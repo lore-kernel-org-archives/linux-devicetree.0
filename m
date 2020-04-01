@@ -2,245 +2,226 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 369A1C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 21:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6FFC43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 22:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 009CE20772
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 21:55:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QAniw9Sj"
+	by mail.kernel.org (Postfix) with ESMTP id D1D7E20772
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 22:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732849AbgDAVzY (ORCPT
+        id S1732637AbgDAWHu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 17:55:24 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34284 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732357AbgDAVzY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 17:55:24 -0400
-Received: by mail-wr1-f67.google.com with SMTP id 65so1922815wrl.1;
-        Wed, 01 Apr 2020 14:55:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=23XR5mx8Dze93AnMWKyPVY0N8s5g7kVY+bkAn8g7cvA=;
-        b=QAniw9SjKQdOhTQ6+egXHh8NRepoYDY4AiDAN7Uj1eGxSWo4AArd8Xtg/NIoC8BIDL
-         KRShWuizd69H8UwgFcT+nsJPKSweoIyITSUfLUqvs6AofqWK+y3TZRVbbvuiCocT3d34
-         1xYjOdKTWqw5ROCwZLYMo2mLc1wISqW/FV8ZJYhX6FQ0Zx41nYXpV8cU4TL7OIH0yXFx
-         CrPbHQtca7er4Idus89zSrtFbSpzq5cTu9jYKK6a2aDUz+WlTe/yJOVckTa7FPeYaETu
-         kYVOgbRKRj1TDcVlxbf9KMv4jmjmrSGAleN6jEjqAaYebTQCSV/TZw8qeWh8gBmxYEUJ
-         w5Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=23XR5mx8Dze93AnMWKyPVY0N8s5g7kVY+bkAn8g7cvA=;
-        b=UzCXBV4jBvb+BvjLbZRIjSEV11o7/PqfTzzQ1D+GUkknsLSCa4eXFbdZrGddHMjASQ
-         k3hgA9wVw6v+rxGPHQj+9Gzu3eh/HAUFKgyHrIzVv++DbYO+pvhcUc0ozikH3kus4efM
-         w83yczLTX43YvIeq2jk4fx8VYKiqCo0coxJ1VYkmqxfVt//MV5wilCwic/abpeM6GA0o
-         97r7Elfg7Mr4XtJNTk9o90uBW3M3s7PY53aJtRMVeazmtuQO2yOytFcLGV8bboaWdQDH
-         etYuKynoByQzTP6dc1S0RcUV3HZGPwVLHgtqZZu8s9x2UFIj0U9PM/XbLjHiHkpxzioN
-         o8Lg==
-X-Gm-Message-State: AGi0PuaproIXC6WnEqhUwA9vupKblam7oIGZMnOKEwRIqRQmh3Nyg1VU
-        TpI9VP9m/mqVzHuKP5EZZck=
-X-Google-Smtp-Source: APiQypLPNH390ekbgjowk9SJkVwRaMOwDEpGqo7J6aTA93oIuwiRwrzQR7kuqQyKFmyS2KRB8S9NlA==
-X-Received: by 2002:adf:a549:: with SMTP id j9mr39711wrb.183.1585778121081;
-        Wed, 01 Apr 2020 14:55:21 -0700 (PDT)
-Received: from AnsuelXPS (host3-220-static.183-80-b.business.telecomitalia.it. [80.183.220.3])
-        by smtp.gmail.com with ESMTPSA id a186sm4244571wmh.33.2020.04.01.14.55.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 Apr 2020 14:55:20 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
-Cc:     "'Stanimir Varbanov'" <svarbanov@mm-sol.com>,
-        "'Sham Muthayyan'" <smuthayy@codeaurora.org>,
-        "'Andy Gross'" <agross@kernel.org>,
-        "'Bjorn Helgaas'" <bhelgaas@google.com>,
-        "'Rob Herring'" <robh+dt@kernel.org>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
-        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
-        "'Philipp Zabel'" <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200320183455.21311-1-ansuelsmth@gmail.com> <20200320183455.21311-7-ansuelsmth@gmail.com> <20200401204007.GG254911@minitux>
-In-Reply-To: <20200401204007.GG254911@minitux>
-Subject: R: [PATCH 07/12] pcie: qcom: add tx term offset support
-Date:   Wed, 1 Apr 2020 23:55:17 +0200
-Message-ID: <006501d60870$3cf99fc0$b6ecdf40$@gmail.com>
+        Wed, 1 Apr 2020 18:07:50 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:58510 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732357AbgDAWHu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 18:07:50 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 0D7828030886;
+        Wed,  1 Apr 2020 22:07:47 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id KYpXvjdddVu8; Thu,  2 Apr 2020 01:07:46 +0300 (MSK)
+Date:   Thu, 2 Apr 2020 01:07:50 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        <devicetree@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/6] dt-bindings: interrupt-controller: Convert
+ mti,gic to DT schema
+Message-ID: <20200401220750.wsoxsxr547aewtgt@ubsrv2.baikal.int>
+References: <20200306125622.839ED80307C4@mail.baikalelectronics.ru>
+ <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
+ <20200324174325.14213-3-Sergey.Semin@baikalelectronics.ru>
+ <20200331210248.GA27684@bogus>
+ <20200401101930.3lk4t6wk6j5ne6ay@ubsrv2.baikal.int>
+ <CAL_JsqJBVTahd9uQPe6KUfVxzGPrGfFarcKBU=EPpon6Ny=Sqg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQF7DJ39byRpk4MoIUXZtcQDafvd5gIhNZ99Afu/Pz6o+d5HcA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJBVTahd9uQPe6KUfVxzGPrGfFarcKBU=EPpon6Ny=Sqg@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> On Fri 20 Mar 11:34 PDT 2020, Ansuel Smith wrote:
+On Wed, Apr 01, 2020 at 08:13:58AM -0600, Rob Herring wrote:
+> On Wed, Apr 1, 2020 at 4:19 AM Sergey Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+> >
+> > On Tue, Mar 31, 2020 at 03:02:48PM -0600, Rob Herring wrote:
+> > > On Tue, Mar 24, 2020 at 08:43:21PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > > > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > >
+> > > > Modern device tree bindings are supposed to be created as YAML-files
+> > > > in accordance with DT schema. This commit replaces MIPS GIC legacy bare
+> > > > text binding with YAML file. As before the binding file states that the
+> > > > corresponding dts node is supposed to be compatible with MIPS Global
+> > > > Interrupt Controller indicated by the "mti,gic" compatible string and
+> > > > to provide a mandatory interrupt-controller and '#interrupt-cells'
+> > > > properties. There might be optional registers memory range,
+> > > > "mti,reserved-cpu-vectors" and "mti,reserved-ipi-vectors" properties
+> > > > specified.
+> > > >
+> > > > MIPS GIC also includes a free-running global timer, per-CPU count/compare
+> > > > timers, and a watchdog. Since currently the GIC Timer is only supported the
+> > > > DT schema expects an IRQ and clock-phandler charged timer sub-node with
+> > > > "mti,mips-gic-timer" compatible string.
+> > > >
+> > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > > > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > > > Cc: Paul Burton <paulburton@kernel.org>
+> > > > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > > > Cc: Alessandro Zummo <a.zummo@towertech.it>
+> > > > Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > > > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > > Cc: Arnd Bergmann <arnd@arndb.de>
+> > > > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > > Cc: devicetree@vger.kernel.org
+> > > > Cc: linux-rtc@vger.kernel.org
+> > > >
+> > > > ---
+> > > >
+> > > > I don't really know who is the corresponding driver maintainer, so I
+> > > > added to the maintainers schema Paul since he used to be looking for the
+> > > > MIPS arch and Thomas looking after it now. Any idea what email should be
+> > > > specified there instead?
+> > > >
+> > > > Similarly to the previous patch the "oneOf: - required: ..." pattern isn't
+> > > > working here. Supposedly due to the script' dtschema/lib.py
+> > > > interrupts/interrupts-extended fixup.
+> > > > ---
+> > > >  .../interrupt-controller/mips-gic.txt         |  67 --------
+> > > >  .../interrupt-controller/mti,gic.yaml         | 152 ++++++++++++++++++
+> > > >  2 files changed, 152 insertions(+), 67 deletions(-)
+> > > >  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
+> > > >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt b/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
+> > > > deleted file mode 100644
+> > > > index 173595305e26..000000000000
+> > > > --- a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
+> > > > +++ /dev/null
+> > > > @@ -1,67 +0,0 @@
+> > > > -MIPS Global Interrupt Controller (GIC)
+> > > > -
+> > > > -The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
+> > > > -It also supports local (per-processor) interrupts and software-generated
+> > > > -interrupts which can be used as IPIs.  The GIC also includes a free-running
+> > > > -global timer, per-CPU count/compare timers, and a watchdog.
+> > > > -
+> > > > -Required properties:
+> > > > -- compatible : Should be "mti,gic".
+> > > > -- interrupt-controller : Identifies the node as an interrupt controller
+> > > > -- #interrupt-cells : Specifies the number of cells needed to encode an
+> > > > -  interrupt specifier.  Should be 3.
+> > > > -  - The first cell is the type of interrupt, local or shared.
+> > > > -    See <include/dt-bindings/interrupt-controller/mips-gic.h>.
+> > > > -  - The second cell is the GIC interrupt number.
+> > > > -  - The third cell encodes the interrupt flags.
+> > > > -    See <include/dt-bindings/interrupt-controller/irq.h> for a list of valid
+> > > > -    flags.
+> > > > -
+> > > > -Optional properties:
+> > > > -- reg : Base address and length of the GIC registers.  If not present,
+> > > > -  the base address reported by the hardware GCR_GIC_BASE will be used.
+> > > > -- mti,reserved-cpu-vectors : Specifies the list of CPU interrupt vectors
+> > > > -  to which the GIC may not route interrupts.  Valid values are 2 - 7.
+> > > > -  This property is ignored if the CPU is started in EIC mode.
+> > > > -- mti,reserved-ipi-vectors : Specifies the range of GIC interrupts that are
+> > > > -  reserved for IPIs.
+> > > > -  It accepts 2 values, the 1st is the starting interrupt and the 2nd is the size
+> > > > -  of the reserved range.
+> > > > -  If not specified, the driver will allocate the last 2 * number of VPEs in the
+> > > > -  system.
+> > > > -
+> > > > -Required properties for timer sub-node:
+> > > > -- compatible : Should be "mti,gic-timer".
+> > > > -- interrupts : Interrupt for the GIC local timer.
+> > > > -
+> > > > -Optional properties for timer sub-node:
+> > > > -- clocks : GIC timer operating clock.
+> > > > -- clock-frequency : Clock frequency at which the GIC timers operate.
+> > > > -
+> > > > -Note that one of clocks or clock-frequency must be specified.
+> > > > -
+> > > > -Example:
+> > > > -
+> > > > -   gic: interrupt-controller@1bdc0000 {
+> > > > -           compatible = "mti,gic";
+> > > > -           reg = <0x1bdc0000 0x20000>;
+> > > > -
+> > > > -           interrupt-controller;
+> > > > -           #interrupt-cells = <3>;
+> > > > -
+> > > > -           mti,reserved-cpu-vectors = <7>;
+> > > > -           mti,reserved-ipi-vectors = <40 8>;
+> > > > -
+> > > > -           timer {
+> > > > -                   compatible = "mti,gic-timer";
+> > > > -                   interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
+> > > > -                   clock-frequency = <50000000>;
+> > > > -           };
+> > > > -   };
+> > > > -
+> > > > -   uart@18101400 {
+> > > > -           ...
+> > > > -           interrupt-parent = <&gic>;
+> > > > -           interrupts = <GIC_SHARED 24 IRQ_TYPE_LEVEL_HIGH>;
+> > > > -           ...
+> > > > -   };
+> > > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml b/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..1e47c0cdc231
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
+> > > > @@ -0,0 +1,152 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > >
+> > > Do you have rights to add BSD?
+> > >
+> >
+> > My manager said we can submitted the DT schema bindings under both GPL and
+> > BSD licenses. Though I don't know what license was of the legacy binding file.
 > 
-> > From: Sham Muthayyan <smuthayy@codeaurora.org>
-> >
-> > Add tx term offset support to pcie qcom driver
-> > need in some revision of the ipq806x soc
-> >
-> > Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 61
-> ++++++++++++++++++++++----
-> >  1 file changed, 52 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
-> b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index ecc22fd27ea6..8009e3117765 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -45,7 +45,13 @@
-> >  #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
-> >
-> >  #define PCIE20_PARF_PHY_CTRL			0x40
-> > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	(0x1f << 16)
-> > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		(x << 16)
-> > +
-> >  #define PCIE20_PARF_PHY_REFCLK			0x4C
-> > +#define REF_SSP_EN				BIT(16)
-> > +#define REF_USE_PAD				BIT(12)
-> > +
-> >  #define PCIE20_PARF_DBI_BASE_ADDR		0x168
-> >  #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
-> >  #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
-> > @@ -77,6 +83,18 @@
-> >  #define DBI_RO_WR_EN				1
-> >
-> >  #define PERST_DELAY_US				1000
-> > +/* PARF registers */
-> > +#define PCIE20_PARF_PCS_DEEMPH			0x34
-> > +#define PCS_DEEMPH_TX_DEEMPH_GEN1(x)		(x << 16)
-> > +#define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)	(x << 8)
-> > +#define PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(x)	(x << 0)
-> > +
-> > +#define PCIE20_PARF_PCS_SWING			0x38
-> > +#define PCS_SWING_TX_SWING_FULL(x)		(x << 8)
-> > +#define PCS_SWING_TX_SWING_LOW(x)		(x << 0)
-> > +
-> > +#define PCIE20_PARF_CONFIG_BITS			0x50
-> > +#define PHY_RX0_EQ(x)				(x << 24)
-> >
-> >  #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
-> >  #define SLV_ADDR_SPACE_SZ			0x10000000
-> > @@ -97,6 +115,7 @@ struct qcom_pcie_resources_2_1_0 {
-> >  	struct reset_control *phy_reset;
-> >  	struct reset_control *ext_reset;
-> >  	struct regulator_bulk_data
-> supplies[QCOM_PCIE_2_1_0_MAX_SUPPLY];
-> > +	uint8_t phy_tx0_term_offset;
-> >  };
-> >
-> >  struct qcom_pcie_resources_1_0_0 {
-> > @@ -184,6 +203,16 @@ struct qcom_pcie {
-> >
-> >  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-> >
-> > +static inline void
-> > +writel_masked(void __iomem *addr, u32 clear_mask, u32 set_mask)
-> > +{
-> > +	u32 val = readl(addr);
-> > +
-> > +	val &= ~clear_mask;
-> > +	val |= set_mask;
-> > +	writel(val, addr);
-> > +}
-> > +
-> >  static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
-> >  {
-> >  	gpiod_set_value_cansleep(pcie->reset, 1);
-> > @@ -277,6 +306,10 @@ static int
-> qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
-> >  	if (IS_ERR(res->ext_reset))
-> >  		return PTR_ERR(res->ext_reset);
-> >
-> > +	if (of_property_read_u8(dev->of_node, "phy-tx0-term-offset",
-> > +				&res->phy_tx0_term_offset))
-> > +		res->phy_tx0_term_offset = 0;
+> Anything in the kernel without an explicit license is GPL-2.0-only.
 > 
-> The appropriate way is to encode differences in hardware is to use
-> different compatibles for the two different versions of the hardware.
+> > BTW Rob, you ask about the license very often whether I set pure GPL-2.0
+> > or dual-license header. Just wondering is it some kind of protocol to make
+> > sure a submitter has got proper rights to submit the binding?
 > 
-> Regards,
-> Bjorn
+> New bindings should be dual GPL/BSD. Converted bindings should be
+> relicensed if the authors of the original agree or you should maintain
+> GPL-2.0-only.
 > 
+> Rob
 
-So a better way to handle this would be to check the SoC compatible?
-AFAIK a different offset is only needed on ipq8064 revision 2 and ipq8065
-but
-it looks bad to add a special code just for that 2 SoC. 
-I would prefer to handle this with the offset definition but If you think
-this would be
-the right way, I will follow that. Waiting for your response about this.
+Ah. ok. I didn't know that the legacy bindings have GPL-2.0 license by
+default. Thanks. I'll keep it in mind in patchsets with bindings conversion.
 
-> > +
-> >  	res->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
-> >  	return PTR_ERR_OR_ZERO(res->phy_reset);
-> >  }
-> > @@ -304,7 +337,6 @@ static int qcom_pcie_init_2_1_0(struct
-> qcom_pcie *pcie)
-> >  	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
-> >  	struct dw_pcie *pci = pcie->pci;
-> >  	struct device *dev = pci->dev;
-> > -	u32 val;
-> >  	int ret;
-> >
-> >  	ret = reset_control_assert(res->ahb_reset);
-> > @@ -355,15 +387,26 @@ static int qcom_pcie_init_2_1_0(struct
-> qcom_pcie *pcie)
-> >  		goto err_deassert_ahb;
-> >  	}
-> >
-> > -	/* enable PCIe clocks and resets */
-> > -	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-> > -	val &= ~BIT(0);
-> > -	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
-> > +	writel_masked(pcie->parf + PCIE20_PARF_PHY_CTRL, BIT(0), 0);
-> > +
-> > +	/* Set Tx termination offset */
-> > +	writel_masked(pcie->parf + PCIE20_PARF_PHY_CTRL,
-> > +		      PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK,
-> > +		      PHY_CTRL_PHY_TX0_TERM_OFFSET(res-
-> >phy_tx0_term_offset));
-> > +
-> > +	/* PARF programming */
-> > +	writel(PCS_DEEMPH_TX_DEEMPH_GEN1(0x18) |
-> > +	       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(0x18) |
-> > +	       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(0x22),
-> > +	       pcie->parf + PCIE20_PARF_PCS_DEEMPH);
-> > +	writel(PCS_SWING_TX_SWING_FULL(0x78) |
-> > +	       PCS_SWING_TX_SWING_LOW(0x78),
-> > +	       pcie->parf + PCIE20_PARF_PCS_SWING);
-> > +	writel(PHY_RX0_EQ(0x4), pcie->parf + PCIE20_PARF_CONFIG_BITS);
-> >
-> > -	/* enable external reference clock */
-> > -	val = readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
-> > -	val |= BIT(16);
-> > -	writel(val, pcie->parf + PCIE20_PARF_PHY_REFCLK);
-> > +	/* Enable reference clock */
-> > +	writel_masked(pcie->parf + PCIE20_PARF_PHY_REFCLK,
-> > +		      REF_USE_PAD, REF_SSP_EN);
-> >
-> >  	ret = reset_control_deassert(res->phy_reset);
-> >  	if (ret) {
-> > --
-> > 2.25.1
-> >
-
+Regards,
+-Sergey
