@@ -2,110 +2,78 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D25C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 03:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A914C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 05:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 935D320678
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 03:22:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="n0crX8Gx"
+	by mail.kernel.org (Postfix) with ESMTP id 6A9482078B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 05:16:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731611AbgDADW7 (ORCPT
+        id S1731738AbgDAFQ7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 23:22:59 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:19739 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731593AbgDADW7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 23:22:59 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 0313MSET017333;
-        Wed, 1 Apr 2020 12:22:29 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 0313MSET017333
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585711350;
-        bh=6cmk4VhYcoiSK0648BJFDTb8WGo1i4aniwWtusevAaQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=n0crX8GxExB2dPg/8QhQatWt02gUfaOo6/Q6XF2RR3LPaFrXrpow0/nhIbhk9UaSp
-         a/+rhR9iy+jrfi4TIoRdURW1PVBAGPQ1E0Qbb7appR14bGzqqheIN3+Tx7tsYwceEx
-         mQJxi6OQmpZb6Nar5VNm/dmqec/IsB23ZD5zBEZG7VFGh1uBd2BGZXjlY06PyQGSak
-         7xgUgyNtqdbz+b1rgf6jKiqrYZsw273kOa1j7abnHphGqOx+Ff8e6bVIajur46u3j7
-         LWs5x+R6+Vo36uvL3YHv/n2qz6z9yTXvH54CSJPzjKW07NcFPpKL7LMbISOrkFEyh6
-         924kwGhB0OP7Q==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: dma: uniphier-xdmac: switch to single reg region
-Date:   Wed,  1 Apr 2020 12:21:50 +0900
-Message-Id: <20200401032150.19767-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 1 Apr 2020 01:16:59 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:14851 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727918AbgDAFQ6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 01:16:58 -0400
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 01 Apr 2020 10:46:12 +0530
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 01 Apr 2020 10:45:56 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id 0A9702619; Wed,  1 Apr 2020 10:45:56 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: [PATCH v7 4/4] arm64: dts: qcom: sc7180: Add interconnect properties for USB
+Date:   Wed,  1 Apr 2020 10:45:45 +0530
+Message-Id: <1585718145-29537-5-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The reg in the example "<0x5fc10000 0x1000>, <0x5fc20000 0x800>"
-is wrong. The register region of this controller is much smaller,
-and there is no other hardware register interleaved. There is no
-good reason to split it into two regions.
+Populate USB DT nodes with interconnect properties.
 
-Just use a single, contiguous register region.
-
-While I am here, I made the 'dma-channels' property mandatory because
-otherwise there is no way to determine the number of the channels.
-
-Please note the original binding was merged recently. Since there
-is no user yet, this change has no actual impact.
-
-Fixes: b9fb56b6ba8a ("dt-bindings: dmaengine: Add UniPhier external DMA controller bindings")
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 ---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-We do not need to touch the driver either because the second
-region is not used.
-
-
- .../devicetree/bindings/dma/socionext,uniphier-xdmac.yaml  | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
-index 86cfb599256e..371f18773198 100644
---- a/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
-+++ b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
-@@ -22,9 +22,7 @@ properties:
-     const: socionext,uniphier-xdmac
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 998f101..bd0d3a7 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1447,6 +1447,10 @@
  
-   reg:
--    items:
--      - description: XDMAC base register region (offset and length)
--      - description: XDMAC extension register region (offset and length)
-+    maxItems: 1
+ 			resets = <&gcc GCC_USB30_PRIM_BCR>;
  
-   interrupts:
-     maxItems: 1
-@@ -49,12 +47,13 @@ required:
-   - reg
-   - interrupts
-   - "#dma-cells"
-+  - dma-channels
- 
- examples:
-   - |
-     xdmac: dma-controller@5fc10000 {
-         compatible = "socionext,uniphier-xdmac";
--        reg = <0x5fc10000 0x1000>, <0x5fc20000 0x800>;
-+        reg = <0x5fc10000 0x5300>;
-         interrupts = <0 188 4>;
-         #dma-cells = <2>;
-         dma-channels = <16>;
++			interconnects = <&aggre2_noc MASTER_USB3 &mc_virt SLAVE_EBI1>,
++					<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_USB3>;
++			interconnect-names = "usb-ddr", "apps-usb";
++
+ 			usb_1_dwc3: dwc3@a600000 {
+ 				compatible = "snps,dwc3";
+ 				reg = <0 0x0a600000 0 0xe000>;
 -- 
-2.17.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
