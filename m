@@ -2,104 +2,182 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C29C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 09:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 706A5C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 09:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8908F20784
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 09:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FFBB2077D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 09:32:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="REC6ewzd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbgDAJ2W (ORCPT
+        id S1731951AbgDAJcb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 05:28:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:46990 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726205AbgDAJ2W (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Apr 2020 05:28:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 424511FB;
-        Wed,  1 Apr 2020 02:28:21 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.97])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF5793F52E;
-        Wed,  1 Apr 2020 02:28:19 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 10:28:16 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 1/4] firmware: arm_scmi: Make mutex channel specific
-Message-ID: <20200401092816.GD3954@bogus>
-References: <20200327163654.13389-1-sudeep.holla@arm.com>
- <20200327163654.13389-2-sudeep.holla@arm.com>
- <AM0PR04MB4481562E2A31386752F92C4488C90@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <20200401091208.GB3954@bogus>
- <AM0PR04MB4481E4CC4FA7A55488E7663988C90@AM0PR04MB4481.eurprd04.prod.outlook.com>
+        Wed, 1 Apr 2020 05:32:31 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:32346 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726974AbgDAJcb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 05:32:31 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585733550; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=O4mfO68j0oUFthZ8BDymyBRZQeDPJ5DqwOJdqb9xXjc=;
+ b=REC6ewzdQ+lioINZISvKvcXrblJFbUF8/aD56UKqVCfTTt1b6ppsuwcEvYkbYZRuAKSWqxo3
+ OABiVYTs6Vv4GDzv0Nli+uCzHPrxJshaBpMU6oGXeOJQCtaYlfUma30dSqoGY8lvAxGGF9Yb
+ +fs5BFjuD1T/7xfy2YS67eYfRao=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e845fa6.7f8810132c38-smtp-out-n03;
+ Wed, 01 Apr 2020 09:32:22 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E3642C43636; Wed,  1 Apr 2020 09:32:21 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kalyan_t)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 16FF4C433D2;
+        Wed,  1 Apr 2020 09:32:21 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM0PR04MB4481E4CC4FA7A55488E7663988C90@AM0PR04MB4481.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 01 Apr 2020 15:02:21 +0530
+From:   kalyan_t@codeaurora.org
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        mkrishn@codeaurora.org, travitej@codeaurora.org,
+        nganji@codeaurora.org
+Subject: Re: [PATCH] drm/msm/dpu: ensure device suspend happens during PM
+ sleep
+In-Reply-To: <CAD=FV=Up4y6GUkJc8NNJBdC28L+6LvUs7pCUg4pyMCgHMGEkug@mail.gmail.com>
+References: <1585663107-12406-1-git-send-email-kalyan_t@codeaurora.org>
+ <CAD=FV=Up4y6GUkJc8NNJBdC28L+6LvUs7pCUg4pyMCgHMGEkug@mail.gmail.com>
+Message-ID: <2922a0c64ec61c3d74d516e44dca2d71@codeaurora.org>
+X-Sender: kalyan_t@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 09:14:36AM +0000, Peng Fan wrote:
-> > Subject: Re: [PATCH 1/4] firmware: arm_scmi: Make mutex channel specific
-> >
-> > On Wed, Apr 01, 2020 at 01:12:37AM +0000, Peng Fan wrote:
-> > > Hi Sudeep,
-> > >
-> > > > Subject: [PATCH 1/4] firmware: arm_scmi: Make mutex channel specific
-> > > >
-> > > > In order to support multiple SMC/HVC transport channels with
-> > > > associated shared memory,
-> > >
-> > > Does this mean each channel will have its own shared memory? Or All
-> > > channels share the same shared memory?
-> > >
-> >
-> > It depends on platform firmware and DT. If there is only one shmem at the top
-> > level scmi node, all share that single channel. If some/all protocols have their
-> > own channel, they there must be shmem entry in the corresponding child
-> > node.
-> >
-> > > it is better to maintain the mutex per channel instead of
-> > > > existing global one.
-> > >
-> > > If all channels shared the same memory, use per channel mutex lock
-> > > will not be able to prevent other channels accessing shared memory at
-> > > the same time.
-> > >
-> >
-> > No we don't create channel per protocol. If they share, we just share the
-> > channel pointer. Look at:
-> >
-> >        if (!info->desc->ops->chan_available(dev, idx)) {
-> >                 cinfo = idr_find(idr, SCMI_PROTOCOL_BASE);
-> >                 if (unlikely(!cinfo)) /* Possible only if platform has no Rx */
-> >                         return -EINVAL;
-> >                 goto idr_alloc;
-> >         }
-> >
-> > If a protocol doesn't have a dedicated channel, we just assign the base
-> > protocol channel to it. We don't call chan_setup at all on that channel.
-> > Your patch assumed so but the core driver never did that.
-> >
-> > Hope this clarifies you doubt.
->
-> Yes. Thanks for the explainaiton.
->
-
-No worries, I should have seen this during initial review, just missed
-few trivial things.
-
---
-Regards,
-Sudeep
+On 2020-03-31 21:30, Doug Anderson wrote:
+> Hi,
+> 
+> On Tue, Mar 31, 2020 at 6:58 AM Kalyan Thota <kalyan_t@codeaurora.org> 
+> wrote:
+>> 
+>> "The PM core always increments the runtime usage counter
+>> before calling the ->suspend() callback and decrements it
+>> after calling the ->resume() callback"
+>> 
+>> DPU and DSI are managed as runtime devices. When
+>> suspend is triggered, PM core adds a refcount on all the
+>> devices and calls device suspend, since usage count is
+>> already incremented, runtime suspend was not getting called
+>> and it kept the clocks on which resulted in target not
+>> entering into XO shutdown.
+>> 
+>> Add changes to force suspend on runtime devices during pm sleep.
+>> 
+>> Changes in v1:
+>>  - Remove unnecessary checks in the function
+>>     _dpu_kms_disable_dpu (Rob Clark).
+>> 
+>> Changes in v2:
+>>  - Avoid using suspend_late to reset the usagecount
+>>    as suspend_late might not be called during suspend
+>>    call failures (Doug).
+>> 
+>> Changes in v3:
+>>  - Use force suspend instead of managing device usage_count
+>>    via runtime put and get API's to trigger callbacks (Doug).
+>> 
+>> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+>> ---
+>>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 2 ++
+>>  drivers/gpu/drm/msm/dsi/dsi.c           | 2 ++
+>>  drivers/gpu/drm/msm/msm_drv.c           | 4 ++++
+>>  3 files changed, 8 insertions(+)
+> 
+> This looks much saner to me.  Thanks!  I assume it still works fine
+> for you?  I'm still no expert on how all the pieces of DRM drivers
+> work together, but at least there's not a bunch of strange fiddling
+> with pm_runtime state and hopefully it will avoid weird corner
+> cases...
+> 
+--- Yes, verified the change on trogdor device, and display can suspend 
+with the change.
+> 
+>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c 
+>> b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+>> index ce19f1d..b886d9d 100644
+>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+>> @@ -1123,6 +1123,8 @@ static int __maybe_unused 
+>> dpu_runtime_resume(struct device *dev)
+>> 
+>>  static const struct dev_pm_ops dpu_pm_ops = {
+>>         SET_RUNTIME_PM_OPS(dpu_runtime_suspend, dpu_runtime_resume, 
+>> NULL)
+>> +       SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+>> +                               pm_runtime_force_resume)
+>>  };
+>> 
+>>  static const struct of_device_id dpu_dt_match[] = {
+>> diff --git a/drivers/gpu/drm/msm/dsi/dsi.c 
+>> b/drivers/gpu/drm/msm/dsi/dsi.c
+>> index 55ea4bc2..62704885 100644
+>> --- a/drivers/gpu/drm/msm/dsi/dsi.c
+>> +++ b/drivers/gpu/drm/msm/dsi/dsi.c
+>> @@ -161,6 +161,8 @@ static int dsi_dev_remove(struct platform_device 
+>> *pdev)
+>> 
+>>  static const struct dev_pm_ops dsi_pm_ops = {
+>>         SET_RUNTIME_PM_OPS(msm_dsi_runtime_suspend, 
+>> msm_dsi_runtime_resume, NULL)
+>> +       SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+>> +                               pm_runtime_force_resume)
+>>  };
+>> 
+>>  static struct platform_driver dsi_driver = {
+>> diff --git a/drivers/gpu/drm/msm/msm_drv.c 
+>> b/drivers/gpu/drm/msm/msm_drv.c
+>> index 7d985f8..2b8c99c 100644
+>> --- a/drivers/gpu/drm/msm/msm_drv.c
+>> +++ b/drivers/gpu/drm/msm/msm_drv.c
+>> @@ -1051,6 +1051,8 @@ static int msm_pm_suspend(struct device *dev)
+>>                 return ret;
+>>         }
+>> 
+>> +       pm_runtime_force_suspend(dev);
+> 
+> nit: check return value of pm_runtime_force_suspend()?
+> 
+> 
+>> +
+>>         return 0;
+>>  }
+>> 
+>> @@ -1063,6 +1065,8 @@ static int msm_pm_resume(struct device *dev)
+>>         if (WARN_ON(!priv->pm_state))
+>>                 return -ENOENT;
+>> 
+>> +       pm_runtime_force_resume(dev);
+> 
+> nit: check return value of pm_runtime_force_resume()?
+> 
+> 
+> -Doug
