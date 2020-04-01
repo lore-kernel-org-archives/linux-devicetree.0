@@ -2,301 +2,91 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6ACC43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 06:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC8CC2D0F2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 07:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF79206F6
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 06:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E7A2071A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 07:12:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nQo50/TR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UO5xF0FA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731741AbgDAGvh (ORCPT
+        id S1731952AbgDAHMX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 02:51:37 -0400
-Received: from mail-am6eur05on2079.outbound.protection.outlook.com ([40.107.22.79]:6204
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730426AbgDAGvh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Apr 2020 02:51:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OpFS8FgeDASoB/2v5y8yal0pL/UCAV4y5I9+kwZndHGXpRkQ+t+1cG6wdNQaTr/5tjiMxHpDd5aIBMekVog8pKYHWSE8o25kwLbAIOSoKZKYAYpQY4XT4DHfsxSh9e/olj+0t+ZBByS160fKLyE9odvb/lmwFGFDPvsuqNH+T32YlMuCjmYV5aJTDHKFyMCUpMciFa5UOJVz3E1AqLujYetBBMhCF8Uu3nxGAAmrAVzYli8Xn593+zL/J5FVMf/JXIGnP2ALhaLU/E6uuBT04Rxs+cnMR/41kyXHeKsKlpzctQD182SGS99dHauGT8yqnm9Jj1ZCKL8KGz7HObe1BQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hNh6/KjEoyHfmtg3YcVfGORUignRmvkcuPpIpo8SfJM=;
- b=Bzl1Am+oE/WtyN+nCvFboPP1JXrMnocxcKwF2aXu/G4x/cWH6LsojhEEg8pG8XMYZqR/IY32uPpKYtweDePAlrsjC5FgBE6A4+XXlQNeNVOe+DoLwh6gCZy3jPwXE5g+tsJ2IXAQjIqDCGwylaW2MAOIfm19pZlBq/gJjxPEn6WXFltu2XbfGZWnyIfso6hZR2Tbzg745d0DZfszBDUu7GqRZDyMDoX9bzypMZnsRQ+n+NC/+wjJGLjcS2HLw18/1FZaUISnCsY9gsu3oJG6aQMcAFisQtVeKCl5M18IaioU/ZtW5NMtEwEmI1XNVBMG76gL6he+1tocDRJCQCN8hg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hNh6/KjEoyHfmtg3YcVfGORUignRmvkcuPpIpo8SfJM=;
- b=nQo50/TRc2g6zITnM2xFE8hMqjU59Gk7vyX3AjcEoCyLxNE2gtRJ4QzM19suZRy4kivvFrovvwLICCkRhPyQ9N762r2TYsEsRMbdpEQzAGfL0df62tjNDHPgkQNPgJAR2NVzE/j4Dp544xUrVNhVhr9e2K02V88tTo4W2LZGia8=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6163.eurprd04.prod.outlook.com (20.179.34.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.19; Wed, 1 Apr 2020 06:51:30 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::ad44:6b0d:205d:f8fc]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::ad44:6b0d:205d:f8fc%7]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
- 06:51:30 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Fabio Estevam <festevam@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH] arm64: dts: imx8m: Fix AIPS reg properties
-Thread-Topic: [PATCH] arm64: dts: imx8m: Fix AIPS reg properties
-Thread-Index: AQHWB4t4/ugLiU2Tk0m1UIFW36Tgqqhj0+XA
-Date:   Wed, 1 Apr 2020 06:51:30 +0000
-Message-ID: <AM0PR04MB448118DFFFBA1C1119D257F588C90@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20200331183725.25255-1-festevam@gmail.com>
-In-Reply-To: <20200331183725.25255-1-festevam@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 833b2e67-340c-4b40-5146-08d7d6091bfc
-x-ms-traffictypediagnostic: AM0PR04MB6163:|AM0PR04MB6163:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB61637D06DA30427EE896380F88C90@AM0PR04MB6163.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 03607C04F0
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB4481.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(39860400002)(396003)(136003)(346002)(366004)(9686003)(2906002)(55016002)(6506007)(26005)(110136005)(54906003)(478600001)(81166006)(316002)(86362001)(81156014)(8936002)(7696005)(76116006)(186003)(8676002)(5660300002)(4326008)(66556008)(66446008)(66946007)(71200400001)(64756008)(52536014)(66476007)(33656002)(44832011)(32563001);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Dn6Ckrt7xKPrGYitp+iDkoFcDXh/iCFVCj6cP7sY4VT9bZcLpzfsE67Y9N2lIltIX5Q5tZiOnN8ro0iK34mwZA178ql/aBfDtV/KO+ijiuyUZwl6I6yApkVUkUaz7Fcz5PxKbNWm+jFZ1vQZ1/pdYmpyTPBciFldQKrxnil2X4rPcHkxgGzXacq9KPVNprA4fXy2Ddud0mzSv8cov1aD2K1xmFgxIEmjUtBzysJruj2XLCcGz1I/bcC/V1HZCAsnSzOg/t2VjvKOgnI1AUggxlGgXhiaRQlCisEWj0x6P53iodLI19r8I9GvjuJv9apfF3ZYbSIlsLZbhBLFT5hVFbGfs7tCjtnDwvDyZIuDfd+2CuD5Q71X8epOW4IG/y+QC/5sYIEDzEznMFmCOqS+ff8jwhaYBRXViNySgKIoLT5hDTEYjLncIf/2zaG3ZTAmB+XFvrUSlrKr4uPDpLDTlIn0NcWgnTJ06XK9tTT2XyY=
-x-ms-exchange-antispam-messagedata: cUMOiLxAUf0frRYiEOBX2w1XSanvCMWmacl0/HiQlgyKO9ow1MpbLZXDbdzMeVnQtESpVm17ci0IA35Ac9JS/WoSUaCbm9bFk/kTCi3ZR0EX7hvobYn1uAyO4+B7mlAV1WvSgKBnDAGoFTU7P6wy7A==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 1 Apr 2020 03:12:23 -0400
+Received: from mail-pj1-f53.google.com ([209.85.216.53]:52145 "EHLO
+        mail-pj1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731725AbgDAHMX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 03:12:23 -0400
+Received: by mail-pj1-f53.google.com with SMTP id w9so2313383pjh.1;
+        Wed, 01 Apr 2020 00:12:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hz5qaXSjMSJnZU949MlZ213oDPmzY4IGeJxDJZAJknk=;
+        b=UO5xF0FAmdNlzWkKhIdWtLFN78GB1BDya6bho8AuomDbns3qwL9M+SXArfkRTo40t5
+         mKuoxznPxAWBjluPbVAtJfyqGWRE7t5moY6wPdxAPc2vtVL60NEX8SJ/3GgoVA5oRCgk
+         Dk1XD3h3EmFpXVxl+XYnz3hd8NhXZCneKgC6ZkZksDFYEp3rLEa+eojwCVUZCxabqUIG
+         tign7pGNpk3N8gHhPjvrf5tLmRiqr8G4uGabgCPIB9xO0JW6ELuPA4qkLnK7ZyB4Pkkd
+         vg8yNr7/szjTy/X4depKHgF9q+Wd0vcTxV5XDFuXzxGnrkm2Ww5THhKRA5LJfKnOJyQh
+         IGKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hz5qaXSjMSJnZU949MlZ213oDPmzY4IGeJxDJZAJknk=;
+        b=U2XMXNvjJX/8L5ZMnhLtio15o77LnYXFkfsvCSmUR79Qh6UnwAPYoRMmtTUI+GabpC
+         4zGmOUHHxr+P/F/SIXmXLk4lWki0m81pgAPFd3Umf8bXZU9qbnDBVmLiexn/uhuTSihy
+         LNcZn9rpd/1lfK18qKjoHUSfeOumLWBbNUkj1CaGBngOg1mXqFAX23VcwlXWMKKMM79R
+         ILTBZHucabjxfNbqHXPVLK3sMs+RUV6OTERR2X9vqdxUIudgHzLLQG25utt1R5/KU2Gq
+         2CyHrRCMvDIg+oKoDgbFpY6QXTnyCs9T/t3E6sa3fL0Fgo6x0dujcP5DVAwDaaMXc6Af
+         /Qjg==
+X-Gm-Message-State: AGi0PuYmNsVW4lZO7hHSsNbgsGOOfR3L/QD7nxQA4xdl+uJpxNSobvz/
+        CuPQhbDVsIT8cBGbf4Efskk=
+X-Google-Smtp-Source: APiQypIV2fiRm3YAnbewgfM7H6vNYSVxWbm0IfFdgiQwFIIuspNbZmUAmgVIU4iAZXRJ0uU+PXjDQQ==
+X-Received: by 2002:a17:90a:d349:: with SMTP id i9mr2991726pjx.180.1585725140868;
+        Wed, 01 Apr 2020 00:12:20 -0700 (PDT)
+Received: from ubt.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id n7sm784519pgm.28.2020.04.01.00.12.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 00:12:20 -0700 (PDT)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: [PATCH 0/2] add clock and emmc/sd nodes for SC9863A
+Date:   Wed,  1 Apr 2020 15:11:42 +0800
+Message-Id: <20200401071144.10424-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 833b2e67-340c-4b40-5146-08d7d6091bfc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2020 06:51:30.7135
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: q/j0qKrJxL2VaslJeas8IO4CaoubuoE1fAfQIhzXzDtnd99xtLKOr5WMUuYkMC4tEKrjW8UJ278Og7aabVVjkg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6163
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Fabio,
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-> Subject: [PATCH] arm64: dts: imx8m: Fix AIPS reg properties
->=20
-> Commit dc3efc6ff0d5 ("arm64: dts: imx8m: fix aips dts node") caused sever=
-al
-> dtc warnings like these when building with W=3D1:
->=20
-> arch/arm64/boot/dts/freescale/imx8mm.dtsi:265.23-542.5: Warning
-> (simple_bus_reg): /soc@0/bus@30000000: simple-bus unit address format
-> error, expected "301f0000"
-> arch/arm64/boot/dts/freescale/imx8mm.dtsi:544.23-602.5: Warning
-> (simple_bus_reg): /soc@0/bus@30400000: simple-bus unit address format
-> error, expected "305f0000"
-> arch/arm64/boot/dts/freescale/imx8mm.dtsi:604.23-862.5: Warning
-> (simple_bus_reg): /soc@0/bus@30800000: simple-bus unit address format
-> error, expected "309f0000"
-> arch/arm64/boot/dts/freescale/imx8mm.dtsi:864.23-909.5: Warning
-> (simple_bus_reg): /soc@0/bus@32c00000: simple-bus unit address format
-> error, expected "32df0000"
->=20
-> Fix them by using the correct address base and size in the AIPS reg prope=
-rties.
->=20
-> Fixes: dc3efc6ff0d5 ("arm64: dts: imx8m: fix aips dts node")
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 8 ++++----
-> arch/arm64/boot/dts/freescale/imx8mn.dtsi | 8 ++++----
-> arch/arm64/boot/dts/freescale/imx8mp.dtsi | 6 +++---
-> arch/arm64/boot/dts/freescale/imx8mq.dtsi | 8 ++++----
->  4 files changed, 15 insertions(+), 15 deletions(-)
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> index cc7152ecedd9..8829628f757a 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> @@ -264,7 +264,7 @@
->=20
->  		aips1: bus@30000000 {
->  			compatible =3D "fsl,aips-bus", "simple-bus";
-> -			reg =3D <0x301f0000 0x10000>;
-> +			reg =3D <0x30000000 0x400000>;
+SC9863A clock driver got merged, this patch-set adds clock nodes, emmc and sd card nodes,
+so that we can startup debian on SC9863A.
 
-Should the node name changed to bus@0x301f0000, but not
-change reg?
+Chunyan Zhang (2):
+  arm64: dts: Add SC9863A clock nodes
+  arm64: dts: Add SC9863A emmc and sd card nodes
 
-The 0x301f0000 is the correct aips configuration space.
+ arch/arm64/boot/dts/sprd/sc9863a.dtsi |  66 +++++++++++
+ arch/arm64/boot/dts/sprd/sharkl3.dtsi | 164 ++++++++++++++++++++++++++
+ 2 files changed, 230 insertions(+)
 
-Thanks,
-Peng.
-
->  			#address-cells =3D <1>;
->  			#size-cells =3D <1>;
->  			ranges =3D <0x30000000 0x30000000 0x400000>; @@ -543,7
-> +543,7 @@
->=20
->  		aips2: bus@30400000 {
->  			compatible =3D "fsl,aips-bus", "simple-bus";
-> -			reg =3D <0x305f0000 0x10000>;
-> +			reg =3D <0x30400000 0x400000>;
->  			#address-cells =3D <1>;
->  			#size-cells =3D <1>;
->  			ranges =3D <0x30400000 0x30400000 0x400000>; @@ -603,7
-> +603,7 @@
->=20
->  		aips3: bus@30800000 {
->  			compatible =3D "fsl,aips-bus", "simple-bus";
-> -			reg =3D <0x309f0000 0x10000>;
-> +			reg =3D <0x30800000 0x400000>;
->  			#address-cells =3D <1>;
->  			#size-cells =3D <1>;
->  			ranges =3D <0x30800000 0x30800000 0x400000>, @@ -863,7
-> +863,7 @@
->=20
->  		aips4: bus@32c00000 {
->  			compatible =3D "fsl,aips-bus", "simple-bus";
-> -			reg =3D <0x32df0000 0x10000>;
-> +			reg =3D <0x32c00000 0x400000>;
->  			#address-cells =3D <1>;
->  			#size-cells =3D <1>;
->  			ranges =3D <0x32c00000 0x32c00000 0x400000>; diff --git
-> a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-> b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-> index fa78f0163270..e62d4146cebc 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-> @@ -241,7 +241,7 @@
->=20
->  		aips1: bus@30000000 {
->  			compatible =3D "fsl,aips-bus", "simple-bus";
-> -			reg =3D <0x301f0000 0x10000>;
-> +			reg =3D <0x30000000 0x400000>;
->  			#address-cells =3D <1>;
->  			#size-cells =3D <1>;
->  			ranges;
-> @@ -448,7 +448,7 @@
->=20
->  		aips2: bus@30400000 {
->  			compatible =3D "fsl,aips-bus", "simple-bus";
-> -			reg =3D <0x305f0000 0x10000>;
-> +			reg =3D <0x30400000 0x400000>;
->  			#address-cells =3D <1>;
->  			#size-cells =3D <1>;
->  			ranges;
-> @@ -508,7 +508,7 @@
->=20
->  		aips3: bus@30800000 {
->  			compatible =3D "fsl,aips-bus", "simple-bus";
-> -			reg =3D <0x309f0000 0x10000>;
-> +			reg =3D <0x30800000 0x400000>;
->  			#address-cells =3D <1>;
->  			#size-cells =3D <1>;
->  			ranges;
-> @@ -754,7 +754,7 @@
->=20
->  		aips4: bus@32c00000 {
->  			compatible =3D "fsl,aips-bus", "simple-bus";
-> -			reg =3D <0x32df0000 0x10000>;
-> +			reg =3D <0x32c00000 0x400000>;
->  			#address-cells =3D <1>;
->  			#size-cells =3D <1>;
->  			ranges;
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> index 9b1616e59d58..9f6ba763238d 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> @@ -145,7 +145,7 @@
->=20
->  		aips1: bus@30000000 {
->  			compatible =3D "fsl,aips-bus", "simple-bus";
-> -			reg =3D <0x301f0000 0x10000>;
-> +			reg =3D <0x30000000 0x400000>;
->  			#address-cells =3D <1>;
->  			#size-cells =3D <1>;
->  			ranges;
-> @@ -318,7 +318,7 @@
->=20
->  		aips2: bus@30400000 {
->  			compatible =3D "fsl,aips-bus", "simple-bus";
-> -			reg =3D <0x305f0000 0x400000>;
-> +			reg =3D <0x30400000 0x400000>;
->  			#address-cells =3D <1>;
->  			#size-cells =3D <1>;
->  			ranges;
-> @@ -378,7 +378,7 @@
->=20
->  		aips3: bus@30800000 {
->  			compatible =3D "fsl,aips-bus", "simple-bus";
-> -			reg =3D <0x309f0000 0x400000>;
-> +			reg =3D <0x30800000 0x400000>;
->  			#address-cells =3D <1>;
->  			#size-cells =3D <1>;
->  			ranges;
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index 75b384217a23..bab88369be1b 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -291,7 +291,7 @@
->=20
->  		bus@30000000 { /* AIPS1 */
->  			compatible =3D "fsl,aips-bus", "simple-bus";
-> -			reg =3D <0x301f0000 0x10000>;
-> +			reg =3D <0x30000000 0x400000>;
->  			#address-cells =3D <1>;
->  			#size-cells =3D <1>;
->  			ranges =3D <0x30000000 0x30000000 0x400000>; @@ -696,7
-> +696,7 @@
->=20
->  		bus@30400000 { /* AIPS2 */
->  			compatible =3D "fsl,aips-bus", "simple-bus";
-> -			reg =3D <0x305f0000 0x10000>;
-> +			reg =3D <0x30400000 0x400000>;
->  			#address-cells =3D <1>;
->  			#size-cells =3D <1>;
->  			ranges =3D <0x30400000 0x30400000 0x400000>; @@ -756,7
-> +756,7 @@
->=20
->  		bus@30800000 { /* AIPS3 */
->  			compatible =3D "fsl,aips-bus", "simple-bus";
-> -			reg =3D <0x309f0000 0x10000>;
-> +			reg =3D <0x30800000 0x400000>;
->  			#address-cells =3D <1>;
->  			#size-cells =3D <1>;
->  			ranges =3D <0x30800000 0x30800000 0x400000>, @@ -1029,7
-> +1029,7 @@
->=20
->  		bus@32c00000 { /* AIPS4 */
->  			compatible =3D "fsl,aips-bus", "simple-bus";
-> -			reg =3D <0x32df0000 0x10000>;
-> +			reg =3D <0x32c00000 0x400000>;
->  			#address-cells =3D <1>;
->  			#size-cells =3D <1>;
->  			ranges =3D <0x32c00000 0x32c00000 0x400000>;
-> --
-> 2.17.1
+-- 
+2.20.1
 
