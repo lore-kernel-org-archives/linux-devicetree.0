@@ -2,272 +2,165 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5136C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 19:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FE2C2BA12
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 19:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F5820747
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 19:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A06620737
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 19:46:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="XTYIY4eX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fCc9uE+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732441AbgDATZ3 (ORCPT
+        id S1732637AbgDATqx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 15:25:29 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:48578 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732219AbgDATZ2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 15:25:28 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id BFF3EA2A;
-        Wed,  1 Apr 2020 21:25:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1585769125;
-        bh=/I2vO+sj0wt+OvA3QDUJVPgyqFFa+cT0KJEkw4EumUA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XTYIY4eXnbBguZBkgADlaZbMx+QuhCc4zMaKDYL2S4+iXTYa173U2xgUxz44QFfqL
-         tKio2kjJ81n53ME3RUX5Guh0M2IYjGi9W6E6Qmn05vvb97jCo5i75JvM9JiL5RHtVG
-         Q+dl2kEItgqKzDipB7BJ3e8TkOLRkYlPh+HW+kF8=
-Date:   Wed, 1 Apr 2020 22:25:18 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 1/3] dt-bindings: phy: Add DT bindings for Xilinx
- ZynqMP PSGTR PHY
-Message-ID: <20200401192518.GG4876@pendragon.ideasonboard.com>
-References: <20200311103252.17514-1-laurent.pinchart@ideasonboard.com>
- <20200311103252.17514-2-laurent.pinchart@ideasonboard.com>
- <20200320023520.GA18490@bogus>
- <20200320095036.GA5193@pendragon.ideasonboard.com>
- <CAL_JsqLYUooc-9i6U6Br9DQKPHZMrLJf3f883PeM4Ctbwycs8w@mail.gmail.com>
+        Wed, 1 Apr 2020 15:46:53 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:55308 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732554AbgDATqx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 15:46:53 -0400
+Received: by mail-pj1-f66.google.com with SMTP id fh8so514568pjb.5
+        for <devicetree@vger.kernel.org>; Wed, 01 Apr 2020 12:46:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/ce+l+iRZG0CueQLUqCcAm+FhjXwOeZQvrFD6a+Pdbk=;
+        b=fCc9uE+XYXB06N48E9h3rQ4SJNQfhzwC50G+TMXvj8kfPBe4kbDLR7b1/oJ+uEuxKc
+         /zyiOEwgGh1jAIInwlsgrzgiU0oI90VjnSLlLTNo58X3/wrlUbKCMZCG3LswFVAZjJin
+         LvE7ziv7OG52tAD9ohxETUiLgLpf2qYRWHzUU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/ce+l+iRZG0CueQLUqCcAm+FhjXwOeZQvrFD6a+Pdbk=;
+        b=Gj/CUwEyOmyM1ih+Nh9P/UE0cCvAHvl983DoDZj9gO43NdZmk59ee7e+Rli/mFtVmg
+         mddfWKsi+mQeXsmWZDs+Y6MgMkHOg5Wkx2lV+4njuG/xx3eTth0N/cXaVk/SKSl4KVWi
+         0sb44wtPOOfg1884hzQPxujoHO73riqCuaTq2ZBPNnWAZaOAdj+urMznNeSvkVgGrPkH
+         5R8YD6zWhQaZEWIEVmarI3lFD44SsgqoO3hk0aoK7UabpJQErfqszZ8L+lH6Oy80m+ot
+         CcO/cXmOft8oWQHQo7USddRPUd1DDQN4J9gy+fxo1qjTtrcFwrxWzmMmWLHQFWYewbu9
+         lxIw==
+X-Gm-Message-State: ANhLgQ00aM6uqGpujNR4vKsRV+UEAKk/iaBl7CVjNGREnqDS0AwYfDtz
+        fK7iZ2EHPCJIAHtNUaJdabJhpA==
+X-Google-Smtp-Source: ADFU+vt/xdibwjNhNGnnuYkq1gCZsQ2pLfGD9zsm2il2lY1sfEB8MLcew8RkcukpAiHbnqsuWeHD3Q==
+X-Received: by 2002:a17:902:9004:: with SMTP id a4mr21923981plp.275.1585770411176;
+        Wed, 01 Apr 2020 12:46:51 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id 132sm2160604pfc.183.2020.04.01.12.46.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Apr 2020 12:46:50 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 12:46:48 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, georgi.djakov@linaro.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org
+Subject: Re: [PATCH V3 3/8] soc: qcom-geni-se: Add interconnect support to
+ fix earlycon crash
+Message-ID: <20200401194648.GM199755@google.com>
+References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
+ <1585652976-17481-4-git-send-email-akashast@codeaurora.org>
+ <20200331182457.GH199755@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqLYUooc-9i6U6Br9DQKPHZMrLJf3f883PeM4Ctbwycs8w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200331182457.GH199755@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Fri, Mar 20, 2020 at 10:53:05AM -0600, Rob Herring wrote:
-> On Fri, Mar 20, 2020 at 3:50 AM Laurent Pinchart wrote:
-> > On Thu, Mar 19, 2020 at 08:35:20PM -0600, Rob Herring wrote:
-> > > On Wed, Mar 11, 2020 at 12:32:50PM +0200, Laurent Pinchart wrote:
-> > > > From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> > > >
-> > > > Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
-> > > > Processing System Gigabit Transceiver which provides PHY capabilities to
-> > > > USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
-> > > >
-> > > > Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> > > > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > > ---
-> > > > Changes since v5:
-> > > >
-> > > > - Document clocks and clock-names properties
-> > > > - Document resets and reset-names properties
-> > > > - Replace subnodes with an additional entry in the PHY cells
-> > > > - Drop lane frequency PHY cell, replaced by reference clock phandle
-> > > > - Convert bindings to YAML
-> > > > - Reword the subject line
-> > > > - Drop Rob's R-b as the bindings have significantly changed
-> > > > - Drop resets and reset-names properties
-> > > > ---
-> > > >  .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 104 ++++++++++++++++++
-> > > >  include/dt-bindings/phy/phy.h                 |   1 +
-> > > >  2 files changed, 105 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..9948e4a60e45
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> > > > @@ -0,0 +1,104 @@
-> > > > +# SPDX-License-Identifier: GPL-2.0
-> > >
-> > > For new bindings:
-> > >
-> > > (GPL-2.0-only OR BSD-2-Clause)
-> > >
-> > > Though I guess Anurag needs to agree.
-> >
-> > There's an ongoing similar discussion regarding the DPSUB (DRM/KMS)
-> > bindings. Hyun is checking with the Xilinx legal department. If they
-> > agree, I'll change the license here, otherwise I'll keep it as-is.
+On Tue, Mar 31, 2020 at 11:24:57AM -0700, Matthias Kaehlcke wrote:
+> Hi Akash,
 > 
-> TBC, the choice is change it or take your toys elsewhere and play by
-> yourself. I don't really want to end up with whatever each submitter
-> desires. I don't expect there's many companies that object to a
-> permissive license.
-
-I don't expect that either, but it's out of my control in any case.
-Let's say.
-
-I've heard quite a few times that "the preferred license for new
-bindings is GPL-2.0-only OR BSD-2-Clause", but this is the first time I
-hear it's a hard requirement. I have missed the decision making process,
-I have nothing to question, and I'll spread that message in the future.
-
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/phy/xlnx,zynqmp-psgtr.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Xilinx ZynqMP Gigabit Transceiver PHY Device Tree Bindings
-> > > > +
-> > > > +maintainers:
-> > > > +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > > +
-> > > > +description: |
-> > > > +  This binding describes the Xilinx ZynqMP Gigabit Transceiver (GTR) PHY. The
-> > > > +  GTR provides four lanes and is used by USB, SATA, PCIE, Display port and
-> > > > +  Ethernet SGMII controllers.
-> > > > +
-> > > > +properties:
-> > > > +  "#phy-cells":
-> > > > +    const: 4
-> > > > +    description: |
-> > > > +      The cells contain the following arguments.
-> > > > +
-> > > > +      - description: The GTR lane
-> > > > +        minimum: 0
-> > > > +        maximum: 3
-> > > > +      - description: The PHY type
-> > > > +        enum:
-> > > > +          - PHY_TYPE_DP
-> > > > +          - PHY_TYPE_PCIE
-> > > > +          - PHY_TYPE_SATA
-> > > > +          - PHY_TYPE_SGMII
-> > > > +          - PHY_TYPE_USB
-> > > > +      - description: The PHY instance
-> > > > +        minimum: 0
-> > > > +        maximum: 1 # for DP, SATA or USB
-> > > > +        maximum: 3 # for PCIE or SGMII
-> > > > +      - description: The reference clock number
-> > > > +        minimum: 0
-> > > > +        maximum: 3
-> > >
-> > > Humm, interesting almost json-schema. I guess it's fine as-is.
-> > >
-> > > I would like to figure out how to apply a schema like this to the
-> > > consumer nodes. We'd have to look up the phandle, get that node's
-> > > compatible, find the provider's schema, find #.*-cells property, and
-> > > extract a schema from it. Actually, doesn't sound too hard.
-> >
-> > That would be nice :-)
-> >
-> > > > +
-> > > > +  compatible:
-> > > > +    enum:
-> > > > +      - xlnx,zynqmp-psgtr-v1.1
-> > > > +      - xlnx,zynqmp-psgtr
-> > > > +
-> > > > +  clocks:
-> > > > +    minItems: 1
-> > > > +    maxItems: 4
-> > > > +    description: |
-> > > > +      Clock for each PS_MGTREFCLK[0-3] reference clock input. Unconnected
-> > > > +      inputs shall not have an entry.
-> > > > +
-> > > > +  clock-names:
-> > > > +    minItems: 1
-> > > > +    maxItems: 4
-> > > > +    items:
-> > > > +      pattern: "^ref[0-3]$"
-> > > > +
-> > > > +  reg:
-> > > > +    items:
-> > > > +      - description: SERDES registers block
-> > > > +      - description: SIOU registers block
-> > > > +
-> > > > +  reg-names:
-> > > > +    items:
-> > > > +      - const: serdes
-> > > > +      - const: siou
-> > > > +
-> > > > +required:
-> > > > +  - "#phy-cells"
-> > > > +  - compatible
-> > > > +  - reg
-> > > > +  - reg-names
-> > > > +
-> > > > +if:
-> > > > +  properties:
-> > > > +    compatible:
-> > > > +      const: xlnx,zynqmp-psgtr
-> > > > +
-> > > > +then:
-> > > > +  properties:
-> > > > +    xlnx,tx-termination-fix:
-> > > > +      description: |
-> > > > +        Include this for fixing functional issue with the TX termination
-> > > > +        resistance in GT, which can be out of spec for the XCZU9EG silicon
-> > > > +        version.
-> > > > +      type: boolean
-> > > > +
-> > > > +additionalProperties: false
-> > >
-> > > This won't work with 'xlnx,tx-termination-fix'. You need to move it to
-> > > the main properties section and then do:
-> > >
-> > > if:
-> > >   properties:
-> > >     compatible:
-> > >       const: xlnx,zynqmp-psgtr-v1.1
-> >
-> > It doesn't make a big difference as only two compatible values are
-> > allowed, but is there a way to express the condition the other way
-> > around, if (compatible != "xlnx,zynqmp-psgtr") ?
+> On Tue, Mar 31, 2020 at 04:39:31PM +0530, Akash Asthana wrote:
+> > QUP core clock is shared among all the SE drivers present on particular
+> > QUP wrapper, the system will reset(unclocked access) if earlycon used after
+> > QUP core clock is put to 0 from other SE drivers before real console comes
+> > up.
+> > 
+> > As earlycon can't vote for it's QUP core need, to fix this add ICC
+> > support to common/QUP wrapper driver and put vote for QUP core from
+> > probe on behalf of earlycon and remove vote during earlycon exit call.
+> > 
+> > Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> > Reported-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> > Change is V3:
+> >  - Add geni_remove_earlycon_icc_vote API that will be used by earlycon
+> >    exit function to remove ICC vote for earlyconsole.
+> >  - Remove suspend/resume hook for geni-se driver as we are no longer
+> >    removing earlyconsole ICC vote from system suspend, we are removing
+> >    from earlycon exit.
+> > 
+> >  drivers/soc/qcom/qcom-geni-se.c       | 51 +++++++++++++++++++++++++++++++++++
+> >  drivers/tty/serial/qcom_geni_serial.c |  7 +++++
+> >  include/linux/qcom-geni-se.h          |  2 ++
+> >  3 files changed, 60 insertions(+)
+> > 
+> > diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+> > index 9344c14..d30c282 100644
+> > --- a/drivers/soc/qcom/qcom-geni-se.c
+> > +++ b/drivers/soc/qcom/qcom-geni-se.c
+> > @@ -90,8 +90,11 @@ struct geni_wrapper {
+> >  	struct device *dev;
+> >  	void __iomem *base;
+> >  	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
+> > +	struct geni_icc_path to_core;
+> >  };
+> >  
+> > +struct geni_wrapper *earlycon_wrapper;
 > 
-> if:
->   properties:
->     compatible:
->       not:
->         const: xlnx,zynqmp-psgtr
+> should be static
 > 
-> I think if: { not: ... } would also work. You'll have to test them out.
-
-I tried both, and neither worked. No big deal, I'll keep the current
-expression.
-
-> > > then:
-> > >   properties:
-> > >     xlnx,tx-termination-fix: false
-> >
-> > This works.
-> >
-> > > I think this would also work:
-> > >
-> > >   not:
-> > >     required:
-> > >       - xlnx,tx-termination-fix
-> >
-> > I've tested it and it works, but I'm not sure why, given that the
-> > property isn't required required in the first place. Could you enlighten
-> > me ?
+> > +
+> >  #define QUP_HW_VER_REG			0x4
+> >  
+> >  /* Common SE registers */
+> > @@ -818,6 +821,26 @@ int geni_icc_vote_off(struct geni_se *se)
+> >  }
+> >  EXPORT_SYMBOL(geni_icc_vote_off);
+> >  
+> > +void geni_remove_earlycon_icc_vote(void)
+> > +{
+> > +	struct geni_wrapper *wrapper = earlycon_wrapper;
+> > +	struct device_node *parent = of_get_next_parent(wrapper->dev->of_node);
+> > +	struct device_node *child;
+> > +
+> > +	for_each_child_of_node(parent, child) {
+> > +		if (of_device_is_compatible(child, "qcom,geni-se-qup")) {
+> > +			wrapper = platform_get_drvdata(of_find_device_by_node(
+> > +					child));
+> > +			icc_put(wrapper->to_core.path);
+> > +			wrapper->to_core.path = NULL;
+> > +		}
+> > +	}
+> > +	of_node_put(parent);
+> > +
+> > +	earlycon_wrapper = NULL;
+> > +}
+> > +EXPORT_SYMBOL(geni_remove_earlycon_icc_vote);
 > 
-> 'required' is true or false based on presence or absence of properties
-> in the list. If 'xlnx,tx-termination-fix' is present, then 'required'
-> evaluates to true. And the inverse is true. Then we take the inverse
-> of of that with 'not'.
-> 
-> The first case is what trips me up more because a property not present
-> evaluates to true. So if you look at 'select' schemas, we have to make
-> any properties we list (compatible typically) required.
+> I didn't know that consoles have an exit handler, this is way nicer than
+> the miscellaneous triggers we discussed earlier :)
 
--- 
-Regards,
+No wonder I 'missed' this when looking at the console code for possible
+triggers, it is brand new and as of now only exists in -next:
 
-Laurent Pinchart
+commit ed31685c96e18f773ca11dd1a637974d62130673
+Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Date:   Mon Feb 3 15:31:30 2020 +0200
+
+    console: Introduce ->exit() callback
+
+
+sharp timing!
