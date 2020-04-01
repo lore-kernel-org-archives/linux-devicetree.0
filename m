@@ -2,191 +2,520 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B884AC43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0198AC43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD2820772
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1A65215A4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:48:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730590AbgDAIpN (ORCPT
+        id S1731608AbgDAIsv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:45:13 -0400
-Received: from mailgate1.rohmeurope.com ([87.129.152.131]:63120 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730420AbgDAIpN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 04:45:13 -0400
-X-AuditID: c0a8fbf4-489ff70000004419-e4-5e845497715a
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id CD.62.17433.794548E5; Wed,  1 Apr 2020 10:45:11 +0200 (CEST)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0487.000; Wed, 1 Apr 2020 10:45:06 +0200
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "brendanhiggins@google.com" <brendanhiggins@google.com>
-CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "talgi@mellanox.com" <talgi@mellanox.com>,
-        "olteanv@gmail.com" <olteanv@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "davidgow@google.com" <davidgow@google.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
-        "bp@suse.de" <bp@suse.de>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
-        "vincenzo.frascino@arm.com" <vincenzo.frascino@arm.com>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "zaslonko@linux.ibm.com" <zaslonko@linux.ibm.com>,
-        "uwe@kleine-koenig.org" <uwe@kleine-koenig.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Subject: Re: [PATCH v7 04/10] lib/test_linear_ranges: add a test for the
- 'linear_ranges'
-Thread-Topic: [PATCH v7 04/10] lib/test_linear_ranges: add a test for the
- 'linear_ranges'
-Thread-Index: AQHWB1c4b3nN1Ux6yEinb5I8a1VXN6hi3q0AgAD00IA=
-Date:   Wed, 1 Apr 2020 08:45:05 +0000
-Message-ID: <4f915b8b8bee36a61ebea62ebf34c61845170ad5.camel@fi.rohmeurope.com>
-References: <cover.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
-         <285da2166eadc1d46667dd9659d8dae74d28b0b9.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
-         <CAFd5g460hY9uOtwicWHK2rhgLdL+gStbKGmLN5KLWi5JXDQEog@mail.gmail.com>
-In-Reply-To: <CAFd5g460hY9uOtwicWHK2rhgLdL+gStbKGmLN5KLWi5JXDQEog@mail.gmail.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [62.78.225.252]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A534CFF7AF89664891FB30A3EECE47C0@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf1AUZRjH593d211+bL4cGG+EU96UpqVG2cw76TSM4sz2Y5oYqj9gBJbY
-        2Cu4Y3bvCuyPmDidxCQs8PACcY4fml6Ah2NwckbnTSElF4NJOIgxIuNdA5mY16WD7bYq/PU+
-        7/P9fp/P+8fzsqTxGJPGmi02UbYIpSY6nho4ctu7zvmmI//Z6dpk3NTlofHeT5wEDtedAXjf
-        52vwyG9fkrhhaprGzoZfAG4KOSg8eLybwi3BYQOubu2i8Z5IOg6Fuhl86/ynBK6/c5jAo74m
-        Gs/vDQLcPjZC4Kb2QQq3Hl6Fu3uiBJ6dcFJ4pz/IYL+zw4B/OmXD+5v9DO7xNpB47MZFAvsX
-        YhT2T84D/MNfMZD5GO856AH8ia/HCb7PdYnhTw48yR/y2vmeI2v51v4wwXuP7qb5LzrcBn7i
-        Qj/Nzw0PM/xg422Kr3MPAP7g2Wz+u2YPw884zxBvJOcmbC4SbB/kmEssG14qTJDqZ0Nk+czG
-        CnfkHKgCvc/XgDgWwY3o6mzEUAPiWSO8ANC/LQFSv/wI0ORsI10DWJaGm1HNOKMFUuAmdKfq
-        M0rzkHAXh/paoqQmJMNc9M3oNaCb8tCBieP36hfRtdPVjDaHgk+guXC21ubg66hnxEfprD8A
-        8nii/3viYDa625+keQBcgXZXzRFaTcJU5J2JGvRHQ9TWHyL1ejkKX1m411+Jvo12UtoYEq5B
-        Xb4NejQT/TnmovR6JarfM8XoT0hCZw9MU3XgYdcSgmsx7VqSdi1Ju5akDwHDUYDKBHNpiWAT
-        M9bLon29bJXK1OMda5kX6Mt3sxfcDbwcAAQLAuARljAt5yq3OvKNDxVZiyslQZEKZHupqAQA
-        YklTCvdVlqpxxULlDlG23pceZSlTKrd6at92I9RY74tiuSjfV9NZ1oS4La+qwSRZLBEr3jWX
-        2hZlgo3ThsenpSiipViUBbtNKtDWo0BR90OTElVuLEfjKuVCmdrVo0PgabYu3Owm2WBzu5s0
-        UharRUxL5cIaCWpWyW55AIqAVBaYkrlNr6lqovoDH8yJqAhCRfxaUa0hbMKilFYFjJ5n0uce
-        z172Qq0J/l4b+fmSOZHYenXLIFwG+KKnVshmxb5rHTy2P8QULnSskj6+PJ9/+vJYpnPHttX/
-        nDynnL8Za49PyGpsK3Tk5Vy5+NGpt4Od7/moV77vvJHLZP3ddt007ovBjG3X+3a+lXVCgo75
-        xl5xaGj7LfrD56S8yYlRE6VIQsZaUlaE/wBK0x6nPgQAAA==
+        Wed, 1 Apr 2020 04:48:51 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:4224 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730720AbgDAIsv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 04:48:51 -0400
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 01 Apr 2020 14:18:44 +0530
+Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 01 Apr 2020 14:18:21 +0530
+Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
+        id 1266946EA; Wed,  1 Apr 2020 14:18:21 +0530 (IST)
+From:   Kalyan Thota <kalyan_t@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        dianders@chromium.org, jsanka@codeaurora.org,
+        mkrishn@codeaurora.org, travitej@codeaurora.org,
+        nganji@codeaurora.org
+Subject: [PATCH] drm/msm/dpu: add support for clk and bw scaling for display
+Date:   Wed,  1 Apr 2020 14:18:18 +0530
+Message-Id: <1585730898-16641-1-git-send-email-kalyan_t@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGVsbG8gQnJlbmRhbiwNCg0KVGhhbmtzIGZvciB0YWtpbmcgYSBsb29rIGF0IHRoaXMgOikgTXVj
-aCBhcHByZWNpYXRlZCEgSSBoYXZlIGFsd2F5cw0KYWRtaXJlZCB5b3UgZ3V5cyB3aG8gaGF2ZSB0
-aGUgcGF0aWVuY2UgdG8gZG8gYWxsIHRoZSByZXZpZXdpbmcuLi4gSXQncw0KZGVmaW5pdGVseSBu
-b3QgbXkgZmF2b3VyaXRlIGpvYiA6Lw0KDQpPbiBUdWUsIDIwMjAtMDMtMzEgYXQgMTE6MDggLTA3
-MDAsIEJyZW5kYW4gSGlnZ2lucyB3cm90ZToNCj4gT24gVHVlLCBNYXIgMzEsIDIwMjAgYXQgNToy
-MyBBTSBNYXR0aSBWYWl0dGluZW4NCj4gPG1hdHRpLnZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNv
-bT4gd3JvdGU6DQo+ID4gICAgIEFkZCBhIEtVbml0IHRlc3QgZm9yIHRoZSBsaW5lYXJfcmFuZ2Vz
-IGhlbHBlci4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4gPG1hdHRp
-LnZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNvbT4NCj4gDQo+IE9uZSBtaW5vciBuaXQsIG90aGVy
-IHRoYW4gdGhhdDoNCj4gDQo+IFJldmlld2VkLWJ5OiBCcmVuZGFuIEhpZ2dpbnMgPGJyZW5kYW5o
-aWdnaW5zQGdvb2dsZS5jb20+DQo+IA0KPiA+IC0tLQ0KPiA+IA0KDQovLy8gU25pcA0KDQo+ID4g
-Kw0KPiA+ICsvKiBGaXJzdCB0aGluZ3MgZmlyc3QuIEkgZGVlcGx5IGRpc2xpa2UgdW5pdC10ZXN0
-cy4gSSBoYXZlIHNlZW4NCj4gPiBhbGwgdGhlIGhlbGwNCj4gPiArICogYnJlYWtpbmcgbG9vc2Ug
-d2hlbiBwZW9wbGUgd2hvIHRoaW5rIHRoZSB1bml0IHRlc3RzIGFyZSAidGhlDQo+ID4gc2lsdmVy
-IGJ1bGxldCINCj4gPiArICogdG8ga2lsbCBidWdzIGdldCB0byBkZWNpZGUgaG93IGEgY29tcGFu
-eSBzaG91bGQgaW1wbGVtZW50DQo+ID4gdGVzdGluZyBzdHJhdGVneS4uLg0KPiA+ICsgKg0KPiA+
-ICsgKiBCZWxpZXZlIG1lLCBpdCBtYXkgZ2V0IF9yZWFsbHlfIHJpZGljdWxvdXMuIEl0IGlzIHRl
-bXB0aW5nIHRvDQo+ID4gdGhpbmsgdGhhdA0KPiA+ICsgKiB3YWxraW5nIHRocm91Z2ggYWxsIHRo
-ZSBwb3NzaWJsZSBleGVjdXRpb24gYnJhbmNoZXMgd2lsbCBuYWlsDQo+ID4gZG93biAxMDAlIG9m
-DQo+ID4gKyAqIGJ1Z3MuIFRoaXMgbWF5IGxlYWQgdG8gaWRlYXMgYWJvdXQgZGVtYW5kcyB0byBn
-ZXQgY2VydGFpbiAlIG9mDQo+ID4gInRlc3QNCj4gPiArICogY292ZXJhZ2UiIC0gbWVhc3VyZWQg
-YXMgbGluZSBjb3ZlcmFnZS4gQW5kIHRoYXQgaXMgb25lIG9mIHRoZQ0KPiA+IHdvcnN0IHRoaW5n
-cw0KPiA+ICsgKiB5b3UgY2FuIGRvLg0KPiA+ICsgKg0KPiA+ICsgKiBBc2sgcGVvcGxlIHRvIHBy
-b3ZpZGUgbGluZSBjb3ZlcmFnZSBhbmQgdGhleSBkby4gSSd2ZSBzZWVuDQo+ID4gY2xldmVyIHRv
-b2xzDQo+ID4gKyAqIHdoaWNoIGdlbmVyYXRlIHRlc3QgY2FzZXMgdG8gdGVzdCB0aGUgZXhpc3Rp
-bmcgZnVuY3Rpb25zIC0gYW5kDQo+ID4gYnkgZGVmYXVsdA0KPiA+ICsgKiB0aGVzZSB0b29scyBl
-eHBlY3QgY29kZSB0byBiZSBjb3JyZWN0IGFuZCBqdXN0IGdlbmVyYXRlIGNoZWNrcw0KPiA+IHdo
-aWNoIGFyZQ0KPiA+ICsgKiBwYXNzaW5nIHdoZW4gcmFuIGFnYWluc3QgY3VycmVudCBjb2RlLWJh
-c2UuIFJ1biB0aGlzIGdlbmVyYXRvcg0KPiA+IGFuZCB5b3UnbGwgZ2V0DQo+ID4gKyAqIHRlc3Rz
-IHRoYXQgZG8gbm90IHRlc3QgY29kZSBpcyBjb3JyZWN0IGJ1dCBqdXN0IHZlcmlmeSBub3RoaW5n
-DQo+ID4gY2hhbmdlcy4NCj4gPiArICogUHJvYmxlbSBpcyB0aGF0IHRlc3Rpbmcgd29ya2luZyBj
-b2RlIGlzIHBvaW50bGVzcy4gQW5kIGlmIGl0IGlzDQo+ID4gbm90DQo+ID4gKyAqIHdvcmtpbmcs
-IHlvdXIgdGVzdCBtdXN0IG5vdCBhc3N1bWUgaXQgaXMgd29ya2luZy4gWW91IHdvbid0DQo+ID4g
-Y2F0Y2ggYW55IGJ1Z3MNCj4gPiArICogYnkgc3VjaCB0ZXN0cy4gV2hhdCB5b3UgY2FuIGRvIGlz
-IHRvIGdlbmVyYXRlIGEgaHVnZSBhbW91bnQgb2YNCj4gPiB0ZXN0cy4NCj4gPiArICogRXNwZWNp
-YWxseSBpZiB5b3Ugd2VyZSBhcmUgYXNrZWQgdG8gcHJvaXZkZSAxMDAlIGxpbmUtY292ZXJhZ2UN
-Cj4gPiB4X3guIFNvIHdoYXQNCj4gPiArICogZG9lcyB0aGVzZSB0ZXN0cyAtIHdoaWNoIGFyZSBu
-b3QgZmluZGluZyBhbnkgYnVncyBub3cgLSBkbz8NCj4gDQo+IEkgZG9uJ3QgZW50aXJlbHkgZGlz
-YWdyZWUuIEkgaGF2ZSB3b3JrZWQgb24gcHJvamVjdHMgdGhhdCBkbyB0ZXN0aW5nDQo+IHdlbGwg
-d2hlcmUgaXQgYWN0dWFsbHkgbWFrZXMgZGV2ZWxvcG1lbnQgZmFzdGVyLCBhbmQgSSBoYXZlIHdv
-cmtlZCBvbg0KPiBwcm9qZWN0cyB0aGF0IGRvIHRlc3RpbmcgcG9vcmx5IHdoZXJlIGl0IG5ldmVy
-IGltcHJvdmVzIGNvZGUgcXVhbGl0eQ0KPiBhbmQgaXMganVzdCBhbiBlbmN1bWJyYW5jZSwgYW5k
-IEkgaGF2ZSBuZXZlciBzZWVuIGEgcHJvamVjdCBnZXQgdG8NCj4gMTAwJSBjb3ZlcmFnZSAobm9y
-IHdvdWxkIEkgd2FudCB0bykuDQo+IA0KPiBEbyB5b3UgZmVlbCBkaWZmZXJlbnRseSBhYm91dCBp
-bmNyZW1lbnRhbCBjb3ZlcmFnZSB2cy4gYWJzb2x1dGUNCj4gY292ZXJhZ2U/IEkgaGF2ZSBmb3Vu
-ZCBpbmNyZW1lbnRhbCBjb3ZlcmFnZSB0byBiZSBhIGxvdCBtb3JlIHZhbHVhYmxlDQo+IGluIG15
-IGV4cGVyaWVuY2VzLg0KDQpJIHRoaW5rIEkgaGF2ZSBvbmx5IGJlZW4gZGVhbGluZyB3aXRoIHBy
-b2plY3RzIG1lYXN1cmluZyBhYnNvbHV0ZQ0KY292ZXJhZ2UuIEkgdGhpbmsgc2VlaW5nIGEgY292
-ZXJhZ2UgYXMgJS1udW1iZXIgaXMgbW9zdGx5IG5vdA0KaW50ZXJlc3RpbmcgdG8gbWUuIFdoYXQg
-SSB0aGluayBjb3VsZCBiZSBpbnRlcmVzdGluZyBpcyBzaG93aW5nIHRoZQ0KY29kZS1wYXRocyB0
-ZXN0IGhhcyB3YWxrZWQgdGhyb3VnaC4gSSBiZWxpZXZlIHRoYXQgY29kZSBzcG90cyB0aGF0DQpz
-aG91bGQgYmUgdGVzdGVkIHNob3VsZCBiZSBoYW5kIHBpY2tlZCBieSBhIGh1bWFuLiBXaGVuIHdl
-IGxvb2sgYXQgYW55DQolLW51bWJlciwgd2UgZG8gbm90IGtub3cgd2hhdCBraW5kIG9mIGNvZGUg
-dGhlIHRlc3QgaGFzIHRlc3RlZC4NCg0KPiBZb3Ugc2VlbSBwcmV0dHkgcGFzc2lvbmF0ZSBhYm91
-dCB0aGlzLiBXb3VsZCB5b3UgbGlrZSB0byBiZSBpbmNsdWRlZA0KPiBpbiBvdXIgdW5pdCB0ZXN0
-aW5nIGRpc2N1c3Npb25zIGluIHRoZSBmdXR1cmU/DQoNCkkgdGhpbmsgaXQgd291bGQgYmUgbmlj
-ZSA6KSBJIGRvbid0IGV4cGVjdCBJIHdpbGwgYmUgYWN0aXZlIHRhbGtlcg0KdGhlcmUgYnV0IEkg
-cmVhbGx5IGxpa2UgdG8ga25vdyB3aGF0IGRpcmVjdGlvbiB0aGluZ3MgYXJlIHByb2NlZWRpbmcg
-aW4NCmdlbmVyYWwuIEFuZCB3aG8ga25vd3MsIG1heWJlIEkgd2lsbCBoYXZlIGEgd29yZCB0byBz
-YXkgYXQgdGltZXMgOikgU28NCnBsZWFzZSwgaW5jbHVkZSBtZSBpZiBpdCBpcyBub3QgYSBiaWcg
-dGhpbmcgZm9yIHlvdS4NCg0KLy9TbmlwDQoNCj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIHJhbmdl
-X3Rlc3RfZ2V0X3ZhbHVlKHN0cnVjdCBrdW5pdCAqdGVzdCkNCj4gPiArew0KPiA+ICsgICAgICAg
-aW50IHJldCwgaTsNCj4gPiArICAgICAgIHVuc2lnbmVkIGludCBzZWwsIHZhbDsNCj4gPiArDQo+
-ID4gKyAgICAgICBmb3IgKGkgPSAwOyBpIDwgUkFOR0UxX05VTV9WQUxTOyBpKyspIHsNCj4gPiAr
-ICAgICAgICAgICAgICAgc2VsID0gcmFuZ2UxX3NlbHNbaV07DQo+ID4gKyAgICAgICAgICAgICAg
-IHJldCA9IGxpbmVhcl9yYW5nZV9nZXRfdmFsdWVfYXJyYXkoJnRlc3RyWzBdLCAyLA0KPiA+IHNl
-bCwgJnZhbCk7DQo+ID4gKyAgICAgICAgICAgICAgIEtVTklUX0VYUEVDVF9FUSh0ZXN0LCAwLCBy
-ZXQpOw0KPiANCj4gbml0OiBJdCBsb29rcyBsaWtlIHRoZSBuZXh0IGxpbmUgbWlnaHQgY3Jhc2gg
-aWYgdGhpcyBleHBlY3RhdGlvbg0KPiBmYWlscy4gSWYgdGhpcyBpcyB0aGUgY2FzZSwgeW91IG1p
-Z2h0IHdhbnQgdG8gdXNlIGEgS1VOSVRfQVNTRVJUXyoNCj4gaGVyZS4NCg0KSHVoLiBJIHJlLXJl
-YWQgdGhpcyBhbmQgYWxtb3N0IGFncmVlZCB3aXRoIHlvdS4gVGhlbiBJIHJlLXJlLXJlYWQgdGhp
-cw0KYW5kIGRpc2FncmVlZC4gUGVyaGFwcyB3ZSBzaG91bGQgd3JpdGUgYW4gdW5pdC10ZXN0IHRv
-IHRlc3QgdGhpcyA7KQ0KDQpUaGUgcmFuZ2UxX3NlbHMgYW5kIHJhbmdlMV92YWxzIGFycmF5cyBz
-aG91bGQgYWx3YXlzIGJlIG9mIHNhbWUgc2l6ZS4NClRodXMgdGhlIGNyYXNoIHNob3VsZCBub3Qg
-b2NjdXIgaGVyZS4gSWYgUkFOR0UxX05VTV9WQUxTIHdhcyBiYWQgdGhlbg0Kd2Ugd291bGQgZ2V0
-IHRoZSBjcmFzaCBhbHJlYWR5IGF0DQoNCj4gPiArICAgICAgICAgICAgICAgc2VsID0gcmFuZ2Ux
-X3NlbHNbaV07DQoNClRoZSBsaW5lYXJfcmFuZ2VfZ2V0X3ZhbHVlX2FycmF5KCkgbWF5IHJldHVy
-biBub24gemVybyB2YWx1ZSBpZiB2YWx1ZQ0KY29udGFpbmVkIGluIHJhbmdlMV9zZWxzW2ldIGlz
-IG5vdCBpbiB0aGUgcmFuZ2UgLSBidXQgcmFuZ2UxX3ZhbHNbaV0NCnNob3VsZCBzdGlsbCBiZSB2
-YWxpZCBtZW1vcnkuDQoNCkJlc3QgUmVnYXJkcw0KCS0tTWF0dGkNCg0KDQoNCj4gPiAtLQ0KPiA+
-IE1hdHRpIFZhaXR0aW5lbiwgTGludXggZGV2aWNlIGRyaXZlcnMNCj4gPiBST0hNIFNlbWljb25k
-dWN0b3JzLCBGaW5sYW5kIFNXREMNCj4gPiBLaXZpaGFyanVubGVua2tpIDFFDQo+ID4gOTAyMjAg
-T1VMVQ0KPiA+IEZJTkxBTkQNCj4gPiANCj4gPiB+fn4gIkkgZG9uJ3QgdGhpbmsgc28sIiBzYWlk
-IFJlbmUgRGVzY2FydGVzLiBKdXN0IHRoZW4gaGUgdmFuaXNoZWQNCj4gPiB+fn4NCj4gPiBTaW1v
-biBzYXlzIC0gaW4gTGF0aW4gcGxlYXNlLg0KPiA+IH5+fiAibm9uIGNvZ2l0byBtZSIgZGl4aXQg
-UmVuZSBEZXNjYXJ0ZSwgZGVpbmRlIGV2YW5lc2Nhdml0IH5+fg0KPiA+IFRoYW5rcyB0byBTaW1v
-biBHbGFzcyBmb3IgdGhlIHRyYW5zbGF0aW9uID1dDQoNCg==
+This change adds support to scale src clk and bandwidth as
+per composition requirements.
+
+Interconnect registration for bw has been moved to mdp
+device node from mdss to facilitate the scaling.
+
+Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c  | 106 +++++++++++++++++++++----
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c |   5 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h |   4 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c        |  37 ++++++++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h        |   4 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c       |   9 ++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c      |  82 +++++++++++++++++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h      |   4 +
+ 8 files changed, 228 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+index 11f2beb..24874f6 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+@@ -29,6 +29,73 @@ enum dpu_perf_mode {
+ 	DPU_PERF_MODE_MAX
+ };
+ 
++/**
++ * @_dpu_core_perf_calc_bw() - to calculate BW per crtc
++ * @kms -  pointer to the dpu_kms
++ * @crtc - pointer to a crtc
++ * Return: returns aggregated BW for all planes in crtc.
++ */
++static u64 _dpu_core_perf_calc_bw(struct dpu_kms *kms,
++		struct drm_crtc *crtc)
++{
++	struct drm_plane *plane;
++	struct dpu_plane_state *pstate;
++	u64 crtc_plane_bw = 0;
++	u32 bw_factor;
++
++	drm_atomic_crtc_for_each_plane(plane, crtc) {
++		pstate = to_dpu_plane_state(plane->state);
++
++		if (!pstate)
++			continue;
++
++		crtc_plane_bw += pstate->plane_fetch_bw;
++	}
++
++	bw_factor = kms->catalog->perf.bw_inefficiency_factor;
++	if (bw_factor)
++		crtc_plane_bw = mult_frac(crtc_plane_bw, bw_factor, 100);
++
++	return crtc_plane_bw;
++}
++
++/**
++ * _dpu_core_perf_calc_clk() - to calculate clock per crtc
++ * @kms -  pointer to the dpu_kms
++ * @crtc - pointer to a crtc
++ * @state - pointer to a crtc state
++ * Return: returns max clk for all planes in crtc.
++ */
++static u64 _dpu_core_perf_calc_clk(struct dpu_kms *kms,
++		struct drm_crtc *crtc, struct drm_crtc_state *state)
++{
++	struct drm_plane *plane;
++	struct dpu_plane_state *pstate;
++	struct drm_display_mode *mode;
++	u64 crtc_clk;
++	u32 clk_factor;
++
++	mode = &state->adjusted_mode;
++
++	crtc_clk = mode->vtotal * mode->hdisplay * drm_mode_vrefresh(mode);
++
++	drm_atomic_crtc_for_each_plane(plane, crtc) {
++		pstate = to_dpu_plane_state(plane->state);
++
++		if (!pstate)
++			continue;
++
++		crtc_clk = max(pstate->plane_clk, crtc_clk);
++	}
++
++	clk_factor = kms->catalog->perf.clk_inefficiency_factor;
++	if (clk_factor)
++		crtc_clk = mult_frac(crtc_clk, clk_factor, 100);
++
++	return crtc_clk;
++}
++
++
+ static struct dpu_kms *_dpu_crtc_get_kms(struct drm_crtc *crtc)
+ {
+ 	struct msm_drm_private *priv;
+@@ -67,12 +134,7 @@ static void _dpu_core_perf_calc_crtc(struct dpu_kms *kms,
+ 	dpu_cstate = to_dpu_crtc_state(state);
+ 	memset(perf, 0, sizeof(struct dpu_core_perf_params));
+ 
+-	if (!dpu_cstate->bw_control) {
+-		perf->bw_ctl = kms->catalog->perf.max_bw_high *
+-					1000ULL;
+-		perf->max_per_pipe_ib = perf->bw_ctl;
+-		perf->core_clk_rate = kms->perf.max_core_clk_rate;
+-	} else if (kms->perf.perf_tune.mode == DPU_PERF_MODE_MINIMUM) {
++	if (kms->perf.perf_tune.mode == DPU_PERF_MODE_MINIMUM) {
+ 		perf->bw_ctl = 0;
+ 		perf->max_per_pipe_ib = 0;
+ 		perf->core_clk_rate = 0;
+@@ -80,6 +142,10 @@ static void _dpu_core_perf_calc_crtc(struct dpu_kms *kms,
+ 		perf->bw_ctl = kms->perf.fix_core_ab_vote;
+ 		perf->max_per_pipe_ib = kms->perf.fix_core_ib_vote;
+ 		perf->core_clk_rate = kms->perf.fix_core_clk_rate;
++	} else {
++		perf->bw_ctl = _dpu_core_perf_calc_bw(kms, crtc);
++		perf->max_per_pipe_ib = kms->catalog->perf.min_dram_ib;
++		perf->core_clk_rate = _dpu_core_perf_calc_clk(kms, crtc, state);
+ 	}
+ 
+ 	DPU_DEBUG(
+@@ -132,11 +198,7 @@ int dpu_core_perf_crtc_check(struct drm_crtc *crtc,
+ 			DPU_DEBUG("crtc:%d bw:%llu ctrl:%d\n",
+ 				tmp_crtc->base.id, tmp_cstate->new_perf.bw_ctl,
+ 				tmp_cstate->bw_control);
+-			/*
+-			 * For bw check only use the bw if the
+-			 * atomic property has been already set
+-			 */
+-			if (tmp_cstate->bw_control)
++
+ 				bw_sum_of_intfs += tmp_cstate->new_perf.bw_ctl;
+ 		}
+ 
+@@ -152,9 +214,7 @@ int dpu_core_perf_crtc_check(struct drm_crtc *crtc,
+ 
+ 		DPU_DEBUG("final threshold bw limit = %d\n", threshold);
+ 
+-		if (!dpu_cstate->bw_control) {
+-			DPU_DEBUG("bypass bandwidth check\n");
+-		} else if (!threshold) {
++		if (!threshold) {
+ 			DPU_ERROR("no bandwidth limits specified\n");
+ 			return -E2BIG;
+ 		} else if (bw > threshold) {
+@@ -175,7 +235,8 @@ static int _dpu_core_perf_crtc_update_bus(struct dpu_kms *kms,
+ 					= dpu_crtc_get_client_type(crtc);
+ 	struct drm_crtc *tmp_crtc;
+ 	struct dpu_crtc_state *dpu_cstate;
+-	int ret = 0;
++	int i, ret = 0;
++	u64 avg_bw;
+ 
+ 	drm_for_each_crtc(tmp_crtc, crtc->dev) {
+ 		if (tmp_crtc->enabled &&
+@@ -186,10 +247,21 @@ static int _dpu_core_perf_crtc_update_bus(struct dpu_kms *kms,
+ 			perf.max_per_pipe_ib = max(perf.max_per_pipe_ib,
+ 					dpu_cstate->new_perf.max_per_pipe_ib);
+ 
+-			DPU_DEBUG("crtc=%d bw=%llu\n", tmp_crtc->base.id,
+-					dpu_cstate->new_perf.bw_ctl);
++			perf.bw_ctl += dpu_cstate->new_perf.bw_ctl;
++
++			DPU_DEBUG("crtc=%d bw=%llu paths:%d\n",
++				  tmp_crtc->base.id,
++				  dpu_cstate->new_perf.bw_ctl, kms->num_paths);
+ 		}
+ 	}
++
++	avg_bw = kms->num_paths ?
++			perf.bw_ctl / kms->num_paths : 0;
++
++	for (i = 0; i < kms->num_paths; i++)
++		icc_set_bw(kms->path[i],
++			Bps_to_icc(avg_bw), (perf.max_per_pipe_ib));
++
+ 	return ret;
+ }
+ 
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+index 731b4fb..cc8bf06 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+@@ -541,7 +541,8 @@
+ 	.max_bw_high = 5500000,
+ 	.min_core_ib = 2400000,
+ 	.min_llcc_ib = 800000,
+-	.min_dram_ib = 800000,
++	.min_dram_ib = 1600000,
++	.min_prefill_lines = 24,
+ 	.danger_lut_tbl = {0xff, 0xffff, 0x0},
+ 	.qos_lut_tbl = {
+ 		{.nentry = ARRAY_SIZE(sc7180_qos_linear),
+@@ -558,6 +559,8 @@
+ 		{.rd_enable = 1, .wr_enable = 1},
+ 		{.rd_enable = 1, .wr_enable = 0}
+ 	},
++	.clk_inefficiency_factor = 105,
++	.bw_inefficiency_factor = 120,
+ };
+ 
+ /*************************************************************
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+index f7de438..f2a5fe2 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+@@ -651,6 +651,8 @@ struct dpu_perf_cdp_cfg {
+  * @downscaling_prefill_lines  downscaling latency in lines
+  * @amortizable_theshold minimum y position for traffic shaping prefill
+  * @min_prefill_lines  minimum pipeline latency in lines
++ * @clk_inefficiency_factor DPU src clock inefficiency factor
++ * @bw_inefficiency_factor DPU axi bus bw inefficiency factor
+  * @safe_lut_tbl: LUT tables for safe signals
+  * @danger_lut_tbl: LUT tables for danger signals
+  * @qos_lut_tbl: LUT tables for QoS signals
+@@ -675,6 +677,8 @@ struct dpu_perf_cfg {
+ 	u32 downscaling_prefill_lines;
+ 	u32 amortizable_threshold;
+ 	u32 min_prefill_lines;
++	u32 clk_inefficiency_factor;
++	u32 bw_inefficiency_factor;
+ 	u32 safe_lut_tbl[DPU_QOS_LUT_USAGE_MAX];
+ 	u32 danger_lut_tbl[DPU_QOS_LUT_USAGE_MAX];
+ 	struct dpu_qos_lut_tbl qos_lut_tbl[DPU_QOS_LUT_USAGE_MAX];
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index b886d9d..554c40f 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -303,6 +303,28 @@ static int dpu_kms_global_obj_init(struct dpu_kms *dpu_kms)
+ 	return 0;
+ }
+ 
++static int dpu_kms_parse_data_bus_icc_path(struct dpu_kms *dpu_kms)
++{
++	struct icc_path *path0;
++	struct icc_path *path1;
++	struct drm_device *dev = dpu_kms->dev;
++
++	path0 = of_icc_get(dev->dev, "mdp0-mem");
++	path1 = of_icc_get(dev->dev, "mdp1-mem");
++
++	if (IS_ERR_OR_NULL(path0))
++		return PTR_ERR_OR_ZERO(path0);
++
++	dpu_kms->path[0] = path0;
++	dpu_kms->num_paths = 1;
++
++	if (!IS_ERR_OR_NULL(path1)) {
++		dpu_kms->path[1] = path1;
++		dpu_kms->num_paths++;
++	}
++	return 0;
++}
++
+ static int dpu_kms_enable_vblank(struct msm_kms *kms, struct drm_crtc *crtc)
+ {
+ 	return dpu_crtc_vblank(crtc, true);
+@@ -980,6 +1002,9 @@ static int dpu_kms_hw_init(struct msm_kms *kms)
+ 
+ 	dpu_vbif_init_memtypes(dpu_kms);
+ 
++	if (of_device_is_compatible(dev->dev->of_node, "qcom,sc7180-mdss"))
++		dpu_kms_parse_data_bus_icc_path(dpu_kms);
++
+ 	pm_runtime_put_sync(&dpu_kms->pdev->dev);
+ 
+ 	return 0;
+@@ -1085,7 +1110,7 @@ static int dpu_dev_remove(struct platform_device *pdev)
+ 
+ static int __maybe_unused dpu_runtime_suspend(struct device *dev)
+ {
+-	int rc = -1;
++	int i, rc = -1;
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
+ 	struct dss_module_power *mp = &dpu_kms->mp;
+@@ -1094,6 +1119,9 @@ static int __maybe_unused dpu_runtime_suspend(struct device *dev)
+ 	if (rc)
+ 		DPU_ERROR("clock disable failed rc:%d\n", rc);
+ 
++	for (i = 0; i < dpu_kms->num_paths; i++)
++		icc_set_bw(dpu_kms->path[i], 0, 0);
++
+ 	return rc;
+ }
+ 
+@@ -1105,8 +1133,15 @@ static int __maybe_unused dpu_runtime_resume(struct device *dev)
+ 	struct drm_encoder *encoder;
+ 	struct drm_device *ddev;
+ 	struct dss_module_power *mp = &dpu_kms->mp;
++	int i;
+ 
+ 	ddev = dpu_kms->dev;
++
++	/* Min vote of BW is required before turning on AXI clk */
++	for (i = 0; i < dpu_kms->num_paths; i++)
++		icc_set_bw(dpu_kms->path[i], 0,
++			dpu_kms->catalog->perf.min_dram_ib);
++
+ 	rc = msm_dss_enable_clk(mp->clk_config, mp->num_clk, true);
+ 	if (rc) {
+ 		DPU_ERROR("clock enable failed rc:%d\n", rc);
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
+index 4e32d04..94410ca 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
+@@ -8,6 +8,8 @@
+ #ifndef __DPU_KMS_H__
+ #define __DPU_KMS_H__
+ 
++#include <linux/interconnect.h>
++
+ #include <drm/drm_drv.h>
+ 
+ #include "msm_drv.h"
+@@ -137,6 +139,8 @@ struct dpu_kms {
+ 	 * when disabled.
+ 	 */
+ 	atomic_t bandwidth_ref;
++	struct icc_path *path[2];
++	u32 num_paths;
+ };
+ 
+ struct vsync_info {
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
+index 80d3cfc..df0a983 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
+@@ -8,7 +8,6 @@
+ #include <linux/irqdesc.h>
+ #include <linux/irqchip/chained_irq.h>
+ #include "dpu_kms.h"
+-#include <linux/interconnect.h>
+ 
+ #define to_dpu_mdss(x) container_of(x, struct dpu_mdss, base)
+ 
+@@ -315,9 +314,11 @@ int dpu_mdss_init(struct drm_device *dev)
+ 	}
+ 	dpu_mdss->mmio_len = resource_size(res);
+ 
+-	ret = dpu_mdss_parse_data_bus_icc_path(dev, dpu_mdss);
+-	if (ret)
+-		return ret;
++	if (!of_device_is_compatible(dev->dev->of_node, "qcom,sc7180-mdss")) {
++		ret = dpu_mdss_parse_data_bus_icc_path(dev, dpu_mdss);
++		if (ret)
++			return ret;
++	}
+ 
+ 	mp = &dpu_mdss->mp;
+ 	ret = msm_dss_parse_clock(pdev, mp);
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+index 3b9c33e..c2a6e3d 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+@@ -132,6 +132,84 @@ static struct dpu_kms *_dpu_plane_get_kms(struct drm_plane *plane)
+ }
+ 
+ /**
++ * _dpu_plane_calc_bw - calculate bandwidth required for a plane
++ * @Plane: Pointer to drm plane.
++ * Result: Updates calculated bandwidth in the plane state.
++ * BW Equation: src_w * src_h * bpp * fps * (v_total / v_dest)
++ * Prefill BW Equation: line src bytes * line_time
++ */
++static void _dpu_plane_calc_bw(struct drm_plane *plane,
++	struct drm_framebuffer *fb)
++{
++	struct dpu_plane *pdpu = to_dpu_plane(plane);
++	struct dpu_plane_state *pstate;
++	struct drm_display_mode *mode;
++	const struct dpu_format *fmt = NULL;
++	struct dpu_kms *dpu_kms = _dpu_plane_get_kms(plane);
++	int src_width, src_height, dst_height, fps;
++	u64 plane_prefill_bw;
++	u64 plane_bw;
++	u32 hw_latency_lines;
++	u32 scale_factor;
++	int vbp, vpw;
++
++	pstate = to_dpu_plane_state(plane->state);
++	mode = &plane->state->crtc->mode;
++
++	fmt = dpu_get_dpu_format_ext(fb->format->format, fb->modifier);
++
++	src_width = drm_rect_width(&pdpu->pipe_cfg.src_rect);
++	src_height = drm_rect_height(&pdpu->pipe_cfg.src_rect);
++	dst_height = drm_rect_height(&pdpu->pipe_cfg.dst_rect);
++	fps = drm_mode_vrefresh(mode);
++	vbp = mode->vtotal - mode->vsync_end;
++	vpw = mode->vsync_end - mode->vsync_start;
++	hw_latency_lines =  dpu_kms->catalog->perf.min_prefill_lines;
++	scale_factor = src_height > dst_height ?
++		mult_frac(src_height, 1, dst_height) : 1;
++
++	plane_bw =
++		src_width * mode->vtotal * fps * fmt->bpp * scale_factor;
++
++	plane_prefill_bw =
++		src_width * hw_latency_lines * fps * fmt->bpp * scale_factor;
++
++	plane_prefill_bw = mult_frac(plane_prefill_bw, mode->vtotal, (vbp+vpw));
++
++	pstate->plane_fetch_bw = max(plane_bw, plane_prefill_bw);
++}
++
++
++/**
++ * _dpu_plane_calc_clk - calculate clock required for a plane
++ * @Plane: Pointer to drm plane.
++ * Result: Updates calculated clock in the plane state.
++ * Clock equation: dst_w * v_total * fps * (src_h / dst_h)
++ */
++static void _dpu_plane_calc_clk(struct drm_plane *plane)
++{
++	struct dpu_plane *pdpu = to_dpu_plane(plane);
++	struct dpu_plane_state *pstate;
++	struct drm_display_mode *mode;
++	int dst_width, src_height, dst_height, fps;
++
++	pstate = to_dpu_plane_state(plane->state);
++	mode = &plane->state->crtc->mode;
++
++	src_height = drm_rect_height(&pdpu->pipe_cfg.src_rect);
++	dst_width = drm_rect_width(&pdpu->pipe_cfg.dst_rect);
++	dst_height = drm_rect_height(&pdpu->pipe_cfg.dst_rect);
++	fps = drm_mode_vrefresh(mode);
++
++	pstate->plane_clk =
++		dst_width * mode->vtotal * fps;
++
++	if (src_height > dst_height)
++		pstate->plane_clk = mult_frac(pstate->plane_clk,
++					src_height, dst_height);
++}
++
++/**
+  * _dpu_plane_calc_fill_level - calculate fill level of the given source format
+  * @plane:		Pointer to drm plane
+  * @fmt:		Pointer to source buffer format
+@@ -1102,6 +1180,10 @@ static void dpu_plane_sspp_atomic_update(struct drm_plane *plane)
+ 	}
+ 
+ 	_dpu_plane_set_qos_remap(plane);
++
++	_dpu_plane_calc_bw(plane, fb);
++
++	_dpu_plane_calc_clk(plane);
+ }
+ 
+ static void _dpu_plane_atomic_disable(struct drm_plane *plane)
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
+index 4569497..ca83b87 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
+@@ -25,6 +25,8 @@
+  * @scaler3_cfg: configuration data for scaler3
+  * @pixel_ext: configuration data for pixel extensions
+  * @cdp_cfg:	CDP configuration
++ * @plane_fetch_bw: calculated BW per plane
++ * @plane_clk: calculated clk per plane
+  */
+ struct dpu_plane_state {
+ 	struct drm_plane_state base;
+@@ -39,6 +41,8 @@ struct dpu_plane_state {
+ 	struct dpu_hw_pixel_ext pixel_ext;
+ 
+ 	struct dpu_hw_pipe_cdp_cfg cdp_cfg;
++	u64 plane_fetch_bw;
++	u64 plane_clk;
+ };
+ 
+ /**
+-- 
+1.9.1
+
