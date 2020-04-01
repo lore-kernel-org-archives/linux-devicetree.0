@@ -2,165 +2,310 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FE2C2BA12
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 19:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42612C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 20:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A06620737
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 19:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1D91206E9
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 20:05:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fCc9uE+X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JW2aLIs6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732637AbgDATqx (ORCPT
+        id S1732720AbgDAUF7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 15:46:53 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:55308 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732554AbgDATqx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 15:46:53 -0400
-Received: by mail-pj1-f66.google.com with SMTP id fh8so514568pjb.5
-        for <devicetree@vger.kernel.org>; Wed, 01 Apr 2020 12:46:51 -0700 (PDT)
+        Wed, 1 Apr 2020 16:05:59 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42607 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732645AbgDAUF7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 16:05:59 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h15so1564025wrx.9;
+        Wed, 01 Apr 2020 13:05:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/ce+l+iRZG0CueQLUqCcAm+FhjXwOeZQvrFD6a+Pdbk=;
-        b=fCc9uE+XYXB06N48E9h3rQ4SJNQfhzwC50G+TMXvj8kfPBe4kbDLR7b1/oJ+uEuxKc
-         /zyiOEwgGh1jAIInwlsgrzgiU0oI90VjnSLlLTNo58X3/wrlUbKCMZCG3LswFVAZjJin
-         LvE7ziv7OG52tAD9ohxETUiLgLpf2qYRWHzUU=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=a+S142soWxvPAwTiDQVsijQTQxAvRRcAFkGcI4sxqnk=;
+        b=JW2aLIs6va4+0cC2zjC0VP+jQjJjrybEKjKoXHFOiz3w9umvjU+QMPGzk3Api0c0pz
+         QK/tdwPratsyvutPSeeQZxJ/Ajl7bwX0See6h4T0Cyk2RzRDWry9HqHoJkpCf85I8nR8
+         ZVkMyy0XQRs1PeCYZ4U2nqQ8xmdaiJhl/7SXTKgKkruMCO4HBkqkNAAjGbRHjOOsHgUy
+         EEq2q4b+tvBdSahvomld+BG5VX1o+KIZc169oFGnDEMumcYt6S06aaivwLgxvWaCNYi3
+         Amw/DFVggYIy/QF+ZuXyQBy1NpIkD3fC0FzKXx1KJIdDgHLHQTJxn9jfomJTKHzhU0kr
+         sAmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/ce+l+iRZG0CueQLUqCcAm+FhjXwOeZQvrFD6a+Pdbk=;
-        b=Gj/CUwEyOmyM1ih+Nh9P/UE0cCvAHvl983DoDZj9gO43NdZmk59ee7e+Rli/mFtVmg
-         mddfWKsi+mQeXsmWZDs+Y6MgMkHOg5Wkx2lV+4njuG/xx3eTth0N/cXaVk/SKSl4KVWi
-         0sb44wtPOOfg1884hzQPxujoHO73riqCuaTq2ZBPNnWAZaOAdj+urMznNeSvkVgGrPkH
-         5R8YD6zWhQaZEWIEVmarI3lFD44SsgqoO3hk0aoK7UabpJQErfqszZ8L+lH6Oy80m+ot
-         CcO/cXmOft8oWQHQo7USddRPUd1DDQN4J9gy+fxo1qjTtrcFwrxWzmMmWLHQFWYewbu9
-         lxIw==
-X-Gm-Message-State: ANhLgQ00aM6uqGpujNR4vKsRV+UEAKk/iaBl7CVjNGREnqDS0AwYfDtz
-        fK7iZ2EHPCJIAHtNUaJdabJhpA==
-X-Google-Smtp-Source: ADFU+vt/xdibwjNhNGnnuYkq1gCZsQ2pLfGD9zsm2il2lY1sfEB8MLcew8RkcukpAiHbnqsuWeHD3Q==
-X-Received: by 2002:a17:902:9004:: with SMTP id a4mr21923981plp.275.1585770411176;
-        Wed, 01 Apr 2020 12:46:51 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id 132sm2160604pfc.183.2020.04.01.12.46.50
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=a+S142soWxvPAwTiDQVsijQTQxAvRRcAFkGcI4sxqnk=;
+        b=lJtDAbtD3K1714/LHe2/pIbbdUSoHfuNOhGWaFM2Zkcqk+iAuT9WyPlPXXgMrgp7w/
+         faXBoaceGK0aCd+0uvo7zUSXbxWVEkTMhP2/dDP4E61I6SJZRN993XH/qudrmS2Twlii
+         kUyw4MLj2xUQZvLPFw73vvwcnrAIqPdI4THMBW/VMWx/AQ4lhZbHgjswtM6xKVhYSzFd
+         K0zGjarfqehNEtWTVVYfKHjqSr1JrQbjDQOnVPd9ca8JvF9wjMLEg0RZP2cVRy8waycu
+         PvGRkrr/xlWbpwkSwn+L9ncZN+zkQ4OFOrDn8X7VOqBkEQartUtsqLwkjzrOEDp9zNHN
+         d5jg==
+X-Gm-Message-State: ANhLgQ27rE/YY5jLsKAZbiGf+VHryooslFGdLeaMq9VWnFgtw7k2DX1H
+        7nACZtcyT60VGy5Oec+glK655d2J
+X-Google-Smtp-Source: ADFU+vtlD0R0agSTAwWxIvSWi1GnzL/csfWdua+qV/QAzNcG4NYAaLzAAuZM1/AlzuodSr61PGI7FA==
+X-Received: by 2002:adf:bb06:: with SMTP id r6mr28143761wrg.324.1585771555790;
+        Wed, 01 Apr 2020 13:05:55 -0700 (PDT)
+Received: from [192.168.1.23] (afdg236.neoplus.adsl.tpnet.pl. [95.49.84.236])
+        by smtp.gmail.com with ESMTPSA id z1sm4434377wrp.90.2020.04.01.13.05.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2020 12:46:50 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 12:46:48 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org, georgi.djakov@linaro.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, dianders@chromium.org,
-        evgreen@chromium.org
-Subject: Re: [PATCH V3 3/8] soc: qcom-geni-se: Add interconnect support to
- fix earlycon crash
-Message-ID: <20200401194648.GM199755@google.com>
-References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
- <1585652976-17481-4-git-send-email-akashast@codeaurora.org>
- <20200331182457.GH199755@google.com>
+        Wed, 01 Apr 2020 13:05:55 -0700 (PDT)
+Subject: Re: [PATCH 1/6] arm64: dts: rockchip: rk3399-roc-pc: Fix MMC
+ numbering for LED triggers
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Chen-Yu Tsai <wens@kernel.org>,
+        Johan Jonker <jbx6244@gmail.com>,
+        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        pavel@ucw.cz, devicetree@vger.kernel.org
+References: <20200327030414.5903-2-wens@kernel.org>
+ <684a08e6-7dfe-4cb1-2ae5-c1fb4128976b@gmail.com>
+ <CAGb2v65ayZwN14S-Pzu2ip1K=fgzTbNB=ZzUcpou-jtv8m6vBA@mail.gmail.com>
+ <ccf35a92-7005-9c6d-a8a2-c17b714a60bc@arm.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <13d459df-114d-3657-0b97-712c3143fe3c@gmail.com>
+Date:   Wed, 1 Apr 2020 22:05:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <ccf35a92-7005-9c6d-a8a2-c17b714a60bc@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200331182457.GH199755@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 11:24:57AM -0700, Matthias Kaehlcke wrote:
-> Hi Akash,
+On 3/31/20 1:07 PM, Robin Murphy wrote:
+> [ +cc LED binding maintainers]
 > 
-> On Tue, Mar 31, 2020 at 04:39:31PM +0530, Akash Asthana wrote:
-> > QUP core clock is shared among all the SE drivers present on particular
-> > QUP wrapper, the system will reset(unclocked access) if earlycon used after
-> > QUP core clock is put to 0 from other SE drivers before real console comes
-> > up.
-> > 
-> > As earlycon can't vote for it's QUP core need, to fix this add ICC
-> > support to common/QUP wrapper driver and put vote for QUP core from
-> > probe on behalf of earlycon and remove vote during earlycon exit call.
-> > 
-> > Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-> > Reported-by: Matthias Kaehlcke <mka@chromium.org>
-> > ---
-> > Change is V3:
-> >  - Add geni_remove_earlycon_icc_vote API that will be used by earlycon
-> >    exit function to remove ICC vote for earlyconsole.
-> >  - Remove suspend/resume hook for geni-se driver as we are no longer
-> >    removing earlyconsole ICC vote from system suspend, we are removing
-> >    from earlycon exit.
-> > 
-> >  drivers/soc/qcom/qcom-geni-se.c       | 51 +++++++++++++++++++++++++++++++++++
-> >  drivers/tty/serial/qcom_geni_serial.c |  7 +++++
-> >  include/linux/qcom-geni-se.h          |  2 ++
-> >  3 files changed, 60 insertions(+)
-> > 
-> > diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
-> > index 9344c14..d30c282 100644
-> > --- a/drivers/soc/qcom/qcom-geni-se.c
-> > +++ b/drivers/soc/qcom/qcom-geni-se.c
-> > @@ -90,8 +90,11 @@ struct geni_wrapper {
-> >  	struct device *dev;
-> >  	void __iomem *base;
-> >  	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
-> > +	struct geni_icc_path to_core;
-> >  };
-> >  
-> > +struct geni_wrapper *earlycon_wrapper;
+> On 2020-03-29 5:36 pm, Chen-Yu Tsai wrote:
+>> On Fri, Mar 27, 2020 at 5:58 PM Johan Jonker <jbx6244@gmail.com> wrote:
+>>>
+>>> Hi Chen-Yu Tsai,
+>>>
+>>> The led node names need some changes.
+>>> 'linux,default-trigger' value does not fit.
+>>>
+>>>  From leds-gpio.yaml:
+>>>
+>>> patternProperties:
+>>>    # The first form is preferred, but fall back to just 'led'
+>>> anywhere in the
+>>>    # node name to at least catch some child nodes.
+>>>    "(^led-[0-9a-f]$|led)":
+>>>      type: object
+>>>
+>>> Rename led nodenames to 'led-0' form
+>>>
+>>> Also include all mail lists found with:
+>>> ./scripts/get_maintainer.pl --nogit-fallback --nogit
+>>>
+>>> devicetree@vger.kernel.org
+>>
+>> Oops...
+>>
+>>> If you like change the rest of dts with leds as well...
+>>>
+>>>    DTC     arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dt.yaml
+>>>    CHECK   arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dt.yaml
+>>> arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dt.yaml: leds:
+>>> yellow-led:linux,default-trigger:0: 'mmc0' is not one of ['backlight',
+>>> 'default-on', 'heartbeat', 'disk-activity', 'ide-disk', 'timer',
+>>> 'pattern']
+>>> arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dt.yaml: leds:
+>>> diy-led:linux,default-trigger:0: 'mmc1' is not one of ['backlight',
+>>> 'default-on', 'heartbeat', 'disk-activity', 'ide-disk', 'timer',
+>>> 'pattern']
+>>>    DTC     arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dt.yaml
+>>>    CHECK   arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dt.yaml
+>>> arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dt.yaml: leds:
+>>> diy-led:linux,default-trigger:0: 'mmc2' is not one of ['backlight',
+>>> 'default-on', 'heartbeat', 'disk-activity', 'ide-disk', 'timer',
+>>> 'pattern']
+>>> arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dt.yaml: leds:
+>>> yellow-led:linux,default-trigger:0: 'mmc1' is not one of ['backlight',
+>>> 'default-on', 'heartbeat', 'disk-activity', 'ide-disk', 'timer',
+>>> 'pattern']
+>>
+>> Maybe we should just get rid of linux,default-trigger then?
 > 
-> should be static
+> In this particular case, I'd say it's probably time to reevaluate the
+> rather out-of-date binding. The apparent intent of the
+> "linux,default-trigger" property seems to be to describe any trigger
+> supported by Linux, so either the binding wants to be kept in sync with
+> all the triggers Linux actually supports, or perhaps it should just be
+> redefined as a free-form string. FWIW I'd be slightly inclined towards
+> the latter, since the schema validator can't know whether the given
+> trigger actually corresponds to the correct thing for whatever the LED
+
+I agree. It is possible for LED class drivers to register their private
+triggers, so generic bindings cannot use predefined set for validation.
+
+I think that Rob just blindly converted common.txt to yaml and I acked
+that but didn't envisage the implications for validation.
+All in all, even that list in common.txt didn't include all existing
+generic LED triggers.
+
+Best regards,
+Jacek Anaszewski
+
+> is physically labelled on the board/case, nor whether the version(s) of
+> Linux that people intend to use actually support that trigger (since it
+> doesn't have to be the version contemporary with the schema definition),
+> so strict validation of this particular property seems to be of limited
+> value.
 > 
-> > +
-> >  #define QUP_HW_VER_REG			0x4
-> >  
-> >  /* Common SE registers */
-> > @@ -818,6 +821,26 @@ int geni_icc_vote_off(struct geni_se *se)
-> >  }
-> >  EXPORT_SYMBOL(geni_icc_vote_off);
-> >  
-> > +void geni_remove_earlycon_icc_vote(void)
-> > +{
-> > +	struct geni_wrapper *wrapper = earlycon_wrapper;
-> > +	struct device_node *parent = of_get_next_parent(wrapper->dev->of_node);
-> > +	struct device_node *child;
-> > +
-> > +	for_each_child_of_node(parent, child) {
-> > +		if (of_device_is_compatible(child, "qcom,geni-se-qup")) {
-> > +			wrapper = platform_get_drvdata(of_find_device_by_node(
-> > +					child));
-> > +			icc_put(wrapper->to_core.path);
-> > +			wrapper->to_core.path = NULL;
-> > +		}
-> > +	}
-> > +	of_node_put(parent);
-> > +
-> > +	earlycon_wrapper = NULL;
-> > +}
-> > +EXPORT_SYMBOL(geni_remove_earlycon_icc_vote);
+> Robin.
 > 
-> I didn't know that consoles have an exit handler, this is way nicer than
-> the miscellaneous triggers we discussed earlier :)
+>>
+>> Heiko?
+>>
+>> ChenYu
+>>
+>>> make -k ARCH=arm64 dtbs_check
+>>> DT_SCHEMA_FILES=Documentation/devicetree/bindings/leds/leds-gpio.yaml
+>>>
+>>>> From: Chen-Yu Tsai <wens@csie.org>
+>>>>
+>>>> With SDIO now enabled, the numbering of the existing MMC host
+>>>> controllers
+>>>> gets incremented by 1, as the SDIO host is the first one.
+>>>>
+>>>> Increment the numbering of the MMC LED triggers to match.
+>>>>
+>>>> Fixes: cf3c5397835f ("arm64: dts: rockchip: Enable sdio0 and uart0
+>>>> on rk3399-roc-pc-mezzanine")
+>>>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+>>>> ---
+>>>>   arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts | 8 ++++++++
+>>>>   arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi          | 4 ++--
+>>>>   2 files changed, 10 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git
+>>>> a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
+>>>> b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
+>>>> index 2acb3d500fb9..f0686fc276be 100644
+>>>> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
+>>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
+>>>> @@ -38,6 +38,10 @@ vcc3v3_pcie: vcc3v3-pcie {
+>>>>        };
+>>>>   };
+>>>>
+>>>> +&diy_led {
+>>>> +     linux,default-trigger = "mmc2";
+>>>> +};
+>>>> +
+>>>>   &pcie_phy {
+>>>>        status = "okay";
+>>>>   };
+>>>> @@ -91,3 +95,7 @@ &uart0 {
+>>>>        pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
+>>>>        status = "okay";
+>>>>   };
+>>>> +
+>>>> +&yellow_led {
+>>>> +     linux,default-trigger = "mmc1";
+>>>> +};
+>>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+>>>> b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+>>>> index 9f225e9c3d54..bc060ac7972d 100644
+>>>> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+>>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+>>>> @@ -70,14 +70,14 @@ work-led {
+>>>>                        linux,default-trigger = "heartbeat";
+>>>>                };
+>>>>
+>>>> -             diy-led {
+>>>> +             diy_led: diy-led {
+>>>>                        label = "red:diy";
+>>>>                        gpios = <&gpio0 RK_PB5 GPIO_ACTIVE_HIGH>;
+>>>>                        default-state = "off";
+>>>>                        linux,default-trigger = "mmc1";
+>>>>                };
+>>>>
+>>>> -             yellow-led {
+>>>> +             yellow_led: yellow-led {
+>>>>                        label = "yellow:yellow-led";
+>>>>                        gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
+>>>>                        default-state = "off";
+>>>> -- 
+>>>> 2.25.1
+>>>
+>>
+>> _______________________________________________
+>> Linux-rockchip mailing list
+>> Linux-rockchip@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>>
 
-No wonder I 'missed' this when looking at the console code for possible
-triggers, it is brand new and as of now only exists in -next:
-
-commit ed31685c96e18f773ca11dd1a637974d62130673
-Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Date:   Mon Feb 3 15:31:30 2020 +0200
-
-    console: Introduce ->exit() callback
-
-
-sharp timing!
