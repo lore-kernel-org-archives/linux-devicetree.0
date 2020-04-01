@@ -2,89 +2,94 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E03C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 09:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF10C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 09:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29F8320772
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 09:09:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IIJj23PN"
+	by mail.kernel.org (Postfix) with ESMTP id 6C0F220772
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 09:12:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgDAJJM (ORCPT
+        id S1731544AbgDAJMN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 05:09:12 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:50824 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgDAJJM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 05:09:12 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0319937l056756;
-        Wed, 1 Apr 2020 04:09:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585732143;
-        bh=BapP4GEMaD/hKUSz20udM/d8F9FfG6LyZICrAcSFl2c=;
-        h=From:To:CC:Subject:Date;
-        b=IIJj23PNMe0sCJogXud2CaB/x2DWAOiQIeJzYchJ1JVUXOCg2gT1+iH6Z/oM4NZMp
-         GrBjGSvVD0OR5xnj5n+Ugjp3TIibTEXHh7RRvAJDQg/Xss/AjRrEt+qDjE/J7LW+5h
-         NnKr/4kJH0r1G89OOknqr8MYMAK0LwCGAcRcFp0g=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 031993CR094643
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 1 Apr 2020 04:09:03 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 1 Apr
- 2020 04:09:03 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 1 Apr 2020 04:09:02 -0500
-Received: from a0230074-Latitude-E7470.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03198xRE032742;
-        Wed, 1 Apr 2020 04:08:59 -0500
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>
-CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <tony@atomide.com>,
-        <bcousson@baylibre.com>, <faiz_abbas@ti.com>
-Subject: [PATCH] ARM: dts: am574x-idk: Disable m_can node
-Date:   Wed, 1 Apr 2020 14:38:58 +0530
-Message-ID: <20200401090858.18523-1-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 1 Apr 2020 05:12:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:46626 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727627AbgDAJMM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Apr 2020 05:12:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C77431B;
+        Wed,  1 Apr 2020 02:12:12 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.97])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B94FB3F52E;
+        Wed,  1 Apr 2020 02:12:10 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 10:12:08 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 1/4] firmware: arm_scmi: Make mutex channel specific
+Message-ID: <20200401091208.GB3954@bogus>
+References: <20200327163654.13389-1-sudeep.holla@arm.com>
+ <20200327163654.13389-2-sudeep.holla@arm.com>
+ <AM0PR04MB4481562E2A31386752F92C4488C90@AM0PR04MB4481.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB4481562E2A31386752F92C4488C90@AM0PR04MB4481.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since commit bcbb63b80284 ("ARM: dts: dra7: Separate AM57 dtsi files"),
-the m_can node was inherited from dra76x.dtsi but the IP is not
-connected on the idk board. Disable the node to reflect this.
+On Wed, Apr 01, 2020 at 01:12:37AM +0000, Peng Fan wrote:
+> Hi Sudeep,
+>
+> > Subject: [PATCH 1/4] firmware: arm_scmi: Make mutex channel specific
+> >
+> > In order to support multiple SMC/HVC transport channels with associated
+> > shared memory,
+>
+> Does this mean each channel will have its own shared memory? Or
+> All channels share the same shared memory?
+>
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
- arch/arm/boot/dts/am574x-idk.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+It depends on platform firmware and DT. If there is only one shmem at
+the top level scmi node, all share that single channel. If some/all
+protocols have their own channel, they there must be shmem entry in the
+corresponding child node.
 
-diff --git a/arch/arm/boot/dts/am574x-idk.dts b/arch/arm/boot/dts/am574x-idk.dts
-index fa0088025b2c..85c95cc551dd 100644
---- a/arch/arm/boot/dts/am574x-idk.dts
-+++ b/arch/arm/boot/dts/am574x-idk.dts
-@@ -40,3 +40,7 @@
- 	status = "okay";
- 	dual_emac;
- };
-+
-+&m_can0 {
-+	status = "disabled";
-+};
--- 
-2.17.1
+> it is better to maintain the mutex per channel instead of
+> > existing global one.
+>
+> If all channels shared the same memory, use per channel mutex lock
+> will not be able to prevent other channels accessing shared memory
+> at the same time.
+>
 
+No we don't create channel per protocol. If they share, we just share
+the channel pointer. Look at:
+
+       if (!info->desc->ops->chan_available(dev, idx)) {
+                cinfo = idr_find(idr, SCMI_PROTOCOL_BASE);
+                if (unlikely(!cinfo)) /* Possible only if platform has no Rx */
+                        return -EINVAL;
+                goto idr_alloc;
+        }
+
+If a protocol doesn't have a dedicated channel, we just assign the base
+protocol channel to it. We don't call chan_setup at all on that channel.
+Your patch assumed so but the core driver never did that.
+
+Hope this clarifies you doubt.
+
+--
+Regards,
+Sudeep
