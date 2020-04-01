@@ -2,211 +2,183 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2988C2D0F0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 14:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D48EC2D0F3
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 14:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2AB20719
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 14:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D6B12082F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 14:51:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nkdPeoGV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eyxhtlak"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733078AbgDAOlz (ORCPT
+        id S1733022AbgDAOv4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:41:55 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42891 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733079AbgDAOlz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 10:41:55 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h15so317778wrx.9
-        for <devicetree@vger.kernel.org>; Wed, 01 Apr 2020 07:41:53 -0700 (PDT)
+        Wed, 1 Apr 2020 10:51:56 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:41292 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732749AbgDAOv4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 10:51:56 -0400
+Received: by mail-il1-f193.google.com with SMTP id t6so168773ilj.8;
+        Wed, 01 Apr 2020 07:51:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NHroaJiOqiJYowehyR6Z1qR9S4USQGmopS50sQu9ptU=;
-        b=nkdPeoGVbvZvfMVhRGmEQQR20HgcDjAdFocg0zTi/j44D0P9Hn3Cu+2NQ4pLIBZn1b
-         SFwb0bmBpxQ1TvqKBrJq4AkgyaQW/mJ81/mrVtcFT7SXyF00llA93G6RALFC0KbhsmSA
-         WPLBtN6lkZUBPoy9maGkO3TARpOynaXGY5ABIBRuyykKIRM0u9dy0bPnr5TXkg2uud+E
-         w35+XtXUrrhJB+PDZ/LWl80RaPms0YI4vyZ29QNsd3MwAeLxNyS+tJjP5C1rnFgJQaSL
-         38uWmEiaP53YA7RqlVM/k2D3HE3Oo/fk35WwHiIKiTXUxDrEgmT25S3T3Vi/GWIl/ckO
-         4pLw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cBp1FovwiRzN5kcrVx2NRVEpxFgLUtHlh+hAWfBd26g=;
+        b=EyxhtlakoVnrr8qvrvwRE10imgby2JoLMFMbmztmlu93p9XFX9yiJHU1k9kO0Mee+9
+         rL3wpoK8ZnklX1EtvvpUyc6aHSpBfvJm9Ei9AvqHbOSOfygx8YSLT40T1aofUPDSFwuS
+         GUs/smZEA0Ooy11SjyqD78OABlq5U/CIarCI1jWB3ApOME9A6UswKkUDnWZcKBBhqiVO
+         1NQUpKyO+kcdqnaN2MERdpiXrwVbk046RnMCaN3fCktMRA3FbmnXN8wcUUMN/LEAMfKZ
+         43/zaCuG56VfSZ0wdwDLmk1pxV0VL9LIZmpQpkcC46BOxQOQ8sTpazzgFtwnqsZXqHOl
+         2txA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NHroaJiOqiJYowehyR6Z1qR9S4USQGmopS50sQu9ptU=;
-        b=Ecq/oYJZaz9yjR6UiUrowFlYxrJyENp7tBcMFzCHSCRPYAb+b3zyqcYJeLhaatN1xr
-         nVSGfRuvVK+qUsHYPuVZmtqxEA/F16vlbCifj0wqFaL2fBnJZvTTWYN97oa1u0bohyJA
-         zYjR0mLrJjIrWRnYarN3UCbQ62sndZijYVw9KKNwyV7qm/+ocMutw7dQxLN9JXRWxK+t
-         PT1crpwZB3g43OOOShLiSyhyj2PCD4Gqj7Q50wGl4O5LvdkvZkrmLc4q5Vi6rZ2xCQgy
-         596yGSdt1FQk7dJnVkhFXDYEu+ODf0fymam2hcDOXUGkhHsc5HIGoKNbBwi4ps37P/Fy
-         SHBQ==
-X-Gm-Message-State: AGi0Pubbn4p4EDh+WBWRwbdX9TZ0/auXENqnxHOMU3savySXrhW1B2cu
-        1Eg+YF83YF4u/PN3D8quxXWXkA==
-X-Google-Smtp-Source: APiQypKgZHZPPgcg5xXVhkDNwuR9wP3vjoOtMK2hqbWR4yBWx7R9fOzVWwITRcfKrILSqZxC6Q8mlQ==
-X-Received: by 2002:a5d:6645:: with SMTP id f5mr212604wrw.280.1585752112928;
-        Wed, 01 Apr 2020 07:41:52 -0700 (PDT)
-Received: from [192.168.0.136] ([87.120.218.65])
-        by smtp.googlemail.com with ESMTPSA id y189sm2894253wmb.26.2020.04.01.07.41.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 Apr 2020 07:41:51 -0700 (PDT)
-Subject: Re: [PATCH V4 06/13] soc: mediatek: add MT8183 dvfsrc support
-To:     Henry Chen <henryc.chen@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Ryan Case <ryandcase@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        Arvin Wang <arvin.wang@mediatek.com>,
-        Mike Turquette <mturquette@linaro.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, srv_heupstream@mediatek.com
-References: <1584092066-24425-1-git-send-email-henryc.chen@mediatek.com>
- <1584092066-24425-7-git-send-email-henryc.chen@mediatek.com>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <4220e681-80b6-f9af-ddd1-b28aabe513cf@linaro.org>
-Date:   Wed, 1 Apr 2020 17:41:49 +0300
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cBp1FovwiRzN5kcrVx2NRVEpxFgLUtHlh+hAWfBd26g=;
+        b=BOXZENkHgBE9z6FEoBXB8rlbSN5ZwuR1P3Vzz+DRaT7pgsB28a+wRzBLg6RNSHq1oT
+         GsXfnWAaxtI7HY4DD1Pj6tP2AQB+cPa/25vx7rJrchBdfZv5ea55A0vjVhWeIEZESrNA
+         ERhaJjRN8uLzJLiJIXZsua/Z0D05PUu+atlfXVC58oLd8KyQfSkr5nWNGx2Lp0OXCYZa
+         C+QXy7iVojV91hxF/UtmPu6nic9joUSrU/1Z2qBKmY6dt6+bbl4hyb+k1ir2/zIVvA3a
+         jjdlILH5+0faTnuU+BFZ8iFz4BlC0SqZBexY9qjWnVrY8/YUxzhvbyLjwBLx9MhcQpOs
+         jLTA==
+X-Gm-Message-State: ANhLgQ1VRfz02B/i40Jhh0yuB+nmWW37gLSbahoLZCXg4TPFsHN0gaN9
+        9Ap7MYSQQWMfgr3cyr94OdCfw7M95FE7+l18VePaSwgB
+X-Google-Smtp-Source: ADFU+vvpHo8+Hk4I69a5RWLc2KY2jcMh/c8jfX7sJ97ptPx1yG6GFnFtNfOoHS8fpjvDMZOyap3cWL0xvjFBm5nB9hU=
+X-Received: by 2002:a05:6e02:41:: with SMTP id i1mr16412755ilr.78.1585752714886;
+ Wed, 01 Apr 2020 07:51:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1584092066-24425-7-git-send-email-henryc.chen@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200326213251.54457-1-aford173@gmail.com> <CAMuHMdU9tQwQHkX0MdQLkMfz-2ymDzfNTFGnzPoq=JQF+28HOg@mail.gmail.com>
+ <CAHCN7xJ+bhDezLp+0F=WkM65d59RwmWsiFQ5gVD8KDLugFU-Og@mail.gmail.com>
+In-Reply-To: <CAHCN7xJ+bhDezLp+0F=WkM65d59RwmWsiFQ5gVD8KDLugFU-Og@mail.gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 1 Apr 2020 09:51:43 -0500
+Message-ID: <CAHCN7xLqxYS6ROYSQymVHg5BWocGO+jO1XjJq8zLVvZTmmZU8w@mail.gmail.com>
+Subject: Re: [RFC] clk: vc5: Add bindings for output configurations
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        Charles Stevens <charles.stevens@logicpd.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Henry,
+On Fri, Mar 27, 2020 at 5:05 AM Adam Ford <aford173@gmail.com> wrote:
+>
+> On Fri, Mar 27, 2020 at 4:41 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> >
+> > Hi Adam,
+> >
+> > CC Marek
+> >
+> > On Thu, Mar 26, 2020 at 10:33 PM Adam Ford <aford173@gmail.com> wrote:
+> > > The Versaclock can be purchased in a non-programmed configuration.
+> > > If that is the case, the driver needs to configure the chip to
+> > > output the correct signal type, voltage and slew.
+> > >
+> > > This RFC is proposing an additional binding to allow non-programmed
+> > > chips to be configured beyond their default configuration.
+> > >
+> > > Signed-off-by: Adam Ford <aford173@gmail.com>
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+> > > index 05a245c9df08..4bc46ed9ba4a 100644
+> > > --- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+> > > +++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+> > > @@ -30,6 +30,25 @@ Required properties:
+> > >                 - 5p49v5933 and
+> > >                 - 5p49v5935: (optional) property not present or "clkin".
+> > >
+> > > +For all output ports, an option child node can be used to specify:
+> > > +
+> > > +- mode: can be one of
+> > > +                 - LVPECL: Low-voltage positive/psuedo emitter-coupled logic
+> > > +                 - CMOS
+> > > +                 - HCSL
+> > > +                 - LVDS: Low voltage differential signal
+> > > +
+> > > +- voltage-level:  can be one of the following microvolts
+> > > +                 - 1800000
+> > > +                 - 2500000
+> > > +                 - 3300000
+> > > +-  slew: Percent of normal, can be one of
+> > > +                 - P80
+> > > +                 - P85
+> > > +                 - P90
+> > > +                 - P100
+> >
+> > Why the P prefixes? Can't you just use integer values?
+> > After the conversion to json-schema, these values can be validated, too.
 
-On 3/13/20 11:34, Henry Chen wrote:
-> Add dvfsrc driver for MT8183
-> 
-> Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
-> ---
->  drivers/soc/mediatek/Kconfig      |  15 ++
->  drivers/soc/mediatek/Makefile     |   1 +
->  drivers/soc/mediatek/mtk-dvfsrc.c | 434 ++++++++++++++++++++++++++++++++++++++
->  include/soc/mediatek/mtk_dvfsrc.h |  30 +++
->  4 files changed, 480 insertions(+)
->  create mode 100644 drivers/soc/mediatek/mtk-dvfsrc.c
->  create mode 100644 include/soc/mediatek/mtk_dvfsrc.h
-> 
-> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> index f837b3c..44808f4 100644
-> --- a/drivers/soc/mediatek/Kconfig
-> +++ b/drivers/soc/mediatek/Kconfig
-> @@ -16,6 +16,21 @@ config MTK_CMDQ
->  	  time limitation, such as updating display configuration during the
->  	  vblank.
->  
-> +config MTK_DVFSRC
-> +	bool "MediaTek DVFSRC Support"
-> +	depends on ARCH_MEDIATEK
-> +	default ARCH_MEDIATEK
-> +	select MTK_INFRACFG
-> +	select PM_GENERIC_DOMAINS if PM
-> +	depends on MTK_SCPSYS
-> +	help
-> +	  Say yes here to add support for the MediaTek DVFSRC (dynamic voltage
-> +	  and frequency scaling resource collector) found
-> +	  on different MediaTek SoCs. The DVFSRC is a proprietary
-> +	  hardware which is used to collect all the requests from
-> +	  system and turn into the decision of minimum Vcore voltage
-> +	  and minimum DRAM frequency to fulfill those requests.
-> +
->  config MTK_PMIC_WRAP
->  	tristate "MediaTek PMIC Wrapper Support"
->  	depends on RESET_CONTROLLER
-> diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
-> index 2b2c2537..84182f0 100644
-> --- a/drivers/soc/mediatek/Makefile
-> +++ b/drivers/soc/mediatek/Makefile
-> @@ -1,4 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  obj-$(CONFIG_MTK_CMDQ) += mtk-cmdq-helper.o
-> +obj-$(CONFIG_MTK_DVFSRC) += mtk-dvfsrc.o
->  obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
->  obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys.o
-> diff --git a/drivers/soc/mediatek/mtk-dvfsrc.c b/drivers/soc/mediatek/mtk-dvfsrc.c
-> new file mode 100644
-> index 0000000..85b3572
-> --- /dev/null
-> +++ b/drivers/soc/mediatek/mtk-dvfsrc.c
-> @@ -0,0 +1,434 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2018 MediaTek Inc.
-> + */
-> +#include <linux/arm-smccc.h>
-> +#include <linux/clk.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/module.h>
-> +#include <linux/notifier.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <soc/mediatek/mtk_dvfsrc.h>
-> +#include <soc/mediatek/mtk_sip.h>
-> +#include <dt-bindings/power/mt8183-power.h>
+That makes sense.  We can just use numbers.
 
-Looks like this depends on a header which is not part of this patch-set.
-It would be nice to list any dependencies in the cover letter.
+> >
+> > > +
+> > > +
+> > >  ==Mapping between clock specifier and physical pins==
+> > >
+> > >  When referencing the provided clock in the DT using phandle and
+> > > @@ -62,6 +81,8 @@ clock specifier, the following mapping applies:
+> > >
+> > >  ==Example==
+> > >
+> > > +#include <dt-bindings/versaclock.h>
+> >
+> > Does not exist?
+>
+> Not yet.  Before actually coding anything, I wanted to get feedback on
+> how the bindings should look.  In this file would be definitions of
+> terms like P80, CMOS, and the other items that are defined for mode
+> and slew.
 
-Thanks,
-Georgi
+The intent was to create this file and define a sensible translation
+between the arbitrary the numbers 0 to 7 and the acronyms for "output
+type". Would it be better to just use strings for output type (and not
+create this header file)? I think I've seen something like that in a
+TI driver. I hesitate to put a bunch of string compares in a driver.
+Is there another way? Could we use properties and only allow one?
+
+>
+> >
+> > > +
+> > >  /* 25MHz reference crystal */
+> > >  ref25: ref25m {
+> > >         compatible = "fixed-clock";
+> > > @@ -80,6 +101,13 @@ i2c-master-node {
+> > >                 /* Connect XIN input to 25MHz reference */
+> > >                 clocks = <&ref25m>;
+> > >                 clock-names = "xin";
+> > > +
+> > > +               ports@1 {
+> > > +                       reg = <1>;
+> > > +                       mode = <CMOS>;
+> > > +                       pwr_sel = <1800000>;
+> > > +                       slew = <P80>;
+> > > +               };
+> > >         };
+> > >  };
+> >
+> > Gr{oetje,eeting}s,
+> >
+> >                         Geert
+> >
+> > --
+> > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> >
+> > In personal conversations with technical people, I call myself a hacker. But
+> > when I'm talking to journalists I just say "programmer" or something like that.
+> >                                 -- Linus Torvalds
