@@ -2,211 +2,139 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CE0C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 17:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD33CC2D0F2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 17:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFC3A2071A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 17:37:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajprIKKw"
+	by mail.kernel.org (Postfix) with ESMTP id 9D96420719
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 17:58:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585763888;
+	bh=kA/EAqPGu3SnhqPXVjq7VlDuN9vT5z8e1xCkqE8323Q=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=UItQ+0W+K51FgpACoPkO8SQ2OYOUUxC9xb+7L8//1X3qb/v2enS0BR0YBxkiLV8L5
+	 a9RkC5XO6fgeZeDrSXIXHd7hPpfEf2XoOlf0/DGSQueUJenWyvbJ0IahaCTbc7Mb6F
+	 LiNYbUFJxroE44nTMwLAn/m9FR4s4yNdFdsV1fo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732336AbgDARhs (ORCPT
+        id S1732331AbgDAR6H (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 13:37:48 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44522 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726901AbgDARhs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 13:37:48 -0400
-Received: by mail-oi1-f193.google.com with SMTP id v134so192760oie.11;
-        Wed, 01 Apr 2020 10:37:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zsQ+CdOVb24V2BAprd8p1XllEy9+EN0Dhep/xWpJ87Q=;
-        b=ajprIKKwv+dueHWTPMNqkQe2LuNgg4lh96IinPEFHmrCeJTFtViEZUxW9z2QWE/PDH
-         Sx2D3ZDf1DwThSCl3I+xZUXxOdQM3YS1LnSnwaYyvUYYoH36qP/eq5tzoUwnhHdBX8Yn
-         su38DI78spLbvC8/1PSh6bzXv0uCioZLfkNVZpHiWsYMnzPdt2Clt8yVEXQw1zdIFrRV
-         lvA9OQ5fuHszWv7f+yfgmhzfwTdEK2OwfBNcOVcnM12x5l2e7gDjIcq2isr/61mT7f6U
-         7f9cfk1IiIY4ss1cNbtcbQjYupvAkuPlgDLmbUqg5KQ4+DbjusR80Fpb129eS5AwN/u4
-         1Bsw==
+        Wed, 1 Apr 2020 13:58:07 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44195 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730574AbgDAR6G (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 13:58:06 -0400
+Received: by mail-io1-f68.google.com with SMTP id r25so589578ioc.11;
+        Wed, 01 Apr 2020 10:58:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zsQ+CdOVb24V2BAprd8p1XllEy9+EN0Dhep/xWpJ87Q=;
-        b=KHYrTz1eVv6O5+hVfSgMtVKGg7+mIuixqY0jb4rIOGU5Bf1Ef/21M+StWaVid2fXaP
-         L9eioU5321tBWAqwBBftu2/IxM5JyZIXYLBrxyOXdFcANZfowbFMMStomE5F4k9XO6/u
-         CeS/MuR2IgHWW48I2MEjwiB1uFtiSRwfwYhRl4SByQ+EMsV2QeWSf+SW1XrHYwQbp/Yb
-         J2uC0de5q+AafCKL9AZr1eX/Qd7ww7mYFx325W8ZZytaLTAS8iq93tRF+15tMffQkjNa
-         G6cDEt3h0asMixRnAkg3SzlTcHBd1QZsrRUuHwAJSDI1jXCsfR92CbIBbJF6awMe8DiM
-         qVTA==
-X-Gm-Message-State: AGi0PubgAEpbnD56REQg/eMudRorwKAP++DGSQgyuQzBL2YEXmVTELnm
-        PkxJKgC0gZKoKxz6oeJ+OY7AO1TMsdDSdW4BXjU=
-X-Google-Smtp-Source: APiQypLVoagopL2LC5fv3WBtfUn4dJ6lfyRk+nZW8iJ4g+qJWR3D3El0wlnEgwGCNQ77KzGiyo/Iso2KZOY63vUG27E=
-X-Received: by 2002:aca:cf0d:: with SMTP id f13mr3508187oig.162.1585762666999;
- Wed, 01 Apr 2020 10:37:46 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YhnZq6kW0oAS2hnyC5WT5+4Jc6X+26sgyRRXo71R0nw=;
+        b=LaLAGyQxVD2dexQDUi1T9hDIOImPtwYfY9fdUv2OOGVbYE0CwmdGcdjJy4dYrM98rh
+         HH3wxZET/7xsR7PaqGXXRhUOBhr9NaznTb7no+Gw0ZIlFTPIvOFpsgH1JaR0ytRbcNVf
+         VUEavmdUSPMWpeI3eBoEAP40oALh71yEs9atKIzM//8/hwi4CFuYctBOtTFpEK82RWUQ
+         lHZX9zHeylwrLgq0uHNAKqzd9Dkybsl7OSKm/twXHa8YzrPqRNpAdwvR2H6wpwmAsggb
+         4uhgoGc/2UZ7flA/BgXbStbduPC5FrVZGi1Ldt9ZLUQu9WM0Gfz/rBEvPiYD1EiwQ76W
+         +fWg==
+X-Gm-Message-State: ANhLgQ1k1JgTtb/mEo9uIx+bsUpmzUgtXybHh68F3laNEZZaxTue1lNY
+        3UN4KRO+VTfShKCyxFzTkrakj8U=
+X-Google-Smtp-Source: ADFU+vskUx0caKjWEpqvhl52V9YxFEomzg6LeP8ohqtqv+81Rw6YLLKrL8aJ1yA85E1XQleWax1bVQ==
+X-Received: by 2002:a6b:6502:: with SMTP id z2mr19396370iob.130.1585763885916;
+        Wed, 01 Apr 2020 10:58:05 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.250])
+        by smtp.googlemail.com with ESMTPSA id z20sm771447iod.25.2020.04.01.10.58.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 10:58:05 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     devicetree@vger.kernel.org,
+        Tobias Waldekranz <tobias@waldekranz.com>,
+        netdev@vger.kernel.org
+Subject: [PATCH] dt-bindings: net: mvusb: Fix example errors
+Date:   Wed,  1 Apr 2020 11:58:04 -0600
+Message-Id: <20200401175804.2305-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <1584886352-4132-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdXhi_1rxpB3zXO+KwtY+36dh+_O8NqVfyLs5mU1+Vy6Og@mail.gmail.com>
-In-Reply-To: <CAMuHMdXhi_1rxpB3zXO+KwtY+36dh+_O8NqVfyLs5mU1+Vy6Og@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Wed, 1 Apr 2020 18:37:20 +0100
-Message-ID: <CA+V-a8ujOD1k+Oc2f+tSHPvt128oO9hT3zEFHghnxq5RAOMb7w@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: renesas: r8a774c0-cat874: Add support for
- AISTARVISION MIPI Adapter V2.1
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
+The example for Marvell USB to MDIO Controller doesn't build:
 
-Thank you for the review.
+Error: Documentation/devicetree/bindings/net/marvell,mvusb.example.dts:18.9-14 syntax error
+FATAL ERROR: Unable to parse input tree
 
+This is due to label refs being used which can't be resolved.
 
-On Wed, Apr 1, 2020 at 10:45 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Sun, Mar 22, 2020 at 3:13 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > This patch adds support for AISTARVISION MIPI Adapter V2.1 board connected
-> > to G2E board. Common file aistarvision-mipi-adapter-2.1.dtsi is created
-> > which have the camera endpoint nodes for imx219 and ov5645 so that this can
-> > be re-used with other G2x platforms.
-> >
-> > r8a774c0-ek874-mipi-2.1.dts file enables the required VIN/CSI nodes and by
-> > default ties ov5645 camera endpoint to CSI2.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  Changes for v2:
-> >  * Dropped #{address,size}-cells
-> >  * Dropped unit address and reg for port
->
-> Thanks for the update!
->
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
-> > @@ -0,0 +1,75 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Device Tree Source for the Silicon Linux RZ/G2E 96board platform (CAT874)
-> > + * connected with aistarvision-mipi-v2-adapter board
-> > + *
-> > + * Copyright (C) 2020 Renesas Electronics Corp.
-> > + */
-> > +
-> > +/dts-v1/;
-> > +#include "r8a774c0-ek874.dts"
-> > +#define MIPI_PARENT_I2C i2c3
-> > +#include "aistarvision-mipi-adapter-2.1.dtsi"
-> > +
-> > +/ {
-> > +       model = "Silicon Linux RZ/G2E evaluation kit EK874 (CAT874 + CAT875) with aistarvision-mipi-v2-adapter board";
-> > +       compatible = "si-linux,cat875", "si-linux,cat874", "renesas,r8a774c0";
-> > +};
-> > +
-> > +&i2c3 {
-> > +       status = "okay";
-> > +};
-> > +
-> > +&vin4 {
-> > +       status = "okay";
-> > +};
-> > +
-> > +&vin5 {
-> > +       status = "okay";
-> > +};
-> > +
-> > +&csi40 {
-> > +       status = "okay";
-> > +
-> > +       ports {
-> > +               port {
-> > +                       csi40_in: endpoint {
-> > +                               clock-lanes = <0>;
-> > +                               data-lanes = <1 2>;
-> > +                               remote-endpoint = <&ov5645_ep>;
-> > +                       };
-> > +               };
-> > +       };
-> > +};
-> > +
-> > +&ov5645 {
-> > +       enable-gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
-> > +       reset-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
-> > +
-> > +       clocks = <&cpg CPG_MOD 716>;
->
-> I'm still a bit puzzled here.
->
-> CPG_MOD 716 is the CSI40 module clock, which runs at 25 MHz, and is
-> presumably output to the CSI0_CLKP/N pair? Or is its rate controlled
-> by the CSI driver?
-> On the MIPI board[*], that signal becomes MIPI1_CP/N.
-> However, the MIPI board also has a "Clock Source Selection" header,
-> which allows you to choose one of:
->   1. The fixed 24 MHz crystal, which is apparently used for the imx219
->      camera, as described by imx219_clk above, and matches the wanted
->      clock rate specified below?
->   2. CSI1_CLK,
->   3. CSI2_CLK.
-> The last two become CLK0/1 on the CAT874 board, which are driven by
-> TPU0TO0/1.
->
-Yes my bad for not looking into this earlier, for both ov5645 and
-imx219 I do short
-pins 3-4 and 5-6 of J14, so for both the sensors the clocks should be
-fixed clock
-of 24Mhz, so I changed it imx219_clk to osc25250_clk and passed the same to
-ov5645 node. (imx219 sensor can take in a external clock from 6-27Mhz [2])
+Fixes: 61e0150cb44b ("dt-bindings: net: add marvell usb to mdio bindings")
+Cc: Tobias Waldekranz <tobias@waldekranz.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: netdev@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+David, Please take this and send to Linus before rc1 as 'make 
+dt_binding_check' was broken by the above commit. That would have been 
+caught had the DT list been CC'ed or if this had been in linux-next long 
+enough to test and fix (it landed in next on Monday :().
 
-> Which setting do you use for the ov5645 camera?
->
-> > +       clock-frequency = <24000000>;
->
-> After your patch for the ov5645 driver, this should be replaced by
-> assigned-clock-rates?
->
-After v4 [1] it was decided that the frequency should be set by driver itself,
-so I'll be revisiting ov5645 driver.
+Rob
 
-[1] https://patchwork.linuxtv.org/patch/62185/
-[2] https://publiclab.org/system/images/photos/000/023/294/original/RASPBERRY_PI_CAMERA_V2_DATASHEET_IMX219PQH5_7.0.0_Datasheet_XXX.PDF
+ .../bindings/net/marvell,mvusb.yaml           | 29 +++++++++----------
+ 1 file changed, 14 insertions(+), 15 deletions(-)
 
-Cheers,
---Prabhakar
+diff --git a/Documentation/devicetree/bindings/net/marvell,mvusb.yaml b/Documentation/devicetree/bindings/net/marvell,mvusb.yaml
+index 9458f6659be1..68573762294b 100644
+--- a/Documentation/devicetree/bindings/net/marvell,mvusb.yaml
++++ b/Documentation/devicetree/bindings/net/marvell,mvusb.yaml
+@@ -38,28 +38,27 @@ required:
+ examples:
+   - |
+     /* USB host controller */
+-    &usb1 {
+-            mvusb: mdio@1 {
++    usb {
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            mdio@1 {
+                     compatible = "usb1286,1fa4";
+                     reg = <1>;
+                     #address-cells = <1>;
+                     #size-cells = <0>;
+-            };
+-    };
+ 
+-    /* MV88E6390X devboard */
+-    &mvusb {
+-            switch@0 {
+-                    compatible = "marvell,mv88e6190";
+-                    status = "ok";
+-                    reg = <0x0>;
++                    switch@0 {
++                            compatible = "marvell,mv88e6190";
++                            reg = <0x0>;
+ 
+-                    ports {
+-                            /* Port definitions */
+-                    };
++                            ports {
++                                    /* Port definitions */
++                            };
+ 
+-                    mdio {
+-                            /* PHY definitions */
++                            mdio {
++                                    /* PHY definitions */
++                            };
+                     };
+             };
+     };
+-- 
+2.20.1
 
-> The rest looks good to me, but I'm not a multi-media/camera expert.
->
-> [*] https://github.com/Kevin-WSCU/96Boards-Camera
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
