@@ -2,139 +2,195 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8E7C10F26
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 10:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D13C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 10:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3397320678
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 10:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F0562080C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 10:42:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kd+qALyd"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AxuVWVF0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732174AbgDAK1e (ORCPT
+        id S1732232AbgDAKmS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 06:27:34 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43140 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728087AbgDAK1d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 06:27:33 -0400
-Received: by mail-pf1-f195.google.com with SMTP id f206so11885232pfa.10;
-        Wed, 01 Apr 2020 03:27:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RNJMZCJvB40U9Qk+mZw8kiFZdWTeiO8956JY+Lpa3zY=;
-        b=kd+qALydDbsk5PDv3CmNVU876gc2XF9ln0DDeqKl2KQAmmQURexYe6cGFN/wz629v6
-         brJSdD5GuUwI/AD89NLIcxbm0THCRCkr925la6QHbV2IVAmQfOujYs/65sZkqcODp2C6
-         1xrJxGxtDNRfAJXPR9QA9Va36wxptxLSMw0XRUUf0j7j74OTEbGxffE+2ewDh0/XbV7g
-         g5Yxa8OsfcZCO602gcz22X4qYB1CPG5pwO0HaueaHsaZgQwi1sP+F7V59FMoThwgZT+Y
-         klbhMvCKOBbJsfyRFpugp1KQZ8TwFG89UzgrRtBFJEuj7gLSxNypQkoRvKX1O87zL6LB
-         66RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RNJMZCJvB40U9Qk+mZw8kiFZdWTeiO8956JY+Lpa3zY=;
-        b=GfgQaF8Q4/c1mmVPuazlO4iavY866iuU7o03ucpory8CM9CUnr7oB+Xb0PyDB0FchU
-         uK07oITEPbkncPAX94bx1CAdKMtVC//zz6nj05icUi65RTvNJrkoFvnB5cLqC58TLRFm
-         adgXx2YOXeyRlIu/cvIOSyd8uZq2VeCPaJSqpwsGE0cuaBk9Suoja+RlLw6ywOyPeah0
-         NbR/oVHnf6RXoVDDKWX8L3IavvhcvlfsG/3KRg82j6vmF/dYPfPJgD45lbb3y+iB3qkm
-         UfGAtu7959CpVOdFLjebk7f/zvV6tti3BfFJbq+Td1a9IHIId/5Gl92KycSpXuqDLJQo
-         zQGw==
-X-Gm-Message-State: ANhLgQ3dOscSuQju4rQneqlFm7Odio7zjTaISfA4Bt2shq5vSgYvBoKp
-        6BzhyP2fr4AABkFRrytTCZL5y5RaC/uwDthA739vGIsTN5Y=
-X-Google-Smtp-Source: ADFU+vt4HEC1R5DFw7uZpOKFKf66YONDP4gkCpjtAsq+aOrsNGlomYjFsswtwGKtUniltF+o2+/dDvfW30Ht+CAEtdg=
-X-Received: by 2002:aa7:9097:: with SMTP id i23mr22128994pfa.170.1585736851029;
- Wed, 01 Apr 2020 03:27:31 -0700 (PDT)
+        Wed, 1 Apr 2020 06:42:18 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:43173 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732201AbgDAKmS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 06:42:18 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200401104216euoutp016ca8682467652cf8a07aaa7931573a40~BrBHeSp7X1001910019euoutp01T
+        for <devicetree@vger.kernel.org>; Wed,  1 Apr 2020 10:42:16 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200401104216euoutp016ca8682467652cf8a07aaa7931573a40~BrBHeSp7X1001910019euoutp01T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1585737736;
+        bh=oyvVweq5rCiDPBSGX/iNsRaVRSr4YFX/8gSUUJ9l9Q0=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=AxuVWVF0aHtmon6aJeXK7ikknqCLJFP71oL2tIJDSM2Xl0BiG0Oxo9Ig5hSooloyE
+         ou6QmNw5gZ484ePL6tlD/EFugTZ3jOa4wkidl8aF76GdP4VASWoyz293BN05hYOEYl
+         pUnYNBNR6ouQSge3fSzAtRMQIQ+Jf/5a8OJjzvbI=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200401104216eucas1p28a74dac22aa3c201c6eb96e34a4a16de~BrBHIgWHA1417914179eucas1p2g;
+        Wed,  1 Apr 2020 10:42:16 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 5E.AD.61286.800748E5; Wed,  1
+        Apr 2020 11:42:16 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200401104215eucas1p158e002d4deb038641d6afd1e3c32e645~BrBGrmoak2926129261eucas1p1z;
+        Wed,  1 Apr 2020 10:42:15 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200401104215eusmtrp20567d4a5acd37bf9460647f0ff72b5bf~BrBGq4j901756017560eusmtrp2L;
+        Wed,  1 Apr 2020 10:42:15 +0000 (GMT)
+X-AuditID: cbfec7f2-f0bff7000001ef66-30-5e84700831fd
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id C3.97.08375.700748E5; Wed,  1
+        Apr 2020 11:42:15 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200401104215eusmtip2b90557b660a45ba9b36077a5153523b8~BrBGCvaM_2190421904eusmtip2O;
+        Wed,  1 Apr 2020 10:42:14 +0000 (GMT)
+Subject: Re: [PATCH 2/2] ARM: DTS: Add devicetree file for the Galaxy S2
+To:     =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com,
+        Stenkin Evgeniy <stenkinevgeniy@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <ba6ecdaf-35cf-6d97-47ad-5e9e7af292a5@samsung.com>
+Date:   Wed, 1 Apr 2020 12:42:14 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200331114811.7978-1-nuno.sa@analog.com> <20200331114811.7978-3-nuno.sa@analog.com>
- <CAHp75VfXS1P-EJaKERojK=-3erYi5MxyDMjfrELyY2X3PZEN1A@mail.gmail.com> <BN6PR03MB3347F9B31FE4E82904ED3E8C99C90@BN6PR03MB3347.namprd03.prod.outlook.com>
-In-Reply-To: <BN6PR03MB3347F9B31FE4E82904ED3E8C99C90@BN6PR03MB3347.namprd03.prod.outlook.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 1 Apr 2020 13:27:23 +0300
-Message-ID: <CAHp75VfowVagnG0U8N4SM5Y2ZRoRTFFtJtZgkV+XWGznhrkogg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] iio: imu: adis: Add irq mask variable
-To:     "Sa, Nuno" <Nuno.Sa@analog.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <8a77ca985214cb0058e4defe4dcaa27a79eafacc.camel@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0gUYRSG+3ZmZ0Zz43M1PFkULCEYqFn+GEpEU3MpKI36UXlpcwevq7br
+        NYjMNS0zFY3UVVJKU7wV62XVylCXTItVV/KG/ogVQ8vEVFAJy3Gw/Pec873nvO+BjyGk3WJH
+        JioukVPHKWJllDXZ9mHd5MIkZIYen26m2QqjSczmW74T7ODga5rVW0bF7EhnOcWWDHaJ2Oqx
+        YRGb/8JMsmt9eQR7/52RZp9UldLee+UNzxqQvN6cTck7dNO0XF/3kJI3V92VL+sPB1LXrD2V
+        XGxUMqd287phHfm2Lp9MMB9IbTcYROmo3D4HWTGAPWCkoB7lIGtGimsRGAfmKaFYQTDdvkEI
+        xTKCRsuqeGdkcUBL8yzFNQiahjwE0SKCnxbTlohh7LAc3n8L5zX2OBq0m4/EvIbABhFol7q2
+        hynsDjkLORSvl2AvMOVd5dskPgq9RW0Uz/txMAz35m/7SrAt9JfOkDxb4QCoNnzZXkPgI6Bt
+        LSMEdoDJmQoR7wV4kob64RJSCO0HhQW1lMB2MN/XQgt8CP507AxoEXw1NdJCkYtgJKMECarT
+        MGXa2E5KYGd41enGI2AfWJgAAffB+IKtkGEfFLYVE0JbAg+ypMIOJ9D1Nf1z7R4yEwVIptt1
+        mW7XNbpd1+j+21Yisg45cEkaVQSncY/jUlw1CpUmKS7CNTxepUdbH+vTZt+vdrRqvtmDMINk
+        NpLUyMxQqViRrElT9SBgCJm9pMxvqyVRKtJuc+r4MHVSLKfpQQcZUuYgOfl8LkSKIxSJXAzH
+        JXDqnVcRY+WYjvZ4ZTn5pwQ2V6+4nC/6fSost3QMZxeNO59NGfXNyPP5eGHOu17ZH8SsnbHZ
+        8FyTym9NaYcSK4uzVCO65eiApYErrcE1JmXY9RMFonvGde+YcSJLdu7xy0sJviFPDXem3lQt
+        oujyJcY/PDPIHJQ7K76o//wjb6JmymnCO2y2ZfKyjNREKtyPEWqN4i8c5ZHUVAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCIsWRmVeSWpSXmKPExsVy+t/xe7rsBS1xBhcuqVvMP3KO1aL/8Wtm
+        i/PnN7BbbHp8jdXi8q45bBYzzu9jslh6/SKTRf/iSywWP473MVu07j3CbjFlyUx2B26PNfPW
+        MHqsvtTO5rFz1l12j02rOtk8Ni+p9/i8SS6ALUrPpii/tCRVISO/uMRWKdrQwkjP0NJCz8jE
+        Us/Q2DzWyshUSd/OJiU1J7MstUjfLkEvY8+qfpaCS5IVO7ZvZ2pgnCPSxcjJISFgIvH+VDM7
+        iC0ksJRR4sERQYi4jMTJaQ2sELawxJ9rXWxdjFxANW8ZJSY+m87YxcjBISzgIbH/eTJIjYhA
+        lsSO59+ZQGqYBbYzSazdtI4ZouEMi8SdvrfMIFVsAoYSXW9BJnFw8ArYSZzriwQJswioSBye
+        vI0NxBYViJH4uaeLBcTmFRCUODnzCZjNKeAusXT7VbBDmQXMJOZtfsgMYctLNG+dDWWLS9x6
+        Mp9pAqPQLCTts5C0zELSMgtJywJGllWMIqmlxbnpucWGesWJucWleel6yfm5mxiBMbrt2M/N
+        OxgvbQw+xCjAwajEw1uR0RInxJpYVlyZe4hRgoNZSYR3tgtQiDclsbIqtSg/vqg0J7X4EKMp
+        0HMTmaVEk/OB6SOvJN7Q1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwfEwenVAOj
+        qsuJ56dr8sULTy09PjNP7OfmOx7fzzVe0rRL//Hmn+8vseVXPvwv3zKfKyeqavoSaeuy4sBv
+        X/1u8kp9jOXdoZ2XITY19NG6VyV6UsWhjErHi7dPvDgl/aTpO/1PXf3zPicHV9aI3u4zVfNw
+        /LLoooHPzSL2lDKPmVozbCoql3WaLG19HHVIiaU4I9FQi7moOBEAS0wsk+cCAAA=
+X-CMS-MailID: 20200401104215eucas1p158e002d4deb038641d6afd1e3c32e645
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200318142549eucas1p1793027850923ebad20b4691cba676671
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200318142549eucas1p1793027850923ebad20b4691cba676671
+References: <20200312153411.13535-1-paul@crapouillou.net>
+        <20200312153411.13535-2-paul@crapouillou.net> <20200313090011.GB7416@pi3>
+        <CGME20200318142549eucas1p1793027850923ebad20b4691cba676671@eucas1p1.samsung.com>
+        <D6.31.03891.A6F227E5@epmailinsp8.samsung.com>
+        <6c549058-00f9-8526-a272-48c538166ccf@samsung.com>
+        <X7728Q.UX8A28S31JO92@crapouillou.net>
+        <6ca59c1b-2676-e69d-e4eb-4667a81d155f@samsung.com>
+        <d9fe575926342b355f76e1f38fef62f0d7d38075.camel@gmail.com>
+        <da888000-52b6-b0c6-76ac-8fc535d07a5d@samsung.com>
+        <8a77ca985214cb0058e4defe4dcaa27a79eafacc.camel@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 10:22 AM Sa, Nuno <Nuno.Sa@analog.com> wrote:
-> > From: linux-iio-owner@vger.kernel.org <linux-iio-owner@vger.kernel.org>=
- On
-> > Behalf Of Andy Shevchenko
-> > Sent: Dienstag, 31. M=C3=A4rz 2020 19:40
-> > On Tue, Mar 31, 2020 at 2:49 PM Nuno S=C3=A1 <nuno.sa@analog.com> wrote=
-:
-> > >
-> > > There are some ADIS devices that can configure the data ready pin
-> > > polarity. Hence, we cannot hardcode our IRQ mask as
-> > IRQF_TRIGGER_RISING
-> > > since we might want to have it as IRQF_TRIGGER_FALLING.
+Hi Paweł,
 
-...
+On 2020-03-31 21:50, Paweł Chmiel wrote:
+> On Tue, 2020-03-31 at 21:29 +0200, Marek Szyprowski wrote:
+>> On 2020-03-31 17:29, Paweł Chmiel wrote:
+>>> On Tue, 2020-03-31 at 15:55 +0200, Marek Szyprowski wrote:
+>>>> On 2020-03-31 15:09, Paul Cercueil wrote:
+>>>>> Le mar. 31 mars 2020 à 7:36, Marek Szyprowski
+>>>>> <m.szyprowski@samsung.com> a écrit :
+>>>>>> On 2020-03-18 15:25, Paul Cercueil wrote:
+>>>>>>>>>     +    };
+>>>>>>>>>     +
+>>>>>>>>>     +    tsp_reg: regulator-1 {
+>>>>>>>>>     +        compatible = "regulator-fixed";
+>>>>>>>>>     +        regulator-name = "TSP_FIXED_VOLTAGES";
+>>>>>>>>>     +        regulator-min-microvolt = <3300000>;
+>>>>>>>>>     +        regulator-max-microvolt = <3300000>;
+>>>>>>>>>     +        gpio = <&gpl0 3 GPIO_ACTIVE_HIGH>;
+>>>>>>>>>     +        startup-delay-us = <70000>;
+>>>>>>>>>     +        enable-active-high;
+>>>>>>>>>     +        regulator-boot-on;
+>>>>>>>>>     +        regulator-always-on;
+>>>>>>>>    always-on and boot-on should not be needed. You have a consumer
+>>>>>>>> for this
+>>>>>>>>    regulator.
+>>>>>>>    About this: the touchscreen driver does not use a regulator, so I
+>>>>>>>    believe that's why these properties were here.
+>>>>>>>
+>>>>>>>    I sent patches upstream to address the issue:
+>>>>>>>    https://protect2.fireeye.com/url?k=e8aedc29-b53072b3-e8af5766-0cc47a336fae-759579fd576d8382&u=https://lkml.org/lkml/2020/3/15/94
+>>>>>>>
+>>>>>>>
+>>>>>>>    I believe this means I cannot merge the i9100 devicetree until it is
+>>>>>>>    acked.
+>>>>>> One more information - similar change has been already posted, but it
+>>>>>> looks it got lost then: https://patchwork.kernel.org/patch/10550903/
+>>>>> I was aware of this patch, but didn't know it was sent upstream.
+>>>>>
+>>>>> This other patch uses two regulators, vdd/avdd but doesn't give any
+>>>>> reason why.
+>>>>>
+>>>> I've checked the UniversalC210 schematic, which uses the same
+>>>> touchscreen chip. There are 2 supplies to the touchscreen chip: 2.8V VDD
+>>>> and 3.3V AVDD. Both are enabled by the same GPIO pin though. There is
+>>>> however no reset GPIO pin there.
+>>> Hi
+>>> Don't remember now how it worked on Galaxy S1, but it looks like it has
+>>> the same setup - two regulators enabled by one GPIO pin.
+>> It is quite common for the regulators to share the enable GPIO line, so
+>> this is not an issue. Regulator framework supports such configuration
+>> for ages. I'm curious about the reset GPIO line, which were made
+>> mandatory for the regulators control in your patch. I didn't find it on
+>> any schematic of the devices with this touch screen, but I don't have a
+>> schematic of the Galaxy S1. IMHO the reset signal is simply derived from
+>> the supply regulators with some simple circuit, but I don't have
+>> schematic of that part.
+> Hi
+> Regarding this change - it was suggested during review of v1 version of
+> those patches. It's first reply here
+> https://patchwork.kernel.org/patch/10524007/
 
-> > > +static int adis_validate_irq_mask(struct adis *adis)
-> > > +{
-> > > +       if (!adis->irq_mask) {
-> > > +               adis->irq_mask =3D IRQF_TRIGGER_RISING;
-> > > +               return 0;
-> >
-> > > +       } else if (adis->irq_mask !=3D IRQF_TRIGGER_RISING &&
-> >
-> > 'else' is redundant.
-> >
-> > > +                  adis->irq_mask !=3D IRQF_TRIGGER_FALLING) {
-> >
-> > But this condition rises questions. Why i can't configure both?
-> > Why I can't configure other flags there?
->
-> Both you can't because it is just how these type of devices work. Data is=
- ready either
-> on the rising edge or on the falling edge (if supported by the device)...
-> I agree this could check if only one of the flags are set instead of dire=
-ctly comparing the
-> values (invalidating other flags) but I would prefer to keep this simple =
-for now...
->
-> >
-> > > +               dev_err(&adis->spi->dev, "Invalid IRQ mask: %08lx\n",
-> > > +                       adis->irq_mask);
-> > > +               return -EINVAL;
-> > > +       }
-> >
-> > > +       return 0;
-> > > +}
-> >
-> > And actually name of the function is not exactly what it does. It
-> > validates *or* initializes.
->
-> Well, yes. It just sets the mask to the default value to keep backward co=
-mpatibility
-> with all the other devices that don't support/use this variable...
+Well, I know that this has been requested in v1 review, but I thought 
+that you have tested v3 of your patch on I9000, thus I was curious about 
+that reset GPIO line.
 
-Perhaps documentation in a comment form should be added.
-Moreover, I realized that you added to variable and function mask
-suffix while it's actually flag.
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
---=20
-With Best Regards,
-Andy Shevchenko
