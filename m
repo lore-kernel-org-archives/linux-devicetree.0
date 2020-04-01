@@ -2,140 +2,222 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA94C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 20:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D25D8C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 20:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC1420719
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 20:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D3C320784
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 20:40:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="lrGWypf3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kfetSDeB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732818AbgDAUTq (ORCPT
+        id S1732350AbgDAUkS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 16:19:46 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:11694 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727178AbgDAUTq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 16:19:46 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031KC3Rm001505;
-        Wed, 1 Apr 2020 22:18:22 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=5QlwJKLZCLk0nG0qWaS9k+T/qOC3AEsVlVtoxtMgP4U=;
- b=lrGWypf31O2KG3VrMaRQ5OnJUUP98evJkXxvPmgOvTq2dxnWQxL3tQhOqkpvHoTIYJd1
- t6ItmGFZKHI6HMM8vzTSxsONzHDx+E3QUqIpup4qDOIUFuKOZRjzB21s2ESbFZmjmTyI
- cDkKH2/XLJ+HKNE2mKy+VSDsAkSHsz2Brufl3UUIc1E0jEAwj9B3xsLfQnxaey28WAt3
- 5Wdx4beNpC5iYahdQbuSdwzuEp4aNkQ4hCAsFnYZKCEbnBHG79JFKhX3mYLK3cNjC2zo
- 6wNrUmgRHvQVPpz6rASZd4hw2HOOVGJ5k2jTdDpjxfgR6I4mPfPPMoWZGBeXqC3JSkga tg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 301w81751c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Apr 2020 22:18:22 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3569010002A;
-        Wed,  1 Apr 2020 22:18:15 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E3680206292;
-        Wed,  1 Apr 2020 22:18:14 +0200 (CEST)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 1 Apr
- 2020 22:18:14 +0200
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Wed, 1 Apr 2020 22:18:14 +0200
-From:   Benoit HOUYERE <benoit.houyere@st.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "amirmizi6@gmail.com" <amirmizi6@gmail.com>
-CC:     "Eyal.Cohen@nuvoton.com" <Eyal.Cohen@nuvoton.com>,
-        "oshrialkoby85@gmail.com" <oshrialkoby85@gmail.com>,
-        "alexander.steffen@infineon.com" <alexander.steffen@infineon.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "peterhuewe@gmx.de" <peterhuewe@gmx.de>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>, "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "oshri.alkoby@nuvoton.com" <oshri.alkoby@nuvoton.com>,
-        "tmaimon77@gmail.com" <tmaimon77@gmail.com>,
-        "gcwilson@us.ibm.com" <gcwilson@us.ibm.com>,
-        "kgoldman@us.ibm.com" <kgoldman@us.ibm.com>,
-        "Dan.Morav@nuvoton.com" <Dan.Morav@nuvoton.com>,
-        "oren.tanami@nuvoton.com" <oren.tanami@nuvoton.com>,
-        "shmulik.hager@nuvoton.com" <shmulik.hager@nuvoton.com>,
-        "amir.mizinski@nuvoton.com" <amir.mizinski@nuvoton.com>,
-        Christophe Richard <hristophe-h.ricard@st.com>
-Subject: RE: [PATCH v4 2/7] tpm: tpm_tis: Add check_data handle to
- tpm_tis_phy_ops in order to check data integrity
-Thread-Topic: [PATCH v4 2/7] tpm: tpm_tis: Add check_data handle to
- tpm_tis_phy_ops in order to check data integrity
-Thread-Index: AQHWB/5sTOWTIuzRBUKbjmfl723Xlqhks7pQ
-Date:   Wed, 1 Apr 2020 20:18:14 +0000
-Message-ID: <173e4e392b9648b7afeb09680d8073b5@SFHDAG3NODE3.st.com>
-References: <20200331113207.107080-1-amirmizi6@gmail.com>
- <20200331113207.107080-3-amirmizi6@gmail.com>
- <20200401082019.GB17325@linux.intel.com>
-In-Reply-To: <20200401082019.GB17325@linux.intel.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.51]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 1 Apr 2020 16:40:18 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:37712 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732345AbgDAUkQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 16:40:16 -0400
+Received: by mail-pj1-f68.google.com with SMTP id k3so578780pjj.2
+        for <devicetree@vger.kernel.org>; Wed, 01 Apr 2020 13:40:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=v9Vka5QMn/XO/UM8b8k78cglitDzsEXJjHSdkOZb/q0=;
+        b=kfetSDeBgwtJwdcBDWNtAFEB3mWOU3uOo7ZKw/rliseEH8MwNWgyOQFwVOGViQW5v8
+         cQHhp2H1rR/iXHTnfLCzbKHmDYZG8lNCe92U6VwwTpmM06W3YBuAGseTiVct062ZHYWE
+         q1hcB4HUUPGtUuAew3XrPXlmPlqBtUuV396Afp4x7ipO/RvrtqF4cZE76xXSkWpbOoIk
+         GyDnDOZP0ZEvvi9TqAcX9olTL4xpzHu8PxzONGGt6GIOQr7pHoQSXtDg2VdWlCi9MEFn
+         qFRWFBBAfP9FHGey09SvI3AARj9VU1D8JtKpBwwW07d+N9wOFUy5uv0qm/D66QBWKfxG
+         rBAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=v9Vka5QMn/XO/UM8b8k78cglitDzsEXJjHSdkOZb/q0=;
+        b=pvmwKKlAw+i1gj2qdZwZo2VsoqpwsCyawUl+vaC818QxTVqqlr2wnHmz5s6sNEewVS
+         v+jcF6RPfrCIIc/XISOq6aC8SyY5SEbYDZfe9EZ/JI4qskiqk+QpYSWiBuS5b+d1rLkd
+         qdRmF1odQtEVp2LsJ8BpvIEL0Z7dqxqmhLan9Z1JbeE8rnkpk7jRLu9VOvP6DL5C80jN
+         ecgpEeLavK9tFHrAP6RjeDiaI1na7e665XJxeq95lNFw1DiYM19jSUzewP7wvSKNBWIV
+         w5ukK+IgEHDOONG4h/iyRRC+BuwfDrgFVU6xAwiMe2HtcrgVy5B/FqnExiBDPozB3pO8
+         P7uw==
+X-Gm-Message-State: AGi0Pubj5rQKzwXELY30CHg5O3neBoZbibQcDQcSgBdBETmCpt+2FNs5
+        8+pZdcPDUCj7h8AcSau8jcNpsw==
+X-Google-Smtp-Source: APiQypL1nBe7sE+Co1U36LDRm5wknOP+L/1oBikK/k8Bv88DatK1zXkG4ztAPqWBILluLhCQX4huMw==
+X-Received: by 2002:a17:90a:21ac:: with SMTP id q41mr7152193pjc.41.1585773613353;
+        Wed, 01 Apr 2020 13:40:13 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id a185sm2265354pfa.27.2020.04.01.13.40.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 13:40:09 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 13:40:07 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Sham Muthayyan <smuthayy@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 07/12] pcie: qcom: add tx term offset support
+Message-ID: <20200401204007.GG254911@minitux>
+References: <20200320183455.21311-1-ansuelsmth@gmail.com>
+ <20200320183455.21311-7-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_04:2020-03-31,2020-04-01 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320183455.21311-7-ansuelsmth@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
->>On Tue, Mar 31, 2020 at 02:32:02PM +0300, amirmizi6@gmail.com wrote:
->> From: Amir Mizinski <amirmizi6@gmail.com>
->>=20
->> In order to compute the crc over the data sent in lower layer  (I2C=20
->> for instance), tpm_tis_check_data() calls an operation (if available) =20
->> to check data integrity. If data integrity cannot be verified, a retry =
-=20
->> attempt to save the sent/received data is implemented.
->>=20
->> The current steps are done when sending a command:
->>     1. Host writes to TPM_STS.commandReady.
->>     2. Host writes command.
->>     3. Host checks that TPM received data is valid.
->>     4. If data is currupted go to step 1.
->>=20
->> When receiving data:
->>     1. Host checks that TPM_STS.dataAvail is set.
->>     2. Host saves received data.
->>     3. Host checks that received data is correct.
->>     4. If data is currupted Host writes to TPM_STS.responseRetry and go =
-to
->>         step 1.
->>=20
->> Co-developed-by: Christophe Richard <hristophe-h.ricard@st.com>
->> Signed-off-by: Christophe Richard <hristophe-h.ricard@st.com>
->> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+On Fri 20 Mar 11:34 PDT 2020, Ansuel Smith wrote:
 
->The email is malformed.
+> From: Sham Muthayyan <smuthayy@codeaurora.org>
+> 
+> Add tx term offset support to pcie qcom driver
+> need in some revision of the ipq806x soc
+> 
+> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 61 ++++++++++++++++++++++----
+>  1 file changed, 52 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index ecc22fd27ea6..8009e3117765 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -45,7 +45,13 @@
+>  #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
+>  
+>  #define PCIE20_PARF_PHY_CTRL			0x40
+> +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	(0x1f << 16)
+> +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		(x << 16)
+> +
+>  #define PCIE20_PARF_PHY_REFCLK			0x4C
+> +#define REF_SSP_EN				BIT(16)
+> +#define REF_USE_PAD				BIT(12)
+> +
+>  #define PCIE20_PARF_DBI_BASE_ADDR		0x168
+>  #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
+>  #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
+> @@ -77,6 +83,18 @@
+>  #define DBI_RO_WR_EN				1
+>  
+>  #define PERST_DELAY_US				1000
+> +/* PARF registers */
+> +#define PCIE20_PARF_PCS_DEEMPH			0x34
+> +#define PCS_DEEMPH_TX_DEEMPH_GEN1(x)		(x << 16)
+> +#define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)	(x << 8)
+> +#define PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(x)	(x << 0)
+> +
+> +#define PCIE20_PARF_PCS_SWING			0x38
+> +#define PCS_SWING_TX_SWING_FULL(x)		(x << 8)
+> +#define PCS_SWING_TX_SWING_LOW(x)		(x << 0)
+> +
+> +#define PCIE20_PARF_CONFIG_BITS			0x50
+> +#define PHY_RX0_EQ(x)				(x << 24)
+>  
+>  #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
+>  #define SLV_ADDR_SPACE_SZ			0x10000000
+> @@ -97,6 +115,7 @@ struct qcom_pcie_resources_2_1_0 {
+>  	struct reset_control *phy_reset;
+>  	struct reset_control *ext_reset;
+>  	struct regulator_bulk_data supplies[QCOM_PCIE_2_1_0_MAX_SUPPLY];
+> +	uint8_t phy_tx0_term_offset;
+>  };
+>  
+>  struct qcom_pcie_resources_1_0_0 {
+> @@ -184,6 +203,16 @@ struct qcom_pcie {
+>  
+>  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+>  
+> +static inline void
+> +writel_masked(void __iomem *addr, u32 clear_mask, u32 set_mask)
+> +{
+> +	u32 val = readl(addr);
+> +
+> +	val &= ~clear_mask;
+> +	val |= set_mask;
+> +	writel(val, addr);
+> +}
+> +
+>  static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
+>  {
+>  	gpiod_set_value_cansleep(pcie->reset, 1);
+> @@ -277,6 +306,10 @@ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+>  	if (IS_ERR(res->ext_reset))
+>  		return PTR_ERR(res->ext_reset);
+>  
+> +	if (of_property_read_u8(dev->of_node, "phy-tx0-term-offset",
+> +				&res->phy_tx0_term_offset))
+> +		res->phy_tx0_term_offset = 0;
 
->So.. How did Christophe participate on writing this patch? I haven't seen =
-him shouting anything about the subject and still his SOB is there.
+The appropriate way is to encode differences in hardware is to use
+different compatibles for the two different versions of the hardware.
 
->/Jarkko
+Regards,
+Bjorn
 
-Christophe sent patch to support I2C TCG TPM driver tpm_tis_i2c (https://pa=
-tchwork.kernel.org/patch/8628681/) in the same time that tpm_tis_spi. This =
-function was named tpm_tis_i2c_check_data.
-
-Best Regards,
+> +
+>  	res->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
+>  	return PTR_ERR_OR_ZERO(res->phy_reset);
+>  }
+> @@ -304,7 +337,6 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+>  	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
+>  	struct dw_pcie *pci = pcie->pci;
+>  	struct device *dev = pci->dev;
+> -	u32 val;
+>  	int ret;
+>  
+>  	ret = reset_control_assert(res->ahb_reset);
+> @@ -355,15 +387,26 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+>  		goto err_deassert_ahb;
+>  	}
+>  
+> -	/* enable PCIe clocks and resets */
+> -	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> -	val &= ~BIT(0);
+> -	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> +	writel_masked(pcie->parf + PCIE20_PARF_PHY_CTRL, BIT(0), 0);
+> +
+> +	/* Set Tx termination offset */
+> +	writel_masked(pcie->parf + PCIE20_PARF_PHY_CTRL,
+> +		      PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK,
+> +		      PHY_CTRL_PHY_TX0_TERM_OFFSET(res->phy_tx0_term_offset));
+> +
+> +	/* PARF programming */
+> +	writel(PCS_DEEMPH_TX_DEEMPH_GEN1(0x18) |
+> +	       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(0x18) |
+> +	       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(0x22),
+> +	       pcie->parf + PCIE20_PARF_PCS_DEEMPH);
+> +	writel(PCS_SWING_TX_SWING_FULL(0x78) |
+> +	       PCS_SWING_TX_SWING_LOW(0x78),
+> +	       pcie->parf + PCIE20_PARF_PCS_SWING);
+> +	writel(PHY_RX0_EQ(0x4), pcie->parf + PCIE20_PARF_CONFIG_BITS);
+>  
+> -	/* enable external reference clock */
+> -	val = readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
+> -	val |= BIT(16);
+> -	writel(val, pcie->parf + PCIE20_PARF_PHY_REFCLK);
+> +	/* Enable reference clock */
+> +	writel_masked(pcie->parf + PCIE20_PARF_PHY_REFCLK,
+> +		      REF_USE_PAD, REF_SSP_EN);
+>  
+>  	ret = reset_control_deassert(res->phy_reset);
+>  	if (ret) {
+> -- 
+> 2.25.1
+> 
