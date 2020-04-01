@@ -2,134 +2,272 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEE2C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 19:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5136C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 19:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7D4320714
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 19:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F5820747
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 19:25:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="XTYIY4eX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732244AbgDATKl (ORCPT
+        id S1732441AbgDATZ3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 15:10:41 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:60071 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732148AbgDATKl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 15:10:41 -0400
-Received: from mail-qt1-f175.google.com ([209.85.160.175]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MnFps-1is2yA2r7k-00jHcO; Wed, 01 Apr 2020 21:10:38 +0200
-Received: by mail-qt1-f175.google.com with SMTP id g7so1052952qtj.13;
-        Wed, 01 Apr 2020 12:10:38 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1NtBAI5jn3L+6sckOI2t+jc5w6d1L4V6RAw5WLOt2FsYq0f+OQ
-        quss2rgxVEqt8fzAl8h9VIA/sz6Dq0KdYVK8VSs=
-X-Google-Smtp-Source: ADFU+vtyMLvr7Dgw6oe+zlZkRyvlCk0FigXkPEVlKpn5w9aHowMBBgNSkrRsc1vRQgMl4vxdrLwn99ZYxeSm7ctuNe8=
-X-Received: by 2002:ac8:d8e:: with SMTP id s14mr12105068qti.204.1585768237437;
- Wed, 01 Apr 2020 12:10:37 -0700 (PDT)
+        Wed, 1 Apr 2020 15:25:29 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:48578 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732219AbgDATZ2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 15:25:28 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id BFF3EA2A;
+        Wed,  1 Apr 2020 21:25:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1585769125;
+        bh=/I2vO+sj0wt+OvA3QDUJVPgyqFFa+cT0KJEkw4EumUA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XTYIY4eXnbBguZBkgADlaZbMx+QuhCc4zMaKDYL2S4+iXTYa173U2xgUxz44QFfqL
+         tKio2kjJ81n53ME3RUX5Guh0M2IYjGi9W6E6Qmn05vvb97jCo5i75JvM9JiL5RHtVG
+         Q+dl2kEItgqKzDipB7BJ3e8TkOLRkYlPh+HW+kF8=
+Date:   Wed, 1 Apr 2020 22:25:18 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v6 1/3] dt-bindings: phy: Add DT bindings for Xilinx
+ ZynqMP PSGTR PHY
+Message-ID: <20200401192518.GG4876@pendragon.ideasonboard.com>
+References: <20200311103252.17514-1-laurent.pinchart@ideasonboard.com>
+ <20200311103252.17514-2-laurent.pinchart@ideasonboard.com>
+ <20200320023520.GA18490@bogus>
+ <20200320095036.GA5193@pendragon.ideasonboard.com>
+ <CAL_JsqLYUooc-9i6U6Br9DQKPHZMrLJf3f883PeM4Ctbwycs8w@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200306130731.938808030702@mail.baikalelectronics.ru>
- <20200306153246.9373B80307C4@mail.baikalelectronics.ru> <20200401150612.addu2gzahrarpgep@ubsrv2.baikal.int>
-In-Reply-To: <20200401150612.addu2gzahrarpgep@ubsrv2.baikal.int>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 1 Apr 2020 21:10:20 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0+3xqLa9-Xsu-WWd5XZZ=4mPzwHhOmGSc9y9W=92L9Uw@mail.gmail.com>
-Message-ID: <CAK8P3a0+3xqLa9-Xsu-WWd5XZZ=4mPzwHhOmGSc9y9W=92L9Uw@mail.gmail.com>
-Subject: Re: [PATCH 0/6] soc: Add Baikal-T1 SoC APB/AXI EHB and L2-cache drivers
-To:     Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-List-Id: <soc.lore.kernel.org>
-Cc:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Olof Johansson <olof@lixom.net>, SoC Team <soc@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:eGV4YgcVYPCaWqXSd/ieWLRacwsOh12zVSTHFYmv6XWKhgKd8Nw
- 31/IDeS0b9jh++OOEhg6plu3z3oy22MqWAjwKvFNIVVhlNbsCtJwreRE2m3I0MZwYdY2dxI
- mVADWzLhaqvpFTIFAdsmOqzuB6GXyHqPAwBphZmnUlsGKQSWv8wbOvqcLBAVxHEqpuDDjZS
- ij0beb3//8ai8iPj3faTg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MQNZw/2uLik=:gR+gJWCbIcpYfxvKXdggJ6
- Yn97LfIDC8XENqH+8vdvcsdP2UQzf6YvORNvxHTjGa+UTBTpPra84p4lKf/pqOuOZNOyIRBjY
- vtPHGI2ACIIARb4TXDnRqhUDbXtbuTLxrIfpUJc4AFxY2rIdRCQsllW8FdW0XgXmcXxKmG4Xj
- W5P6S9qo7dertgMtIhawvcOZutp57nUWaTc4/wxXk7M95TmAu2UmRcRe7ISoBbXWnbuXWh3DT
- k721ot4uitdQDOEd83n0EHDCPKChn7IjgJ9W8cmoQzWpDQFkX7jmrBoLvh4HOgrQZlaxHGOd5
- k4mlMpSNzqE7KBxjy5tVRE759lIsPixrDwR3BT+REjfqkWwPEZN77ePFWCmD6iodZmPL9OHxa
- HKSRk4kx+7mF02b6jEa2nMU8+IVUhk9iTy4PNDIPgRXqKLhxKXVZVHKhT7cCJyF12IVeQjiDb
- 3+v5IsjuDyNZR1Gmk136ZzW70q3v1CxByt1+c/RE2eeb/BYwDBJezaiXBb0rdgtfETdV5xGK3
- hAvlLqNjASfT1iad7f8oCC+PAqILuRt/xwppTf4ZKGgYZnibR1F7GaTAYgTzpJ3CgNrM7Kelu
- Ib2330oEANVfTuPPvgD8Rpm2S3HszTUVDwZCSK0vIiPqC+skAqKyhQ8nC2UZR7ablzNN/k12M
- x/jlh92ioIer4Jp5D3syL7YaRSvbYV+E+B6hFau+QebNpsgv5qBhyAqin4xX5Djr3MEbPByWR
- CPSQOBR2vE4VIIz/Tu4EIdyolXCJHNKAO3+zxANY8ZlekFq13sdvI5qjP7WIZEI1vaWDqwV7b
- qWZx76KdvyuhlpcFB/7cekDJcbGFZwCLkO1VHZ80iCxHfE5ixc=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLYUooc-9i6U6Br9DQKPHZMrLJf3f883PeM4Ctbwycs8w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 5:06 PM Sergey Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
-> On Fri, Mar 06, 2020 at 04:19:47PM +0100, Arnd Bergmann wrote:
-> > On Fri, Mar 6, 2020 at 2:07 PM <Sergey.Semin@baikalelectronics.ru> wrote:
+Hi Rob,
+
+On Fri, Mar 20, 2020 at 10:53:05AM -0600, Rob Herring wrote:
+> On Fri, Mar 20, 2020 at 3:50 AM Laurent Pinchart wrote:
+> > On Thu, Mar 19, 2020 at 08:35:20PM -0600, Rob Herring wrote:
+> > > On Wed, Mar 11, 2020 at 12:32:50PM +0200, Laurent Pinchart wrote:
+> > > > From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> > > >
+> > > > Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
+> > > > Processing System Gigabit Transceiver which provides PHY capabilities to
+> > > > USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
+> > > >
+> > > > Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> > > > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > > ---
+> > > > Changes since v5:
+> > > >
+> > > > - Document clocks and clock-names properties
+> > > > - Document resets and reset-names properties
+> > > > - Replace subnodes with an additional entry in the PHY cells
+> > > > - Drop lane frequency PHY cell, replaced by reference clock phandle
+> > > > - Convert bindings to YAML
+> > > > - Reword the subject line
+> > > > - Drop Rob's R-b as the bindings have significantly changed
+> > > > - Drop resets and reset-names properties
+> > > > ---
+> > > >  .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 104 ++++++++++++++++++
+> > > >  include/dt-bindings/phy/phy.h                 |   1 +
+> > > >  2 files changed, 105 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..9948e4a60e45
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> > > > @@ -0,0 +1,104 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0
 > > >
-> > > From: Serge Semin <fancer.lancer@gmail.com>
+> > > For new bindings:
 > > >
-> > > Aside from PCIe/SATA/DDR/I2C/CPU-reboot specific settings the Baikal-T1
-> > > system controller provides three vendor-specific blocks. In particular
-> > > there are two Errors Handler Blocks to detect and report an info regarding
-> > > any problems discovered on the AXI and APB buses. These are the main buses
-> > > utilized by the SoC devices to interact with each other. In addition there
-> > > is a way to tune the MIPS P5600 CM2 L2-cache up by setting the Tag/Data/WS
-> > > L2-to-RAM latencies. All of this functionality is implemented in the
-> > > APB/AXI EHB and L2-cache control block drivers to be a part of the kernel soc
-> > > subsystem (as being specific to the Baikal-T1 SoC) and introduced in the
-> > > framework of this patchset.
+> > > (GPL-2.0-only OR BSD-2-Clause)
 > > >
-> > > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> > > commit 98d54f81e36b ("Linux 5.6-rc4").
+> > > Though I guess Anurag needs to agree.
 > >
-> > I have no objection to the drivers, but I wonder if these should be
-> > in drivers/bus and drivers/memory instead of drivers/soc, which have
-> > similar drivers already. The driver for the L2 cache is not really a
-> > memory controller driver, but it may be close enough, and we
-> > already have a couple of different things in there.
+> > There's an ongoing similar discussion regarding the DPSUB (DRM/KMS)
+> > bindings. Hyun is checking with the Xilinx legal department. If they
+> > agree, I'll change the license here, otherwise I'll keep it as-is.
+> 
+> TBC, the choice is change it or take your toys elsewhere and play by
+> yourself. I don't really want to end up with whatever each submitter
+> desires. I don't expect there's many companies that object to a
+> permissive license.
+
+I don't expect that either, but it's out of my control in any case.
+Let's say.
+
+I've heard quite a few times that "the preferred license for new
+bindings is GPL-2.0-only OR BSD-2-Clause", but this is the first time I
+hear it's a hard requirement. I have missed the decision making process,
+I have nothing to question, and I'll spread that message in the future.
+
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/phy/xlnx,zynqmp-psgtr.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Xilinx ZynqMP Gigabit Transceiver PHY Device Tree Bindings
+> > > > +
+> > > > +maintainers:
+> > > > +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > > +
+> > > > +description: |
+> > > > +  This binding describes the Xilinx ZynqMP Gigabit Transceiver (GTR) PHY. The
+> > > > +  GTR provides four lanes and is used by USB, SATA, PCIE, Display port and
+> > > > +  Ethernet SGMII controllers.
+> > > > +
+> > > > +properties:
+> > > > +  "#phy-cells":
+> > > > +    const: 4
+> > > > +    description: |
+> > > > +      The cells contain the following arguments.
+> > > > +
+> > > > +      - description: The GTR lane
+> > > > +        minimum: 0
+> > > > +        maximum: 3
+> > > > +      - description: The PHY type
+> > > > +        enum:
+> > > > +          - PHY_TYPE_DP
+> > > > +          - PHY_TYPE_PCIE
+> > > > +          - PHY_TYPE_SATA
+> > > > +          - PHY_TYPE_SGMII
+> > > > +          - PHY_TYPE_USB
+> > > > +      - description: The PHY instance
+> > > > +        minimum: 0
+> > > > +        maximum: 1 # for DP, SATA or USB
+> > > > +        maximum: 3 # for PCIE or SGMII
+> > > > +      - description: The reference clock number
+> > > > +        minimum: 0
+> > > > +        maximum: 3
+> > >
+> > > Humm, interesting almost json-schema. I guess it's fine as-is.
+> > >
+> > > I would like to figure out how to apply a schema like this to the
+> > > consumer nodes. We'd have to look up the phandle, get that node's
+> > > compatible, find the provider's schema, find #.*-cells property, and
+> > > extract a schema from it. Actually, doesn't sound too hard.
 > >
+> > That would be nice :-)
+> >
+> > > > +
+> > > > +  compatible:
+> > > > +    enum:
+> > > > +      - xlnx,zynqmp-psgtr-v1.1
+> > > > +      - xlnx,zynqmp-psgtr
+> > > > +
+> > > > +  clocks:
+> > > > +    minItems: 1
+> > > > +    maxItems: 4
+> > > > +    description: |
+> > > > +      Clock for each PS_MGTREFCLK[0-3] reference clock input. Unconnected
+> > > > +      inputs shall not have an entry.
+> > > > +
+> > > > +  clock-names:
+> > > > +    minItems: 1
+> > > > +    maxItems: 4
+> > > > +    items:
+> > > > +      pattern: "^ref[0-3]$"
+> > > > +
+> > > > +  reg:
+> > > > +    items:
+> > > > +      - description: SERDES registers block
+> > > > +      - description: SIOU registers block
+> > > > +
+> > > > +  reg-names:
+> > > > +    items:
+> > > > +      - const: serdes
+> > > > +      - const: siou
+> > > > +
+> > > > +required:
+> > > > +  - "#phy-cells"
+> > > > +  - compatible
+> > > > +  - reg
+> > > > +  - reg-names
+> > > > +
+> > > > +if:
+> > > > +  properties:
+> > > > +    compatible:
+> > > > +      const: xlnx,zynqmp-psgtr
+> > > > +
+> > > > +then:
+> > > > +  properties:
+> > > > +    xlnx,tx-termination-fix:
+> > > > +      description: |
+> > > > +        Include this for fixing functional issue with the TX termination
+> > > > +        resistance in GT, which can be out of spec for the XCZU9EG silicon
+> > > > +        version.
+> > > > +      type: boolean
+> > > > +
+> > > > +additionalProperties: false
+> > >
+> > > This won't work with 'xlnx,tx-termination-fix'. You need to move it to
+> > > the main properties section and then do:
+> > >
+> > > if:
+> > >   properties:
+> > >     compatible:
+> > >       const: xlnx,zynqmp-psgtr-v1.1
+> >
+> > It doesn't make a big difference as only two compatible values are
+> > allowed, but is there a way to express the condition the other way
+> > around, if (compatible != "xlnx,zynqmp-psgtr") ?
+> 
+> if:
+>   properties:
+>     compatible:
+>       not:
+>         const: xlnx,zynqmp-psgtr
+> 
+> I think if: { not: ... } would also work. You'll have to test them out.
 
-> Regarding l2 driver. Do you really think that L2 cache should be in
-> drivers/memory? First there is no any cache-related drivers in that
-> subsystem (at least I couldn't find any). Second the Baikal-T1
-> L2-cache-RAM config block has just indirect connection with RAM.
-> The block just tunes the L2-cache<->RAM stall clock cycles up on
-> WS/Tag/Data RAM IO-operations. This config seems more SoC-specific,
-> than memory-like. Do you think that the driver should still be in
-> drivers/memory?
+I tried both, and neither worked. No big deal, I'll keep the current
+expression.
 
-Either way could work, and both locations are a bit of a dumping
-ground for different kinds of drivers. My preference would be
-drivers/memory, but if anyone has a strong opinion the other way,
-drivers/soc would be acceptable as well.
+> > > then:
+> > >   properties:
+> > >     xlnx,tx-termination-fix: false
+> >
+> > This works.
+> >
+> > > I think this would also work:
+> > >
+> > >   not:
+> > >     required:
+> > >       - xlnx,tx-termination-fix
+> >
+> > I've tested it and it works, but I'm not sure why, given that the
+> > property isn't required required in the first place. Could you enlighten
+> > me ?
+> 
+> 'required' is true or false based on presence or absence of properties
+> in the list. If 'xlnx,tx-termination-fix' is present, then 'required'
+> evaluates to true. And the inverse is true. Then we take the inverse
+> of of that with 'not'.
+> 
+> The first case is what trips me up more because a property not present
+> evaluates to true. So if you look at 'select' schemas, we have to make
+> any properties we list (compatible typically) required.
 
-> On the other hand the block is part of the System Controller. I could
-> just embed the l2-cache driver functionality into the System Controller
-> MFD driver. Though honestly IMHO the functionality should live in
-> a dedicated driver and drivers/soc is a better place for it. I also have
-> doubts this part will be well accepted by Lee (drivers/mfd maintainer).
->
-> So what do you think?
+-- 
+Regards,
 
-If you make it a combined driver with the system controller,
-drivers/soc would be the most logical place. drivers/mfd should
-only be used for a multiplexer with child drivers doing the
-actual functionality.
-
-        Arnd
+Laurent Pinchart
