@@ -2,182 +2,171 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706A5C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 09:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E2FC43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 09:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FFBB2077D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 09:32:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="REC6ewzd"
+	by mail.kernel.org (Postfix) with ESMTP id A313020784
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 09:42:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731951AbgDAJcb (ORCPT
+        id S1732131AbgDAJml (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 05:32:31 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:32346 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726974AbgDAJcb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 05:32:31 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585733550; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=O4mfO68j0oUFthZ8BDymyBRZQeDPJ5DqwOJdqb9xXjc=;
- b=REC6ewzdQ+lioINZISvKvcXrblJFbUF8/aD56UKqVCfTTt1b6ppsuwcEvYkbYZRuAKSWqxo3
- OABiVYTs6Vv4GDzv0Nli+uCzHPrxJshaBpMU6oGXeOJQCtaYlfUma30dSqoGY8lvAxGGF9Yb
- +fs5BFjuD1T/7xfy2YS67eYfRao=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e845fa6.7f8810132c38-smtp-out-n03;
- Wed, 01 Apr 2020 09:32:22 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E3642C43636; Wed,  1 Apr 2020 09:32:21 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kalyan_t)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 16FF4C433D2;
-        Wed,  1 Apr 2020 09:32:21 +0000 (UTC)
+        Wed, 1 Apr 2020 05:42:41 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41930 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731544AbgDAJml (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 05:42:41 -0400
+Received: by mail-ot1-f68.google.com with SMTP id f52so25240221otf.8;
+        Wed, 01 Apr 2020 02:42:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9NFB4A2CPVwSz9Sg1U5/CRoks4HY24v+VcMc1LJYhlA=;
+        b=p1WRaOvxvULH8ETXZWUa2OKQudPCObw8EmvnL7gmHglr6xirhDFra5OFJqOh4iP94/
+         l3YFXm2BRljkuXohvkeRMQMMo1k9wohT5Ds3OEShcqfs7hkXHJkfd1YTtJq5X2+hxgNM
+         V19sT2eM4pcmDr24KvWP//l6XaJ3YCKyNSaXcxp3AbUxXAJJVS3667eziHptQVg9UTTA
+         1QWlQ0FbZ7BEkgvdMh+OQzhGKSmbHW4Npte2e5mcE17pnkDQl0gvrOk1cNiHU7hnXdr3
+         pgomRw8EREWcbAk6LY89/zI2J0iRb9/7B7U+NkRqq7pW9t1x2zrEWgTmODmbY3hKvEzR
+         voIg==
+X-Gm-Message-State: ANhLgQ3z56mS8WqiuuPgVFSXvAV/nGlVIbNOJJiuZjdfH4+WNKZDXSP/
+        bsknkJyGroQeuT6wXsN/Q9EwjXMATaAlXUeEeV0=
+X-Google-Smtp-Source: ADFU+vvaJkvIXHbATb21lCcc0MJLscOCEDsiXUahQfh8sCQeWQkEkYa7KZWVyEhPq2xVAduTUBjZdSJVtLeQCzJ8nlk=
+X-Received: by 2002:a9d:7590:: with SMTP id s16mr16100426otk.250.1585734160600;
+ Wed, 01 Apr 2020 02:42:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 01 Apr 2020 15:02:21 +0530
-From:   kalyan_t@codeaurora.org
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
+References: <1584886352-4132-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1584886352-4132-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 1 Apr 2020 11:42:29 +0200
+Message-ID: <CAMuHMdXhi_1rxpB3zXO+KwtY+36dh+_O8NqVfyLs5mU1+Vy6Og@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: renesas: r8a774c0-cat874: Add support for
+ AISTARVISION MIPI Adapter V2.1
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        mkrishn@codeaurora.org, travitej@codeaurora.org,
-        nganji@codeaurora.org
-Subject: Re: [PATCH] drm/msm/dpu: ensure device suspend happens during PM
- sleep
-In-Reply-To: <CAD=FV=Up4y6GUkJc8NNJBdC28L+6LvUs7pCUg4pyMCgHMGEkug@mail.gmail.com>
-References: <1585663107-12406-1-git-send-email-kalyan_t@codeaurora.org>
- <CAD=FV=Up4y6GUkJc8NNJBdC28L+6LvUs7pCUg4pyMCgHMGEkug@mail.gmail.com>
-Message-ID: <2922a0c64ec61c3d74d516e44dca2d71@codeaurora.org>
-X-Sender: kalyan_t@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-03-31 21:30, Doug Anderson wrote:
-> Hi,
-> 
-> On Tue, Mar 31, 2020 at 6:58 AM Kalyan Thota <kalyan_t@codeaurora.org> 
-> wrote:
->> 
->> "The PM core always increments the runtime usage counter
->> before calling the ->suspend() callback and decrements it
->> after calling the ->resume() callback"
->> 
->> DPU and DSI are managed as runtime devices. When
->> suspend is triggered, PM core adds a refcount on all the
->> devices and calls device suspend, since usage count is
->> already incremented, runtime suspend was not getting called
->> and it kept the clocks on which resulted in target not
->> entering into XO shutdown.
->> 
->> Add changes to force suspend on runtime devices during pm sleep.
->> 
->> Changes in v1:
->>  - Remove unnecessary checks in the function
->>     _dpu_kms_disable_dpu (Rob Clark).
->> 
->> Changes in v2:
->>  - Avoid using suspend_late to reset the usagecount
->>    as suspend_late might not be called during suspend
->>    call failures (Doug).
->> 
->> Changes in v3:
->>  - Use force suspend instead of managing device usage_count
->>    via runtime put and get API's to trigger callbacks (Doug).
->> 
->> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
->> ---
->>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 2 ++
->>  drivers/gpu/drm/msm/dsi/dsi.c           | 2 ++
->>  drivers/gpu/drm/msm/msm_drv.c           | 4 ++++
->>  3 files changed, 8 insertions(+)
-> 
-> This looks much saner to me.  Thanks!  I assume it still works fine
-> for you?  I'm still no expert on how all the pieces of DRM drivers
-> work together, but at least there's not a bunch of strange fiddling
-> with pm_runtime state and hopefully it will avoid weird corner
-> cases...
-> 
---- Yes, verified the change on trogdor device, and display can suspend 
-with the change.
-> 
->> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c 
->> b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
->> index ce19f1d..b886d9d 100644
->> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
->> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
->> @@ -1123,6 +1123,8 @@ static int __maybe_unused 
->> dpu_runtime_resume(struct device *dev)
->> 
->>  static const struct dev_pm_ops dpu_pm_ops = {
->>         SET_RUNTIME_PM_OPS(dpu_runtime_suspend, dpu_runtime_resume, 
->> NULL)
->> +       SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
->> +                               pm_runtime_force_resume)
->>  };
->> 
->>  static const struct of_device_id dpu_dt_match[] = {
->> diff --git a/drivers/gpu/drm/msm/dsi/dsi.c 
->> b/drivers/gpu/drm/msm/dsi/dsi.c
->> index 55ea4bc2..62704885 100644
->> --- a/drivers/gpu/drm/msm/dsi/dsi.c
->> +++ b/drivers/gpu/drm/msm/dsi/dsi.c
->> @@ -161,6 +161,8 @@ static int dsi_dev_remove(struct platform_device 
->> *pdev)
->> 
->>  static const struct dev_pm_ops dsi_pm_ops = {
->>         SET_RUNTIME_PM_OPS(msm_dsi_runtime_suspend, 
->> msm_dsi_runtime_resume, NULL)
->> +       SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
->> +                               pm_runtime_force_resume)
->>  };
->> 
->>  static struct platform_driver dsi_driver = {
->> diff --git a/drivers/gpu/drm/msm/msm_drv.c 
->> b/drivers/gpu/drm/msm/msm_drv.c
->> index 7d985f8..2b8c99c 100644
->> --- a/drivers/gpu/drm/msm/msm_drv.c
->> +++ b/drivers/gpu/drm/msm/msm_drv.c
->> @@ -1051,6 +1051,8 @@ static int msm_pm_suspend(struct device *dev)
->>                 return ret;
->>         }
->> 
->> +       pm_runtime_force_suspend(dev);
-> 
-> nit: check return value of pm_runtime_force_suspend()?
-> 
-> 
->> +
->>         return 0;
->>  }
->> 
->> @@ -1063,6 +1065,8 @@ static int msm_pm_resume(struct device *dev)
->>         if (WARN_ON(!priv->pm_state))
->>                 return -ENOENT;
->> 
->> +       pm_runtime_force_resume(dev);
-> 
-> nit: check return value of pm_runtime_force_resume()?
-> 
-> 
-> -Doug
+Hi Prabhakar,
+
+On Sun, Mar 22, 2020 at 3:13 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> This patch adds support for AISTARVISION MIPI Adapter V2.1 board connected
+> to G2E board. Common file aistarvision-mipi-adapter-2.1.dtsi is created
+> which have the camera endpoint nodes for imx219 and ov5645 so that this can
+> be re-used with other G2x platforms.
+>
+> r8a774c0-ek874-mipi-2.1.dts file enables the required VIN/CSI nodes and by
+> default ties ov5645 camera endpoint to CSI2.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  Changes for v2:
+>  * Dropped #{address,size}-cells
+>  * Dropped unit address and reg for port
+
+Thanks for the update!
+
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
+> @@ -0,0 +1,75 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Device Tree Source for the Silicon Linux RZ/G2E 96board platform (CAT874)
+> + * connected with aistarvision-mipi-v2-adapter board
+> + *
+> + * Copyright (C) 2020 Renesas Electronics Corp.
+> + */
+> +
+> +/dts-v1/;
+> +#include "r8a774c0-ek874.dts"
+> +#define MIPI_PARENT_I2C i2c3
+> +#include "aistarvision-mipi-adapter-2.1.dtsi"
+> +
+> +/ {
+> +       model = "Silicon Linux RZ/G2E evaluation kit EK874 (CAT874 + CAT875) with aistarvision-mipi-v2-adapter board";
+> +       compatible = "si-linux,cat875", "si-linux,cat874", "renesas,r8a774c0";
+> +};
+> +
+> +&i2c3 {
+> +       status = "okay";
+> +};
+> +
+> +&vin4 {
+> +       status = "okay";
+> +};
+> +
+> +&vin5 {
+> +       status = "okay";
+> +};
+> +
+> +&csi40 {
+> +       status = "okay";
+> +
+> +       ports {
+> +               port {
+> +                       csi40_in: endpoint {
+> +                               clock-lanes = <0>;
+> +                               data-lanes = <1 2>;
+> +                               remote-endpoint = <&ov5645_ep>;
+> +                       };
+> +               };
+> +       };
+> +};
+> +
+> +&ov5645 {
+> +       enable-gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
+> +       reset-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
+> +
+> +       clocks = <&cpg CPG_MOD 716>;
+
+I'm still a bit puzzled here.
+
+CPG_MOD 716 is the CSI40 module clock, which runs at 25 MHz, and is
+presumably output to the CSI0_CLKP/N pair? Or is its rate controlled
+by the CSI driver?
+On the MIPI board[*], that signal becomes MIPI1_CP/N.
+However, the MIPI board also has a "Clock Source Selection" header,
+which allows you to choose one of:
+  1. The fixed 24 MHz crystal, which is apparently used for the imx219
+     camera, as described by imx219_clk above, and matches the wanted
+     clock rate specified below?
+  2. CSI1_CLK,
+  3. CSI2_CLK.
+The last two become CLK0/1 on the CAT874 board, which are driven by
+TPU0TO0/1.
+
+Which setting do you use for the ov5645 camera?
+
+> +       clock-frequency = <24000000>;
+
+After your patch for the ov5645 driver, this should be replaced by
+assigned-clock-rates?
+
+The rest looks good to me, but I'm not a multi-media/camera expert.
+
+[*] https://github.com/Kevin-WSCU/96Boards-Camera
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
