@@ -2,62 +2,120 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FB2C2D0F2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 18:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73EEEC2D0F2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 18:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 924BE2071A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 18:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47FAD20784
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 18:46:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=startmail.com header.i=@startmail.com header.b="ru489shf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732498AbgDASg3 (ORCPT
+        id S1732067AbgDASqs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 14:36:29 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:37724 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732308AbgDASg3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 14:36:29 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2585C11E3C074;
-        Wed,  1 Apr 2020 11:36:28 -0700 (PDT)
-Date:   Wed, 01 Apr 2020 11:36:27 -0700 (PDT)
-Message-Id: <20200401.113627.1377328159361906184.davem@davemloft.net>
-To:     olteanv@gmail.com
-Cc:     grygorii.strashko@ti.com, nsekhar@ti.com, t-kristo@ti.com,
-        peter.ujfalusi@ti.com, robh@kernel.org, netdev@vger.kernel.org,
-        rogerq@ti.com, devicetree@vger.kernel.org, kuba@kernel.org,
-        m-karicheri2@ti.com, kishon@ti.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, arnd@arndb.de, olof@lixom.net
-Subject: Re: [PATCH net-next v6 00/11] net: ethernet: ti: add networking
- support for k3 am65x/j721e soc
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <CA+h21hpAnWbnQihTVGyB-TyRYad+gWCdF7suzsXRFJg-nsU9xg@mail.gmail.com>
-References: <cac3d501-cc36-73c5-eea8-aaa2d10105b0@ti.com>
-        <590f9865-ace7-fc12-05e7-0c8579785f96@ti.com>
-        <CA+h21hpAnWbnQihTVGyB-TyRYad+gWCdF7suzsXRFJg-nsU9xg@mail.gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 01 Apr 2020 11:36:28 -0700 (PDT)
+        Wed, 1 Apr 2020 14:46:48 -0400
+Received: from mx-out2.startmail.com ([145.131.90.155]:60637 "EHLO
+        mx-out2.startmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbgDASqs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 14:46:48 -0400
+From:   Alexandru Lazar <alazar@startmail.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=startmail.com;
+        s=2017-11; t=1585766806;
+        bh=rPZJR8e0aV7M0z3Rj/djkP3V9lgsL9xCnjkBzqTFBgM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ru489shfFLZ74qgFeKk226mO31rKwurEiuqlrFJ2SETaNIRW/PCJBbcRCpY6AqL/u
+         +DSvQmS8gaKAnEio01hMAajVQ/Z2HstN+3ZFwNx5TV2BBTmubFqBibW+9+A8Ss3wb3
+         w5GvIYCJ1sesDdNnKLeyGN0ai6c886T4PTJrL8ylmbX9eFkV2bbKMo9ZG/2YS4Ty0J
+         fkxkf2KIzim/PriZN992OZ7+sMrohQC7Y5muaxLDIauR/g7QsGwG9vQmNBi0npvBqx
+         14QWN1WhVYnj2cxK5NJfaZZA3pE8WOWckycHjIDL5jYbNUmGFGKBwW3kMAcD8k+udj
+         RyQegqmwNE35Q==
+To:     linux-iio@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org,
+        mark.rutland@arm.com, Alexandru Lazar <alazar@startmail.com>
+Subject: [PATCH v6 0/2] Maxim MAX1241 driver
+Date:   Wed,  1 Apr 2020 21:51:36 +0300
+Message-Id: <20200401185138.10673-1-alazar@startmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
-Date: Wed, 1 Apr 2020 21:27:04 +0300
+Hi everyone,
 
-> I think the ARM64 build is now also broken on Linus' master branch,
-> after the net-next merge? I am not quite sure if the device tree
-> patches were supposed to land in mainline the way they did.
+Here's version 6 of a patch series which adds support for the Maxim
+MAX1241, a 12-bit, single-channel, SPI-connected ADC.
 
-There's a fix in my net tree and it will go to Linus soon.
+Changelog so far:
 
-There is no clear policy for dt change integration, and honestly
-I try to deal with the situation on a case by case basis.
+v6:
+
+* Add separate cleanup actions for vdd and vref regulators respectively
+* Change shdn pin name to shutdown. shdn is what the datasheet calls it
+  but "shutdown" seems to be semi-standard, at least in the bindings
+  (Rob orriginally suggested that I change the name in the docs. Figured
+  it made zero sense to have it bear another name in the code)
+* Dropped maxItems property in vref binding, made binding dual-licensed
+* Changed name of spi node in binding example 
+
+v5:
+
+* Add vdd supply binding
+* Reorder include headers -- one of them had escaped the long mechanized
+  hand of the Alphabetron
+* Drop scan_index and scan_type from channel spec, as the driver
+  doesn't support buffered modes
+* Drop a useless initialization of a local variable in probe function
+* Revise dt-bindings patch subject line, revise maintainer and
+  copyright to match the Signed-off: string, drop reference to driver
+  from bindings description
+* Various readability/cosmetic fixes
+
+v4:
+
+* Dropped explicit documentation of SPI reg property
+* Reordered patch series so that dt bindings come first
+
+v3:
+
+* Fixed silly copy-paste error in Kconfig description
+
+v2:
+
+* Removed useeless header includes
+* Dropped needlessly verbose stuff in _read and _probe functions
+* Dropped useless GPL notice
+* Lowered log level of shdn pin status in probe function, now it's
+  dev_dbg
+* Added proper error checking for the GPIO shutdown pin
+* remove now always returns zero (man, I've been wrong about this for
+  *years* now...)
+* Added regulator disable action, cleanup is now handled via devm
+* Drop delay_usecs, use delay.value, delay.unit
+* Drop config_of, of_match_ptr call
+* Dropped IIO_BUFFER, IIO_TRIGGERED_BUFFER dependencies, set SPI_MASTER
+  as dependency, fix indenting.
+* DT binding: use correct id, add reg description (looks pretty
+  standard), dropped spi-max-frequency, fixed dt_binding_check
+  complaints (oops!)
+
+Alexandru Lazar (2):
+  dt-bindings: iio: adc: Add MAX1241 bindings
+  iio: adc: Add MAX1241 driver
+
+ .../bindings/iio/adc/maxim,max1241.yaml       |  64 +++++
+ drivers/iio/adc/Kconfig                       |  10 +
+ drivers/iio/adc/Makefile                      |   1 +
+ drivers/iio/adc/max1241.c                     | 227 ++++++++++++++++++
+ 4 files changed, 302 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml
+ create mode 100644 drivers/iio/adc/max1241.c
+
+-- 
+2.20.1
+
