@@ -6,119 +6,126 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B83C2D0F2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 16:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CCFC43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 16:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13F372063A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 16:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB292063A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 16:58:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="dLRSLCXF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pV/3AZI7"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="GxDcLOLg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732294AbgDAQzj (ORCPT
+        id S1732989AbgDAQ6Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:55:39 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:45731 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733298AbgDAQzi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 12:55:38 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id A2F2C5800E4;
-        Wed,  1 Apr 2020 12:55:36 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 01 Apr 2020 12:55:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=1
-        HvVrQVgf8h1xwI4xlSisY5uAmH78ioNToEd5ZqROGo=; b=dLRSLCXF4QI/ZvstT
-        RTK/iKO7vJFrPwPmtUOFhf71BqNsFb9xL5thVfMoFcY8Z1KdDJrtiBN9x0XDxX6R
-        WDYmkfZ0VtyLDjfvKrF0t6rRZ3TUVu9kU0i2UzUWfKhSSIFbDnraFtPppKAJB7be
-        kiYF8FWjEAQR3qeifFoLajBSPF43EP0JqkTXcOq6rDlRn7s5fC1SzUIfVzVargsI
-        iuF9dj8uYJhodSktI7ajo2LwysdyM/5iDLWJhT6Ykzp5EkJef8qAR57TafoLwAuW
-        EJo5wDMk8sinT6vK9NIZcTGJ68eH8PvkpnKd1mYYwgB2p62neUW+7rpbqnU+S4Sn
-        I5vvw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=1HvVrQVgf8h1xwI4xlSisY5uAmH78ioNToEd5ZqRO
-        Go=; b=pV/3AZI7xio9jPNP/fQsHuqkYqEftJWH2VRcjCrZpmJ5hn7/JJ1nXZj0U
-        zxQq6KAnO+Dx/QIbe4KTTMGLw0OJKJ2zrwoJlHTOOhHKvWOhWPbM4t4t27hCXvBJ
-        pyd6NLuCV82QXwlN57vspRGKjTXNGtMtAxnvD24VXi9LxaKvVxM/h6rWkZ/QFiZn
-        QVvCWY8+3wP40ns/o7yt7etVkCHQ1RCk6keyLgywj1DVnd9jt3zhrPiHkBisYqNK
-        n/laYmia4QoMeAOCmU6tNTwsl2o2uVjszN6aBFwOyPE0n5oOD42i1cA6WLtvVtIF
-        x+om72uu9LgFVzPzURFYCtuScpbOg==
-X-ME-Sender: <xms:h8eEXi_AC7cBT8VflyA_pQ4vzWVbRahRqpTXNfmfILTHnHsDFFJS1g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtddvgddutdeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepuffvfhfhkffffgggjggtgfesthejredttdefjeenucfhrhhomhepufgrmhhu
-    vghlucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecuff
-    homhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepjedtrddufeehrddugeekrdduhedu
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshgrmh
-    huvghlsehshhholhhlrghnugdrohhrgh
-X-ME-Proxy: <xmx:h8eEXjA83Kbeeuchm-TFfZ-_rgepSDMLFcq6TLmo-TQ6RkH4jBXvfg>
-    <xmx:h8eEXvqjowOwm8XxVq6BQhy3O4iesWDDdywZyitqcrxONwrF05ZIow>
-    <xmx:h8eEXlEfqVLVCSou99VtCYzV9opFB3iwNNE99Q3kmsEEQolVgonZGA>
-    <xmx:iMeEXhRRLxhty-Sm4IOQ0Odd5b6pnsFRi6C9HwCwbRdbaPBi-OpyJA>
-Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id DF8CD3280065;
-        Wed,  1 Apr 2020 12:55:34 -0400 (EDT)
-Subject: Re: [PATCH v7 0/6] Allwinner sun6i message box support
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>
-Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Ondrej Jirman <megous@megous.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-References: <20200223040853.2658-1-samuel@sholland.org>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <59dc1ee9-a369-7cf9-df6a-4b5b99e24324@sholland.org>
-Date:   Wed, 1 Apr 2020 11:55:34 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 1 Apr 2020 12:58:16 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:47822 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732587AbgDAQ6P (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 12:58:15 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id EF489A2A;
+        Wed,  1 Apr 2020 18:58:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1585760293;
+        bh=eQZsIhB1wvrRknfrJZU+LzCKO7pIgPHcWCBsxNQwHzM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GxDcLOLgarB3bqbrxyHpH1KddDiIIYq45tDqrelzIWLisQO5vFHgl0/hOVCICbCa1
+         kbV+AC2AcXSFkC90PdrZFVfKZfZuO4oMAph4nJJjRrYquRxZPh8MIMJe/6OPLI6wQc
+         gP4Ora0w+PLrDdpxtdBrtQnlkFw86EpzfvdElmjA=
+Date:   Wed, 1 Apr 2020 19:58:05 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@iki.fi>, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, frankc@nvidia.com, helen.koike@collabora.com,
+        digetx@gmail.com, sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
+Message-ID: <20200401165805.GE4876@pendragon.ideasonboard.com>
+References: <20200325110358.GB853@valkosipuli.retiisi.org.uk>
+ <8bc44545-7d1e-0e37-db27-d37784679574@xs4all.nl>
+ <20200331103215.GI2394@valkosipuli.retiisi.org.uk>
+ <ba37eb84-392c-3767-57f6-d297b0ab79a3@xs4all.nl>
+ <20200331111018.GJ2394@valkosipuli.retiisi.org.uk>
+ <a1145ee4-2991-a958-1225-090c57fec533@xs4all.nl>
+ <20200331115221.GA4767@pendragon.ideasonboard.com>
+ <6aa7d86c-3943-d508-ccf6-5ac46546abe9@nvidia.com>
+ <3b00a559-992a-2da9-92b1-bee44e137ba2@nvidia.com>
+ <1c60491b-1bb2-6291-80a6-c0fa14094077@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20200223040853.2658-1-samuel@sholland.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <1c60491b-1bb2-6291-80a6-c0fa14094077@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2/22/20 10:08 PM, Samuel Holland wrote:
-> Samuel Holland (6):
->   dt-bindings: mailbox: Add a binding for the sun6i msgbox
->   mailbox: sun6i-msgbox: Add a new mailbox driver
+Hi Sowjanya,
 
-These two patches have been applied for 5.7[1], so the DTS changes should be
-ready to apply as well.
-
-[1]:
-https://lore.kernel.org/lkml/CABb+yY0-q+5+pqP-rBHCYpw-LmT+h80+OU26XL34fTrXhO+T3Q@mail.gmail.com/
-
-Cheers,
-Samuel
-
->   ARM: dts: sunxi: a83t: Add msgbox node
->   ARM: dts: sunxi: h3/h5: Add msgbox node
->   arm64: dts: allwinner: a64: Add msgbox node
->   arm64: dts: allwinner: h6: Add msgbox node
+On Wed, Apr 01, 2020 at 09:36:03AM -0700, Sowjanya Komatineni wrote:
+> Hi Sakari/Laurent,
 > 
->  .../mailbox/allwinner,sun6i-a31-msgbox.yaml   |  80 +++++
->  arch/arm/boot/dts/sun8i-a83t.dtsi             |  10 +
->  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  10 +
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  10 +
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  10 +
->  drivers/mailbox/Kconfig                       |   9 +
->  drivers/mailbox/Makefile                      |   2 +
->  drivers/mailbox/sun6i-msgbox.c                | 326 ++++++++++++++++++
->  8 files changed, 457 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
->  create mode 100644 drivers/mailbox/sun6i-msgbox.c
+> Few questions to confirm my understanding on below discussion.
 > 
+> 1. Some sensors that you are referring as don't work with single devnode 
+> controlling pipeline devices are ISP built-in sensors where setup of 
+> pipeline and subdevices happen separately?
 
+Sensors that include ISPs could indeed require to be exposed as multiple
+subdevs, but I was mostly referring to raw Bayer sensors with hardware
+architectures similar to the SMIA++ and MIPI CCS specifications. Those
+sensors can perform cropping in up to three different locations (analog
+crop, digital crop, output crop), and can also scale in up to three
+different locations (binning, skipping and filter-based scaling).
+
+Furthermore, with the V4L2 support for multiplexed streams that we are
+working on, a sensor that can produce both image data and embedded data
+would also need to be split in multiple subdevs.
+
+> 2. With driver supporting single device node control of entire pipeline 
+> devices compared to MC-based, limitation is with userspace apps for only 
+> these complex camera sensors?
+
+In those cases, several policy decisions on how to configure the sensor
+(whether to use binning, skipping and/or filter-based scaling for
+instance, or how much cropping and scaling to apply to achieve a certain
+output resolution) will need to be implemented in the kernel, and
+userspace will not have any control on them.
+
+> 3. Does all upstream video capture drivers eventually will be moved to 
+> support MC-based?
+
+I think we'll see a decrease of the video-node-centric drivers in the
+future for embedded systems, especially the ones that include an ISP.
+When a system has an ISP, even if the ISP is implemented as a
+memory-to-memory device separate from the CSI-2 capture side, userspace
+will likely have a need for fine-grained control of the camera sensor.
+
+> 4. Based on libcamera doc looks like it will work with both types of 
+> MC-based and single devnode based pipeline setup drivers for normal 
+> sensors and limitation is when we use ISP built-in sensor or ISP HW 
+> block. Is my understanding correct?
+
+libcamera supports both, it doesn't put any restriction in that area.
+The pipeline handler (the device-specific code in libcamera that
+configures and control the hardware pipeline) is responsible for
+interfacing with the kernel drivers, and is free to use an MC-centric or
+video-node-centric API depending on what the kernel drivers offer.
+
+The IPA (image processing algorithms) module is also vendor-specific.
+Although it will not interface directly with kernel drivers, it will
+have requirements on how fine-grained control of the sensor is required.
+For systems that have an ISP in the SoC, reaching a high image quality
+level requires fine-grained control of the sensor, or at the very least
+being able to retrieve fine-grained sensor configuration information
+from the kernel. For systems using a camera sensor with an integrated
+ISP and a CSI-2 receiver without any further processing on the SoC side,
+there will be no such fine-grained control of the sensor by the IPA (and
+there could even be no IPA module at all).
+
+-- 
+Regards,
+
+Laurent Pinchart
