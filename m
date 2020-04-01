@@ -2,118 +2,123 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F259FC2D0F3
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 16:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B83C2D0F2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 16:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A774D20714
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 16:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13F372063A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 16:55:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="CxR4gYRI"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="dLRSLCXF";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pV/3AZI7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387480AbgDAQYQ (ORCPT
+        id S1732294AbgDAQzj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:24:16 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:36290 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387668AbgDAQYN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:24:13 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 5EC324128C;
-        Wed,  1 Apr 2020 16:24:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :x-mailer:message-id:date:date:subject:subject:from:from
-        :received:received:received; s=mta-01; t=1585758249; x=
-        1587572650; bh=5BFHPqec9jncdoRdL5YGGPgsWuabE3fMsGtZTUs7+80=; b=C
-        xR4gYRISWEbaVjPqENp2MJ/gi6JS3bKmN9dpzkzv86Er3OtPjaBnnAlsEi5wnO31
-        jItQg9e8DcH9vJafRjVW2czo2mJJldZz+YM4SahgQeDIgidBp5P6OoNacx0uW722
-        Ww/skce/4By/zHRyWCxMB06OY9UqCRK+otCfPkm16E=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id TM75VoZGYZ_m; Wed,  1 Apr 2020 19:24:09 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id D29EC41254;
-        Wed,  1 Apr 2020 19:24:08 +0300 (MSK)
-Received: from localhost.yadro.com (10.199.2.98) by T-EXCH-02.corp.yadro.com
- (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Wed, 1 Apr
- 2020 19:24:09 +0300
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Wed, 1 Apr 2020 12:55:39 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:45731 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733298AbgDAQzi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 12:55:38 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id A2F2C5800E4;
+        Wed,  1 Apr 2020 12:55:36 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 01 Apr 2020 12:55:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        subject:to:cc:references:from:message-id:date:mime-version
+        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=1
+        HvVrQVgf8h1xwI4xlSisY5uAmH78ioNToEd5ZqROGo=; b=dLRSLCXF4QI/ZvstT
+        RTK/iKO7vJFrPwPmtUOFhf71BqNsFb9xL5thVfMoFcY8Z1KdDJrtiBN9x0XDxX6R
+        WDYmkfZ0VtyLDjfvKrF0t6rRZ3TUVu9kU0i2UzUWfKhSSIFbDnraFtPppKAJB7be
+        kiYF8FWjEAQR3qeifFoLajBSPF43EP0JqkTXcOq6rDlRn7s5fC1SzUIfVzVargsI
+        iuF9dj8uYJhodSktI7ajo2LwysdyM/5iDLWJhT6Ykzp5EkJef8qAR57TafoLwAuW
+        EJo5wDMk8sinT6vK9NIZcTGJ68eH8PvkpnKd1mYYwgB2p62neUW+7rpbqnU+S4Sn
+        I5vvw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=1HvVrQVgf8h1xwI4xlSisY5uAmH78ioNToEd5ZqRO
+        Go=; b=pV/3AZI7xio9jPNP/fQsHuqkYqEftJWH2VRcjCrZpmJ5hn7/JJ1nXZj0U
+        zxQq6KAnO+Dx/QIbe4KTTMGLw0OJKJ2zrwoJlHTOOhHKvWOhWPbM4t4t27hCXvBJ
+        pyd6NLuCV82QXwlN57vspRGKjTXNGtMtAxnvD24VXi9LxaKvVxM/h6rWkZ/QFiZn
+        QVvCWY8+3wP40ns/o7yt7etVkCHQ1RCk6keyLgywj1DVnd9jt3zhrPiHkBisYqNK
+        n/laYmia4QoMeAOCmU6tNTwsl2o2uVjszN6aBFwOyPE0n5oOD42i1cA6WLtvVtIF
+        x+om72uu9LgFVzPzURFYCtuScpbOg==
+X-ME-Sender: <xms:h8eEXi_AC7cBT8VflyA_pQ4vzWVbRahRqpTXNfmfILTHnHsDFFJS1g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtddvgddutdeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepuffvfhfhkffffgggjggtgfesthejredttdefjeenucfhrhhomhepufgrmhhu
+    vghlucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecuff
+    homhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepjedtrddufeehrddugeekrdduhedu
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshgrmh
+    huvghlsehshhholhhlrghnugdrohhrgh
+X-ME-Proxy: <xmx:h8eEXjA83Kbeeuchm-TFfZ-_rgepSDMLFcq6TLmo-TQ6RkH4jBXvfg>
+    <xmx:h8eEXvqjowOwm8XxVq6BQhy3O4iesWDDdywZyitqcrxONwrF05ZIow>
+    <xmx:h8eEXlEfqVLVCSou99VtCYzV9opFB3iwNNE99Q3kmsEEQolVgonZGA>
+    <xmx:iMeEXhRRLxhty-Sm4IOQ0Odd5b6pnsFRi6C9HwCwbRdbaPBi-OpyJA>
+Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id DF8CD3280065;
+        Wed,  1 Apr 2020 12:55:34 -0400 (EDT)
+Subject: Re: [PATCH v7 0/6] Allwinner sun6i message box support
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v6 0/2] iio: proximity: driver for vcnl3020
-Date:   Wed, 1 Apr 2020 19:24:14 +0300
-Message-ID: <20200401162416.24474-1-i.mikhaylov@yadro.com>
-X-Mailer: git-send-email 2.21.1
+        Mark Rutland <mark.rutland@arm.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Ondrej Jirman <megous@megous.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+References: <20200223040853.2658-1-samuel@sholland.org>
+From:   Samuel Holland <samuel@sholland.org>
+Message-ID: <59dc1ee9-a369-7cf9-df6a-4b5b99e24324@sholland.org>
+Date:   Wed, 1 Apr 2020 11:55:34 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.199.2.98]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200223040853.2658-1-samuel@sholland.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add proximity sensor driver for Vishay vcnl3020. Only on-demand
-measurement is supported for now.
+On 2/22/20 10:08 PM, Samuel Holland wrote:
+> Samuel Holland (6):
+>   dt-bindings: mailbox: Add a binding for the sun6i msgbox
+>   mailbox: sun6i-msgbox: Add a new mailbox driver
 
-Changes from v5:
-   1. add get_and_apply_property function for optional parameters.
-   2. minor changes.
+These two patches have been applied for 5.7[1], so the DTS changes should be
+ready to apply as well.
 
-Changes from v4:
-   1. add vdd-supply,vddio-supply,interrupts properties into yaml.
-   2. led-current -> vishay,led-current-milliamp in yaml.
-   3. add possible values enum list.
-   4. add bulk_read for result hi/lo registers.
-   5. add description of vcnl3020_data structure.
-   6. vcnl3020 id table is removed.
-   7. make "vishay,led-current-milliamp" optional in yaml and code.
+[1]:
+https://lore.kernel.org/lkml/CABb+yY0-q+5+pqP-rBHCYpw-LmT+h80+OU26XL34fTrXhO+T3Q@mail.gmail.com/
 
-Changes from v3:
-   1. minor changes.
-   2. add i2c block to fix dts section in yaml.
+Cheers,
+Samuel
 
-Changes from v2:
-   1. using regmap_read_poll_timeout instead of do-while in measurement
-      function.
-   2. change struct i2client* in vcnl3020_data to struct dev*
-   3. enable REGMAP_I2C in Kconfig
-
-Changes from v1:
-   1. using regmap interface instead of i2c_smbus_* calls.
-   2. switch from probe to probe_new.
-   3. s32/int32_t -> int
-
-Ivan Mikhaylov (2):
-  iio: proximity: provide device tree binding document
-  iio: proximity: Add driver support for vcnl3020 proximity sensor
-
- .../bindings/iio/proximity/vcnl3020.yaml      |  65 +++++
- drivers/iio/proximity/Kconfig                 |  11 +
- drivers/iio/proximity/Makefile                |   1 +
- drivers/iio/proximity/vcnl3020.c              | 234 ++++++++++++++++++
- 4 files changed, 311 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
- create mode 100644 drivers/iio/proximity/vcnl3020.c
-
--- 
-2.21.1
+>   ARM: dts: sunxi: a83t: Add msgbox node
+>   ARM: dts: sunxi: h3/h5: Add msgbox node
+>   arm64: dts: allwinner: a64: Add msgbox node
+>   arm64: dts: allwinner: h6: Add msgbox node
+> 
+>  .../mailbox/allwinner,sun6i-a31-msgbox.yaml   |  80 +++++
+>  arch/arm/boot/dts/sun8i-a83t.dtsi             |  10 +
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  10 +
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  10 +
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  10 +
+>  drivers/mailbox/Kconfig                       |   9 +
+>  drivers/mailbox/Makefile                      |   2 +
+>  drivers/mailbox/sun6i-msgbox.c                | 326 ++++++++++++++++++
+>  8 files changed, 457 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
+>  create mode 100644 drivers/mailbox/sun6i-msgbox.c
+> 
 
