@@ -2,104 +2,117 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69AC2C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 15:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 496BDC43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 15:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A394214D8
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 15:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DC7920B1F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 15:45:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585755959;
+	bh=Ss9ZdTDOkMedWGrrhWeOI7Hi4L677Nmk0j4eRk1smPI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sjJSoRNCDkrGgzISc8nl5uISeFMI5afMqBhbDJp5OTI+EbYV/90yKtrO6w6wkqelY
+	 77QW6+k700u7jt7MnxsesTVO7lof7eVsKu+GD6CrwMFvYFLImfp1OSSLCXtrWJYTiM
+	 TXStaMhe4Pi2pZ4QuSetCxUv2bhJmSXC6hInIfIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732820AbgDAPhs (ORCPT
+        id S1733129AbgDAPp6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 11:37:48 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57604 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732811AbgDAPhs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 11:37:48 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 2CE868030890;
-        Wed,  1 Apr 2020 15:37:47 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id aRGB71y78hgT; Wed,  1 Apr 2020 18:37:46 +0300 (MSK)
-Date:   Wed, 1 Apr 2020 18:37:56 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Arnd Bergmann <arnd@arndb.de>
-List-Id: <soc.lore.kernel.org>
-CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Olof Johansson <olof@lixom.net>, SoC Team <soc@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/6] soc: Add Baikal-T1 SoC APB/AXI EHB and L2-cache
- drivers
-Message-ID: <20200401153756.kgjz4wsxsu7mtq4z@ubsrv2.baikal.int>
-References: <20200306130731.938808030702@mail.baikalelectronics.ru>
- <CAK8P3a0PjNS9+sAiPnDgkmLsnJ6=hR_Vk8oqe493t-Ad_mGa9w@mail.gmail.com>
- <CAK8P3a3ztmzeDBET=jgX=LDCBVg8FKkQrcBOLzaStgUXRyG3jQ@mail.gmail.com>
+        Wed, 1 Apr 2020 11:45:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732889AbgDAPp6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Apr 2020 11:45:58 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12D1E20B1F;
+        Wed,  1 Apr 2020 15:45:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585755957;
+        bh=Ss9ZdTDOkMedWGrrhWeOI7Hi4L677Nmk0j4eRk1smPI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=sP9gfIaSRugv6o9DO9ZFmAxLAFkBEaA/RHAEy5jx2b+vYcJMs5jdHVb6gPGqKsNVX
+         tXgvnGniFyqivTQaZVYwkYi/ZPj8RxJjtkKRZ5dvjWpBcZofGjTKF0Urr5MwP6xh7R
+         2Ds7kdYHEC927nwIN4MKJx6kxbDGtZ6z7gkP9kfw=
+Received: by mail-qt1-f174.google.com with SMTP id i3so362710qtv.8;
+        Wed, 01 Apr 2020 08:45:57 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0VhKIv20CWeTy/2bm60L+uxrfSu13cH9l3xpEuv55Mn/Jtv7QM
+        /TgZjR3ZkN3WhbNCv9VSbfuSTzL3CthvlfRvzQ==
+X-Google-Smtp-Source: ADFU+vu2TcmhrkQ3vHdIQJxoR1BX1Dgu/jUbMAzrf7+1PBw12+wOLynHGOuAxLN5XgkMazDn1FGHukH38UsQDdzp6Kc=
+X-Received: by 2002:ac8:1b33:: with SMTP id y48mr11115534qtj.136.1585755956175;
+ Wed, 01 Apr 2020 08:45:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3ztmzeDBET=jgX=LDCBVg8FKkQrcBOLzaStgUXRyG3jQ@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+References: <20200330164328.2944505-1-robert.marko@sartura.hr>
+ <20200330164328.2944505-2-robert.marko@sartura.hr> <20200331163103.GA27585@bogus>
+ <CA+HBbNEnH+0g0GK+xMGF48vJbLH3Ud2VY6yDOAxdgbRra3Y25A@mail.gmail.com>
+In-Reply-To: <CA+HBbNEnH+0g0GK+xMGF48vJbLH3Ud2VY6yDOAxdgbRra3Y25A@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 1 Apr 2020 09:45:44 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL_V6Lf3-eGoL454Gtgyp7a4hBo_2SXyq1jWfqDoXdXsQ@mail.gmail.com>
+Message-ID: <CAL_JsqL_V6Lf3-eGoL454Gtgyp7a4hBo_2SXyq1jWfqDoXdXsQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] dt-bindings: phy-qcom-ipq4019-usb: add binding document
+To:     Robert Marko <robert.marko@sartura.hr>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, John Crispin <john@phrozen.org>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 03:12:46PM +0100, Arnd Bergmann wrote:
-> On Fri, Mar 6, 2020 at 4:19 PM Arnd Bergmann <arnd@arndb.de> wrote:
+On Tue, Mar 31, 2020 at 10:39 AM Robert Marko <robert.marko@sartura.hr> wrote:
+>
+> On Tue, Mar 31, 2020 at 6:31 PM Rob Herring <robh@kernel.org> wrote:
 > >
-> > On Fri, Mar 6, 2020 at 2:07 PM <Sergey.Semin@baikalelectronics.ru> wrote:
+> > On Mon, 30 Mar 2020 18:43:29 +0200, Robert Marko wrote:
+> > > This patch adds the binding documentation for the HS/SS USB PHY found
+> > > inside Qualcom Dakota SoCs.
 > > >
-> > > From: Serge Semin <fancer.lancer@gmail.com>
+> > > Signed-off-by: John Crispin <john@phrozen.org>
+> > > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> > > Cc: Luka Perkov <luka.perkov@sartura.hr>
+> > > ---
+> > > Changes from v4 to v5:
+> > > * Replace tabs with whitespaces
+> > > * Add maintainer property
 > > >
-> > > Aside from PCIe/SATA/DDR/I2C/CPU-reboot specific settings the Baikal-T1
-> > > system controller provides three vendor-specific blocks. In particular
-> > > there are two Errors Handler Blocks to detect and report an info regarding
-> > > any problems discovered on the AXI and APB buses. These are the main buses
-> > > utilized by the SoC devices to interact with each other. In addition there
-> > > is a way to tune the MIPS P5600 CM2 L2-cache up by setting the Tag/Data/WS
-> > > L2-to-RAM latencies. All of this functionality is implemented in the
-> > > APB/AXI EHB and L2-cache control block drivers to be a part of the kernel soc
-> > > subsystem (as being specific to the Baikal-T1 SoC) and introduced in the
-> > > framework of this patchset.
+> > >  .../bindings/phy/qcom-usb-ipq4019-phy.yaml    | 48 +++++++++++++++++++
+> > >  1 file changed, 48 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.yaml
 > > >
-> > > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> > > commit 98d54f81e36b ("Linux 5.6-rc4").
 > >
-> > I have no objection to the drivers, but I wonder if these should be
-> > in drivers/bus and drivers/memory instead of drivers/soc, which have
-> > similar drivers already. The driver for the L2 cache is not really a
-> > memory controller driver, but it may be close enough, and we
-> > already have a couple of different things in there.
-> 
-> I don't see a reply to Rob's or my comments, so I assume you are not currently
-> updating them and I will wait for a new version after the v5.7 merge window.
-> 
-> Dropping the series from patchwork for now, see [1].
-> 
->        Arnd
-> 
-> [1] https://patchwork.kernel.org/project/linux-soc/list/
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > Error: Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.example.dts:21.25-26 syntax error
+> > FATAL ERROR: Unable to parse input tree
+> > scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.example.dt.yaml' failed
+> > make[1]: *** [Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.example.dt.yaml] Error 1
+> > make[1]: *** Waiting for unfinished jobs....
+> > Makefile:1262: recipe for target 'dt_binding_check' failed
+> > make: *** [dt_binding_check] Error 2
+> >
+> > See https://patchwork.ozlabs.org/patch/1264091
+> >
+> > If you already ran 'make dt_binding_check' and didn't see the above
+> > error(s), then make sure dt-schema is up to date:
+> >
+> > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> >
+> > Please check and re-submit.
+> Hi Rob,
+> I tested locally before submitting and it will pass.
 
-Yeah, sorry for the delay. I'll send an update very soon. A solution for
-the ehb'es is settled. We agreed to move the drivers to the drivers/bus
-subsystem. While we still don't know what to do with l2-cache driver.
-Please see my last response to your comment on the cover-letter.
+Impossible. Your example has defines, but there are no include files listed.
 
-Regards,
--Sergey
+Rob
