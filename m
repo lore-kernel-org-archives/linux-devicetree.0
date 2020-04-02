@@ -2,183 +2,165 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1FCC2BA1B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 12:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 288B9C2BA15
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 12:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E39E12078B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 12:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F360920757
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 12:16:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TQxW9jZa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ALLV3AjW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388234AbgDBMMB (ORCPT
+        id S2388119AbgDBMQu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 08:12:01 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:43767 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387937AbgDBMMA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 08:12:00 -0400
-Received: by mail-ed1-f66.google.com with SMTP id bd14so3768705edb.10;
-        Thu, 02 Apr 2020 05:11:58 -0700 (PDT)
+        Thu, 2 Apr 2020 08:16:50 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46848 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387730AbgDBMQu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 08:16:50 -0400
+Received: by mail-wr1-f66.google.com with SMTP id j17so3856549wru.13;
+        Thu, 02 Apr 2020 05:16:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LRlrYBCdZcwWb03ZprO8ychzrcB476+VJ1UlnxZ2m10=;
-        b=TQxW9jZaa+wrh9KjiHx179fg9oGdn4GxO+8hkR7A5O77/1lguXBzDIGKMy2QtZFkr7
-         oPsNGTDlqbNES1TGkDjhOVgRXTxopGu9LKpnf+3RnC3rrwOlb6ChrPWTNp6cDki1FeiY
-         LYXx/FZVbN9HsGCHnnPpDIMhFKOoj5qzOacyz6F49Dv5CJRFouSScdHY0zNRWCOfYIFu
-         xh4ipTGayZpAlquTuTUEZymfHHrP6twIFegpkwQgv9OcUgJ5stH1/ofDicEy5Kvjm/Sg
-         VSQIt9Zonjv05IcBKJbEakrXUolg7LkXdCBa07ACnKczupACaKTJ9lriXeUtnf8nk1kY
-         itQA==
+        h=to:cc:references:subject:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9100ZMfQ3eWaJVwdNq9pSQeHCEwHDV/UJ/zuKVucMxA=;
+        b=ALLV3AjWxKR07II/OzlDnRe+odhQFSFArcf8cWjQukJmd6WXsg9+vyfD8DfKX9gWMN
+         o85KGRmQSCApKdFnuQRIdkmUme7sEKjqw5SXiIFrjdPkCVpclHE6AukhNWeb6yNKOhL8
+         mSBvda/9k8hhDcs8hxq7Ir3tcfWNZFcNPUaqnc4VZGHD9WT/x2/UGQ7N9VjavMYukKnM
+         K8ULMWCC9wgUMpVyfUQ+xkB0QzfidY2ZSgy9eCRnT7acIbLf8oyP71jF6JKhMbcYxj4Q
+         HrYzq3IEOcIOy3d+DvXGwz17yj0IpLyHJbIGtAohcctCquPEvV8uOKDwrwF9JRdhOKkc
+         77Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LRlrYBCdZcwWb03ZprO8ychzrcB476+VJ1UlnxZ2m10=;
-        b=r6QmcMUFEPaNtZovlDf3YGfR5t9S1VwJmSFcQXTDuSTec0H3Hd37HnnalHw/pXcFXd
-         ryuPtpG9KUSLBLE8yiNrjPqXt0K0A2vrQ8IMFXTWRedK3CO0uj8ls7hiR+RLg/qeAAMR
-         pQm2OeMBxIv1h7+J0PMlk8Bvc35+szeRyTPOmHztW/cDgmN4X1f33+QST+pna7gaZdZ1
-         VBkopgJygZnLBMoOSkrbaAgIrfMA8JTfAYg6C3UiUd2dfqO8IisqWbEau5MGKOvS9yEj
-         KsMPaAEwT/jjWORESYPYNdXfLch36CnAxyhWIBK5IuNmBkH594E0HPkNgAsX3p4nmsxN
-         uDqQ==
-X-Gm-Message-State: AGi0PuYAEGDUCla0JOmRgQqTcBAtNbObOr0rr9Vizdrd5B+w/WYucY5h
-        tJVqmra4gdq9fsB7eDno2CE=
-X-Google-Smtp-Source: APiQypIVPsuxwUmgrlYcT74yZAWLYg4LgP32sTqKUWFQ5nLWkPN8O2DDt3wLLO2I85DElok5l5lFIw==
-X-Received: by 2002:a50:e007:: with SMTP id e7mr2532354edl.361.1585829518018;
-        Thu, 02 Apr 2020 05:11:58 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host250-251-dynamic.250-95-r.retail.telecomitalia.it. [95.250.251.250])
-        by smtp.googlemail.com with ESMTPSA id w20sm1083611ejv.40.2020.04.02.05.11.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 05:11:57 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Andy Gross <agross@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Sham Muthayyan <smuthayy@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 01/10] PCIe: qcom: add missing ipq806x clocks in PCIe driver
-Date:   Thu,  2 Apr 2020 14:11:38 +0200
-Message-Id: <20200402121148.1767-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200402121148.1767-1-ansuelsmth@gmail.com>
-References: <20200402121148.1767-1-ansuelsmth@gmail.com>
+        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9100ZMfQ3eWaJVwdNq9pSQeHCEwHDV/UJ/zuKVucMxA=;
+        b=HKHDqahQqZ2Rmnr9v31Oypl1kFosLcJzRYsApOh+2yXMCJuWrgTlHipCl28mgK4X0c
+         2QYhgip3EhYMJCPR/mJsT33D6zxnt7rEUb1Ij2SlZt6pd+TQKHL0SI0IQwPIp8KRoz5i
+         1gZ14JJu9eyBAkCukK4IihzSAjoYkmBeX3MqNdWLD4ZqK+X1KiOS4hE6xOBfdkqcRhJp
+         4e6AhkMAKIZAxF5Tl06mJJJ3/8PclTxFRJohssiuSvC5u+rk8Mbi3Mps9W/QDt6aym4y
+         kiNOBkv5CPNHbqtbV9f5vS2TFiiJOvcza9JcX8+7YgjiJ4lKdeWqlzfBfZWTa+IvLkft
+         M1CQ==
+X-Gm-Message-State: AGi0PuaGmFT/Th+5ksbbLJ4LctIVB2LPLJ6rWC+di4Nu+fPSRplqBHoO
+        BWLcgvUHJnuC0Raouw9GerM=
+X-Google-Smtp-Source: APiQypKji7UWQsmE5huunWfu+sXG44AGFdjl0/jp9OPk+bxWF6qOU3UNOHuPQ1YmcSNtr/z7NyzQ1g==
+X-Received: by 2002:a5d:4c48:: with SMTP id n8mr3212293wrt.414.1585829807916;
+        Thu, 02 Apr 2020 05:16:47 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id y12sm4191207wrn.55.2020.04.02.05.16.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Apr 2020 05:16:47 -0700 (PDT)
+To:     helen.koike@collabora.com
+Cc:     dafna.hirschfeld@collabora.com, devel@driverdev.osuosl.org,
+        devicetree@vger.kernel.org, ezequiel@collabora.com,
+        heiko@sntech.de, hverkuil-cisco@xs4all.nl,
+        karthik.poduval@gmail.com, kernel@collabora.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        robh+dt@kernel.org
+References: <20200402000234.226466-2-helen.koike@collabora.com>
+Subject: Re: [PATCH 1/4] dt-bindings: phy: phy-rockchip-dphy-rx0: move
+ rockchip dphy rx0 bindings out of staging
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <bfefe00c-5673-ddcb-4e2a-425eb4771002@gmail.com>
+Date:   Thu, 2 Apr 2020 14:16:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200402000234.226466-2-helen.koike@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Aux and Ref clk are missing in pcie qcom driver.
-Add support in the driver to fix pcie inizialization in ipq806x.
+Hi Helen,
 
-Fixes: 82a82383 PCI: qcom: Add Qualcomm PCIe controller driver
-Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 38 ++++++++++++++++++++++----
- 1 file changed, 33 insertions(+), 5 deletions(-)
+> # SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> %YAML 1.2
+> ---
+> $id: http://devicetree.org/schemas/phy/rockchip-mipi-dphy-rx0.yaml#
+> $schema: http://devicetree.org/meta-schemas/core.yaml#
+> 
+> title: Rockchip SoC MIPI RX0 D-PHY Device Tree Bindings
+> 
+> maintainers:
+>   - Helen Koike <helen.koike@collabora.com>
+>   - Ezequiel Garcia <ezequiel@collabora.com>
+> 
+> description: |
+>   The Rockchip SoC has a MIPI D-PHY bus with an RX0 entry which connects to
+>   the ISP1 (Image Signal Processing unit v1.0) for CSI cameras.
+> 
+> properties:
+>   compatible:
+>     const: rockchip,rk3399-mipi-dphy-rx0
+> 
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 5ea527a6bd9f..f958c535de6e 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -88,6 +88,8 @@ struct qcom_pcie_resources_2_1_0 {
- 	struct clk *iface_clk;
- 	struct clk *core_clk;
- 	struct clk *phy_clk;
-+	struct clk *aux_clk;
-+	struct clk *ref_clk;
- 	struct reset_control *pci_reset;
- 	struct reset_control *axi_reset;
- 	struct reset_control *ahb_reset;
-@@ -246,6 +248,14 @@ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
- 	if (IS_ERR(res->phy_clk))
- 		return PTR_ERR(res->phy_clk);
- 
-+	res->aux_clk = devm_clk_get(dev, "aux");
-+	if (IS_ERR(res->aux_clk))
-+		return PTR_ERR(res->aux_clk);
-+
-+	res->ref_clk = devm_clk_get(dev, "ref");
-+	if (IS_ERR(res->ref_clk))
-+		return PTR_ERR(res->ref_clk);
-+
- 	res->pci_reset = devm_reset_control_get_exclusive(dev, "pci");
- 	if (IS_ERR(res->pci_reset))
- 		return PTR_ERR(res->pci_reset);
-@@ -278,6 +288,8 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
- 	clk_disable_unprepare(res->iface_clk);
- 	clk_disable_unprepare(res->core_clk);
- 	clk_disable_unprepare(res->phy_clk);
-+	clk_disable_unprepare(res->aux_clk);
-+	clk_disable_unprepare(res->ref_clk);
- 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
- }
- 
-@@ -307,16 +319,28 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- 		goto err_assert_ahb;
- 	}
- 
-+	ret = clk_prepare_enable(res->core_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable core clock\n");
-+		goto err_clk_core;
-+	}
-+
- 	ret = clk_prepare_enable(res->phy_clk);
- 	if (ret) {
- 		dev_err(dev, "cannot prepare/enable phy clock\n");
- 		goto err_clk_phy;
- 	}
- 
--	ret = clk_prepare_enable(res->core_clk);
-+	ret = clk_prepare_enable(res->aux_clk);
- 	if (ret) {
--		dev_err(dev, "cannot prepare/enable core clock\n");
--		goto err_clk_core;
-+		dev_err(dev, "cannot prepare/enable aux clock\n");
-+		goto err_clk_aux;
-+	}
-+
-+	ret = clk_prepare_enable(res->ref_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable ref clock\n");
-+		goto err_clk_ref;
- 	}
- 
- 	ret = reset_control_deassert(res->ahb_reset);
-@@ -372,10 +396,14 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- 	return 0;
- 
- err_deassert_ahb:
--	clk_disable_unprepare(res->core_clk);
--err_clk_core:
-+	clk_disable_unprepare(res->ref_clk);
-+err_clk_ref:
-+	clk_disable_unprepare(res->aux_clk);
-+err_clk_aux:
- 	clk_disable_unprepare(res->phy_clk);
- err_clk_phy:
-+	clk_disable_unprepare(res->core_clk);
-+err_clk_core:
- 	clk_disable_unprepare(res->iface_clk);
- err_assert_ahb:
- 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
--- 
-2.25.1
+>   reg:
+>     maxItems: 1
 
+If 'reg' is not used => remove it.
+
+> 
+>   clocks:
+>     items:
+>       - description: MIPI D-PHY ref clock
+>       - description: MIPI D-PHY RX0 cfg clock
+>       - description: Video in/out general register file clock
+> 
+>   clock-names:
+>     items:
+>       - const: dphy-ref
+>       - const: dphy-cfg
+>       - const: grf
+> 
+>   '#phy-cells':
+>     const: 0
+> 
+>   power-domains:
+>     description: Video in/out power domain.
+>     maxItems: 1
+> 
+> required:
+>   - compatible
+>   - clocks
+>   - clock-names
+>   - '#phy-cells'
+>   - power-domains
+> 
+> additionalProperties: false
+> 
+> examples:
+>   - |
+> 
+>     /*
+>      * MIPI D-PHY RX0 use registers in "general register files", it
+>      * should be a child of the GRF.
+>      *
+>      * grf: syscon@ff770000 {
+>      *  compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
+>      *  ...
+>      * };
+>      */
+> 
+>     #include <dt-bindings/clock/rk3399-cru.h>
+>     #include <dt-bindings/power/rk3399-power.h>
+> 
+>     mipi_dphy_rx0: mipi-dphy-rx0 {
+>         compatible = "rockchip,rk3399-mipi-dphy-rx0";
+>         clocks = <&cru SCLK_MIPIDPHY_REF>,
+>                  <&cru SCLK_DPHY_RX0_CFG>,
+>                  <&cru PCLK_VIO_GRF>;
+>         clock-names = "dphy-ref", "dphy-cfg", "grf";
+>         power-domains = <&power RK3399_PD_VIO>;
+>         #phy-cells = <0>;
+>     };
