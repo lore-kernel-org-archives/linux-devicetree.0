@@ -2,84 +2,142 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E452C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 08:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BEDC43331
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 08:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 433912078B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 08:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7262F206F5
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 08:24:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=waldekranz-com.20150623.gappssmtp.com header.i=@waldekranz-com.20150623.gappssmtp.com header.b="0HPfuqj3"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="Z1QSr1ec"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387603AbgDBIE6 (ORCPT
+        id S2387603AbgDBIYc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 04:04:58 -0400
-Received: from mail-lj1-f173.google.com ([209.85.208.173]:45847 "EHLO
-        mail-lj1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726841AbgDBIE6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 04:04:58 -0400
-Received: by mail-lj1-f173.google.com with SMTP id t17so2187148ljc.12
-        for <devicetree@vger.kernel.org>; Thu, 02 Apr 2020 01:04:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=waldekranz-com.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:in-reply-to:date:subject:from:to:cc
-         :message-id;
-        bh=XQZDDCfqzrHXRzCxBWJnl/aWw3Nw+jAcBp/lGh2mgiM=;
-        b=0HPfuqj3MgB7P0rn53IWIK+Ne937bITDv2rsQXN6uCE2BBQebP547iaEHH6dRMSxNr
-         4VGUhzqyo7Mg2d0txJgZgjIYwlJyJYY0btv+qNtG61olGOzl1Vj53K+3AwmVAK9KqKU4
-         leWabsVJj3bu1+EyFSFuBc91OgVsMWQe910fgBTf9yufpFE+My8EpiS8DWQ/mQn04mrj
-         dKRXimrB4mJxEIndN1x07LiRjw0juafqqMHVYF9Yaw9lYXJ5h4d2Er03yCKHVC0YEy95
-         eGJV1VisYI7m99Q4v3uM/HWICfb60z1qDYoY8mTB3T2wHVilM+JXsUPxrvIuCstSGqmZ
-         v6TQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:in-reply-to:date
-         :subject:from:to:cc:message-id;
-        bh=XQZDDCfqzrHXRzCxBWJnl/aWw3Nw+jAcBp/lGh2mgiM=;
-        b=Yzx1nCKnwUKGbKU0bohhEPObJuPwbdvr/MyJOCrH2mZ+1mR0HAIiazrfRGs5UVY18h
-         373mDXAoUS3Qb0Zm2aKiXW7EoSBEeWt/mf+idjy8idQk+piPfnm+J0EZ/Em+L2orzkkL
-         OMsi8z2b+0GheUmGvMmv8N1EjMVYXIPjo3cSCajmm+/dxt4TBdFzssFF+p+0m6beFd5x
-         5kK4x9+L6qXHNFZDVLXFHybnMNlrchCiKAQWQvR6u+9GVr852X4V52IT+2gx67dQRaFP
-         9HKtLdnuKQXaZWmHSVVP7Gn0d8nOUT/gyaiothw6fv5xhQN1TZp4J/t8tkdPKvI1Ojwf
-         YHxQ==
-X-Gm-Message-State: AGi0PuZvOlmRP5vcFdMGuLDxd6nkM8Ou+mI5IO/S1XZ5KghFtlUkQ1eJ
-        i5Go3U/+KXw98Juj7jQvNlfYChncmyDB1Q==
-X-Google-Smtp-Source: APiQypLfgdVYubZFJtOenRgIER0sqtAl9x94eGBWVWyNDyNHwwuVQtskiKfjjxB/YfaG9A3JbKMmmA==
-X-Received: by 2002:a2e:9252:: with SMTP id v18mr1273195ljg.114.1585814691777;
-        Thu, 02 Apr 2020 01:04:51 -0700 (PDT)
-Received: from localhost (static-193-12-47-89.cust.tele2.se. [193.12.47.89])
-        by smtp.gmail.com with ESMTPSA id c2sm3426591lfb.43.2020.04.02.01.04.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 01:04:51 -0700 (PDT)
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-In-Reply-To: <20200401175804.2305-1-robh@kernel.org>
-Date:   Thu, 02 Apr 2020 09:52:22 +0200
-Subject: Re: [PATCH] dt-bindings: net: mvusb: Fix example errors
-From:   "Tobias Waldekranz" <tobias@waldekranz.com>
-To:     "Rob Herring" <robh@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     <devicetree@vger.kernel.org>,
-        "Tobias Waldekranz" <tobias@waldekranz.com>,
-        <netdev@vger.kernel.org>
-Message-Id: <C1QK4JZDOZ2B.24IAC4AFLHWP9@wkz-x280>
+        Thu, 2 Apr 2020 04:24:32 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:39176 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387574AbgDBIYc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Apr 2020 04:24:32 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 60C5141252;
+        Thu,  2 Apr 2020 08:24:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-transfer-encoding:mime-version:user-agent:content-type
+        :content-type:organization:references:in-reply-to:date:date:from
+        :from:subject:subject:message-id:received:received:received; s=
+        mta-01; t=1585815868; x=1587630269; bh=Rk9xR31MTBz42inzc2zDfzMeZ
+        IDUkeMnBQo9b80woiI=; b=Z1QSr1ecssngt9KsASvvvGjwjmSfwzQLU7b3urygH
+        jfQ2eVzv51CZmehzgGEfVE7k2eKD4XeKdy4bNn5FuM69IJ/8R8TSMRkjdlYqLo+l
+        sVv85W8lYsBXvJiVl81kD24CAMcPvG0gRCh/A7cgjEUHSWrsTiigH3W7rFQ4TQPW
+        ok=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id yIxdH8dGqypN; Thu,  2 Apr 2020 11:24:28 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 6E2EA41251;
+        Thu,  2 Apr 2020 11:24:28 +0300 (MSK)
+Received: from localhost.localdomain (10.199.3.154) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Thu, 2 Apr 2020 11:24:28 +0300
+Message-ID: <1e2c9b590a3626abee330a28cca86cbae7affb39.camel@yadro.com>
+Subject: Re: [PATCH v6 2/2] iio: proximity: Add driver support for vcnl3020
+ proximity sensor
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 2 Apr 2020 11:24:36 +0300
+In-Reply-To: <CAHp75VcdDR-owtFuFMqNLFh_-L902fXODG14_6Dh416tTwjidA@mail.gmail.com>
+References: <20200401162416.24474-1-i.mikhaylov@yadro.com>
+         <20200401162416.24474-3-i.mikhaylov@yadro.com>
+         <CAHp75VcdDR-owtFuFMqNLFh_-L902fXODG14_6Dh416tTwjidA@mail.gmail.com>
+Organization: YADRO
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.199.3.154]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed Apr 1, 2020 at 1:58 PM PST, Rob Herring wrote:
-> The example for Marvell USB to MDIO Controller doesn't build:
+On Wed, 2020-04-01 at 19:35 +0300, Andy Shevchenko wrote:
+> On Wed, Apr 1, 2020 at 7:24 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+> > Proximity sensor driver based on light/vcnl4000.c code.
+> > For now supports only the single on-demand measurement.
+> > 
+> > The VCNL3020 is a fully integrated proximity sensor. Fully
+> > integrated means that the infrared emitter is included in the
+> > package. It has 16-bit resolution. It includes a signal
+> > processing IC and features standard I2C communication
+> > interface. It features an interrupt function.
+> 
+> Thank you for an update, my comments below.
+> 
+> ...
+> 
+> > +static int get_and_apply_property(struct vcnl3020_data *data, const char
+> > *prop,
+> > +                                 u32 reg)
+> > +{
+> > +       int rc;
+> > +       u32 val;
+> > +
+> > +       rc = device_property_read_u32(data->dev, prop, &val);
+> > +       if (rc)
+> > +               return 0;
+> > +
+> > +       rc = regmap_write(data->regmap, reg, val);
+> > +       if (rc)
+> > +               dev_err(data->dev, "Error (%d) setting property (%s)",
+> > +                       rc, prop);
+> 
+> This requires {} according to the coding style
 
-Thank you for fixing this. I did run 'make dt_binding_check' before
-submitting, but my branch did not have the latest kbuild additions
-which passed the examples through dtc.
+checkpatch.pl doesn't say anything bad on this spot. Do you mean to make
+something like this?
 
-I'll make sure to address the remaining comments once net-next is open
-again.
+rc = regmap_write(data->regmap, reg, val);
+if (rc) {
+	dev_err(data->dev, "Error (%d) setting property (%s)",
+                rc, prop);
+}
 
-Thanks,
-Tobias
+In previous notes you said to remove them. 
+
+> .
+> 
+> > +       return rc;
+> > +}
+> 
+> ...
+> 
+> > +static int vcnl3020_probe(struct i2c_client *client)
+> > +{
+> > +       indio_dev->name = VCNL_DRV_NAME;
+> 
+> It's definitely not a driver name. You have to put part number here.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/tsl4531.c?h=v5.6#n199
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/max44009.c?h=v5.6#n507
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/vl6180.c?h=v5.6#n515
+
+
