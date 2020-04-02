@@ -2,127 +2,168 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EECF0C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 14:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 503E6C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 15:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C292820757
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 14:52:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XXLJyF7x"
+	by mail.kernel.org (Postfix) with ESMTP id 1FF36206CC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 15:03:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388837AbgDBOw6 (ORCPT
+        id S2388823AbgDBPDZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 10:52:58 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:47011 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388828AbgDBOw6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 10:52:58 -0400
-Received: by mail-lj1-f195.google.com with SMTP id r7so3487138ljg.13;
-        Thu, 02 Apr 2020 07:52:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OL/tVc1Ch0fuHCWGLDW0Ztss4EfxD7apFgMsfQsUr7k=;
-        b=XXLJyF7xqJnLsf3hdgwiZ4/6fLutg8R+bEQTaJJqAeYpNor8HeBOvDfKkexPjnzahg
-         +frziBQdgK3hB1ePSeped/hKH0YLg2DoJjK+3kGLOUiymHQfuQELDwVhuCh1wN/AEsj3
-         zIfCwHuQfaSXAhgByi1w+ZRufw9ziTNKPlAT3+62tzm6ll/lgGnwVwyhIT+LjSrt55eG
-         k13OhX+VLhwvD+/C2RBX8+uvBlD8U5j3KjStGieqDeISRqPeeo2HHKtiCTSHgQjcsGYY
-         QYGBhtRdTaLNRCAAB13kjntO7MF6gYxJw9nw+cDxhtSkEN7UckHq+wKdtdzmvNDaHSQs
-         6nPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OL/tVc1Ch0fuHCWGLDW0Ztss4EfxD7apFgMsfQsUr7k=;
-        b=Gx9YYgIWYon/MuuxV0rs4Kt6CmCDzn4v46Xq5DNgsr9zmITu/1RrJBSxi8vWoQ7Aqw
-         jeYPBc9QFWQSLClQtHiO1gLYNJ0VHTynuwKxFKMUi38OjLNrxWGSgiXJJlMreGujEzim
-         0gNoV9h/uv0sKSmzJM3ARGqW0h1I9KaeuwtHEpTwMXVqlnzZnqhI84s7vD4SKYL3r2Pd
-         IDqTT5KzCOpXumzzudTabm0bt4g1Iiv68Zp4Lmgpqx4ovGq85dTpAfZ4JB2vwBydVoZZ
-         VXfqvIv1mr8iwWqvN+UcbiQlx7YuaP5WioCFfTnlxYKm/MwN6qHBPzzIeD4gimceXz3z
-         vaFA==
-X-Gm-Message-State: AGi0PuYsjzWzWwjUdZaOl60OhSvj+n4gYzBTuy3lutBFOXrAAizcRn15
-        tEAcgwr4bRDxRjWtdAIMqF0LIznv
-X-Google-Smtp-Source: APiQypLjaRISzAROt9vUoQ7mTnsDUyvNC/1ydvIVFNPjf8gKXPfxEOQBVVn2YEr/ZcVFzDNztZhQng==
-X-Received: by 2002:a2e:904b:: with SMTP id n11mr2225309ljg.171.1585839173690;
-        Thu, 02 Apr 2020 07:52:53 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id c22sm3976478lfi.41.2020.04.02.07.52.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 07:52:52 -0700 (PDT)
-Subject: Re: [PATCH v1 5/6] dt-bindings: ARM: tegra: Add ASUS Google Nexus 7
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        =?UTF-8?Q?Pedro_=c3=82ngelo?= <pangelo@void.io>,
-        Matt Merhar <mattmerhar@protonmail.com>,
-        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200331214327.6496-1-digetx@gmail.com>
- <20200331214327.6496-6-digetx@gmail.com>
- <20200402045008.GB11124@qmqm.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <4c059f4a-111a-086b-c165-eb8ae798d606@gmail.com>
-Date:   Thu, 2 Apr 2020 17:52:51 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 2 Apr 2020 11:03:25 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:57337 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388744AbgDBPDZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 11:03:25 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1MybX9-1j7PZQ1xzp-00z00b; Thu, 02 Apr 2020 17:03:09 +0200
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id 097A0650AA7;
+        Thu,  2 Apr 2020 15:03:08 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id qP8o4QmZzMyZ; Thu,  2 Apr 2020 17:03:07 +0200 (CEST)
+Received: from pflmari.corp.cetitec.com (unknown [10.8.5.56])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 9404064C938;
+        Thu,  2 Apr 2020 17:03:07 +0200 (CEST)
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id 68B12804FB; Thu,  2 Apr 2020 16:16:54 +0200 (CEST)
+Date:   Thu, 2 Apr 2020 16:16:54 +0200
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH v4 9/9] arm64: dts: renesas: salvator: add a connection
+ from adv748x codec (HDMI input) to the R-Car SoC
+Message-ID: <20200402141654.GB4291@pflmari>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+References: <cover.1585218857.git.alexander.riesen@cetitec.com>
+ <ad15f80df51c95a7c24498bb0bd3a46f55fbb62e.1585218857.git.alexander.riesen@cetitec.com>
+ <CAMuHMdV+joeNWJotKySVPHNW9OoT8+iODBwhK5fACspq2SX_eg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200402045008.GB11124@qmqm.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV+joeNWJotKySVPHNW9OoT8+iODBwhK5fACspq2SX_eg@mail.gmail.com>
+X-Provags-ID: V03:K1:Is5uJxMg3JOTXfihWmw/yAJXlIzEj/786Ut3euQGsigzUph1yio
+ H5V1cBF7XgZEEeI7WsFwuZTxP2E6Hj6azmNrJh9qwFSuXDZ+zCCP81RCQlmSPJla0Sr6IY6
+ QSzQfPaUUl+mZtQjwdOV8zhedWfwf9gToq+Iv9Gat4KWV8g7VMTdPkti9uvTMfDtvqBdOTd
+ PDGuW+kIr2pCE6T9+kHjg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:FPfBvf1WZKE=:2e0MwuWr49u0npND5T8YEM
+ fXabhm3nmxL2DQkHlFFAFd/AZJcQQiHJROAR+13cGIK/BQ/5L5fhbKsr7QiYNSbpyhGhT1ZXC
+ DruPJmtG+lW129VEWTRpAKIV5wDbNozyUjfNELnMLoLiIgZrFxhzuYtOI4hT+pTegAreOtXuY
+ YfcTsBxuvY4dba3wKL2aYMR5m8DUoCn2hdNWbACXx4muJNO+uRItRcQSWagsMF3DlswZ5+Us2
+ B0+yMDRs7PtQd3w0V3y33k3JPgrBXnZ4w558yfeHQLg4kIWRIHpFhFo8ChpuzQWXxM2F0vQlv
+ HtSDfCZITzq7skt8OyjiMW/jnep2ho+Z9HY1Lxic6ZaS/c1oKGfmYEsa5yjLRoTRUFPiYRFGS
+ 4eWSizLGLgXzJCKL4UZjwwOQQo8F9tKigOvvEkmQqZszuPk2XWOxoop+EHnYkilEOa1eCL4sN
+ axL1Vs/QBvg0L3KWDLUSBXyuPLu1Rafzc9r5rXt+ffN/w75EG6YkVVacAiZC3sBbn4PsgddkC
+ uqAdlMvF1MSmd8W8OaNN1yeN3JuYYF4XRosNbKHSTjriS7k/zZvLxcWpWaZSh+szMs62045IH
+ 8VBAbwU/Wxez46XOtQkuodomLlPQ/dUWP7rllc2j8+g4nBltzexHbEmghcrGNssSjZT/zum//
+ 2jEC3qaNRVnKT06kQAI/jRiueES0WlRUmPhUre8tZGmxjSssxMHxNw5UWej9WOECkNcm3p8u4
+ Yl88JIj+7JtrYyzm88d18pAMmJkOZHw1SaJDqUVASOi5RnYxHDytRQaYe/XrkIqzmlwid6o0T
+ NeU6XqJ/1T6H0LTy6Lk4ke+UK68Rywv87xDbbBW0VOB/RHYoGHeNaIxr4Dl/Nmq4ENHwMYk
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-02.04.2020 07:50, Michał Mirosław пишет:
-> On Wed, Apr 01, 2020 at 12:43:26AM +0300, Dmitry Osipenko wrote:
->> Add a binding for the Tegra30-based ASUS Google Nexus 7 tablet device.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  Documentation/devicetree/bindings/arm/tegra.yaml | 7 +++++++
->>  1 file changed, 7 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/tegra.yaml b/Documentation/devicetree/bindings/arm/tegra.yaml
->> index 7fd0b66c69b2..fb3bbf7a5fb4 100644
->> --- a/Documentation/devicetree/bindings/arm/tegra.yaml
->> +++ b/Documentation/devicetree/bindings/arm/tegra.yaml
->> @@ -62,6 +62,13 @@ properties:
->>                - toradex,colibri_t30-eval-v3
->>            - const: toradex,colibri_t30
->>            - const: nvidia,tegra30
->> +      - items:
->> +          - const: asus,grouper
->> +          - const: nvidia,tegra30
->> +      - items:
->> +          - const: asus,tilapia
->> +          - const: asus,grouper
->> +          - const: nvidia,tegra30
->>        - items:
->>            - enum:
->>                - nvidia,dalmore
+Hi Geert,
+
+I'm sorry for late reply. Some unrelated happenings here in south Germany.
+
+Geert Uytterhoeven, Mon, Mar 30, 2020 10:32:47 +0200:
+> On Thu, Mar 26, 2020 at 11:55 AM Alex Riesen <alexander.riesen@cetitec.com> wrote:
+> > --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> > @@ -510,6 +511,15 @@ adv7482_txb: endpoint {
+> >                                 remote-endpoint = <&csi20_in>;
+> >                         };
+> >                 };
+> > +
+> > +               port@c {
+> > +                       reg = <12>;
+> > +
+> > +                       adv7482_i2s: endpoint {
+> > +                               remote-endpoint = <&rsnd_endpoint3>;
+> > +                               system-clock-direction-out;
+> > +                       };
+> > +               };
 > 
-> Is it really necessary to list every possible device using a SoC chip?
+> As the adv748x driver just ignores "invalid" endpoints...
+> 
+> > @@ -758,8 +769,19 @@ &rcar_sound {
+> >                  <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>,
+> >                  <&cpg CPG_MOD 1019>, <&cpg CPG_MOD 1018>,
+> >                  <&audio_clk_a>, <&cs2000>,
+> > -                <&audio_clk_c>,
+> > +                <&adv7482_hdmi_in>,
+> >                  <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
+> 
+> ... and the rsnd driver ignores nonexistent-clocks, the DT change has no
+> hard dependency on the driver change, and won't introduce regressions
+> when included, right?
 
-Yes, otherwise make dtbs_check will give you a warning about the unknown
-compatible.
+Well, it maybe won't, but isn't it a little ... implicit?
+And I'm no haste to include the changes, if you mean I can (or should) submit
+the device tree patch separately.
 
-> Wouldn't it be enough to just list SoC value nvidia,tegraXYZ and allow
-> any other supplemental "compatibles"?
+> > @@ -777,6 +799,21 @@ rsnd_endpoint0: endpoint {
+> >                                 capture  = <&ssi1 &src1 &dvc1>;
+> >                         };
+> >                 };
+> > +               rsnd_port3: port@3 {
+> > +                       reg = <3>;
+> > +                       rsnd_endpoint3: endpoint {
+> > +                               remote-endpoint = <&adv7482_i2s>;
+> > +
+> > +                               dai-tdm-slot-num = <8>;
+> > +                               dai-tdm-slot-width = <32>;
+> > +                               dai-format = "left_j";
+> > +                               mclk-fs = <256>;
+> > +                               bitclock-master = <&adv7482_i2s>;
+> > +                               frame-master = <&adv7482_i2s>;
+> > +
+> > +                               capture = <&ssi4>;
+> > +                       };
+> > +               };
+> >         };
+> >  };
+> 
+> However, as salvator-common.dtsi is shared by all Salvator-X(S) variants,
+> you'll have to add a dummy ssi4 node to r8a77961.dtsi first.
 
-I don't know what was the initial intention of having boards defined in
-a way it's currently done, maybe Rob;Thierry;Stephen;Jon could clarify?
+I see. There are even two dummy SSI nodes already. I would prefer to submit
+the change together with other Salvator device tree changes. Is that alright?
+
+Regards,
+Alex
+
