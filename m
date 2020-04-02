@@ -2,166 +2,106 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B88D2C2BA12
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 21:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E69C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 21:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 873862078B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 21:33:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585863195;
-	bh=sEbEJDY3uNsFFQnIzWiH4TyvsZPJRza9p71kK+FQIQs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wKCWvyhPnPqVG/35lw/yG0SThotipC6uttikaK3YKez8Myq6T9fLPz0AveCMSRmMb
-	 fj9MGLT9CXHeZq82oSM0g7iwlLE4KP12bFuiBFioS+O5rv0LHiMEbWM2Zp9w6fhrsd
-	 Srvgpv7j1y0weoqs84++O7CiajR3a3YWEYbmZfx0=
+	by mail.kernel.org (Postfix) with ESMTP id CC48020719
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 21:39:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eT0LV6Tg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729549AbgDBVdP (ORCPT
+        id S1730837AbgDBVjW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 17:33:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41412 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726963AbgDBVdO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 2 Apr 2020 17:33:14 -0400
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 818A0208E0;
-        Thu,  2 Apr 2020 21:33:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585863193;
-        bh=sEbEJDY3uNsFFQnIzWiH4TyvsZPJRza9p71kK+FQIQs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=auTMkc/6TL7cwsVXVtygaZtVE/9AzLt81Z/XNW07UPnrdMbVjTiL7U0M76RnFoOvX
-         wzlk5B3vIBkru25w47rgFhHhba5hb5bfo3PFYA4NlbbpkxF3/XKI7wACPLPYTIeYzB
-         nCf1vrK6BtDg4hGPROfuKSOBxnAeUFnPPqE/7NrE=
-Received: by mail-io1-f49.google.com with SMTP id y14so5239456iol.12;
-        Thu, 02 Apr 2020 14:33:13 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZlKhqO5UdIbjK7owat12387u3j0MSr8lVGFf47tuQiG8pMLugB
-        ZToCUMT3jaNigg3tkk2UzPQ5qaSoWRxJbRrIHBM=
-X-Google-Smtp-Source: APiQypLHI870DXnGi+SPCNcNnoFCTVHDyToeM11A/grJamJ4IqpuKrPjOk9kN49V1aXouUC4oxxy05Hry8/NW4pm25o=
-X-Received: by 2002:a02:a785:: with SMTP id e5mr5232296jaj.97.1585863192871;
- Thu, 02 Apr 2020 14:33:12 -0700 (PDT)
+        Thu, 2 Apr 2020 17:39:22 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44889 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729549AbgDBVjW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 17:39:22 -0400
+Received: by mail-wr1-f65.google.com with SMTP id m17so5982204wrw.11;
+        Thu, 02 Apr 2020 14:39:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OA8flzRmQncqENw/jnCzgwT3+26RLddE5UjILgqgsE4=;
+        b=eT0LV6TgcgJm+DZJburRzEYwkFyzpCGlMmoumt6PWmM3BId0R9Pv4MQfcLHg2MBfWJ
+         dcRvNq+BRBXZofY41aCBEND+HjRlQzbSoWKrAPNGLzLLhfjyPCCDGH3VFWc4vCSGeZ2I
+         D9eAsMTl97FmMJiDveInl8wpDOWEnGPTw9poSIvUpEinaAlDn4tJs974Or+AINJVvxZk
+         3VH2+EfhxyQaXsYpmCJE1DZ+hp58cQiM03hrifWQUSCbU1Dw+cFZxHWlOwQtrjqLK6NM
+         yzqtIaFxbv1BEuerQRPTYNkSIBNWZZq/UhdIpYwdQ9uZyi54SufKE/RQwJWrbJlTkTrz
+         oPTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OA8flzRmQncqENw/jnCzgwT3+26RLddE5UjILgqgsE4=;
+        b=URF6OI50ZlPfL9/lLDjZmU+Ulc63ExdjBIUuR0YDdRZgm7UPqyJ5tmkg9LxfyIgY17
+         zQdLiPgBhK6F+PzOgJT03UnV/t8UGxJUVNkJPnbF+ki/pkO33UPQ3KHnwq/H0UUbx0sT
+         JrPe65xDeByH+cDQjztHYEw+eWjDgmIYcIDlaYaWXnXfjByrRTOUSlLih2BedmMatCjD
+         hlVHCfKGh089N5Sbg8cKbMA0h+1kDXZfTX0IBmpaYhKQaPASMu/yOH2K19zDf3Ck9bU0
+         R81KO6Ldjgffz82t0Vd2kNhPRnoy5SMZYxckjzs6bM+kpstYbBjmwt6O+RlsGmP48pji
+         ji/A==
+X-Gm-Message-State: AGi0PuZZZ2RYw+Omp+g46QdcQbVowceBJS/FEAObePBEPX/DAa2JA6z/
+        4QoMoiT/BpnkYhGrzwlaqc0H1AzXCPAm10PNLiA=
+X-Google-Smtp-Source: APiQypJuTFrgRQAeVmtbnKPn1dgb35LqrQlb2cAktYsh516o9IjqYj4O3qFlEtrd3ltgtSYzQHXrBASKQt/2YWYWn9o=
+X-Received: by 2002:adf:e90b:: with SMTP id f11mr5417665wrm.65.1585863560277;
+ Thu, 02 Apr 2020 14:39:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <1585128694-13881-1-git-send-email-hanks.chen@mediatek.com> <1585128694-13881-4-git-send-email-hanks.chen@mediatek.com>
-In-Reply-To: <1585128694-13881-4-git-send-email-hanks.chen@mediatek.com>
-From:   Sean Wang <sean.wang@kernel.org>
-Date:   Thu, 2 Apr 2020 14:33:01 -0700
-X-Gmail-Original-Message-ID: <CAGp9LzpaC5opt9=BDUbR6tdr75F8cUxZc9nydJmNwoyq15x7hg@mail.gmail.com>
-Message-ID: <CAGp9LzpaC5opt9=BDUbR6tdr75F8cUxZc9nydJmNwoyq15x7hg@mail.gmail.com>
-Subject: Re: [PATCH v5 3/6] pinctrl: mediatek: avoid virtual gpio trying to
- set reg
-To:     Hanks Chen <hanks.chen@mediatek.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+References: <1583747589-17267-1-git-send-email-sanm@codeaurora.org> <1583747589-17267-4-git-send-email-sanm@codeaurora.org>
+In-Reply-To: <1583747589-17267-4-git-send-email-sanm@codeaurora.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 2 Apr 2020 14:39:08 -0700
+Message-ID: <CANcMJZCr646jav3h14K0xV=ANMxXg=U20wvSB546qrLX3TECBg@mail.gmail.com>
+Subject: Re: [PATCH v5 3/9] phy: qcom-qusb2: Add generic QUSB2 V2 PHY support
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, devicetree@vger.kernel.org,
-        wsd_upstream@mediatek.com, Mars Cheng <mars.cheng@mediatek.com>
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
+        YongQin Liu <yongqin.liu@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Hanks,
+On Mon, Mar 9, 2020 at 2:54 AM Sandeep Maheswaram <sanm@codeaurora.org> wrote:
+> @@ -774,8 +774,8 @@ static const struct of_device_id qusb2_phy_of_match_table[] = {
+>                 .compatible     = "qcom,msm8998-qusb2-phy",
+>                 .data           = &msm8998_phy_cfg,
+>         }, {
+> -               .compatible     = "qcom,sdm845-qusb2-phy",
+> -               .data           = &sdm845_phy_cfg,
+> +               .compatible     = "qcom,qusb2-v2-phy",
+> +               .data           = &qusb2_v2_phy_cfg,
+>         },
+>         { },
+>  };
 
-On Wed, Mar 25, 2020 at 2:31 AM Hanks Chen <hanks.chen@mediatek.com> wrote:
->
-> for virtual gpios, they should not do reg setting and
-> should behave as expected for eint function.
->
-> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
-> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
-> ---
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c |   28 ++++++++++++++++++++++
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h |    1 +
->  drivers/pinctrl/mediatek/pinctrl-paris.c         |    7 ++++++
->  3 files changed, 36 insertions(+)
->
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> index 20e1c89..087d233 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> @@ -226,6 +226,31 @@ static int mtk_xt_find_eint_num(struct mtk_pinctrl *hw, unsigned long eint_n)
->         return EINT_NA;
->  }
->
-> +/*
-> + * Virtual GPIO only used inside SOC and not being exported to outside SOC.
-> + * Some modules use virtual GPIO as eint (e.g. pmif or usb).
-> + * In MTK platform, external interrupt (EINT) and GPIO is 1-1 mapping
-> + * and we can set GPIO as eint.
-> + * But some modules use specific eint which doesn't have real GPIO pin.
-> + * So we use virtual GPIO to map it.
-> + */
-> +
-> +bool mtk_is_virt_gpio(struct mtk_pinctrl *hw, unsigned int gpio_n)
-> +{
-> +       const struct mtk_pin_desc *desc;
-> +       bool virt_gpio = false;
-> +
-> +       if (gpio_n >= hw->soc->npins)
-> +               return virt_gpio;
+Just as a heads up, Yongqin (cc'ed) reported this patch (now upstream)
+seems to be causing trouble on the db845c.
 
-gpio_n should always be less than hw-> soc-> npins, right? If so, we
-can delete the condition from here.
+It seems like its removing support for the "qcom,sdm845-qusb2-phy"
+compatible string, which is documented:
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml#n23
 
-> +
-> +       desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio_n];
-> +
-> +       if (desc->funcs && !desc->funcs[desc->eint.eint_m].name)
-> +               virt_gpio = true;
-> +
-> +       return virt_gpio;
-> +}
-> +
->  static int mtk_xt_get_gpio_n(void *data, unsigned long eint_n,
->                              unsigned int *gpio_n,
->                              struct gpio_chip **gpio_chip)
-> @@ -278,6 +303,9 @@ static int mtk_xt_set_gpio_as_eint(void *data, unsigned long eint_n)
->         if (err)
->                 return err;
->
-> +       if (mtk_is_virt_gpio(hw, gpio_n))
-> +               return 0;
-> +
->         desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio_n];
->
->         err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_MODE,
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> index 1b7da42..cda1c7a0 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> @@ -299,4 +299,5 @@ int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
->  int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
->                               const struct mtk_pin_desc *desc, u32 *val);
->
-> +bool mtk_is_virt_gpio(struct mtk_pinctrl *hw, unsigned int gpio_n);
->  #endif /* __PINCTRL_MTK_COMMON_V2_H */
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> index 923264d..7fba76d 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> @@ -693,6 +693,13 @@ static int mtk_gpio_get_direction(struct gpio_chip *chip, unsigned int gpio)
->         const struct mtk_pin_desc *desc;
->         int value, err;
->
-> +       /*
-> +        * "Virtual" GPIOs are always and only used for interrupts
-> +        * Since they are only used for interrupts, they are always inputs
-> +        */
-> +       if (mtk_is_virt_gpio(hw, gpio))
-> +               return 1;
-> +
->         desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
->
->         err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &value);
-> --
-> 1.7.9.5
+and already in use:
+   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sdm845.dtsi#n2389
+
+Should this instead have been an addition of the "qcom,qusb2-v2-phy",
+line instead of replacing "qcom,sdm845-qusb2-phy"?
+
+thanks
+-john
