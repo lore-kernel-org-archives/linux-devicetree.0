@@ -2,150 +2,97 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C41CC43331
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 12:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12125C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 13:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52F2920757
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 12:42:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O3BUPwQD"
+	by mail.kernel.org (Postfix) with ESMTP id E5B98206E9
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 13:32:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388257AbgDBMmP (ORCPT
+        id S2388513AbgDBNcE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 08:42:15 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43723 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387654AbgDBMmP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 08:42:15 -0400
-Received: by mail-pg1-f195.google.com with SMTP id g20so1772269pgk.10;
-        Thu, 02 Apr 2020 05:42:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5TKbIydpRklueBEw0/i7UhJyiz9MBbmx3hB6XV9W11U=;
-        b=O3BUPwQDQwBS+6J+YlsV09c9cKEHQLZe73JS3s7YGP2Kv64RmM45GyNeegXSiCso6R
-         mZ+hhIpJmOogGb4LTnMjOaX45KTLoMTMlb8uPz0ZqhnkADaWg9l9+oaIh5Kb/RTwT/oN
-         T641VF7lvajtaYVc7/3LDiJQKCVhDjbVQvKSaiBVi/OI5pal0oTMlbYD5vKqWb3TCRJR
-         mmpPatlwxXXaA3aqLCrPMBZ5a6/EHz7L/xPXyVcCTXfn3m5KP8Lh1eWEnRCJFdc7VOIj
-         rVRm1eLiYeq3WIVshWJ++ZN7fLuyyiOqbdVgiW3R0dr/ENKW84WmnL1Z9JGqoH1hxyIU
-         yJ+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5TKbIydpRklueBEw0/i7UhJyiz9MBbmx3hB6XV9W11U=;
-        b=cgB3zhxWW43booFZ11ckiy/ZnhbMiPblil3aYH++FpYkkbiIkQRI2dmmAPC5gb9HPc
-         tKqKjRG7SNiO5bc67hp4B7xr4vBLfte5eaadql3ojHd8adumU8n/Yf3aMUiD4iB9Ztmy
-         MGPlEhZ5u3plcTvMmZDsyUD0e9Fu4dAp+zVERjBIpeiDbez8tVwuoPG6JVHufw2Nl59X
-         eSAoe9lTx/m1453pfv1ny+k4Q2HneVQp/78MGPPxlBMAeIp2l1XX7vFssxMHkrotqeqG
-         o5uyqR21oAr646AVaTTl3WkFFwoBGLyv/yFPznuF6dM6gNNfsJ5I0YOIsn6NTnk9yQTp
-         oebg==
-X-Gm-Message-State: AGi0PuY6Hl91nZqk7HsyRw4uu+ydxEX7D2VNJQAUQaldz0ROlDk7ja5P
-        QBPXKYHVaOMkXaGtnX8Zjj6pN088NSm7Z17HLBg=
-X-Google-Smtp-Source: APiQypIyT3haLQJS3HQyLJlfdstDioiAxnqAB0Fi0gof1uU4cZvsPDlN6HR1+gsSdxg2Hdx1qT9ZUYHH+OPb+t3rYwo=
-X-Received: by 2002:a63:7b1d:: with SMTP id w29mr3120589pgc.4.1585831333750;
- Thu, 02 Apr 2020 05:42:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200401162416.24474-1-i.mikhaylov@yadro.com> <20200401162416.24474-3-i.mikhaylov@yadro.com>
- <CAHp75VcdDR-owtFuFMqNLFh_-L902fXODG14_6Dh416tTwjidA@mail.gmail.com> <1e2c9b590a3626abee330a28cca86cbae7affb39.camel@yadro.com>
-In-Reply-To: <1e2c9b590a3626abee330a28cca86cbae7affb39.camel@yadro.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 2 Apr 2020 15:42:02 +0300
-Message-ID: <CAHp75VdaM_pumyWyeHJxCQXrKUAW=ktJme1uYxH0w4e9an0X2A@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 2 Apr 2020 09:32:04 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:52202 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387752AbgDBNcE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 09:32:04 -0400
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 02 Apr 2020 19:01:00 +0530
+Received: from mkrishn-linux.qualcomm.com ([10.204.66.35])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 02 Apr 2020 19:00:43 +0530
+Received: by mkrishn-linux.qualcomm.com (Postfix, from userid 438394)
+        id 02C9445CD; Thu,  2 Apr 2020 19:00:41 +0530 (IST)
+From:   Krishna Manikandan <mkrishn@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: [v3 2/3] arm64: dts: sc7180: add bus clock to mdp node for sc7180 target
+Date:   Thu,  2 Apr 2020 19:00:38 +0530
+Message-Id: <1585834239-8895-2-git-send-email-mkrishn@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1585834239-8895-1-git-send-email-mkrishn@codeaurora.org>
+References: <1585834239-8895-1-git-send-email-mkrishn@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 11:24 AM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
->
-> On Wed, 2020-04-01 at 19:35 +0300, Andy Shevchenko wrote:
-> > On Wed, Apr 1, 2020 at 7:24 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
-> > > Proximity sensor driver based on light/vcnl4000.c code.
-> > > For now supports only the single on-demand measurement.
-> > >
-> > > The VCNL3020 is a fully integrated proximity sensor. Fully
-> > > integrated means that the infrared emitter is included in the
-> > > package. It has 16-bit resolution. It includes a signal
-> > > processing IC and features standard I2C communication
-> > > interface. It features an interrupt function.
-> >
-> > Thank you for an update, my comments below.
-> >
-> > ...
-> >
-> > > +static int get_and_apply_property(struct vcnl3020_data *data, const char
-> > > *prop,
-> > > +                                 u32 reg)
-> > > +{
-> > > +       int rc;
-> > > +       u32 val;
-> > > +
-> > > +       rc = device_property_read_u32(data->dev, prop, &val);
-> > > +       if (rc)
-> > > +               return 0;
-> > > +
-> > > +       rc = regmap_write(data->regmap, reg, val);
-> > > +       if (rc)
-> > > +               dev_err(data->dev, "Error (%d) setting property (%s)",
-> > > +                       rc, prop);
-> >
-> > This requires {} according to the coding style
->
-> checkpatch.pl doesn't say anything bad on this spot. Do you mean to make
-> something like this?
->
-> rc = regmap_write(data->regmap, reg, val);
-> if (rc) {
->         dev_err(data->dev, "Error (%d) setting property (%s)",
->                 rc, prop);
-> }
+Move the bus clock to mdp device node,in order
+to facilitate bus band width scaling on sc7180
+target.
 
-Yes. Checkpatch is neither strict nor fully comprehensive tool.
+The parent device MDSS will not vote for bus bw,
+instead the vote will be triggered by mdp device
+node. Since a minimum vote is required to turn
+on bus clock, move the clock node to mdp device
+from where the votes are requested.
 
-> In previous notes you said to remove them.
+This patch has dependency on the below series
+https://patchwork.kernel.org/patch/11468783/
 
-When it's one line, it fine, otherwise you need {} surround.
+Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-https://www.kernel.org/doc/html/latest/process/coding-style.html#placing-braces-and-spaces
-
-> > > +       return rc;
-> > > +}
-> >
-> > ...
-> >
-> > > +static int vcnl3020_probe(struct i2c_client *client)
-> > > +{
-> > > +       indio_dev->name = VCNL_DRV_NAME;
-> >
-> > It's definitely not a driver name. You have to put part number here.
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/tsl4531.c?h=v5.6#n199
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/max44009.c?h=v5.6#n507
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/vl6180.c?h=v5.6#n515
-
-Let's Jonathan speak up.
-
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 998f101..ea1b0cd 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1510,10 +1510,9 @@
+ 			power-domains = <&dispcc MDSS_GDSC>;
+ 
+ 			clocks = <&gcc GCC_DISP_AHB_CLK>,
+-				 <&gcc GCC_DISP_HF_AXI_CLK>,
+ 				 <&dispcc DISP_CC_MDSS_AHB_CLK>,
+ 				 <&dispcc DISP_CC_MDSS_MDP_CLK>;
+-			clock-names = "iface", "bus", "ahb", "core";
++			clock-names = "iface", "ahb", "core";
+ 
+ 			assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>;
+ 			assigned-clock-rates = <300000000>;
+@@ -1536,12 +1535,13 @@
+ 				      <0 0x0aeb0000 0 0x2008>;
+ 				reg-names = "mdp", "vbif";
+ 
+-				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
++				clocks = <&gcc GCC_DISP_HF_AXI_CLK>,
++					 <&dispcc DISP_CC_MDSS_AHB_CLK>,
+ 					 <&dispcc DISP_CC_MDSS_ROT_CLK>,
+ 					 <&dispcc DISP_CC_MDSS_MDP_LUT_CLK>,
+ 					 <&dispcc DISP_CC_MDSS_MDP_CLK>,
+ 					 <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
+-				clock-names = "iface", "rot", "lut", "core",
++				clock-names = "bus", "iface", "rot", "lut", "core",
+ 					      "vsync";
+ 				assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>,
+ 						  <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
 -- 
-With Best Regards,
-Andy Shevchenko
+1.9.1
+
