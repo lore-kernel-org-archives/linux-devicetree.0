@@ -2,129 +2,195 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DA8C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 17:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40397C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 18:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29EC320757
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 17:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DE682078B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 18:32:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L2RTZSrQ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kUSMyb7w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389563AbgDBR1R (ORCPT
+        id S2389318AbgDBScH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 13:27:17 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37934 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388815AbgDBR1R (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 13:27:17 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w3so1591826plz.5
-        for <devicetree@vger.kernel.org>; Thu, 02 Apr 2020 10:27:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Gz0f9qZvU+RRQ/9Q8voQs+xALXqzFeKIupVhhXgqIDI=;
-        b=L2RTZSrQ7A5ycxsB0TzHG2oAcpIvPJT/LPWiB5atc3DFl38OL9k98TR94lYyhqN4IV
-         +lVqrWSoIoJhMJMWUOxJp+t3Rn27ZQbea6iB86DNqNmc3z9+4rKrSu8uAlkZ9xjC7Typ
-         bgMl7IoC1f0jJufjDMrL9rG3x7ZzZhG1y256JHyJ7EexJONnqWFvvb/uhvi8YQZCVkzZ
-         4gDqG8fzyDvtlmzcWykcCEaP1dUEKWuKpZtFU0BltSc/6zaenJthX2iAYl1Cx0f7mIF7
-         QMY1K3I/vLLQsGXRK55TNaSKmFd4LYJJ14QqEKkKlSHZfeV4ygdwXkoGK4vlVPlrfPMc
-         kmlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Gz0f9qZvU+RRQ/9Q8voQs+xALXqzFeKIupVhhXgqIDI=;
-        b=JkFxqHYQMGJtzgWLYO6kNXYdZ3kq1NecoFgBUsQhQAQHJkYc127fzrUXh/qjNxg4fZ
-         0MYXi1Mvkqzdc35K5+yO/OXCbgnQkDxlfj7tnUyCwgeMZtOm+/kHfNnaNYGBAnqPwe/2
-         gN/1WxIJH/vALlwug3cIW1JRyjrReH24DJCMNCKdfHMHYl+LGDvPkaIhIcSuK2VtlnUP
-         EEGuOnj76csQVKkD4BRp/JvOVB+rsYE0YVKSkYutAfGV0OyhMg9CP6sB8kPwUAcm5XM7
-         62E270zsIrb67JFbrRt2wUArvLLaVnTsH9YLPvvIFEDfMHnEnZqbpOJZWBLc/zbnwBKp
-         9x/w==
-X-Gm-Message-State: AGi0PubsCsS2zM8+sUZhahzI1f+mIWjsIHxSa8wlaUuyy0vEv/okf4S/
-        NoJEf5kPWQBH4wKpRevgC0m5AXxAAnAuDqqaXeTeQQdU
-X-Google-Smtp-Source: APiQypJHXGs44BWC8WilJ46Avhei19tnaa/YB6ekL4I+Zzra7DGoUGAP21fYvthy3xQNibUnN4QW+Dbx47n7msYUMJE=
-X-Received: by 2002:a17:90b:230d:: with SMTP id mt13mr4965537pjb.164.1585848435589;
- Thu, 02 Apr 2020 10:27:15 -0700 (PDT)
+        Thu, 2 Apr 2020 14:32:07 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:45966 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389100AbgDBScH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 14:32:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585852326; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=bwdgE6SDnCj91cAVMlb3J56Z9tUcAowCrODV+AuEXSo=; b=kUSMyb7wj0OTzqSAlf5s4QcVfpDrUN5r1xUmMjMfp7HkVTogA/9yCRrB/I2pUwrgRsVGHm3v
+ qJ75PeKS70tDHJJ0rRveUXe8TF0b85QMlx/kkNY8/+p4vpXAtBjMJXL3KTIhl9nKo5sh+SKj
+ tceLkTUkb/umBWkdPdM7jeAG2Tk=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e862f8f.7f132e278928-smtp-out-n01;
+ Thu, 02 Apr 2020 18:31:43 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 720DBC43636; Thu,  2 Apr 2020 18:31:42 +0000 (UTC)
+Received: from [10.110.122.98] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 17244C433D2;
+        Thu,  2 Apr 2020 18:31:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 17244C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH v4 4/4] phy: qcom-qmp: Use proper PWRDOWN offset for
+ sm8150 USB
+To:     Manu Gautam <mgautam@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, kishon@ti.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, p.zabel@pengutronix.de
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <1585597017-30683-1-git-send-email-wcheng@codeaurora.org>
+ <1585597017-30683-5-git-send-email-wcheng@codeaurora.org>
+ <d61723e3-17a3-366d-f476-c33931766efd@codeaurora.org>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <b70f88cd-bbc7-96ab-3890-e15cbe94b258@codeaurora.org>
+Date:   Thu, 2 Apr 2020 11:31:40 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200401.113627.1377328159361906184.davem@davemloft.net>
- <20200401223500.224253-1-ndesaulniers@google.com> <20200402094239.GA3770@willie-the-truck>
- <adc2aa08-60e2-cdc3-6b5b-6d96f8805c44@ti.com>
-In-Reply-To: <adc2aa08-60e2-cdc3-6b5b-6d96f8805c44@ti.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 2 Apr 2020 10:27:04 -0700
-Message-ID: <CAKwvOdk4H052Y=t4_XXy=rMV=CUYPNhb5CN6x8-dBTNaTt3aPA@mail.gmail.com>
-Subject: Re: [PATCH net-next v6 00/11] net: ethernet: ti: add networking
- support for k3 am65x/j721e soc
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Will Deacon <will@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
-        kishon@ti.com, Jakub Kicinski <kuba@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, m-karicheri2@ti.com,
-        Network Development <netdev@vger.kernel.org>, nsekhar@ti.com,
-        Olof Johansson <olof@lixom.net>, olteanv@gmail.com,
-        peter.ujfalusi@ti.com, Rob Herring <robh@kernel.org>,
-        rogerq@ti.com, t-kristo@ti.com,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d61723e3-17a3-366d-f476-c33931766efd@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 4:05 AM Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
->
->
->
-> On 02/04/2020 12:42, Will Deacon wrote:
-> > On Wed, Apr 01, 2020 at 03:35:00PM -0700, Nick Desaulniers wrote:
-> >>>> I think the ARM64 build is now also broken on Linus' master branch,
-> >>>> after the net-next merge? I am not quite sure if the device tree
-> >>>> patches were supposed to land in mainline the way they did.
-> >>>
-> >>> There's a fix in my net tree and it will go to Linus soon.
-> >>>
-> >>> There is no clear policy for dt change integration, and honestly
-> >>> I try to deal with the situation on a case by case basis.
-> >>
-> >> Yep, mainline aarch64-linux-gnu- builds are totally hosed.  DTC fails the build
-> >> very early on:
-> >> https://travis-ci.com/github/ClangBuiltLinux/continuous-integration/jobs/311246218
-> >> https://travis-ci.com/github/ClangBuiltLinux/continuous-integration/jobs/311246270
-> >> There was no failure in -next, not sure how we skipped our canary in the coal
-> >> mine.
-> >
-> > Yes, one of the things linux-next does a really good job at catching is
-> > build breakage so it would've been nice to have seen this there rather
-> > than end up with breakage in Linus' tree :(
-> >
-> > Was the timing just bad, or are we missing DT coverage or something else?
->
-> It seems issue was not caught in -next because the patch that fixes the issue was already in -next
-> before this series was pushed.
->
-> Sorry for the mess again.
+Hi Manu,
 
-No worries, it's just worthwhile to study failures.  So IIUC, in this case:
-mainline was 5.6
-the broken patch was merged in 5.7 merge window
-a fix was already in -next, but not slated for the new merge window.
-(Maybe scheduled for 5.8?)
+Thanks for the feedback and review.
 
-So it sounds like it can be dangerous to have 2 branches from 1 tree
-flow into -next, as the branch meant for a later release can mask
-failures in pull requests for the earlier release?
+On 4/2/2020 12:35 AM, Manu Gautam wrote:
+> 
+> On 3/31/2020 1:06 AM, Wesley Cheng wrote:
+>> The register map for SM8150 QMP USB SSPHY has moved
+>> QPHY_POWER_DOWN_CONTROL to a different offset.  Allow for
+>> an offset in the register table to override default value
+>> if it is a DP capable PHY.
+>>
+>> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+>> ---
+>>  drivers/phy/qualcomm/phy-qcom-qmp.c | 15 ++++++++++++---
+>>  1 file changed, 12 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+>> index cc04471..4c0517e 100644
+>> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+>> @@ -164,6 +164,7 @@ enum qphy_reg_layout {
+>>  	[QPHY_SW_RESET]			= 0x00,
+>>  	[QPHY_START_CTRL]		= 0x44,
+>>  	[QPHY_PCS_STATUS]		= 0x14,
+>> +	[QPHY_COM_POWER_DOWN_CONTROL]	= 0x40,
+> Since this is in PCS block please rename it to -
+> 
+> QPHY_PCS_POWER_DOWN_CONTROL
+> 
 
-Do we know what and where the fix currently is?
-Can we make sure it's sent to Linus for 5.7-rc1? (Or sooner?)
+Sure, will add another enum value to the register layout, and rename it
+where needed.
+
+>>  };
+>>  
+>>  static const unsigned int sdm845_ufsphy_regs_layout[] = {
+>> @@ -1627,6 +1628,9 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
+>>  	if (cfg->has_phy_com_ctrl)
+>>  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+>>  			     SW_PWRDN);
+>> +	else if (cfg->has_phy_dp_com_ctrl && cfg->regs[QPHY_COM_POWER_DOWN_CONTROL])
+>> +		qphy_setbits(pcs, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+>> +			     cfg->pwrdn_ctrl);
+>>  	else
+>>  		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+> Since, this register is in PCS block why check for dp_com_ctrl here?
+> Something like:
+> 
+>  	if (cfg->has_phy_com_ctrl) {
+>  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+>  			     SW_PWRDN);
+> 	} else {
+> 		if (cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL]) 
+> 			qphy_setbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
+> 			     cfg->pwrdn_ctrl);
+>  		else
+>  			qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+> 	}
+> 
+
+Agree with this.
+
+>>  
+>> @@ -1671,10 +1675,12 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
+>>  	return ret;
+>>  }
+>>  
+>> -static int qcom_qmp_phy_com_exit(struct qcom_qmp *qmp)
+>> +static int qcom_qmp_phy_com_exit(struct qmp_phy *qphy)
+>>  {
+>> +	struct qcom_qmp *qmp = qphy->qmp;
+>>  	const struct qmp_phy_cfg *cfg = qmp->cfg;
+>>  	void __iomem *serdes = qmp->serdes;
+>> +	void __iomem *pcs = qphy->pcs;
+>>  	int i = cfg->num_resets;
+>>  
+>>  	mutex_lock(&qmp->phy_mutex);
+>> @@ -1691,6 +1697,9 @@ static int qcom_qmp_phy_com_exit(struct qcom_qmp *qmp)
+>>  			     SW_RESET);
+>>  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+>>  			     SW_PWRDN);
+>> +	} else if (cfg->has_phy_dp_com_ctrl && cfg->regs[QPHY_COM_POWER_DOWN_CONTROL]) {
+> 
+> Can we add change similar to init() here ?
+> 
+> 
+
+Sure.  I will move this check to where the current code writes to the
+PWR DOWN CONTROL in
+
+static int qcom_qmp_phy_disable(struct phy *phy)
+{
+	...
+	qphy_clrbits(qphy->pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+
+We wouldn't want the SW to write to an incorrect register.
+
+>> +			     cfg->pwrdn_ctrl);
+>>  	}
+>>  
+>>  	while (--i >= 0)
+>> @@ -1829,7 +1838,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
+>>  	if (cfg->has_lane_rst)
+>>  		reset_control_assert(qphy->lane_rst);
+>>  err_lane_rst:
+>> -	qcom_qmp_phy_com_exit(qmp);
+>> +	qcom_qmp_phy_com_exit(qphy);
+>>  
+>>  	return ret;
+>>  }
+>> @@ -1855,7 +1864,7 @@ static int qcom_qmp_phy_disable(struct phy *phy)
+>>  	if (cfg->has_lane_rst)
+>>  		reset_control_assert(qphy->lane_rst);
+>>  
+>> -	qcom_qmp_phy_com_exit(qmp);
+>> +	qcom_qmp_phy_com_exit(qphy);
+>>  
+>>  	qmp->phy_initialized = false;
+>>  
+> 
+
 -- 
-Thanks,
-~Nick Desaulniers
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
