@@ -2,63 +2,64 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UPPERCASE_50_75,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611ABC2BA12
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 07:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1C0C2BA12
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 07:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B8092078B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 07:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D062078E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 07:35:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gHoaCBXh"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tVH4x5r+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729289AbgDBHBp (ORCPT
+        id S1725965AbgDBHf7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:01:45 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:25511 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728135AbgDBHBp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 03:01:45 -0400
+        Thu, 2 Apr 2020 03:35:59 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:43055 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729087AbgDBHf7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 03:35:59 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585810904; h=Content-Transfer-Encoding: Content-Type:
+ s=smtp; t=1585812957; h=Content-Transfer-Encoding: Content-Type:
  In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=/3AzJ1drJmypJf2TWd1/pF3JxOWDjhAPZudo91P9Ftg=; b=gHoaCBXh47+4BG4QAPWYwup4GGS7i6jo1tMdoe2S6sia/2sgF4ztMe3JJjdGPRu2lz+Rcea+
- dDso4glpk+pYXMD5rsF+gGmXChspp+sSWkgZ6oZdehA7TTU27TQxY4gVAtuCT7aoeMMT3Ayi
- K6j2SUmwR0H7/j4QUI8J7uAV2fU=
-X-Mailgun-Sending-Ip: 104.130.122.27
+ Subject: Sender; bh=naqNAxywddNgWhPDH5Wtz+lOJzNYkTWgjlzNiVKiv48=; b=tVH4x5r+/7GS4Ky1nrSO2/os18a/8lYDOKEqRME33U03ec9RR2YEMjNVdO/wsi4+3zxTICyU
+ MDULunj8nvDsPPFCnbuhojIOx4DDOQOwtICh83ttg1XeWzAQVlWGRCgkuPFz9o1pVt+HM4jm
+ uj4rusHdRaEeJ51Kjeh8QNeTzmo=
+X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e858dd6.7f5d7f116f10-smtp-out-n05;
- Thu, 02 Apr 2020 07:01:42 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e8595cd.7f5dad9b0ab0-smtp-out-n01;
+ Thu, 02 Apr 2020 07:35:41 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CF08EC433D2; Thu,  2 Apr 2020 07:01:42 +0000 (UTC)
+        id DF789C43637; Thu,  2 Apr 2020 07:35:40 +0000 (UTC)
 Received: from [10.111.194.152] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mgautam)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AAC83C433F2;
-        Thu,  2 Apr 2020 07:01:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AAC83C433F2
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B28D7C433F2;
+        Thu,  2 Apr 2020 07:35:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B28D7C433F2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mgautam@codeaurora.org
-Subject: Re: [PATCH v4 3/4] phy: qcom-qmp: Add SM8150 QMP USB3 PHY support
+Subject: Re: [PATCH v4 4/4] phy: qcom-qmp: Use proper PWRDOWN offset for
+ sm8150 USB
 To:     Wesley Cheng <wcheng@codeaurora.org>, agross@kernel.org,
         bjorn.andersson@linaro.org, kishon@ti.com, robh+dt@kernel.org,
         mark.rutland@arm.com, p.zabel@pengutronix.de
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Jack Pham <jackp@codeaurora.org>
+        devicetree@vger.kernel.org
 References: <1585597017-30683-1-git-send-email-wcheng@codeaurora.org>
- <1585597017-30683-4-git-send-email-wcheng@codeaurora.org>
+ <1585597017-30683-5-git-send-email-wcheng@codeaurora.org>
 From:   Manu Gautam <mgautam@codeaurora.org>
-Message-ID: <6295c8d8-9763-be1d-9227-e61369000536@codeaurora.org>
-Date:   Thu, 2 Apr 2020 12:30:58 +0530
+Message-ID: <d61723e3-17a3-366d-f476-c33931766efd@codeaurora.org>
+Date:   Thu, 2 Apr 2020 13:05:32 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <1585597017-30683-4-git-send-email-wcheng@codeaurora.org>
+In-Reply-To: <1585597017-30683-5-git-send-email-wcheng@codeaurora.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -69,196 +70,101 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 On 3/31/2020 1:06 AM, Wesley Cheng wrote:
-> From: Jack Pham <jackp@codeaurora.org>
+> The register map for SM8150 QMP USB SSPHY has moved
+> QPHY_POWER_DOWN_CONTROL to a different offset.  Allow for
+> an offset in the register table to override default value
+> if it is a DP capable PHY.
 >
-> Add support for SM8150 QMP USB3 PHY with the necessary
-> initialization sequences as well as additional QMP V4
-> register definitions.
->
-> Signed-off-by: Jack Pham <jackp@codeaurora.org>
 > Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
 > ---
->  drivers/phy/qualcomm/phy-qcom-qmp.c | 153 ++++++++++++++++++++++++++++
->  drivers/phy/qualcomm/phy-qcom-qmp.h | 198 +++++++++++++++++++++++++++++++++++-
->  2 files changed, 349 insertions(+), 2 deletions(-)
+>  drivers/phy/qualcomm/phy-qcom-qmp.c | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index cc04471..4c0517e 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -164,6 +164,7 @@ enum qphy_reg_layout {
+>  	[QPHY_SW_RESET]			= 0x00,
+>  	[QPHY_START_CTRL]		= 0x44,
+>  	[QPHY_PCS_STATUS]		= 0x14,
+> +	[QPHY_COM_POWER_DOWN_CONTROL]	= 0x40,
+Since this is in PCS block please rename it to -
 
-[snip]
+QPHY_PCS_POWER_DOWN_CONTROL
+
+>  };
+>  
+>  static const unsigned int sdm845_ufsphy_regs_layout[] = {
+> @@ -1627,6 +1628,9 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
+>  	if (cfg->has_phy_com_ctrl)
+>  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+>  			     SW_PWRDN);
+> +	else if (cfg->has_phy_dp_com_ctrl && cfg->regs[QPHY_COM_POWER_DOWN_CONTROL])
+> +		qphy_setbits(pcs, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+> +			     cfg->pwrdn_ctrl);
+>  	else
+>  		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+Since, this register is in PCS block why check for dp_com_ctrl here?
+Something like:
+
+ 	if (cfg->has_phy_com_ctrl) {
+ 		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+ 			     SW_PWRDN);
+	} else {
+		if (cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL]) 
+			qphy_setbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
+			     cfg->pwrdn_ctrl);
+ 		else
+ 			qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+	}
 
 >  
-> -/* Only for QMP V4 PHY - PCS registers */
-> +/* Only for QMP V4 PHY - UFS PCS registers */
->  #define QPHY_V4_PHY_START				0x000
->  #define QPHY_V4_POWER_DOWN_CONTROL			0x004
->  #define QPHY_V4_SW_RESET				0x008
-> @@ -409,4 +446,161 @@
->  #define QPHY_V4_TX_MID_TERM_CTRL1			0x1d8
->  #define QPHY_V4_MULTI_LANE_CTRL1			0x1e0
+> @@ -1671,10 +1675,12 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
+>  	return ret;
+>  }
 >  
-> +/* Only for QMP V4 PHY - USB/PCIe PCS registers */
-> +#define QPHY_V4_PCS_SW_RESET				0x000
+> -static int qcom_qmp_phy_com_exit(struct qcom_qmp *qmp)
+> +static int qcom_qmp_phy_com_exit(struct qmp_phy *qphy)
+>  {
+> +	struct qcom_qmp *qmp = qphy->qmp;
+>  	const struct qmp_phy_cfg *cfg = qmp->cfg;
+>  	void __iomem *serdes = qmp->serdes;
+> +	void __iomem *pcs = qphy->pcs;
+>  	int i = cfg->num_resets;
+>  
+>  	mutex_lock(&qmp->phy_mutex);
+> @@ -1691,6 +1697,9 @@ static int qcom_qmp_phy_com_exit(struct qcom_qmp *qmp)
+>  			     SW_RESET);
+>  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+>  			     SW_PWRDN);
+> +	} else if (cfg->has_phy_dp_com_ctrl && cfg->regs[QPHY_COM_POWER_DOWN_CONTROL]) {
 
-It is a mess not given that UFS wrapper uses different PCS register layout:
-E.g. UFS uses - QPHY_V4_SW_RESET 0x008
+Can we add change similar to init() here ?
 
-Would it help to add UFS prefix for UFS specific registers to avoid confusion and typos.
-E.g. rename QPHY_V4_SW_RESET to QPHY_V4_UFS_PCS_SW_RESET ?
 
-> +#define QPHY_V4_PCS_REVISION_ID0			0x004
-> +#define QPHY_V4_PCS_REVISION_ID1			0x008
-> +#define QPHY_V4_PCS_REVISION_ID2			0x00c
-> +#define QPHY_V4_PCS_REVISION_ID3			0x010
-> +#define QPHY_V4_PCS_PCS_STATUS1				0x014
-> +#define QPHY_V4_PCS_PCS_STATUS2				0x018
-> +#define QPHY_V4_PCS_PCS_STATUS3				0x01c
-> +#define QPHY_V4_PCS_PCS_STATUS4				0x020
-> +#define QPHY_V4_PCS_PCS_STATUS5				0x024
-> +#define QPHY_V4_PCS_PCS_STATUS6				0x028
-> +#define QPHY_V4_PCS_PCS_STATUS7				0x02c
-> +#define QPHY_V4_PCS_DEBUG_BUS_0_STATUS			0x030
-> +#define QPHY_V4_PCS_DEBUG_BUS_1_STATUS			0x034
-> +#define QPHY_V4_PCS_DEBUG_BUS_2_STATUS			0x038
-> +#define QPHY_V4_PCS_DEBUG_BUS_3_STATUS			0x03c
-> +#define QPHY_V4_PCS_POWER_DOWN_CONTROL			0x040
-> +#define QPHY_V4_PCS_START_CONTROL			0x044
-> +#define QPHY_V4_PCS_INSIG_SW_CTRL1			0x048
-> +#define QPHY_V4_PCS_INSIG_SW_CTRL2			0x04c
-> +#define QPHY_V4_PCS_INSIG_SW_CTRL3			0x050
-> +#define QPHY_V4_PCS_INSIG_SW_CTRL4			0x054
-> +#define QPHY_V4_PCS_INSIG_SW_CTRL5			0x058
-> +#define QPHY_V4_PCS_INSIG_SW_CTRL6			0x05c
-> +#define QPHY_V4_PCS_INSIG_SW_CTRL7			0x060
-> +#define QPHY_V4_PCS_INSIG_SW_CTRL8			0x064
-> +#define QPHY_V4_PCS_INSIG_MX_CTRL1			0x068
-> +#define QPHY_V4_PCS_INSIG_MX_CTRL2			0x06c
-> +#define QPHY_V4_PCS_INSIG_MX_CTRL3			0x070
-> +#define QPHY_V4_PCS_INSIG_MX_CTRL4			0x074
-> +#define QPHY_V4_PCS_INSIG_MX_CTRL5			0x078
-> +#define QPHY_V4_PCS_INSIG_MX_CTRL7			0x07c
-> +#define QPHY_V4_PCS_INSIG_MX_CTRL8			0x080
-> +#define QPHY_V4_PCS_OUTSIG_SW_CTRL1			0x084
-> +#define QPHY_V4_PCS_OUTSIG_MX_CTRL1			0x088
-> +#define QPHY_V4_PCS_CLAMP_ENABLE			0x08c
-> +#define QPHY_V4_PCS_POWER_STATE_CONFIG1			0x090
-> +#define QPHY_V4_PCS_POWER_STATE_CONFIG2			0x094
-> +#define QPHY_V4_PCS_FLL_CNTRL1				0x098
-> +#define QPHY_V4_PCS_FLL_CNTRL2				0x09c
-> +#define QPHY_V4_PCS_FLL_CNT_VAL_L			0x0a0
-> +#define QPHY_V4_PCS_FLL_CNT_VAL_H_TOL			0x0a4
-> +#define QPHY_V4_PCS_FLL_MAN_CODE			0x0a8
-> +#define QPHY_V4_PCS_TEST_CONTROL1			0x0ac
-> +#define QPHY_V4_PCS_TEST_CONTROL2			0x0b0
-> +#define QPHY_V4_PCS_TEST_CONTROL3			0x0b4
-> +#define QPHY_V4_PCS_TEST_CONTROL4			0x0b8
-> +#define QPHY_V4_PCS_TEST_CONTROL5			0x0bc
-> +#define QPHY_V4_PCS_TEST_CONTROL6			0x0c0
-> +#define QPHY_V4_PCS_LOCK_DETECT_CONFIG1			0x0c4
-> +#define QPHY_V4_PCS_LOCK_DETECT_CONFIG2			0x0c8
-> +#define QPHY_V4_PCS_LOCK_DETECT_CONFIG3			0x0cc
-> +#define QPHY_V4_PCS_LOCK_DETECT_CONFIG4			0x0d0
-> +#define QPHY_V4_PCS_LOCK_DETECT_CONFIG5			0x0d4
-> +#define QPHY_V4_PCS_LOCK_DETECT_CONFIG6			0x0d8
-> +#define QPHY_V4_PCS_REFGEN_REQ_CONFIG1			0x0dc
-> +#define QPHY_V4_PCS_REFGEN_REQ_CONFIG2			0x0e0
-> +#define QPHY_V4_PCS_REFGEN_REQ_CONFIG3			0x0e4
-> +#define QPHY_V4_PCS_BIST_CTRL				0x0e8
-> +#define QPHY_V4_PCS_PRBS_POLY0				0x0ec
-> +#define QPHY_V4_PCS_PRBS_POLY1				0x0f0
-> +#define QPHY_V4_PCS_FIXED_PAT0				0x0f4
-> +#define QPHY_V4_PCS_FIXED_PAT1				0x0f8
-> +#define QPHY_V4_PCS_FIXED_PAT2				0x0fc
-> +#define QPHY_V4_PCS_FIXED_PAT3				0x100
-> +#define QPHY_V4_PCS_FIXED_PAT4				0x104
-> +#define QPHY_V4_PCS_FIXED_PAT5				0x108
-> +#define QPHY_V4_PCS_FIXED_PAT6				0x10c
-> +#define QPHY_V4_PCS_FIXED_PAT7				0x110
-> +#define QPHY_V4_PCS_FIXED_PAT8				0x114
-> +#define QPHY_V4_PCS_FIXED_PAT9				0x118
-> +#define QPHY_V4_PCS_FIXED_PAT10				0x11c
-> +#define QPHY_V4_PCS_FIXED_PAT11				0x120
-> +#define QPHY_V4_PCS_FIXED_PAT12				0x124
-> +#define QPHY_V4_PCS_FIXED_PAT13				0x128
-> +#define QPHY_V4_PCS_FIXED_PAT14				0x12c
-> +#define QPHY_V4_PCS_FIXED_PAT15				0x130
-> +#define QPHY_V4_PCS_TXMGN_CONFIG			0x134
-> +#define QPHY_V4_PCS_G12S1_TXMGN_V0			0x138
-> +#define QPHY_V4_PCS_G12S1_TXMGN_V1			0x13c
-> +#define QPHY_V4_PCS_G12S1_TXMGN_V2			0x140
-> +#define QPHY_V4_PCS_G12S1_TXMGN_V3			0x144
-> +#define QPHY_V4_PCS_G12S1_TXMGN_V4			0x148
-> +#define QPHY_V4_PCS_G12S1_TXMGN_V0_RS			0x14c
-> +#define QPHY_V4_PCS_G12S1_TXMGN_V1_RS			0x150
-> +#define QPHY_V4_PCS_G12S1_TXMGN_V2_RS			0x154
-> +#define QPHY_V4_PCS_G12S1_TXMGN_V3_RS			0x158
-> +#define QPHY_V4_PCS_G12S1_TXMGN_V4_RS			0x15c
-> +#define QPHY_V4_PCS_G3S2_TXMGN_MAIN			0x160
-> +#define QPHY_V4_PCS_G3S2_TXMGN_MAIN_RS			0x164
-> +#define QPHY_V4_PCS_G12S1_TXDEEMPH_M6DB			0x168
-> +#define QPHY_V4_PCS_G12S1_TXDEEMPH_M3P5DB		0x16c
-> +#define QPHY_V4_PCS_G3S2_PRE_GAIN			0x170
-> +#define QPHY_V4_PCS_G3S2_POST_GAIN			0x174
-> +#define QPHY_V4_PCS_G3S2_PRE_POST_OFFSET		0x178
-> +#define QPHY_V4_PCS_G3S2_PRE_GAIN_RS			0x17c
-> +#define QPHY_V4_PCS_G3S2_POST_GAIN_RS			0x180
-> +#define QPHY_V4_PCS_G3S2_PRE_POST_OFFSET_RS		0x184
-> +#define QPHY_V4_PCS_RX_SIGDET_LVL			0x188
-> +#define QPHY_V4_PCS_RX_SIGDET_DTCT_CNTRL		0x18c
-> +#define QPHY_V4_PCS_RCVR_DTCT_DLY_P1U2_L		0x190
-> +#define QPHY_V4_PCS_RCVR_DTCT_DLY_P1U2_H		0x194
-> +#define QPHY_V4_PCS_RATE_SLEW_CNTRL1			0x198
-> +#define QPHY_V4_PCS_RATE_SLEW_CNTRL2			0x19c
-> +#define QPHY_V4_PCS_PWRUP_RESET_DLY_TIME_AUXCLK		0x1a0
-> +#define QPHY_V4_PCS_P2U3_WAKEUP_DLY_TIME_AUXCLK_L	0x1a4
-> +#define QPHY_V4_PCS_P2U3_WAKEUP_DLY_TIME_AUXCLK_H	0x1a8
-> +#define QPHY_V4_PCS_TSYNC_RSYNC_TIME			0x1ac
-> +#define QPHY_V4_PCS_CDR_RESET_TIME			0x1b0
-> +#define QPHY_V4_PCS_TSYNC_DLY_TIME			0x1b4
-> +#define QPHY_V4_PCS_ELECIDLE_DLY_SEL			0x1b8
-> +#define QPHY_V4_PCS_CMN_ACK_OUT_SEL			0x1bc
-> +#define QPHY_V4_PCS_ALIGN_DETECT_CONFIG1		0x1c0
-> +#define QPHY_V4_PCS_ALIGN_DETECT_CONFIG2		0x1c4
-> +#define QPHY_V4_PCS_ALIGN_DETECT_CONFIG3		0x1c8
-> +#define QPHY_V4_PCS_ALIGN_DETECT_CONFIG4		0x1cc
-> +#define QPHY_V4_PCS_PCS_TX_RX_CONFIG			0x1d0
-> +#define QPHY_V4_PCS_RX_IDLE_DTCT_CNTRL			0x1d4
-> +#define QPHY_V4_PCS_RX_DCC_CAL_CONFIG			0x1d8
-> +#define QPHY_V4_PCS_EQ_CONFIG1				0x1dc
-> +#define QPHY_V4_PCS_EQ_CONFIG2				0x1e0
-> +#define QPHY_V4_PCS_EQ_CONFIG3				0x1e4
-> +#define QPHY_V4_PCS_EQ_CONFIG4				0x1e8
-> +#define QPHY_V4_PCS_EQ_CONFIG5				0x1ec
-> +#define QPHY_V4_PCS_USB3_POWER_STATE_CONFIG1		0x300
-> +#define QPHY_V4_PCS_USB3_AUTONOMOUS_MODE_STATUS		0x304
-> +#define QPHY_V4_PCS_USB3_AUTONOMOUS_MODE_CTRL		0x308
-> +#define QPHY_V4_PCS_USB3_AUTONOMOUS_MODE_CTRL2		0x30c
-> +#define QPHY_V4_PCS_USB3_LFPS_RXTERM_IRQ_SOURCE_STATUS	0x310
-> +#define QPHY_V4_PCS_USB3_LFPS_RXTERM_IRQ_CLEAR		0x314
-> +#define QPHY_V4_PCS_USB3_LFPS_DET_HIGH_COUNT_VAL	0x318
-> +#define QPHY_V4_PCS_USB3_LFPS_TX_ECSTART		0x31c
-> +#define QPHY_V4_PCS_USB3_LFPS_PER_TIMER_VAL		0x320
-> +#define QPHY_V4_PCS_USB3_LFPS_TX_END_CNT_U3_START	0x324
-> +#define QPHY_V4_PCS_USB3_RXEQTRAINING_LOCK_TIME		0x328
-> +#define QPHY_V4_PCS_USB3_RXEQTRAINING_WAIT_TIME		0x32c
-> +#define QPHY_V4_PCS_USB3_RXEQTRAINING_CTLE_TIME		0x330
-> +#define QPHY_V4_PCS_USB3_RXEQTRAINING_WAIT_TIME_S2	0x334
-> +#define QPHY_V4_PCS_USB3_RXEQTRAINING_DFE_TIME_S2	0x338
-> +#define QPHY_V4_PCS_USB3_RCVR_DTCT_DLY_U3_L		0x33c
-> +#define QPHY_V4_PCS_USB3_RCVR_DTCT_DLY_U3_H		0x340
-> +#define QPHY_V4_PCS_USB3_ARCVR_DTCT_EN_PERIOD		0x344
-> +#define QPHY_V4_PCS_USB3_ARCVR_DTCT_CM_DLY		0x348
-> +#define QPHY_V4_PCS_USB3_TXONESZEROS_RUN_LENGTH		0x34c
-> +#define QPHY_V4_PCS_USB3_ALFPS_DEGLITCH_VAL		0x350
-> +#define QPHY_V4_PCS_USB3_SIGDET_STARTUP_TIMER_VAL	0x354
-> +#define QPHY_V4_PCS_USB3_TEST_CONTROL			0x358
-> +
-> +/* Only for QMP V4 PHY - PCS_MISC registers */
-> +#define QPHY_V4_PCS_MISC_TYPEC_CTRL			0x00
-> +#define QPHY_V4_PCS_MISC_TYPEC_PWRDN_CTRL		0x04
-> +#define QPHY_V4_PCS_MISC_PCS_MISC_CONFIG1		0x08
-> +#define QPHY_V4_PCS_MISC_CLAMP_ENABLE			0x0c
-> +#define QPHY_V4_PCS_MISC_TYPEC_STATUS			0x10
-> +#define QPHY_V4_PCS_MISC_PLACEHOLDER_STATUS		0x14
-> +
->  #endif
+> +			     cfg->pwrdn_ctrl);
+>  	}
+>  
+>  	while (--i >= 0)
+> @@ -1829,7 +1838,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
+>  	if (cfg->has_lane_rst)
+>  		reset_control_assert(qphy->lane_rst);
+>  err_lane_rst:
+> -	qcom_qmp_phy_com_exit(qmp);
+> +	qcom_qmp_phy_com_exit(qphy);
+>  
+>  	return ret;
+>  }
+> @@ -1855,7 +1864,7 @@ static int qcom_qmp_phy_disable(struct phy *phy)
+>  	if (cfg->has_lane_rst)
+>  		reset_control_assert(qphy->lane_rst);
+>  
+> -	qcom_qmp_phy_com_exit(qmp);
+> +	qcom_qmp_phy_com_exit(qphy);
+>  
+>  	qmp->phy_initialized = false;
+>  
 
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
