@@ -2,59 +2,60 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C48C2BA15
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 12:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0974C2D0F4
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 12:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A66772078B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 12:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A83062078B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 12:12:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="agymgViU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O7yp4kXD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387971AbgDBMMA (ORCPT
+        id S2388331AbgDBMMO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 08:12:00 -0400
-Received: from mail-ed1-f43.google.com ([209.85.208.43]:35444 "EHLO
-        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387730AbgDBML7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 08:11:59 -0400
-Received: by mail-ed1-f43.google.com with SMTP id a20so3822155edj.2;
-        Thu, 02 Apr 2020 05:11:56 -0700 (PDT)
+        Thu, 2 Apr 2020 08:12:14 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35342 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388318AbgDBMMO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 08:12:14 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a20so3823099edj.2;
+        Thu, 02 Apr 2020 05:12:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dQNKCc7PUxqRbfY956FD6h+k4Y66wdaQrbWQY54QQ5w=;
-        b=agymgViUtAI2emTrH34p5ZHRX2vFxpJYQZfO6Ph/EpAkAH2SKbGh9Gwowg/y5F2xF9
-         GN9bUassTsCq6TmOom09VHTeAwUjAGfKm8kyfj8L5nGKieUt7e9AmBZ0/ZTmGkrOLi9N
-         pr+6N6O7GHNu8M8Iu1GZGh3K0wLBtSPqGXELUNzjNXnj/DFNRaqkfc9QZto9nWu40mDz
-         GZ2nhih6haNInv37Cq8PqojOPRewbPgnPnex1rzGDwVqgC31gSH+X7GQNx0ioCcTTAet
-         GS4NOrCtJ2TuSOIXnr3rZMN64006zcLHMZ2xA+KOGNbosVbW8GmBGh6odMjJ9ZwM4eB9
-         iEMw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=siYXJ0KfUOVO29qQPm4eyONLoVr/YpaUx1vSJEqMS2g=;
+        b=O7yp4kXD1dc2cH7QAbryxdYwYQPDMgjZn8y06TzsMomTXOGLloWUdF0AH9tkY+fpGZ
+         2h6QbrctZurRQI2Qil1UeMNRpImEyIE0yZLA5usWcZz6XfqmnvoF9Uz00XLBUcQ1boxC
+         4RDIiNvx6TOICGasmCWQCce4dckB/WlULHsb8JA2ehg+g+4zL7YgF2Ns9VaJl5TaS1oO
+         gePFaWScSwuhaEpJFqte+MzptMpYxvRlgkaVrzENrP8Ivihk3ZxbNDXP22tI4vjXlxvx
+         kTinewkrlfizHQfaoY6GGb/n6ioI5mDd5ubH+CgV7BcgIBxDnN+m3qDk7sDScpdAxmvl
+         eEYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dQNKCc7PUxqRbfY956FD6h+k4Y66wdaQrbWQY54QQ5w=;
-        b=uiNfsFjatiixPhFU0JiUfPN3qh4EEOsQFy65bQKQQdKqKJTRsc7k5vG5hD9PWN++3E
-         eP0JG5c3CZiTQZVBBntxnDsTrLIF23QOUyky4OHYZpKjlrgEGVudgLkzoBbG2OIU7Sh7
-         yJiyTGtajFNSctrnCGx7vYD6gEcwB8cWE5XJms5I6VV+fINAUGZkUKPSU0Wa0pnuSZAM
-         WmGXtRdCSCNmCyHxR/D0kj4UoBgJjOZ/YI02RrVK59lnqsNxWUszEX7YxpBROKap5kYB
-         fD7he1MwTMriJosnDIPIE5IDdTO6sYbwg0eYXtC6Fru+HM3//FsgVuYTJxasjmCPLL9y
-         ryCw==
-X-Gm-Message-State: AGi0PuaOkBUGyZxKcu0ShUmcHM9vYgY/iNp2bDBoBH4EX21szL48GJcG
-        UlNqZVNxkFko96pdKiYMr5w=
-X-Google-Smtp-Source: APiQypLPNlmjZYpYHEbYalA5cdj8vdbm+4lcqgc+IcUsx4IEdOq3RzlqeMTeSu9WJGrGxVExBWuiNQ==
-X-Received: by 2002:a50:da49:: with SMTP id a9mr2429759edk.388.1585829515709;
-        Thu, 02 Apr 2020 05:11:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=siYXJ0KfUOVO29qQPm4eyONLoVr/YpaUx1vSJEqMS2g=;
+        b=URFOqU488NcS3oIMUnnFCnsZD92sT+MWdIBU+oyTLHLrZnXPrNOraaMFnFxi5cjDlw
+         wDC/+cjFnHVp9QCsXANy5cuZROXGZPXXTdoIQM9bKQ3E0xvYvGVPa4n/TRvMjcwdnz2X
+         uoXy+BLwh038vGBX30ddR1D7W8i0TV+6ob/hctzvR3RzIayjLaR1fgl0KUBc5OEnsQGQ
+         sFfX+6hxgsLiiZsE+WKtVl07bMix84ETFOdENDp0ZR4Qfwg4W6/0N0oIQgIaEltm8O9/
+         1/A+3EbHhslcD7bwkTWblXH1p2wCpVgJ/Ie+oHx6nUa3Fz+16IAK1FJz0GnHGxhXR459
+         YF3A==
+X-Gm-Message-State: AGi0PubHbn2vCb4VvELeD7bOffSu3aVKF74w+rSrZpK9o2UdMRsw7owS
+        JYOpjUwwEcfqC8K4JmPGDqk=
+X-Google-Smtp-Source: APiQypLl21LPxvZAZ1mpYDoTheGcJsI0a0ylEMWBlnokwvYvhkS7RNpTe49pyiEln83KUEnLseNHjQ==
+X-Received: by 2002:a05:6402:13c8:: with SMTP id a8mr2664671edx.245.1585829531667;
+        Thu, 02 Apr 2020 05:12:11 -0700 (PDT)
 Received: from Ansuel-XPS.localdomain (host250-251-dynamic.250-95-r.retail.telecomitalia.it. [95.250.251.250])
-        by smtp.googlemail.com with ESMTPSA id w20sm1083611ejv.40.2020.04.02.05.11.53
+        by smtp.googlemail.com with ESMTPSA id w20sm1083611ejv.40.2020.04.02.05.12.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Apr 2020 05:11:54 -0700 (PDT)
+        Thu, 02 Apr 2020 05:12:11 -0700 (PDT)
 From:   Ansuel Smith <ansuelsmth@gmail.com>
 To:     Andy Gross <agross@kernel.org>
 Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
@@ -68,10 +69,12 @@ Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 00/10] Multiple fixes in PCIe qcom driver
-Date:   Thu,  2 Apr 2020 14:11:37 +0200
-Message-Id: <20200402121148.1767-1-ansuelsmth@gmail.com>
+Subject: [PATCH v2 07/10] PCIe: qcom: fix init problem with missing PARF programming
+Date:   Thu,  2 Apr 2020 14:11:44 +0200
+Message-Id: <20200402121148.1767-8-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200402121148.1767-1-ansuelsmth@gmail.com>
+References: <20200402121148.1767-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -79,38 +82,104 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This contains multiple fix for PCIe qcom driver.
-Some optional reset and clocks were missing.
-Fix a problem with no PARF programming that cause kernel lock on load.
-Add support to force gen 1 speed if needed. (due to hardware limitation)
-Add ipq8064 rev 2 support that use a different tx termination offset.
+PARF programming was missing and this cause initilizzation problem on
+some ipq806x based device (Netgear R7800 for example). This cause a
+total lock of the system on kernel load.
 
-v2:
-* Drop iATU programming (already done in pcie init)
-* Use max-link-speed instead of force-gen1 custom definition
-* Drop MRRS to 256B (Can't find a realy reason why this was suggested)
-* Introduce a new variant for different revision of ipq8064
+Fixes: 82a82383 PCI: qcom: Add Qualcomm PCIe controller driver
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 48 +++++++++++++++++++++-----
+ 1 file changed, 39 insertions(+), 9 deletions(-)
 
-Abhishek Sahu (1):
-  PCIe: qcom: change duplicate PCI reset to phy reset
-
-Ansuel Smith (7):
-  PCIe: qcom: add missing ipq806x clocks in PCIe driver
-  devicetree: bindings: pci: add missing clks to qcom,pcie
-  PCIe: qcom: Fixed pcie_phy_clk branch issue
-  PCIe: qcom: add missing reset for ipq806x
-  devicetree: bindings: pci: add ext reset to qcom,pcie
-  PCIe: qcom: fix init problem with missing PARF programming
-  devicetree: bindings: pci: add ipq8064 rev 2 variant to qcom,pcie
-
-Sham Muthayyan (2):
-  PCIe: qcom: add ipq8064 rev2 variant and set tx term offset
-  PCIe: qcom: add Force GEN1 support
-
- .../devicetree/bindings/pci/qcom,pcie.txt     |  56 +++++++-
- drivers/pci/controller/dwc/pcie-qcom.c        | 134 +++++++++++++++---
- 2 files changed, 167 insertions(+), 23 deletions(-)
-
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 211a1aa7d0f1..77b1ab7e23a3 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -46,6 +46,9 @@
+ 
+ #define PCIE20_PARF_PHY_CTRL			0x40
+ #define PCIE20_PARF_PHY_REFCLK			0x4C
++#define REF_SSP_EN				BIT(16)
++#define REF_USE_PAD				BIT(12)
++
+ #define PCIE20_PARF_DBI_BASE_ADDR		0x168
+ #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
+ #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
+@@ -77,6 +80,18 @@
+ #define DBI_RO_WR_EN				1
+ 
+ #define PERST_DELAY_US				1000
++/* PARF registers */
++#define PCIE20_PARF_PCS_DEEMPH			0x34
++#define PCS_DEEMPH_TX_DEEMPH_GEN1(x)		(x << 16)
++#define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)	(x << 8)
++#define PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(x)	(x << 0)
++
++#define PCIE20_PARF_PCS_SWING			0x38
++#define PCS_SWING_TX_SWING_FULL(x)		(x << 8)
++#define PCS_SWING_TX_SWING_LOW(x)		(x << 0)
++
++#define PCIE20_PARF_CONFIG_BITS		0x50
++#define PHY_RX0_EQ(x)				(x << 24)
+ 
+ #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
+ #define SLV_ADDR_SPACE_SZ			0x10000000
+@@ -184,6 +199,16 @@ struct qcom_pcie {
+ 
+ #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+ 
++static inline void qcom_clear_and_set_dword(void __iomem *addr,
++				 u32 clear_mask, u32 set_mask)
++{
++	u32 val = readl(addr);
++
++	val &= ~clear_mask;
++	val |= set_mask;
++	writel(val, addr);
++}
++
+ static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
+ {
+ 	gpiod_set_value_cansleep(pcie->reset, 1);
+@@ -304,7 +329,6 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ 	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
+ 	struct dw_pcie *pci = pcie->pci;
+ 	struct device *dev = pci->dev;
+-	u32 val;
+ 	int ret;
+ 
+ 	ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
+@@ -355,15 +379,21 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ 		goto err_deassert_ahb;
+ 	}
+ 
+-	/* enable PCIe clocks and resets */
+-	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+-	val &= ~BIT(0);
+-	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
++	qcom_clear_and_set_dword(pcie->parf + PCIE20_PARF_PHY_CTRL, BIT(0), 0);
++
++	/* PARF programming */
++	writel(PCS_DEEMPH_TX_DEEMPH_GEN1(0x18) |
++	       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(0x18) |
++	       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(0x22),
++	       pcie->parf + PCIE20_PARF_PCS_DEEMPH);
++	writel(PCS_SWING_TX_SWING_FULL(0x78) |
++	       PCS_SWING_TX_SWING_LOW(0x78),
++	       pcie->parf + PCIE20_PARF_PCS_SWING);
++	writel(PHY_RX0_EQ(0x4), pcie->parf + PCIE20_PARF_CONFIG_BITS);
+ 
+-	/* enable external reference clock */
+-	val = readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
+-	val |= BIT(16);
+-	writel(val, pcie->parf + PCIE20_PARF_PHY_REFCLK);
++	/* enable reference clock */
++	qcom_clear_and_set_dword(pcie->parf + PCIE20_PARF_PHY_REFCLK,
++		      REF_USE_PAD, REF_SSP_EN);
+ 
+ 	ret = reset_control_deassert(res->phy_reset);
+ 	if (ret) {
 -- 
 2.25.1
 
