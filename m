@@ -2,104 +2,284 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D2BC2BA16
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 19:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B61FC43331
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 19:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B895A20737
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 19:02:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FMjyYjFS"
+	by mail.kernel.org (Postfix) with ESMTP id 4098B206F8
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 19:18:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389103AbgDBTCS (ORCPT
+        id S2389540AbgDBTSf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 15:02:18 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41167 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388843AbgDBTCR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 15:02:17 -0400
-Received: by mail-pl1-f194.google.com with SMTP id d24so1686506pll.8;
-        Thu, 02 Apr 2020 12:02:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6yHfKlaCzswQfxovPpLdXkshSIOZGxKsbwiyjHduQhQ=;
-        b=FMjyYjFS9dJWJ6Kufsp8wFXo4bon8NQ/xj3XlxYm3k9C/CCHoNQw5slUw277HlDJ0+
-         XY5OoqwS2GIbSMm9eI6Cc992ICMNYsZ06POmIZPstcIioFVOz69byrDtsNNXZzT8lFS3
-         KdmK1u4KiK5kkFbXreYuMAzH9RebBBPNi8lmWyyzwNYM6x5ewD5mzbJz5Gkrpz1P8zqT
-         lTkYn5LypHhZzOBFSEFirni+nY2Am5iSaa4Us78yjlyNie2RJqOmyWU4FsWeea+GgfSR
-         WVBZ8iOrlEU0MTi+I0jpNOw5Dk8lXXwaDz6e3pu5QYnK3A+chHn7leasiVTniupAi/ko
-         Urdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6yHfKlaCzswQfxovPpLdXkshSIOZGxKsbwiyjHduQhQ=;
-        b=FAZNx9KOZ6NN/oz7HYn1xmOKHe8sT3Wmi34wAdxAdwGWif1OxWvKNOkEc+sESO9/iz
-         JbPyb0cxkxTRz0na0EJGhIMt7yfCcYh5DUxu+bHHwmv6kvxS3K9GwEgjdcp86AlhCh/g
-         T6XIGL98izeYgS3f3qeElOM/SdAJDdqKTwX8asQOsy9KUNt+FV3OosgtY+0vziCRHPRe
-         x6Z1QsubI3NqjekomPSHbVSaCc/RUwyIxmMxtTm3DizDn1SN86HvhY+Ds1rMawHRtJ5f
-         LM/cXh/QbF3I8UMqsvgeNAbbS7DnFfGCzDM+mUCU/rMQZ76I9AWpsgNP/KjY2SPXvOd7
-         wwPQ==
-X-Gm-Message-State: AGi0PuYwCMMW1YcWul4yD9r22Or4hp7dH79GyYZJZqrSsT8gQzC1lWj4
-        kQX4fy+wnHO9ZXNbG1aR9hVYqLAebjgXT8oC64Q=
-X-Google-Smtp-Source: APiQypLiABGWEuSpBPsVE+16FnXvEv+J3IeXgmeAKbsxy7kWLepFn3RNroasquV/ua9mGroakBr424wUXGYvlrNYSgE=
-X-Received: by 2002:a17:902:8215:: with SMTP id x21mr4212381pln.255.1585854136837;
- Thu, 02 Apr 2020 12:02:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200401185138.10673-1-alazar@startmail.com> <20200401185138.10673-3-alazar@startmail.com>
- <CAHp75VffpBYh+5xrWeeJJH8gRmJqT9ya5eQFedWi190_=p8HKQ@mail.gmail.com> <4431cacc-4af6-a497-5850-20dfceb588c1@metafoo.de>
-In-Reply-To: <4431cacc-4af6-a497-5850-20dfceb588c1@metafoo.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 2 Apr 2020 22:02:05 +0300
-Message-ID: <CAHp75VdeME1Bck2nFSW4r5PUA2mJDewEJZYZXhVhP-L-A-Nhig@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] iio: adc: Add MAX1241 driver
-To:     Lars-Peter Clausen <lars@metafoo.de>
-Cc:     Alexandru Lazar <alazar@startmail.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
+        Thu, 2 Apr 2020 15:18:35 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:52359 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732006AbgDBTSf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 15:18:35 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MS3zP-1jmQwz01MJ-00TWdd for <devicetree@vger.kernel.org>; Thu, 02 Apr
+ 2020 21:18:34 +0200
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id C1799650ABD
+        for <devicetree@vger.kernel.org>; Thu,  2 Apr 2020 19:18:33 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id bXVp25WSs3MO for <devicetree@vger.kernel.org>;
+        Thu,  2 Apr 2020 21:18:33 +0200 (CEST)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 4B5F464C64C
+        for <devicetree@vger.kernel.org>; Thu,  2 Apr 2020 21:18:33 +0200 (CEST)
+Received: from pflmari.corp.cetitec.com (10.8.5.12) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 2 Apr 2020 21:18:02 +0200
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id 4482E80506; Thu,  2 Apr 2020 20:35:13 +0200 (CEST)
+Date:   Thu, 2 Apr 2020 20:35:13 +0200
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Content-Type: text/plain; charset="UTF-8"
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>
+Subject: [PATCH v5 9/9] arm64: dts: renesas: salvator: add a connection from
+ adv748x codec (HDMI input) to the R-Car SoC
+Message-ID: <90f2c14fcbe5d06eefdaeadbe8a6efc8c91523f3.1585852001.git.alexander.riesen@cetitec.com>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <cover.1585852001.git.alexander.riesen@cetitec.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cover.1585852001.git.alexander.riesen@cetitec.com>
+X-Originating-IP: [10.8.5.12]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A290D7F536A6C7266
+X-Provags-ID: V03:K1:tYhxupCqifLfw3Lzjh/cA/UEgW4vtzUvd3mi1Mp7PfX7XSSvE3a
+ JkwJwcx9tM3hu1LTDwAHPtK3hhcTTkXqYyJyFGcxa/CNmY24B+UP8J5q78LoXblJCfQTjtJ
+ y7IE1yWNcob/pYQJzJWEF8yE4ToFy78W+3Dv5gy8j7BhMMEgka8mxQLi1haCah6nZSDfb+p
+ FujhATOC/fMRAdo9SElDA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:iFy/TWKS/rc=:JqHT2HDPs68AiFZYJ1QHWN
+ SFWBVRFjcR9AJRagpCrYY1Eea8CSuo7eQhBFzUkXwCPDgzxZgu9uzBk2SZa05HBqeZhFn8SNv
+ wcybXdLG2gcA6w7YQhnQAknLC/ydma1lroXtDbuIHtphQO+l/X/ON9U4c7ebrleXaSBWznIRg
+ S+R2kAaUXmD9McEbE5DBxuG8jYLjcPnVcoWriknC9aDv0ENjnSloeAgpV4wACJHEG1H4jVUN9
+ uTC4n1G8FsFdsV1sXuCX0AojlnS81C/Xu9Ok1JpAWzhxvSw7lnvWQmiTqGcDEMslmgPR5fIPT
+ 1qV4550mQWXOFTgVzKukGNkr6BBIGAiv1k0LMxmZVEBPwXrdmVcgwL/La7cBKMO59tt9Axs7C
+ y64yOFnYHIovu+Svq72TmfWqvFkvgSiEgOvL0z650tiHPREHAWBzujqThIX7Khwsdw76EXbF8
+ MuYg06gMsnLie/DZPIhyrKC1PZsSaLa0i1LXUOYT/ArYymiW0kFtysgN119Ze1OCHurdJNqFI
+ kH/BC85O2V8zhQ7vt0IdqBbRfYWOz6AnQ89dFgUjXIOfvlqgJsHbYYRwzjOuOkv2nGGOOdNY6
+ SbZHvJZ31xR1vuyO82pH2AvdLQXcfSfO/CxI1vnBYm9PpdzKspgUfkmPwExooICNjz3opIwZ6
+ XLC9uelmpJyTiMHFuw5WmRcyFvlO6jXLfG00FqOrhuwikIRfY84xo0WmixghBMzKPUxi4uTbx
+ lWjY43RvuWFUvM+cN0fZVpAq7kdfBnjwa1cKrxpJABlwscF7LMf8uR83dWFOcUMsECimNFid8
+ IMdShHGK9AyJaBNyyNibG6ejCIYHtMaZNy8PIOOI8IuEiICnHonqPjKaye76Gjn+lCOdPAP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 9:55 PM Lars-Peter Clausen <lars@metafoo.de> wrote:
-> On 4/2/20 8:45 PM, Andy Shevchenko wrote:
-> > On Wed, Apr 1, 2020 at 9:47 PM Alexandru Lazar <alazar@startmail.com> wrote:
-> >> Add driver for the Maxim MAX1241 12-bit, single-channel ADC.
-> >>
-> > Perhaps put data sheet link as Datasheet: tag here?
-> >
-> >> Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> >> Signed-off-by: Alexandru Lazar <alazar@startmail.com>
-> > ...
-> >
-> >> +       indio_dev->name = spi_get_device_id(spi)->name;
-> > Shouldn't be rather part number?
-> > Jonathan?
->
-> This is the part number as defined in the spi_device id table :)
+As all known variants of the Salvator board have the HDMI decoder
+chip (the ADV7482) connected to the SSI4 on R-Car SoC, the ADV7482
+endpoint and the connection definitions are placed in the common board
+file.
 
-Okay!
+For the same reason, the CLK_C clock line and I2C configuration (similar
+to the ak4613, on the same interface) are added into the common file.
 
-> +static const struct spi_device_id max1241_id[] = {
-> +       { "max1241", max1241 },
-> +       {}
-> +};
+Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
 
+--
 
+v5: Add dummy ssi4 node to the rcar sound card in r8a77961, as the
+    devices (Salvator-X 2nd version with R-Car M3 W+) also reference
+    salvator-common.dtsi.
+    Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+v2: Also add ssi4_ctrl pin group in the sound pins. The pins are
+    responsible for SCK4 (sample clock) WS4 and (word boundary input),
+    and are required for SSI audio input over I2S.
+
+    The adv748x shall provide its own implementation of the output clock
+    (MCLK), connected to the audio_clk_c line of the R-Car SoC.
+
+    If the frequency of the ADV748x MCLK were fixed, the clock
+    implementation were not necessary, but it does not seem so: the MCLK
+    depends on the value in a speed multiplier register and the input sample
+    rate (48kHz).
+
+    Remove audio clock C from the clocks of adv7482.
+
+    The clocks property of the video-receiver node lists the input
+    clocks of the device, which is quite the opposite from the
+    original intention: the adv7482 on Salvator X boards is a
+    provide of the MCLK clock for I2S audio output.
+
+    Remove old definition of &sound_card.dais and reduce size of changes
+    in the Salvator-X specific device tree source.
+
+    Declare video-receiver a clock producer, as the adv748x driver
+    implements the master clock used I2S audio output.
+
+    Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+v2: The driver provides only MCLK clock, not the SCLK and LRCLK,
+    which are part of the I2S protocol.
+
+    Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ .../boot/dts/renesas/r8a77950-salvator-x.dts  |  3 +-
+ arch/arm64/boot/dts/renesas/r8a77961.dtsi     |  1 +
+ .../boot/dts/renesas/salvator-common.dtsi     | 47 +++++++++++++++++--
+ 3 files changed, 45 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts
+index 2438825c9b22..e16c146808b6 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts
++++ b/arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts
+@@ -146,7 +146,8 @@ &sata {
+ &sound_card {
+ 	dais = <&rsnd_port0	/* ak4613 */
+ 		&rsnd_port1	/* HDMI0  */
+-		&rsnd_port2>;	/* HDMI1  */
++		&rsnd_port2	/* HDMI1  */
++		&rsnd_port3>;	/* adv7482 hdmi-in  */
+ };
+ 
+ &usb2_phy2 {
+diff --git a/arch/arm64/boot/dts/renesas/r8a77961.dtsi b/arch/arm64/boot/dts/renesas/r8a77961.dtsi
+index be3824bda632..b79907beaf31 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77961.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77961.dtsi
+@@ -861,6 +861,7 @@ rcar_sound,src {
+ 			rcar_sound,ssi {
+ 				ssi0: ssi-0 { };
+ 				ssi1: ssi-1 { };
++				ssi4: ssi-4 { };
+ 			};
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+index 98bbcafc8c0d..ead7f8d7a929 100644
+--- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
++++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+@@ -460,7 +460,7 @@ pca9654: gpio@20 {
+ 		#gpio-cells = <2>;
+ 	};
+ 
+-	video-receiver@70 {
++	adv7482_hdmi_in: video-receiver@70 {
+ 		compatible = "adi,adv7482";
+ 		reg = <0x70 0x71 0x72 0x73 0x74 0x75
+ 		       0x60 0x61 0x62 0x63 0x64 0x65>;
+@@ -469,6 +469,7 @@ video-receiver@70 {
+ 
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		#clock-cells = <0>; /* the MCLK for I2S output */
+ 
+ 		interrupt-parent = <&gpio6>;
+ 		interrupt-names = "intrq1", "intrq2";
+@@ -510,6 +511,15 @@ adv7482_txb: endpoint {
+ 				remote-endpoint = <&csi20_in>;
+ 			};
+ 		};
++
++		port@c {
++			reg = <12>;
++
++			adv7482_i2s: endpoint {
++				remote-endpoint = <&rsnd_endpoint3>;
++				system-clock-direction-out;
++			};
++		};
+ 	};
+ 
+ 	csa_vdd: adc@7c {
+@@ -684,7 +694,8 @@ sdhi3_pins_uhs: sd3_uhs {
+ 	};
+ 
+ 	sound_pins: sound {
+-		groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a";
++		groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a",
++			 "ssi4_data", "ssi4_ctrl";
+ 		function = "ssi";
+ 	};
+ 
+@@ -733,8 +744,8 @@ &rcar_sound {
+ 	pinctrl-0 = <&sound_pins &sound_clk_pins>;
+ 	pinctrl-names = "default";
+ 
+-	/* Single DAI */
+-	#sound-dai-cells = <0>;
++	/* multi DAI */
++	#sound-dai-cells = <1>;
+ 
+ 	/* audio_clkout0/1/2/3 */
+ 	#clock-cells = <1>;
+@@ -758,8 +769,19 @@ &rcar_sound {
+ 		 <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>,
+ 		 <&cpg CPG_MOD 1019>, <&cpg CPG_MOD 1018>,
+ 		 <&audio_clk_a>, <&cs2000>,
+-		 <&audio_clk_c>,
++		 <&adv7482_hdmi_in>,
+ 		 <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
++	clock-names = "ssi-all",
++		      "ssi.9", "ssi.8", "ssi.7", "ssi.6",
++		      "ssi.5", "ssi.4", "ssi.3", "ssi.2",
++		      "ssi.1", "ssi.0",
++		      "src.9", "src.8", "src.7", "src.6",
++		      "src.5", "src.4", "src.3", "src.2",
++		      "src.1", "src.0",
++		      "mix.1", "mix.0",
++		      "ctu.1", "ctu.0",
++		      "dvc.0", "dvc.1",
++		      "clk_a", "clk_b", "clk_c", "clk_i";
+ 
+ 	ports {
+ 		#address-cells = <1>;
+@@ -777,6 +799,21 @@ rsnd_endpoint0: endpoint {
+ 				capture  = <&ssi1 &src1 &dvc1>;
+ 			};
+ 		};
++		rsnd_port3: port@3 {
++			reg = <3>;
++			rsnd_endpoint3: endpoint {
++				remote-endpoint = <&adv7482_i2s>;
++
++				dai-tdm-slot-num = <8>;
++				dai-tdm-slot-width = <32>;
++				dai-format = "left_j";
++				mclk-fs = <256>;
++				bitclock-master = <&adv7482_i2s>;
++				frame-master = <&adv7482_i2s>;
++
++				capture = <&ssi4>;
++			};
++		};
+ 	};
+ };
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.1.25.g9ecbe7eb18
+
