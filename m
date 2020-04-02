@@ -2,92 +2,119 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BADA6C2BA16
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 19:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB87C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 19:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F4472080C
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 19:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB94A20719
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 19:46:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389700AbgDBTkN (ORCPT
+        id S1727412AbgDBTqn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 15:40:13 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:2154 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732625AbgDBTkM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 15:40:12 -0400
-X-IronPort-AV: E=Sophos;i="5.72,336,1580742000"; 
-   d="scan'208";a="43555725"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 03 Apr 2020 04:40:10 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 251FD40C4F75;
-        Fri,  3 Apr 2020 04:40:03 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v6 11/11] MAINTAINERS: Add file patterns for rcar PCI device tree bindings
-Date:   Thu,  2 Apr 2020 20:38:39 +0100
-Message-Id: <1585856319-4380-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1585856319-4380-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1585856319-4380-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Thu, 2 Apr 2020 15:46:43 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46424 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728225AbgDBTqn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 15:46:43 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 0F4DB28A9AD
+Subject: Re: [PATCH 4/4] arm64: dts: rockchip: add isp0 node for rk3399
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     dafna.hirschfeld@collabora.com, devel@driverdev.osuosl.org,
+        devicetree@vger.kernel.org, ezequiel@collabora.com,
+        heiko@sntech.de, hverkuil-cisco@xs4all.nl,
+        karthik.poduval@gmail.com, kernel@collabora.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        robh+dt@kernel.org
+References: <20200402000234.226466-5-helen.koike@collabora.com>
+ <1187d28a-6fb9-fd12-a422-8a4220a11e79@gmail.com>
+From:   Helen Koike <helen.koike@collabora.com>
+Message-ID: <d8b05dd4-1ece-9513-b2ec-0cb58f665c5e@collabora.com>
+Date:   Thu, 2 Apr 2020 16:46:28 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <1187d28a-6fb9-fd12-a422-8a4220a11e79@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add file pattern entry for rcar PCI devicetree binding, so that when
-people run ./scripts/get_maintainer.pl the rcar PCI maintainers could also
-be listed.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3f0f2ee2af32..87df2d31a54b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12933,6 +12933,7 @@ L:	linux-pci@vger.kernel.org
- L:	linux-renesas-soc@vger.kernel.org
- S:	Maintained
- F:	drivers/pci/controller/*rcar*
-+F:	Documentation/devicetree/bindings/pci/*rcar*
- 
- PCI DRIVER FOR SAMSUNG EXYNOS
- M:	Jingoo Han <jingoohan1@gmail.com>
--- 
-2.20.1
+On 4/2/20 2:20 PM, Johan Jonker wrote:
+> Hi Helen,
+> 
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> index fc0295d2a65a1..815099a0cd0dd 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> @@ -1718,6 +1718,33 @@ vopb_mmu: iommu@ff903f00 {
+>>  		status = "disabled";
+>>  	};
+>>  
+>> +	isp0: isp0@ff910000 {
+>> +		compatible = "rockchip,rk3399-cif-isp";
+>> +		reg = <0x0 0xff910000 0x0 0x4000>;
+>> +		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
+>> +		clocks = <&cru SCLK_ISP0>,
+>> +			 <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
+>> +			 <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
+>> +		clock-names = "clk_isp",
+>> +			      "aclk_isp", "aclk_isp_wrap",
+>> +			      "hclk_isp", "hclk_isp_wrap";
+> 
+>> +		power-domains = <&power RK3399_PD_ISP0>;
+>> +		iommus = <&isp0_mmu>;
+>> +		phys = <&mipi_dphy_rx0>;
+>> +		phy-names = "dphy";
+> 
+> Maybe a little sort? But keep rest as it is. Also in example.
+> 
+> 		iommus = <&isp0_mmu>;
+> 		phys = <&mipi_dphy_rx0>;
+> 		phy-names = "dphy";
+> 		power-domains = <&power RK3399_PD_ISP0>;
 
+Are you proposing only to move power-domains after phy? And keep the rest?
+What is the main logic?
+
+Thanks
+Helen
+
+> 
+>> +
+>> +		ports {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +
+>> +			port@0 {
+> 
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +				reg = <0>;
+> 
+> Move reg above #address-cells. Change that in example as well.
+> 
+> 				reg = <0>;
+> 				#address-cells = <1>;
+> 				#size-cells = <0>;
+> 
+>> +			};
+>> +		};
+>> +	};
+>> +
+>>  	isp0_mmu: iommu@ff914000 {
+>>  		compatible = "rockchip,iommu";
+>>  		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
+>> -- 
+>> 2.26.0
+> 
