@@ -2,195 +2,205 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40397C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 18:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FD3C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 18:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE682078B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 18:32:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kUSMyb7w"
+	by mail.kernel.org (Postfix) with ESMTP id 653122064A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 18:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389318AbgDBScH (ORCPT
+        id S2388526AbgDBSee (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 14:32:07 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:45966 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389100AbgDBScH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 14:32:07 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585852326; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=bwdgE6SDnCj91cAVMlb3J56Z9tUcAowCrODV+AuEXSo=; b=kUSMyb7wj0OTzqSAlf5s4QcVfpDrUN5r1xUmMjMfp7HkVTogA/9yCRrB/I2pUwrgRsVGHm3v
- qJ75PeKS70tDHJJ0rRveUXe8TF0b85QMlx/kkNY8/+p4vpXAtBjMJXL3KTIhl9nKo5sh+SKj
- tceLkTUkb/umBWkdPdM7jeAG2Tk=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e862f8f.7f132e278928-smtp-out-n01;
- Thu, 02 Apr 2020 18:31:43 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 720DBC43636; Thu,  2 Apr 2020 18:31:42 +0000 (UTC)
-Received: from [10.110.122.98] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 17244C433D2;
-        Thu,  2 Apr 2020 18:31:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 17244C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH v4 4/4] phy: qcom-qmp: Use proper PWRDOWN offset for
- sm8150 USB
-To:     Manu Gautam <mgautam@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, kishon@ti.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, p.zabel@pengutronix.de
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <1585597017-30683-1-git-send-email-wcheng@codeaurora.org>
- <1585597017-30683-5-git-send-email-wcheng@codeaurora.org>
- <d61723e3-17a3-366d-f476-c33931766efd@codeaurora.org>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <b70f88cd-bbc7-96ab-3890-e15cbe94b258@codeaurora.org>
-Date:   Thu, 2 Apr 2020 11:31:40 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 2 Apr 2020 14:34:34 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:48679 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729033AbgDBSee (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 14:34:34 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1MeC1p-1ijeBk1XbL-00bH8S for <devicetree@vger.kernel.org>; Thu, 02 Apr
+ 2020 20:34:31 +0200
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id 0D419650846
+        for <devicetree@vger.kernel.org>; Thu,  2 Apr 2020 18:34:31 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id mQmUjZUmjjXx for <devicetree@vger.kernel.org>;
+        Thu,  2 Apr 2020 20:34:30 +0200 (CEST)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 8E24064FD93
+        for <devicetree@vger.kernel.org>; Thu,  2 Apr 2020 20:34:30 +0200 (CEST)
+Received: from pflmari.corp.cetitec.com (10.8.5.12) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 2 Apr 2020 20:34:30 +0200
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id BBC93804FB; Thu,  2 Apr 2020 20:33:58 +0200 (CEST)
+Date:   Thu, 2 Apr 2020 20:33:58 +0200
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>
+Subject: [PATCH v5 0/9] media: adv748x: add support for HDMI audio
+Message-ID: <cover.1585852001.git.alexander.riesen@cetitec.com>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
 MIME-Version: 1.0
-In-Reply-To: <d61723e3-17a3-366d-f476-c33931766efd@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-Originating-IP: [10.8.5.12]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A290D7F536A6C7266
+X-Provags-ID: V03:K1:F2GCpzfB+7IKJTWZE4+csVoWuSOnEk2XFClAw7ZfVCx1TQhfhw6
+ 4TOoNqaV4NzePqYK+1k0N4hU0FrWrVpV5RHfETIbctOB193egj0W3A66a+c9GIPrb8tUe8W
+ vaaAz0BiQEkrTlnsDYqPeQtyBPWpR/D5f9vUeSusM23hmwpvBwAefLLuzJKCDCtmD+JDB/C
+ bjibbuwA+IhMKChVsuZqg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:FViLadnB9TE=:4YN+m3LCFk9uhVI5ACP7JA
+ XSRzjjYL5H7SjvKfysDnMCuGaVVFzchA+nA9CftYeCEMnsRVgv9Hvxf/a1bPW63vdNHsV43QQ
+ XL/eXi/Nmkzp5DEnDVeu9NTxZ30jS7cUXyV9mEn0kEPbYzOs0WPIw37BxwNFURNR87qIw8/dD
+ MTVXZdzfkEmStCKiqmb1T1KVSjc6eIPksSLP6RKHmXcwRUpnhO+UybzqW6mh1Mjn++r6EIc40
+ PCWoIP5IesftHafzYM3jfYUVrnHY8ObaC9PmrQNi6Ah9M9VYcGOVgnKVsuT0GmLOZqZXiWURH
+ 33TTqu921KuicDLWRxNBgFFIEqrRKiqZMv1CjW7lBoy5KazTxUlRK+UvayIi1acxeCdiR6qgS
+ 2mSBRwyjL3ZB8jPsHTDr+BrRy/+QFYFjNjdbqw2tHrutz+FhPcmaGwel1c05m7/ieZiTKJMrb
+ POaugOqg/LXsHtDg5KtNlkuRs0J4lRlgXVELckwvydkd6HQY1hs3Epnc/Ij2vngOqFbH4mKfU
+ r9KDSpdRfZG8OUotNPTe962ek/uS6/CoRtnpDKtJB+HC+B12d9H2SBiQdjR0uQ+WWagiMHzwt
+ ilS3l0kzheCjOBdWxoo29io/LZCoKlJlg2GWqy/rBExaJGP1A19YnO2GQDCcwFNP0BbHDcSYF
+ xpN1/nsgfyTqu/5FUFpgyR8OVIx8++v8a7dvI7fU0AQ1zZY6FLphggx3DdwgDQvOUOTlNFkQM
+ HYTZRAxnvwcgT6kuUOXyVtDTpIFluJHnNrx1GozeJu34WybV0bTjsFDE1Y93yVWMk+wA3IHeH
+ jTAfg+zZ+yQwy7Q8oJ1NxvykVkZIxopNWrlfJC4TT6165N/pPVhk1cff2sJGGpQgPtrJqi7
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Manu,
+This adds minimal support for accessing the HDMI audio provided through the
+I2S port available on ADV7481 and ADV7482 decoder devices by ADI.
+The port carries audio signal from the decoded HDMI stream.
 
-Thanks for the feedback and review.
+Currently, the driver only supports I2S in TDM, 8 channels a 24bit at 48kHz.
+Furthermore, only left-justified, 8 slots, 32bit/slot TDM, at 256fs has been
+ever tried.
 
-On 4/2/2020 12:35 AM, Manu Gautam wrote:
-> 
-> On 3/31/2020 1:06 AM, Wesley Cheng wrote:
->> The register map for SM8150 QMP USB SSPHY has moved
->> QPHY_POWER_DOWN_CONTROL to a different offset.  Allow for
->> an offset in the register table to override default value
->> if it is a DP capable PHY.
->>
->> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
->> ---
->>  drivers/phy/qualcomm/phy-qcom-qmp.c | 15 ++++++++++++---
->>  1 file changed, 12 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
->> index cc04471..4c0517e 100644
->> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
->> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
->> @@ -164,6 +164,7 @@ enum qphy_reg_layout {
->>  	[QPHY_SW_RESET]			= 0x00,
->>  	[QPHY_START_CTRL]		= 0x44,
->>  	[QPHY_PCS_STATUS]		= 0x14,
->> +	[QPHY_COM_POWER_DOWN_CONTROL]	= 0x40,
-> Since this is in PCS block please rename it to -
-> 
-> QPHY_PCS_POWER_DOWN_CONTROL
-> 
+An ADV7482 on the Renesas Salvator-X ES1.1 (R8A77950 SoC) was used during
+development of this code.
 
-Sure, will add another enum value to the register layout, and rename it
-where needed.
+Changes since v4:
+  - rebased on v5.6
 
->>  };
->>  
->>  static const unsigned int sdm845_ufsphy_regs_layout[] = {
->> @@ -1627,6 +1628,9 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
->>  	if (cfg->has_phy_com_ctrl)
->>  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
->>  			     SW_PWRDN);
->> +	else if (cfg->has_phy_dp_com_ctrl && cfg->regs[QPHY_COM_POWER_DOWN_CONTROL])
->> +		qphy_setbits(pcs, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
->> +			     cfg->pwrdn_ctrl);
->>  	else
->>  		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
-> Since, this register is in PCS block why check for dp_com_ctrl here?
-> Something like:
-> 
->  	if (cfg->has_phy_com_ctrl) {
->  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
->  			     SW_PWRDN);
-> 	} else {
-> 		if (cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL]) 
-> 			qphy_setbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
-> 			     cfg->pwrdn_ctrl);
->  		else
->  			qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
-> 	}
-> 
+  - Add dummy ssi4 node to the rcar sound card, as the r8a77961
+    devices also reference salvator-common.dts.
+    Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Agree with this.
+Changes since v3:
+  - use clk_hw instead of clk
+    Suggested-by: Stephen Boyd <sboyd@kernel.org>
 
->>  
->> @@ -1671,10 +1675,12 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
->>  	return ret;
->>  }
->>  
->> -static int qcom_qmp_phy_com_exit(struct qcom_qmp *qmp)
->> +static int qcom_qmp_phy_com_exit(struct qmp_phy *qphy)
->>  {
->> +	struct qcom_qmp *qmp = qphy->qmp;
->>  	const struct qmp_phy_cfg *cfg = qmp->cfg;
->>  	void __iomem *serdes = qmp->serdes;
->> +	void __iomem *pcs = qphy->pcs;
->>  	int i = cfg->num_resets;
->>  
->>  	mutex_lock(&qmp->phy_mutex);
->> @@ -1691,6 +1697,9 @@ static int qcom_qmp_phy_com_exit(struct qcom_qmp *qmp)
->>  			     SW_RESET);
->>  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
->>  			     SW_PWRDN);
->> +	} else if (cfg->has_phy_dp_com_ctrl && cfg->regs[QPHY_COM_POWER_DOWN_CONTROL]) {
-> 
-> Can we add change similar to init() here ?
-> 
-> 
+  - formatting improvements and use const where possible
 
-Sure.  I will move this check to where the current code writes to the
-PWR DOWN CONTROL in
+  - removed implementation of log_status and EDID setting ioctls,
+    those will be submitted as separate patches.
+    Suggested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-static int qcom_qmp_phy_disable(struct phy *phy)
-{
-	...
-	qphy_clrbits(qphy->pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+Changes since v2:
+  - prepare/enable the clock when it is used, as it seems nothing else does
+    this otherwise
 
-We wouldn't want the SW to write to an incorrect register.
+  - give the clock a unique name to ensure it can be registered if there are
+    multiple adv748x devices in the system
 
->> +			     cfg->pwrdn_ctrl);
->>  	}
->>  
->>  	while (--i >= 0)
->> @@ -1829,7 +1838,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
->>  	if (cfg->has_lane_rst)
->>  		reset_control_assert(qphy->lane_rst);
->>  err_lane_rst:
->> -	qcom_qmp_phy_com_exit(qmp);
->> +	qcom_qmp_phy_com_exit(qphy);
->>  
->>  	return ret;
->>  }
->> @@ -1855,7 +1864,7 @@ static int qcom_qmp_phy_disable(struct phy *phy)
->>  	if (cfg->has_lane_rst)
->>  		reset_control_assert(qphy->lane_rst);
->>  
->> -	qcom_qmp_phy_com_exit(qmp);
->> +	qcom_qmp_phy_com_exit(qphy);
->>  
->>  	qmp->phy_initialized = false;
->>  
-> 
+  - remove optionality note from clock cell description to ensure the device
+    description matches the real device (the line is always present, even
+    if not used)
+
+Changes since v1:
+  - Add ssi4_ctrl pin group to the sound pins. The pins are responsible for
+    SCK4 (sample clock) WS4 and (word boundary input), and are required for
+    SSI audio input over I2S.
+    Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+  - Removed the audio clock C from the list of clocks of adv748x,
+    it is exactly the other way around.
+    Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+  - Add an instance of (currently) fixed rate I2S master clock (MCLK),
+    connected to the audio_clk_c line of the R-Car SoC.
+    Explicitly declare the device a clock producer and add it to the
+    list of clocks used by the audio system of the Salvator-X board.
+    Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+  - The implementation of DAI driver has been moved in a separate file
+    and modified to activate audio decoding and I2S streaming using
+    snd_soc_dai_... interfaces. This allows the driver to be used with
+    just ALSA interfaces.
+
+  - The ioctls for selecting audio output and muting have been removed,
+    as not applicable.
+    Suggested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+    I have left implementation of the QUERYCAP in, as it seems to be required
+    by v4l-ctl to support loading of EDID for this node. And setting the EDID
+    is one feature I desperately need: there are devices which plainly refuse
+    to talk to the sink if it does not provide EDID they like.
+
+  - A device tree configuration without audio port will disable the audio code
+    altogether, supporting integrations where the port is not connected.
+
+  - The patches have been re-arranged, starting with the generic changes and
+    changes not related to audio directly. Those will be probably sent as a
+    separate series later.
+
+  - The whole series has been rebased on top of v5.6-rc6
+
+Alex Riesen (9):
+  media: adv748x: fix end-of-line terminators in diagnostic statements
+  media: adv748x: include everything adv748x.h needs into the file
+  media: adv748x: reduce amount of code for bitwise modifications of
+    device registers
+  media: adv748x: add definitions for audio output related registers
+  media: adv748x: add support for HDMI audio
+  media: adv748x: prepare/enable mclk when the audio is used
+  media: adv748x: only activate DAI if it is described in device tree
+  dt-bindings: adv748x: add information about serial audio interface
+    (I2S/TDM)
+  arm64: dts: renesas: salvator: add a connection from adv748x codec
+    (HDMI input) to the R-Car SoC
+
+ .../devicetree/bindings/media/i2c/adv748x.txt |  16 +-
+ .../boot/dts/renesas/r8a77950-salvator-x.dts  |   3 +-
+ arch/arm64/boot/dts/renesas/r8a77961.dtsi     |   1 +
+ .../boot/dts/renesas/salvator-common.dtsi     |  47 ++-
+ drivers/media/i2c/adv748x/Makefile            |   3 +-
+ drivers/media/i2c/adv748x/adv748x-afe.c       |   6 +-
+ drivers/media/i2c/adv748x/adv748x-core.c      |  45 +--
+ drivers/media/i2c/adv748x/adv748x-csi2.c      |   8 +-
+ drivers/media/i2c/adv748x/adv748x-dai.c       | 278 ++++++++++++++++++
+ drivers/media/i2c/adv748x/adv748x-hdmi.c      |   6 +-
+ drivers/media/i2c/adv748x/adv748x.h           |  65 +++-
+ 11 files changed, 436 insertions(+), 42 deletions(-)
+ create mode 100644 drivers/media/i2c/adv748x/adv748x-dai.c
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.25.1.25.g9ecbe7eb18
+
