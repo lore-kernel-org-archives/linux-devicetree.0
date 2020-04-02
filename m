@@ -2,168 +2,115 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6798EC43331
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 10:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56294C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 10:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A7AC2077D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 10:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C8AC206F5
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 10:51:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="gbcQgrA2"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="AjAsHQYn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387709AbgDBKkP (ORCPT
+        id S2387709AbgDBKvZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 06:40:15 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:35893 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728612AbgDBKkP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 06:40:15 -0400
-Received: by mail-ua1-f67.google.com with SMTP id m15so231805uao.3
-        for <devicetree@vger.kernel.org>; Thu, 02 Apr 2020 03:40:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EKz0BYCnAYaxNPQCfa65G2LlOu2wy+lcqbRhsvRTDzY=;
-        b=gbcQgrA22EAyItGP+TKMeDdvt9CVIT/R2GLUGHK8fjYaSwYAmzZjrigV8/ZEc97Cs/
-         RNx49zr/EmMLCKs3yICV3DbWcDYNC5Edq669CkOvAdg3+O1GS2jZbpZOCtZQ6l7yebBe
-         DcE5X2RyzxPvE4l95PLzY7VkQp2hTqveDSVtEZd9yAZEIGIIb1ayiV74u9DWw1el7iMl
-         tBMNVst2x0cB6yx6mL/+mwCZbUBehcbP9DWmWpXhe7ZdE/NU+bYYJ0T4rxkQk1zpYaZY
-         //r41sobGat2KcV4rgWj0zoDrb9ujZcg71SJcQQypNO3b7Zv+97mRrl5whWtKXgFY2t5
-         j6Jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EKz0BYCnAYaxNPQCfa65G2LlOu2wy+lcqbRhsvRTDzY=;
-        b=EhCu5D7NLIzjXwrlur+t/sch6JVvQsNLzVqH9v2Xzjf5u1z4YYGs5fMl9wlK7+N8om
-         vVA93CL3gBB33becDW6eOmpShdEsZXFrT8mWM2NmryL8WbV8LEkpi4yhJnLilL0FsUYt
-         B29KOLDLnKkbUBI76gqZUHtYAgiGmbLbfxnCOWj5HCZNv/2SKFidq9sQreSWmRvCJewD
-         CakRvVsbu+ReZ1V0kHl/7csZcWr5/QPjxXS9O/obOfN+Ck8+vEvA6XKpdy8wpMBosUPn
-         j1emcqsd5gQ7Av4/60IBvwePf2ZUSHFpgzgmYQDD/Y3+kOBHM01nwKNVav1O8uQH/281
-         G3CQ==
-X-Gm-Message-State: AGi0PubKStemuyurkw4Ub9TvNoD/d9tGGVCWrLxeUtS5WCsGjjLbCc6+
-        jxnECsB+6kWvLFhLvE6yV+bwen00GdSUfbDK8t93dg==
-X-Google-Smtp-Source: APiQypI83QnOQ6D0d7POmo0QouJRjj7RkZV/O1KQNeqzJrIRwpmjlcrHV9wDaSFuXhDoh9ukC8k3b+Ye0lKDq5mhdK8=
-X-Received: by 2002:ab0:70d9:: with SMTP id r25mr2082703ual.67.1585824014129;
- Thu, 02 Apr 2020 03:40:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <1584966504-21719-1-git-send-email-Anson.Huang@nxp.com> <1584966504-21719-3-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1584966504-21719-3-git-send-email-Anson.Huang@nxp.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Thu, 2 Apr 2020 16:10:03 +0530
-Message-ID: <CAHLCerNG3ZBbWrTwXxCbd1BOfyHxuvpAuo5tW_bNKgWcO5zESA@mail.gmail.com>
-Subject: Re: [PATCH V3 3/3] arm64: dts: imx8mp: Add thermal zones support
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thu, 2 Apr 2020 06:51:25 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17882 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387592AbgDBKvZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 06:51:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585824667;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
+        bh=wo0+AUxnoZlrbKC5hxp6GLkb/pZHeEjSheMrmhdzJdg=;
+        b=AjAsHQYnAt6ISbnGXlGVm/3UXUCLeWEcz7FoSKYEr/2x/g1EIs1WGklwJVu56xuZ
+        ezUDrTUdoEY9kNT7TNABeHJyzebNP+jlM+HDF+B7XcEQ4W/9vyFYIr7dsWWEU2l7UDs
+        CYDAFMl+wl6bXoe9h4+nbtVFBlMoVDPxH6gtZl/I=
+Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
+        with SMTPS id 1585824666964419.4005134939064; Thu, 2 Apr 2020 18:51:06 +0800 (CST)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
-        Fabio Estevam <festevam@gmail.com>, horia.geanta@nxp.com,
-        peng.fan@nxp.com, Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, Linux-imx@nxp.com
-Content-Type: text/plain; charset="UTF-8"
+        Huacai Chen <chenhc@lemote.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-ID: <20200402104851.368465-3-jiaxun.yang@flygoat.com>
+Subject: [PATCH 3/5] dt-bindings: Document Loongson RS780E PCH ACPI Controller
+Date:   Thu,  2 Apr 2020 18:48:41 +0800
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200402104851.368465-1-jiaxun.yang@flygoat.com>
+References: <20200402104851.368465-1-jiaxun.yang@flygoat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 6:05 PM Anson Huang <Anson.Huang@nxp.com> wrote:
->
-> i.MX8MP has a TMU inside which supports two thermal zones, add support
-> for them.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+This controller is attached under ISA Bus and can be found
+in Loongson-3 systems with RS780E PCH.
+
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ .../bindings/mips/loongson/rs780e-acpi.yaml   | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mips/loongson/rs780e-=
+acpi.yaml
+
+diff --git a/Documentation/devicetree/bindings/mips/loongson/rs780e-acpi.ya=
+ml b/Documentation/devicetree/bindings/mips/loongson/rs780e-acpi.yaml
+new file mode 100644
+index 000000000000..d317897e1115
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mips/loongson/rs780e-acpi.yaml
+@@ -0,0 +1,40 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/mips/loongson/rs780e-acpi.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Loongson RS780E PCH ACPI Controller
++
++maintainers:
++  - Jiaxun Yang <jiaxun.yang@flygoat.com>
++
++description: |
++  This controller can be found in Loongson-3 systems with RS780E PCH.
++
++properties:
++  compatible:
++    const: loongson,rs780e-acpi
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    isa@0 {
++      compatible =3D "isa";
++      #address-cells =3D <2>;
++      #size-cells =3D <1>;
++      ranges =3D <1 0 0 0x1000>;
++
++      acpi@800 {
++        compatible =3D "loongson,rs780e-acpi";
++        reg =3D <1 0x800 0x100>;
++      };
++    };
++
++...
+--=20
+2.26.0.rc2
 
 
-[snip]
-
->
-> +       thermal-zones {
-> +               cpu-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <2000>;
-> +                       thermal-sensors = <&tmu 0x0>;
-
-No need for 0x0, just use 0
-
-> +                       trips {
-> +                               cpu_alert0: trip0 {
-> +                                       temperature = <85000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu_crit0: trip1 {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +
-> +                       cooling-maps {
-> +                               map0 {
-> +                                       trip = <&cpu_alert0>;
-> +                                       cooling-device =
-> +                                               <&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +                                               <&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +                                               <&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +                                               <&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +                               };
-> +                       };
-> +               };
-> +
-> +               soc-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <2000>;
-> +                       thermal-sensors = <&tmu 0x1>;
-
-No need for 0x1, just use 1
-
-> +                       trips {
-> +                               soc_alert0: trip0 {
-> +                                       temperature = <85000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               soc_crit0: trip1 {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-
-You need a cooling-map here since you have a passive trip point.
-
-
-> +               };
-> +       };
-> +
->         timer {
->                 compatible = "arm,armv8-timer";
->                 interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
-> @@ -215,6 +271,13 @@
->                                 gpio-ranges = <&iomuxc 0 114 30>;
->                         };
->
-> +                       tmu: tmu@30260000 {
-> +                               compatible = "fsl,imx8mp-tmu";
-> +                               reg = <0x30260000 0x10000>;
-> +                               clocks = <&clk IMX8MP_CLK_TSENSOR_ROOT>;
-> +                               #thermal-sensor-cells = <1>;
-> +                       };
-> +
->                         wdog1: watchdog@30280000 {
->                                 compatible = "fsl,imx8mp-wdt", "fsl,imx21-wdt";
->                                 reg = <0x30280000 0x10000>;
-> --
-> 2.7.4
->
