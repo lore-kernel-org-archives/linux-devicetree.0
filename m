@@ -2,275 +2,145 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UPPERCASE_50_75,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 499D4C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 23:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EB6C2BA12
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 23:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 022632073B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 23:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC1F3207FF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 23:08:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="giau6HUA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NJH8mUDy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388715AbgDBXG0 (ORCPT
+        id S2390080AbgDBXIg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 19:06:26 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:28432 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732600AbgDBXG0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 19:06:26 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585868785; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=joEfBFYVnCUn1rHziGrcFQaULpvVa2IqWI3HP0gQeC0=; b=giau6HUAQWf8cTh7Y2w1B+BJjdu4XGWnd40sQBwdJ+30ThJA8yr5XELi4wB256NaJT/hNjFd
- GkGRSHGhcZwKbEErLSLBjZNNJcss9dlFHIC0wbVKW/YnFLDfD+2kbO3TH4ARtxM6qSQMOKXH
- EFCWy8dcQwtYVIr68DQrVIlsx6U=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e866ff0.7f06974ecea0-smtp-out-n02;
- Thu, 02 Apr 2020 23:06:24 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D7368C4478C; Thu,  2 Apr 2020 23:06:24 +0000 (UTC)
-Received: from [10.110.122.98] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EF71EC433D2;
-        Thu,  2 Apr 2020 23:06:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EF71EC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH v4 3/4] phy: qcom-qmp: Add SM8150 QMP USB3 PHY support
-To:     Manu Gautam <mgautam@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, kishon@ti.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, p.zabel@pengutronix.de
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Jack Pham <jackp@codeaurora.org>
-References: <1585597017-30683-1-git-send-email-wcheng@codeaurora.org>
- <1585597017-30683-4-git-send-email-wcheng@codeaurora.org>
- <6295c8d8-9763-be1d-9227-e61369000536@codeaurora.org>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <b0382fcc-d580-79a8-65d8-85afbd2047f0@codeaurora.org>
-Date:   Thu, 2 Apr 2020 16:06:22 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 2 Apr 2020 19:08:36 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43615 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390073AbgDBXIf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 19:08:35 -0400
+Received: by mail-ot1-f68.google.com with SMTP id a6so5361609otb.10
+        for <devicetree@vger.kernel.org>; Thu, 02 Apr 2020 16:08:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QQeb3TySrXKWjqdpdystZzrLdZhobbR4wczMyxU9daE=;
+        b=NJH8mUDyS4vydKm8ozgwIwBIN0a+isHGLQhu1Xa7KlLuolkz3lTRHWLGbQWqH3DraZ
+         GVKcNeq10kJshsCpCmD1ur2WOCalb70yJRRqscOw6we52/btmA03mOpNDeepRwaZoCKx
+         dJnRiSXTU6iVG2WpqT5DIUkzfttiDahvRrN9Ewboh/gzEwIivf1ZemL3a2CfwUbgyEk+
+         2hChBjqqFqpMhYxoe+FEq53Gsdh4f2ziNfFkSadQSpgWvqL+EBX+bXP8uMgyvWFIYFUI
+         90w2wzB44wDQeY7nCWytwHwPOT1gRiQLyRCC3DnFQq2w4RQ2VwXqZVzPKsRGfmhCuw6R
+         MIaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QQeb3TySrXKWjqdpdystZzrLdZhobbR4wczMyxU9daE=;
+        b=fWfuoPAmsiuqUxoES4giG4W60+pKvxphj7Y9xtCAyyzhCaKnn65pA6mloKr7/w9pcG
+         R7ma9Lygc1g1Te7Vp6Eq++XhBRBthi3yvwhWX2W1tWUHdhhKZn9wQrbKLF0Skl5oHHSv
+         wLqaTG0XZOP9AiCaLudZXL2SoFJ34fr9GQDC1owhfJWiqxL86l31Hq1Fg5eI8/ntspXA
+         nDJnHP3i2kytH0GJBHKmOb3Cpftpx/eyu9d0sMeJ0vUxXvDmRknt4pmar2KMThAd75gd
+         9QJcpROODD6Tr40hb/CYTUJu+ZEMeZpiFvFi1Fq6xPfmc0WFW51J/aXQev5mc5/ZQlJE
+         7UAg==
+X-Gm-Message-State: AGi0PuahoBnZazmkudQnhlZfkm+POv773GV5dbnAv89dGMwTaSxCqDFE
+        JoM84hl6Z2H5zQLQo2v67zRL9H42kLX65mE8g1kxfA==
+X-Google-Smtp-Source: APiQypLZA26Q+M0Ymf7b40RsmQRLEnKqmqg5on5PqLiHU2wifOGb73iVFhOLTaxXIGxQBRFM25QTMqgRbY3IyGi8mMM=
+X-Received: by 2002:a9d:344:: with SMTP id 62mr4591686otv.102.1585868913011;
+ Thu, 02 Apr 2020 16:08:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <6295c8d8-9763-be1d-9227-e61369000536@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CANcMJZCr646jav3h14K0xV=ANMxXg=U20wvSB546qrLX3TECBg@mail.gmail.com>
+ <20200402223723.7150-1-john.stultz@linaro.org> <CAD=FV=VGT75c4_ErQAJgNtcCd2Jzv0A2KpfEkS637GqOhamj9Q@mail.gmail.com>
+In-Reply-To: <CAD=FV=VGT75c4_ErQAJgNtcCd2Jzv0A2KpfEkS637GqOhamj9Q@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 2 Apr 2020 16:08:21 -0700
+Message-ID: <CALAqxLXfd+7Wc79_XWRv8cKLFu+MpM1w9e3byx9z5bXSdTemLg@mail.gmail.com>
+Subject: Re: [PATCH] phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy" compat string
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Manu,
+On Thu, Apr 2, 2020 at 3:56 PM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Thu, Apr 2, 2020 at 3:37 PM John Stultz <john.stultz@linaro.org> wrote:
+> >
+> > In commit 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2
+> > PHY support"), the change was made to add "qcom,qusb2-v2-phy"
+> > as a generic compat string. However the change also removed
+> > the "qcom,sdm845-qusb2-phy" compat string, which is documented
+> > in the binding and already in use.
+> >
+> > This patch re-adds the "qcom,sdm845-qusb2-phy" compat string
+> > which allows the driver to continue to work with existing dts
+> > entries such as found on the db845c.
+> >
+> > Cc: Andy Gross <agross@kernel.org>
+> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Doug Anderson <dianders@chromium.org>
+> > Cc: Manu Gautam <mgautam@codeaurora.org>
+> > Cc: Sandeep Maheswaram <sanm@codeaurora.org>
+> > Cc: Matthias Kaehlcke <mka@chromium.org>
+> > Cc: Stephen Boyd <swboyd@chromium.org>
+> > Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> > Cc: linux-arm-msm@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Fixes: 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2 PHY support")
+> > Reported-by: YongQin Liu <yongqin.liu@linaro.org>
+> > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > ---
+> >  drivers/phy/qualcomm/phy-qcom-qusb2.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+>
+> Do you have an out-of-tree dts file?  If not, I'd prefer that the fix
+> was for this patch to land instead:
+>
+> https://lore.kernel.org/r/1583747589-17267-9-git-send-email-sanm@codeaurora.org
 
-On 4/2/2020 12:00 AM, Manu Gautam wrote:
-> 
-> On 3/31/2020 1:06 AM, Wesley Cheng wrote:
->> From: Jack Pham <jackp@codeaurora.org>
->>
->> Add support for SM8150 QMP USB3 PHY with the necessary
->> initialization sequences as well as additional QMP V4
->> register definitions.
->>
->> Signed-off-by: Jack Pham <jackp@codeaurora.org>
->> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
->> ---
->>  drivers/phy/qualcomm/phy-qcom-qmp.c | 153 ++++++++++++++++++++++++++++
->>  drivers/phy/qualcomm/phy-qcom-qmp.h | 198 +++++++++++++++++++++++++++++++++++-
->>  2 files changed, 349 insertions(+), 2 deletions(-)
-> 
-> [snip]
-> 
->>  
->> -/* Only for QMP V4 PHY - PCS registers */
->> +/* Only for QMP V4 PHY - UFS PCS registers */
->>  #define QPHY_V4_PHY_START				0x000
->>  #define QPHY_V4_POWER_DOWN_CONTROL			0x004
->>  #define QPHY_V4_SW_RESET				0x008
->> @@ -409,4 +446,161 @@
->>  #define QPHY_V4_TX_MID_TERM_CTRL1			0x1d8
->>  #define QPHY_V4_MULTI_LANE_CTRL1			0x1e0
->>  
->> +/* Only for QMP V4 PHY - USB/PCIe PCS registers */
->> +#define QPHY_V4_PCS_SW_RESET				0x000
-> 
-> It is a mess not given that UFS wrapper uses different PCS register layout:
-> E.g. UFS uses - QPHY_V4_SW_RESET 0x008
-> 
-> Would it help to add UFS prefix for UFS specific registers to avoid confusion and typos.
-> E.g. rename QPHY_V4_SW_RESET to QPHY_V4_UFS_PCS_SW_RESET ?
-> 
+No, no out of tree dts.  The usage is already in tree:
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sdm845.dtsi#n2389
 
-I think we can follow your suggestion.  The UFS PHY has a significantly
-different set of PCS registers versus USB/PCIe, so it will be good to
-differentiate them.  I will add a patch to rename the defines and add it
-to the patch series.
 
->> +#define QPHY_V4_PCS_REVISION_ID0			0x004
->> +#define QPHY_V4_PCS_REVISION_ID1			0x008
->> +#define QPHY_V4_PCS_REVISION_ID2			0x00c
->> +#define QPHY_V4_PCS_REVISION_ID3			0x010
->> +#define QPHY_V4_PCS_PCS_STATUS1				0x014
->> +#define QPHY_V4_PCS_PCS_STATUS2				0x018
->> +#define QPHY_V4_PCS_PCS_STATUS3				0x01c
->> +#define QPHY_V4_PCS_PCS_STATUS4				0x020
->> +#define QPHY_V4_PCS_PCS_STATUS5				0x024
->> +#define QPHY_V4_PCS_PCS_STATUS6				0x028
->> +#define QPHY_V4_PCS_PCS_STATUS7				0x02c
->> +#define QPHY_V4_PCS_DEBUG_BUS_0_STATUS			0x030
->> +#define QPHY_V4_PCS_DEBUG_BUS_1_STATUS			0x034
->> +#define QPHY_V4_PCS_DEBUG_BUS_2_STATUS			0x038
->> +#define QPHY_V4_PCS_DEBUG_BUS_3_STATUS			0x03c
->> +#define QPHY_V4_PCS_POWER_DOWN_CONTROL			0x040
->> +#define QPHY_V4_PCS_START_CONTROL			0x044
->> +#define QPHY_V4_PCS_INSIG_SW_CTRL1			0x048
->> +#define QPHY_V4_PCS_INSIG_SW_CTRL2			0x04c
->> +#define QPHY_V4_PCS_INSIG_SW_CTRL3			0x050
->> +#define QPHY_V4_PCS_INSIG_SW_CTRL4			0x054
->> +#define QPHY_V4_PCS_INSIG_SW_CTRL5			0x058
->> +#define QPHY_V4_PCS_INSIG_SW_CTRL6			0x05c
->> +#define QPHY_V4_PCS_INSIG_SW_CTRL7			0x060
->> +#define QPHY_V4_PCS_INSIG_SW_CTRL8			0x064
->> +#define QPHY_V4_PCS_INSIG_MX_CTRL1			0x068
->> +#define QPHY_V4_PCS_INSIG_MX_CTRL2			0x06c
->> +#define QPHY_V4_PCS_INSIG_MX_CTRL3			0x070
->> +#define QPHY_V4_PCS_INSIG_MX_CTRL4			0x074
->> +#define QPHY_V4_PCS_INSIG_MX_CTRL5			0x078
->> +#define QPHY_V4_PCS_INSIG_MX_CTRL7			0x07c
->> +#define QPHY_V4_PCS_INSIG_MX_CTRL8			0x080
->> +#define QPHY_V4_PCS_OUTSIG_SW_CTRL1			0x084
->> +#define QPHY_V4_PCS_OUTSIG_MX_CTRL1			0x088
->> +#define QPHY_V4_PCS_CLAMP_ENABLE			0x08c
->> +#define QPHY_V4_PCS_POWER_STATE_CONFIG1			0x090
->> +#define QPHY_V4_PCS_POWER_STATE_CONFIG2			0x094
->> +#define QPHY_V4_PCS_FLL_CNTRL1				0x098
->> +#define QPHY_V4_PCS_FLL_CNTRL2				0x09c
->> +#define QPHY_V4_PCS_FLL_CNT_VAL_L			0x0a0
->> +#define QPHY_V4_PCS_FLL_CNT_VAL_H_TOL			0x0a4
->> +#define QPHY_V4_PCS_FLL_MAN_CODE			0x0a8
->> +#define QPHY_V4_PCS_TEST_CONTROL1			0x0ac
->> +#define QPHY_V4_PCS_TEST_CONTROL2			0x0b0
->> +#define QPHY_V4_PCS_TEST_CONTROL3			0x0b4
->> +#define QPHY_V4_PCS_TEST_CONTROL4			0x0b8
->> +#define QPHY_V4_PCS_TEST_CONTROL5			0x0bc
->> +#define QPHY_V4_PCS_TEST_CONTROL6			0x0c0
->> +#define QPHY_V4_PCS_LOCK_DETECT_CONFIG1			0x0c4
->> +#define QPHY_V4_PCS_LOCK_DETECT_CONFIG2			0x0c8
->> +#define QPHY_V4_PCS_LOCK_DETECT_CONFIG3			0x0cc
->> +#define QPHY_V4_PCS_LOCK_DETECT_CONFIG4			0x0d0
->> +#define QPHY_V4_PCS_LOCK_DETECT_CONFIG5			0x0d4
->> +#define QPHY_V4_PCS_LOCK_DETECT_CONFIG6			0x0d8
->> +#define QPHY_V4_PCS_REFGEN_REQ_CONFIG1			0x0dc
->> +#define QPHY_V4_PCS_REFGEN_REQ_CONFIG2			0x0e0
->> +#define QPHY_V4_PCS_REFGEN_REQ_CONFIG3			0x0e4
->> +#define QPHY_V4_PCS_BIST_CTRL				0x0e8
->> +#define QPHY_V4_PCS_PRBS_POLY0				0x0ec
->> +#define QPHY_V4_PCS_PRBS_POLY1				0x0f0
->> +#define QPHY_V4_PCS_FIXED_PAT0				0x0f4
->> +#define QPHY_V4_PCS_FIXED_PAT1				0x0f8
->> +#define QPHY_V4_PCS_FIXED_PAT2				0x0fc
->> +#define QPHY_V4_PCS_FIXED_PAT3				0x100
->> +#define QPHY_V4_PCS_FIXED_PAT4				0x104
->> +#define QPHY_V4_PCS_FIXED_PAT5				0x108
->> +#define QPHY_V4_PCS_FIXED_PAT6				0x10c
->> +#define QPHY_V4_PCS_FIXED_PAT7				0x110
->> +#define QPHY_V4_PCS_FIXED_PAT8				0x114
->> +#define QPHY_V4_PCS_FIXED_PAT9				0x118
->> +#define QPHY_V4_PCS_FIXED_PAT10				0x11c
->> +#define QPHY_V4_PCS_FIXED_PAT11				0x120
->> +#define QPHY_V4_PCS_FIXED_PAT12				0x124
->> +#define QPHY_V4_PCS_FIXED_PAT13				0x128
->> +#define QPHY_V4_PCS_FIXED_PAT14				0x12c
->> +#define QPHY_V4_PCS_FIXED_PAT15				0x130
->> +#define QPHY_V4_PCS_TXMGN_CONFIG			0x134
->> +#define QPHY_V4_PCS_G12S1_TXMGN_V0			0x138
->> +#define QPHY_V4_PCS_G12S1_TXMGN_V1			0x13c
->> +#define QPHY_V4_PCS_G12S1_TXMGN_V2			0x140
->> +#define QPHY_V4_PCS_G12S1_TXMGN_V3			0x144
->> +#define QPHY_V4_PCS_G12S1_TXMGN_V4			0x148
->> +#define QPHY_V4_PCS_G12S1_TXMGN_V0_RS			0x14c
->> +#define QPHY_V4_PCS_G12S1_TXMGN_V1_RS			0x150
->> +#define QPHY_V4_PCS_G12S1_TXMGN_V2_RS			0x154
->> +#define QPHY_V4_PCS_G12S1_TXMGN_V3_RS			0x158
->> +#define QPHY_V4_PCS_G12S1_TXMGN_V4_RS			0x15c
->> +#define QPHY_V4_PCS_G3S2_TXMGN_MAIN			0x160
->> +#define QPHY_V4_PCS_G3S2_TXMGN_MAIN_RS			0x164
->> +#define QPHY_V4_PCS_G12S1_TXDEEMPH_M6DB			0x168
->> +#define QPHY_V4_PCS_G12S1_TXDEEMPH_M3P5DB		0x16c
->> +#define QPHY_V4_PCS_G3S2_PRE_GAIN			0x170
->> +#define QPHY_V4_PCS_G3S2_POST_GAIN			0x174
->> +#define QPHY_V4_PCS_G3S2_PRE_POST_OFFSET		0x178
->> +#define QPHY_V4_PCS_G3S2_PRE_GAIN_RS			0x17c
->> +#define QPHY_V4_PCS_G3S2_POST_GAIN_RS			0x180
->> +#define QPHY_V4_PCS_G3S2_PRE_POST_OFFSET_RS		0x184
->> +#define QPHY_V4_PCS_RX_SIGDET_LVL			0x188
->> +#define QPHY_V4_PCS_RX_SIGDET_DTCT_CNTRL		0x18c
->> +#define QPHY_V4_PCS_RCVR_DTCT_DLY_P1U2_L		0x190
->> +#define QPHY_V4_PCS_RCVR_DTCT_DLY_P1U2_H		0x194
->> +#define QPHY_V4_PCS_RATE_SLEW_CNTRL1			0x198
->> +#define QPHY_V4_PCS_RATE_SLEW_CNTRL2			0x19c
->> +#define QPHY_V4_PCS_PWRUP_RESET_DLY_TIME_AUXCLK		0x1a0
->> +#define QPHY_V4_PCS_P2U3_WAKEUP_DLY_TIME_AUXCLK_L	0x1a4
->> +#define QPHY_V4_PCS_P2U3_WAKEUP_DLY_TIME_AUXCLK_H	0x1a8
->> +#define QPHY_V4_PCS_TSYNC_RSYNC_TIME			0x1ac
->> +#define QPHY_V4_PCS_CDR_RESET_TIME			0x1b0
->> +#define QPHY_V4_PCS_TSYNC_DLY_TIME			0x1b4
->> +#define QPHY_V4_PCS_ELECIDLE_DLY_SEL			0x1b8
->> +#define QPHY_V4_PCS_CMN_ACK_OUT_SEL			0x1bc
->> +#define QPHY_V4_PCS_ALIGN_DETECT_CONFIG1		0x1c0
->> +#define QPHY_V4_PCS_ALIGN_DETECT_CONFIG2		0x1c4
->> +#define QPHY_V4_PCS_ALIGN_DETECT_CONFIG3		0x1c8
->> +#define QPHY_V4_PCS_ALIGN_DETECT_CONFIG4		0x1cc
->> +#define QPHY_V4_PCS_PCS_TX_RX_CONFIG			0x1d0
->> +#define QPHY_V4_PCS_RX_IDLE_DTCT_CNTRL			0x1d4
->> +#define QPHY_V4_PCS_RX_DCC_CAL_CONFIG			0x1d8
->> +#define QPHY_V4_PCS_EQ_CONFIG1				0x1dc
->> +#define QPHY_V4_PCS_EQ_CONFIG2				0x1e0
->> +#define QPHY_V4_PCS_EQ_CONFIG3				0x1e4
->> +#define QPHY_V4_PCS_EQ_CONFIG4				0x1e8
->> +#define QPHY_V4_PCS_EQ_CONFIG5				0x1ec
->> +#define QPHY_V4_PCS_USB3_POWER_STATE_CONFIG1		0x300
->> +#define QPHY_V4_PCS_USB3_AUTONOMOUS_MODE_STATUS		0x304
->> +#define QPHY_V4_PCS_USB3_AUTONOMOUS_MODE_CTRL		0x308
->> +#define QPHY_V4_PCS_USB3_AUTONOMOUS_MODE_CTRL2		0x30c
->> +#define QPHY_V4_PCS_USB3_LFPS_RXTERM_IRQ_SOURCE_STATUS	0x310
->> +#define QPHY_V4_PCS_USB3_LFPS_RXTERM_IRQ_CLEAR		0x314
->> +#define QPHY_V4_PCS_USB3_LFPS_DET_HIGH_COUNT_VAL	0x318
->> +#define QPHY_V4_PCS_USB3_LFPS_TX_ECSTART		0x31c
->> +#define QPHY_V4_PCS_USB3_LFPS_PER_TIMER_VAL		0x320
->> +#define QPHY_V4_PCS_USB3_LFPS_TX_END_CNT_U3_START	0x324
->> +#define QPHY_V4_PCS_USB3_RXEQTRAINING_LOCK_TIME		0x328
->> +#define QPHY_V4_PCS_USB3_RXEQTRAINING_WAIT_TIME		0x32c
->> +#define QPHY_V4_PCS_USB3_RXEQTRAINING_CTLE_TIME		0x330
->> +#define QPHY_V4_PCS_USB3_RXEQTRAINING_WAIT_TIME_S2	0x334
->> +#define QPHY_V4_PCS_USB3_RXEQTRAINING_DFE_TIME_S2	0x338
->> +#define QPHY_V4_PCS_USB3_RCVR_DTCT_DLY_U3_L		0x33c
->> +#define QPHY_V4_PCS_USB3_RCVR_DTCT_DLY_U3_H		0x340
->> +#define QPHY_V4_PCS_USB3_ARCVR_DTCT_EN_PERIOD		0x344
->> +#define QPHY_V4_PCS_USB3_ARCVR_DTCT_CM_DLY		0x348
->> +#define QPHY_V4_PCS_USB3_TXONESZEROS_RUN_LENGTH		0x34c
->> +#define QPHY_V4_PCS_USB3_ALFPS_DEGLITCH_VAL		0x350
->> +#define QPHY_V4_PCS_USB3_SIGDET_STARTUP_TIMER_VAL	0x354
->> +#define QPHY_V4_PCS_USB3_TEST_CONTROL			0x358
->> +
->> +/* Only for QMP V4 PHY - PCS_MISC registers */
->> +#define QPHY_V4_PCS_MISC_TYPEC_CTRL			0x00
->> +#define QPHY_V4_PCS_MISC_TYPEC_PWRDN_CTRL		0x04
->> +#define QPHY_V4_PCS_MISC_PCS_MISC_CONFIG1		0x08
->> +#define QPHY_V4_PCS_MISC_CLAMP_ENABLE			0x0c
->> +#define QPHY_V4_PCS_MISC_TYPEC_STATUS			0x10
->> +#define QPHY_V4_PCS_MISC_PLACEHOLDER_STATUS		0x14
->> +
->>  #endif
-> 
+> While we can land your patch if someone needs it for supporting an
+> out-of-tree dts, it gives people supporting future SoCs the idea that
+> they need to add themselves to this table too.  That's now discouraged
+> unless there's a specific quirk that needs to be handled just for this
+> SoC.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+My understanding with dts bindings is that they are effectively an
+ABI. While maybe it makes sense to deprecate the
+"qcom,sdm845-qusb2-phy" string in the Documentation to avoid new
+users, I'd think we'd want to keep the support in the driver as we
+aren't supposed to have tight coupling between the DTB and kernel (at
+least for official bindings).
+
+Granted, I've not gotten much experience with boards that were fully
+upstream and thus didn't have an eternally evolving dts file that had
+to be kept in sync with the kernel, so in practice either solution
+does work for me, but in theory it seems like we should at least
+pretend these things are stable. :)
+
+thanks
+-john
