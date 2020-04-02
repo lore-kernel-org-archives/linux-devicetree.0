@@ -2,143 +2,129 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0091C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 17:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DA8C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 17:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C70572077D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 17:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29EC320757
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 17:27:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jEtA31kC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L2RTZSrQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388855AbgDBRUZ (ORCPT
+        id S2389563AbgDBR1R (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 13:20:25 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44323 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389042AbgDBRUZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 13:20:25 -0400
-Received: by mail-wr1-f68.google.com with SMTP id m17so5139519wrw.11;
-        Thu, 02 Apr 2020 10:20:23 -0700 (PDT)
+        Thu, 2 Apr 2020 13:27:17 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37934 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388815AbgDBR1R (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 13:27:17 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w3so1591826plz.5
+        for <devicetree@vger.kernel.org>; Thu, 02 Apr 2020 10:27:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:subject:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UNJ1uaTiNqIRTE+G4swZEf2hRjorhqOonJ08sUIRMO8=;
-        b=jEtA31kCYdON/FahHCcg+UBAPDTy+pA+0phOgPakqyDAcWizWXyX2voqe6wOOShhz+
-         lad+2Y+Y76Nug9dGKGO4MM6Q2ZQKJ9czz0E/xBDjQE9N7mG0M95Try7/j0B2rbQceGCY
-         4QG77bLGCkcn1eVcULRpr8BblLziRJEpSpsEADs3Ej1K29FH53U02Nrmnniz/6ugULeu
-         awM1dc0I4KYlvz2i210q6CiLt8W/7umpXeK1yi+U7B2WZJ8JF6mYeWRqD4Ftfi6PtGBw
-         JrXmtfnWOWSF88o9sP1cP/5Vxh0+0uzDr2Ku8qDONJcFTLIcEompanRTmp0Engu85CIO
-         PG6A==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Gz0f9qZvU+RRQ/9Q8voQs+xALXqzFeKIupVhhXgqIDI=;
+        b=L2RTZSrQ7A5ycxsB0TzHG2oAcpIvPJT/LPWiB5atc3DFl38OL9k98TR94lYyhqN4IV
+         +lVqrWSoIoJhMJMWUOxJp+t3Rn27ZQbea6iB86DNqNmc3z9+4rKrSu8uAlkZ9xjC7Typ
+         bgMl7IoC1f0jJufjDMrL9rG3x7ZzZhG1y256JHyJ7EexJONnqWFvvb/uhvi8YQZCVkzZ
+         4gDqG8fzyDvtlmzcWykcCEaP1dUEKWuKpZtFU0BltSc/6zaenJthX2iAYl1Cx0f7mIF7
+         QMY1K3I/vLLQsGXRK55TNaSKmFd4LYJJ14QqEKkKlSHZfeV4ygdwXkoGK4vlVPlrfPMc
+         kmlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UNJ1uaTiNqIRTE+G4swZEf2hRjorhqOonJ08sUIRMO8=;
-        b=pVugqHFn5a2eWamFg4vGI6EylC4/GxpPsJB3px9vx+gxjWlUESy+nZmyFPGB7PdC4a
-         XwNUqosxvZpLZ6D0PMgv1MWpfR8ovIfA1Rp39AYeAvJs1Z2fnplenORTHhPPjrAIu2yW
-         IEec32UWmWRnCHQpEycgStOoZkaYXRumKU9yVVCGoR1nw3vPb1TdVeI6fE2uoEL1v798
-         1oy3pUdZ888BWuOmI8CQE6O839+Q+QEFH8KlNAyuaoXeRJ4Gtg5+vwQF6/aKXx+K2G7P
-         4qDuKQvmGVKfdqm1eg3/6xwICuKHzXUPYABbcHtokkEXM7coogypFKo3U13N8iQsW16S
-         lu8Q==
-X-Gm-Message-State: AGi0PuY4O8IqmbUpDeniCJ+QOKeu3t+h66Jj2sDJtN0OZlMf/RIuYU8j
-        vrnvjyADiGphfbsJzDRKpi4=
-X-Google-Smtp-Source: APiQypKmwTbIEdvuK9WraXHHv2M4yWUIWm+FRJNIs5z6cWkO9BgGTzdDqqMxZD0Qzr89n/zfC45I+A==
-X-Received: by 2002:adf:9168:: with SMTP id j95mr4319844wrj.145.1585848023290;
-        Thu, 02 Apr 2020 10:20:23 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id b199sm8670886wme.23.2020.04.02.10.20.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 10:20:22 -0700 (PDT)
-To:     helen.koike@collabora.com
-Cc:     dafna.hirschfeld@collabora.com, devel@driverdev.osuosl.org,
-        devicetree@vger.kernel.org, ezequiel@collabora.com,
-        heiko@sntech.de, hverkuil-cisco@xs4all.nl,
-        karthik.poduval@gmail.com, kernel@collabora.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        robh+dt@kernel.org
-References: <20200402000234.226466-5-helen.koike@collabora.com>
-Subject: Re: [PATCH 4/4] arm64: dts: rockchip: add isp0 node for rk3399
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <1187d28a-6fb9-fd12-a422-8a4220a11e79@gmail.com>
-Date:   Thu, 2 Apr 2020 19:20:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Gz0f9qZvU+RRQ/9Q8voQs+xALXqzFeKIupVhhXgqIDI=;
+        b=JkFxqHYQMGJtzgWLYO6kNXYdZ3kq1NecoFgBUsQhQAQHJkYc127fzrUXh/qjNxg4fZ
+         0MYXi1Mvkqzdc35K5+yO/OXCbgnQkDxlfj7tnUyCwgeMZtOm+/kHfNnaNYGBAnqPwe/2
+         gN/1WxIJH/vALlwug3cIW1JRyjrReH24DJCMNCKdfHMHYl+LGDvPkaIhIcSuK2VtlnUP
+         EEGuOnj76csQVKkD4BRp/JvOVB+rsYE0YVKSkYutAfGV0OyhMg9CP6sB8kPwUAcm5XM7
+         62E270zsIrb67JFbrRt2wUArvLLaVnTsH9YLPvvIFEDfMHnEnZqbpOJZWBLc/zbnwBKp
+         9x/w==
+X-Gm-Message-State: AGi0PubsCsS2zM8+sUZhahzI1f+mIWjsIHxSa8wlaUuyy0vEv/okf4S/
+        NoJEf5kPWQBH4wKpRevgC0m5AXxAAnAuDqqaXeTeQQdU
+X-Google-Smtp-Source: APiQypJHXGs44BWC8WilJ46Avhei19tnaa/YB6ekL4I+Zzra7DGoUGAP21fYvthy3xQNibUnN4QW+Dbx47n7msYUMJE=
+X-Received: by 2002:a17:90b:230d:: with SMTP id mt13mr4965537pjb.164.1585848435589;
+ Thu, 02 Apr 2020 10:27:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200402000234.226466-5-helen.koike@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200401.113627.1377328159361906184.davem@davemloft.net>
+ <20200401223500.224253-1-ndesaulniers@google.com> <20200402094239.GA3770@willie-the-truck>
+ <adc2aa08-60e2-cdc3-6b5b-6d96f8805c44@ti.com>
+In-Reply-To: <adc2aa08-60e2-cdc3-6b5b-6d96f8805c44@ti.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 2 Apr 2020 10:27:04 -0700
+Message-ID: <CAKwvOdk4H052Y=t4_XXy=rMV=CUYPNhb5CN6x8-dBTNaTt3aPA@mail.gmail.com>
+Subject: Re: [PATCH net-next v6 00/11] net: ethernet: ti: add networking
+ support for k3 am65x/j721e soc
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Will Deacon <will@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
+        kishon@ti.com, Jakub Kicinski <kuba@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, m-karicheri2@ti.com,
+        Network Development <netdev@vger.kernel.org>, nsekhar@ti.com,
+        Olof Johansson <olof@lixom.net>, olteanv@gmail.com,
+        peter.ujfalusi@ti.com, Rob Herring <robh@kernel.org>,
+        rogerq@ti.com, t-kristo@ti.com,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Helen,
+On Thu, Apr 2, 2020 at 4:05 AM Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
+>
+>
+>
+> On 02/04/2020 12:42, Will Deacon wrote:
+> > On Wed, Apr 01, 2020 at 03:35:00PM -0700, Nick Desaulniers wrote:
+> >>>> I think the ARM64 build is now also broken on Linus' master branch,
+> >>>> after the net-next merge? I am not quite sure if the device tree
+> >>>> patches were supposed to land in mainline the way they did.
+> >>>
+> >>> There's a fix in my net tree and it will go to Linus soon.
+> >>>
+> >>> There is no clear policy for dt change integration, and honestly
+> >>> I try to deal with the situation on a case by case basis.
+> >>
+> >> Yep, mainline aarch64-linux-gnu- builds are totally hosed.  DTC fails the build
+> >> very early on:
+> >> https://travis-ci.com/github/ClangBuiltLinux/continuous-integration/jobs/311246218
+> >> https://travis-ci.com/github/ClangBuiltLinux/continuous-integration/jobs/311246270
+> >> There was no failure in -next, not sure how we skipped our canary in the coal
+> >> mine.
+> >
+> > Yes, one of the things linux-next does a really good job at catching is
+> > build breakage so it would've been nice to have seen this there rather
+> > than end up with breakage in Linus' tree :(
+> >
+> > Was the timing just bad, or are we missing DT coverage or something else?
+>
+> It seems issue was not caught in -next because the patch that fixes the issue was already in -next
+> before this series was pushed.
+>
+> Sorry for the mess again.
 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index fc0295d2a65a1..815099a0cd0dd 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -1718,6 +1718,33 @@ vopb_mmu: iommu@ff903f00 {
->  		status = "disabled";
->  	};
->  
-> +	isp0: isp0@ff910000 {
-> +		compatible = "rockchip,rk3399-cif-isp";
-> +		reg = <0x0 0xff910000 0x0 0x4000>;
-> +		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
-> +		clocks = <&cru SCLK_ISP0>,
-> +			 <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
-> +			 <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
-> +		clock-names = "clk_isp",
-> +			      "aclk_isp", "aclk_isp_wrap",
-> +			      "hclk_isp", "hclk_isp_wrap";
+No worries, it's just worthwhile to study failures.  So IIUC, in this case:
+mainline was 5.6
+the broken patch was merged in 5.7 merge window
+a fix was already in -next, but not slated for the new merge window.
+(Maybe scheduled for 5.8?)
 
-> +		power-domains = <&power RK3399_PD_ISP0>;
-> +		iommus = <&isp0_mmu>;
-> +		phys = <&mipi_dphy_rx0>;
-> +		phy-names = "dphy";
+So it sounds like it can be dangerous to have 2 branches from 1 tree
+flow into -next, as the branch meant for a later release can mask
+failures in pull requests for the earlier release?
 
-Maybe a little sort? But keep rest as it is. Also in example.
-
-		iommus = <&isp0_mmu>;
-		phys = <&mipi_dphy_rx0>;
-		phy-names = "dphy";
-		power-domains = <&power RK3399_PD_ISP0>;
-
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				reg = <0>;
-
-Move reg above #address-cells. Change that in example as well.
-
-				reg = <0>;
-				#address-cells = <1>;
-				#size-cells = <0>;
-
-> +			};
-> +		};
-> +	};
-> +
->  	isp0_mmu: iommu@ff914000 {
->  		compatible = "rockchip,iommu";
->  		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
-> -- 
-> 2.26.0
-
+Do we know what and where the fix currently is?
+Can we make sure it's sent to Linus for 5.7-rc1? (Or sooner?)
+-- 
+Thanks,
+~Nick Desaulniers
