@@ -2,676 +2,220 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44488C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 22:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED94C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 22:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E10FF206F8
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 22:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA896206F8
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 22:19:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lPO1xL5p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xr6WT8Zh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389034AbgDBWQH (ORCPT
+        id S2389574AbgDBWTm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 18:16:07 -0400
-Received: from mail-eopbgr70041.outbound.protection.outlook.com ([40.107.7.41]:11466
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388218AbgDBWQH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 2 Apr 2020 18:16:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PVEE5YTML+BLLpnfmxcW+iD/dMcd1YSHblH479GZ0/DxjMBru1kUyFOAl8LnAMZ8DlarAQxkAd8TPLg5sKNyYf24if+V+vwz7WQNEZ2Y7mcr7cjUb70EUan1F61l8Gc0q6EOrb1PRS+MzhbRX3OCil/fl9SWafpycehPC1MeTVn4EB1zbDXm8qF+Q+56TMGIvepyWsfhFBTrMhdq9X0cGR6RCavqPpLlbwxlspECwX+JC0gI23UjtS2fguKTMEHwm0NMKE6rw37WiXKjFxj2eKdaVVSfehVlhY9Pp77szQj9xqRc5y0Cqaeinf2nfGAVQBf1s97SwdwskxKKkfUuyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eMyIFJfD0CzsEdthvfXRXtb14eyGTXlTvJNeKxsYmrU=;
- b=NuM5+IpQkQhWzmfAVupdz8dosVcQsQt3PBR492uAGYEhiUDFn6o87gteWjaUGtJjoCW/7stoU/jceCx61suL03HtN58ONCY9+B3bB4/aKhHATAHGR9V+ExoWKiwSo+2wPgSFo+oDQ2pZcqlxTfq+Zo/+BprF7Ahuxt6Y/22wxmXzVeCL055Jyp4fzAfaUnzZWoWDvKJSDOO4Nbkyyt59Bmv/QyQX75rdaqSDtzepL33w2EKCpYC9bEfxqScNVnHCGD2Rhf8PRMtRPLSnMDbQIhAUaviCvdrI8jaQTYYLpr6U9STYqq07yImnWDFkVNxIGnyONpFOvyhPjFOk44WENw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eMyIFJfD0CzsEdthvfXRXtb14eyGTXlTvJNeKxsYmrU=;
- b=lPO1xL5p33oYt2Nuljqo0M3Mxdhm+27ki+Ma+U5+EXJEiqAsPoUUsdY9PE4uG1mCwPOIVfz5uBpsapCFAHRU06pfy3sPSkA+WRPGqT+YgQo347ShKZpwMc2Fqx+0MC4fmc32r3SIJ0oQwZoToMgoUe9Stsxyi7OKPdFvjaXpu2Q=
-Received: from VI1PR04MB6941.eurprd04.prod.outlook.com (2603:10a6:803:12e::23)
- by VI1PR04MB5824.eurprd04.prod.outlook.com (2603:10a6:803:eb::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16; Thu, 2 Apr
- 2020 22:00:56 +0000
-Received: from VI1PR04MB6941.eurprd04.prod.outlook.com
- ([fe80::289c:fdf8:faf0:3200]) by VI1PR04MB6941.eurprd04.prod.outlook.com
- ([fe80::289c:fdf8:faf0:3200%2]) with mapi id 15.20.2878.016; Thu, 2 Apr 2020
- 22:00:56 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@samsung.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Angus Ainslie <angus@akkea.ca>,
-        Martin Kepplinger <martink@posteo.de>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 4/8] interconnect: Add imx core driver
-Thread-Topic: [PATCH v2 4/8] interconnect: Add imx core driver
-Thread-Index: AQHWCDJ+vtFSR3fKPE6a5fasnP96Gg==
-Date:   Thu, 2 Apr 2020 22:00:56 +0000
-Message-ID: <VI1PR04MB6941080388058184401EDB5EEEC60@VI1PR04MB6941.eurprd04.prod.outlook.com>
-References: <cover.1585751281.git.leonard.crestez@nxp.com>
- <50e6bdb1aab7d8f73cb10d11a4ea1e55056448fc.1585751281.git.leonard.crestez@nxp.com>
- <4464d011-5948-61ef-97bb-173f428021ad@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [92.121.36.198]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b0b992d9-07c8-470a-e086-08d7d751521d
-x-ms-traffictypediagnostic: VI1PR04MB5824:|VI1PR04MB5824:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB5824F17362CE4E490B3D8E72EEC60@VI1PR04MB5824.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:785;
-x-forefront-prvs: 0361212EA8
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB6941.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(39860400002)(136003)(396003)(376002)(366004)(66946007)(66556008)(26005)(33656002)(316002)(6506007)(66446008)(9686003)(64756008)(2906002)(66476007)(86362001)(91956017)(76116006)(55016002)(8676002)(81156014)(71200400001)(52536014)(44832011)(186003)(53546011)(478600001)(4326008)(30864003)(8936002)(7416002)(5660300002)(81166006)(6916009)(7696005)(54906003);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WF2cBX51crgkTkVDPdZxv36Hp3SxA4VJCsyniGnj4wPWh17M0/n/PJzRoz9wtovYwopjhGuiPZM+cWckTSRqlqzn6Am23LB8tickLhAjAtYSDo5que576XadNb8ee/lZsWfLAivEExOyeoF24lO1atTS784Z/PhDd0Ek4dwq82r7xLcZJ6oyDQmuaOYKY6Hr5q/5W5+0GnRi260O9RnJ6z080DN4mJwM1/+GofgcEJ8jAPVDi6GZGtKRJo0dG9H1ocnncV1FJYgATdmv1nNyPTO3WCun8G6TdBUBElaA91kkoC0F8TZRXrvkfhvwf9Nsk6ytqJhvmssDbV4OBTTxiZZrmKc7nUxkAnFXRJg8c24/lCc2DmrAUS/JHdn5CDgZmSGmHeFAcTDEqAPDcpFDaNeBdR9PuafXRv5eHnvXAQpf+CptbmFVgyHkXpE0Srm7
-x-ms-exchange-antispam-messagedata: q3lpjJlRe9LEvvX6lm0Q2H3zXmwWXECaDe4jLFAaUjBTAhQrx7UDxjy48geogxub7jtmghuIR0rLwQHYmHX4icURkD81+PybPEZcTSA/kLBgY9uWqtucAa7vm/wgWhJ3rprSYC3gQzlXlvSVkF83/g==
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 2 Apr 2020 18:19:42 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41586 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388218AbgDBWTl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 18:19:41 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h9so6148316wrc.8;
+        Thu, 02 Apr 2020 15:19:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=suZJF04QoCqEMC3Ue+PM6jnnGlItm04Yr97zJy160H0=;
+        b=Xr6WT8ZhK66cv0H6CIFqIP23vJyLGPkGJDS9mzGyhtw1TqbjsrbxYtl3K1c2E/Smry
+         TRg0aiWpN0AjZ620xeyGQbiihI6L4LtLyUtiegiACxuSbvdHZQteYSR7LKBC8TV1QtRT
+         hGXsxotGrVU3W8U5tL3LFFiqLsvo+oqZqfbGNYlF1TIFq5oxl41F/DC1u4+ixRyvYwOs
+         M567FoR1Bq329977DcQFl0u7fwSb1ODk2BEas8EE51aqgB0rM22IEC6eKb6QPKd2fTJu
+         HlM3HvWeIbc3wxLSm2YxhiFxUOaflTuJ1tp4rSgD0wlt9vdhKN0UXRGoJJi7/bcWG9CR
+         Uchw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=suZJF04QoCqEMC3Ue+PM6jnnGlItm04Yr97zJy160H0=;
+        b=aE87N7M6zKEQCf2SResYnOFAZZwReNy9ehvtWpNQP47OjPi2tSJNOWiGm71OCJT2cW
+         oHmyL7KCBLC8anFBLAwodhm+vwKNfuyR2uMSeKA+a+QJngtRip7qGLHqLer1qX68oZpA
+         Np6A1z7dYqqtL9sfgOaKHcGiXUyhJewvjb0CcxnJv116vvckIoBRDcxnCGDQJBhkoQN+
+         djqtB8cudrvv7ZneJDKHrq632WFsf6/AjQxqug+zQoweqxrUmRtEdEeSlFkz2BoTCpr0
+         qcs8gUExQwVSlA9PoH2oxpM9TcJz22hlexnjuKPa9gVjvEcRFDxPTSUTV8ey4x67vQ1W
+         JANA==
+X-Gm-Message-State: AGi0PubrQAlyQw7DDLFGSa9sjx32m5ezECPTl3+NBGbh2ZcsbG+53Ulg
+        ZSapAKrUyFvug62m+XNscCY=
+X-Google-Smtp-Source: APiQypKFZSrgfLg34mj6kniyGW4cjQSyZk9gnPJiSGToJyBPEg69jqFnP/mxj8Jce6yn8JDgFiJ39Q==
+X-Received: by 2002:adf:edd2:: with SMTP id v18mr5953284wro.55.1585865979374;
+        Thu, 02 Apr 2020 15:19:39 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.113.243])
+        by smtp.gmail.com with ESMTPSA id u13sm9683066wru.88.2020.04.02.15.19.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Apr 2020 15:19:37 -0700 (PDT)
+Subject: Re: [PATCH] arm64: dts: mt7622: add built-in Wi-Fi device nodes
+To:     Ryder Lee <ryder.lee@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Ryder Lee <ryder.lee@mediatek.com>
+References: <315346e1d6fa00e5a0d7a8216982bf723af8e985.1584862530.git.ryder.lee@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <4238d0e0-8605-2d63-9765-d64cde003271@gmail.com>
+Date:   Fri, 3 Apr 2020 00:19:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b0b992d9-07c8-470a-e086-08d7d751521d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2020 22:00:56.3986
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: p96gIEPCqsMIw7eH4flYiNW9XUxD3hOogKcS2xQ7KyIcwjmcKFzXhr0W8PM22/voXQU6gci+8JLPKjCZH37caA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5824
+In-Reply-To: <315346e1d6fa00e5a0d7a8216982bf723af8e985.1584862530.git.ryder.lee@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-04-02 2:06 PM, Georgi Djakov wrote:=0A=
-> Hi Leonard,=0A=
-> =0A=
-> Thank you for updating the patches!=0A=
-> =0A=
-> On 4/1/20 17:33, Leonard Crestez wrote:=0A=
->> This adds support for i.MX SoC family to interconnect framework.=0A=
->>=0A=
->> Platform drivers can describe the interconnect graph and several=0A=
->> adjustment knobs where icc node bandwidth is converted to a=0A=
->> DEV_PM_QOS_MIN_FREQUENCY request.=0A=
->>=0A=
->> The interconnect provider is probed through the main NOC device and=0A=
->> other adjustable nodes on the same graph are found from a=0A=
->> fsl,scalable-nodes phandle array property.=0A=
->>=0A=
->> Signed-off-by: Alexandre Bailon <abailon@baylibre.com>=0A=
->> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
->> Tested-by: Martin Kepplinger <martin.kepplinger@puri.sm>=0A=
->> ---=0A=
->>   drivers/interconnect/Kconfig      |   1 +=0A=
->>   drivers/interconnect/Makefile     |   1 +=0A=
->>   drivers/interconnect/imx/Kconfig  |   5 +=0A=
->>   drivers/interconnect/imx/Makefile |   3 +=0A=
->>   drivers/interconnect/imx/imx.c    | 298 ++++++++++++++++++++++++++++++=
-=0A=
->>   drivers/interconnect/imx/imx.h    |  62 +++++++=0A=
->>   6 files changed, 370 insertions(+)=0A=
->>   create mode 100644 drivers/interconnect/imx/Kconfig=0A=
->>   create mode 100644 drivers/interconnect/imx/Makefile=0A=
->>   create mode 100644 drivers/interconnect/imx/imx.c=0A=
->>   create mode 100644 drivers/interconnect/imx/imx.h=0A=
->>=0A=
->> diff --git a/drivers/interconnect/Kconfig b/drivers/interconnect/Kconfig=
-=0A=
->> index bfa4ca3ab7a9..e61802230f90 100644=0A=
->> --- a/drivers/interconnect/Kconfig=0A=
->> +++ b/drivers/interconnect/Kconfig=0A=
->> @@ -10,7 +10,8 @@ menuconfig INTERCONNECT=0A=
->>   	  If unsure, say no.=0A=
->>   =0A=
->>   if INTERCONNECT=0A=
->>   =0A=
->>   source "drivers/interconnect/qcom/Kconfig"=0A=
->> +source "drivers/interconnect/imx/Kconfig"=0A=
-> =0A=
-> Nit: Please move it up to make it sorted.=0A=
-> =0A=
->>   =0A=
->>   endif=0A=
->> diff --git a/drivers/interconnect/Makefile b/drivers/interconnect/Makefi=
-le=0A=
->> index 725029ae7a2c..6998288a7d98 100644=0A=
->> --- a/drivers/interconnect/Makefile=0A=
->> +++ b/drivers/interconnect/Makefile=0A=
->> @@ -3,5 +3,6 @@=0A=
->>   CFLAGS_core.o				:=3D -I$(src)=0A=
->>   icc-core-objs				:=3D core.o=0A=
->>   =0A=
->>   obj-$(CONFIG_INTERCONNECT)		+=3D icc-core.o=0A=
->>   obj-$(CONFIG_INTERCONNECT_QCOM)		+=3D qcom/=0A=
->> +obj-$(CONFIG_INTERCONNECT_IMX)		+=3D imx/=0A=
-> =0A=
-> Ditto.=0A=
-> =0A=
->> diff --git a/drivers/interconnect/imx/Kconfig b/drivers/interconnect/imx=
-/Kconfig=0A=
->> new file mode 100644=0A=
->> index 000000000000..f39336f8d603=0A=
->> --- /dev/null=0A=
->> +++ b/drivers/interconnect/imx/Kconfig=0A=
->> @@ -0,0 +1,5 @@=0A=
->> +config INTERCONNECT_IMX=0A=
->> +	tristate "i.MX interconnect drivers"=0A=
->> +	depends on ARCH_MXC || COMPILE_TEST=0A=
->> +	help=0A=
->> +	  Generic interconnect drivers for i.MX SOCs=0A=
->> diff --git a/drivers/interconnect/imx/Makefile b/drivers/interconnect/im=
-x/Makefile=0A=
->> new file mode 100644=0A=
->> index 000000000000..86ae0bd28d8c=0A=
->> --- /dev/null=0A=
->> +++ b/drivers/interconnect/imx/Makefile=0A=
->> @@ -0,0 +1,3 @@=0A=
->> +imx-interconnect-objs			:=3D imx.o=0A=
->> +=0A=
->> +obj-$(CONFIG_INTERCONNECT_IMX)		+=3D imx-interconnect.o=0A=
->> diff --git a/drivers/interconnect/imx/imx.c b/drivers/interconnect/imx/i=
-mx.c=0A=
->> new file mode 100644=0A=
->> index 000000000000..527b1de1c41a=0A=
->> --- /dev/null=0A=
->> +++ b/drivers/interconnect/imx/imx.c=0A=
->> @@ -0,0 +1,298 @@=0A=
->> +// SPDX-License-Identifier: GPL-2.0=0A=
->> +/*=0A=
->> + * Interconnect framework driver for i.MX SoC=0A=
->> + *=0A=
->> + * Copyright (c) 2019, BayLibre=0A=
->> + * Copyright (c) 2019, NXP=0A=
-> =0A=
-> Maybe update it to 2020.=0A=
-> =0A=
->> + * Author: Alexandre Bailon <abailon@baylibre.com>=0A=
->> + * Author: Leonard Crestez <leonard.crestez@nxp.com>=0A=
->> + */=0A=
->> +=0A=
->> +#include <linux/device.h>=0A=
->> +#include <linux/interconnect-provider.h>=0A=
->> +#include <linux/module.h>=0A=
->> +#include <linux/of.h>=0A=
->> +#include <linux/of_platform.h>=0A=
->> +#include <linux/platform_device.h>=0A=
->> +#include <linux/pm_qos.h>=0A=
->> +=0A=
->> +#include "imx.h"=0A=
->> +=0A=
->> +/* private icc_node data */=0A=
->> +struct imx_icc_node {=0A=
->> +	const struct imx_icc_node_desc *desc;=0A=
->> +	struct device *qos_dev;=0A=
->> +	struct dev_pm_qos_request qos_req;=0A=
->> +};=0A=
->> +=0A=
->> +static int imx_icc_aggregate(struct icc_node *node, u32 tag,=0A=
->> +			     u32 avg_bw, u32 peak_bw,=0A=
->> +			     u32 *agg_avg, u32 *agg_peak)=0A=
->> +{=0A=
->> +	*agg_avg +=3D avg_bw;=0A=
->> +	*agg_peak =3D max(*agg_peak, peak_bw);=0A=
->> +=0A=
->> +	return 0;=0A=
->> +}=0A=
-> =0A=
-> Please remove and use the common library function:=0A=
-> icc_std_aggregate().=0A=
-=0A=
-OK=0A=
-=0A=
->> +=0A=
->> +static int imx_icc_node_set(struct icc_node *node)=0A=
->> +{=0A=
->> +	struct device *dev =3D node->provider->dev;=0A=
->> +	struct imx_icc_node *node_data =3D node->data;=0A=
->> +	u64 freq;=0A=
->> +=0A=
->> +	if (!node_data->qos_dev)=0A=
->> +		return 0;=0A=
->> +=0A=
->> +	freq =3D (node->avg_bw + node->peak_bw) * node_data->desc->adj->bw_mul=
-;=0A=
->> +	do_div(freq, node_data->desc->adj->bw_div);=0A=
->> +	dev_dbg(dev, "node %s device %s avg_bw %ukBps peak_bw %ukBps min_freq =
-%llukHz\n",=0A=
->> +		node->name, dev_name(node_data->qos_dev),=0A=
->> +		node->avg_bw, node->peak_bw, freq);=0A=
->> +=0A=
->> +	if (freq > S32_MAX) {=0A=
->> +		dev_err(dev, "%s can't request more than S32_MAX freq\n",=0A=
->> +				node->name);=0A=
-> =0A=
-> Please align with the open parenthesis.=0A=
-=0A=
-Fixed all instances.=0A=
-=0A=
->> +		return -ERANGE;=0A=
->> +	}=0A=
->> +=0A=
->> +	dev_pm_qos_update_request(&node_data->qos_req, freq);=0A=
->> +=0A=
->> +	return 0;=0A=
->> +}=0A=
->> +=0A=
->> +static int imx_icc_set(struct icc_node *src, struct icc_node *dst)=0A=
->> +{=0A=
->> +	return imx_icc_node_set(dst);=0A=
->> +}=0A=
->> +=0A=
->> +/* imx_icc_node_destroy() - Destroy an imx icc_node, including private =
-data */=0A=
->> +static void imx_icc_node_destroy(struct icc_node *node)=0A=
->> +{=0A=
->> +	struct imx_icc_node *node_data =3D node->data;=0A=
->> +	int ret;=0A=
->> +=0A=
->> +	if (dev_pm_qos_request_active(&node_data->qos_req)) {=0A=
->> +		ret =3D dev_pm_qos_remove_request(&node_data->qos_req);=0A=
->> +		if (ret)=0A=
->> +			dev_warn(node->provider->dev, "failed to remove qos request for %s\n=
-",=0A=
->> +				 dev_name(node_data->qos_dev));=0A=
->> +	}=0A=
->> +=0A=
->> +	put_device(node_data->qos_dev);=0A=
->> +	icc_node_del(node);=0A=
->> +	icc_node_destroy(node->id);=0A=
->> +}=0A=
->> +=0A=
->> +static int imx_icc_node_init_qos(struct icc_provider *provider,=0A=
->> +				 struct icc_node *node)=0A=
->> +{=0A=
->> +	struct imx_icc_node *node_data =3D node->data;=0A=
->> +	const struct imx_icc_node_adj_desc *adj =3D node_data->desc->adj;=0A=
->> +	struct device *dev =3D provider->dev;=0A=
->> +	struct device_node *dn =3D NULL;=0A=
->> +	struct platform_device *pdev;=0A=
->> +=0A=
->> +	if (adj->main_noc) {=0A=
->> +		node_data->qos_dev =3D dev;=0A=
->> +		dev_info(dev, "icc node %s[%d] is main noc itself\n",=0A=
->> +			 node->name, node->id);=0A=
-> =0A=
-> Should this be dev_dbg()?=0A=
-> =0A=
->> +	} else {=0A=
->> +		dn =3D of_parse_phandle(dev->of_node, adj->phandle_name, 0);=0A=
->> +		if (IS_ERR(dn)) {=0A=
->> +			dev_warn(dev, "Failed to parse %s: %ld\n",=0A=
->> +					adj->phandle_name, PTR_ERR(dn));=0A=
-> =0A=
-> Please align with the open parenthesis.=0A=
-> =0A=
->> +			return PTR_ERR(dn);=0A=
->> +		}=0A=
->> +		/* Allow scaling to be disabled on a per-node basis */=0A=
->> +		if (!dn || !of_device_is_available(dn)) {=0A=
->> +			dev_warn(dev, "Missing property %s, skip scaling %s\n",=0A=
->> +					adj->phandle_name, node->name);=0A=
-> =0A=
-> Please align with the open parenthesis.=0A=
-> =0A=
->> +			return 0;=0A=
->> +		}=0A=
->> +=0A=
->> +		pdev =3D of_find_device_by_node(dn);=0A=
->> +		of_node_put(dn);=0A=
->> +		if (!pdev) {=0A=
->> +			dev_warn(dev, "node %s[%d] missing device for %pOF\n",=0A=
->> +					node->name, node->id, dn);=0A=
-> =0A=
-> Please align with the open parenthesis.=0A=
-> =0A=
->> +			return -EPROBE_DEFER;=0A=
->> +		}=0A=
->> +		node_data->qos_dev =3D &pdev->dev;=0A=
->> +		dev_info(dev, "node %s[%d] has device node %pOF\n",=0A=
->> +			 node->name, node->id, dn);=0A=
-> =0A=
-> dev_dbg() again maybe? Unless you think that it make sense to print this=
-=0A=
-> information to the user?=0A=
-> =0A=
->> +	}=0A=
->> +=0A=
->> +	return dev_pm_qos_add_request(node_data->qos_dev,=0A=
->> +				      &node_data->qos_req,=0A=
->> +				      DEV_PM_QOS_MIN_FREQUENCY, 0);=0A=
->> +}=0A=
->> +=0A=
->> +static struct icc_node *imx_icc_node_add(struct icc_provider *provider,=
-=0A=
->> +					 const struct imx_icc_node_desc *node_desc)=0A=
->> +{=0A=
->> +	struct device *dev =3D provider->dev;=0A=
->> +	struct imx_icc_node *node_data;=0A=
->> +	struct icc_node *node;=0A=
->> +	int ret;=0A=
->> +=0A=
->> +	node =3D icc_node_create(node_desc->id);=0A=
->> +	if (IS_ERR(node)) {=0A=
->> +		dev_err(dev, "failed to create node %d\n", node_desc->id);=0A=
->> +		return node;=0A=
->> +	}=0A=
->> +=0A=
->> +	if (node->data) {=0A=
->> +		dev_err(dev, "already created node %s id=3D%d\n",=0A=
->> +				node_desc->name, node_desc->id);=0A=
-> =0A=
-> Please align with the open parenthesis.=0A=
-> =0A=
->> +		return ERR_PTR(-EEXIST);=0A=
->> +	}=0A=
->> +=0A=
->> +	node_data =3D devm_kzalloc(dev, sizeof(*node_data), GFP_KERNEL);=0A=
->> +	if (!node_data) {=0A=
->> +		icc_node_destroy(node->id);=0A=
->> +		return ERR_PTR(-ENOMEM);=0A=
->> +	}=0A=
->> +=0A=
->> +	node->name =3D node_desc->name;=0A=
->> +	node->data =3D node_data;=0A=
->> +	node_data->desc =3D node_desc;=0A=
->> +	icc_node_add(node, provider);=0A=
->> +=0A=
->> +	if (node_desc->adj) {=0A=
->> +		ret =3D imx_icc_node_init_qos(provider, node);=0A=
->> +		if (ret < 0) {=0A=
->> +			imx_icc_node_destroy(node);=0A=
->> +			return ERR_PTR(ret);=0A=
->> +		}=0A=
->> +	}=0A=
->> +=0A=
->> +	return node;=0A=
->> +}=0A=
->> +=0A=
->> +static void imx_icc_unregister_nodes(struct icc_provider *provider)=0A=
->> +{=0A=
->> +	struct icc_node *node, *tmp;=0A=
->> +=0A=
->> +	list_for_each_entry_safe(node, tmp, &provider->nodes, node_list)=0A=
->> +		imx_icc_node_destroy(node);=0A=
->> +}=0A=
->> +=0A=
->> +static int imx_icc_register_nodes(struct icc_provider *provider,=0A=
->> +				  const struct imx_icc_node_desc *descs,=0A=
->> +				  int count)=0A=
->> +{=0A=
->> +	struct icc_onecell_data *provider_data =3D provider->data;=0A=
->> +	int ret;=0A=
->> +	int i;=0A=
->> +=0A=
->> +	for (i =3D 0; i < count; i++) {=0A=
->> +		struct icc_node *node;=0A=
->> +		const struct imx_icc_node_desc *node_desc =3D &descs[i];=0A=
->> +		size_t j;=0A=
->> +=0A=
->> +		node =3D imx_icc_node_add(provider, node_desc);=0A=
->> +		if (IS_ERR(node)) {=0A=
->> +			ret =3D PTR_ERR(node);=0A=
->> +			if (ret !=3D -EPROBE_DEFER)=0A=
->> +				dev_err(provider->dev, "failed to add %s: %d\n",=0A=
->> +					node_desc->name, ret);=0A=
->> +			goto err;=0A=
->> +		}=0A=
->> +		provider_data->nodes[node->id] =3D node;=0A=
->> +=0A=
->> +		for (j =3D 0; j < node_desc->num_links; j++) {=0A=
->> +			ret =3D icc_link_create(node, node_desc->links[j]);=0A=
->> +			if (ret) {=0A=
->> +				dev_err(provider->dev, "failed to link node %d to %d: %d\n",=0A=
->> +					node->id, node_desc->links[j], ret);=0A=
->> +				goto err;=0A=
->> +			}=0A=
->> +		}=0A=
->> +	}=0A=
->> +=0A=
->> +	return 0;=0A=
->> +=0A=
->> +err:=0A=
->> +	imx_icc_unregister_nodes(provider);=0A=
->> +=0A=
->> +	return ret;=0A=
->> +}=0A=
->> +=0A=
->> +static int get_max_node_id(struct imx_icc_node_desc *nodes, int nodes_c=
-ount)=0A=
->> +{=0A=
->> +	int i, ret =3D 0;=0A=
->> +=0A=
->> +	for (i =3D 0; i < nodes_count; ++i)=0A=
->> +		if (nodes[i].id > ret)=0A=
->> +			ret =3D nodes[i].id;=0A=
->> +=0A=
->> +	return ret;=0A=
->> +}=0A=
->> +=0A=
->> +int imx_icc_register(struct platform_device *pdev,=0A=
->> +		     struct imx_icc_node_desc *nodes, int nodes_count)=0A=
->> +{=0A=
->> +	struct device *dev =3D &pdev->dev;=0A=
->> +	struct icc_onecell_data *data;=0A=
->> +	struct icc_provider *provider;=0A=
->> +	int max_node_id;=0A=
->> +	int ret;=0A=
->> +=0A=
->> +	/* icc_onecell_data is indexed by node_id, unlike nodes param */=0A=
->> +	max_node_id =3D get_max_node_id(nodes, nodes_count);=0A=
->> +	data =3D devm_kzalloc(dev, struct_size(data, nodes, max_node_id),=0A=
->> +			    GFP_KERNEL);=0A=
->> +	if (!data)=0A=
->> +		return -ENOMEM;=0A=
->> +	data->num_nodes =3D max_node_id;=0A=
->> +=0A=
->> +	provider =3D devm_kzalloc(dev, sizeof(*provider), GFP_KERNEL);=0A=
->> +	if (!provider)=0A=
->> +		return -ENOMEM;=0A=
->> +	provider->set =3D imx_icc_set;=0A=
->> +	provider->aggregate =3D imx_icc_aggregate;=0A=
-> =0A=
-> provider->aggregate =3D icc_std_aggregate;=0A=
-> =0A=
->> +	provider->xlate =3D of_icc_xlate_onecell;=0A=
->> +	provider->data =3D data;=0A=
->> +	provider->dev =3D dev->parent;=0A=
->> +	platform_set_drvdata(pdev, provider);=0A=
->> +=0A=
->> +	ret =3D icc_provider_add(provider);=0A=
->> +	if (ret) {=0A=
->> +		dev_err(dev, "error adding interconnect provider: %d\n", ret);=0A=
->> +		return ret;=0A=
->> +	}=0A=
->> +=0A=
->> +	ret =3D imx_icc_register_nodes(provider, nodes, nodes_count);=0A=
->> +	if (ret)=0A=
->> +		goto provider_del;=0A=
->> +=0A=
->> +	return 0;=0A=
->> +=0A=
->> +provider_del:=0A=
->> +	icc_provider_del(provider);=0A=
->> +	return ret;=0A=
->> +}=0A=
->> +EXPORT_SYMBOL_GPL(imx_icc_register);=0A=
->> +=0A=
->> +int imx_icc_unregister(struct platform_device *pdev)=0A=
->> +{=0A=
->> +	struct icc_provider *provider =3D platform_get_drvdata(pdev);=0A=
->> +	int ret;=0A=
->> +=0A=
->> +	if (provider->users) {=0A=
->> +		dev_warn(&pdev->dev, "interconnect provider still has %d users\n",=0A=
->> +			provider->users);=0A=
->> +		return -EBUSY;=0A=
->> +	}=0A=
-> =0A=
-> The above check already exists in icc_provider_del(). But i assume you do=
-n't=0A=
-> want to delete any nodes from the provider if it still has users. Maybe i=
-t will=0A=
-> be sensible to add this check into icc_nodes_remove() instead, so that su=
-ch=0A=
-> cases are handled on a framework level.=0A=
-=0A=
-Actually device removal is not allowed to fail, for example doing an =0A=
-explicit unbind will ignore errors coming from the unregister function:=0A=
-=0A=
-echo imx8mm-interconnect > =0A=
-/sys/bus/platform/drivers/imx8mm-interconnect/unbind=0A=
-=0A=
-results in the following stack trace where device_driver_detach actually =
-=0A=
-continues even if remove returns an error:=0A=
-=0A=
-[   24.017901]  imx_icc_unregister+0x24/0x80=0A=
-[   24.021925]  imx8mm_icc_remove+0x18/0x28=0A=
-[   24.025863]  platform_drv_remove+0x34/0x58=0A=
-[   24.029974]  device_release_driver_internal+0x104/0x1d8=0A=
-[   24.035213]  device_driver_detach+0x20/0x30=0A=
-[   24.039409]  unbind_store+0xe8/0x110=0A=
-[   24.042999]  drv_attr_store+0x2c/0x40=0A=
-[   24.046677]  sysfs_kf_write+0x54/0x80=0A=
-=0A=
-I'm not sure how the framework should handle provider removal. Right now =
-=0A=
-icc_path holds icc_node pointers so when nodes are freed any consumer =0A=
-calling into icc will corrupt memory.=0A=
-=0A=
-One option would be to reference count the allocation of struct =0A=
-icc_node, this way icc_path functions could safely check for =0A=
-node->provider =3D=3D NULL and return an error.=0A=
-=0A=
-I'll remove this check from the imx driver because it does not solve =0A=
-anything.=0A=
-=0A=
-> =0A=
->> +	imx_icc_unregister_nodes(provider);=0A=
->> +=0A=
->> +	ret =3D icc_provider_del(provider);=0A=
->> +	if (ret)=0A=
->> +		return ret;=0A=
->> +=0A=
->> +	return 0;=0A=
->> +}=0A=
->> +EXPORT_SYMBOL_GPL(imx_icc_unregister);=0A=
->> +=0A=
->> +MODULE_LICENSE("GPL v2");=0A=
->> diff --git a/drivers/interconnect/imx/imx.h b/drivers/interconnect/imx/i=
-mx.h=0A=
->> new file mode 100644=0A=
->> index 000000000000..aa811e4ebb7e=0A=
->> --- /dev/null=0A=
->> +++ b/drivers/interconnect/imx/imx.h=0A=
->> @@ -0,0 +1,62 @@=0A=
->> +/* SPDX-License-Identifier: GPL-2.0 */=0A=
->> +/*=0A=
->> + * Interconnect framework driver for i.MX SoC=0A=
->> + *=0A=
->> + * Copyright (c) 2019, BayLibre=0A=
->> + * Copyright (c) 2019, NXP=0A=
->> + * Author: Alexandre Bailon <abailon@baylibre.com>=0A=
->> + * Author: Leonard Crestez <leonard.crestez@nxp.com>=0A=
->> + */=0A=
->> +#ifndef __DRIVERS_INTERCONNECT_IMX_H=0A=
->> +#define __DRIVERS_INTERCONNECT_IMX_H=0A=
->> +=0A=
->> +#include <linux/kernel.h>=0A=
->> +=0A=
->> +#define IMX_ICC_MAX_LINKS	4=0A=
->> +=0A=
->> +/*=0A=
->> + * struct imx_icc_node_adj - Describe a dynamic adjustable node=0A=
->> + */=0A=
->> +struct imx_icc_node_adj_desc {=0A=
->> +	unsigned int bw_mul, bw_div;=0A=
->> +	const char *phandle_name;=0A=
->> +	bool main_noc;=0A=
->> +};=0A=
->> +=0A=
->> +/*=0A=
->> + * struct imx_icc_node - Describe an interconnect node=0A=
->> + * @name: name of the node=0A=
->> + * @id: an unique id to identify the node=0A=
->> + * @links: an array of slaves' node id=0A=
->> + * @num_links: number of id defined in links=0A=
->> + */=0A=
->> +struct imx_icc_node_desc {=0A=
->> +	const char *name;=0A=
->> +	u16 id;=0A=
->> +	u16 links[IMX_ICC_MAX_LINKS];=0A=
->> +	u16 num_links;=0A=
->> +=0A=
-> =0A=
-> Why the blank line?=0A=
-=0A=
-Removed=0A=
-=0A=
->> +	const struct imx_icc_node_adj_desc *adj;=0A=
->> +};=0A=
->> +=0A=
->> +#define DEFINE_BUS_INTERCONNECT(_name, _id, _adj, ...)			\=0A=
->> +	{								\=0A=
->> +		.id =3D _id,						\=0A=
->> +		.name =3D _name,						\=0A=
->> +		.adj =3D _adj,						\=0A=
->> +		.num_links =3D ARRAY_SIZE(((int[]){ __VA_ARGS__ })),	\=0A=
->> +		.links =3D { __VA_ARGS__ },				\=0A=
->> +	}=0A=
->> +=0A=
->> +#define DEFINE_BUS_MASTER(_name, _id, _dest_id)				\=0A=
->> +	DEFINE_BUS_INTERCONNECT(_name, _id, NULL, _dest_id)=0A=
->> +=0A=
->> +#define DEFINE_BUS_SLAVE(_name, _id, _adj)				\=0A=
->> +	DEFINE_BUS_INTERCONNECT(_name, _id, _adj)=0A=
->> +=0A=
->> +int imx_icc_register(struct platform_device *pdev,=0A=
->> +		     struct imx_icc_node_desc *nodes,=0A=
->> +		     int nodes_count);=0A=
->> +int imx_icc_unregister(struct platform_device *pdev);=0A=
->> +=0A=
->> +#endif /* __DRIVERS_INTERCONNECT_IMX_H */=0A=
-=0A=
+
+
+On 30/03/2020 00:53, Ryder Lee wrote:
+> From: Ryder Lee <ryder.lee@mediatek.com>
+> 
+> This enables built-in 802.11n Wi-Fi support. It's 2.4GHz only.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+
+Queued for v5.7-next/dts64
+
+Thanks!
+
+> ---
+>  .../boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts     |  4 ++++
+>  arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts          |  4 ++++
+>  arch/arm64/boot/dts/mediatek/mt7622.dtsi              | 11 +++++++++++
+>  3 files changed, 19 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
+> index 83e10591e0e5..d174ad214857 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
+> +++ b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
+> @@ -543,3 +543,7 @@
+>  	pinctrl-0 = <&watchdog_pins>;
+>  	status = "okay";
+>  };
+> +
+> +&wmac {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+> index 3f783348c66a..0b4de627f96e 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+> +++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+> @@ -506,3 +506,7 @@
+>  	pinctrl-0 = <&watchdog_pins>;
+>  	status = "okay";
+>  };
+> +
+> +&wmac {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> index dac51e98204c..03b14a5ab7f3 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> @@ -699,6 +699,17 @@
+>  		status = "disabled";
+>  	};
+>  
+> +	wmac: wmac@18000000 {
+> +		compatible = "mediatek,mt7622-wmac";
+> +		reg = <0 0x18000000 0 0x100000>;
+> +		interrupts = <GIC_SPI 211 IRQ_TYPE_LEVEL_LOW>;
+> +
+> +		mediatek,infracfg = <&infracfg>;
+> +		status = "disabled";
+> +
+> +		power-domains = <&scpsys MT7622_POWER_DOMAIN_WB>;
+> +	};
+> +
+>  	ssusbsys: ssusbsys@1a000000 {
+>  		compatible = "mediatek,mt7622-ssusbsys",
+>  			     "syscon";
+> 
