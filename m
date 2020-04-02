@@ -2,332 +2,168 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C52BAC2BA13
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 09:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 543C8C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 10:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 877F62073B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 09:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E54B2074D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 10:07:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RlrMaBDl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="dhLgZ1k2";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="rD1gW5CS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgDBJ5Y (ORCPT
+        id S1729033AbgDBKHr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 05:57:24 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39430 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387732AbgDBJ5Y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 05:57:24 -0400
-Received: by mail-ot1-f68.google.com with SMTP id x11so2789138otp.6
-        for <devicetree@vger.kernel.org>; Thu, 02 Apr 2020 02:57:21 -0700 (PDT)
+        Thu, 2 Apr 2020 06:07:47 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:24687 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728135AbgDBKHr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 06:07:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1585822066; x=1617358066;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=MKZR/RB3na+J3TRzmd+RKfsjGXibvkM8M/kiXa7rRa0=;
+  b=dhLgZ1k2eM3ofHxTr64BLYjhRM7hIrAWQr68+eXLcgmBnoUpnnGGfmyt
+   Kj4QnPWNnHW0apb8VyJ8iUwK5QnhJA6wF2g/DX5USR8LfED2Qxqn6XhxY
+   3Cj1dBXVJ/6ZHCrj4fz/bfQUzru+aSoYsLqgPAdu3YRuQXtWDhUXGx1Vy
+   1lTWDDNY/t+q7nL9mI1KG5dVWkAomyeGf2SosQDjqWG+qV6hM3lNr28Uz
+   bPEfeJ+veujXuIT3EyhY3DI5tFtq4UX2pOmmsOAvAUFvIknVDOiQGhG4b
+   0f6qIGAMFJGXI0sBC9vwrqypzbqmEXdMOxNHY83zayFBDADJ20AlGzbNt
+   g==;
+IronPort-SDR: 8xHe2f95JAIDo8Dd/bjKXKlyixn1j0H4P605U5wfFMTKEwWgwoYB39EQRzPRAHiXFDPy+BaS4z
+ DPj7NUedmc+eF+HimYbw6Mgz6deFDqA49rYwc3HEQVaup1wu/NNMdrHy44Uv5VTUczk4JmC9MU
+ jYOOvC0N6KZZyER1aBv46jacbu+MotZoFNQptoNq7rli2UDzdhF06QHqLtMHzKVmE6JPQlLH9U
+ WSpGw7YiPSqKTrmq2aN16o5m3wm1h1rzG3PMHW8uL3q2bvnevuoBN199fAS/r/cahNPBah63vx
+ QIs=
+X-IronPort-AV: E=Sophos;i="5.72,335,1580799600"; 
+   d="scan'208";a="71003402"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Apr 2020 03:07:45 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 2 Apr 2020 03:07:45 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Thu, 2 Apr 2020 03:07:45 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nfhPBpxtoSWS8q8BZ8wYSh1b+PWt8Aj+dlGVESWXk1S/1EmtoEhudx07YxqnXStv4PlKf7jJluK8LFaqIhTIM0jIhTpoIL1iixqKEHB8c8Sa6nDQPCd6T359yK5GMhuKy3zasK0yH9T2QYgbPsTvUg+6iPiFhogVV+butBBCZbBqvBvl92Z4IS5BH5r38To1tvqkdS4ZM/uPbPYuqQbiQfWaFepTXtQito4kSIuxBV/VQL0COcbftalDj8woJ6UFln+ttaUjFO1CN3QsvadNsZPmU7D/zoERrLFLHwMFe/uWQXfiuJfwjGyHWhuBUjpJkDbpxgIXuof7qB7N85OGzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MKZR/RB3na+J3TRzmd+RKfsjGXibvkM8M/kiXa7rRa0=;
+ b=EgyyQQH+qnGUm2U67CM+JkeTtiTrwpEi0bqnNSVMgCJ4AOuRMlDlVqSO75rVwsuUsDVZPGhnDs1HnHiYHZCTiWb3gU+MDFSdiFl3plyORSsmzca25eVwg8D+/xbvJEt+mBJXUDUday9UvS/8E3pA1ywzpkmBOG68tqpOnsOKDLMyZzYXE+ZYfiJyJ+Z1nqlkP4tVO2sjbbuOpb3qqDMtWpHNtBfu5NrbiwiYxbFMTRcvK98QZg6blpOyiV1ejdv/4neMBMMycWYsQ7MA48qlJzYXEn7oWI46ho4E9jfOw1pxdLA0N4BBw7h+z5+NTaGaSa7yB7Uo3EXT8raMeSVfOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k7BONJVnKzuVhtjjNj+qftoNDxpPeWoFQFGqO2BllZ4=;
-        b=RlrMaBDl00mz5wHT4OGSuNFqsCyjlszw2abHjiHD3AUxmMEGyUTX1P09R9ovOsGTAk
-         AUgtBVGV0tova9mq6fSrTsS1/wdwaS5aZALgGP4iMWn+93lB3xUJOtxC6Tn/rk8llQH+
-         QzWQnhhchF7mK+qv+rpfXEmPDtMctDhXEO0vIOzyIBgBzApFDCkMUwHx5VC7z5YDIcX9
-         QpTvWFaLRnvhvv75fXJ+AN7f+oyLe+SZE8urzCsCxn0NTZ/TuzDz+Pczq0d17RegcRYT
-         xfzSoXzH1+SVHB6fKoty/+ltaR7NsJPVoKDNGgd2sD0RVWRjw6f2NQI7uAiE+wDoJdVI
-         Lz/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k7BONJVnKzuVhtjjNj+qftoNDxpPeWoFQFGqO2BllZ4=;
-        b=MWdDtANolbwHAYoZXGEjZ87EiRdNgSNAxqgtlBvh+Wvkt/SrKjT27IB19W2Oo8LNXh
-         Ge6GewfsFrmMUhNqoT2cWHl9+5w4ctmSfey4sRt93E6vox+OUmSkHldbzkP3zy5o+rqE
-         bE9rMsML9dIOrINLFuy7s9tu2Sc8KfF3bejdciVu/vbr0HeZehCC04GNebi/TECZjJ09
-         rpTC2jMlRGwUlaxiKi2e+2AJtcaB+Wirx5wPvgBGDerPKJ2qDCwDYf1pJEwbl0aEjwvA
-         nNtJDs14l+Vs27d7jG/Hu0M7sLM1y0+DsA69DwyKizmW9gumtTWy3XX+c49y+nLCPmQq
-         bEFg==
-X-Gm-Message-State: AGi0PuaHUXdfdU66uxRWsCkLu0dR2Wo6VPh+kwvrUOQZcIxserRsZNCu
-        ZxJ7L/qE39/Q3sOggzBgj1lJ6QulfYg9+Sbgze2wRQ==
-X-Google-Smtp-Source: APiQypJvsIEDz687agNDV5HB9tocDbOrr7IGIaIt4p+7ALU7k2BUZOZdtADN61SUSI+h6xq4jL10+O07CT29CbXFI1U=
-X-Received: by 2002:a9d:27a7:: with SMTP id c36mr1717257otb.68.1585821441364;
- Thu, 02 Apr 2020 02:57:21 -0700 (PDT)
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MKZR/RB3na+J3TRzmd+RKfsjGXibvkM8M/kiXa7rRa0=;
+ b=rD1gW5CSqpZiM/KD5sEOAwR4no+GhMax4UjphLk7nqKqcuqanCs83yJ4Pe9h5FbxafQDP1wAd5J0d249i+J3BUoIDbdf8URiLAD2zC7HLZody1GQR4jmQmFtsTBtyLxAy02+fYaOeRLNC9UFoHL2dY+yniv5u/+A5f9fVF8YIg8=
+Received: from DM6PR11MB2777.namprd11.prod.outlook.com (2603:10b6:5:bf::31) by
+ DM6PR11MB4548.namprd11.prod.outlook.com (2603:10b6:5:2ad::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2878.15; Thu, 2 Apr 2020 10:07:43 +0000
+Received: from DM6PR11MB2777.namprd11.prod.outlook.com
+ ([fe80::3903:ed89:1141:fca6]) by DM6PR11MB2777.namprd11.prod.outlook.com
+ ([fe80::3903:ed89:1141:fca6%5]) with mapi id 15.20.2878.016; Thu, 2 Apr 2020
+ 10:07:43 +0000
+From:   <Ludovic.Desroches@microchip.com>
+To:     <Eugen.Hristev@microchip.com>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <robh+dt@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <Tudor.Ambarus@microchip.com>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <Codrin.Ciubotariu@microchip.com>, <Cristian.Birsan@microchip.com>
+Subject: Re: [PATCH 1/5] ARM: dts: at91: sama5d2_ptc_ek: fix sdmmc0 node
+ description
+Thread-Topic: [PATCH 1/5] ARM: dts: at91: sama5d2_ptc_ek: fix sdmmc0 node
+ description
+Thread-Index: AQHWCHML62OsZNg8VU2miyKNJtKsbKhljvEAgAANUoA=
+Date:   Thu, 2 Apr 2020 10:07:43 +0000
+Message-ID: <5f762bdc-fe07-adbc-af8d-7670b5b4b286@microchip.com>
+References: <20200401221504.41196-1-ludovic.desroches@microchip.com>
+ <b4fe14af-a812-8798-187e-704541a6a75f@microchip.com>
+In-Reply-To: <b4fe14af-a812-8798-187e-704541a6a75f@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Ludovic.Desroches@microchip.com; 
+x-originating-ip: [109.210.131.96]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7f2c0146-7ad5-495e-309c-08d7d6edaf83
+x-ms-traffictypediagnostic: DM6PR11MB4548:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB4548D2AA6EE3BF7158D37286EFC60@DM6PR11MB4548.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0361212EA8
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB2777.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(376002)(366004)(39860400002)(396003)(136003)(346002)(91956017)(66556008)(31696002)(81166006)(76116006)(4326008)(81156014)(66476007)(186003)(66946007)(64756008)(8936002)(86362001)(66446008)(31686004)(6512007)(478600001)(8676002)(26005)(6506007)(107886003)(53546011)(54906003)(36756003)(71200400001)(2616005)(316002)(110136005)(2906002)(5660300002)(6486002);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: agTtK3k9w0v5q5DOtDSxjp0caRBzEKGzClQh5X7AValvxjPzlmT+7OhZiMneA1Hon/3449aN/ddOpYF0BgRtujo9gE4bQkPYhVzVX2h9AtDTp45kU8fPYDxPEXfeksjVonkaLdjnh/wMu6PG4oxSPDGQjQAr3Wrn9jk9RTbiE9glZUDT3jDazcZvOG48nPEZa8T6zZnTR+TQ33QBKLZlXHQ/AReCm83u/raHVpNLOY1svwcJtXlyhMT9QS0Whxso5RRkG7OjZVAVacHaOUk6uwjYmtW0iTxINHP3G2WGXCpxUZbLETT6NJmeqQHA777bxYGMefoor23+nYyoC2Z6mmSEh9GVOvropvVnWQVkDTCMxAbS9/SFGkbOchZRlFaRgSkp0srNbuUHtyJZFSHIwHcGOyh5sC4lggcnncYmzvgdwOwsS0Vpg09utkx1+qow
+x-ms-exchange-antispam-messagedata: LamDJTfUIdE+uVA+jrhgja2yavZa0po5Xs+M69GUyf0vbzvM7/IdlLNc4LhNHGDzl5+d6jnbbJQMpwIa9kkZBaX/FLNrhckHsC9BQtTOGepa2amILcgJWQPYYfp202TkSE+6RMaI3rkTfx0kBnHyhA==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CCB1BF68517C7F41994CBD4EB142EED8@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200331133346.372517-1-robert.foss@linaro.org>
- <20200331133346.372517-2-robert.foss@linaro.org> <20200331151253.q6ody3erhvsabznz@pengutronix.de>
-In-Reply-To: <20200331151253.q6ody3erhvsabznz@pengutronix.de>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Thu, 2 Apr 2020 11:57:10 +0200
-Message-ID: <CAG3jFyvBmfwoSoKxZJPh2VcJe2aCYGWRRNmkuky3wU2jOsRwBQ@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f2c0146-7ad5-495e-309c-08d7d6edaf83
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2020 10:07:43.4999
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IvFukyciQ5VYh1EYVcxvspOVJB/ofLIzyAvdv1qb1rRyn7e5r+j9f3soaO3k3SoRCFcFwxomRrL7dttSu+x9w7ZfXrpJOF7SWoD8vmmBa24=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4548
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-'Hey Marco,
-
-On Tue, 31 Mar 2020 at 17:13, Marco Felsch <m.felsch@pengutronix.de> wrote:
->
-> Hi Robert,
->
-> On 20-03-31 15:33, Robert Foss wrote:
-> > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> >
-> > This patch adds documentation of device tree in YAML schema for the
-> > OV8856 CMOS image sensor.
-> >
-> > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> > ---
-> >
-> > - Changes since v5:
-> >   * Add assigned-clocks and assigned-clock-rates
-> >   * robher: dt-schema errors
-> >
-> > - Changes since v4:
-> >   * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in description
-> >   * Add clock-lanes property to example
-> >   * robher: Fix syntax error in devicetree example
-> >
-> > - Changes since v3:
-> >   * robher: Fix syntax error
-> >   * robher: Removed maxItems
-> >   * Fixes yaml 'make dt-binding-check' errors
-> >
-> > - Changes since v2:
-> >   Fixes comments from from Andy, Tomasz, Sakari, Rob.
-> >   * Convert text documentation to YAML schema.
-> >
-> > - Changes since v1:
-> >   Fixes comments from Sakari, Tomasz
-> >   * Add clock-frequency and link-frequencies in DT
-> >
-> >  .../devicetree/bindings/media/i2c/ov8856.yaml | 150 ++++++++++++++++++
-> >  MAINTAINERS                                   |   1 +
-> >  2 files changed, 151 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov8856.yaml b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> > new file mode 100644
-> > index 000000000000..beeddfbb8709
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> > @@ -0,0 +1,150 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +# Copyright (c) 2019 MediaTek Inc.
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/media/i2c/ov8856.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Omnivision OV8856 CMOS Sensor Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Ben Kao <ben.kao@intel.com>
-> > +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > +
-> > +description: |-
-> > +  The Omnivision OV8856 is a high performance, 1/4-inch, 8 megapixel, CMOS
-> > +  image sensor that delivers 3264x2448 at 30fps. It provides full-frame,
-> > +  sub-sampled, and windowed 10-bit MIPI images in various formats via the
-> > +  Serial Camera Control Bus (SCCB) interface. This chip is programmable
-> > +  through I2C and two-wire SCCB. The sensor output is available via CSI-2
-> > +  serial data output (up to 4-lane).
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: ovti,ov8856
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  clock-names:
-> > +    description:
-> > +      Input clock for the sensor.
-> > +    items:
-> > +      - const: xvclk
-> > +
-> > +  clock-frequency:
-> > +    description:
-> > +      Frequency of the xvclk clock in Hertz.
->
-> Why do we need this here?
->
-> > +  assigned-clocks:
-> > +    description:
-> > +      Input clock for the sensor.
-> > +
-> > +  assigned-clock-rates:
-> > +    description:
-> > +      Frequency of the xvclk clock in Hertz.
->
-> Also this isn't related to the chip. You need this because you are using
-> a qcom platform which provides the clock.
->
-> IMHO you only need to specify the clock. You can get the frequency with
-> the clk_get_rate() function.
-
-The way I understood this, was that clk_get_rate() would fetch the
-clock rate as defined by the 'assigned-clock-rates'
-Is this not the case? And if so, what rate would cllk_get_rate()
-actually retrieve?
-
->
-> > +  dovdd-supply:
-> > +    description:
-> > +      Definition of the regulator used as interface power supply.
->
-> Phandle to the interface power supply regulator?
->
-> > +
-> > +  avdd-supply:
-> > +    description:
-> > +      Definition of the regulator used as analog power supply.
-> > +
-> > +  dvdd-supply:
-> > +    description:
-> > +      Definition of the regulator used as digital power supply.
-> > +
-> > +  reset-gpios:
-> > +    description:
-> > +      The phandle and specifier for the GPIO that controls sensor reset.
-> > +      This corresponds to the hardware pin XSHUTDOWN which is physically
-> > +      active low.
-> > +
-> > +  port:
-> > +    type: object
-> > +    additionalProperties: false
-> > +    description:
-> > +      A node containing input and output port nodes with endpoint definitions
-> > +      as documented in
-> > +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> > +
-> > +    properties:
-> > +      endpoint:
-> > +        type: object
-> > +
-> > +        properties:
-> > +          clock-lanes:
-> > +            maxItems: 1
-> > +
-> > +          data-lanes:
-> > +            maxItems: 1
-> > +
-> > +          remote-endpoint: true
-> > +
-> > +        required:
-> > +          - clock-lanes
-> > +          - data-lanes
-> > +          - remote-endpoint
-> > +
-> > +    required:
-> > +      - endpoint
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +  - clock-names
-> > +  - clock-frequency
-> > +  - assigned-clocks
-> > +  - assigned-clock-rates
-> > +  - dovdd-supply
-> > +  - avdd-supply
-> > +  - dvdd-supply
-> > +  - reset-gpios
-> > +  - port
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +    #include <dt-bindings/clock/qcom,camcc-sdm845.h>
->
-> IMHO we should avoid examples with hardware specific includes.
-
-The HW specific include is used for the clocks property.
-clocks = <&clock_camcc CAM_CC_MCLK0_CLK>;
-
-Is there a non hw specific clock that would be better to use for examples?
-
->
-> > +
-> > +    i2c {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        ov8856: camera@10 {
-> > +            compatible = "ovti,ov8856";
-> > +            reg = <0x10>;
-> > +
-> > +            reset-gpios = <&pio 111 GPIO_ACTIVE_LOW>;
-> > +            pinctrl-names = "default";
-> > +            pinctrl-0 = <&clk_24m_cam>;
-> > +
-> > +            clocks = <&clock_camcc CAM_CC_MCLK0_CLK>;
-> > +            clock-names = "xvclk";
-> > +            clock-frequency = <19200000>;
-> > +            assigned-clocks = <&clock_camcc CAM_CC_MCLK0_CLK>;
-> > +            assigned-clock-rates = <19200000>;
-> > +
-> > +            avdd-supply = <&mt6358_vcama2_reg>;
-> > +            dvdd-supply = <&mt6358_vcamd_reg>;
-> > +            dovdd-supply = <&mt6358_vcamio_reg>;
-> > +
-> > +            port {
-> > +                wcam_out: endpoint {
-> > +                    remote-endpoint = <&mipi_in_wcam>;
-> > +                    clock-lanes = <0>;
-> > +                    data-lanes = <1 2 3 4>;
-> > +                    link-frequencies = /bits/ 64 <360000000 180000000>;
->
-> Should we add the link-frequencies as optional param?
->
-> Regards,
->   Marco
->
-> > +                };
-> > +            };
-> > +        };
-> > +    };
-> > +...
-> > \ No newline at end of file
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index a6fbdf354d34..0f99e863978a 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -12355,6 +12355,7 @@ L:    linux-media@vger.kernel.org
-> >  T:   git git://linuxtv.org/media_tree.git
-> >  S:   Maintained
-> >  F:   drivers/media/i2c/ov8856.c
-> > +F:   Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> >
-> >  OMNIVISION OV9650 SENSOR DRIVER
-> >  M:   Sakari Ailus <sakari.ailus@linux.intel.com>
-> > --
-> > 2.25.1
-> >
-> >
->
-> --
-> Pengutronix e.K.                           |                             |
-> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+T24gNC8yLzIwMjAgMTE6MjAgQU0sIEV1Z2VuIEhyaXN0ZXYgLSBNMTgyODIgd3JvdGU6DQo+IE9u
+IDAyLjA0LjIwMjAgMDE6MTUsIEx1ZG92aWMgRGVzcm9jaGVzIHdyb3RlOg0KPj4gUmVtb3ZlIG5v
+bi1yZW1vdmFibGUgYW5kIG1tYy1kZHItMV84diBwcm9wZXJ0aWVzIGZyb20gdGhlIHNkbW1jMA0K
+Pj4gbm9kZSB3aGljaCBjb21lIHByb2JhYmx5IGZyb20gYW4gdW5jaGVja2VkIGNvcHkvcGFzdGUu
+DQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogTHVkb3ZpYyBEZXNyb2NoZXMgPGx1ZG92aWMuZGVzcm9j
+aGVzQG1pY3JvY2hpcC5jb20+DQo+PiBGaXhlczo0MmVkNTM1NTk1ZWMgIkFSTTogZHRzOiBhdDkx
+OiBpbnRyb2R1Y2UgdGhlIHNhbWE1ZDIgcHRjIGVrIGJvYXJkIg0KPj4gQ2M6IHN0YWJsZUB2Z2Vy
+Lmtlcm5lbC5vcmcgIyA0LjE5IGFuZCBsYXRlcg0KPj4gLS0tDQo+PiAgICBhcmNoL2FybS9ib290
+L2R0cy9hdDkxLXNhbWE1ZDJfcHRjX2VrLmR0cyB8IDIgLS0NCj4+ICAgIDEgZmlsZSBjaGFuZ2Vk
+LCAyIGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9h
+dDkxLXNhbWE1ZDJfcHRjX2VrLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtc2FtYTVkMl9w
+dGNfZWsuZHRzDQo+PiBpbmRleCAxYzI0YWM4MDE5YmE3Li43NzI4MDljNTRjMWYzIDEwMDY0NA0K
+Pj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1zYW1hNWQyX3B0Y19lay5kdHMNCj4+ICsr
+KyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtc2FtYTVkMl9wdGNfZWsuZHRzDQo+PiBAQCAtMTI1
+LDggKzEyNSw2IEBAIHNkbW1jMDogc2Rpby1ob3N0QGEwMDAwMDAwIHsNCj4+ICAgIAkJCWJ1cy13
+aWR0aCA9IDw4PjsNCj4+ICAgIAkJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+PiAgICAJ
+CQlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfc2RtbWMwX2RlZmF1bHQ+Ow0KPj4gLQkJCW5vbi1yZW1v
+dmFibGU7DQo+PiAtCQkJbW1jLWRkci0xXzh2Ow0KPiANCj4gSGkgTHVkb3ZpYywNCj4gDQo+IEkg
+YW0gbm90IHN1cmUgYWJvdXQgdGhlIHJlbW92YWwgb2YgbW1jLWRkci0xXzh2OyB0aGlzIG1lYW5z
+IGVNTUNzDQo+IGNvbm5lY3RlZCBvbiB0aGlzIHNsb3Qgd29uJ3Qgd29yayBpbiBoaWdoIHNwZWVk
+IG1vZGUsIHNvbWUgcGVvcGxlIHVzZQ0KPiBlTU1DIHRvIFNELUNhcmQgYWRhcHRlcnMgYW5kIHN0
+aWNrIHRoZW0gaW50byBTRC1DYXJkIHNsb3RzLg0KPiBXb3VsZCBpdCBiZSBhIHByb2JsZW0gdG8g
+a2VlcCB0aGlzIHByb3BlcnR5IGhlcmUgPw0KDQpIaSBFdWdlbiwNCg0KSXQncyBub3QgYSBwcm9i
+bGVtIHRvIGtlZXAgaXQsIGJ1dCBJIGRvbid0IHRoaW5rIGl0IG1ha2VzIHNlbnNlLiBJbiB0aGlz
+IA0KY2FzZSBtbWMtZGRyLTNfM3Ygc2hvdWxkIGJlIGFkZGVkIHRvby4NCg0KV2lsbCBpdCB3b3Jr
+ICdvdXQgb2YgdGhlIGJveCcgd2l0aCBhbnkgZU1NQyB0byBTRC1DYXJkIGFkYXB0ZXJzIGFuZCAN
+CmVNTUNzPyBJIHJlbWVtYmVyIGRpc2N1c3Npb25zIHdoZXJlIHdlIHNhaWQgSFcgY2hhbmdlcyB3
+ZXJlIG5lZWRlZCB0byBiZSANCmFibGUgdG8gc2VsZWN0IHRoZSB2b2x0YWdlIGZvciB0aGUgSU9z
+IG90aGVyIHRoYW4gdXNpbmcgdGhlIFZERFNFTCANCnNpZ25hbCBvZiB0aGUgY29udHJvbGxlci4N
+Cg0KUmVnYXJkcw0KDQpMdWRvdmljDQoNCg0KPiANCj4gVGhhbmtzLA0KPiBFdWdlbg0KPiANCj4+
+ICAgIAkJCXN0YXR1cyA9ICJva2F5IjsNCj4+ICAgIAkJfTsNCj4+ICAgIA0KPj4NCj4gDQoNCg==
