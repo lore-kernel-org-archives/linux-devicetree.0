@@ -2,99 +2,131 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AF1C2BA16
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 18:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 357ABC43331
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 18:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E56AB206F8
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 18:55:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="lmGm1muQ"
+	by mail.kernel.org (Postfix) with ESMTP id 14F55206F8
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 18:58:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387737AbgDBSz6 (ORCPT
+        id S2389013AbgDBS6U (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 14:55:58 -0400
-Received: from www381.your-server.de ([78.46.137.84]:55958 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732214AbgDBSz6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 14:55:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=fKsOtiZ5cqqJb+vxcZ4y9u2bLpGbyUzcShKf+FTpLFQ=; b=lmGm1muQUlissLhe/K17gQWPTp
-        RRJEoMqSTHvQO+1d5U+NT5rYynkJy6mOs5lPZ3qEAiEm6/g67nqRzk3RGduBE4LX0xn0Isv0lHswd
-        O9X2eld1rxRDLYl3xeTFtOYgggdt228fegTgjPxP/k7lbqufyEBFuWEvAo9LIfS9ijqEw+eYJlCyf
-        laOkJkebnhyAuLL/pmQ0Ve7OinsRvrLzkjxE1nzA+E3m1V5qlM7n60RJ0HG79KuFzDKXAETqx9EFp
-        0XelgymVUzqpsr1PsGrbo55o0ueE21JfOkYM5RYsoGx9NrcD+e6Nzj/pvDq9BuYWFiiIVONhDQN6U
-        3svwTmDg==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1jK50K-0001o5-Q4; Thu, 02 Apr 2020 20:55:52 +0200
-Received: from [82.135.64.109] (helo=[192.168.178.20])
-        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1jK50K-000Td1-Fa; Thu, 02 Apr 2020 20:55:52 +0200
-Subject: Re: [PATCH v6 2/2] iio: adc: Add MAX1241 driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Alexandru Lazar <alazar@startmail.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
+        Thu, 2 Apr 2020 14:58:20 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:46525 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389103AbgDBS6U (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 14:58:20 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1MCKJw-1jSIWG28Go-009Om2 for <devicetree@vger.kernel.org>; Thu, 02 Apr
+ 2020 20:58:18 +0200
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id 3EF70650882
+        for <devicetree@vger.kernel.org>; Thu,  2 Apr 2020 18:58:18 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id JLLxZSsd7gY3 for <devicetree@vger.kernel.org>;
+        Thu,  2 Apr 2020 20:58:17 +0200 (CEST)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id F139B64F705
+        for <devicetree@vger.kernel.org>; Thu,  2 Apr 2020 20:58:17 +0200 (CEST)
+Received: from pflmari.corp.cetitec.com (10.8.5.12) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 2 Apr 2020 20:58:17 +0200
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id 2CFF680504; Thu,  2 Apr 2020 20:34:59 +0200 (CEST)
+Date:   Thu, 2 Apr 2020 20:34:59 +0200
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-References: <20200401185138.10673-1-alazar@startmail.com>
- <20200401185138.10673-3-alazar@startmail.com>
- <CAHp75VffpBYh+5xrWeeJJH8gRmJqT9ya5eQFedWi190_=p8HKQ@mail.gmail.com>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <4431cacc-4af6-a497-5850-20dfceb588c1@metafoo.de>
-Date:   Thu, 2 Apr 2020 20:55:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>
+Subject: [PATCH v5 7/9] media: adv748x: only activate DAI if it is described
+ in device tree
+Message-ID: <c3c8ece14c0fbc987dc201c9b61dd22d98f83056.1585852001.git.alexander.riesen@cetitec.com>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <cover.1585852001.git.alexander.riesen@cetitec.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VffpBYh+5xrWeeJJH8gRmJqT9ya5eQFedWi190_=p8HKQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25770/Thu Apr  2 14:58:54 2020)
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cover.1585852001.git.alexander.riesen@cetitec.com>
+X-Originating-IP: [10.8.5.12]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A290D7F536A6C7266
+X-Provags-ID: V03:K1:JaUZ1RpmIYolYMNA4BO3iZerdNoo404qeAbB0q7nmWFmz74yvk0
+ xtk1OLdzp8UE/MyOx6sAIVWtaqPC9OjjJhgI07XzSJDguN6paYhUR9LLMupW4quKGEB2FCU
+ VJxOAHN0uQksY+xXPUfGDG/VbvKdC7lh57DbG0UVHAcvlhHF6BxHtJ4jEt0CD4qOgE7Jp6M
+ xRuFPZvUeQYvJcSA/a1JA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:A/uZQhYSBVU=:B5dsAgxtQkyDMDlrXzdX9n
+ C4Z/bzUnULBGVwEDb0Bf6qudFSwPTuY4y1UfBfhoD1i7Nn/H0+CquUNcaf0NR91MPv0X4KXuD
+ u+Mx4iruPdWg66DSk1TQFnxaJ0E9FJPoI6b8e5Cw1vEa4FPlz0aQPFIy5hot/2uyTgGNMOlVC
+ wCgmeEsp4mzem65YGGbJcrBrNxY5xU7ilpmFPgOeOcxFY/zyYbU1S10Yk6nab9S0KaqqqW4Vz
+ RN/tGz0Y5HWhpIn7aVxMdTA+H+fOExNiISRMdbTauj1ic3hoMrVdeoyCXkv6VCr+GGpKTZ3fX
+ k/OKsa3RA0R2t7UBnQofhFhWhz6JOoTnXPSHTn5X07k+bgG6u48KwgFHclxGsHDNjrcuquCl2
+ DL8QXRaxitG3FKrgfMFFea2BdM5RLlJgP0lM8rm/pjXc4GP6G6lSsbn3SrTGdQUeT2Ozuqw4G
+ w2f/fVW2NOG0LIPx88lFwYiUSUL3bCTq4lYH/aKjkAtf2rLD/aSwDy15pFDnBlMxtjVIprey4
+ HeIVO8znnULcKslAtkaF/rDtnZaXUFrwJ/ESOvD0jl8MhcIvEm5XzOA1Pon+rOCFV19OFrz9z
+ XJZ/Km0pJpd3uvyYPAtIiUGwtlNod66WW0MOW7TfxV1kusFQ4A0+HML8Eazp/oxbTmZ0NijJJ
+ hpx3nUJ3CTbc1RoZLuae+/Py0E+iO+QC5eWER4fGlN4UAmVw/QY8/bt4DFHQcrl5abCE7Fz80
+ FTyt3qPfYoGp7MUSMuimmXXTCfEKuPIqbblA/3gYyrDU74L6B6CuV1V1p/zDESNYhtMdkI2Wd
+ lHMRl351GvN1uo9hlT4oLgpWk6smDvfufB790BqcyChCLB3Ox3x8jFwyyhat/uXnGP2Z13B
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 4/2/20 8:45 PM, Andy Shevchenko wrote:
-> On Wed, Apr 1, 2020 at 9:47 PM Alexandru Lazar <alazar@startmail.com> wrote:
->> Add driver for the Maxim MAX1241 12-bit, single-channel ADC.
->>
-> Perhaps put data sheet link as Datasheet: tag here?
->
->> Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
->> Signed-off-by: Alexandru Lazar <alazar@startmail.com>
-> ...
->
->> +       indio_dev->name = spi_get_device_id(spi)->name;
-> Shouldn't be rather part number?
-> Jonathan?
+To avoid setting it up even if the hardware is not actually connected
+to anything physically.
 
-This is the part number as defined in the spi_device id table :)
+Besides, the bindings explicitly notes that port definitions are
+"optional if they are not connected to anything at the hardware level".
 
-+static const struct spi_device_id max1241_id[] = {
-+	{ "max1241", max1241 },
-+	{}
-+};
+Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+---
+ drivers/media/i2c/adv748x/adv748x-dai.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-- Lars
+diff --git a/drivers/media/i2c/adv748x/adv748x-dai.c b/drivers/media/i2c/adv748x/adv748x-dai.c
+index 185f78023e91..f9cc47fa9ad1 100644
+--- a/drivers/media/i2c/adv748x/adv748x-dai.c
++++ b/drivers/media/i2c/adv748x/adv748x-dai.c
+@@ -216,6 +216,11 @@ int adv748x_dai_init(struct adv748x_dai *dai)
+ 	int ret;
+ 	struct adv748x_state *state = adv748x_dai_to_state(dai);
+ 
++	if (!state->endpoints[ADV748X_PORT_I2S]) {
++		adv_info(state, "no I2S port, DAI disabled\n");
++		ret = 0;
++		goto fail;
++	}
+ 	dai->mclk_name = kasprintf(GFP_KERNEL, "%s.%s-i2s-mclk",
+ 				   state->dev->driver->name,
+ 				   dev_name(state->dev));
+-- 
+2.25.1.25.g9ecbe7eb18
+
 
