@@ -2,70 +2,64 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F94C2BA17
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 23:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E82B1C2BA17
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 23:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA6A920787
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 23:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAD6D2082F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 23:54:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oHNClAaV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wSRw9XzR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390251AbgDBXtY (ORCPT
+        id S2390313AbgDBXyP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 19:49:24 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:35288 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390232AbgDBXtY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 19:49:24 -0400
-Received: by mail-vs1-f67.google.com with SMTP id u11so3835662vsg.2
-        for <devicetree@vger.kernel.org>; Thu, 02 Apr 2020 16:49:23 -0700 (PDT)
+        Thu, 2 Apr 2020 19:54:15 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34068 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390299AbgDBXyP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 19:54:15 -0400
+Received: by mail-oi1-f193.google.com with SMTP id d3so4586611oic.1
+        for <devicetree@vger.kernel.org>; Thu, 02 Apr 2020 16:54:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2cvHKEqE410gCKmpQqv4fwxuaYQ7RFlmiPeeClrkMO8=;
-        b=oHNClAaVRjBvfiIHC3meUIG6hnjnf11/sNZ/V7gNcrui28BTXX5jOIFMsGIdohMwHO
-         h7PPfy7l5GWTBRcXZ4+8MeUxj5YFP+kXdRxhoLJbiUmJg6R/0pdItL6moT5PJzO0mky3
-         yzMGM24MxAY5wilNoW2rYwoP90L/ZHasF5MUU=
+        bh=MkVjVANpcM96YTP/artLgGpoBzA7LQYeml3uEpxUsEQ=;
+        b=wSRw9XzRiBybQLd7br9k7afPC7Rj5x3o8UDf1DIiDxl26R2ISpzh28VA/aCw6AgQ3r
+         xuvnlxkR+knRDPbx3sXs2gVcudJLcu2lc1Tz4ewwZrR65itu6LgqK1YV+JQyJpR3WUXg
+         A/Mcg+H/AvqA+PHrZpQwWa1DkfSVVxvyQ/DN98Gv55vtWRBVia8xI7uYHHTD8QI2FpvG
+         zkB/KLVn6ElyebU/hCoWiC0P6lHPaxF5iRs4uOAjVk/lpGD1uuj3RRRSejuE9zrwoHtc
+         9DGavumf8OKF7RWI9+k656CDmhalsGx8Q64HSmbnNgL7fGfrFFrxaXm1FwUE8NiUz/DW
+         QKBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2cvHKEqE410gCKmpQqv4fwxuaYQ7RFlmiPeeClrkMO8=;
-        b=RSB0s8OTdq8v4qDZBNN1KOsCaepjMWttGXlcMl8GGoAhE5atwE19LTufHYBIiXGgyi
-         4SkvAl+iNe81ehKhky+eqh3lRjvcfYDevOTU/MypWuEfQDkw+P1IFCOlVveCIuJ8vcli
-         Mp1ANMaljd2pHIfsqh5RMBxeOychEQW286Zq4RcJom0USJPKyofi7RpXhNuBRB7jwAv4
-         ijc2NTx0Y+Vt07nwgJ4SOVtZAxrulaFS44GPhaELfVxD/1rxCMTtvEE+1dFMwpq3GfQu
-         RKYfS3Y1yb87Sk260cYHeNoymZomqDlRZlNe5Jh8dSD7xOLivAhKLzvuk64HrkB4gi/L
-         feCg==
-X-Gm-Message-State: AGi0PuYpxpPrMpMy3b7o+p8oYHk3E+IxgIHEMohxzIYA0T8fFdpE4LQp
-        /S2M5N1MIfeABoP8u08EBek6zFlDv90=
-X-Google-Smtp-Source: APiQypKClX4B7KUhFT/Y8AaikAvDc78KAsXGxp4R+Ponm6Dh1lQID03h3n3Ysqog92cEjX+pTjyQ/g==
-X-Received: by 2002:a67:e901:: with SMTP id c1mr4168453vso.228.1585871362500;
-        Thu, 02 Apr 2020 16:49:22 -0700 (PDT)
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com. [209.85.221.173])
-        by smtp.gmail.com with ESMTPSA id t194sm1691398vst.17.2020.04.02.16.49.21
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 16:49:21 -0700 (PDT)
-Received: by mail-vk1-f173.google.com with SMTP id f195so1184473vka.4
-        for <devicetree@vger.kernel.org>; Thu, 02 Apr 2020 16:49:21 -0700 (PDT)
-X-Received: by 2002:a05:6122:305:: with SMTP id c5mr4339170vko.40.1585871360882;
- Thu, 02 Apr 2020 16:49:20 -0700 (PDT)
+        bh=MkVjVANpcM96YTP/artLgGpoBzA7LQYeml3uEpxUsEQ=;
+        b=VPayrlXIYL46qmX6VdLaZ6V65xmMDOgDiZy2ngJROPKsxK7YbT8gCXqApF6QOi0QCt
+         BaRX2JBr6ELndqvaY0HZ8wZRTCdeZ/u7PdLalPTszlYDJ+U+RCnJr1B9pZrUFo6p3y6J
+         uscx05QM855E96QStj9y6azjreJ4WJRj34MOMS9/kZC1FUow6F30OuayeU17Fqo5sbtW
+         TfbucQnrTBXf+xiFL3DiSngreQRotg0SYv+TkZHQb9Eg0rqOGtJEPcU/INdHn1eL1l8D
+         gVBMVj6B0sMYoA/D6Kw1lKJ7yU8e43UKqQoG0dsecN7J7iQEsbSYq3extm3bLZaJKa5d
+         YBeA==
+X-Gm-Message-State: AGi0PuaPgS/IIk319o8TDpcYWze51UDxBxR3hpbTxRS8DJq/RglW0mCS
+        p2WIgfCGAR8EldHCzPKNVi7vO37cv7AlF2LS/9+UQQ==
+X-Google-Smtp-Source: APiQypJ1ZSdBUd3//b0o+rdxCAtF34zyk2+np7OTHfHudJN4riuwjNAt1eydJ7G7VnJwzPwsibZMWSQvVjikVhy04CY=
+X-Received: by 2002:aca:5208:: with SMTP id g8mr1073389oib.169.1585871654146;
+ Thu, 02 Apr 2020 16:54:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200402223723.7150-1-john.stultz@linaro.org> <20200402234455.75061-1-john.stultz@linaro.org>
-In-Reply-To: <20200402234455.75061-1-john.stultz@linaro.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 2 Apr 2020 16:49:08 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Wh9_4a-cDGPdpMrXUi_HmJvS-a2Ubeyo5WG3sgwVWKKQ@mail.gmail.com>
-Message-ID: <CAD=FV=Wh9_4a-cDGPdpMrXUi_HmJvS-a2Ubeyo5WG3sgwVWKKQ@mail.gmail.com>
-Subject: Re: [PATCH v2] phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy" compat string
-To:     John Stultz <john.stultz@linaro.org>
+References: <CANcMJZCr646jav3h14K0xV=ANMxXg=U20wvSB546qrLX3TECBg@mail.gmail.com>
+ <20200402223723.7150-1-john.stultz@linaro.org> <CAD=FV=VGT75c4_ErQAJgNtcCd2Jzv0A2KpfEkS637GqOhamj9Q@mail.gmail.com>
+ <CALAqxLXfd+7Wc79_XWRv8cKLFu+MpM1w9e3byx9z5bXSdTemLg@mail.gmail.com> <CAD=FV=WLAgowK67U1GkF3h_CZU_nyFfDPpZ=bF8BXU1jd_uTZg@mail.gmail.com>
+In-Reply-To: <CAD=FV=WLAgowK67U1GkF3h_CZU_nyFfDPpZ=bF8BXU1jd_uTZg@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 2 Apr 2020 16:54:02 -0700
+Message-ID: <CALAqxLVt9nZDWVTi=yHRnbT26PGCKANsqfhr9=3qnkOCOCFDhQ@mail.gmail.com>
+Subject: Re: [PATCH] phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy" compat string
+To:     Doug Anderson <dianders@chromium.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -85,62 +79,60 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-On Thu, Apr 2, 2020 at 4:45 PM John Stultz <john.stultz@linaro.org> wrote:
+On Thu, Apr 2, 2020 at 4:19 PM Doug Anderson <dianders@chromium.org> wrote:
+> On Thu, Apr 2, 2020 at 4:08 PM John Stultz <john.stultz@linaro.org> wrote:
+> > My understanding with dts bindings is that they are effectively an
+> > ABI. While maybe it makes sense to deprecate the
+> > "qcom,sdm845-qusb2-phy" string in the Documentation to avoid new
+> > users, I'd think we'd want to keep the support in the driver as we
+> > aren't supposed to have tight coupling between the DTB and kernel (at
+> > least for official bindings).
 >
-> In commit 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2
-> PHY support"), the change was made to add "qcom,qusb2-v2-phy"
-> as a generic compat string. However the change also removed
-> the "qcom,sdm845-qusb2-phy" compat string, which is documented
-> in the binding and already in use.
->
-> This patch re-adds the "qcom,sdm845-qusb2-phy" compat string
-> which allows the driver to continue to work with existing dts
-> entries such as found on the db845c.
->
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Doug Anderson <dianders@chromium.org>
-> Cc: Manu Gautam <mgautam@codeaurora.org>
-> Cc: Sandeep Maheswaram <sanm@codeaurora.org>
-> Cc: Matthias Kaehlcke <mka@chromium.org>
-> Cc: Stephen Boyd <swboyd@chromium.org>
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Fixes: 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2 PHY support")
-> Reported-by: YongQin Liu <yongqin.liu@linaro.org>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
-> v2: Add deprecation note on "qcom,sdm845-qusb2-phy" string
->     as suggested by Doug.
-> ---
->  drivers/phy/qualcomm/phy-qcom-qusb2.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-> index 3708d43b7508..393011a05b48 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-> @@ -815,6 +815,13 @@ static const struct of_device_id qusb2_phy_of_match_table[] = {
->         }, {
->                 .compatible     = "qcom,msm8998-qusb2-phy",
->                 .data           = &msm8998_phy_cfg,
-> +       }, {
-> +               /*
-> +                * Deprecated. Only here to support legacy device
-> +                * trees that didn't include "qcom,qusb2-v2-phy"
-> +                */
-> +               .compatible     = "qcom,sdm845-qusb2-phy",
-> +               .data           = &qusb2_v2_phy_cfg,
+> If nothing else if we're going to land your patch, can you at least
+> put a comment in there that says "only needed to support legacy device
+> trees that didn't include "qcom,qusb2-v2-phy" in the compatible
+> string.  Then the person who adds the next Qualcomm SoC will know not
+> to add themselves to the table too.
 
-Thanks for adding the comment.  With that, I'll still grumble but I'm
-OK with this if people really want it.
+Done.
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
 
--Doug
+> > Granted, I've not gotten much experience with boards that were fully
+> > upstream and thus didn't have an eternally evolving dts file that had
+> > to be kept in sync with the kernel, so in practice either solution
+> > does work for me, but in theory it seems like we should at least
+> > pretend these things are stable. :)
+>
+> Yeah, I don't want to get into the whole stable ABI argument, but what
+> you say is the official word.  The bindings are supposed to be a
+> stable ABI and it's a good goal to strive for.
+>
+> ...but in reality most people are OK with it not being quite so stable
+> as long as it's not hurting anyone.  What should have happened here is
+> that the bindings and dts should have landed in one Linux version and
+> the driver change landed in the next Linux version.  Now we're stuck
+> with the breakage, though.  :(  In general for "new" architectures
+> it's considered more OK to break compatibility, though I guess you can
+> argue whether sdm845 is really new enough.  I guess to get at the meat
+> of the issue though: if you need a patch to fix your problem anyway,
+> why not land the patch that doesn't end up chewing extra up extra code
+> space and providing a bad example for someone to copy?
+>
+> Now certainly if changing your DTS was an undue burden (like you've
+> already baked device trees into firmware) there's no question we
+> should land your patch.  I'm just not sure the lofty goal of "it's
+> supposed to be a stable ABI so let's add an entry to the table that
+> nobody will ever care about after the dts change lands" is enough of a
+> reason to land it now.
+
+Personally, I'm fine with either solution (as there's still dts
+changes for db845c pending that we're carrying), but I also want to
+make sure we're setting a good standard for future changes (as these
+sorts of things seem to bite me far too frequently on the db845c,
+sometimes even resulting in forced userland changes that we've so far
+been able to adapt to, but are not ideal).
+
+So I've resubmitted my version to let the maintainers decide.  :)
+
+thanks
+-john
