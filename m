@@ -2,142 +2,78 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BEDC43331
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 08:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B9FC43331
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 08:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7262F206F5
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 08:24:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="Z1QSr1ec"
+	by mail.kernel.org (Postfix) with ESMTP id 274C12080C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 08:34:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387603AbgDBIYc (ORCPT
+        id S2387585AbgDBIep (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 04:24:32 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:39176 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387574AbgDBIYc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 2 Apr 2020 04:24:32 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 60C5141252;
-        Thu,  2 Apr 2020 08:24:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-transfer-encoding:mime-version:user-agent:content-type
-        :content-type:organization:references:in-reply-to:date:date:from
-        :from:subject:subject:message-id:received:received:received; s=
-        mta-01; t=1585815868; x=1587630269; bh=Rk9xR31MTBz42inzc2zDfzMeZ
-        IDUkeMnBQo9b80woiI=; b=Z1QSr1ecssngt9KsASvvvGjwjmSfwzQLU7b3urygH
-        jfQ2eVzv51CZmehzgGEfVE7k2eKD4XeKdy4bNn5FuM69IJ/8R8TSMRkjdlYqLo+l
-        sVv85W8lYsBXvJiVl81kD24CAMcPvG0gRCh/A7cgjEUHSWrsTiigH3W7rFQ4TQPW
-        ok=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id yIxdH8dGqypN; Thu,  2 Apr 2020 11:24:28 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 6E2EA41251;
-        Thu,  2 Apr 2020 11:24:28 +0300 (MSK)
-Received: from localhost.localdomain (10.199.3.154) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Thu, 2 Apr 2020 11:24:28 +0300
-Message-ID: <1e2c9b590a3626abee330a28cca86cbae7affb39.camel@yadro.com>
-Subject: Re: [PATCH v6 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 2 Apr 2020 11:24:36 +0300
-In-Reply-To: <CAHp75VcdDR-owtFuFMqNLFh_-L902fXODG14_6Dh416tTwjidA@mail.gmail.com>
-References: <20200401162416.24474-1-i.mikhaylov@yadro.com>
-         <20200401162416.24474-3-i.mikhaylov@yadro.com>
-         <CAHp75VcdDR-owtFuFMqNLFh_-L902fXODG14_6Dh416tTwjidA@mail.gmail.com>
-Organization: YADRO
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Thu, 2 Apr 2020 04:34:45 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:60721 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387493AbgDBIep (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 04:34:45 -0400
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jJvJB-00071F-0J; Thu, 02 Apr 2020 10:34:41 +0200
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jJvJ9-0006VN-Mi; Thu, 02 Apr 2020 10:34:39 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, leoyang.li@nxp.com,
+        festevam@gmail.com
+Cc:     kernel@pengutronix.de, devicetree@vger.kernel.org
+Subject: [PATCH] dt-bindings: arm: imx: add kontron smarc to schema
+Date:   Thu,  2 Apr 2020 10:34:36 +0200
+Message-Id: <20200402083436.24710-1-m.felsch@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.199.3.154]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 2020-04-01 at 19:35 +0300, Andy Shevchenko wrote:
-> On Wed, Apr 1, 2020 at 7:24 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
-> > Proximity sensor driver based on light/vcnl4000.c code.
-> > For now supports only the single on-demand measurement.
-> > 
-> > The VCNL3020 is a fully integrated proximity sensor. Fully
-> > integrated means that the infrared emitter is included in the
-> > package. It has 16-bit resolution. It includes a signal
-> > processing IC and features standard I2C communication
-> > interface. It features an interrupt function.
-> 
-> Thank you for an update, my comments below.
-> 
-> ...
-> 
-> > +static int get_and_apply_property(struct vcnl3020_data *data, const char
-> > *prop,
-> > +                                 u32 reg)
-> > +{
-> > +       int rc;
-> > +       u32 val;
-> > +
-> > +       rc = device_property_read_u32(data->dev, prop, &val);
-> > +       if (rc)
-> > +               return 0;
-> > +
-> > +       rc = regmap_write(data->regmap, reg, val);
-> > +       if (rc)
-> > +               dev_err(data->dev, "Error (%d) setting property (%s)",
-> > +                       rc, prop);
-> 
-> This requires {} according to the coding style
+Add Kontron SMARC module compatibles to the schema so we can make use of
+them for the validation.
 
-checkpatch.pl doesn't say anything bad on this spot. Do you mean to make
-something like this?
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-rc = regmap_write(data->regmap, reg, val);
-if (rc) {
-	dev_err(data->dev, "Error (%d) setting property (%s)",
-                rc, prop);
-}
-
-In previous notes you said to remove them. 
-
-> .
-> 
-> > +       return rc;
-> > +}
-> 
-> ...
-> 
-> > +static int vcnl3020_probe(struct i2c_client *client)
-> > +{
-> > +       indio_dev->name = VCNL_DRV_NAME;
-> 
-> It's definitely not a driver name. You have to put part number here.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/tsl4531.c?h=v5.6#n199
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/max44009.c?h=v5.6#n507
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/vl6180.c?h=v5.6#n515
-
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index a8e0b4a813ed..8db048893d5e 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -119,6 +119,7 @@ properties:
+               - fsl,imx6q-sabreauto
+               - fsl,imx6q-sabrelite
+               - fsl,imx6q-sabresd
++              - kontron,imx6q-samx6i      # Kontron i.MX6 Dual/Quad SMARC Module
+               - technologic,imx6q-ts4900
+               - technologic,imx6q-ts7970
+               - toradex,apalis_imx6q            # Apalis iMX6 Module
+@@ -166,6 +167,7 @@ properties:
+               - emtrion,emcon-mx6-avari   # emCON-MX6S or emCON-MX6DL SoM on Avari Base
+               - fsl,imx6dl-sabreauto      # i.MX6 DualLite/Solo SABRE Automotive Board
+               - fsl,imx6dl-sabresd        # i.MX6 DualLite SABRE Smart Device Board
++              - kontron,imx6dl-samx6i     # Kontron i.MX6 Solo SMARC Module
+               - technologic,imx6dl-ts4900
+               - technologic,imx6dl-ts7970
+               - toradex,colibri_imx6dl          # Colibri iMX6 Module
+-- 
+2.20.1
 
