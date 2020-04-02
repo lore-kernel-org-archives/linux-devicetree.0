@@ -2,106 +2,152 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E69C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 21:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B92ACC43331
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 21:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC48020719
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 21:39:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eT0LV6Tg"
+	by mail.kernel.org (Postfix) with ESMTP id 857452078B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 21:46:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585863983;
+	bh=jjK1H/hAvk5yQ4FEwfBH7ucz1rxv/FjvZrwzR0iLZno=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RsPxRiTweJyGR95tIDI2cRUnh5yQyVVipRelZS1VxbhRq88bcD9os31XsAmXJVylO
+	 qGq5UooPjiHFz8UkC5NKv+BcgE7Z5rycJ2lkpirvPNDmLyQVyiNEd+mQYNLRYM1q2W
+	 XRt9kmmITpzEC7A96zVi1Lkl523K0jA8uxWToXtg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730837AbgDBVjW (ORCPT
+        id S1732431AbgDBVqX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 17:39:22 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44889 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729549AbgDBVjW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 17:39:22 -0400
-Received: by mail-wr1-f65.google.com with SMTP id m17so5982204wrw.11;
-        Thu, 02 Apr 2020 14:39:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OA8flzRmQncqENw/jnCzgwT3+26RLddE5UjILgqgsE4=;
-        b=eT0LV6TgcgJm+DZJburRzEYwkFyzpCGlMmoumt6PWmM3BId0R9Pv4MQfcLHg2MBfWJ
-         dcRvNq+BRBXZofY41aCBEND+HjRlQzbSoWKrAPNGLzLLhfjyPCCDGH3VFWc4vCSGeZ2I
-         D9eAsMTl97FmMJiDveInl8wpDOWEnGPTw9poSIvUpEinaAlDn4tJs974Or+AINJVvxZk
-         3VH2+EfhxyQaXsYpmCJE1DZ+hp58cQiM03hrifWQUSCbU1Dw+cFZxHWlOwQtrjqLK6NM
-         yzqtIaFxbv1BEuerQRPTYNkSIBNWZZq/UhdIpYwdQ9uZyi54SufKE/RQwJWrbJlTkTrz
-         oPTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OA8flzRmQncqENw/jnCzgwT3+26RLddE5UjILgqgsE4=;
-        b=URF6OI50ZlPfL9/lLDjZmU+Ulc63ExdjBIUuR0YDdRZgm7UPqyJ5tmkg9LxfyIgY17
-         zQdLiPgBhK6F+PzOgJT03UnV/t8UGxJUVNkJPnbF+ki/pkO33UPQ3KHnwq/H0UUbx0sT
-         JrPe65xDeByH+cDQjztHYEw+eWjDgmIYcIDlaYaWXnXfjByrRTOUSlLih2BedmMatCjD
-         hlVHCfKGh089N5Sbg8cKbMA0h+1kDXZfTX0IBmpaYhKQaPASMu/yOH2K19zDf3Ck9bU0
-         R81KO6Ldjgffz82t0Vd2kNhPRnoy5SMZYxckjzs6bM+kpstYbBjmwt6O+RlsGmP48pji
-         ji/A==
-X-Gm-Message-State: AGi0PuZZZ2RYw+Omp+g46QdcQbVowceBJS/FEAObePBEPX/DAa2JA6z/
-        4QoMoiT/BpnkYhGrzwlaqc0H1AzXCPAm10PNLiA=
-X-Google-Smtp-Source: APiQypJuTFrgRQAeVmtbnKPn1dgb35LqrQlb2cAktYsh516o9IjqYj4O3qFlEtrd3ltgtSYzQHXrBASKQt/2YWYWn9o=
-X-Received: by 2002:adf:e90b:: with SMTP id f11mr5417665wrm.65.1585863560277;
- Thu, 02 Apr 2020 14:39:20 -0700 (PDT)
+        Thu, 2 Apr 2020 17:46:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46062 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731783AbgDBVqW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Apr 2020 17:46:22 -0400
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FB9C2080C;
+        Thu,  2 Apr 2020 21:46:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585863981;
+        bh=jjK1H/hAvk5yQ4FEwfBH7ucz1rxv/FjvZrwzR0iLZno=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Az1kFmsCyVVEKiSnVTQCQbb7LpDlfNCNq0XOZUq06hOENuK2uipb8iz/cwEEF2XfB
+         GKPFw0HWQugSY5NCifihDntuIBEMJq80Obt62Apd9AZCvKDfy3TB2+jPMyE2FiUEZ7
+         lqlXr1EpKgaKctxdS8jdZHRbCLaV/NPTjWlUDEig=
+Received: by mail-io1-f54.google.com with SMTP id i3so5269274ioo.13;
+        Thu, 02 Apr 2020 14:46:21 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZn6wLv64N2pF1wLqH15nf3F5LkCorNxTLLFyvaC4G5TemgibvR
+        FR7XqkaFm9YewzHS2U1xwhrsuSWpIrr2XqNHBtU=
+X-Google-Smtp-Source: APiQypLC6ryaAD8pUnhVXj/E/W7ovtmW8rrj1k7DAualWv4qMHv6pcGlDQqkDbuw1rs+o3K6zcRDIVNKkrssYo0BkUE=
+X-Received: by 2002:a02:c792:: with SMTP id n18mr5501365jao.5.1585863980559;
+ Thu, 02 Apr 2020 14:46:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <1583747589-17267-1-git-send-email-sanm@codeaurora.org> <1583747589-17267-4-git-send-email-sanm@codeaurora.org>
-In-Reply-To: <1583747589-17267-4-git-send-email-sanm@codeaurora.org>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 2 Apr 2020 14:39:08 -0700
-Message-ID: <CANcMJZCr646jav3h14K0xV=ANMxXg=U20wvSB546qrLX3TECBg@mail.gmail.com>
-Subject: Re: [PATCH v5 3/9] phy: qcom-qusb2: Add generic QUSB2 V2 PHY support
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+References: <1585128694-13881-1-git-send-email-hanks.chen@mediatek.com> <1585128694-13881-5-git-send-email-hanks.chen@mediatek.com>
+In-Reply-To: <1585128694-13881-5-git-send-email-hanks.chen@mediatek.com>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Thu, 2 Apr 2020 14:46:10 -0700
+X-Gmail-Original-Message-ID: <CAGp9Lzrci=qhU6QXPfGg=-dGtKNq1Xn-rhYWvPp-8Wj6v6oJwA@mail.gmail.com>
+Message-ID: <CAGp9Lzrci=qhU6QXPfGg=-dGtKNq1Xn-rhYWvPp-8Wj6v6oJwA@mail.gmail.com>
+Subject: Re: [PATCH v5 4/6] pinctrl: mediatek: add pinctrl support for MT6779 SoC
+To:     Hanks Chen <hanks.chen@mediatek.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-msm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
-        YongQin Liu <yongqin.liu@linaro.org>
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>, devicetree@vger.kernel.org,
+        wsd_upstream@mediatek.com, Mars Cheng <mars.cheng@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 9, 2020 at 2:54 AM Sandeep Maheswaram <sanm@codeaurora.org> wrote:
-> @@ -774,8 +774,8 @@ static const struct of_device_id qusb2_phy_of_match_table[] = {
->                 .compatible     = "qcom,msm8998-qusb2-phy",
->                 .data           = &msm8998_phy_cfg,
->         }, {
-> -               .compatible     = "qcom,sdm845-qusb2-phy",
-> -               .data           = &sdm845_phy_cfg,
-> +               .compatible     = "qcom,qusb2-v2-phy",
-> +               .data           = &qusb2_v2_phy_cfg,
->         },
->         { },
->  };
+Hi Hanks,
 
-Just as a heads up, Yongqin (cc'ed) reported this patch (now upstream)
-seems to be causing trouble on the db845c.
+On Wed, Mar 25, 2020 at 2:31 AM Hanks Chen <hanks.chen@mediatek.com> wrote:
+>
+> This adds MT6779 pinctrl driver based on MediaTek pinctrl-paris core.
+>
 
-It seems like its removing support for the "qcom,sdm845-qusb2-phy"
-compatible string, which is documented:
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml#n23
+We can add some useful help text about MT6779 pinctrl, especially
+about specific parts like virtual gpio and its attributes
+Then Acked-by: Sean Wang <sean.wang@kernel.org>
 
-and already in use:
-   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sdm845.dtsi#n2389
+> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+> ---
+>  drivers/pinctrl/mediatek/Kconfig              |    7 +
+>  drivers/pinctrl/mediatek/Makefile             |    1 +
+>  drivers/pinctrl/mediatek/pinctrl-mt6779.c     |  775 +++++++++
+>  drivers/pinctrl/mediatek/pinctrl-mtk-mt6779.h | 2085 +++++++++++++++++++++++++
+>  4 files changed, 2868 insertions(+)
+>  create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt6779.c
+>  create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt6779.h
+>
+> diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
+> index 701f9af..f628d01 100644
+> --- a/drivers/pinctrl/mediatek/Kconfig
+> +++ b/drivers/pinctrl/mediatek/Kconfig
+> @@ -86,6 +86,13 @@ config PINCTRL_MT6765
+>         default ARM64 && ARCH_MEDIATEK
+>         select PINCTRL_MTK_PARIS
+>
+> +config PINCTRL_MT6779
+> +       bool "Mediatek MT6779 pin control"
+> +       depends on OF
+> +       depends on ARM64 || COMPILE_TEST
+> +       default ARM64 && ARCH_MEDIATEK
+> +       select PINCTRL_MTK_PARIS
+> +
+>  config PINCTRL_MT6797
+>         bool "Mediatek MT6797 pin control"
+>         depends on OF
+> diff --git a/drivers/pinctrl/mediatek/Makefile b/drivers/pinctrl/mediatek/Makefile
+> index a74325a..59c1c60 100644
+> --- a/drivers/pinctrl/mediatek/Makefile
+> +++ b/drivers/pinctrl/mediatek/Makefile
+> @@ -11,6 +11,7 @@ obj-$(CONFIG_PINCTRL_MT2712)  += pinctrl-mt2712.o
+>  obj-$(CONFIG_PINCTRL_MT8135)   += pinctrl-mt8135.o
+>  obj-$(CONFIG_PINCTRL_MT8127)   += pinctrl-mt8127.o
+>  obj-$(CONFIG_PINCTRL_MT6765)   += pinctrl-mt6765.o
+> +obj-$(CONFIG_PINCTRL_MT6779)   += pinctrl-mt6779.o
+>  obj-$(CONFIG_PINCTRL_MT6797)   += pinctrl-mt6797.o
+>  obj-$(CONFIG_PINCTRL_MT7622)   += pinctrl-mt7622.o
+>  obj-$(CONFIG_PINCTRL_MT7623)   += pinctrl-mt7623.o
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt6779.c b/drivers/pinctrl/mediatek/pinctrl-mt6779.c
+> new file mode 100644
+> index 0000000..145bf22
+> --- /dev/null
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mt6779.c
+> @@ -0,0 +1,775 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2019 MediaTek Inc.
+> + * Author: Andy Teng <andy.teng@mediatek.com>
+> + *
+> + */
+> +
+> +#include "pinctrl-mtk-mt6779.h"
+> +#include "pinctrl-paris.h"
+> +
+> +/* MT6779 have multiple bases to program pin configuration listed as the below:
+> + * gpio:0x10005000,     iocfg_rm:0x11C20000, iocfg_br:0x11D10000,
+> + * iocfg_lm:0x11E20000, iocfg_lb:0x11E70000, iocfg_rt:0x11EA0000,
+> + * iocfg_lt:0x11F20000, iocfg_tl:0x11F30000
+> + * _i_based could be used to indicate what base the pin should be mapped into.
+> + */
+> +
+> +#define PIN_FIELD_BASE(s_pin, e_pin, i_base, s_addr, x_addrs, s_bit, x_bits) \
+> +       PIN_FIELD_CALC(s_pin, e_pin, i_base, s_addr, x_addrs, s_bit, x_bits, \
+> +                      32, 0)
+> +
 
-Should this instead have been an addition of the "qcom,qusb2-v2-phy",
-line instead of replacing "qcom,sdm845-qusb2-phy"?
-
-thanks
--john
+<snip>
