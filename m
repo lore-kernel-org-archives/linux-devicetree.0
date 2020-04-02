@@ -2,103 +2,115 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77821C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 11:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C48C2BA15
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 12:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52BCF20757
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 11:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A66772078B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 12:12:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="agymgViU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387477AbgDBLmL (ORCPT
+        id S2387971AbgDBMMA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 07:42:11 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39795 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728803AbgDBLmL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 07:42:11 -0400
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jJyEY-0001jv-7O; Thu, 02 Apr 2020 13:42:06 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jJyES-0005T9-L6; Thu, 02 Apr 2020 13:42:00 +0200
-Date:   Thu, 2 Apr 2020 13:42:00 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Christian Herber <christian.herber@nxp.com>,
-        Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        Thu, 2 Apr 2020 08:12:00 -0400
+Received: from mail-ed1-f43.google.com ([209.85.208.43]:35444 "EHLO
+        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387730AbgDBML7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 08:11:59 -0400
+Received: by mail-ed1-f43.google.com with SMTP id a20so3822155edj.2;
+        Thu, 02 Apr 2020 05:11:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dQNKCc7PUxqRbfY956FD6h+k4Y66wdaQrbWQY54QQ5w=;
+        b=agymgViUtAI2emTrH34p5ZHRX2vFxpJYQZfO6Ph/EpAkAH2SKbGh9Gwowg/y5F2xF9
+         GN9bUassTsCq6TmOom09VHTeAwUjAGfKm8kyfj8L5nGKieUt7e9AmBZ0/ZTmGkrOLi9N
+         pr+6N6O7GHNu8M8Iu1GZGh3K0wLBtSPqGXELUNzjNXnj/DFNRaqkfc9QZto9nWu40mDz
+         GZ2nhih6haNInv37Cq8PqojOPRewbPgnPnex1rzGDwVqgC31gSH+X7GQNx0ioCcTTAet
+         GS4NOrCtJ2TuSOIXnr3rZMN64006zcLHMZ2xA+KOGNbosVbW8GmBGh6odMjJ9ZwM4eB9
+         iEMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dQNKCc7PUxqRbfY956FD6h+k4Y66wdaQrbWQY54QQ5w=;
+        b=uiNfsFjatiixPhFU0JiUfPN3qh4EEOsQFy65bQKQQdKqKJTRsc7k5vG5hD9PWN++3E
+         eP0JG5c3CZiTQZVBBntxnDsTrLIF23QOUyky4OHYZpKjlrgEGVudgLkzoBbG2OIU7Sh7
+         yJiyTGtajFNSctrnCGx7vYD6gEcwB8cWE5XJms5I6VV+fINAUGZkUKPSU0Wa0pnuSZAM
+         WmGXtRdCSCNmCyHxR/D0kj4UoBgJjOZ/YI02RrVK59lnqsNxWUszEX7YxpBROKap5kYB
+         fD7he1MwTMriJosnDIPIE5IDdTO6sYbwg0eYXtC6Fru+HM3//FsgVuYTJxasjmCPLL9y
+         ryCw==
+X-Gm-Message-State: AGi0PuaOkBUGyZxKcu0ShUmcHM9vYgY/iNp2bDBoBH4EX21szL48GJcG
+        UlNqZVNxkFko96pdKiYMr5w=
+X-Google-Smtp-Source: APiQypLPNlmjZYpYHEbYalA5cdj8vdbm+4lcqgc+IcUsx4IEdOq3RzlqeMTeSu9WJGrGxVExBWuiNQ==
+X-Received: by 2002:a50:da49:: with SMTP id a9mr2429759edk.388.1585829515709;
+        Thu, 02 Apr 2020 05:11:55 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host250-251-dynamic.250-95-r.retail.telecomitalia.it. [95.250.251.250])
+        by smtp.googlemail.com with ESMTPSA id w20sm1083611ejv.40.2020.04.02.05.11.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 05:11:54 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Andy Gross <agross@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Marek Vasut <marex@denx.de>, netdev <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        David Jander <david@protonic.nl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add support for NXP
- TJA11xx
-Message-ID: <20200402114200.GA15570@pengutronix.de>
-References: <AM0PR04MB70413A974A2152D27CAADFAC86F00@AM0PR04MB7041.eurprd04.prod.outlook.com>
- <20200323151423.GA32387@lunn.ch>
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/10] Multiple fixes in PCIe qcom driver
+Date:   Thu,  2 Apr 2020 14:11:37 +0200
+Message-Id: <20200402121148.1767-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200323151423.GA32387@lunn.ch>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 13:37:53 up 204 days, 25 min, 468 users,  load average: 3.36, 6.87,
- 10.61
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 04:14:23PM +0100, Andrew Lunn wrote:
-> > Yes, it is one device with two address. This is if you call the entire IC a device. If you look at it from a PHY perspective, it is two devices with 1 address.
-> > If you just look at it as a single device, it gets difficult to add PHY specific properties in the future, e.g. master/slave selection.
-> 
-> > In my opinion its important to have some kind of container for the
-> > entire IC, but likewise for the individual PHYs.
-> 
-> Yes, we need some sort of representation of two devices.
-> 
-> Logically, the two PHYs are on the same MDIO bus, so you could have
-> two nodes on the main bus.
-> 
-> Or you consider the secondary PHY as being on an internal MDIO bus
-> which is transparently bridged to the main bus. This is what was
-> proposed in the last patchset.
-> 
-> Because this bridge is transparent, the rest of the PHY/MDIO framework
-> has no idea about it. So i prefer that we keep with two PHY nodes on
-> the main bus. But i still think we need the master PHY to register the
-> secondary PHY, due to the missing PHY ID, and the other constrains
-> like resets which the master PHY has to handle.
+This contains multiple fix for PCIe qcom driver.
+Some optional reset and clocks were missing.
+Fix a problem with no PARF programming that cause kernel lock on load.
+Add support to force gen 1 speed if needed. (due to hardware limitation)
+Add ipq8064 rev 2 support that use a different tx termination offset.
 
-Yes, this is the way how current patches are implemented.
+v2:
+* Drop iATU programming (already done in pcie init)
+* Use max-link-speed instead of force-gen1 custom definition
+* Drop MRRS to 256B (Can't find a realy reason why this was suggested)
+* Introduce a new variant for different revision of ipq8064
 
-Should dt-binding documentation and PHY changes go via David's tree
-upstream?  If nobody has strong opinion against it, @David can you
-please take them.
+Abhishek Sahu (1):
+  PCIe: qcom: change duplicate PCI reset to phy reset
 
-Regards,
-Oleksij & Marc
+Ansuel Smith (7):
+  PCIe: qcom: add missing ipq806x clocks in PCIe driver
+  devicetree: bindings: pci: add missing clks to qcom,pcie
+  PCIe: qcom: Fixed pcie_phy_clk branch issue
+  PCIe: qcom: add missing reset for ipq806x
+  devicetree: bindings: pci: add ext reset to qcom,pcie
+  PCIe: qcom: fix init problem with missing PARF programming
+  devicetree: bindings: pci: add ipq8064 rev 2 variant to qcom,pcie
+
+Sham Muthayyan (2):
+  PCIe: qcom: add ipq8064 rev2 variant and set tx term offset
+  PCIe: qcom: add Force GEN1 support
+
+ .../devicetree/bindings/pci/qcom,pcie.txt     |  56 +++++++-
+ drivers/pci/controller/dwc/pcie-qcom.c        | 134 +++++++++++++++---
+ 2 files changed, 167 insertions(+), 23 deletions(-)
+
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.25.1
+
