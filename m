@@ -2,170 +2,260 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1C0C2BA12
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 07:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69628C10F26
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 07:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95D062078E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 07:35:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tVH4x5r+"
+	by mail.kernel.org (Postfix) with ESMTP id 4223520BED
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 07:43:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585813385;
+	bh=bpiHU8A0oDRpgD0tmxFxrO99WqdpU6KRQOYxoldTLEs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TPEbjOqLrhy4hWnA9KwervMc2HdA1a/GaL9sKO6nY0ToFgFG0I57Edlp3nWAsCvvi
+	 geW3QKzOLm37e4QL5aGb1UWneP1QGe+LjfU0igpq3MFJRxozGj0Pr1JjQZHughOx5J
+	 nncZvnYNZDukvdu/JcW4ventWQjMrC7k6q4l7ENA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725965AbgDBHf7 (ORCPT
+        id S1729289AbgDBHnE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 03:35:59 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:43055 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729087AbgDBHf7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 03:35:59 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585812957; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=naqNAxywddNgWhPDH5Wtz+lOJzNYkTWgjlzNiVKiv48=; b=tVH4x5r+/7GS4Ky1nrSO2/os18a/8lYDOKEqRME33U03ec9RR2YEMjNVdO/wsi4+3zxTICyU
- MDULunj8nvDsPPFCnbuhojIOx4DDOQOwtICh83ttg1XeWzAQVlWGRCgkuPFz9o1pVt+HM4jm
- uj4rusHdRaEeJ51Kjeh8QNeTzmo=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8595cd.7f5dad9b0ab0-smtp-out-n01;
- Thu, 02 Apr 2020 07:35:41 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DF789C43637; Thu,  2 Apr 2020 07:35:40 +0000 (UTC)
-Received: from [10.111.194.152] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 2 Apr 2020 03:43:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54794 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729030AbgDBHnE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Apr 2020 03:43:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: mgautam)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B28D7C433F2;
-        Thu,  2 Apr 2020 07:35:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B28D7C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mgautam@codeaurora.org
-Subject: Re: [PATCH v4 4/4] phy: qcom-qmp: Use proper PWRDOWN offset for
- sm8150 USB
-To:     Wesley Cheng <wcheng@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, kishon@ti.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, p.zabel@pengutronix.de
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <1585597017-30683-1-git-send-email-wcheng@codeaurora.org>
- <1585597017-30683-5-git-send-email-wcheng@codeaurora.org>
-From:   Manu Gautam <mgautam@codeaurora.org>
-Message-ID: <d61723e3-17a3-366d-f476-c33931766efd@codeaurora.org>
-Date:   Thu, 2 Apr 2020 13:05:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        by mail.kernel.org (Postfix) with ESMTPSA id BF3E720678;
+        Thu,  2 Apr 2020 07:43:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585813382;
+        bh=bpiHU8A0oDRpgD0tmxFxrO99WqdpU6KRQOYxoldTLEs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=f2xnXA4c0EcNCIPyRwMbzkTF3nO830kNGtiIiKTQSdXIyITEyR6FFydvjD3dkcetm
+         MEqjVOI2/3Xrch+EKiO3UaUWGmdSXmnj8qtRuH4GNBTPWQZ1o/JFc+Lu54yepJ/yKx
+         WROB7+wewfkcy/JmtFVpQmeVOnwWDOkuiitaxE0M=
+Date:   Thu, 2 Apr 2020 09:42:59 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mateusz Holenko <mholenko@antmicro.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/5] drivers/soc/litex: add LiteX SoC Controller driver
+Message-ID: <20200402074259.GC2755501@kroah.com>
+References: <20200402084513.4173306-0-mholenko@antmicro.com>
+ <20200402084513.4173306-3-mholenko@antmicro.com>
+ <CAPk366QLHbR9cnLs244VbOXOLAg56yhG7O-DEAc1x1ZTvthiig@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1585597017-30683-5-git-send-email-wcheng@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPk366QLHbR9cnLs244VbOXOLAg56yhG7O-DEAc1x1ZTvthiig@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Apr 02, 2020 at 08:50:40AM +0200, Mateusz Holenko wrote:
+> On Thu, Apr 2, 2020 at 8:46 AM Mateusz Holenko <mholenko@antmicro.com> wrote:
+> >
+> > From: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
+> >
+> > This commit adds driver for the FPGA-based LiteX SoC
+> > Controller from LiteX SoC builder.
+> >
+> > Co-developed-by: Mateusz Holenko <mholenko@antmicro.com>
+> > Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+> > Signed-off-by: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
+> > ---
+> >
+> > Notes:
+> >     Changes in v4:
+> >     - fixed indent in Kconfig's help section
+> >     - fixed copyright header
+> >     - changed compatible to "litex,soc-controller"
+> >     - simplified litex_soc_ctrl_probe
+> >     - removed unnecessary litex_soc_ctrl_remove
+> >
+> >     This commit has been introduced in v3 of the patchset.
+> >
+> >     It includes a simplified version of common 'litex.h'
+> >     header introduced in v2 of the patchset.
+> >
+> >  MAINTAINERS                        |   2 +
+> >  drivers/soc/Kconfig                |   1 +
+> >  drivers/soc/Makefile               |   1 +
+> >  drivers/soc/litex/Kconfig          |  14 ++
+> >  drivers/soc/litex/Makefile         |   3 +
+> >  drivers/soc/litex/litex_soc_ctrl.c | 217 +++++++++++++++++++++++++++++
+> >  include/linux/litex.h              |  45 ++++++
+> >  7 files changed, 283 insertions(+)
+> >  create mode 100644 drivers/soc/litex/Kconfig
+> >  create mode 100644 drivers/soc/litex/Makefile
+> >  create mode 100644 drivers/soc/litex/litex_soc_ctrl.c
+> >  create mode 100644 include/linux/litex.h
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 2f5ede8a08aa..a35be1be90d5 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -9729,6 +9729,8 @@ M:        Karol Gugala <kgugala@antmicro.com>
+> >  M:     Mateusz Holenko <mholenko@antmicro.com>
+> >  S:     Maintained
+> >  F:     Documentation/devicetree/bindings/*/litex,*.yaml
+> > +F:     drivers/soc/litex/litex_soc_ctrl.c
+> > +F:     include/linux/litex.h
+> >
+> >  LIVE PATCHING
+> >  M:     Josh Poimboeuf <jpoimboe@redhat.com>
+> > diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+> > index 1778f8c62861..78add2a163be 100644
+> > --- a/drivers/soc/Kconfig
+> > +++ b/drivers/soc/Kconfig
+> > @@ -9,6 +9,7 @@ source "drivers/soc/bcm/Kconfig"
+> >  source "drivers/soc/fsl/Kconfig"
+> >  source "drivers/soc/imx/Kconfig"
+> >  source "drivers/soc/ixp4xx/Kconfig"
+> > +source "drivers/soc/litex/Kconfig"
+> >  source "drivers/soc/mediatek/Kconfig"
+> >  source "drivers/soc/qcom/Kconfig"
+> >  source "drivers/soc/renesas/Kconfig"
+> > diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+> > index 8b49d782a1ab..fd016b51cddd 100644
+> > --- a/drivers/soc/Makefile
+> > +++ b/drivers/soc/Makefile
+> > @@ -14,6 +14,7 @@ obj-$(CONFIG_ARCH_GEMINI)     += gemini/
+> >  obj-$(CONFIG_ARCH_MXC)         += imx/
+> >  obj-$(CONFIG_ARCH_IXP4XX)      += ixp4xx/
+> >  obj-$(CONFIG_SOC_XWAY)         += lantiq/
+> > +obj-$(CONFIG_LITEX_SOC_CONTROLLER) += litex/
+> >  obj-y                          += mediatek/
+> >  obj-y                          += amlogic/
+> >  obj-y                          += qcom/
+> > diff --git a/drivers/soc/litex/Kconfig b/drivers/soc/litex/Kconfig
+> > new file mode 100644
+> > index 000000000000..71264c0e1d6c
+> > --- /dev/null
+> > +++ b/drivers/soc/litex/Kconfig
+> > @@ -0,0 +1,14 @@
+> > +# SPDX-License_Identifier: GPL-2.0
+> > +
+> > +menu "Enable LiteX SoC Builder specific drivers"
+> > +
+> > +config LITEX_SOC_CONTROLLER
+> > +       tristate "Enable LiteX SoC Controller driver"
+> > +       help
+> > +         This option enables the SoC Controller Driver which verifies
+> > +         LiteX CSR access and provides common litex_get_reg/litex_set_reg
+> > +         accessors.
+> > +         All drivers that use functions from litex.h must depend on
+> > +         LITEX_SOC_CONTROLLER.
+> > +
+> > +endmenu
+> > diff --git a/drivers/soc/litex/Makefile b/drivers/soc/litex/Makefile
+> > new file mode 100644
+> > index 000000000000..98ff7325b1c0
+> > --- /dev/null
+> > +++ b/drivers/soc/litex/Makefile
+> > @@ -0,0 +1,3 @@
+> > +# SPDX-License_Identifier: GPL-2.0
+> > +
+> > +obj-$(CONFIG_LITEX_SOC_CONTROLLER)     += litex_soc_ctrl.o
+> > diff --git a/drivers/soc/litex/litex_soc_ctrl.c b/drivers/soc/litex/litex_soc_ctrl.c
+> > new file mode 100644
+> > index 000000000000..5defba000fd4
+> > --- /dev/null
+> > +++ b/drivers/soc/litex/litex_soc_ctrl.c
+> > @@ -0,0 +1,217 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * LiteX SoC Controller Driver
+> > + *
+> > + * Copyright (C) 2020 Antmicro <www.antmicro.com>
+> > + *
+> > + */
+> > +
+> > +#include <linux/litex.h>
+> > +#include <linux/device.h>
+> > +#include <linux/errno.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_platform.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/printk.h>
+> > +#include <linux/module.h>
+> > +#include <linux/errno.h>
+> > +#include <linux/io.h>
+> > +
+> > +/*
+> > + * The parameters below are true for LiteX SoC
+> > + * configured for 8-bit CSR Bus, 32-bit aligned.
+> > + *
+> > + * Supporting other configurations will require
+> > + * extending the logic in this header.
+> > + */
+> > +#define LITEX_REG_SIZE             0x4
+> > +#define LITEX_SUBREG_SIZE          0x1
+> > +#define LITEX_SUBREG_SIZE_BIT      (LITEX_SUBREG_SIZE * 8)
+> > +
+> > +static DEFINE_SPINLOCK(csr_lock);
+> > +
+> > +static inline unsigned long read_pointer_with_barrier(
+> > +       const volatile void __iomem *addr)
+> > +{
+> > +       unsigned long val;
+> > +
+> > +       __io_br();
+> > +       val = *(const volatile unsigned long __force *)addr;
+> > +       __io_ar();
+> > +       return val;
+> > +}
+> > +
+> > +static inline void write_pointer_with_barrier(
+> > +       volatile void __iomem *addr, unsigned long val)
+> > +{
+> > +       __io_br();
+> > +       *(volatile unsigned long __force *)addr = val;
+> > +       __io_ar();
+> > +}
+> > +
+> 
+> I'm defining read_pointer_with_barrier/write_pointer_with_barrier in
+> order to make sure that a series of reads/writes to a single CSR
+> register will not be reordered by the compiler.
 
-On 3/31/2020 1:06 AM, Wesley Cheng wrote:
-> The register map for SM8150 QMP USB SSPHY has moved
-> QPHY_POWER_DOWN_CONTROL to a different offset.  Allow for
-> an offset in the register table to override default value
-> if it is a DP capable PHY.
->
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp.c | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index cc04471..4c0517e 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -164,6 +164,7 @@ enum qphy_reg_layout {
->  	[QPHY_SW_RESET]			= 0x00,
->  	[QPHY_START_CTRL]		= 0x44,
->  	[QPHY_PCS_STATUS]		= 0x14,
-> +	[QPHY_COM_POWER_DOWN_CONTROL]	= 0x40,
-Since this is in PCS block please rename it to -
+Please do not do this, there are core kernel calls for this, otherwise
+this would be required by every individual driver, which would be crazy.
 
-QPHY_PCS_POWER_DOWN_CONTROL
+> Does __raw_readl/__raw_writel guarantee this property? If so, I could
+> drop my functions and use the system ones instead.
 
->  };
->  
->  static const unsigned int sdm845_ufsphy_regs_layout[] = {
-> @@ -1627,6 +1628,9 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
->  	if (cfg->has_phy_com_ctrl)
->  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
->  			     SW_PWRDN);
-> +	else if (cfg->has_phy_dp_com_ctrl && cfg->regs[QPHY_COM_POWER_DOWN_CONTROL])
-> +		qphy_setbits(pcs, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
-> +			     cfg->pwrdn_ctrl);
->  	else
->  		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
-Since, this register is in PCS block why check for dp_com_ctrl here?
-Something like:
+Try it and see.  What's wrong with the normal iomem read/write
+functions?
 
- 	if (cfg->has_phy_com_ctrl) {
- 		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
- 			     SW_PWRDN);
-	} else {
-		if (cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL]) 
-			qphy_setbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
-			     cfg->pwrdn_ctrl);
- 		else
- 			qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
-	}
+Also, just writing to a pointer like you did above is not how to do
+this, please use the normal function calls, that way your driver will
+work properly.
 
->  
-> @@ -1671,10 +1675,12 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
->  	return ret;
->  }
->  
-> -static int qcom_qmp_phy_com_exit(struct qcom_qmp *qmp)
-> +static int qcom_qmp_phy_com_exit(struct qmp_phy *qphy)
->  {
-> +	struct qcom_qmp *qmp = qphy->qmp;
->  	const struct qmp_phy_cfg *cfg = qmp->cfg;
->  	void __iomem *serdes = qmp->serdes;
-> +	void __iomem *pcs = qphy->pcs;
->  	int i = cfg->num_resets;
->  
->  	mutex_lock(&qmp->phy_mutex);
-> @@ -1691,6 +1697,9 @@ static int qcom_qmp_phy_com_exit(struct qcom_qmp *qmp)
->  			     SW_RESET);
->  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
->  			     SW_PWRDN);
-> +	} else if (cfg->has_phy_dp_com_ctrl && cfg->regs[QPHY_COM_POWER_DOWN_CONTROL]) {
+thanks,
 
-Can we add change similar to init() here ?
-
-
-> +			     cfg->pwrdn_ctrl);
->  	}
->  
->  	while (--i >= 0)
-> @@ -1829,7 +1838,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
->  	if (cfg->has_lane_rst)
->  		reset_control_assert(qphy->lane_rst);
->  err_lane_rst:
-> -	qcom_qmp_phy_com_exit(qmp);
-> +	qcom_qmp_phy_com_exit(qphy);
->  
->  	return ret;
->  }
-> @@ -1855,7 +1864,7 @@ static int qcom_qmp_phy_disable(struct phy *phy)
->  	if (cfg->has_lane_rst)
->  		reset_control_assert(qphy->lane_rst);
->  
-> -	qcom_qmp_phy_com_exit(qmp);
-> +	qcom_qmp_phy_com_exit(qphy);
->  
->  	qmp->phy_initialized = false;
->  
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+greg k-h
