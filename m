@@ -1,200 +1,73 @@
-Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3E5C2BA12
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 23:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985C8C2BA12
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 00:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C279620772
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 23:52:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g7KGE2ct"
+	by mail.kernel.org (Postfix) with ESMTP id 6F81920721
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 00:02:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732872AbgDAXwS (ORCPT
+        id S1733213AbgDBACt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 19:52:18 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38827 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733304AbgDAXwR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 19:52:17 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w3so628856plz.5
-        for <devicetree@vger.kernel.org>; Wed, 01 Apr 2020 16:52:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=39o7ZeExYpkfTbZoKHgoBseO9KDqeuMtrYpVQ76wHvQ=;
-        b=g7KGE2ct8ZghoiGIERIsopK2WwcCW24r4+BhCyOrIrAO9QA+wACwNYk8KWp7X1ZSF2
-         3ccANG0k3AmbQKvv9Eguif8ww/gMmCGxH7hyLdiqEBSuH5Bt1qIodKPF261uREWWKGGX
-         SV9XzvvE2ok1Ob9eWNoW+M3pLPzRQ39oCDuo+up1xltLUYMcqEa4tHITqqupbx2UMnZC
-         pI3toKLL+KgyHH96V5JHLBew/9cRjcSxFLTDw6f72T0jREZj3xjIO7loC5jxZkZ04F0G
-         d3eB/yjwJk7bJAfQDKjQ4W0ciZ/r73QQbuMpRaIbnZ4t0brMs0Pj2r2b9uuSJCFU3BmZ
-         ZjUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=39o7ZeExYpkfTbZoKHgoBseO9KDqeuMtrYpVQ76wHvQ=;
-        b=jdroTGJYxHcpMddFkck50Y/Qzi9ZOw3tl+Tb9oaYp5iSRfM20bpzMOleM5r7g/3Byg
-         I110RtTdqjO/rndseLLmWu29JTs7qWF/7S2hTeLpfKlt7MmSi9C/7yUc4UbKd5rGEvzr
-         sdBulFMxEXv6FCe6HuTQeW24WgbZp/t/fWBe65RPQFLRq5SxpaecF2NNWvFWeCQblA70
-         SMXlKegaf7lR6U3nfELcCzJOXUO1rRzdl54fZiPzeV94eqLWTsC2kUolywT/x6dMKzxh
-         ur8VK+jSS1CSWcyoKmO3BgSzy2+6Jc46hRYFKU358hNl4AERG7ZyWwwRrUMJQ1xa/fxC
-         iN1Q==
-X-Gm-Message-State: AGi0PubCPN2WLOrueHPX0OY8AVaWM9OUKaOattEUkMfRrk4VkX9WL7Pv
-        7OaLYWDayxBRjhybpeLAaBok+A==
-X-Google-Smtp-Source: APiQypLd+V9fUOfcYn6J9ceh3M1sNQNMmr8IkTNDiIx6b9iFuOJavZ+5tEa5M0Ne+AMErvILIozTxQ==
-X-Received: by 2002:a17:902:8b82:: with SMTP id ay2mr332388plb.221.1585785133978;
-        Wed, 01 Apr 2020 16:52:13 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id i197sm2401468pfe.137.2020.04.01.16.52.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 16:52:13 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 16:52:11 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     ansuelsmth@gmail.com
-Cc:     'Stanimir Varbanov' <svarbanov@mm-sol.com>,
-        'Sham Muthayyan' <smuthayy@codeaurora.org>,
-        'Andy Gross' <agross@kernel.org>,
-        'Bjorn Helgaas' <bhelgaas@google.com>,
-        'Rob Herring' <robh+dt@kernel.org>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        'Lorenzo Pieralisi' <lorenzo.pieralisi@arm.com>,
-        'Andrew Murray' <amurray@thegoodpenguin.co.uk>,
-        'Philipp Zabel' <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: R: [PATCH 07/12] pcie: qcom: add tx term offset support
-Message-ID: <20200401235211.GK254911@minitux>
-References: <20200320183455.21311-1-ansuelsmth@gmail.com>
- <20200320183455.21311-7-ansuelsmth@gmail.com>
- <20200401204007.GG254911@minitux>
- <006501d60870$3cf99fc0$b6ecdf40$@gmail.com>
+        Wed, 1 Apr 2020 20:02:49 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35672 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733204AbgDBACt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 20:02:49 -0400
+Received: from floko.floko.floko (unknown [IPv6:2804:431:e7cc:11ff:4f80:3de:e2b2:5c1d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 4142129765E;
+        Thu,  2 Apr 2020 01:02:42 +0100 (BST)
+From:   Helen Koike <helen.koike@collabora.com>
+To:     devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        robh+dt@kernel.org, heiko@sntech.de, hverkuil-cisco@xs4all.nl,
+        kernel@collabora.com, dafna.hirschfeld@collabora.com,
+        ezequiel@collabora.com, mark.rutland@arm.com,
+        karthik.poduval@gmail.com
+Subject: [PATCH 0/4] move Rockchip ISP bindings out of staging / add ISP DT nodes for RK3399
+Date:   Wed,  1 Apr 2020 21:02:30 -0300
+Message-Id: <20200402000234.226466-1-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <006501d60870$3cf99fc0$b6ecdf40$@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed 01 Apr 14:55 PDT 2020, ansuelsmth@gmail.com wrote:
+Move the bindings out of drivers/staging and place them in
+Documentation/devicetree/bindings instead.
 
-> > On Fri 20 Mar 11:34 PDT 2020, Ansuel Smith wrote:
-> > 
-> > > From: Sham Muthayyan <smuthayy@codeaurora.org>
-> > >
-> > > Add tx term offset support to pcie qcom driver
-> > > need in some revision of the ipq806x soc
-> > >
-> > > Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-> > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-qcom.c | 61
-> > ++++++++++++++++++++++----
-> > >  1 file changed, 52 insertions(+), 9 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
-> > b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > index ecc22fd27ea6..8009e3117765 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > @@ -45,7 +45,13 @@
-> > >  #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
-> > >
-> > >  #define PCIE20_PARF_PHY_CTRL			0x40
-> > > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	(0x1f << 16)
-> > > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		(x << 16)
-> > > +
-> > >  #define PCIE20_PARF_PHY_REFCLK			0x4C
-> > > +#define REF_SSP_EN				BIT(16)
-> > > +#define REF_USE_PAD				BIT(12)
-> > > +
-> > >  #define PCIE20_PARF_DBI_BASE_ADDR		0x168
-> > >  #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
-> > >  #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
-> > > @@ -77,6 +83,18 @@
-> > >  #define DBI_RO_WR_EN				1
-> > >
-> > >  #define PERST_DELAY_US				1000
-> > > +/* PARF registers */
-> > > +#define PCIE20_PARF_PCS_DEEMPH			0x34
-> > > +#define PCS_DEEMPH_TX_DEEMPH_GEN1(x)		(x << 16)
-> > > +#define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)	(x << 8)
-> > > +#define PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(x)	(x << 0)
-> > > +
-> > > +#define PCIE20_PARF_PCS_SWING			0x38
-> > > +#define PCS_SWING_TX_SWING_FULL(x)		(x << 8)
-> > > +#define PCS_SWING_TX_SWING_LOW(x)		(x << 0)
-> > > +
-> > > +#define PCIE20_PARF_CONFIG_BITS			0x50
-> > > +#define PHY_RX0_EQ(x)				(x << 24)
-> > >
-> > >  #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
-> > >  #define SLV_ADDR_SPACE_SZ			0x10000000
-> > > @@ -97,6 +115,7 @@ struct qcom_pcie_resources_2_1_0 {
-> > >  	struct reset_control *phy_reset;
-> > >  	struct reset_control *ext_reset;
-> > >  	struct regulator_bulk_data
-> > supplies[QCOM_PCIE_2_1_0_MAX_SUPPLY];
-> > > +	uint8_t phy_tx0_term_offset;
-> > >  };
-> > >
-> > >  struct qcom_pcie_resources_1_0_0 {
-> > > @@ -184,6 +203,16 @@ struct qcom_pcie {
-> > >
-> > >  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-> > >
-> > > +static inline void
-> > > +writel_masked(void __iomem *addr, u32 clear_mask, u32 set_mask)
-> > > +{
-> > > +	u32 val = readl(addr);
-> > > +
-> > > +	val &= ~clear_mask;
-> > > +	val |= set_mask;
-> > > +	writel(val, addr);
-> > > +}
-> > > +
-> > >  static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
-> > >  {
-> > >  	gpiod_set_value_cansleep(pcie->reset, 1);
-> > > @@ -277,6 +306,10 @@ static int
-> > qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
-> > >  	if (IS_ERR(res->ext_reset))
-> > >  		return PTR_ERR(res->ext_reset);
-> > >
-> > > +	if (of_property_read_u8(dev->of_node, "phy-tx0-term-offset",
-> > > +				&res->phy_tx0_term_offset))
-> > > +		res->phy_tx0_term_offset = 0;
-> > 
-> > The appropriate way is to encode differences in hardware is to use
-> > different compatibles for the two different versions of the hardware.
-> > 
-> > Regards,
-> > Bjorn
-> > 
-> 
-> So a better way to handle this would be to check the SoC compatible?
-> AFAIK a different offset is only needed on ipq8064 revision 2 and ipq8065
-> but
-> it looks bad to add a special code just for that 2 SoC. 
-> I would prefer to handle this with the offset definition but If you think
-> this would be
-> the right way, I will follow that. Waiting for your response about this.
-> 
+Also, add DT nodes for RK3399 and verify with make ARCH=arm64 dtbs_check
 
-Yes, please do this by having different compatibles for the different
-revisions of the hardware block.
+Tested by verifying images streamed from RockPi 4 board with imx219
+module.
 
-You should be able to use the same implementation for the two
-compatibles, just make the phy_tx0_term_offset depends on which was
-used.
+Helen Koike (2):
+  dt-bindings: phy: phy-rockchip-dphy-rx0: move rockchip dphy rx0
+    bindings out of staging
+  dt-bindings: media: rkisp1: move rockchip-isp1 bindings out of staging
 
-Regards,
-Bjorn
+Shunqian Zheng (2):
+  arm64: dts: rockchip: add rx0 mipi-phy for rk3399
+  arm64: dts: rockchip: add isp0 node for rk3399
+
+ .../bindings/media/rockchip-isp1.yaml         |  0
+ .../bindings/phy/rockchip-mipi-dphy-rx0.yaml  |  0
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi      | 38 +++++++++++++++++++
+ 3 files changed, 38 insertions(+)
+ rename {drivers/staging/media/rkisp1/Documentation => Documentation}/devicetree/bindings/media/rockchip-isp1.yaml (100%)
+ rename {drivers/staging/media/phy-rockchip-dphy-rx0/Documentation => Documentation}/devicetree/bindings/phy/rockchip-mipi-dphy-rx0.yaml (100%)
+
+-- 
+2.26.0
+
