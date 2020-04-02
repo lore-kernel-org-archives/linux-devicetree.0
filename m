@@ -4,129 +4,297 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0489C2BA12
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 02:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE43C2D0F4
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 03:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 763212078C
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 02:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0516206D3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 03:11:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="R+WAuqV4"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="AtxeupPv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387461AbgDBCsT (ORCPT
+        id S1732537AbgDBDLg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 22:48:19 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:50438 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1733269AbgDBCsR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 22:48:17 -0400
-X-UUID: cdb839e7a0d847b8bb10df858863fb3e-20200402
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=P6AXl14409aeLCBpPKkU44gdGTRy5JIxj8i/NJ61DK8=;
-        b=R+WAuqV4NaHAeSkH/LdPNNeyxXO4mFtZdsgFWw+33GfWqKr6oGHK1BXgS0T7ZiQ2sE4vVc7ECyNKzLk4BRq+pB48Ns89S9Biphhbhlqf/sM7+gEUdqaO9f4bVhxF23YnL95JMZWXh1tLDcqCK0chwT1VGWyVxzPfWyiNdYxDsyQ=;
-X-UUID: cdb839e7a0d847b8bb10df858863fb3e-20200402
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <henryc.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 393331207; Thu, 02 Apr 2020 10:48:13 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 2 Apr 2020 10:48:11 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 2 Apr 2020 10:48:10 +0800
-Message-ID: <1585795691.27527.14.camel@mtksdaap41>
-Subject: Re: [PATCH V4 06/13] soc: mediatek: add MT8183 dvfsrc support
-From:   Henry Chen <henryc.chen@mediatek.com>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Ryan Case <ryandcase@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        Arvin Wang <arvin.wang@mediatek.com>,
-        "Mike Turquette" <mturquette@linaro.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>
-Date:   Thu, 2 Apr 2020 10:48:11 +0800
-In-Reply-To: <4220e681-80b6-f9af-ddd1-b28aabe513cf@linaro.org>
-References: <1584092066-24425-1-git-send-email-henryc.chen@mediatek.com>
-         <1584092066-24425-7-git-send-email-henryc.chen@mediatek.com>
-         <4220e681-80b6-f9af-ddd1-b28aabe513cf@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 1 Apr 2020 23:11:36 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:53202 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732498AbgDBDLg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 23:11:36 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 603DE80E;
+        Thu,  2 Apr 2020 05:11:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1585797092;
+        bh=BbVLFLZ9iUUK1B/5QMcNG64/MqiL1pS+fVkAphw4v8U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AtxeupPvqt/aoWUBsntIVX8imyLjiaeOlJU06ozZZi9ZFhYzOjpUnmGuzwCgQ1cqO
+         adaENJsYbbI8/ZujWKYCe0nGVQVI9EXC9fEiXsqF5c798E2qVSWrtUc1XFbYuu6XZU
+         rFZcjEw+sS5BsSrtyPKkL/RxfK+cW87yQCqhCfgs=
+Date:   Thu, 2 Apr 2020 06:11:25 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Hyun Kwon <hyun.kwon@xilinx.com>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Michal Simek <michals@xilinx.com>,
+        Satish Kumar Nagireddy <SATISHNA@xilinx.com>
+Subject: Re: [PATCH v11 1/5] dt-bindings: display: xlnx: Add ZynqMP DP
+ subsystem bindings
+Message-ID: <20200402031125.GA31187@pendragon.ideasonboard.com>
+References: <20200318153728.25843-1-laurent.pinchart@ideasonboard.com>
+ <20200318153728.25843-2-laurent.pinchart@ideasonboard.com>
+ <20200318192651.GA28612@ravnborg.org>
+ <20200319010857.GC27556@smtp.xilinx.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200319010857.GC27556@smtp.xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgR2VvcmdpLA0KDQpPbiBXZWQsIDIwMjAtMDQtMDEgYXQgMTc6NDEgKzAzMDAsIEdlb3JnaSBE
-amFrb3Ygd3JvdGU6DQo+IEhpIEhlbnJ5LA0KPiANCj4gT24gMy8xMy8yMCAxMTozNCwgSGVucnkg
-Q2hlbiB3cm90ZToNCj4gPiBBZGQgZHZmc3JjIGRyaXZlciBmb3IgTVQ4MTgzDQo+ID4gDQo+ID4g
-U2lnbmVkLW9mZi1ieTogSGVucnkgQ2hlbiA8aGVucnljLmNoZW5AbWVkaWF0ZWsuY29tPg0KPiA+
-IC0tLQ0KPiA+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9LY29uZmlnICAgICAgfCAgMTUgKysNCj4g
-PiAgZHJpdmVycy9zb2MvbWVkaWF0ZWsvTWFrZWZpbGUgICAgIHwgICAxICsNCj4gPiAgZHJpdmVy
-cy9zb2MvbWVkaWF0ZWsvbXRrLWR2ZnNyYy5jIHwgNDM0ICsrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrDQo+ID4gIGluY2x1ZGUvc29jL21lZGlhdGVrL210a19kdmZzcmMuaCB8
-ICAzMCArKysNCj4gPiAgNCBmaWxlcyBjaGFuZ2VkLCA0ODAgaW5zZXJ0aW9ucygrKQ0KPiA+ICBj
-cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWR2ZnNyYy5jDQo+ID4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL3NvYy9tZWRpYXRlay9tdGtfZHZmc3JjLmgNCj4g
-PiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvS2NvbmZpZyBiL2RyaXZl
-cnMvc29jL21lZGlhdGVrL0tjb25maWcNCj4gPiBpbmRleCBmODM3YjNjLi40NDgwOGY0IDEwMDY0
-NA0KPiA+IC0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL0tjb25maWcNCj4gPiArKysgYi9kcml2
-ZXJzL3NvYy9tZWRpYXRlay9LY29uZmlnDQo+ID4gQEAgLTE2LDYgKzE2LDIxIEBAIGNvbmZpZyBN
-VEtfQ01EUQ0KPiA+ICAJICB0aW1lIGxpbWl0YXRpb24sIHN1Y2ggYXMgdXBkYXRpbmcgZGlzcGxh
-eSBjb25maWd1cmF0aW9uIGR1cmluZyB0aGUNCj4gPiAgCSAgdmJsYW5rLg0KPiA+ICANCj4gPiAr
-Y29uZmlnIE1US19EVkZTUkMNCj4gPiArCWJvb2wgIk1lZGlhVGVrIERWRlNSQyBTdXBwb3J0Ig0K
-PiA+ICsJZGVwZW5kcyBvbiBBUkNIX01FRElBVEVLDQo+ID4gKwlkZWZhdWx0IEFSQ0hfTUVESUFU
-RUsNCj4gPiArCXNlbGVjdCBNVEtfSU5GUkFDRkcNCj4gPiArCXNlbGVjdCBQTV9HRU5FUklDX0RP
-TUFJTlMgaWYgUE0NCj4gPiArCWRlcGVuZHMgb24gTVRLX1NDUFNZUw0KPiA+ICsJaGVscA0KPiA+
-ICsJICBTYXkgeWVzIGhlcmUgdG8gYWRkIHN1cHBvcnQgZm9yIHRoZSBNZWRpYVRlayBEVkZTUkMg
-KGR5bmFtaWMgdm9sdGFnZQ0KPiA+ICsJICBhbmQgZnJlcXVlbmN5IHNjYWxpbmcgcmVzb3VyY2Ug
-Y29sbGVjdG9yKSBmb3VuZA0KPiA+ICsJICBvbiBkaWZmZXJlbnQgTWVkaWFUZWsgU29Dcy4gVGhl
-IERWRlNSQyBpcyBhIHByb3ByaWV0YXJ5DQo+ID4gKwkgIGhhcmR3YXJlIHdoaWNoIGlzIHVzZWQg
-dG8gY29sbGVjdCBhbGwgdGhlIHJlcXVlc3RzIGZyb20NCj4gPiArCSAgc3lzdGVtIGFuZCB0dXJu
-IGludG8gdGhlIGRlY2lzaW9uIG9mIG1pbmltdW0gVmNvcmUgdm9sdGFnZQ0KPiA+ICsJICBhbmQg
-bWluaW11bSBEUkFNIGZyZXF1ZW5jeSB0byBmdWxmaWxsIHRob3NlIHJlcXVlc3RzLg0KPiA+ICsN
-Cj4gPiAgY29uZmlnIE1US19QTUlDX1dSQVANCj4gPiAgCXRyaXN0YXRlICJNZWRpYVRlayBQTUlD
-IFdyYXBwZXIgU3VwcG9ydCINCj4gPiAgCWRlcGVuZHMgb24gUkVTRVRfQ09OVFJPTExFUg0KPiA+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9NYWtlZmlsZSBiL2RyaXZlcnMvc29j
-L21lZGlhdGVrL01ha2VmaWxlDQo+ID4gaW5kZXggMmIyYzI1MzcuLjg0MTgyZjAgMTAwNjQ0DQo+
-ID4gLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvTWFrZWZpbGUNCj4gPiArKysgYi9kcml2ZXJz
-L3NvYy9tZWRpYXRlay9NYWtlZmlsZQ0KPiA+IEBAIC0xLDQgKzEsNSBAQA0KPiA+ICAjIFNQRFgt
-TGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wLW9ubHkNCj4gPiAgb2JqLSQoQ09ORklHX01US19D
-TURRKSArPSBtdGstY21kcS1oZWxwZXIubw0KPiA+ICtvYmotJChDT05GSUdfTVRLX0RWRlNSQykg
-Kz0gbXRrLWR2ZnNyYy5vDQo+ID4gIG9iai0kKENPTkZJR19NVEtfUE1JQ19XUkFQKSArPSBtdGst
-cG1pYy13cmFwLm8NCj4gPiAgb2JqLSQoQ09ORklHX01US19TQ1BTWVMpICs9IG10ay1zY3BzeXMu
-bw0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstZHZmc3JjLmMgYi9k
-cml2ZXJzL3NvYy9tZWRpYXRlay9tdGstZHZmc3JjLmMNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0
-NA0KPiA+IGluZGV4IDAwMDAwMDAuLjg1YjM1NzINCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysr
-IGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWR2ZnNyYy5jDQo+ID4gQEAgLTAsMCArMSw0MzQg
-QEANCj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4gPiArLyoNCj4g
-PiArICogQ29weXJpZ2h0IChDKSAyMDE4IE1lZGlhVGVrIEluYy4NCj4gPiArICovDQo+ID4gKyNp
-bmNsdWRlIDxsaW51eC9hcm0tc21jY2MuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2Nsay5oPg0K
-PiA+ICsjaW5jbHVkZSA8bGludXgvaW8uaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2lvcG9sbC5o
-Pg0KPiA+ICsjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9u
-b3RpZmllci5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvb2ZfZGV2aWNlLmg+DQo+ID4gKyNpbmNs
-dWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4gPiArI2luY2x1ZGUgPHNvYy9tZWRpYXRl
-ay9tdGtfZHZmc3JjLmg+DQo+ID4gKyNpbmNsdWRlIDxzb2MvbWVkaWF0ZWsvbXRrX3NpcC5oPg0K
-PiA+ICsjaW5jbHVkZSA8ZHQtYmluZGluZ3MvcG93ZXIvbXQ4MTgzLXBvd2VyLmg+DQo+IA0KPiBM
-b29rcyBsaWtlIHRoaXMgZGVwZW5kcyBvbiBhIGhlYWRlciB3aGljaCBpcyBub3QgcGFydCBvZiB0
-aGlzIHBhdGNoLXNldC4NCj4gSXQgd291bGQgYmUgbmljZSB0byBsaXN0IGFueSBkZXBlbmRlbmNp
-ZXMgaW4gdGhlIGNvdmVyIGxldHRlci4NCj4gDQo+IFRoYW5rcywNCj4gR2VvcmdpDQoNCkkgZGlz
-cmVnYXJkZWQgdG8gbGlzdCBoZXJlLiBUaGFua3MgZm9yIHlvdXIgZnJpZW5kbHkgcmVtaW5kZXIu
-DQo=
+Hi Hyun,
 
+On Wed, Mar 18, 2020 at 06:08:57PM -0700, Hyun Kwon wrote:
+> On Wed, 2020-03-18 at 12:26:51 -0700, Sam Ravnborg wrote:
+> > On Wed, Mar 18, 2020 at 05:37:24PM +0200, Laurent Pinchart wrote:
+> >> From: Hyun Kwon <hyun.kwon@xilinx.com>
+> >> 
+> >> The bindings describe the ZynqMP DP subsystem. They don't support the
+> >> interface with the programmable logic (FPGA) or audio yet.
+> >> 
+> >> Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
+> >> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >> Reviewed-by: Rob Herring <robh@kernel.org>
+> > 
+> > Bikeshedding - examples with indent on 4 spaces to make them easier to
+> > read.
+> > 
+> > Would it be possible to make this binding: (GPL-2.0-only OR BSD-2-Clause)
+> > This is preferred for new bindings.
+> > In this case asking Hyun Kwon should be enough?
+> 
+> It should be possible. But to be safer and if needed, I need to check with
+> corperate policy before I can confirm.
+> 
+> Michal, have you already checked about adding 'OR BSD-2-Clause'? or should I
+> take it up to Xilinx legal?
+
+Have you been able to get an answer on this ? I though the
+double-license was encouraged for new bindings, but it now seems to be a
+hard requirement to get them merged.
+
+> > With or without the suggestions above:
+> > Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> > 
+> > 	Sam
+> > 
+> >> ---
+> >> Changes since v10:
+> >> 
+> >> - Update example to new PHY DT bindings without subnodes
+> >> - Add resets property
+> >> 
+> >> Changes since v9:
+> >> 
+> >> - Fix constraints on clock-names
+> >> - Document dp_apb_clk as the APB clock, not the AXI clock
+> >> 
+> >> Changes since v8:
+> >> 
+> >> - Convert to yaml
+> >> - Rename aclk to dp_apb_clk
+> >> ---
+> >>  .../display/xlnx/xlnx,zynqmp-dpsub.yaml       | 174 ++++++++++++++++++
+> >>  1 file changed, 174 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
+> >> 
+> >> diff --git a/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
+> >> new file mode 100644
+> >> index 000000000000..05e6a14de75c
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
+> >> @@ -0,0 +1,174 @@
+> >> +# SPDX-License-Identifier: GPL-2.0
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/display/xlnx/xlnx,zynqmp-dpsub.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Xilinx ZynqMP DisplayPort Subsystem
+> >> +
+> >> +description: |
+> >> +  The DisplayPort subsystem of Xilinx ZynqMP (Zynq UltraScale+ MPSoC)
+> >> +  implements the display and audio pipelines based on the DisplayPort v1.2
+> >> +  standard. The subsystem includes multiple functional blocks as below:
+> >> +
+> >> +               +------------------------------------------------------------+
+> >> +  +--------+   | +----------------+     +-----------+                       |
+> >> +  | DPDMA  | --->|                | --> |   Video   | Video +-------------+ |
+> >> +  | 4x vid |   | |                |     | Rendering | -+--> |             | |   +------+
+> >> +  | 2x aud |   | |  Audio/Video   | --> | Pipeline  |  |    | DisplayPort |---> | PHY0 |
+> >> +  +--------+   | | Buffer Manager |     +-----------+  |    |   Source    | |   +------+
+> >> +               | |    and STC     |     +-----------+  |    | Controller  | |   +------+
+> >> +  Live Video --->|                | --> |   Audio   | Audio |             |---> | PHY1 |
+> >> +               | |                |     |   Mixer   | --+-> |             | |   +------+
+> >> +  Live Audio --->|                | --> |           |  ||   +-------------+ |
+> >> +               | +----------------+     +-----------+  ||                   |
+> >> +               +---------------------------------------||-------------------+
+> >> +                                                       vv
+> >> +                                                 Blended Video and
+> >> +                                                 Mixed Audio to PL
+> >> +
+> >> +  The Buffer Manager interacts with external interface such as DMA engines or
+> >> +  live audio/video streams from the programmable logic. The Video Rendering
+> >> +  Pipeline blends the video and graphics layers and performs colorspace
+> >> +  conversion. The Audio Mixer mixes the incoming audio streams. The DisplayPort
+> >> +  Source Controller handles the DisplayPort protocol and connects to external
+> >> +  PHYs.
+> >> +
+> >> +  The subsystem supports 2 video and 2 audio streams, and various pixel formats
+> >> +  and depths up to 4K@30 resolution.
+> >> +
+> >> +  Please refer to "Zynq UltraScale+ Device Technical Reference Manual"
+> >> +  (https://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultrascale-trm.pdf)
+> >> +  for more details.
+> >> +
+> >> +maintainers:
+> >> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    const: xlnx,zynqmp-dpsub-1.7
+> >> +
+> >> +  reg:
+> >> +    maxItems: 4
+> >> +  reg-names:
+> >> +    items:
+> >> +      - const: dp
+> >> +      - const: blend
+> >> +      - const: av_buf
+> >> +      - const: aud
+> >> +
+> >> +  interrupts:
+> >> +    maxItems: 1
+> >> +
+> >> +  clocks:
+> >> +    description:
+> >> +      The APB clock and at least one video clock are mandatory, the audio clock
+> >> +      is optional.
+> >> +    minItems: 2
+> >> +    maxItems: 4
+> >> +    items:
+> >> +      - description: dp_apb_clk is the APB clock
+> >> +      - description: dp_aud_clk is the Audio clock
+> >> +      - description:
+> >> +          dp_vtc_pixel_clk_in is the non-live video clock (from Processing
+> >> +          System)
+> >> +      - description:
+> >> +          dp_live_video_in_clk is the live video clock (from Programmable
+> >> +          Logic)
+> >> +  clock-names:
+> >> +    oneOf:
+> >> +      - minItems: 2
+> >> +        maxItems: 3
+> >> +        items:
+> >> +          - const: dp_apb_clk
+> >> +          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
+> >> +          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
+> >> +      - minItems: 3
+> >> +        maxItems: 4
+> >> +        items:
+> >> +          - const: dp_apb_clk
+> >> +          - const: dp_aud_clk
+> >> +          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
+> >> +          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
+> >> +
+> >> +  power-domains:
+> >> +    maxItems: 1
+> >> +
+> >> +  resets:
+> >> +    maxItems: 1
+> >> +
+> >> +  dmas:
+> >> +    maxItems: 4
+> >> +    items:
+> >> +      - description: Video layer, plane 0 (RGB or luma)
+> >> +      - description: Video layer, plane 1 (U/V or U)
+> >> +      - description: Video layer, plane 2 (V)
+> >> +      - description: Graphics layer
+> >> +  dma-names:
+> >> +    items:
+> >> +      - const: vid0
+> >> +      - const: vid1
+> >> +      - const: vid2
+> >> +      - const: gfx0
+> >> +
+> >> +  phys:
+> >> +    description: PHYs for the DP data lanes
+> >> +    minItems: 1
+> >> +    maxItems: 2
+> >> +  phy-names:
+> >> +    minItems: 1
+> >> +    maxItems: 2
+> >> +    items:
+> >> +      - const: dp-phy0
+> >> +      - const: dp-phy1
+> >> +
+> >> +required:
+> >> +  - compatible
+> >> +  - reg
+> >> +  - reg-names
+> >> +  - interrupts
+> >> +  - clocks
+> >> +  - clock-names
+> >> +  - power-domains
+> >> +  - resets
+> >> +  - dmas
+> >> +  - dma-names
+> >> +  - phys
+> >> +  - phy-names
+> >> +
+> >> +additionalProperties: false
+> >> +
+> >> +examples:
+> >> +  - |
+> >> +    #include <dt-bindings/phy/phy.h>
+> >> +    #include <dt-bindings/reset/xlnx-zynqmp-resets.h>
+> >> +
+> >> +    display@fd4a0000 {
+> >> +      compatible = "xlnx,zynqmp-dpsub-1.7";
+> >> +      reg = <0x0 0xfd4a0000 0x0 0x1000>,
+> >> +            <0x0 0xfd4aa000 0x0 0x1000>,
+> >> +            <0x0 0xfd4ab000 0x0 0x1000>,
+> >> +            <0x0 0xfd4ac000 0x0 0x1000>;
+> >> +      reg-names = "dp", "blend", "av_buf", "aud";
+> >> +      interrupts = <0 119 4>;
+> >> +      interrupt-parent = <&gic>;
+> >> +
+> >> +      clock-names = "dp_apb_clk", "dp_aud_clk", "dp_live_video_in_clk";
+> >> +      clocks = <&dp_aclk>, <&clkc 17>, <&si570_1>;
+> >> +
+> >> +      power-domains = <&pd_dp>;
+> >> +      resets = <&reset ZYNQMP_RESET_DP>;
+> >> +
+> >> +      dma-names = "vid0", "vid1", "vid2", "gfx0";
+> >> +      dmas = <&xlnx_dpdma 0>,
+> >> +             <&xlnx_dpdma 1>,
+> >> +             <&xlnx_dpdma 2>,
+> >> +             <&xlnx_dpdma 3>;
+> >> +
+> >> +      phys = <&psgtr 1 PHY_TYPE_DP 0 3 27000000>,
+> >> +             <&psgtr 0 PHY_TYPE_DP 1 3 27000000>;
+> >> +
+> >> +      phy-names = "dp-phy0", "dp-phy1";
+> >> +    };
+> >> +
+> >> +...
+
+-- 
+Regards,
+
+Laurent Pinchart
