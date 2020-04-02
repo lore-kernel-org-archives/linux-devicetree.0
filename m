@@ -2,169 +2,84 @@ Return-Path: <SRS0=tl9x=5S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BF6C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 20:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F6EC2BA15
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 20:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F7C6206E9
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 20:10:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jLUnozkZ"
+	by mail.kernel.org (Postfix) with ESMTP id ABBF62078E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Apr 2020 20:17:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388621AbgDBUK0 (ORCPT
+        id S1729123AbgDBURM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 16:10:26 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54596 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgDBUK0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 16:10:26 -0400
-Received: by mail-wm1-f67.google.com with SMTP id c81so4783038wmd.4;
-        Thu, 02 Apr 2020 13:10:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5UitrtcQcLyUuypDd55yvaCM6NIpqOgNi0sTpbymWqI=;
-        b=jLUnozkZzk4wHj1zfjABKiOeRlA+KmFZy7xnaV7k84+hygjsJgnWCGl9rdGgKYZBLD
-         EcCtl/2F/L+6SK6Nkmj7cSBZpmfEVcfaE/qebmIW6CTRo2jxjsafOZlyF0jYEup9bFUi
-         KGbP6hKKwQjR8wryIky2THe219oIq9qoE2XBaUV/36TfgDLK5yNsRDQgzifAv3x+0ide
-         +dXZS9T6AvOWhnXvKDqTZUIA3tBWJH6ohCIqHEGb5gqscpHUgOoqqI2D1xRjMnZ8VFkn
-         kwdj5LogxrcQpwPdW6Q4ABa1wP7PSaceNqWWFLzdpN2R7BSMNvMX0ui6JP1NzEy59lPA
-         WSgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5UitrtcQcLyUuypDd55yvaCM6NIpqOgNi0sTpbymWqI=;
-        b=aN9cyN/grFgV2lcrWJ/vRsGUcSrBVCtyqEG7A1wr/l1EqYxbYIQuB3hAxL+H9Ep5on
-         HqMXfvm1FuT30sB+pn03uAAF0H1yiDa/5Nf/+2CSUVtQeHx2zAVJznc2sxp6eCoBnVwP
-         XZUM4SBVq64XLeATbXPr7AgL1ibyCC2JsWVMWN3wly5XmlYTDyQmdKYeKWSmXTv0qlT6
-         LI6W4kwleSXoOdOdi3r5IT1dVMaeM7OPFBD8VX+MQIry4rAqTS2R+6yFNXkww+ud1tK1
-         LhPHE7AuUGp1QdOovHztdFTQSoo+TfkYPq1wHQL/rC4WRuqsHvQvkX3oTO6U/a9Wpm0X
-         xTHg==
-X-Gm-Message-State: AGi0PuYGcDXmctgu89ft0H4CsV9uRdJXrWxb/nYfZgOMNN7k7R+WHMnO
-        lsqnwXioIZ2XKL4P4Pp0p4k=
-X-Google-Smtp-Source: APiQypIbEEkJukJIMkBcjNC0Z/IpCLXYe/ZM6jvYBjXgKEX9jEuufWBxIiPSsGTTRPDqcUTlIC+mKg==
-X-Received: by 2002:a1c:c257:: with SMTP id s84mr5274398wmf.9.1585858224173;
-        Thu, 02 Apr 2020 13:10:24 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id r5sm8462481wmr.15.2020.04.02.13.10.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2020 13:10:23 -0700 (PDT)
-Subject: Re: [PATCH 4/4] arm64: dts: rockchip: add isp0 node for rk3399
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     dafna.hirschfeld@collabora.com, devel@driverdev.osuosl.org,
-        devicetree@vger.kernel.org, ezequiel@collabora.com,
-        heiko@sntech.de, hverkuil-cisco@xs4all.nl,
-        karthik.poduval@gmail.com, kernel@collabora.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        robh+dt@kernel.org
-References: <20200402000234.226466-5-helen.koike@collabora.com>
- <1187d28a-6fb9-fd12-a422-8a4220a11e79@gmail.com>
- <d8b05dd4-1ece-9513-b2ec-0cb58f665c5e@collabora.com>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <20ae21a6-74b0-ff99-80d9-1a0ce2cc1aa5@gmail.com>
-Date:   Thu, 2 Apr 2020 22:10:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 2 Apr 2020 16:17:12 -0400
+Received: from mga07.intel.com ([134.134.136.100]:49357 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727412AbgDBURL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Apr 2020 16:17:11 -0400
+IronPort-SDR: WoYS+8qKLMwoo753TKle50uWzAFDjZqrP49PNx7bb+UZ3U567sOcmRJbVDfz1Ebig3/9I1Z8Sr
+ LEm+lb5SLvWA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 13:17:11 -0700
+IronPort-SDR: qibqd9S+az7ejxncAI8raSBbcCfwBpEuhv/Nu2BRMba++Z5SMzGaVWLlfTyJ5hOgqWZKvZdGfQ
+ llSq6jQtbMQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
+   d="scan'208";a="238650846"
+Received: from hbriegel-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.39.101])
+  by orsmga007.jf.intel.com with ESMTP; 02 Apr 2020 13:17:01 -0700
+Date:   Thu, 2 Apr 2020 23:17:00 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Amir Mizinski <amirmizi6@gmail.com>
+Cc:     Eyal.Cohen@nuvoton.com, Oshri Alkobi <oshrialkoby85@gmail.com>,
+        Alexander Steffen <alexander.steffen@infineon.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, peterhuewe@gmx.de,
+        jgg@ziepe.ca, Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        IS20 Oshri Alkoby <oshri.alkoby@nuvoton.com>,
+        Tomer Maimon <tmaimon77@gmail.com>, gcwilson@us.ibm.com,
+        kgoldman@us.ibm.com, IS30 Dan Morav <Dan.Morav@nuvoton.com>,
+        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
+        amir.mizinski@nuvoton.com,
+        Christophe Richard <hristophe-h.ricard@st.com>
+Subject: Re: [PATCH v4 2/7] tpm: tpm_tis: Add check_data handle to
+ tpm_tis_phy_ops in order to check data integrity
+Message-ID: <20200402201700.GG10314@linux.intel.com>
+References: <20200331113207.107080-1-amirmizi6@gmail.com>
+ <20200331113207.107080-3-amirmizi6@gmail.com>
+ <20200401082019.GB17325@linux.intel.com>
+ <CAMHTsUUvStPHNL-W7vtjGrtehQx22jUZbN8kLib4h+JWH3p7_w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <d8b05dd4-1ece-9513-b2ec-0cb58f665c5e@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMHTsUUvStPHNL-W7vtjGrtehQx22jUZbN8kLib4h+JWH3p7_w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 4/2/20 9:46 PM, Helen Koike wrote:
-> 
-> 
-> On 4/2/20 2:20 PM, Johan Jonker wrote:
->> Hi Helen,
->>
->>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->>> index fc0295d2a65a1..815099a0cd0dd 100644
->>> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->>> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->>> @@ -1718,6 +1718,33 @@ vopb_mmu: iommu@ff903f00 {
->>>  		status = "disabled";
->>>  	};
->>>  
->>> +	isp0: isp0@ff910000 {
->>> +		compatible = "rockchip,rk3399-cif-isp";
->>> +		reg = <0x0 0xff910000 0x0 0x4000>;
->>> +		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
->>> +		clocks = <&cru SCLK_ISP0>,
->>> +			 <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
->>> +			 <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
->>> +		clock-names = "clk_isp",
->>> +			      "aclk_isp", "aclk_isp_wrap",
->>> +			      "hclk_isp", "hclk_isp_wrap";
->>
->>> +		power-domains = <&power RK3399_PD_ISP0>;
->>> +		iommus = <&isp0_mmu>;
->>> +		phys = <&mipi_dphy_rx0>;
->>> +		phy-names = "dphy";
->>
->> Maybe a little sort? But keep rest as it is. Also in example.
->>
->> 		iommus = <&isp0_mmu>;
->> 		phys = <&mipi_dphy_rx0>;
->> 		phy-names = "dphy";
->> 		power-domains = <&power RK3399_PD_ISP0>;
-> 
-> Are you proposing only to move power-domains after phy? And keep the rest?
-> What is the main logic?
+On Wed, Apr 01, 2020 at 12:19:39PM +0300, Amir Mizinski wrote:
+>    this commit is based on Christophe work and was submitted in 2016:
+>    https://patchwork.kernel.org/patch/8628661/
+>    I followed you comments from the previous version on commit 1/7:
+>    https://lore.kernel.org/patchwork/patch/1192101/
+>    and fixed it in this one too. should i write it differently?
+>    thank you,
+>    Amir Mizinski
 
-There is no hard rule... It mostly depend on Heiko...
+No then it's correct thanks. Just wanted to verify.
 
-For nodes:
-Sort things without reg alphabetical first,
-then sort the rest by reg address.
+Please configure your email client:
 
-Inside nodes:
-If exists on top: compatible, reg and interrupts.
-In alphabetical order the required properties.
-Then in alphabetical order the other properties.
-And as last things that start with '#' in alphabetical order.
+https://www.kernel.org/doc/html/v4.10/process/email-clients.html
 
-> 
-> Thanks
-> Helen
-> 
->>
->>> +
->>> +		ports {
->>> +			#address-cells = <1>;
->>> +			#size-cells = <0>;
->>> +
->>> +			port@0 {
->>
->>> +				#address-cells = <1>;
->>> +				#size-cells = <0>;
->>> +				reg = <0>;
->>
->> Move reg above #address-cells. Change that in example as well.
->>
->> 				reg = <0>;
->> 				#address-cells = <1>;
->> 				#size-cells = <0>;
->>
->>> +			};
->>> +		};
->>> +	};
->>> +
->>>  	isp0_mmu: iommu@ff914000 {
->>>  		compatible = "rockchip,iommu";
->>>  		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
->>> -- 
->>> 2.26.0
->>
-
+/Jarkko
