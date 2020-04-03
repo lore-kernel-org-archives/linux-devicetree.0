@@ -2,147 +2,131 @@ Return-Path: <SRS0=qh1l=5T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8661BC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 18:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4399CC2BA16
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 18:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39132206F5
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 18:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C82F207FF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 18:16:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q2iZUdHe"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NYx+sHPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404478AbgDCSCS (ORCPT
+        id S1728499AbgDCSQe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 14:02:18 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46771 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728382AbgDCSCO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 14:02:14 -0400
-Received: by mail-wr1-f68.google.com with SMTP id j17so9499221wru.13;
-        Fri, 03 Apr 2020 11:02:13 -0700 (PDT)
+        Fri, 3 Apr 2020 14:16:34 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34565 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728066AbgDCSQe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 14:16:34 -0400
+Received: by mail-pl1-f194.google.com with SMTP id a23so3033143plm.1
+        for <devicetree@vger.kernel.org>; Fri, 03 Apr 2020 11:16:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pJW7G8+AK7on97oQRodU2eKPtvCqhsk+Q2DcdPPDzz8=;
-        b=Q2iZUdHeWfYgT0GIKTgX9g9cbkvRoWuoAEuQn3SCx/4TX+zhxmCgWBPytSUwlK9CQC
-         +VTKZkNxS4G2UHy22CVrDUJzi1XsxQRoKeMSWmY/HeP4hq85+i+i4SwanD6WOXYullwi
-         VFCAEMyOcmXXEeduWr8t7L79dOO9A6OMenWqz3hjWHHFujmgZZ5K4jeF0JC7UmIqXyLJ
-         ai+YU4zU8oDq/gB2jc8gUMdPeN8NoOntBN2JV7In/2R6vDP8lT+0wGKKHBQ0sxot5Wcl
-         PWfQkqZABBI2soimfmlEMd66sKGfu9qcCpuaQjTlro+7/NpNgaERYHIaeMVcv29Y0fk4
-         qyuA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=l9OtO5bBjU4ri0ecYRkCgiryeyjL/1OJpZNChQ7ItYI=;
+        b=NYx+sHPEuWXImveqC5saq7LPSHEW29HyBJwPIy0Wsv4qxJp8hwJZwCQLBGUxkDoz5n
+         NRTdcePZ89Ihj3Nr1q4SSWTYE9L6ixXMinliK5sCArFNnBmm0cTAjVAVEUR491pc7zx+
+         7TWCe9R7nyZui0z+kqVrFdlu5SedTFb/AKFV4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=pJW7G8+AK7on97oQRodU2eKPtvCqhsk+Q2DcdPPDzz8=;
-        b=BuY0bNR6wH7uAYK6ZeUKk4kIoA9sWr2QLp7TeyVc9DgswjYMSOa6J3N9nI2+eJ6tCn
-         RthLf0DY1Y6YcN6s+JizrmicObQTC5CPsqwWJ4embVNcDy8h7L2In4bdzqnBIwn+poy5
-         Zs5JipqkMpOhXVScQnZAwVsKHg/LB1RYmyID9hebthvxwE4gd6nCQgRV0vIdMwmFjf80
-         /LgDOe/iu3oYVWmbBcQCmARTp+d6wli8DgavZt2q6MdwklqW2D+AxtnqKLyLuoxGRMvH
-         +IT2rtY7ze09/XGeClyTsASUI7n+nwuUPYX1TLJOVCukjm7QLziKI5GcEzs94lacYlvN
-         csRA==
-X-Gm-Message-State: AGi0PuaEkrdpNy3LOSOpCipSQqI+Oo1k9+h/y4i+tMpJVdU/9niaOCvN
-        B5nGzXIgj2viYIp4yn1KZMM=
-X-Google-Smtp-Source: APiQypI7ZLu33/QL0354eqDrhOWt2QusPd92n+8YfQaB7xvV+Xc3kHE37UcC3XsvhlIDo3M9vnJsGA==
-X-Received: by 2002:a5d:630b:: with SMTP id i11mr9750425wru.94.1585936932802;
-        Fri, 03 Apr 2020 11:02:12 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id j11sm13005492wrt.14.2020.04.03.11.02.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 Apr 2020 11:02:12 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/4] arm64: dts: rockchip: remove include for irq.h
-Date:   Fri,  3 Apr 2020 20:01:58 +0200
-Message-Id: <20200403180159.13387-3-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200403180159.13387-1-jbx6244@gmail.com>
-References: <20200403180159.13387-1-jbx6244@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l9OtO5bBjU4ri0ecYRkCgiryeyjL/1OJpZNChQ7ItYI=;
+        b=fn2/Oou6FUu9Po1ULajGfiC3aPn43p5urz65Z+IObAAa4KDs8vtJakNHWoVo+ZVI4O
+         1xawa3CEgd9QC67gLz/C5u93od175MjIAt46YHtpK+YDFFZUR1Z1cx5YzwW7SPrg9eTE
+         5N+V6wt904KMzsWb6ux3//wJYwZf5rDAUFWc4srvA17KZQgr6OdBpNMD4EilSBE1L0y/
+         c4jHdRxHbBM/1vPHk9s8Mrr/w+SG10Foa04Hmq1/JnvHd8fNMLtfO1NQiJuVWByRrmq5
+         bvJRB5ptJNul0EpjIqjS1snD0R4fnMizWjEJpc2H5ZF4lvrJnipbLjiAfRl6e9Ju0a9B
+         NLyQ==
+X-Gm-Message-State: AGi0PubLsObJrNXQTizZKXv5h5e3TUGC7OhrJY7L6kE1eomO+w0Z36ys
+        In+L0B+2XLXt1Ykq9YHzF0qEBA==
+X-Google-Smtp-Source: APiQypIGHcLKfA4BC6dhIJebo6CEcV70oa/S4T2XWdYpRNyxtEt21rnfykH5/137XQhZwQNCpuZxdQ==
+X-Received: by 2002:a17:902:d3cb:: with SMTP id w11mr8949903plb.257.1585937792655;
+        Fri, 03 Apr 2020 11:16:32 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id x3sm6250986pfp.167.2020.04.03.11.16.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Apr 2020 11:16:30 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 11:16:29 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     "Rajeshwari Ravindra Kamble (Temp)" <rkambl@codeaurora.org>
+Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        sivaa@codeaurora.org, Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Changed polling-delay in
+ Thermal-zones node
+Message-ID: <20200403181629.GP199755@google.com>
+References: <1584430804-8343-1-git-send-email-rkambl@codeaurora.org>
+ <CAD=FV=VLZ4RQQuji=1kKE5EnqrpY0M=U_G8XigAWAaZ8mxc=eg@mail.gmail.com>
+ <fc7f250e-aa85-0835-8bc4-8274235c74d0@codeaurora.org>
+ <CAHLCerMCrNdKUmRww4EFctU8cojh6Fqhs7gpux3SNCSwYUBOvQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHLCerMCrNdKUmRww4EFctU8cojh6Fqhs7gpux3SNCSwYUBOvQ@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The 'irq.h' file is already included through 'arm-gic.h',
-so remove them from all Rockchip dtsi files.
+Hi Rajeshwari,
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/px30.dtsi   | 1 -
- arch/arm64/boot/dts/rockchip/rk3308.dtsi | 1 -
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 1 -
- arch/arm64/boot/dts/rockchip/rk3368.dtsi | 1 -
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 1 -
- 5 files changed, 5 deletions(-)
+do you plan to send v2 with an updated commit message?
 
-diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
-index 6f7171290..4820edc7f 100644
---- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-@@ -6,7 +6,6 @@
- #include <dt-bindings/clock/px30-cru.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
--#include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/pinctrl/rockchip.h>
- #include <dt-bindings/power/px30-power.h>
- #include <dt-bindings/soc/rockchip,boot-mode.h>
-diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-index ac43bc3f7..a9b98555d 100644
---- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-@@ -7,7 +7,6 @@
- #include <dt-bindings/clock/rk3308-cru.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
--#include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/pinctrl/rockchip.h>
- #include <dt-bindings/soc/rockchip,boot-mode.h>
- #include <dt-bindings/thermal/thermal.h>
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index 470783a48..175060695 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -6,7 +6,6 @@
- #include <dt-bindings/clock/rk3328-cru.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
--#include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/pinctrl/rockchip.h>
- #include <dt-bindings/power/rk3328-power.h>
- #include <dt-bindings/soc/rockchip,boot-mode.h>
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-index 1ebb0eef4..f22475016 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-@@ -5,7 +5,6 @@
- 
- #include <dt-bindings/clock/rk3368-cru.h>
- #include <dt-bindings/gpio/gpio.h>
--#include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/pinctrl/rockchip.h>
- #include <dt-bindings/soc/rockchip,boot-mode.h>
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 0d895cff5..123b7402a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -6,7 +6,6 @@
- #include <dt-bindings/clock/rk3399-cru.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
--#include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/pinctrl/rockchip.h>
- #include <dt-bindings/power/rk3399-power.h>
- #include <dt-bindings/thermal/thermal.h>
--- 
-2.11.0
+Thanks
 
+Matthias
+
+On Wed, Mar 18, 2020 at 02:40:47PM +0530, Amit Kucheria wrote:
+> On Wed, Mar 18, 2020 at 11:49 AM Rajeshwari Ravindra Kamble (Temp)
+> <rkambl@codeaurora.org> wrote:
+> >
+> >
+> > On 3/17/2020 10:20 PM, Doug Anderson wrote:
+> >
+> > Hi,
+> >
+> > On Tue, Mar 17, 2020 at 12:42 AM Rajeshwari <rkambl@codeaurora.org> wrote:
+> >
+> > Changed polling-delay and polling-delay-passive to zero as per
+> > the requirement.
+> >
+> > Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sc7180.dtsi | 100 +++++++++++++++++------------------
+> >  1 file changed, 50 insertions(+), 50 deletions(-)
+> >
+> > It probably wouldn't hurt to mention in the commit message that this
+> > is because the thermal sensor interrupts are all hooked up and thus
+> > the polling is not a useful thing to do.  ...but other than that:
+> >
+> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> >
+> >
+> > Hi Douglas
+> >
+> > I didn't  get your comment.
+> >
+> > Thanks,
+> > Rajeshwari
+> 
+> I think he means that you haven't mentioned WHY this patch is needed
+> in the message. The reason you should mention is "to disable polling
+> mode of the framework since interrupts for tsens are already
+> configured."
+> 
+> Regards,
+> Amit
