@@ -2,131 +2,84 @@ Return-Path: <SRS0=qh1l=5T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 895EBC2BA17
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 00:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 710ABC2BA18
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 01:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCE9207FF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 00:51:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="mec9o25/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="C8jIhCmn"
+	by mail.kernel.org (Postfix) with ESMTP id 4025A207FF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 01:34:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585877673;
+	bh=7b3Ysa1BLGv5if39DtngdrAT55GjsM/BtI03DHDpmQc=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=nvaP6X7/VhTfyZT7jXV0lZkI+UilIrI24EX+vSTC3DYSXIxj658bhWcRkzI9qxTHF
+	 yYNTDPKi5KIhnbTW0ZZ+d81cZd6TwapWtY5JNgiMpHeItDC8qULIARp4I3Pfw9QgEI
+	 4EU0OrapttyAvfE+zw2MbEJvlwZg3QuNTfSJmliM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391251AbgDCAv2 (ORCPT
+        id S2390273AbgDCBe3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 20:51:28 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:38873 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2391002AbgDCAv2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 20:51:28 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 8FBCC5C02F8;
-        Thu,  2 Apr 2020 20:51:27 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute3.internal (MEProxy); Thu, 02 Apr 2020 20:51:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type:content-transfer-encoding; s=fm2; bh=o4k4Q
-        byRVOVaBijp4V3irP0AE4nFGkKuv35zWmzD8BU=; b=mec9o25/tw3Q2livsvRKG
-        QhCtaxCniN6f8hKoSNg/O9gjNkUjnkW0FAjtI/W9t0iWwg5dQc3ycoxKwwu5HLJB
-        aLARhApfJU7v/YA4Z+x/KYO2oyYaHFjgG5wcjVmuSbJ5Qz5ObBHH2y2Is1bzzl3/
-        x5xx2d1Nb1g34kqdp9G74YI9kpoumzztHr1LgCK8KCQCkZYJ1bTXqAUMDOjmOFyD
-        XPrqjC+VXI/5ggaF4OZ0aPggnQh5PQ+8LyG6tkgx5UQuLFN53m0j+dr8NgXP6kIT
-        f83RsMOGdVoRRD9owhDCfpzxjNbtKcxDOx7DOEFW0AZI8+Ill4z/6pyj2sRCFgq4
-        g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=o4k4QbyRVOVaBijp4V3irP0AE4nFGkKuv35zWmzD8
-        BU=; b=C8jIhCmnDW9uX6UnO/+qCjj/AIgnTI6ruqM7x1NVRfMQYNFsZBUshXPdf
-        Lk38RkhieIkn4BHPje53naD2QERc/YMWjcZsrjizmeio701jDO3RkuLQobfw4C3v
-        njUtYBGL71JmM1jSQl0jrsQMFr049sg9+Yej7hUkwgITZnkFKMeAeh8JEYOOVmcR
-        a4hQhaaPdJ4Ho0KcBwhqv5D6HlBSPbNUpc+5iJEomWAkILL9tMOJsWCAX0cgVuqw
-        osgbqLFkH8YKIZDLK7+K9NRXg07fYzd2ngpDzT7uICMRaGmNnTsmGa0qvht+7ss3
-        iipXfF2ICZjgqZOOovkmYi72eomEg==
-X-ME-Sender: <xms:iIiGXvxSTTafl6tt0gQFQbHdfo5UEgXrpcVu8l0t0PaC4EwvQ_D4Zg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtdehgdefkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtgfesthhqredtreerjeenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegr
-    jhdrihgurdgruh
-X-ME-Proxy: <xmx:iIiGXlvaWz23-H1wujEUO6g9z11ljzX5dmNpzGzv-ipV4s9drmtqRw>
-    <xmx:iIiGXr9q_QuNl9kf6dfh4o_1JEtkTfElIpSMuoP73M7-t56qeOtmfQ>
-    <xmx:iIiGXk0jV93oo_7IYJ-xld6fW28zXwFUvimoPbSNpWKpN4mwJ1-4eQ>
-    <xmx:j4iGXqRNGMdIVooQRfZbcToWLJCYOBPGxS4otGweza_msf_5QgkRDQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id DD995E00B0; Thu,  2 Apr 2020 20:51:20 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-1080-gca5de7b-fmstable-20200402v5
-Mime-Version: 1.0
-Message-Id: <48c9bd0e-3b5c-4f76-830f-4b0bd962148b@www.fastmail.com>
-In-Reply-To: <9360D2B2-8242-4BA1-BF06-8916E87EDE67@gmail.com>
-References: <20200306170218.79698-1-geissonator@yahoo.com>
- <20200306170218.79698-2-geissonator@yahoo.com>
- <294a52cd-2f60-41e5-a58f-a74151a83b08@www.fastmail.com>
- <9360D2B2-8242-4BA1-BF06-8916E87EDE67@gmail.com>
-Date:   Fri, 03 Apr 2020 11:21:41 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Andrew Geissler" <geissonator@gmail.com>
-Cc:     "Joel Stanley" <joel@jms.id.au>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, openbmc@lists.ozlabs.org
-Subject: Re: [PATCH 2/2] ARM: dts: aspeed: zaius: Add gpio line names
-Content-Type: text/plain;charset=utf-8
+        Thu, 2 Apr 2020 21:34:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57026 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390223AbgDCBe2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Apr 2020 21:34:28 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 535B1206A3;
+        Fri,  3 Apr 2020 01:34:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585877668;
+        bh=7b3Ysa1BLGv5if39DtngdrAT55GjsM/BtI03DHDpmQc=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=BzJgVKHHx6uUXr9l6xQGm5A8oJuQelPcnLUdfdHp+0Yh/+8Yhp6F/TS/8EolPRx11
+         1pEPmSDHQ07+CocsG9XLo2FztBK8wXruCK3ANoHjUNZI8CWBlI+GGjqonAlpruJzIF
+         tchnmiRZ5guOzb0AcRCF1h+0CDJZdMbRXP80mIYY=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200330205647.24806-1-ansuelsmth@gmail.com>
+References: <20200330205647.24806-1-ansuelsmth@gmail.com>
+Subject: Re: [PATCH v2] ARM: qcom: Disable i2c device on gsbi4 for ipq806x
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Mathieu Olivari <mathieu@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To:     Andy Gross <agross@kernel.org>, Ansuel Smith <ansuelsmth@gmail.com>
+Date:   Thu, 02 Apr 2020 18:34:27 -0700
+Message-ID: <158587766752.125146.7582840761926137726@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Quoting Ansuel Smith (2020-03-30 13:56:46)
+> diff --git a/drivers/clk/qcom/gcc-ipq806x.c b/drivers/clk/qcom/gcc-ipq806=
+x.c
+> index b0eee0903807..f7d7a2bc84c1 100644
+> --- a/drivers/clk/qcom/gcc-ipq806x.c
+> +++ b/drivers/clk/qcom/gcc-ipq806x.c
+> @@ -991,6 +991,7 @@ static struct clk_branch gsbi4_h_clk =3D {
+>                 .hw.init =3D &(struct clk_init_data){
+>                         .name =3D "gsbi4_h_clk",
+>                         .ops =3D &clk_branch_ops,
+> +                       .flags =3D CLK_IGNORE_UNUSED,
 
+Is this necessary? Shouldn't we skip clks that are protected during the
+unused phase?
 
-On Tue, 31 Mar 2020, at 04:46, Andrew Geissler wrote:
->=20
->=20
-> > On Mar 26, 2020, at 6:20 PM, Andrew Jeffery <andrew@aj.id.au> wrote:=
-
-> >=20
-> >=20
-> >=20
-> > On Sat, 7 Mar 2020, at 03:32, Andrew Geissler wrote:
-> >> Name the GPIOs to help userspace work with them. The names describe=
- the
-> >> functionality the lines provide, not the net or ball name. This mak=
-es it
-> >> easier to share userspace code across different systems and makes t=
-he
-> >> use of the lines more obvious.
-> >>=20
-> >> Signed-off-by: Andrew Geissler <geissonator@yahoo.com>
-> >=20
-> > So we're creating a bit of an ad-hoc ABI here between the DT and use=
-rspace.
-> >=20
-> > Where are we documenting it?
->=20
-> Yeah, so far it=E2=80=99s basically design by precedent. If you want y=
-our OpenBMC
-> function to work then follow the standards we're setting in other dts=E2=
-=80=99s.
->=20
-> Is there a good place to document this? I could create a OpenBMC desig=
-n
-> doc but that would not address non-OpenBMC areas.
-
-Don't let perfect be the enemy of good enough :) Lets document it in Ope=
-nBMC
-and then look at alternatives if we find it's necessary. I don't think w=
-e will given
-that the contract is between the kernel and OpenBMC userspace.
-
-Andrew
+>                 },
+>         },
+>  };
+> --=20
+> 2.25.1
+>
