@@ -2,443 +2,248 @@ Return-Path: <SRS0=qh1l=5T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1058C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 07:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D302FC43331
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 07:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A82192080C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 07:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A753206F8
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 07:19:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KAOgI47m"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="o+wVQgbS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389223AbgDCHCK (ORCPT
+        id S2387962AbgDCHTq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 03:02:10 -0400
-Received: from mail-pg1-f179.google.com ([209.85.215.179]:43838 "EHLO
-        mail-pg1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389165AbgDCHCJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 03:02:09 -0400
-Received: by mail-pg1-f179.google.com with SMTP id g20so3071419pgk.10
-        for <devicetree@vger.kernel.org>; Fri, 03 Apr 2020 00:02:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=l1h6fRRJBqh4XQu4UKJVfQ1c7NUklIDlUPcnvMtodAE=;
-        b=KAOgI47mhmaeZPpMgPZu5lxHkr/DQgjtN4Cuf6etoeoVJRJeintG38rTZzy+ObK3aA
-         EoVyjaHmg3udHMPBKIoBscwNBmRR86p0Lb0ORBV+FRV9TiZsBsAfCMfe2Db+WaOhkg4I
-         tag+ciAVClZvtYCZmJzo6Wg0X0M0dnexMAzrWqibUA5qLcpEpOjgjnexyput4VMiUCFj
-         tGooz9Sfjf80eqd7HZqwqiKsig4u7LK4DvzlMxneupyQdgpbY7Dz9mZt2/1K2VtOsLy/
-         i7BeqJTgJds6EoN2wXGMXY5pbL2GX0kukIW24gWXHqc2YRM+ERQAF1R0LZHc4Af9tFsL
-         IUPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=l1h6fRRJBqh4XQu4UKJVfQ1c7NUklIDlUPcnvMtodAE=;
-        b=SqmFqF2jCRbcI1DufgfLfXDJB/BH7MZ6yLQZvMo5dQ65nAR5WS5vaBQUXEhcSxo9zu
-         8Qf51PQbcXHKwAM7D9Ag3GO9ROEPJxtT4MjMmehGXhcJXMv3Uc29TpINCpWSk1iuTxMm
-         GdGGxNnX3XPDde6iBndY+l22LHqkYvYAnsVUrC2goMq1MHE3vxvrw1yaWoZmcIYKgA9O
-         4mWreFRsvYCN4qWvQrVMcd8z/MpYTtt6yhth2FXUUTky58AzSa9y7GcJXRVdZpnCup7o
-         RtKRiog2EgLPZ0kb/W8BtiH5vuQmW7eIag8nTrLd6LBnL3Fa8PBqdckK2481ZJJdW1F7
-         TsIQ==
-X-Gm-Message-State: AGi0PubCj9f3NSBr3Ovjo2u868/1zF71VZcBBCBQSnJOD6yoFVD6gd9C
-        z9JW4FY4NP2GYRfmHew5ave60g==
-X-Google-Smtp-Source: APiQypLMrZKEwq4F1JdF2nJIfSq2/+huOYggfp7fD3EZNNWZpwE126NU17j3zPP4lqg2H2TKrefFiw==
-X-Received: by 2002:a63:a361:: with SMTP id v33mr6696515pgn.324.1585897328422;
-        Fri, 03 Apr 2020 00:02:08 -0700 (PDT)
-Received: from localhost ([45.127.44.53])
-        by smtp.gmail.com with ESMTPSA id a19sm5152553pfk.110.2020.04.03.00.02.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 00:02:07 -0700 (PDT)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        swboyd@chromium.org, lukasz.luba@arm.com, mka@chromium.org,
-        daniel.lezcano@linaro.org,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v5 3/3] dt-bindings: thermal: Add yaml bindings for thermal zones
-Date:   Fri,  3 Apr 2020 12:31:48 +0530
-Message-Id: <44e5c68bc654ccaf88945f70dc875fa186dd1480.1585748882.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1585748882.git.amit.kucheria@linaro.org>
-References: <cover.1585748882.git.amit.kucheria@linaro.org>
+        Fri, 3 Apr 2020 03:19:46 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:42743 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731040AbgDCHTp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 03:19:45 -0400
+Received: from [192.168.2.10] ([46.9.234.233])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id KGc5jMQXlLu1fKGc9jWmS0; Fri, 03 Apr 2020 09:19:42 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1585898382; bh=bfyg7ThmxUlUf6ym5ubXNAb9BySDxLNh8D08xS8LgfQ=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=o+wVQgbS9fJByy2/KuL3SISIaK9rfHUX7oN2Y6T/l9kgOQpQFSG0Q46vutIqAZnXz
+         5vcc8RCwAAo2DgU76T/Zzu/4yV6/sOF2GH6b+hnVp+WTD2hsAKs3p0xAMqo3kci3Vy
+         KO26IYeBvgZyu6CFa8KiP9cvgSA4gj8BruK2BnNNSPzDFfIZDWE7fV0cEPLxvdx0jx
+         WcUP4FmloycDqynnbly8LTv2cD582pGJRXsyibPrBKdpXxbWjneVvTWpmMdC4lwQ7c
+         iqwYK9l6/61hhKEIOg6wwf245VUhTCJR8H487jzZaPq2awz7wiAFqgXYoTZ8NXcLau
+         ocmep54ht6q7w==
+Subject: Re: [RFC PATCH v5 0/9] Add Tegra driver for video capture
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        helen.koike@collabora.com
+Cc:     digetx@gmail.com, sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
+ <4bb6a3b8-3332-014b-e763-bce9076179dd@xs4all.nl>
+ <5ca1583a-889e-abd0-f823-eab93f09a365@xs4all.nl>
+ <28ab0071-2e04-d14b-9215-db421e71b6af@nvidia.com>
+ <a8e6b937-de08-ce50-9eca-3b3a5ad2916c@nvidia.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <2aa2f57c-57a3-ff43-48d9-6e1e5660cdf3@xs4all.nl>
+Date:   Fri, 3 Apr 2020 09:19:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <a8e6b937-de08-ce50-9eca-3b3a5ad2916c@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfCllVTF7HJMNcL+6jxhsPF2WfEL2JReDDs20xoNP9MlpyE+vqQr0MvkW9ALIHXsrnJc0axCEPtOtBWPx5CnbAh/872d0Yx0PjxHrN7FxMfPtX85ymOyN
+ W7LP/+gTIT7NL6l48MGi5Aa7na6plTg+HmBnoDbwK4JqH6wX2+NuD2TO6il1FabhRQZIlbvNQiBA4/GscpCLTNFBCk0fniDhaZKDGTbCzCIIjegdSc+g+Fnp
+ q4Y1x8Rv0j8StUPZJcwdcEuhq0UaZezzMJIl7p32dzxt9k8IPaMdY+LIwvMJiNEn4y0SbcGV+O2pHbjZZ4+c6Q2dB0lhuUjBsPT0tfYfyWStNLeFfICVy+vp
+ WhznO4HYhaQEiPLOQrDI2YLla80XgS4aHhKV4SsrxHOotYWE0fRvHZvrM2fVvvHnsQfteKNSXzmGqSXi2loHvv3EPOukvSFTOHnXzoXxhCeWY41ydE7kIFGM
+ ORdyZtGGzN5sm+G/qHBlMUD8S3Jp0jnjVD/A3HUKZs8S48zGTe0irXk5LY3DyHBZ8sIqPzpq3plOOFFzJEhqwRSTaUxfgSWALhresA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-As part of moving the thermal bindings to YAML, split it up into 3
-bindings: thermal sensors, cooling devices and thermal zones.
+On 4/3/20 7:45 AM, Sowjanya Komatineni wrote:
+> 
+> On 3/30/20 9:16 AM, Sowjanya Komatineni wrote:
+>>
+>> On 3/30/20 4:02 AM, Hans Verkuil wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> On 3/30/20 12:04 PM, Hans Verkuil wrote:
+>>>> Hi Sowjanya,
+>>>>
+>>>> On 3/23/20 6:52 PM, Sowjanya Komatineni wrote:
+>>>>> This series adds Tegra210 VI and CSI driver for built-in test pattern
+>>>>> generator (TPG) capture.
+>>>>>
+>>>>> Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
+>>>>> CSI port is one-to-one mapped to VI channel for video capture.
+>>>>>
+>>>>> This series has TPG support only where it creates hard media links
+>>>>> between CSI subdevice and VI video device without device graphs.
+>>>>>
+>>>>> v4l2-compliance results are available below the patch diff.
+>>>>>
+>>>>> [v5]:        Includes,
+>>>>>       - v4 feedback
+>>>>>       - fix for venc powergate mc reset order.
+>>>>>       - fix to have unbind and bind work during v4l2-ctl sleep and 
+>>>>> streaming.
+>>>> Unfortunately, I still crash on this.
+>>>>
+>>>> I do the following:
+>>>>
+>>>> Run: v4l2-ctl --stream-mmap
+>>>>
+>>>> Then, from another shell as root:
+>>>>
+>>>> cd /sys/devices/platform/50000000.host1x/tegra-video/driver
+>>>> echo -n tegra-video > unbind
+>>>>
+>>>> I get this crash:
+>>>>
+>>>> [  315.691971] Unable to handle kernel NULL pointer dereference at 
+>>>> virtual address 00000000000000b0
+>>>> [  315.700749] Mem abort info:
+>>>> [  315.703536]   ESR = 0x96000004
+>>>> [  315.706587]   EC = 0x25: DABT (current EL), IL = 32 bits
+>>>> [  315.711886]   SET = 0, FnV = 0
+>>>> [  315.714933]   EA = 0, S1PTW = 0
+>>>> [  315.718064] Data abort info:
+>>>> [  315.720936]   ISV = 0, ISS = 0x00000004
+>>>> [  315.724763]   CM = 0, WnR = 0
+>>>> [  315.727726] user pgtable: 4k pages, 48-bit VAs, 
+>>>> pgdp=0000000178ee8000
+>>>> [  315.734152] [00000000000000b0] pgd=0000000000000000
+>>>> [  315.739024] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+>>>> [  315.744584] Modules linked in: r8152 nouveau lp855x_bl tegra_drm ttm
+>>>> [  315.750942] CPU: 3 PID: 2206 Comm: bash Tainted: G W         
+>>>> 5.6.0-rc1-arm64 #118
+>>>> [  315.759017] Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
+>>>> [  315.764927] pstate: 20000085 (nzCv daIf -PAN -UAO)
+>>>> [  315.769718] pc : _raw_write_lock_irqsave+0xb0/0x2b8
+>>>> [  315.774590] lr : ida_free+0x48/0x158
+>>>> [  315.778155] sp : ffff800011d8bba0
+>>>> [  315.781462] x29: ffff800011d8bba0 x28: ffff0000f4095400
+>>>> [  315.786766] x27: 0000000000000000 x26: 0000000000000000
+>>>> [  315.792070] x25: 0000000000000000 x24: 0000000000000000
+>>>> [  315.797372] x23: ffff0000f21ad400 x22: ffff0000f5c93000
+>>>> [  315.802674] x21: ffff0000f4095400 x20: ffff0000f86b5540
+>>>> [  315.807975] x19: 0000000000000000 x18: 0000000000000000
+>>>> [  315.813276] x17: 0000000000000001 x16: 0000000000000019
+>>>> [  315.818578] x15: 000000148ccdabe2 x14: 0000000000000136
+>>>> [  315.823879] x13: 0000000000000001 x12: 00000000000003f8
+>>>> [  315.829180] x11: 0000000000000000 x10: 0000000000000000
+>>>> [  315.834482] x9 : ffff0000ff899990 x8 : ffff0000ff899000
+>>>> [  315.839784] x7 : 0000000040000000 x6 : 0000000000210d00
+>>>> [  315.845085] x5 : 0000000000000001 x4 : 0000000000000000
+>>>> [  315.850386] x3 : 00000000000000b0 x2 : 0000000000000001
+>>>> [  315.855687] x1 : 0000000000000000 x0 : 0000000000000001
+>>>> [  315.860988] Call trace:
+>>>> [  315.863432]  _raw_write_lock_irqsave+0xb0/0x2b8
+>>>> [  315.867956]  ida_free+0x48/0x158
+>>>> [  315.871184]  __media_device_unregister_entity+0x28/0xf0
+>>>> [  315.876402]  media_device_unregister+0x6c/0x148
+>>>> [  315.880927]  host1x_video_remove+0x20/0x48
+>>>> [  315.885021]  host1x_device_remove+0x1c/0x30
+>>>> [  315.889198]  device_release_driver_internal+0xf4/0x1c0
+>>>> [  315.894325]  device_driver_detach+0x14/0x20
+>>>> [  315.898503]  unbind_store+0xd4/0xf8
+>>>> [  315.901986]  drv_attr_store+0x20/0x30
+>>>> [  315.905645]  sysfs_kf_write+0x40/0x50
+>>>> [  315.909301]  kernfs_fop_write+0xf8/0x210
+>>>> [  315.913219]  __vfs_write+0x18/0x40
+>>>> [  315.916616]  vfs_write+0xdc/0x1c8
+>>>> [  315.919926]  ksys_write+0x68/0xf0
+>>>> [  315.923235]  __arm64_sys_write+0x18/0x20
+>>>> [  315.927154]  el0_svc_common.constprop.0+0x68/0x160
+>>>> [  315.931936]  do_el0_svc+0x20/0x80
+>>>> [  315.935246]  el0_sync_handler+0x10c/0x180
+>>>> [  315.939246]  el0_sync+0x140/0x180
+>>>> [  315.942560] Code: 8803fc02 35ffffa3 17fffda6 f9800071 (885ffc60)
+>>>> [  315.948644] ---[ end trace e42b943f3c1af06c ]---
+>>>>
+>>>> The following diff fixes this:
+>>>>
+>>>> ------------------ cut here ------------------
+>>>> diff --git a/drivers/staging/media/tegra/tegra-vi.c 
+>>>> b/drivers/staging/media/tegra/tegra-vi.c
+>>>> index 9714152aa6a7..53cf37af9602 100644
+>>>> --- a/drivers/staging/media/tegra/tegra-vi.c
+>>>> +++ b/drivers/staging/media/tegra/tegra-vi.c
+>>>> @@ -583,7 +583,7 @@ static int tegra_channel_init(struct 
+>>>> tegra_vi_channel *chan)
+>>>>        /* initialize the video_device */
+>>>>        chan->video->fops = &tegra_channel_fops;
+>>>>        chan->video->v4l2_dev = &vid->v4l2_dev;
+>>>> -     chan->video->release = video_device_release_empty;
+>>>> +     chan->video->release = video_device_release;
+>>>>        chan->video->queue = &chan->queue;
+>>>>        snprintf(chan->video->name, sizeof(chan->video->name), 
+>>>> "%s-%s-%u",
+>>>>                 dev_name(vi->dev), "output", chan->portno);
+>>>> @@ -647,6 +647,7 @@ static int tegra_channel_init(struct 
+>>>> tegra_vi_channel *chan)
+>>>>        media_entity_cleanup(&chan->video->entity);
+>>>>   release_vdev:
+>>>>        video_device_release(chan->video);
+>>>> +     chan->video = NULL;
+>>>>        return ret;
+>>>>   }
+>>>>
+>>>> @@ -707,7 +708,6 @@ static void tegra_vi_channels_cleanup(struct 
+>>>> tegra_vi *vi)
+>>>>                        mutex_lock(&chan->video_lock);
+>>>>                        vb2_queue_release(&chan->queue);
+>>>>                        mutex_unlock(&chan->video_lock);
+>>>> -                     video_device_release(chan->video);
+>>>>                }
+>>>>
+>>>>                if (chan->frame_start_sp)
+>>>> ------------------ cut here ------------------
+>>> Note: Sakari suggested to embed struct video_device into struct 
+>>> tegra_vi_channel.
+>>> In that case chan->video->release should remain 
+>>> video_device_release_empty and
+>>> all video_device_alloc()/release() calls would have to be dropped.
+>>
+>> Thanks Hans. Tried several unbind/unbind not sure why it did not repro 
+>> during my testing.
+>>
+>> video device is also part of tegra_vi_channel. So, v6 will remove 
+>> video_device_alloc and use video_device_release_empty like I had in v3.
+>>
+>> This should help fix crash during unbind.
+>>
+>>>
+>>> Regards,
+>>>
+>>>          Hans
+> 
+> With video device being part of the channel structure, it gets allocated 
+> along with vi channel allocation during host1x vi client init and is 
+> removed during channel free which happens during host1x vi client exit.
+> 
+> Wit this during driver unbind with video node kept opened with v4l2-ctl 
+> sleep, it crashes during media_device_unregister_entity.
+> 
+> Using, separate video device allocation and freeing allocation during 
+> video device release callback,  driver unbind works  as by the time of 
+> entity unregister its it still available.
+> 
+> So, will keep allocating video device separately with video_device_alloc 
+> and will use video_device_release call back in v6.
+> 
 
-The thermal-zone binding is a software abstraction to capture the
-properties of each zone - how often they should be checked, the
-temperature thresholds (trips) at which mitigation actions need to be
-taken and the level of mitigation needed at those thresholds.
+Sounds good. Add a comment before video_device_alloc() explaining why it is
+used instead of embedding it in the vi channel data structure.
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
----
- .../bindings/thermal/thermal-zones.yaml       | 341 ++++++++++++++++++
- 1 file changed, 341 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+Regards,
 
-diff --git a/Documentation/devicetree/bindings/thermal/thermal-zones.yaml b/Documentation/devicetree/bindings/thermal/thermal-zones.yaml
-new file mode 100644
-index 0000000000000..b8515d3eeaa2b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/thermal-zones.yaml
-@@ -0,0 +1,341 @@
-+# SPDX-License-Identifier: (GPL-2.0)
-+# Copyright 2020 Linaro Ltd.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/thermal-zones.yaml#
-+$schema: http://devicetree.org/meta-schemas/base.yaml#
-+
-+title: Thermal zone binding
-+
-+maintainers:
-+  - Amit Kucheria <amitk@kernel.org>
-+
-+description: |
-+  Thermal management is achieved in devicetree by describing the sensor hardware
-+  and the software abstraction of cooling devices and thermal zones required to
-+  take appropriate action to mitigate thermal overloads.
-+
-+  The following node types are used to completely describe a thermal management
-+  system in devicetree:
-+   - thermal-sensor: device that measures temperature, has SoC-specific bindings
-+   - cooling-device: device used to dissipate heat either passively or actively
-+   - thermal-zones: a container of the following node types used to describe all
-+     thermal data for the platform
-+
-+  This binding describes the thermal-zones.
-+
-+  The polling-delay properties of a thermal-zone are bound to the maximum dT/dt
-+  (temperature derivative over time) in two situations for a thermal zone:
-+    1. when passive cooling is activated (polling-delay-passive)
-+    2. when the zone just needs to be monitored (polling-delay) or when
-+       active cooling is activated.
-+
-+  The maximum dT/dt is highly bound to hardware power consumption and
-+  dissipation capability. The delays should be chosen to account for said
-+  max dT/dt, such that a device does not cross several trip boundaries
-+  unexpectedly between polls. Choosing the right polling delays shall avoid
-+  having the device in temperature ranges that may damage the silicon structures
-+  and reduce silicon lifetime.
-+
-+properties:
-+  $nodename:
-+    const: thermal-zones
-+    description:
-+      A /thermal-zones node is required in order to use the thermal framework to
-+      manage input from the various thermal zones in the system in order to
-+      mitigate thermal overload conditions. It does not represent a real device
-+      in the system, but acts as a container to link a thermal sensor device,
-+      platform-data regarding temperature thresholds and the mitigation actions
-+      to take when the temperature crosses those thresholds.
-+
-+patternProperties:
-+  "^[a-zA-Z][a-zA-Z0-9\\-]{1,12}-thermal$":
-+    type: object
-+    description:
-+      Each thermal zone node contains information about how frequently it
-+      must be checked, the sensor responsible for reporting temperature for
-+      this zone, one sub-node containing the various trip points for this
-+      zone and one sub-node containing all the zone cooling-maps.
-+
-+    properties:
-+      polling-delay:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          The maximum number of milliseconds to wait between polls when
-+          checking this thermal zone. Setting this to 0 disables the polling
-+          timers setup by the thermal framework and assumes that the thermal
-+          sensors in this zone support interrupts.
-+
-+      polling-delay-passive:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          The maximum number of milliseconds to wait between polls when
-+          checking this thermal zone while doing passive cooling. Setting
-+          this to 0 disables the polling timers setup by the thermal
-+          framework and assumes that the thermal sensors in this zone
-+          support interrupts.
-+
-+      thermal-sensors:
-+        $ref: /schemas/types.yaml#/definitions/phandle-array
-+        maxItems: 1
-+        description:
-+          The thermal sensor phandle and sensor specifier used to monitor this
-+          thermal zone.
-+
-+      coefficients:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description:
-+          An array of integers containing the coefficients of a linear equation
-+          that binds all the sensors listed in this thermal zone.
-+
-+          The linear equation used is as follows,
-+            z = c0 * x0 + c1 * x1 + ... + c(n-1) * x(n-1) + cn
-+          where c0, c1, .., cn are the coefficients.
-+
-+          Coefficients default to 1 in case this property is not specified. The
-+          coefficients are ordered and are matched with sensors by means of the
-+          sensor ID. Additional coefficients are interpreted as constant offset.
-+
-+      sustainable-power:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          An estimate of the sustainable power (in mW) that this thermal zone
-+          can dissipate at the desired control temperature. For reference, the
-+          sustainable power of a 4-inch phone is typically 2000mW, while on a
-+          10-inch tablet is around 4500mW.
-+
-+      trips:
-+        type: object
-+        description:
-+          This node describes a set of points in the temperature domain at
-+          which the thermal framework needs to take action. The actions to
-+          be taken are defined in another node called cooling-maps.
-+
-+        patternProperties:
-+          "^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$":
-+            type: object
-+
-+            properties:
-+              temperature:
-+                $ref: /schemas/types.yaml#/definitions/int32
-+                minimum: -273000
-+                maximum: 200000
-+                description:
-+                  An integer expressing the trip temperature in millicelsius.
-+
-+              hysteresis:
-+                $ref: /schemas/types.yaml#/definitions/uint32
-+                description:
-+                  An unsigned integer expressing the hysteresis delta with
-+                  respect to the trip temperature property above, also in
-+                  millicelsius. Any cooling action initiated by the framework is
-+                  maintained until the temperature falls below
-+                  (trip temperature - hysteresis). This potentially prevents a
-+                  situation where the trip gets constantly triggered soon after
-+                  cooling action is removed.
-+
-+              type:
-+                $ref: /schemas/types.yaml#/definitions/string
-+                enum:
-+                  - active   # enable active cooling e.g. fans
-+                  - passive  # enable passive cooling e.g. throttling cpu
-+                  - hot      # send notification to driver
-+                  - critical # send notification to driver, trigger shutdown
-+                description: |
-+                  There are four valid trip types: active, passive, hot,
-+                  critical.
-+
-+                  The critical trip type is used to set the maximum
-+                  temperature threshold above which the HW becomes
-+                  unstable and underlying firmware might even trigger a
-+                  reboot. Hitting the critical threshold triggers a system
-+                  shutdown.
-+
-+                  The hot trip type can be used to send a notification to
-+                  the thermal driver (if a .notify callback is registered).
-+                  The action to be taken is left to the driver.
-+
-+                  The passive trip type can be used to slow down HW e.g. run
-+                  the CPU, GPU, bus at a lower frequency.
-+
-+                  The active trip type can be used to control other HW to
-+                  help in cooling e.g. fans can be sped up or slowed down
-+
-+            required:
-+              - temperature
-+              - hysteresis
-+              - type
-+            additionalProperties: false
-+
-+        additionalProperties: false
-+
-+      cooling-maps:
-+        type: object
-+        description:
-+          This node describes the action to be taken when a thermal zone
-+          crosses one of the temperature thresholds described in the trips
-+          node. The action takes the form of a mapping relation between a
-+          trip and the target cooling device state.
-+
-+        patternProperties:
-+          "^map[-a-zA-Z0-9]*$":
-+            type: object
-+
-+            properties:
-+              trip:
-+                $ref: /schemas/types.yaml#/definitions/phandle
-+                description:
-+                  A phandle of a trip point node within this thermal zone.
-+
-+              cooling-device:
-+                $ref: /schemas/types.yaml#/definitions/phandle-array
-+                description:
-+                  A list of cooling device phandles along with the minimum
-+                  and maximum cooling state specifiers for each cooling
-+                  device. Using the THERMAL_NO_LIMIT (-1UL) constant in the
-+                  cooling-device phandle limit specifier lets the framework
-+                  use the minimum and maximum cooling state for that cooling
-+                  device automatically.
-+
-+              contribution:
-+                $ref: /schemas/types.yaml#/definitions/uint32
-+                minimum: 0
-+                maximum: 100
-+                description:
-+                  The percentage contribution of the cooling devices at the
-+                  specific trip temperature referenced in this map
-+                  to this thermal zone
-+
-+            required:
-+              - trip
-+              - cooling-device
-+            additionalProperties: false
-+
-+    required:
-+      - polling-delay
-+      - polling-delay-passive
-+      - thermal-sensors
-+      - trips
-+    additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/thermal/thermal.h>
-+
-+    // Example 1: SDM845 TSENS
-+    soc: soc@0 {
-+            #address-cells = <2>;
-+            #size-cells = <2>;
-+
-+            /* ... */
-+
-+            tsens0: thermal-sensor@c263000 {
-+                    compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
-+                    reg = <0 0x0c263000 0 0x1ff>, /* TM */
-+                          <0 0x0c222000 0 0x1ff>; /* SROT */
-+                    #qcom,sensors = <13>;
-+                    interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
-+                                 <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
-+                    interrupt-names = "uplow", "critical";
-+                    #thermal-sensor-cells = <1>;
-+            };
-+
-+            tsens1: thermal-sensor@c265000 {
-+                    compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
-+                    reg = <0 0x0c265000 0 0x1ff>, /* TM */
-+                          <0 0x0c223000 0 0x1ff>; /* SROT */
-+                    #qcom,sensors = <8>;
-+                    interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
-+                                 <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>;
-+                    interrupt-names = "uplow", "critical";
-+                    #thermal-sensor-cells = <1>;
-+            };
-+    };
-+
-+    /* ... */
-+
-+    thermal-zones {
-+            cpu0-thermal {
-+                    polling-delay-passive = <250>;
-+                    polling-delay = <1000>;
-+
-+                    thermal-sensors = <&tsens0 1>;
-+
-+                    trips {
-+                            cpu0_alert0: trip-point0 {
-+                                    temperature = <90000>;
-+                                    hysteresis = <2000>;
-+                                    type = "passive";
-+                            };
-+
-+                            cpu0_alert1: trip-point1 {
-+                                    temperature = <95000>;
-+                                    hysteresis = <2000>;
-+                                    type = "passive";
-+                            };
-+
-+                            cpu0_crit: cpu_crit {
-+                                    temperature = <110000>;
-+                                    hysteresis = <1000>;
-+                                    type = "critical";
-+                            };
-+                    };
-+
-+                    cooling-maps {
-+                            map0 {
-+                                    trip = <&cpu0_alert0>;
-+                                    /* Corresponds to 1400MHz in OPP table */
-+                                    cooling-device = <&CPU0 3 3>, <&CPU1 3 3>,
-+                                                     <&CPU2 3 3>, <&CPU3 3 3>;
-+                            };
-+
-+                            map1 {
-+                                    trip = <&cpu0_alert1>;
-+                                    /* Corresponds to 1000MHz in OPP table */
-+                                    cooling-device = <&CPU0 5 5>, <&CPU1 5 5>,
-+                                                     <&CPU2 5 5>, <&CPU3 5 5>;
-+                            };
-+                    };
-+            };
-+
-+            /* ... */
-+
-+            cluster0-thermal {
-+                    polling-delay-passive = <250>;
-+                    polling-delay = <1000>;
-+
-+                    thermal-sensors = <&tsens0 5>;
-+
-+                    trips {
-+                            cluster0_alert0: trip-point0 {
-+                                    temperature = <90000>;
-+                                    hysteresis = <2000>;
-+                                    type = "hot";
-+                            };
-+                            cluster0_crit: cluster0_crit {
-+                                    temperature = <110000>;
-+                                    hysteresis = <2000>;
-+                                    type = "critical";
-+                            };
-+                    };
-+            };
-+
-+            /* ... */
-+
-+            gpu-top-thermal {
-+                    polling-delay-passive = <250>;
-+                    polling-delay = <1000>;
-+
-+                    thermal-sensors = <&tsens0 11>;
-+
-+                    trips {
-+                            gpu1_alert0: trip-point0 {
-+                                    temperature = <90000>;
-+                                    hysteresis = <2000>;
-+                                    type = "hot";
-+                            };
-+                    };
-+            };
-+    };
-+...
--- 
-2.20.1
-
+	Hans
