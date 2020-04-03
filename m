@@ -2,163 +2,232 @@ Return-Path: <SRS0=qh1l=5T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 358B0C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 12:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E397C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 12:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 082B42078C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 12:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E710B20721
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 12:43:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="TE2LwhOx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mz2mmnd8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgDCMfK (ORCPT
+        id S1728175AbgDCMn0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 08:35:10 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12476 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728100AbgDCMfK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 08:35:10 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e872d1a0000>; Fri, 03 Apr 2020 05:33:30 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 03 Apr 2020 05:35:09 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 03 Apr 2020 05:35:09 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 3 Apr
- 2020 12:35:08 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 3 Apr 2020 12:35:09 +0000
-Received: from sandipan-pc.nvidia.com (Not Verified[10.24.42.163]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e872d7a0000>; Fri, 03 Apr 2020 05:35:08 -0700
-From:   Sandipan Patra <spatra@nvidia.com>
-To:     <treding@nvidia.com>, <robh+dt@kernel.org>,
-        <u.kleine-koenig@pengutronix.de>, <jonathanh@nvidia.com>
-CC:     <bbasu@nvidia.com>, <ldewangan@nvidia.com>,
-        <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Sandipan Patra <spatra@nvidia.com>
-Subject: [PATCH] pwm: tegra: dynamic clk freq configuration by PWM driver
-Date:   Fri, 3 Apr 2020 18:05:03 +0530
-Message-ID: <1585917303-10573-1-git-send-email-spatra@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-X-NVConfidentiality: public
-MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585917210; bh=SYS3vdECv0ZXlLBQF+6iQhj+wQ1YRaHGnboJxduGkVU=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=TE2LwhOxmbiB5ep0DTE9I92w7enAAm+wO8gl3WQ6R5P9Nkb5JlEgEwniETwrlX1LM
-         y2HiO9fs21duqc64qD+ctPOXdkMTVhXEamSe765g9z2cyYKzD7K3uKu/kDO7eEeQne
-         dPaoe69ra/g6ViN0aEqmc5bGuU1SFgsNJ7wkDL/eyfwJbdsHBuKXI70HGDL2WL3y3A
-         p+LVoN7mmdqsytVuQFJNgYWP18Sjzw4B3BYCuGwUi1WGHGAtVHuGEVSGT1yLaFFE/B
-         /1AbJRw1m/o7KhkOXwVZrwCtbsfrAZEZa1FA9m1vGSPN51tRWDUX+EJVQwtJhZmcO7
-         iEklmlEZ698qA==
+        Fri, 3 Apr 2020 08:43:26 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40244 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727965AbgDCMnZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 08:43:25 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s8so6218715wrt.7;
+        Fri, 03 Apr 2020 05:43:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HKSaFU1ljMFGNxPUS/qIK5WBodsEvdWVlhlU/sdRISo=;
+        b=Mz2mmnd8WwmABTgVe9q8mKJnoErjpgv8IbeGXxlmSqY0iG6TIrwohnd2JhYb8G37Yh
+         mcK2rZQkNWMfOY0hbyAERWzwhq5qHvqRPfMaSNL+q+NeJlL4xC5xJKvpIiT1+ZQbEEYv
+         UgZbbZF8KIGy3vcHR/toO0BZ8cTCVe6rQZayplH6C9PKuaQzlIrPmjXOAAE4wDduOfJq
+         4SfEmO7ZeEvXsUkNABCFfb2wW8vSthEB2hq4+DZeCHlLUDaHCeRJfI8QK1UpcSob1Cx1
+         LhiMdXmmXIKrPbHJGw7q+DsfNyTK2oe6gR5D4Temxgwh6IIgh8XW55/7vFR8YdC6rLD3
+         5B7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HKSaFU1ljMFGNxPUS/qIK5WBodsEvdWVlhlU/sdRISo=;
+        b=qiFVSraATwjRNtIfi8FiLXGcn78DCJ8kAMBW2DREYOcjclfzougaipfpUfrfiFJX6+
+         8k7junnNcTlzxEjmSFup+H/cT8ojsikhuiRgNhgXC6DLwN0sabffIkdzgQm2o0Q3nSot
+         g3BgtMl7OS3rl/GagOJsO6Z7vDAMcBlbYke0JGksrLWsn8TzPe3VPPt3KzeKosghanDb
+         Fve+BRnw55WIMSMCoQ87FNvwMfWnUkr+1lFYzEWQjG1Z8qwMo5oeKmbXC3cJMzt7gvGv
+         2RCG+EGNOcJCZtzZJf52dIgP2Af82E8g2bpoJg2n3vgOHOGV9NdfDtgbsGZfnck2cuW6
+         a9UA==
+X-Gm-Message-State: AGi0PuZt4XsfewKALOP8OnQhz50AwnaJVP25klugXJrvBmAy/fe6maRm
+        0T3hXngXZGB+NmMz1JFnps0=
+X-Google-Smtp-Source: APiQypLA6bS2lGCmQmJDp4DJ7Dplpig1wUUk3XE/h5DvHOMnuRPKQ/v+JzBXiURE6qmjxUW6ZblJvw==
+X-Received: by 2002:adf:a347:: with SMTP id d7mr2015540wrb.21.1585917803643;
+        Fri, 03 Apr 2020 05:43:23 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id p10sm11735307wrm.6.2020.04.03.05.43.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 Apr 2020 05:43:23 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     ezequiel@collabora.com
+Cc:     mchehab@kernel.org, robh+dt@kernel.org, heiko@sntech.de,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1] dt-bindings: media: convert rockchip vpu bindings to yaml
+Date:   Fri,  3 Apr 2020 14:43:16 +0200
+Message-Id: <20200403124316.5445-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Added support for dynamic clock freq configuration in pwm kernel driver.
-Earlier the pwm driver used to cache boot time clock rate by pwm clock
-parent during probe. Hence dynamically changing pwm frequency was not
-possible for all the possible ranges. With this change, dynamic calculation
-is enabled and it is able to set the requested period from sysfs knob
-provided the value is supported by clock source.
+Current dts files for Rockchip with 'vpu' nodes
+are manually verified. In order to automate this process
+rockchip-vpu.txt has to be converted to yaml.
 
-Changes mainly have 2 parts:
-  - T186 and later chips [1]
-  - T210 and prior chips [2]
+Changed:
+  Add missing reg property
 
-For [1] - Changes implemented to set pwm period dynamically and
-          also checks added to allow only if requested period(ns) is
-          below or equals to higher range.
-
-For [2] - Only checks if the requested period(ns) is below or equals
-          to higher range defined by max clock limit. The limitation
-          in T210 or prior chips are due to the reason of having only
-          one pwm-controller supporting multiple channels. But later
-          chips have multiple pwm controller instances each having
-	  single channel support.
-
-Signed-off-by: Sandipan Patra <spatra@nvidia.com>
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- drivers/pwm/pwm-tegra.c | 45 +++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 43 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/media/rockchip-vpu.txt     | 43 -------------
+ .../devicetree/bindings/media/rockchip-vpu.yaml    | 75 ++++++++++++++++++++++
+ MAINTAINERS                                        |  2 +-
+ 3 files changed, 76 insertions(+), 44 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.txt
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.yaml
 
-diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
-index aa12fb3..d3ba33c 100644
---- a/drivers/pwm/pwm-tegra.c
-+++ b/drivers/pwm/pwm-tegra.c
-@@ -4,7 +4,7 @@
-  *
-  * Tegra pulse-width-modulation controller driver
-  *
-- * Copyright (c) 2010, NVIDIA Corporation.
-+ * Copyright (c) 2010-2020, NVIDIA Corporation.
-  * Based on arch/arm/plat-mxc/pwm.c by Sascha Hauer <s.hauer@pengutronix.de>
-  */
+diff --git a/Documentation/devicetree/bindings/media/rockchip-vpu.txt b/Documentation/devicetree/bindings/media/rockchip-vpu.txt
+deleted file mode 100644
+index 339252d9c..000000000
+--- a/Documentation/devicetree/bindings/media/rockchip-vpu.txt
++++ /dev/null
+@@ -1,43 +0,0 @@
+-device-tree bindings for rockchip VPU codec
+-
+-Rockchip (Video Processing Unit) present in various Rockchip platforms,
+-such as RK3288, RK3328 and RK3399.
+-
+-Required properties:
+-- compatible: value should be one of the following
+-		"rockchip,rk3288-vpu";
+-		"rockchip,rk3328-vpu";
+-		"rockchip,rk3399-vpu";
+-- interrupts: encoding and decoding interrupt specifiers
+-- interrupt-names: should be
+-		"vepu", "vdpu" on RK3288 and RK3399,
+-		"vdpu" on RK3328.
+-- clocks: phandle to VPU aclk, hclk clocks
+-- clock-names: should be "aclk" and "hclk"
+-- power-domains: phandle to power domain node
+-- iommus: phandle to a iommu node
+-
+-Example:
+-SoC-specific DT entry:
+-	vpu: video-codec@ff9a0000 {
+-		compatible = "rockchip,rk3288-vpu";
+-		reg = <0x0 0xff9a0000 0x0 0x800>;
+-		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupt-names = "vepu", "vdpu";
+-		clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
+-		clock-names = "aclk", "hclk";
+-		power-domains = <&power RK3288_PD_VIDEO>;
+-		iommus = <&vpu_mmu>;
+-	};
+-
+-	vpu: video-codec@ff350000 {
+-		compatible = "rockchip,rk3328-vpu";
+-		reg = <0x0 0xff350000 0x0 0x800>;
+-		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupt-names = "vdpu";
+-		clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
+-		clock-names = "aclk", "hclk";
+-		power-domains = <&power RK3328_PD_VPU>;
+-		iommus = <&vpu_mmu>;
+-	};
+diff --git a/Documentation/devicetree/bindings/media/rockchip-vpu.yaml b/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+new file mode 100644
+index 000000000..c64c33923
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+@@ -0,0 +1,75 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/rockchip-vpu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Rockchip video processing unit (VPU) codec
++
++maintainers:
++  - Ezequiel Garcia <ezequiel@collabora.com>
++
++properties:
++  compatible:
++    enum:
++      - rockchip,rk3288-vpu
++      - rockchip,rk3328-vpu
++      - rockchip,rk3399-vpu
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 1
++    maxItems: 2
++
++  interrupt-names:
++    oneOf:
++      - const: vdpu
++      - items:
++        - const: vepu
++        - const: vdpu
++
++  clocks:
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: aclk
++      - const: hclk
++
++  iommus:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-names
++  - clocks
++  - clock-names
++  - iommus
++  - power-domains
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/rk3288-cru.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/power/rk3288-power.h>
++    vpu: video-codec@ff9a0000 {
++      compatible = "rockchip,rk3288-vpu";
++      reg = <0x0 0xff9a0000 0x0 0x800>;
++      interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
++      interrupt-names = "vepu", "vdpu";
++      clocks = <&cru ACLK_VCODEC>,
++               <&cru HCLK_VCODEC>;
++      clock-names = "aclk", "hclk";
++      iommus = <&vpu_mmu>;
++      power-domains = <&power RK3288_PD_VIDEO>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a480cec62..ce80b22cf 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14374,7 +14374,7 @@ M:	Ezequiel Garcia <ezequiel@collabora.com>
+ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ F:	drivers/staging/media/hantro/
+-F:	Documentation/devicetree/bindings/media/rockchip-vpu.txt
++F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
  
-@@ -83,10 +83,51 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	val = (u32)c << PWM_DUTY_SHIFT;
- 
- 	/*
-+	 * Its okay to ignore the fraction part since we will be trying to set
-+	 * slightly lower value to rate than the actual required rate
-+	 */
-+	rate = NSEC_PER_SEC/period_ns;
-+
-+	/*
-+	 *  Period in nano second has to be <= highest allowed period
-+	 *  based on the max clock rate of the pwm controller.
-+	 *
-+	 *  higher limit = max clock limit >> PWM_DUTY_WIDTH
-+	 */
-+	if (rate > (pc->soc->max_frequency >> PWM_DUTY_WIDTH))
-+		return -EINVAL;
-+
-+	/*
- 	 * Compute the prescaler value for which (1 << PWM_DUTY_WIDTH)
- 	 * cycles at the PWM clock rate will take period_ns nanoseconds.
- 	 */
--	rate = pc->clk_rate >> PWM_DUTY_WIDTH;
-+	if (pc->soc->num_channels == 1) {
-+		/*
-+		 * Rate is multiplied with 2^PWM_DUTY_WIDTH so that it matches
-+		 * with the hieghest applicable rate that the controller can
-+		 * provide. Any further lower value can be derived by setting
-+		 * PFM bits[0:12].
-+		 * Higher mark is taken since BPMP has round-up mechanism
-+		 * implemented.
-+		 */
-+		rate = rate << PWM_DUTY_WIDTH;
-+
-+		err = clk_set_rate(pc->clk, rate);
-+		if (err < 0)
-+			return -EINVAL;
-+
-+		rate = clk_get_rate(pc->clk) >> PWM_DUTY_WIDTH;
-+	} else {
-+		/*
-+		 * This is the case for SoCs who support multiple channels:
-+		 *
-+		 * clk_set_rate() can not be called again in config because
-+		 * T210 or any prior chip supports one pwm-controller and
-+		 * multiple channels. Hence in this case cached clock rate
-+		 * will be considered which was stored during probe.
-+		 */
-+		rate = pc->clk_rate >> PWM_DUTY_WIDTH;
-+	}
- 
- 	/* Consider precision in PWM_SCALE_WIDTH rate calculation */
- 	hz = DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns);
+ ROCKER DRIVER
+ M:	Jiri Pirko <jiri@resnulli.us>
 -- 
-2.7.4
+2.11.0
 
