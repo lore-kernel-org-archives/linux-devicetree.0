@@ -2,140 +2,134 @@ Return-Path: <SRS0=qh1l=5T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6531C2BA16
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 05:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A25C9C2BA16
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 05:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B42E20787
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 05:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A093208E4
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 05:29:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dyRE1GZp"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xi5KMTsZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbgDCFMD (ORCPT
+        id S1732711AbgDCF3Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 01:12:03 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:56558 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbgDCFMD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 01:12:03 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0335BmNs071109;
-        Fri, 3 Apr 2020 00:11:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585890708;
-        bh=jofktekZwJmynwAp+73dh/VN6DTrbyAH++7Gc/JbF2c=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=dyRE1GZpuDhhxymx4cHTF/J5WNzncrW1a9rh/0gJcmwGMKWXhQvXZ056vLZNYiOBh
-         IU1hnyhT/djvFb7+LGb07eqkOx++BJ99CokPud4r3arsgzE8zKeOU5aTFBPWMsCTBR
-         6moFnRAwIx61s/1mT2YeJVkp24XPxaxpUAfmIxMY=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0335Bm4u097176
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 3 Apr 2020 00:11:48 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 3 Apr
- 2020 00:11:48 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 3 Apr 2020 00:11:48 -0500
-Received: from [10.24.69.198] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0335Bg4R055217;
-        Fri, 3 Apr 2020 00:11:43 -0500
-Subject: Re: [PATCH net-next v6 00/11] net: ethernet: ti: add networking
- support for k3 am65x/j721e soc
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-CC:     Will Deacon <will@kernel.org>,
+        Fri, 3 Apr 2020 01:29:16 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36206 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730889AbgDCF3Q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 01:29:16 -0400
+Received: by mail-pg1-f194.google.com with SMTP id c23so2988354pgj.3
+        for <devicetree@vger.kernel.org>; Thu, 02 Apr 2020 22:29:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TWUVEWHfILYD4mLoLxiKPBxfXnp3kNrR0NuQf2K0ahQ=;
+        b=Xi5KMTsZkOO7QTHFIZYuRuEr2Z/+6lNWa58ajHP5SQHleic4V+fa3OVt47Iv2/Ytlo
+         AXpJAyiP3yJ3dlaDdpHDhDZFU6cTeYM5BpcgJRXE6fBovCc7bjdG4NRusRfkdLgkky0y
+         VuKqJHgsxIvuagj4lAOrlp9zMnQUOMncAdPIA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TWUVEWHfILYD4mLoLxiKPBxfXnp3kNrR0NuQf2K0ahQ=;
+        b=RYGGhRRfiWERzoJhH7oYRtC3QUC7sROsLIdlriOgLVcIHBudzf8LBgo2IFk1K/zOCl
+         igjyWXnCibwhqZQpWrq9Yjww3xlz0rV+1NWJQF9JmIYEU6e2/ckwjkxmInQe66VitlOW
+         RGv14jXhjdC2y+293wkka22gYy9kzPedZZlBBkFM35n0+myppmNLf7+Ha+micbbbwjQc
+         KstkYcuIlV7uuoMY52pGrKE7tIAMsBtgxArpnAeee2pHJ/GF0hECxTLa/XaUkGgNh4XE
+         B+7Z6zWZDel5PEvbG3L3uI2ExISqzscRBf7PhIoJlPc2YE7gWHwexjzS38P0chvHtfF5
+         HPHg==
+X-Gm-Message-State: AGi0PuYwf//uuLMQtXjacAm4qF6sW3XTnKzLMB3YU+OEnxhz1fftabTl
+        NQ5jr5mIkCAIYj8NArXR7FCgRw==
+X-Google-Smtp-Source: APiQypJwFGVlMhKNjzHxxikpLJzTjv9S0yp8wd3gigfUtQE9RxnY+jxENnaohkQ5QkAddaxMxtczTg==
+X-Received: by 2002:aa7:961c:: with SMTP id q28mr7020119pfg.177.1585891755586;
+        Thu, 02 Apr 2020 22:29:15 -0700 (PDT)
+Received: from localhost ([2401:fa00:9:14:1105:3e8a:838d:e326])
+        by smtp.gmail.com with ESMTPSA id c21sm4451578pgn.84.2020.04.02.22.29.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Apr 2020 22:29:15 -0700 (PDT)
+From:   Evan Benn <evanbenn@chromium.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     xingyu.chen@amlogic.com, jwerner@chromium.org,
+        Evan Benn <evanbenn@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>, <devicetree@vger.kernel.org>,
-        <kishon@ti.com>, Jakub Kicinski <kuba@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, <m-karicheri2@ti.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Olof Johansson <olof@lixom.net>, <olteanv@gmail.com>,
-        <peter.ujfalusi@ti.com>, Rob Herring <robh@kernel.org>,
-        <rogerq@ti.com>, <t-kristo@ti.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-References: <20200401.113627.1377328159361906184.davem@davemloft.net>
- <20200401223500.224253-1-ndesaulniers@google.com>
- <20200402094239.GA3770@willie-the-truck>
- <adc2aa08-60e2-cdc3-6b5b-6d96f8805c44@ti.com>
- <CAKwvOdk4H052Y=t4_XXy=rMV=CUYPNhb5CN6x8-dBTNaTt3aPA@mail.gmail.com>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <818261f1-0075-94ee-f73b-3f72a058999f@ti.com>
-Date:   Fri, 3 Apr 2020 10:41:42 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Vinod Koul <vkoul@kernel.org>, Will Deacon <will@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org
+Subject: [PATCH v2 0/2] Add a watchdog driver that uses ARM Secure Monitor Calls.
+Date:   Fri,  3 Apr 2020 16:28:58 +1100
+Message-Id: <20200403052900.258855-1-evanbenn@chromium.org>
+X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
 MIME-Version: 1.0
-In-Reply-To: <CAKwvOdk4H052Y=t4_XXy=rMV=CUYPNhb5CN6x8-dBTNaTt3aPA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 02/04/20 10:57 PM, Nick Desaulniers wrote:
-> On Thu, Apr 2, 2020 at 4:05 AM Grygorii Strashko
-> <grygorii.strashko@ti.com> wrote:
->>
->>
->>
->> On 02/04/2020 12:42, Will Deacon wrote:
->>> On Wed, Apr 01, 2020 at 03:35:00PM -0700, Nick Desaulniers wrote:
->>>>>> I think the ARM64 build is now also broken on Linus' master branch,
->>>>>> after the net-next merge? I am not quite sure if the device tree
->>>>>> patches were supposed to land in mainline the way they did.
->>>>>
->>>>> There's a fix in my net tree and it will go to Linus soon.
->>>>>
->>>>> There is no clear policy for dt change integration, and honestly
->>>>> I try to deal with the situation on a case by case basis.
->>>>
->>>> Yep, mainline aarch64-linux-gnu- builds are totally hosed.  DTC fails the build
->>>> very early on:
->>>> https://travis-ci.com/github/ClangBuiltLinux/continuous-integration/jobs/311246218
->>>> https://travis-ci.com/github/ClangBuiltLinux/continuous-integration/jobs/311246270
->>>> There was no failure in -next, not sure how we skipped our canary in the coal
->>>> mine.
->>>
->>> Yes, one of the things linux-next does a really good job at catching is
->>> build breakage so it would've been nice to have seen this there rather
->>> than end up with breakage in Linus' tree :(
->>>
->>> Was the timing just bad, or are we missing DT coverage or something else?
->>
->> It seems issue was not caught in -next because the patch that fixes the issue was already in -next
->> before this series was pushed.
->>
->> Sorry for the mess again.
-> 
-> No worries, it's just worthwhile to study failures.  So IIUC, in this case:
-> mainline was 5.6
-> the broken patch was merged in 5.7 merge window
-> a fix was already in -next, but not slated for the new merge window.
-> (Maybe scheduled for 5.8?)
+This is currently supported in firmware deployed on oak, hana and elm mt8173
+chromebook devices. The kernel driver is written to be a generic SMC
+watchdog driver.
 
-No, the "fix" is scheduled to go into v5.7 kernel as well. It is here:
+Arm Trusted Firmware upstreaming review:
+    https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/3405
 
-git://git.kernel.org/pub/scm/linux/kernel/git/kristo/linux tags/ti-k3-soc-for-v5.7
+Patch to add oak, hana, elm device tree:
+    https://lore.kernel.org/linux-arm-kernel/20200110073730.213789-1-hsinyi@chromium.org/
+I would like to add the device tree support after the above patch is
+accepted.
 
-This is already part of ARM SoC tree, and slated for v5.7
+Changes in v3:
+- Change name back to arm
+- Add optional get_timeleft op
+- change name to arm_smc_wdt
 
-https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git/log/?h=arm/dt
+Changes in v2:
+- Change name arm > mt8173
+- use watchdog_stop_on_reboot
+- use watchdog_stop_on_unregister
+- use devm_watchdog_register_device
+- remove smcwd_shutdown, smcwd_remove
+- change error codes
 
-Arnd, Olof,
+Evan Benn (1):
+  dt-bindings: watchdog: Add ARM smc wdt for mt8173 watchdog
 
-Can you please help by either queuing the arm/dt entirely or just the K3 SoC 
-parts to Linus sooner than later?
+Julius Werner (1):
+  watchdog: Add new arm_smd_wdt watchdog driver
 
-Thanks,
-Sekhar
+ .../bindings/watchdog/arm-smc-wdt.yaml        |  30 +++
+ MAINTAINERS                                   |   7 +
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/watchdog/Kconfig                      |  13 ++
+ drivers/watchdog/Makefile                     |   1 +
+ drivers/watchdog/arm_smc_wdt.c                | 181 ++++++++++++++++++
+ 6 files changed, 233 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml
+ create mode 100644 drivers/watchdog/arm_smc_wdt.c
+
+-- 
+2.26.0.292.g33ef6b2f38-goog
+
