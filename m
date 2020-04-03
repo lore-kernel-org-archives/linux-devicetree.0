@@ -2,122 +2,163 @@ Return-Path: <SRS0=qh1l=5T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 803ADC2D0E8
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 12:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358B0C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 12:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D9342078C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 12:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082B42078C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 12:35:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="e8TLsaVw"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="TE2LwhOx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbgDCMda (ORCPT
+        id S1728264AbgDCMfK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 08:33:30 -0400
-Received: from mail-eopbgr40062.outbound.protection.outlook.com ([40.107.4.62]:48929
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728068AbgDCMda (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 3 Apr 2020 08:33:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BrrOHGNPNn+a7u8zA19QNPsprzIQL2q6RKMH0F3mBsf9BPvvc6yFV7zdRwclH54Ju3ItrW+NXTAWOynetw1RlxY/otmfpZrV5M2YGHtEfM2PYG3MyzV+cvkA1Dp33w5EiZh7IFgdDnbRiPf4/XHJ+pccAAR3WBNiw8g30AvU693v+KaBJxbJsRjDoedII8AuNevAcyAzOo0HlHPyc1vrdIQmxCZ2DfFGxZa3MPD3yb5+uv4JGwY+8c12oXzQP7zgvfwF0+n/b/Aotvor+RHMUslaNH7Yz/PVn3ikq8niEt5lFSWiSaDvOn22BG+mF+8EOfIZmVZqS3smFRcqbJi34Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DvEUeQYQMqYCiEXEi+AFQP3tXqAYTx+G4fP9FNLWc20=;
- b=KB+sgETRzq6KWNqACZQPHgAIohDCqRmvKlPUgYAS1FAOBsmqCwOR6Bj+mFfUc6mosbRhIT+nGJfmUYDlXkUqzZ+ZR9qiF3OfBzN0MZbqpj74K3xlIZGnLH684vtuYhicZOdS2M6y3iKkIfX7X6+SHsk+Ca14nj8UoPg2yHv6pGqVio9vIWsCNRs630MuJwIjsTHssYQTCPtbB38nVqBxDyAz4F265VbNWAwIQb1apdKpMSGdvGHd9X1+t3v4XIy6zp+Xe1EgRciRrxdj9tWZhfXuAsm53LPiwXCyyPuMGVkQpU7/QWaxylUYIWZwlQCj27XfxBS3QT965/wvxhuYYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DvEUeQYQMqYCiEXEi+AFQP3tXqAYTx+G4fP9FNLWc20=;
- b=e8TLsaVw2pv3k4fC+hmosqEq2Tp9Ekk4uUX71cX55+aXR7m8+bgkS5qmUuDmcK+DgTNynFnZ5xyrAaFLgQ4rNrd/K5FI5gsDuTFstvJTw6k/4hQsNC9A50u2rqdio0WRzyoJoSQxZfsHkQ50fCgAB+V+9Z4jW/xSiE5UfzeXok8=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB3PR0402MB3689.eurprd04.prod.outlook.com (2603:10a6:8:b::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16; Fri, 3 Apr
- 2020 12:33:26 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3143:c46:62e4:8a8b]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3143:c46:62e4:8a8b%7]) with mapi id 15.20.2878.017; Fri, 3 Apr 2020
- 12:33:26 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Amit Kucheria <amit.kucheria@verdurent.com>
-CC:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V3 1/3] dt-bindings: thermal: imx8mm-thermal: Add support
- for i.MX8MP
-Thread-Topic: [PATCH V3 1/3] dt-bindings: thermal: imx8mm-thermal: Add support
- for i.MX8MP
-Thread-Index: AQHWAQ+NgsYnRiisu0+CCnx8R8nFSKhnZDGAgAABh8A=
-Date:   Fri, 3 Apr 2020 12:33:26 +0000
-Message-ID: <DB3PR0402MB391601BEE4897CCD674597A4F5C70@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1584966504-21719-1-git-send-email-Anson.Huang@nxp.com>
- <CAHLCerPVuZrNiSh45w4TF6jKmZ+aD5aBZCcCK87i4Txdfh_Z2g@mail.gmail.com>
-In-Reply-To: <CAHLCerPVuZrNiSh45w4TF6jKmZ+aD5aBZCcCK87i4Txdfh_Z2g@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4d248068-0431-44ed-47bc-08d7d7cb34ee
-x-ms-traffictypediagnostic: DB3PR0402MB3689:|DB3PR0402MB3689:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB36891A11011059DBF45AE408F5C70@DB3PR0402MB3689.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0362BF9FDB
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(136003)(346002)(366004)(376002)(396003)(66946007)(76116006)(64756008)(66446008)(66476007)(66556008)(33656002)(6916009)(55016002)(6506007)(5660300002)(53546011)(52536014)(9686003)(478600001)(2906002)(4326008)(86362001)(8936002)(186003)(44832011)(26005)(54906003)(8676002)(71200400001)(81156014)(7696005)(7416002)(316002)(81166006)(4744005)(32563001);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rMp0pICX4uhd4tKc+CJnfIMzZT2ma7Fvy6+rm8XjBqSpUUjlH0wioEh9635nAxR0znEL4o/m6yRg7vTO9urfKnylX1aVNj8GpEz82YqyM7deWlDQyGOoDpGLbU+woFpV/Jf/dGXoVfPNk6SWRZ5XwOQ5dS+TDummJuOJb9DqeGfyu7C9R6ngpZgTFFJJdwhz2IK9JYHOj855coBTMnHbP0z4hQ575xDixu1zuDCfva2hKKr8D+tnc+qlPOtY8Qe7ksgYSCs6Ly9BVRLwYHbXLckMdaGgurjuOphLbTWQb39Nxel9iTTNKWKq4gqGQuI1LymnnokH4qYMiGimJmfjVaLO+nkv5vwN9Wxo+NleUa70NB+1G4UeqMYIU/kid/gVfONPDgMOv+bLlIaMV+is5v8UVJ6DwYWhqk4jBAD40vMnEXyrf0Dum0NAQdwvaKC7I+CvSxsO1SjtDZC8geO97KQwIIced/gMwmeEFl5GMaI=
-x-ms-exchange-antispam-messagedata: V9eqJCdAJcLjXsU4dJOfYlURPqyIQq1cyrXZXdW1U5WjgYT0Cp6gJfNOMy85BaapoT2lTyLLDNQEVYz5UbPb5SPv0PvdJUTNzQq8bb3xr5l0VQSN5LUJrgUsmtFruG4O18aQoosQJmxqnrDDX+0l6g==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 3 Apr 2020 08:35:10 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12476 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728100AbgDCMfK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 08:35:10 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e872d1a0000>; Fri, 03 Apr 2020 05:33:30 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 03 Apr 2020 05:35:09 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 03 Apr 2020 05:35:09 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 3 Apr
+ 2020 12:35:08 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 3 Apr 2020 12:35:09 +0000
+Received: from sandipan-pc.nvidia.com (Not Verified[10.24.42.163]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e872d7a0000>; Fri, 03 Apr 2020 05:35:08 -0700
+From:   Sandipan Patra <spatra@nvidia.com>
+To:     <treding@nvidia.com>, <robh+dt@kernel.org>,
+        <u.kleine-koenig@pengutronix.de>, <jonathanh@nvidia.com>
+CC:     <bbasu@nvidia.com>, <ldewangan@nvidia.com>,
+        <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Sandipan Patra <spatra@nvidia.com>
+Subject: [PATCH] pwm: tegra: dynamic clk freq configuration by PWM driver
+Date:   Fri, 3 Apr 2020 18:05:03 +0530
+Message-ID: <1585917303-10573-1-git-send-email-spatra@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d248068-0431-44ed-47bc-08d7d7cb34ee
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 12:33:26.1329
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MtAhzfrOXaZuUkm6geAhKq2Dn+BS/xRoo4noODgCz4fGqq2yGSgLLBYzT3oHUaHRevFAhh1GiIobYnKbpFJxKg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3689
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1585917210; bh=SYS3vdECv0ZXlLBQF+6iQhj+wQ1YRaHGnboJxduGkVU=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=TE2LwhOxmbiB5ep0DTE9I92w7enAAm+wO8gl3WQ6R5P9Nkb5JlEgEwniETwrlX1LM
+         y2HiO9fs21duqc64qD+ctPOXdkMTVhXEamSe765g9z2cyYKzD7K3uKu/kDO7eEeQne
+         dPaoe69ra/g6ViN0aEqmc5bGuU1SFgsNJ7wkDL/eyfwJbdsHBuKXI70HGDL2WL3y3A
+         p+LVoN7mmdqsytVuQFJNgYWP18Sjzw4B3BYCuGwUi1WGHGAtVHuGEVSGT1yLaFFE/B
+         /1AbJRw1m/o7KhkOXwVZrwCtbsfrAZEZa1FA9m1vGSPN51tRWDUX+EJVQwtJhZmcO7
+         iEklmlEZ698qA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIEFtaXQNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFYzIDEvM10gZHQtYmluZGluZ3M6IHRo
-ZXJtYWw6IGlteDhtbS10aGVybWFsOiBBZGQNCj4gc3VwcG9ydCBmb3IgaS5NWDhNUA0KPiANCj4g
-SGkgQW5zb24sDQo+IA0KPiBPbiBNb24sIE1hciAyMywgMjAyMCBhdCA2OjA1IFBNIEFuc29uIEh1
-YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiB3cm90ZToNCj4gPg0KPiA+IEFkZCB0aGVybWFs
-IGJpbmRpbmcgZG9jIGZvciBGcmVlc2NhbGUncyBpLk1YOE1QIFRoZXJtYWwgTW9uaXRvcmluZyBV
-bml0Lg0KPiA+DQo+IA0KPiBJIHJlYWxpc2UgdGhpcyBnb3QgbWVyZ2VkIGFscmVhZHksIGJ1dCBw
-bGVhc2Ugc2VuZCBhIHBhdGNoIGNvbnZlcnRpbmcgdGhpcw0KPiBiaW5kaW5nIHRvIHlhbWwgYXQg
-c29tZSBwb2ludC4NCg0KR290IGl0LCBJIHdpbGwgZmluZCBzb21lIHRpbWUgdG8gY29udmVydCBp
-Lk1YIHRoZXJtYWwgYmluZGluZyBkb2MgdG8geWFtbCBmb3JtYXQuDQoNClRoYW5rcywNCkFuc29u
-DQo=
+Added support for dynamic clock freq configuration in pwm kernel driver.
+Earlier the pwm driver used to cache boot time clock rate by pwm clock
+parent during probe. Hence dynamically changing pwm frequency was not
+possible for all the possible ranges. With this change, dynamic calculation
+is enabled and it is able to set the requested period from sysfs knob
+provided the value is supported by clock source.
+
+Changes mainly have 2 parts:
+  - T186 and later chips [1]
+  - T210 and prior chips [2]
+
+For [1] - Changes implemented to set pwm period dynamically and
+          also checks added to allow only if requested period(ns) is
+          below or equals to higher range.
+
+For [2] - Only checks if the requested period(ns) is below or equals
+          to higher range defined by max clock limit. The limitation
+          in T210 or prior chips are due to the reason of having only
+          one pwm-controller supporting multiple channels. But later
+          chips have multiple pwm controller instances each having
+	  single channel support.
+
+Signed-off-by: Sandipan Patra <spatra@nvidia.com>
+---
+ drivers/pwm/pwm-tegra.c | 45 +++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 43 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+index aa12fb3..d3ba33c 100644
+--- a/drivers/pwm/pwm-tegra.c
++++ b/drivers/pwm/pwm-tegra.c
+@@ -4,7 +4,7 @@
+  *
+  * Tegra pulse-width-modulation controller driver
+  *
+- * Copyright (c) 2010, NVIDIA Corporation.
++ * Copyright (c) 2010-2020, NVIDIA Corporation.
+  * Based on arch/arm/plat-mxc/pwm.c by Sascha Hauer <s.hauer@pengutronix.de>
+  */
+ 
+@@ -83,10 +83,51 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	val = (u32)c << PWM_DUTY_SHIFT;
+ 
+ 	/*
++	 * Its okay to ignore the fraction part since we will be trying to set
++	 * slightly lower value to rate than the actual required rate
++	 */
++	rate = NSEC_PER_SEC/period_ns;
++
++	/*
++	 *  Period in nano second has to be <= highest allowed period
++	 *  based on the max clock rate of the pwm controller.
++	 *
++	 *  higher limit = max clock limit >> PWM_DUTY_WIDTH
++	 */
++	if (rate > (pc->soc->max_frequency >> PWM_DUTY_WIDTH))
++		return -EINVAL;
++
++	/*
+ 	 * Compute the prescaler value for which (1 << PWM_DUTY_WIDTH)
+ 	 * cycles at the PWM clock rate will take period_ns nanoseconds.
+ 	 */
+-	rate = pc->clk_rate >> PWM_DUTY_WIDTH;
++	if (pc->soc->num_channels == 1) {
++		/*
++		 * Rate is multiplied with 2^PWM_DUTY_WIDTH so that it matches
++		 * with the hieghest applicable rate that the controller can
++		 * provide. Any further lower value can be derived by setting
++		 * PFM bits[0:12].
++		 * Higher mark is taken since BPMP has round-up mechanism
++		 * implemented.
++		 */
++		rate = rate << PWM_DUTY_WIDTH;
++
++		err = clk_set_rate(pc->clk, rate);
++		if (err < 0)
++			return -EINVAL;
++
++		rate = clk_get_rate(pc->clk) >> PWM_DUTY_WIDTH;
++	} else {
++		/*
++		 * This is the case for SoCs who support multiple channels:
++		 *
++		 * clk_set_rate() can not be called again in config because
++		 * T210 or any prior chip supports one pwm-controller and
++		 * multiple channels. Hence in this case cached clock rate
++		 * will be considered which was stored during probe.
++		 */
++		rate = pc->clk_rate >> PWM_DUTY_WIDTH;
++	}
+ 
+ 	/* Consider precision in PWM_SCALE_WIDTH rate calculation */
+ 	hz = DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns);
+-- 
+2.7.4
+
