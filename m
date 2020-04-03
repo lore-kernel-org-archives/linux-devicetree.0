@@ -2,333 +2,187 @@ Return-Path: <SRS0=qh1l=5T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 891D2C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 12:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E87C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 12:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61E2C20857
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 12:08:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=startmail.com header.i=@startmail.com header.b="MjiKjNlv"
+	by mail.kernel.org (Postfix) with ESMTP id 1769B20659
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 12:11:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390889AbgDCMIg (ORCPT
+        id S2403917AbgDCMLG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 08:08:36 -0400
-Received: from mx-out2.startmail.com ([145.131.90.155]:56436 "EHLO
-        mx-out2.startmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390880AbgDCMIg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 08:08:36 -0400
-From:   Alexandru Lazar <alazar@startmail.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=startmail.com;
-        s=2017-11; t=1585915713;
-        bh=VAThOJYw62Ktrta9iKVxQZ9KyozWyw05s29h4xdI1qY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MjiKjNlvBM1URpaAs4s1YFDUUgwx/+PWHltHoxL37GlcBs1uqmizncJrJS9BVkVr7
-         yrHRwM49g5vgf8DxgnPq2e1E2O++E6hm+bf8tRaoh46tLGBDJxHem4/SLKQvtVjG7a
-         izkxiBSGoz9P56+NboOpv/pA4YpQ6fzZ07C45oRXYNy7vC8n3OKLnqPHLQXOMNpt41
-         I8VsHFyiojGCGuQmWr8QFHvIkRaCM9fiz4PvhflbZVHMqnG3kfrmrqgOCdUefPmfyJ
-         fdJYGrF0Sh5K/ih+XTpWHJv3rhQXyHdIwUCC4GeNR1ji2mWwZAVhnqKC5nMdzzUQkY
-         XM9+oUGJ9CraA==
-To:     linux-iio@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, Alexandru Lazar <alazar@startmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v7 2/2] iio: adc: Add MAX1241 driver
-Date:   Fri,  3 Apr 2020 15:13:23 +0300
-Message-Id: <20200403121323.1742-3-alazar@startmail.com>
-In-Reply-To: <20200403121323.1742-1-alazar@startmail.com>
-References: <20200403121323.1742-1-alazar@startmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 3 Apr 2020 08:11:06 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:53680 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403859AbgDCMLG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 3 Apr 2020 08:11:06 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CBA3E1A0068;
+        Fri,  3 Apr 2020 14:11:03 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D16021A0023;
+        Fri,  3 Apr 2020 14:10:57 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9E9EE402C4;
+        Fri,  3 Apr 2020 20:10:50 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, horia.geanta@nxp.com,
+        peng.fan@nxp.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V4] arm64: dts: imx8mp: Add thermal zones support
+Date:   Fri,  3 Apr 2020 20:03:24 +0800
+Message-Id: <1585915404-7658-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add driver for the Maxim MAX1241 12-bit, single-channel ADC.
+i.MX8MP has a TMU inside which supports two thermal zones, add support
+for them.
 
-Datasheet: https://datasheets.maximintegrated.com/en/ds/MAX1240-MAX1241.pdf
-
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Alexandru Lazar <alazar@startmail.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/iio/adc/Kconfig   |  10 ++
- drivers/iio/adc/Makefile  |   1 +
- drivers/iio/adc/max1241.c | 227 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 238 insertions(+)
- create mode 100644 drivers/iio/adc/max1241.c
+Changes since V3:
+	- Drop some '0x' prefix;
+	- Add cpufreq cooling for soc thermal zone as well to fit the passive trip point.
+---
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi | 74 +++++++++++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 5d8540b7b427..55f6462cd93f 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -566,6 +566,16 @@ config MAX1118
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called max1118.
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+index 9b1616e..77aff14 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+@@ -7,6 +7,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/thermal/thermal.h>
  
-+config MAX1241
-+	tristate "Maxim max1241 ADC driver"
-+	depends on SPI_MASTER
-+	help
-+	  Say yes here to build support for Maxim max1241 12-bit, single-channel
-+	  ADC.
+ #include "imx8mp-pinfunc.h"
+ 
+@@ -43,6 +44,7 @@
+ 			clocks = <&clk IMX8MP_CLK_ARM>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A53_1: cpu@1 {
+@@ -53,6 +55,7 @@
+ 			clocks = <&clk IMX8MP_CLK_ARM>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A53_2: cpu@2 {
+@@ -63,6 +66,7 @@
+ 			clocks = <&clk IMX8MP_CLK_ARM>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A53_3: cpu@3 {
+@@ -73,6 +77,7 @@
+ 			clocks = <&clk IMX8MP_CLK_ARM>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		A53_L2: l2-cache0 {
+@@ -127,6 +132,68 @@
+ 		method = "smc";
+ 	};
+ 
++	thermal-zones {
++		cpu-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <2000>;
++			thermal-sensors = <&tmu 0>;
++			trips {
++				cpu_alert0: trip0 {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
 +
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called max1241.
++				cpu_crit0: trip1 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
 +
- config MAX1363
- 	tristate "Maxim max1363 ADC driver"
- 	depends on I2C
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index a1f1fbec0f87..37d6f17559dc 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -54,6 +54,7 @@ obj-$(CONFIG_LTC2497) += ltc2497.o
- obj-$(CONFIG_MAX1027) += max1027.o
- obj-$(CONFIG_MAX11100) += max11100.o
- obj-$(CONFIG_MAX1118) += max1118.o
-+obj-$(CONFIG_MAX1241) += max1241.o
- obj-$(CONFIG_MAX1363) += max1363.o
- obj-$(CONFIG_MAX9611) += max9611.o
- obj-$(CONFIG_MCP320X) += mcp320x.o
-diff --git a/drivers/iio/adc/max1241.c b/drivers/iio/adc/max1241.c
-new file mode 100644
-index 000000000000..541939c7abca
---- /dev/null
-+++ b/drivers/iio/adc/max1241.c
-@@ -0,0 +1,227 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * MAX1241 low-power, 12-bit serial ADC
-+ *
-+ * Datasheet: https://datasheets.maximintegrated.com/en/ds/MAX1240-MAX1241.pdf
-+ */
++			cooling-maps {
++				map0 {
++					trip = <&cpu_alert0>;
++					cooling-device =
++						<&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
 +
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/iio/iio.h>
-+#include <linux/module.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/spi/spi.h>
++		soc-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <2000>;
++			thermal-sensors = <&tmu 1>;
++			trips {
++				soc_alert0: trip0 {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
 +
-+#define MAX1241_VAL_MASK GENMASK(11, 0)
-+#define MAX1241_SHUTDOWN_DELAY_USEC 4
++				soc_crit0: trip1 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
 +
-+enum max1241_id {
-+	max1241,
-+};
-+
-+struct max1241 {
-+	struct spi_device *spi;
-+	struct mutex lock;
-+	struct regulator *vdd;
-+	struct regulator *vref;
-+	struct gpio_desc *shutdown;
-+
-+	__be16 data ____cacheline_aligned;
-+};
-+
-+static const struct iio_chan_spec max1241_channels[] = {
-+	{
-+		.type = IIO_VOLTAGE,
-+		.indexed = 1,
-+		.channel = 0,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				BIT(IIO_CHAN_INFO_SCALE),
-+	},
-+};
-+
-+static int max1241_read(struct max1241 *adc)
-+{
-+	struct spi_transfer xfers[] = {
-+		/*
-+		 * Begin conversion by bringing /CS low for at least
-+		 * tconv us.
-+		 */
-+		{
-+			.len = 0,
-+			.delay.value = 8,
-+			.delay.unit = SPI_DELAY_UNIT_USECS,
-+		},
-+		/*
-+		 * Then read two bytes of data in our RX buffer.
-+		 */
-+		{
-+			.rx_buf = &adc->data,
-+			.len = 2,
-+		},
++			cooling-maps {
++				map0 {
++					trip = <&soc_alert0>;
++					cooling-device =
++						<&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						<&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
 +	};
 +
-+	return spi_sync_transfer(adc->spi, xfers, ARRAY_SIZE(xfers));
-+}
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
+@@ -215,6 +282,13 @@
+ 				gpio-ranges = <&iomuxc 0 114 30>;
+ 			};
+ 
++			tmu: tmu@30260000 {
++				compatible = "fsl,imx8mp-tmu";
++				reg = <0x30260000 0x10000>;
++				clocks = <&clk IMX8MP_CLK_TSENSOR_ROOT>;
++				#thermal-sensor-cells = <1>;
++			};
 +
-+static int max1241_read_raw(struct iio_dev *indio_dev,
-+			struct iio_chan_spec const *chan,
-+			int *val, int *val2, long mask)
-+{
-+	int ret, vref_uV;
-+	struct max1241 *adc = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		mutex_lock(&adc->lock);
-+
-+		if (adc->shutdown) {
-+			gpiod_set_value(adc->shutdown, 0);
-+			udelay(MAX1241_SHUTDOWN_DELAY_USEC);
-+			ret = max1241_read(adc);
-+			gpiod_set_value(adc->shutdown, 1);
-+		} else
-+			ret = max1241_read(adc);
-+
-+		if (ret) {
-+			mutex_unlock(&adc->lock);
-+			return ret;
-+		}
-+
-+		*val = (be16_to_cpu(adc->data) >> 3) & MAX1241_VAL_MASK;
-+
-+		mutex_unlock(&adc->lock);
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		vref_uV = regulator_get_voltage(adc->vref);
-+
-+		if (vref_uV < 0)
-+			return vref_uV;
-+
-+		*val = vref_uV / 1000;
-+		*val2 = 12;
-+
-+		return IIO_VAL_FRACTIONAL_LOG2;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info max1241_info = {
-+	.read_raw = max1241_read_raw,
-+};
-+
-+static void max1241_disable_vdd_action(void *data)
-+{
-+	struct max1241 *adc = data;
-+	struct device *dev = &adc->spi->dev;
-+	int err;
-+
-+	err = regulator_disable(adc->vdd);
-+	if (err)
-+		dev_err(dev, "could not disable vdd regulator.\n");
-+}
-+
-+static void max1241_disable_vref_action(void *data)
-+{
-+	struct max1241 *adc = data;
-+	struct device *dev = &adc->spi->dev;
-+	int err;
-+
-+	err = regulator_disable(adc->vref);
-+	if (err)
-+		dev_err(dev, "could not disable vref regulator.\n");
-+}
-+
-+static int max1241_probe(struct spi_device *spi)
-+{
-+	struct device *dev = &spi->dev;
-+	struct iio_dev *indio_dev;
-+	struct max1241 *adc;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*adc));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	adc = iio_priv(indio_dev);
-+	adc->spi = spi;
-+	mutex_init(&adc->lock);
-+
-+	spi_set_drvdata(spi, indio_dev);
-+
-+	adc->vdd = devm_regulator_get(dev, "vdd");
-+	if (IS_ERR(adc->vdd)) {
-+		dev_err(dev, "failed to get vdd regulator\n");
-+		return PTR_ERR(adc->vdd);
-+	}
-+
-+	ret = regulator_enable(adc->vdd);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(dev, max1241_disable_vdd_action, adc);
-+	if (ret) {
-+		dev_err(dev, "could not set up vdd regulator cleanup action\n");
-+		return ret;
-+	}
-+
-+	adc->vref = devm_regulator_get(dev, "vref");
-+	if (IS_ERR(adc->vref)) {
-+		dev_err(dev, "failed to get vref regulator\n");
-+		return PTR_ERR(adc->vref);
-+	}
-+
-+	ret = regulator_enable(adc->vref);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(dev, max1241_disable_vref_action, adc);
-+	if (ret) {
-+		dev_err(dev, "could not set up vref regulator cleanup action\n");
-+		return ret;
-+	}
-+
-+	adc->shutdown = devm_gpiod_get_optional(dev, "shutdown",
-+						GPIOD_OUT_HIGH);
-+	if (IS_ERR(adc->shutdown))
-+		return PTR_ERR(adc->shutdown);
-+
-+	if (adc->shutdown)
-+		dev_dbg(dev, "shutdown pin passed, low-power mode enabled");
-+	else
-+		dev_dbg(dev, "no shutdown pin passed, low-power mode disabled");
-+
-+	indio_dev->name = spi_get_device_id(spi)->name;
-+	indio_dev->dev.parent = dev;
-+	indio_dev->info = &max1241_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = max1241_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(max1241_channels);
-+
-+	return devm_iio_device_register(dev, indio_dev);
-+}
-+
-+static const struct spi_device_id max1241_id[] = {
-+	{ "max1241", max1241 },
-+	{}
-+};
-+
-+static const struct of_device_id max1241_dt_ids[] = {
-+	{ .compatible = "maxim,max1241" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, max1241_dt_ids);
-+
-+static struct spi_driver max1241_spi_driver = {
-+	.driver = {
-+		.name = "max1241",
-+		.of_match_table = max1241_dt_ids,
-+	},
-+	.probe = max1241_probe,
-+	.id_table = max1241_id,
-+};
-+module_spi_driver(max1241_spi_driver);
-+
-+MODULE_AUTHOR("Alexandru Lazar <alazar@startmail.com>");
-+MODULE_DESCRIPTION("MAX1241 ADC driver");
-+MODULE_LICENSE("GPL v2");
+ 			wdog1: watchdog@30280000 {
+ 				compatible = "fsl,imx8mp-wdt", "fsl,imx21-wdt";
+ 				reg = <0x30280000 0x10000>;
 -- 
-2.20.1
+2.7.4
 
