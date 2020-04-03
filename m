@@ -2,210 +2,276 @@ Return-Path: <SRS0=qh1l=5T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5AFC43331
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 05:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2567C2D0E8
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 05:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9BC720719
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 05:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B610220B1F
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 05:45:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ozAcod74"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YtZEZkFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730687AbgDCFmg (ORCPT
+        id S1730698AbgDCFpK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 01:42:36 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:39150 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730025AbgDCFmg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 01:42:36 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0335gHSZ092029;
-        Fri, 3 Apr 2020 00:42:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585892537;
-        bh=PsXDTOOzoT7ydugMXsKdAa+n/Q+otIwW27YnyqGnikw=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=ozAcod74AYc2bG8/fzGyWns1nQzKsgAeXeReuahYeXiGKd0afaaI0hIYibx8nDDuP
-         4vockyOcE3wnlFdXnVNmiAwyphfw7vnxwc9+LtXKXmEwtf81EhYWtwgnseihDCPqiG
-         M/jcwTQn0ADmxH3BRfonTzScHQAZVWtGq5m8eaSw=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0335gHAT043949
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 3 Apr 2020 00:42:17 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 3 Apr
- 2020 00:42:17 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 3 Apr 2020 00:42:17 -0500
-Received: from [10.250.133.232] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0335gEfU090615;
-        Fri, 3 Apr 2020 00:42:14 -0500
-Subject: Re: [PATCH 1/3] dt-bindings: PCI: cadence: Deprecate inbound/outbound
- specific bindings
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Fri, 3 Apr 2020 01:45:10 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5661 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730550AbgDCFpJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 01:45:09 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e86cd000000>; Thu, 02 Apr 2020 22:43:28 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 02 Apr 2020 22:45:07 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 02 Apr 2020 22:45:07 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 3 Apr
+ 2020 05:45:06 +0000
+Received: from [10.2.164.193] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 3 Apr 2020
+ 05:45:05 +0000
+Subject: Re: [RFC PATCH v5 0/9] Add Tegra driver for video capture
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
+        <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-References: <20200327104727.4708-1-kishon@ti.com>
- <20200327104727.4708-2-kishon@ti.com> <20200330160142.GA6259@bogus>
- <2a18a228-9248-24a8-c9cd-a041c62aa381@ti.com> <20200331164529.GA32149@bogus>
- <2985575e-e079-2a8d-bf3e-b7efb7291fc3@ti.com>
-Message-ID: <f335a8be-d292-8e74-0657-d37e7ae55fdc@ti.com>
-Date:   Fri, 3 Apr 2020 11:12:13 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
+ <4bb6a3b8-3332-014b-e763-bce9076179dd@xs4all.nl>
+ <5ca1583a-889e-abd0-f823-eab93f09a365@xs4all.nl>
+ <28ab0071-2e04-d14b-9215-db421e71b6af@nvidia.com>
+Message-ID: <a8e6b937-de08-ce50-9eca-3b3a5ad2916c@nvidia.com>
+Date:   Thu, 2 Apr 2020 22:45:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <2985575e-e079-2a8d-bf3e-b7efb7291fc3@ti.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <28ab0071-2e04-d14b-9215-db421e71b6af@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1585892608; bh=JoPwr1atIPAURfBnVs6d4lzkzIh3MwlRaErjNWeUsFI=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=YtZEZkFAfYCK3fBbP/Y02UdYkPZR1yrl2QlxZRG95cx/nFSDL1FAzIDA/173wg9jS
+         arPfbDnpyVqRJhtkbQq/s7tnEDpbUPZ0dLedGERdOFVu9U2vqo94CYoKe+pLkzoZQh
+         Je75CZnhEM2g1/gcBtUXWy0gQlUn444KSYNmXnmLy1bwQhni1uV9C6Zb2pgCLw+dG5
+         5N5IHpDSt4+0NbCwCvhpdPL3w9C57EdmdaAn8ESe6BH20GheKr30NJ0d+GSZUtA4jP
+         AdKFKzie0fIkrVQAch2aJ8Tp8dKwJyjrFukbFTohsBu0g1I8Q6xVJUeQxvOA6Pfy+t
+         OPv2CdNPTx3vg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On 4/1/2020 8:38 AM, Kishon Vijay Abraham I wrote:
-> Hi Rob,
-> 
-> On 3/31/2020 10:15 PM, Rob Herring wrote:
->> On Tue, Mar 31, 2020 at 09:08:12AM +0530, Kishon Vijay Abraham I wrote:
->>> Hi Rob,
+On 3/30/20 9:16 AM, Sowjanya Komatineni wrote:
+>
+> On 3/30/20 4:02 AM, Hans Verkuil wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> On 3/30/20 12:04 PM, Hans Verkuil wrote:
+>>> Hi Sowjanya,
 >>>
->>> On 3/30/2020 9:31 PM, Rob Herring wrote:
->>>> On Fri, Mar 27, 2020 at 04:17:25PM +0530, Kishon Vijay Abraham I wrote:
->>>>> Deprecate cdns,max-outbound-regions and cdns,no-bar-match-nbits for
->>>>> host mode as both these could be derived from "ranges" and "dma-ranges"
->>>>> property. "cdns,max-outbound-regions" property would still be required
->>>>> for EP mode.
->>>>>
->>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>>> ---
->>>>>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       |  2 +-
->>>>>  .../bindings/pci/cdns,cdns-pcie-host.yaml     |  3 +--
->>>>>  .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 25 +++++++++++++++++++
->>>>>  .../bindings/pci/cdns-pcie-host.yaml          | 10 ++++++++
->>>>>  .../devicetree/bindings/pci/cdns-pcie.yaml    |  8 ------
->>>>>  5 files changed, 37 insertions(+), 11 deletions(-)
->>>>>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
->>>>> index 2996f8d4777c..50ce5d79d2c7 100644
->>>>> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
->>>>> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
->>>>> @@ -10,7 +10,7 @@ maintainers:
->>>>>    - Tom Joseph <tjoseph@cadence.com>
->>>>>  
->>>>>  allOf:
->>>>> -  - $ref: "cdns-pcie.yaml#"
->>>>> +  - $ref: "cdns-pcie-ep.yaml#"
->>>>>    - $ref: "pci-ep.yaml#"
->>>>>  
->>>>>  properties:
->>>>> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->>>>> index cabbe46ff578..84a8f095d031 100644
->>>>> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->>>>> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->>>>> @@ -45,8 +45,6 @@ examples:
->>>>>              #size-cells = <2>;
->>>>>              bus-range = <0x0 0xff>;
->>>>>              linux,pci-domain = <0>;
->>>>> -            cdns,max-outbound-regions = <16>;
->>>>> -            cdns,no-bar-match-nbits = <32>;
->>>>>              vendor-id = <0x17cd>;
->>>>>              device-id = <0x0200>;
->>>>>  
->>>>> @@ -57,6 +55,7 @@ examples:
->>>>>  
->>>>>              ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
->>>>>                       <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
->>>>> +            dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x1 0x00000000>;
->>>>>  
->>>>>              #interrupt-cells = <0x1>;
->>>>>  
->>>>> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
->>>>> new file mode 100644
->>>>> index 000000000000..6150a7a7bdbf
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
->>>>> @@ -0,0 +1,25 @@
->>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>>> +%YAML 1.2
->>>>> +---
->>>>> +$id: "http://devicetree.org/schemas/pci/cdns-pcie-ep.yaml#"
->>>>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->>>>> +
->>>>> +title: Cadence PCIe Device
->>>>> +
->>>>> +maintainers:
->>>>> +  - Tom Joseph <tjoseph@cadence.com>
->>>>> +
->>>>> +allOf:
->>>>> +  - $ref: "cdns-pcie.yaml#"
->>>>> +
->>>>> +properties:
->>>>> +  cdns,max-outbound-regions:
->>>>> +    description: maximum number of outbound regions
->>>>> +    allOf:
->>>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
->>>>> +    minimum: 1
->>>>> +    maximum: 32
->>>>> +    default: 32
+>>> On 3/23/20 6:52 PM, Sowjanya Komatineni wrote:
+>>>> This series adds Tegra210 VI and CSI driver for built-in test pattern
+>>>> generator (TPG) capture.
 >>>>
->>>> I have a feeling that as the PCI endpoint binding evolves this won't be 
->>>> necessary. I can see a common need to define the number of BARs for an 
->>>> endpoint and then this will again just be error checking.
->>>
->>> For every buffer given by the host, we have to create a new outbound
->>> translation. If there are no outbound regions, we have to report the error to
->>> the endpoint function driver. At-least for reporting the error, we'd need to
->>> have this binding no?
->>
->> But isn't the endpoint defined to have some number of BARs? The PCI host 
->> doesn't decide that.
-> 
-> cdns,max-outbound-regions defined here doesn't configure the BARs. BARs provide
-> an interface for the host to access the endpoints memory. IOW for BARs we
-> configure the inbound address translation unit.
-> 
-> cdns,max-outbound-regions is used while configuring the outbound address
-> translation unit. Outbound regions are used while the endpoint access host
-> memory and in that path endpoint BARs doesn't come.
->>
+>>>> Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
+>>>> CSI port is one-to-one mapped to VI channel for video capture.
 >>>>
->>>> What's the result if you write to a non-existent region in register 
->>>> CDNS_PCIE_AT_OB_REGION_PCI_ADDR0/1? If the register is non-existent and 
->>>> doesn't abort, you could detect this instead.
+>>>> This series has TPG support only where it creates hard media links
+>>>> between CSI subdevice and VI video device without device graphs.
+>>>>
+>>>> v4l2-compliance results are available below the patch diff.
+>>>>
+>>>> [v5]:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Includes,
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - v4 feedback
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - fix for venc powergate mc reset order=
+.
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - fix to have unbind and bind work duri=
+ng v4l2-ctl sleep and=20
+>>>> streaming.
+>>> Unfortunately, I still crash on this.
 >>>
->>> I'm not sure if we should ever try to write to a non-existent register though
->>> the behavior could be different in different platforms. IMHO maximum number of
->>> outbound regions is a HW property and is best described in device tree.
+>>> I do the following:
+>>>
+>>> Run: v4l2-ctl --stream-mmap
+>>>
+>>> Then, from another shell as root:
+>>>
+>>> cd /sys/devices/platform/50000000.host1x/tegra-video/driver
+>>> echo -n tegra-video > unbind
+>>>
+>>> I get this crash:
+>>>
+>>> [=C2=A0 315.691971] Unable to handle kernel NULL pointer dereference at=
+=20
+>>> virtual address 00000000000000b0
+>>> [=C2=A0 315.700749] Mem abort info:
+>>> [=C2=A0 315.703536]=C2=A0=C2=A0 ESR =3D 0x96000004
+>>> [=C2=A0 315.706587]=C2=A0=C2=A0 EC =3D 0x25: DABT (current EL), IL =3D =
+32 bits
+>>> [=C2=A0 315.711886]=C2=A0=C2=A0 SET =3D 0, FnV =3D 0
+>>> [=C2=A0 315.714933]=C2=A0=C2=A0 EA =3D 0, S1PTW =3D 0
+>>> [=C2=A0 315.718064] Data abort info:
+>>> [=C2=A0 315.720936]=C2=A0=C2=A0 ISV =3D 0, ISS =3D 0x00000004
+>>> [=C2=A0 315.724763]=C2=A0=C2=A0 CM =3D 0, WnR =3D 0
+>>> [=C2=A0 315.727726] user pgtable: 4k pages, 48-bit VAs,=20
+>>> pgdp=3D0000000178ee8000
+>>> [=C2=A0 315.734152] [00000000000000b0] pgd=3D0000000000000000
+>>> [=C2=A0 315.739024] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+>>> [=C2=A0 315.744584] Modules linked in: r8152 nouveau lp855x_bl tegra_dr=
+m ttm
+>>> [=C2=A0 315.750942] CPU: 3 PID: 2206 Comm: bash Tainted: G W=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=20
+>>> 5.6.0-rc1-arm64 #118
+>>> [=C2=A0 315.759017] Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
+>>> [=C2=A0 315.764927] pstate: 20000085 (nzCv daIf -PAN -UAO)
+>>> [=C2=A0 315.769718] pc : _raw_write_lock_irqsave+0xb0/0x2b8
+>>> [=C2=A0 315.774590] lr : ida_free+0x48/0x158
+>>> [=C2=A0 315.778155] sp : ffff800011d8bba0
+>>> [=C2=A0 315.781462] x29: ffff800011d8bba0 x28: ffff0000f4095400
+>>> [=C2=A0 315.786766] x27: 0000000000000000 x26: 0000000000000000
+>>> [=C2=A0 315.792070] x25: 0000000000000000 x24: 0000000000000000
+>>> [=C2=A0 315.797372] x23: ffff0000f21ad400 x22: ffff0000f5c93000
+>>> [=C2=A0 315.802674] x21: ffff0000f4095400 x20: ffff0000f86b5540
+>>> [=C2=A0 315.807975] x19: 0000000000000000 x18: 0000000000000000
+>>> [=C2=A0 315.813276] x17: 0000000000000001 x16: 0000000000000019
+>>> [=C2=A0 315.818578] x15: 000000148ccdabe2 x14: 0000000000000136
+>>> [=C2=A0 315.823879] x13: 0000000000000001 x12: 00000000000003f8
+>>> [=C2=A0 315.829180] x11: 0000000000000000 x10: 0000000000000000
+>>> [=C2=A0 315.834482] x9 : ffff0000ff899990 x8 : ffff0000ff899000
+>>> [=C2=A0 315.839784] x7 : 0000000040000000 x6 : 0000000000210d00
+>>> [=C2=A0 315.845085] x5 : 0000000000000001 x4 : 0000000000000000
+>>> [=C2=A0 315.850386] x3 : 00000000000000b0 x2 : 0000000000000001
+>>> [=C2=A0 315.855687] x1 : 0000000000000000 x0 : 0000000000000001
+>>> [=C2=A0 315.860988] Call trace:
+>>> [=C2=A0 315.863432]=C2=A0 _raw_write_lock_irqsave+0xb0/0x2b8
+>>> [=C2=A0 315.867956]=C2=A0 ida_free+0x48/0x158
+>>> [=C2=A0 315.871184]=C2=A0 __media_device_unregister_entity+0x28/0xf0
+>>> [=C2=A0 315.876402]=C2=A0 media_device_unregister+0x6c/0x148
+>>> [=C2=A0 315.880927]=C2=A0 host1x_video_remove+0x20/0x48
+>>> [=C2=A0 315.885021]=C2=A0 host1x_device_remove+0x1c/0x30
+>>> [=C2=A0 315.889198]=C2=A0 device_release_driver_internal+0xf4/0x1c0
+>>> [=C2=A0 315.894325]=C2=A0 device_driver_detach+0x14/0x20
+>>> [=C2=A0 315.898503]=C2=A0 unbind_store+0xd4/0xf8
+>>> [=C2=A0 315.901986]=C2=A0 drv_attr_store+0x20/0x30
+>>> [=C2=A0 315.905645]=C2=A0 sysfs_kf_write+0x40/0x50
+>>> [=C2=A0 315.909301]=C2=A0 kernfs_fop_write+0xf8/0x210
+>>> [=C2=A0 315.913219]=C2=A0 __vfs_write+0x18/0x40
+>>> [=C2=A0 315.916616]=C2=A0 vfs_write+0xdc/0x1c8
+>>> [=C2=A0 315.919926]=C2=A0 ksys_write+0x68/0xf0
+>>> [=C2=A0 315.923235]=C2=A0 __arm64_sys_write+0x18/0x20
+>>> [=C2=A0 315.927154]=C2=A0 el0_svc_common.constprop.0+0x68/0x160
+>>> [=C2=A0 315.931936]=C2=A0 do_el0_svc+0x20/0x80
+>>> [=C2=A0 315.935246]=C2=A0 el0_sync_handler+0x10c/0x180
+>>> [=C2=A0 315.939246]=C2=A0 el0_sync+0x140/0x180
+>>> [=C2=A0 315.942560] Code: 8803fc02 35ffffa3 17fffda6 f9800071 (885ffc60=
+)
+>>> [=C2=A0 315.948644] ---[ end trace e42b943f3c1af06c ]---
+>>>
+>>> The following diff fixes this:
+>>>
+>>> ------------------ cut here ------------------
+>>> diff --git a/drivers/staging/media/tegra/tegra-vi.c=20
+>>> b/drivers/staging/media/tegra/tegra-vi.c
+>>> index 9714152aa6a7..53cf37af9602 100644
+>>> --- a/drivers/staging/media/tegra/tegra-vi.c
+>>> +++ b/drivers/staging/media/tegra/tegra-vi.c
+>>> @@ -583,7 +583,7 @@ static int tegra_channel_init(struct=20
+>>> tegra_vi_channel *chan)
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* initialize the video_device */
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 chan->video->fops =3D &tegra_chann=
+el_fops;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 chan->video->v4l2_dev =3D &vid->v4=
+l2_dev;
+>>> -=C2=A0=C2=A0=C2=A0=C2=A0 chan->video->release =3D video_device_release=
+_empty;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 chan->video->release =3D video_device_release=
+;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 chan->video->queue =3D &chan->queu=
+e;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 snprintf(chan->video->name, sizeof=
+(chan->video->name),=20
+>>> "%s-%s-%u",
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 dev_name(vi->dev), "output", chan->portno);
+>>> @@ -647,6 +647,7 @@ static int tegra_channel_init(struct=20
+>>> tegra_vi_channel *chan)
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 media_entity_cleanup(&chan->video-=
+>entity);
+>>> =C2=A0 release_vdev:
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 video_device_release(chan->video);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 chan->video =3D NULL;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>>> =C2=A0 }
+>>>
+>>> @@ -707,7 +708,6 @@ static void tegra_vi_channels_cleanup(struct=20
+>>> tegra_vi *vi)
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_lock(=
+&chan->video_lock);
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vb2_queue_r=
+elease(&chan->queue);
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_unloc=
+k(&chan->video_lock);
+>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 video_device_release(ch=
+an->video);
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 }
+>>>
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 if (chan->frame_start_sp)
+>>> ------------------ cut here ------------------
+>> Note: Sakari suggested to embed struct video_device into struct=20
+>> tegra_vi_channel.
+>> In that case chan->video->release should remain=20
+>> video_device_release_empty and
+>> all video_device_alloc()/release() calls would have to be dropped.
+>
+> Thanks Hans. Tried several unbind/unbind not sure why it did not repro=20
+> during my testing.
+>
+> video device is also part of tegra_vi_channel. So, v6 will remove=20
+> video_device_alloc and use video_device_release_empty like I had in v3.
+>
+> This should help fix crash during unbind.
+>
 >>
->> AIUI, PCI defines non-existent (config space) registers to return all 
->> 1s. Not sure if this register is in PCI config space or the host SoC bus 
->> (e.g. AXI). It seems PCI bridges get done both ways from what I've seen.
-> 
-> All of that is correct for the Host or RC. However here
-> cdns,max-outbound-regions is an endpoint specific property (defined only in
-> cdns-pcie-ep.yaml) and is useful while configuring OB address translation unit
-> for the endpoint to access host memory.
+>> Regards,
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Hans
 
-Do you still have concerns regarding this? If you don't have any further
-comments on this, can you give your Acked-by please?
+With video device being part of the channel structure, it gets allocated=20
+along with vi channel allocation during host1x vi client init and is=20
+removed during channel free which happens during host1x vi client exit.
 
-Thanks
-Kishon
+Wit this during driver unbind with video node kept opened with v4l2-ctl=20
+sleep, it crashes during media_device_unregister_entity.
+
+Using, separate video device allocation and freeing allocation during=20
+video device release callback,=C2=A0 driver unbind works=C2=A0 as by the ti=
+me of=20
+entity unregister its it still available.
+
+So, will keep allocating video device separately with video_device_alloc=20
+and will use video_device_release call back in v6.
+
