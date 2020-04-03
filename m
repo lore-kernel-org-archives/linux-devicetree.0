@@ -4,66 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C06C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 12:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A34BC2D0E8
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 12:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AB5920737
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 12:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F87420737
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 12:27:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="XsPDzoTQ"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="AWTYy8y4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390839AbgDCMYK (ORCPT
+        id S2403937AbgDCM1G (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 08:24:10 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:36805 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728178AbgDCMYK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 08:24:10 -0400
-Received: by mail-ua1-f66.google.com with SMTP id m15so1885718uao.3
-        for <devicetree@vger.kernel.org>; Fri, 03 Apr 2020 05:24:09 -0700 (PDT)
+        Fri, 3 Apr 2020 08:27:06 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:41261 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390805AbgDCM1G (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 08:27:06 -0400
+Received: by mail-vs1-f68.google.com with SMTP id a63so4759139vsa.8
+        for <devicetree@vger.kernel.org>; Fri, 03 Apr 2020 05:27:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=verdurent-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qvyI6Sc61lD8J/TKKLvSHBnJpLEYrXxRzZK/pmr8tcg=;
-        b=XsPDzoTQ41hY6HEPrchkLgIyTyUZXd/7hYRk7hgYvAQyaCqqW4xvUi9ngh25hdOXoa
-         yMhq7WafBQ0A/1ilm6nWz/kuM2yWawQ0gYIElHm8mgFSRx28aAGOOwj68xw/NpCRYwuh
-         C2nWwWuGuwH47OMW7dHh2/NH59AbGExXVtK6+90BJdmf2L2esTgbo9pHe4i4cZF4rxiz
-         fa9ejul7C23G7guipBlYt4Q7u872Vm0pgFUSHL9Z6KLTAfV3coPxeIblL3Yqk3miScsk
-         jKF8SDgAbn9TMC+nwoi7bB4bTPpa63u9nsPQ1/+BDroRI4Fms+im2b1nC4z3mMu9UKUT
-         Qd8A==
+        bh=wo2EZUNeB9SsWLhfGdO4NXUFfi3h/ZgSDOZGnGz/M8M=;
+        b=AWTYy8y4zaClO/E3QrKZnMlUQae7ZWH/UnD3yozTj2BZivUYWSNVsWc8JkBuB+NIwf
+         AcFYWWGWuvb5i0nj0fsftLGlbHooXGodA2QURbiI2wVxmFMdYgWV40LlgLU7RkFFbYH0
+         BBfpXYmdxE1q8oIPu2qSSY2PCA4Hg8AC7+NjwcFXnZ+uzmT1GFk0+qJsuqaZ/VLfWvDP
+         LtxO+i/cfEYCZJ0Dc291wQomb4Dr/uxJut004AZ4gePqeNQlV0MNbRWIlTi98WZwK0Nh
+         S0XOkLvPsAPN0fdRxmYIW22+eTeJ2K4lq75U2VFpcDlB5KBDN9/cg/dvLyc7F52R4M7E
+         sasg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qvyI6Sc61lD8J/TKKLvSHBnJpLEYrXxRzZK/pmr8tcg=;
-        b=ikOnnuA55lbQpewRlg+ohPEvCHtbqNHsJWF0YVQ19rOQIjb442D/3heUDYeXf2NUH6
-         5gUc2f4WYZJXSB/8/4SL8/c/j65x1Z/DdFnLjpAUkRArzfC86CRKmFpLHK8jWx88lsGc
-         QQFZz87/s/FPFGrSCvXfcBwt2Bcor2colJNw5E9Se0NesUu1GOmw01KPZYRos2nw0r9V
-         Q5CPK6ekDuWQu2x9uS4LuXq/3oIqXAHNSp+VTHk4Mbo1lsKu84pVd4s+t2kZcXSYlm7m
-         oS8+XkgOjCLTTnzwYkyCaJkHm/S+EeSMTy5npZB1T/OqIk4OAoRgx8mcF7SWUjMfrvU8
-         PAjw==
-X-Gm-Message-State: AGi0PuavoDlZTnWV6NlNHulsU4zjEftlKUjkLK0GWbLYQmJn3nKYeBA8
-        LLKR3Xq2yqnsnCAjLWKK2mXJPrVZAXQeXphX0DztuQ==
-X-Google-Smtp-Source: APiQypI1u6fH2mX4s1RMnAvdrTdNNnWXLCWcnocYGW43VybN65NwGB9/DkXtVrPHM3u37UwkTy8EsjAY0aRPDloK43M=
-X-Received: by 2002:ab0:911:: with SMTP id w17mr6133575uag.60.1585916649174;
- Fri, 03 Apr 2020 05:24:09 -0700 (PDT)
+        bh=wo2EZUNeB9SsWLhfGdO4NXUFfi3h/ZgSDOZGnGz/M8M=;
+        b=O5O4UxK7I4EEJmoiSbf5QI+MrluOuOYuguzm1jYTYkXmJ9XQ8s2qq16S1o1nl+SVpG
+         kOR4XIZDhJkJZ5PiJicB72tC+FwjDo9w4YYhwTiYJaOqwKdQo8c2Hk6q7U/hXs5Hd0ba
+         PGLFTIl2uNpj9KioaIkfT20kPo02q65CCw1z6mMlzAW79sn7h5kYt3JZlh8N2SjMmphu
+         IY6p27Z5mwXzcrasow8J1Hxrcwj2lB6gMKDHJR9sP2MdavoHn5yAqKwR0RMYOeqDYv0A
+         NGZjdztUzQQw3d8Wt8p4Hs6GzqLXKvQTPopxk4YFVyfl2UYMw7BvqAX1hpEtK2+RA3rQ
+         Mn2Q==
+X-Gm-Message-State: AGi0PuZnlLY53xL1baajiMTZ0WrVxte0b/iSc8OyAcRjkMxPQlVg/3tH
+        EYEmYqQxxNj6Synru1cliPPSDQ/L757fjI7QipvNlw==
+X-Google-Smtp-Source: APiQypK3zlebDaHIYf3xJ0SdPkARdWrQq4THbXVO5Hj6xfMPT8VmYGqXxqVDetDL0Cu8CSgCsMIkNhk2Qk2txrZ2Wlo=
+X-Received: by 2002:a67:870f:: with SMTP id j15mr5889031vsd.95.1585916825114;
+ Fri, 03 Apr 2020 05:27:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <1585915404-7658-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1585915404-7658-1-git-send-email-Anson.Huang@nxp.com>
+References: <1584966504-21719-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1584966504-21719-1-git-send-email-Anson.Huang@nxp.com>
 From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Fri, 3 Apr 2020 17:53:58 +0530
-Message-ID: <CAHLCerOpgoL3_F6mg3i2d3Mnb81-4Y=+fkc_81+aWr3ut3GVEg@mail.gmail.com>
-Subject: Re: [PATCH V4] arm64: dts: imx8mp: Add thermal zones support
+Date:   Fri, 3 Apr 2020 17:56:53 +0530
+Message-ID: <CAHLCerPVuZrNiSh45w4TF6jKmZ+aD5aBZCcCK87i4Txdfh_Z2g@mail.gmail.com>
+Subject: Re: [PATCH V3 1/3] dt-bindings: thermal: imx8mm-thermal: Add support
+ for i.MX8MP
 To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
         Fabio Estevam <festevam@gmail.com>,
         Horia Geanta <horia.geanta@nxp.com>,
         Peng Fan <peng.fan@nxp.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
         lakml <linux-arm-kernel@lists.infradead.org>,
@@ -75,151 +80,43 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 3, 2020 at 5:41 PM Anson Huang <Anson.Huang@nxp.com> wrote:
+Hi Anson,
+
+On Mon, Mar 23, 2020 at 6:05 PM Anson Huang <Anson.Huang@nxp.com> wrote:
 >
-> i.MX8MP has a TMU inside which supports two thermal zones, add support
-> for them.
+> Add thermal binding doc for Freescale's i.MX8MP Thermal Monitoring Unit.
 >
+
+I realise this got merged already, but please send a patch converting
+this binding to yaml at some point.
+
+Regards,
+Amit
+
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-
-
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-
 > ---
-> Changes since V3:
->         - Drop some '0x' prefix;
->         - Add cpufreq cooling for soc thermal zone as well to fit the passive trip point.
+> No change.
 > ---
->  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 74 +++++++++++++++++++++++++++++++
->  1 file changed, 74 insertions(+)
+>  Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> index 9b1616e..77aff14 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> @@ -7,6 +7,7 @@
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/input/input.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/thermal/thermal.h>
+> diff --git a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+> index d09ae82..3629d3c 100644
+> --- a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
+> @@ -1,10 +1,10 @@
+>  * Thermal Monitoring Unit (TMU) on Freescale i.MX8MM SoC
 >
->  #include "imx8mp-pinfunc.h"
+>  Required properties:
+> -- compatible : Must be "fsl,imx8mm-tmu".
+> +- compatible : Must be "fsl,imx8mm-tmu" or "fsl,imx8mp-tmu".
+>  - reg : Address range of TMU registers.
+>  - clocks : TMU's clock source.
+> -- #thermal-sensor-cells : Should be 0. See ./thermal.txt for a description.
+> +- #thermal-sensor-cells : Should be 0 or 1. See ./thermal.txt for a description.
 >
-> @@ -43,6 +44,7 @@
->                         clocks = <&clk IMX8MP_CLK_ARM>;
->                         enable-method = "psci";
->                         next-level-cache = <&A53_L2>;
-> +                       #cooling-cells = <2>;
->                 };
->
->                 A53_1: cpu@1 {
-> @@ -53,6 +55,7 @@
->                         clocks = <&clk IMX8MP_CLK_ARM>;
->                         enable-method = "psci";
->                         next-level-cache = <&A53_L2>;
-> +                       #cooling-cells = <2>;
->                 };
->
->                 A53_2: cpu@2 {
-> @@ -63,6 +66,7 @@
->                         clocks = <&clk IMX8MP_CLK_ARM>;
->                         enable-method = "psci";
->                         next-level-cache = <&A53_L2>;
-> +                       #cooling-cells = <2>;
->                 };
->
->                 A53_3: cpu@3 {
-> @@ -73,6 +77,7 @@
->                         clocks = <&clk IMX8MP_CLK_ARM>;
->                         enable-method = "psci";
->                         next-level-cache = <&A53_L2>;
-> +                       #cooling-cells = <2>;
->                 };
->
->                 A53_L2: l2-cache0 {
-> @@ -127,6 +132,68 @@
->                 method = "smc";
->         };
->
-> +       thermal-zones {
-> +               cpu-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <2000>;
-> +                       thermal-sensors = <&tmu 0>;
-> +                       trips {
-> +                               cpu_alert0: trip0 {
-> +                                       temperature = <85000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu_crit0: trip1 {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +
-> +                       cooling-maps {
-> +                               map0 {
-> +                                       trip = <&cpu_alert0>;
-> +                                       cooling-device =
-> +                                               <&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +                                               <&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +                                               <&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +                                               <&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +                               };
-> +                       };
-> +               };
-> +
-> +               soc-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <2000>;
-> +                       thermal-sensors = <&tmu 1>;
-> +                       trips {
-> +                               soc_alert0: trip0 {
-> +                                       temperature = <85000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               soc_crit0: trip1 {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +
-> +                       cooling-maps {
-> +                               map0 {
-> +                                       trip = <&soc_alert0>;
-> +                                       cooling-device =
-> +                                               <&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +                                               <&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +                                               <&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +                                               <&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +
->         timer {
->                 compatible = "arm,armv8-timer";
->                 interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
-> @@ -215,6 +282,13 @@
->                                 gpio-ranges = <&iomuxc 0 114 30>;
->                         };
->
-> +                       tmu: tmu@30260000 {
-> +                               compatible = "fsl,imx8mp-tmu";
-> +                               reg = <0x30260000 0x10000>;
-> +                               clocks = <&clk IMX8MP_CLK_TSENSOR_ROOT>;
-> +                               #thermal-sensor-cells = <1>;
-> +                       };
-> +
->                         wdog1: watchdog@30280000 {
->                                 compatible = "fsl,imx8mp-wdt", "fsl,imx21-wdt";
->                                 reg = <0x30280000 0x10000>;
+>  Example:
+>  tmu: tmu@30260000 {
 > --
 > 2.7.4
 >
