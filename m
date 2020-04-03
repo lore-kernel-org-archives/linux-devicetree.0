@@ -2,181 +2,203 @@ Return-Path: <SRS0=qh1l=5T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E81ACC2D0E8
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 07:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B58E7C2D0E8
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 07:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B551120787
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 07:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8965E208E4
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 07:52:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aCJmbHts"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="YNSyhomk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbgDCHgP (ORCPT
+        id S2389223AbgDCHwh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 03:36:15 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5388 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730759AbgDCHgP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 03:36:15 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e86e73c0000>; Fri, 03 Apr 2020 00:35:24 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 03 Apr 2020 00:36:14 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 03 Apr 2020 00:36:14 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 3 Apr
- 2020 07:36:14 +0000
-Received: from [10.2.164.193] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 3 Apr 2020
- 07:36:13 +0000
-Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@iki.fi>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
-        <helen.koike@collabora.com>, <digetx@gmail.com>,
-        <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200325110358.GB853@valkosipuli.retiisi.org.uk>
- <8bc44545-7d1e-0e37-db27-d37784679574@xs4all.nl>
- <20200331103215.GI2394@valkosipuli.retiisi.org.uk>
- <ba37eb84-392c-3767-57f6-d297b0ab79a3@xs4all.nl>
- <20200331111018.GJ2394@valkosipuli.retiisi.org.uk>
- <a1145ee4-2991-a958-1225-090c57fec533@xs4all.nl>
- <20200331115221.GA4767@pendragon.ideasonboard.com>
- <6aa7d86c-3943-d508-ccf6-5ac46546abe9@nvidia.com>
- <3b00a559-992a-2da9-92b1-bee44e137ba2@nvidia.com>
- <1c60491b-1bb2-6291-80a6-c0fa14094077@nvidia.com>
- <20200401165805.GE4876@pendragon.ideasonboard.com>
- <e3b437c6-76e1-d407-e81d-c05912ffcd0b@nvidia.com>
-Message-ID: <f80dfa8f-0188-a733-bde6-e3210977d910@nvidia.com>
-Date:   Fri, 3 Apr 2020 00:36:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 3 Apr 2020 03:52:37 -0400
+Received: from mail-eopbgr1410128.outbound.protection.outlook.com ([40.107.141.128]:25728
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387655AbgDCHwg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 3 Apr 2020 03:52:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iPRIrJJM6DxIZWlrxX25J6inykH3kNU1OqnkZswOovcXKjUbzh88VLHzsBlYEM1z4E0Jdsz1uNIgkrDovJXGMi/ztGUQl40lP9RNAEvoslGn0VH8Lm5IzI+d9RKOTYrDmYLK7GdaaprXM+VBrFTfkUn/IhCOK+9Z1YeNEuRbKSQt1rYBLWb4NSFc8XBZIAOq518gW5Uk0tWoLAMKGBFErDkL87OOUAQq3Gk9qR8qL2tPiRK6DCXRcndvAlsCuzUgOZfPQvqo3wYkYuaowXGrNZGKaWm82urMFLzJn6UT6USzFNPmMm4nkAl7LABlfLHe6kdYh4aZyrCvS3bRidgbkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J0p2YS2jzhjkQFt0D189Yj1uzwU6BrprkwNoIo/IMRQ=;
+ b=LqOXBhxSCjJS5SgRDYh6jdJmQgu+cbdGyZYXjnB4yzYZARJqfVeO0j5LTU1vU8Anyed4F6Hp/2s85lBWlev83AP77J+wWOX+Y1Rni4jiaXlExr9lSFTnO9LaZGAtqFevfQb4QSQK+Sya9xNSzbYzmXRc0QbwlDh2/VwicQ8A3MtS1jTSKIkYP9+5dW+YTc2F/7ezqMtdrCwYbL5H/25IEMWhhQMCqE/m4c5Mxz8jf+nT+mf1KitfKXZj7BpRwu6JwZY2b0z8FZyvE9+4FMWwPOXwZSVLA9WCjJr7Uo722m+x3EP/kfAEjySb0oETf46+a6kRzIYpEuklfdst4rF8wg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J0p2YS2jzhjkQFt0D189Yj1uzwU6BrprkwNoIo/IMRQ=;
+ b=YNSyhomkhNDNGy6WwrQv/xgQO4HXcSuMQws2WG8pAVE6i1pPhCI22LZMOKgPqjuX9evOj6gqSqAhxt+IrExBdXuksWaQCxFxG9qfHS3AvUjyU1sABIKzNHKEsiHreOe95Lco8C6KQcYgSuqeGvhoIomjX9mjF6rr95b8231wFZE=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB2831.jpnprd01.prod.outlook.com (20.177.105.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2878.16; Fri, 3 Apr 2020 07:52:30 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2878.017; Fri, 3 Apr 2020
+ 07:52:30 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: RE: [PATCH v6 01/11] PCI: rcar: Rename pcie-rcar.c to
+ pcie-rcar-host.c
+Thread-Topic: [PATCH v6 01/11] PCI: rcar: Rename pcie-rcar.c to
+ pcie-rcar-host.c
+Thread-Index: AQHWCSZbXsVurzSitUKuta8LtwfZKahnBwTg
+Date:   Fri, 3 Apr 2020 07:52:29 +0000
+Message-ID: <TYAPR01MB4544C0756D781BB6545423E3D8C70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <1585856319-4380-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1585856319-4380-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1585856319-4380-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a8c5ebf7-f909-45ba-fdc8-08d7d7a3f603
+x-ms-traffictypediagnostic: TYAPR01MB2831:|TYAPR01MB2831:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TYAPR01MB2831E7DE898E43584BAC8BC0D8C70@TYAPR01MB2831.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:546;
+x-forefront-prvs: 0362BF9FDB
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(376002)(396003)(136003)(39860400002)(346002)(66946007)(66556008)(33656002)(6506007)(55236004)(76116006)(66446008)(64756008)(66476007)(26005)(9686003)(86362001)(2906002)(55016002)(316002)(81156014)(4326008)(478600001)(107886003)(7416002)(5660300002)(71200400001)(81166006)(52536014)(7696005)(110136005)(54906003)(8936002)(186003)(8676002)(921003)(1121003);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FlZ5e1W1Jwwgk49Rb23U/0VpPtLkeYYl0KWEmoEpk9ybnZbu9iefQuRWDvQvPfNLbvJCLnW3HnPZ3M9Jg2/XaNDoltlQvqeL/K0wn8nlF795mkA2Hk9x8f884EfWPo+i+Vr6Twa+iKwnH7Ct1+OS8GB70aQhMIKN9epgJx6hRwE0pH6iajZ/ykvGO3az93AcnHu1+5LGuYh5hPY9q9sONpCIHdhqCTlu5j9YI0K/u3IcF9707Ha+9ZpgRO/s0yMk8HFmbpeE0l6YEKaACEnlZbi3i91jk1FUm2fXh4tzk/HAw7uT2tGkC1Q+HsKZ77Zbn29hOt+a/VKlNuBkLEwHhFvg+ut8R8GpxkcYrgsw99iSOctLlKuWcUoqm8PMiFfZJ6OSaTxhkTzFroF4M/FXG4YfbrdSjsNdeHORtMncmkGpR5VO0P1FIZ9b1kDqpq4qbo7PXF2gui63LQ/XObH8WjqX+ui92ELHo+KNevmbTyq6qCdUJaWedvJddfYMlQD/
+x-ms-exchange-antispam-messagedata: Tzqtdux/9zhTLulNPXfem+wGmP7LUwT0uW3Y88WAQh+tLZ8SMzZib8/54MBQjWt6uOfl46oJxieUHfFv6H+3kqHHyo5JN4Q/koDF5Pu/yyr7ClVxeCLBnX1heZWE+XHkbEQU8GS7Rv1wezFrb3vZrw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <e3b437c6-76e1-d407-e81d-c05912ffcd0b@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585899324; bh=lH8VCoTnCQfzYg8lxheGj9jbRYQX28Pk6wDY+1bd1Lc=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=aCJmbHtsc4d/J4y6wxxvtxPdp8AB1QyHvod3IkYmiYOFmNqRKzkoO4l4xehzZLMNN
-         HciKMWr46UM+naKvToV2stzzX9PdWPMx4AIVUrBCxI/BDYPaGEEB9iyN1aT+d0iHP6
-         lWU4h7sEP2wi0FLerEJpqXt1cnt5khCLapxZ/1tXVzyNkfEJCppASvxjcID5mzAauM
-         FNMkg3nG2Jdvl9gTDoveadA1PqSeMIPxzu+owU/zY+fOkicByGSu6uTgeeOskEALIn
-         bmNFWfEDYEYKPWlfkD9L9vnpfAltTR75ArZq8+fZ6XqcBr6p5Ly4MBXQL9GiEU2c6E
-         ewNJyE76dqBUg==
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a8c5ebf7-f909-45ba-fdc8-08d7d7a3f603
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2020 07:52:30.0643
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yK2ovDTL3eAh1QKVQz46ROnMd4OaToFC4Mtx7LUEav6Vz102LRr02wL0n0p/MtEsSE8axKXdoYKH6CoGdRUv6AL/DTlHdrHCGRzyGFL4WzZkABPgS0cVo2XmP+PaN9eM
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2831
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-As we don't need have MC based for tegra internal TPG, will continue 
-with video node based for CSI sub-device in this series.
+Hi Prabhakar-san,
 
-Next series will include sensor support, will discuss internally by then 
-and will implement accordingly.
+> From: Lad Prabhakar, Sent: Friday, April 3, 2020 4:38 AM
+>=20
+> This commit renames pcie-rcar.c to pcie-rcar-host.c in preparation for
+> adding support for endpoint mode. CONFIG_PCIE_RCAR is kept so that arm64
+> defconfig change can be a separate patch.
+>=20
+> With this patch both config options PCIE_RCAR and PCIE_RCAR_HOST will be
+> available but PCIE_RCAR internally selects PCIE_RCAR_HOST so that bisect
+> builds wont be affected.
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Thanks
+Thank you for the patch!
 
-Sowjanya
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
+Best regards,
+Yoshihiro Shimoda
 
-On 4/1/20 11:24 AM, Sowjanya Komatineni wrote:
->
-> On 4/1/20 9:58 AM, Laurent Pinchart wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> Hi Sowjanya,
->>
->> On Wed, Apr 01, 2020 at 09:36:03AM -0700, Sowjanya Komatineni wrote:
->>> Hi Sakari/Laurent,
->>>
->>> Few questions to confirm my understanding on below discussion.
->>>
->>> 1. Some sensors that you are referring as don't work with single 
->>> devnode
->>> controlling pipeline devices are ISP built-in sensors where setup of
->>> pipeline and subdevices happen separately?
->> Sensors that include ISPs could indeed require to be exposed as multiple
->> subdevs, but I was mostly referring to raw Bayer sensors with hardware
->> architectures similar to the SMIA++ and MIPI CCS specifications. Those
->> sensors can perform cropping in up to three different locations (analog
->> crop, digital crop, output crop), and can also scale in up to three
->> different locations (binning, skipping and filter-based scaling).
->>
->> Furthermore, with the V4L2 support for multiplexed streams that we are
->> working on, a sensor that can produce both image data and embedded data
->> would also need to be split in multiple subdevs.
->
-> Thanks Laurent.
->
-> For sensors with meta/embedded data along with image in same frame, 
-> Tegra VI HW extracts based on programmed embedded data size info.
->
-> So in our driver we capture this as separate buffer as embedded data 
-> is part of frame.
->
-> You above comment on multiplexed streams is for sensors using 
-> different virutal channels for diff streams?
->
->
->>> 2. With driver supporting single device node control of entire pipeline
->>> devices compared to MC-based, limitation is with userspace apps for 
->>> only
->>> these complex camera sensors?
->> In those cases, several policy decisions on how to configure the sensor
->> (whether to use binning, skipping and/or filter-based scaling for
->> instance, or how much cropping and scaling to apply to achieve a certain
->> output resolution) will need to be implemented in the kernel, and
->> userspace will not have any control on them.
->>
->>> 3. Does all upstream video capture drivers eventually will be moved to
->>> support MC-based?
->> I think we'll see a decrease of the video-node-centric drivers in the
->> future for embedded systems, especially the ones that include an ISP.
->> When a system has an ISP, even if the ISP is implemented as a
->> memory-to-memory device separate from the CSI-2 capture side, userspace
->> will likely have a need for fine-grained control of the camera sensor.
->>
->>> 4. Based on libcamera doc looks like it will work with both types of
->>> MC-based and single devnode based pipeline setup drivers for normal
->>> sensors and limitation is when we use ISP built-in sensor or ISP HW
->>> block. Is my understanding correct?
->> libcamera supports both, it doesn't put any restriction in that area.
->> The pipeline handler (the device-specific code in libcamera that
->> configures and control the hardware pipeline) is responsible for
->> interfacing with the kernel drivers, and is free to use an MC-centric or
->> video-node-centric API depending on what the kernel drivers offer.
->>
->> The IPA (image processing algorithms) module is also vendor-specific.
->> Although it will not interface directly with kernel drivers, it will
->> have requirements on how fine-grained control of the sensor is required.
->> For systems that have an ISP in the SoC, reaching a high image quality
->> level requires fine-grained control of the sensor, or at the very least
->> being able to retrieve fine-grained sensor configuration information
->> from the kernel. For systems using a camera sensor with an integrated
->> ISP and a CSI-2 receiver without any further processing on the SoC side,
->> there will be no such fine-grained control of the sensor by the IPA (and
->> there could even be no IPA module at all).
->>
->> -- 
->> Regards,
->>
->> Laurent Pinchart
+> ---
+>  drivers/pci/controller/Kconfig                         | 10 ++++++++++
+>  drivers/pci/controller/Makefile                        |  2 +-
+>  .../pci/controller/{pcie-rcar.c =3D> pcie-rcar-host.c}   |  0
+>  3 files changed, 11 insertions(+), 1 deletion(-)
+>  rename drivers/pci/controller/{pcie-rcar.c =3D> pcie-rcar-host.c} (100%)
+>=20
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kcon=
+fig
+> index af0f0bc11917..cfdc898450d0 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -58,8 +58,18 @@ config PCIE_RCAR
+>  	bool "Renesas R-Car PCIe controller"
+>  	depends on ARCH_RENESAS || COMPILE_TEST
+>  	depends on PCI_MSI_IRQ_DOMAIN
+> +	select PCIE_RCAR_HOST
+>  	help
+>  	  Say Y here if you want PCIe controller support on R-Car SoCs.
+> +	  This option will be removed after arm64 defconfig is updated.
+> +
+> +config PCIE_RCAR_HOST
+> +	bool "Renesas R-Car PCIe host controller"
+> +	depends on ARCH_RENESAS || COMPILE_TEST
+> +	depends on PCI_MSI_IRQ_DOMAIN
+> +	help
+> +	  Say Y here if you want PCIe controller support on R-Car SoCs in host
+> +	  mode.
+>=20
+>  config PCI_HOST_COMMON
+>  	bool
+> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Mak=
+efile
+> index 158c59771824..9dbccb5b24e1 100644
+> --- a/drivers/pci/controller/Makefile
+> +++ b/drivers/pci/controller/Makefile
+> @@ -7,7 +7,7 @@ obj-$(CONFIG_PCI_MVEBU) +=3D pci-mvebu.o
+>  obj-$(CONFIG_PCI_AARDVARK) +=3D pci-aardvark.o
+>  obj-$(CONFIG_PCI_TEGRA) +=3D pci-tegra.o
+>  obj-$(CONFIG_PCI_RCAR_GEN2) +=3D pci-rcar-gen2.o
+> -obj-$(CONFIG_PCIE_RCAR) +=3D pcie-rcar.o
+> +obj-$(CONFIG_PCIE_RCAR_HOST) +=3D pcie-rcar-host.o
+>  obj-$(CONFIG_PCI_HOST_COMMON) +=3D pci-host-common.o
+>  obj-$(CONFIG_PCI_HOST_GENERIC) +=3D pci-host-generic.o
+>  obj-$(CONFIG_PCIE_XILINX) +=3D pcie-xilinx.o
+> diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/=
+pcie-rcar-host.c
+> similarity index 100%
+> rename from drivers/pci/controller/pcie-rcar.c
+> rename to drivers/pci/controller/pcie-rcar-host.c
+> --
+> 2.20.1
+
