@@ -2,139 +2,136 @@ Return-Path: <SRS0=qh1l=5T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B49C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 08:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BEF5C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 08:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42A3F20721
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 08:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3ED32073B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 08:40:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fw9TB0HE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390518AbgDCI20 (ORCPT
+        id S2390403AbgDCIkd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 04:28:26 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33035 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389015AbgDCI20 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 04:28:26 -0400
-Received: by mail-oi1-f193.google.com with SMTP id m14so5455032oic.0;
-        Fri, 03 Apr 2020 01:28:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Jd71ZkzudxX5g2IyvVUOYdKyHi8OFqEjn6IvsJ3wV7k=;
-        b=FptaELtUqZtw2PU+tc3+NF2788XDhVfr2VIIe/2V4QAciH24UopAEvzEfFTk/eMdr0
-         KK/bH8IlvDlRvFlCFXPsGiRlA/hSkE2w5OtvxkMdZHMNIERNp89MWsiIAJA2VmdcXoe0
-         ltumbPd00FeL8SIWehhKXlPqxNa8Xa/nGbJBnbEqx15TEWLKO5PbN/Ah1PvmwVIpuDW/
-         qpyf1Az7WlIF/EcBQWWZlhK6KZ7Rv8PVaR9Mru0mJZDROQwD4npZKPiNSCghc4nsZSbU
-         WAFKIioIP8XG8tZQUQ37UB3Ue+j4/8lXhRQK+ITWCjXfzdhRUMh4YNwkg4ogzTorSu0b
-         gRXQ==
-X-Gm-Message-State: AGi0PubH7hqbi2eLKTJiwBMHgXhLZ2t5EbB/p+TopymSgWJx8ZrALXP3
-        lelfEc20rHbEF5+UXWZS5KqygYsQa28o31HrWi8=
-X-Google-Smtp-Source: APiQypIS6fpMGxM4Q7dZQ7e1YsUy6vcUkIWwvKfW8MQ2oAPzqQO4S5tcl4AqLxJx41ERvItQuVYYFJJlh5Wv+BynmHU=
-X-Received: by 2002:aca:cdd1:: with SMTP id d200mr2041353oig.153.1585902505654;
- Fri, 03 Apr 2020 01:28:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <1585856319-4380-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1585856319-4380-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <TYAPR01MB454403D69A74036B74CC8220D8C70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYAPR01MB454403D69A74036B74CC8220D8C70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 3 Apr 2020 10:28:13 +0200
-Message-ID: <CAMuHMdVWn=U82k5RJnBaRUgRHh3bRfdncOupmX67-u-nbwsG9w@mail.gmail.com>
-Subject: Re: [PATCH v6 02/11] arm64: defconfig: enable CONFIG_PCIE_RCAR_HOST
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
+        Fri, 3 Apr 2020 04:40:33 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:51631 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390267AbgDCIkc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 04:40:32 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585903232; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=pcPZXHP6kJuCOK+5sj4KXybMGy4D3NvpQrGs0CQsFM0=; b=fw9TB0HEDJV/0a419K+9xPMkA7mymRI2OT3IFsKsatQpimck+plvay1XlW3JPlPHkAwPiVdv
+ zUWArRwVbzuyrA0QtyHmwQMGu2v1HbaFDwvDvaC3fYo00Z2VooLXfzlJWilHje3O/pvG309J
+ M1WkAurfz/jWCZtT+ny2SgDkS2s=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e86f675.7f1f14f46d50-smtp-out-n04;
+ Fri, 03 Apr 2020 08:40:21 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 37B75C433BA; Fri,  3 Apr 2020 08:40:21 +0000 (UTC)
+Received: from [10.111.194.152] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mgautam)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 58944C433D2;
+        Fri,  3 Apr 2020 08:40:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 58944C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mgautam@codeaurora.org
+Subject: Re: [PATCH 1/2] phy: qualcomm: add qcom dwc3 phy
+To:     Ansuel Smith <ansuelsmth@gmail.com>, Andy Gross <agross@kernel.org>
+Cc:     Andy Gross <agross@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20200403002608.946-1-ansuelsmth@gmail.com>
+From:   Manu Gautam <mgautam@codeaurora.org>
+Message-ID: <75326e97-a6fb-3682-9973-22d46e48b58d@codeaurora.org>
+Date:   Fri, 3 Apr 2020 14:10:13 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200403002608.946-1-ansuelsmth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
+Hi,
 
-On Fri, Apr 3, 2020 at 10:03 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> > From: Lad Prabhakar, Sent: Friday, April 3, 2020 4:39 AM
-> >
-> > config option PCIE_RCAR internally selects PCIE_RCAR_HOST which builds the
-> > same driver. So this patch renames CONFIG_PCIE_RCAR to
-> > CONFIG_PCIE_RCAR_HOST so that PCIE_RCAR can be safely dropped from Kconfig
-> > file.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 4/3/2020 5:56 AM, Ansuel Smith wrote:
+> This has lost in the original push for the dwc3 qcom driver.
+> This is needed for ipq806x SoC as without this the usb ports
+> doesn't work at all.
 >
-> Thank you for the patch!
+> Signed-off-by: Andy Gross <agross@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  drivers/phy/qualcomm/Kconfig         |  12 +
+>  drivers/phy/qualcomm/Makefile        |   1 +
+>  drivers/phy/qualcomm/phy-qcom-dwc3.c | 578 +++++++++++++++++++++++++++
+>  3 files changed, 591 insertions(+)
+>  create mode 100644 drivers/phy/qualcomm/phy-qcom-dwc3.c
 >
-> Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> diff --git a/drivers/phy/qualcomm/Kconfig b/drivers/phy/qualcomm/Kconfig
+> index e46824da29f6..3d45a9156f85 100644
+> --- a/drivers/phy/qualcomm/Kconfig
+> +++ b/drivers/phy/qualcomm/Kconfig
+> @@ -91,3 +91,15 @@ config PHY_QCOM_USB_HSIC
+>  	select GENERIC_PHY
+>  	help
+>  	  Support for the USB HSIC ULPI compliant PHY on QCOM chipsets.
+> +
+> +config PHY_QCOM_DWC3
+Please rename to PHY_QCOM_IPQ806X_USB
+> +	tristate "QCOM DWC3 USB PHY support"
+> +	depends on ARCH_QCOM
+> +	depends on HAS_IOMEM
+> +	depends on OF
+> +	select GENERIC_PHY
+> +	help
+> +	  This option enables support for the Synopsis PHYs present inside the
+> +	  Qualcomm USB3.0 DWC3 controller.  This driver supports both HS and SS
+> +	  PHY controllers.
+
+Please mention that driver supports only IPQ806x, as it can't  be used
+for all QCOM phy and dwc3 controllers wrappers.
+
+
+> +
+> diff --git a/drivers/phy/qualcomm/Makefile b/drivers/phy/qualcomm/Makefile
+> index 283251d6a5d9..04c5a8da941a 100644
+> --- a/drivers/phy/qualcomm/Makefile
+> +++ b/drivers/phy/qualcomm/Makefile
+> @@ -10,3 +10,4 @@ obj-$(CONFIG_PHY_QCOM_UFS_14NM)		+= phy-qcom-ufs-qmp-14nm.o
+>  obj-$(CONFIG_PHY_QCOM_UFS_20NM)		+= phy-qcom-ufs-qmp-20nm.o
+>  obj-$(CONFIG_PHY_QCOM_USB_HS) 		+= phy-qcom-usb-hs.o
+>  obj-$(CONFIG_PHY_QCOM_USB_HSIC) 	+= phy-qcom-usb-hsic.o
+> +obj-$(CONFIG_PHY_QCOM_DWC3)		+= phy-qcom-dwc3.o
+> diff --git a/drivers/phy/qualcomm/phy-qcom-dwc3.c b/drivers/phy/qualcomm/phy-qcom-dwc3.c
+> new file mode 100644
+> index 000000000000..f33da199ddde
+> --- /dev/null
+> +++ b/drivers/phy/qualcomm/phy-qcom-dwc3.c
+
+Rename to phy-qcom-ip806x-usb.c
+
+Please also add qcom_ipq806x_usb as prefix in the function names and structures etc.
+
+> @@ -0,0 +1,578 @@
 >
-> But, I'm thinking this patch (and patch 03/11) should be separated
-> from this patch series for arm64 subsystem to ease maintenance.
-> My scenario is:
->  1) patch series 1: R-Car PCIe endpoint support.
->  -- This means: patch 1, 4 - 9, 11
->
->  2) After the patch series 1 is merged, submit this patch 2/11 to arm subsystem
->    and submit the patch 10/11 to misc subsystem.
->
->  3) At last, submit patch 3/11 after the patch 2/11 is merged.
->
-> Geert-san, what do you think?
-
-Thanks, I agree with your summary.
-
-I can take patch 2/11 through renesas-devel.
-Probably it's best if I submit it to arm-soc as a fix for v5.8, after
-the driver part
-has been merged into v5.8-rc1, so 3/11 can be submitted for v5.9.
-
-BTW, I'm wondering about "[PATCH v6 05/11] PCI: rcar: Fix calculating
-mask for PCIEPAMR register". Can the issue fixed by this patch happen with
-the current driver in host mode, or is that limited to ep mode?
-In case of the former, please submit it to the PCI maintainer as a separate
-fix.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
