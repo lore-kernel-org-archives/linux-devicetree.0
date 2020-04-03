@@ -2,104 +2,76 @@ Return-Path: <SRS0=qh1l=5T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A64C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 03:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09231C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 05:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE1B207FF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 03:50:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="xCpnIFv0";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="spNmuEnP"
+	by mail.kernel.org (Postfix) with ESMTP id D902E20787
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 05:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390204AbgDCDuK (ORCPT
+        id S1731738AbgDCFEm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 23:50:10 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:37957 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389477AbgDCDuJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 23:50:09 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id D3E795802F5;
-        Thu,  2 Apr 2020 23:50:08 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute3.internal (MEProxy); Thu, 02 Apr 2020 23:50:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm2; bh=P0i5a44/PsPVXizK2loCZDTGox+XOyW
-        9+9DooRb9EMI=; b=xCpnIFv0cZaUC0AT3DOLbflHBL9J8ZgbLYc5wbe/jrK9xf0
-        2DrW2l0EHIfkNsyHA1GvpB7OtMjoRjcPThiu1r4wTCJJOnrfJyZPiFq4Dg3AJ6wf
-        a85rCFiUQkwyYiwQOtCWvxoHxzKiqttkGod6I0yWN/TioFl+i1V7Hj5IQTYCwbQC
-        znkD6kxL2gP/y+MCtrePHGlpybz2YLv9gsZyE7LY9Op1vYXzEstBJtZ4vRbOeaZF
-        vTx+w1purQ9LiCNNN1fxdjz2t3ZXhaUKs/FwwOl8bY3vHTrntt2MYrpNxcxZxRzz
-        UVhqrJO6Uhqo3L0+MijmP3fdZAPUbPcAaf8l0ZA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=P0i5a4
-        4/PsPVXizK2loCZDTGox+XOyW9+9DooRb9EMI=; b=spNmuEnPJL8Uu297qnnHKy
-        rVOe2vFT6f/6b+xH026WDSohpHZdg8xnj9yghCLCKM/rgNrP0qcKPPvuEq3bz91c
-        IkLsmP8xu1bPI2TfqfgUQUOHRQU3C9Lb1ukkQhXGAbCYh6bizNqEYrv9khjRe5wZ
-        VpxfvrnYKrJYAH1X5aeawv1fijcB0QqbTnJEBIL2i8j7OWw2zsRljAEOfL4ISZ0p
-        wo3BZ2RoeP9T46XJgve+IcLR4rEpIH8oPKxmdTjQEhUxhzf62WB+8z9+VUlPdAHR
-        Li/tpyMFcYScbN0Byx2BjzYEvBksqSffm8w1fyHumWEm/LlV/MOVHc601cm5UMag
-        ==
-X-ME-Sender: <xms:abKGXrawh2OniH8S0iCs40jn3tE3MLaWUO1O7DzwPZMwVHiZwOiUmQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtdehgdejhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderreejnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucffohhmrg
-    hinhepkhgvrhhnvghlrdhorhhgpdguvghvihgtvghsrdhpihhnghenucevlhhushhtvghr
-    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiug
-    drrghu
-X-ME-Proxy: <xmx:abKGXvlPkC1DxluARvIz4GaXXaHhMdSSm3xWLd9ypVAGbxaeaS2-Sw>
-    <xmx:abKGXu3Aj5bepyhous-L-NVYVZy5zOZEmFcgFo4Z9CiCwBm8fmqjmg>
-    <xmx:abKGXn1jySVFIH3-waYbwYInoEN1TIXY0UmbLkxz2p-O6vvw7YFerA>
-    <xmx:cLKGXryKVaezoVOQ2k_ilBFTF_ZS0jkbQmrbG0_MwuNVc1LC4v28CQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id AFA09E00B0; Thu,  2 Apr 2020 23:50:01 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-1082-g13d7805-fmstable-20200403v1
-Mime-Version: 1.0
-Message-Id: <7734002a-181e-4baf-b9a3-af66894acc16@www.fastmail.com>
-In-Reply-To: <cover.fe20dfec1a7c91771c6bb574814ffb4bb49e2136.1576462051.git-series.andrew@aj.id.au>
-References: <cover.fe20dfec1a7c91771c6bb574814ffb4bb49e2136.1576462051.git-series.andrew@aj.id.au>
-Date:   Fri, 03 Apr 2020 14:20:21 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     openipmi-developer@lists.sourceforge.net
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        "Corey Minyard" <minyard@acm.org>, "Arnd Bergmann" <arnd@arndb.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Haiyue Wang" <haiyue.wang@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: =?UTF-8?Q?Re:_[PATCH_v2_0/3]_ipmi:_kcs-bmc:_Rework_bindings_to_clean_up_?=
- =?UTF-8?Q?DT_warnings?=
-Content-Type: text/plain
+        Fri, 3 Apr 2020 01:04:42 -0400
+Received: from mga02.intel.com ([134.134.136.20]:32566 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726343AbgDCFEm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 3 Apr 2020 01:04:42 -0400
+IronPort-SDR: htDLeOx5ODFgMoBww79p1DnEsYiYkJ/ZK3NeWW026WTku44+fodzn8eMhsOaqIdcY8gEOoLHsV
+ aA7ov8HRrSHQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 22:04:41 -0700
+IronPort-SDR: oYg4EmzZ5YRs92cjIRiEe9dCbv4Js6gS+DEXXO8gGIxRhAYGbjkBGWUDw+6frs3mj+jbfIaWz2
+ 7GlN2/7NGexA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,338,1580803200"; 
+   d="scan'208";a="396608927"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga004.jf.intel.com with ESMTP; 02 Apr 2020 22:04:38 -0700
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     kishon@ti.com, robh@kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com,
+        Dilip Kota <eswara.kota@linux.intel.com>
+Subject: [PATCH v6 0/4] Add Intel ComboPhy driver
+Date:   Fri,  3 Apr 2020 13:04:07 +0800
+Message-Id: <cover.1585889042.git.eswara.kota@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This patch series adds Intel ComboPhy driver, respective yaml schemas
+and a kernel API fwnode_to_regmap().
+ComboPhy driver calls it to get regmap handle through firmware node.
 
+Changes on v6:
+  Rebase patches on the latest maintainer's branch
+  https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git/?h=phy-for-5.7
 
-On Mon, 16 Dec 2019, at 12:57, Andrew Jeffery wrote:
-> Hello,
-> 
-> This is a short series reworking the devicetree binding and driver for the
-> ASPEED BMC KCS devices. With the number of supported ASPEED BMC devicetrees the
-> changes enable removal of more than 100 lines of warning output from dtc.
-> 
-> v1 can be found here:
-> 
-> https://lore.kernel.org/lkml/cover.5630f63168ad5cddf02e9796106f8e086c196907.1575376664.git-series.andrew@aj.id.au/
-> 
-> v2 cleans up the commit message of 2/3 and changes the name of the property
-> governing the LPC IO address for the KCS devices.
+Dilip Kota (4):
+  mfd: syscon: Add fwnode_to_regmap
+  dt-bindings: phy: Add PHY_TYPE_XPCS definition
+  dt-bindings: phy: Add YAML schemas for Intel ComboPhy
+  phy: intel: Add driver support for ComboPhy
 
-Ping?
+ .../devicetree/bindings/phy/intel,combo-phy.yaml   | 101 ++++
+ drivers/mfd/syscon.c                               |   8 +
+ drivers/phy/intel/Kconfig                          |  14 +
+ drivers/phy/intel/Makefile                         |   1 +
+ drivers/phy/intel/phy-intel-combo.c                | 626 +++++++++++++++++++++
+ include/dt-bindings/phy/phy.h                      |   1 +
+ include/linux/mfd/syscon.h                         |   6 +
+ 7 files changed, 757 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+ create mode 100644 drivers/phy/intel/phy-intel-combo.c
+
+-- 
+2.11.0
+
