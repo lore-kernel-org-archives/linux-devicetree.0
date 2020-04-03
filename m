@@ -2,73 +2,76 @@ Return-Path: <SRS0=qh1l=5T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4208C2BA12
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 16:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA50C2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 16:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B02A215A4
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 16:16:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=startmail.com header.i=@startmail.com header.b="J8G1Cgrj"
+	by mail.kernel.org (Postfix) with ESMTP id 79C1A20721
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 16:16:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404333AbgDCQQt (ORCPT
+        id S2404084AbgDCQQk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:16:49 -0400
-Received: from mx-out2.startmail.com ([145.131.90.155]:46190 "EHLO
-        mx-out2.startmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404035AbgDCQQs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 12:16:48 -0400
-Date:   Fri, 3 Apr 2020 19:21:54 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=startmail.com;
-        s=2017-11; t=1585930607;
-        bh=ipQrauf/RATph3AuYQzrJh8EzsblD3zQ5PJ+nD02B2M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J8G1Cgrjb1PcBHRAC4aMQlgyMJPyhCwBoYKwmYBPa9EkRjJeRitFhFgxygPrXXRav
-         q58jHnhWHVRpmlMsOGj4VwkYolIedboNlDZVv/Wt5UW8WIit66lxwCXlma+6rVtCvE
-         NmP7qTZhsgGGC+7qFgn/bCBydQORq/zt+k9cTIAn+I4RfNcx04+Y+CsXBTPNNzOCfQ
-         EaCNlW7/b316Jh6rPHVwe5poQcD1zHxhf81l2KzSrhGG9PiVdXyImAcCAYmPMjmuMy
-         Xwj/JIF2f+HpGYWNe5cRVumGcMycqSAeoTOqPOGjZT8OEnbIEWPNjv7lsPkO6eY7+d
-         CL8g/rW8ZGIPA==
-From:   Alexandru Lazar <alazar@startmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: Re: [PATCH v7 2/2] iio: adc: Add MAX1241 driver
-Message-ID: <20200403162154.GA8285@leena.republic>
-References: <20200403121323.1742-1-alazar@startmail.com>
- <20200403121323.1742-3-alazar@startmail.com>
- <CAHp75VcKEqM4nxvu3QtqNDpwtJU77zu=YfPwmCXn_L=LsGSuAQ@mail.gmail.com>
+        Fri, 3 Apr 2020 12:16:40 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58086 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404035AbgDCQQk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 12:16:40 -0400
+Received: from floko.floko.floko (unknown [IPv6:2804:431:e7cc:11ff:4f80:3de:e2b2:5c1d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 6CEEC29868A;
+        Fri,  3 Apr 2020 17:16:33 +0100 (BST)
+From:   Helen Koike <helen.koike@collabora.com>
+To:     devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        robh+dt@kernel.org, heiko@sntech.de, hverkuil-cisco@xs4all.nl,
+        kernel@collabora.com, dafna.hirschfeld@collabora.com,
+        ezequiel@collabora.com, mark.rutland@arm.com,
+        karthik.poduval@gmail.com, jbx6244@gmail.com, kishon@ti.com
+Subject: [PATCH v2 7/9] media: MAINTAINERS: rkisp1: add path to dt-bindings
+Date:   Fri,  3 Apr 2020 13:15:36 -0300
+Message-Id: <20200403161538.1375908-8-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200403161538.1375908-1-helen.koike@collabora.com>
+References: <20200403161538.1375908-1-helen.koike@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHp75VcKEqM4nxvu3QtqNDpwtJU77zu=YfPwmCXn_L=LsGSuAQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> FWIW,
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+The Rockchip ISP bindings was moved out of staging.
+Update MAINTAINERS file with the new path.
 
-Thanks!
+Suggested-by: Johan Jonker <jbx6244@gmail.com>
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+---
 
-> > Datasheet: https://datasheets.maximintegrated.com/en/ds/MAX1240-MAX1241.pdf
-> >
-> No blank line, but this can be fixed by maintainer, I think.
+V2:
+- This is a new patch in the series
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-Oops! Not sure how I (and checkpatch.pl?) missed that! It's tiny enough
-to fix inline I guess, but it's not a problem to make a v8 with it if
-needed.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d66ac41ef5872..726044b84cf23 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14303,6 +14303,7 @@ M:	Helen Koike <helen.koike@collabora.com>
+ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ F:	drivers/staging/media/rkisp1/
++F:	Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+ 
+ ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
+ M:	Jacob Chen <jacob-chen@iotwrt.com>
+-- 
+2.26.0
 
-Thanks,
-Alex
