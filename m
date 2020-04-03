@@ -2,236 +2,92 @@ Return-Path: <SRS0=qh1l=5T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7636C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 15:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0A2C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 15:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD6602073B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 15:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 637AD20721
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 15:43:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="djFdKEvT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404140AbgDCPLG (ORCPT
+        id S1727989AbgDCPnj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 11:11:06 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39203 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404135AbgDCPLF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 11:11:05 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jKNy7-0005GW-Ki; Fri, 03 Apr 2020 17:10:51 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jKNy7-0007wC-2O; Fri, 03 Apr 2020 17:10:51 +0200
-Date:   Fri, 3 Apr 2020 17:10:51 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Sandipan Patra <spatra@nvidia.com>
-Cc:     treding@nvidia.com, robh+dt@kernel.org, jonathanh@nvidia.com,
-        bbasu@nvidia.com, ldewangan@nvidia.com, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pwm: tegra: dynamic clk freq configuration by PWM driver
-Message-ID: <20200403151050.nh2mrffkqdqtkozq@pengutronix.de>
-References: <1585917303-10573-1-git-send-email-spatra@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1585917303-10573-1-git-send-email-spatra@nvidia.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+        Fri, 3 Apr 2020 11:43:39 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51149 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbgDCPni (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 11:43:38 -0400
+Received: by mail-wm1-f67.google.com with SMTP id t128so7634869wma.0;
+        Fri, 03 Apr 2020 08:43:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=LK/63VpRTinhiS72eGFe8hpGS9Ib9592eNpC47zP9eg=;
+        b=djFdKEvTwrwu3CjbnLd2DYvKdWWmT3nTiRUjzGLsXnWqQKq+R5eIyZqf6vy3qOHK8U
+         lo8rz2LKF2oDOXC794xOJzkCiONvpaVCcKcGtnu9BO/nqiyyz+q45cdXr63dEVbNQBWg
+         lWzogL2owQshIUBQ7VXOrlBLemWBhscnAdyoxUqGH2GVHdUTj7hjTqD8lxvFAFqjQ39q
+         jBKSCTXH8pLWl1dYeQTmvLGda8KIKWYue+cUBo2RD5NOFJjE2wqLJZCNaN1qk8cWOxlf
+         bGqi7ZGbePD5JHM+2En0vexg2XVAXFkak0ZTBdGS3mTBUOQAhKRR8VZKFrET3hS0ZdwY
+         Th4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LK/63VpRTinhiS72eGFe8hpGS9Ib9592eNpC47zP9eg=;
+        b=Cjn9QrqGzaBjqfMXwBDvdDeQ8u/CCWM626aBxgCOJ4MU5OdDPaf9ic1sm1noHPAlHq
+         INE0xlWUL1bPP8efn+A//CLwOnEK/hLrLFKoaxdjjcOesXkzUpKQHvHLsIPT81EhfEpT
+         jPmMMFVEFz+JH9lgYOnbTJ/PctMVlFxuLBK/q0vaFDOLve54YoGQf5e+sAd1mRR55Rvp
+         8+3fD4gyfonDR7kkQ3BoGRZas1kHM0tO2mUKCrwtrNbNLc0GrBt/nWB8pDCzBRDy8Vv1
+         aX/9i6igb2Z5uH78SEV0e2+PvzDFp9dl7DgTBwoadEj9bOnN5OGa17+nI6Hhe0IWDrOb
+         nUYA==
+X-Gm-Message-State: AGi0PubN7Oo7C83zutF346+TKPhKDXuFjw+Mb1BhjLlwsNpboi8dLB8e
+        24UiK7rS2PBTPRIDrTMFS5cHMJoo
+X-Google-Smtp-Source: APiQypLNXXcyKij1x2E3kI4jmxsZKz7DUFMVECFp2pVDbsBupYf2V9AJPCMBidDJDkAUQpQ4APKy4Q==
+X-Received: by 2002:a1c:8090:: with SMTP id b138mr9695849wmd.55.1585928616606;
+        Fri, 03 Apr 2020 08:43:36 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id h2sm11701580wmb.16.2020.04.03.08.43.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 Apr 2020 08:43:35 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/3] ARM: dts: rockchip: remove identical #include from rk3288.dtsi
+Date:   Fri,  3 Apr 2020 17:43:27 +0200
+Message-Id: <20200403154329.11256-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 06:05:03PM +0530, Sandipan Patra wrote:
-> Added support for dynamic clock freq configuration in pwm kernel driver.
-> Earlier the pwm driver used to cache boot time clock rate by pwm clock
-> parent during probe. Hence dynamically changing pwm frequency was not
-> possible for all the possible ranges. With this change, dynamic calculation
-> is enabled and it is able to set the requested period from sysfs knob
-> provided the value is supported by clock source.
+There are 2 identical '#include' for 'rk3288-power.h',
+so remove one of them.
 
-Without having looked closely at the patch (yet), just for my
-understanding: If the PWM is running and the frequency changes, the
-output changes, too, right? If so, do we need a notifier that prevents a
-frequency change when the PWM is running?
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm/boot/dts/rk3288.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
-And slightly orthogonal to this patch: The tegra driver needs some love
-to make it use the atomic callback .apply() instead of
-.config()/.enable()/.disable() and a .get_state() implementation.
-
-> Changes mainly have 2 parts:
->   - T186 and later chips [1]
->   - T210 and prior chips [2]
-> 
-> For [1] - Changes implemented to set pwm period dynamically and
->           also checks added to allow only if requested period(ns) is
->           below or equals to higher range.
-> 
-> For [2] - Only checks if the requested period(ns) is below or equals
->           to higher range defined by max clock limit. The limitation
->           in T210 or prior chips are due to the reason of having only
->           one pwm-controller supporting multiple channels. But later
->           chips have multiple pwm controller instances each having
-> 	  single channel support.
-> 
-> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
-> ---
->  drivers/pwm/pwm-tegra.c | 45 +++++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 43 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
-> index aa12fb3..d3ba33c 100644
-> --- a/drivers/pwm/pwm-tegra.c
-> +++ b/drivers/pwm/pwm-tegra.c
-> @@ -4,7 +4,7 @@
->   *
->   * Tegra pulse-width-modulation controller driver
->   *
-> - * Copyright (c) 2010, NVIDIA Corporation.
-> + * Copyright (c) 2010-2020, NVIDIA Corporation.
->   * Based on arch/arm/plat-mxc/pwm.c by Sascha Hauer <s.hauer@pengutronix.de>
->   */
->  
-> @@ -83,10 +83,51 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
->  	val = (u32)c << PWM_DUTY_SHIFT;
->  
->  	/*
-> +	 * Its okay to ignore the fraction part since we will be trying to set
-> +	 * slightly lower value to rate than the actual required rate
-
-s/actual/actually/
-
-You round down the rate, that results in rounding up period and
-duty_cycle, right? If so, that's wrong. (Note that if the driver would
-use the atomic callbacks, the just introduced debug checks would tell
-you this.)
-
-> +	 */
-> +	rate = NSEC_PER_SEC/period_ns;
-
-space around / please.
-
-> +
-> +	/*
-> +	 *  Period in nano second has to be <= highest allowed period
-> +	 *  based on the max clock rate of the pwm controller.
-> +	 *
-> +	 *  higher limit = max clock limit >> PWM_DUTY_WIDTH
-> +	 */
-> +	if (rate > (pc->soc->max_frequency >> PWM_DUTY_WIDTH))
-> +		return -EINVAL;
-
-Related to my question above: What happens if the rate increases after
-this check?
-
-Also the division above is just done to compare the requested period
-value with the allowed range.
-
-Your check is:
-
-	NSEC_PER_SEC / period_ns > (max_frequency >> PWM_DUTY_WIDTH)
-
-This is equivalent to
-
-	period_ns <= NSEC_PER_SEC / (max_frequency >> PWM_DUTY_WIDTH)
-
-where the right side is constant per PWM type. (Rounding might need
-addressing.)
-
-> +
-> +	/*
->  	 * Compute the prescaler value for which (1 << PWM_DUTY_WIDTH)
->  	 * cycles at the PWM clock rate will take period_ns nanoseconds.
->  	 */
-> -	rate = pc->clk_rate >> PWM_DUTY_WIDTH;
-> +	if (pc->soc->num_channels == 1) {
-> +		/*
-> +		 * Rate is multiplied with 2^PWM_DUTY_WIDTH so that it matches
-> +		 * with the hieghest applicable rate that the controller can
-
-typo: s/hieghest/highest/
-
-> +		 * provide. Any further lower value can be derived by setting
-> +		 * PFM bits[0:12].
-> +		 * Higher mark is taken since BPMP has round-up mechanism
-> +		 * implemented.
-> +		 */
-> +		rate = rate << PWM_DUTY_WIDTH;
-> +
-> +		err = clk_set_rate(pc->clk, rate);
-> +		if (err < 0)
-> +			return -EINVAL;
-> +
-> +		rate = clk_get_rate(pc->clk) >> PWM_DUTY_WIDTH;
-> +	} else {
-> +		/*
-> +		 * This is the case for SoCs who support multiple channels:
-
-s/who/that/
-
-> +		 *
-> +		 * clk_set_rate() can not be called again in config because
-> +		 * T210 or any prior chip supports one pwm-controller and
-> +		 * multiple channels. Hence in this case cached clock rate
-> +		 * will be considered which was stored during probe.
-
-I don't understand that. If 
-> +		 */
-> +		rate = pc->clk_rate >> PWM_DUTY_WIDTH;
-> +	}
->  
->  	/* Consider precision in PWM_SCALE_WIDTH rate calculation */
->  	hz = DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns);
-
-I took a deeper look into the driver now. Just to ensure, I understood
-the PWMs behaviour right:
-
-There is an ENABLE bit (with obvious semantics), a 13-bit SCALE value
-and an 8-bit DUTY value. There is an internal counter incrementing by
-one each (SCALE + 1) clock cycles and resets at 256. The counter going
-from 0 to 256 defines the period length. On counter reset the output
-gets active and on reaching DUTY the output gets inactive.
-
-So we have:
-
-	.period = 256 * (SCALE + 1) / clkrate
-	.duty_cycle = DUTY * (SCALE + 1) / clkrate
-
-Right?
-
-There are a few things that could be improved in the driver:
-
- - .config() does quite some divisions. This could be reduced which
-   probably even reduces rounding effects.
-
- - When .duty_ns == .period the assignment of DUTY overflows.
-   (Can the PWM provide 100% duty cycle at all?)
-
- - The comment "Since the actual PWM divider is the register's frequency
-   divider field minus 1, we need to decrement to get the correct value
-   to write to the register." seems wrong. If I understand correctly, we
-   need to do s/minus/plus/. If the register holds a 0, the divider
-   isn't -1 for sure?!
-
-How does the PWM behave when it gets disabled? Does it complete the
-currently running period? Does the output stop at the inactive level, or
-where it just happens to be? How does a running PWM behave when the
-register is updated? Does it complete the currently running period?
-
-Best regards
-Uwe
-
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index e72368a7a..f102fec69 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -7,7 +7,6 @@
+ #include <dt-bindings/clock/rk3288-cru.h>
+ #include <dt-bindings/power/rk3288-power.h>
+ #include <dt-bindings/thermal/thermal.h>
+-#include <dt-bindings/power/rk3288-power.h>
+ #include <dt-bindings/soc/rockchip,boot-mode.h>
+ 
+ / {
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.11.0
+
