@@ -2,311 +2,182 @@ Return-Path: <SRS0=qh1l=5T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6110AC43331
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 14:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA63C2BA18
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 14:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C2242077D
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 14:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EA302078C
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 14:25:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WUXbhUtD"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ZMtQ3Z/u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391074AbgDCOWr (ORCPT
+        id S2403878AbgDCOZE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 10:22:47 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37066 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390812AbgDCOWr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 10:22:47 -0400
-Received: by mail-wm1-f66.google.com with SMTP id j19so7919511wmi.2;
-        Fri, 03 Apr 2020 07:22:44 -0700 (PDT)
+        Fri, 3 Apr 2020 10:25:04 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:51329 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403869AbgDCOZE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 10:25:04 -0400
+Received: by mail-pj1-f65.google.com with SMTP id w9so3058647pjh.1
+        for <devicetree@vger.kernel.org>; Fri, 03 Apr 2020 07:25:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=FnjjXTS2tsUqaCMaL0+MNmh8auRiJkLrY6HybNJpx+A=;
-        b=WUXbhUtDuCCX+mwh0lK951yZfAZfXRYIO0QlQERr12I5nb1nrhtizedRX0mIcKlkCk
-         +AxrfWxqUqWBTGRzn/yto9ZkY6yY4/qSJgiA8O81CHAfVu+cOrWg2Jw+TwzA1oZy7jwv
-         Q6vGIAKnj69JKQSbkzRhWWT7HxGZxuthjJFRcRcFtXlEnV/ge9yjeUwsDQb7YKxLZzul
-         D6QbY6pE2fCh18Qxs5i8aY7kcHMNjcdQNlB+xxrv1eLzT5l6UO/oPL8kTdQtbrYLp+5q
-         wSW9xwEFgqlW+gNc2jt3oNQmJ38yyj1vlJKoEE98xswoWRqYFO9AOY0uZB88tO1bGVNd
-         5Xug==
+        bh=vKBRMX/UzCOn34k/kAwE26KCgVenN+ytvHTmdWU7Okc=;
+        b=ZMtQ3Z/uwSYiMhhw2nTl6CsbXXgH9xLLOhxQrgzJsrv3UW4kLSwgmTsE+7IuS36SVf
+         nNr3S9XTiC1OASHDsk3Kjfy1pztgLDzzIXtliEDLztXZmr+sVH40xM7/Q9Gd23g7LO7t
+         QfJPhwHti/wJtJsJ6E7HVd7ge9OGsfoe7PzWc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=FnjjXTS2tsUqaCMaL0+MNmh8auRiJkLrY6HybNJpx+A=;
-        b=orFZn4cdb9AI4+buqKBfkirCvlnaU280rjwhzCUXsucnJEH4+jXX+fNk4+ygUISn7L
-         HAP3/d3WMNy0C+y9lYJdLfeZluk3dKWa425JP+hNiSp1fZIYQrQYSegfrwGWFwNKxwcn
-         3Q5WBMtyqbukMzL7R5+kCn5R3+YFFw8xwQHjSKjyeqkcqPKMFGHlfyY9QdG217SuGcVd
-         XFOoRBbJ0Dd4mdYKOo6ntzVMqBtpMNKnuIBQCSKYimLWWvcA1gs+GFx4QvIl20iDX/UE
-         DzomlROhEH0SNdX/Oo2PgudoPuBxc0J6r7pB4CuP12ujLcIOkz4k3s13D4YCvtIDSFPZ
-         oVfQ==
-X-Gm-Message-State: AGi0PuZ7Vg1rCUsUNKURZvvpkPeL3piLoSU+uqFdxqqGOoafj50pnyPE
-        1CDj7By2jzTd9A7aV0VLNgo=
-X-Google-Smtp-Source: APiQypLjkxiSIiSVBM2f6/971sNVX/AwIwkwZ+MDXn3Jc6d57+MOIC7i53w6iYG8L7VzmVg7i6SIrA==
-X-Received: by 2002:a7b:c445:: with SMTP id l5mr6162878wmi.61.1585923764058;
-        Fri, 03 Apr 2020 07:22:44 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id u16sm12132223wro.23.2020.04.03.07.22.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 Apr 2020 07:22:43 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 1/2] dt-bindings: display: convert rockchip vop bindings to yaml
-Date:   Fri,  3 Apr 2020 16:22:34 +0200
-Message-Id: <20200403142235.8870-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        bh=vKBRMX/UzCOn34k/kAwE26KCgVenN+ytvHTmdWU7Okc=;
+        b=Tf9q9oeLLOb7zkmaQ3esl7jqBNzVo/8e4zn7SC/cjiZHjU7dMc95s2vpuaqG3t0sdz
+         suuRooRtww/axW84jKeMVmdzmzQUES75MSZLuf+3ZHRLcPvjsvgWwdiFcBPfdUMwfM61
+         c7rSJ0d/WYYrPWkww/5OM3zzA2ltTLaxgbLn0U7eXmRf3TbPP9INp5QlAQxal6pib2M6
+         aM3NFPaVt+XeKpPfnfIfx67PQ6j0s6+23j1/trTqwA+Bs7xJFzCmprsGv3QfLLjr+qaq
+         85/0w08ziPbxRiKkMmy+ALYKHWBMdBObF1y/M3tRw+hWX28RY7WWDO5ENH12+2yXndE5
+         UBHA==
+X-Gm-Message-State: AGi0PubwtHyYP6a+XXXKc9e5zNPwZBJTPt7qz0E+0kMUjeJFIZRkMX05
+        lT9jiioe46CdJHWammC+GhXAPb56WM4=
+X-Google-Smtp-Source: APiQypK/FOTXW2tO2HaeGhqMJi79/X/DjEIrHqAV05vSXxlPqEGWtElSKJxS/FsqoFPl8lB1RiTSIg==
+X-Received: by 2002:a17:90b:3615:: with SMTP id ml21mr10361300pjb.145.1585923902916;
+        Fri, 03 Apr 2020 07:25:02 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:c809:c7d5:9cd7:b821:2c84:e325])
+        by smtp.gmail.com with ESMTPSA id g75sm5857060pje.37.2020.04.03.07.24.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2020 07:25:02 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v3 1/3] dt-bindings: display: panel: Convert feiyang,fy07024di26a30d to DT schema
+Date:   Fri,  3 Apr 2020 19:54:51 +0530
+Message-Id: <20200403142453.25307-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Current dts files with 'vop' nodes are manually verified.
-In order to automate this process rockchip-vop.txt
-has to be converted to yaml.
+Convert the feiyang,fy07024di26a30d panel bindings to DT schema.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
-Changes v5:
-  Add reviewed by
-  Fix irq.h already included in arm-gic.h
+Changes for v3:
+- update the licence, used (GPL-2.0-only OR BSD-2-Clause) since
+  I'm the author for old binding
+- use panel-common.yaml
+- mark true for common properties 
+- use maxItems: 1 for reg
+- update example
+Changes for v2:
+- fix dt_binding_check 
 
-Changes v4:
-  Change description
-  Replace compatible oneOf by enum
-  Change interrupts description
-  Remove resets minItems
+ .../display/panel/feiyang,fy07024di26a30d.txt | 20 -------
+ .../panel/feiyang,fy07024di26a30d.yaml        | 58 +++++++++++++++++++
+ 2 files changed, 58 insertions(+), 20 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
 
-Changes v3:
-  Change description
-
-Changes v2:
-  No new properties
----
- .../bindings/display/rockchip/rockchip-vop.txt     |  74 -------------
- .../bindings/display/rockchip/rockchip-vop.yaml    | 123 +++++++++++++++++++++
- 2 files changed, 123 insertions(+), 74 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
+diff --git a/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt b/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
 deleted file mode 100644
-index 8b3a5f514..000000000
---- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
+index 82caa7b65ae8..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
 +++ /dev/null
-@@ -1,74 +0,0 @@
--device-tree bindings for rockchip soc display controller (vop)
--
--VOP (Visual Output Processor) is the Display Controller for the Rockchip
--series of SoCs which transfers the image data from a video memory
--buffer to an external LCD interface.
+@@ -1,20 +0,0 @@
+-Feiyang FY07024DI26A30-D 7" MIPI-DSI LCD Panel
 -
 -Required properties:
--- compatible: value should be one of the following
--		"rockchip,rk3036-vop";
--		"rockchip,rk3126-vop";
--		"rockchip,px30-vop-lit";
--		"rockchip,px30-vop-big";
--		"rockchip,rk3066-vop";
--		"rockchip,rk3188-vop";
--		"rockchip,rk3288-vop";
--		"rockchip,rk3368-vop";
--		"rockchip,rk3366-vop";
--		"rockchip,rk3399-vop-big";
--		"rockchip,rk3399-vop-lit";
--		"rockchip,rk3228-vop";
--		"rockchip,rk3328-vop";
+-- compatible: must be "feiyang,fy07024di26a30d"
+-- reg: DSI virtual channel used by that screen
+-- avdd-supply: analog regulator dc1 switch
+-- dvdd-supply: 3v3 digital regulator
+-- reset-gpios: a GPIO phandle for the reset pin
 -
--- reg: Must contain one entry corresponding to the base address and length
--	of the register space. Can optionally contain a second entry
--	corresponding to the CRTC gamma LUT address.
+-Optional properties:
+-- backlight: phandle for the backlight control.
 -
--- interrupts: should contain a list of all VOP IP block interrupts in the
--		 order: VSYNC, LCD_SYSTEM. The interrupt specifier
--		 format depends on the interrupt controller used.
--
--- clocks: must include clock specifiers corresponding to entries in the
--		clock-names property.
--
--- clock-names: Must contain
--		aclk_vop: for ddr buffer transfer.
--		hclk_vop: for ahb bus to R/W the phy regs.
--		dclk_vop: pixel clock.
--
--- resets: Must contain an entry for each entry in reset-names.
--  See ../reset/reset.txt for details.
--- reset-names: Must include the following entries:
--  - axi
--  - ahb
--  - dclk
--
--- iommus: required a iommu node
--
--- port: A port node with endpoint definitions as defined in
--  Documentation/devicetree/bindings/media/video-interfaces.txt.
--
--Example:
--SoC specific DT entry:
--	vopb: vopb@ff930000 {
--		compatible = "rockchip,rk3288-vop";
--		reg = <0x0 0xff930000 0x0 0x19c>, <0x0 0xff931000 0x0 0x1000>;
--		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
--		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
--		resets = <&cru SRST_LCDC1_AXI>, <&cru SRST_LCDC1_AHB>, <&cru SRST_LCDC1_DCLK>;
--		reset-names = "axi", "ahb", "dclk";
--		iommus = <&vopb_mmu>;
--		vopb_out: port {
--			#address-cells = <1>;
--			#size-cells = <0>;
--			vopb_out_edp: endpoint@0 {
--				reg = <0>;
--				remote-endpoint=<&edp_in_vopb>;
--			};
--			vopb_out_hdmi: endpoint@1 {
--				reg = <1>;
--				remote-endpoint=<&hdmi_in_vopb>;
--			};
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
+-panel@0 {
+-	compatible = "feiyang,fy07024di26a30d";
+-	reg = <0>;
+-	avdd-supply = <&reg_dc1sw>;
+-	dvdd-supply = <&reg_dldo2>;
+-	reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
+-	backlight = <&backlight>;
+-};
+diff --git a/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml b/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
 new file mode 100644
-index 000000000..42ee2b5c3
+index 000000000000..95acf9e96f1c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
-@@ -0,0 +1,123 @@
-+# SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
+@@ -0,0 +1,58 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/display/rockchip/rockchip-vop.yaml#
++$id: http://devicetree.org/schemas/display/panel/feiyang,fy07024di26a30d.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Rockchip SoC display controller (VOP)
-+
-+description:
-+  VOP (Video Output Processor) is the display controller for the Rockchip
-+  series of SoCs which transfers the image data from a video memory
-+  buffer to an external LCD interface.
++title: Feiyang FY07024DI26A30-D 7" MIPI-DSI LCD Panel
 +
 +maintainers:
-+  - Sandy Huang <hjc@rock-chips.com>
-+  - Heiko Stuebner <heiko@sntech.de>
++  - Jagan Teki <jagan@amarulasolutions.com>
++
++allOf:
++  - $ref: panel-common.yaml#
 +
 +properties:
 +  compatible:
-+    enum:
-+      - rockchip,px30-vop-big
-+      - rockchip,px30-vop-lit
-+      - rockchip,rk3036-vop
-+      - rockchip,rk3066-vop
-+      - rockchip,rk3126-vop
-+      - rockchip,rk3188-vop
-+      - rockchip,rk3228-vop
-+      - rockchip,rk3288-vop
-+      - rockchip,rk3328-vop
-+      - rockchip,rk3366-vop
-+      - rockchip,rk3368-vop
-+      - rockchip,rk3399-vop-big
-+      - rockchip,rk3399-vop-lit
++    const: feiyang,fy07024di26a30d
 +
 +  reg:
-+    minItems: 1
-+    items:
-+      - description:
-+          Must contain one entry corresponding to the base address and length
-+          of the register space.
-+      - description:
-+          Can optionally contain a second entry corresponding to
-+          the CRTC gamma LUT address.
-+
-+  interrupts:
++    description: DSI virtual channel used by that screen
 +    maxItems: 1
-+    description:
-+      The VOP interrupt is shared by several interrupt sources, such as
-+      frame start (VSYNC), line flag and other status interrupts.
 +
-+  clocks:
-+    items:
-+      - description: Clock for ddr buffer transfer.
-+      - description: Pixel clock.
-+      - description: Clock for the ahb bus to R/W the phy regs.
++  avdd-supply:
++    description: analog regulator dc1 switch
 +
-+  clock-names:
-+    items:
-+      - const: aclk_vop
-+      - const: dclk_vop
-+      - const: hclk_vop
++  dvdd-supply:
++    description: 3v3 digital regulator
 +
-+  resets:
-+    maxItems: 3
++  reset-gpios: true
 +
-+  reset-names:
-+    items:
-+      - const: axi
-+      - const: ahb
-+      - const: dclk
-+
-+  port:
-+    type: object
-+    description:
-+      A port node with endpoint definitions as defined in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+  iommus:
-+    maxItems: 1
++  backlight: true
 +
 +required:
 +  - compatible
 +  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - port
++  - avdd-supply
++  - dvdd-supply
++  - reset-gpios
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    #include <dt-bindings/clock/rk3288-cru.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    vopb: vopb@ff930000 {
-+      compatible = "rockchip,rk3288-vop";
-+      reg = <0x0 0xff930000 0x0 0x19c>,
-+            <0x0 0xff931000 0x0 0x1000>;
-+      interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&cru ACLK_VOP0>,
-+               <&cru DCLK_VOP0>,
-+               <&cru HCLK_VOP0>;
-+      clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-+      resets = <&cru SRST_LCDC1_AXI>,
-+               <&cru SRST_LCDC1_AHB>,
-+               <&cru SRST_LCDC1_DCLK>;
-+      reset-names = "axi", "ahb", "dclk";
-+      iommus = <&vopb_mmu>;
-+      vopb_out: port {
++    #include <dt-bindings/gpio/gpio.h>
++
++    dsi {
 +        #address-cells = <1>;
 +        #size-cells = <0>;
-+        vopb_out_edp: endpoint@0 {
-+          reg = <0>;
-+          remote-endpoint=<&edp_in_vopb>;
++
++        panel@0 {
++            compatible = "feiyang,fy07024di26a30d";
++            reg = <0>;
++            avdd-supply = <&reg_dc1sw>;
++            dvdd-supply = <&reg_dldo2>;
++            reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
++            backlight = <&backlight>;
 +        };
-+        vopb_out_hdmi: endpoint@1 {
-+          reg = <1>;
-+          remote-endpoint=<&hdmi_in_vopb>;
-+        };
-+      };
 +    };
 -- 
-2.11.0
+2.17.1
 
