@@ -2,137 +2,163 @@ Return-Path: <SRS0=qh1l=5T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E7CC2BA12
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 17:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98726C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 17:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B41C20675
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 17:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 464B0206F5
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 17:28:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hlm6P03s"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WhFf4JSV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgDCREl (ORCPT
+        id S2404412AbgDCR2E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 13:04:41 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:40491 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390961AbgDCREk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 13:04:40 -0400
-Received: by mail-ua1-f65.google.com with SMTP id a10so2998105uad.7
-        for <devicetree@vger.kernel.org>; Fri, 03 Apr 2020 10:04:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eKwWwj3eqf+cZzC5JrJMT4a43JvCqUM+JiOzX9deVL0=;
-        b=hlm6P03s/Sq5PDxZkKnjNhsRznuMMud9tkThiDgQeV7G1rL6qquyi7rq7iMdnRCfLa
-         eWAY/+MOlyXrktAih6k/dfz5ql/Vw70D8AgPa/ajBudMfEzf400Q4yG9I1r7eVo/sMOu
-         OpTDl1bhUsTqqoiyOoYnCzV5tFYSc7pHf6vmI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eKwWwj3eqf+cZzC5JrJMT4a43JvCqUM+JiOzX9deVL0=;
-        b=fkafwzx3qJxsJHhnEhxvq3D7Iwv6k5XKCQcmcbB5/QfHdEkoxrZ7SIKHJ6yNLpxXrQ
-         Xg0G9VBUecShcY6vxflYvCjOj9cVTAlxWf92u1tFAJlJ/w+1+baTkMzMjHH6mZEGky0G
-         l0CAAavl7G0jUZwJ05vPiboFDGOqhMQQO4g3KRX4Wr8TlGapFi4cJj9UMpXf+707pM8X
-         flnnqGIpskzlE6n+hjqadEbyYZCdEfvzxKXyKloIP6qXIpFHchcWPB157r0Uvfp+y5zT
-         0jQQoOr3X+cGTpcjS+AuiYdQzNXnPqS8BjFs7EhlyWu9if6oC4QJsdT04LuiZkFDJ9G8
-         Edlw==
-X-Gm-Message-State: AGi0PuZbM5lcpYv7qUhQxZPDYol4XzyMkGMiTjfCkv4G23WtbXiUcuac
-        9iUjYHf8OhjOtmi9q5nhI/rAOqkTKs4=
-X-Google-Smtp-Source: APiQypKhcgmNmeqiIFFVT0GiNHPtmM5l+QZz0LmpYMjp9QlRRbn8+aS0PSkMoImsOIxWj2mqNXkR0w==
-X-Received: by 2002:ab0:a9:: with SMTP id 38mr7744546uaj.61.1585933477450;
-        Fri, 03 Apr 2020 10:04:37 -0700 (PDT)
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
-        by smtp.gmail.com with ESMTPSA id g135sm2375955vkg.48.2020.04.03.10.04.35
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Apr 2020 10:04:36 -0700 (PDT)
-Received: by mail-ua1-f48.google.com with SMTP id g24so2990411uan.10
-        for <devicetree@vger.kernel.org>; Fri, 03 Apr 2020 10:04:35 -0700 (PDT)
-X-Received: by 2002:ab0:1d10:: with SMTP id j16mr7491766uak.91.1585933475285;
- Fri, 03 Apr 2020 10:04:35 -0700 (PDT)
+        Fri, 3 Apr 2020 13:28:04 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33536 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404371AbgDCR2E (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 13:28:04 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 033HRdOg115404;
+        Fri, 3 Apr 2020 12:27:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1585934859;
+        bh=Jt4eGbPiA6nLbaLqUDwk0/ki7Wj5fZ7t7wGKoVBH6+4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=WhFf4JSVjpyFG+5vUU8wZmmxcHBm33SxlF5cEknvg9VAorbjlw0lZAybFLp67W7xL
+         UnAMa9Oa8OYTmWXsS2SK1RnkJCuBW8zD0dTKCJZcOvcXx5TNHGijNdnEJwJyivWXPW
+         PUHQP6RBaO7GD0wTprQvSeX8I1WfgdIMHcB2WHCc=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 033HRdWE056151;
+        Fri, 3 Apr 2020 12:27:39 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 3 Apr
+ 2020 12:27:38 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 3 Apr 2020 12:27:39 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 033HRcc0044904;
+        Fri, 3 Apr 2020 12:27:38 -0500
+Subject: Re: [PATCH v2 1/2] dt-bindings: leds: Add binding for sgm3140
+To:     Luca Weiss <luca@z3ntu.xyz>, <linux-leds@vger.kernel.org>
+CC:     Heiko Stuebner <heiko@sntech.de>, Icenowy Zheng <icenowy@aosc.io>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <~postmarketos/upstreaming@lists.sr.ht>
+References: <20200330194757.2645388-1-luca@z3ntu.xyz>
+ <20200330194757.2645388-2-luca@z3ntu.xyz>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <6c43ac0d-2510-568c-bb5e-955709a9016f@ti.com>
+Date:   Fri, 3 Apr 2020 12:21:51 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <1573220319-4287-1-git-send-email-ppvk@codeaurora.org> <1573220319-4287-3-git-send-email-ppvk@codeaurora.org>
-In-Reply-To: <1573220319-4287-3-git-send-email-ppvk@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 3 Apr 2020 10:04:23 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WGUasS=UZxFeSS0Cg=9WxHPMWVFyYae7CFmOxV2_yhJw@mail.gmail.com>
-Message-ID: <CAD=FV=WGUasS=UZxFeSS0Cg=9WxHPMWVFyYae7CFmOxV2_yhJw@mail.gmail.com>
-Subject: Re: [RFC-v2 2/2] mmc: sdhci-msm: Add support for bus bandwidth voting
-To:     Pradeep P V K <ppvk@codeaurora.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Sahitya Tummala <stummala@codeaurora.org>,
-        Sayali Lokhande <sayalil@codeaurora.org>,
-        Ram Prakash Gupta <rampraka@codeaurora.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Andy Gross <agross@kernel.org>,
-        linux-mmc-owner@vger.kernel.org,
-        Subhash Jadavani <subhashj@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200330194757.2645388-2-luca@z3ntu.xyz>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Luca
 
-On Fri, Nov 8, 2019 at 5:45 AM Pradeep P V K <ppvk@codeaurora.org> wrote:
+On 3/30/20 2:47 PM, Luca Weiss wrote:
+> Add YAML devicetree binding for SGMICRO SGM3140 charge pump used for
+> camera flash LEDs.
 >
-> +       if (msm_host->bus_vote_data->curr_vote != VOTE_ZERO)
-> +               queue_delayed_work(system_wq,
-> +                                  &msm_host->bus_vote_work,
-> +                                  msecs_to_jiffies(MSM_MMC_BUS_VOTING_DELAY));
-> +}
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> ---
+> Changes since v1:
+> - Add vin-supply
+> - Add led subnode (common.yaml)
+>
+>   .../bindings/leds/leds-sgm3140.yaml           | 61 +++++++++++++++++++
+>   1 file changed, 61 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/leds/leds-sgm3140.yaml b/Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
+> new file mode 100644
+> index 000000000000..24ca178e5d0a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
+> @@ -0,0 +1,61 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/leds-sgm3140.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: SGMICRO SGM3140 500mA Buck/Boost Charge Pump LED Driver
+> +
+> +maintainers:
+> +  - Luca Weiss <luca@z3ntu.xyz>
+> +
+> +description: |
+> +  The SGM3140 is a current-regulated charge pump which can regulate two current
+> +  levels for Flash and Torch modes.
+> +
+> +  The data sheet can be found at:
+> +    http://www.sg-micro.com/uploads/soft/20190626/1561535688.pdf
+> +
+> +properties:
+> +  compatible:
+> +    const: sgmicro,sgm3140
+> +
+> +  enable-gpios:
+> +    maxItems: 1
+> +    description: A connection to the 'EN' pin.
+> +
+> +  flash-gpios:
+> +    maxItems: 1
+> +    description: A connection to the 'FLASH' pin.
+> +
+> +  vin-supply:
+> +    description: Regulator providing power to the 'VIN' pin.
+> +
+> +  led:
+> +    allOf:
+> +      - $ref: common.yaml#
+> +
+> +required:
+> +  - compatible
+> +  - flash-gpios
+> +  - enable-gpios
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/leds/common.h>
+> +
+> +    sgm3140 {
+> +        compatible = "sgmicro,sgm3140";
+> +        flash-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
+> +        enable-gpios = <&pio 2 3 GPIO_ACTIVE_HIGH>; /* PC3 */
+> +        vin-supply = <&reg_dcdc1>;
+> +
+> +        sgm3140_flash: led {
+> +            function = LED_FUNCTION_FLASH;
+> +            color = <LED_COLOR_ID_WHITE>;
+> +            flash-max-timeout-us = <250000>;
+> +        };
+> +    };
 
-Drive-by feedback here without any full review of your patch...
-Someone had your patch applied and sent me a stack trace with a
-warning on it.  That warning showed:
 
-workqueue: WQ_MEM_RECLAIM kblockd:blk_mq_run_work_fn is flushing
-!WQ_MEM_RECLAIM events:sdhci_msm_bus_work
+Reviewed-by: Dan Murphy <dmurphy@ti.com>
 
-The trace shown was:
-
-    check_flush_dependency+0x108/0x110
-    __flush_work+0xa8/0x1e8
-    __cancel_work_timer+0x130/0x1c4
-    cancel_delayed_work_sync+0x20/0x30
-    sdhci_msm_bus_cancel_work_and_set_vote+0x3c/0x8c
-    sdhci_msm_bus_voting+0x40/0x7c
-    sdhci_msm_runtime_resume+0xdc/0xf4
-    pm_generic_runtime_resume+0x34/0x48
-    __rpm_callback+0x70/0xfc
-    rpm_callback+0x5c/0x8c
-    rpm_resume+0x3fc/0x534
-    __pm_runtime_resume+0x7c/0xa0
-    __mmc_claim_host+0x1f4/0x230
-    mmc_get_card+0x34/0x40
-    mmc_mq_queue_rq+0x18c/0x244
-    blk_mq_dispatch_rq_list+0x27c/0x560
-    blk_mq_do_dispatch_sched+0xe0/0x140
-    blk_mq_sched_dispatch_requests+0x138/0x1b8
-    __blk_mq_run_hw_queue+0xc0/0x118
-    blk_mq_run_work_fn+0x24/0x30
-
-I believe the way to interpret this is that you need to be running
-your work on a workqueue marked for memory reclaim.  That means you
-can't use the system_wq to queue your work.  Without being an expert,
-a quick guess would be that you should be queueing your work on the
-"kblockd_workqueue" using one of the functions for this.
-
--Doug
