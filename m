@@ -2,108 +2,106 @@ Return-Path: <SRS0=qh1l=5T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67962C2BA16
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 14:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA40C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 14:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D7EA2078C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 14:25:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Dl8MYxOF"
+	by mail.kernel.org (Postfix) with ESMTP id 30E1C206F5
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 14:52:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403806AbgDCOZM (ORCPT
+        id S2390850AbgDCOwl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 10:25:12 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:51337 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403918AbgDCOZL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 10:25:11 -0400
-Received: by mail-pj1-f65.google.com with SMTP id w9so3058787pjh.1
-        for <devicetree@vger.kernel.org>; Fri, 03 Apr 2020 07:25:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xxGGn51zri+SmBzw6OefhHFXr2bA0wMiqg3raFhJWNk=;
-        b=Dl8MYxOFg0TfBLOCOplJysObTuJ0bgBh15U2unyF9O1O5VlGEW8vPMVEsHiA+xpfLn
-         u1p4DpYLO4L1LTNqUKtBfyeKN7Ok92m0YALjsOKfb5uaKdxhEtUZgHzSPkcR5HpO8UfU
-         2Ka1EVSjq/tTo6qFMot+aXuJbz8WHWL6sCC18=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=xxGGn51zri+SmBzw6OefhHFXr2bA0wMiqg3raFhJWNk=;
-        b=nYF/5BuxApOsnsQliqN6Ib3BqXOY8zXXbGxhMhO/Hqu1AwFQPZfVR5x/XqMxkCBZAA
-         xI9/vtGaVk/zgAGgstLThhK0znfoSKO5mFsbcXd9eygXjzduKNa4VhcD+AYdvJUjeoZD
-         cU1kXGG2X0qLFFVNUQaO3hK5m2dD/os71Hlf3qK/2Pdwk8+2jAub3mi+eMU73zWrUBV7
-         0cOt3qBTd425PT2+5nIqnp/VPZaipxNBWI/T9bk9qNdXuLybrsLVDBlwYc5T2av4ttIx
-         Ia6WkqlvcULucqZwglx6PN5qHg/8qNVBGG77VNH9hKFvkuP7vfHTVbfNCCIz+019OqZH
-         GWDw==
-X-Gm-Message-State: AGi0PuYX/5ARIFesqCDAxNr00GUCx/w/JXJuwWCHtn2JQS1R97KpsPAN
-        FWJ4w62d2HN9CmSDMTufCUke9A==
-X-Google-Smtp-Source: APiQypI5jQw1eSXRKQohkfFUTS7Vbekz33WC/zYzEcO9VRwvS2L6cNMg6F3ab1C/P8BJ+rmCfy9dQg==
-X-Received: by 2002:a17:90a:33c1:: with SMTP id n59mr9737670pjb.4.1585923910684;
-        Fri, 03 Apr 2020 07:25:10 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c809:c7d5:9cd7:b821:2c84:e325])
-        by smtp.gmail.com with ESMTPSA id g75sm5857060pje.37.2020.04.03.07.25.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 07:25:09 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v3 3/3] MAINTAINERS: Update feiyang, st7701 panel bindings converted as YAML
-Date:   Fri,  3 Apr 2020 19:54:53 +0530
-Message-Id: <20200403142453.25307-3-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200403142453.25307-1-jagan@amarulasolutions.com>
-References: <20200403142453.25307-1-jagan@amarulasolutions.com>
+        Fri, 3 Apr 2020 10:52:41 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57016 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390807AbgDCOwl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 10:52:41 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 033EYbWw119203;
+        Fri, 3 Apr 2020 10:52:32 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 301yfk0mkg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Apr 2020 10:52:32 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 033Eq4Cr009672;
+        Fri, 3 Apr 2020 14:52:31 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma02dal.us.ibm.com with ESMTP id 301x77x514-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 Apr 2020 14:52:31 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 033EqVTP17891686
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 Apr 2020 14:52:31 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E21112805E;
+        Fri,  3 Apr 2020 14:52:30 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 31D902805A;
+        Fri,  3 Apr 2020 14:52:30 +0000 (GMT)
+Received: from [9.163.91.129] (unknown [9.163.91.129])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  3 Apr 2020 14:52:30 +0000 (GMT)
+Subject: Re: [PATCH v7 0/5] soc: aspeed: Add XDMA engine driver
+To:     Andrew Jeffery <andrew@aj.id.au>, linux-aspeed@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>
+References: <20200402194955.16643-1-eajames@linux.ibm.com>
+ <8ca08ea0-2f3e-4b44-a595-bfe96ca02b3f@www.fastmail.com>
+From:   Eddie James <eajames@linux.ibm.com>
+Message-ID: <d1fe0157-8a4b-f0f5-f0e4-443d6f4e3e4a@linux.ibm.com>
+Date:   Fri, 3 Apr 2020 09:52:29 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <8ca08ea0-2f3e-4b44-a595-bfe96ca02b3f@www.fastmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-03_11:2020-04-03,2020-04-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 impostorscore=0 mlxscore=0 phishscore=0 clxscore=1015
+ bulkscore=0 malwarescore=0 spamscore=0 mlxlogscore=911 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004030125
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The feiyang,fy07024di26a30d.txt and sitronix,st7701.txt has been
-converted to YAML schemas, update MAINTAINERS to match them again.
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v3:
-- none
+On 4/2/20 7:32 PM, Andrew Jeffery wrote:
+>
+> On Fri, 3 Apr 2020, at 06:19, Eddie James wrote:
+>> This series adds a driver to control the Aspeed XDMA engine embedded in the
+>> AST2500 and AST2600. The XDMA engine performs automatic DMA operations
+>> over PCI-E between the Aspeed SOC (acting as a BMC) and a host processor.
+>>
+>> Changes since v6:
+>>   - See individual patches
+> v7 is not an evolution on v6 - v7 contains a bunch of bugs that v6 fixed (at least
+> wrt locking). How did you generate this series?
 
- MAINTAINERS | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6ba8b584bf95..b987f2588e6a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5273,7 +5273,7 @@ DRM DRIVER FOR FEIYANG FY07024DI26A30-D MIPI-DSI LCD PANELS
- M:	Jagan Teki <jagan@amarulasolutions.com>
- S:	Maintained
- F:	drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
--F:	Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
-+F:	Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
- 
- DRM DRIVER FOR GRAIN MEDIA GM12U320 PROJECTORS
- M:	Hans de Goede <hdegoede@redhat.com>
-@@ -5416,7 +5416,7 @@ DRM DRIVER FOR SITRONIX ST7701 PANELS
- M:	Jagan Teki <jagan@amarulasolutions.com>
- S:	Maintained
- F:	drivers/gpu/drm/panel/panel-sitronix-st7701.c
--F:	Documentation/devicetree/bindings/display/panel/sitronix,st7701.txt
-+F:	Documentation/devicetree/bindings/display/panel/sitronix,st7701.yaml
- 
- DRM DRIVER FOR SITRONIX ST7586 PANELS
- M:	David Lechner <david@lechnology.com>
--- 
-2.17.1
+My goodness, I could have sworn that was v6. I took the series that was 
+merged in the openbmc kernel. Must have gotten mixed up. -_-
 
+
+>
+> Also my name is misspelled in each of the Reviewed-by: tags which makes me
+> think that something has gone quite wrong with the posting of v7, and I'm
+> concerned that this was based on e.g. v5 but with my tags against v6 applied.
+
+
+Well thats because I added them manually since they had "disappeared" or 
+so I thought from v6 during the application to openbmc... guess that 
+should have been a warning sign
+
+>
+> Andrew
