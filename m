@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 688B2C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 20:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8689BC43331
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 20:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3798B206E9
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 20:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 523092077D
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 20:15:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u8oLm4/u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KEjqd6X2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727627AbgDCUOj (ORCPT
+        id S1728001AbgDCUPp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 16:14:39 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42076 "EHLO
+        Fri, 3 Apr 2020 16:15:45 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40163 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbgDCUOj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 16:14:39 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h15so9981458wrx.9;
-        Fri, 03 Apr 2020 13:14:37 -0700 (PDT)
+        with ESMTP id S1727627AbgDCUPp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 16:15:45 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s8so7873420wrt.7;
+        Fri, 03 Apr 2020 13:15:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=NoBEXm3PM7ViLuA7xdCYEzaMez2zPl2CAWaYAKT35qo=;
-        b=u8oLm4/u6yhguQiY5GBjDNzNtA5FKa3/SGbDE/zNXAOn66bh1m4H6G1SuZ5szmFiVV
-         21LbiUR7FLGlZSKiLxPg3k4ThBOECagOsIvdHl8TMIndDKHafy4Z+gl82DSoN7d4E5li
-         p9gR8BjnnW9nNgUzDk60PZOch1m2CE5uHpfbY5ODnVFiS0l/9KS5P2q6XSyEqU8Q+4nW
-         n+SLJY1AfPefvgOrKrgktkgoar7j4XUr5G8JsHio/YJGXAVIJlUb6cQY2AYV+ru7V6rO
-         KYVGVmzGZt2Be3aK8sbz81jejUHiaS6ZJ+WJCDpYIu11RNlR5tQCZq89gqPNw68gsE13
-         U3nw==
+        bh=NFzoMKhf5fXeo+6k3A7plsOyq2vhoiv1IpjF6ainKL4=;
+        b=KEjqd6X2U2AC+oZJG/BTOb63GtFtJ4CmhUoKQvbKDW5mLP2hE36IegSKUQdB9HnpZ7
+         tolIN67bAsY6LYrWWG/ezEyLs/01d1BtHJ4a1Sm4jdRyQzxHi9tBRdO1n9QbHBt5JNGW
+         HLrMYhq0TqLsbbLDiiZNVyrwt6PcsoS0ziDPAkcP6GsjDblWRIXqq5y3Ui6NOut8xJSc
+         s6gnPxwGLk+9R0DqheabINScZTZLdvQElXaWHaBo4gLikF0ETL6f6PO9UZmUxamhoVOB
+         4700hA7ql3uJ81CRgQiu903HOQheDtq6K9NOwWSRUJ8bQVfw2tIoDBcjj2N9nep3lWlG
+         guAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NoBEXm3PM7ViLuA7xdCYEzaMez2zPl2CAWaYAKT35qo=;
-        b=oJN96oftl0yFJGQSZ547m2xuITMxrKf7MjnkY16pI6y9ni1J2iHdPKKugQmPWsUpCO
-         zc3CPPH0iKGO5a6ZDmueNa6uRwpoq413hYHwFTdrVMhEHRdT34QJ2/hzLF9Zpj8wXoEP
-         Te2OqxJ8XciiFWamuVoMuN94ox7Y+F6elvdW/L92rvlwpRumWxR7B514GIlqSJe8Cz1X
-         2H9/UWncUg9fCihMaM+36CI5Wita6L1GbuVCDwO6ZhXdF4pf2GVQZRwIa75XRWHtm8P3
-         J9LWKC0WZvLIl9arnDpU/3mVNVRFlK/oY9z6FIS2Xao0Ql3UzLcBdB8FvjNk1uNWUKgu
-         IFmg==
-X-Gm-Message-State: AGi0PuYvxIb7IWFBS1RI4dtDc/8BuhkEVvf5Ag7oJQwc8FMP4zUb745h
-        d+v1xYdOV8RAstekPCSF9gM=
-X-Google-Smtp-Source: APiQypKIvi/R/MRCGgyXwqhz7VgOqKDwXIL3i/xWKBtpZeTMgJ7o9HVK2E6+mhjM//qsYh2R4giPMA==
-X-Received: by 2002:a5d:4305:: with SMTP id h5mr10387381wrq.69.1585944877094;
-        Fri, 03 Apr 2020 13:14:37 -0700 (PDT)
+        bh=NFzoMKhf5fXeo+6k3A7plsOyq2vhoiv1IpjF6ainKL4=;
+        b=grV3wcgehM8KUY2UhpyglVp7KUrwSOw9va+VvCa+tqcm+fFhkXP62e2qoNb0GghBit
+         EELCl4AIlHXg6chUV4yeD6JlMF4RWcv6n1kvh3tYnzZ1d4sACJydo0Dz4Fb9jDJL6HJD
+         5NLmVznahK8TDd3l/TGTlB1KVk5q7Xak8AWuNihUwZm3NKYdSHk2Izug6qQbOyunryK+
+         mcNfgI0T9tirVv/GBYf5nyOwxOGJlqBjLhbq2N7kE+X+X5YRZsXZPOibgeMjV+rrVKL0
+         uqO+340HT1WDnQwi9TDT6691I6CMYm1pnNOdjeaatRkN/VzLCxaQ5JKtH7J0qdOcjGkE
+         y1Ug==
+X-Gm-Message-State: AGi0PubFI4F4gDXsSm4pmtmM25Zax0+1UWfjBTNZpA6/NslJY950aCJY
+        m9UlqtFbVxOCdFIzRlfWVJM=
+X-Google-Smtp-Source: APiQypIDpJuV8BSFiZiA+G/mWzbpUaHwnZfM3dJy88tOmyDFsnSdUhShdwGFg/cl/vcyL0PvfoUtKQ==
+X-Received: by 2002:a5d:6204:: with SMTP id y4mr11385362wru.410.1585944943426;
+        Fri, 03 Apr 2020 13:15:43 -0700 (PDT)
 Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
-        by smtp.gmail.com with ESMTPSA id d7sm13081031wrr.77.2020.04.03.13.14.35
+        by smtp.gmail.com with ESMTPSA id b127sm10900731wmd.2.2020.04.03.13.15.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2020 13:14:35 -0700 (PDT)
-Date:   Fri, 3 Apr 2020 22:14:35 +0200
+        Fri, 03 Apr 2020 13:15:42 -0700 (PDT)
+Date:   Fri, 3 Apr 2020 22:15:41 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Dmitry Osipenko <digetx@gmail.com>
 Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
@@ -64,15 +64,15 @@ Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v2 2/7] clocksource: Add Tegra186 timers support
-Message-ID: <20200403201435.GB282587@ulmo>
+Message-ID: <20200403201541.GC282587@ulmo>
 References: <20200331221914.2966407-1-thierry.reding@gmail.com>
  <20200331221914.2966407-3-thierry.reding@gmail.com>
- <edf08b18-ad19-7191-020d-a06d57747c45@gmail.com>
+ <a982d831-fc59-f705-8f8a-9370b897adb8@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cvVnyQ+4j833TQvp"
+        protocol="application/pgp-signature"; boundary="0vzXIDBeUiKkjNJl"
 Content-Disposition: inline
-In-Reply-To: <edf08b18-ad19-7191-020d-a06d57747c45@gmail.com>
+In-Reply-To: <a982d831-fc59-f705-8f8a-9370b897adb8@gmail.com>
 User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -80,84 +80,71 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---cvVnyQ+4j833TQvp
+--0vzXIDBeUiKkjNJl
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 03, 2020 at 07:24:55PM +0300, Dmitry Osipenko wrote:
+On Fri, Apr 03, 2020 at 07:33:24PM +0300, Dmitry Osipenko wrote:
 > 01.04.2020 01:19, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
 > ...
-> > +static int tegra186_wdt_set_timeout(struct watchdog_device *wdd,
-> > +				    unsigned int timeout)
+> > +static int tegra186_timer_probe(struct platform_device *pdev)
 > > +{
-> > +	struct tegra186_wdt *wdt =3D to_tegra186_wdt(wdd);
+> > +	struct device *dev =3D &pdev->dev;
+> > +	struct tegra186_timer *tegra;
+> > +	int err;
 > > +
-> > +	tegra186_wdt_disable(wdt);
-> > +	wdt->base.timeout =3D timeout;
-> > +	tegra186_wdt_enable(wdt);
+> > +	tegra =3D devm_kzalloc(dev, sizeof(*tegra), GFP_KERNEL);
+> > +	if (!tegra)
+> > +		return -ENOMEM;
+> > +
+> > +	tegra->soc =3D of_device_get_match_data(dev);
+> > +	dev_set_drvdata(dev, tegra);
+> > +	tegra->dev =3D dev;
+> > +
+> > +	tegra->regs =3D devm_platform_ioremap_resource(pdev, 0);
+> > +	if (IS_ERR(tegra->regs))
+> > +		return PTR_ERR(tegra->regs);
+> > +
+> > +	err =3D platform_get_irq(pdev, 0);
+> > +	if (err < 0) {
+> > +		dev_err(dev, "failed to get interrupt #0: %d\n", err);
+> > +		return err;
+> > +	}
+> > +
+> > +	tegra->irq =3D err;
+> > +
+> > +	err =3D devm_request_irq(dev, tegra->irq, tegra186_timer_irq,
+> > +			       IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
+> > +			       "tegra186-timer", tegra);
 >=20
-> Why changing timeout enables the watchdog?
+> Looks like there is no need to store tegra->irq in the struct
+> tegra186_timer.
 
-We have to disable and enable to make it accept the new settings and to
-restart the counter. But you're right, we should only do that when the
-WDT is actually active, so I've conditionalized the disable/enable calls
-on watchdog_active().
-
->=20
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct watchdog_ops tegra186_wdt_ops =3D {
-> > +	.owner =3D THIS_MODULE,
-> > +	.start =3D tegra186_wdt_start,
-> > +	.stop =3D tegra186_wdt_stop,
-> > +	.ping =3D tegra186_wdt_ping,
-> > +	.set_timeout =3D tegra186_wdt_set_timeout,
-> > +};
->=20
-> ...
-> > +static int __maybe_unused tegra186_timer_suspend(struct device *dev)
-> > +{
-> > +	struct tegra186_timer *tegra =3D dev_get_drvdata(dev);
-> > +
-> > +	if (tegra->wdt)
-> > +		tegra186_wdt_disable(tegra->wdt);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int __maybe_unused tegra186_timer_resume(struct device *dev)
-> > +{
-> > +	struct tegra186_timer *tegra =3D dev_get_drvdata(dev);
-> > +
-> > +	if (tegra->wdt)
-> > +		tegra186_wdt_enable(tegra->wdt);
->=20
-> What if watchdog is in a stopped state? Why it's enabled unconditionally?
-
-Same as above.
+After moving devm_request_irq() to a later point in ->probe() we now
+have to store it somewhere because err is being reused. But I can store
+it in a local variable instead.
 
 Thierry
 
---cvVnyQ+4j833TQvp
+--0vzXIDBeUiKkjNJl
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6HmSoACgkQ3SOs138+
-s6FW4RAAivFPt4wmSN/9pbmq+eZfLIcpD3oZlXbL4yI4SqecIYtiMjv406AYhe7r
-yFWTJLJHguzw721iKzgMLjC8wKocFxXv5o98PIW/+TQbNHTtYdOyI9ecHgVU009s
-M9u/5nIgdDvHr1eotPo3ROJB+rkud4x4ocXpdbMiJOGemaBZcvkeg1OXX5L5tLoM
-8HTkYDPxe1nTnyQZkrlIESN+Eo2HxUge/7lCs99fmoERJmyziqpc2Z3wuKMJ6ZLz
-s6/AniQ4Bz5qHsLH7/H2Hwgvyqnx8uBQT2lwEajqDORaBr4LY4NXo2Gvu+mUmCGn
-BkLssHrRI5+eSBF7vAJVqbd+xDZUIlFp1CYl7Sm0ujBPdy8JdJMtfyIwhtgPlSqW
-PfDade0gHQVHIkDJm6DO9SC/4ox1hE9Q0T+XcFetXnLMa5Rvu2RPFgdp74P62dLF
-kOEVQWh537QPMq0RHe8IIwo82WrXjasaOeg0Mp6mJ57AAYLSfRmVuGYvKecL9yyk
-OMDLxevX8oMKVcoEOZTBVE+g3Z5JdSnmQAcC48H44TDYYdrVnM4sCZGD93PPtsZS
-R6rOBDdfDq9GAEUPSN1i1dE7pROecd31g/DgTUiU8UGo4kO/NKEeCrQ0w82f5U7R
-cqO7VJVCj0pX0VQ4vV59/vR6pj9TUt4IMZ+uQD5DT3FuU+zmH+c=
-=2meF
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6HmW0ACgkQ3SOs138+
+s6Go3Q/+OPtu0XdhKbM8c43FPsGnTxNWpedF00lGCxN2A+W+ngo9DIZtSVwS+jVI
+lIAUzXH/ZNvfziaNfnQZSFeBnKigiY9/PSGliXT502ysfc8zk5wZ93ESYEbwwrd7
+l38dIDqzx3A7Y7eJpAyacC7RvBRHEh9e6bXw+qJ5+MKgZYwdqQQv4dTjqNqaYq+u
+7cyD3MpIqKgurGxhzhOImsEZK/i3YLNn95tNTTdsiaqtckrK+cDSNVk414ecreoW
+JsrXGYmPc3vE5YkuVeeB1wCxLArnv80/u4PYrhzhNom7eENl7zMhVs2US1B1pivF
+iPEp5Z/7DKUUiGCcZppSuK5FyIoL5JEdUIbNOAxZAsEA6yG+9GACwV/5qEv4RRbG
+ydZLh2pdN3rEzrxfOdYYuqq/EfUypcCUg4BhxMpF3WQtqR/B4z5Yc2dpuMkEEaNq
+9iwQ+e/fp3g1oxsQy03fZ9HVDaq89lQzH5szH44n0qgDDg/D17OzL73NeU2JxnrK
+QtORluwWHwbSgY+oxQs5VYotlvsaRoXXotHGg9ZNlQdHPvMwpXNSW5ejhFErAjHM
+2ZDZqOYK2mxAVR6RJ9Mmulaqg2sTJS1J6ae8ujHuQP9MzE4qUDAdT+y3VCNbCcH1
+WUl6WmuFxEGQrVWC5IRocmXhpzLuct9RGh45cqrSSqYhvx163TE=
+=mTDH
 -----END PGP SIGNATURE-----
 
---cvVnyQ+4j833TQvp--
+--0vzXIDBeUiKkjNJl--
