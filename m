@@ -2,160 +2,115 @@ Return-Path: <SRS0=qh1l=5T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA05C2BA15
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 16:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03595C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 16:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA61206F8
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 16:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8578207FF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 16:33:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vF6AKxYe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404299AbgDCQ32 (ORCPT
+        id S2404511AbgDCQd3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:29:28 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36568 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404051AbgDCQ3O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 12:29:14 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 033GEP7A035793;
-        Fri, 3 Apr 2020 12:29:07 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 304gsundvn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Apr 2020 12:29:07 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 033GSlCS019265;
-        Fri, 3 Apr 2020 16:29:05 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma02dal.us.ibm.com with ESMTP id 301x77xwxc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Apr 2020 16:29:05 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 033GT4s050921814
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 Apr 2020 16:29:04 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 56EE8AE060;
-        Fri,  3 Apr 2020 16:29:04 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 71896AE05C;
-        Fri,  3 Apr 2020 16:29:03 +0000 (GMT)
-Received: from ghost4.ibm.com (unknown [9.163.91.129])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  3 Apr 2020 16:29:03 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-aspeed@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, joel@jms.id.au, andrew@aj.id.au,
-        eajames@linux.ibm.com
-Subject: [PATCH v8 1/5] dt-bindings: soc: Add Aspeed XDMA Engine
-Date:   Fri,  3 Apr 2020 11:28:57 -0500
-Message-Id: <20200403162901.21106-2-eajames@linux.ibm.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200403162901.21106-1-eajames@linux.ibm.com>
-References: <20200403162901.21106-1-eajames@linux.ibm.com>
+        Fri, 3 Apr 2020 12:33:29 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38321 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403834AbgDCQd3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 12:33:29 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v16so7599103ljg.5;
+        Fri, 03 Apr 2020 09:33:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4fDqTfkx4s/hoWco9IqQyOBi9hVMRkMxaYHCSQZz32M=;
+        b=vF6AKxYepfMhz5KpdLRqBl8CgNcVtORl6kJUjZJayifDV6bxqGps7ImjAQKwJbOlrS
+         k9ciAI3kr7UIjYuY9SqAtT5xDq1BodDkf7WV3d21RDhw/vUSDU/R/+vfp28LJOUGiVvf
+         9jM0Rkjyv77OPDhsRQnGiiF//0durL6UxULWWmZ01e8nrXST2Ey/59OLk1nLbuBDZzRB
+         h/8JsxtPQlyMjNEOlpHkSSmmC1zOvWMk5wpQgn9FbYxYHosCmve8tpWc094QOW40l03j
+         ks9QMZz8Y2CNsMaaJl7qgKmpmXaCDxzqYOSG4C61U2rX64kF6mfmrw/cx8DxobcthKhA
+         nBfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4fDqTfkx4s/hoWco9IqQyOBi9hVMRkMxaYHCSQZz32M=;
+        b=ZCDvz9iRGIiYhia6IVQjuq9YWFgs/dzpyjK5qSAqype3Xi68tEqHrkumOlvHcanBEK
+         S/QfsYQEsXiqzxp9WZXkEKvnOZLT8Eo0jfeazAfw1pBUxQoIgna14FEJ3FzdifiExUTO
+         m8VRcqHBuYOLxaJnXewupCSyZoBg9zcbrAgJkFVbaumrYgdLvt2p+hzxPhLw2kU/AyDW
+         sw/QiauUFG6vGg3W4S7Cp3JizdmVj3mTWvmjs5X0h04RxbGkbImgGdGFvEqcabTExLu5
+         s4odCrm8htOaM/5bZKBC/SGcruFolafZ0vz67ZR4di45hwyp3XwYtDkvH5Jlatir72Sg
+         7hDA==
+X-Gm-Message-State: AGi0PuYrUhLd0mMxGRSgpe0kfjhXY/lWxKC85uVP3Tc2pP0iryp+zQw6
+        Lj1suLB69Ad7GAkAbCJFDR72hAv5
+X-Google-Smtp-Source: APiQypLnWZ1KmknHBadkRmdgO5AzNTC3XSpWvhGXSGcwm9CpVCHEEsqOzJu59kBa5vQS7OIIbP/ZEA==
+X-Received: by 2002:a2e:8015:: with SMTP id j21mr5128664ljg.165.1585931606195;
+        Fri, 03 Apr 2020 09:33:26 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id d12sm6007971lfi.86.2020.04.03.09.33.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Apr 2020 09:33:25 -0700 (PDT)
+Subject: Re: [PATCH v2 2/7] clocksource: Add Tegra186 timers support
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200331221914.2966407-1-thierry.reding@gmail.com>
+ <20200331221914.2966407-3-thierry.reding@gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <a982d831-fc59-f705-8f8a-9370b897adb8@gmail.com>
+Date:   Fri, 3 Apr 2020 19:33:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200331221914.2966407-3-thierry.reding@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-03_11:2020-04-03,2020-04-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- malwarescore=0 suspectscore=1 priorityscore=1501 lowpriorityscore=0
- phishscore=0 clxscore=1015 mlxlogscore=948 mlxscore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004030134
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document the bindings for the Aspeed AST25XX and AST26XX XDMA engine.
+01.04.2020 01:19, Thierry Reding пишет:
+...
+> +static int tegra186_timer_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct tegra186_timer *tegra;
+> +	int err;
+> +
+> +	tegra = devm_kzalloc(dev, sizeof(*tegra), GFP_KERNEL);
+> +	if (!tegra)
+> +		return -ENOMEM;
+> +
+> +	tegra->soc = of_device_get_match_data(dev);
+> +	dev_set_drvdata(dev, tegra);
+> +	tegra->dev = dev;
+> +
+> +	tegra->regs = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(tegra->regs))
+> +		return PTR_ERR(tegra->regs);
+> +
+> +	err = platform_get_irq(pdev, 0);
+> +	if (err < 0) {
+> +		dev_err(dev, "failed to get interrupt #0: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	tegra->irq = err;
+> +
+> +	err = devm_request_irq(dev, tegra->irq, tegra186_timer_irq,
+> +			       IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
+> +			       "tegra186-timer", tegra);
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
----
-Changes since v6:
- - Add PCI-E root complex reset documentation
- - Add reset-names documentation
- - Switch to memory-region phandle instead of memory regs
-
- .../devicetree/bindings/soc/aspeed/xdma.txt   | 44 +++++++++++++++++++
- MAINTAINERS                                   |  6 +++
- 2 files changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.txt
-
-diff --git a/Documentation/devicetree/bindings/soc/aspeed/xdma.txt b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
-new file mode 100644
-index 000000000000..c3d7cdeb1db6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
-@@ -0,0 +1,44 @@
-+Aspeed AST25XX and AST26XX XDMA Engine
-+
-+The XDMA Engine embedded in the AST2500 and AST2600 SOCs can perform automatic
-+DMA operations over PCI between the SOC (acting as a BMC) and a host processor.
-+
-+Required properties:
-+ - compatible		: must be "aspeed,ast2500-xdma" or
-+			  "aspeed,ast2600-xdma"
-+ - reg			: contains the address and size of the memory region
-+			  associated with the XDMA engine registers
-+ - clocks		: clock specifier for the clock associated with the
-+			  XDMA engine
-+ - resets		: reset specifier for the syscon reset associated with
-+			  the XDMA engine, and, for the AST2600, a second reset
-+			  associated with the PCI-E root complex
-+ - reset-names		: required only for the AST2600; must be "dev, "rc"
-+ - interrupts-extended	: two interrupt cells; the first specifies the global
-+			  interrupt for the XDMA engine and the second
-+			  specifies the PCI-E reset or PERST interrupt.
-+ - aspeed,scu		: a phandle to the syscon node for the system control
-+			  unit of the SOC
-+ - memory-region	: a phandle to the reserved memory region to be used by
-+			  the XDMA engine for DMA operations
-+
-+Optional properties:
-+ - pcie-device		: should be either "bmc" or "vga", corresponding to
-+			  which device should be used by the XDMA engine for
-+			  DMA operations. If this property is not set, the XDMA
-+			  engine will use the BMC PCI-E device.
-+
-+Example:
-+
-+    xdma@1e6e7000 {
-+        compatible = "aspeed,ast2600-xdma";
-+        reg = <0x1e6e7000 0x100>;
-+        clocks = <&syscon ASPEED_CLK_GATE_BCLK>;
-+        resets = <&syscon ASPEED_RESET_DEV_XDMA>, <&syscon ASPEED_RESET_RC_XDMA>;
-+        reset-names = "dev", "rc";
-+        interrupts-extended = <&gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+                              <&scu_ic0 ASPEED_AST2600_SCU_IC0_PCIE_PERST_LO_TO_HI>;
-+        aspeed,scu = <&syscon>;
-+        pcie-device = "bmc";
-+        memory-region = <&vga_memory>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 245a96316636..dcc0907b2aa5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2771,6 +2771,12 @@ S:	Maintained
- F:	drivers/media/platform/aspeed-video.c
- F:	Documentation/devicetree/bindings/media/aspeed-video.txt
- 
-+ASPEED XDMA ENGINE DRIVER
-+M:	Eddie James <eajames@linux.ibm.com>
-+L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/soc/aspeed/xdma.txt
-+
- ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS
- M:	Corentin Chary <corentin.chary@gmail.com>
- L:	acpi4asus-user@lists.sourceforge.net
--- 
-2.24.0
-
+Looks like there is no need to store tegra->irq in the struct
+tegra186_timer.
