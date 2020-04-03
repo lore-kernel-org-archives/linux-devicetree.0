@@ -2,133 +2,101 @@ Return-Path: <SRS0=qh1l=5T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C34C2BA17
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 01:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4501EC43331
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 01:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD652077D
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 01:39:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9khXu4i"
+	by mail.kernel.org (Postfix) with ESMTP id 20100207FF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 01:43:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390227AbgDCBjK (ORCPT
+        id S2390207AbgDCBnt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Apr 2020 21:39:10 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35144 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390161AbgDCBjK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Apr 2020 21:39:10 -0400
-Received: by mail-wm1-f66.google.com with SMTP id i19so6018782wmb.0;
-        Thu, 02 Apr 2020 18:39:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=3AFMHS1WtjkegpTOd6VcZdSWdEDiYCNRGU1r6BLfA4c=;
-        b=h9khXu4iGRCOEqc6AGX9JaFQ/zfObIQd3ONsEZqn5snz+vtAXcQLCNd49yy/4tl26+
-         +68y4zXQrRoxvIZKXzM8aRL6FLfJjPNIQHmzhS44lQbsNE42ieya2IT1D29//HmhSD6F
-         uOb5FZcGB4ab9B5t61d0lTGRtf1ncQtZ61cICEEg2S9EMPun2VmELQ9l/Tnta5ZgXbqI
-         nIP0CO032qLaR5NC1poTwfBK+w0dzLe3CRJxvJO0Iuzx6aZOWOKbrgXhBmeTVnhAemdt
-         a8vBLPrp4w99ls/diJ/XdCJltz1zAS6ljCp0KUejjnticfdISUMDgv1fLZE5zXknuQYZ
-         Bq7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=3AFMHS1WtjkegpTOd6VcZdSWdEDiYCNRGU1r6BLfA4c=;
-        b=adYJXPPVaePdnzDmOjdmheVTBpjSK2BUSj6iDmSRbohVv+ND9DjK/m8jvP/PQRY3vg
-         duQb3cTCcFMuGrF5YGUF0I67HwEqkiY+8/cGbrxKvGngeOsSzSB+GWaJXoekQnTK8Ufs
-         3GDYNjPN0WNWR77Ci26Np15B2s9Rt8z+vErwNXn9EpCwhJAQK2/QjpVbWV72pXtKtzOv
-         lgbtWkDnX34mCWqvdJ508kICg9N7B/aeuXlSZypzb1wLbalAySq7XPoFss2RzA4CVo3C
-         tXJWcD5IfuMTh4Tjap3wPsraW9Z1kagE3tNuvU+ZxkAZD+qSJbslaXLI5+xM60yvQyy6
-         Uzyg==
-X-Gm-Message-State: AGi0PuYPvaHJ1tUPrDKAEabrhFz+qYwTVmEWi1jzmqLoMCW2J/5zDGQn
-        MIg7jaKKdqeCKHYK6YpchPs=
-X-Google-Smtp-Source: APiQypJh0jEGg74M2Qrhn52FkumZVE1QcoT+LEnI3m7Nmk8CPCIgnWQAexV8JnhYuE/7tuSExWLIFQ==
-X-Received: by 2002:a7b:cc85:: with SMTP id p5mr6450052wma.83.1585877947650;
-        Thu, 02 Apr 2020 18:39:07 -0700 (PDT)
-Received: from AnsuelXPS (host133-251-dynamic.52-79-r.retail.telecomitalia.it. [79.52.251.133])
-        by smtp.gmail.com with ESMTPSA id u17sm10755869wra.63.2020.04.02.18.39.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 Apr 2020 18:39:07 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Stephen Boyd'" <sboyd@kernel.org>,
-        "'Andy Gross'" <agross@kernel.org>
-Cc:     "'Mathieu Olivari'" <mathieu@codeaurora.org>,
-        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
-        "'Rob Herring'" <robh+dt@kernel.org>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        "'Michael Turquette'" <mturquette@baylibre.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>
-References: <20200330205647.24806-1-ansuelsmth@gmail.com> <158587766752.125146.7582840761926137726@swboyd.mtv.corp.google.com>
-In-Reply-To: <158587766752.125146.7582840761926137726@swboyd.mtv.corp.google.com>
-Subject: R: [PATCH v2] ARM: qcom: Disable i2c device on gsbi4 for ipq806x
-Date:   Fri, 3 Apr 2020 03:39:04 +0200
-Message-ID: <00f701d60958$a9ed46c0$fdc7d440$@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQGo1QQgHzu0HPOv8BNyQx6G4xhnEwIGzuWZqLDQIBA=
+        Thu, 2 Apr 2020 21:43:49 -0400
+Received: from mx.socionext.com ([202.248.49.38]:19260 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389108AbgDCBnt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Apr 2020 21:43:49 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 03 Apr 2020 10:43:47 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 6221C18009F;
+        Fri,  3 Apr 2020 10:43:47 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 3 Apr 2020 10:43:47 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id F263F1A01BB;
+        Fri,  3 Apr 2020 10:43:46 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v4 0/5] Add devicetree features and fixes for UniPhier SoCs
+Date:   Fri,  3 Apr 2020 10:43:02 +0900
+Message-Id: <1585878187-8131-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This series adds new features that includes XDMAC for each SoC, ethernet
+aliases to inherit MAC address from u-boot, and stabilization for ethernet
+on PXs3 ref board.
 
+Changes since v3:
+- dt-bindings: Exclude from this series
+  The alternative patch fixed by Yamada-san has been applied.
+- Fix size of xdmac register region
 
-> -----Messaggio originale-----
-> Da: Stephen Boyd <sboyd@kernel.org>
-> Inviato: venerd=C3=AC 3 aprile 2020 03:34
-> A: Andy Gross <agross@kernel.org>; Ansuel Smith
-> <ansuelsmth@gmail.com>
-> Cc: Ansuel Smith <ansuelsmth@gmail.com>; Mathieu Olivari
-> <mathieu@codeaurora.org>; Bjorn Andersson
-> <bjorn.andersson@linaro.org>; Rob Herring <robh+dt@kernel.org>; Mark
-> Rutland <mark.rutland@arm.com>; Michael Turquette
-> <mturquette@baylibre.com>; linux-arm-msm@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> clk@vger.kernel.org
-> Oggetto: Re: [PATCH v2] ARM: qcom: Disable i2c device on gsbi4 for
-> ipq806x
->=20
-> Quoting Ansuel Smith (2020-03-30 13:56:46)
-> > diff --git a/drivers/clk/qcom/gcc-ipq806x.c b/drivers/clk/qcom/gcc-
-> ipq806x.c
-> > index b0eee0903807..f7d7a2bc84c1 100644
-> > --- a/drivers/clk/qcom/gcc-ipq806x.c
-> > +++ b/drivers/clk/qcom/gcc-ipq806x.c
-> > @@ -991,6 +991,7 @@ static struct clk_branch gsbi4_h_clk =3D {
-> >                 .hw.init =3D &(struct clk_init_data){
-> >                         .name =3D "gsbi4_h_clk",
-> >                         .ops =3D &clk_branch_ops,
-> > +                       .flags =3D CLK_IGNORE_UNUSED,
->=20
-> Is this necessary? Shouldn't we skip clks that are protected during =
-the
-> unused phase?
->=20
+Changes since v2:
+- dt-bindings: Consolidate register description for xdmac
+- Spread the size of xdmac register region
 
-gsbi4_h_clk is not protected. gsbi4_h_clk needs to not be disabled if =
-unused
-(as it's used by rpm) but can't be protected since it's used by uart =
-gsbi4.
-(With some test protecting also this clk cause the malfunction of uart =
-gsb4)
+Changes since v1:
+- dt-bindings: Remove extension register description for xdmac
+- Remove extension register area from xdmac node
+- Fix commit message for ethernet aliases
+- Remove RGMII setting for LD20 global board
 
-> >                 },
-> >         },
-> >  };
-> > --
-> > 2.25.1
-> >
+These patches in v1 have already been applied:
+  ARM: dts: uniphier: Add USB3 controller nodes for Pro5
+  arm64: dts: uniphier: Enable spi node for PXs3 reference board
+  arm64: dts: uniphier: Add nodes of thermal monitor and thermal zone
+    for PXs3
+  ARM: dts: uniphier: Set SCSSI clock and reset IDs for each channel
+  arm64: dts: uniphier: Set SCSSI clock and reset IDs for each channel
+
+Kunihiko Hayashi (5):
+  ARM: dts: uniphier: Add XDMAC node
+  arm64: dts: uniphier: Add XDMAC node
+  ARM: dts: uniphier: Add ethernet aliases
+  arm64: dts: uniphier: Add ethernet aliases
+  arm64: dts: uniphier: Stabilize Ethernet RGMII mode of PXs3 ref board
+
+ arch/arm/boot/dts/uniphier-ld6b-ref.dts                |  1 +
+ arch/arm/boot/dts/uniphier-pro4-ace.dts                |  1 +
+ arch/arm/boot/dts/uniphier-pro4-ref.dts                |  1 +
+ arch/arm/boot/dts/uniphier-pro4-sanji.dts              |  1 +
+ arch/arm/boot/dts/uniphier-pro4.dtsi                   |  8 ++++++++
+ arch/arm/boot/dts/uniphier-pro5.dtsi                   |  8 ++++++++
+ arch/arm/boot/dts/uniphier-pxs2-gentil.dts             |  1 +
+ arch/arm/boot/dts/uniphier-pxs2-vodka.dts              |  1 +
+ arch/arm/boot/dts/uniphier-pxs2.dtsi                   |  8 ++++++++
+ arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts |  1 +
+ arch/arm64/boot/dts/socionext/uniphier-ld11-ref.dts    |  1 +
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi       |  8 ++++++++
+ arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts |  1 +
+ arch/arm64/boot/dts/socionext/uniphier-ld20-ref.dts    |  1 +
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi       |  8 ++++++++
+ arch/arm64/boot/dts/socionext/uniphier-pxs3-ref.dts    | 18 ++++++++++++++++++
+ arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi       |  8 ++++++++
+ 17 files changed, 76 insertions(+)
+
+-- 
+2.7.4
 
