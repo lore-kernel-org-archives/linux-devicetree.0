@@ -2,102 +2,73 @@ Return-Path: <SRS0=qh1l=5T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D9AC43331
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 16:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4208C2BA12
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 16:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9035A20721
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 16:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B02A215A4
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 16:16:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=startmail.com header.i=@startmail.com header.b="J8G1Cgrj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404316AbgDCQQq (ORCPT
+        id S2404333AbgDCQQt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 12:16:46 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58102 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404035AbgDCQQq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 12:16:46 -0400
-Received: from floko.floko.floko (unknown [IPv6:2804:431:e7cc:11ff:4f80:3de:e2b2:5c1d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7BA2429868E;
-        Fri,  3 Apr 2020 17:16:39 +0100 (BST)
-From:   Helen Koike <helen.koike@collabora.com>
-To:     devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        robh+dt@kernel.org, heiko@sntech.de, hverkuil-cisco@xs4all.nl,
-        kernel@collabora.com, dafna.hirschfeld@collabora.com,
-        ezequiel@collabora.com, mark.rutland@arm.com,
-        karthik.poduval@gmail.com, jbx6244@gmail.com, kishon@ti.com
-Subject: [PATCH v2 8/9] arm64: dts: rockchip: add rx0 mipi-phy for rk3399
-Date:   Fri,  3 Apr 2020 13:15:37 -0300
-Message-Id: <20200403161538.1375908-9-helen.koike@collabora.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200403161538.1375908-1-helen.koike@collabora.com>
-References: <20200403161538.1375908-1-helen.koike@collabora.com>
+        Fri, 3 Apr 2020 12:16:49 -0400
+Received: from mx-out2.startmail.com ([145.131.90.155]:46190 "EHLO
+        mx-out2.startmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404035AbgDCQQs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 12:16:48 -0400
+Date:   Fri, 3 Apr 2020 19:21:54 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=startmail.com;
+        s=2017-11; t=1585930607;
+        bh=ipQrauf/RATph3AuYQzrJh8EzsblD3zQ5PJ+nD02B2M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=J8G1Cgrjb1PcBHRAC4aMQlgyMJPyhCwBoYKwmYBPa9EkRjJeRitFhFgxygPrXXRav
+         q58jHnhWHVRpmlMsOGj4VwkYolIedboNlDZVv/Wt5UW8WIit66lxwCXlma+6rVtCvE
+         NmP7qTZhsgGGC+7qFgn/bCBydQORq/zt+k9cTIAn+I4RfNcx04+Y+CsXBTPNNzOCfQ
+         EaCNlW7/b316Jh6rPHVwe5poQcD1zHxhf81l2KzSrhGG9PiVdXyImAcCAYmPMjmuMy
+         Xwj/JIF2f+HpGYWNe5cRVumGcMycqSAeoTOqPOGjZT8OEnbIEWPNjv7lsPkO6eY7+d
+         CL8g/rW8ZGIPA==
+From:   Alexandru Lazar <alazar@startmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: Re: [PATCH v7 2/2] iio: adc: Add MAX1241 driver
+Message-ID: <20200403162154.GA8285@leena.republic>
+References: <20200403121323.1742-1-alazar@startmail.com>
+ <20200403121323.1742-3-alazar@startmail.com>
+ <CAHp75VcKEqM4nxvu3QtqNDpwtJU77zu=YfPwmCXn_L=LsGSuAQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcKEqM4nxvu3QtqNDpwtJU77zu=YfPwmCXn_L=LsGSuAQ@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Shunqian Zheng <zhengsq@rock-chips.com>
+> FWIW,
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Designware MIPI D-PHY, used for ISP0 in rk3399.
+Thanks!
 
-Verified with:
-make ARCH=arm64 dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy-rx0.yaml
+> > Datasheet: https://datasheets.maximintegrated.com/en/ds/MAX1240-MAX1241.pdf
+> >
+> No blank line, but this can be fixed by maintainer, I think.
 
-Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
-Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
+Oops! Not sure how I (and checkpatch.pl?) missed that! It's tiny enough
+to fix inline I guess, but it's not a problem to make a v8 with it if
+needed.
 
----
-
-Changes in v2:
-- fix alignment of clocks
-
-V1:
-This patchset came from the original ISP series from Rockchip:
-
-    https://patchwork.kernel.org/patch/10267409/
-
-The only difference is:
-- add phy-cells
-- update compatible to "rockchip,rk3399-mipi-dphy-rx0"
-- commit message
----
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 33cc21fcf4c10..6b3380b10e596 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1394,6 +1394,17 @@ io_domains: io-domains {
- 			status = "disabled";
- 		};
- 
-+		mipi_dphy_rx0: mipi-dphy-rx0 {
-+			compatible = "rockchip,rk3399-mipi-dphy-rx0";
-+			clocks = <&cru SCLK_MIPIDPHY_REF>,
-+				 <&cru SCLK_DPHY_RX0_CFG>,
-+				 <&cru PCLK_VIO_GRF>;
-+			clock-names = "dphy-ref", "dphy-cfg", "grf";
-+			power-domains = <&power RK3399_PD_VIO>;
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		u2phy0: usb2-phy@e450 {
- 			compatible = "rockchip,rk3399-usb2phy";
- 			reg = <0xe450 0x10>;
--- 
-2.26.0
-
+Thanks,
+Alex
