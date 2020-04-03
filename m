@@ -7,187 +7,219 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20558C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 12:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C06C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 12:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCCF320659
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 12:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB5920737
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 12:24:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="1V68tdUm"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="XsPDzoTQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403940AbgDCMLw (ORCPT
+        id S2390839AbgDCMYK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 08:11:52 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:36065 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403859AbgDCMLw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 08:11:52 -0400
-Received: by mail-vs1-f67.google.com with SMTP id 184so4769340vsu.3
-        for <devicetree@vger.kernel.org>; Fri, 03 Apr 2020 05:11:51 -0700 (PDT)
+        Fri, 3 Apr 2020 08:24:10 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:36805 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728178AbgDCMYK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 08:24:10 -0400
+Received: by mail-ua1-f66.google.com with SMTP id m15so1885718uao.3
+        for <devicetree@vger.kernel.org>; Fri, 03 Apr 2020 05:24:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=verdurent-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xYEUwgGx/wc/zC1RH6EQ9oeCu6zgO1eYOfdLmoIOI0s=;
-        b=1V68tdUmUpbPdxA9zVxDDj5a0Gt3IA+mKy1UZgQpP1+s+p7SHY+hCfoSfggwMPCWCF
-         187ZVFfoz/dAxM4C1T8BUOpJ/gxEFWKho/+9dL1xwTzkR//877DID9MVeJJpgmbgxkpN
-         OrDMiTQ8CjeKbYd1Iq8xgpABspcAH+aQu3TPLETjLdwo6H0DEYcgB92V720q2g4eLjVJ
-         hIU7rUbarY6sk4Ku+glgJdjWBG+rJEE3bLxdnkKm5RC12WSbVf98PmBiHLkClMfhajuK
-         4kRzabP+D+MPAvRO68fHdHZqmiqT3jyzIVRTu5Yd+RjjvI35OEPE2vpclKvBUqgffr1H
-         Ij9Q==
+        bh=qvyI6Sc61lD8J/TKKLvSHBnJpLEYrXxRzZK/pmr8tcg=;
+        b=XsPDzoTQ41hY6HEPrchkLgIyTyUZXd/7hYRk7hgYvAQyaCqqW4xvUi9ngh25hdOXoa
+         yMhq7WafBQ0A/1ilm6nWz/kuM2yWawQ0gYIElHm8mgFSRx28aAGOOwj68xw/NpCRYwuh
+         C2nWwWuGuwH47OMW7dHh2/NH59AbGExXVtK6+90BJdmf2L2esTgbo9pHe4i4cZF4rxiz
+         fa9ejul7C23G7guipBlYt4Q7u872Vm0pgFUSHL9Z6KLTAfV3coPxeIblL3Yqk3miScsk
+         jKF8SDgAbn9TMC+nwoi7bB4bTPpa63u9nsPQ1/+BDroRI4Fms+im2b1nC4z3mMu9UKUT
+         Qd8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xYEUwgGx/wc/zC1RH6EQ9oeCu6zgO1eYOfdLmoIOI0s=;
-        b=c7CVMtZN+NqYtY7voYHNPAYx0qVHA/sTi73HAxyycFVGosmDp8xzo+U2T7+mJ3hToD
-         jbo/sVy4e/spHLWjAfXs9nnO9QwmgzatdiyXMR47iDktoWiFiRQfV+hIblD+3MGcuWr3
-         ovdhAc6l+aFsSoS7KGsODq5UGW8DgddoSC5FHo+9SN20YkI7E4RVoK0y4xv1dWrrBUqh
-         xCJ2D8t9Fbvr2cVhJ7L51xXUwZLLiKkGPv6dUUJuaf/WiUaHEd05z0UrjQ/jTTWmxi7B
-         WwZvHCrirg8PAyAPAPTbxH9iTK4zmBj16GZv8vOKo/55pcXZXbVam0sg9ONBSO08WhkA
-         cy8Q==
-X-Gm-Message-State: AGi0PuZBa4cY6tJSnY3zRMX2fqW016hee1NdgQ7qIxCx7sVDe6rl0QVv
-        Lbag8/wUkYwzLCv9HI8FzuXPAvaUqgTmdDYJzjctXQ==
-X-Google-Smtp-Source: APiQypIyBKqzVPKfYyIMWPApMpq5/DhtKduEKFwFD63nSwRmOIgdEA4YlJ78wS4L/6ay0AGmpiwfUA5Pxq0Y1D0WRMI=
-X-Received: by 2002:a67:870f:: with SMTP id j15mr5840117vsd.95.1585915910577;
- Fri, 03 Apr 2020 05:11:50 -0700 (PDT)
+        bh=qvyI6Sc61lD8J/TKKLvSHBnJpLEYrXxRzZK/pmr8tcg=;
+        b=ikOnnuA55lbQpewRlg+ohPEvCHtbqNHsJWF0YVQ19rOQIjb442D/3heUDYeXf2NUH6
+         5gUc2f4WYZJXSB/8/4SL8/c/j65x1Z/DdFnLjpAUkRArzfC86CRKmFpLHK8jWx88lsGc
+         QQFZz87/s/FPFGrSCvXfcBwt2Bcor2colJNw5E9Se0NesUu1GOmw01KPZYRos2nw0r9V
+         Q5CPK6ekDuWQu2x9uS4LuXq/3oIqXAHNSp+VTHk4Mbo1lsKu84pVd4s+t2kZcXSYlm7m
+         oS8+XkgOjCLTTnzwYkyCaJkHm/S+EeSMTy5npZB1T/OqIk4OAoRgx8mcF7SWUjMfrvU8
+         PAjw==
+X-Gm-Message-State: AGi0PuavoDlZTnWV6NlNHulsU4zjEftlKUjkLK0GWbLYQmJn3nKYeBA8
+        LLKR3Xq2yqnsnCAjLWKK2mXJPrVZAXQeXphX0DztuQ==
+X-Google-Smtp-Source: APiQypI1u6fH2mX4s1RMnAvdrTdNNnWXLCWcnocYGW43VybN65NwGB9/DkXtVrPHM3u37UwkTy8EsjAY0aRPDloK43M=
+X-Received: by 2002:ab0:911:: with SMTP id w17mr6133575uag.60.1585916649174;
+ Fri, 03 Apr 2020 05:24:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <1585064650-16235-1-git-send-email-jprakash@codeaurora.org> <1585064650-16235-3-git-send-email-jprakash@codeaurora.org>
-In-Reply-To: <1585064650-16235-3-git-send-email-jprakash@codeaurora.org>
+References: <1585915404-7658-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1585915404-7658-1-git-send-email-Anson.Huang@nxp.com>
 From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Fri, 3 Apr 2020 17:41:39 +0530
-Message-ID: <CAHLCerO6GY4pNAxZucCOv3wSDweA1MsuPh5bGjSWoEUauv0iFA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] iio: adc: Add PMIC7 ADC bindings
-To:     Jishnu Prakash <jprakash@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+Date:   Fri, 3 Apr 2020 17:53:58 +0530
+Message-ID: <CAHLCerOpgoL3_F6mg3i2d3Mnb81-4Y=+fkc_81+aWr3ut3GVEg@mail.gmail.com>
+Subject: Re: [PATCH V4] arm64: dts: imx8mp: Add thermal zones support
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
+        Fabio Estevam <festevam@gmail.com>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Jonathan.Cameron@huawei.com, smohanad@codeaurora.org,
-        kgunda@codeaurora.org, aghayal@codeaurora.org,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-arm-msm-owner@vger.kernel.org
+        <devicetree@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <Linux-imx@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jishnu,
-
-On Tue, Mar 24, 2020 at 9:15 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
+On Fri, Apr 3, 2020 at 5:41 PM Anson Huang <Anson.Huang@nxp.com> wrote:
 >
-> Add documentation for PMIC7 ADC peripheral. For PMIC7 ADC, all SW
-> communication to ADC goes through PMK8350, which communicates with
-> other PMICs through PBS.
-
-What is PMK8350? What is PBS? Please expand the acronyms and describe
-more verbosely.
-
-
+> i.MX8MP has a TMU inside which supports two thermal zones, add support
+> for them.
 >
-> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+
+
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+
 > ---
->  .../bindings/iio/adc/qcom,spmi-vadc.yaml           | 28 ++++++++++++++++------
->  1 file changed, 21 insertions(+), 7 deletions(-)
+> Changes since V3:
+>         - Drop some '0x' prefix;
+>         - Add cpufreq cooling for soc thermal zone as well to fit the passive trip point.
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 74 +++++++++++++++++++++++++++++++
+>  1 file changed, 74 insertions(+)
 >
-> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
-> index 72db14c..20f010c 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
-> @@ -13,7 +13,7 @@ maintainers:
->  description: |
->    SPMI PMIC voltage ADC (VADC) provides interface to clients to read
->    voltage. The VADC is a 15-bit sigma-delta ADC.
-> -  SPMI PMIC5 voltage ADC (ADC) provides interface to clients to read
-> +  SPMI PMIC5/PMIC7 voltage ADC (ADC) provides interface to clients to read
->    voltage. The VADC is a 16-bit sigma-delta ADC.
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> index 9b1616e..77aff14 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> @@ -7,6 +7,7 @@
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/input/input.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/thermal/thermal.h>
 >
->  properties:
-> @@ -23,6 +23,7 @@ properties:
->        - qcom,spmi-adc5
->        - qcom,spmi-adc-rev2
->        - qcom,pms405-adc
-> +      - qcom,spmi-adc7
+>  #include "imx8mp-pinfunc.h"
 >
->    reg:
->      description: VADC base address in the SPMI PMIC register map
-> @@ -65,6 +66,8 @@ patternProperties:
->          description: |
->            ADC channel number.
->            See include/dt-bindings/iio/qcom,spmi-vadc.h
-> +          For PMIC7 ADC, the channel numbers are specified separately per PMIC
-> +          in the PMIC-specific files in include/dt-bindings/iio/.
+> @@ -43,6 +44,7 @@
+>                         clocks = <&clk IMX8MP_CLK_ARM>;
+>                         enable-method = "psci";
+>                         next-level-cache = <&A53_L2>;
+> +                       #cooling-cells = <2>;
+>                 };
 >
->        label:
->          description: |
-> @@ -72,7 +75,7 @@ patternProperties:
->              For thermistor inputs connected to generic AMUX or GPIO inputs
->              these can vary across platform for the same pins. Hence select
->              the platform schematics name for this channel. It is required
-> -            for "qcom,spmi-adc5" and "qcom,spmi-adc-rev2".
-> +            for "qcom,spmi-adc5", "qcom,spmi-adc7" and "qcom,spmi-adc-rev2".
->          allOf:
->            - $ref: /schemas/types.yaml#/definitions/string
+>                 A53_1: cpu@1 {
+> @@ -53,6 +55,7 @@
+>                         clocks = <&clk IMX8MP_CLK_ARM>;
+>                         enable-method = "psci";
+>                         next-level-cache = <&A53_L2>;
+> +                       #cooling-cells = <2>;
+>                 };
 >
-> @@ -85,6 +88,8 @@ patternProperties:
->                of 512 will be used.
->              - For compatible property "qcom,spmi-adc5", valid values are 250, 420
->                and 840. If property is not found, default value of 840 is used.
-> +            - For compatible property "qcom,spmi-adc7", valid values are 85, 340
-> +              and 1360. If property is not found, default value of 1360 is used.
->              - For compatible property "qcom,spmi-adc-rev2", valid values are 256,
->                512 and 1024. If property is not present, default value is 1024.
->          allOf:
-> @@ -109,11 +114,11 @@ patternProperties:
->                channel calibration. If property is not found, channel will be
->                calibrated with 0.625V and 1.25V reference channels, also
->                known as absolute calibration.
-> -            - For compatible property "qcom,spmi-adc5" and "qcom,spmi-adc-rev2",
-> -              if this property is specified VADC will use the VDD reference (1.875V)
-> -              and GND for channel calibration. If property is not found, channel
-> -              will be calibrated with 0V and 1.25V reference channels, also known
-> -              as absolute calibration.
-> +            - For compatible property "qcom,spmi-adc5", "qcom,spmi-adc7" and
-> +              "qcom,spmi-adc-rev2", if this property is specified VADC will use
-> +              the VDD reference (1.875V) and GND for channel calibration. If
-> +              property is not found, channel will be calibrated with 0V and 1.25V
-> +              reference channels, also known as absolute calibration.
->          type: boolean
+>                 A53_2: cpu@2 {
+> @@ -63,6 +66,7 @@
+>                         clocks = <&clk IMX8MP_CLK_ARM>;
+>                         enable-method = "psci";
+>                         next-level-cache = <&A53_L2>;
+> +                       #cooling-cells = <2>;
+>                 };
 >
->        qcom,hw-settle-time:
-> @@ -135,6 +140,12 @@ patternProperties:
->                Certain controller digital versions have valid values of
->                15, 100, 200, 300, 400, 500, 600, 700, 1, 2, 4, 8, 16, 32, 64, 128 ms
->                If property is not found, channel will use 15us.
-> +            - For compatible property "qcom,spmi-adc7", delay = 15us for
-> +              value 0, 100us * (value) for values < 8, 1ms for value 8
-> +              and 2ms * (value - 8) otherwise.
-> +              Valid values are: 15, 100, 200, 300, 400, 500, 600, 700, 1000, 2000,
-> +              4000, 8000, 16000, 32000, 64000, 128000 us.
-> +              If property is not found, channel will use 15us.
->          allOf:
->            - $ref: /schemas/types.yaml#/definitions/uint32
+>                 A53_3: cpu@3 {
+> @@ -73,6 +77,7 @@
+>                         clocks = <&clk IMX8MP_CLK_ARM>;
+>                         enable-method = "psci";
+>                         next-level-cache = <&A53_L2>;
+> +                       #cooling-cells = <2>;
+>                 };
 >
-> @@ -147,6 +158,9 @@ patternProperties:
->              - For compatible property "qcom,spmi-vadc", valid values
->                are: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
->                If property is not found, 1 sample will be used.
-> +            - For compatible property "qcom,spmi-adc5", "qcom,spmi-adc7"
-> +              and "qcom,spmi-adc-rev2", valid values are: 1, 2, 4, 8, 16.
-> +              If property is not found, 1 sample will be used.
->          allOf:
->            - $ref: /schemas/types.yaml#/definitions/uint32
+>                 A53_L2: l2-cache0 {
+> @@ -127,6 +132,68 @@
+>                 method = "smc";
+>         };
 >
+> +       thermal-zones {
+> +               cpu-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <2000>;
+> +                       thermal-sensors = <&tmu 0>;
+> +                       trips {
+> +                               cpu_alert0: trip0 {
+> +                                       temperature = <85000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu_crit0: trip1 {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +
+> +                       cooling-maps {
+> +                               map0 {
+> +                                       trip = <&cpu_alert0>;
+> +                                       cooling-device =
+> +                                               <&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +                                               <&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +                                               <&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +                                               <&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +                               };
+> +                       };
+> +               };
+> +
+> +               soc-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <2000>;
+> +                       thermal-sensors = <&tmu 1>;
+> +                       trips {
+> +                               soc_alert0: trip0 {
+> +                                       temperature = <85000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               soc_crit0: trip1 {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +
+> +                       cooling-maps {
+> +                               map0 {
+> +                                       trip = <&soc_alert0>;
+> +                                       cooling-device =
+> +                                               <&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +                                               <&A53_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +                                               <&A53_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +                                               <&A53_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +
+>         timer {
+>                 compatible = "arm,armv8-timer";
+>                 interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
+> @@ -215,6 +282,13 @@
+>                                 gpio-ranges = <&iomuxc 0 114 30>;
+>                         };
+>
+> +                       tmu: tmu@30260000 {
+> +                               compatible = "fsl,imx8mp-tmu";
+> +                               reg = <0x30260000 0x10000>;
+> +                               clocks = <&clk IMX8MP_CLK_TSENSOR_ROOT>;
+> +                               #thermal-sensor-cells = <1>;
+> +                       };
+> +
+>                         wdog1: watchdog@30280000 {
+>                                 compatible = "fsl,imx8mp-wdt", "fsl,imx21-wdt";
+>                                 reg = <0x30280000 0x10000>;
 > --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+> 2.7.4
+>
