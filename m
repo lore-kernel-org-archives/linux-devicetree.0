@@ -2,178 +2,114 @@ Return-Path: <SRS0=qh1l=5T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8CFC2D0E8
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 05:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0FCC2BA15
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 06:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA767206A3
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 05:46:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="zIZsDrrc"
+	by mail.kernel.org (Postfix) with ESMTP id B0CCD20787
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Apr 2020 06:01:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585893702;
+	bh=p2IuVwkph+/SUR16YqbpBqb56Vyf1fYOzyLt2WbYoB8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gKHRALRfNDP6AD8BQAFh7Lah9oHJArycH3fBIN5aGL1ca79rx1x2sfrJaOMYVjI4g
+	 EGSkPSC5UCAC9VI5y662IgmxmO1pILlHjFxVExIxHvWXSOMJRErzROYn2nJwFaNGmB
+	 US2Hi7OJlhOrb05ieJkDPnmflLC+YbPEg6nQ7gPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730025AbgDCFqH (ORCPT
+        id S1731040AbgDCGBl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 01:46:07 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:36719 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730759AbgDCFqH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 01:46:07 -0400
-Received: by mail-vs1-f67.google.com with SMTP id 184so4229255vsu.3
-        for <devicetree@vger.kernel.org>; Thu, 02 Apr 2020 22:46:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S4XNepmeOooAZ1+s30LlQ+CWVHmuUGaSrMEBEx9YwGo=;
-        b=zIZsDrrcJTGyEaY5wJrQpWkaz8MwaasE7La+XUSJtg3/Fei8sHG6TmlNUnjdV7T8wX
-         1FIaPRHwHluCkALganU6p5noYpWnVJvyIcTBe/kRZvpNkl0XRMrzCX5rf92cMtef4pqC
-         mAnt9li35bOeUdLroCDFuMJGkqRiePNH/be4Pxcwvu/tpzxeR/WQu3iVky+eJ+PODVFi
-         FziBzTQuwvkfBRaQbRN1MBwYaHBeLy2LEHuO8dbafMgAdj+9bWofkpNNeErdiyWGXIFE
-         HYIHu9XnCX4FetnrNoz53MjaDLTaShXiszb1qIIrvZZWtkXGaHxZg55ongNI0Mv/UmTj
-         AYMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S4XNepmeOooAZ1+s30LlQ+CWVHmuUGaSrMEBEx9YwGo=;
-        b=RN6wpwATXqIzr7fka18W5rs7bnlHPN0lEEmQdrX6P298c0CgWQAEDmKR2RRDtWgTpI
-         vRv5iZbJDfL91BY+r7U/As3e92bqVUSM9ZYk1xkb9bUdLAWgDGG4c2pBLKiDpObT7zJ0
-         VCQFMKdsVs0Xh8oLTGSG0JbZL48Z6ikOK9+Vdw0TDo2uhcVGt7CD+DMNhhhtAQURDbuZ
-         tCpnhurgEtWCNNfrjbIWQLUmQX/4cA9DHHjsPHyta2pOKdOeX7vEJuX/nekbNaswkoxq
-         ZymZ8+gdvLkrxt9ojhXsavudw+g3jVa4kW87zyo3BPjFABwI9qJQrfKstIli/4H0/sfC
-         T0CA==
-X-Gm-Message-State: AGi0PubK95w3Kkrk7sOreJeyHgHbxSfVY/ZcQvXhnZ82rbZ0Xj0IhUur
-        fwLEP408JQhfrCxPDREI3g0el7dgFhiNO2cTEUaTzA==
-X-Google-Smtp-Source: APiQypKwPJ3eQAj3UmcqOc18/vQnRNsFvQw3FTV9eUmQpOy4PLfT3A7xYCqvCkwaapvUhQCilHz1KbZizZs8pohCCcQ=
-X-Received: by 2002:a05:6102:104b:: with SMTP id h11mr5288832vsq.182.1585892764055;
- Thu, 02 Apr 2020 22:46:04 -0700 (PDT)
+        Fri, 3 Apr 2020 02:01:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729349AbgDCGBl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 3 Apr 2020 02:01:41 -0400
+Received: from localhost (unknown [171.76.107.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19CB6206F6;
+        Fri,  3 Apr 2020 06:01:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585893700;
+        bh=p2IuVwkph+/SUR16YqbpBqb56Vyf1fYOzyLt2WbYoB8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QKav23U/eh6h/UhxXS/ncKxL41JZk1qm0n5hpfLHzXL0ONIxq+/ZuqChX9TyH49dI
+         eKvRgnzQOuoAVCmL62/441OrFBkq2FrvtPqwQ+N7TAlBRl4lJk5QUGCbPOQhfKc8JC
+         Z/x/weXzdPtovzgoqretYp6zsUfL3N1DnfrgIdCc=
+Date:   Fri, 3 Apr 2020 11:31:27 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 2/5] phy: qcom-snps: Add SNPS USB PHY driver for QCOM
+ based SOCs
+Message-ID: <20200403060127.GM72691@vkoul-mobl>
+References: <1585880634-15222-1-git-send-email-wcheng@codeaurora.org>
+ <1585880634-15222-3-git-send-email-wcheng@codeaurora.org>
 MIME-Version: 1.0
-References: <1584966504-21719-1-git-send-email-Anson.Huang@nxp.com>
- <1584966504-21719-3-git-send-email-Anson.Huang@nxp.com> <CAHLCerNG3ZBbWrTwXxCbd1BOfyHxuvpAuo5tW_bNKgWcO5zESA@mail.gmail.com>
- <DB3PR0402MB3916AF241DE20AB9CCE1A4C2F5C70@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB3916AF241DE20AB9CCE1A4C2F5C70@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Fri, 3 Apr 2020 11:15:53 +0530
-Message-ID: <CAHLCerMEn7g3a-MG9xiiLKMUCLXjKRiuZ_wMjRjPJCXvDMzDdA@mail.gmail.com>
-Subject: Re: [PATCH V3 3/3] arm64: dts: imx8mp: Add thermal zones support
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585880634-15222-3-git-send-email-wcheng@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 3, 2020 at 9:04 AM Anson Huang <anson.huang@nxp.com> wrote:
->
-> Hi, Amit
->
-> > Subject: Re: [PATCH V3 3/3] arm64: dts: imx8mp: Add thermal zones support
-> >
-> > On Mon, Mar 23, 2020 at 6:05 PM Anson Huang <Anson.Huang@nxp.com>
-> > wrote:
-> > >
-> > > i.MX8MP has a TMU inside which supports two thermal zones, add support
-> > > for them.
-> > >
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> >
-> >
-> > [snip]
-> >
-> > >
-> > > +       thermal-zones {
-> > > +               cpu-thermal {
-> > > +                       polling-delay-passive = <250>;
-> > > +                       polling-delay = <2000>;
-> > > +                       thermal-sensors = <&tmu 0x0>;
-> >
-> > No need for 0x0, just use 0
->
-> OK.
->
-> >
-> > > +                       trips {
-> > > +                               cpu_alert0: trip0 {
-> > > +                                       temperature = <85000>;
-> > > +                                       hysteresis = <2000>;
-> > > +                                       type = "passive";
-> > > +                               };
-> > > +
-> > > +                               cpu_crit0: trip1 {
-> > > +                                       temperature = <95000>;
-> > > +                                       hysteresis = <2000>;
-> > > +                                       type = "critical";
-> > > +                               };
-> > > +                       };
-> > > +
-> > > +                       cooling-maps {
-> > > +                               map0 {
-> > > +                                       trip = <&cpu_alert0>;
-> > > +                                       cooling-device =
-> > > +                                               <&A53_0
-> > THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > > +                                               <&A53_1
-> > THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > > +                                               <&A53_2
-> > THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > > +                                               <&A53_3
-> > THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> > > +                               };
-> > > +                       };
-> > > +               };
-> > > +
-> > > +               soc-thermal {
-> > > +                       polling-delay-passive = <250>;
-> > > +                       polling-delay = <2000>;
-> > > +                       thermal-sensors = <&tmu 0x1>;
-> >
-> > No need for 0x1, just use 1
->
-> OK.
->
-> >
-> > > +                       trips {
-> > > +                               soc_alert0: trip0 {
-> > > +                                       temperature = <85000>;
-> > > +                                       hysteresis = <2000>;
-> > > +                                       type = "passive";
-> > > +                               };
-> > > +
-> > > +                               soc_crit0: trip1 {
-> > > +                                       temperature = <95000>;
-> > > +                                       hysteresis = <2000>;
-> > > +                                       type = "critical";
-> > > +                               };
-> > > +                       };
-> >
-> > You need a cooling-map here since you have a passive trip point.
->
-> Currently, there is no cooling map defined for soc thermal zone, the cpufreq cooling
-> is mapped to cpu thermal zone already, so do you think it is OK to leave it as no cooling
-> map, or it is better to put cpufreq cooling for soc thermal zone as well?
->
+On 02-04-20, 19:23, Wesley Cheng wrote:
+> This adds the SNPS FemtoPHY V2 driver used in QCOM SOCs.  There
+> are potentially multiple instances of this UTMI PHY on the
+> SOC, all which can utilize this driver.  The V2 driver will
+> have a different register map compared to V1.
 
-If there is no cooling, why do you need a passive trip point? Just
-make it a hot trip that will send you a nofication (if .notify
-callback registered).
+Some nitpicks below, otherwise:
 
-Regards,
-Amit
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+
+> +/**
+> + * struct qcom_snps_hsphy - structure holding snps hs phy attributes
+> + *
+> + * @phy: generic phy
+> + * @base: iomapped memory space for qubs2 phy
+> + *
+> + * @cfg_ahb_clk: AHB2PHY interface clock
+> + * @ref_clk: phy reference clock
+> + * @iface_clk: phy interface clock
+> + * @phy_reset: phy reset control
+> + * @vregs: regulator supplies bulk data
+> +
+
+This is missing the marker * for kernel doc
+
+> + * @phy_initialized: if PHY has been initialized correctly
+> + *
+
+This empty line is redundant
+
+> + */
+> +struct qcom_snps_hsphy {
+> +	struct phy *phy;
+> +	void __iomem *base;
+> +
+> +	struct clk *cfg_ahb_clk;
+> +	struct clk *ref_clk;
+> +	struct reset_control *phy_reset;
+> +	struct regulator_bulk_data vregs[SNPS_HS_NUM_VREGS];
+> +
+> +	bool phy_initialized;
+> +};
+> +
+> +static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
+> +				    u32 mask, u32 val)
+
+coding style mandates that second line should start at preceeding line
+opening brace :), so can you please make it:
+
+static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
+                                              u32 mask, u32 val)
+
+-- 
+~Vinod
