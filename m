@@ -2,153 +2,117 @@ Return-Path: <SRS0=g3EE=5U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A75CC2BA15
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 16:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2298CC2BA15
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 17:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E57DB206F8
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 16:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0C5206E6
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 17:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586019375;
-	bh=UF4azqKmc4DVGtBy9aE/k2vQDQ5mrUXEby578UnCuLA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lnUchFJHOWab7nCuLXeIFlYQOv/CdxHCUNw9om19/2ahAK8JYaZwikdY+qCsnmvxf
-	 W1bH4ktEb7pKaajtm1h0ewNH9RFfWGS3spa+zxd7XLgUH8+oR0q0n4QYaT36Ac5pUj
-	 oUSYgendLzQHwj1wWz3L04pHMwkLKOxhtFFlt0/E=
+	s=default; t=1586019636;
+	bh=Q9DGxEZ75n/+g0aOKcev+m75GcJbUC1U+Egq5Ib2rDc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VxaMVDIueWYALsjaVQchSObNXW8l9vsTdPwcLjDFcrkQDcy/IzHXR8RxoAR0eZz2l
+	 r0hmSTGuxW13yVesl2oVs7k7LvnoLob58zOJt7ITXEgig6fcSQ0D+zYn8KF47L/Vio
+	 FA4FQ8qsa4rL1rayeZ3lZXzaV42HRN/oYorD8p74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbgDDQ4O (ORCPT
+        id S1726248AbgDDRAc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Apr 2020 12:56:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbgDDQ4N (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 4 Apr 2020 12:56:13 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96580206D4;
-        Sat,  4 Apr 2020 16:56:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586019373;
-        bh=UF4azqKmc4DVGtBy9aE/k2vQDQ5mrUXEby578UnCuLA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GIWhJSAc+Vx2b+DoSTggrekGvFM8g6ihKUqdlRyRP5KW7drFAvAKh0QL/+nGkr22x
-         akzDKS1tudGPTHEyZBcBHVa0TaCIlF9/Gx/uorcv6jQRxhQGbJsWG+Ew9E/hs1OznB
-         nwExH6RsRIao6mRONS3JQVhETHtE9C+XPdx6UAqs=
-Date:   Sat, 4 Apr 2020 17:56:08 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Lazar <alazar@startmail.com>
-Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        robh+dt@kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH v7 1/2] dt-bindings: iio: adc: Add MAX1241 bindings
-Message-ID: <20200404175608.71f81e34@archlinux>
-In-Reply-To: <20200403121323.1742-2-alazar@startmail.com>
-References: <20200403121323.1742-1-alazar@startmail.com>
-        <20200403121323.1742-2-alazar@startmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 4 Apr 2020 13:00:32 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:37789 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbgDDRAc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Apr 2020 13:00:32 -0400
+Received: by mail-il1-f194.google.com with SMTP id a6so10572786ilr.4;
+        Sat, 04 Apr 2020 10:00:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b4kl0NLLFcA0pn57UJb7veMZizU71qWwaJMkCLDmT14=;
+        b=bTwG+72I/zpvdcle8kEay+ZzI43XVulBvGIJfU+HkKxt7FOVYnKU4jfYh6GF9A4WDN
+         UmEUOf9MhTiZn1G+OTCIX6uLjCBvvc0kI5fq7p1WugkX/Ay24rLVfAQJ/5IF8hQzc0gT
+         MuQ/+VrDFDSVpmSWaf6mUstB2xHzHEeGh4EofjpA66g6OfkoW1G3DUtKu80bc5DaAhMy
+         fKUIRPA7dNlqVXdU2Fq/2Dafr1pPfAfderhikO2pGgqtVUkB3B24YupUaFltjVhbU4TC
+         CZKbDvtEkWE6O6AlPdetaCn3La4a0Yeqkbk+2PLG3uWsR7t2H1y0GrWwyagEr/+bm/J4
+         SECA==
+X-Gm-Message-State: AGi0PuYq0NWJIEFZ2wlce1QlVXOhsIALO+9kAQcw+AwM3wZ7SNlv96RD
+        4EpteDqzkcyNofLFOygW8hOVwpw=
+X-Google-Smtp-Source: APiQypJ+bshZTlCGhsnPSYdXqvLk4YbF17FiZptNH1O88h8uIgBD2k4BdVMGGzXW6OxeszhF7KqufA==
+X-Received: by 2002:a92:8c93:: with SMTP id s19mr12535365ill.222.1586019629542;
+        Sat, 04 Apr 2020 10:00:29 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id t86sm4038008ili.82.2020.04.04.10.00.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Apr 2020 10:00:28 -0700 (PDT)
+Received: (nullmailer pid 25017 invoked by uid 1000);
+        Sat, 04 Apr 2020 17:00:26 -0000
+Date:   Sat, 4 Apr 2020 11:00:26 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH 1/3] media: dt-bindings: media: Document Rockchip CIF
+ bindings
+Message-ID: <20200404170026.GA24638@bogus>
+References: <20200403142122.297283-1-maxime.chevallier@bootlin.com>
+ <20200403142122.297283-2-maxime.chevallier@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403142122.297283-2-maxime.chevallier@bootlin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri,  3 Apr 2020 15:13:22 +0300
-Alexandru Lazar <alazar@startmail.com> wrote:
-
-> Add device-tree bindings documentation for the MAX1241 device driver.
+On Fri,  3 Apr 2020 16:21:20 +0200, Maxime Chevallier wrote:
+> Add a documentation for the Rockchip Camera Interface controller
+> binding.
 > 
-> Signed-off-by: Alexandru Lazar <alazar@startmail.com>
-One trivial thing inline.   I'll fix that up and apply, but not
-in a form that can't be rebased - so I can add DT review if Rob wants
-to take another look.
-
-Thanks,
-
-Jonathan
-
+> This controller can be found on platforms such as the PX30 or the
+> RK3288, the PX30 being the only platform supported so far.
+> 
+> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 > ---
->  .../bindings/iio/adc/maxim,max1241.yaml       | 64 +++++++++++++++++++
->  1 file changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml
+>  .../bindings/media/rockchip-cif.yaml          | 98 +++++++++++++++++++
+>  1 file changed, 98 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/rockchip-cif.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml b/Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml
-> new file mode 100644
-> index 000000000000..7da9e4153ac1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml
-> @@ -0,0 +1,64 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2020 Alexandru Lazar
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/maxim,max1241.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Maxim MAX1241 12-bit, single-channel analog to digital converter
-> +
-> +maintainers:
-> +  - Alexandru Lazar <alazar@startmail.com>
-> +
-> +description: |
-> +  Bindings for the max1241 12-bit, single-channel ADC device. Datasheet
-> +  can be found at:
-> +    https://datasheets.maximintegrated.com/en/ds/MAX1240-MAX1241.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - maxim,max1241
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  vdd-supply:
-> +    description:
-> +      Device tree identifier of the regulator that powers the ADC.
-> +
-> +  vref-supply:
-> +    description:
-> +      Device tree identifier of the regulator that provides the external
-> +      reference voltage.
 
-I believe this is always one anyway so not needed.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-> +    maxItems: 1
-> +
-> +  shutdown-gpios:
-> +    description:
-> +      GPIO spec for the GPIO pin connected to the ADC's /SHDN pin. If
-> +      specified, the /SHDN pin will be asserted between conversions,
-> +      thus enabling power-down mode.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - vdd-supply
-> +  - vref-supply
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    spi {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +        adc@0 {
-> +            compatible = "maxim,max1241";
-> +            reg = <0>;
-> +            vdd-supply = <&adc_vdd>;
-> +            vref-supply = <&adc_vref>;
-> +            spi-max-frequency = <1000000>;
-> +            shutdown-gpios = <&gpio 26 1>;
-> +        };
-> +    };
+Documentation/devicetree/bindings/media/rockchip-cif.yaml:  while scanning a simple key
+  in "<unicode string>", line 13, column 1
+could not find expected ':'
+  in "<unicode string>", line 15, column 1
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/media/rockchip-cif.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/media/rockchip-cif.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+warning: no schema found in file: Documentation/devicetree/bindings/media/rockchip-cif.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/rockchip-cif.yaml: ignoring, error parsing file
+Makefile:1262: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
+See https://patchwork.ozlabs.org/patch/1266070
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
