@@ -2,880 +2,347 @@ Return-Path: <SRS0=g3EE=5U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF52C2BA18
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 18:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB34CC2BA15
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 19:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C98AF206F5
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 18:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA2B206C3
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 19:33:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="gjno40pe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nyxaeOuy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbgDDS2P (ORCPT
+        id S1726278AbgDDTdm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Apr 2020 14:28:15 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:33138 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgDDS2P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Apr 2020 14:28:15 -0400
-Received: by mail-lf1-f68.google.com with SMTP id h6so3983007lfc.0
-        for <devicetree@vger.kernel.org>; Sat, 04 Apr 2020 11:28:08 -0700 (PDT)
+        Sat, 4 Apr 2020 15:33:42 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38667 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbgDDTdl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Apr 2020 15:33:41 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v16so10467932ljg.5;
+        Sat, 04 Apr 2020 12:33:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=tHsn7tIO9Svt9DZhW/8Hyo1IGVPh+Qof3WeSqdHRn7U=;
-        b=gjno40peVrzo/rqUnEk2pDqZfaFxSB34CE+dB7Zn65nNKqLAr/yQN6myCR09rx4kuv
-         u6oDCw+OgrTHf0o8gPNj6boAdKNV0ebqKsBOYW+yTMJ+5e/+yXgUxJHL+C8UxqDQXY/c
-         RxY4xWGp0fVCpUhzpw9rlwhKjCSxQY+t0A5Zrx4onBNEYsoS8pkWkMyAIMuUdOoI0Nou
-         C4iSg0KbxJ3dqfnp6bncxQDyTTvIfiz60nBq2p15XIK2NnWdQSdkCnLxlco/kzHsQUtx
-         1o5tlyjVzhVtgv6pPZGBZB1lgfqkpc6kStOM5Gn+58aJ1mP1cHa1iXCcC3iIc2WXF1DZ
-         ak7A==
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=4BEcKBM854EHRMSKSj1v3PrUiNMQfzD93zf2eqZZW/s=;
+        b=nyxaeOuyPwFenTed8gTtBXUlljPovb6+sQ9vLs7bvDrFjwvPuoTVepfOrznRhamr4C
+         wNwTDsMmLm+HyruZXRQfHi/uE4+TCDavaZPeILfulcyogfVj7lWy4drIFP6fjoTSEPkP
+         G+9a1Q5GmNBUL0si0eMrteNij6iFUlAmjfVhtknu0F1qT0LqvsT3z8KWI61DuNESjU9d
+         WLcC48lScoOa9LSQEpVe3f9IfIvrqDvwLWjCDFAsphU9m+yAu6Ghy5370/n3oxBsnHmW
+         +amSAYbtEzyYx+o/9VZBKgDVoqydAYqYFcYy3Vh2Kpj6EH9FEaFC4m3Fq77R7UEfKdCm
+         H4Cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=tHsn7tIO9Svt9DZhW/8Hyo1IGVPh+Qof3WeSqdHRn7U=;
-        b=R8ktXLOkrJEYd32HWI1GFpXINrcpqgvTiRA95uK6XQuzh/FiaDhm8lnmWepOP7bQKO
-         Aia85c0j/HoJVO/9Qvh7lfNSbUFN/fFqkJWmEbibnTM629yO4neU1r47gCKHXf1pAyUN
-         rA3Axky3ElvgXCkVcIUsGlBxoQsCPNddnPFqwjZi5b+jJJP/rLmLzldjHxRzqXJsL4Fy
-         NtpUPa2uxeANLN3fdI3Jfx99XRCuw8T23HQSdypDCpoo4C1D//WakXwGdGZR4ki44zsS
-         OBq3mzcGs4i7Hm/E4PQ3fxr0CbrNhKb7Kc/Iprsd2kL6qUIwAH989UB12a6KStZavIYG
-         BeDA==
-X-Gm-Message-State: AGi0PuZLZYFfZ+R5YgsApyF5EBcApW4VsDLf5/LC4g2f5amEXsQAGjyI
-        lYL0WKL8DxyiJz08qhXXr3Z/8A==
-X-Google-Smtp-Source: APiQypL587vEnjs+GjA0hbwmoltk+HYBmyubT08N06+9gWlzuntb57eebrkovowJq37G+OH4SF1paA==
-X-Received: by 2002:a05:6512:54e:: with SMTP id h14mr8753828lfl.56.1586024887832;
-        Sat, 04 Apr 2020 11:28:07 -0700 (PDT)
-Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id f23sm7303782lja.60.2020.04.04.11.28.06
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=4BEcKBM854EHRMSKSj1v3PrUiNMQfzD93zf2eqZZW/s=;
+        b=YYDEG00bGuWsY/dHCgCMju4w5zpOD6v597pB4gKVQruiFHCVx2IiYG0lcrOFCkBtT9
+         t8KPovygYEhFOHkx8DhrtSXMrgy2/ZpE9mUYi8IBhzjycGrHJL8AYGGXU4OKec0AczDP
+         7MkzAAeuu6S/souTSkVsvrUX1AqfaqX/yU80lfvuWeuUhSpmo99GLt6YTkBR9dNGxL4E
+         igFdrJIUY/tsMg7gduLJb3/Qp6OP0iWAs1318Tdn7mnf3io+23olRIkM0MScbVJptRwH
+         1C0wkUfLOU2UwZkxwRKDjTT9tFctRUxnbSaq+D2KBUguuDJg6Xjq6lk1/TZg8wkjPda4
+         /jog==
+X-Gm-Message-State: AGi0PubfKE+RlFF9BDuF05dW0KLz+Lu+AYkiVa+lkV6kfX98ZLiIyKtk
+        YFh42GIfEbmbCUdhDg2vNMk=
+X-Google-Smtp-Source: APiQypI46R59B0fPH0tDt7zirMg6uIu9BgCDmR65KJ6W7oyLUAS3UTwZshkiz1kOuOH7lrt90VANQw==
+X-Received: by 2002:a05:651c:201d:: with SMTP id s29mr8464429ljo.214.1586028815892;
+        Sat, 04 Apr 2020 12:33:35 -0700 (PDT)
+Received: from pablo-laptop ([2a02:a315:5445:5300:95b9:c293:40ef:8bdd])
+        by smtp.googlemail.com with ESMTPSA id s10sm7536789ljp.87.2020.04.04.12.33.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Apr 2020 11:28:07 -0700 (PDT)
-Date:   Sat, 4 Apr 2020 20:28:45 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     linux-omap@vger.kernel.org
-Cc:     Jason Kridner <jkridner@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Andreas Dannenberg <dannenberg@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Caleb Robey <c-robey@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Tom Rini <trini@konsulko.com>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] ARM: dts: am5729: beaglebone-ai: adding device tree
-Message-ID: <20200404182845.GA27650@x1>
+        Sat, 04 Apr 2020 12:33:34 -0700 (PDT)
+Message-ID: <17aa7c13a0f5a183158829e9b9af85537a740846.camel@gmail.com>
+Subject: Re: [PATCH v4 5/5] arm64: dts: Add node for ufs exynos7
+From:   =?UTF-8?Q?Pawe=C5=82?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+To:     Alim Akhtar <alim.akhtar@samsung.com>, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-scsi@vger.kernel.org
+Cc:     krzk@kernel.org, avri.altman@wdc.com, martin.petersen@oracle.com,
+        kwmad.kim@samsung.com, stanley.chu@mediatek.com,
+        cang@codeaurora.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Sat, 04 Apr 2020 21:33:33 +0200
+In-Reply-To: <000001d60aad$05e7b6e0$11b724a0$@samsung.com>
+References: <20200327170638.17670-1-alim.akhtar@samsung.com>
+         <CGME20200327171423epcas5p485d227f19e45999ad9b42b21d2864e4a@epcas5p4.samsung.com>
+         <20200327170638.17670-6-alim.akhtar@samsung.com>
+         <ac67cfc3736cf50c716b823a59af878d59b7198f.camel@gmail.com>
+         <000801d60516$823fd890$86bf89b0$@samsung.com>
+         <838a17416b4ed59903ae153e09842ac62584616f.camel@gmail.com>
+         <002e01d605df$af658440$0e308cc0$@samsung.com>
+         <1182150aff8140a82af17979a09c81676c719e2f.camel@gmail.com>
+         <000001d60aad$05e7b6e0$11b724a0$@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Sat, 2020-04-04 at 23:45 +0530, Alim Akhtar wrote:
+Hi Alim,
+> Hi Pawel,
+> 
+> > -----Original Message-----
+> > From: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> > Sent: 03 April 2020 22:22
+> > To: Alim Akhtar <alim.akhtar@samsung.com>; robh+dt@kernel.org;
+> > devicetree@vger.kernel.org; linux-scsi@vger.kernel.org
+> > Cc: krzk@kernel.org; avri.altman@wdc.com; martin.petersen@oracle.com;
+> > kwmad.kim@samsung.com; stanley.chu@mediatek.com;
+> > cang@codeaurora.org; linux-samsung-soc@vger.kernel.org; linux-arm-
+> > kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH v4 5/5] arm64: dts: Add node for ufs exynos7
+> > 
+> > Hi Alim
+> > 
+> > Looking at vendor sources, my device is using the same gpios for
+> > urfs_rst_n and ufs_refclk_out like Espresso (with one difference -
+> > ufs_rst_n shouldn't be pulled up).
+> > 
+> > About regulators (it would be easier if dts would have all regulators).
+> > It's also using s2mps15 as Espresso, but it vendor dts had only 8 (of
+> > 10 possible bucks, one missing was for UFS) and 14 ldos (of 27
+> > possible), where almost all rails are connected to something.
+> > 
+> > I'm wondering how it's working on Espresso, because when adding correct
+> > regulators for ufs (vccq = buck10 from s2mps15, always enabled for
+> > testing plus vccq2 and vccq = two regulators enabled by one gpio,
+> > enabled at boot by firmware), ufs wasn't still working because it was
+> > then failing at defer probe (s2mps15 was probed after ufs)
+> > 
+> > [    0.962482] exynos-ufshc 15570000.ufs: ufshcd_get_vreg: vccq get
+> > failed, err=-517
+> > 
+> As I said, this is very specific to the board, on Espresso we have LDO12 connected to UFS_RESETn.
+> Either make all of them as always-on, or just disabled s2mps15 
+> (default voltage supply should be ok, unless bootloader on your board does have messed too much with PMIC)
+>  
+> > After that boot would just stop/hang.
+> > 
+> > After making a "dirty fix" by making s2mps15 regulator driver use
+> > subsys_initcall (like in vendor sources) and ufs late_initcall (to give
+> > it more time to setup and get it working and solve it later),
+> > i had to mark following clocks as CLK_IGNORE_UNUSED to be able to bring
+> > link up (it replicates setting done by vendor kernel, which enables
+> > them on boot):
+> > - "phyclk_ufs20_rx1_symbol_user"
+> > - "phyclk_ufs20_rx0_symbol_user"
+> > - "phyclk_ufs20_tx0_symbol_user"
+> > 
+> Coming to these clocks, all these are supplied by default, my best guess is since you are using an actual product (S6 edge), they might have optimized for power saving 
+> And most likely all clock might be  gated initially. In my case all are set to default.
+> I have attached a small change in the exynos7 dts and phy driver clock handling, please try this attached patch and let me know if this helps in removing some of your hacks.
+> In the later SoCs these clocks are not in this form, so I didn't included in my current patch set, If this works for your, will add as an optional for exynos7/7420.
+> I also assume you are using clk-exynos7.c and my posted ufs driver.
+Yes, i'm using clk-exynos7 (and other exynos7 drivers/dts/etc).
+It would be great if someone could say how exynos7 and exynos7420 are
+similar. For now it looks like that only difference is that exynos7 has
+only 4 cores (a57) where 7420 has 4xa53 + 4xa57.
+It would be very valuable information for me so i could know how much i
+could reuse my device.
+> 
+> > Now it's able to bring both device and link, but it fails at
+> > ufshcd_uic_change_pwr_mode.
+> > 
+> Can you please use the exact ufs and ufs-phy device node as in my patch?
+With Your patch + removed my changes to clocks (removed fix for wrong
+clock order in dts + removed CLK_IGNORE_UNUSED from symbol clocks in
+clk-exynos7) it's finally able to detect my UFS device!! 
 
-From: Jason Kridner <jdk@ti.com>
+(but of fails later...with constant error spam in kernel log).
 
-BeagleBoard.org BeagleBone AI is an open source hardware single
-board computer based on the Texas Instruments AM5729 SoC featuring
-dual-core 1.5GHz Arm Cortex-A15 processor, dual-core C66 digital
-signal processor (DSP), quad-core embedded vision engine (EVE),
-Arm Cortex-M4 processors, dual programmable realtime unit
-industrial control subsystems and more. The board features 1GB
-DDR3L, USB3.0 Type-C, USB HS Type-A, microHDMI, 16GB eMMC flash,
-1G Ethernet, 802.11ac 2/5GHz, Bluetooth, and BeagleBone expansion
-headers.
+[    1.383481] exynos-ufshc 15570000.ufs: ufshcd_populate_vreg: Unable
+to find vdd-hba-supply regulator, assuming enabled
+[    1.390060] exynos-ufshc 15570000.ufs: ufshcd_populate_vreg: unable
+to find vcc-max-microamp
+[    1.398465] exynos-ufshc 15570000.ufs: ufshcd_populate_vreg: unable
+to find vccq-max-microamp
+[    1.406968] exynos-ufshc 15570000.ufs: ufshcd_populate_vreg: unable
+to find vccq2-max-microamp
+[    1.415569] exynos-ufshc 15570000.ufs: ufshcd_init_clocks: clk:
+core_clk, rate: 100000000
+[    1.423715] exynos-ufshc 15570000.ufs: ufshcd_init_clocks: clk:
+sclk_unipro_main, rate: 167000000
+[    1.432569] exynos-ufshc 15570000.ufs: __ufshcd_setup_clocks: clk:
+core_clk enabled
+[    1.440205] exynos-ufshc 15570000.ufs: __ufshcd_setup_clocks: clk:
+sclk_unipro_main enabled
+[    1.449613] scsi host0: ufshcd
+[    1.452179] samsung-ufs-phy 15571800.ufs-phy: MPHY ref_clk_rate =
+26000000
+[    1.458448] samsung-ufs-phy 15571800.ufs-phy: MPHY
+ref_parent_clk_rate = 26000000
+[    1.487288] exynos-ufshc 15570000.ufs: ufshcd_print_pwr_info:[RX,
+TX]: gear=[1, 1], lane[1, 1], pwr[SLOWAUTO_MODE, SLOWAUTO_MODE], rate =
+0
+[    2.025569] exynos-ufshc 15570000.ufs: dme-set: attr-id 0xd041 val
+0x1fff error code 1
+[    2.025715] exynos-ufshc 15570000.ufs: dme-set: attr-id 0xd041 val
+0x1fff failed 0 retries
+[    2.025880] exynos-ufshc 15570000.ufs: dme-set: attr-id 0xd042 val
+0xffff error code 1
+[    2.027354] exynos-ufshc 15570000.ufs: dme-set: attr-id 0xd042 val
+0xffff failed 0 retries
+[    2.035583] exynos-ufshc 15570000.ufs: dme-set: attr-id 0xd043 val
+0x7fff error code 1
+[    2.043465] exynos-ufshc 15570000.ufs: dme-set: attr-id 0xd043 val
+0x7fff failed 0 retries
+[    2.054049] exynos-ufshc 15570000.ufs: Power mode change 0 : Fast
+series_B G_2 L_2
+[    2.059261] exynos-ufshc 15570000.ufs: ufshcd_print_pwr_info:[RX,
+TX]: gear=[2, 2], lane[2, 2], pwr[FAST MODE, FAST MODE], rate = 2
+[    2.071307] exynos-ufshc 15570000.ufs: ufshcd_init_icc_levels:
+setting icc_level 0x0
+[    2.081624] exynos-ufshc 15570000.ufs: ufshcd_set_queue_depth:
+activate tcq with queue depth 1
+[    2.087576] scsi 0:0:0:49488: scsi_add_lun: correcting incorrect
+peripheral device type 0x0 for W-LUN 0x            c150hN
+[    2.098400] scsi 0:0:0:49488: Well-known LUN    SAMSUNG  KLUBG4G1BD-
+E0B1  0200 PQ: 0 ANSI: 6
+[    2.107585] exynos-ufshc 15570000.ufs: ufshcd_set_queue_depth:
+activate tcq with queue depth 16
+[    2.115588] scsi 0:0:0:49476: scsi_add_lun: correcting incorrect
+peripheral device type 0x0 for W-LUN 0x            c144hN
+[    2.126519] scsi 0:0:0:49476: Well-known LUN    SAMSUNG  KLUBG4G1BD-
+E0B1  0200 PQ: 0 ANSI: 6
+[    2.135534] exynos-ufshc 15570000.ufs: ufshcd_set_queue_depth:
+activate tcq with queue depth 1
+[    2.143612] scsi 0:0:0:49456: scsi_add_lun: correcting incorrect
+peripheral device type 0x0 for W-LUN 0x            c130hN
+[    2.154543] scsi 0:0:0:49456: Well-known LUN    SAMSUNG  KLUBG4G1BD-
+E0B1  0200 PQ: 0 ANSI: 6
+[    2.163597] exynos-ufshc 15570000.ufs: ufshcd_set_queue_depth:
+activate tcq with queue depth 16
+[    2.171721] scsi 0:0:0:0: Direct-Access     SAMSUNG  KLUBG4G1BD-
+E0B1  0200 PQ: 0 ANSI: 6
+[    2.180352] exynos-ufshc 15570000.ufs: OCS error from controller = 7
+for tag 0
+[    2.186921] host_regs: 00000000: 0383ff0f 00000000 00000200 00000000
+[    2.193230] host_regs: 00000010: 00000101 00007fce 00000c96 00000000
+[    2.199565] host_regs: 00000020: 00000000 00030e75 00000000 00000000
+[    2.205899] host_regs: 00000030: 0000010f 00000000 80000010 00000000
+[    2.212234] host_regs: 00000040: 00000000 00000000 00000000 00000000
+[    2.218568] host_regs: 00000050: f8d64000 00000000 00000000 00000000
+[    2.224903] host_regs: 00000060: 00000001 00000000 00000000 00000000
+[    2.231237] host_regs: 00000070: f8da2000 00000000 00000000 00000000
+[    2.237572] host_regs: 00000080: 00000001 00000000 00000000 00000000
+[    2.243907] host_regs: 00000090: 00000002 95190000 00000000 00000000
+[    2.250242] exynos-ufshc 15570000.ufs: hba->ufs_version = 0x200,
+hba->capabilities = 0x383ff0f
 
-For more information, refer to:
-https://beaglebone.ai
+Full bootlog 
+https://gist.github.com/PabloPL/0bcb24492f4ab6e9703c2a4ea20ceb18
+kernel source: https://github.com/PabloPL/linux/tree/ufs-mainline
+dts file: exynos7-zeroflt.dts (it should be zerolt, but will be
+fixed/changed later).
 
-This patch introduces the BeagleBone AI device tree.
-
-Note that the device use the "ti,tpd12s016" component which is
-software compatible with "ti,tpd12s015". Thus we only use the
-latter driver.
-
-Signed-off-by: Jason Kridner <jdk@ti.com>
-Signed-off-by: Caleb Robey <c-robey@ti.com>
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
-Cc: Robert Nelson <robertcnelson@gmail.com>
----
-V3 Changes:
-  - remove changes for dra7.dtsi as they are not needed after commit
-    ecdeca6d961c6 by Suman for PRU-ICSS interconnect target-module nodes
-  - change compatible to "beagle,am5729-beagleboneai" which matches
-    entry for BeagleBoard.org in patch posted for vendor-prefixes.yaml
-
-V2 Changes:
-  - dra7.dtsi was reintroduced and components that are only
-    not present in upstream linux dts were removed.
----
- arch/arm/boot/dts/Makefile                |   1 +
- arch/arm/boot/dts/am5729-beagleboneai.dts | 731 ++++++++++++++++++++++
- 2 files changed, 732 insertions(+)
- create mode 100644 arch/arm/boot/dts/am5729-beagleboneai.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e8dd99201397..d86ea9ae0190 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -832,6 +832,7 @@ dtb-$(CONFIG_SOC_DRA7XX) += \
- 	am57xx-beagle-x15.dtb \
- 	am57xx-beagle-x15-revb1.dtb \
- 	am57xx-beagle-x15-revc.dtb \
-+	am5729-beagleboneai.dtb \
- 	am57xx-cl-som-am57x.dtb \
- 	am57xx-sbc-am57x.dtb \
- 	am572x-idk.dtb \
-diff --git a/arch/arm/boot/dts/am5729-beagleboneai.dts b/arch/arm/boot/dts/am5729-beagleboneai.dts
-new file mode 100644
-index 000000000000..8dda7dd43391
---- /dev/null
-+++ b/arch/arm/boot/dts/am5729-beagleboneai.dts
-@@ -0,0 +1,731 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2014-2019 Texas Instruments Incorporated - http://www.ti.com/
-+ */
-+
-+/dts-v1/;
-+
-+#include "dra74x.dtsi"
-+#include "am57xx-commercial-grade.dtsi"
-+#include "dra74x-mmc-iodelay.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/pinctrl/dra.h>
-+
-+/ {
-+	model = "BeagleBoard.org BeagleBone AI";
-+	compatible = "beagle,am5729-beagleboneai", "ti,am5728",
-+		     "ti,dra742", "ti,dra74", "ti,dra7";
-+
-+	aliases {
-+		rtc0 = &tps659038_rtc;
-+		rtc1 = &rtc;
-+		display0 = &hdmi_conn;
-+	};
-+
-+	chosen {
-+		stdout-path = &uart1;
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x0 0x40000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		ipu2_memory_region: ipu2-memory@95800000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x0 0x95800000 0x0 0x3800000>;
-+			reusable;
-+			status = "okay";
-+		};
-+
-+		dsp1_memory_region: dsp1-memory@99000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x0 0x99000000 0x0 0x4000000>;
-+			reusable;
-+			status = "okay";
-+		};
-+
-+		ipu1_memory_region: ipu1-memory@9d000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x0 0x9d000000 0x0 0x2000000>;
-+			reusable;
-+			status = "okay";
-+		};
-+
-+		dsp2_memory_region: dsp2-memory@9f000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x0 0x9f000000 0x0 0x800000>;
-+			reusable;
-+			status = "okay";
-+		};
-+
-+	};
-+
-+	vdd_adc: gpioregulator-vdd_adc {
-+		compatible = "regulator-gpio";
-+		regulator-name = "vdd_adc";
-+		vin-supply = <&vdd_5v>;
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		gpios = <&gpio3 27 GPIO_ACTIVE_HIGH>;
-+		states = <1800000 0
-+			3300000 1>;
-+	};
-+
-+	vdd_5v: fixedregulator-vdd_5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_5v";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	vtt_fixed: fixedregulator-vtt {
-+		/* TPS51200 */
-+		compatible = "regulator-fixed";
-+		regulator-name = "vtt_fixed";
-+		vin-supply = <&vdd_ddr>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		led0 {
-+			label = "beaglebone:green:usr0";
-+			gpios = <&gpio3 17 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+			default-state = "off";
-+		};
-+
-+		led1 {
-+			label = "beaglebone:green:usr1";
-+			gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "mmc0";
-+			default-state = "off";
-+		};
-+
-+		led2 {
-+			label = "beaglebone:green:usr2";
-+			gpios = <&gpio3 15 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "cpu";
-+			default-state = "off";
-+		};
-+
-+		led3 {
-+			label = "beaglebone:green:usr3";
-+			gpios = <&gpio3 14 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "mmc1";
-+			default-state = "off";
-+		};
-+
-+		led4 {
-+			label = "beaglebone:green:usr4";
-+			gpios = <&gpio3 7 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "netdev";
-+			default-state = "off";
-+		};
-+	};
-+
-+	hdmi_conn: connector@0 {
-+		compatible = "hdmi-connector";
-+		label = "hdmi";
-+		type = "a";
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi_encoder_out>;
-+			};
-+		};
-+	};
-+
-+	hdmi_enc: encoder@0 {
-+		/* "ti,tpd12s016" software compatible with "ti,tpd12s015"
-+		 *  no need for individual driver
-+		 */
-+		compatible = "ti,tpd12s015";
-+		gpios = <0>,
-+			<0>,
-+			<&gpio7 12 GPIO_ACTIVE_HIGH>;
-+
-+		ports {
-+			#address-cells = <0x1>;
-+			#size-cells = <0x0>;
-+
-+			port@0 {
-+				reg = <0x0>;
-+
-+				hdmi_encoder_in: endpoint@0 {
-+					remote-endpoint = <&hdmi_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <0x1>;
-+
-+				hdmi_encoder_out: endpoint@0 {
-+					remote-endpoint = <&hdmi_connector_in>;
-+				};
-+			};
-+		};
-+	};
-+
-+	emmc_pwrseq: emmc_pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio5 7 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	brcmf_pwrseq: brcmf_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpio3 22 GPIO_ACTIVE_LOW>,	/* BT-REG-ON */
-+				<&gpio3 18 GPIO_ACTIVE_LOW>;	/* WL-REG-ON */
-+	};
-+
-+	extcon_usb1: extcon_usb1 {
-+		compatible = "linux,extcon-usb-gpio";
-+		ti,enable-id-detection;
-+		id-gpio = <&gpio3 13 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	tps659038: tps659038@58 {
-+		compatible = "ti,tps659038";
-+		reg = <0x58>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
-+
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+
-+		ti,system-power-controller;
-+		ti,palmas-override-powerhold;
-+
-+		tps659038_pmic {
-+			compatible = "ti,tps659038-pmic";
-+
-+			smps12-in-supply = <&vdd_5v>;
-+			smps3-in-supply = <&vdd_5v>;
-+			smps45-in-supply = <&vdd_5v>;
-+			smps6-in-supply = <&vdd_5v>;
-+			smps7-in-supply = <&vdd_5v>;
-+			mps3-in-supply = <&vdd_5v>;
-+			smps8-in-supply = <&vdd_5v>;
-+			smps9-in-supply = <&vdd_5v>;
-+			ldo1-in-supply = <&vdd_5v>;
-+			ldo2-in-supply = <&vdd_5v>;
-+			ldo3-in-supply = <&vdd_5v>;
-+			ldo4-in-supply = <&vdd_5v>;
-+			ldo9-in-supply = <&vdd_5v>;
-+			ldoln-in-supply = <&vdd_5v>;
-+			ldousb-in-supply = <&vdd_5v>;
-+			ldortc-in-supply = <&vdd_5v>;
-+
-+			regulators {
-+				vdd_mpu: smps12 {
-+					/* VDD_MPU */
-+					regulator-name = "smps12";
-+					regulator-min-microvolt = <850000>;
-+					regulator-max-microvolt = <1250000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_ddr: smps3 {
-+					/* VDD_DDR EMIF1 EMIF2 */
-+					regulator-name = "smps3";
-+					regulator-min-microvolt = <1350000>;
-+					regulator-max-microvolt = <1350000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_dspeve: smps45 {
-+					/* VDD_DSPEVE on AM572 */
-+					regulator-name = "smps45";
-+					regulator-min-microvolt = < 850000>;
-+					regulator-max-microvolt = <1250000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_gpu: smps6 {
-+					/* VDD_GPU */
-+					regulator-name = "smps6";
-+					regulator-min-microvolt = < 850000>;
-+					regulator-max-microvolt = <1250000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_core: smps7 {
-+					/* VDD_CORE */
-+					regulator-name = "smps7";
-+					regulator-min-microvolt = < 850000>;	/*** 1.15V */
-+					regulator-max-microvolt = <1150000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_iva: smps8 {
-+					/* VDD_IVAHD */				/*** 1.06V */
-+					regulator-name = "smps8";
-+				};
-+
-+				vdd_3v3: smps9 {
-+					/* VDD_3V3 */
-+					regulator-name = "smps9";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_sd: ldo1 {
-+					/* VDDSHV8 - VSDMMC  */
-+					regulator-name = "ldo1";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-boot-on;
-+					regulator-always-on;
-+				};
-+
-+				vdd_1v8: ldo2 {
-+					/* VDDSH18V */
-+					regulator-name = "ldo2";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_1v8_phy_ldo3: ldo3 {
-+					/* R1.3a 572x V1_8PHY_LDO3: USB, SATA */
-+					regulator-name = "ldo3";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_1v8_phy_ldo4: ldo4 {
-+					/* R1.3a 572x V1_8PHY_LDO4: PCIE, HDMI*/
-+					regulator-name = "ldo4";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				/* LDO5-8 unused */
-+
-+				vdd_rtc: ldo9 {
-+					/* VDD_RTC  */
-+					regulator-name = "ldo9";
-+					regulator-min-microvolt = < 840000>;
-+					regulator-max-microvolt = <1160000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_1v8_pll: ldoln {
-+					/* VDDA_1V8_PLL */
-+					regulator-name = "ldoln";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				ldousb_reg: ldousb {
-+					/* VDDA_3V_USB: VDDA_USBHS33 */
-+					regulator-name = "ldousb";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				ldortc_reg: ldortc {
-+					/* VDDA_RTC  */
-+					regulator-name = "ldortc";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				regen1: regen1 {
-+					/* VDD_3V3_ON */
-+					regulator-name = "regen1";
-+					regulator-boot-on;
-+					regulator-always-on;
-+				};
-+
-+				regen2: regen2 {
-+					/* Needed for PMIC internal resource */
-+					regulator-name = "regen2";
-+					regulator-boot-on;
-+					regulator-always-on;
-+				};
-+			};
-+		};
-+
-+		tps659038_rtc: tps659038_rtc {
-+			compatible = "ti,palmas-rtc";
-+			interrupt-parent = <&tps659038>;
-+			interrupts = <8 IRQ_TYPE_EDGE_FALLING>;
-+			wakeup-source;
-+		};
-+
-+		tps659038_pwr_button: tps659038_pwr_button {
-+			compatible = "ti,palmas-pwrbutton";
-+			interrupt-parent = <&tps659038>;
-+			interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
-+			wakeup-source;
-+			ti,palmas-long-press-seconds = <12>;
-+		};
-+
-+		tps659038_gpio: tps659038_gpio {
-+			compatible = "ti,palmas-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+		};
-+	};
-+
-+	/* STMPE811 touch screen controller */
-+	stmpe811@41 {
-+		compatible = "st,stmpe811";
-+		reg = <0x41>;
-+		interrupts = <30 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-parent = <&gpio2>;
-+		interrupt-controller;
-+		id = <0>;
-+		blocks = <0x5>;
-+		irq-trigger = <0x1>;
-+		st,mod-12b = <1>; /* 12-bit ADC */
-+		st,ref-sel = <0>; /* internal ADC reference */
-+		st,adc-freq = <1>; /* 3.25 MHz ADC clock speed */
-+		st,sample-time = <4>; /* ADC converstion time: 80 clocks */
-+
-+		stmpe_adc {
-+			compatible = "st,stmpe-adc";
-+			st,norequest-mask = <0x00>; /* mask any channels to be used by touchscreen */
-+			adc0: iio-device@0 {
-+				#io-channel-cells = <1>;
-+				iio-channels = <&adc0 4>, <&adc0 1>, <&adc0 2>, <&adc0 3>, <&adc0 4>, <&adc0 5>, <&adc0 6>;
-+				iio-channel-names = "AIN0_P9_39", "AIN1_P9_40", "AIN2_P9_37", "AIN3_P9_38",
-+					"AIN4_P9_33", "AIN5_P9_36", "AIN6_P9_35";
-+			};
-+		};
-+
-+		stmpe_touchscreen {
-+			status = "disabled";
-+			compatible = "st,stmpe-ts";
-+			/* 8 sample average control */
-+			st,ave-ctrl = <3>;
-+			/* 7 length fractional part in z */
-+			st,fraction-z = <7>;
-+			/*
-+			 * 50 mA typical 80 mA max touchscreen drivers
-+			 * current limit value
-+			 */
-+			st,i-drive = <1>;
-+			/* 1 ms panel driver settling time */
-+			st,settling = <3>;
-+			/* 5 ms touch detect interrupt delay */
-+			st,touch-det-delay = <5>;
-+		};
-+
-+		stmpe_gpio {
-+			compatible = "st,stmpe-gpio";
-+		};
-+
-+		stmpe_pwm {
-+			compatible = "st,stmpe-pwm";
-+			#pwm-cells = <2>;
-+		};
-+	};
-+};
-+
-+&mcspi3 {
-+	status = "okay";
-+	ti,pindir-d0-out-d1-in;
-+
-+	sn65hvs882: sn65hvs882@0 {
-+		compatible = "pisosr-gpio";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		reg = <0>;
-+		spi-max-frequency = <1000000>;
-+		spi-cpol;
-+	};
-+};
-+
-+&cpu0 {
-+	vdd-supply = <&vdd_mpu>;
-+	voltage-tolerance = <1>;
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&davinci_mdio {
-+	reset-gpios = <&gpio2 23 GPIO_ACTIVE_LOW>;
-+	reset-delay-us = <2>;
-+
-+	phy0: ethernet-phy@1 {
-+		reg = <4>;
-+		eee-broken-100tx;
-+		eee-broken-1000t;
-+	};
-+};
-+
-+&mac {
-+	slaves = <1>;
-+	status = "okay";
-+};
-+
-+&cpsw_emac0 {
-+	phy-handle = <&phy0>;
-+	phy-mode = "rgmii";
-+};
-+
-+&ocp {
-+	pruss1_shmem: pruss_shmem@4b200000 {
-+		status = "okay";
-+		compatible = "ti,pruss-shmem";
-+		reg = <0x4b200000 0x020000>;
-+	};
-+
-+	pruss2_shmem: pruss_shmem@4b280000 {
-+		status = "okay";
-+		compatible = "ti,pruss-shmem";
-+		reg = <0x4b280000 0x020000>;
-+	};
-+};
-+
-+&mmc1 {
-+	status = "okay";
-+	vmmc-supply = <&vdd_3v3>;
-+	vqmmc-supply = <&vdd_sd>;
-+	bus-width = <4>;
-+	cd-gpios = <&gpio6 27 GPIO_ACTIVE_LOW>; /* gpio 219 */
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins_default>;
-+};
-+
-+&mmc2 {
-+	status = "okay";
-+	vmmc-supply = <&vdd_1v8>;
-+	vqmmc-supply = <&vdd_1v8>;
-+	bus-width = <8>;
-+	ti,non-removable;
-+	non-removable;
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+
-+	ti,needs-special-reset;
-+	dmas = <&sdma_xbar 47>, <&sdma_xbar 48>;
-+	dma-names = "tx", "rx";
-+
-+};
-+
-+&mmc4 {
-+	/* DS: Default speed (DS) up to 25 MHz, including 1- and 4-bit modes (3.3 V signaling). */
-+	/* HS: High speed up to 50 MHz (3.3 V signaling). */
-+	/* SDR12: SDR up to 25 MHz (1.8 V signaling). */
-+	/* SDR25: SDR up to 50 MHz (1.8 V signaling). */
-+	/* SDR50: SDR up to 100 MHz (1.8 V signaling). */
-+	/* SDR104: SDR up to 208 MHz (1.8 V signaling) */
-+	/* DDR50: DDR up to 50 MHz (1.8 V signaling). */
-+	status = "okay";
-+
-+	ti,needs-special-reset;
-+	vmmc-supply = <&vdd_3v3>;
-+	cap-power-off-card;
-+	keep-power-in-suspend;
-+	bus-width = <4>;
-+	ti,non-removable;
-+	non-removable;
-+	no-1-8-v;
-+	max-frequency = <24000000>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	mmc-pwrseq = <&brcmf_pwrseq>;
-+
-+	brcmf: wifi@1 {
-+		status = "okay";
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+
-+		brcm,sd-head-align = <4>;
-+		brcm,sd_head_align = <4>;
-+		brcm,sd_sgentry_align = <512>;
-+
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-names = "host-wake";
-+	};
-+};
-+
-+&usb2_phy1 {
-+	phy-supply = <&ldousb_reg>;
-+};
-+
-+&usb2_phy2 {
-+	phy-supply = <&ldousb_reg>;
-+};
-+
-+&usb1 {
-+	status = "okay";
-+	dr_mode = "otg";
-+};
-+
-+&omap_dwc3_1 {
-+	extcon = <&extcon_usb1>;
-+};
-+
-+&usb2 {
-+	status = "okay";
-+	dr_mode = "host";
-+};
-+
-+&dss {
-+	status = "okay";
-+	vdda_video-supply = <&vdd_1v8_pll>;
-+};
-+
-+&hdmi {
-+	status = "okay";
-+	vdda-supply = <&vdd_1v8_phy_ldo4>;
-+
-+	port {
-+		hdmi_out: endpoint {
-+			remote-endpoint = <&hdmi_encoder_in>;
-+		};
-+	};
-+};
-+
-+&bandgap {
-+	status = "okay";
-+};
-+
-+&mailbox1 {
-+	status = "okay";
-+};
-+
-+&mailbox2 {
-+	status = "okay";
-+};
-+
-+&mailbox3 {
-+	status = "okay";
-+};
-+
-+&mailbox4 {
-+	status = "okay";
-+};
-+
-+&mailbox5 {
-+	status = "okay";
-+};
-+
-+&mailbox6 {
-+	status = "okay";
-+};
-+
-+&mailbox7 {
-+	status = "okay";
-+};
-+
-+&mailbox8 {
-+	status = "okay";
-+};
-+
-+&mailbox9 {
-+	status = "okay";
-+};
-+
-+&mailbox10 {
-+	status = "okay";
-+};
-+
-+&mailbox11 {
-+	status = "okay";
-+};
-+
-+&mailbox12 {
-+	status = "okay";
-+};
-+
-+&mailbox13 {
-+	status = "okay";
-+};
-+
-+&cpu_alert0 {
-+	temperature = <55000>; /* milliCelsius */
-+};
-+
-+&cpu_crit {
-+	temperature = <85000>; /* milliCelsius */
-+};
-+
-+&gpu_crit {
-+	temperature = <85000>; /* milliCelsius */
-+};
-+
-+&core_crit {
-+	temperature = <85000>; /* milliCelsius */
-+};
-+
-+&dspeve_crit {
-+	temperature = <85000>; /* milliCelsius */
-+};
-+
-+&iva_crit {
-+	temperature = <85000>; /* milliCelsius */
-+};
-+
-+&sata {
-+	status = "disabled";
-+};
-+
-+&sata_phy {
-+	status = "disabled";
-+};
-+
-+/* bluetooth */
-+&uart6 {
-+	status = "okay";
-+};
-+
-+/* cape header stuff */
-+&i2c4 {
-+	status = "okay";
-+	clock-frequency = <100000>;
-+};
-+
-+&cpu0_opp_table {
-+	opp_slow-500000000 {
-+		opp-shared;
-+	};
-+};
--- 
-2.20.1
+Thanks
+> 
+> > [    1.411547] exynos-ufshc 15570000.ufs: ufshcd_init_clocks: clk:
+> > core_clk, rate: 100000000
+> > [    1.419698] exynos-ufshc 15570000.ufs: ufshcd_init_clocks: clk:
+> > sclk_unipro_main, rate: 167000000
+> > [    1.428550] exynos-ufshc 15570000.ufs: __ufshcd_setup_clocks: clk:
+> > core_clk enabled
+> > [    1.436200] exynos-ufshc 15570000.ufs: __ufshcd_setup_clocks: clk:
+> > sclk_unipro_main enabled
+> > [    1.445704] scsi host0: ufshcd
+> > [    1.465684] exynos-ufshc 15570000.ufs: ufshcd_print_pwr_info:[RX,
+> > TX]: gear=[1, 1], lane[1, 1], pwr[SLOWAUTO_MODE, SLOWAUTO_MODE], rate
+> > =
+> > 0
+> > [    2.023699] exynos-ufshc 15570000.ufs: dme-set: attr-id 0xd041 val
+> > 0x1fff error code 1
+> > [    2.023846] exynos-ufshc 15570000.ufs: dme-set: attr-id 0xd041 val
+> > 0x1fff failed 0 retries
+> > [    2.024025] exynos-ufshc 15570000.ufs: dme-set: attr-id 0xd042 val
+> > 0xffff error code 1
+> > [    2.025457] exynos-ufshc 15570000.ufs: dme-set: attr-id 0xd042 val
+> > 0xffff failed 0 retries
+> > [    2.033777] exynos-ufshc 15570000.ufs: dme-set: attr-id 0xd043 val
+> > 0x7fff error code 1
+> > [    2.041607] exynos-ufshc 15570000.ufs: dme-set: attr-id 0xd043 val
+> > 0x7fff failed 0 retries
+> > [    2.067809] exynos-ufshc 15570000.ufs: pwr ctrl cmd 0x2 failed, host
+> > upmcrs:0x5
+> > [    2.067953] exynos-ufshc 15570000.ufs: UFS Host state=0
+> > [    2.068056] exynos-ufshc 15570000.ufs: outstanding reqs=0x0
+> > tasks=0x0
+> > [    2.068759] exynos-ufshc 15570000.ufs: saved_err=0x0,
+> > saved_uic_err=0x0
+> > [    2.075368] exynos-ufshc 15570000.ufs: Device power mode=1, UIC link
+> > state=1
+> > [    2.082392] exynos-ufshc 15570000.ufs: PM in progress=0, sys.
+> > suspended=0
+> > [    2.089158] exynos-ufshc 15570000.ufs: Auto BKOPS=0, Host self-
+> > block=0
+> > [    2.095667] exynos-ufshc 15570000.ufs: Clk gate=1
+> > [    2.100354] exynos-ufshc 15570000.ufs: error handling flags=0x0,
+> > req. abort count=0
+> > [    2.107987] exynos-ufshc 15570000.ufs: Host capabilities=0x383ff0f,
+> > caps=0x0
+> > [    2.115018] exynos-ufshc 15570000.ufs: quirks=0x780, dev.
+> > quirks=0xc4
+> > [    2.121443] exynos-ufshc 15570000.ufs: ufshcd_print_pwr_info:[RX,
+> > TX]: gear=[1, 1], lane[1, 1], pwr[SLOWAUTO_MODE, SLOWAUTO_MODE], rate
+> > =
+> > 0
+> > [    2.133960] host_regs: 00000000: 0383ff0f 00000000 00000200 00000000
+> > [    2.140268] host_regs: 00000010: 00000101 00007fce 00000000 00000000
+> > [    2.146604] host_regs: 00000020: 00000000 00030a75 00000000 00000000
+> > [    2.152940] host_regs: 00000030: 0000050f 00000000 80000010 00000000
+> > [    2.159271] host_regs: 00000040: 00000000 00000000 00000000 00000000
+> > [    2.165609] host_regs: 00000050: f9587000 00000000 00000000 00000000
+> > [    2.171944] host_regs: 00000060: 00000001 00000000 00000000 00000000
+> > [    2.178278] host_regs: 00000070: f958a000 00000000 00000000 00000000
+> > [    2.184609] host_regs: 00000080: 00000001 00000000 00000000 00000000
+> > [    2.190945] host_regs: 00000090: 00000002 15710000 00000000 00000000
+> > [    2.197282] exynos-ufshc 15570000.ufs: hba->ufs_version = 0x200,
+> > hba->capabilities = 0x383ff0f
+> > [    2.205869] exynos-ufshc 15570000.ufs: hba->outstanding_reqs = 0x0,
+> > hba->outstanding_tasks = 0x0
+> > [    2.214636] exynos-ufshc 15570000.ufs: last_hibern8_exit_tstamp at 0
+> > us, hibern8_exit_cnt = 0
+> > [    2.223141] exynos-ufshc 15570000.ufs: No record of pa_err
+> > [    2.228606] exynos-ufshc 15570000.ufs: No record of dl_err
+> > [    2.234071] exynos-ufshc 15570000.ufs: No record of nl_err
+> > [    2.239540] exynos-ufshc 15570000.ufs: No record of tl_err
+> > [    2.245007] exynos-ufshc 15570000.ufs: No record of dme_err
+> > [    2.250558] exynos-ufshc 15570000.ufs: No record of auto_hibern8_err
+> > [    2.256895] exynos-ufshc 15570000.ufs: No record of fatal_err
+> > [    2.262624] exynos-ufshc 15570000.ufs: No record of
+> > link_startup_fail
+> > [    2.269044] exynos-ufshc 15570000.ufs: No record of resume_fail
+> > [    2.274942] exynos-ufshc 15570000.ufs: No record of suspend_fail
+> > [    2.280931] exynos-ufshc 15570000.ufs: No record of dev_reset
+> > [    2.286659] exynos-ufshc 15570000.ufs: No record of host_reset
+> > [    2.292475] exynos-ufshc 15570000.ufs: No record of task_abort
+> > [    2.298290] exynos-ufshc 15570000.ufs: ufshcd_change_power_mode:
+> > power mode change failed 5
+> > [    2.306619] exynos-ufshc 15570000.ufs: ufshcd_probe_hba: Failed
+> > setting power mode, err = 5
+> > [    2.315144] exynos-ufshc 15570000.ufs: __ufshcd_setup_clocks: clk:
+> > core_clk disabled
+> > 
+> > And here boot would just stop/hang.
+> > 
+> > Thanks for all hints.
+> > 
+> > > 
+> > > > > > Also looking at clk-exynos7 driver seems to confirm this.
+> > > > > > 
+> > > > > > > +		};
+> > > > > > > +
+> > > > > > >  		usbdrd_phy: phy@15500000 {
+> > > > > > >  			compatible = "samsung,exynos7-usbdrd-phy";
+> > > > > > >  			reg = <0x15500000 0x100>;
+> 
+> 
 
