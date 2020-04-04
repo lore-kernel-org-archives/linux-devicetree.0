@@ -2,95 +2,164 @@ Return-Path: <SRS0=g3EE=5U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B58CEC2BA1E
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 01:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AAAC2BA18
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 07:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 854B820737
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 01:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4065F206B8
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 07:31:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ARlB71dG"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="U/z7FaYg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgDDBZO (ORCPT
+        id S1726395AbgDDHba (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Apr 2020 21:25:14 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8288 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726186AbgDDBZO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Apr 2020 21:25:14 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e87e1c70000>; Fri, 03 Apr 2020 18:24:23 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 03 Apr 2020 18:25:13 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 03 Apr 2020 18:25:13 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 4 Apr
- 2020 01:25:13 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sat, 4 Apr 2020 01:25:13 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.164.193]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e87e1f70005>; Fri, 03 Apr 2020 18:25:12 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH v6 2/9] arm64: tegra: Add reset-cells to mc
-Date:   Fri, 3 Apr 2020 18:25:00 -0700
-Message-ID: <1585963507-12610-3-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Sat, 4 Apr 2020 03:31:30 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:46572 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbgDDHb3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Apr 2020 03:31:29 -0400
+Received: by mail-vs1-f65.google.com with SMTP id z125so6425464vsb.13
+        for <devicetree@vger.kernel.org>; Sat, 04 Apr 2020 00:31:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PM54+TAF+g/S8Jdu48v4vdALgU1uHmqD41DlN+nN2GQ=;
+        b=U/z7FaYgCxrifjRMbUMuNc48xDQkG1azVQ1qAqD5C7gQ2BC0+SFLokHqrseBZoS9BZ
+         HhrCnBVjIlsNzTSk4g9jfL9JJz+m5CKI+s5CrxslyKnjLoTsEBG8QO2itdwefQVPu7Sh
+         RWs2OJabHZCg++IlG5djjUt5kNFHWUOxPGGHY1AUmooXc5/Kvu95qNG/RJNI1bp408I1
+         rv4YucMhPRAVJiiew6KxAcltBjYQn1wwVVPeylGsfx2YHhAuDgZgIaV+C9Eq+6VzjDvp
+         i2sBU69P9pmQehnOz4LSQCQfw45G1MRqFniKV+pNE9TYCEJv2jY/nLd6aPv16oy5YDpy
+         UvZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PM54+TAF+g/S8Jdu48v4vdALgU1uHmqD41DlN+nN2GQ=;
+        b=cUP6H3LS+1wT5e7Uarp9rt0HWB4sLEZtCFa45UkrXbmQxONUijEnAa9gTxvjqJ9JBF
+         //ykhQlGbMjTvH0cPI9cekDmpMdPgZFJNDBzdFizYbjV6bm3L4QLIwFRihs8gNDIx60K
+         eiR1yMSWpp/bPB2zWMOkHXIy/gxp0k9apI83BCcDNmnB7/12PiJXNKzg3+k9C36/5rwu
+         bYXJxsAAeUis1o3Hwxr0rEHLRFS72Y/DqxDnJPFJTkUEZUBjW5u+KJua62YZIO4ytvnb
+         09Df6KuAFVYdKau+yFXcQfZZMcYdl2jXThgklXAkI+JpDrEn/ojij+ELERgh+NF4CXbj
+         F1VQ==
+X-Gm-Message-State: AGi0PuYVB2dy4wB5WESRpG8tTwzobONR5IMmMGqY6D6ONablFZBhKaXd
+        KDaJsYlL6joO918AYHgq9eh4JPoAcZLUQSQr66V8Ig==
+X-Google-Smtp-Source: APiQypIu/alTBXDgKITDXBctny47stbSvo55Own/Vu8y0I7bxK1KHmvt7pgNCgb+JQCSxYjPHiy+3AH9i6i2tnOhjmE=
+X-Received: by 2002:a67:69d5:: with SMTP id e204mr8446240vsc.159.1585985488361;
+ Sat, 04 Apr 2020 00:31:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585963463; bh=fypsljnYXUQBk09pkBuzFp0S2nxT0B9eauugx/SlCBI=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=ARlB71dGov+V9JUbaD/x3Jo5bVpb6yNX+zLTzQ4U4Yv3qwmraXukvJu6Ls/Cmb7H/
-         n0zievMV9fppxmYIfoZhhaUbefzc8MnUCAv7sNG2GjPetFv4TNtZ93GuxbfnZrBG+P
-         Cbieeyx/FmTxWk8tJas77tSORjmCt8XFt6CfPpBUEweTlFcvos8Q5uY74iKQIoadZ6
-         mlTUsfaexeAndmACh7+6N3Ar0qhUTw6mv6pxft1kgDsm7++ckYNTItjEHhvxeQzVeW
-         GLhsmK4LyPjEEvyl0dFE/frjp3bQg4kCn2urO2Mi4ob04woKWU6s0wNa6+UMPiHAhv
-         mBbFHl9S6KPDA==
+References: <20200331075356.19171-1-j-keerthy@ti.com> <20200331075356.19171-2-j-keerthy@ti.com>
+In-Reply-To: <20200331075356.19171-2-j-keerthy@ti.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Sat, 4 Apr 2020 13:00:00 +0530
+Message-ID: <CAHLCerPrmsMU3uVwQGXfZAsWkgxiG+1M136f6uuWgwB4EF2uGg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] dt-bindings: thermal: k3: Add VTM bindings documentation
+To:     Keerthy <j-keerthy@ti.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>, t-kristo@ti.com,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tegra210 device tree is missing reset-cells property for mc node.
+On Tue, Mar 31, 2020 at 1:24 PM Keerthy <j-keerthy@ti.com> wrote:
+>
+> Add VTM bindings documentation. In the Voltage Thermal
+> Management Module(VTM), K3 AM654 supplies a voltage
+> reference and a temperature sensor feature that are gathered in the band
+> gap voltage and temperature sensor (VBGAPTS) module. The band
+> gap provides current and voltage reference for its internal
+> circuits and other analog IP blocks. The analog-to-digital
+> converter (ADC) produces an output value that is proportional
+> to the silicon temperature.
+>
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>
+> Changes in v5:
+>
+>   * Added Reviewed-by: Rob Herring <robh@kernel.org>
+>
+>  .../bindings/thermal/ti,am654-thermal.yaml    | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml b/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
+> new file mode 100644
+> index 000000000000..d241b65d6072
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/ti,am654-thermal.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Texas Instruments AM654 VTM (DTS) binding
+> +
+> +maintainers:
+> +  - Keerthy <j-keerthy@ti.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: ti,am654-vtm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  "#thermal-sensor-cells":
+> +    const: 1
+> +
+> +required:
+> +  - "#thermal-sensor-cells"
+> +  - compatible
+> +  - reg
+> +  - power-domains
+> +
 
-This patch fixes it.
+A nit-pick: arrange the required properties in order they're listed above.
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index d0eff92..5b1dfd8 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -894,6 +894,7 @@
- 		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
- 
- 		#iommu-cells = <1>;
-+		#reset-cells = <1>;
- 	};
- 
- 	sata@70020000 {
--- 
-2.7.4
-
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+> +    vtm: thermal@42050000 {
+> +        compatible = "ti,am654-vtm";
+> +        reg = <0x0 0x42050000 0x0 0x25c>;
+> +        power-domains = <&k3_pds 80 TI_SCI_PD_EXCLUSIVE>;
+> +        #thermal-sensor-cells = <1>;
+> +    };
+> +
+> +    mpu0_thermal: mpu0_thermal {
+> +        polling-delay-passive = <250>; /* milliseconds */
+> +        polling-delay = <500>; /* milliseconds */
+> +        thermal-sensors = <&vtm0 0>;
+> +
+> +        trips {
+> +                mpu0_crit: mpu0_crit {
+> +                        temperature = <125000>; /* milliCelsius */
+> +                        hysteresis = <2000>; /* milliCelsius */
+> +                        type = "critical";
+> +                };
+> +        };
+> +    };
+> +...
+> --
+> 2.17.1
+>
