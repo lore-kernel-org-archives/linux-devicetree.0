@@ -2,149 +2,158 @@ Return-Path: <SRS0=g3EE=5U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D61D2C4332B
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 17:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8C8C4332B
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 17:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F3E0206C3
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 17:30:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586021449;
-	bh=iu5Wfddj0F+JxETYj4W/lxAjw7GfUHDBF0DQwuci5Yo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JvfIF2OTj5r+IwfZOiBVgcibF3foEusQmsLcLL7A3LjZDL+81GNyx3xjfv/tcwQXl
-	 IbtPvpj/cqbfZ1llitsuinCSxjp+S7b6flIBWHNAA2OYlqQQb+hT8+qWwhgKNiCtw8
-	 TJTKbiohtOZvcRbOP4LxsLdZNencse+iPMIbc58o=
+	by mail.kernel.org (Postfix) with ESMTP id 815842070E
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 17:45:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbgDDRat (ORCPT
+        id S1726229AbgDDRp1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Apr 2020 13:30:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37712 "EHLO mail.kernel.org"
+        Sat, 4 Apr 2020 13:45:27 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:49656 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbgDDRas (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 4 Apr 2020 13:30:48 -0400
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 785F620719;
-        Sat,  4 Apr 2020 17:30:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586021447;
-        bh=iu5Wfddj0F+JxETYj4W/lxAjw7GfUHDBF0DQwuci5Yo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BPo5eFMaHNxEKpZQbLkAjpAzQ2isaBQaINszUVFcZZfcDc2N4uGFfnTH5JJ1BxwLB
-         qwlWVorYpUEluyb+KP4wWVNmQ1g1uUUGJ4MF3z9pQhxH2ZitJUHdKmOlQoRMH3xxw6
-         yXIKvwrUPLJDCBI13siwwTz2SGnLfTt9XOvqKLGQ=
-Received: by mail-qt1-f177.google.com with SMTP id m33so9329137qtb.3;
-        Sat, 04 Apr 2020 10:30:47 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYc4daP1XcmYUmY8ueqAuUve+sj/YMWgbEtILiGS6X44Os7zLE5
-        YJeGTXfQz9ZEgPBv7KFuxS1lQ82Yd6EokMOHkg==
-X-Google-Smtp-Source: APiQypIID7IpWNF4KnAIw9M0luBvXme6yb+vzm0vk0OBcNAs1gRtQr/B3GPssKZMhZttLpjUOmhCNJ8wuVJ/4X3ktN0=
-X-Received: by 2002:ac8:6649:: with SMTP id j9mr13801811qtp.110.1586021446598;
- Sat, 04 Apr 2020 10:30:46 -0700 (PDT)
+        id S1726207AbgDDRp1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 4 Apr 2020 13:45:27 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id C5250FB03;
+        Sat,  4 Apr 2020 19:45:23 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id PRs-DEyCgI-x; Sat,  4 Apr 2020 19:45:22 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 9ED44414D7; Sat,  4 Apr 2020 19:45:21 +0200 (CEST)
+Date:   Sat, 4 Apr 2020 19:45:21 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, Tomas Novotny <tomas@novotny.cz>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Nishant Malpani <nish.malpani25@gmail.com>
+Subject: Re: [PATCH v3 2/4] dt-bindings: iio: light: vcnl4000: Add near-level
+Message-ID: <20200404174521.GA24709@bogon.m.sigxcpu.org>
+References: <cover.1585134362.git.agx@sigxcpu.org>
+ <f0ad40351d7ab12f79d2c29f738443514ae0fb76.1585134362.git.agx@sigxcpu.org>
+ <20200329102526.1ee85e96@archlinux>
+ <20200331214517.GA24128@bogus>
+ <20200404160127.1ef9d1ac@archlinux>
 MIME-Version: 1.0
-References: <20200320094233.GA30959@localhost.localdomain> <CAL_JsqJjLGz6LPQmTP5eJTdti38yQa86UWiwCTae81Fr7eMHtA@mail.gmail.com>
-In-Reply-To: <CAL_JsqJjLGz6LPQmTP5eJTdti38yQa86UWiwCTae81Fr7eMHtA@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Sat, 4 Apr 2020 11:30:35 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ2VBDHSWViyvjEBckOqsMQVUdOGjABH0AT6LiaMnJx1Q@mail.gmail.com>
-Message-ID: <CAL_JsqJ2VBDHSWViyvjEBckOqsMQVUdOGjABH0AT6LiaMnJx1Q@mail.gmail.com>
-Subject: Re: [RESEND PATCH v2] dt-bindings: bd718x7: Yamlify and add BD71850
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200404160127.1ef9d1ac@archlinux>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Apr 4, 2020 at 11:28 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Fri, Mar 20, 2020 at 3:42 AM Matti Vaittinen
-> <matti.vaittinen@fi.rohmeurope.com> wrote:
-> >
-> > Convert ROHM bd71837 and bd71847 PMIC binding text docs to yaml. Split
-> > the binding document to two separate documents (own documents for BD71837
-> > and BD71847) as they have different amount of regulators. This way we can
-> > better enforce the node name check for regulators. ROHM is also providing
-> > BD71850 - which is almost identical to BD71847 - main difference is some
-> > initial regulator states. The BD71850 can be driven by same driver and it
-> > has same buck/LDO setup as BD71847 - add it to BD71847 binding document and
-> > introduce compatible for it.
-> >
-> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
->
-> I did, but there's some dtc warnings that need to be fixed:
->
-> Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dts:23.17-30:
-> Warning (reg_format): /example-0/i2c/pmic@4b:reg: property has invalid
-> length (4 bytes) (#address-cells == 2, #size-cells == 1)
->  Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dt.yaml:
-> Warning (pci_device_reg): Failed prerequisite 'reg_format'
->  Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dt.yaml:
-> Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
->  Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dt.yaml:
-> Warning (simple_bus_reg): Failed prerequisite 'reg_format'
->  Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dts:20.13-131.11:
-> Warning (i2c_bus_bridge): /example-0/i2c: incorrect #address-cells for
-> I2C bus
->  Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dts:20.13-131.11:
-> Warning (i2c_bus_bridge): /example-0/i2c: incorrect #size-cells for
-> I2C bus
->  Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dt.yaml:
-> Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
->  Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dt.yaml:
-> Warning (i2c_bus_reg): Failed prerequisite 'i2c_bus_bridge'
->  Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dt.yaml:
-> Warning (spi_bus_reg): Failed prerequisite 'reg_format'
->  Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dts:21.25-130.15:
-> Warning (avoid_default_addr_size): /example-0/i2c/pmic@4b: Relying on
-> default #address-cells value
->  Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dts:21.25-130.15:
-> Warning (avoid_default_addr_size): /example-0/i2c/pmic@4b: Relying on
-> default #size-cells value
->  Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.example.dt.yaml:
-> Warning (unique_unit_address): Failed prerequisite
-> 'avoid_default_addr_size'
+Hi,
+On Sat, Apr 04, 2020 at 04:01:27PM +0100, Jonathan Cameron wrote:
+> On Tue, 31 Mar 2020 15:45:17 -0600
+> Rob Herring <robh@kernel.org> wrote:
+> 
+> > On Sun, Mar 29, 2020 at 10:25:26AM +0100, Jonathan Cameron wrote:
+> > > On Wed, 25 Mar 2020 12:09:06 +0100
+> > > Guido Günther <agx@sigxcpu.org> wrote:
+> > >   
+> > > > This value indicates when userspace should consider an object
+> > > > near to the sensor/device.
+> > > > 
+> > > > Signed-off-by: Guido Günther <agx@sigxcpu.org>  
+> > > 
+> > > I'm fine with this.  Note for Rob or other DT people.
+> > > 
+> > > This is a new generic binding hence no vendor prefix.  
+> > 
+> > Then document in a common place.
+> 
+> Ok. 
+> 
+> I guess we need to create a proximity specific binding file.
+> 
+> Documentation/devicetree/bindings/iio/proximity.yaml
+> 
+> Guido, could you do a v4 adding such a file.  For now I think
+> this is pretty much all that is proximity specific.
 
-And also:
+I did a Documentation/devicetree/bindings/iio/common.yaml:
 
-Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.example.dts:23.17-30:
-Warning (reg_format): /example-0/i2c/pmic@4b:reg: property has invalid
-length (4 bytes) (#address-cells == 2, #size-cells == 1)
-Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.example.dt.yaml:
-Warning (pci_device_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.example.dt.yaml:
-Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.example.dt.yaml:
-Warning (simple_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.example.dts:20.13-112.11:
-Warning (i2c_bus_bridge): /example-0/i2c: incorrect #address-cells for
-I2C bus
-Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.example.dts:20.13-112.11:
-Warning (i2c_bus_bridge): /example-0/i2c: incorrect #size-cells for
-I2C bus
-Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.example.dt.yaml:
-Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.example.dt.yaml:
-Warning (i2c_bus_reg): Failed prerequisite 'i2c_bus_bridge'
-Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.example.dt.yaml:
-Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.example.dts:21.25-111.15:
-Warning (avoid_default_addr_size): /example-0/i2c/pmic@4b: Relying on
-default #address-cells value
-Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.example.dts:21.25-111.15:
-Warning (avoid_default_addr_size): /example-0/i2c/pmic@4b: Relying on
-default #size-cells value
-Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.example.dt.yaml:
-Warning (unique_unit_address): Failed prerequisite
-'avoid_default_addr_size'
+https://source.puri.sm/guido.gunther/linux-imx8/commit/8b91f0b7fa76ca4b2f3cdc251411829f71f8d810
+
+so we can add new properties there and move iio-bindings.txt over.
+
+Does that work as well? If so I'll send out a v4.
+Cheers,
+ -- Guido
+
+
+> 
+> At somepoint we should convert the subsystem wide iio-bindings.txt
+> but not today!
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+> > 
+> > > 
+> > > I will ideally want review of both the dt patches though
+> > > before applying.  As we've missed the merge window anyway
+> > > there is no particular rush.
+> > > 
+> > > Thanks,
+> > > 
+> > > Jonathan
+> > >   
+> > > > ---
+> > > >  .../devicetree/bindings/iio/light/vishay,vcnl4000.yaml    | 8 ++++++++
+> > > >  1 file changed, 8 insertions(+)
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/iio/light/vishay,vcnl4000.yaml b/Documentation/devicetree/bindings/iio/light/vishay,vcnl4000.yaml
+> > > > index 21ef2eb7a205..ac9e3bb6a505 100644
+> > > > --- a/Documentation/devicetree/bindings/iio/light/vishay,vcnl4000.yaml
+> > > > +++ b/Documentation/devicetree/bindings/iio/light/vishay,vcnl4000.yaml
+> > > > @@ -25,6 +25,13 @@ properties:
+> > > >    reg:
+> > > >      maxItems: 1
+> > > >  
+> > > > +  near-level:  
+> > 
+> > Perhaps proximity-near-level instead.
+> 
+> Makes sense.
+> 
+> > 
+> > > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > > +    description:
+> > > > +      Raw proximity values equal or above this level should be
+> > > > +      considered 'near' to the device (an object is near to the
+> > > > +      sensor).
+> > > > +
+> > > >  required:
+> > > >    - compatible
+> > > >    - reg
+> > > > @@ -40,6 +47,7 @@ examples:
+> > > >        light-sensor@51 {
+> > > >                compatible = "vishay,vcnl4200";
+> > > >                reg = <0x51>;
+> > > > +              near-level = <220>;
+> > > >        };
+> > > >    };
+> > > >  ...  
+> > >   
+> 
