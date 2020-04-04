@@ -2,86 +2,127 @@ Return-Path: <SRS0=g3EE=5U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C79A9C2BA16
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 14:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C80ACC2BA16
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 14:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5FC206D4
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 14:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96C622070E
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 14:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586008945;
-	bh=EKRxVNbgw1zORqCuHwnitV+fHMklM3Un+Dg5wgAezPs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kvuG9TqcLEhaP5HZefHzgEZApKfqxslGbIPufqtqk9zbRHc9vH/fh55cKPCj6bGOB
-	 t2WxN0aloieC0lxCFt5Ix8nsALpcgmPpbGm2taByGIUZkbDoCNjoRsgYgtntr3VOYw
-	 MGFuKF1yT2nCcv5+8CmTb3zoU+O0WEDgfvMrpjpU=
+	s=default; t=1586009217;
+	bh=+b0oTb1t16JA3+0YlDERGnAPMV5kIMdS/LTGfcOX41U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GUgCVjAX4vbW65iuE8ByEkBO831fc89iYya8BA4t6FZaz1GRzHscXK5V2J4hekhXf
+	 sHEHPgydM2KdE280X9bvOarA3e1roAJ4Vk/FhpDGCSCShsHo+J766UYFSFUsKM9NGU
+	 g9PYT7tVLIoyAK2P02ctJKdUCVVQOq562/9GRwo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726016AbgDDOCZ (ORCPT
+        id S1726039AbgDDOG5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Apr 2020 10:02:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47168 "EHLO mail.kernel.org"
+        Sat, 4 Apr 2020 10:06:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725837AbgDDOCY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 4 Apr 2020 10:02:24 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726307AbgDDOG4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 4 Apr 2020 10:06:56 -0400
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F69D206F5;
-        Sat,  4 Apr 2020 14:02:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD7282074B;
+        Sat,  4 Apr 2020 14:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586008944;
-        bh=EKRxVNbgw1zORqCuHwnitV+fHMklM3Un+Dg5wgAezPs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=e8khb7TjTILjFGn8wV0aZ+RVF9ptaRdcXTk2oeELPMjuPBY3BqgbJE9/f4+DGOvoo
-         ht95KZchQttOLrn8twzy3TFZ0SjgL0hFt2M1iB93oKFw3JzcTE0AFo6bLRvwgHIrlG
-         y6bAqC89cFguPBAQR/Entwqi5L3vtpBUiG7+CB4g=
-Date:   Sat, 4 Apr 2020 15:02:19 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Johan Jonker <jbx6244@gmail.com>, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, heiko@sntech.de, robh+dt@kernel.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] dt-bindings: iio: adc: rockchip-saradc: add
- description for px30
-Message-ID: <20200404150219.0e66be93@archlinux>
-In-Reply-To: <20200330181106.GA8102@bogus>
-References: <20200313132926.10543-1-jbx6244@gmail.com>
-        <20200313132926.10543-3-jbx6244@gmail.com>
-        <20200330181106.GA8102@bogus>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1586009216;
+        bh=+b0oTb1t16JA3+0YlDERGnAPMV5kIMdS/LTGfcOX41U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=d19ZLvzaDmpCW357gTjPA1TjMezn/zxJIORTvB5Io2yYEqf47IY2Ttzkt/UFraWx/
+         m1Nf9yUj8JbBzv871OwE2FZWGNOeLDsgfR+0VRl6IiDJx3nHlpu83X7kJN288/saoO
+         um2bO/Sr5PCPtS8pflCCHBQzzEFDmp/M1y//Yv+o=
+Received: by mail-ed1-f54.google.com with SMTP id i16so12813642edy.11;
+        Sat, 04 Apr 2020 07:06:55 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZ388S4rvzdEpptNGBIl+gZ8ID0kHz/qJ6x6yUxO1RgKtSHSqRp
+        AbtstoHO0yh7YViQILrIntSjvLlTz7quSRt0KQ==
+X-Google-Smtp-Source: APiQypKLXINGBOt97ZZpI29BPDjcTt7cZyRUT5zbCMljkyv5Paew8tAP2fOKpbz9k7takTeCmHk4vVxNJHxo+pWOLBU=
+X-Received: by 2002:a05:6402:b70:: with SMTP id cb16mr11854658edb.48.1586009214144;
+ Sat, 04 Apr 2020 07:06:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200403080350.95826-1-jitao.shi@mediatek.com> <20200403080350.95826-2-jitao.shi@mediatek.com>
+In-Reply-To: <20200403080350.95826-2-jitao.shi@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sat, 4 Apr 2020 22:06:42 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_-0xddwEvo+v8KsyfSVbtYpe_cZGLFoz-5BBnx5MEwHEQ@mail.gmail.com>
+Message-ID: <CAAOTY_-0xddwEvo+v8KsyfSVbtYpe_cZGLFoz-5BBnx5MEwHEQ@mail.gmail.com>
+Subject: Re: [PATCH v14 1/3] dt-bindings: display: mediatek: control dpi pins
+ mode to avoid leakage
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        srv_heupstream@mediatek.com, huijuan.xie@mediatek.com,
+        stonea168@163.com, cawa.cheng@mediatek.com,
+        linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com,
+        eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 30 Mar 2020 12:11:06 -0600
-Rob Herring <robh@kernel.org> wrote:
+Hi, Jitao:
 
-> On Fri, 13 Mar 2020 14:29:26 +0100, Johan Jonker wrote:
-> > The description below is already in use for px30.dtsi,
-> > but was somehow never added to a document, so add
-> > "rockchip,px30-saradc", "rockchip,rk3399-saradc"
-> > for saradc nodes on a px30 platform to rockchip-saradc.yaml.
-> > 
-> > Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> > ---
-> >  Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml | 1 +
-> >  1 file changed, 1 insertion(+)
-> >   
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
+Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=883=E6=97=
+=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:04=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Add property "pinctrl-names" to swap pin mode between gpio and dpi mode. =
+Set
+> the dpi pins to gpio mode and output-low to avoid leakage current when dp=
+i
+> disabled.
+>
 
-Applied.
+Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 
-Thanks,
-
-Jonathan
-
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  .../devicetree/bindings/display/mediatek/mediatek,dpi.txt   | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
+dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.t=
+xt
+> index 58914cf681b8..77def4456706 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> @@ -17,6 +17,9 @@ Required properties:
+>    Documentation/devicetree/bindings/graph.txt. This port should be conne=
+cted
+>    to the input port of an attached HDMI or LVDS encoder chip.
+>
+> +Optional properties:
+> +- pinctrl-names: Contain "default" and "sleep".
+> +
+>  Example:
+>
+>  dpi0: dpi@1401d000 {
+> @@ -27,6 +30,9 @@ dpi0: dpi@1401d000 {
+>                  <&mmsys CLK_MM_DPI_ENGINE>,
+>                  <&apmixedsys CLK_APMIXED_TVDPLL>;
+>         clock-names =3D "pixel", "engine", "pll";
+> +       pinctrl-names =3D "default", "sleep";
+> +       pinctrl-0 =3D <&dpi_pin_func>;
+> +       pinctrl-1 =3D <&dpi_pin_idle>;
+>
+>         port {
+>                 dpi0_out: endpoint {
+> --
+> 2.21.0
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
