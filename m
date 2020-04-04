@@ -4,293 +4,151 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72278C2BA18
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 16:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A75CC2BA15
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 16:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A5792071C
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 16:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E57DB206F8
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 16:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586017458;
-	bh=zLzyO0vkAY8hFwapbYXloOrTstp1BoEEZ4oGP7XxZ+Y=;
+	s=default; t=1586019375;
+	bh=UF4azqKmc4DVGtBy9aE/k2vQDQ5mrUXEby578UnCuLA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GqZRkkBqtl5H5qvyAGfbLkmxPA23k+9/LWUu6ksbu5Mfi9OsNSeqPKkzufL17iy7V
-	 Fid19Ajlr7tr72vLQmcQvWd0fJF1Qqv6RW+RxF0x9jJCb8d3HsTuRvdYVfOmEvAYWI
-	 u4QEXWt1PsnPCJJgds14rTkEbAHHYWd0wBF8833g=
+	b=lnUchFJHOWab7nCuLXeIFlYQOv/CdxHCUNw9om19/2ahAK8JYaZwikdY+qCsnmvxf
+	 W1bH4ktEb7pKaajtm1h0ewNH9RFfWGS3spa+zxd7XLgUH8+oR0q0n4QYaT36Ac5pUj
+	 oUSYgendLzQHwj1wWz3L04pHMwkLKOxhtFFlt0/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726222AbgDDQYR (ORCPT
+        id S1726229AbgDDQ4O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Apr 2020 12:24:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51354 "EHLO mail.kernel.org"
+        Sat, 4 Apr 2020 12:56:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbgDDQYR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 4 Apr 2020 12:24:17 -0400
+        id S1726057AbgDDQ4N (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 4 Apr 2020 12:56:13 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85E04206F8;
-        Sat,  4 Apr 2020 16:24:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96580206D4;
+        Sat,  4 Apr 2020 16:56:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586017456;
-        bh=zLzyO0vkAY8hFwapbYXloOrTstp1BoEEZ4oGP7XxZ+Y=;
+        s=default; t=1586019373;
+        bh=UF4azqKmc4DVGtBy9aE/k2vQDQ5mrUXEby578UnCuLA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=v9RfM2tWuoCf6nDxriN7YBQW3h1hUdPWLHIWF5ub2d4DOWPnef1LUZw7mHyjSKDi7
-         DH4hP0FaLJmn40fmR4NE8CBO89LYyJqCTY/i6nHa0dtMEi9kRvjEcc69ax3fYu8KGf
-         F83euvRAi9Kgb1CNvC2AqSQtAKeC/RVEbGbXEvXI=
-Date:   Sat, 4 Apr 2020 17:24:11 +0100
+        b=GIWhJSAc+Vx2b+DoSTggrekGvFM8g6ihKUqdlRyRP5KW7drFAvAKh0QL/+nGkr22x
+         akzDKS1tudGPTHEyZBcBHVa0TaCIlF9/Gx/uorcv6jQRxhQGbJsWG+Ew9E/hs1OznB
+         nwExH6RsRIao6mRONS3JQVhETHtE9C+XPdx6UAqs=
+Date:   Sat, 4 Apr 2020 17:56:08 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-Subject: Re: [PATCH v3 1/6] iio: imu: adis: Add Managed device functions
-Message-ID: <20200404172411.07defbab@archlinux>
-In-Reply-To: <20200331114811.7978-2-nuno.sa@analog.com>
-References: <20200331114811.7978-1-nuno.sa@analog.com>
-        <20200331114811.7978-2-nuno.sa@analog.com>
+To:     Alexandru Lazar <alazar@startmail.com>
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        robh+dt@kernel.org, mark.rutland@arm.com
+Subject: Re: [PATCH v7 1/2] dt-bindings: iio: adc: Add MAX1241 bindings
+Message-ID: <20200404175608.71f81e34@archlinux>
+In-Reply-To: <20200403121323.1742-2-alazar@startmail.com>
+References: <20200403121323.1742-1-alazar@startmail.com>
+        <20200403121323.1742-2-alazar@startmail.com>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 31 Mar 2020 13:48:06 +0200
-Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
+On Fri,  3 Apr 2020 15:13:22 +0300
+Alexandru Lazar <alazar@startmail.com> wrote:
 
-> This patch adds support for a managed device version of
-> adis_setup_buffer_and_trigger. It works exactly as the original
-> one but it calls all the devm_iio_* functions to setup an iio
-> buffer and trigger. Hence we do not need to care about cleaning those
-> and we do not need to support a remove() callback for every driver using
-> the adis library.
->=20
-> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+> Add device-tree bindings documentation for the MAX1241 device driver.
+> 
+> Signed-off-by: Alexandru Lazar <alazar@startmail.com>
+One trivial thing inline.   I'll fix that up and apply, but not
+in a form that can't be rebased - so I can add DT review if Rob wants
+to take another look.
 
-Random thought inline.  Something we could use more in IIO :)
-
-> ---
-> Changes in v2:
->  * Added blank lines for readability.
->=20
-> Changes in V3:
->  * Removed unnecessary inline;
->  * Free buffer resources.
->=20
->  drivers/iio/imu/adis_buffer.c  | 45 ++++++++++++++++++++++++++++++++++
->  drivers/iio/imu/adis_trigger.c | 41 ++++++++++++++++++++++++++++---
->  include/linux/iio/imu/adis.h   | 17 +++++++++++++
->  3 files changed, 100 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/iio/imu/adis_buffer.c b/drivers/iio/imu/adis_buffer.c
-> index 04e5e2a0fd6b..c2211ab80d8c 100644
-> --- a/drivers/iio/imu/adis_buffer.c
-> +++ b/drivers/iio/imu/adis_buffer.c
-> @@ -156,6 +156,14 @@ static irqreturn_t adis_trigger_handler(int irq, voi=
-d *p)
->  	return IRQ_HANDLED;
->  }
-> =20
-> +static void adis_buffer_cleanup(void *arg)
-> +{
-> +	struct adis *adis =3D arg;
-> +
-> +	kfree(adis->buffer);
-> +	kfree(adis->xfer);
-> +}
-> +
->  /**
->   * adis_setup_buffer_and_trigger() - Sets up buffer and trigger for the =
-adis device
->   * @adis: The adis device.
-> @@ -198,6 +206,43 @@ int adis_setup_buffer_and_trigger(struct adis *adis,=
- struct iio_dev *indio_dev,
->  }
->  EXPORT_SYMBOL_GPL(adis_setup_buffer_and_trigger);
-> =20
-> +/**
-> + * devm_adis_setup_buffer_and_trigger() - Sets up buffer and trigger for
-> + *					  the managed adis device
-> + * @adis: The adis device
-> + * @indio_dev: The IIO device
-> + * @trigger_handler: Optional trigger handler, may be NULL.
-> + *
-> + * Returns 0 on success, a negative error code otherwise.
-> + *
-> + * This function perfoms exactly the same as adis_setup_buffer_and_trigg=
-er()
-> + */
-> +int
-> +devm_adis_setup_buffer_and_trigger(struct adis *adis, struct iio_dev *in=
-dio_dev,
-> +				   irqreturn_t (*trigger_handler)(int, void *))
-
-It occurred to me that there must be a lot of irq handling function pointers
-in the kernel and it would be odd if there wasn't a type for this...
-
-There is :) irq_handler_t=20
-
-https://elixir.bootlin.com/linux/latest/source/include/linux/interrupt.h#L92
-
-Not sure why I never noticed that before.  Hohum.
+Thanks,
 
 Jonathan
 
+> ---
+>  .../bindings/iio/adc/maxim,max1241.yaml       | 64 +++++++++++++++++++
+>  1 file changed, 64 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml b/Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml
+> new file mode 100644
+> index 000000000000..7da9e4153ac1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml
+> @@ -0,0 +1,64 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2020 Alexandru Lazar
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/maxim,max1241.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Maxim MAX1241 12-bit, single-channel analog to digital converter
+> +
+> +maintainers:
+> +  - Alexandru Lazar <alazar@startmail.com>
+> +
+> +description: |
+> +  Bindings for the max1241 12-bit, single-channel ADC device. Datasheet
+> +  can be found at:
+> +    https://datasheets.maximintegrated.com/en/ds/MAX1240-MAX1241.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - maxim,max1241
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  vdd-supply:
+> +    description:
+> +      Device tree identifier of the regulator that powers the ADC.
+> +
+> +  vref-supply:
+> +    description:
+> +      Device tree identifier of the regulator that provides the external
+> +      reference voltage.
 
-> +{
-> +	int ret;
+I believe this is always one anyway so not needed.
+
+> +    maxItems: 1
 > +
-> +	if (!trigger_handler)
-> +		trigger_handler =3D adis_trigger_handler;
+> +  shutdown-gpios:
+> +    description:
+> +      GPIO spec for the GPIO pin connected to the ADC's /SHDN pin. If
+> +      specified, the /SHDN pin will be asserted between conversions,
+> +      thus enabling power-down mode.
+> +    maxItems: 1
 > +
-> +	ret =3D devm_iio_triggered_buffer_setup(&adis->spi->dev, indio_dev,
-> +					      &iio_pollfunc_store_time,
-> +					      trigger_handler, NULL);
-> +	if (ret)
-> +		return ret;
+> +required:
+> +  - compatible
+> +  - reg
+> +  - vdd-supply
+> +  - vref-supply
 > +
-> +	if (adis->spi->irq) {
-> +		ret =3D devm_adis_probe_trigger(adis, indio_dev);
-> +		if (ret)
-> +			return ret;
-> +	}
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    spi {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
 > +
-> +	return devm_add_action_or_reset(&adis->spi->dev, adis_buffer_cleanup,
-> +					adis);
-> +}
-> +EXPORT_SYMBOL_GPL(devm_adis_setup_buffer_and_trigger);
-> +
->  /**
->   * adis_cleanup_buffer_and_trigger() - Free buffer and trigger resources
->   * @adis: The adis device.
-> diff --git a/drivers/iio/imu/adis_trigger.c b/drivers/iio/imu/adis_trigge=
-r.c
-> index 8b9cd02c0f9f..a36810e0b1ab 100644
-> --- a/drivers/iio/imu/adis_trigger.c
-> +++ b/drivers/iio/imu/adis_trigger.c
-> @@ -27,6 +27,13 @@ static const struct iio_trigger_ops adis_trigger_ops =
-=3D {
->  	.set_trigger_state =3D &adis_data_rdy_trigger_set_state,
->  };
-> =20
-> +static void adis_trigger_setup(struct adis *adis)
-> +{
-> +	adis->trig->dev.parent =3D &adis->spi->dev;
-> +	adis->trig->ops =3D &adis_trigger_ops;
-> +	iio_trigger_set_drvdata(adis->trig, adis);
-> +}
-> +
->  /**
->   * adis_probe_trigger() - Sets up trigger for a adis device
->   * @adis: The adis device
-> @@ -45,9 +52,7 @@ int adis_probe_trigger(struct adis *adis, struct iio_de=
-v *indio_dev)
->  	if (adis->trig =3D=3D NULL)
->  		return -ENOMEM;
-> =20
-> -	adis->trig->dev.parent =3D &adis->spi->dev;
-> -	adis->trig->ops =3D &adis_trigger_ops;
-> -	iio_trigger_set_drvdata(adis->trig, adis);
-> +	adis_trigger_setup(adis);
-> =20
->  	ret =3D request_irq(adis->spi->irq,
->  			  &iio_trigger_generic_data_rdy_poll,
-> @@ -73,6 +78,36 @@ int adis_probe_trigger(struct adis *adis, struct iio_d=
-ev *indio_dev)
->  }
->  EXPORT_SYMBOL_GPL(adis_probe_trigger);
-> =20
-> +/**
-> + * devm_adis_probe_trigger() - Sets up trigger for a managed adis device
-> + * @adis: The adis device
-> + * @indio_dev: The IIO device
-> + *
-> + * Returns 0 on success or a negative error code
-> + */
-> +int devm_adis_probe_trigger(struct adis *adis, struct iio_dev *indio_dev)
-> +{
-> +	int ret;
-> +
-> +	adis->trig =3D devm_iio_trigger_alloc(&adis->spi->dev, "%s-dev%d",
-> +					    indio_dev->name, indio_dev->id);
-> +	if (!adis->trig)
-> +		return -ENOMEM;
-> +
-> +	adis_trigger_setup(adis);
-> +
-> +	ret =3D devm_request_irq(&adis->spi->dev, adis->spi->irq,
-> +			       &iio_trigger_generic_data_rdy_poll,
-> +			       IRQF_TRIGGER_RISING,
-> +			       indio_dev->name,
-> +			       adis->trig);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_iio_trigger_register(&adis->spi->dev, adis->trig);
-> +}
-> +EXPORT_SYMBOL_GPL(devm_adis_probe_trigger);
-> +
->  /**
->   * adis_remove_trigger() - Remove trigger for a adis devices
->   * @adis: The adis device
-> diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
-> index dd8219138c2e..ac94c483bf2b 100644
-> --- a/include/linux/iio/imu/adis.h
-> +++ b/include/linux/iio/imu/adis.h
-> @@ -448,11 +448,15 @@ struct adis_burst {
->  	unsigned int	extra_len;
->  };
-> =20
-> +int
-> +devm_adis_setup_buffer_and_trigger(struct adis *adis, struct iio_dev *in=
-dio_dev,
-> +				   irqreturn_t (*trigger_handler)(int, void *));
->  int adis_setup_buffer_and_trigger(struct adis *adis,
->  	struct iio_dev *indio_dev, irqreturn_t (*trigger_handler)(int, void *));
->  void adis_cleanup_buffer_and_trigger(struct adis *adis,
->  	struct iio_dev *indio_dev);
-> =20
-> +int devm_adis_probe_trigger(struct adis *adis, struct iio_dev *indio_dev=
-);
->  int adis_probe_trigger(struct adis *adis, struct iio_dev *indio_dev);
->  void adis_remove_trigger(struct adis *adis);
-> =20
-> @@ -461,6 +465,13 @@ int adis_update_scan_mode(struct iio_dev *indio_dev,
-> =20
->  #else /* CONFIG_IIO_BUFFER */
-> =20
-> +static inline int
-> +devm_adis_setup_buffer_and_trigger(struct adis *adis, struct iio_dev *in=
-dio_dev,
-> +				   irqreturn_t (*trigger_handler)(int, void *))
-> +{
-> +	return 0;
-> +}
-> +
->  static inline int adis_setup_buffer_and_trigger(struct adis *adis,
->  	struct iio_dev *indio_dev, irqreturn_t (*trigger_handler)(int, void *))
->  {
-> @@ -472,6 +483,12 @@ static inline void adis_cleanup_buffer_and_trigger(s=
-truct adis *adis,
->  {
->  }
-> =20
-> +static inline int devm_adis_probe_trigger(struct adis *adis,
-> +					  struct iio_dev *indio_dev)
-> +{
-> +	return 0;
-> +}
-> +
->  static inline int adis_probe_trigger(struct adis *adis,
->  	struct iio_dev *indio_dev)
->  {
+> +        adc@0 {
+> +            compatible = "maxim,max1241";
+> +            reg = <0>;
+> +            vdd-supply = <&adc_vdd>;
+> +            vref-supply = <&adc_vref>;
+> +            spi-max-frequency = <1000000>;
+> +            shutdown-gpios = <&gpio 26 1>;
+> +        };
+> +    };
 
