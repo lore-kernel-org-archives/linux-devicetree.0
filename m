@@ -2,92 +2,124 @@ Return-Path: <SRS0=g3EE=5U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D421C2BA15
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 14:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B88C2BA15
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 14:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E928A206F5
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 14:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B01B206E9
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 14:19:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586009799;
-	bh=jYh8ojEfBjWhcionJm7bLgdtcMaLtTKw3IPbO1FXFv4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YpBC/iUXrcVgrU9uB2DrUDTzJQfEnLEY6SNE/WROzzKylhccp1PLOhOhSrRHYsCXr
-	 0Af7MmvzY4YwsQe9gbNq3ppMDVatZzHkJNWRjqpRvSsRwofX3QgbcKp6BX/JO6xSdz
-	 opAKTwMRYxU8z+TSZrRKb4yDizesI0i7A8I2yBko=
+	s=default; t=1586009990;
+	bh=1Sf4GRcpkzurYk5nWdRpUBTbjpEdNqlUaBNpb/X5+dQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cyXgE1siO5gIaRR0zaSLyqLJdhAk7jQFRxS5tMd/UJ2UeAuvN1aKbleaWoUwPAjyD
+	 hjUzP2mh7tt2N6Llxcj7DPR6xLXQvW3ZXtzKJPNxgfsI0nG5T2QwXPG+LMD4Rpa0S1
+	 XYVzmchGM4IaHdtegORzvekD91JS82+wgKD7rdXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgDDOQf (ORCPT
+        id S1726269AbgDDOTt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Apr 2020 10:16:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49996 "EHLO mail.kernel.org"
+        Sat, 4 Apr 2020 10:19:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgDDOQe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 4 Apr 2020 10:16:34 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725730AbgDDOTt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 4 Apr 2020 10:19:49 -0400
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C91A0206C3;
-        Sat,  4 Apr 2020 14:16:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 685EB206F8;
+        Sat,  4 Apr 2020 14:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586009794;
-        bh=jYh8ojEfBjWhcionJm7bLgdtcMaLtTKw3IPbO1FXFv4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RqPr8qa75t3W6KS03U5hHpDlF4XP2X6lqAjJCAFU6vIZPD1LrQ++H9BcAGdjGxrPr
-         DUkJVaLa15/fM9zucspy/AP1uQhw2WVq2t6qELZKy1M8Dge7qhAnEHiD845ewQntin
-         poTmrHUrLuGuNa17buSgeJ0Jyk7IBoylskKvq704=
-Date:   Sat, 4 Apr 2020 15:16:28 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>, robh+dt@kernel.org,
-        alexandre.torgue@st.com, mark.rutland@arm.com,
-        mcoquelin.stm32@gmail.com, lars@metafoo.de, knaack.h@gmx.de,
-        pmeerw@pmeerw.net, olivier.moysan@st.com,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: iio: dac: stm32-dac: convert bindings
- to json-schema
-Message-ID: <20200404151628.52576e43@archlinux>
-In-Reply-To: <20200330232040.GA16570@bogus>
-References: <1584639983-31098-1-git-send-email-fabrice.gasnier@st.com>
-        <20200330232040.GA16570@bogus>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1586009988;
+        bh=1Sf4GRcpkzurYk5nWdRpUBTbjpEdNqlUaBNpb/X5+dQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=O8huTio9z+O50iibPA2HHY/QtrPqbwyWz1RKwJtA5+S2VErMFssNXpKRJJrdADcRm
+         5+JvXRVC3t+WJybfvGrQgbbxeU2nflDlQvLq1tSR5YRFjjRTrEThBNrw9Btl8FNtVn
+         tenQzu87ozx1AV6wDwtA8GZrfHCHMpzQkS2m2zjw=
+Received: by mail-ed1-f49.google.com with SMTP id cf14so12847680edb.13;
+        Sat, 04 Apr 2020 07:19:48 -0700 (PDT)
+X-Gm-Message-State: AGi0PubyRs/nyynFT0AQEVfM8h7i3mt4vtEY49Vvpln1b1z/iGhadVss
+        +KA/cC1NMU1nccc74ru9NTUW+4o3wNx28UytfQ==
+X-Google-Smtp-Source: APiQypJUjRQr94z4xLuZ/juKRJi8yfwdfJgOA8X/UsmoNla4rM3c6EhUj/R+uzBope3z7L6dpYbRs0E13kmcBGuQwrQ=
+X-Received: by 2002:a05:6402:335:: with SMTP id q21mr2832765edw.47.1586009986874;
+ Sat, 04 Apr 2020 07:19:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200331082725.81048-1-jitao.shi@mediatek.com> <20200331082725.81048-3-jitao.shi@mediatek.com>
+In-Reply-To: <20200331082725.81048-3-jitao.shi@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sat, 4 Apr 2020 22:19:34 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_-7xKF2tVioSU+qDU0qFs3CbUJFypB7RLakXR=PdvubFg@mail.gmail.com>
+Message-ID: <CAAOTY_-7xKF2tVioSU+qDU0qFs3CbUJFypB7RLakXR=PdvubFg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] dt-bindings: display: mediatek: get mipitx
+ calibration data from nvmem
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        srv_heupstream@mediatek.com, huijuan.xie@mediatek.com,
+        stonea168@163.com, cawa.cheng@mediatek.com,
+        linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com,
+        eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 30 Mar 2020 17:20:40 -0600
-Rob Herring <robh@kernel.org> wrote:
+Hi, Jitao:
 
-> On Thu, 19 Mar 2020 18:46:23 +0100, Fabrice Gasnier wrote:
-> > Convert the STM32 DAC binding to DT schema format using json-schema
-> > 
-> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> > ---
-> > Changes in v2:
-> > - Fix id relative path/filename as detected by Rob's bot
-> > ---
-> >  .../devicetree/bindings/iio/dac/st,stm32-dac.txt   |  63 ------------
-> >  .../devicetree/bindings/iio/dac/st,stm32-dac.yaml  | 110 +++++++++++++++++++++
-> >  2 files changed, 110 insertions(+), 63 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
-> >   
-> 
+Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B43=E6=9C=8831=E6=
+=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=884:28=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Add properties to get get mipitx calibration data.
+
+Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+
+>
 > Reviewed-by: Rob Herring <robh@kernel.org>
-Applied to the togreg branch of iio.git and pushed out as testing for the
-autobuilders to poke at it.
-
-Thanks,
-
-Jonathan
-
-
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  .../devicetree/bindings/display/mediatek/mediatek,dsi.txt    | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
+dsi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.t=
+xt
+> index d78b6d6d8fab..8e4729de8c85 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
+> @@ -36,6 +36,9 @@ Required properties:
+>  Optional properties:
+>  - drive-strength-microamp: adjust driving current, should be 3000 ~ 6000=
+. And
+>                                                    the step is 200.
+> +- nvmem-cells: A phandle to the calibration data provided by a nvmem dev=
+ice. If
+> +               unspecified default values shall be used.
+> +- nvmem-cell-names: Should be "calibration-data"
+>
+>  Example:
+>
+> @@ -47,6 +50,8 @@ mipi_tx0: mipi-dphy@10215000 {
+>         #clock-cells =3D <0>;
+>         #phy-cells =3D <0>;
+>         drive-strength-microamp =3D <4600>;
+> +       nvmem-cells=3D <&mipi_tx_calibration>;
+> +       nvmem-cell-names =3D "calibration-data";
+>  };
+>
+>  dsi0: dsi@1401b000 {
+> --
+> 2.21.0
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
