@@ -2,320 +2,415 @@ Return-Path: <SRS0=g3EE=5U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 138F1C2BA15
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 14:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB3AC2BA15
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 15:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C71D620738
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 14:48:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586011734;
-	bh=Ml/kgPI9HrGjh2SgU+OdoR1GK0opQt5FXqJGCZYnGek=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=QdQyHoiHkwJyiqixYNy4FOy76pMJsTVfr5uOUv18miqhuGBAyXmUihSeETmVlXx86
-	 dx2NDG1icTERc45WRFZ1KD1F0dk1b9I0YfKVhC58zXskzKVW4kfij6/fgY4hS0TQWD
-	 lPtnECpW4zGZFyoe71ymBZWSYxlGQh+r17PTdtU0=
+	by mail.kernel.org (Postfix) with ESMTP id 8AA2E206C3
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 15:01:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NBCKst4i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgDDOsy (ORCPT
+        id S1726397AbgDDPBR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Apr 2020 10:48:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56468 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726254AbgDDOsy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 4 Apr 2020 10:48:54 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5BC620731;
-        Sat,  4 Apr 2020 14:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586011732;
-        bh=Ml/kgPI9HrGjh2SgU+OdoR1GK0opQt5FXqJGCZYnGek=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=vlmdQIbbjOGNsY8qqY3VIJYV/wODRbE5F7tcoL9uQjP6IslmDn7pcbSMvr2sTnmnY
-         mUSEe6CQVMN0dNcYtj+hyldCovHc2icFomj0FfMpXysBIuxZMAPYK4nsbbLiX73bza
-         vLtneYxk2NHprPXDHsEq2kRKHpf5/K9JlZ/KX7hA=
-Date:   Sat, 4 Apr 2020 15:48:47 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Mike Looijmans <mike.looijmans@topic.nl>
-Cc:     devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH v5 2/2] iio: accel: Add support for the Bosch-Sensortec
- BMI088
-Message-ID: <20200404154847.62a4a35e@archlinux>
-In-Reply-To: <51d63f6b-a561-88f3-3718-b04539a7b3be@topic.nl>
-References: <20200324080309.12171-1-mike.looijmans@topic.nl>
-        <20200324080309.12171-2-mike.looijmans@topic.nl>
-        <20200328162044.7b9992c3@archlinux>
-        <51d63f6b-a561-88f3-3718-b04539a7b3be@topic.nl>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 4 Apr 2020 11:01:17 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:37547 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbgDDPBR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Apr 2020 11:01:17 -0400
+Received: by mail-qv1-f68.google.com with SMTP id n1so5175520qvz.4
+        for <devicetree@vger.kernel.org>; Sat, 04 Apr 2020 08:01:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AsJPI0kgDCKGswo0+xFUMj9ekMPPjTHCNOTX6rTxeB8=;
+        b=NBCKst4iqQqjP8k5jOCubePQx47OOiWEBhIj5jzxri9gtnvjZpDv3O09t/bhD2SVoX
+         QUAdujBotIBRYcG7u+gkn2Ti1NQ8IY9BxX35UH+V+Uas3pbHmeP/X8c7hRRMK5Y20rr1
+         T8hIVUKnVOFNV7XaSelIE9S+Vi6Sn9aM8iovCibmdAviYHEcjUO+eB49oSxT6k+hDepf
+         Y0CxtlBW2zZPdoyVwy23EiJw75+AFsH0TeRJXrP/VCSYLQLBubwK00Zckc/YNgidDA+y
+         ivpzLAYAiO6t8KMCvpi8Lb4r3uVtZ1/f6QNzq+7SfOfWkaOJBhEK6jU3gXvHD4CN40VG
+         ZIBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AsJPI0kgDCKGswo0+xFUMj9ekMPPjTHCNOTX6rTxeB8=;
+        b=L/15IYcwoS/wgXtRyLT4P7e6BmVjKO1ViFqNr6F/qf7B2I4eLvQMW7tXYkN0e6H/Sa
+         lbiIZ1QPmQF3vc9lKLRmNEvtkXdWQ49N6DvswITbU6enoyGHSw0ol0SrmpHei9yj79qg
+         gSXUtXBPasgD3efLMetZKyYg9HNzRSazcUND86oVomzX/OPQpDin77pIWAmveKJYUQb1
+         eLkAUYuE33rju1a+JSrbHe8uiDg+LTN1QLfE9yktOogkh7Wj+avbKEhoKAeYBFbNaRrf
+         Tsx+ZUEHKN2oY+lvobh5kOPuPL2ZTml/G/b6THVovTRshoJYXIajyy8whf6+E5982Rne
+         FO3g==
+X-Gm-Message-State: AGi0Pub+WveqLtN6SKaSE2CDgZrc+LF6BbK3avIq/xcLHMSF5Rs86S4E
+        /0zJyBNAyFpnY3gYG4vXf/zqPu7mdz+kWCL2Rvdj9Q==
+X-Google-Smtp-Source: APiQypI+Y25nGgXrD7Ut0TNZeTXXfBz7/2dPd5u0GfPZ64ekcp3Fqw+axoRmDDBqjRVZVq/lt5GCNJGL+Vy12LFHaMQ=
+X-Received: by 2002:a0c:a2a2:: with SMTP id g31mr42043qva.31.1586012474420;
+ Sat, 04 Apr 2020 08:01:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200323233354.239365-1-kunyi@google.com> <20200323233354.239365-2-kunyi@google.com>
+ <20200331154630.GA41691@roeck-us.net>
+In-Reply-To: <20200331154630.GA41691@roeck-us.net>
+From:   Kun Yi <kunyi@google.com>
+Date:   Sat, 4 Apr 2020 08:00:00 -0700
+Message-ID: <CAGMNF6WQ4FLZOiHf6cL43oMtREV+Zi8gbZbnNbgxVaHHcp-FYQ@mail.gmail.com>
+Subject: Re: [PATCH linux hwmon-next v2 1/3] hwmon: (sbtsi) Add basic support
+ for SB-TSI sensors
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Joel Stanley <joel@jms.id.au>, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 30 Mar 2020 10:07:00 +0200
-Mike Looijmans <mike.looijmans@topic.nl> wrote:
+On Tue, Mar 31, 2020 at 8:46 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On Mon, Mar 23, 2020 at 04:33:52PM -0700, Kun Yi wrote:
+> > SB Temperature Sensor Interface (SB-TSI) is an SMBus compatible
+> > interface that reports AMD SoC's Ttcl (normalized temperature),
+> > and resembles a typical 8-pin remote temperature sensor's I2C interface
+> > to BMC.
+> >
+> > This commit adds basic support using this interface to read CPU
+> > temperature, and read/write high/low CPU temp thresholds.
+> >
+> > To instantiate this driver on an AMD CPU with SB-TSI
+> > support, the i2c bus number would be the bus connected from the board
+> > management controller (BMC) to the CPU. The i2c address is specified in
+> > Section 6.3.1 of the spec [1]: The SB-TSI address is normally 98h for socket 0
+> > and 90h for socket 1, but it could vary based on hardware address select pins.
+> >
+> > [1]: https://www.amd.com/system/files/TechDocs/56255_OSRR.pdf
+> >
+> > Test status: tested reading temp1_input, and reading/writing
+> > temp1_max/min.
+> >
+> > Signed-off-by: Kun Yi <kunyi@google.com>
+> > Change-Id: I85ec65a57e8d73d7343aa9e250860ec85bfa79e5
+> > ---
+> >  drivers/hwmon/Kconfig      |  10 ++
+> >  drivers/hwmon/Makefile     |   1 +
+> >  drivers/hwmon/sbtsi_temp.c | 261 +++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 272 insertions(+)
+> >  create mode 100644 drivers/hwmon/sbtsi_temp.c
+> >
+> > diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> > index 05a30832c6ba..9585dcd01d1b 100644
+> > --- a/drivers/hwmon/Kconfig
+> > +++ b/drivers/hwmon/Kconfig
+> > @@ -1412,6 +1412,16 @@ config SENSORS_RASPBERRYPI_HWMON
+> >         This driver can also be built as a module. If so, the module
+> >         will be called raspberrypi-hwmon.
+> >
+> > +config SENSORS_SBTSI
+> > +     tristate "Emulated SB-TSI temperature sensor"
+> > +     depends on I2C
+> > +     help
+> > +       If you say yes here you get support for emulated temperature
+> > +       sensors on AMD SoCs with SB-TSI interface connected to a BMC device.
+> > +
+> > +       This driver can also be built as a module. If so, the module will
+> > +       be called sbtsi_temp.
+> > +
+> >  config SENSORS_SHT15
+> >       tristate "Sensiron humidity and temperature sensors. SHT15 and compat."
+> >       depends on GPIOLIB || COMPILE_TEST
+> > diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> > index b0b9c8e57176..cd109f003ce4 100644
+> > --- a/drivers/hwmon/Makefile
+> > +++ b/drivers/hwmon/Makefile
+> > @@ -152,6 +152,7 @@ obj-$(CONFIG_SENSORS_POWR1220)  += powr1220.o
+> >  obj-$(CONFIG_SENSORS_PWM_FAN)        += pwm-fan.o
+> >  obj-$(CONFIG_SENSORS_RASPBERRYPI_HWMON)      += raspberrypi-hwmon.o
+> >  obj-$(CONFIG_SENSORS_S3C)    += s3c-hwmon.o
+> > +obj-$(CONFIG_SENSORS_SBTSI)  += sbtsi_temp.o
+> >  obj-$(CONFIG_SENSORS_SCH56XX_COMMON)+= sch56xx-common.o
+> >  obj-$(CONFIG_SENSORS_SCH5627)        += sch5627.o
+> >  obj-$(CONFIG_SENSORS_SCH5636)        += sch5636.o
+> > diff --git a/drivers/hwmon/sbtsi_temp.c b/drivers/hwmon/sbtsi_temp.c
+> > new file mode 100644
+> > index 000000000000..cc452cb29c2c
+> > --- /dev/null
+> > +++ b/drivers/hwmon/sbtsi_temp.c
+> > @@ -0,0 +1,261 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > +/*
+> > + * sbtsi_temp.c - hwmon driver for a SBI Temperature Sensor Interface (SB-TSI)
+> > + *                compliant AMD SoC temperature device.
+> > + *
+> > + * Copyright (c) 2020, Google Inc.
+> > + * Copyright (c) 2020, Kun Yi <kunyi@google.com>
+> > + */
+> > +
+> > +#include <linux/err.h>
+> > +#include <linux/i2c.h>
+> > +#include <linux/init.h>
+> > +#include <linux/hwmon.h>
+> > +#include <linux/module.h>
+> > +#include <linux/mutex.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/of.h>
+> > +
+> > +/*
+> > + * SB-TSI registers only support SMBus byte data access. "_INT" registers are
+> > + * the integer part of a temperature value or limit, and "_DEC" registers are
+> > + * corresponding decimal parts.
+> > + */
+> > +#define SBTSI_REG_TEMP_INT           0x01 /* RO */
+> > +#define SBTSI_REG_STATUS             0x02 /* RO */
+> > +#define SBTSI_REG_CONFIG             0x03 /* RO */
+> > +#define SBTSI_REG_TEMP_HIGH_INT              0x07 /* RW */
+> > +#define SBTSI_REG_TEMP_LOW_INT               0x08 /* RW */
+> > +#define SBTSI_REG_TEMP_DEC           0x10 /* RW */
+> > +#define SBTSI_REG_TEMP_HIGH_DEC              0x13 /* RW */
+> > +#define SBTSI_REG_TEMP_LOW_DEC               0x14 /* RW */
+> > +#define SBTSI_REG_REV                        0xFF /* RO */
+> > +
+> > +#define SBTSI_CONFIG_READ_ORDER_SHIFT        5
+> > +
+> > +#define SBTSI_TEMP_MIN       0
+> > +#define SBTSI_TEMP_MAX       255875
+> > +#define SBTSI_REV_MAX_VALID_ID       4
+> > +
+> > +/* Each client has this additional data */
+> > +struct sbtsi_data {
+> > +     struct i2c_client *client;
+> > +     struct mutex lock;
+> > +};
+> > +
+> > +/*
+> > + * From SB-TSI spec: CPU temperature readings and limit registers encode the
+> > + * temperature in increments of 0.125 from 0 to 255.875. The "high byte"
+> > + * register encodes the base-2 of the integer portion, and the upper 3 bits of
+> > + * the "low byte" encode in base-2 the decimal portion.
+> > + *
+> > + * e.g. INT=0x19, DEC=0x20 represents 25.125 degrees Celsius
+> > + *
+> > + * Therefore temperature in millidegree Celsius =
+> > + *   (INT + DEC / 256) * 1000 = (INT * 8 + DEC / 32) * 125
+> > + */
+> > +static inline int sbtsi_reg_to_mc(s32 integer, s32 decimal)
+> > +{
+> > +     return ((integer << 3) + (decimal >> 5)) * 125;
+> > +}
+> > +
+> > +/*
+> > + * Inversely, given temperature in millidegree Celsius
+> > + *   INT = (TEMP / 125) / 8
+> > + *   DEC = ((TEMP / 125) % 8) * 32
+> > + * Caller have to make sure temp doesn't exceed 255875, the max valid value.
+> > + */
+> > +static inline void sbtsi_mc_to_reg(s32 temp, u8 *integer, u8 *decimal)
+> > +{
+> > +     temp /= 125;
+> > +     *integer = temp >> 3;
+> > +     *decimal = (temp & 0x7) << 5;
+> > +}
+> > +
+> > +static int sbtsi_read(struct device *dev, enum hwmon_sensor_types type,
+> > +                   u32 attr, int channel, long *val)
+> > +{
+> > +     struct sbtsi_data *data = dev_get_drvdata(dev);
+> > +     s32 temp_int, temp_dec;
+> > +     int err, reg_int, reg_dec;
+> > +     u8 read_order;
+> > +
+> > +     if (type != hwmon_temp)
+> > +             return -EINVAL;
+> > +
+> > +     read_order = 0;
+> > +     switch (attr) {
+> > +     case hwmon_temp_input:
+> > +             /*
+> > +              * ReadOrder bit specifies the reading order of integer and
+> > +              * decimal part of CPU temp for atomic reads. If bit == 0,
+> > +              * reading integer part triggers latching of the decimal part,
+> > +              * so integer part should be read first. If bit == 1, read
+> > +              * order should be reversed.
+> > +              */
+> > +             err = i2c_smbus_read_byte_data(data->client, SBTSI_REG_CONFIG);
+> > +             if (err < 0)
+> > +                     return err;
+> > +
+> > +             read_order = (u8)err & BIT(SBTSI_CONFIG_READ_ORDER_SHIFT);
+> > +             reg_int = SBTSI_REG_TEMP_INT;
+> > +             reg_dec = SBTSI_REG_TEMP_DEC;
+> > +             break;
+> > +     case hwmon_temp_max:
+> > +             reg_int = SBTSI_REG_TEMP_HIGH_INT;
+> > +             reg_dec = SBTSI_REG_TEMP_HIGH_DEC;
+> > +             break;
+> > +     case hwmon_temp_min:
+> > +             reg_int = SBTSI_REG_TEMP_LOW_INT;
+> > +             reg_dec = SBTSI_REG_TEMP_LOW_DEC;
+> > +             break;
+> > +     default:
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     if (read_order == 0) {
+> > +             temp_int = i2c_smbus_read_byte_data(data->client, reg_int);
+> > +             temp_dec = i2c_smbus_read_byte_data(data->client, reg_dec);
+> > +     } else {
+> > +             temp_dec = i2c_smbus_read_byte_data(data->client, reg_dec);
+> > +             temp_int = i2c_smbus_read_byte_data(data->client, reg_int);
+> > +     }
+> > +
+> > +     if (temp_int < 0)
+> > +             return temp_int;
+> > +     if (temp_dec < 0)
+> > +             return temp_dec;
+> > +
+> > +     *val = sbtsi_reg_to_mc(temp_int, temp_dec);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int sbtsi_write(struct device *dev, enum hwmon_sensor_types type,
+> > +                    u32 attr, int channel, long val)
+> > +{
+> > +     struct sbtsi_data *data = dev_get_drvdata(dev);
+> > +     int reg_int, reg_dec, err;
+> > +     u8 temp_int, temp_dec;
+> > +
+> > +     if (type != hwmon_temp)
+> > +             return -EINVAL;
+> > +
+> > +     switch (attr) {
+> > +     case hwmon_temp_max:
+> > +             reg_int = SBTSI_REG_TEMP_HIGH_INT;
+> > +             reg_dec = SBTSI_REG_TEMP_HIGH_DEC;
+> > +             break;
+> > +     case hwmon_temp_min:
+> > +             reg_int = SBTSI_REG_TEMP_LOW_INT;
+> > +             reg_dec = SBTSI_REG_TEMP_LOW_DEC;
+> > +             break;
+> > +     default:
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     val = clamp_val(val, SBTSI_TEMP_MIN, SBTSI_TEMP_MAX);
+> > +     mutex_lock(&data->lock);
+> > +     sbtsi_mc_to_reg(val, &temp_int, &temp_dec);
+> > +     err = i2c_smbus_write_byte_data(data->client, reg_int, temp_int);
+> > +     if (err)
+> > +             goto exit;
+> > +
+> > +     err = i2c_smbus_write_byte_data(data->client, reg_dec, temp_dec);
+> > +exit:
+> > +     mutex_unlock(&data->lock);
+> > +     return err;
+> > +}
+> > +
+> > +static umode_t sbtsi_is_visible(const void *data,
+> > +                             enum hwmon_sensor_types type,
+> > +                             u32 attr, int channel)
+> > +{
+> > +     switch (type) {
+> > +     case hwmon_temp:
+> > +             switch (attr) {
+> > +             case hwmon_temp_input:
+> > +                     return 0444;
+> > +             case hwmon_temp_min:
+> > +                     return 0644;
+> > +             case hwmon_temp_max:
+> > +                     return 0644;
+> > +             }
+> > +             break;
+> > +     default:
+> > +             break;
+> > +     }
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct hwmon_channel_info *sbtsi_info[] = {
+> > +     HWMON_CHANNEL_INFO(chip,
+> > +                        HWMON_C_REGISTER_TZ),
+> > +     HWMON_CHANNEL_INFO(temp,
+> > +                        HWMON_T_INPUT | HWMON_T_MIN | HWMON_T_MAX),
+> > +     NULL
+> > +};
+> > +
+> > +static const struct hwmon_ops sbtsi_hwmon_ops = {
+> > +     .is_visible = sbtsi_is_visible,
+> > +     .read = sbtsi_read,
+> > +     .write = sbtsi_write,
+> > +};
+> > +
+> > +static const struct hwmon_chip_info sbtsi_chip_info = {
+> > +     .ops = &sbtsi_hwmon_ops,
+> > +     .info = sbtsi_info,
+> > +};
+> > +
+> > +static int sbtsi_probe(struct i2c_client *client,
+> > +                    const struct i2c_device_id *id)
+> > +{
+> > +     struct device *dev = &client->dev;
+> > +     struct device *hwmon_dev;
+> > +     struct sbtsi_data *data;
+> > +
+> > +     data = devm_kzalloc(dev, sizeof(struct sbtsi_data), GFP_KERNEL);
+> > +     if (!data)
+> > +             return -ENOMEM;
+> > +
+> > +     data->client = client;
+> > +     mutex_init(&data->lock);
+> > +
+> > +     dev_set_drvdata(dev, data);
+> > +
+>
+> This is not needed.
+Thanks. Removed in v3.
+>
+> Guenter
+>
+> > +     hwmon_dev =
+> > +             devm_hwmon_device_register_with_info(dev, client->name, data,
+> > +                                                  &sbtsi_chip_info, NULL);
+> > +
+> > +     return PTR_ERR_OR_ZERO(hwmon_dev);
+> > +}
+> > +
+> > +static const struct i2c_device_id sbtsi_id[] = {
+> > +     {"sbtsi", 0},
+> > +     {}
+> > +};
+> > +MODULE_DEVICE_TABLE(i2c, sbtsi_id);
+> > +
+> > +static const struct of_device_id __maybe_unused sbtsi_of_match[] = {
+> > +     {
+> > +             .compatible = "amd,sbtsi",
+> > +     },
+> > +     { },
+> > +};
+> > +MODULE_DEVICE_TABLE(of, sbtsi_of_match);
+> > +
+> > +static struct i2c_driver sbtsi_driver = {
+> > +     .class = I2C_CLASS_HWMON,
+> > +     .driver = {
+> > +             .name = "sbtsi",
+> > +             .of_match_table = of_match_ptr(sbtsi_of_match),
+> > +     },
+> > +     .probe = sbtsi_probe,
+> > +     .id_table = sbtsi_id,
+> > +};
+> > +
+> > +module_i2c_driver(sbtsi_driver);
+> > +
+> > +MODULE_AUTHOR("Kun Yi <kunyi@google.com>");
+> > +MODULE_DESCRIPTION("Hwmon driver for AMD SB-TSI emulated sensor");
+> > +MODULE_LICENSE("GPL");
 
-> On 28-03-2020 17:20, Jonathan Cameron wrote:
-> > On Tue, 24 Mar 2020 09:03:08 +0100
-> > Mike Looijmans <mike.looijmans@topic.nl> wrote:
-> >   
-> >> The BMI088 is a combined module with both accelerometer and gyroscope.
-> >> This adds the accelerometer driver support for the SPI interface.
-> >> The gyroscope part is already supported by the BMG160 driver.
-> >>
-> >> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>  
-> > 
-> > Hi Mike,
-> > 
-> > A few tiny things from me.
-> > 
-> > For the sampling frequency, I wonder if we are better off going back
-> > to the list of values, but then also using the read_avail infrastructure
-> > to avoid having to carry them as a string as well?  
-> 
-> The frequency range is just a simple power-of-two formula, so my take 
-> was that a table would just be a waste of memory and resources.
-> 
-> A table lookup costs more resources and requires more code in this case.
-
-True, but the table is still there be it in string form  in order
-to provide the 'available' list.
-
-For reasons of simplicity in the IIO core, the read_avail callbacks
-deal with tables of numbers like was originally the case here.
 
 
-> 
-> > 
-> > Thanks,
-> > 
-> > Jonathan
-> >   
-> >>
-> >> diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
-> >> index 5d91a6dda894..7ed9c82b731b 100644
-> >> --- a/drivers/iio/accel/Kconfig
-> >> +++ b/drivers/iio/accel/Kconfig
-> >> @@ -151,6 +151,23 @@ config BMC150_ACCEL_SPI
-> >>   	tristate
-> >>   	select REGMAP_SPI
-> >>   
-> >> +config BMI088_ACCEL
-> >> +	tristate "Bosch BMI088 Accelerometer Driver"
-> >> +	select IIO_BUFFER
-> >> +	select IIO_TRIGGERED_BUFFER
-> >> +	select REGMAP
-> >> +	select BMI088_ACCEL_SPI
-> >> +	help
-> >> +	  Say yes here to build support for the Bosch BMI088 accelerometer.
-> >> +
-> >> +	  This is a combo module with both accelerometer and gyroscope.
-> >> +	  This driver is only implementing accelerometer part, which has
-> >> +	  its own address and register map.
-> >> +
-> >> +config BMI088_ACCEL_SPI
-> >> +	tristate
-> >> +	select REGMAP_SPI
-> >> +  
-> > 
-> > Hmm. So we list this driver even if SPI is disabled.  Generally we try
-> > not to do that, as it makes for lots of things to pick on devices that
-> > don't actually have an SPI bus.
-> > 
-> > Hence, please add a depends to the first Kconfig symbol so it's hidden
-> > if no SPI.  When I2C is added it can become at least one of the two.
-> >   
-> 
-> I'm okay with a depends on SPI. Adding the I2C support is not difficult, 
-> but I don't want to release something into the kernel that I cannot test.
-
-Agreed.  Just add the depends on SPI.  I was just looking forwards to yourself
-or someone else adding I2C when they do have a platform to test it.
-
-
-> 
-> 
-> > ...
-> >   
-> >> +
-> >> +static int bmi088_accel_get_sample_freq(struct bmi088_accel_data *data,
-> >> +					int *val, int *val2)
-> >> +{
-> >> +	unsigned int value;
-> >> +	int ret;
-> >> +
-> >> +	ret = regmap_read(data->regmap, BMI088_ACCEL_REG_ACC_CONF,
-> >> +			  &value);
-> >> +	if (ret)
-> >> +		return ret;
-> >> +
-> >> +	value &= BMI088_ACCEL_MODE_ODR_MASK;
-> >> +	if (value == BMI088_ACCEL_MODE_ODR_12_5) {
-> >> +		*val = 12;
-> >> +		*val2 = 500000;
-> >> +		ret = IIO_VAL_INT_PLUS_MICRO;
-> >> +	} else {
-> >> +		*val = 25 << (value - BMI088_ACCEL_MODE_ODR_25);
-> >> +		*val2 = 0;
-> >> +		ret = IIO_VAL_INT;
-> >> +	}
-> >> +
-> >> +	return ret;
-> >> +}
-> >> +
-> >> +static int bmi088_accel_set_sample_freq(struct bmi088_accel_data *data, int val)
-> >> +{
-> >> +	unsigned int value;
-> >> +
-> >> +	if (val < 12 || val > 1600)
-> >> +		return -EINVAL;
-> >> +
-> >> +	value = fls(val) + 1;  
-> > 
-> > This leads to some 'novel' rounding to my mind.
-> > 
-> > (12,16] = 12.5
-> > (16,32] = 25
-> > (32,64] = 50
-> > (64,128] = 100
-> > 
-> > Generally we want to go faster if anything when talking about sampling frequencies,
-> > so I'd either like to see round up or precise value matching only.  
-> 
-> I went for simplicity. The driver reports an "avail" range, so users 
-> should not expect other values like "70" to actually work. The above is 
-> the shortest inversion of the get_sample_freq function.
-
-That's a bold assumption to make about userspace doing what it should
-and checking _avail before writing crazy values.   A not entirely stupid
-optimization would be to write without checking _avail and only do the
-handling of that if the write fails (indicating that whatever value was
-provided by some user isn't fine).
-
-
-> 
-> Just wanted to make it so that obvious things would work, and I feared 
-> that a range would require one to spec "100.000" in decimal format just 
-> because of the existence of the 12.5 value. So the driver is a bit 
-> forgiving in that specifying "12" or "13" will also work.
-> 
-> For a more exact match I could also add something like:
-> 
-> if (val > 13 && (25 << (value - BMI088_ACCEL_MODE_ODR_25 ) != val)
->     return -EINVAL;
-> 
-> this would return -EINVAL for values like "26" or "1599".
-
-Given the way the IIO core works, it will be perfectly happy to present
-you with precise values.  If the val == 12, then check the val2 == 5
-For the rest just check if the val is correct and val2 == 0.
-
-If decimal part is not provide val2 will be equal to 0.
-
-I'm still falling on the side of thinking a table of values is simpler,
-less bug prone (because it's just a case of linear search for a match)
-and if you use read_avail callback can handle that case as well without
-needing to repeat values.  Memory cost of the
-table is tiny 8 * 4 * 2 = 64 bytes.
-
-It's not exactly a huge list of possibilities.
-
-Jonathan
-
-> 
-> >   
-> >> +
-> >> +	return regmap_update_bits(data->regmap, BMI088_ACCEL_REG_ACC_CONF,
-> >> +				  BMI088_ACCEL_MODE_ODR_MASK, value);
-> >> +}
-> >> +  
-> > 
-> > ...
-> >   
-> >> +
-> >> +static int bmi088_accel_read_raw(struct iio_dev *indio_dev,
-> >> +				 struct iio_chan_spec const *chan,
-> >> +				 int *val, int *val2, long mask)
-> >> +{
-> >> +	struct bmi088_accel_data *data = iio_priv(indio_dev);
-> >> +	int ret;
-> >> +
-> >> +	switch (mask) {
-> >> +	case IIO_CHAN_INFO_RAW:
-> >> +		switch (chan->type) {
-> >> +		case IIO_TEMP:
-> >> +			return bmi088_accel_get_temp(data, val);
-> >> +		case IIO_ACCEL:
-> >> +			ret = iio_device_claim_direct_mode(indio_dev);
-> >> +			if (ret)
-> >> +				return ret;
-> >> +
-> >> +			ret = bmi088_accel_get_axis(data, chan, val);
-> >> +			iio_device_release_direct_mode(indio_dev);
-> >> +			if (ret)
-> >> +				return ret;
-> >> +
-> >> +			return IIO_VAL_INT;
-> >> +		default:
-> >> +			return -EINVAL;
-> >> +		}
-> >> +	case IIO_CHAN_INFO_OFFSET:
-> >> +		switch (chan->type) {
-> >> +		case IIO_TEMP:
-> >> +			/* Offset applies before scale */
-> >> +			*val = BMI088_ACCEL_TEMP_OFFSET/BMI088_ACCEL_TEMP_UNIT;
-> >> +			return IIO_VAL_INT;
-> >> +		default:
-> >> +			return -EINVAL;
-> >> +		}
-> >> +	case IIO_CHAN_INFO_SCALE:
-> >> +		*val = 0;  
-> > 
-> > Why?  In error paths it's not used, and it's set in the other two paths.  
-> 
-> will remove
-> 
-> >   
-> >> +		switch (chan->type) {
-> >> +		case IIO_TEMP:
-> >> +			/* 0.125 degrees per LSB */
-> >> +			*val = BMI088_ACCEL_TEMP_UNIT;
-> >> +			return IIO_VAL_INT;
-> >> +		case IIO_ACCEL:
-> >> +			ret = regmap_read(data->regmap,
-> >> +					  BMI088_ACCEL_REG_ACC_RANGE, val);
-> >> +			if (ret)
-> >> +				return ret;
-> >> +
-> >> +			*val2 = 15 - (*val & 0x3);
-> >> +			*val = 3 * 980;
-> >> +
-> >> +			return IIO_VAL_FRACTIONAL_LOG2;
-> >> +		default:
-> >> +			return -EINVAL;
-> >> +		}
-> >> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> >> +		mutex_lock(&data->mutex);
-> >> +		ret = bmi088_accel_get_sample_freq(data, val, val2);
-> >> +		mutex_unlock(&data->mutex);
-> >> +		return ret;
-> >> +	default:
-> >> +		return -EINVAL;
-> >> +	}
-> >> +}
-> >> +  
-> > ...
-> >   
-> 
-> 
-
+-- 
+Regards,
+Kun
