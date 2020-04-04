@@ -2,276 +2,134 @@ Return-Path: <SRS0=g3EE=5U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF7CC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 16:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4891C4332B
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 16:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3221C2071C
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 16:05:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586016318;
-	bh=HW7aE2/knhyGocfIyYeP5gXtMUPsb6H/6ETBizWYE1E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=QEnMOENAaqNnDg0gP4V+BYX/nwRMpY7bOIj+bxMwhGXg9m2iXXvGKK0P5pvCfe67v
-	 4BBDqbexqmo8CJOZZrz/rwLS0pkryYLOZgVuBS+BCkT8LuEIgIttNxc+58LpojOUbW
-	 XyUDcU2TivYIpO2QZ9mOp2UDhUUc0SLCPzyYD3W4=
+	by mail.kernel.org (Postfix) with ESMTP id 9B28820659
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 16:15:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PITs6j2o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgDDQFR (ORCPT
+        id S1726229AbgDDQPy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Apr 2020 12:05:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45230 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbgDDQFR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 4 Apr 2020 12:05:17 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C01E206D4;
-        Sat,  4 Apr 2020 16:05:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586016316;
-        bh=HW7aE2/knhyGocfIyYeP5gXtMUPsb6H/6ETBizWYE1E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PvL8HCt3+Q3xraEuy+spg8tjKwYWI3osBJDAo3Dfs6rDO0q7x1XUkdVi7suwvkpVp
-         xUkaqmCzn2voIMWwraDLgvqfeRbnyCrjkgbFtfzj4AO+Yom55Zc7zmKd4+iPu6s0Oq
-         5tA6+BhktC+CnlSkMe/tfaBNh6Y4YhKnAOtfLQZw=
-Date:   Sat, 4 Apr 2020 17:05:11 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Sa, Nuno" <Nuno.Sa@analog.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Sat, 4 Apr 2020 12:15:54 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:34508 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbgDDQPy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Apr 2020 12:15:54 -0400
+Received: by mail-qt1-f194.google.com with SMTP id 14so8943018qtp.1;
+        Sat, 04 Apr 2020 09:15:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GET/abLarLGWrJ/MA6cxRPWMhupz6y/cS44XtSN8P1Q=;
+        b=PITs6j2oMJ94bhpMMf1H3BqUuhd7dJBQ7tNZLaOPASETEFGlBsTBTvv/VjpX1wljdc
+         TI4OpRHn3OdDW+HvlYeEV8MahPpuRgBpGyHi/nQHlxWvZIGN+IPpEPC9rtkfA283KBcs
+         6Kc5IK4H5qLdfrQDvViuKJg/KnUjEKnXewzzh3Xq8MgLA5iV8GgJzHORhBAdrGibo6VU
+         EXVBlEoxnXSykLuS/AH/rAqCeE2Q+clyju7NH2zRT/CpkNtJ5l7IicQL1/x3qQAtFABM
+         FLhA4MBj7ClvkGg6UDeNq3+seAh4kFvnmPlVg5Q1RCb4P1brviqg+bhnzWJe19o7ZWKD
+         IrmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GET/abLarLGWrJ/MA6cxRPWMhupz6y/cS44XtSN8P1Q=;
+        b=Ks12LQ8I8zkRUtB2wy20rrPEKk8fo/HNojNyHlaHh+ZBVgSGE4jz21ueBvFxwVMa73
+         hybR+1aSr4BxFSZ0M9S4R777TDANonjwnUGwg5Hk9268+Hnz467lUam+CuPttSYnN9Az
+         wKRRBkrO3pcAIPF/VmDjrgePzRc+gCcuZknMlbIUdNjQq3OltCMWRXLW91LJK/mjUCz3
+         OftJILaP768cIZdtLEA8N7R7Xm2LhNy/oVNP0tMczVFlEK+111qsZ/exqP5CEXyf0LcH
+         6zGhFbPhU+DdQJpRdevTeYzcXMb5OGqSt+69kbGLSzVGQBRn1wWJX5tQMS+Zg/LSYsNR
+         ETAA==
+X-Gm-Message-State: AGi0PuYEWiHlLfVKC2hqa4TSEibWiIBCuMFxqFEg6TwehWZiObJYw1SJ
+        Tpi/QyERJ8xp8Om2h2qgf3VJ7RQm1eQ=
+X-Google-Smtp-Source: APiQypIqmrIQsN+B5vp2y+ZGCzobEJI6V/qWweRvWnzLs0lYY//84LnNyNJvfLEqHbKDxIZNGFwMOQ==
+X-Received: by 2002:aed:208e:: with SMTP id 14mr13326211qtb.335.1586016950961;
+        Sat, 04 Apr 2020 09:15:50 -0700 (PDT)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id n67sm9213534qte.79.2020.04.04.09.15.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Apr 2020 09:15:50 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-clk@vger.kernel.org
+Cc:     aford@beaconembedded.com, charles.stevens@logicpd.com,
+        Adam Ford <aford173@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>
-Subject: Re: [PATCH v3 5/6] iio: imu: Add support for adis16475
-Message-ID: <20200404170511.0966b7e4@archlinux>
-In-Reply-To: <BN6PR03MB3347E5ECF100EAD1453B577D99C90@BN6PR03MB3347.namprd03.prod.outlook.com>
-References: <20200331114811.7978-1-nuno.sa@analog.com>
-        <20200331114811.7978-6-nuno.sa@analog.com>
-        <CAHp75Vdxtn1gXi=xCJfGOkBYiWB2qsYQLTJyaEGiiFqHvELaHQ@mail.gmail.com>
-        <BN6PR03MB3347862A4C434CCA8C1B1E2599C90@BN6PR03MB3347.namprd03.prod.outlook.com>
-        <CAHp75VfuWMDR4dUmjsYgeMgNMcVDZKdKVCsZ5p6g0m3TLHi5UA@mail.gmail.com>
-        <BN6PR03MB3347E5ECF100EAD1453B577D99C90@BN6PR03MB3347.namprd03.prod.outlook.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Marek Vasut <marek.vasut@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] clk: vc5: Add support for IDT VersaClock 5P49V6965
+Date:   Sat,  4 Apr 2020 11:15:35 -0500
+Message-Id: <20200404161537.2312297-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 1 Apr 2020 13:27:31 +0000
-"Sa, Nuno" <Nuno.Sa@analog.com> wrote:
+Update IDT VersaClock 5 driver to support 5P49V6965.
 
-> > From: linux-iio-owner@vger.kernel.org <linux-iio-owner@vger.kernel.org>=
- On
-> > Behalf Of Andy Shevchenko
-> > Sent: Mittwoch, 1. April 2020 12:23
-> > To: Sa, Nuno <Nuno.Sa@analog.com>
-> > Cc: linux-iio <linux-iio@vger.kernel.org>; devicetree
-> > <devicetree@vger.kernel.org>; Jonathan Cameron <jic23@kernel.org>;
-> > Hartmut Knaack <knaack.h@gmx.de>; Lars-Peter Clausen <lars@metafoo.de>;
-> > Peter Meerwald-Stadler <pmeerw@pmeerw.net>; Rob Herring
-> > <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Ardelean,
-> > Alexandru <alexandru.Ardelean@analog.com>; Hennerich, Michael
-> > <Michael.Hennerich@analog.com>
-> > Subject: Re: [PATCH v3 5/6] iio: imu: Add support for adis16475
-> >=20
-> > On Wed, Apr 1, 2020 at 10:13 AM Sa, Nuno <Nuno.Sa@analog.com> wrote: =20
-> > > =20
-> > > > From: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > > Sent: Dienstag, 31. M=C3=A4rz 2020 20:16
-> > > > To: Sa, Nuno <Nuno.Sa@analog.com>
-> > > > Cc: linux-iio <linux-iio@vger.kernel.org>; devicetree
-> > > > <devicetree@vger.kernel.org>; Jonathan Cameron <jic23@kernel.org>;
-> > > > Hartmut Knaack <knaack.h@gmx.de>; Lars-Peter Clausen =20
-> > <lars@metafoo.de>; =20
-> > > > Peter Meerwald-Stadler <pmeerw@pmeerw.net>; Rob Herring
-> > > > <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; =20
-> > Ardelean, =20
-> > > > Alexandru <alexandru.Ardelean@analog.com>; Hennerich, Michael
-> > > > <Michael.Hennerich@analog.com>
-> > > > Subject: Re: [PATCH v3 5/6] iio: imu: Add support for adis16475
-> > > > On Tue, Mar 31, 2020 at 2:49 PM Nuno S=C3=A1 <nuno.sa@analog.com> w=
-rote: =20
-> >=20
-> > ...
-> >  =20
-> > > > > +#include <asm/unaligned.h> =20
-> >  =20
-> > > I thought we wanted alphabetic order... =20
-> >=20
-> > Yes, but from more generic header groups to less generic. Inside each
-> > group is alphabetical.
-> > asm/ is less generic than linux/.
-> > =20
->=20
-> Got it...
->=20
-> > > > Usually it goes after linux/* =20
-> >  =20
-> > > > > +#include <linux/bitfield.h>
-> > > > > +#include <linux/bitops.h>
-> > > > > +#include <linux/clk.h>
-> > > > > +#include <linux/debugfs.h>
-> > > > > +#include <linux/delay.h>
-> > > > > +#include <linux/device.h> =20
-> > > > =20
-> > > > > +#include <linux/kernel.h> =20
-> > > >
-> > > > What this is for?
-> > > > =20
-> > > Yeps. Not really needed... =20
-> >=20
-> > I think you needed it for DIV_ROUND_UP or alike macros. It also has
-> > container_of...
-> >  =20
->=20
-> Yes, DIV_ROUND_CLOSEST is defined there...
->=20
-> > > > > +#include <linux/iio/buffer.h>
-> > > > > +#include <linux/iio/iio.h>
-> > > > > +#include <linux/iio/imu/adis.h>
-> > > > > +#include <linux/iio/sysfs.h>
-> > > > > +#include <linux/iio/trigger_consumer.h>
-> > > > > +#include <linux/irq.h>
-> > > > > +#include <linux/module.h> =20
-> > > > =20
-> > > > > +#include <linux/of_device.h> =20
-> > > >
-> > > > Do you really need this? Perhaps mod_devicetable.h is what you are =
-=20
-> > looking =20
-> > > > for.
-> > > > =20
-> > >
-> > > Yes. For ` of_device_get_match_data ``. If changed by =20
-> > `device_get_match_data`, then I guess =20
-> > > I can drop it.. =20
-> >=20
-> > Probably change to mod_devicetable.h with property.h.
-> >  =20
-> > > > > +#include <linux/spi/spi.h> =20
-> >=20
-> > ...
-> >  =20
-> > > > > +       for (i =3D ARRAY_SIZE(adis16475_3db_freqs) - 2; i >=3D 1;=
- i--) { =20
-> > > >
-> > > > Why those margins? size-2 and 1 ?
-> > > > =20
-> > >
-> > > The -2 is needed since index 7 is not valid. The 1 I honestly don't r=
-emember =20
-> > why I did it =20
-> > > like this. Using > 0 is the same and more "common"... =20
-> >=20
-> > More common is >=3D 0. That's my question basically.
-> > And if 7 is not valid why to keep it in the array at all? =20
->=20
-> Well, I can remove the 7. I honestly took it from another driver and I gu=
-ess the idea
-> is to make explicit that 7 is not supported. Since this is a 3 bit field =
-and the datasheet
-> does not state this directly.
->=20
-> As for the >=3D0, I prefer to have either as is or >0 since we don't real=
-ly need to check the
-> index 0. If 1 fails, then we will use 0 either way...
->=20
-> > > > > +               if (adis16475_3db_freqs[i] >=3D filter)
-> > > > > +                       break;
-> > > > > +       } =20
-> >=20
-> > ...
-> >  =20
-> > > > > +#define ADIS16475_GYRO_CHANNEL(_mod) \
-> > > > > +       ADIS16475_MOD_CHAN(IIO_ANGL_VEL, IIO_MOD_ ## _mod, \
-> > > > > +       ADIS16475_REG_ ## _mod ## _GYRO_L, ADIS16475_SCAN_GYRO_ =
-=20
-> > ## =20
-> > > > _mod, 32, \ =20
-> > > > > +       32) =20
-> > > >
-> > > > It's not obvious that this is macro inside macro. Can you indent be=
-tter?
-> > > > Ditto for the rest similar ones.
-> > > > =20
-> > >
-> > > Honestly here I don't see any problems with indentation and it goes i=
-n =20
-> > conformity with =20
-> > > other IMU drivers already in tree. So here, as long as anyone else ha=
-s a =20
-> > problem with this, I prefer =20
-> > > to keep it this way... =20
-> >=20
-> > I'm not a maintainer, not my call :-)
-> >=20
-> > ...
-> >  =20
-> > > > > +       buffer =3D (u16 *)adis->buffer; =20
-> > > >
-> > > > Why the casting is needed?
-> > > > =20
-> > > > > +       crc =3D get_unaligned_be16(&buffer[offset + 2]); =20
-> > > >
-> > > > If your buffer is aligned in the structure, you may simple use =20
-> > be16_to_cpu(). =20
-> > > > Same for the rest of get_unaligned*() calls.
-> > > > Or do you have unaligned data there? =20
-> > >
-> > > This is a nice point. So, honestly I made it like this to keep confor=
-mity with =20
-> > other drivers we have =20
-> > > in our internal tree (in queue for upstream) and I also wondered abou=
-t this. =20
-> > The only justification I can =20
-> > > find to use unligned calls is to keep this independent from the ADIS =
-lib (not =20
-> > sure if it makes sense) since =20
-> > > we get the pointer from the library (allocated there).
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-It would be very odd to get a buffer from a library dealing with this sort =
-of
-device that wanted at least 8 byte aligned.  I guess we could add a paranoid
-check in the driver, but I think we can safely assume this is fine without =
-one.
+diff --git a/drivers/clk/clk-versaclock5.c b/drivers/clk/clk-versaclock5.c
 
-> > >
-> > > Now, if Im not missing nothing obvious we can access the buffer norma=
-lly =20
-> > since it's being allocated =20
-> > > with kmalloc which means we have  ARCH_KMALLOC_MINALIGN (which is =20
-> > at least 8 if Im not mistaken). =20
-> > > On top of this, the device sends the data as n 16 bits segments. So i=
-n theory, =20
-> > I guess we can ditch the =20
-> > > overhead of the *unaligned calls if any objections? =20
-> >=20
-> > No objections from my side at least.
-> >  =20
->=20
-> I will wait to see if someone else has anything to add and if not, I will=
- change it
-> to normal buffer accesses (probably using restricted types).
->=20
-
-If it's aligned, definitely prefer that to be explicit in the driver and use
-the relevant endian types.
-
-We have had a few cases where things are oddly padded so this may be cut and
-paste from one of those.
-
-Jonathan
-
+index 24fef51fbcb5..fa96659f8023
+--- a/drivers/clk/clk-versaclock5.c
++++ b/drivers/clk/clk-versaclock5.c
+@@ -124,6 +124,7 @@ enum vc5_model {
+ 	IDT_VC5_5P49V5933,
+ 	IDT_VC5_5P49V5935,
+ 	IDT_VC6_5P49V6901,
++	IDT_VC6_5P49V6965,
+ };
+ 
+ /* Structure to describe features of a particular VC5 model */
+@@ -683,6 +684,7 @@ static int vc5_map_index_to_output(const enum vc5_model model,
+ 	case IDT_VC5_5P49V5925:
+ 	case IDT_VC5_5P49V5935:
+ 	case IDT_VC6_5P49V6901:
++	case IDT_VC6_5P49V6965:
+ 	default:
+ 		return n;
+ 	}
+@@ -956,12 +958,20 @@ static const struct vc5_chip_info idt_5p49v6901_info = {
+ 	.flags = VC5_HAS_PFD_FREQ_DBL,
+ };
+ 
++static const struct vc5_chip_info idt_5p49v6965_info = {
++	.model = IDT_VC6_5P49V6965,
++	.clk_fod_cnt = 4,
++	.clk_out_cnt = 5,
++	.flags = 0,
++};
++
+ static const struct i2c_device_id vc5_id[] = {
+ 	{ "5p49v5923", .driver_data = IDT_VC5_5P49V5923 },
+ 	{ "5p49v5925", .driver_data = IDT_VC5_5P49V5925 },
+ 	{ "5p49v5933", .driver_data = IDT_VC5_5P49V5933 },
+ 	{ "5p49v5935", .driver_data = IDT_VC5_5P49V5935 },
+ 	{ "5p49v6901", .driver_data = IDT_VC6_5P49V6901 },
++	{ "5p49v6965", .driver_data = IDT_VC6_5P49V6965 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, vc5_id);
+@@ -972,6 +982,7 @@ static const struct of_device_id clk_vc5_of_match[] = {
+ 	{ .compatible = "idt,5p49v5933", .data = &idt_5p49v5933_info },
+ 	{ .compatible = "idt,5p49v5935", .data = &idt_5p49v5935_info },
+ 	{ .compatible = "idt,5p49v6901", .data = &idt_5p49v6901_info },
++	{ .compatible = "idt,5p49v6965", .data = &idt_5p49v6965_info },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, clk_vc5_of_match);
+-- 
+2.25.1
 
