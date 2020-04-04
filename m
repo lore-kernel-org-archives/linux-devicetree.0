@@ -5,99 +5,114 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1B2C2BA1A
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 10:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A20C2C2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 11:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6B292072B
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 10:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7791E20752
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 11:52:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dtRSXMGh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQ1elwuQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgDDK1s (ORCPT
+        id S1726005AbgDDLwf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Apr 2020 06:27:48 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36124 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbgDDK1s (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Apr 2020 06:27:48 -0400
-Received: by mail-wm1-f66.google.com with SMTP id d202so10526975wmd.1;
-        Sat, 04 Apr 2020 03:27:46 -0700 (PDT)
+        Sat, 4 Apr 2020 07:52:35 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53574 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbgDDLwf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Apr 2020 07:52:35 -0400
+Received: by mail-wm1-f65.google.com with SMTP id d77so9861609wmd.3;
+        Sat, 04 Apr 2020 04:52:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LKn/T/YOjm2g49N2GnTJO8IqVO2wTeZD3GHQLfr9788=;
-        b=dtRSXMGhG4s18xOq7nSqtCjqkc4ylms0u0M83uQs9rrN9ymNzrG/RR5hIC1Xr5vlND
-         HVpogzca5XksTkmZg0f8SU1Rc/9gXyOT3yvCbWRV44j51FJjThSZVFH63vTdk9HFx3uY
-         DwFS9xNp3YQKmjmd5suKwSBEePJjZInMSaMQt/GRVw56rmIEtesTPYU9c71qJi/+cs8z
-         P80A6ZMoUOfi0WDp2Zaa1XnxFae+FsgY+TLmNvGbYZXZwIAL+WLeh/tTMZirwziWkITb
-         Joux3aOdYMqYUepG5nDeb0ZfbHb6Ifoo7kdX4IsFG6fR4U+AF8ujKOfEbOdcwH3s5JPV
-         MfYg==
+        bh=NEH69Or2hzeYwgynW/zdgYOrxtAvoDOcH/4r2+cx3GQ=;
+        b=IQ1elwuQfrv7z7KBKqsfXe+nJtZ9EpUmkp/QEgxZh1eGAsSzPCh4Pw9aelJPkO1lwd
+         GeHg5B8Yg8SksRakKG3s5qyUWai+DwoUPCZzPAX9VG59mZ3lxjpIlgM0qT2LqFV6RMDS
+         EzQPLB+oY5i/+g/hbAt3vmNL/foVckzdilsQWAa85V+uD0PM+vwECrMcaaBiGOvtVXMO
+         aOuDKZxfO2lKiCVnsOC0uXYKUNBEplAHX6PjShJbIFLpuaLTL+JD2FH7FdjUgA778seH
+         R9zIV+cnmbX28Q/5I+reBqMmD5G6QBn6dCZ1GnBrfcinWAFvtlhPJuY7FBJqNa7HtoEE
+         ZlKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=LKn/T/YOjm2g49N2GnTJO8IqVO2wTeZD3GHQLfr9788=;
-        b=QrudkJnvY+35e7rZvaO+YNvDtaTczXAmGV2X9qrRM/VyjHSm4vcdRMxcYlOIomoRCg
-         +Nz7WIVf7JOOJP34CYqEEmzACHVT65wdQ1jM/erFaEnIWm/2G183cXTDkt1H+8sZS0py
-         HE4c/htgHKwmQJIOXfTx3nEP8NiEHqs3b70zEGCfIxBqleEB1Kg2CmNC95dhu5SPc3uu
-         ov5p0q8NSBFZEGrj1f48tbD9Y+9GdXk5RKL2Ydx6sL7bzPCc+T5n1phlLZ5NK4DPLWkH
-         X+Bz1HtvocjzeCHf9zWCmtF4FPK8GUq8oFTYy+QXplm9oKOfUOcox+VqTdsJUo6jEyOf
-         A0pg==
-X-Gm-Message-State: AGi0PuavjhKHBIVz4O5lzDAjOugxKo5okoca/P1m6miVjSV4NQFmR+zw
-        LgbiyMiPkkhj3Mea1AF01AU=
-X-Google-Smtp-Source: APiQypJ1TtPTEK86zb3XBL8CXguASyxCagcMjtYiJSPZja45TmT27ARgAd7NnAbtGutgz0SpzfoZCg==
-X-Received: by 2002:a1c:4805:: with SMTP id v5mr12759826wma.98.1585996066182;
-        Sat, 04 Apr 2020 03:27:46 -0700 (PDT)
+        bh=NEH69Or2hzeYwgynW/zdgYOrxtAvoDOcH/4r2+cx3GQ=;
+        b=CScyksfgGWtBMX2o2o2X6QYA3cwetP7tkp+MgMd707/wf7SdOFSiycMBTm5lwYwvjm
+         HR4FZNvGXP9NpBcYGXGR0MmGaZO6GbeHJ7QlKEkyBllVR27KlvazlP5H+d+8vJVM6i1c
+         jbYaSiD1aVfAVL4zU02GsH2Y+bTWZGp0qIsrn8h1TplCjFw/i3jlXB/h97V+Ym+IuXsw
+         i5igjHcYMjNTzjZaSu88+g3521k6fpVd1/R/GOeU7s6KlniwuJU0tpMfxyLMXGIuKFZ7
+         VFYB+aaO4QTXKlqD2lT0NUIvjKsIyMyh0fbOofhComw4WV+BW3bUctKnmq/WWyKhFbPk
+         KvyA==
+X-Gm-Message-State: AGi0PubmRkJPFyk/JL3d/p9I97iC9pF2YET5Tv6qyQkG3/BhpP4inLar
+        hzPzRJkEV+6qesEQ8p7XPgI=
+X-Google-Smtp-Source: APiQypLsS+luw94/uZOvPuvg8cKZwf3UNkI9eP06vdLN8Yj2UZWLbMLjom9VgzDkuQr2GPlhAP/WPg==
+X-Received: by 2002:a1c:cc11:: with SMTP id h17mr13428237wmb.39.1586001153735;
+        Sat, 04 Apr 2020 04:52:33 -0700 (PDT)
 Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id c18sm15833178wrx.5.2020.04.04.03.27.45
+        by smtp.gmail.com with ESMTPSA id g186sm16183276wmg.36.2020.04.04.04.52.32
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 04 Apr 2020 03:27:45 -0700 (PDT)
+        Sat, 04 Apr 2020 04:52:33 -0700 (PDT)
 From:   Johan Jonker <jbx6244@gmail.com>
-To:     jic23@kernel.org
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        heiko@sntech.de, robh+dt@kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+To:     lgirdwood@gmail.com
+Cc:     broonie@kernel.org, heiko@sntech.de, robh+dt@kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] dt-bindings: iio: adc: rockchip-saradc: add description for px30
-Date:   Sat,  4 Apr 2020 12:27:30 +0200
-Message-Id: <20200404102730.3295-3-jbx6244@gmail.com>
+Subject: [PATCH v3 2/3] dt-bindings: sound: rockchip-spdif: add #sound-dai-cells property
+Date:   Sat,  4 Apr 2020 13:52:24 +0200
+Message-Id: <20200404115225.4314-2-jbx6244@gmail.com>
 X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200404102730.3295-1-jbx6244@gmail.com>
-References: <20200404102730.3295-1-jbx6244@gmail.com>
+In-Reply-To: <20200404115225.4314-1-jbx6244@gmail.com>
+References: <20200404115225.4314-1-jbx6244@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The description below is already in use for px30.dtsi,
-but was somehow never added to a document, so add
-"rockchip,px30-saradc", "rockchip,rk3399-saradc"
-for saradc nodes on a px30 platform to rockchip-saradc.yaml.
+'#sound-dai-cells' is required to properly interpret
+the list of DAI specified in the 'sound-dai' property,
+so add them to 'rockchip-spdif.yaml'
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-Changes v2:
-  Add acked by
+Changes v3:
+  Add reviewed by
 ---
- Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/sound/rockchip-spdif.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-index 7653aa480..bcff82a42 100644
---- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-@@ -17,6 +17,7 @@ properties:
-       - const: rockchip,rk3399-saradc
-       - items:
-           - enum:
-+            - rockchip,px30-saradc
-             - rockchip,rk3308-saradc
-             - rockchip,rk3328-saradc
-             - rockchip,rv1108-saradc
+diff --git a/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
+index bfd44fd8e..f381dbbf5 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
++++ b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
+@@ -57,6 +57,9 @@ properties:
+       The phandle of the syscon node for the GRF register.
+       Required property on RK3288.
+ 
++  "#sound-dai-cells":
++    const: 0
++
+ required:
+   - compatible
+   - reg
+@@ -65,6 +68,7 @@ required:
+   - clock-names
+   - dmas
+   - dma-names
++  - "#sound-dai-cells"
+ 
+ if:
+   properties:
+@@ -90,4 +94,5 @@ examples:
+       clock-names = "mclk", "hclk";
+       dmas = <&dmac1_s 8>;
+       dma-names = "tx";
++      #sound-dai-cells = <0>;
+     };
 -- 
 2.11.0
 
