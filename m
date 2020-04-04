@@ -2,282 +2,363 @@ Return-Path: <SRS0=g3EE=5U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4F8C2BA16
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 13:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 504C6C2BA1B
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 13:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D7FF206E9
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 13:25:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KhHDddTV"
+	by mail.kernel.org (Postfix) with ESMTP id 12EFF2054F
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 13:54:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586008464;
+	bh=kP3rgXLRAVolw9CPUVEoaNjMhG6cMUtXedR+DGTQ7f0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=UCjxxM3B2GaT6jrfPOIXv2vbpzraMDLfu8wMBJskAIuGyzbB8KoGpJJ5eUp1SYoxU
+	 8iLgjrB5Ljsf/oiJL78kZlJpN+0RHuRtfVQtFl2U1IhN/ZU277j2yoYWgOUsXeV0cy
+	 /NiSAj+DGkDKdVXlg89gfD+6HVbmQBDfIC4vUIJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726258AbgDDNZi (ORCPT
+        id S1726039AbgDDNyV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Apr 2020 09:25:38 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:35163 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgDDNZi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Apr 2020 09:25:38 -0400
-Received: by mail-il1-f196.google.com with SMTP id 7so10221354ill.2;
-        Sat, 04 Apr 2020 06:25:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ScNwQlaT6PVi5sYfWnDXWuHcgtCKis/6yURrV47X/cw=;
-        b=KhHDddTVPCEDtxdQUJfKSnbB9NWNom/HqErDavx0IaUhRhdpx8p7eRolCvpreprFX+
-         bG0ts4onYD8+DdHJeAv4kcsjWFfqNFmy5dnffK5cQWyIL7BeoCKNAZdTJ0wCrOGTIXJU
-         GxFJYX4eLBWo5BFiMBaHxN3LTv3LmLNLCLWeDF5VFlIGrAsSu1qF5tONkYyuHRaRwVC6
-         oskhir3uLQZfptJIT5XeNYtQffa8kN7NYmCN+kZKERvMaW1AFGXGFjASeLS0U61etPc0
-         UHlbEIr6Fr51DTIo0qddYuYHxefIOvCnbrgfStN/khTJUK5HkQoNvB6CYoP8wXCkRi6A
-         ZiNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ScNwQlaT6PVi5sYfWnDXWuHcgtCKis/6yURrV47X/cw=;
-        b=EOjbxmd/TyXUjwssTfmDn+Wno9b2tSo4rQDw0Nqua0w8NNkWJMwTQaY1OaJSbt91N3
-         honKnha4nXtLgmAnxo7WU8TJr3JdlTP9Wzaoa/zpxswRF+9M7s07KWl7eqIapJdGenem
-         nLY0JAAl33u19XfXGlF2DXawOR+4qGdnBHuPU9tYLaGXp8Trdbec9ZyEOPPS77DLHZAw
-         N8JJ/cQpnN55+3KOHW2+TNEl/h1HXZqfFgn/9j1U3E1GFCGvCK7gnT0BVKchNI2pYFTU
-         gltuihQ82NE1RwI5Mkw6yxxN1ouKYUUYuILEHpyUNi3VSRM92BTrJVOUAIR3iqzyXcUq
-         L/9g==
-X-Gm-Message-State: AGi0PuZZab/Vn4OM7bFwrva84wD5sdpiHtZKZnU81raUQHKpT7hwFxGU
-        GmOQJiDT8BgilSDUIo4YDuiooumytl16uKvMj3s=
-X-Google-Smtp-Source: APiQypK3XiIUkQMbXIv7kgzxvm2CyJbazGkPtKRTHWEaSDKDC9suPX8g16lHi4ncEU9Lqs/8MRVkjMMs1CkPfI8XepQ=
-X-Received: by 2002:a92:4896:: with SMTP id j22mr12637650ilg.158.1586006736069;
- Sat, 04 Apr 2020 06:25:36 -0700 (PDT)
+        Sat, 4 Apr 2020 09:54:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726016AbgDDNyV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 4 Apr 2020 09:54:21 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 956182054F;
+        Sat,  4 Apr 2020 13:54:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586008459;
+        bh=kP3rgXLRAVolw9CPUVEoaNjMhG6cMUtXedR+DGTQ7f0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rtuyN5x8+SHV95f7C38p1vKhvljA4ofjW+e/W/sD0sTVun1EL8GRaMnz700pnJLoX
+         bbBW+ECBlM4/G0JkQkYkLEPV+plo1FbtoIQJ/dJVUIM9I6OOIWM5dPwG6c4BrOIYgR
+         OY9LVOAs8/mYAVh1LAXsY5IFwzP3uZp4TyV0rLOw=
+Date:   Sat, 4 Apr 2020 14:54:14 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "Costina, Adrian" <Adrian.Costina@analog.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "Nagy, Laszlo" <Laszlo.Nagy@analog.com>,
+        "Csomortani, Istvan" <Istvan.Csomortani@analog.com>,
+        "ardeleanalex@gmail.com" <ardeleanalex@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Grozav, Andrei" <Andrei.Grozav@analog.com>
+Subject: Re: [PATCH v9 0/8] iio: adi-axi-adc,ad9647: Add support for AD9467
+ ADC
+Message-ID: <20200404145414.004b7207@archlinux>
+In-Reply-To: <ce9c0b9d73435e923752c25ae6e66f6dbb562a14.camel@analog.com>
+References: <20200312083511.28832-1-alexandru.ardelean@analog.com>
+        <20200315130625.705548ce@archlinux>
+        <227c4c793044ca9a4e50f5d68d3de204c53d26e6.camel@analog.com>
+        <20200321104829.040661d9@archlinux>
+        <ce9c0b9d73435e923752c25ae6e66f6dbb562a14.camel@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <cover.1585751281.git.leonard.crestez@nxp.com> <c167baa48d6830cf32b9ac51968eeadd684ebf2d.1585751281.git.leonard.crestez@nxp.com>
-In-Reply-To: <c167baa48d6830cf32b9ac51968eeadd684ebf2d.1585751281.git.leonard.crestez@nxp.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Sat, 4 Apr 2020 08:25:24 -0500
-Message-ID: <CAHCN7xKpwex8MQbTFAYKjGPQbQ1uOe7EywASmcakg8F_2w-iuA@mail.gmail.com>
-Subject: Re: [PATCH v2 8/8] arm64: dts: imx8m: Add NOC nodes
-To:     Leonard Crestez <leonard.crestez@nxp.com>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-pm@vger.kernel.org, Martin Kepplinger <martink@posteo.de>,
-        Silvano di Ninno <silvano.dininno@nxp.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 9:35 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
->
-> Add nodes for the main interconnect of the imx8m series chips.
->
-> These nodes are bound to by devfreq and interconnect drivers.
->
-> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 24 +++++++++++++++++++++++
->  arch/arm64/boot/dts/freescale/imx8mn.dtsi | 24 +++++++++++++++++++++++
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 24 +++++++++++++++++++++++
->  3 files changed, 72 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> index 175c28ae10cf..41047b6709b6 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> @@ -6,10 +6,11 @@
->  #include <dt-bindings/clock/imx8mm-clock.h>
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/input/input.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/thermal/thermal.h>
-> +#include <dt-bindings/interconnect/imx8mm.h>
->
->  #include "imx8mm-pinfunc.h"
->
->  / {
->         interrupt-parent = <&gic>;
-> @@ -860,10 +861,33 @@
->                                 status = "disabled";
->                         };
->
->                 };
->
-> +               noc: interconnect@32700000 {
-> +                       compatible = "fsl,imx8mm-noc", "fsl,imx8m-noc";
-> +                       reg = <0x32700000 0x100000>;
-> +                       clocks = <&clk IMX8MM_CLK_NOC>;
-> +                       fsl,ddrc = <&ddrc>;
-> +                       #interconnect-cells = <1>;
-> +                       operating-points-v2 = <&noc_opp_table>;
-> +
-> +                       noc_opp_table: opp-table {
-> +                               compatible = "operating-points-v2";
-> +
-> +                               opp-150M {
-> +                                       opp-hz = /bits/ 64 <150000000>;
-> +                               };
-> +                               opp-375M {
-> +                                       opp-hz = /bits/ 64 <375000000>;
-> +                               };
-> +                               opp-750M {
-> +                                       opp-hz = /bits/ 64 <750000000>;
+On Mon, 30 Mar 2020 08:52:15 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
-Out of curiosity, the 8M Mini runs up to 750M, and  the 8M Nano and
-8MQ run up to 800.  The 8MQ had a patch to increase the assigned clock
-speed for the NOC to 800MHz
+> On Sat, 2020-03-21 at 10:48 +0000, Jonathan Cameron wrote:
+> > On Mon, 16 Mar 2020 08:47:27 +0000
+> > "Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+> >   
+> > > On Sun, 2020-03-15 at 13:06 +0000, Jonathan Cameron wrote:  
+> > > > On Thu, 12 Mar 2020 10:35:03 +0200
+> > > > Alexandru Ardelean <ardeleanalex@gmail.com> wrote:
+> > > >     
+> > > > > This changeset adds support for the AD9467 LVDS High-Speed ADC.
+> > > > > In order to support it, support for an FPGA ADI AXI ADC is added in this
+> > > > > set.
+> > > > > This uses the current support for IIO buffer DMAEngine.    
+> > > > 
+> > > > I took a look through this series and I'm think I'm now happy with it.
+> > > > However, I'd like to leave a bit of time for Rob, the DT binding
+> > > > Maintainer to take a look at the bindings.
+> > > > 
+> > > > Long term I sort of wonder if we might get some alternative for the
+> > > > ADI-AXI interface, either because Analog decide to rewrite it, or
+> > > > because someone else puts together similar IP. At that point we may
+> > > > want a more sophisticated registration framework etc.  I guess we
+> > > > can wait and see if anyone ever does that though.    
+> > > 
+> > > This registration mechanism is a bit of a rewrite of an older mechanism
+> > > that's
+> > > been in-use for 7+ years.
+> > > https://github.com/analogdevicesinc/linux/blob/master/drivers/iio/adc/cf_axi_adc_core.c#L832
+> > > Essentially, the old one searches on the SPI bus for a device, while this
+> > > one
+> > > makes the coupling to the AXI-ADC driver a bit tighter, by requiring it to
+> > > explicitly register with the AXI-ADC driver.
+> > > No idea which is better; since both implementations require knowledge about
+> > > the
+> > > AXI-ADC driver.
+> > > In the DT, the main difference is a rename of the property 'spibus-
+> > > connected' to
+> > > 'adi,adc-dev'.  
+> > 
+> > The approach here seems reasonable to me.  We can be more flexible
+> > if we ever need to.
+> >   
+> > > I agree that a more sophisticated/generalized interface between the 2 would
+> > > be a
+> > > better idea, but [given how long this has been as-is], I don't feel it
+> > > happening
+> > > really soon.
+> > > 
+> > > I'm also preparing now an AXI-DAC driver, similar to this one.
+> > > The idea would be to also prepare upstreaming the AD9361, which is an RF
+> > > transceiver. I'm not sure whether that would classify as an MFD device [ADC
+> > > &
+> > > DAC], or whether as an IIO device, with a drivers/iio/transceiver sub-type.  
+> > 
+> > We did have the slightly silly naming of addac in staging for a while.
+> > 
+> > Anyhow, I'd say a single driver (not mfd), in a new directory as appropriate.
+> >   
+> > > Related, what would be interesting, is a generic multi-chip-sync mechanism.
+> > > For many complicated devices [typically high-speed ADCs/DACs/transceivers],
+> > > this
+> > > seems to be a more common use-case.
+> > > I've been wondering about a way to do it; if you have any input, or a
+> > > subsystem
+> > > that does that well, I'm open to inputs.
+> > > MFD doesn't seem to be quite be that. Doing it with clocks has been tried
+> > > and is
+> > > not very easy.
+> > > Another idea would be to try to implement some device-group mechanism. The
+> > > idea
+> > > would be to have state-transition tables, and each driver defines it's own
+> > > callbacks for each state/state-transition. Whenever a device-group needs to
+> > > jump
+> > > a certain state, all callbacks are called to put each device in it's own
+> > > sub-
+> > > state.
+> > > Still not sure how good this approach is, but it sounds the closest to
+> > > something
+> > > that would work.  
+> > 
+> > I'm not sure I follow in enough detail what you mean to offer detailed
+> > opinions.
+> > Are we talking pipeling type setups similar to the media framework does?  
+> 
+> Seems I forgot about this email.
+> Sorry about that. If they go through the weekend, I might forget about some
+> emails.
+> 
+> So, I'm not super-familiar with meda. If you are referring to
+> of_graph/fwnode_graph stuff [for defining order of init], then yes, something
+> similar.
+> Though, I think I tried something with of_graph and it seemed to be a bit too
+> many DT entries.
+> I think the clock "links/connections" are a bit neater as they specify the
+> minimum required to know that 2 devices depend on one another in a certain
+> order.
+I was more thinking about the media controller framework that lets you stitch
+together multiple hardware blocks at runtime.
 
-See: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/patch/arch/arm64/boot/dts/freescale?id=912b9dacf3f0ffad55e1a1b3c5af0e433ebdb5dd)
+https://lwn.net/Articles/415714/
 
-The 8M Mini and 8M Nano appear to be setting the default speed to 0.
+> 
+> > 
+> > It would certainly be possible to have a notification system that multiple
+> > driver
+> > can register to but I'm not sure I follow the usecase.  Perhaps some in depth
+> > examples would help me understand?
+> >   
+> 
+> The use-case typically is when there are 2 x high-speed transceivers.
+> And this gets more complicated when doing JESD204.
+> Because you need certain clocks/PLLs and certain chips to initialize in a
+> certain order.
+> 
+> If you just want to do a single-static initialization during probe [for some
+> complex transceiver configuration], you can do it via probe and that is fine [it
+> works].
+> 
+> But if you want to re-configure the JESD204 link [at run-time], or change some
+> transceiver parameters, you would [sometimes] need to re-do a big part of the
+> configuration topology, same as during probe, including in the same order that
+> they were probed; admittedly, some things can be done via the clock framework,
+> but there are limitations.
+> A workaround [which we didn't try and likely won't] is to convert the drivers to
+> modules and move some things to userspace.  
+> In the meantime, one thing I'm trying is to decouple some init stuff away from
+> probe and move it to a generic state-machine that takes care of re-
+> initialization ordering.
 
-Should the 8M Mini or 8M Nano do something similar to what the 8MQ
-did, or does this series negate the need for such a patch?
+It does sound similar to the constraints seen in both media controller
+related stuff, and the for that matter some of the asoc bits where really quite
+complex reconfiguration can be needed.
 
-thanks
+Jonathan
 
-adam
+> 
+> 
+> > Thanks,
+> > 
+> > Jonathan
+> >   
+> > > Thanks
+> > > Alex
+> > >   
+> > > > Jonathan
+> > > >     
+> > > > > Changelog v8 -> v9:
+> > > > > * adding more Analog people to the list; predominantly HDL people; this
+> > > > >   should help me sync people about the details of regs/reg-names
+> > > > > * added 'Acked-by: Moritz Fischer <mdf@kernel.org>' tag to fpga patches
+> > > > >   - we can always re-update these patches if something else is decided
+> > > > > about
+> > > > >     the location of the 'adi-axi-common.h' header; I'm not insisting
+> > > > > about
+> > > > >     where to put it; I'm open to other proposals
+> > > > > * patch 'iio: adc: adi-axi-adc: add support for AXI ADC IP core'
+> > > > >   - prefixed regs ADI_AXI_ ; I tried ADI_AXI_ADC_, but that seemed to
+> > > > > make
+> > > > >     them too long
+> > > > >   - dropped unused regs; will add them as stuff gets added in the
+> > > > > upstream
+> > > > >     driver; in the meantime, reg-names can be reworked
+> > > > >   - dropped generic LOWERXY_SET/GET macros
+> > > > >   - update reg-names a bit; will update them in the docs and HDL
+> > > > >   - order in adi_axi_adc_conv_unregister() should now be symmetrically
+> > > > >     oppposite now to the register function
+> > > > >   - implemented 'is_visible()' callback to adi_axi_adc_attributes[] so
+> > > > > that
+> > > > >     attrs can be made invisible to userspace if needed;
+> > > > >   - 'indio_dev->name = "adi-axi-adc";'
+> > > > >   - added kernel doc-string for @reg_access
+> > > > > * patch 'iio: adc: ad9467: add support AD9467 ADC'
+> > > > >   - ad9467_spi_read() split in 2 buffers; tbuf & rbuf
+> > > > >   - removed 'if (chan->extend_name)' test ; left-over from initial
+> > > > > driver
+> > > > >   - removed 'if (!st->clk)' check; driver will fail probe without a
+> > > > > clock
+> > > > >   - removed 'if (!spi->dev.of_node)' in probe; shouldn't be needed
+> > > > >   - using 'of_device_get_match_data()' in probe to get data; moved chip
+> > > > >     info table entry as data on the of_device_id table
+> > > > > 
+> > > > > Changelog v7 -> v8:
+> > > > > * in 'iio: adc: adi-axi-adc: add support for AXI ADC IP core'
+> > > > >   - updated register definitions and bits to newer format/docs; the ref
+> > > > > driver wasn't really up-to-date
+> > > > >     -- prefixed bit names with reg-name to avoid bit definition
+> > > > > colisions;
+> > > > > that makes some macros longer, but at least the format is consistent
+> > > > >   - using dev_name(&pdev->dev) for indio_dev->name
+> > > > >   - moved reset to own axi_adc_reset() function; may be re-used later
+> > > > >   - some re-formatting/alignment changes
+> > > > >   - address ENOSYS checkpatch complaint; changed with EOPNOTSUPP
+> > > > > 
+> > > > > Changelog v6 -> v7:
+> > > > > * Fixed dt-schema build for adi,axi-adc.yaml based on Rob's suggestion
+> > > > >   - added '$ref: /schemas/types.yaml#/definitions/phandle' to 'adi,adc-
+> > > > > dev'
+> > > > >   - dropped 'maxItems' from 'adi,adc-dev'
+> > > > > 
+> > > > > Changelog v5 -> v6
+> > > > > * fix URLs; got changed during rename
+> > > > >    https://wiki.analog.com/resources/fpga/docs/adi_axi_adc_ip ->
+> > > > >    https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
+> > > > >   - noticed while working on the AXI DAC driver
+> > > > > 
+> > > > > Changelog v4 -> v5:
+> > > > > * update drivers/iio/adc/Kconfig note about module name; omitted during
+> > > > > first rename
+> > > > >    - 'module will be called axi-adc.' -> 'module will be called adi-axi-
+> > > > > adc.'
+> > > > > 
+> > > > > Changelog v3 -> v4:
+> > > > > * addressed Rob's dt-remarks
+> > > > >    - change 'adi-axi-adc-client' prop to 'adi,adc-dev'
+> > > > > 
+> > > > > Changelog v2 -> v3:
+> > > > > * addressed compiler warning
+> > > > > 
+> > > > > Changelog v1 -> v2:
+> > > > > * first series was added a bit hastily
+> > > > > * addressed  'make dt_binding_check' complaints; seems I missed a few
+> > > > > when
+> > > > > running the check; 
+> > > > > * added missing patches to include/linux/fpga/adi-axi-common.h
+> > > > >    - 'include: fpga: adi-axi-common.h: fixup whitespace tab -> space'
+> > > > >    - 'include: fpga: adi-axi-common.h: add version helper macros'
+> > > > > * patch 'iio: buffer-dmaengine: add dev-managed calls for buffer
+> > > > > alloc/free'
+> > > > >    - remove copy+pasted comment for 'devm_iio_dmaengine_buffer_alloc()'
+> > > > >    - removed devm_iio_dmaengine_buffer_free() ; hopefully it might never
+> > > > > be
+> > > > > needed
+> > > > >    - fix-up alignment for devm_iio_dmaengine_buffer_alloc() in header
+> > > > > * patch 'iio: adc: adi-axi-adc: add support for AXI ADC IP core'
+> > > > >    - renamed axi-adc.c -> adi-axi-adc.c & Kconfig symbol
+> > > > >    - prefix all axi_adc -> adi_axi_adc
+> > > > >    - removed switch statement in axi_adc_read_raw() &
+> > > > > axi_adc_write_raw()
+> > > > >    - remove axi_adc_chan_spec ; replaced with iio_chan_spec directly ;
+> > > > > will
+> > > > > think of a simpler solution for extra chan params
+> > > > >    - removed left-over 'struct axi_adc_cleanup_data'
+> > > > >    - moved 'devm_add_action_or_reset()' call right after
+> > > > > 'adi_axi_adc_attach_client()'
+> > > > >    - switched to using 'devm_platform_ioremap_resource()'
+> > > > > * patch 'iio: adc: ad9467: add support AD9467 ADC'
+> > > > >   - renamed ADI_ADC reg prefixes to AN877_ADC
+> > > > >   - dropped 'info_mask_separate' field in AD9467_CHAN - will be re-added
+> > > > > later when driver gets more features; was left-over from the initial ref
+> > > > > driver
+> > > > >   - remove .shift = 0,  in AD9467_CHAN
+> > > > >   - renamed 'sample-clock' -> 'adc-clock'
+> > > > >   - direct returns in ad9467_read_raw() & ad9467_write_raw() &
+> > > > > ad9467_setup() switch statements
+> > > > >   - removed blank line after devm_axi_adc_conv_register()
+> > > > >   - removed ad9467_id & reworked to use ad9467_of_match
+> > > > > 
+> > > > > Alexandru Ardelean (6):
+> > > > >   include: fpga: adi-axi-common.h: fixup whitespace tab -> space
+> > > > >   include: fpga: adi-axi-common.h: add version helper macros
+> > > > >   iio: buffer-dmaengine: use %zu specifier for sprintf(align)
+> > > > >   iio: buffer-dmaengine: add dev-managed calls for buffer alloc
+> > > > >   dt-bindings: iio: adc: add bindings doc for AXI ADC driver
+> > > > >   dt-bindings: iio: adc: add bindings doc for AD9467 ADC
+> > > > > 
+> > > > > Michael Hennerich (2):
+> > > > >   iio: adc: adi-axi-adc: add support for AXI ADC IP core
+> > > > >   iio: adc: ad9467: add support AD9467 ADC
+> > > > > 
+> > > > >  .../bindings/iio/adc/adi,ad9467.yaml          |  65 +++
+> > > > >  .../bindings/iio/adc/adi,axi-adc.yaml         |  63 +++
+> > > > >  drivers/iio/adc/Kconfig                       |  35 ++
+> > > > >  drivers/iio/adc/Makefile                      |   2 +
+> > > > >  drivers/iio/adc/ad9467.c                      | 420 ++++++++++++++
+> > > > >  drivers/iio/adc/adi-axi-adc.c                 | 518 ++++++++++++++++++
+> > > > >  .../buffer/industrialio-buffer-dmaengine.c    |  41 +-
+> > > > >  include/linux/fpga/adi-axi-common.h           |   6 +-
+> > > > >  include/linux/iio/adc/adi-axi-adc.h           |  64 +++
+> > > > >  include/linux/iio/buffer-dmaengine.h          |   3 +
+> > > > >  10 files changed, 1215 insertions(+), 2 deletions(-)
+> > > > >  create mode 100644
+> > > > > Documentation/devicetree/bindings/iio/adc/adi,ad9467.yaml
+> > > > >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,axi-
+> > > > > adc.yaml
+> > > > >  create mode 100644 drivers/iio/adc/ad9467.c
+> > > > >  create mode 100644 drivers/iio/adc/adi-axi-adc.c
+> > > > >  create mode 100644 include/linux/iio/adc/adi-axi-adc.h
+> > > > >     
 
-> +                               };
-> +                       };
-> +               };
-> +
->                 aips4: bus@32c00000 {
->                         compatible = "fsl,aips-bus", "simple-bus";
->                         reg = <0x32df0000 0x10000>;
->                         #address-cells = <1>;
->                         #size-cells = <1>;
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-> index 88e7d74e077f..e8a55956813f 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-> @@ -6,10 +6,11 @@
->  #include <dt-bindings/clock/imx8mn-clock.h>
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/input/input.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/thermal/thermal.h>
-> +#include <dt-bindings/interconnect/imx8mn.h>
->
->  #include "imx8mn-pinfunc.h"
->
->  / {
->         interrupt-parent = <&gic>;
-> @@ -751,10 +752,33 @@
->                                 status = "disabled";
->                         };
->
->                 };
->
-> +               noc: interconnect@32700000 {
-> +                       compatible = "fsl,imx8mn-noc", "fsl,imx8m-noc";
-> +                       reg = <0x32700000 0x100000>;
-> +                       clocks = <&clk IMX8MN_CLK_NOC>;
-> +                       fsl,ddrc = <&ddrc>;
-> +                       #interconnect-cells = <1>;
-> +                       operating-points-v2 = <&noc_opp_table>;
-> +
-> +                       noc_opp_table: opp-table {
-> +                               compatible = "operating-points-v2";
-> +
-> +                               opp-100M {
-> +                                       opp-hz = /bits/ 64 <100000000>;
-> +                               };
-> +                               opp-600M {
-> +                                       opp-hz = /bits/ 64 <600000000>;
-> +                               };
-> +                               opp-800M {
-> +                                       opp-hz = /bits/ 64 <800000000>;
-> +                               };
-> +                       };
-> +               };
-> +
->                 aips4: bus@32c00000 {
->                         compatible = "fsl,aips-bus", "simple-bus";
->                         reg = <0x32df0000 0x10000>;
->                         #address-cells = <1>;
->                         #size-cells = <1>;
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index ea93bc4b7d7e..3a208feec74c 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -9,10 +9,11 @@
->  #include <dt-bindings/reset/imx8mq-reset.h>
->  #include <dt-bindings/gpio/gpio.h>
->  #include "dt-bindings/input/input.h"
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/thermal/thermal.h>
-> +#include <dt-bindings/interconnect/imx8mq.h>
->  #include "imx8mq-pinfunc.h"
->
->  / {
->         interrupt-parent = <&gpc>;
->
-> @@ -1026,10 +1027,33 @@
->                                 fsl,num-rx-queues = <3>;
->                                 status = "disabled";
->                         };
->                 };
->
-> +               noc: interconnect@32700000 {
-> +                       compatible = "fsl,imx8mq-noc", "fsl,imx8m-noc";
-> +                       reg = <0x32700000 0x100000>;
-> +                       clocks = <&clk IMX8MQ_CLK_NOC>;
-> +                       fsl,ddrc = <&ddrc>;
-> +                       #interconnect-cells = <1>;
-> +                       operating-points-v2 = <&noc_opp_table>;
-> +
-> +                       noc_opp_table: opp-table {
-> +                               compatible = "operating-points-v2";
-> +
-> +                               opp-133M {
-> +                                       opp-hz = /bits/ 64 <133333333>;
-> +                               };
-> +                               opp-400M {
-> +                                       opp-hz = /bits/ 64 <400000000>;
-> +                               };
-> +                               opp-800M {
-> +                                       opp-hz = /bits/ 64 <800000000>;
-> +                               };
-> +                       };
-> +               };
-> +
->                 bus@32c00000 { /* AIPS4 */
->                         compatible = "fsl,aips-bus", "simple-bus";
->                         reg = <0x32df0000 0x10000>;
->                         #address-cells = <1>;
->                         #size-cells = <1>;
-> --
-> 2.17.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
