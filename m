@@ -2,248 +2,123 @@ Return-Path: <SRS0=g3EE=5U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DDAC2BA15
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 15:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 423ACC2BA15
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 15:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7582070E
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 15:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17CB5206C3
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 15:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586014960;
-	bh=2nbQzzTWUae4gAnFooHgdOimjhE6qkQ3FFCGp5LEx08=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=2kynrPVGg3y4C2f3DLFJDfe4CLTvrAJviQ2+Y6fe0RxcDjpXjcGpfmmsNxn9sEvaG
-	 Lr4Tl/AxoI4WT14zdc1T8fB6jjE2Vvt64Urk7W+qzMtmUMece6vQenlp5XElFELMkk
-	 DvCEbS0j21ANP2kPYYUFU41NuwhiFEAdJ1dIHMuU=
+	s=default; t=1586015160;
+	bh=GMu0zk+p8QMuMWjCbtVqePXwGuMgSxIWxR0r1z6lvyU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TqRh1Fw0kHNMb5MDZkE2+mhKTlYAxVq4yX1VdYqHj+/qyspS19QW6sTOqz7cjbBA8
+	 0mJHMm4j9C4aW0e6JWhVSE0R4H2k79hQu+GehUL5QI2vgHeb02rvxFDN+mwMTY0QHs
+	 0Z9V67j7NuLJO7fnHOC+z2mCQDFZ7y+vGqQ7ck0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbgDDPmk (ORCPT
+        id S1726224AbgDDPp7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Apr 2020 11:42:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39052 "EHLO mail.kernel.org"
+        Sat, 4 Apr 2020 11:45:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726229AbgDDPmk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 4 Apr 2020 11:42:40 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726039AbgDDPp7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 4 Apr 2020 11:45:59 -0400
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A88420644;
-        Sat,  4 Apr 2020 15:42:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96CB3206C3;
+        Sat,  4 Apr 2020 15:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586014958;
-        bh=2nbQzzTWUae4gAnFooHgdOimjhE6qkQ3FFCGp5LEx08=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VlkvCwndO4kgFzhKS2cdPI+DV6x1M1e03OyEJVQAl9xp9i5EyfYN7Pjpharfjv0x5
-         9hmVDfUQJdFoP9XVqD7JG1UuXWADqYaT0BgmdxvqzDXi6bWsgL71eBkJ89rxISacId
-         Bb0AdTf2pzaNGphhFpDmh+M5A8Et9oPasOPcSyig=
-Date:   Sat, 4 Apr 2020 16:42:34 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     =?UTF-8?B?R2HDq3RhbiBBbmRyw6k=?= <rvlander@gaetanandre.eu>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 2/2] iio: accel: st_sensors:  add support for LIS2HH12
-Message-ID: <20200404164234.2e8a80d5@archlinux>
-In-Reply-To: <20200330171031.GA41042@gerhold.net>
-References: <20200330141923.280226-1-rvlander@gaetanandre.eu>
-        <20200330141923.280226-2-rvlander@gaetanandre.eu>
-        <20200330171031.GA41042@gerhold.net>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1586015158;
+        bh=GMu0zk+p8QMuMWjCbtVqePXwGuMgSxIWxR0r1z6lvyU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=In63Izep8i8dqQyydQQmo8v++EZOqlLlmMuKdMxXFfzEBMh1HfJabL2vVFHShgGIj
+         /Wo4gzAUVDMtw1/UNGmQf1lYig+Kg4Wp8LDhqUX2GeATB1X7WwqAm1JcIUyZqtQ+Zk
+         TfnheDJbmR4Co6Zm3mHw7Ky+Ki1/d+WJm7frwn84=
+Received: by mail-ed1-f44.google.com with SMTP id bd14so13077896edb.10;
+        Sat, 04 Apr 2020 08:45:58 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYb4DqvdnthUD2B9TpA8TuFVbN9WT5N8639J2gvInN+1nJ/B7xV
+        5yAP+k1RqpFdua6NhQ3tYWbJcxVsGnqB1OeI8A==
+X-Google-Smtp-Source: APiQypKX48tTaJ6RxCfGLNPptu/cJWdbVnwRtToRHot3QHJ2YgdHABiYCkH652IzhRi38qOA2XH03CE7gPBlBXCImT4=
+X-Received: by 2002:a50:af85:: with SMTP id h5mr12733695edd.300.1586015157107;
+ Sat, 04 Apr 2020 08:45:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20200331082725.81048-1-jitao.shi@mediatek.com> <20200331082725.81048-2-jitao.shi@mediatek.com>
+In-Reply-To: <20200331082725.81048-2-jitao.shi@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sat, 4 Apr 2020 23:45:45 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_-77zLp1W=29oxdFbPWzdiUbk-dJfEmUU16CJoLxC8FMg@mail.gmail.com>
+Message-ID: <CAAOTY_-77zLp1W=29oxdFbPWzdiUbk-dJfEmUU16CJoLxC8FMg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] dt-bindings: display: mediatek: add property to
+ control mipi tx drive current
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        srv_heupstream@mediatek.com, huijuan.xie@mediatek.com,
+        stonea168@163.com, cawa.cheng@mediatek.com,
+        linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com,
+        eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 30 Mar 2020 19:10:31 +0200
-Stephan Gerhold <stephan@gerhold.net> wrote:
+Hi, Jitao:
 
-> Hi,
->=20
-> On Mon, Mar 30, 2020 at 04:19:23PM +0200, Ga=C3=ABtan Andr=C3=A9 wrote:
-> > Add support for STMicroelectronics LISHH12 accelerometer in st_accel
-> > framework.
-> >=20
-> > https://www.st.com/resource/en/datasheet/lis2hh12.pdf
-> >=20
-> > Signed-off-by: Ga=C3=ABtan Andr=C3=A9 <rvlander@gaetanandre.eu> =20
->=20
-> Thanks a lot for sending this patch upstream!
+Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B43=E6=9C=8831=E6=
+=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=884:28=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Add a property to control mipi tx drive current:
+> "drive-strength-microamp"
 
-Thanks. Applied to the togreg branch of iio.git and pushed out as testing
-for the various autobuilders to poke at it.
+Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 
-Thanks,
-
-Jonathan
-
->=20
-> > ---
-> >  drivers/iio/accel/Kconfig         |  2 +-
-> >  drivers/iio/accel/st_accel.h      |  2 +
-> >  drivers/iio/accel/st_accel_core.c | 77 +++++++++++++++++++++++++++++++
-> >  drivers/iio/accel/st_accel_i2c.c  |  5 ++
-> >  4 files changed, 85 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
-> > index 5d91a6dda894..24ebe9e76915 100644
-> > --- a/drivers/iio/accel/Kconfig
-> > +++ b/drivers/iio/accel/Kconfig
-> > @@ -238,7 +238,7 @@ config IIO_ST_ACCEL_3AXIS
-> >  	  Say yes here to build support for STMicroelectronics accelerometers:
-> >  	  LSM303DLH, LSM303DLHC, LIS3DH, LSM330D, LSM330DL, LSM330DLC,
-> >  	  LIS331DLH, LSM303DL, LSM303DLM, LSM330, LIS2DH12, H3LIS331DL,
-> > -	  LNG2DM, LIS3DE, LIS2DE12
-> > +	  LNG2DM, LIS3DE, LIS2DE12, LIS2HH12
-> > =20
-> >  	  This driver can also be built as a module. If so, these modules
-> >  	  will be created:
-> > diff --git a/drivers/iio/accel/st_accel.h b/drivers/iio/accel/st_accel.h
-> > index 5b13e293cade..5d356288e001 100644
-> > --- a/drivers/iio/accel/st_accel.h
-> > +++ b/drivers/iio/accel/st_accel.h
-> > @@ -35,6 +35,7 @@ enum st_accel_type {
-> >  	LIS2DW12,
-> >  	LIS3DHH,
-> >  	LIS2DE12,
-> > +	LIS2HH12,
-> >  	ST_ACCEL_MAX,
-> >  };
-> > =20
-> > @@ -59,6 +60,7 @@ enum st_accel_type {
-> >  #define LIS3DHH_ACCEL_DEV_NAME		"lis3dhh"
-> >  #define LIS3DE_ACCEL_DEV_NAME		"lis3de"
-> >  #define LIS2DE12_ACCEL_DEV_NAME		"lis2de12"
-> > +#define LIS2HH12_ACCEL_DEV_NAME		"lis2hh12"
-> > =20
-> >  /**
-> >  * struct st_sensors_platform_data - default accel platform data
-> > diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_a=
-ccel_core.c
-> > index e2ec5d127495..43c50167d220 100644
-> > --- a/drivers/iio/accel/st_accel_core.c
-> > +++ b/drivers/iio/accel/st_accel_core.c
-> > @@ -904,6 +904,83 @@ static const struct st_sensor_settings st_accel_se=
-nsors_settings[] =3D {
-> >  		.multi_read_bit =3D true,
-> >  		.bootime =3D 2,
-> >  	},
-> > +	{
-> > +		.wai =3D 0x41,
-> > +		.wai_addr =3D ST_SENSORS_DEFAULT_WAI_ADDRESS,
-> > +		.sensors_supported =3D {
-> > +			[0] =3D LIS2HH12_ACCEL_DEV_NAME,
-> > +		},
-> > +		.ch =3D (struct iio_chan_spec *)st_accel_16bit_channels,
-> > +		.odr =3D {
-> > +			.addr =3D 0x20,
-> > +			.mask =3D 0x70,
-> > +			.odr_avl =3D {
-> > +				{ .hz =3D 10, .value =3D 0x01, },
-> > +				{ .hz =3D 50, .value =3D 0x02, },
-> > +				{ .hz =3D 100, .value =3D 0x03, },
-> > +				{ .hz =3D 200, .value =3D 0x04, },
-> > +				{ .hz =3D 400, .value =3D 0x05, },
-> > +				{ .hz =3D 800, .value =3D 0x06, },
-> > +			},
-> > +		},
-> > +		.pw =3D {
-> > +			.addr =3D 0x20,
-> > +			.mask =3D 0x70,
-> > +			.value_off =3D ST_SENSORS_DEFAULT_POWER_OFF_VALUE,
-> > +		},
-> > +		.enable_axis =3D {
-> > +			.addr =3D ST_SENSORS_DEFAULT_AXIS_ADDR,
-> > +			.mask =3D ST_SENSORS_DEFAULT_AXIS_MASK,
-> > +		},
-> > +		.fs =3D {
-> > +			.addr =3D 0x23,
-> > +			.mask =3D 0x30,
-> > +			.fs_avl =3D {
-> > +				[0] =3D {
-> > +					.num =3D ST_ACCEL_FS_AVL_2G,
-> > +					.value =3D 0x00,
-> > +					.gain =3D IIO_G_TO_M_S_2(61),
-> > +				},
-> > +				[1] =3D {
-> > +					.num =3D ST_ACCEL_FS_AVL_4G,
-> > +					.value =3D 0x02,
-> > +					.gain =3D IIO_G_TO_M_S_2(122),
-> > +				},
-> > +				[2] =3D {
-> > +					.num =3D ST_ACCEL_FS_AVL_8G,
-> > +					.value =3D 0x03,
-> > +					.gain =3D IIO_G_TO_M_S_2(244),
-> > +				},
-> > +			},
-> > +		},
-> > +		.bdu =3D {
-> > +			.addr =3D 0x20,
-> > +			.mask =3D 0x08,
-> > +		},
-> > +		.drdy_irq =3D {
-> > +			.int1 =3D {
-> > +				.addr =3D 0x22,
-> > +				.mask =3D 0x01,
-> > +			},
-> > +			.int2 =3D {
-> > +				.addr =3D 0x25,
-> > +				.mask =3D 0x01,
-> > +			},
-> > +			.addr_ihl =3D 0x24,
-> > +			.mask_ihl =3D 0x02,
-> > +			.stat_drdy =3D {
-> > +				.addr =3D ST_SENSORS_DEFAULT_STAT_ADDR,
-> > +				.mask =3D 0x07,
-> > +			},
-> > +		},
-> > +		.sim =3D {
-> > +			.addr =3D 0x23,
-> > +			.value =3D BIT(0),
-> > +		},
-> > +		.multi_read_bit =3D true,
-> > +		.bootime =3D 2,
-> > +	},
-> > +
-> >  }; =20
->=20
-> I checked that this conforms to the information in the linked datasheet:
->=20
-> Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
->=20
-> > =20
-> >  static int st_accel_read_raw(struct iio_dev *indio_dev,
-> > diff --git a/drivers/iio/accel/st_accel_i2c.c b/drivers/iio/accel/st_ac=
-cel_i2c.c
-> > index 8c489312f668..821854251a7b 100644
-> > --- a/drivers/iio/accel/st_accel_i2c.c
-> > +++ b/drivers/iio/accel/st_accel_i2c.c
-> > @@ -104,6 +104,10 @@ static const struct of_device_id st_accel_of_match=
-[] =3D {
-> >  		.compatible =3D "st,lis2de12",
-> >  		.data =3D LIS2DE12_ACCEL_DEV_NAME,
-> >  	},
-> > +	{
-> > +		.compatible =3D "st,lis2hh12",
-> > +		.data =3D LIS2HH12_ACCEL_DEV_NAME,
-> > +	},
-> >  	{},
-> >  };
-> >  MODULE_DEVICE_TABLE(of, st_accel_of_match);
-> > @@ -138,6 +142,7 @@ static const struct i2c_device_id st_accel_id_table=
-[] =3D {
-> >  	{ LIS2DW12_ACCEL_DEV_NAME },
-> >  	{ LIS3DE_ACCEL_DEV_NAME },
-> >  	{ LIS2DE12_ACCEL_DEV_NAME },
-> > +	{ LIS2HH12_ACCEL_DEV_NAME },
-> >  	{},
-> >  };
-> >  MODULE_DEVICE_TABLE(i2c, st_accel_id_table);
-> > --=20
-> > 2.26.0 =20
-
+>
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  .../devicetree/bindings/display/mediatek/mediatek,dsi.txt    | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
+dsi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.t=
+xt
+> index a19a6cc375ed..d78b6d6d8fab 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
+> @@ -33,6 +33,10 @@ Required properties:
+>  - #clock-cells: must be <0>;
+>  - #phy-cells: must be <0>.
+>
+> +Optional properties:
+> +- drive-strength-microamp: adjust driving current, should be 3000 ~ 6000=
+. And
+> +                                                  the step is 200.
+> +
+>  Example:
+>
+>  mipi_tx0: mipi-dphy@10215000 {
+> @@ -42,6 +46,7 @@ mipi_tx0: mipi-dphy@10215000 {
+>         clock-output-names =3D "mipi_tx0_pll";
+>         #clock-cells =3D <0>;
+>         #phy-cells =3D <0>;
+> +       drive-strength-microamp =3D <4600>;
+>  };
+>
+>  dsi0: dsi@1401b000 {
+> --
+> 2.21.0
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
