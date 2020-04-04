@@ -2,104 +2,282 @@ Return-Path: <SRS0=g3EE=5U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE92C2BA1B
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 11:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4F8C2BA16
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 13:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31F7D20659
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 11:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D7FF206E9
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Apr 2020 13:25:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KMcn9it0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KhHDddTV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726019AbgDDLwg (ORCPT
+        id S1726258AbgDDNZi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Apr 2020 07:52:36 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39309 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgDDLwg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Apr 2020 07:52:36 -0400
-Received: by mail-wm1-f68.google.com with SMTP id e9so10691295wme.4;
-        Sat, 04 Apr 2020 04:52:35 -0700 (PDT)
+        Sat, 4 Apr 2020 09:25:38 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:35163 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgDDNZi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Apr 2020 09:25:38 -0400
+Received: by mail-il1-f196.google.com with SMTP id 7so10221354ill.2;
+        Sat, 04 Apr 2020 06:25:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=J7JWQaNHlZkGey2CYstynUU1J9hNrgdTpL9zcYilbqk=;
-        b=KMcn9it08ctna9tgMEQrsjpXRPY/0IlCndUov70cazbmUWifl1XfERwQwaWbxb8fnc
-         CLSlKcbbvKF41FGA533Eo8T6KEFilYbQfMX6N8aj2xG5UyjGjz1EHWEzRMlxi47pQ6l/
-         JbVRLrHt/o1cYKG4K+Cbl8/dAuKYYNau7sL18LJTBtmT5ZB7yvb5lxVrEYqrw+VOQPLg
-         tHdn3DP5eElLfpIwficpxfYtQwSeKfIcHOzvNeTewtwjILWrUU9eROXl2mfMeT+3XpiG
-         D2wB2Z5h4oRkvkYHL/5jX95ZgLH6PaAb1G/9UpiUXrBwceXrAL3QjS4G40EoPA50iojj
-         fLtg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ScNwQlaT6PVi5sYfWnDXWuHcgtCKis/6yURrV47X/cw=;
+        b=KhHDddTVPCEDtxdQUJfKSnbB9NWNom/HqErDavx0IaUhRhdpx8p7eRolCvpreprFX+
+         bG0ts4onYD8+DdHJeAv4kcsjWFfqNFmy5dnffK5cQWyIL7BeoCKNAZdTJ0wCrOGTIXJU
+         GxFJYX4eLBWo5BFiMBaHxN3LTv3LmLNLCLWeDF5VFlIGrAsSu1qF5tONkYyuHRaRwVC6
+         oskhir3uLQZfptJIT5XeNYtQffa8kN7NYmCN+kZKERvMaW1AFGXGFjASeLS0U61etPc0
+         UHlbEIr6Fr51DTIo0qddYuYHxefIOvCnbrgfStN/khTJUK5HkQoNvB6CYoP8wXCkRi6A
+         ZiNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=J7JWQaNHlZkGey2CYstynUU1J9hNrgdTpL9zcYilbqk=;
-        b=sLhRqWa+EXS7YZlA34Zjgk3dAqITRZXKCYxJG0WI8gkDHztQaH0uDRqUblUT+JQBMo
-         kn44FNUjGSvkMj07zUVDqAWTla6o3bjgg+diKEBCw1Xdx+4ifXV1c4rv3/fYvfRpLAll
-         5FFCXxGOcOTREezQKyRsBb7c6ILI0DkxInmvKRwKblFkGAGdYJG9At9jvjSVHL7nsYM8
-         cdjnxZIu7FHsLAAuVDQinoUGs1KpWVdxSGoL5VQ/t0EE/YyXZch1YsPQBq0FUJpJu9zB
-         GWIsQM60PWAHN/m1pz99C5+D+vKzl+Dpjnfpzls2l5Dnn9s8VLF+VvmmD79gkenjReQv
-         9t3g==
-X-Gm-Message-State: AGi0PuZuBNG9xiHNPCnGIuXdVti+gRtFCXDA77/6ZNuKQpZrjCzCkNcQ
-        4U9pl68RP3hRqrPsK/dfEcT0u4O3
-X-Google-Smtp-Source: APiQypJOBCdxMEJ3ncc/Kkyn7t6jJ/t0d4nR31OFtbx1bKw5Uw1QEC7QFaR1ybRs/cSapZBPKEkpqg==
-X-Received: by 2002:a7b:cbd6:: with SMTP id n22mr12504001wmi.29.1586001154733;
-        Sat, 04 Apr 2020 04:52:34 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id g186sm16183276wmg.36.2020.04.04.04.52.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 04 Apr 2020 04:52:34 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     lgirdwood@gmail.com
-Cc:     broonie@kernel.org, heiko@sntech.de, robh+dt@kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] dt-bindings: sound: rockchip-spdif: add power-domains property
-Date:   Sat,  4 Apr 2020 13:52:25 +0200
-Message-Id: <20200404115225.4314-3-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200404115225.4314-1-jbx6244@gmail.com>
-References: <20200404115225.4314-1-jbx6244@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ScNwQlaT6PVi5sYfWnDXWuHcgtCKis/6yURrV47X/cw=;
+        b=EOjbxmd/TyXUjwssTfmDn+Wno9b2tSo4rQDw0Nqua0w8NNkWJMwTQaY1OaJSbt91N3
+         honKnha4nXtLgmAnxo7WU8TJr3JdlTP9Wzaoa/zpxswRF+9M7s07KWl7eqIapJdGenem
+         nLY0JAAl33u19XfXGlF2DXawOR+4qGdnBHuPU9tYLaGXp8Trdbec9ZyEOPPS77DLHZAw
+         N8JJ/cQpnN55+3KOHW2+TNEl/h1HXZqfFgn/9j1U3E1GFCGvCK7gnT0BVKchNI2pYFTU
+         gltuihQ82NE1RwI5Mkw6yxxN1ouKYUUYuILEHpyUNi3VSRM92BTrJVOUAIR3iqzyXcUq
+         L/9g==
+X-Gm-Message-State: AGi0PuZZab/Vn4OM7bFwrva84wD5sdpiHtZKZnU81raUQHKpT7hwFxGU
+        GmOQJiDT8BgilSDUIo4YDuiooumytl16uKvMj3s=
+X-Google-Smtp-Source: APiQypK3XiIUkQMbXIv7kgzxvm2CyJbazGkPtKRTHWEaSDKDC9suPX8g16lHi4ncEU9Lqs/8MRVkjMMs1CkPfI8XepQ=
+X-Received: by 2002:a92:4896:: with SMTP id j22mr12637650ilg.158.1586006736069;
+ Sat, 04 Apr 2020 06:25:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1585751281.git.leonard.crestez@nxp.com> <c167baa48d6830cf32b9ac51968eeadd684ebf2d.1585751281.git.leonard.crestez@nxp.com>
+In-Reply-To: <c167baa48d6830cf32b9ac51968eeadd684ebf2d.1585751281.git.leonard.crestez@nxp.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Sat, 4 Apr 2020 08:25:24 -0500
+Message-ID: <CAHCN7xKpwex8MQbTFAYKjGPQbQ1uOe7EywASmcakg8F_2w-iuA@mail.gmail.com>
+Subject: Re: [PATCH v2 8/8] arm64: dts: imx8m: Add NOC nodes
+To:     Leonard Crestez <leonard.crestez@nxp.com>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Angus Ainslie <angus@akkea.ca>,
+        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        Alexandre Bailon <abailon@baylibre.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-pm@vger.kernel.org, Martin Kepplinger <martink@posteo.de>,
+        Silvano di Ninno <silvano.dininno@nxp.com>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In the old txt situation we add/describe only properties that are used
-by the driver/hardware itself. With yaml it also filters things in a
-node that are used by other drivers like 'power-domains' for rk3399,
-so add it to 'rockchip-spdif.yaml'.
+On Wed, Apr 1, 2020 at 9:35 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
+>
+> Add nodes for the main interconnect of the imx8m series chips.
+>
+> These nodes are bound to by devfreq and interconnect drivers.
+>
+> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 24 +++++++++++++++++++++++
+>  arch/arm64/boot/dts/freescale/imx8mn.dtsi | 24 +++++++++++++++++++++++
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 24 +++++++++++++++++++++++
+>  3 files changed, 72 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> index 175c28ae10cf..41047b6709b6 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> @@ -6,10 +6,11 @@
+>  #include <dt-bindings/clock/imx8mm-clock.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/input/input.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/thermal/thermal.h>
+> +#include <dt-bindings/interconnect/imx8mm.h>
+>
+>  #include "imx8mm-pinfunc.h"
+>
+>  / {
+>         interrupt-parent = <&gic>;
+> @@ -860,10 +861,33 @@
+>                                 status = "disabled";
+>                         };
+>
+>                 };
+>
+> +               noc: interconnect@32700000 {
+> +                       compatible = "fsl,imx8mm-noc", "fsl,imx8m-noc";
+> +                       reg = <0x32700000 0x100000>;
+> +                       clocks = <&clk IMX8MM_CLK_NOC>;
+> +                       fsl,ddrc = <&ddrc>;
+> +                       #interconnect-cells = <1>;
+> +                       operating-points-v2 = <&noc_opp_table>;
+> +
+> +                       noc_opp_table: opp-table {
+> +                               compatible = "operating-points-v2";
+> +
+> +                               opp-150M {
+> +                                       opp-hz = /bits/ 64 <150000000>;
+> +                               };
+> +                               opp-375M {
+> +                                       opp-hz = /bits/ 64 <375000000>;
+> +                               };
+> +                               opp-750M {
+> +                                       opp-hz = /bits/ 64 <750000000>;
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes v3:
-  Add reviewed by
----
- Documentation/devicetree/bindings/sound/rockchip-spdif.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+Out of curiosity, the 8M Mini runs up to 750M, and  the 8M Nano and
+8MQ run up to 800.  The 8MQ had a patch to increase the assigned clock
+speed for the NOC to 800MHz
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
-index f381dbbf5..c46715265 100644
---- a/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
-+++ b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
-@@ -51,6 +51,9 @@ properties:
-   dma-names:
-     const: tx
- 
-+  power-domains:
-+    maxItems: 1
-+
-   rockchip,grf:
-     $ref: /schemas/types.yaml#/definitions/phandle
-     description:
--- 
-2.11.0
+See: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/patch/arch/arm64/boot/dts/freescale?id=912b9dacf3f0ffad55e1a1b3c5af0e433ebdb5dd)
 
+The 8M Mini and 8M Nano appear to be setting the default speed to 0.
+
+Should the 8M Mini or 8M Nano do something similar to what the 8MQ
+did, or does this series negate the need for such a patch?
+
+thanks
+
+adam
+
+> +                               };
+> +                       };
+> +               };
+> +
+>                 aips4: bus@32c00000 {
+>                         compatible = "fsl,aips-bus", "simple-bus";
+>                         reg = <0x32df0000 0x10000>;
+>                         #address-cells = <1>;
+>                         #size-cells = <1>;
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+> index 88e7d74e077f..e8a55956813f 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+> @@ -6,10 +6,11 @@
+>  #include <dt-bindings/clock/imx8mn-clock.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/input/input.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/thermal/thermal.h>
+> +#include <dt-bindings/interconnect/imx8mn.h>
+>
+>  #include "imx8mn-pinfunc.h"
+>
+>  / {
+>         interrupt-parent = <&gic>;
+> @@ -751,10 +752,33 @@
+>                                 status = "disabled";
+>                         };
+>
+>                 };
+>
+> +               noc: interconnect@32700000 {
+> +                       compatible = "fsl,imx8mn-noc", "fsl,imx8m-noc";
+> +                       reg = <0x32700000 0x100000>;
+> +                       clocks = <&clk IMX8MN_CLK_NOC>;
+> +                       fsl,ddrc = <&ddrc>;
+> +                       #interconnect-cells = <1>;
+> +                       operating-points-v2 = <&noc_opp_table>;
+> +
+> +                       noc_opp_table: opp-table {
+> +                               compatible = "operating-points-v2";
+> +
+> +                               opp-100M {
+> +                                       opp-hz = /bits/ 64 <100000000>;
+> +                               };
+> +                               opp-600M {
+> +                                       opp-hz = /bits/ 64 <600000000>;
+> +                               };
+> +                               opp-800M {
+> +                                       opp-hz = /bits/ 64 <800000000>;
+> +                               };
+> +                       };
+> +               };
+> +
+>                 aips4: bus@32c00000 {
+>                         compatible = "fsl,aips-bus", "simple-bus";
+>                         reg = <0x32df0000 0x10000>;
+>                         #address-cells = <1>;
+>                         #size-cells = <1>;
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index ea93bc4b7d7e..3a208feec74c 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -9,10 +9,11 @@
+>  #include <dt-bindings/reset/imx8mq-reset.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include "dt-bindings/input/input.h"
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/thermal/thermal.h>
+> +#include <dt-bindings/interconnect/imx8mq.h>
+>  #include "imx8mq-pinfunc.h"
+>
+>  / {
+>         interrupt-parent = <&gpc>;
+>
+> @@ -1026,10 +1027,33 @@
+>                                 fsl,num-rx-queues = <3>;
+>                                 status = "disabled";
+>                         };
+>                 };
+>
+> +               noc: interconnect@32700000 {
+> +                       compatible = "fsl,imx8mq-noc", "fsl,imx8m-noc";
+> +                       reg = <0x32700000 0x100000>;
+> +                       clocks = <&clk IMX8MQ_CLK_NOC>;
+> +                       fsl,ddrc = <&ddrc>;
+> +                       #interconnect-cells = <1>;
+> +                       operating-points-v2 = <&noc_opp_table>;
+> +
+> +                       noc_opp_table: opp-table {
+> +                               compatible = "operating-points-v2";
+> +
+> +                               opp-133M {
+> +                                       opp-hz = /bits/ 64 <133333333>;
+> +                               };
+> +                               opp-400M {
+> +                                       opp-hz = /bits/ 64 <400000000>;
+> +                               };
+> +                               opp-800M {
+> +                                       opp-hz = /bits/ 64 <800000000>;
+> +                               };
+> +                       };
+> +               };
+> +
+>                 bus@32c00000 { /* AIPS4 */
+>                         compatible = "fsl,aips-bus", "simple-bus";
+>                         reg = <0x32df0000 0x10000>;
+>                         #address-cells = <1>;
+>                         #size-cells = <1>;
+> --
+> 2.17.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
