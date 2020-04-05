@@ -2,131 +2,154 @@ Return-Path: <SRS0=YuQm=5V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A69C2BA1B
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 17:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD50BC2BA15
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 17:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F28482075A
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 17:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF4320678
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 17:36:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="iUoJfZfC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tTY8TD7u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgDEReA (ORCPT
+        id S1727076AbgDERgH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Apr 2020 13:34:00 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:11501 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbgDEReA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 13:34:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586108038;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=5eexSbKaD4PWK4+vSfn+rMLl0XvRZRi7o/XZA3aRFVw=;
-        b=iUoJfZfC4CTRxBBqoQSWGj58y+cigCrp6HjzoKq1ECiUIAd2bS5hLKCQ79HOP8zKGo
-        BTsC+Nx4IsGNs6c6cAvCD1Ds5M3+B7fIhPzDhAmd1PEIMr0SnMbangHxLMOXMON4fEE0
-        4pCsgYVczCG/Np2y8sdQoOVDWnWZ62meGJbOjKygwDJs+nz1qxGEgO0R2Uhg4XXIuIQs
-        CdBuoPY/2atSdyW848DxCTOlcqr51lLtIesnL3USKWNzZrZMPqR4MzNrlpv2MMoGqRVs
-        eBGlCQV9MFbo4MNhj4cxVGh3omof9j7n+g8zmObDteXZpyvGXNUMdL4G8Bo0nOE3OGb9
-        gGUA==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB526NfqU="
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id u043b8w35HXqxmd
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Sun, 5 Apr 2020 19:33:52 +0200 (CEST)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Sun, 5 Apr 2020 13:36:07 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50368 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbgDERgH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 13:36:07 -0400
+Received: by mail-wm1-f66.google.com with SMTP id x25so1280058wmc.0;
+        Sun, 05 Apr 2020 10:36:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SRF6N8cRuZvvVCXMCOyMNsHazept9Ws44rtULXoUZv0=;
+        b=tTY8TD7uDnvBkw/UoC8Tk43vS+8cikFxHyF9Om2gvwsmg+ktlq4rr31JyEUUafawmX
+         bNfBrHvRqtWcuOfPacBJGOLPkY9/GHptKl1Wg4VeTcSodNXbjhEX5cxwZDqGouCSyqFO
+         5bsfr1Otud+9TNhTCn6Z1FPh4CNm5kStnSBksV2D006oWRzsOOUwR/u+YJ/iZxFvD1C7
+         5XcxfksQYbjLpzX8WGaoVNhfj6fiB4z6VGv4xVLO3ttinhEVh7+33e/tbm5BqC0ECApm
+         PItcxqN3sN4j7Ck9f0BCkWTlsfTrf8uOA5D/PXrJeg/wZ3Y7JTauiqMzZdtjr4bjPELg
+         ClkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SRF6N8cRuZvvVCXMCOyMNsHazept9Ws44rtULXoUZv0=;
+        b=eqSms++q9FiWVnVYHEi7bG/ypk0Dct4j2evGKwkEvfnaSb4U6PmdiVNiutlBW71FUx
+         mqgxq4UXuU8ZqWxg6ngC92JowBqc6RQjDHZ4k73jtgp2jFLO4XtV+mJTq2AP5kuLw1dK
+         JJquz48TF3nlwK3r+QEQWFMUYCZTu/N1GjLuXtKVYJZP0dV+LfKa5KIf+xcP4DuqaSXl
+         sbI+K+CAKrKd9RRLNK2S6zokbaf36xGnUbBkUuJwHdV8QX89CJCS8FWxYg2odvhXreyx
+         fHh/NVKdSPORZiJrO2CYdhF/gPTK+OllPXiD0VuqvbuuozMZ63janzJhsWB/ZHOHDQ72
+         7I6Q==
+X-Gm-Message-State: AGi0Pua9RDAb7hPfKGxYXroU0u4KVsI5cFqYqX/RGDthlpPR//Kfe3XO
+        4526I6q1UT4wjATZ4Z9CFzk=
+X-Google-Smtp-Source: APiQypJEdQdYeNEp0+y3WDmC4ooJao1v/Bv+H68S8EDXP68odyUR9G3QLytTafla8bD+dMOGZ5fhcQ==
+X-Received: by 2002:a7b:cf27:: with SMTP id m7mr9998785wmg.58.1586108165177;
+        Sun, 05 Apr 2020 10:36:05 -0700 (PDT)
+Received: from localhost.localdomain (91-167-199-67.subs.proxad.net. [91.167.199.67])
+        by smtp.gmail.com with ESMTPSA id s13sm6031669wrw.20.2020.04.05.10.36.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Apr 2020 10:36:04 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 1/2] ARM: dts: ux500: samsung-golden: Add proximity sensor
-Date:   Sun,  5 Apr 2020 19:32:51 +0200
-Message-Id: <20200405173252.67614-1-stephan@gerhold.net>
-X-Mailer: git-send-email 2.26.0
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v2 0/7] Add support for Allwinner H6 DVFS
+Date:   Sun,  5 Apr 2020 19:35:54 +0200
+Message-Id: <20200405173601.24331-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-samsung-golden has the same sharp,gp2ap002s00f proximity sensor
-that is also used in samsung-skomer.
+Hi Sunxi maintainers and members,
 
-A driver was added for it in
-commit 97d642e23037 ("iio: light: Add a driver for Sharp GP2AP002x00F").
+Now that required drivers are merged we can contibute on DVFS
+support for Allwinner H6.
 
-Now that it was merged we can add an entry for it in the device tree
-for samsung-golden.
+This serie is based on Yangtao Li serie[0] and Ondřej Jirman work[1].
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
- .../arm/boot/dts/ste-ux500-samsung-golden.dts | 35 +++++++++++++++++++
- 1 file changed, 35 insertions(+)
+Most of the OPP tables are taken from original vendor kernel[2].
+Plus there is a new CPU frequencies at 1.6GHz, 1.7GHz and 1.8GHz.
 
-diff --git a/arch/arm/boot/dts/ste-ux500-samsung-golden.dts b/arch/arm/boot/dts/ste-ux500-samsung-golden.dts
-index 313f0ab16866..0e9e33f4ca3c 100644
---- a/arch/arm/boot/dts/ste-ux500-samsung-golden.dts
-+++ b/arch/arm/boot/dts/ste-ux500-samsung-golden.dts
-@@ -146,6 +146,32 @@ uart@80007000 {
- 			pinctrl-1 = <&u2rxtx_c_1_sleep>;
- 		};
- 
-+		i2c@80004000 {
-+			status = "okay";
-+
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&i2c0_a_1_default>;
-+			pinctrl-1 = <&i2c0_a_1_sleep>;
-+
-+			proximity@44 {
-+				compatible = "sharp,gp2ap002s00f";
-+				reg = <0x44>;
-+
-+				/* GPIO146 (PS_INT) */
-+				interrupt-parent = <&gpio4>;
-+				interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
-+
-+				vdd-supply = <&ab8500_ldo_aux1_reg>;
-+				vio-supply = <&ab8500_ldo_aux8_reg>;
-+
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&proximity_default>;
-+
-+				sharp,proximity-far-hysteresis = <0x40>;
-+				sharp,proximity-close-hysteresis = <0x0f>;
-+			};
-+		};
-+
- 		i2c@80128000 {
- 			status = "okay";
- 
-@@ -375,6 +401,15 @@ golden_cfg1 {
- 		};
- 	};
- 
-+	proximity {
-+		proximity_default: proximity_default {
-+			golden_cfg1 {
-+				pins = "GPIO146_D13";	/* PS_INT */
-+				ste,config = <&gpio_in_nopull>;
-+			};
-+		};
-+	};
-+
- 	imu {
- 		imu_default: imu_default {
- 			golden_cfg1 {
+I wrote a simple script to randomly set a frequency during
+a random time[3].
+With this script and using stress-ng during several hours, I didn't
+see any issue. Moreover I have tested specifically the 1.8GHz on my
+Beelink GS1, max thermal 85°C is reached very quickly and then the
+SoC oscillates quickly between 1.5 and 1.8GHz. So i have added
+1.6GHz and 1.7GHz my board now oscillate slower between 1.5GHz and
+1.6GHz swapping every second and temperature is also morestable.
+
+I also test that that offlining CPU0 and doing DVFS on other CPUs
+works. As CPU regulator is only set for CPU0.
+
+But maybe it doesn't cost much to set the regulator for all the CPUs?
+
+Jernej test the GPU devfreq on several H6 board particulary the
+Tanix TX6 which doesn't have a proper dedicated PMIC and doesn't
+had any trouble with it.
+
+Do you think I can enable GPU OPP for all H6 Boards?
+
+Also Yangtao Li enable DVFS for Pine64, as I can't test it.
+I'm waiting for his ack or someone who has a Pine64 and can test this
+serie before reenabling this board.
+
+Thanks,
+Clément
+
+0: https://patchwork.kernel.org/cover/10815117/
+1: https://megous.com/git/linux/log/?h=ths-5.7
+2: https://github.com/orangepi-xunlong/OrangePiH6_Linux4_9/blob/master/arch/arm64/boot/dts/sunxi/sun50iw6p1.dtsi#L345-L517
+3: https://gist.github.com/clementperon/55a055dae3f13bbd14fb39c0069fe2e2
+
+Changes since v1 (thanks to Ondřej Jirman):
+  - Remove Polling thermal
+  - Add Orange Pi boards
+  - Remove minimal voltage change for Beelink GS1
+  - Add ramp-deplay for GPU and CPU regulators
+  - Push to thermal point to 85°C (Allwinner set them to 100°C and 115°C)
+  - Added 1.6GHz and 1.7GHz to OPP table. 
+
+Clément Péron (4):
+  arm64: dts: allwinner: h6: Add GPU Operating Performance Points table
+  arm64: configs: Enable sun50i cpufreq nvmem
+  arm64: dts: allwinner: h6: Enable CPU and GPU opp tables for Beelink
+    GS1
+  arm64: dts: allwinner: h6: Enable CPU and GPU opp tables for Orange Pi
+    boards
+
+Ondrej Jirman (2):
+  arm64: dts: allwinner: h6: Add thermal trip points/cooling map
+  arm64: dts: allwinner: h6: Add CPU Operating Performance Points table
+
+Yangtao Li (1):
+  arm64: dts: allwinner: h6: Add clock to CPU cores
+
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  10 +-
+ .../boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi | 121 ++++++++++++++++++
+ .../boot/dts/allwinner/sun50i-h6-gpu-opp.dtsi |  74 +++++++++++
+ .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  10 +-
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  36 ++++++
+ arch/arm64/configs/defconfig                  |   1 +
+ 6 files changed, 250 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-gpu-opp.dtsi
+
 -- 
-2.26.0
+2.20.1
 
