@@ -2,160 +2,223 @@ Return-Path: <SRS0=YuQm=5V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA81C2D0F4
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 11:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61397C2BA1E
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 12:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F86D206F7
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 11:51:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="TIzjQu4T"
+	by mail.kernel.org (Postfix) with ESMTP id 37CB32072A
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 12:06:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586088388;
+	bh=BLqF5UpN5dBt1mmE30uQkggfsm1D8TJgVlYEiQgXgYk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PRxImn2cUsgW6138RjvjBTOClQ5DtNh6OGvz0aWmc8ShMmJArZKTVQ7YiYm6RHtin
+	 F7ojPc2bawuA/suywLKIcQL96spQAR86lfN4LsJgidHamw2D/EvOc0RNrUgaxa1Sjy
+	 PfFF4+9lP/nvi4Iux2SebvoT3FNmK6M7S3mb7bT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbgDELvl (ORCPT
+        id S1726696AbgDEMG1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Apr 2020 07:51:41 -0400
-Received: from vps.xff.cz ([195.181.215.36]:37732 "EHLO vps.xff.cz"
+        Sun, 5 Apr 2020 08:06:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgDELvl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 5 Apr 2020 07:51:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1586087498; bh=NNWPYQmKXiUs070rAcv05Neys9flJOHGWA3PVq5buKk=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=TIzjQu4Ta7udL+i4zYgBcZYi7l/NQ0qQ4myiGz3hM1O6UU7MbzPLt7FatSSdJPiGs
-         IGsydDYXAlgZz2pu8uHJLRT9mL4xXBrDzDIOltqhpCkZJoaIoap7bU209SMa0DJMvP
-         PBuGJwwbgJU//n3AJVKnNEIOQ2RnpsdmSXWV6Vc4=
-Date:   Sun, 5 Apr 2020 13:51:38 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [linux-sunxi] [PATCH 0/7] Add support for Allwinner H6 DVFS
-Message-ID: <20200405115138.vrrvv7spnv6ifm6x@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-References: <20200405104913.22806-1-peron.clem@gmail.com>
+        id S1726410AbgDEMG1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 5 Apr 2020 08:06:27 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 262AF206B8;
+        Sun,  5 Apr 2020 12:06:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586088385;
+        bh=BLqF5UpN5dBt1mmE30uQkggfsm1D8TJgVlYEiQgXgYk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=S931edFR5bYWYsUzDFrRmmKYtkoHOFI3AJt6sVnvIiyw4cYRGu55YnaArKu8yVj88
+         7yd7ut5dYgfXPNSTLBGj1k34U+OKSsSZyd/i/OfT6zaHioRT7CC0Yhxp7/3TPQk45A
+         ZKQspLZvbz+Zu1yRO5r8Vip3uYlKSaDVA2uQlGXc=
+Date:   Sun, 5 Apr 2020 13:06:21 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        heiko@sntech.de, robh+dt@kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: iio: adc: convert rockchip saradc
+ bindings to yaml
+Message-ID: <20200405130621.252578e8@archlinux>
+In-Reply-To: <20200404102730.3295-1-jbx6244@gmail.com>
+References: <20200404102730.3295-1-jbx6244@gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200405104913.22806-1-peron.clem@gmail.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Clément,
+On Sat,  4 Apr 2020 12:27:28 +0200
+Johan Jonker <jbx6244@gmail.com> wrote:
 
-On Sun, Apr 05, 2020 at 12:49:06PM +0200, Clément Péron wrote:
-> Hi Sunxi maintainers and members,
+> Current dts files with 'saradc' nodes are manually verified.
+> In order to automate this process rockchip-saradc.txt
+> has to be converted to yaml.
 > 
-> Now that required drivers are merged we can contibute on DVFS support for
-> Allwinner H6.
-> 
-> This serie is based on Yangtao Li serie[0] and Megous works[1].
-> 
-> Most of the OPP tables are taken from original vendor kernel[2].
-> Plus there is a new CPU frequency @1.8GHz.
-> 
-> I wrote a simple script to randomly set a frequency during a random time[3].
-> With this script and using stress-ng during a day I didn't see any issue.
-> Moreover I have tested specifically the 1.8GHz on my Beelink GS1, max thermal
-> 80°C is reached after ~10min and then the SoC oscillates quickly between 1.5
-> and 1.8GHz.
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+Hi Johan
 
-Thank you for working on this. :) I wonder what SoC bin you tested this on.
+As I'd already applied these I'd have preferred a fix patch and I'm not actually
+sure it's really worth making the change.  I don't think we have any rules
+about minimal includes or anything in DT bindings.  Was there an error or
+warning as a result of this?
 
-I have a patch to print it here:
+Still as I hadn't pushed out as non rebasing yet I've picked this version up
+and dropped the previous.
 
-  https://megous.com/git/linux/commit/?h=ths-5.7&id=c5ddd2a45c7e04dcec31619b58de7c798ad6594c
+Thanks,
 
-> I also test that that offlining CPU0 and doing DVFS on other CPUs works.
-> As CPU regulator is only set for CPU0.
+Jonathan
+
+> ---
+> Changes v2:
+>   Add reviewed by
+>   Fix irq.h already included in arm-gic.h
+> ---
+>  .../bindings/iio/adc/rockchip-saradc.txt           | 37 ----------
+>  .../bindings/iio/adc/rockchip-saradc.yaml          | 78 ++++++++++++++++++++++
+>  2 files changed, 78 insertions(+), 37 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
 > 
-> But maybe it doesn't cost much to set the regulator for all the CPUs?
-> 
-> Jernej test the GPU devfreq on several H6 board particulary the Tanix TX6 which
-> doesn't have a proper dedicated PMIC and doesn't had any trouble with it.
-> 
-> Do you think I can enable GPU OPP for all H6 Boards?
-> 
-> Also Yangtao Li enable DVFS for OrangePi and Pine64, as I can't test them I
-> didn't reenable these boards. Please, let me know if you want me to add these
-> boards in this serie.
+> diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+> deleted file mode 100644
+> index c2c50b598..000000000
+> --- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+> +++ /dev/null
+> @@ -1,37 +0,0 @@
+> -Rockchip Successive Approximation Register (SAR) A/D Converter bindings
+> -
+> -Required properties:
+> -- compatible: should be "rockchip,<name>-saradc" or "rockchip,rk3066-tsadc"
+> -   - "rockchip,saradc": for rk3188, rk3288
+> -   - "rockchip,rk3066-tsadc": for rk3036
+> -   - "rockchip,rk3328-saradc", "rockchip,rk3399-saradc": for rk3328
+> -   - "rockchip,rk3399-saradc": for rk3399
+> -   - "rockchip,rv1108-saradc", "rockchip,rk3399-saradc": for rv1108
+> -
+> -- reg: physical base address of the controller and length of memory mapped
+> -       region.
+> -- interrupts: The interrupt number to the cpu. The interrupt specifier format
+> -              depends on the interrupt controller.
+> -- clocks: Must contain an entry for each entry in clock-names.
+> -- clock-names: Shall be "saradc" for the converter-clock, and "apb_pclk" for
+> -               the peripheral clock.
+> -- vref-supply: The regulator supply ADC reference voltage.
+> -- #io-channel-cells: Should be 1, see ../iio-bindings.txt
+> -
+> -Optional properties:
+> -- resets: Must contain an entry for each entry in reset-names if need support
+> -	  this option. See ../reset/reset.txt for details.
+> -- reset-names: Must include the name "saradc-apb".
+> -
+> -Example:
+> -	saradc: saradc@2006c000 {
+> -		compatible = "rockchip,saradc";
+> -		reg = <0x2006c000 0x100>;
+> -		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+> -		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
+> -		clock-names = "saradc", "apb_pclk";
+> -		resets = <&cru SRST_SARADC>;
+> -		reset-names = "saradc-apb";
+> -		#io-channel-cells = <1>;
+> -		vref-supply = <&vcc18>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
+> new file mode 100644
+> index 000000000..9b9882323
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
+> @@ -0,0 +1,78 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/rockchip-saradc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Rockchip Successive Approximation Register (SAR) A/D Converter
+> +
+> +maintainers:
+> +  - Heiko Stuebner <heiko@sntech.de>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: rockchip,saradc
+> +      - const: rockchip,rk3066-tsadc
+> +      - const: rockchip,rk3399-saradc
+> +      - items:
+> +          - enum:
+> +            - rockchip,rk3328-saradc
+> +            - rockchip,rv1108-saradc
+> +          - const: rockchip,rk3399-saradc
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: converter clock
+> +      - description: peripheral clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: saradc
+> +      - const: apb_pclk
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  reset-names:
+> +    const: saradc-apb
+> +
+> +  vref-supply:
+> +    description:
+> +      The regulator supply for the ADC reference voltage.
+> +
+> +  "#io-channel-cells":
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - vref-supply
+> +  - "#io-channel-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/rk3288-cru.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    saradc: saradc@2006c000 {
+> +      compatible = "rockchip,saradc";
+> +      reg = <0x2006c000 0x100>;
+> +      interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+> +      clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
+> +      clock-names = "saradc", "apb_pclk";
+> +      resets = <&cru SRST_SARADC>;
+> +      reset-names = "saradc-apb";
+> +      vref-supply = <&vcc18>;
+> +      #io-channel-cells = <1>;
+> +    };
 
-Feel free to add these OPPs also to OrangePi 3 dts, I've been running mine with
-this OPP table for at least a year already (I have the worst SoC bin).
-
-Though I'll run a bit more comprehensive test for more frequencies, like you
-did, just to be sure.
-
-One thing I wonder about is if there should not be some small ramp delay on the
-CPU regulator node, because voltage change probably takes some small time to
-apply, compared to changing the PLL frequency. And I have no idea if the CPU
-is not running for some very small time out of spec during transitions.
-
-I didn't find timing information in the PMIC datasheet, but I suppose based
-on the DCDCA frequency of 3MHz that it will adapt to the new voltage in the
-range of 1s-10s of microseconds.
-
-In datasheet of the similar PMIC (AXP813) there is this note:
-
-  DVM (Dynamic Voltage scaling Management) ramp rate: 2.5mV/us at buck frequency 3MHz
-
-I think it will be simiar with AXP805.
-
-regards,
-	o.
-
-> Thanks,
-> Clément
-> 
-> 0: https://patchwork.kernel.org/cover/10815117/
-> 1: https://megous.com/git/linux/log/?h=ths-5.7
-> 2: https://github.com/orangepi-xunlong/OrangePiH6_Linux4_9/blob/master/arch/arm64/boot/dts/sunxi/sun50iw6p1.dtsi#L345-L517
-> 3: https://gist.github.com/clementperon/55a055dae3f13bbd14fb39c0069fe2e2
-> 
-> Clément Péron (4):
->   arm64: dts: allwinner: h6: set thermal polling time
->   arm64: dts: allwinner: h6: Add GPU Operating Performance Points table
->   arm64: configs: Enable sun50i cpufreq nvmem
->   arm64: dts: allwinner: h6: Enable CPU and GPU opp tables for Beelink
->     GS1
-> 
-> Ondrej Jirman (2):
->   arm64: dts: allwinner: h6: Add thermal trip points/cooling map
->   arm64: dts: allwinner: h6: Add CPU Operating Performance Points table
-> 
-> Yangtao Li (1):
->   arm64: dts: allwinner: h6: Add clock to CPU cores
-> 
->  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  10 +-
->  .../boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi | 103 ++++++++++++++++++
->  .../boot/dts/allwinner/sun50i-h6-gpu-opp.dtsi |  74 +++++++++++++
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  44 +++++++-
->  arch/arm64/configs/defconfig                  |   1 +
->  5 files changed, 226 insertions(+), 6 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-gpu-opp.dtsi
-> 
-> -- 
-> 2.20.1
-> 
-> -- 
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20200405104913.22806-1-peron.clem%40gmail.com.
