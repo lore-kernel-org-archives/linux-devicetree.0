@@ -2,152 +2,128 @@ Return-Path: <SRS0=YuQm=5V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7267C2BA1B
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 11:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CA9C2D0F4
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 11:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8948020659
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 11:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 945F120709
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 11:31:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="nlhymB+7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgDELaH (ORCPT
+        id S1726506AbgDELbs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Apr 2020 07:30:07 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:52995 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726388AbgDELaH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 07:30:07 -0400
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 05 Apr 2020 04:30:06 -0700
-Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 05 Apr 2020 04:30:03 -0700
-Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 72B4E213E1; Sun,  5 Apr 2020 17:00:02 +0530 (IST)
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sivaprak@codeaurora.org
-Subject: [PATCH V2 2/8] dt-bindings: clock: Add YAML schemas for QCOM A53 PLL
-Date:   Sun,  5 Apr 2020 16:59:19 +0530
-Message-Id: <1586086165-19426-3-git-send-email-sivaprak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586086165-19426-1-git-send-email-sivaprak@codeaurora.org>
-References: <1586086165-19426-1-git-send-email-sivaprak@codeaurora.org>
+        Sun, 5 Apr 2020 07:31:48 -0400
+Received: from vps.xff.cz ([195.181.215.36]:37570 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbgDELbs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 5 Apr 2020 07:31:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1586086306; bh=dke9xyVpu/4Upjr6OYucKLOKfLnfaYRXQxjsbKJJ/Y0=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=nlhymB+726DMdDbsKypIt3tV2pdi3zOxHtzdqT9K3s3gHvWHTueLD8bJWy8AURh9x
+         bgCX4z+Mjd8xB5zNKPK54rPO5DNS+PDikjItt0GMU+ABuEQSS9f1dS4a7Bu1v9wRbx
+         uEOsHaVh1uEOpy2CuPgD/aEiZNsekaZRhim3F+gk=
+Date:   Sun, 5 Apr 2020 13:31:46 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [linux-sunxi] [PATCH 7/7] arm64: dts: allwinner: h6: Enable CPU
+ and GPU opp tables for Beelink GS1
+Message-ID: <20200405113146.be2etxxjdkgtrmac@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+References: <20200405104913.22806-1-peron.clem@gmail.com>
+ <20200405104913.22806-8-peron.clem@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200405104913.22806-8-peron.clem@gmail.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds schema for primary CPU PLL found on few Qualcomm
-platforms.
+Hello,
 
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
----
- .../devicetree/bindings/clock/qcom,a53pll.txt      | 22 --------
- .../devicetree/bindings/clock/qcom,a53pll.yaml     | 60 ++++++++++++++++++++++
- 2 files changed, 60 insertions(+), 22 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.txt
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
+On Sun, Apr 05, 2020 at 12:49:13PM +0200, Clément Péron wrote:
+> Enable CPU and GPU opp tables for Beelink GS1.
+> 
+> This needs also to change the CPU regulator min/max voltage to fit
+> the OPP table.
+> 
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> ---
+>  .../arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+> index df6d872c34e2..8e65d56a7c85 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+> @@ -4,6 +4,8 @@
+>  /dts-v1/;
+>  
+>  #include "sun50i-h6.dtsi"
+> +#include "sun50i-h6-cpu-opp.dtsi"
+> +#include "sun50i-h6-gpu-opp.dtsi"
+>  
+>  #include <dt-bindings/gpio/gpio.h>
+>  
+> @@ -70,6 +72,10 @@
+>  	};
+>  };
+>  
+> +&cpu0 {
+> +	cpu-supply = <&reg_dcdca>;
+> +};
+> +
+>  &de {
+>  	status = "okay";
+>  };
+> @@ -226,8 +232,8 @@
+>  
+>  			reg_dcdca: dcdca {
+>  				regulator-always-on;
+> -				regulator-min-microvolt = <810000>;
+> -				regulator-max-microvolt = <1080000>;
+> +				regulator-min-microvolt = <820000>;
+> +				regulator-max-microvolt = <1160000>;
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,a53pll.txt b/Documentation/devicetree/bindings/clock/qcom,a53pll.txt
-deleted file mode 100644
-index e3fa811..0000000
---- a/Documentation/devicetree/bindings/clock/qcom,a53pll.txt
-+++ /dev/null
-@@ -1,22 +0,0 @@
--Qualcomm MSM8916 A53 PLL Binding
----------------------------------
--The A53 PLL on MSM8916 platforms is the main CPU PLL used used for frequencies
--above 1GHz.
--
--Required properties :
--- compatible : Shall contain only one of the following:
--
--		"qcom,msm8916-a53pll"
--
--- reg : shall contain base register location and length
--
--- #clock-cells : must be set to <0>
--
--Example:
--
--	a53pll: clock@b016000 {
--		compatible = "qcom,msm8916-a53pll";
--		reg = <0xb016000 0x40>;
--		#clock-cells = <0>;
--	};
--
-diff --git a/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml b/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
-new file mode 100644
-index 0000000..97b234e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
-@@ -0,0 +1,60 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/clock/qcom,a53pll.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm A53 PLL Binding
-+
-+maintainers:
-+  - Sivaprakash Murugesan <sivaprak@codeaurora.org>
-+
-+description:
-+  The A53 PLL on few Qualcomm platforms is the main CPU PLL used used for
-+  frequencies above 1GHz.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,msm8916-a53pll
-+      - qcom,ipq6018-a53pll
-+
-+  reg:
-+    maxItems: 1
-+
-+  '#clock-cells':
-+    const: 0
-+
-+  clocks:
-+    description: clocks required for this controller.
-+    maxItems: 1
-+
-+  clock-names:
-+    description: clock output names of required clocks.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#clock-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  #Example 1 - A53 PLL found on MSM8916 devices
-+  - |
-+    a53pll: clock@b016000 {
-+        compatible = "qcom,msm8916-a53pll";
-+        reg = <0xb016000 0x40>;
-+        #clock-cells = <0>;
-+    };
-+
-+  #Example 2 - A53 PLL found on IPQ6018 devices
-+  - |
-+    a53pll_ipq: clock@b116000 {
-+        compatible = "qcom,ipq6018-a53pll";
-+        reg = <0x0b116000 0x40>;
-+        #clock-cells = <0>;
-+        clocks = <&xo>;
-+        clock-names = "xo";
-+    };
--- 
-2.7.4
+The H6 datasheet says:
 
+- VDD-CPU Power Supply for CPU  0.81 - 1.08 V (recommended)
+- VDD-CPU Power Supply for CPU -0.30 - 1.30 V (abs max)
+
+So I guess there's no need to increase the lower limit, because it matches
+the datasheet already.
+
+regards,
+	o.
+
+>  				regulator-name = "vdd-cpu";
+>  			};
+>  
+> -- 
+> 2.20.1
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20200405104913.22806-8-peron.clem%40gmail.com.
