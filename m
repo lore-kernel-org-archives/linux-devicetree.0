@@ -2,176 +2,187 @@ Return-Path: <SRS0=YuQm=5V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC7FC2BA1B
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 08:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A25C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 09:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5576A20659
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 08:30:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZWJu0rvA"
+	by mail.kernel.org (Postfix) with ESMTP id 2180B206C1
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 09:29:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586078991;
+	bh=MjC92rt0E5l5W5t5bknkFQpDqRFmsGXr/XiP7FEyRnw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fGajdrP0RZ4e58j1V4eh9FaOgCXlEG0p6CPIHQMEHksuSWm4pRq3t3MQadB+rUC0a
+	 fWWMpRBh6SBFbx4sJWCGR0tryOhGEfd4BsqW9BRAs1x5oWgSsNigWQ6DoWcPRxgoOY
+	 ntB8235alMh1vty5BptIIex2YQITzz2aQ9CemvUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgDEIar (ORCPT
+        id S1726486AbgDEJ3u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Apr 2020 04:30:47 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:63407 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726397AbgDEIaq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 04:30:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586075445; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=boJiaV3EccHj3kSwD3JA7pnnQAJZ7j95LcXsC2qfwdk=; b=ZWJu0rvAAoX8gVTdph+D4O6zppylQ5JfqGrx2eE5NygvIyKNaQp2VguNCpUtudZ9Ga2CMKWy
- l/IHcbMzqkjETI2KhzHWMT7B4yHyCDvgeg4n+NdzCtqaoOeeEz/GCJ4uh+QUJ5fghIS7VhD4
- ILQjp6wgumpfWb38+ywAcwenO0E=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e899727.7f860ad8f180-smtp-out-n01;
- Sun, 05 Apr 2020 08:30:31 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 73276C433D2; Sun,  5 Apr 2020 08:30:30 +0000 (UTC)
-Received: from [192.168.0.100] (unknown [49.206.125.103])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Sun, 5 Apr 2020 05:29:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35594 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726399AbgDEJ3u (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 5 Apr 2020 05:29:50 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sivaprak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5564BC433F2;
-        Sun,  5 Apr 2020 08:30:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5564BC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
-Subject: Re: [PATCH 1/2] clk: qcom: Add DT bindings for ipq6018 apss clock
- controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1582797318-26288-1-git-send-email-sivaprak@codeaurora.org>
- <1582797318-26288-2-git-send-email-sivaprak@codeaurora.org>
- <20200309211349.GA10752@bogus>
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Message-ID: <a8248eb8-ed65-7d80-7824-08aef22a963b@codeaurora.org>
-Date:   Sun, 5 Apr 2020 14:00:25 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 4740B20672;
+        Sun,  5 Apr 2020 09:29:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586078989;
+        bh=MjC92rt0E5l5W5t5bknkFQpDqRFmsGXr/XiP7FEyRnw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ANdgQ1IlKPeaeP/UytsafnLFyaKFe4sOwigg/u5QrYmJJa+OIda9LoCwhMDL14Nxv
+         BZBVt6Nr44kJtnK53DkJ0pjs7O/MKIJaKILuKldI5RPiWyja6nOh1hSYrVygl2T0TK
+         sTWsyONTO4eGptXCELaIsRF835tYvTjTYsc/BXvA=
+Date:   Sun, 5 Apr 2020 10:29:44 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>
+Cc:     Rob Herring <robh@kernel.org>, Tomas Novotny <tomas@novotny.cz>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Nishant Malpani <nish.malpani25@gmail.com>
+Subject: Re: [PATCH v3 2/4] dt-bindings: iio: light: vcnl4000: Add
+ near-level
+Message-ID: <20200405102944.41589d98@archlinux>
+In-Reply-To: <20200404174521.GA24709@bogon.m.sigxcpu.org>
+References: <cover.1585134362.git.agx@sigxcpu.org>
+        <f0ad40351d7ab12f79d2c29f738443514ae0fb76.1585134362.git.agx@sigxcpu.org>
+        <20200329102526.1ee85e96@archlinux>
+        <20200331214517.GA24128@bogus>
+        <20200404160127.1ef9d1ac@archlinux>
+        <20200404174521.GA24709@bogon.m.sigxcpu.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200309211349.GA10752@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+On Sat, 4 Apr 2020 19:45:21 +0200
+Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
 
-Thanks for the review.
+> Hi,
+> On Sat, Apr 04, 2020 at 04:01:27PM +0100, Jonathan Cameron wrote:
+> > On Tue, 31 Mar 2020 15:45:17 -0600
+> > Rob Herring <robh@kernel.org> wrote:
+> >  =20
+> > > On Sun, Mar 29, 2020 at 10:25:26AM +0100, Jonathan Cameron wrote: =20
+> > > > On Wed, 25 Mar 2020 12:09:06 +0100
+> > > > Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
+> > > >    =20
+> > > > > This value indicates when userspace should consider an object
+> > > > > near to the sensor/device.
+> > > > >=20
+> > > > > Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>   =20
+> > > >=20
+> > > > I'm fine with this.  Note for Rob or other DT people.
+> > > >=20
+> > > > This is a new generic binding hence no vendor prefix.   =20
+> > >=20
+> > > Then document in a common place. =20
+> >=20
+> > Ok.=20
+> >=20
+> > I guess we need to create a proximity specific binding file.
+> >=20
+> > Documentation/devicetree/bindings/iio/proximity.yaml
+> >=20
+> > Guido, could you do a v4 adding such a file.  For now I think
+> > this is pretty much all that is proximity specific. =20
+>=20
+> I did a Documentation/devicetree/bindings/iio/common.yaml:
+>=20
+> https://source.puri.sm/guido.gunther/linux-imx8/commit/8b91f0b7fa76ca4b2f=
+3cdc251411829f71f8d810
+>=20
+> so we can add new properties there and move iio-bindings.txt over.
+>=20
+> Does that work as well? If so I'll send out a v4.
 
-On 3/10/2020 2:43 AM, Rob Herring wrote:
-> On Thu, Feb 27, 2020 at 03:25:17PM +0530, Sivaprakash Murugesan wrote:
->> add dt-binding for ipq6018 apss clock controller
->>
->> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
->> ---
->>   .../devicetree/bindings/clock/qcom,apsscc.yaml     | 58 ++++++++++++++++++++++
->>   include/dt-bindings/clock/qcom,apss-ipq6018.h      | 26 ++++++++++
->>   2 files changed, 84 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
->>   create mode 100644 include/dt-bindings/clock/qcom,apss-ipq6018.h
->>
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml b/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
->> new file mode 100644
->> index 0000000..7433721
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
->> @@ -0,0 +1,58 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
-> Dual license new bindings please:
->
-> (GPL-2.0-only OR BSD-2-Clause)
-ok.
->
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/bindings/clock/qcom,apsscc.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm IPQ6018 APSS Clock Controller Binding
->> +
->> +maintainers:
->> +  - Stephen Boyd <sboyd@kernel.org>
-> I'd expect this to be a QCom person, not who is applying patches.
->
->> +
->> +description: |
-> You can drop '|'.
-ok.
->> +  Qualcomm IPQ6018 APSS clock control module which supports the clocks with
->> +  frequencies above 800Mhz.
->> +
->> +properties:
->> +  compatible :
->> +    const: qcom,apss-ipq6018
-> Normal ordering is: qcom,ipq6018-apss
-ok.
->> +
->> +  clocks:
->> +    description: clocks required for this controller.
->> +    maxItems: 4
-> Need to define what each clock is.
-ok.
->> +
->> +  clock-names:
->> +    description: clock output names of required clocks.
->> +    maxItems: 4
->> +
->> +  '#clock-cells':
->> +    const: 1
->> +
->> +  '#reset-cells':
->> +    const: 1
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - '#clock-cells'
->> +  - '#reset-cells'
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +      #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
->> +      apss_clk: qcom,apss_clk@b111000 {
-> I thought I'd finally seen the last of these Qcom node names...
->
-> clock-controller@...
-ok.
->> +            compatible = "qcom,apss-ipq6018";
->> +            clocks = <&xo>, <&gcc GPLL0>,
->> +                        <&gcc GPLL2>, <&gcc GPLL4>;
->> +            clock-names = "xo", "gpll0",
->> +                         "gpll2", "gpll4";
->> +            reg = <0xb11100c 0x5ff4>;
->> +            #clock-cells = <1>;
->> +            #reset-cells = <1>;
->> +      };
->> +...
->> diff --git a/include/dt-bindings/clock/qcom,apss-ipq6018.h b/include/dt-bindings/clock/qcom,apss-ipq6018.h
->> new file mode 100644
->> index 0000000..ed9d7d8
->> --- /dev/null
->> +++ b/include/dt-bindings/clock/qcom,apss-ipq6018.h
->> @@ -0,0 +1,26 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
-> I'm pretty sure your employer would like an additional license here.
-my bad. will correct it.
+I can't find any real precedence for naming of such files.
+So I guess this is still evolving. Send it out and we'll see what Rob think=
+s.
+
+Jonathan
+
+
+> Cheers,
+>  -- Guido
+>=20
+>=20
+> >=20
+> > At somepoint we should convert the subsystem wide iio-bindings.txt
+> > but not today!
+> >=20
+> > Thanks,
+> >=20
+> > Jonathan
+> >  =20
+> > >  =20
+> > > >=20
+> > > > I will ideally want review of both the dt patches though
+> > > > before applying.  As we've missed the merge window anyway
+> > > > there is no particular rush.
+> > > >=20
+> > > > Thanks,
+> > > >=20
+> > > > Jonathan
+> > > >    =20
+> > > > > ---
+> > > > >  .../devicetree/bindings/iio/light/vishay,vcnl4000.yaml    | 8 ++=
+++++++
+> > > > >  1 file changed, 8 insertions(+)
+> > > > >=20
+> > > > > diff --git a/Documentation/devicetree/bindings/iio/light/vishay,v=
+cnl4000.yaml b/Documentation/devicetree/bindings/iio/light/vishay,vcnl4000.=
+yaml
+> > > > > index 21ef2eb7a205..ac9e3bb6a505 100644
+> > > > > --- a/Documentation/devicetree/bindings/iio/light/vishay,vcnl4000=
+.yaml
+> > > > > +++ b/Documentation/devicetree/bindings/iio/light/vishay,vcnl4000=
+.yaml
+> > > > > @@ -25,6 +25,13 @@ properties:
+> > > > >    reg:
+> > > > >      maxItems: 1
+> > > > > =20
+> > > > > +  near-level:   =20
+> > >=20
+> > > Perhaps proximity-near-level instead. =20
+> >=20
+> > Makes sense.
+> >  =20
+> > >  =20
+> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > > > +    description:
+> > > > > +      Raw proximity values equal or above this level should be
+> > > > > +      considered 'near' to the device (an object is near to the
+> > > > > +      sensor).
+> > > > > +
+> > > > >  required:
+> > > > >    - compatible
+> > > > >    - reg
+> > > > > @@ -40,6 +47,7 @@ examples:
+> > > > >        light-sensor@51 {
+> > > > >                compatible =3D "vishay,vcnl4200";
+> > > > >                reg =3D <0x51>;
+> > > > > +              near-level =3D <220>;
+> > > > >        };
+> > > > >    };
+> > > > >  ...   =20
+> > > >    =20
+> >  =20
+
