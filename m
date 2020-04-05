@@ -8,63 +8,60 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2376CC2BA15
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 15:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9907CC2BA15
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 15:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7CB7206B8
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 15:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE66206C3
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 15:30:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c0oIvEOd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q1HdO4V8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgDEPCE (ORCPT
+        id S1727018AbgDEPaf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Apr 2020 11:02:04 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:35517 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbgDEPCE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 11:02:04 -0400
-Received: by mail-il1-f196.google.com with SMTP id 7so12245577ill.2;
-        Sun, 05 Apr 2020 08:02:03 -0700 (PDT)
+        Sun, 5 Apr 2020 11:30:35 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33111 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgDEPaf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 11:30:35 -0400
+Received: by mail-io1-f65.google.com with SMTP id o127so13027032iof.0;
+        Sun, 05 Apr 2020 08:30:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=g8MbrIxOq0zCTo9fKog8mhMy9bOW8Fg9D9RRomTrVFI=;
-        b=c0oIvEOdEgPWSDDAJkRrteqAJ3sCP4mCe/YU5gQyLw7rZEqtGK3507vguvbOdjP0Ku
-         l/gsKL4J9b55i0DtEkFtOrwhBm9U/Ud17zTpDyGTAtqirorOHRySO1PQ2DTpj8My2A36
-         QI8PVjlCjThg1wzF8PEAbT/Fj2TVpekpwd82Jn6Rm48N7aj2COYNCPr5f5AUPEraQVIb
-         RQxjVxFxo/KJcJsMlulaasXOgVZ6b1hpo8jVevu095Ezb4QRJpZai8VErHtcWIpY77xi
-         gPJbT3QZJioFrrvD+9Id+v9oBZgWb/axGwLn2rqkmaxybnljKKmMRejVqScpghWMmJKD
-         ZOOw==
+         :cc:content-transfer-encoding;
+        bh=yvEjNWR2BGZ2SH6akSfQFul9qgwv77tPLoJrdQcMpQg=;
+        b=Q1HdO4V8WqRn9BOJTAzxFnuKHo80y5XF6qo/nQ3DPYkVBbiVrfG3UMOqC0xBCe68Ag
+         jLpuZN4peqFkDZrJtuZ2lLGmTOPggYr7FqteZaMjhAyMhnigBybDchpQ3h2cRrlvCkCQ
+         2Uy0WJVdtzncI7qCVGhK89q6iD+HbNXoOOU2qjWx0ouBcwdgNvWDvsHcNVcPqJsMzK5K
+         1rkwnN9115YhhN63/f70BpwWfZJdSC/KLSlevLRjbumXjkPfH/Dmhdk1lHlZ/0Wa/vdV
+         F5x4ppJ075vTZGJ5sq1gy5gk4hHG/ouUvt6cyflp/vw8gUmW61a5Vlb3HH4u6OTmLNfa
+         Eswg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=g8MbrIxOq0zCTo9fKog8mhMy9bOW8Fg9D9RRomTrVFI=;
-        b=RL0DuaqWP5W8KZTVooKJH53TWwcAfwOnBMbmxSVaDpgZq+Rpm8amAPiSftyfGk3Ykd
-         eOdE8m4r0lBZCtRWSkwVrWqAeJPrW3XeVRNsHA4SmiwP58edhE8G0YcGaU7w3WxYB1px
-         Nr11/dgeFlliDa4Gt2YTYgNm+vGCcs5IBvbJt06N3k3K2P7EWP0AISCehmhMK19hwh+S
-         2TfBh3hZBOcrD9SFfK49RoOuS6SDYXNuAVqQGXcrUXeO/SccWtgT8oyv3hMN8uM3B+QY
-         G/TqgyHkFw1CAJOXpB/HRJ/ESj4c5MMZvvCLbpBDduq+k06V6035wfhJ0pOlBrU1ayam
-         wyJA==
-X-Gm-Message-State: AGi0PuYLINfheUPWueSW4PYYmaiS9fmix9jN40VeDK59kep2G8C2PSVQ
-        DPGuamzv7/8OkDgPdofgfjP6IA7cvuLpQmln2/U=
-X-Google-Smtp-Source: APiQypL0dkIH9W+iVFh+3Kch1QpTGXIz6w0urhh9Ynz7E5vaHn9o5pPCdsvh7b7WT0kXp4kHiPPmamoXZdEpSSTdNn8=
-X-Received: by 2002:a05:6e02:6cd:: with SMTP id p13mr16728576ils.150.1586098922818;
- Sun, 05 Apr 2020 08:02:02 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=yvEjNWR2BGZ2SH6akSfQFul9qgwv77tPLoJrdQcMpQg=;
+        b=BG10j1CYiy7SgDedZ3fa+rkmT6z2lqsU/57O0SSxB9Q56a9nCfAruSMarnXKM0eRG+
+         Y3Xo9QuaBKlLN5RbWJChpFsc6F2bcTGPuKBQywES0o5Bo+2p5uNaIUb0eqMYoselJ4Y+
+         0Q4WJ6PoyPAitggH5QlNK9vU36GL7twDWvSgRotUvbaL5MBTf8mMfc76o9w7DN1HAYER
+         xRjTdPpM5EYr1oAARNaMRxN3BrtD/jqhDEA4id8IY+a0qYg/sOU6LXZuDnT/ykFFY8om
+         41MTfITSHU2+YHbQlp9QxYM3GGLK+qEcpK970U65a44aCSRNKfkORQuF/3VC7OLbGs3o
+         0mwg==
+X-Gm-Message-State: AGi0PubQ2uBK+s4wamw1FV58ir4jK7y0KvQnEQ/947FzdzMafoIyaA6J
+        P++QSKyiff3KOrfDESZynKkx77yvNVANrMQeCM8=
+X-Google-Smtp-Source: APiQypKs8y6Vg2KzmMT4g4oZu5wiFa4G/kju8yqlU96SeL7qZ7ELe7MmcVgtpvP5CqJLwjK9A2qIovwpySFpCdeuE3I=
+X-Received: by 2002:a5d:9494:: with SMTP id v20mr5060146ioj.101.1586100632475;
+ Sun, 05 Apr 2020 08:30:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200405104913.22806-1-peron.clem@gmail.com> <20200405115138.vrrvv7spnv6ifm6x@core.my.home>
- <CAJiuCcfAKCs5ZLi_O21eyx-ZraC2Sb_ugQSmOEYm5+eVkQ7ZSw@mail.gmail.com> <20200405145443.uycsh73kxmurdmil@core.my.home>
-In-Reply-To: <20200405145443.uycsh73kxmurdmil@core.my.home>
+References: <20200405104913.22806-1-peron.clem@gmail.com>
+In-Reply-To: <20200405104913.22806-1-peron.clem@gmail.com>
 From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Sun, 5 Apr 2020 17:01:51 +0200
-Message-ID: <CAJiuCceROWv1ni3YZ6rU71O9R__t6ZOgnkZQDjBhJvhqHRAVng@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH 0/7] Add support for Allwinner H6 DVFS
-To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
-        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+Date:   Sun, 5 Apr 2020 17:30:21 +0200
+Message-ID: <CAJiuCcdEMDJik7jZYkTETF3D_H6Y0OLND46e9wJ2vsTtnrb0rQ@mail.gmail.com>
+Subject: Re: [PATCH 0/7] Add support for Allwinner H6 DVFS
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         devicetree <devicetree@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
         linux-sunxi <linux-sunxi@googlegroups.com>
@@ -77,47 +74,83 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi,
 
-On Sun, 5 Apr 2020 at 16:54, Ond=C5=99ej Jirman <megous@megous.com> wrote:
+On Sun, 5 Apr 2020 at 12:49, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>=
+ wrote:
 >
-> Hi,
+> Hi Sunxi maintainers and members,
 >
-> On Sun, Apr 05, 2020 at 04:33:37PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Hi Ond=C5=99ej,
+> Now that required drivers are merged we can contibute on DVFS support for
+> Allwinner H6.
 >
-> [ ... ]
+> This serie is based on Yangtao Li serie[0] and Megous works[1].
 >
-> > Good point, this information should be added for both CPU and GPU regul=
-ator.
-> > This could be nice to confirm this point with a scope.
-> >
-> > Also I remark that Allwinner user higher temperature than what we set :
-> > alarm_low_temp =3D <105000>;
-> > alarm_high_temp =3D <110000>;
-> > alarm_temp_hysteresis =3D <15000>;
-> > shut_temp=3D <115000>;
-> > https://github.com/orangepi-xunlong/OrangePiH6_Linux4_9/blob/master/arc=
-h/arm64/boot/dts/sunxi/sun50iw6p1.dtsi#L1924
-> >
-> > Don't you think that we can push a bit higher the temperature it's
-> > actually at 80=C2=B0C ?
+> Most of the OPP tables are taken from original vendor kernel[2].
+> Plus there is a new CPU frequency @1.8GHz.
 >
-> We probably can. But just 5=C2=B0C between high temp and criticla temp is=
- probably
-> not enough. I'd probably set our value to something like 90-100=C2=B0C so=
- that quick
-> temperature spike before regulation kicks in would not shutdown the CPU.
+> I wrote a simple script to randomly set a frequency during a random time[=
+3].
+> With this script and using stress-ng during a day I didn't see any issue.
+> Moreover I have tested specifically the 1.8GHz on my Beelink GS1, max the=
+rmal
+> 80=C2=B0C is reached after ~10min and then the SoC oscillates quickly bet=
+ween 1.5
+> and 1.8GHz.
+This result is wrong ignore it.
 
-OK I will push it to 85=C2=B0C and leave the critical to 100=C2=B0C.
-
-Test it again and will send a v2
+I will resend new one in next serie.
 
 Regards,
-Cl=C3=A9ment
-
+Clement
 >
-> regards,
->         o.
+> I also test that that offlining CPU0 and doing DVFS on other CPUs works.
+> As CPU regulator is only set for CPU0.
 >
-> > Thanks for the review,
-> > Clement
-> >
+> But maybe it doesn't cost much to set the regulator for all the CPUs?
+>
+> Jernej test the GPU devfreq on several H6 board particulary the Tanix TX6=
+ which
+> doesn't have a proper dedicated PMIC and doesn't had any trouble with it.
+>
+> Do you think I can enable GPU OPP for all H6 Boards?
+>
+> Also Yangtao Li enable DVFS for OrangePi and Pine64, as I can't test them=
+ I
+> didn't reenable these boards. Please, let me know if you want me to add t=
+hese
+> boards in this serie.
+>
+> Thanks,
+> Cl=C3=A9ment
+>
+> 0: https://patchwork.kernel.org/cover/10815117/
+> 1: https://megous.com/git/linux/log/?h=3Dths-5.7
+> 2: https://github.com/orangepi-xunlong/OrangePiH6_Linux4_9/blob/master/ar=
+ch/arm64/boot/dts/sunxi/sun50iw6p1.dtsi#L345-L517
+> 3: https://gist.github.com/clementperon/55a055dae3f13bbd14fb39c0069fe2e2
+>
+> Cl=C3=A9ment P=C3=A9ron (4):
+>   arm64: dts: allwinner: h6: set thermal polling time
+>   arm64: dts: allwinner: h6: Add GPU Operating Performance Points table
+>   arm64: configs: Enable sun50i cpufreq nvmem
+>   arm64: dts: allwinner: h6: Enable CPU and GPU opp tables for Beelink
+>     GS1
+>
+> Ondrej Jirman (2):
+>   arm64: dts: allwinner: h6: Add thermal trip points/cooling map
+>   arm64: dts: allwinner: h6: Add CPU Operating Performance Points table
+>
+> Yangtao Li (1):
+>   arm64: dts: allwinner: h6: Add clock to CPU cores
+>
+>  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  10 +-
+>  .../boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi | 103 ++++++++++++++++++
+>  .../boot/dts/allwinner/sun50i-h6-gpu-opp.dtsi |  74 +++++++++++++
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  44 +++++++-
+>  arch/arm64/configs/defconfig                  |   1 +
+>  5 files changed, 226 insertions(+), 6 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-gpu-opp.dtsi
+>
+> --
+> 2.20.1
+>
