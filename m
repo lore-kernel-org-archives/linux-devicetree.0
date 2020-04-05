@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2EEC2D0F4
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7714C2BA1B
 	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 10:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6980206F7
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 10:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F91E206F7
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 10:49:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nv0iaaZu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ptusWilB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgDEKtk (ORCPT
+        id S1726599AbgDEKtW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Apr 2020 06:49:40 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51038 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbgDEKtZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 06:49:25 -0400
-Received: by mail-wm1-f68.google.com with SMTP id x25so606099wmc.0;
-        Sun, 05 Apr 2020 03:49:24 -0700 (PDT)
+        Sun, 5 Apr 2020 06:49:22 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33866 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbgDEKtV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 06:49:21 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c195so5626680wme.1;
+        Sun, 05 Apr 2020 03:49:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IaJsFC4mWmdWbyKkdQgRslfWupkpd121xwwCWiCDFic=;
-        b=Nv0iaaZun8PkGFqjzFCOX/XXu0sTlYO7LusRed2bei95p+rs4hZ7XH2/iv2jGKx862
-         oN9+2KsfkmGeiQfJDqT58NKoObV1zqDiDqgJygMerNwfmNjCl85s+ItAryXJsZDJOhVU
-         ylJ94U7G6a2oOSmrTYv3D6bN7o5DNh8+8++aG+PXhZ26+PVQzmimqgwKJLEx2OZm1B5T
-         2++Zq9V0Ui1hIHtTjFEck8Jn69LwAMDYikkRyvEJqip9WjViVZ/MFzqeMG3xsu9nqywq
-         104rznEUw6/mMPPP9kgjczn2DnWMfQDKfHjGzmwcoL/fR2O/Zay7Xdskguof+j5YnPr2
-         6xEA==
+        bh=PlVxpMo3N8K7wg75iggPuxNbQ7akl7aPxo796TvewWU=;
+        b=ptusWilBR0UMywqaFMTzUaLupeLJwjXw4MZ/RAe4QkPfPnyGKOUW5OVQ2EDb+LPiUa
+         xtcCrPUAChJe2Q20e28jKt3qMRGfEjPniioDDt3ThduS5EmZ0rZrFLK0KtFQoJxCVwmF
+         /qzwkKpKUwg9XuUi5HwJ3+EVEugPXK+F8HFZAVfIITBY/+gHf3ayMK3m6zkQTiwFbyfr
+         PU+SYre5EFhvIjh8w3gJwhoHGCGn+5DznxVXfTyMM8DZ9mh9cqLTlC5kws8ZqWKpXBoU
+         ZWQ288Ji2RvH30uJmywF+c/FEJSZtPz9guLSQY7ikKVC0iPMihparMUFQQSXgO3Yslzg
+         9Avg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IaJsFC4mWmdWbyKkdQgRslfWupkpd121xwwCWiCDFic=;
-        b=dSDOlPhLSVYce8gzq2HkoSoG/BSvhRu08X+LbtnCYxiZk712F397C/nWmHJlOnzxC+
-         bDvUxIdk77VDVbylY6dcNLJX3JtZJ1qf2mEaBFhuZUQllo43jZaUqtk+TFsiTiBULzhJ
-         CzIzOxI5buxtaccQldMu4KbX/aD8c5CtIVbLlqXgzks8vDXyt8h2Md6+2eDpXimsu7JR
-         n+Vh+n6RkbL7C8Sls6H0LBYgS3xjVcRsRsgkJpWJp7iU0yTK31GNgUd21aaVrPFbGJVA
-         djAZTSRO6ZbqoklpB2U0t+Sl6/Y8PzDfQGCr0n/6qODDyClp5ke6XfFvWzXNyCduq9OX
-         aFCA==
-X-Gm-Message-State: AGi0PubQ/1XsxZ233l9kKirLOcw12d5QhGmMpgjdUbvMDU0Fba7VcMlJ
-        zzP4X8F6mptIjAaiBZL9nNE=
-X-Google-Smtp-Source: APiQypIS4eeDCAO10hAejWjIAXROTbLF+7oPU0gehy8YueTE+QgfA2pzVNpE3cbH4EFv4ULU0UCRmQ==
-X-Received: by 2002:a7b:cde8:: with SMTP id p8mr17359670wmj.87.1586083763912;
-        Sun, 05 Apr 2020 03:49:23 -0700 (PDT)
+        bh=PlVxpMo3N8K7wg75iggPuxNbQ7akl7aPxo796TvewWU=;
+        b=SmIhFibB4xG8LHUpvHTI/b4F+60etk2sqplkjRo/Y7ZkiEOGORfJwdYyrEaFn8h2a5
+         ymKRbnRcvqPqvOupbPRqrC2BD3LfkKWJ2EY3qNVt9Moqzq1xnB6n9ETLiHkiMEiMtE7s
+         LgSrR+IHfQcontqS4hwbzbAv3Msy3VjfJVtrYGpFCh9Zrt2Isa2iP2ohrBN7chEs8+HZ
+         26FGvH3+UNA3zfF8DyKlCu1mwnk/plVpyEtGwIN+ykOHyC2SiiyDdmIMikV7E9rBaR14
+         kKSCEghWyJLwOqc8+sG/Sp/v7GZFbqZvzZs8+1CQ7XfhFhfCvXza1ga7JjVajc8xzgcW
+         BRBA==
+X-Gm-Message-State: AGi0PuZEOlvhIlS/VkrDSLZXLF0zlXvn39vsMWKU5WRCshGbu5VwKedX
+        3YSrImExmFgtNl412oWssDg=
+X-Google-Smtp-Source: APiQypKOcJ97wwE4UtOnmuAVjQvnUJ4R+GsdW7s2pCGH0nZt+rhOuVsOiqSQ/cf8nJqCNs12RNJa8A==
+X-Received: by 2002:a1c:b743:: with SMTP id h64mr17307450wmf.88.1586083759594;
+        Sun, 05 Apr 2020 03:49:19 -0700 (PDT)
 Received: from localhost.localdomain (91-167-199-67.subs.proxad.net. [91.167.199.67])
-        by smtp.gmail.com with ESMTPSA id u13sm21606411wru.88.2020.04.05.03.49.22
+        by smtp.gmail.com with ESMTPSA id u13sm21606411wru.88.2020.04.05.03.49.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 03:49:23 -0700 (PDT)
+        Sun, 05 Apr 2020 03:49:18 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Rob Herring <robh+dt@kernel.org>
@@ -63,9 +63,9 @@ Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         linux-sunxi <linux-sunxi@googlegroups.com>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH 7/7] arm64: dts: allwinner: h6: Enable CPU and GPU opp tables for Beelink GS1
-Date:   Sun,  5 Apr 2020 12:49:13 +0200
-Message-Id: <20200405104913.22806-8-peron.clem@gmail.com>
+Subject: [PATCH 3/7] arm64: dts: allwinner: h6: set thermal polling time
+Date:   Sun,  5 Apr 2020 12:49:09 +0200
+Message-Id: <20200405104913.22806-4-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200405104913.22806-1-peron.clem@gmail.com>
 References: <20200405104913.22806-1-peron.clem@gmail.com>
@@ -77,51 +77,39 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable CPU and GPU opp tables for Beelink GS1.
-
-This needs also to change the CPU regulator min/max voltage to fit
-the OPP table.
+Add reasonable thermal polling time for Allwinner H6.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- .../arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-index df6d872c34e2..8e65d56a7c85 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-@@ -4,6 +4,8 @@
- /dts-v1/;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index d4d3963705f5..c3e4f09f60ce 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -905,8 +905,8 @@
  
- #include "sun50i-h6.dtsi"
-+#include "sun50i-h6-cpu-opp.dtsi"
-+#include "sun50i-h6-gpu-opp.dtsi"
+ 	thermal-zones {
+ 		cpu-thermal {
+-			polling-delay-passive = <0>;
+-			polling-delay = <0>;
++			polling-delay-passive = <100>;
++			polling-delay = <1000>;
+ 			thermal-sensors = <&ths 0>;
  
- #include <dt-bindings/gpio/gpio.h>
+ 			trips {
+@@ -935,8 +935,8 @@
+ 		};
  
-@@ -70,6 +72,10 @@
+ 		gpu-thermal {
+-			polling-delay-passive = <0>;
+-			polling-delay = <0>;
++			polling-delay-passive = <100>;
++			polling-delay = <1000>;
+ 			thermal-sensors = <&ths 1>;
+ 		};
  	};
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdca>;
-+};
-+
- &de {
- 	status = "okay";
- };
-@@ -226,8 +232,8 @@
- 
- 			reg_dcdca: dcdca {
- 				regulator-always-on;
--				regulator-min-microvolt = <810000>;
--				regulator-max-microvolt = <1080000>;
-+				regulator-min-microvolt = <820000>;
-+				regulator-max-microvolt = <1160000>;
- 				regulator-name = "vdd-cpu";
- 			};
- 
 -- 
 2.20.1
 
