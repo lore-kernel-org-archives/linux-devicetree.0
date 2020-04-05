@@ -7,220 +7,229 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0978AC2BA15
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 02:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 217FFC2BA18
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 02:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C689B20672
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 02:02:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC5E12071C
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 02:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586052132;
-	bh=owsYX0CKuVeeqB/rvClTpw5x1mx6Zy5Im9lldwCC0DQ=;
+	s=default; t=1586052592;
+	bh=qLQNJ3mFpgXqbKBKnIiMGtL8wAOhGmCZvB0KGY6dhnw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=trdcXB8sgfBv1z9B/uymaQbEW5iFl+Ej02wlLj5nC09JjBuJQU2ivGQi0l3QyAxaC
-	 Zld0G22SZ9yBm0Vi3njXRz+RlucwOUDDkXXHtlptZcHCN8HcSoHYz+Ion8c/GDfSCM
-	 BTEQ5RObv69eo8lXfVilxR06nEUNr1R6g7W3DXaw=
+	b=dDGYm7LY1vfu+ZTtTGQGXlEykXJdExCy/SHQwJmhuU84rHH6LO57JtyC2dwAXK8hN
+	 /e7O3Gsvdx4zIBrF3rvodFgroMPdoHxnOe6CsmTkZlYZsoVx91LgxiGK80HXTedYZh
+	 /KvNFX5agUdK0rvUteaI7JrPe/9c9C7WCQIK70aQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbgDECCM (ORCPT
+        id S1726352AbgDECJv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Apr 2020 22:02:12 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:32781 "EHLO
+        Sat, 4 Apr 2020 22:09:51 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35559 "EHLO
         mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgDECCM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Apr 2020 22:02:12 -0400
-Received: by mail-io1-f67.google.com with SMTP id o127so11993786iof.0;
-        Sat, 04 Apr 2020 19:02:11 -0700 (PDT)
+        with ESMTP id S1726283AbgDECJv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Apr 2020 22:09:51 -0400
+Received: by mail-io1-f67.google.com with SMTP id o3so12036033ioh.2;
+        Sat, 04 Apr 2020 19:09:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4KE1ajm7Pr9JZRShONsIYV51HCcbzA2Ep3Y98R0uXF0=;
-        b=p2kaPmcAldHpOL99t6U+L1FwDAnTlKtTVOZUQPej+Za9wQAKU6qrbVZcKuRsYqLoy7
-         78HNHhRcQ3zoDHbUSSZF2+zjqwMlGRsWx6qWtUpStydriP31CVqTMHVvxZBFl3NQUg86
-         Uq/d7rR2NTOFVqnbyXoUa8CDrSb5+rz7hoO5z7lW5tYjyxTgzHbd8ZnB4x21eRgdNX6E
-         Lm3++nASJe4mt3q0km/0uSVB18rtOgCRifDji4wlapIGHeHTw9FiO9serZ20mDlry10h
-         4du+fHR3+/9GlHGAAe3dbsRhYPaQK9x+THWqvN4P0xz6Zlb5m2dvI4Og7WR5ynCd83Hx
-         em9w==
-X-Gm-Message-State: AGi0PubRbhCNjYaz8HnpuyocGDUkznu8dMYpq4Uwf3AOtF1mUwuZEDqw
-        PekQwGA2xQPjJGcpiucfqw==
-X-Google-Smtp-Source: APiQypJBAkbiTizGN9DKt26SkLi+oMNVXz4uYVjtoFP0Ee1EplO0IkrN+ydU296Tom/Bm7vDZfPvpA==
-X-Received: by 2002:a05:6638:155:: with SMTP id y21mr713152jao.79.1586052130726;
-        Sat, 04 Apr 2020 19:02:10 -0700 (PDT)
+        bh=HGvGldYqzcPwlD+W1QgZLducQvHDHG5zRE8/3hy9qmE=;
+        b=ZGiWJcKk5rA0RoQ9U4nQaFTbO/P84py6g8caDWaiK3W6urNUEKd44N0aZbaVt80AsY
+         aAqSZVzAZT7vROPohdF3K5YkZmfYjT0PuawPgXGa9M+MdHveUW5X2Z/6LR0Ad/cm3Wjj
+         nnJDl6npYLFfQJIKQM76y0BmSayv/LEBuP1XtHLU8Af2G8FA1zd0wOWjjTpbQUlbbygd
+         0+efNSCOseJznNB/OViPMONEPGT0e3XdrZSi+iuAbrMCXXoXST/X6d6sBmOw7shohKOj
+         1HVCQMf2eEjufXsbKJQhAVy3sGyRauZRQWhwTbSpuMZ9XOjOE1gj9fyJB6oDa+xUDLn3
+         Ukmw==
+X-Gm-Message-State: AGi0PuYcTzOB+aByDcGLXblKjkJDcBhOnQh7PwF7/g/B2btUmpdSA1/p
+        9mLYXBLWi0GVF2odDoYdVg==
+X-Google-Smtp-Source: APiQypLR+L4TyzsQ18uH/T8q5XIdKfhiVKmP6auhisbFB8B7HRQkYCMpG4OowZonWrf8jyvc8VdSIQ==
+X-Received: by 2002:a02:2a47:: with SMTP id w68mr3890967jaw.76.1586052589693;
+        Sat, 04 Apr 2020 19:09:49 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id r10sm3871386iom.42.2020.04.04.19.02.09
+        by smtp.gmail.com with ESMTPSA id b6sm3770146iok.19.2020.04.04.19.09.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Apr 2020 19:02:10 -0700 (PDT)
-Received: (nullmailer pid 536 invoked by uid 1000);
-        Sun, 05 Apr 2020 02:02:08 -0000
-Date:   Sat, 4 Apr 2020 20:02:08 -0600
+        Sat, 04 Apr 2020 19:09:48 -0700 (PDT)
+Received: (nullmailer pid 11718 invoked by uid 1000);
+        Sun, 05 Apr 2020 02:09:46 -0000
+Date:   Sat, 4 Apr 2020 20:09:46 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-scsi@vger.kernel.org,
-        krzk@kernel.org, avri.altman@wdc.com, martin.petersen@oracle.com,
-        kwmad.kim@samsung.com, stanley.chu@mediatek.com,
-        cang@codeaurora.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/5] Documentation: devicetree: ufs: Add DT bindings
- for exynos UFS host controller
-Message-ID: <20200405020208.GA22609@bogus>
-References: <20200327170638.17670-1-alim.akhtar@samsung.com>
- <CGME20200327171418epcas5p4b85bea273e17c05a7edca58f528c435a@epcas5p4.samsung.com>
- <20200327170638.17670-4-alim.akhtar@samsung.com>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette =?iso-8859-1?Q?=A0?= 
+        <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v1 2/4] dt-bindings: clock: Add YAML schemas for LPASS
+ clocks on SC7180
+Message-ID: <20200405020946.GA6110@bogus>
+References: <1585338485-31820-1-git-send-email-tdas@codeaurora.org>
+ <1585338485-31820-3-git-send-email-tdas@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200327170638.17670-4-alim.akhtar@samsung.com>
+In-Reply-To: <1585338485-31820-3-git-send-email-tdas@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 10:36:36PM +0530, Alim Akhtar wrote:
-> This adds Exynos Universal Flash Storage (UFS) Host Controller DT bindings.
-
-Why the inconsistent subject. 'dt-bindings: ...' please.
-
+On Sat, Mar 28, 2020 at 01:18:03AM +0530, Taniya Das wrote:
+> The LPASS(Low Power Audio Subsystem) clock provider have a bunch of generic
+> properties that are needed in a device tree. Also add clock ids for GCC
+> LPASS and LPASS Core clock IDs for LPASS client to request for the clocks.
 > 
-> Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
-> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
 > ---
->  .../devicetree/bindings/ufs/ufs-exynos.txt    | 104 ++++++++++++++++++
->  1 file changed, 104 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ufs/ufs-exynos.txt
-
-Use DT schema format. Not sure why you'd do that for one and not the 
-other...
-
+>  .../bindings/clock/qcom,sc7180-lpasscorecc.yaml    | 81 ++++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,gcc-sc7180.h        |  1 +
+>  .../dt-bindings/clock/qcom,lpasscorecc-sc7180.h    | 28 ++++++++
+>  3 files changed, 110 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
+>  create mode 100644 include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
 > 
-> diff --git a/Documentation/devicetree/bindings/ufs/ufs-exynos.txt b/Documentation/devicetree/bindings/ufs/ufs-exynos.txt
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
 > new file mode 100644
-> index 000000000000..08e2d1497b1b
+> index 0000000..d040bd1
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ufs/ufs-exynos.txt
-> @@ -0,0 +1,104 @@
-> +* Exynos Universal Flash Storage (UFS) Host Controller
+> +++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
+> @@ -0,0 +1,81 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/qcom,sc7180-lpasscorecc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +UFSHC nodes are defined to describe on-chip UFS host controllers.
-> +Each UFS controller instance should have its own node.
+> +title: Qualcomm LPASS Core Clock Controller Binding for SC7180
 > +
-> +Required properties:
-> +- compatible        : compatible name, contains "samsung,exynos7-ufs"
-> +- interrupts        : <interrupt mapping for UFS host controller IRQ>
-> +- reg               : Should contain HCI, vendor specific, UNIPRO and
-> +		      UFS protector address space
-> +- reg-names	    : "hci", "vs_hci", "unipro", "ufsp";
+> +maintainers:
+> +  - Taniya Das <tdas@codeaurora.org>
 > +
-> +Optional properties:
-> +- vdd-hba-supply        : phandle to UFS host controller supply regulator node
-> +- vcc-supply            : phandle to VCC supply regulator node
-> +- vccq-supply           : phandle to VCCQ supply regulator node
-> +- vccq2-supply          : phandle to VCCQ2 supply regulator node
-> +- vcc-supply-1p8        : For embedded UFS devices, valid VCC range is 1.7-1.95V
-> +                          or 2.7-3.6V. This boolean property when set, specifies
-> +			  to use low voltage range of 1.7-1.95V. Note for external
-> +			  UFS cards this property is invalid and valid VCC range is
-> +			  always 2.7-3.6V.
+> +description: |
+> +  Qualcomm LPASS core clock control module which supports the clocks and
+> +  power domains on SC7180.
+> +
+> +  See also:
+> +  - dt-bindings/clock/qcom,lpasscorecc-sc7180.h
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,sc7180-lpasshm
+> +      - qcom,sc7180-lpasscorecc
+> +
+> +  clocks:
+> +    items:
+> +      - description: gcc_lpass_sway clock from GCC
+> +
+> +  clock-names:
+> +    items:
+> +      - const: gcc_lpass_sway
+> +
+> +  power-domains:
+> +    items:
+> +      - description: LPASS CORE HM GSDCR
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +  '#power-domain-cells':
+> +    const: 1
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 2
 
-The supply for vcc-supply should be restricted to the valid range and 
-this is not needed.
-
-> +- vcc-max-microamp      : specifies max. load that can be drawn from vcc supply
-> +- vccq-max-microamp     : specifies max. load that can be drawn from vccq supply
-> +- vccq2-max-microamp    : specifies max. load that can be drawn from vccq2 supply
-
-How is this information useful?
-
-> +- <name>-fixed-regulator : boolean property specifying that <name>-supply is a fixed regulator
-
-No need for this. Look up the phandle and check supply's node if you 
-want to know this.
+Need to define what each one is when there are 2.
 
 > +
-> +- clocks                : List of phandle and clock specifier pairs
-> +- clock-names           : List of clock input name strings sorted in the same
-> +                          order as the clocks property.
-> +			  "core", "sclk_unipro_main", "ref" and ref_parent
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - '#clock-cells'
+> +  - '#power-domain-cells'
 > +
-> +- freq-table-hz		: Array of <min max> operating frequencies stored in the same
-> +			  order as the clocks property. If this property is not
-> +			  defined or a value in the array is "0" then it is assumed
-> +			  that the frequency is set by the parent clock or a
-> +			  fixed rate clock source.
-> +- pclk-freq-avail-range : specifies available frequency range(min/max) for APB clock
-> +- ufs,pwr-attr-mode : specifies mode value for power mode change, possible values are
-> +			"FAST", "SLOW", "FAST_auto" and "SLOW_auto"
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
+> +    #include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
+> +    clock-controller@63000000 {
+> +      compatible = "qcom,sc7180-lpasshm";
+> +        reg = <0 0x63000000 0 0x28>;
+> +        clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
+> +        clock-names = "gcc_lpass_sway";
+> +        #clock-cells = <1>;
+> +        #power-domain-cells = <1>;
+> +    };
+> +
+> +  - |
+> +    clock-controller@62d00000 {
+> +        compatible = "qcom,sc7180-lpasscorecc";
+> +        reg = <0 0x62d00000 0 0x50000>,
+> +            <0 0x62780000 0 0x30000>;
+> +        clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
+> +        clock-names = "gcc_lpass_sway";
+> +        power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
+> +        #clock-cells = <1>;
+> +        #power-domain-cells = <1>;
+> +    };
+> +...
+> diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+> index 1258fd0..439476c 100644
+> --- a/include/dt-bindings/clock/qcom,gcc-sc7180.h
+> +++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+> @@ -137,6 +137,7 @@
+>  #define GCC_MSS_NAV_AXI_CLK					127
+>  #define GCC_MSS_Q6_MEMNOC_AXI_CLK				128
+>  #define GCC_MSS_SNOC_AXI_CLK					129
+> +#define GCC_LPASS_CFG_NOC_SWAY_CLK				130
+> 
+>  /* GCC resets */
+>  #define GCC_QUSB2PHY_PRIM_BCR					0
+> diff --git a/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h b/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
+> new file mode 100644
+> index 0000000..9466d5e
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
+> @@ -0,0 +1,28 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_CLK_QCOM_LPASS_CORE_CC_SC7180_H
+> +#define _DT_BINDINGS_CLK_QCOM_LPASS_CORE_CC_SC7180_H
+> +
+> +/* LPASS_CORE_CC clocks */
+> +#define LPASS_LPAAUDIO_DIG_PLL				0
+> +#define LPASS_LPAAUDIO_DIG_PLL_OUT_ODD			1
+> +#define CORE_CLK_SRC					2
+> +#define EXT_MCLK0_CLK_SRC				3
+> +#define LPAIF_PRI_CLK_SRC				4
+> +#define LPAIF_SEC_CLK_SRC				5
+> +#define LPASS_AUDIO_CORE_CORE_CLK			6
+> +#define LPASS_AUDIO_CORE_EXT_MCLK0_CLK			7
+> +#define LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK		8
+> +#define LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK		9
+> +#define LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK		10
+> +
+> +/* LPASS power domains */
+> +#define LPASS_CORE_HM_GDSCR				0
+> +
+> +#define LPASS_AUDIO_HM_GDSCR				0
 
-Anything before the ',' is considered a vendor prefix and 'ufs' is not a 
-vendor.
+Kind of odd that 2 are the same value.
 
-If these are standard UFS properties, then they should be documented in 
-a common UFS binding. On the flip side, none of the other UFS bindings 
-have needed these properties, so why do you?
-
-> +- ufs,pwr-attr-lane : specifies lane count value for power mode change
-> +		      allowed values are 1 or 2
-> +- ufs,pwr-attr-gear : specifies gear count value for power mode change
-> +		      allowed values are 1 or 2
-> +- ufs,pwr-attr-hs-series : specifies HS rate series for power mode change
-> +			   can be one of "HS_rate_b" or "HS_rate_a"
-> +- ufs,pwr-local-l2-timer : specifies array of local UNIPRO L2 timer values
-> +			   3 timers supported
-> +			   <FC0ProtectionTimeOutVal,TC0ReplayTimeOutVal, AFC0ReqTimeOutVal>
-> +- ufs,pwr-remote-l2-timer : specifies array of remote UNIPRO L2 timer values
-> +			   3 timers supported
-> +			   <FC0ProtectionTimeOutVal,TC0ReplayTimeOutVal, AFC0ReqTimeOutVal>
-> +- ufs-rx-adv-fine-gran-sup_en : specifies support of fine granularity of MPHY,
-> +			      this is a boolean property.
-> +- ufs-rx-adv-fine-gran-step : specifies granularity steps of MPHY,
-> +			      allowed step size is 0 to 3
-> +- ufs-rx-adv-min-activate-time-cap : specifies rx advanced minimum activate time of MPHY
-> +				     range is 1 to 9
-> +- ufs-pa-granularity : specifies Granularity for PA_TActivate and PA_Hibern8Time
-> +- ufs-pa-tacctivate : specifies time to wake-up remote M-RX
-> +- ufs-pa-hibern8time : specifies minimum time to wait in HIBERN8 state
+> +#define LPASS_PDC_HM_GDSCR				1
 > +
-> +Note: If above properties are not defined it can be assumed that the supply
-> +regulators or clocks are always on.
-> +
-> +Example:
-> +	ufshc@0x15570000 {
-> +		compatible = "samsung,exynos7-ufs";
-> +		reg = <0x15570000 0x100>,
-> +		      <0x15570100 0x100>,
-> +		      <0x15571000 0x200>,
-> +		      <0x15572000 0x300>;
-> +		reg-names = "hci", "vs_hci", "unipro", "ufsp";
-> +		interrupts = <0 200 0>;
-> +
-> +		vdd-hba-supply = <&xxx_reg0>;
-> +		vdd-hba-fixed-regulator;
-> +		vcc-supply = <&xxx_reg1>;
-> +		vcc-supply-1p8;
-> +		vccq-supply = <&xxx_reg2>;
-> +		vccq2-supply = <&xxx_reg3>;
-> +		vcc-max-microamp = 500000;
-> +		vccq-max-microamp = 200000;
-> +		vccq2-max-microamp = 200000;
-> +
-> +		clocks = <&core 0>, <&ref 0>, <&iface 0>;
-> +		clock-names = "core", "sclk_unipro_main", "ref", "ref_parent";
-> +		freq-table-hz = <100000000 200000000>, <0 0>, <0 0>, <0 0>;
-> +
-> +		pclk-freq-avail-range = <70000000 133000000>;
-> +
-> +		ufs,pwr-attr-mode = "FAST";
-> +		ufs,pwr-attr-lane = <2>;
-> +		ufs,pwr-attr-gear = <2>;
-> +		ufs,pwr-attr-hs-series = "HS_rate_b";
-> +		ufs,pwr-local-l2-timer = <8000 28000 20000>;
-> +		ufs,pwr-remote-l2-timer = <12000 32000 16000>;
-> +		ufs-rx-adv-fine-gran-sup_en = <1>;
-> +		ufs-rx-adv-fine-gran-step = <3>;
-> +		ufs-rx-adv-min-activate-time-cap = <9>;
-> +		ufs-pa-granularity = <6>;
-> +		ufs-pa-tacctivate = <6>;
-> +		ufs-pa-hibern8time = <20>;
-> +	};
-> -- 
-> 2.17.1
+> +#endif
+> --
+> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+> of the Code Aurora Forum, hosted by the  Linux Foundation.
 > 
