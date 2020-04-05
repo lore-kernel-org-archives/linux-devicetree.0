@@ -2,117 +2,106 @@ Return-Path: <SRS0=YuQm=5V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FB0C2BA1E
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 03:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 643F8C2BA16
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 03:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD3F9206A3
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 03:01:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PO44/Tdb"
+	by mail.kernel.org (Postfix) with ESMTP id 3922A206A3
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 03:11:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586056261;
+	bh=JT+cqz7qLQP4SxN8BKeesGICXxCLM/dtqRMyPQ3Sypg=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=DeSMzXLWwswiW4VzxaaG/Z0jZTn477awlIWMGR8L22DtHTt3hQTIcagVxGZuz7WUi
+	 jsHMIu18DUf9j3ZRgtqHtT81k1gMlG6unIHWKN10iC10ZPMpoLp/X1Pk8sl7BSdA38
+	 3DnxtoeiPqlZUaQ5wQtfdAJBn2zA4Y6rA+W6B/Ew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgDEDBg (ORCPT
+        id S1726487AbgDEDK6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Apr 2020 23:01:36 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:44142 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbgDEDBf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Apr 2020 23:01:35 -0400
-Received: by mail-pg1-f202.google.com with SMTP id 201so2028458pgg.11
-        for <devicetree@vger.kernel.org>; Sat, 04 Apr 2020 20:01:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=/mhEVKDrcLowpzfx6YTsJHtWxucbZ6JF/7+trFXxaIo=;
-        b=PO44/TdbXsdOKUnGcbwCiq/biYVFIazEY47zEiL9aID60XNQpcSbVLtTbF1LgtQNwu
-         pq8ors1X0WVg3T14QfHi7jePFG7uQd9ygbYZ6CpcFfjP/18Wf+elgVnt5F1k5n4JTJ88
-         wPmAHTdtEMBZ9c4iEm7ET5yZaVXbSdnJxh4D/AcqBo+UW8TDHuzclsZA7utXw9OpDhga
-         +2K7HKhe7i3QIUgjhE6O9ZNROr7e5cy2HNGHVJrpRSZmhPjQGhABt/equMSc59wTWcwT
-         pJfczuxrC9ZErwPiAZCZ5Yd0aL2OYbkslHcPXbWXWA0pWQUgI8ar1xlvTEqM5Uvs3TiU
-         N6rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=/mhEVKDrcLowpzfx6YTsJHtWxucbZ6JF/7+trFXxaIo=;
-        b=LDL86extoHeIzPe+YDaxkFchqu3hQGbro6mKUJgKZIYy0BNM6CyMjWtqDjM9OW+dkX
-         hwUj5h1xuIMxex+wKzKdbXazAved167X+NObfG7JhEIApWVH5Ty7rvr5hmxqqJh/gfdV
-         oWoVlCGBLe/5+ECZOsJju85h017loe+cZViV1NsGuQmYtsJB03TnIXHagqXH92HZ9dyg
-         4PBZT99VzZe/ltUQy4HZfp7v3J1QfuO0BQeDW0uwIzTOuaKhboUMmJenfDd8ZzGSoJHu
-         A4a8iTlwieMiV6J0LRD5vJyzSgwJp7Ymp+JG/3bqeDP/c2nWrry9O3nWwTqYP2+Ep4Wc
-         r12w==
-X-Gm-Message-State: AGi0PuYge1ng0utb9yaiK7d3UE50jnqbV47dc9/1RPPDpqoBDHklAQg2
-        xMZ9xiGZJ4sSc43LR2R0+N6ajnTIbQ==
-X-Google-Smtp-Source: APiQypJo7hFsDNHoEJgwxYSllOJInVS57xICFoKfaImyalPvwkywRfVPaQkhFH+eDgQu9zLiFFDHLfoToQ==
-X-Received: by 2002:a63:2e44:: with SMTP id u65mr3435016pgu.142.1586055694463;
- Sat, 04 Apr 2020 20:01:34 -0700 (PDT)
-Date:   Sat,  4 Apr 2020 20:01:18 -0700
-In-Reply-To: <20200405030118.191950-1-kunyi@google.com>
-Message-Id: <20200405030118.191950-4-kunyi@google.com>
-Mime-Version: 1.0
-References: <20200405030118.191950-1-kunyi@google.com>
-X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
-Subject: [PATCH linux hwmon-next v3 3/3] dt-bindings: (hwmon/sbtsi_tmep) Add
- SB-TSI hwmon driver bindings
-From:   Kun Yi <kunyi@google.com>
-To:     jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     Kun Yi <kunyi@google.com>, openbmc@lists.ozlabs.org,
-        joel@jms.id.au, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 4 Apr 2020 23:10:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55432 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726057AbgDEDK6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 4 Apr 2020 23:10:58 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8897206A3;
+        Sun,  5 Apr 2020 03:10:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586056257;
+        bh=JT+cqz7qLQP4SxN8BKeesGICXxCLM/dtqRMyPQ3Sypg=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=gH6i3tO5MVQB3uPNo+huaHmkejxuBY4nUhUoCunnAqMsmF7anDqq0ZyFOb0Cm/062
+         oNFKVzSEKGRTGILKizSs4A5zAnTdvUWnRrLd++9JV+COQo8DjgElxvI+U+quW9jfPU
+         7JXLOLw2oTI3bIOEozn/Lfqjau/wBp5VXM3Uw6hE=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <00f701d60958$a9ed46c0$fdc7d440$@gmail.com>
+References: <20200330205647.24806-1-ansuelsmth@gmail.com> <158587766752.125146.7582840761926137726@swboyd.mtv.corp.google.com> <00f701d60958$a9ed46c0$fdc7d440$@gmail.com>
+Subject: Re: R: [PATCH v2] ARM: qcom: Disable i2c device on gsbi4 for ipq806x
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     'Mathieu Olivari' <mathieu@codeaurora.org>,
+        'Bjorn Andersson' <bjorn.andersson@linaro.org>,
+        'Rob Herring' <robh+dt@kernel.org>,
+        'Mark Rutland' <mark.rutland@arm.com>,
+        'Michael Turquette' <mturquette@baylibre.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To:     'Andy Gross' <agross@kernel.org>, ansuelsmth@gmail.com
+Date:   Sat, 04 Apr 2020 20:10:56 -0700
+Message-ID: <158605625697.158626.12280118012638752686@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document device tree bindings for AMD SB-TSI emulated temperature
-sensor.
+Quoting ansuelsmth@gmail.com (2020-04-02 18:39:04)
+>=20
+>=20
+> > -----Messaggio originale-----
+> > Da: Stephen Boyd <sboyd@kernel.org>
+> > Inviato: venerd=C3=AC 3 aprile 2020 03:34
+> > A: Andy Gross <agross@kernel.org>; Ansuel Smith
+> > <ansuelsmth@gmail.com>
+> > Cc: Ansuel Smith <ansuelsmth@gmail.com>; Mathieu Olivari
+> > <mathieu@codeaurora.org>; Bjorn Andersson
+> > <bjorn.andersson@linaro.org>; Rob Herring <robh+dt@kernel.org>; Mark
+> > Rutland <mark.rutland@arm.com>; Michael Turquette
+> > <mturquette@baylibre.com>; linux-arm-msm@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> > clk@vger.kernel.org
+> > Oggetto: Re: [PATCH v2] ARM: qcom: Disable i2c device on gsbi4 for
+> > ipq806x
+> >=20
+> > Quoting Ansuel Smith (2020-03-30 13:56:46)
+> > > diff --git a/drivers/clk/qcom/gcc-ipq806x.c b/drivers/clk/qcom/gcc-
+> > ipq806x.c
+> > > index b0eee0903807..f7d7a2bc84c1 100644
+> > > --- a/drivers/clk/qcom/gcc-ipq806x.c
+> > > +++ b/drivers/clk/qcom/gcc-ipq806x.c
+> > > @@ -991,6 +991,7 @@ static struct clk_branch gsbi4_h_clk =3D {
+> > >                 .hw.init =3D &(struct clk_init_data){
+> > >                         .name =3D "gsbi4_h_clk",
+> > >                         .ops =3D &clk_branch_ops,
+> > > +                       .flags =3D CLK_IGNORE_UNUSED,
+> >=20
+> > Is this necessary? Shouldn't we skip clks that are protected during the
+> > unused phase?
+> >=20
+>=20
+> gsbi4_h_clk is not protected. gsbi4_h_clk needs to not be disabled if unu=
+sed
+> (as it's used by rpm) but can't be protected since it's used by uart gsbi=
+4.
+> (With some test protecting also this clk cause the malfunction of uart gs=
+b4)
+>=20
 
-Signed-off-by: Kun Yi <kunyi@google.com>
----
- .../devicetree/bindings/hwmon/amd,sbtsi.txt   | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/amd,sbtsi.txt
-
-diff --git a/Documentation/devicetree/bindings/hwmon/amd,sbtsi.txt b/Documentation/devicetree/bindings/hwmon/amd,sbtsi.txt
-new file mode 100644
-index 000000000000..be7293c43c0e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/amd,sbtsi.txt
-@@ -0,0 +1,26 @@
-+* Sideband interface Temperature Sensor Interface (SB-TSI) compliant
-+AMD SoC temperature device.
-+
-+SB Temperature Sensor Interface (SB-TSI) is an SMBus compatible
-+interface that reports AMD SoC's Ttcl (normalized temperature),
-+and resembles a typical 8-pin remote temperature sensor's I2C interface
-+to BMC. The emulated thermal sensor can report temperatures in increments of
-+0.125 degrees, ranging from 0 to 255.875.
-+
-+Required properties:
-+- compatible: manufacturer and chip name, should be
-+	"amd,sbtsi",
-+
-+- reg: I2C bus address of the device as specified in Section 6.3.1 of the
-+SoC register reference: The SB-TSI address is normally 98h for socket 0 and
-+90h for socket 1, but it could vary based on hardware address select pins.
-+
-+[open source SoC register reference]:
-+	https://www.amd.com/system/files/TechDocs/56255_OSRR.pdf
-+
-+Example:
-+
-+sbtsi@4c {
-+	compatible = "amd,sbtsi";
-+	reg = <0x4c>;
-+};
--- 
-2.26.0.292.g33ef6b2f38-goog
-
+Who owns gsbi4 on this platform? Is it RPM? If so, it should be
+protected and we shouldn't touch this clk from the kernel.
