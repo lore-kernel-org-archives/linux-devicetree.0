@@ -2,41 +2,59 @@ Return-Path: <SRS0=YuQm=5V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF0AC2BA15
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 17:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 292C2C2BA15
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 17:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00F0320659
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 17:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8DD020678
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 17:34:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="F8GJLnTf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgDERN5 (ORCPT
+        id S1726830AbgDEReA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Apr 2020 13:13:57 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:34367 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbgDERN5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 13:13:57 -0400
+        Sun, 5 Apr 2020 13:34:00 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.81]:32522 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726669AbgDEReA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 13:34:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586108038;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=QogDZOCus9nqNdEZ1wBxwV54eVkXLair7HgM4gYWe0c=;
+        b=F8GJLnTfZXPgGQy5ek0If3doa9hGcgCoHPymSfaYN+yQIUmNVD17INaeJmkqxUzhIG
+        ol6JZ4SO2hrW2OH+8wtRpqDeQus3f3q9QQquoq2i1QfB1Mvn30b0/MI85FVjfb9BnN7T
+        PPL62sA3Dzl7EDRqkyrY2LoZ8/tRcQ5dgKV+0d97TcgJl+wDUEz1RjDJtcy9t2Op5NTs
+        rd/VgiF5QLyyx5CSI9AQvF74gcPAfImGO1aVAgnzW2CIhKHtFJ2g1LsafQYKBhZG1sk/
+        Pv0bD0FeHPpWzNmxWL7HH1AstFBnU9SxuVMjav6FflMxMh7j3I1SjfVGOGDFcv9h5Dzs
+        H6Kw==
 X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB526NfqU="
 X-RZG-CLASS-ID: mo00
 Received: from localhost.localdomain
         by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id u043b8w35HAoxil
+        with ESMTPSA id u043b8w35HXrxmg
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Sun, 5 Apr 2020 19:10:50 +0200 (CEST)
+        Sun, 5 Apr 2020 19:33:53 +0200 (CEST)
 From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Andi Shyti <andi@etezian.org>, linux-input@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH v2 1/2] Input: mms114 - add support for mms345l
-Date:   Sun,  5 Apr 2020 19:09:03 +0200
-Message-Id: <20200405170904.61512-1-stephan@gerhold.net>
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH 2/2] ARM: defconfig: u8500: Enable CONFIG_GP2AP002
+Date:   Sun,  5 Apr 2020 19:32:52 +0200
+Message-Id: <20200405173252.67614-2-stephan@gerhold.net>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200405173252.67614-1-stephan@gerhold.net>
+References: <20200405173252.67614-1-stephan@gerhold.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -44,155 +62,26 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-MMS345L is another first generation touch screen from Melfas,
-which uses the same registers as MMS152.
+sharp,gp2ap002s00f is used as a proximity sensor in
+samsung-golden and samsung-skomer.
 
-However, using I2C_M_NOSTART for it causes errors when reading:
-
-	i2c i2c-0: sendbytes: NAK bailout.
-	mms114 0-0048: __mms114_read_reg: i2c transfer failed (-5)
-
-The driver works fine as soon as I2C_M_NOSTART is removed.
-
-Add a separate melfas,mms345l binding, and make use of I2C_M_NOSTART
-only for MMS114 and MMS152.
-
-Reviewed-by: Andi Shyti <andi@etezian.org>
 Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 ---
-Changes in v2:
-  - Pick up review tags
-  - Clarify intention
+ arch/arm/configs/u8500_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-I sent more or less the same patch an half year(!) ago:
-  https://patchwork.kernel.org/patch/11178515/
-
-Back then we discussed removing the I2C_M_NOSTART quirk for all
-devices in the mms114 driver, and using the chance to convert it to
-use smbus/regmap functions instead of the custom i2c read/write functions.
-
-However, this changes the behavior for all existing devices,
-(eventually causing a regression if the quirk is really needed for them).
-The problem with the smbus patch was that i2c_smbus_read_i2c_block_data()
-is currently limited to 32 bytes (as specified in older versions of the SMBus
-standard), which broke larger touchscreen packets (i.e. multi-touch).
-
-Until today, I'm still not quite sure what needs to be changed to finally
-gain support for MMS345L in mainline, despite several emails asking for
-clarification. MMS345L support is seemingly stuck forever :(
-
-I have only my device with MMS345L for testing, and everyone with one
-of the other devices seems to be rather busy. IMO it would be much safer
-to take this patch, which keeps behavior for all existing devices as-is.
-
-Can we reconsider applying this patch and do the refactoring
-separately later?
-
-Thanks,
-Stephan
----
- drivers/input/touchscreen/mms114.c | 43 +++++++++++++++++++++---------
- 1 file changed, 31 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/input/touchscreen/mms114.c b/drivers/input/touchscreen/mms114.c
-index 69c6d559eeb0..d9f45755d073 100644
---- a/drivers/input/touchscreen/mms114.c
-+++ b/drivers/input/touchscreen/mms114.c
-@@ -54,6 +54,7 @@
- enum mms_type {
- 	TYPE_MMS114	= 114,
- 	TYPE_MMS152	= 152,
-+	TYPE_MMS345L	= 345,
- };
- 
- struct mms114_data {
-@@ -91,9 +92,14 @@ static int __mms114_read_reg(struct mms114_data *data, unsigned int reg,
- 	if (reg <= MMS114_MODE_CONTROL && reg + len > MMS114_MODE_CONTROL)
- 		BUG();
- 
--	/* Write register: use repeated start */
-+	/* Write register */
- 	xfer[0].addr = client->addr;
--	xfer[0].flags = I2C_M_TEN | I2C_M_NOSTART;
-+	if (data->type != TYPE_MMS345L)
-+		/* use repeated start */
-+		xfer[0].flags = I2C_M_TEN | I2C_M_NOSTART;
-+	else
-+		xfer[0].flags = client->flags & I2C_M_TEN;
-+
- 	xfer[0].len = 1;
- 	xfer[0].buf = &buf;
- 
-@@ -250,6 +256,15 @@ static int mms114_get_version(struct mms114_data *data)
- 	int error;
- 
- 	switch (data->type) {
-+	case TYPE_MMS345L:
-+		error = __mms114_read_reg(data, MMS152_FW_REV, 3, buf);
-+		if (error)
-+			return error;
-+
-+		dev_info(dev, "TSP FW Rev: bootloader 0x%x / core 0x%x / config 0x%x\n",
-+			 buf[0], buf[1], buf[2]);
-+		break;
-+
- 	case TYPE_MMS152:
- 		error = __mms114_read_reg(data, MMS152_FW_REV, 3, buf);
- 		if (error)
-@@ -287,8 +302,8 @@ static int mms114_setup_regs(struct mms114_data *data)
- 	if (error < 0)
- 		return error;
- 
--	/* MMS152 has no configuration or power on registers */
--	if (data->type == TYPE_MMS152)
-+	/* Only MMS114 has configuration and power on registers */
-+	if (data->type != TYPE_MMS114)
- 		return 0;
- 
- 	error = mms114_set_active(data, true);
-@@ -425,11 +440,16 @@ static int mms114_probe(struct i2c_client *client,
- {
- 	struct mms114_data *data;
- 	struct input_dev *input_dev;
--	const void *match_data;
-+	enum mms_type type;
- 	int error;
- 
--	if (!i2c_check_functionality(client->adapter,
--				I2C_FUNC_PROTOCOL_MANGLING)) {
-+	type = (enum mms_type)device_get_match_data(&client->dev);
-+	if (!type)
-+		return -EINVAL;
-+
-+	if (type != TYPE_MMS345L &&
-+	    !i2c_check_functionality(client->adapter,
-+				     I2C_FUNC_PROTOCOL_MANGLING)) {
- 		dev_err(&client->dev,
- 			"Need i2c bus that supports protocol mangling\n");
- 		return -ENODEV;
-@@ -446,11 +466,7 @@ static int mms114_probe(struct i2c_client *client,
- 	data->client = client;
- 	data->input_dev = input_dev;
- 
--	match_data = device_get_match_data(&client->dev);
--	if (!match_data)
--		return -EINVAL;
--
--	data->type = (enum mms_type)match_data;
-+	data->type = type;
- 
- 	input_set_capability(input_dev, EV_ABS, ABS_MT_POSITION_X);
- 	input_set_capability(input_dev, EV_ABS, ABS_MT_POSITION_Y);
-@@ -599,6 +615,9 @@ static const struct of_device_id mms114_dt_match[] = {
- 	}, {
- 		.compatible = "melfas,mms152",
- 		.data = (void *)TYPE_MMS152,
-+	}, {
-+		.compatible = "melfas,mms345l",
-+		.data = (void *)TYPE_MMS345L,
- 	},
- 	{ }
- };
+diff --git a/arch/arm/configs/u8500_defconfig b/arch/arm/configs/u8500_defconfig
+index 0fd2726cf1c1..9387481f93a5 100644
+--- a/arch/arm/configs/u8500_defconfig
++++ b/arch/arm/configs/u8500_defconfig
+@@ -125,6 +125,7 @@ CONFIG_IIO_ST_ACCEL_3AXIS=y
+ CONFIG_IIO_ST_GYRO_3AXIS=y
+ CONFIG_INV_MPU6050_I2C=y
+ CONFIG_BH1780=y
++CONFIG_GP2AP002=y
+ CONFIG_AK8974=y
+ CONFIG_IIO_ST_MAGN_3AXIS=y
+ CONFIG_IIO_HRTIMER_TRIGGER=y
 -- 
 2.26.0
 
