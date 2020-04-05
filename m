@@ -2,175 +2,233 @@ Return-Path: <SRS0=YuQm=5V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B718C2BA17
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 15:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F44C2BA15
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 16:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBFDC20675
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 15:48:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tP29YWUW"
+	by mail.kernel.org (Postfix) with ESMTP id 97F6E20659
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 16:27:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586104060;
+	bh=87r5HiwV250TQH/hXNaopHedMN2Y4ebyXBOwB1uf87s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=f3wc0++NgxJL9e+dup5JFudyv1PHMv8iGf7q20yzMBhmYE9Fd8Ojx9ex1qKMHVRBm
+	 SCqA2MXZpG+fr5JyQTMhkwHuQ8U95oDt61ZUIUKwrP/xLuHtkTg0uwuMbJFaHSgPUy
+	 2ugikY3McT8EZQKmZ3LhVob/qujuxTQhFFiRP0Ok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgDEPsH (ORCPT
+        id S1727183AbgDEQ1k (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Apr 2020 11:48:07 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:54378 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbgDEPsH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 11:48:07 -0400
-Received: by mail-pj1-f66.google.com with SMTP id np9so5389362pjb.4;
-        Sun, 05 Apr 2020 08:48:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ro6+KbefkXz+hPhP0Iqcl220cLZghODcgKlebnYOeYc=;
-        b=tP29YWUW3x9WmSD+ejFt0USy7DlViex3SScBAv1194VeWEW5P9g9VXP7BMtEHS8w4o
-         QPEfWb32O9gGWb9l5p2m/MwBZGd01bhZtG6jspoK0xjJae9sqlBh+KZssRbed9Z+QCdE
-         ibfhMZoW/BZzu86FQTx0vrjbRyyFeZSgrMea26rN5lDE2YICdsFuLjEOYYkWvZDu52eL
-         NVcqOdFEhwCMikqBIMdHZw9a0M+RpCj5nxjy8jBiVYgDTitDq+16+nYYhd+Dbzt0UuJI
-         zqaRYmvalcX94TgFGbrUvfw4CiST8M5n78E5hYYPFyRNP5bQxMkuBpFlKh+IDCQch0mz
-         BZgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ro6+KbefkXz+hPhP0Iqcl220cLZghODcgKlebnYOeYc=;
-        b=f6UneDuM21y62oIK9aKMZiYJCx8A3fOR9cUFhtoCAWxqpNqd53KMcTm8KUbyU1j/M7
-         MU/uy+sp0DTkKNBxQVckCP2E2TnegR3lAXQWettNMYgFASQvl1zTXdsWKfNrmp9m5tqA
-         wdsntUFln0mUe560Gp57dI5ycSsjDQgj8F+NDRc+embJaPiXZE0RpvhorzWy7xP1YqII
-         U580iUc8A1oLH+wU4v1ETT5Zd5NsFW+VuIppCGOMBM9XkX/N1dpEY4eqAI6UMpESgGD1
-         v+Fby5WFNWwkgQL7d/nDHy5lQoshC7NR5qdOOw8V17rnHyjnf1g+VkPT8H0NG+S6xskZ
-         FyQg==
-X-Gm-Message-State: AGi0PuYAWxkxj8WGJ0pVezkouVbHDYAEEmZhVM/o1uJAWIAcoxoysIkl
-        vCplI/cHJsEueJeTYt1NQ8CwO6e9
-X-Google-Smtp-Source: APiQypKcN3uszX8BCrmxru7kRRaolnm7NM90uaXqMOzHJXXYiCi0JzXO4o7Hw2tblXgAA60VR1Qp7A==
-X-Received: by 2002:a17:90b:292:: with SMTP id az18mr21079654pjb.126.1586101684836;
-        Sun, 05 Apr 2020 08:48:04 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l18sm9009275pgc.26.2020.04.05.08.48.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Apr 2020 08:48:04 -0700 (PDT)
-Subject: Re: [PATCH linux hwmon-next v3 3/3] dt-bindings: (hwmon/sbtsi_tmep)
- Add SB-TSI hwmon driver bindings
-To:     Kun Yi <kunyi@google.com>, jdelvare@suse.com, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     openbmc@lists.ozlabs.org, joel@jms.id.au,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200405030118.191950-1-kunyi@google.com>
- <20200405030118.191950-4-kunyi@google.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <a49060b5-a529-e6b2-2690-cac4681c7722@roeck-us.net>
-Date:   Sun, 5 Apr 2020 08:48:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 5 Apr 2020 12:27:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51554 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727018AbgDEQ1j (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 5 Apr 2020 12:27:39 -0400
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43A40206C3;
+        Sun,  5 Apr 2020 16:27:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586104058;
+        bh=87r5HiwV250TQH/hXNaopHedMN2Y4ebyXBOwB1uf87s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0uL/iuu+DPJe3hArpFNmH8g3sP52h2w4dF5t09k1v3CrPdfKPoQKTfgvJcjovoA32
+         B+EUftAQ0AjBlefdQfqvusqMf7jZrybIP9c6M1PmkZtel1YqtJI27zpYNEDqqW2+rj
+         /hW9yYf2bLOL3IOwhZAtOZREdTI3pvVfcw5Kccxs=
+Received: by mail-ed1-f46.google.com with SMTP id cf14so15824219edb.13;
+        Sun, 05 Apr 2020 09:27:38 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaS//XKd4N+81FI+Hx96KnsjMamaLEhzPSQuw5udiFttLcdtyHN
+        Oi8iGbhu2NWqbvvFImf0VkrbaCiiLzFAfGE3UQ==
+X-Google-Smtp-Source: APiQypJxhl3q1HZOKp0nuBjPykK5XzlvVbUY1lgbpYwIUm7Q3QtRq37rV5b91lqpWxHI2giZOD89RTYhXF9pKbTigvc=
+X-Received: by 2002:aa7:c544:: with SMTP id s4mr16354259edr.271.1586104056683;
+ Sun, 05 Apr 2020 09:27:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200405030118.191950-4-kunyi@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200331082725.81048-1-jitao.shi@mediatek.com>
+ <20200331082725.81048-5-jitao.shi@mediatek.com> <CAAOTY_8vpzfKeyxVxXOVC7mDpw+QGGOX+8fJaQg5WduvndEmoA@mail.gmail.com>
+ <1586093949.10544.4.camel@mszsdaap41>
+In-Reply-To: <1586093949.10544.4.camel@mszsdaap41>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Mon, 6 Apr 2020 00:27:24 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_83pE=+WFJe3Jb8uk-8ToS_j4XN=LDLs+e_7DoYzrjdUA@mail.gmail.com>
+Message-ID: <CAAOTY_83pE=+WFJe3Jb8uk-8ToS_j4XN=LDLs+e_7DoYzrjdUA@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] drm/mediatek: config mipitx impedance with
+ calibration data
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        srv_heupstream@mediatek.com, huijuan.xie@mediatek.com,
+        stonea168@163.com, cawa.cheng@mediatek.com,
+        linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com,
+        eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 4/4/20 8:01 PM, Kun Yi wrote:
-> Document device tree bindings for AMD SB-TSI emulated temperature
-> sensor.
-> 
-> Signed-off-by: Kun Yi <kunyi@google.com>
-> ---
->  .../devicetree/bindings/hwmon/amd,sbtsi.txt   | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/amd,sbtsi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/amd,sbtsi.txt b/Documentation/devicetree/bindings/hwmon/amd,sbtsi.txt
-> new file mode 100644
-> index 000000000000..be7293c43c0e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/amd,sbtsi.txt
-> @@ -0,0 +1,26 @@
-> +* Sideband interface Temperature Sensor Interface (SB-TSI) compliant
-> +AMD SoC temperature device.
-> +
-> +SB Temperature Sensor Interface (SB-TSI) is an SMBus compatible
-> +interface that reports AMD SoC's Ttcl (normalized temperature),
-> +and resembles a typical 8-pin remote temperature sensor's I2C interface
-> +to BMC. The emulated thermal sensor can report temperatures in increments of
-> +0.125 degrees, ranging from 0 to 255.875.
-> +
-> +Required properties:
-> +- compatible: manufacturer and chip name, should be
-> +	"amd,sbtsi",
-> +
-> +- reg: I2C bus address of the device as specified in Section 6.3.1 of the
-> +SoC register reference: The SB-TSI address is normally 98h for socket 0 and
-> +90h for socket 1, but it could vary based on hardware address select pins.
-> +
-> +[open source SoC register reference]:
-> +	https://www.amd.com/system/files/TechDocs/56255_OSRR.pdf
-> +
-> +Example:
-> +
-> +sbtsi@4c {
-> +	compatible = "amd,sbtsi";
-> +	reg = <0x4c>;
-> +};
-> 
+Hi, Jitao:
 
-Rob is going to ask you to provide this information in DT schema format
-(Documentation/devicetree/writing-schema.rst). checkpatch tells you the same
-nowadays.
+Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=885=E6=97=
+=A5 =E9=80=B1=E6=97=A5 =E4=B8=8B=E5=8D=889:39=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+>
+> On Sat, 2020-04-04 at 22:26 +0800, Chun-Kuang Hu wrote:
+> > Hi, Jitao:
+> >
+> > Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B43=E6=9C=8831=
+=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=884:28=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> > >
+> > > Read calibration data from nvmem, and config mipitx impedance with
+> > > calibration data to make sure their impedance are 100ohm.
+> > >
+> > > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> > > ---
+> > >  drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c | 57 +++++++++++++++++=
+++
+> > >  1 file changed, 57 insertions(+)
+> > >
+> > > diff --git a/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c b/drivers/=
+gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
+> > > index e4cc967750cb..0f87cd3d1d7d 100644
+> > > --- a/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
+> > > +++ b/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
+> > > @@ -5,6 +5,8 @@
+> > >   */
+> > >
+> > >  #include "mtk_mipi_tx.h"
+> > > +#include <linux/nvmem-consumer.h>
+> > > +#include <linux/slab.h>
+> > >
+> > >  #define MIPITX_LANE_CON                0x000c
+> > >  #define RG_DSI_CPHY_T1DRV_EN           BIT(0)
+> > > @@ -28,6 +30,7 @@
+> > >  #define MIPITX_PLL_CON4                0x003c
+> > >  #define RG_DSI_PLL_IBIAS               (3 << 10)
+> > >
+> > > +#define MIPITX_D2P_RTCODE      0x0100
+> > >  #define MIPITX_D2_SW_CTL_EN    0x0144
+> > >  #define MIPITX_D0_SW_CTL_EN    0x0244
+> > >  #define MIPITX_CK_CKMODE_EN    0x0328
+> > > @@ -108,6 +111,58 @@ static const struct clk_ops mtk_mipi_tx_pll_ops =
+=3D {
+> > >         .recalc_rate =3D mtk_mipi_tx_pll_recalc_rate,
+> > >  };
+> > >
+> > > +static void mtk_mipi_tx_config_calibration_data(struct mtk_mipi_tx *=
+mipi_tx)
+> > > +{
+> > > +       u32 *buf;
+> > > +       u32 rt_code[5];
+> > > +       int i, j;
+> > > +       struct nvmem_cell *cell;
+> > > +       struct device *dev =3D mipi_tx->dev;
+> > > +       size_t len;
+> > > +
+> > > +       cell =3D nvmem_cell_get(dev, "calibration-data");
+> > > +       if (IS_ERR(cell)) {
+> > > +               dev_info(dev, "nvmem_cell_get fail\n");
+> > > +               return;
+> > > +       }
+> > > +
+> > > +       buf =3D (u32 *)nvmem_cell_read(cell, &len);
+> > > +
+> > > +       nvmem_cell_put(cell);
+> > > +
+> > > +       if (IS_ERR(buf)) {
+> > > +               dev_info(dev, "can't get data\n");
+> > > +               return;
+> > > +       }
+> > > +
+> > > +       if (len < 3 * sizeof(u32)) {
+> > > +               dev_info(dev, "invalid calibration data\n");
+> > > +               kfree(buf);
+> > > +               return;
+> > > +       }
+> > > +
+> > > +       rt_code[0] =3D ((buf[0] >> 6 & 0x1f) << 5) | (buf[0] >> 11 & =
+0x1f);
+> > > +       rt_code[1] =3D ((buf[1] >> 27 & 0x1f) << 5) | (buf[0] >> 1 & =
+0x1f);
+> > > +       rt_code[2] =3D ((buf[1] >> 17 & 0x1f) << 5) | (buf[1] >> 22 &=
+ 0x1f);
+> > > +       rt_code[3] =3D ((buf[1] >> 7 & 0x1f) << 5) | (buf[1] >> 12 & =
+0x1f);
+> > > +       rt_code[4] =3D ((buf[2] >> 27 & 0x1f) << 5) | (buf[1] >> 2 & =
+0x1f);
+> >
+> > Why not just save rt_code in nvmem and you don't need to translate here=
+?
+> > If you need to do so, please add description for this.
+> >
+> > Regards,
+> > Chun-Kuang.
+> >
+>
+> Hi Chun-Kuang,
+>
+> The calibration data is flashed in rom when the IC FT test
+> And the data struct can't be stored again
 
-Guenter
+OK, it looks like this transtation is necessary.
+If it's fixed, I would like to get the rt_code when probe or somewhere
+initialization.
 
+Regards,
+Chun-Kuang.
+
+>
+> Best Regards
+> JItao
+> >
+> > > +
+> > > +       for (i =3D 0; i < 5; i++) {
+> > > +               if ((rt_code[i] & 0x1f) =3D=3D 0)
+> > > +                       rt_code[i] |=3D 0x10;
+> > > +
+> > > +               if ((rt_code[i] >> 5 & 0x1f) =3D=3D 0)
+> > > +                       rt_code[i] |=3D 0x10 << 5;
+> > > +
+> > > +               for (j =3D 0; j < 10; j++)
+> > > +                       mtk_mipi_tx_update_bits(mipi_tx,
+> > > +                               MIPITX_D2P_RTCODE * (i + 1) + j * 4,
+> > > +                               1, rt_code[i] >> j & 1);
+> > > +       }
+> > > +
+> > > +       kfree(buf);
+> > > +}
+> > > +
+> > >  static void mtk_mipi_tx_power_on_signal(struct phy *phy)
+> > >  {
+> > >         struct mtk_mipi_tx *mipi_tx =3D phy_get_drvdata(phy);
+> > > @@ -130,6 +185,8 @@ static void mtk_mipi_tx_power_on_signal(struct ph=
+y *phy)
+> > >                                 RG_DSI_HSTX_LDO_REF_SEL,
+> > >                                 (mipi_tx->mipitx_drive - 3000) / 200 =
+<< 6);
+> > >
+> > > +       mtk_mipi_tx_config_calibration_data(mipi_tx);
+> > > +
+> > >         mtk_mipi_tx_set_bits(mipi_tx, MIPITX_CK_CKMODE_EN, DSI_CK_CKM=
+ODE_EN);
+> > >  }
+> > >
+> > > --
+> > > 2.21.0
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
+>
