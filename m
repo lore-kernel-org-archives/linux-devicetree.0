@@ -2,45 +2,45 @@ Return-Path: <SRS0=YuQm=5V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CADC2BA1B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4046EC2BA80
 	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 23:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F0C320659
+	by mail.kernel.org (Postfix) with ESMTP id 142B52074B
 	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 23:23:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="VaGB8RqO"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JF5nSjXL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbgDEXXi (ORCPT
+        id S1727848AbgDEXXi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Sun, 5 Apr 2020 19:23:38 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:34620 "EHLO
+Received: from perceval.ideasonboard.com ([213.167.242.64]:34604 "EHLO
         perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727841AbgDEXXi (ORCPT
+        with ESMTP id S1727612AbgDEXXi (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 19:23:38 -0400
 Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DEE7A11F3;
-        Mon,  6 Apr 2020 01:23:35 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id AAA7411C8;
+        Mon,  6 Apr 2020 01:23:34 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1586129016;
-        bh=pozkGKqsejRbmYLU+Z9/Qc6jJ4lh6jNC1qZjC+6WgXg=;
+        s=mail; t=1586129015;
+        bh=gRsFNe+iwSy3nz7DUx5fdhrC79a4EVTP232e8CxGEQ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VaGB8RqOtdzpW4lQ9pICbW2qCFctwmJy+xA9hWReq9Cil8t08EUV1AgX+AnCibIbB
-         aamMeACfSLHD5VFIYzgggnsT0s+p1sLFKmoGbBnM9kAHSY94Zg5aHEFeY47iY9AaDb
-         xWasmI2Y4WgTKj7NglBA/d9fEpOBGevJfRCeqD9o=
+        b=JF5nSjXLSQCEcwKHtUUFd3fo5pS+tTBxCmx6UN1k2XHfvRdjBJlJlqnWi0adUka3+
+         dT5/hp8J48Ct0+EZ1WF+SNyG5iC9zP7+2txOfAVyODU11VVdxW6n7JDfJvqS30VoZ9
+         5WZKZKJlTzp7rGulXvcG+4wL9z75ZTo+JxCmAHxk=
 From:   Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 To:     devicetree@vger.kernel.org
 Cc:     dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
         Jacopo Mondi <jacopo+renesas@jmondi.org>,
         Maxime Ripard <maxime@cerno.tech>,
         Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH 3/4] dt-bindings: display: bridge: thc63lvd1024: Convert binding to YAML
-Date:   Mon,  6 Apr 2020 02:23:17 +0300
-Message-Id: <20200405232318.26833-4-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 2/4] dt-bindings: display: bridge: Convert simple-bridge bindings to YAML
+Date:   Mon,  6 Apr 2020 02:23:16 +0300
+Message-Id: <20200405232318.26833-3-laurent.pinchart+renesas@ideasonboard.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200405232318.26833-1-laurent.pinchart+renesas@ideasonboard.com>
 References: <20200405232318.26833-1-laurent.pinchart+renesas@ideasonboard.com>
@@ -51,66 +51,58 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the Thine THC63LVD1024 text binding to YAML.
+The simple-bridge driver supports multiple simple or dumb bridges,
+covered by different compatible strings but otherwise identical DT
+bindings. Some of those bridges have undocumented bindings, while others
+are documented in text form in separate files. Group them all in a
+single binding and convert it to YAML.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- .../display/bridge/thine,thc63lvd1024.txt     |  66 ----------
- .../display/bridge/thine,thc63lvd1024.yaml    | 121 ++++++++++++++++++
- 2 files changed, 121 insertions(+), 66 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
- create mode 100644 Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.yaml
+ .../bindings/display/bridge/adi,adv7123.txt   | 50 ----------
+ .../bindings/display/bridge/dumb-vga-dac.txt  | 50 ----------
+ .../display/bridge/simple-bridge.yaml         | 99 +++++++++++++++++++
+ .../bindings/display/bridge/ti,ths813x.txt    | 51 ----------
+ 4 files changed, 99 insertions(+), 151 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/bridge/adi,adv7123.txt
+ delete mode 100644 Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/simple-bridge.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,ths813x.txt
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7123.txt b/Documentation/devicetree/bindings/display/bridge/adi,adv7123.txt
 deleted file mode 100644
-index d17d1e5820d7..000000000000
---- a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+index a6b2b2b8f3d9..000000000000
+--- a/Documentation/devicetree/bindings/display/bridge/adi,adv7123.txt
 +++ /dev/null
-@@ -1,66 +0,0 @@
--Thine Electronics THC63LVD1024 LVDS decoder
---------------------------------------------
+@@ -1,50 +0,0 @@
+-Analog Device ADV7123 Video DAC
+--------------------------------
 -
--The THC63LVD1024 is a dual link LVDS receiver designed to convert LVDS streams
--to parallel data outputs. The chip supports single/dual input/output modes,
--handling up to two LVDS input streams and up to two digital CMOS/TTL outputs.
--
--Single or dual operation mode, output data mapping and DDR output modes are
--configured through input signals and the chip does not expose any control bus.
+-The ADV7123 is a digital-to-analog converter that outputs VGA signals from a
+-parallel video input.
 -
 -Required properties:
--- compatible: Shall be "thine,thc63lvd1024"
--- vcc-supply: Power supply for TTL output, TTL CLOCKOUT signal, LVDS input,
--  PPL and digital circuitry
+-
+-- compatible: Should be "adi,adv7123"
 -
 -Optional properties:
--- powerdown-gpios: Power down GPIO signal, pin name "/PDWN". Active low
--- oe-gpios: Output enable GPIO signal, pin name "OE". Active high
 -
--The THC63LVD1024 video port connections are modeled according
--to OF graph bindings specified by Documentation/devicetree/bindings/graph.txt
+-- psave-gpios: Power save control GPIO
 -
--Required video port nodes:
--- port@0: First LVDS input port
--- port@2: First digital CMOS/TTL parallel output
+-Required nodes:
 -
--Optional video port nodes:
--- port@1: Second LVDS input port
--- port@3: Second digital CMOS/TTL parallel output
+-The ADV7123 has two video ports. Their connections are modeled using the OF
+-graph bindings specified in Documentation/devicetree/bindings/graph.txt.
 -
--The device can operate in single-link mode or dual-link mode. In single-link
--mode, all pixels are received on port@0, and port@1 shall not contain any
--endpoint. In dual-link mode, even-numbered pixels are received on port@0 and
--odd-numbered pixels on port@1, and both port@0 and port@1 shall contain
--endpoints.
+-- Video port 0 for DPI input
+-- Video port 1 for VGA output
 -
--Example:
----------
 -
--	thc63lvd1024: lvds-decoder {
--		compatible = "thine,thc63lvd1024";
+-Example
+--------
 -
--		vcc-supply = <&reg_lvds_vcc>;
--		powerdown-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
+-	adv7123: encoder@0 {
+-		compatible = "adi,adv7123";
 -
 -		ports {
 -			#address-cells = <1>;
@@ -119,64 +111,118 @@ index d17d1e5820d7..000000000000
 -			port@0 {
 -				reg = <0>;
 -
--				lvds_dec_in_0: endpoint {
--					remote-endpoint = <&lvds_out>;
+-				adv7123_in: endpoint@0 {
+-					remote-endpoint = <&dpi_out>;
 -				};
 -			};
 -
--			port@2{
--				reg = <2>;
+-			port@1 {
+-				reg = <1>;
 -
--				lvds_dec_out_2: endpoint {
--					remote-endpoint = <&adv7511_in>;
+-				adv7123_out: endpoint@0 {
+-					remote-endpoint = <&vga_connector_in>;
 -				};
 -			};
 -		};
 -	};
-diff --git a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.yaml b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.yaml
+diff --git a/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt b/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
+deleted file mode 100644
+index 164cbb15f04c..000000000000
+--- a/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
++++ /dev/null
+@@ -1,50 +0,0 @@
+-Dumb RGB to VGA DAC bridge
+----------------------------
+-
+-This binding is aimed for dumb RGB to VGA DAC based bridges that do not require
+-any configuration.
+-
+-Required properties:
+-
+-- compatible: Must be "dumb-vga-dac"
+-
+-Required nodes:
+-
+-This device has two video ports. Their connections are modelled using the OF
+-graph bindings specified in Documentation/devicetree/bindings/graph.txt.
+-
+-- Video port 0 for RGB input
+-- Video port 1 for VGA output
+-
+-Optional properties:
+-- vdd-supply: Power supply for DAC
+-
+-Example
+--------
+-
+-bridge {
+-	compatible = "dumb-vga-dac";
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-
+-	ports {
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		port@0 {
+-			reg = <0>;
+-
+-			vga_bridge_in: endpoint {
+-				remote-endpoint = <&tcon0_out_vga>;
+-			};
+-		};
+-
+-		port@1 {
+-			reg = <1>;
+-
+-			vga_bridge_out: endpoint {
+-				remote-endpoint = <&vga_con_in>;
+-			};
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/display/bridge/simple-bridge.yaml b/Documentation/devicetree/bindings/display/bridge/simple-bridge.yaml
 new file mode 100644
-index 000000000000..469ac4a34273
+index 000000000000..0880cbf217d5
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.yaml
-@@ -0,0 +1,121 @@
++++ b/Documentation/devicetree/bindings/display/bridge/simple-bridge.yaml
+@@ -0,0 +1,99 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/display/bridge/thine,thc63lvd1024.yaml#
++$id: http://devicetree.org/schemas/display/bridge/simple-bridge.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Thine Electronics THC63LVD1024 LVDS Decoder
++title: Transparent non-programmable DRM bridges
 +
 +maintainers:
-+  - Jacopo Mondi <jacopo+renesas@jmondi.org>
 +  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
++  - Maxime Ripard <mripard@kernel.org>
 +
 +description: |
-+  The THC63LVD1024 is a dual link LVDS receiver designed to convert LVDS
-+  streams to parallel data outputs. The chip supports single/dual input/output
-+  modes, handling up to two LVDS input streams and up to two digital CMOS/TTL
-+  outputs.
-+
-+  Single or dual operation mode, output data mapping and DDR output modes are
-+  configured through input signals and the chip does not expose any control
-+  bus.
++  This binding supports transparent non-programmable bridges that don't require
++  any configuration, with a single input and a single output.
 +
 +properties:
 +  compatible:
-+    const: thine,thc63lvd1024
++    oneOf:
++      - items:
++        - enum:
++          - ti,ths8134a
++          - ti,ths8134b
++        - const: ti,ths8134
++      - enum:
++        - adi,adv7123
++        - dumb-vga-dac
++        - ti,opa362
++        - ti,ths8134
++        - ti,ths8135
 +
 +  ports:
 +    type: object
 +    description: |
-+      This device has four video ports. Their connections are modeled using the
++      This device has two video ports. Their connections are modeled using the
 +      OF graph bindings specified in Documentation/devicetree/bindings/graph.txt.
-+
-+      The device can operate in single-link mode or dual-link mode. In
-+      single-link mode, all pixels are received on port@0, and port@1 shall not
-+      contain any endpoint. In dual-link mode, even-numbered pixels are
-+      received on port@0 and odd-numbered pixels on port@1, and both port@0 and
-+      port@1 shall contain endpoints.
-+
 +    properties:
 +      '#address-cells':
 +        const: 1
@@ -186,56 +232,36 @@ index 000000000000..469ac4a34273
 +
 +      port@0:
 +        type: object
-+        description: First LVDS input port
++        description: The bridge input
 +
 +      port@1:
 +        type: object
-+        description: Second LVDS input port
-+
-+      port@2:
-+        type: object
-+        description: First digital CMOS/TTL parallel output
-+
-+      port@3:
-+        type: object
-+        description: Second digital CMOS/TTL parallel output
++        description: The bridge output
 +
 +    required:
 +      - port@0
-+      - port@2
++      - port@1
 +
 +    additionalProperties: false
 +
-+  oe-gpios:
++  enable-gpios:
 +    maxItems: 1
-+    description: Output enable GPIO signal, pin name "OE", active high.
++    description: GPIO controlling bridge enable
 +
-+  powerdown-gpios:
++  vdd-supply:
 +    maxItems: 1
-+    description: Power down GPIO signal, pin name "/PDWN", active low.
-+
-+  vcc-supply:
-+    maxItems: 1
-+    description:
-+      Power supply for the TTL output, TTL CLOCKOUT signal, LVDS input, PLL and
-+      digital circuitry.
++    description: Power supply for the bridge
 +
 +required:
 +  - compatible
 +  - ports
-+  - vcc-supply
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    lvds-decoder {
-+        compatible = "thine,thc63lvd1024";
-+
-+        vcc-supply = <&reg_lvds_vcc>;
-+        powerdown-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
++    bridge {
++        compatible = "ti,ths8134a", "ti,ths8134";
 +
 +        ports {
 +            #address-cells = <1>;
@@ -244,22 +270,79 @@ index 000000000000..469ac4a34273
 +            port@0 {
 +                reg = <0>;
 +
-+                lvds_dec_in_0: endpoint {
-+                    remote-endpoint = <&lvds_out>;
++                vga_bridge_in: endpoint {
++                    remote-endpoint = <&tcon0_out_vga>;
 +                };
 +            };
 +
-+            port@2 {
-+                reg = <2>;
++            port@1 {
++                reg = <1>;
 +
-+                lvds_dec_out_2: endpoint {
-+                    remote-endpoint = <&adv7511_in>;
++                vga_bridge_out: endpoint {
++                    remote-endpoint = <&vga_con_in>;
 +                };
 +            };
 +        };
 +    };
 +
 +...
+diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ths813x.txt b/Documentation/devicetree/bindings/display/bridge/ti,ths813x.txt
+deleted file mode 100644
+index df3d7c1ac09e..000000000000
+--- a/Documentation/devicetree/bindings/display/bridge/ti,ths813x.txt
++++ /dev/null
+@@ -1,51 +0,0 @@
+-THS8134 and THS8135 Video DAC
+------------------------------
+-
+-This is the binding for Texas Instruments THS8134, THS8134A, THS8134B and
+-THS8135 Video DAC bridges.
+-
+-Required properties:
+-
+-- compatible: Must be one of
+-  "ti,ths8134"
+-  "ti,ths8134a," "ti,ths8134"
+-  "ti,ths8134b", "ti,ths8134"
+-  "ti,ths8135"
+-
+-Required nodes:
+-
+-This device has two video ports. Their connections are modelled using the OF
+-graph bindings specified in Documentation/devicetree/bindings/graph.txt.
+-
+-- Video port 0 for RGB input
+-- Video port 1 for VGA output
+-
+-Example
+--------
+-
+-vga-bridge {
+-	compatible = "ti,ths8135";
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-
+-	ports {
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		port@0 {
+-			reg = <0>;
+-
+-			vga_bridge_in: endpoint {
+-				remote-endpoint = <&lcdc_out_vga>;
+-			};
+-		};
+-
+-		port@1 {
+-			reg = <1>;
+-
+-			vga_bridge_out: endpoint {
+-				remote-endpoint = <&vga_con_in>;
+-			};
+-		};
+-	};
+-};
 -- 
 Regards,
 
