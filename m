@@ -2,119 +2,131 @@ Return-Path: <SRS0=YuQm=5V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AB2C2D0F4
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 11:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9D4C2D0F4
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 11:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6DED206C3
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 11:24:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="eW2k5TeS"
+	by mail.kernel.org (Postfix) with ESMTP id EF285206F7
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 11:24:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbgDELYL (ORCPT
+        id S1726556AbgDELYd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Apr 2020 07:24:11 -0400
-Received: from vps.xff.cz ([195.181.215.36]:37452 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726388AbgDELYL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 5 Apr 2020 07:24:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1586085849; bh=QY9Q7XhPkDOAvJvjFhI09s7uaGOfN/GI8egEfmyZajg=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=eW2k5TeS8ZTpaYYemfbZP+CQujIJUdxTTMBMfsdm58FNEmhftEgEqRJqr0nWSSO+z
-         apZfhPIxZEVNsgdEgbVZIPUfRwvtgy9dNdH9HdavAbgnPesVTrAM/8g+GKrTjbF+L2
-         3+YcWOpPNMIZQ1eDXEIX5+flxI9N0TT29MajBtgU=
-Date:   Sun, 5 Apr 2020 13:24:09 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [linux-sunxi] [PATCH 3/7] arm64: dts: allwinner: h6: set thermal
- polling time
-Message-ID: <20200405112409.gl6kn7cjakwludf6@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-References: <20200405104913.22806-1-peron.clem@gmail.com>
- <20200405104913.22806-4-peron.clem@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200405104913.22806-4-peron.clem@gmail.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+        Sun, 5 Apr 2020 07:24:33 -0400
+Received: from outgoing2.flk.host-h.net ([188.40.0.84]:45339 "EHLO
+        outgoing2.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726598AbgDELYd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 07:24:33 -0400
+X-Greylist: delayed 1197 seconds by postgrey-1.27 at vger.kernel.org; Sun, 05 Apr 2020 07:24:32 EDT
+Received: from www31.flk1.host-h.net ([188.40.1.173])
+        by antispam3-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1jL34p-0007Uu-IF; Sun, 05 Apr 2020 13:04:33 +0200
+Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
+        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1jL34m-00027v-EM; Sun, 05 Apr 2020 13:04:28 +0200
+From:   Justin Swartz <justin.swartz@risingedge.co.za>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: enable WLAN for Mecer Xtreme Mini S6
+Date:   Sun,  5 Apr 2020 11:00:21 +0000
+Message-Id: <20200405110022.3849-1-justin.swartz@risingedge.co.za>
+X-Mailer: git-send-email 2.11.0
+X-Authenticated-Sender: justin.swartz@risingedge.co.za
+X-Virus-Scanned: Clear
+X-Originating-IP: 188.40.1.173
+X-SpamExperts-Domain: risingedge.co.za
+X-SpamExperts-Username: 
+Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: SB/global_tokens (0.00700465061722)
+X-Recommended-Action: accept
+X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0VxB0mWeGZk2wSOLROvd+japSDasLI4SayDByyq9LIhVCODMyKVUA5BF
+ Hq9af7rAaUTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
+ mAX8Bxy/iUu0ThNZg0jxJtcVJProrT987X1VDPOqN+OoDzRTdku7DidYUZdNf38Sp7Of4wP429AA
+ f49baR+f3He7jw4SoVhmTJ/3eP9ORQWVx8ds1M4qmk3/bYr2p8zbg4Paoa3pNVQ0zl7t/+UfQLYB
+ qEPnp1U88kqVD8AM2G81dFO0E3gi+MOI1foZYzDggRXhpvoPtF3cVkniFXU3qJSqpdJudO6+rkiw
+ E5i8Wl78Q18OeOfsy4h7jF1Uv9lnibl3vcBqVmvQB4A18adRHDV3Cg2VtHDZHoZSNr/jAVXirbLu
+ Jjy3NtnGWLbnBGfrUBEXB2fYGLNieGQuoHtJvp0r29Rf3ZjFwL+MhHEWw/0qBlNDp8uABz3dkWV+
+ ttWGem52QLIiDo2hv5/Q58JTycYLFeAN4+MGwnsp7SkU6CLbyF0Zq4b1/7rjUzETJrWks4pbbQJq
+ 6gWopI3ep45X19ZysgQ+31LcAX8eoFXAhohfegXGH2GIVQVglJFbK771YV8YbC29CtmpcTqTfSIf
+ CWq9oj7OiT8GwpAriB+3/81I3rvR8KJ2fK9jiDYgiuaWjWJ1lPr1Ev5xNW3FQUl1thv0hd9gZGlV
+ L/SEDgzCxVAfo0TfAdBm88UU/z2X2IjokNqZVv3KMEb5yncp4Gliqy40Rbjn7L/aSJSlbL1zKyEL
+ KRIlJqopKieSGgZIDDCaOnYR+e17nmKXMy4iUno/l2R44/7at9DP1rQ8e6dbF/Yfz7ZwWRFpJHQn
+ mVbGJJcMBQM8xFcyypgGsWJnLxUf4D3bkY2u9P2maVhPXuiOVOc6XrA4vsvWFPzHwIQ6neDt/vDy
+ PLUXN2ILHndC4hwbA2fIdq9z/kUhYTDkDb9GLLhZsgdKPiGhHoIVmEgc3vQE4bdGRg51xWZ402gC
+ TyXPOOUgfrQ68NrwMFh7KSObGsS+toWgXfk8WFHb2sU11qA6HXMtTTYLhUej0Yho17o8CVsONrMJ
+ uGzuoGnKTKcyMAVhaIz/fGNqyRYsGJ0LJeBqPlwuAReGWkPdwxr2XgmbPrJVQzt6iVRPsiDvDuTj
+ 4oYwO9PC4N2NoF8mn/qyLT9gcYZ23l4P3JrzWS8jWh8xuwZvHnAADkIPtamKuAZddoNrr+WHg4o5
+ S3beb97n9J0N63F3lSElipbV7k/tzvRn13OWvSfGlZ4x16b3bGBx
+X-Report-Abuse-To: spam@antispammaster.host-h.net
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+The Mecer Xtreme Mini S6 features a wireless module, based on a
+Realtek 8723BS, which provides WLAN and Bluetooth connectivity via
+SDIO and UART interfaces respectively.
 
-On Sun, Apr 05, 2020 at 12:49:09PM +0200, Clément Péron wrote:
-> Add reasonable thermal polling time for Allwinner H6.
-> 
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> index d4d3963705f5..c3e4f09f60ce 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> @@ -905,8 +905,8 @@
->  
->  	thermal-zones {
->  		cpu-thermal {
-> -			polling-delay-passive = <0>;
-> -			polling-delay = <0>;
-> +			polling-delay-passive = <100>;
-> +			polling-delay = <1000>;
->  			thermal-sensors = <&ths 0>;
+Define a simple MMC power sequence that declares the GPIO pins
+connected to the module's WLAN Disable and Bluetooth Disable pins
+as active low reset signals, because both signals must be deasserted
+for WLAN radio operation.
 
-This is not necessary, and will not do anything useful, since the driver
-uses interrupts to update the thermal zone's temperature. Please keep the
-values at 0.
+Configure the host's SDIO interface for High Speed mode with 1.8v
+I/O signalling and IRQ detection over a 4-bit wide bus.
 
-With your settings the thermal zone would just add a polling timer in addition
-to being updated every 250ms via THS interrupt. The real thermal measurements
-are available every 250ms anyway, so setting a smaller period here will not do
-anything useful, and 1s period will not lead to slower updates either.
+Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+---
+ arch/arm/boot/dts/rk3229-xms6.dts | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Values of 0 mean tell the thermal zone to rely on thermal driver to update
-the thermal zone by itself (via interrupt) and to not poll.
+diff --git a/arch/arm/boot/dts/rk3229-xms6.dts b/arch/arm/boot/dts/rk3229-xms6.dts
+index 679fc2b00..cdfcef41b 100644
+--- a/arch/arm/boot/dts/rk3229-xms6.dts
++++ b/arch/arm/boot/dts/rk3229-xms6.dts
+@@ -39,6 +39,12 @@
+ 		};
+ 	};
+ 
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&gpio2 26 GPIO_ACTIVE_LOW>,
++		              <&gpio2 29 GPIO_ACTIVE_LOW>;
++	};
++
+ 	vcc_host: vcc-host-regulator {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+@@ -202,6 +208,18 @@
+ 	status = "okay";
+ };
+ 
++&sdio {
++	bus-width = <4>;
++	cap-sd-highspeed;
++	cap-sdio-irq;
++	disable-wp;
++	mmc-pwrseq = <&sdio_pwrseq>;
++	non-removable;
++	num-slots = <1>;
++	vqmmc-supply = <&vccio_1v8>;
++	status = "okay";
++};
++
+ &sdmmc {
+ 	cap-mmc-highspeed;
+ 	disable-wp;
+-- 
+2.11.0
 
-regards,
-	o.
-
->  			trips {
-> @@ -935,8 +935,8 @@
->  		};
->  
->  		gpu-thermal {
-> -			polling-delay-passive = <0>;
-> -			polling-delay = <0>;
-> +			polling-delay-passive = <100>;
-> +			polling-delay = <1000>;
->  			thermal-sensors = <&ths 1>;
->  		};
->  	};
-> -- 
-> 2.20.1
-> 
-> -- 
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20200405104913.22806-4-peron.clem%40gmail.com.
