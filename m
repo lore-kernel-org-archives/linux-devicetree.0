@@ -2,87 +2,91 @@ Return-Path: <SRS0=YuQm=5V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD366C2BA15
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 02:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D78CDC2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 03:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03B620672
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 02:10:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586052641;
-	bh=+eBLU6dbzegIasK4eav0hKmN+wv2L8OLOi9lZsufu+4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=laKYwKncvibS/C/4WG0r1D2tPZQ7VCBbpnm+5s1s8dMetiXhTTht6E8UEJVg2OQAl
-	 Rt+WzoOOAZFOgA/pBq2HktkGB/xwiaMpI6rWnu0yJS2uHRpBm0VCx8LWsW7NEwNhCR
-	 bXl3J9CUtdUPAgfWtyZj3hAJ4nNHkQdAQMzwdazg=
+	by mail.kernel.org (Postfix) with ESMTP id A443E2071C
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 03:01:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hKp4kxrW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgDECKl (ORCPT
+        id S1726307AbgDEDBX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Apr 2020 22:10:41 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35609 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgDECKk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Apr 2020 22:10:40 -0400
-Received: by mail-io1-f67.google.com with SMTP id o3so12036902ioh.2;
-        Sat, 04 Apr 2020 19:10:38 -0700 (PDT)
+        Sat, 4 Apr 2020 23:01:23 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:41548 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbgDEDBX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Apr 2020 23:01:23 -0400
+Received: by mail-pf1-f201.google.com with SMTP id 125so9881754pfv.8
+        for <devicetree@vger.kernel.org>; Sat, 04 Apr 2020 20:01:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=591U0a3uj9ivd77KkEIm1wqfWLnwA8UR+XpmgbL5TUM=;
+        b=hKp4kxrW6XAOSPo5e47PZ4T9BUTPc550lpDbhxsApbvTsaCDnClin7TtKDNYXp3dgP
+         naCTlZnAkqVQMptnT5UvtXV5t8y1k0lxANTtKavs+a0uTTxQAxSL135y/fcNhEwjbwQh
+         EmwKH8BflZkz8oTREBxpCuZ4W/0jUAqoZQCXwctmGtwBOwCLLJU0HxvqXjGu721cnLzm
+         Ok379Ew5s+3YK9HCiWtr7YKzpMCQ3FXhWMqikaeW8JJS9dklYlLHLxGegJwWmBxdCZ90
+         J2l+heXciWqQPv+YJhOHbrx+Ct1I+yrA3QtiFsqnq8syOH53vchx3RBdNYEfkK4CWCb8
+         SM4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cE/liTALpMqdfLbgPQ+OMKvNPX/1bH463lnIhirz1sI=;
-        b=bsRoT5ovDavx0tMF6zKvf8vMUT2uEZ0RR8V+d4o0nkFSumSUsQnHd3ISqdsd6QN3KD
-         Cq0rzch7sdJ/icIsjLt71BEldG3AjCUQdJkRao4AUWYb4xWs/vpOZV5e+RvGr3Iffzlu
-         imXGUeNFg6Z2Qdi9gO4e5EpgwgnXZmypp2wG5+843Ym3orUFPLDsUjBY6Y+Hnv51zFnV
-         6UBNPa/wJgGedVny+KtxbmNW0WObINY6SMjyyluT4dq36U732md9iqN9HTstKYK2GsAH
-         quIxcZk454FKXRwha/BTadu6S/QyYj4UiqdKm3pWCbjFd27kVwRfDlZjvW8y6UkwFu/P
-         JtHw==
-X-Gm-Message-State: AGi0Pua6CFXMy2MLpUFcnulugbNlT95xV7Y2nTpgaM2M7pyRlDrpMluj
-        GXcFr3qc0Yo5miaBqSmAzQ==
-X-Google-Smtp-Source: APiQypJ4Bii0h2zVuvjzC9xTfN/pXAliQtZWN2YXolG58HYB/LUmgfHgAwhVGMXf9l9WEMGwZS1vug==
-X-Received: by 2002:a5e:9901:: with SMTP id t1mr13990159ioj.176.1586052638133;
-        Sat, 04 Apr 2020 19:10:38 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id a5sm3803374ioa.14.2020.04.04.19.10.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Apr 2020 19:10:37 -0700 (PDT)
-Received: (nullmailer pid 12991 invoked by uid 1000);
-        Sun, 05 Apr 2020 02:10:34 -0000
-Date:   Sat, 4 Apr 2020 20:10:34 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        andrew.smirnov@gmail.com, manivannan.sadhasivam@linaro.org,
-        michael@walle.cc, rjones@gateworks.com,
-        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
-        jon@solid-run.com, cosmin.stoica@nxp.com, l.stach@pengutronix.de,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
-Subject: Re: [PATCH 3/3] dt-bindings: arm: imx: Add the i.MX8DXL EVK board
-Message-ID: <20200405021034.GA12944@bogus>
-References: <1585394015-27825-1-git-send-email-Anson.Huang@nxp.com>
- <1585394015-27825-3-git-send-email-Anson.Huang@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585394015-27825-3-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=591U0a3uj9ivd77KkEIm1wqfWLnwA8UR+XpmgbL5TUM=;
+        b=GPu3h7DM/LTOGQATzEOJwcLw/83u2IFFZbl4Xe64yutK51IoFmwuiSs6R+hKDQFtQE
+         tE529y2A/LxMR9q6ux3b/9yN9NiqTXBcuVtviKuF5Yn7el/gEDQzg6xzscN8W4JQMIkG
+         i7L1P2ZcAqKwB83N8MkXL188Pso/JVBCKXFB4tL9amySIec2gtsEM6sFM8UdTPMu0L+s
+         H9rgC10dAAil0MXyQHNGhAcQ1Kqe9FnD/aQiwhbAnqWSy2T3hg6zpT4X8yOoO0Ds47Ua
+         CTOAknPrcVgdCmSrBJCA0hK4ZjrxuSWmGQFqqDXBFBk3Xkn9+PaGlh893Y8SWXMrrRPn
+         IScg==
+X-Gm-Message-State: AGi0PuYdb2lQjpVDJ6wYA4qkeBi6fcxffnlUvqvWoPf85S/3oDCJueAK
+        jClheoTgE9LKII1Ofh3wS64gnQ97bw==
+X-Google-Smtp-Source: APiQypIpVtgrpRGuQhmH8vpxld8wtXdjmuaKlv6sGDOC8MvvoytVECMHXLkOuA7tHJE0sC2mGX6RM6rHEg==
+X-Received: by 2002:a63:4d57:: with SMTP id n23mr15911198pgl.59.1586055681735;
+ Sat, 04 Apr 2020 20:01:21 -0700 (PDT)
+Date:   Sat,  4 Apr 2020 20:01:15 -0700
+Message-Id: <20200405030118.191950-1-kunyi@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
+Subject: [PATCH linux hwmon-next v3 0/3] SB-TSI hwmon driver v3
+From:   Kun Yi <kunyi@google.com>
+To:     jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     Kun Yi <kunyi@google.com>, openbmc@lists.ozlabs.org,
+        joel@jms.id.au, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 28 Mar 2020 19:13:35 +0800, Anson Huang wrote:
-> Add board binding for i.MX8DXL EVK board.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
+v3: addressed comment in v2 and improved documentation
+v2: rewrote using devm_hwmon_device_register_with_info() API and addressed
+    comments received in v1
+v1: first version
 
-Acked-by: Rob Herring <robh@kernel.org>
+Kun Yi (3):
+  hwmon: (sbtsi) Add basic support for SB-TSI sensors
+  hwmon: (sbtsi) Add documentation
+  dt-bindings: (hwmon/sbtsi_tmep) Add SB-TSI hwmon driver bindings
+
+ .../devicetree/bindings/hwmon/amd,sbtsi.txt   |  26 ++
+ Documentation/hwmon/index.rst                 |   1 +
+ Documentation/hwmon/sbtsi_temp.rst            |  40 +++
+ drivers/hwmon/Kconfig                         |  10 +
+ drivers/hwmon/Makefile                        |   1 +
+ drivers/hwmon/sbtsi_temp.c                    | 259 ++++++++++++++++++
+ 6 files changed, 337 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/amd,sbtsi.txt
+ create mode 100644 Documentation/hwmon/sbtsi_temp.rst
+ create mode 100644 drivers/hwmon/sbtsi_temp.c
+
+-- 
+2.26.0.292.g33ef6b2f38-goog
+
