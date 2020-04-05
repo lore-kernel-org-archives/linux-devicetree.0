@@ -2,121 +2,134 @@ Return-Path: <SRS0=YuQm=5V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AE3C2BA1B
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 10:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED339C2D0F4
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 10:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B372206F8
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 10:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A915420709
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 10:49:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MXLhu3KB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDU9MpLl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgDEKis (ORCPT
+        id S1726491AbgDEKtU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Apr 2020 06:38:48 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42447 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbgDEKis (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 06:38:48 -0400
-Received: by mail-pg1-f195.google.com with SMTP id g6so4108814pgs.9;
-        Sun, 05 Apr 2020 03:38:47 -0700 (PDT)
+        Sun, 5 Apr 2020 06:49:20 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52205 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbgDEKtT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 06:49:19 -0400
+Received: by mail-wm1-f66.google.com with SMTP id z7so11632211wmk.1;
+        Sun, 05 Apr 2020 03:49:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qdLT95uUUHQQjan6IE7MImhuwtChu6BiQ6bgREKm7VM=;
-        b=MXLhu3KBzqbM7vGo8jZvb7194ZggQq+Rej3BI7Vu8KoJUXc36JHdoH3rU0SK24Q/N9
-         IdzsJGJ4LCDiyF0OfwAezRI30kFwJ08BUB8yJsFZz9EwPYD6JoiiLKBM3E/4qIv6HT6S
-         grhT/7ubthWiKfmBX95cGAsY3jVuTaLkP7V3ZpJZM54+jZoxtKhHCFfzK8z8BTdZTiTe
-         707weLjiVp+vnaIEsJClyv1vSvUL4YpocdJsP63n88sdSPK3CubOfMyw7LXqaL6d/FmG
-         UsOKCY6yzhfebMpt5GNWTIDIKfVf/GYUiUki1nEMB3eZSMH57CXpOlMaE/eArrZYhYl0
-         8EdQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=953t16PaqsK6LcXl7SedQvIrbO2yGs6c/tDrXm7TIhc=;
+        b=gDU9MpLlJXCxtnrJImoSbWNKul0yvFgILeoD6x0Az1GLzewahCBNoaASoP2PwKMwu0
+         If9A7h8AvWGp43dPJXZzkKEWy+TXf18/nhD7/OEk//SJ2ussttndqB67MpOX80y7qPUn
+         XDGeAkJXlialvYn4mgovXTGTwk8h/cvavMSNFpPg/Aj27whu6BgHq6IBDtcprRnzyUzp
+         dI1LvNsoFTdLJjqO/j4OYwqsXAkiHGiXaaYvT9LHva1GvzuNTZ6/rHO3AfdFjz2pStlS
+         Rc46XrpmD1T7jUWt7gQd0ferGemsUtHc4Gna7eOK4HpiGdwGRzH2RqlvIhpuSwWQHmSl
+         XnQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qdLT95uUUHQQjan6IE7MImhuwtChu6BiQ6bgREKm7VM=;
-        b=ea0rNsaS8lE7K7f7u2XIzSwquQfvX7wU8WL2cO/THBuAfWlL4ziZJ3EYhqrCwu483q
-         bsAZkbOdzHVK7EsHIFibtwrtlNjsqwhlTMpNzmnMAmHEVVe32zxEvombij0H4grGEf3G
-         7N/hFGtpHjEKSWwE++NJZlu0ltUniUtHs8iJU0L0igUjhKsEAvJUTyv2zlcwqDg+yHqN
-         EWPpvJNCCnCIayLhJjzYURCKGz8P4fbhjA7NQwuU/quaUERCOYTWAE+GQodBNAiykxyd
-         P4Xvbau7cr0L7gmYEIqkcUhEnwYWzX9bydpJDZLZle7V5iu8trORoB+A2Rhzbluwncc+
-         HZKg==
-X-Gm-Message-State: AGi0Pua3Czw9nTzOTS5TL6WuSJBls9blWA+JhMjnEVlE4cDdW2/kBljf
-        /DXEvXF5E0gDbwra2r2qDqnfsvLivi4anzERGacf8ZP01LM=
-X-Google-Smtp-Source: APiQypIdZjZrO4aeX+/9G7UXEKP7hP1w5JadaMQbG06oUiIQ8NjExQZ7der4QrwRDuenrob6GM+iG+QvYzm3UfSS+fE=
-X-Received: by 2002:a63:1c1:: with SMTP id 184mr17155666pgb.203.1586083127176;
- Sun, 05 Apr 2020 03:38:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200401162416.24474-1-i.mikhaylov@yadro.com> <20200401162416.24474-3-i.mikhaylov@yadro.com>
- <CAHp75VcdDR-owtFuFMqNLFh_-L902fXODG14_6Dh416tTwjidA@mail.gmail.com>
- <1e2c9b590a3626abee330a28cca86cbae7affb39.camel@yadro.com>
- <CAHp75VdaM_pumyWyeHJxCQXrKUAW=ktJme1uYxH0w4e9an0X2A@mail.gmail.com> <20200405111341.0912468d@archlinux>
-In-Reply-To: <20200405111341.0912468d@archlinux>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 5 Apr 2020 13:38:36 +0300
-Message-ID: <CAHp75VeQ7LNve3bUEgzH2YrMwcihSDs+LHB3fgxy=b6pKH4RcA@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=953t16PaqsK6LcXl7SedQvIrbO2yGs6c/tDrXm7TIhc=;
+        b=OYJqFIhSu3stR2uhzjZe7nbe7UHRX53H/Zdoz++OHekF0iMeKzxxHkEf6CXiOg0y0m
+         TRc+qj/H2L4wx3KWK5KyuvV5RBwEz+vUfhiZeVFzM88Ds6KT0mh6eS6SR5KLM0J0UYPj
+         MA/y8DkoMHOtAQEtFvWPbcjnw4T6hicFsOzd9TCOu963vapZ0e4St+DMlotSObtWKnsI
+         lW2vthZ0qbfsFl2Kr35nkaiK8QO2IQnWq/vYj0XKRrU81XFte+LA9YjpYV1TGA5W8LFC
+         YKW8SB18y3ZB1R4OMKldJ81r6xC8Gn3oaQaMpCqr1TgDuz+7npauw5Duy5/TbnUktZYd
+         Z/tg==
+X-Gm-Message-State: AGi0PuYNIbo+hHIMnjSy1P2IumB6C271Bl8KqplV6qTkttnOEcncEjYc
+        9C6FViKYr5YC1M0hCrw4s1g=
+X-Google-Smtp-Source: APiQypIb6hYEiZU/p/Pp6GyHUm6hJVSiw5xrphdOw1InxhwhbkqgTWtX3m4rJUfQxyavTQCkImQr2g==
+X-Received: by 2002:a1c:6044:: with SMTP id u65mr9806744wmb.11.1586083757409;
+        Sun, 05 Apr 2020 03:49:17 -0700 (PDT)
+Received: from localhost.localdomain (91-167-199-67.subs.proxad.net. [91.167.199.67])
+        by smtp.gmail.com with ESMTPSA id u13sm21606411wru.88.2020.04.05.03.49.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Apr 2020 03:49:16 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH 1/7] arm64: dts: allwinner: h6: Add clock to CPU cores
+Date:   Sun,  5 Apr 2020 12:49:07 +0200
+Message-Id: <20200405104913.22806-2-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200405104913.22806-1-peron.clem@gmail.com>
+References: <20200405104913.22806-1-peron.clem@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Apr 5, 2020 at 1:13 PM Jonathan Cameron <jic23@kernel.org> wrote:
-> On Thu, 2 Apr 2020 15:42:02 +0300
-> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > On Thu, Apr 2, 2020 at 11:24 AM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
-> > > On Wed, 2020-04-01 at 19:35 +0300, Andy Shevchenko wrote:
-> > > > On Wed, Apr 1, 2020 at 7:24 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+From: Yangtao Li <tiny.windzz@gmail.com>
 
-> > > > > +       indio_dev->name = VCNL_DRV_NAME;
-> > > >
-> > > > It's definitely not a driver name. You have to put part number here.
-> > >
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/tsl4531.c?h=v5.6#n199
-> That one is actually fine (if not very pretty) because the driver only supports one part and it happens
-> to also be the name of the driver.
->
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/max44009.c?h=v5.6#n507
-> Also only one part supported, so fine if liable to accidentally get broken if we support more parts.
->
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/vl6180.c?h=v5.6#n515
->
-> Again, one part supported and the driver has the same name.
->
-> >
-> > Let's Jonathan speak up.
->
-> So, the real point here is not the value being assigned but the fact it's
-> explicitly linked to the name of the driver.  I'd argue that you could use
-> VCNL_NAME as the define and that link is clearly broken. Or just put the string
-> inline in both places and don't worry about the tiny bit of replication!
+The ARM CPU cores are fed by the CPU clock from the CCU. Add a
+reference to the clock for each CPU core, along with the clock
+transition latency.
 
-My comments, except this one, to this version are quite minor, so,
-after addressing this in a way Jonathan likes,
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-P.S. Don't forget to include given tags in the commit message of next
-(fixed) version.
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 3329283e38ab..aef4ae760d5e 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -25,6 +25,8 @@
+ 			device_type = "cpu";
+ 			reg = <0>;
+ 			enable-method = "psci";
++			clocks = <&ccu CLK_CPUX>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 
+ 		cpu1: cpu@1 {
+@@ -32,6 +34,8 @@
+ 			device_type = "cpu";
+ 			reg = <1>;
+ 			enable-method = "psci";
++			clocks = <&ccu CLK_CPUX>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 
+ 		cpu2: cpu@2 {
+@@ -39,6 +43,8 @@
+ 			device_type = "cpu";
+ 			reg = <2>;
+ 			enable-method = "psci";
++			clocks = <&ccu CLK_CPUX>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 
+ 		cpu3: cpu@3 {
+@@ -46,6 +52,8 @@
+ 			device_type = "cpu";
+ 			reg = <3>;
+ 			enable-method = "psci";
++			clocks = <&ccu CLK_CPUX>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 	};
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1
+
