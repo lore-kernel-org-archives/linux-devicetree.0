@@ -2,134 +2,191 @@ Return-Path: <SRS0=YuQm=5V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0CEC2BA1B
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 17:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15AA6C2BA15
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 18:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 358DB2063A
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 17:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE45206F5
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 18:45:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="INC92HEz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="QQTY4ckB";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="thro8YDa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbgDERgI (ORCPT
+        id S1727076AbgDESpa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Apr 2020 13:36:08 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55621 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727048AbgDERgI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 13:36:08 -0400
-Received: by mail-wm1-f66.google.com with SMTP id r16so12336342wmg.5;
-        Sun, 05 Apr 2020 10:36:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=953t16PaqsK6LcXl7SedQvIrbO2yGs6c/tDrXm7TIhc=;
-        b=INC92HEziM9mI7F9DsK0oDiYSAUcj61mUM8QOERk6Pzc3RsAR9n5EvgY19wVTuuVJW
-         KUdW4Pw9qQTehhyANrM6Y/7tIrdr8IQ5puN+/SYfboKxMPTycx7/JIWUsvHG94Zi1UjD
-         QgMC22w8FBqy6/D+Ce0SZWlY3xfQBuPljKmyS+JPy41U4iTSnjExPt/csQDBypU8rkll
-         tT3X54jPxnPZ25hlCDArG/0Z5iJ/yqhBQp52wlYlZ+EQVviDPToZINJUgwSvCfP75cOj
-         IBEL9uCueNVqRvrRq62rHGwtbfK9Wc5poVN2YNDZtXQhjl7gwjn4ZvFaXz69l5mrz6Y7
-         4PiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=953t16PaqsK6LcXl7SedQvIrbO2yGs6c/tDrXm7TIhc=;
-        b=YGFvq0ZiulRM1hyXe67EfSUhOYAM+a1dBUvX65MC2HycA7FlUK4xQ8snXwfGw7JvZa
-         hifsLXH3oZbEMJwDSCRzJpvKj+DIhQP0zdjDFYST+8as3jmmGgsuoGZy+5r3XQ1/8k6B
-         g8wljS1rX5+kNWSok9THlPDyMK/Qke8MS0j49FXn19jEzhfQuwYA6FqeMYbSiJaUyZHl
-         bd4Cd7mHcpaQD4OuwHVkBaVfb+sPEIokeOV+I5DQ/bwFRaj7ET1dA5+4sAB+po7hKitH
-         4arKgDCSZzUBS+82cmU+bDE/Dk9MS/n3Q2XlBYCCYMmqOIVpR/C0VsIHyA30kbvKYjd5
-         a9GA==
-X-Gm-Message-State: AGi0PuZS5Ibp/ALYUJZjIWmgGtS/+sfE73sk+TmZ7LGMlKQnIRt+BTfn
-        vYqBYA5SmAKogl8FMz/LhBE=
-X-Google-Smtp-Source: APiQypJrXfDDMcyPXVi9s8+wzP9CVxUi8k0MrgpcBSdXs0lTPfVzTDwTJhHxIg22NnyET3Xt6c/8yQ==
-X-Received: by 2002:a1c:4409:: with SMTP id r9mr4398898wma.165.1586108166066;
-        Sun, 05 Apr 2020 10:36:06 -0700 (PDT)
-Received: from localhost.localdomain (91-167-199-67.subs.proxad.net. [91.167.199.67])
-        by smtp.gmail.com with ESMTPSA id s13sm6031669wrw.20.2020.04.05.10.36.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 10:36:05 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 1/7] arm64: dts: allwinner: h6: Add clock to CPU cores
-Date:   Sun,  5 Apr 2020 19:35:55 +0200
-Message-Id: <20200405173601.24331-2-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200405173601.24331-1-peron.clem@gmail.com>
-References: <20200405173601.24331-1-peron.clem@gmail.com>
+        Sun, 5 Apr 2020 14:45:30 -0400
+Received: from mail.z3ntu.xyz ([128.199.32.197]:53418 "EHLO mail.z3ntu.xyz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726771AbgDESpa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 5 Apr 2020 14:45:30 -0400
+Received: by mail.z3ntu.xyz (Postfix, from userid 182)
+        id 66D30C4A48; Sun,  5 Apr 2020 18:45:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1586112327; bh=gcwe3ElP/7v212/hOuOpcAarEMfzryBhN3eyrrQNMAs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=QQTY4ckBmuk02vYdyVquWzcGkBYIMht5m93iBxL+mnlWWIIVOoV1JKJSHs36jlVr3
+         CMmiBY7zPdKxSDzdihpa9F2LjaxienpmcK2nsNNL2+7cjdXi0jXNNDtwRX+ztCo8Ya
+         ncJaqP7yE8m7swDvuAqLVNU/ngpNNDu3TN1hrPzw=
+Received: from g550jk.localnet (80-110-124-168.cgn.dynamic.surfer.at [80.110.124.168])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 02A56C4A0D;
+        Sun,  5 Apr 2020 18:45:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1586112315; bh=gcwe3ElP/7v212/hOuOpcAarEMfzryBhN3eyrrQNMAs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=thro8YDa0mNSr/5s68+qG0xZMKN7QlPuGqecmo2yOyzEFKtxlKOJtuMMbCcgwwna2
+         3NtganpJu5fSJ5DShL2C7Xl+ZW81M3ooLq8UNc+DlOkRgz5W6n0RW+D+L/Q24NRFir
+         M+yqPtaTmhcqn1tsJbEFCyT2rfrdPhMG6GKRjRrc=
+From:   Luca Weiss <luca@z3ntu.xyz>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>, Heiko Stuebner <heiko@sntech.de>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v2 2/2] leds: add sgm3140 driver
+Date:   Sun, 05 Apr 2020 20:45:14 +0200
+Message-ID: <4437676.LvFx2qVVIh@g550jk>
+In-Reply-To: <CAHp75Vf6ZS1UGUv-okzzcDNnMtjjBjGbjsXb8w6TmGcgKdhhfA@mail.gmail.com>
+References: <20200330194757.2645388-1-luca@z3ntu.xyz> <20200330194757.2645388-3-luca@z3ntu.xyz> <CAHp75Vf6ZS1UGUv-okzzcDNnMtjjBjGbjsXb8w6TmGcgKdhhfA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Yangtao Li <tiny.windzz@gmail.com>
+Hi Andy,
 
-The ARM CPU cores are fed by the CPU clock from the CCU. Add a
-reference to the clock for each CPU core, along with the clock
-transition latency.
+On Samstag, 4. April 2020 11:58:31 CEST Andy Shevchenko wrote:
+> On Mon, Mar 30, 2020 at 10:49 PM Luca Weiss <luca@z3ntu.xyz> wrote:
+> > Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
+> > 
+> > This device is controlled by two GPIO pins, one for enabling and the
+> > second one for switching between torch and flash mode.
+> 
+> ...
+> 
+> > +config LEDS_SGM3140
+> > +       tristate "LED support for the SGM3140"
+> > +       depends on LEDS_CLASS_FLASH
+> > +       depends on V4L2_FLASH_LED_CLASS || !V4L2_FLASH_LED_CLASS
+> > 
+> > +       depends on OF
+> 
+> depends on OF || COMPILE_TEST ?
+> But hold on...
+> 
+> ...
+> 
+> > +#include <linux/of.h>
+> 
+> Perhaps switch this to property.h and replace OF with more generic
+> device property / fwnode API?
+> 
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+I didn't find clear documentation on this, the functions in drivers/base/
+property.c can be used instead of the of_* (device tree) functions?
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 3329283e38ab..aef4ae760d5e 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -25,6 +25,8 @@
- 			device_type = "cpu";
- 			reg = <0>;
- 			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -32,6 +34,8 @@
- 			device_type = "cpu";
- 			reg = <1>;
- 			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
- 		};
- 
- 		cpu2: cpu@2 {
-@@ -39,6 +43,8 @@
- 			device_type = "cpu";
- 			reg = <2>;
- 			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
- 		};
- 
- 		cpu3: cpu@3 {
-@@ -46,6 +52,8 @@
- 			device_type = "cpu";
- 			reg = <3>;
- 			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
- 		};
- 	};
- 
--- 
-2.20.1
+As far as I can tell, the device_property_* functions are supposed to be used 
+for simple "give me a property for this 'struct device*'" while the fwnode_* 
+functions are used as generic equivalent of the of_* functions?
+
+So in this case I can replace 
+
+struct device_node *child_node;
+child_node = of_get_next_available_child(pdev->dev.of_node, NULL);
+
+with
+
+struct fwnode_handle *child_node;
+child_node = fwnode_get_next_available_child_node(pdev->dev.fwnode, NULL);
+
+and then instead of
+
+ret = of_property_read_u32(child_node, "flash-max-timeout-us",
+		   &priv->max_timeout);
+
+use
+
+ret = fwnode_property_read_u32(child_node, "flash-max-timeout-us",
+		            &priv->max_timeout);
+
+and finally instead of
+
+init_data.fwnode = of_fwnode_handle(child_node);
+
+I can probably directly do
+
+init_data.fwnode = child_node;
+
+Does that sound correct?
+
+> ...
+> 
+> > +struct sgm3140 {
+> > +       bool enabled;
+> > +       struct gpio_desc *flash_gpio;
+> > +       struct gpio_desc *enable_gpio;
+> > +       struct regulator *vin_regulator;
+> > +
+> > +       /* current timeout in us */
+> > +       u32 timeout;
+> > +       /* maximum timeout in us */
+> > +       u32 max_timeout;
+> > +
+> > 
+> > +       struct led_classdev_flash fled_cdev;
+> 
+> I guess it might be slightly better to make it first member of the
+> struct (I didn't check but the rationale is to put more often used
+> members at the beginning to utilize cachelines).
+> 
+> > +       struct v4l2_flash *v4l2_flash;
+> > +
+> > +       struct timer_list powerdown_timer;
+> > +};
+> 
+> ...
+> 
+> > +static struct sgm3140 *flcdev_to_sgm3140(struct led_classdev_flash
+> > *flcdev) +{
+> > +       return container_of(flcdev, struct sgm3140, fled_cdev);
+> > +}
+> 
+> ...and this becomes a no-op AFAICS (doesn't mean you need to remove it).
+> 
+> ...
+> 
+> > +       struct device_node *child_node;
+> > 
+> > +       child_node = of_get_next_available_child(pdev->dev.of_node, NULL);
+> > 
+> > +       ret = of_property_read_u32(child_node, "flash-max-timeout-us",
+> > +                                  &priv->max_timeout);
+> > 
+> > +       init_data.fwnode = of_fwnode_handle(child_node);
+> > 
+> > +       of_node_put(child_node);
+> 
+> Device property / fwnode API?
+> 
+> --
+> With Best Regards,
+> Andy Shevchenko
+
+Regards
+Luca
+
+
 
