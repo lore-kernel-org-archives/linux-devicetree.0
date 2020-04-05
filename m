@@ -5,68 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED339C2D0F4
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 10:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7B4C2BA1B
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 10:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A915420709
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 10:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09D05206C3
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 10:49:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDU9MpLl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BKb8O+gr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgDEKtU (ORCPT
+        id S1726628AbgDEKtZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Apr 2020 06:49:20 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52205 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbgDEKtT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 06:49:19 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z7so11632211wmk.1;
-        Sun, 05 Apr 2020 03:49:18 -0700 (PDT)
+        Sun, 5 Apr 2020 06:49:25 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38435 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgDEKtX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 06:49:23 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c7so13847145wrx.5;
+        Sun, 05 Apr 2020 03:49:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=953t16PaqsK6LcXl7SedQvIrbO2yGs6c/tDrXm7TIhc=;
-        b=gDU9MpLlJXCxtnrJImoSbWNKul0yvFgILeoD6x0Az1GLzewahCBNoaASoP2PwKMwu0
-         If9A7h8AvWGp43dPJXZzkKEWy+TXf18/nhD7/OEk//SJ2ussttndqB67MpOX80y7qPUn
-         XDGeAkJXlialvYn4mgovXTGTwk8h/cvavMSNFpPg/Aj27whu6BgHq6IBDtcprRnzyUzp
-         dI1LvNsoFTdLJjqO/j4OYwqsXAkiHGiXaaYvT9LHva1GvzuNTZ6/rHO3AfdFjz2pStlS
-         Rc46XrpmD1T7jUWt7gQd0ferGemsUtHc4Gna7eOK4HpiGdwGRzH2RqlvIhpuSwWQHmSl
-         XnQg==
+        bh=kf/zKaXETW/6458P4s0u4NU6tE49BufLG2XcDtV/oYY=;
+        b=BKb8O+gruVcuzrvJ+jdE4CH0Kx7gHmxQkao3riTtUm5F/RkBe/gJO8ylyyPjDhUiOc
+         pfvN+GFiJ1qgUlcGzTajqhFVefA9KLugJmEbLM8ZUDZxdQmIrf7rWptyP5GhhtpUPPLd
+         sx9Xv9JnYsgoPuTESmDetFf63Cev90TiEd6uGH8ju8QAGGpfoJSPu7dJNmV96vcoaSr1
+         ypDIC9+5Q3BpDVCY9MXYpmAlUgNe2zjTMTjW9dr0doerX1kUt4ynUup7FZTKd0f0HZIe
+         ZMzmhmb3fSQQxq9nWVcauYe6H7A43o2rbfNTd5+L8IBX0OzZR8KwlyHNxCjyTPD/3ycv
+         Gl0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=953t16PaqsK6LcXl7SedQvIrbO2yGs6c/tDrXm7TIhc=;
-        b=OYJqFIhSu3stR2uhzjZe7nbe7UHRX53H/Zdoz++OHekF0iMeKzxxHkEf6CXiOg0y0m
-         TRc+qj/H2L4wx3KWK5KyuvV5RBwEz+vUfhiZeVFzM88Ds6KT0mh6eS6SR5KLM0J0UYPj
-         MA/y8DkoMHOtAQEtFvWPbcjnw4T6hicFsOzd9TCOu963vapZ0e4St+DMlotSObtWKnsI
-         lW2vthZ0qbfsFl2Kr35nkaiK8QO2IQnWq/vYj0XKRrU81XFte+LA9YjpYV1TGA5W8LFC
-         YKW8SB18y3ZB1R4OMKldJ81r6xC8Gn3oaQaMpCqr1TgDuz+7npauw5Duy5/TbnUktZYd
-         Z/tg==
-X-Gm-Message-State: AGi0PuYNIbo+hHIMnjSy1P2IumB6C271Bl8KqplV6qTkttnOEcncEjYc
-        9C6FViKYr5YC1M0hCrw4s1g=
-X-Google-Smtp-Source: APiQypIb6hYEiZU/p/Pp6GyHUm6hJVSiw5xrphdOw1InxhwhbkqgTWtX3m4rJUfQxyavTQCkImQr2g==
-X-Received: by 2002:a1c:6044:: with SMTP id u65mr9806744wmb.11.1586083757409;
-        Sun, 05 Apr 2020 03:49:17 -0700 (PDT)
+        bh=kf/zKaXETW/6458P4s0u4NU6tE49BufLG2XcDtV/oYY=;
+        b=rQowVs/+YcC1FZRO1P7KzscPnLCAuOyW53tu3TjbO7tW5PqLjCcWUPK4kTMtEA5hB+
+         9maP30kxmoZqfLjFQNl/OmS2nIsRF73RCPhGHVA8V4/7pavKmKVtT3N5WLSLVSDwu0VK
+         bKxmkC+PWcYko5UqmgeCdgSuKzppXtlhfLU03gGH6mE7wu39HcGQeov1rouhcYFhtuqI
+         9rMXgsLz3rb5sDRCITE4aREvUvSE17uraN46np+cR4msu+FrDBU2MlePcuFKNs09d7ft
+         1S464AVF59XNRXUMeqSFKkRrWa0rCFa14yFT7FIjY05a0Gq+EqLOMrJnQOAyomMhtXg7
+         mYlA==
+X-Gm-Message-State: AGi0PuaRMdS3/pzYsfWSGK+S0zoVXjaC+jN7+6zh2VbfC25U69u53XWT
+        wSUBayg3Qwylh+0J8j7o4zw=
+X-Google-Smtp-Source: APiQypKHu20FrbfSe0fDwBKWYRQzJF4KCRaS0O42RnvhISY1odqSGlpPzlujLCquM1gMQbnxl270vA==
+X-Received: by 2002:a05:6000:1142:: with SMTP id d2mr17526555wrx.320.1586083760663;
+        Sun, 05 Apr 2020 03:49:20 -0700 (PDT)
 Received: from localhost.localdomain (91-167-199-67.subs.proxad.net. [91.167.199.67])
-        by smtp.gmail.com with ESMTPSA id u13sm21606411wru.88.2020.04.05.03.49.16
+        by smtp.gmail.com with ESMTPSA id u13sm21606411wru.88.2020.04.05.03.49.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 03:49:16 -0700 (PDT)
+        Sun, 05 Apr 2020 03:49:19 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Rob Herring <robh+dt@kernel.org>
 Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         linux-sunxi <linux-sunxi@googlegroups.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
+        Ondrej Jirman <megous@megous.com>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH 1/7] arm64: dts: allwinner: h6: Add clock to CPU cores
-Date:   Sun,  5 Apr 2020 12:49:07 +0200
-Message-Id: <20200405104913.22806-2-peron.clem@gmail.com>
+Subject: [PATCH 4/7] arm64: dts: allwinner: h6: Add CPU Operating Performance Points table
+Date:   Sun,  5 Apr 2020 12:49:10 +0200
+Message-Id: <20200405104913.22806-5-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200405104913.22806-1-peron.clem@gmail.com>
 References: <20200405104913.22806-1-peron.clem@gmail.com>
@@ -78,58 +78,143 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Yangtao Li <tiny.windzz@gmail.com>
+From: Ondrej Jirman <megous@megous.com>
 
-The ARM CPU cores are fed by the CPU clock from the CCU. Add a
-reference to the clock for each CPU core, along with the clock
-transition latency.
+Add an Operating Performance Points table for the CPU cores to
+enable Dynamic Voltage & Frequency Scaling on the H6.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Signed-off-by: Ondrej Jirman <megous@megous.com>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi | 103 ++++++++++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |   4 +
+ 2 files changed, 107 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi
 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi
+new file mode 100644
+index 000000000000..b480c33f426b
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi
+@@ -0,0 +1,103 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++// Copyright (C) 2020 Ondrej Jirman <megous@megous.com>
++// Copyright (C) 2020 Clément Péron <peron.clem@gmail.com>
++
++/ {
++	cpu0_opp_table: opp_table0 {
++		compatible = "allwinner,sun50i-h6-operating-points";
++		nvmem-cells = <&speedbin_efuse>;
++		opp-shared;
++
++		opp@480000000 {
++			clock-latency-ns = <244144>; /* 8 32k periods */
++			opp-hz = /bits/ 64 <480000000>;
++
++			opp-microvolt-speed0 = <880000>;
++			opp-microvolt-speed1 = <820000>;
++			opp-microvolt-speed2 = <820000>;
++		};
++
++		opp@720000000 {
++			clock-latency-ns = <244144>; /* 8 32k periods */
++			opp-hz = /bits/ 64 <720000000>;
++
++			opp-microvolt-speed0 = <880000>;
++			opp-microvolt-speed1 = <820000>;
++			opp-microvolt-speed2 = <820000>;
++		};
++
++		opp@816000000 {
++			clock-latency-ns = <244144>; /* 8 32k periods */
++			opp-hz = /bits/ 64 <816000000>;
++
++			opp-microvolt-speed0 = <880000>;
++			opp-microvolt-speed1 = <820000>;
++			opp-microvolt-speed2 = <820000>;
++		};
++
++		opp@888000000 {
++			clock-latency-ns = <244144>; /* 8 32k periods */
++			opp-hz = /bits/ 64 <888000000>;
++
++			opp-microvolt-speed0 = <880000>;
++			opp-microvolt-speed1 = <820000>;
++			opp-microvolt-speed2 = <820000>;
++		};
++
++		opp@1080000000 {
++			clock-latency-ns = <244144>; /* 8 32k periods */
++			opp-hz = /bits/ 64 <1080000000>;
++
++			opp-microvolt-speed0 = <940000>;
++			opp-microvolt-speed1 = <880000>;
++			opp-microvolt-speed2 = <880000>;
++		};
++
++		opp@1320000000 {
++			clock-latency-ns = <244144>; /* 8 32k periods */
++			opp-hz = /bits/ 64 <1320000000>;
++
++			opp-microvolt-speed0 = <1000000>;
++			opp-microvolt-speed1 = <940000>;
++			opp-microvolt-speed2 = <940000>;
++		};
++
++		opp@1488000000 {
++			clock-latency-ns = <244144>; /* 8 32k periods */
++			opp-hz = /bits/ 64 <1488000000>;
++
++			opp-microvolt-speed0 = <1060000>;
++			opp-microvolt-speed1 = <1000000>;
++			opp-microvolt-speed2 = <1000000>;
++		};
++
++		opp@1800000000 {
++			clock-latency-ns = <244144>; /* 8 32k periods */
++			opp-hz = /bits/ 64 <1800000000>;
++
++			opp-microvolt-speed0 = <1160000>;
++			opp-microvolt-speed1 = <1100000>;
++			opp-microvolt-speed2 = <1100000>;
++		};
++	};
++};
++
++&cpu0 {
++	operating-points-v2 = <&cpu0_opp_table>;
++	#cooling-cells = <2>;
++};
++
++&cpu1 {
++	operating-points-v2 = <&cpu0_opp_table>;
++	#cooling-cells = <2>;
++};
++
++&cpu2 {
++	operating-points-v2 = <&cpu0_opp_table>;
++	#cooling-cells = <2>;
++};
++
++&cpu3 {
++	operating-points-v2 = <&cpu0_opp_table>;
++	#cooling-cells = <2>;
++};
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 3329283e38ab..aef4ae760d5e 100644
+index c3e4f09f60ce..a9304fec245c 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -25,6 +25,8 @@
- 			device_type = "cpu";
- 			reg = <0>;
- 			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
- 		};
+@@ -253,6 +253,10 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
  
- 		cpu1: cpu@1 {
-@@ -32,6 +34,8 @@
- 			device_type = "cpu";
- 			reg = <1>;
- 			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
- 		};
- 
- 		cpu2: cpu@2 {
-@@ -39,6 +43,8 @@
- 			device_type = "cpu";
- 			reg = <2>;
- 			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
- 		};
- 
- 		cpu3: cpu@3 {
-@@ -46,6 +52,8 @@
- 			device_type = "cpu";
- 			reg = <3>;
- 			enable-method = "psci";
-+			clocks = <&ccu CLK_CPUX>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
- 		};
- 	};
- 
++			speedbin_efuse: speed@1c {
++				reg = <0x1c 0x4>;
++			};
++
+ 			ths_calibration: thermal-sensor-calibration@14 {
+ 				reg = <0x14 0x8>;
+ 			};
 -- 
 2.20.1
 
