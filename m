@@ -2,155 +2,155 @@ Return-Path: <SRS0=YuQm=5V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9907CC2BA15
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 15:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DC5C2BA15
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 15:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE66206C3
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 15:30:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q1HdO4V8"
+	by mail.kernel.org (Postfix) with ESMTP id A067A20659
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 15:34:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgDEPaf (ORCPT
+        id S1726887AbgDEPet (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Apr 2020 11:30:35 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33111 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgDEPaf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 11:30:35 -0400
-Received: by mail-io1-f65.google.com with SMTP id o127so13027032iof.0;
-        Sun, 05 Apr 2020 08:30:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=yvEjNWR2BGZ2SH6akSfQFul9qgwv77tPLoJrdQcMpQg=;
-        b=Q1HdO4V8WqRn9BOJTAzxFnuKHo80y5XF6qo/nQ3DPYkVBbiVrfG3UMOqC0xBCe68Ag
-         jLpuZN4peqFkDZrJtuZ2lLGmTOPggYr7FqteZaMjhAyMhnigBybDchpQ3h2cRrlvCkCQ
-         2Uy0WJVdtzncI7qCVGhK89q6iD+HbNXoOOU2qjWx0ouBcwdgNvWDvsHcNVcPqJsMzK5K
-         1rkwnN9115YhhN63/f70BpwWfZJdSC/KLSlevLRjbumXjkPfH/Dmhdk1lHlZ/0Wa/vdV
-         F5x4ppJ075vTZGJ5sq1gy5gk4hHG/ouUvt6cyflp/vw8gUmW61a5Vlb3HH4u6OTmLNfa
-         Eswg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=yvEjNWR2BGZ2SH6akSfQFul9qgwv77tPLoJrdQcMpQg=;
-        b=BG10j1CYiy7SgDedZ3fa+rkmT6z2lqsU/57O0SSxB9Q56a9nCfAruSMarnXKM0eRG+
-         Y3Xo9QuaBKlLN5RbWJChpFsc6F2bcTGPuKBQywES0o5Bo+2p5uNaIUb0eqMYoselJ4Y+
-         0Q4WJ6PoyPAitggH5QlNK9vU36GL7twDWvSgRotUvbaL5MBTf8mMfc76o9w7DN1HAYER
-         xRjTdPpM5EYr1oAARNaMRxN3BrtD/jqhDEA4id8IY+a0qYg/sOU6LXZuDnT/ykFFY8om
-         41MTfITSHU2+YHbQlp9QxYM3GGLK+qEcpK970U65a44aCSRNKfkORQuF/3VC7OLbGs3o
-         0mwg==
-X-Gm-Message-State: AGi0PubQ2uBK+s4wamw1FV58ir4jK7y0KvQnEQ/947FzdzMafoIyaA6J
-        P++QSKyiff3KOrfDESZynKkx77yvNVANrMQeCM8=
-X-Google-Smtp-Source: APiQypKs8y6Vg2KzmMT4g4oZu5wiFa4G/kju8yqlU96SeL7qZ7ELe7MmcVgtpvP5CqJLwjK9A2qIovwpySFpCdeuE3I=
-X-Received: by 2002:a5d:9494:: with SMTP id v20mr5060146ioj.101.1586100632475;
- Sun, 05 Apr 2020 08:30:32 -0700 (PDT)
+        Sun, 5 Apr 2020 11:34:49 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:39772 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726667AbgDEPes (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 11:34:48 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id D93AD80045F3;
+        Sun,  5 Apr 2020 15:34:45 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id x37euBZrnQIW; Sun,  5 Apr 2020 18:34:44 +0300 (MSK)
+Date:   Sun, 5 Apr 2020 18:35:05 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Stephen Boyd <sboyd@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/5] dt-bindings: clk: Add Baikal-T1 System Devices CCU
+ bindings
+Message-ID: <20200405153505.5u2fi3orbgbxitav@ubsrv2.baikal.int>
+References: <20200306130048.8868-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306130056.7434E80307C4@mail.baikalelectronics.ru>
+ <20200310021915.8A0E7803087C@mail.baikalelectronics.ru>
 MIME-Version: 1.0
-References: <20200405104913.22806-1-peron.clem@gmail.com>
-In-Reply-To: <20200405104913.22806-1-peron.clem@gmail.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Sun, 5 Apr 2020 17:30:21 +0200
-Message-ID: <CAJiuCcdEMDJik7jZYkTETF3D_H6Y0OLND46e9wJ2vsTtnrb0rQ@mail.gmail.com>
-Subject: Re: [PATCH 0/7] Add support for Allwinner H6 DVFS
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200310021915.8A0E7803087C@mail.baikalelectronics.ru>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Mar 09, 2020 at 07:19:12PM -0700, Stephen Boyd wrote:
+> Quoting Sergey.Semin@baikalelectronics.ru (2020-03-06 05:00:46)
+> > diff --git a/Documentation/devicetree/bindings/clock/be,bt1-ccu-sys.yaml b/Documentation/devicetree/bindings/clock/be,bt1-ccu-sys.yaml
+> > new file mode 100644
+> > index 000000000000..aea09fbafc89
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/be,bt1-ccu-sys.yaml
+> > @@ -0,0 +1,169 @@
+> [..]
+> > +  assigned-clock-rates: true
+> > +
+> > +additionalProperties: false
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - "#clock-cells"
+> > +  - clocks
+> > +  - clock-names
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/clock/bt1-ccu.h>
+> > +
+> > +    ccu_sys: ccu_sys@1F04D060 {
+> 
+> Node name should be clock-controller@1f04d060.
 
-On Sun, 5 Apr 2020 at 12:49, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>=
- wrote:
->
-> Hi Sunxi maintainers and members,
->
-> Now that required drivers are merged we can contibute on DVFS support for
-> Allwinner H6.
->
-> This serie is based on Yangtao Li serie[0] and Megous works[1].
->
-> Most of the OPP tables are taken from original vendor kernel[2].
-> Plus there is a new CPU frequency @1.8GHz.
->
-> I wrote a simple script to randomly set a frequency during a random time[=
-3].
-> With this script and using stress-ng during a day I didn't see any issue.
-> Moreover I have tested specifically the 1.8GHz on my Beelink GS1, max the=
-rmal
-> 80=C2=B0C is reached after ~10min and then the SoC oscillates quickly bet=
-ween 1.5
-> and 1.8GHz.
-This result is wrong ignore it.
+Ok.
 
-I will resend new one in next serie.
+> 
+> Also, binding looks wrong because that address isn't aligned. Most
+> likely it's one hardware block that has many different functionalities
+> so splitting it up into different regions isn't doing anything besides
+> logically splitting up the register space for software benefits.
+
+As I said in RFC: https://lkml.org/lkml/2020/3/22/393 , CCU (Clock
+Control Unit) is part of the Baikal-T1 System Control Module (simply
+speaking the system controller). In details why I split the system
+controller registers space up, I described in the text. Alternatively I
+also suggested there to make the CCU nodes being sub-nodes of the System
+Control Module DT node. This would better reflect the hardware blocks,
+but instead of having an independent registers MMIO in driver I would
+have to use the syscon regmap handler.
+
+As I also said in the RFC, in accordance with the Baikal-T1 CCU documentation
+CCU is split up into three blocks: PLLs, AXI-bus clocks and System devices
+clocks. That's why the CCU driver expects to find three DT nodes:
+CCU PLL (be,bt1-ccu-pll), CCU AXI (be,bt1-ccu-axi) and CCU Sys
+(be,bt1-ccu-sys).
+
+> 
+> > +      compatible = "be,bt1-ccu-sys";
+> > +      reg = <0x1F04D060 0x0A0>,
+> > +            <0x1F04D150 0x004>;
+> > +      #clock-cells = <1>;
+> > +      #reset-cells = <1>;
+> > +
+> > +      clocks = <&osc25>,
+> > +               <&ccu_pll CCU_SATA_PLL>,
+> > +               <&ccu_pll CCU_PCIE_PLL>,
+> > +               <&ccu_pll CCU_ETH_PLL>;
+> > +      clock-names = "ref_clk", "sata_clk", "pcie_clk",
+> > +                    "eth_clk";
+> > +
+> > +      clock-output-names = "sys_sata_ref_clk", "sys_apb_clk",
+> > +                           "sys_gmac0_csr_clk", "sys_gmac0_tx_clk",
+> > +                           "sys_gmac0_ptp_clk", "sys_gmac1_csr_clk",
+> > +                           "sys_gmac1_tx_clk", "sys_gmac1_ptp_clk",
+> > +                           "sys_xgmac_ref_clk", "sys_xgmac_ptp_clk",
+> > +                           "sys_usb_clk", "sys_pvt_clk",
+> > +                           "sys_hwa_clk", "sys_uart_clk",
+> > +                           "sys_spi_clk", "sys_i2c1_clk",
+> > +                           "sys_i2c2_clk", "sys_gpio_clk",
+> > +                           "sys_timer0_clk", "sys_timer1_clk",
+> > +                           "sys_timer2_clk", "sys_wdt_clk";
+> > +      };
+> > +...
+> > diff --git a/include/dt-bindings/reset/bt1-ccu.h b/include/dt-bindings/reset/bt1-ccu.h
+> > index 4de5b6bcd433..0bd8fd0edb41 100644
+> > --- a/include/dt-bindings/reset/bt1-ccu.h
+> > +++ b/include/dt-bindings/reset/bt1-ccu.h
+> > @@ -20,4 +20,8 @@
+> >  #define CCU_AXI_HWA_RST                        9
+> >  #define CCU_AXI_SRAM_RST               10
+> >  
+> > +/* Baikal-T1 System Devices CCU Reset indeces. */
+> 
+> indeces is not a word.
+
+Yeah, it was supposed to be "indices". I'll remove this comment anyway.
 
 Regards,
-Clement
->
-> I also test that that offlining CPU0 and doing DVFS on other CPUs works.
-> As CPU regulator is only set for CPU0.
->
-> But maybe it doesn't cost much to set the regulator for all the CPUs?
->
-> Jernej test the GPU devfreq on several H6 board particulary the Tanix TX6=
- which
-> doesn't have a proper dedicated PMIC and doesn't had any trouble with it.
->
-> Do you think I can enable GPU OPP for all H6 Boards?
->
-> Also Yangtao Li enable DVFS for OrangePi and Pine64, as I can't test them=
- I
-> didn't reenable these boards. Please, let me know if you want me to add t=
-hese
-> boards in this serie.
->
-> Thanks,
-> Cl=C3=A9ment
->
-> 0: https://patchwork.kernel.org/cover/10815117/
-> 1: https://megous.com/git/linux/log/?h=3Dths-5.7
-> 2: https://github.com/orangepi-xunlong/OrangePiH6_Linux4_9/blob/master/ar=
-ch/arm64/boot/dts/sunxi/sun50iw6p1.dtsi#L345-L517
-> 3: https://gist.github.com/clementperon/55a055dae3f13bbd14fb39c0069fe2e2
->
-> Cl=C3=A9ment P=C3=A9ron (4):
->   arm64: dts: allwinner: h6: set thermal polling time
->   arm64: dts: allwinner: h6: Add GPU Operating Performance Points table
->   arm64: configs: Enable sun50i cpufreq nvmem
->   arm64: dts: allwinner: h6: Enable CPU and GPU opp tables for Beelink
->     GS1
->
-> Ondrej Jirman (2):
->   arm64: dts: allwinner: h6: Add thermal trip points/cooling map
->   arm64: dts: allwinner: h6: Add CPU Operating Performance Points table
->
-> Yangtao Li (1):
->   arm64: dts: allwinner: h6: Add clock to CPU cores
->
->  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  10 +-
->  .../boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi | 103 ++++++++++++++++++
->  .../boot/dts/allwinner/sun50i-h6-gpu-opp.dtsi |  74 +++++++++++++
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  44 +++++++-
->  arch/arm64/configs/defconfig                  |   1 +
->  5 files changed, 226 insertions(+), 6 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-gpu-opp.dtsi
->
-> --
-> 2.20.1
->
+-Sergey
+
+> 
+> > +#define CCU_SYS_SATA_REF_RST           0
+> > +#define CCU_SYS_APB_RST                        1
+> > +
