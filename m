@@ -5,33 +5,33 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1A8C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 23:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5A3C2BB86
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 23:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D375620787
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 23:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31AF420731
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Apr 2020 23:39:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="hsHMrOXI"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dKqC4s8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgDEXj4 (ORCPT
+        id S1727612AbgDEXj5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Apr 2020 19:39:56 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:34746 "EHLO
+        Sun, 5 Apr 2020 19:39:57 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:34754 "EHLO
         perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727612AbgDEXjz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 19:39:55 -0400
+        with ESMTP id S1727742AbgDEXj5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 19:39:57 -0400
 Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A664E11FB;
-        Mon,  6 Apr 2020 01:39:51 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 492E61265;
+        Mon,  6 Apr 2020 01:39:53 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1586129992;
-        bh=FUC2Gn9ZQSxRB3DRa173DRbeGoAqn8U52oitvHkFiKo=;
+        s=mail; t=1586129993;
+        bh=JIynv/PFJ90OxTiK0luE9C0Ue4XEj7dYZ6mhjEAb5MM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hsHMrOXIyL/D+jYwK45oAE6NaHyZu6Y0PwYL7oku2+EIL4B0Fhz7llTJCd9z+aA4r
-         uo1F8y+IP2aglAqrbVVQDxQRqgSIIh6HmBOKxwThm6gfa4GwINQ6zywBR/1Ay8kHot
-         CYAEhNp42wir/p1mBovBe12WaPDMqAcf8IvJlq8I=
+        b=dKqC4s8TO6aYVtS/f/KfqHZBtuo0OZ2j1j3crJR+gEcoeZDg3hGYPyl9HmdaJZSVf
+         NdHvmJmpzQcfAHXSPAWJjIoMxqTalrYCDNJ9PAGql6zHNPycSQ2u0cxC8karHYclU9
+         okUZKhio0Fe5xXxx1IUXQKqBsEEyhofsxmf6iSKc=
 From:   Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 To:     devicetree@vger.kernel.org
 Cc:     dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
@@ -40,9 +40,9 @@ Cc:     dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Mark Yao <mark.yao@rock-chips.com>,
         Sandy Huang <hjc@rock-chips.com>, Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH/RFC 4/6] dt-bindings: display: rockchip: dw-hdmi: Convert binding to YAML
-Date:   Mon,  6 Apr 2020 02:39:33 +0300
-Message-Id: <20200405233935.27599-5-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH/RFC 6/6] dt-bindings: display: bridge: Remove deprecated dw_hdmi.txt
+Date:   Mon,  6 Apr 2020 02:39:35 +0300
+Message-Id: <20200405233935.27599-7-laurent.pinchart+renesas@ideasonboard.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200405233935.27599-1-laurent.pinchart+renesas@ideasonboard.com>
 References: <20200405233935.27599-1-laurent.pinchart+renesas@ideasonboard.com>
@@ -53,280 +53,54 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the Rockchip HDMI TX text binding to YAML.
+dw_hdmi.txt has been replaced with synopsys,dw-hdmi.yaml, and all
+references to the old file have been converted. Remove it.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- .../display/rockchip/dw_hdmi-rockchip.txt     |  74 --------
- .../display/rockchip/rockchip,dw-hdmi.yaml    | 178 ++++++++++++++++++
- 2 files changed, 178 insertions(+), 74 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
+ .../bindings/display/bridge/dw_hdmi.txt       | 33 -------------------
+ 1 file changed, 33 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt
 
-diff --git a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+diff --git a/Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt b/Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt
 deleted file mode 100644
-index 3d32ce137e7f..000000000000
---- a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+index 33bf981fbe33..000000000000
+--- a/Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt
 +++ /dev/null
-@@ -1,74 +0,0 @@
--Rockchip DWC HDMI TX Encoder
--============================
+@@ -1,33 +0,0 @@
+-Synopsys DesignWare HDMI TX Encoder
+-===================================
 -
--The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
--with a companion PHY IP.
+-This document defines device tree properties for the Synopsys DesignWare HDMI
+-TX Encoder (DWC HDMI TX). It doesn't constitue a device tree binding
+-specification by itself but is meant to be referenced by platform-specific
+-device tree bindings.
 -
--These DT bindings follow the Synopsys DWC HDMI TX bindings defined in
--Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt with the
--following device-specific properties.
+-When referenced from platform device tree bindings the properties defined in
+-this document are defined as follows. The platform device tree bindings are
+-responsible for defining whether each property is required or optional.
 -
+-- reg: Memory mapped base address and length of the DWC HDMI TX registers.
 -
--Required properties:
+-- reg-io-width: Width of the registers specified by the reg property. The
+-  value is expressed in bytes and must be equal to 1 or 4 if specified. The
+-  register width defaults to 1 if the property is not present.
 -
--- compatible: should be one of the following:
--		"rockchip,rk3228-dw-hdmi"
--		"rockchip,rk3288-dw-hdmi"
--		"rockchip,rk3328-dw-hdmi"
--		"rockchip,rk3399-dw-hdmi"
--- reg: See dw_hdmi.txt.
--- reg-io-width: See dw_hdmi.txt. Shall be 4.
--- interrupts: HDMI interrupt number
--- clocks: See dw_hdmi.txt.
--- clock-names: Shall contain "iahb" and "isfr" as defined in dw_hdmi.txt.
--- ports: See dw_hdmi.txt. The DWC HDMI shall have a single port numbered 0
--  corresponding to the video input of the controller. The port shall have two
--  endpoints, numbered 0 and 1, connected respectively to the vopb and vopl.
--- rockchip,grf: Shall reference the GRF to mux vopl/vopb.
+-- interrupts: Reference to the DWC HDMI TX interrupt.
 -
--Optional properties
+-- clocks: References to all the clocks specified in the clock-names property
+-  as specified in Documentation/devicetree/bindings/clock/clock-bindings.txt.
 -
--- ddc-i2c-bus: The HDMI DDC bus can be connected to either a system I2C master
--  or the functionally-reduced I2C master contained in the DWC HDMI. When
--  connected to a system I2C master this property contains a phandle to that
--  I2C master controller.
--- clock-names: See dw_hdmi.txt. The "cec" clock is optional.
--- clock-names: May contain "cec" as defined in dw_hdmi.txt.
--- clock-names: May contain "grf", power for grf io.
--- clock-names: May contain "vpll", external clock for some hdmi phy.
--- phys: from general PHY binding: the phandle for the PHY device.
--- phy-names: Should be "hdmi" if phys references an external phy.
+-- clock-names: The DWC HDMI TX uses the following clocks.
 -
--Optional pinctrl entry:
--- If you have both a "unwedge" and "default" pinctrl entry, dw_hdmi
--  will switch to the unwedge pinctrl state for 10ms if it ever gets an
--  i2c timeout.  It's intended that this unwedge pinctrl entry will
--  cause the SDA line to be driven low to work around a hardware
--  errata.
+-  - "iahb" is the bus clock for either AHB and APB (mandatory).
+-  - "isfr" is the internal register configuration clock (mandatory).
+-  - "cec" is the HDMI CEC controller main clock (optional).
 -
--Example:
--
--hdmi: hdmi@ff980000 {
--	compatible = "rockchip,rk3288-dw-hdmi";
--	reg = <0xff980000 0x20000>;
--	reg-io-width = <4>;
--	ddc-i2c-bus = <&i2c5>;
--	rockchip,grf = <&grf>;
--	interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
--	clocks = <&cru  PCLK_HDMI_CTRL>, <&cru SCLK_HDMI_HDCP>;
--	clock-names = "iahb", "isfr";
--	ports {
--		hdmi_in: port {
--			#address-cells = <1>;
--			#size-cells = <0>;
--			hdmi_in_vopb: endpoint@0 {
--				reg = <0>;
--				remote-endpoint = <&vopb_out_hdmi>;
--			};
--			hdmi_in_vopl: endpoint@1 {
--				reg = <1>;
--				remote-endpoint = <&vopl_out_hdmi>;
--			};
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
-new file mode 100644
-index 000000000000..8ff544ae0ac2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
-@@ -0,0 +1,178 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/rockchip/rockchip,dw-hdmi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip DWC HDMI TX Encoder
-+
-+maintainers:
-+  - Mark Yao <mark.yao@rock-chips.com>
-+
-+description: |
-+  The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
-+  with a companion PHY IP.
-+
-+allOf:
-+  - $ref: ../bridge/synopsys,dw-hdmi.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - rockchip,rk3228-dw-hdmi
-+      - rockchip,rk3288-dw-hdmi
-+      - rockchip,rk3328-dw-hdmi
-+      - rockchip,rk3399-dw-hdmi
-+
-+  reg: true
-+
-+  reg-io-width:
-+    const: 4
-+
-+  clocks:
-+    minItems: 2
-+    maxItems: 5
-+    items:
-+      - description: The bus clock for either AHB and APB
-+      - description: The internal register configuration clock
-+      - description: The HDMI CEC controller main clock
-+      - description: Power for GRF IO
-+      - description: External clock for some HDMI PHY
-+
-+  clock-names:
-+    minItems: 2
-+    maxItems: 5
-+    items:
-+      - const: iahb
-+      - const: isfr
-+      - enum:
-+        - cec
-+        - grf
-+        - vpll
-+      - enum:
-+        - cec
-+        - grf
-+        - vpll
-+      - enum:
-+        - cec
-+        - grf
-+        - vpll
-+
-+  ddc-i2c-bus:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      The HDMI DDC bus can be connected to either a system I2C master or the
-+      functionally-reduced I2C master contained in the DWC HDMI. When connected
-+      to a system I2C master this property contains a phandle to that I2C
-+      master controller.
-+
-+  interrupts: true
-+
-+  phys:
-+    maxItems: 1
-+    description: The HDMI PHY
-+
-+  phy-names:
-+    const: hdmi
-+
-+  pinctrl-0: true
-+  pinctrl-1: true
-+
-+  pinctrl-names:
-+    description:
-+      The unwedge pinctrl entry shall drive the DDC SDA line low. This is
-+      intended to work around a hardware errata that can cause the DDC I2C
-+      bus to be wedged.
-+    items:
-+      - const: default
-+      - const: unwedge
-+
-+  ports:
-+    type: object
-+    description: |
-+      This device has one video port, corresponding to the input of the DWC
-+      HDMI TX. Its connections are modelled using the OF graph bindings
-+      specified in Documentation/devicetree/bindings/graph.txt.
-+
-+    properties:
-+      port:
-+        type: object
-+        description: Input of the DWC HDMI TX
-+
-+        properties:
-+          '#address-cells':
-+            const: 1
-+
-+          '#size-cells':
-+            const: 0
-+
-+          endpoint@0:
-+            type: object
-+            description: Connection to the VOPB
-+
-+          endpoint@1:
-+            type: object
-+            description: Connection to the VOPL
-+
-+        required:
-+          - endpoint@0
-+          - endpoint@1
-+
-+        additionalProperties: false
-+
-+    required:
-+      - port
-+
-+    additionalProperties: false
-+
-+  rockchip,grf:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      phandle to the GRF to mux vopl/vopb.
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-io-width
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - ports
-+  - rockchip,grf
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rk3288-cru.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    hdmi: hdmi@ff980000 {
-+        compatible = "rockchip,rk3288-dw-hdmi";
-+        reg = <0xff980000 0x20000>;
-+        reg-io-width = <4>;
-+        ddc-i2c-bus = <&i2c5>;
-+        rockchip,grf = <&grf>;
-+        interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&cru  PCLK_HDMI_CTRL>, <&cru SCLK_HDMI_HDCP>;
-+        clock-names = "iahb", "isfr";
-+
-+        ports {
-+            port {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                hdmi_in_vopb: endpoint@0 {
-+                    reg = <0>;
-+                    remote-endpoint = <&vopb_out_hdmi>;
-+                };
-+                hdmi_in_vopl: endpoint@1 {
-+                    reg = <1>;
-+                    remote-endpoint = <&vopl_out_hdmi>;
-+                };
-+            };
-+        };
-+    };
-+
-+...
+-- ports: The connectivity of the DWC HDMI TX with the rest of the system is
+-  expressed in using ports as specified in the device graph bindings defined
+-  in Documentation/devicetree/bindings/graph.txt. The numbering of the ports
+-  is platform-specific.
 -- 
 Regards,
 
