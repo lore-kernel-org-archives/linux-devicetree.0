@@ -2,76 +2,72 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF77C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 11:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 530FEC2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 11:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFCF7206F8
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 11:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AACD2072A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 11:47:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DTnFFPcz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eESeKRjj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbgDFLqs (ORCPT
+        id S1727528AbgDFLrO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:46:48 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:62054 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727614AbgDFLqs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 07:46:48 -0400
+        Mon, 6 Apr 2020 07:47:14 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:58663 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727822AbgDFLrO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 07:47:14 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586173607; h=Content-Transfer-Encoding: Content-Type:
+ s=smtp; t=1586173633; h=Content-Transfer-Encoding: Content-Type:
  In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=21Usv+7OlYJnY+NURtDJjs/B1ZBay7aqmLhPGZSU41c=; b=DTnFFPczwTQh3UmJcmMBsOGSUbeGPQe/kgWL91Y/dHlp0060bZsWq5RzgYUiut0u+SGuLiNG
- CG990hg6E8v/+3vGliu4Hqnf1fqBg2bF3rLCUeuNfuhKlgGGcntWFiHBwsqVdbS3i1P83Q5x
- 4KjEhu8xJEVpuadGsUVRuSg5Fk0=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ Subject: Sender; bh=25p0sbzZfLtgF8ygogfJS9V2w4DtSzhD7xPuHGZQ5pY=; b=eESeKRjjiDz8WAOfzJw/GXX5mO87mKndDzCk1o9JASESMVa/ycvbBAp6OYjApQrtJIFItiOY
+ qePkqcV5EIZqrPWzI4lLdwYkOf1CWGkeR2ksLvNOJa1urHMcKyNMISRCrPPqpGMOLIwhytzU
+ ExxrW25t6cMVJdE8gyctTl38vQs=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8b1691.7f5dc86ee0d8-smtp-out-n01;
- Mon, 06 Apr 2020 11:46:25 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e8b16a7.7fcd34cdc8f0-smtp-out-n02;
+ Mon, 06 Apr 2020 11:46:47 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B3441C4478F; Mon,  6 Apr 2020 11:46:23 +0000 (UTC)
+        id 62795C433BA; Mon,  6 Apr 2020 11:46:46 +0000 (UTC)
 Received: from [192.168.1.100] (unknown [157.44.182.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jprakash)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C61FCC43636;
-        Mon,  6 Apr 2020 11:46:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C61FCC43636
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CA7A8C433F2;
+        Mon,  6 Apr 2020 11:46:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CA7A8C433F2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jprakash@codeaurora.org
 Subject: Re: [PATCH 3/3] iio: adc: Add support for PMIC7 ADC
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        smohanad@codeaurora.org, kgunda@codeaurora.org,
-        aghayal@codeaurora.org, Jonathan Cameron <jic23@kernel.org>,
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, linus.walleij@linaro.org, sboyd@codeaurora.org,
+        Jonathan.Cameron@huawei.com, smohanad@codeaurora.org,
+        kgunda@codeaurora.org, aghayal@codeaurora.org,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org,
-        linux-iio <linux-iio@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org,
         linux-arm-msm-owner@vger.kernel.org
 References: <1585064650-16235-1-git-send-email-jprakash@codeaurora.org>
  <1585064650-16235-4-git-send-email-jprakash@codeaurora.org>
- <CAHp75Vfk1DZ+bz6h_prm6Tp7kXos6jio5JCpg6=wvGRmDPTBsw@mail.gmail.com>
+ <20200328170407.41d8ed68@archlinux>
 From:   Jishnu Prakash <jprakash@codeaurora.org>
-Message-ID: <6bf90d8c-48e6-9a07-7688-aa3890ebcd0d@codeaurora.org>
-Date:   Mon, 6 Apr 2020 17:16:11 +0530
+Message-ID: <578c81d3-c9a2-1739-bb10-21d366627893@codeaurora.org>
+Date:   Mon, 6 Apr 2020 17:16:35 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vfk1DZ+bz6h_prm6Tp7kXos6jio5JCpg6=wvGRmDPTBsw@mail.gmail.com>
+In-Reply-To: <20200328170407.41d8ed68@archlinux>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -80,10 +76,12 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andy,
+Hi Jonathan,
 
-On 3/24/2020 10:03 PM, Andy Shevchenko wrote:
-> On Tue, Mar 24, 2020 at 5:46 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
+On 3/28/2020 10:34 PM, Jonathan Cameron wrote:
+> On Tue, 24 Mar 2020 21:14:10 +0530
+> Jishnu Prakash <jprakash@codeaurora.org> wrote:
+>
 >> The ADC architecture on PMIC7 is changed as compared to PMIC5. The
 >> major change from PMIC5 is that all SW communication to ADC goes through
 >> PMK8350, which communicates with other PMICs through PBS when the ADC
@@ -92,43 +90,11 @@ On 3/24/2020 10:03 PM, Andy Shevchenko wrote:
 >>
 >> In addition, add definitions for ADC channels and virtual channel
 >> definitions per PMIC, to be used by ADC clients for PMIC7.
+>>
+>> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
+> A few additions from me.
+>
+>> ---
 > ...
 >
->> +#define ADC_CHANNEL_OFFSET                     0x8
->> +#define ADC_CHANNEL_MASK                       0xff
-> GENMASK()
-I'll fix this and the other simple changes in the next post.
->
-> ...
->
->> +#define ADC_APP_SID                            0x40
->> +#define ADC_APP_SID_MASK                       0xf
-> GENMASK()
->
->> +#define ADC7_CONV_TIMEOUT                      msecs_to_jiffies(10)
-> Useless.
-I'm not sure what you mean by this. It is used in the API 
-adc7_do_conversion.
-> ...
->
-> + if (of_device_is_compatible(node, "qcom,spmi-adc7")) {
->> +               indio_dev->info = &adc7_info;
->> +               adc->is_pmic7 = true;
->> +       } else {
->> +               indio_dev->info = &adc5_info;
->> +       }
-> Hmm... I would rather put this as driver_data in ID structure(s).
-I'll remove the check for the compatible string, using driver data, in 
-the next post.
->
-> ...
->
->> +static int adc5_exit(struct platform_device *pdev)
->> +{
->> +       struct adc5_chip *adc = platform_get_drvdata(pdev);
->> +
->> +       mutex_destroy(&adc->lock);
-> Are you sure you will have no race conditions? Does this driver use IRQs?
-The driver does use an IRQ. Will fix this in the next post.
->
->
+> I'll address your comments in the next post.
