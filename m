@@ -2,122 +2,126 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 976FCC2BA17
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 17:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE18C2BA1E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 17:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 679D5249CB
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 17:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A96206F5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 17:19:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YFFDLodF"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="R7DTf12D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729790AbgDFRMP (ORCPT
+        id S1728594AbgDFRTx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 13:12:15 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38991 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbgDFRMP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 13:12:15 -0400
-Received: by mail-oi1-f194.google.com with SMTP id d63so13741086oig.6;
-        Mon, 06 Apr 2020 10:12:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zPvT9nYNJKIlI18d6CVFeb9HSS66c5aP1HzV/cwJ2iA=;
-        b=YFFDLodFgLBNXipDdFrKkNe5KdfTMuCuUWZy9SOzDynX4/zoxOV+WL+e0NBF5wHS7m
-         K2xlX4c+mLFB9R0QcvfqTnPOmVGKFzWOkG0iWwmF5LCzw0E9UWVqly7Dk1SprNmYgm+h
-         JHYWexqjTq7egHo0iQyTN6kM6LF95CTs376RuckrF25VCJ2Z1rqm1kddE2D/SyXjf2bG
-         DokPYV1pM8Hf5N2wOszDExe9/Qod7xhRTogKLDusnPpPe3+MMRPS2qVMiHqhYwcbAfjI
-         kK+ER38azeo+YgVLCUzXCojrerc6K8VZ5veCSkvCLyJ+ADzkhjmedRaVE1hz86ekYpsN
-         PL9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zPvT9nYNJKIlI18d6CVFeb9HSS66c5aP1HzV/cwJ2iA=;
-        b=XHD/EQtuB6l1mpYAoLchMhtGrfN9jIs3gafm9TLjdWPF6cCTMSQmG+z46LF0gtmOhW
-         RfghgGXw7WCS//wWwOUqNXIc+6HBmyPJztXItLjDn8d9CvbU9/p81rIc0pnw682D7RiP
-         7yQeNU6A8lDFxZoCiekRLbPdcHJuAEzuNBKV7bJJEzXR4+thE5JlkmyFNj7VfFj34lTx
-         OYCrrMO14xpW7Cw4PTlBJrSvqOwOhxjgfZ0FU0KOPUeSlSvB1lIFeJSW+OWd9s+ksie5
-         tSReErlLEAKy7yTK0Vh3Tvxd21rQKS8T7Y16uMljJXlsh+cgjqp2Mg4/jQPGvgm/iHmY
-         3LmQ==
-X-Gm-Message-State: AGi0PubxSB14wqRKoZ2JMmy0VBcWcLByswcubi3jZL/bMdBQ405bsYj1
-        iqcTX+8SjRfrOYtZADp962x1nQC4Pz84bU5YM8c=
-X-Google-Smtp-Source: APiQypKEN2WUc7C67Si85BMK8Rs/ssPmf30vW/UZKNuRyXpHzIcqTCLUJHaY3Of9rWarp68OvvmFfK4r3rsGvhQ8uHk=
-X-Received: by 2002:aca:5d83:: with SMTP id r125mr304838oib.8.1586193134784;
- Mon, 06 Apr 2020 10:12:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200406165108.GA7646@kekkonen.localdomain>
-In-Reply-To: <20200406165108.GA7646@kekkonen.localdomain>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 6 Apr 2020 18:11:48 +0100
-Message-ID: <CA+V-a8vxjJ4Fr2CAtRAnZCgmvoR+3m26DdAKPMOkSMYELDgZ0A@mail.gmail.com>
-Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency dt-property
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Maxime Ripard <maxime@cerno.tech>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Mon, 6 Apr 2020 13:19:53 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:50196 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726837AbgDFRTx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Apr 2020 13:19:53 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id E4BF7412E0;
+        Mon,  6 Apr 2020 17:19:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:date:subject:subject:from:from
+        :received:received:received; s=mta-01; t=1586193588; x=
+        1588007989; bh=OlQp0QR8ZmePBVD0oPDt0O90rMrQqNlRPgN8qmiAkRo=; b=R
+        7DTf12DcRkkbhNh/I2rIG4e64ONwzUAX66Abnj++kKdtLpVIhjpuKwyY/qJfHQ59
+        uX2pzzfT/VpoDFhPWljAw4GoyX68V3D0XLfoB8ls3vD3Q8+qalQNw+0VJiF0ZXqh
+        hPOsEBRTv27HC343e34pksgsuDT2F9kHmmaTlgfsZU=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 3mRB6m6Qq1DT; Mon,  6 Apr 2020 20:19:48 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id C0BE841287;
+        Mon,  6 Apr 2020 20:19:47 +0300 (MSK)
+Received: from localhost.yadro.com (10.199.2.226) by T-EXCH-02.corp.yadro.com
+ (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Mon, 6 Apr
+ 2020 20:19:48 +0300
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v8 0/2] iio: proximity: driver for vcnl3020
+Date:   Mon, 6 Apr 2020 20:20:00 +0300
+Message-ID: <20200406172002.18028-1-i.mikhaylov@yadro.com>
+X-Mailer: git-send-email 2.21.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.199.2.226]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sakari,
+Add proximity sensor driver for Vishay vcnl3020. Only on-demand
+measurement is supported for now.
 
+Changes from v7:
+   1. forgot to add Reviewed-by tag.
 
-On Mon, Apr 6, 2020 at 5:51 PM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
->
-> Hi Prabhakar,
->
-> On Mon, Apr 06, 2020 at 05:42:38PM +0100, Lad Prabhakar wrote:
-> > Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
-> > as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
-> > 24MHz. So instead making clock-frequency as dt-property just let the
-> > driver enforce the required clock frequency.
->
-> Even if some current systems where the driver is used are using 24 MHz
-> clock, that doesn't mean there wouldn't be systems using another frequency
-> that the driver does not support right now.
->
-> The driver really should not set the frequency unless it gets it from DT,
-> but I think the preferred means is to use assigned-clock-rates instead, and
-> not to involve the driver with setting the frequency.
->
-> Otherwise we'll make it impossible to support other frequencies, at least
-> without more or less random defaults.
->
-Ouch! my previous version of patches switched the driver for using
-assigned-clock-rates but I was asked to
-not do so [1].
+Changes from v6:
+   1. minor changes
+     1.1 remove VCNL_DRV_NAME
+     1.2 add braces in get_and_apply_property
 
-[1] https://patchwork.linuxtv.org/patch/62185/
+Changes from v5:
+   1. add get_and_apply_property function for optional parameters.
+   2. minor changes.
 
-Cheers,
---Prabhakar
+Changes from v4:
+   1. add vdd-supply,vddio-supply,interrupts properties into yaml.
+   2. led-current -> vishay,led-current-milliamp in yaml.
+   3. add possible values enum list.
+   4. add bulk_read for result hi/lo registers.
+   5. add description of vcnl3020_data structure.
+   6. vcnl3020 id table is removed.
+   7. make "vishay,led-current-milliamp" optional in yaml and code.
 
-> --
-> Kind regards,
->
-> Sakari Ailus
+Changes from v3:
+   1. minor changes.
+   2. add i2c block to fix dts section in yaml.
+
+Changes from v2:
+   1. using regmap_read_poll_timeout instead of do-while in measurement
+      function.
+   2. change struct i2client* in vcnl3020_data to struct dev*
+   3. enable REGMAP_I2C in Kconfig
+
+Changes from v1:
+   1. using regmap interface instead of i2c_smbus_* calls.
+   2. switch from probe to probe_new.
+   3. s32/int32_t -> int
+
+Ivan Mikhaylov (2):
+  iio: proximity: provide device tree binding document
+  iio: proximity: Add driver support for vcnl3020 proximity sensor
+
+ .../bindings/iio/proximity/vcnl3020.yaml      |  65 +++++
+ drivers/iio/proximity/Kconfig                 |  11 +
+ drivers/iio/proximity/Makefile                |   1 +
+ drivers/iio/proximity/vcnl3020.c              | 234 ++++++++++++++++++
+ 4 files changed, 311 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+ create mode 100644 drivers/iio/proximity/vcnl3020.c
+
+-- 
+2.21.1
+
