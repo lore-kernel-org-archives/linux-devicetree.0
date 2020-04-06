@@ -2,296 +2,149 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B793FC2BA1E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 08:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C90A0C2BA18
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 08:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD40206C3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 08:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94144206C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 08:10:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Hk12HmPS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ePEJvDot"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="woS3dcHT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ac65Exf1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbgDFIAg (ORCPT
+        id S1726514AbgDFIKN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 04:00:36 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:50759 "EHLO
+        Mon, 6 Apr 2020 04:10:13 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:60551 "EHLO
         out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726475AbgDFIAg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 04:00:36 -0400
+        by vger.kernel.org with ESMTP id S1726475AbgDFIKM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 04:10:12 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id D74F15C01A7;
-        Mon,  6 Apr 2020 04:00:34 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Mon, 06 Apr 2020 04:00:34 -0400
+        by mailout.nyi.internal (Postfix) with ESMTP id 403D35C015E;
+        Mon,  6 Apr 2020 04:10:11 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 06 Apr 2020 04:10:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=IkPl9GikYyHPmZc02tULTBn56d9
-        A0vpAp2YQ86XA7LU=; b=Hk12HmPSF34cbLkWUAQcbrVNM9pkdDGaOwf8CQPE3gN
-        3cmfz1iVG6T+jojVuFEaba66i6jPUKckIOR41xehgGhrzSxc7HSnKW19vjY9AgR1
-        I7uvzHCh0sepjGu5LGPWnbzf9JeZ2j6XQAvxfJPZhEHTieGH/HDV485klUUapExU
-        GSYDyIDjW/8AYqGSQbH4SfA0P3iyb8KQoH2icqdKSuDEoo6wGfsy+81RGO3YGpGP
-        q7Hm5QKsxNrEQVjIIy3Ni0Wzhkk5TPO+9IfqAAlO9BznH341AleyrrqToDW6uo+y
-        XVIzW9sP52p539b9i7gAP+1tiADjghfjk4otspYVSzQ==
+        :content-type:in-reply-to; s=fm2; bh=Lk1XzoQIyt4x3trpA0BOgrOVyDs
+        LWD0uMh01o6xe5MA=; b=woS3dcHTPR0/NMT2vWxjkxPTj9fnof0nct8U0Va6SB8
+        hpWkYiqBUV/NfVjsXkYt/IG5skZ5XpwtLbUoOS7bQf4I97cmEK8SGX+mzpYVSIqF
+        GEkfhtqOL12uVUE0BGCAV9LQEVquP+90ihDdAgouS9l9OKSZSvyUqhmO+MnfkH/8
+        epm03Q9+2zyHvcfjYY3d23LNGt9Vl7t6TroSzpDh8paRYRXei31WqPHhqMmeU/nW
+        FFyikvwpt+IVEoibXlh2c15xUn/TdpnjxqSBoYRChfJzPMAdWM1VjCJTPpjghZdC
+        MHiVWVN7EE5YdTrnQoTPf8rfi7h+FOi7J7EOPRVY3+w==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=IkPl9G
-        ikYyHPmZc02tULTBn56d9A0vpAp2YQ86XA7LU=; b=ePEJvDotrB9gxXClxaSXwP
-        Dxva49fLYXmews7qJtotG3I8FxNN9rI+H6E6ExakqiV9UZMjrAIe/N8K7AkMMx/Z
-        NPuspa0CteKqG4JkB+AA8KYhgoXMffEd4qZbzcv27ggN+94Lv8VXebV+ZArdKw0P
-        PeoXu4CtscHrNNFr5qzi2VOY6Pkm+e2IIDeHslLMVI9CMIQbzoPlNlm3P2qq3OvV
-        rx8rbHVv72VoiYR2iEmOUa3Vae+32Y3JyU1Y6TGfI9YmKmrcr6kFpQrk4ZLdL3uX
-        PtVaM9A1tEZlO3y9keOrmC0g1ZW5bAQrlcopKnQoQPER5qPwvoh6DQaxU3emxRUg
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Lk1Xzo
+        QIyt4x3trpA0BOgrOVyDsLWD0uMh01o6xe5MA=; b=ac65Exf1y5rbDZtz/ER0zl
+        DtgDjyiwtCE+r/oJt2RX7jEhQuYKOlIYqFqr6TuT4N9U2iTJg7oYt2xv6+cYOq43
+        LOWTw55qpspbpfq2aJFwL/TUEJ2gcfE6Hn1HjFMcp1C5weaeWDTQmYUlDtcOC8ja
+        I7Bwk9mZtfObOGXFBu8Bs6IuCn71MnzH8nXVC9SZnq2vbM5Q1EFNhgAzEHgKdJPA
+        adUeaozGU1txJ19CaNLetj1d/LV+grWSdxAVi0dLI/wjtJMO4j8DPcegWd7YeggM
+        YSSHeyFmxhmf7i1jXlADAiRZcBzWFVGqr/Pqv/oj38vAeUekodhR81bqEgEIVr5w
         ==
-X-ME-Sender: <xms:oeGKXqY9SPziKqWhImqe8gj8mkZl2z-C8yK3I5D3CrAMDumLd2jjMA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgdduvdelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuffhomhgrih
-    hnpeguvghvihgtvghtrhgvvgdrohhrghenucfkphepledtrdekledrieekrdejieenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvg
-    estggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:oeGKXptQ2NxTu6CDE-RM137L0F6nk1teCPjvITxYA62-NrLZ_LcpIw>
-    <xmx:oeGKXnudaCiGH0-eSxDdWUqpxuGB_jv_5RrzuaXrCyE6oTD8Gb-cgw>
-    <xmx:oeGKXucu_-HCmEH37qPzlM7itCCpPUlPEVPGjP0bRCD6t6vLo55iGQ>
-    <xmx:ouGKXtQYr8yqF5opG21J19m7iAK3Sh6iezGQXZKQ8oqWIx9FndZx2g>
+X-ME-Sender: <xms:4eOKXiYS_JJQUYUsJV2uLtl3h6Cpe9BIdrjSWQlvxH-XDG3F_wOiKg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefgddtvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
+    epghhithhhuhgsrdgtohhmnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgv
+    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnh
+    hordhtvggthh
+X-ME-Proxy: <xmx:4eOKXsXfPLaYq3GQIaEpON7I69G9F2oAiGU853Atp4_pn3vlMigeuQ>
+    <xmx:4eOKXjbwUvQBZP48DNfpdCN5Pyatlum8y9-nd47fTkjExUWClNVUdw>
+    <xmx:4eOKXjLUWxLfYyviqS5uurImPcPfeBO9_T1GxyeEBTjqpJ-8lxFNLA>
+    <xmx:4-OKXgPHINzjfLhYBYJFoWYX9aOOQ7vkZY4-sVRxGqcGEugWiLwx6g>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7D43F306D397;
-        Mon,  6 Apr 2020 04:00:33 -0400 (EDT)
-Date:   Mon, 6 Apr 2020 10:00:32 +0200
+        by mail.messagingengine.com (Postfix) with ESMTPA id 557743280066;
+        Mon,  6 Apr 2020 04:10:09 -0400 (EDT)
+Date:   Mon, 6 Apr 2020 10:10:07 +0200
 From:   Maxime Ripard <maxime@cerno.tech>
-To:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mark Yao <mark.yao@rock-chips.com>,
-        Sandy Huang <hjc@rock-chips.com>, Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH/RFC 4/6] dt-bindings: display: rockchip: dw-hdmi: Convert
- binding to YAML
-Message-ID: <20200406080032.zlszhkjqmjeoa4ti@gilmour.lan>
-References: <20200405233935.27599-1-laurent.pinchart+renesas@ideasonboard.com>
- <20200405233935.27599-5-laurent.pinchart+renesas@ideasonboard.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [PATCH v2 0/7] Add support for Allwinner H6 DVFS
+Message-ID: <20200406081007.k6wlaampgbe46yts@gilmour.lan>
+References: <20200405173601.24331-1-peron.clem@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ofqcj6g3ss2qbhgm"
+        protocol="application/pgp-signature"; boundary="6je42lpfvpbcwyuc"
 Content-Disposition: inline
-In-Reply-To: <20200405233935.27599-5-laurent.pinchart+renesas@ideasonboard.com>
+In-Reply-To: <20200405173601.24331-1-peron.clem@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---ofqcj6g3ss2qbhgm
-Content-Type: text/plain; charset=us-ascii
+--6je42lpfvpbcwyuc
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Mon, Apr 06, 2020 at 02:39:33AM +0300, Laurent Pinchart wrote:
-> Convert the Rockchip HDMI TX text binding to YAML.
+On Sun, Apr 05, 2020 at 07:35:54PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> Now that required drivers are merged we can contibute on DVFS
+> support for Allwinner H6.
 >
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> ---
->  .../display/rockchip/dw_hdmi-rockchip.txt     |  74 --------
->  .../display/rockchip/rockchip,dw-hdmi.yaml    | 178 ++++++++++++++++++
->  2 files changed, 178 insertions(+), 74 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
->  create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
+> This serie is based on Yangtao Li serie[0] and Ond=C5=99ej Jirman work[1].
 >
-> diff --git a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
-> deleted file mode 100644
-> index 3d32ce137e7f..000000000000
-> --- a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
-> +++ /dev/null
-> @@ -1,74 +0,0 @@
-> -Rockchip DWC HDMI TX Encoder
-> -============================
-> -
-> -The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
-> -with a companion PHY IP.
-> -
-> -These DT bindings follow the Synopsys DWC HDMI TX bindings defined in
-> -Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt with the
-> -following device-specific properties.
-> -
-> -
-> -Required properties:
-> -
-> -- compatible: should be one of the following:
-> -		"rockchip,rk3228-dw-hdmi"
-> -		"rockchip,rk3288-dw-hdmi"
-> -		"rockchip,rk3328-dw-hdmi"
-> -		"rockchip,rk3399-dw-hdmi"
-> -- reg: See dw_hdmi.txt.
-> -- reg-io-width: See dw_hdmi.txt. Shall be 4.
-> -- interrupts: HDMI interrupt number
-> -- clocks: See dw_hdmi.txt.
-> -- clock-names: Shall contain "iahb" and "isfr" as defined in dw_hdmi.txt.
-> -- ports: See dw_hdmi.txt. The DWC HDMI shall have a single port numbered 0
-> -  corresponding to the video input of the controller. The port shall have two
-> -  endpoints, numbered 0 and 1, connected respectively to the vopb and vopl.
-> -- rockchip,grf: Shall reference the GRF to mux vopl/vopb.
-> -
-> -Optional properties
-> -
-> -- ddc-i2c-bus: The HDMI DDC bus can be connected to either a system I2C master
-> -  or the functionally-reduced I2C master contained in the DWC HDMI. When
-> -  connected to a system I2C master this property contains a phandle to that
-> -  I2C master controller.
-> -- clock-names: See dw_hdmi.txt. The "cec" clock is optional.
-> -- clock-names: May contain "cec" as defined in dw_hdmi.txt.
-> -- clock-names: May contain "grf", power for grf io.
-> -- clock-names: May contain "vpll", external clock for some hdmi phy.
-> -- phys: from general PHY binding: the phandle for the PHY device.
-> -- phy-names: Should be "hdmi" if phys references an external phy.
-> -
-> -Optional pinctrl entry:
-> -- If you have both a "unwedge" and "default" pinctrl entry, dw_hdmi
-> -  will switch to the unwedge pinctrl state for 10ms if it ever gets an
-> -  i2c timeout.  It's intended that this unwedge pinctrl entry will
-> -  cause the SDA line to be driven low to work around a hardware
-> -  errata.
-> -
-> -Example:
-> -
-> -hdmi: hdmi@ff980000 {
-> -	compatible = "rockchip,rk3288-dw-hdmi";
-> -	reg = <0xff980000 0x20000>;
-> -	reg-io-width = <4>;
-> -	ddc-i2c-bus = <&i2c5>;
-> -	rockchip,grf = <&grf>;
-> -	interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-> -	clocks = <&cru  PCLK_HDMI_CTRL>, <&cru SCLK_HDMI_HDCP>;
-> -	clock-names = "iahb", "isfr";
-> -	ports {
-> -		hdmi_in: port {
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -			hdmi_in_vopb: endpoint@0 {
-> -				reg = <0>;
-> -				remote-endpoint = <&vopb_out_hdmi>;
-> -			};
-> -			hdmi_in_vopl: endpoint@1 {
-> -				reg = <1>;
-> -				remote-endpoint = <&vopl_out_hdmi>;
-> -			};
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
-> new file mode 100644
-> index 000000000000..8ff544ae0ac2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
-> @@ -0,0 +1,178 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/rockchip/rockchip,dw-hdmi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Rockchip DWC HDMI TX Encoder
-> +
-> +maintainers:
-> +  - Mark Yao <mark.yao@rock-chips.com>
-> +
-> +description: |
-> +  The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
-> +  with a companion PHY IP.
-> +
-> +allOf:
-> +  - $ref: ../bridge/synopsys,dw-hdmi.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - rockchip,rk3228-dw-hdmi
-> +      - rockchip,rk3288-dw-hdmi
-> +      - rockchip,rk3328-dw-hdmi
-> +      - rockchip,rk3399-dw-hdmi
-> +
-> +  reg: true
-> +
-> +  reg-io-width:
-> +    const: 4
-> +
-> +  clocks:
-> +    minItems: 2
-> +    maxItems: 5
-> +    items:
-> +      - description: The bus clock for either AHB and APB
-> +      - description: The internal register configuration clock
-> +      - description: The HDMI CEC controller main clock
-> +      - description: Power for GRF IO
-> +      - description: External clock for some HDMI PHY
-> +
-> +  clock-names:
-> +    minItems: 2
-> +    maxItems: 5
-> +    items:
-> +      - const: iahb
-> +      - const: isfr
-> +      - enum:
-> +        - cec
-> +        - grf
-> +        - vpll
-> +      - enum:
-> +        - cec
-> +        - grf
-> +        - vpll
-> +      - enum:
-> +        - cec
-> +        - grf
-> +        - vpll
+> Most of the OPP tables are taken from original vendor kernel[2].
+> Plus there is a new CPU frequencies at 1.6GHz, 1.7GHz and 1.8GHz.
+>
+> I wrote a simple script to randomly set a frequency during
+> a random time[3].
 
-IIRC Rob wanted us to standardize the order of the clocks if possible,
-since it's a pain to support properly here, and your description won't
-match what you describe here either (and in general it's just a best
-practice), so if all your DTs have the same order you should just set
-that order in stone.
+If you ever need to do that ever again, cpufreq-ljt-stress-test (found
+here https://github.com/ssvb/cpuburn-arm) has proven to be very
+reliable to detect cpufreq related issues. stress-ng might not be
+enough since the (at least older) Allwinner SoCs tend to create cache
+corruption when undervolted, and that might not be unnoticed by
+stress-ng but will be catched by cpufreq-ljt-stress-test.
 
-> +  ddc-i2c-bus:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      The HDMI DDC bus can be connected to either a system I2C master or the
-> +      functionally-reduced I2C master contained in the DWC HDMI. When connected
-> +      to a system I2C master this property contains a phandle to that I2C
-> +      master controller.
-> +
-> +  interrupts: true
-> +
-> +  phys:
-> +    maxItems: 1
-> +    description: The HDMI PHY
-> +
-> +  phy-names:
-> +    const: hdmi
-> +
-> +  pinctrl-0: true
-> +  pinctrl-1: true
+Also, it will test each frequency, while random frequencies might skip
+a few.
 
-These two are already set by the tools on any schemas (up to
-pinctrl-255 actually).
+> With this script and using stress-ng during several hours, I didn't
+> see any issue. Moreover I have tested specifically the 1.8GHz on my
+> Beelink GS1, max thermal 85=C2=B0C is reached very quickly and then the
+> SoC oscillates quickly between 1.5 and 1.8GHz. So i have added
+> 1.6GHz and 1.7GHz my board now oscillate slower between 1.5GHz and
+> 1.6GHz swapping every second and temperature is also morestable.
+>
+> I also test that that offlining CPU0 and doing DVFS on other CPUs
+> works. As CPU regulator is only set for CPU0.
+>
+> But maybe it doesn't cost much to set the regulator for all the CPUs?
+>
+> Jernej test the GPU devfreq on several H6 board particulary the
+> Tanix TX6 which doesn't have a proper dedicated PMIC and doesn't
+> had any trouble with it.
+>
+> Do you think I can enable GPU OPP for all H6 Boards?
+
+It seems you're doing it?
 
 Maxime
 
---ofqcj6g3ss2qbhgm
+--6je42lpfvpbcwyuc
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXorhoAAKCRDj7w1vZxhR
-xR4bAQCBWDdneD/u9+7PGzCDBNh8sIvQvVJSL+TgtX6FRplLagD/c7pS9CfDHxzG
-vQrFqWGofHKNGJWHWIUjh3BxqsuemQw=
-=wdbW
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXorj3wAKCRDj7w1vZxhR
+xSZxAP9kSMVuxQsQgL0XAk5Y63Yvolay8esXWCTPla+PntPdLgEAufE2bGi74D1N
+8qBXuxrI6Oc3uosdriCBWT1mWHokdAI=
+=RqjV
 -----END PGP SIGNATURE-----
 
---ofqcj6g3ss2qbhgm--
+--6je42lpfvpbcwyuc--
