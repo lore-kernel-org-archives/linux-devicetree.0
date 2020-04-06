@@ -2,201 +2,166 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58483C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 09:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C01C0C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 09:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB36C2051A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 09:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EA08206F5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 09:57:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="OWP8BQri";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="ylfnx7MS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vEZ2wNAR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgDFJmf (ORCPT
+        id S1726784AbgDFJ5I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 05:42:35 -0400
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:38308 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726675AbgDFJmf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 05:42:35 -0400
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0368ko3a003741;
-        Mon, 6 Apr 2020 01:54:40 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=proofpoint;
- bh=WtowDfSd4ZD5Ow+x6zpsGWGIbQ1Ry/7xJkw2mXFUEhE=;
- b=OWP8BQrid3hzQDdlDexolm+xA7fdK6gkWJrrEZSUI97UUIW9k9p2yGrWbk+xK1iv8Sdq
- hjmowuWm4SsCdxxa8A10h/ESmMvLg4p1yWd+74kvk8f8TLkXRIy0FkWWOwwgW7LzNvul
- 1jGyMpCvaUBIi2iOptJII+QBSEc/v3PhZG7E2GC4UocPt2en6PIuH9UM3VIckgjN1wFS
- 8Bgpb57OlDzluS9CB+rakuWPRyXklSiGHXszuvrXGEqE//AW/oPZu13MzMEgDNmJi4ux
- /Kv2vS2W7C6xxnrfQx9p4kzkM9epy6qozOilXQhNLm+IuwRimbURIMsLNB0/y6TWeHxj 8Q== 
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2109.outbound.protection.outlook.com [104.47.70.109])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 306psvwmxy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Apr 2020 01:54:40 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JBv8wVaMpi5oHyfmPCJittsct7yv7xwInhmcc7w14XN9aAKQP8E8M6rPB6nvJfBR4LWaadnU59bHonoQ74sviUI7IR+kVZLZ9vIQxu2golIhcj6YaczAydDkMWLfOnLcTDrTXHqvPqkFbcXYHGX36CW/6VkZl/QBFgPH8briN9N47UnYBouO6bSDUzYoWOWxoW1pbNjOU2GqmijwCA7/FyzcGBwjy1HE6Xz7ShP0RIa2bvF1/GDuG4X8rEHLCifcmJa1xsgoNXAh3PDg+TOv98wHhTSM3ujBdKieuTCB/ACZTgN4ggSYuYsTEl06wrcaS1lErWmORjl3Jkr/RCr3Ng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WtowDfSd4ZD5Ow+x6zpsGWGIbQ1Ry/7xJkw2mXFUEhE=;
- b=mJNW61jIbLdh3t2X0dMomPmWPOghalBiosKCuEku25gBag0IxjOVhof1KTyEh6pSHX4UJLGiTN4SwmxFUeicva/kOgb09zD3FbrM0OoIWwMHe2467zzq/YhrPS8Fs44MpwqNleQySOYcpcXxgCWqvLfwUJ0kge+dl0cKbkTi8pLz/HGok4gph7vi0OnE+dzxBe+DdxOuZp+Pbgqg6+YL0t6So/iuAZ3JEp7uSDpk3Zzru13c/4SCLHr0i6eq4tWnJDk62JAaon6KctnC/XQ/QgOm/UdALdPZgpRC9fOAKr533M+kwvSw6yclwKSRT9RYb30U0S7mWVYi6E6yhpdTYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 64.207.220.244) smtp.rcpttodomain=kernel.org smtp.mailfrom=cadence.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WtowDfSd4ZD5Ow+x6zpsGWGIbQ1Ry/7xJkw2mXFUEhE=;
- b=ylfnx7MS39GCrMDhM9Ub2mEpoAdjiEROGkYlV0ESBZNVy/0RfCvff/E0Bacl2ldrj/C/xlQCPGIMe9jrs5FjKS4g7nC3jF/94kRRze3N+JFTsBLlUdl3ADYnVMJ1z1e8XmfBBQusFTyht1pML2Bov2svjvoEo8KrQBs/4hhJbRk=
-Received: from MWHPR17CA0066.namprd17.prod.outlook.com (2603:10b6:300:93::28)
- by SN6PR07MB4400.namprd07.prod.outlook.com (2603:10b6:805:5c::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16; Mon, 6 Apr
- 2020 08:54:36 +0000
-Received: from MW2NAM12FT059.eop-nam12.prod.protection.outlook.com
- (2603:10b6:300:93:cafe::fe) by MWHPR17CA0066.outlook.office365.com
- (2603:10b6:300:93::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend
- Transport; Mon, 6 Apr 2020 08:54:36 +0000
-Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
- 64.207.220.244 as permitted sender) receiver=protection.outlook.com;
- client-ip=64.207.220.244; helo=wcmailrelayl01.cadence.com;
-Received: from wcmailrelayl01.cadence.com (64.207.220.244) by
- MW2NAM12FT059.mail.protection.outlook.com (10.13.180.165) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2878.9 via Frontend Transport; Mon, 6 Apr 2020 08:54:35 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id 0368sWmq015091
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
-        Mon, 6 Apr 2020 01:54:35 -0700
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Mon, 6 Apr 2020 10:54:32 +0200
-Received: from vleu-orange.cadence.com (10.160.88.83) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Mon, 6 Apr 2020 10:54:32 +0200
-Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
-        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 0368sWW1004294;
-        Mon, 6 Apr 2020 10:54:32 +0200
-Received: (from dkangude@localhost)
-        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 0368sWol004293;
-        Mon, 6 Apr 2020 10:54:32 +0200
-From:   Dhananjay Kangude <dkangude@cadence.com>
-To:     <linux-edac@vger.kernel.org>
-CC:     <bp@alien8.de>, <mchehab@kernel.org>, <tony.luck@intel.com>,
-        <james.morse@arm.com>, <linux-kernel@vger.kernel.org>,
-        <mparab@cadence.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Dhananjay Kangude <dkangude@cadence.com>
-Subject: [PATCH v2 1/2] dt-bindings: edac: Add cadence ddr mc support
-Date:   Mon, 6 Apr 2020 10:54:03 +0200
-Message-ID: <20200406085404.3983-2-dkangude@cadence.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20200406085404.3983-1-dkangude@cadence.com>
-References: <20200406085404.3983-1-dkangude@cadence.com>
+        Mon, 6 Apr 2020 05:57:08 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44232 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbgDFJ5I (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 05:57:08 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c15so741869wro.11;
+        Mon, 06 Apr 2020 02:57:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:references:subject:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FvEi+v8qZ6wRx1mCm/iC1sBfa5p8W6TIxjoeXPWIu2Q=;
+        b=vEZ2wNARNNG/UR7JHYBp4KiNBSoFde3bLdpN9GMUsmvYX57lbUKfJHpc/r2cTubTpP
+         jRBX+4Lre5qkFI2ENdU1t3IgZ1t3rfVgokDYliC7NtymTR/ksf0iwzLnQkbvUH/sw3Om
+         AE3OA0r2/6qWDEAu7YdxTogwiNHyHDfV2Oae8xhs9TVu7u0YmLRhKQuwB21+lCFKJWlq
+         fAdVEVoWJNyPiHivCpbvgL9XXTBOf+MzNyRdLdKRkyCpr6Ee0nbq34I2ltbqhxDC1ZZF
+         A4SXyvv9hpePr1jYYbfc9sDH9iJ8IJcpmbV+ZzE7CgJoRpgrUpDW888LTtk+8AHqLYF5
+         jTrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FvEi+v8qZ6wRx1mCm/iC1sBfa5p8W6TIxjoeXPWIu2Q=;
+        b=lbnh79j1eqMiJ5kw5KJsZOrOX2T3NbDQ5HLVe/1+lbuXFVcLyXyYVszEjc3QLIh+xF
+         W/X0PycGqB5UHshtl25RKodnJz0YdflnwAz3FNK7tBTDpVIvAKmNGnIgZnc+RgtNF/1N
+         sJy8BpRgfprukasVR7Q2w2NJUor57XmKGXyZoVslJ5lhXnN8X+MQlkg7aXHiHPouIMHv
+         S1l5DZ5EHUf3CROMuoPiek0ojAUvpYM30i4knLTYD3U7KiEU+0QQDsHuzpXs5FQfKHLe
+         kIlf3TMib9ud5LRnFXJNRGqIRXcxjkJUtGTqlU4PeD1BdAKLN3yFlt0duqtp7K0YuJfL
+         IYOw==
+X-Gm-Message-State: AGi0PuZzOt6aeyRCoVcguvndVZYhAv3C4g0/ZCaQoneyp2a/MjW8gwIZ
+        UFubiA+vfLtV7Zczpfc/fDU=
+X-Google-Smtp-Source: APiQypKOYgFbX4rIA4V65ymFGi6FWm5SoeTA/SifEwSIIg4ZrWipB3EBywllK0pF5ZWsglTTIlRd2Q==
+X-Received: by 2002:adf:a459:: with SMTP id e25mr15750030wra.402.1586167025240;
+        Mon, 06 Apr 2020 02:57:05 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id f187sm25107141wme.9.2020.04.06.02.57.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Apr 2020 02:57:04 -0700 (PDT)
+To:     justin.swartz@risingedge.co.za
+Cc:     devicetree@vger.kernel.org, heiko@sntech.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        robh+dt@kernel.org
+References: <20200405110022.3849-1-justin.swartz@risingedge.co.za>
+Subject: Re: [PATCH] ARM: dts: enable WLAN for Mecer Xtreme Mini S6
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <e602c1b8-3606-a8d3-c64c-ec9e58315974@gmail.com>
+Date:   Mon, 6 Apr 2020 11:57:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:64.207.220.244;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:wcmailrelayl01.cadence.com;PTR:unused.mynethost.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(346002)(396003)(39860400002)(136003)(36092001)(46966005)(336012)(1076003)(186003)(426003)(107886003)(70206006)(70586007)(26005)(47076004)(478600001)(81156014)(82740400003)(356004)(6666004)(316002)(81166006)(8936002)(6916009)(26826003)(36906005)(2906002)(2616005)(966005)(54906003)(86362001)(36756003)(4326008)(5660300002)(42186006)(8676002);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0cf08fcd-f3a4-49bb-6c7b-08d7da0821da
-X-MS-TrafficTypeDiagnostic: SN6PR07MB4400:
-X-Microsoft-Antispam-PRVS: <SN6PR07MB4400EBFA5874AA7B7F44F017CDC20@SN6PR07MB4400.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
-X-Forefront-PRVS: 0365C0E14B
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dxM1uDlu41w0gTGbHa3TkG9e9sue0+SbpQWQSMXpmv+qHCAezIenJfhc1tv6XfLYvfxhDP7VnMLoKZsIwaEI0xJYPrSL+ADPX9mLB9M/tl2CIahQivRhrvtvc38LKCB0gFSAwtQ6DdVW22YlibWa5tIb19laORVHAMnfIW1xvM8QxIk7ih+6eG1002qN3/Sz9AjX7y2Yp7I3Dzso3Ff1N4ndPK3GePtmjRF4sGMe7H3RcEMeE19Xc1udOvoiqLAibJHt6NiD70GvfdRj/4JdkDLKyk9L8BDrNMy1xlDauBIACwoLXDa3BrpKNQv6HJ4UA1jYpMz3gpcEH4g/huheesdXwrV+YY8N/FPr248mejaJYiA+jrgnYz1Pqc/N6tToytGM/wh5K/9VRAecKrXwkalak2d5iQ9AMSBgzk2WCeXEuEKZHynT/L7098iSMgrJe9Jy4d8tZFa6SGUF/q7uA0nX8rs2WwSg+pmZxxOtas8g4uaklAThyZUUmXZhQ3Uq62Uo8/XF54E/vLlFdWojSEZIy1DwZeDoCoxX25QzhYknQmTpupgmDAIEEnzojQ6a00/EP4KUNQsTX0iAihcyVmlT+4UgWzvo0xlHwf+Zpt6TGfkjiJu4V3DewpuZaZZu
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2020 08:54:35.8131
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0cf08fcd-f3a4-49bb-6c7b-08d7da0821da
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.244];Helo=[wcmailrelayl01.cadence.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR07MB4400
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-06_05:2020-04-03,2020-04-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 bulkscore=0
- spamscore=0 clxscore=1011 adultscore=0 impostorscore=0 malwarescore=0
- lowpriorityscore=0 phishscore=0 mlxlogscore=961 mlxscore=0 suspectscore=1
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004060076
+In-Reply-To: <20200405110022.3849-1-justin.swartz@risingedge.co.za>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add documentation for cadence ddr memory controller EDAC DTS bindings
+Hi Justin,
 
-Signed-off-by: Dhananjay Kangude <dkangude@cadence.com>
----
- .../devicetree/bindings/cdns,ddr-edac.yaml         |   47 ++++++++++++++++++++
- 1 files changed, 47 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/cdns,ddr-edac.yaml
+Have a look at the documents:
 
-diff --git a/Documentation/devicetree/bindings/cdns,ddr-edac.yaml b/Documentation/devicetree/bindings/cdns,ddr-edac.yaml
-new file mode 100644
-index 0000000..30ea757
---- /dev/null
-+++ b/Documentation/devicetree/bindings/cdns,ddr-edac.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/edac/cdns,ddr-edac.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Cadence DDR IP with ECC support (EDAC)
-+
-+description:
-+  This binding describes the Cadence DDR/LPDDR IP with ECC feature enabled
-+  to detect and correct CE/UE errors.
-+
-+maintainers:
-+  - Dhananjay Kangdue <dkangude@cadence.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - cdns,ddr4-mc
-+
-+  reg:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description:
-+          Register block of DDR/LPDDR apb registers up to mapped area.
-+          Mapped area contains the register set for memory controller,
-+          phy and PI module register set doesn't part of this mapping.
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    edac: edac@fd100000 {
-+        compatible = "cdns,ddr4-mc-edac";
-+        reg = <0xfd100000 0x4000>;
-+        interrupts = <0x00 0x01 0x04>;
-+    };
-+...
--- 
-1.7.1
+Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
+Documentation/devicetree/bindings/mmc/synopsys-dw-mshc-common.yaml
+Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+
+Fix &emmc as well.
+
+> From: Justin Swartz <justin.swartz@risingedge.co.za>
+> To: Heiko Stuebner <heiko@sntech.de>,
+> 	Rob Herring <robh+dt@kernel.org>,
+> 	Mark Rutland <mark.rutland@arm.com>
+> Cc: Justin Swartz <justin.swartz@risingedge.co.za>,
+> 	linux-arm-kernel@lists.infradead.org,
+> 	linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+> 	linux-kernel@vger.kernel.org
+> Subject: [PATCH] ARM: dts: enable WLAN for Mecer Xtreme Mini S6
+> Date: Sun,  5 Apr 2020 11:00:21 +0000
+> Message-ID: <20200405110022.3849-1-justin.swartz@risingedge.co.za> (raw)
+> 
+> The Mecer Xtreme Mini S6 features a wireless module, based on a
+> Realtek 8723BS, which provides WLAN and Bluetooth connectivity via
+> SDIO and UART interfaces respectively.
+> 
+> Define a simple MMC power sequence that declares the GPIO pins
+> connected to the module's WLAN Disable and Bluetooth Disable pins
+> as active low reset signals, because both signals must be deasserted
+> for WLAN radio operation.
+> 
+> Configure the host's SDIO interface for High Speed mode with 1.8v
+> I/O signalling and IRQ detection over a 4-bit wide bus.
+> 
+> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+> ---
+>  arch/arm/boot/dts/rk3229-xms6.dts | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3229-xms6.dts b/arch/arm/boot/dts/rk3229-xms6.dts
+> index 679fc2b00..cdfcef41b 100644
+> --- a/arch/arm/boot/dts/rk3229-xms6.dts
+> +++ b/arch/arm/boot/dts/rk3229-xms6.dts
+> @@ -39,6 +39,12 @@
+>  		};
+>  	};
+>  
+> +	sdio_pwrseq: sdio-pwrseq {
+> +		compatible = "mmc-pwrseq-simple";
+> +		reset-gpios = <&gpio2 26 GPIO_ACTIVE_LOW>,
+> +		              <&gpio2 29 GPIO_ACTIVE_LOW>;
+> +	};
+> +
+>  	vcc_host: vcc-host-regulator {
+>  		compatible = "regulator-fixed";
+>  		enable-active-high;
+> @@ -202,6 +208,18 @@
+>  	status = "okay";
+>  };
+>  
+> +&sdio {
+> +	bus-width = <4>;
+> +	cap-sd-highspeed;
+> +	cap-sdio-irq;
+
+> +	disable-wp;
+
+Not used in combination with sdio and emmc.
+
+> +	mmc-pwrseq = <&sdio_pwrseq>;
+> +	non-removable;
+
+> +	num-slots = <1>;
+
+Deprecated.
+
+> +	vqmmc-supply = <&vccio_1v8>;
+> +	status = "okay";
+> +};
+> +
+>  &sdmmc {
+>  	cap-mmc-highspeed;
+>  	disable-wp;
+> -- 
+> 2.11.0
 
