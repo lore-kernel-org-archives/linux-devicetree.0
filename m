@@ -2,170 +2,106 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9911AC2BA18
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 05:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9370C2BA1E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 05:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 636892074F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 05:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DF7C2075E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 05:24:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LsqPTCDd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725884AbgDFFKk (ORCPT
+        id S1726474AbgDFFYo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 01:10:40 -0400
-Received: from mailgate1.rohmeurope.com ([87.129.152.131]:45428 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgDFFKk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 01:10:40 -0400
-X-AuditID: c0a8fbf4-489ff70000004419-ec-5e8ab9ce1081
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id D2.0C.17433.EC9BA8E5; Mon,  6 Apr 2020 07:10:38 +0200 (CEST)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0487.000; Mon, 6 Apr 2020 07:10:27 +0200
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>
-Subject: Re: [RESEND PATCH v2] dt-bindings: bd718x7: Yamlify and add BD71850
-Thread-Topic: [RESEND PATCH v2] dt-bindings: bd718x7: Yamlify and add BD71850
-Thread-Index: AQHV/pvo719qMCop60OzVH3qQk0yrqhpLk2AgAAAc4CAAlXrgA==
-Date:   Mon, 6 Apr 2020 05:10:27 +0000
-Message-ID: <5963a34e3ebaada7cc6ec786f6f2342a7cc2a15c.camel@fi.rohmeurope.com>
-References: <20200320094233.GA30959@localhost.localdomain>
-         <CAL_JsqJjLGz6LPQmTP5eJTdti38yQa86UWiwCTae81Fr7eMHtA@mail.gmail.com>
-         <CAL_JsqJ2VBDHSWViyvjEBckOqsMQVUdOGjABH0AT6LiaMnJx1Q@mail.gmail.com>
-In-Reply-To: <CAL_JsqJ2VBDHSWViyvjEBckOqsMQVUdOGjABH0AT6LiaMnJx1Q@mail.gmail.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [62.78.225.252]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0467FE60C05919409064C16A5803CD2B@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Mon, 6 Apr 2020 01:24:44 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43684 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgDFFYo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 01:24:44 -0400
+Received: by mail-pf1-f194.google.com with SMTP id f206so6982998pfa.10
+        for <devicetree@vger.kernel.org>; Sun, 05 Apr 2020 22:24:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uB1Mykzge5iooYd/JncH7b56DuZzhg2jK+iY0sqpSeU=;
+        b=LsqPTCDd1KuzJS24biQIDNPlFWGBigllx8luKamoHlfmYS1fQtW7Vw6aWGFcLRybon
+         8QxPe++BC+MM//RVKtjQoesT3VL6DmfO44/VNilFG8UmdZrHUNKpLtjIJi46mpU4+2sQ
+         YSlbLApS0r//HndZUUKz6sb4NuxoHSxeUU9Z60YRFAvZxgDv6Cgb6wqw3sIUmcsgDKoJ
+         dzzCltyX5uJzRScQ7o0ZR0DfGJJR4gWejhb6p8NdxiFeeVEqJsp4/SyuXmidQHd6WQOG
+         xSzg0h36JXNh48Mm9EbAO8oTLCTdllfIUt5f37xrj6HeBxbqxAU6d5BJHbIlNC1gaROK
+         0nUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uB1Mykzge5iooYd/JncH7b56DuZzhg2jK+iY0sqpSeU=;
+        b=tAz7bIEW5/iuidL9cZ7ym52pSSnukcGmsrr6Biyo4t3QyHjNf6j7XpAG8kHaM08hkY
+         f1Dkdp7QOY1+3ZnHm7buppgEa8ymHYmK3wJHdGzXWSdudZPpXc7FPEoUwChg/Sp0c/ld
+         iDUZtiWKugq3yDglcPCk/d9x4xDbo5UR0HTGGGHkejpu8iPl5rcVKPUrtjMRJ2EuJjYv
+         gyH6GXuMUxb1d26L3q1xzGxeGjUFuiKtptHyUd2s2oB/6UG7ILPuWbiyuGG84BJLx5LR
+         5iYBOquYerwOvcevxcaU9zMCH9d085gOZLXFadvYSECdQL2J1Qej+sehTRSkSrkZJ0H7
+         /wWQ==
+X-Gm-Message-State: AGi0PuaA1JZqDVmvXaWA/QQIX565cI/RXmsuaANwvYwqjFf8Ql8FW8k+
+        WbxCxy81V2yv4bxGFyWrTU9ivQ==
+X-Google-Smtp-Source: APiQypKOpD/l7tmSe6qbam/589Kl+uaKxJ+b3dV6SV9SQi3SsC7JgYjYOtViUynK4ppquqOIumkemA==
+X-Received: by 2002:a62:27c2:: with SMTP id n185mr19407711pfn.203.1586150683293;
+        Sun, 05 Apr 2020 22:24:43 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id d21sm10636360pfo.49.2020.04.05.22.24.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Apr 2020 22:24:42 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: c630: Make i2c devices active high
+Date:   Sun,  5 Apr 2020 22:24:47 -0700
+Message-Id: <20200406052447.105513-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgk+LIzCtJLcpLzFFi42I5sOL3Rt1zO7viDF78V7KY+vAJm8X8I+dY
-        Le5/Pcpo8e1KB5PF5V1z2CyWXr/IZDFn6QkWi9a9R9gdODzWzFvD6LFz1l12j02rOtk87lzb
-        w+bxeZNcAGsUt01SYklZcGZ6nr5dAndGz8e/7AVd1hVHj95lb2A8YdnFyMkhIWAi8aZzLlsX
-        IxeHkMA1Rom/jw+zQDjHGSVW7LrG3sXIwcEmYCPRdZMdpEFEQFdi/+EnTCA1zAKfmSROLtjG
-        ClIjLOAj0fk2HqLGV+Lbj4dMELaTxLkFd8BsFgEViU/tf9hAynkF/CT6nvpArDrFKLH102VG
-        kBpOgUCJ2wdADuLkYBSQlehseAfWyywgLrHp2XdWiKMFJJbsOc8MYYtKvHz8DyquKLH9+zoW
-        kPnMApoS63fpQ7Q6SExd+ZMNwlaUmNL9EOwVXgFBiZMzn7BMYBSbhWTDLITuWUi6ZyHpnoWk
-        ewEj6ypGidzEzJz0xJJUQ72i1FK9ovyMXCCVnJ+7iRESs192MP4/5HmIkYmD8RCjJAeTkiiv
-        zY6uOCG+pPyUyozE4oz4otKc1OJDjBIczEoivFK9nXFCvCmJlVWpRfkwKWkOFiVxXvWHE2OF
-        BEB2ZaemFqQWwWRlODiUJHjrgOlHSLAoNT21Ii0zpwQhzcTBCTKcS0qkODUvJbUosbQkIx6U
-        POKLgekDJMUDtPf1dqB23uKCxFygKETrKUZtjgkv5y5i5jgyd+kiZiGWvPy8VClxXn6QTQIg
-        pRmleXCLXjGKczAqCfNmggziASZvuDmvgFYwAa1gy2sHWVGSiJCSamBsveFloplx3WfH56p0
-        tpjf/ybu7WRY4VRx+5xyA/uv2PaNndbbpK4dYLj47H7P4oSzgnYsSjPtnXYZHrx1q8z0lHbO
-        DLGM9IK9nfbKkte4Hjn8WbT1p21o/73ArL/BNscZ+J7eDMiQ9neIUXBlexkhuHLF5EnlLnOE
-        90zYPeGJWsF0q5ULXsxTYinOSDTUYi4qTgQA8IPTkZsDAAA=
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-TW9ybmluZyBSb2IgJiBMZWUsDQoNCkxlZSBhbHJlYWR5IGFwcGxpZWQgdGhpcyB0byBmb3ItbWZk
-LW5leHQuIChUaGUgZHJpdmVyIGNoYW5nZXMgd2l0aA0KQkQ3MTg1MCBjb21wYXRpYmxlIGFkZGl0
-aW9uIHdlbnQgaW4gaGlzIHRyZWUgdG9vKS4gSSBndWVzcyB0aGUgcmlnaHQNCnRoaW5nIHRvIGRv
-IGlzIHRvIHNlbmQgaGltIGFuIGluY3JlbWVudGFsIHBhdGNoIGZvciBoaXMgZm9yLW1mZC1uZXh0
-DQpicmFuY2g/IEknbGwgZG8gdGhhdCAtIHNvcnJ5IGZvciB0aGUgdHJvdWJsZS4NCg0KQmVzdCBS
-ZWdhcmRzLA0KCU1hdHRpDQoNCk9uIFNhdCwgMjAyMC0wNC0wNCBhdCAxMTozMCAtMDYwMCwgUm9i
-IEhlcnJpbmcgd3JvdGU6DQo+IE9uIFNhdCwgQXByIDQsIDIwMjAgYXQgMTE6MjggQU0gUm9iIEhl
-cnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4NCj4gd3JvdGU6DQo+ID4gT24gRnJpLCBNYXIgMjAs
-IDIwMjAgYXQgMzo0MiBBTSBNYXR0aSBWYWl0dGluZW4NCj4gPiA8bWF0dGkudmFpdHRpbmVuQGZp
-LnJvaG1ldXJvcGUuY29tPiB3cm90ZToNCj4gPiA+IENvbnZlcnQgUk9ITSBiZDcxODM3IGFuZCBi
-ZDcxODQ3IFBNSUMgYmluZGluZyB0ZXh0IGRvY3MgdG8geWFtbC4NCj4gPiA+IFNwbGl0DQo+ID4g
-PiB0aGUgYmluZGluZyBkb2N1bWVudCB0byB0d28gc2VwYXJhdGUgZG9jdW1lbnRzIChvd24gZG9j
-dW1lbnRzIGZvcg0KPiA+ID4gQkQ3MTgzNw0KPiA+ID4gYW5kIEJENzE4NDcpIGFzIHRoZXkgaGF2
-ZSBkaWZmZXJlbnQgYW1vdW50IG9mIHJlZ3VsYXRvcnMuIFRoaXMNCj4gPiA+IHdheSB3ZSBjYW4N
-Cj4gPiA+IGJldHRlciBlbmZvcmNlIHRoZSBub2RlIG5hbWUgY2hlY2sgZm9yIHJlZ3VsYXRvcnMu
-IFJPSE0gaXMgYWxzbw0KPiA+ID4gcHJvdmlkaW5nDQo+ID4gPiBCRDcxODUwIC0gd2hpY2ggaXMg
-YWxtb3N0IGlkZW50aWNhbCB0byBCRDcxODQ3IC0gbWFpbiBkaWZmZXJlbmNlDQo+ID4gPiBpcyBz
-b21lDQo+ID4gPiBpbml0aWFsIHJlZ3VsYXRvciBzdGF0ZXMuIFRoZSBCRDcxODUwIGNhbiBiZSBk
-cml2ZW4gYnkgc2FtZQ0KPiA+ID4gZHJpdmVyIGFuZCBpdA0KPiA+ID4gaGFzIHNhbWUgYnVjay9M
-RE8gc2V0dXAgYXMgQkQ3MTg0NyAtIGFkZCBpdCB0byBCRDcxODQ3IGJpbmRpbmcNCj4gPiA+IGRv
-Y3VtZW50IGFuZA0KPiA+ID4gaW50cm9kdWNlIGNvbXBhdGlibGUgZm9yIGl0Lg0KPiA+ID4gDQo+
-ID4gPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4gPG1hdHRpLnZhaXR0aW5lbkBmaS5y
-b2htZXVyb3BlLmNvbQ0KPiA+ID4gPg0KPiA+ID4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxy
-b2JoQGtlcm5lbC5vcmc+DQo+ID4gDQo+ID4gSSBkaWQsIGJ1dCB0aGVyZSdzIHNvbWUgZHRjIHdh
-cm5pbmdzIHRoYXQgbmVlZCB0byBiZSBmaXhlZDoNCj4gPiANCj4gPiBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvbWZkL3JvaG0sYmQ3MTgzNy0NCj4gPiBwbWljLmV4YW1wbGUuZHRz
-OjIzLjE3LTMwOg0KPiA+IFdhcm5pbmcgKHJlZ19mb3JtYXQpOiAvZXhhbXBsZS0wL2kyYy9wbWlj
-QDRiOnJlZzogcHJvcGVydHkgaGFzDQo+ID4gaW52YWxpZA0KPiA+IGxlbmd0aCAoNCBieXRlcykg
-KCNhZGRyZXNzLWNlbGxzID09IDIsICNzaXplLWNlbGxzID09IDEpDQo+ID4gIERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvcm9obSxiZDcxODM3LQ0KPiA+IHBtaWMuZXhhbXBs
-ZS5kdC55YW1sOg0KPiA+IFdhcm5pbmcgKHBjaV9kZXZpY2VfcmVnKTogRmFpbGVkIHByZXJlcXVp
-c2l0ZSAncmVnX2Zvcm1hdCcNCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L21mZC9yb2htLGJkNzE4MzctDQo+ID4gcG1pYy5leGFtcGxlLmR0LnlhbWw6DQo+ID4gV2Fybmlu
-ZyAocGNpX2RldmljZV9idXNfbnVtKTogRmFpbGVkIHByZXJlcXVpc2l0ZSAncmVnX2Zvcm1hdCcN
-Cj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4Mzct
-DQo+ID4gcG1pYy5leGFtcGxlLmR0LnlhbWw6DQo+ID4gV2FybmluZyAoc2ltcGxlX2J1c19yZWcp
-OiBGYWlsZWQgcHJlcmVxdWlzaXRlICdyZWdfZm9ybWF0Jw0KPiA+ICBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvbWZkL3JvaG0sYmQ3MTgzNy0NCj4gPiBwbWljLmV4YW1wbGUuZHRz
-OjIwLjEzLTEzMS4xMToNCj4gPiBXYXJuaW5nIChpMmNfYnVzX2JyaWRnZSk6IC9leGFtcGxlLTAv
-aTJjOiBpbmNvcnJlY3QgI2FkZHJlc3MtY2VsbHMNCj4gPiBmb3INCj4gPiBJMkMgYnVzDQo+ID4g
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvcm9obSxiZDcxODM3LQ0KPiA+
-IHBtaWMuZXhhbXBsZS5kdHM6MjAuMTMtMTMxLjExOg0KPiA+IFdhcm5pbmcgKGkyY19idXNfYnJp
-ZGdlKTogL2V4YW1wbGUtMC9pMmM6IGluY29ycmVjdCAjc2l6ZS1jZWxscyBmb3INCj4gPiBJMkMg
-YnVzDQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvcm9obSxiZDcx
-ODM3LQ0KPiA+IHBtaWMuZXhhbXBsZS5kdC55YW1sOg0KPiA+IFdhcm5pbmcgKGkyY19idXNfcmVn
-KTogRmFpbGVkIHByZXJlcXVpc2l0ZSAncmVnX2Zvcm1hdCcNCj4gPiAgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4MzctDQo+ID4gcG1pYy5leGFtcGxlLmR0
-LnlhbWw6DQo+ID4gV2FybmluZyAoaTJjX2J1c19yZWcpOiBGYWlsZWQgcHJlcmVxdWlzaXRlICdp
-MmNfYnVzX2JyaWRnZScNCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21m
-ZC9yb2htLGJkNzE4MzctDQo+ID4gcG1pYy5leGFtcGxlLmR0LnlhbWw6DQo+ID4gV2FybmluZyAo
-c3BpX2J1c19yZWcpOiBGYWlsZWQgcHJlcmVxdWlzaXRlICdyZWdfZm9ybWF0Jw0KPiA+ICBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3JvaG0sYmQ3MTgzNy0NCj4gPiBwbWlj
-LmV4YW1wbGUuZHRzOjIxLjI1LTEzMC4xNToNCj4gPiBXYXJuaW5nIChhdm9pZF9kZWZhdWx0X2Fk
-ZHJfc2l6ZSk6IC9leGFtcGxlLTAvaTJjL3BtaWNANGI6IFJlbHlpbmcNCj4gPiBvbg0KPiA+IGRl
-ZmF1bHQgI2FkZHJlc3MtY2VsbHMgdmFsdWUNCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL21mZC9yb2htLGJkNzE4MzctDQo+ID4gcG1pYy5leGFtcGxlLmR0czoyMS4yNS0x
-MzAuMTU6DQo+ID4gV2FybmluZyAoYXZvaWRfZGVmYXVsdF9hZGRyX3NpemUpOiAvZXhhbXBsZS0w
-L2kyYy9wbWljQDRiOiBSZWx5aW5nDQo+ID4gb24NCj4gPiBkZWZhdWx0ICNzaXplLWNlbGxzIHZh
-bHVlDQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvcm9obSxiZDcx
-ODM3LQ0KPiA+IHBtaWMuZXhhbXBsZS5kdC55YW1sOg0KPiA+IFdhcm5pbmcgKHVuaXF1ZV91bml0
-X2FkZHJlc3MpOiBGYWlsZWQgcHJlcmVxdWlzaXRlDQo+ID4gJ2F2b2lkX2RlZmF1bHRfYWRkcl9z
-aXplJw0KPiANCj4gQW5kIGFsc286DQo+IA0KPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvbWZkL3JvaG0sYmQ3MTg0Ny0NCj4gcG1pYy5leGFtcGxlLmR0czoyMy4xNy0zMDoNCj4g
-V2FybmluZyAocmVnX2Zvcm1hdCk6IC9leGFtcGxlLTAvaTJjL3BtaWNANGI6cmVnOiBwcm9wZXJ0
-eSBoYXMNCj4gaW52YWxpZA0KPiBsZW5ndGggKDQgYnl0ZXMpICgjYWRkcmVzcy1jZWxscyA9PSAy
-LCAjc2l6ZS1jZWxscyA9PSAxKQ0KPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-bWZkL3JvaG0sYmQ3MTg0Ny0NCj4gcG1pYy5leGFtcGxlLmR0LnlhbWw6DQo+IFdhcm5pbmcgKHBj
-aV9kZXZpY2VfcmVnKTogRmFpbGVkIHByZXJlcXVpc2l0ZSAncmVnX2Zvcm1hdCcNCj4gRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4NDctDQo+IHBtaWMuZXhh
-bXBsZS5kdC55YW1sOg0KPiBXYXJuaW5nIChwY2lfZGV2aWNlX2J1c19udW0pOiBGYWlsZWQgcHJl
-cmVxdWlzaXRlICdyZWdfZm9ybWF0Jw0KPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbWZkL3JvaG0sYmQ3MTg0Ny0NCj4gcG1pYy5leGFtcGxlLmR0LnlhbWw6DQo+IFdhcm5pbmcg
-KHNpbXBsZV9idXNfcmVnKTogRmFpbGVkIHByZXJlcXVpc2l0ZSAncmVnX2Zvcm1hdCcNCj4gRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4NDctDQo+IHBtaWMu
-ZXhhbXBsZS5kdHM6MjAuMTMtMTEyLjExOg0KPiBXYXJuaW5nIChpMmNfYnVzX2JyaWRnZSk6IC9l
-eGFtcGxlLTAvaTJjOiBpbmNvcnJlY3QgI2FkZHJlc3MtY2VsbHMNCj4gZm9yDQo+IEkyQyBidXMN
-Cj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4NDctDQo+
-IHBtaWMuZXhhbXBsZS5kdHM6MjAuMTMtMTEyLjExOg0KPiBXYXJuaW5nIChpMmNfYnVzX2JyaWRn
-ZSk6IC9leGFtcGxlLTAvaTJjOiBpbmNvcnJlY3QgI3NpemUtY2VsbHMgZm9yDQo+IEkyQyBidXMN
-Cj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4NDctDQo+
-IHBtaWMuZXhhbXBsZS5kdC55YW1sOg0KPiBXYXJuaW5nIChpMmNfYnVzX3JlZyk6IEZhaWxlZCBw
-cmVyZXF1aXNpdGUgJ3JlZ19mb3JtYXQnDQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9tZmQvcm9obSxiZDcxODQ3LQ0KPiBwbWljLmV4YW1wbGUuZHQueWFtbDoNCj4gV2Fybmlu
-ZyAoaTJjX2J1c19yZWcpOiBGYWlsZWQgcHJlcmVxdWlzaXRlICdpMmNfYnVzX2JyaWRnZScNCj4g
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4NDctDQo+IHBt
-aWMuZXhhbXBsZS5kdC55YW1sOg0KPiBXYXJuaW5nIChzcGlfYnVzX3JlZyk6IEZhaWxlZCBwcmVy
-ZXF1aXNpdGUgJ3JlZ19mb3JtYXQnDQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9tZmQvcm9obSxiZDcxODQ3LQ0KPiBwbWljLmV4YW1wbGUuZHRzOjIxLjI1LTExMS4xNToNCj4g
-V2FybmluZyAoYXZvaWRfZGVmYXVsdF9hZGRyX3NpemUpOiAvZXhhbXBsZS0wL2kyYy9wbWljQDRi
-OiBSZWx5aW5nIG9uDQo+IGRlZmF1bHQgI2FkZHJlc3MtY2VsbHMgdmFsdWUNCj4gRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4NDctDQo+IHBtaWMuZXhhbXBs
-ZS5kdHM6MjEuMjUtMTExLjE1Og0KPiBXYXJuaW5nIChhdm9pZF9kZWZhdWx0X2FkZHJfc2l6ZSk6
-IC9leGFtcGxlLTAvaTJjL3BtaWNANGI6IFJlbHlpbmcgb24NCj4gZGVmYXVsdCAjc2l6ZS1jZWxs
-cyB2YWx1ZQ0KPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3JvaG0sYmQ3
-MTg0Ny0NCj4gcG1pYy5leGFtcGxlLmR0LnlhbWw6DQo+IFdhcm5pbmcgKHVuaXF1ZV91bml0X2Fk
-ZHJlc3MpOiBGYWlsZWQgcHJlcmVxdWlzaXRlDQo+ICdhdm9pZF9kZWZhdWx0X2FkZHJfc2l6ZScN
-Cg0KSSBiZWxpZXZlIHRoZXNlIHdlcmUgYWxyZWFkeSBhcHBsaWVkIGJ5IExlZS4NCg0KDQo=
+The two i2c hid devices on i2c3 are supposed to have interrupts
+triggered active high, update this.
+
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+index be6635068dc3..d4cdde496b74 100644
+--- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
++++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+@@ -338,7 +338,7 @@ hid@15 {
+ 		reg = <0x15>;
+ 		hid-descr-addr = <0x1>;
+ 
+-		interrupts-extended = <&tlmm 37 IRQ_TYPE_EDGE_RISING>;
++		interrupts-extended = <&tlmm 37 IRQ_TYPE_LEVEL_HIGH>;
+ 	};
+ 
+ 	hid@2c {
+@@ -346,7 +346,7 @@ hid@2c {
+ 		reg = <0x2c>;
+ 		hid-descr-addr = <0x20>;
+ 
+-		interrupts-extended = <&tlmm 37 IRQ_TYPE_EDGE_RISING>;
++		interrupts-extended = <&tlmm 37 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c2_hid_active>;
+-- 
+2.26.0
+
