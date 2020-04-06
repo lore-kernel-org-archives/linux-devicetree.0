@@ -2,297 +2,120 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FC6C2BA1E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 06:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E87C2BA18
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 07:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC4920719
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 06:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A7BA20672
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 07:30:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbgDFGhh (ORCPT
+        id S1726571AbgDFHaS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 02:37:37 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:60595 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbgDFGhg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 02:37:36 -0400
-X-Originating-IP: 2.224.242.101
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 9628B60005;
-        Mon,  6 Apr 2020 06:37:28 +0000 (UTC)
-Date:   Mon, 6 Apr 2020 08:40:31 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 3/4] dt-bindings: display: bridge: thc63lvd1024: Convert
- binding to YAML
-Message-ID: <20200406064031.huwbq3wqd6t46idq@uno.localdomain>
-References: <20200405232318.26833-1-laurent.pinchart+renesas@ideasonboard.com>
- <20200405232318.26833-4-laurent.pinchart+renesas@ideasonboard.com>
+        Mon, 6 Apr 2020 03:30:18 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44353 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgDFHaS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 03:30:18 -0400
+Received: by mail-lj1-f196.google.com with SMTP id p14so13490937lji.11;
+        Mon, 06 Apr 2020 00:30:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=dgmZ0bjqyUvm/qPZv62N1I4mJZ+HWVLMJ51Jy00jq/g=;
+        b=i6kBbKWfw/uGkbJj9F4mVkzO8TB+e0MjgrXI6OGbGagrncVEzQW6HjvyTBcf4fIFT+
+         kqKn4uJNmn6f0ol0aeQGmDXYYbDgjVnbnnXhvJ7TZglCOd3doNXeU9xDKYaQ73S4pNTa
+         dmqMQDFXBOuMvfqMM3LJBsj0IrP3SeseXVRZRwkzm6wnhddUXosEiIVvMjxmWon+dkA+
+         o0paejTCPQrCLvt4EKTjCQZPCVfp4gO4c3NJMY0waZp4M4myQLKZPSxx2X8CgYFDYL3Q
+         3EswPeHpaOo+4F2nCRkP/4QXwKYF2epe4QaAERNNXS6GEDpsCUR0Do1/npStP5y4U973
+         4jgw==
+X-Gm-Message-State: AGi0PuZGYQ/GJywMJSo57mvlGTwGFTc3o+Z8rqGl+xnr8LFWIraNxbNm
+        2X/m79csM4my24T5Bk/7hAo1bUk0
+X-Google-Smtp-Source: APiQypIDh8ERPkAwJp6PTql+5aLtPMaYL8QLB0SEl5+4n2GutnKQ4T6lJD9sCsX9xn2EsCOl8GqwRw==
+X-Received: by 2002:a2e:5450:: with SMTP id y16mr11870330ljd.121.1586158215774;
+        Mon, 06 Apr 2020 00:30:15 -0700 (PDT)
+Received: from localhost.localdomain (dc7t7ryyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e1:b700::3])
+        by smtp.gmail.com with ESMTPSA id m7sm12956837lfh.54.2020.04.06.00.30.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 00:30:15 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 10:30:08 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: BD718x7 - add missing I2C bus properties
+Message-ID: <20200406073008.GA13084@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200405232318.26833-4-laurent.pinchart+renesas@ideasonboard.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent,
+The DT example needs #address-cells and #size-cells for I2C bus or
+validity checker will generate warnings. Add these properties in
+BD71837 and BD71847 binding examples.
 
-On Mon, Apr 06, 2020 at 02:23:17AM +0300, Laurent Pinchart wrote:
-> Convert the Thine THC63LVD1024 text binding to YAML.
->
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> ---
->  .../display/bridge/thine,thc63lvd1024.txt     |  66 ----------
->  .../display/bridge/thine,thc63lvd1024.yaml    | 121 ++++++++++++++++++
->  2 files changed, 121 insertions(+), 66 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.yaml
->
-> diff --git a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
-> deleted file mode 100644
-> index d17d1e5820d7..000000000000
-> --- a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
-> +++ /dev/null
-> @@ -1,66 +0,0 @@
-> -Thine Electronics THC63LVD1024 LVDS decoder
-> --------------------------------------------
-> -
-> -The THC63LVD1024 is a dual link LVDS receiver designed to convert LVDS streams
-> -to parallel data outputs. The chip supports single/dual input/output modes,
-> -handling up to two LVDS input streams and up to two digital CMOS/TTL outputs.
-> -
-> -Single or dual operation mode, output data mapping and DDR output modes are
-> -configured through input signals and the chip does not expose any control bus.
-> -
-> -Required properties:
-> -- compatible: Shall be "thine,thc63lvd1024"
-> -- vcc-supply: Power supply for TTL output, TTL CLOCKOUT signal, LVDS input,
-> -  PPL and digital circuitry
-> -
-> -Optional properties:
-> -- powerdown-gpios: Power down GPIO signal, pin name "/PDWN". Active low
-> -- oe-gpios: Output enable GPIO signal, pin name "OE". Active high
-> -
-> -The THC63LVD1024 video port connections are modeled according
-> -to OF graph bindings specified by Documentation/devicetree/bindings/graph.txt
-> -
-> -Required video port nodes:
-> -- port@0: First LVDS input port
-> -- port@2: First digital CMOS/TTL parallel output
-> -
-> -Optional video port nodes:
-> -- port@1: Second LVDS input port
-> -- port@3: Second digital CMOS/TTL parallel output
-> -
-> -The device can operate in single-link mode or dual-link mode. In single-link
-> -mode, all pixels are received on port@0, and port@1 shall not contain any
-> -endpoint. In dual-link mode, even-numbered pixels are received on port@0 and
-> -odd-numbered pixels on port@1, and both port@0 and port@1 shall contain
-> -endpoints.
-> -
-> -Example:
-> ---------
-> -
-> -	thc63lvd1024: lvds-decoder {
-> -		compatible = "thine,thc63lvd1024";
-> -
-> -		vcc-supply = <&reg_lvds_vcc>;
-> -		powerdown-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
-> -
-> -		ports {
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -
-> -			port@0 {
-> -				reg = <0>;
-> -
-> -				lvds_dec_in_0: endpoint {
-> -					remote-endpoint = <&lvds_out>;
-> -				};
-> -			};
-> -
-> -			port@2{
-> -				reg = <2>;
-> -
-> -				lvds_dec_out_2: endpoint {
-> -					remote-endpoint = <&adv7511_in>;
-> -				};
-> -			};
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.yaml b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.yaml
-> new file mode 100644
-> index 000000000000..469ac4a34273
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.yaml
-> @@ -0,0 +1,121 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/thine,thc63lvd1024.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Thine Electronics THC63LVD1024 LVDS Decoder
-> +
-> +maintainers:
-> +  - Jacopo Mondi <jacopo+renesas@jmondi.org>
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
 
-Ack
+This patch was created against Lee's for-mfd-next branch. Please let
+me know if this was not feasible.
 
-> +  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> +
-> +description: |
-> +  The THC63LVD1024 is a dual link LVDS receiver designed to convert LVDS
-> +  streams to parallel data outputs. The chip supports single/dual input/output
-> +  modes, handling up to two LVDS input streams and up to two digital CMOS/TTL
-> +  outputs.
-> +
-> +  Single or dual operation mode, output data mapping and DDR output modes are
-> +  configured through input signals and the chip does not expose any control
-> +  bus.
-> +
-> +properties:
-> +  compatible:
-> +    const: thine,thc63lvd1024
-> +
-> +  ports:
-> +    type: object
-> +    description: |
-> +      This device has four video ports. Their connections are modeled using the
-> +      OF graph bindings specified in Documentation/devicetree/bindings/graph.txt.
-> +
-> +      The device can operate in single-link mode or dual-link mode. In
-> +      single-link mode, all pixels are received on port@0, and port@1 shall not
-> +      contain any endpoint. In dual-link mode, even-numbered pixels are
-> +      received on port@0 and odd-numbered pixels on port@1, and both port@0 and
-> +      port@1 shall contain endpoints.
+ Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml | 4 +++-
+ Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml | 4 +++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-I wonder why we have documented only single/dual input mode and not
-single/dual output mode too. The driver only supports single input and
-single output, but this might be a good occasion to document the
-output port mapping as well.
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
+index aa922c560fcc..65018a019e1d 100644
+--- a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
++++ b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
+@@ -123,7 +123,9 @@ examples:
+     #include <dt-bindings/leds/common.h>
+ 
+     i2c {
+-      pmic: pmic@4b {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        pmic: pmic@4b {
+             compatible = "rohm,bd71837";
+             reg = <0x4b>;
+             interrupt-parent = <&gpio1>;
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
+index 402e40dfe0b8..77bcca2d414f 100644
+--- a/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
++++ b/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
+@@ -128,7 +128,9 @@ examples:
+     #include <dt-bindings/leds/common.h>
+ 
+     i2c {
+-      pmic: pmic@4b {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        pmic: pmic@4b {
+             compatible = "rohm,bd71847";
+             reg = <0x4b>;
+             interrupt-parent = <&gpio1>;
 
-How about
+base-commit: d2923aa4535664ae5c46c3a093985afd18fec118
+-- 
+2.21.0
 
-      The device can operate in single or dual input and output modes.
 
-      When operating in single input mode, all pixels are received on
-      port@0, and port@1 shall not contain any endpoint. In dual input
-      mode, even-numbered pixels are received on port@0 and
-      odd-numbered pixels on port@1, and both port@0 and port@1 shall
-      contain endpoints.
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-      When operating in single output mode all pixels are output from
-      the first CMOS/TTL port and port@3 shall not contain any
-      endpoint. In dual output mode pixels are output from both
-      CMOS/TTL ports and both port@2 and port@3 shall contain
-      endpoints.
-
-With or without this, as the new bindings are not worse than what they
-where already:
-
-Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-
-Thanks
-   j
-
-> +
-> +    properties:
-> +      '#address-cells':
-> +        const: 1
-> +
-> +      '#size-cells':
-> +        const: 0
-> +
-> +      port@0:
-> +        type: object
-> +        description: First LVDS input port
-> +
-> +      port@1:
-> +        type: object
-> +        description: Second LVDS input port
-> +
-> +      port@2:
-> +        type: object
-> +        description: First digital CMOS/TTL parallel output
-> +
-> +      port@3:
-> +        type: object
-> +        description: Second digital CMOS/TTL parallel output
-> +
-> +    required:
-> +      - port@0
-> +      - port@2
-> +
-> +    additionalProperties: false
-> +
-> +  oe-gpios:
-> +    maxItems: 1
-> +    description: Output enable GPIO signal, pin name "OE", active high.
-> +
-> +  powerdown-gpios:
-> +    maxItems: 1
-> +    description: Power down GPIO signal, pin name "/PDWN", active low.
-> +
-> +  vcc-supply:
-> +    maxItems: 1
-> +    description:
-> +      Power supply for the TTL output, TTL CLOCKOUT signal, LVDS input, PLL and
-> +      digital circuitry.
-> +
-> +required:
-> +  - compatible
-> +  - ports
-> +  - vcc-supply
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    lvds-decoder {
-> +        compatible = "thine,thc63lvd1024";
-> +
-> +        vcc-supply = <&reg_lvds_vcc>;
-> +        powerdown-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
-> +
-> +        ports {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            port@0 {
-> +                reg = <0>;
-> +
-> +                lvds_dec_in_0: endpoint {
-> +                    remote-endpoint = <&lvds_out>;
-> +                };
-> +            };
-> +
-> +            port@2 {
-> +                reg = <2>;
-> +
-> +                lvds_dec_out_2: endpoint {
-> +                    remote-endpoint = <&adv7511_in>;
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> --
-> Regards,
->
-> Laurent Pinchart
->
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
