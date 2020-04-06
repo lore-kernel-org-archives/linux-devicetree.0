@@ -2,100 +2,148 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16298C2BA1B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 16:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A01C2BA17
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 16:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E118024960
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 16:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C85124964
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 16:37:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="DGLBL0Yq"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fPCoO9GD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbgDFQdQ (ORCPT
+        id S1729260AbgDFQhh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:33:16 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:48262 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728789AbgDFQdQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:33:16 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 9704B41259;
-        Mon,  6 Apr 2020 16:33:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-transfer-encoding:mime-version:user-agent:content-type
-        :content-type:organization:references:in-reply-to:date:date:from
-        :from:subject:subject:message-id:received:received:received; s=
-        mta-01; t=1586190792; x=1588005193; bh=5jzTCimFf/ZN+kP2sD+q9bPMb
-        I+Q4K3DWZbRHFkwR74=; b=DGLBL0YqcGOeu952klY/cvzNCyealrFkuiwZbyjdc
-        7z9P+5KzECC3m8eMMBVGj7O2zvtVW9Dp2pT0qtRvL3R1wc2zw+DLVSEJ98NQBwJS
-        yG4k9OEWHeICT9dwej1SvhFN1rxtcacC7BYuKWum+PW2vgQpcFjyXsuT1zy4YRGb
-        s0=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id CN7tA-FteRvA; Mon,  6 Apr 2020 19:33:12 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 53EAB412E2;
-        Mon,  6 Apr 2020 19:32:38 +0300 (MSK)
-Received: from localhost.localdomain (10.199.2.226) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Mon, 6 Apr 2020 19:32:38 +0300
-Message-ID: <b02f5e2fc09b30c36b0d9e8984c18eb21cba7b73.camel@yadro.com>
-Subject: Re: [PATCH v7 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 6 Apr 2020 19:32:56 +0300
-In-Reply-To: <CAHp75Vdg7bhB69uQSZt2LK3JXJ-my-+-Mg-0F6ij9HcFdQ=LTg@mail.gmail.com>
-References: <20200406151839.13572-1-i.mikhaylov@yadro.com>
-         <20200406151839.13572-3-i.mikhaylov@yadro.com>
-         <CAHp75Vdg7bhB69uQSZt2LK3JXJ-my-+-Mg-0F6ij9HcFdQ=LTg@mail.gmail.com>
-Organization: YADRO
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Mon, 6 Apr 2020 12:37:37 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11100 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728996AbgDFQhh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 12:37:37 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e8b5a6a0000>; Mon, 06 Apr 2020 09:35:54 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 06 Apr 2020 09:37:36 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 06 Apr 2020 09:37:36 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
+ 2020 16:37:36 +0000
+Received: from [10.2.164.193] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
+ 16:37:34 +0000
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
+ <38d921a7-5cdf-8d0a-2772-4399dd1a96a0@gmail.com>
+ <9b8cf37b-d2ad-9df2-aad8-216c2c954e69@nvidia.com>
+ <1a12974a-7cc7-2c3a-3995-076b9956714d@gmail.com>
+ <66cc8646-43d3-3fc8-c31d-d0d2efac505f@nvidia.com>
+ <f000f6b9-0f05-b2a5-6dad-37b09803711d@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <fe6a17c1-fae2-a365-4dd6-6d3a25d47d54@nvidia.com>
+Date:   Mon, 6 Apr 2020 09:37:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.199.2.226]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+In-Reply-To: <f000f6b9-0f05-b2a5-6dad-37b09803711d@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586190954; bh=rPSq0eirHRbbp3P7o0ShrYFulLXLt5OnUxaf3rXZFgg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=fPCoO9GDIW2e0sIi6EidkOUdnkqqK0Vwny+NicAnLg2GfrNQejNlNbxM75to3c/qI
+         FiLTrWUQmTmk3areKo8LLLT5dA7bp77Pll9+uGciZCd61RC0o3kmEdh0+YkO7dj3qL
+         w5LD3k66gOf7opM4UmSUSpy4nWmvXxRIT/JDdH7xP7ZbUV24l7ss9eMDidz5nTcPvB
+         Re8oZ+Bl7OXCQQxl+HSks18vEerUGwe1PVJDhveB0wP3GaPJtH9hiAcn3pvX/NBi4I
+         RnwjiW+LllYmRlw0I1eTzyqIJOVrQC+YdtpncAGRVkpoAz662Wq83xGEO0E530smjV
+         XQN1rb3Ll1yLg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 2020-04-06 at 18:43 +0300, Andy Shevchenko wrote:
-> On Mon, Apr 6, 2020 at 6:18 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
-> > Proximity sensor driver based on light/vcnl4000.c code.
-> > For now supports only the single on-demand measurement.
-> > 
-> > The VCNL3020 is a fully integrated proximity sensor. Fully
-> > integrated means that the infrared emitter is included in the
-> > package. It has 16-bit resolution. It includes a signal
-> > processing IC and features standard I2C communication
-> > interface. It features an interrupt function.
-> > 
-> 
-> I don't know how to explain to you that if anybody gives the tag, you
-> need to add it to your commit message.
-> Why are you ignoring this?
-> 
 
-Sorry for that, I'll add it.
+On 4/6/20 9:29 AM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 06.04.2020 19:12, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 4/6/20 9:05 AM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> 06.04.2020 18:35, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> ...
+>>>>>> +     /* wait for syncpt counter to reach frame start event
+>>>>>> threshold */
+>>>>>> +     err =3D host1x_syncpt_wait(chan->frame_start_sp, thresh,
+>>>>>> +                              TEGRA_VI_SYNCPT_WAIT_TIMEOUT, &value)=
+;
+>>>>>> +     if (err) {
+>>>>>> +             dev_err(&chan->video.dev,
+>>>>>> +                     "frame start syncpt timeout: %d\n", err);
+>>>>>> +             /* increment syncpoint counter for timedout events */
+>>>>>> +             host1x_syncpt_incr(chan->frame_start_sp);
+>>>>> Why incrementing is done while hardware is still active?
+>>>>>
+>>>>> The sync point's state needs to be completely reset after resetting
+>>>>> hardware. But I don't think that the current upstream host1x driver
+>>>>> supports doing that, it's one of the known-long-standing problems of
+>>>>> the
+>>>>> host1x driver.
+>>>>>
+>>>>> At least the sp->max_val incrementing should be done based on the
+>>>>> actual
+>>>>> syncpoint value and this should be done after resetting hardware.
+>>>> upstream host1x driver don't have API to reset or to equalize max valu=
+e
+>>>> with min/load value.
+>>>>
+>>>> So to synchronize missed event, incrementing HW syncpt counter.
+>>>>
+>>>> This should not impact as we increment this in case of missed events
+>>>> only.
+>>> It's wrong to touch sync point while hardware is active and it's active
+>>> until being reset.
+>>>
+>>> You should re-check the timeout after hw resetting and manually put the
+>>> syncpoint counter back into sync only if needed.
+>> There is possibility of timeout to happen any time even during the
+>> capture also and is not related to hw reset.
+>>
+>> Manual synchronization is needed when timeout of any frame events happen
+>> otherwise all subsequence frames will timeout due to mismatch in event
+>> counters.
+> My point is that hardware is stopped only after being reset, until then
+> you should assume that sync point could be incremented by HW at any time.
+>
+> And if this happens that HW increments sync point after the timeout,
+> then the sync point counter should become out-of-sync in yours case,
+> IIUC. Because host1x_syncpt_incr() doesn't update the cached counter.
 
-> Jonathan, my tag still applies here, but I'm so confused with the above.
+We wait for enough time based on frame rate for syncpt increment to=20
+happen and if it doesn't happen by then definitely its missed event and=20
+we increment HW syncpoint for this timed event.
+
+cached value gets updated during syncpt wait for subsequent event.
+
+syncpt increment happens for all subsequent frame events during video=20
+capture.
 
