@@ -2,143 +2,158 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0E1C2BB54
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 23:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA74C2BA80
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 23:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D786207FF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 23:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08BD4206C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 23:18:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IMMfv5wo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C8El9k9X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgDFXJM (ORCPT
+        id S1726403AbgDFXSK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 19:09:12 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:10854 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgDFXJM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 19:09:12 -0400
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200406230910epoutp024d04f173d5db6dfb9edf16466d991d29~DXbq90aD52435624356epoutp02N
-        for <devicetree@vger.kernel.org>; Mon,  6 Apr 2020 23:09:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200406230910epoutp024d04f173d5db6dfb9edf16466d991d29~DXbq90aD52435624356epoutp02N
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1586214550;
-        bh=Oyy8GSRtEGb4j6pnM0cKP+mEu/lSYBx7es05N7ZvSyQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IMMfv5wo1Wy3luOftdi3f4SXeCvjyT2E7wYB+wIgmBVgavx5egDdOBz7OncXlqVsA
-         FxSxUq6eqcVYPJ2YGr+vaaIWaPpuM27GSAbTn0M4ZtUlZMlGedF6egspvd/QiaXBL3
-         LM+5klE+QpbWJikXbgeWeyx6EW0Pp0Ge2Y7rS+fU=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-        20200406230910epcas2p280f714fd89d96230425220ebebd1e737~DXbquwSps1756717567epcas2p2s;
-        Mon,  6 Apr 2020 23:09:10 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.40.182]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 48x5nw4yzHzMqYkf; Mon,  6 Apr
-        2020 23:09:08 +0000 (GMT)
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        57.DB.04598.296BB8E5; Tue,  7 Apr 2020 08:09:06 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200406230906epcas2p3f5703f7f9f00cd1cf7dbe5cfd304481f~DXbnKFX4w2087620876epcas2p3z;
-        Mon,  6 Apr 2020 23:09:06 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200406230906epsmtrp28a8a24b78a9c73f6326ab42e442631a3~DXbnJVtk60348103481epsmtrp2Z;
-        Mon,  6 Apr 2020 23:09:06 +0000 (GMT)
-X-AuditID: b6c32a45-ea1ff700000011f6-cd-5e8bb692a63b
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F2.1E.04024.296BB8E5; Tue,  7 Apr 2020 08:09:06 +0900 (KST)
-Received: from ishtar.dsn.sec.samsung.com (unknown [12.36.155.159]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200406230906epsmtip2820abc144cd863527dfa2f94cee9fcb8~DXbm6UmB_2465024650epsmtip2L;
-        Mon,  6 Apr 2020 23:09:06 +0000 (GMT)
-From:   Hyunki Koo <hyunki00.koo@samsung.com>
-To:     gregkh@linuxfoundation.org, krzk@kernel.org
-Cc:     Hyunki Koo <hyunki00.koo@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 1/2] dt-bindings: serial: Add reg-io-width compatible
-Date:   Tue,  7 Apr 2020 08:08:50 +0900
-Message-Id: <20200406230855.13772-2-hyunki00.koo@samsung.com>
-X-Mailer: git-send-email 2.15.0.rc1
-In-Reply-To: <20200406230855.13772-1-hyunki00.koo@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH+Xm33VktL5vWcYmsa0oPdLurzZukBWVMM7H8o4hw3dxts/bq
-        3i2yBxmSlWbvyI3K0sIS0/DFUExxRkQPA0FNKIkyQtQsoRe9tt1F/fflnM/3cF5STP5arJQW
-        2V0sZ2espGSWqN2/JDX5fHtFgcbzNJGu7nsmpktrmyR0/a1hjO7vv4fTAx1XJPST2kqcPtbV
-        h6/BDc31JyWG7qsNuOF0az0yzDTH54m2WVdZWMbEcirWXugwFdnN6eSGfONao06voZKplXQq
-        qbIzNjadXJeTl7y+yBrogFTtY6zuQCiP4XlSnbGKc7hdrMri4F3pJOs0WZ0U5UzhGRvvtptT
-        Ch22NEqj0eoC5A6rpbWkFXf24Pv9j3QlqFJSjiKlQKyA1wOlqBzNksoJH4LOqe5QQk58QnDt
-        4hEh8RlBb92QuBxJQ466D2kC04XgzmicwHxFcHq6OmSWEMtg4osHC/LRhBrethmCDEbUIXhc
-        M44FGQVhgEFfizioRUQi/PrtDWkZkQ4/vo+KhO4S4PnUzVA8ksiAmks/8GAhIKok8MrzJQyt
-        A3/3oFjQChh/2IoLWgkzU13hMY/A/bJzYfMpBN+mx8KG5eB9dxwFO8WIJdDUoRaGTIC+kVB5
-        jJgLJ/w/cSEsgxNlcsGYBI2f30cIOg4axjrCiAGOtiwSVvIAQcvkm4izKN77r/51hOrRPNbJ
-        28wsr3VS/1+rGYXea2mmD1U9y+lFhBSRc2RbIysK5GJmH19s60UgxchombLyZIFcZmKKD7Cc
-        w8i5rSzfi3SBRZ7DlDGFjsCz2l1GSqfV6zUrdbROr6XJ+bKW2S+2ywkz42L3sKyT5f76IqSR
-        yhK0uELRjob3Gj1a/11ul+ewTXWVy5ob+3PsUNxw1sIarbhiUKX8/U7dpXjZafFVZZrSbl2+
-        YElSpMLquIO1xOQW1W3/heyNPfnalImGxWp22JeAOmNzVeqkqMY3evf45o6YnSMfi6PMu7PN
-        m9rO5N9YQA15riyv7fQOUrlDMwpSxFsYainG8cwf1hU9gnQDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHLMWRmVeSWpSXmKPExsWy7bCSvO6kbd1xBu92c1nMP3KO1aJ58Xo2
-        i1VLbzBbnD+/gd3i8q45bBZnFveyW7TuPcLuwO6xaVUnm8f+uWvYPfq2rGL0+LxJLoAlissm
-        JTUnsyy1SN8ugStjS8MW9oID7BWHT5o2MPaydTFycEgImEgsf2/VxcjFISSwm1Fi7urtLF2M
-        nEBxGYkJL5YwQ9jCEvdbjrBCFH1jlHh1cDojSIJNQFvizfeZYEUiAoYSX+70s4AUMQusZpR4
-        /WMK2CRhAQ+Jazs2s4LYLAKqEv/+zwKzeQVsJf78ug+1TVniwrslYHFOATuJRVP/sIPYQgKF
-        Eq/23maZwMi3gJFhFaNkakFxbnpusWGBYV5quV5xYm5xaV66XnJ+7iZGcKhpae5gvLwk/hCj
-        AAejEg8vA3t3nBBrYllxZe4hRgkOZiURXqnezjgh3pTEyqrUovz4otKc1OJDjNIcLErivE/z
-        jkUKCaQnlqRmp6YWpBbBZJk4OKUaGKOSLCdGO2/p0uQ1/2DyXiC3RuJ2vuu9ZaYffIr2vPL3
-        frumbYbRpCd77nlGuKvWlx1Rv3cq6kKVUvyyIFVx7xkSNq9feuzccs378mONyeJHTY8r8Crp
-        rjsYNTsrav0x0awOS1Ovo+F3f85beoRluo8v8w/XucxiE4omXQ92ZbQ1tb+0umhbnxJLcUai
-        oRZzUXEiAEpSdCIxAgAA
-X-CMS-MailID: 20200406230906epcas2p3f5703f7f9f00cd1cf7dbe5cfd304481f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200406230906epcas2p3f5703f7f9f00cd1cf7dbe5cfd304481f
-References: <20200401082721.19431-1-hyunki00.koo@samsung.com>
-        <20200406230855.13772-1-hyunki00.koo@samsung.com>
-        <CGME20200406230906epcas2p3f5703f7f9f00cd1cf7dbe5cfd304481f@epcas2p3.samsung.com>
+        Mon, 6 Apr 2020 19:18:10 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43969 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgDFXSK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 19:18:10 -0400
+Received: by mail-lf1-f65.google.com with SMTP id k28so847462lfe.10;
+        Mon, 06 Apr 2020 16:18:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=chS43n5Rzi5QlXuzujx9Up/J1i2zDWrT898t52vhKwM=;
+        b=C8El9k9Xe+SkBTrIZmw46NaUoXdx8q2vzZ2qLOwqIC3BIoa2ynJ4xkShtIAVG6Ps65
+         5s8USY91DvcarVsY/k9q10+g5qjicoNQuIouYE6p7k5YDKS7nRQOlliAaSdh9nBQlto1
+         XUp7gUmvaTF1yetGDRwZZchQzAnHxsUq9xwyb+S59Qjzpa64YZnKZO8IcrN2vtSyvs+r
+         BYv/2aQfWTJlUc0MhGoL690I3u5V9KLX1koXfURhFYW1IXMhhdNPt3J9QWC6WEK4vKrJ
+         rRug3DMfmCkU9Me3uyNMt6rI1ESrh/TmT+WwAlsYfyNt7+H0X8cWHNe8zu4a6UubeT6i
+         O/lA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=chS43n5Rzi5QlXuzujx9Up/J1i2zDWrT898t52vhKwM=;
+        b=BjTeodJ7WBrWZYtkxiw/SqSFexjkdBkiLd1vhbDpenuS2Imn5COVDyDGKU+JrDHj97
+         bMc+Ly1v/hrBGjSmHmr6PYw/julEjoOnTi+vnqE2Y+cXFnzN650X668RGHkwWKKe8cJC
+         IvIWwbaKjIoBtnaSHB2AurQL1ZXSnI7FM2Whwe6aoPI5BOGf86B3clBoy3JgXop7MSAr
+         44ifvgxdhcJrfEVPuu9+I4IDEmUcADQpRaWK8QUxD8ktNQB4Gb02NOwVSUtJTBy9s8CZ
+         zCI3Ix/QU2M9OWegv1LmDe0qRFg0RMvYeqG8Jsgm9eks2bwImE6MPAn5vtmQ6UX/tlfd
+         KnyA==
+X-Gm-Message-State: AGi0PuZMihRM8CskxB+aEpzwm2Kcd1TUurFdhe6zAdN5DKjlRPzfiwhM
+        kfIO6QRFsxXdI7irdGR2dc4TtySs
+X-Google-Smtp-Source: APiQypKYg7s05Oo6p5B56gIRuzqS4bQjSQVXLZkNJNbdwWw5ASMZsecvKR7JPKWjof/yi0102iCppQ==
+X-Received: by 2002:a05:6512:14a:: with SMTP id m10mr10185113lfo.152.1586215086411;
+        Mon, 06 Apr 2020 16:18:06 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id d21sm10826594ljc.49.2020.04.06.16.18.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Apr 2020 16:18:05 -0700 (PDT)
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
+ <200bb96e-2d07-764f-9e14-55538dc742fd@gmail.com>
+ <23bfab09-b464-6e51-9843-06d13000e9b9@nvidia.com>
+ <be77b0ef-d605-8357-4180-f40b2886d07a@gmail.com>
+ <08cd31d5-e8b9-4d3a-fb0e-0e4462947d96@nvidia.com>
+ <12a834ac-52b1-6dc0-7d3a-3e6a1fa85a2a@gmail.com>
+ <e3712e7b-b335-b35b-a94f-24eb85122dca@nvidia.com>
+ <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
+ <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
+ <dd16c560-ba8f-e7df-5dc4-5227e0043196@nvidia.com>
+ <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
+ <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <9e317f65-8a02-3b15-cfec-8e0d8374130e@gmail.com>
+Date:   Tue, 7 Apr 2020 02:18:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a description for reg-io-width options for the samsung serial
-UART peripheral.
+07.04.2020 01:07, Sowjanya Komatineni пишет:
+> 
+> On 4/6/20 3:00 PM, Sowjanya Komatineni wrote:
+>>
+>> On 4/6/20 2:39 PM, Sowjanya Komatineni wrote:
+>>>
+>>> On 4/6/20 2:15 PM, Sowjanya Komatineni wrote:
+>>>>
+>>>> On 4/6/20 2:11 PM, Dmitry Osipenko wrote:
+>>>>> External email: Use caution opening links or attachments
+>>>>>
+>>>>>
+>>>>> 07.04.2020 00:02, Sowjanya Komatineni пишет:
+>>>>>>>>>>> Am I understanding correctly that this thread will take 100%
+>>>>>>>>>>> CPU,
+>>>>>>>>>>> spinning here, if more than 2 frame-captures queued?
+>>>>>>>>>> on more than 2 frames captures, it breaks thread and on next
+>>>>>>>>>> wakeup it
+>>>>>>>>>> continues
+>>>>>>>>> The wait_event() won't wait if condition is true.
+>>>>>>>> condition is checked when waitqueue is woken up
+>>>>>>> https://elixir.bootlin.com/linux/v5.6.2/source/include/linux/wait.h#L462
+>>>>>>>
+>>>>>> process is put to sleep until the condition evaluates to true or
+>>>>>> signal
+>>>>>> is received.
+>>>>>>
+>>>>>> condition is checked each time the waitqueue head is woken up.
+>>>>> This is a wrong assumption in accordance to the code.
+>>
+>> process is in sleep until the condition is evaluated and when
+>> condition is true wakeup still happens only when wake_up on waitqueue
+>> is called
+>>
+>> This is the reason for using this to prevent blocking while waiting
+>> for the buffers.
+> 
+> w.r.t capture list update, wakeup happens when wake_up on waitqueue is
+> called.
+> 
+> wakeup also happens on kthread stop signal event.
+> 
+>>
+>>
+>>>>
+>>>> when every buffer is available as long as we are in streaming, we
+>>>> should process it.
+>>>>
+>>>> So if wake up happens when list has buffer, it will be processed but
+>>>> at a time we limit processing 2 simultaneous buffer capture starts
+>>>> only.
+>>>>
+>>> Fixing typo.
+>>>
+>>> I meant when ever buffer is available as long as we are in streaming,
+>>> we should process it.
+>>>
+>>> So capture thread processes as long as buffers are available from
+>>> user space limiting 2 simultaneous trigger of captures and thread
+>>> will be in sleep when capture buffers list is empty or no stop thread
+>>> is signaled.
 
-Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
----
-v5: first added in this series
-v6: clean description of reg-io-width
----
- Documentation/devicetree/bindings/serial/samsung_uart.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+IIUC, the waiting won't happen if more than 2 captures are queued and
+thread will be spinning until captures are processed.
 
-diff --git a/Documentation/devicetree/bindings/serial/samsung_uart.yaml b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-index 9d2ce347875b..1a0bb7619e2e 100644
---- a/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-+++ b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-@@ -29,6 +29,12 @@ properties:
-   reg:
-     maxItems: 1
- 
-+  reg-io-width:
-+    description:
-+      The size (in bytes) of the IO accesses that should be performed
-+      on the device. If omitted, default of 1 is used.
-+      - enum: [ 1, 4 ]
-+
-   clocks:
-     minItems: 2
-     maxItems: 5
--- 
-2.15.0.rc1
-
+I think you need a semaphore with resource count = 2.
