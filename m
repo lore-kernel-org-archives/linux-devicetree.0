@@ -2,200 +2,146 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF644C2BA1E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 14:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F29C7C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 15:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C44A623DC1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 14:31:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="kIjXbZNo"
+	by mail.kernel.org (Postfix) with ESMTP id C20012487C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 15:06:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbgDFObZ (ORCPT
+        id S1728766AbgDFPGa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 10:31:25 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.84]:16592 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728406AbgDFObZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 10:31:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586183482;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=ey2GXzMvyqvroTPmaRXrrAz5iqe+P8aBisZEkCVhpDA=;
-        b=kIjXbZNo262/j1YJtknncryLNywq2RifZsfQEy6gQDoZVbRgjPZn+2LYPYZ7cZixNF
-        mNXHClDbYaaKKMS4GqASRDe9VBNwbdo4dAIQ6A3EtZ1eDXrU1xuIj7wpzvFOthvlAA6o
-        GIM4kS8q1km9yAcdPd0CBl8mhypnAxZo1e6yAlUi5Mdl+ay9NlDKIrcWigSE67B0aNnU
-        WFDgYk6ts8Qf7Ivp1FwKOjB7NnTAmNEs+WSHkE0UAxY4UOIikYErxnd3Ewlt/SDcOooj
-        9GiE+596A/wqKvroz5Oz1pEO7AGD+FAKm7UCznSWT5GdIBHdiAw+CVn6du36iqF9ULB4
-        HJ8Q==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j8Ic/MbIo="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id u043b8w36EVK2fF
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Mon, 6 Apr 2020 16:31:20 +0200 (CEST)
-Date:   Mon, 6 Apr 2020 16:31:13 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Nick Reitemeyer <nick.reitemeyer@web.de>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 3/3] iio: magnetometer: ak8974: add Alps hscdtd008a
-Message-ID: <20200406143113.GA126707@gerhold.net>
-References: <20200406141350.162036-1-nick.reitemeyer@web.de>
- <20200406141350.162036-3-nick.reitemeyer@web.de>
+        Mon, 6 Apr 2020 11:06:30 -0400
+Received: from mga14.intel.com ([192.55.52.115]:4461 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728695AbgDFPGa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Apr 2020 11:06:30 -0400
+IronPort-SDR: IpCH46fnrgIwOj0Uw5Z8/PBPcL309qndtdiBx0TUyB8iMunWD++KxLucXS1rePGTrOd9LZgXvH
+ cbgA0L82J9+A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 08:06:28 -0700
+IronPort-SDR: mqw7ycFAc1LmPAC67DPTqIPgVgTjHFH2j8p8RoZfwndcKlL/z+tEfGOZN1CLbTbI2F7YfryUZ/
+ sRgsmN8ohpTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,351,1580803200"; 
+   d="scan'208";a="450862810"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 06 Apr 2020 08:06:23 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1jLTKU-00GCiI-8A; Mon, 06 Apr 2020 18:06:26 +0300
+Date:   Mon, 6 Apr 2020 18:06:26 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 2/3] media: ov8856: Add devicetree support
+Message-ID: <20200406150626.GW3676135@smile.fi.intel.com>
+References: <20200331133346.372517-1-robert.foss@linaro.org>
+ <20200331133346.372517-3-robert.foss@linaro.org>
+ <CAHp75VfFKY6nzb8aEWmop73v2haZ0P5+aTsKDEU8M=uUPn0u3g@mail.gmail.com>
+ <CAG3jFyuH5Kad16R7Oit-c_7RasiEfPycOpA68JYLVopbyQ749w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200406141350.162036-3-nick.reitemeyer@web.de>
+In-Reply-To: <CAG3jFyuH5Kad16R7Oit-c_7RasiEfPycOpA68JYLVopbyQ749w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 04:13:53PM +0200, Nick Reitemeyer wrote:
-> The hscdtd008a is similar to the AK8974:
-> Only the whoami value and some registers are different.
+On Mon, Apr 06, 2020 at 03:37:24PM +0200, Robert Foss wrote:
+> On Tue, 31 Mar 2020 at 16:01, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > On Tue, Mar 31, 2020 at 4:36 PM Robert Foss <robert.foss@linaro.org> wrote:
+
+...
+
+> > > +       if (ret < 0) {
+> >
+> > Do you need all ' < 0' parts all over the series?
 > 
-> Signed-off-by: Nick Reitemeyer <nick.reitemeyer@web.de>
-
-Thanks a lot for sending this patch upstream!
-
-I checked this with the datasheet available here:
-https://tech.alpsalpine.com/prod/c/pdf/sensor/geomagnetic/hscd/hscdtd008a_data.pdf
-
-Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
-
-... and it seems to produce reasonable values on samsung-golden:
-
-Tested-by: Stephan Gerhold <stephan@gerhold.net>
-
-Linus Walleij might want to test this on his samsung-skomer :)
-
-Thanks,
-Stephan
-
-> ---
->  drivers/iio/magnetometer/ak8974.c | 38 ++++++++++++++++++++++++-------
->  1 file changed, 30 insertions(+), 8 deletions(-)
+> Some checks are needed due to ACPI and DT support co-existing.
+> Maybe it would be better to just split the probing into an ACPI path
+> and a DT path.
 > 
-> diff --git a/drivers/iio/magnetometer/ak8974.c b/drivers/iio/magnetometer/ak8974.c
-> index d32996702110..ade4ed8f67d2 100644
-> --- a/drivers/iio/magnetometer/ak8974.c
-> +++ b/drivers/iio/magnetometer/ak8974.c
-> @@ -49,6 +49,7 @@
->  #define AK8974_WHOAMI_VALUE_AMI306 0x46
->  #define AK8974_WHOAMI_VALUE_AMI305 0x47
->  #define AK8974_WHOAMI_VALUE_AK8974 0x48
-> +#define AK8974_WHOAMI_VALUE_HSCDTD008A 0x49
+> I'll have a look through the series for redundant retval checks.
+
+Drop where it is redundant.
+
+...
+
+> > > -       ret = fwnode_property_read_u32(fwnode, "clock-frequency", &mclk);
+> > > -       if (ret)
+> > > -               return ret;
+> >
+> > Where is it gone? Why?
 > 
->  #define AK8974_DATA_X		0x10
->  #define AK8974_DATA_Y		0x12
-> @@ -140,6 +141,12 @@
->  #define AK8974_INT_CTRL_PULSE	BIT(1) /* 0 = latched; 1 = pulse (50 usec) */
->  #define AK8974_INT_CTRL_RESDEF	(AK8974_INT_CTRL_XYZEN | AK8974_INT_CTRL_POL)
+> It was replaced by a clk_get_rate call, which as Sakari pointed out,
+> isn't correct.
+> I'll rework the clock handling for v4.
+
+If it was in the driver it should stay -- properties is an ABI (between firmware and kernel).
+
+> > > +       ov8856->xvclk = devm_clk_get_optional(dev, "xvclk");
+> > > +       if (IS_ERR(ov8856->xvclk)) {
+> >
+> > > +               dev_err(dev, "could not get xvclk clock (%ld)\n",
+> > > +                       PTR_ERR(ov8856->xvclk));
+> >
+> > Also you may use %pe here and in similar cases.
 > 
-> +/* HSCDTD008A-specific control register */
-> +#define HSCDTD008A_CTRL4	0x1E
-> +#define HSCDTD008A_CTRL4_MMD	BIT(7)	/* must be set to 1 */
-> +#define HSCDTD008A_CTRL4_RANGE	BIT(4)	/* 0 = 14-bit output; 1 = 15-bit output */
-> +#define HSCDTD008A_CTRL4_RESDEF	(HSCDTD008A_CTRL4_MMD | HSCDTD008A_CTRL4_RANGE)
-> +
->  /* The AMI305 has elaborate FW version and serial number registers */
->  #define AMI305_VER		0xE8
->  #define AMI305_SN		0xEA
-> @@ -241,10 +248,17 @@ static int ak8974_reset(struct ak8974 *ak8974)
->  	ret = regmap_write(ak8974->map, AK8974_CTRL3, AK8974_CTRL3_RESDEF);
->  	if (ret)
->  		return ret;
-> -	ret = regmap_write(ak8974->map, AK8974_INT_CTRL,
-> -			   AK8974_INT_CTRL_RESDEF);
-> -	if (ret)
-> -		return ret;
-> +	if (ak8974->variant != AK8974_WHOAMI_VALUE_HSCDTD008A) {
-> +		ret = regmap_write(ak8974->map, AK8974_INT_CTRL,
-> +				   AK8974_INT_CTRL_RESDEF);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		ret = regmap_write(ak8974->map, HSCDTD008A_CTRL4,
-> +				   HSCDTD008A_CTRL4_RESDEF);
-> +		if (ret)
-> +			return ret;
-> +	}
+> Weirdly checkpatch complains about this.
+> But it builds and runs cleanly, so I'll add it in v4.
+
+%pe requires pointer, PTR_ERR converts pointer to integer.
+
+...
+
+> > > +       ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ov8856_supply_names),
+> > > +                                     ov8856->supplies);
+> > > +       if (ret) {
+> >
+> > > +               dev_warn(dev, "failed to get regulators\n");
+> >
+> > If it's a warning, why we return from here?
+> > Same question to all other places with same issue.
 > 
->  	/* After reset, power off is default state */
->  	return ak8974_set_power(ak8974, AK8974_PWR_OFF);
-> @@ -267,6 +281,8 @@ static int ak8974_configure(struct ak8974 *ak8974)
->  		if (ret)
->  			return ret;
->  	}
-> +	if (ak8974->variant == AK8974_WHOAMI_VALUE_HSCDTD008A)
-> +		return 0;
->  	ret = regmap_write(ak8974->map, AK8974_INT_CTRL, AK8974_INT_CTRL_POL);
->  	if (ret)
->  		return ret;
-> @@ -495,6 +511,10 @@ static int ak8974_detect(struct ak8974 *ak8974)
->  		name = "ak8974";
->  		dev_info(&ak8974->i2c->dev, "detected AK8974\n");
->  		break;
-> +	case AK8974_WHOAMI_VALUE_HSCDTD008A:
-> +		name = "hscdtd008a";
-> +		dev_info(&ak8974->i2c->dev, "detected hscdtd008a\n");
-> +		break;
->  	default:
->  		dev_err(&ak8974->i2c->dev, "unsupported device (%02x) ",
->  			whoami);
-> @@ -674,18 +694,18 @@ static bool ak8974_writeable_reg(struct device *dev, unsigned int reg)
->  	case AK8974_INT_CTRL:
->  	case AK8974_INT_THRES:
->  	case AK8974_INT_THRES + 1:
-> +		return true;
->  	case AK8974_PRESET:
->  	case AK8974_PRESET + 1:
-> -		return true;
-> +		return ak8974->variant != AK8974_WHOAMI_VALUE_HSCDTD008A;
->  	case AK8974_OFFSET_X:
->  	case AK8974_OFFSET_X + 1:
->  	case AK8974_OFFSET_Y:
->  	case AK8974_OFFSET_Y + 1:
->  	case AK8974_OFFSET_Z:
->  	case AK8974_OFFSET_Z + 1:
-> -		if (ak8974->variant == AK8974_WHOAMI_VALUE_AK8974)
-> -			return true;
-> -		return false;
-> +		return ak8974->variant == AK8974_WHOAMI_VALUE_AK8974 ||
-> +		       ak8974->variant == AK8974_WHOAMI_VALUE_HSCDTD008A;
->  	case AMI305_OFFSET_X:
->  	case AMI305_OFFSET_X + 1:
->  	case AMI305_OFFSET_Y:
-> @@ -926,12 +946,14 @@ static const struct i2c_device_id ak8974_id[] = {
->  	{"ami305", 0 },
->  	{"ami306", 0 },
->  	{"ak8974", 0 },
-> +	{"hscdtd008a", 0 },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(i2c, ak8974_id);
+> The issue I was seeing was the driver having to return a EDEFER here,
+> so this warning sheds some light on which exact component is returning
+> an EDEFER.
 > 
->  static const struct of_device_id ak8974_of_match[] = {
->  	{ .compatible = "asahi-kasei,ak8974", },
-> +	{ .compatible = "alps,hscdtd008a", },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, ak8974_of_match);
-> --
-> 2.26.0
+> [   15.962623] ov8856 16-0010: Dropping the link to regulator.29
+> [   15.968464] ov8856 16-0010: failed to get regulators
+> [   15.973493] ov8856 16-0010: failed to get HW configuration: -517
+> [   15.979591] ov8856 16-0010: removing from PM domain titan_top_gdsc
+> [   15.985855] ov8856 16-0010: genpd_remove_device()
+> [   15.990672] i2c 16-0010: Driver ov8856 requests probe deferral
 > 
+> Personally I found it helpful to speed up debugging, but I'll happily
+> remove it if you prefer no warning.
+
+My point is that you have it in align:
+ - if it is an error, print as an error and bail out, otherwise
+ - if it is a warning, print it and continue.
+
+> > > +               return ret;
+> > >         }
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
