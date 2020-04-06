@@ -2,191 +2,144 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A0CC2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 08:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC14C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 08:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B075C206C3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 08:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B569206F8
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 08:49:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KlcQa7lI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgDFIru (ORCPT
+        id S1726514AbgDFItc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 04:47:50 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45888 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgDFIrt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 04:47:49 -0400
-Received: by mail-oi1-f193.google.com with SMTP id l22so12345668oii.12;
-        Mon, 06 Apr 2020 01:47:49 -0700 (PDT)
+        Mon, 6 Apr 2020 04:49:32 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36540 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbgDFItc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 04:49:32 -0400
+Received: by mail-wm1-f67.google.com with SMTP id d202so14913984wmd.1
+        for <devicetree@vger.kernel.org>; Mon, 06 Apr 2020 01:49:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=hB/cttD2PIQJrbz4bzuL3i++GH0OSgasFqo3xqjEQAo=;
+        b=KlcQa7lIt+n/wVEV8JdYNkiUDQQp+hGTfkU1Mu02PywtjHqp63UeXe/YmyUw018Kdc
+         lpl1WphuIEEQUPCuEbfiYH37JUXWUTrg26Sf4c64ZSxRRDOVgszt6TP6yfeIKKv4bnBC
+         w3jj2IBcjWCz177Pxk5VvdWa2Y40lDC/vS6pXi98sdU+jDGOH7l9ozbD6p+C4Ah8Nsap
+         AB/D6Od+pOXPDjy792trBcGT+iJ0/81trVcYIVx4YxoA9gCgCvFxxtHf0GNkk09CRmxo
+         BTql6k2kwaGkNcIiaIY/53x86i7F0xHwY9eXlCwZPZzQEaMUhBuLdt9X9dmS8LyJB3ZM
+         EsVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ofe9gpx/rAfxW7TO3g+sj7lCoLVUw0RfPyc4HUwJq/0=;
-        b=R6bruQB0S4lzRN8lix/535ikbTaHcxwPjU1BDwFxVmhgDYm5eteniRJVce1vahC/9y
-         ZgLNg7TZbOStS1m6zNzsT8tEligpjeyARlm8L7AvQynXI2Neqv5GNvZI9ny1AyV1+vMM
-         YthPwoow8rVqqC9H9LKPktw+Utx5u0fHjcQd6RsfOeB0lRHbUUZjFgzf1DdhGS438bHs
-         uz1yvl2eHPAxhXmZvfi7GK7ZqlChLR3svpjDGnqy4wfzgpiiUiK2RQpInhBD7hOPL08I
-         pjMsQJKWR+trxszvu4eLHOXxYAl2nvLIcHDIvArYnuJIwwZ9RgNy5lbMnW0a9JMUXlIg
-         rFoQ==
-X-Gm-Message-State: AGi0PuaFLm/W7Uacw/vmyvJgoLKrgMwp+i8WVxdZ1UxubohvzNdy29aS
-        8vQsj3JThGIJ0Dognz0Xsq4acVtA7ExceYvurI8=
-X-Google-Smtp-Source: APiQypI0xhIzfIwCX4pr1CeA1Z/0H4YxMtzB3XTU4byr19XfCp2qMUh0J0OZzFv0dnImP8Rwz0MkG5uV0lsmtuR32VU=
-X-Received: by 2002:aca:4e57:: with SMTP id c84mr11513006oib.148.1586162868764;
- Mon, 06 Apr 2020 01:47:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=hB/cttD2PIQJrbz4bzuL3i++GH0OSgasFqo3xqjEQAo=;
+        b=eJSAdG2SubWSmBzpf9dyBL7m/bDw6CBJ1tPlDbVovj/eDRXzHc28/q3EjBPsSTC6ac
+         B6kz52BfVqc9nfa53eD4wnW9PRQ11YNuvt5mv5dq2E0Ofayn7qthD+WGWPUbY+lP4OXA
+         CY/uy2C7kEwiKkkS4jzFw+ATQ5/Me96aFQbb/+c49BQQk9okwQXU95H1naS1HG0nevrU
+         nYuXIwSmAuxnJwssUj6xvjoj5KOsUjQXrbxmeFI5A2P8bk/FozQoCyHtq4uDbURLqu7M
+         D1cOm77X4KLv+VlQfkEFLgHVENolkvd+VOxu4LylKTWM2859QVGc05QV1kkZzK0tDzGr
+         wzHA==
+X-Gm-Message-State: AGi0PuaFGv/OgobnKUHO0BIwNR+CRrNVK0mc4WVrCCcQVCE9nQ3crLGv
+        eM71fLgS7a3HrlXTMVjUzeE3NQ==
+X-Google-Smtp-Source: APiQypL6NsZE4UH6W7CHGi4ojlUeqMxw4vdKpXkAYqw432CMd+116S8Nw19uLsayC9FcZNch4FCf5A==
+X-Received: by 2002:a1c:9d84:: with SMTP id g126mr6730754wme.184.1586162968744;
+        Mon, 06 Apr 2020 01:49:28 -0700 (PDT)
+Received: from dell ([2.27.35.179])
+        by smtp.gmail.com with ESMTPSA id t26sm14548888wmj.12.2020.04.06.01.49.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 01:49:27 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 09:50:24 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     kgunda@codeaurora.org, Rob Herring <robh@kernel.org>,
+        bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        linux-arm-msm@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH V4 1/4] backlight: qcom-wled: convert the wled bindings
+ to .yaml format
+Message-ID: <20200406085024.GF30614@dell>
+References: <1584985618-25689-1-git-send-email-kgunda@codeaurora.org>
+ <1584985618-25689-2-git-send-email-kgunda@codeaurora.org>
+ <20200331175401.GA9791@bogus>
+ <ac8f25113a3bb233c11fd7cd9e62c2cf@codeaurora.org>
+ <20200403114651.m6rholzufzqinanc@holly.lan>
 MIME-Version: 1.0
-References: <20200405232318.26833-1-laurent.pinchart+renesas@ideasonboard.com> <20200405232318.26833-5-laurent.pinchart+renesas@ideasonboard.com>
-In-Reply-To: <20200405232318.26833-5-laurent.pinchart+renesas@ideasonboard.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 6 Apr 2020 10:47:37 +0200
-Message-ID: <CAMuHMdXJcw0eGY7J=JcGv6Hs9E_GCybsYSeKKeH5pAH8nkdTrg@mail.gmail.com>
-Subject: Re: [PATCH 4/4] dt-bindings: display: bridge: renesas,lvds: Convert
- binding to YAML
-To:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200403114651.m6rholzufzqinanc@holly.lan>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent,
+On Fri, 03 Apr 2020, Daniel Thompson wrote:
 
-On Mon, Apr 6, 2020 at 1:24 AM Laurent Pinchart
-<laurent.pinchart+renesas@ideasonboard.com> wrote:
-> Convert the Renesas R-Car LVDS encoder text binding to YAML.
->
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> On Fri, Apr 03, 2020 at 04:45:49PM +0530, kgunda@codeaurora.org wrote:
+> > On 2020-03-31 23:24, Rob Herring wrote:
+> > > On Mon, Mar 23, 2020 at 11:16:55PM +0530, Kiran Gunda wrote:
+> > > > diff --git
+> > > > a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+> > > > b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+> > > > new file mode 100644
+> > > > index 0000000..8a388bf
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+> > > > @@ -0,0 +1,184 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0-only
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/leds/backlight/qcom-wled.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Binding for Qualcomm Technologies, Inc. WLED driver
+> > > > +
+> > > > +maintainers:
+> > > > +  - Lee Jones <lee.jones@linaro.org>
+> > > 
+> > > Should be the h/w owner (you), not who applies patches.
+> > > 
+> > will address in next post.
+> > <snip>
+> > will address in next post.
+> > <snip>
+> > will address in next post.
+> > <snip>
+> > will address in next post.
+> > <snip>
+> > will address in next post.
+> > <snip>
+> > will address in next post.
+> > <snip>
+> > will address in next post.
+> > <snip>
+> > will address in next post.
+> > <snip>
+> > will address in next post.
+> 
+> If you agree on all points raised I doubt there is any need for a point
+> by point reply since everyone who reads it will have to scroll down
+> simply to find out that you agree on all points.
+> 
+> Better just to acknowledge the feedback and reply to the first one
+> saying you'll agree on all points and will address all feedback in the
+> next revision (and then trim the reply to keep it short).
 
-Thanks for your patch!
-
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.yaml
-> @@ -0,0 +1,248 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/renesas,lvds.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas R-Car LVDS Encoder
-> +
-> +maintainers:
-> +  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> +
-> +description: |
-> +  These DT bindings describe the LVDS encoder embedded in the Renesas R-Car
-> +  Gen2, R-Car Gen3 and RZ/G SoCs.
-
-RZ/G1 and RZ/G2 (no idea what'll RZ/G3 will bring ;-)
-
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - renesas,r8a7743-lvds # for R8A7743 (RZ/G1M) compatible LVDS encoders
-> +      - renesas,r8a7744-lvds # for R8A7744 (RZ/G1N) compatible LVDS encoders
-> +      - renesas,r8a774a1-lvds # for R8A774A1 (RZ/G2M) compatible LVDS encoders
-> +      - renesas,r8a774b1-lvds # for R8A774B1 (RZ/G2N) compatible LVDS encoders
-> +      - renesas,r8a774c0-lvds # for R8A774C0 (RZ/G2E) compatible LVDS encoders
-> +      - renesas,r8a7790-lvds # for R8A7790 (R-Car H2) compatible LVDS encoders
-> +      - renesas,r8a7791-lvds # for R8A7791 (R-Car M2-W) compatible LVDS encoders
-> +      - renesas,r8a7793-lvds # for R8A7793 (R-Car M2-N) compatible LVDS encoders
-> +      - renesas,r8a7795-lvds # for R8A7795 (R-Car H3) compatible LVDS encoders
-> +      - renesas,r8a7796-lvds # for R8A7796 (R-Car M3-W) compatible LVDS encoders
-
-R8A77960 (I know you don't have support for R8A77961 yet ;-)
-
-> +      - renesas,r8a77965-lvds # for R8A77965 (R-Car M3-N) compatible LVDS encoders
-> +      - renesas,r8a77970-lvds # for R8A77970 (R-Car V3M) compatible LVDS encoders
-> +      - renesas,r8a77980-lvds # for R8A77980 (R-Car V3H) compatible LVDS encoders
-> +      - renesas,r8a77990-lvds # for R8A77990 (R-Car E3) compatible LVDS encoders
-> +      - renesas,r8a77995-lvds # for R8A77995 (R-Car D3) compatible LVDS encoders
-
-Wouldn't it be sufficient to just have the SoC name (e.g. "R-Car D3") in
-the comments?
-
-> +if:
-> +  properties:
-> +    compatible:
-> +      enum:
-> +        - renesas,r8a774c0-lvds
-> +        - renesas,r8a77990-lvds
-> +        - renesas,r8a77995-lvds
-> +then:
-> +  properties:
-> +    clocks:
-> +      minItems: 1
-> +      maxItems: 4
-> +      items:
-> +        - description: Functional clock
-> +        - description: EXTAL input clock
-> +        - description: DU_DOTCLKIN0 input clock
-> +        - description: DU_DOTCLKIN1 input clock
-> +
-> +    clock-names:
-> +      minItems: 1
-> +      maxItems: 4
-> +      items:
-> +        - const: fck
-> +        # The LVDS encoder can use the EXTAL or DU_DOTCLKINx clocks.
-> +        # These clocks are optional.
-> +        - enum:
-> +          - extal
-> +          - dclkin.0
-> +          - dclkin.1
-> +        - enum:
-> +          - extal
-> +          - dclkin.0
-> +          - dclkin.1
-> +        - enum:
-> +          - extal
-> +          - dclkin.0
-> +          - dclkin.1
-
-Can the duplication of the last 3 entries be avoided?
-Perhaps like in
-Documentation/devicetree/bindings/serial/renesas,scif.yaml?
-
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/renesas-cpg-mssr.h>
-> +    #include <dt-bindings/power/r8a7795-sysc.h>
-> +
-> +    lvds@feb90000 {
-> +        compatible = "renesas,r8a7795-lvds";
-> +        reg = <0 0xfeb90000 0 0x14>;
-
-Examples are built with #{address,size}-cells = <1>.
-
-> +    lvds0: lvds@feb90000 {
-> +        compatible = "renesas,r8a77990-lvds";
-> +        reg = <0 0xfeb90000 0 0x20>;
-
-Likewise.
-
-> +    lvds1: lvds@feb90100 {
-> +        compatible = "renesas,r8a77990-lvds";
-> +        reg = <0 0xfeb90100 0 0x20>;
-
-Likewise.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Or better still, just submit the next revision with all the fixes. :)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
