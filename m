@@ -2,249 +2,133 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 835B6C2BA1B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 13:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B2EC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 13:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BD2923356
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 13:37:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GckHuiQL"
+	by mail.kernel.org (Postfix) with ESMTP id 92A7C2087E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 13:54:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbgDFNhh (ORCPT
+        id S1728374AbgDFNyW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:37:37 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43692 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728528AbgDFNhh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 09:37:37 -0400
-Received: by mail-oi1-f194.google.com with SMTP id k5so13033505oiw.10
-        for <devicetree@vger.kernel.org>; Mon, 06 Apr 2020 06:37:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6L3aORYHMbwwCq3SCrpWJ+tXaNPgCZaZOcLf7iItFoM=;
-        b=GckHuiQLusEfuz7m7kL2bfmJegj7H8mS9QM9fAP1xyMvKgqdKEty3fg6OwV6T9jPxN
-         bnSCYkeHIMVM01Rvpbr1MuFU1p0UJtWWSVscCydH/L5qbZhASReOaOo7gET1/zbaj+QI
-         c8FrHwThgqlaZMx5YZ70coYm1NXAZsfG0LiFzFrp7pg/iBBWNnhQ4Gdr8484Bz972VYC
-         4eWwQ3NZXWZI47TzKQShY+n5EuG4xi/gjs5tMzzocKEuJ0zxJTCbKSIXsQjdz5uITfqO
-         QkeBGOgQyANa82d9UCdl+C2qQHvztpu0qmTYLDWqH4o5vQik3FHeO8BdvkSDaaNpSlTG
-         DZzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6L3aORYHMbwwCq3SCrpWJ+tXaNPgCZaZOcLf7iItFoM=;
-        b=N54Z+RfrQYA7wJiBbGOf6QM/dlP+nUCP+jLdIRs7X8JQSKPLVy8zkyayhA7YxB5JD9
-         pHLA1jf2OIq6MKbKxK2849wBtfHUpR0fTFFJhdIKs2p15QV4eQifm8kCOlOTpf1RMKsC
-         GU4GeA0XtIPTETsMEvGF28cJQ5ic7y4zjVWU1c/7EuYpii7yG6dfYAZdZATlcLlx5Ozi
-         fmijKmNDPSq5fPW7wpafJv0ZIo2ZywxL5f5zNDffOqT6x3Bes51Dlw+Xo/47CIKFBLzg
-         MiSU2dIMoR3W65DqsbO9quah98eUhl1Q1kR9lzF1veYhrgKWt2LzeUSbTX40bol5xXNq
-         ZrtA==
-X-Gm-Message-State: AGi0PuZfUv9H8W7BkdoIfwsDRHDIJqdLyWySymnVNs6v9JfnfY1Sl+Hp
-        ehpJ05mjXiWqeXjPu0wiWehxgqwvLY+7sbrI9VLDNA==
-X-Google-Smtp-Source: APiQypKD7wVcZWhoSfKhnnMOWHbZfY+YnnpAAJPlZzKefOLNi4hmZpG97WRWAolZBV2nqJ5aYs8hHESeS5eTQm5YhZ4=
-X-Received: by 2002:aca:fcd8:: with SMTP id a207mr13378081oii.56.1586180255395;
- Mon, 06 Apr 2020 06:37:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200331133346.372517-1-robert.foss@linaro.org>
- <20200331133346.372517-3-robert.foss@linaro.org> <CAHp75VfFKY6nzb8aEWmop73v2haZ0P5+aTsKDEU8M=uUPn0u3g@mail.gmail.com>
-In-Reply-To: <CAHp75VfFKY6nzb8aEWmop73v2haZ0P5+aTsKDEU8M=uUPn0u3g@mail.gmail.com>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Mon, 6 Apr 2020 15:37:24 +0200
-Message-ID: <CAG3jFyuH5Kad16R7Oit-c_7RasiEfPycOpA68JYLVopbyQ749w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] media: ov8856: Add devicetree support
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 6 Apr 2020 09:54:22 -0400
+Received: from outgoing2.flk.host-h.net ([188.40.0.84]:47695 "EHLO
+        outgoing2.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbgDFNyW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 09:54:22 -0400
+Received: from www31.flk1.host-h.net ([188.40.1.173])
+        by antispam3-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1jLSCe-0004L7-T9; Mon, 06 Apr 2020 15:54:19 +0200
+Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
+        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1jLSCc-0003gd-6G; Mon, 06 Apr 2020 15:54:14 +0200
+From:   Justin Swartz <justin.swartz@risingedge.co.za>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ARM: dts: enable WLAN for Mecer Xtreme Mini S6
+Date:   Mon,  6 Apr 2020 13:50:04 +0000
+Message-Id: <20200406135006.23759-1-justin.swartz@risingedge.co.za>
+In-Reply-To: <e602c1b8-3606-a8d3-c64c-ec9e58315974@gmail.com>
+References: <e602c1b8-3606-a8d3-c64c-ec9e58315974@gmail.com>
+X-Authenticated-Sender: justin.swartz@risingedge.co.za
+X-Virus-Scanned: Clear
+X-Originating-IP: 188.40.1.173
+X-SpamExperts-Domain: risingedge.co.za
+X-SpamExperts-Username: 
+Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: Combined (0.01)
+X-Recommended-Action: accept
+X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0VxB0mWeGZk2wSOLROvd+japSDasLI4SayDByyq9LIhVKSjl/T5Wjq3C
+ cHUN07/U5ETNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
+ mAX8Bxy/iUu0ThNZg0jxJtcVJProrT987X1VDPOqN+OoDzRTdku7DidYUZdNf38Sp7Of4wP429AA
+ f49baR+f3He7jw4SoVhmTJ/3eP9ORQWVx8ds1M4qmk3/bYr2p8zbg4Paoa3pNVQ0zl7t/+UfQLYB
+ qEPnp1U88kqVD8AM2G81dFO0E3gi+MOI1foZYzDggRXhpvoPtF3cVkniFXU3qJSqpdJudO6+rkiw
+ E5i8Wl78Q18OeOfsy4h7jF1Uv9lnibl3vcBqVmvQB4A18af/JarpiQ+6hR7HOCnjVN6YAVXirbLu
+ Jjy3NtnGWLbnBGfrUBEXB2fYGLNieGQuoHtJvp0r29Rf3ZjFwL+MhHEWw/0qBlNDp8uABz3dkWV+
+ ttWGem52QLIiDo2hv5/Q58JTycYLFeAN4+MGwnsp7SkU6CLbyF0Zq4b1/7rjUzETJrWks4pbbQJq
+ 6gWopI3ep45X19ZysgQ+31LcAX8eoFXAhohfegXGH2GIVQVglJFbK771YV8YbC29CtmpcTqTfSIf
+ CWq9oj7OiT8GwpAriB+3/81I3rvR8KJ2fK9jiDYgijyqqY0rATpzHKGfmtNsYTr4SmDZ/bGW8xZC
+ RRs6ZD24UhFcZZEpLhnBCwImTQNvxaLyCc35VA7RvW/HGiGqxL09Cymermt8NAa/gGopT3kKfO4C
+ gvcKmV0o9jYzsFpuc43pp/LzIs3ornuRuAAdgrkq+6l7ZLNYJcf7Z6PCydDzoYZgInuDxgFOs7AZ
+ TwbwMaed1BaNkB2/QnXFItfl/CUlUJcr3N9JpeObY3YyPF5A38NrFoXSENXH6UXfnav35JPA4YfM
+ 6tBkXsqvKY6zoLLTPpuFqUUQz+mM8JAD4ECWNo09vb0YLIRnK477e9Xake5PIWKjIXX7qe2zOXoS
+ foy7Z4L9ynga1OLlo1iENjSur2RbacxP0wHegoAoacXze2bjO41FyBEqIaDudcVplPE6wCr6GXU1
+ lCw88ijyus1sGnWknJqS8gGhNQxpB5P3qu7c1xMljx2PG/R+pKBSKy8hXOgvE1zSS7XUhkYEQYeb
+ 3jR5NeVaJQBh0uawl0Cg8j+knAzOA9mmoJvkuhKHiekUuskYaI6ERCKp8gXWqnT9kLHhStr5fiGK
+ 7KncpWELuTEvuGslKTrRIXcXpFg5ivY=
+X-Report-Abuse-To: spam@antispammaster.host-h.net
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hey Andy,
+The Mecer Xtreme Mini S6 features a wireless module, based on a
+Realtek 8723BS, which provides WLAN and Bluetooth connectivity via
+SDIO and UART interfaces respectively.
 
-Thanks for the review, it is much appreciated!
+Define a simple MMC power sequence that declares the GPIO pins
+connected to the module's WLAN Disable and Bluetooth Disable pins
+as active low reset signals, because both signals must be deasserted
+for WLAN radio operation.
 
-On Tue, 31 Mar 2020 at 16:01, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
->
-> On Tue, Mar 31, 2020 at 4:36 PM Robert Foss <robert.foss@linaro.org> wrote:
-> >
-> > Add devicetree match table, and enable ov8856_probe()
-> > to initialize power, clocks and reset pins.
->
-> ...
->
-> > +static int __ov8856_power_on(struct ov8856 *ov8856)
-> > +{
-> > +       struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
-> > +       int ret;
-> > +
-> > +       ret = clk_prepare_enable(ov8856->xvclk);
-> > +       if (ret < 0) {
-> > +               dev_err(&client->dev, "failed to enable xvclk\n");
-> > +               return ret;
-> > +       }
-> > +
->
-> > +       if (is_acpi_node(ov8856->dev->fwnode))
->
-> Use dev_fwnode().
+Configure the host's SDIO interface for High Speed mode with 1.8v
+I/O signalling and IRQ detection over a 4-bit wide bus.
 
-Ack.
+Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+---
+Changes in v2:
+  - Remove unused disable-wp and deprecated num-slots attributes
+    from &sdio, as suggested by Johan Jonker.
 
->
-> > +               return 0;
-> > +
-> > +       if (ov8856->reset_gpio) {
->
-> > +               gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_HIGH);
->
-> This is wrong. You have to fix it to use either 0 or 1.
+ arch/arm/boot/dts/rk3229-xms6.dts | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-I've changed all gpiod_set_value_cansleep() calls to use 0/1.
+diff --git a/arch/arm/boot/dts/rk3229-xms6.dts b/arch/arm/boot/dts/rk3229-xms6.dts
+index 679fc2b00..6890af0b7 100644
+--- a/arch/arm/boot/dts/rk3229-xms6.dts
++++ b/arch/arm/boot/dts/rk3229-xms6.dts
+@@ -39,6 +39,12 @@
+ 		};
+ 	};
+ 
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&gpio2 26 GPIO_ACTIVE_LOW>,
++		              <&gpio2 29 GPIO_ACTIVE_LOW>;
++	};
++
+ 	vcc_host: vcc-host-regulator {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+@@ -202,6 +208,16 @@
+ 	status = "okay";
+ };
+ 
++&sdio {
++	bus-width = <4>;
++	cap-sd-highspeed;
++	cap-sdio-irq;
++	mmc-pwrseq = <&sdio_pwrseq>;
++	non-removable;
++	vqmmc-supply = <&vccio_1v8>;
++	status = "okay";
++};
++
+ &sdmmc {
+ 	cap-mmc-highspeed;
+ 	disable-wp;
+-- 
+2.11.0
 
->
-> > +               usleep_range(1000, 2000);
-> > +       }
-> > +
-> > +       ret = regulator_bulk_enable(ARRAY_SIZE(ov8856_supply_names),
-> > +                                   ov8856->supplies);
->
-> > +       if (ret < 0) {
->
-> Do you need all ' < 0' parts all over the series?
-
-Some checks are needed due to ACPI and DT support co-existing.
-Maybe it would be better to just split the probing into an ACPI path
-and a DT path.
-
-I'll have a look through the series for redundant retval checks.
-
->
-> > +               dev_err(&client->dev, "failed to enable regulators\n");
-> > +               goto disable_clk;
-> > +       }
->
-> ...
->
-> > +       gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_LOW);
->
-> Ditto.
-
-Ack.
-
->
-> ...
->
-> > +       gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_HIGH);
->
-> Ditto.
-
-Ack.
-
->
-> ...
->
-> > +       gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_HIGH);
->
-> Ditto.
-
-Ack.
-
->
-> ...
->
-> > -       ret = fwnode_property_read_u32(fwnode, "clock-frequency", &mclk);
-> > -       if (ret)
-> > -               return ret;
->
-> Where is it gone? Why?
-
-It was replaced by a clk_get_rate call, which as Sakari pointed out,
-isn't correct.
-I'll rework the clock handling for v4.
-
->
-> > +       ov8856->xvclk = devm_clk_get_optional(dev, "xvclk");
-> > +       if (IS_ERR(ov8856->xvclk)) {
->
-> > +               dev_err(dev, "could not get xvclk clock (%ld)\n",
-> > +                       PTR_ERR(ov8856->xvclk));
->
-> Also you may use %pe here and in similar cases.
-
-Weirdly checkpatch complains about this.
-But it builds and runs cleanly, so I'll add it in v4.
-
->
-> > +               return PTR_ERR(ov8856->xvclk);
-> > +       }
->
-> > +       ov8856->reset_gpio = devm_gpiod_get_optional(dev, "reset",
-> > +               GPIOD_OUT_HIGH);
->
-> Here parameter is correct. The question is, what the value should be
-> HIGH or LOW?
-> Basically HIGH means to assert the signal.
-
-Ack, I'll invert the logic.
-
->
-> > +       if (IS_ERR(ov8856->reset_gpio)) {
->
-> > +               dev_dbg(dev, "failed to get reset-gpio\n");
->
-> Noise.
-> Enable GPIO debug to see this kind of messages.
-
-Ack.
-
->
-> > +               return PTR_ERR(ov8856->reset_gpio);
-> > +       }
->
-> ...
->
-> > +       ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ov8856_supply_names),
-> > +                                     ov8856->supplies);
-> > +       if (ret) {
->
-> > +               dev_warn(dev, "failed to get regulators\n");
->
-> If it's a warning, why we return from here?
-> Same question to all other places with same issue.
-
-The issue I was seeing was the driver having to return a EDEFER here,
-so this warning sheds some light on which exact component is returning
-an EDEFER.
-
-[   15.962623] ov8856 16-0010: Dropping the link to regulator.29
-[   15.968464] ov8856 16-0010: failed to get regulators
-[   15.973493] ov8856 16-0010: failed to get HW configuration: -517
-[   15.979591] ov8856 16-0010: removing from PM domain titan_top_gdsc
-[   15.985855] ov8856 16-0010: genpd_remove_device()
-[   15.990672] i2c 16-0010: Driver ov8856 requests probe deferral
-
-Personally I found it helpful to speed up debugging, but I'll happily
-remove it if you prefer no warning.
-
->
-> > +               return ret;
-> >         }
->
-> --
-> With Best Regards,
-> Andy Shevchenko
