@@ -2,125 +2,168 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE1CC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 09:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6662C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 09:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCF36206F5
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 09:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 887D62072A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 09:22:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Ro214fb4";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FR5Grp1I"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="UCAlchR4";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="CKlwvlkR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgDFJPO (ORCPT
+        id S1726706AbgDFJWe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 05:15:14 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:47793 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726744AbgDFJPO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 05:15:14 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id DB10B58014F;
-        Mon,  6 Apr 2020 05:15:10 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 06 Apr 2020 05:15:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=Yo+kk4ssQ5zTwLnaP0Ele1F1y+q
-        26rLa/dshj8KwXRs=; b=Ro214fb4noi/VPI5Awh/ibsEBUH7Z0GDSeRdL6qHYNE
-        WSGTgsQP5+6VhuWw9Ijk1lgaOPmNONRf3EXjX8sa2BbJjqInAyBuf7Uv+Iy9M5+L
-        usgr7yewwEJCyjQBbXkhtq1iAOxPOgrQKjQn97RIGsIpyIvAbly7HOg72t48Anxc
-        8DH12mBcovs+0oMyKWConql2bipT4Xc3eACcVNNoXxKaaaWJfQMbqRSSel++g22P
-        88fpGjS/9ACxPKF+9zWSFkDNDfukHxY7Wq/CvlnVHC40a2M4Am/eO/w6YbA0mu2x
-        vcyPGvsuxx1bp4fA/89o74GRTRPjrTba2A8I+WhmUTQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Yo+kk4
-        ssQ5zTwLnaP0Ele1F1y+q26rLa/dshj8KwXRs=; b=FR5Grp1IpF2SHehuXf4r3T
-        jtjEpQUxE/4oUH49uBfa3ICmSkitQx0xtqkdtzt9M/hCnqxkETqV7RBMO/0CkIu9
-        xeBKOs9HQS2snUBhB3iidR9TZaoU3kG4SaTcsr8RKXhgLrHih+Muo4tTin/yFwEP
-        O6tLMUSLGUkCCNCRi0u9oLIkmmJoAUkyU/5TlYtTZsTBZmKxrVW74qoGeI5nnS+5
-        5VObxN3qoh1brt1cxFT5fdkNMERQrJ5AcqzOzqLGEtHAgV7TZaz7z+Si/AY3TobL
-        vZ4vzoDsgtCsa17DkciA/hIEqII76xDso8J5lB5yuSC5gLhGxnwXssch2lh5Jm2g
-        ==
-X-ME-Sender: <xms:HfOKXr5Nyxk6k1GVM9huhudZON1Hd0xo4IV5rT93EZvHaC1VzD3jTw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefgdduhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
-    epkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgv
-    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnh
-    hordhtvggthh
-X-ME-Proxy: <xmx:HfOKXn0d3TaUbMsAZPubP-kvk10FGNh38AW9nbJRP30Fl6YIAcNAAg>
-    <xmx:HfOKXnn4plu2WCUixfRxj3e5hNUQWt_Gk-ZHD2dx30OJhCPOGFUKQw>
-    <xmx:HfOKXggQ-btirr7O0G8WO0ikBaRltjPaSejWBznZ5pkiSr3u8c_CCg>
-    <xmx:HvOKXmsisu5MBDr0BCoB62pLG6EMM8T4AHp8Oc61JSeoAWyA-6YXhw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7C6C9328005D;
-        Mon,  6 Apr 2020 05:15:09 -0400 (EDT)
-Date:   Mon, 6 Apr 2020 11:15:07 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Ondrej Jirman <megous@megous.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v7 0/6] Allwinner sun6i message box support
-Message-ID: <20200406091507.jojdzjidru64sjhm@gilmour.lan>
-References: <20200223040853.2658-1-samuel@sholland.org>
- <59dc1ee9-a369-7cf9-df6a-4b5b99e24324@sholland.org>
+        Mon, 6 Apr 2020 05:22:34 -0400
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:21630 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726701AbgDFJWe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 05:22:34 -0400
+X-Greylist: delayed 1659 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 Apr 2020 05:22:33 EDT
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0368l2Y5003853;
+        Mon, 6 Apr 2020 01:54:40 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=proofpoint;
+ bh=hw1jLeC6H7wNEPLHCSw7kFD1EFLkp0M2cp8w/uwSQGU=;
+ b=UCAlchR4P2lxUVfQ0C7509WbKXYvk0rKSYk+dbucp+6DnvGAGI5QPWiDoluHxfJK9B8W
+ X1GFB0Ldp3gASUyQ6y0B/iVTMkpZ4pbGZQ6olbl3gxWscOEpMMuuDXHVvtFzJ5yFDgrI
+ atM6bE+e58vSeGVCWp3IYfxqw4HV7LNeUonvUGsZF524UzXu0zPs3ttmW3g01lobgh2Q
+ tqopGRN3fOQd5nBwyIKUeAJPmdVZbKlyHgfcOTVtATJijtaCWssb31OAH/BO+xCW+1eA
+ chU/4Uk5f3Ov6OFyNupl8VvqoLOole4C2N+zv1NeYEHMSy2bcEY/wYuEsMKJlJfI7AdK Kw== 
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2103.outbound.protection.outlook.com [104.47.55.103])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 306psvwmy2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Apr 2020 01:54:40 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ndjiCwzHOetYY4gUsBFaNnkfNsB5JTiiC5LNsTBztPoRrcaOvNixetMSuXreXrFoBf5aMFb/m8SrYpx+iOeGqM6aDzzEcmT63RxyEp4wS4s8gHUUN0FAQvEs2L1zjaSeJpaXltvnqbGvRJBIFp/wD4o5GSvR39xDMMsNqveE/RdHIGuppxrlLwXS64yr7PyWhqlTpzijx9ekgaFWMUbruwPQDVWkRYmPrRbBX1lajfvhSOyAQ+IuuOIw+v7ierSD5bXNKU9IAhknJh93cUfT6ktcRBrSal2OlmtSvrwIg95iQFtKX+S4B+9hpbicl+LpGHn3kcVz5M6FqiE/8p7Zjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hw1jLeC6H7wNEPLHCSw7kFD1EFLkp0M2cp8w/uwSQGU=;
+ b=mUShA7rWqvRXYDF7a7hgITRi2WammHw7PS5h0NXbFeU7VubHuo0nuv+moajg2FoOnlJQGMUeDG078WxFEyCqSzGUwUzAfIaZjCTdN6gxOvk9vhYTKhVYLHGTKdtJ/NqmqPzMybc70FgsR+5UpFOlj69RY5ahpXxXkWyV7WLytxNTXR2hMJSCi4Yc4MRPM8wyoRA6aqJAK/g9q2miUAA7ylhvhdzWfxKD5vuPSRsiMWLyS1Ldmo0yg+9hFkLR8oDcs9WVvywMBHD+1fN8lAUJbdMOQN0KiDqQ7jJ+olBF+fPSV3JwT2fBMdtAV2i2TIwLgtkPL/mWI65aTq1YgEvB5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 64.207.220.244) smtp.rcpttodomain=kernel.org smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hw1jLeC6H7wNEPLHCSw7kFD1EFLkp0M2cp8w/uwSQGU=;
+ b=CKlwvlkRtcvxYWRMs7aOnJnGF8n//pUVv2SWJE8UigS6ff6YK4uNt+hpOJXEUSB8790TalPXcGmul+wh/t2CWdnu+aHP+LlLnG8E72ytZDW1o0LrkSB0X/Ld4rDC78lRT+MA4K67lapgHzW/n+6c1UyohLwk+zbTN+5fLvvVMhk=
+Received: from MWHPR18CA0041.namprd18.prod.outlook.com (2603:10b6:320:31::27)
+ by MW2PR07MB4010.namprd07.prod.outlook.com (2603:10b6:907:4::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.19; Mon, 6 Apr
+ 2020 08:54:38 +0000
+Received: from MW2NAM12FT013.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:320:31:cafe::bf) by MWHPR18CA0041.outlook.office365.com
+ (2603:10b6:320:31::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend
+ Transport; Mon, 6 Apr 2020 08:54:38 +0000
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 64.207.220.244 as permitted sender) receiver=protection.outlook.com;
+ client-ip=64.207.220.244; helo=wcmailrelayl01.cadence.com;
+Received: from wcmailrelayl01.cadence.com (64.207.220.244) by
+ MW2NAM12FT013.mail.protection.outlook.com (10.13.180.80) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2878.9 via Frontend Transport; Mon, 6 Apr 2020 08:54:36 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id 0368sWmp015091
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
+        Mon, 6 Apr 2020 01:54:34 -0700
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Mon, 6 Apr 2020 10:54:32 +0200
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Mon, 6 Apr 2020 10:54:32 +0200
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 0368sWwK004290;
+        Mon, 6 Apr 2020 10:54:32 +0200
+Received: (from dkangude@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 0368sVYo004283;
+        Mon, 6 Apr 2020 10:54:31 +0200
+From:   Dhananjay Kangude <dkangude@cadence.com>
+To:     <linux-edac@vger.kernel.org>
+CC:     <bp@alien8.de>, <mchehab@kernel.org>, <tony.luck@intel.com>,
+        <james.morse@arm.com>, <linux-kernel@vger.kernel.org>,
+        <mparab@cadence.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Dhananjay Kangude <dkangude@cadence.com>
+Subject: [PATCH v2 0/2] Add EDAC support for Cadence ddr controller
+Date:   Mon, 6 Apr 2020 10:54:02 +0200
+Message-ID: <20200406085404.3983-1-dkangude@cadence.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xdzfhjy327jx4nkm"
-Content-Disposition: inline
-In-Reply-To: <59dc1ee9-a369-7cf9-df6a-4b5b99e24324@sholland.org>
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:64.207.220.244;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:wcmailrelayl01.cadence.com;PTR:ErrorRetry;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(136003)(396003)(36092001)(46966005)(4326008)(70586007)(36756003)(107886003)(356004)(6666004)(336012)(26005)(1076003)(426003)(81156014)(2616005)(186003)(8936002)(8676002)(5660300002)(47076004)(36906005)(42186006)(478600001)(81166006)(70206006)(82740400003)(26826003)(54906003)(86362001)(6916009)(316002)(2906002);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2d97a432-d444-4068-6fc9-08d7da082268
+X-MS-TrafficTypeDiagnostic: MW2PR07MB4010:
+X-Microsoft-Antispam-PRVS: <MW2PR07MB401094230BCCA87DB156A10BCDC20@MW2PR07MB4010.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 0365C0E14B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: LOcolp50ktCVIFpquHcDGNXDyaPdKHPjPqkj/zBOsqdsBsH7j8NshmgaxT7lx96lF8/SNAfaODbU4f5XQPWDRX4KRFPuW0/zYzagRWjDlFyEk48Vl8kw87nsN1hCRl98ByWjYcaKTgd57UwnDKZRBFz0iDUPW8VIxSYo4lOoPq1Z7mVivDH19YULLMANa7DVJhp9q9zMJag1gk5Tpg2KlDr1Mhw0EDmi7aFmkGPyt9yF8VdeQPJfQLgA/76WGMMEgGYuIHJk5ttaZXTwgOFa/gZcpMmN68OizotqIW0djTem5rur0HW69W4Hzql0PmrFmIE6yGPLjDtQ9V0u9FbmwWEFrbTzpOFz5zarCvgoEamZQO87KLQehQXam8rY1WRHROvotJ55+6YXtFRvot8yhLz1bGyY0yrOINTqQnma1bKU/wx3zFnlxzOH7bsFqW3MkqvCA4gaH5/o1/elzvfgAO80tJ366h6hjSUPM/LOJ3cjRDwXwv7EseUtVuBYUahhcDhbX+/Bpyhz3PUP+42gYiZbuNn0TC9h+CMCb4rtotk=
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2020 08:54:36.7398
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d97a432-d444-4068-6fc9-08d7da082268
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.244];Helo=[wcmailrelayl01.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR07MB4010
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-06_05:2020-04-03,2020-04-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 bulkscore=0
+ spamscore=0 clxscore=1015 adultscore=0 impostorscore=0 malwarescore=0
+ lowpriorityscore=0 phishscore=0 mlxlogscore=509 mlxscore=0 suspectscore=1
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004060076
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+These patches add new edac driver for Cadence ddr memory controller.
+Cadence controller detects single(CE) and double(UE) bit errors during
+memory operations(RMW). DDR controller raised the interrupt on detection
+of the ecc error event and fill the data into registers. Driver handle
+the interrupt event and notify edac subsystem about ecc errors.
 
---xdzfhjy327jx4nkm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Changes since v2:
+=================
+- Added minor fixes to YAML file
+- Split ISR into two differnt functions
+- Removed unused paramters
+- Fixed indentation issues
+- Improved code readabilty
+- Checked return value for edac_get_dimm
+- Modified quirks as a ip_features
 
-On Wed, Apr 01, 2020 at 11:55:34AM -0500, Samuel Holland wrote:
-> On 2/22/20 10:08 PM, Samuel Holland wrote:
-> > Samuel Holland (6):
-> >   dt-bindings: mailbox: Add a binding for the sun6i msgbox
-> >   mailbox: sun6i-msgbox: Add a new mailbox driver
->
-> These two patches have been applied for 5.7[1], so the DTS changes should be
-> ready to apply as well.
->
-> [1]:
-> https://lore.kernel.org/lkml/CABb+yY0-q+5+pqP-rBHCYpw-LmT+h80+OU26XL34fTrXhO+T3Q@mail.gmail.com/
+Changes since v1:
+=================
+- Made predefined arrays as static
+ Fixes: 201447a5db9b ("EDAC/Cadence:Add EDAC driver for cadence memory controller")
+- Replace macro 'EDAC_DIMM_PTR' with newly introduce function
+- Removed unused variable root
 
-Sorry, I missed that it was merged and sent for a PR.
+Dhananjay Kangude (2):
+  dt-bindings: edac: Add cadence ddr mc support
+  EDAC/Cadence:Add EDAC driver for cadence memory controller
 
-I've queued the DT changes for 5.8
+ .../devicetree/bindings/cdns,ddr-edac.yaml         |   47 ++
+ drivers/edac/Kconfig                               |    8 +
+ drivers/edac/cadence_edac.c                        |  641 ++++++++++++++++++++
+ 3 files changed, 696 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/cdns,ddr-edac.yaml
+ create mode 100644 drivers/edac/cadence_edac.c
 
-Maxime
-
---xdzfhjy327jx4nkm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXorzGwAKCRDj7w1vZxhR
-xfkjAQDQamF1U+7L7tVY2lQH6acuSJ6qmfCYNC0tJ9ZUu1NNmQD9H2qUHh5Aqh+d
-wYXK+j0yeHQAgMu9TwBZ32Dg/eeKRwU=
-=ay2J
------END PGP SIGNATURE-----
-
---xdzfhjy327jx4nkm--
