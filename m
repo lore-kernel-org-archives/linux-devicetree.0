@@ -2,96 +2,297 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 309E9C2BA1A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 06:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FC6C2BA1E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 06:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05FFF20672
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 06:01:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SJBpzLN8"
+	by mail.kernel.org (Postfix) with ESMTP id 5BC4920719
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 06:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725884AbgDFGAs (ORCPT
+        id S1726564AbgDFGhh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 02:00:48 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:40825 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgDFGAs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 02:00:48 -0400
-Received: by mail-pj1-f68.google.com with SMTP id kx8so5987517pjb.5
-        for <devicetree@vger.kernel.org>; Sun, 05 Apr 2020 23:00:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5+uZMfBZv12Nq4DU6XHRgLdqk7yyEBTks4MoCu3V16w=;
-        b=SJBpzLN8cZ5bsVFizs2mSYop/ikIqT2uLbv4hR80BL8LBfrFSUrqxu+VSeZKuZbZXK
-         aVGcRn8y/D8GV5sR9REBmlyfBLogrSRL3Rf1R79m1gjpOnymFvURwo0irgHI87oTs/MO
-         4RKTVuuWHnd0k09FmATYaRWDqMgwldzsA8yV42fjeg1ILCzZ0M+cl7Gr67TLCHZOhPpk
-         9ByphToDAjJwRa+klKcSs43mfUTuMrM+5z6fDbwF9xcQI7/ZDQOH9Wm1ZYVBQiGejD33
-         RcH2YKt1+We57xvkTnxOZcMca6yWODRFhMJyclDxi/EfPfJmURII30Mbaw7PQEBsvc6M
-         Nn+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5+uZMfBZv12Nq4DU6XHRgLdqk7yyEBTks4MoCu3V16w=;
-        b=OVtu1eJjr+QNhn0BBoofFosMhxSv6QbJ3SqBS6mvFRIj7z3GUuMYl555Tw+Hqe/DYD
-         oY9C0OlS4cCqIL2UYMgHq+YTl9RbFdpncG09eed34enGY/ilwDeTHPHnpBDPl7SJfnz1
-         JEhxk6f6ouGRR1giyIzgXuqG5fqAqnt6wF+g6YglCnxTxMNxw+pxB0pN+fZrJx3NOPOX
-         IAm1dfQDmtlVms7jddOK7fbleSl7HJwj7r60DNvjTtG6DJCtx351bi+nt9SyqgDXfKpA
-         s3BRhZ3CgngBH/w0YKDEAhrVMWymg/9xsVFlDomXPlHMLqxV2T3BlR+E1qbu2WCWkc4t
-         Uvbw==
-X-Gm-Message-State: AGi0PuYz1SrqrluYZmUFK95JVuhqIED85vJ4A0coT9lwb2Ef4SoK8WKp
-        udw+fouVwzQSRA3mIpuHz3IURQ==
-X-Google-Smtp-Source: APiQypK02cIrQa2bOqRgzm15ePaxfOCT5LWvMZq/McP6IafAcS0bfx4MMbkfC01e575Gql/Wc7qPnQ==
-X-Received: by 2002:a17:90a:2103:: with SMTP id a3mr24949763pje.181.1586152846668;
-        Sun, 05 Apr 2020 23:00:46 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id s61sm11806003pjd.33.2020.04.05.23.00.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 23:00:45 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: qcom: c630: Specify UFS device reset
-Date:   Sun,  5 Apr 2020 23:00:49 -0700
-Message-Id: <20200406060049.227029-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.26.0
+        Mon, 6 Apr 2020 02:37:37 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:60595 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726408AbgDFGhg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 02:37:36 -0400
+X-Originating-IP: 2.224.242.101
+Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 9628B60005;
+        Mon,  6 Apr 2020 06:37:28 +0000 (UTC)
+Date:   Mon, 6 Apr 2020 08:40:31 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 3/4] dt-bindings: display: bridge: thc63lvd1024: Convert
+ binding to YAML
+Message-ID: <20200406064031.huwbq3wqd6t46idq@uno.localdomain>
+References: <20200405232318.26833-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20200405232318.26833-4-laurent.pinchart+renesas@ideasonboard.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200405232318.26833-4-laurent.pinchart+renesas@ideasonboard.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On some device the reset line for the UFS memory needs to be tickled in
-order for UFS to initialize properly, add this to the ufs_mem_hc node.
+Hi Laurent,
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 2 ++
- 1 file changed, 2 insertions(+)
+On Mon, Apr 06, 2020 at 02:23:17AM +0300, Laurent Pinchart wrote:
+> Convert the Thine THC63LVD1024 text binding to YAML.
+>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> ---
+>  .../display/bridge/thine,thc63lvd1024.txt     |  66 ----------
+>  .../display/bridge/thine,thc63lvd1024.yaml    | 121 ++++++++++++++++++
+>  2 files changed, 121 insertions(+), 66 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+> deleted file mode 100644
+> index d17d1e5820d7..000000000000
+> --- a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.txt
+> +++ /dev/null
+> @@ -1,66 +0,0 @@
+> -Thine Electronics THC63LVD1024 LVDS decoder
+> --------------------------------------------
+> -
+> -The THC63LVD1024 is a dual link LVDS receiver designed to convert LVDS streams
+> -to parallel data outputs. The chip supports single/dual input/output modes,
+> -handling up to two LVDS input streams and up to two digital CMOS/TTL outputs.
+> -
+> -Single or dual operation mode, output data mapping and DDR output modes are
+> -configured through input signals and the chip does not expose any control bus.
+> -
+> -Required properties:
+> -- compatible: Shall be "thine,thc63lvd1024"
+> -- vcc-supply: Power supply for TTL output, TTL CLOCKOUT signal, LVDS input,
+> -  PPL and digital circuitry
+> -
+> -Optional properties:
+> -- powerdown-gpios: Power down GPIO signal, pin name "/PDWN". Active low
+> -- oe-gpios: Output enable GPIO signal, pin name "OE". Active high
+> -
+> -The THC63LVD1024 video port connections are modeled according
+> -to OF graph bindings specified by Documentation/devicetree/bindings/graph.txt
+> -
+> -Required video port nodes:
+> -- port@0: First LVDS input port
+> -- port@2: First digital CMOS/TTL parallel output
+> -
+> -Optional video port nodes:
+> -- port@1: Second LVDS input port
+> -- port@3: Second digital CMOS/TTL parallel output
+> -
+> -The device can operate in single-link mode or dual-link mode. In single-link
+> -mode, all pixels are received on port@0, and port@1 shall not contain any
+> -endpoint. In dual-link mode, even-numbered pixels are received on port@0 and
+> -odd-numbered pixels on port@1, and both port@0 and port@1 shall contain
+> -endpoints.
+> -
+> -Example:
+> ---------
+> -
+> -	thc63lvd1024: lvds-decoder {
+> -		compatible = "thine,thc63lvd1024";
+> -
+> -		vcc-supply = <&reg_lvds_vcc>;
+> -		powerdown-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
+> -
+> -		ports {
+> -			#address-cells = <1>;
+> -			#size-cells = <0>;
+> -
+> -			port@0 {
+> -				reg = <0>;
+> -
+> -				lvds_dec_in_0: endpoint {
+> -					remote-endpoint = <&lvds_out>;
+> -				};
+> -			};
+> -
+> -			port@2{
+> -				reg = <2>;
+> -
+> -				lvds_dec_out_2: endpoint {
+> -					remote-endpoint = <&adv7511_in>;
+> -				};
+> -			};
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.yaml b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.yaml
+> new file mode 100644
+> index 000000000000..469ac4a34273
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd1024.yaml
+> @@ -0,0 +1,121 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/thine,thc63lvd1024.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Thine Electronics THC63LVD1024 LVDS Decoder
+> +
+> +maintainers:
+> +  - Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-index d92a22e67b67..99f197cc0505 100644
---- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-@@ -623,6 +623,8 @@ bluetooth {
- &ufs_mem_hc {
- 	status = "okay";
- 
-+	reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
-+
- 	vcc-supply = <&vreg_l20a_2p95>;
- 	vcc-max-microamp = <600000>;
- };
--- 
-2.26.0
+Ack
 
+> +  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> +
+> +description: |
+> +  The THC63LVD1024 is a dual link LVDS receiver designed to convert LVDS
+> +  streams to parallel data outputs. The chip supports single/dual input/output
+> +  modes, handling up to two LVDS input streams and up to two digital CMOS/TTL
+> +  outputs.
+> +
+> +  Single or dual operation mode, output data mapping and DDR output modes are
+> +  configured through input signals and the chip does not expose any control
+> +  bus.
+> +
+> +properties:
+> +  compatible:
+> +    const: thine,thc63lvd1024
+> +
+> +  ports:
+> +    type: object
+> +    description: |
+> +      This device has four video ports. Their connections are modeled using the
+> +      OF graph bindings specified in Documentation/devicetree/bindings/graph.txt.
+> +
+> +      The device can operate in single-link mode or dual-link mode. In
+> +      single-link mode, all pixels are received on port@0, and port@1 shall not
+> +      contain any endpoint. In dual-link mode, even-numbered pixels are
+> +      received on port@0 and odd-numbered pixels on port@1, and both port@0 and
+> +      port@1 shall contain endpoints.
+
+I wonder why we have documented only single/dual input mode and not
+single/dual output mode too. The driver only supports single input and
+single output, but this might be a good occasion to document the
+output port mapping as well.
+
+How about
+
+      The device can operate in single or dual input and output modes.
+
+      When operating in single input mode, all pixels are received on
+      port@0, and port@1 shall not contain any endpoint. In dual input
+      mode, even-numbered pixels are received on port@0 and
+      odd-numbered pixels on port@1, and both port@0 and port@1 shall
+      contain endpoints.
+
+      When operating in single output mode all pixels are output from
+      the first CMOS/TTL port and port@3 shall not contain any
+      endpoint. In dual output mode pixels are output from both
+      CMOS/TTL ports and both port@2 and port@3 shall contain
+      endpoints.
+
+With or without this, as the new bindings are not worse than what they
+where already:
+
+Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+
+Thanks
+   j
+
+> +
+> +    properties:
+> +      '#address-cells':
+> +        const: 1
+> +
+> +      '#size-cells':
+> +        const: 0
+> +
+> +      port@0:
+> +        type: object
+> +        description: First LVDS input port
+> +
+> +      port@1:
+> +        type: object
+> +        description: Second LVDS input port
+> +
+> +      port@2:
+> +        type: object
+> +        description: First digital CMOS/TTL parallel output
+> +
+> +      port@3:
+> +        type: object
+> +        description: Second digital CMOS/TTL parallel output
+> +
+> +    required:
+> +      - port@0
+> +      - port@2
+> +
+> +    additionalProperties: false
+> +
+> +  oe-gpios:
+> +    maxItems: 1
+> +    description: Output enable GPIO signal, pin name "OE", active high.
+> +
+> +  powerdown-gpios:
+> +    maxItems: 1
+> +    description: Power down GPIO signal, pin name "/PDWN", active low.
+> +
+> +  vcc-supply:
+> +    maxItems: 1
+> +    description:
+> +      Power supply for the TTL output, TTL CLOCKOUT signal, LVDS input, PLL and
+> +      digital circuitry.
+> +
+> +required:
+> +  - compatible
+> +  - ports
+> +  - vcc-supply
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    lvds-decoder {
+> +        compatible = "thine,thc63lvd1024";
+> +
+> +        vcc-supply = <&reg_lvds_vcc>;
+> +        powerdown-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
+> +
+> +        ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            port@0 {
+> +                reg = <0>;
+> +
+> +                lvds_dec_in_0: endpoint {
+> +                    remote-endpoint = <&lvds_out>;
+> +                };
+> +            };
+> +
+> +            port@2 {
+> +                reg = <2>;
+> +
+> +                lvds_dec_out_2: endpoint {
+> +                    remote-endpoint = <&adv7511_in>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
