@@ -2,148 +2,291 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A01C2BA17
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 16:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F359C2BA17
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 16:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C85124964
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 16:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1531620769
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 16:39:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fPCoO9GD"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BrxzIhzV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbgDFQhh (ORCPT
+        id S1729529AbgDFQji (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:37:37 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11100 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728996AbgDFQhh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 12:37:37 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8b5a6a0000>; Mon, 06 Apr 2020 09:35:54 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 06 Apr 2020 09:37:36 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 06 Apr 2020 09:37:36 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
- 2020 16:37:36 +0000
-Received: from [10.2.164.193] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
- 16:37:34 +0000
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
- <38d921a7-5cdf-8d0a-2772-4399dd1a96a0@gmail.com>
- <9b8cf37b-d2ad-9df2-aad8-216c2c954e69@nvidia.com>
- <1a12974a-7cc7-2c3a-3995-076b9956714d@gmail.com>
- <66cc8646-43d3-3fc8-c31d-d0d2efac505f@nvidia.com>
- <f000f6b9-0f05-b2a5-6dad-37b09803711d@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <fe6a17c1-fae2-a365-4dd6-6d3a25d47d54@nvidia.com>
-Date:   Mon, 6 Apr 2020 09:37:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 6 Apr 2020 12:39:38 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:17621 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729519AbgDFQji (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 12:39:38 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586191177; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=p0XtF/zhQFXWOlfW1YKM6MOQlK8lTjQ5wMkXZkRGCnY=; b=BrxzIhzVOa8UKyaxbR3jwpyICwlC5DoHM0zTm4kPGkmMIzIY4Ynt0QOrpYoCzUUkZ73/AIfa
+ dIfWMjUeLNEBJM2W/FvBcd7BMl+nQmXedhV4b9MpNcNiscdPejMWsPzyUCH5sOT9JtrVACN4
+ mMqzejB0aiN9oOm7i9eHVLOS6uI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8b5b3d.7f0a1db726c0-smtp-out-n05;
+ Mon, 06 Apr 2020 16:39:25 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 67E3DC4478C; Mon,  6 Apr 2020 16:39:25 +0000 (UTC)
+Received: from [10.206.24.160] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sanm)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 01CCEC433D2;
+        Mon,  6 Apr 2020 16:39:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 01CCEC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
+Subject: Re: [PATCH v5 1/2] dt-bindings: usb: qcom,dwc3: Convert USB DWC3
+ bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>
+References: <1585206368-685-1-git-send-email-sanm@codeaurora.org>
+ <1585206368-685-2-git-send-email-sanm@codeaurora.org>
+ <20200404171700.GA10096@bogus>
+From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
+Message-ID: <5e2eb0a4-ed70-4212-fc70-6ee850507a7e@codeaurora.org>
+Date:   Mon, 6 Apr 2020 22:09:17 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <f000f6b9-0f05-b2a5-6dad-37b09803711d@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200404171700.GA10096@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586190954; bh=rPSq0eirHRbbp3P7o0ShrYFulLXLt5OnUxaf3rXZFgg=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=fPCoO9GDIW2e0sIi6EidkOUdnkqqK0Vwny+NicAnLg2GfrNQejNlNbxM75to3c/qI
-         FiLTrWUQmTmk3areKo8LLLT5dA7bp77Pll9+uGciZCd61RC0o3kmEdh0+YkO7dj3qL
-         w5LD3k66gOf7opM4UmSUSpy4nWmvXxRIT/JDdH7xP7ZbUV24l7ss9eMDidz5nTcPvB
-         Re8oZ+Bl7OXCQQxl+HSks18vEerUGwe1PVJDhveB0wP3GaPJtH9hiAcn3pvX/NBi4I
-         RnwjiW+LllYmRlw0I1eTzyqIJOVrQC+YdtpncAGRVkpoAz662Wq83xGEO0E530smjV
-         XQN1rb3Ll1yLg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Rob,
 
-On 4/6/20 9:29 AM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 06.04.2020 19:12, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 4/6/20 9:05 AM, Dmitry Osipenko wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> 06.04.2020 18:35, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> ...
->>>>>> +     /* wait for syncpt counter to reach frame start event
->>>>>> threshold */
->>>>>> +     err =3D host1x_syncpt_wait(chan->frame_start_sp, thresh,
->>>>>> +                              TEGRA_VI_SYNCPT_WAIT_TIMEOUT, &value)=
-;
->>>>>> +     if (err) {
->>>>>> +             dev_err(&chan->video.dev,
->>>>>> +                     "frame start syncpt timeout: %d\n", err);
->>>>>> +             /* increment syncpoint counter for timedout events */
->>>>>> +             host1x_syncpt_incr(chan->frame_start_sp);
->>>>> Why incrementing is done while hardware is still active?
->>>>>
->>>>> The sync point's state needs to be completely reset after resetting
->>>>> hardware. But I don't think that the current upstream host1x driver
->>>>> supports doing that, it's one of the known-long-standing problems of
->>>>> the
->>>>> host1x driver.
->>>>>
->>>>> At least the sp->max_val incrementing should be done based on the
->>>>> actual
->>>>> syncpoint value and this should be done after resetting hardware.
->>>> upstream host1x driver don't have API to reset or to equalize max valu=
-e
->>>> with min/load value.
->>>>
->>>> So to synchronize missed event, incrementing HW syncpt counter.
->>>>
->>>> This should not impact as we increment this in case of missed events
->>>> only.
->>> It's wrong to touch sync point while hardware is active and it's active
->>> until being reset.
->>>
->>> You should re-check the timeout after hw resetting and manually put the
->>> syncpoint counter back into sync only if needed.
->> There is possibility of timeout to happen any time even during the
->> capture also and is not related to hw reset.
+On 4/4/2020 10:47 PM, Rob Herring wrote:
+> On Thu, Mar 26, 2020 at 12:36:07PM +0530, Sandeep Maheswaram wrote:
+>> Convert USB DWC3 bindings to DT schema format using json-schema.
 >>
->> Manual synchronization is needed when timeout of any frame events happen
->> otherwise all subsequence frames will timeout due to mismatch in event
->> counters.
-> My point is that hardware is stopped only after being reset, until then
-> you should assume that sync point could be incremented by HW at any time.
+>> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/usb/qcom,dwc3.txt          | 104 --------------
+>>   .../devicetree/bindings/usb/qcom,dwc3.yaml         | 158 +++++++++++++++++++++
+>>   2 files changed, 158 insertions(+), 104 deletions(-)
+>>   delete mode 100644 Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+>>   create mode 100644 Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
 >
-> And if this happens that HW increments sync point after the timeout,
-> then the sync point counter should become out-of-sync in yours case,
-> IIUC. Because host1x_syncpt_incr() doesn't update the cached counter.
+>> diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+>> new file mode 100644
+>> index 0000000..0f69475
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+>> @@ -0,0 +1,158 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm SuperSpeed DWC3 USB SoC controller
+>> +
+>> +maintainers:
+>> +  - Manu Gautam <mgautam@codeaurora.org>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    items:
+>> +      - enum:
+>> +          - qcom,msm8996-dwc3
+>> +          - qcom,msm8998-dwc3
+>> +          - qcom,sdm845-dwc3
+>> +      - const: qcom,dwc3
+>> +
+>> +  reg:
+>> +    description: Offset and length of register set for QSCRATCH wrapper
+>> +    maxItems: 1
+>> +
+>> +  "#address-cells":
+>> +    enum: [ 1, 2 ]
+>> +
+>> +  "#size-cells":
+>> +    enum: [ 1, 2 ]
+>> +
+>> +  power-domains:
+>> +    description: specifies a phandle to PM domain provider node
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    description:
+>> +      A list of phandle and clock-specifier pairs for the clocks
+>> +      listed in clock-names.
+>> +    items:
+>> +      - description: System Config NOC clock.
+>> +      - description: Master/Core clock, has to be >= 125 MHz
+>> +          for SS operation and >= 60MHz for HS operation.
+>> +      - description: System bus AXI clock.
+>> +      - description: Mock utmi clock needed for ITP/SOF generation
+>> +          in host mode. Its frequency should be 19.2MHz.
+>> +      - description: Sleep clock, used for wakeup when
+>> +          USB3 core goes into low power mode (U3).
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: cfg_noc
+>> +      - const: core
+>> +      - const: iface
+>> +      - const: mock_utmi
+>> +      - const: sleep
+>> +
+>> +  assigned-clocks:
+>> +    items:
+>> +      - description: Phandle and clock specifier of MOCK_UTMI_CLK.
+>> +      - description: Phandle and clock specifoer of MASTER_CLK.
+>> +
+>> +  assigned-clock-rates:
+>> +    maxItems: 2
+> Need to drop this as it is redundant. Soon this will generate an error.
+Will do in next version.
+>> +    items:
+>> +      - description: Must be 19.2MHz (19200000).
+> Sounds like a constraint:
+>
+> - const: 19200000
+>
+>> +      - description: Must be >= 60 MHz in HS mode, >= 125 MHz in SS mode.
+> - minimum: 60000000
+>    maximum: ?
 
-We wait for enough time based on frame rate for syncpt increment to=20
-happen and if it doesn't happen by then definitely its missed event and=20
-we increment HW syncpoint for this timed event.
+Tried  as below but facing errors
 
-cached value gets updated during syncpt wait for subsequent event.
+assigned-clock-rates:
+     items:
+       - const: 19200000
+       - minimum: 60000000
+         maximum: 150000000
 
-syncpt increment happens for all subsequent frame events during video=20
-capture.
+Errors
 
+linux-next/Documentation/devicetree/bindings/usb/qcom,dwc3.example.dt.yaml: 
+usb@a6f8800: assigned-clock-rates: Additional items are not allowed 
+([150000000] was unexpected)
+linux-next/Documentation/devicetree/bindings/usb/qcom,dwc3.example.dt.yaml: 
+usb@a6f8800: assigned-clock-rates:0: [19200000] is too short
+linux-next/Documentation/devicetree/bindings/usb/qcom,dwc3.example.dt.yaml: 
+usb@a6f8800: assigned-clock-rates: [[19200000], [150000000]] is too long
+
+>> +
+>> +  resets:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    items:
+>> +      - description: The interrupt that is asserted
+>> +          when a wakeup event is received on USB2 bus.
+>> +      - description: The interrupt that is asserted
+>> +          when a wakeup event is received on USB3 bus.
+>> +      - description: Wakeup event on DM line.
+>> +      - description: Wakeup event on DP line.
+>> +
+>> +  interrupt-names:
+>> +    items:
+>> +      - const: hs_phy_irq
+>> +      - const: ss_phy_irq
+>> +      - const: dm_hs_phy_irq
+>> +      - const: dp_hs_phy_irq
+>> +
+>> +  qcom,select-utmi-as-pipe-clk:
+>> +    description:
+>> +      If present, disable USB3 pipe_clk requirement.
+>> +      Used when dwc3 operates without SSPHY and only
+>> +      HS/FS/LS modes are supported.
+>> +    type: boolean
+>> +
+>> +# Required child node:
+>> +
+>> +patternProperties:
+>> +  "^dwc3@[0-9a-f]+$":
+>> +    type: object
+>> +    description:
+>> +      A child node must exist to represent the core DWC3 IP block
+>> +      The content of the node is defined in dwc3.txt.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - "#address-cells"
+>> +  - "#size-cells"
+>> +  - power-domains
+>> +  - clocks
+>> +  - clock-names
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>> +    usb@a6f8800 {
+>> +        compatible = "qcom,sdm845-dwc3", "qcom,dwc3";
+>> +        reg = <0 0x0a6f8800 0 0x400>;
+>> +
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +
+>> +        clocks = <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
+>> +                 <&gcc GCC_USB30_PRIM_MASTER_CLK>,
+>> +                 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>,
+>> +                 <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
+>> +                 <&gcc GCC_USB30_PRIM_SLEEP_CLK>;
+>> +        clock-names = "cfg_noc", "core", "iface", "mock_utmi",
+>> +                      "sleep";
+>> +
+>> +        assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
+>> +                          <&gcc GCC_USB30_PRIM_MASTER_CLK>;
+>> +        assigned-clock-rates = <19200000>, <150000000>;
+>> +
+>> +        interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
+>> +                     <GIC_SPI 486 IRQ_TYPE_LEVEL_HIGH>,
+>> +                     <GIC_SPI 488 IRQ_TYPE_LEVEL_HIGH>,
+>> +                     <GIC_SPI 489 IRQ_TYPE_LEVEL_HIGH>;
+>> +        interrupt-names = "hs_phy_irq", "ss_phy_irq",
+>> +                          "dm_hs_phy_irq", "dp_hs_phy_irq";
+>> +
+>> +        power-domains = <&gcc USB30_PRIM_GDSC>;
+>> +
+>> +        resets = <&gcc GCC_USB30_PRIM_BCR>;
+>> +
+>> +        dwc3@a600000 {
+>> +            compatible = "snps,dwc3";
+>> +            reg = <0 0x0a600000 0 0xcd00>;
+> You need 'ranges' in the parent for this address to be translatable.
+Will add in next version.
+>
+>> +            interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
+>> +            iommus = <&apps_smmu 0x740 0>;
+>> +            snps,dis_u2_susphy_quirk;
+>> +            snps,dis_enblslpm_quirk;
+>> +            phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
+>> +            phy-names = "usb2-phy", "usb3-phy";
+>> +        };
+>> +    };
+>> -- 
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>> of Code Aurora Forum, hosted by The Linux Foundation
+>>
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
