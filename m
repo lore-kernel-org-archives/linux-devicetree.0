@@ -2,110 +2,105 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B23BC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 11:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8F0C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 11:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF0D2072A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 11:47:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Io+muzxg"
+	by mail.kernel.org (Postfix) with ESMTP id EAFEA2076C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 11:50:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586173812;
+	bh=T8JPB2G201IEXtY9alosGKryKAmkDfl6bXQtj/eFyw0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UwidXIru6yn16ptD3dIOPoD+HhlL6wMz4zHHqfwtHZP02ZkrRyuh+WIBe/rHd+yRL
+	 iboFVcjwrGvrSwnsINjEt+WyV630l6GOd9n/hz1lqY1wEQNIxTZ3AcGOgedRRwGXus
+	 lQamnaGP+u/02bNPzV6TQltxts8I2M/S4pTnT6RM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbgDFLru (ORCPT
+        id S1727387AbgDFLuL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:47:50 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:35877 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727349AbgDFLrt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 07:47:49 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586173669; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=FgPDoydCs+DhGKztcRPMXkbqhx2Dj1OriztFjPgeMag=; b=Io+muzxg7z/GyodYqthm9m+uKkEy2sdFqtLj6JS/f0eZnVddTA3xHghvJeYTk+k84ami6Jjo
- o1W8pdS+IzrE1ft5rEESlCevUlsOv1lP7cau6vcEI4pXzaH/kIplO6o/7IyHTusGeGGnqBRj
- +HrmFo5/riEAZgQVjEMywnon2Rg=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8b16c6.7f69c7495ab0-smtp-out-n04;
- Mon, 06 Apr 2020 11:47:18 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6BC51C433D2; Mon,  6 Apr 2020 11:47:16 +0000 (UTC)
-Received: from [192.168.1.100] (unknown [157.44.182.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 6 Apr 2020 07:50:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41534 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727376AbgDFLuL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Apr 2020 07:50:11 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jprakash)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E2F5BC433BA;
-        Mon,  6 Apr 2020 11:47:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E2F5BC433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jprakash@codeaurora.org
-Subject: Re: [PATCH 3/3] iio: adc: Add support for PMIC7 ADC
-To:     Rob Herring <robh@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, linus.walleij@linaro.org, sboyd@codeaurora.org,
-        Jonathan.Cameron@huawei.com, smohanad@codeaurora.org,
-        kgunda@codeaurora.org, aghayal@codeaurora.org,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-References: <1585064650-16235-1-git-send-email-jprakash@codeaurora.org>
- <1585064650-16235-4-git-send-email-jprakash@codeaurora.org>
- <20200331200611.GA10950@bogus>
-From:   Jishnu Prakash <jprakash@codeaurora.org>
-Message-ID: <46f4f206-ab75-31ad-66cc-71d1e458b76e@codeaurora.org>
-Date:   Mon, 6 Apr 2020 17:17:04 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F841206F8;
+        Mon,  6 Apr 2020 11:50:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586173810;
+        bh=T8JPB2G201IEXtY9alosGKryKAmkDfl6bXQtj/eFyw0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qvyM70Aitm0A8bkQA9KFhhF+YBMwVWKMlbAXpGvIlOPB5IymIJfiYVSv8iP4QkML/
+         lQbPiycMFY5IpuJ8pTonEj1ZtW1CKB1V0TAUX7A3Udswogrt1vu4q0RGwwwsVO7D7/
+         +pX6sL+5s606/Oy82X+VJEoRkXsS12NDjvAwn6bo=
+Date:   Mon, 6 Apr 2020 12:50:08 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     lgirdwood@gmail.com, heiko@sntech.de, robh+dt@kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] dt-bindings: sound: convert rockchip spdif
+ bindings to yaml
+Message-ID: <20200406115008.GA7650@sirena.org.uk>
+References: <20200404115225.4314-1-jbx6244@gmail.com>
+ <20200406110703.GA6837@sirena.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200331200611.GA10950@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Nq2Wo0NMKNjxTN9z"
+Content-Disposition: inline
+In-Reply-To: <20200406110703.GA6837@sirena.org.uk>
+X-Cookie: Ahead warp factor one, Mr. Sulu.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob
 
-On 4/1/2020 1:36 AM, Rob Herring wrote:
-> On Tue, Mar 24, 2020 at 09:14:10PM +0530, Jishnu Prakash wrote:
->> The ADC architecture on PMIC7 is changed as compared to PMIC5. The
->> major change from PMIC5 is that all SW communication to ADC goes through
->> PMK8350, which communicates with other PMICs through PBS when the ADC
->> on PMK8350 works in master mode. The SID register is used to identify the
->> PMICs with which the PBS needs to communicate. Add support for the same.
->>
->> In addition, add definitions for ADC channels and virtual channel
->> definitions per PMIC, to be used by ADC clients for PMIC7.
->>
->> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
->> ---
->>   drivers/iio/adc/qcom-spmi-adc5.c                 | 239 ++++++++++++++++++++-
->>   drivers/iio/adc/qcom-vadc-common.c               | 260 +++++++++++++++++++++++
->>   drivers/iio/adc/qcom-vadc-common.h               |  14 ++
->>   include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h  |  67 ++++++
->>   include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h |  88 ++++++++
->>   include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h |  46 ++++
->>   include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h |  28 +++
->>   include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h |  28 +++
->>   include/dt-bindings/iio/qcom,spmi-vadc.h         |  78 ++++++-
-> DT headers go in the binding patch(es).
-I'll move these to the bindings patch in the next post.
->
->>   9 files changed, 843 insertions(+), 5 deletions(-)
->>   create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h
->>   create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h
->>   create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h
->>   create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h
->>   create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h
+--Nq2Wo0NMKNjxTN9z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Apr 06, 2020 at 12:07:03PM +0100, Mark Brown wrote:
+> On Sat, Apr 04, 2020 at 01:52:23PM +0200, Johan Jonker wrote:
+> > Current dts files with 'spdif' nodes are manually verified.
+> > In order to automate this process rockchip-spdif.txt
+> > has to be converted to yaml.
+>=20
+> Please don't send content free pings and please allow a reasonable time
+> for review.  People get busy, go on holiday, attend conferences and so=20
+
+Sorry, I just noticed that there are actually some changes in this
+version.
+
+> Please submit patches using subject lines reflecting the style for the
+> subsystem, this makes it easier for people to identify relevant patches.
+> Look at what existing commits in the area you're changing are doing and
+> make sure your subject lines visually resemble what they're doing.
+> There's no need to resubmit to fix this alone.
+
+This bit still applies though.
+
+--Nq2Wo0NMKNjxTN9z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6LF28ACgkQJNaLcl1U
+h9BQDwf/TLMzjvaOS/XrkaDPT2V2JBzzwos/AckUmEy1bGBb3gFmfuV5mHpZFfTM
+f1svscqWp5VgXssq6EGCwZnUpmyGjo1AcJTq1aYCAgXa65a7c8D8QS2WwzYlFeFQ
+NMTO/Vd5q/9qjreQSvqWCXByFF1lSaNX3LOq4F1b8wEloSjFUv33W4AgewOq8g6P
+evxzb1IsiIUv9CJsOgz/cPAud4FseYOuh4H1L+TqigrDd4z1i9nUXeluSvmswf0k
+WJGHHvU2xxLjFicbQeJrG5VyXHSELl6JRdbojGFPksD2SKTnHXl3+/mLDWHYzFW4
+4YhxljCFCaRnx+ofEiOsmPEjt/HEOQ==
+=y6jt
+-----END PGP SIGNATURE-----
+
+--Nq2Wo0NMKNjxTN9z--
