@@ -2,202 +2,130 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86283C2BABC
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 19:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 788D5C2BABC
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 19:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65B5D20769
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 19:19:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586200795;
-	bh=zdj7yojVhBaB/Gk/gXB9gngRJZ5TCmP70WrifeTeWPo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xR4a7/8SQyXGTIBaMFUOIH85zsCvXsE8Io/HfANq/VjjW5d2ynSjufeL/OaPx7Z7O
-	 HwVVX/ZEPHcN+I4CZ0LN2g091X6tvlfH2JEmyU0k5Facd3jh8jHccNffkymPFhrDkH
-	 ad3Q3uiGnsHCHIVSK7Totvas/T6bW57hh06xvrUY=
+	by mail.kernel.org (Postfix) with ESMTP id 5A4F82072F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 19:30:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z17icQy6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725957AbgDFTTz (ORCPT
+        id S1725933AbgDFTax (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 15:19:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45776 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725928AbgDFTTy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Apr 2020 15:19:54 -0400
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3427420748;
-        Mon,  6 Apr 2020 19:19:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586200793;
-        bh=zdj7yojVhBaB/Gk/gXB9gngRJZ5TCmP70WrifeTeWPo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kesdoxmkVgj2Dqv1tQt4fCw9H0dMsOgGP9qPRjv6lxpDGHTZFQ1uelps6tnsNLOnV
-         9nh0Bo+fqKkQzQGZ419+d2v7FAG5G+QsZIATy+uKnjZeOBlQSb+tW7Q+Cgyo0nqrRD
-         y8IuKO4hOpB0d8gYWFzx/ahsF9E58viGQiCokusg=
-Received: by mail-qt1-f174.google.com with SMTP id s30so753741qth.2;
-        Mon, 06 Apr 2020 12:19:53 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZcgCPeTVWsD4XH9JsJNQY4Lx7AlLXcf2TXptd1rF4ng1TiW2p3
-        AG3W+Nyey8kzEWkIgCBWsgSj7TLxgCnSyXEAUg==
-X-Google-Smtp-Source: APiQypJ1VgDGdNpHhWosDRaYn1Rfz/zEmplt4aAY7f96THP6EXWe5/sr8OVtCQdWt8FkwVCSRsBVmdwCf83I3b/uFa0=
-X-Received: by 2002:ac8:2668:: with SMTP id v37mr1115420qtv.143.1586200792283;
- Mon, 06 Apr 2020 12:19:52 -0700 (PDT)
+        Mon, 6 Apr 2020 15:30:53 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40900 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbgDFTax (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 15:30:53 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c20so8062135pfi.7;
+        Mon, 06 Apr 2020 12:30:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nh5t5HwqaZ5vwtLT3aQ5LPtySy+1nmXDpAkBkNh9qyc=;
+        b=Z17icQy61jImrE8skOGEPbOqTmG9HyfmTZHJ9J4nDsMICEIMALuGTFfraW+NGGOger
+         WWNTDt/WYlVXRQqUtOKRYznm5XdVAdS23I5p2WLLp0LEKzyY6Pny/FPVO0Mm/W8Ootak
+         b4jaqqUZmbQ/XE50A31zs7bH9DxX/RzKnjA7BnWRdyx2eE/JNItutYtaFDpm0C2BPxd6
+         +BB/q0KROQAgfS5eSHctOHZ4Kay8cKPXLHdsIEfSHR54mK+4RmkArDtBT4IhujG1TnlZ
+         UhPgsZjV6GxCIBaffTOFOQiGbHsz5ZPQA+dqrJ7zplqxMnxQMYqbxStcaW7jUQdRJnRE
+         tCJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nh5t5HwqaZ5vwtLT3aQ5LPtySy+1nmXDpAkBkNh9qyc=;
+        b=p0JOb7lCycA/jkBAsfPZ/ZBHbZnThYVs7SYVY9xZ0v0QwkQFt+2EoQxYIDF5yIVW5l
+         ZNZC/ozGnLrO0bUvZYJqpFLjjZAGzZlaZf8ycOnXAudAsYZuiK+TfGDOy6nN0qD2Sc2E
+         eLelrvh+Bp5gjoNcXTL9FJTtuqkeHB+aNwGLvtKk6MRjAWtS2sXHjvCpVvLtAXJb2EIt
+         AvIokjkEzbAMCRpVrwB17rDmkj7Ws/qehIzrLz+dwtKs5AtaGzdT4fmvZosUS6bUsqwm
+         lFkVAjZaqWffnpY9lh3wAkJg/eTGP/+Qzom8gztXNunhfYz5nXpPhiwxIwojKaUap7Jx
+         Bm6Q==
+X-Gm-Message-State: AGi0PubWqakPgUEdjtP4S2j4l8Q/VkuxN/eVHsmIw0XxB/0DINwN7oYw
+        FzQG0xUng4YLnI/NN+c0zh8=
+X-Google-Smtp-Source: APiQypIdxJFiZxwLmJw0oNITUEQIevo3vGxi8hwQjd0iINquNH4IGOvTh7aTLBwC6be3oGyutBQ5GA==
+X-Received: by 2002:aa7:9695:: with SMTP id f21mr1030846pfk.93.1586201452092;
+        Mon, 06 Apr 2020 12:30:52 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y29sm11509937pge.22.2020.04.06.12.30.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 Apr 2020 12:30:51 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 12:30:50 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 04/17] clk: mmp2: Add support for PLL clock sources
+Message-ID: <20200406193050.GA53133@roeck-us.net>
+References: <20200309194254.29009-1-lkundrak@v3.sk>
+ <20200309194254.29009-5-lkundrak@v3.sk>
 MIME-Version: 1.0
-References: <20200405232318.26833-1-laurent.pinchart+renesas@ideasonboard.com>
- <20200405232318.26833-5-laurent.pinchart+renesas@ideasonboard.com>
- <CAMuHMdXJcw0eGY7J=JcGv6Hs9E_GCybsYSeKKeH5pAH8nkdTrg@mail.gmail.com>
- <20200406110924.GB4757@pendragon.ideasonboard.com> <CAMuHMdWhj1uS6v1bb0ntsP_b29Sgw+M6KHPceDxmeF3329Aw=g@mail.gmail.com>
-In-Reply-To: <CAMuHMdWhj1uS6v1bb0ntsP_b29Sgw+M6KHPceDxmeF3329Aw=g@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 6 Apr 2020 13:19:40 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKhdQdfX4bHe2dxR_TiK2jWpdY=pacHOme+qaJ-MdN_fg@mail.gmail.com>
-Message-ID: <CAL_JsqKhdQdfX4bHe2dxR_TiK2jWpdY=pacHOme+qaJ-MdN_fg@mail.gmail.com>
-Subject: Re: [PATCH 4/4] dt-bindings: display: bridge: renesas,lvds: Convert
- binding to YAML
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Maxime Ripard <maxime@cerno.tech>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309194254.29009-5-lkundrak@v3.sk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 5:40 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Laurent,
->
-> On Mon, Apr 6, 2020 at 1:09 PM Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
-> > On Mon, Apr 06, 2020 at 10:47:37AM +0200, Geert Uytterhoeven wrote:
-> > > On Mon, Apr 6, 2020 at 1:24 AM Laurent Pinchart wrote:
-> > > > Convert the Renesas R-Car LVDS encoder text binding to YAML.
-> > > >
-> > > > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
->
-> > > > +if:
-> > > > +  properties:
-> > > > +    compatible:
-> > > > +      enum:
-> > > > +        - renesas,r8a774c0-lvds
-> > > > +        - renesas,r8a77990-lvds
-> > > > +        - renesas,r8a77995-lvds
-> > > > +then:
-> > > > +  properties:
-> > > > +    clocks:
-> > > > +      minItems: 1
-> > > > +      maxItems: 4
-> > > > +      items:
-> > > > +        - description: Functional clock
-> > > > +        - description: EXTAL input clock
-> > > > +        - description: DU_DOTCLKIN0 input clock
-> > > > +        - description: DU_DOTCLKIN1 input clock
-> > > > +
-> > > > +    clock-names:
-> > > > +      minItems: 1
-> > > > +      maxItems: 4
-> > > > +      items:
-> > > > +        - const: fck
-> > > > +        # The LVDS encoder can use the EXTAL or DU_DOTCLKINx clocks.
-> > > > +        # These clocks are optional.
-> > > > +        - enum:
-> > > > +          - extal
-> > > > +          - dclkin.0
-> > > > +          - dclkin.1
-> > > > +        - enum:
-> > > > +          - extal
-> > > > +          - dclkin.0
-> > > > +          - dclkin.1
-> > > > +        - enum:
-> > > > +          - extal
-> > > > +          - dclkin.0
-> > > > +          - dclkin.1
-> > >
-> > > Can the duplication of the last 3 entries be avoided?
-> > > Perhaps like in
-> > > Documentation/devicetree/bindings/serial/renesas,scif.yaml?
-> >
-> > I'd love to, if you can tell me how to make sure the fck entry is
-> > mandatory. The following
-> >
-> >   minItems: 1
-> >   maxItems: 4
-> >   items:
-> >     enum:
-> >       - fck
-> >       - extal
-> >       - dclkin.0
-> >       - dclkin.1
-> >
-> > passes the checks, but would accept
-> >
-> >         clock-names = "extal";
-> >
-> > which is not valid. Your
-> > Documentation/devicetree/bindings/serial/renesas,scif.yaml bindings
-> > suffer from the same problem :-)
->
-> Hmm....
->
-> > > > +examples:
-> > > > +  - |
-> > > > +    #include <dt-bindings/clock/renesas-cpg-mssr.h>
-> > > > +    #include <dt-bindings/power/r8a7795-sysc.h>
-> > > > +
-> > > > +    lvds@feb90000 {
-> > > > +        compatible = "renesas,r8a7795-lvds";
-> > > > +        reg = <0 0xfeb90000 0 0x14>;
-> > >
-> > > Examples are built with #{address,size}-cells = <1>.
-> >
-> > Are they ? I don't get any failure from make dt_binding_check.
->
-> Hmm... And you do have "reg: maxItems: 1"...
+On Mon, Mar 09, 2020 at 08:42:41PM +0100, Lubomir Rintel wrote:
+> The clk-of-mmp2 driver pretends that the clock outputs from the PLLs are
+> constant, but in fact they are configurable.
+> 
+> Add logic for obtaining the actual clock rates on MMP2 as well as MMP3.
+> There is no documentation for either SoC, but the "systemsetting" drivers
+> from Marvell GPL code dump provide some clue as far as MPMU registers on
+> MMP2 [1] and MMP3 [2] go.
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/lkundrak/linux-mmp3-dell-ariel.git/tree/drivers/char/mmp2_systemsetting.c
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/lkundrak/linux-mmp3-dell-ariel.git/tree/drivers/char/mmp3_systemsetting.c
+> 
+> A separate commit will adjust the clk-of-mmp2 driver.
+> 
+> Tested on a MMP3-based Dell Wyse 3020 as well as MMP2-based OLPC
+> XO-1.75 laptop.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-At first glance I was expecting an error too, but there isn't. As far
-as the schema is concerned, it's valid because it's a single entry
-(i.e. one entry in <>). And then dtc can only check that reg is a
-multiple of 2. The size check does work where we have more constraints
-like I2C.
+This patch results in:
 
-If we enforce bracketing, then we should be able to check these.
-Otherwise, knowing both the cell sizes and number of entries is a
-problem. With bracketing, we can split those checks. I'd been thinking
-checking cell sizes would be easier in dtc (we're already doing that
-in lots of cases), but thinking about it some more there is a way to
-do this with schema:
+arm-linux-gnueabi-ld: drivers/clk/mmp/clk.o: in function `mmp_register_pll_clks':
+drivers/clk/mmp/clk.c:192: undefined reference to `mmp_clk_register_pll'
 
-if:
-  properties:
-    '#address-cells':
-      const: 2
-    '#size-cells':
-      const: 2
-  required:
-    - '#address-cells'
-    - '#size-cells'
-then:
-  patternProperties:
-    '@':
-      properties:
-        reg:
-          items:
-            minItems: 4
-            maxItems: 4
-      required:
-        - reg
+when building arm:pxa910_defconfig.
 
-...and copy-n-paste for each size combination.
+Bisect log is attached.
 
-I imagine implementing this will result in another set of fixes.
+Guenter
 
-Rob
+---
+# bad: [a10c9c710f9ecea87b9f4bbb837467893b4bef01] Merge tag 'for-v5.7' of git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply
+# good: [4c205c84e249e0a91dcfabe461d77667ec9b2d05] Merge tag 'keys-fixes-20200329' of git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs
+git bisect start 'a10c9c710f9e' '4c205c84e249'
+# bad: [31c0aa87ec8a30b1e9e4cf862905a369560f7705] Merge tag 'random_for_linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tytso/random
+git bisect bad 31c0aa87ec8a30b1e9e4cf862905a369560f7705
+# bad: [53a2cc5cc36fd97728e1b418dbfa8f70bf23391a] Merge branches 'clk-ti', 'clk-ingenic', 'clk-typo', 'clk-at91', 'clk-mmp2' and 'clk-arm-icst' into clk-next
+git bisect bad 53a2cc5cc36fd97728e1b418dbfa8f70bf23391a
+# good: [2d11e9a1fd2abe784b334442b36f7d83ff914287] Merge branches 'clk-phase-errors', 'clk-amlogic', 'clk-renesas' and 'clk-allwinner' into clk-next
+git bisect good 2d11e9a1fd2abe784b334442b36f7d83ff914287
+# bad: [de17be999cb07effacf6a1129602f63396f5af27] clk: mmp2: Fix bit masks for LCDC I/O and pixel clocks
+git bisect bad de17be999cb07effacf6a1129602f63396f5af27
+# bad: [4d6da655d1871fadcb2b5de086e5a35883e22c95] dt-bindings: marvell,mmp2: Add clock ids for MMP3 PLLs
+git bisect bad 4d6da655d1871fadcb2b5de086e5a35883e22c95
+# bad: [5d34d0b32d6c13947b0aa890fc4c68f203491169] clk: mmp2: Add support for PLL clock sources
+git bisect bad 5d34d0b32d6c13947b0aa890fc4c68f203491169
+# good: [cb8dbfe831758fb2ba52d8c30db5249e48f57b8b] clk: mmp2: Constify some strings
+git bisect good cb8dbfe831758fb2ba52d8c30db5249e48f57b8b
+# good: [7de0b8b8b0508af5fed2f2a07e3abb6acac0c466] dt-bindings: clock: Convert marvell,mmp2-clock to json-schema
+git bisect good 7de0b8b8b0508af5fed2f2a07e3abb6acac0c466
+# first bad commit: [5d34d0b32d6c13947b0aa890fc4c68f203491169] clk: mmp2: Add support for PLL clock sources
