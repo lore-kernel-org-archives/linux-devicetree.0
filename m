@@ -2,106 +2,153 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B96D6C2BA80
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 23:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47E0C2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 23:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C9D120768
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 23:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8353D20768
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 23:48:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a9DPGYBx"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JC33UhAv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgDFXsX (ORCPT
+        id S1726464AbgDFXsp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 19:48:23 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:36131 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbgDFXsX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 19:48:23 -0400
-Received: by mail-ua1-f66.google.com with SMTP id m15so643809uao.3
-        for <devicetree@vger.kernel.org>; Mon, 06 Apr 2020 16:48:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wp76Kyvm8RQcxJEi+GNTFvD7u58xFm/eeI8yCkx9UaY=;
-        b=a9DPGYBxfRaFFN12gfMUgDgWSgr5qMmjAZptWkaGgrp03DY0V2eTWC6fVwCFLzgzXJ
-         cMUG6A8aWKicmrgPJSJuMNmpqDa6soOUMRpyYwMYWuolFXrl2KdF+hS7XzofYtx72G6V
-         nQq10sBt14qxL361HYyCzi4akknL4vLOtOIoQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wp76Kyvm8RQcxJEi+GNTFvD7u58xFm/eeI8yCkx9UaY=;
-        b=SaZgFMTcdJc8TK3nRSzUsRjNOvJhBK//7obOGUQlgwj/3tPvVGGpmo/4Ot4LUUeonZ
-         L5RTCnfVPrCH0tkCD3hTiXiBeBfNU9YT2EayLTfiqfUvqbPJ/DOiAcnzz3oAHTG2I6M7
-         118UfMNfbJBrbkrIgL87LoEkTNAz1DR9Apa7Zgnr68UHIsoTRtwLTAiM6wZrYDAmJbit
-         s5LXjXYSsSeCyilimekVvkCAotjeZmhBMn+RAIYF/yUhWCeUXW4w2wRHrUZQQUYdN9lJ
-         +pIwfE3Nra/946PL5HPOjLAp3NMDVuN4ADg9dOAOvUAnMNFrcODdkqKl1tB1BYCZfAPU
-         vROg==
-X-Gm-Message-State: AGi0PuZ0VQx+okoq4+W475DGlAMrXKXGGpWPGSJxp3CZzcdV3uI3KYlN
-        H2zpKRcalOycpsKHoOkvNaany56mtmY=
-X-Google-Smtp-Source: APiQypKNN2+AbHn6Ilx7nKGBCHTrqCaMGwsQ55tENb539sREgVivmqrKdvnRlGD4TyBM3lhxph5stg==
-X-Received: by 2002:ab0:2e9c:: with SMTP id f28mr1657791uaa.66.1586216900825;
-        Mon, 06 Apr 2020 16:48:20 -0700 (PDT)
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
-        by smtp.gmail.com with ESMTPSA id k68sm5109083vke.40.2020.04.06.16.48.19
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Apr 2020 16:48:19 -0700 (PDT)
-Received: by mail-vs1-f44.google.com with SMTP id x82so1026228vsc.12
-        for <devicetree@vger.kernel.org>; Mon, 06 Apr 2020 16:48:19 -0700 (PDT)
-X-Received: by 2002:a67:2b07:: with SMTP id r7mr1969972vsr.169.1586216898579;
- Mon, 06 Apr 2020 16:48:18 -0700 (PDT)
+        Mon, 6 Apr 2020 19:48:45 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11999 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbgDFXso (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 19:48:44 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e8bbfcf0000>; Mon, 06 Apr 2020 16:48:31 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 06 Apr 2020 16:48:44 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 06 Apr 2020 16:48:44 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
+ 2020 23:48:43 +0000
+Received: from [10.2.164.193] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
+ 23:48:42 +0000
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
+ <200bb96e-2d07-764f-9e14-55538dc742fd@gmail.com>
+ <23bfab09-b464-6e51-9843-06d13000e9b9@nvidia.com>
+ <be77b0ef-d605-8357-4180-f40b2886d07a@gmail.com>
+ <08cd31d5-e8b9-4d3a-fb0e-0e4462947d96@nvidia.com>
+ <12a834ac-52b1-6dc0-7d3a-3e6a1fa85a2a@gmail.com>
+ <e3712e7b-b335-b35b-a94f-24eb85122dca@nvidia.com>
+ <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
+ <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
+ <dd16c560-ba8f-e7df-5dc4-5227e0043196@nvidia.com>
+ <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
+ <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
+ <9e317f65-8a02-3b15-cfec-8e0d8374130e@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <97b35910-4c93-123a-43a0-eb14476ed0f3@nvidia.com>
+Date:   Mon, 6 Apr 2020 16:48:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <1583747589-17267-1-git-send-email-sanm@codeaurora.org> <1583747589-17267-9-git-send-email-sanm@codeaurora.org>
-In-Reply-To: <1583747589-17267-9-git-send-email-sanm@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 6 Apr 2020 16:48:07 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VNBkSOgFfZCg_jG91rBBmE+MZwsHhymOg-MD+9roqWkA@mail.gmail.com>
-Message-ID: <CAD=FV=VNBkSOgFfZCg_jG91rBBmE+MZwsHhymOg-MD+9roqWkA@mail.gmail.com>
-Subject: Re: [PATCH v5 8/9] arm64: dts: qcom: sdm845: Add generic QUSB2 V2 Phy compatible
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Manu Gautam <mgautam@codeaurora.org>,
-        John Stultz <john.stultz@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9e317f65-8a02-3b15-cfec-8e0d8374130e@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586216911; bh=HLb6nrvQHJ/9ja5w0a+AOxh5Qft5XGAcZe0yo4nGdxo=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=JC33UhAvmPHRLVyhkXd76e3gzOBCpwUW7OBLZ/5PlqX/t8BRQupAsntTMoGqSdleW
+         azJuY4ZlmR8krQ9Mtyhf8+CyCfdb4EaUk3XF4bd5ihRcXyyoWUEUUY0KzPdpIkW47S
+         2929qI6ehhGrdf6Xp1cze5dEmgaZSMqeAewbRPM1Yh/pFjZ4Z3UaenBT8PwwVe5t+i
+         IgcIzLHC705dgqVbZTUVhIOCPagUBUeLnMCbe+bGlxSS4aL2Vq1e3BGYcDqp6Iue0N
+         I6D6hBXHMwTRarG0DPmfAtTzqQCCwrv/iDFDfBsI8Fy9AzC/7w8UttPOGQSIcq7gIm
+         eL43wkJdo3HHA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
 
-On Mon, Mar 9, 2020 at 2:54 AM Sandeep Maheswaram <sanm@codeaurora.org> wrote:
+On 4/6/20 4:18 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
 >
-> Use generic QUSB2 V2 Phy configuration for sdm845.
 >
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-
-Wouldn't hurt to add:
-
-Fixes: 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2 PHY support")
-
-...in case this lands before the patch John Stultz sent out and thus
-makes it to stable faster.
-
--Doug
+> 07.04.2020 01:07, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 4/6/20 3:00 PM, Sowjanya Komatineni wrote:
+>>> On 4/6/20 2:39 PM, Sowjanya Komatineni wrote:
+>>>> On 4/6/20 2:15 PM, Sowjanya Komatineni wrote:
+>>>>> On 4/6/20 2:11 PM, Dmitry Osipenko wrote:
+>>>>>> External email: Use caution opening links or attachments
+>>>>>>
+>>>>>>
+>>>>>> 07.04.2020 00:02, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
+:
+>>>>>>>>>>>> Am I understanding correctly that this thread will take 100%
+>>>>>>>>>>>> CPU,
+>>>>>>>>>>>> spinning here, if more than 2 frame-captures queued?
+>>>>>>>>>>> on more than 2 frames captures, it breaks thread and on next
+>>>>>>>>>>> wakeup it
+>>>>>>>>>>> continues
+>>>>>>>>>> The wait_event() won't wait if condition is true.
+>>>>>>>>> condition is checked when waitqueue is woken up
+>>>>>>>> https://elixir.bootlin.com/linux/v5.6.2/source/include/linux/wait.=
+h#L462
+>>>>>>>>
+>>>>>>> process is put to sleep until the condition evaluates to true or
+>>>>>>> signal
+>>>>>>> is received.
+>>>>>>>
+>>>>>>> condition is checked each time the waitqueue head is woken up.
+>>>>>> This is a wrong assumption in accordance to the code.
+>>> process is in sleep until the condition is evaluated and when
+>>> condition is true wakeup still happens only when wake_up on waitqueue
+>>> is called
+>>>
+>>> This is the reason for using this to prevent blocking while waiting
+>>> for the buffers.
+>> w.r.t capture list update, wakeup happens when wake_up on waitqueue is
+>> called.
+>>
+>> wakeup also happens on kthread stop signal event.
+>>
+>>>
+>>>>> when every buffer is available as long as we are in streaming, we
+>>>>> should process it.
+>>>>>
+>>>>> So if wake up happens when list has buffer, it will be processed but
+>>>>> at a time we limit processing 2 simultaneous buffer capture starts
+>>>>> only.
+>>>>>
+>>>> Fixing typo.
+>>>>
+>>>> I meant when ever buffer is available as long as we are in streaming,
+>>>> we should process it.
+>>>>
+>>>> So capture thread processes as long as buffers are available from
+>>>> user space limiting 2 simultaneous trigger of captures and thread
+>>>> will be in sleep when capture buffers list is empty or no stop thread
+>>>> is signaled.
+> IIUC, the waiting won't happen if more than 2 captures are queued and
+> thread will be spinning until captures are processed.
+>
+> I think you need a semaphore with resource count =3D 2.
+we hold on to issuing capture if more than 2 buffers are queued and it=20
+continues only after fifo has min 1 slot empty
