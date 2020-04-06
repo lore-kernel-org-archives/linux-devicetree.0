@@ -2,115 +2,244 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64463C2BA18
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 08:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DACC2BA18
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 08:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3504A20672
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 08:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 652C620672
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 08:26:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="YrgcxlpE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Va1mcUBG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LNSvxDZj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgDFIQt (ORCPT
+        id S1726661AbgDFI0E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 04:16:49 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:40165 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726535AbgDFIQt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 04:16:49 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id E2A195C0135;
-        Mon,  6 Apr 2020 04:16:47 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Mon, 06 Apr 2020 04:16:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=CF2JGTX2lmYm+0Luc5WMUbWddfh
-        IiV6ykRb8Y5fDHqM=; b=YrgcxlpEV+FnnI5895p6Lwb9khHPqURxLlAO7YElv3j
-        gZkCFfOzNqzQ1iFn7hMkzeWh4j05kYn4uwF6NpsLMU0tolXDG48A48l80mb6LTyo
-        al8RDFrCul/dHpqZkQEW4fBmpLP59xpW4KYJYcRWMIS+BBEJLrQqGLA7vYulaJlg
-        9E+SNBOlXLr96ngSsD/AdORiLsx9nxrPL+/9IMOuIOYonKHd5AuAzigFPv2u2+dx
-        RtT55/n8ONl2k9PiPuZhVXxVwihUC0f2ew4ppfotBwbeBjNIS/W+jbSuzlzFbQV8
-        UL/3F6NoTLW3ZyA3TF8mTrFcov6tF5BTCMwHFSBnK1w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=CF2JGT
-        X2lmYm+0Luc5WMUbWddfhIiV6ykRb8Y5fDHqM=; b=Va1mcUBGzXRRkRTHUPmoKN
-        nmPshwoihcqx6sFvYm0G5vh1JoEw+vxShJ7Ob9T8SXla0+5dvFAxOEJ6rjquqNHQ
-        FhTxJM5wDMpu18cOCiEe62RnjkjnEtxpFZR0J5mYH8xjuVzCj/JQIPu8nMklRfUU
-        vBQYiS9TMdgPz3Ly5iz0djp7nYuJ6wRD/i6SjXkhQtZhNw/hTh9IncjjeUfZ8jDX
-        OSTmUTHDMUYuE5t5kImLLtBn3Fy6k+JE0shwQ+F+YYb9nwtqdvzjyxNE75Y6RsiW
-        N9/iUK3NieCEh+xmckgdyTjXQAD81TXNLiHgxslNmxkJaTKSjos0JQXKQnSlL+3w
-        ==
-X-ME-Sender: <xms:b-WKXkOQ3NPMe67cT8I1n7HOKrYgwt99J-uEztzpNXZT05TlGWFH9Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefgddtfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:b-WKXnRoyyMh9zzFKwWagheeuHcMN_LeHC_v8P7ickj-UfoQS1Axvg>
-    <xmx:b-WKXs5TWZo9U2buvYAIKLYpiC-G_gH5iOaCb1aj0bxketnUxShoFA>
-    <xmx:b-WKXp2BgChCwiv8M42X7H-Sio_qUYA3z5rAXLcixdydOFA3fNUeyA>
-    <xmx:b-WKXsxndKMi8PyqnHrT_unl-ZjzMV9478ouGnnOphKYRDNk63HMbA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8486C306D37B;
-        Mon,  6 Apr 2020 04:16:47 -0400 (EDT)
-Date:   Mon, 6 Apr 2020 10:16:46 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [PATCH v2 5/7] arm64: configs: Enable sun50i cpufreq nvmem
-Message-ID: <20200406081646.yduso2velulbedku@gilmour.lan>
-References: <20200405173601.24331-1-peron.clem@gmail.com>
- <20200405173601.24331-6-peron.clem@gmail.com>
+        Mon, 6 Apr 2020 04:26:04 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36542 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbgDFI0D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 04:26:03 -0400
+Received: by mail-ot1-f68.google.com with SMTP id l23so14457465otf.3
+        for <devicetree@vger.kernel.org>; Mon, 06 Apr 2020 01:26:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vOURNP/+1sHn2/oMAz9DpyrmfncIc+Lque59yZC/+5w=;
+        b=LNSvxDZjUIJxP4/R0gUjwWEcoIXjaM14W0yLZVSrDlbz182T85YKg9jbdKtsDv4lSw
+         CJiAmks7NsnTkIghjBXK8DlURDeKnUSzJHYlN+12DuAULHbIVlDN8ppxELEfYm4zwqBs
+         aw/ZeWuSYt776wwjblNiwil1Cb3zzS0HMTuWr4qv/qliIlcRDXzDzrT9gX+SGuK3v/KQ
+         SyvKYC+rBZ/4QqGchMam2id0O6G1vGyw3EkfvK4wIoXf3OQ9eMKwadXJfYRiD2FLFq/W
+         QUHuyHh4ngh+RtAjWUyHyUabXwCzTo0oYRE1r8ouVeIQ7FxN8oMye+v/vqt+KJHyEl5z
+         t9mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vOURNP/+1sHn2/oMAz9DpyrmfncIc+Lque59yZC/+5w=;
+        b=jAC8AAw0iF90+JCvLs88C1eptboxGzkkYI0KjqU+KV4xrt0Zm/cAF5Gbzsz2liqGTP
+         8Zojnu/F4f2NvTeTwuTEzAQpy4WlxAhjhdKeR8Dzmmk4K+KjupzJGluQuU/nW5t2D5r2
+         0tXA9iONPRw6jfwE7yhFDHa/0bsknQVWOC0l8KYsuPMYI3UN1NJP7Z7cd0HjcnK2mt4N
+         scqUYYjeNLmMV9OLpYtxhYWKi5Q5szxaX0TrYTROTYENgZ3VKXPdigYcbCn9V65pm7Og
+         Nubq36qCGrf6eqjxCKIQHV1zyElQHnbHZKUySKe+WxGgbzkN4bY8z+FF3Rd7kM1Epwlr
+         XZew==
+X-Gm-Message-State: AGi0PuZ8nHP6cCRmn88sYkljM15D1KPhuO+DhjswbSt9XzsYMVT/pTcN
+        BBdHTTTwLqOKuPcDvvotJfpJHVnay2AL5Tevd6nQ7w==
+X-Google-Smtp-Source: APiQypIkuoFfBZNbSuH6xY0DqxdXdxWr0AqNxKMHvTzBtHBZP9ZPw+ZzMKWrTKGg9oy2VTppKuGgJcpLQV7RZVDW/2Y=
+X-Received: by 2002:a4a:e495:: with SMTP id s21mr16488515oov.79.1586161562627;
+ Mon, 06 Apr 2020 01:26:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="d3h3r5s2altjvdpi"
-Content-Disposition: inline
-In-Reply-To: <20200405173601.24331-6-peron.clem@gmail.com>
+References: <20200331133346.372517-1-robert.foss@linaro.org>
+ <20200331133346.372517-2-robert.foss@linaro.org> <20200401080705.j4goeqcqhoswhx4u@gilmour.lan>
+ <CAG3jFyvUd08U9yNVPUD9Y=nd5Xpcx34GcHJRhtvAAycoq3qimg@mail.gmail.com>
+ <20200403232736.GA6127@valkosipuli.retiisi.org.uk> <20200404093446.vuvwrhn5436h4d3s@gilmour.lan>
+In-Reply-To: <20200404093446.vuvwrhn5436h4d3s@gilmour.lan>
+From:   Robert Foss <robert.foss@linaro.org>
+Date:   Mon, 6 Apr 2020 10:25:50 +0200
+Message-ID: <CAG3jFytX19r4FCateVtcd6C7mHNHUF4NA24mGTrogs6DWiE1pQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hey Maxime,
 
---d3h3r5s2altjvdpi
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Apr 05, 2020 at 07:35:59PM +0200, Cl=E9ment P=E9ron wrote:
-> Allwinner H6 needs this driver to be able to get
-> the correct speed_bin required for DVFS.
+On Sat, 4 Apr 2020 at 11:34, Maxime Ripard <maxime@cerno.tech> wrote:
 >
-> Enable this option in arm64 defconfig.
+> Hi,
 >
-> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> On Sat, Apr 04, 2020 at 02:27:36AM +0300, Sakari Ailus wrote:
+> > Hi Robert,
+> >
+> > On Thu, Apr 02, 2020 at 12:10:00PM +0200, Robert Foss wrote:
+> > > Hey Maxime,
+> > >
+> > > On Wed, 1 Apr 2020 at 10:07, Maxime Ripard <maxime@cerno.tech> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Tue, Mar 31, 2020 at 03:33:44PM +0200, Robert Foss wrote:
+> > > > > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > > >
+> > > > > This patch adds documentation of device tree in YAML schema for the
+> > > > > OV8856 CMOS image sensor.
+> > > > >
+> > > > > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > > > Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> > > > > ---
+> > > > >
+> > > > > - Changes since v5:
+> > > > >   * Add assigned-clocks and assigned-clock-rates
+> > > > >   * robher: dt-schema errors
+> > > > >
+> > > > > - Changes since v4:
+> > > > >   * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in description
+> > > > >   * Add clock-lanes property to example
+> > > > >   * robher: Fix syntax error in devicetree example
+> > > > >
+> > > > > - Changes since v3:
+> > > > >   * robher: Fix syntax error
+> > > > >   * robher: Removed maxItems
+> > > > >   * Fixes yaml 'make dt-binding-check' errors
+> > > > >
+> > > > > - Changes since v2:
+> > > > >   Fixes comments from from Andy, Tomasz, Sakari, Rob.
+> > > > >   * Convert text documentation to YAML schema.
+> > > > >
+> > > > > - Changes since v1:
+> > > > >   Fixes comments from Sakari, Tomasz
+> > > > >   * Add clock-frequency and link-frequencies in DT
+> > > > >
+> > > > >  .../devicetree/bindings/media/i2c/ov8856.yaml | 150 ++++++++++++++++++
+> > > > >  MAINTAINERS                                   |   1 +
+> > > > >  2 files changed, 151 insertions(+)
+> > > > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov8856.yaml b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> > > > > new file mode 100644
+> > > > > index 000000000000..beeddfbb8709
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> > > > > @@ -0,0 +1,150 @@
+> > > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > > > +# Copyright (c) 2019 MediaTek Inc.
+> > > > > +%YAML 1.2
+> > > > > +---
+> > > > > +$id: http://devicetree.org/schemas/media/i2c/ov8856.yaml#
+> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > +
+> > > > > +title: Omnivision OV8856 CMOS Sensor Device Tree Bindings
+> > > > > +
+> > > > > +maintainers:
+> > > > > +  - Ben Kao <ben.kao@intel.com>
+> > > > > +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > > > +
+> > > > > +description: |-
+> > > > > +  The Omnivision OV8856 is a high performance, 1/4-inch, 8 megapixel, CMOS
+> > > > > +  image sensor that delivers 3264x2448 at 30fps. It provides full-frame,
+> > > > > +  sub-sampled, and windowed 10-bit MIPI images in various formats via the
+> > > > > +  Serial Camera Control Bus (SCCB) interface. This chip is programmable
+> > > > > +  through I2C and two-wire SCCB. The sensor output is available via CSI-2
+> > > > > +  serial data output (up to 4-lane).
+> > > > > +
+> > > > > +properties:
+> > > > > +  compatible:
+> > > > > +    const: ovti,ov8856
+> > > > > +
+> > > > > +  reg:
+> > > > > +    maxItems: 1
+> > > > > +
+> > > > > +  clocks:
+> > > > > +    maxItems: 1
+> > > > > +
+> > > > > +  clock-names:
+> > > > > +    description:
+> > > > > +      Input clock for the sensor.
+> > > > > +    items:
+> > > > > +      - const: xvclk
+> > > > > +
+> > > > > +  clock-frequency:
+> > > > > +    description:
+> > > > > +      Frequency of the xvclk clock in Hertz.
+> > > >
+> > > > We also had that discussion recently for another omnivision sensor
+> > > > (ov5645 iirc), but what is clock-frequency useful for?
+> > > >
+> > > > It seems that the sensor is passed in clocks, so if you need to
+> > > > retrieve the clock rate you should use the clock API instead.
+> > > >
+> > > > Looking at the driver, it looks like it first retrieves the clock, set
+> > > > it to clock-frequency, and then checks that this is OV8856_XVCLK_19_2
+> > > > (19.2 MHz).
+> > >
+> > > As far as I understand it, 19.2MHz is requirement for the sensor mode
+> > > that currently defaults to. Some modes require higher clock speeds
+> > > than this however.
+> >
+> > It's very system specific. Either way, bindings should not assume a
+> > particular driver implementation.
+> >
+> > >
+> > > >
+> > > > The datasheet says that the sensor can have any frequency in the 6 -
+> > > > 27 MHz range, so this is a driver limitation and should be set in the
+> > > > driver using the clock API, and you can always bail out if it doesn't
+> > > > provide a rate that is not acceptable for the drivers assumption.
+> > > >
+> > > > In any case, you don't need clock-frequency here...
+> > >
+> > > So your suggestion is that we remove all clocks-rate properties, and
+> > > replace the clk_get_rate() calls in the driver with clk_set_rate()
+> > > calls for the desired frequencies?
+> >
+> > The driver shouldn't set the rate here unless it gets it from DT (but that
+> > was not the intention). So the driver should get the frequency instead.
+>
+> I'm actually saying the opposite :)
+>
+> Like you were saying, the binding (or DT, for that matter) shouldn't
+> assume a particular driver implementation.
+>
+> So one corollary is that if the driver has some restrictions in Linux,
+> it shouldn't be part of the binding, right?
+>
+> This binding uses multiple clock properties but as far as I can see,
+> the driver retrieves a clock using clocks and makes sure that its rate
+> match its limitation of 19.2MHz using clock-frequency (which is
+> redundant on a clk_get_rate on the clocks provided earlier).
+>
+> I'm suspecting that the parent clock on multiple SoCs can be
+> configured and is not a fixed rate crystal, so assigned-clocks-rate is
+> here just to make sure we set the frequency at the one being checked
+> in the driver's probe so that it all works.
+>
+> But that 19.2MHz is not a limitation of the device itself, it's a
+> limitation of our implementation, so we can instead implement
+> something equivalent in Linux using a clk_set_rate to 19.2MHz (to make
+> sure that our parent clock is configured at the right rate) and the
+> clk_get_rate and compare that to 19.2MHz (to make sure that it's not
+> been rounded too far apart from the frequency we expect).
+>
+> This is doing exactly the same thing, except that we don't encode our
+> implementation limitations in the DT, but in the driver instead.
+>
 
-In general, it's better to put anything in arm64 defconfig as a
-module, this defconfig is used by everyone.
-
-Maxime
-
---d3h3r5s2altjvdpi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXorlbgAKCRDj7w1vZxhR
-xXYHAQCYFche+fruhs7HL9PcB8Ws7GcpaL1wGd0FzELeszvbbQEA4PpN1F2lYa81
-QGyoZJ0c34qJBd5u34lOzcl+NB1frgU=
-=t4/j
------END PGP SIGNATURE-----
-
---d3h3r5s2altjvdpi--
+Thanks for taking the time to explain this.
+I'll spin a new revision that moves the clock rate handling into the driver.
