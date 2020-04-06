@@ -2,163 +2,135 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62044C2BA1E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 11:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F767C2BA80
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 11:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43F82206C3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 11:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2552D206C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 11:42:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nQh+pg6B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727300AbgDFLk2 (ORCPT
+        id S1727409AbgDFLma (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:40:28 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36658 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727192AbgDFLk2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 07:40:28 -0400
-Received: by mail-ot1-f67.google.com with SMTP id l23so14964999otf.3;
-        Mon, 06 Apr 2020 04:40:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dbg7DIum6KX3viMdVj5pwqj5cNuHsNuoxpYrRpMdwUo=;
-        b=rO/0s16bAKvBqmdiU3RNGvThYLTJO4dDOcaIT5w9RjkNv//crbY7xVEyuyrh647m2Z
-         ieoMDr0Xy/VOlRIRNBXB4hov5kqsVQPOcx6519fRGxpoIsueFSeBrKuxX8Fc2hsyyrdm
-         gX21dp/JvdqJORX2SvFPtEHo4ALch9avviagzeusOH9G0uqKTBxBNf9Lups33j3Qiy+P
-         8LEr4ScceSKhQMRtAQXsVYT5fRXHIKqY246VuXF5d+VN/towb8DoFqkkuOyj+/v86pMV
-         CwZOTo8a6sboEZN6gY4wIPK9Nkppd6ILC1xRe5lxYdA+YMptNfJLVd7YfvOIwaHs9z5K
-         qXNw==
-X-Gm-Message-State: AGi0Pua65itJqHj6Kdwed5wg0iXgQVmE3T5ygP2BHaqINXegNTVLVVJG
-        dymuWwNakkFu4IUl0iC7tl4fGyLQ246d9NLIy9YoCTY9
-X-Google-Smtp-Source: APiQypKPqvJRqeOqzC4j+4scy+dkCgEgdJpmPPaKExBorHuKEyGk71KwouiImwTYTgXWTESJfoVc8xJbRu11OFUXFTY=
-X-Received: by 2002:a9d:76c7:: with SMTP id p7mr16783289otl.145.1586173227928;
- Mon, 06 Apr 2020 04:40:27 -0700 (PDT)
+        Mon, 6 Apr 2020 07:42:30 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:18409 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727192AbgDFLm1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 07:42:27 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586173347; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=uLA+aP168I0ocVcL3/x2EZUaB7OeJIyHoWNUAc8lggA=; b=nQh+pg6BFscBUiK9sp+IS4Bc5xADYGr26Tv/ZAxoggFdo6YXQr5xmOnLVIClpf+gun+L0NbP
+ leBiDB9YOTC4DoNSKAKHa1xqqfflCXdr+GfrGbpGSr+gXmRcUWtZzHVjPH1fnzloU3CtjCFe
+ 6PbUiCZCINQYmmPBZxx0iP+Rts0=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8b15a2.7f40aa4c8260-smtp-out-n04;
+ Mon, 06 Apr 2020 11:42:26 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2728CC4478F; Mon,  6 Apr 2020 11:42:25 +0000 (UTC)
+Received: from [192.168.1.100] (unknown [157.44.182.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jprakash)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 01F4BC433D2;
+        Mon,  6 Apr 2020 11:42:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 01F4BC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jprakash@codeaurora.org
+Subject: Re: [PATCH 1/3] iio: adc: Convert the QCOM SPMI ADC bindings to .yaml
+ format
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, linus.walleij@linaro.org, sboyd@codeaurora.org,
+        Jonathan.Cameron@huawei.com, smohanad@codeaurora.org,
+        kgunda@codeaurora.org, aghayal@codeaurora.org,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>, linux-iio@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+References: <1585064650-16235-1-git-send-email-jprakash@codeaurora.org>
+ <1585064650-16235-2-git-send-email-jprakash@codeaurora.org>
+ <20200328165113.6fdeedd3@archlinux>
+From:   Jishnu Prakash <jprakash@codeaurora.org>
+Message-ID: <f53cd9f7-333d-9bc7-b545-236e0b9efcac@codeaurora.org>
+Date:   Mon, 6 Apr 2020 17:11:56 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200405232318.26833-1-laurent.pinchart+renesas@ideasonboard.com>
- <20200405232318.26833-5-laurent.pinchart+renesas@ideasonboard.com>
- <CAMuHMdXJcw0eGY7J=JcGv6Hs9E_GCybsYSeKKeH5pAH8nkdTrg@mail.gmail.com> <20200406110924.GB4757@pendragon.ideasonboard.com>
-In-Reply-To: <20200406110924.GB4757@pendragon.ideasonboard.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 6 Apr 2020 13:40:16 +0200
-Message-ID: <CAMuHMdWhj1uS6v1bb0ntsP_b29Sgw+M6KHPceDxmeF3329Aw=g@mail.gmail.com>
-Subject: Re: [PATCH 4/4] dt-bindings: display: bridge: renesas,lvds: Convert
- binding to YAML
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200328165113.6fdeedd3@archlinux>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hi Jonathan,
 
-On Mon, Apr 6, 2020 at 1:09 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Mon, Apr 06, 2020 at 10:47:37AM +0200, Geert Uytterhoeven wrote:
-> > On Mon, Apr 6, 2020 at 1:24 AM Laurent Pinchart wrote:
-> > > Convert the Renesas R-Car LVDS encoder text binding to YAML.
-> > >
-> > > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-
-> > > +if:
-> > > +  properties:
-> > > +    compatible:
-> > > +      enum:
-> > > +        - renesas,r8a774c0-lvds
-> > > +        - renesas,r8a77990-lvds
-> > > +        - renesas,r8a77995-lvds
-> > > +then:
-> > > +  properties:
-> > > +    clocks:
-> > > +      minItems: 1
-> > > +      maxItems: 4
-> > > +      items:
-> > > +        - description: Functional clock
-> > > +        - description: EXTAL input clock
-> > > +        - description: DU_DOTCLKIN0 input clock
-> > > +        - description: DU_DOTCLKIN1 input clock
-> > > +
-> > > +    clock-names:
-> > > +      minItems: 1
-> > > +      maxItems: 4
-> > > +      items:
-> > > +        - const: fck
-> > > +        # The LVDS encoder can use the EXTAL or DU_DOTCLKINx clocks.
-> > > +        # These clocks are optional.
-> > > +        - enum:
-> > > +          - extal
-> > > +          - dclkin.0
-> > > +          - dclkin.1
-> > > +        - enum:
-> > > +          - extal
-> > > +          - dclkin.0
-> > > +          - dclkin.1
-> > > +        - enum:
-> > > +          - extal
-> > > +          - dclkin.0
-> > > +          - dclkin.1
-> >
-> > Can the duplication of the last 3 entries be avoided?
-> > Perhaps like in
-> > Documentation/devicetree/bindings/serial/renesas,scif.yaml?
+On 3/28/2020 10:21 PM, Jonathan Cameron wrote:
+> On Tue, 24 Mar 2020 21:14:08 +0530
+> Jishnu Prakash <jprakash@codeaurora.org> wrote:
 >
-> I'd love to, if you can tell me how to make sure the fck entry is
-> mandatory. The following
+>> Convert the adc bindings from .txt to .yaml format.
+>>
+>> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
+> Hi Jishnu,
 >
->   minItems: 1
->   maxItems: 4
->   items:
->     enum:
->       - fck
->       - extal
->       - dclkin.0
->       - dclkin.1
+> Looks to me like we can tighten the checks a fair bit in here rather
+> than just using uint32s
 >
-> passes the checks, but would accept
+> Now, my yaml isn't great so I won't try to say how, but there are plenty
+> of examples in tree.
 >
->         clock-names = "extal";
+> Thanks,
 >
-> which is not valid. Your
-> Documentation/devicetree/bindings/serial/renesas,scif.yaml bindings
-> suffer from the same problem :-)
-
-Hmm....
-
-> > > +examples:
-> > > +  - |
-> > > +    #include <dt-bindings/clock/renesas-cpg-mssr.h>
-> > > +    #include <dt-bindings/power/r8a7795-sysc.h>
-> > > +
-> > > +    lvds@feb90000 {
-> > > +        compatible = "renesas,r8a7795-lvds";
-> > > +        reg = <0 0xfeb90000 0 0x14>;
-> >
-> > Examples are built with #{address,size}-cells = <1>.
+> Jonathan
 >
-> Are they ? I don't get any failure from make dt_binding_check.
+> +
+> +      qcom,decimation:
+> +        description: |
+> +            This parameter is used to decrease ADC sampling rate.
+> +            Quicker measurements can be made by reducing decimation ratio.
+> +            - For compatible property "qcom,spmi-vadc", valid values are
+> +              512, 1024, 2048, 4096. If property is not found, default value
+> +              of 512 will be used.
+> +            - For compatible property "qcom,spmi-adc5", valid values are 250, 420
+> +              and 840. If property is not found, default value of 840 is used.
+> +            - For compatible property "qcom,spmi-adc-rev2", valid values are 256,
+> +              512 and 1024. If property is not present, default value is 1024.
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#/definitions/uint32
+> Should ideally verify all the values against models etc rather than a uint32 binding.
+I'll add constraints for all properties for which it's applicable in the 
+next post.
+>
+>> +
+>> +      qcom,pre-scaling:
+>> +        description: |
+>> +            Used for scaling the channel input signal before the signal is
+>> +            fed to VADC. The configuration for this node is to know the
+>> +            pre-determined ratio and use it for post scaling. Select one from
+>> +            the following options.
+>> +            <1 1>, <1 3>, <1 4>, <1 6>, <1 20>, <1 8>, <10 81>, <1 10>
+>
 
-Hmm... And you do have "reg: maxItems: 1"...
-
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>> +
+>> +examples:
+>> +  - |
+>> +      /* VADC node */
+>> +      pmic_vadc: vadc@3100 {
+> Should really be using generic names, so adc@3100 preferred.
+I'll change it in the next post.
