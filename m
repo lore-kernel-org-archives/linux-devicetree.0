@@ -2,429 +2,204 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B73DAC2BA1E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 13:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 366BEC2BA1E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 13:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77246233EB
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 13:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 019FA206C3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 13:59:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="YCuo456D"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q9doaK/j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbgDFN4x (ORCPT
+        id S1728392AbgDFN7b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:56:53 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:19650 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728415AbgDFN4w (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 09:56:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586181408;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=HCkobm6WVxFivuVMVb0Qlziw5czUnYwYei1vVlTv3VQ=;
-        b=YCuo456DjFWhKcZcuRmJ2UNwM2fBYWySCWF7pO8IXrZAHU/pF+ltV4naSKKm2vf7Lp
-        xIuMOpAG31WfDhqulxdvCI83acZ0tBoX80UTcQXzRBAzNwE2ZCDgxDUiNzifJBX9Ox24
-        3v2nVC4FiwNKLbruC2f6b511hUxrd3LVxxDckopCKPn6CuMIRk1kxJbe23+fkMW5ult2
-        EQ+rZAsvvMVbtCLAd1tgjSD78qKJ5SpFgH/i79bhitsS6MexIia7hUUCGhokWNyHOrdZ
-        dgZsZXfQaZe1c8d/rd0twlT4hCzlTbYKed2VW/cCa+DEzmuD+rcLlX6u2TE37ENZQCuk
-        T1lg==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB5m6NBgYo"
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id u043b8w36Duh2ON
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Mon, 6 Apr 2020 15:56:43 +0200 (CEST)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Kenneth Westfield <kwestfie@codeaurora.org>,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 2/2] ASoC: qcom: lpass-cpu: Make I2S SD lines configurable
-Date:   Mon,  6 Apr 2020 15:56:08 +0200
-Message-Id: <20200406135608.126171-2-stephan@gerhold.net>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200406135608.126171-1-stephan@gerhold.net>
-References: <20200406135608.126171-1-stephan@gerhold.net>
+        Mon, 6 Apr 2020 09:59:31 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38898 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728271AbgDFN7b (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 09:59:31 -0400
+Received: by mail-io1-f67.google.com with SMTP id e79so6012659iof.5;
+        Mon, 06 Apr 2020 06:59:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WiuMw9xp+mz0F42UsrL6QJlGqNwQFdd9t3J1yc1c128=;
+        b=q9doaK/jB6bzjdiPXdM99b+qxzxFd86JnUE4lPM2p2JB/Swp2TkaXGPUs9/8Sy0l5c
+         Hm/R89+F+ZJjqwLKA0hlVs5+9vJkWinSKTrElIhHFNwWgudRJgtu3CAGAC2lAij+MAqY
+         KEjOV7kThMttPa9yFWO6204IuptO208FPDtYuS8bAiX1Zera0q9dyX9LQfjFtbWX8269
+         cKtZ60zpE+EMBatUc//2ApK/bqTWJg54i21O7Rsm+DXndSYVzAEJWSQ7nFhvyGkGXLav
+         Y8J72h1H+8zS3zQBfHmBCcNKT8aZv1ztlOle5VIZd17SY6jNMz/UBsRS6aAmJgq4QRog
+         S81g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WiuMw9xp+mz0F42UsrL6QJlGqNwQFdd9t3J1yc1c128=;
+        b=D1PNK0TQ09x58UEVRalWTC67zyOCkkiKuGXe1VxqR/IF4IDj6rPCneqK/pmzAbC+a8
+         ZILLdZGRMxC5izCZbwqTNXNK8ScKsuL2bIsDGPhwQc0Gb3yvuyxkya/eVyVNLL0gCpnu
+         BrL90XASA/086vz0bSZLHLGqZWay3iDifGJBzjHbft8jguqPWSCfxS815pXyQJwtrHHj
+         NLfNLqui3XGKL53228MVj6FFOhcnRdx9xv2oY5G9lTOIWlWHULhmRn4b2w0H3WH+GsMf
+         b2R4hJw3DD9o2Q7QzBCCU2OyOCAwn0+hddSiotVfGhnp9Alun1kqk1rNdHwTpUSnxoGP
+         oPhw==
+X-Gm-Message-State: AGi0PubasEdDS8n6ZR76qkIrU2ZavF3uirf0/9hS5Rp4fHjRWmFF0gmr
+        95UQcSwqBfFeexh12EARfYLjUkhh/IHyo65XT1c=
+X-Google-Smtp-Source: APiQypKtgDkzu/faGibQ6B724sQtNeNo6BF+zpyGWrRWohntvwo9hrBSntu3RhE1re6zf7ZfhNSGrnVqR5/HJVoHlDs=
+X-Received: by 2002:a05:6638:120c:: with SMTP id n12mr21231145jas.32.1586181568036;
+ Mon, 06 Apr 2020 06:59:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1586165281-11888-1-git-send-email-chun-hung.wu@mediatek.com> <1586165281-11888-3-git-send-email-chun-hung.wu@mediatek.com>
+In-Reply-To: <1586165281-11888-3-git-send-email-chun-hung.wu@mediatek.com>
+From:   Alan Cooper <alcooperx@gmail.com>
+Date:   Mon, 6 Apr 2020 09:59:16 -0400
+Message-ID: <CAOGqxeUjx+OWRhwWznk-uHZ9op7WTZaAGq6xd4Z4QdL+Hja2yA@mail.gmail.com>
+Subject: Re: [PATCH 2/5] [2/5] mmc: host: Remove redundant host CQE bindings
+To:     Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Cc:     mirq-linux@rere.qmqm.pl, Jonathan Hunter <jonathanh@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Pan Bian <bianpan2016@163.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Kuohong Wang <kuohong.wang@mediatek.com>,
+        kernel-team@android.com,
+        ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        DTML <devicetree@vger.kernel.org>, wsd_upstream@mediatek.com,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The LPASS hardware allows configuring the MI2S SD lines to use
-when playing/recording audio. However, at the moment the lpass-cpu
-driver has SD0 hard-coded for mono/stereo (or additional fixed
-SD lines for more channels).
+On Mon, Apr 6, 2020 at 5:28 AM Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
+>
+> CQE bindings "supports-cqe" and "disable-cqe-dcmd" is parsed
+> in mmc_of_parse(). Remove vendor code which parses CQE bindings,
+> and use mmc_host->caps2 to decide support CQE or not.
+>
+> Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+> ---
+>  drivers/mmc/host/sdhci-brcmstb.c   | 11 ++++++-----
+>  drivers/mmc/host/sdhci-msm.c       |  3 +--
+>  drivers/mmc/host/sdhci-of-arasan.c |  3 ---
+>  drivers/mmc/host/sdhci-tegra.c     |  2 +-
+>  4 files changed, 8 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-brcmstb.c
+> index ad01f64..07c90c6 100644
+> --- a/drivers/mmc/host/sdhci-brcmstb.c
+> +++ b/drivers/mmc/host/sdhci-brcmstb.c
+> @@ -247,10 +247,6 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
+>                 return res;
+>
+>         memset(&brcmstb_pdata, 0, sizeof(brcmstb_pdata));
+> -       if (device_property_read_bool(&pdev->dev, "supports-cqe")) {
+> -               has_cqe = true;
+> -               match_priv->ops->irq = sdhci_brcmstb_cqhci_irq;
 
-For weird reasons there seems to be hardware that uses one of the
-other SD lines for mono/stereo. For example, some Samsung devices
-use an external Speaker amplifier connected to Quaternary MI2S.
-For some reason, the SD line for audio playback was connected to
-SD1 rather than SD0. (I have no idea why...)
-At the moment, the lpass-cpu driver cannot be configured to work
-for the Speaker on these devices.
+The above line that sets the irq was moved to later in the function,
+but needs to come before sdhci_pltfm_init()
 
-The q6afe driver already allows configuring the MI2S SD lines
-through the "qcom,sd-lines" device tree property, but this works
-only when routing audio through the ADSP.
+Al
 
-This commit adds a very similar configuration for the lpass-cpu driver.
-It is now possible to add additional subnodes to the lpass device in
-the device tree, to configure the SD lines for playback and/or capture.
-E.g. for the Samsung devices mentioned above:
-
-&lpass {
-	mi2s-quaternary@3 {
-		reg = <MI2S_QUATERNARY>;
-		qcom,playback-sd-lines = <1>;
-	};
-};
-
-qcom,playback/capture-sd-lines takes a list of SD lines (0-3)
-in the same format as the q6afe driver. (The difference here is that
-q6afe has separate DAIs for playback/capture, while lpass-cpu has one
-for both...)
-
-For backwards compatibility with older device trees, the lpass-cpu driver
-defaults to LPAIF_I2SCTL_MODE_8CH if the subnode for a DAI is missing.
-This is equivalent to the previous behavior: Up to 8 channels can be
-configured, and SD0/QUAT01 will be chosen when setting up a stream
-with fewer channels.
-
-This allows the speaker to work on Samsung MSM8916 devices
-that use an external speaker amplifier.
-
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
- sound/soc/qcom/lpass-cpu.c       | 196 +++++++++++++++++++++++--------
- sound/soc/qcom/lpass-lpaif-reg.h |  30 ++---
- sound/soc/qcom/lpass.h           |   4 +
- 3 files changed, 166 insertions(+), 64 deletions(-)
-
-diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
-index dbce7e92baf3..de2b6d60ce6a 100644
---- a/sound/soc/qcom/lpass-cpu.c
-+++ b/sound/soc/qcom/lpass-cpu.c
-@@ -19,6 +19,16 @@
- #include "lpass-lpaif-reg.h"
- #include "lpass.h"
- 
-+#define LPASS_CPU_MAX_MI2S_LINES	4
-+#define LPASS_CPU_I2S_SD0_MASK		BIT(0)
-+#define LPASS_CPU_I2S_SD1_MASK		BIT(1)
-+#define LPASS_CPU_I2S_SD2_MASK		BIT(2)
-+#define LPASS_CPU_I2S_SD3_MASK		BIT(3)
-+#define LPASS_CPU_I2S_SD0_1_MASK	GENMASK(1, 0)
-+#define LPASS_CPU_I2S_SD2_3_MASK	GENMASK(3, 2)
-+#define LPASS_CPU_I2S_SD0_1_2_MASK	GENMASK(2, 0)
-+#define LPASS_CPU_I2S_SD0_1_2_3_MASK	GENMASK(3, 0)
-+
- static int lpass_cpu_daiops_set_sysclk(struct snd_soc_dai *dai, int clk_id,
- 		unsigned int freq, int dir)
- {
-@@ -72,6 +82,7 @@ static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
- 	snd_pcm_format_t format = params_format(params);
- 	unsigned int channels = params_channels(params);
- 	unsigned int rate = params_rate(params);
-+	unsigned int mode;
- 	unsigned int regval;
- 	int bitwidth, ret;
- 
-@@ -99,60 +110,84 @@ static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
- 		return -EINVAL;
- 	}
- 
--	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
--		switch (channels) {
--		case 1:
--			regval |= LPAIF_I2SCTL_SPKMODE_SD0;
--			regval |= LPAIF_I2SCTL_SPKMONO_MONO;
--			break;
--		case 2:
--			regval |= LPAIF_I2SCTL_SPKMODE_SD0;
--			regval |= LPAIF_I2SCTL_SPKMONO_STEREO;
--			break;
--		case 4:
--			regval |= LPAIF_I2SCTL_SPKMODE_QUAD01;
--			regval |= LPAIF_I2SCTL_SPKMONO_STEREO;
--			break;
--		case 6:
--			regval |= LPAIF_I2SCTL_SPKMODE_6CH;
--			regval |= LPAIF_I2SCTL_SPKMONO_STEREO;
-+	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-+		mode = drvdata->mi2s_playback_sd_mode[dai->driver->id];
-+	else
-+		mode = drvdata->mi2s_capture_sd_mode[dai->driver->id];
-+
-+	if (!mode) {
-+		dev_err(dai->dev, "no line is assigned\n");
-+		return -EINVAL;
-+	}
-+
-+	switch (channels) {
-+	case 1:
-+	case 2:
-+		switch (mode) {
-+		case LPAIF_I2SCTL_MODE_QUAD01:
-+		case LPAIF_I2SCTL_MODE_6CH:
-+		case LPAIF_I2SCTL_MODE_8CH:
-+			mode = LPAIF_I2SCTL_MODE_SD0;
- 			break;
--		case 8:
--			regval |= LPAIF_I2SCTL_SPKMODE_8CH;
--			regval |= LPAIF_I2SCTL_SPKMONO_STEREO;
-+		case LPAIF_I2SCTL_MODE_QUAD23:
-+			mode = LPAIF_I2SCTL_MODE_SD2;
- 			break;
--		default:
--			dev_err(dai->dev, "invalid channels given: %u\n",
--				channels);
-+		}
-+
-+		break;
-+	case 4:
-+		if (mode < LPAIF_I2SCTL_MODE_QUAD01) {
-+			dev_err(dai->dev, "cannot configure 4 channels with mode %d\n",
-+				mode);
- 			return -EINVAL;
- 		}
--	} else {
--		switch (channels) {
--		case 1:
--			regval |= LPAIF_I2SCTL_MICMODE_SD0;
--			regval |= LPAIF_I2SCTL_MICMONO_MONO;
--			break;
--		case 2:
--			regval |= LPAIF_I2SCTL_MICMODE_SD0;
--			regval |= LPAIF_I2SCTL_MICMONO_STEREO;
--			break;
--		case 4:
--			regval |= LPAIF_I2SCTL_MICMODE_QUAD01;
--			regval |= LPAIF_I2SCTL_MICMONO_STEREO;
--			break;
--		case 6:
--			regval |= LPAIF_I2SCTL_MICMODE_6CH;
--			regval |= LPAIF_I2SCTL_MICMONO_STEREO;
-+
-+		switch (mode) {
-+		case LPAIF_I2SCTL_MODE_6CH:
-+		case LPAIF_I2SCTL_MODE_8CH:
-+			mode = LPAIF_I2SCTL_MODE_QUAD01;
- 			break;
--		case 8:
--			regval |= LPAIF_I2SCTL_MICMODE_8CH;
--			regval |= LPAIF_I2SCTL_MICMONO_STEREO;
-+		}
-+		break;
-+	case 6:
-+		if (mode < LPAIF_I2SCTL_MODE_6CH) {
-+			dev_err(dai->dev, "cannot configure 6 channels with mode %d\n",
-+				mode);
-+			return -EINVAL;
-+		}
-+
-+		switch (mode) {
-+		case LPAIF_I2SCTL_MODE_8CH:
-+			mode = LPAIF_I2SCTL_MODE_6CH;
- 			break;
--		default:
--			dev_err(dai->dev, "invalid channels given: %u\n",
--				channels);
-+		}
-+		break;
-+	case 8:
-+		if (mode < LPAIF_I2SCTL_MODE_8CH) {
-+			dev_err(dai->dev, "cannot configure 8 channels with mode %d\n",
-+				mode);
- 			return -EINVAL;
- 		}
-+		break;
-+	default:
-+		dev_err(dai->dev, "invalid channels given: %u\n", channels);
-+		return -EINVAL;
-+	}
-+
-+	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-+		regval |= LPAIF_I2SCTL_SPKMODE(mode);
-+
-+		if (channels >= 2)
-+			regval |= LPAIF_I2SCTL_SPKMONO_STEREO;
-+		else
-+			regval |= LPAIF_I2SCTL_SPKMONO_MONO;
-+	} else {
-+		regval |= LPAIF_I2SCTL_MICMODE(mode);
-+
-+		if (channels >= 2)
-+			regval |= LPAIF_I2SCTL_MICMONO_STEREO;
-+		else
-+			regval |= LPAIF_I2SCTL_MICMONO_MONO;
- 	}
- 
- 	ret = regmap_write(drvdata->lpaif_map,
-@@ -413,6 +448,73 @@ static struct regmap_config lpass_cpu_regmap_config = {
- 	.cache_type = REGCACHE_FLAT,
- };
- 
-+static unsigned int of_lpass_cpu_parse_sd_lines(struct device *dev,
-+						struct device_node *node,
-+						const char *name)
-+{
-+	unsigned int lines[LPASS_CPU_MAX_MI2S_LINES];
-+	unsigned int sd_line_mask = 0;
-+	int num_lines, i;
-+
-+	num_lines = of_property_read_variable_u32_array(node, name, lines, 0,
-+							LPASS_CPU_MAX_MI2S_LINES);
-+	if (num_lines < 0)
-+		return LPAIF_I2SCTL_MODE_NONE;
-+
-+	for (i = 0; i < num_lines; i++)
-+		sd_line_mask |= BIT(lines[i]);
-+
-+	switch (sd_line_mask) {
-+	case LPASS_CPU_I2S_SD0_MASK:
-+		return LPAIF_I2SCTL_MODE_SD0;
-+	case LPASS_CPU_I2S_SD1_MASK:
-+		return LPAIF_I2SCTL_MODE_SD1;
-+	case LPASS_CPU_I2S_SD2_MASK:
-+		return LPAIF_I2SCTL_MODE_SD2;
-+	case LPASS_CPU_I2S_SD3_MASK:
-+		return LPAIF_I2SCTL_MODE_SD3;
-+	case LPASS_CPU_I2S_SD0_1_MASK:
-+		return LPAIF_I2SCTL_MODE_QUAD01;
-+	case LPASS_CPU_I2S_SD2_3_MASK:
-+		return LPAIF_I2SCTL_MODE_QUAD23;
-+	case LPASS_CPU_I2S_SD0_1_2_MASK:
-+		return LPAIF_I2SCTL_MODE_6CH;
-+	case LPASS_CPU_I2S_SD0_1_2_3_MASK:
-+		return LPAIF_I2SCTL_MODE_8CH;
-+	default:
-+		dev_err(dev, "Unsupported SD line mask: %#x\n", sd_line_mask);
-+		return LPAIF_I2SCTL_MODE_NONE;
-+	}
-+}
-+
-+static void of_lpass_cpu_parse_dai_data(struct device *dev,
-+					struct lpass_data *data)
-+{
-+	struct device_node *node;
-+	int ret, id;
-+
-+	/* Allow all channels by default for backwards compatibility */
-+	for (id = 0; id < data->variant->num_dai; id++) {
-+		data->mi2s_playback_sd_mode[id] = LPAIF_I2SCTL_MODE_8CH;
-+		data->mi2s_capture_sd_mode[id] = LPAIF_I2SCTL_MODE_8CH;
-+	}
-+
-+	for_each_child_of_node(dev->of_node, node) {
-+		ret = of_property_read_u32(node, "reg", &id);
-+		if (ret || id < 0 || id >= data->variant->num_dai) {
-+			dev_err(dev, "valid dai id not found: %d\n", ret);
-+			continue;
-+		}
-+
-+		data->mi2s_playback_sd_mode[id] =
-+			of_lpass_cpu_parse_sd_lines(dev, node,
-+						    "qcom,playback-sd-lines");
-+		data->mi2s_capture_sd_mode[id] =
-+			of_lpass_cpu_parse_sd_lines(dev, node,
-+						    "qcom,capture-sd-lines");
-+	}
-+}
-+
- int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
- {
- 	struct lpass_data *drvdata;
-@@ -442,6 +544,8 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
- 	drvdata->variant = (struct lpass_variant *)match->data;
- 	variant = drvdata->variant;
- 
-+	of_lpass_cpu_parse_dai_data(dev, drvdata);
-+
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "lpass-lpaif");
- 
- 	drvdata->lpaif = devm_ioremap_resource(&pdev->dev, res);
-diff --git a/sound/soc/qcom/lpass-lpaif-reg.h b/sound/soc/qcom/lpass-lpaif-reg.h
-index 3d74ae123e9d..72a3e2f69572 100644
---- a/sound/soc/qcom/lpass-lpaif-reg.h
-+++ b/sound/soc/qcom/lpass-lpaif-reg.h
-@@ -22,17 +22,19 @@
- #define LPAIF_I2SCTL_SPKEN_DISABLE	(0 << LPAIF_I2SCTL_SPKEN_SHIFT)
- #define LPAIF_I2SCTL_SPKEN_ENABLE	(1 << LPAIF_I2SCTL_SPKEN_SHIFT)
- 
-+#define LPAIF_I2SCTL_MODE_NONE		0
-+#define LPAIF_I2SCTL_MODE_SD0		1
-+#define LPAIF_I2SCTL_MODE_SD1		2
-+#define LPAIF_I2SCTL_MODE_SD2		3
-+#define LPAIF_I2SCTL_MODE_SD3		4
-+#define LPAIF_I2SCTL_MODE_QUAD01	5
-+#define LPAIF_I2SCTL_MODE_QUAD23	6
-+#define LPAIF_I2SCTL_MODE_6CH		7
-+#define LPAIF_I2SCTL_MODE_8CH		8
-+
- #define LPAIF_I2SCTL_SPKMODE_MASK	0x3C00
- #define LPAIF_I2SCTL_SPKMODE_SHIFT	10
--#define LPAIF_I2SCTL_SPKMODE_NONE	(0 << LPAIF_I2SCTL_SPKMODE_SHIFT)
--#define LPAIF_I2SCTL_SPKMODE_SD0	(1 << LPAIF_I2SCTL_SPKMODE_SHIFT)
--#define LPAIF_I2SCTL_SPKMODE_SD1	(2 << LPAIF_I2SCTL_SPKMODE_SHIFT)
--#define LPAIF_I2SCTL_SPKMODE_SD2	(3 << LPAIF_I2SCTL_SPKMODE_SHIFT)
--#define LPAIF_I2SCTL_SPKMODE_SD3	(4 << LPAIF_I2SCTL_SPKMODE_SHIFT)
--#define LPAIF_I2SCTL_SPKMODE_QUAD01	(5 << LPAIF_I2SCTL_SPKMODE_SHIFT)
--#define LPAIF_I2SCTL_SPKMODE_QUAD23	(6 << LPAIF_I2SCTL_SPKMODE_SHIFT)
--#define LPAIF_I2SCTL_SPKMODE_6CH	(7 << LPAIF_I2SCTL_SPKMODE_SHIFT)
--#define LPAIF_I2SCTL_SPKMODE_8CH	(8 << LPAIF_I2SCTL_SPKMODE_SHIFT)
-+#define LPAIF_I2SCTL_SPKMODE(mode)	((mode) << LPAIF_I2SCTL_SPKMODE_SHIFT)
- 
- #define LPAIF_I2SCTL_SPKMONO_MASK	0x0200
- #define LPAIF_I2SCTL_SPKMONO_SHIFT	9
-@@ -46,15 +48,7 @@
- 
- #define LPAIF_I2SCTL_MICMODE_MASK	GENMASK(7, 4)
- #define LPAIF_I2SCTL_MICMODE_SHIFT	4
--#define LPAIF_I2SCTL_MICMODE_NONE	(0 << LPAIF_I2SCTL_MICMODE_SHIFT)
--#define LPAIF_I2SCTL_MICMODE_SD0	(1 << LPAIF_I2SCTL_MICMODE_SHIFT)
--#define LPAIF_I2SCTL_MICMODE_SD1	(2 << LPAIF_I2SCTL_MICMODE_SHIFT)
--#define LPAIF_I2SCTL_MICMODE_SD2	(3 << LPAIF_I2SCTL_MICMODE_SHIFT)
--#define LPAIF_I2SCTL_MICMODE_SD3	(4 << LPAIF_I2SCTL_MICMODE_SHIFT)
--#define LPAIF_I2SCTL_MICMODE_QUAD01	(5 << LPAIF_I2SCTL_MICMODE_SHIFT)
--#define LPAIF_I2SCTL_MICMODE_QUAD23	(6 << LPAIF_I2SCTL_MICMODE_SHIFT)
--#define LPAIF_I2SCTL_MICMODE_6CH	(7 << LPAIF_I2SCTL_MICMODE_SHIFT)
--#define LPAIF_I2SCTL_MICMODE_8CH	(8 << LPAIF_I2SCTL_MICMODE_SHIFT)
-+#define LPAIF_I2SCTL_MICMODE(mode)	((mode) << LPAIF_I2SCTL_MICMODE_SHIFT)
- 
- #define LPAIF_I2SCTL_MIMONO_MASK	GENMASK(3, 3)
- #define LPAIF_I2SCTL_MICMONO_SHIFT	3
-diff --git a/sound/soc/qcom/lpass.h b/sound/soc/qcom/lpass.h
-index 17113d380dcc..bd19ec57c73d 100644
---- a/sound/soc/qcom/lpass.h
-+++ b/sound/soc/qcom/lpass.h
-@@ -29,6 +29,10 @@ struct lpass_data {
- 	/* MI2S bit clock (derived from system clock by a divider */
- 	struct clk *mi2s_bit_clk[LPASS_MAX_MI2S_PORTS];
- 
-+	/* MI2S SD lines to use for playback/capture */
-+	unsigned int mi2s_playback_sd_mode[LPASS_MAX_MI2S_PORTS];
-+	unsigned int mi2s_capture_sd_mode[LPASS_MAX_MI2S_PORTS];
-+
- 	/* low-power audio interface (LPAIF) registers */
- 	void __iomem *lpaif;
- 
--- 
-2.26.0
-
+> -       }
+>         brcmstb_pdata.ops = match_priv->ops;
+>         host = sdhci_pltfm_init(pdev, &brcmstb_pdata,
+>                                 sizeof(struct sdhci_brcmstb_priv));
+> @@ -261,7 +257,6 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
+>
+>         pltfm_host = sdhci_priv(host);
+>         priv = sdhci_pltfm_priv(pltfm_host);
+> -       priv->has_cqe = has_cqe;
+>
+>         /* Map in the non-standard CFG registers */
+>         iomem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> @@ -276,6 +271,12 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
+>         if (res)
+>                 goto err;
+>
+> +       if (host->mmc->caps2 & MMC_CAP2_CQE) {
+> +               has_cqe = true;
+> +               match_priv->ops->irq = sdhci_brcmstb_cqhci_irq;
+> +       }
+> +       priv->has_cqe = has_cqe;
+> +
+>         /*
+>          * If the chip has enhanced strobe and it's enabled, add
+>          * callback
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index c3a160c..fbb2f57 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -1880,7 +1880,6 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>         u8 core_major;
+>         const struct sdhci_msm_offset *msm_offset;
+>         const struct sdhci_msm_variant_info *var_info;
+> -       struct device_node *node = pdev->dev.of_node;
+>
+>         host = sdhci_pltfm_init(pdev, &sdhci_msm_pdata, sizeof(*msm_host));
+>         if (IS_ERR(host))
+> @@ -2076,7 +2075,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>         pm_runtime_use_autosuspend(&pdev->dev);
+>
+>         host->mmc_host_ops.execute_tuning = sdhci_msm_execute_tuning;
+> -       if (of_property_read_bool(node, "supports-cqe"))
+> +       if (host->mmc->caps2 & MMC_CAP2_CQE)
+>                 ret = sdhci_msm_cqe_add_host(host, pdev);
+>         else
+>                 ret = sdhci_add_host(host);
+> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+> index e49b44b..359eff6 100644
+> --- a/drivers/mmc/host/sdhci-of-arasan.c
+> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+> @@ -1281,9 +1281,6 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+>                                         sdhci_arasan_voltage_switch;
+>                 sdhci_arasan->has_cqe = true;
+>                 host->mmc->caps2 |= MMC_CAP2_CQE;
+> -
+> -               if (!of_property_read_bool(np, "disable-cqe-dcmd"))
+> -                       host->mmc->caps2 |= MMC_CAP2_CQE_DCMD;
+>         }
+>
+>         ret = sdhci_arasan_add_host(sdhci_arasan);
+> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+> index 403ac44..d09abdd 100644
+> --- a/drivers/mmc/host/sdhci-tegra.c
+> +++ b/drivers/mmc/host/sdhci-tegra.c
+> @@ -715,7 +715,7 @@ static void tegra_sdhci_parse_dt(struct sdhci_host *host)
+>         struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>         struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
+>
+> -       if (device_property_read_bool(host->mmc->parent, "supports-cqe"))
+> +       if (host->mmc->caps2 & MMC_CAP2_CQE)
+>                 tegra_host->enable_hwcq = true;
+>         else
+>                 tegra_host->enable_hwcq = false;
+> --
+> 1.9.1
