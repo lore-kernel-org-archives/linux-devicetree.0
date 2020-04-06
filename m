@@ -2,101 +2,150 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A666C2BA17
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 17:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22542C2BA1E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 17:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C298206C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 17:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3FFD206F8
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 17:43:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="OQ+6N8+n"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="iPjyvEQf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgDFRgu (ORCPT
+        id S1726712AbgDFRnu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 13:36:50 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:52766 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbgDFRgt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 13:36:49 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 597171031;
-        Mon,  6 Apr 2020 19:36:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1586194607;
-        bh=YPNE2hB3+Kd4JYl1p59Zx6o1xWVLnWL1+Y6boeKyKUw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OQ+6N8+n1zJZ0/2gH5NJj0mdJcoSxgpgo9vwr7oiQm0EgXP/WfcG1R7OCF1Q7Q7gs
-         sgnuJLn7jlHyoU6HR+MOZFZWLVzUPGO41cT1LkEnU7D77nDcDwb/sNPR8xYKzBCcbT
-         3DLZ9KNu12/OA/QQpUw55JkMIcnoBYMMZ4JIgb+w=
-Date:   Mon, 6 Apr 2020 20:36:37 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Mon, 6 Apr 2020 13:43:50 -0400
+Received: from mail-mw2nam10on2064.outbound.protection.outlook.com ([40.107.94.64]:64832
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726703AbgDFRnt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Apr 2020 13:43:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fWvqrc0WbvR+saNHV3FxmU625Z6OFV1smbLoUJcv/QuoaoM76D2Gf+OljKz8OJs+EiElw4s9jH22deZsT4SyCpNXDJ+k2BzRzFVjMMk6CPIPFokFDHjTnIIUAkt2rXoC7zl6B6PK/GNC/KMx2sRr3kAQ1sYQgxxVdKbCfZKjuqJpWvScufiCoNGw+kt1rkrrZCghH6PIZxN7i49j2P2M4eOxOD/0WxoB5QFRhckcsq3MEgRq4AiOzMdzIeucdjQqywWfZkrSYjos3dLa/uSEPz/a3HxGEZXwcFw0Rr8V9PKgfW+152wXtj77EHE/wNb2d+a3hwHvwwRAMXrXEOZW4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t7la2qJGrRTTJ84B/rnDVHIfmpYeTc8cZSGQBmczHHU=;
+ b=XwAJTp/xFrkNhi9hZ0JpiKsIyW6Lt2LhzPUKIWNCnHmR0LTAZzuIBg9bJZzHStJmwUXpVgjoZ5Ww/PazEuTuWBZ9a4vhy8eURP9jOG+WROvz1B2rfzd1/sPiCEJFkh5VxHcN9QlduhkHXgZJN2LW6r7iBUddgJ9Agi8VpLpfQXxS6jrbA6LJaAzVcAZIG6+WwQyfz0jn5VTUsekkaXviMnrtNu/06Lu18tyZbniwrfOl/ul11RppROokiSOHeYmlZrhq09lNxFuAs4Vny4Um9GxbWtT8hagtTzqsw30JyE1eRptFbT3qjBL0L9AEwSxfe72x2uf9lbBQNzhNFvvHGg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t7la2qJGrRTTJ84B/rnDVHIfmpYeTc8cZSGQBmczHHU=;
+ b=iPjyvEQfRZF8UaZCXR+TgEPJA2OQdY434/Z9roZmrEb0g1TL1c+la+kUUn9PU3Fnyvk/IeJkWRFiwhSKtUwe6oZ574VqWCQLKTwmlc2HYbkgilH2NXAinWUU4XNJRxKuUMj+Sa/OkLASr7TUW/eANZ0ORXqr0p3WEUuzhoxpayE=
+Received: from SN4PR0801CA0015.namprd08.prod.outlook.com
+ (2603:10b6:803:29::25) by BN7PR02MB3986.namprd02.prod.outlook.com
+ (2603:10b6:406:f0::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.19; Mon, 6 Apr
+ 2020 17:43:45 +0000
+Received: from SN1NAM02FT052.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:803:29:cafe::73) by SN4PR0801CA0015.outlook.office365.com
+ (2603:10b6:803:29::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16 via Frontend
+ Transport; Mon, 6 Apr 2020 17:43:44 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT052.mail.protection.outlook.com (10.152.72.146) with Microsoft SMTP
+ Server id 15.20.2878.15 via Frontend Transport; Mon, 6 Apr 2020 17:43:44
+ +0000
+Received: from [149.199.38.66] (port=44341 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <manish.narani@xilinx.com>)
+        id 1jLVmQ-0007Zr-Fk; Mon, 06 Apr 2020 10:43:26 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <manish.narani@xilinx.com>)
+        id 1jLVmi-0001Ne-1G; Mon, 06 Apr 2020 10:43:44 -0700
+Received: from xsj-pvapsmtp01 (mailhub.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 036HheHd017224;
+        Mon, 6 Apr 2020 10:43:40 -0700
+Received: from [172.23.64.106] (helo=xhdvnc125.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <mnarani@xilinx.com>)
+        id 1jLVme-0001N1-1L; Mon, 06 Apr 2020 10:43:40 -0700
+Received: by xhdvnc125.xilinx.com (Postfix, from userid 16987)
+        id 1F4631211F6; Mon,  6 Apr 2020 23:13:39 +0530 (IST)
+From:   Manish Narani <manish.narani@xilinx.com>
+To:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        adrian.hunter@intel.com, michal.simek@xilinx.com
+Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v5 4/5] ARM: dts: imx6qdl-wandboard: Drop clock-frequency
- property from ov5645 node
-Message-ID: <20200406173637.GG16885@pendragon.ideasonboard.com>
-References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1586191361-16598-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        git@xilinx.com, Manish Narani <manish.narani@xilinx.com>
+Subject: [PATCH v3 0/6] Add support for Xilinx Versal SDHCI in Arasan driver
+Date:   Mon,  6 Apr 2020 23:13:29 +0530
+Message-Id: <1586195015-128992-1-git-send-email-manish.narani@xilinx.com>
+X-Mailer: git-send-email 2.1.1
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(396003)(39860400002)(346002)(136003)(46966005)(5660300002)(4326008)(107886003)(26005)(6266002)(6666004)(426003)(356004)(81156014)(186003)(2616005)(44832011)(8936002)(8676002)(36756003)(336012)(47076004)(82740400003)(81166006)(478600001)(70586007)(70206006)(6636002)(2906002)(42186006)(316002);DIR:OUT;SFP:1101;
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1586191361-16598-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e1ea59eb-2269-4b6f-7ce2-08d7da520d70
+X-MS-TrafficTypeDiagnostic: BN7PR02MB3986:
+X-Microsoft-Antispam-PRVS: <BN7PR02MB3986E161E1AA41FD4CCABCB6C1C20@BN7PR02MB3986.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 0365C0E14B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3xNgAAF/s2BvcHhoxz65DkSdvEIeGHlTK4AzE0mEmktKXTqM67BAp/NbTDmy6AydGzwSkSZwrgqjIOEJVKFHyUyHMN4Zp3DEaJWBLp83c2xa2tGfGVaYIbku84YIOKgflDT7J+d4IYhN3RR5XYbxm/9E5aJ5aDbqw6d+juebkslXqP6d2g1zQiSDaNIJhsTLKn5a0GFqP2dpxGBtWpAwNad9EpS88UeOcrbyLVt6uXHHP8kNiqQVsSe4gjxYzQGPEDoDM5E8n7zHGtWC7Yb7QtD/WBa6s/Fsj2fjK11O86rPhOXu7ul8xRyhNPBkxHTs97yEbx1MRzQ8oQ1ZY85AAbs/q6e/+5eQppAkXzsLqNDvp20mdRoqWMWCwbyBvwa571hxvfMGfK0rIKbuQMQkTNunL0rd9Y6ZV0kuE1goxakFnj3U0hmQK/OWQy3SqAM0Yicz6h+SgkKDcuMxj+7tz43CvXt14oUqLsewY1IhV8eXd7GSL6NJjCxXasa233h/tDKXts3wHyxBiUFJNWEsPw==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2020 17:43:44.3743
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1ea59eb-2269-4b6f-7ce2-08d7da520d70
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB3986
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prabhakar,
+This patch series includes:
+ -> Document the Xilinx Versal SD controller
+ -> Add support for Versal SD Tap Delays
+ -> Reorganizing the clock operations handling
+ -> Resolve kernel-doc warnings
 
-Thank you for the patch.
+Changes in v2:
+	- Addressed review comments given in v1
+	- Changed clock operation handling for better modularity.
+	- Changed comments to fix kernel-doc warnings
 
-On Mon, Apr 06, 2020 at 05:42:40PM +0100, Lad Prabhakar wrote:
-> clock-frequency property has been deprecated in ov5645 binding. This patch
-> makes sure it matches the bindings by dropping clock-frequency property
-> from ov5645 node.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Changes in v3:
+	- Addressed review comments from v2
+	- Move platform related structure before doing clock related changes
+	- Rename sdhci_arasan_data to avoid confusion with another struct name
 
-This looks good to me, but could you also address imx6qdl-pico.dtsi ?
-With that,
+Manish Narani (6):
+  dt-bindings: mmc: arasan: Document 'xlnx,versal-8.9a' controller
+  sdhci: arasan: Add support for Versal Tap Delays
+  mmc: sdhci-of-arasan: Rename sdhci_arasan_data to avoid confusion
+  mmc: sdhci-of-arasan: Rearrange the platform data structs for
+    modularity
+  mmc: sdhci-of-arasan: Modify clock operations handling
+  mmc: sdhci-of-arasan: Fix kernel-doc warnings
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  arch/arm/boot/dts/imx6qdl-wandboard.dtsi | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl-wandboard.dtsi b/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
-> index c070893c509e..fa01cad65335 100644
-> --- a/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
-> @@ -126,7 +126,6 @@
->  		reg = <0x3c>;
->  		clocks = <&clks IMX6QDL_CLK_CKO2>;
->  		clock-names = "xclk";
-> -		clock-frequency = <24000000>;
->  		vdddo-supply = <&reg_1p8v>;
->  		vdda-supply = <&reg_2p8v>;
->  		vddd-supply = <&reg_1p5v>;
+ .../devicetree/bindings/mmc/arasan,sdhci.txt       |  15 +
+ drivers/mmc/host/sdhci-of-arasan.c                 | 473 +++++++++++++++------
+ 2 files changed, 361 insertions(+), 127 deletions(-)
 
 -- 
-Regards,
+2.1.1
 
-Laurent Pinchart
