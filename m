@@ -2,272 +2,200 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5964EC2BA1E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 12:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E4BC2BABC
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 13:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30AB920B1F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 12:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BD0C22522
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 13:14:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="i3fcfFQl";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="lHmXFjd4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgDFMDn (ORCPT
+        id S1728392AbgDFNOC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 08:03:43 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:40132 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbgDFMDX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Apr 2020 08:03:23 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 770C51A0DE0;
-        Mon,  6 Apr 2020 14:03:20 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 581461A0DC9;
-        Mon,  6 Apr 2020 14:03:20 +0200 (CEST)
-Received: from fsr-ub1864-112.ea.freescale.net (fsr-ub1864-112.ea.freescale.net [10.171.82.98])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 88409204E6;
-        Mon,  6 Apr 2020 14:03:18 +0200 (CEST)
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Alexandre Bailon <abailon@baylibre.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Angus Ainslie <angus@akkea.ca>,
-        Martin Kepplinger <martink@posteo.de>,
-        Silvano di Ninno <silvano.dininno@nxp.com>,
-        linux-pm@vger.kernel.org, kernel@pengutronix.de, linux-imx@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 2/8] PM / devfreq: Add generic imx bus scaling driver
-Date:   Mon,  6 Apr 2020 15:03:07 +0300
-Message-Id: <af1fd3a339a37123ee36179efcb90600c1e0f746.1586174566.git.leonard.crestez@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1586174566.git.leonard.crestez@nxp.com>
-References: <cover.1586174566.git.leonard.crestez@nxp.com>
-In-Reply-To: <cover.1586174566.git.leonard.crestez@nxp.com>
-References: <cover.1586174566.git.leonard.crestez@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 6 Apr 2020 09:14:02 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:48254 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728167AbgDFNOB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 09:14:01 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 036D58nm016507;
+        Mon, 6 Apr 2020 06:13:51 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=2et/XuZug6kjmJtkLC+ntwLPkH6Re+U+W7JzYghvQpQ=;
+ b=i3fcfFQla0rdSBuMf4gOB6ozrxAVcQa2yKRVJUbUttVnBuEdpkpbEE+W76wONMu9CPGL
+ qZx4tvANfQdTDfUb4G3RVRBT/Jq5b4+J4nuBQhecqqecEYtvChl6X+Tdib/T/8UDjmr0
+ 86ui4dOEuean66S2YPmlZfKPcE3HOc4UrbESWiPKZ5vK27miBiMAjUdi+WeGCY84drjc
+ WO19HteV9Oeedt7ho3CS5sMGoMGvndvPm3V9PZu+rxmofHyfyfts6DbKJKrG1BXYfGOA
+ iY1ZNQdoUYvJrnEAnv24uI380ut/gpJ2fib4Dnjg78E68f0QGE6XjeWDpvctqAJqi44R 1A== 
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2171.outbound.protection.outlook.com [104.47.58.171])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 306ntxxmbj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Apr 2020 06:13:51 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TcSNRki2OtDljn8P7hGu9O71mGVYvwwlywCbFuGYPhyOfQ2IAzi2q240wqrsn+aqW6JwfjTgwBwEo1/HzhRSOD0zN3jk1IOfDxa2IQHuwJRW+eYMGBPb3zsxtQFY9IHEcfHThPg1+Bh5SEqSbUmS2BABZ4D5DBJ8cOFZHpiKxMfx5ha2AYSdChrrlqdOdKi7Zr1AY1MCNvSzM4h2DAQrrlVikabfElsODc3x8mFEzFqykxNfrBhiKTe9VWkDW/LjXJcfzxZRlhxvjDUzL1WmI1PxsbpZ3wpM1eJxE8uhRJxSeJi0wR76Vvay61wyoyDknMIdOcgt+rUzvVihslKPOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2et/XuZug6kjmJtkLC+ntwLPkH6Re+U+W7JzYghvQpQ=;
+ b=nCw1PfJ9DPtg123YPv8Z3Xbu9wzc9c6WZFnqkphJJs3QxhjtHH5q39NX70ADVCQRCtHSgXU0zCasaglr4Gyswf9fBeRW5f5mzi4Y9q6qmgBdOwqSbfnY6skHNtaoDPA8azCAjNrj4esn9R6QGfzi1j20lay60h9hSKhebxNPS3V/adGSB01rKvCpLFaxCzSXNcEiNEMBApd0Kwxs4hHen2DOxO4mKq3LADGC9i2oaSFFvED15I242WKjvdWNEGNsx5dJXOz+3mbx8X12Ptsflg0O+0+Al+cT9YqkmJpBjmoTES7FqnHhFdlSzI2Vkz6LWW7Y27wItEHIQ3lJbftDiQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 158.140.1.148) smtp.rcpttodomain=kernel.org smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2et/XuZug6kjmJtkLC+ntwLPkH6Re+U+W7JzYghvQpQ=;
+ b=lHmXFjd4hzEmzxa8EJnMPZnMC4GxfnKXqEsxJXDS4piv5f/Ak9P9YeLEGcIf9+MFnJawIskz70Ss8HnRE+GOd5ZBKzw/0reM7N/mu3xB00r8h2Y1n+lYvw79kQyHcycIrMf4dBAbiI6ogkL3bhc4KLswS7yyAyaIy3BuMHR1k9k=
+Received: from DM6PR03CA0026.namprd03.prod.outlook.com (2603:10b6:5:40::39) by
+ BYAPR07MB4999.namprd07.prod.outlook.com (2603:10b6:a03:15::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2878.21; Mon, 6 Apr 2020 13:13:49 +0000
+Received: from DM6NAM12FT057.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:5:40:cafe::26) by DM6PR03CA0026.outlook.office365.com
+ (2603:10b6:5:40::39) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.19 via Frontend
+ Transport; Mon, 6 Apr 2020 13:13:48 +0000
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 158.140.1.148 as permitted sender) receiver=protection.outlook.com;
+ client-ip=158.140.1.148; helo=sjmaillnx2.cadence.com;
+Received: from sjmaillnx2.cadence.com (158.140.1.148) by
+ DM6NAM12FT057.mail.protection.outlook.com (10.13.178.73) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2878.9 via Frontend Transport; Mon, 6 Apr 2020 13:13:48 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by sjmaillnx2.cadence.com (8.14.4/8.14.4) with ESMTP id 036DDiTd018857
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Mon, 6 Apr 2020 06:13:47 -0700
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Mon, 6 Apr 2020 15:13:44 +0200
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Mon, 6 Apr 2020 15:13:44 +0200
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 036DDion001337;
+        Mon, 6 Apr 2020 15:13:44 +0200
+Received: (from dkangude@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 036DDirY001336;
+        Mon, 6 Apr 2020 15:13:44 +0200
+From:   Dhananjay Kangude <dkangude@cadence.com>
+To:     <linux-edac@vger.kernel.org>
+CC:     <bp@alien8.de>, <mchehab@kernel.org>, <tony.luck@intel.com>,
+        <james.morse@arm.com>, <linux-kernel@vger.kernel.org>,
+        <mparab@cadence.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Dhananjay Kangude <dkangude@cadence.com>
+Subject: [PATCH v3 1/2] dt-bindings: edac: Add cadence ddr mc support
+Date:   Mon, 6 Apr 2020 15:13:40 +0200
+Message-ID: <20200406131341.1253-2-dkangude@cadence.com>
+X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20200406131341.1253-1-dkangude@cadence.com>
+References: <20200406131341.1253-1-dkangude@cadence.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:158.140.1.148;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:sjmaillnx2.cadence.com;PTR:unknown.cadence.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(136003)(376002)(396003)(346002)(36092001)(46966005)(82740400003)(36756003)(246002)(86362001)(5660300002)(8676002)(47076004)(8936002)(2906002)(6916009)(7636002)(356004)(6666004)(966005)(107886003)(426003)(54906003)(316002)(36906005)(1076003)(2616005)(70586007)(70206006)(26005)(42186006)(478600001)(4326008)(26826003)(186003)(336012);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a88dbcc6-997a-465a-dad9-08d7da2c57f7
+X-MS-TrafficTypeDiagnostic: BYAPR07MB4999:
+X-Microsoft-Antispam-PRVS: <BYAPR07MB49996A43E6243A8A778B99BBCDC20@BYAPR07MB4999.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
+X-Forefront-PRVS: 0365C0E14B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8VMcJeuyxsiX02GbQ/iN2Ui4ACNv4i35VZFxHozMj7Y3i2PHc0oSqCfrTZpUnXRtfHKX/1wsY24K/eojPn4XjZFddJOGgZIU1pj4biNigThIVpo96AnLWXJOfsikXBGgGqtLzUMtQhvJCynq9w1jDWtYHbZA/sy0aune3/jT1FPHNIGfXSC/cy3FM3IjbWr+7t4KQu7H6vkaeRjFKohs5Bhht7vSAMCdGii/DDIlNxSGhcpfGjiQguXaCzcuT6zLUDn4d8FXw2ROzca4VzDfmaCBd6gjt+RMeh97nsauMlE5hUbgvnGi7dj/gb3Sv0Pt/PpvMHAMoSYcy93lvWHyeQHALomCJzEHZ84VgHYoEcBi2vYXG4kMnf/Eg1WoRL/uHohoQQjx+P7+Ea6atZiuZ1vJDYoQJlyyzMh3ZiZ5kYYdGoTdIqX7lBZ0kx1+BY7EdhpY26Eq8wXVmFGgllZaL3Xevwhu1AlFJ/tb8YRRY0G0pzxmjohylw/xGvGD0iLgOUJlCPEsbKTOoFVC5jIU9EduhpBDI+nbEm2ckQ8r5CjPiTyrSwtPb0+GT9wxRIPuhaianRe/pDDMZXOn/zYUEHuztstM2wQczt79/boBbCei2Z7fR7hjJhBhqsJbf9nO
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2020 13:13:48.4412
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a88dbcc6-997a-465a-dad9-08d7da2c57f7
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.148];Helo=[sjmaillnx2.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB4999
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-06_07:2020-04-06,2020-04-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 bulkscore=0
+ adultscore=0 clxscore=1015 mlxscore=0 malwarescore=0 mlxlogscore=961
+ spamscore=0 suspectscore=1 phishscore=0 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004060112
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add initial support for dynamic frequency switching on pieces of the imx
-interconnect fabric.
+Add documentation for cadence ddr memory controller EDAC DTS bindings
 
-All this driver does is set a clk rate based on an opp table, it does
-not map register areas.
-
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Tested-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+Signed-off-by: Dhananjay Kangude <dkangude@cadence.com>
 ---
- drivers/devfreq/Kconfig   |   8 +++
- drivers/devfreq/Makefile  |   1 +
- drivers/devfreq/imx-bus.c | 138 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 147 insertions(+)
- create mode 100644 drivers/devfreq/imx-bus.c
+ .../devicetree/bindings/edac/cdns,ddr-edac.yaml    |   47 ++++++++++++++++++++
+ 1 files changed, 47 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
 
-diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-index 0b1df12e0f21..37dc40d1fcfb 100644
---- a/drivers/devfreq/Kconfig
-+++ b/drivers/devfreq/Kconfig
-@@ -89,10 +89,18 @@ config ARM_EXYNOS_BUS_DEVFREQ
- 	  Each memory bus group could contain many memoby bus block. It reads
- 	  PPMU counters of memory controllers by using DEVFREQ-event device
- 	  and adjusts the operating frequencies and voltages with OPP support.
- 	  This does not yet operate with optimal voltages.
- 
-+config ARM_IMX_BUS_DEVFREQ
-+	tristate "i.MX Generic Bus DEVFREQ Driver"
-+	depends on ARCH_MXC || COMPILE_TEST
-+	select DEVFREQ_GOV_USERSPACE
-+	help
-+	  This adds the generic DEVFREQ driver for i.MX interconnects. It
-+	  allows adjusting NIC/NOC frequency.
-+
- config ARM_IMX8M_DDRC_DEVFREQ
- 	tristate "i.MX8M DDRC DEVFREQ Driver"
- 	depends on (ARCH_MXC && HAVE_ARM_SMCCC) || \
- 		(COMPILE_TEST && HAVE_ARM_SMCCC)
- 	select DEVFREQ_GOV_SIMPLE_ONDEMAND
-diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
-index 3eb4d5e6635c..3ca1ad0ecb97 100644
---- a/drivers/devfreq/Makefile
-+++ b/drivers/devfreq/Makefile
-@@ -7,10 +7,11 @@ obj-$(CONFIG_DEVFREQ_GOV_POWERSAVE)	+= governor_powersave.o
- obj-$(CONFIG_DEVFREQ_GOV_USERSPACE)	+= governor_userspace.o
- obj-$(CONFIG_DEVFREQ_GOV_PASSIVE)	+= governor_passive.o
- 
- # DEVFREQ Drivers
- obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
-+obj-$(CONFIG_ARM_IMX_BUS_DEVFREQ)	+= imx-bus.o
- obj-$(CONFIG_ARM_IMX8M_DDRC_DEVFREQ)	+= imx8m-ddrc.o
- obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+= rk3399_dmc.o
- obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra30-devfreq.o
- obj-$(CONFIG_ARM_TEGRA20_DEVFREQ)	+= tegra20-devfreq.o
- 
-diff --git a/drivers/devfreq/imx-bus.c b/drivers/devfreq/imx-bus.c
+diff --git a/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml b/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
 new file mode 100644
-index 000000000000..428f7980a2f2
+index 0000000..30ea757
 --- /dev/null
-+++ b/drivers/devfreq/imx-bus.c
-@@ -0,0 +1,138 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 NXP
-+ */
++++ b/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/edac/cdns,ddr-edac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <linux/clk.h>
-+#include <linux/devfreq.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/pm_opp.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
++title: Cadence DDR IP with ECC support (EDAC)
 +
-+struct imx_bus {
-+	struct devfreq_dev_profile profile;
-+	struct devfreq *devfreq;
-+	struct clk *clk;
-+};
++description:
++  This binding describes the Cadence DDR/LPDDR IP with ECC feature enabled
++  to detect and correct CE/UE errors.
 +
-+static int imx_bus_target(struct device *dev,
-+		unsigned long *freq, u32 flags)
-+{
-+	struct dev_pm_opp *new_opp;
-+	int ret;
++maintainers:
++  - Dhananjay Kangdue <dkangude@cadence.com>
 +
-+	new_opp = devfreq_recommended_opp(dev, freq, flags);
-+	if (IS_ERR(new_opp)) {
-+		ret = PTR_ERR(new_opp);
-+		dev_err(dev, "failed to get recommended opp: %d\n", ret);
-+		return ret;
-+	}
-+	dev_pm_opp_put(new_opp);
++properties:
++  compatible:
++    enum:
++      - cdns,ddr4-mc
 +
-+	return dev_pm_opp_set_rate(dev, *freq);
-+}
++  reg:
++    minItems: 1
++    maxItems: 2
++    items:
++      - description:
++          Register block of DDR/LPDDR apb registers up to mapped area.
++          Mapped area contains the register set for memory controller,
++          phy and PI module register set doesn't part of this mapping.
 +
-+static int imx_bus_get_cur_freq(struct device *dev, unsigned long *freq)
-+{
-+	struct imx_bus *priv = dev_get_drvdata(dev);
++  interrupts:
++    maxItems: 1
 +
-+	*freq = clk_get_rate(priv->clk);
++required:
++  - compatible
++  - reg
++  - interrupts
 +
-+	return 0;
-+}
++additionalProperties: false
 +
-+static int imx_bus_get_dev_status(struct device *dev,
-+		struct devfreq_dev_status *stat)
-+{
-+	struct imx_bus *priv = dev_get_drvdata(dev);
-+
-+	stat->busy_time = 0;
-+	stat->total_time = 0;
-+	stat->current_frequency = clk_get_rate(priv->clk);
-+
-+	return 0;
-+}
-+
-+static void imx_bus_exit(struct device *dev)
-+{
-+	dev_pm_opp_of_remove_table(dev);
-+}
-+
-+static int imx_bus_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct imx_bus *priv;
-+	const char *gov = DEVFREQ_GOV_USERSPACE;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	/*
-+	 * Fetch the clock to adjust but don't explicitly enable.
-+	 *
-+	 * For imx bus clock clk_set_rate is safe no matter if the clock is on
-+	 * or off and some peripheral side-buses might be off unless enabled by
-+	 * drivers for devices on those specific buses.
-+	 *
-+	 * Rate adjustment on a disabled bus clock just takes effect later.
-+	 */
-+	priv->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(priv->clk)) {
-+		ret = PTR_ERR(priv->clk);
-+		dev_err(dev, "failed to fetch clk: %d\n", ret);
-+		return ret;
-+	}
-+	platform_set_drvdata(pdev, priv);
-+
-+	ret = dev_pm_opp_of_add_table(dev);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to get OPP table\n");
-+		return ret;
-+	}
-+
-+	priv->profile.polling_ms = 1000;
-+	priv->profile.target = imx_bus_target;
-+	priv->profile.get_dev_status = imx_bus_get_dev_status;
-+	priv->profile.exit = imx_bus_exit;
-+	priv->profile.get_cur_freq = imx_bus_get_cur_freq;
-+	priv->profile.initial_freq = clk_get_rate(priv->clk);
-+
-+	priv->devfreq = devm_devfreq_add_device(dev, &priv->profile,
-+						gov, NULL);
-+	if (IS_ERR(priv->devfreq)) {
-+		ret = PTR_ERR(priv->devfreq);
-+		dev_err(dev, "failed to add devfreq device: %d\n", ret);
-+		goto err;
-+	}
-+
-+	return 0;
-+
-+err:
-+	dev_pm_opp_of_remove_table(dev);
-+	return ret;
-+}
-+
-+static const struct of_device_id imx_bus_of_match[] = {
-+	{ .compatible = "fsl,imx8m-noc", },
-+	{ .compatible = "fsl,imx8m-nic", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, imx_bus_of_match);
-+
-+static struct platform_driver imx_bus_platdrv = {
-+	.probe		= imx_bus_probe,
-+	.driver = {
-+		.name	= "imx-bus-devfreq",
-+		.of_match_table = of_match_ptr(imx_bus_of_match),
-+	},
-+};
-+module_platform_driver(imx_bus_platdrv);
-+
-+MODULE_DESCRIPTION("Generic i.MX bus frequency scaling driver");
-+MODULE_AUTHOR("Leonard Crestez <leonard.crestez@nxp.com>");
-+MODULE_LICENSE("GPL v2");
++examples:
++  - |
++    edac: edac@fd100000 {
++        compatible = "cdns,ddr4-mc-edac";
++        reg = <0xfd100000 0x4000>;
++        interrupts = <0x00 0x01 0x04>;
++    };
++...
 -- 
-2.17.1
+1.7.1
 
