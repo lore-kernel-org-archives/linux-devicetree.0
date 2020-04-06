@@ -2,274 +2,281 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 525B0C2BA80
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 17:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B920FC2BA80
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 17:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 254C520768
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 17:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97C7F20753
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 17:50:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Wn6YlvRV"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="qu5mbH/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbgDFRpK (ORCPT
+        id S1726521AbgDFRun (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 13:45:10 -0400
-Received: from mail-bn8nam11on2070.outbound.protection.outlook.com ([40.107.236.70]:50669
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727922AbgDFRpK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Apr 2020 13:45:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ghECAGcoj6uXObkpyibByDNUsqLR7z0ihtVKlJctBnKEXeCnrb5IKokC+rW+EgkbhgW69x5SrlR4IfytabPFlBSaswgGN3WFmIppBTbAbqnT46ngZSCozjBSm5WL7eNuO8BGFOK1TzRrBNAC6iqyXZ2neoNvwV1sDaP5PPLpSbLMkJhQKRLBJt1/nG0YXtfojYIUIrWhq1t54BBy8/cdM3bBqS/AMbQF7nI8Y/ihxu/wvFR+MVrQBqTm/0Ex9QZnCoLPWstFMB3CU8ldLM7ZnbCGBdhcVmaGNo8SmMABZ5lvYkBCmHrMVDrgWrosvRnI30vSUxczf1efSbzhbuMgbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Kn32ffDIsSfZKt885YQqYFdCOzb25fzxsgWQSNVQU6I=;
- b=U274sabF1zj9YbsQ/5MhDhUX98KLBM3y9iUYUW3aur0U+0qclp/N/MDtCgkaoBLvqSVoTr1TaUMyPHlpgmK1Ke/FdaXxrE2Di5e09jOgg5OEv2Db9X0Sk3VWajbMZHTYLnHDstEmLTRWQCt86ikxmdcxdGb5try8G37yi+GtDWv81ihg1ivO4SaIDNhv5b0As42G/O9+B+utD+FTDDCH2sRhabAayw7mEJoh2S3tyN40s+GKGHLSVfjNSmT9v07TPSpUrBFinyRTf9BaQCZmSvDE6PnfWdFyj4ojK+X7aDO4PutBxYowgteOGxHK4/4pNFLuk0tJTVOFTO9o+UTcHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Kn32ffDIsSfZKt885YQqYFdCOzb25fzxsgWQSNVQU6I=;
- b=Wn6YlvRVh6vQpUGV7Cwn0903qITGq1V1VoDtsnWsDoiKpZ9+lu1vilFdD2u+f29CQLNbcNWPv97gmCDKVwnFGwTOvedjQqCe1xGgw5ZOiv+/P34whkf1uN57ImRYyJeiqDY3a5FhHxVk6FqS4FSgGVA94i1KpfMaxTmxsg2tv30=
-Received: from CY4PR13CA0093.namprd13.prod.outlook.com (2603:10b6:903:152::31)
- by CH2PR02MB6309.namprd02.prod.outlook.com (2603:10b6:610:12::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Mon, 6 Apr
- 2020 17:44:55 +0000
-Received: from CY1NAM02FT054.eop-nam02.prod.protection.outlook.com
- (2603:10b6:903:152:cafe::40) by CY4PR13CA0093.outlook.office365.com
- (2603:10b6:903:152::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.6 via Frontend
- Transport; Mon, 6 Apr 2020 17:44:55 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT054.mail.protection.outlook.com (10.152.74.100) with Microsoft SMTP
- Server id 15.20.2878.15 via Frontend Transport; Mon, 6 Apr 2020 17:44:55
- +0000
-Received: from [149.199.38.66] (port=46484 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <manish.narani@xilinx.com>)
-        id 1jLVnZ-0007bK-9Y; Mon, 06 Apr 2020 10:44:37 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <manish.narani@xilinx.com>)
-        id 1jLVnq-0001li-Rd; Mon, 06 Apr 2020 10:44:54 -0700
-Received: from xsj-pvapsmtp01 (mailhub.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 036HilLH018161;
-        Mon, 6 Apr 2020 10:44:47 -0700
-Received: from [172.23.64.106] (helo=xhdvnc125.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <mnarani@xilinx.com>)
-        id 1jLVni-0001kH-Tf; Mon, 06 Apr 2020 10:44:47 -0700
-Received: by xhdvnc125.xilinx.com (Postfix, from userid 16987)
-        id 3C09C121242; Mon,  6 Apr 2020 23:13:39 +0530 (IST)
-From:   Manish Narani <manish.narani@xilinx.com>
-To:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        adrian.hunter@intel.com, michal.simek@xilinx.com
-Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        git@xilinx.com, Manish Narani <manish.narani@xilinx.com>
-Subject: [PATCH v3 5/6] mmc: sdhci-of-arasan: Modify clock operations handling
-Date:   Mon,  6 Apr 2020 23:13:34 +0530
-Message-Id: <1586195015-128992-6-git-send-email-manish.narani@xilinx.com>
-X-Mailer: git-send-email 2.1.1
-In-Reply-To: <1586195015-128992-1-git-send-email-manish.narani@xilinx.com>
-References: <1586195015-128992-1-git-send-email-manish.narani@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(346002)(136003)(46966005)(70586007)(2616005)(70206006)(36756003)(44832011)(426003)(336012)(478600001)(5660300002)(2906002)(8936002)(82740400003)(4326008)(316002)(47076004)(186003)(6666004)(42186006)(6636002)(81156014)(356004)(26005)(81166006)(6266002)(107886003)(8676002);DIR:OUT;SFP:1101;
+        Mon, 6 Apr 2020 13:50:43 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:53188 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgDFRun (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 13:50:43 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 179D580E;
+        Mon,  6 Apr 2020 19:50:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586195439;
+        bh=3QLlghUrryaj5Iq6GY5ZQ+HMUYeI6nNN9lKy3CRAyZ8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qu5mbH/SEe7Yae8jmd/YMfOQSBJ59i6LkFn2pn4+Gh+phRwFZzlYx61pXxyc09jno
+         g+JwSdDY/u4+FTCX8BsO9cED/gOgw1VNgeNo0664j5rjTTeh10WmAeGN6QzsbjuEgD
+         Hx8MhzY1/t8hrtbAqWiKc5b+HBOVO+zUKG9JNL+8=
+Date:   Mon, 6 Apr 2020 20:50:28 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mark Yao <mark.yao@rock-chips.com>,
+        Sandy Huang <hjc@rock-chips.com>, Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH/RFC 4/6] dt-bindings: display: rockchip: dw-hdmi: Convert
+ binding to YAML
+Message-ID: <20200406175028.GI16885@pendragon.ideasonboard.com>
+References: <20200405233935.27599-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20200405233935.27599-5-laurent.pinchart+renesas@ideasonboard.com>
+ <20200406080032.zlszhkjqmjeoa4ti@gilmour.lan>
+ <20200406111927.GD4757@pendragon.ideasonboard.com>
+ <20200406170915.x2ztz4q446h6vx2y@gilmour.lan>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 48ceedec-08bc-4cdb-81af-08d7da5237a2
-X-MS-TrafficTypeDiagnostic: CH2PR02MB6309:
-X-Microsoft-Antispam-PRVS: <CH2PR02MB63090BE24FB0BB8556077AB5C1C20@CH2PR02MB6309.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
-X-Forefront-PRVS: 0365C0E14B
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: iwF5Pavmw0EYvwsCgB+rBZtXHAPdgVACpZjcvm528CYEEGddiXK4I3zTd1OS4zPEsqPfxpRcs7V0iXid1GF5ISuQXmwUzgQlsFmmMHORxIQ/eoUtlPh7pWOyZ6AJqffyThzub163Q5n+eWT1tQlHRrV4sGImiRA3G/baj9ualeN8Pa9buSCSbJg0io3r/t1FTE+ZRlJvXNTF4hIbHLwlsFWXbyk19OnW9+bsUOI55nLyKTarQN5G0pRSV5AzucAoahNVBMZ9dVT3Z+NF1OiUgIYCmyAMXBsdWsixUdkqfrWBJlhiZ+9g1qxCGRRTAbDap+I6Xt5Lr1lhsDTtjkRF3AJ1myAO7BubqzSMkwhdYIW6i1t1YR+hIwQMtn2KWS/SsByym93t1t1bUQ1pJArt03a4B7m0HEv/+Q7w11dXV7C1gGqVwHaO67VG2jpTtNy6wV9DUmDq+pdwWTfTlRyls47icULNQXbixEZZ85cu7W8htUWp5aBjTcG9bnV1ZKhz4BlCjHVD2om5htS0vYctVw==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2020 17:44:55.1665
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48ceedec-08bc-4cdb-81af-08d7da5237a2
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6309
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200406170915.x2ztz4q446h6vx2y@gilmour.lan>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The SDHCI clock operations are platform specific. So it better to define
-them separately for particular platform. This will prevent multiple
-if..else conditions and will make it easy for user to add their own
-clock operations handlers.
+Hi Maxime,
 
-Signed-off-by: Manish Narani <manish.narani@xilinx.com>
----
- drivers/mmc/host/sdhci-of-arasan.c | 50 +++++++++++++++++++++++++++++---------
- 1 file changed, 38 insertions(+), 12 deletions(-)
+On Mon, Apr 06, 2020 at 07:09:15PM +0200, Maxime Ripard wrote:
+> On Mon, Apr 06, 2020 at 02:19:27PM +0300, Laurent Pinchart wrote:
+> > On Mon, Apr 06, 2020 at 10:00:32AM +0200, Maxime Ripard wrote:
+> > > On Mon, Apr 06, 2020 at 02:39:33AM +0300, Laurent Pinchart wrote:
+> > > > Convert the Rockchip HDMI TX text binding to YAML.
+> > > >
+> > > > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > > > ---
+> > > >  .../display/rockchip/dw_hdmi-rockchip.txt     |  74 --------
+> > > >  .../display/rockchip/rockchip,dw-hdmi.yaml    | 178 ++++++++++++++++++
+> > > >  2 files changed, 178 insertions(+), 74 deletions(-)
+> > > >  delete mode 100644 Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+> > > >  create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+> > > > deleted file mode 100644
+> > > > index 3d32ce137e7f..000000000000
+> > > > --- a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+> > > > +++ /dev/null
+> > > > @@ -1,74 +0,0 @@
+> > > > -Rockchip DWC HDMI TX Encoder
+> > > > -============================
+> > > > -
+> > > > -The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
+> > > > -with a companion PHY IP.
+> > > > -
+> > > > -These DT bindings follow the Synopsys DWC HDMI TX bindings defined in
+> > > > -Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt with the
+> > > > -following device-specific properties.
+> > > > -
+> > > > -
+> > > > -Required properties:
+> > > > -
+> > > > -- compatible: should be one of the following:
+> > > > -		"rockchip,rk3228-dw-hdmi"
+> > > > -		"rockchip,rk3288-dw-hdmi"
+> > > > -		"rockchip,rk3328-dw-hdmi"
+> > > > -		"rockchip,rk3399-dw-hdmi"
+> > > > -- reg: See dw_hdmi.txt.
+> > > > -- reg-io-width: See dw_hdmi.txt. Shall be 4.
+> > > > -- interrupts: HDMI interrupt number
+> > > > -- clocks: See dw_hdmi.txt.
+> > > > -- clock-names: Shall contain "iahb" and "isfr" as defined in dw_hdmi.txt.
+> > > > -- ports: See dw_hdmi.txt. The DWC HDMI shall have a single port numbered 0
+> > > > -  corresponding to the video input of the controller. The port shall have two
+> > > > -  endpoints, numbered 0 and 1, connected respectively to the vopb and vopl.
+> > > > -- rockchip,grf: Shall reference the GRF to mux vopl/vopb.
+> > > > -
+> > > > -Optional properties
+> > > > -
+> > > > -- ddc-i2c-bus: The HDMI DDC bus can be connected to either a system I2C master
+> > > > -  or the functionally-reduced I2C master contained in the DWC HDMI. When
+> > > > -  connected to a system I2C master this property contains a phandle to that
+> > > > -  I2C master controller.
+> > > > -- clock-names: See dw_hdmi.txt. The "cec" clock is optional.
+> > > > -- clock-names: May contain "cec" as defined in dw_hdmi.txt.
+> > > > -- clock-names: May contain "grf", power for grf io.
+> > > > -- clock-names: May contain "vpll", external clock for some hdmi phy.
+> > > > -- phys: from general PHY binding: the phandle for the PHY device.
+> > > > -- phy-names: Should be "hdmi" if phys references an external phy.
+> > > > -
+> > > > -Optional pinctrl entry:
+> > > > -- If you have both a "unwedge" and "default" pinctrl entry, dw_hdmi
+> > > > -  will switch to the unwedge pinctrl state for 10ms if it ever gets an
+> > > > -  i2c timeout.  It's intended that this unwedge pinctrl entry will
+> > > > -  cause the SDA line to be driven low to work around a hardware
+> > > > -  errata.
+> > > > -
+> > > > -Example:
+> > > > -
+> > > > -hdmi: hdmi@ff980000 {
+> > > > -	compatible = "rockchip,rk3288-dw-hdmi";
+> > > > -	reg = <0xff980000 0x20000>;
+> > > > -	reg-io-width = <4>;
+> > > > -	ddc-i2c-bus = <&i2c5>;
+> > > > -	rockchip,grf = <&grf>;
+> > > > -	interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
+> > > > -	clocks = <&cru  PCLK_HDMI_CTRL>, <&cru SCLK_HDMI_HDCP>;
+> > > > -	clock-names = "iahb", "isfr";
+> > > > -	ports {
+> > > > -		hdmi_in: port {
+> > > > -			#address-cells = <1>;
+> > > > -			#size-cells = <0>;
+> > > > -			hdmi_in_vopb: endpoint@0 {
+> > > > -				reg = <0>;
+> > > > -				remote-endpoint = <&vopb_out_hdmi>;
+> > > > -			};
+> > > > -			hdmi_in_vopl: endpoint@1 {
+> > > > -				reg = <1>;
+> > > > -				remote-endpoint = <&vopl_out_hdmi>;
+> > > > -			};
+> > > > -		};
+> > > > -	};
+> > > > -};
+> > > > diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..8ff544ae0ac2
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
+> > > > @@ -0,0 +1,178 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/display/rockchip/rockchip,dw-hdmi.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Rockchip DWC HDMI TX Encoder
+> > > > +
+> > > > +maintainers:
+> > > > +  - Mark Yao <mark.yao@rock-chips.com>
+> > > > +
+> > > > +description: |
+> > > > +  The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
+> > > > +  with a companion PHY IP.
+> > > > +
+> > > > +allOf:
+> > > > +  - $ref: ../bridge/synopsys,dw-hdmi.yaml#
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    enum:
+> > > > +      - rockchip,rk3228-dw-hdmi
+> > > > +      - rockchip,rk3288-dw-hdmi
+> > > > +      - rockchip,rk3328-dw-hdmi
+> > > > +      - rockchip,rk3399-dw-hdmi
+> > > > +
+> > > > +  reg: true
+> > > > +
+> > > > +  reg-io-width:
+> > > > +    const: 4
+> > > > +
+> > > > +  clocks:
+> > > > +    minItems: 2
+> > > > +    maxItems: 5
+> > > > +    items:
+> > > > +      - description: The bus clock for either AHB and APB
+> > > > +      - description: The internal register configuration clock
+> > > > +      - description: The HDMI CEC controller main clock
+> > > > +      - description: Power for GRF IO
+> > > > +      - description: External clock for some HDMI PHY
+> > > > +
+> > > > +  clock-names:
+> > > > +    minItems: 2
+> > > > +    maxItems: 5
+> > > > +    items:
+> > > > +      - const: iahb
+> > > > +      - const: isfr
+> > > > +      - enum:
+> > > > +        - cec
+> > > > +        - grf
+> > > > +        - vpll
+> > > > +      - enum:
+> > > > +        - cec
+> > > > +        - grf
+> > > > +        - vpll
+> > > > +      - enum:
+> > > > +        - cec
+> > > > +        - grf
+> > > > +        - vpll
+> > >
+> > > IIRC Rob wanted us to standardize the order of the clocks if possible,
+> > > since it's a pain to support properly here, and your description won't
+> > > match what you describe here either (and in general it's just a best
+> > > practice), so if all your DTs have the same order you should just set
+> > > that order in stone.
+> >
+> > But how do we handle the case where any of the cec, grf and vpll clocks
+> > can be set ? Assuming, for instance, that
+> >
+> > 	clock-names = "iahb", "isfr", "cec";
+> > 	clock-names = "iahb", "isfr", "vpll";
+> > 	clock-names = "iahb", "isfr", "cec", "vpll";
+> >
+> > would all be valid.
+> 
+> It would be painful then...
+> 
+> The easiest way to do so would be to simply use an enum there, and not
+> bother checking the array at all. You'll get a warning if there's
+> multiple occurences of the same string, and I guess that's what you
+> would be really concerned about.
+> 
+> However, now that I think about it, what's the interaction between the
+> generic binding and this one when it comes to the third clock? The
+> generic one expects it to be cec, and here you have other options?
 
-diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-index bff726a..60ad159 100644
---- a/drivers/mmc/host/sdhci-of-arasan.c
-+++ b/drivers/mmc/host/sdhci-of-arasan.c
-@@ -88,6 +88,17 @@ struct sdhci_arasan_soc_ctl_map {
- };
- 
- /**
-+ * struct sdhci_arasan_clk_ops - Clock Operations for Arasan SD controller
-+ *
-+ * @sdcardclk_ops:	The output clock related operations
-+ * @sampleclk_ops:	The sample clock related operations
-+ */
-+struct sdhci_arasan_clk_ops {
-+	const struct clk_ops *sdcardclk_ops;
-+	const struct clk_ops *sampleclk_ops;
-+};
-+
-+/**
-  * struct sdhci_arasan_clk_data
-  * @sdcardclk_hw:	Struct for the clock we might provide to a PHY.
-  * @sdcardclk:		Pointer to normal 'struct clock' for sdcardclk_hw.
-@@ -120,6 +131,7 @@ struct sdhci_arasan_zynqmp_clk_data {
-  * @phy:		Pointer to the generic phy
-  * @is_phy_on:		True if the PHY is on; false if not.
-  * @clk_data:		Struct for the Arasan Controller Clock Data.
-+ * @clk_ops:		Struct for the Arasan Controller Clock Operations.
-  * @soc_ctl_base:	Pointer to regmap for syscon for soc_ctl registers.
-  * @soc_ctl_map:	Map to get offsets into soc_ctl registers.
-  */
-@@ -131,6 +143,7 @@ struct sdhci_arasan_data {
- 
- 	bool		has_cqe;
- 	struct sdhci_arasan_clk_data clk_data;
-+	const struct sdhci_arasan_clk_ops *clk_ops;
- 
- 	struct regmap	*soc_ctl_base;
- 	const struct sdhci_arasan_soc_ctl_map *soc_ctl_map;
-@@ -146,6 +159,7 @@ struct sdhci_arasan_data {
- struct sdhci_arasan_of_data {
- 	const struct sdhci_arasan_soc_ctl_map *soc_ctl_map;
- 	const struct sdhci_pltfm_data *pdata;
-+	const struct sdhci_arasan_clk_ops *clk_ops;
- };
- 
- static const struct sdhci_arasan_soc_ctl_map rk3399_soc_ctl_map = {
-@@ -1091,23 +1105,32 @@ static const struct sdhci_pltfm_data sdhci_arasan_pdata = {
- 			SDHCI_QUIRK2_STOP_WITH_TC,
- };
- 
-+static const struct sdhci_arasan_clk_ops arasan_clk_ops = {
-+	.sdcardclk_ops = &arasan_sdcardclk_ops,
-+	.sampleclk_ops = &arasan_sampleclk_ops,
-+};
-+
- static struct sdhci_arasan_of_data sdhci_arasan_generic_data = {
- 	.pdata = &sdhci_arasan_pdata,
-+	.clk_ops = &arasan_clk_ops,
- };
- 
- static struct sdhci_arasan_of_data sdhci_arasan_rk3399_data = {
- 	.soc_ctl_map = &rk3399_soc_ctl_map,
- 	.pdata = &sdhci_arasan_cqe_pdata,
-+	.clk_ops = &arasan_clk_ops,
- };
- 
- static struct sdhci_arasan_of_data intel_lgm_emmc_data = {
- 	.soc_ctl_map = &intel_lgm_emmc_soc_ctl_map,
- 	.pdata = &sdhci_arasan_cqe_pdata,
-+	.clk_ops = &arasan_clk_ops,
- };
- 
- static struct sdhci_arasan_of_data intel_lgm_sdxc_data = {
- 	.soc_ctl_map = &intel_lgm_sdxc_soc_ctl_map,
- 	.pdata = &sdhci_arasan_cqe_pdata,
-+	.clk_ops = &arasan_clk_ops,
- };
- 
- static const struct sdhci_pltfm_data sdhci_arasan_zynqmp_pdata = {
-@@ -1117,12 +1140,24 @@ static const struct sdhci_pltfm_data sdhci_arasan_zynqmp_pdata = {
- 			SDHCI_QUIRK2_STOP_WITH_TC,
- };
- 
-+static const struct sdhci_arasan_clk_ops zynqmp_clk_ops = {
-+	.sdcardclk_ops = &zynqmp_sdcardclk_ops,
-+	.sampleclk_ops = &zynqmp_sampleclk_ops,
-+};
-+
- static struct sdhci_arasan_of_data sdhci_arasan_zynqmp_data = {
- 	.pdata = &sdhci_arasan_zynqmp_pdata,
-+	.clk_ops = &zynqmp_clk_ops,
-+};
-+
-+static const struct sdhci_arasan_clk_ops versal_clk_ops = {
-+	.sdcardclk_ops = &versal_sdcardclk_ops,
-+	.sampleclk_ops = &versal_sampleclk_ops,
- };
- 
- static struct sdhci_arasan_of_data sdhci_arasan_versal_data = {
- 	.pdata = &sdhci_arasan_zynqmp_pdata,
-+	.clk_ops = &versal_clk_ops,
- };
- 
- static const struct of_device_id sdhci_arasan_of_match[] = {
-@@ -1198,12 +1233,7 @@ sdhci_arasan_register_sdcardclk(struct sdhci_arasan_data *sdhci_arasan,
- 	sdcardclk_init.parent_names = &parent_clk_name;
- 	sdcardclk_init.num_parents = 1;
- 	sdcardclk_init.flags = CLK_GET_RATE_NOCACHE;
--	if (of_device_is_compatible(np, "xlnx,zynqmp-8.9a"))
--		sdcardclk_init.ops = &zynqmp_sdcardclk_ops;
--	else if (of_device_is_compatible(np, "xlnx,versal-8.9a"))
--		sdcardclk_init.ops = &versal_sdcardclk_ops;
--	else
--		sdcardclk_init.ops = &arasan_sdcardclk_ops;
-+	sdcardclk_init.ops = sdhci_arasan->clk_ops->sdcardclk_ops;
- 
- 	clk_data->sdcardclk_hw.init = &sdcardclk_init;
- 	clk_data->sdcardclk =
-@@ -1252,12 +1282,7 @@ sdhci_arasan_register_sampleclk(struct sdhci_arasan_data *sdhci_arasan,
- 	sampleclk_init.parent_names = &parent_clk_name;
- 	sampleclk_init.num_parents = 1;
- 	sampleclk_init.flags = CLK_GET_RATE_NOCACHE;
--	if (of_device_is_compatible(np, "xlnx,zynqmp-8.9a"))
--		sampleclk_init.ops = &zynqmp_sampleclk_ops;
--	else if (of_device_is_compatible(np, "xlnx,versal-8.9a"))
--		sampleclk_init.ops = &versal_sampleclk_ops;
--	else
--		sampleclk_init.ops = &arasan_sampleclk_ops;
-+	sampleclk_init.ops = sdhci_arasan->clk_ops->sampleclk_ops;
- 
- 	clk_data->sampleclk_hw.init = &sampleclk_init;
- 	clk_data->sampleclk =
-@@ -1405,6 +1430,7 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
- 	sdhci_arasan->host = host;
- 
- 	sdhci_arasan->soc_ctl_map = data->soc_ctl_map;
-+	sdhci_arasan->clk_ops = data->clk_ops;
- 
- 	node = of_parse_phandle(pdev->dev.of_node, "arasan,soc-ctl-syscon", 0);
- 	if (node) {
+I'm not too familiar with the platform, but as far as I understand, any
+of the cec, grf and vpll clock is optional (if someone could confirm
+that, it would be useful). I don't care so much about the order, but
+iahb and isfr are mandatory, and thus need to be specified as two const
+items in the beginning as far as I understand. It would be nice to set
+something along the lines of
+
+  minItems: 2
+  maxItems: 5
+  items:
+    - const: iahb
+    - const: isfr
+    - enum:
+      - cec
+      - grf
+      - vpll
+
+and have the enum automatically span the last three slots of the items.
+I understand this isn't possible, but an equivalent compact would to do
+so would be useful.
+
+As for the base schema, it expects three clocks only, so
+
+	clock-names = "iahb", "isfr", "vpll";
+
+won't validate. I can't think of a way around that other than pulling
+constraints selectively from the base schema, or just not specifying it
+in the base schema at all.
+
 -- 
-2.1.1
+Regards,
 
+Laurent Pinchart
