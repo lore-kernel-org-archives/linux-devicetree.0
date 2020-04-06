@@ -2,108 +2,210 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEB9C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 11:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C37D6C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 11:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F6C2072A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 11:07:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586171227;
-	bh=MW0KG31dJrppaZHP8FQnU1F/hl4SWfSAkuygfDdzRsY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tHzJLxkIn9JPRaAvX+dqsnMIFDud9VGEVgH6zL11gun6j+vjDN0GxipEGIin2du/K
-	 i4uZ5IKOgVk4YO3rzltKr6HqaYd9xvSOagmqbvzVoMqf583o1laMAAuTq6Z1uqa9x1
-	 E+U3CKapx/BaZkOEUMBTBBwTPMrbuCsKNfaYhBZ4=
+	by mail.kernel.org (Postfix) with ESMTP id 949B120780
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 11:09:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="QToKcaKz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbgDFLHG (ORCPT
+        id S1727045AbgDFLJg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:07:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45414 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726883AbgDFLHG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Apr 2020 07:07:06 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31DE6206F8;
-        Mon,  6 Apr 2020 11:07:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586171225;
-        bh=MW0KG31dJrppaZHP8FQnU1F/hl4SWfSAkuygfDdzRsY=;
+        Mon, 6 Apr 2020 07:09:36 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:43648 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726883AbgDFLJg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 07:09:36 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8429780E;
+        Mon,  6 Apr 2020 13:09:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586171373;
+        bh=wOa46SkDs0zPYtO0Mk2Rt7HQJtUozoqbzU6t9dIdgmk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vYBvA3+sGFhq3yTKh+ucCBVysSRVEhv8kbTZ7mUax4BlKAv3D4fK5qjUXj7Z5gLgl
-         TISEdcdQC4Yw6kKUo0xsMd21GDTjBeoWPMIjRqPbpl8tuQjZBP5dWfsAI/LfpptVzJ
-         V/SAs1M5qygo+k2m9swv+YpL4hpf8/q5LkRknr1E=
-Date:   Mon, 6 Apr 2020 12:07:03 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     lgirdwood@gmail.com, heiko@sntech.de, robh+dt@kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: sound: convert rockchip spdif
- bindings to yaml
-Message-ID: <20200406110703.GA6837@sirena.org.uk>
-References: <20200404115225.4314-1-jbx6244@gmail.com>
+        b=QToKcaKzf7LnS/uQ79TxJ8EaLZH33OBk4yS8/eGWK0P/4Xk9yiHYT+L65Oo4zEQ52
+         GmXdtQBkP74hSzCnnJuWDEVkR8hpA1XLbNrBs1TS9o6RjlOZr9fb5T4FcfMs944BQV
+         jPKrcnJDVFFhKds6IjQh+F1QdNShVxJzT+Mffsp4=
+Date:   Mon, 6 Apr 2020 14:09:24 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 4/4] dt-bindings: display: bridge: renesas,lvds: Convert
+ binding to YAML
+Message-ID: <20200406110924.GB4757@pendragon.ideasonboard.com>
+References: <20200405232318.26833-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20200405232318.26833-5-laurent.pinchart+renesas@ideasonboard.com>
+ <CAMuHMdXJcw0eGY7J=JcGv6Hs9E_GCybsYSeKKeH5pAH8nkdTrg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200404115225.4314-1-jbx6244@gmail.com>
-X-Cookie: Serfs up!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMuHMdXJcw0eGY7J=JcGv6Hs9E_GCybsYSeKKeH5pAH8nkdTrg@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Geert,
 
---TB36FDmn/VVEgNH/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Apr 06, 2020 at 10:47:37AM +0200, Geert Uytterhoeven wrote:
+> On Mon, Apr 6, 2020 at 1:24 AM Laurent Pinchart wrote:
+> > Convert the Renesas R-Car LVDS encoder text binding to YAML.
+> >
+> > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> 
+> Thanks for your patch!
+> 
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.yaml
+> > @@ -0,0 +1,248 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/display/bridge/renesas,lvds.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Renesas R-Car LVDS Encoder
+> > +
+> > +maintainers:
+> > +  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > +
+> > +description: |
+> > +  These DT bindings describe the LVDS encoder embedded in the Renesas R-Car
+> > +  Gen2, R-Car Gen3 and RZ/G SoCs.
+> 
+> RZ/G1 and RZ/G2 (no idea what'll RZ/G3 will bring ;-)
 
-On Sat, Apr 04, 2020 at 01:52:23PM +0200, Johan Jonker wrote:
-> Current dts files with 'spdif' nodes are manually verified.
-> In order to automate this process rockchip-spdif.txt
-> has to be converted to yaml.
+Fixed.
 
-Please don't send content free pings and please allow a reasonable time
-for review.  People get busy, go on holiday, attend conferences and so=20
-on so unless there is some reason for urgency (like critical bug fixes)
-please allow at least a couple of weeks for review.  If there have been
-review comments then people may be waiting for those to be addressed.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - renesas,r8a7743-lvds # for R8A7743 (RZ/G1M) compatible LVDS encoders
+> > +      - renesas,r8a7744-lvds # for R8A7744 (RZ/G1N) compatible LVDS encoders
+> > +      - renesas,r8a774a1-lvds # for R8A774A1 (RZ/G2M) compatible LVDS encoders
+> > +      - renesas,r8a774b1-lvds # for R8A774B1 (RZ/G2N) compatible LVDS encoders
+> > +      - renesas,r8a774c0-lvds # for R8A774C0 (RZ/G2E) compatible LVDS encoders
+> > +      - renesas,r8a7790-lvds # for R8A7790 (R-Car H2) compatible LVDS encoders
+> > +      - renesas,r8a7791-lvds # for R8A7791 (R-Car M2-W) compatible LVDS encoders
+> > +      - renesas,r8a7793-lvds # for R8A7793 (R-Car M2-N) compatible LVDS encoders
+> > +      - renesas,r8a7795-lvds # for R8A7795 (R-Car H3) compatible LVDS encoders
+> > +      - renesas,r8a7796-lvds # for R8A7796 (R-Car M3-W) compatible LVDS encoders
+> 
+> R8A77960 (I know you don't have support for R8A77961 yet ;-)
+> 
+> > +      - renesas,r8a77965-lvds # for R8A77965 (R-Car M3-N) compatible LVDS encoders
+> > +      - renesas,r8a77970-lvds # for R8A77970 (R-Car V3M) compatible LVDS encoders
+> > +      - renesas,r8a77980-lvds # for R8A77980 (R-Car V3H) compatible LVDS encoders
+> > +      - renesas,r8a77990-lvds # for R8A77990 (R-Car E3) compatible LVDS encoders
+> > +      - renesas,r8a77995-lvds # for R8A77995 (R-Car D3) compatible LVDS encoders
+> 
+> Wouldn't it be sufficient to just have the SoC name (e.g. "R-Car D3") in
+> the comments?
 
-Sending content free pings adds to the mail volume (if they are seen at
-all) which is often the problem and since they can't be reviewed
-directly if something has gone wrong you'll have to resend the patches
-anyway, so sending again is generally a better approach though there are
-some other maintainers who like them - if in doubt look at how patches
-for the subsystem are normally handled.
+Good idea. I've thus dropped R8A7796(0) :-)
 
-Please submit patches using subject lines reflecting the style for the
-subsystem, this makes it easier for people to identify relevant patches.
-Look at what existing commits in the area you're changing are doing and
-make sure your subject lines visually resemble what they're doing.
-There's no need to resubmit to fix this alone.
+> > +if:
+> > +  properties:
+> > +    compatible:
+> > +      enum:
+> > +        - renesas,r8a774c0-lvds
+> > +        - renesas,r8a77990-lvds
+> > +        - renesas,r8a77995-lvds
+> > +then:
+> > +  properties:
+> > +    clocks:
+> > +      minItems: 1
+> > +      maxItems: 4
+> > +      items:
+> > +        - description: Functional clock
+> > +        - description: EXTAL input clock
+> > +        - description: DU_DOTCLKIN0 input clock
+> > +        - description: DU_DOTCLKIN1 input clock
+> > +
+> > +    clock-names:
+> > +      minItems: 1
+> > +      maxItems: 4
+> > +      items:
+> > +        - const: fck
+> > +        # The LVDS encoder can use the EXTAL or DU_DOTCLKINx clocks.
+> > +        # These clocks are optional.
+> > +        - enum:
+> > +          - extal
+> > +          - dclkin.0
+> > +          - dclkin.1
+> > +        - enum:
+> > +          - extal
+> > +          - dclkin.0
+> > +          - dclkin.1
+> > +        - enum:
+> > +          - extal
+> > +          - dclkin.0
+> > +          - dclkin.1
+> 
+> Can the duplication of the last 3 entries be avoided?
+> Perhaps like in
+> Documentation/devicetree/bindings/serial/renesas,scif.yaml?
 
---TB36FDmn/VVEgNH/
-Content-Type: application/pgp-signature; name="signature.asc"
+I'd love to, if you can tell me how to make sure the fck entry is
+mandatory. The following
 
------BEGIN PGP SIGNATURE-----
+  minItems: 1
+  maxItems: 4
+  items:
+    enum:
+      - fck
+      - extal
+      - dclkin.0
+      - dclkin.1
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6LDVQACgkQJNaLcl1U
-h9At1Af9FC3z9FsNzTwUOLATMox+yRod2jIFEGJXPViju4E8V2EuoclTbhXAgNQ+
-HpPLozVdeSMKzCNs57EAKph0W6rKpkaGz5R9NliqRohe0OiQpnIhftVJMHawgqCl
-0e0hzX3E+R+1hOa6R2BDTdTHuA+xk2oni8V6w/MW4LVuZZ13fl2Pxa2y5dOdp+ER
-woZL3J56Q1b6NkKdYWyCMZgj/GfOb8FFVfC0Dp4BTQh0VO0V2KvwCdklmWXqYC8D
-kkHkggw+t/98qhSUrBu+L4FvXYwc17OzhJszkbJWGLoA83ogbf12Nqm4X2ftyteA
-p+R0xiHc+axQuwhe8ch0Ei0ZBAJxvg==
-=VqFs
------END PGP SIGNATURE-----
+passes the checks, but would accept
 
---TB36FDmn/VVEgNH/--
+	clock-names = "extal";
+
+which is not valid. Your
+Documentation/devicetree/bindings/serial/renesas,scif.yaml bindings
+suffer from the same problem :-)
+
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/clock/renesas-cpg-mssr.h>
+> > +    #include <dt-bindings/power/r8a7795-sysc.h>
+> > +
+> > +    lvds@feb90000 {
+> > +        compatible = "renesas,r8a7795-lvds";
+> > +        reg = <0 0xfeb90000 0 0x14>;
+> 
+> Examples are built with #{address,size}-cells = <1>.
+
+Are they ? I don't get any failure from make dt_binding_check.
+
+> > +    lvds0: lvds@feb90000 {
+> > +        compatible = "renesas,r8a77990-lvds";
+> > +        reg = <0 0xfeb90000 0 0x20>;
+> 
+> Likewise.
+> 
+> > +    lvds1: lvds@feb90100 {
+> > +        compatible = "renesas,r8a77990-lvds";
+> > +        reg = <0 0xfeb90100 0 0x20>;
+> 
+> Likewise.
+
+-- 
+Regards,
+
+Laurent Pinchart
