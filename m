@@ -2,102 +2,106 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AACCC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 15:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D664C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 15:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6611624880
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 15:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3711A206C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 15:09:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728800AbgDFPG6 (ORCPT
+        id S1728807AbgDFPJS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 11:06:58 -0400
-Received: from outgoing15.flk.host-h.net ([197.242.87.49]:57293 "EHLO
-        outgoing15.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728685AbgDFPG6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 11:06:58 -0400
-X-Greylist: delayed 4351 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 Apr 2020 11:06:57 EDT
-Received: from www31.flk1.host-h.net ([188.40.1.173])
-        by antispam4-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1jLSCk-0002PP-Tr; Mon, 06 Apr 2020 15:54:24 +0200
-Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
-        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1jLSCh-0003gd-WD; Mon, 06 Apr 2020 15:54:20 +0200
-From:   Justin Swartz <justin.swartz@risingedge.co.za>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: remove disable-wp from rk3229-xms6 emmc
-Date:   Mon,  6 Apr 2020 13:50:05 +0000
-Message-Id: <20200406135006.23759-2-justin.swartz@risingedge.co.za>
-In-Reply-To: <e602c1b8-3606-a8d3-c64c-ec9e58315974@gmail.com>
-References: <e602c1b8-3606-a8d3-c64c-ec9e58315974@gmail.com>
-X-Authenticated-Sender: justin.swartz@risingedge.co.za
-X-Virus-Scanned: Clear
-X-Originating-IP: 188.40.1.173
-X-SpamExperts-Domain: risingedge.co.za
-X-SpamExperts-Username: 
-Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.02)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0VxB0mWeGZk2wSOLROvd+japSDasLI4SayDByyq9LIhVMzIT/cdpaPXn
- 8mlmYDKPTUTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
- mAX8Bxy/iUu0ThNZg0jxJtcVJProrT987X1VDPOqN+OoDzRTdku7DidYUZdNf38Sp7Of4wP429AA
- f49baR+f3He7jw4SoVhmTJ/3eP9ORQWVx8ds1M4qmk3/bYr2p8zbg4Paoa3pNVQ0zl7t/+UfQLYB
- qEPnp1U88kqVD8AM2G81dFO0E3gi+MOI1foZYzDggRXhpvoPtF3cVkniFXU3qJSqpdJudO6+rkiw
- E5i8Wl78Q18OeOfsy4h7jF1Uv9lnibl3vcBqVmvQB4A18acGxkU6APd/2A0Kw7VphYofAVXirbLu
- Jjy3NtnGWLbnBGfrUBEXB2fYGLNieGQuoHtJvp0r29Rf3ZjFwL+MhHEWw/0qBlNDp8uABz3dkWV+
- tnlsqEID1rwhWix/EYFNtp1TycYLFeAN4+MGwnsp7SkU6CLbyF0Zq4b1/7rjUzETJrWks4pbbQJq
- 6gWopI3ep45X19ZysgQ+31LcAX8eoFXAhohfegXGH2GIVQVglJFbK771YV8YbC29CtmpcTqTfSIf
- CWq9oj7OiT8GwpAriB+3/81I3rvR8KJ2fK9jiDYgijyqqY0rATpzHKGfmtNsYTr4SmDZ/bGW8xZC
- RRs6ZD24UhFcZZEpLhnBCwImTQNvxaLyCc35VA7RvW/HGiGqxL09Cymermt8NAa/gGopT3kKfO4C
- gvcKmV0o9jYzsFpuc43pp/LzIs3ornuRuAAdgrkq+6l7ZLNYJcf7Z6PCydDzoYZgInuDxgFOs7AZ
- TwbwMdGiAezOfJNnrbxp9qi+/W68d5545dki9+vnsnnTQ8Wq38NrFoXSENXH6UXfnav35JPA4YfM
- 6tBkXsqvKY6zoLLTPpuFqUUQz+mM8JAD4ECWNo09vb0YLIRnK477e9Xake5PIWKjIXX7qe2zOXoS
- foz/k0KmhMm/d7m9QAUl+M6tQhYDNj8G8czrGYe1tD5Uy2bjO41FyBEqIaDudcVplPE6wCr6GXU1
- lCw88ijyus1sGnWknJqS8gGhNQxpB5P3qu7c1xMljx2PG/R+pKBSKy8hXOgvE1zSS7XUhkYEQYeb
- 3jR5NeVaJQBh0uawl0Cg8j+knAzOA9mmoJvkuhKHiekUuskYaI6ERCKp8gXWqnT9kLHhStr5fiGK
- 7KncpWELuTEvuGslKTrRIXcXpFg5ivY=
-X-Report-Abuse-To: spam@antispammaster.host-h.net
+        Mon, 6 Apr 2020 11:09:18 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:21680 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728709AbgDFPJS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 11:09:18 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 036F4L40030332;
+        Mon, 6 Apr 2020 11:08:57 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 306m367g82-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Apr 2020 11:08:56 -0400
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 036F8tq8064300
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Mon, 6 Apr 2020 11:08:55 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Mon, 6 Apr 2020
+ 11:08:54 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Mon, 6 Apr 2020 11:08:54 -0400
+Received: from NSA-L01.ad.analog.com (nsa-l01.ad.analog.com [10.32.224.203])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 036F8oIe002847;
+        Mon, 6 Apr 2020 11:08:51 -0400
+From:   =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>
+To:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>
+Subject: [PATCH v4 0/6] Support ADIS16475 and similar IMUs
+Date:   Mon, 6 Apr 2020 17:08:40 +0200
+Message-ID: <20200406150846.878-1-nuno.sa@analog.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-06_08:2020-04-06,2020-04-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
+ mlxlogscore=999 suspectscore=0 spamscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004060124
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Remove the disable-wp attribute from &emmc as it is, according to
-Documentation/devicetree/bindings/mmc/mmc-controller.yaml:
+This series adds support for the adis16475 and similar IMUs. This driver
+will be the first user of some changes on the adis library. Hence, the
+first three patches are related to the library:
+ * Add anaged device functions for registering triggers with the library;
+ * Updates the way `irq_mask` is passed to `request_irq()`;
+ * It adds an update_bits() like API.
 
-    "Not used in combination with eMMC or SDIO."
+A new patch was introduced (iio: adis: Add burst_max_len variable) in
+order to make burst32 configuration at runtime.
 
-Suggested-by: Johan Jonker <jbx6244@gmail.com>
-Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
----
- arch/arm/boot/dts/rk3229-xms6.dts | 1 -
- 1 file changed, 1 deletion(-)
+Nuno Sá (6):
+  iio: imu: adis: Add Managed device functions
+  iio: imu: adis: Add irq mask variable
+  iio: adis: Add adis_update_bits() APIs
+  iio: adis: Support different burst sizes
+  iio: imu: Add support for adis16475
+  dt-bindings: iio: Add adis16475 documentation
 
-diff --git a/arch/arm/boot/dts/rk3229-xms6.dts b/arch/arm/boot/dts/rk3229-xms6.dts
-index 6890af0b7..e75624d46 100644
---- a/arch/arm/boot/dts/rk3229-xms6.dts
-+++ b/arch/arm/boot/dts/rk3229-xms6.dts
-@@ -137,7 +137,6 @@
- 
- &emmc {
- 	cap-mmc-highspeed;
--	disable-wp;
- 	non-removable;
- 	status = "okay";
- };
+ .../bindings/iio/imu/adi,adis16475.yaml       |  137 ++
+ MAINTAINERS                                   |    8 +
+ drivers/iio/imu/Kconfig                       |   13 +
+ drivers/iio/imu/Makefile                      |    1 +
+ drivers/iio/imu/adis.c                        |   25 +
+ drivers/iio/imu/adis16400.c                   |    2 +-
+ drivers/iio/imu/adis16475.c                   | 1333 +++++++++++++++++
+ drivers/iio/imu/adis_buffer.c                 |   58 +-
+ drivers/iio/imu/adis_trigger.c                |   72 +-
+ include/linux/iio/imu/adis.h                  |   87 +-
+ 10 files changed, 1725 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
+ create mode 100644 drivers/iio/imu/adis16475.c
+
 -- 
-2.11.0
+2.17.1
 
