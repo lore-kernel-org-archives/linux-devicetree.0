@@ -2,149 +2,119 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3233C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 22:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0FEC2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 22:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A35C6208E4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 22:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DD7320753
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 22:43:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Y/WMbuTz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kLJPEGqk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbgDFWH5 (ORCPT
+        id S1726272AbgDFWnv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 18:07:57 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1158 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgDFWH5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 18:07:57 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8ba8070000>; Mon, 06 Apr 2020 15:07:03 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 06 Apr 2020 15:07:55 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 06 Apr 2020 15:07:55 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
- 2020 22:07:55 +0000
-Received: from [10.2.164.193] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
- 22:07:54 +0000
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
- <200bb96e-2d07-764f-9e14-55538dc742fd@gmail.com>
- <23bfab09-b464-6e51-9843-06d13000e9b9@nvidia.com>
- <be77b0ef-d605-8357-4180-f40b2886d07a@gmail.com>
- <08cd31d5-e8b9-4d3a-fb0e-0e4462947d96@nvidia.com>
- <12a834ac-52b1-6dc0-7d3a-3e6a1fa85a2a@gmail.com>
- <e3712e7b-b335-b35b-a94f-24eb85122dca@nvidia.com>
- <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
- <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
- <dd16c560-ba8f-e7df-5dc4-5227e0043196@nvidia.com>
- <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
-Message-ID: <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
-Date:   Mon, 6 Apr 2020 15:07:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 6 Apr 2020 18:43:51 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44686 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgDFWnv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 18:43:51 -0400
+Received: by mail-pl1-f194.google.com with SMTP id h11so442038plr.11;
+        Mon, 06 Apr 2020 15:43:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TU6zRlp6bLsLQvuU0UNh0Rjs9SMeCJnn8DHzXq3NahA=;
+        b=kLJPEGqkkgLnVbzA/I1nZdwcgddzzL+2wXZ5Xp1wnWMMVjFPOf3YQaOQy8TL1M0v26
+         3zVTMY9m62NSg/FwiRYeADQhn6OD90JCaiQOoLGTOSfHSyRH98rGuTU4k3wUihHLgnoM
+         3slUwXsnIbL3ONy473/bh2JtTR12Aj8f9DfVhCGwBDD35ya2UJbjieo3M0XuSZONcaLe
+         4NTBLpfwm38kvCsf9/fDWgJlbf9SsZEMzZfQdD7zeT5JZ+/AmrdHAqboOvL2/ycAgkdx
+         OmtkjNNiJAORPFexNi771zvXl40gfTZ8znTbAE9+pChnRuB1o2OtQonZU9tDWIsYHnrx
+         lLHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TU6zRlp6bLsLQvuU0UNh0Rjs9SMeCJnn8DHzXq3NahA=;
+        b=CUMScXTtECcwzFqj+qhQAhHmnS/GTMXhnh43FJ7Vo5VaWChOQczx4cib6JDnOHMWZp
+         33GngKgQZrWAMZRuE8QdNBdxzEimyUn2JPStbVWPrqyo8FfziqytnivIZmTXcHdkpTiz
+         PNQHKZcsEVfHa42HMK9YVq+kXCgr/OjeoDnd9CQKNWFdNwZe28h+sifK5feuHPxDorXy
+         w7jlRbwYgZ/4O9SSFNZG32ccBAw4eEhRIank87lamU6SUU6+QK4eIO+LB+ynr8czohHA
+         Mhg0MdTmYCmVVxo5Rl69TlBTbMlTdYZfU1f3JWf7ooVjThjX4j4yegFuzeHgD92/C+yB
+         r6gg==
+X-Gm-Message-State: AGi0PuZq7EOqaBHEBy53TI38bwC+9Rygy7WSLCZzp8t8uwUfON731zC6
+        w9Njx9nvhmXjY5vtiRfC7bc=
+X-Google-Smtp-Source: APiQypLOSynrL78ItHLA268DR9LFHq6YzYF0pLnuY2yHwnMr2DJQM0F4Xmt3tudbtp848HtDy2ffOQ==
+X-Received: by 2002:a17:90a:1911:: with SMTP id 17mr1755900pjg.65.1586213030402;
+        Mon, 06 Apr 2020 15:43:50 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id l7sm12590717pfl.171.2020.04.06.15.43.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 Apr 2020 15:43:50 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 15:43:52 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        broonie@kernel.org, alsa-devel@alsa-project.org,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/7] ASoC: dt-bindings: fsl_asrc: Add new property
+ fsl,asrc-format
+Message-ID: <20200406224352.GA20891@Asurada-Nvidia.nvidia.com>
+References: <cover.1585726761.git.shengjiu.wang@nxp.com>
+ <47fcf06689d1a086141ce4d80f7ea7af7958dc89.1585726761.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586210823; bh=HpwSmhwcv0DQ/SMY/515qVkKZ6WeiMUhqqpKIo4nZuE=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=Y/WMbuTziPO5+ZL/2ukt1TSrFKEQXnqx2rlUk2QM3l2SCZ6K3o4Cs3Ubx4A/EU6BC
-         nyj4U/1BM0DsBSfrcwtIPKhTFoqi19r6hYcHAeTGIP0cjPTvS08Bs8WgVfvfv+mPeN
-         JbEAqo0ITJ8Sd7V/8ulFf2IuIoL7mD/WveyHOOqWHosxzlhIeUKaqWrq0XM2ceDhqQ
-         zJhOFJfbMSFOrtmR4Gy0qaJdvEVE2gJdRTr1bDmDgVzK0NOYev0ETUpYexXMK3X/gS
-         9MQhtNRrUdhEx1poKESQzf0yh85VbkbXqzIyvoBCw9Fq1qJI38QZRm8QE/dQgtHZtB
-         pvWVwMmw/+RYg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <47fcf06689d1a086141ce4d80f7ea7af7958dc89.1585726761.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Apr 01, 2020 at 04:45:35PM +0800, Shengjiu Wang wrote:
+> In order to support new EASRC and simplify the code structure,
+> We decide to share the common structure between them. This bring
+> a problem that EASRC accept format directly from devicetree, but
+> ASRC accept width from devicetree.
+> 
+> In order to align with new ESARC, we add new property fsl,asrc-format.
+> The fsl,asrc-format can replace the fsl,asrc-width, then driver
+> can accept format from devicetree, don't need to convert it to
+> format through width.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-On 4/6/20 3:00 PM, Sowjanya Komatineni wrote:
->
-> On 4/6/20 2:39 PM, Sowjanya Komatineni wrote:
->>
->> On 4/6/20 2:15 PM, Sowjanya Komatineni wrote:
->>>
->>> On 4/6/20 2:11 PM, Dmitry Osipenko wrote:
->>>> External email: Use caution opening links or attachments
->>>>
->>>>
->>>> 07.04.2020 00:02, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>>>>> Am I understanding correctly that this thread will take 100%=20
->>>>>>>>>> CPU,
->>>>>>>>>> spinning here, if more than 2 frame-captures queued?
->>>>>>>>> on more than 2 frames captures, it breaks thread and on next=20
->>>>>>>>> wakeup it
->>>>>>>>> continues
->>>>>>>> The wait_event() won't wait if condition is true.
->>>>>>> condition is checked when waitqueue is woken up
->>>>>> https://elixir.bootlin.com/linux/v5.6.2/source/include/linux/wait.h#=
-L462=20
->>>>>>
->>>>> process is put to sleep until the condition evaluates to true or=20
->>>>> signal
->>>>> is received.
->>>>>
->>>>> condition is checked each time the waitqueue head is woken up.
->>>> This is a wrong assumption in accordance to the code.
->
-> process is in sleep until the condition is evaluated and when=20
-> condition is true wakeup still happens only when wake_up on waitqueue=20
-> is called
->
-> This is the reason for using this to prevent blocking while waiting=20
-> for the buffers.
+Once Rob has no objection:
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
 
-w.r.t capture list update, wakeup happens when wake_up on waitqueue is=20
-called.
-
-wakeup also happens on kthread stop signal event.
-
->
->
->>>
->>> when every buffer is available as long as we are in streaming, we=20
->>> should process it.
->>>
->>> So if wake up happens when list has buffer, it will be processed but=20
->>> at a time we limit processing 2 simultaneous buffer capture starts=20
->>> only.
->>>
->> Fixing typo.
->>
->> I meant when ever buffer is available as long as we are in streaming,=20
->> we should process it.
->>
->> So capture thread processes as long as buffers are available from=20
->> user space limiting 2 simultaneous trigger of captures and thread=20
->> will be in sleep when capture buffers list is empty or no stop thread=20
->> is signaled.
->
->
->
+> ---
+>  Documentation/devicetree/bindings/sound/fsl,asrc.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> index cb9a25165503..998b4c8a7f78 100644
+> --- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> +++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> @@ -51,6 +51,10 @@ Optional properties:
+>  			  will be in use as default. Otherwise, the big endian
+>  			  mode will be in use for all the device registers.
+>  
+> +   - fsl,asrc-format	: Defines a mutual sample format used by DPCM Back
+> +			  Ends, which can replace the fsl,asrc-width.
+> +			  The value is 2 (S16_LE), or 6 (S24_LE).
+> +
+>  Example:
+>  
+>  asrc: asrc@2034000 {
+> -- 
+> 2.21.0
+> 
