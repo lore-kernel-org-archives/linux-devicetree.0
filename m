@@ -2,280 +2,139 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA97C2BA1E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 16:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E59C9C2BA80
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 16:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E223206C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 16:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA3D23A1C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 16:30:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aqKQfC2j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LSprrJcm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbgDFQTm (ORCPT
+        id S1729342AbgDFQaB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:19:42 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46932 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728802AbgDFQTm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 12:19:42 -0400
-Received: by mail-pg1-f195.google.com with SMTP id k191so138748pgc.13;
-        Mon, 06 Apr 2020 09:19:39 -0700 (PDT)
+        Mon, 6 Apr 2020 12:30:01 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39500 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728789AbgDFQaA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 12:30:00 -0400
+Received: by mail-lf1-f66.google.com with SMTP id m2so1083985lfo.6;
+        Mon, 06 Apr 2020 09:29:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=oa630XzomU4aKMww5XPentv1Soe/ZbLABSO++PNFqs0=;
-        b=aqKQfC2j1EtWORNiX4VgxmMztGjb35unU4GdvAMFBwhin7sem4OKIy3z49zGwXOVfS
-         VpF6XarXErLaQsxPJ2rqcvnQZKNA14z1/xM3a4J/+Z/tOldiJBMpsLRExlldLq0mhzyy
-         IUkWeK+rSRD5JwJoEfMyz3nIHV5M8tl4y2j1yKrJ3f7c1NnyFnGGWi+OxUqJ2QlzY5VV
-         pEe/guSd252MxJRhFTEJocKAEPNjVk7n8RNPP3hEIogaeocCUyZs64H3uKOHBmBk0naT
-         D2gwTJDo8tX8XF9ep2t38ZjR5lHKuaYpA00JHRJKpzKbOwjAOIDSYcMZwZauhEaDJ/JW
-         +Yjw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6s1RomBLaAaLYjYEtNzLrGXH4D7zjKQWtC32MsL6TUY=;
+        b=LSprrJcm3y6O68ykXfq0AwAcOXpXeo3pGt4YLZBoeWDaR66qrtXxzAelikL6s/AXDu
+         FGHPtdNoSflFkLVTLd8QGYdiDg6euW5aBbWHTixMjNECj2/+fyKXqZUyr1q35+D3Y8LV
+         jAzi3i9rcDH5CWJmpU1cvSgb8e4GhesT4mDs2vwz7UZCsIk/zRwij2GhEr3osByaaPP8
+         7AQuK+sVZow8NUK7mYPS5k0deg3BerX6FOWDd5wkrtmgjcFTxSJA9wOPtbJS/1sCGh71
+         f2cSYUOfE16Mm7B4ko6/HUTwI71+jGkY325iGIgz+0Ps6jznZnqGTBNBKf3YNoFx/Q9y
+         HKhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oa630XzomU4aKMww5XPentv1Soe/ZbLABSO++PNFqs0=;
-        b=j9jmTcT0ouwhNsle1lDecYIoVvaUrDk1IuD/f000pXXKFTmJQ40fdVto3mT/FnDEjo
-         32t/WxMS/IlRB86cbEWDBLO38or6Svf1Zjejm07r87VLZowFTfRyq/YCUum7exrpfwUq
-         f/wh8mLR+7HnUBUf36KHFY6wsxbRI27MM2Phsk6+g8dWJyk82VovPFOlAN1o8NqLrC/8
-         ipMrmeP333Sbn+J5C4Giq+oYtFbLl37K466N5msGe6SzLcbPvO2V8CY/OMmC39A1GCbm
-         oPQXD1xA9LSBypPkZ1CVoQM5XAY9oirqL+gQrX562qVsPLYwkh3WnXqoY0M/mBjQ51n+
-         onPQ==
-X-Gm-Message-State: AGi0PuYOsrD1djWqoyp7K001ay329Omp4IdXCDHZTBtN7p6h7s23VO4Z
-        1oKld4M8gvdFNU2w3mI+f+61H386F3MWlmhp5RE=
-X-Google-Smtp-Source: APiQypJU+5ObmGWWzP72qOYvrzN6MOlLYHJRMcoUevfMEqea7emG1qqaRhegC8m0z8uNHfnVVLeFLZhlLL3aAyMhlIg=
-X-Received: by 2002:a63:1d4:: with SMTP id 203mr9970690pgb.74.1586189978891;
- Mon, 06 Apr 2020 09:19:38 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6s1RomBLaAaLYjYEtNzLrGXH4D7zjKQWtC32MsL6TUY=;
+        b=YO2drf//51T4IKoyFtBJ/3iHhkbw2tBJQufwREBCRMC4mJgbTrchdSw88+e4KxCTSR
+         VqEeWgB1FUOOkZkDRPTQLR7x186hBtlWJ7SrkgF4IIWVMVt3dNKgJn0JjoNxRU0gLo8b
+         4RmAoEqjWjU2q5DkFhrjbHDvBwoL1NjWrlR048VHBw2+fBfZ4ZU/OvAsaZTmNEHwx9Xq
+         fItD1Ana3/pCojh2YO6RvUMaObcptLOeRGwApko+oVYqGPIv5hKzhCUeuXxRsdhcABCW
+         4bi+pxTT8Cez3ZVT6VSJ8goVktw7TQ4hs0j9JpB9TpvWhc+3LUnWcp5iFP9h/Ys/FHMj
+         od4A==
+X-Gm-Message-State: AGi0PuZS7kSo+y2slepDjApV4tfei7OeCS0QI66d9Mkpc1uodjYTxvjR
+        jE6y1dPpStvVRBRmVPz8yTbBwiVc
+X-Google-Smtp-Source: APiQypJbe1lJWnXFExH2l4+Uev/fYbSRZkAaZ/gonD7P6gbu5LIxn7YaRhzchCFdPfJWvG/UV5o85g==
+X-Received: by 2002:a19:c8cf:: with SMTP id y198mr9870475lff.197.1586190596953;
+        Mon, 06 Apr 2020 09:29:56 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id j19sm11701904lfe.17.2020.04.06.09.29.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Apr 2020 09:29:54 -0700 (PDT)
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
+ <38d921a7-5cdf-8d0a-2772-4399dd1a96a0@gmail.com>
+ <9b8cf37b-d2ad-9df2-aad8-216c2c954e69@nvidia.com>
+ <1a12974a-7cc7-2c3a-3995-076b9956714d@gmail.com>
+ <66cc8646-43d3-3fc8-c31d-d0d2efac505f@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f000f6b9-0f05-b2a5-6dad-37b09803711d@gmail.com>
+Date:   Mon, 6 Apr 2020 19:29:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200406150846.878-1-nuno.sa@analog.com> <20200406150846.878-6-nuno.sa@analog.com>
-In-Reply-To: <20200406150846.878-6-nuno.sa@analog.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 6 Apr 2020 19:19:31 +0300
-Message-ID: <CAHp75VeK8K0WHK3gDwyT3ZAaMaVdfZ5xVG94JY4O8fd2U0HEHg@mail.gmail.com>
-Subject: Re: [PATCH v4 5/6] iio: imu: Add support for adis16475
-To:     =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <66cc8646-43d3-3fc8-c31d-d0d2efac505f@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 6:10 PM Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
->
-> Support ADIS16475 and similar IMU devices. These devices are
-> a precision, miniature MEMS inertial measurement unit (IMU) that
-> includes a triaxial gyroscope and a triaxial accelerometer. Each
-> inertial sensor combines with signal conditioning that optimizes
-> dynamic performance.
->
-> The driver adds support for the following devices:
->  * adis16470, adis16475, adis16477, adis16465, adis16467, adis16500,
->    adis16505, adis16507.
+06.04.2020 19:12, Sowjanya Komatineni пишет:
+> 
+> On 4/6/20 9:05 AM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> 06.04.2020 18:35, Sowjanya Komatineni пишет:
+>> ...
+>>>>> +     /* wait for syncpt counter to reach frame start event
+>>>>> threshold */
+>>>>> +     err = host1x_syncpt_wait(chan->frame_start_sp, thresh,
+>>>>> +                              TEGRA_VI_SYNCPT_WAIT_TIMEOUT, &value);
+>>>>> +     if (err) {
+>>>>> +             dev_err(&chan->video.dev,
+>>>>> +                     "frame start syncpt timeout: %d\n", err);
+>>>>> +             /* increment syncpoint counter for timedout events */
+>>>>> +             host1x_syncpt_incr(chan->frame_start_sp);
+>>>> Why incrementing is done while hardware is still active?
+>>>>
+>>>> The sync point's state needs to be completely reset after resetting
+>>>> hardware. But I don't think that the current upstream host1x driver
+>>>> supports doing that, it's one of the known-long-standing problems of
+>>>> the
+>>>> host1x driver.
+>>>>
+>>>> At least the sp->max_val incrementing should be done based on the
+>>>> actual
+>>>> syncpoint value and this should be done after resetting hardware.
+>>> upstream host1x driver don't have API to reset or to equalize max value
+>>> with min/load value.
+>>>
+>>> So to synchronize missed event, incrementing HW syncpt counter.
+>>>
+>>> This should not impact as we increment this in case of missed events
+>>> only.
+>> It's wrong to touch sync point while hardware is active and it's active
+>> until being reset.
+>>
+>> You should re-check the timeout after hw resetting and manually put the
+>> syncpoint counter back into sync only if needed.
+> 
+> There is possibility of timeout to happen any time even during the
+> capture also and is not related to hw reset.
+> 
+> Manual synchronization is needed when timeout of any frame events happen
+> otherwise all subsequence frames will timeout due to mismatch in event
+> counters.
 
-...
+My point is that hardware is stopped only after being reset, until then
+you should assume that sync point could be incremented by HW at any time.
 
-> +       int i =3D ARRAY_SIZE(adis16475_3db_freqs);
-> +       int ret;
-
-> +       while (--i)
-> +               if (adis16475_3db_freqs[i] >=3D filter)
-> +                       break;
-
-Nit: perhaps {} to add.
-
-...
-
-> +enum adis16475_variant {
-> +       ADIS16470,
-> +       ADIS16475_1,
-> +       ADIS16475_2,
-> +       ADIS16475_3,
-> +       ADIS16477_1,
-> +       ADIS16477_2,
-> +       ADIS16477_3,
-> +       ADIS16465_1,
-> +       ADIS16465_2,
-> +       ADIS16465_3,
-> +       ADIS16467_1,
-> +       ADIS16467_2,
-> +       ADIS16467_3,
-> +       ADIS16500,
-> +       ADIS16505_1,
-> +       ADIS16505_2,
-> +       ADIS16505_3,
-> +       ADIS16507_1,
-> +       ADIS16507_2,
-> +       ADIS16507_3,
-
-> +
-
-Extra blank line.
-
-> +};
-
-...
-
-> +static void adis16475_burst32_check(struct adis16475 *st)
-> +{
-> +       int ret;
-> +       struct adis *adis =3D &st->adis;
-> +
-> +       if (!st->info->has_burst32)
-> +               return;
-> +
-> +       if (st->lsb_flag && !st->burst32) {
-> +               const u16 en =3D ADIS16500_BURST32(1);
-> +
-> +               ret =3D __adis_update_bits(&st->adis, ADIS16475_REG_MSG_C=
-TRL,
-> +                                        ADIS16500_BURST32_MASK, en);
-> +               if (ret)
-> +                       return;
-> +
-> +               st->burst32 =3D true;
-
-+ Blank line.
-
-> +               /*
-> +                * In 32bit mode we need extra 2 bytes for all gyro
-
-32-bit
-
-> +                * and accel channels.
-> +                */
-> +               adis->burst_extra_len =3D 6 * sizeof(u16);
-> +               adis->xfer[1].len +=3D 6 * sizeof(u16);
-> +               dev_dbg(&adis->spi->dev, "Enable burst32 mode, xfer:%d",
-> +                       adis->xfer[1].len);
-> +
-> +       } else if (!st->lsb_flag && st->burst32) {
-> +               const u16 en =3D ADIS16500_BURST32(0);
-> +
-> +               ret =3D __adis_update_bits(&st->adis, ADIS16475_REG_MSG_C=
-TRL,
-> +                                        ADIS16500_BURST32_MASK, en);
-> +               if (ret)
-> +                       return;
-> +
-> +               st->burst32 =3D false;
-
-+ Blank line
-
-> +               /* Remove the extra bits */
-> +               adis->burst_extra_len =3D 0;
-> +               adis->xfer[1].len -=3D 6 * sizeof(u16);
-> +               dev_dbg(&adis->spi->dev, "Disable burst32 mode, xfer:%d\n=
-",
-> +                       adis->xfer[1].len);
-> +       }
-> +}
-
-...
-
-> +       for_each_set_bit(bit, indio_dev->active_scan_mask,
-> +                        indio_dev->masklength) {
-
-One line?
-
-> +                               if (st->lsb_flag && !st->info->has_burst3=
-2) {
-> +                                       u16 val =3D 0;
-
-> +                                       const u32 reg =3D ADIS16475_REG_X=
-_GYRO_L +
-> +                                               (bit * 4);
-
-Redundant parentheses.
-
-> +                                       adis_read_reg_16(adis, reg, &val)=
-;
-> +                                       data[i++] =3D cpu_to_be16(val);
-> +                               } else {
-> +                                       /* lower not used */
-> +                                       data[i++] =3D 0;
-> +                               }
-> +                       }
-> +                       break;
-> +               }
-> +       }
-
-...
-
-> +               if (sync->sync_mode =3D=3D ADIS16475_SYNC_SCALED) {
-> +                       u16 up_scale;
-> +                       u32 scaled_out_freq =3D 0;
-> +                       /*
-> +                        * If we are in scaled mode, we must have an up_s=
-cale.
-> +                        * In scaled mode the allowable input clock range=
- is
-> +                        * 1 Hz to 128 Hz, and the allowable output range=
- is
-> +                        * 1900 to 2100 Hz. Hence, a scale must be given =
-to
-> +                        * get the allowable output.
-> +                        */
-> +                       device_property_read_u32(dev, "adi,scaled-output-=
-hz",
-> +                                                &scaled_out_freq);
-> +
-> +                       if (scaled_out_freq < 1900 || scaled_out_freq > 2=
-100) {
-> +                               dev_err(dev,
-> +                                       "Invalid value:%u for adi,scaled-=
-output-hz",
-> +                                       scaled_out_freq);
-
-When there is no property or property has a value 0 this message can't
-tell the difference.
-Perhaps you have to check return code from device_property_read_u32() call.
-
-> +                               return -EINVAL;
-> +                       }
-
-> +               }
-
-...
-
-> +       /*
-> +        * It is possible to configure the data ready polarity. Furthermo=
-re, we
-> +        * need to update the adis struct if we want data ready as active=
- low.
-> +        */
-> +       irq_type =3D irqd_get_trigger_type(desc);
-> +       if (irq_type =3D=3D IRQF_TRIGGER_RISING) {
-> +               polarity =3D 1;
-> +       } else if (irq_type =3D=3D IRQF_TRIGGER_FALLING) {
-> +               polarity =3D 0;
-> +               st->adis.irq_flag =3D IRQF_TRIGGER_FALLING;
-> +       } else {
-> +               dev_err(&spi->dev, "Invalid interrupt type 0x%x specified=
-\n",
-> +                       irq_type);
-> +               return -EINVAL;
-> +       }
-
-Here is the problem. You got type, but you compare it to flags. It's
-not correct.
-Although values are the same, the meaning is different.
-
---
-With Best Regards,
-Andy Shevchenko
+And if this happens that HW increments sync point after the timeout,
+then the sync point counter should become out-of-sync in yours case,
+IIUC. Because host1x_syncpt_incr() doesn't update the cached counter.
