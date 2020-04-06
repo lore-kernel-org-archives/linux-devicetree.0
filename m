@@ -2,112 +2,108 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F53EC2BA1E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 10:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEB9C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 11:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3C5C206F8
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 10:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F6C2072A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 11:07:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586170039;
-	bh=u/X6i+pwbj4Go4hz551p6d+YJfNGL+983Ma99T64H9g=;
+	s=default; t=1586171227;
+	bh=MW0KG31dJrppaZHP8FQnU1F/hl4SWfSAkuygfDdzRsY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WJ2OIG6qQ7qLu9jh/PkLUYBpE28pmoHFCqE+oFd4fN3HH1U3tY+aqR7XyZGHUhfed
-	 UvT0KYXBYJKmVN78cTsWm7s9eEwy9aoWDmRK2M8cZYQkN7MlBk2/8u7+tZlgyouxRg
-	 /WbgB1Q7VfOVi1G8pAwcNI6hByvB8MR3VkP0CsHI=
+	b=tHzJLxkIn9JPRaAvX+dqsnMIFDud9VGEVgH6zL11gun6j+vjDN0GxipEGIin2du/K
+	 i4uZ5IKOgVk4YO3rzltKr6HqaYd9xvSOagmqbvzVoMqf583o1laMAAuTq6Z1uqa9x1
+	 E+U3CKapx/BaZkOEUMBTBBwTPMrbuCsKNfaYhBZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgDFKrS (ORCPT
+        id S1727118AbgDFLHG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 06:47:18 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:42890 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726841AbgDFKrS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 06:47:18 -0400
-Received: by mail-ed1-f67.google.com with SMTP id cw6so18588492edb.9;
-        Mon, 06 Apr 2020 03:47:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UAxqYdPL6az1VgPFrfxQ/rn+ZWBqyWdcAzok87Z4u2E=;
-        b=LCyDFq6iTs1cx9oMAN6SI8W2jQYULe2C9YZszMNwTbZjL5scjRXcFeOnQZmtf0dH5n
-         wL/wKInrZ9TI9SbAe+sjnbWcG8cs3ha3iI8hnDe7jO3NbJeWHLyy4IMr6699UHKS3hU/
-         w1Ofq5SXXln9EyhM6MHKl1xd7D8fCo1K8pbagLqiPqkGIvvZHJuQWBIp/RKYB+VyIncR
-         9kRY4Id4qgwNjV+wFFrvQ23/Z8i10+vC41kEd+5RcpxomZl3bqD7eoYMMY5Py8y8o65y
-         ml9WCgwkuhxSipor65YyEeja5/1V5PHORWAXxkpXiILBWhJXVG4GuM/Mw6RByudfw1+m
-         HP6A==
-X-Gm-Message-State: AGi0Pub7BGaFOCx5l2mHAOCldNE2ArNr0djCTWMAQwKwxEB8/KnrXnvt
-        3VRCTe645wKJ3uib9mNuaG0=
-X-Google-Smtp-Source: APiQypKkmi8CBCaysXUslPpenLVQu3HtftW3JIysFyeclM2AJ0m49d4QSlRgMy7XSMhhvzq1JOaQ1w==
-X-Received: by 2002:a50:e107:: with SMTP id h7mr19285192edl.124.1586170035816;
-        Mon, 06 Apr 2020 03:47:15 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.125])
-        by smtp.googlemail.com with ESMTPSA id r25sm2422181edy.77.2020.04.06.03.47.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 Apr 2020 03:47:15 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 12:47:13 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Hyunki Koo <hyunki00.koo@samsung.com>
-Cc:     gregkh@linuxfoundation.org, Rob Herring <robh+dt@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] dt-bindings: serial: Add reg-io-width compatible
-Message-ID: <20200406104713.GB16798@kozik-lap>
-References: <20200401082721.19431-1-hyunki00.koo@samsung.com>
- <20200406103127.17105-1-hyunki00.koo@samsung.com>
- <CGME20200406103206epcas2p2bf3c65f96d94cc91fcdcd3e6db75e2a3@epcas2p2.samsung.com>
- <20200406103127.17105-2-hyunki00.koo@samsung.com>
+        Mon, 6 Apr 2020 07:07:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726883AbgDFLHG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Apr 2020 07:07:06 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31DE6206F8;
+        Mon,  6 Apr 2020 11:07:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586171225;
+        bh=MW0KG31dJrppaZHP8FQnU1F/hl4SWfSAkuygfDdzRsY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vYBvA3+sGFhq3yTKh+ucCBVysSRVEhv8kbTZ7mUax4BlKAv3D4fK5qjUXj7Z5gLgl
+         TISEdcdQC4Yw6kKUo0xsMd21GDTjBeoWPMIjRqPbpl8tuQjZBP5dWfsAI/LfpptVzJ
+         V/SAs1M5qygo+k2m9swv+YpL4hpf8/q5LkRknr1E=
+Date:   Mon, 6 Apr 2020 12:07:03 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     lgirdwood@gmail.com, heiko@sntech.de, robh+dt@kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] dt-bindings: sound: convert rockchip spdif
+ bindings to yaml
+Message-ID: <20200406110703.GA6837@sirena.org.uk>
+References: <20200404115225.4314-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
 Content-Disposition: inline
-In-Reply-To: <20200406103127.17105-2-hyunki00.koo@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200404115225.4314-1-jbx6244@gmail.com>
+X-Cookie: Serfs up!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 07:31:26PM +0900, Hyunki Koo wrote:
-> Add a description for reg-io-width options for the samsung serial
-> UART peripheral.
-> 
-> Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
-> ---
->  Documentation/devicetree/bindings/serial/samsung_uart.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/samsung_uart.yaml b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-> index 9d2ce347875b..a57b1233c691 100644
-> --- a/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-> +++ b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-> @@ -29,6 +29,14 @@ properties:
->    reg:
->      maxItems: 1
->  
-> +  reg-io-width:
-> +    description: |
-> +      The size (in bytes) of the IO accesses that should be performed
-> +      on the device.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [ 1, 4 ]
 
-I just noticed that the allOf is not needed. Just enum [1, 2] is enough.
+--TB36FDmn/VVEgNH/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-With that change:
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+On Sat, Apr 04, 2020 at 01:52:23PM +0200, Johan Jonker wrote:
+> Current dts files with 'spdif' nodes are manually verified.
+> In order to automate this process rockchip-spdif.txt
+> has to be converted to yaml.
 
-Best regards,
-Krzysztof
+Please don't send content free pings and please allow a reasonable time
+for review.  People get busy, go on holiday, attend conferences and so=20
+on so unless there is some reason for urgency (like critical bug fixes)
+please allow at least a couple of weeks for review.  If there have been
+review comments then people may be waiting for those to be addressed.
 
-> +
->    clocks:
->      minItems: 2
->      maxItems: 5
-> -- 
-> 2.15.0.rc1
-> 
+Sending content free pings adds to the mail volume (if they are seen at
+all) which is often the problem and since they can't be reviewed
+directly if something has gone wrong you'll have to resend the patches
+anyway, so sending again is generally a better approach though there are
+some other maintainers who like them - if in doubt look at how patches
+for the subsystem are normally handled.
+
+Please submit patches using subject lines reflecting the style for the
+subsystem, this makes it easier for people to identify relevant patches.
+Look at what existing commits in the area you're changing are doing and
+make sure your subject lines visually resemble what they're doing.
+There's no need to resubmit to fix this alone.
+
+--TB36FDmn/VVEgNH/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6LDVQACgkQJNaLcl1U
+h9At1Af9FC3z9FsNzTwUOLATMox+yRod2jIFEGJXPViju4E8V2EuoclTbhXAgNQ+
+HpPLozVdeSMKzCNs57EAKph0W6rKpkaGz5R9NliqRohe0OiQpnIhftVJMHawgqCl
+0e0hzX3E+R+1hOa6R2BDTdTHuA+xk2oni8V6w/MW4LVuZZ13fl2Pxa2y5dOdp+ER
+woZL3J56Q1b6NkKdYWyCMZgj/GfOb8FFVfC0Dp4BTQh0VO0V2KvwCdklmWXqYC8D
+kkHkggw+t/98qhSUrBu+L4FvXYwc17OzhJszkbJWGLoA83ogbf12Nqm4X2ftyteA
+p+R0xiHc+axQuwhe8ch0Ei0ZBAJxvg==
+=VqFs
+-----END PGP SIGNATURE-----
+
+--TB36FDmn/VVEgNH/--
