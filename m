@@ -2,166 +2,280 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96553C2BA17
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 16:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA97C2BA1E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 16:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC5724942
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 16:12:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586189545;
-	bh=GVYsMfinsR8g/zIfP0f+/JnCqupV0DlPI3YA/qjQXDQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zGUQubaYTvCnUROjSEX/uICBKvMDchnqPwYnSX65c9Tp85C4n8zu68UkQBwNbyVGZ
-	 iQSQh9geQNo7xE0IOIZ0pxsRexAj5KYRIB2grlSd5euNZKrxcq3/HtE5BdUSvkGsHq
-	 84Ltjx9IF38N6217euy8ohvpMFNOr6enaY4Sx7fc=
+	by mail.kernel.org (Postfix) with ESMTP id 7E223206C0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 16:19:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aqKQfC2j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbgDFQMY (ORCPT
+        id S1728902AbgDFQTm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:12:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42284 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729460AbgDFQMY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:12:24 -0400
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9AA624942;
-        Mon,  6 Apr 2020 16:12:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586189544;
-        bh=GVYsMfinsR8g/zIfP0f+/JnCqupV0DlPI3YA/qjQXDQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GR/zEuixadXHyK9EYI6p/14VWTYdRuxjwohtZp2qg156UQg20yk1N+EZ3DE5LtAVQ
-         tNBGlDZBV9IfY7WcTHU1VoyjEdHtX91s1aprUJbW7ZnWDcpXI/2PxLLRDX3uRDmrq8
-         6+Jb82i+rXAFL8lHmZmA4k7QBRi1LnPGe6Q6qnos=
-Received: by mail-yb1-f176.google.com with SMTP id a5so127951ybo.7;
-        Mon, 06 Apr 2020 09:12:23 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYHGaRKLV3wNSouBwY/T6CXxknznsQeStJbO9yJ3+TtU2r6Y9cT
-        vpoAk0mnNZDYlYyKVXKNM6fOsKMciA2++QtoQQ==
-X-Google-Smtp-Source: APiQypIYwpnlMa5Ygcs/VtizsI4ZStmf0I0qUuQo8f6ibr2ljHP/sSlm07OxHpCgUGHI4QHbGPm2cFzN94YqXmtWAnU=
-X-Received: by 2002:a25:b950:: with SMTP id s16mr35290019ybm.255.1586189543020;
- Mon, 06 Apr 2020 09:12:23 -0700 (PDT)
+        Mon, 6 Apr 2020 12:19:42 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46932 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728802AbgDFQTm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 12:19:42 -0400
+Received: by mail-pg1-f195.google.com with SMTP id k191so138748pgc.13;
+        Mon, 06 Apr 2020 09:19:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=oa630XzomU4aKMww5XPentv1Soe/ZbLABSO++PNFqs0=;
+        b=aqKQfC2j1EtWORNiX4VgxmMztGjb35unU4GdvAMFBwhin7sem4OKIy3z49zGwXOVfS
+         VpF6XarXErLaQsxPJ2rqcvnQZKNA14z1/xM3a4J/+Z/tOldiJBMpsLRExlldLq0mhzyy
+         IUkWeK+rSRD5JwJoEfMyz3nIHV5M8tl4y2j1yKrJ3f7c1NnyFnGGWi+OxUqJ2QlzY5VV
+         pEe/guSd252MxJRhFTEJocKAEPNjVk7n8RNPP3hEIogaeocCUyZs64H3uKOHBmBk0naT
+         D2gwTJDo8tX8XF9ep2t38ZjR5lHKuaYpA00JHRJKpzKbOwjAOIDSYcMZwZauhEaDJ/JW
+         +Yjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oa630XzomU4aKMww5XPentv1Soe/ZbLABSO++PNFqs0=;
+        b=j9jmTcT0ouwhNsle1lDecYIoVvaUrDk1IuD/f000pXXKFTmJQ40fdVto3mT/FnDEjo
+         32t/WxMS/IlRB86cbEWDBLO38or6Svf1Zjejm07r87VLZowFTfRyq/YCUum7exrpfwUq
+         f/wh8mLR+7HnUBUf36KHFY6wsxbRI27MM2Phsk6+g8dWJyk82VovPFOlAN1o8NqLrC/8
+         ipMrmeP333Sbn+J5C4Giq+oYtFbLl37K466N5msGe6SzLcbPvO2V8CY/OMmC39A1GCbm
+         oPQXD1xA9LSBypPkZ1CVoQM5XAY9oirqL+gQrX562qVsPLYwkh3WnXqoY0M/mBjQ51n+
+         onPQ==
+X-Gm-Message-State: AGi0PuYOsrD1djWqoyp7K001ay329Omp4IdXCDHZTBtN7p6h7s23VO4Z
+        1oKld4M8gvdFNU2w3mI+f+61H386F3MWlmhp5RE=
+X-Google-Smtp-Source: APiQypJU+5ObmGWWzP72qOYvrzN6MOlLYHJRMcoUevfMEqea7emG1qqaRhegC8m0z8uNHfnVVLeFLZhlLL3aAyMhlIg=
+X-Received: by 2002:a63:1d4:: with SMTP id 203mr9970690pgb.74.1586189978891;
+ Mon, 06 Apr 2020 09:19:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200326213251.54457-1-aford173@gmail.com> <20200405012847.GA5234@bogus>
- <CAHCN7xLoGUSOMtMC+uHMNbA+5MGT0dzTrwbL8J0RSMjmQ7G59g@mail.gmail.com>
-In-Reply-To: <CAHCN7xLoGUSOMtMC+uHMNbA+5MGT0dzTrwbL8J0RSMjmQ7G59g@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 6 Apr 2020 10:12:11 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL2F3_QPEgG89X_nNgcUDW1Q8tSPBbqVr319T5N0bBiSw@mail.gmail.com>
-Message-ID: <CAL_JsqL2F3_QPEgG89X_nNgcUDW1Q8tSPBbqVr319T5N0bBiSw@mail.gmail.com>
-Subject: Re: [RFC] clk: vc5: Add bindings for output configurations
-To:     Adam Ford <aford173@gmail.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        Adam Ford-BE <aford@beaconembedded.com>,
-        Charles Stevens <charles.stevens@logicpd.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200406150846.878-1-nuno.sa@analog.com> <20200406150846.878-6-nuno.sa@analog.com>
+In-Reply-To: <20200406150846.878-6-nuno.sa@analog.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 6 Apr 2020 19:19:31 +0300
+Message-ID: <CAHp75VeK8K0WHK3gDwyT3ZAaMaVdfZ5xVG94JY4O8fd2U0HEHg@mail.gmail.com>
+Subject: Re: [PATCH v4 5/6] iio: imu: Add support for adis16475
+To:     =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Apr 4, 2020 at 7:38 PM Adam Ford <aford173@gmail.com> wrote:
+On Mon, Apr 6, 2020 at 6:10 PM Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
 >
-> On Sat, Apr 4, 2020 at 8:28 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Thu, Mar 26, 2020 at 04:32:51PM -0500, Adam Ford wrote:
-> > > The Versaclock can be purchased in a non-programmed configuration.
-> > > If that is the case, the driver needs to configure the chip to
-> > > output the correct signal type, voltage and slew.
-> > >
-> > > This RFC is proposing an additional binding to allow non-programmed
-> > > chips to be configured beyond their default configuration.
-> > >
-> > > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-> > > index 05a245c9df08..4bc46ed9ba4a 100644
-> > > --- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-> > > +++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-> > > @@ -30,6 +30,25 @@ Required properties:
-> > >               - 5p49v5933 and
-> > >               - 5p49v5935: (optional) property not present or "clkin".
-> > >
-> > > +For all output ports, an option child node can be used to specify:
-> > > +
-> > > +- mode: can be one of
-> > > +               - LVPECL: Low-voltage positive/psuedo emitter-coupled logic
-> > > +               - CMOS
-> > > +               - HCSL
-> > > +               - LVDS: Low voltage differential signal
-> > > +
-> > > +- voltage-level:  can be one of the following microvolts
-> > > +               - 1800000
-> > > +               - 2500000
-> > > +               - 3300000
-> > > +-  slew: Percent of normal, can be one of
-> > > +               - P80
-> > > +               - P85
-> > > +               - P90
-> > > +               - P100
-> > > +
-> > > +
-> > >  ==Mapping between clock specifier and physical pins==
-> > >
-> > >  When referencing the provided clock in the DT using phandle and
-> > > @@ -62,6 +81,8 @@ clock specifier, the following mapping applies:
-> > >
-> > >  ==Example==
-> > >
-> > > +#include <dt-bindings/versaclock.h>
-> > > +
-> > >  /* 25MHz reference crystal */
-> > >  ref25: ref25m {
-> > >       compatible = "fixed-clock";
-> > > @@ -80,6 +101,13 @@ i2c-master-node {
-> > >               /* Connect XIN input to 25MHz reference */
-> > >               clocks = <&ref25m>;
-> > >               clock-names = "xin";
-> > > +
-> > > +             ports@1 {
-> >
-> > 'ports' is already taken as a node name.
-> Rob,
+> Support ADIS16475 and similar IMU devices. These devices are
+> a precision, miniature MEMS inertial measurement unit (IMU) that
+> includes a triaxial gyroscope and a triaxial accelerometer. Each
+> inertial sensor combines with signal conditioning that optimizes
+> dynamic performance.
 >
-> The clock chip can drive multiple clocks and each output is
-> independent of the rest.  The idea is that port@1 would represent
-> output 1, port@2 would represent output 2, etc.
-> Is there a name you'd think we should use to represent each output?
+> The driver adds support for the following devices:
+>  * adis16470, adis16475, adis16477, adis16465, adis16467, adis16500,
+>    adis16505, adis16507.
 
-clock-output@...?
+...
 
-> Different variations of this chip can have different number of
-> outputs.
->
-> >
-> > > +                     reg = <1>;
-> >
-> > What do the reg value signify?
->
-> I am fine if we drop we drop it. I was under the assumption that reg
-> =<1> had to correspond to the port@1 and that it was required since
-> other devices with port sub-nodes use the reg entry.
+> +       int i =3D ARRAY_SIZE(adis16475_3db_freqs);
+> +       int ret;
 
-I wasn't suggesting dropping it. Just what 0, 1, 2, etc. corresponds
-to as you explained above. Just put that into the 'reg' description.
+> +       while (--i)
+> +               if (adis16475_3db_freqs[i] >=3D filter)
+> +                       break;
 
-> > > +                     mode = <CMOS>;
-> > > +                     pwr_sel = <1800000>;
-> >
-> > Not documented. Don't use '-' in property names.
->
-> Do you have a preference to what name or convention you want us to use?
+Nit: perhaps {} to add.
 
-Errr, that was supposed to say '_'. Using hyphens is fine.
+...
 
-Also, needs a vendor prefix and if that's in microvolts needs a unit suffix.
+> +enum adis16475_variant {
+> +       ADIS16470,
+> +       ADIS16475_1,
+> +       ADIS16475_2,
+> +       ADIS16475_3,
+> +       ADIS16477_1,
+> +       ADIS16477_2,
+> +       ADIS16477_3,
+> +       ADIS16465_1,
+> +       ADIS16465_2,
+> +       ADIS16465_3,
+> +       ADIS16467_1,
+> +       ADIS16467_2,
+> +       ADIS16467_3,
+> +       ADIS16500,
+> +       ADIS16505_1,
+> +       ADIS16505_2,
+> +       ADIS16505_3,
+> +       ADIS16507_1,
+> +       ADIS16507_2,
+> +       ADIS16507_3,
 
-Rob
+> +
+
+Extra blank line.
+
+> +};
+
+...
+
+> +static void adis16475_burst32_check(struct adis16475 *st)
+> +{
+> +       int ret;
+> +       struct adis *adis =3D &st->adis;
+> +
+> +       if (!st->info->has_burst32)
+> +               return;
+> +
+> +       if (st->lsb_flag && !st->burst32) {
+> +               const u16 en =3D ADIS16500_BURST32(1);
+> +
+> +               ret =3D __adis_update_bits(&st->adis, ADIS16475_REG_MSG_C=
+TRL,
+> +                                        ADIS16500_BURST32_MASK, en);
+> +               if (ret)
+> +                       return;
+> +
+> +               st->burst32 =3D true;
+
++ Blank line.
+
+> +               /*
+> +                * In 32bit mode we need extra 2 bytes for all gyro
+
+32-bit
+
+> +                * and accel channels.
+> +                */
+> +               adis->burst_extra_len =3D 6 * sizeof(u16);
+> +               adis->xfer[1].len +=3D 6 * sizeof(u16);
+> +               dev_dbg(&adis->spi->dev, "Enable burst32 mode, xfer:%d",
+> +                       adis->xfer[1].len);
+> +
+> +       } else if (!st->lsb_flag && st->burst32) {
+> +               const u16 en =3D ADIS16500_BURST32(0);
+> +
+> +               ret =3D __adis_update_bits(&st->adis, ADIS16475_REG_MSG_C=
+TRL,
+> +                                        ADIS16500_BURST32_MASK, en);
+> +               if (ret)
+> +                       return;
+> +
+> +               st->burst32 =3D false;
+
++ Blank line
+
+> +               /* Remove the extra bits */
+> +               adis->burst_extra_len =3D 0;
+> +               adis->xfer[1].len -=3D 6 * sizeof(u16);
+> +               dev_dbg(&adis->spi->dev, "Disable burst32 mode, xfer:%d\n=
+",
+> +                       adis->xfer[1].len);
+> +       }
+> +}
+
+...
+
+> +       for_each_set_bit(bit, indio_dev->active_scan_mask,
+> +                        indio_dev->masklength) {
+
+One line?
+
+> +                               if (st->lsb_flag && !st->info->has_burst3=
+2) {
+> +                                       u16 val =3D 0;
+
+> +                                       const u32 reg =3D ADIS16475_REG_X=
+_GYRO_L +
+> +                                               (bit * 4);
+
+Redundant parentheses.
+
+> +                                       adis_read_reg_16(adis, reg, &val)=
+;
+> +                                       data[i++] =3D cpu_to_be16(val);
+> +                               } else {
+> +                                       /* lower not used */
+> +                                       data[i++] =3D 0;
+> +                               }
+> +                       }
+> +                       break;
+> +               }
+> +       }
+
+...
+
+> +               if (sync->sync_mode =3D=3D ADIS16475_SYNC_SCALED) {
+> +                       u16 up_scale;
+> +                       u32 scaled_out_freq =3D 0;
+> +                       /*
+> +                        * If we are in scaled mode, we must have an up_s=
+cale.
+> +                        * In scaled mode the allowable input clock range=
+ is
+> +                        * 1 Hz to 128 Hz, and the allowable output range=
+ is
+> +                        * 1900 to 2100 Hz. Hence, a scale must be given =
+to
+> +                        * get the allowable output.
+> +                        */
+> +                       device_property_read_u32(dev, "adi,scaled-output-=
+hz",
+> +                                                &scaled_out_freq);
+> +
+> +                       if (scaled_out_freq < 1900 || scaled_out_freq > 2=
+100) {
+> +                               dev_err(dev,
+> +                                       "Invalid value:%u for adi,scaled-=
+output-hz",
+> +                                       scaled_out_freq);
+
+When there is no property or property has a value 0 this message can't
+tell the difference.
+Perhaps you have to check return code from device_property_read_u32() call.
+
+> +                               return -EINVAL;
+> +                       }
+
+> +               }
+
+...
+
+> +       /*
+> +        * It is possible to configure the data ready polarity. Furthermo=
+re, we
+> +        * need to update the adis struct if we want data ready as active=
+ low.
+> +        */
+> +       irq_type =3D irqd_get_trigger_type(desc);
+> +       if (irq_type =3D=3D IRQF_TRIGGER_RISING) {
+> +               polarity =3D 1;
+> +       } else if (irq_type =3D=3D IRQF_TRIGGER_FALLING) {
+> +               polarity =3D 0;
+> +               st->adis.irq_flag =3D IRQF_TRIGGER_FALLING;
+> +       } else {
+> +               dev_err(&spi->dev, "Invalid interrupt type 0x%x specified=
+\n",
+> +                       irq_type);
+> +               return -EINVAL;
+> +       }
+
+Here is the problem. You got type, but you compare it to flags. It's
+not correct.
+Although values are the same, the meaning is different.
+
+--
+With Best Regards,
+Andy Shevchenko
