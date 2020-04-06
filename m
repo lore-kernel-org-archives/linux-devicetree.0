@@ -2,146 +2,102 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F29C7C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 15:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AACCC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 15:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C20012487C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 15:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6611624880
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 15:06:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbgDFPGa (ORCPT
+        id S1728800AbgDFPG6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 11:06:30 -0400
-Received: from mga14.intel.com ([192.55.52.115]:4461 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728695AbgDFPGa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Apr 2020 11:06:30 -0400
-IronPort-SDR: IpCH46fnrgIwOj0Uw5Z8/PBPcL309qndtdiBx0TUyB8iMunWD++KxLucXS1rePGTrOd9LZgXvH
- cbgA0L82J9+A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 08:06:28 -0700
-IronPort-SDR: mqw7ycFAc1LmPAC67DPTqIPgVgTjHFH2j8p8RoZfwndcKlL/z+tEfGOZN1CLbTbI2F7YfryUZ/
- sRgsmN8ohpTA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,351,1580803200"; 
-   d="scan'208";a="450862810"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 06 Apr 2020 08:06:23 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jLTKU-00GCiI-8A; Mon, 06 Apr 2020 18:06:26 +0300
-Date:   Mon, 6 Apr 2020 18:06:26 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 2/3] media: ov8856: Add devicetree support
-Message-ID: <20200406150626.GW3676135@smile.fi.intel.com>
-References: <20200331133346.372517-1-robert.foss@linaro.org>
- <20200331133346.372517-3-robert.foss@linaro.org>
- <CAHp75VfFKY6nzb8aEWmop73v2haZ0P5+aTsKDEU8M=uUPn0u3g@mail.gmail.com>
- <CAG3jFyuH5Kad16R7Oit-c_7RasiEfPycOpA68JYLVopbyQ749w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG3jFyuH5Kad16R7Oit-c_7RasiEfPycOpA68JYLVopbyQ749w@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Mon, 6 Apr 2020 11:06:58 -0400
+Received: from outgoing15.flk.host-h.net ([197.242.87.49]:57293 "EHLO
+        outgoing15.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728685AbgDFPG6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 11:06:58 -0400
+X-Greylist: delayed 4351 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 Apr 2020 11:06:57 EDT
+Received: from www31.flk1.host-h.net ([188.40.1.173])
+        by antispam4-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1jLSCk-0002PP-Tr; Mon, 06 Apr 2020 15:54:24 +0200
+Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
+        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1jLSCh-0003gd-WD; Mon, 06 Apr 2020 15:54:20 +0200
+From:   Justin Swartz <justin.swartz@risingedge.co.za>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: remove disable-wp from rk3229-xms6 emmc
+Date:   Mon,  6 Apr 2020 13:50:05 +0000
+Message-Id: <20200406135006.23759-2-justin.swartz@risingedge.co.za>
+In-Reply-To: <e602c1b8-3606-a8d3-c64c-ec9e58315974@gmail.com>
+References: <e602c1b8-3606-a8d3-c64c-ec9e58315974@gmail.com>
+X-Authenticated-Sender: justin.swartz@risingedge.co.za
+X-Virus-Scanned: Clear
+X-Originating-IP: 188.40.1.173
+X-SpamExperts-Domain: risingedge.co.za
+X-SpamExperts-Username: 
+Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: Combined (0.02)
+X-Recommended-Action: accept
+X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0VxB0mWeGZk2wSOLROvd+japSDasLI4SayDByyq9LIhVMzIT/cdpaPXn
+ 8mlmYDKPTUTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
+ mAX8Bxy/iUu0ThNZg0jxJtcVJProrT987X1VDPOqN+OoDzRTdku7DidYUZdNf38Sp7Of4wP429AA
+ f49baR+f3He7jw4SoVhmTJ/3eP9ORQWVx8ds1M4qmk3/bYr2p8zbg4Paoa3pNVQ0zl7t/+UfQLYB
+ qEPnp1U88kqVD8AM2G81dFO0E3gi+MOI1foZYzDggRXhpvoPtF3cVkniFXU3qJSqpdJudO6+rkiw
+ E5i8Wl78Q18OeOfsy4h7jF1Uv9lnibl3vcBqVmvQB4A18acGxkU6APd/2A0Kw7VphYofAVXirbLu
+ Jjy3NtnGWLbnBGfrUBEXB2fYGLNieGQuoHtJvp0r29Rf3ZjFwL+MhHEWw/0qBlNDp8uABz3dkWV+
+ tnlsqEID1rwhWix/EYFNtp1TycYLFeAN4+MGwnsp7SkU6CLbyF0Zq4b1/7rjUzETJrWks4pbbQJq
+ 6gWopI3ep45X19ZysgQ+31LcAX8eoFXAhohfegXGH2GIVQVglJFbK771YV8YbC29CtmpcTqTfSIf
+ CWq9oj7OiT8GwpAriB+3/81I3rvR8KJ2fK9jiDYgijyqqY0rATpzHKGfmtNsYTr4SmDZ/bGW8xZC
+ RRs6ZD24UhFcZZEpLhnBCwImTQNvxaLyCc35VA7RvW/HGiGqxL09Cymermt8NAa/gGopT3kKfO4C
+ gvcKmV0o9jYzsFpuc43pp/LzIs3ornuRuAAdgrkq+6l7ZLNYJcf7Z6PCydDzoYZgInuDxgFOs7AZ
+ TwbwMdGiAezOfJNnrbxp9qi+/W68d5545dki9+vnsnnTQ8Wq38NrFoXSENXH6UXfnav35JPA4YfM
+ 6tBkXsqvKY6zoLLTPpuFqUUQz+mM8JAD4ECWNo09vb0YLIRnK477e9Xake5PIWKjIXX7qe2zOXoS
+ foz/k0KmhMm/d7m9QAUl+M6tQhYDNj8G8czrGYe1tD5Uy2bjO41FyBEqIaDudcVplPE6wCr6GXU1
+ lCw88ijyus1sGnWknJqS8gGhNQxpB5P3qu7c1xMljx2PG/R+pKBSKy8hXOgvE1zSS7XUhkYEQYeb
+ 3jR5NeVaJQBh0uawl0Cg8j+knAzOA9mmoJvkuhKHiekUuskYaI6ERCKp8gXWqnT9kLHhStr5fiGK
+ 7KncpWELuTEvuGslKTrRIXcXpFg5ivY=
+X-Report-Abuse-To: spam@antispammaster.host-h.net
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 03:37:24PM +0200, Robert Foss wrote:
-> On Tue, 31 Mar 2020 at 16:01, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > On Tue, Mar 31, 2020 at 4:36 PM Robert Foss <robert.foss@linaro.org> wrote:
+Remove the disable-wp attribute from &emmc as it is, according to
+Documentation/devicetree/bindings/mmc/mmc-controller.yaml:
 
-...
+    "Not used in combination with eMMC or SDIO."
 
-> > > +       if (ret < 0) {
-> >
-> > Do you need all ' < 0' parts all over the series?
-> 
-> Some checks are needed due to ACPI and DT support co-existing.
-> Maybe it would be better to just split the probing into an ACPI path
-> and a DT path.
-> 
-> I'll have a look through the series for redundant retval checks.
+Suggested-by: Johan Jonker <jbx6244@gmail.com>
+Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+---
+ arch/arm/boot/dts/rk3229-xms6.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-Drop where it is redundant.
-
-...
-
-> > > -       ret = fwnode_property_read_u32(fwnode, "clock-frequency", &mclk);
-> > > -       if (ret)
-> > > -               return ret;
-> >
-> > Where is it gone? Why?
-> 
-> It was replaced by a clk_get_rate call, which as Sakari pointed out,
-> isn't correct.
-> I'll rework the clock handling for v4.
-
-If it was in the driver it should stay -- properties is an ABI (between firmware and kernel).
-
-> > > +       ov8856->xvclk = devm_clk_get_optional(dev, "xvclk");
-> > > +       if (IS_ERR(ov8856->xvclk)) {
-> >
-> > > +               dev_err(dev, "could not get xvclk clock (%ld)\n",
-> > > +                       PTR_ERR(ov8856->xvclk));
-> >
-> > Also you may use %pe here and in similar cases.
-> 
-> Weirdly checkpatch complains about this.
-> But it builds and runs cleanly, so I'll add it in v4.
-
-%pe requires pointer, PTR_ERR converts pointer to integer.
-
-...
-
-> > > +       ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ov8856_supply_names),
-> > > +                                     ov8856->supplies);
-> > > +       if (ret) {
-> >
-> > > +               dev_warn(dev, "failed to get regulators\n");
-> >
-> > If it's a warning, why we return from here?
-> > Same question to all other places with same issue.
-> 
-> The issue I was seeing was the driver having to return a EDEFER here,
-> so this warning sheds some light on which exact component is returning
-> an EDEFER.
-> 
-> [   15.962623] ov8856 16-0010: Dropping the link to regulator.29
-> [   15.968464] ov8856 16-0010: failed to get regulators
-> [   15.973493] ov8856 16-0010: failed to get HW configuration: -517
-> [   15.979591] ov8856 16-0010: removing from PM domain titan_top_gdsc
-> [   15.985855] ov8856 16-0010: genpd_remove_device()
-> [   15.990672] i2c 16-0010: Driver ov8856 requests probe deferral
-> 
-> Personally I found it helpful to speed up debugging, but I'll happily
-> remove it if you prefer no warning.
-
-My point is that you have it in align:
- - if it is an error, print as an error and bail out, otherwise
- - if it is a warning, print it and continue.
-
-> > > +               return ret;
-> > >         }
-
+diff --git a/arch/arm/boot/dts/rk3229-xms6.dts b/arch/arm/boot/dts/rk3229-xms6.dts
+index 6890af0b7..e75624d46 100644
+--- a/arch/arm/boot/dts/rk3229-xms6.dts
++++ b/arch/arm/boot/dts/rk3229-xms6.dts
+@@ -137,7 +137,6 @@
+ 
+ &emmc {
+ 	cap-mmc-highspeed;
+-	disable-wp;
+ 	non-removable;
+ 	status = "okay";
+ };
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.11.0
 
