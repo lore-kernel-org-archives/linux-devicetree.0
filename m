@@ -2,33 +2,42 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E3DC2BA1E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 16:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597EDC2BA17
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 16:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B07524990
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 16:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E164248BF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 16:51:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbgDFQnS (ORCPT
+        id S1729579AbgDFQvQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:43:18 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:57420 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729533AbgDFQnR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 12:43:17 -0400
-X-IronPort-AV: E=Sophos;i="5.72,351,1580742000"; 
-   d="scan'208";a="43857586"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 07 Apr 2020 01:43:16 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 8C21240065D4;
-        Tue,  7 Apr 2020 01:43:12 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mon, 6 Apr 2020 12:51:16 -0400
+Received: from mga04.intel.com ([192.55.52.120]:56820 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729331AbgDFQvQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Apr 2020 12:51:16 -0400
+IronPort-SDR: duF6fNvmuIy3p1pe0XWqMt8R91hjqWKX19Hj+K8kJ2c5XXPtr6MjDXWvxnsyH4IqPqtuwsm89s
+ +nwKpuX+XW5g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 09:51:16 -0700
+IronPort-SDR: kjCiRUBms6Oudl08kIgmjRJ8yJFiqdbX9CskZ1NCkQPkJ5tiWYY/FBE+/gJesUjKh8ZqsLOOJZ
+ Hi9KN4lWORPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,351,1580803200"; 
+   d="scan'208";a="452131333"
+Received: from unknown (HELO kekkonen.fi.intel.com) ([10.252.48.155])
+  by fmsmga006.fm.intel.com with ESMTP; 06 Apr 2020 09:51:11 -0700
+Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
+        id B273921D18; Mon,  6 Apr 2020 19:51:08 +0300 (EEST)
+Date:   Mon, 6 Apr 2020 19:51:08 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -37,223 +46,46 @@ To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         linux-media@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v5 5/5] media: dt-bindings: media: i2c: convert ov5645 bindings to json-schema
-Date:   Mon,  6 Apr 2020 17:42:41 +0100
-Message-Id: <1586191361-16598-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency
+ dt-property
+Message-ID: <20200406165108.GA7646@kekkonen.localdomain>
 References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert ov5645 bindings to json-schema.
+Hi Prabhakar,
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- .../devicetree/bindings/media/i2c/ov5645.txt  |  52 --------
- .../devicetree/bindings/media/i2c/ov5645.yaml | 126 ++++++++++++++++++
- 2 files changed, 126 insertions(+), 52 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.yaml
+On Mon, Apr 06, 2020 at 05:42:38PM +0100, Lad Prabhakar wrote:
+> Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
+> as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
+> 24MHz. So instead making clock-frequency as dt-property just let the
+> driver enforce the required clock frequency.
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-deleted file mode 100644
-index a55bb728ea48..000000000000
---- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-+++ /dev/null
-@@ -1,52 +0,0 @@
--* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
--
--The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
--an active array size of 2592H x 1944V. It is programmable through a serial I2C
--interface.
--
--Required Properties:
--- compatible: Value should be "ovti,ov5645".
--- clocks: Reference to the xclk clock.
--- clock-names: Should be "xclk".
--- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
--  to the hardware pin PWDNB which is physically active low.
--- reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
--  the hardware pin RESETB.
--- vdddo-supply: Chip digital IO regulator.
--- vdda-supply: Chip analog regulator.
--- vddd-supply: Chip digital core regulator.
--
--The device node must contain one 'port' child node for its digital output
--video port, in accordance with the video interface bindings defined in
--Documentation/devicetree/bindings/media/video-interfaces.txt.
--
--Example:
--
--	&i2c1 {
--		...
--
--		ov5645: ov5645@3c {
--			compatible = "ovti,ov5645";
--			reg = <0x3c>;
--
--			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
--			reset-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
--			pinctrl-names = "default";
--			pinctrl-0 = <&camera_rear_default>;
--
--			clocks = <&clks 200>;
--			clock-names = "xclk";
--
--			vdddo-supply = <&camera_dovdd_1v8>;
--			vdda-supply = <&camera_avdd_2v8>;
--			vddd-supply = <&camera_dvdd_1v2>;
--
--			port {
--				ov5645_ep: endpoint {
--					clock-lanes = <1>;
--					data-lanes = <0 2>;
--					remote-endpoint = <&csi0_ep>;
--				};
--			};
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.yaml b/Documentation/devicetree/bindings/media/i2c/ov5645.yaml
-new file mode 100644
-index 000000000000..d5cdcf9a1c76
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov5645.yaml
-@@ -0,0 +1,126 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/i2c/ov5645.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Omnivision 1/4-Inch 5MP CMOS Digital Image Sensor
-+
-+maintainers:
-+  - Sakari Ailus <sakari.ailus@linux.intel.com>
-+  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-+
-+description: |-
-+ The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
-+ an active array size of 2592H x 1944V. It is programmable through a serial I2C
-+ interface.
-+
-+properties:
-+  compatible:
-+    const: ovti,ov5645
-+
-+  reg:
-+    description: I2C device address
-+    maxItems: 1
-+
-+  clocks:
-+    description: External clock frequency should range between 6MHz to 27MHz.
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: xclk
-+
-+  enable-gpios:
-+    description: |-
-+      Chip enable GPIO. This corresponds to the hardware pin PWDNB which is
-+      physically active low.
-+
-+  reset-gpios:
-+    description: Chip reset GPIO. This corresponds to the hardware pin RESETB.
-+
-+  vdddo-supply:
-+    description: Chip digital IO regulator.
-+
-+  vdda-supply:
-+    description: Chip analog regulator.
-+
-+  vddd-supply:
-+    description: Chip digital core regulator.
-+
-+  # See ../video-interfaces.txt for more details
-+  port:
-+    type: object
-+    properties:
-+      endpoint:
-+        type: object
-+
-+        properties:
-+          data-lanes:
-+            description: |-
-+              The sensor supports either one-lane, or two-lane operation.
-+              For one-lane operation the property must be set to <1> and
-+              for two-lane operation the property must be set to <1 2>.
-+            items:
-+              - const: 1
-+              - const: 2
-+
-+          clock-lanes:
-+            description:
-+              should be set to <0> (clock lane on hardware lane 0).
-+            items:
-+              - const: 0
-+
-+          remote-endpoint: true
-+
-+        required:
-+          - data-lanes
-+          - clock-lanes
-+          - remote-endpoint
-+
-+        additionalProperties: false
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - enable-gpios
-+  - reset-gpios
-+  - vdddo-supply
-+  - vdda-supply
-+  - vddd-supply
-+  - port
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        ov5645: sensor@3c {
-+            compatible = "ovti,ov5645";
-+            reg = <0x3c>;
-+            clocks = <&ov5645_cl>;
-+            clock-names = "xclk";
-+            enable-gpios = <&gpio1 6 /* GPIO_ACTIVE_HIGH */>;
-+            reset-gpios = <&gpio5 20 /* GPIO_ACTIVE_LOW */>;
-+            vdddo-supply = <&camera_dovdd_1v8>;
-+            vdda-supply = <&camera_avdd_2v8>;
-+            vddd-supply = <&camera_dvdd_1v2>;
-+
-+            port {
-+                ov5645_0: endpoint {
-+                    remote-endpoint = <&csi1_ep>;
-+                    clock-lanes = <0>;
-+                    data-lanes = <1 2>;
-+                };
-+            };
-+        };
-+    };
-+
-+...
+Even if some current systems where the driver is used are using 24 MHz
+clock, that doesn't mean there wouldn't be systems using another frequency
+that the driver does not support right now.
+
+The driver really should not set the frequency unless it gets it from DT,
+but I think the preferred means is to use assigned-clock-rates instead, and
+not to involve the driver with setting the frequency.
+
+Otherwise we'll make it impossible to support other frequencies, at least
+without more or less random defaults.
+
 -- 
-2.20.1
+Kind regards,
 
+Sakari Ailus
