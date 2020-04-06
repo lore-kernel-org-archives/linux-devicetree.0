@@ -2,415 +2,170 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49974C2D0F4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 03:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9911AC2BA18
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 05:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0984920738
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 03:12:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WK7xXiqW"
+	by mail.kernel.org (Postfix) with ESMTP id 636892074F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 05:10:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgDFDMT (ORCPT
+        id S1725884AbgDFFKk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Apr 2020 23:12:19 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:50354 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbgDFDMT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Apr 2020 23:12:19 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0363C1hx039475;
-        Sun, 5 Apr 2020 22:12:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1586142721;
-        bh=5+uIOWq+uFl9X9POMGiqgAuePuquyXGQ334ci5pc7HA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=WK7xXiqWD3SAggRcCmfwGLXqJrc1MimMcJ2xf7fj4gIhtqRLYtlY3dkZLc7rPYkYS
-         noosQBt9jXgS03dI7TZa1xHaBt/HtQxXZidtC8zLvTHpZ8p5ebDlnmZ8h/pa9rHwnm
-         /Krcagpzpi1qAvwT7FfjIas5niPtEz7Mq+VIsDNY=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0363C1mI016283
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 5 Apr 2020 22:12:01 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 5 Apr
- 2020 22:12:01 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Sun, 5 Apr 2020 22:12:01 -0500
-Received: from [10.250.133.125] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0363Bv5M040701;
-        Sun, 5 Apr 2020 22:11:58 -0500
-Subject: Re: [PATCH v5 2/4] thermal: k3: Add support for bandgap sensors
-To:     <rui.zhang@intel.com>, <robh+dt@kernel.org>,
-        <daniel.lezcano@linaro.org>
-CC:     <amit.kucheria@verdurent.com>, <t-kristo@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <mark.rutland@arm.com>
-References: <20200331075356.19171-1-j-keerthy@ti.com>
- <20200331075356.19171-3-j-keerthy@ti.com>
-From:   "J, KEERTHY" <j-keerthy@ti.com>
-Message-ID: <72c40d7b-32b9-ba5b-a56c-a30733f6c03b@ti.com>
-Date:   Mon, 6 Apr 2020 08:41:56 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 6 Apr 2020 01:10:40 -0400
+Received: from mailgate1.rohmeurope.com ([87.129.152.131]:45428 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgDFFKk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 01:10:40 -0400
+X-AuditID: c0a8fbf4-489ff70000004419-ec-5e8ab9ce1081
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id D2.0C.17433.EC9BA8E5; Mon,  6 Apr 2020 07:10:38 +0200 (CEST)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0487.000; Mon, 6 Apr 2020 07:10:27 +0200
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>
+Subject: Re: [RESEND PATCH v2] dt-bindings: bd718x7: Yamlify and add BD71850
+Thread-Topic: [RESEND PATCH v2] dt-bindings: bd718x7: Yamlify and add BD71850
+Thread-Index: AQHV/pvo719qMCop60OzVH3qQk0yrqhpLk2AgAAAc4CAAlXrgA==
+Date:   Mon, 6 Apr 2020 05:10:27 +0000
+Message-ID: <5963a34e3ebaada7cc6ec786f6f2342a7cc2a15c.camel@fi.rohmeurope.com>
+References: <20200320094233.GA30959@localhost.localdomain>
+         <CAL_JsqJjLGz6LPQmTP5eJTdti38yQa86UWiwCTae81Fr7eMHtA@mail.gmail.com>
+         <CAL_JsqJ2VBDHSWViyvjEBckOqsMQVUdOGjABH0AT6LiaMnJx1Q@mail.gmail.com>
+In-Reply-To: <CAL_JsqJ2VBDHSWViyvjEBckOqsMQVUdOGjABH0AT6LiaMnJx1Q@mail.gmail.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [62.78.225.252]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0467FE60C05919409064C16A5803CD2B@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20200331075356.19171-3-j-keerthy@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgk+LIzCtJLcpLzFFi42I5sOL3Rt1zO7viDF78V7KY+vAJm8X8I+dY
+        Le5/Pcpo8e1KB5PF5V1z2CyWXr/IZDFn6QkWi9a9R9gdODzWzFvD6LFz1l12j02rOtk87lzb
+        w+bxeZNcAGsUt01SYklZcGZ6nr5dAndGz8e/7AVd1hVHj95lb2A8YdnFyMkhIWAi8aZzLlsX
+        IxeHkMA1Rom/jw+zQDjHGSVW7LrG3sXIwcEmYCPRdZMdpEFEQFdi/+EnTCA1zAKfmSROLtjG
+        ClIjLOAj0fk2HqLGV+Lbj4dMELaTxLkFd8BsFgEViU/tf9hAynkF/CT6nvpArDrFKLH102VG
+        kBpOgUCJ2wdADuLkYBSQlehseAfWyywgLrHp2XdWiKMFJJbsOc8MYYtKvHz8DyquKLH9+zoW
+        kPnMApoS63fpQ7Q6SExd+ZMNwlaUmNL9EOwVXgFBiZMzn7BMYBSbhWTDLITuWUi6ZyHpnoWk
+        ewEj6ypGidzEzJz0xJJUQ72i1FK9ovyMXCCVnJ+7iRESs192MP4/5HmIkYmD8RCjJAeTkiiv
+        zY6uOCG+pPyUyozE4oz4otKc1OJDjBIczEoivFK9nXFCvCmJlVWpRfkwKWkOFiVxXvWHE2OF
+        BEB2ZaemFqQWwWRlODiUJHjrgOlHSLAoNT21Ii0zpwQhzcTBCTKcS0qkODUvJbUosbQkIx6U
+        POKLgekDJMUDtPf1dqB23uKCxFygKETrKUZtjgkv5y5i5jgyd+kiZiGWvPy8VClxXn6QTQIg
+        pRmleXCLXjGKczAqCfNmggziASZvuDmvgFYwAa1gy2sHWVGSiJCSamBsveFloplx3WfH56p0
+        tpjf/ybu7WRY4VRx+5xyA/uv2PaNndbbpK4dYLj47H7P4oSzgnYsSjPtnXYZHrx1q8z0lHbO
+        DLGM9IK9nfbKkte4Hjn8WbT1p21o/73ArL/BNscZ+J7eDMiQ9neIUXBlexkhuHLF5EnlLnOE
+        90zYPeGJWsF0q5ULXsxTYinOSDTUYi4qTgQA8IPTkZsDAAA=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 3/31/2020 1:23 PM, Keerthy wrote:
-> The bandgap provides current and voltage reference for its internal
-> circuits and other analog IP blocks. The analog-to-digital
-> converter (ADC) produces an output value that is proportional
-> to the silicon temperature.
-> 
-> Currently reading temperatures only is supported.
-> There are no active/passive cooling agent supported.
-
-Daniel,
-
-Let me kow if there are further comments to be addressed.
-
-Regards,
-Keerthy
-
-> 
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> ---
-> 
-> Changes in v5:
-> 
->    * Removed thermal work function which was unused.
->    * Removed unused preve_tenmp and a couple more struct variables.
->    * Removed couple of redundant header function include.
-> 
->   drivers/thermal/Kconfig      |  10 ++
->   drivers/thermal/Makefile     |   1 +
->   drivers/thermal/k3_bandgap.c | 268 +++++++++++++++++++++++++++++++++++
->   3 files changed, 279 insertions(+)
->   create mode 100644 drivers/thermal/k3_bandgap.c
-> 
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 5a05db5438d6..1df434527f8d 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -251,6 +251,16 @@ config IMX_THERMAL
->   	  cpufreq is used as the cooling device to throttle CPUs when the
->   	  passive trip is crossed.
->   
-> +config K3_THERMAL
-> +	tristate "Texas Instruments K3 thermal support"
-> +	depends on ARCH_K3 || COMPILE_TEST
-> +	help
-> +	  If you say yes here you get thermal support for the Texas Instruments
-> +	  K3 SoC family. The current chip supported is:
-> +	   - AM654
-> +
-> +	  This includes temperature reading functionality.
-> +
->   config MAX77620_THERMAL
->   	tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
->   	depends on MFD_MAX77620
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index 9fb88e26fb10..5ad6535139ae 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -28,6 +28,7 @@ thermal_sys-$(CONFIG_CLOCK_THERMAL)	+= clock_cooling.o
->   # devfreq cooling
->   thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
->   
-> +obj-$(CONFIG_K3_THERMAL)	+= k3_bandgap.o
->   # platform thermal drivers
->   obj-y				+= broadcom/
->   obj-$(CONFIG_THERMAL_MMIO)		+= thermal_mmio.o
-> diff --git a/drivers/thermal/k3_bandgap.c b/drivers/thermal/k3_bandgap.c
-> new file mode 100644
-> index 000000000000..1d976af4461a
-> --- /dev/null
-> +++ b/drivers/thermal/k3_bandgap.c
-> @@ -0,0 +1,268 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * TI Bandgap temperature sensor driver for K3 SoC Family
-> + *
-> + * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/err.h>
-> +#include <linux/types.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/io.h>
-> +#include <linux/thermal.h>
-> +#include <linux/of.h>
-> +
-> +#define K3_VTM_DEVINFO_PWR0_OFFSET		0x4
-> +#define K3_VTM_DEVINFO_PWR0_CVD_CT_MASK	0xf
-> +#define K3_VTM_DEVINFO_PWR0_TEMPSENS_CT_MASK	0xf0
-> +#define K3_VTM_TMPSENS0_CTRL_OFFSET	0x80
-> +#define K3_VTM_REGS_PER_TS			0x10
-> +#define K3_VTM_TS_STAT_DTEMP_MASK	0x3ff
-> +#define K3_VTM_MAX_NUM_TS		8
-> +#define K3_VTM_TMPSENS_CTRL_CBIASSEL	BIT(0)
-> +#define K3_VTM_TMPSENS_CTRL_SOC		BIT(5)
-> +#define K3_VTM_TMPSENS_CTRL_CLRZ		BIT(6)
-> +#define K3_VTM_TMPSENS_CTRL_CLKON_REQ	BIT(7)
-> +
-> +#define K3_VTM_ADC_BEGIN_VAL		540
-> +#define K3_VTM_ADC_END_VAL		944
-> +
-> +static const int k3_adc_to_temp[] = {
-> +	-40000, -40000, -40000, -40000, -39800, -39400, -39000, -38600, -38200,
-> +	-37800, -37400, -37000, -36600, -36200, -35800, -35300, -34700, -34200,
-> +	-33800, -33400, -33000, -32600, -32200, -31800, -31400, -31000, -30600,
-> +	-30200, -29800, -29400, -29000, -28600, -28200, -27700, -27100, -26600,
-> +	-26200, -25800, -25400, -25000, -24600, -24200, -23800, -23400, -23000,
-> +	-22600, -22200, -21800, -21400, -21000, -20500, -19900, -19400, -19000,
-> +	-18600, -18200, -17800, -17400, -17000, -16600, -16200, -15800, -15400,
-> +	-15000, -14600, -14200, -13800, -13400, -13000, -12500, -11900, -11400,
-> +	-11000, -10600, -10200, -9800, -9400, -9000, -8600, -8200, -7800, -7400,
-> +	-7000, -6600, -6200, -5800, -5400, -5000, -4500, -3900, -3400, -3000,
-> +	-2600, -2200, -1800, -1400, -1000, -600, -200, 200, 600, 1000, 1400,
-> +	1800, 2200, 2600, 3000, 3400, 3900, 4500, 5000, 5400, 5800, 6200, 6600,
-> +	7000, 7400, 7800, 8200, 8600, 9000, 9400, 9800, 10200, 10600, 11000,
-> +	11400, 11800, 12200, 12700, 13300, 13800, 14200, 14600, 15000, 15400,
-> +	15800, 16200, 16600, 17000, 17400, 17800, 18200, 18600, 19000, 19400,
-> +	19800, 20200, 20600, 21000, 21400, 21900, 22500, 23000, 23400, 23800,
-> +	24200, 24600, 25000, 25400, 25800, 26200, 26600, 27000, 27400, 27800,
-> +	28200, 28600, 29000, 29400, 29800, 30200, 30600, 31000, 31400, 31900,
-> +	32500, 33000, 33400, 33800, 34200, 34600, 35000, 35400, 35800, 36200,
-> +	36600, 37000, 37400, 37800, 38200, 38600, 39000, 39400, 39800, 40200,
-> +	40600, 41000, 41400, 41800, 42200, 42600, 43100, 43700, 44200, 44600,
-> +	45000, 45400, 45800, 46200, 46600, 47000, 47400, 47800, 48200, 48600,
-> +	49000, 49400, 49800, 50200, 50600, 51000, 51400, 51800, 52200, 52600,
-> +	53000, 53400, 53800, 54200, 54600, 55000, 55400, 55900, 56500, 57000,
-> +	57400, 57800, 58200, 58600, 59000, 59400, 59800, 60200, 60600, 61000,
-> +	61400, 61800, 62200, 62600, 63000, 63400, 63800, 64200, 64600, 65000,
-> +	65400, 65800, 66200, 66600, 67000, 67400, 67800, 68200, 68600, 69000,
-> +	69400, 69800, 70200, 70600, 71000, 71500, 72100, 72600, 73000, 73400,
-> +	73800, 74200, 74600, 75000, 75400, 75800, 76200, 76600, 77000, 77400,
-> +	77800, 78200, 78600, 79000, 79400, 79800, 80200, 80600, 81000, 81400,
-> +	81800, 82200, 82600, 83000, 83400, 83800, 84200, 84600, 85000, 85400,
-> +	85800, 86200, 86600, 87000, 87400, 87800, 88200, 88600, 89000, 89400,
-> +	89800, 90200, 90600, 91000, 91400, 91800, 92200, 92600, 93000, 93400,
-> +	93800, 94200, 94600, 95000, 95400, 95800, 96200, 96600, 97000, 97500,
-> +	98100, 98600, 99000, 99400, 99800, 100200, 100600, 101000, 101400,
-> +	101800, 102200, 102600, 103000, 103400, 103800, 104200, 104600, 105000,
-> +	105400, 105800, 106200, 106600, 107000, 107400, 107800, 108200, 108600,
-> +	109000, 109400, 109800, 110200, 110600, 111000, 111400, 111800, 112200,
-> +	112600, 113000, 113400, 113800, 114200, 114600, 115000, 115400, 115800,
-> +	116200, 116600, 117000, 117400, 117800, 118200, 118600, 119000, 119400,
-> +	119800, 120200, 120600, 121000, 121400, 121800, 122200, 122600, 123000,
-> +	123400, 123800, 124200, 124600, 124900, 125000,
-> +};
-> +
-> +struct k3_bandgap {
-> +	void __iomem *base;
-> +	const struct k3_bandgap_data *conf;
-> +};
-> +
-> +/* common data structures */
-> +struct k3_thermal_data {
-> +	struct thermal_zone_device *ti_thermal;
-> +	struct k3_bandgap *bgp;
-> +	int sensor_id;
-> +	u32 ctrl_offset;
-> +	u32 stat_offset;
-> +};
-> +
-> +static unsigned int vtm_get_best_value(unsigned int s0, unsigned int s1,
-> +				       unsigned int s2)
-> +{
-> +	int d01 = abs(s0 - s1);
-> +	int d02 = abs(s0 - s2);
-> +	int d12 = abs(s1 - s2);
-> +
-> +	if (d01 <= d02 && d01 <= d12)
-> +		return (s0 + s1) / 2;
-> +
-> +	if (d02 <= d01 && d02 <= d12)
-> +		return (s0 + s2) / 2;
-> +
-> +	return (s1 + s2) / 2;
-> +}
-> +
-> +static int k3_bgp_read_temp(struct k3_thermal_data *devdata,
-> +			    int *temp)
-> +{
-> +	struct k3_bandgap *bgp;
-> +	unsigned int dtemp, s0, s1, s2;
-> +
-> +	bgp = devdata->bgp;
-> +
-> +	/*
-> +	 * Errata is applicable for am654 pg 1.0 silicon. There
-> +	 * is a variation of the order for 8-10 degree centigrade.
-> +	 * Work around that by getting the average of two closest
-> +	 * readings out of three readings everytime we want to
-> +	 * report temperatures.
-> +	 *
-> +	 * Errata workaround.
-> +	 */
-> +	s0 = readl(bgp->base + devdata->stat_offset) &
-> +		K3_VTM_TS_STAT_DTEMP_MASK;
-> +	s1 = readl(bgp->base + devdata->stat_offset) &
-> +		K3_VTM_TS_STAT_DTEMP_MASK;
-> +	s2 = readl(bgp->base + devdata->stat_offset) &
-> +		K3_VTM_TS_STAT_DTEMP_MASK;
-> +	dtemp = vtm_get_best_value(s0, s1, s2);
-> +
-> +	if (dtemp < K3_VTM_ADC_BEGIN_VAL || dtemp > K3_VTM_ADC_END_VAL)
-> +		return -EINVAL;
-> +
-> +	*temp = k3_adc_to_temp[dtemp - K3_VTM_ADC_BEGIN_VAL];
-> +
-> +	return 0;
-> +}
-> +
-> +static int k3_thermal_get_temp(void *devdata, int *temp)
-> +{
-> +	struct k3_thermal_data *data = devdata;
-> +	int ret = 0;
-> +
-> +	ret = k3_bgp_read_temp(data, temp);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct thermal_zone_of_device_ops k3_of_thermal_ops = {
-> +	.get_temp = k3_thermal_get_temp,
-> +};
-> +
-> +static const struct of_device_id of_k3_bandgap_match[];
-> +
-> +static int k3_bandgap_probe(struct platform_device *pdev)
-> +{
-> +	int ret = 0, cnt, val, id, reg_cnt = 0;
-> +	struct resource *res;
-> +	struct device *dev = &pdev->dev;
-> +	struct k3_bandgap *bgp;
-> +	struct k3_thermal_data *data;
-> +
-> +	if (ARRAY_SIZE(k3_adc_to_temp) != (K3_VTM_ADC_END_VAL + 1 -
-> +						K3_VTM_ADC_BEGIN_VAL))
-> +		return -EINVAL;
-> +
-> +	bgp = devm_kzalloc(&pdev->dev, sizeof(*bgp), GFP_KERNEL);
-> +	if (!bgp)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	bgp->base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(bgp->base))
-> +		return PTR_ERR(bgp->base);
-> +
-> +	pm_runtime_enable(dev);
-> +	ret = pm_runtime_get_sync(dev);
-> +	if (ret < 0) {
-> +		pm_runtime_put_noidle(dev);
-> +		pm_runtime_disable(dev);
-> +		return ret;
-> +	}
-> +
-> +	/* Get the sensor count in the VTM */
-> +	val = readl(bgp->base + K3_VTM_DEVINFO_PWR0_OFFSET);
-> +	cnt = val & K3_VTM_DEVINFO_PWR0_TEMPSENS_CT_MASK;
-> +	cnt >>= __ffs(K3_VTM_DEVINFO_PWR0_TEMPSENS_CT_MASK);
-> +
-> +	data = devm_kcalloc(dev, cnt, sizeof(*data), GFP_KERNEL);
-> +	if (!data) {
-> +		ret = -ENOMEM;
-> +		goto err_alloc;
-> +	}
-> +
-> +	/* Register the thermal sensors */
-> +	for (id = 0; id < cnt; id++) {
-> +		data[id].sensor_id = id;
-> +		data[id].bgp = bgp;
-> +		data[id].ctrl_offset = K3_VTM_TMPSENS0_CTRL_OFFSET +
-> +					id * K3_VTM_REGS_PER_TS;
-> +		data[id].stat_offset = data[id].ctrl_offset + 0x8;
-> +
-> +		val = readl(data[id].bgp->base + data[id].ctrl_offset);
-> +		val |= (K3_VTM_TMPSENS_CTRL_SOC |
-> +			K3_VTM_TMPSENS_CTRL_CLRZ |
-> +			K3_VTM_TMPSENS_CTRL_CLKON_REQ);
-> +		val &= ~K3_VTM_TMPSENS_CTRL_CBIASSEL;
-> +		writel(val, data[id].bgp->base + data[id].ctrl_offset);
-> +
-> +		data[id].ti_thermal =
-> +		devm_thermal_zone_of_sensor_register(dev, id,
-> +						     &data[id],
-> +						     &k3_of_thermal_ops);
-> +		if (IS_ERR(data[id].ti_thermal)) {
-> +			dev_err(dev, "thermal zone device is NULL\n");
-> +			ret = PTR_ERR(data[id].ti_thermal);
-> +			goto err_alloc;
-> +		}
-> +
-> +		reg_cnt++;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, bgp);
-> +
-> +	return 0;
-> +
-> +err_alloc:
-> +	pm_runtime_put_sync(&pdev->dev);
-> +	pm_runtime_disable(&pdev->dev);
-> +
-> +	return ret;
-> +}
-> +
-> +static int k3_bandgap_remove(struct platform_device *pdev)
-> +{
-> +	pm_runtime_put_sync(&pdev->dev);
-> +	pm_runtime_disable(&pdev->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id of_k3_bandgap_match[] = {
-> +	{
-> +		.compatible = "ti,am654-vtm",
-> +	},
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, of_k3_bandgap_match);
-> +
-> +static struct platform_driver k3_bandgap_sensor_driver = {
-> +	.probe = k3_bandgap_probe,
-> +	.remove = k3_bandgap_remove,
-> +	.driver = {
-> +		.name = "k3-soc-thermal",
-> +		.of_match_table	= of_k3_bandgap_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(k3_bandgap_sensor_driver);
-> +
-> +MODULE_DESCRIPTION("K3 bandgap temperature sensor driver");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("J Keerthy <j-keerthy@ti.com>");
-> 
+TW9ybmluZyBSb2IgJiBMZWUsDQoNCkxlZSBhbHJlYWR5IGFwcGxpZWQgdGhpcyB0byBmb3ItbWZk
+LW5leHQuIChUaGUgZHJpdmVyIGNoYW5nZXMgd2l0aA0KQkQ3MTg1MCBjb21wYXRpYmxlIGFkZGl0
+aW9uIHdlbnQgaW4gaGlzIHRyZWUgdG9vKS4gSSBndWVzcyB0aGUgcmlnaHQNCnRoaW5nIHRvIGRv
+IGlzIHRvIHNlbmQgaGltIGFuIGluY3JlbWVudGFsIHBhdGNoIGZvciBoaXMgZm9yLW1mZC1uZXh0
+DQpicmFuY2g/IEknbGwgZG8gdGhhdCAtIHNvcnJ5IGZvciB0aGUgdHJvdWJsZS4NCg0KQmVzdCBS
+ZWdhcmRzLA0KCU1hdHRpDQoNCk9uIFNhdCwgMjAyMC0wNC0wNCBhdCAxMTozMCAtMDYwMCwgUm9i
+IEhlcnJpbmcgd3JvdGU6DQo+IE9uIFNhdCwgQXByIDQsIDIwMjAgYXQgMTE6MjggQU0gUm9iIEhl
+cnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4NCj4gd3JvdGU6DQo+ID4gT24gRnJpLCBNYXIgMjAs
+IDIwMjAgYXQgMzo0MiBBTSBNYXR0aSBWYWl0dGluZW4NCj4gPiA8bWF0dGkudmFpdHRpbmVuQGZp
+LnJvaG1ldXJvcGUuY29tPiB3cm90ZToNCj4gPiA+IENvbnZlcnQgUk9ITSBiZDcxODM3IGFuZCBi
+ZDcxODQ3IFBNSUMgYmluZGluZyB0ZXh0IGRvY3MgdG8geWFtbC4NCj4gPiA+IFNwbGl0DQo+ID4g
+PiB0aGUgYmluZGluZyBkb2N1bWVudCB0byB0d28gc2VwYXJhdGUgZG9jdW1lbnRzIChvd24gZG9j
+dW1lbnRzIGZvcg0KPiA+ID4gQkQ3MTgzNw0KPiA+ID4gYW5kIEJENzE4NDcpIGFzIHRoZXkgaGF2
+ZSBkaWZmZXJlbnQgYW1vdW50IG9mIHJlZ3VsYXRvcnMuIFRoaXMNCj4gPiA+IHdheSB3ZSBjYW4N
+Cj4gPiA+IGJldHRlciBlbmZvcmNlIHRoZSBub2RlIG5hbWUgY2hlY2sgZm9yIHJlZ3VsYXRvcnMu
+IFJPSE0gaXMgYWxzbw0KPiA+ID4gcHJvdmlkaW5nDQo+ID4gPiBCRDcxODUwIC0gd2hpY2ggaXMg
+YWxtb3N0IGlkZW50aWNhbCB0byBCRDcxODQ3IC0gbWFpbiBkaWZmZXJlbmNlDQo+ID4gPiBpcyBz
+b21lDQo+ID4gPiBpbml0aWFsIHJlZ3VsYXRvciBzdGF0ZXMuIFRoZSBCRDcxODUwIGNhbiBiZSBk
+cml2ZW4gYnkgc2FtZQ0KPiA+ID4gZHJpdmVyIGFuZCBpdA0KPiA+ID4gaGFzIHNhbWUgYnVjay9M
+RE8gc2V0dXAgYXMgQkQ3MTg0NyAtIGFkZCBpdCB0byBCRDcxODQ3IGJpbmRpbmcNCj4gPiA+IGRv
+Y3VtZW50IGFuZA0KPiA+ID4gaW50cm9kdWNlIGNvbXBhdGlibGUgZm9yIGl0Lg0KPiA+ID4gDQo+
+ID4gPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4gPG1hdHRpLnZhaXR0aW5lbkBmaS5y
+b2htZXVyb3BlLmNvbQ0KPiA+ID4gPg0KPiA+ID4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxy
+b2JoQGtlcm5lbC5vcmc+DQo+ID4gDQo+ID4gSSBkaWQsIGJ1dCB0aGVyZSdzIHNvbWUgZHRjIHdh
+cm5pbmdzIHRoYXQgbmVlZCB0byBiZSBmaXhlZDoNCj4gPiANCj4gPiBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvbWZkL3JvaG0sYmQ3MTgzNy0NCj4gPiBwbWljLmV4YW1wbGUuZHRz
+OjIzLjE3LTMwOg0KPiA+IFdhcm5pbmcgKHJlZ19mb3JtYXQpOiAvZXhhbXBsZS0wL2kyYy9wbWlj
+QDRiOnJlZzogcHJvcGVydHkgaGFzDQo+ID4gaW52YWxpZA0KPiA+IGxlbmd0aCAoNCBieXRlcykg
+KCNhZGRyZXNzLWNlbGxzID09IDIsICNzaXplLWNlbGxzID09IDEpDQo+ID4gIERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvcm9obSxiZDcxODM3LQ0KPiA+IHBtaWMuZXhhbXBs
+ZS5kdC55YW1sOg0KPiA+IFdhcm5pbmcgKHBjaV9kZXZpY2VfcmVnKTogRmFpbGVkIHByZXJlcXVp
+c2l0ZSAncmVnX2Zvcm1hdCcNCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L21mZC9yb2htLGJkNzE4MzctDQo+ID4gcG1pYy5leGFtcGxlLmR0LnlhbWw6DQo+ID4gV2Fybmlu
+ZyAocGNpX2RldmljZV9idXNfbnVtKTogRmFpbGVkIHByZXJlcXVpc2l0ZSAncmVnX2Zvcm1hdCcN
+Cj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4Mzct
+DQo+ID4gcG1pYy5leGFtcGxlLmR0LnlhbWw6DQo+ID4gV2FybmluZyAoc2ltcGxlX2J1c19yZWcp
+OiBGYWlsZWQgcHJlcmVxdWlzaXRlICdyZWdfZm9ybWF0Jw0KPiA+ICBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvbWZkL3JvaG0sYmQ3MTgzNy0NCj4gPiBwbWljLmV4YW1wbGUuZHRz
+OjIwLjEzLTEzMS4xMToNCj4gPiBXYXJuaW5nIChpMmNfYnVzX2JyaWRnZSk6IC9leGFtcGxlLTAv
+aTJjOiBpbmNvcnJlY3QgI2FkZHJlc3MtY2VsbHMNCj4gPiBmb3INCj4gPiBJMkMgYnVzDQo+ID4g
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvcm9obSxiZDcxODM3LQ0KPiA+
+IHBtaWMuZXhhbXBsZS5kdHM6MjAuMTMtMTMxLjExOg0KPiA+IFdhcm5pbmcgKGkyY19idXNfYnJp
+ZGdlKTogL2V4YW1wbGUtMC9pMmM6IGluY29ycmVjdCAjc2l6ZS1jZWxscyBmb3INCj4gPiBJMkMg
+YnVzDQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvcm9obSxiZDcx
+ODM3LQ0KPiA+IHBtaWMuZXhhbXBsZS5kdC55YW1sOg0KPiA+IFdhcm5pbmcgKGkyY19idXNfcmVn
+KTogRmFpbGVkIHByZXJlcXVpc2l0ZSAncmVnX2Zvcm1hdCcNCj4gPiAgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4MzctDQo+ID4gcG1pYy5leGFtcGxlLmR0
+LnlhbWw6DQo+ID4gV2FybmluZyAoaTJjX2J1c19yZWcpOiBGYWlsZWQgcHJlcmVxdWlzaXRlICdp
+MmNfYnVzX2JyaWRnZScNCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21m
+ZC9yb2htLGJkNzE4MzctDQo+ID4gcG1pYy5leGFtcGxlLmR0LnlhbWw6DQo+ID4gV2FybmluZyAo
+c3BpX2J1c19yZWcpOiBGYWlsZWQgcHJlcmVxdWlzaXRlICdyZWdfZm9ybWF0Jw0KPiA+ICBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3JvaG0sYmQ3MTgzNy0NCj4gPiBwbWlj
+LmV4YW1wbGUuZHRzOjIxLjI1LTEzMC4xNToNCj4gPiBXYXJuaW5nIChhdm9pZF9kZWZhdWx0X2Fk
+ZHJfc2l6ZSk6IC9leGFtcGxlLTAvaTJjL3BtaWNANGI6IFJlbHlpbmcNCj4gPiBvbg0KPiA+IGRl
+ZmF1bHQgI2FkZHJlc3MtY2VsbHMgdmFsdWUNCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL21mZC9yb2htLGJkNzE4MzctDQo+ID4gcG1pYy5leGFtcGxlLmR0czoyMS4yNS0x
+MzAuMTU6DQo+ID4gV2FybmluZyAoYXZvaWRfZGVmYXVsdF9hZGRyX3NpemUpOiAvZXhhbXBsZS0w
+L2kyYy9wbWljQDRiOiBSZWx5aW5nDQo+ID4gb24NCj4gPiBkZWZhdWx0ICNzaXplLWNlbGxzIHZh
+bHVlDQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvcm9obSxiZDcx
+ODM3LQ0KPiA+IHBtaWMuZXhhbXBsZS5kdC55YW1sOg0KPiA+IFdhcm5pbmcgKHVuaXF1ZV91bml0
+X2FkZHJlc3MpOiBGYWlsZWQgcHJlcmVxdWlzaXRlDQo+ID4gJ2F2b2lkX2RlZmF1bHRfYWRkcl9z
+aXplJw0KPiANCj4gQW5kIGFsc286DQo+IA0KPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbWZkL3JvaG0sYmQ3MTg0Ny0NCj4gcG1pYy5leGFtcGxlLmR0czoyMy4xNy0zMDoNCj4g
+V2FybmluZyAocmVnX2Zvcm1hdCk6IC9leGFtcGxlLTAvaTJjL3BtaWNANGI6cmVnOiBwcm9wZXJ0
+eSBoYXMNCj4gaW52YWxpZA0KPiBsZW5ndGggKDQgYnl0ZXMpICgjYWRkcmVzcy1jZWxscyA9PSAy
+LCAjc2l6ZS1jZWxscyA9PSAxKQ0KPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+bWZkL3JvaG0sYmQ3MTg0Ny0NCj4gcG1pYy5leGFtcGxlLmR0LnlhbWw6DQo+IFdhcm5pbmcgKHBj
+aV9kZXZpY2VfcmVnKTogRmFpbGVkIHByZXJlcXVpc2l0ZSAncmVnX2Zvcm1hdCcNCj4gRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4NDctDQo+IHBtaWMuZXhh
+bXBsZS5kdC55YW1sOg0KPiBXYXJuaW5nIChwY2lfZGV2aWNlX2J1c19udW0pOiBGYWlsZWQgcHJl
+cmVxdWlzaXRlICdyZWdfZm9ybWF0Jw0KPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbWZkL3JvaG0sYmQ3MTg0Ny0NCj4gcG1pYy5leGFtcGxlLmR0LnlhbWw6DQo+IFdhcm5pbmcg
+KHNpbXBsZV9idXNfcmVnKTogRmFpbGVkIHByZXJlcXVpc2l0ZSAncmVnX2Zvcm1hdCcNCj4gRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4NDctDQo+IHBtaWMu
+ZXhhbXBsZS5kdHM6MjAuMTMtMTEyLjExOg0KPiBXYXJuaW5nIChpMmNfYnVzX2JyaWRnZSk6IC9l
+eGFtcGxlLTAvaTJjOiBpbmNvcnJlY3QgI2FkZHJlc3MtY2VsbHMNCj4gZm9yDQo+IEkyQyBidXMN
+Cj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4NDctDQo+
+IHBtaWMuZXhhbXBsZS5kdHM6MjAuMTMtMTEyLjExOg0KPiBXYXJuaW5nIChpMmNfYnVzX2JyaWRn
+ZSk6IC9leGFtcGxlLTAvaTJjOiBpbmNvcnJlY3QgI3NpemUtY2VsbHMgZm9yDQo+IEkyQyBidXMN
+Cj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4NDctDQo+
+IHBtaWMuZXhhbXBsZS5kdC55YW1sOg0KPiBXYXJuaW5nIChpMmNfYnVzX3JlZyk6IEZhaWxlZCBw
+cmVyZXF1aXNpdGUgJ3JlZ19mb3JtYXQnDQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9tZmQvcm9obSxiZDcxODQ3LQ0KPiBwbWljLmV4YW1wbGUuZHQueWFtbDoNCj4gV2Fybmlu
+ZyAoaTJjX2J1c19yZWcpOiBGYWlsZWQgcHJlcmVxdWlzaXRlICdpMmNfYnVzX2JyaWRnZScNCj4g
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4NDctDQo+IHBt
+aWMuZXhhbXBsZS5kdC55YW1sOg0KPiBXYXJuaW5nIChzcGlfYnVzX3JlZyk6IEZhaWxlZCBwcmVy
+ZXF1aXNpdGUgJ3JlZ19mb3JtYXQnDQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9tZmQvcm9obSxiZDcxODQ3LQ0KPiBwbWljLmV4YW1wbGUuZHRzOjIxLjI1LTExMS4xNToNCj4g
+V2FybmluZyAoYXZvaWRfZGVmYXVsdF9hZGRyX3NpemUpOiAvZXhhbXBsZS0wL2kyYy9wbWljQDRi
+OiBSZWx5aW5nIG9uDQo+IGRlZmF1bHQgI2FkZHJlc3MtY2VsbHMgdmFsdWUNCj4gRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4NDctDQo+IHBtaWMuZXhhbXBs
+ZS5kdHM6MjEuMjUtMTExLjE1Og0KPiBXYXJuaW5nIChhdm9pZF9kZWZhdWx0X2FkZHJfc2l6ZSk6
+IC9leGFtcGxlLTAvaTJjL3BtaWNANGI6IFJlbHlpbmcgb24NCj4gZGVmYXVsdCAjc2l6ZS1jZWxs
+cyB2YWx1ZQ0KPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3JvaG0sYmQ3
+MTg0Ny0NCj4gcG1pYy5leGFtcGxlLmR0LnlhbWw6DQo+IFdhcm5pbmcgKHVuaXF1ZV91bml0X2Fk
+ZHJlc3MpOiBGYWlsZWQgcHJlcmVxdWlzaXRlDQo+ICdhdm9pZF9kZWZhdWx0X2FkZHJfc2l6ZScN
+Cg0KSSBiZWxpZXZlIHRoZXNlIHdlcmUgYWxyZWFkeSBhcHBsaWVkIGJ5IExlZS4NCg0KDQo=
