@@ -2,190 +2,489 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4EEC2BA1A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 19:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6D3C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 19:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94893206C0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 19:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F70206F5
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 19:59:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QWujv4Rz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OnJvbwcm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbgDFTx4 (ORCPT
+        id S1725995AbgDFT7U (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 15:53:56 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42404 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbgDFTx4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 15:53:56 -0400
-Received: by mail-lj1-f195.google.com with SMTP id q19so1048244ljp.9;
-        Mon, 06 Apr 2020 12:53:54 -0700 (PDT)
+        Mon, 6 Apr 2020 15:59:20 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35625 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbgDFT7U (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 15:59:20 -0400
+Received: by mail-pl1-f196.google.com with SMTP id c12so276315plz.2
+        for <devicetree@vger.kernel.org>; Mon, 06 Apr 2020 12:59:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QEAzK7b0u2ss864W21oMnrNk924PkZ/JBDmjfBzTVEg=;
-        b=QWujv4RzXQtuEVv4DLH1RqoOyioGG8TfYWsPAM1z1a8U5hXilnwudjqTQDqU2uL0/Z
-         AIl0iExMoc5gGLgjmmUuTuYqbJVa7rtr+i44JexPT2cQDljk/jVHuIder8gvHdE44EDB
-         4PyWtxBjBGWK5721nSe9RGxI9ai/Fze3Uefktb02YesRGRyfsGDhXb6FCbA8upxw7Rsc
-         XDEPWGJlf/F7F22nRJZEzEvQJ+YeaOe/KwhDX9YFb/HvCJbe+DA9bxjts6h6UQPXykMv
-         LCuL+UKQKXg3ez+e0Wt6fFowImdedh6LL66nnBTAnDcfEcaog9u4k2o8jWPAk4X2xP6e
-         8Zmw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=E7QY7pXlGy+jqNVfN8zs1x8pk4wyzR53SWCmw/IulpQ=;
+        b=OnJvbwcmp/xdIUf2kjtQ+rv+mzamnbM+Jg9l129jfvPj1SXcCdryIYNWBb+2mgC2zg
+         aanzBShBRW3Nlst543fY0W6MJ8BfYKCv1Fg/gwhgoorDyZYYKDlYvqEBBpbF9maSkasu
+         EdUz6deR/NRwQAgGrMhVpqzYPIkKnjxhonifpDOSwQkEI47Yb1Gs0aFdeAlL9F+cBKZM
+         Q/NBxCWGTXlfCyj/cv1oz2ih5jer/tRfNoqQ64BA6F0MmlMsHrFdUcNmFB38YSVklY5r
+         SofhUmvOtLogaqxE41uXwowy2+aGN6GdBLDx7DC1RZP1Sgac0jH2F0googU2pmjC7cw3
+         xt/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QEAzK7b0u2ss864W21oMnrNk924PkZ/JBDmjfBzTVEg=;
-        b=noG/i4yahCi+WQX1AQO3riHibGScIxA4qj0VabjPgP8fGqaDfcTDEHeMqCh31SvIyl
-         iMfQjObECopaKAb2ebEfOBHRwxIHMYHIsATGYy6Z4LBiiZu4Uun7IuRgSXSEdJ3eOxWb
-         7zMvF6hwz5mJ5y8tMqAoTFZMdLrpiGQV9zLG52t+IPVsHZYVqsf1m+r2k3Wn03Cwhl37
-         Us1wPZdE34JyFw0bbGK/lpYy9MKhOOCzka/+0AbNnlZ9EXboRBoDDONyPWcbtywe/qm8
-         bdRbV4dRNSBgDfdn/JBIwDHjIVQ5eiIUwgr2NFfCZfBPZyRi2cU0t4mrbwwYBRfsRxR7
-         ugpw==
-X-Gm-Message-State: AGi0PuYh+NNaug5Z5t26/Uvb1EIJv00l81oaKiKh/BGpGs8LzckaALHg
-        ma3j1zcNcSysXZIorqdIsfTmGIIk
-X-Google-Smtp-Source: APiQypLKWt3nl3ocBDP9LHP4kzT5aHOE+NAZLzKLXcli2wWaMewGefGw9f0h5nTLabCr7e6h8KNSgQ==
-X-Received: by 2002:a05:651c:23a:: with SMTP id z26mr7476ljn.179.1586202832949;
-        Mon, 06 Apr 2020 12:53:52 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id 64sm10460457ljj.41.2020.04.06.12.53.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Apr 2020 12:53:52 -0700 (PDT)
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
- <38d921a7-5cdf-8d0a-2772-4399dd1a96a0@gmail.com>
- <9b8cf37b-d2ad-9df2-aad8-216c2c954e69@nvidia.com>
- <1a12974a-7cc7-2c3a-3995-076b9956714d@gmail.com>
- <66cc8646-43d3-3fc8-c31d-d0d2efac505f@nvidia.com>
- <f000f6b9-0f05-b2a5-6dad-37b09803711d@gmail.com>
- <fe6a17c1-fae2-a365-4dd6-6d3a25d47d54@nvidia.com>
- <9038ce90-ac53-93e7-ce65-57f6ff1e9b30@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <abe82fd1-0464-0627-6c97-39c896e53dd0@gmail.com>
-Date:   Mon, 6 Apr 2020 22:53:51 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=E7QY7pXlGy+jqNVfN8zs1x8pk4wyzR53SWCmw/IulpQ=;
+        b=BFPogqc5bzli7PQlKUmnidRenaJzUBeEieuOuVYV+yCni076FZRFITU4p8IoCiwDPE
+         20hrrDnyN/3f+t6BGoGUkSoAmv6QH0UvQzarM1djtGke7BFkj1wojMErNVMt28BmjKYJ
+         4MTxcsuLRmY8kyHNL5PvjlCgcMIjuDN6C+LI6L9P3h/s2+AjWBnd7PN07A+tkf2rrvOF
+         IMVtGBTqbiprUyGG259Zx92xPPEFi3I9pcYKDbi5mUQuW/zzBFbaJ61Qxqa0ZYXDO2p/
+         6J+7itDHI5Gt70EZTyO0FOSo1WRPEcek2B02htAqQH45DvxQoJ86XM3ox6ExYBdG8U6+
+         Lfaw==
+X-Gm-Message-State: AGi0Pub2RUass4RFd8Lv6JFKINKMn8IHiPSInF7+TCri7d+Cn6OAAFDN
+        pPt6MbqF9Hw3AGRahXHWws+mu168ork=
+X-Google-Smtp-Source: APiQypL7cFU1hSU7+qLXSpXGz3Q+V+lYL3g+H9DsPNQWRZEMG+qUMJm1RQhpmZXQ8v3vWqRD6JZkVg==
+X-Received: by 2002:a17:902:a706:: with SMTP id w6mr22444142plq.79.1586203158400;
+        Mon, 06 Apr 2020 12:59:18 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id i4sm12091324pfq.82.2020.04.06.12.59.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 12:59:17 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 13:59:15 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/7] dt-bindings: remoteproc: Add bindings for R5F
+ subsystem on TI K3 SoCs
+Message-ID: <20200406195915.GB11572@xps15>
+References: <20200324201819.23095-1-s-anna@ti.com>
+ <20200324201819.23095-4-s-anna@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <9038ce90-ac53-93e7-ce65-57f6ff1e9b30@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324201819.23095-4-s-anna@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-06.04.2020 20:02, Sowjanya Komatineni пишет:
+On Tue, Mar 24, 2020 at 03:18:15PM -0500, Suman Anna wrote:
+> The Texas Instruments K3 family of SoCs have one or more dual-core
+> Arm Cortex R5F processor subsystems/clusters (R5FSS). The clusters
+> can be split between multiple voltage domains as well. Add the device
+> tree bindings document for these R5F subsystem devices. These R5F
+> processors do not have an MMU, and so require fixed memory carveout
+> regions matching the firmware image addresses. The nodes require more
+> than one memory region, with the first memory region used for DMA
+> allocations at runtime. The remaining memory regions are reserved
+> and are used for the loading and running of the R5F remote processors.
+> The R5F processors can also optionally use any internal on-chip SRAM
+> memories either for executing code or using it as fast-access data.
 > 
-> On 4/6/20 9:37 AM, Sowjanya Komatineni wrote:
->>
->> On 4/6/20 9:29 AM, Dmitry Osipenko wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> 06.04.2020 19:12, Sowjanya Komatineni пишет:
->>>> On 4/6/20 9:05 AM, Dmitry Osipenko wrote:
->>>>> External email: Use caution opening links or attachments
->>>>>
->>>>>
->>>>> 06.04.2020 18:35, Sowjanya Komatineni пишет:
->>>>> ...
->>>>>>>> +     /* wait for syncpt counter to reach frame start event
->>>>>>>> threshold */
->>>>>>>> +     err = host1x_syncpt_wait(chan->frame_start_sp, thresh,
->>>>>>>> + TEGRA_VI_SYNCPT_WAIT_TIMEOUT, &value);
->>>>>>>> +     if (err) {
->>>>>>>> +             dev_err(&chan->video.dev,
->>>>>>>> +                     "frame start syncpt timeout: %d\n", err);
->>>>>>>> +             /* increment syncpoint counter for timedout events */
->>>>>>>> + host1x_syncpt_incr(chan->frame_start_sp);
->>>>>>> Why incrementing is done while hardware is still active?
->>>>>>>
->>>>>>> The sync point's state needs to be completely reset after resetting
->>>>>>> hardware. But I don't think that the current upstream host1x driver
->>>>>>> supports doing that, it's one of the known-long-standing problems of
->>>>>>> the
->>>>>>> host1x driver.
->>>>>>>
->>>>>>> At least the sp->max_val incrementing should be done based on the
->>>>>>> actual
->>>>>>> syncpoint value and this should be done after resetting hardware.
->>>>>> upstream host1x driver don't have API to reset or to equalize max
->>>>>> value
->>>>>> with min/load value.
->>>>>>
->>>>>> So to synchronize missed event, incrementing HW syncpt counter.
->>>>>>
->>>>>> This should not impact as we increment this in case of missed events
->>>>>> only.
->>>>> It's wrong to touch sync point while hardware is active and it's
->>>>> active
->>>>> until being reset.
->>>>>
->>>>> You should re-check the timeout after hw resetting and manually put
->>>>> the
->>>>> syncpoint counter back into sync only if needed.
->>>> There is possibility of timeout to happen any time even during the
->>>> capture also and is not related to hw reset.
->>>>
->>>> Manual synchronization is needed when timeout of any frame events
->>>> happen
->>>> otherwise all subsequence frames will timeout due to mismatch in event
->>>> counters.
->>> My point is that hardware is stopped only after being reset, until then
->>> you should assume that sync point could be incremented by HW at any
->>> time.
->>>
->>> And if this happens that HW increments sync point after the timeout,
->>> then the sync point counter should become out-of-sync in yours case,
->>> IIUC. Because host1x_syncpt_incr() doesn't update the cached counter.
->>
->> We wait for enough time based on frame rate for syncpt increment to
->> happen and if it doesn't happen by then definitely its missed event
->> and we increment HW syncpoint for this timed event.
->>
->> cached value gets updated during syncpt wait for subsequent event.
->>
->> syncpt increment happens for all subsequent frame events during video
->> capture.
->>
-> Just to be clear, syncpt max value increment happens first and syncpt
-> trigger condition is programmed. hw syncpt increment happens based on HW
-> events.
+> The added example illustrates the DT nodes for the single R5FSS device
+> present on K3 AM65x family of SoCs.
 > 
-> Wait time for HW syncpt to reach threshold is tuned to work for all
-> frame rates. So if increment doesn't happen by then, its definitely
-> missed event.
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> ---
+> Hi Rob,
+> 
+> The dt_bindings_check seems to throw couple of warnings around the
+> usage of ranges because the tooling is adding the #address-cells
+> and #size-cells of 1 by default, whereas our actual code uses 2.
+> No issues are found with dtbs_check.
+> 
+> regards
+> Suman
+> 
+>  .../bindings/remoteproc/ti,k3-r5f-rproc.yaml  | 338 ++++++++++++++++++
+>  1 file changed, 338 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
+> new file mode 100644
+> index 000000000000..bbfc1e6ae884
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
+> @@ -0,0 +1,338 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/remoteproc/ti,k3-r5f-rproc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI K3 R5F processor subsystems
+> +
+> +maintainers:
+> +  - Suman Anna <s-anna@ti.com>
+> +
+> +description: |
+> +  The TI K3 family of SoCs usually have one or more dual-core Arm Cortex R5F
+> +  processor subsystems/clusters (R5FSS). The dual core cluster can be used
+> +  either in a LockStep mode providing safety/fault tolerance features or in a
+> +  Split mode providing two individual compute cores for doubling the compute
+> +  capacity. These are used together with other processors present on the SoC
+> +  to achieve various system level goals.
+> +
+> +  Each Dual-Core R5F sub-system is represented as a single DTS node
+> +  representing the cluster, with a pair of child DT nodes representing
+> +  the individual R5F cores. Each node has a number of required or optional
+> +  properties that enable the OS running on the host processor to perform
+> +  the device management of the remote processor and to communicate with the
+> +  remote processor.
+> +
+> +# Required properties:
+> +# --------------------
+> +# The following are the mandatory properties:
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^r5fss(@.*)?"
+> +
+> +  compatible:
+> +    enum:
+> +      - ti,am654-r5fss
+> +      - ti,j721e-r5fss
+> +
+> +  power-domains:
+> +    description: |
+> +      Should contain a phandle to a PM domain provider node and an args
+> +      specifier containing the R5FSS device id value. This property is
+> +      as per the binding,
+> +      Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+> +    maxItems: 1
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 1
+> +
+> +  ranges:
+> +    description: |
+> +      Standard ranges definition providing address translations for
+> +      local R5F TCM address spaces to bus addresses.
+> +
+> +# Optional properties:
+> +# --------------------
+> +
+> +  lockstep-mode:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [0, 1]
+> +    description: |
+> +      Configuration Mode for the Dual R5F cores within the R5F
+> +      cluster. Should be either a value of 1 (LockStep mode) or
+> +      0 (Split mode), default is LockStep mode if omitted.
 
-This is questionable. Technically, speculating about whether the tuned
-value is good for all possible cases is incorrect thing to do.
+Should I deduce lockstep means SMP and split mode two processors running in UP
+mode?
 
-Although, I guess in practice it should be good enough for the starter
-and could be improved later on, once the host1x driver will be improved.
+> +
+> +# R5F Processor Child Nodes:
+> +# ==========================
+> +
+> +patternProperties:
+> +  "^r5f@[a-f0-9]+$":
+> +    type: object
+> +    description: |
+> +        The R5F Sub-System device node should define two R5F child nodes, each
+> +        node representing a TI instantiation of the Arm Cortex R5F core. There
+> +        are some specific integration differences for the IP like the usage of
+> +        a Region Address Translator (RAT) for translating the larger SoC bus
+> +        addresses into a 32-bit address space for the processor.
+> +
+> +# Required properties:
+> +# --------------------
+> +# The following are the mandatory properties:
+> +
+> +    properties:
+> +      compatible:
+> +        enum:
+> +          - ti,am654-r5f
+> +          - ti,j721e-r5f
+> +
+> +      reg:
+> +        description: |
+> +          Should contain an entry for each value in 'reg-names'.
+> +          Each entry should have the memory region's start address
+> +          and the size of the region, the representation matching
+> +          the parent node's '#address-cells' and '#size-cells' values.
+> +        maxItems: 2
+> +
+> +      reg-names:
+> +        description: |
+> +          Should contain strings with the names of the specific internal
+> +          internal memory regions, and should be defined in this order
 
-> In case of missed HW event corresponding to syncpt condition, hw syncpt
-> increment does not happen and driver increments it on timeout.
-> 
-> As there is not API to equialize max with min incase of timeout/reset,
-> incrementing HW syncpt for timed out event.
-> 
-> syncpt cached value gets updated during syncpt wait when it loads from
-> HW syncpt.
-> 
-> As syncpt condition is already triggered, without compensating timeout
-> events or leaving syncpt max and hw syncpt in non synchronized state for
-> missed events, subsequent streamings will all timeout even on real events.
-> 
+There is two "internal" in a row.
 
+> +        maxItems: 2
+> +        items:
+> +          - const: atcm
+> +          - const: btcm
+> +
+> +      ti,sci:
+> +        $ref: /schemas/types.yaml#/definitions/phandle
+> +        description:
+> +          Should be a phandle to the TI-SCI System Controller node
+> +
+> +      ti,sci-dev-id:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: |
+> +          Should contain the TI-SCI device id corresponding to the R5F core.
+> +          Please refer to the corresponding System Controller documentation
+> +          for valid values for the R5F cores.
+> +
+> +      ti,sci-proc-ids:
+> +        description: Should contain a single tuple of <proc_id host_id>.
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +          - maxItems: 1
+> +            items:
+> +              items:
+> +                - description: TI-SCI processor id for the R5F core device
+> +                - description: TI-SCI host id to which processor control
+> +                               ownership should be transferred to
+> +
+> +      resets:
+> +        description: |
+> +          Should contain the phandle to the reset controller node
+> +          managing the resets for this device, and a reset
+> +          specifier. Please refer to the following reset bindings
+> +          for the reset argument specifier,
+> +          Documentation/devicetree/bindings/reset/ti,sci-reset.txt
+> +            for AM65x and J721E SoCs
+> +
+> +      firmware-name:
+> +        description: |
+> +          Should contain the name of the default firmware image
+> +          file located on the firmware search path
+> +
+> +# The following properties are mandatory for R5F Core0 in both LockStep and Split
+> +# modes, and are mandatory for R5F Core1 _only_ in Split mode. They are unused for
+> +# R5F Core1 in LockStep mode:
+> +
+> +      mboxes:
+> +        description: |
+> +          OMAP Mailbox specifier denoting the sub-mailbox, to be used for
+> +          communication with the remote processor. This property should match
+> +          with the sub-mailbox node used in the firmware image. The specifier
+> +          format is as per the bindings,
+> +          Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
+
+In the example below node "mcu_r5f1" has a "mboxes" property despite being in lockstep mode.  I
+haven't delved in the code yet, perharps I'll find an answer in there.
+
+> +
+> +      memory-region:
+> +        minItems: 2
+> +        description: |
+> +          phandle to the reserved memory nodes to be associated with the remoteproc
+> +          device. There should be atleast two reserved memory nodes defined - the
+
+s/atleast/at least
+
+> +          first one would be used for dynamic DMA allocations like vrings and vring
+> +          buffers, and the remaining ones used for the firmware image sections. The
+> +          reserved memory nodes should be carveout nodes, and should be defined as
+> +          per the bindings in
+> +          Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> +
+> +# Optional properties:
+> +# --------------------
+> +# The following properties are optional properties for each of the R5F cores:
+> +
+> +      atcm-enable:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        enum: [0, 1]
+> +        description: |
+> +          R5F core configuration mode dictating if ATCM should be enabled. R5F
+> +          view of ATCM dictated by loczrama property. Should be either a value
+> +          of 1 (enabled) or 0 (disabled), default is disabled if omitted.
+
+What is ATCM and why would one want to enable the feature?
+
+> +
+> +      btcm-enable:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        enum: [0, 1]
+> +        description: |
+> +          R5F core configuration mode dictating if BTCM should be enabled. R5F
+> +          view of BTCM dictated by loczrama property. Should be either a value
+> +          of 1 (enabled) or 0 (disabled), default is enabled if omitted.
+
+Same here, there is no way to tell what BTCM is.
+
+> +
+> +      loczrama:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        enum: [0, 1]
+> +        description: |
+> +          R5F core configuration mode dictating which TCM should appear at
+> +          address 0 (from core's view). Should be either a value of 1 (ATCM
+> +          at 0x0) or 0 (BTCM at 0x0), default value is 1 if omitted.
+
+loczrama: Location Zero Ram Address?  Can both core show up at the address 0x0?
+In the example below both cores have the same setting for atcm, btcm and
+loczrama.
+
+> +
+> +      sram:
+> +        $ref: /schemas/types.yaml#/definitions/phandle-array
+> +        minItems: 1
+> +        description: |
+> +          pHandles to one or more reserved on-chip SRAM region. The regions
+> +          should be defined as child nodes of the respective SRAM node, and
+> +          should be defined as per the generic bindings in,
+> +          Documentation/devicetree/bindings/sram/sram.yaml
+
+Is the behaviour the same whether operating in locksetup mode and split mode? 
+
+Thanks,
+Mathieu
+
+> +
+> +    required:
+> +     - compatible
+> +     - reg
+> +     - reg-names
+> +     - ti,sci
+> +     - ti,sci-dev-id
+> +     - ti,sci-proc-ids
+> +     - resets
+> +     - firmware-name
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> + - compatible
+> + - power-domains
+> + - "#address-cells"
+> + - "#size-cells"
+> + - ranges
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +
+> +    //Example: AM654 SoC
+> +    /* R5F DDR Carveout reserved memory nodes */
+> +    reserved-memory {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +        ranges;
+> +
+> +        mcu_r5fss0_core1_dma_memory_region: r5f-dma-memory@9b000000 {
+> +            compatible = "shared-dma-pool";
+> +            reg = <0x00 0x9b000000 0x00 0x100000>;
+> +            no-map;
+> +        };
+> +
+> +        mcu_r5fss0_core1_memory_region: r5f-memory@9b100000 {
+> +            compatible = "shared-dma-pool";
+> +            reg = <0x00 0x9b100000 0x00 0xf00000>;
+> +            no-map;
+> +        };
+> +
+> +        mcu_r5fss0_core0_dma_memory_region: r5f-dma-memory@9c000000 {
+> +            compatible = "shared-dma-pool";
+> +            reg = <0x00 0x9c000000 0x00 0x100000>;
+> +            no-map;
+> +        };
+> +
+> +        mcu_r5fss0_core0_memory_region: r5f-memory@9c100000 {
+> +            compatible = "shared-dma-pool";
+> +            reg = <0x00 0x9c100000 0x00 0x700000>;
+> +            no-map;
+> +        };
+> +    };
+> +
+> +    cbass_main: interconnect@100000 {
+> +        compatible = "simple-bus";
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +        ranges = <0x00 0x41000000 0x00 0x41000000 0x00 0x00020000>,
+> +                 <0x00 0x41400000 0x00 0x41400000 0x00 0x00020000>,
+> +                 <0x00 0x41c00000 0x00 0x41c00000 0x00 0x00080000>;
+> +
+> +        cbass_mcu: interconnect@28380000 {
+> +            compatible = "simple-bus";
+> +            #address-cells = <2>;
+> +            #size-cells = <2>;
+> +            ranges = <0x00 0x41000000 0x00 0x41000000 0x00 0x00020000>, /* MCU R5F Core0 */
+> +                     <0x00 0x41400000 0x00 0x41400000 0x00 0x00020000>, /* MCU R5F Core1 */
+> +                     <0x00 0x41c00000 0x00 0x41c00000 0x00 0x00080000>; /* MCU SRAM */
+> +
+> +            /* MCU domain SRAM node */
+> +            mcu_ram: mcu-ram@41c00000 {
+> +                compatible = "mmio-sram";
+> +                reg = <0x00 0x41c00000 0x00 0x80000>;
+> +                ranges = <0x0 0x00 0x41c00000 0x80000>;
+> +                #address-cells = <1>;
+> +                #size-cells = <1>;
+> +
+> +                mcu_r5fss0_core0_sram: r5f-sram@0 {
+> +                    reg = <0x0 0x40000>;
+> +                };
+> +            };
+> +
+> +            /* AM65x MCU R5FSS node */
+> +            mcu_r5fss0: r5fss@41000000 {
+> +                compatible = "ti,am654-r5fss";
+> +                power-domains = <&k3_pds 129>;
+> +                lockstep-mode = <1>;
+> +                #address-cells = <1>;
+> +                #size-cells = <1>;
+> +                ranges = <0x41000000 0x00 0x41000000 0x20000>,
+> +                         <0x41400000 0x00 0x41400000 0x20000>;
+> +
+> +                mcu_r5f0: r5f@41000000 {
+> +                    compatible = "ti,am654-r5f";
+> +                    reg = <0x41000000 0x00008000>,
+> +                          <0x41010000 0x00008000>;
+> +                    reg-names = "atcm", "btcm";
+> +                    ti,sci = <&dmsc>;
+> +                    ti,sci-dev-id = <159>;
+> +                    ti,sci-proc-ids = <0x01 0xFF>;
+> +                    resets = <&k3_reset 159 1>;
+> +                    firmware-name = "am65x-mcu-r5f0_0-fw";
+> +                    atcm-enable = <1>;
+> +                    btcm-enable = <1>;
+> +                    loczrama = <1>;
+> +                    mboxes = <&mailbox0 &mbox_mcu_r5fss0_core0>;
+> +                    memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
+> +                                    <&mcu_r5fss0_core0_memory_region>;
+> +                    sram = <&mcu_r5fss0_core0_sram>;
+> +                };
+> +
+> +                mcu_r5f1: r5f@41400000 {
+> +                    compatible = "ti,am654-r5f";
+> +                    reg = <0x41400000 0x00008000>,
+> +                          <0x41410000 0x00008000>;
+> +                    reg-names = "atcm", "btcm";
+> +                    ti,sci = <&dmsc>;
+> +                    ti,sci-dev-id = <245>;
+> +                    ti,sci-proc-ids = <0x02 0xFF>;
+> +                    resets = <&k3_reset 245 1>;
+> +                    firmware-name = "am65x-mcu-r5f0_1-fw";
+> +                    atcm-enable = <1>;
+> +                    btcm-enable = <1>;
+> +                    loczrama = <1>;
+> +                    mboxes = <&mailbox1 &mbox_mcu_r5fss0_core1>;
+> +               };
+> +           };
+> +        };
+> +    };
+> -- 
+> 2.23.0
+> 
