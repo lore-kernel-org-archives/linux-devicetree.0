@@ -2,156 +2,244 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7009C2BA18
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 08:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD79CC2BA80
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 08:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A31A02072A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 08:27:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="pIMXjGrj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Fyyi3KV3"
+	by mail.kernel.org (Postfix) with ESMTP id 8D985206F8
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 08:36:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgDFI1g (ORCPT
+        id S1726533AbgDFIgN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 04:27:36 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:33203 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726514AbgDFI1g (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 04:27:36 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 273DE5800E5;
-        Mon,  6 Apr 2020 04:27:35 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 06 Apr 2020 04:27:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=f9JBRr+XhbC+CvGSQhNRe2L/ERw
-        IGY84ZpI4+IQemfM=; b=pIMXjGrj8l2gSjLhTowqJmg7cVKQfqQQNt7JH5RcSJm
-        525J+EbU3EjWe1RfHZKli13PSS+kuMRl5UmgyAJRLT04uiEAyCW992YS77jZJQlv
-        +rKHmvMMkkGM323eZBDxE0i4KejgnvxwFTbtvOvn8eYeBx6Vt9roYtaYeFxuwwGR
-        ntELBKF5gXG5ZFAPe9Xmh5NpT3VEX5qWzW4gHRUctnBFfq6EsvA7IzvLvKi5f6ft
-        Th/J7u+AO8wvG7KJbt8VE2/IU7GPJ0KWU5ObV7oy6HqN6N4l/T2JuV5SjXCOZqVI
-        I3aarBglXwIs3TCwi1S8a+0o+57zuOqHlrI8z++kiTw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=f9JBRr
-        +XhbC+CvGSQhNRe2L/ERwIGY84ZpI4+IQemfM=; b=Fyyi3KV32nrPIy5vKGKxZS
-        IPq6wIkkMSPOYi3wHBbzrFi4xMfDJAt/HL21FD4ZqqqX6Kp3SA+KCmXewcLFFhni
-        wzcg+bdztWsQlxbLIa85taJokNN+PvZ2+Yv+aQZi202x7Krrdysg1/2TkwGR1Qxy
-        dBF8NCoTdTClJP7bRojjClayTFD2NfEw+0NwRD6Xc4x4jWej7NLBkyVsBdq2GGL3
-        bLa4oLsOB5xpPkLlRybtCT5Q8TyFf2Ul+UbWSnrtg+o3+YeRgxPs0bMdt8juNDJJ
-        DoUsKIC7NTC+1wQxL+qrq8gqgzCkUjvr/ikPXG5io3scq/dpdfq8NT0xNpN1I7Mw
-        ==
-X-ME-Sender: <xms:9ueKXgHAd-e8n3CVwVMaAsGp9RwZEzFn6T02Txh1Tcs6FfzeXmoyCg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefgddthecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
-    epghhithhhuhgsrdgtohhmpdgrrhhmsghirghnrdgtohhmnecukfhppeeltddrkeelrdei
-    kedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    epmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:9ueKXjTHNe2AxKtGcT-xwXSuJYwf7qgEPNS-ODthj-q8CV2sROePSw>
-    <xmx:9ueKXgez-eoeh12lrwjYhPKHWA_mlW6Bc9RvN24HMxqMYGVEJ_WtXQ>
-    <xmx:9ueKXokawD1_rDrtS5Bt-hUvRn2gDnrKqpoU4Qjg4wlFb56TEBgIqQ>
-    <xmx:9-eKXoLhLrHQKi8juWiUQl6jMggIZQ8QIY1ToWq_i4HFyzgrZ2cd2g>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E8DB8328005D;
-        Mon,  6 Apr 2020 04:27:33 -0400 (EDT)
-Date:   Mon, 6 Apr 2020 10:27:32 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [RFC PATCH] PCI: dwc: add support for Allwinner SoCs' PCIe
- controller
-Message-ID: <20200406082732.nt5d7puwn65j4nvl@gilmour.lan>
-References: <20200402160549.296203-1-icenowy@aosc.io>
+        Mon, 6 Apr 2020 04:36:13 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:37940 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726595AbgDFIgM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 04:36:12 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 1B24F634C8C;
+        Mon,  6 Apr 2020 11:35:08 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jLNDn-0002Bc-5M; Mon, 06 Apr 2020 11:35:07 +0300
+Date:   Mon, 6 Apr 2020 11:35:07 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Robert Foss <robert.foss@linaro.org>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
+Message-ID: <20200406083506.GE6127@valkosipuli.retiisi.org.uk>
+References: <20200331133346.372517-1-robert.foss@linaro.org>
+ <20200331133346.372517-2-robert.foss@linaro.org>
+ <20200401080705.j4goeqcqhoswhx4u@gilmour.lan>
+ <CAG3jFyvUd08U9yNVPUD9Y=nd5Xpcx34GcHJRhtvAAycoq3qimg@mail.gmail.com>
+ <20200403232736.GA6127@valkosipuli.retiisi.org.uk>
+ <20200404093446.vuvwrhn5436h4d3s@gilmour.lan>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bxu46sevqgfhv5v4"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200402160549.296203-1-icenowy@aosc.io>
+In-Reply-To: <20200404093446.vuvwrhn5436h4d3s@gilmour.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Maxime,
 
---bxu46sevqgfhv5v4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Sat, Apr 04, 2020 at 11:34:46AM +0200, Maxime Ripard wrote:
+> Hi,
+> 
+> On Sat, Apr 04, 2020 at 02:27:36AM +0300, Sakari Ailus wrote:
+> > Hi Robert,
+> >
+> > On Thu, Apr 02, 2020 at 12:10:00PM +0200, Robert Foss wrote:
+> > > Hey Maxime,
+> > >
+> > > On Wed, 1 Apr 2020 at 10:07, Maxime Ripard <maxime@cerno.tech> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Tue, Mar 31, 2020 at 03:33:44PM +0200, Robert Foss wrote:
+> > > > > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > > >
+> > > > > This patch adds documentation of device tree in YAML schema for the
+> > > > > OV8856 CMOS image sensor.
+> > > > >
+> > > > > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > > > Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> > > > > ---
+> > > > >
+> > > > > - Changes since v5:
+> > > > >   * Add assigned-clocks and assigned-clock-rates
+> > > > >   * robher: dt-schema errors
+> > > > >
+> > > > > - Changes since v4:
+> > > > >   * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in description
+> > > > >   * Add clock-lanes property to example
+> > > > >   * robher: Fix syntax error in devicetree example
+> > > > >
+> > > > > - Changes since v3:
+> > > > >   * robher: Fix syntax error
+> > > > >   * robher: Removed maxItems
+> > > > >   * Fixes yaml 'make dt-binding-check' errors
+> > > > >
+> > > > > - Changes since v2:
+> > > > >   Fixes comments from from Andy, Tomasz, Sakari, Rob.
+> > > > >   * Convert text documentation to YAML schema.
+> > > > >
+> > > > > - Changes since v1:
+> > > > >   Fixes comments from Sakari, Tomasz
+> > > > >   * Add clock-frequency and link-frequencies in DT
+> > > > >
+> > > > >  .../devicetree/bindings/media/i2c/ov8856.yaml | 150 ++++++++++++++++++
+> > > > >  MAINTAINERS                                   |   1 +
+> > > > >  2 files changed, 151 insertions(+)
+> > > > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov8856.yaml b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> > > > > new file mode 100644
+> > > > > index 000000000000..beeddfbb8709
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> > > > > @@ -0,0 +1,150 @@
+> > > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > > > +# Copyright (c) 2019 MediaTek Inc.
+> > > > > +%YAML 1.2
+> > > > > +---
+> > > > > +$id: http://devicetree.org/schemas/media/i2c/ov8856.yaml#
+> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > +
+> > > > > +title: Omnivision OV8856 CMOS Sensor Device Tree Bindings
+> > > > > +
+> > > > > +maintainers:
+> > > > > +  - Ben Kao <ben.kao@intel.com>
+> > > > > +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > > > +
+> > > > > +description: |-
+> > > > > +  The Omnivision OV8856 is a high performance, 1/4-inch, 8 megapixel, CMOS
+> > > > > +  image sensor that delivers 3264x2448 at 30fps. It provides full-frame,
+> > > > > +  sub-sampled, and windowed 10-bit MIPI images in various formats via the
+> > > > > +  Serial Camera Control Bus (SCCB) interface. This chip is programmable
+> > > > > +  through I2C and two-wire SCCB. The sensor output is available via CSI-2
+> > > > > +  serial data output (up to 4-lane).
+> > > > > +
+> > > > > +properties:
+> > > > > +  compatible:
+> > > > > +    const: ovti,ov8856
+> > > > > +
+> > > > > +  reg:
+> > > > > +    maxItems: 1
+> > > > > +
+> > > > > +  clocks:
+> > > > > +    maxItems: 1
+> > > > > +
+> > > > > +  clock-names:
+> > > > > +    description:
+> > > > > +      Input clock for the sensor.
+> > > > > +    items:
+> > > > > +      - const: xvclk
+> > > > > +
+> > > > > +  clock-frequency:
+> > > > > +    description:
+> > > > > +      Frequency of the xvclk clock in Hertz.
+> > > >
+> > > > We also had that discussion recently for another omnivision sensor
+> > > > (ov5645 iirc), but what is clock-frequency useful for?
+> > > >
+> > > > It seems that the sensor is passed in clocks, so if you need to
+> > > > retrieve the clock rate you should use the clock API instead.
+> > > >
+> > > > Looking at the driver, it looks like it first retrieves the clock, set
+> > > > it to clock-frequency, and then checks that this is OV8856_XVCLK_19_2
+> > > > (19.2 MHz).
+> > >
+> > > As far as I understand it, 19.2MHz is requirement for the sensor mode
+> > > that currently defaults to. Some modes require higher clock speeds
+> > > than this however.
+> >
+> > It's very system specific. Either way, bindings should not assume a
+> > particular driver implementation.
+> >
+> > >
+> > > >
+> > > > The datasheet says that the sensor can have any frequency in the 6 -
+> > > > 27 MHz range, so this is a driver limitation and should be set in the
+> > > > driver using the clock API, and you can always bail out if it doesn't
+> > > > provide a rate that is not acceptable for the drivers assumption.
+> > > >
+> > > > In any case, you don't need clock-frequency here...
+> > >
+> > > So your suggestion is that we remove all clocks-rate properties, and
+> > > replace the clk_get_rate() calls in the driver with clk_set_rate()
+> > > calls for the desired frequencies?
+> >
+> > The driver shouldn't set the rate here unless it gets it from DT (but that
+> > was not the intention). So the driver should get the frequency instead.
+> 
+> I'm actually saying the opposite :)
+> 
+> Like you were saying, the binding (or DT, for that matter) shouldn't
+> assume a particular driver implementation.
+> 
+> So one corollary is that if the driver has some restrictions in Linux,
+> it shouldn't be part of the binding, right?
 
-Hi,
+Correct.
 
-On Fri, Apr 03, 2020 at 12:05:49AM +0800, Icenowy Zheng wrote:
-> The Allwinner H6 SoC uses DesignWare's PCIe controller to provide a PCIe
-> host.
->
-> However, on Allwinner H6, the PCIe host has bad MMIO, which needs to be
-> workarounded. A workaround with the EL2 hypervisor functionality of ARM
-> Cortex cores is now available, which wraps MMIO operations.
->
-> This patch is going to add a driver for the DWC PCIe controller
-> available in Allwinner SoCs, either the H6 one when wrapped by the
-> hypervisor (so that the driver can consider it as an ordinary PCIe
-> controller) or further not buggy ones.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> ---
-> There's no device tree binding patch available, because I still have
-> questions on the device tree compatible string. I want to use it to
-> describe that this driver doesn't support the "native Allwinner H6 PCIe
-> controller", but a wrapped version with my hypervisor.
->
-> I think supporting a "para-physical" device is some new thing, so this
-> patch is RFC.
->
-> My hypervisor is at [1], and some basic usage documentation is at [2].
->
-> [1] https://github.com/Icenowy/aw-el2-barebone
-> [2] https://forum.armbian.com/topic/13529-a-try-on-utilizing-h6-pcie-with-virtualization/
+> 
+> This binding uses multiple clock properties but as far as I can see,
+> the driver retrieves a clock using clocks and makes sure that its rate
+> match its limitation of 19.2MHz using clock-frequency (which is
+> redundant on a clk_get_rate on the clocks provided earlier).
+> 
+> I'm suspecting that the parent clock on multiple SoCs can be
+> configured and is not a fixed rate crystal, so assigned-clocks-rate is
+> here just to make sure we set the frequency at the one being checked
+> in the driver's probe so that it all works.
 
-I'm a bit concerned to throw yet another mandatory, difficult to
-update, component in the already quite long boot chain.
+Agreed.
 
-Getting fixes deployed in ATF or U-Boot is already pretty long, having
-another component in there will just make it worse, and it's another
-hard to debug component that we throw into the mix.
+> 
+> But that 19.2MHz is not a limitation of the device itself, it's a
+> limitation of our implementation, so we can instead implement
+> something equivalent in Linux using a clk_set_rate to 19.2MHz (to make
+> sure that our parent clock is configured at the right rate) and the
+> clk_get_rate and compare that to 19.2MHz (to make sure that it's not
+> been rounded too far apart from the frequency we expect).
+> 
+> This is doing exactly the same thing, except that we don't encode our
+> implementation limitations in the DT, but in the driver instead.
 
-And this prevents any use of virtualisation on the platform.
+What I really wanted to say that a driver that doesn't get the clock
+frequency from DT but still sets that frequency is broken.
 
-I haven't found an explanation on what that hypervisor is doing
-exactly, but from a look at it it seems that it will trap all the
-accesses to the PCIe memory region to emulate a regular space on top
-of the restricted one we have?
+This frequency is highly system specific, and in many cases only a certain
+frequency is usable, for a few reasons: On many SoCs, not all common
+frequencies can be used (e.g. 9,6 MHz, 19,2 MHz and 24 MHz; while others
+are being used as well), and then that frequency affects the usable CSI-2
+bus frequencies directly --- and of those, only safe, known-good ones
+should be used. IOW, getting the external clock frequency wrong typically
+has an effect that that none of the known-good CSI-2 bus clock frequencies
+are available.
 
-If so, can't we do that from the kernel directly by using a memory
-region that always fault with a fault handler like Framebuffer's
-deferred_io is doing (drivers/video/fbdev/core/fb_defio.c) ?
+-- 
+Regards,
 
-Maxime
-
---bxu46sevqgfhv5v4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXorn9AAKCRDj7w1vZxhR
-xdV6AP4y+CTh2KPAJf/qouRZrEmCvj19E23Xp9w67VLU9qZHBQD7BVzW6hD0E0oG
-LnBT9kYGbeef7keRU4XuDbLzxH3hzQc=
-=0eCj
------END PGP SIGNATURE-----
-
---bxu46sevqgfhv5v4--
+Sakari Ailus
