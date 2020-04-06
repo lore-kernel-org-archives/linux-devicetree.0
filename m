@@ -2,114 +2,202 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E441C2BA80
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 19:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86283C2BABC
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 19:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11C702072F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 19:19:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="IhTkbg/Y"
+	by mail.kernel.org (Postfix) with ESMTP id 65B5D20769
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 19:19:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586200795;
+	bh=zdj7yojVhBaB/Gk/gXB9gngRJZ5TCmP70WrifeTeWPo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xR4a7/8SQyXGTIBaMFUOIH85zsCvXsE8Io/HfANq/VjjW5d2ynSjufeL/OaPx7Z7O
+	 HwVVX/ZEPHcN+I4CZ0LN2g091X6tvlfH2JEmyU0k5Facd3jh8jHccNffkymPFhrDkH
+	 ad3Q3uiGnsHCHIVSK7Totvas/T6bW57hh06xvrUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbgDFTTF (ORCPT
+        id S1725957AbgDFTTz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 15:19:05 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:40654 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbgDFTTE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 15:19:04 -0400
-Received: by mail-ua1-f65.google.com with SMTP id a10so374185uad.7
-        for <devicetree@vger.kernel.org>; Mon, 06 Apr 2020 12:19:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XjAfYfpfwR/Uhuxu4iW+Imv0nmFvljHi7SshWdYw2xM=;
-        b=IhTkbg/YrdV9CWgF4LU1QM5yNI9PoTaAT/lHfXx7ntA1TFAbRqF07o4m4oVedDzL09
-         RRdK3/5Jb+Ep18uOnJkJGm74pLTDz0AcFcX3dGrKDhjpWT87aCFU/cJBnZgJAMzYQKX6
-         U1OGTTEbogXxeCfMhfLykTt6nJeDmulQWt1m7CYKeu/QKsl0F/xbYK77Abf2jh2TwXb1
-         eedchPfzMERpZVeSRlEA1jTVZGgA0d/o7yzMaxBo1TJfqOzcmzbmS5BkrOuoUBYLFvlQ
-         bAa865MDmFZAXeIgNhXIJwdnZ0/x/z9HYK4hEiSBwJVpF45lVJZoe3kTwNpLNRNzOkq9
-         0hXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XjAfYfpfwR/Uhuxu4iW+Imv0nmFvljHi7SshWdYw2xM=;
-        b=IuGmPyQzuhl8g2cux84HO0DfB0VDvIm0GFNQ5eRrNIMEfVm3Rk+VrsmBfeBm+0TYrL
-         ZfsqLEfbgh26IV7qOf/SYnPlveg3JCcKzcrDDZYkXRnMlLPU2DG09psMtyqhH2Osmdl2
-         uMPVEZrO3Xlw9t2kxvWZdbNc7F4VIuQKlIdewX7OAiU1vcQWi24UWiDgW+gVurqwlEnp
-         FH5oeWe0Wgh3Z0Zhnr1wEkol09W1VdHwqQBA3rnBgCDHF8NcaV/GDC8IhiMiZscFBGnJ
-         uQ8yXGJmc6y5+kFDDD/er4ySs9dBIBe+aIIKoxZTWQ206JTV1hQqvJtaNN+ST3Gw1jUW
-         pfrA==
-X-Gm-Message-State: AGi0PuZ9npg1JbhKLimWBPuca26RtJ6xcVnBlvhODRM5ItjNs6h0QyRt
-        J9YpPENzY+7EXqco3uRgHqp6LQE379zCuj0ZdOGP9w==
-X-Google-Smtp-Source: APiQypLHaO/009rtrIIFj+TOpL4Oald+Q5Coyb4NlVmf9tNta8n6ctHnGaUajSTwxn4kl/rUSiWPoeWQfNaKQ7MNrOA=
-X-Received: by 2002:ab0:654c:: with SMTP id x12mr963381uap.48.1586200741414;
- Mon, 06 Apr 2020 12:19:01 -0700 (PDT)
+        Mon, 6 Apr 2020 15:19:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725928AbgDFTTy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Apr 2020 15:19:54 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3427420748;
+        Mon,  6 Apr 2020 19:19:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586200793;
+        bh=zdj7yojVhBaB/Gk/gXB9gngRJZ5TCmP70WrifeTeWPo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kesdoxmkVgj2Dqv1tQt4fCw9H0dMsOgGP9qPRjv6lxpDGHTZFQ1uelps6tnsNLOnV
+         9nh0Bo+fqKkQzQGZ419+d2v7FAG5G+QsZIATy+uKnjZeOBlQSb+tW7Q+Cgyo0nqrRD
+         y8IuKO4hOpB0d8gYWFzx/ahsF9E58viGQiCokusg=
+Received: by mail-qt1-f174.google.com with SMTP id s30so753741qth.2;
+        Mon, 06 Apr 2020 12:19:53 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZcgCPeTVWsD4XH9JsJNQY4Lx7AlLXcf2TXptd1rF4ng1TiW2p3
+        AG3W+Nyey8kzEWkIgCBWsgSj7TLxgCnSyXEAUg==
+X-Google-Smtp-Source: APiQypJ1VgDGdNpHhWosDRaYn1Rfz/zEmplt4aAY7f96THP6EXWe5/sr8OVtCQdWt8FkwVCSRsBVmdwCf83I3b/uFa0=
+X-Received: by 2002:ac8:2668:: with SMTP id v37mr1115420qtv.143.1586200792283;
+ Mon, 06 Apr 2020 12:19:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200331075356.19171-1-j-keerthy@ti.com> <20200331075356.19171-5-j-keerthy@ti.com>
-In-Reply-To: <20200331075356.19171-5-j-keerthy@ti.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Tue, 7 Apr 2020 00:48:49 +0530
-Message-ID: <CAHLCerOyo0D=A14wmRGZqSSAmDj0X1AF1Ht1zV0ODDZcW0YqFg@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] arm64: dts: ti: am6: Add VTM node
-To:     Keerthy <j-keerthy@ti.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>, t-kristo@ti.com,
+References: <20200405232318.26833-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20200405232318.26833-5-laurent.pinchart+renesas@ideasonboard.com>
+ <CAMuHMdXJcw0eGY7J=JcGv6Hs9E_GCybsYSeKKeH5pAH8nkdTrg@mail.gmail.com>
+ <20200406110924.GB4757@pendragon.ideasonboard.com> <CAMuHMdWhj1uS6v1bb0ntsP_b29Sgw+M6KHPceDxmeF3329Aw=g@mail.gmail.com>
+In-Reply-To: <CAMuHMdWhj1uS6v1bb0ntsP_b29Sgw+M6KHPceDxmeF3329Aw=g@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 6 Apr 2020 13:19:40 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKhdQdfX4bHe2dxR_TiK2jWpdY=pacHOme+qaJ-MdN_fg@mail.gmail.com>
+Message-ID: <CAL_JsqKhdQdfX4bHe2dxR_TiK2jWpdY=pacHOme+qaJ-MdN_fg@mail.gmail.com>
+Subject: Re: [PATCH 4/4] dt-bindings: display: bridge: renesas,lvds: Convert
+ binding to YAML
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
+        <devicetree@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Maxime Ripard <maxime@cerno.tech>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Keerthy,
+On Mon, Apr 6, 2020 at 5:40 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Laurent,
+>
+> On Mon, Apr 6, 2020 at 1:09 PM Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> > On Mon, Apr 06, 2020 at 10:47:37AM +0200, Geert Uytterhoeven wrote:
+> > > On Mon, Apr 6, 2020 at 1:24 AM Laurent Pinchart wrote:
+> > > > Convert the Renesas R-Car LVDS encoder text binding to YAML.
+> > > >
+> > > > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+>
+> > > > +if:
+> > > > +  properties:
+> > > > +    compatible:
+> > > > +      enum:
+> > > > +        - renesas,r8a774c0-lvds
+> > > > +        - renesas,r8a77990-lvds
+> > > > +        - renesas,r8a77995-lvds
+> > > > +then:
+> > > > +  properties:
+> > > > +    clocks:
+> > > > +      minItems: 1
+> > > > +      maxItems: 4
+> > > > +      items:
+> > > > +        - description: Functional clock
+> > > > +        - description: EXTAL input clock
+> > > > +        - description: DU_DOTCLKIN0 input clock
+> > > > +        - description: DU_DOTCLKIN1 input clock
+> > > > +
+> > > > +    clock-names:
+> > > > +      minItems: 1
+> > > > +      maxItems: 4
+> > > > +      items:
+> > > > +        - const: fck
+> > > > +        # The LVDS encoder can use the EXTAL or DU_DOTCLKINx clocks.
+> > > > +        # These clocks are optional.
+> > > > +        - enum:
+> > > > +          - extal
+> > > > +          - dclkin.0
+> > > > +          - dclkin.1
+> > > > +        - enum:
+> > > > +          - extal
+> > > > +          - dclkin.0
+> > > > +          - dclkin.1
+> > > > +        - enum:
+> > > > +          - extal
+> > > > +          - dclkin.0
+> > > > +          - dclkin.1
+> > >
+> > > Can the duplication of the last 3 entries be avoided?
+> > > Perhaps like in
+> > > Documentation/devicetree/bindings/serial/renesas,scif.yaml?
+> >
+> > I'd love to, if you can tell me how to make sure the fck entry is
+> > mandatory. The following
+> >
+> >   minItems: 1
+> >   maxItems: 4
+> >   items:
+> >     enum:
+> >       - fck
+> >       - extal
+> >       - dclkin.0
+> >       - dclkin.1
+> >
+> > passes the checks, but would accept
+> >
+> >         clock-names = "extal";
+> >
+> > which is not valid. Your
+> > Documentation/devicetree/bindings/serial/renesas,scif.yaml bindings
+> > suffer from the same problem :-)
+>
+> Hmm....
+>
+> > > > +examples:
+> > > > +  - |
+> > > > +    #include <dt-bindings/clock/renesas-cpg-mssr.h>
+> > > > +    #include <dt-bindings/power/r8a7795-sysc.h>
+> > > > +
+> > > > +    lvds@feb90000 {
+> > > > +        compatible = "renesas,r8a7795-lvds";
+> > > > +        reg = <0 0xfeb90000 0 0x14>;
+> > >
+> > > Examples are built with #{address,size}-cells = <1>.
+> >
+> > Are they ? I don't get any failure from make dt_binding_check.
+>
+> Hmm... And you do have "reg: maxItems: 1"...
 
-Should the subject refer to am65x instead of am6 since your dtsi file
-is called k3-am65-wakeup.dtsi?
+At first glance I was expecting an error too, but there isn't. As far
+as the schema is concerned, it's valid because it's a single entry
+(i.e. one entry in <>). And then dtc can only check that reg is a
+multiple of 2. The size check does work where we have more constraints
+like I2C.
 
-Regards,
-Amit
+If we enforce bracketing, then we should be able to check these.
+Otherwise, knowing both the cell sizes and number of entries is a
+problem. With bracketing, we can split those checks. I'd been thinking
+checking cell sizes would be easier in dtc (we're already doing that
+in lots of cases), but thinking about it some more there is a way to
+do this with schema:
 
-On Tue, Mar 31, 2020 at 1:24 PM Keerthy <j-keerthy@ti.com> wrote:
->
-> VTM stands for voltage and thermal management. Add the vtm node and
-> the associated thermal zones on the SoC.
->
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-> index f4227e2743f2..54a133fa1bf2 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-> @@ -89,4 +89,15 @@
->                 clocks = <&k3_clks 59 0>;
->                 clock-names = "gpio";
->         };
-> +
-> +       wkup_vtm0: thermal@42050000 {
-> +               compatible = "ti,am654-vtm";
-> +               reg = <0x42050000 0x25c>;
-> +               power-domains = <&k3_pds 80 TI_SCI_PD_EXCLUSIVE>;
-> +               #thermal-sensor-cells = <1>;
-> +       };
-> +
-> +       thermal_zones: thermal-zones {
-> +               #include "k3-am654-industrial-thermal.dtsi"
-> +       };
->  };
-> --
-> 2.17.1
->
+if:
+  properties:
+    '#address-cells':
+      const: 2
+    '#size-cells':
+      const: 2
+  required:
+    - '#address-cells'
+    - '#size-cells'
+then:
+  patternProperties:
+    '@':
+      properties:
+        reg:
+          items:
+            minItems: 4
+            maxItems: 4
+      required:
+        - reg
+
+...and copy-n-paste for each size combination.
+
+I imagine implementing this will result in another set of fixes.
+
+Rob
