@@ -2,64 +2,63 @@ Return-Path: <SRS0=4d9G=5W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B26F6C2BABC
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 08:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0661EC2BA1E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 09:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA8B206F8
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 08:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2F0C206B8
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Apr 2020 09:07:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bn+gVHDE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HNSAOniF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgDFI67 (ORCPT
+        id S1726715AbgDFJH5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 04:58:59 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45468 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbgDFI66 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 04:58:58 -0400
-Received: by mail-io1-f68.google.com with SMTP id y14so14883882iol.12;
-        Mon, 06 Apr 2020 01:58:56 -0700 (PDT)
+        Mon, 6 Apr 2020 05:07:57 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:44377 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbgDFJH5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 05:07:57 -0400
+Received: by mail-il1-f193.google.com with SMTP id j69so13881527ila.11;
+        Mon, 06 Apr 2020 02:07:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=UPqDv8CeYx1N0Rja5HT63eK8rvmvj33Sn4Tfxap3WTc=;
-        b=Bn+gVHDErL8xA6WvQFL200iyfcEdk15R4pwg/hQTYqbdp4UqOFrBDKJ5VSmq9u6+Rb
-         /DeDXlLbydHymHVCAbiurUQlc/aa5I1KkdZN8F1w/r27hlxr8Y+XXn8YY1WNgUt6aKKH
-         3TI0b2RGGTqLFpZcVy1vBm006yak8uN/7KFeq1Qx6OMqw5h13Y7pNa1lrTPq1YvGMCCJ
-         mqlycyqCwA1qrYb6bqKQeD7+4BE1bpPfWGBOKFb5QI1zlOxGGOxxkm1jc26mL2QWWFDU
-         92ng5DI/gdutvOEEHZdUwjA3nBbiLRPEUZYO2k7spgJmJOr8alCTYOeGY0aVi3EdYyXP
-         pIDQ==
+        bh=/9j8DdZJYyLVGpLvuhYgYAvXmfCc0kHfDTcnuG7viz0=;
+        b=HNSAOniFzM6jm6vp0c57iOa9y0/X3uZ2z5tkjrwiIng1IfKsrxBzQ0hhjx3XuZZ/u2
+         6hLtPhK9VhleZ1LllosidRlLXtoSbp6R7Vr3okE/i94RO7FVsmvnjqon+5zEYHwdYAeM
+         Mk5i+86U7o50T/KDGfFAAeSlxyR6QwXvOyFrEOeJQKH4j7U5wUNtBfq4toVis7WZlTfA
+         UwGyi5mXfJ/ZDv3sWnLbmiupP80JSFKlYxmq1PjyMUITzZwcxVW8Vv8ijJHF2kICYfc8
+         C9IqSAekroHkP5mYGQDSXWbT9DOxRcpZt3aw9vEiPEiF9nfZKvo1BtNlUZleKXptI0sk
+         kPKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UPqDv8CeYx1N0Rja5HT63eK8rvmvj33Sn4Tfxap3WTc=;
-        b=BDBkshVZ1g98rpR+KbcOGYg3eCwlq8APS6mT/u6HRnU6/yGqjlESsnbFRwrqRa3nVL
-         cSJE6aBqPvpVlvcgOry6fs4p8kyIy31uEfzrzoFbRj07+LyIRIe2ORrR9OGQRpKZosh6
-         5zuYhA6Q6SPvvL4Rjhh3wfye5XByh0OoQTmtKdGGgdCkgjynBAyILtsbx6AiBr86mtpo
-         TU9vPqX5GmayiAtZLYuTiPAWnJ4JXQGgmf7re0uDp05mJL9HvMnarKjrommRe1jP0KT7
-         HNHXQ/oXzOivjt2/UUhh+f3JSyAnjbZme9gaVuMOr6h05W9lJNGx9sgae51jUsf09vJl
-         a1RA==
-X-Gm-Message-State: AGi0PuZN6qZb7kKoSl2r6quw9dEpzzGLbVKjzwMLzRk9VtqbBTWICbRf
-        wBUzuopKfKJpYTK0hGOqro4XljGQdB5+55W0u58=
-X-Google-Smtp-Source: APiQypKzF6+d+kvaHfqUmiZUENYlrMoUP8gCIkosLWjyIQWyWGDfhXe0uF0V+iawQs6++52+4Lv1JVXLmh6NX2xx8IY=
-X-Received: by 2002:a05:6638:53:: with SMTP id a19mr19157348jap.144.1586163535745;
- Mon, 06 Apr 2020 01:58:55 -0700 (PDT)
+        bh=/9j8DdZJYyLVGpLvuhYgYAvXmfCc0kHfDTcnuG7viz0=;
+        b=KFZeL56O/E8RzA794Q0Zs9thzlvv/6lLBWZnm84cslhTiO/o7sytCtbxZv52VScoeS
+         uWeYUelRry3SDYgIOJNSHMssaQLfyOWur/DBRXA+FnoponqqKF2jJ6uAHuchYfaVDUdi
+         gEi+f+YopVLjQlC4vaiC9MnoFqFIfmRSnT61iBiDrUAm2faC0btKa2AoYWPyDm3wdkC8
+         5IxyfKQh8OKY829qdtflvPabvUQF1I4kfaykALdkWMO9d18mBxoMUzv+hV8WpeJXU6/6
+         ipHp5tHFP73GjdkNo8g2nAJjvvfEL6vPeSlDwRY76qz7tWivMneVF3/wJ9MoSP3nqhfc
+         AQDA==
+X-Gm-Message-State: AGi0PuYY5ZQUBW6/SG+pbkmZIvBoaHVl8UcOHMfQNQ2MUbUxdU0ip2vI
+        ifIogM3Pbt22XLKeZYLbMdC77amyBQlizmnTt64=
+X-Google-Smtp-Source: APiQypI5S4sx/nuC+BoUUIBngD3kJd8k+mZEAdHCy9UHtWhnWg7WVKqBk4l0p1gpmHZya6fVvlPa6dwh5Lw7jJAZmyc=
+X-Received: by 2002:a92:5ccd:: with SMTP id d74mr18764377ilg.59.1586164076003;
+ Mon, 06 Apr 2020 02:07:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200405173601.24331-1-peron.clem@gmail.com> <20200405173601.24331-5-peron.clem@gmail.com>
- <20200406081601.3y6fwb7czr2xdkep@gilmour.lan>
-In-Reply-To: <20200406081601.3y6fwb7czr2xdkep@gilmour.lan>
+References: <20200405173601.24331-1-peron.clem@gmail.com> <20200406081007.k6wlaampgbe46yts@gilmour.lan>
+In-Reply-To: <20200406081007.k6wlaampgbe46yts@gilmour.lan>
 From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Mon, 6 Apr 2020 10:58:44 +0200
-Message-ID: <CAJiuCceK40JVf7SDm5s-JAL1g_bMPuuhF7cc-yCSN7epUV7V=w@mail.gmail.com>
-Subject: Re: [PATCH v2 4/7] arm64: dts: allwinner: h6: Add GPU Operating
- Performance Points table
+Date:   Mon, 6 Apr 2020 11:07:44 +0200
+Message-ID: <CAJiuCccPxnW-YMjENr5-_XMMu_gs5pRnCtYvpXQtHTAVj1QQqw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] Add support for Allwinner H6 DVFS
 To:     Maxime Ripard <maxime@cerno.tech>
 Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
@@ -75,62 +74,66 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Maxime,
 
-On Mon, 6 Apr 2020 at 10:16, Maxime Ripard <maxime@cerno.tech> wrote:
+On Mon, 6 Apr 2020 at 10:10, Maxime Ripard <maxime@cerno.tech> wrote:
 >
-> On Sun, Apr 05, 2020 at 07:35:58PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Add an Operating Performance Points table for the GPU to
-> > enable Dynamic Voltage & Frequency Scaling on the H6.
+> Hi,
+>
+> On Sun, Apr 05, 2020 at 07:35:54PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Now that required drivers are merged we can contibute on DVFS
+> > support for Allwinner H6.
 > >
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >  .../boot/dts/allwinner/sun50i-h6-gpu-opp.dtsi | 74 +++++++++++++++++++
-> >  1 file changed, 74 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-gpu-opp.dts=
-i
+> > This serie is based on Yangtao Li serie[0] and Ond=C5=99ej Jirman work[=
+1].
 > >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-gpu-opp.dtsi b/arc=
-h/arm64/boot/dts/allwinner/sun50i-h6-gpu-opp.dtsi
-> > new file mode 100644
-> > index 000000000000..4a1814844fe0
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-gpu-opp.dtsi
-> > @@ -0,0 +1,74 @@
-> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > +// Copyright (C) 2020 Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > +
-> > +/ {
-> > +     gpu_opp_table: opp_table1 {
+> > Most of the OPP tables are taken from original vendor kernel[2].
+> > Plus there is a new CPU frequencies at 1.6GHz, 1.7GHz and 1.8GHz.
+> >
+> > I wrote a simple script to randomly set a frequency during
+> > a random time[3].
 >
-> A node name is supposed to be a generic description, so what about
-> using gpu-opp-table (and cpu-opp-table) instead?
->
-> > +             compatible =3D "operating-points-v2";
-> > +
-> > +             opp@756000000 {
-> > +                     opp-hz =3D /bits/ 64 <756000000>;
-> > +                     opp-microvolt =3D <1040000>;
-> > +             };
-> > +             opp@624000000 {
-> > +                     opp-hz =3D /bits/ 64 <624000000>;
-> > +                     opp-microvolt =3D <950000>;
-> > +             };
->
-> Ordering by ascending frequency would be great here.
-Indeed will fix it.
+> If you ever need to do that ever again, cpufreq-ljt-stress-test (found
+> here https://github.com/ssvb/cpuburn-arm) has proven to be very
+> reliable to detect cpufreq related issues. stress-ng might not be
+> enough since the (at least older) Allwinner SoCs tend to create cache
+> corruption when undervolted, and that might not be unnoticed by
+> stress-ng but will be catched by cpufreq-ljt-stress-test.
+
+Thanks for the tool and explanation. I will test the v3 with this one.
 
 >
-> Also, why did you need to create a new DTSI for it? Is there some
-> downside to enabling it for all the users?
+> Also, it will test each frequency, while random frequencies might skip
+> a few.
 
-I didn't want to enable it for all boards as I can't test them and not all =
-board
-have a dedicated regulator for VDD-GPU.
-Hence my question in the cover,
-But with Jernej =C5=A0krabec test on Tanix TX6 I think it can be safely
-enable on all boards.
+I didn't count them but there was more than 2000lines, probability to miss
+a frequency is really low. Also changing from 500MHz to 1.8GHz could have
+trigger some out-of-spec issue.
 
-Regards,
-Clement
+But just to be sure I will add an init phase before doing random stuff.
+
+>
+> > With this script and using stress-ng during several hours, I didn't
+> > see any issue. Moreover I have tested specifically the 1.8GHz on my
+> > Beelink GS1, max thermal 85=C2=B0C is reached very quickly and then the
+> > SoC oscillates quickly between 1.5 and 1.8GHz. So i have added
+> > 1.6GHz and 1.7GHz my board now oscillate slower between 1.5GHz and
+> > 1.6GHz swapping every second and temperature is also morestable.
+> >
+> > I also test that that offlining CPU0 and doing DVFS on other CPUs
+> > works. As CPU regulator is only set for CPU0.
+> >
+> > But maybe it doesn't cost much to set the regulator for all the CPUs?
+> >
+> > Jernej test the GPU devfreq on several H6 board particulary the
+> > Tanix TX6 which doesn't have a proper dedicated PMIC and doesn't
+> > had any trouble with it.
+> >
+> > Do you think I can enable GPU OPP for all H6 Boards?
+>
+> It seems you're doing it?
+No I don't, see my answer on patch 4/7.
+
+Thanks for your review,
+Cl=C3=A9ment
 
 >
 > Maxime
