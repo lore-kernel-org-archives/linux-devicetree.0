@@ -2,131 +2,116 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD1DC2D0EC
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 23:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBC8C2BB54
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 23:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 155FC20719
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 23:12:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ITb0PCiL"
+	by mail.kernel.org (Postfix) with ESMTP id E09C3206BE
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 23:24:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbgDGXMc (ORCPT
+        id S1726421AbgDGXYI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 19:12:32 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46583 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgDGXMc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 19:12:32 -0400
-Received: by mail-lf1-f68.google.com with SMTP id m19so1677410lfq.13;
-        Tue, 07 Apr 2020 16:12:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RwBDvU/d/RuyuOicf+LMSeUuB7FpaSGPCFNY8uUMcT8=;
-        b=ITb0PCiLvFvAVN7bpWpJlckTjQ8s/wjqbxLsbWXCFsj+XrR6vru92/JlT6lzOgpb0u
-         GvSyCbY86jIPTEp7Rr6UG3CpHXhrlyN6C7QMfn9hGHT5V94hmDalVuuw6l9Uj+jhnEpL
-         0w+zGOx2K4nyKvpPS1itml53GKUo/T2CDvs+jNKP83LXgAiqyUEMkQukAExr3FGhUMK0
-         /q2xBHo/iw98t6r1GJ1gaaC8/QbQZmkYgHikswey901fj0KneeQkZ/8Oq6B4+5lXpTPy
-         QCx3IlR4i1XwPUTGs2RiyEngHTxoZVbLXWuUTpGiGD93wuoUcU/BPwTEWWiry2rngf2P
-         dYpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RwBDvU/d/RuyuOicf+LMSeUuB7FpaSGPCFNY8uUMcT8=;
-        b=A8cj4Mm/6m7HBUghxwF8KyDY8QfJD5MoDA5jW8IJuOMEmFWCA6o3ihf2QRPynMe/9r
-         Hy9a1L7ur3XRdLN21rzampW7+uxxC+jypwsQe49wK4ZYGXEkMsfN5g50G9qBk/D+O27r
-         fT8j/ExA6jz8VSiE14WfNBACgYMY6471MnSbv+sRlU9aS1oP3wc6q7P4SgQNDCH39zEP
-         tDwkVeK9THQ0iv9o3nY8euBNmGokrOGuGm1v994Ckn613Gc7vzyrq5wgwNzcllPGynZM
-         qHhycVQ8jStsP3pay3g35A7mWT7LEJXZgSg1c2712EgsqlV3m7DTG/4hu3JhY7idIrCe
-         vDYw==
-X-Gm-Message-State: AGi0PuatZMcSzG14cIesifDWQDDJG8I2gc48bLlbKibvskhFrwa7tQZI
-        IyGILgnDNkiIXiD2dJRrKh4zTns6
-X-Google-Smtp-Source: APiQypLgfZ7BpY4nMrnJrXTT3z+5gBIe2iOt5bl8wLbbK0kgy8mwEcvrUJhccF8GU5G5Zh9WGlI4uw==
-X-Received: by 2002:ac2:5607:: with SMTP id v7mr2758744lfd.212.1586301148120;
-        Tue, 07 Apr 2020 16:12:28 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id c2sm14650894lfb.43.2020.04.07.16.12.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 16:12:27 -0700 (PDT)
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
- <200bb96e-2d07-764f-9e14-55538dc742fd@gmail.com>
- <23bfab09-b464-6e51-9843-06d13000e9b9@nvidia.com>
- <be77b0ef-d605-8357-4180-f40b2886d07a@gmail.com>
- <08cd31d5-e8b9-4d3a-fb0e-0e4462947d96@nvidia.com>
- <12a834ac-52b1-6dc0-7d3a-3e6a1fa85a2a@gmail.com>
- <e3712e7b-b335-b35b-a94f-24eb85122dca@nvidia.com>
- <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
- <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
- <dd16c560-ba8f-e7df-5dc4-5227e0043196@nvidia.com>
- <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
- <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
- <9e317f65-8a02-3b15-cfec-8e0d8374130e@gmail.com>
- <97b35910-4c93-123a-43a0-eb14476ed0f3@nvidia.com>
- <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
- <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
- <0c425505-347f-7418-af7e-d121fe0d06dc@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <db7c7051-5674-cdb9-0aa4-ee94125b3024@gmail.com>
-Date:   Wed, 8 Apr 2020 02:12:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 7 Apr 2020 19:24:08 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:39078 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726386AbgDGXYI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Apr 2020 19:24:08 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.sntech)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1jLxZa-00025g-Gb; Wed, 08 Apr 2020 01:24:02 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     dri-devel@lists.freedesktop.org
+Cc:     thierry.reding@gmail.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, mark.rutland@arm.com,
+        christoph.muellner@theobroma-systems.com, heiko@sntech.de,
+        sam@ravnborg.org,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: [PATCH v2 1/2] dt-bindings: display: panel: Add binding document for Leadtek LTK050H3146W
+Date:   Wed,  8 Apr 2020 01:23:50 +0200
+Message-Id: <20200407232351.2547750-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <0c425505-347f-7418-af7e-d121fe0d06dc@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-08.04.2020 01:22, Sowjanya Komatineni пишет:
-> 
-> On 4/7/20 3:08 PM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 08.04.2020 00:08, Sowjanya Komatineni пишет:
->> ...
->>>>> I think you need a semaphore with resource count = 2.
->>>> we hold on to issuing capture if more than 2 buffers are queued and it
->>>> continues only after fifo has min 1 slot empty
->>>
->>> Just want to close on this part of feedback. Hope above explanation is
->>> clear regarding triggering/issuing at max 2 frame capture to VI HW and
->>> also regarding capture threads where they use wait_event_interruptible
->>> to prevent blocking waiting for buffers to be available for captures.
->>>
->>> So no changes related to this part are needed in v7.
->>  From what I see in the code, you "hold on" by making kthread to spin in
->> a busy-loop while caps_inflight >= SYNCPT_FIFO_DEPTH. So some change
->> should be needed to prevent this.
->>
->> The wait_event_interruptible seems should be okay.
-> 
-> We don't want to prevent that as we already have buffers available for
-> capture so as soon as VI HW issuing single shot is done and when min 1
-> slot is empty we should continue with issuing for another capture.
-> 
-> As long as buffers are available, we should continue to capture and
-> should not hold
-> 
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-I suppose that taking a shot takes at least few milliseconds, which
-should be unacceptable to waste.
+The LTK050H3146W is a 5.0" 720x1280 DSI display.
+
+changes in v2:
+- add display variants
+
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+---
+ .../display/panel/leadtek,ltk050h3146w.yaml   | 51 +++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/leadtek,ltk050h3146w.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/panel/leadtek,ltk050h3146w.yaml b/Documentation/devicetree/bindings/display/panel/leadtek,ltk050h3146w.yaml
+new file mode 100644
+index 000000000000..a372bdc5bde1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/leadtek,ltk050h3146w.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/leadtek,ltk050h3146w.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Leadtek LTK050H3146W 5.0in 720x1280 DSI panel
++
++maintainers:
++  - Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
++
++allOf:
++  - $ref: panel-common.yaml#
++
++properties:
++  compatible:
++    enum:
++      - leadtek,ltk050h3146w
++      - leadtek,ltk050h3146w-a2
++  reg: true
++  backlight: true
++  reset-gpios: true
++  iovcc-supply:
++     description: regulator that supplies the iovcc voltage
++  vci-supply:
++     description: regulator that supplies the vci voltage
++
++required:
++  - compatible
++  - reg
++  - backlight
++  - iovcc-supply
++  - vci-supply
++
++additionalProperties: false
++
++examples:
++  - |
++    dsi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        panel@0 {
++            compatible = "leadtek,ltk050h3146w";
++            reg = <0>;
++            backlight = <&backlight>;
++            iovcc-supply = <&vcc_1v8>;
++            vci-supply = <&vcc3v3_lcd>;
++        };
++    };
++
++...
+-- 
+2.24.1
+
