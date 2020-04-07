@@ -2,142 +2,240 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 809DDC2BA16
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 06:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A23C2BABC
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 07:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C20120748
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 06:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FB0A2074F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 07:01:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Fr9aFOcB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="ZQ6w+gAN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgDGGyJ (ORCPT
+        id S1726631AbgDGHBJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 02:54:09 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:25338 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbgDGGyJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 02:54:09 -0400
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200407065407epoutp010551a3402a57b1e3d9f5950d3caedc40~DdxocxB5X1120311203epoutp01h
-        for <devicetree@vger.kernel.org>; Tue,  7 Apr 2020 06:54:07 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200407065407epoutp010551a3402a57b1e3d9f5950d3caedc40~DdxocxB5X1120311203epoutp01h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1586242447;
-        bh=FD6u6gfSfkVoafsxdQNzxjDTpNg+DSItmEjTgsOLtxk=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=Fr9aFOcBoX+ijwXyThPrEYedZA1LFeIUQs3ZbJiiAttqRG3amcBE2ZenidORB6kjb
-         Kn0bR0uR8T5bz0kOXu+D1Ai5HcTLYyVKblFzqYQb88Ks5gIKh4IRwk8cC9oVScF87J
-         4o4cI9yZPE4/MSvVdpN6P89i1CuWkLJOP2Tvx2rg=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-        20200407065407epcas2p1c6e02e1a1e1cb8d5a91877e733e5f94d~Ddxn9mXvO1808218082epcas2p1x;
-        Tue,  7 Apr 2020 06:54:07 +0000 (GMT)
-Received: from epsmges2p4.samsung.com (unknown [182.195.40.181]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 48xJ6P4nNWzMqYkk; Tue,  7 Apr
-        2020 06:54:05 +0000 (GMT)
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        3B.1D.04647.B832C8E5; Tue,  7 Apr 2020 15:54:03 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200407065403epcas2p37d0990979790e3e14a25149830f5c913~DdxkNzj_k2389123891epcas2p3-;
-        Tue,  7 Apr 2020 06:54:03 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200407065403epsmtrp27601e96f08f9701f497a9742ed6ce228~DdxkK9nvC3043630436epsmtrp2c;
-        Tue,  7 Apr 2020 06:54:03 +0000 (GMT)
-X-AuditID: b6c32a48-8a5ff70000001227-59-5e8c238bbe98
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        1A.42.04024.B832C8E5; Tue,  7 Apr 2020 15:54:03 +0900 (KST)
-Received: from KORCO004660 (unknown [12.36.165.196]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200407065402epsmtip21f3515027a661b7686ec8d83ad8aae00~Ddxj6Sdlv2245622456epsmtip2X;
-        Tue,  7 Apr 2020 06:54:02 +0000 (GMT)
-From:   "Hyunki Koo" <hyunki00.koo@samsung.com>
-To:     "'Krzysztof Kozlowski'" <krzk@kernel.org>
-Cc:     <gregkh@linuxfoundation.org>, "'Rob Herring'" <robh+dt@kernel.org>,
-        "'Kukjin Kim'" <kgene@kernel.org>,
-        "'Jiri Slaby'" <jslaby@suse.com>, <linux-serial@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>
-In-Reply-To: <20200407062655.GC21995@kozik-lap>
-Subject: RE: [PATCH v6 2/2] tty: samsung_tty: 32-bit access for TX/RX hold
- registers
-Date:   Tue, 7 Apr 2020 15:54:02 +0900
-Message-ID: <000501d60ca9$529b3cc0$f7d1b640$@samsung.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQKEs4Y1dkf1SYeuuA/6Ie9wROds5QJr8Gf+Ae0ziqcAfW/RYKbpNljg
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm29k5Z1qL07J6GVHjdCENdZttHSujSGVgkGRlWGgHd/LSbu1s
-        doMyTPOSZShdppFlpVhMmaU2cTOzQgoVrOhGRWqUUVmC3ZDa8Rj573m/73m+93ne75VhCg+h
-        lGVZHJzdwppoIljafCdUF16y8Hiq+rtPy1zo6sGZvJoGgqloHJEwJwc+YkxvbyPJeAae4Ey/
-        t4pgzvb6JMzDmlKSyW/vItcGGzz1RYTBf/46aWi6fNjQcOOx1DDqmZ+Ip5hWZ3KskbOrOEu6
-        1ZhlyYihE5LS1qfp9GpNuCaaWUGrLKyZi6FjNySGx2eZAqZoVQ5rcgaOElmepyPXrLZbnQ5O
-        lWnlHTE0ZzOabBqNLYJnzbzTkhGRbjWv1KjVWl2AudOUeeRlB2nzS/edaCwjctE9rBgFyYBa
-        Dn+8r/BiFCxTUK0I+i8VSsXiGwJ37phUYCmoMQTdT/hiJJtQjNZyIqcdQcnRXkIsPiDwuR+R
-        goCgwqG/ZlAi4JAAbnpaSwokjPJJoPNsPi68FERFwthggsCZRW2Fm81tE3wptQg++e/jApZT
-        0dDXVIKJeCZ0nxucMIRRC6DlU9VkBBX8HLqKi73iobJuHImcEKgsKsCEvkDlkdBV7ZWIglho
-        OX+bFPEsGL5/YxIrYfRzOyHiw+ArOEWK4uMIfo4M4eJFFLjeHUNCAIwKhQZvpDiVhdD1fNLb
-        DCi8M06Kx3IoLFCIwiXgHns/6WAeXB/ykmWIdk1J5pqSzDUlget/r2okrUdzOBtvzuB4rW35
-        1L/2oIl9DTO0oo6eDZ2IkiF6unxbUEmqAmdz+P3mTgQyjA6RK0uLUhVyI7v/AGe3ptmdJo7v
-        RLrA4E9hytnp1sD2WxxpGp1Wr1dH6xidXsvQc+Weac92KKgM1sHt5jgbZ/+nk8iClLloY3ze
-        657fy65cS/ma3fYcUb+iF+trL5cbIk+7V+mT7751upvWpvQd/FExMn/mSv+Xir4O3P0nzmvd
-        8iNJq8tXJj/QNvjiirTMvtTEHev21B2afSam1f9m+OJm1falB1vmvtu0t/sYGs52GNvULyru
-        5ZeHbT7UrzEvvXV1+645UQPXRmkpn8lqwjA7z/4FM7y3qcUDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHIsWRmVeSWpSXmKPExsWy7bCSvG63ck+cwZq/zBbzj5xjtWhevJ7N
-        YsqGD0wW/Y9fM1ucP7+B3WLT42usFpd3zWGzmHF+H5PFmcW97Bate4+wO3B5bFrVyeaxf+4a
-        do/NS+o91m+5yuLxeZNcAGsUl01Kak5mWWqRvl0CV0bjnQPsBftZKvo2TGBrYDzG3MXIwSEh
-        YCLxeXlqFyMXh5DAbkaJx5962bsYOYHiMhITXixhhrCFJe63HGGFKHrOKLHt6wuwBJuArsTl
-        xU+YQGwRIHvzjeXsIEXMAseYJG4+/8kC0fGEUeJs10I2kHWcAvoS3554gzQIC4RIrGv+wApi
-        swioSLzdfxzM5hWwlLiwuZsZwhaUODnzCQuIzSygLdH7sJURwpaX2P52DtR1ChI/ny5jhTjC
-        TWL2ir9QNSISszvbmCcwCs9CMmoWklGzkIyahaRlASPLKkbJ1ILi3PTcYsMCw7zUcr3ixNzi
-        0rx0veT83E2M4FjT0tzBeHlJ/CFGAQ5GJR5eBvbuOCHWxLLiytxDjBIczEoivFK9nXFCvCmJ
-        lVWpRfnxRaU5qcWHGKU5WJTEeZ/mHYsUEkhPLEnNTk0tSC2CyTJxcEo1MHLvL7U5v0L8rsQ7
-        U570MwsnrtB5+ptXMttyd9/Vo1y/srufxvezsRdyKWzV+3G4+WBZ6qSEzE256cbzp2/fL1yy
-        63g958dXsuwHNj1e3Bmu3ffn3IaMj4XvgifHr9py9rddI1OItdykJ0eLFSYc8b37/uVX5v4E
-        /qZrc+dWf/fK0lVLeFNnfV+JpTgj0VCLuag4EQDbGOyGsQIAAA==
-X-CMS-MailID: 20200407065403epcas2p37d0990979790e3e14a25149830f5c913
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200406230902epcas2p19a8df6805dac59968d664efb9bc9419b
-References: <20200401082721.19431-1-hyunki00.koo@samsung.com>
-        <CGME20200406230902epcas2p19a8df6805dac59968d664efb9bc9419b@epcas2p1.samsung.com>
-        <20200406230855.13772-1-hyunki00.koo@samsung.com>
-        <20200407062655.GC21995@kozik-lap>
+        Tue, 7 Apr 2020 03:01:09 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:29276 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbgDGHBJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 03:01:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586242863;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=VFXj4dpUOu/S9rLbC7KR7sOUmE95my22jH+cpwFuU5I=;
+        b=ZQ6w+gANoSqD84cMlvcLWaiwH6n2ejlVMHdONC1eZTotMABvfWVoxn+n6pxOg770pB
+        1uUrUh5Jts5VaPYbKgkC9y5YigBBA7LZbdUqyiyc8CaMKo5ipY/smFyA72bEoogoZgeF
+        Pcx3iNzjdTZxP6c1ePs7Gvc+wMUN9/xvOQJAp796nfnGTTs4DjrlDDweLyDdSfFxI1bw
+        JGEYVQChCYywWo5iAP1qA6sH+2xOXP/mJnvlBEakxXA6Hsob3l9fFJSNPpdo61ZpdwPD
+        7tWOi4mQu3Pmm+KDlepCF/VLXfEoH3JAPzwRa+SAv36DVZBm13cgf9Blg5W3YPqmuUZL
+        v49A==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCzzVWjZMpPLf7DqeEVaZMNMnOlXq6WvfU0ov11g"
+X-RZG-CLASS-ID: mo00
+Received: from [IPv6:2001:16b8:26f1:6300:3c47:ec38:42c4:72c6]
+        by smtp.strato.de (RZmta 46.2.1 AUTH)
+        with ESMTPSA id m02241w3770kj69
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Tue, 7 Apr 2020 09:00:46 +0200 (CEST)
+Subject: Re: [PATCH v5 1/8] dt-bindings: add img,pvrsgx.yaml for Imagination GPUs
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <000359713a45bb1a1adc0b609e4e659aedf99e6c.1585503505.git.hns@goldelico.com>
+Date:   Tue, 7 Apr 2020 09:00:48 +0200
+Cc:     Philipp Rossak <embed3d@gmail.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
+        linux-mips@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0E273453-861D-45A2-8FA4-D5EC4B78F490@goldelico.com>
+References: <cover.1585503505.git.hns@goldelico.com> <000359713a45bb1a1adc0b609e4e659aedf99e6c.1585503505.git.hns@goldelico.com>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 3:27 :00PM +0900, Krzysztof Kozlowski wrote:
-> On Tue, Apr 07, 2020 at 08:08:49AM +0900, Hyunki Koo wrote:
-> > Support 32-bit access for the TX/RX hold registers UTXH and URXH.
-> >
-> > This is required for some newer SoCs.
-> >
-> > Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
-> > ---
-> 
-> Why I am adding these for the third time?
-Sorry, I didn't knew that,
-I will keep this next time
-> 
-> Tested-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> Best regards,
-> Krzysztof
+
+> Am 29.03.2020 um 19:38 schrieb H. Nikolaus Schaller =
+<hns@goldelico.com>:
+>=20
+> The Imagination PVR/SGX GPU is part of several SoC from
+> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo,
+> Allwinner A83 and others.
+>=20
+> With this binding, we describe how the SGX processor is
+> interfaced to the SoC (registers, interrupt etc.).
+>=20
+> In most cases, Clock, Reset and power management is handled
+> by a parent node or elsewhere (e.g. code in the driver).
+>=20
+> Tested by make dt_binding_check dtbs_check
+>=20
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+> .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 109 ++++++++++++++++++
+> 1 file changed, 109 insertions(+)
+> create mode 100644 =
+Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml =
+b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+> new file mode 100644
+> index 000000000000..aadfb2d9b012
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+> @@ -0,0 +1,109 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpu/img,pvrsgx.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Imagination PVR/SGX GPU
+> +
+> +maintainers:
+> +  - H. Nikolaus Schaller <hns@goldelico.com>
+> +
+> +description: |+
+> +  This binding describes the Imagination SGX5 series of 3D =
+accelerators which
+> +  are found in several different SoC like TI OMAP, Sitara, Ingenic =
+JZ4780,
+> +  Allwinner A83, and Intel Poulsbo and CedarView and more.
+> +
+> +  For an extensive list see: =
+https://en.wikipedia.org/wiki/PowerVR#Implementations
+> +
+> +  The SGX node is usually a child node of some DT node belonging to =
+the SoC
+> +  which handles clocks, reset and general address space mapping of =
+the SGX
+> +  register area.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - description: SGX530-121 based SoC
+> +        items:
+> +          - enum:
+> +            - ti,omap3-sgx530-121 # BeagleBoard A/B/C, OpenPandora =
+600MHz and similar
+> +          - const: img,sgx530-121
+> +          - const: img,sgx530
+> +
+> +      - description: SGX530-125 based SoC
+> +        items:
+> +          - enum:
+> +            - ti,am3352-sgx530-125 # BeagleBone Black
+> +            - ti,am3517-sgx530-125
+> +            - ti,am4-sgx530-125
+> +            - ti,omap3-sgx530-125 # BeagleBoard XM, GTA04, =
+OpenPandora 1GHz and similar
+> +            - ti,ti81xx-sgx530-125
+> +          - const: ti,omap3-sgx530-125
+> +          - const: img,sgx530-125
+> +          - const: img,sgx530
+> +
+> +      - description: SGX535-116 based SoC
+> +        items:
+> +          - const: intel,poulsbo-gma500-sgx535 # Atom Z5xx
+> +          - const: img,sgx535-116
+> +          - const: img,sgx535
+> +
+> +      - description: SGX540-116 based SoC
+> +        items:
+> +          - const: intel,medfield-gma-sgx540 # Atom Z24xx
+> +          - const: img,sgx540-116
+> +          - const: img,sgx540
+> +
+> +      - description: SGX540-120 based SoC
+> +        items:
+> +          - enum:
+> +            - ingenic,jz4780-sgx540-120 # CI20
+> +            - ti,omap4-sgx540-120 # Pandaboard, Pandaboard ES and =
+similar
+> +          - const: img,sgx540-120
+> +          - const: img,sgx540
+> +
+> +      - description: SGX544-112 based SoC
+> +        items:
+> +          - const: ti,omap4-sgx544-112
+> +          - const: img,sgx544-112
+> +          - const: img,sgx544
+> +
+> +      - description: SGX544-116 based SoC
+> +        items:
+> +          - enum:
+> +            - allwinner,sun8i-a83t-sgx544-116 # Banana-Pi-M3 =
+(Allwinner A83T) and similar
+
+Philipp Rossak reported on a different list [1] that the a83t tells to =
+have a sgx544-115 inside.
+
+So it needs a separate entry.
+
+[1]: =
+http://lists.goldelico.com/pipermail/openpvrsgx-devgroup/2020-April/000263=
+.html
+
+> +            - ti,dra7-sgx544-116 # DRA7
+> +            - ti,omap5-sgx544-116 # OMAP5 UEVM, Pyra Handheld and =
+similar
+> +          - const: img,sgx544-116
+> +          - const: img,sgx544
+> +
+> +      - description: SGX545-116 based SoC
+> +        items:
+> +          - const: intel,cedarview-gma3600-sgx545 # Atom N2600, D2500
+> +          - const: img,sgx545-116
+> +          - const: img,sgx545
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |+
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    gpu: gpu@fe00 {
+> +      compatible =3D "ti,omap5-sgx544-116", "img,sgx544-116", =
+"img,sgx544";
+> +      reg =3D <0xfe00 0x200>;
+> +      interrupts =3D <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+> +    };
+> +
+> +...
+> --=20
+> 2.25.1
+>=20
 
