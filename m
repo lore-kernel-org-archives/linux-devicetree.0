@@ -2,136 +2,236 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C35C2BB54
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 09:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58027C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 09:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD9E2074F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 09:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DBEF20644
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 09:42:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="U21FymAC"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="T5/Tfczr";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="D8wY+GD4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgDGJlU (ORCPT
+        id S1728075AbgDGJmE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 05:41:20 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:58424 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726657AbgDGJlU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 05:41:20 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586252480; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
- Subject: Sender; bh=++wZMu6+upyOo/X2jGPlQvmS8PlK2mzO0cecdjSV+I8=; b=U21FymACdBhdtWrPj8AOo7++ndhVN1pNXciICYQSUlBzgoJmLIoXIBmd3dm9ddyOrcyMN4hj
- IMoIpKMLPXvOeRkyz/hEaQ/ikGMS+gW7VO2prbHwuWU6q8WbTBMphmH8D3aa0dGE9an1ziXf
- tiW15iJhxXimekVmyVma/1QvAQ8=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8c4aac.7fcfe2b38298-smtp-out-n03;
- Tue, 07 Apr 2020 09:41:00 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 11AB9C44791; Tue,  7 Apr 2020 09:40:58 +0000 (UTC)
-Received: from [192.168.0.6] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 39832C43636;
-        Tue,  7 Apr 2020 09:40:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 39832C43636
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH V3 6/8] tty: serial: qcom_geni_serial: Add interconnect
- support
-From:   Akash Asthana <akashast@codeaurora.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org, georgi.djakov@linaro.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, dianders@chromium.org,
-        evgreen@chromium.org
-References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
- <1585652976-17481-7-git-send-email-akashast@codeaurora.org>
- <20200331193949.GK199755@google.com>
- <db7d1369-33aa-b0b3-ec44-2018ea382887@codeaurora.org>
-Message-ID: <694f2664-3ef2-b3a6-c447-c33086172b02@codeaurora.org>
-Date:   Tue, 7 Apr 2020 15:10:50 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 7 Apr 2020 05:42:04 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:42003 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725883AbgDGJmE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 05:42:04 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 8F18B580432;
+        Tue,  7 Apr 2020 05:42:02 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 07 Apr 2020 05:42:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=CCbcFFDvgPRSxCF+8kZaaLO/1MA
+        76diBRU97kO0B2Q8=; b=T5/TfczrwzeOgw6HFlUxIdyoSA/V0HhD7PYXgy/9TQ4
+        ikbfway1Ve6eAIDB1YpuKG8qj8p0bt3ImtiS5pVw3wXumJRHeiWAuFM+0UCB+KNf
+        jNkB4xLghBQLbrYfXDxqscKi7+Zd5C0e8otfoRQsR9J83FuaTZ51porehp1vuEIx
+        27FTOX4iAFXHwRRQKZFXxlJhg/FVD0RcXh9vmzfub5Yc/D2TLRdWM92xAgXJWFre
+        g5AooSA85ZbUkd3R0yR/wB16lhCJCscJRIUxoos4gqOUk7PFRjpf7A0VAr3/6Jij
+        Vo/9sYx3ICBSkKgA4qG+jSXhS/rz7mt4yoyei538yIg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=CCbcFF
+        DvgPRSxCF+8kZaaLO/1MA76diBRU97kO0B2Q8=; b=D8wY+GD4/i+PHJodUNJO57
+        8imtIXeZcubk9ZyX7MWTkFSIlwKtdy9pezqcnMwb9f+Q/UWIgV8aqvjJ+kkzEv7V
+        /dvqFuDOa3o5Gd1IoLrBvFUBc87+XSIyZAvpthaTuigqpH/wjPLycMqzY1/PmmPZ
+        mnFMDp4yUSc8Ork+6KdpZr8Cj0kOc+b61fFDKWEbAjltSwPU9J4kder4tAu5bO7Q
+        kuIXCEu23UEVOftL2fYnnHEvuPwT2z33SUQuJEjfJ3oZrfGQ6zJpnjUAwNJXDp4o
+        AjKMMZjRqmnZ9oskDmQlGTyg5fRmjTa9AIqswuJJ4rQ6pPofwl+X4EQqzAeeZOoQ
+        ==
+X-ME-Sender: <xms:6UqMXrEESRaMA6LPL3tIrAKxumyafD9oInxTfyn0UYeMhbuq_F3qpg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehgddulecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
+    epuggvvhhitggvthhrvggvrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvse
+    gtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:6UqMXjxTEDcTx1vL3tqsGbobBFxRNsbgWN30Nr0OrYnkWl2y1Vrdww>
+    <xmx:6UqMXgps9meExFNY9FK8qVIHjUIRuKsKRFhApBpQRbNRfR8LRDGObA>
+    <xmx:6UqMXtjiYQnYDtdnDJwlxdZOiIOoWsN6Bt76h6ENnjnYbJhLZR--ug>
+    <xmx:6kqMXmjh6iiSCY83qIMll5ueTt-0nO1qmd6Z7Q-wNzHVP6hBGf0vIg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 19790328005A;
+        Tue,  7 Apr 2020 05:42:01 -0400 (EDT)
+Date:   Tue, 7 Apr 2020 11:41:59 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH 2/3] Input: rotary-encoder-counter: add DT bindings
+Message-ID: <20200407094159.xtbhtsxorvs2g22c@gilmour.lan>
+References: <20200406155806.1295169-1-kamel.bouhara@bootlin.com>
+ <20200406155806.1295169-3-kamel.bouhara@bootlin.com>
 MIME-Version: 1.0
-In-Reply-To: <db7d1369-33aa-b0b3-ec44-2018ea382887@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="japkdjzpcbcq3brx"
+Content-Disposition: inline
+In-Reply-To: <20200406155806.1295169-3-kamel.bouhara@bootlin.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Matthias,
 
+--japkdjzpcbcq3brx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->>>     static const struct uart_ops qcom_geni_console_pops = {
->>> @@ -1304,6 +1315,17 @@ static int qcom_geni_serial_probe(struct 
->>> platform_device *pdev)
->>>               return -ENOMEM;
->>>       }
->>>   +    ret = geni_icc_get(&port->se, "qup-core", "qup-config", NULL);
->>> +    if (ret)
->>> +        return ret;
->>> +    /* Set the bus quota to a reasonable value */
->>> +    port->se.to_core.avg_bw = console ? GENI_DEFAULT_BW :
->>> +        Bps_to_icc(CORE_2X_50_MHZ);
->>> +    port->se.to_core.peak_bw = console ? GENI_DEFAULT_BW :
->>> +        Bps_to_icc(CORE_2X_100_MHZ);
->> I'm still unconvinced about the setting of the core bandwidth based on
->> whether the port is used as console or not. It could possibly break
->> consoles working at speeds > 115kbs and reserve more bandwidth than
->> necessary for ports with 'slow' devices.
->>
->> Why not scale the core bandwidth dynamically? You said earlier that 
->> there
->> is no clear/linear translation of port speed to bandwidth, but you could
->> use the same logic that is implicitly used here:
->>
->>     if (baudrate <= 115200) {
->>         avg_bw = GENI_DEFAULT_BW;
->>         peak_bw = GENI_DEFAULT_BW;
+Hi Kamel,
 
-I will make peak_bw = 2 * DEFAULT  to generalize this logic and will 
-factor it out in common driver.
+The prefix for device tree bindings is usually dt-bindings:
+$framework: $title
 
-Anyway with  peak_bw = GENI_DEFAULT_BW or 2 * GENI_DEFAULT_BW core clock 
-is going to tick at 50 MHz.
+So a title like "dt-bindings: input: Add a counter-based rotary
+encoder binding" would be better.
 
-9600(19.2 MHz) < GENI_DEFAULT_BW, 2 * GENI_DEFAULT_BW < 2500(50 MHz).
-
-
-Regards,
-
-Akash
-
->>     } else {
->>         avg_bw = Bps_to_icc(CORE_2X_50_MHZ);
->>         peak_bw = Bps_to_icc(CORE_2X_100_MHZ);
->>     }
->>
->> This would be more robust, power efficient and future readers of the
->> code don't have to wonder "why is the console special?" when our
->> discussions on this will be long forgotten.
+On Mon, Apr 06, 2020 at 05:58:05PM +0200, Kamel Bouhara wrote:
+> Add dt binding for the counter variant of the rotary encoder driver.
 >
-> Okay, I will add this piece of code in set_termios call of the driver 
-> because I don't have baudrate information during probe. It covers the 
-> console case mentioned in probe function.
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> ---
+>  .../input/rotary-encoder-counter.yaml         | 67 +++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
 >
-> Regards,
->
-> Akash
->
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+> diff --git a/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> new file mode 100644
+> index 000000000000..a59f7c1faf0c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> @@ -0,0 +1,67 @@
+> +# SPDX-License-Identifier: GPL-2.0
+
+Bindings are usually used by other OS's, so you should consider
+putting it under a more permissive license, usually that would be GPL2
+and the BSD-2-Clause
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/input/rotary-encoder-counter.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Rotary Encoder Counter
+> +
+> +maintainers:
+> +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
+> +
+> +description:
+> +  Registers a Rotary encoder connected through a counter device.
+
+You shouldn't really describe the action here, but more what the
+binding is about. The registration will not depend on the presence of
+the node following that binding, but rather on whether or not the OS
+that uses it has support for it.
+
+> +properties:
+> +  compatible:
+> +    const: rotary-encoder-counter
+> +
+> +  counter:
+> +    description: Phandle for the counter device providing rotary position.
+
+This should have a type
+
+> +  linux-axis:
+> +    description: The input subsystem axis to map to this rotary encoder.
+> +    type: boolean
+> +
+> +  qdec-mode:
+> +    description: |
+> +      Quadrature decoder function to set in the counter device.
+> +      3: x1-PHA
+> +      4: x1-PHB
+> +      5: x2-PHA
+> +      6: x2-PHB
+> +      7: x4-PHA and PHB
+
+That range (even though it's a bit odd) should be expressed through an
+enum so that you can check that the values are actually within that
+range.
+
+> +  steps:
+> +    description: Number of steps in a full turnaround of the encoder.
+
+Muli-line strings should have either quotes around them, or a | or >
+like you did for the description. | will keep the \n, > will make that
+a single string.
+
+This should also have a type
+
+> +      Only relevant for absolute axis.
+
+This should be expressed through a if / then clause, or a dependencies one
+
+>                                         Defaults to 24 which is a typical
+> +      value for such devices.
+
+This should be expressed through a default property.
+
+> +  relative-axis:
+> +    description: Register a relative axis rather than an absolute one.
+> +    type: boolean
+> +
+> +  rollover:
+> +    description: Automatic rollover when the rotary value becomes greater
+> +      than the specified steps or smaller than 0. For absolute axis only.
+> +    type: boolean
+
+Same story than steps for the dependency. Also, what is is the
+behaviour when this property isn't set?
+
+> +  poll-interval:
+> +    description: Poll interval at which the position is read from the counter
+> +      device (default 500ms).
+
+It should have a type too, and a default property
+
+> +
+> +required:
+> +  - compatible
+> +  - counter
+> +  - qdec-mode
+> +
+> +examples:
+> +  - |
+> +    rotary@0 {
+> +        compatible = "rotary-encoder-counter";
+
+A unit-address (the part after @) only makes sense for a node if
+there's a matching reg property in the node. This will trigger a DTC
+warning, so you should remove the @0
+
+Maxime
+
+--japkdjzpcbcq3brx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXoxK5wAKCRDj7w1vZxhR
+xV5PAP9oleLNJ1AEhCCnvJCT4zm5frzWFncYL0ZW4bzrBCNAgQD/VfmXTyrdhPL8
+UoL54zIDj9ggENLCwxMqk6jdw/++/wM=
+=QF+N
+-----END PGP SIGNATURE-----
+
+--japkdjzpcbcq3brx--
