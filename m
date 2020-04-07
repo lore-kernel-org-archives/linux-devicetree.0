@@ -2,173 +2,226 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1048FC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 12:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C6FC2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 13:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF732051A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 12:32:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D61220719
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 13:18:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="CCPrM+Um";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="t4RqkwNM"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hh+Jhi3R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbgDGMcj (ORCPT
+        id S1728596AbgDGNSg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 08:32:39 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:36275 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728482AbgDGMci (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 08:32:38 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 21EA15C01CC;
-        Tue,  7 Apr 2020 08:32:37 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 07 Apr 2020 08:32:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=AJJDe/ySRz3tiDgYe4Ah8eWUjMw
-        PlBWYVnjlrFiwgpU=; b=CCPrM+UmHvchU6T42mFGaM+xWH2yZfApfdGSBDlSWgo
-        Xh0OdoLnFs1sa+9urnGFkIrs92XYTBbvgLkAfCVLf/SlQ2Ofghm4AdZjNqtXQiXa
-        qIEhanCDEdrxsfpWLM7yVbQGadXlRW+bPu0Ep0gcqfn8pG4//FtyKQK5xl6weXtX
-        wcTHaHaZhDdoEbTJCvwVC07o9NwVbEBGhCVSINs9sXwjnU1+jSo62wRbShe8KLDd
-        r4EQoxgv7KimD0NnfKN0IoUwSAJhT3Dz0g8QkLai4azf5+3zS+Wly+staUfJnR3v
-        akLSQ9NEaTOFnE7B6+E1FojbdGQI5g2JBkQSvyF2xEQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=AJJDe/
-        ySRz3tiDgYe4Ah8eWUjMwPlBWYVnjlrFiwgpU=; b=t4RqkwNMROgv8J04ULLbet
-        vNfJFqLnjMojnj+Psea7DWXuOh/qi9j0f4iqKSVPucAeaeOl9kZO/LXN0dCIlU+7
-        LXC3dT0yeGEVqRglpbS/n1NLioGN1BZ1A5m3gecAfIwtHsDgFMDk+PXhf/GIx2gv
-        ZJP3yM2GEzEyqmG2Ty1tfya4a6EzFZ9CTL4vfwZeZQrpkycghppMBk/2V+5ysSDj
-        m0D8zoRXlNJ0Vq3WfczsexvqVfeOWrAHElIXsWIXpWmSAe/1fcnL6+6OV6aGJ4TS
-        /ITx6gNMVYtlXXnYqzt2Y+KLuj6qxbJ4ZcKJEBmzlriPHJK9/6istrrP1vJkXakw
-        ==
-X-ME-Sender: <xms:4nKMXhxx3OJoYu1Ih5_UrKqWFi8ciC_sOMQacN_tG3ySHv8nyBfG5Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehgdehvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
-    epkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgv
-    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnh
-    hordhtvggthh
-X-ME-Proxy: <xmx:4nKMXuejvC_z9AjzWbD98-bH3EL_wkH29hXxmJoTIFqH24JDdymWHA>
-    <xmx:4nKMXjXiFNgG_f_d-m57ibzOGjIuern_3XWhdOFyfXhyx7MCUIL_Yg>
-    <xmx:4nKMXkMVbbbdHht8-D-F5Xy6xouh6UYJmHL_yohmUauBaFNe6-cwoA>
-    <xmx:5XKMXrqDifzzqHNJWRY_TK0e2EdA0gCx0lQX52w0uDmaoK7YUzidxA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1E3CC328005E;
-        Tue,  7 Apr 2020 08:32:34 -0400 (EDT)
-Date:   Tue, 7 Apr 2020 14:32:32 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
-Message-ID: <20200407123232.ktvaifhqntgzvkap@gilmour.lan>
-References: <20200331133346.372517-1-robert.foss@linaro.org>
- <20200331133346.372517-2-robert.foss@linaro.org>
- <20200401080705.j4goeqcqhoswhx4u@gilmour.lan>
- <CAG3jFyvUd08U9yNVPUD9Y=nd5Xpcx34GcHJRhtvAAycoq3qimg@mail.gmail.com>
- <20200403232736.GA6127@valkosipuli.retiisi.org.uk>
- <20200404093446.vuvwrhn5436h4d3s@gilmour.lan>
- <20200406083506.GE6127@valkosipuli.retiisi.org.uk>
- <20200407083647.4mocdl7aqa3x737q@gilmour.lan>
- <CAG3jFyvd32pWppubMoOoyH9eO2XLjwUXMC7p4xtv8m+JkPv6vw@mail.gmail.com>
+        Tue, 7 Apr 2020 09:18:36 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59420 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728555AbgDGNSf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 09:18:35 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 037DIOJn049470;
+        Tue, 7 Apr 2020 08:18:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1586265504;
+        bh=IqUIxHQvCQB1xZjM77qZ5l7zHWe1GnTQLlokeKqi4tA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=hh+Jhi3R+hndMpdAisUgJ6f0ts4AtprQLgb6UgX4d1h6ahWkto0+XoflluW4LFwaT
+         y/46RKj8tDcP/9d5NpJpQiF95wuk7M2z/x4DHjESaBF34P2ixHmqHdo0eDyoydD38A
+         TqVOKREkeEsifEDHHJb3lktuz2ImfabHheAmHSSw=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 037DIOQa106429
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 7 Apr 2020 08:18:24 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Apr
+ 2020 08:18:23 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 7 Apr 2020 08:18:23 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 037DIK2F014228;
+        Tue, 7 Apr 2020 08:18:21 -0500
+Subject: Re: [PATCH v9 0/5] drm/tidss: New driver for TI Keystone platform
+ Display SubSystem
+To:     Jyri Sarha <jsarha@ti.com>, <dri-devel@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>
+CC:     <laurent.pinchart@ideasonboard.com>, <peter.ujfalusi@ti.com>,
+        <bparrot@ti.com>, <subhajit_paul@ti.com>, <praneeth@ti.com>,
+        <yamonkar@cadence.com>, <sjakhade@cadence.com>, <sam@ravnborg.org>
+References: <cover.1580129724.git.jsarha@ti.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <d3931419-aa73-daeb-c8f6-8e29166d586a@ti.com>
+Date:   Tue, 7 Apr 2020 16:18:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="l6xvrv4jf2wbahni"
-Content-Disposition: inline
-In-Reply-To: <CAG3jFyvd32pWppubMoOoyH9eO2XLjwUXMC7p4xtv8m+JkPv6vw@mail.gmail.com>
+In-Reply-To: <cover.1580129724.git.jsarha@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Jyri,
 
---l6xvrv4jf2wbahni
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 27/01/2020 18:00, Jyri Sarha wrote:
+> This is intended to be the last patch series. I'll apply these trough
+> drm-misc-next tomorrow.
 
-Hi Robert,
+Were these ever merged?
 
-On Tue, Apr 07, 2020 at 01:29:05PM +0200, Robert Foss wrote:
-> On Tue, 7 Apr 2020 at 10:36, Maxime Ripard <maxime@cerno.tech> wrote:
-> > On Mon, Apr 06, 2020 at 11:35:07AM +0300, Sakari Ailus wrote:
-> > > > But that 19.2MHz is not a limitation of the device itself, it's a
-> > > > limitation of our implementation, so we can instead implement
-> > > > something equivalent in Linux using a clk_set_rate to 19.2MHz (to make
-> > > > sure that our parent clock is configured at the right rate) and the
-> > > > clk_get_rate and compare that to 19.2MHz (to make sure that it's not
-> > > > been rounded too far apart from the frequency we expect).
-> > > >
-> > > > This is doing exactly the same thing, except that we don't encode our
-> > > > implementation limitations in the DT, but in the driver instead.
-> > >
-> > > What I really wanted to say that a driver that doesn't get the clock
-> > > frequency from DT but still sets that frequency is broken.
-> > >
-> > > This frequency is highly system specific, and in many cases only a certain
-> > > frequency is usable, for a few reasons: On many SoCs, not all common
-> > > frequencies can be used (e.g. 9,6 MHz, 19,2 MHz and 24 MHz; while others
-> > > are being used as well), and then that frequency affects the usable CSI-2
-> > > bus frequencies directly --- and of those, only safe, known-good ones
-> > > should be used. IOW, getting the external clock frequency wrong typically
-> > > has an effect that that none of the known-good CSI-2 bus clock frequencies
-> > > are available.
-> >
-> > So clock-frequency is not about the "Frequency of the xvclk clock in
-> > Hertz", but the frequency at which that clock must run on this
-> > particular SoC / board to be functional?
-> >
-> > If so, then yeah, we should definitely keep it, but the documentation
-> > of the binding should be made clearer as well.
->
-> Alright so, let me summarise the desired approach then.
+  Tomi
 
-There's a separate discussion on the same topic here:
-https://lore.kernel.org/linux-media/20200407122106.GD4751@pendragon.ideasonboard.com/
+> 
+> Changes since v8:
+> - "dt-bindings: display: ti,k2g-dss: Add dt-schema yaml binding"
+>    - Remove ports-node from the dts example in
+> - "drm/tidss: New driver for TI Keystone platform Display SubSystem"
+>    - Rename dispc_write_irqenable() to dispc_set_irqenable() to avoid
+>      conflict exported omapfb function with same name.
+>    - Add Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> - "MAINTAINERS: add entry for tidss"
+>    - Add Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> 
+> Changes since v7:
+> - "drm/tidss: New driver for TI Keystone platform Display SubSystem"
+>    - Remove idle debug prints from dispc_init()
+>    - Add Reviewed-by: Benoit Parrot <bparrot@ti.com>
+> - "MAINTAINERS: add entry for tidss"
+>    - Add Reviewed-by: Benoit Parrot <bparrot@ti.com>
+> 
+> Changes since v6:
+> - Rebase on top of drm-misc-next-2020-01-10
+> - Fix all checkpatch.pl -q --emacs --strict --show-types issues
+>    - all issues but these have been fixed:
+>      - over 80 char lines in scale coefficients found in tidss_scale_coefs.c
+>      - Co-developed-by and Signed-off-by: name/email do not match
+>      - added, moved or deleted file(s), does MAINTAINERS need updating
+> - Add Acked-by: Sam Ravnborg <sam@ravnborg.org> to "drm/tidss: New driver ..."
+> 
+> Changes since v5:
+> - Add Add Reviewed-by: from Rob Herring <robh@kernel.org> and
+>    Benoit Parrot <bparrot@ti.com> to binding patches
+> - Color property changes and fixes to the driver implementation patch
+>    - Check CTM and gamma support from dispc_features when creating crtc
+>    - Implement CTM support for k2g and fix k3 CTM implementation
+>    - Remove gamma property persistence and always write color properties
+>      in a new modeset
+> 
+> Changes since v4:
+> - itemize named resource property descriptions in dt binding
+> - fix wp to wb in the ti,j721e-dss reg property description
+> - remove fifo underflow irq handling, it is not an error and
+>    it should be used for debug purposes only
+> - memory tuning, prefetch plane fifo up to high-threshold value to
+>    minimize possibility of underflows.
+> 
+> Changes since v3:
+> - Add descriptions some yaml binding properites
+> - Remove redundant minItems directives from yaml bindings
+> - Remove ports node from ti,k2g-dss yaml binding
+> - no change to MAINTAINERS or to the driver code
+> 
+> Changes since v2:
+> - Add version history to commit messages
+> - Fix yaml bindings now that got dt_binding_check dtbs_check working property
+> - Move tidss entry in MAINTAINERS after omapdrm and add "T: git
+>    git://anongit.freedesktop.org/drm/drm-misc"
+> - no change to driver code
+> 
+> Changes since the first version of the patch series [2]:
+> - "drm/tidss: New driver for TI Keystone platform Display SubSystem"
+>   - rebased on top of drm-next-2019-11-27
+>   - sort all include lines in all files
+>   - remove all include <drm/drmP.h>
+>   - remove select "select VIDEOMODE_HELPERS"
+>   - call dispc_vp_setup() later in tidss_crtc_atomic_flush() (there is no
+>     to call it in new modeset case as it is also called in vp_enable())
+>   - change probe sequence and drm_device allocation (follow example in drm_drv.c)
+>   - use __maybe_unused instead of #ifdef for pm functions
+>   - remove "struct drm_fbdev_cma *fbdev;" from driver data
+>   - check panel connector type before connecting it
+> - No change to binding or MAINTAINERS patches
+> 
+> There was couple of attempts upstream an earlier version of this
+> driver about a year ago [1]. Back then I needed to stop my efforts to
+> implement support for next Keystone DSS version, so now the driver
+> supports three different Keystone DSS version on three different SoCs.
+> 
+> I am starting the patch series versioning from the beginning because it
+> has been over a year since the previous patch set and the structure of
+> the driver has evolved quite a bit. However, all the earlier comments
+> should be addressed in this series.
+> 
+> [1] https://patchwork.freedesktop.org/series/44947/
+> [2] https://lists.freedesktop.org/archives/dri-devel/2019-November/246542.html
+> 
+> Jyri Sarha (5):
+>    dt-bindings: display: ti,k2g-dss: Add dt-schema yaml binding
+>    dt-bindings: display: ti,am65x-dss: Add dt-schema yaml binding
+>    dt-bindings: display: ti,j721e-dss: Add dt-schema yaml binding
+>    drm/tidss: New driver for TI Keystone platform Display SubSystem
+>    MAINTAINERS: add entry for tidss
+> 
+>   .../bindings/display/ti/ti,am65x-dss.yaml     |  152 +
+>   .../bindings/display/ti/ti,j721e-dss.yaml     |  208 ++
+>   .../bindings/display/ti/ti,k2g-dss.yaml       |  106 +
+>   MAINTAINERS                                   |   11 +
+>   drivers/gpu/drm/Kconfig                       |    2 +
+>   drivers/gpu/drm/Makefile                      |    1 +
+>   drivers/gpu/drm/tidss/Kconfig                 |   14 +
+>   drivers/gpu/drm/tidss/Makefile                |   12 +
+>   drivers/gpu/drm/tidss/tidss_crtc.c            |  377 +++
+>   drivers/gpu/drm/tidss/tidss_crtc.h            |   46 +
+>   drivers/gpu/drm/tidss/tidss_dispc.c           | 2768 +++++++++++++++++
+>   drivers/gpu/drm/tidss/tidss_dispc.h           |  132 +
+>   drivers/gpu/drm/tidss/tidss_dispc_regs.h      |  243 ++
+>   drivers/gpu/drm/tidss/tidss_drv.c             |  285 ++
+>   drivers/gpu/drm/tidss/tidss_drv.h             |   39 +
+>   drivers/gpu/drm/tidss/tidss_encoder.c         |   88 +
+>   drivers/gpu/drm/tidss/tidss_encoder.h         |   17 +
+>   drivers/gpu/drm/tidss/tidss_irq.c             |  146 +
+>   drivers/gpu/drm/tidss/tidss_irq.h             |   77 +
+>   drivers/gpu/drm/tidss/tidss_kms.c             |  249 ++
+>   drivers/gpu/drm/tidss/tidss_kms.h             |   15 +
+>   drivers/gpu/drm/tidss/tidss_plane.c           |  217 ++
+>   drivers/gpu/drm/tidss/tidss_plane.h           |   25 +
+>   drivers/gpu/drm/tidss/tidss_scale_coefs.c     |  202 ++
+>   drivers/gpu/drm/tidss/tidss_scale_coefs.h     |   22 +
+>   25 files changed, 5454 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+>   create mode 100644 Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+>   create mode 100644 Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+>   create mode 100644 drivers/gpu/drm/tidss/Kconfig
+>   create mode 100644 drivers/gpu/drm/tidss/Makefile
+>   create mode 100644 drivers/gpu/drm/tidss/tidss_crtc.c
+>   create mode 100644 drivers/gpu/drm/tidss/tidss_crtc.h
+>   create mode 100644 drivers/gpu/drm/tidss/tidss_dispc.c
+>   create mode 100644 drivers/gpu/drm/tidss/tidss_dispc.h
+>   create mode 100644 drivers/gpu/drm/tidss/tidss_dispc_regs.h
+>   create mode 100644 drivers/gpu/drm/tidss/tidss_drv.c
+>   create mode 100644 drivers/gpu/drm/tidss/tidss_drv.h
+>   create mode 100644 drivers/gpu/drm/tidss/tidss_encoder.c
+>   create mode 100644 drivers/gpu/drm/tidss/tidss_encoder.h
+>   create mode 100644 drivers/gpu/drm/tidss/tidss_irq.c
+>   create mode 100644 drivers/gpu/drm/tidss/tidss_irq.h
+>   create mode 100644 drivers/gpu/drm/tidss/tidss_kms.c
+>   create mode 100644 drivers/gpu/drm/tidss/tidss_kms.h
+>   create mode 100644 drivers/gpu/drm/tidss/tidss_plane.c
+>   create mode 100644 drivers/gpu/drm/tidss/tidss_plane.h
+>   create mode 100644 drivers/gpu/drm/tidss/tidss_scale_coefs.c
+>   create mode 100644 drivers/gpu/drm/tidss/tidss_scale_coefs.h
+> 
 
-> ACPI:
->   - Fetch the "clock-frequency" property
->   - Verify it to be 19.2Mhz
->
-> DT:
->   - Fetch the "clock-frequency" property
->   - Verify it to be 19.2Mhz
->   - Get xvclk clock
->   - Get xvclk clock rate
->   - Verify xvclk clock rate to be 19.2Mhz
-
-The current status is that you should
-'s/clock-frequency/link-frequencies/', and in order to replace
-assigned-clock-rates, you'll want to have a clk_set_rate to 19.2MHz
-between steps 3 and 4
-
-Maxime
-
---l6xvrv4jf2wbahni
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXoxy4AAKCRDj7w1vZxhR
-xVapAQCajMfkGy5KObQodKq6TMZ/f6RLIlLUEGI+a//+esc7rQEA2Ln60lZuEk5u
-dZFJEBn6+y8Nrkp5GApl67Yq210tSQ4=
-=eEag
------END PGP SIGNATURE-----
-
---l6xvrv4jf2wbahni--
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
