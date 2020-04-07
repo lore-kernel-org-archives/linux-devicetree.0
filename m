@@ -2,136 +2,114 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E25C2BB54
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 11:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D755C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 12:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 104A62074B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 11:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5B372074F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 12:18:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rORX1ZTa"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Ki3AHBrZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbgDGLea (ORCPT
+        id S1728576AbgDGMSb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 07:34:30 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:27115 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726562AbgDGLea (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 07:34:30 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586259269; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=PgxDriPW1fjgOHVxa8whDLa3oewEP6YBFY38xnPglCI=; b=rORX1ZTaWXGHb11cxy7+fHXnAe++dCsouTou6vwlpYBpDtRb8h9c1zyvqF5nHrr2HNAjKf8y
- 4Q+i0f33eaAKfe67kH7Rh6LxIMASCCOol7LoQ6mNkaDllwTCoOS7ni+QK4Tg79EsFR6llHZL
- zQIbBDc2QCjILx46GQt845y8XK0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8c6545.7f3a4e1aab58-smtp-out-n05;
- Tue, 07 Apr 2020 11:34:29 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1C3FCC43637; Tue,  7 Apr 2020 11:34:29 +0000 (UTC)
-Received: from [192.168.0.6] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 87FCDC433F2;
-        Tue,  7 Apr 2020 11:34:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 87FCDC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH V3 3/8] soc: qcom-geni-se: Add interconnect support to fix
- earlycon crash
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org, georgi.djakov@linaro.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, dianders@chromium.org,
-        evgreen@chromium.org
-References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
- <1585652976-17481-4-git-send-email-akashast@codeaurora.org>
- <20200331182457.GH199755@google.com>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <7a4e13bf-a4b7-d75b-df42-bf5e4125258a@codeaurora.org>
-Date:   Tue, 7 Apr 2020 17:04:17 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 7 Apr 2020 08:18:31 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:41218 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbgDGMSb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 08:18:31 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id ACABD59E;
+        Tue,  7 Apr 2020 14:18:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586261909;
+        bh=fPdYE8A3jszFhj8Ia41Q61eXHMMvA97zhV0Z1oSNhpo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ki3AHBrZ4A1pHq9QyVUJmBRoyYy6r5XgnCvPLxfUMdFWAd+t6vap0lPuXVl4Exjrn
+         QGGFNT4zOWrpzji+6HaLIZro4VSBmpIW0R27U01g31cKRxQ33UG9t2g5bFRqwJzII4
+         BTM6sXy8JiOEaVdicsbrqxvEd0mfTiJATCkYEotA=
+Date:   Tue, 7 Apr 2020 15:18:18 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency
+ dt-property
+Message-ID: <20200407121818.GC4751@pendragon.ideasonboard.com>
+References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdWiVLt23a0JBDX6ZiKDiru9-ecgt3XF4Y5qzVOWXhLcCw@mail.gmail.com>
+ <CA+V-a8tHb1OomhfdsWV5duyuypTKC_EWT4o=mMjWVsxu+aOnBQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200331182457.GH199755@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CA+V-a8tHb1OomhfdsWV5duyuypTKC_EWT4o=mMjWVsxu+aOnBQ@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Matthias,
+Hi Prabhakar,
 
+On Tue, Apr 07, 2020 at 08:40:06AM +0100, Lad, Prabhakar wrote:
+> On Tue, Apr 7, 2020 at 8:17 AM Geert Uytterhoeven wrote:
+> > On Mon, Apr 6, 2020 at 6:43 PM Lad Prabhakar wrote:
+> > > Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
+> > > as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
+> > > 24MHz. So instead making clock-frequency as dt-property just let the
+> > > driver enforce the required clock frequency.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >
+> > However, still wondering about the "xvclk" name above and in the definition
+> > below.  Is this the naming from the datasheet?
+> > The DT bindings nor the driver use the "xvclk" naming.
+> >
+> xvclk naming is from the datasheet, although the 0v5645 datasheet on
+> publicly available I have referred [1]/[2].
+> If I am not wrong all the ov sensors have the same naming convention as xvclk.
+> 
+> [1] https://cdn.sparkfun.com/datasheets/Sensors/LightImaging/OV5640_datasheet.pdf
+> [2] https://www.ovt.com/download/sensorpdf/126/OmniVision_OV5645.pdf
 
->>   static int geni_se_probe(struct platform_device *pdev)
->>   {
->>   	struct device *dev = &pdev->dev;
->> @@ -845,6 +868,34 @@ static int geni_se_probe(struct platform_device *pdev)
->>   		}
->>   	}
->>   
->> +#ifdef CONFIG_SERIAL_EARLYCON
->> +	wrapper->to_core.path = devm_of_icc_get(dev, "qup-core");
->> +	if (IS_ERR(wrapper->to_core.path))
->> +		return PTR_ERR(wrapper->to_core.path);
->> +	/*
->> +	 * Put minmal BW request on core clocks on behalf of early console.
->> +	 * The vote will be removed earlycon exit function.
->> +	 *
->> +	 * Note: We are putting vote on each QUP wrapper instead only to which
->> +	 * earlycon is connected because QUP core clock of different wrapper
->> +	 * share same voltage domain. If core1 is put to 0, then core2 will
->> +	 * also run at 0, if not voted. Default ICC vote will be removed ASA
->> +	 * we touch any of the core clock.
->> +	 * core1 = core2 = max(core1, core2)
->> +	 */
-> I don't really understand this part. According to the comment if we vote
-> (let's say) for core2 but not for core1 then:
->
-> core1: 0
-> core2: GENI_DEFAULT_BW
->
-> core1 = core2 = max(core1, core2)
->    or
-> core1 = core2 = max(0, GENI_DEFAULT_BW)
->
-> hence
->
-> core1 = core2 = GENI_DEFAULT_BW
->
-> What am I missing, why is it necessary to vote for both/all?
-say core1 is for earlycon usecase
+The clock in DT should really have been named xvclk, but it's too late
+to change that. We can follow one of two approaches, either naming
+everything xclk, and naming everything but the DT property xvclk. Both
+have pros and cons, feel free to pick your preferred option, but in any
+case a comment to explain the issue would be useful.
 
-There is common switch to control both the QUP core clock. I guess most 
-appropriate description would be     switch = max(vote_on_core1, 
-vote_on_core2) + default_vote.
-
-During early bootup, vote_on_core1 = 0, vote_on_core2 = 0;
-
-As earlycon was working even without voting it's core need because there 
-was some default vote present on the core switch by ICC during bootup.
-
-So if any child(say SPI) of other QUP wrapper resumed and suspended 
-before earlycon wrapper comes up. This will make core clock to run at 
-zero and will cause NOC issue because vote_on_core1 = 0, vote_on_core2 = 
-0; and it seems default votes from core switch is removed  ASA it's 
-voted on any core.
-
-Regards,
-
-Akash
+> > > --- a/drivers/media/i2c/ov5645.c
+> > > +++ b/drivers/media/i2c/ov5645.c
+> > > @@ -61,6 +61,8 @@
+> > >  #define OV5645_SDE_SAT_U               0x5583
+> > >  #define OV5645_SDE_SAT_V               0x5584
+> > >
+> > > +#define OV5645_XVCLK_FREQ              24000000
+> > > +
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+Regards,
+
+Laurent Pinchart
