@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E15DEC2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 00:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D64C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 00:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7A8E20768
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 00:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CC9D2076E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 00:09:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586218054;
-	bh=pPQAnpLJ6swHilZZiXwdXrhXTemHxz69XOukH7cla4c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AtmpnOyiY9MuPproQOoqiyHyVg1k+48deNuSSLAlyp28U83R2DQC0GXdIlzIxLPoP
-	 8aVtWDEH5UH4NmNA0QXSrIZX7TstCropqH6aYrSDwfjLdTjOIQ21+xCILjR9wtuU3G
-	 JpW1VsLqLQsWMk6cgvbtp0imXkaj5FGltiK377WQ=
+	s=default; t=1586218198;
+	bh=K2m3pcjtFaB1WdUGw6/97iAE58R7nthpPofK+CoeoqM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=E2VWvWkDrppqXqeObNB3wMoDe9OF88tdUX5zEXrwlQaUsF1EwEfufQvCc7LKAbHAk
+	 7B0bcHN3CgbgwSF/YzJzIUuXfHsAIiDaoje1FYxnvxJi8qT78HMeC7B7sgq1a1SkEH
+	 CXGrrTWqSYHlZggnHoD0u1B7A8DW2tcM7LvXsU5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbgDGAB4 (ORCPT
+        id S1726277AbgDGABB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:01:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35662 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:01:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727635AbgDGAB4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:01:56 -0400
+        id S1726254AbgDGABB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:01:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA4DA20842;
-        Tue,  7 Apr 2020 00:01:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E6F620768;
+        Tue,  7 Apr 2020 00:00:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217715;
-        bh=pPQAnpLJ6swHilZZiXwdXrhXTemHxz69XOukH7cla4c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PVUNp2ASOJKjj9mc7IOVx+44rWDUsXxTcVZvT2RlwLc6Zku/yJsiLJHz5gMaXbkuV
-         vVWlcefeRbCfpWbT33wYkMjhj9Sqt3Q90mVOIATtBRHaI2YKE2ubUTQ6OXNKwceunq
-         R5HnPnFuaYuKFKlQsbp3kD5YUgPh1SRfUGcCowVY=
+        s=default; t=1586217660;
+        bh=K2m3pcjtFaB1WdUGw6/97iAE58R7nthpPofK+CoeoqM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Kknbdf+TIFolbtAz2Wr8pqEth8WWfUisNdQawJitN2wcMDnKoxmdIlekd4wirxnqW
+         +4XfyZhdZy3/v2IGLZpFpUqS6Jg8ZS3YUhkkUxoyuWc+b0xqDNjOsJMfCyYu8CjNRr
+         9kxKlt7S4iJQ4GvGi85h6gFR1jqvWHOD4wJCa2HE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 03/32] ARM: dts: Fix dm814x Ethernet by changing to use rgmii-id mode
-Date:   Mon,  6 Apr 2020 20:01:21 -0400
-Message-Id: <20200407000151.16768-3-sashal@kernel.org>
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 01/35] ARM: dts: sun8i-a83t-tbs-a711: HM5065 doesn't like such a high voltage
+Date:   Mon,  6 Apr 2020 20:00:23 -0400
+Message-Id: <20200407000058.16423-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200407000151.16768-1-sashal@kernel.org>
-References: <20200407000151.16768-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,81 +58,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Ondrej Jirman <megous@megous.com>
 
-[ Upstream commit b46b2b7ba6e104d265ab705914859ec0db7a98c5 ]
+[ Upstream commit a40550952c000667b20082d58077bc647da6c890 ]
 
-Commit cd28d1d6e52e ("net: phy: at803x: Disable phy delay for RGMII mode")
-caused a regression for dm814x boards where NFSroot would no longer work.
+Lowering the voltage solves the quick image degradation over time
+(minutes), that was probably caused by overheating.
 
-Let's fix the issue by configuring "rgmii-id" mode as internal delays are
-needed that is no longer the case with "rgmii" mode.
-
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/dm8148-evm.dts       | 4 ++--
- arch/arm/boot/dts/dm8148-t410.dts      | 4 ++--
- arch/arm/boot/dts/dra62x-j5eco-evm.dts | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/dm8148-evm.dts b/arch/arm/boot/dts/dm8148-evm.dts
-index 3931fb068ff09..91d1018ab75fc 100644
---- a/arch/arm/boot/dts/dm8148-evm.dts
-+++ b/arch/arm/boot/dts/dm8148-evm.dts
-@@ -24,12 +24,12 @@
- 
- &cpsw_emac0 {
- 	phy-handle = <&ethphy0>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
+diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+index f781d330cff50..e8b3669e0e5d8 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+@@ -374,8 +374,8 @@
  };
  
- &cpsw_emac1 {
- 	phy-handle = <&ethphy1>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
+ &reg_dldo3 {
+-	regulator-min-microvolt = <2800000>;
+-	regulator-max-microvolt = <2800000>;
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
+ 	regulator-name = "vdd-csi";
  };
  
- &davinci_mdio {
-diff --git a/arch/arm/boot/dts/dm8148-t410.dts b/arch/arm/boot/dts/dm8148-t410.dts
-index 9e43d5ec0bb2f..79ccdd4470f4c 100644
---- a/arch/arm/boot/dts/dm8148-t410.dts
-+++ b/arch/arm/boot/dts/dm8148-t410.dts
-@@ -33,12 +33,12 @@
- 
- &cpsw_emac0 {
- 	phy-handle = <&ethphy0>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- };
- 
- &cpsw_emac1 {
- 	phy-handle = <&ethphy1>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- };
- 
- &davinci_mdio {
-diff --git a/arch/arm/boot/dts/dra62x-j5eco-evm.dts b/arch/arm/boot/dts/dra62x-j5eco-evm.dts
-index 861ab90a3f3aa..c16e183822bee 100644
---- a/arch/arm/boot/dts/dra62x-j5eco-evm.dts
-+++ b/arch/arm/boot/dts/dra62x-j5eco-evm.dts
-@@ -24,12 +24,12 @@
- 
- &cpsw_emac0 {
- 	phy-handle = <&ethphy0>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- };
- 
- &cpsw_emac1 {
- 	phy-handle = <&ethphy1>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- };
- 
- &davinci_mdio {
 -- 
 2.20.1
 
