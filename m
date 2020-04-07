@@ -2,216 +2,139 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9606FC2BA80
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 17:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3B9C2BB55
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 17:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CC0F20771
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 17:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C2D020771
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 17:52:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgDGRry (ORCPT
+        id S1726332AbgDGRwF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 13:47:54 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:54036 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgDGRrx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 13:47:53 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id C9BCE803078C;
-        Tue,  7 Apr 2020 17:47:45 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ym6rrVGUgDYk; Tue,  7 Apr 2020 20:47:44 +0300 (MSK)
-Date:   Tue, 7 Apr 2020 20:48:06 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        <linux-watchdog@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/7] dt-bindings: watchdog: dw-wdt: Replace legacy
- bindings file with YAML-based one
-Message-ID: <20200407174805.cbpufcyimt5daycp@ubsrv2.baikal.int>
-References: <20200306132747.14701-1-Sergey.Semin@baikalelectronics.ru>
- <20200306132803.770DC8030792@mail.baikalelectronics.ru>
- <20200306151839.374AA80307C2@mail.baikalelectronics.ru>
+        Tue, 7 Apr 2020 13:52:05 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:42206 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgDGRwE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 13:52:04 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id A11CA804F2;
+        Tue,  7 Apr 2020 19:52:00 +0200 (CEST)
+Date:   Tue, 7 Apr 2020 19:51:59 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        airlied@linux.ie, daniel@ffwll.ch, Gustavo.Pimentel@synopsys.com,
+        Joao.Pinto@synopsys.com
+Subject: Re: [PATCH v2 3/4] drm: ipk: Add extensions for DW MIPI DSI Host
+ driver
+Message-ID: <20200407175159.GB6356@ravnborg.org>
+References: <cover.1586174459.git.angelo.ribeiro@synopsys.com>
+ <8b63a8390bbc0e81d01540648da7e6b03b8577fa.1586174459.git.angelo.ribeiro@synopsys.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200306151839.374AA80307C2@mail.baikalelectronics.ru>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <8b63a8390bbc0e81d01540648da7e6b03b8577fa.1586174459.git.angelo.ribeiro@synopsys.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=QyXUC8HyAAAA:8
+        a=VwQbUJbxAAAA:8 a=jIQo8A4GAAAA:8 a=NYW8XwYh3pstn-W6v_UA:9
+        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=Lf5xNeLK5dgiOs8hzIjU:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Guenter,
+Hi Angelo.
 
-On Fri, Mar 06, 2020 at 07:18:35AM -0800, Guenter Roeck wrote:
-> On 3/6/20 5:27 AM, Sergey.Semin@baikalelectronics.ru wrote:
-> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > 
-> > Modern device tree bindings are supposed to be created as YAML-files
-> > in accordane with dt-schema. This commit replaces the DW Watchdog
-> > legacy bare text bindings with YAML file. As before the the bindings
-> > states that the corresponding dts node is supposed to have a registers
-> > range reference, at least one clocks phandle reference, optional reset
-> > lines. Seeing all the platforms with DW Watchdog provide the watchdog
-> > interrupt property and since in further commit we'll alter the driver
-> > to use it for pre-timeout functionality implementation, lets declare
-> > the IRQ property to be required.
-> > 
+One nit below.
+
+	Sam
+
+On Mon, Apr 06, 2020 at 03:24:13PM +0200, Angelo Ribeiro wrote:
+> Add Synopsys DesignWare IPK specific extensions for Synopsys DesignWare
+> MIPI DSI Host driver.
 > 
-> First, this is not just a replacement - it changes semantics.
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Cc: Joao Pinto <jpinto@synopsys.com>
+> Signed-off-by: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
+> ---
+>  drivers/gpu/drm/ipk/Kconfig           |   9 +
+>  drivers/gpu/drm/ipk/Makefile          |   2 +
+>  drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c | 556 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 567 insertions(+)
+>  create mode 100644 drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c
 > 
-> Second, I disagree with making interrupts mandatory. They are only needed
-> for pretimeout functionality, and not everyone may want to enable that.
-> I don't see the point of forcing everyone to enable and provide functionality
-> that is neither wanted or needed for a given use case. Yes, the interrupt
-> is provided by all users today, but we may have one coming up tomorrow
-> where the interrupt line is not even wired up. What then ?
+> diff --git a/drivers/gpu/drm/ipk/Kconfig b/drivers/gpu/drm/ipk/Kconfig
+> index 1f87444..49819e5 100644
+> --- a/drivers/gpu/drm/ipk/Kconfig
+> +++ b/drivers/gpu/drm/ipk/Kconfig
+> @@ -11,3 +11,12 @@ config DRM_IPK
+>  	  Enable support for the Synopsys DesignWare DRM DSI.
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called ipk-drm.
+> +
+> +config DRM_IPK_DSI
+> +	tristate "Synopsys DesignWare IPK specific extensions for MIPI DSI"
+> +	depends on DRM_IPK
+> +	select DRM_DW_MIPI_DSI
+> +	help
+> +	  Choose this option for Synopsys DesignWare IPK MIPI DSI support.
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called dw-mipi-dsi-ipk.
+> diff --git a/drivers/gpu/drm/ipk/Makefile b/drivers/gpu/drm/ipk/Makefile
+> index 51d2774..c80503f 100644
+> --- a/drivers/gpu/drm/ipk/Makefile
+> +++ b/drivers/gpu/drm/ipk/Makefile
+> @@ -4,3 +4,5 @@ ipk-drm-y := \
+>  	dw-vpg.o
+>  
+>  obj-$(CONFIG_DRM_IPK) += ipk-drm.o
+> +
+> +obj-$(CONFIG_DRM_IPK_DSI) += dw-mipi-dsi-ipk.o
+> diff --git a/drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c b/drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c
+> new file mode 100644
+> index 0000000..070eccb
+> --- /dev/null
+> +++ b/drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c
+> @@ -0,0 +1,556 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019-2020 Synopsys, Inc. and/or its affiliates.
+> + * Synopsys DesignWare MIPI DSI solution driver
+> + *
+> + * Author: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
+> + * Author: Luis Oliveira <luis.oliveira@synopsys.com>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/module.h>
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/bridge/dw_mipi_dsi.h>
+> +#include <video/mipi_display.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include <drm/drm_crtc.h>
+> +#include <drm/drm_device.h>
+> +#include <drm/drm_print.h>
+Same rant as in previous mail about include file.
 
-Ok. I'll leave the interrupts optional, though I would have to implement
-it in the driver as well. Is this all semantic changes you were referring to?
 
-There is one more change, which you may have also considered as semantic
-update. It's async clocks support - "pclk" clock. Would you like me to
-unpin this alteration into an additional patch? Rob?
+Rest of the driver looked good while quickly browsing the code.
 
-I'll also provide the next fixes in v2:
-- single license with GPL-2.0-only,
-- remove copyrights (it's not right to add our copyrights here),
-- replace "additionalProperties: false" with "unevaluatedProperties: false"
-- Remove "assigned-clocks" and "assigned-clock-rates" properties
-
-Regards,
--Sergey
-
-> 
-> Guenter
-> 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > ---
-> >  .../devicetree/bindings/watchdog/dw_wdt.txt   | 24 -------
-> >  .../bindings/watchdog/snps,dw-wdt.yaml        | 66 +++++++++++++++++++
-> >  2 files changed, 66 insertions(+), 24 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-> >  create mode 100644 Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-> > deleted file mode 100644
-> > index eb0914420c7c..000000000000
-> > --- a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-> > +++ /dev/null
-> > @@ -1,24 +0,0 @@
-> > -Synopsys Designware Watchdog Timer
-> > -
-> > -Required Properties:
-> > -
-> > -- compatible	: Should contain "snps,dw-wdt"
-> > -- reg		: Base address and size of the watchdog timer registers.
-> > -- clocks	: phandle + clock-specifier for the clock that drives the
-> > -		watchdog timer.
-> > -
-> > -Optional Properties:
-> > -
-> > -- interrupts	: The interrupt used for the watchdog timeout warning.
-> > -- resets	: phandle pointing to the system reset controller with
-> > -		line index for the watchdog.
-> > -
-> > -Example:
-> > -
-> > -	watchdog0: wd@ffd02000 {
-> > -		compatible = "snps,dw-wdt";
-> > -		reg = <0xffd02000 0x1000>;
-> > -		interrupts = <0 171 4>;
-> > -		clocks = <&per_base_clk>;
-> > -		resets = <&rst WDT0_RESET>;
-> > -	};
-> > diff --git a/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml b/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
-> > new file mode 100644
-> > index 000000000000..8b30f9601c38
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
-> > @@ -0,0 +1,66 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +#
-> > +# Copyright (C) 2019 BAIKAL ELECTRONICS, JSC
-> > +#
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/watchdog/snps,dw-wdt.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Synopsys Designware Watchdog Timer
-> > +
-> > +allOf:
-> > +  - $ref: "watchdog.yaml#"
-> > +
-> > +maintainers:
-> > +  - Jamie Iles <jamie@jamieiles.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: snps,dw-wdt
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    description: DW Watchdog pre-timeout interrupts.
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    minItems: 1
-> > +    items:
-> > +      - description: Watchdog timer reference clock.
-> > +      - description: APB3 interface clock.
-> > +
-> > +  clock-names:
-> > +    minItems: 1
-> > +    items:
-> > +      - const: tclk
-> > +      - const: pclk
-> > +
-> > +  assigned-clocks: true
-> > +
-> > +  assigned-clock-rates: true
-> > +
-> > +  resets:
-> > +    description: Phandle to the DW Watchdog reset lane.
-> > +    maxItems: 1
-> > +
-> > +additionalProperties: false
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - clocks
-> > +
-> > +examples:
-> > +  - |
-> > +    watchdog0: watchdog@ffd02000 {
-> > +      compatible = "snps,dw-wdt";
-> > +      reg = <0xffd02000 0x1000>;
-> > +      interrupts = <0 171 4>;
-> > +      clocks = <&per_base_clk>;
-> > +      resets = <&wdt_rst>;
-> > +    };
-> > +...
-> > 
-> 
+	Sam
