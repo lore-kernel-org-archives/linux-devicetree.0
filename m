@@ -2,79 +2,124 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162DAC2BB54
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 21:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E5FC2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 22:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8929207FF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 21:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0293F2083E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 22:07:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rw68i3XJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgDGVN2 (ORCPT
+        id S1726406AbgDGWH0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 17:13:28 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:46135 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgDGVN2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 17:13:28 -0400
-X-Originating-IP: 72.234.141.215
-Received: from tb.lan (udp224251uds.hawaiiantel.net [72.234.141.215])
-        (Authenticated sender: mail@aparcar.org)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id D2A2DFF805;
-        Tue,  7 Apr 2020 21:13:21 +0000 (UTC)
-From:   Paul Spooren <mail@aparcar.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, jason@lakedaemon.net, andrew@lunn.ch,
-        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
-        daniel@makrotopia.org, freifunk@adrianschmutzler.de
-Subject: [PATCH 0/5] arm: dts: linksys: rename codename to model
-Date:   Tue,  7 Apr 2020 11:08:16 -1000
-Message-Id: <20200407210816.866084-7-mail@aparcar.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200407210816.866084-1-mail@aparcar.org>
-References: <20200407210816.866084-1-mail@aparcar.org>
+        Tue, 7 Apr 2020 18:07:26 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46506 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbgDGWH0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 18:07:26 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q3so1422547pff.13
+        for <devicetree@vger.kernel.org>; Tue, 07 Apr 2020 15:07:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xQ0CMqBW6HOiKsmKZ6VgVvjTVRhpyHMNm3H4n2IX4C8=;
+        b=Rw68i3XJ5JnnwX/K/8I3yzixlUVsVtJ2etjO5TZhfnYbsajRHoeks03BiJgc4IfBou
+         pplNLgCJb4AibRRMSKpOE+MgNY2ShgtRSuFxsEr0E7TMIntadjYbMmCzEJM82pfk37t5
+         7ySqepJeD5kpr2jRBpC2O3hCv5zKx89jMhXvZIFEkqcwpMe0Zetu9YvY924vkJS9kNyA
+         fq2slWBlcJ0DDuF/xaFlnd5Kx7z+uNpxn1I5a7EeBT7muxR+VxQ0iBnYWNlYN6s/07Gf
+         3u0ljmf5E8+2Jg2asB/+5DNamV2GqzhneAUcBvpTDHXD8SF4Flpjfu8WvXugWRFK67OK
+         pP9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xQ0CMqBW6HOiKsmKZ6VgVvjTVRhpyHMNm3H4n2IX4C8=;
+        b=MWEq2GQyp63LxETei4/qaH6N9S54svQsONP36aXOLL8rNFUH43xTRs/5tsN9FLfRDg
+         JduoC/tQil6dz7Z0k4kvNlYSbPJUIAePwBw5D9VFQaIxNkGgA8LxHhae4+x821RfAIr2
+         Vn+NvIvonfJldnQJMSVIV6MEQB4wS4UGzwKRc1JjPmtZ3OtYFw07Zs4k/2wHN3gxZ6Lm
+         g9Q0kfo4oHLw0ech+GofuXdnvXPZstaK0A+3LqzkqnKVEdXfpGng77I7Yg8sNv3lBNlb
+         i/FQ8Csm1dofSBePojbYOs+hN/Ww8SXhi9Tl6zsA15WopfnsFTeFSiyqIamnCSiXVi4i
+         lMTg==
+X-Gm-Message-State: AGi0PuZCq9M9P6gpYP/3OTGbucyLEsgcfKqIXnaYr5pCIkR4/sViTQf4
+        3+PdeDB6IzjwaLNyBqXKdw+Rrg==
+X-Google-Smtp-Source: APiQypImyD5jkZCA6R9BSgJ+PmtBP9/LG4f/aJX6aezk6OZplkgeFKHReg6Bg6r/hmACeL/V74aYKw==
+X-Received: by 2002:a62:75d0:: with SMTP id q199mr4566702pfc.72.1586297245671;
+        Tue, 07 Apr 2020 15:07:25 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id r9sm14091252pfg.2.2020.04.07.15.07.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 15:07:24 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 15:07:30 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org, wsa@the-dreams.de,
+        broonie@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org,
+        georgi.djakov@linaro.org, linux-i2c@vger.kernel.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        swboyd@chromium.org, mgautam@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
+        mka@chromium.org, dianders@chromium.org, evgreen@chromium.org
+Subject: Re: [PATCH V3 2/8] soc: qcom: geni: Support for ICC voting
+Message-ID: <20200407220730.GK20625@builder.lan>
+References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
+ <1585652976-17481-3-git-send-email-akashast@codeaurora.org>
+ <20200331233209.GF254911@minitux>
+ <45191b98-60fa-cd49-3067-d58c128d2c9c@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <45191b98-60fa-cd49-3067-d58c128d2c9c@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Linksys chose to use codenames for a few of their devices and sell their
-them under an entirely different name.
+On Mon 06 Apr 23:45 PDT 2020, Akash Asthana wrote:
 
-codename  model name
-rango  -> wrt3200acm
-mamba  -> wrt1900ac
-cobra  -> wrt1900ac-v2
-caiman -> wrt1200ac
-shelby -> wrt1900acs
+> Hi Bjorn,
+> 
+> On 4/1/2020 5:02 AM, Bjorn Andersson wrote:
+> > On Tue 31 Mar 04:09 PDT 2020, Akash Asthana wrote:
+> > 
+> > > Add necessary macros and structure variables to support ICC BW
+> > > voting from individual SE drivers.
+> > > 
+> > > Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> > > ---
+> > > Changes in V2:
+> > >   - As per Bjorn's comment dropped enums for ICC paths, given the three
+> > >     paths individual members
+> > > 
+> > > Changes in V3:
+> > >   - Add geni_icc_get, geni_icc_vote_on and geni_icc_vote_off as helper API.
+> > >   - Add geni_icc_path structure in common header
+> > > 
+> > >   drivers/soc/qcom/qcom-geni-se.c | 98 +++++++++++++++++++++++++++++++++++++++++
+> > >   include/linux/qcom-geni-se.h    | 36 +++++++++++++++
+> > >   2 files changed, 134 insertions(+)
+> > > 
+> > > diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+> > > index 7d622ea..9344c14 100644
+> > > --- a/drivers/soc/qcom/qcom-geni-se.c
+> > > +++ b/drivers/soc/qcom/qcom-geni-se.c
+> > > @@ -720,6 +720,104 @@ void geni_se_rx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len)
+> > >   }
+> > >   EXPORT_SYMBOL(geni_se_rx_dma_unprep);
+> > > +int geni_icc_get(struct geni_se *se, const char *icc_core, const char *icc_cpu,
+> > > +		const char *icc_ddr)
+> > > +{
+> > > +	if (icc_core) {
+> > Afaict it's only this that might be passed as NULL, so please drop these
+> > conditionals (keep the last one).
+> IIUC you're suggesting to drop if (icc_core/cpu) but keep if (icc_ddr) ?
 
-This introduces some extra loops in OpenWrt, a distribution specialized
-on embedded Internet facing devices, as both codename and model name are
-used within the build system. The double naming requires developers to
-keep track of that mapping and introduces inconsistencies:
+Correct
 
-To build a specific device in OpenWrt profiles are used, named after the
-device model, e.g. `wrt3200acm`. However as device tree is used and the
-first item of the DT `compatible` list is `linksys,rango`, the running
-device identifies itself as `linksys,rango`.
-
-Such double naming complicates currently the automatic search for
-firmware upgrade as the build system does not support such mapping.
-Ideally the first item of the DT `compatible` list would contain a
-string reasonable similar to the DT `model`.
-
-With this patch set the Linksys device tree files are moved from
-containing the codename to contain a sanitized model name and also use
-it as first entry of the DT `compatible` list.
-
-Paul Spooren (5):
-  arm: dts: linksys: rename rango to wrt3200acm
-  arm: dts: linksys: rename mamba to wrt1900ac
-  arm: dts: linksys: rename cobra to wrt1900acv2
-  arm: dts: linksys: rename caiman to wrt1200ac
-  arm: dts: linksys: rename shelby to wrt1900acsv
+Thanks,
+Bjorn
