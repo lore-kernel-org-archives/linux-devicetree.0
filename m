@@ -2,111 +2,102 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2055C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 22:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD340C2D0EC
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 22:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97A862063A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 22:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A59F5206C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 22:46:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cBxyq4N4"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="419V9ZM8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgDGW3s (ORCPT
+        id S1726393AbgDGWqW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 18:29:48 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:40322 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726627AbgDGW3r (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 18:29:47 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586298586; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Y51llxo6V8hgiVIDqT1dGRczqJHThRU0itOQaSw5CeI=; b=cBxyq4N4LwGUYzAOBVyRaZJLObmpBuZnCoZUURdeDcLqzVKVvu8I/5cFqwsYhX8XMb1RYZ8M
- ISdh2nlMbZ4Q9VjsRQsgRB419i7xiJQItEd1se6sldItHoECIUcfCg8mrt7txM2QqiMVV2zN
- qJ3Mg9O5ULlCNuAAAyofuNzrybI=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8cfed9.7fa01118d928-smtp-out-n01;
- Tue, 07 Apr 2020 22:29:45 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 220DFC44788; Tue,  7 Apr 2020 22:29:44 +0000 (UTC)
-Received: from [10.110.111.40] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C548BC433F2;
-        Tue,  7 Apr 2020 22:29:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C548BC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH v3 0/4] Add SS/HS-USB changes for Qualcomm SM8150 chipset
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        vinod.koul@linaro.org
-References: <1586298209-4589-1-git-send-email-wcheng@codeaurora.org>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <a1328e98-fb97-3fff-913e-45ad85f44532@codeaurora.org>
-Date:   Tue, 7 Apr 2020 15:29:41 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 7 Apr 2020 18:46:22 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:53734 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726380AbgDGWqW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Apr 2020 18:46:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=SjTHWgdH+APmia7yev+r5og+EF8CcHtsC9+wUuc74BQ=; b=419V9ZM8i56ZctpAO/OJC4QDpJ
+        0I4aBfDHchtIoOk0LriYXrHgmMGDCm3ArG+bwNDforN1Ianmzag0VF/NfbVtBHRMnFtpauief9ioM
+        CdW5+oBd6nVNCksfES5xAY/3FuW+BnczEyKKC3fj1/LPtUhVat84eRiWUQIEcOffM1yQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jLwz1-001X61-Hq; Wed, 08 Apr 2020 00:46:15 +0200
+Date:   Wed, 8 Apr 2020 00:46:15 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Paul Spooren <mail@aparcar.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        jason@lakedaemon.net, gregory.clement@bootlin.com,
+        sebastian.hesselbarth@gmail.com, daniel@makrotopia.org,
+        freifunk@adrianschmutzler.de
+Subject: Re: [PATCH 0/5] arm: dts: linksys: rename codename to model
+Message-ID: <20200407224615.GA359603@lunn.ch>
+References: <20200407210816.866084-1-mail@aparcar.org>
 MIME-Version: 1.0
-In-Reply-To: <1586298209-4589-1-git-send-email-wcheng@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407210816.866084-1-mail@aparcar.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi All,
+On Tue, Apr 07, 2020 at 11:08:10AM -1000, Paul Spooren wrote:
+> Linksys chose to use codenames for a few of their devices and sell their
+> them under an entirely different name.
+> 
+> codename  model name
+> rango  -> wrt3200acm
+> mamba  -> wrt1900ac
+> cobra  -> wrt1900ac-v2
+> caiman -> wrt1200ac
+> shelby -> wrt1900acs
 
-Sorry for the confusion, please disregard these patches.  I sent the
-incorrect patch series update.
+Hi Paul
 
-Thanks
-Wesley
+There was quite a bit of discussion about this when the first board
+was added. If i remember correctly, it was Mamba.
 
-On 4/7/2020 3:23 PM, Wesley Cheng wrote:
-> This series adds support for the Synopsis 7nm HSPHY USB driver being
-> used in QCOM chipsets.  The HSPHY register map differs compared to 
-> other PHY revisions.  In addition, modifications and updates are done
-> to the QMP driver to add new registers/offsets, and to update the
-> initialization sequence for enabling the SSUSB path on SM8150.
-> 
-> Changes in v3:
->  - Use devm_reset_control_get_exclusive instead of referencing index for
->    reset handle
-> 
-> Changes in v2:
->  - Fixed YAML errors caught by dt_binding_check
-> 
-> Jack Pham (1):
->   phy: qcom-qmp: Add SM8150 QMP USB3 PHY support
-> 
-> Wesley Cheng (3):
->   dt-bindings: phy: Add binding for qcom,usb-hs-7nm
->   phy: qcom-snps: Add SNPS USB PHY driver for QCOM based SOCs
->   phy: qcom-qmp: Use proper PWRDOWN offset for sm8150 USB
-> 
->  .../devicetree/bindings/phy/qcom,usb-hs-7nm.yaml   |  76 ++++++
->  drivers/phy/qualcomm/Kconfig                       |  10 +
->  drivers/phy/qualcomm/Makefile                      |   1 +
->  drivers/phy/qualcomm/phy-qcom-qmp.c                | 157 +++++++++++
->  drivers/phy/qualcomm/phy-qcom-qmp.h                | 198 +++++++++++++-
->  drivers/phy/qualcomm/phy-qcom-snps-7nm.c           | 294 +++++++++++++++++++++
->  6 files changed, 734 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
->  create mode 100644 drivers/phy/qualcomm/phy-qcom-snps-7nm.c
-> 
+Imre Kaloz, <kaloz@openwrt.org> was the one arguing for
+the name armada-xp-linksys-mamba.dts.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+So it seems that openwrt.org has now come full circle?
+
+> This introduces some extra loops in OpenWrt, a distribution specialized
+> on embedded Internet facing devices, as both codename and model name are
+> used within the build system. The double naming requires developers to
+> keep track of that mapping and introduces inconsistencies:
+> 
+> To build a specific device in OpenWrt profiles are used, named after the
+> the compatible string for targets using device tree (similar to how .dts
+> files are named in the linux source tree). However, the first item of
+> the DT `compatible` list in this case is `linksys,rango`, which is
+> inconsistent with the model name and not what common users would expect.
+> 
+> Such double naming complicates currently the automatic search for
+> firmware upgrade as the build system does not support such mapping.
+> Ideally the first item of the DT `compatible` list would contain a
+> string suitable to be used as a filename recognizable by normal users to
+> belong to that device.
+
+> With this patch set the Linksys device tree files are moved from
+> containing the codename to contain a sanitized model name and also use
+> it as first entry of the DT `compatible` list.
+
+I've no problems adding another compatible to the list. But i don't
+like the idea of renaming the files. The file names could be
+considered ABI! What installers/bootloaders are you going to break by
+renaming them?
+
+	   Andrew
