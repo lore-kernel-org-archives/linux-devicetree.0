@@ -2,84 +2,181 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D8EC2D0EC
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 20:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F06C2D0EC
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 20:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C48A02074B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 20:11:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fuuoVvxO"
+	by mail.kernel.org (Postfix) with ESMTP id 61E7B2074B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 20:13:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgDGUL3 (ORCPT
+        id S1727192AbgDGUNF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 16:11:29 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35442 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgDGUL2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 16:11:28 -0400
-Received: by mail-ed1-f68.google.com with SMTP id c7so5689218edl.2;
-        Tue, 07 Apr 2020 13:11:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=O/BJQaeANbIKLpZe5KSFJnDJg0ZhPtLL0czLVqGibAc=;
-        b=fuuoVvxO72e9A0KngBAmR45pLxeyY2fkBz+MSrvRxmJBijNKoT+hS/9CKwburDfnYn
-         COwPvtLHal+LOGhW/c2e3jg1MnGDW5bFoOdQkD9UXeRuMaL/6kM2cBitYL2WrpnEX+ho
-         B2m1N4nwQd7g2dxGUnsglBqWqz55w14tIEbuRcSoh4xjR7R+ebX9MJRKkXQ1nCJHoxXA
-         IRYOw4SJcDXvRijVn64TAzmx9D1lAnBVfk5mwTFmvwa/lQ1s3Kvxfy1PdTSrV01X/cmP
-         uwQPIMaCBJ1mvgDDlxLi9IXibvlVINo4dvPNQPbS83W6Bm0J+9wmOIlCF1JOM7XsnTb4
-         hVgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O/BJQaeANbIKLpZe5KSFJnDJg0ZhPtLL0czLVqGibAc=;
-        b=PWjXsf4PIn8Um/6LNRhHp2fqKF4sAepTTixsNTGjFoFiQOJCKiAOSwGeQ54qTdg85g
-         Jn6H/e1jDt5WVWQDmAt1vS3Zcj3XnFGEFw6YVxZvzcHQKQhyq9emV13x6A/0SXVwhgv1
-         15h2mdgC9g22S0TJOPNfZPjcMq5gPv4PSwA1isfZUx5xz1vjKwzQ6AL19pHD4pNJhBu2
-         KY+d60q/Yia7hvjJF5X0nO1fXsedBelpm4jN/Vprwa4fw62U5AWSnLedKuPwq91DJIpG
-         tQaC7y5DtWEBq8AMB13ypyX9lNh+o2cX6imyjSjhQhk2kPr+PeWQWU7t4OyWDVNdoH4Y
-         CdcQ==
-X-Gm-Message-State: AGi0PuaFJ0eiOm5XmQmBfGlWy5ZOaUoPKLEdOCB7/TAskHCVSvB3F3pH
-        Buz4y78BB74j0cJ+qBFxY4c=
-X-Google-Smtp-Source: APiQypLjh8Y73aeBuCicCk/HIPysaQ6m8DET7luf/lR9IXrkt7ld59ZOtgryR6Ruq9iXw2xmD7mdcA==
-X-Received: by 2002:a50:aa9c:: with SMTP id q28mr3577169edc.10.1586290286463;
-        Tue, 07 Apr 2020 13:11:26 -0700 (PDT)
-Received: from localhost (ip1f115f16.dynamic.kabel-deutschland.de. [31.17.95.22])
-        by smtp.gmail.com with ESMTPSA id p20sm2901637edw.31.2020.04.07.13.11.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 Apr 2020 13:11:25 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 22:11:25 +0200
-From:   Oliver Graute <oliver.graute@gmail.com>
-To:     Peter Chen <peter.chen@nxp.com>
-Cc:     robh+dt@kernel.org, kishon@ti.com, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org, jun.li@nxp.com, linux-imx@nxp.com
-Subject: Re: [PATCH v3 1/2] phy: cadence: salvo: add salvo phy driver
-Message-ID: <20200407201125.GA14497@ripley>
-References: <20200324071030.19801-1-peter.chen@nxp.com>
+        Tue, 7 Apr 2020 16:13:05 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:52342 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgDGUNF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 16:13:05 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id F2C92804F2;
+        Tue,  7 Apr 2020 22:12:59 +0200 (CEST)
+Date:   Tue, 7 Apr 2020 22:12:58 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-amarula@amarulasolutions.com
+Subject: Re: [PATCH v3 1/3] dt-bindings: display: panel: Convert feiyang,
+ fy07024di26a30d to DT schema
+Message-ID: <20200407201258.GB28801@ravnborg.org>
+References: <20200403142453.25307-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200324071030.19801-1-peter.chen@nxp.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200403142453.25307-1-jagan@amarulasolutions.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=iP-xVBlJAAAA:8
+        a=gEfo2CItAAAA:8 a=e5mUnYsNAAAA:8 a=IP_fJxDYSyxqUQePLtIA:9
+        a=CjuIK1q_8ugA:10 a=lHLH-nfn2y1bM_0xSXwp:22 a=sptkURWiP4Gy88Gu7hUp:22
+        a=Vxmtnl_E_bksehYqCbjh:22 a=pHzHmUro8NiASowvMSCR:22
+        a=nt3jZW36AmriUCFCBwmW:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 24/03/20, Peter Chen wrote:
-> Cadence SALVO PHY is a 28nm product, and is only used for USB3 & USB2.
-> According to the Cadence, this PHY is a legacy Module, and Sierra and
-> Torrent are later evolutions from it, and their sequence overlap is
-> minimal, meaning we cannot reuse either (Sierra & Torrent) of the PHY
-> drivers.
-> 
-> Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Hi Jagan.
 
-Tested-by:  Oliver Graute <oliver.graute@kococonnector.com>
+On Fri, Apr 03, 2020 at 07:54:51PM +0530, Jagan Teki wrote:
+> Convert the feiyang,fy07024di26a30d panel bindings to DT schema.
+> 
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+
+Thanks, this and the two other patches are now pushed to drm-misc-next.
+
+	Sam
+
+> ---
+> Changes for v3:
+> - update the licence, used (GPL-2.0-only OR BSD-2-Clause) since
+>   I'm the author for old binding
+> - use panel-common.yaml
+> - mark true for common properties 
+> - use maxItems: 1 for reg
+> - update example
+> Changes for v2:
+> - fix dt_binding_check 
+> 
+>  .../display/panel/feiyang,fy07024di26a30d.txt | 20 -------
+>  .../panel/feiyang,fy07024di26a30d.yaml        | 58 +++++++++++++++++++
+>  2 files changed, 58 insertions(+), 20 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt b/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
+> deleted file mode 100644
+> index 82caa7b65ae8..000000000000
+> --- a/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
+> +++ /dev/null
+> @@ -1,20 +0,0 @@
+> -Feiyang FY07024DI26A30-D 7" MIPI-DSI LCD Panel
+> -
+> -Required properties:
+> -- compatible: must be "feiyang,fy07024di26a30d"
+> -- reg: DSI virtual channel used by that screen
+> -- avdd-supply: analog regulator dc1 switch
+> -- dvdd-supply: 3v3 digital regulator
+> -- reset-gpios: a GPIO phandle for the reset pin
+> -
+> -Optional properties:
+> -- backlight: phandle for the backlight control.
+> -
+> -panel@0 {
+> -	compatible = "feiyang,fy07024di26a30d";
+> -	reg = <0>;
+> -	avdd-supply = <&reg_dc1sw>;
+> -	dvdd-supply = <&reg_dldo2>;
+> -	reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
+> -	backlight = <&backlight>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml b/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
+> new file mode 100644
+> index 000000000000..95acf9e96f1c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
+> @@ -0,0 +1,58 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/panel/feiyang,fy07024di26a30d.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Feiyang FY07024DI26A30-D 7" MIPI-DSI LCD Panel
+> +
+> +maintainers:
+> +  - Jagan Teki <jagan@amarulasolutions.com>
+> +
+> +allOf:
+> +  - $ref: panel-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: feiyang,fy07024di26a30d
+> +
+> +  reg:
+> +    description: DSI virtual channel used by that screen
+> +    maxItems: 1
+> +
+> +  avdd-supply:
+> +    description: analog regulator dc1 switch
+> +
+> +  dvdd-supply:
+> +    description: 3v3 digital regulator
+> +
+> +  reset-gpios: true
+> +
+> +  backlight: true
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - avdd-supply
+> +  - dvdd-supply
+> +  - reset-gpios
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    dsi {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        panel@0 {
+> +            compatible = "feiyang,fy07024di26a30d";
+> +            reg = <0>;
+> +            avdd-supply = <&reg_dc1sw>;
+> +            dvdd-supply = <&reg_dldo2>;
+> +            reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
+> +            backlight = <&backlight>;
+> +        };
+> +    };
+> -- 
+> 2.17.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
