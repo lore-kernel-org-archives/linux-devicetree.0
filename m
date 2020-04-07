@@ -2,175 +2,150 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3598C2BB55
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 16:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FCCC2BA80
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 16:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA0E220730
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 16:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A17A20730
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 16:53:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f5RWEbf+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gTMYjS8V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbgDGQqX (ORCPT
+        id S1726426AbgDGQxk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:46:23 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35408 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726609AbgDGQqX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 12:46:23 -0400
-Received: by mail-ed1-f68.google.com with SMTP id c7so4908420edl.2
-        for <devicetree@vger.kernel.org>; Tue, 07 Apr 2020 09:46:22 -0700 (PDT)
+        Tue, 7 Apr 2020 12:53:40 -0400
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:35654 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgDGQxk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 12:53:40 -0400
+Received: by mail-qv1-f65.google.com with SMTP id q73so2177587qvq.2;
+        Tue, 07 Apr 2020 09:53:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BMeg8/u+aAWyp+BW+T1dMXhjJgPZOJD50ZkqHJzzRoE=;
-        b=f5RWEbf+E0nWNJpvEWdEO8ocghgxfw4wvjDh9gLkUt0zvFUzMbiSxfotaP5774Ypuf
-         lTmNnoMP6E7bkI5RDgeZqPaGu2ZZNhCC4a9oR8gdn1sr0AhsRh5VOEIieUEMYhlKwF02
-         cG9muzV5Wbm2HWH/7PNjnhkB+sSrU9DCGcGwU=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=d3VppNLHFrOcwWwbhA0a42eUvrzhWAyV8lp0TArcKUI=;
+        b=gTMYjS8VCusWzzR0ujkxGvuNVHTf97jQDDyMXbcKUdhzfmqh8hJapcfDJXCqvVpZpH
+         y2GtAqJX+ZTq7ILnqzyqwMPlBeZG6qYiFEZmMWMuGYCZvqaf8ejN8sL87Ju22j+VgjrR
+         7fCs7WafEs77ZB3k+dcLzdVHRizOUpzywpcDREzNQROl8lHJ9z+GEBgRCqavav/TuGky
+         ZAaAHWX/8hTFesdNvVB1CQkMJA6ugBJl2tgreshtXqx2bPI3VZOk1Rb5QEF3zVPNm1qz
+         3aOHzWfcR4WTQ425t7EDeNinHx4272hmXhvbdNIAl5S7wVj0DQcw65lp+JH2cTVw7hKv
+         IsVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BMeg8/u+aAWyp+BW+T1dMXhjJgPZOJD50ZkqHJzzRoE=;
-        b=jHtn1IlTNi5xvU/ylcEC258cGE12NJGHZ9HpbEff+bCLU2dD4lRGvYzi0YYyu6bWMO
-         edsaMNLljXLF32dn3LL5w1WSD+2beb5JIA9EcjdQ7IgLxlOz/VzzzeoXsJcG54ZUpIgS
-         yvZTEOq4AZLh3zdmp55scU+EDgscv4quBcSNp2QEz7ifNwf9YqXLDaGaplZPgkO4G4AX
-         WpvwIPyAoInChv4QL8CKZFAsQanqn0xiAjES3QFPSNXOABiEnOOp9+X+axCvOlBGQugY
-         tm/FxPo4LC58QBwC9kCCEeAhNu2hlFbCS77Efbl56iXThxP1Q6YQ/GyLQrZS6YzgD89V
-         WkUA==
-X-Gm-Message-State: AGi0PuZ3zoraWQptJemdQsMHKoxBAjuGRdB3it1d0GGApDKVYDKebxUF
-        RTlYu6SDRzSRh3BAzRKrmot5ibAaFHmnpQ==
-X-Google-Smtp-Source: APiQypIX3GNK/LXFYswnqcFfvXGnZgHR7ujGznaiAQh7pGWcR8U33AhhiHVGtypEQWrpVmq8EWCdeQ==
-X-Received: by 2002:a50:d695:: with SMTP id r21mr2709129edi.323.1586277980902;
-        Tue, 07 Apr 2020 09:46:20 -0700 (PDT)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com. [209.85.128.53])
-        by smtp.gmail.com with ESMTPSA id 21sm3250036ejz.10.2020.04.07.09.46.19
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 09:46:20 -0700 (PDT)
-Received: by mail-wm1-f53.google.com with SMTP id t203so2410260wmt.2
-        for <devicetree@vger.kernel.org>; Tue, 07 Apr 2020 09:46:19 -0700 (PDT)
-X-Received: by 2002:a1c:a913:: with SMTP id s19mr215349wme.134.1586277979069;
- Tue, 07 Apr 2020 09:46:19 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=d3VppNLHFrOcwWwbhA0a42eUvrzhWAyV8lp0TArcKUI=;
+        b=cNNPwgD/+0BNF4UaEO3tNKpSiqITwrsSZh10QMqZYFwDLQYLqX2roNcwE2D0Oylz4C
+         igR7f80kbNL9oP+epYLXbr6JB00u9i6AAZecnHKWoucDKt5vU541ifE/Fe4IhZSI2ke6
+         rh64gWF0+a7SrfWgB8Wx1A046+swmWYA77IvDDJltVy3cvxQh8pCFWpayQ1KUK3gyLFB
+         cix07Ftaw8bSEJGPSj0gooimWWSHrfxhwNH7kXO57LsafKBewCLfDCt12jkx7BogYmry
+         vFebt3XtmsjD1/adFslTluDOGZyfWYfTVeAYEl1vliGQM9ur0ACAg5yMP21sK2ibVUYU
+         ey/g==
+X-Gm-Message-State: AGi0PuadIbbPDNrVfz4oy3+BEPsOkl2mmIEk3WAQnyugTPbejP1A/pv7
+        V0b/QDhCIHHmYhbT18vbCP0=
+X-Google-Smtp-Source: APiQypK11F/M1pHTJnN84IWOLfEDHscNiF0dxYg4qZy2tkh6lY/465HRjDB4R4Bn3/EpZJUuWGcf6w==
+X-Received: by 2002:ad4:496b:: with SMTP id p11mr3140242qvy.202.1586278418655;
+        Tue, 07 Apr 2020 09:53:38 -0700 (PDT)
+Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id m127sm13463453qke.64.2020.04.07.09.53.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 09:53:37 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 12:53:35 -0400
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH 1/3] ARM: at91: add atmel tcb capabilities
+Message-ID: <20200407165335.GF5578@icarus>
+References: <20200406155320.1291701-1-kamel.bouhara@bootlin.com>
+ <20200406155320.1291701-2-kamel.bouhara@bootlin.com>
 MIME-Version: 1.0
-References: <20200331133346.372517-2-robert.foss@linaro.org>
- <20200401080705.j4goeqcqhoswhx4u@gilmour.lan> <CAG3jFyvUd08U9yNVPUD9Y=nd5Xpcx34GcHJRhtvAAycoq3qimg@mail.gmail.com>
- <20200403232736.GA6127@valkosipuli.retiisi.org.uk> <20200404093446.vuvwrhn5436h4d3s@gilmour.lan>
- <20200406083506.GE6127@valkosipuli.retiisi.org.uk> <20200407083647.4mocdl7aqa3x737q@gilmour.lan>
- <CAG3jFyvd32pWppubMoOoyH9eO2XLjwUXMC7p4xtv8m+JkPv6vw@mail.gmail.com>
- <20200407123232.ktvaifhqntgzvkap@gilmour.lan> <CAG3jFysSrZJRE2TvL0bWoRFNnscgDGj8yGr-iwWBm4=1wMbJ9A@mail.gmail.com>
- <20200407163916.GL6127@valkosipuli.retiisi.org.uk>
-In-Reply-To: <20200407163916.GL6127@valkosipuli.retiisi.org.uk>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Tue, 7 Apr 2020 18:46:06 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5BGFB5znb9QyyPVL47kc809Ktu33bssvqg5eA-WwvMgOw@mail.gmail.com>
-Message-ID: <CAAFQd5BGFB5znb9QyyPVL47kc809Ktu33bssvqg5eA-WwvMgOw@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     Robert Foss <robert.foss@linaro.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="RE3pQJLXZi4fr8Xo"
+Content-Disposition: inline
+In-Reply-To: <20200406155320.1291701-2-kamel.bouhara@bootlin.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 6:40 PM Sakari Ailus <sakari.ailus@iki.fi> wrote:
->
-> On Tue, Apr 07, 2020 at 05:47:41PM +0200, Robert Foss wrote:
-> > On Tue, 7 Apr 2020 at 14:32, Maxime Ripard <maxime@cerno.tech> wrote:
-> > >
-> > > Hi Robert,
-> > >
-> > > On Tue, Apr 07, 2020 at 01:29:05PM +0200, Robert Foss wrote:
-> > > > On Tue, 7 Apr 2020 at 10:36, Maxime Ripard <maxime@cerno.tech> wrote:
-> > > > > On Mon, Apr 06, 2020 at 11:35:07AM +0300, Sakari Ailus wrote:
-> > > > > > > But that 19.2MHz is not a limitation of the device itself, it's a
-> > > > > > > limitation of our implementation, so we can instead implement
-> > > > > > > something equivalent in Linux using a clk_set_rate to 19.2MHz (to make
-> > > > > > > sure that our parent clock is configured at the right rate) and the
-> > > > > > > clk_get_rate and compare that to 19.2MHz (to make sure that it's not
-> > > > > > > been rounded too far apart from the frequency we expect).
-> > > > > > >
-> > > > > > > This is doing exactly the same thing, except that we don't encode our
-> > > > > > > implementation limitations in the DT, but in the driver instead.
-> > > > > >
-> > > > > > What I really wanted to say that a driver that doesn't get the clock
-> > > > > > frequency from DT but still sets that frequency is broken.
-> > > > > >
-> > > > > > This frequency is highly system specific, and in many cases only a certain
-> > > > > > frequency is usable, for a few reasons: On many SoCs, not all common
-> > > > > > frequencies can be used (e.g. 9,6 MHz, 19,2 MHz and 24 MHz; while others
-> > > > > > are being used as well), and then that frequency affects the usable CSI-2
-> > > > > > bus frequencies directly --- and of those, only safe, known-good ones
-> > > > > > should be used. IOW, getting the external clock frequency wrong typically
-> > > > > > has an effect that that none of the known-good CSI-2 bus clock frequencies
-> > > > > > are available.
-> > > > >
-> > > > > So clock-frequency is not about the "Frequency of the xvclk clock in
-> > > > > Hertz", but the frequency at which that clock must run on this
-> > > > > particular SoC / board to be functional?
-> > > > >
-> > > > > If so, then yeah, we should definitely keep it, but the documentation
-> > > > > of the binding should be made clearer as well.
-> > > >
-> > > > Alright so, let me summarise the desired approach then.
-> > >
-> > > There's a separate discussion on the same topic here:
-> > > https://lore.kernel.org/linux-media/20200407122106.GD4751@pendragon.ideasonboard.com/
-> >
-> > Thanks for the link.
-> >
-> > >
-> > > > ACPI:
-> > > >   - Fetch the "clock-frequency" property
-> > > >   - Verify it to be 19.2Mhz
-> > > >
-> > > > DT:
-> > > >   - Fetch the "clock-frequency" property
-> > > >   - Verify it to be 19.2Mhz
-> > > >   - Get xvclk clock
-> > > >   - Get xvclk clock rate
-> > > >   - Verify xvclk clock rate to be 19.2Mhz
-> > >
-> > > The current status is that you should
-> > > 's/clock-frequency/link-frequencies/', and in order to replace
-> > > assigned-clock-rates, you'll want to have a clk_set_rate to 19.2MHz
-> > > between steps 3 and 4
-> >
-> > Would we want to 's/clock-frequency/link-frequencies/' for ACPI too?
-> > I imagine that would cause some breakage.
->
-> It would, yes, and it would be no more correct on DT either.
->
-> There are basically two possibilities here; either use the clock-frequency
-> property and set the frequency, or rely on assigned-clock-rates, and get
-> the frequency instead.
->
-> The latter, while I understand it is generally preferred, comes with having
-> to figure out the register list set that closest matches the frequency
-> obtained. The former generally gets around this silently by the clock
-> driver setting the closest frequency it can support.
 
-Wouldn't the former actually cause problems, because the closest
-frequency the clock driver can support could be pretty far from the
-one requested? (E.g. 19.2 MHz vs 24 MHz) The driver needs to check the
-resulting frequency anyway.
+--RE3pQJLXZi4fr8Xo
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Perhaps a simplified approach of rounding the result of clk_get_rate()
-to a multiple of 100 KHz and comparing it to the hardcoded value would
-be enough in practice?
+On Mon, Apr 06, 2020 at 05:53:18PM +0200, Kamel Bouhara wrote:
+> Some atmel socs have extra tcb capabilities that allow using a generic
+> clock source or enabling a quadrature decoder.
+>=20
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> ---
+>  include/soc/at91/atmel_tcb.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/include/soc/at91/atmel_tcb.h b/include/soc/at91/atmel_tcb.h
+> index fbf5474f4484..6b9c9bec982e 100644
+> --- a/include/soc/at91/atmel_tcb.h
+> +++ b/include/soc/at91/atmel_tcb.h
+> @@ -39,7 +39,8 @@ struct clk;
+>   */
+>  struct atmel_tcb_config {
+>  	size_t	counter_width;
+> -	unsigned int has_gclk:1;
+
+Hi Kamel,
+
+I'm having trouble applying this patch, so I think we have different
+bases. Specifically, I'm not sure where this has_gclk member was
+introduced. It doesn't look like it's in the testing branch of the IIO
+tree yet.
+
+What branch did you base your patches on?
+
+Thanks,
+
+William Breathitt Gray
+
+> +	bool	has_gclk;
+> +	bool	has_qdec;
+>  };
+> =20
+>  /**
+> --=20
+> 2.25.0
+>=20
+
+--RE3pQJLXZi4fr8Xo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl6MsA8ACgkQhvpINdm7
+VJI7/g/8DlUdnaSLPC9O0tau43LweVzguxsRZUbsgEYcyNqguZF+ZmPWMospskNI
+LqRF7nWh6hVXjz9EarWDGKT+EEw2ykfJnkc+9UYnDseXC8lcphprTyTQxRg1Q0ol
+Ot9jb1uHhPWE5hOQqrwwP84ec43wjUryFER//0NmpJZEPGjCEiJK7oqjJahLN12v
+ooL6gDIB3iGV8QBIfANVUxwBV00pnsFAxtQMZ7euZew+qN9nxxUA1DmfTlW7tO7p
+te+ZW9WwEb2qhE1KhxBv3rcul1kxGSj2gA0MufqW7MsKEQN+iZiZorXy7p9ZbSG5
+L2NgwY/HnIT6yyoOZZ+c25yhfL+suFW2o9s0C16CqTOmmMXoqLevPTllgNSVxkod
+mZ73s9+JOrhGr9qjwqyLOWo4gGvIzaxfwbeTpgVcq0rLcdinDFLH09eorvDogeWv
+QfMZSrR30ATakNbdJcglA6Kf7q6CNxvELc9P5aSxeujLTwezP+Cy6Ea61eSIeR60
+dvxyttF09iBzTKr0VjqFJ19geMFS4RExoN2Vu4w03RqyTihcDQHJnNF8hO4l/mpl
+t/lKLh06mUEB7LFNwh1AisIO+l/EKiPmDGb1cuefI9v92k2Nof32QfvhAmmYDl1g
+0OMxLl/WMd563XzCDKRLPqm7IIgjEtJEg7uU2YHiaSNk3p2t3TA=
+=66eq
+-----END PGP SIGNATURE-----
+
+--RE3pQJLXZi4fr8Xo--
