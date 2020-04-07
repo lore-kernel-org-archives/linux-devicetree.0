@@ -2,73 +2,121 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFB8C2BA16
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 06:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8CCC2BA80
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 06:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F1F9206F5
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 06:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F97206F5
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 06:22:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgDGGQ7 (ORCPT
+        id S1726937AbgDGGWx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 02:16:59 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53331 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgDGGQ6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 02:16:58 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jLhXT-0007JL-Hs; Tue, 07 Apr 2020 08:16:47 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jLhXS-0008D1-Jd; Tue, 07 Apr 2020 08:16:46 +0200
-Date:   Tue, 7 Apr 2020 08:16:46 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     devicetree@vger.kernel.org, Paul Barker <pbarker@konsulko.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Tue, 7 Apr 2020 02:22:53 -0400
+Received: from mga17.intel.com ([192.55.52.151]:24121 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbgDGGWx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Apr 2020 02:22:53 -0400
+IronPort-SDR: X/TfEfD4CRWsSqpo9g//RH7yxgCg3aDDh2rMr4R2HnxH7/0K1exrTDQYMyVY5Sxiiz9yOwc5+A
+ BaidyKcclqlQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 23:22:52 -0700
+IronPort-SDR: qEYf7JlZgWdR2QkscqkIrxsVpn+lpD0+6yCVbuUCA6pZmUdEMlc1wMb91tOE6waPGgHcLc/tPD
+ dUU2kteimC7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,353,1580803200"; 
+   d="scan'208";a="248519276"
+Received: from klatzer-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.252.39.161])
+  by orsmga008.jf.intel.com with ESMTP; 06 Apr 2020 23:22:46 -0700
+Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
+        id 07E9E21D18; Tue,  7 Apr 2020 09:22:41 +0300 (EEST)
+Date:   Tue, 7 Apr 2020 09:22:41 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [RFC PATCH v2 2/6] dt-bindings: pwm: document the PWM no-flag
-Message-ID: <20200407061646.pcglaw43kfmrag6a@pengutronix.de>
-References: <20200405192246.3741784-1-oleksandr.suvorov@toradex.com>
- <20200405192246.3741784-3-oleksandr.suvorov@toradex.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency
+ dt-property
+Message-ID: <20200407062241.GA8883@kekkonen.localdomain>
+References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200406165108.GA7646@kekkonen.localdomain>
+ <20200406173234.GD16885@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200405192246.3741784-3-oleksandr.suvorov@toradex.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <20200406173234.GD16885@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Apr 05, 2020 at 10:22:42PM +0300, Oleksandr Suvorov wrote:
-> Add the description of PWM_NOFLAGS flag property.
+Hi Laurent,
+
+On Mon, Apr 06, 2020 at 08:32:34PM +0300, Laurent Pinchart wrote:
+> Hi Sakari,
 > 
-> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+> (CC'ing Maxime)
+> 
+> On Mon, Apr 06, 2020 at 07:51:08PM +0300, Sakari Ailus wrote:
+> > On Mon, Apr 06, 2020 at 05:42:38PM +0100, Lad Prabhakar wrote:
+> > > Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
+> > > as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
+> > > 24MHz. So instead making clock-frequency as dt-property just let the
+> > > driver enforce the required clock frequency.
+> > 
+> > Even if some current systems where the driver is used are using 24 MHz
+> > clock, that doesn't mean there wouldn't be systems using another frequency
+> > that the driver does not support right now.
+> > 
+> > The driver really should not set the frequency unless it gets it from DT,
+> > but I think the preferred means is to use assigned-clock-rates instead, and
+> > not to involve the driver with setting the frequency.
+> > 
+> > Otherwise we'll make it impossible to support other frequencies, at least
+> > without more or less random defaults.
+> 
+> We're running in circles here.
+> 
+> As the driver only supports 24MHz at the moment, the frequency should be
+> set by the driver, as it's a driver limitation. We can then work on
+> supporting additional frequencies, which will require DT to provide a
+> list of supported frequencies for the system, but that can be done on
+> top.
 
-As I already wrote in reply to the v1 series I'd prefer a name for 0
-that explicitly handles normal polarity.
+I guess it would be possible to use different external clock frequencies on
+a sensor in a given system but that seems to be a bit far fetched, to the
+extent I've never seen anyone doing that in practice.
 
-Best regards
-Uwe
+Originally, the driver set the frequency based on the clock-frequency
+property. If we're removing that but use a fixed frequency instead, then
+how is that going to work going forward when someone adds support for other
+frequencies in the driver and has a system requiring that, while there are
+some other platforms relying on the driver setting a particular frequency?
+
+Although, if you're saying that this driver only needs to work with DT that
+comes with the kernel and you don't care about DT binary compatibility,
+this would be fine.
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Regards,
+
+Sakari Ailus
