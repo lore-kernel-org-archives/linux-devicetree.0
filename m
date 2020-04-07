@@ -2,84 +2,84 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BF5C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 10:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 663F8C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 10:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC572074B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 10:05:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CC3720771
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 10:08:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DDJtqM0Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hbob5IWs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgDGKFZ (ORCPT
+        id S1728214AbgDGKIf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:05:25 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36508 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728091AbgDGKFZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 06:05:25 -0400
-Received: by mail-wr1-f68.google.com with SMTP id k1so3201860wrm.3;
-        Tue, 07 Apr 2020 03:05:23 -0700 (PDT)
+        Tue, 7 Apr 2020 06:08:35 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35534 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbgDGKIf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 06:08:35 -0400
+Received: by mail-wm1-f65.google.com with SMTP id r26so1199076wmh.0;
+        Tue, 07 Apr 2020 03:08:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=WWziHtBi4oc9djsFaUX7XQ3VCEDyA2EhaftZG+vRTmU=;
-        b=DDJtqM0ZmFRZgkoIfjqJdHl3jmIlVS6XZRWpAl1W640TYYwj0oq1aQCqr6ap3+oXJP
-         Kc+CTP22W4kFz075wcNPlgXk3WIA2OC06cMHalq/pNM3NkOSxpXQJHnnIN1T0e/TcL8b
-         4Da9rKgxsLO+gXm78IdgUnGJbWWBCXW9qxF84EhqNYsncCFZnPXPDHTspg8A/EW5UqEd
-         Usyjjklwodn/qRuRfGIsTsG2HS6JuC786EggwG53ZL5smZDXB+SnAHV4dGmsSadipRwI
-         8BFWuNpzpawO5DCsGVwbrD+y2DF49Q0yGejQjO7XaC3xrXCP6EZ9DmrUO2haJJUgmaHo
-         7RcA==
+        bh=9FaJuBCa/BT+mcCfha6DjAg3gctMk4+x7nK6u0p3Vvw=;
+        b=hbob5IWsIb9yOV+Jnhn6ZBGOYp5AVNgSywpZoGjEiFZ4T1oc/aKvE723RQO+2g3RKi
+         RY7U5Awqzca+QrpnFJmCNSyOxaI4h/am+clzCax4X6MAYQF8iiJ3oVelhQWvAwlPowNE
+         Tz4KwFc03VvsfszVSKCt7f4y9Us2IGVFDMHfXqyXcOK6JYeQqODxnKisbT3hWdzgyjYV
+         uWV1Eyzop5EK6BtfPuYkvFKBfknHLLoYDzjCjvG9Fqh0XOTBsIS+R6goXdb9Z0xlRth0
+         wPZVB1KHmvx1Rr7LRhPr1WhvSGNp5jMfJvrCjOPtdLIrWkTUvrdnQuz/hBoDeL3M+QvA
+         3oVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WWziHtBi4oc9djsFaUX7XQ3VCEDyA2EhaftZG+vRTmU=;
-        b=FUDQ9JiRFe0OY5ulrgKEwwykIibWe6jjlMLuZT5xTx5sh1Qog1VdOWN0f6Z2kuJLDS
-         YGNUIbDM9evpwzC3z53B2zYR9EMK0tt0dZgbKITA3IZHyAWffwGSl0FMjr5mwIDQRNpz
-         AicTo/zioFvl8YKEB2++5GWv7ocojxehmdN+i4mYzVKi6gwBlstp+ejHXP05e1+FTx2k
-         UQKH4P0yMHEMFpo4uXl+AXpNMYI+fOz4RNcdKsnEJnTp0c+3CjnFyxaz79Sv9PyMw6uZ
-         TJc1L7wEnqBwK2F0h5rdGpJv98L2oNvsYwmryOaI7eS9wxaxUaL77Lmf2/I+OGPrG0FQ
-         Q3Ig==
-X-Gm-Message-State: AGi0PuZ/TVTajEb+YUYMf9qNKQV3S0xSGRkJWP30KfkT5Ml/zwQfOEBX
-        ahPjlMjkNTwOzR899yOJW6M=
-X-Google-Smtp-Source: APiQypKNqMTxJb7gtU/ZDGcNRW5WADi+fcwveFkxNyy/3NH2A8xr0eNmIy5j6DbGgVgXH5x924qrTQ==
-X-Received: by 2002:adf:fe87:: with SMTP id l7mr1823086wrr.377.1586253922777;
-        Tue, 07 Apr 2020 03:05:22 -0700 (PDT)
+        bh=9FaJuBCa/BT+mcCfha6DjAg3gctMk4+x7nK6u0p3Vvw=;
+        b=XC5c6SI7oAit1EGYZ1MOb8swTE5WtEHu7nief0LL/cFWePR3kC+OpJJojzz3HMFS9O
+         p/zI3/L1onABhjlcQ8tfaPfNkaGWUFxTD4seS1pS9xsWqF7bBsn2fWhNPbJfxpw/y20Q
+         IoWTPIvYenPTQ9kLrp3bB1AGh4d8OTiYtRF+zsmD+8cZs3qQmbssddCtlt3eUX0VoLZl
+         GBflpMaqCZhy0IItJyNwG2v2ngWwVIgKnG9uCp5I4NhYaBKsn5BFiINgIBXyYtGXh73A
+         Kuj2eJ/43MQ0TS12poi9ZbdAq3+4lxLNY2HuXvfo5nqb0O9PI2OF8YxmD8LCcrpdaxR7
+         HwDA==
+X-Gm-Message-State: AGi0PuZMa9wKzVhnKWpNmrgW25OB970j+uSCuqEbtzQmmDNwFkspkzvm
+        xUUBuq2fqw0800cG0aL0jOM=
+X-Google-Smtp-Source: APiQypLhaC4G+o0dezQfQTWzuc1LY8gxh+bdoi/g5NA0mpkwMMnaYJEm4vbohom0C314D2GoTk17qg==
+X-Received: by 2002:a1c:6a13:: with SMTP id f19mr1663085wmc.105.1586254112064;
+        Tue, 07 Apr 2020 03:08:32 -0700 (PDT)
 Received: from localhost (pD9E51D62.dip0.t-ipconnect.de. [217.229.29.98])
-        by smtp.gmail.com with ESMTPSA id i2sm30490830wrx.22.2020.04.07.03.05.21
+        by smtp.gmail.com with ESMTPSA id 25sm1634823wmf.13.2020.04.07.03.08.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 03:05:21 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 12:05:20 +0200
+        Tue, 07 Apr 2020 03:08:30 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 12:08:29 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Mikko Perttunen <cyndis@kapsi.fi>, Sumit Gupta <sumitg@nvidia.com>,
-        catalin.marinas@arm.com, will@kernel.org, jonathanh@nvidia.com,
-        talho@nvidia.com, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, bbasu@nvidia.com,
-        mperttunen@nvidia.com, devicetree@vger.kernel.org
-Subject: Re: [TEGRA194_CPUFREQ Patch 1/3] firmware: tegra: adding function to
- get BPMP data
-Message-ID: <20200407100520.GA1720957@ulmo>
-References: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
- <20191203174229.GA1721849@ulmo>
- <9404232d-84ce-a117-89dd-f2d8de80993e@kapsi.fi>
- <20191204091703.d32to5omdm3eynon@vireshk-i7>
- <20191204093339.GA2784830@ulmo>
- <20191204095138.rrul5vxnkprfwmku@vireshk-i7>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Pedro =?utf-8?Q?=C3=82ngelo?= <pangelo@void.io>,
+        Matt Merhar <mattmerhar@protonmail.com>,
+        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 6/6] ARM: tegra_defconfig: Enable options useful for
+ Nexus 7 and Acer A500
+Message-ID: <20200407100829.GB1720957@ulmo>
+References: <20200406194110.21283-1-digetx@gmail.com>
+ <20200406194110.21283-7-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
+        protocol="application/pgp-signature"; boundary="4bRzO86E/ozDv8r1"
 Content-Disposition: inline
-In-Reply-To: <20191204095138.rrul5vxnkprfwmku@vireshk-i7>
+In-Reply-To: <20200406194110.21283-7-digetx@gmail.com>
 User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -87,120 +87,41 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---C7zPtVaVf+AK4Oqc
+--4bRzO86E/ozDv8r1
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 04, 2019 at 03:21:38PM +0530, Viresh Kumar wrote:
-> On 04-12-19, 10:33, Thierry Reding wrote:
-> > Yeah, the code that registers this device is in drivers/base/cpu.c in
-> > register_cpu(). It even retrieves the device tree node for the CPU from
-> > device tree and stores it in cpu->dev.of_node, so we should be able to
-> > just pass &cpu->dev to tegra_bpmp_get() in order to retrieve a reference
-> > to the BPMP.
-> >=20
-> > That said, I'm wondering if perhaps we could just add a compatible
-> > string to the /cpus node for cases like this where we don't have an
-> > actual device representing the CPU complex. There are a number of CPU
-> > frequency drivers that register dummy devices just so that they have
-> > something to bind a driver to.
-> >=20
-> > If we allow the /cpus node to represent the CPU complex (if no other
-> > "device" does that yet), we can add a compatible string and have the
-> > cpufreq driver match on that.
-> >=20
-> > Of course this would be slightly difficult to retrofit into existing
-> > drivers because they'd need to remain backwards compatible with existing
-> > device trees. But it would allow future drivers to do this a little more
-> > elegantly. For some SoCs this may not matter, but especially once you
-> > start depending on additional resources this would come in handy.
-> >=20
-> > Adding Rob and the device tree mailing list for feedback on this idea.
+On Mon, Apr 06, 2020 at 10:41:10PM +0300, Dmitry Osipenko wrote:
+> Enable several drivers for hardware that is found on Nexus 7 and Acer A500
+> tablet devices. Please note that some drivers may require firmware files
+> extracted from original Android image.
 >=20
-> Took some time to find this thread, but something around this was
-> suggested by Rafael earlier.
->=20
-> https://lore.kernel.org/lkml/8139001.Q4eV8YG1Il@vostro.rjw.lan/
+> Link: https://github.com/digetx/linux-firmware
 
-I gave this a try and came up with the following:
-
---- >8 ---
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts=
-/nvidia/tegra194.dtsi
-index f4ede86e32b4..e4462f95f0b3 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -1764,6 +1764,9 @@ bpmp_thermal: thermal {
- 	};
-=20
- 	cpus {
-+		compatible =3D "nvidia,tegra194-ccplex";
-+		nvidia,bpmp =3D <&bpmp>;
-+
- 		#address-cells =3D <1>;
- 		#size-cells =3D <0>;
-=20
---- >8 ---
-
-Now I can do something rougly like this, although I have a more complete
-patch locally that also gets rid of all the global variables because we
-now actually have a struct platform_device that we can anchor everything
-at:
-
---- >8 ---
-static const struct of_device_id tegra194_cpufreq_of_match[] =3D {
-	{ .compatible =3D "nvidia,tegra194-ccplex", },
-	{ /* sentinel */ }
-};
-MODULE_DEVICE_TABLE(of, tegra194_cpufreq_of_match);
-
-static struct platform_driver tegra194_ccplex_driver =3D {
-	.driver =3D {
-		.name =3D "tegra194-cpufreq",
-		.of_match_table =3D tegra194_cpufreq_of_match,
-	},
-	.probe =3D tegra194_cpufreq_probe,
-	.remove =3D tegra194_cpufreq_remove,
-};
-module_platform_driver(tegra194_ccplex_driver);
---- >8 ---
-
-I don't think that's exactly what Rafael (Cc'ed) had in mind, since the
-above thread seems to have mostly talked about binding a driver to each
-individual CPU.
-
-But this seems a lot better than having to instantiate a device from
-scratch just so that a driver can bind to it and it allows additional
-properties to be associated with the CCPLEX device.
-
-Rob, any thoughts on this from a device tree point of view? The /cpus
-bindings don't mention the compatible property, but there doesn't seem
-to be anything in the bindings that would prohibit its use.
-
-If we can agree on that, I can forward my local changes to Sumit for
-inclusion or reference.
+What's the license for these files? Can they be made available through
+the official linux-firmware repository?
 
 Thierry
 
---C7zPtVaVf+AK4Oqc
+--4bRzO86E/ozDv8r1
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6MUF0ACgkQ3SOs138+
-s6HaEQ/+PrLLpiP0PyCKw9EYMDnFCSTvnHIrXNeyiycSw3o6+KzTFZ/0H1gWoQQz
-A9fdmSWvIO98e2aSMU6KwV+JN/AiOgYA9/oJG1hwKw6/M6z7hMrPeMntFgssE1EP
-sGXeYATmFMuCWVqJ8j3+85eKeIAuwauCuf2JXEXBPYCIl/YWNbepLuhAXreDXfqk
-rLtIJqDa5G4oCLshLkb1SR211kQM9uDX16EVLL1gc/gd7psSYqUMOxiVEGwMnL5t
-h5y+JsMwp4M8CPM4Faq7dEbwKfXOhDJp+aZmMFcm5OEbwSZ7wSUdG3TgoYyEAqhs
-O6PDf9IAR323R2Iz38VuwDIcus8arw4mRI7C6k1c+5Bz+mg9nTcbr2MkiDOvEsn7
-PkII3xkaTsspdVCtFCIlyROHwVKtdjzyOcXS7t57cXyjrLatTtjCGw20889CzSjd
-nTfT5MHCbeex/djcUYRi5Ewe0sT4KSGyud4DgMP9L+Tk87jRGhOUloW3g3DnNQg6
-ucn72xKUFnVnlPFnkwXJucHnUdNSxC+FeTWk97Y96QpsdO47tNBNGMlejajIKWhO
-p91cb7sD+IvYmCAK/UKtmC6n2rD50IphWxm4zJ2QIkyqsa5H3x2vFAI2CqGsefIa
-JhsqKT+LsegNriVWHIFEZzBGj7WDOdvnD/tx12NLFcgyuGFlik8=
-=emOZ
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6MUR0ACgkQ3SOs138+
+s6GEow/+PCRBWMRHZqrLzXaBLfVmbh6Jl87RzDZcnbNzyKRyQvcbBcaPWsXf9tLh
+LlXh/OInkWgYIfU+Skqi0BmHHATWq+XfHzLzQfkkujSAa8QafRKVtGTV0e+beQFD
+2BrixFkH0TllbiYxaDdu9iZXxW0+/Bx5s/9AZYQFNerWoQ3NqqqrFhXNcyAbbVUO
+Y46sRJy0uCNObGlyUdKCupug8fbyciPSzbhYIE2ZWmjSIKzJNPCgk/FlJrQRcyRu
+5bcWkS7uwedPwmuzQMQrOW2m0FYOZ+UU01aMur7s7mPNp0cFY4dZlI/hzO3JDh4W
+oTOvtjnlJodHnaQlDQijCQtukKDiTfiOlU4ZfXna6cN1T2fzaYNaCLRPWzhu4K23
+1F3UTp6+UXGF2+H83jeAgcpKHGmkXrNjn4KNIDt6rIMyEnz2RJ8II4wYhJH/Oza1
+Lbf+26X650r2CwOAUhSyDtAgo2Mt58GTDztVMIJStpap3A+UT+clWmoG+eYOZGMR
+mVBL9UWowL1dkvjrjXmlOsqcN0OfWtmazA2rQAurS0NU2Aq1hoffcx73gWCJE5B/
+9z0RHHQUUVMGFNSYQiZxpTIKsBIu+iTHZ99q29RPBK5wye5sIKjFTogylTvzh6wk
+78XF5M1Ndf+6LQaxvgNXHZsGkb1sdjAgbz1f2JMQmDrtSH7RNoc=
+=kOsC
 -----END PGP SIGNATURE-----
 
---C7zPtVaVf+AK4Oqc--
+--4bRzO86E/ozDv8r1--
