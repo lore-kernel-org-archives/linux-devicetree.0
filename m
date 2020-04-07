@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6E8C2BA80
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFD3C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD4C820768
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C96520857
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217686;
-	bh=SteS77gACO4sJ7lpztNtH3/D2R3O5SRCa8yV+ZMnFak=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wwfLjNYBdAcOOzU51qXuPAv8vnFzzZDHJreMxOWHnNUWKHpnmn3SYW9H0F+yGMuFk
-	 E9GzlljFySNC2X+S+VINW+yZFObsyDFtLWm4avkUDqhwLSQlDdOjuwxa42BM1Tv+BJ
-	 ksP2jQkJDKEZhKc8vAJEUwVqMbEFYTPvJjih53qU=
+	s=default; t=1586217715;
+	bh=5tu6jgjQORBsXTyfqgjJ3eMKXV2UrGsH132oHEvwEcc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=j4myNvnesVqLybgKAKSYm6IFg3zqaj746af3dGh/28ZmxvY6Zg1EZMHK2HBfFQaX6
+	 2nuxYsZegJaTIDM3w81FjV7ikYWJRuldfA2qTpTMtMCNdRynhRFUbut452eq261N1K
+	 sCbf5k/fj+pULz4dB4MEUzT9ddhRxo6eyZognD7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgDGABZ (ORCPT
+        id S1727549AbgDGABy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:01:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34224 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:01:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726762AbgDGABX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:01:23 -0400
+        id S1727421AbgDGABx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:01:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FD912082D;
-        Tue,  7 Apr 2020 00:01:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49AE02083E;
+        Tue,  7 Apr 2020 00:01:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217682;
-        bh=SteS77gACO4sJ7lpztNtH3/D2R3O5SRCa8yV+ZMnFak=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mdzmy0SVEjfSYvaOTSoqMQQZ3EjlVHUUQMaSffrGR0VLI3r9XVm8GM4q3LNBNYSfD
-         guxYbQKGnlFcjXXaxzpkx8SgJ/0scp7XctuKFWBfMUmrH0jaQQ40fzaNhKs5qkPJ2m
-         GDOg0py5JinKUyn1Ta3yz4B+XflWPSCaNHC3ZXVI=
+        s=default; t=1586217713;
+        bh=5tu6jgjQORBsXTyfqgjJ3eMKXV2UrGsH132oHEvwEcc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ilHvrIVeY8be5f6Uq2Tmel5tAM7qebUNj1c2VyO5V3/KUvOblJ0+F8yDsB/Dv5D5p
+         MAhRLwPhPKM3VEn4nxjQfbtkJ8Fhr2p9egPi9P3Lh9MgAtVLiSSb4pyxuvLjY0BkfQ
+         PFkojcywn/CYKFa+RZ1E9OLEr1e8dDzJvh6QyQIU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, maemo-leste@lists.dyne.org,
-        Arthur Demchenkov <spinal.by@gmail.com>,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 18/35] ARM: dts: omap4-droid4: Fix lost touchscreen interrupts
-Date:   Mon,  6 Apr 2020 20:00:40 -0400
-Message-Id: <20200407000058.16423-18-sashal@kernel.org>
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 01/32] ARM: dts: sun8i-a83t-tbs-a711: HM5065 doesn't like such a high voltage
+Date:   Mon,  6 Apr 2020 20:01:19 -0400
+Message-Id: <20200407000151.16768-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200407000058.16423-1-sashal@kernel.org>
-References: <20200407000058.16423-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -63,49 +58,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Ondrej Jirman <megous@megous.com>
 
-[ Upstream commit 4abd9930d189dedaa59097144c6d8f623342fa72 ]
+[ Upstream commit a40550952c000667b20082d58077bc647da6c890 ]
 
-Looks like we can have the maxtouch touchscreen stop producing interrupts
-if an edge interrupt is lost. This can happen easily when the SoC idles as
-the gpio controller may not see any state for an edge interrupt if it
-is briefly triggered when the system is idle.
+Lowering the voltage solves the quick image degradation over time
+(minutes), that was probably caused by overheating.
 
-Also it looks like maxtouch stops sending any further interrupts if the
-interrupt is not handled. And we do have several cases of maxtouch already
-configured with a level interrupt, so let's do that.
-
-With level interrupt the gpio controller has the interrupt state visible
-after idle. Note that eventually we will probably also be using the
-Linux generic wakeirq configured for the controller, but that cannot be
-done until the maxtouch driver supports runtime PM.
-
-Cc: maemo-leste@lists.dyne.org
-Cc: Arthur Demchenkov <spinal.by@gmail.com>
-Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/motorola-mapphone-common.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/motorola-mapphone-common.dtsi b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
-index da6b107da84a4..aeb5a673c209e 100644
---- a/arch/arm/boot/dts/motorola-mapphone-common.dtsi
-+++ b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
-@@ -413,7 +413,7 @@
- 		reset-gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>; /* gpio173 */
+diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+index 397140454132f..6bf93e5ed6817 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+@@ -358,8 +358,8 @@
+ };
  
- 		/* gpio_183 with sys_nirq2 pad as wakeup */
--		interrupts-extended = <&gpio6 23 IRQ_TYPE_EDGE_FALLING>,
-+		interrupts-extended = <&gpio6 23 IRQ_TYPE_LEVEL_LOW>,
- 				      <&omap4_pmx_core 0x160>;
- 		interrupt-names = "irq", "wakeup";
- 		wakeup-source;
+ &reg_dldo3 {
+-	regulator-min-microvolt = <2800000>;
+-	regulator-max-microvolt = <2800000>;
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
+ 	regulator-name = "vdd-csi";
+ };
+ 
 -- 
 2.20.1
 
