@@ -2,150 +2,115 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F40A5C2BB55
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 10:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68945C2BB86
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 10:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDE2520719
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 10:52:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="HOXOhS+u"
+	by mail.kernel.org (Postfix) with ESMTP id 3E2AF2080C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 10:55:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586256947;
+	bh=2l/vT4Iy6bAQT51YE8e9gRnPs3uL+EMeRJhWtbxLAzY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mRT3HDY8YYE0TLI47/+TvKZ5RDep1MQB50V5zyinaEDmbmgIc8rp1ZMo/gswxhZrn
+	 ilAmAr071nh8R9SzbIn7Ls4uS54vjGKdwl93m8NnYgHxM2IcZanEyO+8KEmBzhxZJz
+	 nFQYxBhs2FW63ZYb6P63RHbMZVCpEdCNW0g49K0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgDGKwO (ORCPT
+        id S1728144AbgDGKzq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:52:14 -0400
-Received: from mail-eopbgr50104.outbound.protection.outlook.com ([40.107.5.104]:4018
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728290AbgDGKwO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:52:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JPvKPDODVx3btLyr6nCAx2AvVoxlM13id6JB+2Fl1xZ/1c8whdD5tHO9HHA2cM3MoEueq5OYsJ33i1slyrriXPZtz2F65NvxD7rWebx4CkX+PbR2kZZubHbjy1fjBrZ4s9joatEc64U+Ajf2SwcvQXlJVu6SebsB6ShbPg90iGF3IP5C0rrPWJRHtqou2mriPbiVflE8MeIAlM+QTpscC1HAe8zjML8Cv8o+kgpIdCFnMLyVuDVB5GwEFxyGMl95ZIcgR5mIamkxQBUTgzdLJzakQ8d3pAxlq0IQWKsN0pETWvIYvmHNu0FInanHWE8/mcBIU7I12yu7NdL3HOKEdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uhiOeoD8Ep3vd7ozP0ztEl47UdSzPh4C42RP3wdk7Yo=;
- b=C/BVUI01yoYinjLvHcUyJqQDgL5ovzTRnlOduQ0SehoUo16NkKRSHZggwoSNS7fano440j/wnlF2bWmKYabaYrDDyzU97hKAdtk3xnSIlpgwSJMhblFOGC7IJGv9uzeNsnTfwiZfvntsXEwAhy4PuKqNRszasRI16BmOopYv+zEy5b4jRnsFRnNfYN3BOkSFshJbvKIel7uVuT3pAfFQT0cvdzsd+pmyOBYS0gmG1FYLJd52Ce1mZ0qykUViss5ybULLXyZjGTbmUuhN37ifmOdKJ+pKpTuOgbB16g5sDd9DiDJoXg8oY7mC+iL1GDyXIEzVqvVEO88naBd+JyZC7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uhiOeoD8Ep3vd7ozP0ztEl47UdSzPh4C42RP3wdk7Yo=;
- b=HOXOhS+ug1U/EFc2nempusn+TMyRtbjbsrJblupYTVWFVMKqWhD8U4isTst13dem2DRGpOG4/mvMeKTtUUEYacPpSvxwAtL4/+5C6AvEkEcBsFQhhhStsMtE5Ag2Dt0V5bIrfpyPxoS/ehYSpZ6ykD1VeafyKdOXTX9LW6561F8=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=oleksandr.suvorov@toradex.com; 
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (2603:10a6:802:1c::24)
- by VI1PR05MB5888.eurprd05.prod.outlook.com (2603:10a6:803:dd::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16; Tue, 7 Apr
- 2020 10:51:57 +0000
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::7cdd:4feb:a8b6:a6d2]) by VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::7cdd:4feb:a8b6:a6d2%7]) with mapi id 15.20.2878.018; Tue, 7 Apr 2020
- 10:51:57 +0000
-X-Gm-Message-State: AGi0PuboX5G7pHioKwFTVEiVxK2/Szv7Y5uX0vfz3Fsn6c7l6St7IfrC
-        QnR3VlLggZ+A0E8KBRfim4drngjWv2WGJ3pdpxo=
-X-Google-Smtp-Source: APiQypJcJNgpNCHWqde1ppPh+KOdbTYRa6VL+4ueqjtQLTpEjbjBgjlDMjA9dAs6ilFY8udrPh9G9EFK+lyL21dP3GM=
-X-Received: by 2002:aed:2351:: with SMTP id i17mr1528151qtc.342.1586256713855;
- Tue, 07 Apr 2020 03:51:53 -0700 (PDT)
-References: <20200405192246.3741784-1-oleksandr.suvorov@toradex.com>
- <20200405192246.3741784-3-oleksandr.suvorov@toradex.com> <20200407061646.pcglaw43kfmrag6a@pengutronix.de>
-In-Reply-To: <20200407061646.pcglaw43kfmrag6a@pengutronix.de>
-From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Date:   Tue, 7 Apr 2020 13:51:42 +0300
-X-Gmail-Original-Message-ID: <CAGgjyvH5nmnXH068QTNPKzsjocNXfEP_yh0HO=L-oGaqQdYRuA@mail.gmail.com>
-Message-ID: <CAGgjyvH5nmnXH068QTNPKzsjocNXfEP_yh0HO=L-oGaqQdYRuA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 2/6] dt-bindings: pwm: document the PWM no-flag
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     devicetree@vger.kernel.org, Paul Barker <pbarker@konsulko.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: BL0PR01CA0021.prod.exchangelabs.com (2603:10b6:208:71::34)
- To VI1PR05MB3279.eurprd05.prod.outlook.com (2603:10a6:802:1c::24)
+        Tue, 7 Apr 2020 06:55:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47712 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726562AbgDGKzq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:55:46 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B77652063A;
+        Tue,  7 Apr 2020 10:55:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586256945;
+        bh=2l/vT4Iy6bAQT51YE8e9gRnPs3uL+EMeRJhWtbxLAzY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D3wNVWTzel205i3JqikhF9KThBjcP8CzuSMSS70nQvmcBh2hJr/ytGlwpGBWxFkI7
+         Oe16Rc5btc8qctc0NhSUJo6552xtmcxoX+73Eb+yO6Sl4R/FpWd6qrBsMXBAI7Tngz
+         ncOrA7NSjao9QmXfU5GDGKGQlnfFt4y5UkV2s2AE=
+Date:   Tue, 7 Apr 2020 11:55:42 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de,
+        mark.rutland@arm.com, robh+dt@kernel.org, georgi.djakov@linaro.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, mka@chromium.org,
+        dianders@chromium.org, evgreen@chromium.org
+Subject: Re: [PATCH V3 7/8] spi: spi-qcom-qspi: Add interconnect support
+Message-ID: <20200407105542.GA5247@sirena.org.uk>
+References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
+ <1585652976-17481-8-git-send-email-akashast@codeaurora.org>
+ <20200331112352.GB4802@sirena.org.uk>
+ <f896d6e4-cc86-db46-a9b9-d7c98071b524@codeaurora.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mail-qt1-f176.google.com (209.85.160.176) by BL0PR01CA0021.prod.exchangelabs.com (2603:10b6:208:71::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.17 via Frontend Transport; Tue, 7 Apr 2020 10:51:57 +0000
-Received: by mail-qt1-f176.google.com with SMTP id n17so2268060qtv.4;        Tue, 07 Apr 2020 03:51:57 -0700 (PDT)
-X-Gm-Message-State: AGi0PuboX5G7pHioKwFTVEiVxK2/Szv7Y5uX0vfz3Fsn6c7l6St7IfrC
-        QnR3VlLggZ+A0E8KBRfim4drngjWv2WGJ3pdpxo=
-X-Google-Smtp-Source: APiQypJcJNgpNCHWqde1ppPh+KOdbTYRa6VL+4ueqjtQLTpEjbjBgjlDMjA9dAs6ilFY8udrPh9G9EFK+lyL21dP3GM=
-X-Received: by 2002:aed:2351:: with SMTP id i17mr1528151qtc.342.1586256713855;
- Tue, 07 Apr 2020 03:51:53 -0700 (PDT)
-X-Gmail-Original-Message-ID: <CAGgjyvH5nmnXH068QTNPKzsjocNXfEP_yh0HO=L-oGaqQdYRuA@mail.gmail.com>
-X-Originating-IP: [209.85.160.176]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4aa8d418-4f9f-4baa-628f-08d7dae1b14e
-X-MS-TrafficTypeDiagnostic: VI1PR05MB5888:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB58880063227F559576F81B0DF9C30@VI1PR05MB5888.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2512;
-X-Forefront-PRVS: 036614DD9C
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB3279.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(39840400004)(346002)(136003)(366004)(376002)(396003)(8676002)(81156014)(86362001)(8936002)(81166006)(450100002)(66556008)(4326008)(316002)(66476007)(6862004)(4744005)(186003)(66946007)(52116002)(966005)(26005)(44832011)(54906003)(9686003)(55236004)(5660300002)(53546011)(55446002)(478600001)(6666004)(2906002)(42186006);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ewO5136rLVVos6aDUu0GO4GSULr0HZO/tmyfN+OF9gTra7nCtNzG5ZXkHSMaiEFVlFK17V/37MwXq+m86Ob7QOTQ3SSKu38J3qA4vTwRCyRsSuVypIqFTpdSHMF8CfTFj5xbMCIv9cNJRULMk+xFOFiwjzaG9APFHCc2OsJIMTufSHrZZ47BZEIrHciyWlceHIjHmDgIc3x8piJM7K9oG9L7ir5O59mdbxWZEeWs8pxUHXGPWbjOZphtFccAT1lYh6GFkJaj61F9/1td4YyxHQRRbGEaPnyELOuoGyTPQTEtT17TjJU2DJOIZTBfUCXQSSE7ipFvKkt931u5IHc7FY4wIyTX7ZwZTxujuTjJLCmcmqMrua8r8iqlSf74Zu1/pBHZRnUs7yON0ys71JDL0TvjsFCjsLYmvMUTFkIHT1WQT8j0Tx4HLhQ0GE/7Afl8SnUK7Jc+talrbcOrEnjC3v4oYamINUB9QJ72SMhQkg7anX7a6CL3/Ult/MaOW/FNgKlhIYnmrEbUVPF4OgJNog==
-X-MS-Exchange-AntiSpam-MessageData: DACH9GMOzmaYoz7Op35kZoMXQaetfc92bMgq6Z2n7ZLNMJQCiYQc/Cj0XCUnM9pBOqdKjBeF55L92rYiGs86Zxqdp4eorzASxC1ZVTMf8wLwgML5DW6M8hSDXL9LQHP9QHLE1dJiNNgt0HNLuGtd/w==
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4aa8d418-4f9f-4baa-628f-08d7dae1b14e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2020 10:51:57.5084
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bIU7qU7SARTTUvStQ9cXOrpuL7cKO+au53bX/utZsbEVdUCXrRkIY0c0IBqcz7ZhIwZZZ2fTz6Jb6y+dji71ofR7ohtZsQ6hDhl6FBJsWqE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5888
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
+Content-Disposition: inline
+In-Reply-To: <f896d6e4-cc86-db46-a9b9-d7c98071b524@codeaurora.org>
+X-Cookie: Just to have it is enough.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 9:17 AM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> On Sun, Apr 05, 2020 at 10:22:42PM +0300, Oleksandr Suvorov wrote:
-> > Add the description of PWM_NOFLAGS flag property.
-> >
-> > Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
->
-> As I already wrote in reply to the v1 series I'd prefer a name for 0
-> that explicitly handles normal polarity.
 
-Uwe, AFAIU, there is no flag that forces normal polarity, the normal polari=
-ty
-is the default state if there is no flag to invert the polarity is set.
-'0' value in the bit flags cell really means there are no flags set
-for the PWM instance.
+--C7zPtVaVf+AK4Oqc
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
-> Best regards
-> Uwe
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
-|
+On Tue, Apr 07, 2020 at 03:24:42PM +0530, Akash Asthana wrote:
+> On 3/31/2020 4:53 PM, Mark Brown wrote:
 
+> > > +	ctrl->avg_bw_cpu =3D Bps_to_icc(speed_hz);
+> > > +	ctrl->peak_bw_cpu =3D Bps_to_icc(2 * speed_hz);
 
+> > I thought you were going to factor this best guess handling of peak
+> > bandwidth out into the core?
 
---
-Best regards
-Oleksandr Suvorov
+> I can centralize this for SPI, I2C and UART=A0 in Common driver(QUP wrapp=
+er)
+> but still for QSPI I have to keep this piece of code as is because It is =
+not
+> child of QUP wrapper(it doesn't use common code).
 
-Toradex AG
-Ebenaustrasse 10 | 6048 Horw | Switzerland | T: +41 41 500 48 00
+Why not?
+
+> I am not sure whether I can move this " Assume peak_bw as twice of avg_bw=
+ if
+> nothing is mentioned explicitly" to ICC core because the factor of 2 is
+> chosen randomly by me.
+
+That's the whole point - if this is just a random number then we may as
+well at least be consistently random.
+
+--C7zPtVaVf+AK4Oqc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6MXCkACgkQJNaLcl1U
+h9CEeQf/eaVfeJR9ovqStt0V0zniW7RMpZKG29cmxTS4fPcK6lCpnIJkuFHsCsw6
+OJBjpy9Uyb1eKn0tV79iCLQx428YeoOeJFhp7d/JwAOG+lIc4Jp3HIh3mJ+eRmrt
+i0HmoPaJygm8PSz/MsgvFQEsuwGhJJ/DKUpAjcYbaa08Y24VKDZgRcvaMk4Xp3x1
+bOTk96XEtzCXyQU5uQ9EBJL8PyRO1kAVp5xeUGVNiqT4TKEFd95YWrTrrQa/Z8/w
+UDBToWopSQZJjXIBB5xIbxyIdNB1yXAaOKdSjmja/cIqiNYn1pzog0nJBOwANsxj
+YRYqsbzHbmLNuoeCBVX9CoSBVOlpFw==
+=Rxn1
+-----END PGP SIGNATURE-----
+
+--C7zPtVaVf+AK4Oqc--
