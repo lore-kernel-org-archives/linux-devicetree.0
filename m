@@ -2,340 +2,143 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F264C2BA16
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 07:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E23AC2BA16
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 07:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32C5B2072A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 07:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EBA3206F5
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 07:35:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XJrU1YiG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgDGHc2 (ORCPT
+        id S1727003AbgDGHf3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 03:32:28 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:63203 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726393AbgDGHc2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 03:32:28 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 07 Apr 2020 13:02:25 +0530
-Received: from c-rkambl-linux1.qualcomm.com ([10.242.50.190])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 07 Apr 2020 13:02:07 +0530
-Received: by c-rkambl-linux1.qualcomm.com (Postfix, from userid 2344811)
-        id 93F8F3A46; Tue,  7 Apr 2020 13:02:06 +0530 (IST)
-From:   Rajeshwari <rkambl@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Tue, 7 Apr 2020 03:35:29 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46228 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbgDGHf3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 03:35:29 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 111so726188oth.13;
+        Tue, 07 Apr 2020 00:35:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fid1QYCY0NO/I6cTp/weYurLiEg0cFhCN05hyqNgj/o=;
+        b=XJrU1YiGYXObCCyXMEpQZnKbbwe1ZMgGBITvdVL8yqcS5c4ABjNgv1qZ5t/y9cw1F8
+         MsAAVIWLcQQ8q6DRSVEp6ovppqqwycPJ9VisN7GDYbtZfqjNpNOWgfnac39+vNq+GqHr
+         DULGIjG0ANLz3tIsKU4xd3dR0PrSm/4vbFXWQN6POY1r40YiFRZSprxg0UweJmKdQaps
+         TS21+MlgxJ9bz9czec7CBhYaH+YRzenE/DJ+JRbXLYVnFS9LPdxhQAtfN+nDIGbZ9+no
+         dva2d+fT/l2uXBMFoA2YBFZoc3FnekN5iwPVOMlUVjsZlYPTg+9bGkMGhSeGq6HTV/yL
+         eAGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fid1QYCY0NO/I6cTp/weYurLiEg0cFhCN05hyqNgj/o=;
+        b=AtlrFnODiReNrwCPTE525ASig/uFtSPAu3f9qDFf2awcZT54AHmHGjlPmkpzlcwe/Y
+         tQwyHJX8707V1hEAljkNMup0S3TWUiRf+Vx7AWz8XPpH1bNi8VMqWpLwUUawfsMZSFV5
+         Q7QAx2pjE2GPPrDdBHB+dUhvjAg6MDOB0rsWNsqk314VWJzTU2yph0kbznIac5nAtUnQ
+         5RxTqS5OqmHCOxsfjazSH+CNFOTPA/BwPqn5POdPLSTDXhprlnmaWGZjrGpPcVMsvO7O
+         Cl+qAxB0P18IDGaV37YlUQsqMHxII4LQ5lvqyldmrEnmJltXXc3X5zWDkmjlZXQYNT0T
+         zqeg==
+X-Gm-Message-State: AGi0PuZpFNM4J9+tqib7PriJga/Qb1i8Ox+/tk43x4wGbA5cRfm+Zgzd
+        YzXbXqxywouzgMMVf2Q4E53oaJ/Xu0U/e99giOs=
+X-Google-Smtp-Source: APiQypLI0T3PwqTnxtxkqJnxwE8QGxknf0jO+EhxS8l79ny0FYLhK6MNtO3r7HSPV1qbh6C45cOjMeY+tdBR+PB/R0k=
+X-Received: by 2002:a9d:ef6:: with SMTP id 109mr474840otj.43.1586244928446;
+ Tue, 07 Apr 2020 00:35:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1586191361-16598-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200406173002.GC16885@pendragon.ideasonboard.com>
+In-Reply-To: <20200406173002.GC16885@pendragon.ideasonboard.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Tue, 7 Apr 2020 08:35:02 +0100
+Message-ID: <CA+V-a8sROBQpYvaP8TJ9fGYqOXT+uFsKhjnVBh0hZ2qS7yLQiQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/5] media: dt-bindings: media: i2c: Deprecate usage of
+ the clock-frequency property
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sivaa@codeaurora.org,
-        sanm@codeaurora.org, Doug Anderson <dianders@chromium.org>,
-        Rajeshwari <rkambl@codeaurora.org>
-Subject: [PATCH v2] arm64: dts: qcom: sc7180: Changed polling mode in Thermal-zones node
-Date:   Tue,  7 Apr 2020 13:01:16 +0530
-Message-Id: <1586244677-14399-1-git-send-email-rkambl@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Changed polling-delay and polling-delay-passive to zero to disable
-polling mode of the framework as interrupts for tsens are already
-configured.
+Hi Laurent,
 
-Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 100 +++++++++++++++++------------------
- 1 file changed, 50 insertions(+), 50 deletions(-)
+Thank you for the review.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 998f101..45a2b32 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -2011,8 +2011,8 @@
- 
- 	thermal-zones {
- 		cpu0-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 1>;
- 
-@@ -2059,8 +2059,8 @@
- 		};
- 
- 		cpu1-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 2>;
- 
-@@ -2107,8 +2107,8 @@
- 		};
- 
- 		cpu2-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 3>;
- 
-@@ -2155,8 +2155,8 @@
- 		};
- 
- 		cpu3-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 4>;
- 
-@@ -2203,8 +2203,8 @@
- 		};
- 
- 		cpu4-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 5>;
- 
-@@ -2251,8 +2251,8 @@
- 		};
- 
- 		cpu5-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 6>;
- 
-@@ -2299,8 +2299,8 @@
- 		};
- 
- 		cpu6-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 9>;
- 
-@@ -2339,8 +2339,8 @@
- 		};
- 
- 		cpu7-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 10>;
- 
-@@ -2379,8 +2379,8 @@
- 		};
- 
- 		cpu8-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 11>;
- 
-@@ -2419,8 +2419,8 @@
- 		};
- 
- 		cpu9-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 12>;
- 
-@@ -2459,8 +2459,8 @@
- 		};
- 
- 		aoss0-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 0>;
- 
-@@ -2480,8 +2480,8 @@
- 		};
- 
- 		cpuss0-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 7>;
- 
-@@ -2500,8 +2500,8 @@
- 		};
- 
- 		cpuss1-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 8>;
- 
-@@ -2520,8 +2520,8 @@
- 		};
- 
- 		gpuss0-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 13>;
- 
-@@ -2541,8 +2541,8 @@
- 		};
- 
- 		gpuss1-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 14>;
- 
-@@ -2562,8 +2562,8 @@
- 		};
- 
- 		aoss1-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 0>;
- 
-@@ -2583,8 +2583,8 @@
- 		};
- 
- 		cwlan-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 1>;
- 
-@@ -2604,8 +2604,8 @@
- 		};
- 
- 		audio-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 2>;
- 
-@@ -2625,8 +2625,8 @@
- 		};
- 
- 		ddr-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 3>;
- 
-@@ -2646,8 +2646,8 @@
- 		};
- 
- 		q6-hvx-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 4>;
- 
-@@ -2667,8 +2667,8 @@
- 		};
- 
- 		camera-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 5>;
- 
-@@ -2688,8 +2688,8 @@
- 		};
- 
- 		mdm-core-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 6>;
- 
-@@ -2709,8 +2709,8 @@
- 		};
- 
- 		mdm-dsp-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 7>;
- 
-@@ -2730,8 +2730,8 @@
- 		};
- 
- 		npu-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 8>;
- 
-@@ -2751,8 +2751,8 @@
- 		};
- 
- 		video-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 9>;
- 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+On Mon, Apr 6, 2020 at 6:30 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Prabhakar,
+>
+> Thank you for the patch.
+>
+> On Mon, Apr 06, 2020 at 05:42:37PM +0100, Lad Prabhakar wrote:
+> > OV5645 sensor supports input clock frequency ranging from 6MHz to 27MHz
+> > but the driver strictly expects this to be 24MHz (with tolerance of 1%)
+> > with this restrictions let the driver enforce the clock frequency
+>
+> Maybe s/with/With/ ?
+>
+OK will fix it next version.
 
+Cheers,
+--Prabhakar
+
+> > internally to 24MHz rather then being passed as dt-property.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>
+> > ---
+> >  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 2 --
+> >  1 file changed, 2 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > index 72ad992f77be..a55bb728ea48 100644
+> > --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > @@ -8,7 +8,6 @@ Required Properties:
+> >  - compatible: Value should be "ovti,ov5645".
+> >  - clocks: Reference to the xclk clock.
+> >  - clock-names: Should be "xclk".
+> > -- clock-frequency: Frequency of the xclk clock.
+> >  - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
+> >    to the hardware pin PWDNB which is physically active low.
+> >  - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
+> > @@ -37,7 +36,6 @@ Example:
+> >
+> >                       clocks = <&clks 200>;
+> >                       clock-names = "xclk";
+> > -                     clock-frequency = <24000000>;
+> >
+> >                       vdddo-supply = <&camera_dovdd_1v8>;
+> >                       vdda-supply = <&camera_avdd_2v8>;
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
