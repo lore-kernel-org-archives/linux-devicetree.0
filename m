@@ -2,137 +2,194 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 019E9C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 05:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2EEC2BA16
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 06:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD2F52074F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 05:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 365022051A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 06:03:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="fzFRDfdn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RZ3NC15S"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XpwM1Dzv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgDGF6u (ORCPT
+        id S1726808AbgDGGDB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 01:58:50 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:47509 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726792AbgDGF6t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 01:58:49 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 6806B58030C;
-        Tue,  7 Apr 2020 01:58:48 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Tue, 07 Apr 2020 01:58:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
-         h=from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=j0hiybRWpWmn4
-        RFlXkM4Nvl4eLWofEJym1lENDbvopU=; b=fzFRDfdn9v8eMnVl8iT7MynBqAS7Z
-        okMUoO2leumP0WFnxOmlJN0ax8p0/tDS/H/BeAKje4ULvIe6sfO6vVMY1TYLSONZ
-        BlQBJ5o+QXvNRU0UixXbFxKDf4oxpgPwmQ+RJ6wrkKi1T1Loo1FMiaY975GwutbO
-        C1fL+AWFxL3Ox7Bd+tdQaibXuLjvoM495YCZA4n0iZVWBNGti6c854Ik0d8uvKoi
-        AYMMiNff+1cHb4C7Qbpe3K5mqraDf2tnp5dxDxceKFHKB6kHw6cNHJDWX1sg26+E
-        29pCKYZcpMdVWJoIwnD1lUHF62RrCKCiRDwIuZ14ua7ig6suAX87PBocA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=j0hiybRWpWmn4RFlXkM4Nvl4eLWofEJym1lENDbvopU=; b=RZ3NC15S
-        6n2oFqaKn8j1/5yiru9oXGDSqQlt6pAoqUNX8YlDUL0eyiGG0qPkdeoHq1MEy0bK
-        8qE5uR3lIOHfWZq3zRProqQxvm2YphnnwtNxgsmdhGTNxYPciYTRM5xUBhrTFa7V
-        jCEtD0029ZuWAGTmzjOytKXs70lk5lrjnTLlFghTITzy27zkuptxYqCYX71Se030
-        qOc+gBbIaHdeCvb/GnEtflhJCTFY3NpNko/bBsIv3S59MsrBd2CTHuIehXwdB39l
-        oUnf5vpSIpGKCubiKYZaEk/+Rw+yy2KPzUE+LkVeLOV1uEFroMrINIlaJPLpbIvf
-        dOYN1j6MHQj0IQ==
-X-ME-Sender: <xms:lxaMXvsmFnSGvBb0DBILmQD_iruZgzBOoaorzpbJIwKkc7vXqGJI6g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeggdellecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
-    ertddtnecuhfhrohhmpeetlhhishhtrghirhcuhfhrrghntghishcuoegrlhhishhtrghi
-    rhesrghlihhsthgrihhrvdefrdhmvgeqnecukfhppeejfedrleefrdekgedrvddtkeenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrlhhishht
-    rghirhesrghlihhsthgrihhrvdefrdhmvg
-X-ME-Proxy: <xmx:lxaMXjfRdmjaeSUQ-_foCoeQEjT2DUq9cH7API2izHpdw6phnOaPbA>
-    <xmx:lxaMXuaARqcMIIPBjAvGULjtqfWrXT3n9beNUjY97zebZmt0sKE1AQ>
-    <xmx:lxaMXs4QoxsT-W4VJYbB8KXl4oiHzjWccqlmTOLkCiWDinjxWS_2XA>
-    <xmx:mBaMXtFfF4rIiaxzDaVxIs6NYgvNgVVRa9caWph7Nazh_511BZ0W-Q>
-Received: from alistair-xps-14z.alistair23.me (c-73-93-84-208.hsd1.ca.comcast.net [73.93.84.208])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 738AC3280064;
-        Tue,  7 Apr 2020 01:58:46 -0400 (EDT)
-From:   Alistair Francis <alistair@alistair23.me>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-bluetooth@vger.kernel.org, mripard@kernel.org, wens@csie.org
-Cc:     anarsoul@gmail.com, devicetree@vger.kernel.org,
-        alistair23@gmail.com, linux-arm-kernel@lists.infradead.org,
-        Alistair Francis <alistair@alistair23.me>
-Subject: [PATCH v2 3/3] arm64: allwinner: Enable Bluetooth and WiFi on sopine baseboard
-Date:   Mon,  6 Apr 2020 22:58:37 -0700
-Message-Id: <20200407055837.3508017-3-alistair@alistair23.me>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200407055837.3508017-1-alistair@alistair23.me>
-References: <20200407055837.3508017-1-alistair@alistair23.me>
+        Tue, 7 Apr 2020 02:03:01 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:64119 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726821AbgDGGDA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 02:03:00 -0400
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200407060258epoutp038d27f641bb86825426f49df70e7304a8~DdE9wsNZC0269302693epoutp034
+        for <devicetree@vger.kernel.org>; Tue,  7 Apr 2020 06:02:58 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200407060258epoutp038d27f641bb86825426f49df70e7304a8~DdE9wsNZC0269302693epoutp034
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1586239378;
+        bh=UHJ/xy/UlANgcny0UOh5Ut2QlDZdjfdnSsm1AznPSTE=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=XpwM1Dzveq7gjd55a1CBsNtwtt8QF+bBqsabzFvDCJFZcuPCzQ43UVzV/HeQttWw4
+         L7JOODIqauJ7OsLHrBFgnF9FcOXm7nSq2PuO10c2CXEYI4wxe5urnBPE4kLbRSseUy
+         A2+f5d2usGEl5tUiMPKVDQAjVQxIlAFfQ+UbMAk4=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20200407060257epcas2p372c0452e9eb770b02eb360fd8b216b6e~DdE9a6nfD1451114511epcas2p37;
+        Tue,  7 Apr 2020 06:02:57 +0000 (GMT)
+Received: from epsmges2p2.samsung.com (unknown [182.195.40.182]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 48xGzM40PjzMqYkg; Tue,  7 Apr
+        2020 06:02:55 +0000 (GMT)
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        BF.04.04704.E871C8E5; Tue,  7 Apr 2020 15:02:54 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200407060253epcas2p4a98467e9fdd8c77db2be8c7a8c2e0d1f~DdE5pBu1j0264802648epcas2p4P;
+        Tue,  7 Apr 2020 06:02:53 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200407060253epsmtrp246645ee0fa5ad61d407cfbc0c42b653e~DdE5nzJMo0321703217epsmtrp2r;
+        Tue,  7 Apr 2020 06:02:53 +0000 (GMT)
+X-AuditID: b6c32a46-811ff70000001260-d4-5e8c178ec2ee
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        2C.8D.04024.D871C8E5; Tue,  7 Apr 2020 15:02:53 +0900 (KST)
+Received: from KORCO004660 (unknown [12.36.165.196]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200407060253epsmtip2b8eb7f5017b9e1a33efbdeb4071fc24c~DdE5aMClM2535825358epsmtip2a;
+        Tue,  7 Apr 2020 06:02:53 +0000 (GMT)
+From:   "Hyunki Koo" <hyunki00.koo@samsung.com>
+To:     "'Jiri Slaby'" <jslaby@suse.com>, <gregkh@linuxfoundation.org>,
+        <krzk@kernel.org>
+Cc:     "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Kukjin Kim'" <kgene@kernel.org>, <linux-serial@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>
+In-Reply-To: <62a918df-b3ba-21f4-b3ad-9f638ad104ad@suse.com>
+Subject: RE: [PATCH v6 2/2] tty: samsung_tty: 32-bit access for TX/RX hold
+ registers
+Date:   Tue, 7 Apr 2020 15:02:53 +0900
+Message-ID: <000401d60ca2$2d2b3550$87819ff0$@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQKEs4Y1dkf1SYeuuA/6Ie9wROds5QJr8Gf+Ae0ziqcBDq6a2abkmiBQ
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRTut3u3Xa3Fz2V1GFLjJpHVdFtNr6EWVLIoSOhlEdrN3aa0F7vT
+        XkSGZWqariJtFSaa9kJrmYkyEzUsMqX3A4vCFpX0UloIWW27Vv73nd/5Ps73nd+hCHmjREFl
+        WRyc3cKaaEko2dQZxaiOTC9OUztfRjCVXb1iJq+6QcIcv/JVxJQODBJMX98VKeMeeCJmHrac
+        ljAVfW0ipqe6RMoc9HRJl4Tq3RcLJfqbZy5L9ddq9ukbGh+T+mH3jBTxJlNCJscaOLuSs2RY
+        DVkWYyK9ck360nRdrFqj0sQzcbTSwpq5RHrZqhRVcpbJb4pW5rCmbP9TCsvzdExSgt2a7eCU
+        mVbekUhzNoPJptHYonnWzGdbjNEZVvMijVqt1fmZW0yZA2VdyOYJ2/ljuIHMRcOyIhRCAV4I
+        5a67ZBEKpeS4GUF7o1MqFEMI3rS+FguFD4H7UKX0n8TpHWt4EBy930cIxQcEn3p9KMCSYBU8
+        rH4rKkIUFY43QGtHToBD4J8I8jxPyAAnBCdA5+D9IJ6C18P1plZRAJM4Ei74eoLTZDgezj3y
+        iQUcBndOvg3yCTwPaqsGCcGREka8tUFOOE6GL0f6CYETDqcK84PmAP+WQOWzcpEgWAZlD0pJ
+        AU+Bj92NY9EUMPzZIxHwPmjLF5YBuBjByFevWGgsANe7QyiQjMBR0NASE4CAZ0HXizFvk6Gg
+        c1QqPMugIF8uCGdDve/9mIMIuOxtkZYh2jUumWtcMte4BK7/s84i8iKaxtl4s5HjtTbt+N92
+        o+DFzk1uRjW9qzoQphA9SZYacjhNLmZz+F3mDgQUQYfLFCWFaXKZgd21m7Nb0+3ZJo7vQDr/
+        4p2EYmqG1X//Fke6RqeNjVXH6xhdrJahp8vcE59vlmMj6+C2c5yNs//ViagQRS56euz7UsdL
+        WnTL82HCVa5qfvmboaTIV/31/KtfG1fmPb69f/Gs2abRgqMnt1WW31DFHdjbHXm+pzQtdU99
+        incts/rewbq6wq2iihVPl9s3DY0WNT3aXkfMPHPN2D1tx0hM/+5ow/J113XGSW3fik9M9HRG
+        XNpR0n426sXi3KQ4ZiB1jlNBk3wmq5lL2Hn2D4ffaEXHAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLIsWRmVeSWpSXmKPExsWy7bCSvG6veE+cwcpvuhbzj5xjtWhevJ7N
+        YsqGD0wW/Y9fM1ucP7+B3WLT42usFpd3zWGzmHF+H5PFmcW97Bate4+wO3B5bFrVyeaxf+4a
+        do/NS+o91m+5yuLxeZNcAGsUl01Kak5mWWqRvl0CV8a+XbUFCwUr9i3rY21gvMzbxcjJISFg
+        IjF94lPWLkYuDiGB3YwSS3cfY4NIyEhMeLGEGcIWlrjfcgSq6DmjxKN9C1lBEmwCuhKXFz9h
+        6mLk4BARiJTY1ScOUsMs0MQk0XttB1izkMBHRomp26pBbE4BG4nDry+ygNjCAiES65o/gM1h
+        EVCRWPntDDuIzStgKbH0yjdWCFtQ4uTMJ2D1zALaEr0PWxlh7GULX0MdpyDx8+kysHoRATeJ
+        9313mCFqRCRmd7YxT2AUnoVk1Cwko2YhGTULScsCRpZVjJKpBcW56bnFhgWGeanlesWJucWl
+        eel6yfm5mxjBkaaluYPx8pL4Q4wCHIxKPLwM7N1xQqyJZcWVuYcYJTiYlUR4pXo744R4UxIr
+        q1KL8uOLSnNSiw8xSnOwKInzPs07FikkkJ5YkpqdmlqQWgSTZeLglGpglFCZ6HHomci8KYvu
+        /uB+Uni3YLO+KQ/z7NbKU1E2k9qM9maW2ja92Mh3e1t8r+0uxY0JfNEfld1tXP7pHZ1kxxSx
+        5Zr0s/yIe+XP1qa1Ln+Zc7Og9ivX7q0RLlF79EN3rG1zF45ZxJD946h/21IP1VO6v5bsvVH1
+        +Fma84u8zAMXUsX5e73+K7EUZyQaajEXFScCAGO85/mwAgAA
+X-CMS-MailID: 20200407060253epcas2p4a98467e9fdd8c77db2be8c7a8c2e0d1f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200406230902epcas2p19a8df6805dac59968d664efb9bc9419b
+References: <20200401082721.19431-1-hyunki00.koo@samsung.com>
+        <CGME20200406230902epcas2p19a8df6805dac59968d664efb9bc9419b@epcas2p1.samsung.com>
+        <20200406230855.13772-1-hyunki00.koo@samsung.com>
+        <62a918df-b3ba-21f4-b3ad-9f638ad104ad@suse.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The sopine board has an optional RTL8723BS WiFi + BT module that can be
-connected to UART1. Add this to the device tree so that it will work
-for users if connected.
+On 07. 04. 20, 1:49, Jiri Slaby wrote:
+> On 07. 04. 20, 1:08, Hyunki Koo wrote:
+> > Support 32-bit access for the TX/RX hold registers UTXH and URXH.
+> >
+> > This is required for some newer SoCs.
+> >
+> > Signed-off-by: Hyunki Koo <hyunki00.koo=40samsung.com>
+> ...
+> > ---
+> >  drivers/tty/serial/samsung_tty.c =7C 76
+> > +++++++++++++++++++++++++++++++++-------
+> >  1 file changed, 64 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/tty/serial/samsung_tty.c
+> > b/drivers/tty/serial/samsung_tty.c
+> > index 73f951d65b93..bdf1d4d12cb1 100644
+> > --- a/drivers/tty/serial/samsung_tty.c
+> > +++ b/drivers/tty/serial/samsung_tty.c
+> > =40=40 -154,12 +154,47 =40=40 struct s3c24xx_uart_port =7B
+> ...
+> > -=23define wr_regb(port, reg, val) writeb_relaxed(val, portaddr(port,
+> > reg))
+> > +static void wr_reg(struct uart_port *port, u32 reg, u32 val) =7B
+> > +	switch (port->iotype) =7B
+> > +	case UPIO_MEM:
+> > +		writeb_relaxed(val, portaddr(port, reg));
+> > +		break;
+> > +	case UPIO_MEM32:
+> > +		writel_relaxed(val, portaddr(port, reg));
+> > +		break;
+> > +	=7D
+> > +=7D
+> > +
+> >  =23define wr_regl(port, reg, val) writel_relaxed(val, portaddr(port,
+> > reg))
+> >
+> > +static void wr_reg_barrier(struct uart_port *port, u32 reg, u32 val)
+>=20
+> You need to explain, why you need this _barrier variant now. This change
+> should be done in a separate patch too.
+>=20
+> > +=7B
+> > +	switch (port->iotype) =7B
+> > +	case UPIO_MEM:
+> > +		writeb(val, portaddr(port, reg));
+> > +		break;
+> > +	case UPIO_MEM32:
+> > +		writel(val, portaddr(port, reg));
+> > +		break;
+> > +	=7D
+> > +=7D
+> > +
+> >  /* Byte-order aware bit setting/clearing functions. */
+> >
+> >  static inline void s3c24xx_set_bit(struct uart_port *port, int idx,
+>=20
+> thanks,
+> --
+> js
+> suse labs
 
-Signed-off-by: Alistair Francis <alistair@alistair23.me>
----
- .../allwinner/sun50i-a64-sopine-baseboard.dts | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
+The purpose of this patch is to support 32bit access for registers, and it =
+is also working exsisting device.
+There are 3 operations what I have to to change which are rd_regb, wr_regb,=
+ and writeb.
+rd_regb, wr_regb are changed to rd_reg, wr_reg.
+and writeb is changed to wr_reg_barrier.
+So I make as a one patch.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-index 2f6ea9f3f6a2..f4be1bc56b07 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-@@ -103,6 +103,16 @@ ext_rgmii_phy: ethernet-phy@1 {
- 	};
- };
- 
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	vmmc-supply = <&reg_dldo4>;
-+	vqmmc-supply = <&reg_eldo1>;
-+	non-removable;
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
- &mmc2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc2_pins>;
-@@ -174,6 +184,19 @@ &uart0 {
- 	status = "okay";
- };
- 
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-+	uart-has-rtscts = <1>;
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "realtek,rtl8723bs-bt";
-+		device-wake-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
-+		host-wake-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
-+	};
-+};
-+
- /* On Pi-2 connector */
- &uart2 {
- 	pinctrl-names = "default";
--- 
-2.25.1
+wr_reg_barrier is not a different patch, itis just replaced from writeb.
 
