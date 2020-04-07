@@ -2,124 +2,113 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E5FC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 22:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6DDC2D0EC
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 22:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0293F2083E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 22:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B2E2074F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 22:08:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rw68i3XJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b5fGARpq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbgDGWH0 (ORCPT
+        id S1726407AbgDGWId (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 18:07:26 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46506 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbgDGWH0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 18:07:26 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q3so1422547pff.13
-        for <devicetree@vger.kernel.org>; Tue, 07 Apr 2020 15:07:26 -0700 (PDT)
+        Tue, 7 Apr 2020 18:08:33 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34149 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgDGWId (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 18:08:33 -0400
+Received: by mail-lj1-f194.google.com with SMTP id p10so5513492ljn.1;
+        Tue, 07 Apr 2020 15:08:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xQ0CMqBW6HOiKsmKZ6VgVvjTVRhpyHMNm3H4n2IX4C8=;
-        b=Rw68i3XJ5JnnwX/K/8I3yzixlUVsVtJ2etjO5TZhfnYbsajRHoeks03BiJgc4IfBou
-         pplNLgCJb4AibRRMSKpOE+MgNY2ShgtRSuFxsEr0E7TMIntadjYbMmCzEJM82pfk37t5
-         7ySqepJeD5kpr2jRBpC2O3hCv5zKx89jMhXvZIFEkqcwpMe0Zetu9YvY924vkJS9kNyA
-         fq2slWBlcJ0DDuF/xaFlnd5Kx7z+uNpxn1I5a7EeBT7muxR+VxQ0iBnYWNlYN6s/07Gf
-         3u0ljmf5E8+2Jg2asB/+5DNamV2GqzhneAUcBvpTDHXD8SF4Flpjfu8WvXugWRFK67OK
-         pP9Q==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+YQ6O1FoLb/MfQceNzDIXhdipEgwi9Vc6NSir8tVQ+0=;
+        b=b5fGARpqiUJ7tcTmKi17zh32/umwOMmRpj5E7VyMWiIibjaXst8RmX8O8P35JUyxoB
+         6Srx0qIWoyb0R3sr5KBfDQoEnvEurTVoixuY6pKVzK6V0nZZaH1WLBHJCgODTyUnqSxc
+         X49o7q+1BAjWXdEHWcb5RBPbkGePf3ZQCcrHIE5gVg8G7dqkVWkgDJtyVY50t+6i1vz7
+         9+Y6CsV3Op9HNxdA7AJcEIcqI4bhlCtefpVpxwuzjXqdpTabAAI1bMAa9VEIUEEBphEf
+         Lr2sVn/gXiqQ8aZkkz6iklP4IDWSm7n0ZR9cfBzhbt+REFpmTKEw0cGFkseFcBPWz3N5
+         wEmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xQ0CMqBW6HOiKsmKZ6VgVvjTVRhpyHMNm3H4n2IX4C8=;
-        b=MWEq2GQyp63LxETei4/qaH6N9S54svQsONP36aXOLL8rNFUH43xTRs/5tsN9FLfRDg
-         JduoC/tQil6dz7Z0k4kvNlYSbPJUIAePwBw5D9VFQaIxNkGgA8LxHhae4+x821RfAIr2
-         Vn+NvIvonfJldnQJMSVIV6MEQB4wS4UGzwKRc1JjPmtZ3OtYFw07Zs4k/2wHN3gxZ6Lm
-         g9Q0kfo4oHLw0ech+GofuXdnvXPZstaK0A+3LqzkqnKVEdXfpGng77I7Yg8sNv3lBNlb
-         i/FQ8Csm1dofSBePojbYOs+hN/Ww8SXhi9Tl6zsA15WopfnsFTeFSiyqIamnCSiXVi4i
-         lMTg==
-X-Gm-Message-State: AGi0PuZCq9M9P6gpYP/3OTGbucyLEsgcfKqIXnaYr5pCIkR4/sViTQf4
-        3+PdeDB6IzjwaLNyBqXKdw+Rrg==
-X-Google-Smtp-Source: APiQypImyD5jkZCA6R9BSgJ+PmtBP9/LG4f/aJX6aezk6OZplkgeFKHReg6Bg6r/hmACeL/V74aYKw==
-X-Received: by 2002:a62:75d0:: with SMTP id q199mr4566702pfc.72.1586297245671;
-        Tue, 07 Apr 2020 15:07:25 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id r9sm14091252pfg.2.2020.04.07.15.07.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 15:07:24 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 15:07:30 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org, wsa@the-dreams.de,
-        broonie@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org,
-        georgi.djakov@linaro.org, linux-i2c@vger.kernel.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        swboyd@chromium.org, mgautam@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
-        mka@chromium.org, dianders@chromium.org, evgreen@chromium.org
-Subject: Re: [PATCH V3 2/8] soc: qcom: geni: Support for ICC voting
-Message-ID: <20200407220730.GK20625@builder.lan>
-References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
- <1585652976-17481-3-git-send-email-akashast@codeaurora.org>
- <20200331233209.GF254911@minitux>
- <45191b98-60fa-cd49-3067-d58c128d2c9c@codeaurora.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+YQ6O1FoLb/MfQceNzDIXhdipEgwi9Vc6NSir8tVQ+0=;
+        b=Dp4ULi8Tx2TD3pOwYxK0SYA7e6/9aZK+GIh+WMGENsGl5IK8dOoRu/njwm/jGNfAYe
+         2wwi+rk5fzARxszGXJ89KPXhe/Sosf/lZ++TPa2/9tXIPA1HPM/IywlrEbkU2fVsQfQw
+         etV1bdtw+FyG5hf36IGdiDpVYHw3MyWlJ5DPuHog02H4XnFY8KDD6AbkMtAlDaM4vLDl
+         iqDtCQTe4wGUsdqN17Kffqw0w/EBrKPtb7zTWiMK9ozOCyG9iNegr3B7xs1B2PsRRxon
+         J55CeNOegIBQS8C4Gyw2qgzaFWAzJQrpwsZTacWsTpS7wZKIwWvMcPvFhlxxrRVRelcF
+         lkqQ==
+X-Gm-Message-State: AGi0Pub9aw+NbXq8RFYDMteL6jfWohVs82XHxfTmvN+4inkEsl3q9DEM
+        42+hYCf3oX/SWVjlpc+VHPWQE2sZ
+X-Google-Smtp-Source: APiQypIPFyOuiHqydgiWr6R4XGLm/DccgJs0gnd5vqagCP8wITfmTfFr2KFObqdKFiD8qLk0TEs8AA==
+X-Received: by 2002:a2e:7d09:: with SMTP id y9mr2964718ljc.146.1586297309354;
+        Tue, 07 Apr 2020 15:08:29 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id r23sm3140311lfi.33.2020.04.07.15.08.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 15:08:28 -0700 (PDT)
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
+ <200bb96e-2d07-764f-9e14-55538dc742fd@gmail.com>
+ <23bfab09-b464-6e51-9843-06d13000e9b9@nvidia.com>
+ <be77b0ef-d605-8357-4180-f40b2886d07a@gmail.com>
+ <08cd31d5-e8b9-4d3a-fb0e-0e4462947d96@nvidia.com>
+ <12a834ac-52b1-6dc0-7d3a-3e6a1fa85a2a@gmail.com>
+ <e3712e7b-b335-b35b-a94f-24eb85122dca@nvidia.com>
+ <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
+ <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
+ <dd16c560-ba8f-e7df-5dc4-5227e0043196@nvidia.com>
+ <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
+ <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
+ <9e317f65-8a02-3b15-cfec-8e0d8374130e@gmail.com>
+ <97b35910-4c93-123a-43a0-eb14476ed0f3@nvidia.com>
+ <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
+Date:   Wed, 8 Apr 2020 01:08:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <45191b98-60fa-cd49-3067-d58c128d2c9c@codeaurora.org>
+In-Reply-To: <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon 06 Apr 23:45 PDT 2020, Akash Asthana wrote:
-
-> Hi Bjorn,
+08.04.2020 00:08, Sowjanya Komatineni пишет:
+...
+>>> I think you need a semaphore with resource count = 2.
+>> we hold on to issuing capture if more than 2 buffers are queued and it
+>> continues only after fifo has min 1 slot empty
 > 
-> On 4/1/2020 5:02 AM, Bjorn Andersson wrote:
-> > On Tue 31 Mar 04:09 PDT 2020, Akash Asthana wrote:
-> > 
-> > > Add necessary macros and structure variables to support ICC BW
-> > > voting from individual SE drivers.
-> > > 
-> > > Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-> > > ---
-> > > Changes in V2:
-> > >   - As per Bjorn's comment dropped enums for ICC paths, given the three
-> > >     paths individual members
-> > > 
-> > > Changes in V3:
-> > >   - Add geni_icc_get, geni_icc_vote_on and geni_icc_vote_off as helper API.
-> > >   - Add geni_icc_path structure in common header
-> > > 
-> > >   drivers/soc/qcom/qcom-geni-se.c | 98 +++++++++++++++++++++++++++++++++++++++++
-> > >   include/linux/qcom-geni-se.h    | 36 +++++++++++++++
-> > >   2 files changed, 134 insertions(+)
-> > > 
-> > > diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
-> > > index 7d622ea..9344c14 100644
-> > > --- a/drivers/soc/qcom/qcom-geni-se.c
-> > > +++ b/drivers/soc/qcom/qcom-geni-se.c
-> > > @@ -720,6 +720,104 @@ void geni_se_rx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len)
-> > >   }
-> > >   EXPORT_SYMBOL(geni_se_rx_dma_unprep);
-> > > +int geni_icc_get(struct geni_se *se, const char *icc_core, const char *icc_cpu,
-> > > +		const char *icc_ddr)
-> > > +{
-> > > +	if (icc_core) {
-> > Afaict it's only this that might be passed as NULL, so please drop these
-> > conditionals (keep the last one).
-> IIUC you're suggesting to drop if (icc_core/cpu) but keep if (icc_ddr) ?
+> 
+> Just want to close on this part of feedback. Hope above explanation is
+> clear regarding triggering/issuing at max 2 frame capture to VI HW and
+> also regarding capture threads where they use wait_event_interruptible
+> to prevent blocking waiting for buffers to be available for captures.
+> 
+> So no changes related to this part are needed in v7.
+From what I see in the code, you "hold on" by making kthread to spin in
+a busy-loop while caps_inflight >= SYNCPT_FIFO_DEPTH. So some change
+should be needed to prevent this.
 
-Correct
-
-Thanks,
-Bjorn
+The wait_event_interruptible seems should be okay.
