@@ -2,121 +2,147 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FF1C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 23:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5810FC2BB54
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 23:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C18E8206C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 23:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 249C720784
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 23:58:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qaqchf5j"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dmHuwCoU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgDGXip (ORCPT
+        id S1726443AbgDGX66 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 19:38:45 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40587 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbgDGXip (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 19:38:45 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c20so1528553pfi.7
-        for <devicetree@vger.kernel.org>; Tue, 07 Apr 2020 16:38:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mOG8uXDl25YkIY1KwvU7WP+vA59IBuf+1/ymXSgkT1I=;
-        b=qaqchf5jB5Eqy41fV6WU2Pz9vxP8irw80dxERZBvo8vJlEUyLvQcVHqo4d7BqKi5mk
-         OzWDY3XOoxKXqyjI/WiJMwIx732T7Zasabr7mN8xRgxLdQugRkuLklMqQo+Ko7LHb3Jk
-         s6ekr19+LwPrmvkJCNgUquIJZGlUv7tY+a1Ynp/veuOitVrFvnVN0CibRse67tRCbWoB
-         Da7DlOB6sd3vxeH/eOHhilb8y74yZqq9KWgdDEQqkEVeKW/CelXsOB1V4m/Bl+mWGGG6
-         QCv8SivvGUS3W6VPJQSAru20CvvFR1SUImMZ681gh306B9PWC+k/syh4IpzC6qvd+HEq
-         lmCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mOG8uXDl25YkIY1KwvU7WP+vA59IBuf+1/ymXSgkT1I=;
-        b=OR7P88SOaoUZCh4dxYaJmdbId0Up/M4aO1W+w7DD1MKfp2YzHcM4KSZIgT94jiC0n4
-         STXClDtYraVcOZbxS3aVwobJqU6UbAboUtkgApM5+3Ox2g6+trV9lT8BlVZMJRy+wleO
-         uxouhZe/T3Igux/FkX30dhV4O+HbWsoUy/5fRogigBVE9MWiiUdQR/uVpMmcDuDB8Q2f
-         OBiQCijTg0dFAKa9lMAl+7tlKfTxAIGqUczhnG4FRbttwR0AuOesqdE6w2Gykta7s7zJ
-         V/5zNWzIN1eJKVIO91n34VgWC1ajCO9Pk9Ttgavxor3N09WWFm8VWj/p1N5qAbKpjGXv
-         Thow==
-X-Gm-Message-State: AGi0Puby1O6lk0s61kk+04+AAS9O4GJUhshsB2QYCMy7RnBT2kv5oDI0
-        vM4sINaUUxW4awxrvif6UGQdhw==
-X-Google-Smtp-Source: APiQypLJ4W6r4lUs3kl4+KovCBimfVWxesaytHb1fY7SpaerFs+CbFQPc75tWHX2dn9mukWlYUgjuw==
-X-Received: by 2002:a63:2e44:: with SMTP id u65mr4419244pgu.142.1586302722857;
-        Tue, 07 Apr 2020 16:38:42 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id hg20sm2573036pjb.3.2020.04.07.16.38.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 16:38:42 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 16:38:48 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        vinod.koul@linaro.org, Jack Pham <jackp@codeaurora.org>
-Subject: Re: [PATCH v3 2/2] arm64: dts: qcom: sm8150: Add USB and PHY device
- nodes
-Message-ID: <20200407233848.GN20625@builder.lan>
-References: <1586298267-4722-1-git-send-email-wcheng@codeaurora.org>
- <1586298267-4722-3-git-send-email-wcheng@codeaurora.org>
+        Tue, 7 Apr 2020 19:58:58 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:18946 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726407AbgDGX66 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 19:58:58 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e8d135a0001>; Tue, 07 Apr 2020 16:57:14 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 07 Apr 2020 16:58:57 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 07 Apr 2020 16:58:57 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Apr
+ 2020 23:58:56 +0000
+Received: from [10.2.171.175] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Apr 2020
+ 23:57:43 +0000
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <23bfab09-b464-6e51-9843-06d13000e9b9@nvidia.com>
+ <be77b0ef-d605-8357-4180-f40b2886d07a@gmail.com>
+ <08cd31d5-e8b9-4d3a-fb0e-0e4462947d96@nvidia.com>
+ <12a834ac-52b1-6dc0-7d3a-3e6a1fa85a2a@gmail.com>
+ <e3712e7b-b335-b35b-a94f-24eb85122dca@nvidia.com>
+ <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
+ <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
+ <dd16c560-ba8f-e7df-5dc4-5227e0043196@nvidia.com>
+ <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
+ <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
+ <9e317f65-8a02-3b15-cfec-8e0d8374130e@gmail.com>
+ <97b35910-4c93-123a-43a0-eb14476ed0f3@nvidia.com>
+ <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
+ <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
+ <0c425505-347f-7418-af7e-d121fe0d06dc@nvidia.com>
+ <db7c7051-5674-cdb9-0aa4-ee94125b3024@gmail.com>
+ <1a31cd60-739f-0660-1c45-31487d2f2128@nvidia.com>
+ <603084a5-249a-4fe2-3646-e9335ef9ab43@nvidia.com>
+Message-ID: <edefcfd9-b268-0ea5-b438-f5ab5efe61bf@nvidia.com>
+Date:   Tue, 7 Apr 2020 16:57:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586298267-4722-3-git-send-email-wcheng@codeaurora.org>
+In-Reply-To: <603084a5-249a-4fe2-3646-e9335ef9ab43@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586303834; bh=WYYijVJNHfLwjTCH3gNwu8d4A+RLe1YduJ1izGmTGaY=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=dmHuwCoULE5BLIDblMLpSgxcHMBKRoftC7H99Z24OQk02WAtj0mCIdy8eQcXX9D2Q
+         CxFpEwlTzVR9sNKcB/tmSyT6VW0af0UGqw1ifekOjAodceqhNYfEi8n3/6FYqSAH4/
+         iOCZJReh/KRpbzI0frdMT3rH8OibhzX4Qnioyi12vqeCir3uW0ve7+i6nspHvwptrH
+         2IlU8dnpB3Q6zTkLqoy3yKwdDWO5kNBO+01i1jlIrBehRX85Cy7fbG3wC5YqpDe7f0
+         U+1KysPlnIpdD8OqQH6AOpvU+54+64jf4P7LbWEpx1tiN+3BCaDlEl8SmZuap1IM3y
+         onRaRvqcBcnMw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue 07 Apr 15:24 PDT 2020, Wesley Cheng wrote:
 
-> From: Jack Pham <jackp@codeaurora.org>
-> 
-> Add device nodes for the USB3 controller, QMP SS PHY and
-> SNPS HS PHY.
-> 
-
-Thanks for the respin Wesley, and thanks for testing Vinod. Just spotted
-one little details below.
-
-> Signed-off-by: Jack Pham <jackp@codeaurora.org>
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Tested-by: Vinod Koul <vinod.koul@linaro.org>
-> ---
-
-Please make a habit of documenting what changed since the previous
-version here, below the ---.
-
->  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 21 ++++++++
->  arch/arm64/boot/dts/qcom/sm8150.dtsi    | 92 +++++++++++++++++++++++++++++++++
->  2 files changed, 113 insertions(+)
-[..]
-> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-[..]
-> +		usb_1_hsphy: phy@88e2000 {
-> +			compatible = "qcom,usb-snps-hs-7nm-phy",
-> +							"qcom,sm8150-usb-hs-phy";
-[..]
-> +		usb_1: usb@a6f8800 {
-> +			compatible = "qcom,sdm845-dwc3", "qcom,dwc3";
-
-The first cell here should be qcom,sm8150-dwc3. The Linux driver will
-"fall through" and match on the less specific "qcom,dwc3", but if we in
-the future realize that we have sm8150 specific behavior/quirks we can
-make the driver match on the more specific one to implement this.
-
-And similarly the order of the compatibles in &usb_1_hsphy should be
-reversed as well.
-
-Regards,
-Bjorn
+On 4/7/20 4:38 PM, Sowjanya Komatineni wrote:
+>
+> On 4/7/20 4:36 PM, Sowjanya Komatineni wrote:
+>>
+>> On 4/7/20 4:12 PM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> 08.04.2020 01:22, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> On 4/7/20 3:08 PM, Dmitry Osipenko wrote:
+>>>>> External email: Use caution opening links or attachments
+>>>>>
+>>>>>
+>>>>> 08.04.2020 00:08, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> ...
+>>>>>>>> I think you need a semaphore with resource count =3D 2.
+>>>>>>> we hold on to issuing capture if more than 2 buffers are queued=20
+>>>>>>> and it
+>>>>>>> continues only after fifo has min 1 slot empty
+>>>>>> Just want to close on this part of feedback. Hope above=20
+>>>>>> explanation is
+>>>>>> clear regarding triggering/issuing at max 2 frame capture to VI=20
+>>>>>> HW and
+>>>>>> also regarding capture threads where they use=20
+>>>>>> wait_event_interruptible
+>>>>>> to prevent blocking waiting for buffers to be available for=20
+>>>>>> captures.
+>>>>>>
+>>>>>> So no changes related to this part are needed in v7.
+>>>>> =C2=A0 From what I see in the code, you "hold on" by making kthread t=
+o=20
+>>>>> spin in
+>>>>> a busy-loop while caps_inflight >=3D SYNCPT_FIFO_DEPTH. So some chang=
+e
+>>>>> should be needed to prevent this.
+>>>>>
+>>>>> The wait_event_interruptible seems should be okay.
+>>>> We don't want to prevent that as we already have buffers available for
+>>>> capture so as soon as VI HW issuing single shot is done and when min 1
+>>>> slot is empty we should continue with issuing for another capture.
+>>>>
+>>>> As long as buffers are available, we should continue to capture and
+>>>> should not hold
+>>>>
+>>> I suppose that taking a shot takes at least few milliseconds, which
+>>> should be unacceptable to waste.
+>> As long as buffers are in queue we have to keep processing each=20
+>> buffer and between buffers obviously we have to wait for previous=20
+>> frames to finish and this why we have separate thread for frame=20
+>> finish where we can have next buffer capture ready and issue while=20
+>> previous frame memory write happens
+Also we specified numbers buffers as 3 to vb2 queue. So this is rare=20
+case but to prevent issuing more than 2 at a time as VI HW is only=20
+double buffered and syncpt fifo max depth is 2 added this to be safer.
