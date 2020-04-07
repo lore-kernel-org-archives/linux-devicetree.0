@@ -2,228 +2,272 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A102CC38A2C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 18:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EFBC2BA80
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 18:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C95B2076E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 18:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3ACA20730
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 18:44:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HhVc+VPQ"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="CGEqBf8P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbgDGSja (ORCPT
+        id S1726628AbgDGSoL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:39:30 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36707 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727134AbgDGSj3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 14:39:29 -0400
-Received: by mail-io1-f68.google.com with SMTP id n10so4491343iom.3;
-        Tue, 07 Apr 2020 11:39:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=m/dkOYJLIlXBlQ2q0cF+y0fSOD9w7drnxFN+ZiKGczc=;
-        b=HhVc+VPQjdnTtHJrbSqVAIpA37XENUVVPMKJoCvMOLILhmYAt9Cg6MCTkuxbLg/S5L
-         zge2X3hZMuuonoY+RSpjILUJHxY839RCYOmgj++OV+mHW57ei7rmxVvFuOng8/o1ZxiH
-         dT/FJsUEcpn6bQnq8+U8F3fWSibqWlkbyWAlF3/7iZQrElRKnpCueDJY40YuPf3y96Oz
-         ju3q8H2IpouARmIulQM/2D5wNoa6/8gttCaUfPdlf44J/YUPJXtnGDaaH2zGHegjV6C0
-         pLKYEO/NkHyYW4zXjAEWieU56zPYQVNjR+CwfHdoZLREjYT0qki0wGDHGsQTSlNxQ+RU
-         f6Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=m/dkOYJLIlXBlQ2q0cF+y0fSOD9w7drnxFN+ZiKGczc=;
-        b=n00gcgI66r/MswzOvjPb9SoYJQmqdZtzO7WtL/zF6r1LVhi42iSqV90uG5LIZsxJ2L
-         q16A2L+p2Ym32ecoIyxq7euBHxcOLA591PdKRFHy84Bn8kBfE77+ZuBwtgilswXfm6L9
-         ez4Z26a+go85IchqWnHkio6LUkTgweMtBiW3lASDb0cPve8MybmZLYyTIt9bsLqwh3ZP
-         QXrGg+YU9rR0sW6t/GVc8gfKzlI3wMXnYBLt4W62Ty6MCx38rgzTxPsiGLIH17WyrvLd
-         OQ0/2b4wHF5nuAoS7+cJyzR3yy7r5Obfcahurzw+ykhZBjKAHNHVX2iqND7TNHUN/uZy
-         ynAA==
-X-Gm-Message-State: AGi0PuY35G8iOt3jQplF/oOlBGvGCPBtbVehAI2abw1/1TucznxoHt+D
-        yNeKQt9ETZIwEgEZ9IcpA+3fIZAeiMRlC+5MfnI=
-X-Google-Smtp-Source: APiQypK8CelIKlG8WGkSg9wDsshxnRW9s7TBg+Pmy9wtl3BctesOgPVGqiV912kKL0NWCXULiA4yy8kOE5DKMqeSIhA=
-X-Received: by 2002:a02:9988:: with SMTP id a8mr3254752jal.3.1586284767120;
- Tue, 07 Apr 2020 11:39:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1585751281.git.leonard.crestez@nxp.com> <c167baa48d6830cf32b9ac51968eeadd684ebf2d.1585751281.git.leonard.crestez@nxp.com>
- <CAHCN7xKpwex8MQbTFAYKjGPQbQ1uOe7EywASmcakg8F_2w-iuA@mail.gmail.com> <VI1PR04MB69417FFDFF452FC46889B686EEC30@VI1PR04MB6941.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB69417FFDFF452FC46889B686EEC30@VI1PR04MB6941.eurprd04.prod.outlook.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Tue, 7 Apr 2020 13:39:09 -0500
-Message-ID: <CAHCN7xJSpTCJM5gAP=BuUdKXE3+ig0skoTLnsgqTs1LGcTmD1w@mail.gmail.com>
-Subject: Re: [PATCH v2 8/8] arm64: dts: imx8m: Add NOC nodes
-To:     Leonard Crestez <leonard.crestez@nxp.com>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Tue, 7 Apr 2020 14:44:11 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:50836 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgDGSoL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 14:44:11 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2184359E;
+        Tue,  7 Apr 2020 20:44:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586285047;
+        bh=+wwINIXYvOQByrteQZLqgZA10lOroQ6Th1LCLXHNWwk=;
+        h=Reply-To:Subject:To:References:From:Date:In-Reply-To:From;
+        b=CGEqBf8PhEA5f1q02Ta5eOsOgIywvva9MvH7UcrF/xxNL3RDhKHwLvICbCaaTqqlJ
+         qhtcU6m17k5ASR3PFhPtK2ypAdDNHij3OCefgj+4AaOcrA2cdM7bWI0NKQjFD2UVqI
+         SRAe2cHQTmLKhxW/ziAA+Pz98upJfaRDE9QnoSCc=
+Reply-To: kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH v5 4/9] media: adv748x: add definitions for audio output
+ related registers
+To:     Alex Riesen <alexander.riesen@cetitec.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Martin Kepplinger <martink@posteo.de>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <cover.1585852001.git.alexander.riesen@cetitec.com>
+ <26573ecdb48aa816f802b9d8bbe5f74157248021.1585852001.git.alexander.riesen@cetitec.com>
+ <a0ff0a59-bd6e-044b-5669-679126c23323@ideasonboard.com>
+ <20200407171327.GA4711@pflmari>
+From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
+ 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
+ WZw01QYHU/GUV/zHJSFk
+Organization: Ideas on Board
+Message-ID: <9bdf0c48-ca1c-addc-aca4-5f1889d0ae93@ideasonboard.com>
+Date:   Tue, 7 Apr 2020 19:44:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+MIME-Version: 1.0
+In-Reply-To: <20200407171327.GA4711@pflmari>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 4:10 AM Leonard Crestez <leonard.crestez@nxp.com> wr=
-ote:
->
-> On 2020-04-04 4:25 PM, Adam Ford wrote:
-> > On Wed, Apr 1, 2020 at 9:35 AM Leonard Crestez <leonard.crestez@nxp.com=
-> wrote:
-> >>
-> >> Add nodes for the main interconnect of the imx8m series chips.
-> >>
-> >> These nodes are bound to by devfreq and interconnect drivers.
-> >>
-> >> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-> >> ---
-> >>   arch/arm64/boot/dts/freescale/imx8mm.dtsi | 24 +++++++++++++++++++++=
-++
-> >>   arch/arm64/boot/dts/freescale/imx8mn.dtsi | 24 +++++++++++++++++++++=
-++
-> >>   arch/arm64/boot/dts/freescale/imx8mq.dtsi | 24 +++++++++++++++++++++=
-++
-> >>   3 files changed, 72 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/bo=
-ot/dts/freescale/imx8mm.dtsi
-> >> index 175c28ae10cf..41047b6709b6 100644
-> >> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> >> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> >> @@ -6,10 +6,11 @@
-> >>   #include <dt-bindings/clock/imx8mm-clock.h>
-> >>   #include <dt-bindings/gpio/gpio.h>
-> >>   #include <dt-bindings/input/input.h>
-> >>   #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >>   #include <dt-bindings/thermal/thermal.h>
-> >> +#include <dt-bindings/interconnect/imx8mm.h>
-> >>
-> >>   #include "imx8mm-pinfunc.h"
-> >>
-> >>   / {
-> >>          interrupt-parent =3D <&gic>;
-> >> @@ -860,10 +861,33 @@
-> >>                                  status =3D "disabled";
-> >>                          };
-> >>
-> >>                  };
-> >>
-> >> +               noc: interconnect@32700000 {
-> >> +                       compatible =3D "fsl,imx8mm-noc", "fsl,imx8m-no=
-c";
-> >> +                       reg =3D <0x32700000 0x100000>;
-> >> +                       clocks =3D <&clk IMX8MM_CLK_NOC>;
-> >> +                       fsl,ddrc =3D <&ddrc>;
-> >> +                       #interconnect-cells =3D <1>;
-> >> +                       operating-points-v2 =3D <&noc_opp_table>;
-> >> +
-> >> +                       noc_opp_table: opp-table {
-> >> +                               compatible =3D "operating-points-v2";
-> >> +
-> >> +                               opp-150M {
-> >> +                                       opp-hz =3D /bits/ 64 <15000000=
-0>;
-> >> +                               };
-> >> +                               opp-375M {
-> >> +                                       opp-hz =3D /bits/ 64 <37500000=
-0>;
-> >> +                               };
-> >> +                               opp-750M {
-> >> +                                       opp-hz =3D /bits/ 64 <75000000=
-0>;
-> >
-> > Out of curiosity, the 8M Mini runs up to 750M, and  the 8M Nano and
-> > 8MQ run up to 800.  The 8MQ had a patch to increase the assigned clock
-> > speed for the NOC to 800MHz
-> >
-> > See: https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%=
-2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fnext%2Flinux-next.git=
-%2Fpatch%2Farch%2Farm64%2Fboot%2Fdts%2Ffreescale%3Fid%3D912b9dacf3f0ffad55e=
-1a1b3c5af0e433ebdb5dd&amp;data=3D02%7C01%7Cleonard.crestez%40nxp.com%7C32c3=
-655718e4459028e008d7d89baa31%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C6=
-37216035403876452&amp;sdata=3Dz%2B5afsPGbCk4HkRp4nR6QepOrm70Fi5B5dohyvaquxo=
-%3D&amp;reserved=3D0)
-> >
-> > The 8M Mini and 8M Nano appear to be setting the default speed to 0.
->
-> I'm not sure what you mean about this, the noc clock is required for
-> mostly everything.
+Hi Alex,
 
-As an example, the i.MX8MM looks like this:
+With all the changes you've described below:
 
-assigned-clocks =3D <&clk IMX8MM_CLK_NOC>,
-                              <&clk IMX8MM_CLK_AUDIO_AHB>,
-                              <&clk IMX8MM_CLK_IPG_AUDIO_ROOT>,
-                              <&clk IMX8MM_SYS_PLL3>,
-                              <&clk IMX8MM_VIDEO_PLL1>,
-                              <&clk IMX8MM_AUDIO_PLL1>,
-                              <&clk IMX8MM_AUDIO_PLL2>;
-assigned-clock-parents =3D <&clk IMX8MM_SYS_PLL3_OUT>,
-                                         <&clk IMX8MM_SYS_PLL1_800M>;
-assigned-clock-rates =3D <0>,
-                                    <400000000>,
-                                    <400000000>,
-                                    <750000000>,
-                                    <594000000>,
-                                    <393216000>,
-                                    <361267200>;
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-If I am reading this correctly, it appears to me that IMX8MM_CLK_NOC
-is set to 0.
+On 07/04/2020 18:13, Alex Riesen wrote:
+> Hi Kieran,
+> 
+> Kieran Bingham, Tue, Apr 07, 2020 18:21:00 +0200:
+>> On 02/04/2020 19:34, Alex Riesen wrote:
+>>> diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
+>>> index 0a9d78c2870b..1a1ea70086c6 100644
+>>> --- a/drivers/media/i2c/adv748x/adv748x.h
+>>> +++ b/drivers/media/i2c/adv748x/adv748x.h
+>>> @@ -226,6 +226,11 @@ struct adv748x_state {
+>>>  
+>>>  #define ADV748X_IO_VID_STD		0x05
+>>>  
+>>> +#define ADV748X_IO_PAD_CONTROLS		0x0e
+>>> +#define ADV748X_IO_PAD_CONTROLS_TRI_AUD	BIT(5)
+>>> +#define ADV748X_IO_PAD_CONTROLS_PDN_AUD	BIT(1)
+>>> +#define ADV748X_IO_PAD_CONTROLS1	0x1d
+>>
+>> What is CONTROLS1 (1d) referenced from here?
+> 
+> I wish I knew... I afraid this is a left-over from the early development
+> attempts. It is obviously a mask of some bits. I don't even use the _CONTROLS1
+> anymore.
+> 
+> Removed the #define.
+> 
+>> There's no 'field' matching for this register, and the 'bits' (0, 2, 3,
+>> 4) correspond to "pdn_spi, pdn_pix, '-', tri_spi"
+> 
+>> Perhaps we need to define those bit fields accordingly and reference
+>> them where they get used directly?
+>>
+>> Perhaps calling bit 3 as:
+>>  #define ADV748X_IO_PAD_CONTROLS_BIT_3	BIT(3)
+>>
+>> Or
+>>  #define ADV748X_IO_PAD_CONTROLS_RESVD	BIT(3)
+> 
+> I would prefer _BIT_3, if only to stay as opaque as the documentation.
+> 
+>> (Unless you have documentation that better describes it?)
+> 
+> Mine matches what you described above.
+> 
+> Do you mind if I describe the other bits of the register even though the
+> driver does not use them? Just for completeness sake (and while I still have
+> access to the documentation).
 
-The i.MX8MN is similar, but the patch above shows IMX8MQ_CLK_NOC used
-to be 0, but was updated for better performance.
+I'm fine describing those extra BIT()s correctly.
 
->
-> > Should the 8M Mini or 8M Nano do something similar to what the 8MQ
-> > did, or does this series negate the need for such a patch?
->
-> Instead of doing assigned-clocks noc frequency needs to be tweaked by
-> adjusting OPPs in this list. The devfreq device for noc will overwrite
-> other frequencies set for the noc.
-
-My question was whether or not we should consider a patch to made the
-default assigned-clock-rate for IMX8MM_CLK_NOC to be 750000000.  Based
-on your response, it sounds like the answer might be that it's not
-necessary.
-
-thanks
-
-adam
->
-> --
+> 
+>>> @@ -248,7 +253,21 @@ struct adv748x_state {
+>>>  #define ADV748X_IO_REG_FF		0xff
+>>>  #define ADV748X_IO_REG_FF_MAIN_RESET	0xff
+>>>  
+>>> +/* DPLL Map */
+>>> +#define ADV748X_DPLL_MCLK_FS		0xb5
+>>> +#define ADV748X_DPLL_MCLK_FS_N_MASK	GENMASK(2, 0)
+>>> +
+>>>  /* HDMI RX Map */
+>>> +#define ADV748X_HDMI_I2S		0x03	/* I2S mode and width */
+>>
+>> Looks like a more appropriate name than the datasheets
+>> "hdmi_register_03h" :-D
+> 
+> It was derived from the map and prefix of its bit-fields: i2soutmode and
+> i2sbitwidth. I too felt the name hdmi_register_03h lacking of depth.
+> 
+>>> +#define ADV748X_HDMI_I2SBITWIDTH_MASK	GENMASK(4, 0)
+>>> +#define ADV748X_HDMI_I2SOUTMODE_SHIFT	5
+>>> +#define ADV748X_HDMI_I2SOUTMODE_MASK	\
+>>> +	GENMASK(6, ADV748X_HDMI_I2SOUTMODE_SHIFT)
+>>
+>> I'd be very tempted to ignore the 80char limit here and put that on the
+>> line above ... or find a way to remove the 1 character...
+>>
+>> In fact, given the entry there - how about just leaving this as:
+>>
+>> #define ADV748X_HDMI_I2SOUTMODE_MASK	GENMASK(6, 5)
+> 
+> No problem. Reformatted with two spaces.
+> 
+>>> +#define ADV748X_I2SOUTMODE_I2S 0
+>>> +#define ADV748X_I2SOUTMODE_RIGHT_J 1
+>>> +#define ADV748X_I2SOUTMODE_LEFT_J 2
+>>> +#define ADV748X_I2SOUTMODE_SPDIF 3
+>>
+>> Can we align these value in the column with the other values?
+> 
+> Alignment corrected.
+> 
+>> And as much as I hate long define names, it seems a bit odd that these
+>> suddenly lack the HDMI_ part of the define prefix...
+>>
+>> Should we either remove the HDMI_ from
+>>  ADV748X_HDMI_I2SBITWIDTH_MASK
+>>  ADV748X_HDMI_I2SOUTMODE_SHIFT
+>>  ADV748X_HDMI_I2SOUTMODE_MASK
+>>
+>> or add it to
+>>  ADV748X_I2SOUTMODE_I2S
+>>  ADV748X_I2SOUTMODE_RIGHT_J
+>>  ADV748X_I2SOUTMODE_LEFT_J
+>>  ADV748X_I2SOUTMODE_SPDIF
+> 
+> Well, I see no reason for them to stand out like this, so perhaps I better add
+> the prefix. I didn't add the prefix initially because they weren't names of
+> fields or registers, but names of values of a field (i2soutmode of that
+> hdmi_register_03h).
+> But I see there is a precedent for such already:
+> ADV748X_CP_{CON,SAT,BRI}_{MIN,DEF,MAX}, so prefix is okay.
+> 
+>>> @@ -260,6 +279,16 @@ struct adv748x_state {
+>>>  #define ADV748X_HDMI_F1H1		0x0b	/* field1 height_1 */
+>>>  #define ADV748X_HDMI_F1H1_INTERLACED	BIT(5)
+>>>  
+>>> +#define ADV748X_HDMI_MUTE_CTRL		0x1a
+>>> +#define ADV748X_HDMI_MUTE_CTRL_MUTE_AUDIO BIT(4)
+>>> +#define ADV748X_HDMI_MUTE_CTRL_WAIT_UNMUTE_MASK	GENMASK(3, 1)
+>>> +#define ADV748X_HDMI_MUTE_CTRL_NOT_AUTO_UNMUTE	BIT(0)
+>>> +
+>>> +#define ADV748X_HDMI_AUDIO_MUTE_SPEED	0x0f
+>>
+>> Can we keep the register definitions in address order please?
+> 
+> Done.
+> 
+>>> +#define ADV748X_HDMI_AUDIO_MUTE_SPEED_MASK	GENMASK(4, 0)
+>>> +#define ADV748X_MAN_AUDIO_DL_BYPASS BIT(7)
+>>> +#define ADV748X_AUDIO_DELAY_LINE_BYPASS BIT(6)
+>>
+>> Those bits do not describe the register they are in, not sure how to
+>> address that without exceptionally long names though.. :-(
+>>
+>> So perhaps how you've got them might be the best option...
+> 
+> Yes, please. Besides, they aren't even obviously related to the audio mute
+> speed.
+> 
+> And I corrected the alignment.
+> 
+>>> +#define ADV748X_HDMI_REG_6D		0x6d	/* hdmi_reg_6d */
+>>> +#define ADV748X_I2S_TDM_MODE_ENABLE BIT(7)
+> 
+> Alignment corrected.
+> 
 > Regards,
-> Leonard
+> Alex
+> 
+
+-- 
+Regards
+--
+Kieran
