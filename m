@@ -2,591 +2,149 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B63ADC2BABC
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 04:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F175C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 04:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD5720801
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 04:23:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="q+qQ7K1V"
+	by mail.kernel.org (Postfix) with ESMTP id 125302074F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 04:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726030AbgDGEXW (ORCPT
+        id S1726448AbgDGEtd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 00:23:22 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:53182 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725883AbgDGEXV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 00:23:21 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586233400; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
- To: From: Sender; bh=p8AiWAR7sO79j0rSGp9CRqkB75yONIL5cu2vJrDn6BM=; b=q+qQ7K1VjELpPSaT3aF6X0KNi02/XJCnJ1tvKTwyAjsnlUACh0IGWN7sso+Cqc4RW+/l4tJo
- jZeXy91uqh480rMmNGfberJSxOzRNt+0bYe4/Zo1GO3RdbMVSzBRGeJdV0N1J1E7LOvIB5tm
- AtSng8W6/l+DhuwgXngYeymS2SQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8c0030.7fb7e0f9a3e8-smtp-out-n01;
- Tue, 07 Apr 2020 04:23:12 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A6EFCC433BA; Tue,  7 Apr 2020 04:23:12 +0000 (UTC)
-Received: from TANMSHAH (cpe-75-85-180-63.san.res.rr.com [75.85.180.63])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 011CDC433F2;
-        Tue,  7 Apr 2020 04:23:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 011CDC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tanmay@codeaurora.org
-From:   <tanmay@codeaurora.org>
-To:     "'Sam Ravnborg'" <sam@ravnborg.org>
-Cc:     <freedreno@lists.freedesktop.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <seanpaul@chromium.org>,
-        <swboyd@chromium.org>, <abhinavk@codeaurora.org>,
-        <hoegsberg@google.com>, <dri-devel@lists.freedesktop.org>,
-        "'Vara Reddy'" <varar@codeaurora.org>, <aravindh@codeaurora.org>,
-        <linux-clk@vger.kernel.org>,
-        "'Chandan Uddaraju'" <chandanu@codeaurora.org>
-References: <1585701031-28871-1-git-send-email-tanmay@codeaurora.org> <1585701031-28871-2-git-send-email-tanmay@codeaurora.org> <20200401054949.GA10028@ravnborg.org>
-In-Reply-To: <20200401054949.GA10028@ravnborg.org>
-Subject: RE: [DPU PATCH v5 1/5] dt-bindings: msm/dp: add bindings of DP/DP-PLL driver for Snapdragon
-Date:   Mon, 6 Apr 2020 21:23:09 -0700
-Message-ID: <7d3401d60c94$3f2794a0$bd76bde0$@codeaurora.org>
+        Tue, 7 Apr 2020 00:49:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39146 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbgDGEtd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Apr 2020 00:49:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C44ACAC4A;
+        Tue,  7 Apr 2020 04:49:30 +0000 (UTC)
+Subject: Re: [PATCH v6 2/2] tty: samsung_tty: 32-bit access for TX/RX hold
+ registers
+To:     Hyunki Koo <hyunki00.koo@samsung.com>, gregkh@linuxfoundation.org,
+        krzk@kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+References: <20200401082721.19431-1-hyunki00.koo@samsung.com>
+ <CGME20200406230902epcas2p19a8df6805dac59968d664efb9bc9419b@epcas2p1.samsung.com>
+ <20200406230855.13772-1-hyunki00.koo@samsung.com>
+From:   Jiri Slaby <jslaby@suse.com>
+Autocrypt: addr=jslaby@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <62a918df-b3ba-21f4-b3ad-9f638ad104ad@suse.com>
+Date:   Tue, 7 Apr 2020 06:49:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
+In-Reply-To: <20200406230855.13772-1-hyunki00.koo@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-us
-Thread-Index: AQJnKLy7z6bNgCfKvhixjK+twDq6KwEizvlRAkyDUHinL1pZMA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sam,
-
-Thanks for reviews.
-
-The changes were posted by Vara Reddy. Due to some configuration errors,
-changes were posted with my E-mail ID. Vara will be addressing comments, and
-we will take care of this error with next patchset.
-
-Thanks,
-Tanmay
-
------Original Message-----
-From: Sam Ravnborg <sam@ravnborg.org> 
-Sent: Tuesday, March 31, 2020 10:50 PM
-To: Tanmay Shah <tanmay@codeaurora.org>
-Cc: freedreno@lists.freedesktop.org; linux-arm-msm@vger.kernel.org;
-devicetree@vger.kernel.org; seanpaul@chromium.org; swboyd@chromium.org;
-abhinavk@codeaurora.org; hoegsberg@google.com;
-dri-devel@lists.freedesktop.org; Vara Reddy <varar@codeaurora.org>;
-aravindh@codeaurora.org; linux-clk@vger.kernel.org; Chandan Uddaraju
-<chandanu@codeaurora.org>
-Subject: Re: [DPU PATCH v5 1/5] dt-bindings: msm/dp: add bindings of
-DP/DP-PLL driver for Snapdragon
-
-Hi Tanmay
-
-
-Reviewing the yaml bindings triggered a few comments. See below.
-
-	Sam
-
-On Tue, Mar 31, 2020 at 05:30:27PM -0700, Tanmay Shah wrote:
-> From: Chandan Uddaraju <chandanu@codeaurora.org>
+On 07. 04. 20, 1:08, Hyunki Koo wrote:
+> Support 32-bit access for the TX/RX hold registers UTXH and URXH.
 > 
-> Add bindings for Snapdragon DisplayPort and display-port PLL driver.
+> This is required for some newer SoCs.
 > 
-> Changes in V2:
-> Provide details about sel-gpio
-> 
-> Changes in V4:
-> Provide details about max dp lanes
-> Change the commit text
-> 
-> Changes in V5:
-> Moved dp.txt to yaml file.
-> 
-> Signed-off-by: Chandan Uddaraju <chandanu@codeaurora.org>
-> Signed-off-by: Vara Reddy <varar@codeaurora.org>
-
-As you handle the patch, thus the patch passed throgh you, you are supposed
-to sign-off the patch.
-
-
-The changes to dpu.txt is not explained in the changelog.
-
-
+> Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
+...
 > ---
->  .../devicetree/bindings/display/msm/dp-sc7180.yaml | 325
-+++++++++++++++++++++
->  .../devicetree/bindings/display/msm/dpu.txt        |  16 +-
->  2 files changed, 337 insertions(+), 4 deletions(-)  create mode 
-> 100644 Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
+>  drivers/tty/serial/samsung_tty.c | 76 +++++++++++++++++++++++++++++++++-------
+>  1 file changed, 64 insertions(+), 12 deletions(-)
 > 
-> diff --git 
-> a/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml 
-> b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
-> new file mode 100644
-> index 0000000..761a01d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
-> @@ -0,0 +1,325 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-For new bindings please use: (GPL-2.0-only OR BSD-2-Clause)
-
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/msm/dp-sc7180.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+> index 73f951d65b93..bdf1d4d12cb1 100644
+> --- a/drivers/tty/serial/samsung_tty.c
+> +++ b/drivers/tty/serial/samsung_tty.c
+> @@ -154,12 +154,47 @@ struct s3c24xx_uart_port {
+...
+> -#define wr_regb(port, reg, val) writeb_relaxed(val, portaddr(port, reg))
+> +static void wr_reg(struct uart_port *port, u32 reg, u32 val)
+> +{
+> +	switch (port->iotype) {
+> +	case UPIO_MEM:
+> +		writeb_relaxed(val, portaddr(port, reg));
+> +		break;
+> +	case UPIO_MEM32:
+> +		writel_relaxed(val, portaddr(port, reg));
+> +		break;
+> +	}
+> +}
 > +
-> +title: Description of Qualcomm Display Port dt properties.
-> +
-> +maintainers:
-> +  - Chandan Uddaraju <chandanu@codeaurora.org>
-> +  - Vara Reddy <varar@codeaurora.org>
-> +
-> +description: |
-> +  Device tree bindings for MSM Display Port which supports DP host 
-> +controllers
-> +  that are compatible with VESA Display Port interface specification.
-> +
-> +properties:
-> +  "msm_dp":
-The quotes seems not necessary.
-This describes the name of the node.
-The typical way to identify a node is using a compatible.
-
-So I think that the right solution here is to drop "msm_dp".
-
-> +    type: object
-> +    description: |
-> +      Node containing Display port register address bases, clocks, power
-supplies.
-> +
-
-And start here.
-> +    properties:
-> +     compatible:
-> +       items:
-> +         - const: qcom,dp-display
-> +
-> +     cell-index:
-> +       description: Specifies the controller instance.
-> +
-> +     reg:
-> +       description: Physical base address and length of controller's
-registers.
-This description is generic and can be omitted.
-But it would be good with a descrition of the individual registers like
-this:
-
-    reg:
-      items:
-        - description: AHB bla bla
-	- description: aux bla bla
-
-> +
-> +     reg-names:
-> +       description: |
-> +         Names for different register regions defined above. The required
-region
-> +         is mentioned below.
-> +       items:
-> +         - const: dp_ahb
-> +         - const: dp_aux
-> +         - const: dp_link
-> +         - const: dp_p0
-> +         - const: dp_phy
-> +         - const: dp_ln_tx0
-> +         - const: dp_ln_tx1
-> +         - const: afprom_physical
-> +         - const: dp_pll
-> +         - const: usb3_dp_com
-> +         - const: hdcp_physical
-> +
-> +     interrupts:
-> +       description: The interrupt signal from the DP block.
-> +
-> +     clocks:
-> +       description: List of clock specifiers for clocks needed by the
-device.
-          items:
-	    - description: aux clock bla bla
-	    - description: ref clock bla bla
-
-
-> +
-> +     clock-names:
-> +       description: |
-> +         Device clock names in the same order as mentioned in clocks
-property.
-> +         The required clocks are mentioned below.
-> +       items:
-> +         - const: core_aux_clk
-> +         - const: core_ref_clk_src
-> +         - const: core_usb_ref_clk
-> +         - const: core_usb_cfg_ahb_clk
-> +         - const: core_usb_pipe_clk
-> +         - const: ctrl_link_clk
-> +         - const: ctrl_link_iface_clk
-> +         - const: ctrl_pixel_clk
-> +         - const: crypto_clk
-> +         - const: pixel_clk_rcg
-> +
-> +     pll-node:
-> +       description: phandle to DP PLL node.
-Add type (phandle)
-
-> +
-> +     vdda-1p2-supply:
-> +       description: phandle to vdda 1.2V regulator node.
-> +
-> +     vdda-0p9-supply:
-> +       description: phandle to vdda 0.9V regulator node.
-> +
-> +     aux-cfg0-settings:
-> +       description: |
-> +         Specifies the DP AUX configuration 0 settings.
-> +         The first entry in this array corresponds to the register offset
-> +         within DP AUX, while the remaining entries indicate the
-> +         programmable values.
-Add type, goes for all *-settings
-
-
-> +
-> +     aux-cfg1-settings:
-> +       description: |
-> +         Specifies the DP AUX configuration 1 settings.
-> +         The first entry in this array corresponds to the register offset
-> +         within DP AUX, while the remaining entries indicate the
-> +         programmable values.
-> +
-> +     aux-cfg2-settings:
-> +       description: |
-> +         Specifies the DP AUX configuration 2 settings.
-> +         The first entry in this array corresponds to the register offset
-> +         within DP AUX, while the remaining entries indicate the
-> +         programmable values.
-> +
-> +     aux-cfg3-settings:
-> +       description: |
-> +         Specifies the DP AUX configuration 3 settings.
-> +         The first entry in this array corresponds to the register offset
-> +         within DP AUX, while the remaining entries indicate the
-> +         programmable values.
-> +
-> +     aux-cfg4-settings:
-> +       description: |
-> +         Specifies the DP AUX configuration 4 settings.
-> +         The first entry in this array corresponds to the register offset
-> +         within DP AUX, while the remaining entries indicate the
-> +         programmable values.
-> +
-> +     aux-cfg5-settings:
-> +       description: |
-> +         Specifies the DP AUX configuration 5 settings.
-> +         The first entry in this array corresponds to the register offset
-> +         within DP AUX, while the remaining entries indicate the
-> +         programmable values.
-> +
-> +     aux-cfg6-settings:
-> +       description: |
-> +         Specifies the DP AUX configuration 6 settings.
-> +         The first entry in this array corresponds to the register offset
-> +         within DP AUX, while the remaining entries indicate the
-> +         programmable values.
-> +
-> +     aux-cfg7-settings:
-> +       description: |
-> +         Specifies the DP AUX configuration 7 settings.
-> +         The first entry in this array corresponds to the register offset
-> +         within DP AUX, while the remaining entries indicate the
-> +         programmable values.
-> +
-> +     aux-cfg8-settings:
-> +       description: |
-> +         Specifies the DP AUX configuration 8 settings.
-> +         The first entry in this array corresponds to the register offset
-> +         within DP AUX, while the remaining entries indicate the
-> +         programmable values.
-> +
-> +     aux-cfg9-settings:
-> +       description: |
-> +         Specifies the DP AUX configuration 9 settings.
-> +         The first entry in this array corresponds to the register offset
-> +         within DP AUX, while the remaining entries indicate the
-> +         programmable values.
-> +
-> +     max-pclk-frequency-khz:
-> +       description: Maximum displayport pixel clock supported for the
-chipset.
-> +
-> +     data-lanes:
-> +       description: Maximum number of lanes that can be used for Display
-port.
-> +
-> +     usbplug-cc-gpio:
-> +       maxItems: 1
-> +       description: Specifies the usbplug orientation gpio.
-Shall be named -gpios. Goes for all -gpio properties.
-maxItems: 1 is good. Keep it.
-
-> +
-> +     aux-en-gpio:
-> +       maxItems: 1
-> +       description: Specifies the aux-channel enable gpio.
-> +
-> +     aux-sel-gpio:
-> +       maxItems: 1
-> +       description: Specifies the sux-channel select gpio.
-> +
-> +     ports:
-> +       description: |
-> +         Contains display port controller endpoint subnode.
-> +         remote-endpoint: |
-> +           For port@0, set to phandle of the connected panel/bridge's
-> +           input endpoint. For port@1, set to the DPU interface output.
-> +           Documentation/devicetree/bindings/graph.txt and
-> +           Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +  "dp_pll":
-quotes should not be required here.
-
-I looks like yo try to describe two differents nodes in the same file.
-Consider to split in two files.
-
-Some of the comments from above applies here too.
-
-> +     type: object
-> +     description: Node contains properties of Display port pll and phy
-driver.
-> +
-> +     properties:
-> +       compatible:
-> +         items:
-> +           - const: qcom,dp-pll-10nm
-> +
-> +       cell-index:
-> +         description: Specifies the controller instance.
-> +
-> +       reg:
-> +         description: Physical base address and length of DP phy and pll
-registers.
-> +
-> +       reg-names:
-> +         description: |
-> +           Names for different register regions defined above. The
-required region
-> +           is mentioned below.
-> +         items:
-> +           - const: pll_base
-> +           - const: phy_base
-> +           - const: ln_tx0_base
-> +           - const: ln_tx1_base
-> +           - const: gdsc_base
-> +
-> +       clocks:
-> +         description: List of clock specifiers for clocks needed by the
-device.
-> +
-> +       clock-names:
-> +         description: |
-> +           Device clock names in the same order as mentioned in clocks
-property.
-> +           The required clocks are mentioned below.
-> +         items:
-> +           - const: iface
-> +           - const: ref
-> +           - const: cfg_ahb
-> +           - const: pipe
-> +
-> +examples:
-
-4 spaces as indent - good.
-You have include files - good.
-
-
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/qcom,dispcc-sdm845.h>
-> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-> +    #include <dt-bindings/clock/qcom,rpmh.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    msm_dp: displayport-controller@ae90000{
-> +                cell-index = <0>;
-indent only four spaces
-
-> +        compatible = "qcom,dp-display";
-> +        reg =   <0 0xae90000 0 0x200>,
-Only one space after '=' - rememebr to adjust indent in following lines.
-> +                <0 0xae90200 0 0x200>,
-> +                <0 0xae90400 0 0xc00>,
-> +                <0 0xae91000 0 0x400>,
-> +                <0 0x88eaa00 0 0x200>,
-> +                <0 0x88ea200 0 0x200>,
-> +                <0 0x88ea600 0 0x200>,
-> +                <0 0x780000 0 0x6228>,
-> +                <0 0x088ea000 0 0x40>,
-> +                <0 0x88e8000 0 0x20>,
-> +                <0 0x0aee1000 0 0x034>;
-> +        reg-names = "dp_ahb", "dp_aux", "dp_link",
-> +            "dp_p0", "dp_phy", "dp_ln_tx0", "dp_ln_tx1",
-> +            "qfprom_physical", "dp_pll",
-> +            "usb3_dp_com", "hdcp_physical";
-
-Indent so names in following lines starts where names in previous lines
-starts.
-Like this:
-        reg-names = "dp_ahb", "dp_aux", "dp_link",
-                    "dp_p0", "dp_phy", "dp_ln_tx0", "dp_ln_tx1",
-                    "qfprom_physical", "dp_pll",
-                    "usb3_dp_com", "hdcp_physical";
-
-
-> +
-> +        interrupt-parent = <&display_subsystem>;
-> +        interrupts = <12 0>;
-> +
-> +        clocks = <&dispcc DISP_CC_MDSS_DP_AUX_CLK>,
-> +            <&rpmhcc RPMH_CXO_CLK>,
-Indent so '<' are aligned under each other. Like done above for reg =
-
-> +            <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
-> +            <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-> +            <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>,
-> +            <&dispcc DISP_CC_MDSS_DP_LINK_CLK>,
-> +            <&dispcc DISP_CC_MDSS_DP_LINK_INTF_CLK>,
-> +            <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK>,
-> +            <&dispcc DISP_CC_MDSS_DP_CRYPTO_CLK>,
-> +            <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
-> +        clock-names = "core_aux_clk", "core_ref_clk_src",
-> +            "core_usb_ref_clk", "core_usb_cfg_ahb_clk",
-> +            "core_usb_pipe_clk", "ctrl_link_clk",
-> +            "ctrl_link_iface_clk", "ctrl_pixel_clk",
-> +            "crypto_clk", "pixel_clk_rcg";
-Fix indent
-
-> +
-> +        pll-node = <&dp_pll>;
-> +        vdda-1p2-supply = <&vreg_l3c_1p2>;
-> +        vdda-0p9-supply = <&vreg_l4a_0p8>;
-> +
-> +        aux-cfg0-settings = [20 00];
-> +        aux-cfg1-settings = [24 13 23 1d];
-> +        aux-cfg2-settings = [28 24];
-> +        aux-cfg3-settings = [2c 00];
-> +        aux-cfg4-settings = [30 0a];
-> +        aux-cfg5-settings = [34 26];
-> +        aux-cfg6-settings = [38 0a];
-> +        aux-cfg7-settings = [3c 03];
-> +        aux-cfg8-settings = [40 bb];
-> +        aux-cfg9-settings = [44 03];
-> +
-> +        max-pclk-frequency-khz = <67500>;
-> +        data-lanes = <2>;
-> +
-> +        aux-en-gpio = <&msmgpio 55 1>;
-> +        aux-sel-gpio = <&msmgpio 110 1>;
-> +        usbplug-cc-gpio = <&msmgpio 90 1>;
-> +
-> +        ports {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            port@0 {
-> +                reg = <0>;
-> +                dp_in: endpoint {
-> +                    remote-endpoint = <&dpu_intf0_out>;
-> +                };
-> +            };
-> +
-> +            port@1 {
-> +                reg = <1>;
-> +                dp_out: endpoint {
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +    dp_pll: dp-pll@088ea000 {
-> +        compatible = "qcom,dp-pll-10nm";
-> +        label = "DP PLL";
-> +        cell-index = <0>;
-> +        #clock-cells = <1>;
-> +
-> +        reg = <0 0x088ea000 0 0x200>,
-> +              <0 0x088eaa00 0 0x200>,
-> +              <0 0x088ea200 0 0x200>,
-> +              <0 0x088ea600 0 0x200>,
-> +              <0 0x08803000 0 0x8>;
-> +        reg-names = "pll_base", "phy_base", "ln_tx0_base",
-> +            "ln_tx1_base", "gdsc_base";
-> +
-> +        clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-> +             <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
-> +             <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-> +             <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
-> +        clock-names = "iface_clk", "ref_clk",
-> +            "cfg_ahb_clk", "pipe_clk";
-> +    };
-> +
-> diff --git a/Documentation/devicetree/bindings/display/msm/dpu.txt 
-> b/Documentation/devicetree/bindings/display/msm/dpu.txt
-> index 551ae26..7e99e45 100644
-> --- a/Documentation/devicetree/bindings/display/msm/dpu.txt
-> +++ b/Documentation/devicetree/bindings/display/msm/dpu.txt
-> @@ -63,8 +63,9 @@ Required properties:
->  	Documentation/devicetree/bindings/graph.txt
->  	Documentation/devicetree/bindings/media/video-interfaces.txt
+>  #define wr_regl(port, reg, val) writel_relaxed(val, portaddr(port, reg))
 >  
-> -	Port 0 -> DPU_INTF1 (DSI1)
-> -	Port 1 -> DPU_INTF2 (DSI2)
-> +	Port 0 -> DPU_INTF0 (DP)
-> +	Port 1 -> DPU_INTF1 (DSI1)
-> +	Port 2 -> DPU_INTF2 (DSI2)
->  
->  Optional properties:
->  - assigned-clocks: list of clock specifiers for clocks needing rate 
-> assignment @@ -125,13 +126,20 @@ Example:
->  
->  				port@0 {
->  					reg = <0>;
-> -					dpu_intf1_out: endpoint {
-> -						remote-endpoint =
-<&dsi0_in>;
-> +					dpu_intf0_out: endpoint {
-> +						remote-endpoint = <&dp_in>;
->  					};
->  				};
->  
->  				port@1 {
->  					reg = <1>;
-> +					dpu_intf1_out: endpoint {
-> +						remote-endpoint =
-<&dsi0_in>;
-> +					};
-> +				};
+> +static void wr_reg_barrier(struct uart_port *port, u32 reg, u32 val)
+
+You need to explain, why you need this _barrier variant now. This change
+should be done in a separate patch too.
+
+> +{
+> +	switch (port->iotype) {
+> +	case UPIO_MEM:
+> +		writeb(val, portaddr(port, reg));
+> +		break;
+> +	case UPIO_MEM32:
+> +		writel(val, portaddr(port, reg));
+> +		break;
+> +	}
+> +}
 > +
-> +				port@2 {
-> +					reg = <2>;
->  					dpu_intf2_out: endpoint {
->  						remote-endpoint =
-<&dsi1_in>;
->  					};
-> --
-> 1.9.1
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>  /* Byte-order aware bit setting/clearing functions. */
+>  
+>  static inline void s3c24xx_set_bit(struct uart_port *port, int idx,
+
+thanks,
+-- 
+js
+suse labs
