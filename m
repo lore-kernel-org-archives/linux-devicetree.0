@@ -2,115 +2,219 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68945C2BB86
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 10:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC11C2BB54
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 11:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2AF2080C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 10:55:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586256947;
-	bh=2l/vT4Iy6bAQT51YE8e9gRnPs3uL+EMeRJhWtbxLAzY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mRT3HDY8YYE0TLI47/+TvKZ5RDep1MQB50V5zyinaEDmbmgIc8rp1ZMo/gswxhZrn
-	 ilAmAr071nh8R9SzbIn7Ls4uS54vjGKdwl93m8NnYgHxM2IcZanEyO+8KEmBzhxZJz
-	 nFQYxBhs2FW63ZYb6P63RHbMZVCpEdCNW0g49K0w=
+	by mail.kernel.org (Postfix) with ESMTP id 515702078A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 11:03:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbgDGKzq (ORCPT
+        id S1728054AbgDGLDo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:55:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47712 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726562AbgDGKzq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:55:46 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B77652063A;
-        Tue,  7 Apr 2020 10:55:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586256945;
-        bh=2l/vT4Iy6bAQT51YE8e9gRnPs3uL+EMeRJhWtbxLAzY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D3wNVWTzel205i3JqikhF9KThBjcP8CzuSMSS70nQvmcBh2hJr/ytGlwpGBWxFkI7
-         Oe16Rc5btc8qctc0NhSUJo6552xtmcxoX+73Eb+yO6Sl4R/FpWd6qrBsMXBAI7Tngz
-         ncOrA7NSjao9QmXfU5GDGKGQlnfFt4y5UkV2s2AE=
-Date:   Tue, 7 Apr 2020 11:55:42 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de,
-        mark.rutland@arm.com, robh+dt@kernel.org, georgi.djakov@linaro.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, mka@chromium.org,
-        dianders@chromium.org, evgreen@chromium.org
-Subject: Re: [PATCH V3 7/8] spi: spi-qcom-qspi: Add interconnect support
-Message-ID: <20200407105542.GA5247@sirena.org.uk>
-References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
- <1585652976-17481-8-git-send-email-akashast@codeaurora.org>
- <20200331112352.GB4802@sirena.org.uk>
- <f896d6e4-cc86-db46-a9b9-d7c98071b524@codeaurora.org>
+        Tue, 7 Apr 2020 07:03:44 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:48821 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbgDGLDo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 07:03:44 -0400
+X-Originating-IP: 78.193.40.249
+Received: from kb-xps (unknown [78.193.40.249])
+        (Authenticated sender: kamel.bouhara@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id D5839FF819;
+        Tue,  7 Apr 2020 11:03:40 +0000 (UTC)
+Date:   Tue, 7 Apr 2020 13:03:39 +0200
+From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH 2/3] Input: rotary-encoder-counter: add DT bindings
+Message-ID: <20200407110339.GA1489441@kb-xps>
+References: <20200406155806.1295169-1-kamel.bouhara@bootlin.com>
+ <20200406155806.1295169-3-kamel.bouhara@bootlin.com>
+ <20200407094159.xtbhtsxorvs2g22c@gilmour.lan>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f896d6e4-cc86-db46-a9b9-d7c98071b524@codeaurora.org>
-X-Cookie: Just to have it is enough.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200407094159.xtbhtsxorvs2g22c@gilmour.lan>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Apr 07, 2020 at 11:41:59AM +0200, Maxime Ripard wrote:
+> Hi Kamel,
+>
 
---C7zPtVaVf+AK4Oqc
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Maxime,
 
-On Tue, Apr 07, 2020 at 03:24:42PM +0530, Akash Asthana wrote:
-> On 3/31/2020 4:53 PM, Mark Brown wrote:
+> The prefix for device tree bindings is usually dt-bindings:
+> $framework: $title
+>
+> So a title like "dt-bindings: input: Add a counter-based rotary
+> encoder binding" would be better.
+>
 
-> > > +	ctrl->avg_bw_cpu =3D Bps_to_icc(speed_hz);
-> > > +	ctrl->peak_bw_cpu =3D Bps_to_icc(2 * speed_hz);
+OK, to be fixed then.
 
-> > I thought you were going to factor this best guess handling of peak
-> > bandwidth out into the core?
+> On Mon, Apr 06, 2020 at 05:58:05PM +0200, Kamel Bouhara wrote:
+> > Add dt binding for the counter variant of the rotary encoder driver.
+> >
+> > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> > ---
+> >  .../input/rotary-encoder-counter.yaml         | 67 +++++++++++++++++++
+> >  1 file changed, 67 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> > new file mode 100644
+> > index 000000000000..a59f7c1faf0c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> > @@ -0,0 +1,67 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+>
+> Bindings are usually used by other OS's, so you should consider
+> putting it under a more permissive license, usually that would be GPL2
+> and the BSD-2-Clause
+>
 
-> I can centralize this for SPI, I2C and UART=A0 in Common driver(QUP wrapp=
-er)
-> but still for QSPI I have to keep this piece of code as is because It is =
-not
-> child of QUP wrapper(it doesn't use common code).
+Well to be honest I just looked into an existing binding and I guess
+the wrong one :).
 
-Why not?
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/input/rotary-encoder-counter.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Rotary Encoder Counter
+> > +
+> > +maintainers:
+> > +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
+> > +
+> > +description:
+> > +  Registers a Rotary encoder connected through a counter device.
+>
+> You shouldn't really describe the action here, but more what the
+> binding is about. The registration will not depend on the presence of
+> the node following that binding, but rather on whether or not the OS
+> that uses it has support for it.
+>
 
-> I am not sure whether I can move this " Assume peak_bw as twice of avg_bw=
- if
-> nothing is mentioned explicitly" to ICC core because the factor of 2 is
-> chosen randomly by me.
+Then shall it be better with just :
+"A rotary encoder device using a generic counter interface." ?
 
-That's the whole point - if this is just a random number then we may as
-well at least be consistently random.
+> > +properties:
+> > +  compatible:
+> > +    const: rotary-encoder-counter
+> > +
+> > +  counter:
+> > +    description: Phandle for the counter device providing rotary position.
+>
+> This should have a type
+>
+> > +  linux-axis:
+> > +    description: The input subsystem axis to map to this rotary encoder.
+> > +    type: boolean
+> > +
+> > +  qdec-mode:
+> > +    description: |
+> > +      Quadrature decoder function to set in the counter device.
+> > +      3: x1-PHA
+> > +      4: x1-PHB
+> > +      5: x2-PHA
+> > +      6: x2-PHB
+> > +      7: x4-PHA and PHB
+>
+> That range (even though it's a bit odd) should be expressed through an
+> enum so that you can check that the values are actually within that
+> range.
+>
 
---C7zPtVaVf+AK4Oqc
-Content-Type: application/pgp-signature; name="signature.asc"
+Indeed, that make sens to check it from the binding.
 
------BEGIN PGP SIGNATURE-----
+Will fix it in v2.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6MXCkACgkQJNaLcl1U
-h9CEeQf/eaVfeJR9ovqStt0V0zniW7RMpZKG29cmxTS4fPcK6lCpnIJkuFHsCsw6
-OJBjpy9Uyb1eKn0tV79iCLQx428YeoOeJFhp7d/JwAOG+lIc4Jp3HIh3mJ+eRmrt
-i0HmoPaJygm8PSz/MsgvFQEsuwGhJJ/DKUpAjcYbaa08Y24VKDZgRcvaMk4Xp3x1
-bOTk96XEtzCXyQU5uQ9EBJL8PyRO1kAVp5xeUGVNiqT4TKEFd95YWrTrrQa/Z8/w
-UDBToWopSQZJjXIBB5xIbxyIdNB1yXAaOKdSjmja/cIqiNYn1pzog0nJBOwANsxj
-YRYqsbzHbmLNuoeCBVX9CoSBVOlpFw==
-=Rxn1
------END PGP SIGNATURE-----
+> > +  steps:
+> > +    description: Number of steps in a full turnaround of the encoder.
+>
+> Muli-line strings should have either quotes around them, or a | or >
+> like you did for the description. | will keep the \n, > will make that
+> a single string.
+>
+> This should also have a type
+>
+> > +      Only relevant for absolute axis.
+>
+> This should be expressed through a if / then clause, or a dependencies one
+>
+> >                                         Defaults to 24 which is a typical
+> > +      value for such devices.
+>
+> This should be expressed through a default property.
+>
 
---C7zPtVaVf+AK4Oqc--
+The devil is in the details and yet quite lot of them to fix.
+
+Thanks.
+
+> > +  relative-axis:
+> > +    description: Register a relative axis rather than an absolute one.
+> > +    type: boolean
+> > +
+> > +  rollover:
+> > +    description: Automatic rollover when the rotary value becomes greater
+> > +      than the specified steps or smaller than 0. For absolute axis only.
+> > +    type: boolean
+>
+> Same story than steps for the dependency. Also, what is is the
+> behaviour when this property isn't set?
+>
+
+OK, if rollover isn't set then the count is unbounded, of course this
+shall be described here.
+
+> > +  poll-interval:
+> > +    description: Poll interval at which the position is read from the counter
+> > +      device (default 500ms).
+>
+> It should have a type too, and a default property
+>
+> > +
+> > +required:
+> > +  - compatible
+> > +  - counter
+> > +  - qdec-mode
+> > +
+> > +examples:
+> > +  - |
+> > +    rotary@0 {
+> > +        compatible = "rotary-encoder-counter";
+>
+> A unit-address (the part after @) only makes sense for a node if
+> there's a matching reg property in the node. This will trigger a DTC
+> warning, so you should remove the @0
+>
+
+Ok I'll fix it then.
+
+Thanks again.
+
+> Maxime
+
+
+
+--
+Kamel Bouhara, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
