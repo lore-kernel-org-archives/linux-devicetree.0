@@ -2,286 +2,170 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B22DC2BA80
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 14:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D144FC2BB55
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 14:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB4DC20747
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 14:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 983F82078A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 14:22:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="ZXx1i4nN"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="wdop+Ryp";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="u7Ar+N/L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbgDGOKL (ORCPT
+        id S1729010AbgDGOWq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:10:11 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:40609 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728861AbgDGOKL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 10:10:11 -0400
-Received: by mail-vs1-f67.google.com with SMTP id w14so2252782vsf.7
-        for <devicetree@vger.kernel.org>; Tue, 07 Apr 2020 07:10:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=79+nDZOIuLbZa1VTI8selCuNZ0XnINqdR9GKi1iIKkc=;
-        b=ZXx1i4nNzmqsyK3v/Nwm4L+LlvTL7TDN6g03H79BMB/zO78o76UJYEWnQoJBCw6sSg
-         EfQvFQohi1GecvhFdwEVdL9/CFGhY/6OB8OegYOo9sjVEYCFWYjGdaSf3NpzQPxCINPn
-         XV5mc1CZEkPx1rM0oyMOXleDxfpnYCNRSZMkK81An1Sx3rLwTPXnQ+Rq3oD+YqLZA/5E
-         ExUQpEddgCRPE4FI4gGn8bO0XZFb0KmhMqNKQlKWwYaB0YDU0jBLhFlIdqBsFqzh9jBB
-         Irbx783Zm5pne5C0Cd6kfNVshlUZwG4uJXK/HKPJtR66ldf28iIjkQRp9n2OLjubtIS5
-         eSow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=79+nDZOIuLbZa1VTI8selCuNZ0XnINqdR9GKi1iIKkc=;
-        b=byVXAUTI+UKgZOocRXCf4eDmlJV0DVgz3Vz5670lyhyk2gLrw9M7GVrS2smQRpj14u
-         9+zqh6OGdJqN5e5Zgl5SVj+Ijzy/oj9/itCIzgKTld9vlh8KeSLkLXII/22Go/JtgtKS
-         rdCsVfLKdbc1KjB1s9vbL2sdDQACo4plXxqm8kGttYnEK01vputi9nLS8JsGJ+sGyhJo
-         pv+cNqygVYAn4WzOQh9g4DA0B1cqwcD11dBHq1eEtpg2LtXoUkvLAz/G6yGfR2CE77PA
-         UTZUTNTVh09J4q/nnhEIe3A2Swwj9fQkCCddJKsNVHy2bWB1acXjsdOnEesAAiTiy4hR
-         x0YQ==
-X-Gm-Message-State: AGi0PubwFsmnDk1Sn+233QNu3LkTzguEnfsQruLm/IPpoGG2DadLFju9
-        4A/m0qJff7YcQs7hjE4hz6NJ+/DzNkRY7WgmTH5jyA==
-X-Google-Smtp-Source: APiQypIFEOVcAbgdQZgWZ34s1xvjOFu+BBAukDayLct4eCO3UmJWQZwoxMaCFMsAFdAXxqi0hDH6qKqImsRL4bdZaIo=
-X-Received: by 2002:a67:f90e:: with SMTP id t14mr171963vsq.27.1586268608265;
- Tue, 07 Apr 2020 07:10:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200329220324.8785-1-daniel.lezcano@linaro.org> <20200329220324.8785-2-daniel.lezcano@linaro.org>
-In-Reply-To: <20200329220324.8785-2-daniel.lezcano@linaro.org>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Tue, 7 Apr 2020 19:39:56 +0530
-Message-ID: <CAHLCerMTcRo34jFkP+ZTt6BAwDPOQo9sf7Yws4Tja7_gikvvKQ@mail.gmail.com>
-Subject: Re: [PATCH 2/4] dt-bindings: thermal: Add the idle cooling device
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+        Tue, 7 Apr 2020 10:22:46 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:57187 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728776AbgDGOWq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 10:22:46 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id E14165800FB;
+        Tue,  7 Apr 2020 10:22:44 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 07 Apr 2020 10:22:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=WZZOGhHApCSV1L4UtRpjl8cMVms
+        LTISqTdlhGk83/tE=; b=wdop+RypTY1L95rFhllqkRhtWYgEAFYClfhAPgL7V8o
+        qMlLR5SE6GWLIa1ZSoQ79+Z0W44kt9OiHmZ3CvUvzPb9jnW8UTnki0vTUO07qO/M
+        IH6Du1/ArFs7vqpgdxcGBcasaf/y7tUY/Qy7R0LaqaiV+vdq3gWWG69cu1/Db2d2
+        tSYjGHL62GfQ854q3eGFOokJ2aVePEbHQyaKzerNy29ZfdIMewn63SjOEecLL7SC
+        keWTudwlRGyEJlyAtfcF1aiupSS+Bt6ZxO/lAXvD3cJrOSGcwc7fHwYCw97oo/XP
+        B09l3Pen7zFk/wx6bMLUR9LR0LM1186/fRdBfVdHAjg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=WZZOGh
+        HApCSV1L4UtRpjl8cMVmsLTISqTdlhGk83/tE=; b=u7Ar+N/LF2C6DeXvp3SLmb
+        v1Aty03403E8GzS/l7ZKt6hE1iFd1OjUSMadk8vZhO0FHQa5CTGzPnz2qMBxScGh
+        VM3E1KLQdyBaBxleBRWqGLabrDiHLEfgPjVNddjZEVwztIaWE4P5pY5cKXNJff1G
+        m4v7B7IbDgM7MLt99bro9rRdWjB2MqQrm0rgPulYrJ6qwW00bE6wZ8PNYhUPXcpA
+        NpZlR0RsXbdqFhNsP68Mf/Bl8eF9YLBED3W7NW8d0Dgna7s6UMubPnxtj7zz17PK
+        db20zhWWFiQbOMl2mISNojJH+Obdtsrx2/DuH48sMTHeAJRm9Yrwpn1QMT9SoKvA
+        ==
+X-ME-Sender: <xms:sIyMXlTiXSiRI3WvCdI1mm-Jzir6hQXM5vePtj5cXsapk4tU1rNmag>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehgdejgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
+    epuggvvhhitggvthhrvggvrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvse
+    gtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:sIyMXgXSx8_2lL0owyyT9Y357BIRf8xmDBvgz7I_14l90OfeLLKC5w>
+    <xmx:sIyMXhLRLGm4H2wIpXCkhFto8ChkzLs0j1QJICpClPHUiGd0LFxaYA>
+    <xmx:sIyMXo1pKdgnUJ6tomalMQBcN1-ucn-9h8KxFx-8TrBFAflFemlHRg>
+    <xmx:tIyMXlK4-tLy7Ok2qgPryQ3kFTA8t51d5wIiKn3KRdcyZJ25Z25gwQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0064F3280066;
+        Tue,  7 Apr 2020 10:22:39 -0400 (EDT)
+Date:   Tue, 7 Apr 2020 16:22:38 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH 2/3] Input: rotary-encoder-counter: add DT bindings
+Message-ID: <20200407142238.ik67isetbggn2rh3@gilmour.lan>
+References: <20200406155806.1295169-1-kamel.bouhara@bootlin.com>
+ <20200406155806.1295169-3-kamel.bouhara@bootlin.com>
+ <20200407094159.xtbhtsxorvs2g22c@gilmour.lan>
+ <20200407110339.GA1489441@kb-xps>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cmea35pc2hxci5l3"
+Content-Disposition: inline
+In-Reply-To: <20200407110339.GA1489441@kb-xps>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 3:37 AM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
+
+--cmea35pc2hxci5l3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Apr 07, 2020 at 01:03:39PM +0200, Kamel Bouhara wrote:
+> > On Mon, Apr 06, 2020 at 05:58:05PM +0200, Kamel Bouhara wrote:
+> > > Add dt binding for the counter variant of the rotary encoder driver.
+> > >
+> > > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> > > ---
+> > >  .../input/rotary-encoder-counter.yaml         | 67 +++++++++++++++++++
+> > >  1 file changed, 67 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> > > new file mode 100644
+> > > index 000000000000..a59f7c1faf0c
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> > > @@ -0,0 +1,67 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> >
+> > Bindings are usually used by other OS's, so you should consider
+> > putting it under a more permissive license, usually that would be GPL2
+> > and the BSD-2-Clause
 >
-> Some devices are not able to cool down by reducing their voltage /
-> frequency because it could be not available or the system does not
-> allow voltage scaling. In this configuration, it is not possible to
-> use this strategy and the idle injection cooling device can be used
-> instead.
+> Well to be honest I just looked into an existing binding and I guess
+> the wrong one :).
+
+Not the wrong ones, but the old ones :)
+
+It's painful to change a license on existing files, whereas it's
+pretty easy to mention it during review.
+
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/input/rotary-encoder-counter.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Rotary Encoder Counter
+> > > +
+> > > +maintainers:
+> > > +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
+> > > +
+> > > +description:
+> > > +  Registers a Rotary encoder connected through a counter device.
+> >
+> > You shouldn't really describe the action here, but more what the
+> > binding is about. The registration will not depend on the presence of
+> > the node following that binding, but rather on whether or not the OS
+> > that uses it has support for it.
+> >
 >
-> One idle cooling device is now present for the CPU as implemented by
-> the combination of the idle injection framework belonging to the power
-> capping framework and the thermal cooling device. The missing part is
-> the DT binding providing a way to describe how the cooling device will
-> work on the system.
->
-> A first iteration was done by making the cooling device to point to
-> the idle state. Unfortunately it does not make sense because it would
-> need to duplicate the idle state description for each CPU in order to
-> have a different phandle and make the thermal internal framework
-> happy.
->
-> It was proposed to add an cooling-cells to <3>, unfortunately the
-> thermal framework is expecting a value of <2> as stated by the
-> documentation and it is not possible from the cooling device generic
-> code to loop this third value to the back end cooling device.
->
-> Another proposal was to add a child 'thermal-idle' node as the SCMI
-> does. This approach allows to have a self-contained configuration for
-> the idle cooling device without colliding with the cpufreq cooling
-> device which is based on the CPU node. In addition, it allows to have
-> the cpufreq cooling device and the idle cooling device to co-exist
-> together as showed in the example.
+> Then shall it be better with just :
+> "A rotary encoder device using a generic counter interface." ?
 
-typo: shown
+The generic counter interface is a Linux-only stuff though, some other
+OS might want to implement something else. Something like "based on a
+counter"?
 
->
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  .../bindings/thermal/thermal-idle.yaml        | 145 ++++++++++++++++++
->  1 file changed, 145 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-idle.yaml
->
-> diff --git a/Documentation/devicetree/bindings/thermal/thermal-idle.yaml b/Documentation/devicetree/bindings/thermal/thermal-idle.yaml
-> new file mode 100644
-> index 000000000000..f9f59cfa3c36
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/thermal-idle.yaml
-> @@ -0,0 +1,145 @@
-> +# SPDX-License-Identifier: (GPL-2.0)
-> +# Copyright 2020 Linaro Ltd.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/thermal/thermal-idle.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Thermal idle cooling device binding
-> +
-> +maintainers:
-> +  - Daniel Lezcano <daniel.lezcano@linaro.org>
-> +
-> +description: |
-> +  The thermal idle cooling device allows the system to passively
-> +  mitigate the temperature on the device by injecting idle cycles,
-> +  forcing it to cool down.
-> +
-> +  This binding describes the thermal idle node.
-> +
-> +properties:
-> +   $nodename:
-> +     const: thermal-idle
-> +     description: |
-> +        A /thermal-idle node describes the idle cooling device properties to
-> +        cool down efficiently the attached thermal zone.
-> +
-> +   '#cooling-cells':
-> +      const: 2
-> +      description: |
-> +         Must be 2, in order to specify minimum and maximum cooling state used in
-> +         the cooling-maps reference. The first cell is the minimum cooling state
-> +         and the second cell is the maximum cooling state requested.
-> +
-> +   duration:
-> +      $ref: /schemas/types.yaml#/definitions/uint32
-> +      description: |
-> +         The idle duration in microsecond the device begins to cool down.
+Maxime
 
-s/begins to /should/?
+--cmea35pc2hxci5l3
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +
-> +   latency:
-> +      $ref: /schemas/types.yaml#/definitions/uint32
-> +      description: |
-> +         The exit latency constraint in microsecond for the injected
-> +         idle state for the device.
+-----BEGIN PGP SIGNATURE-----
 
-I haven't yet checked this entire series, but what does this property
-mean? Is it the latency constraint to apply when selecting an idle
-state from among all the states described to cpuidle?
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXoyMrgAKCRDj7w1vZxhR
+xaGoAP0Rk4zze3+M3tv+xBVv0PmMPLNoqDCmIQF259PcWDF2FQEAovMUQKsz/fRB
+40V3ClfoNka1Z3kbhlkiwiHDy75R/Q0=
+=HdTF
+-----END PGP SIGNATURE-----
 
-Shouldn't we just name the property exit-latency?
-
-> +
-> +required:
-> +  - '#cooling-cells'
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/thermal/thermal.h>
-> +
-> +    // Example: Combining idle cooling device on big CPUs with cpufreq cooling device
-> +    cpus {
-> +            #address-cells = <2>;
-> +            #size-cells = <0>;
-> +
-> +            /* ... */
-> +
-> +                 cpu_b0: cpu@100 {
-> +                         device_type = "cpu";
-> +                         compatible = "arm,cortex-a72";
-> +                         reg = <0x0 0x100>;
-> +                         enable-method = "psci";
-> +                         capacity-dmips-mhz = <1024>;
-> +                         dynamic-power-coefficient = <436>;
-> +                         #cooling-cells = <2>; /* min followed by max */
-> +                         cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
-> +                         idle-thermal {
-
-thermal-idle?
-
-> +                                 #cooling-cells = <2>;
-> +                                 duration = <10000>;
-> +                                 latency = <500>;
-> +                         };
-> +                };
-> +
-> +                cpu_b1: cpu@101 {
-> +                        device_type = "cpu";
-> +                        compatible = "arm,cortex-a72";
-> +                        reg = <0x0 0x101>;
-> +                        enable-method = "psci";
-> +                        capacity-dmips-mhz = <1024>;
-> +                        dynamic-power-coefficient = <436>;
-> +                        #cooling-cells = <2>; /* min followed by max */
-> +                        cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
-> +                        idle-thermal {
-
-thermal-idle?
-
-> +                                #cooling-cells = <2>;
-> +                                duration = <10000>;
-> +                                latency = <500>;
-> +                        };
-> +                 };
-> +
-> +          /* ... */
-> +
-> +    };
-> +
-> +    /* ... */
-> +
-> +    thermal_zones {
-> +         cpu_thermal: cpu {
-> +                polling-delay-passive = <100>;
-> +                polling-delay = <1000>;
-> +
-> +                /* ... */
-> +
-> +                trips {
-> +                        cpu_alert0: cpu_alert0 {
-> +                                    temperature = <65000>;
-> +                                    hysteresis = <2000>;
-> +                                    type = "passive";
-> +                        };
-> +
-> +                        cpu_alert1: cpu_alert1 {
-> +                                    temperature = <70000>;
-> +                                    hysteresis = <2000>;
-> +                                    type = "passive";
-> +                        };
-> +
-> +                        cpu_alert2: cpu_alert2 {
-> +                                    temperature = <75000>;
-> +                                    hysteresis = <2000>;
-> +                                    type = "passive";
-> +                        };
-> +
-> +                        cpu_crit: cpu_crit {
-> +                                    temperature = <95000>;
-> +                                    hysteresis = <2000>;
-> +                                    type = "critical";
-> +                        };
-> +                };
-> +
-> +                cooling-maps {
-> +                        map0 {
-> +                             trip = <&cpu_alert1>;
-> +                             cooling-device = <&{/cpus/cpu@100/idle-thermal} 0 15 >,
-> +                                              <&{/cpus/cpu@101/idle-thermal} 0 15>;
-> +                        };
-> +
-> +                        map1 {
-> +                             trip = <&cpu_alert2>;
-> +                             cooling-device =
-> +                                        <&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +                                        <&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +                       };
-> +                };
-> +          };
-> +    };
-> --
-> 2.17.1
->
+--cmea35pc2hxci5l3--
