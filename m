@@ -2,291 +2,340 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC892C2BA16
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 07:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F264C2BA16
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 07:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83B922064A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 07:26:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="pdtL2UMT"
+	by mail.kernel.org (Postfix) with ESMTP id 32C5B2072A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 07:32:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbgDGH0y (ORCPT
+        id S1726707AbgDGHc2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 03:26:54 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:3010 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726767AbgDGH0y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 03:26:54 -0400
-Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0377Ou7t020387;
-        Tue, 7 Apr 2020 03:26:32 -0400
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2103.outbound.protection.outlook.com [104.47.70.103])
-        by mx0b-00128a01.pphosted.com with ESMTP id 3079ubee29-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 03:26:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NwyL1cCoYODcl9tHDMK0CaFI1qxQGY4rkSorK5hjCKJBINPT5Mm3ufax/e9npLZxGZwTZiTnut+6faCsRVHToatNaPVcWYiQliQLo58UaiR4GTKK4QOKMcSYkKX2dj9IIR9b9JKnbHVnyx5FcKPVPdvxC+xqEFiwG4Ovzhv7vC5UTRmUZaWDTq6bEnm3kVSDjqRVOHkOcePjOj3+b2UL36uSRFuB0jEDekTBHFC5Ivh1gdkLxMnfhgWKInXRQviUi4fSQHMTHepMlktE8P6t3+y/KLm5FWaIPmfdBX4ccAPgcVIxCtf8qQs073yJyafQEJNeGaXwcevMxTrG4Dsk4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jj3kuZR67YoC7RQiafXFlhZu8aivOa7MQo5tisLqGj0=;
- b=HhI+1IfYTfecN0QUbAF33z04yoKZTmsk8nvd2u0Zd1S17WlzSRdjMeJzGhqLYL6RWEGExTTTyWCUHuPMcfHKRtzz/3MfY9Ir+gXvWR1k4gLOYJaMqqSuBBmPE6dkKkk0T2yIZRCYGDlEKQLxSaIp3M5MZRqC7EJjX0pQvWMlytqgfML0u0/oEaFDGBopSWAvoJrDMRqbTmT1J6JIUcNI+vtkF42xxHUAiTNf3Koo8rkCdcunnz0CaCBxrDkM4DQbk9PnNTdd2tZjZsG/Sz7dwB9X+jNcITCbowC/F5LpF7mZe+9EDV0jfXkw76y9YHIwXF3U7/pXAEgq1rb8floqew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jj3kuZR67YoC7RQiafXFlhZu8aivOa7MQo5tisLqGj0=;
- b=pdtL2UMTkD+gDkBwj4dFQYv0bkiPxnL74i+T1SosG7PP/hAioU9xfoGvD5obsft4bUy0vVunXHHzxOQN5y4wgHdrlrpTR2LlT2FnYwlXzHK0YxiGs+xIZ84rCt9Qtycxy92sSSMrZuPMzM2BrnWYm8aCMak4QS5eTPw3CJ078Os=
-Received: from BN6PR03MB3347.namprd03.prod.outlook.com (2603:10b6:405:3d::35)
- by BN6PR03MB3236.namprd03.prod.outlook.com (2603:10b6:405:42::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.17; Tue, 7 Apr
- 2020 07:26:30 +0000
-Received: from BN6PR03MB3347.namprd03.prod.outlook.com
- ([fe80::4097:be14:fb64:1979]) by BN6PR03MB3347.namprd03.prod.outlook.com
- ([fe80::4097:be14:fb64:1979%7]) with mapi id 15.20.2878.021; Tue, 7 Apr 2020
- 07:26:30 +0000
-From:   "Sa, Nuno" <Nuno.Sa@analog.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
+        Tue, 7 Apr 2020 03:32:28 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:63203 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726393AbgDGHc2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 03:32:28 -0400
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 07 Apr 2020 13:02:25 +0530
+Received: from c-rkambl-linux1.qualcomm.com ([10.242.50.190])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 07 Apr 2020 13:02:07 +0530
+Received: by c-rkambl-linux1.qualcomm.com (Postfix, from userid 2344811)
+        id 93F8F3A46; Tue,  7 Apr 2020 13:02:06 +0530 (IST)
+From:   Rajeshwari <rkambl@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>
-Subject: RE: [PATCH v4 5/6] iio: imu: Add support for adis16475
-Thread-Topic: [PATCH v4 5/6] iio: imu: Add support for adis16475
-Thread-Index: AQHWDCVkOfz1b8oGSEWNSpsmzzycs6hsRgOAgAD0LqA=
-Date:   Tue, 7 Apr 2020 07:26:30 +0000
-Message-ID: <BN6PR03MB33476ECFB3F8454CC6C67F0E99C30@BN6PR03MB3347.namprd03.prod.outlook.com>
-References: <20200406150846.878-1-nuno.sa@analog.com>
- <20200406150846.878-6-nuno.sa@analog.com>
- <CAHp75VeK8K0WHK3gDwyT3ZAaMaVdfZ5xVG94JY4O8fd2U0HEHg@mail.gmail.com>
-In-Reply-To: <CAHp75VeK8K0WHK3gDwyT3ZAaMaVdfZ5xVG94JY4O8fd2U0HEHg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
- =?utf-8?B?bk5jYm5OaFhHRndjR1JoZEdGY2NtOWhiV2x1WjF3d09XUTRORGxpTmkwek1t?=
- =?utf-8?B?UXpMVFJoTkRBdE9EVmxaUzAyWWpnMFltRXlPV1V6TldKY2JYTm5jMXh0YzJj?=
- =?utf-8?B?dE1UZ3laRGczTmpJdE56aGhNUzB4TVdWaExUaGhORFV0Wm1NM056YzBNakZt?=
- =?utf-8?B?WTJGbFhHRnRaUzEwWlhOMFhERTRNbVE0TnpZekxUYzRZVEV0TVRGbFlTMDRZ?=
- =?utf-8?B?VFExTFdaak56YzNOREl4Wm1OaFpXSnZaSGt1ZEhoMElpQnplajBpT0RBMU1p?=
- =?utf-8?B?SWdkRDBpTVRNeU16QTNNVGM1T0RreE1qWTBPREl4SWlCb1BTSkhVVUo2UldK?=
- =?utf-8?B?RGFESjJWR3gwYlc0MGNrRm9MMHAyZEZsUFVqUTlJaUJwWkQwaUlpQmliRDBp?=
- =?utf-8?B?TUNJZ1ltODlJakVpSUdOcFBTSmpRVUZCUVVWU1NGVXhVbE5TVlVaT1EyZFZR?=
- =?utf-8?B?VUZGYjBOQlFVRXhSR0ZtWVhKUmVsZEJaR1UyTWpGS1pYZFBOM294TjNKaVZX?=
- =?utf-8?B?dzNRVGQyVFVSQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCU0VG?=
- =?utf-8?B?QlFVRkVZVUZSUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJSVUZC?=
- =?utf-8?B?VVVGQ1FVRkJRVFYxUjBSWFFVRkJRVUZCUVVGQlFVRkJRVUZCUVVvMFFVRkJR?=
- =?utf-8?B?bWhCUjFGQllWRkNaa0ZJVFVGYVVVSnFRVWhWUVdOblFteEJSamhCWTBGQ2VV?=
- =?utf-8?B?RkhPRUZoWjBKc1FVZE5RV1JCUW5wQlJqaEJXbWRDYUVGSGQwRmpkMEpzUVVZ?=
- =?utf-8?B?NFFWcG5RblpCU0UxQllWRkNNRUZIYTBGa1owSnNRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkZRVUZCUVVGQlFVRkJRV2RCUVVG?=
- =?utf-8?B?QlFVRnVaMEZCUVVkRlFWcEJRbkJCUmpoQlkzZENiRUZIVFVGa1VVSjVRVWRW?=
- =?utf-8?B?UVZoM1FuZEJTRWxCWW5kQ2NVRkhWVUZaZDBJd1FVaE5RVmgzUWpCQlIydEJX?=
- =?utf-8?B?bEZDZVVGRVJVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCVVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVOQlFVRkJRVUZEWlVGQlFVRlpVVUpyUVVkclFWaDNRbnBCUjFWQldY?=
- =?utf-8?B?ZENNVUZJU1VGYVVVSm1RVWhCUVdOblFuWkJSMjlCV2xGQ2FrRklVVUZqZDBK?=
- =?utf-8?B?bVFVaFJRV0ZSUW14QlNFbEJUV2RCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFrRkJRVUZCUVVGQlFVRkpRVUZCUVVGQlFUMDlJaTgrUEM5dFpYUmhQZz09?=
-x-dg-rorf: true
-x-originating-ip: [2001:a61:2557:2e01:d4ab:ab:35c7:53e6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a026ae06-20d9-40f6-26cf-08d7dac4fdda
-x-ms-traffictypediagnostic: BN6PR03MB3236:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN6PR03MB32367D3FCB880CCCF853EF0499C30@BN6PR03MB3236.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 036614DD9C
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR03MB3347.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(396003)(366004)(376002)(136003)(346002)(39850400004)(86362001)(81166006)(5660300002)(33656002)(4326008)(186003)(8676002)(6506007)(6916009)(8936002)(7696005)(2906002)(71200400001)(53546011)(107886003)(81156014)(66556008)(64756008)(66476007)(66446008)(55016002)(52536014)(54906003)(316002)(66946007)(478600001)(9686003)(76116006);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: q6TzdYGpxBtuxvEjZS3KFO5/f0wqdz7BHGePc9atqHXjSongC2F7OfYdYLCvV2qhLyj/YDVL4fF4o6lOKocDrc7+CtYEs6gaHAMtU1Lpkqa+SQfzQha/hUddi4Qm/dqRu5BpuSQ1f1zwMsbCM0paHGoapqLP/B1QOjf5gGlqwDvDfHY1r/A4wg00Ouoj+gTJBl5mIltbrAKMfabBfcL73Sa00OOf0fybRU5tZye1SMitF3gsI+ew/GGk9o/9OCrD3aSaLy53bZssZD1uAoJgc+P2g2tLenbKRjY6VQ+S6EGN5TJx+gLk/h16EXOvXWd2/Y2d+m045bj1F0vioB3CB8Y0dOQeb6YMbbKVsLnxmBqJf6IT0fzPrWkonFphB5qRwTUgvE8JCOP6hdwY/yOVNT4+OuQh7hAeFEHFeDqOOJY0jlNdtXYkEubTp09vbkda
-x-ms-exchange-antispam-messagedata: KZwoNC71AoNRNDTDmKFepRZZXCaW3VXayL7UnM/tjTyMpEewz8MF4hlBWIFhNGH5gCPFTVBcS7rSq7lbJbNALd0wxcZ28DpPNZcR5phf4EAhxfJFzBVCoM6cfXXPIJXU8CJ4CjS44XjtdzgDpy87yIvCgz7mkK/EsaG/mTdeBLpKraXNGGIgnwJzNPSRn/JlbqLb+tZTO+zH+UH063g7RA==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a026ae06-20d9-40f6-26cf-08d7dac4fdda
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2020 07:26:30.0473
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3wZuu26UFJcbgaG0MniwFRNo/Xi24YuMjZhAP76dGIhhI1VgxldYCB2n3b/scazZejSVcMIDt2D2RHnITtH6HA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR03MB3236
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_01:2020-04-07,2020-04-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- bulkscore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
- impostorscore=0 clxscore=1015 mlxlogscore=999 mlxscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004070062
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sivaa@codeaurora.org,
+        sanm@codeaurora.org, Doug Anderson <dianders@chromium.org>,
+        Rajeshwari <rkambl@codeaurora.org>
+Subject: [PATCH v2] arm64: dts: qcom: sc7180: Changed polling mode in Thermal-zones node
+Date:   Tue,  7 Apr 2020 13:01:16 +0530
+Message-Id: <1586244677-14399-1-git-send-email-rkambl@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PiBGcm9tOiBBbmR5IFNoZXZjaGVua28gPGFuZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+DQo+IFNl
-bnQ6IE1vbnRhZywgNi4gQXByaWwgMjAyMCAxODoyMA0KPiBUbzogU2EsIE51bm8gPE51bm8uU2FA
-YW5hbG9nLmNvbT4NCj4gQ2M6IGxpbnV4LWlpbyA8bGludXgtaWlvQHZnZXIua2VybmVsLm9yZz47
-IGRldmljZXRyZWUNCj4gPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgSm9uYXRoYW4gQ2Ft
-ZXJvbiA8amljMjNAa2VybmVsLm9yZz47DQo+IEhhcnRtdXQgS25hYWNrIDxrbmFhY2suaEBnbXgu
-ZGU+OyBMYXJzLVBldGVyIENsYXVzZW4NCj4gPGxhcnNAbWV0YWZvby5kZT47IFBldGVyIE1lZXJ3
-YWxkLVN0YWRsZXIgPHBtZWVyd0BwbWVlcncubmV0PjsgUm9iDQo+IEhlcnJpbmcgPHJvYmgrZHRA
-a2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+Ow0KPiBBcmRl
-bGVhbiwgQWxleGFuZHJ1IDxhbGV4YW5kcnUuQXJkZWxlYW5AYW5hbG9nLmNvbT47IEhlbm5lcmlj
-aCwNCj4gTWljaGFlbCA8TWljaGFlbC5IZW5uZXJpY2hAYW5hbG9nLmNvbT4NCj4gU3ViamVjdDog
-UmU6IFtQQVRDSCB2NCA1LzZdIGlpbzogaW11OiBBZGQgc3VwcG9ydCBmb3IgYWRpczE2NDc1DQo+
-IA0KPiBPbiBNb24sIEFwciA2LCAyMDIwIGF0IDY6MTAgUE0gTnVubyBTw6EgPG51bm8uc2FAYW5h
-bG9nLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBTdXBwb3J0IEFESVMxNjQ3NSBhbmQgc2ltaWxhciBJ
-TVUgZGV2aWNlcy4gVGhlc2UgZGV2aWNlcyBhcmUNCj4gPiBhIHByZWNpc2lvbiwgbWluaWF0dXJl
-IE1FTVMgaW5lcnRpYWwgbWVhc3VyZW1lbnQgdW5pdCAoSU1VKSB0aGF0DQo+ID4gaW5jbHVkZXMg
-YSB0cmlheGlhbCBneXJvc2NvcGUgYW5kIGEgdHJpYXhpYWwgYWNjZWxlcm9tZXRlci4gRWFjaA0K
-PiA+IGluZXJ0aWFsIHNlbnNvciBjb21iaW5lcyB3aXRoIHNpZ25hbCBjb25kaXRpb25pbmcgdGhh
-dCBvcHRpbWl6ZXMNCj4gPiBkeW5hbWljIHBlcmZvcm1hbmNlLg0KPiA+DQo+ID4gVGhlIGRyaXZl
-ciBhZGRzIHN1cHBvcnQgZm9yIHRoZSBmb2xsb3dpbmcgZGV2aWNlczoNCj4gPiAgKiBhZGlzMTY0
-NzAsIGFkaXMxNjQ3NSwgYWRpczE2NDc3LCBhZGlzMTY0NjUsIGFkaXMxNjQ2NywgYWRpczE2NTAw
-LA0KPiA+ICAgIGFkaXMxNjUwNSwgYWRpczE2NTA3Lg0KPiANCj4gLi4uDQo+IA0KPiA+ICsgICAg
-ICAgaW50IGkgPSBBUlJBWV9TSVpFKGFkaXMxNjQ3NV8zZGJfZnJlcXMpOw0KPiA+ICsgICAgICAg
-aW50IHJldDsNCj4gDQo+ID4gKyAgICAgICB3aGlsZSAoLS1pKQ0KPiA+ICsgICAgICAgICAgICAg
-ICBpZiAoYWRpczE2NDc1XzNkYl9mcmVxc1tpXSA+PSBmaWx0ZXIpDQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgYnJlYWs7DQo+IA0KPiBOaXQ6IHBlcmhhcHMge30gdG8gYWRkLg0KPiANCkFj
-dHVhbGx5IHRob3VnaHQgYWJvdXQgdGhhdCBhbmQgcmVtb3ZlZCB0aGVtIGluIHRoZSBsYXN0IG1p
-bnV0ZS4gV2lsbCBhZGQgdGhlbSBhZ2Fpbi4uLg0KPiAuLi4NCj4gDQo+ID4gK2VudW0gYWRpczE2
-NDc1X3ZhcmlhbnQgew0KPiA+ICsgICAgICAgQURJUzE2NDcwLA0KPiA+ICsgICAgICAgQURJUzE2
-NDc1XzEsDQo+ID4gKyAgICAgICBBRElTMTY0NzVfMiwNCj4gPiArICAgICAgIEFESVMxNjQ3NV8z
-LA0KPiA+ICsgICAgICAgQURJUzE2NDc3XzEsDQo+ID4gKyAgICAgICBBRElTMTY0NzdfMiwNCj4g
-PiArICAgICAgIEFESVMxNjQ3N18zLA0KPiA+ICsgICAgICAgQURJUzE2NDY1XzEsDQo+ID4gKyAg
-ICAgICBBRElTMTY0NjVfMiwNCj4gPiArICAgICAgIEFESVMxNjQ2NV8zLA0KPiA+ICsgICAgICAg
-QURJUzE2NDY3XzEsDQo+ID4gKyAgICAgICBBRElTMTY0NjdfMiwNCj4gPiArICAgICAgIEFESVMx
-NjQ2N18zLA0KPiA+ICsgICAgICAgQURJUzE2NTAwLA0KPiA+ICsgICAgICAgQURJUzE2NTA1XzEs
-DQo+ID4gKyAgICAgICBBRElTMTY1MDVfMiwNCj4gPiArICAgICAgIEFESVMxNjUwNV8zLA0KPiA+
-ICsgICAgICAgQURJUzE2NTA3XzEsDQo+ID4gKyAgICAgICBBRElTMTY1MDdfMiwNCj4gPiArICAg
-ICAgIEFESVMxNjUwN18zLA0KPiANCj4gPiArDQo+IA0KPiBFeHRyYSBibGFuayBsaW5lLg0KPiAN
-Cg0KYWNrDQoNCj4gPiArfTsNCj4gDQo+IC4uLg0KPiANCj4gPiArc3RhdGljIHZvaWQgYWRpczE2
-NDc1X2J1cnN0MzJfY2hlY2soc3RydWN0IGFkaXMxNjQ3NSAqc3QpDQo+ID4gK3sNCj4gPiArICAg
-ICAgIGludCByZXQ7DQo+ID4gKyAgICAgICBzdHJ1Y3QgYWRpcyAqYWRpcyA9ICZzdC0+YWRpczsN
-Cj4gPiArDQo+ID4gKyAgICAgICBpZiAoIXN0LT5pbmZvLT5oYXNfYnVyc3QzMikNCj4gPiArICAg
-ICAgICAgICAgICAgcmV0dXJuOw0KPiA+ICsNCj4gPiArICAgICAgIGlmIChzdC0+bHNiX2ZsYWcg
-JiYgIXN0LT5idXJzdDMyKSB7DQo+ID4gKyAgICAgICAgICAgICAgIGNvbnN0IHUxNiBlbiA9IEFE
-SVMxNjUwMF9CVVJTVDMyKDEpOw0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAgcmV0ID0gX19h
-ZGlzX3VwZGF0ZV9iaXRzKCZzdC0+YWRpcywgQURJUzE2NDc1X1JFR19NU0dfQ1RSTCwNCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFESVMxNjUwMF9CVVJTVDMy
-X01BU0ssIGVuKTsNCj4gPiArICAgICAgICAgICAgICAgaWYgKHJldCkNCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICByZXR1cm47DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBzdC0+YnVy
-c3QzMiA9IHRydWU7DQo+IA0KPiArIEJsYW5rIGxpbmUuDQo+DQoNCkNhbiBhZGQgaXQuIEZvciBz
-b21lIHJlYXNvbiBJIGxpa2UgdG8gc2F2ZSBibGFuayBsaW5lcyB3aGVuIHRoZSBuZXh0IGxpbmVz
-IGFyZSBjb21tZW50cy4uLg0KDQo+ID4gKyAgICAgICAgICAgICAgIC8qDQo+ID4gKyAgICAgICAg
-ICAgICAgICAqIEluIDMyYml0IG1vZGUgd2UgbmVlZCBleHRyYSAyIGJ5dGVzIGZvciBhbGwgZ3ly
-bw0KPiANCj4gMzItYml0DQo+IA0KPiA+ICsgICAgICAgICAgICAgICAgKiBhbmQgYWNjZWwgY2hh
-bm5lbHMuDQo+ID4gKyAgICAgICAgICAgICAgICAqLw0KPiA+ICsgICAgICAgICAgICAgICBhZGlz
-LT5idXJzdF9leHRyYV9sZW4gPSA2ICogc2l6ZW9mKHUxNik7DQo+ID4gKyAgICAgICAgICAgICAg
-IGFkaXMtPnhmZXJbMV0ubGVuICs9IDYgKiBzaXplb2YodTE2KTsNCj4gPiArICAgICAgICAgICAg
-ICAgZGV2X2RiZygmYWRpcy0+c3BpLT5kZXYsICJFbmFibGUgYnVyc3QzMiBtb2RlLCB4ZmVyOiVk
-IiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBhZGlzLT54ZmVyWzFdLmxlbik7DQo+ID4g
-Kw0KPiA+ICsgICAgICAgfSBlbHNlIGlmICghc3QtPmxzYl9mbGFnICYmIHN0LT5idXJzdDMyKSB7
-DQo+ID4gKyAgICAgICAgICAgICAgIGNvbnN0IHUxNiBlbiA9IEFESVMxNjUwMF9CVVJTVDMyKDAp
-Ow0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAgcmV0ID0gX19hZGlzX3VwZGF0ZV9iaXRzKCZz
-dC0+YWRpcywgQURJUzE2NDc1X1JFR19NU0dfQ1RSTCwNCj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIEFESVMxNjUwMF9CVVJTVDMyX01BU0ssIGVuKTsNCj4gPiAr
-ICAgICAgICAgICAgICAgaWYgKHJldCkNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZXR1
-cm47DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBzdC0+YnVyc3QzMiA9IGZhbHNlOw0KPiAN
-Cj4gKyBCbGFuayBsaW5lDQo+IA0KPiA+ICsgICAgICAgICAgICAgICAvKiBSZW1vdmUgdGhlIGV4
-dHJhIGJpdHMgKi8NCj4gPiArICAgICAgICAgICAgICAgYWRpcy0+YnVyc3RfZXh0cmFfbGVuID0g
-MDsNCj4gPiArICAgICAgICAgICAgICAgYWRpcy0+eGZlclsxXS5sZW4gLT0gNiAqIHNpemVvZih1
-MTYpOw0KPiA+ICsgICAgICAgICAgICAgICBkZXZfZGJnKCZhZGlzLT5zcGktPmRldiwgIkRpc2Fi
-bGUgYnVyc3QzMiBtb2RlLCB4ZmVyOiVkXG4iLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-IGFkaXMtPnhmZXJbMV0ubGVuKTsNCj4gPiArICAgICAgIH0NCj4gPiArfQ0KPiANCj4gLi4uDQo+
-IA0KPiA+ICsgICAgICAgZm9yX2VhY2hfc2V0X2JpdChiaXQsIGluZGlvX2Rldi0+YWN0aXZlX3Nj
-YW5fbWFzaywNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgaW5kaW9fZGV2LT5tYXNrbGVu
-Z3RoKSB7DQo+IA0KPiBPbmUgbGluZT8NCj4gDQoNCkl0IGdvZXMgYmV5b25kIDgwIGNvbCBsaW1p
-dC4uLiBJIGtub3cgSSBjb3VsZCBpbml0aWFsaXplIHRoZXNlIHRvIHNvbWUgbG9jYWwgY29uc3Qg
-YnV0Li4uDQoNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmIChzdC0+bHNi
-X2ZsYWcgJiYgIXN0LT5pbmZvLT5oYXNfYnVyc3QzMikgew0KPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICB1MTYgdmFsID0gMDsNCj4gDQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnN0IHUzMiByZWcgPSBBRElTMTY0NzVfUkVH
-X1hfR1lST19MICsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAoYml0ICogNCk7DQo+IA0KPiBSZWR1bmRhbnQgcGFyZW50aGVzZXMuDQo+IA0KDQpE
-ZWZpbml0ZWx5Li4uDQogDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIGFkaXNfcmVhZF9yZWdfMTYoYWRpcywgcmVnLCAmdmFsKTsNCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgZGF0YVtpKytdID0gY3B1X3RvX2JlMTYodmFsKTsN
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0gZWxzZSB7DQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8qIGxvd2VyIG5vdCB1c2VkICovDQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRhdGFbaSsrXSA9IDA7
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9DQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgfQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGJyZWFrOw0KPiA+ICsg
-ICAgICAgICAgICAgICB9DQo+ID4gKyAgICAgICB9DQo+IA0KPiAuLi4NCj4gDQo+ID4gKyAgICAg
-ICAgICAgICAgIGlmIChzeW5jLT5zeW5jX21vZGUgPT0gQURJUzE2NDc1X1NZTkNfU0NBTEVEKSB7
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgdTE2IHVwX3NjYWxlOw0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIHUzMiBzY2FsZWRfb3V0X2ZyZXEgPSAwOw0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIC8qDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICogSWYgd2UgYXJl
-IGluIHNjYWxlZCBtb2RlLCB3ZSBtdXN0IGhhdmUgYW4gdXBfc2NhbGUuDQo+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICogSW4gc2NhbGVkIG1vZGUgdGhlIGFsbG93YWJsZSBpbnB1dCBjbG9j
-ayByYW5nZSBpcw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAqIDEgSHogdG8gMTI4IEh6
-LCBhbmQgdGhlIGFsbG93YWJsZSBvdXRwdXQgcmFuZ2UgaXMNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgKiAxOTAwIHRvIDIxMDAgSHouIEhlbmNlLCBhIHNjYWxlIG11c3QgYmUgZ2l2ZW4g
-dG8NCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgKiBnZXQgdGhlIGFsbG93YWJsZSBvdXRw
-dXQuDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICovDQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgZGV2aWNlX3Byb3BlcnR5X3JlYWRfdTMyKGRldiwgImFkaSxzY2FsZWQtb3V0cHV0
-LWh6IiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgJnNjYWxlZF9vdXRfZnJlcSk7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-IGlmIChzY2FsZWRfb3V0X2ZyZXEgPCAxOTAwIHx8IHNjYWxlZF9vdXRfZnJlcSA+IDIxMDApIHsN
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRldl9lcnIoZGV2LA0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiSW52YWxpZCB2YWx1ZToldSBm
-b3IgYWRpLHNjYWxlZC1vdXRwdXQtaHoiLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBzY2FsZWRfb3V0X2ZyZXEpOw0KPiANCj4gV2hlbiB0aGVyZSBpcyBubyBw
-cm9wZXJ0eSBvciBwcm9wZXJ0eSBoYXMgYSB2YWx1ZSAwIHRoaXMgbWVzc2FnZSBjYW4ndA0KPiB0
-ZWxsIHRoZSBkaWZmZXJlbmNlLg0KPiBQZXJoYXBzIHlvdSBoYXZlIHRvIGNoZWNrIHJldHVybiBj
-b2RlIGZyb20gZGV2aWNlX3Byb3BlcnR5X3JlYWRfdTMyKCkNCj4gY2FsbC4NCj4NCg0KV2VsbCwg
-SSB0aGluayB3ZSBkb24ndCByZWFsbHkgbmVlZCB0by4gSWYgdGhlIHN5bmMgbW9kZSBpcyBzY2Fs
-ZWQsIHRoZW4gdGhpcyBwcm9wZXJ0eSBpcyBtYW5kYXRvcnkNCihhbmQgdGhpcyBpcyBzdGF0ZWQg
-aW4gdGhlIGJpbmRpbmdzKS4gU28sIEkgZG9uJ3QgcmVhbGx5IGNhcmUgaWYgdGhlIHByb3BlcnR5
-IGlzIG5vdCB0aGVyZSBvciBpZiBpdCdzIGp1c3QNCmEgd3JvbmcgdmFsdWUuIFdlIHNob3VsZCBm
-YWlsIGVpdGhlciB3YXkgYW5kIEknbSBub3Qgc3VyZSBhbiBleHRyYSBpZiB3aXRoIHNvbWUgb3Ro
-ZXIgbWVzc2FnZSB3aWxsDQpnaXZlIHVzIHRoYXQgZXh0cmEgdmFsdWUuLi4NCg0KPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7DQo+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgfQ0KPiANCj4gPiArICAgICAgICAgICAgICAgfQ0KPiANCj4gLi4uDQo+
-IA0KPiA+ICsgICAgICAgLyoNCj4gPiArICAgICAgICAqIEl0IGlzIHBvc3NpYmxlIHRvIGNvbmZp
-Z3VyZSB0aGUgZGF0YSByZWFkeSBwb2xhcml0eS4gRnVydGhlcm1vcmUsIHdlDQo+ID4gKyAgICAg
-ICAgKiBuZWVkIHRvIHVwZGF0ZSB0aGUgYWRpcyBzdHJ1Y3QgaWYgd2Ugd2FudCBkYXRhIHJlYWR5
-IGFzIGFjdGl2ZSBsb3cuDQo+ID4gKyAgICAgICAgKi8NCj4gPiArICAgICAgIGlycV90eXBlID0g
-aXJxZF9nZXRfdHJpZ2dlcl90eXBlKGRlc2MpOw0KPiA+ICsgICAgICAgaWYgKGlycV90eXBlID09
-IElSUUZfVFJJR0dFUl9SSVNJTkcpIHsNCj4gPiArICAgICAgICAgICAgICAgcG9sYXJpdHkgPSAx
-Ow0KPiA+ICsgICAgICAgfSBlbHNlIGlmIChpcnFfdHlwZSA9PSBJUlFGX1RSSUdHRVJfRkFMTElO
-Rykgew0KPiA+ICsgICAgICAgICAgICAgICBwb2xhcml0eSA9IDA7DQo+ID4gKyAgICAgICAgICAg
-ICAgIHN0LT5hZGlzLmlycV9mbGFnID0gSVJRRl9UUklHR0VSX0ZBTExJTkc7DQo+ID4gKyAgICAg
-ICB9IGVsc2Ugew0KPiA+ICsgICAgICAgICAgICAgICBkZXZfZXJyKCZzcGktPmRldiwgIkludmFs
-aWQgaW50ZXJydXB0IHR5cGUgMHgleCBzcGVjaWZpZWRcbiIsDQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgaXJxX3R5cGUpOw0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsN
-Cj4gPiArICAgICAgIH0NCj4gDQo+IEhlcmUgaXMgdGhlIHByb2JsZW0uIFlvdSBnb3QgdHlwZSwg
-YnV0IHlvdSBjb21wYXJlIGl0IHRvIGZsYWdzLiBJdCdzDQo+IG5vdCBjb3JyZWN0Lg0KPiBBbHRo
-b3VnaCB2YWx1ZXMgYXJlIHRoZSBzYW1lLCB0aGUgbWVhbmluZyBpcyBkaWZmZXJlbnQuDQo+IA0K
-DQpIbW0sIHRoYW5rcyEgSG9uZXN0bHksIHRoaXMgd2FzIGNvcHkgcGFzdGUgZnJvbSBhZGlzMTY0
-ODAgYW5kIEkgbmV2ZXIgcmVhbGl6ZWQgdGhpcy4gSSB3aWxsDQp1c2UgSVJRX1RZUEVfRURHRV9S
-SVNJTkcgYW5kIElSUV9UWVBFX0VER0VfRkFMTElORy4gSSBndWVzcyB3ZSBuZWVkIGEgcGF0Y2gg
-Y2hhbmdpbmcgdGhpcw0KaW4gYWRpczE2NDgwLi4uDQoNClRoYW5rcywNCi0gTnVubyBTw6ENCg0K
-PiAtLQ0KPiBXaXRoIEJlc3QgUmVnYXJkcywNCj4gQW5keSBTaGV2Y2hlbmtvDQo=
+Changed polling-delay and polling-delay-passive to zero to disable
+polling mode of the framework as interrupts for tsens are already
+configured.
+
+Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 100 +++++++++++++++++------------------
+ 1 file changed, 50 insertions(+), 50 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 998f101..45a2b32 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -2011,8 +2011,8 @@
+ 
+ 	thermal-zones {
+ 		cpu0-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens0 1>;
+ 
+@@ -2059,8 +2059,8 @@
+ 		};
+ 
+ 		cpu1-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens0 2>;
+ 
+@@ -2107,8 +2107,8 @@
+ 		};
+ 
+ 		cpu2-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens0 3>;
+ 
+@@ -2155,8 +2155,8 @@
+ 		};
+ 
+ 		cpu3-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens0 4>;
+ 
+@@ -2203,8 +2203,8 @@
+ 		};
+ 
+ 		cpu4-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens0 5>;
+ 
+@@ -2251,8 +2251,8 @@
+ 		};
+ 
+ 		cpu5-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens0 6>;
+ 
+@@ -2299,8 +2299,8 @@
+ 		};
+ 
+ 		cpu6-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens0 9>;
+ 
+@@ -2339,8 +2339,8 @@
+ 		};
+ 
+ 		cpu7-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens0 10>;
+ 
+@@ -2379,8 +2379,8 @@
+ 		};
+ 
+ 		cpu8-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens0 11>;
+ 
+@@ -2419,8 +2419,8 @@
+ 		};
+ 
+ 		cpu9-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens0 12>;
+ 
+@@ -2459,8 +2459,8 @@
+ 		};
+ 
+ 		aoss0-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens0 0>;
+ 
+@@ -2480,8 +2480,8 @@
+ 		};
+ 
+ 		cpuss0-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens0 7>;
+ 
+@@ -2500,8 +2500,8 @@
+ 		};
+ 
+ 		cpuss1-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens0 8>;
+ 
+@@ -2520,8 +2520,8 @@
+ 		};
+ 
+ 		gpuss0-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens0 13>;
+ 
+@@ -2541,8 +2541,8 @@
+ 		};
+ 
+ 		gpuss1-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens0 14>;
+ 
+@@ -2562,8 +2562,8 @@
+ 		};
+ 
+ 		aoss1-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens1 0>;
+ 
+@@ -2583,8 +2583,8 @@
+ 		};
+ 
+ 		cwlan-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens1 1>;
+ 
+@@ -2604,8 +2604,8 @@
+ 		};
+ 
+ 		audio-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens1 2>;
+ 
+@@ -2625,8 +2625,8 @@
+ 		};
+ 
+ 		ddr-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens1 3>;
+ 
+@@ -2646,8 +2646,8 @@
+ 		};
+ 
+ 		q6-hvx-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens1 4>;
+ 
+@@ -2667,8 +2667,8 @@
+ 		};
+ 
+ 		camera-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens1 5>;
+ 
+@@ -2688,8 +2688,8 @@
+ 		};
+ 
+ 		mdm-core-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens1 6>;
+ 
+@@ -2709,8 +2709,8 @@
+ 		};
+ 
+ 		mdm-dsp-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens1 7>;
+ 
+@@ -2730,8 +2730,8 @@
+ 		};
+ 
+ 		npu-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens1 8>;
+ 
+@@ -2751,8 +2751,8 @@
+ 		};
+ 
+ 		video-thermal {
+-			polling-delay-passive = <250>;
+-			polling-delay = <1000>;
++			polling-delay-passive = <0>;
++			polling-delay = <0>;
+ 
+ 			thermal-sensors = <&tsens1 9>;
+ 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+of Code Aurora Forum, hosted by The Linux Foundation
+
