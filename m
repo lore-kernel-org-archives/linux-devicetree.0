@@ -2,160 +2,100 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0999C2BB54
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 09:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB383C2BB54
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 09:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C12EA206F7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 09:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B26032074B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 09:55:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mq8c88Cw"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vVcSsUsU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgDGJys (ORCPT
+        id S1728176AbgDGJzH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 05:54:48 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38009 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728129AbgDGJyr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 05:54:47 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c21so560616pfo.5;
-        Tue, 07 Apr 2020 02:54:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N/AY2Km8PifPy3imPl/lbUeSicPj3n0GEhu63na6IGc=;
-        b=mq8c88CwohX/PzApU3CJEIL4Br1RzZyfdp1Q5xfTJ4Jf2BuV4ucUtCQpgD4om80pxD
-         C+u65sLXlymg9hs2x2JDJLLqQ6fhv6SfHzwf1ShpbWcouhzLkESPy+2M52OGBiwfr6F6
-         MRHxBNegwSX6caxGmRMB980AGnXHVAV/YpUQIaNrzKUzL5oq2ymEouhmww08tmPwKYnp
-         p++Cbxty7rzsBIk3ZkEHOBxE7RtWjbLrJxhz+DVq+p9MG3/AD7mIqRTVGJp8ECIAbbgb
-         x24uWGK/YWtbUpWll0gSSdd7yFBEGAqRjalwIppPSbzcBgIMb3tBfsaRtuNlFJvB6N9i
-         CwBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N/AY2Km8PifPy3imPl/lbUeSicPj3n0GEhu63na6IGc=;
-        b=hJOk2YUQa/jj5nPRdTp1alQNLs2maSlNF4B0aoGtzC/3bXkaSXQ0TNZXG9YkCUuo4C
-         Ii8Hsn5QyXt8v44xmEpik8NdluQkA2qSzod3GQJFNB2mEfuIb9dJJFI5yH+9X/1q/RwY
-         xwWFtFW7e+Io7ZmVbyrThDOEMm+VulK87AJQ06wQNYs8k8acrFhL1gC7o5inLPP9vaai
-         QQQ32gL8UORmaiVxRMCfO2CPrKn1hvuoUiDYczAlv55+fOqtB9S3M4UTzUUMIsr+HZZh
-         XBJZS7JdRX0tBnfxccEpFTE2LbNkJweq1oa2MUkzLCJbPH3BH+aRZaPek9JpDqndN9Ap
-         9CJQ==
-X-Gm-Message-State: AGi0PuYLNMAQX360KLRizadPTEo228N2SFYD+9mY4KVCg0JDPwf6rOGI
-        Tyljr9FO+LLYOyBWpPQV37D7VjOEe2WryoG42wE=
-X-Google-Smtp-Source: APiQypLzFcLW1izEfD1Gb+eB1GF8vhCfXf5UMv1aM5bBnDH/j1JYmeUP01tlpra04BXAdf0a1ZuNNijmS3R6+ixBPvg=
-X-Received: by 2002:a63:7b1d:: with SMTP id w29mr1245672pgc.4.1586253286857;
- Tue, 07 Apr 2020 02:54:46 -0700 (PDT)
+        Tue, 7 Apr 2020 05:55:07 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:34144 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728177AbgDGJzH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 05:55:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586253306; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=82g7s3h7enEh+MnyvkTIef7YuXwt3pby8b9ZJPdxNEc=; b=vVcSsUsUPLHiI5YL3hcDFCJgeR2oydA3WQddJywRLogVhtOhgVme/pczj691Z8b6rveDQcJc
+ anE/QQ0LgwkMNVxgdepwmV423WuS23zYfPHQzGE6f4Wd4XxGmw2iFxL017SzZvMDreq5QnAT
+ 56SQwPLWVg49/d4V8AtXG/11Kvs=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8c4dec.7fe852937340-smtp-out-n04;
+ Tue, 07 Apr 2020 09:54:52 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E95CFC43636; Tue,  7 Apr 2020 09:54:50 +0000 (UTC)
+Received: from [192.168.0.6] (unknown [183.83.138.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C9E4AC433D2;
+        Tue,  7 Apr 2020 09:54:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C9E4AC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH V3 7/8] spi: spi-qcom-qspi: Add interconnect support
+To:     Mark Brown <broonie@kernel.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de,
+        mark.rutland@arm.com, robh+dt@kernel.org, georgi.djakov@linaro.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, mka@chromium.org,
+        dianders@chromium.org, evgreen@chromium.org
+References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
+ <1585652976-17481-8-git-send-email-akashast@codeaurora.org>
+ <20200331112352.GB4802@sirena.org.uk>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <f896d6e4-cc86-db46-a9b9-d7c98071b524@codeaurora.org>
+Date:   Tue, 7 Apr 2020 15:24:42 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200406150846.878-1-nuno.sa@analog.com> <20200406150846.878-6-nuno.sa@analog.com>
- <CAHp75VeK8K0WHK3gDwyT3ZAaMaVdfZ5xVG94JY4O8fd2U0HEHg@mail.gmail.com>
- <BN6PR03MB33476ECFB3F8454CC6C67F0E99C30@BN6PR03MB3347.namprd03.prod.outlook.com>
- <CAHp75VcOxjnNRetQxUR=8Z-WA=V6rzAFwCfhjNCmjQE3hgAEEA@mail.gmail.com> <BN6PR03MB33475380CFB1AD5B50026A6A99C30@BN6PR03MB3347.namprd03.prod.outlook.com>
-In-Reply-To: <BN6PR03MB33475380CFB1AD5B50026A6A99C30@BN6PR03MB3347.namprd03.prod.outlook.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 7 Apr 2020 12:54:39 +0300
-Message-ID: <CAHp75VeAOKXNU+FEYsXBZ65sM1AWxB2zA+LJ2diAxyiJPk60mQ@mail.gmail.com>
-Subject: Re: [PATCH v4 5/6] iio: imu: Add support for adis16475
-To:     "Sa, Nuno" <Nuno.Sa@analog.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200331112352.GB4802@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 12:26 PM Sa, Nuno <Nuno.Sa@analog.com> wrote:
+Hi Mark,
+
+On 3/31/2020 4:53 PM, Mark Brown wrote:
+> On Tue, Mar 31, 2020 at 04:39:35PM +0530, Akash Asthana wrote:
 >
-> > From: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Sent: Dienstag, 7. April 2020 11:19
-> > To: Sa, Nuno <Nuno.Sa@analog.com>
-> > Cc: linux-iio <linux-iio@vger.kernel.org>; devicetree
-> > <devicetree@vger.kernel.org>; Jonathan Cameron <jic23@kernel.org>;
-> > Hartmut Knaack <knaack.h@gmx.de>; Lars-Peter Clausen
-> > <lars@metafoo.de>; Peter Meerwald-Stadler <pmeerw@pmeerw.net>; Rob
-> > Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
-> > Ardelean, Alexandru <alexandru.Ardelean@analog.com>; Hennerich,
-> > Michael <Michael.Hennerich@analog.com>
-> > Subject: Re: [PATCH v4 5/6] iio: imu: Add support for adis16475
+>> +	/*
+>> +	 * Set BW quota for CPU as driver supports FIFO mode only.
+>> +	 * Assume peak bw as twice of avg bw.
+>> +	 */
+>> +	ctrl->avg_bw_cpu = Bps_to_icc(speed_hz);
+>> +	ctrl->peak_bw_cpu = Bps_to_icc(2 * speed_hz);
+> I thought you were going to factor this best guess handling of peak
+> bandwidth out into the core?
 
-...
+I can centralize this for SPI, I2C and UART  in Common driver(QUP 
+wrapper) but still for QSPI I have to keep this piece of code as is 
+because It is not child of QUP wrapper(it doesn't use common code).
 
-> > > > > +       for_each_set_bit(bit, indio_dev->active_scan_mask,
-> > > > > +                        indio_dev->masklength) {
-> > > >
-> > > > One line?
-> > > >
-> > >
-> > > It goes beyond 80 col limit... I know I could initialize these to some local
-> > const but...
-> >
-> > That's why question mark is there.
-> > Nonetheless, if it ~2-3 characters more, I would leave it on one line anyway.
-> >
-> > JFYI: readability has a priority over 80 limit.
-> >
->
-> Thanks! I would say it also depends on the maintainer (not sure)? Some are more
-> strict about checkpatch...
-> Btw, the line will have 84 if one liner...
+I am not sure whether I can move this " Assume peak_bw as twice of 
+avg_bw if nothing is mentioned explicitly" to ICC core because the 
+factor of 2 is chosen randomly by me.
 
-Let's leave it to maintainer then.
+Regards,
 
-> > > > > +       }
-
-...
-
-> > > > > +       irq_type = irqd_get_trigger_type(desc);
-> > > > > +       if (irq_type == IRQF_TRIGGER_RISING) {
-> >
-> > > > > +               polarity = 1;
-> >
-> > For the sake of consistency I would assign irq_flag here as well.
-> >
->
-> The library will do it by default, But that's me using "inside" info... or maybe if
-> I document that in patch 2 (the struct kernel docs) we would not really need to
-> assign it here?
-
-I see now. From my point of view the library here does an ill turn
-because it hides some details which driver needs to do anyway.
-I prefer explicit over implicit at least here.
-
-I would say okay, if there is no such code (like below) would be
-present in the driver.
-
-> > > > > +       } else if (irq_type == IRQF_TRIGGER_FALLING) {
-> > > > > +               polarity = 0;
-> > > > > +               st->adis.irq_flag = IRQF_TRIGGER_FALLING;
-> > > > > +       } else {
-> > > > > +               dev_err(&spi->dev, "Invalid interrupt type 0x%x specified\n",
-> > > > > +                       irq_type);
-> > > > > +               return -EINVAL;
-> > > > > +       }
-> > > >
-> > > > Here is the problem. You got type, but you compare it to flags. It's
-> > > > not correct.
-> > > > Although values are the same, the meaning is different.
-> > > >
-> > >
-> > > Hmm, thanks! Honestly, this was copy paste from adis16480 and I never
-> > realized this. I will
-> > > use IRQ_TYPE_EDGE_RISING and IRQ_TYPE_EDGE_FALLING.
+Akash
 
 -- 
-With Best Regards,
-Andy Shevchenko
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
