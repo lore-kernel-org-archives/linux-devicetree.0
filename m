@@ -2,171 +2,137 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED63C2BB54
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 00:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E15DEC2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 00:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A24C72078C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 00:05:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="px8ei+Fo"
+	by mail.kernel.org (Postfix) with ESMTP id B7A8E20768
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 00:07:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586218054;
+	bh=pPQAnpLJ6swHilZZiXwdXrhXTemHxz69XOukH7cla4c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AtmpnOyiY9MuPproQOoqiyHyVg1k+48deNuSSLAlyp28U83R2DQC0GXdIlzIxLPoP
+	 8aVtWDEH5UH4NmNA0QXSrIZX7TstCropqH6aYrSDwfjLdTjOIQ21+xCILjR9wtuU3G
+	 JpW1VsLqLQsWMk6cgvbtp0imXkaj5FGltiK377WQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbgDGAFU (ORCPT
+        id S1727421AbgDGAB4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:05:20 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:38668 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbgDGAFT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Apr 2020 20:05:19 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200407000517epoutp03b4c49303577cd7dd7a5943a0219a74d8~DYMqpzVbi1664716647epoutp03X
-        for <devicetree@vger.kernel.org>; Tue,  7 Apr 2020 00:05:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200407000517epoutp03b4c49303577cd7dd7a5943a0219a74d8~DYMqpzVbi1664716647epoutp03X
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1586217917;
-        bh=tzpVAjvJlF8U3nA9D3i9y31F8b3lBonoiViArwP4bx4=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=px8ei+FoCPnU65Ti1oxup/jdjpes6gtaNBmgoKqMeE6EDKKJZqopQCZLQ74yAiQzb
-         Qw01Qi3QCcMWz6hATMCpoEQJmj/f9J4Wr8274vWQtizMEka3JJshSGSSe4XV4Afji2
-         kXAoA0aTE880LIvVqb5twdRnGwPGO9mBEJInHMME=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200407000516epcas1p13492e8bfe704a21592fce4ec848aa09f~DYMpcECR11546015460epcas1p1M;
-        Tue,  7 Apr 2020 00:05:16 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.152]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 48x72b3fy1zMqYlr; Tue,  7 Apr
-        2020 00:05:11 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        78.0E.04402.7B3CB8E5; Tue,  7 Apr 2020 09:05:11 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200407000511epcas1p361a8982b0da2bc80b1b6e8cf9870093c~DYMkxoNIT1542515425epcas1p3e;
-        Tue,  7 Apr 2020 00:05:11 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200407000510epsmtrp2862d3043e81792698814e1636a048611~DYMkwdmjI0035300353epsmtrp2H;
-        Tue,  7 Apr 2020 00:05:10 +0000 (GMT)
-X-AuditID: b6c32a35-753ff70000001132-8f-5e8bc3b7ce85
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F4.11.04024.6B3CB8E5; Tue,  7 Apr 2020 09:05:10 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200407000510epsmtip1001cc24d264d29a611749eef3a386d57~DYMkLEa1f0424704247epsmtip1c;
-        Tue,  7 Apr 2020 00:05:10 +0000 (GMT)
-Subject: Re: [PATCH v3 2/8] PM / devfreq: Add generic imx bus scaling driver
-To:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Alexandre Bailon <abailon@baylibre.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Angus Ainslie <angus@akkea.ca>,
-        Martin Kepplinger <martink@posteo.de>,
-        Silvano di Ninno <silvano.dininno@nxp.com>,
-        linux-pm@vger.kernel.org, kernel@pengutronix.de, linux-imx@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <f091bc7a-c59b-ae05-2be8-2f654e03b61a@samsung.com>
-Date:   Tue, 7 Apr 2020 09:14:27 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Mon, 6 Apr 2020 20:01:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35662 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727635AbgDGAB4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:01:56 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA4DA20842;
+        Tue,  7 Apr 2020 00:01:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586217715;
+        bh=pPQAnpLJ6swHilZZiXwdXrhXTemHxz69XOukH7cla4c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PVUNp2ASOJKjj9mc7IOVx+44rWDUsXxTcVZvT2RlwLc6Zku/yJsiLJHz5gMaXbkuV
+         vVWlcefeRbCfpWbT33wYkMjhj9Sqt3Q90mVOIATtBRHaI2YKE2ubUTQ6OXNKwceunq
+         R5HnPnFuaYuKFKlQsbp3kD5YUgPh1SRfUGcCowVY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 03/32] ARM: dts: Fix dm814x Ethernet by changing to use rgmii-id mode
+Date:   Mon,  6 Apr 2020 20:01:21 -0400
+Message-Id: <20200407000151.16768-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200407000151.16768-1-sashal@kernel.org>
+References: <20200407000151.16768-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <af1fd3a339a37123ee36179efcb90600c1e0f746.1586174566.git.leonard.crestez@nxp.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Tf0wbZRj2612vV7LqWUA+mw3ZzX9gsrUrnR8G0ERmLg5jAwkhGouX9gIN
-        /ZVeuzgXA25DoYiubM1CdUBkbAWJ0lKg4BhZ6VRYYKKzI8JkERIXIiXYgQbF2HKo/Pe8z/s8
-        ed/n/fKRmNwvUZBGi4OzW1gTTaTgg+PZytyh8SadsvnOXrTQVg/Q+q1JgK58dxOgh54RDC0u
-        zAE01KpH7ZFpMfL3z+Ho4miAQD2eYRzdvt0nQVOnf5Ug3701MQosRsXItdmNoXhzBKCuuzMi
-        FPW5xSjetwjQzOQxNPeuj0CfTd8g0KWHHgzVj0YkyBXeItDfUT+OHgQzUFdnFEP+deaFfYzH
-        5QNMb1svYFZn6yXMx3UzONMRcDKBnkaCmY9eI5j+y7WMPxYSMR9tKZnN8XTmw2APYOKBTK3s
-        tZqCao41cPYszqK3GoyWqkL6eFnli5Wao0pVriofPUtnWVgzV0gXl2hzXzKaEkehs06wJmeC
-        0rI8Tx8uKrBbnQ4uq9rKOwppzmYw2fJth3jWzDstVYf0VvNzKqXyiCYhfLOmum2z3LYkfivY
-        HifqQBR3ASkJqTzYsf65yAVSSDkVAnD1wtpO8RuAN1eu40KxAeCZ8Px/ltBPGzuqUQAHB74B
-        QrEKYOjOX1hSlUqVwJXQZZDEadQpeG7q9LYDo2YkcME9K0o2CCoHjj2YJZL4MWo//OGPxW2D
-        jCqCQ+7kViSJU0/DQMveJJ1OlcOJwbM7ksfhROsSnpRIKR2c/LQ0SWNUBvxxqV0k4Kfg0Mon
-        WHIspEIk9G/0E0k9pIrhypflQphUuPx1UCJgBYzHRgkBn4LdExFC8DYAGBz7Viw01HCs6/z2
-        ahiVDb8YOSzQ++Hwn5eAMPdRGFv/QCyMksGG9+SC5AD8/v49kYCfhJ3vNxLnAO3dFca7K4F3
-        VwLv/8M6AN4DnuBsvLmK41U21e63DoDt75KjCYEL0yVhQJGA3iOrkDbp5GL2BH/SHAaQxOg0
-        maK5USeXGdiTb3N2a6XdaeL4MNAkTu3GFOl6a+LzWRyVKs0RtVqN8lRHNSoVnSHz3DXp5FQV
-        6+BqOM7G2f/1iUipog5oL5ZFX860th7LCU3nl57J3Lz6sx/vHjBUpBXdP/jLV8ZHzL/XLr9e
-        3ITKtPGBhsLUWHfKM7eupl3zRzL84tTOiha1Xo6kpXtibG6fEXOev7HWO5vpXm5RvHNWrrBZ
-        jyte1QVtr3ALzxfsk+V5wfAI6atdZefHr2e/McUfbN6icb6aVeVgdp79B1Zt3xFEBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTURiAO7t3d1dzeZ2aR0vLJUVS6qLgQCVFGJcKsgLREHXMm1pujl0/
-        sn40q6VOrQw0/Ghqqcwl4ab4kYnk/EBlyhSnZKk5M384I9QMUaupgf8e3vd5zvnzkpiglOtF
-        JsiSGYVMnCgkHPFGo9DneKMxJyqoOvMUmtSoAFru7wOoeqgLoKWC9xiyTo4D1FQkQWWdA1yk
-        rx/H0cs2A4F0BS04Ghys4yHTw3ke0n75yUUGq4WL1Ks1GFrM6wSoatTMQRZtPhct1lkBMveF
-        oPEMLYHeDnwk0KulAgyp2jp5SN2xTqANix5Hcw0eqOqNBUP6ZfqcN12g1gK6VlML6B9jKh5d
-        ojTjdLkhhTbosgn6s+UDQddXPqD1C80c+tl6EL1qdKefNugAvWjwCeXfdDwTyyQmpDKKwOAY
-        x3jNaph8hnu3oWyRUAILrgYOJKROwuaJXxw1cCQFVCuA5szW7YUnLDR3YWpA/mNXaDSyW44N
-        wLwnw4TdcaWuQFtzJbCzG3Ufrs32YHYJo0Z4cP57+far0wBWzCo3C4Lyh+1zY5vsTPnCkd/W
-        zZpPBcOm/Hcc+2845QcNL/bbx+5UGGyptHK2FBfYWzSD2xUHKgr2vb5uH2PUEbimGcK22AN+
-        minjbPEB2GQrxZ4D1+IddfGOpHhHUrwjKQe4DngyclYaJ2VFcpGMSQtgxVI2RRYXIEmSGsDm
-        zfgfbQbDldEdgCKB0Im/i5cTJeCKU9l0aQeAJCZ043vlZUcJ+LHi9HuMIilakZLIsB1gH4kL
-        PfjfZN0RAipOnMzcYRg5o/i/5ZAOXkpwOcAbL03Ll0dMFxKHz1abZo2HHt8oGwjPClsiHjWJ
-        YpRZEZE1fqFFB3NNU199e6/Z0p30lzIsFEflF5K0cmwqm7cn1yaJXIt3PtFjWrg6cZvbvvIn
-        kBgNk6zWSFwCllW7M/tLQrUmYDo/H45fqOiO1oSu7L11WuCxwFx03hgT4my8WOSPKVjxX5Cv
-        xMEvAwAA
-X-CMS-MailID: 20200407000511epcas1p361a8982b0da2bc80b1b6e8cf9870093c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200406120515epcas1p2331d9e8917c308ad7e2d005df4dd7420
-References: <cover.1586174566.git.leonard.crestez@nxp.com>
-        <CGME20200406120515epcas1p2331d9e8917c308ad7e2d005df4dd7420@epcas1p2.samsung.com>
-        <af1fd3a339a37123ee36179efcb90600c1e0f746.1586174566.git.leonard.crestez@nxp.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 4/6/20 9:03 PM, Leonard Crestez wrote:
-> Add initial support for dynamic frequency switching on pieces of the imx
-> interconnect fabric.
-> 
-> All this driver does is set a clk rate based on an opp table, it does
-> not map register areas.
-> 
-> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-> Tested-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-> ---
->  drivers/devfreq/Kconfig   |   8 +++
->  drivers/devfreq/Makefile  |   1 +
->  drivers/devfreq/imx-bus.c | 138 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 147 insertions(+)
->  create mode 100644 drivers/devfreq/imx-bus.c
-> 
+From: Tony Lindgren <tony@atomide.com>
 
-(snip)
+[ Upstream commit b46b2b7ba6e104d265ab705914859ec0db7a98c5 ]
 
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Commit cd28d1d6e52e ("net: phy: at803x: Disable phy delay for RGMII mode")
+caused a regression for dm814x boards where NFSroot would no longer work.
 
+Let's fix the issue by configuring "rgmii-id" mode as internal delays are
+needed that is no longer the case with "rgmii" mode.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/dm8148-evm.dts       | 4 ++--
+ arch/arm/boot/dts/dm8148-t410.dts      | 4 ++--
+ arch/arm/boot/dts/dra62x-j5eco-evm.dts | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/boot/dts/dm8148-evm.dts b/arch/arm/boot/dts/dm8148-evm.dts
+index 3931fb068ff09..91d1018ab75fc 100644
+--- a/arch/arm/boot/dts/dm8148-evm.dts
++++ b/arch/arm/boot/dts/dm8148-evm.dts
+@@ -24,12 +24,12 @@
+ 
+ &cpsw_emac0 {
+ 	phy-handle = <&ethphy0>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ };
+ 
+ &cpsw_emac1 {
+ 	phy-handle = <&ethphy1>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ };
+ 
+ &davinci_mdio {
+diff --git a/arch/arm/boot/dts/dm8148-t410.dts b/arch/arm/boot/dts/dm8148-t410.dts
+index 9e43d5ec0bb2f..79ccdd4470f4c 100644
+--- a/arch/arm/boot/dts/dm8148-t410.dts
++++ b/arch/arm/boot/dts/dm8148-t410.dts
+@@ -33,12 +33,12 @@
+ 
+ &cpsw_emac0 {
+ 	phy-handle = <&ethphy0>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ };
+ 
+ &cpsw_emac1 {
+ 	phy-handle = <&ethphy1>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ };
+ 
+ &davinci_mdio {
+diff --git a/arch/arm/boot/dts/dra62x-j5eco-evm.dts b/arch/arm/boot/dts/dra62x-j5eco-evm.dts
+index 861ab90a3f3aa..c16e183822bee 100644
+--- a/arch/arm/boot/dts/dra62x-j5eco-evm.dts
++++ b/arch/arm/boot/dts/dra62x-j5eco-evm.dts
+@@ -24,12 +24,12 @@
+ 
+ &cpsw_emac0 {
+ 	phy-handle = <&ethphy0>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ };
+ 
+ &cpsw_emac1 {
+ 	phy-handle = <&ethphy1>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ };
+ 
+ &davinci_mdio {
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.20.1
+
