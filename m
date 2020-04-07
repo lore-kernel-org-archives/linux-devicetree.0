@@ -2,219 +2,110 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC11C2BB54
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 11:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD29C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 11:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 515702078A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 11:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CE0620731
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 11:18:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbgDGLDo (ORCPT
+        id S1728427AbgDGLSx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 07:03:44 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:48821 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbgDGLDo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 07:03:44 -0400
-X-Originating-IP: 78.193.40.249
-Received: from kb-xps (unknown [78.193.40.249])
-        (Authenticated sender: kamel.bouhara@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id D5839FF819;
-        Tue,  7 Apr 2020 11:03:40 +0000 (UTC)
-Date:   Tue, 7 Apr 2020 13:03:39 +0200
-From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Tue, 7 Apr 2020 07:18:53 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46933 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbgDGLSx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 07:18:53 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jLmFf-0005po-L5; Tue, 07 Apr 2020 13:18:43 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jLmFe-0002q9-MB; Tue, 07 Apr 2020 13:18:42 +0200
+Date:   Tue, 7 Apr 2020 13:18:42 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     devicetree@vger.kernel.org, Paul Barker <pbarker@konsulko.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 2/3] Input: rotary-encoder-counter: add DT bindings
-Message-ID: <20200407110339.GA1489441@kb-xps>
-References: <20200406155806.1295169-1-kamel.bouhara@bootlin.com>
- <20200406155806.1295169-3-kamel.bouhara@bootlin.com>
- <20200407094159.xtbhtsxorvs2g22c@gilmour.lan>
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [RFC PATCH v2 2/6] dt-bindings: pwm: document the PWM no-flag
+Message-ID: <20200407111842.hp7mhrlsuesa74ep@pengutronix.de>
+References: <20200405192246.3741784-1-oleksandr.suvorov@toradex.com>
+ <20200405192246.3741784-3-oleksandr.suvorov@toradex.com>
+ <20200407061646.pcglaw43kfmrag6a@pengutronix.de>
+ <CAGgjyvH5nmnXH068QTNPKzsjocNXfEP_yh0HO=L-oGaqQdYRuA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200407094159.xtbhtsxorvs2g22c@gilmour.lan>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGgjyvH5nmnXH068QTNPKzsjocNXfEP_yh0HO=L-oGaqQdYRuA@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 11:41:59AM +0200, Maxime Ripard wrote:
-> Hi Kamel,
->
-
-Hi Maxime,
-
-> The prefix for device tree bindings is usually dt-bindings:
-> $framework: $title
->
-> So a title like "dt-bindings: input: Add a counter-based rotary
-> encoder binding" would be better.
->
-
-OK, to be fixed then.
-
-> On Mon, Apr 06, 2020 at 05:58:05PM +0200, Kamel Bouhara wrote:
-> > Add dt binding for the counter variant of the rotary encoder driver.
+On Tue, Apr 07, 2020 at 01:51:42PM +0300, Oleksandr Suvorov wrote:
+> On Tue, Apr 7, 2020 at 9:17 AM Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
 > >
-> > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> > ---
-> >  .../input/rotary-encoder-counter.yaml         | 67 +++++++++++++++++++
-> >  1 file changed, 67 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> > On Sun, Apr 05, 2020 at 10:22:42PM +0300, Oleksandr Suvorov wrote:
+> > > Add the description of PWM_NOFLAGS flag property.
+> > >
+> > > Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 > >
-> > diff --git a/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
-> > new file mode 100644
-> > index 000000000000..a59f7c1faf0c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
-> > @@ -0,0 +1,67 @@
-> > +# SPDX-License-Identifier: GPL-2.0
->
-> Bindings are usually used by other OS's, so you should consider
-> putting it under a more permissive license, usually that would be GPL2
-> and the BSD-2-Clause
->
+> > As I already wrote in reply to the v1 series I'd prefer a name for 0
+> > that explicitly handles normal polarity.
+> 
+> Uwe, AFAIU, there is no flag that forces normal polarity, the normal polarity
+> is the default state if there is no flag to invert the polarity is set.
 
-Well to be honest I just looked into an existing binding and I guess
-the wrong one :).
+Yes, that's the status quo.
 
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/input/rotary-encoder-counter.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Rotary Encoder Counter
-> > +
-> > +maintainers:
-> > +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
-> > +
-> > +description:
-> > +  Registers a Rotary encoder connected through a counter device.
->
-> You shouldn't really describe the action here, but more what the
-> binding is about. The registration will not depend on the presence of
-> the node following that binding, but rather on whether or not the OS
-> that uses it has support for it.
->
+> '0' value in the bit flags cell really means there are no flags set
+> for the PWM instance.
 
-Then shall it be better with just :
-"A rotary encoder device using a generic counter interface." ?
+For me the relevance of giving 0 a name is mostly for human consumption.
+Currently there is only a single flag encoded in the number in question.
+But as soon as we add another, say PWM_AUTOSTART we have the following
+possible settings:
 
-> > +properties:
-> > +  compatible:
-> > +    const: rotary-encoder-counter
-> > +
-> > +  counter:
-> > +    description: Phandle for the counter device providing rotary position.
->
-> This should have a type
->
-> > +  linux-axis:
-> > +    description: The input subsystem axis to map to this rotary encoder.
-> > +    type: boolean
-> > +
-> > +  qdec-mode:
-> > +    description: |
-> > +      Quadrature decoder function to set in the counter device.
-> > +      3: x1-PHA
-> > +      4: x1-PHB
-> > +      5: x2-PHA
-> > +      6: x2-PHB
-> > +      7: x4-PHA and PHB
->
-> That range (even though it's a bit odd) should be expressed through an
-> enum so that you can check that the values are actually within that
-> range.
->
+	PWM_NOFLAGS
+	PWM_POLARITY_INVERTED
+	PWM_AUTOSTART
+	PWM_POLARITY_INVERTED | PWM_AUTOSTART
 
-Indeed, that make sens to check it from the binding.
+Then for the first two a reader doesn't see if autostart is not in use
+because the dt author doesn't know this feature (e.g. because autostart
+is too new) or if they don't want autostart at all.
 
-Will fix it in v2.
+If however we had PWM_POLARITY_NORMAL and PWM_NO_AUTOSTART to complement
+PWM_POLARITY_INVERTED and PWM_AUTOSTART every flag's setting could be
+explicit and if there is a device tree that only has
 
-> > +  steps:
-> > +    description: Number of steps in a full turnaround of the encoder.
->
-> Muli-line strings should have either quotes around them, or a | or >
-> like you did for the description. | will keep the \n, > will make that
-> a single string.
->
-> This should also have a type
->
-> > +      Only relevant for absolute axis.
->
-> This should be expressed through a if / then clause, or a dependencies one
->
-> >                                         Defaults to 24 which is a typical
-> > +      value for such devices.
->
-> This should be expressed through a default property.
->
+	PWM_POLARITY_NORMAL
 
-The devil is in the details and yet quite lot of them to fix.
+it would be obvious that nobody thought enough about autostarting to
+explicitly mention it.
 
-Thanks.
+Best regards
+Uwe
 
-> > +  relative-axis:
-> > +    description: Register a relative axis rather than an absolute one.
-> > +    type: boolean
-> > +
-> > +  rollover:
-> > +    description: Automatic rollover when the rotary value becomes greater
-> > +      than the specified steps or smaller than 0. For absolute axis only.
-> > +    type: boolean
->
-> Same story than steps for the dependency. Also, what is is the
-> behaviour when this property isn't set?
->
-
-OK, if rollover isn't set then the count is unbounded, of course this
-shall be described here.
-
-> > +  poll-interval:
-> > +    description: Poll interval at which the position is read from the counter
-> > +      device (default 500ms).
->
-> It should have a type too, and a default property
->
-> > +
-> > +required:
-> > +  - compatible
-> > +  - counter
-> > +  - qdec-mode
-> > +
-> > +examples:
-> > +  - |
-> > +    rotary@0 {
-> > +        compatible = "rotary-encoder-counter";
->
-> A unit-address (the part after @) only makes sense for a node if
-> there's a matching reg property in the node. This will trigger a DTC
-> warning, so you should remove the @0
->
-
-Ok I'll fix it then.
-
-Thanks again.
-
-> Maxime
-
-
-
---
-Kamel Bouhara, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
