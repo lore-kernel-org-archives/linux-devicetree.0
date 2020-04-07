@@ -2,112 +2,144 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAAFC2BA1A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 16:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AA2C2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 16:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A26312076E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 16:38:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LZtSbL6m"
+	by mail.kernel.org (Postfix) with ESMTP id 1661520719
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 16:40:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgDGQiH (ORCPT
+        id S1726833AbgDGQk0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:38:07 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42465 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbgDGQiG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 12:38:06 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q19so4445935ljp.9;
-        Tue, 07 Apr 2020 09:38:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wJFq2XOe7RkgNC35l325ZwPjkblMAPqbWKh6AWFgEI0=;
-        b=LZtSbL6m49RtrXGKLs6ozpHCCZbdsGsKQFHI9bDe5IvhMKvsuEEobgcQcQhC+xgiYx
-         RXlUoeXJF7fOQUm/mxXaRyqAF97pTd4ZOqouJ87iVsazVMkNQ8+tfJCIcm8Ekw7P5szF
-         vVQvmXECwVU3ko/oKpjLx4Uu7sWBZlKAbRGB6UGttmr7RbNHhz74+a6S7O8B+6asnu89
-         JcMAQL6I2mpP7Q4+TFehmxU0eME9LFBO7J2mFbCHElMZjH/R3fwxIDRlqLbF/i9Km+6m
-         10ut7kt62Klk2PiMBkihw5YRC8NzXRjFs3M7NVqqBpByByJrUFGTOPcmWNkehvMnesDo
-         NVHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wJFq2XOe7RkgNC35l325ZwPjkblMAPqbWKh6AWFgEI0=;
-        b=gY3aRiViPVjyzaMDm8zxP5IQD70fE5EIJM5duL5+8tMG3dp8WemWhYq4qT7gIrP0gg
-         hjjK5zuitdMQLfZ6z21H3HNi9j2B2amqQdhNkmwGpvVVE46pLClSYGyLLpVZAUodY3Yk
-         tjKxU/pYKK3xM0n/R+PsKvgfFWrHf3cytB6oPdnCLoobzs7oZMKep3ZSowUlz6l5h6fS
-         5E6JOXcmXQwuOSewAMPzk2zvF+nwTwmzLoV5OSyNnC749nhWOuSkSwaXHWfrooSasKN8
-         A/WBNhyINOLUGcKNKx+0wv183o3s5e+4bFtuYV1G+CQnuZ3huIJGsg9uzycAAT82YNQi
-         F9XA==
-X-Gm-Message-State: AGi0Pubr6nMK4mg0kYAHlSS/WDrpiHhH3JP1YE0sho5lsdK+MBO0tmwb
-        F5QlyYIG3HygA933JbQG6Vcsn3i6
-X-Google-Smtp-Source: APiQypLRXTVLhUyQXvlFZhdg1KqTBz6jb+pJgadbyCplIwX4sPW1MzmAkLnY16yhAcVeTQdzNFdVbA==
-X-Received: by 2002:a2e:920b:: with SMTP id k11mr2345064ljg.46.1586277482811;
-        Tue, 07 Apr 2020 09:38:02 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id j13sm3854133lfb.19.2020.04.07.09.38.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 09:38:02 -0700 (PDT)
-Subject: Re: [PATCH v2 6/6] ARM: tegra_defconfig: Enable options useful for
- Nexus 7 and Acer A500
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        =?UTF-8?Q?Pedro_=c3=82ngelo?= <pangelo@void.io>,
-        Matt Merhar <mattmerhar@protonmail.com>,
-        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200406194110.21283-1-digetx@gmail.com>
- <20200406194110.21283-7-digetx@gmail.com> <20200407100829.GB1720957@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <70ad6fd6-9603-a114-2d0f-608110b68c0b@gmail.com>
-Date:   Tue, 7 Apr 2020 19:38:00 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 7 Apr 2020 12:40:26 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:52194 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727993AbgDGQk0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 12:40:26 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 0A114634C89;
+        Tue,  7 Apr 2020 19:39:17 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jLrFs-0002MN-3d; Tue, 07 Apr 2020 19:39:16 +0300
+Date:   Tue, 7 Apr 2020 19:39:16 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Maxime Ripard <maxime@cerno.tech>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
+Message-ID: <20200407163916.GL6127@valkosipuli.retiisi.org.uk>
+References: <20200331133346.372517-2-robert.foss@linaro.org>
+ <20200401080705.j4goeqcqhoswhx4u@gilmour.lan>
+ <CAG3jFyvUd08U9yNVPUD9Y=nd5Xpcx34GcHJRhtvAAycoq3qimg@mail.gmail.com>
+ <20200403232736.GA6127@valkosipuli.retiisi.org.uk>
+ <20200404093446.vuvwrhn5436h4d3s@gilmour.lan>
+ <20200406083506.GE6127@valkosipuli.retiisi.org.uk>
+ <20200407083647.4mocdl7aqa3x737q@gilmour.lan>
+ <CAG3jFyvd32pWppubMoOoyH9eO2XLjwUXMC7p4xtv8m+JkPv6vw@mail.gmail.com>
+ <20200407123232.ktvaifhqntgzvkap@gilmour.lan>
+ <CAG3jFysSrZJRE2TvL0bWoRFNnscgDGj8yGr-iwWBm4=1wMbJ9A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200407100829.GB1720957@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG3jFysSrZJRE2TvL0bWoRFNnscgDGj8yGr-iwWBm4=1wMbJ9A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-07.04.2020 13:08, Thierry Reding пишет:
-> On Mon, Apr 06, 2020 at 10:41:10PM +0300, Dmitry Osipenko wrote:
->> Enable several drivers for hardware that is found on Nexus 7 and Acer A500
->> tablet devices. Please note that some drivers may require firmware files
->> extracted from original Android image.
->>
->> Link: https://github.com/digetx/linux-firmware
+On Tue, Apr 07, 2020 at 05:47:41PM +0200, Robert Foss wrote:
+> On Tue, 7 Apr 2020 at 14:32, Maxime Ripard <maxime@cerno.tech> wrote:
+> >
+> > Hi Robert,
+> >
+> > On Tue, Apr 07, 2020 at 01:29:05PM +0200, Robert Foss wrote:
+> > > On Tue, 7 Apr 2020 at 10:36, Maxime Ripard <maxime@cerno.tech> wrote:
+> > > > On Mon, Apr 06, 2020 at 11:35:07AM +0300, Sakari Ailus wrote:
+> > > > > > But that 19.2MHz is not a limitation of the device itself, it's a
+> > > > > > limitation of our implementation, so we can instead implement
+> > > > > > something equivalent in Linux using a clk_set_rate to 19.2MHz (to make
+> > > > > > sure that our parent clock is configured at the right rate) and the
+> > > > > > clk_get_rate and compare that to 19.2MHz (to make sure that it's not
+> > > > > > been rounded too far apart from the frequency we expect).
+> > > > > >
+> > > > > > This is doing exactly the same thing, except that we don't encode our
+> > > > > > implementation limitations in the DT, but in the driver instead.
+> > > > >
+> > > > > What I really wanted to say that a driver that doesn't get the clock
+> > > > > frequency from DT but still sets that frequency is broken.
+> > > > >
+> > > > > This frequency is highly system specific, and in many cases only a certain
+> > > > > frequency is usable, for a few reasons: On many SoCs, not all common
+> > > > > frequencies can be used (e.g. 9,6 MHz, 19,2 MHz and 24 MHz; while others
+> > > > > are being used as well), and then that frequency affects the usable CSI-2
+> > > > > bus frequencies directly --- and of those, only safe, known-good ones
+> > > > > should be used. IOW, getting the external clock frequency wrong typically
+> > > > > has an effect that that none of the known-good CSI-2 bus clock frequencies
+> > > > > are available.
+> > > >
+> > > > So clock-frequency is not about the "Frequency of the xvclk clock in
+> > > > Hertz", but the frequency at which that clock must run on this
+> > > > particular SoC / board to be functional?
+> > > >
+> > > > If so, then yeah, we should definitely keep it, but the documentation
+> > > > of the binding should be made clearer as well.
+> > >
+> > > Alright so, let me summarise the desired approach then.
+> >
+> > There's a separate discussion on the same topic here:
+> > https://lore.kernel.org/linux-media/20200407122106.GD4751@pendragon.ideasonboard.com/
 > 
-> What's the license for these files?
+> Thanks for the link.
+> 
+> >
+> > > ACPI:
+> > >   - Fetch the "clock-frequency" property
+> > >   - Verify it to be 19.2Mhz
+> > >
+> > > DT:
+> > >   - Fetch the "clock-frequency" property
+> > >   - Verify it to be 19.2Mhz
+> > >   - Get xvclk clock
+> > >   - Get xvclk clock rate
+> > >   - Verify xvclk clock rate to be 19.2Mhz
+> >
+> > The current status is that you should
+> > 's/clock-frequency/link-frequencies/', and in order to replace
+> > assigned-clock-rates, you'll want to have a clk_set_rate to 19.2MHz
+> > between steps 3 and 4
+> 
+> Would we want to 's/clock-frequency/link-frequencies/' for ACPI too?
+> I imagine that would cause some breakage.
 
-It's either GPL (like touchscreen config) or something else
-redistributeable.
+It would, yes, and it would be no more correct on DT either.
 
-> Can they be made available through the official linux-firmware repository?
+There are basically two possibilities here; either use the clock-frequency
+property and set the frequency, or rely on assigned-clock-rates, and get
+the frequency instead.
 
-Yes, but I don't know yet for sure whether it's really needed for all
-firmware files.
+The latter, while I understand it is generally preferred, comes with having
+to figure out the register list set that closest matches the frequency
+obtained. The former generally gets around this silently by the clock
+driver setting the closest frequency it can support.
 
-For example, the T30 Broadcom WiFi doesn't work using stock
-linux-firmware, it's on my to-do list to try to figure out why.
+-- 
+Regards,
 
-While Bluetooth FW seems to be reusable be many different devices,
-although (AFAIK) nobody cared to upstream it to the linux-firmware.
+Sakari Ailus
