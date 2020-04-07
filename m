@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBFBC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 23:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF1EC2D0EC
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 23:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 550E420730
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 23:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6753720747
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 23:59:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="p/LebaBQ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QTryjX/4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgDGX66 (ORCPT
+        id S1726436AbgDGX7K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 19:58:58 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12474 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbgDGX66 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 19:58:58 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8d138c0000>; Tue, 07 Apr 2020 16:58:04 -0700
+        Tue, 7 Apr 2020 19:59:10 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:18963 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgDGX7K (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 19:59:10 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e8d13660000>; Tue, 07 Apr 2020 16:57:26 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 Apr 2020 16:58:57 -0700
+  Tue, 07 Apr 2020 16:59:09 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 Apr 2020 16:58:57 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Apr
- 2020 23:58:56 +0000
-Received: from [10.2.171.175] (10.124.1.5) by DRHQMAIL107.nvidia.com
+        by hqpgpgate101.nvidia.com on Tue, 07 Apr 2020 16:59:09 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Apr
+ 2020 23:59:09 +0000
+Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
  (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Apr 2020
- 23:56:17 +0000
+ 23:59:06 +0000
 Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
@@ -62,30 +62,30 @@ References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
  <db7c7051-5674-cdb9-0aa4-ee94125b3024@gmail.com>
  <1a31cd60-739f-0660-1c45-31487d2f2128@nvidia.com>
  <603084a5-249a-4fe2-3646-e9335ef9ab43@nvidia.com>
-Message-ID: <14f1b643-a960-659d-dd0e-7d2d30245138@nvidia.com>
-Date:   Tue, 7 Apr 2020 16:56:08 -0700
+Message-ID: <7895b9c6-f27d-8939-73d7-67d785e1a8b7@nvidia.com>
+Date:   Tue, 7 Apr 2020 16:59:05 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
 In-Reply-To: <603084a5-249a-4fe2-3646-e9335ef9ab43@nvidia.com>
 X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
  DRHQMAIL107.nvidia.com (10.27.9.16)
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586303884; bh=WYYijVJNHfLwjTCH3gNwu8d4A+RLe1YduJ1izGmTGaY=;
+        t=1586303846; bh=WYYijVJNHfLwjTCH3gNwu8d4A+RLe1YduJ1izGmTGaY=;
         h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
          User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
          X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
          Content-Language;
-        b=p/LebaBQMGJPCGdjfyDgp97vjwd7RisFqjUVd463WMzUVU6jZarigNukoVuL+g7SA
-         vW7J1h649L1oQ2NI3VswYKMZ+ZUWX5RtvEcJc9Em2frx+IyWvAVJ85KdhprgmCBMMt
-         XQLILQUn8DkSnJDC05uBSTnRC6YL1EmZsT7ArRSZx0Ynw/7+KwaR9ddOlrUoC+Z02t
-         4pfoJQZKunn39y23h+2Zrwn5RE3KFPFpkg7Ybyna36xQhVKoUDlWZscaXs1RF7GaNl
-         KAG6MtLLZi9+O/3hWn9sYuWoyZcdM70NrG45BMRhy6brIyoTfl/nJ50HcZeO0uICFl
-         9CKkFzfJAZSjA==
+        b=QTryjX/4DzZcBR7r2dzqEABiLuL8yqfVvq8XgY+HKA5V9myvxFGyQdbQ4XR7GYWPj
+         9YjhGVivtPlmMIIkjrSlG6ZRH2wprYShM1H5XdS7lnAu/slYdToi54nxqiTS0TfA8T
+         i2usj8RrqrnTBoKRM6yBU94Bq8xRenvfjH8RWFUYduf4QRc3X0/KRPx3RB53Plwotl
+         AiO2q1ug5Ue9K+67ftjuxS2UIl8FI0p4Lxqub8tp1DW+8yNk6anhGukEzCJ+vhcfAE
+         MJbsfGtNTxno9SNaGd0Wr7Rw0I/CzSSHKolO0/VoY4MieJ6ucVfTYw6GUnuPWMnHAP
+         hNKEMGFx6Ndlw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
