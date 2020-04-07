@@ -2,114 +2,147 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0585CC2BB86
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 10:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 372B3C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 10:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBBBA20731
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 10:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F02C420731
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 10:50:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d8OuWtLi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b3CCYlyY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728389AbgDGKmT (ORCPT
+        id S1726687AbgDGKu6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:42:19 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:35925 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728362AbgDGKmS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 06:42:18 -0400
-Received: by mail-pj1-f68.google.com with SMTP id nu11so576246pjb.1;
-        Tue, 07 Apr 2020 03:42:18 -0700 (PDT)
+        Tue, 7 Apr 2020 06:50:58 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34728 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbgDGKu6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 06:50:58 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 65so3364426wrl.1;
+        Tue, 07 Apr 2020 03:50:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bzqwAdtYLxklcbi4bn5nRW3WLK1NuZfWMg1sbkIYXsg=;
-        b=d8OuWtLiXi07adgKhX0vDHo0HDoUXA5WsMgaLztYSFxXDcmZElyNE9Qy7gdt/hjfEi
-         28TdKiW/JkTQTCisP+VTlpjlRAxu30MzB/46cIsc6Q9TPiaOmdfmdngyIJfbTKT2wmgK
-         3iByKJc7ukrbZlClFzw3AN6uf9IRJn0Cl3cIK45oSgPpm3tDn2ufpH8k35MOpiH/bENE
-         8UdPf8lPh65rvPxeVeXaS8Ca/XBjdT4fJ/odZXz9LtSQoX7lPLQ+9VaJvGSmzOVx4cB+
-         TkQq8XSlaO4bB08UqpIe2HVn3bt7G5NgFW9b19KdrXfDkdSJHoMxPzIsKaCEBTnfE7ei
-         zbzQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=amPYgdlLGhWc+0ojfJPO8krsqf8U5xNGSa0wf2ccSKY=;
+        b=b3CCYlyY9xhzitc78hkXpZ1gIUYPF7KzBXSYpqojtuQupSJ6+DrUCxe8FH2jW/v9IN
+         mmiI0EKVYXfUpjcCJCdQQNOMPqu5X7PQNjy/shuujY7mh2l+wTUqkhsT1wnbBwqV/7E+
+         2PubsF6JiCerT5L4ZrKen1I3oa5MN5Po8xDFfWEQzk7HfYe4A78UGRVAZSKHV07lFmOq
+         qXU3LWk80e3OtZZyInEOoOsLmDd4mXCqpzziH2Fynm9CT52eVSCo2nDbJeyf4ymAwjXM
+         zFQ6O1js/IitR3+FIcnoYfKJ+9CAkcY/X41nNxYn4kfCU5y3PpD2LdtCu7hWgsx4Lr+3
+         jhzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bzqwAdtYLxklcbi4bn5nRW3WLK1NuZfWMg1sbkIYXsg=;
-        b=rxALRLj2UWybCJho8Ha+Qw95D7j8e6IdSGtJlbNSnh/RG355B0o7jz4Hs9vIpS2sCZ
-         jJdCVRm2o4OBgCpMJzIS5MvZre24f+26pH7+413pI7twUEUgfSbySssrNxxyit7CXIUd
-         C2pvOfIJMen99ASrJFS81dbK1PjBVrUudSITDHc5tYydJdRNScTTcdjeyEAmnI3ec3d2
-         nNbWQ1M40xqdQ5+fFvVu5xBc7OlrmEhS4D2UuiNcOOFdi4fk7DGC/9NLfbheODuNIo65
-         Dbh/RvKfCSTvmgb/VuSHq2aE/2MUdkHBKGyVZ8uyD9LhiWigyhaJR9dX6EIIWu3XjzOb
-         i9qQ==
-X-Gm-Message-State: AGi0PuYQzz14zZdXj9PAsil8ciKsAMnCHmHm783ngL29wH7LMjvCEU97
-        HBhoh1kDm5PCnKDfslPv0HOThbx2fbASp47s3eI=
-X-Google-Smtp-Source: APiQypKCY6KcZDQToqX4Nu8arPCYMVSCWsGEwnkNm84wgwLYQRInlV9cAqzJlmLoXg1hlQUeNm2NKRuzzYInrxQR/zs=
-X-Received: by 2002:a17:90a:8546:: with SMTP id a6mr2050407pjw.8.1586256137543;
- Tue, 07 Apr 2020 03:42:17 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=amPYgdlLGhWc+0ojfJPO8krsqf8U5xNGSa0wf2ccSKY=;
+        b=Xgdn+8pVxDZX9Rls2CUbqKvTvsthfPs+blOqeVUTZ/JIJZZhBH94zIxVezcGGgWvnR
+         dy1+1hiPPIlePR9ixAxtgIDue0yTFh67rjKIG0VzrDkLiKk6YkhwadnjECgw8T7rwWx7
+         9+s+6jBDEcrfvw+H8vSIQ6eUmpQKh1ZsPETpz39f9qh71y9AU6WQL4tu1LiUkyAPryOn
+         FSXLO/Sz6Y2Z5yL7YUwGK6o8Hd108UFh4dZ99hmaHPMqaquYKmDhbdA/v3/6y9H3I0y0
+         DbJUMjQcno+q0aKzQF0o0PG9DCy5/5PRP95e6ys+fOwWWRo9XFp3ZbxSUfmyiBwQp+iv
+         5PHg==
+X-Gm-Message-State: AGi0Pua/Ss61Z7yED+Et7clEicPSZWkCl3IChCmztqnB7g0vMo3NY5UB
+        P32kdgJ60daGvEt4oPUGKq8=
+X-Google-Smtp-Source: APiQypK2b4OXIxuXoJyQ4fHa63DR9pfnOD8PvvRreqrLTWsZW8M6lrkz2Z8K3TIgliXbrE9X5C4YeQ==
+X-Received: by 2002:a5d:4d12:: with SMTP id z18mr2163780wrt.67.1586256655703;
+        Tue, 07 Apr 2020 03:50:55 -0700 (PDT)
+Received: from localhost (pD9E51D62.dip0.t-ipconnect.de. [217.229.29.98])
+        by smtp.gmail.com with ESMTPSA id n6sm1799380wmc.28.2020.04.07.03.50.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 03:50:54 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 12:50:53 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Pedro =?utf-8?Q?=C3=82ngelo?= <pangelo@void.io>,
+        Matt Merhar <mattmerhar@protonmail.com>,
+        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] ARM: tegra: Add device-tree for ASUS Google Nexus
+ 7
+Message-ID: <20200407105053.GD1720957@ulmo>
+References: <20200406194110.21283-1-digetx@gmail.com>
+ <20200406194110.21283-3-digetx@gmail.com>
 MIME-Version: 1.0
-References: <20200406150846.878-1-nuno.sa@analog.com> <20200406150846.878-6-nuno.sa@analog.com>
- <CAHp75VeK8K0WHK3gDwyT3ZAaMaVdfZ5xVG94JY4O8fd2U0HEHg@mail.gmail.com>
- <BN6PR03MB33476ECFB3F8454CC6C67F0E99C30@BN6PR03MB3347.namprd03.prod.outlook.com>
- <CAHp75VcOxjnNRetQxUR=8Z-WA=V6rzAFwCfhjNCmjQE3hgAEEA@mail.gmail.com>
- <BN6PR03MB33475380CFB1AD5B50026A6A99C30@BN6PR03MB3347.namprd03.prod.outlook.com>
- <CAHp75VeAOKXNU+FEYsXBZ65sM1AWxB2zA+LJ2diAxyiJPk60mQ@mail.gmail.com> <BN6PR03MB3347A09B7760F6F34086303899C30@BN6PR03MB3347.namprd03.prod.outlook.com>
-In-Reply-To: <BN6PR03MB3347A09B7760F6F34086303899C30@BN6PR03MB3347.namprd03.prod.outlook.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 7 Apr 2020 13:42:10 +0300
-Message-ID: <CAHp75VdOnk7gbkmvR37O-4mLY1jV2A1qw_iX2roerqaq6PVAzg@mail.gmail.com>
-Subject: Re: [PATCH v4 5/6] iio: imu: Add support for adis16475
-To:     "Sa, Nuno" <Nuno.Sa@analog.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="P+33d92oIH25kiaB"
+Content-Disposition: inline
+In-Reply-To: <20200406194110.21283-3-digetx@gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 1:38 PM Sa, Nuno <Nuno.Sa@analog.com> wrote:
 
-> > > > > > > +       irq_type = irqd_get_trigger_type(desc);
+--P+33d92oIH25kiaB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > > > For the sake of consistency I would assign irq_flag here as well.
-> > > >
-> > >
-> > > The library will do it by default, But that's me using "inside" info... or maybe
-> > if
-> > > I document that in patch 2 (the struct kernel docs) we would not really
-> > need to
-> > > assign it here?
-> >
-> > I see now. From my point of view the library here does an ill turn
-> > because it hides some details which driver needs to do anyway.
-> > I prefer explicit over implicit at least here.
-> >
->
-> Let's explicitly assign the irq_flag then...
->
-> > I would say okay, if there is no such code (like below) would be
-> > present in the driver.
->
-> Now that I think about, this is actually code that, probably, could go inside the
-> library since this is pretty standard for this kind of devices. Anyways, that's
-> another story...
+On Mon, Apr 06, 2020 at 10:41:06PM +0300, Dmitry Osipenko wrote:
+[...]
+> diff --git a/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi b/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi
+[...]
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		linux,cma@80000000 {
+> +			compatible = "shared-dma-pool";
+> +			alloc-ranges = <0x80000000 0x30000000>;
+> +			size = <0x10000000>; /* 256MiB */
+> +			linux,cma-default;
+> +			reusable;
+> +		};
+> +
+> +		ramoops@bfdf0000 {
+> +			compatible = "ramoops";
+> +			reg = <0xbfdf0000 0x10000>;	/* 64kB */
+> +			console-size = <0x8000>;	/* 32kB */
+> +			record-size = <0x400>;		/*  1kB */
+> +			ecc-size = <16>;
+> +		};
+> +
+> +		trust_zone@bfe00000 {
 
-It would be awesome if you can do that!
-Yes, it probably will require a separate series.
+Given that this is trademarked as "TrustZone", perhaps drop the
+underscore?
 
--- 
-With Best Regards,
-Andy Shevchenko
+Other than that, the same comments as for the Acer tablet patch also
+apply here.
+
+Thierry
+
+--P+33d92oIH25kiaB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6MWw0ACgkQ3SOs138+
+s6GFUxAAjuO9EN/TXj4dinbIrLbtW7TMjcDyz79Bogtubyxa0vfYgHB14xoBe5tm
+xRsBWLwvJho9KUQZo2eo8prLaI1Wv2hZNy5T94OmmBRfT52Vfg+xLdRySwwDruft
+Shw9b0FPXFJQAuV4R2BcWav7nznEiB+1d/NVwa/Je4bexYWWjXlcdjWDsx5fpBhd
+SQaXl+P337dFW9xsoXSzM7Cxv9gMvZXxe61qgWTKCnTzkyvRZjPlnp61RgHaB60b
+R9X4h4Llu297J3Abz8xfniQPj2V2ivcm5G7uOIeAlJFDNht78Pirytg8X8G2c3Iv
+KGdz6NmV9yCkNSGjJ6gkQEH5BuI/dQbcmRkEw3CaD4hB2fWOvEfLqlSbplc/b3MT
+pY7z60pREG06H2VlqrFMVQH0JFLkFNVMAZzDkvxpE9y+hLLDUYVjvHXti1HOTIBW
+IJA+aiqaxiDDtghn4gp254d6n0Toq9knu3PIaKFf8ssv7VlrAFYUrScXnnXZfbG2
+Nhu7szpE0ejt1+LwJkKWybeIEuKP4WK1cVmyd9vNPSa+i6WBNAmfxtA7SZ22ZF3+
+nCZokOQ9js77AIIzz/WbtwG9miq6S2W1At7itN4IN2pt5B358kiXHdjk3y32k4Pz
+ZM2/ODOgdmAKILn8xfXqi1S1ITKlUYD62qu86RYDiWclgDIOLJU=
+=MqrP
+-----END PGP SIGNATURE-----
+
+--P+33d92oIH25kiaB--
