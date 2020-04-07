@@ -2,124 +2,88 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A2BC2D0EC
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 19:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3243CC2D0EC
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 19:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A913A20768
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 19:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFC9920768
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 19:39:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="M8VtUxkw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LM3rAhtT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgDGTGC (ORCPT
+        id S1726705AbgDGTjG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 15:06:02 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:14419 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbgDGTGB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 15:06:01 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8ccf0c0000>; Tue, 07 Apr 2020 12:05:48 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 07 Apr 2020 12:06:01 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 07 Apr 2020 12:06:01 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Apr
- 2020 19:06:00 +0000
-Received: from [10.2.171.175] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Apr 2020
- 19:05:59 +0000
+        Tue, 7 Apr 2020 15:39:06 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40492 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgDGTjG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 15:39:06 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 142so536039ljj.7;
+        Tue, 07 Apr 2020 12:39:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zLcAPrdHJTiOlU+Vohv35MeNqZnxV8vWIz+r7YmHilc=;
+        b=LM3rAhtTTjnkZ1iIh8WZemFvYAu0N5VIhOLI9ksG4cpplJmIO55BPNi4CqaJoiRHcm
+         ImpGasuoshNZJdpe5Ki+cTs6iyiN5l1rqVfhgcwLB11GtgoazdmRBYgsXQ2AVleCa8SN
+         P7XKhpUysj4j1KYsTzSnmWvMPBGPCuja8MKm8xR8SpM56HxiUVYvGDxgw6juSEqJ7q/i
+         pr7y7b2IRBkmr9iHJ8kX/rBYt5QpA4hA2j4iUXFOIwa195gcWI6Nw76siqZdWMlXb4CD
+         r5yFv2BOkbpn2XJuM17H6zNV3JtE5532XAlQovkoYHVqvRyptPDpFH4mgC6NnmNfpJK9
+         kD9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zLcAPrdHJTiOlU+Vohv35MeNqZnxV8vWIz+r7YmHilc=;
+        b=ITkpGE/uBLw3voBISnxIHOCdqNYbbM1Yn9mWh4PVnAzyhqJwKynrbS0l+f4B3vOyQH
+         8pEcxaJxqjTtT1rbLQYvoHJUhufOK/44w6OWjAvN6ARvcN+CLMc0aO9+MeOpQkCvtmOl
+         QrtCnRLjSmF9KFgJ0YXY+N5uDpDtsnYn2GIP418+sEPwQKOaHFAPnPAFAYV2Mcb5ZDQP
+         Czw03VR+SIF84J8vPct4Qv6IrHH/BttJzhUkxSLLe4tgjGNtANFaEfc8IBDNSWqbX6x6
+         Jx65cerUSJL6qq0L7v75vqSg/zYrUXlFHY5+mmxvEMJ4nWrEnynSUACRHuWnqvVk/Sru
+         mY0A==
+X-Gm-Message-State: AGi0PubfUP+hN9FTpRX0rGk5NSrfI4Rtg6EiOmeBkeiaT+dz2N2g/w8V
+        tRCPaZV02SWOgpmLAwdiMFDk5jTd
+X-Google-Smtp-Source: APiQypIGjUsAGDXlzydI9bWO6M0/Yuew5+4My4ojzFTz6EdfIqkgZW9wbFZMtjvZN5qigbULI1yT7A==
+X-Received: by 2002:a2e:3c0b:: with SMTP id j11mr2803432lja.9.1586288343010;
+        Tue, 07 Apr 2020 12:39:03 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id f26sm12187680lja.102.2020.04.07.12.39.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 12:39:02 -0700 (PDT)
 Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
  <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
- <40102767-ecdb-e958-66f4-45d11464069c@gmail.com>
- <b7b77258-6309-7ed2-489d-337cf273ba1e@nvidia.com>
- <6014fee9-ce97-7ced-f2ba-82176b8b36db@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <55ca95a0-41d9-a071-ab9d-08d26b3f8698@nvidia.com>
-Date:   Tue, 7 Apr 2020 12:05:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <430efa4e-5435-7e2a-fe07-c3a0d0dc967e@gmail.com>
+Date:   Tue, 7 Apr 2020 22:39:01 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <6014fee9-ce97-7ced-f2ba-82176b8b36db@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586286348; bh=7t/2hBzkGE2FuWGhPFMgSIueDjtcOTTLwFTzLicufH0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=M8VtUxkwY4lt7B0+68GJzxSBImPxb9H/gfjuA+dKsjvSpuoQavo9IR3cdWt2JMBrG
-         HKdD1OGl3acnmDWMe9ZPflMVWi9J8wsjbl6+KRBvFhQhUZeMbfWExwhyedr5bWJZvX
-         akWNxOPL2ufAyt/bybX4OMkPnA3okeZzehS6b0KfVR0FRJkk8wPXtw6AQ2JUGMvZzu
-         h1P8qm+PcfnTL+KvhW/inCEftVsuWkW0xsuhzH4wpmpYQQu+TcAw+HhVOktgMHBFj8
-         hKx62HbzhxQu2zL/zVFrabC/J1Suce7z3p6Z1lQ+oOF3C5dZMdRYM/H3/e+Oko7ccq
-         K/L2d7j1BudTA==
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+04.04.2020 04:25, Sowjanya Komatineni пишет:
+...
+> +static const struct dev_pm_ops tegra_vi_pm_ops = {
+> +	SET_RUNTIME_PM_OPS(vi_runtime_suspend, vi_runtime_resume, NULL)
+> +};
 
-On 4/6/20 9:11 AM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 06.04.2020 18:41, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 4/5/20 2:11 PM, Dmitry Osipenko wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> 04.04.2020 04:25, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> ...
->>>> +static int tegra_vi_tpg_channels_alloc(struct tegra_vi *vi)
->>>> +{
->>>> +     struct tegra_vi_channel *chan, *tmp;
->>>> +     unsigned int port_num;
->>>> +     unsigned int nchannels =3D vi->soc->vi_max_channels;
->>>> +     int ret =3D 0;
->>>> +
->>>> +     for (port_num =3D 0; port_num < nchannels; port_num++) {
->>>> +             /*
->>>> +              * Do not use devm_kzalloc as memory is freed immediatel=
-y
->>>> +              * when device instance is unbound but application
->>>> might still
->>>> +              * be holding the device node open. Channel memory
->>>> allocated
->>>> +              * with kzalloc is freed during video device release
->>>> callback.
->>>> +              */
->>>> +             chan =3D kzalloc(sizeof(*chan), GFP_KERNEL);
->>> Why anyone would want to unbind this driver in practice?
->>>
->>> I think it should make more sense to set suppress_bind_attrs=3Dtrue.
->>  From the previous feedback of patch series, we need to support
->> unbind/bind and looks like this driver should also support to built as a
->> module.
-> If module unloading is also affected, then perhaps you should use
-> get/put_device() to not allow freeing the resources until they're still
-> in-use.
->
-> I suppose that it should be up to the V4L core to keep the device alive
-> while needed, rather than to put the burden to the individual drivers.
-
-Hans/Thierry, Can you please comment on this?
-
+Aren't the suspend/resume ops needed?
