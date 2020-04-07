@@ -2,140 +2,109 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 014A1C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 15:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B08CC2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 15:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D232320692
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 15:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DFC02072A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 15:47:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qLfgk9Rc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbgDGPOK (ORCPT
+        id S1727221AbgDGPrm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:14:10 -0400
-Received: from mga07.intel.com ([134.134.136.100]:62686 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728306AbgDGPOK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:14:10 -0400
-IronPort-SDR: e2F3fvYjJzLzH/gvI6FziCJ69bveB9/Tpr2xBALz/6Cl0EtnUP0pmxPWnoVCEaCVja+Qu1W3fw
- NFAEfBDow0Uw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 08:14:08 -0700
-IronPort-SDR: 8ckQHmyoRKj0DtORzCgo/m3++m+vmgjbBLXTRWkuf7wtA3ynA8bzDDWhMm9y+5VxyZAfQLA732
- 8roctUPLzFZw==
-X-IronPort-AV: E=Sophos;i="5.72,355,1580803200"; 
-   d="scan'208";a="243790804"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 08:14:03 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 4C0FF205C7; Tue,  7 Apr 2020 18:14:01 +0300 (EEST)
-Date:   Tue, 7 Apr 2020 18:14:01 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency
- dt-property
-Message-ID: <20200407151401.GA5206@paasikivi.fi.intel.com>
-References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200406165108.GA7646@kekkonen.localdomain>
- <20200406173234.GD16885@pendragon.ideasonboard.com>
- <20200407062241.GA8883@kekkonen.localdomain>
- <20200407122106.GD4751@pendragon.ideasonboard.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407122106.GD4751@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 7 Apr 2020 11:47:42 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:52681 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726637AbgDGPrm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 11:47:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586274461; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=9T9i2bhqi3VLaEw0ff7UrAhvelqlEdAg6Xi/18D6Cic=; b=qLfgk9RcwFz2kRIn5bHqsgNj1bBlyMLFhNTGOYGWXy7ZwtzvCHvhNZXnvjcQJr3CCTsxsLTR
+ lgyX1f6lV3+Qk61HFjKfNqpOld8DAoxFCS9SSvtn1RKmp1TJaPu65SKyXPOmiB9UPVpWe/uo
+ YBvTxqiMaVNGYRvSJs6NWJMhNNs=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8ca095.7f2f4870f848-smtp-out-n02;
+ Tue, 07 Apr 2020 15:47:33 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0686EC4478F; Tue,  7 Apr 2020 15:47:32 +0000 (UTC)
+Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kgunda)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C1695C433F2;
+        Tue,  7 Apr 2020 15:47:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C1695C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
+From:   Kiran Gunda <kgunda@codeaurora.org>
+To:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, Kiran Gunda <kgunda@codeaurora.org>
+Subject: [PATCH V5 0/4] Add support for WLED5
+Date:   Tue,  7 Apr 2020 21:17:06 +0530
+Message-Id: <1586274430-28402-1-git-send-email-kgunda@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent,
+Currently, WLED driver supports only WLED4 peripherals that is present
+on pmi8998 and pm660L. This patch series  converts the existing WLED4
+bindings from .txt to .yaml format and adds the support for WLED5 peripheral
+that is present on PM8150L.
 
-On Tue, Apr 07, 2020 at 03:21:06PM +0300, Laurent Pinchart wrote:
-> Hi Sakari,
-> 
-> On Tue, Apr 07, 2020 at 09:22:41AM +0300, Sakari Ailus wrote:
-> > On Mon, Apr 06, 2020 at 08:32:34PM +0300, Laurent Pinchart wrote:
-> > > On Mon, Apr 06, 2020 at 07:51:08PM +0300, Sakari Ailus wrote:
-> > > > On Mon, Apr 06, 2020 at 05:42:38PM +0100, Lad Prabhakar wrote:
-> > > > > Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
-> > > > > as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
-> > > > > 24MHz. So instead making clock-frequency as dt-property just let the
-> > > > > driver enforce the required clock frequency.
-> > > > 
-> > > > Even if some current systems where the driver is used are using 24 MHz
-> > > > clock, that doesn't mean there wouldn't be systems using another frequency
-> > > > that the driver does not support right now.
-> > > > 
-> > > > The driver really should not set the frequency unless it gets it from DT,
-> > > > but I think the preferred means is to use assigned-clock-rates instead, and
-> > > > not to involve the driver with setting the frequency.
-> > > > 
-> > > > Otherwise we'll make it impossible to support other frequencies, at least
-> > > > without more or less random defaults.
-> > > 
-> > > We're running in circles here.
-> > > 
-> > > As the driver only supports 24MHz at the moment, the frequency should be
-> > > set by the driver, as it's a driver limitation. We can then work on
-> > > supporting additional frequencies, which will require DT to provide a
-> > > list of supported frequencies for the system, but that can be done on
-> > > top.
-> > 
-> > I guess it would be possible to use different external clock frequencies on
-> > a sensor in a given system but that seems to be a bit far fetched, to the
-> > extent I've never seen anyone doing that in practice.
-> > 
-> > Originally, the driver set the frequency based on the clock-frequency
-> > property. If we're removing that but use a fixed frequency instead, then
-> > how is that going to work going forward when someone adds support for other
-> > frequencies in the driver and has a system requiring that, while there are
-> > some other platforms relying on the driver setting a particular frequency?
-> 
-> The standard property for this is link-frequencies, not clock-frequency.
-> Deprecating clock-frequency now paves the way to use the standard
-> property later when/if someone implements support for additional
-> frequencies.
+PM8150L WLED supports the following.
+    - Two modulators and each sink can use any of the modulator
+    - Multiple CABC selection options
+    - Multiple brightness width selection (12 bits to 15 bits)
 
-The external clock frequency and link frequency are different indeed, but
-they are related. The link frequency has been selected in a way that it is
-possible to generate that exact frequency using the chosen external clock
-frequency. If you change the external clock frequency, chances are good
-there is no PLL configuration to generate that link frequency.
+Changes from V1:
+	- Rebased on top of the below commit.
+	  backlight: qcom-wled: Fix unsigned comparison to zero
 
-> 
-> > Although, if you're saying that this driver only needs to work with DT that
-> > comes with the kernel and you don't care about DT binary compatibility,
-> > this would be fine.
-> 
-> I believe this series to not break backward compatibility, as the driver
-> only works with a 24MHz clock, so I expect all DTs to specify that.
+Changes from V2:
+	- Addressed Bjorn's comments by splitting the WLED4 changes
+	  in a seperate patch.
+	- Added WLED5 auto calibration support
 
-What you're still doing here is defining the DT bindings based on the
-current driver implementation, not the device properties.
+Changes from V3:
+        - Addressed comments from Daniel Thompson and Rob Herring
+        - Seperated the WLED5 bindings from the driver changes
+        - Squashed wled5 auto string detection and wled5 basic changes
+          to avoid the NULL callback function pointer issue.
+
+Changes from V4:
+        - Addressed the yaml formatting comments from Rob Herring.
+        - Addressed the comments from Daniel Thompson on the below patch
+  	  "backlight: qcom-wled: Add callback functions"
+
+Kiran Gunda (3):
+  backlight: qcom-wled: convert the wled bindings to .yaml format
+  backlight: qcom-wled: Add callback functions
+  backlight: qcom-wled: Add WLED5 bindings
+
+Subbaraman Narayanamurthy (1):
+  backlight: qcom-wled: Add support for WLED5 peripheral that is present
+    on PM8150L PMICs
+
+ .../bindings/leds/backlight/qcom-wled.txt          | 154 -----
+ .../bindings/leds/backlight/qcom-wled.yaml         | 255 ++++++++
+ drivers/video/backlight/qcom-wled.c                | 659 ++++++++++++++++++---
+ 3 files changed, 841 insertions(+), 227 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
 
 -- 
-Regards,
-
-Sakari Ailus
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+ a Linux Foundation Collaborative Project
