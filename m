@@ -2,695 +2,249 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B30E4C2BA80
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 15:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A491C2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 16:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A102076E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 15:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B665D206C0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 16:21:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NK46ghbj"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="qbnRb6pY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgDGPsZ (ORCPT
+        id S1727028AbgDGQVH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:48:25 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:22659 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727221AbgDGPsZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 11:48:25 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586274504; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=nePdhfz2TGUgYiQX1ro2+R5vCq0XkAO0zVqF+1oFbM4=; b=NK46ghbj+1m9VufpCpi2K7lz/TevG0tbI8H1PZEWa7HJWy07pLOKM0eCUGgyJ/0J7lbAinyD
- KpfZ/X90QMyMB4in/RKxE8UKW12acvTaH8L6A4b1i+C5YpCBmt4M5msOcKuCnCbhcrcwodK3
- Ommp8Ot4hJXd4mMqF8jsrHj1GoI=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8ca0b4.7fd0ff146458-smtp-out-n05;
- Tue, 07 Apr 2020 15:48:04 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 96655C19433; Tue,  7 Apr 2020 15:48:02 +0000 (UTC)
-Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kgunda)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E84F5C4478F;
-        Tue,  7 Apr 2020 15:47:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E84F5C4478F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
-From:   Kiran Gunda <kgunda@codeaurora.org>
-To:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-fbdev@vger.kernel.org
-Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        Kiran Gunda <kgunda@codeaurora.org>
-Subject: [PATCH V5 4/4] backlight: qcom-wled: Add support for WLED5 peripheral that is present on PM8150L PMICs
-Date:   Tue,  7 Apr 2020 21:17:10 +0530
-Message-Id: <1586274430-28402-5-git-send-email-kgunda@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586274430-28402-1-git-send-email-kgunda@codeaurora.org>
-References: <1586274430-28402-1-git-send-email-kgunda@codeaurora.org>
+        Tue, 7 Apr 2020 12:21:07 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:43440 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbgDGQVH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 12:21:07 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id ECAE659E;
+        Tue,  7 Apr 2020 18:21:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586276463;
+        bh=9k/b210bXaKEO0jP41fWojcwSZNdDKVOFMT4jx7nUwQ=;
+        h=Reply-To:Subject:To:References:From:Date:In-Reply-To:From;
+        b=qbnRb6pYBIZS7TlG/84hivA/od637j1PGl9FswDR3DIvgKuIC60YeCh3IjKqEIeJc
+         y1olhG9pByPV/uac90EJnYtDfaSGqs+3K0wK8N0ag94KRilmfeXGquR8GFO0vhdRXu
+         6yPVNVvS4IhzGy3eExXFp109ws0f3MrD/R7b4kAY=
+Reply-To: kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH v5 4/9] media: adv748x: add definitions for audio output
+ related registers
+To:     Alex Riesen <alexander.riesen@cetitec.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <cover.1585852001.git.alexander.riesen@cetitec.com>
+ <26573ecdb48aa816f802b9d8bbe5f74157248021.1585852001.git.alexander.riesen@cetitec.com>
+From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
+ 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
+ WZw01QYHU/GUV/zHJSFk
+Organization: Ideas on Board
+Message-ID: <a0ff0a59-bd6e-044b-5669-679126c23323@ideasonboard.com>
+Date:   Tue, 7 Apr 2020 17:21:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+MIME-Version: 1.0
+In-Reply-To: <26573ecdb48aa816f802b9d8bbe5f74157248021.1585852001.git.alexander.riesen@cetitec.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Hi Alex,
 
-PM8150L WLED supports the following:
-    - Two modulators and each sink can use any of the modulator
-    - Multiple CABC selection options from which one can be selected/enabled
-    - Multiple brightness width selection (12 bits to 15 bits)
+On 02/04/2020 19:34, Alex Riesen wrote:
+> Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+> ---
+>  drivers/media/i2c/adv748x/adv748x.h | 32 +++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
+> index 0a9d78c2870b..1a1ea70086c6 100644
+> --- a/drivers/media/i2c/adv748x/adv748x.h
+> +++ b/drivers/media/i2c/adv748x/adv748x.h
+> @@ -226,6 +226,11 @@ struct adv748x_state {
+>  
+>  #define ADV748X_IO_VID_STD		0x05
+>  
+> +#define ADV748X_IO_PAD_CONTROLS		0x0e
+> +#define ADV748X_IO_PAD_CONTROLS_TRI_AUD	BIT(5)
+> +#define ADV748X_IO_PAD_CONTROLS_PDN_AUD	BIT(1)
+> +#define ADV748X_IO_PAD_CONTROLS1	0x1d
 
-Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
----
- drivers/video/backlight/qcom-wled.c | 443 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 442 insertions(+), 1 deletion(-)
+What is CONTROLS1 (1d) referenced from here?
 
-diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
-index a6ddaa9..3a57011 100644
---- a/drivers/video/backlight/qcom-wled.c
-+++ b/drivers/video/backlight/qcom-wled.c
-@@ -19,12 +19,15 @@
- #define WLED_DEFAULT_BRIGHTNESS				2048
- #define WLED_SOFT_START_DLY_US				10000
- #define WLED3_SINK_REG_BRIGHT_MAX			0xFFF
-+#define WLED5_SINK_REG_BRIGHT_MAX_12B			0xFFF
-+#define WLED5_SINK_REG_BRIGHT_MAX_15B			0x7FFF
- 
- /* WLED3/WLED4 control registers */
- #define WLED3_CTRL_REG_FAULT_STATUS			0x08
- #define  WLED3_CTRL_REG_ILIM_FAULT_BIT			BIT(0)
- #define  WLED3_CTRL_REG_OVP_FAULT_BIT			BIT(1)
- #define  WLED4_CTRL_REG_SC_FAULT_BIT			BIT(2)
-+#define  WLED5_CTRL_REG_OVP_PRE_ALARM_BIT		BIT(4)
- 
- #define WLED3_CTRL_REG_INT_RT_STS			0x10
- #define  WLED3_CTRL_REG_OVP_FAULT_STATUS		BIT(1)
-@@ -40,6 +43,7 @@
- 
- #define WLED3_CTRL_REG_OVP				0x4d
- #define  WLED3_CTRL_REG_OVP_MASK			GENMASK(1, 0)
-+#define  WLED5_CTRL_REG_OVP_MASK			GENMASK(3, 0)
- 
- #define WLED3_CTRL_REG_ILIMIT				0x4e
- #define  WLED3_CTRL_REG_ILIMIT_MASK			GENMASK(2, 0)
-@@ -101,6 +105,44 @@
- 
- #define WLED4_SINK_REG_BRIGHT(n)			(0x57 + (n * 0x10))
- 
-+/* WLED5 specific control registers */
-+#define WLED5_CTRL_REG_OVP_INT_CTL			0x5f
-+#define  WLED5_CTRL_REG_OVP_INT_TIMER_MASK		GENMASK(2, 0)
-+
-+/* WLED5 specific sink registers */
-+#define WLED5_SINK_REG_MOD_A_EN				0x50
-+#define WLED5_SINK_REG_MOD_B_EN				0x60
-+#define  WLED5_SINK_REG_MOD_EN_MASK			BIT(7)
-+
-+#define WLED5_SINK_REG_MOD_A_SRC_SEL			0x51
-+#define WLED5_SINK_REG_MOD_B_SRC_SEL			0x61
-+#define  WLED5_SINK_REG_MOD_SRC_SEL_HIGH		0
-+#define  WLED5_SINK_REG_MOD_SRC_SEL_EXT			0x03
-+#define  WLED5_SINK_REG_MOD_SRC_SEL_MASK		GENMASK(1, 0)
-+
-+#define WLED5_SINK_REG_MOD_A_BRIGHTNESS_WIDTH_SEL	0x52
-+#define WLED5_SINK_REG_MOD_B_BRIGHTNESS_WIDTH_SEL	0x62
-+#define  WLED5_SINK_REG_BRIGHTNESS_WIDTH_12B		0
-+#define  WLED5_SINK_REG_BRIGHTNESS_WIDTH_15B		1
-+
-+#define WLED5_SINK_REG_MOD_A_BRIGHTNESS_LSB		0x53
-+#define WLED5_SINK_REG_MOD_A_BRIGHTNESS_MSB		0x54
-+#define WLED5_SINK_REG_MOD_B_BRIGHTNESS_LSB		0x63
-+#define WLED5_SINK_REG_MOD_B_BRIGHTNESS_MSB		0x64
-+
-+#define WLED5_SINK_REG_MOD_SYNC_BIT			0x65
-+#define  WLED5_SINK_REG_SYNC_MOD_A_BIT			BIT(0)
-+#define  WLED5_SINK_REG_SYNC_MOD_B_BIT			BIT(1)
-+#define  WLED5_SINK_REG_SYNC_MASK			GENMASK(1, 0)
-+
-+/* WLED5 specific per-'string' registers below */
-+#define WLED5_SINK_REG_STR_FULL_SCALE_CURR(n)		(0x72 + (n * 0x10))
-+
-+#define WLED5_SINK_REG_STR_SRC_SEL(n)			(0x73 + (n * 0x10))
-+#define  WLED5_SINK_REG_SRC_SEL_MOD_A			0
-+#define  WLED5_SINK_REG_SRC_SEL_MOD_B			1
-+#define  WLED5_SINK_REG_SRC_SEL_MASK			GENMASK(1, 0)
-+
- struct wled_var_cfg {
- 	const u32 *values;
- 	u32 (*fn)(u32);
-@@ -125,6 +167,8 @@ struct wled_config {
- 	u32 num_strings;
- 	u32 string_i_limit;
- 	u32 enabled_strings[WLED_MAX_STRINGS];
-+	u32 mod_sel;
-+	u32 cabc_sel;
- 	bool cs_out_en;
- 	bool ext_gen;
- 	bool cabc;
-@@ -150,6 +194,7 @@ struct wled {
- 	u32 version;
- 	bool disabled_by_short;
- 	bool has_short_detect;
-+	bool cabc_disabled;
- 	int short_irq;
- 	int ovp_irq;
- 
-@@ -184,6 +229,27 @@ struct wled {
- 	bool (*wled_auto_detection_required)(struct wled *wled);
- };
- 
-+enum wled5_mod_sel {
-+	MOD_A,
-+	MOD_B,
-+	MOD_MAX,
-+};
-+
-+static const u8 wled5_brightness_reg[MOD_MAX] = {
-+	[MOD_A] = WLED5_SINK_REG_MOD_A_BRIGHTNESS_LSB,
-+	[MOD_B] = WLED5_SINK_REG_MOD_B_BRIGHTNESS_LSB,
-+};
-+
-+static const u8 wled5_src_sel_reg[MOD_MAX] = {
-+	[MOD_A] = WLED5_SINK_REG_MOD_A_SRC_SEL,
-+	[MOD_B] = WLED5_SINK_REG_MOD_B_SRC_SEL,
-+};
-+
-+static const u8 wled5_brt_wid_sel_reg[MOD_MAX] = {
-+	[MOD_A] = WLED5_SINK_REG_MOD_A_BRIGHTNESS_WIDTH_SEL,
-+	[MOD_B] = WLED5_SINK_REG_MOD_B_BRIGHTNESS_WIDTH_SEL,
-+};
-+
- static int wled3_set_brightness(struct wled *wled, u16 brightness)
- {
- 	int rc, i;
-@@ -225,6 +291,25 @@ static int wled4_set_brightness(struct wled *wled, u16 brightness)
- 	return 0;
- }
- 
-+static int wled5_set_brightness(struct wled *wled, u16 brightness)
-+{
-+	int rc, offset;
-+	u16 low_limit = wled->max_brightness * 1 / 1000;
-+	u8 v[2];
-+
-+	/* WLED5's lower limit is 0.1% */
-+	if (brightness < low_limit)
-+		brightness = low_limit;
-+
-+	v[0] = brightness & 0xff;
-+	v[1] = (brightness >> 8) & 0x7f;
-+
-+	offset = wled5_brightness_reg[wled->cfg.mod_sel];
-+	rc = regmap_bulk_write(wled->regmap, wled->sink_addr + offset,
-+			       v, 2);
-+	return rc;
-+}
-+
- static void wled_ovp_work(struct work_struct *work)
- {
- 	struct wled *wled = container_of(work,
-@@ -282,6 +367,24 @@ static int wled3_sync_toggle(struct wled *wled)
- 	return rc;
- }
- 
-+static int wled5_sync_toggle(struct wled *wled)
-+{
-+	int rc;
-+	u8 val;
-+
-+	val = (wled->cfg.mod_sel == MOD_A) ? WLED5_SINK_REG_SYNC_MOD_A_BIT :
-+					     WLED5_SINK_REG_SYNC_MOD_B_BIT;
-+	rc = regmap_update_bits(wled->regmap,
-+				wled->sink_addr + WLED5_SINK_REG_MOD_SYNC_BIT,
-+				WLED5_SINK_REG_SYNC_MASK, val);
-+	if (rc < 0)
-+		return rc;
-+
-+	return regmap_update_bits(wled->regmap,
-+				  wled->sink_addr + WLED5_SINK_REG_MOD_SYNC_BIT,
-+				  WLED5_SINK_REG_SYNC_MASK, 0);
-+}
-+
- static int wled4_ovp_fault_status(struct wled *wled, bool *fault_set)
- {
- 	int rc;
-@@ -317,11 +420,67 @@ static int wled4_ovp_fault_status(struct wled *wled, bool *fault_set)
- 	return rc;
- }
- 
-+static int wled5_ovp_fault_status(struct wled *wled, bool *fault_set)
-+{
-+	int rc;
-+	u32 int_rt_sts, fault_sts;
-+
-+	*fault_set = false;
-+	rc = regmap_read(wled->regmap,
-+			wled->ctrl_addr + WLED3_CTRL_REG_INT_RT_STS,
-+			&int_rt_sts);
-+	if (rc < 0) {
-+		dev_err(wled->dev, "Failed to read INT_RT_STS rc=%d\n", rc);
-+		return rc;
-+	}
-+
-+	rc = regmap_read(wled->regmap,
-+			wled->ctrl_addr + WLED3_CTRL_REG_FAULT_STATUS,
-+			&fault_sts);
-+	if (rc < 0) {
-+		dev_err(wled->dev, "Failed to read FAULT_STATUS rc=%d\n", rc);
-+		return rc;
-+	}
-+
-+	if (int_rt_sts & WLED3_CTRL_REG_OVP_FAULT_STATUS)
-+		*fault_set = true;
-+
-+	if (fault_sts & (WLED3_CTRL_REG_OVP_FAULT_BIT |
-+			       WLED5_CTRL_REG_OVP_PRE_ALARM_BIT))
-+		*fault_set = true;
-+
-+	if (*fault_set)
-+		dev_dbg(wled->dev, "WLED OVP fault detected, int_rt_sts=0x%x fault_sts=0x%x\n",
-+			int_rt_sts, fault_sts);
-+
-+	return rc;
-+}
-+
- static int wled4_ovp_delay(struct wled *wled)
- {
- 	return WLED_SOFT_START_DLY_US;
- }
- 
-+static int wled5_ovp_delay(struct wled *wled)
-+{
-+	int rc, delay_us;
-+	u32 val;
-+	u8 ovp_timer_ms[8] = {1, 2, 4, 8, 12, 16, 20, 24};
-+
-+	/* For WLED5, get the delay based on OVP timer */
-+	rc = regmap_read(wled->regmap, wled->ctrl_addr +
-+			 WLED5_CTRL_REG_OVP_INT_CTL, &val);
-+	if (rc < 0)
-+		delay_us =
-+		ovp_timer_ms[val & WLED5_CTRL_REG_OVP_INT_TIMER_MASK] * 1000;
-+	else
-+		delay_us = 2 * WLED_SOFT_START_DLY_US;
-+
-+	dev_dbg(wled->dev, "delay_time_us: %d\n", delay_us);
-+
-+	return delay_us;
-+}
-+
- static int wled_update_status(struct backlight_device *bl)
- {
- 	struct wled *wled = bl_get_data(bl);
-@@ -384,6 +543,29 @@ static int wled4_cabc_config(struct wled *wled, bool enable)
- 	return 0;
- }
- 
-+static int wled5_cabc_config(struct wled *wled, bool enable)
-+{
-+	int rc, offset;
-+	u8 reg;
-+
-+	if (wled->cabc_disabled)
-+		return 0;
-+
-+	reg = enable ? wled->cfg.cabc_sel : 0;
-+	offset = wled5_src_sel_reg[wled->cfg.mod_sel];
-+	rc = regmap_update_bits(wled->regmap, wled->sink_addr + offset,
-+				WLED5_SINK_REG_MOD_SRC_SEL_MASK, reg);
-+	if (rc < 0) {
-+		pr_err("Error in configuring CABC rc=%d\n", rc);
-+		return rc;
-+	}
-+
-+	if (!wled->cfg.cabc_sel)
-+		wled->cabc_disabled = true;
-+
-+	return 0;
-+}
-+
- #define WLED_SHORT_DLY_MS			20
- #define WLED_SHORT_CNT_MAX			5
- #define WLED_SHORT_RESET_CNT_DLY_US		USEC_PER_SEC
-@@ -615,6 +797,7 @@ static void wled_auto_string_detection(struct wled *wled)
- 
- #define WLED_AUTO_DETECT_OVP_COUNT		5
- #define WLED_AUTO_DETECT_CNT_DLY_US		USEC_PER_SEC
-+
- static bool wled4_auto_detection_required(struct wled *wled)
- {
- 	s64 elapsed_time_us;
-@@ -648,6 +831,46 @@ static bool wled4_auto_detection_required(struct wled *wled)
- 	return false;
- }
- 
-+static bool wled5_auto_detection_required(struct wled *wled)
-+{
-+	s64 elapsed_time_us;
-+
-+	if (!wled->cfg.auto_detection_enabled)
-+		return false;
-+
-+	/*
-+	 * Check if the OVP fault was an occasional one
-+	 * or if it's firing continuously, the latter qualifies
-+	 * for an auto-detection check.
-+	 */
-+	if (!wled->auto_detection_ovp_count) {
-+		wled->start_ovp_fault_time = ktime_get();
-+		wled->auto_detection_ovp_count++;
-+	} else {
-+		/*
-+		 * WLED5 has OVP fault density interrupt configuration i.e. to
-+		 * count the number of OVP alarms for a certain duration before
-+		 * triggering OVP fault interrupt. By default, number of OVP
-+		 * fault events counted before an interrupt is fired is 32 and
-+		 * the time interval is 12 ms. If we see more than one OVP fault
-+		 * interrupt, then that should qualify for a real OVP fault
-+		 * condition to run auto calibration algorithm.
-+		 */
-+
-+		if (wled->auto_detection_ovp_count > 1) {
-+			elapsed_time_us = ktime_us_delta(ktime_get(),
-+					wled->start_ovp_fault_time);
-+			wled->auto_detection_ovp_count = 0;
-+			dev_dbg(wled->dev, "Elapsed time: %lld us\n",
-+				elapsed_time_us);
-+			return true;
-+		}
-+		wled->auto_detection_ovp_count++;
-+	}
-+
-+	return false;
-+}
-+
- static int wled_auto_detection_at_init(struct wled *wled)
- {
- 	int rc;
-@@ -923,6 +1146,115 @@ static const struct wled_config wled4_config_defaults = {
- 	.auto_detection_enabled = false,
- };
- 
-+static int wled5_setup(struct wled *wled)
-+{
-+	int rc, temp, i, j;
-+	u8 sink_en = 0;
-+	u16 addr;
-+	u32 val;
-+
-+	rc = regmap_update_bits(wled->regmap,
-+				wled->ctrl_addr + WLED3_CTRL_REG_OVP,
-+				WLED5_CTRL_REG_OVP_MASK, wled->cfg.ovp);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = regmap_update_bits(wled->regmap,
-+				wled->ctrl_addr + WLED3_CTRL_REG_ILIMIT,
-+				WLED3_CTRL_REG_ILIMIT_MASK,
-+				wled->cfg.boost_i_limit);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = regmap_update_bits(wled->regmap,
-+				wled->ctrl_addr + WLED3_CTRL_REG_FREQ,
-+				WLED3_CTRL_REG_FREQ_MASK,
-+				wled->cfg.switch_freq);
-+	if (rc < 0)
-+		return rc;
-+
-+	/* Per sink/string configuration */
-+	for (i = 0; i < wled->cfg.num_strings; ++i) {
-+		j = wled->cfg.enabled_strings[i];
-+		addr = wled->sink_addr +
-+				WLED4_SINK_REG_STR_FULL_SCALE_CURR(j);
-+		rc = regmap_update_bits(wled->regmap, addr,
-+					WLED4_SINK_REG_STR_FULL_SCALE_CURR_MASK,
-+					wled->cfg.string_i_limit);
-+		if (rc < 0)
-+			return rc;
-+
-+		addr = wled->sink_addr + WLED5_SINK_REG_STR_SRC_SEL(j);
-+		rc = regmap_update_bits(wled->regmap, addr,
-+					WLED5_SINK_REG_SRC_SEL_MASK,
-+					wled->cfg.mod_sel == MOD_A ?
-+					WLED5_SINK_REG_SRC_SEL_MOD_A :
-+					WLED5_SINK_REG_SRC_SEL_MOD_B);
-+
-+		temp = j + WLED4_SINK_REG_CURR_SINK_SHFT;
-+		sink_en |= 1 << temp;
-+	}
-+
-+	rc = wled5_cabc_config(wled, wled->cfg.cabc_sel ? true : false);
-+	if (rc < 0)
-+		return rc;
-+
-+	/* Enable one of the modulators A or B based on mod_sel */
-+	addr = wled->sink_addr + WLED5_SINK_REG_MOD_A_EN;
-+	val = (wled->cfg.mod_sel == MOD_A) ? WLED5_SINK_REG_MOD_EN_MASK : 0;
-+	rc = regmap_update_bits(wled->regmap, addr,
-+				WLED5_SINK_REG_MOD_EN_MASK, val);
-+	if (rc < 0)
-+		return rc;
-+
-+	addr = wled->sink_addr + WLED5_SINK_REG_MOD_B_EN;
-+	val = (wled->cfg.mod_sel == MOD_B) ? WLED5_SINK_REG_MOD_EN_MASK : 0;
-+	rc = regmap_update_bits(wled->regmap, addr,
-+				WLED5_SINK_REG_MOD_EN_MASK, val);
-+	if (rc < 0)
-+		return rc;
-+
-+	addr = wled->sink_addr + wled5_brt_wid_sel_reg[wled->cfg.mod_sel];
-+	val = (wled->max_brightness == WLED5_SINK_REG_BRIGHT_MAX_15B) ?
-+		 WLED5_SINK_REG_BRIGHTNESS_WIDTH_15B :
-+		 WLED5_SINK_REG_BRIGHTNESS_WIDTH_12B;
-+	rc = regmap_write(wled->regmap, addr, val);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = regmap_update_bits(wled->regmap,
-+				wled->sink_addr + WLED4_SINK_REG_CURR_SINK,
-+				WLED4_SINK_REG_CURR_SINK_MASK, sink_en);
-+	if (rc < 0)
-+		return rc;
-+
-+	/* This updates only FSC configuration in WLED5 */
-+	rc = wled->wled_sync_toggle(wled);
-+	if (rc < 0) {
-+		pr_err("Failed to toggle sync reg rc:%d\n", rc);
-+		return rc;
-+	}
-+
-+	rc = wled_auto_detection_at_init(wled);
-+	if (rc < 0)
-+		return rc;
-+
-+	return 0;
-+}
-+
-+static const struct wled_config wled5_config_defaults = {
-+	.boost_i_limit = 5,
-+	.string_i_limit = 10,
-+	.ovp = 4,
-+	.num_strings = 4,
-+	.switch_freq = 11,
-+	.mod_sel = 0,
-+	.cabc_sel = 0,
-+	.cabc = false,
-+	.external_pfet = false,
-+	.auto_detection_enabled = false,
-+};
-+
- static const u32 wled3_boost_i_limit_values[] = {
- 	105, 385, 525, 805, 980, 1260, 1400, 1680,
- };
-@@ -941,6 +1273,16 @@ static const struct wled_var_cfg wled4_boost_i_limit_cfg = {
- 	.size = ARRAY_SIZE(wled4_boost_i_limit_values),
- };
- 
-+static inline u32 wled5_boost_i_limit_values_fn(u32 idx)
-+{
-+	return 525 + (idx * 175);
-+}
-+
-+static const struct wled_var_cfg wled5_boost_i_limit_cfg = {
-+	.fn = wled5_boost_i_limit_values_fn,
-+	.size = 8,
-+};
-+
- static const u32 wled3_ovp_values[] = {
- 	35, 32, 29, 27,
- };
-@@ -959,6 +1301,21 @@ static const struct wled_var_cfg wled4_ovp_cfg = {
- 	.size = ARRAY_SIZE(wled4_ovp_values),
- };
- 
-+static inline u32 wled5_ovp_values_fn(u32 idx)
-+{
-+	/*
-+	 * 0000 - 38.5 V
-+	 * 0001 - 37 V ..
-+	 * 1111 - 16 V
-+	 */
-+	return 38500 - (idx * 1500);
-+}
-+
-+static const struct wled_var_cfg wled5_ovp_cfg = {
-+	.fn = wled5_ovp_values_fn,
-+	.size = 16,
-+};
-+
- static u32 wled3_num_strings_values_fn(u32 idx)
- {
- 	return idx + 1;
-@@ -1006,6 +1363,14 @@ static const struct wled_var_cfg wled4_string_cfg = {
- 	.size = 16,
- };
- 
-+static const struct wled_var_cfg wled5_mod_sel_cfg = {
-+	.size = 2,
-+};
-+
-+static const struct wled_var_cfg wled5_cabc_sel_cfg = {
-+	.size = 4,
-+};
-+
- static u32 wled_values(const struct wled_var_cfg *cfg, u32 idx)
- {
- 	if (idx >= cfg->size)
-@@ -1082,6 +1447,44 @@ static int wled_configure(struct wled *wled)
- 		},
- 	};
- 
-+	const struct wled_u32_opts wled5_opts[] = {
-+		{
-+			.name = "qcom,current-boost-limit",
-+			.val_ptr = &cfg->boost_i_limit,
-+			.cfg = &wled5_boost_i_limit_cfg,
-+		},
-+		{
-+			.name = "qcom,current-limit-microamp",
-+			.val_ptr = &cfg->string_i_limit,
-+			.cfg = &wled4_string_i_limit_cfg,
-+		},
-+		{
-+			.name = "qcom,ovp-millivolt",
-+			.val_ptr = &cfg->ovp,
-+			.cfg = &wled5_ovp_cfg,
-+		},
-+		{
-+			.name = "qcom,switching-freq",
-+			.val_ptr = &cfg->switch_freq,
-+			.cfg = &wled3_switch_freq_cfg,
-+		},
-+		{
-+			.name = "qcom,num-strings",
-+			.val_ptr = &cfg->num_strings,
-+			.cfg = &wled4_num_strings_cfg,
-+		},
-+		{
-+			.name = "qcom,modulator-sel",
-+			.val_ptr = &cfg->mod_sel,
-+			.cfg = &wled5_mod_sel_cfg,
-+		},
-+		{
-+			.name = "qcom,cabc-sel",
-+			.val_ptr = &cfg->cabc_sel,
-+			.cfg = &wled5_cabc_sel_cfg,
-+		},
-+	};
-+
- 	const struct wled_bool_opts bool_opts[] = {
- 		{ "qcom,cs-out", &cfg->cs_out_en, },
- 		{ "qcom,ext-gen", &cfg->ext_gen, },
-@@ -1133,6 +1536,27 @@ static int wled_configure(struct wled *wled)
- 		wled->sink_addr = be32_to_cpu(*prop_addr);
- 		break;
- 
-+	case 5:
-+		u32_opts = wled5_opts;
-+		size = ARRAY_SIZE(wled5_opts);
-+		*cfg = wled5_config_defaults;
-+		wled->wled_set_brightness = wled5_set_brightness;
-+		wled->wled_sync_toggle = wled5_sync_toggle;
-+		wled->wled_cabc_config = wled5_cabc_config;
-+		wled->wled_ovp_fault_status = wled5_ovp_fault_status;
-+		wled->wled_ovp_delay = wled5_ovp_delay;
-+		wled->wled_auto_detection_required =
-+					wled5_auto_detection_required;
-+		wled->max_string_count = 4;
-+
-+		prop_addr = of_get_address(dev->of_node, 1, NULL, NULL);
-+		if (!prop_addr) {
-+			dev_err(wled->dev, "invalid IO resources\n");
-+			return -EINVAL;
-+		}
-+		wled->sink_addr = be32_to_cpu(*prop_addr);
-+		break;
-+
- 	default:
- 		dev_err(wled->dev, "Invalid WLED version\n");
- 		return -EINVAL;
-@@ -1286,6 +1710,10 @@ static int wled_probe(struct platform_device *pdev)
- 	if (rc)
- 		return rc;
- 
-+	val = WLED3_SINK_REG_BRIGHT_MAX;
-+	of_property_read_u32(pdev->dev.of_node, "max-brightness", &val);
-+	wled->max_brightness = val;
-+
- 	switch (wled->version) {
- 	case 3:
- 		wled->cfg.auto_detection_enabled = false;
-@@ -1305,6 +1733,18 @@ static int wled_probe(struct platform_device *pdev)
- 		}
- 		break;
- 
-+	case 5:
-+		wled->has_short_detect = true;
-+		if (wled->cfg.cabc_sel)
-+			wled->max_brightness = WLED5_SINK_REG_BRIGHT_MAX_12B;
-+
-+		rc = wled5_setup(wled);
-+		if (rc) {
-+			dev_err(&pdev->dev, "wled5_setup failed\n");
-+			return rc;
-+		}
-+		break;
-+
- 	default:
- 		dev_err(wled->dev, "Invalid WLED version\n");
- 		break;
-@@ -1326,7 +1766,7 @@ static int wled_probe(struct platform_device *pdev)
- 	memset(&props, 0, sizeof(struct backlight_properties));
- 	props.type = BACKLIGHT_RAW;
- 	props.brightness = val;
--	props.max_brightness = WLED3_SINK_REG_BRIGHT_MAX;
-+	props.max_brightness = wled->max_brightness;
- 	bl = devm_backlight_device_register(&pdev->dev, wled->name,
- 					    &pdev->dev, wled,
- 					    &wled_ops, &props);
-@@ -1349,6 +1789,7 @@ static const struct of_device_id wled_match_table[] = {
- 	{ .compatible = "qcom,pm8941-wled", .data = (void *)3 },
- 	{ .compatible = "qcom,pmi8998-wled", .data = (void *)4 },
- 	{ .compatible = "qcom,pm660l-wled", .data = (void *)4 },
-+	{ .compatible = "qcom,pm8150l-wled", .data = (void *)5 },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, wled_match_table);
+There's no 'field' matching for this register, and the 'bits' (0, 2, 3,
+4) correspond to "pdn_spi, pdn_pix, '-', tri_spi"
+
+Perhaps we need to define those bit fields accordingly and reference
+them where they get used directly?
+
+Perhaps calling bit 3 as:
+ #define ADV748X_IO_PAD_CONTROLS_BIT_3	BIT(3)
+
+Or
+ #define ADV748X_IO_PAD_CONTROLS_RESVD	BIT(3)
+
+(Unless you have documentation that better describes it?)
+
+
+> +
+>  #define ADV748X_IO_10			0x10	/* io_reg_10 */
+>  #define ADV748X_IO_10_CSI4_EN		BIT(7)
+>  #define ADV748X_IO_10_CSI1_EN		BIT(6)
+> @@ -248,7 +253,21 @@ struct adv748x_state {
+>  #define ADV748X_IO_REG_FF		0xff
+>  #define ADV748X_IO_REG_FF_MAIN_RESET	0xff
+>  
+> +/* DPLL Map */
+> +#define ADV748X_DPLL_MCLK_FS		0xb5
+> +#define ADV748X_DPLL_MCLK_FS_N_MASK	GENMASK(2, 0)
+> +
+>  /* HDMI RX Map */
+> +#define ADV748X_HDMI_I2S		0x03	/* I2S mode and width */
+
+Looks like a more appropriate name than the datasheets
+"hdmi_register_03h" :-D
+
+
+> +#define ADV748X_HDMI_I2SBITWIDTH_MASK	GENMASK(4, 0)
+> +#define ADV748X_HDMI_I2SOUTMODE_SHIFT	5
+> +#define ADV748X_HDMI_I2SOUTMODE_MASK	\
+> +	GENMASK(6, ADV748X_HDMI_I2SOUTMODE_SHIFT)
+
+I'd be very tempted to ignore the 80char limit here and put that on the
+line above ... or find a way to remove the 1 character...
+
+In fact, given the entry there - how about just leaving this as:
+
+#define ADV748X_HDMI_I2SOUTMODE_MASK	GENMASK(6, 5)
+
+
+> +#define ADV748X_I2SOUTMODE_I2S 0
+> +#define ADV748X_I2SOUTMODE_RIGHT_J 1
+> +#define ADV748X_I2SOUTMODE_LEFT_J 2
+> +#define ADV748X_I2SOUTMODE_SPDIF 3
+
+Can we align these value in the column with the other values?
+
+And as much as I hate long define names, it seems a bit odd that these
+suddenly lack the HDMI_ part of the define prefix...
+
+Should we either remove the HDMI_ from
+ ADV748X_HDMI_I2SBITWIDTH_MASK
+ ADV748X_HDMI_I2SOUTMODE_SHIFT
+ ADV748X_HDMI_I2SOUTMODE_MASK
+
+or add it to
+ ADV748X_I2SOUTMODE_I2S
+ ADV748X_I2SOUTMODE_RIGHT_J
+ ADV748X_I2SOUTMODE_LEFT_J
+ ADV748X_I2SOUTMODE_SPDIF
+
+?
+
+> +
+>  #define ADV748X_HDMI_LW1		0x07	/* line width_1 */
+>  #define ADV748X_HDMI_LW1_VERT_FILTER	BIT(7)
+>  #define ADV748X_HDMI_LW1_DE_REGEN	BIT(5)
+> @@ -260,6 +279,16 @@ struct adv748x_state {
+>  #define ADV748X_HDMI_F1H1		0x0b	/* field1 height_1 */
+>  #define ADV748X_HDMI_F1H1_INTERLACED	BIT(5)
+>  
+> +#define ADV748X_HDMI_MUTE_CTRL		0x1a
+> +#define ADV748X_HDMI_MUTE_CTRL_MUTE_AUDIO BIT(4)
+> +#define ADV748X_HDMI_MUTE_CTRL_WAIT_UNMUTE_MASK	GENMASK(3, 1)
+> +#define ADV748X_HDMI_MUTE_CTRL_NOT_AUTO_UNMUTE	BIT(0)
+> +
+> +#define ADV748X_HDMI_AUDIO_MUTE_SPEED	0x0f
+
+Can we keep the register definitions in address order please?
+
+> +#define ADV748X_HDMI_AUDIO_MUTE_SPEED_MASK	GENMASK(4, 0)
+> +#define ADV748X_MAN_AUDIO_DL_BYPASS BIT(7)
+> +#define ADV748X_AUDIO_DELAY_LINE_BYPASS BIT(6)
+
+Those bits do not describe the register they are in, not sure how to
+address that without exceptionally long names though.. :-(
+
+So perhaps how you've got them might be the best option...
+
+> +
+>  #define ADV748X_HDMI_HFRONT_PORCH	0x20	/* hsync_front_porch_1 */
+>  #define ADV748X_HDMI_HFRONT_PORCH_MASK	0x1fff
+>  
+> @@ -281,6 +310,9 @@ struct adv748x_state {
+>  #define ADV748X_HDMI_TMDS_1		0x51	/* hdmi_reg_51 */
+>  #define ADV748X_HDMI_TMDS_2		0x52	/* hdmi_reg_52 */
+>  
+> +#define ADV748X_HDMI_REG_6D		0x6d	/* hdmi_reg_6d */
+> +#define ADV748X_I2S_TDM_MODE_ENABLE BIT(7)
+> +
+>  /* HDMI RX Repeater Map */
+>  #define ADV748X_REPEATER_EDID_SZ	0x70	/* primary_edid_size */
+>  #define ADV748X_REPEATER_EDID_SZ_SHIFT	4
+> 
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
- a Linux Foundation Collaborative Project
+Regards
+--
+Kieran
