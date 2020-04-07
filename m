@@ -2,68 +2,46 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2955DC2D0EC
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 22:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1270AC2D0EC
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 22:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F387B20747
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 22:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B6820730
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 22:22:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rAbkst+f"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gQN4aVBF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgDGWOK (ORCPT
+        id S1726483AbgDGWWK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 18:14:10 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36116 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgDGWOK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 18:14:10 -0400
-Received: by mail-lf1-f65.google.com with SMTP id w145so3627481lff.3;
-        Tue, 07 Apr 2020 15:14:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6uRUHjT3H2vueqpdrwwP13xe2CMDcv0WafFpeyYI7lU=;
-        b=rAbkst+fkeSxUghjYacRPqyPdtQYTMTxLi0WEDiLh/eeZIOXvyTJMVDNdpP7PCvHKj
-         UbvmD4JHXfPK56f/bwbNd63eJem8edKGcsuJ5TFFIIyr5fvsv7D5XJrg2AVYmEbFZ1sN
-         fUQEAuLZ4WqDpYFUeEWRWwdNcEh4Okv0DTOlKYHi0PuHzvBVyJi65DHjEax9WpbKyWmK
-         1t39Snwf4LIo5wv4RoHnO47DmCIh0tA3qXUp17JpCc+dGFA1oWCfj41VTXsbr7UEMJBf
-         5pUceT7Y8uET2RHGMktMxypggnKcT4sc3XJyCmY1P8hQSDUM/mBJDbq21AAsL3ijkAR4
-         b+TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6uRUHjT3H2vueqpdrwwP13xe2CMDcv0WafFpeyYI7lU=;
-        b=Ttbe0enW28GkvvD4dElaRdHa9FhrL6wzCwZd2tqUb5M3h9GJ8SZjJaYr3qhs5gv/Rb
-         t4m6jz4oQDJHANBspppCTZWhDT6SqauNEcOAbuDtDThvsi+2mXqVUgBy7glxnJdB5TMt
-         BBTALXyNhn7tMhKk5p7trKeNaDPip8IO87kwKG31a9qw5LPKUr/UTSoIpSyaU+wl3Sp1
-         grH2jijQmrAMpB1D9AIv/MWzK4ydT2NdRa10cksuGI4YNPIKyignK9vdpUQZI0UvfeMf
-         2H+MDkRhQ2HBL0TAEg6th9IHPN5pzy2DdjKKWnxzzUVQ1yh3aVRRdK4JMysEzc9ltSlv
-         /wnQ==
-X-Gm-Message-State: AGi0PuaD1dsQQiKYYLmmBaVTku+zITE3NWqA7wTcJGKG9yjokdeLRyFH
-        +6RYWsRyiBAP3MXyj3kC+oUdIrrp
-X-Google-Smtp-Source: APiQypIugZXxUsd6hzBRHuCzJVvozH9gSOdzFAkV/cOyC5kvexLHlgQQHLEyOFzolrIVXQv3Be/QaA==
-X-Received: by 2002:ac2:46e5:: with SMTP id q5mr1912441lfo.11.1586297646938;
-        Tue, 07 Apr 2020 15:14:06 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id l13sm12381613ljc.84.2020.04.07.15.14.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 15:14:06 -0700 (PDT)
+        Tue, 7 Apr 2020 18:22:10 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13202 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726438AbgDGWWJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 18:22:09 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e8cfca90000>; Tue, 07 Apr 2020 15:20:25 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 07 Apr 2020 15:22:08 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 07 Apr 2020 15:22:08 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Apr
+ 2020 22:22:07 +0000
+Received: from [10.2.171.175] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Apr 2020
+ 22:22:06 +0000
 Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
  <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
  <200bb96e-2d07-764f-9e14-55538dc742fd@gmail.com>
@@ -81,27 +59,46 @@ References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
  <97b35910-4c93-123a-43a0-eb14476ed0f3@nvidia.com>
  <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
  <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
-Message-ID: <ee4cce05-2c60-6de1-2639-fe54abbf8345@gmail.com>
-Date:   Wed, 8 Apr 2020 01:14:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <0c425505-347f-7418-af7e-d121fe0d06dc@nvidia.com>
+Date:   Tue, 7 Apr 2020 15:22:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
 In-Reply-To: <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
-Content-Type: text/plain; charset=utf-8
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586298025; bh=affO1Yr/fVkdDgXtDFDw59Iv7waWtClGoqGLbuDmMvA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=gQN4aVBFGHGfJTH4B+1M5e3V40VRWaNWZ/4VYh6O83zGBgCCkEPn7tt+e+40JAfW1
+         LyY6THdOiL1ww8uD/iOy8wzG4YyNEoYiepsyeHS3cPFJrvmG/hk0wWHEJQKrfU/xVY
+         kKlhkNye6bffxcrrQFV3xQ/bIdjKoo5BG4CTP/CirNy9gMgdx2lpwob70+O9RBk5hF
+         xHrfDGeBjgLLWYilKcS3QWfJ8gALhtXkFruZyu+210ZEkZAmfQZtORygckCHc6fPx9
+         IaCUaNMPEmyknNUyPY8tn3H/mHhuj1EgBiYlZ56GJn7NlTw5AZ8i+xuen6mBQ/1c7e
+         EFZIAi3TcTWcw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-08.04.2020 01:08, Dmitry Osipenko пишет:
-> 08.04.2020 00:08, Sowjanya Komatineni пишет:
+
+On 4/7/20 3:08 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 08.04.2020 00:08, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
 > ...
->>>> I think you need a semaphore with resource count = 2.
+>>>> I think you need a semaphore with resource count =3D 2.
 >>> we hold on to issuing capture if more than 2 buffers are queued and it
 >>> continues only after fifo has min 1 slot empty
->>
 >>
 >> Just want to close on this part of feedback. Hope above explanation is
 >> clear regarding triggering/issuing at max 2 frame capture to VI HW and
@@ -109,12 +106,16 @@ X-Mailing-List: devicetree@vger.kernel.org
 >> to prevent blocking waiting for buffers to be available for captures.
 >>
 >> So no changes related to this part are needed in v7.
-> From what I see in the code, you "hold on" by making kthread to spin in
-> a busy-loop while caps_inflight >= SYNCPT_FIFO_DEPTH. So some change
+>  From what I see in the code, you "hold on" by making kthread to spin in
+> a busy-loop while caps_inflight >=3D SYNCPT_FIFO_DEPTH. So some change
 > should be needed to prevent this.
+>
+> The wait_event_interruptible seems should be okay.
 
-Looks like some other media drivers do:
+We don't want to prevent that as we already have buffers available for=20
+capture so as soon as VI HW issuing single shot is done and when min 1=20
+slot is empty we should continue with issuing for another capture.
 
-	schedule_timeout_uninterruptible(1);
+As long as buffers are available, we should continue to capture and=20
+should not hold
 
-to avoid CPU hogging when contention is detected.
