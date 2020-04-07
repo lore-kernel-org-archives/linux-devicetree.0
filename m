@@ -2,150 +2,112 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3464DC2BB85
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 16:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAAFC2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 16:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B6D82072A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 16:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A26312076E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 16:38:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="btq/mjS/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LZtSbL6m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgDGQ36 (ORCPT
+        id S1728468AbgDGQiH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:29:58 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38219 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbgDGQ36 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 12:29:58 -0400
-Received: by mail-wr1-f67.google.com with SMTP id 31so4624858wre.5;
-        Tue, 07 Apr 2020 09:29:56 -0700 (PDT)
+        Tue, 7 Apr 2020 12:38:07 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42465 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726883AbgDGQiG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 12:38:06 -0400
+Received: by mail-lj1-f193.google.com with SMTP id q19so4445935ljp.9;
+        Tue, 07 Apr 2020 09:38:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Wh+IvUc3DeAnnMIbLtY/uy0lszH3oLkUHUCVMoP6fwk=;
-        b=btq/mjS/OdeudDUsgt4r3Qe4QTx/aK2wYEi/y06q2lEGwpps1LweXIbBJ9w+WCIl3B
-         1BUSsmf0c3Dm1iWL9CjzIZF6jU00xNIG4UMTtnAmfsk/y9RVaJt9h8GFpi+WhHFicBwW
-         JC1GJytC+oKSZMAitPx39BGPCZ552unJrPF9Tvs7toz+2+heYYWByoAi+qPvtQLZFhY+
-         zKuq6UBiZGrjKUvnUwUUt3lmStTLuBNGefj65PG12Nq6fkl7AcLjSHO/+x2GYv+XoL7R
-         ORqEKnSRnyge4MDPVmk2DleLzE5/f+xrt2FWJjqJnHRPUWQPWizFzxCcVwNZfRIL97fF
-         9/Bw==
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wJFq2XOe7RkgNC35l325ZwPjkblMAPqbWKh6AWFgEI0=;
+        b=LZtSbL6m49RtrXGKLs6ozpHCCZbdsGsKQFHI9bDe5IvhMKvsuEEobgcQcQhC+xgiYx
+         RXlUoeXJF7fOQUm/mxXaRyqAF97pTd4ZOqouJ87iVsazVMkNQ8+tfJCIcm8Ekw7P5szF
+         vVQvmXECwVU3ko/oKpjLx4Uu7sWBZlKAbRGB6UGttmr7RbNHhz74+a6S7O8B+6asnu89
+         JcMAQL6I2mpP7Q4+TFehmxU0eME9LFBO7J2mFbCHElMZjH/R3fwxIDRlqLbF/i9Km+6m
+         10ut7kt62Klk2PiMBkihw5YRC8NzXRjFs3M7NVqqBpByByJrUFGTOPcmWNkehvMnesDo
+         NVHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Wh+IvUc3DeAnnMIbLtY/uy0lszH3oLkUHUCVMoP6fwk=;
-        b=c4wKTH7OPDRf8/rJIEQ+skmjbhBQDIQC36yCjNQ1XfkJVqmFS/7v5yYvILMMtIB+w6
-         0BJNqo8Ca3eEoF5wDKq654zCQ+D9/jnccOkc+vLRMMLGiZxGTZgRolHLskplJ6JFaWWy
-         qidybXYmJVvq+7f+qVQWRsdVhqG7JXQOIIuRyc7rwxA6sQbWAU4A5Q9hNh4EPDT2o9aD
-         F/M3vSPaNJXBnWYF0hMQMOHRvHc58TbxFtPnuULar6bxUoEiEKf4+SKas2vG9Msn5QSy
-         ZzD6wbfFr4IFdDxBi08lBW9FYEJQRPbk5FzWp/wx0O5EMBZtk04AIJ7XmdM1Xb0DXBdC
-         Zkww==
-X-Gm-Message-State: AGi0PuYO8bU7bIfx3o418kIM1i+3mdn/Aq9kCGI1/uRJ0BKUztblhNIL
-        snIQ0Chcuu7zw8TrrGvIr4vh4lyy
-X-Google-Smtp-Source: APiQypJAja1nV/r7nPykalrGELfrqZVJMRh3+qKHRzCZZRNqAebNU+XiPPAJmPa0DEWeAfF5Rwcj1w==
-X-Received: by 2002:adf:dd8f:: with SMTP id x15mr3817160wrl.201.1586276995322;
-        Tue, 07 Apr 2020 09:29:55 -0700 (PDT)
-Received: from [192.168.0.104] (p5B3F6774.dip0.t-ipconnect.de. [91.63.103.116])
-        by smtp.gmail.com with ESMTPSA id 145sm1915427wma.1.2020.04.07.09.29.53
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wJFq2XOe7RkgNC35l325ZwPjkblMAPqbWKh6AWFgEI0=;
+        b=gY3aRiViPVjyzaMDm8zxP5IQD70fE5EIJM5duL5+8tMG3dp8WemWhYq4qT7gIrP0gg
+         hjjK5zuitdMQLfZ6z21H3HNi9j2B2amqQdhNkmwGpvVVE46pLClSYGyLLpVZAUodY3Yk
+         tjKxU/pYKK3xM0n/R+PsKvgfFWrHf3cytB6oPdnCLoobzs7oZMKep3ZSowUlz6l5h6fS
+         5E6JOXcmXQwuOSewAMPzk2zvF+nwTwmzLoV5OSyNnC749nhWOuSkSwaXHWfrooSasKN8
+         A/WBNhyINOLUGcKNKx+0wv183o3s5e+4bFtuYV1G+CQnuZ3huIJGsg9uzycAAT82YNQi
+         F9XA==
+X-Gm-Message-State: AGi0Pubr6nMK4mg0kYAHlSS/WDrpiHhH3JP1YE0sho5lsdK+MBO0tmwb
+        F5QlyYIG3HygA933JbQG6Vcsn3i6
+X-Google-Smtp-Source: APiQypLRXTVLhUyQXvlFZhdg1KqTBz6jb+pJgadbyCplIwX4sPW1MzmAkLnY16yhAcVeTQdzNFdVbA==
+X-Received: by 2002:a2e:920b:: with SMTP id k11mr2345064ljg.46.1586277482811;
+        Tue, 07 Apr 2020 09:38:02 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id j13sm3854133lfb.19.2020.04.07.09.38.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 09:29:54 -0700 (PDT)
-Subject: Re: [PATCH v4 1/5] dt-bindings: mfd: add document bindings for mp2629
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20200322224626.13160-1-sravanhome@gmail.com>
- <20200322224626.13160-2-sravanhome@gmail.com> <20200327080013.GG603801@dell>
- <d449b567-bd5c-168d-83af-5ba38771f75a@gmail.com>
- <20200330064630.GA30614@dell>
-From:   saravanan sekar <sravanhome@gmail.com>
-Message-ID: <e4412378-1423-a48e-9176-f0d48f6000c4@gmail.com>
-Date:   Tue, 7 Apr 2020 18:29:52 +0200
+        Tue, 07 Apr 2020 09:38:02 -0700 (PDT)
+Subject: Re: [PATCH v2 6/6] ARM: tegra_defconfig: Enable options useful for
+ Nexus 7 and Acer A500
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        =?UTF-8?Q?Pedro_=c3=82ngelo?= <pangelo@void.io>,
+        Matt Merhar <mattmerhar@protonmail.com>,
+        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200406194110.21283-1-digetx@gmail.com>
+ <20200406194110.21283-7-digetx@gmail.com> <20200407100829.GB1720957@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <70ad6fd6-9603-a114-2d0f-608110b68c0b@gmail.com>
+Date:   Tue, 7 Apr 2020 19:38:00 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200330064630.GA30614@dell>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200407100829.GB1720957@ulmo>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Lee,
-
-On 30/03/20 8:46 am, Lee Jones wrote:
-> On Fri, 27 Mar 2020, saravanan sekar wrote:
->> On 27/03/20 9:00 am, Lee Jones wrote:
->>> On Sun, 22 Mar 2020, Saravanan Sekar wrote:
->>>
->>>> Add device tree binding information for mp2629 mfd driver.
->>>>
->>>> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
->>>> ---
->>>>    .../devicetree/bindings/mfd/mps,mp2629.yaml   | 60 +++++++++++++++++++
->>>>    1 file changed, 60 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
->>>> new file mode 100644
->>>> index 000000000000..314309ea91ac
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
->>>> @@ -0,0 +1,60 @@
->>>> +# SPDX-License-Identifier: GPL-2.0
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> Are these links supposed to work?
->> Not really, but as far my understanding needed for dt-bindings check
-> Rob, why are these here if they just result in 404s?
->
->>>> +examples:
->>>> +  - |
->>>> +    #include <dt-bindings/interrupt-controller/irq.h>
->>>> +    #include <dt-bindings/input/linux-event-codes.h>
->>>> +    i2c {
->>> i2c@0x????????
->> Its a I2C controller node, I don't think address is needed. Mention like
->> this my previous other driver patches,
-> This doesn't sound right.
->
-> How do you control/operate the controller?
->
-> Surely you read/write from/to registers?
-
-
-Indeed, but each SoC will have different address so which address to 
-mention here.
-For me it should be like &i2c {}, anyhow I respect maintainers review (I 
-can give RPi I2c bus address used for testing)
-and wait for Rob's reply
-
->
->> dt_binding_check is also passed
+07.04.2020 13:08, Thierry Reding пишет:
+> On Mon, Apr 06, 2020 at 10:41:10PM +0300, Dmitry Osipenko wrote:
+>> Enable several drivers for hardware that is found on Nexus 7 and Acer A500
+>> tablet devices. Please note that some drivers may require firmware files
+>> extracted from original Android image.
 >>
->>>> +        #address-cells = <1>;
->>>> +        #size-cells = <0>;
->>>> +
->>>> +        pmic@4b {
->>>> +            compatible = "mps,mp2629";
->>>> +            reg = <0x4b>;
->>>> +
->>>> +            interrupt-controller;
->>>> +            interrupt-parent = <&gpio2>;
->>>> +            #interrupt-cells = <2>;
->>>> +            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
->>>> +        };
->>>> +    };
+>> Link: https://github.com/digetx/linux-firmware
+> 
+> What's the license for these files?
+
+It's either GPL (like touchscreen config) or something else
+redistributeable.
+
+> Can they be made available through the official linux-firmware repository?
+
+Yes, but I don't know yet for sure whether it's really needed for all
+firmware files.
+
+For example, the T30 Broadcom WiFi doesn't work using stock
+linux-firmware, it's on my to-do list to try to figure out why.
+
+While Bluetooth FW seems to be reusable be many different devices,
+although (AFAIK) nobody cared to upstream it to the linux-firmware.
