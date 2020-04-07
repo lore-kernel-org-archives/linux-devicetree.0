@@ -2,44 +2,46 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD06C2BB1D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E859C2BB55
 	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 22:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D24DF2082F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 22:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7803A20719
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 22:24:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Z2miYVQB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="b28Db7Wd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgDGWYm (ORCPT
+        id S1726718AbgDGWYo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 18:24:42 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:20252 "EHLO
+        Tue, 7 Apr 2020 18:24:44 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:33623 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726621AbgDGWYm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 18:24:42 -0400
+        by vger.kernel.org with ESMTP id S1726495AbgDGWYn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 18:24:43 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586298281; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=dx666URRqJLgHx/92TiYUOVZjVVrAvoOpoacNAgGDDg=; b=Z2miYVQBoOVrt/fWoel5lZc+xxH8UDVlu0zvBneEdMND8yuNeRVp2DaXz/71BcP2paBOzJRx
- x81UmsMF4u5DZl/9KkvtlmIEfHCrNfxKIdrSjwoLCmdJcEpVCCaV8SUcfqigOKv2fHTsXeL2
- 78luR1/nSJtpDGnvMZmxnElUj0s=
+ s=smtp; t=1586298283; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=Imil9AjSTOr7fzSdf9HIL72Sr8OKj1T2LJjdyGPinNs=; b=b28Db7Wd69vYB2bbR0aj8l8waFj1jxI/44uCNOPqxiQF9+GPpjGhdMdsVenNdX+dlajSROXY
+ 7JQHfYC2tStFUj8A/hX2hTHT2LqV0H27lMrDukrYby3QUhHqsDHursKgLkxQkA2hTftWcHfx
+ ywQQYdCAFm9nQFtBc/jmZ3KnzS4=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8cfda8.7f235810db90-smtp-out-n01;
- Tue, 07 Apr 2020 22:24:40 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e8cfdaa.7f7d47d9e8f0-smtp-out-n01;
+ Tue, 07 Apr 2020 22:24:42 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E882DC43637; Tue,  7 Apr 2020 22:24:39 +0000 (UTC)
+        id 39083C433D2; Tue,  7 Apr 2020 22:24:42 +0000 (UTC)
 Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BF6BBC433D2;
-        Tue,  7 Apr 2020 22:24:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BF6BBC433D2
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 412DCC43637;
+        Tue,  7 Apr 2020 22:24:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 412DCC43637
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
 From:   Wesley Cheng <wcheng@codeaurora.org>
@@ -48,40 +50,165 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org,
         mark.rutland@arm.com
 Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        vinod.koul@linaro.org, Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH v3 0/2] Enable SS/HS USB support on SM8150
-Date:   Tue,  7 Apr 2020 15:24:25 -0700
-Message-Id: <1586298267-4722-1-git-send-email-wcheng@codeaurora.org>
+        vinod.koul@linaro.org, Jack Pham <jackp@codeaurora.org>,
+        Wesley Cheng <wcheng@codeaurora.org>
+Subject: [PATCH v3 2/2] arm64: dts: qcom: sm8150: Add USB and PHY device nodes
+Date:   Tue,  7 Apr 2020 15:24:27 -0700
+Message-Id: <1586298267-4722-3-git-send-email-wcheng@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1586298267-4722-1-git-send-email-wcheng@codeaurora.org>
+References: <1586298267-4722-1-git-send-email-wcheng@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add required device tree nodes to enable the USB SS and HS
-paths on the primary USB controller on SM8150.  In addition,
-implement missing resources from the SM8150 GCC driver, which
-includes the USB GDSC and the USB PIPE clocks.
+From: Jack Pham <jackp@codeaurora.org>
 
-Changes in v3:
- - Set dr_mode to "peripheral" on the SM8150 MTP DTSI file.
+Add device nodes for the USB3 controller, QMP SS PHY and
+SNPS HS PHY.
 
-Changes in v2:
- - Combine GDSC and USB PIPE clock changes.
- - Re-order DTS nodes based on address
+Signed-off-by: Jack Pham <jackp@codeaurora.org>
+Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Tested-by: Vinod Koul <vinod.koul@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 21 ++++++++
+ arch/arm64/boot/dts/qcom/sm8150.dtsi    | 92 +++++++++++++++++++++++++++++++++
+ 2 files changed, 113 insertions(+)
 
-Jack Pham (1):
-  arm64: dts: qcom: sm8150: Add USB and PHY device nodes
-
-Wesley Cheng (1):
-  clk: qcom: gcc: Add USB3 PIPE clock and GDSC for SM8150
-
- arch/arm64/boot/dts/qcom/sm8150-mtp.dts     | 21 +++++++
- arch/arm64/boot/dts/qcom/sm8150.dtsi        | 92 +++++++++++++++++++++++++++++
- drivers/clk/qcom/gcc-sm8150.c               | 52 ++++++++++++++++
- include/dt-bindings/clock/qcom,gcc-sm8150.h |  4 ++
- 4 files changed, 169 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+index 8ab1661..6c6325c 100644
+--- a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
++++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+@@ -408,3 +408,24 @@
+ 	vdda-pll-supply = <&vreg_l3c_1p2>;
+ 	vdda-pll-max-microamp = <19000>;
+ };
++
++&usb_1_hsphy {
++	status = "okay";
++	vdda-pll-supply = <&vdd_usb_hs_core>;
++	vdda33-supply = <&vdda_usb_hs_3p1>;
++	vdda18-supply = <&vdda_usb_hs_1p8>;
++};
++
++&usb_1_qmpphy {
++	status = "okay";
++	vdda-phy-supply = <&vreg_l3c_1p2>;
++	vdda-pll-supply = <&vdda_usb_ss_dp_core_1>;
++};
++
++&usb_1 {
++	status = "okay";
++};
++
++&usb_1_dwc3 {
++	dr_mode = "peripheral";
++};
+diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+index 141c21d..fd6c83a 100644
+--- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+@@ -621,6 +621,98 @@
+ 			};
+ 		};
+ 
++		usb_1_hsphy: phy@88e2000 {
++			compatible = "qcom,usb-snps-hs-7nm-phy",
++							"qcom,sm8150-usb-hs-phy";
++			reg = <0 0x088e2000 0 0x400>;
++			status = "disabled";
++			#phy-cells = <0>;
++
++			clocks = <&rpmhcc RPMH_CXO_CLK>;
++			clock-names = "ref";
++
++			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
++		};
++
++		usb_1_qmpphy: phy@88e9000 {
++			compatible = "qcom,sm8150-qmp-usb3-phy";
++			reg = <0 0x088e9000 0 0x18c>,
++			      <0 0x088e8000 0 0x10>;
++			reg-names = "reg-base", "dp_com";
++			status = "disabled";
++			#clock-cells = <1>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++
++			clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
++				 <&rpmhcc RPMH_CXO_CLK>,
++				 <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
++				 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
++			clock-names = "aux", "ref_clk_src", "ref", "com_aux";
++
++			resets = <&gcc GCC_USB3_DP_PHY_PRIM_BCR>,
++				 <&gcc GCC_USB3_PHY_PRIM_BCR>;
++			reset-names = "phy", "common";
++
++			usb_1_ssphy: lanes@88e9200 {
++				reg = <0 0x088e9200 0 0x200>,
++				      <0 0x088e9400 0 0x200>,
++				      <0 0x088e9c00 0 0x218>,
++				      <0 0x088e9600 0 0x200>,
++				      <0 0x088e9800 0 0x200>,
++				      <0 0x088e9a00 0 0x100>;
++				#phy-cells = <0>;
++				clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
++				clock-names = "pipe0";
++				clock-output-names = "usb3_phy_pipe_clk_src";
++			};
++		};
++
++		usb_1: usb@a6f8800 {
++			compatible = "qcom,sdm845-dwc3", "qcom,dwc3";
++			reg = <0 0x0a6f8800 0 0x400>;
++			status = "disabled";
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++			dma-ranges;
++
++			clocks = <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
++				 <&gcc GCC_USB30_PRIM_MASTER_CLK>,
++				 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>,
++				 <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
++				 <&gcc GCC_USB30_PRIM_SLEEP_CLK>,
++				 <&gcc GCC_USB3_SEC_CLKREF_CLK>;
++			clock-names = "cfg_noc", "core", "iface", "mock_utmi",
++				      "sleep", "xo";
++
++			assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
++					  <&gcc GCC_USB30_PRIM_MASTER_CLK>;
++			assigned-clock-rates = <19200000>, <150000000>;
++
++			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 486 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 488 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 489 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "hs_phy_irq", "ss_phy_irq",
++					  "dm_hs_phy_irq", "dp_hs_phy_irq";
++
++			power-domains = <&gcc USB30_PRIM_GDSC>;
++
++			resets = <&gcc GCC_USB30_PRIM_BCR>;
++
++			usb_1_dwc3: dwc3@a600000 {
++				compatible = "snps,dwc3";
++				reg = <0 0x0a600000 0 0xcd00>;
++				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
++				snps,dis_u2_susphy_quirk;
++				snps,dis_enblslpm_quirk;
++				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
++				phy-names = "usb2-phy", "usb3-phy";
++			};
++		};
++
+ 		aoss_qmp: power-controller@c300000 {
+ 			compatible = "qcom,sm8150-aoss-qmp";
+ 			reg = <0x0 0x0c300000 0x0 0x100000>;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
