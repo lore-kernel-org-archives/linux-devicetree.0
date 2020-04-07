@@ -2,110 +2,140 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD29C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 11:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E607C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 11:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CE0620731
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 11:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 347DD2063A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 11:29:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WwLZV5Pq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbgDGLSx (ORCPT
+        id S1728152AbgDGL3S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 07:18:53 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46933 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbgDGLSx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 07:18:53 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jLmFf-0005po-L5; Tue, 07 Apr 2020 13:18:43 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jLmFe-0002q9-MB; Tue, 07 Apr 2020 13:18:42 +0200
-Date:   Tue, 7 Apr 2020 13:18:42 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     devicetree@vger.kernel.org, Paul Barker <pbarker@konsulko.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [RFC PATCH v2 2/6] dt-bindings: pwm: document the PWM no-flag
-Message-ID: <20200407111842.hp7mhrlsuesa74ep@pengutronix.de>
-References: <20200405192246.3741784-1-oleksandr.suvorov@toradex.com>
- <20200405192246.3741784-3-oleksandr.suvorov@toradex.com>
- <20200407061646.pcglaw43kfmrag6a@pengutronix.de>
- <CAGgjyvH5nmnXH068QTNPKzsjocNXfEP_yh0HO=L-oGaqQdYRuA@mail.gmail.com>
+        Tue, 7 Apr 2020 07:29:18 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36660 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbgDGL3S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 07:29:18 -0400
+Received: by mail-ot1-f65.google.com with SMTP id l23so2731174otf.3
+        for <devicetree@vger.kernel.org>; Tue, 07 Apr 2020 04:29:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ks+RAtref+Aa1LsW+qIjyIm12wRKmiZeJoTmqqOQJAc=;
+        b=WwLZV5PqTcKdjYS0x26/v/152x7q2BE84BJKWv5T0fkwlP232BkXXojRJGU3wqXEMB
+         eTJ35MYTpY5QgZ+YnFShYrtna/idnsWil9QCzqNUnMc03XPLNojGeZfwcRbIDjcZMkZC
+         46p+Z6IXaKLfS4gJEZMtdVhS2lu5VoVT0vrr/k5Y8C7wH/nYomuIHrE3RFRycbRLhWqB
+         F0mylWILg6s6/G5U/q64JbpqV1ZexEdkOhq1LzmjSGPnpxBbWU4FRoh6AQp+8rVWs+W0
+         5zxR5JcOWhdxqupUCQTENA4KCynXCuZzWw+QmtXOcmWCSafkb3cfokad4WMcSVpr2yxv
+         qpPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ks+RAtref+Aa1LsW+qIjyIm12wRKmiZeJoTmqqOQJAc=;
+        b=H/rZVQsNQ7YjIO9eMn4I/6swFw+ylYkbgpafs1gLQBllA0dcfPEFUxLUtiE8BfYFP1
+         4GJ+PLhOLF0Qd/u5gzg/bgKuyl/xOY1mihUD/76eHYMpz9teZ3RyIzEYAaztFrF4PxGK
+         +RoCizBjeiqc+q7AV80xp0amAK4lr8C+5fr+cEcwPQwrL1qO5J1J+U20+sNR3A4Cqdni
+         8Da5nt/PAj3K7WmzEGo2msgwb/aelNUqSAGMBwpKPq8XosadI0dfxp8HJ/Gn/Lr2QUgF
+         1RRacuIbgv20Ris3cMe/U/bO599qVyJhi8dKrtAgLM9zmScgd9ffK6u1YKNJAqc4MZLB
+         S56Q==
+X-Gm-Message-State: AGi0Pub0Ld+pdhdrootbS4jtLoNfi23TK390JF1N1nGrpCAAnsHfmw6q
+        4IqMLs1p14o2ziiqiqHcbQ4VsgcyaeblroO0SAXUzA==
+X-Google-Smtp-Source: APiQypIbfbWm+UAuN2LQYpOJrjxSOeEswzyxBe4SbCKqH3dehDKampxrwTbrEfg8it7NBjEQyLOXANbFoJ8NHgeJKvk=
+X-Received: by 2002:a9d:6c88:: with SMTP id c8mr1082037otr.272.1586258957489;
+ Tue, 07 Apr 2020 04:29:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGgjyvH5nmnXH068QTNPKzsjocNXfEP_yh0HO=L-oGaqQdYRuA@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <20200331133346.372517-1-robert.foss@linaro.org>
+ <20200331133346.372517-2-robert.foss@linaro.org> <20200401080705.j4goeqcqhoswhx4u@gilmour.lan>
+ <CAG3jFyvUd08U9yNVPUD9Y=nd5Xpcx34GcHJRhtvAAycoq3qimg@mail.gmail.com>
+ <20200403232736.GA6127@valkosipuli.retiisi.org.uk> <20200404093446.vuvwrhn5436h4d3s@gilmour.lan>
+ <20200406083506.GE6127@valkosipuli.retiisi.org.uk> <20200407083647.4mocdl7aqa3x737q@gilmour.lan>
+In-Reply-To: <20200407083647.4mocdl7aqa3x737q@gilmour.lan>
+From:   Robert Foss <robert.foss@linaro.org>
+Date:   Tue, 7 Apr 2020 13:29:05 +0200
+Message-ID: <CAG3jFyvd32pWppubMoOoyH9eO2XLjwUXMC7p4xtv8m+JkPv6vw@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 01:51:42PM +0300, Oleksandr Suvorov wrote:
-> On Tue, Apr 7, 2020 at 9:17 AM Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> >
-> > On Sun, Apr 05, 2020 at 10:22:42PM +0300, Oleksandr Suvorov wrote:
-> > > Add the description of PWM_NOFLAGS flag property.
+Hey Maixme & Sakari,
+
+On Tue, 7 Apr 2020 at 10:36, Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> Hi Sakari,
+>
+> On Mon, Apr 06, 2020 at 11:35:07AM +0300, Sakari Ailus wrote:
+> > > But that 19.2MHz is not a limitation of the device itself, it's a
+> > > limitation of our implementation, so we can instead implement
+> > > something equivalent in Linux using a clk_set_rate to 19.2MHz (to make
+> > > sure that our parent clock is configured at the right rate) and the
+> > > clk_get_rate and compare that to 19.2MHz (to make sure that it's not
+> > > been rounded too far apart from the frequency we expect).
 > > >
-> > > Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+> > > This is doing exactly the same thing, except that we don't encode our
+> > > implementation limitations in the DT, but in the driver instead.
 > >
-> > As I already wrote in reply to the v1 series I'd prefer a name for 0
-> > that explicitly handles normal polarity.
-> 
-> Uwe, AFAIU, there is no flag that forces normal polarity, the normal polarity
-> is the default state if there is no flag to invert the polarity is set.
+> > What I really wanted to say that a driver that doesn't get the clock
+> > frequency from DT but still sets that frequency is broken.
+> >
+> > This frequency is highly system specific, and in many cases only a certain
+> > frequency is usable, for a few reasons: On many SoCs, not all common
+> > frequencies can be used (e.g. 9,6 MHz, 19,2 MHz and 24 MHz; while others
+> > are being used as well), and then that frequency affects the usable CSI-2
+> > bus frequencies directly --- and of those, only safe, known-good ones
+> > should be used. IOW, getting the external clock frequency wrong typically
+> > has an effect that that none of the known-good CSI-2 bus clock frequencies
+> > are available.
+>
+> So clock-frequency is not about the "Frequency of the xvclk clock in
+> Hertz", but the frequency at which that clock must run on this
+> particular SoC / board to be functional?
+>
+> If so, then yeah, we should definitely keep it, but the documentation
+> of the binding should be made clearer as well.
+>
 
-Yes, that's the status quo.
+Alright so, let me summarise the desired approach then.
 
-> '0' value in the bit flags cell really means there are no flags set
-> for the PWM instance.
+ACPI:
+  - Fetch the "clock-frequency" property
+  - Verify it to be 19.2Mhz
 
-For me the relevance of giving 0 a name is mostly for human consumption.
-Currently there is only a single flag encoded in the number in question.
-But as soon as we add another, say PWM_AUTOSTART we have the following
-possible settings:
+DT:
+  - Fetch the "clock-frequency" property
+  - Verify it to be 19.2Mhz
+  - Get xvclk clock
+  - Get xvclk clock rate
+  - Verify xvclk clock rate to be 19.2Mhz
 
-	PWM_NOFLAGS
-	PWM_POLARITY_INVERTED
-	PWM_AUTOSTART
-	PWM_POLARITY_INVERTED | PWM_AUTOSTART
+Since the xvclk clock isn't available under ACPI, this is how the two
+cases would be distinguished between.
+Does this sound about right?
 
-Then for the first two a reader doesn't see if autostart is not in use
-because the dt author doesn't know this feature (e.g. because autostart
-is too new) or if they don't want autostart at all.
+> assigned-clock-rates should still go away though.
 
-If however we had PWM_POLARITY_NORMAL and PWM_NO_AUTOSTART to complement
-PWM_POLARITY_INVERTED and PWM_AUTOSTART every flag's setting could be
-explicit and if there is a device tree that only has
+Ack.
 
-	PWM_POLARITY_NORMAL
-
-it would be obvious that nobody thought enough about autostarting to
-explicitly mention it.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+>
+> Maxime
