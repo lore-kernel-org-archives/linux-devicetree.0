@@ -6,145 +6,126 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B36C2BABC
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 08:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14889C2BA16
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 08:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 247E1206C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 08:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB91820719
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 08:47:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="XsjePcnH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="grugulOl"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Vz1oyh07";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mvDi/utu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbgDGIgy (ORCPT
+        id S1726393AbgDGIrQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 04:36:54 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:36721 "EHLO
+        Tue, 7 Apr 2020 04:47:16 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:57085 "EHLO
         wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725817AbgDGIgy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 04:36:54 -0400
+        by vger.kernel.org with ESMTP id S1725883AbgDGIrQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 04:47:16 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 4A951651;
-        Tue,  7 Apr 2020 04:36:50 -0400 (EDT)
+        by mailout.west.internal (Postfix) with ESMTP id 138776A3;
+        Tue,  7 Apr 2020 04:47:15 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 07 Apr 2020 04:36:50 -0400
+  by compute4.internal (MEProxy); Tue, 07 Apr 2020 04:47:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=4JjD4nhCeDSm8qKCj697mUQU3e9
-        hRBe6jxcMGNOUYSk=; b=XsjePcnHJcDSz+mYUIJGJ5B/aG0e7XbHR08R6oCdAsh
-        QzvpBvr7/otb8MdKszbYdUvJ7mJAWq7WpZQgnlOOMTg22tCIBfg7s9G01I0Q70ph
-        y1FE4ni4is/9D0LSw986qIl42FmIYyaFix9y0BwtS4p+0ngYe1UEr/Ie7si7UjNR
-        U1n/WC8YxMmA1Coa5sJ+nRcGFGtdGDflzZMwjJWxXV8Y10va4JA1QUSjp03mOn6C
-        InAfGS6Jt9poszH1Rm2Yy+7dcaFn6Dd0EJ9ClcKU91jLgsRYFVjmBBL7pqhly6kw
-        XsIs5uuvAVm2szqC/GLE+9mXtSJMV89w8YP8sV07Ixg==
+        :content-type:in-reply-to; s=fm2; bh=+r7E2sih1Sc6rl7ZjA85HKrYKcR
+        XrhWjnKqfOs7riwI=; b=Vz1oyh07UZtEO+4lHO3DJsBcHYWppi1bS81AH5lk/ua
+        8Ic2cC2Q/9qsKRqR/syrfuIiceNm3xQ4KKdgqGAhRezBcZEochNuMg5fiM7Chqry
+        i72mA577HHjeVsHAWiHFMbGAyWhM53CLMaXn4tSV6sUmekDIN2sHXBSf0byahgjl
+        3fuAjkWzE1vwnqBK1PafX1NTIIDXRhi9TncxNGx3Y6kBE/QBJdh73ahKNCEUo8zT
+        VumRGaR8glFBa0GLp5zlOj5zutqxozYlxi0/17dubsg2vGlEXpkm/S1dAe9YSN3r
+        GL11wCsmRaKZhU11Hoo6dNiLbqfJQoiCcpnNLtkw9bw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=4JjD4n
-        hCeDSm8qKCj697mUQU3e9hRBe6jxcMGNOUYSk=; b=grugulOlKGnUpe+cw9Zfr2
-        9f2qnI/N4GTrxJEk0reU+x7fgJTGrv6wk3aCrPY50tZN80Ig4ttN7IF6rsgccwTV
-        +wgWBnn37c+X94Whcfgu7RIxNRzkXxH4tKj2/0/lW/q0447RJ8JfZRgXmysK35kI
-        CLOrtNnLZi8AdoU+nA/2yREnra6Kj4zuQl8rvf16uzxgIZYmblNObIdLiizjKalP
-        koluwaGEoGmeCrRY0s/NEnN9ZqeQapx1jj1OI6qyGhfmiEzV1CgOIMc3EOaetgy2
-        ug25xi+X6xeAMuuhXMwsyY0jUeUmJu6ZivSU+3MP9N9CA6XtTyD3+kLrx+VLPkFA
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=+r7E2s
+        ih1Sc6rl7ZjA85HKrYKcRXrhWjnKqfOs7riwI=; b=mvDi/utuYv3ZST7eZ8B1rB
+        JHiaD2qHJMyx5RJ6EE6RpVJ30s6uKoE5zD2hyY2EVBy5BEck9DGl0yqp+pBxsb35
+        sGsiF+ckaQf8i+iBj2D9TLZFlkzAghq3uhn94ni+BtKkdpbnJ4CRdEV2EW3TEAt7
+        h1Y0p76Wa/nqBMSyhMM0yfBPHkLCr7D3g0ggWww+l/HnPBSOzsr7IA+DahdM97a7
+        15Pq4Q4R89xNwpG3LE+Ng51ShndZozWa6N1Pb4NIZpDkSrND/jvU1uM39Bya1Fps
+        Hdm/BECnpFrqPJcwUoOXG+dQggR1zNU0x7DlwWS5/SLvWGyyvNz8fXMUwH7uN/GQ
         ==
-X-ME-Sender: <xms:oDuMXoh2gp59uxcEAj3duYH0-yhYXLWYbH_tMDlcGxbbasASAygIXw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehgddtiecutefuodetggdotefrodftvf
+X-ME-Sender: <xms:ET6MXnq-9dP9HLR4P9u9gz4S19WyNfcDtqnrpxwbzjrrQvbsqW7mEA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehgddtkecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
     ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
     ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
     fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:oDuMXqu1vN_TtHjH1yewbxSIyz-7NK8R3TKr_clhgUVp8D_GoQUnlQ>
-    <xmx:oDuMXnDbrU0wWq_pGftuSHZP0-87qyEQS3GsGRlmlE5cYkmG7xgQFQ>
-    <xmx:oDuMXtUrpVVLtUG4WTD8ytEBgDGLlRkz8Hjt3NkjCYH7JzfxNMeksA>
-    <xmx:oTuMXopADU6Av-QC84MI_1SCEhUc3OOEpfHx_3Y1DF3uYJPNjABlFg>
+X-ME-Proxy: <xmx:ET6MXnwuMLxrUSVul9xC_9hMzk8BGtb4EpMrb2RDgqALG_OZ0n9n6A>
+    <xmx:ET6MXpVnYtllvCwYgZCn1OlJXCGTiJdwNLdiM8_NMaR1PEN6On0Buw>
+    <xmx:ET6MXhKu6fIj6bIFpTiHT2Oi-4pku10GhCi6ZsFhhUsMFuCDKPQHZw>
+    <xmx:Ej6MXrtnqvTgUIRR7UWOMs2rrsExaEGVK-qknW3UcK06e-TKvsccuw>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 787A6328005A;
-        Tue,  7 Apr 2020 04:36:48 -0400 (EDT)
-Date:   Tue, 7 Apr 2020 10:36:47 +0200
+        by mail.messagingengine.com (Postfix) with ESMTPA id 775FD328005E;
+        Tue,  7 Apr 2020 04:47:13 -0400 (EDT)
+Date:   Tue, 7 Apr 2020 10:47:12 +0200
 From:   Maxime Ripard <maxime@cerno.tech>
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     Robert Foss <robert.foss@linaro.org>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
-Message-ID: <20200407083647.4mocdl7aqa3x737q@gilmour.lan>
-References: <20200331133346.372517-1-robert.foss@linaro.org>
- <20200331133346.372517-2-robert.foss@linaro.org>
- <20200401080705.j4goeqcqhoswhx4u@gilmour.lan>
- <CAG3jFyvUd08U9yNVPUD9Y=nd5Xpcx34GcHJRhtvAAycoq3qimg@mail.gmail.com>
- <20200403232736.GA6127@valkosipuli.retiisi.org.uk>
- <20200404093446.vuvwrhn5436h4d3s@gilmour.lan>
- <20200406083506.GE6127@valkosipuli.retiisi.org.uk>
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Ondrej Jirman <megous@megous.com>
+Subject: Re: [PATCH v2 3/7] arm64: dts: allwinner: h6: Add CPU Operating
+ Performance Points table
+Message-ID: <20200407084712.lhvrotihtxr5rqxa@gilmour.lan>
+References: <20200405173601.24331-1-peron.clem@gmail.com>
+ <20200405173601.24331-4-peron.clem@gmail.com>
+ <20200406081412.ubdogkjknlofynei@gilmour.lan>
+ <CAJiuCcdTQHGhZ=7Z_Du-zcZ_OWdGO1iEpYOBD4z=eNDYzMA5tg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tdgovq5ccaqtherr"
+        protocol="application/pgp-signature"; boundary="obs3nniolwwu6iqt"
 Content-Disposition: inline
-In-Reply-To: <20200406083506.GE6127@valkosipuli.retiisi.org.uk>
+In-Reply-To: <CAJiuCcdTQHGhZ=7Z_Du-zcZ_OWdGO1iEpYOBD4z=eNDYzMA5tg@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---tdgovq5ccaqtherr
-Content-Type: text/plain; charset=us-ascii
+--obs3nniolwwu6iqt
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi Sakari,
-
-On Mon, Apr 06, 2020 at 11:35:07AM +0300, Sakari Ailus wrote:
-> > But that 19.2MHz is not a limitation of the device itself, it's a
-> > limitation of our implementation, so we can instead implement
-> > something equivalent in Linux using a clk_set_rate to 19.2MHz (to make
-> > sure that our parent clock is configured at the right rate) and the
-> > clk_get_rate and compare that to 19.2MHz (to make sure that it's not
-> > been rounded too far apart from the frequency we expect).
+On Mon, Apr 06, 2020 at 08:03:34PM +0200, Cl=E9ment P=E9ron wrote:
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > @@ -253,6 +253,10 @@
+> > >                       #address-cells =3D <1>;
+> > >                       #size-cells =3D <1>;
+> > >
+> > > +                     speedbin_efuse: speed@1c {
+> > > +                             reg =3D <0x1c 0x4>;
+> > > +                     };
+> > > +
 > >
-> > This is doing exactly the same thing, except that we don't encode our
-> > implementation limitations in the DT, but in the driver instead.
+> > You should order this by address, so after the THS calibration. Also,
+> > using a less generic node name than "speed" would be great. What about
+> > soc-bin ?
 >
-> What I really wanted to say that a driver that doesn't get the clock
-> frequency from DT but still sets that frequency is broken.
->
-> This frequency is highly system specific, and in many cases only a certain
-> frequency is usable, for a few reasons: On many SoCs, not all common
-> frequencies can be used (e.g. 9,6 MHz, 19,2 MHz and 24 MHz; while others
-> are being used as well), and then that frequency affects the usable CSI-2
-> bus frequencies directly --- and of those, only safe, known-good ones
-> should be used. IOW, getting the external clock frequency wrong typically
-> has an effect that that none of the known-good CSI-2 bus clock frequencies
-> are available.
+> Indeed it's too generic.
+> I will keep coherency with i.MX8 and use "cpu_speed_grade"
 
-So clock-frequency is not about the "Frequency of the xvclk clock in
-Hertz", but the frequency at which that clock must run on this
-particular SoC / board to be functional?
-
-If so, then yeah, we should definitely keep it, but the documentation
-of the binding should be made clearer as well.
-
-assigned-clock-rates should still go away though.
+It works for me, but remember that you can't use underscores :)
 
 Maxime
 
---tdgovq5ccaqtherr
+--obs3nniolwwu6iqt
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXow7nwAKCRDj7w1vZxhR
-xQstAP0TwTb8HQCIY1hTWh6ICjLurf3wji32l8sqvhKN/kS2bAEA/QsgQ8BIfzU3
-wxJ2Dwt128qujydSVIFZL5Uk7XAwJgY=
-=IafI
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXow+EAAKCRDj7w1vZxhR
+xYhmAP9HFTxiuLkTGD9dyTe3MbP31mksKDRSBxrC27AhkLIqyAEAoQzGYqLtOzOR
+1r04CfnUwInSdC9XI1/sFFXlhvD7+AU=
+=oCF1
 -----END PGP SIGNATURE-----
 
---tdgovq5ccaqtherr--
+--obs3nniolwwu6iqt--
