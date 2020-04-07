@@ -2,195 +2,140 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55744C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 15:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 014A1C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 15:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB98206F7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 15:03:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="ZBNFyjs2"
+	by mail.kernel.org (Postfix) with ESMTP id D232320692
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 15:14:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728994AbgDGPDW (ORCPT
+        id S1728943AbgDGPOK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:03:22 -0400
-Received: from mail-vi1eur05on2096.outbound.protection.outlook.com ([40.107.21.96]:61358
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728306AbgDGPDW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:03:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kj04heUr+HYusf6oIWXyyp5nqeSBxBWFEb6oHSgt3lsvxLMeQpuZXs5NXc3HUW1D718tN/VZ+KpC1ex94ItWdztqL0papBDCFaUoLilr9iNYmEiSWj7mnARPHO/nPgh/XJ4l0JpH/OPOJv0by6sfodHhjQdjrQGeZneV3VhGOJL2+KD3LCeDV4PEn0oHaFc+yYk+dicG+2wP5nUvd35IGm0MFreuuY43AUYRNFA3hbeNQukNOoHK6EB1c7PAcSMQtJYX/Lq/YQsLwxI4UA6OaNO5Gs0q7EoHeuJTEk2NHOs5ncCpLORr7N5TDFjQY0DzTFMKCctkxyskGSZUun+/mQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z7g9CIIbfpIxg6D5MyZN7sIGSrgpv7q7e5h4qDbWFHw=;
- b=EH+Bje7KmYoYa9K/F5yrLx4OtHVjtmp2z6Ts80HZbWPPh3TMUU3zjEj8Hvh5XUFKSMbP9DikaloL0pgFe7T6ZOplImyv19GSz5N9L7LtTr2VucfwcTi8p3KKc4aqugJL1wi306kjHkzabSTDJJfWWQZWpG+8IXFFtZa+BfCn6PdOCv/HzSBiZ+SlGxsOUwziovvMBOK/UKt8RBkX1vj/NQYg5z+jXnCV7LkUin8D/KFg1FHTv4u/XFkOktcW7+7gLQGBb5nHRE7Z44DhYlPhqCONBJlFuRcrXrMhQiQLwmtqkB3gDche3OyJis5l64edYp4b3eLEkGWtu2zwFvIhuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z7g9CIIbfpIxg6D5MyZN7sIGSrgpv7q7e5h4qDbWFHw=;
- b=ZBNFyjs2OdPdpHMGADX13DDJ6aQHnNfEggEQfBUoPRBm5agjW5FnHpMmJBsygSDlFj8pDz+M6LILGtSwrmntdO/tZQ/EWP6j1z3rhStRr3LoFcPR5PUgFVzVL8TpGT1f2J+wFWUhGPV2DDdcwagUU0TCngGaoVvB7i2rgwIiJM8=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=oleksandr.suvorov@toradex.com; 
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (2603:10a6:802:1c::24)
- by VI1PR05MB3197.eurprd05.prod.outlook.com (2603:10a6:802:1e::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16; Tue, 7 Apr
- 2020 15:02:43 +0000
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::7cdd:4feb:a8b6:a6d2]) by VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::7cdd:4feb:a8b6:a6d2%7]) with mapi id 15.20.2878.018; Tue, 7 Apr 2020
- 15:02:43 +0000
-X-Gm-Message-State: AGi0Pua2Woas8iaQqvpmTEO+VJLyhEl+EQv2BcP5/D2g5fZ0njoAzNE5
-        r/CakPEF4MrJncFXG8BfFXBcagUP7NW6NOR2H4Q=
-X-Google-Smtp-Source: APiQypJecAGSzh6EfVMbgGC7Y20UIVAsV7RXFyihwphTgBjyxSXKRhk249Ab4SbtSokg3ekIHhX2jUhq74sTTTwY1kE=
-X-Received: by 2002:ad4:54d4:: with SMTP id j20mr2526844qvx.75.1586271329677;
- Tue, 07 Apr 2020 07:55:29 -0700 (PDT)
-References: <20200405192246.3741784-1-oleksandr.suvorov@toradex.com>
- <20200405192246.3741784-3-oleksandr.suvorov@toradex.com> <20200407061646.pcglaw43kfmrag6a@pengutronix.de>
- <CAGgjyvH5nmnXH068QTNPKzsjocNXfEP_yh0HO=L-oGaqQdYRuA@mail.gmail.com> <20200407111842.hp7mhrlsuesa74ep@pengutronix.de>
-In-Reply-To: <20200407111842.hp7mhrlsuesa74ep@pengutronix.de>
-From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Date:   Tue, 7 Apr 2020 17:55:18 +0300
-X-Gmail-Original-Message-ID: <CAGgjyvEP8q9AmXr5nnHiw6zEhoTwFNOW4=wP8eeALfsxtj7L-g@mail.gmail.com>
-Message-ID: <CAGgjyvEP8q9AmXr5nnHiw6zEhoTwFNOW4=wP8eeALfsxtj7L-g@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 2/6] dt-bindings: pwm: document the PWM no-flag
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     devicetree@vger.kernel.org, Paul Barker <pbarker@konsulko.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Tue, 7 Apr 2020 11:14:10 -0400
+Received: from mga07.intel.com ([134.134.136.100]:62686 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728306AbgDGPOK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Apr 2020 11:14:10 -0400
+IronPort-SDR: e2F3fvYjJzLzH/gvI6FziCJ69bveB9/Tpr2xBALz/6Cl0EtnUP0pmxPWnoVCEaCVja+Qu1W3fw
+ NFAEfBDow0Uw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 08:14:08 -0700
+IronPort-SDR: 8ckQHmyoRKj0DtORzCgo/m3++m+vmgjbBLXTRWkuf7wtA3ynA8bzDDWhMm9y+5VxyZAfQLA732
+ 8roctUPLzFZw==
+X-IronPort-AV: E=Sophos;i="5.72,355,1580803200"; 
+   d="scan'208";a="243790804"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 08:14:03 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 4C0FF205C7; Tue,  7 Apr 2020 18:14:01 +0300 (EEST)
+Date:   Tue, 7 Apr 2020 18:14:01 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: MWHPR13CA0025.namprd13.prod.outlook.com
- (2603:10b6:300:95::11) To VI1PR05MB3279.eurprd05.prod.outlook.com
- (2603:10a6:802:1c::24)
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency
+ dt-property
+Message-ID: <20200407151401.GA5206@paasikivi.fi.intel.com>
+References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200406165108.GA7646@kekkonen.localdomain>
+ <20200406173234.GD16885@pendragon.ideasonboard.com>
+ <20200407062241.GA8883@kekkonen.localdomain>
+ <20200407122106.GD4751@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mail-pg1-f179.google.com (209.85.215.179) by MWHPR13CA0025.namprd13.prod.outlook.com (2603:10b6:300:95::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.5 via Frontend Transport; Tue, 7 Apr 2020 15:02:42 +0000
-Received: by mail-pg1-f179.google.com with SMTP id m17so1852860pgj.5;        Tue, 07 Apr 2020 08:02:42 -0700 (PDT)
-X-Gm-Message-State: AGi0Pua2Woas8iaQqvpmTEO+VJLyhEl+EQv2BcP5/D2g5fZ0njoAzNE5
-        r/CakPEF4MrJncFXG8BfFXBcagUP7NW6NOR2H4Q=
-X-Google-Smtp-Source: APiQypJecAGSzh6EfVMbgGC7Y20UIVAsV7RXFyihwphTgBjyxSXKRhk249Ab4SbtSokg3ekIHhX2jUhq74sTTTwY1kE=
-X-Received: by 2002:ad4:54d4:: with SMTP id j20mr2526844qvx.75.1586271329677;
- Tue, 07 Apr 2020 07:55:29 -0700 (PDT)
-X-Gmail-Original-Message-ID: <CAGgjyvEP8q9AmXr5nnHiw6zEhoTwFNOW4=wP8eeALfsxtj7L-g@mail.gmail.com>
-X-Originating-IP: [209.85.215.179]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d617f09e-eb50-4b32-09e0-08d7db04b927
-X-MS-TrafficTypeDiagnostic: VI1PR05MB3197:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB319799A1BCD75094045343ABF9C30@VI1PR05MB3197.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 036614DD9C
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB3279.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(396003)(136003)(366004)(346002)(39850400004)(376002)(316002)(478600001)(81156014)(52116002)(42186006)(5660300002)(186003)(55446002)(8676002)(26005)(9686003)(2906002)(86362001)(81166006)(966005)(44832011)(54906003)(55236004)(66556008)(66946007)(53546011)(450100002)(6862004)(4326008)(66476007)(8936002)(6666004);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: J87O5YKbc/Uu15/8JJDoH0tCcA6WBGlYqbUdZitaGotre1kWO5SUbkeirn1aca7nsvg6NJIyJJ1yJd8ciGk5oVnGXqfkj8g8c43IYGkCS/93AIUCE51EJOmAABeCNjAKVA2rO1GVwF59g4pFmiSeUpPJ1PHp+nqN5yZ74KOD4K7cclAfOvcxpXKbG6q1nj+yZdgJ0SCJGH1Mkzgd3LTzNojEyOD2/TMqCnBqsvbMyOpdWWarBzjeJ9SV/EcAVxyvSGETJh8EtZ7UQn5BynmkQq3senyB9tpEPkkojsOAf1XHVHbxRucIi2k/z6EGQnjWB4rHVnQ0jS3vj3AZURKDsh1n9tEUAApDVQyNLd6J2PdZ5XSW3pu4acsdwVSn0DaJaE/AcgD+M5VRUhhMoSksQAJJLx99vvcjIs0E3p9RDbdukUO3TZUDe2vUhgDUhCQZWdbCEz7yRAA1yAa7OYOyFUwMXNifA7puGCLsLkVutH+aY/+BvVs37RqEazoTvCUesCaJ7nZ1cPhFiolXQepaJA==
-X-MS-Exchange-AntiSpam-MessageData: yCnjryy0mQRGQcbswCCozBY6FK5qzrhclWe5Bjb6vRLgU2fmvpTGZC6p2AVrjgdzRSM6h6Wvrv+f9Lxttxc8vaT5IqjAcSSFoTQfpIvVnptBt3C5Wxk6lEEs24E1je+RijiiSuQWfQtvN0tKYdzKGQ==
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d617f09e-eb50-4b32-09e0-08d7db04b927
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2020 15:02:42.9809
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dpJ7TC0OhxvwrC/oa40wq71iyPLobCejS+DFmnIBJxNW/DxHwkJSjS7cNY2z0JdPTscWyyM2iqWz+My+0qwIQppGhOJ+pkE1SyaLNp/lXzA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3197
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407122106.GD4751@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 2:19 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> On Tue, Apr 07, 2020 at 01:51:42PM +0300, Oleksandr Suvorov wrote:
-> > On Tue, Apr 7, 2020 at 9:17 AM Uwe Kleine-K=C3=B6nig
-> > <u.kleine-koenig@pengutronix.de> wrote:
-> > >
-> > > On Sun, Apr 05, 2020 at 10:22:42PM +0300, Oleksandr Suvorov wrote:
-> > > > Add the description of PWM_NOFLAGS flag property.
-> > > >
-> > > > Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-> > >
-> > > As I already wrote in reply to the v1 series I'd prefer a name for 0
-> > > that explicitly handles normal polarity.
-> >
-> > Uwe, AFAIU, there is no flag that forces normal polarity, the normal po=
-larity
-> > is the default state if there is no flag to invert the polarity is set.
->
-> Yes, that's the status quo.
->
-> > '0' value in the bit flags cell really means there are no flags set
-> > for the PWM instance.
->
-> For me the relevance of giving 0 a name is mostly for human consumption.
-> Currently there is only a single flag encoded in the number in question.
-> But as soon as we add another, say PWM_AUTOSTART we have the following
-> possible settings:
->
->         PWM_NOFLAGS
->         PWM_POLARITY_INVERTED
->         PWM_AUTOSTART
->         PWM_POLARITY_INVERTED | PWM_AUTOSTART
->
-> Then for the first two a reader doesn't see if autostart is not in use
-> because the dt author doesn't know this feature (e.g. because autostart
-> is too new) or if they don't want autostart at all.
->
-> If however we had PWM_POLARITY_NORMAL and PWM_NO_AUTOSTART to complement
-> PWM_POLARITY_INVERTED and PWM_AUTOSTART
+Hi Laurent,
 
-So using this approach, in theory, we'll have several flags that all
-just equals to 0 (0 << 0, 0 << 1, 0 << 2 ...).
-What if just describe default states for each flag in the DT documentation?
+On Tue, Apr 07, 2020 at 03:21:06PM +0300, Laurent Pinchart wrote:
+> Hi Sakari,
+> 
+> On Tue, Apr 07, 2020 at 09:22:41AM +0300, Sakari Ailus wrote:
+> > On Mon, Apr 06, 2020 at 08:32:34PM +0300, Laurent Pinchart wrote:
+> > > On Mon, Apr 06, 2020 at 07:51:08PM +0300, Sakari Ailus wrote:
+> > > > On Mon, Apr 06, 2020 at 05:42:38PM +0100, Lad Prabhakar wrote:
+> > > > > Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
+> > > > > as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
+> > > > > 24MHz. So instead making clock-frequency as dt-property just let the
+> > > > > driver enforce the required clock frequency.
+> > > > 
+> > > > Even if some current systems where the driver is used are using 24 MHz
+> > > > clock, that doesn't mean there wouldn't be systems using another frequency
+> > > > that the driver does not support right now.
+> > > > 
+> > > > The driver really should not set the frequency unless it gets it from DT,
+> > > > but I think the preferred means is to use assigned-clock-rates instead, and
+> > > > not to involve the driver with setting the frequency.
+> > > > 
+> > > > Otherwise we'll make it impossible to support other frequencies, at least
+> > > > without more or less random defaults.
+> > > 
+> > > We're running in circles here.
+> > > 
+> > > As the driver only supports 24MHz at the moment, the frequency should be
+> > > set by the driver, as it's a driver limitation. We can then work on
+> > > supporting additional frequencies, which will require DT to provide a
+> > > list of supported frequencies for the system, but that can be done on
+> > > top.
+> > 
+> > I guess it would be possible to use different external clock frequencies on
+> > a sensor in a given system but that seems to be a bit far fetched, to the
+> > extent I've never seen anyone doing that in practice.
+> > 
+> > Originally, the driver set the frequency based on the clock-frequency
+> > property. If we're removing that but use a fixed frequency instead, then
+> > how is that going to work going forward when someone adds support for other
+> > frequencies in the driver and has a system requiring that, while there are
+> > some other platforms relying on the driver setting a particular frequency?
+> 
+> The standard property for this is link-frequencies, not clock-frequency.
+> Deprecating clock-frequency now paves the way to use the standard
+> property later when/if someone implements support for additional
+> frequencies.
 
-> every flag's setting could be explicit and if there is a device tree that=
- only has
->
->         PWM_POLARITY_NORMAL
->
-> it would be obvious that nobody thought enough about autostarting to
-> explicitly mention it.
+The external clock frequency and link frequency are different indeed, but
+they are related. The link frequency has been selected in a way that it is
+possible to generate that exact frequency using the chosen external clock
+frequency. If you change the external clock frequency, chances are good
+there is no PLL configuration to generate that link frequency.
 
-If you insist on the flag complement model, I have another suggestion.
-As the normal polarity is the default state, can we use PWM_NO_POLARITY_INV=
-ERTED
-instead of PWM_POLARITY_NORMAL?
-It gives us 2 benefits:
-1. The name will not interfere with enum PWM_POLARITY_NORMAL in <linux/pmw.=
-h>
-2. Each flag complement will be made with the same scheme:
-PWM_flagA -> PWM_NO_flagA...
+> 
+> > Although, if you're saying that this driver only needs to work with DT that
+> > comes with the kernel and you don't care about DT binary compatibility,
+> > this would be fine.
+> 
+> I believe this series to not break backward compatibility, as the driver
+> only works with a 24MHz clock, so I expect all DTs to specify that.
 
-> Best regards
-> Uwe
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
-|
+What you're still doing here is defining the DT bindings based on the
+current driver implementation, not the device properties.
 
---
-Best regards
-Oleksandr Suvorov
+-- 
+Regards,
 
-Toradex AG
-Ebenaustrasse 10 | 6048 Horw | Switzerland | T: +41 41 500 48 00
+Sakari Ailus
