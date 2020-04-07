@@ -2,181 +2,179 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13017C2BB86
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 09:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8A0C2BABC
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 09:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC93520748
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 09:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C590420730
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 09:19:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGRWXEx5"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fSDf9tia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgDGJTn (ORCPT
+        id S1728074AbgDGJTr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 05:19:43 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:38070 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbgDGJTn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 05:19:43 -0400
-Received: by mail-pj1-f67.google.com with SMTP id m15so487135pje.3;
-        Tue, 07 Apr 2020 02:19:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=lROniNDiIOjjpIjvHpnVkfnddBnlAAfl2vsiVaC1w6o=;
-        b=mGRWXEx53f8V++y2sqBoAJ0W40h0u3ObljSb2j8iQQAvSDWZZ70AVb3Pwu0EEylo0w
-         NfLeJuroWUEq8q+pTLmqGSg05cDpZZCwMFe3N3rwXulOIfMdbz4/vhJYAOztxH0EwjQa
-         b3pwIwxm3xvYCgz9wPIPHEWpO5ov9nunx8fWrPmEHvlTp7GTnY6ZakEVE86A6Udjqloj
-         qDcS6FiCWb4JDhSQUIybCEtTJydQ39jZpqAjPLVPWPNhJji0Zlk4f9N2VX/mFFfAjU9g
-         krp3/qosAdizvvC0zP7r6b2ypy0PDA3Q3mWVPWA8KeKtmdAi9PkTYW4305s1AIWuKzvE
-         c1Dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lROniNDiIOjjpIjvHpnVkfnddBnlAAfl2vsiVaC1w6o=;
-        b=JoEWzI/xU8DFiZWTiAPAt/SojvgKXTiLWWMJiI5yzcCeT4zLU1J+wCTsMci7jrqWoQ
-         nMAFbuxgolkYgN+2QUujtH4niM2iD2uUuwywV/MY+tXMJ97TJpFlmbtxfXUfI8J1AHCt
-         QaWvNkzFQHyh7YCFrAI1NTKkkgTI2s0IkMatYPTLqUNeAgivffrll10lGW7KL51A0KOD
-         YfQ2p/1pcpckqXU6M0f120lEPaPH8+yRIyGGbJ8rA0RLuJJTlTVMtfzG5l7Bma5V0sRh
-         obShttVsIlDB/XpC76kbQK6IQR/khHlHjB/+Fz0HdVJtPITREGfOp+pdPSRYYIZ/DWgy
-         zR6A==
-X-Gm-Message-State: AGi0PuYfRmRKK+XFo0ZXx5tI1IDqzpj6kIrq2NF6j/K4F/FJkXPPINNi
-        Oy0jkGvcLRJRfVbStRTgGUqslNodmMuAsJU5gail1v0FwrY=
-X-Google-Smtp-Source: APiQypJordqgk/ugka5pE/qIu6yAn6IP19nsSoS08a2JxwizKmaqj9yLRA/TujXhtXBTWSBFc0Rp6rWmNZb5NKEH1B0=
-X-Received: by 2002:a17:902:5acb:: with SMTP id g11mr1627149plm.18.1586251180188;
- Tue, 07 Apr 2020 02:19:40 -0700 (PDT)
+        Tue, 7 Apr 2020 05:19:47 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:50513 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726637AbgDGJTq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 05:19:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586251186; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=JkT2sTUJ8FGclBebPphK1ZlCoEL/hiXwiZW3sDem2YU=; b=fSDf9tiaFlUGKeDrGY/byYHs1C5bXtLS0XKg9+nlOLVSXJqI1W3zaWOpqaPmIeg+Sxhcbupx
+ a0Q2QWwozHINtdzGYiqi46t2Ro9ASXZLTEhCABr88F/UGv6dLlHV3cO0tVNAejxbbzemjPU7
+ zsKeCU6rXUg9hhAqCGQJIhqpfYs=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8c45a9.7fb55a6fa688-smtp-out-n03;
+ Tue, 07 Apr 2020 09:19:37 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B635FC4478C; Tue,  7 Apr 2020 09:19:35 +0000 (UTC)
+Received: from [192.168.0.6] (unknown [183.83.138.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 26D7AC433F2;
+        Tue,  7 Apr 2020 09:19:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 26D7AC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH V3 6/8] tty: serial: qcom_geni_serial: Add interconnect
+ support
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, georgi.djakov@linaro.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org
+References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
+ <1585652976-17481-7-git-send-email-akashast@codeaurora.org>
+ <20200331193949.GK199755@google.com>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <db7d1369-33aa-b0b3-ec44-2018ea382887@codeaurora.org>
+Date:   Tue, 7 Apr 2020 14:49:20 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200406150846.878-1-nuno.sa@analog.com> <20200406150846.878-6-nuno.sa@analog.com>
- <CAHp75VeK8K0WHK3gDwyT3ZAaMaVdfZ5xVG94JY4O8fd2U0HEHg@mail.gmail.com> <BN6PR03MB33476ECFB3F8454CC6C67F0E99C30@BN6PR03MB3347.namprd03.prod.outlook.com>
-In-Reply-To: <BN6PR03MB33476ECFB3F8454CC6C67F0E99C30@BN6PR03MB3347.namprd03.prod.outlook.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 7 Apr 2020 12:19:28 +0300
-Message-ID: <CAHp75VcOxjnNRetQxUR=8Z-WA=V6rzAFwCfhjNCmjQE3hgAEEA@mail.gmail.com>
-Subject: Re: [PATCH v4 5/6] iio: imu: Add support for adis16475
-To:     "Sa, Nuno" <Nuno.Sa@analog.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200331193949.GK199755@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 10:26 AM Sa, Nuno <Nuno.Sa@analog.com> wrote:
-> > From: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Sent: Montag, 6. April 2020 18:20
-> > To: Sa, Nuno <Nuno.Sa@analog.com>
-> > Cc: linux-iio <linux-iio@vger.kernel.org>; devicetree
-> > <devicetree@vger.kernel.org>; Jonathan Cameron <jic23@kernel.org>;
-> > Hartmut Knaack <knaack.h@gmx.de>; Lars-Peter Clausen
-> > <lars@metafoo.de>; Peter Meerwald-Stadler <pmeerw@pmeerw.net>; Rob
-> > Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
-> > Ardelean, Alexandru <alexandru.Ardelean@analog.com>; Hennerich,
-> > Michael <Michael.Hennerich@analog.com>
-> > Subject: Re: [PATCH v4 5/6] iio: imu: Add support for adis16475
-> >
-> > On Mon, Apr 6, 2020 at 6:10 PM Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
+Hi Matthias,
 
-...
-
-> > > +       for_each_set_bit(bit, indio_dev->active_scan_mask,
-> > > +                        indio_dev->masklength) {
-> >
-> > One line?
-> >
+On 4/1/2020 1:09 AM, Matthias Kaehlcke wrote:
+> Hi Akash,
 >
-> It goes beyond 80 col limit... I know I could initialize these to some lo=
-cal const but...
-
-That's why question mark is there.
-Nonetheless, if it ~2-3 characters more, I would leave it on one line anywa=
-y.
-
-JFYI: readability has a priority over 80 limit.
-
-> > > +       }
-
-...
-
-> > > +                       if (scaled_out_freq < 1900 || scaled_out_freq=
- > 2100) {
-> > > +                               dev_err(dev,
-> > > +                                       "Invalid value:%u for adi,sca=
-led-output-hz",
-> > > +                                       scaled_out_freq);
-> >
-> > When there is no property or property has a value 0 this message can't
-> > tell the difference.
-> > Perhaps you have to check return code from device_property_read_u32()
-> > call.
-> >
+> On Tue, Mar 31, 2020 at 04:39:34PM +0530, Akash Asthana wrote:
+>> Get the interconnect paths for Uart based Serial Engine device
+>> and vote according to the baud rate requirement of the driver.
+>>
+>> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+>> ---
+>> Changes in V2:
+>>   - As per Bjorn's comment, removed se == NULL check from geni_serial_icc_get
+>>   - As per Bjorn's comment, removed code to set se->icc_path* to NULL in failure
+>>   - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
+>>     path handle
+>>   - As per Matthias comment, added error handling for icc_set_bw call
+>>
+>> Changes in V3:
+>>   - As per Matthias comment, use common library APIs defined in geni-se
+>>     driver for ICC functionality.
+>>
+>>   drivers/tty/serial/qcom_geni_serial.c | 28 +++++++++++++++++++++++++---
+>>   1 file changed, 25 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+>> index 8c5d97c..2befe72 100644
+>> --- a/drivers/tty/serial/qcom_geni_serial.c
+>> +++ b/drivers/tty/serial/qcom_geni_serial.c
+>> @@ -965,6 +965,14 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
+>>   	ser_clk_cfg = SER_CLK_EN;
+>>   	ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
+>>   
+>> +	/*
+>> +	 * Bump up BW vote on CPU path as driver supports FIFO mode only.
+>> +	 * Assume peak_bw as twice of avg_bw.
+>> +	 */
+>> +	port->se.from_cpu.avg_bw = Bps_to_icc(baud);
+>> +	port->se.from_cpu.peak_bw = Bps_to_icc(2 * baud);
+>> +	geni_icc_vote_on(&port->se);
+>> +
+>>   	/* parity */
+>>   	tx_trans_cfg = readl(uport->membase + SE_UART_TX_TRANS_CFG);
+>>   	tx_parity_cfg = readl(uport->membase + SE_UART_TX_PARITY_CFG);
+>> @@ -1202,11 +1210,14 @@ static void qcom_geni_serial_pm(struct uart_port *uport,
+>>   	if (old_state == UART_PM_STATE_UNDEFINED)
+>>   		old_state = UART_PM_STATE_OFF;
+>>   
+>> -	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF)
+>> +	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF) {
+>> +		geni_icc_vote_on(&port->se);
+>>   		geni_se_resources_on(&port->se);
+>> -	else if (new_state == UART_PM_STATE_OFF &&
+>> -			old_state == UART_PM_STATE_ON)
+>> +	} else if (new_state == UART_PM_STATE_OFF &&
+>> +			old_state == UART_PM_STATE_ON) {
+>>   		geni_se_resources_off(&port->se);
+>> +		geni_icc_vote_off(&port->se);
+>> +	}
+>>   }
+>>   
+>>   static const struct uart_ops qcom_geni_console_pops = {
+>> @@ -1304,6 +1315,17 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
+>>   			return -ENOMEM;
+>>   	}
+>>   
+>> +	ret = geni_icc_get(&port->se, "qup-core", "qup-config", NULL);
+>> +	if (ret)
+>> +		return ret;
+>> +	/* Set the bus quota to a reasonable value */
+>> +	port->se.to_core.avg_bw = console ? GENI_DEFAULT_BW :
+>> +		Bps_to_icc(CORE_2X_50_MHZ);
+>> +	port->se.to_core.peak_bw = console ? GENI_DEFAULT_BW :
+>> +		Bps_to_icc(CORE_2X_100_MHZ);
+> I'm still unconvinced about the setting of the core bandwidth based on
+> whether the port is used as console or not. It could possibly break
+> consoles working at speeds > 115kbs and reserve more bandwidth than
+> necessary for ports with 'slow' devices.
 >
-> Well, I think we don't really need to. If the sync mode is scaled, then t=
-his property is mandatory
-> (and this is stated in the bindings). So, I don't really care if the prop=
-erty is not there or if it's just
-> a wrong value. We should fail either way and I'm not sure an extra if wit=
-h some other message will
-> give us that extra value...
-
-Up to maintainer (I have no strong opinion about this)
-
-> > > +                               return -EINVAL;
-> > > +                       }
-
-...
-
-> > > +       /*
-> > > +        * It is possible to configure the data ready polarity. Furth=
-ermore, we
-> > > +        * need to update the adis struct if we want data ready as ac=
-tive low.
-> > > +        */
-> > > +       irq_type =3D irqd_get_trigger_type(desc);
-> > > +       if (irq_type =3D=3D IRQF_TRIGGER_RISING) {
-
-> > > +               polarity =3D 1;
-
-For the sake of consistency I would assign irq_flag here as well.
-
-> > > +       } else if (irq_type =3D=3D IRQF_TRIGGER_FALLING) {
-> > > +               polarity =3D 0;
-> > > +               st->adis.irq_flag =3D IRQF_TRIGGER_FALLING;
-> > > +       } else {
-> > > +               dev_err(&spi->dev, "Invalid interrupt type 0x%x speci=
-fied\n",
-> > > +                       irq_type);
-> > > +               return -EINVAL;
-> > > +       }
-> >
-> > Here is the problem. You got type, but you compare it to flags. It's
-> > not correct.
-> > Although values are the same, the meaning is different.
-> >
+> Why not scale the core bandwidth dynamically? You said earlier that there
+> is no clear/linear translation of port speed to bandwidth, but you could
+> use the same logic that is implicitly used here:
 >
-> Hmm, thanks! Honestly, this was copy paste from adis16480 and I never rea=
-lized this. I will
-> use IRQ_TYPE_EDGE_RISING and IRQ_TYPE_EDGE_FALLING. I guess we need a pat=
-ch changing this
-> in adis16480...
+> 	if (baudrate <= 115200) {
+> 		avg_bw = GENI_DEFAULT_BW;
+> 		peak_bw = GENI_DEFAULT_BW;
+> 	} else {
+> 		avg_bw = Bps_to_icc(CORE_2X_50_MHZ);
+> 		peak_bw = Bps_to_icc(CORE_2X_100_MHZ);
+> 	}
+>
+> This would be more robust, power efficient and future readers of the
+> code don't have to wonder "why is the console special?" when our
+> discussions on this will be long forgotten.
 
-As a separate patch, yes.
+Okay, I will add this piece of code in set_termios call of the driver 
+because I don't have baudrate information during probe. It covers the 
+console case mentioned in probe function.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Regards,
+
+Akash
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
