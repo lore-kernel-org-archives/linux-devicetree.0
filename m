@@ -2,109 +2,95 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8505C2BA16
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 06:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4711C2BA16
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 06:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 800C320692
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 06:46:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RwfxFhp4"
+	by mail.kernel.org (Postfix) with ESMTP id 9BED220692
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 06:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbgDGGqw (ORCPT
+        id S1726030AbgDGGqo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 02:46:52 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:31729 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727575AbgDGGqv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 02:46:51 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586242011; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=YNf79xvKi5JqIDaeZlfwyRyDgRV9sC+NNd4/lwc+Ngc=; b=RwfxFhp4i67FaZvjziWM6HSEgR23w7QWJ84h/V9K4mTsb3R8aw9fsAYrQgzqFhF8IhGgGOuO
- odokWH6w0Xj0Vk10uyrs3XWOlo/mbglpaOxogQ7PYx7NLlLT+AWhMENvOvqqBa91K+VM48KG
- xuz4x2MCDB7Nf5+mz5YhdcWYe1s=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8c21cc.7f439206cbc8-smtp-out-n04;
- Tue, 07 Apr 2020 06:46:36 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 190F4C43636; Tue,  7 Apr 2020 06:46:36 +0000 (UTC)
-Received: from [192.168.0.6] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2C9DBC433D2;
-        Tue,  7 Apr 2020 06:46:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2C9DBC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH V3 2/8] soc: qcom: geni: Support for ICC voting
-To:     Evan Green <evgreen@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>, wsa@the-dreams.de,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-serial@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Doug Anderson <dianders@chromium.org>
-References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
- <1585652976-17481-3-git-send-email-akashast@codeaurora.org>
- <20200331233209.GF254911@minitux>
- <CAE=gft6B2UCBVaKVCJXED8waFWci8WJ+sTM3CT+3e_eYS=-BDQ@mail.gmail.com>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <66da4cc6-3873-1d39-ecb7-e9866320c469@codeaurora.org>
-Date:   Tue, 7 Apr 2020 12:16:26 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <CAE=gft6B2UCBVaKVCJXED8waFWci8WJ+sTM3CT+3e_eYS=-BDQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Tue, 7 Apr 2020 02:46:44 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:58318 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726901AbgDGGqn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Apr 2020 02:46:43 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C28B7201034;
+        Tue,  7 Apr 2020 08:46:42 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6C1BA201022;
+        Tue,  7 Apr 2020 08:46:38 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B8E29402E4;
+        Tue,  7 Apr 2020 14:46:32 +0800 (SGT)
+From:   Biwen Li <biwen.li@oss.nxp.com>
+To:     shawnguo@kernel.org, ran.wang_1@nxp.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jiafei.pan@nxp.com, Biwen Li <biwen.li@nxp.com>
+Subject: [RESEND 2/4] arm64: dts: ls1028a: Add ftm_alarm0 DT node
+Date:   Tue,  7 Apr 2020 14:42:49 +0800
+Message-Id: <20200407064251.39244-2-biwen.li@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200407064251.39244-1-biwen.li@oss.nxp.com>
+References: <20200407064251.39244-1-biwen.li@oss.nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn, Evan,
+From: Biwen Li <biwen.li@nxp.com>
 
->> Given that these two functions only switch the bandwidth request between
->> some value and 0, I really think we should carry a "bool enabled" on the
->> path and replace these two functions with
->> icc_bulk_enable()/icc_bulk_disable().
-So, if above is implementation "bool enabled" on path can be used 
-directly in aggregation of ICC votes on particular node without using 
-icc_set_bw call, if yes then I am not aware how? or we'll be using 
-icc_set_bw API indirectly inside icc_bulk APIs?
->> The added benefit of this would be that you call icc_set_bw() instead of
->> changing the geni_icc_path->{avg_bw,peak_bw} and don't need to keep
->> track of them here.
+The patch adds ftm_alarm0 DT node for LS1028ARDB board
+FlexTimer1 module is used to wakeup the system
 
-Ok IIUC, we need to call icc_set_bw() from GENI driver only if we change 
-(avg_bw | peak_bw)?
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Regards,
-
-Akash
-
-> Yes yes! I had the same thought here [1].
->
-> Georgi, what do you think?
-> -Evan
->
-> [1] https://lore.kernel.org/linux-arm-msm/CAE=gft58QsgTCUHMHKJhcM9ZxAeMiY16CrbNv2HaTCRqwtmt7A@mail.gmail.com/
-
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 0bf375ec959b..98233fe61037 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -17,6 +17,10 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 
++	aliases {
++		rtc1 = &ftm_alarm0;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -724,6 +728,19 @@
+ 				little-endian;
+ 			};
+ 		};
++
++		rcpm: rcpm@1e34040 {
++			compatible = "fsl,ls1028a-rcpm", "fsl,qoriq-rcpm-2.1+";
++			reg = <0x0 0x1e34040 0x0 0x1c>;
++			#fsl,rcpm-wakeup-cells = <7>;
++		};
++
++		ftm_alarm0: timer@2800000 {
++			compatible = "fsl,ls1028a-ftm-alarm";
++			reg = <0x0 0x2800000 0x0 0x10000>;
++			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0 0x0>;
++			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++		};
+ 	};
+ 
+ 	malidp0: display@f080000 {
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+2.17.1
+
