@@ -2,181 +2,205 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3240C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 09:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BF5C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 10:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7971C206F7
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 09:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FC572074B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 10:05:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ERxD/TeO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DDJtqM0Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbgDGJ6e (ORCPT
+        id S1728202AbgDGKFZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 05:58:34 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39176 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728091AbgDGJ6e (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 05:58:34 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p10so3134134wrt.6
-        for <devicetree@vger.kernel.org>; Tue, 07 Apr 2020 02:58:33 -0700 (PDT)
+        Tue, 7 Apr 2020 06:05:25 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36508 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728091AbgDGKFZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 06:05:25 -0400
+Received: by mail-wr1-f68.google.com with SMTP id k1so3201860wrm.3;
+        Tue, 07 Apr 2020 03:05:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=17rM6IjmKNZZODjeRxanNL0pY2eyTkdVNq2/tT7WZmE=;
-        b=ERxD/TeOIqmAldeFFhLoPnM73o+qNAQOYxMQWrckKjWSlIndJjheH5SAwj8+W6+JQE
-         Cxa0LZu8ElpRx5M/aB/POW8ykMJoY4tj+Zglqqb+f6n+Jlmki5mviLlHY59SnofZUFdj
-         b4WwAcIDAPzAGCKar1Tm9m1q16gf+GOblIe6WMAKa9FyNKzJvKptE3FyT1kuQhkvQ5f2
-         53f3IY+71nkYJEATIybBctYfmNJeHo6jPgK4oKuh09YrrucFH9XntXiGxuIgxceUbmqZ
-         66G1xUjnT3hQdxHrkinoltxJwUEPdmGo/MOmtwFv1hKxqgdMnpIS+/oNaWsDSb2Wobo9
-         nFsA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WWziHtBi4oc9djsFaUX7XQ3VCEDyA2EhaftZG+vRTmU=;
+        b=DDJtqM0ZmFRZgkoIfjqJdHl3jmIlVS6XZRWpAl1W640TYYwj0oq1aQCqr6ap3+oXJP
+         Kc+CTP22W4kFz075wcNPlgXk3WIA2OC06cMHalq/pNM3NkOSxpXQJHnnIN1T0e/TcL8b
+         4Da9rKgxsLO+gXm78IdgUnGJbWWBCXW9qxF84EhqNYsncCFZnPXPDHTspg8A/EW5UqEd
+         Usyjjklwodn/qRuRfGIsTsG2HS6JuC786EggwG53ZL5smZDXB+SnAHV4dGmsSadipRwI
+         8BFWuNpzpawO5DCsGVwbrD+y2DF49Q0yGejQjO7XaC3xrXCP6EZ9DmrUO2haJJUgmaHo
+         7RcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=17rM6IjmKNZZODjeRxanNL0pY2eyTkdVNq2/tT7WZmE=;
-        b=I1yYUCv7YL79nbgHv0/aQcoxasJgi5WwZoeCh9iiZiHQCA5KTcKhuydQE2QE8eRO8K
-         3fHVi0Ei0PcEpXi6/8qPmgw90nwehXvQxCl+NE+WikaIiB9veWdZGDZZsdts395KOySk
-         sXq/hHO0eLB/9I4McVQiKxYlaLrujAoFFosM9b2eAYuiTilHXzSq0wS72grjTY8n1dE1
-         Ak/n4I3Vyqlf4UM62Ob5Fl27EkIhhgzcVRUkQ9fwO/brcrkKf11LtbT9Lf9xVZ7Koj5R
-         qJHyy3s6S9gqxREcEGafzytVySCuEni1FC7bmuAdq8Wblw9LoCgd9vYrezz2EU8C7VP1
-         DCqg==
-X-Gm-Message-State: AGi0PubB69KSaTnTNni7TfCNZ59jgYEHGDJuqSCw8vPFkbmqU91UKoAF
-        fk9chC8VlpDu6cgEYLLNjRqYqQ==
-X-Google-Smtp-Source: APiQypL2FllgryYtHwOLtsaM3rTG/9cMFgFuErEQsvHGtP9IzpT3hFO2SL44+fh//EJSQMYbP7QJqg==
-X-Received: by 2002:a5d:53d1:: with SMTP id a17mr1964915wrw.41.1586253512412;
-        Tue, 07 Apr 2020 02:58:32 -0700 (PDT)
-Received: from [192.168.0.136] ([87.120.218.65])
-        by smtp.googlemail.com with ESMTPSA id s7sm5647638wrt.2.2020.04.07.02.58.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 Apr 2020 02:58:31 -0700 (PDT)
-Subject: Re: [PATCH V3 2/8] soc: qcom: geni: Support for ICC voting
-To:     Akash Asthana <akashast@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>, wsa@the-dreams.de,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-serial@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Doug Anderson <dianders@chromium.org>
-References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
- <1585652976-17481-3-git-send-email-akashast@codeaurora.org>
- <20200331233209.GF254911@minitux>
- <CAE=gft6B2UCBVaKVCJXED8waFWci8WJ+sTM3CT+3e_eYS=-BDQ@mail.gmail.com>
- <66da4cc6-3873-1d39-ecb7-e9866320c469@codeaurora.org>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <866a5cac-9f05-703e-8c3c-168d8f219c4d@linaro.org>
-Date:   Tue, 7 Apr 2020 12:58:30 +0300
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WWziHtBi4oc9djsFaUX7XQ3VCEDyA2EhaftZG+vRTmU=;
+        b=FUDQ9JiRFe0OY5ulrgKEwwykIibWe6jjlMLuZT5xTx5sh1Qog1VdOWN0f6Z2kuJLDS
+         YGNUIbDM9evpwzC3z53B2zYR9EMK0tt0dZgbKITA3IZHyAWffwGSl0FMjr5mwIDQRNpz
+         AicTo/zioFvl8YKEB2++5GWv7ocojxehmdN+i4mYzVKi6gwBlstp+ejHXP05e1+FTx2k
+         UQKH4P0yMHEMFpo4uXl+AXpNMYI+fOz4RNcdKsnEJnTp0c+3CjnFyxaz79Sv9PyMw6uZ
+         TJc1L7wEnqBwK2F0h5rdGpJv98L2oNvsYwmryOaI7eS9wxaxUaL77Lmf2/I+OGPrG0FQ
+         Q3Ig==
+X-Gm-Message-State: AGi0PuZ/TVTajEb+YUYMf9qNKQV3S0xSGRkJWP30KfkT5Ml/zwQfOEBX
+        ahPjlMjkNTwOzR899yOJW6M=
+X-Google-Smtp-Source: APiQypKNqMTxJb7gtU/ZDGcNRW5WADi+fcwveFkxNyy/3NH2A8xr0eNmIy5j6DbGgVgXH5x924qrTQ==
+X-Received: by 2002:adf:fe87:: with SMTP id l7mr1823086wrr.377.1586253922777;
+        Tue, 07 Apr 2020 03:05:22 -0700 (PDT)
+Received: from localhost (pD9E51D62.dip0.t-ipconnect.de. [217.229.29.98])
+        by smtp.gmail.com with ESMTPSA id i2sm30490830wrx.22.2020.04.07.03.05.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 03:05:21 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 12:05:20 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Mikko Perttunen <cyndis@kapsi.fi>, Sumit Gupta <sumitg@nvidia.com>,
+        catalin.marinas@arm.com, will@kernel.org, jonathanh@nvidia.com,
+        talho@nvidia.com, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, bbasu@nvidia.com,
+        mperttunen@nvidia.com, devicetree@vger.kernel.org
+Subject: Re: [TEGRA194_CPUFREQ Patch 1/3] firmware: tegra: adding function to
+ get BPMP data
+Message-ID: <20200407100520.GA1720957@ulmo>
+References: <1575394348-17649-1-git-send-email-sumitg@nvidia.com>
+ <20191203174229.GA1721849@ulmo>
+ <9404232d-84ce-a117-89dd-f2d8de80993e@kapsi.fi>
+ <20191204091703.d32to5omdm3eynon@vireshk-i7>
+ <20191204093339.GA2784830@ulmo>
+ <20191204095138.rrul5vxnkprfwmku@vireshk-i7>
 MIME-Version: 1.0
-In-Reply-To: <66da4cc6-3873-1d39-ecb7-e9866320c469@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
+Content-Disposition: inline
+In-Reply-To: <20191204095138.rrul5vxnkprfwmku@vireshk-i7>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
 
-On 4/7/20 09:46, Akash Asthana wrote:
-> Hi Bjorn, Evan,
-> 
->>> Given that these two functions only switch the bandwidth request between
->>> some value and 0, I really think we should carry a "bool enabled" on the
->>> path and replace these two functions with
->>> icc_bulk_enable()/icc_bulk_disable().
-> So, if above is implementation "bool enabled" on path can be used directly in
-> aggregation of ICC votes on particular node without using icc_set_bw call, if
-> yes then I am not aware how? or we'll be using icc_set_bw API indirectly inside
-> icc_bulk APIs?
+--C7zPtVaVf+AK4Oqc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If there is a repeated pattern to switch between some bandwidth value and zero,
-it really makes sense to introduce such functions in the framework core. I think
-that this might be very useful especially for suspend and resume cases.
-Something like icc_{enable,disable}(struct icc_path *path) functions and also
-the bulk versions, that will flag the path as disabled, re-aggregate and do
-icc_set_bw().
+On Wed, Dec 04, 2019 at 03:21:38PM +0530, Viresh Kumar wrote:
+> On 04-12-19, 10:33, Thierry Reding wrote:
+> > Yeah, the code that registers this device is in drivers/base/cpu.c in
+> > register_cpu(). It even retrieves the device tree node for the CPU from
+> > device tree and stores it in cpu->dev.of_node, so we should be able to
+> > just pass &cpu->dev to tegra_bpmp_get() in order to retrieve a reference
+> > to the BPMP.
+> >=20
+> > That said, I'm wondering if perhaps we could just add a compatible
+> > string to the /cpus node for cases like this where we don't have an
+> > actual device representing the CPU complex. There are a number of CPU
+> > frequency drivers that register dummy devices just so that they have
+> > something to bind a driver to.
+> >=20
+> > If we allow the /cpus node to represent the CPU complex (if no other
+> > "device" does that yet), we can add a compatible string and have the
+> > cpufreq driver match on that.
+> >=20
+> > Of course this would be slightly difficult to retrofit into existing
+> > drivers because they'd need to remain backwards compatible with existing
+> > device trees. But it would allow future drivers to do this a little more
+> > elegantly. For some SoCs this may not matter, but especially once you
+> > start depending on additional resources this would come in handy.
+> >=20
+> > Adding Rob and the device tree mailing list for feedback on this idea.
+>=20
+> Took some time to find this thread, but something around this was
+> suggested by Rafael earlier.
+>=20
+> https://lore.kernel.org/lkml/8139001.Q4eV8YG1Il@vostro.rjw.lan/
 
->>> The added benefit of this would be that you call icc_set_bw() instead of
->>> changing the geni_icc_path->{avg_bw,peak_bw} and don't need to keep
->>> track of them here.
-> 
-> Ok IIUC, we need to call icc_set_bw() from GENI driver only if we change (avg_bw
-> | peak_bw)?
+I gave this a try and came up with the following:
 
-Yes, exactly.
+--- >8 ---
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts=
+/nvidia/tegra194.dtsi
+index f4ede86e32b4..e4462f95f0b3 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -1764,6 +1764,9 @@ bpmp_thermal: thermal {
+ 	};
+=20
+ 	cpus {
++		compatible =3D "nvidia,tegra194-ccplex";
++		nvidia,bpmp =3D <&bpmp>;
++
+ 		#address-cells =3D <1>;
+ 		#size-cells =3D <0>;
+=20
+--- >8 ---
 
-Thanks,
-Georgi
+Now I can do something rougly like this, although I have a more complete
+patch locally that also gets rid of all the global variables because we
+now actually have a struct platform_device that we can anchor everything
+at:
 
-> 
-> Regards,
-> 
-> Akash
-> 
->> Yes yes! I had the same thought here [1].
->>
->> Georgi, what do you think?
->> -Evan
->>
->> [1]
->> https://lore.kernel.org/linux-arm-msm/CAE=gft58QsgTCUHMHKJhcM9ZxAeMiY16CrbNv2HaTCRqwtmt7A@mail.gmail.com/
->>
-> 
+--- >8 ---
+static const struct of_device_id tegra194_cpufreq_of_match[] =3D {
+	{ .compatible =3D "nvidia,tegra194-ccplex", },
+	{ /* sentinel */ }
+};
+MODULE_DEVICE_TABLE(of, tegra194_cpufreq_of_match);
+
+static struct platform_driver tegra194_ccplex_driver =3D {
+	.driver =3D {
+		.name =3D "tegra194-cpufreq",
+		.of_match_table =3D tegra194_cpufreq_of_match,
+	},
+	.probe =3D tegra194_cpufreq_probe,
+	.remove =3D tegra194_cpufreq_remove,
+};
+module_platform_driver(tegra194_ccplex_driver);
+--- >8 ---
+
+I don't think that's exactly what Rafael (Cc'ed) had in mind, since the
+above thread seems to have mostly talked about binding a driver to each
+individual CPU.
+
+But this seems a lot better than having to instantiate a device from
+scratch just so that a driver can bind to it and it allows additional
+properties to be associated with the CCPLEX device.
+
+Rob, any thoughts on this from a device tree point of view? The /cpus
+bindings don't mention the compatible property, but there doesn't seem
+to be anything in the bindings that would prohibit its use.
+
+If we can agree on that, I can forward my local changes to Sumit for
+inclusion or reference.
+
+Thierry
+
+--C7zPtVaVf+AK4Oqc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6MUF0ACgkQ3SOs138+
+s6HaEQ/+PrLLpiP0PyCKw9EYMDnFCSTvnHIrXNeyiycSw3o6+KzTFZ/0H1gWoQQz
+A9fdmSWvIO98e2aSMU6KwV+JN/AiOgYA9/oJG1hwKw6/M6z7hMrPeMntFgssE1EP
+sGXeYATmFMuCWVqJ8j3+85eKeIAuwauCuf2JXEXBPYCIl/YWNbepLuhAXreDXfqk
+rLtIJqDa5G4oCLshLkb1SR211kQM9uDX16EVLL1gc/gd7psSYqUMOxiVEGwMnL5t
+h5y+JsMwp4M8CPM4Faq7dEbwKfXOhDJp+aZmMFcm5OEbwSZ7wSUdG3TgoYyEAqhs
+O6PDf9IAR323R2Iz38VuwDIcus8arw4mRI7C6k1c+5Bz+mg9nTcbr2MkiDOvEsn7
+PkII3xkaTsspdVCtFCIlyROHwVKtdjzyOcXS7t57cXyjrLatTtjCGw20889CzSjd
+nTfT5MHCbeex/djcUYRi5Ewe0sT4KSGyud4DgMP9L+Tk87jRGhOUloW3g3DnNQg6
+ucn72xKUFnVnlPFnkwXJucHnUdNSxC+FeTWk97Y96QpsdO47tNBNGMlejajIKWhO
+p91cb7sD+IvYmCAK/UKtmC6n2rD50IphWxm4zJ2QIkyqsa5H3x2vFAI2CqGsefIa
+JhsqKT+LsegNriVWHIFEZzBGj7WDOdvnD/tx12NLFcgyuGFlik8=
+=emOZ
+-----END PGP SIGNATURE-----
+
+--C7zPtVaVf+AK4Oqc--
