@@ -2,135 +2,170 @@ Return-Path: <SRS0=WBDS=5X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDFBC2BA16
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 06:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A7BC2BA16
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 06:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 304C320692
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 06:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD43720692
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Apr 2020 06:53:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q1SWZgGw"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hFBDoUV+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbgDGGxF (ORCPT
+        id S1727444AbgDGGx3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 02:53:05 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41225 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgDGGxF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 02:53:05 -0400
-Received: by mail-qt1-f194.google.com with SMTP id i3so1889931qtv.8;
-        Mon, 06 Apr 2020 23:53:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vWzddfgz7uTE/9V/V86TERRrsNQQISOhESAwCEUneBo=;
-        b=q1SWZgGwg4IOTQBPhG40WaUEPyUsX+FyFrDs5950iqCm/t8Heu0eZHAFpGoUmZq6Bd
-         Xt9rXDCXr5n9qN08BMqz7yICGB2sH0AhkAXJlTs1J7X89vRCHIuaPvju9lH5s+f6PC/L
-         9VOu1HA363LRV4cm1ZSVTe3/KXdojZNaS3z/JhiAGsbhSzHB0xJtMXNE1tArKqjoQ9dX
-         J93dSXODgr6msokMUAPf5TyjdVehaJmZr57P2BIpLtHSJMbkqa12pUGAK1RsrhZOcA+S
-         +GwPXJJGGlLkoUpRmAlQvM5i20ex3c1CjK0uQUPaCH7Msb6KUnoHHaI7KERkD6T+TxkD
-         1zGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vWzddfgz7uTE/9V/V86TERRrsNQQISOhESAwCEUneBo=;
-        b=ZjNS4m2kBr2fFPnSiYrRMvM7AzdWEznIx3LCnkXsokMBT/TqXhjvUUslku03fY+ZP1
-         6opJQrMTU32vfEKEJtYGpsdFkGnqKs3nBTJN7WlDQU9MBrpkEmJZshgQ9exlZwHuW8vF
-         QhcD0/pEGS7cHhxLnvgAtc2oVO9o8QYuPZG8hKFLbOu14mZbJ7ilYYcDM1fKTjhX8d7v
-         HVClyxSlfvGMSvVUvM4fwhlV1JYvKKwv9aE5IU/GO3b+BhNUUqYLmLESvOnyxZh0gPdp
-         brc6ik3Gn1GNZGQ8wjgj5PYkZFW11tTG/uzTwGJrCztef7689JUn35NhS/rHTIV5mv2t
-         EJ4w==
-X-Gm-Message-State: AGi0PuZweS6aVTqAxZVl3yFrII8yq2ZfJ96+16GY0TeNBMm6UzqVrJHx
-        HhWzPnrEVScsXlh7nliJ2UUul+2xnDza4IiobRg=
-X-Google-Smtp-Source: APiQypI66gw7vMWPdfIdgXDBcmt9McXyUBt2rwqcPJXsAdNoo5YK7kjPqDasabdi/daxyv9FQqWl3aCPN2y58P0heE8=
-X-Received: by 2002:aed:21c5:: with SMTP id m5mr897676qtc.42.1586242382828;
- Mon, 06 Apr 2020 23:53:02 -0700 (PDT)
+        Tue, 7 Apr 2020 02:53:29 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:19917 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726030AbgDGGx3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 02:53:29 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586242408; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=MM42mk4hxGceNvVymMZohHxg/lrxWGdHHgUgo5ZLcAw=; b=hFBDoUV+nICu520xYpTGy79plkvhRHvD9ygZ+KEVoQU3iXq5FsLX2M/C47uLeFAfFEvl5ms4
+ kS9XvhR/gxhDOcV8nf4ZiHpJTNXuQpPT0QjlevMiD1hG6ykoEZYOuDRnY1nuLif7/iXNf6ll
+ aweh9MYvfeBADd2qGuUAHw6tE/s=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8c2355.7f4202608ab0-smtp-out-n04;
+ Tue, 07 Apr 2020 06:53:09 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EC920C44792; Tue,  7 Apr 2020 06:53:07 +0000 (UTC)
+Received: from [192.168.0.6] (unknown [183.83.138.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 084B5C433F2;
+        Tue,  7 Apr 2020 06:53:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 084B5C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH V3 3/8] soc: qcom-geni-se: Add interconnect support to fix
+ earlycon crash
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, georgi.djakov@linaro.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org
+References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
+ <1585652976-17481-4-git-send-email-akashast@codeaurora.org>
+ <20200331182457.GH199755@google.com> <20200401194648.GM199755@google.com>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <1a72df9d-3781-f9e2-a394-3b00774bf935@codeaurora.org>
+Date:   Tue, 7 Apr 2020 12:22:59 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200407055837.3508017-1-alistair@alistair23.me> <20200407055837.3508017-3-alistair@alistair23.me>
-In-Reply-To: <20200407055837.3508017-3-alistair@alistair23.me>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Mon, 6 Apr 2020 23:52:36 -0700
-Message-ID: <CA+E=qVf_Zr6JXQVxRuUdTWL7oxq5dRp+jeHF8PWDSozyFZMaCw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] arm64: allwinner: Enable Bluetooth and WiFi on
- sopine baseboard
-To:     Alistair Francis <alistair@alistair23.me>
-Cc:     netdev <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        devicetree <devicetree@vger.kernel.org>, alistair23@gmail.com,
-        arm-linux <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200401194648.GM199755@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 10:58 PM Alistair Francis <alistair@alistair23.me> wrote:
->
-> The sopine board has an optional RTL8723BS WiFi + BT module that can be
-> connected to UART1. Add this to the device tree so that it will work
-> for users if connected.
+Hi Matthias
 
-It's optional, so patch should have 'DO-NOT-MERGE' tag and appropriate
-change should go into dt overlay.
+On 4/2/2020 1:16 AM, Matthias Kaehlcke wrote:
+> On Tue, Mar 31, 2020 at 11:24:57AM -0700, Matthias Kaehlcke wrote:
+>> Hi Akash,
+>>
+>> On Tue, Mar 31, 2020 at 04:39:31PM +0530, Akash Asthana wrote:
+>>> QUP core clock is shared among all the SE drivers present on particular
+>>> QUP wrapper, the system will reset(unclocked access) if earlycon used after
+>>> QUP core clock is put to 0 from other SE drivers before real console comes
+>>> up.
+>>>
+>>> As earlycon can't vote for it's QUP core need, to fix this add ICC
+>>> support to common/QUP wrapper driver and put vote for QUP core from
+>>> probe on behalf of earlycon and remove vote during earlycon exit call.
+>>>
+>>> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+>>> Reported-by: Matthias Kaehlcke <mka@chromium.org>
+>>> ---
+>>> Change is V3:
+>>>   - Add geni_remove_earlycon_icc_vote API that will be used by earlycon
+>>>     exit function to remove ICC vote for earlyconsole.
+>>>   - Remove suspend/resume hook for geni-se driver as we are no longer
+>>>     removing earlyconsole ICC vote from system suspend, we are removing
+>>>     from earlycon exit.
+>>>
+>>>   drivers/soc/qcom/qcom-geni-se.c       | 51 +++++++++++++++++++++++++++++++++++
+>>>   drivers/tty/serial/qcom_geni_serial.c |  7 +++++
+>>>   include/linux/qcom-geni-se.h          |  2 ++
+>>>   3 files changed, 60 insertions(+)
+>>>
+>>> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+>>> index 9344c14..d30c282 100644
+>>> --- a/drivers/soc/qcom/qcom-geni-se.c
+>>> +++ b/drivers/soc/qcom/qcom-geni-se.c
+>>> @@ -90,8 +90,11 @@ struct geni_wrapper {
+>>>   	struct device *dev;
+>>>   	void __iomem *base;
+>>>   	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
+>>> +	struct geni_icc_path to_core;
+>>>   };
+>>>   
+>>> +struct geni_wrapper *earlycon_wrapper;
+>> should be static
+Yeah ok, I missed it.
+>>
+>>> +
+>>>   #define QUP_HW_VER_REG			0x4
+>>>   
+>>>   /* Common SE registers */
+>>> @@ -818,6 +821,26 @@ int geni_icc_vote_off(struct geni_se *se)
+>>>   }
+>>>   EXPORT_SYMBOL(geni_icc_vote_off);
+>>>   
+>>> +void geni_remove_earlycon_icc_vote(void)
+>>> +{
+>>> +	struct geni_wrapper *wrapper = earlycon_wrapper;
+>>> +	struct device_node *parent = of_get_next_parent(wrapper->dev->of_node);
+>>> +	struct device_node *child;
+>>> +
+>>> +	for_each_child_of_node(parent, child) {
+>>> +		if (of_device_is_compatible(child, "qcom,geni-se-qup")) {
+>>> +			wrapper = platform_get_drvdata(of_find_device_by_node(
+>>> +					child));
+>>> +			icc_put(wrapper->to_core.path);
+>>> +			wrapper->to_core.path = NULL;
+>>> +		}
+>>> +	}
+>>> +	of_node_put(parent);
+>>> +
+>>> +	earlycon_wrapper = NULL;
+>>> +}
+>>> +EXPORT_SYMBOL(geni_remove_earlycon_icc_vote);
+>> I didn't know that consoles have an exit handler, this is way nicer than
+>> the miscellaneous triggers we discussed earlier :)
+> No wonder I 'missed' this when looking at the console code for possible
+> triggers, it is brand new and as of now only exists in -next:
+>
+> commit ed31685c96e18f773ca11dd1a637974d62130673
+> Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Date:   Mon Feb 3 15:31:30 2020 +0200
+>
+>      console: Introduce ->exit() callback
+>
+>
+> sharp timing!
 
-> Signed-off-by: Alistair Francis <alistair@alistair23.me>
-> ---
->  .../allwinner/sun50i-a64-sopine-baseboard.dts | 23 +++++++++++++++++++
->  1 file changed, 23 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> index 2f6ea9f3f6a2..f4be1bc56b07 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> @@ -103,6 +103,16 @@ ext_rgmii_phy: ethernet-phy@1 {
->         };
->  };
->
-> +&mmc1 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&mmc1_pins>;
-> +       vmmc-supply = <&reg_dldo4>;
-> +       vqmmc-supply = <&reg_eldo1>;
-> +       non-removable;
-> +       bus-width = <4>;
-> +       status = "okay";
-> +};
-> +
->  &mmc2 {
->         pinctrl-names = "default";
->         pinctrl-0 = <&mmc2_pins>;
-> @@ -174,6 +184,19 @@ &uart0 {
->         status = "okay";
->  };
->
-> +&uart1 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-> +       uart-has-rtscts = <1>;
-> +       status = "okay";
-> +
-> +       bluetooth {
-> +               compatible = "realtek,rtl8723bs-bt";
-> +               device-wake-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
-> +               host-wake-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
-> +       };
-> +};
-> +
->  /* On Pi-2 connector */
->  &uart2 {
->         pinctrl-names = "default";
-> --
-> 2.25.1
->
+Yeah this is added recently, even I was not aware of it, Bjorn suggested 
+me to use this. Indeed sharp timing!  :)
+
+Regards,
+
+Akash
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
