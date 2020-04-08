@@ -2,107 +2,478 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C15FC2BB55
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 20:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 790C7C2D0F4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 21:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B18E206F7
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 20:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29FE02075E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 21:20:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpwFnppq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dN4B/PDU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729059AbgDHUlL (ORCPT
+        id S1729578AbgDHVUG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 16:41:11 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42569 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728970AbgDHUlK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 16:41:10 -0400
-Received: by mail-lj1-f194.google.com with SMTP id q19so9109033ljp.9;
-        Wed, 08 Apr 2020 13:41:09 -0700 (PDT)
+        Wed, 8 Apr 2020 17:20:06 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54173 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgDHVUG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 17:20:06 -0400
+Received: by mail-wm1-f65.google.com with SMTP id d77so1387040wmd.3
+        for <devicetree@vger.kernel.org>; Wed, 08 Apr 2020 14:20:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=aMH1Nn5N++bI82vIh9Zeuiq3h9nQ3Tmnp6S+rKl7EQQ=;
-        b=BpwFnppqcLZOPMRxvow1AbvcXuw+LGJXXW3YesZitK0ee3meIpNyhFQSaN6lKc2E3e
-         QdqeRZbSO1mhtl1vNx8CDU0cePi/UMCD82sMpGvEJoy+gUY9DSbDgxRtm8u721XZykxN
-         Vc/7OcSl52+VKP8OI2V89pLXOU231Ua3zn3wpElhj9476Bw5xpE+6GoOQiG8Lrg9yBR4
-         FIykuxoZlnbg0E3L9X7Oouc4GwTVvJiSotpWaMjXC1h4kbL5Os0M5YuyV24j0b5NOvfA
-         tyFmGVVqDsjFXuhiBQ+bJjzCqB2ywzYv0PutfO5UDbom9CAFrsC1qgdRVdU3vsSrLYQW
-         0S8g==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mlooLY7Sz99r4w5SxW3vhlXWplWMMsvRGvuuen3K1G4=;
+        b=dN4B/PDUnB4ESD02bEyepRx8xOEgSxpQkBnOn1PcFRiLJHlhzDqu+5FzsTHHtqwmyu
+         p0t1WW1FOGeUBGOvvWYNRZOM7PPegLuwU3C02BYEmf39qCifISHTYbOE//7hXGTkvULF
+         69CBbB0SZnHe15+XLIEJwmIbv7QeXPZ+VIhdQ9yYEoUNLe/scixvX+TEHrnNVitj3oD2
+         aPU2mOKUTycAypK/EIINnP3sRPGb5j67LPA3abnn6YqD3bZT1fEtoMpur7YkoaBr8ucR
+         ZsgSHpx+NkPj+kkMao8gKvAfQNiTq6eGyaarUtfHNr85qgPoOUmiDq/KTtEugZoamFbW
+         dFOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=aMH1Nn5N++bI82vIh9Zeuiq3h9nQ3Tmnp6S+rKl7EQQ=;
-        b=UJ4Ngw3sAGZu9LnpYsD8EoIuGeGfKeDW7tKyLd72mdYJGfVBp3a3Wp+HUF+eLWgVnQ
-         JkXWC10bcNjdDgJzmg/EIY17S0uSVZeEwbR0kGRsXkOMuTd7ve9wzPBdluTUkaPiCu7e
-         TRvzdpXPOuYIsxTgjF1jCh0aowaIwHf0u5/VkZYhbzCQYMJLiyXQADuAcrTgwHaICdNo
-         fEmeuxTRk09PBa+V6/SD/ljxUYdgalhnldJURyGHIsGvTzBHKbqAMoE7ShxZMBa/m+YG
-         LnPqYyKeoW/+yWHh80w6LySMB4jEAsVIAG5uLoYRpKMWyrejpTsOChwzE2rFX2SDSlvV
-         /KSg==
-X-Gm-Message-State: AGi0Pua21mxtCStAeEZDKrrX4psHsk8p1gZ5fL81IAM2xNTWHvRgVk61
-        JPDmFF6vtwEG/NVDsir3D1o=
-X-Google-Smtp-Source: APiQypKf0vBdDq3CrSKg/wNsyqgATcaa9BpFhUQ8ohV3RW3Xy+aaXR9CF0tG3AcI7mKPUjvKhOMCNQ==
-X-Received: by 2002:a2e:5844:: with SMTP id x4mr5899665ljd.40.1586378468632;
-        Wed, 08 Apr 2020 13:41:08 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id p14sm13189727lfe.87.2020.04.08.13.41.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 13:41:08 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        =?UTF-8?q?Pedro=20=C3=82ngelo?= <pangelo@void.io>,
-        Matt Merhar <mattmerhar@protonmail.com>
-Cc:     linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/6] dt-bindings: ARM: tegra: Add Acer Iconia Tab A500
-Date:   Wed,  8 Apr 2020 23:39:43 +0300
-Message-Id: <20200408203945.10329-5-digetx@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200408203945.10329-1-digetx@gmail.com>
-References: <20200408203945.10329-1-digetx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mlooLY7Sz99r4w5SxW3vhlXWplWMMsvRGvuuen3K1G4=;
+        b=D9VXdvncY1SJ1KVcygzaQI9yaUJASLXsdVmQ7vOV0XoVuByGu8LvUAVHmXfSfS5xpg
+         G/rJTo0TmGM4KmO8Ia17ojWTOzO8iU7xVeNlnb+5TJ4WKo74QbHfLHM9DLgahLq0UUoc
+         z3GUdHsf+VJfd6h3TBdvRPp3NDgTboT9ezAbbVHQXO8R4l+ONoZWe48MrqZTlrv5PY11
+         esIcpKpHJ8HKiDeYL4cuNMlonGusSEFbRhoS7hH4q9/grOwNpBmeqqxzNa/ymjX6Da7B
+         V1ILAOU6IiwpKpUUCJ0cWj9x2eSZaBuYpRl31FDPtLDY3bcVop4Bfxt7rAZvSe7B9pu2
+         GDYg==
+X-Gm-Message-State: AGi0PuamOhECSKzMjxU4FuvuzNyNEDMe9c/hqITlbIuu53Es7oScAS1y
+        zxwr7hTPXX4aAC6Dvui5h6iB7FckKPzqx1x+7NpWh1z6db2ZbQ==
+X-Google-Smtp-Source: APiQypKhHUwAsJjYzyYB5VHXHzMmc8iH+YM/uo2cJCDxrNfExZKJ40xBSX/01K7muRDVNEhwkWslWZLPCv77qbEK1j4=
+X-Received: by 2002:adf:e282:: with SMTP id v2mr10444096wri.329.1586380803307;
+ Wed, 08 Apr 2020 14:20:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200323124310.1.I6ed779cd21abf3e70f21c1562bbda81f590976ab@changeid>
+ <20200323124310.2.I1f56fe698017f22d6e825c913c256d5afc2ad69f@changeid> <CAHp75VfHiKqjaEKPGa=ymmsu44AMB5FCNKFEKhDeazW5vWZkBg@mail.gmail.com>
+In-Reply-To: <CAHp75VfHiKqjaEKPGa=ymmsu44AMB5FCNKFEKhDeazW5vWZkBg@mail.gmail.com>
+From:   Daniel Campello <campello@google.com>
+Date:   Wed, 8 Apr 2020 15:19:26 -0600
+Message-ID: <CAHcu+VZW_giesTmJRoy35b7-6V04BW8Npgz+GAN6NSYH81ZYZQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2 v5] iio: Add SEMTECH SX9310/9311 sensor driver
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Andreas Klinger <ak@it-klinger.de>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a binding for the Tegra20-based Acer Iconia Tab A500 tablet device.
+On Tue, Mar 24, 2020 at 10:18 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Mon, Mar 23, 2020 at 8:46 PM Daniel Campello <campello@chromium.org> wrote:
+> >
+> > Add SEMTECH SX9310/9311 driver.
+> >
+> > The device has the following entry points:
+> >
+> > Usual frequency:
+> > - sampling_frequency
+> > - sampling_frequency_available
+> >
+> > Instant reading of current values for different sensors:
+> > - in_proximity0_raw
+> > - in_proximity1_raw
+> > - in_proximity2_raw
+> > - in_proximity3_comb_raw
+> > and associated events in events/
+>
+> ...
+>
+> > +#include <linux/acpi.h>
+>
+> > +#include <linux/of.h>
+>
+> No users for these (see ID table handling below), but property.h would
+> be needed.
+>
+>
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- Documentation/devicetree/bindings/arm/tegra.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+I removed of.h but kept acpi.h in v6 since it was needed for other
+ACPI macros on the probe function
+>
+> ...
+>
+> > +#define   SX9310_EVENT_IRQ                             (SX9310_FAR_IRQ | \
+> > +                                                        SX9310_CLOSE_IRQ)
+>
+> Better formatting is
+> #define FOO \
+>   (BAR | ZOO)
+>
+> ...
+>
+> > +struct sx9310_data {
+>
+> > +       struct i2c_client *client;
+>
+> Do you really need client? Perhaps struct device will be enough?
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra.yaml b/Documentation/devicetree/bindings/arm/tegra.yaml
-index 60b38eb5c61a..7fd0b66c69b2 100644
---- a/Documentation/devicetree/bindings/arm/tegra.yaml
-+++ b/Documentation/devicetree/bindings/arm/tegra.yaml
-@@ -34,6 +34,9 @@ properties:
-               - toradex,colibri_t20-iris
-           - const: toradex,colibri_t20
-           - const: nvidia,tegra20
-+      - items:
-+          - const: acer,picasso
-+          - const: nvidia,tegra20
-       - items:
-           - enum:
-               - nvidia,beaver
--- 
-2.25.1
 
+There are references to client->irq in some places
+
+>
+>
+> > +       struct iio_trigger *trig;
+> > +       struct regmap *regmap;
+> > +       /*
+> > +        * Last reading of the proximity status for each channel.
+> > +        * We only send an event to user space when this changes.
+> > +        */
+> > +       bool prox_stat[SX9310_NUM_CHANNELS];
+> > +       bool trigger_enabled;
+>
+> > +       __be16 buffer[SX9310_NUM_CHANNELS +
+> > +                     4]; /* 64-bit data + 64-bit timestamp */
+>
+> Please, fix formatting.
+>
+> > +};
+>
+> ...
+>
+> > +static int sx9310_update_chan_en(struct sx9310_data *data,
+> > +                                unsigned int chan_read,
+> > +                                unsigned int chan_event)
+> > +{
+> > +       int ret;
+> > +
+>
+> > +       if ((data->chan_read | data->chan_event) != (chan_read | chan_event)) {
+> > +               ret = regmap_update_bits(data->regmap, SX9310_REG_PROX_CTRL0,
+> > +                                        SX9310_CHAN_ENABLED_MASK,
+> > +                                        chan_read | chan_event);
+>
+> unsigned int readevent = chan_read | chan_event;
+> ...
+> if (... != readevent) {
+>   ..., readevent);
+> }
+>
+> > +               if (ret)
+> > +                       return ret;
+> > +       }
+> > +       data->chan_read = chan_read;
+> > +       data->chan_event = chan_event;
+> > +       return 0;
+> > +}
+>
+> ...
+>
+> > +static int sx9310_read_prox_data(struct sx9310_data *data,
+> > +                                const struct iio_chan_spec *chan, __be16 *val)
+> > +{
+> > +       int ret;
+> > +
+> > +       ret = regmap_write(data->regmap, SX9310_REG_SENSOR_SEL, chan->channel);
+> > +       if (ret < 0)
+> > +               return ret;
+> > +
+>
+> > +       return regmap_bulk_read(data->regmap, chan->address, val, 2);
+>
+> sizeof()?
+>
+> > +}
+>
+> ...
+>
+> > +       if (data->client->irq > 0) {
+> > +               ret = wait_for_completion_interruptible(&data->completion);
+> > +               reinit_completion(&data->completion);
+>
+> Logically reinit better to be called before you start measurement.
+>
+I think this is effectively before measurement, minus error/locking handling.
+
+> > +       } else {
+> > +               ret = sx9310_wait_for_sample(data);
+> > +       }
+>
+> ...
+>
+> > +       *val = sign_extend32(be16_to_cpu(rawval),
+> > +                            (chan->address == SX9310_REG_DIFF_MSB ? 11 : 15));
+>
+> Too many parentheses.
+>
+> ...
+>
+> > +       mutex_lock(&data->mutex);
+> > +
+> > +       ret = regmap_update_bits(data->regmap, SX9310_REG_PROX_CTRL0,
+> > +                                SX9310_SCAN_PERIOD_MASK,
+> > +                                i << SX9310_SCAN_PERIOD_SHIFT);
+> > +
+> > +       mutex_unlock(&data->mutex);
+>
+> Btw, can you use locking provided by regmap?
+
+
+The lock is protecting critical sections that include multiple regmap
+and other operations together in other parts of the code.
+>
+>
+> ...
+>
+> > +       /*
+> > +        * Even if no event is enabled, we need to wake the thread to
+>
+> > +        * clear the interrupt state by reading SX9310_REG_IRQ_SRC.  It
+>
+> Move it to the next line.
+>
+> > +        * is not possible to do that here because regmap_read takes a
+> > +        * mutex.
+> > +        */
+>
+> ...
+>
+> > +       for (chan = 0; chan < SX9310_NUM_CHANNELS; chan++) {
+> > +               int dir;
+> > +               u64 ev;
+> > +               bool new_prox = val & BIT(chan);
+> > +
+>
+> > +               if (!(data->chan_event & BIT(chan)))
+> > +                       continue;
+>
+> for_each_set_bit()
+
+
+Thanks, more clear now!
+>
+>
+> > +               if (new_prox == data->prox_stat[chan])
+> > +                       /* No change on this channel. */
+> > +                       continue;
+>
+> > +       }
+>
+> ...
+>
+> > +static struct attribute *sx9310_attributes[] = {
+> > +       &iio_dev_attr_sampling_frequency_available.dev_attr.attr,
+>
+> > +       NULL,
+>
+> Comma is not needed for terminator.
+>
+> > +};
+>
+> ...
+>
+> > +static int sx9310_buffer_preenable(struct iio_dev *indio_dev)
+> > +{
+> > +       struct sx9310_data *data = iio_priv(indio_dev);
+> > +       unsigned int channels = 0;
+> > +       int bit, ret;
+> > +
+> > +       mutex_lock(&data->mutex);
+> > +       for_each_set_bit(bit, indio_dev->active_scan_mask,
+> > +                        indio_dev->masklength)
+>
+> > +               channels |= BIT(indio_dev->channels[bit].channel);
+>
+> unsigned long channels;
+> ...
+> __set_bit(...);
+>
+> > +       ret = sx9310_update_chan_en(data, channels, data->chan_event);
+> > +       mutex_unlock(&data->mutex);
+> > +       return ret;
+> > +}
+>
+> ...
+>
+> > +#define SX_INIT(_reg, _def)                    \
+> > +       {                                       \
+> > +               .reg = SX9310_REG_##_reg,       \
+> > +               .def = _def,                    \
+> > +       }
+>
+> Usually it's a good tone to #undef custom macro when they are not
+> needed anymore.
+>
+> ...
+>
+> > +       for (i = 100; i >= 0; i--) {
+> > +               msleep(20);
+> > +               ret = regmap_read(data->regmap, SX9310_REG_STAT1, &val);
+> > +               if (ret < 0)
+> > +                       goto out;
+> > +               if (!(val & SX9310_COMPSTAT_MASK))
+> > +                       break;
+> > +       }
+>
+> NIH of regmap_real_poll_timeout();
+
+
+Sorry, somehow I overlooked this on v6, I'll send v7 with it
+
+>
+>
+> > +
+> > +       if (i < 0) {
+> > +               dev_err(&data->client->dev,
+> > +                       "initial compensation timed out: 0x%02x", val);
+> > +               ret = -ETIMEDOUT;
+> > +       }
+>
+> ...
+>
+> > +               ret = regmap_write(data->regmap, initval->reg, initval->def);
+> > +               if (ret < 0)
+>
+> Do you need all these ' < 0'?
+
+
+Not sure what do you mean? This one in particular is trying to fail
+fast the probe
+>
+>
+> > +                       return ret;
+>
+> ...
+>
+> > +       const struct acpi_device_id *acpi_id;
+>
+> > +       /* id will be NULL when enumerated via ACPI */
+> > +       if (id) {
+> > +               if (id->driver_data != whoami)
+> > +                       dev_err(dev, "WHOAMI does not match i2c_device_id: %s",
+> > +                               id->name);
+> > +       } else if (ACPI_HANDLE(dev)) {
+> > +               acpi_id = acpi_match_device(dev->driver->acpi_match_table, dev);
+> > +               if (!acpi_id)
+> > +                       return -ENODEV;
+> > +               if (acpi_id->driver_data != whoami)
+> > +                       dev_err(dev, "WHOAMI does not match acpi_device_id: %s",
+> > +                               acpi_id->id);
+> > +       } else
+> > +               return -ENODEV;
+>
+> device_get_match_data().
+>
+THANKS! I was happy to learn about this after you pointed it out!
+>
+> ...
+>
+> > +static int sx9310_probe(struct i2c_client *client,
+> > +                       const struct i2c_device_id *id)
+>
+> Can you switch to ->probe_new()?
+>
+> ...
+>
+> > +       indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+>
+> > +       if (indio_dev == NULL)
+>
+> if (!indio_dev)
+>
+> > +               return -ENOMEM;
+>
+> ...
+>
+> > +               dev_err(&client->dev, "error in reading WHOAMI register: %d",
+> > +                       ret);
+>
+> If you introduce temporary variable the code will be better to read
+>
+>   struct device *dev = &client->dev;
+>
+> > +       ret = sx9310_set_indio_dev_name(&client->dev, indio_dev, id,
+> > +                                       data->whoami);
+> > +       if (ret < 0)
+> > +               return ret;
+>
+> ...
+>
+> > +static const struct acpi_device_id sx9310_acpi_match[] = {
+> > +       { "STH9310", SX9310_WHOAMI_VALUE },
+> > +       { "STH9311", SX9311_WHOAMI_VALUE },
+>
+> Hmm... May I ask some official proof that these IDs are real and
+> issued by vendor?
+
+
+Not sure how to prove this but they are live in device firmware right
+now. One example:
+https://chromium.googlesource.com/chromiumos/third_party/coreboot/+/b905beb46935c114ebc416583bb2e5407183af35/src/mainboard/google/zoombini/variants/meowth/devicetree.cb
+>
+>
+> > +       {},
+>
+> No comma.
+>
+> > +};
+> > +MODULE_DEVICE_TABLE(acpi, sx9310_acpi_match);
+>
+> > +static const struct of_device_id sx9310_of_match[] = {
+> > +       { .compatible = "semtech,sx9310" },
+> > +       { .compatible = "semtech,sx9311" },
+>
+> > +       {},
+>
+> No comma.
+>
+> > +};
+> > +MODULE_DEVICE_TABLE(of, sx9310_of_match);
+> > +
+> > +static const struct i2c_device_id sx9310_id[] = {
+> > +       { "sx9310", SX9310_WHOAMI_VALUE },
+> > +       { "sx9311", SX9311_WHOAMI_VALUE },
+>
+> > +       {},
+>
+> No comma.
+>
+> > +};
+> > +MODULE_DEVICE_TABLE(i2c, sx9310_id);
+>
+> ...
+>
+> > +               .acpi_match_table = ACPI_PTR(sx9310_acpi_match),
+> > +               .of_match_table = of_match_ptr(sx9310_of_match),
+>
+> Drop these macros. You probably didn't test with !ACPI and/or !OF --
+> should be compiler warning.
+
+
+Why do we want to drop these? I tried compiling with either and both
+disabled and did not see a warning on my system.
+>
+>
+> > +               .pm = &sx9310_pm_ops,
+> > +       },
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+
+Thanks for the review. Sorry for the delay on this email after sending v6.
+
+Regards,
+Daniel
