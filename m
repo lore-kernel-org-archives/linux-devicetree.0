@@ -2,87 +2,120 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6E0C2D0EA
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 14:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE0FC2D0EA
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 14:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3020420780
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 14:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1B7E20787
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 14:21:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BOgb6KT/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbgDHOGv (ORCPT
+        id S1728570AbgDHOVr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 10:06:51 -0400
-Received: from 8bytes.org ([81.169.241.247]:58532 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728159AbgDHOGv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Apr 2020 10:06:51 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id A412A2CC; Wed,  8 Apr 2020 16:06:50 +0200 (CEST)
-Date:   Wed, 8 Apr 2020 16:06:49 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH v2 2/4] iommu: Add Allwinner H6 IOMMU driver
-Message-ID: <20200408140649.GI3103@8bytes.org>
-References: <cover.a31c229a83f1d92e6928ae2adb70887da0fd44b3.1582222496.git-series.maxime@cerno.tech>
- <6864f0f28825bb7a2ec1c0d811a4aacdecf5f945.1582222496.git-series.maxime@cerno.tech>
- <20200302153606.GB6540@8bytes.org>
- <20200401114710.doioefzmjhte7jwu@gilmour.lan>
+        Wed, 8 Apr 2020 10:21:47 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44884 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727486AbgDHOVr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 10:21:47 -0400
+Received: by mail-lf1-f67.google.com with SMTP id 131so5226841lfh.11;
+        Wed, 08 Apr 2020 07:21:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Jf0MyvNrfZeSllBWGHedtbc9gbfyY6waAa4WK3aei6c=;
+        b=BOgb6KT/XVKYSez/v8+1A9WWPBbubsoob5g6qXsuZVeNs532Z9I6fM8sF6fB8xghkY
+         qP+dEBTK3mVa/tcTlHZM3L5qk2jePUvTQe1EPBVKBd33p1Xhlj+y6CbsghxHEgOzv94M
+         ZbYM+/4LONvDQQCWBTTnaHppKB2T4SUourtCjXjhuDoaaWfkOlIwK1zkdJGHcvQl6w9h
+         Rspvj2ZULbLC2F7ZLyhVDwX0sfTOrnJp23EJi2YOYjm80+kmfuPFnz/CUVaRvR+Xc7gB
+         I+96QbxW8VNPc3bqnM6bQlwDWYsGuGiW8f+Wp3F7wyZ6Jv/bkjTyplevyjSjtwaJV+I9
+         nh+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Jf0MyvNrfZeSllBWGHedtbc9gbfyY6waAa4WK3aei6c=;
+        b=WTayKLloEeaC3ujWOb43MQ5a3oojmf4c9rNljAT6aLJm+mtjwVlXoTu0L/t8OKnra+
+         P6ERGX2U7F7X8kOnqGiKrsTSlPx64tao/Zj1/bqpxsCKXh5AqJIBFlQ58xwf232kYaVJ
+         JKwSfp9M6uQ5qATcdyD0P0irk0xPeazDZ1YX9czzzhr6wQHJyg+b9gpft2+u6Qu+xa2z
+         twvWljQDLapS7I7a9G4PBJRd821LjNKWX0u5aQEcGxSnsmHGlLSwFqDIlvAH5PLBUfLi
+         BlOgI3xTUstb6rB+34E4NKzx2Jm1kEHShRMHjduP0MFtZkeUoQasbJKQ1pFaTAdaSaSN
+         0y3Q==
+X-Gm-Message-State: AGi0Pub+E6AL4WNq+9zipRmww28Qv2974nn9LoSa7anUUC8KxzZDZ2Wa
+        yEyD2/Ew/iUlF2mA4Exq9cdXSBXg
+X-Google-Smtp-Source: APiQypI0mxuc5luIqiw00spdsT9+ePChmhF5+4Scec0luiKkg51AuPK0pfMQqpfnOGXrQXb29jk1/A==
+X-Received: by 2002:ac2:58d7:: with SMTP id u23mr4817315lfo.182.1586355701563;
+        Wed, 08 Apr 2020 07:21:41 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id v9sm13821994ljv.82.2020.04.08.07.21.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Apr 2020 07:21:40 -0700 (PDT)
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <08cd31d5-e8b9-4d3a-fb0e-0e4462947d96@nvidia.com>
+ <12a834ac-52b1-6dc0-7d3a-3e6a1fa85a2a@gmail.com>
+ <e3712e7b-b335-b35b-a94f-24eb85122dca@nvidia.com>
+ <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
+ <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
+ <dd16c560-ba8f-e7df-5dc4-5227e0043196@nvidia.com>
+ <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
+ <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
+ <9e317f65-8a02-3b15-cfec-8e0d8374130e@gmail.com>
+ <97b35910-4c93-123a-43a0-eb14476ed0f3@nvidia.com>
+ <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
+ <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
+ <0c425505-347f-7418-af7e-d121fe0d06dc@nvidia.com>
+ <db7c7051-5674-cdb9-0aa4-ee94125b3024@gmail.com>
+ <1a31cd60-739f-0660-1c45-31487d2f2128@nvidia.com>
+ <603084a5-249a-4fe2-3646-e9335ef9ab43@nvidia.com>
+ <7895b9c6-f27d-8939-73d7-67d785e1a8b7@nvidia.com>
+ <ea60b489-990e-4b15-e215-d93381a1371e@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b2405c2a-73c0-ad69-ccea-0388caf8045c@gmail.com>
+Date:   Wed, 8 Apr 2020 17:21:39 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401114710.doioefzmjhte7jwu@gilmour.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ea60b489-990e-4b15-e215-d93381a1371e@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Maxime,
-
-On Wed, Apr 01, 2020 at 01:47:10PM +0200, Maxime Ripard wrote:
-> As far as I understand it, the page table can be accessed concurrently
-> since the framework doesn't seem to provide any serialization /
-> locking, shouldn't we have some locks to prevent concurrent access?
-
-The dma-iommu code makes sure that there are no concurrent accesses to
-the same address-range of the page-table, but there can (and will) be
-concurrent accesses to the same page-table, just for different parts of
-the address space.
-
-Making this lock-less usually involves updating non-leaf page-table
-entries using atomic compare-exchange instructions.
-
-> > > +	*pte_addr = sun50i_mk_pte(paddr, prot);
-> > > +	sun50i_table_flush(sun50i_domain, pte_addr, 1);
-> >
-> > This maps only one page, right? But the function needs to map up to
-> > 'size' as given in the parameter list.
+08.04.2020 03:00, Sowjanya Komatineni пишет:
+...
+>>>>> I suppose that taking a shot takes at least few milliseconds, which
+>>>>> should be unacceptable to waste.
+>>>> As long as buffers are in queue we have to keep processing each
+>>>> buffer and between buffers obviously we have to wait for previous
+>>>> frames to finish and this why we have separate thread for frame
+>>>> finish where we can have next buffer capture ready and issue while
+>>>> previous frame memory write happens
+>> Also we specified numbers buffers as 3 to vb2 queue. So this is rare
+>> case but to prevent issuing more than 2 at a time as VI HW is only
+>> double buffered and syncpt fifo max depth is 2 added this to be safer.
 > 
-> It does, but pgsize_bitmap is set to 4k only (since the hardware only
-> supports that), so we would have multiple calls to map, each time with
-> a single page judging from:
-> https://elixir.bootlin.com/linux/latest/source/drivers/iommu/iommu.c#L1948
+> To be more clear, when more buffers are enqueued from userspace always
+> capture list will be full and thread will be busy in capture till either
+> error or stop stream request happens.
 > 
-> Right?
 
-Okay, you are right here. Just note that when this function is called
-for every 4k page it should better be fast and avoid slow things like
-TLB flushes.
-
-> The vendor driver was doing something along those lines and I wanted
-> to be conservative with the cache management if we didn't run into
-> performances issues, but I'll convert to the iotlb callbacks then.
-
-Yeah, that definitly helps performance.
-
-Regards,
-
-	Joerg
+If kthreads take more than 1% of CPU time during capture (video) with
+more than 2 buffers in queue, then it's not good and I think you should
+do something about it. If kthreads stay at ~0%, then it should be okay
+as-is.
