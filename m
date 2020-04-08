@@ -2,113 +2,263 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E335C2BA1B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 769FDC2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E79CF2082F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:00:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKGKiSuR"
+	by mail.kernel.org (Postfix) with ESMTP id 3CBA5208FE
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:09:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586362190;
+	bh=kIreA496xvIapaRTLuMlFLqanuB0f3Kepl2wTRTpIrQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XZQuZLQI5K2E451ic74xzAULbDXClFs4oIfNrv4Su1AniQkExsgZo0LdToMBbIsIN
+	 RRe6NHFiVEFW5K3m1zcV8cZHNP5Qj7GTw1JJoaV/3ss0Ba7an9FJbGMpw3Hvy5I5x8
+	 9K10QtBxHntTn2hiYEzfFMiM3l6FFUV+M/Rk75nc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729295AbgDHQAF (ORCPT
+        id S1730248AbgDHQJo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:00:05 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:45229 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729755AbgDHQAE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 12:00:04 -0400
-Received: by mail-qk1-f195.google.com with SMTP id m67so619985qke.12;
-        Wed, 08 Apr 2020 09:00:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aRe2LUZ6th1URyp3FHFKMF3md2te8S/MCUnxkUCOAJM=;
-        b=EKGKiSuRAwpaR5KSV6azvx0CJk9B6N+3O8L0o6RCsmsZsnV/8SEZeGSTVGM7ycSRzu
-         bfNQo0kJ6IPzgBMk26jN14ISooZz+y5lUvv8X1JToguDZIF2bmWSQXP5UrPjxy1NOYqR
-         O40Xym2bar84IcTU+DOguc6ig9ufu04KoDiW9laNk8VyDMWNPEE9fPTKRBtrqLOHNwxo
-         zpHjHVhFEA+mye6b5NVuw6251J/jRZcZwi196jEyd4wpOR/3JZRebAGlqL+8PpPMmVKJ
-         LpVsWggwkWPImJggudamhEXDakbELWE2rGyOJmbxmlso2iCdhI/3/YQx8c5qLbUnQm6+
-         CGeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aRe2LUZ6th1URyp3FHFKMF3md2te8S/MCUnxkUCOAJM=;
-        b=tw4iHB8v62LeGFbPg4zSC78MfM2pBXqqQGKC5lUZG0AnfDw1OqXQcSQEqx9I8izPpK
-         e09u8Q4Mpo9b3c7887HM7Gsrj/a4sswVL4HDCPkphLUMRPekUQdJp0+Mena7teRG7/i7
-         5/A60YRQo15CKlg8sx7JpDX2RA4a/yMlHXtCpigYtW26vrbahE1wcxfv9Tzy5EhAmnFP
-         qIxp1qeb3Vg/B2PnmRdtemvbxCzk24L0GXh91MpdLtq2h8YThZahUTZSVM+lyKDa52eR
-         AfcwgdILIWIOrIaaa89pcUw3yY1P5oci9E3YlKZ34oug1KNESIh6ioQUTrzPDCdkFgnf
-         b+BA==
-X-Gm-Message-State: AGi0PuZ/M3e/ocFdt+cwjgU1sCtk50LHe5O7EgvTPiCMolnH0MCR2eek
-        6lMYp5GJXVD1QlD5E5EuZII=
-X-Google-Smtp-Source: APiQypKEYc/okCZmPC9ScbxhDZtYpLn1KKpByvTqnV75zi20PiEz27HaxIjHrZ1pv227jwLjwU/h3Q==
-X-Received: by 2002:a05:620a:1189:: with SMTP id b9mr7975639qkk.236.1586361603428;
-        Wed, 08 Apr 2020 09:00:03 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id a62sm18131916qkb.134.2020.04.08.09.00.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 Apr 2020 09:00:02 -0700 (PDT)
-Subject: Re: [PATCH] of: remove unneeded variable
-To:     Ding Xiang <dingxiang@cmss.chinamobile.com>, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1585562702-360-1-git-send-email-dingxiang@cmss.chinamobile.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <92c6b7e9-4d55-a5c3-8c7f-5611edeb55c9@gmail.com>
-Date:   Wed, 8 Apr 2020 11:00:01 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 8 Apr 2020 12:09:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60834 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730191AbgDHQJn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Apr 2020 12:09:43 -0400
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A371206F5;
+        Wed,  8 Apr 2020 16:09:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586362182;
+        bh=kIreA496xvIapaRTLuMlFLqanuB0f3Kepl2wTRTpIrQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AoEtzue8Eqfa+5ETZ4xoX852d8hgX6nzAq5CipUt2NoS4jErtK5FBjsxuWED09Bf2
+         gXlds6dSYRSMAH9PQsIh0coJEKmU8SZw4H/nKH0iXc+e1IQkfBPekD4e8lKblQBpvv
+         PpD69Duh/TS9CZZDUV2J/9GOWC+dO0Ut70IVAtLw=
+Received: by mail-ed1-f51.google.com with SMTP id c7so9312563edl.2;
+        Wed, 08 Apr 2020 09:09:42 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZWjzOFgk8GLOHrLcNQe2AAJlIQphOSSs4g+x93BBZ/sb7CB2Jn
+        0oRGCpAt3UPOxGexA1R4O/tP2ijGaPWxBpilRg==
+X-Google-Smtp-Source: APiQypKguSiBz1WDycjJcK/7zfMUMEOKbNsIYCiMlmWJEDxjESIp2hRMSGNObcV5FtbjDF7rs+6Ju+PzFKHvOfilMAI=
+X-Received: by 2002:aa7:c544:: with SMTP id s4mr7300400edr.271.1586362178940;
+ Wed, 08 Apr 2020 09:09:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1585562702-360-1-git-send-email-dingxiang@cmss.chinamobile.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191118104252.228406-1-hsinyi@chromium.org> <CAFqH_528vidMhTFxNZ=b7SFD2K12UwtdX3uTUzW4YUgeDWkg5A@mail.gmail.com>
+In-Reply-To: <CAFqH_528vidMhTFxNZ=b7SFD2K12UwtdX3uTUzW4YUgeDWkg5A@mail.gmail.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Thu, 9 Apr 2020 00:09:27 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_8RMboOuKVKPANZ1QN+mt0jvOr13o84VhWKGY1QZqbPDg@mail.gmail.com>
+Message-ID: <CAAOTY_8RMboOuKVKPANZ1QN+mt0jvOr13o84VhWKGY1QZqbPDg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: mt8173: Add gce setting in mmsys and display node
+To:     Enric Balletbo Serra <eballetbo@gmail.com>
+Cc:     Hsin-Yi Wang <hsinyi@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 3/30/20 5:05 AM, Ding Xiang wrote:
-> rc is unneeded, just return 0.
+Hi, Hsin-Yi:
 
-of: of_detach_node() remove unneeded local return variable
+Enric Balletbo Serra <eballetbo@gmail.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=
+=888=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=8811:48=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+>
+> Missatge de Hsin-Yi Wang <hsinyi@chromium.org> del dia dl., 18 de nov.
+> 2019 a les 11:43:
+> >
+> > In order to use GCE function, we need add some informations
+> > into display node (mboxes, mediatek,gce-client-reg, mediatek,gce-events=
+).
+> >
+> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+>
+> With the fix provided by Hsin-Yi [1] and after the mmsys patches
+> landed I get GCE function working on mt8173, so
+>
+> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>
+> [1] https://lore.kernel.org/lkml/20200406051131.225748-1-hsinyi@chromium.=
+org/
+>
+> Thanks,
+>  Enric
+>
+> > ---
+> > - This is based on series "support gce on mt8183 platform"
+> >   https://patchwork.kernel.org/cover/11208309/
+> > - gce setting in 8183:
+> >   https://patchwork.kernel.org/patch/11127105/
+> > ---
+> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot=
+/dts/mediatek/mt8173.dtsi
+> > index 15f1842f6df3..e84ec3f95d81 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > @@ -911,6 +911,11 @@ mmsys: clock-controller@14000000 {
+> >                         assigned-clocks =3D <&topckgen CLK_TOP_MM_SEL>;
+> >                         assigned-clock-rates =3D <400000000>;
+> >                         #clock-cells =3D <1>;
+> > +                       mboxes =3D <&gce 0 CMDQ_THR_PRIO_HIGHEST 1>,
+> > +                                <&gce 1 CMDQ_THR_PRIO_HIGHEST 1>;
 
-> 
-> Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
-> ---
->  drivers/of/dynamic.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> index 08fd823..fe64430 100644
-> --- a/drivers/of/dynamic.c
-> +++ b/drivers/of/dynamic.c
-> @@ -286,7 +286,6 @@ int of_detach_node(struct device_node *np)
->  {
->  	struct of_reconfig_data rd;
->  	unsigned long flags;
-> -	int rc = 0;
->  
->  	memset(&rd, 0, sizeof(rd));
->  	rd.dn = np;
-> @@ -301,7 +300,7 @@ int of_detach_node(struct device_node *np)
->  
->  	of_reconfig_notify(OF_RECONFIG_DETACH_NODE, &rd);
->  
-> -	return rc;
-> +	return 0;
->  }
->  EXPORT_SYMBOL_GPL(of_detach_node);
->  
-> 
+Because of patch [1], atomic_exec parameter should be removed.
 
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/com=
+mit/?h=3Dnext-20200408&id=3D19d8e335d58a961a7ed377e5e2e63664b92c0b9c
 
-Reviewed-by: Frank Rowand <frank.rowand@sony.com>
+> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1400XX=
+XX 0 0x1000>;
+> > +                       mediatek,gce-events =3D <CMDQ_EVENT_MUTEX0_STRE=
+AM_EOF>,
+> > +                                             <CMDQ_EVENT_MUTEX1_STREAM=
+_EOF>;
+
+Because of patch [2], these events should be moved to mutex node.
+
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
+it/?h=3Dv5.6&id=3D60fa8c13ab1a33b8b958efb1510ec2fd8a064bcc
+
+Regards,
+Chun-Kuang.
+
+> >                 };
+> >
+> >                 mdp_rdma0: rdma@14001000 {
+> > @@ -991,6 +996,7 @@ ovl0: ovl@1400c000 {
+> >                         clocks =3D <&mmsys CLK_MM_DISP_OVL0>;
+> >                         iommus =3D <&iommu M4U_PORT_DISP_OVL0>;
+> >                         mediatek,larb =3D <&larb0>;
+> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1400XX=
+XX 0xc000 0x1000>;
+> >                 };
+> >
+> >                 ovl1: ovl@1400d000 {
+> > @@ -1001,6 +1007,7 @@ ovl1: ovl@1400d000 {
+> >                         clocks =3D <&mmsys CLK_MM_DISP_OVL1>;
+> >                         iommus =3D <&iommu M4U_PORT_DISP_OVL1>;
+> >                         mediatek,larb =3D <&larb4>;
+> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1400XX=
+XX 0xd000 0x1000>;
+> >                 };
+> >
+> >                 rdma0: rdma@1400e000 {
+> > @@ -1011,6 +1018,7 @@ rdma0: rdma@1400e000 {
+> >                         clocks =3D <&mmsys CLK_MM_DISP_RDMA0>;
+> >                         iommus =3D <&iommu M4U_PORT_DISP_RDMA0>;
+> >                         mediatek,larb =3D <&larb0>;
+> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1400XX=
+XX 0xe000 0x1000>;
+> >                 };
+> >
+> >                 rdma1: rdma@1400f000 {
+> > @@ -1021,6 +1029,7 @@ rdma1: rdma@1400f000 {
+> >                         clocks =3D <&mmsys CLK_MM_DISP_RDMA1>;
+> >                         iommus =3D <&iommu M4U_PORT_DISP_RDMA1>;
+> >                         mediatek,larb =3D <&larb4>;
+> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1400XX=
+XX 0xf000 0x1000>;
+> >                 };
+> >
+> >                 rdma2: rdma@14010000 {
+> > @@ -1031,6 +1040,7 @@ rdma2: rdma@14010000 {
+> >                         clocks =3D <&mmsys CLK_MM_DISP_RDMA2>;
+> >                         iommus =3D <&iommu M4U_PORT_DISP_RDMA2>;
+> >                         mediatek,larb =3D <&larb4>;
+> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XX=
+XX 0 0x1000>;
+> >                 };
+> >
+> >                 wdma0: wdma@14011000 {
+> > @@ -1041,6 +1051,7 @@ wdma0: wdma@14011000 {
+> >                         clocks =3D <&mmsys CLK_MM_DISP_WDMA0>;
+> >                         iommus =3D <&iommu M4U_PORT_DISP_WDMA0>;
+> >                         mediatek,larb =3D <&larb0>;
+> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XX=
+XX 0x1000 0x1000>;
+> >                 };
+> >
+> >                 wdma1: wdma@14012000 {
+> > @@ -1051,6 +1062,7 @@ wdma1: wdma@14012000 {
+> >                         clocks =3D <&mmsys CLK_MM_DISP_WDMA1>;
+> >                         iommus =3D <&iommu M4U_PORT_DISP_WDMA1>;
+> >                         mediatek,larb =3D <&larb4>;
+> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XX=
+XX 0x2000 0x1000>;
+> >                 };
+> >
+> >                 color0: color@14013000 {
+> > @@ -1059,6 +1071,7 @@ color0: color@14013000 {
+> >                         interrupts =3D <GIC_SPI 187 IRQ_TYPE_LEVEL_LOW>=
+;
+> >                         power-domains =3D <&scpsys MT8173_POWER_DOMAIN_=
+MM>;
+> >                         clocks =3D <&mmsys CLK_MM_DISP_COLOR0>;
+> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XX=
+XX 0x3000 0x1000>;
+> >                 };
+> >
+> >                 color1: color@14014000 {
+> > @@ -1067,6 +1080,7 @@ color1: color@14014000 {
+> >                         interrupts =3D <GIC_SPI 188 IRQ_TYPE_LEVEL_LOW>=
+;
+> >                         power-domains =3D <&scpsys MT8173_POWER_DOMAIN_=
+MM>;
+> >                         clocks =3D <&mmsys CLK_MM_DISP_COLOR1>;
+> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XX=
+XX 0x4000 0x1000>;
+> >                 };
+> >
+> >                 aal@14015000 {
+> > @@ -1075,6 +1089,7 @@ aal@14015000 {
+> >                         interrupts =3D <GIC_SPI 189 IRQ_TYPE_LEVEL_LOW>=
+;
+> >                         power-domains =3D <&scpsys MT8173_POWER_DOMAIN_=
+MM>;
+> >                         clocks =3D <&mmsys CLK_MM_DISP_AAL>;
+> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XX=
+XX 0x5000 0x1000>;
+> >                 };
+> >
+> >                 gamma@14016000 {
+> > @@ -1083,6 +1098,7 @@ gamma@14016000 {
+> >                         interrupts =3D <GIC_SPI 190 IRQ_TYPE_LEVEL_LOW>=
+;
+> >                         power-domains =3D <&scpsys MT8173_POWER_DOMAIN_=
+MM>;
+> >                         clocks =3D <&mmsys CLK_MM_DISP_GAMMA>;
+> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XX=
+XX 0x6000 0x1000>;
+> >                 };
+> >
+> >                 merge@14017000 {
+> > --
+> > 2.24.0.432.g9d3f5f5b63-goog
+> >
+> >
+> > _______________________________________________
+> > Linux-mediatek mailing list
+> > Linux-mediatek@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
