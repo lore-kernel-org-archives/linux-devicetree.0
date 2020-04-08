@@ -2,103 +2,111 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE6AC2BA16
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 07:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A22F1C2BA1B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 07:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92E34206A1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 07:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A8C62074F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 07:36:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="GJyBXQjX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="rjfLrzj2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbgDHHb1 (ORCPT
+        id S1726545AbgDHHgT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 03:31:27 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:43744 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbgDHHb0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 03:31:26 -0400
-Received: by mail-ua1-f65.google.com with SMTP id g24so2316903uan.10
-        for <devicetree@vger.kernel.org>; Wed, 08 Apr 2020 00:31:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JCVp9cQtOdkPaCURq2lbHA0T3kiz0brcw8uKYGlf6rE=;
-        b=GJyBXQjX1Zxk4QMXXm55+mVCa0T6jEynLfonSJhvT/PhtYJY5aHXll0K16TXLyYzxW
-         wB2TYqrKi7jcrZs6mOOiL530et3RVXg5+vXx3v4/DT3FJAhEc64g+odV/VaUZTNgddsw
-         06fEeBgcv3HLCy1NLRcuRaxVii7yS+OB8d+nwJ7h8Sy9I2O3rnAqftNuSdnf9xcU6PKU
-         AEyK529xCrWBpMDN8b3r4zWYg2rDo0+YOFL6qb/8wd6EYmN6SmEMqYtcaIKQ8ADWX9qC
-         xJ6g83KNqBNbeogF1wjE4tDrcbabIAiqN690IUMRi53qR8A3M0c93vQzDdJ2iL8InRPi
-         JM6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JCVp9cQtOdkPaCURq2lbHA0T3kiz0brcw8uKYGlf6rE=;
-        b=d2F17SChNX5aUPHUOvdawja38ZvzYSfn8PRlSPJHDftYrvAqAbjzvT5A7MD8H3e7Me
-         YdSFHiByYjFt8Ka2GE2t6lOdI5UH3HARLf/7isSUaTxpCdCRax+SHVWiAj45GuBrIRs7
-         xJH99VxfSIoPAs28lHvlUfay/PcLNntO2yQxDLappOg4xANRMID0k1f4FWoo7w6We6/a
-         Zn2L3GgcbVVNTnSDYFxcb0+oVpk4vAmwInD6sb8bVIYO71wnrmrJyBTSM+KiNWnGdKjk
-         M/39mNaNFoIw/o1oVk22oMdPOi+gWAkxiZBK3jX8BxDISss0kTgyfE2w3RwZ5D0XKQRb
-         lxxQ==
-X-Gm-Message-State: AGi0PuZeShPKChnQEFURXLh3sO1FpaU7R30/5HH7/gWT6GGLRNajWFGh
-        0g3KKZiag5K3NTzyK0c5CWiDykbvDA7oqPLqxHzjOQ==
-X-Google-Smtp-Source: APiQypLd/k1ADI3b3/7gpiUW51OxpbWTZC3P4zU2FxImWXd0zUYVWWqtRdMeSEaxTnp+5juiZP/Es7UhrHsCpLo20M8=
-X-Received: by 2002:ab0:608b:: with SMTP id i11mr4339623ual.94.1586331084097;
- Wed, 08 Apr 2020 00:31:24 -0700 (PDT)
+        Wed, 8 Apr 2020 03:36:19 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:33319 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbgDHHgT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 03:36:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586331375;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=sjnB8w1eg3xxKwvMLCRQkJECWsSSDwKnucOYw682BT8=;
+        b=rjfLrzj21oEGMXHJsrWhM+bziAdnhuwHI/tuY57+5xA3mgRl6nf/dVsx03Cwzh2RTb
+        H1lWFZoL/v8s3WoNGo/BROyu0Cvmdl+1GsezyZhwYdydupWOQWRjzvN0+k4ey6zxZRRL
+        bIweLHmZcqox7rC7U7YrLhmnxkDtl1eZz/ZHQgRYzMV/iep/HJiHYOSXR3Y0pAXoLuad
+        nnwpacrUFEbjL+YLB3nTV2v1uGCP4XeLkKXuwR+D1LAO1WPi2JBtAaofnSqTnN07kKgs
+        na4m7IIBk6W9g0INw+uNPoExgkOYMpTz3OBeNe9dmhqnSH/WGAzeRNLOsadVt9MBV1oO
+        iZRQ==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j7IcfFBg=="
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
+        with ESMTPSA id u043b8w387a8EA4
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 8 Apr 2020 09:36:08 +0200 (CEST)
+Date:   Wed, 8 Apr 2020 09:36:03 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Andi Shyti <andi@etezian.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: mms114: document melfas,mms345l
+ binding
+Message-ID: <20200408073603.GA948@gerhold.net>
+References: <20200405170904.61512-1-stephan@gerhold.net>
+ <20200405170904.61512-2-stephan@gerhold.net>
+ <20200407215143.GD207210@jack.zhora.eu>
 MIME-Version: 1.0
-References: <20200407055116.16082-1-j-keerthy@ti.com> <20200407055116.16082-4-j-keerthy@ti.com>
-In-Reply-To: <20200407055116.16082-4-j-keerthy@ti.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Wed, 8 Apr 2020 13:00:00 +0530
-Message-ID: <CAHLCerN4m4um2w1rfKut=R8FX_maDfvLebRcyiSL+=FzJsp1zA@mail.gmail.com>
-Subject: Re: [PATCH v6 3/4] arm64: dts: ti: am65-wakeup: Add VTM node
-To:     Keerthy <j-keerthy@ti.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>, t-kristo@ti.com,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407215143.GD207210@jack.zhora.eu>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 11:21 AM Keerthy <j-keerthy@ti.com> wrote:
->
-> VTM stands for voltage and thermal management.
->
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
+On Wed, Apr 08, 2020 at 12:51:43AM +0300, Andi Shyti wrote:
+> Hi Stephan,
+> 
+> On Sun, Apr 05, 2020 at 07:09:04PM +0200, Stephan Gerhold wrote:
+> > The mms114 driver now supports MMS345L; document the
+> > melfas,mms345l binding that is used for it.
+> > 
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > Reviewed-by: Andi Shyti <andi@etezian.org>
+> > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> 
+> just one nitpick, the signing should be sorted in chronological
+> order, I see that you reverted it.
+> 
+> You first signed it as the author, then I reviewed it and the Rob
+> acked it, so that it should be:
+> 
+>   Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+>   Reviewed-by: Andi Shyti <andi@etezian.org>
+>   Acked-by: Rob Herring <robh@kernel.org>
+> 
+> you reversed it.
+> 
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+I didn't really "reverse" it, I didn't know the order of these tags is
+important at all. :) Is this documented somewhere?
 
-> ---
->  arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-> index f4227e2743f2..98b89cf0ccdf 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-> @@ -89,4 +89,11 @@
->                 clocks = <&k3_clks 59 0>;
->                 clock-names = "gpio";
->         };
-> +
-> +       wkup_vtm0: thermal@42050000 {
-> +               compatible = "ti,am654-vtm";
-> +               reg = <0x42050000 0x25c>;
-> +               power-domains = <&k3_pds 80 TI_SCI_PD_EXCLUSIVE>;
-> +               #thermal-sensor-cells = <1>;
-> +       };
->  };
-> --
-> 2.17.1
->
+Since I have added the tags and re-sent the patch,
+I thought it would make sense have my Signed-off-by last.
+
+I suppose this can be easily fixed up if Dmitry wants to apply the
+patch. But if I should re-send with the order changed in some way,
+just let me know. :)
+
+> Other than that, I'm sorry I couldn't help you but I haven't
+> received answers from Samsung about getting the prototypes.
+> However I don't see reason for not applying the patch.
+
+It's fine, don't worry :)
+
+I just think at this point we should either take my patch
+(and preserve existing behavior for all currently supported devices),
+or accept the potential breakage when refactoring the driver
+(because seemingly no-one is able to test it on the other versions
+at the moment).
+
+Thanks,
+Stephan
