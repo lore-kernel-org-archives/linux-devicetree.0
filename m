@@ -2,110 +2,123 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9ECC2BA1A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 13:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C28C2D0EA
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 13:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3AA420757
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 13:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C627D206F7
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 13:13:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QHL4MXPE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fTBMY2BU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgDHNKr (ORCPT
+        id S1727226AbgDHNN5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 09:10:47 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35131 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727942AbgDHNKr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 09:10:47 -0400
-Received: by mail-wm1-f65.google.com with SMTP id r26so5399306wmh.0
-        for <devicetree@vger.kernel.org>; Wed, 08 Apr 2020 06:10:46 -0700 (PDT)
+        Wed, 8 Apr 2020 09:13:57 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34167 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbgDHNN5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 09:13:57 -0400
+Received: by mail-io1-f65.google.com with SMTP id f3so1368ioj.1;
+        Wed, 08 Apr 2020 06:13:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JYXlDfYBhiWgPgJU0Q/nJhdlPceCvlDUE/4GyWKcH6g=;
-        b=QHL4MXPEljvtIQGjunB5zOVtcdXGVKmlw4SZOnXhxkT1G/idNJYDWnJFfBVSZA6ur3
-         XLz9bz/BqDPWhdQatlMyK6MmtNW8HxbZeVjK0G1uqi7z9jMag7KM2wUrQWsgkoABLzNs
-         oYhqehOttVSx8OlDnxRpDf36Pjdevb/n571RX6/ccykz1GdjpgOarVQkS4Bm9+QTsEy0
-         UbUITpFmgxApWyw5xc28x/GA0O2u/y+CJhdZhLfIxQwoqqqjCYFGVNm594e3V6ypu9Lr
-         UWvi+6+0ZKt423SaS92K/1Xh7qfhb+YaYr0a0RE4bUjQ2SNqU3UJArWVOsEbiLCXMGU4
-         CArg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8nD34K5pjnKrhNZ/IDFX0q8TbRjSUPEDKUV8DiV88EM=;
+        b=fTBMY2BUApkworc3vB/SEq2Tj2Ebry8B29xg6eiIaBN0kfm7DSk1BzZ4/iP1l9XOHq
+         zSc23vODTSVFwtfd9Zw4RB763HLpGeNzPSOwPC8zX2JQl4eUmdnePV+34+Kc0m4PWh+k
+         rcDEH1GOvygS8953k9AjW7xx+PpVNwzCBKXDRyomHgsK9peCbjiU0rq1lVE4O5tLw0Za
+         KprMRiVP5dREID+UMAvzKVAY0kFzgINYjQhLgoEmCxnlBpN2qY8yQ0HDKmItOOu3YyT7
+         vBScu63QYN/qc5wUT30O7j/DXuxdJpTr+RdLZFfMqOcM7MwMP4FdCuJBeJesaFCVkoT1
+         itqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JYXlDfYBhiWgPgJU0Q/nJhdlPceCvlDUE/4GyWKcH6g=;
-        b=SFWWlttDEYuWg6DGWFz/huQ7KIVSOUI3jCDCdrL5KHrQNROZ3MpJkTz95LnK3SfhMP
-         8rbILaA483CpIDKyYG2fSZzrzh5nr1WVxwK6CNn1T+M2PSKFwJbfwnKqS0qIAs21p2eg
-         OI97nE74ujq/DaumL8Apa4/FwIHlSfu332EaH+686OzVb3CCJWIU3uwRWFPvRQ0NFXZX
-         vRBBaY4U80N4mdnwjglaVGGFexKGv7vFm3LoN/Uc0JNtPwkFhdtSm+PQBMRQD86Vg9hp
-         ZLZggJpinNK9u3ZK3zt7j42dndnYcgvGFTb17Sd/jqte0dSyiRo1S2Yf/F+YP13rAnHh
-         4ylQ==
-X-Gm-Message-State: AGi0PuZdiXY4xZLtioI+RpQ8ulOuOLLtv4uH0gAeQiUADNJijx01L4LR
-        Qeh2nTgBt90l7106NOmxGObo2A==
-X-Google-Smtp-Source: APiQypJze0ARzAXgLTH/rmOlQ2KeFXFto1u/pWx1vCgzC7LIu7QenfXc92GJkM+v/zzhBPo68YSeJA==
-X-Received: by 2002:a1c:2c85:: with SMTP id s127mr4663487wms.18.1586351445367;
-        Wed, 08 Apr 2020 06:10:45 -0700 (PDT)
-Received: from localhost.localdomain ([37.120.50.78])
-        by smtp.gmail.com with ESMTPSA id f4sm18428044wrp.80.2020.04.08.06.10.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 06:10:44 -0700 (PDT)
-From:   Robert Foss <robert.foss@linaro.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        catalin.marinas@arm.com, will@kernel.org, shawnguo@kernel.org,
-        leoyang.li@nxp.com, Anson.Huang@nxp.com, olof@lixom.net,
-        leonard.crestez@nxp.com, geert+renesas@glider.be,
-        marcin.juszkiewicz@linaro.org, valentin.schneider@arm.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Luca Weiss <luca@z3ntu.xyz>
-Cc:     Robert Foss <robert.foss@linaro.org>
-Subject: [PATCH v4 0/6] Qualcomm CCI & Camera for db410c & db845c
-Date:   Wed,  8 Apr 2020 15:09:53 +0200
-Message-Id: <20200408130959.2717409-1-robert.foss@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8nD34K5pjnKrhNZ/IDFX0q8TbRjSUPEDKUV8DiV88EM=;
+        b=kdq7WkQb0OywRIShDLsyJouPXHdm2OBJnjK/tZAZHY5repKglqyi74Lf3HM6E9L/At
+         +AqylYSqMhsJ3yYOxgaNCftIivL5ggDrUnOyUJIpm4CJL08Cz02Aj4E7wbZktN80s+Nj
+         9WZU+X5svC6UYMql8tiSDCNo46KApw1ruP1l58cgyK0IxGECchzXUZqwk/Px8lChE82U
+         OAIihkAyEDrrCFPdOPtAKpNCPIfi3PsrrchA58arEdoyVEfgaekASdzDqySetE7/XsqL
+         INYdIyQi9P559wBv6jBHKo64gHcC9uM9DvJ+ZKonlPLPCrJ7Xn85j68UlfyNMAnLyqd5
+         rx0g==
+X-Gm-Message-State: AGi0PuZOBQ3DTM1hQ7mfV7wzWaF6OuzuCft2+GMNmFjEIHITO2FyC3AV
+        PEq+PTUEjLFizbGjfIEYSPVLsSWtAlaYsiygTRI=
+X-Google-Smtp-Source: APiQypKe/jG/Ygr7L5LC6TETf4HSCl2G7Zz2PbD1bznu/pDr8JB9qbVFTLFFJ9NDoQA/XxfMFeD356DZa5k9dnCEDpc=
+X-Received: by 2002:a02:ccf4:: with SMTP id l20mr1046213jaq.28.1586351636019;
+ Wed, 08 Apr 2020 06:13:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200327204711.10614-1-alcooperx@gmail.com> <20200327204711.10614-2-alcooperx@gmail.com>
+ <20200330154006.GA21478@bogus> <7e980e08-bc4c-aad5-fce0-0133e4e479f8@gmail.com>
+In-Reply-To: <7e980e08-bc4c-aad5-fce0-0133e4e479f8@gmail.com>
+From:   Alan Cooper <alcooperx@gmail.com>
+Date:   Wed, 8 Apr 2020 09:13:45 -0400
+Message-ID: <CAOGqxeWuP5c2VtA5qHertbwzKrBjEA2Bo4ds_H+vqQ=h_zABEg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: Add Broadcom STB USB support
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mathias Nyman <mathias.nyman@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This series depends on the Qualcom CCI I2C driver series:
-https://patchwork.kernel.org/project/linux-arm-msm/list/?series=267371
+Sending again in plain text.
 
-And the ov8856 device tree series:
-https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=268013
+On Tue, Apr 7, 2020 at 4:28 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> On 3/30/2020 8:40 AM, Rob Herring wrote:
+> > On Fri, 27 Mar 2020 16:47:08 -0400, Al Cooper wrote:
+> >> Add DT bindings for Broadcom STB USB EHCI and XHCI drivers.
+> >>
+> >> NOTE: The OHCI driver is not included because it uses the generic
+> >>       platform driver.
+> >>
+> >> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> >> ---
+> >>  .../bindings/usb/brcm,bcm7445-ehci.yaml       | 61 +++++++++++++++++++
+> >>  .../devicetree/bindings/usb/usb-xhci.txt      |  1 +
+> >>  2 files changed, 62 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+> >>
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.example.dt.yaml: ehci@f0b00300: 'interrupt-names' does not match any of the regexes: 'pinctrl-[0-9]+'
+>
+> This warning does not seem to be legitimate, the 'interrupt-names'
+> property is a valid one, where do we update the schema such that it
+> knows about it?
 
-This series enables basic camera functionality on the Qualcomm db410c and
-db845c (RB3) platforms.
+It looks like I need to specify it in the specification portion of my
+file if I want it in the example, like I did for "clock-names" and
+"phy-names".
+Since the driver always get the interrupt by index, I'm going to
+remove "interrupt-names" from the example.
 
-This includes building drivers as modules, adding devicetree nodes
-for camera controllers, clocks, regulators and sensor nodes.
+Al
 
-
-Loic Poulain (2):
-  arm64: dts: msm8916: Add i2c-qcom-cci node
-  arm64: dts: apq8016-sbc: Add CCI/Sensor nodes
-
-Robert Foss (4):
-  arm64: dts: sdm845: Add i2c-qcom-cci node
-  arm64: dts: sdm845-db845c: Add pm_8998 gpio names
-  arm64: dts: sdm845-db845c: Add ov8856 & ov7251 camera nodes
-  arm64: defconfig: Enable QCOM CAMCC, CAMSS and CCI drivers
-
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi  |  76 ++++++++
- arch/arm64/boot/dts/qcom/msm8916.dtsi      |  27 +++
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 204 +++++++++++++++++++++
- arch/arm64/boot/dts/qcom/sdm845.dtsi       |  92 ++++++++++
- arch/arm64/configs/defconfig               |   3 +
- 5 files changed, 402 insertions(+)
-
--- 
-2.25.1
-
+>
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.example.dt.yaml: ehci@f0b00300: $nodename:0: 'ehci@f0b00300' does not match '^usb(@.*)?'
+>
+> This one is a legitimate one and should be fixed.
+> --
+> Florian
+>
+>
