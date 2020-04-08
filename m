@@ -2,136 +2,135 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916F6C2D0EA
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 13:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3147C2BB55
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 13:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62865206F7
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 13:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 765892082F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 13:10:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="YnZae3dt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YR7kjZED"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbgDHNG2 (ORCPT
+        id S1729080AbgDHNKy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 09:06:28 -0400
-Received: from ns.mm-sol.com ([37.157.136.199]:36970 "EHLO extserv.mm-sol.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727902AbgDHNG1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Apr 2020 09:06:27 -0400
-Received: from [192.168.1.4] (212-5-158-69.ip.btc-net.bg [212.5.158.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id AC2DFCFB4;
-        Wed,  8 Apr 2020 16:06:24 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1586351185; bh=b49iDG8IN2LwQuXCivPrSYLmA+u1Ox/a/HqsWubR/cs=;
-        h=Subject:To:Cc:From:Date:From;
-        b=YnZae3dtnDweNils7UPkECsSFUcxag0g6B9OS0FcGO4iTuvphscpte+fPB9x1aHok
-         chukJ1sx8kdHSZ54RXmoGFny7C33xmNV01xNjmcUKWq8FflRs3Bh3PvMNpNS6i3ZL7
-         DnRBlD5hKjrv0/a8LnouZF5aZakeoKMkJkggOZH6gW26E0LUV6o6eWWlam76/AxC8N
-         7pUBVXQoMmGLEi1HTp91BVrHpToaY/VIoG6XkImVnJwZLBfKb1bNCye3UNXFv31wVb
-         Sn3PQTR+25cq/oCfXwcdNU+0ybwMNoN+Ik5tzkHdowDUdfGxufuZnVATQqIU2wFRuf
-         oPd6kuKim7P9g==
-Subject: Re: R: R: [PATCH v2 01/10] PCIe: qcom: add missing ipq806x clocks in
- PCIe driver
-To:     ansuelsmth@gmail.com, 'Andy Gross' <agross@kernel.org>
-Cc:     'Sham Muthayyan' <smuthayy@codeaurora.org>,
-        'Bjorn Andersson' <bjorn.andersson@linaro.org>,
-        'Bjorn Helgaas' <bhelgaas@google.com>,
-        'Rob Herring' <robh+dt@kernel.org>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        'Lorenzo Pieralisi' <lorenzo.pieralisi@arm.com>,
-        'Andrew Murray' <amurray@thegoodpenguin.co.uk>,
-        'Philipp Zabel' <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200402121148.1767-1-ansuelsmth@gmail.com>
- <20200402121148.1767-2-ansuelsmth@gmail.com>
- <b09627a8-d928-cf5d-c765-406959138a29@mm-sol.com>
- <053d01d60da2$49e0ca60$dda25f20$@gmail.com>
- <f333d990-6d76-0e04-5949-54ffe31bc0e9@mm-sol.com>
- <000401d60da5$0669a4c0$133cee40$@gmail.com>
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-Message-ID: <98b7eba1-4ab4-8d39-655f-01d31ca12406@mm-sol.com>
-Date:   Wed, 8 Apr 2020 16:06:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 8 Apr 2020 09:10:54 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35149 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729076AbgDHNKx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 09:10:53 -0400
+Received: by mail-wm1-f66.google.com with SMTP id r26so5399672wmh.0
+        for <devicetree@vger.kernel.org>; Wed, 08 Apr 2020 06:10:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=eyBGvPhV7TUH86tokQz7uJLxAaD+h2U61M1YV5bgXQs=;
+        b=YR7kjZEDp8Dclxy+3WQjIozJps5zrdc4+YpZUIpjxeZLzDHIU344sV0qjc6I5pl5HS
+         dkdFmg3wIS2EartLPHjLFXqCuhZ7hLhu5zLUe8eT5OY1hQwcQho3Koo5VZdAdUPC42D8
+         BKEx2Ih8T9FQYlyYAbVNl4Q0K2CSJOrmYNWBuf3g+UVZaVMPh+uQ39NATJlcMFPmbevA
+         9TFyoOZMfgAqk3zRxULaqOIu8HaSJY4k6FSeWBM6Bh1xa914KMROhcZ3qitfgcZl2t9x
+         LGvT4y1l3mXC3aoE3JyNrZVS+HkWqZVomzaWEs9F3CR1owCjmrGC8D0k1Y/fbqypS7pA
+         GzvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=eyBGvPhV7TUH86tokQz7uJLxAaD+h2U61M1YV5bgXQs=;
+        b=dPJwJkb5a5l8/cAhHD7fo13xJJQSN04vaAp8ehFX0J/AyYpSsFvO5uDexzY6yhAbqP
+         ALH12dSAM4XGT3M/rJWD8IKtCqA/tho1dAd77oll5dR2nqao7QcGF0UXMesGEzp+n1oJ
+         Uxex2RVTapFTao87fGdR3AI+D6otm9Jaghm7a1qx9c0gCxjpuYXItQxdeSOgFpcLmeOD
+         ecc+ux0W9JqZiNjOCtJe0hJZ+U4UlBvrylQoYzaw9Y85PMZIu4Z4uMhnHWcFfXdPpFGj
+         Cf8SEqjGJxDwJRknV//vT9kAwm7nyZB+fj0OgLaIZxcS0aApvX0BGgheZeY+dXef4BCd
+         BLrg==
+X-Gm-Message-State: AGi0PuZZ5/UUvTfFJTTD7/OgDG960i8aWed97ZS+RYcy88DDrZc3GPfP
+        m+P5kXY61N2hFqXC+6ik4n9Juw==
+X-Google-Smtp-Source: APiQypJNeoXs5y2t1gLKM6gDJw9wo7P2PspFCxzFWP5VVAB+XA/VWx9wysS6dw5QBKvX78ZXyqHxXQ==
+X-Received: by 2002:a1c:2c85:: with SMTP id s127mr4663898wms.18.1586351451594;
+        Wed, 08 Apr 2020 06:10:51 -0700 (PDT)
+Received: from localhost.localdomain ([37.120.50.78])
+        by smtp.gmail.com with ESMTPSA id f4sm18428044wrp.80.2020.04.08.06.10.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2020 06:10:51 -0700 (PDT)
+From:   Robert Foss <robert.foss@linaro.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, shawnguo@kernel.org,
+        leoyang.li@nxp.com, Anson.Huang@nxp.com, olof@lixom.net,
+        leonard.crestez@nxp.com, geert+renesas@glider.be,
+        marcin.juszkiewicz@linaro.org, valentin.schneider@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Luca Weiss <luca@z3ntu.xyz>
+Cc:     Robert Foss <robert.foss@linaro.org>
+Subject: [PATCH v4 4/6] arm64: dts: sdm845-db845c: Add pm_8998 gpio names
+Date:   Wed,  8 Apr 2020 15:09:57 +0200
+Message-Id: <20200408130959.2717409-5-robert.foss@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200408130959.2717409-1-robert.foss@linaro.org>
+References: <20200408130959.2717409-1-robert.foss@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <000401d60da5$0669a4c0$133cee40$@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add pm_8998 GPIO trace names. These names are defined in
+the 96boards db845c mezzanine schematic.
 
+Signed-off-by: Robert Foss <robert.foss@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
-On 4/8/20 3:55 PM, ansuelsmth@gmail.com wrote:
->> in PCIe driver
->>
->> Hi Ansuel,
->>
->> On 4/8/20 3:36 PM, ansuelsmth@gmail.com wrote:
->>>> PCIe driver
->>>>
->>>> Ansuel,
->>>>
->>>> On 4/2/20 3:11 PM, Ansuel Smith wrote:
->>>>> Aux and Ref clk are missing in pcie qcom driver.
->>>>> Add support in the driver to fix pcie inizialization in ipq806x.
->>>>>
->>>>> Fixes: 82a82383 PCI: qcom: Add Qualcomm PCIe controller driver
->>>>
->>>> this should be:
->>>>
->>>> Fixes: 82a823833f4e PCI: qcom: Add Qualcomm PCIe controller driver
->>>>
->>>> and add:
->>>>
->>>> Cc: stable@vger.kernel.org # v4.5+
->>>>
->>>> But, I wonder, as apq8064 shares the same ops_2_1_0 how it worked
->> until
->>>> now. Something more I cannot find such clocks for apq8064, which
->> means
->>>> that this patch will break it.
->>>>
->>>> One option is to use those new clocks only for ipq806x.
->>>>
->>>
->>> How to add this new clocks only for ipq806x? Check the compatible and
->> add
->>> them accordingly?
->>>
->>
->> Yes, through of_device_is_compatible(). See how we done this in
->> qcom_pcie_get_resources_2_4_0.
->>
->> I thought about second option though - encoder what clocks we have for
->> any SoC but if you take into that direction you have to change the whole
->> driver :)
->>
->> Another option is to use clk_get_optional() for the clocks which you
->> have on ipq806x (and don't have on apq8064). Please research this one
->> first.
->>
->> --
->> regards,
->> Stan
-> 
-> Ok I will use get optional for the extra clocks. Should I add a warning if they 
-> are not present? Also what about the extra reset? Should I follow the same
-> approach? 
-> Thx for the suggestions. 
-> 
+Changes since v1:
+ - Move gpio-names to previous reference to pm8998_gpio label
 
-No warnings please. You should follow the same rules for resets.
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+index 8644a2f6095a..5cd06ab97b9a 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+@@ -412,6 +412,34 @@ &pcie1_phy {
+ };
+ 
+ &pm8998_gpio {
++	gpio-line-names =
++		"NC",
++		"NC",
++		"WLAN_SW_CTRL",
++		"NC",
++		"PM_GPIO5_BLUE_BT_LED",
++		"VOL_UP_N",
++		"NC",
++		"ADC_IN1",
++		"PM_GPIO9_YEL_WIFI_LED",
++		"CAM0_AVDD_EN",
++		"NC",
++		"CAM0_DVDD_EN",
++		"PM_GPIO13_GREEN_U4_LED",
++		"DIV_CLK2",
++		"NC",
++		"NC",
++		"NC",
++		"SMB_STAT",
++		"NC",
++		"NC",
++		"ADC_IN2",
++		"OPTION1",
++		"WCSS_PWR_REQ",
++		"PM845_GPIO24",
++		"OPTION2",
++		"PM845_SLB";
++
+ 	vol_up_pin_a: vol-up-active {
+ 		pins = "gpio6";
+ 		function = "normal";
 -- 
-regards,
-Stan
+2.25.1
+
