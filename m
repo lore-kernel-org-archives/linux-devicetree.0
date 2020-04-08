@@ -2,263 +2,309 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 769FDC2BA1A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6144C2D0F4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CBA5208FE
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:09:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586362190;
-	bh=kIreA496xvIapaRTLuMlFLqanuB0f3Kepl2wTRTpIrQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XZQuZLQI5K2E451ic74xzAULbDXClFs4oIfNrv4Su1AniQkExsgZo0LdToMBbIsIN
-	 RRe6NHFiVEFW5K3m1zcV8cZHNP5Qj7GTw1JJoaV/3ss0Ba7an9FJbGMpw3Hvy5I5x8
-	 9K10QtBxHntTn2hiYEzfFMiM3l6FFUV+M/Rk75nc=
+	by mail.kernel.org (Postfix) with ESMTP id A812C20784
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:22:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="C1mvJ/tH";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="PrXmRgO3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbgDHQJo (ORCPT
+        id S1729931AbgDHQWY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:09:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60834 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730191AbgDHQJn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Apr 2020 12:09:43 -0400
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 8 Apr 2020 12:22:24 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:39174 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728473AbgDHQWX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 12:22:23 -0400
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A371206F5;
-        Wed,  8 Apr 2020 16:09:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586362182;
-        bh=kIreA496xvIapaRTLuMlFLqanuB0f3Kepl2wTRTpIrQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=AoEtzue8Eqfa+5ETZ4xoX852d8hgX6nzAq5CipUt2NoS4jErtK5FBjsxuWED09Bf2
-         gXlds6dSYRSMAH9PQsIh0coJEKmU8SZw4H/nKH0iXc+e1IQkfBPekD4e8lKblQBpvv
-         PpD69Duh/TS9CZZDUV2J/9GOWC+dO0Ut70IVAtLw=
-Received: by mail-ed1-f51.google.com with SMTP id c7so9312563edl.2;
-        Wed, 08 Apr 2020 09:09:42 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZWjzOFgk8GLOHrLcNQe2AAJlIQphOSSs4g+x93BBZ/sb7CB2Jn
-        0oRGCpAt3UPOxGexA1R4O/tP2ijGaPWxBpilRg==
-X-Google-Smtp-Source: APiQypKguSiBz1WDycjJcK/7zfMUMEOKbNsIYCiMlmWJEDxjESIp2hRMSGNObcV5FtbjDF7rs+6Ju+PzFKHvOfilMAI=
-X-Received: by 2002:aa7:c544:: with SMTP id s4mr7300400edr.271.1586362178940;
- Wed, 08 Apr 2020 09:09:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191118104252.228406-1-hsinyi@chromium.org> <CAFqH_528vidMhTFxNZ=b7SFD2K12UwtdX3uTUzW4YUgeDWkg5A@mail.gmail.com>
-In-Reply-To: <CAFqH_528vidMhTFxNZ=b7SFD2K12UwtdX3uTUzW4YUgeDWkg5A@mail.gmail.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Thu, 9 Apr 2020 00:09:27 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_8RMboOuKVKPANZ1QN+mt0jvOr13o84VhWKGY1QZqbPDg@mail.gmail.com>
-Message-ID: <CAAOTY_8RMboOuKVKPANZ1QN+mt0jvOr13o84VhWKGY1QZqbPDg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: mt8173: Add gce setting in mmsys and display node
-To:     Enric Balletbo Serra <eballetbo@gmail.com>
-Cc:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 741B040676;
+        Wed,  8 Apr 2020 16:22:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1586362942; bh=l9sBrvrvegRKI9SUcUF/EwgfFTINGmPIkIT0DDuwJCw=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=C1mvJ/tHmANfHFcqhGvEddkcsG5+fHSlnGMlOlXxRkG6g7ilfF2Tn+xXu7Iv36gf9
+         LiRKDVRxfLyK8ZUYSmeajVMFnhhCxIsPxoIdJgLTjpOdgfCvVNIbfRrhq/OziET4ou
+         soLfi+rxWTte6RlksAdo5Dl1I2QQEohN/1DpWHhiwsqSUI6gW1nWwDofVIYEEnHe/i
+         FlrBmU1k0CDFSzu+Hit7EKgGcfJitZsTZnj/bZeR/vgyLzGjaXSnJ7FY9qSnT/Mc73
+         AgVy+OQ+Cft1j9EJcPGOf+TlY+itgE87CYgFrAjWVdRy9OAlC/yFJ8KcyDCle8IpEe
+         1aHYH+gx1zYvQ==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 10A12A006B;
+        Wed,  8 Apr 2020 16:22:17 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 8 Apr 2020 09:22:17 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 8 Apr 2020 09:22:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D2JWZWK/ovm6s9Jbyc72aRYGEEBBABlrb592fj/KvgrG5rGTjIZOJ17AuhMcjPRiK+eHoWbfeTECpc4x+sKEG+I7q3lAT55tUgQJGyVV4wFAS/gb3TFfaFvh4HBIvSEV59srrZ/P2gWY2RTaQ6S+gZggl/koODiIa26yD40zSuCe2006RSx8PhRYViRZDqZfUw70OyA8yJMP4pHLcKGwiTViZQSDpYwi9veQo+vcZgu3F67GZ02Ob5C/gSyqaZjk4y8vJfq1yLWJ7d5GRmmh6yEUt+AUF6SdxW5ru4OpXFFGcrjHxj3TNpx/cH09UnKL/Q5EQcCkuY1xAQGpe9D2zA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HqEyPD3Zuf5UDS0a4jJPqSwDkuUp9+ePd4R3LGkqm/A=;
+ b=QMal0Y1+A++X659UxogEEMqhRH72brojgHFoQTs8H/VQFTMexGCNHHjxzwP53gPe3t3EcHHzVZUruUu5AZ1m3G+XS1K3r5wLsXjyiGcXWV3lgV2sfLbSsYluHQ0AsGWtwyyFPsSqtojaGW4V84Y4y0iYUlVdBLC+enoVjGmDoEOzcUnyHdhGa/aOiipxZ181sADchsgG5xxfuJnRtmPXiPZe87Bgu/K8mhFgo+SYXSaqxiY0guiOszZyiFrZnp0B2qvmZ+oJwjbMy6RqYgQXcOsm6ec/3YARe/UotaFctUAjfLDAjiCwlUGk/srQU7lPzeW5/+cNHo0iqSTqKDMEBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HqEyPD3Zuf5UDS0a4jJPqSwDkuUp9+ePd4R3LGkqm/A=;
+ b=PrXmRgO35/s0ktKBhP1Tn50X+lWxrnT5/vRiJzItRkxi6VmhxUy9Ve7RCAfF+qfFd5fRRq0UeKxR5zgek7lrn3AGYG3pj+1W5nWxEVVfR/MkZqO0Q8ZgZU5Tr5NalcY0srNxKRrRVGqDweNgkYH4C/Dk8uu2TmfI5jXH5CNEZSQ=
+Received: from CH2PR12MB3782.namprd12.prod.outlook.com (2603:10b6:610:23::28)
+ by CH2PR12MB4327.namprd12.prod.outlook.com (2603:10b6:610:7d::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15; Wed, 8 Apr
+ 2020 16:22:15 +0000
+Received: from CH2PR12MB3782.namprd12.prod.outlook.com
+ ([fe80::98c8:5bfd:ae23:37cf]) by CH2PR12MB3782.namprd12.prod.outlook.com
+ ([fe80::98c8:5bfd:ae23:37cf%7]) with mapi id 15.20.2878.022; Wed, 8 Apr 2020
+ 16:22:15 +0000
+From:   Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
+To:     Sam Ravnborg <sam@ravnborg.org>
+CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: RE: [PATCH v2 3/4] drm: ipk: Add extensions for DW MIPI DSI Host
+ driver
+Thread-Topic: [PATCH v2 3/4] drm: ipk: Add extensions for DW MIPI DSI Host
+ driver
+Thread-Index: AQHWDBbMvXG/yV0ow0quQOwBbF95eaht8kqAgAF258A=
+Date:   Wed, 8 Apr 2020 16:22:15 +0000
+Message-ID: <CH2PR12MB37826C649EB8C3065722F032CBC00@CH2PR12MB3782.namprd12.prod.outlook.com>
+References: <cover.1586174459.git.angelo.ribeiro@synopsys.com>
+ <8b63a8390bbc0e81d01540648da7e6b03b8577fa.1586174459.git.angelo.ribeiro@synopsys.com>
+ <20200407175159.GB6356@ravnborg.org>
+In-Reply-To: <20200407175159.GB6356@ravnborg.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYW5nZWxvclxh?=
+ =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
+ =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLTE5YjZmODk4LTc5YjUtMTFlYS05ZDcwLWZjNzc3?=
+ =?us-ascii?Q?NGVlZGMyZVxhbWUtdGVzdFwxOWI2Zjg5OS03OWI1LTExZWEtOWQ3MC1mYzc3?=
+ =?us-ascii?Q?NzRlZWRjMmVib2R5LnR4dCIgc3o9IjMzMjAiIHQ9IjEzMjMwODM2NTMzMDI1?=
+ =?us-ascii?Q?MjI3NyIgaD0ia0JrTWF4bURQanNRM1dxd0VVMUg2K2pNYjRrPSIgaWQ9IiIg?=
+ =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFE?=
+ =?us-ascii?Q?MWdWTGN3UTNXQVMxbEcvL3lrQ1JzTFdVYi8vS1FKR3dPQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQVFBQkFBQUFveW5uNlFBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
+ =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
+ =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
+ =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
+ =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
+ =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
+ =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
+ =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
+ =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
+ =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
+ =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
+ =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
+ =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
+ =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
+ =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
+ =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
+ =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
+ =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
+ =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
+ =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
+ =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
+ =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
+ =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
+ =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
+ =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=angelor@synopsys.com; 
+x-originating-ip: [95.136.124.74]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 87c72ef6-a2d9-49da-4ae0-08d7dbd90062
+x-ms-traffictypediagnostic: CH2PR12MB4327:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR12MB4327FCE0C1C59A8CE50AEE27CBC00@CH2PR12MB4327.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0367A50BB1
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3782.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(366004)(396003)(376002)(346002)(39860400002)(136003)(316002)(186003)(2906002)(6506007)(54906003)(26005)(7696005)(71200400001)(8676002)(55016002)(9686003)(86362001)(107886003)(81166007)(4326008)(81156014)(52536014)(5660300002)(6916009)(8936002)(33656002)(478600001)(76116006)(66446008)(66946007)(66476007)(66556008)(64756008);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 0jRsTazwNf210tGFYj9ztlumMo83wI81HfgALBhREtc583LyTnRcunPdoda50b+2jaX7OePIY0RO5MOjp9P4Wwj2V6YrRJomkVs10Re4RL2ZxILT2hJyzja7fQXfQn1ZfsARvPBlVi5VrNA9ld7mUup0prPYREvNNukwUaiJHuNi3Mpm3izVJGip0vIk4WYlp52Cieen0AADCHQO2/+5X0ShunaARqeUB0LanBD1n7u3atTpVafrcDU4rVinA4h1c/e8m4DUoC3kzMXNWieJtA3ks01/OE1usg+Eaag4EIV83HPSu++OFBDQ1w47sYpRZwNhqv+kig+GwWqwDkiJ++GSA2Lel5O7kknW4vgeBxZlsRfG2LO/O1p7ImCARMexQYpuma18nAtx8vS0zqVVAQZdMaMF5wmbe83+WrMRzAhO/OYWgPuzg1oR4pcbLKLL
+x-ms-exchange-antispam-messagedata: ztahJxkxdK73meqkCZdmQXMuI9PyabA+sgwjkR5WYNdymaFeqKOc7IyVaOjAZUBPRMHL6UcdgKJqZILN0vls7MP2vrYWPcfYneyOTU72VbGWoxcK/Uf25LplJpzgjklpqGiB+vG5GizTAm1o2SxSFg==
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87c72ef6-a2d9-49da-4ae0-08d7dbd90062
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2020 16:22:15.4803
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JpFdtwi70z1ODfXF17mPbyHuflaZHc2HQrSKy42bV2Na8ZUzD/PFFflc9Su07Y6wy4QtD5vO5tO55+8g1d+INw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4327
+X-OriginatorOrg: synopsys.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Hsin-Yi:
+Hi Sam,
 
-Enric Balletbo Serra <eballetbo@gmail.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=
-=888=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=8811:48=E5=AF=AB=E9=81=93=
-=EF=BC=9A
->
-> Missatge de Hsin-Yi Wang <hsinyi@chromium.org> del dia dl., 18 de nov.
-> 2019 a les 11:43:
-> >
-> > In order to use GCE function, we need add some informations
-> > into display node (mboxes, mediatek,gce-client-reg, mediatek,gce-events=
-).
-> >
-> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
->
-> With the fix provided by Hsin-Yi [1] and after the mmsys patches
-> landed I get GCE function working on mt8173, so
->
-> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->
-> [1] https://lore.kernel.org/lkml/20200406051131.225748-1-hsinyi@chromium.=
-org/
->
-> Thanks,
->  Enric
->
+Thanks for your revision=20
+
+Angelo
+
+From: Sam Ravnborg <sam@ravnborg.org>
+Date: Tue, Apr 07, 2020 at 18:51:59
+
+> Hi Angelo.
+>=20
+> One nit below.
+>=20
+> 	Sam
+>=20
+> On Mon, Apr 06, 2020 at 03:24:13PM +0200, Angelo Ribeiro wrote:
+> > Add Synopsys DesignWare IPK specific extensions for Synopsys DesignWare
+> > MIPI DSI Host driver.
+> >=20
+> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> > Cc: Maxime Ripard <mripard@kernel.org>
+> > Cc: David Airlie <airlied@linux.ie>
+> > Cc: Daniel Vetter <daniel@ffwll.ch>
+> > Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> > Cc: Joao Pinto <jpinto@synopsys.com>
+> > Signed-off-by: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
 > > ---
-> > - This is based on series "support gce on mt8183 platform"
-> >   https://patchwork.kernel.org/cover/11208309/
-> > - gce setting in 8183:
-> >   https://patchwork.kernel.org/patch/11127105/
-> > ---
-> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot=
-/dts/mediatek/mt8173.dtsi
-> > index 15f1842f6df3..e84ec3f95d81 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > @@ -911,6 +911,11 @@ mmsys: clock-controller@14000000 {
-> >                         assigned-clocks =3D <&topckgen CLK_TOP_MM_SEL>;
-> >                         assigned-clock-rates =3D <400000000>;
-> >                         #clock-cells =3D <1>;
-> > +                       mboxes =3D <&gce 0 CMDQ_THR_PRIO_HIGHEST 1>,
-> > +                                <&gce 1 CMDQ_THR_PRIO_HIGHEST 1>;
+> >  drivers/gpu/drm/ipk/Kconfig           |   9 +
+> >  drivers/gpu/drm/ipk/Makefile          |   2 +
+> >  drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c | 556 ++++++++++++++++++++++++++=
+++++++++
+> >  3 files changed, 567 insertions(+)
+> >  create mode 100644 drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c
+> >=20
+> > diff --git a/drivers/gpu/drm/ipk/Kconfig b/drivers/gpu/drm/ipk/Kconfig
+> > index 1f87444..49819e5 100644
+> > --- a/drivers/gpu/drm/ipk/Kconfig
+> > +++ b/drivers/gpu/drm/ipk/Kconfig
+> > @@ -11,3 +11,12 @@ config DRM_IPK
+> >  	  Enable support for the Synopsys DesignWare DRM DSI.
+> >  	  To compile this driver as a module, choose M here: the module
+> >  	  will be called ipk-drm.
+> > +
+> > +config DRM_IPK_DSI
+> > +	tristate "Synopsys DesignWare IPK specific extensions for MIPI DSI"
+> > +	depends on DRM_IPK
+> > +	select DRM_DW_MIPI_DSI
+> > +	help
+> > +	  Choose this option for Synopsys DesignWare IPK MIPI DSI support.
+> > +	  To compile this driver as a module, choose M here: the module
+> > +	  will be called dw-mipi-dsi-ipk.
+> > diff --git a/drivers/gpu/drm/ipk/Makefile b/drivers/gpu/drm/ipk/Makefil=
+e
+> > index 51d2774..c80503f 100644
+> > --- a/drivers/gpu/drm/ipk/Makefile
+> > +++ b/drivers/gpu/drm/ipk/Makefile
+> > @@ -4,3 +4,5 @@ ipk-drm-y :=3D \
+> >  	dw-vpg.o
+> > =20
+> >  obj-$(CONFIG_DRM_IPK) +=3D ipk-drm.o
+> > +
+> > +obj-$(CONFIG_DRM_IPK_DSI) +=3D dw-mipi-dsi-ipk.o
+> > diff --git a/drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c b/drivers/gpu/drm/ip=
+k/dw-mipi-dsi-ipk.c
+> > new file mode 100644
+> > index 0000000..070eccb
+> > --- /dev/null
+> > +++ b/drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c
+> > @@ -0,0 +1,556 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (c) 2019-2020 Synopsys, Inc. and/or its affiliates.
+> > + * Synopsys DesignWare MIPI DSI solution driver
+> > + *
+> > + * Author: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
+> > + * Author: Luis Oliveira <luis.oliveira@synopsys.com>
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/iopoll.h>
+> > +#include <linux/module.h>
+> > +#include <drm/drm_mipi_dsi.h>
+> > +#include <drm/bridge/dw_mipi_dsi.h>
+> > +#include <video/mipi_display.h>
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +
+> > +#include <drm/drm_crtc.h>
+> > +#include <drm/drm_device.h>
+> > +#include <drm/drm_print.h>
+> Same rant as in previous mail about include file.
+>=20
+>=20
+> Rest of the driver looked good while quickly browsing the code.
+>=20
+> 	Sam
 
-Because of patch [1], atomic_exec parameter should be removed.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/com=
-mit/?h=3Dnext-20200408&id=3D19d8e335d58a961a7ed377e5e2e63664b92c0b9c
-
-> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1400XX=
-XX 0 0x1000>;
-> > +                       mediatek,gce-events =3D <CMDQ_EVENT_MUTEX0_STRE=
-AM_EOF>,
-> > +                                             <CMDQ_EVENT_MUTEX1_STREAM=
-_EOF>;
-
-Because of patch [2], these events should be moved to mutex node.
-
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
-it/?h=3Dv5.6&id=3D60fa8c13ab1a33b8b958efb1510ec2fd8a064bcc
-
-Regards,
-Chun-Kuang.
-
-> >                 };
-> >
-> >                 mdp_rdma0: rdma@14001000 {
-> > @@ -991,6 +996,7 @@ ovl0: ovl@1400c000 {
-> >                         clocks =3D <&mmsys CLK_MM_DISP_OVL0>;
-> >                         iommus =3D <&iommu M4U_PORT_DISP_OVL0>;
-> >                         mediatek,larb =3D <&larb0>;
-> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1400XX=
-XX 0xc000 0x1000>;
-> >                 };
-> >
-> >                 ovl1: ovl@1400d000 {
-> > @@ -1001,6 +1007,7 @@ ovl1: ovl@1400d000 {
-> >                         clocks =3D <&mmsys CLK_MM_DISP_OVL1>;
-> >                         iommus =3D <&iommu M4U_PORT_DISP_OVL1>;
-> >                         mediatek,larb =3D <&larb4>;
-> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1400XX=
-XX 0xd000 0x1000>;
-> >                 };
-> >
-> >                 rdma0: rdma@1400e000 {
-> > @@ -1011,6 +1018,7 @@ rdma0: rdma@1400e000 {
-> >                         clocks =3D <&mmsys CLK_MM_DISP_RDMA0>;
-> >                         iommus =3D <&iommu M4U_PORT_DISP_RDMA0>;
-> >                         mediatek,larb =3D <&larb0>;
-> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1400XX=
-XX 0xe000 0x1000>;
-> >                 };
-> >
-> >                 rdma1: rdma@1400f000 {
-> > @@ -1021,6 +1029,7 @@ rdma1: rdma@1400f000 {
-> >                         clocks =3D <&mmsys CLK_MM_DISP_RDMA1>;
-> >                         iommus =3D <&iommu M4U_PORT_DISP_RDMA1>;
-> >                         mediatek,larb =3D <&larb4>;
-> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1400XX=
-XX 0xf000 0x1000>;
-> >                 };
-> >
-> >                 rdma2: rdma@14010000 {
-> > @@ -1031,6 +1040,7 @@ rdma2: rdma@14010000 {
-> >                         clocks =3D <&mmsys CLK_MM_DISP_RDMA2>;
-> >                         iommus =3D <&iommu M4U_PORT_DISP_RDMA2>;
-> >                         mediatek,larb =3D <&larb4>;
-> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XX=
-XX 0 0x1000>;
-> >                 };
-> >
-> >                 wdma0: wdma@14011000 {
-> > @@ -1041,6 +1051,7 @@ wdma0: wdma@14011000 {
-> >                         clocks =3D <&mmsys CLK_MM_DISP_WDMA0>;
-> >                         iommus =3D <&iommu M4U_PORT_DISP_WDMA0>;
-> >                         mediatek,larb =3D <&larb0>;
-> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XX=
-XX 0x1000 0x1000>;
-> >                 };
-> >
-> >                 wdma1: wdma@14012000 {
-> > @@ -1051,6 +1062,7 @@ wdma1: wdma@14012000 {
-> >                         clocks =3D <&mmsys CLK_MM_DISP_WDMA1>;
-> >                         iommus =3D <&iommu M4U_PORT_DISP_WDMA1>;
-> >                         mediatek,larb =3D <&larb4>;
-> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XX=
-XX 0x2000 0x1000>;
-> >                 };
-> >
-> >                 color0: color@14013000 {
-> > @@ -1059,6 +1071,7 @@ color0: color@14013000 {
-> >                         interrupts =3D <GIC_SPI 187 IRQ_TYPE_LEVEL_LOW>=
-;
-> >                         power-domains =3D <&scpsys MT8173_POWER_DOMAIN_=
-MM>;
-> >                         clocks =3D <&mmsys CLK_MM_DISP_COLOR0>;
-> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XX=
-XX 0x3000 0x1000>;
-> >                 };
-> >
-> >                 color1: color@14014000 {
-> > @@ -1067,6 +1080,7 @@ color1: color@14014000 {
-> >                         interrupts =3D <GIC_SPI 188 IRQ_TYPE_LEVEL_LOW>=
-;
-> >                         power-domains =3D <&scpsys MT8173_POWER_DOMAIN_=
-MM>;
-> >                         clocks =3D <&mmsys CLK_MM_DISP_COLOR1>;
-> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XX=
-XX 0x4000 0x1000>;
-> >                 };
-> >
-> >                 aal@14015000 {
-> > @@ -1075,6 +1089,7 @@ aal@14015000 {
-> >                         interrupts =3D <GIC_SPI 189 IRQ_TYPE_LEVEL_LOW>=
-;
-> >                         power-domains =3D <&scpsys MT8173_POWER_DOMAIN_=
-MM>;
-> >                         clocks =3D <&mmsys CLK_MM_DISP_AAL>;
-> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XX=
-XX 0x5000 0x1000>;
-> >                 };
-> >
-> >                 gamma@14016000 {
-> > @@ -1083,6 +1098,7 @@ gamma@14016000 {
-> >                         interrupts =3D <GIC_SPI 190 IRQ_TYPE_LEVEL_LOW>=
-;
-> >                         power-domains =3D <&scpsys MT8173_POWER_DOMAIN_=
-MM>;
-> >                         clocks =3D <&mmsys CLK_MM_DISP_GAMMA>;
-> > +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XX=
-XX 0x6000 0x1000>;
-> >                 };
-> >
-> >                 merge@14017000 {
-> > --
-> > 2.24.0.432.g9d3f5f5b63-goog
-> >
-> >
-> > _______________________________________________
-> > Linux-mediatek mailing list
-> > Linux-mediatek@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
