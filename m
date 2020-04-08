@@ -2,93 +2,138 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B99CDC2D0F4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 20:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68145C2D0F4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 20:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88F0220769
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 20:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36EC620771
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 20:41:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rzvt9if/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbgDHUSK (ORCPT
+        id S1727614AbgDHUlF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 16:18:10 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:47342 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgDHUSJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 16:18:09 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id B564B804E6;
-        Wed,  8 Apr 2020 22:18:03 +0200 (CEST)
-Date:   Wed, 8 Apr 2020 22:18:02 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     David Lu <david.lu@bitland.com.cn>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, jungle.chiang@bitland.com.cn,
+        Wed, 8 Apr 2020 16:41:05 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37890 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726795AbgDHUlF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 16:41:05 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v16so9183828ljg.5;
+        Wed, 08 Apr 2020 13:41:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x9w5E+HapWonCQjMtyDC8375wQXju054hOLV5mQ/Whw=;
+        b=Rzvt9if/5nk0Qrd5E0KcoJCDmJgJ0Wu4kwxrxBJOse89mVEYHlpHYTLac4I2hMmuHl
+         K0dMhP6Yz4FmhnJvM902dtWOspE24NP8nHmtLu316qYdxIgQs+BDROp+jKdxGNQJzSh5
+         sGy7stXPE5D63XeYgAW90LK32nhR8j5t5IPNQbQVNAA5sMj9V1oF9oe5Kdq0fB793jAp
+         VyJoqYJtaR8Yivjg6zO0v30D41T5r6HWlvb16QunPx4jXHaI1Dd/UN1EQqP9lvtXbzM7
+         l31N3K2J0D1dZI6kPBde6l2r0Dmzyp0iVnrIMM15mHZVoJ0cGdCnWCPAgqGXQWgH9YJk
+         SBMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x9w5E+HapWonCQjMtyDC8375wQXju054hOLV5mQ/Whw=;
+        b=b+MV5TxZIsD0mgYIkmx83Qvp2q9Rt6DxHQ+VS0QfP9sHWR5ClMOwNQTDaJC8Qi3TME
+         /mnUCZBWZAUwaDSyUzZauUiPJE6WPDzHsKcypQ/lJF5rTL2AmfbmP2OY7cmfhg42iECB
+         YbyPrkjoq0PdsTx970Nz3qyi/RewOM1JrhiVmNIEIFlr/wMQtPycPetiU33FYD2kEKCx
+         5oOJu8OFC7rUtAOTa/j7xSAfzI1p+t5lO+uuXetfRTw2wVYWbufXl+oeQO46hA+KqjiJ
+         jkipiPDzKYMAiOCVU1yPnmaJUdRWbM/00zJtJ0Roz1Xz86wlG07rd6kWWjZOfjdSxAkh
+         8tug==
+X-Gm-Message-State: AGi0PuZ5b1V9xlCe+pxRYxodq67I/zwoTnVMnpAtm54JlYenwpkm6Ogo
+        oaCKnrCmZzX0qunLHlnGlHY=
+X-Google-Smtp-Source: APiQypLADbDn1KWbppW6sBYUPcYJ0zUtbrTZcXK4qNKB0fjRrSA/DLxVwT5/hElXOYQxCz9rYu+MGQ==
+X-Received: by 2002:a2e:7a0b:: with SMTP id v11mr5753748ljc.120.1586378463530;
+        Wed, 08 Apr 2020 13:41:03 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.gmail.com with ESMTPSA id p14sm13189727lfe.87.2020.04.08.13.41.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2020 13:41:02 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] dt-bindings: boe, tv101wum-n16: Add compatible for boe
- tv105wum-nw0.
-Message-ID: <20200408201802.GB612@ravnborg.org>
-References: <20200324094525.4758-1-david.lu@bitland.com.cn>
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        =?UTF-8?q?Pedro=20=C3=82ngelo?= <pangelo@void.io>,
+        Matt Merhar <mattmerhar@protonmail.com>
+Cc:     linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/6] Support NVIDIA Tegra-based Acer A500 and Nexus 7 devices
+Date:   Wed,  8 Apr 2020 23:39:39 +0300
+Message-Id: <20200408203945.10329-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324094525.4758-1-david.lu@bitland.com.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=iKCrp2iyAAAA:8
-        a=e5mUnYsNAAAA:8 a=KSWG7gIH_8gM9piVvoQA:9 a=CjuIK1q_8ugA:10
-        a=6dnM-gFdnRAg0d82BWIM:22 a=Vxmtnl_E_bksehYqCbjh:22
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi David.
+Hello,
 
-On Tue, Mar 24, 2020 at 05:45:25PM +0800, David Lu wrote:
-> Add bindings documentation for BOE TV105WUM-NW0 10.5" WUXGA TFT LCD
-> panel.
-> 
-> Signed-off-by: David Lu <david.lu@bitland.com.cn>
-> Change-Id: I450c0e52aae080728d4794bdffc50bb0d2f39f40
+This series introduces upstream kernel support for Acer Iconia Tab A500
+and ASUS Google Nexus 7 tablet devices. Please review and apply, thanks
+in advance.
 
-I dropped the Change-Id while applying.
-Applied to drm-misc-next and pushed out.
+Changelog:
 
-	Sam
+v3: - Improved device-tree node-names in accordance to review comments that
+      were made by Thierry Reding to v2.
 
-> ---
->  .../devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml     | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
-> index 740213459134..7f5df5851017 100644
-> --- a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
-> @@ -24,6 +24,8 @@ properties:
->        - boe,tv101wum-n53
->          # AUO B101UAN08.3 10.1" WUXGA TFT LCD panel
->        - auo,b101uan08.3
-> +        # BOE TV105WUM-NW0 10.5" WUXGA TFT LCD panel
-> +      - boe,tv105wum-nw0
->  
->    reg:
->      description: the virtual channel number of a DSI peripheral
-> -- 
-> 2.24.1
-> 
-> 
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+    - Corrected LVDS encoder powerdown-GPIO polarity on both A500 and Nexus 7
+      because I implemented the DRM bridges support in the Tegra DRM driver
+      and found that there was a mistake in the device-trees. The updated
+      polarity also matches the boards schematics. Now DRM bridges support
+      becomes mandatory since LVDS is getting disabled during of the encoder
+      driver probing. I'll send the DRM patch separately from this series.
+
+    - Replaced recently deprecated CONFIG_DRM_LVDS_ENCODER with the new
+      CONFIG_DRM_LVDS_CODEC in tegra_defconfig.
+
+    - Added more config options to tegra_defconfig, like pstore and thermal.
+
+    - Added atmel,cfg_name to the A500 DT, which is a new upcoming property
+      in 5.8+ that allows to specify the per-board hardware config file name.
+
+v2: - Corrected "volume down" key-label in the grouper's device-tree and
+      improved some other names in device-trees.
+
+    - Added optional (upcoming in 5.8+) VDD/AVDD regulators to the touchscreen
+      node in A500 device-tree.
+
+Dmitry Osipenko (6):
+  ARM: tegra: Add device-tree for Acer Iconia Tab A500
+  ARM: tegra: Add device-tree for ASUS Google Nexus 7
+  dt-bindings: Add vendor prefix for Acer Inc.
+  dt-bindings: ARM: tegra: Add Acer Iconia Tab A500
+  dt-bindings: ARM: tegra: Add ASUS Google Nexus 7
+  ARM: tegra_defconfig: Enable options useful for Nexus 7 and Acer A500
+
+ .../devicetree/bindings/arm/tegra.yaml        |   10 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
+ arch/arm/boot/dts/Makefile                    |    3 +
+ .../boot/dts/tegra20-acer-a500-picasso.dts    | 1458 +++++++++
+ .../tegra30-asus-nexus7-grouper-common.dtsi   | 2646 +++++++++++++++++
+ .../boot/dts/tegra30-asus-nexus7-grouper.dts  |  463 +++
+ .../boot/dts/tegra30-asus-nexus7-tilapia.dts  |  549 ++++
+ arch/arm/configs/tegra_defconfig              |   38 +
+ 8 files changed, 5169 insertions(+)
+ create mode 100644 arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper.dts
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-tilapia.dts
+
+-- 
+2.25.1
+
