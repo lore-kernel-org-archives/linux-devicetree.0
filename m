@@ -2,111 +2,125 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A22F1C2BA1B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 07:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A497C2D0EA
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 07:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A8C62074F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 07:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F091120747
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 07:45:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="rjfLrzj2"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="f3B2Odmv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgDHHgT (ORCPT
+        id S1726730AbgDHHp1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 03:36:19 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:33319 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbgDHHgT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 03:36:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586331375;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=sjnB8w1eg3xxKwvMLCRQkJECWsSSDwKnucOYw682BT8=;
-        b=rjfLrzj21oEGMXHJsrWhM+bziAdnhuwHI/tuY57+5xA3mgRl6nf/dVsx03Cwzh2RTb
-        H1lWFZoL/v8s3WoNGo/BROyu0Cvmdl+1GsezyZhwYdydupWOQWRjzvN0+k4ey6zxZRRL
-        bIweLHmZcqox7rC7U7YrLhmnxkDtl1eZz/ZHQgRYzMV/iep/HJiHYOSXR3Y0pAXoLuad
-        nnwpacrUFEbjL+YLB3nTV2v1uGCP4XeLkKXuwR+D1LAO1WPi2JBtAaofnSqTnN07kKgs
-        na4m7IIBk6W9g0INw+uNPoExgkOYMpTz3OBeNe9dmhqnSH/WGAzeRNLOsadVt9MBV1oO
-        iZRQ==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j7IcfFBg=="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id u043b8w387a8EA4
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 8 Apr 2020 09:36:08 +0200 (CEST)
-Date:   Wed, 8 Apr 2020 09:36:03 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Andi Shyti <andi@etezian.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: mms114: document melfas,mms345l
- binding
-Message-ID: <20200408073603.GA948@gerhold.net>
-References: <20200405170904.61512-1-stephan@gerhold.net>
- <20200405170904.61512-2-stephan@gerhold.net>
- <20200407215143.GD207210@jack.zhora.eu>
+        Wed, 8 Apr 2020 03:45:27 -0400
+Received: from sender2-op-o12.zoho.com.cn ([163.53.93.243]:17619 "EHLO
+        sender2-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726366AbgDHHp1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 03:45:27 -0400
+X-Greylist: delayed 925 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Apr 2020 03:45:21 EDT
+ARC-Seal: i=1; a=rsa-sha256; t=1586330965; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=Iycq5DlQ6SOtacyxA7XZxR+thyTuiVVtzIWJLfYi9XnYxwGhquS9MqjNxszhk68P93h2x/7dxVpMgRXoSCcAPgARjQvIXh82P7GdTOu2BxTJaN9dQPyYMjoI92rEi+vW0A/kuUXFpUSKL9VoqJDCNboJlMyN+qX7Hb+L5Xzt08I=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1586330965; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=GNVZm3rqhhIk0ti5k0VINiyIi16Ulbzcehh+RXhWBNo=; 
+        b=kFOW50PX46xQnCjo1S9w/CKkkNsmhmFe6T8h68JG7hifzrhUmnQvqDakglihp1+bYTRwUETIsyKh0IoxOxRWGKLlnYOyPig8mUMxpam7t2+657NH+DRAlq90Vc7inTHzN9n2KfFTY5r4Pj61ddypTKfEq2Eoa7D4zAAw3KsyIU8=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586330965;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=GNVZm3rqhhIk0ti5k0VINiyIi16Ulbzcehh+RXhWBNo=;
+        b=f3B2OdmvXKAck7Mb/q3crvtDKQsn3TqdDLfCWY1ykXQUh20aHjtdXwLV1za0TCiZ
+        Z0CaBXE+JD68vRly4w2Edx3HMUCpG+d2NiopxKxm91CoVqdsSG8UcENlN3iqq4pGn53
+        zi7KH3G50PelkIl4AWUKhk8gHzg/fJ+KNV4oQbhA=
+Received: from flygoat-x1e (183.156.33.240 [183.156.33.240]) by mx.zoho.com.cn
+        with SMTPS id 1586330963417478.574454780491; Wed, 8 Apr 2020 15:29:23 +0800 (CST)
+Date:   Wed, 8 Apr 2020 15:29:22 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Hamish Martin" <Hamish.Martin@alliedtelesis.co.nz>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: Dealing with holes in CPU address space
+Message-ID: <20200408152922.14f90ff3@flygoat-x1e>
+In-Reply-To: <fcb8f2655452f60a7c734e2ce54ac4d47eec7e92.camel@alliedtelesis.co.nz>
+References: <fcb8f2655452f60a7c734e2ce54ac4d47eec7e92.camel@alliedtelesis.co.nz>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407215143.GD207210@jack.zhora.eu>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ZohoCNMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 12:51:43AM +0300, Andi Shyti wrote:
-> Hi Stephan,
+On Wed, 8 Apr 2020 05:14:22 +0000
+Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:
+
+> Hi All,
 > 
-> On Sun, Apr 05, 2020 at 07:09:04PM +0200, Stephan Gerhold wrote:
-> > The mms114 driver now supports MMS345L; document the
-> > melfas,mms345l binding that is used for it.
-> > 
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > Reviewed-by: Andi Shyti <andi@etezian.org>
-> > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> I'm trying to port an old Broadcom MIPS CPU (BCM53003) to a shiny new
+> kernel. I have some old historic source from a long forgotten Broadcom
+> LDK but I'd prefer to do things the modern way with device-trees.
 > 
-> just one nitpick, the signing should be sorted in chronological
-> order, I see that you reverted it.
+> The problem I've been grappling with is trying to open up access to
+> all of the RAM on the board. It has 512MB of DDR2. The CPU has two
+> areas where this appears. The first 128MB is from 0 to 0x07ffffff the
+> second area is from 0x88000000 to 0x9fffffff.
 > 
-> You first signed it as the author, then I reviewed it and the Rob
-> acked it, so that it should be:
+> SoC peripherals are at 0x18000000 and there is an IO window for flash
+> at 0x20000000.
 > 
->   Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
->   Reviewed-by: Andi Shyti <andi@etezian.org>
->   Acked-by: Rob Herring <robh@kernel.org>
+> The old code has some custom tlb initialisation to deal with this but
+> I figured it should be possible with the following dts snippet.
 > 
-> you reversed it.
+>         memory@0 {
+>                 device_type = "memory";
+>                 reg = <0x00000000 0x08000000
+>                        0x88000000 0x18000000>;
+>         };
+> 
+> I end up with only 128MB available. This appears to be
+> because the default HIGHMEM_START of 0x20000000 stops the rest from
+> being made available. If I add an override of HIGHMEM_START to
+> 0xffffffff I seem to have the full 512MB avaiable but then I get a
+> kernel panic
+
+Hi,
+
+Have you tried to enable CONFIG_HIGHMEM?
+
+> 
+>   CPU 0 Unable to handle kernel paging request at virtual address
+> 1fc00000, epc == 800167b8, ra == 800e2860
+> 
+> 0x1fc00000 is in the range where the SoC peripherals are so I'm
+> thinking that is the problem. But then again that is a virtual address
+> so maybe it's just a co-incidence.
+
+0x1fc00000 should be the Boot ROM's physical address. Probably you
+forgot to convert it into virtual address in your platform code?
+
+Check the EPC of exception in vmlinux with addr2line may help. (Don't
+forget to compile your kernel with debuginfo). 
+
+> 
+> Anyway I'd really appreciate any guidance that anyone could provide on
+> this. Even if it's just "go look at this SoC".
+> 
+> Thanks,
+> Chris
+> 
 > 
 
-I didn't really "reverse" it, I didn't know the order of these tags is
-important at all. :) Is this documented somewhere?
-
-Since I have added the tags and re-sent the patch,
-I thought it would make sense have my Signed-off-by last.
-
-I suppose this can be easily fixed up if Dmitry wants to apply the
-patch. But if I should re-send with the order changed in some way,
-just let me know. :)
-
-> Other than that, I'm sorry I couldn't help you but I haven't
-> received answers from Samsung about getting the prototypes.
-> However I don't see reason for not applying the patch.
-
-It's fine, don't worry :)
-
-I just think at this point we should either take my patch
-(and preserve existing behavior for all currently supported devices),
-or accept the potential breakage when refactoring the driver
-(because seemingly no-one is able to test it on the other versions
-at the moment).
-
-Thanks,
-Stephan
+--
+Jiaxun Yang
