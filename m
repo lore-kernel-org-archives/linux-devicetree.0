@@ -2,242 +2,178 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F26C2BA1A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D11FDC2BA1B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1505820730
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:47:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B312B20730
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbgDHQrF (ORCPT
+        id S1730368AbgDHQtK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:47:05 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55206 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728955AbgDHQrF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 12:47:05 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 535B328CC6F
-Subject: Re: [PATCH] arm64: dts: mt8173: Add gce setting in mmsys and display
- node
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Enric Balletbo Serra <eballetbo@gmail.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Wed, 8 Apr 2020 12:49:10 -0400
+Received: from fudo.makrotopia.org ([185.142.180.71]:52755 "EHLO
+        fudo.makrotopia.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727929AbgDHQtK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 12:49:10 -0400
+X-Greylist: delayed 1482 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Apr 2020 12:49:08 EDT
+Received: from local
+        by fudo.makrotopia.org with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+         (Exim 4.92.3)
+        (envelope-from <daniel@makrotopia.org>)
+        id 1jMDUv-0002ru-7m; Wed, 08 Apr 2020 18:24:19 +0200
+Date:   Wed, 8 Apr 2020 17:23:49 +0100
+From:   Daniel Golle <daniel@makrotopia.org>
+To:     Imre Kaloz <kaloz@dune.hu>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Paul Spooren <mail@aparcar.org>, Andrew Lunn <andrew@lunn.ch>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <20191118104252.228406-1-hsinyi@chromium.org>
- <CAFqH_528vidMhTFxNZ=b7SFD2K12UwtdX3uTUzW4YUgeDWkg5A@mail.gmail.com>
- <CAAOTY_8RMboOuKVKPANZ1QN+mt0jvOr13o84VhWKGY1QZqbPDg@mail.gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <e22e0400-56e0-2ff4-72d8-5231b7fa58fc@collabora.com>
-Date:   Wed, 8 Apr 2020 18:46:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "freifunk@adrianschmutzler.de" <freifunk@adrianschmutzler.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "kaloz@openwrt.org" <kaloz@openwrt.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 0/5] arm: dts: linksys: rename codename to model
+Message-ID: <20200408162009.GC1995@makrotopia.org>
+References: <20200407210816.866084-1-mail@aparcar.org>
+ <20200407224615.GA359603@lunn.ch>
+ <004a2ef9c1e04f9ffbb9c3cc9907ca656a406713.camel@aparcar.org>
+ <ecf4dc01-81f8-a33d-b4a7-2065748993ed@gmail.com>
+ <VI1PR02MB5325621D39BF0FFAFE3993C4A0C00@VI1PR02MB5325.eurprd02.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <CAAOTY_8RMboOuKVKPANZ1QN+mt0jvOr13o84VhWKGY1QZqbPDg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR02MB5325621D39BF0FFAFE3993C4A0C00@VI1PR02MB5325.eurprd02.prod.outlook.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Chun-Kuang
+Hi Imre,
 
-Many thanks to let us know this, I completely missed.
+On Wed, Apr 08, 2020 at 08:32:41AM +0000, Imre Kaloz wrote:
+> Hi,
+> 
+> I'm on the same page here - this has not an issue for years. The common sense and policy was always to reject kernel changes that would only make the userland's job easier - and here were are not even talking about the userland, but a script that's being used for image generation.
+> 
+> The reason codenames are preffered to marketing names is simple: the same board can be sold under multiple marketing names.
+> 
+> The Linksys Viper has been sold as E4200v2 and EA4500. The Linksys Focus as EA6100 and EA5800. The LeMans is the EA6300 and the EA6200. The Macan is both EA7500 and EA7400 - on the other hand, the EA7500v2 and the EA7400v2 are the Savannah.
 
-On 8/4/20 18:09, Chun-Kuang Hu wrote:
-> Hi, Hsin-Yi:
-> 
-> Enric Balletbo Serra <eballetbo@gmail.com> 於 2020年4月8日 週三 下午11:48寫道：
->>
->> Missatge de Hsin-Yi Wang <hsinyi@chromium.org> del dia dl., 18 de nov.
->> 2019 a les 11:43:
->>>
->>> In order to use GCE function, we need add some informations
->>> into display node (mboxes, mediatek,gce-client-reg, mediatek,gce-events).
->>>
->>> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
->>
->> With the fix provided by Hsin-Yi [1] and after the mmsys patches
->> landed I get GCE function working on mt8173, so
->>
->> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->>
->> [1] https://lore.kernel.org/lkml/20200406051131.225748-1-hsinyi@chromium.org/
->>
->> Thanks,
->>  Enric
->>
->>> ---
->>> - This is based on series "support gce on mt8183 platform"
->>>   https://patchwork.kernel.org/cover/11208309/
->>> - gce setting in 8183:
->>>   https://patchwork.kernel.org/patch/11127105/
->>> ---
->>>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 16 ++++++++++++++++
->>>  1 file changed, 16 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->>> index 15f1842f6df3..e84ec3f95d81 100644
->>> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->>> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->>> @@ -911,6 +911,11 @@ mmsys: clock-controller@14000000 {
->>>                         assigned-clocks = <&topckgen CLK_TOP_MM_SEL>;
->>>                         assigned-clock-rates = <400000000>;
->>>                         #clock-cells = <1>;
->>> +                       mboxes = <&gce 0 CMDQ_THR_PRIO_HIGHEST 1>,
->>> +                                <&gce 1 CMDQ_THR_PRIO_HIGHEST 1>;
-> 
-> Because of patch [1], atomic_exec parameter should be removed.
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20200408&id=19d8e335d58a961a7ed377e5e2e63664b92c0b9c
-> 
+What Paul, Adian and others are trying to achieve here is consistency.
+See also the debate on openwrt-devel:
 
-Many thanks to point this. Hsin-Yi, as the mt8173 device-tree will not land in
-current merge window (Matthias correct me if I am  wrong) maybe you could send a
-new version of the device-tree including these changes?
+http://lists.infradead.org/pipermail/openwrt-devel/2020-April/022567.html
+
+The goal is to make it easier for users and semi-automated processes
+to identify the right OpenWrt image for a specific device.
+This especially becomes necessary for OTA updates and we have invested
+quite a bit of work to no longer need to scrape and translate that
+with additional layers of abstraction but simply use the first (ie.
+most significant) compatible from DTS to indentify the right image.
+
+As product-name aliases are indeed very common, we usually deal with it
+in a way that the first product name which hits the OpenWrt tree is
+used for model, compatible, DTS- and image filenames. We then add
+aliases to that in our build-scripts which allows web-based wizards and
+such to match the alternative names as well when entered by the user.
 
 
->>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0 0x1000>;
->>> +                       mediatek,gce-events = <CMDQ_EVENT_MUTEX0_STREAM_EOF>,
->>> +                                             <CMDQ_EVENT_MUTEX1_STREAM_EOF>;
 > 
-> Because of patch [2], these events should be moved to mutex node.
 > 
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=v5.6&id=60fa8c13ab1a33b8b958efb1510ec2fd8a064bcc
+> Best,
 > 
-
-Hsin-Yi, note this will also impact your fixes patch [1].
-
-[1] https://lore.kernel.org/lkml/20200406051131.225748-1-hsinyi@chromium.org/
-
-Thanks,
- Enric
-
-> Regards,
-> Chun-Kuang.
+> Imre
 > 
->>>                 };
->>>
->>>                 mdp_rdma0: rdma@14001000 {
->>> @@ -991,6 +996,7 @@ ovl0: ovl@1400c000 {
->>>                         clocks = <&mmsys CLK_MM_DISP_OVL0>;
->>>                         iommus = <&iommu M4U_PORT_DISP_OVL0>;
->>>                         mediatek,larb = <&larb0>;
->>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xc000 0x1000>;
->>>                 };
->>>
->>>                 ovl1: ovl@1400d000 {
->>> @@ -1001,6 +1007,7 @@ ovl1: ovl@1400d000 {
->>>                         clocks = <&mmsys CLK_MM_DISP_OVL1>;
->>>                         iommus = <&iommu M4U_PORT_DISP_OVL1>;
->>>                         mediatek,larb = <&larb4>;
->>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xd000 0x1000>;
->>>                 };
->>>
->>>                 rdma0: rdma@1400e000 {
->>> @@ -1011,6 +1018,7 @@ rdma0: rdma@1400e000 {
->>>                         clocks = <&mmsys CLK_MM_DISP_RDMA0>;
->>>                         iommus = <&iommu M4U_PORT_DISP_RDMA0>;
->>>                         mediatek,larb = <&larb0>;
->>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xe000 0x1000>;
->>>                 };
->>>
->>>                 rdma1: rdma@1400f000 {
->>> @@ -1021,6 +1029,7 @@ rdma1: rdma@1400f000 {
->>>                         clocks = <&mmsys CLK_MM_DISP_RDMA1>;
->>>                         iommus = <&iommu M4U_PORT_DISP_RDMA1>;
->>>                         mediatek,larb = <&larb4>;
->>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xf000 0x1000>;
->>>                 };
->>>
->>>                 rdma2: rdma@14010000 {
->>> @@ -1031,6 +1040,7 @@ rdma2: rdma@14010000 {
->>>                         clocks = <&mmsys CLK_MM_DISP_RDMA2>;
->>>                         iommus = <&iommu M4U_PORT_DISP_RDMA2>;
->>>                         mediatek,larb = <&larb4>;
->>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0 0x1000>;
->>>                 };
->>>
->>>                 wdma0: wdma@14011000 {
->>> @@ -1041,6 +1051,7 @@ wdma0: wdma@14011000 {
->>>                         clocks = <&mmsys CLK_MM_DISP_WDMA0>;
->>>                         iommus = <&iommu M4U_PORT_DISP_WDMA0>;
->>>                         mediatek,larb = <&larb0>;
->>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x1000 0x1000>;
->>>                 };
->>>
->>>                 wdma1: wdma@14012000 {
->>> @@ -1051,6 +1062,7 @@ wdma1: wdma@14012000 {
->>>                         clocks = <&mmsys CLK_MM_DISP_WDMA1>;
->>>                         iommus = <&iommu M4U_PORT_DISP_WDMA1>;
->>>                         mediatek,larb = <&larb4>;
->>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x2000 0x1000>;
->>>                 };
->>>
->>>                 color0: color@14013000 {
->>> @@ -1059,6 +1071,7 @@ color0: color@14013000 {
->>>                         interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_LOW>;
->>>                         power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
->>>                         clocks = <&mmsys CLK_MM_DISP_COLOR0>;
->>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x3000 0x1000>;
->>>                 };
->>>
->>>                 color1: color@14014000 {
->>> @@ -1067,6 +1080,7 @@ color1: color@14014000 {
->>>                         interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_LOW>;
->>>                         power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
->>>                         clocks = <&mmsys CLK_MM_DISP_COLOR1>;
->>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x4000 0x1000>;
->>>                 };
->>>
->>>                 aal@14015000 {
->>> @@ -1075,6 +1089,7 @@ aal@14015000 {
->>>                         interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_LOW>;
->>>                         power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
->>>                         clocks = <&mmsys CLK_MM_DISP_AAL>;
->>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x5000 0x1000>;
->>>                 };
->>>
->>>                 gamma@14016000 {
->>> @@ -1083,6 +1098,7 @@ gamma@14016000 {
->>>                         interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_LOW>;
->>>                         power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
->>>                         clocks = <&mmsys CLK_MM_DISP_GAMMA>;
->>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x6000 0x1000>;
->>>                 };
->>>
->>>                 merge@14017000 {
->>> --
->>> 2.24.0.432.g9d3f5f5b63-goog
->>>
->>>
->>> _______________________________________________
->>> Linux-mediatek mailing list
->>> Linux-mediatek@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/linux-mediatek
->>
->> _______________________________________________
->> Linux-mediatek mailing list
->> Linux-mediatek@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> ________________________________
+> From: Florian Fainelli <f.fainelli@gmail.com>
+> Sent: Wednesday, April 8, 2020 2:07:38 AM
+> To: Paul Spooren <mail@aparcar.org>; Andrew Lunn <andrew@lunn.ch>
+> Cc: devicetree@vger.kernel.org <devicetree@vger.kernel.org>; jason@lakedaemon.net <jason@lakedaemon.net>; gregory.clement@bootlin.com <gregory.clement@bootlin.com>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>; daniel@makrotopia.org <daniel@makrotopia.org>; freifunk@adrianschmutzler.de <freifunk@adrianschmutzler.de>; robh+dt@kernel.org <robh+dt@kernel.org>; kaloz@openwrt.org <kaloz@openwrt.org>; linux-arm-kernel@lists.infradead.org <linux-arm-kernel@lists.infradead.org>; sebastian.hesselbarth@gmail.com <sebastian.hesselbarth@gmail.com>
+> Subject: Re: [PATCH 0/5] arm: dts: linksys: rename codename to model
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
+> 
+> On 4/7/2020 4:38 PM, Paul Spooren wrote:
+> > Hi Andrew,
+> >
+> > thank you very much for the quick response!
+> >
+> > On Wed, 2020-04-08 at 00:46 +0200, Andrew Lunn wrote:
+> >> On Tue, Apr 07, 2020 at 11:08:10AM -1000, Paul Spooren wrote:
+> >>> Linksys chose to use codenames for a few of their devices and sell
+> >>> their
+> >>> them under an entirely different name.
+> >>>
+> >>> codename  model name
+> >>> rango  -> wrt3200acm
+> >>> mamba  -> wrt1900ac
+> >>> cobra  -> wrt1900ac-v2
+> >>> caiman -> wrt1200ac
+> >>> shelby -> wrt1900acs
+> >>
+> >> Hi Paul
+> >>
+> >> There was quite a bit of discussion about this when the first board
+> >> was added. If i remember correctly, it was Mamba.
+> >>
+> >> Imre Kaloz, <kaloz@openwrt.org> was the one arguing for
+> >> the name armada-xp-linksys-mamba.dts.
+> >>
+> >> So it seems that openwrt.org has now come full circle?
+> >
+> > I talked with three currently active OpenWrt core developers and all
+> > were in favor of a unification. I wasn't aware of any previous
+> > discussions nor any pro arguments to keep code names.
+> >
+> > I've added Imre via CC so maybe he can share his opinion, too.
+> >>
+> >>> This introduces some extra loops in OpenWrt, a distribution
+> >>> specialized
+> >>> on embedded Internet facing devices, as both codename and model
+> >>> name are
+> >>> used within the build system. The double naming requires developers
+> >>> to
+> >>> keep track of that mapping and introduces inconsistencies:
+> >>>
+> >>> To build a specific device in OpenWrt profiles are used, named
+> >>> after the
+> >>> the compatible string for targets using device tree (similar to how
+> >>> .dts
+> >>> files are named in the linux source tree). However, the first item
+> >>> of
+> >>> the DT `compatible` list in this case is `linksys,rango`, which is
+> >>> inconsistent with the model name and not what common users would
+> >>> expect.
+> >>>
+> >>> Such double naming complicates currently the automatic search for
+> >>> firmware upgrade as the build system does not support such mapping.
+> >>> Ideally the first item of the DT `compatible` list would contain a
+> >>> string suitable to be used as a filename recognizable by normal
+> >>> users to
+> >>> belong to that device.
+> >>> With this patch set the Linksys device tree files are moved from
+> >>> containing the codename to contain a sanitized model name and also
+> >>> use
+> >>> it as first entry of the DT `compatible` list.
+> >>
+> >> I've no problems adding another compatible to the list. But i don't
+> >> like the idea of renaming the files. The file names could be
+> >> considered ABI! What installers/bootloaders are you going to break by
+> >> renaming them?
+> >
+> > Are you okay with adding the new compatible string as first element of
+> > the list? This would already simplify the OpenWrt build system.
+> 
+> Having a mapping table between model names in OpenWrt profiles and .dts
+> file names in the kernel sources is not that complicated to maintain,
+> changing the kernel for that reason sounds a bit weak IMHO.
+> --
+> Florian
