@@ -2,158 +2,87 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D13ABC2D0EA
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 10:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3597C2D0EA
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 10:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A191120768
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 10:14:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qH2Gq9of"
+	by mail.kernel.org (Postfix) with ESMTP id 8713720771
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 10:35:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgDHKON (ORCPT
+        id S1726980AbgDHKfp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 06:14:13 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51648 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727009AbgDHKOM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 06:14:12 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z7so4553798wmk.1
-        for <devicetree@vger.kernel.org>; Wed, 08 Apr 2020 03:14:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=25069VDYosEmyzjyjgB1Fr18hxU9v2CBSXz/PzXbBl8=;
-        b=qH2Gq9ofUudA1pSW/odMa2/8M3XmMMz4UqX2oplXnZzl9Zo6pq3fFKvWczVldbcoE3
-         rCblbFO7EivrifQ0yexwYerKq5cUSFOuFmSsm+ChZxBrayh9ItBM00FDUsvaif0CzZUT
-         yXwnsYgQPkmmQec1o15WiCKzl7gZ5VKsbTqCIqd3B+4Vp56sx080HaaB3XlU92ixc7j+
-         lxi3bHPtjS9RgyNojZsXRodNFPBF4XYPZQdnvvXcwz+1uGfrkDexovaZic2rcBwRZ8ii
-         3QNtzuH4yGE4hmhzJEFo6vFePo89Z8YhFrjA40dtu/+8URe59utwIJ0kIMFqkLvlzLB5
-         qsaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=25069VDYosEmyzjyjgB1Fr18hxU9v2CBSXz/PzXbBl8=;
-        b=OLGOzGqWbkZ4GSmFlsFqJlZcQMbanSqj1Y/WJvIZR3Zyx8WVe7vqpHrNSTsJxnq8rz
-         9rawT4eybR/TC5l31knolyVrU8q8yLsz0VQNyvNsv4IfVXi1+xj3mL27O/uZ8pW5HsNO
-         /XZ1IBCFOheP5Kcgq3qzH0ilv/y3UrOwlkU1JVkflGn7/5be81igeHpuUIQ5Aacy7kmL
-         RzQxws/G9msEN7JERPuztfMf9W3Qq1dvBCRW/krdeEGCu9K20wAbvytp8OCoHXSviaPc
-         sStrA89kXdXB5iYsOa9jHjVGMZv3MIIwWSW2VxE1S5mLxu8KiCiOOjnMvRiuA3aMQOfM
-         NRuA==
-X-Gm-Message-State: AGi0PuYSaVu7eVhs2Zcw/zuX1TeSjH1PG7LHPiZ6gZE4vI0Jw7HOOE4h
-        Q3yLpWlp1b6LL4ZbrGum4WiwIw==
-X-Google-Smtp-Source: APiQypJXilSL/A+a4hF27py3ApM+n04W/ugNsSh5QoeD0Hyiw1yKokhPBGveos7hrHjep9MKgM7opA==
-X-Received: by 2002:a05:600c:2c06:: with SMTP id q6mr3967744wmg.42.1586340850731;
-        Wed, 08 Apr 2020 03:14:10 -0700 (PDT)
-Received: from dell ([2.31.167.253])
-        by smtp.gmail.com with ESMTPSA id y7sm33984899wrq.54.2020.04.08.03.14.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 03:14:10 -0700 (PDT)
-Date:   Wed, 8 Apr 2020 11:15:06 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] dt-bindings: mfd: add document bindings for mp2629
-Message-ID: <20200408101506.GI30614@dell>
-References: <20200322224626.13160-1-sravanhome@gmail.com>
- <20200322224626.13160-2-sravanhome@gmail.com>
- <20200327080013.GG603801@dell>
- <d449b567-bd5c-168d-83af-5ba38771f75a@gmail.com>
- <20200330064630.GA30614@dell>
- <e4412378-1423-a48e-9176-f0d48f6000c4@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e4412378-1423-a48e-9176-f0d48f6000c4@gmail.com>
+        Wed, 8 Apr 2020 06:35:45 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:59628 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbgDHKfp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Apr 2020 06:35:45 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A4A2F201437;
+        Wed,  8 Apr 2020 12:35:43 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8311D201436;
+        Wed,  8 Apr 2020 12:35:37 +0200 (CEST)
+Received: from titan.ap.freescale.net (titan.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 48D95402E4;
+        Wed,  8 Apr 2020 18:35:30 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH v1] gpio: mpc8xxx: Add shutdown function.
+Date:   Wed,  8 Apr 2020 18:21:17 +0800
+Message-Id: <20200408102118.17572-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 07 Apr 2020, saravanan sekar wrote:
+From: Song Hui <hui.song_1@nxp.com>
 
-> Hi Lee,
-> 
-> On 30/03/20 8:46 am, Lee Jones wrote:
-> > On Fri, 27 Mar 2020, saravanan sekar wrote:
-> > > On 27/03/20 9:00 am, Lee Jones wrote:
-> > > > On Sun, 22 Mar 2020, Saravanan Sekar wrote:
-> > > > 
-> > > > > Add device tree binding information for mp2629 mfd driver.
-> > > > > 
-> > > > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> > > > > ---
-> > > > >    .../devicetree/bindings/mfd/mps,mp2629.yaml   | 60 +++++++++++++++++++
-> > > > >    1 file changed, 60 insertions(+)
-> > > > >    create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> > > > > 
-> > > > > diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> > > > > new file mode 100644
-> > > > > index 000000000000..314309ea91ac
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> > > > > @@ -0,0 +1,60 @@
-> > > > > +# SPDX-License-Identifier: GPL-2.0
-> > > > > +%YAML 1.2
-> > > > > +---
-> > > > > +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
-> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > Are these links supposed to work?
-> > > Not really, but as far my understanding needed for dt-bindings check
-> > Rob, why are these here if they just result in 404s?
-> > 
-> > > > > +examples:
-> > > > > +  - |
-> > > > > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > > > > +    #include <dt-bindings/input/linux-event-codes.h>
-> > > > > +    i2c {
-> > > > i2c@0x????????
-> > > Its a I2C controller node, I don't think address is needed. Mention like
-> > > this my previous other driver patches,
-> > This doesn't sound right.
-> > 
-> > How do you control/operate the controller?
-> > 
-> > Surely you read/write from/to registers?
-> 
-> 
-> Indeed, but each SoC will have different address so which address to mention
-> here.
-> For me it should be like &i2c {}, anyhow I respect maintainers review (I can
-> give RPi I2c bus address used for testing)
-> and wait for Rob's reply
+The shutdown function needed to make interrupt handler to be NULL
+when kexec execute.
 
-It's only an example.  It doesn't have to match any real H/W.
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
+---
+ drivers/gpio/gpio-mpc8xxx.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-> > > dt_binding_check is also passed
-> > > 
-> > > > > +        #address-cells = <1>;
-> > > > > +        #size-cells = <0>;
-> > > > > +
-> > > > > +        pmic@4b {
-> > > > > +            compatible = "mps,mp2629";
-> > > > > +            reg = <0x4b>;
-> > > > > +
-> > > > > +            interrupt-controller;
-> > > > > +            interrupt-parent = <&gpio2>;
-> > > > > +            #interrupt-cells = <2>;
-> > > > > +            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-> > > > > +        };
-> > > > > +    };
-
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 604dfec..a24e6c5 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -446,9 +446,21 @@ static int mpc8xxx_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static int mpc8xxx_shutdown(struct platform_device *pdev)
++{
++	struct mpc8xxx_gpio_chip *mpc8xxx_gc = platform_get_drvdata(pdev);
++
++	if (mpc8xxx_gc->irq) {
++		irq_set_chained_handler_and_data(mpc8xxx_gc->irqn, NULL, NULL);
++		irq_domain_remove(mpc8xxx_gc->irq);
++	}
++
++	return 0;
++}
+ static struct platform_driver mpc8xxx_plat_driver = {
+ 	.probe		= mpc8xxx_probe,
+ 	.remove		= mpc8xxx_remove,
++	.shutdown	= mpc8xxx_shutdown,
+ 	.driver		= {
+ 		.name = "gpio-mpc8xxx",
+ 		.of_match_table	= mpc8xxx_gpio_ids,
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.9.5
+
