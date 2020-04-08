@@ -2,87 +2,242 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0BAC2D0F4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F26C2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54FCF20787
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1505820730
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:47:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729373AbgDHQqf (ORCPT
+        id S1728651AbgDHQrF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:46:35 -0400
-Received: from mga11.intel.com ([192.55.52.93]:39188 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729355AbgDHQqf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Apr 2020 12:46:35 -0400
-IronPort-SDR: 45bEa2gAHB2GdoaIEZORwqygpMww3NvW1OyoYRWU+JU6iClxYODD61/X2yzg2jJEtQRw8OYWeL
- b5rF2WBY7NQQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 09:46:34 -0700
-IronPort-SDR: vnrR0SDm2xnMUZvyRTH4Ooy7MJySJhAdizG4leup9HxoJXjykfOP9niO3wUFsAJTh99vx3/vde
- dZeaCFdP7EJg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,359,1580803200"; 
-   d="scan'208";a="425200141"
-Received: from pratuszn-mobl.ger.corp.intel.com (HELO localhost) ([10.252.40.202])
-  by orsmga005.jf.intel.com with ESMTP; 08 Apr 2020 09:46:24 -0700
-Date:   Wed, 8 Apr 2020 19:46:23 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     amirmizi6@gmail.com
-Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
-        alexander.steffen@infineon.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
-Subject: Re: [PATCH v6 1/7] tpm: tpm_tis: Make implementation of read16
- read32 write32 optional
-Message-ID: <20200408164623.GA33486@linux.intel.com>
-References: <20200407162044.168890-1-amirmizi6@gmail.com>
- <20200407162044.168890-2-amirmizi6@gmail.com>
+        Wed, 8 Apr 2020 12:47:05 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:55206 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728955AbgDHQrF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 12:47:05 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 535B328CC6F
+Subject: Re: [PATCH] arm64: dts: mt8173: Add gce setting in mmsys and display
+ node
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Enric Balletbo Serra <eballetbo@gmail.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20191118104252.228406-1-hsinyi@chromium.org>
+ <CAFqH_528vidMhTFxNZ=b7SFD2K12UwtdX3uTUzW4YUgeDWkg5A@mail.gmail.com>
+ <CAAOTY_8RMboOuKVKPANZ1QN+mt0jvOr13o84VhWKGY1QZqbPDg@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <e22e0400-56e0-2ff4-72d8-5231b7fa58fc@collabora.com>
+Date:   Wed, 8 Apr 2020 18:46:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407162044.168890-2-amirmizi6@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAAOTY_8RMboOuKVKPANZ1QN+mt0jvOr13o84VhWKGY1QZqbPDg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 07:20:38PM +0300, amirmizi6@gmail.com wrote:
-> From: Amir Mizinski <amirmizi6@gmail.com>
+Hi Chun-Kuang
+
+Many thanks to let us know this, I completely missed.
+
+On 8/4/20 18:09, Chun-Kuang Hu wrote:
+> Hi, Hsin-Yi:
 > 
-> Only tpm_tis can use memory mapped I/O, which is truly mapped into
-> the kernel's memory space. So using ioread16/ioread32/iowrite32 turn into a
-> straightforward pointer dereference.
-> Every other driver require more complicated operations to read more than 1
-> byte at a time and will just fall back to read_bytes/write_bytes.
-> Therefore, move this common code out of tpm_tis_spi into tpm_tis_core, so
-> that it is automatically used when low-level drivers do not implement the
-> specialized methods.
+> Enric Balletbo Serra <eballetbo@gmail.com> 於 2020年4月8日 週三 下午11:48寫道：
+>>
+>> Missatge de Hsin-Yi Wang <hsinyi@chromium.org> del dia dl., 18 de nov.
+>> 2019 a les 11:43:
+>>>
+>>> In order to use GCE function, we need add some informations
+>>> into display node (mboxes, mediatek,gce-client-reg, mediatek,gce-events).
+>>>
+>>> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+>>
+>> With the fix provided by Hsin-Yi [1] and after the mmsys patches
+>> landed I get GCE function working on mt8173, so
+>>
+>> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>>
+>> [1] https://lore.kernel.org/lkml/20200406051131.225748-1-hsinyi@chromium.org/
+>>
+>> Thanks,
+>>  Enric
+>>
+>>> ---
+>>> - This is based on series "support gce on mt8183 platform"
+>>>   https://patchwork.kernel.org/cover/11208309/
+>>> - gce setting in 8183:
+>>>   https://patchwork.kernel.org/patch/11127105/
+>>> ---
+>>>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 16 ++++++++++++++++
+>>>  1 file changed, 16 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>>> index 15f1842f6df3..e84ec3f95d81 100644
+>>> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>>> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>>> @@ -911,6 +911,11 @@ mmsys: clock-controller@14000000 {
+>>>                         assigned-clocks = <&topckgen CLK_TOP_MM_SEL>;
+>>>                         assigned-clock-rates = <400000000>;
+>>>                         #clock-cells = <1>;
+>>> +                       mboxes = <&gce 0 CMDQ_THR_PRIO_HIGHEST 1>,
+>>> +                                <&gce 1 CMDQ_THR_PRIO_HIGHEST 1>;
 > 
-> Co-developed-by: Alexander Steffen <Alexander.Steffen@infineon.com>
-> Signed-off-by: Alexander Steffen <Alexander.Steffen@infineon.com>
-> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
-> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Because of patch [1], atomic_exec parameter should be removed.
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20200408&id=19d8e335d58a961a7ed377e5e2e63664b92c0b9c
+> 
 
-Just noticed that the short summary is still wrong. As far as I remember
-I asked to fix it.
+Many thanks to point this. Hsin-Yi, as the mt8173 device-tree will not land in
+current merge window (Matthias correct me if I am  wrong) maybe you could send a
+new version of the device-tree including these changes?
 
-tpm: tpm_tis: Make implementation of read16 read32 write32 optional
 
-In English you put comma between enumerated things except for the last
-thing where you use and-conjuction. How hard is it seriously to write
-legit sentences?
+>>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0 0x1000>;
+>>> +                       mediatek,gce-events = <CMDQ_EVENT_MUTEX0_STREAM_EOF>,
+>>> +                                             <CMDQ_EVENT_MUTEX1_STREAM_EOF>;
+> 
+> Because of patch [2], these events should be moved to mutex node.
+> 
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=v5.6&id=60fa8c13ab1a33b8b958efb1510ec2fd8a064bcc
+> 
 
-/Jarkko
+Hsin-Yi, note this will also impact your fixes patch [1].
+
+[1] https://lore.kernel.org/lkml/20200406051131.225748-1-hsinyi@chromium.org/
+
+Thanks,
+ Enric
+
+> Regards,
+> Chun-Kuang.
+> 
+>>>                 };
+>>>
+>>>                 mdp_rdma0: rdma@14001000 {
+>>> @@ -991,6 +996,7 @@ ovl0: ovl@1400c000 {
+>>>                         clocks = <&mmsys CLK_MM_DISP_OVL0>;
+>>>                         iommus = <&iommu M4U_PORT_DISP_OVL0>;
+>>>                         mediatek,larb = <&larb0>;
+>>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xc000 0x1000>;
+>>>                 };
+>>>
+>>>                 ovl1: ovl@1400d000 {
+>>> @@ -1001,6 +1007,7 @@ ovl1: ovl@1400d000 {
+>>>                         clocks = <&mmsys CLK_MM_DISP_OVL1>;
+>>>                         iommus = <&iommu M4U_PORT_DISP_OVL1>;
+>>>                         mediatek,larb = <&larb4>;
+>>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xd000 0x1000>;
+>>>                 };
+>>>
+>>>                 rdma0: rdma@1400e000 {
+>>> @@ -1011,6 +1018,7 @@ rdma0: rdma@1400e000 {
+>>>                         clocks = <&mmsys CLK_MM_DISP_RDMA0>;
+>>>                         iommus = <&iommu M4U_PORT_DISP_RDMA0>;
+>>>                         mediatek,larb = <&larb0>;
+>>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xe000 0x1000>;
+>>>                 };
+>>>
+>>>                 rdma1: rdma@1400f000 {
+>>> @@ -1021,6 +1029,7 @@ rdma1: rdma@1400f000 {
+>>>                         clocks = <&mmsys CLK_MM_DISP_RDMA1>;
+>>>                         iommus = <&iommu M4U_PORT_DISP_RDMA1>;
+>>>                         mediatek,larb = <&larb4>;
+>>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xf000 0x1000>;
+>>>                 };
+>>>
+>>>                 rdma2: rdma@14010000 {
+>>> @@ -1031,6 +1040,7 @@ rdma2: rdma@14010000 {
+>>>                         clocks = <&mmsys CLK_MM_DISP_RDMA2>;
+>>>                         iommus = <&iommu M4U_PORT_DISP_RDMA2>;
+>>>                         mediatek,larb = <&larb4>;
+>>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0 0x1000>;
+>>>                 };
+>>>
+>>>                 wdma0: wdma@14011000 {
+>>> @@ -1041,6 +1051,7 @@ wdma0: wdma@14011000 {
+>>>                         clocks = <&mmsys CLK_MM_DISP_WDMA0>;
+>>>                         iommus = <&iommu M4U_PORT_DISP_WDMA0>;
+>>>                         mediatek,larb = <&larb0>;
+>>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x1000 0x1000>;
+>>>                 };
+>>>
+>>>                 wdma1: wdma@14012000 {
+>>> @@ -1051,6 +1062,7 @@ wdma1: wdma@14012000 {
+>>>                         clocks = <&mmsys CLK_MM_DISP_WDMA1>;
+>>>                         iommus = <&iommu M4U_PORT_DISP_WDMA1>;
+>>>                         mediatek,larb = <&larb4>;
+>>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x2000 0x1000>;
+>>>                 };
+>>>
+>>>                 color0: color@14013000 {
+>>> @@ -1059,6 +1071,7 @@ color0: color@14013000 {
+>>>                         interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_LOW>;
+>>>                         power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+>>>                         clocks = <&mmsys CLK_MM_DISP_COLOR0>;
+>>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x3000 0x1000>;
+>>>                 };
+>>>
+>>>                 color1: color@14014000 {
+>>> @@ -1067,6 +1080,7 @@ color1: color@14014000 {
+>>>                         interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_LOW>;
+>>>                         power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+>>>                         clocks = <&mmsys CLK_MM_DISP_COLOR1>;
+>>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x4000 0x1000>;
+>>>                 };
+>>>
+>>>                 aal@14015000 {
+>>> @@ -1075,6 +1089,7 @@ aal@14015000 {
+>>>                         interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_LOW>;
+>>>                         power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+>>>                         clocks = <&mmsys CLK_MM_DISP_AAL>;
+>>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x5000 0x1000>;
+>>>                 };
+>>>
+>>>                 gamma@14016000 {
+>>> @@ -1083,6 +1098,7 @@ gamma@14016000 {
+>>>                         interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_LOW>;
+>>>                         power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+>>>                         clocks = <&mmsys CLK_MM_DISP_GAMMA>;
+>>> +                       mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x6000 0x1000>;
+>>>                 };
+>>>
+>>>                 merge@14017000 {
+>>> --
+>>> 2.24.0.432.g9d3f5f5b63-goog
+>>>
+>>>
+>>> _______________________________________________
+>>> Linux-mediatek mailing list
+>>> Linux-mediatek@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+>>
+>> _______________________________________________
+>> Linux-mediatek mailing list
+>> Linux-mediatek@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
