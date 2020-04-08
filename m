@@ -2,123 +2,101 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C28C2D0EA
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 13:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9D0C2D0EA
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 13:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C627D206F7
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 13:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 443782072A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 13:18:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fTBMY2BU"
+	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="H5BsiIzB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbgDHNN5 (ORCPT
+        id S1728808AbgDHNSF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 09:13:57 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34167 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbgDHNN5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 09:13:57 -0400
-Received: by mail-io1-f65.google.com with SMTP id f3so1368ioj.1;
-        Wed, 08 Apr 2020 06:13:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8nD34K5pjnKrhNZ/IDFX0q8TbRjSUPEDKUV8DiV88EM=;
-        b=fTBMY2BUApkworc3vB/SEq2Tj2Ebry8B29xg6eiIaBN0kfm7DSk1BzZ4/iP1l9XOHq
-         zSc23vODTSVFwtfd9Zw4RB763HLpGeNzPSOwPC8zX2JQl4eUmdnePV+34+Kc0m4PWh+k
-         rcDEH1GOvygS8953k9AjW7xx+PpVNwzCBKXDRyomHgsK9peCbjiU0rq1lVE4O5tLw0Za
-         KprMRiVP5dREID+UMAvzKVAY0kFzgINYjQhLgoEmCxnlBpN2qY8yQ0HDKmItOOu3YyT7
-         vBScu63QYN/qc5wUT30O7j/DXuxdJpTr+RdLZFfMqOcM7MwMP4FdCuJBeJesaFCVkoT1
-         itqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8nD34K5pjnKrhNZ/IDFX0q8TbRjSUPEDKUV8DiV88EM=;
-        b=kdq7WkQb0OywRIShDLsyJouPXHdm2OBJnjK/tZAZHY5repKglqyi74Lf3HM6E9L/At
-         +AqylYSqMhsJ3yYOxgaNCftIivL5ggDrUnOyUJIpm4CJL08Cz02Aj4E7wbZktN80s+Nj
-         9WZU+X5svC6UYMql8tiSDCNo46KApw1ruP1l58cgyK0IxGECchzXUZqwk/Px8lChE82U
-         OAIihkAyEDrrCFPdOPtAKpNCPIfi3PsrrchA58arEdoyVEfgaekASdzDqySetE7/XsqL
-         INYdIyQi9P559wBv6jBHKo64gHcC9uM9DvJ+ZKonlPLPCrJ7Xn85j68UlfyNMAnLyqd5
-         rx0g==
-X-Gm-Message-State: AGi0PuZOBQ3DTM1hQ7mfV7wzWaF6OuzuCft2+GMNmFjEIHITO2FyC3AV
-        PEq+PTUEjLFizbGjfIEYSPVLsSWtAlaYsiygTRI=
-X-Google-Smtp-Source: APiQypKe/jG/Ygr7L5LC6TETf4HSCl2G7Zz2PbD1bznu/pDr8JB9qbVFTLFFJ9NDoQA/XxfMFeD356DZa5k9dnCEDpc=
-X-Received: by 2002:a02:ccf4:: with SMTP id l20mr1046213jaq.28.1586351636019;
- Wed, 08 Apr 2020 06:13:56 -0700 (PDT)
+        Wed, 8 Apr 2020 09:18:05 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:38172 "EHLO extserv.mm-sol.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728062AbgDHNSF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Apr 2020 09:18:05 -0400
+Received: from [192.168.1.4] (212-5-158-69.ip.btc-net.bg [212.5.158.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id A35B7CFB4;
+        Wed,  8 Apr 2020 16:18:02 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1586351883; bh=6jsS54DDAbAVWAIdONxSTHUhrCNzAC7cdn2dSGdXnBg=;
+        h=Subject:To:Cc:From:Date:From;
+        b=H5BsiIzB8AZxY0Wq3Tf16IwYzzmNiusO9OkRSYpYmfdIUGLh+BC4cjiSyKjjdU/20
+         OLzEOj8NRb7KFq6sCwZk+L+B6rEFumPkXkvAJMAq6ekGwk0ahP8ztFLDQrwpuhC8az
+         VfQp97J1Ov1sFxv2bnMBcDblhbNWtSDtgT1MqIfpq0WJYQ+RJDEoeEPUHzhvhksk0e
+         ElRZ//uN6BAO1ZDzMx++hPMrGd1TycYo+7c46ge4WdqAVyVgYJ5JOCxosA8l+a1WaL
+         koBe23FyOZtaShYFn51cpiPYHIJvnGbhnOIv0w+2XPhYSx4hZr0WjoTsauBcJ1DYSc
+         SUs2QL8bsicTQ==
+Subject: Re: R: [PATCH v2 07/10] PCIe: qcom: fix init problem with missing
+ PARF programming
+To:     ansuelsmth@gmail.com, 'Andy Gross' <agross@kernel.org>
+Cc:     'Bjorn Andersson' <bjorn.andersson@linaro.org>,
+        'Bjorn Helgaas' <bhelgaas@google.com>,
+        'Rob Herring' <robh+dt@kernel.org>,
+        'Mark Rutland' <mark.rutland@arm.com>,
+        'Lorenzo Pieralisi' <lorenzo.pieralisi@arm.com>,
+        'Andrew Murray' <amurray@thegoodpenguin.co.uk>,
+        'Philipp Zabel' <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200402121148.1767-1-ansuelsmth@gmail.com>
+ <20200402121148.1767-8-ansuelsmth@gmail.com>
+ <fea9cfd1-2bc7-0141-444e-9c781877ad02@mm-sol.com>
+ <053e01d60da2$984f1170$c8ed3450$@gmail.com>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <2c5dcc8e-fc65-bc72-64c4-b5c69a21f7ca@mm-sol.com>
+Date:   Wed, 8 Apr 2020 16:18:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200327204711.10614-1-alcooperx@gmail.com> <20200327204711.10614-2-alcooperx@gmail.com>
- <20200330154006.GA21478@bogus> <7e980e08-bc4c-aad5-fce0-0133e4e479f8@gmail.com>
-In-Reply-To: <7e980e08-bc4c-aad5-fce0-0133e4e479f8@gmail.com>
-From:   Alan Cooper <alcooperx@gmail.com>
-Date:   Wed, 8 Apr 2020 09:13:45 -0400
-Message-ID: <CAOGqxeWuP5c2VtA5qHertbwzKrBjEA2Bo4ds_H+vqQ=h_zABEg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: Add Broadcom STB USB support
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mathias Nyman <mathias.nyman@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <053e01d60da2$984f1170$c8ed3450$@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sending again in plain text.
+Hi Ansuel,
 
-On Tue, Apr 7, 2020 at 4:28 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> On 3/30/2020 8:40 AM, Rob Herring wrote:
-> > On Fri, 27 Mar 2020 16:47:08 -0400, Al Cooper wrote:
-> >> Add DT bindings for Broadcom STB USB EHCI and XHCI drivers.
-> >>
-> >> NOTE: The OHCI driver is not included because it uses the generic
-> >>       platform driver.
-> >>
-> >> Signed-off-by: Al Cooper <alcooperx@gmail.com>
-> >> ---
-> >>  .../bindings/usb/brcm,bcm7445-ehci.yaml       | 61 +++++++++++++++++++
-> >>  .../devicetree/bindings/usb/usb-xhci.txt      |  1 +
-> >>  2 files changed, 62 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
-> >>
-> >
-> > My bot found errors running 'make dt_binding_check' on your patch:
-> >
-> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.example.dt.yaml: ehci@f0b00300: 'interrupt-names' does not match any of the regexes: 'pinctrl-[0-9]+'
->
-> This warning does not seem to be legitimate, the 'interrupt-names'
-> property is a valid one, where do we update the schema such that it
-> knows about it?
+On 4/8/20 3:38 PM, ansuelsmth@gmail.com wrote:
+>> PARF programming
+>>
+>> Hi Ansuel,
+>>
+>> Please fix the patch subject for all patches in the series per Bjorn H.
+>> request.
+>>
+>> PCI: qcom: Fix init problem with missing PARF programming
+>>
+>> Also the patch subject is misleading to me. Actually you change few phy
+>> parameters: Tx De-Emphasis, Tx Swing and Rx equalization. On the other
+>> side I guess those parameters are board specific and I'm not sure how
+>> this change will reflect on apq8064 boards.
+>>
+> 
+> I also think that this would brake apq8064, on ipq8064 this is needed or 
+> the system doesn't boot. 
+> Should I move this to the dts and set this params only if they are present
+> in dts or also here check for compatible and set accordingly? 
+> 
 
-It looks like I need to specify it in the specification portion of my
-file if I want it in the example, like I did for "clock-names" and
-"phy-names".
-Since the driver always get the interrupt by index, I'm going to
-remove "interrupt-names" from the example.
+I also think that these phy params should be per board (and they are
+tunable).
 
-Al
+Maybe you can propose those as generic phy params in pci.txt binding
+document and then we can ask DT maintainers for opinion. If they refuse
+such generic bindings, we could switch to custom qcom,phy properties.
 
->
-> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.example.dt.yaml: ehci@f0b00300: $nodename:0: 'ehci@f0b00300' does not match '^usb(@.*)?'
->
-> This one is a legitimate one and should be fixed.
-> --
-> Florian
->
->
+-- 
+regards,
+Stan
