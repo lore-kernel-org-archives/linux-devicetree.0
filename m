@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3597C2D0EA
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 10:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34190C2BA80
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 10:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8713720771
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 10:35:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0605E20753
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 10:35:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgDHKfp (ORCPT
+        id S1728187AbgDHKfu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 06:35:45 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:59628 "EHLO inva021.nxp.com"
+        Wed, 8 Apr 2020 06:35:50 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:43918 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgDHKfp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Apr 2020 06:35:45 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A4A2F201437;
-        Wed,  8 Apr 2020 12:35:43 +0200 (CEST)
+        id S1726436AbgDHKfu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Apr 2020 06:35:50 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 248741A16DB;
+        Wed,  8 Apr 2020 12:35:49 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8311D201436;
-        Wed,  8 Apr 2020 12:35:37 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6BD031A0153;
+        Wed,  8 Apr 2020 12:35:43 +0200 (CEST)
 Received: from titan.ap.freescale.net (titan.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 48D95402E4;
-        Wed,  8 Apr 2020 18:35:30 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3334C40285;
+        Wed,  8 Apr 2020 18:35:36 +0800 (SGT)
 From:   Hui Song <hui.song_1@nxp.com>
 To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -37,10 +37,12 @@ To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
 Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Song Hui <hui.song_1@nxp.com>
-Subject: [PATCH v1] gpio: mpc8xxx: Add shutdown function.
-Date:   Wed,  8 Apr 2020 18:21:17 +0800
-Message-Id: <20200408102118.17572-1-hui.song_1@nxp.com>
+Subject: [PATCH] gpio: mpc8xxx: Add shutdown function.
+Date:   Wed,  8 Apr 2020 18:21:18 +0800
+Message-Id: <20200408102118.17572-2-hui.song_1@nxp.com>
 X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20200408102118.17572-1-hui.song_1@nxp.com>
+References: <20200408102118.17572-1-hui.song_1@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
