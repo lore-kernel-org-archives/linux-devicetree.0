@@ -2,324 +2,133 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63872C2BA1B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 17:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D11C2BA1B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 17:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4305A20730
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 17:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E3F20784
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 17:45:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZvHdKxmu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbgDHRdG (ORCPT
+        id S1728583AbgDHRpo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 13:33:06 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:33188 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727254AbgDHRdG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 13:33:06 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 8171E804E5;
-        Wed,  8 Apr 2020 19:32:59 +0200 (CEST)
-Date:   Wed, 8 Apr 2020 19:32:58 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v10 1/2] dt-bindings: display/bridge: Add binding for NWL
- mipi dsi host controller
-Message-ID: <20200408173258.GA24828@ravnborg.org>
-References: <cover.1584730033.git.agx@sigxcpu.org>
- <c7fd138e00608a108dae3651ab10d583a60040fc.1584730033.git.agx@sigxcpu.org>
+        Wed, 8 Apr 2020 13:45:44 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:6896 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727028AbgDHRpo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 13:45:44 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e8e0dba0001>; Wed, 08 Apr 2020 10:45:30 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 08 Apr 2020 10:45:43 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 08 Apr 2020 10:45:43 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Apr
+ 2020 17:45:43 +0000
+Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Apr 2020
+ 17:45:41 +0000
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <12a834ac-52b1-6dc0-7d3a-3e6a1fa85a2a@gmail.com>
+ <e3712e7b-b335-b35b-a94f-24eb85122dca@nvidia.com>
+ <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
+ <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
+ <dd16c560-ba8f-e7df-5dc4-5227e0043196@nvidia.com>
+ <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
+ <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
+ <9e317f65-8a02-3b15-cfec-8e0d8374130e@gmail.com>
+ <97b35910-4c93-123a-43a0-eb14476ed0f3@nvidia.com>
+ <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
+ <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
+ <0c425505-347f-7418-af7e-d121fe0d06dc@nvidia.com>
+ <db7c7051-5674-cdb9-0aa4-ee94125b3024@gmail.com>
+ <1a31cd60-739f-0660-1c45-31487d2f2128@nvidia.com>
+ <603084a5-249a-4fe2-3646-e9335ef9ab43@nvidia.com>
+ <7895b9c6-f27d-8939-73d7-67d785e1a8b7@nvidia.com>
+ <ea60b489-990e-4b15-e215-d93381a1371e@nvidia.com>
+ <b2405c2a-73c0-ad69-ccea-0388caf8045c@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <15d8b525-67b5-b437-f7fd-89f80cd0d9f6@nvidia.com>
+Date:   Wed, 8 Apr 2020 10:45:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c7fd138e00608a108dae3651ab10d583a60040fc.1584730033.git.agx@sigxcpu.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=8nJEP1OIZ-IA:10 a=ze386MxoAAAA:8
-        a=8AirrxEcAAAA:8 a=VwQbUJbxAAAA:8 a=7gkXJVJtAAAA:8 a=gEfo2CItAAAA:8
-        a=Y9UcUKKVKEwMmb4K0lMA:9 a=cci32D0TwK99nO6w:21 a=mc74Iri104anq4aC:21
-        a=wPNLvfGTeEIA:10 a=iBZjaW-pnkserzjvUTHh:22 a=ST-jHhOKWsTCqRlWije3:22
-        a=AjGcO6oz07-iQ99wixmX:22 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=sptkURWiP4Gy88Gu7hUp:22
+In-Reply-To: <b2405c2a-73c0-ad69-ccea-0388caf8045c@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586367930; bh=C3x4vYXHJ49cie7cETLtHeDW7HBZDN9Aik/bGZg6QYs=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=ZvHdKxmuJM+G+XgaYTT347VCzFcHYhPRZYubc1sEmcwwkzb/6vxZLBQLs1qf0saEl
+         6g1DkgpIVIiIRIlPleTIEdK2W8I2QMcGy2gFG2lKwPYZgiRLIxi0EmbgIlQukDbNv9
+         pigO87uX7/ZwSLy8dG3gyc3pT4LPDU58fBAxEyr2dZVZzsVGZ4Ykcm7RGH7+mfYUqc
+         yTXwxcbAqAQbajJzvlygoSnbR7hCbHR8gTEFeLMRPrm9Q0QX9eRe9o6snDdVVBuPKh
+         +KG+dJrXb8paWXblRpjIQ4R72jZRDPT4WGHIk4zE78b2p0K1mSQdjW/2jUXCO/KQql
+         3om9KO0W/JBtg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Guido.
 
-We discussed this binding briefly on IRC:
+On 4/8/20 7:21 AM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 08.04.2020 03:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> ...
+>>>>>> I suppose that taking a shot takes at least few milliseconds, which
+>>>>>> should be unacceptable to waste.
+>>>>> As long as buffers are in queue we have to keep processing each
+>>>>> buffer and between buffers obviously we have to wait for previous
+>>>>> frames to finish and this why we have separate thread for frame
+>>>>> finish where we can have next buffer capture ready and issue while
+>>>>> previous frame memory write happens
+>>> Also we specified numbers buffers as 3 to vb2 queue. So this is rare
+>>> case but to prevent issuing more than 2 at a time as VI HW is only
+>>> double buffered and syncpt fifo max depth is 2 added this to be safer.
+>> To be more clear, when more buffers are enqueued from userspace always
+>> capture list will be full and thread will be busy in capture till either
+>> error or stop stream request happens.
+>>
+> If kthreads take more than 1% of CPU time during capture (video) with
+> more than 2 buffers in queue, then it's not good and I think you should
+> do something about it. If kthreads stay at ~0%, then it should be okay
+> as-is.
 
-19:28 <pinchartl> port 0 is defined as
-19:28 <pinchartl> +          Input port node to receive pixel data from the
-19:28 <pinchartl> +          display controller. Exactly one endpoint must be
-19:28 <pinchartl> +          specified.
-19:28 <pinchartl> then there's two endpoints,
+VI outstanding requests max can only be 2=C2=A0 as syncpt fifo depth is 2=
+=C2=A0=20
+and waiting to issue next capture when already 2 captures are inflight=20
+happens only during beginning of streaming where buffers allocated go=20
+thru capture for first time after queuing.
 
+same buffers are returned to userspace after capture and same allocated=20
+buffers will be queued back for subsequent captures.
 
-On Fri, Mar 20, 2020 at 07:49:09PM +0100, Guido Günther wrote:
-> The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
-> 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> Tested-by: Robert Chiras <robert.chiras@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> ---
->  .../bindings/display/bridge/nwl-dsi.yaml      | 216 ++++++++++++++++++
->  1 file changed, 216 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> new file mode 100644
-> index 000000000000..ec1e7e12719d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> @@ -0,0 +1,216 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/nwl-dsi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Northwest Logic MIPI-DSI controller on i.MX SoCs
-> +
-> +maintainers:
-> +  - Guido Gúnther <agx@sigxcpu.org>
-> +  - Robert Chiras <robert.chiras@nxp.com>
-> +
-> +description: |
-> +  NWL MIPI-DSI host controller found on i.MX8 platforms. This is a dsi bridge for
-> +  the SOCs NWL MIPI-DSI host controller.
-> +
-> +properties:
-> +  compatible:
-> +    const: fsl,imx8mq-nwl-dsi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +  clocks:
-> +    items:
-> +      - description: DSI core clock
-> +      - description: RX_ESC clock (used in escape mode)
-> +      - description: TX_ESC clock (used in escape mode)
-> +      - description: PHY_REF clock
-> +      - description: LCDIF clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: core
-> +      - const: rx_esc
-> +      - const: tx_esc
-> +      - const: phy_ref
-> +      - const: lcdif
-> +
-> +  mux-controls:
-> +    description:
-> +      mux controller node to use for operating the input mux
-> +
-> +  phys:
-> +    maxItems: 1
-> +    description:
-> +      A phandle to the phy module representing the DPHY
-> +
-> +  phy-names:
-> +    items:
-> +      - const: dphy
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    items:
-> +      - description: dsi byte reset line
-> +      - description: dsi dpi reset line
-> +      - description: dsi esc reset line
-> +      - description: dsi pclk reset line
-> +
-> +  reset-names:
-> +    items:
-> +      - const: byte
-> +      - const: dpi
-> +      - const: esc
-> +      - const: pclk
-> +
-> +  ports:
-> +    type: object
-> +    description:
-> +      A node containing DSI input & output port nodes with endpoint
-> +      definitions as documented in
-> +      Documentation/devicetree/bindings/graph.txt.
-> +    properties:
-> +      port@0:
-> +        type: object
-> +        description:
-> +          Input port node to receive pixel data from the
-> +          display controller. Exactly one endpoint must be
-> +          specified.
-> +        properties:
-> +          '#address-cells':
-> +            const: 1
-> +
-> +          '#size-cells':
-> +            const: 0
-> +
-> +          endpoint@0:
-> +            description: sub-node describing the input from LCDIF
-> +            type: object
-> +
-> +          endpoint@1:
-> +            description: sub-node describing the input from DCSS
-> +            type: object
-> +
-> +          reg:
-> +            const: 0
-> +
-> +        required:
-> +          - '#address-cells'
-> +          - '#size-cells'
-> +          - reg
-> +        additionalProperties: false
-> +
-> +      port@1:
-> +        type: object
-> +        description:
-> +          DSI output port node to the panel or the next bridge
-> +          in the chain
-> +
-> +      '#address-cells':
-> +        const: 1
-> +
-> +      '#size-cells':
-> +        const: 0
-> +
-> +    required:
-> +      - '#address-cells'
-> +      - '#size-cells'
-> +      - port@0
-> +      - port@1
-> +
-> +    additionalProperties: false
+So this case of holding to issue single shot when already single shot is=20
+issue for 2 frames simultaneous happens only during beginning of start=20
+stream and also we set num_buffers to allocate for queue as 3 although 2=20
+is good enough where we will not hit this case even during streaming=20
+start with 2 buffers
 
-For the casual reader the above confuses.
-Assuming the binding is correct, can we have the comment updated.
-
-	Sam
-
-> +
-> +patternProperties:
-> +  "^panel@[0-9]+$":
-> +    type: object
-> +
-> +required:
-> +  - '#address-cells'
-> +  - '#size-cells'
-> +  - clock-names
-> +  - clocks
-> +  - compatible
-> +  - interrupts
-> +  - mux-controls
-> +  - phy-names
-> +  - phys
-> +  - ports
-> +  - reg
-> +  - reset-names
-> +  - resets
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> + - |
-> +
-> +   #include <dt-bindings/clock/imx8mq-clock.h>
-> +   #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +   #include <dt-bindings/reset/imx8mq-reset.h>
-> +
-> +   mipi_dsi: mipi_dsi@30a00000 {
-> +              #address-cells = <1>;
-> +              #size-cells = <0>;
-> +              compatible = "fsl,imx8mq-nwl-dsi";
-> +              reg = <0x30A00000 0x300>;
-> +              clocks = <&clk IMX8MQ_CLK_DSI_CORE>,
-> +                       <&clk IMX8MQ_CLK_DSI_AHB>,
-> +                       <&clk IMX8MQ_CLK_DSI_IPG_DIV>,
-> +                       <&clk IMX8MQ_CLK_DSI_PHY_REF>,
-> +                       <&clk IMX8MQ_CLK_LCDIF_PIXEL>;
-> +              clock-names = "core", "rx_esc", "tx_esc", "phy_ref", "lcdif";
-> +              interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> +              mux-controls = <&mux 0>;
-> +              power-domains = <&pgc_mipi>;
-> +              resets = <&src IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N>,
-> +                       <&src IMX8MQ_RESET_MIPI_DSI_DPI_RESET_N>,
-> +                       <&src IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N>,
-> +                       <&src IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N>;
-> +              reset-names = "byte", "dpi", "esc", "pclk";
-> +              phys = <&dphy>;
-> +              phy-names = "dphy";
-> +
-> +              panel@0 {
-> +                      compatible = "rocktech,jh057n00900";
-> +                      reg = <0>;
-> +                      port@0 {
-> +                           panel_in: endpoint {
-> +                                     remote-endpoint = <&mipi_dsi_out>;
-> +                           };
-> +                      };
-> +              };
-> +
-> +              ports {
-> +                    #address-cells = <1>;
-> +                    #size-cells = <0>;
-> +
-> +                    port@0 {
-> +                           #size-cells = <0>;
-> +                           #address-cells = <1>;
-> +                           reg = <0>;
-> +                           mipi_dsi_in: endpoint@0 {
-> +                                        reg = <0>;
-> +                                        remote-endpoint = <&lcdif_mipi_dsi>;
-> +                           };
-> +                    };
-> +                    port@1 {
-> +                           reg = <1>;
-> +                           mipi_dsi_out: endpoint {
-> +                                         remote-endpoint = <&panel_in>;
-> +                           };
-> +                    };
-> +              };
-> +      };
-> -- 
-> 2.23.0
