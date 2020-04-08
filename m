@@ -7,138 +7,162 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55904C2BB85
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E1DC2D0F4
 	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2975E20768
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D932320768
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:52:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d5oFaK8U"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mN+q9T2O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730244AbgDHTwG (ORCPT
+        id S1730248AbgDHTwG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Wed, 8 Apr 2020 15:52:06 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40392 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730241AbgDHTwG (ORCPT
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36910 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730244AbgDHTwG (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 15:52:06 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 142so4453430ljj.7
-        for <devicetree@vger.kernel.org>; Wed, 08 Apr 2020 12:52:03 -0700 (PDT)
+Received: by mail-lf1-f68.google.com with SMTP id t11so6124537lfe.4
+        for <devicetree@vger.kernel.org>; Wed, 08 Apr 2020 12:52:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=K6Ojd94vjUcgSndzfprDVKF+JSlxG4uGRfRXsYpGzQ0=;
-        b=d5oFaK8UwOZi7H5F48rnNaK2R8v6LkGnKwHFDBzDgHi/ojGrvQzjwZ+lzvVLhz0wDG
-         lGhd6WN0q1JE2+li4ltylG/TjC0yKBgl0u3sye4rUxxuD3Yz8clpWWNnBhOsFx7/Mafh
-         UakuDeyrWRbksFKH9NKCB3XeXOdTpo4myPKOAHrIKOwhajzFT5fBB9DwJHqSpjDIFDtb
-         HLcLuC7pPaRLWLxjliscAUvZ9V4W4HxkqdPw92JiOYt/QKYttmCuaxJL9aNbjqaSnbAs
-         8WoFH7iow2pBdcaIpYsQ79aKcFx+vXY9K4jLcLPwnz0upKHwAMWmDoONqvOKjBWFHjEe
-         Dueg==
+        bh=LNUYG492p0LzUw743VYzwd+v9kMLkVKaGJFhNA4+IGs=;
+        b=mN+q9T2Ox9nNdGI+Bg0QEtZ1gPcvLhLG9wEc3hS7zX1zyZfPfm45LpNnSNu3evoS7W
+         fAFVjROotSXtb6Cr/JB4+/iCId9emJM5teg/6n9SXxBAspCr3xTBGYHp1HQgn/wR4pBs
+         9ZCxqaY5xxraCyezt9autnPhyalqeuwGmzEEJ+GAWUtjb/bbVFoPrltEMtrwvkxloGfQ
+         Q/XemAyoHHOrBw0oe+tO01d/LPzlUUhzcySwncf8jzs0L7+8N6uKA5oD9pChPGzxfJWW
+         4wQ32Eqgk5unl3pqwjqls/KkAs7Vl2C8nYwQVxUPuk/gwfyaLS/EcseEaUAt/R9llmWq
+         cgBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=K6Ojd94vjUcgSndzfprDVKF+JSlxG4uGRfRXsYpGzQ0=;
-        b=FGwE9q8Jad2Yt9qpxFc+2oNy+pU/PtkaOZv38to4UbZnjlefT7PFOYKy++6p+MjM9n
-         zV0SAAK6UBjOXDgTiBDUP4pq05ydJ96SccKkRt34J91fIeD8Y9pmZ1AppBbozWQ1RgFs
-         bsAELSOCZJR5D6XTkJeqz05QOXq304g3Ue+rODnrNdPGIKp0oDwL6ETl8812nqmYogFN
-         oPo3BYC1dfDRTmPC7KbbtRVYpofy0QnwNpUSWF9gOMdQMER2nOkt7O3NCaF02/eu1v9y
-         PqrK969ad1/W8nFyRiO6+hEa1SQI6A8nZVtaCB/eibngXK+cE5MlafRgUpkXUE25KDN/
-         F2sQ==
-X-Gm-Message-State: AGi0PuZ7BB40ffbpBE7BvW1nJqIwGkUp+F+HLzmiiVQRV/uP7/ejXJzc
-        7a7sHrElGnbrMkkWsrbJblM=
-X-Google-Smtp-Source: APiQypJbuaHNQe5dLcOoFSvhluuZKo2c0ks74xx7xSGRxc9QW9zx74abZXhtv300Khuz3xg3CEOWOA==
-X-Received: by 2002:a2e:7a0a:: with SMTP id v10mr6156018ljc.143.1586375522923;
-        Wed, 08 Apr 2020 12:52:02 -0700 (PDT)
+        bh=LNUYG492p0LzUw743VYzwd+v9kMLkVKaGJFhNA4+IGs=;
+        b=r8AJn/JlNTDzl+nmK+w0d9BQ8KKfIPJO/ChTyB18YCGrUxlE0kWwejqG18N4fBdmi7
+         IeT7hyYPuHE9+ZASDafYiELd+4qosUb6y3a6Lu4bT0plpkNEXAgGO8rsk05RmugYSxXr
+         rTNhYUaCg2NbbvMNEoC3HzbMih2QL2Yz/BR1mquSLjB7O9522VI0+03ynV/V0RHS/zGI
+         oZxnZU3vyISa/PIeUEydQ8Z3li+E0dGha53amn579WH2huREAWRhYFCNgd+qn4JP5H4B
+         HLm2o5U3jHKHl2nMI2ieVyh3O6I1EqidWL4NBOv+ySpiXu65lmkloIyI3TuI/Ev+pp8m
+         OHbg==
+X-Gm-Message-State: AGi0PuZtMvpJ0GK6k4QZy2plxOjNDkj5iJwHQQ6WhbC2TGQrVLxnLkIz
+        fXXQo4QYctJJKFXWp5fD6t8=
+X-Google-Smtp-Source: APiQypIQDyNx4KNt5NxFsFdlnGw/HmO+tJL9kmeWTmTA6imYTfVNhAX3quWG+Z03RN9unpofs2Hhqw==
+X-Received: by 2002:ac2:4426:: with SMTP id w6mr5559037lfl.8.1586375521479;
+        Wed, 08 Apr 2020 12:52:01 -0700 (PDT)
 Received: from saturn.lan (18.158-248-194.customer.lyse.net. [158.248.194.18])
-        by smtp.gmail.com with ESMTPSA id i20sm3961304lfe.15.2020.04.08.12.52.01
+        by smtp.gmail.com with ESMTPSA id i20sm3961304lfe.15.2020.04.08.12.52.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 12:52:02 -0700 (PDT)
+        Wed, 08 Apr 2020 12:52:01 -0700 (PDT)
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     dri-devel@lists.freedesktop.org,
         Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
 Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: [PATCH v2 20/36] dt-bindings: display: convert samsung AMOLED to DT Schema
-Date:   Wed,  8 Apr 2020 21:50:53 +0200
-Message-Id: <20200408195109.32692-21-sam@ravnborg.org>
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Purism Kernel Team <kernel@puri.sm>
+Subject: [PATCH v2 19/36] dt-bindings: display: convert rocktech,jh057n00900 to DT Schema
+Date:   Wed,  8 Apr 2020 21:50:52 +0200
+Message-Id: <20200408195109.32692-20-sam@ravnborg.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200408195109.32692-1-sam@ravnborg.org>
 References: <20200408195109.32692-1-sam@ravnborg.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-For samsung there was two AMOLED panels with the same
-description.
-Collect them in one binding file.
+v2:
+  - Fix entry in MAINTAINERS
 
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Reviewed-by: Guido Günther <agx@sigxcpu.org>
+Cc: "Guido Günther" <agx@sigxcpu.org>
+Cc: Purism Kernel Team <kernel@puri.sm>
 Cc: Thierry Reding <thierry.reding@gmail.com>
 Cc: Sam Ravnborg <sam@ravnborg.org>
 ---
- .../panel/samsung,amoled-mipi-dsi.yaml        | 65 +++++++++++++++++++
- .../display/panel/samsung,s6e3ha2.txt         | 31 ---------
- .../display/panel/samsung,s6e63j0x03.txt      | 24 -------
- 3 files changed, 65 insertions(+), 55 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,amoled-mipi-dsi.yaml
- delete mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e3ha2.txt
- delete mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e63j0x03.txt
+ .../display/panel/rocktech,jh057n00900.txt    | 23 --------
+ .../display/panel/rocktech,jh057n00900.yaml   | 57 +++++++++++++++++++
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 58 insertions(+), 24 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
 
-diff --git a/Documentation/devicetree/bindings/display/panel/samsung,amoled-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/panel/samsung,amoled-mipi-dsi.yaml
+diff --git a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
+deleted file mode 100644
+index a372c5d84695..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
++++ /dev/null
+@@ -1,23 +0,0 @@
+-Rocktech jh057n00900 5.5" 720x1440 TFT LCD panel
+-
+-Required properties:
+-- compatible: should be "rocktech,jh057n00900"
+-- reg: DSI virtual channel of the peripheral
+-- reset-gpios: panel reset gpio
+-- backlight: phandle of the backlight device attached to the panel
+-- vcc-supply: phandle of the regulator that provides the vcc supply voltage.
+-- iovcc-supply: phandle of the regulator that provides the iovcc supply
+-  voltage.
+-
+-Example:
+-
+-	&mipi_dsi {
+-		panel@0 {
+-			compatible = "rocktech,jh057n00900";
+-			reg = <0>;
+-			backlight = <&backlight>;
+-			reset-gpios = <&gpio3 13 GPIO_ACTIVE_LOW>;
+-			vcc-supply = <&reg_2v8_p>;
+-			iovcc-supply = <&reg_1v8_p>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
 new file mode 100644
-index 000000000000..96bdde9298e0
+index 000000000000..827417bbff63
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/samsung,amoled-mipi-dsi.yaml
-@@ -0,0 +1,65 @@
++++ b/Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
+@@ -0,0 +1,57 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/display/panel/samsung,amoled-mipi-dsi.yaml#
++$id: http://devicetree.org/schemas/display/panel/rocktech,jh057n00900.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Samsung AMOLED MIPI-DSI panels
++title: Rocktech jh057n00900 5.5" 720x1440 TFT LCD panel
 +
 +maintainers:
-+  - Hoegeun Kwon <hoegeun.kwon@samsung.com>
++  - Guido Günther <agx@sigxcpu.org>
 +
 +allOf:
 +  - $ref: panel-common.yaml#
 +
 +properties:
 +  compatible:
-+    enum:
-+        # Samsung S6E63J0X03 1.63" 320x320 AMOLED panel
-+      - samsung,s6e63j0x03
-+        # Samsung S6E3HA2 5.7" 1440x2560 AMOLED panel
-+      - samsung,s6e3ha2
-+        # Samsung S6E3HF2 5.65" 1600x2560 AMOLED panel
-+      - samsung,s6e3hf2
++    const: rocktech,jh057n00900
 +
 +  reg: true
 +  reset-gpios: true
-+  enable-gpios: true
-+  te-gpios: true
++  backlight: true
 +
-+  vdd3-supply:
-+    description: I/O voltage supply
++  vcc-supply:
++    description: The regulator that provides the vcc supply voltage
 +
-+  vci-supply:
-+    description: voltage supply for analog circuits
++  iovcc-supply:
++    description: The regulator that provides the iovcc supply voltage
 +
 +required:
 +  - compatible
 +  - reg
-+  - vdd3-supply
-+  - vci-supply
 +  - reset-gpios
-+  - enable-gpios
++  - backlight
++  - vcc-supply
++  - iovcc-supply
 +
 +additionalProperties: false
 +
@@ -151,84 +175,29 @@ index 000000000000..96bdde9298e0
 +        #size-cells = <0>;
 +
 +        panel@0 {
-+            compatible = "samsung,s6e3ha2";
++            compatible = "rocktech,jh057n00900";
 +            reg = <0>;
-+            vdd3-supply = <&ldo27_reg>;
-+            vci-supply = <&ldo28_reg>;
-+            reset-gpios = <&gpg0 0 GPIO_ACTIVE_LOW>;
-+            enable-gpios = <&gpf1 5 GPIO_ACTIVE_HIGH>;
-+            te-gpios = <&gpf1 3 GPIO_ACTIVE_HIGH>;
++            backlight = <&backlight>;
++            reset-gpios = <&gpio3 13 GPIO_ACTIVE_LOW>;
++            vcc-supply = <&reg_2v8_p>;
++            iovcc-supply = <&reg_1v8_p>;
 +        };
 +    };
 +
 +...
-diff --git a/Documentation/devicetree/bindings/display/panel/samsung,s6e3ha2.txt b/Documentation/devicetree/bindings/display/panel/samsung,s6e3ha2.txt
-deleted file mode 100644
-index 4acea25c244b..000000000000
---- a/Documentation/devicetree/bindings/display/panel/samsung,s6e3ha2.txt
-+++ /dev/null
-@@ -1,31 +0,0 @@
--Samsung S6E3HA2 5.7" 1440x2560 AMOLED panel
--Samsung S6E3HF2 5.65" 1600x2560 AMOLED panel
--
--Required properties:
--  - compatible: should be one of:
--    "samsung,s6e3ha2",
--    "samsung,s6e3hf2".
--  - reg: the virtual channel number of a DSI peripheral
--  - vdd3-supply: I/O voltage supply
--  - vci-supply: voltage supply for analog circuits
--  - reset-gpios: a GPIO spec for the reset pin (active low)
--  - enable-gpios: a GPIO spec for the panel enable pin (active high)
--
--Optional properties:
--  - te-gpios: a GPIO spec for the tearing effect synchronization signal
--    gpio pin (active high)
--
--Example:
--&dsi {
--	...
--
--	panel@0 {
--		compatible = "samsung,s6e3ha2";
--		reg = <0>;
--		vdd3-supply = <&ldo27_reg>;
--		vci-supply = <&ldo28_reg>;
--		reset-gpios = <&gpg0 0 GPIO_ACTIVE_LOW>;
--		enable-gpios = <&gpf1 5 GPIO_ACTIVE_HIGH>;
--		te-gpios = <&gpf1 3 GPIO_ACTIVE_HIGH>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/panel/samsung,s6e63j0x03.txt b/Documentation/devicetree/bindings/display/panel/samsung,s6e63j0x03.txt
-deleted file mode 100644
-index 3f1a8392af7f..000000000000
---- a/Documentation/devicetree/bindings/display/panel/samsung,s6e63j0x03.txt
-+++ /dev/null
-@@ -1,24 +0,0 @@
--Samsung S6E63J0X03 1.63" 320x320 AMOLED panel (interface: MIPI-DSI command mode)
--
--Required properties:
--  - compatible: "samsung,s6e63j0x03"
--  - reg: the virtual channel number of a DSI peripheral
--  - vdd3-supply: I/O voltage supply
--  - vci-supply: voltage supply for analog circuits
--  - reset-gpios: a GPIO spec for the reset pin (active low)
--  - te-gpios: a GPIO spec for the tearing effect synchronization signal
--    gpio pin (active high)
--
--Example:
--&dsi {
--	...
--
--	panel@0 {
--		compatible = "samsung,s6e63j0x03";
--		reg = <0>;
--		vdd3-supply = <&ldo16_reg>;
--		vci-supply = <&ldo20_reg>;
--		reset-gpios = <&gpe0 1 GPIO_ACTIVE_LOW>;
--		te-gpios = <&gpx0 6 GPIO_ACTIVE_HIGH>;
--	};
--};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 33dbe94e03ab..eec316171b5e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5400,7 +5400,7 @@ M:	Guido Günther <agx@sigxcpu.org>
+ R:	Purism Kernel Team <kernel@puri.sm>
+ S:	Maintained
+ F:	drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+-F:	Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.txt
++F:	Documentation/devicetree/bindings/display/panel/rocktech,jh057n00900.yaml
+ 
+ DRM DRIVER FOR SAVAGE VIDEO CARDS
+ S:	Orphan / Obsolete
 -- 
 2.20.1
 
