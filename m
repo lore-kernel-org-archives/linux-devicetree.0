@@ -2,62 +2,44 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C39C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 14:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6E0C2D0EA
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 14:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A78682074F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 14:01:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="d9jT2vK9"
+	by mail.kernel.org (Postfix) with ESMTP id 3020420780
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 14:06:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbgDHOBU (ORCPT
+        id S1728173AbgDHOGv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 10:01:20 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60164 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbgDHOBT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 10:01:19 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 86BC9522;
-        Wed,  8 Apr 2020 16:01:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1586354476;
-        bh=XxzHVE6zlWTyguJ27GTvGM6nacHAH8FyWLtZvZFu2/o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=d9jT2vK9pgwoxt9t1G3WP4tn7UhnCCiCzsRndoW75L4PWrqgQJsqRJxEGYc1gDsE0
-         Gh9N0LYxSemAjirnWQy5I9reHelt7BYJPwgqUb2r0rVVkWqpJsQy/rZtwTUhGFmkDN
-         hRLo7Y4g3NXpJxfFobSajUD90HyAzwKG7Ja+iwb8=
-Date:   Wed, 8 Apr 2020 17:01:07 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+        Wed, 8 Apr 2020 10:06:51 -0400
+Received: from 8bytes.org ([81.169.241.247]:58532 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728159AbgDHOGv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Apr 2020 10:06:51 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id A412A2CC; Wed,  8 Apr 2020 16:06:50 +0200 (CEST)
+Date:   Wed, 8 Apr 2020 16:06:49 +0200
+From:   Joerg Roedel <joro@8bytes.org>
 To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org,
+Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mark Yao <mark.yao@rock-chips.com>,
-        Sandy Huang <hjc@rock-chips.com>, Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH/RFC 4/6] dt-bindings: display: rockchip: dw-hdmi: Convert
- binding to YAML
-Message-ID: <20200408140107.GH4881@pendragon.ideasonboard.com>
-References: <20200405233935.27599-1-laurent.pinchart+renesas@ideasonboard.com>
- <20200405233935.27599-5-laurent.pinchart+renesas@ideasonboard.com>
- <20200406080032.zlszhkjqmjeoa4ti@gilmour.lan>
- <20200406111927.GD4757@pendragon.ideasonboard.com>
- <20200406170915.x2ztz4q446h6vx2y@gilmour.lan>
- <20200406175028.GI16885@pendragon.ideasonboard.com>
- <20200407071251.npibrmzywiyigu2a@gilmour.lan>
- <20200408114552.GC4881@pendragon.ideasonboard.com>
- <20200408122519.epxtptdjlhkj3kru@gilmour.lan>
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v2 2/4] iommu: Add Allwinner H6 IOMMU driver
+Message-ID: <20200408140649.GI3103@8bytes.org>
+References: <cover.a31c229a83f1d92e6928ae2adb70887da0fd44b3.1582222496.git-series.maxime@cerno.tech>
+ <6864f0f28825bb7a2ec1c0d811a4aacdecf5f945.1582222496.git-series.maxime@cerno.tech>
+ <20200302153606.GB6540@8bytes.org>
+ <20200401114710.doioefzmjhte7jwu@gilmour.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200408122519.epxtptdjlhkj3kru@gilmour.lan>
+In-Reply-To: <20200401114710.doioefzmjhte7jwu@gilmour.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -65,282 +47,42 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Maxime,
 
-On Wed, Apr 08, 2020 at 02:25:19PM +0200, Maxime Ripard wrote:
-> On Wed, Apr 08, 2020 at 02:45:52PM +0300, Laurent Pinchart wrote:
-> > On Tue, Apr 07, 2020 at 09:12:51AM +0200, Maxime Ripard wrote:
-> >> On Mon, Apr 06, 2020 at 08:50:28PM +0300, Laurent Pinchart wrote:
-> >>> On Mon, Apr 06, 2020 at 07:09:15PM +0200, Maxime Ripard wrote:
-> >>>> On Mon, Apr 06, 2020 at 02:19:27PM +0300, Laurent Pinchart wrote:
-> >>>>> On Mon, Apr 06, 2020 at 10:00:32AM +0200, Maxime Ripard wrote:
-> >>>>>> On Mon, Apr 06, 2020 at 02:39:33AM +0300, Laurent Pinchart wrote:
-> >>>>>>> Convert the Rockchip HDMI TX text binding to YAML.
-> >>>>>>>
-> >>>>>>> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> >>>>>>> ---
-> >>>>>>>  .../display/rockchip/dw_hdmi-rockchip.txt     |  74 --------
-> >>>>>>>  .../display/rockchip/rockchip,dw-hdmi.yaml    | 178 ++++++++++++++++++
-> >>>>>>>  2 files changed, 178 insertions(+), 74 deletions(-)
-> >>>>>>>  delete mode 100644 Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
-> >>>>>>>  create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
-> >>>>>>>
-> >>>>>>> diff --git a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
-> >>>>>>> deleted file mode 100644
-> >>>>>>> index 3d32ce137e7f..000000000000
-> >>>>>>> --- a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
-> >>>>>>> +++ /dev/null
-> >>>>>>> @@ -1,74 +0,0 @@
-> >>>>>>> -Rockchip DWC HDMI TX Encoder
-> >>>>>>> -============================
-> >>>>>>> -
-> >>>>>>> -The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
-> >>>>>>> -with a companion PHY IP.
-> >>>>>>> -
-> >>>>>>> -These DT bindings follow the Synopsys DWC HDMI TX bindings defined in
-> >>>>>>> -Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt with the
-> >>>>>>> -following device-specific properties.
-> >>>>>>> -
-> >>>>>>> -
-> >>>>>>> -Required properties:
-> >>>>>>> -
-> >>>>>>> -- compatible: should be one of the following:
-> >>>>>>> -		"rockchip,rk3228-dw-hdmi"
-> >>>>>>> -		"rockchip,rk3288-dw-hdmi"
-> >>>>>>> -		"rockchip,rk3328-dw-hdmi"
-> >>>>>>> -		"rockchip,rk3399-dw-hdmi"
-> >>>>>>> -- reg: See dw_hdmi.txt.
-> >>>>>>> -- reg-io-width: See dw_hdmi.txt. Shall be 4.
-> >>>>>>> -- interrupts: HDMI interrupt number
-> >>>>>>> -- clocks: See dw_hdmi.txt.
-> >>>>>>> -- clock-names: Shall contain "iahb" and "isfr" as defined in dw_hdmi.txt.
-> >>>>>>> -- ports: See dw_hdmi.txt. The DWC HDMI shall have a single port numbered 0
-> >>>>>>> -  corresponding to the video input of the controller. The port shall have two
-> >>>>>>> -  endpoints, numbered 0 and 1, connected respectively to the vopb and vopl.
-> >>>>>>> -- rockchip,grf: Shall reference the GRF to mux vopl/vopb.
-> >>>>>>> -
-> >>>>>>> -Optional properties
-> >>>>>>> -
-> >>>>>>> -- ddc-i2c-bus: The HDMI DDC bus can be connected to either a system I2C master
-> >>>>>>> -  or the functionally-reduced I2C master contained in the DWC HDMI. When
-> >>>>>>> -  connected to a system I2C master this property contains a phandle to that
-> >>>>>>> -  I2C master controller.
-> >>>>>>> -- clock-names: See dw_hdmi.txt. The "cec" clock is optional.
-> >>>>>>> -- clock-names: May contain "cec" as defined in dw_hdmi.txt.
-> >>>>>>> -- clock-names: May contain "grf", power for grf io.
-> >>>>>>> -- clock-names: May contain "vpll", external clock for some hdmi phy.
-> >>>>>>> -- phys: from general PHY binding: the phandle for the PHY device.
-> >>>>>>> -- phy-names: Should be "hdmi" if phys references an external phy.
-> >>>>>>> -
-> >>>>>>> -Optional pinctrl entry:
-> >>>>>>> -- If you have both a "unwedge" and "default" pinctrl entry, dw_hdmi
-> >>>>>>> -  will switch to the unwedge pinctrl state for 10ms if it ever gets an
-> >>>>>>> -  i2c timeout.  It's intended that this unwedge pinctrl entry will
-> >>>>>>> -  cause the SDA line to be driven low to work around a hardware
-> >>>>>>> -  errata.
-> >>>>>>> -
-> >>>>>>> -Example:
-> >>>>>>> -
-> >>>>>>> -hdmi: hdmi@ff980000 {
-> >>>>>>> -	compatible = "rockchip,rk3288-dw-hdmi";
-> >>>>>>> -	reg = <0xff980000 0x20000>;
-> >>>>>>> -	reg-io-width = <4>;
-> >>>>>>> -	ddc-i2c-bus = <&i2c5>;
-> >>>>>>> -	rockchip,grf = <&grf>;
-> >>>>>>> -	interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-> >>>>>>> -	clocks = <&cru  PCLK_HDMI_CTRL>, <&cru SCLK_HDMI_HDCP>;
-> >>>>>>> -	clock-names = "iahb", "isfr";
-> >>>>>>> -	ports {
-> >>>>>>> -		hdmi_in: port {
-> >>>>>>> -			#address-cells = <1>;
-> >>>>>>> -			#size-cells = <0>;
-> >>>>>>> -			hdmi_in_vopb: endpoint@0 {
-> >>>>>>> -				reg = <0>;
-> >>>>>>> -				remote-endpoint = <&vopb_out_hdmi>;
-> >>>>>>> -			};
-> >>>>>>> -			hdmi_in_vopl: endpoint@1 {
-> >>>>>>> -				reg = <1>;
-> >>>>>>> -				remote-endpoint = <&vopl_out_hdmi>;
-> >>>>>>> -			};
-> >>>>>>> -		};
-> >>>>>>> -	};
-> >>>>>>> -};
-> >>>>>>> diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
-> >>>>>>> new file mode 100644
-> >>>>>>> index 000000000000..8ff544ae0ac2
-> >>>>>>> --- /dev/null
-> >>>>>>> +++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
-> >>>>>>> @@ -0,0 +1,178 @@
-> >>>>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >>>>>>> +%YAML 1.2
-> >>>>>>> +---
-> >>>>>>> +$id: http://devicetree.org/schemas/display/rockchip/rockchip,dw-hdmi.yaml#
-> >>>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >>>>>>> +
-> >>>>>>> +title: Rockchip DWC HDMI TX Encoder
-> >>>>>>> +
-> >>>>>>> +maintainers:
-> >>>>>>> +  - Mark Yao <mark.yao@rock-chips.com>
-> >>>>>>> +
-> >>>>>>> +description: |
-> >>>>>>> +  The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
-> >>>>>>> +  with a companion PHY IP.
-> >>>>>>> +
-> >>>>>>> +allOf:
-> >>>>>>> +  - $ref: ../bridge/synopsys,dw-hdmi.yaml#
-> >>>>>>> +
-> >>>>>>> +properties:
-> >>>>>>> +  compatible:
-> >>>>>>> +    enum:
-> >>>>>>> +      - rockchip,rk3228-dw-hdmi
-> >>>>>>> +      - rockchip,rk3288-dw-hdmi
-> >>>>>>> +      - rockchip,rk3328-dw-hdmi
-> >>>>>>> +      - rockchip,rk3399-dw-hdmi
-> >>>>>>> +
-> >>>>>>> +  reg: true
-> >>>>>>> +
-> >>>>>>> +  reg-io-width:
-> >>>>>>> +    const: 4
-> >>>>>>> +
-> >>>>>>> +  clocks:
-> >>>>>>> +    minItems: 2
-> >>>>>>> +    maxItems: 5
-> >>>>>>> +    items:
-> >>>>>>> +      - description: The bus clock for either AHB and APB
-> >>>>>>> +      - description: The internal register configuration clock
-> >>>>>>> +      - description: The HDMI CEC controller main clock
-> >>>>>>> +      - description: Power for GRF IO
-> >>>>>>> +      - description: External clock for some HDMI PHY
-> >>>>>>> +
-> >>>>>>> +  clock-names:
-> >>>>>>> +    minItems: 2
-> >>>>>>> +    maxItems: 5
-> >>>>>>> +    items:
-> >>>>>>> +      - const: iahb
-> >>>>>>> +      - const: isfr
-> >>>>>>> +      - enum:
-> >>>>>>> +        - cec
-> >>>>>>> +        - grf
-> >>>>>>> +        - vpll
-> >>>>>>> +      - enum:
-> >>>>>>> +        - cec
-> >>>>>>> +        - grf
-> >>>>>>> +        - vpll
-> >>>>>>> +      - enum:
-> >>>>>>> +        - cec
-> >>>>>>> +        - grf
-> >>>>>>> +        - vpll
-> >>>>>>
-> >>>>>> IIRC Rob wanted us to standardize the order of the clocks if possible,
-> >>>>>> since it's a pain to support properly here, and your description won't
-> >>>>>> match what you describe here either (and in general it's just a best
-> >>>>>> practice), so if all your DTs have the same order you should just set
-> >>>>>> that order in stone.
-> >>>>>
-> >>>>> But how do we handle the case where any of the cec, grf and vpll clocks
-> >>>>> can be set ? Assuming, for instance, that
-> >>>>>
-> >>>>> 	clock-names = "iahb", "isfr", "cec";
-> >>>>> 	clock-names = "iahb", "isfr", "vpll";
-> >>>>> 	clock-names = "iahb", "isfr", "cec", "vpll";
-> >>>>>
-> >>>>> would all be valid.
-> >>>>
-> >>>> It would be painful then...
-> >>>>
-> >>>> The easiest way to do so would be to simply use an enum there, and not
-> >>>> bother checking the array at all. You'll get a warning if there's
-> >>>> multiple occurences of the same string, and I guess that's what you
-> >>>> would be really concerned about.
-> >>>>
-> >>>> However, now that I think about it, what's the interaction between the
-> >>>> generic binding and this one when it comes to the third clock? The
-> >>>> generic one expects it to be cec, and here you have other options?
-> >>>
-> >>> I'm not too familiar with the platform, but as far as I understand, any
-> >>> of the cec, grf and vpll clock is optional (if someone could confirm
-> >>> that, it would be useful). I don't care so much about the order, but
-> >>> iahb and isfr are mandatory, and thus need to be specified as two const
-> >>> items in the beginning as far as I understand. It would be nice to set
-> >>> something along the lines of
-> >>>
-> >>>   minItems: 2
-> >>>   maxItems: 5
-> >>>   items:
-> >>>     - const: iahb
-> >>>     - const: isfr
-> >>>     - enum:
-> >>>       - cec
-> >>>       - grf
-> >>>       - vpll
-> >>
-> >> I guess you could do something like:
-> >>
-> >> in the generic schema:
-> >>
-> >> clock-names:
-> >>   allOf:
-> >>     - minItems: 2
-> >>     - enum:
-> >>        - iahb
-> >>        - isfr
-> >>        - cec
-> >>       additonalItems: true
-> >>     - items:
-> >>       - iahb
-> >>       - isfr
-> >>
-> >> Or something along those lines, I haven't tested it, but the basic
-> >> idea is that you want to enforce that:
-> >>   a) there's a minimum of two clocks
-> >>   b) valid clock names are iahb, isfr and cec, but we will allow more
-> >>   c) the first two clocks are iahb and isfr
+On Wed, Apr 01, 2020 at 01:47:10PM +0200, Maxime Ripard wrote:
+> As far as I understand it, the page table can be accessed concurrently
+> since the framework doesn't seem to provide any serialization /
+> locking, shouldn't we have some locks to prevent concurrent access?
+
+The dma-iommu code makes sure that there are no concurrent accesses to
+the same address-range of the page-table, but there can (and will) be
+concurrent accesses to the same page-table, just for different parts of
+the address space.
+
+Making this lock-less usually involves updating non-leaf page-table
+entries using atomic compare-exchange instructions.
+
+> > > +	*pte_addr = sun50i_mk_pte(paddr, prot);
+> > > +	sun50i_table_flush(sun50i_domain, pte_addr, 1);
 > >
-> > Interesting idea. I've tried
-> >
-> >   clock-names:
-> >     allOf:
-> >       - minItems: 2
-> >       - enum:
-> >         - iahb
-> >         - isfr
-> >         - cec
-> >         additionalItems: true
-> >       - items:
-> >         - const: iahb
-> >         - const: isfr
-> >
-> > in the base synopsys,dw-hdmi.yaml schema, and
-> >
-> >   clock-names:
-> >     maxItems: 2
-> >
-> > in renesas,dw-hdmi.yaml, which resulted in the following validation
-> > errors:
-> >
-> > Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.example.dt.yaml: hdmi@fead0000: clock-names: ['iahb', 'isfr'] is too long
-> >
-> > This is caused by the enum entry.
+> > This maps only one page, right? But the function needs to map up to
+> > 'size' as given in the parameter list.
 > 
-> What happens if you have instead of
-> - enum:
->  ...
+> It does, but pgsize_bitmap is set to 4k only (since the hardware only
+> supports that), so we would have multiple calls to map, each time with
+> a single page judging from:
+> https://elixir.bootlin.com/linux/latest/source/drivers/iommu/iommu.c#L1948
 > 
-> - items:
->     enum:
->       ...
+> Right?
 
-That works, but if I then specify a cec clock in the example in
-renesas,dw-hdmi.yaml, I get
+Okay, you are right here. Just note that when this function is called
+for every 4k page it should better be fast and avoid slow things like
+TLB flushes.
 
-Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.example.dt.yaml: hdmi@fead0000: clock-names: ['iahb', 'isfr', 'cec'] is too long
-Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.example.dt.yaml: hdmi@fead0000: clock-names: Additional items are not allowed ('cec' was unexpected)
+> The vendor driver was doing something along those lines and I wanted
+> to be conservative with the cache management if we didn't run into
+> performances issues, but I'll convert to the iotlb callbacks then.
 
-which is caused by
+Yeah, that definitly helps performance.
 
-       - items:
-         - const: iahb
-         - const: isfr
-
--- 
 Regards,
 
-Laurent Pinchart
+	Joerg
