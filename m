@@ -2,234 +2,149 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D6BC2D0EA
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 12:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 028F7C2D0EA
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 12:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 245162051A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 12:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B54292074F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 12:55:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iuHWZKg+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Plwjt11T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbgDHMtV (ORCPT
+        id S1728834AbgDHMzv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 08:49:21 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41074 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728005AbgDHMtU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 08:49:20 -0400
-Received: by mail-ed1-f67.google.com with SMTP id v1so8382230edq.8
-        for <devicetree@vger.kernel.org>; Wed, 08 Apr 2020 05:49:18 -0700 (PDT)
+        Wed, 8 Apr 2020 08:55:51 -0400
+Received: from mail-wr1-f47.google.com ([209.85.221.47]:41383 "EHLO
+        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727077AbgDHMzv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 08:55:51 -0400
+Received: by mail-wr1-f47.google.com with SMTP id h9so7683426wrc.8;
+        Wed, 08 Apr 2020 05:55:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ImZqh6xFyWTP+hCLRseUGFfjvuATFwSzoN2jRckYzSk=;
-        b=iuHWZKg+pIWEBlsACAQ4YXH2mS3QrCGDdCd463hpF4FaNiGuk9aFm0zDBV3zdeafgR
-         3ZnImtuZ+wyMDDvmkR249YelH0aLXKbisp8ztrr4A0fBNyuZV+ObuE3T8OiMRRi340IU
-         wd7vqFZZ9kxtDpuz9bj10oUv10rucFw5JlYIg=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=IJrqIcjoTwEEZUiMbhcI7+TuN6aVCX5wdU8bhu4KfEA=;
+        b=Plwjt11TpHQIXe5+H5/OdTry5rXjeuIVwFPlCTnY4WUYUp6zUzNNjqtoDGkXIzL03H
+         X41WXKy/weA0VzlA+zfKsaZfbvIhVEokGNq/xOiIRKNR0YDnvpaoWj13cjn6F/o0rCRl
+         YL6jhUp3anUdfLijyMfJ+MbfTP6MiTKZ/oHkYvkiCEG9vb8SE04nZtZBw5P5q3Ftnl8P
+         vekLdf1+4I5rQaCFUAwmGOxzi8PiudiygrvmD2D0SWZGyHNB/0TldWvu1hEzQq8Y5zhD
+         hDj8xQyajJ9G2x9b+/F/gJrvQ55+SMakv3+EfQoXyahnhoN6Q4t8RPmfHdzRJ4cbRvwr
+         pM2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ImZqh6xFyWTP+hCLRseUGFfjvuATFwSzoN2jRckYzSk=;
-        b=tel3MQ8POhaUNyr8pM09sIyJ16elcMs/G07CRo7WSQF0yjlESvxlP78SNueEi3OFgv
-         ryt1sVOSlQUtxc8F22npfTjjncvHls2Zh40LXyZMNxFa2mti7seF69dPaVvFVBGSdR28
-         UjY0Li1y5RN52+9KR8tl4OZSkhW7pAhHuyWu/Kz2/HO4bwSZgLStN4DysU38VNnxGljh
-         ratO0PxX5uvO+lJRJXSv7twvgA+8DCxzxjbmMUADs+cCIN6YvfckEV0NJ2u5CoY/mZzH
-         dK/lDkm4UnHYckrozHoyQ6LcegI+KscitxsjcFS93n0hqHdOaE0AOjz+l6NA/E31KLs+
-         oT6w==
-X-Gm-Message-State: AGi0PubcVyLGbgaXEHTBl3l558nFbR2Dl+OIUXya6uHwtvjUYfg4yzU3
-        W/7Tyft9NprGgVsZP+7M9yAkkfTwteMG5Q==
-X-Google-Smtp-Source: APiQypKG3lr9L656xgwLOHIq5xYn8sZfWTA8iLwhJnjIjdmrfNyz2W7RPlgy4B1iZJ+1nZiu0TZ33A==
-X-Received: by 2002:a50:ec8c:: with SMTP id e12mr6199949edr.349.1586350157320;
-        Wed, 08 Apr 2020 05:49:17 -0700 (PDT)
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com. [209.85.128.49])
-        by smtp.gmail.com with ESMTPSA id h17sm2933530edv.65.2020.04.08.05.49.16
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Apr 2020 05:49:16 -0700 (PDT)
-Received: by mail-wm1-f49.google.com with SMTP id v8so8545wma.0
-        for <devicetree@vger.kernel.org>; Wed, 08 Apr 2020 05:49:16 -0700 (PDT)
-X-Received: by 2002:a7b:c38b:: with SMTP id s11mr4529806wmj.55.1586350155398;
- Wed, 08 Apr 2020 05:49:15 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=IJrqIcjoTwEEZUiMbhcI7+TuN6aVCX5wdU8bhu4KfEA=;
+        b=O1W7me2XZU9s2D28/P5ACrYXikuB8DLeamtHFZvLGqYP7rdKrATQqRIqe6ce+ODfQq
+         G56ejlJPTTkyohybAgnYi/r+0+Yj6N8RaLgv3CwLwDRC+7wjQCnvVOLet1FliA+o0D07
+         oDKqowphCLAyAx6Rfhn7+V2+3wTdaG8w9k1yxuHfaFFjovJAjfAj9d4XT9xHDMEtFPde
+         /weIjhnHqnUPKFz5BiYKUF2QoT5eStf1AhCyFhRz9gqJwnh8QXAnVQIaH2+95k1bwJqT
+         dDm7TmfnAq0hBzQOWOY4NrgUNhqx1feakNQgyj4WIxkqtKWcPM3xw7eFHH2yc3ChiZxs
+         oqIQ==
+X-Gm-Message-State: AGi0Pub+F2WJbEskTJITPfzXOudTZbQajaRAx4GP0kmf4ZdzCsfldPBh
+        sfvg5+rGLoRW8/y+1OZIWo8=
+X-Google-Smtp-Source: APiQypLl0AJwhrs7d8Pz+/qIo+zYrF4kiSv+XDOGTpRwATawZ4h5Ticw7u9bW9aR8TO8gAjGPTPhQA==
+X-Received: by 2002:adf:e403:: with SMTP id g3mr8245405wrm.295.1586350549061;
+        Wed, 08 Apr 2020 05:55:49 -0700 (PDT)
+Received: from AnsuelXPS (host117-205-dynamic.180-80-r.retail.telecomitalia.it. [80.180.205.117])
+        by smtp.gmail.com with ESMTPSA id 22sm6588386wmk.6.2020.04.08.05.55.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Apr 2020 05:55:48 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Stanimir Varbanov'" <svarbanov@mm-sol.com>,
+        "'Andy Gross'" <agross@kernel.org>
+Cc:     "'Sham Muthayyan'" <smuthayy@codeaurora.org>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+        "'Bjorn Helgaas'" <bhelgaas@google.com>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
+        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
+        "'Philipp Zabel'" <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200402121148.1767-1-ansuelsmth@gmail.com> <20200402121148.1767-2-ansuelsmth@gmail.com> <b09627a8-d928-cf5d-c765-406959138a29@mm-sol.com> <053d01d60da2$49e0ca60$dda25f20$@gmail.com> <f333d990-6d76-0e04-5949-54ffe31bc0e9@mm-sol.com>
+In-Reply-To: <f333d990-6d76-0e04-5949-54ffe31bc0e9@mm-sol.com>
+Subject: R: R: [PATCH v2 01/10] PCIe: qcom: add missing ipq806x clocks in PCIe driver
+Date:   Wed, 8 Apr 2020 14:55:46 +0200
+Message-ID: <000401d60da5$0669a4c0$133cee40$@gmail.com>
 MIME-Version: 1.0
-References: <20191211112849.16705-1-dongchun.zhu@mediatek.com>
- <20191211112849.16705-2-dongchun.zhu@mediatek.com> <CAAFQd5AnWZqjQEVvw8gv7JzOBHxJvsOWaGrbY8CXQ_87ap-ahA@mail.gmail.com>
-In-Reply-To: <CAAFQd5AnWZqjQEVvw8gv7JzOBHxJvsOWaGrbY8CXQ_87ap-ahA@mail.gmail.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Wed, 8 Apr 2020 14:49:04 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5DHL3mXZGHW+XWMXTVfekamEvaEv3bLZt4Bg2UpKPohmA@mail.gmail.com>
-Message-ID: <CAAFQd5DHL3mXZGHW+XWMXTVfekamEvaEv3bLZt4Bg2UpKPohmA@mail.gmail.com>
-Subject: Re: [V6, 1/2] media: dt-bindings: media: i2c: Document OV02A10 bindings
-To:     Rob Herring <robh+dt@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Cao Bing Bu <bingbu.cao@intel.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Sj Huang <sj.huang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Louis Kuo <louis.kuo@mediatek.com>,
-        =?UTF-8?B?U2hlbmduYW4gV2FuZyAo546L5Zyj55S3KQ==?= 
-        <shengnan.wang@mediatek.com>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQLxewcL6EghaIoibfUjxKO3XpeZ4wIE8vndAX3+x+ECk40mNAECtPf3pf+JrqA=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 4:15 AM Tomasz Figa <tfiga@chromium.org> wrote:
->
-> Hi Rob, Dongchun,
->
-> On Wed, Dec 11, 2019 at 8:29 PM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
+> in PCIe driver
+>=20
+> Hi Ansuel,
+>=20
+> On 4/8/20 3:36 PM, ansuelsmth@gmail.com wrote:
+> >> PCIe driver
+> >>
+> >> Ansuel,
+> >>
+> >> On 4/2/20 3:11 PM, Ansuel Smith wrote:
+> >>> Aux and Ref clk are missing in pcie qcom driver.
+> >>> Add support in the driver to fix pcie inizialization in ipq806x.
+> >>>
+> >>> Fixes: 82a82383 PCI: qcom: Add Qualcomm PCIe controller driver
+> >>
+> >> this should be:
+> >>
+> >> Fixes: 82a823833f4e PCI: qcom: Add Qualcomm PCIe controller driver
+> >>
+> >> and add:
+> >>
+> >> Cc: stable@vger.kernel.org # v4.5+
+> >>
+> >> But, I wonder, as apq8064 shares the same ops_2_1_0 how it worked
+> until
+> >> now. Something more I cannot find such clocks for apq8064, which
+> means
+> >> that this patch will break it.
+> >>
+> >> One option is to use those new clocks only for ipq806x.
+> >>
 > >
-> > Add DT bindings documentation for Omnivision OV02A10 image sensor.
+> > How to add this new clocks only for ipq806x? Check the compatible =
+and
+> add
+> > them accordingly?
 > >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/media/i2c/ov02a10.txt      | 54 ++++++++++++++++++++++
-> >  MAINTAINERS                                        |  7 +++
-> >  2 files changed, 61 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov02a10.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov02a10.txt b/Documentation/devicetree/bindings/media/i2c/ov02a10.txt
-> > new file mode 100644
-> > index 0000000..18acc4f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/ov02a10.txt
-> > @@ -0,0 +1,54 @@
-> > +* Omnivision OV02A10 MIPI CSI-2 sensor
-> > +
-> > +Required Properties:
-> > +- compatible: shall be "ovti,ov02a10"
-> > +- clocks: reference to the eclk input clock
-> > +- clock-names: shall be "eclk"
-> > +- dovdd-supply: Digital I/O voltage supply, 1.8 volts
-> > +- avdd-supply: Analog voltage supply, 2.8 volts
-> > +- dvdd-supply: Digital core voltage supply, 1.8 volts
-> > +- powerdown-gpios: reference to the GPIO connected to the powerdown pin,
-> > +                  if any. This is an active low signal to the OV02A10.
->
-> On the hardware level this pin is active high, i.e. the device is
-> powered down when the signal is high.
->
-> > +- reset-gpios: reference to the GPIO connected to the reset pin, if any.
-> > +              This is an active high signal to the OV02A10.
->
-> On the hardware level this pin is active low, i.e. the device is held
-> in reset when the signal is low.
->
-> However, there is some confusion around how the polarity flag in the
-> GPIO specifier is supposed to be used.
->
-> As per [1],
->
-> "The gpio-specifier's polarity flag should represent the physical
-> level at the GPIO controller that achieves (or represents, for inputs)
-> a logically asserted value at the device. The exact definition of
-> logically asserted should be defined by the binding for the device."
->
-> In this case it sounds like "logically asserted" means the device is
-> powered down or held in reset, respectively, which would suggest that
-> the specifiers should have GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW
-> respectively. The latter would cause the GPIO subsystem to invert the
-> values set by the consumers, which would then be confusing from the
-> driver implementation point of view.
->
-> Should the pin be renamed to "nreset"? It would change the meaning of
-> "logically asserted" to "device is not held in reset" and so
-> GPIO_ACTIVE_HIGH (or 0) would be the right value to use.
->
-> [1] https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/gpio/gpio.txt#L83
+>=20
+> Yes, through of_device_is_compatible(). See how we done this in
+> qcom_pcie_get_resources_2_4_0.
+>=20
+> I thought about second option though - encoder what clocks we have for
+> any SoC but if you take into that direction you have to change the =
+whole
+> driver :)
+>=20
+> Another option is to use clk_get_optional() for the clocks which you
+> have on ipq806x (and don't have on apq8064). Please research this one
+> first.
+>=20
+> --
+> regards,
+> Stan
 
-+ Bartosz, Linus, Sakari and the linux-gpio ML for a broader audience.
+Ok I will use get optional for the extra clocks. Should I add a warning =
+if they=20
+are not present? Also what about the extra reset? Should I follow the =
+same
+approach?=20
+Thx for the suggestions.=20
 
-Would appreciate some feedback on what's the proper way of defining
-GPIO polarity. Thanks!
-
-Best regards,
-Tomasz
-
->
-> Best regards,
-> Tomasz
->
-> > +
-> > +Optional Properties:
-> > +- rotation: as defined in
-> > +           Documentation/devicetree/bindings/media/video-interfaces.txt,
-> > +           valid values are 0 (sensor mounted upright) and 180 (sensor
-> > +           mounted upside down).
-> > +
-> > +The device node shall contain one 'port' child node with an
-> > +'endpoint' subnode for its digital output video port,
-> > +in accordance with the video interface bindings defined in
-> > +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> > +
-> > +Example:
-> > +&i2c4 {
-> > +       ov02a10: camera-sensor@3d {
-> > +               compatible = "ovti,ov02a10";
-> > +               reg = <0x3d>;
-> > +               pinctrl-names = "default";
-> > +               pinctrl-0 = <&camera_pins_cam1_mclk_on>;
-> > +
-> > +               clocks = <&topckgen CLK_TOP_MUX_CAMTG2>,
-> > +                       <&topckgen CLK_TOP_UNIVP_192M_D8>;
-> > +               clock-names = "eclk", "freq_mux";
-> > +               clock-frequency = <24000000>;
-> > +
-> > +               dovdd-supply = <&mt6358_vcamio_reg>;
-> > +               avdd-supply = <&mt6358_vcama1_reg>;
-> > +               dvdd-supply = <&mt6358_vcn18_reg>;
-> > +               powerdown-gpios = <&pio 107 GPIO_ACTIVE_LOW>;
-> > +               reset-gpios = <&pio 109 GPIO_ACTIVE_HIGH>;
-> > +               rotation = <180>;
-> > +
-> > +               port {
-> > +                       /* MIPI CSI-2 bus endpoint */
-> > +                       ov02a10_core: endpoint {
-> > +                               remote-endpoint = <&ov02a10_0>;
-> > +                               link-frequencies = /bits/ 64 <390000000>;
-> > +                       };
-> > +               };
-> > +       };
-> > +};
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index bd5847e..92a868c 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -12130,6 +12130,13 @@ T:     git git://linuxtv.org/media_tree.git
-> >  S:     Maintained
-> >  F:     drivers/media/i2c/ov13858.c
-> >
-> > +OMNIVISION OV02A10 SENSOR DRIVER
-> > +M:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > +L:     linux-media@vger.kernel.org
-> > +T:     git git://linuxtv.org/media_tree.git
-> > +S:     Maintained
-> > +F:     Documentation/devicetree/bindings/media/i2c/ov02a10.txt
-> > +
-> >  OMNIVISION OV2680 SENSOR DRIVER
-> >  M:     Rui Miguel Silva <rmfrfs@gmail.com>
-> >  L:     linux-media@vger.kernel.org
-> > --
-> > 2.9.2
