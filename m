@@ -2,178 +2,181 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D11FDC2BA1B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C104C2BB54
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 17:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B312B20730
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5400320753
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 17:09:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UfCqr7nW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730368AbgDHQtK (ORCPT
+        id S1730509AbgDHRJl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:49:10 -0400
-Received: from fudo.makrotopia.org ([185.142.180.71]:52755 "EHLO
-        fudo.makrotopia.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727929AbgDHQtK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 12:49:10 -0400
-X-Greylist: delayed 1482 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Apr 2020 12:49:08 EDT
-Received: from local
-        by fudo.makrotopia.org with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-         (Exim 4.92.3)
-        (envelope-from <daniel@makrotopia.org>)
-        id 1jMDUv-0002ru-7m; Wed, 08 Apr 2020 18:24:19 +0200
-Date:   Wed, 8 Apr 2020 17:23:49 +0100
-From:   Daniel Golle <daniel@makrotopia.org>
-To:     Imre Kaloz <kaloz@dune.hu>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Paul Spooren <mail@aparcar.org>, Andrew Lunn <andrew@lunn.ch>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "freifunk@adrianschmutzler.de" <freifunk@adrianschmutzler.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "kaloz@openwrt.org" <kaloz@openwrt.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 0/5] arm: dts: linksys: rename codename to model
-Message-ID: <20200408162009.GC1995@makrotopia.org>
-References: <20200407210816.866084-1-mail@aparcar.org>
- <20200407224615.GA359603@lunn.ch>
- <004a2ef9c1e04f9ffbb9c3cc9907ca656a406713.camel@aparcar.org>
- <ecf4dc01-81f8-a33d-b4a7-2065748993ed@gmail.com>
- <VI1PR02MB5325621D39BF0FFAFE3993C4A0C00@VI1PR02MB5325.eurprd02.prod.outlook.com>
+        Wed, 8 Apr 2020 13:09:41 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36546 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgDHRJl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 13:09:41 -0400
+Received: by mail-pg1-f193.google.com with SMTP id c23so3603055pgj.3
+        for <devicetree@vger.kernel.org>; Wed, 08 Apr 2020 10:09:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=AHziH+dvb20W54djSeStIqMRFUtsTKUD7rAxti8gSRo=;
+        b=UfCqr7nW9oVwE/+3fDL2f/0drVAie/Gdd49JNzuAxmorHNRLKlrYPhlG11rr3bgejy
+         xkUe3E27ZRhPnu1zmh6s8BOyTOxFWxFtBYB6VVdIzkwz1k1M39weBC9nYeM17DDXtam8
+         cup6jFVztqp+DixZ5tXPe13GR4v5OaprUy27s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=AHziH+dvb20W54djSeStIqMRFUtsTKUD7rAxti8gSRo=;
+        b=YWXNrYpWnd3ZENdbeVgMCJZEPLsC8FW0awWse5x0RNyTT79xEkzv0HhsdNBLRZNI/y
+         fOh4co7XOtT8ndFryaGGCaxKkpdjIHQy7eKVCqK8NYsRbumGVprj6NjqhmI8GHsZ1g30
+         uOwQvroMUEegMbm0NRTE4sbxD5ZbWO8cla4U2J3krf3Ki7bfSKDVNQKLwRnOaNbV0UBC
+         /qEcMG1fXDO+QfTC0dq6JO3AbpAZ1Yh0NckeLd1Jh9MRw4VSg1mHRCTfJb3qFLkYJ9dr
+         Yc9a3sLlMbGU4G9sDWlOSacDHc+wqEY/TRnTvP9fkBVMfxxFH5qOiX1jvDozggE/nUn/
+         +evw==
+X-Gm-Message-State: AGi0PuZxynGQbf5d/IGAURfbeKryRG5q3nSmegE2VaniWyqWpHtgxIQI
+        KxeNK6rbI0g9EhHO1ffyFQu1sQ==
+X-Google-Smtp-Source: APiQypKGNnlb36etT59dCY18zVMEKPnBzgK1wnTk5VhhNMgMuyWQeel0X5RkoYsKiR6opA9JBVYRoA==
+X-Received: by 2002:a63:1f14:: with SMTP id f20mr7742513pgf.411.1586365778377;
+        Wed, 08 Apr 2020 10:09:38 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id s10sm2317753pfd.124.2020.04.08.10.09.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Apr 2020 10:09:37 -0700 (PDT)
+Date:   Wed, 8 Apr 2020 10:09:36 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, georgi.djakov@linaro.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org
+Subject: Re: [PATCH V3 3/8] soc: qcom-geni-se: Add interconnect support to
+ fix earlycon crash
+Message-ID: <20200408170936.GR199755@google.com>
+References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
+ <1585652976-17481-4-git-send-email-akashast@codeaurora.org>
+ <20200331182457.GH199755@google.com>
+ <7a4e13bf-a4b7-d75b-df42-bf5e4125258a@codeaurora.org>
+ <20200407172604.GQ199755@google.com>
+ <9e91aaa8-88f0-656f-b9f5-7e64014bad7a@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <VI1PR02MB5325621D39BF0FFAFE3993C4A0C00@VI1PR02MB5325.eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9e91aaa8-88f0-656f-b9f5-7e64014bad7a@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Imre,
+On Wed, Apr 08, 2020 at 05:08:01PM +0530, Akash Asthana wrote:
+> Hi Matthias,
+> 
+> On 4/7/2020 10:56 PM, Matthias Kaehlcke wrote:
+> > Hi Akash,
+> > 
+> > On Tue, Apr 07, 2020 at 05:04:17PM +0530, Akash Asthana wrote:
+> > > Hi Matthias,
+> > > 
+> > > 
+> > > > >    static int geni_se_probe(struct platform_device *pdev)
+> > > > >    {
+> > > > >    	struct device *dev = &pdev->dev;
+> > > > > @@ -845,6 +868,34 @@ static int geni_se_probe(struct platform_device *pdev)
+> > > > >    		}
+> > > > >    	}
+> > > > > +#ifdef CONFIG_SERIAL_EARLYCON
+> > > > > +	wrapper->to_core.path = devm_of_icc_get(dev, "qup-core");
+> > > > > +	if (IS_ERR(wrapper->to_core.path))
+> > > > > +		return PTR_ERR(wrapper->to_core.path);
+> > > > > +	/*
+> > > > > +	 * Put minmal BW request on core clocks on behalf of early console.
+> > > > > +	 * The vote will be removed earlycon exit function.
+> > > > > +	 *
+> > > > > +	 * Note: We are putting vote on each QUP wrapper instead only to which
+> > > > > +	 * earlycon is connected because QUP core clock of different wrapper
+> > > > > +	 * share same voltage domain. If core1 is put to 0, then core2 will
+> > > > > +	 * also run at 0, if not voted. Default ICC vote will be removed ASA
+> > > > > +	 * we touch any of the core clock.
+> > > > > +	 * core1 = core2 = max(core1, core2)
+> > > > > +	 */
+> > > > I don't really understand this part. According to the comment if we vote
+> > > > (let's say) for core2 but not for core1 then:
+> > > > 
+> > > > core1: 0
+> > > > core2: GENI_DEFAULT_BW
+> > > > 
+> > > > core1 = core2 = max(core1, core2)
+> > > >     or
+> > > > core1 = core2 = max(0, GENI_DEFAULT_BW)
+> > > > 
+> > > > hence
+> > > > 
+> > > > core1 = core2 = GENI_DEFAULT_BW
+> > > > 
+> > > > What am I missing, why is it necessary to vote for both/all?
+> > > say core1 is for earlycon usecase
+> > > 
+> > > There is common switch to control both the QUP core clock. I guess most
+> > > appropriate description would be     switch = max(vote_on_core1,
+> > > vote_on_core2) + default_vote.
+> > > 
+> > > During early bootup, vote_on_core1 = 0, vote_on_core2 = 0;
+> > > 
+> > > As earlycon was working even without voting it's core need because there was
+> > > some default vote present on the core switch by ICC during bootup.
+> > > 
+> > > So if any child(say SPI) of other QUP wrapper resumed and suspended before
+> > > earlycon wrapper comes up. This will make core clock to run at zero and will
+> > > cause NOC issue because vote_on_core1 = 0, vote_on_core2 = 0; and it seems
+> > > default votes from core switch is removed  ASA it's voted on any core.
+> > Thanks for the explication!
+> > 
+> > You are probably totally right, but for some reason my brain still resists
+> > to get it ...
+> > 
+> > With the above my current interpretation is (assuming earlycon only votes on
+> > core1):
+> > 
+> >                        core1   core2  default  switch
+> > early boot              0       0        1       1
+> > SPI resume (core2)      0       1        0       1
+> > SPI suspend (core2)     0       0        0       0
+> > earlycon init 		1	0        0       1
+> > 
+> > 
+> > What is wrong in the above table?
+> > 
+> > Thanks for bearing with me :)
+> NP :)
+> 
+> I guess you meant QUP WRAPPER 1 probe by "earlycon init".
+> 
+>                       core1   core2  default  switch	Time
+> early boot              0       0        1       1	0s
+> SPI resume (core2)      0       1        0       1	3.2s
+> SPI suspend (core2)     0       0        0       0	3.3s
+> QUP WRAPPER 1(probe)	1	0        0       1	5s (say)
+> 
+> So switch is at 0 in time interval [3.3, 5] that will make core clock to run at 0.
+> If we use earlycon during this time interval it will reset the board.
+> 
+> Did above answered the query?
 
-On Wed, Apr 08, 2020 at 08:32:41AM +0000, Imre Kaloz wrote:
-> Hi,
-> 
-> I'm on the same page here - this has not an issue for years. The common sense and policy was always to reject kernel changes that would only make the userland's job easier - and here were are not even talking about the userland, but a script that's being used for image generation.
-> 
-> The reason codenames are preffered to marketing names is simple: the same board can be sold under multiple marketing names.
-> 
-> The Linksys Viper has been sold as E4200v2 and EA4500. The Linksys Focus as EA6100 and EA5800. The LeMans is the EA6300 and the EA6200. The Macan is both EA7500 and EA7400 - on the other hand, the EA7500v2 and the EA7400v2 are the Savannah.
-
-What Paul, Adian and others are trying to achieve here is consistency.
-See also the debate on openwrt-devel:
-
-http://lists.infradead.org/pipermail/openwrt-devel/2020-April/022567.html
-
-The goal is to make it easier for users and semi-automated processes
-to identify the right OpenWrt image for a specific device.
-This especially becomes necessary for OTA updates and we have invested
-quite a bit of work to no longer need to scrape and translate that
-with additional layers of abstraction but simply use the first (ie.
-most significant) compatible from DTS to indentify the right image.
-
-As product-name aliases are indeed very common, we usually deal with it
-in a way that the first product name which hits the OpenWrt tree is
-used for model, compatible, DTS- and image filenames. We then add
-aliases to that in our build-scripts which allows web-based wizards and
-such to match the alternative names as well when entered by the user.
-
-
-> 
-> 
-> Best,
-> 
-> Imre
-> 
-> ________________________________
-> From: Florian Fainelli <f.fainelli@gmail.com>
-> Sent: Wednesday, April 8, 2020 2:07:38 AM
-> To: Paul Spooren <mail@aparcar.org>; Andrew Lunn <andrew@lunn.ch>
-> Cc: devicetree@vger.kernel.org <devicetree@vger.kernel.org>; jason@lakedaemon.net <jason@lakedaemon.net>; gregory.clement@bootlin.com <gregory.clement@bootlin.com>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>; daniel@makrotopia.org <daniel@makrotopia.org>; freifunk@adrianschmutzler.de <freifunk@adrianschmutzler.de>; robh+dt@kernel.org <robh+dt@kernel.org>; kaloz@openwrt.org <kaloz@openwrt.org>; linux-arm-kernel@lists.infradead.org <linux-arm-kernel@lists.infradead.org>; sebastian.hesselbarth@gmail.com <sebastian.hesselbarth@gmail.com>
-> Subject: Re: [PATCH 0/5] arm: dts: linksys: rename codename to model
-> 
-> 
-> 
-> On 4/7/2020 4:38 PM, Paul Spooren wrote:
-> > Hi Andrew,
-> >
-> > thank you very much for the quick response!
-> >
-> > On Wed, 2020-04-08 at 00:46 +0200, Andrew Lunn wrote:
-> >> On Tue, Apr 07, 2020 at 11:08:10AM -1000, Paul Spooren wrote:
-> >>> Linksys chose to use codenames for a few of their devices and sell
-> >>> their
-> >>> them under an entirely different name.
-> >>>
-> >>> codename  model name
-> >>> rango  -> wrt3200acm
-> >>> mamba  -> wrt1900ac
-> >>> cobra  -> wrt1900ac-v2
-> >>> caiman -> wrt1200ac
-> >>> shelby -> wrt1900acs
-> >>
-> >> Hi Paul
-> >>
-> >> There was quite a bit of discussion about this when the first board
-> >> was added. If i remember correctly, it was Mamba.
-> >>
-> >> Imre Kaloz, <kaloz@openwrt.org> was the one arguing for
-> >> the name armada-xp-linksys-mamba.dts.
-> >>
-> >> So it seems that openwrt.org has now come full circle?
-> >
-> > I talked with three currently active OpenWrt core developers and all
-> > were in favor of a unification. I wasn't aware of any previous
-> > discussions nor any pro arguments to keep code names.
-> >
-> > I've added Imre via CC so maybe he can share his opinion, too.
-> >>
-> >>> This introduces some extra loops in OpenWrt, a distribution
-> >>> specialized
-> >>> on embedded Internet facing devices, as both codename and model
-> >>> name are
-> >>> used within the build system. The double naming requires developers
-> >>> to
-> >>> keep track of that mapping and introduces inconsistencies:
-> >>>
-> >>> To build a specific device in OpenWrt profiles are used, named
-> >>> after the
-> >>> the compatible string for targets using device tree (similar to how
-> >>> .dts
-> >>> files are named in the linux source tree). However, the first item
-> >>> of
-> >>> the DT `compatible` list in this case is `linksys,rango`, which is
-> >>> inconsistent with the model name and not what common users would
-> >>> expect.
-> >>>
-> >>> Such double naming complicates currently the automatic search for
-> >>> firmware upgrade as the build system does not support such mapping.
-> >>> Ideally the first item of the DT `compatible` list would contain a
-> >>> string suitable to be used as a filename recognizable by normal
-> >>> users to
-> >>> belong to that device.
-> >>> With this patch set the Linksys device tree files are moved from
-> >>> containing the codename to contain a sanitized model name and also
-> >>> use
-> >>> it as first entry of the DT `compatible` list.
-> >>
-> >> I've no problems adding another compatible to the list. But i don't
-> >> like the idea of renaming the files. The file names could be
-> >> considered ABI! What installers/bootloaders are you going to break by
-> >> renaming them?
-> >
-> > Are you okay with adding the new compatible string as first element of
-> > the list? This would already simplify the OpenWrt build system.
-> 
-> Having a mapping table between model names in OpenWrt profiles and .dts
-> file names in the kernel sources is not that complicated to maintain,
-> changing the kernel for that reason sounds a bit weak IMHO.
-> --
-> Florian
+now it finally made 'click', thanks :)
