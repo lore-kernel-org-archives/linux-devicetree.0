@@ -2,104 +2,100 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBD4C2D0EA
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 04:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DADC2D0EA
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 05:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC1A20747
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 04:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEB532063A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 05:14:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UDOh/7HX"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="iLIfvVjX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgDHEmw (ORCPT
+        id S1726492AbgDHFO0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 00:42:52 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:57735 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725932AbgDHEmw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 00:42:52 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586320971; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=iWIIGMPoYNGURX0VaZ3ac1DtOkfzwlUTUE4xxC9XYag=; b=UDOh/7HXm7aJ7VdtmNpltTdba0Ej7naEFrCNFmrs3XRXva8YjZ/N9ZA8byC+yBjHPMm1Q90x
- 9+wX9+ksITdgVETfgBq2/WoV4+NitD0NSHH97tt75c0F+Gm/oxnUEgT+kr6HgADJngr40FlT
- sg0SWQ/JCaydZF4L2hdNSLPPQKs=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8d563e.7f1592bed3e8-smtp-out-n04;
- Wed, 08 Apr 2020 04:42:38 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 20F40C44788; Wed,  8 Apr 2020 04:42:37 +0000 (UTC)
-Received: from [10.206.24.160] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sanm)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CF290C433F2;
-        Wed,  8 Apr 2020 04:42:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CF290C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
-Subject: Re: [PATCH v5 1/2] dt-bindings: usb: qcom,dwc3: Convert USB DWC3
- bindings
-To:     Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>
-References: <1585206368-685-1-git-send-email-sanm@codeaurora.org>
- <1585206368-685-2-git-send-email-sanm@codeaurora.org>
- <158631747937.216820.504748426462367724@swboyd.mtv.corp.google.com>
-From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
-Message-ID: <0b8d0d73-0421-bd4d-9dcc-62713c1c7f23@codeaurora.org>
-Date:   Wed, 8 Apr 2020 10:12:27 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <158631747937.216820.504748426462367724@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Wed, 8 Apr 2020 01:14:26 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:42898 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbgDHFO0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 01:14:26 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3471580237;
+        Wed,  8 Apr 2020 17:14:23 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1586322863;
+        bh=YkXvA/8SLVreNAYgan070U1NrymtwAPnJ2gFe0lYFwU=;
+        h=From:To:CC:Subject:Date;
+        b=iLIfvVjXyMiurQkbhtrj+nP2eHl0vJDaMQFOGG5FJk5jISCcl8QHwH6cZcSgWGXzm
+         MrdU9HWY6EjCJ5Mt3twae5mNIAM4OaTFgdSJPmiQ+djtXK/df6zV3wplCtDDaUqWtm
+         FkTJTAQPJ1pWpL1DoNlmIZ2WQO/02cbhTVZ29P+dk1vA8vt7rksqHZ5UCgCRg5wjsl
+         8j0ny5y56prjsBgu7EHITYfVClUGwyPoAITJ1sZeVh4dzffVwlExMeko6myII+zYiQ
+         nSVxNA7eDRdGrPcXaFOLDFP4Vq6zhlyOaTzQp9tg0q6CDRVJzx6v+VWUoZ4ACKBu1t
+         nKLCktG3ruteA==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e8d5db00000>; Wed, 08 Apr 2020 17:14:24 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Wed, 8 Apr 2020 17:14:23 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Wed, 8 Apr 2020 17:14:22 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Hamish Martin" <Hamish.Martin@alliedtelesis.co.nz>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Dealing with holes in CPU address space
+Thread-Topic: Dealing with holes in CPU address space
+Thread-Index: AQHWDWSQGXFxFOrcR0ujeloVxC+pHA==
+Date:   Wed, 8 Apr 2020 05:14:22 +0000
+Message-ID: <fcb8f2655452f60a7c734e2ce54ac4d47eec7e92.camel@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.14.96]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <87A62D6F9DDB66408682E8C27463080B@atlnz.lc>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-On 4/8/2020 9:14 AM, Stephen Boyd wrote:
-> Quoting Sandeep Maheswaram (2020-03-26 00:06:07)
->> diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
->> new file mode 100644
->> index 0000000..0f69475
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
->> @@ -0,0 +1,158 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +
-> [...]
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    items:
->> +      - description: The interrupt that is asserted
->> +          when a wakeup event is received on USB2 bus.
->> +      - description: The interrupt that is asserted
->> +          when a wakeup event is received on USB3 bus.
->> +      - description: Wakeup event on DM line.
->> +      - description: Wakeup event on DP line.
-> I can see that it was optional before but that still doesn't make sense
-> to me. The glue hardware from qcom always has interrupts so I'd expect
-> it to be required in the binding.
-Will add in next version.
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+SGkgQWxsLA0KDQpJJ20gdHJ5aW5nIHRvIHBvcnQgYW4gb2xkIEJyb2FkY29tIE1JUFMgQ1BVIChC
+Q001MzAwMykgdG8gYSBzaGlueSBuZXcNCmtlcm5lbC4gSSBoYXZlIHNvbWUgb2xkIGhpc3Rvcmlj
+IHNvdXJjZSBmcm9tIGEgbG9uZyBmb3Jnb3R0ZW4gQnJvYWRjb20NCkxESyBidXQgSSdkIHByZWZl
+ciB0byBkbyB0aGluZ3MgdGhlIG1vZGVybiB3YXkgd2l0aCBkZXZpY2UtdHJlZXMuDQoNClRoZSBw
+cm9ibGVtIEkndmUgYmVlbiBncmFwcGxpbmcgd2l0aCBpcyB0cnlpbmcgdG8gb3BlbiB1cCBhY2Nl
+c3MgdG8gYWxsDQpvZiB0aGUgUkFNIG9uIHRoZSBib2FyZC4gSXQgaGFzIDUxMk1CIG9mIEREUjIu
+IFRoZSBDUFUgaGFzIHR3byBhcmVhcw0Kd2hlcmUgdGhpcyBhcHBlYXJzLiBUaGUgZmlyc3QgMTI4
+TUIgaXMgZnJvbSAwIHRvIDB4MDdmZmZmZmYgdGhlIHNlY29uZA0KYXJlYSBpcyBmcm9tIDB4ODgw
+MDAwMDAgdG8gMHg5ZmZmZmZmZi4NCg0KU29DIHBlcmlwaGVyYWxzIGFyZSBhdCAweDE4MDAwMDAw
+IGFuZCB0aGVyZSBpcyBhbiBJTyB3aW5kb3cgZm9yIGZsYXNoDQphdCAweDIwMDAwMDAwLg0KDQpU
+aGUgb2xkIGNvZGUgaGFzIHNvbWUgY3VzdG9tIHRsYiBpbml0aWFsaXNhdGlvbiB0byBkZWFsIHdp
+dGggdGhpcyBidXQgSQ0KZmlndXJlZCBpdCBzaG91bGQgYmUgcG9zc2libGUgd2l0aCB0aGUgZm9s
+bG93aW5nIGR0cyBzbmlwcGV0Lg0KDQogICAgICAgIG1lbW9yeUAwIHsNCiAgICAgICAgICAgICAg
+ICBkZXZpY2VfdHlwZSA9ICJtZW1vcnkiOw0KICAgICAgICAgICAgICAgIHJlZyA9IDwweDAwMDAw
+MDAwIDB4MDgwMDAwMDANCiAgICAgICAgICAgICAgICAgICAgICAgMHg4ODAwMDAwMCAweDE4MDAw
+MDAwPjsNCiAgICAgICAgfTsNCg0KSSBlbmQgdXAgd2l0aCBvbmx5IDEyOE1CIGF2YWlsYWJsZS4g
+VGhpcyBhcHBlYXJzIHRvIGJlDQpiZWNhdXNlIHRoZSBkZWZhdWx0IEhJR0hNRU1fU1RBUlQgb2Yg
+MHgyMDAwMDAwMCBzdG9wcyB0aGUgcmVzdCBmcm9tDQpiZWluZyBtYWRlIGF2YWlsYWJsZS4gSWYg
+SSBhZGQgYW4gb3ZlcnJpZGUgb2YgSElHSE1FTV9TVEFSVCB0bw0KMHhmZmZmZmZmZiBJIHNlZW0g
+dG8gaGF2ZSB0aGUgZnVsbCA1MTJNQiBhdmFpYWJsZSBidXQgdGhlbiBJIGdldCBhDQprZXJuZWwg
+cGFuaWMNCg0KICBDUFUgMCBVbmFibGUgdG8gaGFuZGxlIGtlcm5lbCBwYWdpbmcgcmVxdWVzdCBh
+dCB2aXJ0dWFsIGFkZHJlc3MgMWZjMDAwMDAsIGVwYyA9PSA4MDAxNjdiOCwgcmEgPT0gODAwZTI4
+NjANCg0KMHgxZmMwMDAwMCBpcyBpbiB0aGUgcmFuZ2Ugd2hlcmUgdGhlIFNvQyBwZXJpcGhlcmFs
+cyBhcmUgc28gSSdtDQp0aGlua2luZyB0aGF0IGlzIHRoZSBwcm9ibGVtLiBCdXQgdGhlbiBhZ2Fp
+biB0aGF0IGlzIGEgdmlydHVhbCBhZGRyZXNzDQpzbyBtYXliZSBpdCdzIGp1c3QgYSBjby1pbmNp
+ZGVuY2UuDQoNCkFueXdheSBJJ2QgcmVhbGx5IGFwcHJlY2lhdGUgYW55IGd1aWRhbmNlIHRoYXQg
+YW55b25lIGNvdWxkIHByb3ZpZGUgb24NCnRoaXMuIEV2ZW4gaWYgaXQncyBqdXN0ICJnbyBsb29r
+IGF0IHRoaXMgU29DIi4NCg0KVGhhbmtzLA0KQ2hyaXMNCg0KDQo=
