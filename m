@@ -2,130 +2,312 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 287F8C2D0EA
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 12:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8B9C2BA80
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 12:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA3012074F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 12:17:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UFNn/xH+"
+	by mail.kernel.org (Postfix) with ESMTP id 723EC20787
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 12:20:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgDHMRf (ORCPT
+        id S1728532AbgDHMUo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 08:17:35 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:24165 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727049AbgDHMRf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 08:17:35 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586348254; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=k3YztnopJljpDNhUQCDDNG8AGHekob6hja/cRl7AZTw=; b=UFNn/xH+D+wUgqGnBt1SftP8ZbOq6NO64OZ2QaJeWKKdbqRO8lCR3P68ouFuTRWGouAjjP0L
- vyJjog9Ma8aJPJ/QPAbe/k8BwOttkM4bzwNWLIir9IXpSqxNdduWK6/W90oGfPmF1IQdEkqN
- Q0emlana+hBQgIKoWD4N+jfiip4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8dc0de.7fb8db3359d0-smtp-out-n04;
- Wed, 08 Apr 2020 12:17:34 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 11216C43636; Wed,  8 Apr 2020 12:17:34 +0000 (UTC)
-Received: from [192.168.0.6] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7BE5AC433F2;
-        Wed,  8 Apr 2020 12:17:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7BE5AC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH V3 7/8] spi: spi-qcom-qspi: Add interconnect support
-To:     Mark Brown <broonie@kernel.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de,
-        mark.rutland@arm.com, robh+dt@kernel.org, georgi.djakov@linaro.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, mka@chromium.org,
-        dianders@chromium.org, evgreen@chromium.org
-References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
- <1585652976-17481-8-git-send-email-akashast@codeaurora.org>
- <20200331112352.GB4802@sirena.org.uk>
- <f896d6e4-cc86-db46-a9b9-d7c98071b524@codeaurora.org>
- <20200407105542.GA5247@sirena.org.uk>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <48c60fdf-03c6-650a-2671-b8f7cc1e5c82@codeaurora.org>
-Date:   Wed, 8 Apr 2020 17:47:25 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 8 Apr 2020 08:20:44 -0400
+Received: from mga04.intel.com ([192.55.52.120]:46344 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728530AbgDHMUn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Apr 2020 08:20:43 -0400
+IronPort-SDR: 6RbGmhF8ppYBneAvGVWyZ5RJXzu+0ZSw35k1bGyqLUL/R2yBwXnYQ6Z3DVNUf1WvMEr7p5s3sx
+ NxenPNdHvnnA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 05:20:43 -0700
+IronPort-SDR: EsGpVrBICzA9yNIzcqsXym6EkBtvPGS4UmV6Eypp1AhLxdwvFieP3v3RbENjyQF/kaPW5r+tIe
+ 4ict1+hzKhdg==
+X-IronPort-AV: E=Sophos;i="5.72,358,1580803200"; 
+   d="scan'208";a="425120463"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 05:20:39 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 45DDC20364; Wed,  8 Apr 2020 15:20:37 +0300 (EEST)
+Date:   Wed, 8 Apr 2020 15:20:37 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
+Cc:     andriy.shevchenko@linux.intel.com, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com,
+        bingbu.cao@intel.com, srv_heupstream@mediatek.com,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
+Subject: Re: [V6, 2/2] media: i2c: ov02a10: Add OV02A10 image sensor driver
+Message-ID: <20200408122037.GG5206@paasikivi.fi.intel.com>
+References: <20191211112849.16705-1-dongchun.zhu@mediatek.com>
+ <20191211112849.16705-3-dongchun.zhu@mediatek.com>
+ <20191211143640.GU32742@smile.fi.intel.com>
+ <faf3482d4127464195d04a17cae446b7@mtkmbs05n1.mediatek.inc>
+ <1586346824.8804.12.camel@mhfsdcap03>
 MIME-Version: 1.0
-In-Reply-To: <20200407105542.GA5247@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586346824.8804.12.camel@mhfsdcap03>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mark, Evan, Georgi,
+Hi Dongchun,
 
-On 4/7/2020 4:25 PM, Mark Brown wrote:
-> On Tue, Apr 07, 2020 at 03:24:42PM +0530, Akash Asthana wrote:
->> On 3/31/2020 4:53 PM, Mark Brown wrote:
->>>> +	ctrl->avg_bw_cpu = Bps_to_icc(speed_hz);
->>>> +	ctrl->peak_bw_cpu = Bps_to_icc(2 * speed_hz);
->>> I thought you were going to factor this best guess handling of peak
->>> bandwidth out into the core?
->> I can centralize this for SPI, I2C and UART  in Common driver(QUP wrapper)
->> but still for QSPI I have to keep this piece of code as is because It is not
->> child of QUP wrapper(it doesn't use common code).
-> Why not?
->
->> I am not sure whether I can move this " Assume peak_bw as twice of avg_bw if
->> nothing is mentioned explicitly" to ICC core because the factor of 2 is
->> chosen randomly by me.
-> That's the whole point - if this is just a random number then we may as
-> well at least be consistently random.
+On Wed, Apr 08, 2020 at 07:53:44PM +0800, Dongchun Zhu wrote:
+> Hello Andy,
+> 
+> Thanks for the review. Sorry for the late reply.
+> 
+> On Mon, 2019-12-11 at 16:36 +0200, Andy Shevchenko wrote:
+> > On Wed, Dec 11, 2019 at 07:28:49PM +0800, Dongchun Zhu wrote:
+> > > Add a V4L2 sub-device driver for OV02A10 image sensor. The OV02A10 is
+> > > a 1/5" CMOS sensor from Omnivision, asupporting output format: 10-bit Raw.
+> > >
+> > > This chip has a single MIPI lane interface and use the I2C bus for
+> > > control and the CSI-2 bus for data.
+> > 
+> > ...
+> > 
+> > > +#define OV02A10_MASK_8_BITS                            0xff
+> > 
+> > Besides GENMASK() why do you need a definition here? What's the point?
+> > 
+> 
+> Fixed in next release.
+> 
+> > ...
+> > 
+> > > +static int ov02a10_entity_init_cfg(struct v4l2_subdev *sd,
+> > > +   struct v4l2_subdev_pad_config *cfg) {
+> > > +struct v4l2_subdev_format fmt = {
+> > > +.which = cfg ? V4L2_SUBDEV_FORMAT_TRY
+> > > +     : V4L2_SUBDEV_FORMAT_ACTIVE,
+> > > +.format = {
+> > > +.width = 1600,
+> > 
+> > > +.height = 1200
+> > 
+> > Leave comma here.
+> > 
+> 
+> Fixed in next release.
+> 
+> > > +}
+> > > +};
+> > > +
+> > > +ov02a10_set_fmt(sd, cfg, &fmt);
+> > > +
+> > > +return 0;
+> > > +}
+> > 
+> > ...
+> > 
+> > > +ret = i2c_smbus_write_byte_data(client, OV02A10_REG_GAIN,
+> > > +(val & OV02A10_MASK_8_BITS));
+> > 
+> > Too many parentheses.
+> > 
+> 
+> Fixed in next release.
+> 
+> > > +if (ret < 0)
+> > > +return ret;
+> > 
+> > ...
+> > 
+> > > +static int ov02a10_set_vblank(struct ov02a10 *ov02a10, int val) {
+> > > +struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
+> > 
+> > if you do
+> > 
+> > int vts = val + ov02a10->cur_mode->height - OV02A10_BASIC_LINE;
+> > 
+> > you may increase readability below...
+> > 
+> 
+> Thanks for the suggestion.
+> It seems better now.
+> 
+> > > +int ret;
+> > > +
+> > > +ret = i2c_smbus_write_byte_data(client, REG_PAGE_SWITCH, REG_ENABLE);
+> > > +if (ret < 0)
+> > > +return ret;
+> > > +
+> > > +ret = i2c_smbus_write_byte_data(client, OV02A10_REG_VTS_H,
+> > > +(((val + ov02a10->cur_mode->height -
+> > > +OV02A10_BASIC_LINE) >>
+> > > +OV02A10_VTS_SHIFT) &
+> > > +OV02A10_MASK_8_BITS));
+> > 
+> > ret = i2c_smbus_write_byte_data(client, OV02A10_REG_VTS_H,
+> > (vts >> OV02A10_VTS_SHIFT) &
+> > OV02A10_MASK_8_BITS));
+> > 
+> > And actually why do you need this mask here? Isn't enough to call
+> > 
+> > ret = i2c_smbus_write_byte_data(client, OV02A10_REG_VTS_H,
+> > vts >> OV02A10_VTS_SHIFT);
+> > 
+> > here...
+> > 
+> > 
+> 
+> Yes. Now we code like this.
+> 
+> > > +if (ret < 0)
+> > > +return ret;
+> > > +
+> > > +ret = i2c_smbus_write_byte_data(client, OV02A10_REG_VTS_L,
+> > > +((val + ov02a10->cur_mode->height -
+> > > +OV02A10_BASIC_LINE) &
+> > > +OV02A10_MASK_8_BITS));
+> > 
+> > ...and
+> > 
+> > ret = i2c_smbus_write_byte_data(client, OV02A10_REG_VTS_L, vts);
+> > 
+> > here?
+> > 
+> 
+> Yes. Fixed in next release.
+> 
+> > > +if (ret < 0)
+> > > +return ret;
+> > > +
+> > > +return i2c_smbus_write_byte_data(client, REG_GLOBAL_EFFECTIVE,
+> > > + REG_ENABLE);
+> > > +}
+> > 
+> > ...
+> > 
+> > > +static int ov02a10_check_hwcfg(struct device *dev, struct ov02a10
+> > > +*ov02a10) {
+> > > +struct fwnode_handle *ep;
+> > > +struct fwnode_handle *fwnode = dev_fwnode(dev);
+> > > +struct v4l2_fwnode_endpoint bus_cfg = {
+> > 
+> > > +.bus_type = V4L2_MBUS_CSI2_DPHY
+> > 
+> > Leave comma here.
+> > 
+> 
+> Fixed in next release.
+> 
+> > > +};
+> > > +unsigned int i, j;
+> > > +int ret;
+> > 
+> > > +if (!fwnode)
+> > > +return -ENXIO;
+> > 
+> > A bit strange error code here.
+> > 
+> 
+> This should be reported as -EINVAL.
+> Fixed in next release.
+> 
+> > > +
+> > > +ep = fwnode_graph_get_next_endpoint(fwnode, NULL);
+> > > +if (!ep)
+> > > +return -ENXIO;
+> > > +
+> > > +ret = v4l2_fwnode_endpoint_alloc_parse(ep, &bus_cfg);
+> > > +fwnode_handle_put(ep);
+> > > +if (ret)
+> > > +return ret;
+> > 
+> > > +if (!bus_cfg.nr_of_link_frequencies) {
+> > > +dev_err(dev, "no link frequencies defined");
+> > > +ret = -EINVAL;
+> > > +goto check_hwcfg_error;
+> > > +}
+> > 
+> > I still think it's redundant check, though it's up to maintainers.
+> > 
+> 
+> We still wanna keep this check.
+> Keep same as ov2659 and ov8856.
+> 
+> > > +
+> > > +for (i = 0; i < ARRAY_SIZE(link_freq_menu_items); i++) {
+> > > +for (j = 0; j < bus_cfg.nr_of_link_frequencies; j++) {
+> > > +if (link_freq_menu_items[i] ==
+> > > +bus_cfg.link_frequencies[j])
+> > > +break;
+> > > +}
+> > > +
+> > > +if (j == bus_cfg.nr_of_link_frequencies) {
+> > > +dev_err(dev, "no link frequency %lld supported",
+> > > +link_freq_menu_items[i]);
+> > > +ret = -EINVAL;
+> > > +goto check_hwcfg_error;
+> > > +}
+> > > +}
+> > > +
+> > > +check_hwcfg_error:
+> > > +v4l2_fwnode_endpoint_free(&bus_cfg);
+> > > +
+> > > +return ret;
+> > > +}
+> > 
+> > ...
+> > 
+> > > +static int ov02a10_probe(struct i2c_client *client) {
+> > 
+> > > +/* Optional indication of physical rotation of sensor */
+> > > +ret = fwnode_property_read_u32(dev_fwnode(dev), "rotation",
+> > > +&rotation);
+> > 
+> > > +if (!ret) {
+> > 
+> > Why not positive conditional?
+> > 
+> 
+> Okay. Fixed in next release.
+> 
+> > > +ov02a10->upside_down = rotation == 180;
+> > > +if (rotation == 180) {
+> > > +ov02a10->upside_down = true;
+> > > +ov02a10->fmt.code = MEDIA_BUS_FMT_SRGGB10_1X10;
+> > > +}
+> > > +} else {
+> > > +dev_warn(dev, "failed to get rotation\n");
+> > > +}
+> > > +
+> > > +/* Optional indication of mipi TX speed */
+> > > +ret = fwnode_property_read_u32(dev_fwnode(dev), "ovti,mipi-tx-speed",
+> > > +       &clock_lane_tx_speed);
+> > > +
+> > 
+> > > +if (!ret)
+> > 
+> > Ditto.
+> > 
+> 
+> As Sakari mentioned earlier, the property "ovti,mipi-tx-speed" is
+> optional that shouldn't warn it's missing when ret is 0.
+> So we would keep the condition like that, just removing else case.
 
-Can we centralize below logic of peak_bw selection for all the clients 
-to ICC core?
+I don't remember discussing this, but could be because it was quite some
+time ago.
 
-"Assume peak_bw requirement as twice of avg_bw, if it is not mentioned 
-explicitly"
+It doesn't seem to be documented. What is it for?
 
-===========================================================================
-int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
-{
-         struct icc_node *node;
-         u32 old_avg, old_peak;
-         size_t i;
-         int ret;
+> > *********************MEDIATEK Confidential/Internal Use*********************
 
-         if (!path)
-                 return 0;
-
-         if (WARN_ON(IS_ERR(path) || !path->num_nodes))
-                 return -EINVAL;
-
-+       /*
-+        * Assume peak_bw requirement as twice of avg_bw, if it is not
-+        * mentioned explicitly
-+        */
-+       peak_bw = peak_bw ? peak_bw : 2 * avg_bw;
-===========================================================================
-
-In case if some client really don't want to put peak requirement they 
-can pass avg_bw = peak_bw. As peak_bw <= avg_bw is kind of no-ops.
-
-Regards,
-
-Akash
+Is this intentional?
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+Regards,
+
+Sakari Ailus
