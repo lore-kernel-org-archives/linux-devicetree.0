@@ -2,122 +2,154 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C42C2D0F4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B89C2D0F4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB9592072F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 357252078E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:38:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m8rt2Xhy"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="j2P10Vzg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728611AbgDHT1P (ORCPT
+        id S1730028AbgDHTi0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 15:27:15 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:32870 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727717AbgDHT1P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 15:27:15 -0400
-Received: by mail-qv1-f67.google.com with SMTP id p19so4310108qve.0;
-        Wed, 08 Apr 2020 12:27:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oJV+TvCO+VY9DO+jZTnnzXFI3BZ6Ed8DSfpwoOZDIjE=;
-        b=m8rt2XhycVFsFwCJs971W8tfd4kvUrZ1DGawZM4WWJZfOJO8ATmciRBkiNvxCt+Y22
-         HJvU6OGiO2GBAhyiU0BzCiVe9mEMTgcwAILdykWB+Ei6v9/dtVAreQ1QfwiSfJAYtbp5
-         Hp8jD05EUdJ3kkVb4JnT2lL/ckqY0xg1SF3ESxlBrFSgEDFcCl0ZgQ6WhR/zC6K2zl9U
-         4mQd1QA3rVBTN1cbIRxXZUOoDYW/nEIejkXcbjeMjbNXku8OXka6f5f20dyBv22kJbEd
-         eeKZTgU5UW9cnaFudA5TbukVoXfj8G9Vypqv0pFVmL3AvzfffHeaZZhztoyIqmz6LHm/
-         2zmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oJV+TvCO+VY9DO+jZTnnzXFI3BZ6Ed8DSfpwoOZDIjE=;
-        b=UElA1umSQZj2RORnWYFR2XaVXpiRtVZMN/Nqz0mjKV9HZFLwFLszX1SQdt+cMEH92O
-         xNNcCr3n/DnHlqem+PWkih3M5OSU/tDQZ/1080/CG0hlS0HC9FJb0b4GVWcRk5R8M0ls
-         V5hyG0L8g+wtRYhWjt4o6iUjOwrIbDzItVpKr3RqX9IiwNGHzEBznAj85SI/j1m4O28Y
-         qkoXghMnUv56jntecA/+SaAJl0YWI5jYmPXBUA8/IX7WdF9GCyMhWdea5NWAr7kT+yrU
-         bBeDpUJ9EgMxoK+7qk6QVqsIWBawjxwbslnZa8mvLv5+ERTw4q0zBp+t9/oYBBC6G2lX
-         F+SA==
-X-Gm-Message-State: AGi0PuYlEZTTqj6KUlcLYkKCYOMUQNzJxqhLIj0V46nlsRlNWxAIsDW4
-        4R9JY2W9G7u4aI8gaPysvcQ=
-X-Google-Smtp-Source: APiQypJT1y2+pe84RYUVofBuROMqGUOExowdWQXdnWGTNSf3OUWv6Wa4vkyfGj3ws9+DFIgs9LK74w==
-X-Received: by 2002:ad4:5448:: with SMTP id h8mr9106996qvt.23.1586374033710;
-        Wed, 08 Apr 2020 12:27:13 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id a136sm20267507qkb.15.2020.04.08.12.27.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 Apr 2020 12:27:13 -0700 (PDT)
-Subject: Re: [PATCH] of: remove unneeded variable
-From:   Frank Rowand <frowand.list@gmail.com>
-To:     Ding Xiang <dingxiang@cmss.chinamobile.com>, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1585562702-360-1-git-send-email-dingxiang@cmss.chinamobile.com>
- <92c6b7e9-4d55-a5c3-8c7f-5611edeb55c9@gmail.com>
-Message-ID: <94145488-c077-4b40-943f-f53f21f660c4@gmail.com>
-Date:   Wed, 8 Apr 2020 14:27:11 -0500
+        Wed, 8 Apr 2020 15:38:26 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2985 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728725AbgDHTiZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 15:38:25 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e8e27c90000>; Wed, 08 Apr 2020 12:36:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 08 Apr 2020 12:38:24 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 08 Apr 2020 12:38:24 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Apr
+ 2020 19:38:24 +0000
+Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Apr 2020
+ 19:38:23 +0000
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
+ <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
+ <dd16c560-ba8f-e7df-5dc4-5227e0043196@nvidia.com>
+ <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
+ <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
+ <9e317f65-8a02-3b15-cfec-8e0d8374130e@gmail.com>
+ <97b35910-4c93-123a-43a0-eb14476ed0f3@nvidia.com>
+ <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
+ <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
+ <0c425505-347f-7418-af7e-d121fe0d06dc@nvidia.com>
+ <db7c7051-5674-cdb9-0aa4-ee94125b3024@gmail.com>
+ <1a31cd60-739f-0660-1c45-31487d2f2128@nvidia.com>
+ <603084a5-249a-4fe2-3646-e9335ef9ab43@nvidia.com>
+ <7895b9c6-f27d-8939-73d7-67d785e1a8b7@nvidia.com>
+ <ea60b489-990e-4b15-e215-d93381a1371e@nvidia.com>
+ <b2405c2a-73c0-ad69-ccea-0388caf8045c@gmail.com>
+ <15d8b525-67b5-b437-f7fd-89f80cd0d9f6@nvidia.com>
+ <a638bb8e-bb50-7aa5-05a0-8de1c6207ba7@nvidia.com>
+Message-ID: <ced73258-6f4b-e970-4ca5-ecdf1808a4c3@nvidia.com>
+Date:   Wed, 8 Apr 2020 12:38:21 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <92c6b7e9-4d55-a5c3-8c7f-5611edeb55c9@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <a638bb8e-bb50-7aa5-05a0-8de1c6207ba7@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586374601; bh=FzCCMH0FVXQ03sPS9Blx8PYycG7R5/dfGRSA6QuVW5w=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=j2P10VzgKY91EKABc27qxtQBRmIqqfjS1JYnmAPKBKrO/B1S8IJz56Q6xmD/MtHfG
+         VXYbHE/JpFA8Xw2kp9vHG2MGewgoJcZyWCjSm8XGlU+XGpMhYOouL/BGv7ezZPrUFC
+         cGXAuMuS3wuEmHE8eftH0PY49aejq25IOi4CxPrk5Ry6IVOlpduPSCYNYgUDHQ7KQ6
+         ZA02y6Lodd1Mc+YxkyNuSzIRy58FxS0zFl8GDQYW/Z/4HIOVgZyCOq5UmsTB07ae++
+         C9KJoEj5LNi6MwcigyxrOZoEwXjD5PwYPz0XHDug/yd27NZNz80m+0XTli9nvmcuQH
+         E5E7NarLS5OXg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 4/8/20 11:00 AM, Frank Rowand wrote:
-> On 3/30/20 5:05 AM, Ding Xiang wrote:
->> rc is unneeded, just return 0.
-> 
-> of: of_detach_node() remove unneeded local return variable
 
-never mind, this is not the subject line...  My mistake.
+On 4/8/20 11:58 AM, Sowjanya Komatineni wrote:
+>
+> On 4/8/20 10:45 AM, Sowjanya Komatineni wrote:
+>>
+>> On 4/8/20 7:21 AM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> 08.04.2020 03:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> ...
+>>>>>>>> I suppose that taking a shot takes at least few milliseconds,=20
+>>>>>>>> which
+>>>>>>>> should be unacceptable to waste.
+>>>>>>> As long as buffers are in queue we have to keep processing each
+>>>>>>> buffer and between buffers obviously we have to wait for previous
+>>>>>>> frames to finish and this why we have separate thread for frame
+>>>>>>> finish where we can have next buffer capture ready and issue while
+>>>>>>> previous frame memory write happens
+>>>>> Also we specified numbers buffers as 3 to vb2 queue. So this is rare
+>>>>> case but to prevent issuing more than 2 at a time as VI HW is only
+>>>>> double buffered and syncpt fifo max depth is 2 added this to be=20
+>>>>> safer.
+>>>> To be more clear, when more buffers are enqueued from userspace always
+>>>> capture list will be full and thread will be busy in capture till=20
+>>>> either
+>>>> error or stop stream request happens.
+>>>>
+>>> If kthreads take more than 1% of CPU time during capture (video) with
+>>> more than 2 buffers in queue, then it's not good and I think you should
+>>> do something about it. If kthreads stay at ~0%, then it should be okay
+>>> as-is.
+>>
+>> VI outstanding requests max can only be 2=C2=A0 as syncpt fifo depth is =
+2=C2=A0=20
+>> and waiting to issue next capture when already 2 captures are=20
+>> inflight happens only during beginning of streaming where buffers=20
+>> allocated go thru capture for first time after queuing.
+>>
+>> same buffers are returned to userspace after capture and same=20
+>> allocated buffers will be queued back for subsequent captures.
+>>
+>> So this case of holding to issue single shot when already single shot=20
+>> is issue for 2 frames simultaneous happens only during beginning of=20
+>> start stream and also we set num_buffers to allocate for queue as 3=20
+>> although 2 is good enough where we will not hit this case even during=20
+>> streaming start with 2 buffers
+>>
+> As 2 buffers are good enough to be clear will update in v7 to use 2=20
+> buffers so we don't need to check for more than 2 outstanding buffers.
 
--Frank
+correction: With 3 buffers, as soon as buffer is available capture=20
+starts. So right most times I see it waiting for few ms before 3rd=20
+capture to get through.
 
-> 
->>
->> Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
->> ---
->>  drivers/of/dynamic.c | 3 +--
->>  1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
->> index 08fd823..fe64430 100644
->> --- a/drivers/of/dynamic.c
->> +++ b/drivers/of/dynamic.c
->> @@ -286,7 +286,6 @@ int of_detach_node(struct device_node *np)
->>  {
->>  	struct of_reconfig_data rd;
->>  	unsigned long flags;
->> -	int rc = 0;
->>  
->>  	memset(&rd, 0, sizeof(rd));
->>  	rd.dn = np;
->> @@ -301,7 +300,7 @@ int of_detach_node(struct device_node *np)
->>  
->>  	of_reconfig_notify(OF_RECONFIG_DETACH_NODE, &rd);
->>  
->> -	return rc;
->> +	return 0;
->>  }
->>  EXPORT_SYMBOL_GPL(of_detach_node);
->>  
->>
-> 
-> 
-> Reviewed-by: Frank Rowand <frank.rowand@sony.com>
-> 
+As only 2 frames single shot can be issued in sequence (inflight=20
+requests), instead of waiting for 1 of the request to finish, we can use=20
+2 buffers and avoid waiting as 2 buffers are good enough. Will change=20
+this in v7.
+
+
 
