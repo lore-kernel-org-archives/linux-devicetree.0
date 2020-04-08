@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35569C2BB55
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 691CFC2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08F5320769
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D18C20769
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:52:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CkcHjNsQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SEaJe1JC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730179AbgDHTvy (ORCPT
+        id S1730268AbgDHTwO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 15:51:54 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36791 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730184AbgDHTvy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 15:51:54 -0400
-Received: by mail-lj1-f194.google.com with SMTP id b1so9036783ljp.3
-        for <devicetree@vger.kernel.org>; Wed, 08 Apr 2020 12:51:52 -0700 (PDT)
+        Wed, 8 Apr 2020 15:52:14 -0400
+Received: from mail-lj1-f177.google.com ([209.85.208.177]:39255 "EHLO
+        mail-lj1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730263AbgDHTwO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 15:52:14 -0400
+Received: by mail-lj1-f177.google.com with SMTP id i20so8991303ljn.6
+        for <devicetree@vger.kernel.org>; Wed, 08 Apr 2020 12:52:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DKFWNzm+inHvUnuFaBbTyPTrAd4h6YpCxucuZ+VVDvg=;
-        b=CkcHjNsQ20m+yqfOzKHjMytfQoQkJG2wXH71UADD/ktN2zoVZeZ96XX0heMGOm//6t
-         8K8huxzPx4uSJmqo70qEASm66u4HPllzSthMpTXQL4L+v+NFYblZLscv90xPt1BMPdxF
-         wUYq3lS/wGAHjKteAaFK0e1DYemmbfldXefSO81xKMQVyaIksDe//blzgSR+RjJM3UBs
-         CuC3OEeSqTMB2HNur6tG4z4WRmcgBoWXqiUU35daO7178UmQ6y0KHdEc79xS/JP7EezZ
-         0iUAnJ+3iWMYd3u5/0+dacgP8FAAbnOy6QSfL5f3jAhE1SOd2El9KP1NDfoPoEaQB3zv
-         1dCA==
+        bh=iLwmLLXxp+3at3NXYeHsZbtqN22J5m0j84C8EY0Tpvw=;
+        b=SEaJe1JCrR9zDU7Y5BWPoYjiMOXkt9vafq1EBfXteVwRxHKgifJ+HakQtmQ/Si6ZY7
+         ekAXqqx2IVDfAjaBmxvkCPvuAqtzgdErjtQB7J7hgbY75nP31S7zcT3qGiTt0AuV0yze
+         6cuRxXpdCcqE4HwfRIRCM5idnU8NyCzQbxH9psr4tPYShikjPWDpdfOBHL4iG5Z0jJOS
+         TlYbyoyyNqUr4TW4LEZVR4edb5QkIZpEt/at7qqV7SD8w68yiON56vJhuZkv2ROWHTej
+         oxFIW8okNZ8L9gx2P5aApRjDThaYbWsUgt9Bxj578teWqu/Dg7qr1pC/lsT23sqTolKV
+         TsUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=DKFWNzm+inHvUnuFaBbTyPTrAd4h6YpCxucuZ+VVDvg=;
-        b=kOCCVQT4pjjEa6303MmLZBWqdxZLZN3gyoYfC5lxHrXu8RVNTVFp6mwLUdUa3NpCRt
-         h03XJWbHjzJ4TEO28ZinxarWIjdFUaFo1TiWLhUYrbTAY1V5u8foqpTajToYJ2fv3XWs
-         htvUKYwhGhfKtRbVFF9Ll0wKn6Uyf5PpKXVKbm3+R3BagaWpnEyMouv8HG7UT3mN/rZC
-         7VXXJqxSY79X0no2a8X0hpjYyxnhx8nvUdQFs+PxUcoySOqtWJHpA7JZEkfjH1fyMgMa
-         sGlGVzGyzghzEcbP48K2W+excR5Ju8Awl6GiTmb2hvcY+cCnI7IZfeDg+8fiz8vT2jSK
-         eicA==
-X-Gm-Message-State: AGi0PuaEKB2b8LI3T6CDzfyulq2vZnoLtcahv+G0ix92TsCUA+W5XUO1
-        gofxli/x+ZxeEmfmM3GSFIBMTFbB/fc=
-X-Google-Smtp-Source: APiQypJVKiKV3cQwYN7WSMqnPehfuKwlFS/3MwFscNM08RSykhQTIIaKCjs+GhUyHKjtquZVJhNjOA==
-X-Received: by 2002:a2e:6a17:: with SMTP id f23mr5583286ljc.285.1586375512022;
-        Wed, 08 Apr 2020 12:51:52 -0700 (PDT)
+        bh=iLwmLLXxp+3at3NXYeHsZbtqN22J5m0j84C8EY0Tpvw=;
+        b=Od6GSSzRQmXJf9bLYle+BMMUo4P+uRXgkl19ol+0AMA4QRFOzvZ74jDVHD/xHOh6Hh
+         euQq1MiagN11ghKFGsOv4fiGoo0UiWoOzdhsyevbXJl1HYIqC0zgw+Lk3hYUGX0c6Dht
+         V5HR40yp+ruZyh/kNzz2qX5Rw0IiHMdvq2umP2hoQx7N6H9DvMi0VF/ZfUmZu8+oljsR
+         nN32ehMMaq71ei00q30k6nj4lBf8ZjKFDTHPLEb59IMrebYg6mymblc10XXdnOLv+Yic
+         +y6eqfRUUKIligSGhkZYzX4NKDeqmHsuZKVdRS796lx5jHYZled6CBC0ebcgB/xSWaY1
+         POdQ==
+X-Gm-Message-State: AGi0PuYssZdnIvEwTCJ0YDx15eE7wIpjWOwPD4ZwoAiw/b1V2T25EK7Z
+        SbCIP3prnd3mTf+37bsgYg0=
+X-Google-Smtp-Source: APiQypJux+tS4zCz4JUzc/4t/XTEpugkfLJZ0kNiGF6FynCxhE+ZODVIFmH2shE8oLIJFFG/2qxtIQ==
+X-Received: by 2002:a2e:9a89:: with SMTP id p9mr6062408lji.222.1586375530300;
+        Wed, 08 Apr 2020 12:52:10 -0700 (PDT)
 Received: from saturn.lan (18.158-248-194.customer.lyse.net. [158.248.194.18])
-        by smtp.gmail.com with ESMTPSA id i20sm3961304lfe.15.2020.04.08.12.51.50
+        by smtp.gmail.com with ESMTPSA id i20sm3961304lfe.15.2020.04.08.12.52.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 12:51:51 -0700 (PDT)
+        Wed, 08 Apr 2020 12:52:09 -0700 (PDT)
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     dri-devel@lists.freedesktop.org,
         Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc:     Sam Ravnborg <sam@ravnborg.org>, Lin Huang <hl@rock-chips.com>
-Subject: [PATCH v2 10/36] dt-bindings: display: convert innolux,p097pfg to DT Schema
-Date:   Wed,  8 Apr 2020 21:50:43 +0200
-Message-Id: <20200408195109.32692-11-sam@ravnborg.org>
+Cc:     Sam Ravnborg <sam@ravnborg.org>, Maxime Ripard <mripard@kernel.org>
+Subject: [PATCH v2 27/36] dt-bindings: display: convert sitronix,st7789v to DT Schema
+Date:   Wed,  8 Apr 2020 21:51:00 +0200
+Message-Id: <20200408195109.32692-28-sam@ravnborg.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200408195109.32692-1-sam@ravnborg.org>
 References: <20200408195109.32692-1-sam@ravnborg.org>
@@ -73,105 +73,129 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+v2:
+    - dropped use of spi-slave.yaml (Maxime)
+    - added unevaluatedProperties (Maxime)
+
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Lin Huang <hl@rock-chips.com>
+Cc: Maxime Ripard <mripard@kernel.org>
 Cc: Thierry Reding <thierry.reding@gmail.com>
 Cc: Sam Ravnborg <sam@ravnborg.org>
 ---
- .../display/panel/innolux,p097pfg.txt         | 24 --------
- .../display/panel/innolux,p097pfg.yaml        | 56 +++++++++++++++++++
- 2 files changed, 56 insertions(+), 24 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/innolux,p097pfg.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/innolux,p097pfg.yaml
+ .../display/panel/sitronix,st7789v.txt        | 37 -----------
+ .../display/panel/sitronix,st7789v.yaml       | 63 +++++++++++++++++++
+ 2 files changed, 63 insertions(+), 37 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/sitronix,st7789v.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/sitronix,st7789v.yaml
 
-diff --git a/Documentation/devicetree/bindings/display/panel/innolux,p097pfg.txt b/Documentation/devicetree/bindings/display/panel/innolux,p097pfg.txt
+diff --git a/Documentation/devicetree/bindings/display/panel/sitronix,st7789v.txt b/Documentation/devicetree/bindings/display/panel/sitronix,st7789v.txt
 deleted file mode 100644
-index d1cab3a8f0fb..000000000000
---- a/Documentation/devicetree/bindings/display/panel/innolux,p097pfg.txt
+index c6995dde641b..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/sitronix,st7789v.txt
 +++ /dev/null
-@@ -1,24 +0,0 @@
--Innolux P097PFG 9.7" 1536x2048 TFT LCD panel
+@@ -1,37 +0,0 @@
+-Sitronix ST7789V RGB panel with SPI control bus
 -
 -Required properties:
--- compatible: should be "innolux,p097pfg"
--- reg: DSI virtual channel of the peripheral
--- avdd-supply: phandle of the regulator that provides positive voltage
--- avee-supply: phandle of the regulator that provides negative voltage
--- enable-gpios: panel enable gpio
+-  - compatible: "sitronix,st7789v"
+-  - reg: Chip select of the panel on the SPI bus
+-  - reset-gpios: a GPIO phandle for the reset pin
+-  - power-supply: phandle of the regulator that provides the supply voltage
 -
 -Optional properties:
--- backlight: phandle of the backlight device attached to the panel
+-  - backlight: phandle to the backlight used
+-
+-The generic bindings for the SPI slaves documented in [1] also applies
+-
+-The device node can contain one 'port' child node with one child
+-'endpoint' node, according to the bindings defined in [2]. This
+-node should describe panel's video bus.
+-
+-[1]: Documentation/devicetree/bindings/spi/spi-bus.txt
+-[2]: Documentation/devicetree/bindings/graph.txt
 -
 -Example:
 -
--	&mipi_dsi {
--		panel@0 {
--			compatible = "innolux,p079zca";
--			reg = <0>;
--			avdd-supply = <...>;
--			avee-supply = <...>;
--			backlight = <&backlight>;
--			enable-gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
+-panel@0 {
+-	compatible = "sitronix,st7789v";
+-	reg = <0>;
+-	reset-gpios = <&pio 6 11 GPIO_ACTIVE_LOW>;
+-	backlight = <&pwm_bl>;
+-	spi-max-frequency = <100000>;
+-	spi-cpol;
+-	spi-cpha;
+-
+-	port {
+-		panel_input: endpoint {
+-			remote-endpoint = <&tcon0_out_panel>;
 -		};
 -	};
-diff --git a/Documentation/devicetree/bindings/display/panel/innolux,p097pfg.yaml b/Documentation/devicetree/bindings/display/panel/innolux,p097pfg.yaml
+-};
+diff --git a/Documentation/devicetree/bindings/display/panel/sitronix,st7789v.yaml b/Documentation/devicetree/bindings/display/panel/sitronix,st7789v.yaml
 new file mode 100644
-index 000000000000..5a5f071627fb
+index 000000000000..fa46d151e7b3
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/innolux,p097pfg.yaml
-@@ -0,0 +1,56 @@
++++ b/Documentation/devicetree/bindings/display/panel/sitronix,st7789v.yaml
+@@ -0,0 +1,63 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/display/panel/innolux,p097pfg.yaml#
++$id: http://devicetree.org/schemas/display/panel/sitronix,st7789v.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Innolux P097PFG 9.7" 1536x2048 TFT LCD panel
++title: Sitronix ST7789V RGB panel with SPI control bus
++
++description: |
++  The panel must obey the rules for a SPI slave device as specified in
++  spi/spi-controller.yaml
 +
 +maintainers:
-+  - Lin Huang <hl@rock-chips.com>
++  - Maxime Ripard <mripard@kernel.org>
 +
 +allOf:
 +  - $ref: panel-common.yaml#
 +
 +properties:
 +  compatible:
-+    const: innolux,p097pfg
++    const: sitronix,st7789v
 +
-+  backlight: true
-+  enable-gpios: true
 +  reg: true
-+
-+  avdd-supply:
-+    description: The regulator that provides positive voltage
-+
-+  avee-supply:
-+    description: The regulator that provides negative voltage
++  reset-gpios: true
++  power-supply: true
++  backlight: true
++  port: true
 +
 +required:
 +  - compatible
 +  - reg
-+  - avdd-supply
-+  - avee-supply
-+  - enable-gpios
++  - reset-gpios
++  - power-supply
 +
-+additionalProperties: false
++unevaluatedProperties: false
 +
 +examples:
 +  - |
 +    #include <dt-bindings/gpio/gpio.h>
 +
-+    dsi {
++    spi {
 +        #address-cells = <1>;
 +        #size-cells = <0>;
 +
 +        panel@0 {
-+            compatible = "innolux,p097pfg";
++            compatible = "sitronix,st7789v";
 +            reg = <0>;
-+            avdd-supply = <&avdd>;
-+            avee-supply = <&avee>;
-+            backlight = <&backlight>;
-+            enable-gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
++            reset-gpios = <&pio 6 11 GPIO_ACTIVE_LOW>;
++            backlight = <&pwm_bl>;
++            power-supply = <&power>;
++            spi-max-frequency = <100000>;
++            spi-cpol;
++            spi-cpha;
++
++            port {
++                panel_input: endpoint {
++                    remote-endpoint = <&tcon0_out_panel>;
++                };
++            };
 +        };
 +    };
 +
