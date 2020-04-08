@@ -7,210 +7,152 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 367F0C2BBFD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5449C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09AA22075E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E8EA2078E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:52:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fy7py9mJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bJrnqBT9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730209AbgDHTv5 (ORCPT
+        id S1730216AbgDHTwA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 15:51:57 -0400
-Received: from mail-lj1-f180.google.com ([209.85.208.180]:35359 "EHLO
-        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730196AbgDHTv5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 15:51:57 -0400
-Received: by mail-lj1-f180.google.com with SMTP id k21so9043223ljh.2
-        for <devicetree@vger.kernel.org>; Wed, 08 Apr 2020 12:51:55 -0700 (PDT)
+        Wed, 8 Apr 2020 15:52:00 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43825 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730184AbgDHTv7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 15:51:59 -0400
+Received: by mail-lf1-f65.google.com with SMTP id k28so6091412lfe.10
+        for <devicetree@vger.kernel.org>; Wed, 08 Apr 2020 12:51:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gts8IBK9sE8CfYbVSsVTkwe650OyDr0ovRiE3fWcD5w=;
-        b=fy7py9mJ7xLW9YoKJCavc0rM7N1S2ZJ1i2xWM6bPxAfKhwNLe085VmXMVqSFZ/BUuh
-         DsNmYNbLxMgblA74MbUTxY9fwU+cpiKnMoMbWVD00TAjeB0Nmjygu+/zH+ynalzvQYqR
-         zdhs8r3/xXKItmbxdnF1Ea7WfXCkPe532WQ0fDXtCBsUSN7CEl/cskfKB43sw2Bbd5Ec
-         8AEsA/JTiSn90W1GSBIKwnO7MZyCbB/DBy3zNIaxBIR2fkMORHKNEOb0xoMT/WyDxjR2
-         uPEyG7llbcRBVWdqT+KsVUNzsnmxmj74vkKpcu1SJFg/h8fDSN0x745/5wZ71wEVMq6u
-         zOLQ==
+        bh=79d8ydBEeVchzXXOzRIawXTAySSjx90jaugBrSZsHQA=;
+        b=bJrnqBT9cd9ybEv/ObtZp0zMaDd4qGK6riRu2c5RkkFvE1hIeZdFgxFt3VnPRKytqq
+         Hu/QOwH5M2GFx9b+4Kgr11iv2EMCl+THZ4SE73K7YrK5c8y2Q4/4KiM0uKAg960mKBDE
+         4ZnVphSaUz5dNynfpZgPy7AX54RJ0EJTvx54Qbp8R1ZrqrTN/yBfWlVNhFi8ztTOx25u
+         CeMKyKYyGyBlZgZ7ZHqzfF30Hw4Lfr/cUyvKmPIVVj4g2txYD2av5w/1loBfJtwcbrbN
+         FpqgD1bpvU7lasHgbpc/9Tzi35tRBuhIbb4+oh3/2EIXItMJD5rYFiNZu1lPgm8MJlZi
+         fYew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=gts8IBK9sE8CfYbVSsVTkwe650OyDr0ovRiE3fWcD5w=;
-        b=YwDZFDs6NuG3Eq62ZqBdzEblMBD61IpcuMHNaJ/giraOMLYbTqbgHP2K7Tek74oomX
-         /vM52BJjC3rtPggXEd7qzlNcjN3QO5JuQtd2MwJ31QxJhXmr6V11kuD3X2jsHHVsF0gX
-         bbCPvSJbcUA7p7hPh86E1NxTs99V+UyNNgndu5rGReBts95zt9slJ4a7mqPFVp6M4dWH
-         9ivsNMJvMy+Vj/NBHTw/hoNMrF8E5vuHe9ozATwHzEVVKk+Su5pGnG2B/1/Wmz7E7PHX
-         kyXZH/w8jXo8hB0ncC/vdh2p5tHMZP8f79/PggRaJtrG3s7OjQ9ZfrdVrbtyrakIQGwZ
-         IRAQ==
-X-Gm-Message-State: AGi0PuaXdEHfGUb8RyDWMBhSa7qdg9Y2xEy7863oTv8fxh7saSUuL/Ow
-        WEP53dSseN7GAXaMAuy5H28=
-X-Google-Smtp-Source: APiQypKE90E7N2o/yHSibcHm+rJeb50Ogag0nb6GTjwrAzUJENGsLHHdGJo+6lW9xokMMiEI0l9e3Q==
-X-Received: by 2002:a2e:900c:: with SMTP id h12mr3845652ljg.290.1586375515137;
-        Wed, 08 Apr 2020 12:51:55 -0700 (PDT)
+        bh=79d8ydBEeVchzXXOzRIawXTAySSjx90jaugBrSZsHQA=;
+        b=NnqoE/nEq1umKdpBkVX93wQYDiOdWNzUcqI6urw7U5BYRSdQ6Zr4X0bQcxQcA4I4fh
+         q2rkd6QqY46+ikzI/W22J10Cqh+RPfZwadW5NPdULIhmZN5OTHrOOoIIVHUZ51Bu2iAV
+         slTcApBc7O55T3/atj4VaUGFV5//8/Yw9FjGMHdqt33zftzUy01SpBSvoOkTl1PielpL
+         +AIoCsqPwWxZN1toC3r/Rr3brtvBzmcjUuqHjT5tES95dS8xVuWRFwDAPYGO6sM9dq9K
+         zv3fkqJCPMA93G1tv3VXX6UDK+4J0p7swkWB7fxwCSKWEzwvTMfz/2+ozaNUTb4dTCG2
+         1MgA==
+X-Gm-Message-State: AGi0PuZzfdUbh4IM2AQEGxJqeOVSHkOQpAy6XyQkxx2tDtfVgxw92RBZ
+        oFf0GoJvtWJeWF9nAZSLcUs=
+X-Google-Smtp-Source: APiQypI93VEntAsC4tx0iRCQh3Hx52ByIPE/1htlLC1d+Sux+/LLEHizMFmf+jMbfcUIlQQJpr+jaw==
+X-Received: by 2002:ac2:5559:: with SMTP id l25mr5563589lfk.55.1586375517195;
+        Wed, 08 Apr 2020 12:51:57 -0700 (PDT)
 Received: from saturn.lan (18.158-248-194.customer.lyse.net. [158.248.194.18])
-        by smtp.gmail.com with ESMTPSA id i20sm3961304lfe.15.2020.04.08.12.51.54
+        by smtp.gmail.com with ESMTPSA id i20sm3961304lfe.15.2020.04.08.12.51.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 12:51:54 -0700 (PDT)
+        Wed, 08 Apr 2020 12:51:56 -0700 (PDT)
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     dri-devel@lists.freedesktop.org,
         Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
 Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Maxime Ripard <mripard@kernel.org>
-Subject: [PATCH v2 13/36] dt-bindings: display: convert kingdisplay,kd035g6-54nt to DT Schema
-Date:   Wed,  8 Apr 2020 21:50:46 +0200
-Message-Id: <20200408195109.32692-14-sam@ravnborg.org>
+        Brian Masney <masneyb@onstation.org>,
+        Alexandre Courbot <acourbot@chromium.org>
+Subject: [PATCH v2 15/36] dt-bindings: display: convert simple lg panels to DT Schema
+Date:   Wed,  8 Apr 2020 21:50:48 +0200
+Message-Id: <20200408195109.32692-16-sam@ravnborg.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200408195109.32692-1-sam@ravnborg.org>
 References: <20200408195109.32692-1-sam@ravnborg.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-v2:
-  - Drop use of spi-slave.yaml (Maxime)
-  - Introduce unevaluatedProperties (Maxime)
+Add the lg panels that matches the panel-simple binding to
+panel-simple.yaml
 
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Brian Masney <masneyb@onstation.org>
+Cc: Brian Masney <masneyb@onstation.org>
+Cc: Alexandre Courbot <acourbot@chromium.org>
 Cc: Thierry Reding <thierry.reding@gmail.com>
 Cc: Sam Ravnborg <sam@ravnborg.org>
 ---
- .../panel/kingdisplay,kd035g6-54nt.txt        | 42 ------------
- .../panel/kingdisplay,kd035g6-54nt.yaml       | 65 +++++++++++++++++++
- 2 files changed, 65 insertions(+), 42 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/kingdisplay,kd035g6-54nt.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/kingdisplay,kd035g6-54nt.yaml
+ .../devicetree/bindings/display/panel/lg,acx467akm-7.txt   | 7 -------
+ .../devicetree/bindings/display/panel/lg,ld070wx3-sl01.txt | 7 -------
+ .../devicetree/bindings/display/panel/lg,lh500wx1-sd03.txt | 7 -------
+ .../devicetree/bindings/display/panel/panel-simple.yaml    | 6 ++++++
+ 4 files changed, 6 insertions(+), 21 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/lg,acx467akm-7.txt
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/lg,ld070wx3-sl01.txt
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/lg,lh500wx1-sd03.txt
 
-diff --git a/Documentation/devicetree/bindings/display/panel/kingdisplay,kd035g6-54nt.txt b/Documentation/devicetree/bindings/display/panel/kingdisplay,kd035g6-54nt.txt
+diff --git a/Documentation/devicetree/bindings/display/panel/lg,acx467akm-7.txt b/Documentation/devicetree/bindings/display/panel/lg,acx467akm-7.txt
 deleted file mode 100644
-index fa9596082e44..000000000000
---- a/Documentation/devicetree/bindings/display/panel/kingdisplay,kd035g6-54nt.txt
+index fc1e1b325e49..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/lg,acx467akm-7.txt
 +++ /dev/null
-@@ -1,42 +0,0 @@
--King Display KD035G6-54NT 3.5" (320x240 pixels) 24-bit TFT LCD panel
+@@ -1,7 +0,0 @@
+-LG ACX467AKM-7 4.95" 1080×1920 LCD Panel
 -
 -Required properties:
--- compatible: should be "kingdisplay,kd035g6-54nt"
--- power-supply: See panel-common.txt
--- reset-gpios: See panel-common.txt
+-- compatible: must be "lg,acx467akm-7"
 -
--Optional properties:
--- backlight: see panel-common.txt
+-This binding is compatible with the simple-panel binding, which is specified
+-in simple-panel.txt in this directory.
+diff --git a/Documentation/devicetree/bindings/display/panel/lg,ld070wx3-sl01.txt b/Documentation/devicetree/bindings/display/panel/lg,ld070wx3-sl01.txt
+deleted file mode 100644
+index 5e649cb9aa1a..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/lg,ld070wx3-sl01.txt
++++ /dev/null
+@@ -1,7 +0,0 @@
+-LG Corporation 7" WXGA TFT LCD panel
 -
--The generic bindings for the SPI slaves documented in [1] also apply.
+-Required properties:
+-- compatible: should be "lg,ld070wx3-sl01"
 -
--The device node can contain one 'port' child node with one child
--'endpoint' node, according to the bindings defined in [2]. This
--node should describe panel's video bus.
+-This binding is compatible with the simple-panel binding, which is specified
+-in simple-panel.txt in this directory.
+diff --git a/Documentation/devicetree/bindings/display/panel/lg,lh500wx1-sd03.txt b/Documentation/devicetree/bindings/display/panel/lg,lh500wx1-sd03.txt
+deleted file mode 100644
+index a04fd2b2e73d..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/lg,lh500wx1-sd03.txt
++++ /dev/null
+@@ -1,7 +0,0 @@
+-LG Corporation 5" HD TFT LCD panel
 -
--[1]: Documentation/devicetree/bindings/spi/spi-bus.txt
--[2]: Documentation/devicetree/bindings/graph.txt
+-Required properties:
+-- compatible: should be "lg,lh500wx1-sd03"
 -
--Example:
--
--&spi {
--	panel@0 {
--		compatible = "kingdisplay,kd035g6-54nt";
--		reg = <0>;
--
--		spi-max-frequency = <3125000>;
--		spi-3wire;
--		spi-cs-high;
--
--		reset-gpios = <&gpe 2 GPIO_ACTIVE_LOW>;
--
--		backlight = <&backlight>;
--		power-supply = <&ldo6>;
--
--		port {
--			panel_input: endpoint {
--				remote-endpoint = <&panel_output>;
--			};
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/panel/kingdisplay,kd035g6-54nt.yaml b/Documentation/devicetree/bindings/display/panel/kingdisplay,kd035g6-54nt.yaml
-new file mode 100644
-index 000000000000..6960036975fa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/kingdisplay,kd035g6-54nt.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/kingdisplay,kd035g6-54nt.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: King Display KD035G6-54NT 3.5" (320x240 pixels) 24-bit TFT LCD panel
-+
-+description: |
-+  The panel must obey the rules for a SPI slave device as specified in
-+  spi/spi-controller.yaml
-+
-+maintainers:
-+  - Paul Cercueil <paul@crapouillou.net>
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: kingdisplay,kd035g6-54nt
-+
-+  backlight: true
-+  port: true
-+  power-supply: true
-+  reg: true
-+  reset-gpios: true
-+
-+required:
-+  - compatible
-+  - power-supply
-+  - reset-gpios
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        panel@0 {
-+            compatible = "kingdisplay,kd035g6-54nt";
-+            reg = <0>;
-+
-+            spi-max-frequency = <3125000>;
-+            spi-3wire;
-+            spi-cs-high;
-+
-+            reset-gpios = <&gpe 2 GPIO_ACTIVE_LOW>;
-+
-+            backlight = <&backlight>;
-+            power-supply = <&ldo6>;
-+
-+            port {
-+                panel_input: endpoint {
-+                    remote-endpoint = <&panel_output>;
-+                };
-+            };
-+        };
-+    };
-+
-+...
+-This binding is compatible with the simple-panel binding, which is specified
+-in simple-panel.txt in this directory.
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+index 328df95cbe88..e4f8133f48bb 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
++++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+@@ -155,8 +155,14 @@ properties:
+       - kyo,tcg121xglp
+         # LeMaker BL035-RGB-002 3.5" QVGA TFT LCD panel
+       - lemaker,bl035-rgb-002
++        # LG ACX467AKM-7 4.95" 1080×1920 LCD Panel
++      - lg,acx467akm-7
+         # LG 7" (800x480 pixels) TFT LCD panel
+       - lg,lb070wv8
++        # LG Corporation 7" WXGA TFT LCD panel
++      - lg,ld070wx3-sl01
++        # LG Corporation 5" HD TFT LCD panel
++      - lg,lh500wx1-sd03
+         # LG LP079QX1-SP0V 7.9" (1536x2048 pixels) TFT LCD panel
+       - lg,lp079qx1-sp0v
+         # LG 9.7" (2048x1536 pixels) TFT LCD panel
 -- 
 2.20.1
 
