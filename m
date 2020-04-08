@@ -2,96 +2,113 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3066C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 15:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E335C2BA1B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8ACF20730
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 15:49:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586360944;
-	bh=ooW89rST4GmeQXzLWvXim86Mk5Dn0bBASsKnbkuiJgo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uHrd9py05ZgZqZGGTqABcwncJXQ6WRdsbkR79OuPnuz/W5d0PFOtHaTM4rX9oHgP1
-	 dHyJDUZCViCAFUvcZdkYc/b++LHTD9BOjNTL+gURq2XxEp6f9Iz/rOOIXUHva1N2L+
-	 byUuoJHgSB7Bx4ud4wxsY+5X4saUkWfruG142fbQ=
+	by mail.kernel.org (Postfix) with ESMTP id E79CF2082F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:00:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKGKiSuR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbgDHPqb (ORCPT
+        id S1729295AbgDHQAF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:46:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48838 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729566AbgDHPqb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:46:31 -0400
-Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFBF720730;
-        Wed,  8 Apr 2020 15:46:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586360791;
-        bh=ooW89rST4GmeQXzLWvXim86Mk5Dn0bBASsKnbkuiJgo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l55rUwi6jEY2YGj9/088umhgixkoDyC8JHBIIxCim0CxdmtfSdy5TnjzxWsV2ya+Z
-         pQxgmoO4b05mjJyPYugJuYuyMc9fdPOJnMLQYlMew5joUed7Qx+kGDcXzd4Prh8IgD
-         NOOfxZp72IDNpxrRDe/vLF5ge8lp0O32A44Nkoto=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jMCuL-000cAO-2O; Wed, 08 Apr 2020 17:46:29 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Yuti Amonkar <yamonkar@cadence.com>, devicetree@vger.kernel.org
-Subject: [PATCH 02/35] docs: dt: fix broken reference to phy-cadence-torrent.yaml
-Date:   Wed,  8 Apr 2020 17:45:54 +0200
-Message-Id: <e2b930ceda89bc29ad84a6c6edcf196930dc18a6.1586359676.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <cover.1586359676.git.mchehab+huawei@kernel.org>
-References: <cover.1586359676.git.mchehab+huawei@kernel.org>
+        Wed, 8 Apr 2020 12:00:05 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45229 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729755AbgDHQAE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 12:00:04 -0400
+Received: by mail-qk1-f195.google.com with SMTP id m67so619985qke.12;
+        Wed, 08 Apr 2020 09:00:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=aRe2LUZ6th1URyp3FHFKMF3md2te8S/MCUnxkUCOAJM=;
+        b=EKGKiSuRAwpaR5KSV6azvx0CJk9B6N+3O8L0o6RCsmsZsnV/8SEZeGSTVGM7ycSRzu
+         bfNQo0kJ6IPzgBMk26jN14ISooZz+y5lUvv8X1JToguDZIF2bmWSQXP5UrPjxy1NOYqR
+         O40Xym2bar84IcTU+DOguc6ig9ufu04KoDiW9laNk8VyDMWNPEE9fPTKRBtrqLOHNwxo
+         zpHjHVhFEA+mye6b5NVuw6251J/jRZcZwi196jEyd4wpOR/3JZRebAGlqL+8PpPMmVKJ
+         LpVsWggwkWPImJggudamhEXDakbELWE2rGyOJmbxmlso2iCdhI/3/YQx8c5qLbUnQm6+
+         CGeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aRe2LUZ6th1URyp3FHFKMF3md2te8S/MCUnxkUCOAJM=;
+        b=tw4iHB8v62LeGFbPg4zSC78MfM2pBXqqQGKC5lUZG0AnfDw1OqXQcSQEqx9I8izPpK
+         e09u8Q4Mpo9b3c7887HM7Gsrj/a4sswVL4HDCPkphLUMRPekUQdJp0+Mena7teRG7/i7
+         5/A60YRQo15CKlg8sx7JpDX2RA4a/yMlHXtCpigYtW26vrbahE1wcxfv9Tzy5EhAmnFP
+         qIxp1qeb3Vg/B2PnmRdtemvbxCzk24L0GXh91MpdLtq2h8YThZahUTZSVM+lyKDa52eR
+         AfcwgdILIWIOrIaaa89pcUw3yY1P5oci9E3YlKZ34oug1KNESIh6ioQUTrzPDCdkFgnf
+         b+BA==
+X-Gm-Message-State: AGi0PuZ/M3e/ocFdt+cwjgU1sCtk50LHe5O7EgvTPiCMolnH0MCR2eek
+        6lMYp5GJXVD1QlD5E5EuZII=
+X-Google-Smtp-Source: APiQypKEYc/okCZmPC9ScbxhDZtYpLn1KKpByvTqnV75zi20PiEz27HaxIjHrZ1pv227jwLjwU/h3Q==
+X-Received: by 2002:a05:620a:1189:: with SMTP id b9mr7975639qkk.236.1586361603428;
+        Wed, 08 Apr 2020 09:00:03 -0700 (PDT)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id a62sm18131916qkb.134.2020.04.08.09.00.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Apr 2020 09:00:02 -0700 (PDT)
+Subject: Re: [PATCH] of: remove unneeded variable
+To:     Ding Xiang <dingxiang@cmss.chinamobile.com>, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1585562702-360-1-git-send-email-dingxiang@cmss.chinamobile.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <92c6b7e9-4d55-a5c3-8c7f-5611edeb55c9@gmail.com>
+Date:   Wed, 8 Apr 2020 11:00:01 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1585562702-360-1-git-send-email-dingxiang@cmss.chinamobile.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This file was removed, and another file was added instead of
-it, on two separate commits.
+On 3/30/20 5:05 AM, Ding Xiang wrote:
+> rc is unneeded, just return 0.
 
-Splitting a single logical change (doc conversion) on two
-patches is a bad thing, as it makes harder to discover what
-crap happened.
+of: of_detach_node() remove unneeded local return variable
 
-Anyway, this patch fixes the broken reference, making it
-pointing to the new location of the file.
+> 
+> Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+> ---
+>  drivers/of/dynamic.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+> index 08fd823..fe64430 100644
+> --- a/drivers/of/dynamic.c
+> +++ b/drivers/of/dynamic.c
+> @@ -286,7 +286,6 @@ int of_detach_node(struct device_node *np)
+>  {
+>  	struct of_reconfig_data rd;
+>  	unsigned long flags;
+> -	int rc = 0;
+>  
+>  	memset(&rd, 0, sizeof(rd));
+>  	rd.dn = np;
+> @@ -301,7 +300,7 @@ int of_detach_node(struct device_node *np)
+>  
+>  	of_reconfig_notify(OF_RECONFIG_DETACH_NODE, &rd);
+>  
+> -	return rc;
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(of_detach_node);
+>  
+> 
 
-Fixes: 922003733d42 ("dt-bindings: phy: Remove Cadence MHDP PHY dt binding")
-Fixes: c6d8eef38b7f ("dt-bindings: phy: Add Cadence MHDP PHY bindings in YAML format.")
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
-index fd1982c56104..3f913d6d1c3d 100644
---- a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
-+++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
-@@ -146,7 +146,7 @@ patternProperties:
-       bindings specified in
-       Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
-       Torrent SERDES should follow the bindings specified in
--      Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
-+      Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
- 
- required:
-   - compatible
--- 
-2.25.2
-
+Reviewed-by: Frank Rowand <frank.rowand@sony.com>
