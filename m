@@ -2,157 +2,215 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 167ADC2D0EC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 00:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B20C2D0EC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 00:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3E4E2054F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 00:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45AFA2054F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 00:07:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eWO+inum"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ulXYa0uw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgDHAAq (ORCPT
+        id S1726417AbgDHAHp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Apr 2020 20:00:46 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1025 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbgDHAAq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 20:00:46 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8d14200000>; Tue, 07 Apr 2020 17:00:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 07 Apr 2020 17:00:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 07 Apr 2020 17:00:45 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Apr
- 2020 00:00:44 +0000
-Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Apr 2020
- 00:00:43 +0000
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <be77b0ef-d605-8357-4180-f40b2886d07a@gmail.com>
- <08cd31d5-e8b9-4d3a-fb0e-0e4462947d96@nvidia.com>
- <12a834ac-52b1-6dc0-7d3a-3e6a1fa85a2a@gmail.com>
- <e3712e7b-b335-b35b-a94f-24eb85122dca@nvidia.com>
- <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
- <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
- <dd16c560-ba8f-e7df-5dc4-5227e0043196@nvidia.com>
- <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
- <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
- <9e317f65-8a02-3b15-cfec-8e0d8374130e@gmail.com>
- <97b35910-4c93-123a-43a0-eb14476ed0f3@nvidia.com>
- <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
- <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
- <0c425505-347f-7418-af7e-d121fe0d06dc@nvidia.com>
- <db7c7051-5674-cdb9-0aa4-ee94125b3024@gmail.com>
- <1a31cd60-739f-0660-1c45-31487d2f2128@nvidia.com>
- <603084a5-249a-4fe2-3646-e9335ef9ab43@nvidia.com>
- <7895b9c6-f27d-8939-73d7-67d785e1a8b7@nvidia.com>
-Message-ID: <ea60b489-990e-4b15-e215-d93381a1371e@nvidia.com>
-Date:   Tue, 7 Apr 2020 17:00:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 7 Apr 2020 20:07:45 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33306 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726416AbgDHAHp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Apr 2020 20:07:45 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v8so2653wma.0;
+        Tue, 07 Apr 2020 17:07:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2fG/vO+qjiABqlpw9kh+t0UsO4QTTlq+ppWwS4RE+1s=;
+        b=ulXYa0uw1K3wGSI9lmvkLzIfcxAKWdBvy7EdTUT/KxNS2CvQEMt0D6e98IyXq7tRlq
+         k1mqFzMf82KDa15dQTDDxaAhxRwQQfLKhQ9/Hj0R5uvtYY16hcvY9NpGLWj2kqE6B3tE
+         tVFZvf8BP1rvRCZd6Luyf3sesAUpNunXZvp5pWsnVscyBQfQYjwyldgsZH4xX86ns35q
+         e4NsuQSxZvc+TD2unNeht7i5NjYqzRJ4KOfliHV80SQ+oY0YCSOJE/CukL1L+TpcxVQy
+         GCbibqjigI0V9Vmg4h2jxbSEb449X2qbg944PlaM+ZHgYL+Y+I4/JnpNK9HN42HCuFiC
+         drMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=2fG/vO+qjiABqlpw9kh+t0UsO4QTTlq+ppWwS4RE+1s=;
+        b=S7gVfDIJr/1qQbV/DHerVqNxZy+ZBrGCYwuv0OoJDaYBe6v3/2k2T9F/NmXOW/xA0E
+         xFWVahrh3qcxjusxh1ehORRopk5jcuUnjROzlzY8Rx+HvjsjXNo9/eGAhVl7o6ZgJOIc
+         uxgba7ewPeyvcom+Q/OHv54s0r1YCCLaKAYd8AIlM5q4QECP+OvneyYqpCKDxfCWjDkN
+         DpOIjtkya4dzXqkQ9QdgE9pyuIDCJ28MupIoQF3+aHsvqB+N/FiBblTMQ1GIpI/JCeht
+         BYqSa72PE3bQPwFDXhSDm5AV6JaNDyw9rrYT7lmmvY3KLHgeOminOQ+cEmRlflaccuC6
+         mhkw==
+X-Gm-Message-State: AGi0Pubfi8nOW3/JIhNXfWb39fvFxFbve89o1wj71GV+ozZs/VzoSOEm
+        oUEZQlexjbNuhozkq72/GBg=
+X-Google-Smtp-Source: APiQypK0JrKIVG1lFeKNPmMG8d7tfr77E0xegYAKNfqXt+djTc20xcBBX628F8sOnjoSsKo6gGbEBg==
+X-Received: by 2002:a7b:cf27:: with SMTP id m7mr1785049wmg.58.1586304462488;
+        Tue, 07 Apr 2020 17:07:42 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id d133sm1260586wmc.27.2020.04.07.17.07.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 17:07:41 -0700 (PDT)
+Subject: Re: [PATCH 0/5] arm: dts: linksys: rename codename to model
+To:     Paul Spooren <mail@aparcar.org>, Andrew Lunn <andrew@lunn.ch>
+Cc:     devicetree@vger.kernel.org, jason@lakedaemon.net,
+        gregory.clement@bootlin.com, linux-kernel@vger.kernel.org,
+        daniel@makrotopia.org, freifunk@adrianschmutzler.de,
+        robh+dt@kernel.org, kaloz@openwrt.org,
+        linux-arm-kernel@lists.infradead.org,
+        sebastian.hesselbarth@gmail.com
+References: <20200407210816.866084-1-mail@aparcar.org>
+ <20200407224615.GA359603@lunn.ch>
+ <004a2ef9c1e04f9ffbb9c3cc9907ca656a406713.camel@aparcar.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <ecf4dc01-81f8-a33d-b4a7-2065748993ed@gmail.com>
+Date:   Tue, 7 Apr 2020 17:07:38 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <7895b9c6-f27d-8939-73d7-67d785e1a8b7@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <004a2ef9c1e04f9ffbb9c3cc9907ca656a406713.camel@aparcar.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586304032; bh=FSo44cZwUySuOimxsjMypd59TtiRcxs9yvJGq9wJ31U=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=eWO+inumv2c6wIMCFx9NG/PtbLJuwiteq8xjriDMNhpbO6r/tQK3XTUz71u9R+vsC
-         Nj6NxYmpWlj3xzm+waTTG6jufCyNKXoGc/7AkPJsCzyPVfNJfydpdBOfxaC4TCu38Q
-         ceEkIuC777ldHLwG2m/Sczo9EhnoyZrLAzK4+dr1IVc+AZ3b543Ijhfm1EvCBVyMik
-         moOsZpCzqRTf3tZsqx7LWSm4dz84esu2nxvj0PAe+g+kktIP7k7GjMt7Ey5udZF9EP
-         ckihbT8KTNIWzxEIeARv/u4sy5mYbwDbYBABEeK6mFVawHBY6GPZSWUftA/44B7NL8
-         rKqwB094rGP4A==
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-On 4/7/20 4:59 PM, Sowjanya Komatineni wrote:
->
-> On 4/7/20 4:38 PM, Sowjanya Komatineni wrote:
->>
->> On 4/7/20 4:36 PM, Sowjanya Komatineni wrote:
+
+On 4/7/2020 4:38 PM, Paul Spooren wrote:
+> Hi Andrew,
+> 
+> thank you very much for the quick response!
+> 
+> On Wed, 2020-04-08 at 00:46 +0200, Andrew Lunn wrote:
+>> On Tue, Apr 07, 2020 at 11:08:10AM -1000, Paul Spooren wrote:
+>>> Linksys chose to use codenames for a few of their devices and sell
+>>> their
+>>> them under an entirely different name.
 >>>
->>> On 4/7/20 4:12 PM, Dmitry Osipenko wrote:
->>>> External email: Use caution opening links or attachments
->>>>
->>>>
->>>> 08.04.2020 01:22, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> On 4/7/20 3:08 PM, Dmitry Osipenko wrote:
->>>>>> External email: Use caution opening links or attachments
->>>>>>
->>>>>>
->>>>>> 08.04.2020 00:08, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
-:
->>>>>> ...
->>>>>>>>> I think you need a semaphore with resource count =3D 2.
->>>>>>>> we hold on to issuing capture if more than 2 buffers are queued=20
->>>>>>>> and it
->>>>>>>> continues only after fifo has min 1 slot empty
->>>>>>> Just want to close on this part of feedback. Hope above=20
->>>>>>> explanation is
->>>>>>> clear regarding triggering/issuing at max 2 frame capture to VI=20
->>>>>>> HW and
->>>>>>> also regarding capture threads where they use=20
->>>>>>> wait_event_interruptible
->>>>>>> to prevent blocking waiting for buffers to be available for=20
->>>>>>> captures.
->>>>>>>
->>>>>>> So no changes related to this part are needed in v7.
->>>>>> =C2=A0 From what I see in the code, you "hold on" by making kthread =
-to=20
->>>>>> spin in
->>>>>> a busy-loop while caps_inflight >=3D SYNCPT_FIFO_DEPTH. So some chan=
-ge
->>>>>> should be needed to prevent this.
->>>>>>
->>>>>> The wait_event_interruptible seems should be okay.
->>>>> We don't want to prevent that as we already have buffers available=20
->>>>> for
->>>>> capture so as soon as VI HW issuing single shot is done and when=20
->>>>> min 1
->>>>> slot is empty we should continue with issuing for another capture.
->>>>>
->>>>> As long as buffers are available, we should continue to capture and
->>>>> should not hold
->>>>>
->>>> I suppose that taking a shot takes at least few milliseconds, which
->>>> should be unacceptable to waste.
->>> As long as buffers are in queue we have to keep processing each=20
->>> buffer and between buffers obviously we have to wait for previous=20
->>> frames to finish and this why we have separate thread for frame=20
->>> finish where we can have next buffer capture ready and issue while=20
->>> previous frame memory write happens
-> Also we specified numbers buffers as 3 to vb2 queue. So this is rare=20
-> case but to prevent issuing more than 2 at a time as VI HW is only=20
-> double buffered and syncpt fifo max depth is 2 added this to be safer.
+>>> codename  model name
+>>> rango  -> wrt3200acm
+>>> mamba  -> wrt1900ac
+>>> cobra  -> wrt1900ac-v2
+>>> caiman -> wrt1200ac
+>>> shelby -> wrt1900acs
+>>
+>> Hi Paul
+>>
+>> There was quite a bit of discussion about this when the first board
+>> was added. If i remember correctly, it was Mamba.
+>>
+>> Imre Kaloz, <kaloz@openwrt.org> was the one arguing for
+>> the name armada-xp-linksys-mamba.dts.
+>>
+>> So it seems that openwrt.org has now come full circle?
+> 
+> I talked with three currently active OpenWrt core developers and all
+> were in favor of a unification. I wasn't aware of any previous
+> discussions nor any pro arguments to keep code names.
+> 
+> I've added Imre via CC so maybe he can share his opinion, too.
+>>
+>>> This introduces some extra loops in OpenWrt, a distribution
+>>> specialized
+>>> on embedded Internet facing devices, as both codename and model
+>>> name are
+>>> used within the build system. The double naming requires developers
+>>> to
+>>> keep track of that mapping and introduces inconsistencies:
+>>>
+>>> To build a specific device in OpenWrt profiles are used, named
+>>> after the
+>>> the compatible string for targets using device tree (similar to how
+>>> .dts
+>>> files are named in the linux source tree). However, the first item
+>>> of
+>>> the DT `compatible` list in this case is `linksys,rango`, which is
+>>> inconsistent with the model name and not what common users would
+>>> expect.
+>>>
+>>> Such double naming complicates currently the automatic search for
+>>> firmware upgrade as the build system does not support such mapping.
+>>> Ideally the first item of the DT `compatible` list would contain a
+>>> string suitable to be used as a filename recognizable by normal
+>>> users to
+>>> belong to that device.
+>>> With this patch set the Linksys device tree files are moved from
+>>> containing the codename to contain a sanitized model name and also
+>>> use
+>>> it as first entry of the DT `compatible` list.
+>>
+>> I've no problems adding another compatible to the list. But i don't
+>> like the idea of renaming the files. The file names could be
+>> considered ABI! What installers/bootloaders are you going to break by
+>> renaming them?
+> 
+> Are you okay with adding the new compatible string as first element of
+> the list? This would already simplify the OpenWrt build system.
 
-To be more clear, when more buffers are enqueued from userspace always=20
-capture list will be full and thread will be busy in capture till either=20
-error or stop stream request happens.
-
+Having a mapping table between model names in OpenWrt profiles and .dts
+file names in the kernel sources is not that complicated to maintain,
+changing the kernel for that reason sounds a bit weak IMHO.
+-- 
+Florian
