@@ -2,84 +2,97 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7B3C2D0EA
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 15:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2E7C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 15:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BE46206F7
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 15:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D5C5206F5
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 15:46:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586360795;
+	bh=9Y31naY1EvKUzeBtNXH9yLcsi4Q9S83JSI6RN3kfVpY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gw3qZUXcAG7rcHQid7XAusKqb9VHQxfecNGwcv8fXQaG1cizdrvmR0iofOOzxii51
+	 6W2RyqHeJHq5FjMrTxt/MRlSn5X5oXxbhF/j1Szk5zR3aH7ZS4njOjcWrfqPLVP77D
+	 NBx+Fx87oGXCHUqWwVYwsnrmzl8ahaP3GIjcHdbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729678AbgDHPi6 (ORCPT
+        id S1729721AbgDHPqe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:38:58 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:22084 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729674AbgDHPi6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 11:38:58 -0400
-X-IronPort-AV: E=Sophos;i="5.72,359,1580742000"; 
-   d="scan'208";a="43920588"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 09 Apr 2020 00:38:57 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id DF4114004BDB;
-        Thu,  9 Apr 2020 00:38:52 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        Wed, 8 Apr 2020 11:46:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729690AbgDHPqd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Apr 2020 11:46:33 -0400
+Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1957221ED;
+        Wed,  8 Apr 2020 15:46:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586360792;
+        bh=9Y31naY1EvKUzeBtNXH9yLcsi4Q9S83JSI6RN3kfVpY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tsgcmjmKJvEsykOhbhneuXgALWi3DZUG6PeK6tKsuiCpyxAF0eRNcJQW+kOLQ23Jo
+         TiuMKmNUD04eGycwukqX37pEATv3blbXtUprAgSohyoGT/IjUULpxWsDlglsFYurNQ
+         IcV2ozRTLNNwG7Pijm3ZElFADoHObDJ4PrXz9SO0=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jMCuM-000cCV-3n; Wed, 08 Apr 2020 17:46:30 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        linux-rockchip@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v7 8/8] MAINTAINERS: Add file patterns for rcar PCI device tree bindings
-Date:   Wed,  8 Apr 2020 16:38:00 +0100
-Message-Id: <1586360280-10956-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586360280-10956-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1586360280-10956-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH 28/35] docs: dt: qcom,dwc3.txt: fix cross-reference for a converted file
+Date:   Wed,  8 Apr 2020 17:46:20 +0200
+Message-Id: <24b30222392569e7aa5d61d46642a4c38a964512.1586359676.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <cover.1586359676.git.mchehab+huawei@kernel.org>
+References: <cover.1586359676.git.mchehab+huawei@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add file pattern entry for rcar PCI devicetree binding, so that when
-people run ./scripts/get_maintainer.pl the rcar PCI maintainers could also
-be listed.
+The qcom-qusb2-phy.txt file was converted and renamed to yaml.
+Update cross-reference accordingly.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Fixes: 8ce65d8d38df ("dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bindings to yaml")
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/usb/qcom,dwc3.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3f0f2ee2af32..87df2d31a54b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12933,6 +12933,7 @@ L:	linux-pci@vger.kernel.org
- L:	linux-renesas-soc@vger.kernel.org
- S:	Maintained
- F:	drivers/pci/controller/*rcar*
-+F:	Documentation/devicetree/bindings/pci/*rcar*
+diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+index cb695aa3fba4..fbdd01756752 100644
+--- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+@@ -52,8 +52,8 @@ A child node must exist to represent the core DWC3 IP block. The name of
+ the node is not important. The content of the node is defined in dwc3.txt.
  
- PCI DRIVER FOR SAMSUNG EXYNOS
- M:	Jingoo Han <jingoohan1@gmail.com>
+ Phy documentation is provided in the following places:
+-Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt   - USB3 QMP PHY
+-Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt - USB2 QUSB2 PHY
++Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt    - USB3 QMP PHY
++Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml - USB2 QUSB2 PHY
+ 
+ Example device nodes:
+ 
 -- 
-2.20.1
+2.25.2
 
