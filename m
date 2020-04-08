@@ -2,92 +2,87 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B832C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0BAC2D0F4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5659220769
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54FCF20787
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 16:46:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728841AbgDHQe4 (ORCPT
+        id S1729373AbgDHQqf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 12:34:56 -0400
-Received: from mga06.intel.com ([134.134.136.31]:64601 "EHLO mga06.intel.com"
+        Wed, 8 Apr 2020 12:46:35 -0400
+Received: from mga11.intel.com ([192.55.52.93]:39188 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728789AbgDHQez (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Apr 2020 12:34:55 -0400
-IronPort-SDR: 1z5WKU1i8PA1wCz00rSehvj9v/pIjlJ7fAcVwomONCq2ro2FFFO51rPt1q1guMLDD4YvVROQT4
- lNqvIM17oprQ==
+        id S1729355AbgDHQqf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Apr 2020 12:46:35 -0400
+IronPort-SDR: 45bEa2gAHB2GdoaIEZORwqygpMww3NvW1OyoYRWU+JU6iClxYODD61/X2yzg2jJEtQRw8OYWeL
+ b5rF2WBY7NQQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 09:34:54 -0700
-IronPort-SDR: Tj0esvZQXAM9Yq184jUz+nd//ij61LzjJkaVIYkuBLRed76dq/sKDvbMJwGR/mCXPPvqkFrNZ4
- XPnKIv2mbIQg==
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 09:46:34 -0700
+IronPort-SDR: vnrR0SDm2xnMUZvyRTH4Ooy7MJySJhAdizG4leup9HxoJXjykfOP9niO3wUFsAJTh99vx3/vde
+ dZeaCFdP7EJg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,359,1580803200"; 
-   d="scan'208";a="452870041"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 08 Apr 2020 09:34:52 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jMDfC-00Gk7n-DL; Wed, 08 Apr 2020 19:34:54 +0300
-Date:   Wed, 8 Apr 2020 19:34:54 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     Maxime Ripard <maxime@cerno.tech>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Robert Foss <robert.foss@linaro.org>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
-Message-ID: <20200408163454.GG3676135@smile.fi.intel.com>
-References: <20200407123232.ktvaifhqntgzvkap@gilmour.lan>
- <CAG3jFysSrZJRE2TvL0bWoRFNnscgDGj8yGr-iwWBm4=1wMbJ9A@mail.gmail.com>
- <20200407163916.GL6127@valkosipuli.retiisi.org.uk>
- <CAAFQd5BGFB5znb9QyyPVL47kc809Ktu33bssvqg5eA-WwvMgOw@mail.gmail.com>
- <20200407172035.GM6127@valkosipuli.retiisi.org.uk>
- <20200408122127.i27hrmjh3pbjeulk@gilmour.lan>
- <CAAFQd5DNyQra-XksVaSfT_FCkOHTzm9mbn+tMd1vACV=pb9_8g@mail.gmail.com>
- <20200408134315.a7cemmto6bi26arg@gilmour.lan>
- <20200408152857.GO6127@valkosipuli.retiisi.org.uk>
- <20200408153051.GP6127@valkosipuli.retiisi.org.uk>
+   d="scan'208";a="425200141"
+Received: from pratuszn-mobl.ger.corp.intel.com (HELO localhost) ([10.252.40.202])
+  by orsmga005.jf.intel.com with ESMTP; 08 Apr 2020 09:46:24 -0700
+Date:   Wed, 8 Apr 2020 19:46:23 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
+Subject: Re: [PATCH v6 1/7] tpm: tpm_tis: Make implementation of read16
+ read32 write32 optional
+Message-ID: <20200408164623.GA33486@linux.intel.com>
+References: <20200407162044.168890-1-amirmizi6@gmail.com>
+ <20200407162044.168890-2-amirmizi6@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200408153051.GP6127@valkosipuli.retiisi.org.uk>
+In-Reply-To: <20200407162044.168890-2-amirmizi6@gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 06:30:51PM +0300, Sakari Ailus wrote:
-> On Wed, Apr 08, 2020 at 06:28:57PM +0300, Sakari Ailus wrote:
-> > On Wed, Apr 08, 2020 at 03:43:15PM +0200, Maxime Ripard wrote:
+On Tue, Apr 07, 2020 at 07:20:38PM +0300, amirmizi6@gmail.com wrote:
+> From: Amir Mizinski <amirmizi6@gmail.com>
+> 
+> Only tpm_tis can use memory mapped I/O, which is truly mapped into
+> the kernel's memory space. So using ioread16/ioread32/iowrite32 turn into a
+> straightforward pointer dereference.
+> Every other driver require more complicated operations to read more than 1
+> byte at a time and will just fall back to read_bytes/write_bytes.
+> Therefore, move this common code out of tpm_tis_spi into tpm_tis_core, so
+> that it is automatically used when low-level drivers do not implement the
+> specialized methods.
+> 
+> Co-developed-by: Alexander Steffen <Alexander.Steffen@infineon.com>
+> Signed-off-by: Alexander Steffen <Alexander.Steffen@infineon.com>
+> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-...
+Just noticed that the short summary is still wrong. As far as I remember
+I asked to fix it.
 
-> > No sensor driver I've seen has used clk_set_rate_exclusive() but I guess
-> > they should. The absence of practical problems has been probably because of
-> > two factors; firstly, these are typically clocks dedicated to the sensors
-> > and secondly, good luck.
+tpm: tpm_tis: Make implementation of read16 read32 write32 optional
 
-As I heard in another thread clk_*_exclusive() is quite a big hammer with a lot
-of side effects and if it can be avoided, it must be avoided.
+In English you put comma between enumerated things except for the last
+thing where you use and-conjuction. How hard is it seriously to write
+legit sentences?
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+/Jarkko
