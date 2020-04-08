@@ -2,89 +2,125 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34190C2BA80
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 10:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E4EC2D0EA
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 10:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0605E20753
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 10:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8772520747
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 10:55:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="HpNs0wdn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbgDHKfu (ORCPT
+        id S1728209AbgDHKzo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 06:35:50 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:43918 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgDHKfu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Apr 2020 06:35:50 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 248741A16DB;
-        Wed,  8 Apr 2020 12:35:49 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6BD031A0153;
-        Wed,  8 Apr 2020 12:35:43 +0200 (CEST)
-Received: from titan.ap.freescale.net (titan.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3334C40285;
-        Wed,  8 Apr 2020 18:35:36 +0800 (SGT)
-From:   Hui Song <hui.song_1@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Wed, 8 Apr 2020 06:55:44 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:54912 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgDHKzo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 06:55:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=w6dHPYMv2i9dm01SaFUvBAnpyuM/9O8Vy7ZNYT4fAcY=; b=HpNs0wdn7sIB4LHpoFt4EPV2v
+        ugIr1QFTho4/bn6ATMEWn/ThHaK3CzQqQX1yYflUUX7BTC4wiB+EmHxzWF0CJrly9cZK1uLca/RZs
+        /SbuAkNVXidImBiJRAWZ40Cf39MVWTyEkXLmYLqCza7ufVHCV3KO+QMqzNe4piJv7pYKWWv3St+BV
+        ir7kkXkdJkNpBkP0ycIJ/q+pejyz/D3ndwa02/VkX/z9OwGn5jb5IxUb95LK9+XEQ/5JHOmMZNmS+
+        /OizKNwKIM0oBYRYpDTTc0uohJEIOKRoXtBzSdxRCnW/JL30g5ZwWIT3PQv27Pj4tddYvUlHjjEud
+        IMX7H5geg==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:43136)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jM8Mn-0005RT-IU; Wed, 08 Apr 2020 11:55:33 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jM8Mk-0001mF-Ry; Wed, 08 Apr 2020 11:55:30 +0100
+Date:   Wed, 8 Apr 2020 11:55:30 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Hui Song <hui.song_1@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Song Hui <hui.song_1@nxp.com>
-Subject: [PATCH] gpio: mpc8xxx: Add shutdown function.
-Date:   Wed,  8 Apr 2020 18:21:18 +0800
-Message-Id: <20200408102118.17572-2-hui.song_1@nxp.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200408102118.17572-1-hui.song_1@nxp.com>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v1] gpio: mpc8xxx: Add shutdown function.
+Message-ID: <20200408105530.GR25745@shell.armlinux.org.uk>
 References: <20200408102118.17572-1-hui.song_1@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408102118.17572-1-hui.song_1@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
+On Wed, Apr 08, 2020 at 06:21:17PM +0800, Hui Song wrote:
+> From: Song Hui <hui.song_1@nxp.com>
+> 
+> The shutdown function needed to make interrupt handler to be NULL
+> when kexec execute.
+> 
+> Signed-off-by: Song Hui <hui.song_1@nxp.com>
 
-The shutdown function needed to make interrupt handler to be NULL
-when kexec execute.
+Please improve the commit message.  You describe what change the patch
+is making (which we can see from reading the patch), but you don't
+explain why it is necessary, or really what problem the patch is
+solving.  I'm not aware of other implementations needing this for
+kexec to work.
 
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
----
- drivers/gpio/gpio-mpc8xxx.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Thanks.
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 604dfec..a24e6c5 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -446,9 +446,21 @@ static int mpc8xxx_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int mpc8xxx_shutdown(struct platform_device *pdev)
-+{
-+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = platform_get_drvdata(pdev);
-+
-+	if (mpc8xxx_gc->irq) {
-+		irq_set_chained_handler_and_data(mpc8xxx_gc->irqn, NULL, NULL);
-+		irq_domain_remove(mpc8xxx_gc->irq);
-+	}
-+
-+	return 0;
-+}
- static struct platform_driver mpc8xxx_plat_driver = {
- 	.probe		= mpc8xxx_probe,
- 	.remove		= mpc8xxx_remove,
-+	.shutdown	= mpc8xxx_shutdown,
- 	.driver		= {
- 		.name = "gpio-mpc8xxx",
- 		.of_match_table	= mpc8xxx_gpio_ids,
+> ---
+>  drivers/gpio/gpio-mpc8xxx.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+> index 604dfec..a24e6c5 100644
+> --- a/drivers/gpio/gpio-mpc8xxx.c
+> +++ b/drivers/gpio/gpio-mpc8xxx.c
+> @@ -446,9 +446,21 @@ static int mpc8xxx_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static int mpc8xxx_shutdown(struct platform_device *pdev)
+> +{
+> +	struct mpc8xxx_gpio_chip *mpc8xxx_gc = platform_get_drvdata(pdev);
+> +
+> +	if (mpc8xxx_gc->irq) {
+> +		irq_set_chained_handler_and_data(mpc8xxx_gc->irqn, NULL, NULL);
+> +		irq_domain_remove(mpc8xxx_gc->irq);
+> +	}
+> +
+> +	return 0;
+> +}
+>  static struct platform_driver mpc8xxx_plat_driver = {
+>  	.probe		= mpc8xxx_probe,
+>  	.remove		= mpc8xxx_remove,
+> +	.shutdown	= mpc8xxx_shutdown,
+>  	.driver		= {
+>  		.name = "gpio-mpc8xxx",
+>  		.of_match_table	= mpc8xxx_gpio_ids,
+> -- 
+> 2.9.5
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
 -- 
-2.9.5
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
