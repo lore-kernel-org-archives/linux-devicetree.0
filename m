@@ -7,63 +7,62 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82ABBC2BA1B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554C1C2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C132075E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 261E520769
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:51:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IvFfKCEW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DD1bKhJP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730172AbgDHTvo (ORCPT
+        id S1730176AbgDHTvq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 15:51:44 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36706 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbgDHTvo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 15:51:44 -0400
-Received: by mail-lj1-f195.google.com with SMTP id b1so9036034ljp.3
-        for <devicetree@vger.kernel.org>; Wed, 08 Apr 2020 12:51:42 -0700 (PDT)
+        Wed, 8 Apr 2020 15:51:46 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45851 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbgDHTvq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 15:51:46 -0400
+Received: by mail-lf1-f65.google.com with SMTP id f8so6075094lfe.12
+        for <devicetree@vger.kernel.org>; Wed, 08 Apr 2020 12:51:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=CHVjRzMuuU310GbyJK/QLhuR1wLfy8v28XEG79WdtmY=;
-        b=IvFfKCEWvxdkNAYPSEVha/dK8zD5QE0gDPK02BSmFJKlvn8XlaQ0htmZgD4gBw83c8
-         3DTIjAB5biJaExkgbj2gj9kWsGPNvCIOWYW3mp5UG01Vp5dUfXxn7cYKc9nuaUNuk/Yv
-         2IVcoh7hAko20Oyh5udG1nh37+n+iQXHNJH6Q3g8HK76c7uK3Mt1EEg9MkZtEwbVyjaP
-         U9WYdYFfGd/Z8nQUPyVs7yi/yDAry7UJYeWYpEbu2mjZT+wTqVoqRI9A18FJYfAFTACD
-         b/xzV8uEepea49dQhA/I7NPeN9+dcPnrN+5mz49nApt6Pjcr7xoR+lB81T7CTk31R5Ar
-         nAYQ==
+        bh=724/lfLQXagg3iBwy3nhrx1mv6xJ9vurcClPnBGSmdI=;
+        b=DD1bKhJPg0YJyuw3KDAjtl5+8V/mS7cpL6VRrInSPwb5kCQ8fYVOCylh671+i+GgrO
+         aQ6IP9eVbZu/KFmbqWznIwLTxQz8j5OU9VUyys1AOgJ+sDm2dofFqFGyk9xucYwK/TMH
+         21kYkSIBXYDxbV9VEJF4hnCaSLMXMXEKVP5+c2eKF9iLOw8eFqNOQ3cKJanTtKs35CTy
+         muR5KYyVJ1N8CdvZoQWR1cZgxxzD/TDGPKjLgr4cGJfAyWFoXWqCzO//kiMgvKGgOnmp
+         VM0dWiEvRghrv8h7WB0DpNeSCxLJqBS/XzntnVPDzdi54bR91aYScMe7sjcv5n2xHjyr
+         R16w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=CHVjRzMuuU310GbyJK/QLhuR1wLfy8v28XEG79WdtmY=;
-        b=DMb4l65PrpCBePlbgcgJhujN2H8gF64Ks8z/bVDmW9yH8nWV0GtjJOevDpFVw05cgy
-         4qeKWT7GKJC5DpUzaiTzllQNkp68o9ugyFKFaDq8T3aJYdBAvss8ifRgwiDxSEP4pguz
-         3P9/FeG5iI5DjYiwqSNCoKZHQPvmkork/wVbdU21us5idgir4LvcjLPIiXf4ywHG412X
-         RPvasY7VMH9bnA4DfbdjZTNvpzUx+baGqlWBZeJrRt5MOseaTLs5g9ZL/jzNo89O8rye
-         WXjwmATzjh5j9ev5bCw7e09XD+5Z6wmGOer6cVD4m1M6laSrQ0HUa/v1fM/stGMCurnK
-         +ttw==
-X-Gm-Message-State: AGi0PubGLBYnH+cQCqlGGQ0C55jVltgv7WC0ahm4newX93uFeb3VCXLE
-        3sIeKYM89SdnwaPbjmR1ZrU=
-X-Google-Smtp-Source: APiQypJ91Q004ZE4tYA8kCFhDwIemmIQEr19HuL+SR8e46lWnuO2JTTvQhsVGrNkjq1rTlBhv1izXw==
-X-Received: by 2002:a2e:b611:: with SMTP id r17mr6172730ljn.62.1586375502082;
-        Wed, 08 Apr 2020 12:51:42 -0700 (PDT)
+        bh=724/lfLQXagg3iBwy3nhrx1mv6xJ9vurcClPnBGSmdI=;
+        b=dpHmyo9uNatlcur076nsg0dMsLwKje07TfamOUbDuXWd5eW1brAibySIHMn0QgMsEJ
+         fd6lLkwjV0ilw5actc7jCgLewYhMFFM4xNPh4qIcwJBQf0NbzVHhKLzP4BcjDbi8pg+h
+         efxsR1A7o1IvF8M9leouRu68Y6okZ1Bxbl02YZLAQb3Ni0zDqUtDMI2TyFR/duVDGkP3
+         liyvG0quLyAhMvcQMuUKLB0ZoCKDJp8QTzh0R26enE6Fut4hk4SNuugdtO4BN5ifE07s
+         2plMWDpmg0LkuT3sgOuQZKvf6hereIhwtRUvf8pQqC1WfHCQi1g7y1aRA2Dzo429+vm9
+         lC4Q==
+X-Gm-Message-State: AGi0Puby7qQecAAezRYiYpmoeq9H99XP98UCf1ou2WE3LJLV5U+ndBjD
+        USOMt/1/akc5DO2wiZ38nro=
+X-Google-Smtp-Source: APiQypKyZ+P2VTnHN61mAiyG/8Kk7/dsCVnRJle8luKRqOOJ0Det3YcWnuGUAQcR129tK+Bst+f/Bg==
+X-Received: by 2002:ac2:5192:: with SMTP id u18mr5501184lfi.114.1586375503698;
+        Wed, 08 Apr 2020 12:51:43 -0700 (PDT)
 Received: from saturn.lan (18.158-248-194.customer.lyse.net. [158.248.194.18])
-        by smtp.gmail.com with ESMTPSA id i20sm3961304lfe.15.2020.04.08.12.51.39
+        by smtp.gmail.com with ESMTPSA id i20sm3961304lfe.15.2020.04.08.12.51.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 12:51:40 -0700 (PDT)
+        Wed, 08 Apr 2020 12:51:42 -0700 (PDT)
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     dri-devel@lists.freedesktop.org,
         Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v2 02/36] dt-bindings: display: look for dsi* nodes in dsi-controller
-Date:   Wed,  8 Apr 2020 21:50:35 +0200
-Message-Id: <20200408195109.32692-3-sam@ravnborg.org>
+Cc:     Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH v2 03/36] dt-bindings: display: add te-gpios to panel-common
+Date:   Wed,  8 Apr 2020 21:50:36 +0200
+Message-Id: <20200408195109.32692-4-sam@ravnborg.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200408195109.32692-1-sam@ravnborg.org>
 References: <20200408195109.32692-1-sam@ravnborg.org>
@@ -74,44 +73,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rob wrote:
-
-    Uhhh, it's looking for dsi-controller(@.*)? which is not the common
-    case found in dts files. We should fix that to dsi(@.*)?.
-
-See: https://lore.kernel.org/dri-devel/20200319032222.GK29911@bogus/
-
-Fix it.
+Several bindings specifies a "te-gpios" for tearing effect signal.
+Add this to panel-common so we have a shared definition.
 
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Sam Ravnborg <sam@ravnborg.org>
 ---
- Documentation/devicetree/bindings/display/dsi-controller.yaml | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/display/panel/panel-common.yaml    | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/dsi-controller.yaml b/Documentation/devicetree/bindings/display/dsi-controller.yaml
-index fd986c36c737..85b71b1fd28a 100644
---- a/Documentation/devicetree/bindings/display/dsi-controller.yaml
-+++ b/Documentation/devicetree/bindings/display/dsi-controller.yaml
-@@ -28,7 +28,7 @@ description: |
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+index dd97907a7450..17b8367f12dd 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
++++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+@@ -124,6 +124,13 @@ properties:
+       while active. Active high reset signals can be supported by inverting the
+       GPIO specifier polarity flag.
  
- properties:
-   $nodename:
--    pattern: "^dsi-controller(@.*)?$"
-+    pattern: "^dsi(@.*)?$"
- 
-   "#address-cells":
-     const: 1
-@@ -76,7 +76,7 @@ patternProperties:
- examples:
-   - |
-     #include <dt-bindings/gpio/gpio.h>
--    dsi-controller@a0351000 {
-+    dsi@a0351000 {
-         reg = <0xa0351000 0x1000>;
-         #address-cells = <1>;
-         #size-cells = <0>;
++  te-gpios:
++    maxItems: 1
++    description:
++      GPIO spec for the tearing effect synchronization signal.
++      The tearing effect signal is active high. Active low signals can be
++      supported by inverting the GPIO specifier polarity flag.
++
+   # Power
+   power-supply:
+     description:
 -- 
 2.20.1
 
