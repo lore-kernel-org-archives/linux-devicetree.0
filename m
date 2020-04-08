@@ -2,220 +2,379 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B9DC2BB86
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 12:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5E2C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 12:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1872076D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 12:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C00942083E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 12:25:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="y3G6SnJR";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TQl2L42O"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="eLn6fGZR";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DOTxIYX3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbgDHMVd (ORCPT
+        id S1728468AbgDHMZ0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 08:21:33 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:41657 "EHLO
+        Wed, 8 Apr 2020 08:25:26 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:37259 "EHLO
         wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726726AbgDHMVc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 08:21:32 -0400
+        by vger.kernel.org with ESMTP id S1727897AbgDHMZZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 08:25:25 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id B437763A;
-        Wed,  8 Apr 2020 08:21:30 -0400 (EDT)
+        by mailout.west.internal (Postfix) with ESMTP id F345C6CF;
+        Wed,  8 Apr 2020 08:25:23 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 08 Apr 2020 08:21:31 -0400
+  by compute4.internal (MEProxy); Wed, 08 Apr 2020 08:25:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=eKznV0EiL5YFZpOgXi3T6SWekp5
-        tEc/i2dZyn4lI7YQ=; b=y3G6SnJRMJ7Tk4hZZx8sIMN5la8gvlHS+CaUAFWbE3X
-        /Vb1XWbWYfkKhtxebVqYJ28/vxzsg9bDLTHLMF5NNUEchjO6ds+4093X8CA1fUOE
-        EHR+572XFc7A0MXPnVB3u86Tkz+wG2W5XTYU7WYQw8gF0voKc8ZpjzwTbChCTWTK
-        C6xQaYhb9zlPXoFQkR2UvLJgiiH4vt/8Pk06capoTJbfCKcmhGpJGLTSIuMZinxt
-        OGisGKVFqkNAooHR5EpCgsJMCT0uzr2qWH02sjI5fSX+6h06V2Qxu1K0EZibOult
-        bM2Evg+B1ocQxjnBZbuV3oFN0owIz3CIDriO4IQWFOA==
+        :content-type:in-reply-to; s=fm2; bh=8vo38O6sA+xkasIwGUJvtsuzqb0
+        ZaQOwPwmgXDv4Ls8=; b=eLn6fGZR5LODqZt1yExKILfX1kagp9IBT1RM1EYQqCp
+        aXPu42DYCROpYxjD19eBSDoGSZOFYRDXzdb4GTjTElzdEIxzybo7A2jRnBAyUvvN
+        /luWioZAK1Qct9+z5u3xdz8DYSoLRDzdarM7sePPRber6qGrMuGUlhPj9af9XsxW
+        zlE0fbC3ZoK0qezcqIFf30qrwQewfR+yTQVcLPWg1GEvf9pcKXTdXMpYpnWcsGnY
+        2p7CrutpOxnfGsWm7fNDfK7UXR7KXTCmZLN0X22oxrielBvONJRkfwSnIpLiosvX
+        CtjI4/1BFK881HBvOQkUhAlzR5TQYdlwQZhQJG81PvA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=eKznV0
-        EiL5YFZpOgXi3T6SWekp5tEc/i2dZyn4lI7YQ=; b=TQl2L42OzyQBtTjJNcWyY+
-        6qxikGDjDfVNQeb+XwsoquQq8fWGCGjYNLNl6PKednklRaBcGAyDfZCkOy9ztUrW
-        YcP3egDOwtqd16/APpKmN0q30nLytvNlrW0HCgll5rw23Om7DBUC6IGg1wC0N8zP
-        bCBhKW9Ce1cjW0HhMGBG74BTC+ciyyFMyFzVf0NRg5TM1/AoK0ygYwPVJaCy4tJl
-        BCjfVPqjCqIuMrhbEQvikJvhUa50KcdEPNROeQfLMn+sjTXCqzhm4k4eqHZr3M6X
-        i0vY9VY8D2pgkRW6E43i18wE1dkrze4/pPlO/9hlgWfim2yw2j8z6h/nDW9k6akA
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=8vo38O
+        6sA+xkasIwGUJvtsuzqb0ZaQOwPwmgXDv4Ls8=; b=DOTxIYX3ycrg4TR0Hnv9av
+        4obxzvxtqcwtnhmhYYKwRCBusrKQAIWuhXX+lLHcH2Z/kPp0/jflyJwShvLQ9XV1
+        GL9XG7Dpa+0CUcSzBfzXOeWjkh2ZBSysqzm2BDmGpYo1zs58GWtbIn+T2+/yquLe
+        DcLY4yYhNp/KeDaJ5uShauLFQO9ygj44v1VEnEkTHfHtuyBSDNBNcs9um8Ji9qBC
+        suiDHjkirQ8qdgJvLlqjxr5HNf6UrY8IC7seZPL2wDvegQI/mU5x5Zs+L9kHx1+J
+        sqhgqotYulQ+/wYW02U+7LiY7Wix/bVYAE6Zs1dfU7mo8AOCVrBHlovIvBYl9hFA
         ==
-X-ME-Sender: <xms:ycGNXtk1MzxgRg_KwThRKNaXvYijIRp1Zw8jodCfG5omNEiJ_ZkO1g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudejgdehudcutefuodetggdotefrodftvf
+X-ME-Sender: <xms:scKNXt7E-iPgqddR1AyuFT6Rrpptg3qJfbmNIsp1SOzLXBKwQAeWZg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudejgdehvdcutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
     ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
-    epkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgv
-    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnh
-    hordhtvggthh
-X-ME-Proxy: <xmx:ycGNXiXGq7FhPt5qpuT2E7PiP8wjLoHZh8iRn3_qd8v_U-emvXZPiQ>
-    <xmx:ycGNXn7I9-wlrv7qgD9ALd8iWNxZl1FRz0VnrEpLVUH-HpaEY5aEPQ>
-    <xmx:ycGNXlLcRgosgpvrJyurZmT3IKu8F0Nkr6FbI1qfigopqq7VvZTW8A>
-    <xmx:ysGNXk8puO2wGE6Qy3VjvwYey2vezEq3FSeB8yA2jO-2-GP_bCsHVg>
+    epuggvvhhitggvthhrvggvrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvse
+    gtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:scKNXl1lfS4oWPVaDxJkCTR8nZ178iyN5dac95PYKZJ60BddIc9EDw>
+    <xmx:scKNXjctOppE9whi1P_r7ratHJvRLUiL9eh2AXjL6DU5K39UP0tz0g>
+    <xmx:scKNXreu5k5w2l-npDmwl4B574tZn9_YPuZ4YPK3el4npoBxTuiVuA>
+    <xmx:s8KNXv0EPTmAUR4sFib5OvVNi8f4TD3z3YiWA9uEFOSE0bznXjFD1g>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4EDE33280070;
-        Wed,  8 Apr 2020 08:21:29 -0400 (EDT)
-Date:   Wed, 8 Apr 2020 14:21:27 +0200
+        by mail.messagingengine.com (Postfix) with ESMTPA id E29B43280097;
+        Wed,  8 Apr 2020 08:25:20 -0400 (EDT)
+Date:   Wed, 8 Apr 2020 14:25:19 +0200
 From:   Maxime Ripard <maxime@cerno.tech>
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Robert Foss <robert.foss@linaro.org>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
-Message-ID: <20200408122127.i27hrmjh3pbjeulk@gilmour.lan>
-References: <20200403232736.GA6127@valkosipuli.retiisi.org.uk>
- <20200404093446.vuvwrhn5436h4d3s@gilmour.lan>
- <20200406083506.GE6127@valkosipuli.retiisi.org.uk>
- <20200407083647.4mocdl7aqa3x737q@gilmour.lan>
- <CAG3jFyvd32pWppubMoOoyH9eO2XLjwUXMC7p4xtv8m+JkPv6vw@mail.gmail.com>
- <20200407123232.ktvaifhqntgzvkap@gilmour.lan>
- <CAG3jFysSrZJRE2TvL0bWoRFNnscgDGj8yGr-iwWBm4=1wMbJ9A@mail.gmail.com>
- <20200407163916.GL6127@valkosipuli.retiisi.org.uk>
- <CAAFQd5BGFB5znb9QyyPVL47kc809Ktu33bssvqg5eA-WwvMgOw@mail.gmail.com>
- <20200407172035.GM6127@valkosipuli.retiisi.org.uk>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mark Yao <mark.yao@rock-chips.com>,
+        Sandy Huang <hjc@rock-chips.com>, Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH/RFC 4/6] dt-bindings: display: rockchip: dw-hdmi: Convert
+ binding to YAML
+Message-ID: <20200408122519.epxtptdjlhkj3kru@gilmour.lan>
+References: <20200405233935.27599-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20200405233935.27599-5-laurent.pinchart+renesas@ideasonboard.com>
+ <20200406080032.zlszhkjqmjeoa4ti@gilmour.lan>
+ <20200406111927.GD4757@pendragon.ideasonboard.com>
+ <20200406170915.x2ztz4q446h6vx2y@gilmour.lan>
+ <20200406175028.GI16885@pendragon.ideasonboard.com>
+ <20200407071251.npibrmzywiyigu2a@gilmour.lan>
+ <20200408114552.GC4881@pendragon.ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kc7rymy56ghls6sm"
+        protocol="application/pgp-signature"; boundary="l22va4dilhq2lzki"
 Content-Disposition: inline
-In-Reply-To: <20200407172035.GM6127@valkosipuli.retiisi.org.uk>
+In-Reply-To: <20200408114552.GC4881@pendragon.ideasonboard.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---kc7rymy56ghls6sm
+--l22va4dilhq2lzki
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Apr 07, 2020 at 08:20:35PM +0300, Sakari Ailus wrote:
-> On Tue, Apr 07, 2020 at 06:46:06PM +0200, Tomasz Figa wrote:
-> > On Tue, Apr 7, 2020 at 6:40 PM Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> > >
-> > > On Tue, Apr 07, 2020 at 05:47:41PM +0200, Robert Foss wrote:
-> > > > On Tue, 7 Apr 2020 at 14:32, Maxime Ripard <maxime@cerno.tech> wrote:
-> > > > >
-> > > > > Hi Robert,
-> > > > >
-> > > > > On Tue, Apr 07, 2020 at 01:29:05PM +0200, Robert Foss wrote:
-> > > > > > On Tue, 7 Apr 2020 at 10:36, Maxime Ripard <maxime@cerno.tech> wrote:
-> > > > > > > On Mon, Apr 06, 2020 at 11:35:07AM +0300, Sakari Ailus wrote:
-> > > > > > > > > But that 19.2MHz is not a limitation of the device itself, it's a
-> > > > > > > > > limitation of our implementation, so we can instead implement
-> > > > > > > > > something equivalent in Linux using a clk_set_rate to 19.2MHz (to make
-> > > > > > > > > sure that our parent clock is configured at the right rate) and the
-> > > > > > > > > clk_get_rate and compare that to 19.2MHz (to make sure that it's not
-> > > > > > > > > been rounded too far apart from the frequency we expect).
-> > > > > > > > >
-> > > > > > > > > This is doing exactly the same thing, except that we don't encode our
-> > > > > > > > > implementation limitations in the DT, but in the driver instead.
-> > > > > > > >
-> > > > > > > > What I really wanted to say that a driver that doesn't get the clock
-> > > > > > > > frequency from DT but still sets that frequency is broken.
-> > > > > > > >
-> > > > > > > > This frequency is highly system specific, and in many cases only a certain
-> > > > > > > > frequency is usable, for a few reasons: On many SoCs, not all common
-> > > > > > > > frequencies can be used (e.g. 9,6 MHz, 19,2 MHz and 24 MHz; while others
-> > > > > > > > are being used as well), and then that frequency affects the usable CSI-2
-> > > > > > > > bus frequencies directly --- and of those, only safe, known-good ones
-> > > > > > > > should be used. IOW, getting the external clock frequency wrong typically
-> > > > > > > > has an effect that that none of the known-good CSI-2 bus clock frequencies
-> > > > > > > > are available.
-> > > > > > >
-> > > > > > > So clock-frequency is not about the "Frequency of the xvclk clock in
-> > > > > > > Hertz", but the frequency at which that clock must run on this
-> > > > > > > particular SoC / board to be functional?
-> > > > > > >
-> > > > > > > If so, then yeah, we should definitely keep it, but the documentation
-> > > > > > > of the binding should be made clearer as well.
-> > > > > >
-> > > > > > Alright so, let me summarise the desired approach then.
-> > > > >
-> > > > > There's a separate discussion on the same topic here:
-> > > > > https://lore.kernel.org/linux-media/20200407122106.GD4751@pendragon.ideasonboard.com/
-> > > >
-> > > > Thanks for the link.
-> > > >
-> > > > >
-> > > > > > ACPI:
-> > > > > >   - Fetch the "clock-frequency" property
-> > > > > >   - Verify it to be 19.2Mhz
-> > > > > >
-> > > > > > DT:
-> > > > > >   - Fetch the "clock-frequency" property
-> > > > > >   - Verify it to be 19.2Mhz
-> > > > > >   - Get xvclk clock
-> > > > > >   - Get xvclk clock rate
-> > > > > >   - Verify xvclk clock rate to be 19.2Mhz
-> > > > >
-> > > > > The current status is that you should
-> > > > > 's/clock-frequency/link-frequencies/', and in order to replace
-> > > > > assigned-clock-rates, you'll want to have a clk_set_rate to 19.2MHz
-> > > > > between steps 3 and 4
-> > > >
-> > > > Would we want to 's/clock-frequency/link-frequencies/' for ACPI too?
-> > > > I imagine that would cause some breakage.
-> > >
-> > > It would, yes, and it would be no more correct on DT either.
-> > >
-> > > There are basically two possibilities here; either use the clock-frequency
-> > > property and set the frequency, or rely on assigned-clock-rates, and get
-> > > the frequency instead.
-> > >
-> > > The latter, while I understand it is generally preferred, comes with having
-> > > to figure out the register list set that closest matches the frequency
-> > > obtained. The former generally gets around this silently by the clock
-> > > driver setting the closest frequency it can support.
-> >
-> > Wouldn't the former actually cause problems, because the closest
-> > frequency the clock driver can support could be pretty far from the
-> > one requested? (E.g. 19.2 MHz vs 24 MHz) The driver needs to check the
-> > resulting frequency anyway.
+On Wed, Apr 08, 2020 at 02:45:52PM +0300, Laurent Pinchart wrote:
+> Hi Maxime,
 >
-> That's possible, yes; in this case there wouldn't be a guarantee the
-> frequency wouldn't be far off.
+> On Tue, Apr 07, 2020 at 09:12:51AM +0200, Maxime Ripard wrote:
+> > On Mon, Apr 06, 2020 at 08:50:28PM +0300, Laurent Pinchart wrote:
+> > > On Mon, Apr 06, 2020 at 07:09:15PM +0200, Maxime Ripard wrote:
+> > > > On Mon, Apr 06, 2020 at 02:19:27PM +0300, Laurent Pinchart wrote:
+> > > > > On Mon, Apr 06, 2020 at 10:00:32AM +0200, Maxime Ripard wrote:
+> > > > > > On Mon, Apr 06, 2020 at 02:39:33AM +0300, Laurent Pinchart wrote:
+> > > > > > > Convert the Rockchip HDMI TX text binding to YAML.
+> > > > > > >
+> > > > > > > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > > > > > > ---
+> > > > > > >  .../display/rockchip/dw_hdmi-rockchip.txt     |  74 --------
+> > > > > > >  .../display/rockchip/rockchip,dw-hdmi.yaml    | 178 ++++++++++++++++++
+> > > > > > >  2 files changed, 178 insertions(+), 74 deletions(-)
+> > > > > > >  delete mode 100644 Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+> > > > > > >  create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
+> > > > > > >
+> > > > > > > diff --git a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+> > > > > > > deleted file mode 100644
+> > > > > > > index 3d32ce137e7f..000000000000
+> > > > > > > --- a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+> > > > > > > +++ /dev/null
+> > > > > > > @@ -1,74 +0,0 @@
+> > > > > > > -Rockchip DWC HDMI TX Encoder
+> > > > > > > -============================
+> > > > > > > -
+> > > > > > > -The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
+> > > > > > > -with a companion PHY IP.
+> > > > > > > -
+> > > > > > > -These DT bindings follow the Synopsys DWC HDMI TX bindings defined in
+> > > > > > > -Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt with the
+> > > > > > > -following device-specific properties.
+> > > > > > > -
+> > > > > > > -
+> > > > > > > -Required properties:
+> > > > > > > -
+> > > > > > > -- compatible: should be one of the following:
+> > > > > > > -		"rockchip,rk3228-dw-hdmi"
+> > > > > > > -		"rockchip,rk3288-dw-hdmi"
+> > > > > > > -		"rockchip,rk3328-dw-hdmi"
+> > > > > > > -		"rockchip,rk3399-dw-hdmi"
+> > > > > > > -- reg: See dw_hdmi.txt.
+> > > > > > > -- reg-io-width: See dw_hdmi.txt. Shall be 4.
+> > > > > > > -- interrupts: HDMI interrupt number
+> > > > > > > -- clocks: See dw_hdmi.txt.
+> > > > > > > -- clock-names: Shall contain "iahb" and "isfr" as defined in dw_hdmi.txt.
+> > > > > > > -- ports: See dw_hdmi.txt. The DWC HDMI shall have a single port numbered 0
+> > > > > > > -  corresponding to the video input of the controller. The port shall have two
+> > > > > > > -  endpoints, numbered 0 and 1, connected respectively to the vopb and vopl.
+> > > > > > > -- rockchip,grf: Shall reference the GRF to mux vopl/vopb.
+> > > > > > > -
+> > > > > > > -Optional properties
+> > > > > > > -
+> > > > > > > -- ddc-i2c-bus: The HDMI DDC bus can be connected to either a system I2C master
+> > > > > > > -  or the functionally-reduced I2C master contained in the DWC HDMI. When
+> > > > > > > -  connected to a system I2C master this property contains a phandle to that
+> > > > > > > -  I2C master controller.
+> > > > > > > -- clock-names: See dw_hdmi.txt. The "cec" clock is optional.
+> > > > > > > -- clock-names: May contain "cec" as defined in dw_hdmi.txt.
+> > > > > > > -- clock-names: May contain "grf", power for grf io.
+> > > > > > > -- clock-names: May contain "vpll", external clock for some hdmi phy.
+> > > > > > > -- phys: from general PHY binding: the phandle for the PHY device.
+> > > > > > > -- phy-names: Should be "hdmi" if phys references an external phy.
+> > > > > > > -
+> > > > > > > -Optional pinctrl entry:
+> > > > > > > -- If you have both a "unwedge" and "default" pinctrl entry, dw_hdmi
+> > > > > > > -  will switch to the unwedge pinctrl state for 10ms if it ever gets an
+> > > > > > > -  i2c timeout.  It's intended that this unwedge pinctrl entry will
+> > > > > > > -  cause the SDA line to be driven low to work around a hardware
+> > > > > > > -  errata.
+> > > > > > > -
+> > > > > > > -Example:
+> > > > > > > -
+> > > > > > > -hdmi: hdmi@ff980000 {
+> > > > > > > -	compatible = "rockchip,rk3288-dw-hdmi";
+> > > > > > > -	reg = <0xff980000 0x20000>;
+> > > > > > > -	reg-io-width = <4>;
+> > > > > > > -	ddc-i2c-bus = <&i2c5>;
+> > > > > > > -	rockchip,grf = <&grf>;
+> > > > > > > -	interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > > > -	clocks = <&cru  PCLK_HDMI_CTRL>, <&cru SCLK_HDMI_HDCP>;
+> > > > > > > -	clock-names = "iahb", "isfr";
+> > > > > > > -	ports {
+> > > > > > > -		hdmi_in: port {
+> > > > > > > -			#address-cells = <1>;
+> > > > > > > -			#size-cells = <0>;
+> > > > > > > -			hdmi_in_vopb: endpoint@0 {
+> > > > > > > -				reg = <0>;
+> > > > > > > -				remote-endpoint = <&vopb_out_hdmi>;
+> > > > > > > -			};
+> > > > > > > -			hdmi_in_vopl: endpoint@1 {
+> > > > > > > -				reg = <1>;
+> > > > > > > -				remote-endpoint = <&vopl_out_hdmi>;
+> > > > > > > -			};
+> > > > > > > -		};
+> > > > > > > -	};
+> > > > > > > -};
+> > > > > > > diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
+> > > > > > > new file mode 100644
+> > > > > > > index 000000000000..8ff544ae0ac2
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
+> > > > > > > @@ -0,0 +1,178 @@
+> > > > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > > > > +%YAML 1.2
+> > > > > > > +---
+> > > > > > > +$id: http://devicetree.org/schemas/display/rockchip/rockchip,dw-hdmi.yaml#
+> > > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > > > +
+> > > > > > > +title: Rockchip DWC HDMI TX Encoder
+> > > > > > > +
+> > > > > > > +maintainers:
+> > > > > > > +  - Mark Yao <mark.yao@rock-chips.com>
+> > > > > > > +
+> > > > > > > +description: |
+> > > > > > > +  The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
+> > > > > > > +  with a companion PHY IP.
+> > > > > > > +
+> > > > > > > +allOf:
+> > > > > > > +  - $ref: ../bridge/synopsys,dw-hdmi.yaml#
+> > > > > > > +
+> > > > > > > +properties:
+> > > > > > > +  compatible:
+> > > > > > > +    enum:
+> > > > > > > +      - rockchip,rk3228-dw-hdmi
+> > > > > > > +      - rockchip,rk3288-dw-hdmi
+> > > > > > > +      - rockchip,rk3328-dw-hdmi
+> > > > > > > +      - rockchip,rk3399-dw-hdmi
+> > > > > > > +
+> > > > > > > +  reg: true
+> > > > > > > +
+> > > > > > > +  reg-io-width:
+> > > > > > > +    const: 4
+> > > > > > > +
+> > > > > > > +  clocks:
+> > > > > > > +    minItems: 2
+> > > > > > > +    maxItems: 5
+> > > > > > > +    items:
+> > > > > > > +      - description: The bus clock for either AHB and APB
+> > > > > > > +      - description: The internal register configuration clock
+> > > > > > > +      - description: The HDMI CEC controller main clock
+> > > > > > > +      - description: Power for GRF IO
+> > > > > > > +      - description: External clock for some HDMI PHY
+> > > > > > > +
+> > > > > > > +  clock-names:
+> > > > > > > +    minItems: 2
+> > > > > > > +    maxItems: 5
+> > > > > > > +    items:
+> > > > > > > +      - const: iahb
+> > > > > > > +      - const: isfr
+> > > > > > > +      - enum:
+> > > > > > > +        - cec
+> > > > > > > +        - grf
+> > > > > > > +        - vpll
+> > > > > > > +      - enum:
+> > > > > > > +        - cec
+> > > > > > > +        - grf
+> > > > > > > +        - vpll
+> > > > > > > +      - enum:
+> > > > > > > +        - cec
+> > > > > > > +        - grf
+> > > > > > > +        - vpll
+> > > > > >
+> > > > > > IIRC Rob wanted us to standardize the order of the clocks if possible,
+> > > > > > since it's a pain to support properly here, and your description won't
+> > > > > > match what you describe here either (and in general it's just a best
+> > > > > > practice), so if all your DTs have the same order you should just set
+> > > > > > that order in stone.
+> > > > >
+> > > > > But how do we handle the case where any of the cec, grf and vpll clocks
+> > > > > can be set ? Assuming, for instance, that
+> > > > >
+> > > > > 	clock-names = "iahb", "isfr", "cec";
+> > > > > 	clock-names = "iahb", "isfr", "vpll";
+> > > > > 	clock-names = "iahb", "isfr", "cec", "vpll";
+> > > > >
+> > > > > would all be valid.
+> > > >
+> > > > It would be painful then...
+> > > >
+> > > > The easiest way to do so would be to simply use an enum there, and not
+> > > > bother checking the array at all. You'll get a warning if there's
+> > > > multiple occurences of the same string, and I guess that's what you
+> > > > would be really concerned about.
+> > > >
+> > > > However, now that I think about it, what's the interaction between the
+> > > > generic binding and this one when it comes to the third clock? The
+> > > > generic one expects it to be cec, and here you have other options?
+> > >
+> > > I'm not too familiar with the platform, but as far as I understand, any
+> > > of the cec, grf and vpll clock is optional (if someone could confirm
+> > > that, it would be useful). I don't care so much about the order, but
+> > > iahb and isfr are mandatory, and thus need to be specified as two const
+> > > items in the beginning as far as I understand. It would be nice to set
+> > > something along the lines of
+> > >
+> > >   minItems: 2
+> > >   maxItems: 5
+> > >   items:
+> > >     - const: iahb
+> > >     - const: isfr
+> > >     - enum:
+> > >       - cec
+> > >       - grf
+> > >       - vpll
+> >
+> > I guess you could do something like:
+> >
+> > in the generic schema:
+> >
+> > clock-names:
+> >   allOf:
+> >     - minItems: 2
+> >     - enum:
+> >        - iahb
+> >        - isfr
+> >        - cec
+> >       additonalItems: true
+> >     - items:
+> >       - iahb
+> >       - isfr
+> >
+> > Or something along those lines, I haven't tested it, but the basic
+> > idea is that you want to enforce that:
+> >   a) there's a minimum of two clocks
+> >   b) valid clock names are iahb, isfr and cec, but we will allow more
+> >   c) the first two clocks are iahb and isfr
+>
+> Interesting idea. I've tried
+>
+>   clock-names:
+>     allOf:
+>       - minItems: 2
+>       - enum:
+>         - iahb
+>         - isfr
+>         - cec
+>         additionalItems: true
+>       - items:
+>         - const: iahb
+>         - const: isfr
+>
+> in the base synopsys,dw-hdmi.yaml schema, and
+>
+>   clock-names:
+>     maxItems: 2
+>
+> in renesas,dw-hdmi.yaml, which resulted in the following validation
+> errors:
+>
+> Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.example.dt.yaml: hdmi@fead0000: clock-names: ['iahb', 'isfr'] is too long
+>
+> This is caused by the enum entry.
 
-assigned-clock-rates is really fragile... There's zero guarantee on
-how far the actual rate is going to be from the asked one, but more
-importantly you have zero guarantee on the time frame that rate is
-going to be enforced for.
+What happens if you have instead of
+- enum:
+ ...
 
-It's simply going to change the rate as a one-off thing, and if
-there's the next millisecond someone else is going to change its rate
-one way or another, it's going to do so and you won't have any
-notification.
-
-And even semantically, they do not share the same meaning at all, so
-we should really stop using assigned-clock-rates if we can, instead of
-pushing it.
+- items:
+    enum:
+      ...
 
 Maxime
 
---kc7rymy56ghls6sm
+--l22va4dilhq2lzki
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXo3BxwAKCRDj7w1vZxhR
-xWhbAP9X25KKaNSaUW1/Jij1L0q+JM7MlxgflP4JGoAWoYhzEwEA0p3y5pIaWdWz
-0+7krLCpqDit6ypGh6H5SOeFZ2zpgAw=
-=IwZI
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXo3CrwAKCRDj7w1vZxhR
+xbN6AQCc7buFuL3P6jm4pyv9ceyGeJhEgt4bqFOZZ++nvyTYwQEA3ZYo85jvEsgT
+ebGqvMfxeH3sWoAdVasUC+Ku+ff5eQ8=
+=L4B2
 -----END PGP SIGNATURE-----
 
---kc7rymy56ghls6sm--
+--l22va4dilhq2lzki--
