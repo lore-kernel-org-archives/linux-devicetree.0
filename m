@@ -7,227 +7,234 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C97D0C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B361CC38A2D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CF7620936
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DCA620784
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 19:52:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ioDaWnCB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vJCodok9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730271AbgDHTwW (ORCPT
+        id S1730269AbgDHTwQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 15:52:22 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41850 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730270AbgDHTwV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 15:52:21 -0400
-Received: by mail-lf1-f67.google.com with SMTP id z23so6109011lfh.8
-        for <devicetree@vger.kernel.org>; Wed, 08 Apr 2020 12:52:19 -0700 (PDT)
+        Wed, 8 Apr 2020 15:52:16 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33688 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730241AbgDHTwP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 15:52:15 -0400
+Received: by mail-lj1-f196.google.com with SMTP id q22so5253825ljg.0
+        for <devicetree@vger.kernel.org>; Wed, 08 Apr 2020 12:52:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VJCCkRIdQYZizf3lrj9PmXMBXsnQM3CNWOz+i68b5qs=;
-        b=ioDaWnCBdekR5Uypkvp87fPf4bKJMGHIPurqS6rJwzGNrZtdwBS7Zxch4a7PKgxkXN
-         t1oeMHRrRDQmNJVweBUgYnMyupHxdidXPOR7CDTnvp0GAdNIg2Wm9mevleve2AT2kq7i
-         8QWozhl+s4iO1DXIjUDYnwYKNa5RVgNmLba+rBweF4aQb7s07wDXbKqJJhPY37EMeoqX
-         yF9f6tdGZ0yS6m3cIUZFk7uJIftWEtiqRHZ6LiYFWm7Fm9hvjRPEB/qH5Ch1wgtueALA
-         deT9tGAZprpHlRFhXk9O/TiCh1m9PPE9h3jQ0puWydDuBDcpsgzjgrA489O/r/oAltMR
-         DQ8g==
+        bh=suEzlqh4afqhEw2Ww2mplEXF7wOhnfd4sMyHNvHCYpk=;
+        b=vJCodok97LC8P6Lvhb5ZqFYpj7CCVZYMer7kVf9Yxa+TvurROq/YQaaOUTHnuApn1h
+         v7P9MXCoHl4BWNwY3hK0Adz2tRJBNIHZPOy14PTpb9xpQfNqppblrnUD3Aw7olHxi2YM
+         LHC72hkN5kw0kU/ADaKdg4EktaOd0/F9BT4pKoGHnX2qRBfmFzFlO3jm8JbZ2COuc9vz
+         2uvU8QsK+lbPg1Vt+OxAH3O/UfcsInZMBkvB/g8z7XfjrqWpqvvhV4O/2jqds2MBqg+t
+         7MMWtcPorHT3zp9Vav7+zx2wTxNHxamlkNKIJWLAhSk32sOy59ry6/6uIl0TE8hSdnE7
+         ZaQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=VJCCkRIdQYZizf3lrj9PmXMBXsnQM3CNWOz+i68b5qs=;
-        b=KN4vhxt+/ReT1GboKWJO6Pxs0zVjdrGfWHGyYAsQMaSj0hUyIwIVKlSa9s5Xm5OxyM
-         p+tZboSmLyIEMdLkyBd3vRJysjE1OftdTRhUJEivI02ieXk79PbYi13ei1vp0/IoLSeq
-         q+tcZc5Y3mxfr63lLw4bBfzXBojvDCfpXPUli1n4VYL9fqnTsCPD8PCVUv21c28W2vyJ
-         a7NUtnTpuB9/5VZ20Cr6+8CBoSJ695U5c0Ivj9ipzLD3IiaayrtG7XU40YU87SGPt1Kf
-         8NghI6TDQ6omR9SZNxL3/A6oLdgxxBumIRrL8sIKrcTHdB4ndSFU1AqI2OY8d12VzU6I
-         kTEw==
-X-Gm-Message-State: AGi0PuYE42XWSjPRPWQgJiGzHCoPGCejKEvrEeH70EGctHVelhotIzvP
-        XmfNp6HD2jDDgj6oUn6U1zMy1xKsPE0=
-X-Google-Smtp-Source: APiQypL2DbbPq8gMuU8zl3cgNaQitOS0YkG5vNPE+/UUfphZWIW1fa7PoalWduD5LbMTKMGom2c0ZQ==
-X-Received: by 2002:ac2:489b:: with SMTP id x27mr5601399lfc.60.1586375538493;
-        Wed, 08 Apr 2020 12:52:18 -0700 (PDT)
+        bh=suEzlqh4afqhEw2Ww2mplEXF7wOhnfd4sMyHNvHCYpk=;
+        b=mvBnnLSpGCYqemdIkj6/By3SY0OSftbV/9L7VUNmi5Pbz5JMeu2jDaSU8XSX6KKXmq
+         SzGsPr/p2tN0B8iof44diVgvqcob008fLVdOSn3jNyMm7gLqNNAlNHk3q2KI0E/r0sgc
+         EZJKJWy5XK36Kv8kt786WqsbAR7tzTsw/VVQwkDlAleuUZS7V9f/IW5Nso6Yiv5oJ0y5
+         Y94OAKTUzbSbszJmk7xQBVP6oI3QSsB/dAIxq5CDyHAxb419NXD8EQuM9KVg3ULmOZHl
+         BpAjupLJWZW09D+axsFSMddt0T9Rs75A2uaPa09p+aV/prXkEzY6Aow9fTjbVT0rcdYo
+         g17w==
+X-Gm-Message-State: AGi0PuYGOmTprawgoslY8lF3v9lpj8GbzLe+Sl41CVLZEesV65b1Mc/0
+        UxYWOAfsvwS3NFE9+FLll0Y=
+X-Google-Smtp-Source: APiQypIDDL0YGzy2cn/gU/4C+B8rnL9iXWO5mnpo/vhV4zasXGY0NQzkcPYldKWuIKqKqBjIsDD0Qg==
+X-Received: by 2002:a2e:8914:: with SMTP id d20mr5771584lji.148.1586375533346;
+        Wed, 08 Apr 2020 12:52:13 -0700 (PDT)
 Received: from saturn.lan (18.158-248-194.customer.lyse.net. [158.248.194.18])
-        by smtp.gmail.com with ESMTPSA id i20sm3961304lfe.15.2020.04.08.12.52.17
+        by smtp.gmail.com with ESMTPSA id i20sm3961304lfe.15.2020.04.08.12.52.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 12:52:18 -0700 (PDT)
+        Wed, 08 Apr 2020 12:52:12 -0700 (PDT)
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     dri-devel@lists.freedesktop.org,
         Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Stefan Mavrodiev <stefan@olimex.com>
-Subject: [PATCH v2 35/36] dt-bindings: display: convert olimex,lcd-olinuxino to DT Schema
-Date:   Wed,  8 Apr 2020 21:51:08 +0200
-Message-Id: <20200408195109.32692-36-sam@ravnborg.org>
+Cc:     Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH v2 30/36] dt-bindings: display: convert sharp,lq101r1sx01 to DT Schema
+Date:   Wed,  8 Apr 2020 21:51:03 +0200
+Message-Id: <20200408195109.32692-31-sam@ravnborg.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200408195109.32692-1-sam@ravnborg.org>
 References: <20200408195109.32692-1-sam@ravnborg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This binding describes a panel with a secondary channel.
+
 v2:
-  - use "ic2" node name in example (Rob)
+  - add check for required properties if link2 is present (Rob)
 
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
 Cc: Rob Herring <robh@kernel.org>
-Cc: Stefan Mavrodiev <stefan@olimex.com>
 Cc: Thierry Reding <thierry.reding@gmail.com>
 Cc: Sam Ravnborg <sam@ravnborg.org>
 ---
- .../display/panel/olimex,lcd-olinuxino.txt    | 42 -----------
- .../display/panel/olimex,lcd-olinuxino.yaml   | 70 +++++++++++++++++++
- MAINTAINERS                                   |  2 +-
- 3 files changed, 71 insertions(+), 43 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.yaml
+ .../display/panel/sharp,lq101r1sx01.txt       | 49 -----------
+ .../display/panel/sharp,lq101r1sx01.yaml      | 85 +++++++++++++++++++
+ 2 files changed, 85 insertions(+), 49 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/sharp,lq101r1sx01.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,lq101r1sx01.yaml
 
-diff --git a/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.txt b/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.txt
+diff --git a/Documentation/devicetree/bindings/display/panel/sharp,lq101r1sx01.txt b/Documentation/devicetree/bindings/display/panel/sharp,lq101r1sx01.txt
 deleted file mode 100644
-index a89f9c830a85..000000000000
---- a/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.txt
+index f522bb8e47e1..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/sharp,lq101r1sx01.txt
 +++ /dev/null
-@@ -1,42 +0,0 @@
--Binding for Olimex Ltd. LCD-OLinuXino bridge panel.
+@@ -1,49 +0,0 @@
+-Sharp Microelectronics 10.1" WQXGA TFT LCD panel
 -
--This device can be used as bridge between a host controller and LCD panels.
--Currently supported LCDs are:
--  - LCD-OLinuXino-4.3TS
--  - LCD-OLinuXino-5
--  - LCD-OLinuXino-7
--  - LCD-OLinuXino-10
+-This panel requires a dual-channel DSI host to operate. It supports two modes:
+-- left-right: each channel drives the left or right half of the screen
+-- even-odd: each channel drives the even or odd lines of the screen
 -
--The panel itself contains:
--  - AT24C16C EEPROM holding panel identification and timing requirements
--  - AR1021 resistive touch screen controller (optional)
--  - FT5x6 capacitive touch screnn controller (optional)
--  - GT911/GT928 capacitive touch screen controller (optional)
+-Each of the DSI channels controls a separate DSI peripheral. The peripheral
+-driven by the first link (DSI-LINK1), left or even, is considered the primary
+-peripheral and controls the device. The 'link2' property contains a phandle
+-to the peripheral driven by the second link (DSI-LINK2, right or odd).
 -
--The above chips share same I2C bus. The EEPROM is factory preprogrammed with
--device information (id, serial, etc.) and timing requirements.
--
--Touchscreen bingings can be found in these files:
--  - input/touchscreen/goodix.txt
--  - input/touchscreen/edt-ft5x06.txt
--  - input/touchscreen/ar1021.txt
+-Note that in video mode the DSI-LINK1 interface always provides the left/even
+-pixels and DSI-LINK2 always provides the right/odd pixels. In command mode it
+-is possible to program either link to drive the left/even or right/odd pixels
+-but for the sake of consistency this binding assumes that the same assignment
+-is chosen as for video mode.
 -
 -Required properties:
--  - compatible: should be "olimex,lcd-olinuxino"
--  - reg: address of the configuration EEPROM, should be <0x50>
--  - power-supply: phandle of the regulator that provides the supply voltage
+-- compatible: should be "sharp,lq101r1sx01"
+-- reg: DSI virtual channel of the peripheral
 -
--Optional properties:
--  - enable-gpios: GPIO pin to enable or disable the panel
--  - backlight: phandle of the backlight device attacked to the panel
+-Required properties (for DSI-LINK1 only):
+-- link2: phandle to the DSI peripheral on the secondary link. Note that the
+-  presence of this property marks the containing node as DSI-LINK1.
+-- power-supply: phandle of the regulator that provides the supply voltage
+-
+-Optional properties (for DSI-LINK1 only):
+-- backlight: phandle of the backlight device attached to the panel
 -
 -Example:
--&i2c2 {
--	panel@50 {
--		compatible = "olimex,lcd-olinuxino";
--		reg = <0x50>;
--		power-supply = <&reg_vcc5v0>;
--		enable-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>;
--		backlight = <&backlight>;
+-
+-	dsi@54300000 {
+-		panel: panel@0 {
+-			compatible = "sharp,lq101r1sx01";
+-			reg = <0>;
+-
+-			link2 = <&secondary>;
+-
+-			power-supply = <...>;
+-			backlight = <...>;
+-		};
 -	};
--};
-diff --git a/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.yaml b/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.yaml
+-
+-	dsi@54400000 {
+-		secondary: panel@0 {
+-			compatible = "sharp,lq101r1sx01";
+-			reg = <0>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/display/panel/sharp,lq101r1sx01.yaml b/Documentation/devicetree/bindings/display/panel/sharp,lq101r1sx01.yaml
 new file mode 100644
-index 000000000000..2329d9610f83
+index 000000000000..956608cada77
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.yaml
-@@ -0,0 +1,70 @@
++++ b/Documentation/devicetree/bindings/display/panel/sharp,lq101r1sx01.yaml
+@@ -0,0 +1,85 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/display/panel/olimex,lcd-olinuxino.yaml#
++$id: http://devicetree.org/schemas/display/panel/sharp,lq101r1sx01.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Binding for Olimex Ltd. LCD-OLinuXino bridge panel.
++title: Sharp Microelectronics 10.1" WQXGA TFT LCD panel
 +
 +maintainers:
-+  - Stefan Mavrodiev <stefan@olimex.com>
++  - Thierry Reding <treding@nvidia.com>
 +
 +description: |
-+  This device can be used as bridge between a host controller and LCD panels.
-+  Currently supported LCDs are:
-+    - LCD-OLinuXino-4.3TS
-+    - LCD-OLinuXino-5
-+    - LCD-OLinuXino-7
-+    - LCD-OLinuXino-10
++  This panel requires a dual-channel DSI host to operate. It supports two modes:
++  - left-right: each channel drives the left or right half of the screen
++  - even-odd: each channel drives the even or odd lines of the screen
 +
-+  The panel itself contains:
-+    - AT24C16C EEPROM holding panel identification and timing requirements
-+    - AR1021 resistive touch screen controller (optional)
-+    - FT5x6 capacitive touch screnn controller (optional)
-+    - GT911/GT928 capacitive touch screen controller (optional)
++  Each of the DSI channels controls a separate DSI peripheral. The peripheral
++  driven by the first link (DSI-LINK1), left or even, is considered the primary
++  peripheral and controls the device. The 'link2' property contains a phandle
++  to the peripheral driven by the second link (DSI-LINK2, right or odd).
 +
-+  The above chips share same I2C bus. The EEPROM is factory preprogrammed with
-+  device information (id, serial, etc.) and timing requirements.
-+
-+  Touchscreen bingings can be found in these files:
-+    - input/touchscreen/goodix.yaml
-+    - input/touchscreen/edt-ft5x06.txt
-+    - input/touchscreen/ar1021.txt
++  Note that in video mode the DSI-LINK1 interface always provides the left/even
++  pixels and DSI-LINK2 always provides the right/odd pixels. In command mode it
++  is possible to program either link to drive the left/even or right/odd pixels
++  but for the sake of consistency this binding assumes that the same assignment
++  is chosen as for video mode.
 +
 +allOf:
 +  - $ref: panel-common.yaml#
 +
 +properties:
 +  compatible:
-+    const: olimex,lcd-olinuxino
++    const: sharp,lq101r1sx01
 +
-+  backlight: true
-+  enable-gpios: true
-+  power-supply: true
 +  reg: true
++  power-supply: true
++  backlight: true
++
++  link2:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: |
++      phandle to the DSI peripheral on the secondary link. Note that the
++      presence of this property marks the containing node as DSI-LINK1
 +
 +required:
 +  - compatible
 +  - reg
-+  - power-supply
++
++if:
++  required:
++    - link2
++then:
++  required:
++    - power-supply
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    i2c {
++    dsi0 {
 +        #address-cells = <1>;
 +        #size-cells = <0>;
 +
-+        panel@50 {
-+            compatible = "olimex,lcd-olinuxino";
-+            reg = <0x50>;
-+            power-supply = <&reg_vcc5v0>;
-+            enable-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>;
++        panel: panel@0 {
++            compatible = "sharp,lq101r1sx01";
++            reg = <0>;
++
++            link2 = <&secondary>;
++
++            power-supply = <&power>;
 +            backlight = <&backlight>;
 +        };
 +    };
 +
++    dsi1 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        secondary: panel@0 {
++            compatible = "sharp,lq101r1sx01";
++            reg = <0>;
++        };
++    };
++
 +...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index eec316171b5e..22e63341006e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5356,7 +5356,7 @@ DRM DRIVER FOR OLIMEX LCD-OLINUXINO PANELS
- M:	Stefan Mavrodiev <stefan@olimex.com>
- S:	Maintained
- F:	drivers/gpu/drm/panel/panel-olimex-lcd-olinuxino.c
--F:	Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.txt
-+F:	Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.yaml
- 
- DRM DRIVER FOR PERVASIVE DISPLAYS REPAPER PANELS
- M:	Noralf Trønnes <noralf@tronnes.org>
 -- 
 2.20.1
 
