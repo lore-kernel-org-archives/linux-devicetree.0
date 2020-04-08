@@ -2,100 +2,253 @@ Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DADC2D0EA
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 05:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 415F0C2D0EA
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 05:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB532063A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 05:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02CB22075E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 05:59:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="iLIfvVjX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hEmTMlb4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgDHFO0 (ORCPT
+        id S1726574AbgDHF7D (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 01:14:26 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:42898 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbgDHFO0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 01:14:26 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3471580237;
-        Wed,  8 Apr 2020 17:14:23 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1586322863;
-        bh=YkXvA/8SLVreNAYgan070U1NrymtwAPnJ2gFe0lYFwU=;
-        h=From:To:CC:Subject:Date;
-        b=iLIfvVjXyMiurQkbhtrj+nP2eHl0vJDaMQFOGG5FJk5jISCcl8QHwH6cZcSgWGXzm
-         MrdU9HWY6EjCJ5Mt3twae5mNIAM4OaTFgdSJPmiQ+djtXK/df6zV3wplCtDDaUqWtm
-         FkTJTAQPJ1pWpL1DoNlmIZ2WQO/02cbhTVZ29P+dk1vA8vt7rksqHZ5UCgCRg5wjsl
-         8j0ny5y56prjsBgu7EHITYfVClUGwyPoAITJ1sZeVh4dzffVwlExMeko6myII+zYiQ
-         nSVxNA7eDRdGrPcXaFOLDFP4Vq6zhlyOaTzQp9tg0q6CDRVJzx6v+VWUoZ4ACKBu1t
-         nKLCktG3ruteA==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e8d5db00000>; Wed, 08 Apr 2020 17:14:24 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Wed, 8 Apr 2020 17:14:23 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Wed, 8 Apr 2020 17:14:22 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Hamish Martin" <Hamish.Martin@alliedtelesis.co.nz>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Dealing with holes in CPU address space
-Thread-Topic: Dealing with holes in CPU address space
-Thread-Index: AQHWDWSQGXFxFOrcR0ujeloVxC+pHA==
-Date:   Wed, 8 Apr 2020 05:14:22 +0000
-Message-ID: <fcb8f2655452f60a7c734e2ce54ac4d47eec7e92.camel@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.14.96]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <87A62D6F9DDB66408682E8C27463080B@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Wed, 8 Apr 2020 01:59:03 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:38822 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbgDHF7D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 01:59:03 -0400
+Received: by mail-ua1-f67.google.com with SMTP id g10so2271145uae.5
+        for <devicetree@vger.kernel.org>; Tue, 07 Apr 2020 22:59:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JuRf6yJbWtYxlK9MiLbnHNoPgySrKime7soo03XHwg8=;
+        b=hEmTMlb4G0P+2aogFyGWc7pbqPwOB9J/CxeELOvBgHigymKo71VkQZw/1AwPY8mWut
+         hwlP4KtfBta/VQNebJf0HYnPZQVMVG+j5hXWeIOv+KLCeReFxuiDGM5foKGDa6dufKMS
+         yCVPYX7Cm/1qWuKhZsuJ9KARUZM1CExEo8TFU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JuRf6yJbWtYxlK9MiLbnHNoPgySrKime7soo03XHwg8=;
+        b=kLPlOiAiEOW/s9LanuNuT7Hm6HH3TMXp7V8mMiX11CFaENor5b/TqaavmsyrDeQVKh
+         zuMqXsAH1R4wukWiU5K89zR8X84e6b97S0SS/HQMTrdFNwGaro4GKAaoMnIMh93gkc0C
+         rf1hpBll7Fc7Jg5VKJvNi3HT8WBunS1ArxmpPripc6g9Lgghxg9f5Dfu4xlEFT4a+NBp
+         dm2J7dSFDZHWXyQ8FrKY+a6vn0+HTeufG588+YFIoPSqf+YZKMB2DgMr7fqblDgOePBi
+         qDD24QnhuQjzLJSPHMt7EoRS2dDl0yDocd50VJuYZG2/p3JipTD9kzWlAe6NG9QtsVm1
+         Firw==
+X-Gm-Message-State: AGi0PuZaPxKFa2obLu4jKOzFfIp7RcHFKvHkbFrBIkQYZTX2NOzPtu73
+        EFl7HrQtXr+XS1SCxuXpWSHKKjXUVajgCKon9bExEA==
+X-Google-Smtp-Source: APiQypKMQ51JKxh8oiu6lK7kqI3wqi5K92W9MpE8rI9SPxjpQoT14gqiJBH6/yay/Jqgt97yU6ykLrh500/nJv1Ksio=
+X-Received: by 2002:a9f:3770:: with SMTP id a45mr4294126uae.117.1586325539503;
+ Tue, 07 Apr 2020 22:58:59 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200107070154.1574-1-roger.lu@mediatek.com> <20200107070154.1574-2-roger.lu@mediatek.com>
+ <20200108203829.GA18987@bogus> <CANMq1KBu-gFy701BgFcjEwyhV9GgCCU2mkT9c8LviOJKBF30UA@mail.gmail.com>
+ <CAL_JsqLnVEhvAh_8DfGWRZa+MdPRpXc9sWEQ6-3HQAeUfvkOSg@mail.gmail.com>
+ <1581406566.14120.46.camel@mtksdaap41> <CANMq1KBVs7ZucNu9pTxXGZ0__E6tyxd1+mm2Zui81G=xQNtShA@mail.gmail.com>
+In-Reply-To: <CANMq1KBVs7ZucNu9pTxXGZ0__E6tyxd1+mm2Zui81G=xQNtShA@mail.gmail.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Wed, 8 Apr 2020 13:58:48 +0800
+Message-ID: <CANMq1KBcV_7O-_XQxk+6LTWywVoPW1U5BjYRG=-ojih9DOK-Wg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] dt-bindings: soc: add mtk svs dt-bindings
+To:     Roger Lu <roger.lu@mediatek.com>
+Cc:     Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@kernel.org>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?B?RmFuIENoZW4gKOmZs+WHoSk=?= <fan.chen@mediatek.com>,
+        =?UTF-8?B?SGVucnlDIENoZW4gKOmZs+W7uuixqik=?= 
+        <HenryC.Chen@mediatek.com>,
+        =?UTF-8?B?WVQgTGVlICjmnY7ku7Dlk7Ip?= <yt.lee@mediatek.com>,
+        =?UTF-8?B?WGlhb3FpbmcgTGl1ICjliJjmmZPluoYp?= 
+        <Xiaoqing.Liu@mediatek.com>,
+        =?UTF-8?B?Q2hhcmxlcyBZYW5nICjmpYrkuo7pgLIp?= 
+        <Charles.Yang@mediatek.com>,
+        =?UTF-8?B?QW5ndXMgTGluICjmnpfnkZvosaop?= <Angus.Lin@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nishanth Menon <nm@ti.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgQWxsLA0KDQpJJ20gdHJ5aW5nIHRvIHBvcnQgYW4gb2xkIEJyb2FkY29tIE1JUFMgQ1BVIChC
-Q001MzAwMykgdG8gYSBzaGlueSBuZXcNCmtlcm5lbC4gSSBoYXZlIHNvbWUgb2xkIGhpc3Rvcmlj
-IHNvdXJjZSBmcm9tIGEgbG9uZyBmb3Jnb3R0ZW4gQnJvYWRjb20NCkxESyBidXQgSSdkIHByZWZl
-ciB0byBkbyB0aGluZ3MgdGhlIG1vZGVybiB3YXkgd2l0aCBkZXZpY2UtdHJlZXMuDQoNClRoZSBw
-cm9ibGVtIEkndmUgYmVlbiBncmFwcGxpbmcgd2l0aCBpcyB0cnlpbmcgdG8gb3BlbiB1cCBhY2Nl
-c3MgdG8gYWxsDQpvZiB0aGUgUkFNIG9uIHRoZSBib2FyZC4gSXQgaGFzIDUxMk1CIG9mIEREUjIu
-IFRoZSBDUFUgaGFzIHR3byBhcmVhcw0Kd2hlcmUgdGhpcyBhcHBlYXJzLiBUaGUgZmlyc3QgMTI4
-TUIgaXMgZnJvbSAwIHRvIDB4MDdmZmZmZmYgdGhlIHNlY29uZA0KYXJlYSBpcyBmcm9tIDB4ODgw
-MDAwMDAgdG8gMHg5ZmZmZmZmZi4NCg0KU29DIHBlcmlwaGVyYWxzIGFyZSBhdCAweDE4MDAwMDAw
-IGFuZCB0aGVyZSBpcyBhbiBJTyB3aW5kb3cgZm9yIGZsYXNoDQphdCAweDIwMDAwMDAwLg0KDQpU
-aGUgb2xkIGNvZGUgaGFzIHNvbWUgY3VzdG9tIHRsYiBpbml0aWFsaXNhdGlvbiB0byBkZWFsIHdp
-dGggdGhpcyBidXQgSQ0KZmlndXJlZCBpdCBzaG91bGQgYmUgcG9zc2libGUgd2l0aCB0aGUgZm9s
-bG93aW5nIGR0cyBzbmlwcGV0Lg0KDQogICAgICAgIG1lbW9yeUAwIHsNCiAgICAgICAgICAgICAg
-ICBkZXZpY2VfdHlwZSA9ICJtZW1vcnkiOw0KICAgICAgICAgICAgICAgIHJlZyA9IDwweDAwMDAw
-MDAwIDB4MDgwMDAwMDANCiAgICAgICAgICAgICAgICAgICAgICAgMHg4ODAwMDAwMCAweDE4MDAw
-MDAwPjsNCiAgICAgICAgfTsNCg0KSSBlbmQgdXAgd2l0aCBvbmx5IDEyOE1CIGF2YWlsYWJsZS4g
-VGhpcyBhcHBlYXJzIHRvIGJlDQpiZWNhdXNlIHRoZSBkZWZhdWx0IEhJR0hNRU1fU1RBUlQgb2Yg
-MHgyMDAwMDAwMCBzdG9wcyB0aGUgcmVzdCBmcm9tDQpiZWluZyBtYWRlIGF2YWlsYWJsZS4gSWYg
-SSBhZGQgYW4gb3ZlcnJpZGUgb2YgSElHSE1FTV9TVEFSVCB0bw0KMHhmZmZmZmZmZiBJIHNlZW0g
-dG8gaGF2ZSB0aGUgZnVsbCA1MTJNQiBhdmFpYWJsZSBidXQgdGhlbiBJIGdldCBhDQprZXJuZWwg
-cGFuaWMNCg0KICBDUFUgMCBVbmFibGUgdG8gaGFuZGxlIGtlcm5lbCBwYWdpbmcgcmVxdWVzdCBh
-dCB2aXJ0dWFsIGFkZHJlc3MgMWZjMDAwMDAsIGVwYyA9PSA4MDAxNjdiOCwgcmEgPT0gODAwZTI4
-NjANCg0KMHgxZmMwMDAwMCBpcyBpbiB0aGUgcmFuZ2Ugd2hlcmUgdGhlIFNvQyBwZXJpcGhlcmFs
-cyBhcmUgc28gSSdtDQp0aGlua2luZyB0aGF0IGlzIHRoZSBwcm9ibGVtLiBCdXQgdGhlbiBhZ2Fp
-biB0aGF0IGlzIGEgdmlydHVhbCBhZGRyZXNzDQpzbyBtYXliZSBpdCdzIGp1c3QgYSBjby1pbmNp
-ZGVuY2UuDQoNCkFueXdheSBJJ2QgcmVhbGx5IGFwcHJlY2lhdGUgYW55IGd1aWRhbmNlIHRoYXQg
-YW55b25lIGNvdWxkIHByb3ZpZGUgb24NCnRoaXMuIEV2ZW4gaWYgaXQncyBqdXN0ICJnbyBsb29r
-IGF0IHRoaXMgU29DIi4NCg0KVGhhbmtzLA0KQ2hyaXMNCg0KDQo=
+On Thu, Feb 27, 2020 at 11:55 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
+>
+> Hi Rob,
+>
+> On Tue, Feb 11, 2020 at 3:36 PM Roger Lu <roger.lu@mediatek.com> wrote:
+> >
+> > Hi Rob & Nicolas,
+> >
+> > Sorry for the late reply.
+> >
+> > On Mon, 2020-01-13 at 23:50 +0800, Rob Herring wrote:
+> > > On Mon, Jan 13, 2020 at 12:44 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> > > >
+> > > > On Thu, Jan 9, 2020 at 4:38 AM Rob Herring <robh@kernel.org> wrote:
+> > > > >
+> > > > > On Tue, Jan 07, 2020 at 03:01:52PM +0800, Roger Lu wrote:
+> > > > > > Document the binding for enabling mtk svs on MediaTek SoC.
+> > > > > >
+> > > > > > Signed-off-by: Roger Lu <roger.lu@mediatek.com>
+> > > > > > ---
+> > > > > >  .../devicetree/bindings/power/mtk-svs.txt     | 76 +++++++++++++++++++
+> > > > > >  1 file changed, 76 insertions(+)
+> > > > > >  create mode 100644 Documentation/devicetree/bindings/power/mtk-svs.txt
+> > > > > >
+> > > > > > diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt b/Documentation/devicetree/bindings/power/mtk-svs.txt
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..9a3e81b9e1d2
+> > > > > > --- /dev/null
+> > > > > > +++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
+> > > > > > @@ -0,0 +1,76 @@
+> > > > > > +* Mediatek Smart Voltage Scaling (MTK SVS)
+> > > > > > +
+> > > > > > +This describes the device tree binding for the MTK SVS controller (bank)
+> > > > > > +which helps provide the optimized CPU/GPU/CCI voltages. This device also
+> > > > > > +needs thermal data to calculate thermal slope for accurately compensate
+> > > > > > +the voltages when temperature change.
+> > > > > > +
+> > > > > > +Required properties:
+> > > > > > +- compatible:
+> > > > > > +  - "mediatek,mt8183-svs" : For MT8183 family of SoCs
+> > > > > > +- reg: Address range of the MTK SVS controller.
+> > > > > > +- interrupts: IRQ for the MTK SVS controller.
+> > > > > > +- clocks, clock-names: Clocks needed for the svs hardware. required
+> > > > > > +                       clocks are:
+> > > > > > +                    "main": Main clock for svs controller to work.
+> > > > > > +- nvmem-cells: Phandle to the calibration data provided by a nvmem device.
+> > > > > > +- nvmem-cell-names: Should be "svs-calibration-data" and "calibration-data"
+> > > > > > +
+> > > > > > +Subnodes:
+> > > > > > +- svs-cpu-little: SVS bank device node of little CPU
+> > > > > > +  compatible: "mediatek,mt8183-svs-cpu-little"
+> > > > > > +  operating-points-v2: OPP table hooked by SVS little CPU bank.
+> > > > > > +                    SVS will optimze this OPP table voltage part.
+> > > > > > +  vcpu-little-supply: PMIC buck of little CPU
+> > > > > > +- svs-cpu-big: SVS bank device node of big CPU
+> > > > > > +  compatible: "mediatek,mt8183-svs-cpu-big"
+> > > > > > +  operating-points-v2: OPP table hooked by SVS big CPU bank.
+> > > > > > +                    SVS will optimze this OPP table voltage part.
+> > > > > > +  vcpu-big-supply: PMIC buck of big CPU
+> > > > > > +- svs-cci: SVS bank device node of CCI
+> > > > > > +  compatible: "mediatek,mt8183-svs-cci"
+> > > > > > +  operating-points-v2: OPP table hooked by SVS CCI bank.
+> > > > > > +                    SVS will optimze this OPP table voltage part.
+> > > > > > +  vcci-supply: PMIC buck of CCI
+> > > > > > +- svs-gpu: SVS bank device node of GPU
+> > > > > > +  compatible: "mediatek,mt8183-svs-gpu"
+> > > > > > +  operating-points-v2: OPP table hooked by SVS GPU bank.
+> > > > > > +                    SVS will optimze this OPP table voltage part.
+> > > > > > +  vgpu-supply: PMIC buck of GPU
+> > > > > > +
+> > > > > > +Example:
+> > > > > > +
+> > > > > > +     svs: svs@1100b000 {
+> > > > > > +             compatible = "mediatek,mt8183-svs";
+> > > > > > +             reg = <0 0x1100b000 0 0x1000>;
+> > > > > > +             interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW>;
+> > > > > > +             clocks = <&infracfg CLK_INFRA_THERM>;
+> > > > > > +             clock-names = "main_clk";
+> > > > > > +             nvmem-cells = <&svs_calibration>, <&thermal_calibration>;
+> > > > > > +             nvmem-cell-names = "svs-calibration-data", "calibration-data";
+> > > > > > +
+> > > > > > +             svs_cpu_little: svs-cpu-little {
+> > > > > > +                     compatible = "mediatek,mt8183-svs-cpu-little";
+> > > > > > +                     operating-points-v2 = <&cluster0_opp>;
+> > > > > > +                     vcpu-little-supply = <&mt6358_vproc12_reg>;
+> > > > > > +             };
+> > > > >
+> > > > > I don't think this is a good binding. This information already exists
+> > > > > elsewhere in the DT, so your driver should just look in those nodes.
+> > > > > For example the regulator can be in the cpu nodes or the OPP table
+> > > > > itself.
+> > > >
+> > > > Roger, if that helps, without changing any other binding, on 8183,
+> > > > basically you could have:
+> > > >  - svs-cpu-little: Add a handle to &cpu0 and get the regulator/opp
+> > > > table from it.
+> > > >  - svs-cpu-big: Handle to &cpu4
+> > >
+> > > Why do you need those? Use the compatible of the cpus to determine big
+> > > and little cores. Or there's the cpu capacity property that could be
+> > > used instead.
+> > >
+> > > >  - svs-cci: Handle to &cci
+> > >
+> > > Is there more than 1 CCI? Just retrieve the node by the compatible.
+> > > There's no need to have nodes that simply serve as a collection of
+> > > data for some driver.
+> > >
+> > > >  - svs-gpu: Handle to &gpu (BTW, it is expected that SVS would only
+> > > > apply to vgpu/mali regulator, and not vsram regulator?)
+> >
+> > svs-gpu depends on vgpu power on for init (don't care vgpu_sram). After
+> > svs-gpu init is done, it doesn't need vgpu power on anymore. (vgpu can
+> > be turned off)
+> >
+> > Please allows me to introduce more about what svs-gpu device needs.
+> > 1. It needs gpu opp table from "gpu node" and gpu_core2 power-domains
+> > from "gpu_core2 node". When svs-gpu has those resources, it turns on
+> > gpu_core2 power-domain for svs-gpu-hw to have power (for calculating)
+> > and svs-gpu-sw will update gpu opp table voltages' part.
+> > 2. Therefore, if I retrieve gpu-related node from phandle or compatible,
+> > it means svs-gpu device in driver needs to attach two different gpu
+> > nodes for attaining gpu opp table and gpu_core2 power-domains. I think
+> > this architecture of svs-gpu confuses maintainer why it attaches two
+> > different nodes instead of having a device to describe what it needs.
+>
+> > 3. Is it acceptable to have a Linux device attaching two different
+> > nodes? If yes, could you guide us some APIs for one device to attach two
+> > nodes? I don't know how to implement it. Thanks.
+>
+> I'm also trying to understand how that would work. The way the code
+> works now (https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.19/drivers/power/avs/mtk_svs.c#1388):
+>
+> The SVS driver creates a platform device for each sub-node, find the
+> sub-node that matches the compatible (pdev->dev.of_node):
+> for_each_child_of_node(svs->dev->of_node, np) {
+>   if (of_device_is_compatible(np, svsb->of_compatible)) {
+>     pdev->dev.of_node = np;
+>     break;
+>   }
+> }
+>
+> Then, thanks to that, the 2 functions dev_pm_opp_of_add_table and
+> devm_regulator_get_optional "just work", as the get the opp table and
+> regulator from the device tree node.
+>
+> So what you suggest is basically something like this:
+> pdev->dev.of_node = of_find_compatible_node(NULL, NULL, "mediatek,mt8183-cci");
+>
+> I came up with a (very dirty) prototype here:
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/2076718
+> ... and it doesn't really work
+> (https://gist.github.com/drinkcat/61e50eedbdc301d418c9cee3ee5b6b06, I
+> think the kernel is probing more than it should, like the DMA mask
+> errors should not happen...)
+>
+> Before I dig further... I have the same concern as Roger, is it ok to
+> have 2 devices bound to the same device tree node/compatible? My
+> understanding was also that it's not.
+
+Rob: It seems like this conversation died here. Do you have any
+suggestions for the above?
+
+Thanks,
