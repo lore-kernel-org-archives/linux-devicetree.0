@@ -2,46 +2,44 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 618EBC2BB86
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 22:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E1DC2BB85
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 22:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 349E92083E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 22:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E56E2074F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 22:52:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="o6BJ7Ibh"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kMbiOC1L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgDIWwm (ORCPT
+        id S1727078AbgDIWwp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 18:52:42 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:57194 "EHLO
+        Thu, 9 Apr 2020 18:52:45 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:33721 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726689AbgDIWwm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 18:52:42 -0400
+        by vger.kernel.org with ESMTP id S1726949AbgDIWwn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 18:52:43 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586472762; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=CVKwdv1dL/6/p21AAAZ4seiEJbEjLRqpVCT2OHJoL4k=; b=o6BJ7IbhfIxkO14MrSNIlk+Zx+FVAuV/jST0XBGCEWRNBNg0nLM3Mfp6LHvaZ7h0suIEKfnb
- rVY0ldCcnBZxxKZyXiZ6ReHo+Apun8CBri7Gd5uCpgU4eNqhk8wxnnIcWOq/KGzOCMx0Cuaj
- OYILFDOZM6NJaVFZtcUiL37wx+0=
+ s=smtp; t=1586472763; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=4VHVn9nVFsUQOnjsMQdKD/QU88hkBjHogDQBbcbmW8I=; b=kMbiOC1LnA1B2MUbf8tmJe6yDR6k5CnXtpkq4FP+TB/byFoHht8vHGULaky9AqC57s9rqsCJ
+ Z+yMNFQ8W7IO4D5/iz0dwARkGQoQqohfD+6gaeQtOmr6KYmZ7zo7WvYXxcKoWq5TjQ+vK0q2
+ 0O9ElNbU1s2eh98tfzSAhtNkMH8=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8fa73a.7f37d20eafb8-smtp-out-n02;
- Thu, 09 Apr 2020 22:52:42 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e8fa734.7fc2fd9e6810-smtp-out-n04;
+ Thu, 09 Apr 2020 22:52:36 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 94099C44792; Thu,  9 Apr 2020 22:52:40 +0000 (UTC)
+        id AA462C44788; Thu,  9 Apr 2020 22:52:36 +0000 (UTC)
 Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 46AD7C433BA;
-        Thu,  9 Apr 2020 22:52:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 46AD7C433BA
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9F809C433D2;
+        Thu,  9 Apr 2020 22:52:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9F809C433D2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
 From:   Wesley Cheng <wcheng@codeaurora.org>
@@ -50,116 +48,60 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
         mgautam@codeaurora.org, vkoul@kernel.org
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH v6 5/5] phy: qcom-qmp: Rename UFS PCS QMP v4 registers
-Date:   Thu,  9 Apr 2020 15:52:29 -0700
-Message-Id: <1586472749-18599-6-git-send-email-wcheng@codeaurora.org>
+Subject: [PATCH v6 0/5] Add SS/HS-USB changes for Qualcomm SM8150 chipset
+Date:   Thu,  9 Apr 2020 15:52:24 -0700
+Message-Id: <1586472749-18599-1-git-send-email-wcheng@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1586472749-18599-1-git-send-email-wcheng@codeaurora.org>
-References: <1586472749-18599-1-git-send-email-wcheng@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The UFS QMP v4 PHY has a largely different register set versus USB and
-PCIe.  Rename the register offsets to denote that the value is specific for
-the UFS PCS register.
+This series adds support for the Synopsis 7nm HSPHY USB driver being
+used in QCOM chipsets.  The HSPHY register map differs compared to 
+other PHY revisions.  In addition, modifications and updates are done
+to the QMP driver to add new registers/offsets, and to update the
+initialization sequence for enabling the SSUSB path on SM8150.
 
-Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
----
- drivers/phy/qualcomm/phy-qcom-qmp.c | 20 +++++++++----------
- drivers/phy/qualcomm/phy-qcom-qmp.h | 40 ++++++++++++++++++-------------------
- 2 files changed, 30 insertions(+), 30 deletions(-)
+Changes in v6:
+ - Addressed coding style errors in phy-qcom-snps-femto-v2.c
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 5363a99..9400748 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -174,9 +174,9 @@ enum qphy_reg_layout {
- };
- 
- static const unsigned int sm8150_ufsphy_regs_layout[] = {
--	[QPHY_START_CTRL]		= QPHY_V4_PHY_START,
--	[QPHY_PCS_READY_STATUS]		= QPHY_V4_PCS_READY_STATUS,
--	[QPHY_SW_RESET]			= QPHY_V4_SW_RESET,
-+	[QPHY_START_CTRL]		= QPHY_V4_PCS_UFS_PHY_START,
-+	[QPHY_PCS_READY_STATUS]		= QPHY_V4_PCS_UFS_READY_STATUS,
-+	[QPHY_SW_RESET]			= QPHY_V4_PCS_UFS_SW_RESET,
- };
- 
- static const struct qmp_phy_init_tbl msm8996_pcie_serdes_tbl[] = {
-@@ -971,13 +971,13 @@ enum qphy_reg_layout {
- };
- 
- static const struct qmp_phy_init_tbl sm8150_ufsphy_pcs_tbl[] = {
--	QMP_PHY_INIT_CFG(QPHY_V4_RX_SIGDET_CTRL2, 0x6d),
--	QMP_PHY_INIT_CFG(QPHY_V4_TX_LARGE_AMP_DRV_LVL, 0x0a),
--	QMP_PHY_INIT_CFG(QPHY_V4_TX_SMALL_AMP_DRV_LVL, 0x02),
--	QMP_PHY_INIT_CFG(QPHY_V4_TX_MID_TERM_CTRL1, 0x43),
--	QMP_PHY_INIT_CFG(QPHY_V4_DEBUG_BUS_CLKSEL, 0x1f),
--	QMP_PHY_INIT_CFG(QPHY_V4_RX_MIN_HIBERN8_TIME, 0xff),
--	QMP_PHY_INIT_CFG(QPHY_V4_MULTI_LANE_CTRL1, 0x02),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_RX_SIGDET_CTRL2, 0x6d),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_TX_LARGE_AMP_DRV_LVL, 0x0a),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_TX_SMALL_AMP_DRV_LVL, 0x02),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_TX_MID_TERM_CTRL1, 0x43),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_DEBUG_BUS_CLKSEL, 0x1f),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_RX_MIN_HIBERN8_TIME, 0xff),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_UFS_MULTI_LANE_CTRL1, 0x02),
- };
- 
- static const struct qmp_phy_init_tbl sm8150_usb3_serdes_tbl[] = {
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.h b/drivers/phy/qualcomm/phy-qcom-qmp.h
-index 22c9009..d78acbf 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.h
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.h
-@@ -425,26 +425,26 @@
- #define QSERDES_V4_RX_VTH_CODE				0x1c4
- 
- /* Only for QMP V4 PHY - UFS PCS registers */
--#define QPHY_V4_PHY_START				0x000
--#define QPHY_V4_POWER_DOWN_CONTROL			0x004
--#define QPHY_V4_SW_RESET				0x008
--#define QPHY_V4_TIMER_20US_CORECLK_STEPS_MSB		0x00c
--#define QPHY_V4_TIMER_20US_CORECLK_STEPS_LSB		0x010
--#define QPHY_V4_PLL_CNTL				0x02c
--#define QPHY_V4_TX_LARGE_AMP_DRV_LVL			0x030
--#define QPHY_V4_TX_SMALL_AMP_DRV_LVL			0x038
--#define QPHY_V4_BIST_FIXED_PAT_CTRL			0x060
--#define QPHY_V4_TX_HSGEAR_CAPABILITY			0x074
--#define QPHY_V4_RX_HSGEAR_CAPABILITY			0x0b4
--#define QPHY_V4_DEBUG_BUS_CLKSEL			0x124
--#define QPHY_V4_LINECFG_DISABLE				0x148
--#define QPHY_V4_RX_MIN_HIBERN8_TIME			0x150
--#define QPHY_V4_RX_SIGDET_CTRL2				0x158
--#define QPHY_V4_TX_PWM_GEAR_BAND			0x160
--#define QPHY_V4_TX_HS_GEAR_BAND				0x168
--#define QPHY_V4_PCS_READY_STATUS			0x180
--#define QPHY_V4_TX_MID_TERM_CTRL1			0x1d8
--#define QPHY_V4_MULTI_LANE_CTRL1			0x1e0
-+#define QPHY_V4_PCS_UFS_PHY_START				0x000
-+#define QPHY_V4_PCS_UFS_POWER_DOWN_CONTROL			0x004
-+#define QPHY_V4_PCS_UFS_SW_RESET				0x008
-+#define QPHY_V4_PCS_UFS_TIMER_20US_CORECLK_STEPS_MSB		0x00c
-+#define QPHY_V4_PCS_UFS_TIMER_20US_CORECLK_STEPS_LSB		0x010
-+#define QPHY_V4_PCS_UFS_PLL_CNTL				0x02c
-+#define QPHY_V4_PCS_UFS_TX_LARGE_AMP_DRV_LVL			0x030
-+#define QPHY_V4_PCS_UFS_TX_SMALL_AMP_DRV_LVL			0x038
-+#define QPHY_V4_PCS_UFS_BIST_FIXED_PAT_CTRL			0x060
-+#define QPHY_V4_PCS_UFS_TX_HSGEAR_CAPABILITY			0x074
-+#define QPHY_V4_PCS_UFS_RX_HSGEAR_CAPABILITY			0x0b4
-+#define QPHY_V4_PCS_UFS_DEBUG_BUS_CLKSEL			0x124
-+#define QPHY_V4_PCS_UFS_LINECFG_DISABLE				0x148
-+#define QPHY_V4_PCS_UFS_RX_MIN_HIBERN8_TIME			0x150
-+#define QPHY_V4_PCS_UFS_RX_SIGDET_CTRL2				0x158
-+#define QPHY_V4_PCS_UFS_TX_PWM_GEAR_BAND			0x160
-+#define QPHY_V4_PCS_UFS_TX_HS_GEAR_BAND				0x168
-+#define QPHY_V4_PCS_UFS_READY_STATUS			0x180
-+#define QPHY_V4_PCS_UFS_TX_MID_TERM_CTRL1			0x1d8
-+#define QPHY_V4_PCS_UFS_MULTI_LANE_CTRL1			0x1e0
- 
- /* Only for QMP V4 PHY - USB/PCIe PCS registers */
- #define QPHY_V4_PCS_SW_RESET				0x000
+Changes in v5:
+ - Reorganize IF check for when to use the proper PWRDOWN CTRL offset
+ - Rename UFS specific offset definitions in the QMP PHY driver to clearly
+   denote they are UFS specific
+ - Rename the phy-qcom-snps-7nm driver to phy-qcom-snps-femto-v2
+
+Changes in v4:
+ - Fix POWERDOWN offset for QMP PHY exit routine, and check for
+   has_phy_dp_com_ctrl instead of !has_phy_com_ctrl
+
+Changes in v3:
+ - Use devm_reset_control_get_exclusive instead of referencing index for
+   reset handle
+
+Changes in v2:
+ - Fixed YAML errors caught by dt_binding_check
+
+Jack Pham (1):
+  phy: qcom-qmp: Add SM8150 QMP USB3 PHY support
+
+Wesley Cheng (4):
+  dt-bindings: phy: Add binding for qcom,usb-snps-femto-v2
+  phy: qcom-snps: Add SNPS USB PHY driver for QCOM based SOCs
+  phy: qcom-qmp: Use proper PWRDOWN offset for sm8150 USB
+  phy: qcom-qmp: Rename UFS PCS QMP v4 registers
+
+ .../bindings/phy/qcom,usb-snps-femto-v2.yaml       |  77 ++++++
+ drivers/phy/qualcomm/Kconfig                       |  10 +
+ drivers/phy/qualcomm/Makefile                      |   1 +
+ drivers/phy/qualcomm/phy-qcom-qmp.c                | 193 +++++++++++++-
+ drivers/phy/qualcomm/phy-qcom-qmp.h                | 238 +++++++++++++++--
+ drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c      | 296 +++++++++++++++++++++
+ 6 files changed, 779 insertions(+), 36 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
+
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
