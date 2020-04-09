@@ -2,85 +2,120 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D76E1C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 11:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA567C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 11:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B653620771
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 11:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82E9920757
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 11:50:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pb9aAJmg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725970AbgDILgl (ORCPT
+        id S1726552AbgDILuE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 07:36:41 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:38038 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbgDILgl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 07:36:41 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id C574C20047;
-        Thu,  9 Apr 2020 13:36:34 +0200 (CEST)
-Date:   Thu, 9 Apr 2020 13:36:33 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v10 2/2] drm/bridge: Add NWL MIPI DSI host controller
- support
-Message-ID: <20200409113633.GA4330@ravnborg.org>
-References: <cover.1584730033.git.agx@sigxcpu.org>
- <22f34fb7cf7ee4262cf63372aee90bc8e5ae3f35.1584730033.git.agx@sigxcpu.org>
- <20200408175252.GB24828@ravnborg.org>
- <20200409104314.GB104945@bogon.m.sigxcpu.org>
+        Thu, 9 Apr 2020 07:50:04 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41049 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbgDILuE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 07:50:04 -0400
+Received: by mail-io1-f68.google.com with SMTP id b12so3493438ion.8;
+        Thu, 09 Apr 2020 04:50:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+XqP7Ap1vUorR0W4ROT/4/sK/I8YLfCYd/qeR1cdEgE=;
+        b=pb9aAJmgSBJLFZELTtD91Tc95hIg9mDY+5kW6+GTYkZaHen2JQf7wzds/IJmGDXHUe
+         C5XEesCYKp3GfC6zLjKW6/rvD1Yrj3DHNXFn1DbVZQ8i7epRLwih8GTlFT1vZSK/iYU8
+         vlTFysaBrWnf11tqcUfcGUNE46VNhUcf8ztZzk/5FRvhWUb3VEOSNVyBh0nlgN6nh2d8
+         YTMQ6vxxVkgVp4cgEPHpp42L2cxkjxsoMNvWzg53KTRQONuKukD05S9tegwhGPsq396I
+         FmAQwmI57WYF2vX58i/su/H2kvtQmacL17KBJJy8pNhDaC8XurNV8rGaHkA8bQGfYj5k
+         ELYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+XqP7Ap1vUorR0W4ROT/4/sK/I8YLfCYd/qeR1cdEgE=;
+        b=ASPO49B6wmSm9iVAe2Tzq9BLkM/gYshECuOECmlDZ9ra3LzNf3VI4jb0gVgNHuB+GD
+         VSe7Kfh8hN02osjyDKZpwzQjNE4RdEiT9GFqLz1uBpBCiXJXI8OYrU637MIk/uIZHjrf
+         XUHxcpwtBpAq8QXdz8cemW1+k6rxMRAEL94GYUg646qs/kp6nufpxek/OIy/MZ4LzVs5
+         m95X8ALrTWZqGKz5g1v0BlMll4k3q8Moig/wQhPuJdnkQV+H/4qmMXdfknAX1iOKGG7x
+         fvZLHaLnT4000iysc4TPJD/u+BxY3+XuJqCd1HFA2JwGxk6j2GnkGtOUHfTVMud3YwCS
+         sZug==
+X-Gm-Message-State: AGi0PuYzy2PdlbjhheieVSrC32Pw1AwUL0QIy5/3uhzzGoEwWyjs59lI
+        EKR7LATooYnSqrb5wd/v/PTeOlSuyMyfPNyJ76BMtpHaErY=
+X-Google-Smtp-Source: APiQypJQhXszQeNXb++KfW2iCUidd5W34HBnZ+kUn+qj+aseYfrFokyXuutDqIhvyASuZlMs6VaFb/5bfk17ypWr05s=
+X-Received: by 2002:a6b:5116:: with SMTP id f22mr11568386iob.15.1586433003478;
+ Thu, 09 Apr 2020 04:50:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409104314.GB104945@bogon.m.sigxcpu.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=wF2D5j3In6wItstX1c4A:9 a=CjuIK1q_8ugA:10
+References: <20200408181406.40389-1-alcooperx@gmail.com> <20200408181406.40389-5-alcooperx@gmail.com>
+ <CAHp75Vd_nbgwdE5Fbm3oxd_+51BJZ=67sVyjKiN2zLS+J4X-Fw@mail.gmail.com>
+In-Reply-To: <CAHp75Vd_nbgwdE5Fbm3oxd_+51BJZ=67sVyjKiN2zLS+J4X-Fw@mail.gmail.com>
+From:   Alan Cooper <alcooperx@gmail.com>
+Date:   Thu, 9 Apr 2020 07:49:52 -0400
+Message-ID: <CAOGqxeXQE0z=+6yuEME48am__2vtJhBpetYd_sZamJmm1h_TLQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] usb: host: Add ability to build new Broadcom STB
+ USB drivers
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        USB <linux-usb@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Guido.
+On Thu, Apr 9, 2020 at 5:08 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Thu, Apr 9, 2020 at 12:52 AM Al Cooper <alcooperx@gmail.com> wrote:
+> >
+> > Add the build system changes needed to get the Broadcom STB XHCI,
+> > EHCI and OHCI functionality working. The OHCI support does not
+> > require anything unique to Broadcom so the standard ohci-platform
+> > driver is being used. The link order for XHCI was changed in the
+> > Makefile because of the way STB XHCI, EHCI and OHCI controllers
+> > share a port which requires that the XHCI driver be initialized
+> > first. Also update MAINTAINERS.
+>
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -3477,6 +3477,14 @@ S:       Supported
+> >  F:     drivers/i2c/busses/i2c-brcmstb.c
+> >  F:     Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
+> >
+> > +BROADCOM BRCMSTB USB EHCI DRIVER
+> > +M:     Al Cooper <alcooperx@gmail.com>
+> > +L:     linux-usb@vger.kernel.org
+> > +L:     bcm-kernel-feedback-list@broadcom.com
+> > +S:     Maintained
+> > +F:     drivers/usb/host/ehci-brcm.*
+> > +F:     Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+>
+> This has ordering issues.
+> Run parse-maintainer.pl to fix. (Note, it creates by default a new
+> file, you might need to run diff manually to see the difference).
 
-> > > +
-> > > +/* i.MX8 NWL quirks */
-> > > +/* i.MX8MQ errata E11418 */
-> > > +#define E11418_HS_MODE_QUIRK	BIT(0)
-> > > +
-> > > +#define NWL_DSI_MIPI_FIFO_TIMEOUT msecs_to_jiffies(500)
-> > Should the defines be moved to the header file?
-> 
-> I've used this rules: register layout (that is chip properties)
-> go to the header file while defines specific to this very driver
-> go into the .c file. Hope that makes sense.
+I'm not sure what you mean.
+I ran "./scripts/parse-maintainers.pl" and did "diff MAINTAINERS
+MAINTAINERS.new" and there are no differences in or around my entry.
 
-Makes good sense, thanks for the explanation.
+Al
 
-	Sam
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
