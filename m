@@ -2,107 +2,83 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87160C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 14:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD55C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 16:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3D8208FE
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 14:52:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EtJmkLcK"
+	by mail.kernel.org (Postfix) with ESMTP id 1E5D020768
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 16:04:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586448267;
+	bh=jHl2tXuPUqSaQC+oyWJix3OnWQectQwicEvPWmdxhFQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YvRuCK5FKhPxvShhhEitlRGTAOh3ltDbduOEpue9N+9ftw2GjAgT8bDBMkPLLiw20
+	 bTpQh0NY+gLq/6ocsuaslQ1GCue8swbEZGd/bUZCE3w3SMFCYc70qW9q3Dt0z+cgmI
+	 X9DrBFp/4u2bfYCS88YaSgobILtpuWcsqqE3Jqag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbgDIOwQ (ORCPT
+        id S1728237AbgDIQE0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 10:52:16 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43505 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbgDIOwQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 10:52:16 -0400
-Received: by mail-lf1-f67.google.com with SMTP id k28so8096003lfe.10;
-        Thu, 09 Apr 2020 07:52:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ze/V2JXU5Dd6o3pQccxKMS1reN02+30rheQBo6CTvd8=;
-        b=EtJmkLcKWT1VvBoekMfVi4G/IdP51lOLqGI3DCGWKvYoSJX9VTKrBV7CfBuc5fCDo+
-         uKw1cbIpserHPhUs/W//5NfRkr2B1Iac8FMcQImayUXWPy/IBMA1wJ4WHZtvOBI8XGtd
-         LjpQ/cco9NMOtKBsQIWtLsallphNy3kVNYKHwJ7U5SYaMeVK6CwILbQbp103mlI/l2gy
-         My75x9UeDmhAx+bzfZERtqKjTOH2oZcR67OlnF+0H9OBzBudwTyYEIt0nBZqDch6WHIn
-         kaVycaWjKQ+S4qRGChhI68gskphg55kBWYyKUcCGSoT021hFDuf8nOBT475Ue3sjuNQJ
-         CcNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ze/V2JXU5Dd6o3pQccxKMS1reN02+30rheQBo6CTvd8=;
-        b=iebuAhm18WUx4AGJdjVdkG0XUNFXxjQcdGZ1xnBAFllbEtFeNC22h2BXWo6Uvv0p5Y
-         DTBel7u75VNtqTJU4PWMKvhovQISRuCig9BQd9KaMZmJ4ISGU2+XW+3xSOn6o6oxHq1G
-         4s9oTnuXhQQLcYXr0bysDfQ36bgfNpGXtiZ1UwyduABsrkA2ykWU9Bpo/PxVeKAKWIck
-         qL6d0XDwFl5ly0KoyZf5EXbW/R/JVCHjn0kGyw4Ad1b1AdsmOQJJiMaBiEgoCnjC277G
-         NeyOGMotgiZuCYxVPVal/YhkuCkVWz0DrBgvUau6ugFoOQovX7Xt1DuKlZ7n+l7ogfu/
-         6OmA==
-X-Gm-Message-State: AGi0PuaG9TV6+g6Rk1LGNl2m/Gjpx1Tk76Il+smxzJThsMkv1yU21syT
-        2WANygNDtwYa9jh2I4gGLmd9sRfw
-X-Google-Smtp-Source: APiQypKEJgsBG72cT7T421h/LiCZlt01kMa/HHAJAkrMz6hTbZ3iGPgQpuFAJHbdjXE3AzP9I6kzuw==
-X-Received: by 2002:ac2:4c34:: with SMTP id u20mr8073483lfq.40.1586443931852;
-        Thu, 09 Apr 2020 07:52:11 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id v17sm3353142lfe.34.2020.04.09.07.52.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 07:52:11 -0700 (PDT)
-Subject: Re: [PATCH v1 0/2] Support headset on Tegra boards that use WM8903
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20200330204011.18465-1-digetx@gmail.com>
-Message-ID: <5c9c995a-a571-e543-e680-30739cb1561c@gmail.com>
-Date:   Thu, 9 Apr 2020 17:52:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 9 Apr 2020 12:04:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39018 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728193AbgDIQEZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Apr 2020 12:04:25 -0400
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE93A2082D
+        for <devicetree@vger.kernel.org>; Thu,  9 Apr 2020 16:04:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586448266;
+        bh=jHl2tXuPUqSaQC+oyWJix3OnWQectQwicEvPWmdxhFQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JvQO1zcrMuUG+G5yhLQ+FC82141KHggoH55IydrkE9dcXvWyDOTx0LTZ8G+DeNqlK
+         rX1a6zIdEqdAN3ocTVxK+Ok6FToMIDzn+3Vn9py2AAZfjdP9qFDE9qHrh/HY6w40Hr
+         6WKFCtS/GgpM6sIqTnVtu0d/noeQ+uaMzN7ZgQSg=
+Received: by mail-qk1-f181.google.com with SMTP id m67so4430747qke.12
+        for <devicetree@vger.kernel.org>; Thu, 09 Apr 2020 09:04:25 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZVXcJdxSfcYrH9plGoH0tr+DummuzDly8ZJ6RIXJMePcJPFDMC
+        yClFdK0LzYauVIP2SSe/hZdB+YKz78l9oqpYjw==
+X-Google-Smtp-Source: APiQypJORe0eaQnOiuivPG/xIQ+NoeNev+Wot1Kl7zM7TIi6OX4XybaKhfLLknumjo9+oc4cE7ZrNPC+AtZSpQVaJvs=
+X-Received: by 2002:a37:61cd:: with SMTP id v196mr511059qkb.393.1586448265058;
+ Thu, 09 Apr 2020 09:04:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200330204011.18465-1-digetx@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200328183641.11226-1-festevam@gmail.com> <20200328203001.GD32230@ravnborg.org>
+In-Reply-To: <20200328203001.GD32230@ravnborg.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 9 Apr 2020 10:04:13 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+JXb3DHo-on-52TN6fGeukdPQPe+S+ZNrJmLxFT0rFOw@mail.gmail.com>
+Message-ID: <CAL_Jsq+JXb3DHo-on-52TN6fGeukdPQPe+S+ZNrJmLxFT0rFOw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: display: ltk500hd1829: Remove the reg property
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-30.03.2020 23:40, Dmitry Osipenko пишет:
-> Hello,
-> 
-> Some devices have a 4-pin jack instead of a 3-pin and currently the
-> WM8903 configuration is hardcoded to the case of 3-pin jack in the
-> Tegra's ASoC driver. A new device-tree property is required in order
-> to convey that hardware has a 4-pin jack, and thus, microphone's
-> detection needs to be done in a different way.
-> 
-> In particular this is needed for Acer A500 tablet device that has
-> a 4-pin headset jack, otherwise userspace sees headset instead of
-> headphones and internal microphone isn't enabled by ALSA UCM rule
-> when it should be. Please review and apply, thanks in advance.
-> 
-> Dmitry Osipenko (2):
->   dt-bindings: sound: tegra-wm8903: Document new nvidia,headset property
->   ASoC: tegra: tegra_wm8903: Support nvidia,headset property
-> 
->  .../devicetree/bindings/sound/nvidia,tegra-audio-wm8903.txt | 1 +
->  sound/soc/tegra/tegra_wm8903.c                              | 6 +++++-
->  2 files changed, 6 insertions(+), 1 deletion(-)
-> 
+On Sat, Mar 28, 2020 at 2:30 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> On Sat, Mar 28, 2020 at 03:36:40PM -0300, Fabio Estevam wrote:
+> > Commit 52120e8c7ae3 ("dt-bindings: display: fix panel warnings") removed
+> > the dsi unit name, but missed to remove the 'reg' property, which causes
+> > the following 'make dt_binding_check' warning:
+> >
+> > Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.example.dts:17.5-29.11: Warning (unit_address_vs_reg): /example-0/dsi: node has a reg or ranges property, but no unit name
+> >
+> > Fix it by removing the unneeded 'reg' property.
+> >
+> > Fixes: 52120e8c7ae3 ("dt-bindings: display: fix panel warnings")
+> > Signed-off-by: Fabio Estevam <festevam@gmail.com>
+>
+> Thanks, applied to drm-misc-next.
 
-Jon / Stephen, are you okay with this patchset? Could you please ack it?
-Thanks in advance.
+This should go in fixes for 5.7 as well as the one for xinpeng,xpp055c272.
+
+Rob
