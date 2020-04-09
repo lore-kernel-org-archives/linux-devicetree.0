@@ -2,108 +2,126 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F92BC2BB85
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 18:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DFBC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 18:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24D392087E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 18:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E442082D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 18:28:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aMaO6MI5"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YPzLgxQA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgDISYh (ORCPT
+        id S1726609AbgDIS2S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 14:24:37 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46532 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbgDISYh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 14:24:37 -0400
-Received: by mail-lf1-f68.google.com with SMTP id m19so353333lfq.13;
-        Thu, 09 Apr 2020 11:24:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fa26jqPPtzIkc//RtMH6SVR58k747j0sywbqTRpv304=;
-        b=aMaO6MI5RtYfDEKWn9t0hPBC+iiaGTHCKRHtqhDSpYRMdBINmseVb852oVgHht6hPG
-         fd5K+uLll0UGAFw7Ko66nAjKVrlhMMp65nYW03VLlXPRaY5atpmWKGaXhAtAb6xCClV6
-         N47yqVKTXIOkz8e1N84nDPdfP9RrkXWPvqVNvtCeWnZrcO5m7hm7hcheYrI9c+na0Xow
-         +vd9UPBZHs9OesASsdiq182qwSHO+rFmLE70XnZdIBKxF84e6TEcDUkS3c+EToF3JiTA
-         dM95arlpy/Idu/NqW0rGgaHFtWN2RkP0URVjCMUNSOkAKTqoAPag5CwvxT/dKtmXCGUj
-         A1qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fa26jqPPtzIkc//RtMH6SVR58k747j0sywbqTRpv304=;
-        b=HMd8rcob4UOZc1YvQoIAVp7CeQRpiU+GGJ6uhs5QVcZhpw1Bjv7fT+mDNCd5Sx5hHr
-         DANoKrDEUuSrclign39Y0mZeNy7+rQ+iziURyrSMB28VV562r9QQY+zfTKkFsKucrx2j
-         ypj83eR2yckJhg36JYMhEnI+PKAUnZBfn3fmQn8vKk2EDdKCuPy3P0tcubfaYf4l9XXW
-         0twK24Ku28goqOSoyXs5qWyIaCN6HLG8CY5ScwZxtx7sTmKvG39eWd4zAYWeqis86qk0
-         eZ/7MhG2UdhDK28PsucYX3egdts1qy25HRUYMdA0tkfLbaxbSPEa+jg0EjWBbqYmkBCM
-         V7wA==
-X-Gm-Message-State: AGi0PuZaFjWIe2LZboAmKYQh83LbwTHNKOSfOMRrJRtn6ff4vixYNuGC
-        +xzOEuIeODaATzsXJt2X3As=
-X-Google-Smtp-Source: APiQypKBIIC1fFOKcSXJcsM3k16YK6Uo7dy37UIDlG+baWYmUXAJIkTaBwCpQaQHtwMdvrWhiCEcxg==
-X-Received: by 2002:a05:6512:443:: with SMTP id y3mr371032lfk.166.1586456673273;
-        Thu, 09 Apr 2020 11:24:33 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id w7sm2108193lji.92.2020.04.09.11.24.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 11:24:32 -0700 (PDT)
-Subject: Re: [PATCH v6 07/14] clk: tegra: Implement Tegra210 EMC clock
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200409175238.3586487-1-thierry.reding@gmail.com>
- <20200409175238.3586487-8-thierry.reding@gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <8dc000fb-8867-cf8f-8204-a9e1e79a4811@gmail.com>
-Date:   Thu, 9 Apr 2020 21:24:31 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 9 Apr 2020 14:28:18 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9757 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbgDIS2S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 14:28:18 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e8f690c0000>; Thu, 09 Apr 2020 11:27:24 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 09 Apr 2020 11:28:18 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 09 Apr 2020 11:28:18 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Apr
+ 2020 18:28:17 +0000
+Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Apr 2020
+ 18:28:16 +0000
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
+ <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
+ <9e317f65-8a02-3b15-cfec-8e0d8374130e@gmail.com>
+ <97b35910-4c93-123a-43a0-eb14476ed0f3@nvidia.com>
+ <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
+ <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
+ <0c425505-347f-7418-af7e-d121fe0d06dc@nvidia.com>
+ <db7c7051-5674-cdb9-0aa4-ee94125b3024@gmail.com>
+ <1a31cd60-739f-0660-1c45-31487d2f2128@nvidia.com>
+ <603084a5-249a-4fe2-3646-e9335ef9ab43@nvidia.com>
+ <7895b9c6-f27d-8939-73d7-67d785e1a8b7@nvidia.com>
+ <ea60b489-990e-4b15-e215-d93381a1371e@nvidia.com>
+ <b2405c2a-73c0-ad69-ccea-0388caf8045c@gmail.com>
+ <15d8b525-67b5-b437-f7fd-89f80cd0d9f6@nvidia.com>
+ <a638bb8e-bb50-7aa5-05a0-8de1c6207ba7@nvidia.com>
+ <ced73258-6f4b-e970-4ca5-ecdf1808a4c3@nvidia.com>
+ <ad646fde-2eed-eeeb-4d85-ec36d6613eb1@nvidia.com>
+ <7288cacd-badc-cb01-1f4c-286dd024ca10@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <77c88717-618f-b366-2b6a-f8b4abaa66cc@nvidia.com>
+Date:   Thu, 9 Apr 2020 11:28:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200409175238.3586487-8-thierry.reding@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <7288cacd-badc-cb01-1f4c-286dd024ca10@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586456844; bh=J/aG9q8CC/oWgBUBz0DhAt3fXvAn/5D8wg8H/6egt/k=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=YPzLgxQABUqO8OPEPQuriGTYqhWKxRFVQrPN++BwMsEhM6J9i6K8noQnvD0TY2Knu
+         RiBq8AfHissKuS2udec8T94gBVNUEIdF49dfKr0zhbfzVMgl+IgneaUjB6vIlJqvow
+         qK8v9s3lxrmlKiTI9Ow6XuZsKHp6Ig4oSqJJCnziLNupWfqC/z3kUSbkdKRPLlIDNO
+         h/vRsMsyimqOCe6d1PfptFD6mGbK3Z174Gwhdgp3Fdwy2I4ZxkXFgkEgzO57j1hE+g
+         kqtVlEcahsvxGcs8vH+QZvais40AOL7k/7vszJlqJ4A1IxGLDp9UXAY+qMWoNJvvOM
+         vX53TCKI0iRcg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-09.04.2020 20:52, Thierry Reding пишет:
-...
-> +static long tegra210_clk_emc_round_rate(struct clk_hw *hw, unsigned long rate,
-> +					unsigned long *prate)
-> +{
-> +	struct tegra210_clk_emc *emc = to_tegra210_clk_emc(hw);
-> +	struct tegra210_clk_emc_provider *provider = emc->provider;
-> +	unsigned int i;
-> +
-> +	if (!provider || !provider->configs || provider->num_configs == 0)
-> +		return clk_hw_get_rate(hw);
 
-This still looks wrong to me. Nobody should be able to get EMC clock
-until provider is registered.
+On 4/9/20 7:50 AM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 09.04.2020 06:38, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> ...
+>> Tested with 3 buffers and by checking outstanding buffers in process by
+>> VI hw and holding to start capture till one outstanding buffer in
+>> process by HW.
+>> Also tested with 2 buffers without checking for outstanding buffers.
+>>
+>> In both cases, I see same %CPU for the kthreads and is < 1%
+>>
+> I don't see where buffers queue max limit is set to 3 in the code, but
+> should be okay if CPU isn't getting hogged. Looking forward to v7.
+Sorry, correction I meant to say pre-queued buffers before streaming not=20
+num_buffers.
+vb2 queue min_buffers_needed was set to 3 as part of one of the issue=20
+debug in earlier version which actually was irrelevant to that issue and=20
+should have been removed. Will remove min_buffers_needed in v7.
 
-This is troublesome, especially given that you're allowing the EMC
-driver to be compiled as a loadable module. For example, this won't work
-with the current ACTMON driver because it builds OPP table based on the
-clk-rate rounding during the driver's probe, so it won't be able to do
-it properly if provider is "temporarily" missing.
+I added checking for outstanding requests by hardware just to be safer=20
+although we may not hit this case of issuing more than 1 outstanding=20
+frame capture to VI hardware as capture_frame() waits till it sees frame=20
+start event through HW syncpt increment before proceeding for memory=20
+write and issuing next frame capture.
 
-... I think that in a longer run we should stop manually building the
-ACTMON's OPP table and instead define a proper OPP table (per-HW Speedo
-ID, with voltages) in a device-tree. But this is just a vague plans for
-the future for now.
+So issuing frame captures are synchronized with frame start and frame end.
+
+Will remove min_buffers_needed and also explicit check for outstanding=20
+buffers in v7.
+
+
