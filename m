@@ -2,120 +2,150 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA567C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 11:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA690C2BB86
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 12:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82E9920757
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 11:50:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pb9aAJmg"
+	by mail.kernel.org (Postfix) with ESMTP id A8AD12072F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 12:14:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586434483;
+	bh=8RDOfeRpv8sSTfJOK+ESYmlCMV/Tj7tFARBsz1kHT5c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N5lCBYb3b4sxQ/RNRGHuBmr1RCMKGTb62UaVYDiXE19xu41GG12/TkZqBWKiKi6ZA
+	 x7nwW7hDxsqnjTyOP163jmcM0Odod9tP3dmd8IuXGWyEp9rLyc6oQpnqP94sxBffHP
+	 /pY31X3vEgyve7Pcuz37xBN6PEQ7BTysfO5RcJZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbgDILuE (ORCPT
+        id S1725987AbgDIMOj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 07:50:04 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41049 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgDILuE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 07:50:04 -0400
-Received: by mail-io1-f68.google.com with SMTP id b12so3493438ion.8;
-        Thu, 09 Apr 2020 04:50:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+XqP7Ap1vUorR0W4ROT/4/sK/I8YLfCYd/qeR1cdEgE=;
-        b=pb9aAJmgSBJLFZELTtD91Tc95hIg9mDY+5kW6+GTYkZaHen2JQf7wzds/IJmGDXHUe
-         C5XEesCYKp3GfC6zLjKW6/rvD1Yrj3DHNXFn1DbVZQ8i7epRLwih8GTlFT1vZSK/iYU8
-         vlTFysaBrWnf11tqcUfcGUNE46VNhUcf8ztZzk/5FRvhWUb3VEOSNVyBh0nlgN6nh2d8
-         YTMQ6vxxVkgVp4cgEPHpp42L2cxkjxsoMNvWzg53KTRQONuKukD05S9tegwhGPsq396I
-         FmAQwmI57WYF2vX58i/su/H2kvtQmacL17KBJJy8pNhDaC8XurNV8rGaHkA8bQGfYj5k
-         ELYQ==
+        Thu, 9 Apr 2020 08:14:39 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:46176 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbgDIMOj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 08:14:39 -0400
+Received: by mail-ed1-f67.google.com with SMTP id dk4so1560333edb.13;
+        Thu, 09 Apr 2020 05:14:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+XqP7Ap1vUorR0W4ROT/4/sK/I8YLfCYd/qeR1cdEgE=;
-        b=ASPO49B6wmSm9iVAe2Tzq9BLkM/gYshECuOECmlDZ9ra3LzNf3VI4jb0gVgNHuB+GD
-         VSe7Kfh8hN02osjyDKZpwzQjNE4RdEiT9GFqLz1uBpBCiXJXI8OYrU637MIk/uIZHjrf
-         XUHxcpwtBpAq8QXdz8cemW1+k6rxMRAEL94GYUg646qs/kp6nufpxek/OIy/MZ4LzVs5
-         m95X8ALrTWZqGKz5g1v0BlMll4k3q8Moig/wQhPuJdnkQV+H/4qmMXdfknAX1iOKGG7x
-         fvZLHaLnT4000iysc4TPJD/u+BxY3+XuJqCd1HFA2JwGxk6j2GnkGtOUHfTVMud3YwCS
-         sZug==
-X-Gm-Message-State: AGi0PuYzy2PdlbjhheieVSrC32Pw1AwUL0QIy5/3uhzzGoEwWyjs59lI
-        EKR7LATooYnSqrb5wd/v/PTeOlSuyMyfPNyJ76BMtpHaErY=
-X-Google-Smtp-Source: APiQypJQhXszQeNXb++KfW2iCUidd5W34HBnZ+kUn+qj+aseYfrFokyXuutDqIhvyASuZlMs6VaFb/5bfk17ypWr05s=
-X-Received: by 2002:a6b:5116:: with SMTP id f22mr11568386iob.15.1586433003478;
- Thu, 09 Apr 2020 04:50:03 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gjEM13EEF7k1kbQW2kuKohhF4C6T/w7Fwh7P4gFdLqA=;
+        b=I4LNnoXz1z0gieIsGitYgwO+1sflmuUCL98wdt8mAlA0Hzkk2Pi0D3U5xfdXqOjQyX
+         BAkfocMeOVQsj8A3wGPvXwVwueao2TbraV6SNJCUO1R+e1/0oeU8e8lQblpt/scPQt5t
+         x9uIbpNBl3AriaoWJO3IqwQzARZPv5Oh05G6BBjzGY4orbiY0DoOFGwi6CYAyDYnxxKB
+         23wYNsm2kXXXASr/kpXbxL9w/OLDK0AthcvINkdvJLwRx0GNyzP1AcnQoE8TFNcdZQJO
+         UesApie1Ada8sRCaEy/6aitCX2Hyz72FDhgQf90s82kT1nb8e/Hviwa4T5rZcDdGfO9x
+         SRnQ==
+X-Gm-Message-State: AGi0PuboaxMNjsYmRZgGuBbBdazP2gJ6C+ebwmC2352XIrBRZHN5Tgoi
+        dqA+WZzhNKtzhv/TTvwhnLk=
+X-Google-Smtp-Source: APiQypLiKWNSVqSQqzEU1uEC5Rj3p/l7GJLgM9883/Bzide7ODn4Zj6pkixK6wZWrnVqtCwUfOA5sQ==
+X-Received: by 2002:a50:ee82:: with SMTP id f2mr10974652edr.208.1586434476649;
+        Thu, 09 Apr 2020 05:14:36 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id a17sm3035898edj.53.2020.04.09.05.14.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 Apr 2020 05:14:35 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 14:14:32 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     devicetree@vger.kernel.org, Paul Barker <pbarker@konsulko.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrius =?utf-8?B?xaB0aWtvbmFz?= <andrius@stikonas.eu>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hugh Cole-Baker <sigmaris@gmail.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Johan Jonker <jbx6244@gmail.com>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Nick Xie <nick@khadas.com>, Rob Herring <robh+dt@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Soeren Moch <smoch@web.de>, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [RFC PATCH v2 4/6] arm64: dts: pwm: replace flag 0 with
+ PWM_NOFLAGS
+Message-ID: <20200409121432.GA802@kozik-lap>
+References: <20200405192246.3741784-1-oleksandr.suvorov@toradex.com>
+ <20200405192246.3741784-5-oleksandr.suvorov@toradex.com>
 MIME-Version: 1.0
-References: <20200408181406.40389-1-alcooperx@gmail.com> <20200408181406.40389-5-alcooperx@gmail.com>
- <CAHp75Vd_nbgwdE5Fbm3oxd_+51BJZ=67sVyjKiN2zLS+J4X-Fw@mail.gmail.com>
-In-Reply-To: <CAHp75Vd_nbgwdE5Fbm3oxd_+51BJZ=67sVyjKiN2zLS+J4X-Fw@mail.gmail.com>
-From:   Alan Cooper <alcooperx@gmail.com>
-Date:   Thu, 9 Apr 2020 07:49:52 -0400
-Message-ID: <CAOGqxeXQE0z=+6yuEME48am__2vtJhBpetYd_sZamJmm1h_TLQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] usb: host: Add ability to build new Broadcom STB
- USB drivers
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        USB <linux-usb@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200405192246.3741784-5-oleksandr.suvorov@toradex.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 5:08 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Thu, Apr 9, 2020 at 12:52 AM Al Cooper <alcooperx@gmail.com> wrote:
-> >
-> > Add the build system changes needed to get the Broadcom STB XHCI,
-> > EHCI and OHCI functionality working. The OHCI support does not
-> > require anything unique to Broadcom so the standard ohci-platform
-> > driver is being used. The link order for XHCI was changed in the
-> > Makefile because of the way STB XHCI, EHCI and OHCI controllers
-> > share a port which requires that the XHCI driver be initialized
-> > first. Also update MAINTAINERS.
->
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -3477,6 +3477,14 @@ S:       Supported
-> >  F:     drivers/i2c/busses/i2c-brcmstb.c
-> >  F:     Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
-> >
-> > +BROADCOM BRCMSTB USB EHCI DRIVER
-> > +M:     Al Cooper <alcooperx@gmail.com>
-> > +L:     linux-usb@vger.kernel.org
-> > +L:     bcm-kernel-feedback-list@broadcom.com
-> > +S:     Maintained
-> > +F:     drivers/usb/host/ehci-brcm.*
-> > +F:     Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
->
-> This has ordering issues.
-> Run parse-maintainer.pl to fix. (Note, it creates by default a new
-> file, you might need to run diff manually to see the difference).
+On Sun, Apr 05, 2020 at 10:22:44PM +0300, Oleksandr Suvorov wrote:
+> The raw value '0' in the 3rd cell of the "pwms" property means there are
+> no flags to be set.
+> 
+> This patch converts '0' flag into PWM_NOFLAGS.
+> 
+> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+> ---
+> 
+> Changes in v2:
+> - Use PWM_NOFLAGS instead of PWM_POLARITY_NORMAL to avoid possible
+>   conflict with enum pwm_polarity in <linux/pwm.h>. Also, this name
+>   reflects the sense of this value more precisely.
+> 
+>  arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts      | 2 +-
+>  arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts       | 2 +-
+>  arch/arm64/boot/dts/amlogic/meson-axg-s400.dts             | 3 ++-
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi                 | 1 +
+>  arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi          | 1 +
+>  arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts          | 5 +++--
+>  arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts            | 2 +-
+>  arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts         | 5 +++--
+>  arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi    | 4 ++--
+>  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts       | 4 ++--
+>  arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts       | 7 ++++---
+>  arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi        | 3 ++-
+>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi                  | 1 +
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts       | 3 ++-
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts     | 3 ++-
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi           | 3 ++-
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi       | 3 ++-
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi          | 3 ++-
+>  arch/arm64/boot/dts/amlogic/meson-gxl-s805x-p241.dts       | 3 ++-
+>  .../boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts    | 3 ++-
+>  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts | 2 +-
+>  .../arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts | 3 ++-
+>  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi      | 3 ++-
+>  arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts      | 5 +++--
+>  arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts         | 3 ++-
+>  arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi         | 4 +++-
+>  arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts     | 2 +-
+>  arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts           | 7 ++++---
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi      | 3 ++-
 
-I'm not sure what you mean.
-I ran "./scripts/parse-maintainers.pl" and did "diff MAINTAINERS
-MAINTAINERS.new" and there are no differences in or around my entry.
+I understand you are going to push it through arm-soc, so:
+For Exynos:
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Al
+Otherwise if you expect individual maintainers to pick it up, please
+split per architecture.
 
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+Best regards,
+Krzysztof
