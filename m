@@ -7,234 +7,112 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C5BC2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 16:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BADC2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 16:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1FDB20768
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 16:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 752FC218AC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 16:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586448526;
-	bh=TOT/Mzl4w6vmAGDWGhPKnT+4PELnslGlsvCk7rJDnzE=;
+	s=default; t=1586448683;
+	bh=dY4y3+4XbjvyakdB/uUdMrfzN4g/tqUzd0PNclNSbKY=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ON8l9nwspvScvl/lBbjDBbxo7ew52IcRIaMqe8azRjy4ZSCcRtHo0Su2OXV0K9mTI
-	 RBGBWquKcvFaX6H+v7tlWAZC0l3CckyjZSd/8OyJrvWjzO/Tp7z9PzX63uT5ZbGOG3
-	 yAuDMP2g/dWlzrDb+hPVX0jjz4ieiyhvFHBmS0mE=
+	b=DMOkkBaLCWtkinJzTxq72/DTyLr5cu2COIfpLBAYm3MvCtcXlQ8nkWhm0Q3PScA/D
+	 QeMjCSagFQ60ZNujrubioJwFXu5NV39NiPZx5my13e93chtbka3CKzh/bAvm3ECjQD
+	 WIBZSbnEWlk46m2ooyCvu+7DEYvcLhVDmgog6h6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbgDIQIp (ORCPT
+        id S1728398AbgDIQLW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 12:08:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39938 "EHLO mail.kernel.org"
+        Thu, 9 Apr 2020 12:11:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728247AbgDIQIp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Apr 2020 12:08:45 -0400
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+        id S1728254AbgDIQLW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Apr 2020 12:11:22 -0400
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89005208E4;
-        Thu,  9 Apr 2020 16:08:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E81521973
+        for <devicetree@vger.kernel.org>; Thu,  9 Apr 2020 16:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586448524;
-        bh=TOT/Mzl4w6vmAGDWGhPKnT+4PELnslGlsvCk7rJDnzE=;
+        s=default; t=1586448682;
+        bh=dY4y3+4XbjvyakdB/uUdMrfzN4g/tqUzd0PNclNSbKY=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QBCvXXzoS+RU5UsWnBtsz4E4MHaY7nxvY8jMC6PtPJDpKW+PMVeNy0aQXSDKAgnUG
-         x47OnmsO1Z7aE5yw/d7znpeDhpvchrKN/hovaCz1pApHeVqW6NHRWJ+Lx5Lfv5TAqF
-         6+vK3kpheyU/Hmnx2V9Iat4G9BejPoZa8i9/KPNM=
-Received: by mail-ed1-f51.google.com with SMTP id v1so390189edq.8;
-        Thu, 09 Apr 2020 09:08:44 -0700 (PDT)
-X-Gm-Message-State: AGi0Puak/YBQ2T/Mn83onKVPAXM2xtu9GCwBeKSpmBua+OkemOTlMqw/
-        D52nB8mY+V1TrKiZBj/L+g5VhlJR0mmv2aC7MA==
-X-Google-Smtp-Source: APiQypI+MGlIlAQIPn+88qW5Z3iOShPT8da+gGggfEYATb3irxEdImO6ejY5HXdb4Cdf8Lc+YiDb+ROl/NqElrYEHCo=
-X-Received: by 2002:a05:6402:b70:: with SMTP id cb16mr741631edb.48.1586448522950;
- Thu, 09 Apr 2020 09:08:42 -0700 (PDT)
+        b=Y6Kkz4YffGxvN/26LWVTywp6KjT9Bo0OWatb6LvFCbHM5RTBHAhNv1dUsPr/8Ihqs
+         j5P/0ncVLiCgI6SGumdrR+scvugGw58Y0uXtyHaQ+fpsSj+5FVBPrE39jVh6URWWmN
+         /0VgOzgKjsf3HYM+csRMdIkODW12sdmHj1MfDENk=
+Received: by mail-qk1-f169.google.com with SMTP id c63so4526607qke.2
+        for <devicetree@vger.kernel.org>; Thu, 09 Apr 2020 09:11:22 -0700 (PDT)
+X-Gm-Message-State: AGi0Pua5dJ6s3HKjKQh+Mry+xqG09DVsbMpasv+FDOK2TbKyyV5h5k/w
+        Tc4/72atkEsO46TjMTRjovc2c7dTJder3e3QDQ==
+X-Google-Smtp-Source: APiQypLHsZq1dcUUjmhrUwi046XKEZhwxT7wbBhFjz2qi6S6YZ3km9QRZscpkxJrdVKvm7zomaEcxWOLtAO8qAUOKpA=
+X-Received: by 2002:a37:c43:: with SMTP id 64mr539234qkm.119.1586448681197;
+ Thu, 09 Apr 2020 09:11:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200409055012.199320-1-hsinyi@chromium.org>
-In-Reply-To: <20200409055012.199320-1-hsinyi@chromium.org>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Fri, 10 Apr 2020 00:08:31 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_8fOHW7cm_mPGY9J1DL6xnY76+cRmbBEBmuZLWeRe9dFg@mail.gmail.com>
-Message-ID: <CAAOTY_8fOHW7cm_mPGY9J1DL6xnY76+cRmbBEBmuZLWeRe9dFg@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: mt8173: Add gce setting in mmsys and
- display node
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
+References: <20200408195109.32692-1-sam@ravnborg.org> <20200408195109.32692-2-sam@ravnborg.org>
+In-Reply-To: <20200408195109.32692-2-sam@ravnborg.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 9 Apr 2020 10:11:10 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKp9r6sQuyKtqZnx26-2kzwkQSaa7N6Lbs2g6rC-Rpx1w@mail.gmail.com>
+Message-ID: <CAL_JsqKp9r6sQuyKtqZnx26-2kzwkQSaa7N6Lbs2g6rC-Rpx1w@mail.gmail.com>
+Subject: Re: [PATCH v2 01/36] dt-bindings: display: allow port and ports in panel-lvds
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
         devicetree@vger.kernel.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Hsin-Yi:
-
-Hsin-Yi Wang <hsinyi@chromium.org> =E6=96=BC 2020=E5=B9=B44=E6=9C=889=E6=97=
-=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=881:50=E5=AF=AB=E9=81=93=EF=BC=9A
+On Wed, Apr 8, 2020 at 1:51 PM Sam Ravnborg <sam@ravnborg.org> wrote:
 >
-> In order to use GCE function, we need add some informations
-> into display node (mboxes, mediatek,gce-client-reg, mediatek,gce-events).
+> Both port and ports names may be used.
+> port - for a single port
+> ports - if there is more than one port in sub-nodes
 >
-
-Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> Reviewed-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> Fixes the following warning:
+> advantech,idk-2121wr.example.dt.yaml: panel-lvds: 'port' is a required property
+>
+> advantech,idk-2121wr.yaml needs several ports, so uses a ports node.
+>
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Cc: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
 > ---
-> change log:
-> v1->v2: align with
-> 19d8e335d58a ("dt-binding: gce: remove atomic_exec in mboxes property")
-> 60fa8c13ab1a ("drm/mediatek: Move gce event property to mutex device node=
-")
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/display/panel/lvds.yaml | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+
+
 >
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/d=
-ts/mediatek/mt8173.dtsi
-> index ccb8e88a60c5..8337ba42845d 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -549,7 +549,7 @@ gce: mailbox@10212000 {
->                         interrupts =3D <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
->                         clocks =3D <&infracfg CLK_INFRA_GCE>;
->                         clock-names =3D "gce";
-> -                       #mbox-cells =3D <3>;
-> +                       #mbox-cells =3D <2>;
->                 };
->
->                 mipi_tx0: mipi-dphy@10215000 {
-> @@ -916,6 +916,9 @@ mmsys: clock-controller@14000000 {
->                         assigned-clocks =3D <&topckgen CLK_TOP_MM_SEL>;
->                         assigned-clock-rates =3D <400000000>;
->                         #clock-cells =3D <1>;
-> +                       mboxes =3D <&gce 0 CMDQ_THR_PRIO_HIGHEST>,
-> +                                <&gce 1 CMDQ_THR_PRIO_HIGHEST>;
-> +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1400XXXX=
- 0 0x1000>;
->                 };
->
->                 mdp_rdma0: rdma@14001000 {
-> @@ -996,6 +999,7 @@ ovl0: ovl@1400c000 {
->                         clocks =3D <&mmsys CLK_MM_DISP_OVL0>;
->                         iommus =3D <&iommu M4U_PORT_DISP_OVL0>;
->                         mediatek,larb =3D <&larb0>;
-> +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1400XXXX=
- 0xc000 0x1000>;
->                 };
->
->                 ovl1: ovl@1400d000 {
-> @@ -1006,6 +1010,7 @@ ovl1: ovl@1400d000 {
->                         clocks =3D <&mmsys CLK_MM_DISP_OVL1>;
->                         iommus =3D <&iommu M4U_PORT_DISP_OVL1>;
->                         mediatek,larb =3D <&larb4>;
-> +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1400XXXX=
- 0xd000 0x1000>;
->                 };
->
->                 rdma0: rdma@1400e000 {
-> @@ -1016,6 +1021,7 @@ rdma0: rdma@1400e000 {
->                         clocks =3D <&mmsys CLK_MM_DISP_RDMA0>;
->                         iommus =3D <&iommu M4U_PORT_DISP_RDMA0>;
->                         mediatek,larb =3D <&larb0>;
-> +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1400XXXX=
- 0xe000 0x1000>;
->                 };
->
->                 rdma1: rdma@1400f000 {
-> @@ -1026,6 +1032,7 @@ rdma1: rdma@1400f000 {
->                         clocks =3D <&mmsys CLK_MM_DISP_RDMA1>;
->                         iommus =3D <&iommu M4U_PORT_DISP_RDMA1>;
->                         mediatek,larb =3D <&larb4>;
-> +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1400XXXX=
- 0xf000 0x1000>;
->                 };
->
->                 rdma2: rdma@14010000 {
-> @@ -1036,6 +1043,7 @@ rdma2: rdma@14010000 {
->                         clocks =3D <&mmsys CLK_MM_DISP_RDMA2>;
->                         iommus =3D <&iommu M4U_PORT_DISP_RDMA2>;
->                         mediatek,larb =3D <&larb4>;
-> +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XXXX=
- 0 0x1000>;
->                 };
->
->                 wdma0: wdma@14011000 {
-> @@ -1046,6 +1054,7 @@ wdma0: wdma@14011000 {
->                         clocks =3D <&mmsys CLK_MM_DISP_WDMA0>;
->                         iommus =3D <&iommu M4U_PORT_DISP_WDMA0>;
->                         mediatek,larb =3D <&larb0>;
-> +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XXXX=
- 0x1000 0x1000>;
->                 };
->
->                 wdma1: wdma@14012000 {
-> @@ -1056,6 +1065,7 @@ wdma1: wdma@14012000 {
->                         clocks =3D <&mmsys CLK_MM_DISP_WDMA1>;
->                         iommus =3D <&iommu M4U_PORT_DISP_WDMA1>;
->                         mediatek,larb =3D <&larb4>;
-> +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XXXX=
- 0x2000 0x1000>;
->                 };
->
->                 color0: color@14013000 {
-> @@ -1064,6 +1074,7 @@ color0: color@14013000 {
->                         interrupts =3D <GIC_SPI 187 IRQ_TYPE_LEVEL_LOW>;
->                         power-domains =3D <&scpsys MT8173_POWER_DOMAIN_MM=
->;
->                         clocks =3D <&mmsys CLK_MM_DISP_COLOR0>;
-> +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XXXX=
- 0x3000 0x1000>;
->                 };
->
->                 color1: color@14014000 {
-> @@ -1072,6 +1083,7 @@ color1: color@14014000 {
->                         interrupts =3D <GIC_SPI 188 IRQ_TYPE_LEVEL_LOW>;
->                         power-domains =3D <&scpsys MT8173_POWER_DOMAIN_MM=
->;
->                         clocks =3D <&mmsys CLK_MM_DISP_COLOR1>;
-> +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XXXX=
- 0x4000 0x1000>;
->                 };
->
->                 aal@14015000 {
-> @@ -1080,6 +1092,7 @@ aal@14015000 {
->                         interrupts =3D <GIC_SPI 189 IRQ_TYPE_LEVEL_LOW>;
->                         power-domains =3D <&scpsys MT8173_POWER_DOMAIN_MM=
->;
->                         clocks =3D <&mmsys CLK_MM_DISP_AAL>;
-> +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XXXX=
- 0x5000 0x1000>;
->                 };
->
->                 gamma@14016000 {
-> @@ -1088,6 +1101,7 @@ gamma@14016000 {
->                         interrupts =3D <GIC_SPI 190 IRQ_TYPE_LEVEL_LOW>;
->                         power-domains =3D <&scpsys MT8173_POWER_DOMAIN_MM=
->;
->                         clocks =3D <&mmsys CLK_MM_DISP_GAMMA>;
-> +                       mediatek,gce-client-reg =3D <&gce SUBSYS_1401XXXX=
- 0x6000 0x1000>;
->                 };
->
->                 merge@14017000 {
-> @@ -1193,6 +1207,8 @@ mutex: mutex@14020000 {
->                         interrupts =3D <GIC_SPI 169 IRQ_TYPE_LEVEL_LOW>;
->                         power-domains =3D <&scpsys MT8173_POWER_DOMAIN_MM=
->;
->                         clocks =3D <&mmsys CLK_MM_MUTEX_32K>;
-> +                       mediatek,gce-events =3D <CMDQ_EVENT_MUTEX0_STREAM=
-_EOF>,
-> +                                              <CMDQ_EVENT_MUTEX1_STREAM_=
-EOF>;
->                 };
->
->                 larb0: larb@14021000 {
-> --
-> 2.26.0.292.g33ef6b2f38-goog
->
+> diff --git a/Documentation/devicetree/bindings/display/panel/lvds.yaml b/Documentation/devicetree/bindings/display/panel/lvds.yaml
+> index d0083301acbe..f9132d50821c 100644
+> --- a/Documentation/devicetree/bindings/display/panel/lvds.yaml
+> +++ b/Documentation/devicetree/bindings/display/panel/lvds.yaml
+> @@ -102,6 +102,12 @@ required:
+>    - width-mm
+>    - height-mm
+>    - panel-timing
+> -  - port
+> +
+> +if:
+> +  required:
+> +    - port
+> +else:
+> +  required:
+> +    - ports
+
+Humm, I guess 'then' is not required. That's a bit weird IMO.
+
+I usually do a 'oneOf' for these cases.
+
+Either way, please apply this to drm-misc-fixes (or
+drm-misc-next-fixes depending on the state of the tree). Or I can take
+it. I'd like to get all the warnings cleared up by rc2.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+Rob
