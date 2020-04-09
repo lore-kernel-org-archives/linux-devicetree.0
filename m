@@ -2,152 +2,159 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA79C2BB86
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 22:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E80C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 22:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 953D3208E4
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 22:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47EE92074F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 22:52:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SVPPqk9N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgDIWjL (ORCPT
+        id S1726973AbgDIWwl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 18:39:11 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:58675 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbgDIWjL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 18:39:11 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 78876FF803;
-        Thu,  9 Apr 2020 22:39:07 +0000 (UTC)
-Date:   Fri, 10 Apr 2020 00:39:07 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Kamel Bouhara <kamel.bouhara@bootlin.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 2/3] Input: rotary-encoder-counter: add DT bindings
-Message-ID: <20200409223907.GW3628@piout.net>
-References: <20200406155806.1295169-1-kamel.bouhara@bootlin.com>
- <20200406155806.1295169-3-kamel.bouhara@bootlin.com>
- <20200409222115.GT75430@dtor-ws>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409222115.GT75430@dtor-ws>
+        Thu, 9 Apr 2020 18:52:41 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:57194 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726689AbgDIWwl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 18:52:41 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586472761; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=h0FSuIUefockKuhVSAXTy3J0iwWzl0qO7vd4uJJG7io=; b=SVPPqk9NOcT2O8Q/wX2aGqbY/SKmTPISI8dw4MAEm+UIqRKRn5E/eYQanBjEEnsF7SlH+I5G
+ aSjBhUTBvpGqxhcUg5N+BBJ29o0VGXzEa2v1xYTqJH4jvKb3rq/AbLtrJFnsMQQ3XTXU4sE0
+ TmJDI1wiJoVq8R6Ne8AkkHlElvA=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8fa736.7fe93dae73e8-smtp-out-n05;
+ Thu, 09 Apr 2020 22:52:38 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C2C01C44791; Thu,  9 Apr 2020 22:52:38 +0000 (UTC)
+Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 52161C433BA;
+        Thu,  9 Apr 2020 22:52:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 52161C433BA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+From:   Wesley Cheng <wcheng@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
+        mgautam@codeaurora.org, vkoul@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Wesley Cheng <wcheng@codeaurora.org>
+Subject: [PATCH v6 1/5] dt-bindings: phy: Add binding for qcom,usb-snps-femto-v2
+Date:   Thu,  9 Apr 2020 15:52:25 -0700
+Message-Id: <1586472749-18599-2-git-send-email-wcheng@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1586472749-18599-1-git-send-email-wcheng@codeaurora.org>
+References: <1586472749-18599-1-git-send-email-wcheng@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dmitry,
+This binding shows the descriptions and properties for the
+Synopsis Femto USB PHY V2 used on QCOM platforms.
 
-On 09/04/2020 15:21:15-0700, Dmitry Torokhov wrote:
-> On Mon, Apr 06, 2020 at 05:58:05PM +0200, Kamel Bouhara wrote:
-> > Add dt binding for the counter variant of the rotary encoder driver.
-> > 
-> > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> > ---
-> >  .../input/rotary-encoder-counter.yaml         | 67 +++++++++++++++++++
-> >  1 file changed, 67 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
-> > new file mode 100644
-> > index 000000000000..a59f7c1faf0c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
-> > @@ -0,0 +1,67 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/input/rotary-encoder-counter.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Rotary Encoder Counter
-> > +
-> > +maintainers:
-> > +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
-> > +
-> > +description:
-> > +  Registers a Rotary encoder connected through a counter device.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: rotary-encoder-counter
-> 
-> I wonder if a separate driver is really needed. The original driver be
-> taught to use counter device when available?
-> 
+Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/phy/qcom,usb-snps-femto-v2.yaml       | 77 ++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
 
-By the original driver, do you mean drivers/input/misc/rotary_encoder.c
-that is using gpios ?
-
-> > +
-> > +  counter:
-> > +    description: Phandle for the counter device providing rotary position.
-> > +
-> > +  linux-axis:
-> > +    description: The input subsystem axis to map to this rotary encoder.
-> > +    type: boolean
-> > +
-> > +  qdec-mode:
-> > +    description: |
-> > +      Quadrature decoder function to set in the counter device.
-> > +      3: x1-PHA
-> > +      4: x1-PHB
-> > +      5: x2-PHA
-> > +      6: x2-PHB
-> > +      7: x4-PHA and PHB
-> 
-> Is it really property of the rotary encoder itself or property of the
-> counter device?
-> 
-
-The mode the quadrature decoder has to be put in depends on both the
-rotary encoder and the qdec.
-
-> > +
-> > +  steps:
-> > +    description: Number of steps in a full turnaround of the encoder.
-> > +      Only relevant for absolute axis. Defaults to 24 which is a typical
-> > +      value for such devices.
-> > +
-> > +  relative-axis:
-> > +    description: Register a relative axis rather than an absolute one.
-> > +    type: boolean
-> > +
-> > +  rollover:
-> > +    description: Automatic rollover when the rotary value becomes greater
-> > +      than the specified steps or smaller than 0. For absolute axis only.
-> > +    type: boolean
-> > +
-> > +  poll-interval:
-> > +    description: Poll interval at which the position is read from the counter
-> > +      device (default 500ms).
-> 
-> Is there a way found counters to signal an interrupt?
-> 
-
-For some counters, there are interrupts available, this is not trivial
-with the counter that is the target of this work but this is on the TODO
-list. Of course, this will also require adding a bit more to the
-in-kernel counter API to allow registering a callback that would be
-called when an interrupt happens.
-
-
+diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml b/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
+new file mode 100644
+index 0000000..a912df0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom,usb-snps-femto-v2.yaml
+@@ -0,0 +1,77 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/phy/qcom,usb-snps-femto-v2.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Qualcomm Synopsys Femto High-Speed USB PHY V2
++
++maintainers:
++  - Wesley Cheng <wcheng@codeaurora.org>
++
++description: |
++  Qualcomm Hi-Speed USB PHY
++
++properties:
++  compatible:
++    enum:
++      - qcom,usb-snps-hs-7nm-phy
++      - qcom,sm8150-usb-hs-phy
++      - qcom,usb-snps-femto-v2-phy
++
++  reg:
++    maxItems: 1
++
++  "#phy-cells":
++    const: 0
++
++  clocks:
++    items:
++      - description: rpmhcc ref clock
++
++  clock-names:
++    items:
++      - const: ref
++
++  resets:
++    items:
++      - description: PHY core reset
++
++  vdda-pll-supply:
++    description: phandle to the regulator VDD supply node.
++
++  vdda18-supply:
++    description: phandle to the regulator 1.8V supply node.
++
++  vdda33-supply:
++    description: phandle to the regulator 3.3V supply node.
++
++required:
++  - compatible
++  - reg
++  - "#phy-cells"
++  - clocks
++  - clock-names
++  - resets
++  - vdda-pll-supply
++  - vdda18-supply
++  - vdda33-supply
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,rpmh.h>
++    #include <dt-bindings/clock/qcom,gcc-sm8150.h>
++    usb_1_hsphy: phy@88e2000 {
++        compatible = "qcom,sm8150-usb-hs-phy";
++        reg = <0 0x088e2000 0 0x400>;
++        status = "disabled";
++        #phy-cells = <0>;
++
++        clocks = <&rpmhcc RPMH_CXO_CLK>;
++        clock-names = "ref";
++
++        resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
++    };
++...
+\ No newline at end of file
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
