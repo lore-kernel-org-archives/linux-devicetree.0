@@ -2,262 +2,111 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5D5C2D0EA
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 06:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77059C2D0EA
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 07:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00C802072F
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 06:21:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F1AC2072F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 07:05:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="J6O+bvGx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UmX2dla9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725283AbgDIGV1 (ORCPT
+        id S1725972AbgDIHF3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 02:21:27 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:27874 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726552AbgDIGV1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 02:21:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586413284;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=JuzbKQX42uL8ZIJIWjmD9qTFwUL8iA4u+F2Ck54wjjI=;
-        b=J6O+bvGx532k/itV13GBxOajKhcVeCgAHg4q69to6XQP6bnhD31usBVUG5K2gccSuf
-        AJmX9WjD9e3k4UQrzyUyUCxlpSC2LzEpfXeIRyBsfY7wSYfynh1oILmdsQX2V8tE/M8j
-        HJEVvlKgRtY8x/OL2G7hp2VxmIidpd1o9ngQzQ6LFVVAwdo4fXad97XQ0RLXUlkQsI2q
-        ioFBVpywRIpmMuTx92t6bhIxfNkt013tDuHx9JHX6YJdwlStX11lgaD0OaZw/FPffnfP
-        x2p0ojXCchPQ5heRQFEWrWvOIwVNqA52XFyzlANN7X0CMpCuEL82LgoyBUFOa6L1uHQM
-        K2tA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/zvwDCoFnA="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id m02241w396LGt47
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Thu, 9 Apr 2020 08:21:16 +0200 (CEST)
-Subject: Re: [PATCH v2 24/36] dt-bindings: display: convert toppoly panels to DT Schema
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200408195109.32692-25-sam@ravnborg.org>
-Date:   Thu, 9 Apr 2020 08:21:16 +0200
-Cc:     dri-devel@lists.freedesktop.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        Thu, 9 Apr 2020 03:05:29 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39391 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgDIHF3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 03:05:29 -0400
+Received: by mail-lf1-f66.google.com with SMTP id m2so7088015lfo.6;
+        Thu, 09 Apr 2020 00:05:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wQ238dmMNO0NeDBy2E+C5WT/Ni8JLUesfjuaRncrKOc=;
+        b=UmX2dla9lsoiWLpFQZPC87OMAPuiPk4A9BZjKH2/n71yjovcXvL052YTpoZDWAVj4k
+         CPdgi5bK1u2HlPnUo44xb4r7eeJsO0dm7xUJa5jOfwYwdzXKNTb0Ih7O1YpzOmvFDWIs
+         Nkh7/XDoWkrWkDcOyF3A9mb/5oHDb3hU6WRy7A61mVcIMnkSNTKq12ngA8Bq617SgptL
+         cFVy5RYswS5Qv+4M7DqPGN9KusN/bF1sSNuyCGPRS/cYPbz8Tjm2JeIUuSi/7x11WxmV
+         0kNt8UdqxcDOOQ8mF7z5DUJs5ufXTBQsqeArHSo1GvGNBXlZPblW1Rgn8Y5Wnmpxv+Y/
+         Ppfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wQ238dmMNO0NeDBy2E+C5WT/Ni8JLUesfjuaRncrKOc=;
+        b=tA7YZ/sK6QF2N89wVXkzuI7hIqJ89OJETZi47I29w5vnPGtpnVk8RmH4DT6ZlCRCvy
+         /I9hSfxKUZ/W5vuxf1D/ViHY8EkmWhYr8GJjlVr6wf0wmzCTrYlStRhnbEEsHrYttD2j
+         e5objvF28tL3Ohkd2oGtxO81vEyQQqyopebsXKbcmwPpIPjU/qRIAxlJuC+MaTYhRkgH
+         ikBTsUaqe9E3lA0mza3x/DCWGRDiNWn0KMPcQTO/Y/Kg7jxeNQuYGNdm5fnHpsoXMiJ3
+         p0CG5xaFhyhRjHGoi9T9f731tEC0fLptoBa070cFyTwdpbOPfJSLsGtDIIMPw28kqB5e
+         gOIw==
+X-Gm-Message-State: AGi0Pua/8o14icy50KfHU0NEWvOgiCVTqE/9Ko0dzLIy6idQB10IX6VW
+        ET9IiVpyKZomdGNb8qMcpmg=
+X-Google-Smtp-Source: APiQypKjqNMu43wzrl8sB/tGmE9+dDeR/o7ssSgVKyc0WJEX5Rl2rA0ujm+vb062Ec2ClF6ZpV8NCQ==
+X-Received: by 2002:ac2:58d7:: with SMTP id u23mr6976459lfo.182.1586415927069;
+        Thu, 09 Apr 2020 00:05:27 -0700 (PDT)
+Received: from localhost.localdomain ([185.188.71.122])
+        by smtp.gmail.com with ESMTPSA id c22sm16436955lfi.41.2020.04.09.00.05.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 00:05:26 -0700 (PDT)
+From:   Pawel Dembicki <paweldembicki@gmail.com>
+Cc:     Pawel Dembicki <paweldembicki@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
         Maxime Ripard <mripard@kernel.org>,
-        Marek Belisko <marek@goldelico.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <981A14FA-AFB0-47B6-9EEF-E1C09828976F@goldelico.com>
-References: <20200408195109.32692-1-sam@ravnborg.org> <20200408195109.32692-25-sam@ravnborg.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-X-Mailer: Apple Mail (2.3124)
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 1/2] dt-bindings: vendor-prefixes: Add Check Point
+Date:   Thu,  9 Apr 2020 09:04:43 +0200
+Message-Id: <20200409070448.3209-1-paweldembicki@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sam,
+Check Point Software Technologies Ltd. is a company based in Israel and
+USA. They manufacture network devices and provide software
+products for IT security.
 
-> Am 08.04.2020 um 21:50 schrieb Sam Ravnborg <sam@ravnborg.org>:
->=20
-> v2:
->  - dropped use of spi-slave.yaml (Maxime)
->  - added unevaluatedProperties (Maxime)
->=20
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Marek Belisko <marek@goldelico.com>
-> Cc: H. Nikolaus Schaller <hns@goldelico.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> ---
-> .../bindings/display/panel/tpo,td.yaml        | 65 +++++++++++++++++++
-> .../bindings/display/panel/tpo,td028ttec1.txt | 32 ---------
-> .../bindings/display/panel/tpo,td043mtea1.txt | 33 ----------
-> 3 files changed, 65 insertions(+), 65 deletions(-)
-> create mode 100644 =
-Documentation/devicetree/bindings/display/panel/tpo,td.yaml
-> delete mode 100644 =
-Documentation/devicetree/bindings/display/panel/tpo,td028ttec1.txt
-> delete mode 100644 =
-Documentation/devicetree/bindings/display/panel/tpo,td043mtea1.txt
->=20
-> diff --git =
-a/Documentation/devicetree/bindings/display/panel/tpo,td.yaml =
-b/Documentation/devicetree/bindings/display/panel/tpo,td.yaml
-> new file mode 100644
-> index 000000000000..4aa605613445
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/tpo,td.yaml
-> @@ -0,0 +1,65 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/tpo,td.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Toppoly TD Panels
-> +
-> +description: |
-> +  The panel must obey the rules for a SPI slave device as specified =
-in
-> +  spi/spi-controller.yaml
-> +
-> +maintainers:
-> +  - Marek Belisko <marek@goldelico.com>
-> +  - H. Nikolaus Schaller <hns@goldelico.com>
-> +
-> +allOf:
-> +  - $ref: panel-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +        # Toppoly TD028TTEC1 Panel
-> +      - tpo,td028ttec1
-> +        # Toppoly TD043MTEA1 Panel
-> +      - tpo,td043mtea1
-> +
-> +  reg: true
-> +  label: true
-> +  reset-gpios: true
-> +  backlight: true
-> +  port: true
-> +
-> +required:
-> +  - compatible
-> +  - port
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    spi {
-> +        #address-cells =3D <1>;
-> +        #size-cells =3D <0>;
-> +
-> +        panel: panel@0 {
-> +            compatible =3D "tpo,td043mtea1";
-> +            reg =3D <0>;
-> +            spi-max-frequency =3D <100000>;
-> +            spi-cpol;
-> +            spi-cpha;
-> +
-> +            label =3D "lcd";
-> +
-> +            reset-gpios =3D <&gpio7 7 0>;
-> +
-> +            port {
-> +                lcd_in: endpoint {
-> +                    remote-endpoint =3D <&dpi_out>;
-> +                };
-> +            };
-> +        };
-> +    };
+Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+---
+Changes in v2:
+- corrected line order
 
-I think it is possible to add two examples (the one for tpo,td028ttec1)
-as well. The reason is that it must also have spi-cs-high; which isn't
-documented anywhere else and wasn't in tpo,td028ttec1.txt.
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> +
-> +...
-
-looks ok to me.
-
-BR and thanks,
-Nikolaus
-
-> diff --git =
-a/Documentation/devicetree/bindings/display/panel/tpo,td028ttec1.txt =
-b/Documentation/devicetree/bindings/display/panel/tpo,td028ttec1.txt
-> deleted file mode 100644
-> index 898e06ecf4ef..000000000000
-> --- =
-a/Documentation/devicetree/bindings/display/panel/tpo,td028ttec1.txt
-> +++ /dev/null
-> @@ -1,32 +0,0 @@
-> -Toppoly TD028TTEC1 Panel
-> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-
-> -
-> -Required properties:
-> -- compatible: "tpo,td028ttec1"
-> -
-> -Optional properties:
-> -- label: a symbolic name for the panel
-> -- backlight: phandle of the backlight device
-> -
-> -Required nodes:
-> -- Video port for DPI input
-> -
-> -Example
-> --------
-> -
-> -lcd-panel: td028ttec1@0 {
-> -	compatible =3D "tpo,td028ttec1";
-> -	reg =3D <0>;
-> -	spi-max-frequency =3D <100000>;
-> -	spi-cpol;
-> -	spi-cpha;
-> -
-> -	label =3D "lcd";
-> -	backlight =3D <&backlight>;
-> -	port {
-> -		lcd_in: endpoint {
-> -			remote-endpoint =3D <&dpi_out>;
-> -		};
-> -	};
-> -};
-> -
-> diff --git =
-a/Documentation/devicetree/bindings/display/panel/tpo,td043mtea1.txt =
-b/Documentation/devicetree/bindings/display/panel/tpo,td043mtea1.txt
-> deleted file mode 100644
-> index ec6d62975162..000000000000
-> --- =
-a/Documentation/devicetree/bindings/display/panel/tpo,td043mtea1.txt
-> +++ /dev/null
-> @@ -1,33 +0,0 @@
-> -TPO TD043MTEA1 Panel
-> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> -
-> -Required properties:
-> -- compatible: "tpo,td043mtea1"
-> -- reset-gpios: panel reset gpio
-> -
-> -Optional properties:
-> -- label: a symbolic name for the panel
-> -
-> -Required nodes:
-> -- Video port for DPI input
-> -
-> -Example
-> --------
-> -
-> -lcd-panel: panel@0 {
-> -	compatible =3D "tpo,td043mtea1";
-> -	reg =3D <0>;
-> -	spi-max-frequency =3D <100000>;
-> -	spi-cpol;
-> -	spi-cpha;
-> -
-> -	label =3D "lcd";
-> -
-> -	reset-gpios =3D <&gpio7 7 0>;
-> -
-> -	port {
-> -		lcd_in: endpoint {
-> -			remote-endpoint =3D <&dpi_out>;
-> -		};
-> -	};
-> -};
-> --=20
-> 2.20.1
->=20
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index d3891386d671..3819192d035d 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -181,6 +181,8 @@ patternProperties:
+     description: CDTech(H.K.) Electronics Limited
+   "^ceva,.*":
+     description: Ceva, Inc.
++  "^checkpoint,.*":
++    description: Check Point Software Technologies Ltd.
+   "^chipidea,.*":
+     description: Chipidea, Inc
+   "^chipone,.*":
+-- 
+2.20.1
 
