@@ -2,217 +2,91 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00028C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 08:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F09AAC2D0EA
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 09:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B83BF20A8B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 08:32:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y0lpZy9D"
+	by mail.kernel.org (Postfix) with ESMTP id A3CA92083E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 09:04:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725970AbgDIIcp (ORCPT
+        id S1726536AbgDIJEO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 04:32:45 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45136 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbgDIIco (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 04:32:44 -0400
-Received: by mail-oi1-f193.google.com with SMTP id l22so2519351oii.12
-        for <devicetree@vger.kernel.org>; Thu, 09 Apr 2020 01:32:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pJpaYFDjfzzvcvYVsv7tnkT+Uj3FaSt07vFYzfz/iJE=;
-        b=y0lpZy9Dn6HsYQW/+bGMmTHdYtRzhyYKpkKEVlw4ttxb1YjqAn353GchUiwQqtO/EL
-         6+ZGCSUEGq04ULviclGbHXMWU4iV7AjTXHEhFAhi6t653pJCMfiwEYprh2qzxvg3w52e
-         wy/OiRaLOOtVaOTvskYDf8feBuCfg2xgdkal+97vZZU5SBLeu6VUTqbqmihtcejVUIYx
-         pz1/V2epnMRkqO9Yckb4KMGUczc0rSsEiUC5Tn6SK85DeX2GVecrDe4h4AcEAxgI4Qjb
-         MhQjaENopxf0du5w78dYrzw5o/G5H+r2fwZt8l/oE5/Lt9z9SKPJxOcWmb0L/4Gx7zM/
-         tE7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pJpaYFDjfzzvcvYVsv7tnkT+Uj3FaSt07vFYzfz/iJE=;
-        b=AnmHqGk1t7o6t8C0WJHV0m0guP/s34xv+iaQtNnASs5vsaRvX4zlQ0FSIw9W4oNf+i
-         oE20w5VFrj4VKbswM/UZ2GuIwF3uriIwEeUiB7GPsr85M+G+z5Icm9J1cffmgf2hIxtG
-         1KRvpS2o9Td0GDMzedxP5DDG2baN2wZ1k1pOpvtI3uojDNhpbs1eVGuNCLVfLgJYXMlO
-         FNMei5Vtr+QIwI1AuceLTv/F0pQKtVuba1/1bzbWBSQLr29IA2hGA+4OaHAS0MwZmoJ2
-         Bwr0lQ/WOplVzZ6REoK2Mm+lHZT9vwSBFnjMIbHMq5v1sznHqoKFk81cprGbjQQuQ4S3
-         wyDg==
-X-Gm-Message-State: AGi0PuZD8uBc0GzfnySi4Cama4hNbjIo752Cn69qJ2mGBV7x12pwjVQo
-        8Mf30Jm2EOxZdUldaDeeJTdprCueba7hIPu/qXPlTg==
-X-Google-Smtp-Source: APiQypL7QT1RUQBYoH3bLNuwPgd/B7JhqceE4pniefZZAH9pLmRzac2Q3zEsxVxL3WB/dAAULbryVBhT6MLCad7jBRA=
-X-Received: by 2002:aca:fcd8:: with SMTP id a207mr5694824oii.56.1586421162212;
- Thu, 09 Apr 2020 01:32:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200407083647.4mocdl7aqa3x737q@gilmour.lan> <CAG3jFyvd32pWppubMoOoyH9eO2XLjwUXMC7p4xtv8m+JkPv6vw@mail.gmail.com>
- <20200407123232.ktvaifhqntgzvkap@gilmour.lan> <CAG3jFysSrZJRE2TvL0bWoRFNnscgDGj8yGr-iwWBm4=1wMbJ9A@mail.gmail.com>
- <20200407163916.GL6127@valkosipuli.retiisi.org.uk> <CAAFQd5BGFB5znb9QyyPVL47kc809Ktu33bssvqg5eA-WwvMgOw@mail.gmail.com>
- <20200407172035.GM6127@valkosipuli.retiisi.org.uk> <20200408122127.i27hrmjh3pbjeulk@gilmour.lan>
- <CAAFQd5DNyQra-XksVaSfT_FCkOHTzm9mbn+tMd1vACV=pb9_8g@mail.gmail.com>
- <20200408134315.a7cemmto6bi26arg@gilmour.lan> <20200408152857.GO6127@valkosipuli.retiisi.org.uk>
-In-Reply-To: <20200408152857.GO6127@valkosipuli.retiisi.org.uk>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Thu, 9 Apr 2020 10:32:26 +0200
-Message-ID: <CAG3jFyvf=uUSsswY66mgB4yBuddFEmNGn2sCiT6zSHwO=2hodA@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     Maxime Ripard <maxime@cerno.tech>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 9 Apr 2020 05:04:14 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:50806 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbgDIJEO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Apr 2020 05:04:14 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 05A8B1A03EC;
+        Thu,  9 Apr 2020 11:04:13 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4D3B61A01DE;
+        Thu,  9 Apr 2020 11:04:07 +0200 (CEST)
+Received: from titan.ap.freescale.net (titan.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 13F2840294;
+        Thu,  9 Apr 2020 17:04:00 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH] gpio: mpc8xxx: Add shutdown function.
+Date:   Thu,  9 Apr 2020 16:49:53 +0800
+Message-Id: <20200409084953.46265-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Maxime,
+From: Song Hui <hui.song_1@nxp.com>
 
-On Wed, 8 Apr 2020 at 17:30, Sakari Ailus <sakari.ailus@iki.fi> wrote:
->
-> Hi Maxime,
->
-> On Wed, Apr 08, 2020 at 03:43:15PM +0200, Maxime Ripard wrote:
-> > On Wed, Apr 08, 2020 at 02:35:28PM +0200, Tomasz Figa wrote:
-> > > On Wed, Apr 8, 2020 at 2:21 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> > > > On Tue, Apr 07, 2020 at 08:20:35PM +0300, Sakari Ailus wrote:
-> > > > > On Tue, Apr 07, 2020 at 06:46:06PM +0200, Tomasz Figa wrote:
-> > > > > > On Tue, Apr 7, 2020 at 6:40 PM Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> > > > > > >
-> > > > > > > On Tue, Apr 07, 2020 at 05:47:41PM +0200, Robert Foss wrote:
-> > > > > > > > On Tue, 7 Apr 2020 at 14:32, Maxime Ripard <maxime@cerno.tech> wrote:
-> > > > > > > > >
-> > > > > > > > > Hi Robert,
-> > > > > > > > >
-> > > > > > > > > On Tue, Apr 07, 2020 at 01:29:05PM +0200, Robert Foss wrote:
-> > > > > > > > > > On Tue, 7 Apr 2020 at 10:36, Maxime Ripard <maxime@cerno.tech> wrote:
-> > > > > > > > > > > On Mon, Apr 06, 2020 at 11:35:07AM +0300, Sakari Ailus wrote:
-> > > > > > > > > > > > > But that 19.2MHz is not a limitation of the device itself, it's a
-> > > > > > > > > > > > > limitation of our implementation, so we can instead implement
-> > > > > > > > > > > > > something equivalent in Linux using a clk_set_rate to 19.2MHz (to make
-> > > > > > > > > > > > > sure that our parent clock is configured at the right rate) and the
-> > > > > > > > > > > > > clk_get_rate and compare that to 19.2MHz (to make sure that it's not
-> > > > > > > > > > > > > been rounded too far apart from the frequency we expect).
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > This is doing exactly the same thing, except that we don't encode our
-> > > > > > > > > > > > > implementation limitations in the DT, but in the driver instead.
-> > > > > > > > > > > >
-> > > > > > > > > > > > What I really wanted to say that a driver that doesn't get the clock
-> > > > > > > > > > > > frequency from DT but still sets that frequency is broken.
-> > > > > > > > > > > >
-> > > > > > > > > > > > This frequency is highly system specific, and in many cases only a certain
-> > > > > > > > > > > > frequency is usable, for a few reasons: On many SoCs, not all common
-> > > > > > > > > > > > frequencies can be used (e.g. 9,6 MHz, 19,2 MHz and 24 MHz; while others
-> > > > > > > > > > > > are being used as well), and then that frequency affects the usable CSI-2
-> > > > > > > > > > > > bus frequencies directly --- and of those, only safe, known-good ones
-> > > > > > > > > > > > should be used. IOW, getting the external clock frequency wrong typically
-> > > > > > > > > > > > has an effect that that none of the known-good CSI-2 bus clock frequencies
-> > > > > > > > > > > > are available.
-> > > > > > > > > > >
-> > > > > > > > > > > So clock-frequency is not about the "Frequency of the xvclk clock in
-> > > > > > > > > > > Hertz", but the frequency at which that clock must run on this
-> > > > > > > > > > > particular SoC / board to be functional?
-> > > > > > > > > > >
-> > > > > > > > > > > If so, then yeah, we should definitely keep it, but the documentation
-> > > > > > > > > > > of the binding should be made clearer as well.
-> > > > > > > > > >
-> > > > > > > > > > Alright so, let me summarise the desired approach then.
-> > > > > > > > >
-> > > > > > > > > There's a separate discussion on the same topic here:
-> > > > > > > > > https://lore.kernel.org/linux-media/20200407122106.GD4751@pendragon.ideasonboard.com/
-> > > > > > > >
-> > > > > > > > Thanks for the link.
-> > > > > > > >
-> > > > > > > > >
-> > > > > > > > > > ACPI:
-> > > > > > > > > >   - Fetch the "clock-frequency" property
-> > > > > > > > > >   - Verify it to be 19.2Mhz
-> > > > > > > > > >
-> > > > > > > > > > DT:
-> > > > > > > > > >   - Fetch the "clock-frequency" property
-> > > > > > > > > >   - Verify it to be 19.2Mhz
-> > > > > > > > > >   - Get xvclk clock
-> > > > > > > > > >   - Get xvclk clock rate
-> > > > > > > > > >   - Verify xvclk clock rate to be 19.2Mhz
-> > > > > > > > >
-> > > > > > > > > The current status is that you should
-> > > > > > > > > 's/clock-frequency/link-frequencies/', and in order to replace
-> > > > > > > > > assigned-clock-rates, you'll want to have a clk_set_rate to 19.2MHz
-> > > > > > > > > between steps 3 and 4
-> > > > > > > >
-> > > > > > > > Would we want to 's/clock-frequency/link-frequencies/' for ACPI too?
-> > > > > > > > I imagine that would cause some breakage.
-> > > > > > >
-> > > > > > > It would, yes, and it would be no more correct on DT either.
-> > > > > > >
-> > > > > > > There are basically two possibilities here; either use the clock-frequency
-> > > > > > > property and set the frequency, or rely on assigned-clock-rates, and get
-> > > > > > > the frequency instead.
-> > > > > > >
-> > > > > > > The latter, while I understand it is generally preferred, comes with having
-> > > > > > > to figure out the register list set that closest matches the frequency
-> > > > > > > obtained. The former generally gets around this silently by the clock
-> > > > > > > driver setting the closest frequency it can support.
-> > > > > >
-> > > > > > Wouldn't the former actually cause problems, because the closest
-> > > > > > frequency the clock driver can support could be pretty far from the
-> > > > > > one requested? (E.g. 19.2 MHz vs 24 MHz) The driver needs to check the
-> > > > > > resulting frequency anyway.
-> > > > >
-> > > > > That's possible, yes; in this case there wouldn't be a guarantee the
-> > > > > frequency wouldn't be far off.
-> > > >
-> > > > assigned-clock-rates is really fragile... There's zero guarantee on
-> > > > how far the actual rate is going to be from the asked one, but more
-> > > > importantly you have zero guarantee on the time frame that rate is
-> > > > going to be enforced for.
-> > >
-> > > Is there such a guarantee if clk_set_rate() is called?
-> >
-> > with clk_set_rate itself, no, but...
-> >
-> > > > It's simply going to change the rate as a one-off thing, and if
-> > > > there's the next millisecond someone else is going to change its rate
-> > > > one way or another, it's going to do so and you won't have any
-> > > > notification.
-> >
-> > You can get notified, and you can use clk_set_rate_exclusive if you
-> > *really* want to enforce it.
->
-> Is the conclusion then we should go back to relying on the clock-frequency
-> property?
+When the kexec command is executed, the memory area will be re-paginated.
+The shutdown function needed to make interrupt handler to be NULL.If
+not, an interrupt will be generated during this period. When the interrupt
+handler is executed,the handler function address changed and crash will
+occur.
 
-I too am curious about the conclusion, if we have arrived at one yet.
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
+---
+ drivers/gpio/gpio-mpc8xxx.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-I sent out v4 of this series yesterday, which used the
-'assigned-clock-rates' approach but I would like update the series
-with whatever is deemed the best approach.
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 604dfec..a24e6c5 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -446,9 +446,21 @@ static int mpc8xxx_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static int mpc8xxx_shutdown(struct platform_device *pdev)
++{
++	struct mpc8xxx_gpio_chip *mpc8xxx_gc = platform_get_drvdata(pdev);
++
++	if (mpc8xxx_gc->irq) {
++		irq_set_chained_handler_and_data(mpc8xxx_gc->irqn, NULL, NULL);
++		irq_domain_remove(mpc8xxx_gc->irq);
++	}
++
++	return 0;
++}
+ static struct platform_driver mpc8xxx_plat_driver = {
+ 	.probe		= mpc8xxx_probe,
+ 	.remove		= mpc8xxx_remove,
++	.shutdown	= mpc8xxx_shutdown,
+ 	.driver		= {
+ 		.name = "gpio-mpc8xxx",
+ 		.of_match_table	= mpc8xxx_gpio_ids,
+-- 
+2.9.5
 
->
-> This has been discussed multiple times over the years, and I don't really
-> disagree with the above. The frequency is typically indeed hand-picked for
-> the hardware, and no other frequency should be used in any circumstances.
->
-> No sensor driver I've seen has used clk_set_rate_exclusive() but I guess
-> they should. The absence of practical problems has been probably because of
-> two factors; firstly, these are typically clocks dedicated to the sensors
-> and secondly, good luck.
->
-> --
-> Regards,
->
-> Sakari Ailus
