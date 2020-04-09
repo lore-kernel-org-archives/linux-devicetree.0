@@ -1,1232 +1,587 @@
-Return-Path: <SRS0=8MPa=5Y=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8065C2BA80
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 23:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73885C2BA80
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 00:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 733B5208E4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Apr 2020 23:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AC8D20757
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 00:02:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WwsxvxP4"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eolr92kS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgDHXxk (ORCPT
+        id S1726549AbgDIACS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Apr 2020 19:53:40 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36124 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbgDHXxj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 19:53:39 -0400
-Received: by mail-io1-f65.google.com with SMTP id n10so2049514iom.3
-        for <devicetree@vger.kernel.org>; Wed, 08 Apr 2020 16:53:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=U9e2GUxF7Ogdd8GCUOAFsdA+owtz13Brsiy4wt3gN9k=;
-        b=WwsxvxP40KkU/AugGRVd4kIIqETNr80ori9exv61F8jM4X9bNB/2zshyyhd8O+NfiS
-         LLUGwVRPHFbntEq6oRzKiRhqqFMjEcZxYQkaCdchWPzp9choHKrJIoVg6jVTtuSQkavB
-         jhTTL9MtWOVRHb7BNBuNc6+br/J5mHmwtSH+8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=U9e2GUxF7Ogdd8GCUOAFsdA+owtz13Brsiy4wt3gN9k=;
-        b=AZuSvWVU0vTKRfGTgBKS6oD9Od2iB3uS6ZYE9FDKS6F/h87WwJIa+YaKobKQBVLZ9W
-         1J2A/RELRx8oPl+tz/cnqTKCs2tEehvnVAqrsZJIr+7fIXlaJhe7aAjIlLaOivc7ayMd
-         +B0zg4GcVcJC5Z8tqjDS9Jc3G1I805yWOpE2/fzkh/F12KGFhmcGxxhBBrsUPhNBSaEh
-         O5dpk9NdYddP92AxNTSSHRfPhD83zfnZ0GFZOE/rV2HYTfRb3coM4uCHMzzTcP+WVzqX
-         8lQnDruilrcTaqqetCMAzEB6O1T4qgy2HAJTRw34yuQhTZRrMfAi/wa6y/p5N+1LVtHA
-         TITQ==
-X-Gm-Message-State: AGi0PubD7dRcvEZo8mC3T6Le4/DXyNwjSyWwaozwnHDin2TNodxmylbS
-        8kaxXk0direA7M7OhLlbFvnVjgx/ZSmEbg==
-X-Google-Smtp-Source: APiQypIzKV/uSKM6D4+6DLFgOFAyjpyyxnwtgss7/8C5ZXP7M9WufnuMr8N+mUyj59GwA5oJ1DsX2g==
-X-Received: by 2002:a6b:8f90:: with SMTP id r138mr9583854iod.146.1586390017183;
-        Wed, 08 Apr 2020 16:53:37 -0700 (PDT)
-Received: from derch.Home (75-166-136-192.hlrn.qwest.net. [75.166.136.192])
-        by smtp.gmail.com with ESMTPSA id b62sm8675448ilb.1.2020.04.08.16.53.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 16:53:36 -0700 (PDT)
-From:   Daniel Campello <campello@chromium.org>
-To:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Daniel Campello <campello@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Andreas Klinger <ak@it-klinger.de>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-iio@vger.kernel.org
-Subject: [PATCH 2/2 v8] iio: Add SEMTECH SX9310/9311 sensor driver
-Date:   Wed,  8 Apr 2020 17:53:32 -0600
-Message-Id: <20200408175058.2.I1f56fe698017f22d6e825c913c256d5afc2ad69f@changeid>
-X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
+        Wed, 8 Apr 2020 20:02:18 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:41668 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbgDIACR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Apr 2020 20:02:17 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 039027Xf033354;
+        Wed, 8 Apr 2020 19:02:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1586390527;
+        bh=3SXoNqQ/Qohczo02kc6rTpyLmeIai7jU/VQTKDNDaGE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=eolr92kScgpeDkjFsVxMur7HyuYZ8OYulDYZ12TMJzE+Xs68lxN/SQ203k9tcbVqT
+         tHDSIFTDPHJp+sOgIg8T/nYeVwdSUrXXM6OfP3vFP+GZoicD8xcWATQ/pluSwHBxEw
+         rD7ftJlHa2ylnHxuGzvzdfzriUN5+vPy+vMgLOaY=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 039027nX117043
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 8 Apr 2020 19:02:07 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Apr
+ 2020 19:02:06 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 8 Apr 2020 19:02:07 -0500
+Received: from [10.250.86.212] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 039026MX079644;
+        Wed, 8 Apr 2020 19:02:06 -0500
+Subject: Re: [PATCH 3/7] dt-bindings: remoteproc: Add bindings for R5F
+ subsystem on TI K3 SoCs
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200324201819.23095-1-s-anna@ti.com>
+ <20200324201819.23095-4-s-anna@ti.com>
+ <CAL_JsqKpC=W-y3OdeqSROhiKLbQKf3sGyCXzQH__Wr-O=QS4Tg@mail.gmail.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <30cb4bee-fe79-8683-8225-fad174e0d630@ti.com>
+Date:   Wed, 8 Apr 2020 19:02:06 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqKpC=W-y3OdeqSROhiKLbQKf3sGyCXzQH__Wr-O=QS4Tg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add SEMTECH SX9310/9311 driver.
+Hi Rob,
 
-The device has the following entry points:
+On 3/26/20 11:53 AM, Rob Herring wrote:
+> On Tue, Mar 24, 2020 at 2:18 PM Suman Anna <s-anna@ti.com> wrote:
+>>
+>> The Texas Instruments K3 family of SoCs have one or more dual-core
+>> Arm Cortex R5F processor subsystems/clusters (R5FSS). The clusters
+>> can be split between multiple voltage domains as well. Add the device
+>> tree bindings document for these R5F subsystem devices. These R5F
+>> processors do not have an MMU, and so require fixed memory carveout
+>> regions matching the firmware image addresses. The nodes require more
+>> than one memory region, with the first memory region used for DMA
+>> allocations at runtime. The remaining memory regions are reserved
+>> and are used for the loading and running of the R5F remote processors.
+>> The R5F processors can also optionally use any internal on-chip SRAM
+>> memories either for executing code or using it as fast-access data.
+> 
+> I'm inclined to say the system DT stuff should be sorted out before
+> accepting this. Is the system DT stuff going to be useful for your R5
+> cores? Do you really want to be stuck with this binding?
 
-Usual frequency:
-- sampling_frequency
-- sampling_frequency_available
+Hmm, I am not dependent on System DT and prefer to be not gated by that.
+This is still all from the Linux host perspective, and we don't have any
+plans to use DT on the firmware-side.
 
-Instant reading of current values for different sensors:
-- in_proximity0_raw
-- in_proximity1_raw
-- in_proximity2_raw
-- in_proximity3_comb_raw
-and associated events in events/
+> 
+>> The added example illustrates the DT nodes for the single R5FSS device
+>> present on K3 AM65x family of SoCs.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> ---
+>> Hi Rob,
+>>
+>> The dt_bindings_check seems to throw couple of warnings around the
+>> usage of ranges because the tooling is adding the #address-cells
+>> and #size-cells of 1 by default, whereas our actual code uses 2.
+> 
+> Then change the default by specifying what you want. Or change the
+> example to be 1 cell. It is *just* an example.
 
-Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-Signed-off-by: Enrico Granata <egranata@chromium.org>
-Signed-off-by: Daniel Campello <campello@chromium.org>
----
-v8 changes:
-  - Fixed -Wpointer-to-int-cast warning introduced in v6
-v7 changes:
-  - Introduced regmap_read_poll_timeout in sx9310_init_compensation
-v6 changes:
-  - Fixed formatting
-  - Changed to make use of device_get_match_data()
-  - Switched to ->probe_new()
-v5 changes:
-  - Fixed size of allocated buffer to include timestamp
-  - Changed string comparison to whoami comparison when probing and
-    assigning device name
-v4 changes:
-  - Renamed in_proximity3_COMB_raw to in_proximity3_comb_raw and added
-    documentation for it
-  - Minor clean ups
-v3 changes:
-  - Fixed "Using plain integer as NULL pointer"
-v2 changes:
-  - Removed differential channels
-  - Raw channels expose data from SX9310_REG_DIFF_MSB registers
-  - 4th channel uses extend_name = COMB
-  - Allocated data->buffer statically
-  - Check whoami value against i2c / acpi device id
-  - General clean up
+OK, was using the actual dts nodes as how they would be added in our dts
+files. The only way to get rid of the warnings is to use 1 cell. I can
+do that for the R5F bindings, but cannot really do that for the DSPs
+since the addresses need 2 cells.
 
- .../ABI/testing/sysfs-bus-iio-sx9310          |   10 +
- drivers/iio/proximity/Kconfig                 |   13 +
- drivers/iio/proximity/Makefile                |    1 +
- drivers/iio/proximity/sx9310.c                | 1040 +++++++++++++++++
- 4 files changed, 1064 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-sx9310
- create mode 100644 drivers/iio/proximity/sx9310.c
+> 
+>> No issues are found with dtbs_check.
+> 
+> I doubt that if your dts matches the example.
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-sx9310 b/Documentation/ABI/testing/sysfs-bus-iio-sx9310
-new file mode 100644
-index 00000000000000..3ac7759013e5c4
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-sx9310
-@@ -0,0 +1,10 @@
-+What:		/sys/bus/iio/devices/iio:deviceX/in_proximity3_comb_raw
-+Date:		February 2019
-+KernelVersion:	5.6
-+Contact:	Daniel Campello <campello@chromium.org>
-+Description:
-+		Proximity measurement indicating that some object is
-+		near the combined sensor. The combined sensor presents
-+		proximity measurements constructed by hardware by
-+		combining measurements taken from a given set of
-+		physical sensors.
-diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-index 37606d400805a9..d57e8cc17e42d6 100644
---- a/drivers/iio/proximity/Kconfig
-+++ b/drivers/iio/proximity/Kconfig
-@@ -101,6 +101,19 @@ config SRF04
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called srf04.
+The top-level cells value is 2 in our dts files (See either of
+arm64/dts/ti/k3-am65.dtsi or k3-j721e.dtsi).
 
-+config SX9310
-+	tristate "SX9310/SX9311 Semtech proximity sensor"
-+	select IIO_BUFFER
-+	select IIO_TRIGGERED_BUFFER
-+	select REGMAP_I2C
-+	depends on I2C
-+	help
-+	  Say Y here to build a driver for Semtech's SX9310/SX9311 capacitive
-+	  proximity/button sensor.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called sx9310.
-+
- config SX9500
- 	tristate "SX9500 Semtech proximity sensor"
- 	select IIO_BUFFER
-diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
-index c591b019304e7f..25e5a04da101c5 100644
---- a/drivers/iio/proximity/Makefile
-+++ b/drivers/iio/proximity/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_PING)		+= ping.o
- obj-$(CONFIG_RFD77402)		+= rfd77402.o
- obj-$(CONFIG_SRF04)		+= srf04.o
- obj-$(CONFIG_SRF08)		+= srf08.o
-+obj-$(CONFIG_SX9310)		+= sx9310.o
- obj-$(CONFIG_SX9500)		+= sx9500.o
- obj-$(CONFIG_VL53L0X_I2C)	+= vl53l0x-i2c.o
+> 
+>>
+>> regards
+>> Suman
+>>
+>>  .../bindings/remoteproc/ti,k3-r5f-rproc.yaml  | 338 ++++++++++++++++++
+>>  1 file changed, 338 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
+>> new file mode 100644
+>> index 000000000000..bbfc1e6ae884
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
+>> @@ -0,0 +1,338 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/remoteproc/ti,k3-r5f-rproc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: TI K3 R5F processor subsystems
+>> +
+>> +maintainers:
+>> +  - Suman Anna <s-anna@ti.com>
+>> +
+>> +description: |
+>> +  The TI K3 family of SoCs usually have one or more dual-core Arm Cortex R5F
+>> +  processor subsystems/clusters (R5FSS). The dual core cluster can be used
+>> +  either in a LockStep mode providing safety/fault tolerance features or in a
+>> +  Split mode providing two individual compute cores for doubling the compute
+>> +  capacity. These are used together with other processors present on the SoC
+>> +  to achieve various system level goals.
+>> +
+>> +  Each Dual-Core R5F sub-system is represented as a single DTS node
+>> +  representing the cluster, with a pair of child DT nodes representing
+>> +  the individual R5F cores. Each node has a number of required or optional
+>> +  properties that enable the OS running on the host processor to perform
+>> +  the device management of the remote processor and to communicate with the
+>> +  remote processor.
+>> +
+>> +# Required properties:
+>> +# --------------------
+>> +# The following are the mandatory properties:
+>> +
+>> +properties:
+>> +  $nodename:
+>> +    pattern: "^r5fss(@.*)?"
+>> +
+>> +  compatible:
+>> +    enum:
+>> +      - ti,am654-r5fss
+>> +      - ti,j721e-r5fss
+>> +
+>> +  power-domains:
+>> +    description: |
+>> +      Should contain a phandle to a PM domain provider node and an args
+>> +      specifier containing the R5FSS device id value. This property is
+>> +      as per the binding,
+>> +      Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+> 
+> What implementation of power domains is used is outside the scope of
+> this binding. I'd just drop the whole description as it is pretty
+> generic.
 
-diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-new file mode 100644
-index 00000000000000..b7c12610e5d1f3
---- /dev/null
-+++ b/drivers/iio/proximity/sx9310.c
-@@ -0,0 +1,1040 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2018 Google LLC.
-+ *
-+ * Driver for Semtech's SX9310/SX9311 capacitive proximity/button solution.
-+ * Based on SX9500 driver and Semtech driver using the input framework
-+ * <https://my.syncplicity.com/share/teouwsim8niiaud/
-+ *          linux-driver-SX9310_NoSmartHSensing>.
-+ * Reworked April 2019 by Evan Green <evgreen@chromium.org>
-+ * and January 2020 by Daniel Campello <campello@chromium.org>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/delay.h>
-+#include <linux/i2c.h>
-+#include <linux/irq.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/pm.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+#include <linux/iio/buffer.h>
-+#include <linux/iio/events.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/iio/trigger.h>
-+#include <linux/iio/triggered_buffer.h>
-+#include <linux/iio/trigger_consumer.h>
-+
-+/* Register definitions. */
-+#define SX9310_REG_IRQ_SRC				0x00
-+#define SX9310_REG_STAT0				0x01
-+#define SX9310_REG_STAT1				0x02
-+#define SX9310_REG_IRQ_MSK				0x03
-+#define   SX9310_CONVDONE_IRQ				BIT(3)
-+#define   SX9310_FAR_IRQ				BIT(5)
-+#define   SX9310_CLOSE_IRQ				BIT(6)
-+#define   SX9310_EVENT_IRQ		(SX9310_FAR_IRQ | SX9310_CLOSE_IRQ)
-+#define SX9310_REG_IRQ_FUNC				0x04
-+
-+#define SX9310_REG_PROX_CTRL0				0x10
-+#define   SX9310_REG_PROX_CTRL0_PROXSTAT2		0x10
-+#define   SX9310_REG_PROX_CTRL0_EN_MASK			0x0F
-+#define SX9310_REG_PROX_CTRL1				0x11
-+#define SX9310_REG_PROX_CTRL2				0x12
-+#define   SX9310_REG_PROX_CTRL2_COMBMODE_ALL		0x80
-+#define   SX9310_REG_PROX_CTRL2_SHIELDEN_DYNAMIC	0x04
-+#define SX9310_REG_PROX_CTRL3				0x13
-+#define   SX9310_REG_PROX_CTRL3_GAIN0_X8		0x0c
-+#define   SX9310_REG_PROX_CTRL3_GAIN12_X4		0x02
-+#define SX9310_REG_PROX_CTRL4				0x14
-+#define   SX9310_REG_PROX_CTRL4_RESOLUTION_FINEST	0x07
-+#define SX9310_REG_PROX_CTRL5				0x15
-+#define   SX9310_REG_PROX_CTRL5_RANGE_SMALL		0xc0
-+#define   SX9310_REG_PROX_CTRL5_STARTUPSENS_CS1		0x04
-+#define   SX9310_REG_PROX_CTRL5_RAWFILT_1P25		0x02
-+#define SX9310_REG_PROX_CTRL6				0x16
-+#define   SX9310_REG_PROX_CTRL6_COMP_COMMON		0x20
-+#define SX9310_REG_PROX_CTRL7				0x17
-+#define   SX9310_REG_PROX_CTRL7_AVGNEGFILT_2		0x08
-+#define   SX9310_REG_PROX_CTRL7_AVGPOSFILT_512		0x05
-+#define SX9310_REG_PROX_CTRL8				0x18
-+#define SX9310_REG_PROX_CTRL9				0x19
-+#define   SX9310_REG_PROX_CTRL8_9_PTHRESH12_28		0x40
-+#define   SX9310_REG_PROX_CTRL8_9_PTHRESH_96		0x88
-+#define   SX9310_REG_PROX_CTRL8_9_BODYTHRESH_900	0x03
-+#define   SX9310_REG_PROX_CTRL8_9_BODYTHRESH_1500	0x05
-+#define SX9310_REG_PROX_CTRL10				0x1a
-+#define   SX9310_REG_PROX_CTRL10_HYST_6PCT		0x10
-+#define   SX9310_REG_PROX_CTRL10_CLOSE_DEBOUNCE_8	0x12
-+#define   SX9310_REG_PROX_CTRL10_FAR_DEBOUNCE_8		0x03
-+#define SX9310_REG_PROX_CTRL11				0x1b
-+#define SX9310_REG_PROX_CTRL12				0x1c
-+#define SX9310_REG_PROX_CTRL13				0x1d
-+#define SX9310_REG_PROX_CTRL14				0x1e
-+#define SX9310_REG_PROX_CTRL15				0x1f
-+#define SX9310_REG_PROX_CTRL16				0x20
-+#define SX9310_REG_PROX_CTRL17				0x21
-+#define SX9310_REG_PROX_CTRL18				0x22
-+#define SX9310_REG_PROX_CTRL19				0x23
-+#define SX9310_REG_SAR_CTRL0				0x2a
-+#define   SX9310_REG_SAR_CTRL0_SARDEB_4_SAMPLES		0x40
-+#define   SX9310_REG_SAR_CTRL0_SARHYST_8		0x10
-+#define SX9310_REG_SAR_CTRL1				0x2b
-+/* Each increment of the slope register is 0.0078125. */
-+#define   SX9310_REG_SAR_CTRL1_SLOPE(_hnslope)		(_hnslope / 78125)
-+#define SX9310_REG_SAR_CTRL2				0x2c
-+#define   SX9310_REG_SAR_CTRL2_SAROFFSET_DEFAULT	0x3c
-+
-+#define SX9310_REG_SENSOR_SEL				0x30
-+
-+#define SX9310_REG_USE_MSB				0x31
-+#define SX9310_REG_USE_LSB				0x32
-+
-+#define SX9310_REG_AVG_MSB				0x33
-+#define SX9310_REG_AVG_LSB				0x34
-+
-+#define SX9310_REG_DIFF_MSB				0x35
-+#define SX9310_REG_DIFF_LSB				0x36
-+
-+#define SX9310_REG_OFFSET_MSB				0x37
-+#define SX9310_REG_OFFSET_LSB				0x38
-+
-+#define SX9310_REG_SAR_MSB				0x39
-+#define SX9310_REG_SAR_LSB				0x3a
-+
-+#define SX9310_REG_I2CADDR				0x40
-+#define SX9310_REG_PAUSE				0x41
-+#define SX9310_REG_WHOAMI				0x42
-+#define   SX9310_WHOAMI_VALUE				0x01
-+#define   SX9311_WHOAMI_VALUE				0x02
-+
-+#define SX9310_REG_RESET				0x7f
-+#define   SX9310_SOFT_RESET				0xde
-+
-+#define SX9310_SCAN_PERIOD_MASK				GENMASK(7, 4)
-+#define SX9310_SCAN_PERIOD_SHIFT			4
-+
-+#define SX9310_COMPSTAT_MASK				GENMASK(3, 0)
-+
-+/* 4 hardware channels, as defined in STAT0: COMB, CS2, CS1 and CS0. */
-+#define SX9310_NUM_CHANNELS				4
-+#define SX9310_CHAN_ENABLED_MASK			GENMASK(3, 0)
-+
-+struct sx9310_data {
-+	/* Serialize access to registers and channel configuration */
-+	struct mutex mutex;
-+	struct i2c_client *client;
-+	struct iio_trigger *trig;
-+	struct regmap *regmap;
-+	/*
-+	 * Last reading of the proximity status for each channel.
-+	 * We only send an event to user space when this changes.
-+	 */
-+	bool prox_stat[SX9310_NUM_CHANNELS];
-+	bool trigger_enabled;
-+	/* 64-bit data + 64-bit timestamp buffer */
-+	__be16 buffer[SX9310_NUM_CHANNELS + 4];
-+	/* Remember enabled channels and sample rate during suspend. */
-+	unsigned int suspend_ctrl0;
-+	struct completion completion;
-+	unsigned long chan_read, chan_event;
-+	int channel_users[SX9310_NUM_CHANNELS];
-+	int whoami;
-+};
-+
-+static const struct iio_event_spec sx9310_events[] = {
-+	{
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_EITHER,
-+		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
-+	},
-+};
-+
-+#define SX9310_NAMED_CHANNEL(idx, name)					 \
-+	{								 \
-+		.type = IIO_PROXIMITY,					 \
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		 \
-+		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ), \
-+		.indexed = 1,						 \
-+		.channel = idx,						 \
-+		.extend_name = name,					 \
-+		.address = SX9310_REG_DIFF_MSB,				 \
-+		.event_spec = sx9310_events,				 \
-+		.num_event_specs = ARRAY_SIZE(sx9310_events),		 \
-+		.scan_index = idx,					 \
-+		.scan_type = {						 \
-+			.sign = 's',					 \
-+			.realbits = 12,					 \
-+			.storagebits = 16,				 \
-+			.endianness = IIO_BE,				 \
-+		},							 \
-+	}
-+#define SX9310_CHANNEL(idx) SX9310_NAMED_CHANNEL(idx, NULL)
-+
-+static const struct iio_chan_spec sx9310_channels[] = {
-+	SX9310_CHANNEL(0),			/* CS0 */
-+	SX9310_CHANNEL(1),			/* CS1 */
-+	SX9310_CHANNEL(2),			/* CS2 */
-+	SX9310_NAMED_CHANNEL(3, "comb"),	/* COMB */
-+
-+	IIO_CHAN_SOFT_TIMESTAMP(4),
-+};
-+
-+/*
-+ * Each entry contains the integer part (val) and the fractional part, in micro
-+ * seconds. It conforms to the IIO output IIO_VAL_INT_PLUS_MICRO.
-+ */
-+static const struct {
-+	int val;
-+	int val2;
-+} sx9310_samp_freq_table[] = {
-+	{ 500, 0 }, /* 0000: Min (no idle time) */
-+	{ 66, 666666 }, /* 0001: 15 ms */
-+	{ 33, 333333 }, /* 0010: 30 ms (Typ.) */
-+	{ 22, 222222 }, /* 0011: 45 ms */
-+	{ 16, 666666 }, /* 0100: 60 ms */
-+	{ 11, 111111 }, /* 0101: 90 ms */
-+	{ 8, 333333 }, /* 0110: 120 ms */
-+	{ 5, 0 }, /* 0111: 200 ms */
-+	{ 2, 500000 }, /* 1000: 400 ms */
-+	{ 1, 666666 }, /* 1001: 600 ms */
-+	{ 1, 250000 }, /* 1010: 800 ms */
-+	{ 1, 0 }, /* 1011: 1 s */
-+	{ 0, 500000 }, /* 1100: 2 s */
-+	{ 0, 333333 }, /* 1101: 3 s */
-+	{ 0, 250000 }, /* 1110: 4 s */
-+	{ 0, 200000 }, /* 1111: 5 s */
-+};
-+static const unsigned int sx9310_scan_period_table[] = {
-+	2,   15,  30,  45,   60,   90,	 120,  200,
-+	400, 600, 800, 1000, 2000, 3000, 4000, 5000,
-+};
-+
-+static ssize_t sx9310_show_samp_freq_avail(struct device *dev,
-+					   struct device_attribute *attr,
-+					   char *buf)
-+{
-+	size_t len = 0;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(sx9310_samp_freq_table); i++)
-+		len += scnprintf(buf + len, PAGE_SIZE - len, "%d.%d ",
-+				 sx9310_samp_freq_table[i].val,
-+				 sx9310_samp_freq_table[i].val2);
-+	buf[len - 1] = '\n';
-+	return len;
-+}
-+static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(sx9310_show_samp_freq_avail);
-+
-+static const struct regmap_range sx9310_writable_reg_ranges[] = {
-+	regmap_reg_range(SX9310_REG_IRQ_MSK, SX9310_REG_IRQ_FUNC),
-+	regmap_reg_range(SX9310_REG_PROX_CTRL0, SX9310_REG_PROX_CTRL19),
-+	regmap_reg_range(SX9310_REG_SAR_CTRL0, SX9310_REG_SAR_CTRL2),
-+	regmap_reg_range(SX9310_REG_SENSOR_SEL, SX9310_REG_SENSOR_SEL),
-+	regmap_reg_range(SX9310_REG_OFFSET_MSB, SX9310_REG_OFFSET_LSB),
-+	regmap_reg_range(SX9310_REG_PAUSE, SX9310_REG_PAUSE),
-+	regmap_reg_range(SX9310_REG_RESET, SX9310_REG_RESET),
-+};
-+
-+static const struct regmap_access_table sx9310_writeable_regs = {
-+	.yes_ranges = sx9310_writable_reg_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(sx9310_writable_reg_ranges),
-+};
-+
-+static const struct regmap_range sx9310_readable_reg_ranges[] = {
-+	regmap_reg_range(SX9310_REG_IRQ_SRC, SX9310_REG_IRQ_FUNC),
-+	regmap_reg_range(SX9310_REG_PROX_CTRL0, SX9310_REG_PROX_CTRL19),
-+	regmap_reg_range(SX9310_REG_SAR_CTRL0, SX9310_REG_SAR_CTRL2),
-+	regmap_reg_range(SX9310_REG_SENSOR_SEL, SX9310_REG_SAR_LSB),
-+	regmap_reg_range(SX9310_REG_I2CADDR, SX9310_REG_WHOAMI),
-+	regmap_reg_range(SX9310_REG_RESET, SX9310_REG_RESET),
-+};
-+
-+static const struct regmap_access_table sx9310_readable_regs = {
-+	.yes_ranges = sx9310_readable_reg_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(sx9310_readable_reg_ranges),
-+};
-+
-+static const struct regmap_range sx9310_volatile_reg_ranges[] = {
-+	regmap_reg_range(SX9310_REG_IRQ_SRC, SX9310_REG_STAT1),
-+	regmap_reg_range(SX9310_REG_USE_MSB, SX9310_REG_DIFF_LSB),
-+	regmap_reg_range(SX9310_REG_SAR_MSB, SX9310_REG_SAR_LSB),
-+	regmap_reg_range(SX9310_REG_RESET, SX9310_REG_RESET),
-+};
-+
-+static const struct regmap_access_table sx9310_volatile_regs = {
-+	.yes_ranges = sx9310_volatile_reg_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(sx9310_volatile_reg_ranges),
-+};
-+
-+static const struct regmap_config sx9310_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+
-+	.max_register = SX9310_REG_RESET,
-+	.cache_type = REGCACHE_RBTREE,
-+
-+	.wr_table = &sx9310_writeable_regs,
-+	.rd_table = &sx9310_readable_regs,
-+	.volatile_table = &sx9310_volatile_regs,
-+};
-+
-+static int sx9310_update_chan_en(struct sx9310_data *data,
-+				 unsigned long chan_read,
-+				 unsigned long chan_event)
-+{
-+	int ret;
-+	unsigned long channels = chan_read | chan_event;
-+
-+	if ((data->chan_read | data->chan_event) != channels) {
-+		ret = regmap_update_bits(data->regmap, SX9310_REG_PROX_CTRL0,
-+					 SX9310_CHAN_ENABLED_MASK, channels);
-+		if (ret)
-+			return ret;
-+	}
-+	data->chan_read = chan_read;
-+	data->chan_event = chan_event;
-+	return 0;
-+}
-+
-+static int sx9310_get_read_channel(struct sx9310_data *data, int channel)
-+{
-+	return sx9310_update_chan_en(data, data->chan_read | BIT(channel),
-+				     data->chan_event);
-+}
-+
-+static int sx9310_put_read_channel(struct sx9310_data *data, int channel)
-+{
-+	return sx9310_update_chan_en(data, data->chan_read & ~BIT(channel),
-+				     data->chan_event);
-+}
-+
-+static int sx9310_get_event_channel(struct sx9310_data *data, int channel)
-+{
-+	return sx9310_update_chan_en(data, data->chan_read,
-+				     data->chan_event | BIT(channel));
-+}
-+
-+static int sx9310_put_event_channel(struct sx9310_data *data, int channel)
-+{
-+	return sx9310_update_chan_en(data, data->chan_read,
-+				     data->chan_event & ~BIT(channel));
-+}
-+
-+static int sx9310_enable_irq(struct sx9310_data *data, unsigned int irq)
-+{
-+	return regmap_update_bits(data->regmap, SX9310_REG_IRQ_MSK, irq, irq);
-+}
-+
-+static int sx9310_disable_irq(struct sx9310_data *data, unsigned int irq)
-+{
-+	return regmap_update_bits(data->regmap, SX9310_REG_IRQ_MSK, irq, 0);
-+}
-+
-+static int sx9310_read_prox_data(struct sx9310_data *data,
-+				 const struct iio_chan_spec *chan, __be16 *val)
-+{
-+	int ret;
-+
-+	ret = regmap_write(data->regmap, SX9310_REG_SENSOR_SEL, chan->channel);
-+	if (ret < 0)
-+		return ret;
-+
-+	return regmap_bulk_read(data->regmap, chan->address, val,
-+				sizeof(__be16));
-+}
-+
-+/*
-+ * If we have no interrupt support, we have to wait for a scan period
-+ * after enabling a channel to get a result.
-+ */
-+static int sx9310_wait_for_sample(struct sx9310_data *data)
-+{
-+	int ret;
-+	unsigned int val;
-+
-+	ret = regmap_read(data->regmap, SX9310_REG_PROX_CTRL0, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	val = (val & SX9310_SCAN_PERIOD_MASK) >> SX9310_SCAN_PERIOD_SHIFT;
-+
-+	msleep(sx9310_scan_period_table[val]);
-+
-+	return 0;
-+}
-+
-+static int sx9310_read_proximity(struct sx9310_data *data,
-+				 const struct iio_chan_spec *chan, int *val)
-+{
-+	int ret = 0;
-+	__be16 rawval;
-+
-+	mutex_lock(&data->mutex);
-+
-+	ret = sx9310_get_read_channel(data, chan->channel);
-+	if (ret < 0)
-+		goto out;
-+
-+	ret = sx9310_enable_irq(data, SX9310_CONVDONE_IRQ);
-+	if (ret < 0)
-+		goto out_put_channel;
-+
-+	mutex_unlock(&data->mutex);
-+
-+	if (data->client->irq > 0) {
-+		ret = wait_for_completion_interruptible(&data->completion);
-+		reinit_completion(&data->completion);
-+	} else {
-+		ret = sx9310_wait_for_sample(data);
-+	}
-+
-+	mutex_lock(&data->mutex);
-+
-+	if (ret < 0)
-+		goto out_disable_irq;
-+
-+	ret = sx9310_read_prox_data(data, chan, &rawval);
-+	if (ret < 0)
-+		goto out_disable_irq;
-+
-+	*val = sign_extend32(be16_to_cpu(rawval),
-+			     chan->address == SX9310_REG_DIFF_MSB ? 11 : 15);
-+
-+	ret = sx9310_disable_irq(data, SX9310_CONVDONE_IRQ);
-+	if (ret < 0)
-+		goto out_put_channel;
-+
-+	ret = sx9310_put_read_channel(data, chan->channel);
-+	if (ret < 0)
-+		goto out;
-+
-+	mutex_unlock(&data->mutex);
-+
-+	return IIO_VAL_INT;
-+
-+out_disable_irq:
-+	sx9310_disable_irq(data, SX9310_CONVDONE_IRQ);
-+out_put_channel:
-+	sx9310_put_read_channel(data, chan->channel);
-+out:
-+	mutex_unlock(&data->mutex);
-+
-+	return ret;
-+}
-+
-+static int sx9310_read_samp_freq(struct sx9310_data *data, int *val, int *val2)
-+{
-+	unsigned int regval;
-+	int ret = regmap_read(data->regmap, SX9310_REG_PROX_CTRL0, &regval);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	regval = (regval & SX9310_SCAN_PERIOD_MASK) >> SX9310_SCAN_PERIOD_SHIFT;
-+	*val = sx9310_samp_freq_table[regval].val;
-+	*val2 = sx9310_samp_freq_table[regval].val2;
-+
-+	return IIO_VAL_INT_PLUS_MICRO;
-+}
-+
-+static int sx9310_read_raw(struct iio_dev *indio_dev,
-+			   const struct iio_chan_spec *chan, int *val,
-+			   int *val2, long mask)
-+{
-+	struct sx9310_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	if (chan->type != IIO_PROXIMITY)
-+		return -EINVAL;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = iio_device_claim_direct_mode(indio_dev);
-+		if (ret)
-+			return ret;
-+
-+		ret = sx9310_read_proximity(data, chan, val);
-+		iio_device_release_direct_mode(indio_dev);
-+		return ret;
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		return sx9310_read_samp_freq(data, val, val2);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int sx9310_set_samp_freq(struct sx9310_data *data, int val, int val2)
-+{
-+	int i, ret;
-+
-+	for (i = 0; i < ARRAY_SIZE(sx9310_samp_freq_table); i++)
-+		if (val == sx9310_samp_freq_table[i].val &&
-+		    val2 == sx9310_samp_freq_table[i].val2)
-+			break;
-+
-+	if (i == ARRAY_SIZE(sx9310_samp_freq_table))
-+		return -EINVAL;
-+
-+	mutex_lock(&data->mutex);
-+
-+	ret = regmap_update_bits(data->regmap, SX9310_REG_PROX_CTRL0,
-+				 SX9310_SCAN_PERIOD_MASK,
-+				 i << SX9310_SCAN_PERIOD_SHIFT);
-+
-+	mutex_unlock(&data->mutex);
-+
-+	return ret;
-+}
-+
-+static int sx9310_write_raw(struct iio_dev *indio_dev,
-+			    const struct iio_chan_spec *chan, int val, int val2,
-+			    long mask)
-+{
-+	struct sx9310_data *data = iio_priv(indio_dev);
-+
-+	if (chan->type != IIO_PROXIMITY)
-+		return -EINVAL;
-+
-+	if (mask != IIO_CHAN_INFO_SAMP_FREQ)
-+		return -EINVAL;
-+
-+	return sx9310_set_samp_freq(data, val, val2);
-+}
-+
-+static irqreturn_t sx9310_irq_handler(int irq, void *private)
-+{
-+	struct iio_dev *indio_dev = private;
-+	struct sx9310_data *data = iio_priv(indio_dev);
-+
-+	if (data->trigger_enabled)
-+		iio_trigger_poll(data->trig);
-+
-+	/*
-+	 * Even if no event is enabled, we need to wake the thread to clear the
-+	 * interrupt state by reading SX9310_REG_IRQ_SRC.
-+	 * It is not possible to do that here because regmap_read takes a mutex.
-+	 */
-+	return IRQ_WAKE_THREAD;
-+}
-+
-+static void sx9310_push_events(struct iio_dev *indio_dev)
-+{
-+	int ret;
-+	unsigned int val, chan;
-+	struct sx9310_data *data = iio_priv(indio_dev);
-+	s64 timestamp = iio_get_time_ns(indio_dev);
-+
-+	/* Read proximity state on all channels */
-+	ret = regmap_read(data->regmap, SX9310_REG_STAT0, &val);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev, "i2c transfer error in irq\n");
-+		return;
-+	}
-+
-+	for_each_set_bit(chan, &data->chan_event, SX9310_NUM_CHANNELS) {
-+		int dir;
-+		u64 ev;
-+		bool new_prox = val & BIT(chan);
-+
-+		if (new_prox == data->prox_stat[chan])
-+			/* No change on this channel. */
-+			continue;
-+
-+		dir = new_prox ? IIO_EV_DIR_FALLING : IIO_EV_DIR_RISING;
-+		ev = IIO_UNMOD_EVENT_CODE(IIO_PROXIMITY, chan,
-+					  IIO_EV_TYPE_THRESH, dir);
-+
-+		iio_push_event(indio_dev, ev, timestamp);
-+		data->prox_stat[chan] = new_prox;
-+	}
-+}
-+
-+static irqreturn_t sx9310_irq_thread_handler(int irq, void *private)
-+{
-+	struct iio_dev *indio_dev = private;
-+	struct sx9310_data *data = iio_priv(indio_dev);
-+	int ret;
-+	unsigned int val;
-+
-+	mutex_lock(&data->mutex);
-+
-+	ret = regmap_read(data->regmap, SX9310_REG_IRQ_SRC, &val);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev, "i2c transfer error in irq\n");
-+		goto out;
-+	}
-+
-+	if (val & SX9310_EVENT_IRQ)
-+		sx9310_push_events(indio_dev);
-+
-+	if (val & SX9310_CONVDONE_IRQ)
-+		complete(&data->completion);
-+
-+out:
-+	mutex_unlock(&data->mutex);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int sx9310_read_event_config(struct iio_dev *indio_dev,
-+				    const struct iio_chan_spec *chan,
-+				    enum iio_event_type type,
-+				    enum iio_event_direction dir)
-+{
-+	struct sx9310_data *data = iio_priv(indio_dev);
-+
-+	return !!(data->chan_event & BIT(chan->channel));
-+}
-+
-+static int sx9310_write_event_config(struct iio_dev *indio_dev,
-+				     const struct iio_chan_spec *chan,
-+				     enum iio_event_type type,
-+				     enum iio_event_direction dir, int state)
-+{
-+	struct sx9310_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	/* If the state hasn't changed, there's nothing to do. */
-+	if (!!(data->chan_event & BIT(chan->channel)) == state)
-+		return 0;
-+
-+	mutex_lock(&data->mutex);
-+	if (state) {
-+		ret = sx9310_get_event_channel(data, chan->channel);
-+		if (ret < 0)
-+			goto out_unlock;
-+		if (!(data->chan_event & ~BIT(chan->channel))) {
-+			ret = sx9310_enable_irq(data, SX9310_EVENT_IRQ);
-+			if (ret < 0)
-+				sx9310_put_event_channel(data, chan->channel);
-+		}
-+	} else {
-+		ret = sx9310_put_event_channel(data, chan->channel);
-+		if (ret < 0)
-+			goto out_unlock;
-+		if (!data->chan_event) {
-+			ret = sx9310_disable_irq(data, SX9310_EVENT_IRQ);
-+			if (ret < 0)
-+				sx9310_get_event_channel(data, chan->channel);
-+		}
-+	}
-+
-+out_unlock:
-+	mutex_unlock(&data->mutex);
-+	return ret;
-+}
-+
-+static struct attribute *sx9310_attributes[] = {
-+	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group sx9310_attribute_group = {
-+	.attrs = sx9310_attributes,
-+};
-+
-+static const struct iio_info sx9310_info = {
-+	.attrs = &sx9310_attribute_group,
-+	.read_raw = sx9310_read_raw,
-+	.write_raw = sx9310_write_raw,
-+	.read_event_config = sx9310_read_event_config,
-+	.write_event_config = sx9310_write_event_config,
-+};
-+
-+static int sx9310_set_trigger_state(struct iio_trigger *trig, bool state)
-+{
-+	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
-+	struct sx9310_data *data = iio_priv(indio_dev);
-+	int ret = 0;
-+
-+	mutex_lock(&data->mutex);
-+
-+	if (state)
-+		ret = sx9310_enable_irq(data, SX9310_CONVDONE_IRQ);
-+	else if (!data->chan_read)
-+		ret = sx9310_disable_irq(data, SX9310_CONVDONE_IRQ);
-+	if (ret < 0)
-+		goto out;
-+
-+	data->trigger_enabled = state;
-+
-+out:
-+	mutex_unlock(&data->mutex);
-+
-+	return ret;
-+}
-+
-+static const struct iio_trigger_ops sx9310_trigger_ops = {
-+	.set_trigger_state = sx9310_set_trigger_state,
-+};
-+
-+static irqreturn_t sx9310_trigger_handler(int irq, void *private)
-+{
-+	struct iio_poll_func *pf = private;
-+	struct iio_dev *indio_dev = pf->indio_dev;
-+	struct sx9310_data *data = iio_priv(indio_dev);
-+	__be16 val;
-+	int bit, ret, i = 0;
-+
-+	mutex_lock(&data->mutex);
-+
-+	for_each_set_bit(bit, indio_dev->active_scan_mask,
-+			 indio_dev->masklength) {
-+		ret = sx9310_read_prox_data(data, &indio_dev->channels[bit],
-+					    &val);
-+		if (ret < 0)
-+			goto out;
-+
-+		data->buffer[i++] = val;
-+	}
-+
-+	iio_push_to_buffers_with_timestamp(indio_dev, data->buffer,
-+					   pf->timestamp);
-+
-+out:
-+	mutex_unlock(&data->mutex);
-+
-+	iio_trigger_notify_done(indio_dev->trig);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int sx9310_buffer_preenable(struct iio_dev *indio_dev)
-+{
-+	struct sx9310_data *data = iio_priv(indio_dev);
-+	unsigned long channels = 0;
-+	int bit, ret;
-+
-+	mutex_lock(&data->mutex);
-+	for_each_set_bit(bit, indio_dev->active_scan_mask,
-+			 indio_dev->masklength)
-+		__set_bit(indio_dev->channels[bit].channel, &channels);
-+
-+	ret = sx9310_update_chan_en(data, channels, data->chan_event);
-+	mutex_unlock(&data->mutex);
-+	return ret;
-+}
-+
-+static int sx9310_buffer_postdisable(struct iio_dev *indio_dev)
-+{
-+	struct sx9310_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	mutex_lock(&data->mutex);
-+	ret = sx9310_update_chan_en(data, 0, data->chan_event);
-+	mutex_unlock(&data->mutex);
-+	return ret;
-+}
-+
-+static const struct iio_buffer_setup_ops sx9310_buffer_setup_ops = {
-+	.preenable = sx9310_buffer_preenable,
-+	.postenable = iio_triggered_buffer_postenable,
-+	.predisable = iio_triggered_buffer_predisable,
-+	.postdisable = sx9310_buffer_postdisable,
-+};
-+
-+struct sx9310_reg_default {
-+	u8 reg;
-+	u8 def;
-+};
-+
-+#define SX_INIT(_reg, _def)			\
-+	{					\
-+		.reg = SX9310_REG_##_reg,	\
-+		.def = _def,			\
-+	}
-+
-+static const struct sx9310_reg_default sx9310_default_regs[] = {
-+	SX_INIT(IRQ_MSK, 0x00),
-+	SX_INIT(IRQ_FUNC, 0x00),
-+	/*
-+	 * The lower 4 bits should not be set as it enable sensors measurements.
-+	 * Turning the detection on before the configuration values are set to
-+	 * good values can cause the device to return erroneous readings.
-+	 */
-+	SX_INIT(PROX_CTRL0, SX9310_REG_PROX_CTRL0_PROXSTAT2),
-+	SX_INIT(PROX_CTRL1, 0x00),
-+	SX_INIT(PROX_CTRL2, SX9310_REG_PROX_CTRL2_COMBMODE_ALL |
-+			    SX9310_REG_PROX_CTRL2_SHIELDEN_DYNAMIC),
-+	SX_INIT(PROX_CTRL3, SX9310_REG_PROX_CTRL3_GAIN0_X8 |
-+			    SX9310_REG_PROX_CTRL3_GAIN12_X4),
-+	SX_INIT(PROX_CTRL4, SX9310_REG_PROX_CTRL4_RESOLUTION_FINEST),
-+	SX_INIT(PROX_CTRL5, SX9310_REG_PROX_CTRL5_RANGE_SMALL |
-+			    SX9310_REG_PROX_CTRL5_STARTUPSENS_CS1 |
-+			    SX9310_REG_PROX_CTRL5_RAWFILT_1P25),
-+	SX_INIT(PROX_CTRL6, SX9310_REG_PROX_CTRL6_COMP_COMMON),
-+	SX_INIT(PROX_CTRL7, SX9310_REG_PROX_CTRL7_AVGNEGFILT_2 |
-+			    SX9310_REG_PROX_CTRL7_AVGPOSFILT_512),
-+	SX_INIT(PROX_CTRL8, SX9310_REG_PROX_CTRL8_9_PTHRESH_96 |
-+			    SX9310_REG_PROX_CTRL8_9_BODYTHRESH_1500),
-+	SX_INIT(PROX_CTRL9, SX9310_REG_PROX_CTRL8_9_PTHRESH12_28 |
-+			    SX9310_REG_PROX_CTRL8_9_BODYTHRESH_900),
-+	SX_INIT(PROX_CTRL10, SX9310_REG_PROX_CTRL10_HYST_6PCT |
-+			     SX9310_REG_PROX_CTRL10_CLOSE_DEBOUNCE_8 |
-+			     SX9310_REG_PROX_CTRL10_FAR_DEBOUNCE_8),
-+	SX_INIT(PROX_CTRL11, 0x00),
-+	SX_INIT(PROX_CTRL12, 0x00),
-+	SX_INIT(PROX_CTRL13, 0x00),
-+	SX_INIT(PROX_CTRL14, 0x00),
-+	SX_INIT(PROX_CTRL15, 0x00),
-+	SX_INIT(PROX_CTRL16, 0x00),
-+	SX_INIT(PROX_CTRL17, 0x00),
-+	SX_INIT(PROX_CTRL18, 0x00),
-+	SX_INIT(PROX_CTRL19, 0x00),
-+	SX_INIT(SAR_CTRL0, SX9310_REG_SAR_CTRL0_SARDEB_4_SAMPLES |
-+			   SX9310_REG_SAR_CTRL0_SARHYST_8),
-+	SX_INIT(SAR_CTRL1, SX9310_REG_SAR_CTRL1_SLOPE(10781250)),
-+	SX_INIT(SAR_CTRL2, SX9310_REG_SAR_CTRL2_SAROFFSET_DEFAULT),
-+};
-+
-+#undef SX_INIT
-+
-+/* Activate all channels and perform an initial compensation. */
-+static int sx9310_init_compensation(struct iio_dev *indio_dev)
-+{
-+	struct sx9310_data *data = iio_priv(indio_dev);
-+	int ret;
-+	unsigned int val;
-+	unsigned int ctrl0;
-+
-+	ret = regmap_read(data->regmap, SX9310_REG_PROX_CTRL0, &ctrl0);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* run the compensation phase on all channels */
-+	ret = regmap_write(data->regmap, SX9310_REG_PROX_CTRL0,
-+			   ctrl0 | SX9310_REG_PROX_CTRL0_EN_MASK);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = regmap_read_poll_timeout(data->regmap, SX9310_REG_STAT1, val,
-+				       !(val & SX9310_COMPSTAT_MASK), 20000,
-+				       2000000);
-+	if (ret == -ETIMEDOUT)
-+		dev_err(&data->client->dev,
-+			"initial compensation timed out: 0x%02x", val);
-+
-+	regmap_write(data->regmap, SX9310_REG_PROX_CTRL0, ctrl0);
-+	return ret;
-+}
-+
-+static int sx9310_init_device(struct iio_dev *indio_dev)
-+{
-+	struct sx9310_data *data = iio_priv(indio_dev);
-+	const struct sx9310_reg_default *initval;
-+	int ret;
-+	unsigned int i, val;
-+
-+	ret = regmap_write(data->regmap, SX9310_REG_RESET, SX9310_SOFT_RESET);
-+	if (ret < 0)
-+		return ret;
-+
-+	usleep_range(1000, 2000); /* power-up time is ~1ms. */
-+
-+	/* Clear reset interrupt state by reading SX9310_REG_IRQ_SRC. */
-+	ret = regmap_read(data->regmap, SX9310_REG_IRQ_SRC, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Program some sane defaults. */
-+	for (i = 0; i < ARRAY_SIZE(sx9310_default_regs); i++) {
-+		initval = &sx9310_default_regs[i];
-+		ret = regmap_write(data->regmap, initval->reg, initval->def);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return sx9310_init_compensation(indio_dev);
-+}
-+
-+static int sx9310_set_indio_dev_name(struct device *dev,
-+				     struct iio_dev *indio_dev, int whoami)
-+{
-+	if ((long)device_get_match_data(dev) != whoami)
-+		dev_err(dev, "WHOAMI does not match device data: %d", whoami);
-+
-+	switch (whoami) {
-+	case SX9310_WHOAMI_VALUE:
-+		indio_dev->name = "sx9310";
-+		break;
-+	case SX9311_WHOAMI_VALUE:
-+		indio_dev->name = "sx9311";
-+		break;
-+	default:
-+		dev_err(dev, "unexpected WHOAMI response: %u", whoami);
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static int sx9310_probe(struct i2c_client *client)
-+{
-+	int ret;
-+	struct device *dev = &client->dev;
-+	struct iio_dev *indio_dev;
-+	struct sx9310_data *data;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	data = iio_priv(indio_dev);
-+	data->client = client;
-+	mutex_init(&data->mutex);
-+	init_completion(&data->completion);
-+
-+	data->regmap = devm_regmap_init_i2c(client, &sx9310_regmap_config);
-+	if (IS_ERR(data->regmap))
-+		return PTR_ERR(data->regmap);
-+
-+	ret = regmap_read(data->regmap, SX9310_REG_WHOAMI, &data->whoami);
-+	if (ret < 0) {
-+		dev_err(dev, "error in reading WHOAMI register: %d", ret);
-+		return ret;
-+	}
-+
-+	ret = sx9310_set_indio_dev_name(dev, indio_dev, data->whoami);
-+	if (ret < 0)
-+		return ret;
-+
-+	ACPI_COMPANION_SET(&indio_dev->dev, ACPI_COMPANION(dev));
-+	indio_dev->dev.parent = dev;
-+	indio_dev->channels = sx9310_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(sx9310_channels);
-+	indio_dev->info = &sx9310_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	i2c_set_clientdata(client, indio_dev);
-+
-+	ret = sx9310_init_device(indio_dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (client->irq) {
-+		ret = devm_request_threaded_irq(dev, client->irq,
-+						sx9310_irq_handler,
-+						sx9310_irq_thread_handler,
-+						IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-+						"sx9310_event", indio_dev);
-+		if (ret < 0)
-+			return ret;
-+
-+		data->trig = devm_iio_trigger_alloc(
-+			dev, "%s-dev%d", indio_dev->name, indio_dev->id);
-+		if (!data->trig)
-+			return -ENOMEM;
-+
-+		data->trig->dev.parent = dev;
-+		data->trig->ops = &sx9310_trigger_ops;
-+		iio_trigger_set_drvdata(data->trig, indio_dev);
-+
-+		ret = devm_iio_trigger_register(dev, data->trig);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = devm_iio_triggered_buffer_setup(dev, indio_dev,
-+					      iio_pollfunc_store_time,
-+					      sx9310_trigger_handler,
-+					      &sx9310_buffer_setup_ops);
-+	if (ret < 0)
-+		return ret;
-+
-+	return devm_iio_device_register(dev, indio_dev);
-+}
-+
-+static int __maybe_unused sx9310_suspend(struct device *dev)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
-+	struct sx9310_data *data = iio_priv(indio_dev);
-+	u8 ctrl0;
-+	int ret;
-+
-+	disable_irq_nosync(data->client->irq);
-+
-+	mutex_lock(&data->mutex);
-+	ret = regmap_read(data->regmap, SX9310_REG_PROX_CTRL0,
-+			  &data->suspend_ctrl0);
-+
-+	if (ret)
-+		goto out;
-+
-+	ctrl0 = data->suspend_ctrl0 & ~SX9310_REG_PROX_CTRL0_EN_MASK;
-+	ret = regmap_write(data->regmap, SX9310_REG_PROX_CTRL0, ctrl0);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_write(data->regmap, SX9310_REG_PAUSE, 0);
-+
-+out:
-+	mutex_unlock(&data->mutex);
-+	return ret;
-+}
-+
-+static int __maybe_unused sx9310_resume(struct device *dev)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
-+	struct sx9310_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	mutex_lock(&data->mutex);
-+	ret = regmap_write(data->regmap, SX9310_REG_PAUSE, 1);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_write(data->regmap, SX9310_REG_PROX_CTRL0,
-+			   data->suspend_ctrl0);
-+
-+out:
-+	mutex_unlock(&data->mutex);
-+
-+	enable_irq(data->client->irq);
-+
-+	return ret;
-+}
-+
-+static const struct dev_pm_ops sx9310_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(sx9310_suspend, sx9310_resume)
-+};
-+
-+static const struct acpi_device_id sx9310_acpi_match[] = {
-+	{ "STH9310", SX9310_WHOAMI_VALUE },
-+	{ "STH9311", SX9311_WHOAMI_VALUE },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(acpi, sx9310_acpi_match);
-+
-+static const struct of_device_id sx9310_of_match[] = {
-+	{ .compatible = "semtech,sx9310" },
-+	{ .compatible = "semtech,sx9311" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, sx9310_of_match);
-+
-+static const struct i2c_device_id sx9310_id[] = {
-+	{ "sx9310", SX9310_WHOAMI_VALUE },
-+	{ "sx9311", SX9311_WHOAMI_VALUE },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(i2c, sx9310_id);
-+
-+static struct i2c_driver sx9310_driver = {
-+	.driver = {
-+		.name	= "sx9310",
-+		.acpi_match_table = ACPI_PTR(sx9310_acpi_match),
-+		.of_match_table = of_match_ptr(sx9310_of_match),
-+		.pm = &sx9310_pm_ops,
-+	},
-+	.probe_new	= sx9310_probe,
-+	.id_table	= sx9310_id,
-+};
-+module_i2c_driver(sx9310_driver);
-+
-+MODULE_AUTHOR("Gwendal Grignou <gwendal@chromium.org>");
-+MODULE_AUTHOR("Daniel Campello <campello@chromium.org>");
-+MODULE_DESCRIPTION("Driver for Semtech SX9310/SX9311 proximity sensor");
-+MODULE_LICENSE("GPL v2");
---
-2.26.0.292.g33ef6b2f38-goog
+OK.
+
+> 
+>> +    maxItems: 1
+>> +
+>> +  "#address-cells":
+>> +    const: 1
+>> +
+>> +  "#size-cells":
+>> +    const: 1
+>> +
+>> +  ranges:
+>> +    description: |
+>> +      Standard ranges definition providing address translations for
+>> +      local R5F TCM address spaces to bus addresses.
+>> +
+>> +# Optional properties:
+>> +# --------------------
+>> +
+>> +  lockstep-mode:
+> 
+> Needs a vendor prefix.
+
+Yep, will fix this one and all the others below.
+
+> 
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    enum: [0, 1]
+>> +    description: |
+>> +      Configuration Mode for the Dual R5F cores within the R5F
+>> +      cluster. Should be either a value of 1 (LockStep mode) or
+>> +      0 (Split mode), default is LockStep mode if omitted.
+>> +
+>> +# R5F Processor Child Nodes:
+>> +# ==========================
+>> +
+>> +patternProperties:
+>> +  "^r5f@[a-f0-9]+$":
+>> +    type: object
+>> +    description: |
+>> +        The R5F Sub-System device node should define two R5F child nodes, each
+>> +        node representing a TI instantiation of the Arm Cortex R5F core. There
+>> +        are some specific integration differences for the IP like the usage of
+>> +        a Region Address Translator (RAT) for translating the larger SoC bus
+>> +        addresses into a 32-bit address space for the processor.
+>> +
+>> +# Required properties:
+>> +# --------------------
+>> +# The following are the mandatory properties:
+>> +
+>> +    properties:
+>> +      compatible:
+>> +        enum:
+>> +          - ti,am654-r5f
+>> +          - ti,j721e-r5f
+>> +
+>> +      reg:
+>> +        description: |
+>> +          Should contain an entry for each value in 'reg-names'.
+>> +          Each entry should have the memory region's start address
+>> +          and the size of the region, the representation matching
+>> +          the parent node's '#address-cells' and '#size-cells' values.
+> 
+> That's every 'reg' property.
+> 
+>> +        maxItems: 2
+> 
+> You need to define what each one is:
+> 
+> items:
+>   - description: ...
+>   - description: ...
+
+OK, will fix.
+
+> 
+>> +
+>> +      reg-names:
+>> +        description: |
+>> +          Should contain strings with the names of the specific internal
+>> +          internal memory regions, and should be defined in this order
+>> +        maxItems: 2
+>> +        items:
+>> +          - const: atcm
+>> +          - const: btcm
+>> +
+>> +      ti,sci:
+>> +        $ref: /schemas/types.yaml#/definitions/phandle
+>> +        description:
+>> +          Should be a phandle to the TI-SCI System Controller node
+>> +
+>> +      ti,sci-dev-id:
+>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>> +        description: |
+>> +          Should contain the TI-SCI device id corresponding to the R5F core.
+>> +          Please refer to the corresponding System Controller documentation
+>> +          for valid values for the R5F cores.
+>> +
+>> +      ti,sci-proc-ids:
+>> +        description: Should contain a single tuple of <proc_id host_id>.
+>> +        allOf:
+>> +          - $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> 
+> Sounds more like an array.
+
+OK, I can modify this. Went with this originally to reflect the tuple,
+but guess both translate similarly for my usage.
+
+> 
+>> +          - maxItems: 1
+>> +            items:
+>> +              items:
+>> +                - description: TI-SCI processor id for the R5F core device
+>> +                - description: TI-SCI host id to which processor control
+>> +                               ownership should be transferred to
+>> +
+>> +      resets:
+>> +        description: |
+>> +          Should contain the phandle to the reset controller node
+>> +          managing the resets for this device, and a reset
+>> +          specifier. Please refer to the following reset bindings
+>> +          for the reset argument specifier,
+>> +          Documentation/devicetree/bindings/reset/ti,sci-reset.txt
+>> +            for AM65x and J721E SoCs
+> 
+> Drop. How many resets (maxItems or items list)?
+
+Yeah, this is 1, will update. Do you want me to drop just the specifier
+link or the entire description?
+
+> 
+>> +
+>> +      firmware-name:
+>> +        description: |
+>> +          Should contain the name of the default firmware image
+>> +          file located on the firmware search path
+>> +
+>> +# The following properties are mandatory for R5F Core0 in both LockStep and Split
+>> +# modes, and are mandatory for R5F Core1 _only_ in Split mode. They are unused for
+>> +# R5F Core1 in LockStep mode:
+>> +
+>> +      mboxes:
+>> +        description: |
+>> +          OMAP Mailbox specifier denoting the sub-mailbox, to be used for
+>> +          communication with the remote processor. This property should match
+>> +          with the sub-mailbox node used in the firmware image. The specifier
+>> +          format is as per the bindings,
+>> +          Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
+> 
+> How many?
+
+OK, will fix.
+
+> 
+>> +
+>> +      memory-region:
+>> +        minItems: 2
+>> +        description: |
+>> +          phandle to the reserved memory nodes to be associated with the remoteproc
+>> +          device. There should be atleast two reserved memory nodes defined - the
+> 
+> What's the max number? As is, it will be 2.
+
+Aah, I misinterpreted that not having would be open-ended. OK, I will
+have to give an arbitrary number here (maybe 4 or 8). Can we update this
+later on if a usecase really needs more?
+
+> 
+>> +          first one would be used for dynamic DMA allocations like vrings and vring
+>> +          buffers, and the remaining ones used for the firmware image sections. The
+>> +          reserved memory nodes should be carveout nodes, and should be defined as
+>> +          per the bindings in
+>> +          Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+>> +
+>> +# Optional properties:
+>> +# --------------------
+>> +# The following properties are optional properties for each of the R5F cores:
+>> +
+>> +      atcm-enable:
+> 
+> Vendor prefix needed.
+> 
+>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>> +        enum: [0, 1]
+>> +        description: |
+>> +          R5F core configuration mode dictating if ATCM should be enabled. R5F
+>> +          view of ATCM dictated by loczrama property. Should be either a value
+>> +          of 1 (enabled) or 0 (disabled), default is disabled if omitted.
+>> +
+>> +      btcm-enable:
+> 
+> ditto
+> 
+>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>> +        enum: [0, 1]
+>> +        description: |
+>> +          R5F core configuration mode dictating if BTCM should be enabled. R5F
+>> +          view of BTCM dictated by loczrama property. Should be either a value
+>> +          of 1 (enabled) or 0 (disabled), default is enabled if omitted.
+>> +
+>> +      loczrama:
+> 
+> ditto
+> 
+>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>> +        enum: [0, 1]
+>> +        description: |
+>> +          R5F core configuration mode dictating which TCM should appear at
+>> +          address 0 (from core's view). Should be either a value of 1 (ATCM
+>> +          at 0x0) or 0 (BTCM at 0x0), default value is 1 if omitted.
+> 
+> I can't decipher how you came up with 'loczrama' based on the description.
+
+That's actually the signal name from the Arm R5 specs.
+
+> 
+>> +
+>> +      sram:
+>> +        $ref: /schemas/types.yaml#/definitions/phandle-array
+>> +        minItems: 1
+>> +        description: |
+>> +          pHandles to one or more reserved on-chip SRAM region. The regions
+>> +          should be defined as child nodes of the respective SRAM node, and
+>> +          should be defined as per the generic bindings in,
+>> +          Documentation/devicetree/bindings/sram/sram.yaml
+>> +
+>> +    required:
+>> +     - compatible
+>> +     - reg
+>> +     - reg-names
+>> +     - ti,sci
+>> +     - ti,sci-dev-id
+>> +     - ti,sci-proc-ids
+>> +     - resets
+>> +     - firmware-name
+>> +
+>> +    additionalProperties: false
+>> +
+>> +required:
+>> + - compatible
+>> + - power-domains
+>> + - "#address-cells"
+>> + - "#size-cells"
+>> + - ranges
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +
+>> +    //Example: AM654 SoC
+>> +    /* R5F DDR Carveout reserved memory nodes */
+>> +    reserved-memory {
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +        ranges;
+>> +
+>> +        mcu_r5fss0_core1_dma_memory_region: r5f-dma-memory@9b000000 {
+>> +            compatible = "shared-dma-pool";
+>> +            reg = <0x00 0x9b000000 0x00 0x100000>;
+>> +            no-map;
+>> +        };
+>> +
+>> +        mcu_r5fss0_core1_memory_region: r5f-memory@9b100000 {
+>> +            compatible = "shared-dma-pool";
+>> +            reg = <0x00 0x9b100000 0x00 0xf00000>;
+>> +            no-map;
+>> +        };
+>> +
+>> +        mcu_r5fss0_core0_dma_memory_region: r5f-dma-memory@9c000000 {
+>> +            compatible = "shared-dma-pool";
+>> +            reg = <0x00 0x9c000000 0x00 0x100000>;
+>> +            no-map;
+>> +        };
+>> +
+>> +        mcu_r5fss0_core0_memory_region: r5f-memory@9c100000 {
+>> +            compatible = "shared-dma-pool";
+>> +            reg = <0x00 0x9c100000 0x00 0x700000>;
+>> +            no-map;
+>> +        };
+>> +    };
+>> +
+>> +    cbass_main: interconnect@100000 {
+> 
+> bus@...
+
+Yeah, will update the example to use bus. The DTS nodes in the kernel
+are already using the interconnect name.
+
+> 
+> Doesn't look like the right address either.
+
+Yeah, I skipped the actual first entry from the ranges, and only
+mentioned the ones that I am using in the nodes. Will fix this.
+
+> 
+>> +        compatible = "simple-bus";
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +        ranges = <0x00 0x41000000 0x00 0x41000000 0x00 0x00020000>,
+>> +                 <0x00 0x41400000 0x00 0x41400000 0x00 0x00020000>,
+>> +                 <0x00 0x41c00000 0x00 0x41c00000 0x00 0x00080000>;
+>> +
+>> +        cbass_mcu: interconnect@28380000 {
+> 
+> Doesn't look like the right address.
+
+Same as above.
+
+> 
+>> +            compatible = "simple-bus";
+>> +            #address-cells = <2>;
+>> +            #size-cells = <2>;
+>> +            ranges = <0x00 0x41000000 0x00 0x41000000 0x00 0x00020000>, /* MCU R5F Core0 */
+>> +                     <0x00 0x41400000 0x00 0x41400000 0x00 0x00020000>, /* MCU R5F Core1 */
+>> +                     <0x00 0x41c00000 0x00 0x41c00000 0x00 0x00080000>; /* MCU SRAM */
+>> +
+>> +            /* MCU domain SRAM node */
+>> +            mcu_ram: mcu-ram@41c00000 {
+> 
+> I would omit this node from the example. Nothing special here really.
+
+Showcasing the optional sram property usage from the mcu_r5f0 node.
+
+regards
+Suman
+
+> 
+>> +                compatible = "mmio-sram";
+>> +                reg = <0x00 0x41c00000 0x00 0x80000>;
+>> +                ranges = <0x0 0x00 0x41c00000 0x80000>;
+>> +                #address-cells = <1>;
+>> +                #size-cells = <1>;
+>> +
+>> +                mcu_r5fss0_core0_sram: r5f-sram@0 {
+>> +                    reg = <0x0 0x40000>;
+>> +                };
+>> +            };
+>> +
+>> +            /* AM65x MCU R5FSS node */
+>> +            mcu_r5fss0: r5fss@41000000 {
+>> +                compatible = "ti,am654-r5fss";
+>> +                power-domains = <&k3_pds 129>;
+>> +                lockstep-mode = <1>;
+>> +                #address-cells = <1>;
+>> +                #size-cells = <1>;
+>> +                ranges = <0x41000000 0x00 0x41000000 0x20000>,
+>> +                         <0x41400000 0x00 0x41400000 0x20000>;
+>> +
+>> +                mcu_r5f0: r5f@41000000 {
+>> +                    compatible = "ti,am654-r5f";
+>> +                    reg = <0x41000000 0x00008000>,
+>> +                          <0x41010000 0x00008000>;
+>> +                    reg-names = "atcm", "btcm";
+>> +                    ti,sci = <&dmsc>;
+>> +                    ti,sci-dev-id = <159>;
+>> +                    ti,sci-proc-ids = <0x01 0xFF>;
+>> +                    resets = <&k3_reset 159 1>;
+>> +                    firmware-name = "am65x-mcu-r5f0_0-fw";
+>> +                    atcm-enable = <1>;
+>> +                    btcm-enable = <1>;
+>> +                    loczrama = <1>;
+>> +                    mboxes = <&mailbox0 &mbox_mcu_r5fss0_core0>;
+>> +                    memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
+>> +                                    <&mcu_r5fss0_core0_memory_region>;
+>> +                    sram = <&mcu_r5fss0_core0_sram>;
+>> +                };
+>> +
+>> +                mcu_r5f1: r5f@41400000 {
+>> +                    compatible = "ti,am654-r5f";
+>> +                    reg = <0x41400000 0x00008000>,
+>> +                          <0x41410000 0x00008000>;
+>> +                    reg-names = "atcm", "btcm";
+>> +                    ti,sci = <&dmsc>;
+>> +                    ti,sci-dev-id = <245>;
+>> +                    ti,sci-proc-ids = <0x02 0xFF>;
+>> +                    resets = <&k3_reset 245 1>;
+>> +                    firmware-name = "am65x-mcu-r5f0_1-fw";
+>> +                    atcm-enable = <1>;
+>> +                    btcm-enable = <1>;
+>> +                    loczrama = <1>;
+>> +                    mboxes = <&mailbox1 &mbox_mcu_r5fss0_core1>;
+>> +               };
+>> +           };
+>> +        };
+>> +    };
+>> --
+>> 2.23.0
+>>
 
