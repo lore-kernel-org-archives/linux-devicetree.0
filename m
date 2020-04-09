@@ -2,71 +2,70 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87193C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 10:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F73C2BB86
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 10:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5DF21D92
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 10:13:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pmVUwiuI"
+	by mail.kernel.org (Postfix) with ESMTP id C249620BED
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 10:05:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgDIKNM (ORCPT
+        id S1725987AbgDIKFU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 06:13:12 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40861 "EHLO
+        Thu, 9 Apr 2020 06:05:20 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33189 "EHLO
         mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgDIKNM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 06:13:12 -0400
-Received: by mail-ot1-f67.google.com with SMTP id q2so7152727otk.7;
-        Thu, 09 Apr 2020 03:13:11 -0700 (PDT)
+        with ESMTP id S1725783AbgDIKFU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 06:05:20 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 103so3519923otv.0;
+        Thu, 09 Apr 2020 03:05:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5gCZP4VOAtxv93Dwz8G9N+IxG+FH0dYZBABiIJGbG7E=;
-        b=pmVUwiuIMo0kmUMLq83grnGCpTZklP8SCBR+TQ0joTcBm9AdV7SNA755dETA8L+Pdt
-         DzxF9SQnuqzRpS6Zuba4psevWLsUbUlJNwtBafNnKqn/Aotbj94l0LlSi4GT3g5DlVhB
-         OKWju+K39+glkV6ifSt70XgUC7ZnddEWJhetY0iRyBxZ3y35yYzI60Ampi0S8ft6AaS1
-         hqg/S/6o/4BjWjNsCF5Nrdho4hifNBodl4bRcFM8TQ6IiP3xsaBnSlFbsp1Nqp/GEFnf
-         rKL+Xf7yLQV5ibq9Nv9zNwFAbzgSRGFTHpae+q2CtJf1JczXReXdtTl5M2Q33wblHM7o
-         zMog==
+        bh=339j4MaqRyQUqdJT33toZfwVsRBRNf1r0tP9u8tA6/k=;
+        b=E1dFeILKHlqqZAzfS0yB6UoHzzwrLRtZ8X8WHp+c1guK812Ac3v1D8MqHQms5kdfj0
+         3yyMWYgtrOyTvMYdbGk7LG3bqCNXBbKmyVByy1WkLVRcyRNNHIKtAC/Ff/Ffrx0Eyxwg
+         34jnSSD42/QryQnaEchzDT17xTYgVRNKJotdWuyJBww1ox8bXhVVLeVPnmnemwEUjJ19
+         /vNgWYmIKQfliHgiboJ5yKJveN5HoiD5xnCDzFwefHb0Kx4WaqeSCvuqR7IYEwoGbmfa
+         xnjM1LOH0HynOtlqdJOWztV53gpIugfHYz9hYfqAXd12Wk/G21Z6fXwZK3+8Fm31/kRz
+         KE2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5gCZP4VOAtxv93Dwz8G9N+IxG+FH0dYZBABiIJGbG7E=;
-        b=WA8cRMX/bHOTcw0WV20DjcxvEemXbyuEIrB/8eCDw5DnJ+1lj61S+LeIOxS8nw20zF
-         A7WlLGvkL8iG10umc+rT28qDqb5+yLZ3qMhRrElSGb+OCj2JgUfqJUwOWxEfQc33gGje
-         +kyCi8EO4mmDu90yprkyy5fAkyVprXqT1MWEGKPfsumY6JvooCQQXJyeSHV0SQkFM585
-         Otjx1OzgzL1DPhStO1eDGa5vBft9frtRwn5MpAv8mSC4pi5TIeJokXkcW97PgGIVNmAP
-         Q67FoC0XUqpB7kck2ZsXoqJk8zYqegoIxHGbzcxo2kR2w1NfcAeCJcUuXrheMn3dOu2C
-         IPLA==
-X-Gm-Message-State: AGi0PubyGT1UhCRT/TpHmy+q6aGVQJQVBRBBkWtiZwcEEAvjpSfTkgLW
-        iwTUgdyUieWZy9RM3chT+j+tWTvZcqO3IwCXfYg=
-X-Google-Smtp-Source: APiQypLhsQeYzwoUhGLE9gEJNuYaBxMBYdOrDBfS/DVmEFxN0Im6t1IiIy0qzEuA2Wmozs97BahlPiYaYmuzaWQ47b8=
-X-Received: by 2002:a9d:798e:: with SMTP id h14mr6693794otm.88.1586427191253;
- Thu, 09 Apr 2020 03:13:11 -0700 (PDT)
+        bh=339j4MaqRyQUqdJT33toZfwVsRBRNf1r0tP9u8tA6/k=;
+        b=h30BwOqb943WWLPKJDgPZV6lL+NL7sISAyPkNuJ9D6lLf9mwgvyARvISazHMLHBJ/J
+         zGU6EiBEHX7cf7g2LOxasCBv+Xp6wfAb4b5jqByxObQqG2FmgQVTUuPmh5YoiKMxy3n9
+         O0GJUtQwF7Y+Ekt8BnjR7Agp5dE0RL6uaGXuvKRn0gPusvwjy4uZ+o8WGgX61ZCTDdXL
+         5S6/ZlkO5QYdgvfOdcM+hp8V1GKr4pyHBcWP/sUnyB2mh1uz/o1T3vfYAXJSpQPUmpNh
+         5JjkAi6TSpQGc3rYHRiYebkBmMQoQq/w7vPWkpAO7TlnzUVoOSGlWzsS9vjmlB+NWir/
+         smnQ==
+X-Gm-Message-State: AGi0PuYh9GO3mc3Zu2qlNvDDlsNJTyh4Xxh2/0JWswsOtVToyt0eVrsg
+        0YOn2Lrumt52fNrOlGdctgVl+ZAg/ZbzVIT+A04=
+X-Google-Smtp-Source: APiQypI1ZTh7a2IVl4I8tXE41Mc3lGPBZY4nosM1GN+H5r+AL5nH4NCX6DGIGvQhFATTRXa0MRQAoqev/aam1hCwyf0=
+X-Received: by 2002:a9d:ef6:: with SMTP id 109mr2955843otj.43.1586426718309;
+ Thu, 09 Apr 2020 03:05:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <1586360280-10956-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200408234622.GA150772@google.com>
-In-Reply-To: <20200408234622.GA150772@google.com>
+References: <1586360280-10956-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1586360280-10956-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <e3f5fa77-f78e-edbf-9efc-53b5ea620460@cogentembedded.com>
+In-Reply-To: <e3f5fa77-f78e-edbf-9efc-53b5ea620460@cogentembedded.com>
 From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 9 Apr 2020 11:12:45 +0100
-Message-ID: <CA+V-a8te28Ji5HYV-QAmd28x-ACshCkVmUUkMYu1KSt0RRdJgQ@mail.gmail.com>
-Subject: Re: [PATCH v7 4/8] PCI: endpoint: Add support to handle multiple base
- for mapping outbound memory
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
+Date:   Thu, 9 Apr 2020 11:04:52 +0100
+Message-ID: <CA+V-a8s1E_kq_GENBTw3zGxKSPFnVKNY-ta9+c8W8nV4JFyEEw@mail.gmail.com>
+Subject: Re: [PATCH v7 7/8] PCI: Add Renesas R8A774C0 device ID
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
         Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Marek Vasut <marek.vasut+renesas@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Jingoo Han <jingoohan1@gmail.com>,
@@ -87,53 +86,45 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Hi Sergei and Bjorn,
 
-Thank you for the review.
-
-On Thu, Apr 9, 2020 at 12:46 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Thu, Apr 9, 2020 at 10:36 AM Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
 >
-> On Wed, Apr 08, 2020 at 04:37:56PM +0100, Lad Prabhakar wrote:
-> > R-Car PCIe controller has support to map multiple memory regions for
-> > mapping the outbound memory in local system also the controller limits
-> > single allocation for each region (that is, once a chunk is used from the
-> > region it cannot be used to allocate a new one). This features inspires to
-> > add support for handling multiple memory bases in endpoint framework.
+> Hello!
+>
+> On 08.04.2020 18:37, Lad Prabhakar wrote:
+>
+> > Add R8A774C0 device ID so that this can be used by
+> > pci_endpoint_test driver.
 > >
-> > With this patch pci_epc_mem_init() initializes address space for endpoint
-> > controller which support single window and whereas __pci_epc_mem_init()
-> > now accepts pointer to multiple windows supported by endpoint controller.
->
-> Adding a double underscore prefix usually indicates an internal
-> function that skips some checking.
->
-> It doesn't seem like quite the right thing for this external interface
-> that adds functionality.  Maybe the name could include something like
-> "multi"?
->
-Agreed. how about pci_epc_mem_multi_init() ?
-
 > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > ---
+> >   include/linux/pci_ids.h | 1 +
+> >   1 file changed, 1 insertion(+)
+> >
+> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> > index 1dfc4e1dcb94..9e957c18abeb 100644
+> > --- a/include/linux/pci_ids.h
+> > +++ b/include/linux/pci_ids.h
+> > @@ -2460,6 +2460,7 @@
+> >   #define PCI_DEVICE_ID_RENESAS_SH7763        0x0004
+> >   #define PCI_DEVICE_ID_RENESAS_SH7785        0x0007
+> >   #define PCI_DEVICE_ID_RENESAS_SH7786        0x0010
+> > +#define PCI_DEVICE_ID_RENESAS_R8A774C0       0x002d
 >
-> This needs an ack from Kishon, of course.
+>     We don't add the device IDs in this file, unless used in several places.
+> Is it?
 >
-Yes waiting for Kishon to review it.
-
-> This patch seems like it does several things that could possibly be
-> split into separate patches?
->
->   - Change pci_epc_mem_init() interface to add page_size argument (the
->     only one that touches cadence & rockchip; it would be nice if this
->     were a tiny patch)
->
-Can be done.
-
->   - Add struct pci_epc_mem_window
->
->   - Add a pci_epc_multi_mem_init() or similar, implement
->     pci_epc_mem_init() in terms of it (as you already do)
->
-The above two needs to be single patch. Is that OK with you ?
+My bad I should have checked it before making this change actually it
+was suggested in my previous version of the series but anyway atm this
+was planned to be  used only in pci_endpoint_test driver, so in that
+case Ill drop this patch.
 
 Cheers,
 --Prabhakar
+
+> [...]
+>
+> MBR, Sergei
