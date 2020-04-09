@@ -2,322 +2,230 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F4BC2BA1B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 04:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F08FEC2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 04:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39D5520757
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 04:50:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="QtJEoauo"
+	by mail.kernel.org (Postfix) with ESMTP id BB7D620936
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 04:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725785AbgDIEu3 (ORCPT
+        id S1725769AbgDIE7q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 00:50:29 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:44913 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbgDIEu2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 00:50:28 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3CE848066C;
-        Thu,  9 Apr 2020 16:50:25 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1586407825;
-        bh=2a+QvJeEMgfgD8MYgpqL0txx98rA8ewZrzs/v7cLI4U=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=QtJEoauo9se31Krx156LMcL6r11M6YxhedYJLhgA9PrOq0hCfyrPc0NcUzwp8dUjR
-         hRHNXGhcwbUo3UsqG0cDrI9X4cF+SApW8LTWBhEnQGqkNxXWlAH3SHEqDEhy8StevT
-         7NxC55ddIY7zTYmwRRj6y5crQoPeWnbpZVSPowAJVRfE7Y4L/izlzNEwL/IhyHpvEZ
-         Mc6GvdRyhMrMblcyM761IXx9+AshhzFp1Jnu2R6dtBWQcP/NMfW9BUEsRIHvjjYYHL
-         xVAmppUHq8gMuOS7gH2qGCuMShZeP61tUTB7/eD4u1H+4x6MRRJfhPn4PjXxlQHL/r
-         eE7SUSh7tRYOw==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e8ea9910001>; Thu, 09 Apr 2020 16:50:25 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 9 Apr 2020 16:50:24 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Thu, 9 Apr 2020 16:50:24 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "jiaxun.yang@flygoat.com" <jiaxun.yang@flygoat.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Hamish Martin" <Hamish.Martin@alliedtelesis.co.nz>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: Dealing with holes in CPU address space
-Thread-Topic: Dealing with holes in CPU address space
-Thread-Index: AQHWDWSQGXFxFOrcR0ujeloVxC+pHKhuCuQAgADrvoCAAGz3gIAADTWA
-Date:   Thu, 9 Apr 2020 04:50:23 +0000
-Message-ID: <f5c7a3387dde5667be4fc462838edfaefae31e16.camel@alliedtelesis.co.nz>
-References: <fcb8f2655452f60a7c734e2ce54ac4d47eec7e92.camel@alliedtelesis.co.nz>
-         <20200408152922.14f90ff3@flygoat-x1e>
-         <2e10a19b6608a6c3413b52180c69500aa255a701.camel@alliedtelesis.co.nz>
-         <dd91aa7f-ed7d-44de-6887-ad25c7e4d4ff@gmail.com>
-In-Reply-To: <dd91aa7f-ed7d-44de-6887-ad25c7e4d4ff@gmail.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.14.96]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AD512F97C0BD0040B1C13BCBB461D74F@atlnz.lc>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Thu, 9 Apr 2020 00:59:46 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:48172 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725283AbgDIE7q (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Apr 2020 00:59:46 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 94EF81A02F2;
+        Thu,  9 Apr 2020 06:59:44 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BB9921A0170;
+        Thu,  9 Apr 2020 06:59:37 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8710D40293;
+        Thu,  9 Apr 2020 12:59:29 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] dt-bindings: thermal: Convert i.MX to json-schema
+Date:   Thu,  9 Apr 2020 12:51:48 +0800
+Message-Id: <1586407908-27139-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA0LTA4IGF0IDIxOjAzIC0wNzAwLCBGbG9yaWFuIEZhaW5lbGxpIHdyb3Rl
-Og0KPiANCj4gT24gNC84LzIwMjAgMjozMyBQTSwgQ2hyaXMgUGFja2hhbSB3cm90ZToNCj4gPiBP
-biBXZWQsIDIwMjAtMDQtMDggYXQgMTU6MjkgKzA4MDAsIEppYXh1biBZYW5nIHdyb3RlOg0KPiA+
-ID4gT24gV2VkLCA4IEFwciAyMDIwIDA1OjE0OjIyICswMDAwDQo+ID4gPiBDaHJpcyBQYWNraGFt
-IDxDaHJpcy5QYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+IHdyb3RlOg0KPiA+ID4gDQo+ID4g
-PiA+IEhpIEFsbCwNCj4gPiA+ID4gDQo+ID4gPiA+IEknbSB0cnlpbmcgdG8gcG9ydCBhbiBvbGQg
-QnJvYWRjb20gTUlQUyBDUFUgKEJDTTUzMDAzKSB0byBhDQo+ID4gPiA+IHNoaW55DQo+ID4gPiA+
-IG5ldw0KPiA+ID4gPiBrZXJuZWwuIEkgaGF2ZSBzb21lIG9sZCBoaXN0b3JpYyBzb3VyY2UgZnJv
-bSBhIGxvbmcgZm9yZ290dGVuDQo+ID4gPiA+IEJyb2FkY29tDQo+ID4gPiA+IExESyBidXQgSSdk
-IHByZWZlciB0byBkbyB0aGluZ3MgdGhlIG1vZGVybiB3YXkgd2l0aCBkZXZpY2UtDQo+ID4gPiA+
-IHRyZWVzLg0KPiA+ID4gPiANCj4gPiA+ID4gVGhlIHByb2JsZW0gSSd2ZSBiZWVuIGdyYXBwbGlu
-ZyB3aXRoIGlzIHRyeWluZyB0byBvcGVuIHVwDQo+ID4gPiA+IGFjY2VzcyB0bw0KPiA+ID4gPiBh
-bGwgb2YgdGhlIFJBTSBvbiB0aGUgYm9hcmQuIEl0IGhhcyA1MTJNQiBvZiBERFIyLiBUaGUgQ1BV
-IGhhcw0KPiA+ID4gPiB0d28NCj4gPiA+ID4gYXJlYXMgd2hlcmUgdGhpcyBhcHBlYXJzLiBUaGUg
-Zmlyc3QgMTI4TUIgaXMgZnJvbSAwIHRvDQo+ID4gPiA+IDB4MDdmZmZmZmYNCj4gPiA+ID4gdGhl
-DQo+ID4gPiA+IHNlY29uZCBhcmVhIGlzIGZyb20gMHg4ODAwMDAwMCB0byAweDlmZmZmZmZmLg0K
-PiA+ID4gPiANCj4gPiA+ID4gU29DIHBlcmlwaGVyYWxzIGFyZSBhdCAweDE4MDAwMDAwIGFuZCB0
-aGVyZSBpcyBhbiBJTyB3aW5kb3cgZm9yDQo+ID4gPiA+IGZsYXNoDQo+ID4gPiA+IGF0IDB4MjAw
-MDAwMDAuDQo+ID4gPiA+IA0KPiA+ID4gPiBUaGUgb2xkIGNvZGUgaGFzIHNvbWUgY3VzdG9tIHRs
-YiBpbml0aWFsaXNhdGlvbiB0byBkZWFsIHdpdGgNCj4gPiA+ID4gdGhpcw0KPiA+ID4gPiBidXQN
-Cj4gPiA+ID4gSSBmaWd1cmVkIGl0IHNob3VsZCBiZSBwb3NzaWJsZSB3aXRoIHRoZSBmb2xsb3dp
-bmcgZHRzIHNuaXBwZXQuDQo+ID4gPiA+IA0KPiA+ID4gPiAgICAgICAgIG1lbW9yeUAwIHsNCj4g
-PiA+ID4gICAgICAgICAgICAgICAgIGRldmljZV90eXBlID0gIm1lbW9yeSI7DQo+ID4gPiA+ICAg
-ICAgICAgICAgICAgICByZWcgPSA8MHgwMDAwMDAwMCAweDA4MDAwMDAwDQo+ID4gPiA+ICAgICAg
-ICAgICAgICAgICAgICAgICAgMHg4ODAwMDAwMCAweDE4MDAwMDAwPjsNCj4gPiA+ID4gICAgICAg
-ICB9Ow0KPiA+ID4gPiANCj4gPiA+ID4gSSBlbmQgdXAgd2l0aCBvbmx5IDEyOE1CIGF2YWlsYWJs
-ZS4gVGhpcyBhcHBlYXJzIHRvIGJlDQo+ID4gPiA+IGJlY2F1c2UgdGhlIGRlZmF1bHQgSElHSE1F
-TV9TVEFSVCBvZiAweDIwMDAwMDAwIHN0b3BzIHRoZSByZXN0DQo+ID4gPiA+IGZyb20NCj4gPiA+
-ID4gYmVpbmcgbWFkZSBhdmFpbGFibGUuIElmIEkgYWRkIGFuIG92ZXJyaWRlIG9mIEhJR0hNRU1f
-U1RBUlQgdG8NCj4gPiA+ID4gMHhmZmZmZmZmZiBJIHNlZW0gdG8gaGF2ZSB0aGUgZnVsbCA1MTJN
-QiBhdmFpYWJsZSBidXQgdGhlbiBJDQo+ID4gPiA+IGdldCBhDQo+ID4gPiA+IGtlcm5lbCBwYW5p
-Yw0KPiA+ID4gDQo+ID4gPiBIaSwNCj4gPiA+IA0KPiA+ID4gSGF2ZSB5b3UgdHJpZWQgdG8gZW5h
-YmxlIENPTkZJR19ISUdITUVNPw0KPiA+ID4gDQo+ID4gDQo+ID4gSSBoYXZlIGJ1dCB0aGF0IGRp
-ZG4ndCBzZWVtIHRvIGhlbHAuIEFzIEkgdW5kZXJzdGFuZCBpdCBISUdITUVNIGlzDQo+ID4gaW50
-ZW5kZWQgZm9yIHNpdHVhdGlvbnMgd2hlbiB5b3UgaGF2ZSBtb3JlIHBoeXNpY2FsIFJBTSB0aGF0
-IGNhbiBiZQ0KPiA+IGFkZHJlc3NlZCAoZS5nLiA+NEdCIG9uIGEgMzItYml0IHN5c3RlbSkuDQo+
-IA0KPiBPbiBNSVBTIHlvdSBtYXkgaGF2ZSB0byBlbmFibGUgSElHSE1FTSBhcyBzb29uIGFzIHlv
-dSBydW4gb3V0IG9mDQo+IHZpcnR1YWwNCj4ga2VybmVsIGFkZHJlc3Mgc3BhY2UgdG8gbWFwIHRo
-ZSBlbnRpcmUgYW1vdW50IG9mIG1lbW9yeSB0aGF0IGlzDQo+IHBvcHVsYXRlZCBBRkFJQ1QuIFRo
-ZSBrZXJuZWwgaGFzIGEgbGl0dGxlIHVuZGVyIDFHQiBvZiB2aXJ0dWFsDQo+IGFkZHJlc3MNCj4g
-c3BhY2UgdGhhdCBjYW4gYmUgbWFwcGVkIHZpYSB0aGUgVExCIHNpbmNlIHRoZSBmaXJzdCA1MTJN
-QiBhcmUNCj4gb2NjdXBpZWQNCj4gYnkgS1NFRzAvMS4NCj4gDQoNCk15IGFkdmVudHVyZXMgdGh1
-cyBmYXIgd2l0aCBISUdITUVNIGhhdmUgZ290IGFzIGZhciBhcw0KDQogIFRoaXMgcHJvY2Vzc29y
-IGRvZXNuJ3Qgc3VwcG9ydCBoaWdobWVtLiAyNDkwMzY4ayBoaWdobWVtIGlnbm9yZWQNCg0KV2hp
-Y2ggSSB0aGluayBoYXMgc29tZXRoaW5nIHRvIGRvIHdpdGggdGhlIG1heF9sb3dfcGZuIGFuZCBo
-aWdoZW5kX3Bmbg0KYmVpbmcgZGlmZmVyZW50Lg0KDQoNCj4gPiANCj4gPiA+ID4gDQo+ID4gPiA+
-ICAgQ1BVIDAgVW5hYmxlIHRvIGhhbmRsZSBrZXJuZWwgcGFnaW5nIHJlcXVlc3QgYXQgdmlydHVh
-bA0KPiA+ID4gPiBhZGRyZXNzDQo+ID4gPiA+IDFmYzAwMDAwLCBlcGMgPT0gODAwMTY3YjgsIHJh
-ID09IDgwMGUyODYwDQo+ID4gPiA+IA0KPiA+ID4gPiAweDFmYzAwMDAwIGlzIGluIHRoZSByYW5n
-ZSB3aGVyZSB0aGUgU29DIHBlcmlwaGVyYWxzIGFyZSBzbyBJJ20NCj4gPiA+ID4gdGhpbmtpbmcg
-dGhhdCBpcyB0aGUgcHJvYmxlbS4gQnV0IHRoZW4gYWdhaW4gdGhhdCBpcyBhIHZpcnR1YWwNCj4g
-PiA+ID4gYWRkcmVzcw0KPiA+ID4gPiBzbyBtYXliZSBpdCdzIGp1c3QgYSBjby1pbmNpZGVuY2Uu
-DQo+ID4gPiANCj4gPiA+IDB4MWZjMDAwMDAgc2hvdWxkIGJlIHRoZSBCb290IFJPTSdzIHBoeXNp
-Y2FsIGFkZHJlc3MuIFByb2JhYmx5DQo+ID4gPiB5b3UNCj4gPiA+IGZvcmdvdCB0byBjb252ZXJ0
-IGl0IGludG8gdmlydHVhbCBhZGRyZXNzIGluIHlvdXIgcGxhdGZvcm0gY29kZT8NCj4gPiANCj4g
-PiBZZXMgdGhhdCdzIHJpZ2h0IGl0J3MgdGhlIGJvb3Ryb21zIFBBLiBJJ20gbm90IGludGl0ZW50
-aW9uYWxseQ0KPiA+IGRvaW5nDQo+ID4gYW55dGhpbmcgd2l0aCBpdCBidXQgbWF5YmUgdGhhdCdz
-IHRoZSBwcm9ibGVtLg0KPiANCj4gSWYgeW91IHdlcmUgYWNjZXNzaW5nIHRoaXMgYXMgYSB2aXJ0
-dWFsIGFkZHJlc3MgdGhlbiBpdCB3b3VsZCBiZQ0KPiBlaXRoZXINCj4gdmlhIEtTRUcwLzEgYW5k
-IHRoZSBhZGRyZXNzZXMgd291bGQgYmUgMHgxZmMwXzAwMDAgKyAweDgwMDBfMDAwMCBvcg0KPiAw
-eDFmYzBfMDAwMCArIDB4YTAwMF8wMDAwIGJ1dCBoZXJlIGl0IGxvb2tzIGxpa2UgdGhlIHJhdyBw
-aHlzaWNhbA0KPiBhZGRyZXNzIGlzIGJlaW5nIGFjY2Vzc2VkIHdoaWNoIHN1Z2dlc3RzIHRoZSBU
-TEIgaXMgaW5jb3JyZWN0bHkNCj4gcHJvZ3JhbW1lZCBzb21laG93Lg0KPiANCj4gPiANCj4gPiA+
-IA0KPiA+ID4gQ2hlY2sgdGhlIEVQQyBvZiBleGNlcHRpb24gaW4gdm1saW51eCB3aXRoIGFkZHIy
-bGluZSBtYXkgaGVscC4NCj4gPiA+IChEb24ndA0KPiA+ID4gZm9yZ2V0IHRvIGNvbXBpbGUgeW91
-ciBrZXJuZWwgd2l0aCBkZWJ1Z2luZm8pLiANCj4gPiA+IA0KPiA+IA0KPiA+IFRoZSBmdWxsIHBh
-bmljIGlzDQo+ID4gDQo+ID4gQ1BVIDAgVW5hYmxlIHRvIGhhbmRsZSBrZXJuZWwgcGFnaW5nIHJl
-cXVlc3QgYXQgdmlydHVhbCBhZGRyZXNzDQo+ID4gMWZjMDAwMDAsIGVwYyA9PSA4MDAxNjdiOCwg
-cmEgPT0NCj4gPiA4MDBlMjg2MCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgIA0KPiA+IE9v
-cHNbIzFdOiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+IENQVTogMCBQSUQ6IDAgQ29tbTogc3dhcHBl
-ciBOb3QgdGFpbnRlZCA1LjUuMC1hdDENCj4gPiAjNDYgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0K
-PiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-DQo+ID4gJCAwICAgOiAwMDAwMDAwMCAwMDAwMDAwMSAwMDAwMDAwMQ0KPiA+IDgwN2U0MjcwICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAN
-Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICANCj4gPiAkIDQgICA6IDFmYzAw
-MDAwIDAwMDAwMDAwIDFmYzAwZjgwDQo+ID4gMDAwMDAwMDEgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4g
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgDQo+ID4gIA0KPiA+ICQgOCAgIDogODNlNTJhMDAgODNlNTJhMjQgODA3ZjYy
-OGMNCj4gPiA4MDgwZmEwMCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAg
-DQo+ID4gJDEyICAgOiBmZmZmZmZmZiAwMDAwMDAwMSAwMDAwMDAwYg0KPiA+IGZmZmZmZmZmICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAN
-Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICANCj4gPiAkMTYgICA6IDgzZTUy
-YTIwIDgwMDAwMDAwIDgwODcwMDAwDQo+ID4gODNlNTJhMDAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4g
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgDQo+ID4gIA0KPiA+ICQyMCAgIDogODA4MGZkZDQgODA3ZGRlMDAgMDAwMDAw
-MDANCj4gPiA4MDgwZjliYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAg
-DQo+ID4gJDI0ICAgOiA4MDgwZmI2OA0KPiA+IGZmZmZmZjdmICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+
-ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICANCj4gPiAkMjggICA6IDgwN2Rj
-MDAwIDgwN2RkZDM4IDgzZTUyYTAwDQo+ID4gODAwZTI4NjAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4g
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgDQo+ID4gIA0KPiA+IEhpICAgIDoNCj4gPiAwMDAwMDAwMCAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-DQo+ID4gTG8gICAgOg0KPiA+IDAwMDAwMDAwICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiBlcGMgICA6IDgwMDE2
-N2I4DQo+ID4gY2xlYXJfcGFnZSsweDE4LzB4MTI4ICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4g
-ICAgICAgICAgICAgICAgICAgIA0KPiA+IHJhICAgIDogODAwZTI4NjANCj4gPiBnZXRfcGFnZV9m
-cm9tX2ZyZWVsaXN0KzB4YTk0LzB4ZGQ0ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAg
-DQo+ID4gU3RhdHVzOiAxMTAwMDAwMiAgICAgICAgS0VSTkVMDQo+ID4gRVhMICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICANCj4gPiBDYXVzZSA6IDQwODAw
-MDBjIChFeGNDb2RlDQo+ID4gMDMpICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgDQo+ID4gICAgICAgICAgIA0KPiA+IEJhZFZBIDoNCj4gPiAxZmMwMDAwMCAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-DQo+ID4gUHJJZCAgOiAwMDAxOTc0OSAoTUlQUw0KPiA+IDc0S2MpICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICANCj4gPiBNb2R1bGVzIGxpbmtl
-ZA0KPiA+IGluOiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAg
-ICAgICAgICAgICAgICAgICAgIA0KPiA+IFByb2Nlc3Mgc3dhcHBlciAocGlkOiAwLCB0aHJlYWRp
-bmZvPShwdHJ2YWwpLCB0YXNrPShwdHJ2YWwpLA0KPiA+IHRscz0wMDAwMDAwMCkgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4g
-Kkh3VExTOg0KPiA+IGUxOWY3ZDNhICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0K
-PiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiBTdGFjayA6IDgwN2UwMDAwIDgw
-N2RkZTk4IDgwODY3Y2Q4IDgwNzkxODE0IDAwMDAwMDAxIDgwNjg3OTc0DQo+ID4gODA3ZGRlMTgN
-Cj4gPiAwMDAwMDAwMCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgDQo+ID4gICAgICAgICA4MDdmNWVkMCA4MDdmNjI4YyA4MDdmNjI4YyA4MDgw
-ZmRkNCA4MDg3MDAwMCAwMDAwMDAwMQ0KPiA+IDgwN2UwMDAwDQo+ID4gMDAwMDAwNDQgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAg
-ICAgICAgMDAwMDAwNWMgODA3ZGRlMDAgMDAwMDAwMDAgMDAwMDAwMDEgODA4MTAwMDAgODA3NWE2
-NjANCj4gPiA4MDg3MDAwMQ0KPiA+IDAwMDAwMDAwICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgIDAwMDAwMTAwIDAwMDAw
-MDAwIDgwN2UwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAxDQo+ID4gODA4NjAwMDANCj4g
-PiA4MDg0OTJiNCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgDQo+ID4gICAgICAgICA4N2Q3NTYwOCA4MDBlMzAyOCAwMDAwMDEwMCAwMDAwMDAw
-MCAwMDAwMDAwMSA4MDA1OGMwOA0KPiA+IDgwODcwMDAwDQo+ID4gODA4NzAwMDAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAg
-ICAgLi4uICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIA0KPiA+IENhbGwNCj4gPiBUcmFjZTogICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgDQo+ID4gWzw4MDAxNjdiOD5dDQo+ID4gY2xlYXJfcGFnZSsweDE4LzB4MTI4ICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4g
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICANCj4gPiBbPDgwMGUyODYw
-Pl0NCj4gPiBnZXRfcGFnZV9mcm9tX2ZyZWVsaXN0KzB4YTk0LzB4ZGQ0ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAg
-ICAgICAgICAgICAgICAgICAgICAgIA0KPiA+IFs8ODAwZTMwMjg+XQ0KPiA+IF9fYWxsb2NfcGFn
-ZXNfbm9kZW1hc2srMHhmNC8weGJiOCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAN
-Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAg
-ICAgDQo+ID4gWzw4MDBlM2IwOD5dDQo+ID4gX19nZXRfZnJlZV9wYWdlcysweDFjLzB4NTggICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4g
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICANCj4gPiBbPDgwMDEzNDMw
-Pl0NCj4gPiBzZXR1cF96ZXJvX3BhZ2VzKzB4M2MvMHhlNCAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAg
-ICAgICAgICAgICAgICAgICAgICAgIA0KPiA+IFs8ODA4MjZlYWM+XQ0KPiA+IG1lbV9pbml0KzB4
-NDAvMHg1MCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAN
-Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAg
-ICAgDQo+ID4gWzw4MDgyMTljMD5dDQo+ID4gc3RhcnRfa2VybmVsKzB4MjUwLzB4NTEwICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4g
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICANCj4gPiBDb2RlOiBjYzll
-MDA0MCAgY2M5ZTAwNjAgIGNjOWUwMDgwIDxhYzgwMDAwMD4NCj4gPiBhYzgwMDAwNCAgYWM4MDAw
-MDggIGFjODAwMDBjICAyNDg0MDAyMCAgYWM4MGZmZjAgIA0KPiA+IA0KPiA+IEkgdGhpbmsgdGhp
-cyBpcyBqdXN0IHRoZSBlYXJseSBzZXR1cCBvZiB0aGUgcGFnZXMuDQo+ID4gDQo+ID4gPiA+IA0K
-PiA+ID4gPiBBbnl3YXkgSSdkIHJlYWxseSBhcHByZWNpYXRlIGFueSBndWlkYW5jZSB0aGF0IGFu
-eW9uZSBjb3VsZA0KPiA+ID4gPiBwcm92aWRlDQo+ID4gPiA+IG9uDQo+ID4gPiA+IHRoaXMuIEV2
-ZW4gaWYgaXQncyBqdXN0ICJnbyBsb29rIGF0IHRoaXMgU29DIi4NCj4gPiA+ID4gDQo+ID4gPiA+
-IFRoYW5rcywNCj4gPiA+ID4gQ2hyaXMNCj4gPiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gDQo+ID4g
-PiAtLQ0KPiA+ID4gSmlheHVuIFlhbmcNCj4gDQo+IA0K
+Convert the i.MX thermal binding to DT schema format using json-schema
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../devicetree/bindings/thermal/imx-thermal.txt    | 61 --------------
+ .../devicetree/bindings/thermal/imx-thermal.yaml   | 97 ++++++++++++++++++++++
+ 2 files changed, 97 insertions(+), 61 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/thermal/imx-thermal.txt
+ create mode 100644 Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+
+diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+deleted file mode 100644
+index 823e417..0000000
+--- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
++++ /dev/null
+@@ -1,61 +0,0 @@
+-* Temperature Monitor (TEMPMON) on Freescale i.MX SoCs
+-
+-Required properties:
+-- compatible : must be one of following:
+-  - "fsl,imx6q-tempmon" for i.MX6Q,
+-  - "fsl,imx6sx-tempmon" for i.MX6SX,
+-  - "fsl,imx7d-tempmon" for i.MX7S/D.
+-- interrupts : the interrupt output of the controller:
+-  i.MX6Q has one IRQ which will be triggered when temperature is higher than high threshold,
+-  i.MX6SX and i.MX7S/D have two more IRQs than i.MX6Q, one is IRQ_LOW and the other is IRQ_PANIC,
+-  when temperature is below than low threshold, IRQ_LOW will be triggered, when temperature
+-  is higher than panic threshold, system will auto reboot by SRC module.
+-- fsl,tempmon : phandle pointer to system controller that contains TEMPMON
+-  control registers, e.g. ANATOP on imx6q.
+-- nvmem-cells: A phandle to the calibration cells provided by ocotp.
+-- nvmem-cell-names: Should be "calib", "temp_grade".
+-
+-Deprecated properties:
+-- fsl,tempmon-data : phandle pointer to fuse controller that contains TEMPMON
+-  calibration data, e.g. OCOTP on imx6q.  The details about calibration data
+-  can be found in SoC Reference Manual.
+-
+-Direct access to OCOTP via fsl,tempmon-data is incorrect on some newer chips
+-because it does not handle OCOTP clock requirements.
+-
+-Optional properties:
+-- clocks : thermal sensor's clock source.
+-
+-Example:
+-ocotp: ocotp@21bc000 {
+-	#address-cells = <1>;
+-	#size-cells = <1>;
+-	compatible = "fsl,imx6sx-ocotp", "syscon";
+-	reg = <0x021bc000 0x4000>;
+-	clocks = <&clks IMX6SX_CLK_OCOTP>;
+-
+-	tempmon_calib: calib@38 {
+-		reg = <0x38 4>;
+-	};
+-
+-	tempmon_temp_grade: temp-grade@20 {
+-		reg = <0x20 4>;
+-	};
+-};
+-
+-tempmon: tempmon {
+-	compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
+-	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+-	fsl,tempmon = <&anatop>;
+-	nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
+-	nvmem-cell-names = "calib", "temp_grade";
+-	clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
+-};
+-
+-Legacy method (Deprecated):
+-tempmon {
+-	compatible = "fsl,imx6q-tempmon";
+-	fsl,tempmon = <&anatop>;
+-	fsl,tempmon-data = <&ocotp>;
+-	clocks = <&clks 172>;
+-};
+diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.yaml b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+new file mode 100644
+index 0000000..ad12622
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+@@ -0,0 +1,97 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/thermal/imx-thermal.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP i.MX Thermal Binding
++
++maintainers:
++  - Anson Huang <Anson.Huang@nxp.com>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - fsl,imx6q-tempmon
++              - fsl,imx6sx-tempmon
++              - fsl,imx7d-tempmon
++
++  interrupts:
++    description: |
++      The interrupt output of the controller, the IRQ will be triggered
++      when temperature is higher than high threshold.
++    maxItems: 1
++
++  nvmem-cells:
++    description: |
++      Phandle to the calibration cells provided by ocotp for calibration
++      data and temperature grade.
++    maxItems: 2
++
++  nvmem-cell-names:
++    maxItems: 2
++    items:
++      - const: calib
++      - const: temp_grade
++
++  fsl,tempmon:
++    description: |
++      Phandle pointer to system controller that contains TEMPMON control
++      registers, e.g. ANATOP on imx6q.
++    $ref: '/schemas/types.yaml#/definitions/phandle'
++
++  fsl,tempmon-data:
++    description: |
++      Deprecated property, phandle pointer to fuse controller that contains
++      TEMPMON calibration data, e.g. OCOTP on imx6q. The details about
++      calibration data can be found in SoC Reference Manual.
++    $ref: '/schemas/types.yaml#/definitions/phandle'
++
++  clocks:
++    description: |
++      Thermal sensor's clock source.
++    maxItems: 1
++
++required:
++  - compatible
++  - interrupts
++  - fsl,tempmon
++  - clocks
++  - nvmem-cells
++  - nvmem-cell-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/imx6sx-clock.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    ocotp: ocotp@21bc000 {
++         #address-cells = <1>;
++         #size-cells = <1>;
++         compatible = "fsl,imx6sx-ocotp", "syscon";
++         reg = <0x021bc000 0x4000>;
++         clocks = <&clks IMX6SX_CLK_OCOTP>;
++
++         tempmon_calib: calib@38 {
++             reg = <0x38 4>;
++         };
++
++         tempmon_temp_grade: temp-grade@20 {
++             reg = <0x20 4>;
++         };
++    };
++
++    tempmon: tempmon {
++         compatible = "fsl,imx6sx-tempmon";
++         interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++         fsl,tempmon = <&anatop>;
++         nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
++         nvmem-cell-names = "calib", "temp_grade";
++         clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
++    };
++
++...
+-- 
+2.7.4
+
