@@ -2,90 +2,138 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01A8C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 16:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A0E5C2BB55
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 16:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72745206F7
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 16:36:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586450186;
-	bh=WM8fzLcL/5V2Emf041z1Ju2WVjvnRsye640+G/iqob0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ShGI9ynLRi5H+cVDYHajsqhsiDonSHwVmWBvYvtxTChHfb6BrZb2xNjEqjSOeIJLM
-	 Nc+MHtlCZiLbVGBpnEioRfpgO9ygF0DhVU8NArnQtesxk8cKl8B+qBtkD2txRyS2vL
-	 SGsBbaOnxf77RB0Bq+lzT2qR4foARB9IkUqopxOc=
+	by mail.kernel.org (Postfix) with ESMTP id E7FAA2082D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 16:54:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgDIQgZ (ORCPT
+        id S1727356AbgDIQyp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 12:36:25 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33389 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbgDIQgZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 12:36:25 -0400
-Received: by mail-io1-f66.google.com with SMTP id o127so243838iof.0;
-        Thu, 09 Apr 2020 09:36:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=obJzJn/9ATJzLF22GIU9tDOuUBYY5RgcTfjfIGtO6pw=;
-        b=A6xeAxpkNiFact8iSO5vKcIvaBzWkWcX2vQR54cu/8dxJXqPx+Fm7y1Aeg4jGtJ3SK
-         po37Wac8C7j11MWrvIuoRQG8SByAXBRDGKfTJPsfqLOpRKMJsK1YaZYEsquKD53gHbTD
-         XWG+e0pPMb6oSlS6Wtuh1kzKjRdUqHPwCzICcf3aoF4iAYW+nl7txpZDdE6uC8xxbOSW
-         u/Fb6pXJ3PenVYb110BOELrbdyMncdqG3mVD9F6DWER2KIN9O7hRyejAGxKznHQzZtHV
-         9piJaecEMIOV35Il5hTmYTm9ouQ89yDRRWo1aizotnduWJoq3eeqGGwwDxfBh3FhlD8G
-         DJ5w==
-X-Gm-Message-State: AGi0Pua3Y9bZ+fZBkKChuH2Jv2A/2P0i3ADbkQQlDVs6c5IhgxYjnETG
-        1W2ShAYKtHlO/QPFkjB5Ow==
-X-Google-Smtp-Source: APiQypJafzlDGxoW+PJWxSbYf96R+/W/fyCAo4cBla5lhCPh3XAypIgk0uPoivb5zBTXQuZ8OkE55A==
-X-Received: by 2002:a6b:3783:: with SMTP id e125mr28986ioa.188.1586450184721;
-        Thu, 09 Apr 2020 09:36:24 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id r18sm1793650ilo.18.2020.04.09.09.36.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 09:36:24 -0700 (PDT)
-Received: (nullmailer pid 10601 invoked by uid 1000);
-        Thu, 09 Apr 2020 16:36:22 -0000
-Date:   Thu, 9 Apr 2020 10:36:22 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: BD718x7 - add missing I2C bus properties
-Message-ID: <20200409163622.GA10546@bogus>
-References: <20200406073008.GA13084@localhost.localdomain>
+        Thu, 9 Apr 2020 12:54:45 -0400
+Received: from avon.wwwdotorg.org ([104.237.132.123]:48568 "EHLO
+        avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbgDIQyp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 12:54:45 -0400
+Received: from [10.2.51.79] (thunderhill.nvidia.com [216.228.112.22])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by avon.wwwdotorg.org (Postfix) with ESMTPSA id 98CCE1C0520;
+        Thu,  9 Apr 2020 10:54:43 -0600 (MDT)
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.1 at avon.wwwdotorg.org
+Subject: Re: [PATCH v1 0/2] Support headset on Tegra boards that use WM8903
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+References: <20200330204011.18465-1-digetx@gmail.com>
+ <5c9c995a-a571-e543-e680-30739cb1561c@gmail.com>
+From:   Stephen Warren <swarren@wwwdotorg.org>
+Autocrypt: addr=swarren@wwwdotorg.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <848cc6c5-e8e4-2796-3ee1-3e12a3e92c54@wwwdotorg.org>
+Date:   Thu, 9 Apr 2020 10:54:42 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200406073008.GA13084@localhost.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5c9c995a-a571-e543-e680-30739cb1561c@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 6 Apr 2020 10:30:08 +0300, Matti Vaittinen wrote:
-> The DT example needs #address-cells and #size-cells for I2C bus or
-> validity checker will generate warnings. Add these properties in
-> BD71837 and BD71847 binding examples.
+On 4/9/20 8:52 AM, Dmitry Osipenko wrote:
+> 30.03.2020 23:40, Dmitry Osipenko пишет:
+>> Hello,
+>>
+>> Some devices have a 4-pin jack instead of a 3-pin and currently the
+>> WM8903 configuration is hardcoded to the case of 3-pin jack in the
+>> Tegra's ASoC driver. A new device-tree property is required in order
+>> to convey that hardware has a 4-pin jack, and thus, microphone's
+>> detection needs to be done in a different way.
+>>
+>> In particular this is needed for Acer A500 tablet device that has
+>> a 4-pin headset jack, otherwise userspace sees headset instead of
+>> headphones and internal microphone isn't enabled by ALSA UCM rule
+>> when it should be. Please review and apply, thanks in advance.
+>>
+>> Dmitry Osipenko (2):
+>>   dt-bindings: sound: tegra-wm8903: Document new nvidia,headset property
+>>   ASoC: tegra: tegra_wm8903: Support nvidia,headset property
+>>
+>>  .../devicetree/bindings/sound/nvidia,tegra-audio-wm8903.txt | 1 +
+>>  sound/soc/tegra/tegra_wm8903.c                              | 6 +++++-
+>>  2 files changed, 6 insertions(+), 1 deletion(-)
+>>
 > 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
-> 
-> This patch was created against Lee's for-mfd-next branch. Please let
-> me know if this was not feasible.
-> 
->  Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml | 4 +++-
->  Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml | 4 +++-
->  2 files changed, 6 insertions(+), 2 deletions(-)
-> 
+> Jon / Stephen, are you okay with this patchset? Could you please ack it?
+> Thanks in advance.
 
-Applied, thanks.
-
-Rob
+It looks plausible based on commit descriptions, but I don't remember
+the details of those APIs well enough to actually review the code change.
