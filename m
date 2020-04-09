@@ -2,102 +2,103 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9D3C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 17:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F277BC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 17:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2711D20678
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 17:14:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TgZGStOX"
+	by mail.kernel.org (Postfix) with ESMTP id C23AD20771
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 17:29:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586453396;
+	bh=gwCMVgI55oBxZeA/ZAEGuRvjk4DQBHRco/poNeClq98=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Kq1taGJLAzhSSTUFmB1hhR9jWl4b1Bt3VrPG2kM0Dsnh9uRDFvW5YHpQjIOY/Fods
+	 s+wwIFuGizJVEes8ZjxANrCuKGl459/1OM/GUPPaNE2JhMFGm4XlSh7G+djwFiOVXb
+	 2lVHiJiCLXXSfTRR8w3RvL91JEXsOm+PGCaH8NgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbgDIROA (ORCPT
+        id S1726627AbgDIR3z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 13:14:00 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38257 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgDIRN7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 13:13:59 -0400
-Received: by mail-lf1-f68.google.com with SMTP id l11so221022lfc.5;
-        Thu, 09 Apr 2020 10:13:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=j5y9erjap5VmHy0BQLWCh9oVMJ7PdliECGnV0deEBC0=;
-        b=TgZGStOXa5YzcE/XeS59qlX6qIX4dKczf+omjTRlYVc7kUr+CaxrRkwrJqreMAAO3Q
-         P0X2hEjUYmMKnQMlHldzMz64AcvhudBeAnFqfyuzNLDVkwuZiFUVl6GiRn/mOm4dmPlg
-         Vcxl0iRHBtyOcX34+UNkZGfSwroNn7P440DSyaeDDOWbdAjbNfJcc9ObMi8fJS8NbODD
-         Q9xg7pYCHLLwxDQRSA0DwaQTLoWcRIYM3licsf7mnjoC7S07X3koZpY8pV6K50XjZK+Q
-         /RDHJOAU1VGceZJl0hY5o/BVxBAUWl00hD6Bc1fEGBP+sShBLFjTUCzk4M+AtyMn0uhE
-         4PdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=j5y9erjap5VmHy0BQLWCh9oVMJ7PdliECGnV0deEBC0=;
-        b=Qg+QhXYPaBBd/l7qOPIBNBOChoT8BMyu4ODmmoux1p5AMmAJJYHgcR9Z/vQe8VcWYR
-         6FBXFROUEEdAJWO0k0Js6mBxB6gvcFPAKQPC9ZsFJqQc+77qeYH8YYhE4p3k3x7oNQrc
-         znEzmMtYj5HiqlP+D+9DYV2p3taf7eUrBA+MeX5zcPaDhX2RT3luVRNdTMzzm6AGkRxb
-         QXEWz+OKjc1PGG90cNOtli3sjhsYQ6Fz84wwvQR9YIwWoVR3piltxu2j37YYDrU//bNC
-         YCacDPoDrOmW/V1vPZbKNQjF/gBe5ztm8BmNLW2tKunyWwlLAmK2mRody6nEKeBjmwac
-         BHHw==
-X-Gm-Message-State: AGi0Pubb7HIEy/3tUxRLGGcEILbSFKAVr5mH3t1H4HaWCPpKWALYWWIe
-        o9d8kx+gHoIcSwijgwNxPjxcy2bm
-X-Google-Smtp-Source: APiQypLZXt4t1Gkrg5L1En5p1CGXycKYgR724EWJAl4RMO/nyeZQwzbZ97CZnMFl6YDIVLqtyOEw8Q==
-X-Received: by 2002:a19:f611:: with SMTP id x17mr182866lfe.51.1586452435969;
-        Thu, 09 Apr 2020 10:13:55 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id v9sm15934908ljj.31.2020.04.09.10.13.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 10:13:55 -0700 (PDT)
-Subject: Re: [PATCH v1 0/2] Support headset on Tegra boards that use WM8903
-To:     Stephen Warren <swarren@wwwdotorg.org>,
-        Mark Brown <broonie@kernel.org>,
+        Thu, 9 Apr 2020 13:29:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55452 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726583AbgDIR3z (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Apr 2020 13:29:55 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E22FD20753;
+        Thu,  9 Apr 2020 17:29:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586453395;
+        bh=gwCMVgI55oBxZeA/ZAEGuRvjk4DQBHRco/poNeClq98=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KkdOASzNiq2YKxftkzZx9j78sH3gxPhCTlGpCnRqbkDC13mBU2Wnc5AOSeCbBXjVE
+         7IOD/AJ4lvMVE8hNnDGwhMQP7kTdPfD24CW8SDOik2z8gjk/LHklzeYFuIVod9MGyx
+         g6J/6HB0KqtvYhAPRiiSsLoG9WpNJRliUCZE0hXI=
+Date:   Thu, 9 Apr 2020 18:29:52 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Stephen Warren <swarren@wwwdotorg.org>,
         Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-tegra@vger.kernel.org, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/2] Support headset on Tegra boards that use WM8903
+Message-ID: <20200409172952.GG5399@sirena.org.uk>
 References: <20200330204011.18465-1-digetx@gmail.com>
  <5c9c995a-a571-e543-e680-30739cb1561c@gmail.com>
  <848cc6c5-e8e4-2796-3ee1-3e12a3e92c54@wwwdotorg.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a7159a8e-4987-0c08-ce3a-fa82d926218e@gmail.com>
-Date:   Thu, 9 Apr 2020 20:13:54 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ <a7159a8e-4987-0c08-ce3a-fa82d926218e@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <848cc6c5-e8e4-2796-3ee1-3e12a3e92c54@wwwdotorg.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="OFj+1YLvsEfSXdCH"
+Content-Disposition: inline
+In-Reply-To: <a7159a8e-4987-0c08-ce3a-fa82d926218e@gmail.com>
+X-Cookie: HUGH BEAUMONT died in 1982!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-09.04.2020 19:54, Stephen Warren пишет:
-...
->> Jon / Stephen, are you okay with this patchset? Could you please ack it?
->> Thanks in advance.
-> 
-> It looks plausible based on commit descriptions, but I don't remember
-> the details of those APIs well enough to actually review the code change.
-> 
 
-The code change doesn't affect any of the old users, so it should be
-safe anyways.
+--OFj+1YLvsEfSXdCH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I understand that you don't feel comfortable to give an ACK if you're
-unsure, but I assume that Jon is in the same position, and thus, I'm not
-sure how to move forward.
+On Thu, Apr 09, 2020 at 08:13:54PM +0300, Dmitry Osipenko wrote:
 
-Mark, could you please help with reviewing this series?
+> The code change doesn't affect any of the old users, so it should be
+> safe anyways.
+
+> I understand that you don't feel comfortable to give an ACK if you're
+> unsure, but I assume that Jon is in the same position, and thus, I'm not
+> sure how to move forward.
+
+> Mark, could you please help with reviewing this series?
+
+It is currently the merge window.  Nothing other than bug fixes is going
+to get applied until the merge window is over, probably Sunday or Monday.
+
+--OFj+1YLvsEfSXdCH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6PW5AACgkQJNaLcl1U
+h9Aipwf+N3qaJUOkv/KorzxIyIDYSsyZPSVUq0X/6TbEkyjM6GDU3cnm2Q1KI4PI
+hVwyBmoXuz87lGD9Xr46fpZ6J/Z0KX/wih9fsA/IEfas15FlfHG5Ps0wUPdgCFJV
+3k39OnaYCVcvr+9mTfqNDmZiaOUu/6S6NS3c6NQ19ZeIXDCJORE7Mu2jhw8QJFSe
+YRIYQUC3ftEKoKvJKca7dQdgwlmCt3QDml3vn3E6k3WqL2zeRciJ9lq+do/re+OR
+zUCxHfY8vcJwDhPPOx8SCAf98O3XbgRddqQNXVZ2hVW/gWX+RnD3so6MK6jfyeUW
+olmfljKWY4JZP+Uf/9LHZn5VEdGyyg==
+=U7om
+-----END PGP SIGNATURE-----
+
+--OFj+1YLvsEfSXdCH--
