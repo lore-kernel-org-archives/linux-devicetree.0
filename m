@@ -2,230 +2,171 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F08FEC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 04:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6353DC2D0EA
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 05:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB7D620936
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 04:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09FB020784
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 05:07:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="KrcB7BQF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725769AbgDIE7q (ORCPT
+        id S1725769AbgDIFHV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 00:59:46 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:48172 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbgDIE7q (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Apr 2020 00:59:46 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 94EF81A02F2;
-        Thu,  9 Apr 2020 06:59:44 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BB9921A0170;
-        Thu,  9 Apr 2020 06:59:37 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8710D40293;
-        Thu,  9 Apr 2020 12:59:29 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] dt-bindings: thermal: Convert i.MX to json-schema
-Date:   Thu,  9 Apr 2020 12:51:48 +0800
-Message-Id: <1586407908-27139-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 9 Apr 2020 01:07:21 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17863 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725271AbgDIFHV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 01:07:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1586408795; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=axyfKa6+yKpn/MMbVGEDwvxVo+0Xr6DHv6ASYKuSKyqf9F2sOADNOphNhQh+3kJXGEXW02S1Z46vJseXV3QH+IKYduSNqP/ex9n13nPOk1Kx0F1wiqbNz+UQI4evjx6ZqhLwRQk9j4aqxUOuwC+kFRa4dku5TKo/kQWtvNpXP5I=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1586408795; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=oZguYgV4dt6GMip/bfTlUgHicwDP44JSTvTs02Kyom4=; 
+        b=env2q6KeNYdV55Jy1oWWmf4NST8AWqg0c+z++ZShezUK6KIlSrZ/yXFcPOlfZI/Puij+TelHy/mjV0JGUewELfA2PRO0B200SwoPmbc11MCdB26VK7K9QLrP222BhDR7lqlSZNI3oQ07FNjvNFC2J+5e7xcbH6cPgCDTWMIcSOU=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586408795;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=oZguYgV4dt6GMip/bfTlUgHicwDP44JSTvTs02Kyom4=;
+        b=KrcB7BQFuykNkEDk4Q17FFxcD5p9im+NmHklrjJgcdhUQwJ56DwSrKjOU8+bhI4V
+        LPDlLQUJWYe8xurWhNLfPCi1zd1yFqF1xM97g1RsvvWgxpZ8kJN4QubL0auAlVet2eC
+        Z4u//YB+e3BbY12XsmKE5TncKWgqQGq1hHANZvdA=
+Received: from flygoat-x1e (122.235.212.87 [122.235.212.87]) by mx.zoho.com.cn
+        with SMTPS id 1586408793441802.0844748222644; Thu, 9 Apr 2020 13:06:33 +0800 (CST)
+Date:   Thu, 9 Apr 2020 13:06:31 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Hamish Martin" <Hamish.Martin@alliedtelesis.co.nz>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: Dealing with holes in CPU address space
+Message-ID: <20200409130631.69413b76@flygoat-x1e>
+In-Reply-To: <f5c7a3387dde5667be4fc462838edfaefae31e16.camel@alliedtelesis.co.nz>
+References: <fcb8f2655452f60a7c734e2ce54ac4d47eec7e92.camel@alliedtelesis.co.nz>
+        <20200408152922.14f90ff3@flygoat-x1e>
+        <2e10a19b6608a6c3413b52180c69500aa255a701.camel@alliedtelesis.co.nz>
+        <dd91aa7f-ed7d-44de-6887-ad25c7e4d4ff@gmail.com>
+        <f5c7a3387dde5667be4fc462838edfaefae31e16.camel@alliedtelesis.co.nz>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ZohoCNMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the i.MX thermal binding to DT schema format using json-schema
+On Thu, 9 Apr 2020 04:50:23 +0000
+Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- .../devicetree/bindings/thermal/imx-thermal.txt    | 61 --------------
- .../devicetree/bindings/thermal/imx-thermal.yaml   | 97 ++++++++++++++++++++++
- 2 files changed, 97 insertions(+), 61 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/thermal/imx-thermal.txt
- create mode 100644 Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+> On Wed, 2020-04-08 at 21:03 -0700, Florian Fainelli wrote:
+> > 
+> > On 4/8/2020 2:33 PM, Chris Packham wrote:  
+> > > On Wed, 2020-04-08 at 15:29 +0800, Jiaxun Yang wrote:  
+> > > > On Wed, 8 Apr 2020 05:14:22 +0000
+> > > > Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:
+> > > >   
+> > > > > Hi All,
+> > > > > 
+> > > > > I'm trying to port an old Broadcom MIPS CPU (BCM53003) to a
+> > > > > shiny
+> > > > > new
+> > > > > kernel. I have some old historic source from a long forgotten
+> > > > > Broadcom
+> > > > > LDK but I'd prefer to do things the modern way with device-
+> > > > > trees.
+> > > > > 
+> > > > > The problem I've been grappling with is trying to open up
+> > > > > access to
+> > > > > all of the RAM on the board. It has 512MB of DDR2. The CPU has
+> > > > > two
+> > > > > areas where this appears. The first 128MB is from 0 to
+> > > > > 0x07ffffff
+> > > > > the
+> > > > > second area is from 0x88000000 to 0x9fffffff.
+> > > > > 
+> > > > > SoC peripherals are at 0x18000000 and there is an IO window
+> > > > > for flash
+> > > > > at 0x20000000.
+> > > > > 
+> > > > > The old code has some custom tlb initialisation to deal with
+> > > > > this
+> > > > > but
+> > > > > I figured it should be possible with the following dts
+> > > > > snippet.
+> > > > > 
+> > > > >         memory@0 {
+> > > > >                 device_type = "memory";
+> > > > >                 reg = <0x00000000 0x08000000
+> > > > >                        0x88000000 0x18000000>;
+> > > > >         };
+> > > > > 
+> > > > > I end up with only 128MB available. This appears to be
+> > > > > because the default HIGHMEM_START of 0x20000000 stops the rest
+> > > > > from
+> > > > > being made available. If I add an override of HIGHMEM_START to
+> > > > > 0xffffffff I seem to have the full 512MB avaiable but then I
+> > > > > get a
+> > > > > kernel panic  
+> > > > 
+> > > > Hi,
+> > > > 
+> > > > Have you tried to enable CONFIG_HIGHMEM?
+> > > >   
+> > > 
+> > > I have but that didn't seem to help. As I understand it HIGHMEM is
+> > > intended for situations when you have more physical RAM that can
+> > > be addressed (e.g. >4GB on a 32-bit system).  
+> > 
+> > On MIPS you may have to enable HIGHMEM as soon as you run out of
+> > virtual
+> > kernel address space to map the entire amount of memory that is
+> > populated AFAICT. The kernel has a little under 1GB of virtual
+> > address
+> > space that can be mapped via the TLB since the first 512MB are
+> > occupied
+> > by KSEG0/1.
+> >   
+> 
+> My adventures thus far with HIGHMEM have got as far as
+> 
+>   This processor doesn't support highmem. 2490368k highmem ignored
+> 
+> Which I think has something to do with the max_low_pfn and highend_pfn
+> being different.
+> 
 
-diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-deleted file mode 100644
-index 823e417..0000000
---- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-+++ /dev/null
-@@ -1,61 +0,0 @@
--* Temperature Monitor (TEMPMON) on Freescale i.MX SoCs
--
--Required properties:
--- compatible : must be one of following:
--  - "fsl,imx6q-tempmon" for i.MX6Q,
--  - "fsl,imx6sx-tempmon" for i.MX6SX,
--  - "fsl,imx7d-tempmon" for i.MX7S/D.
--- interrupts : the interrupt output of the controller:
--  i.MX6Q has one IRQ which will be triggered when temperature is higher than high threshold,
--  i.MX6SX and i.MX7S/D have two more IRQs than i.MX6Q, one is IRQ_LOW and the other is IRQ_PANIC,
--  when temperature is below than low threshold, IRQ_LOW will be triggered, when temperature
--  is higher than panic threshold, system will auto reboot by SRC module.
--- fsl,tempmon : phandle pointer to system controller that contains TEMPMON
--  control registers, e.g. ANATOP on imx6q.
--- nvmem-cells: A phandle to the calibration cells provided by ocotp.
--- nvmem-cell-names: Should be "calib", "temp_grade".
--
--Deprecated properties:
--- fsl,tempmon-data : phandle pointer to fuse controller that contains TEMPMON
--  calibration data, e.g. OCOTP on imx6q.  The details about calibration data
--  can be found in SoC Reference Manual.
--
--Direct access to OCOTP via fsl,tempmon-data is incorrect on some newer chips
--because it does not handle OCOTP clock requirements.
--
--Optional properties:
--- clocks : thermal sensor's clock source.
--
--Example:
--ocotp: ocotp@21bc000 {
--	#address-cells = <1>;
--	#size-cells = <1>;
--	compatible = "fsl,imx6sx-ocotp", "syscon";
--	reg = <0x021bc000 0x4000>;
--	clocks = <&clks IMX6SX_CLK_OCOTP>;
--
--	tempmon_calib: calib@38 {
--		reg = <0x38 4>;
--	};
--
--	tempmon_temp_grade: temp-grade@20 {
--		reg = <0x20 4>;
--	};
--};
--
--tempmon: tempmon {
--	compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
--	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
--	fsl,tempmon = <&anatop>;
--	nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
--	nvmem-cell-names = "calib", "temp_grade";
--	clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
--};
--
--Legacy method (Deprecated):
--tempmon {
--	compatible = "fsl,imx6q-tempmon";
--	fsl,tempmon = <&anatop>;
--	fsl,tempmon-data = <&ocotp>;
--	clocks = <&clks 172>;
--};
-diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.yaml b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
-new file mode 100644
-index 0000000..ad12622
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
-@@ -0,0 +1,97 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/imx-thermal.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: NXP i.MX Thermal Binding
-+
-+maintainers:
-+  - Anson Huang <Anson.Huang@nxp.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - fsl,imx6q-tempmon
-+              - fsl,imx6sx-tempmon
-+              - fsl,imx7d-tempmon
-+
-+  interrupts:
-+    description: |
-+      The interrupt output of the controller, the IRQ will be triggered
-+      when temperature is higher than high threshold.
-+    maxItems: 1
-+
-+  nvmem-cells:
-+    description: |
-+      Phandle to the calibration cells provided by ocotp for calibration
-+      data and temperature grade.
-+    maxItems: 2
-+
-+  nvmem-cell-names:
-+    maxItems: 2
-+    items:
-+      - const: calib
-+      - const: temp_grade
-+
-+  fsl,tempmon:
-+    description: |
-+      Phandle pointer to system controller that contains TEMPMON control
-+      registers, e.g. ANATOP on imx6q.
-+    $ref: '/schemas/types.yaml#/definitions/phandle'
-+
-+  fsl,tempmon-data:
-+    description: |
-+      Deprecated property, phandle pointer to fuse controller that contains
-+      TEMPMON calibration data, e.g. OCOTP on imx6q. The details about
-+      calibration data can be found in SoC Reference Manual.
-+    $ref: '/schemas/types.yaml#/definitions/phandle'
-+
-+  clocks:
-+    description: |
-+      Thermal sensor's clock source.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - interrupts
-+  - fsl,tempmon
-+  - clocks
-+  - nvmem-cells
-+  - nvmem-cell-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx6sx-clock.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    ocotp: ocotp@21bc000 {
-+         #address-cells = <1>;
-+         #size-cells = <1>;
-+         compatible = "fsl,imx6sx-ocotp", "syscon";
-+         reg = <0x021bc000 0x4000>;
-+         clocks = <&clks IMX6SX_CLK_OCOTP>;
-+
-+         tempmon_calib: calib@38 {
-+             reg = <0x38 4>;
-+         };
-+
-+         tempmon_temp_grade: temp-grade@20 {
-+             reg = <0x20 4>;
-+         };
-+    };
-+
-+    tempmon: tempmon {
-+         compatible = "fsl,imx6sx-tempmon";
-+         interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+         fsl,tempmon = <&anatop>;
-+         nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
-+         nvmem-cell-names = "calib", "temp_grade";
-+         clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
-+    };
-+
-+...
--- 
-2.7.4
+You might have cpu_has_dc_aliases defined.
+HIGHMEM is unsafe on these systems due to Cache Alias issue.
+
+Here is a comment in mips/kernel/cpu-probe.c:
+
+/*
+ * Early versions of the 74K do not update the cache tags on a
+ * vtag miss/ptag hit which can occur in the case of KSEG0/KUSEG
+ * aliases.  In this case it is better to treat the cache as always
+ * having aliases.  Also disable the synonym tag update feature
+ * where available.  In this case no opportunistic tag update will
+ * happen where a load causes a virtual address miss but a physical
+ * address hit during a D-cache look-up.
+ */
+
+Probably you system have this kind of issue?
+
+You can determine waysize of D-Cache and set a larger pagesize.
+
+--
+Jiaxun Yang
 
