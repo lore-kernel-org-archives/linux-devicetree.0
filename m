@@ -4,114 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDF6C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 23:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5366CC2BB85
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 23:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B6420857
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 23:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CCB5208E4
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 23:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586473826;
-	bh=cok74IMHnuYWsgPnboRukysU7DKzK7U5gPi7WyBzanU=;
+	s=default; t=1586473873;
+	bh=+hu2kiUapqLKLwgFDRVtuTq5RpfzekANDca/NK5mCsI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=b7sWf/k3n5IcyI9OGc2WFWcvdVAEtaM8e3PDVQw2Itgo5G3s5yYu99ZtgnOwNHpbz
-	 lXwjuP/o/NBtSaJON1GiQKcGIjVnbhMI6L8ttQuNvSHAtT8fvT6eFHi7+Xg79SW0K7
-	 mmZNSi57jMbnKJY1chmIlW5fezs8gusbuSpzgcy4=
+	b=Fbtev9SavTj6fD9BDlMeAn450aE1r5hb7zeuyYwipFMQFvDRnDSurIylN+pV/VHN1
+	 n/TLrhzy+Q845nvTVuo1Y4kYhx3HizWWmqrPBJzQnOovwv4QbsbpJlu8k977tJAFnU
+	 /xGHZNUE6zONaxK7XOyZuYLSk3seqTx7afo1gnqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgDIXKZ (ORCPT
+        id S1726779AbgDIXLM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 19:10:25 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46303 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbgDIXKZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 19:10:25 -0400
-Received: by mail-io1-f66.google.com with SMTP id i3so92319ioo.13;
-        Thu, 09 Apr 2020 16:10:25 -0700 (PDT)
+        Thu, 9 Apr 2020 19:11:12 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:41404 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbgDIXLL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 19:11:11 -0400
+Received: by mail-il1-f195.google.com with SMTP id t6so348848ilj.8;
+        Thu, 09 Apr 2020 16:11:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Hkv9Vin9gJRSKCAf/kk8KdwDOEdNpGQ0k0uqyqoPiNU=;
-        b=BVb1fdHjKzKaSBA7+kY3LIHZu+cTpBFNMQ5nMonkZopJo2gc83Vyq2LyC8RSF9BNTs
-         dlxDdgjfc0+UB4IAMTUoneAdiSktiirv3QyRBuY1LXiGDQbLNKoh2XHn5O/PaaxOWXXl
-         5CyEdo40dwDRzld1ESE+B/H/x53QXQ6QuZR2ck4jUAOeE1w5LGOPiq+bqgDRfRv0SCNk
-         MA7jV12s1nrrpj+fNVCqpUHy4/WCR9T9eEpu2JLg3MhsZ5peP0C4QAZgiw8o0U0LH8lN
-         /svDs0TomOjzAA5Xl10TMk0bCG8IFujqWS69aioyOTu4LzSHGK5W9X1ZhWLBeyTFRe8c
-         qjhQ==
-X-Gm-Message-State: AGi0PubyAntFsYathbEECxTiqnMbNXaOUNQpJ0EHKCJ672AZUPlSVnYz
-        ZFQvePfUwFNIxtee4XaHGw==
-X-Google-Smtp-Source: APiQypIDVQQ7NtmX3YGOcYcp8Rl/QMyqAmd4Ruw2zFzqc36idNXftVPGGChHwiyDAJpKWKB//ysTJg==
-X-Received: by 2002:a5d:905a:: with SMTP id v26mr1610480ioq.39.1586473824640;
-        Thu, 09 Apr 2020 16:10:24 -0700 (PDT)
+        bh=XHTHGCsgfXX19VGzpIF+rrRJOUUg2k/5itbti4Sluiw=;
+        b=IzHZU48K1YiX/+21sbw6ltl0cfMlPd0AJL++uHe1cm1SPfBeZNavnNLgE6/Ik15p4Z
+         ST0rof2SNOW/1KF/xia/N0ovS0yDmSlaMvtefia3gvxXiiGRoef/gEWiNYhqUhDxEiFt
+         Q2EY/Zwm86nzQJNLzeZ/D/KKMMv8OrYXYPKAeYYAKdgHKrTxqAb0jK4yr0jcrmhdlOT2
+         V8e4UqzdSw4wKDUPKmWoUifEq0flZzmi559PSQV4rrM6e5opxeUtgabZgcwsvdmaozbq
+         TdP51W6/47WYVcNrvV43E4W55wZ8jPsaJaISuc+EsgYjKa1jmPcYI1OLlpL8RjcgNYLQ
+         F+Sg==
+X-Gm-Message-State: AGi0PuYfJ7sF8xy3eHVtrJnBnvhr+fXXQsvbct3FsqDJ59dWuDBSS0Nk
+        ouEFZx/Vhpm1wwQJb0ypHg==
+X-Google-Smtp-Source: APiQypLqo2zaWnSheojFEJB8E++9Zq1uWFEbh1m5g1x8qcvNxZ1Pn4QvM+fA/kuyDlypQvUKQCdWKQ==
+X-Received: by 2002:a92:912:: with SMTP id y18mr2357154ilg.299.1586473871414;
+        Thu, 09 Apr 2020 16:11:11 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id n29sm144557ila.86.2020.04.09.16.10.22
+        by smtp.gmail.com with ESMTPSA id h29sm157861ili.19.2020.04.09.16.11.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 16:10:24 -0700 (PDT)
-Received: (nullmailer pid 25365 invoked by uid 1000);
-        Thu, 09 Apr 2020 23:10:21 -0000
-Date:   Thu, 9 Apr 2020 17:10:21 -0600
+        Thu, 09 Apr 2020 16:11:10 -0700 (PDT)
+Received: (nullmailer pid 26485 invoked by uid 1000);
+        Thu, 09 Apr 2020 23:11:08 -0000
+Date:   Thu, 9 Apr 2020 17:11:08 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Alistair Francis <alistair@alistair23.me>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-bluetooth@vger.kernel.org, mripard@kernel.org, wens@csie.org,
-        anarsoul@gmail.com, devicetree@vger.kernel.org,
-        alistair23@gmail.com, linux-arm-kernel@lists.infradead.org,
-        Alistair Francis <alistair@alistair23.me>
-Subject: Re: [PATCH v2 1/3] dt-bindings: net: bluetooth: Add
- rtl8723bs-bluetooth
-Message-ID: <20200409231021.GA19363@bogus>
-References: <20200407055837.3508017-1-alistair@alistair23.me>
+To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
+Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org,
+        Kamel Bouhara <kamel.bouhara@bootlin.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: counter: atmel-tcb-capture counter
+Message-ID: <20200409231108.GA25954@bogus>
+References: <20200409141401.321222-1-kamel.bouhara@bootlin.com>
+ <20200409141401.321222-3-kamel.bouhara@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200407055837.3508017-1-alistair@alistair23.me>
+In-Reply-To: <20200409141401.321222-3-kamel.bouhara@bootlin.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon,  6 Apr 2020 22:58:35 -0700, Alistair Francis wrote:
-> From: Vasily Khoruzhick <anarsoul@gmail.com>
+On Thu,  9 Apr 2020 16:14:00 +0200, Kamel Bouhara wrote:
+> Describe the devicetree binding for the ATMEL TCB counter. Each counter
+> blocks exposes three independent counters.
 > 
-> Add binding document for bluetooth part of RTL8723BS/RTL8723CS
+> However, when configured in quadrature decoder, both channel <0> and <1>
+> are required for speed/position and rotation capture (yet only the
+> position is captured).
 > 
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> Signed-off-by: Alistair Francis <alistair@alistair23.me>
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
 > ---
-> v2:
->  - Update bindings based on upstream feedback
->  - Add RTL8822CS
->  - Remove unused/unsupported fields
->  - Remove firmware-postfix field
->  - Small formatting changes
-> 
->  .../bindings/net/realtek,rtl8723bs-bt.yaml    | 55 +++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/realtek,rtl8723bs-bt.yaml
+>  .../bindings/counter/atmel-tcb-capture.yaml   | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/counter/atmel-tcb-capture.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/realtek,rtl8723bs-bt.yaml: properties:compatible:oneOf:0: 'realtek,rtl8723bs-bt' is not of type 'object', 'boolean'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/realtek,rtl8723bs-bt.yaml: properties:compatible:oneOf:1: 'realtek,rtl8723cs-bt' is not of type 'object', 'boolean'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/realtek,rtl8723bs-bt.yaml: properties:compatible:oneOf:2: 'realtek,rtl8822cs-bt' is not of type 'object', 'boolean'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/realtek,rtl8723bs-bt.yaml: properties:host-wake-gpios: Additional properties are not allowed ('desciption' was unexpected)
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/realtek,rtl8723bs-bt.yaml: properties:host-wake-gpios: 'desciption' is not one of ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'deprecated', 'description', 'else', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'items', 'if', 'minItems', 'minimum', 'maxItems', 'maximum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'required', 'then', 'type', 'typeSize', 'unevaluatedProperties', 'uniqueItems']
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/realtek,rtl8723bs-bt.yaml: properties:host-wake-gpios: {'maxItems': 1, 'desciption': 'GPIO specifier, used to wakeup the host processor'} is not valid under any of the given schemas (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/realtek,rtl8723bs-bt.yaml: properties:host-wake-gpios: Additional properties are not allowed ('desciption' was unexpected)
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/realtek,rtl8723bs-bt.yaml: properties:host-wake-gpios:maxItems: 1 is less than the minimum of 2
+Documentation/devicetree/bindings/counter/atmel-tcb-capture.example.dts:20.17-32: Warning (reg_format): /example-0/timer@f800c000/timer@0:reg: property has invalid length (8 bytes) (#address-cells == 2, #size-cells == 1)
+Documentation/devicetree/bindings/counter/atmel-tcb-capture.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/counter/atmel-tcb-capture.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/counter/atmel-tcb-capture.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/counter/atmel-tcb-capture.example.dts:18.27-21.15: Warning (avoid_default_addr_size): /example-0/timer@f800c000/timer@0: Relying on default #address-cells value
+Documentation/devicetree/bindings/counter/atmel-tcb-capture.example.dts:18.27-21.15: Warning (avoid_default_addr_size): /example-0/timer@f800c000/timer@0: Relying on default #size-cells value
 
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/net/realtek,rtl8723bs-bt.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/net/realtek,rtl8723bs-bt.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1262: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-See https://patchwork.ozlabs.org/patch/1267219
+See https://patchwork.ozlabs.org/patch/1268623
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
