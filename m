@@ -2,194 +2,280 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B8CCC2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 13:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3B0C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 13:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 792D820B1F
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 13:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DACB2083E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 13:49:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="amKfqnd8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgDINZL (ORCPT
+        id S1726679AbgDINtI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 09:25:11 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38042 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgDINZL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 09:25:11 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 0A542297B00
-Subject: Re: [PATCH v2] arm64: dts: mt8173: Add gce setting in mmsys and
- display node
-To:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     devicetree@vger.kernel.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>
-References: <20200409055012.199320-1-hsinyi@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <63058ea1-9cce-2c2e-0041-9369033a7b33@collabora.com>
-Date:   Thu, 9 Apr 2020 15:25:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 9 Apr 2020 09:49:08 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:43925 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726583AbgDINtI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 09:49:08 -0400
+Received: by mail-ua1-f66.google.com with SMTP id g24so3929336uan.10
+        for <devicetree@vger.kernel.org>; Thu, 09 Apr 2020 06:49:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5dJ2iz6mYeufR/3a819TAwvmat0FG6WlCPrzsZs/LR0=;
+        b=amKfqnd8WQyQUAwi4cZoNrTICQeFaNVJPH28XmKBDQXacysYodktIyiN2ndQx+TQcv
+         bE1YQidGEZu1EqGjm0MH4mmpq5nA+42ldSSrTL99PS28PvRiy5Hu36Cw1+BHd0Q73auH
+         i7MxRDbVc1bfVrS2iATOcjNUHRMwaGOf7ARFElgadRaI+Se1QV8mAOs2BNZiqLtpCn8c
+         oTRo6ATdFF9BsWVB81GBQe4ny1no9JSpdhqD2Z9AjhLDI+EVj/kkJjI4KioULc4bTIrU
+         53JZXLEI3Y9kZK43il6Z+a7GkDur/yKP+teUqIU/+86Cx0fcoAj2NCUItb1asfK4YGnz
+         WjZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5dJ2iz6mYeufR/3a819TAwvmat0FG6WlCPrzsZs/LR0=;
+        b=jEBixgj+ac5Zu0dfjYYVzlYkyPsacJWFNu/JhNj+Um9/kJr2ZhgkYzsg/0RX66Tl59
+         nG5ejowq8j6XW5x4FPj6B7N4AuXqCIAMDjmcLT/TLVV4/yaMX4ItEKf9F7r3ZZPDZyCz
+         8lt7dVFuCF35MtHULMKccjrj63ns5XmD4ncr+q/czLV+Zm51dhZ78qz//xHbWY6d68th
+         NEBiKywxmhjXn5f8MTL5bRQkbrndm4yC0DbN509px53+5yWQOArv1USi/lYgveqeqrKc
+         aE/RU1MA4lA1eH0bRFYXwv05wax/XqJWpndw4IxB0vUf7mLbUdzMhABEztFU+77Z00pf
+         mItA==
+X-Gm-Message-State: AGi0PuZGaWVleLI/vxTAajm3oV4igfVWQnGPQFd9MohmCqHsGsl1XcIs
+        6tvZPHL50+7kTPEor0EviyFGrzR3Qfs9g2l8wIhpNw==
+X-Google-Smtp-Source: APiQypJeghsuGIyn0WvqoYX5wxkTIWjxtH/G1Qe+Ftm6KAYOlTTo2AJGBIWDmRQ2iRf8Hp4GTBdezU70qfNWPExhJhA=
+X-Received: by 2002:ab0:654c:: with SMTP id x12mr9506156uap.48.1586440147159;
+ Thu, 09 Apr 2020 06:49:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200409055012.199320-1-hsinyi@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1586407908-27139-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1586407908-27139-1-git-send-email-Anson.Huang@nxp.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Thu, 9 Apr 2020 19:18:56 +0530
+Message-ID: <CAHLCerPi36z4z4DLmP9czEp8aw8yQq7EHAtHdCFLO2ZVYBZsRA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: thermal: Convert i.MX to json-schema
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
+        Fabio Estevam <festevam@gmail.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Hsin-Yi,
+Hi Anson,
 
-Thanks for sending the patch upstream
-
-On 9/4/20 7:50, Hsin-Yi Wang wrote:
-> In order to use GCE function, we need add some informations
-> into display node (mboxes, mediatek,gce-client-reg, mediatek,gce-events).
-> 
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> Reviewed-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-
-Tested on my Acer Chromebook R13, so
-
-Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
+On Thu, Apr 9, 2020 at 10:29 AM Anson Huang <Anson.Huang@nxp.com> wrote:
+>
+> Convert the i.MX thermal binding to DT schema format using json-schema
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
-> change log:
-> v1->v2: align with
-> 19d8e335d58a ("dt-binding: gce: remove atomic_exec in mboxes property")
-> 60fa8c13ab1a ("drm/mediatek: Move gce event property to mutex device node")
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index ccb8e88a60c5..8337ba42845d 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -549,7 +549,7 @@ gce: mailbox@10212000 {
->  			interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
->  			clocks = <&infracfg CLK_INFRA_GCE>;
->  			clock-names = "gce";
-> -			#mbox-cells = <3>;
-> +			#mbox-cells = <2>;
->  		};
->  
->  		mipi_tx0: mipi-dphy@10215000 {
-> @@ -916,6 +916,9 @@ mmsys: clock-controller@14000000 {
->  			assigned-clocks = <&topckgen CLK_TOP_MM_SEL>;
->  			assigned-clock-rates = <400000000>;
->  			#clock-cells = <1>;
-> +			mboxes = <&gce 0 CMDQ_THR_PRIO_HIGHEST>,
-> +				 <&gce 1 CMDQ_THR_PRIO_HIGHEST>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0 0x1000>;
->  		};
->  
->  		mdp_rdma0: rdma@14001000 {
-> @@ -996,6 +999,7 @@ ovl0: ovl@1400c000 {
->  			clocks = <&mmsys CLK_MM_DISP_OVL0>;
->  			iommus = <&iommu M4U_PORT_DISP_OVL0>;
->  			mediatek,larb = <&larb0>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xc000 0x1000>;
->  		};
->  
->  		ovl1: ovl@1400d000 {
-> @@ -1006,6 +1010,7 @@ ovl1: ovl@1400d000 {
->  			clocks = <&mmsys CLK_MM_DISP_OVL1>;
->  			iommus = <&iommu M4U_PORT_DISP_OVL1>;
->  			mediatek,larb = <&larb4>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xd000 0x1000>;
->  		};
->  
->  		rdma0: rdma@1400e000 {
-> @@ -1016,6 +1021,7 @@ rdma0: rdma@1400e000 {
->  			clocks = <&mmsys CLK_MM_DISP_RDMA0>;
->  			iommus = <&iommu M4U_PORT_DISP_RDMA0>;
->  			mediatek,larb = <&larb0>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xe000 0x1000>;
->  		};
->  
->  		rdma1: rdma@1400f000 {
-> @@ -1026,6 +1032,7 @@ rdma1: rdma@1400f000 {
->  			clocks = <&mmsys CLK_MM_DISP_RDMA1>;
->  			iommus = <&iommu M4U_PORT_DISP_RDMA1>;
->  			mediatek,larb = <&larb4>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xf000 0x1000>;
->  		};
->  
->  		rdma2: rdma@14010000 {
-> @@ -1036,6 +1043,7 @@ rdma2: rdma@14010000 {
->  			clocks = <&mmsys CLK_MM_DISP_RDMA2>;
->  			iommus = <&iommu M4U_PORT_DISP_RDMA2>;
->  			mediatek,larb = <&larb4>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0 0x1000>;
->  		};
->  
->  		wdma0: wdma@14011000 {
-> @@ -1046,6 +1054,7 @@ wdma0: wdma@14011000 {
->  			clocks = <&mmsys CLK_MM_DISP_WDMA0>;
->  			iommus = <&iommu M4U_PORT_DISP_WDMA0>;
->  			mediatek,larb = <&larb0>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x1000 0x1000>;
->  		};
->  
->  		wdma1: wdma@14012000 {
-> @@ -1056,6 +1065,7 @@ wdma1: wdma@14012000 {
->  			clocks = <&mmsys CLK_MM_DISP_WDMA1>;
->  			iommus = <&iommu M4U_PORT_DISP_WDMA1>;
->  			mediatek,larb = <&larb4>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x2000 0x1000>;
->  		};
->  
->  		color0: color@14013000 {
-> @@ -1064,6 +1074,7 @@ color0: color@14013000 {
->  			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_LOW>;
->  			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
->  			clocks = <&mmsys CLK_MM_DISP_COLOR0>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x3000 0x1000>;
->  		};
->  
->  		color1: color@14014000 {
-> @@ -1072,6 +1083,7 @@ color1: color@14014000 {
->  			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_LOW>;
->  			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
->  			clocks = <&mmsys CLK_MM_DISP_COLOR1>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x4000 0x1000>;
->  		};
->  
->  		aal@14015000 {
-> @@ -1080,6 +1092,7 @@ aal@14015000 {
->  			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_LOW>;
->  			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
->  			clocks = <&mmsys CLK_MM_DISP_AAL>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x5000 0x1000>;
->  		};
->  
->  		gamma@14016000 {
-> @@ -1088,6 +1101,7 @@ gamma@14016000 {
->  			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_LOW>;
->  			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
->  			clocks = <&mmsys CLK_MM_DISP_GAMMA>;
-> +			mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x6000 0x1000>;
->  		};
->  
->  		merge@14017000 {
-> @@ -1193,6 +1207,8 @@ mutex: mutex@14020000 {
->  			interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_LOW>;
->  			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
->  			clocks = <&mmsys CLK_MM_MUTEX_32K>;
-> +			mediatek,gce-events = <CMDQ_EVENT_MUTEX0_STREAM_EOF>,
-> +                                              <CMDQ_EVENT_MUTEX1_STREAM_EOF>;
->  		};
->  
->  		larb0: larb@14021000 {
-> 
+>  .../devicetree/bindings/thermal/imx-thermal.txt    | 61 --------------
+>  .../devicetree/bindings/thermal/imx-thermal.yaml   | 97 ++++++++++++++++++++++
+>  2 files changed, 97 insertions(+), 61 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/thermal/imx-thermal.txt
+>  create mode 100644 Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> deleted file mode 100644
+> index 823e417..0000000
+> --- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> +++ /dev/null
+> @@ -1,61 +0,0 @@
+> -* Temperature Monitor (TEMPMON) on Freescale i.MX SoCs
+> -
+> -Required properties:
+> -- compatible : must be one of following:
+> -  - "fsl,imx6q-tempmon" for i.MX6Q,
+> -  - "fsl,imx6sx-tempmon" for i.MX6SX,
+> -  - "fsl,imx7d-tempmon" for i.MX7S/D.
+> -- interrupts : the interrupt output of the controller:
+> -  i.MX6Q has one IRQ which will be triggered when temperature is higher than high threshold,
+> -  i.MX6SX and i.MX7S/D have two more IRQs than i.MX6Q, one is IRQ_LOW and the other is IRQ_PANIC,
+> -  when temperature is below than low threshold, IRQ_LOW will be triggered, when temperature
+> -  is higher than panic threshold, system will auto reboot by SRC module.
+> -- fsl,tempmon : phandle pointer to system controller that contains TEMPMON
+> -  control registers, e.g. ANATOP on imx6q.
+> -- nvmem-cells: A phandle to the calibration cells provided by ocotp.
+> -- nvmem-cell-names: Should be "calib", "temp_grade".
+> -
+> -Deprecated properties:
+> -- fsl,tempmon-data : phandle pointer to fuse controller that contains TEMPMON
+> -  calibration data, e.g. OCOTP on imx6q.  The details about calibration data
+> -  can be found in SoC Reference Manual.
+> -
+> -Direct access to OCOTP via fsl,tempmon-data is incorrect on some newer chips
+> -because it does not handle OCOTP clock requirements.
+> -
+> -Optional properties:
+> -- clocks : thermal sensor's clock source.
+> -
+> -Example:
+> -ocotp: ocotp@21bc000 {
+> -       #address-cells = <1>;
+> -       #size-cells = <1>;
+> -       compatible = "fsl,imx6sx-ocotp", "syscon";
+> -       reg = <0x021bc000 0x4000>;
+> -       clocks = <&clks IMX6SX_CLK_OCOTP>;
+> -
+> -       tempmon_calib: calib@38 {
+> -               reg = <0x38 4>;
+> -       };
+> -
+> -       tempmon_temp_grade: temp-grade@20 {
+> -               reg = <0x20 4>;
+> -       };
+> -};
+> -
+> -tempmon: tempmon {
+> -       compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
+> -       interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> -       fsl,tempmon = <&anatop>;
+> -       nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
+> -       nvmem-cell-names = "calib", "temp_grade";
+> -       clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
+> -};
+> -
+> -Legacy method (Deprecated):
+> -tempmon {
+> -       compatible = "fsl,imx6q-tempmon";
+> -       fsl,tempmon = <&anatop>;
+> -       fsl,tempmon-data = <&ocotp>;
+> -       clocks = <&clks 172>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.yaml b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+> new file mode 100644
+> index 0000000..ad12622
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+> @@ -0,0 +1,97 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/imx-thermal.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP i.MX Thermal Binding
+> +
+> +maintainers:
+> +  - Anson Huang <Anson.Huang@nxp.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - fsl,imx6q-tempmon
+> +              - fsl,imx6sx-tempmon
+> +              - fsl,imx7d-tempmon
+> +
+
+> +  interrupts:
+> +    description: |
+> +      The interrupt output of the controller, the IRQ will be triggered
+> +      when temperature is higher than high threshold.
+> +    maxItems: 1
+> +
+
+imx6sx and imx7d have 3 interrupts each. So you need an if clause to
+change the interrupt number based on what compatible is provided. See
+qcom-tsens.yaml for an example.
+
+> +  nvmem-cells:
+> +    description: |
+> +      Phandle to the calibration cells provided by ocotp for calibration
+> +      data and temperature grade.
+> +    maxItems: 2
+> +
+> +  nvmem-cell-names:
+> +    maxItems: 2
+> +    items:
+> +      - const: calib
+> +      - const: temp_grade
+> +
+> +  fsl,tempmon:
+> +    description: |
+> +      Phandle pointer to system controller that contains TEMPMON control
+> +      registers, e.g. ANATOP on imx6q.
+> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+
+Nit: move $ref line above description. IMO it makes the binding easier to read.
+
+> +
+> +  fsl,tempmon-data:
+> +    description: |
+> +      Deprecated property, phandle pointer to fuse controller that contains
+> +      TEMPMON calibration data, e.g. OCOTP on imx6q. The details about
+> +      calibration data can be found in SoC Reference Manual.
+> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+
+Nit: move $ref line above description. IMO it makes the binding easier to read.
+
+> +
+> +  clocks:
+> +    description: |
+> +      Thermal sensor's clock source.
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - interrupts
+> +  - fsl,tempmon
+> +  - clocks
+
+Clocks was an optional property before, are you sure?
+
+> +  - nvmem-cells
+> +  - nvmem-cell-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/imx6sx-clock.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    ocotp: ocotp@21bc000 {
+> +         #address-cells = <1>;
+> +         #size-cells = <1>;
+> +         compatible = "fsl,imx6sx-ocotp", "syscon";
+> +         reg = <0x021bc000 0x4000>;
+> +         clocks = <&clks IMX6SX_CLK_OCOTP>;
+> +
+> +         tempmon_calib: calib@38 {
+> +             reg = <0x38 4>;
+> +         };
+> +
+> +         tempmon_temp_grade: temp-grade@20 {
+> +             reg = <0x20 4>;
+> +         };
+> +    };
+> +
+> +    tempmon: tempmon {
+> +         compatible = "fsl,imx6sx-tempmon";
+> +         interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> +         fsl,tempmon = <&anatop>;
+> +         nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
+> +         nvmem-cell-names = "calib", "temp_grade";
+> +         clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
+> +    };
+> +
+> +...
+> --
+> 2.7.4
+>
