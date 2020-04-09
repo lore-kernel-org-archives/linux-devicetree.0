@@ -2,133 +2,151 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AA5C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 18:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D61FCC2BB85
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 18:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB1C20753
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 18:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF5BC20753
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 18:20:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pVpwsncD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eiWw9hPG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgDISPo (ORCPT
+        id S1726583AbgDISU1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 14:15:44 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37696 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgDISPo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 14:15:44 -0400
-Received: by mail-io1-f65.google.com with SMTP id n20so530824ioa.4;
-        Thu, 09 Apr 2020 11:15:43 -0700 (PDT)
+        Thu, 9 Apr 2020 14:20:27 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:51806 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgDISUZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 14:20:25 -0400
+Received: by mail-pj1-f65.google.com with SMTP id n4so1640362pjp.1
+        for <devicetree@vger.kernel.org>; Thu, 09 Apr 2020 11:20:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LL3UHibZ+te+7A+uSzs2GWjULtkRzuINzptnfU6LoEo=;
-        b=pVpwsncD80U1Vo8ia9pZ/EIwpyB6jWDA1LFtTHdzPhG+PFggIu9xT7DWirMQXBLPvb
-         uONSu5B2gHFjWRPVcNH4Y7lAyNfvbDbR+XNpc4f3kIZPCNIB9lO6Bl2mFI6sC2wKDYPN
-         Jmt9gIPoVwW9WEkdi6ZVE7PSyBZDTrzDHaC9eGZMC4Du/1odJcs2mIp+sRe+xvVTsSmA
-         c6LqudHjmIPcnK0EmbwGnZJt7WuHeUI8VqGyShq35ttOanWgY7xllA5m3KPzFsw4MMnx
-         6zR9PxwSVHh503zEcoQG+weKgF7X0M20jHJwW9OOhmeHUMqwnInLweQaxjijxb8SDjyH
-         lO8g==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BeycGXQuoBVYG9ONaPHpfk62jXqpOs5+cJRriF7c/i8=;
+        b=eiWw9hPGWIX/zUVRY9wkUwIv1FnbbBOrbahsPi5dTo5e/FwwwapcN5dyzIuiSgY9mp
+         Ip1Ixj5snBlO6YG3cKudB8PLfCHgRRXnoRMswLYfbVE8jle0nx7NR5kBBGLjagEPSx9f
+         koHAPmeN6wPc3hT3KTb+hLuL7RlUjRVgdH+Oo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LL3UHibZ+te+7A+uSzs2GWjULtkRzuINzptnfU6LoEo=;
-        b=n9XOUsA/MiLfMW8SVmLhzppSBdPMr+7j2s1G2v8eG73+5rs4FG0QowowIb1in0ZtqB
-         DfaAM9t/nbiEbtWyWxT72kkW2dECsjMWrMDTwMsyv37/jH0Qps99xapOJsUAZcEWy0rz
-         bKkfjKW1VSJnuuGrc0qIFxnRNdjYD+8Mv/hi57y1TW3M4X70eG1MirHvgnre46juykFt
-         3cSAoNrO11VcjedW9E5vPB8lpP6un9cLqFrlQ/gM5Y91AKp9JsIkAoF9QdbGxeewYj0e
-         0YMZTJQ9IAZ+AYRgigi1Osofo1fz+xYxu2q00Xg/2YgwKflq44Q/DxSOTpjJQAXP2alR
-         43KA==
-X-Gm-Message-State: AGi0PubAkExVN9pgAFQmJlD0/IGNdXIbg0h/NjD7Tr/FDo0LNafcB/cC
-        cGjS2spPUsU7qbcZFr+vgCp+z3zYL0a0lJmlT5g=
-X-Google-Smtp-Source: APiQypJVQCvGnxu7nG00aqRlf3SSOvrrDHqAXeb07CR8HgcmHaQ/4QZcfGexyp4Xp6Arr7ZLoLwDE9ymHWIXeKQNlD0=
-X-Received: by 2002:a02:ccf4:: with SMTP id l20mr794921jaq.28.1586456143394;
- Thu, 09 Apr 2020 11:15:43 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BeycGXQuoBVYG9ONaPHpfk62jXqpOs5+cJRriF7c/i8=;
+        b=pvrwOgrFF2UO/Q68XuajKyBqiTd+uSpMxVA3v4bbZ96fLFjHYRIgDayxJolV9dzyOd
+         2SFiFyKolbV24BWBAKsLTieJUczobvhnG3/H0LbgRiHKtMw++J/fJkFWhR1EsLR2LRk9
+         mYCAWWsreKp2SsN18WyoYvlIvGdBR6IIzi6bwpYfW93fmWYnspE1CZYFNp1cMtpDLy5i
+         rESMwY4fCEG6jjyAiQIoGTgxcToRPhFeJNPepiDDKFZdGbo3EAzAofHiMW4uKbvzQdJ1
+         M9OfWBV6n1Lvo7FlT9Bjps3haimtfWj5H3cw/JPqKS+D5PkPif+B6DdZfYkH84tbRqZx
+         WqQA==
+X-Gm-Message-State: AGi0Pubwk9rjLx4TEdXDSgcjKcuhDu3RGsQLtYurAM6WRV5h5AseUTMZ
+        iho9Y6MO93fjKQ7wGydDV1ezCA==
+X-Google-Smtp-Source: APiQypLNbNT42VEJbPyenbCADnqH7UTIDCwf3AhvZbUz4pn+NCvzf8moNTIgUtBVxtsTfY0oYZ7a9w==
+X-Received: by 2002:a17:90a:198b:: with SMTP id 11mr879240pji.23.1586456423630;
+        Thu, 09 Apr 2020 11:20:23 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id h13sm6213736pfr.1.2020.04.09.11.20.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Apr 2020 11:20:22 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 11:20:21 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH 03/21] spi: spi-geni-qcom: Use OPP API to set clk/perf
+ state
+Message-ID: <20200409182021.GT199755@google.com>
+References: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
+ <1586353607-32222-4-git-send-email-rnayak@codeaurora.org>
 MIME-Version: 1.0
-References: <20200408181406.40389-1-alcooperx@gmail.com> <20200408181406.40389-5-alcooperx@gmail.com>
- <CAHp75Vd_nbgwdE5Fbm3oxd_+51BJZ=67sVyjKiN2zLS+J4X-Fw@mail.gmail.com>
- <CAOGqxeXQE0z=+6yuEME48am__2vtJhBpetYd_sZamJmm1h_TLQ@mail.gmail.com> <20200409123005.GZ3676135@smile.fi.intel.com>
-In-Reply-To: <20200409123005.GZ3676135@smile.fi.intel.com>
-From:   Alan Cooper <alcooperx@gmail.com>
-Date:   Thu, 9 Apr 2020 14:15:32 -0400
-Message-ID: <CAOGqxeUounB5f5oht+d=y+bOiAFe_RM20GUACv2rkL6aR_DV2Q@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] usb: host: Add ability to build new Broadcom STB
- USB drivers
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        USB <linux-usb@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1586353607-32222-4-git-send-email-rnayak@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 8:30 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Thu, Apr 09, 2020 at 07:49:52AM -0400, Alan Cooper wrote:
-> > On Thu, Apr 9, 2020 at 5:08 AM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > >
-> > > On Thu, Apr 9, 2020 at 12:52 AM Al Cooper <alcooperx@gmail.com> wrote:
-> > > >
-> > > > Add the build system changes needed to get the Broadcom STB XHCI,
-> > > > EHCI and OHCI functionality working. The OHCI support does not
-> > > > require anything unique to Broadcom so the standard ohci-platform
-> > > > driver is being used. The link order for XHCI was changed in the
-> > > > Makefile because of the way STB XHCI, EHCI and OHCI controllers
-> > > > share a port which requires that the XHCI driver be initialized
-> > > > first. Also update MAINTAINERS.
-> > >
-> > > > --- a/MAINTAINERS
-> > > > +++ b/MAINTAINERS
-> > > > @@ -3477,6 +3477,14 @@ S:       Supported
-> > > >  F:     drivers/i2c/busses/i2c-brcmstb.c
-> > > >  F:     Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml
-> > > >
-> > > > +BROADCOM BRCMSTB USB EHCI DRIVER
-> > > > +M:     Al Cooper <alcooperx@gmail.com>
-> > > > +L:     linux-usb@vger.kernel.org
-> > > > +L:     bcm-kernel-feedback-list@broadcom.com
-> > > > +S:     Maintained
-> > > > +F:     drivers/usb/host/ehci-brcm.*
-> > > > +F:     Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
-> > >
-> > > This has ordering issues.
-> > > Run parse-maintainer.pl to fix. (Note, it creates by default a new
-> > > file, you might need to run diff manually to see the difference).
-> >
-> > I'm not sure what you mean.
-> > I ran "./scripts/parse-maintainers.pl" and did "diff MAINTAINERS
-> > MAINTAINERS.new" and there are no differences in or around my entry.
->
-> Perhaps --order should be added.
+Hi Rajendra,
 
-So you're asking me to swap the following lines?
+On Wed, Apr 08, 2020 at 07:16:29PM +0530, Rajendra Nayak wrote:
+> geni spi needs to express a perforamnce state requirement on CX
+> depending on the frequency of the clock rates. Use OPP table from
+> DT to register with OPP framework and use dev_pm_opp_set_rate() to
+> set the clk/perf state.
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Cc: Alok Chauhan <alokc@codeaurora.org>
+> Cc: Akash Asthana <akashast@codeaurora.org>
+> Cc: linux-spi@vger.kernel.org
+> ---
+>  drivers/spi/spi-geni-qcom.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+> index c397242..ce387dc 100644
+> --- a/drivers/spi/spi-geni-qcom.c
+> +++ b/drivers/spi/spi-geni-qcom.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/log2.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_opp.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/qcom-geni-se.h>
+>  #include <linux/spi/spi.h>
+> @@ -95,7 +96,6 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
+>  {
+>  	unsigned long sclk_freq;
+>  	unsigned int actual_hz;
+> -	struct geni_se *se = &mas->se;
+>  	int ret;
+>  
+>  	ret = geni_se_clk_freq_match(&mas->se,
+> @@ -112,9 +112,9 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
+>  
+>  	dev_dbg(mas->dev, "req %u=>%u sclk %lu, idx %d, div %d\n", speed_hz,
+>  				actual_hz, sclk_freq, *clk_idx, *clk_div);
+> -	ret = clk_set_rate(se->clk, sclk_freq);
+> +	ret = dev_pm_opp_set_rate(mas->dev, sclk_freq);
+>  	if (ret)
+> -		dev_err(mas->dev, "clk_set_rate failed %d\n", ret);
+> +		dev_err(mas->dev, "dev_pm_opp_set_rate failed %d\n", ret);
+>  	return ret;
+>  }
+>  
+> @@ -553,6 +553,7 @@ static int spi_geni_probe(struct platform_device *pdev)
+>  	if (!spi)
+>  		return -ENOMEM;
+>  
+> +
+>  	platform_set_drvdata(pdev, spi);
+>  	mas = spi_master_get_devdata(spi);
+>  	mas->irq = irq;
+> @@ -561,6 +562,8 @@ static int spi_geni_probe(struct platform_device *pdev)
+>  	mas->se.wrapper = dev_get_drvdata(dev->parent);
+>  	mas->se.base = base;
+>  	mas->se.clk = clk;
+> +	mas->se.opp = dev_pm_opp_set_clkname(&pdev->dev, "se");
 
-F:    drivers/usb/host/ehci-brcm.*
-F:    Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+As commented on the serial patch, it seems an error check is needed
+and the OPP table saved in 'struct geni_se' is never used.
 
-Al
+> +	dev_pm_opp_of_add_table(&pdev->dev);
 
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+This function could also fail for multiple reasons, so the return value
+should be checked.
+
+From patch "[01/21] opp: Manage empty OPP tables with clk handle" it seems
+ignoring errors is intended to be able to operate when no OPP table is
+specified. But even with that you want to return in case of certain errors,
+like an invalid OPP table, out of memory or -EPROBE_DEFER.
