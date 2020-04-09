@@ -2,151 +2,108 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D61FCC2BB85
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 18:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F92BC2BB85
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 18:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF5BC20753
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 18:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24D392087E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 18:24:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eiWw9hPG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aMaO6MI5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgDISU1 (ORCPT
+        id S1726623AbgDISYh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 14:20:27 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:51806 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgDISUZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 14:20:25 -0400
-Received: by mail-pj1-f65.google.com with SMTP id n4so1640362pjp.1
-        for <devicetree@vger.kernel.org>; Thu, 09 Apr 2020 11:20:24 -0700 (PDT)
+        Thu, 9 Apr 2020 14:24:37 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46532 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgDISYh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 14:24:37 -0400
+Received: by mail-lf1-f68.google.com with SMTP id m19so353333lfq.13;
+        Thu, 09 Apr 2020 11:24:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BeycGXQuoBVYG9ONaPHpfk62jXqpOs5+cJRriF7c/i8=;
-        b=eiWw9hPGWIX/zUVRY9wkUwIv1FnbbBOrbahsPi5dTo5e/FwwwapcN5dyzIuiSgY9mp
-         Ip1Ixj5snBlO6YG3cKudB8PLfCHgRRXnoRMswLYfbVE8jle0nx7NR5kBBGLjagEPSx9f
-         koHAPmeN6wPc3hT3KTb+hLuL7RlUjRVgdH+Oo=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fa26jqPPtzIkc//RtMH6SVR58k747j0sywbqTRpv304=;
+        b=aMaO6MI5RtYfDEKWn9t0hPBC+iiaGTHCKRHtqhDSpYRMdBINmseVb852oVgHht6hPG
+         fd5K+uLll0UGAFw7Ko66nAjKVrlhMMp65nYW03VLlXPRaY5atpmWKGaXhAtAb6xCClV6
+         N47yqVKTXIOkz8e1N84nDPdfP9RrkXWPvqVNvtCeWnZrcO5m7hm7hcheYrI9c+na0Xow
+         +vd9UPBZHs9OesASsdiq182qwSHO+rFmLE70XnZdIBKxF84e6TEcDUkS3c+EToF3JiTA
+         dM95arlpy/Idu/NqW0rGgaHFtWN2RkP0URVjCMUNSOkAKTqoAPag5CwvxT/dKtmXCGUj
+         A1qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BeycGXQuoBVYG9ONaPHpfk62jXqpOs5+cJRriF7c/i8=;
-        b=pvrwOgrFF2UO/Q68XuajKyBqiTd+uSpMxVA3v4bbZ96fLFjHYRIgDayxJolV9dzyOd
-         2SFiFyKolbV24BWBAKsLTieJUczobvhnG3/H0LbgRiHKtMw++J/fJkFWhR1EsLR2LRk9
-         mYCAWWsreKp2SsN18WyoYvlIvGdBR6IIzi6bwpYfW93fmWYnspE1CZYFNp1cMtpDLy5i
-         rESMwY4fCEG6jjyAiQIoGTgxcToRPhFeJNPepiDDKFZdGbo3EAzAofHiMW4uKbvzQdJ1
-         M9OfWBV6n1Lvo7FlT9Bjps3haimtfWj5H3cw/JPqKS+D5PkPif+B6DdZfYkH84tbRqZx
-         WqQA==
-X-Gm-Message-State: AGi0Pubwk9rjLx4TEdXDSgcjKcuhDu3RGsQLtYurAM6WRV5h5AseUTMZ
-        iho9Y6MO93fjKQ7wGydDV1ezCA==
-X-Google-Smtp-Source: APiQypLNbNT42VEJbPyenbCADnqH7UTIDCwf3AhvZbUz4pn+NCvzf8moNTIgUtBVxtsTfY0oYZ7a9w==
-X-Received: by 2002:a17:90a:198b:: with SMTP id 11mr879240pji.23.1586456423630;
-        Thu, 09 Apr 2020 11:20:23 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id h13sm6213736pfr.1.2020.04.09.11.20.22
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fa26jqPPtzIkc//RtMH6SVR58k747j0sywbqTRpv304=;
+        b=HMd8rcob4UOZc1YvQoIAVp7CeQRpiU+GGJ6uhs5QVcZhpw1Bjv7fT+mDNCd5Sx5hHr
+         DANoKrDEUuSrclign39Y0mZeNy7+rQ+iziURyrSMB28VV562r9QQY+zfTKkFsKucrx2j
+         ypj83eR2yckJhg36JYMhEnI+PKAUnZBfn3fmQn8vKk2EDdKCuPy3P0tcubfaYf4l9XXW
+         0twK24Ku28goqOSoyXs5qWyIaCN6HLG8CY5ScwZxtx7sTmKvG39eWd4zAYWeqis86qk0
+         eZ/7MhG2UdhDK28PsucYX3egdts1qy25HRUYMdA0tkfLbaxbSPEa+jg0EjWBbqYmkBCM
+         V7wA==
+X-Gm-Message-State: AGi0PuZaFjWIe2LZboAmKYQh83LbwTHNKOSfOMRrJRtn6ff4vixYNuGC
+        +xzOEuIeODaATzsXJt2X3As=
+X-Google-Smtp-Source: APiQypKBIIC1fFOKcSXJcsM3k16YK6Uo7dy37UIDlG+baWYmUXAJIkTaBwCpQaQHtwMdvrWhiCEcxg==
+X-Received: by 2002:a05:6512:443:: with SMTP id y3mr371032lfk.166.1586456673273;
+        Thu, 09 Apr 2020 11:24:33 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id w7sm2108193lji.92.2020.04.09.11.24.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 11:20:22 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 11:20:21 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH 03/21] spi: spi-geni-qcom: Use OPP API to set clk/perf
- state
-Message-ID: <20200409182021.GT199755@google.com>
-References: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
- <1586353607-32222-4-git-send-email-rnayak@codeaurora.org>
+        Thu, 09 Apr 2020 11:24:32 -0700 (PDT)
+Subject: Re: [PATCH v6 07/14] clk: tegra: Implement Tegra210 EMC clock
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200409175238.3586487-1-thierry.reding@gmail.com>
+ <20200409175238.3586487-8-thierry.reding@gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <8dc000fb-8867-cf8f-8204-a9e1e79a4811@gmail.com>
+Date:   Thu, 9 Apr 2020 21:24:31 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200409175238.3586487-8-thierry.reding@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1586353607-32222-4-git-send-email-rnayak@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rajendra,
-
-On Wed, Apr 08, 2020 at 07:16:29PM +0530, Rajendra Nayak wrote:
-> geni spi needs to express a perforamnce state requirement on CX
-> depending on the frequency of the clock rates. Use OPP table from
-> DT to register with OPP framework and use dev_pm_opp_set_rate() to
-> set the clk/perf state.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Cc: Alok Chauhan <alokc@codeaurora.org>
-> Cc: Akash Asthana <akashast@codeaurora.org>
-> Cc: linux-spi@vger.kernel.org
-> ---
->  drivers/spi/spi-geni-qcom.c | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
-> index c397242..ce387dc 100644
-> --- a/drivers/spi/spi-geni-qcom.c
-> +++ b/drivers/spi/spi-geni-qcom.c
-> @@ -7,6 +7,7 @@
->  #include <linux/log2.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> +#include <linux/pm_opp.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/qcom-geni-se.h>
->  #include <linux/spi/spi.h>
-> @@ -95,7 +96,6 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
->  {
->  	unsigned long sclk_freq;
->  	unsigned int actual_hz;
-> -	struct geni_se *se = &mas->se;
->  	int ret;
->  
->  	ret = geni_se_clk_freq_match(&mas->se,
-> @@ -112,9 +112,9 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
->  
->  	dev_dbg(mas->dev, "req %u=>%u sclk %lu, idx %d, div %d\n", speed_hz,
->  				actual_hz, sclk_freq, *clk_idx, *clk_div);
-> -	ret = clk_set_rate(se->clk, sclk_freq);
-> +	ret = dev_pm_opp_set_rate(mas->dev, sclk_freq);
->  	if (ret)
-> -		dev_err(mas->dev, "clk_set_rate failed %d\n", ret);
-> +		dev_err(mas->dev, "dev_pm_opp_set_rate failed %d\n", ret);
->  	return ret;
->  }
->  
-> @@ -553,6 +553,7 @@ static int spi_geni_probe(struct platform_device *pdev)
->  	if (!spi)
->  		return -ENOMEM;
->  
+09.04.2020 20:52, Thierry Reding пишет:
+...
+> +static long tegra210_clk_emc_round_rate(struct clk_hw *hw, unsigned long rate,
+> +					unsigned long *prate)
+> +{
+> +	struct tegra210_clk_emc *emc = to_tegra210_clk_emc(hw);
+> +	struct tegra210_clk_emc_provider *provider = emc->provider;
+> +	unsigned int i;
 > +
->  	platform_set_drvdata(pdev, spi);
->  	mas = spi_master_get_devdata(spi);
->  	mas->irq = irq;
-> @@ -561,6 +562,8 @@ static int spi_geni_probe(struct platform_device *pdev)
->  	mas->se.wrapper = dev_get_drvdata(dev->parent);
->  	mas->se.base = base;
->  	mas->se.clk = clk;
-> +	mas->se.opp = dev_pm_opp_set_clkname(&pdev->dev, "se");
+> +	if (!provider || !provider->configs || provider->num_configs == 0)
+> +		return clk_hw_get_rate(hw);
 
-As commented on the serial patch, it seems an error check is needed
-and the OPP table saved in 'struct geni_se' is never used.
+This still looks wrong to me. Nobody should be able to get EMC clock
+until provider is registered.
 
-> +	dev_pm_opp_of_add_table(&pdev->dev);
+This is troublesome, especially given that you're allowing the EMC
+driver to be compiled as a loadable module. For example, this won't work
+with the current ACTMON driver because it builds OPP table based on the
+clk-rate rounding during the driver's probe, so it won't be able to do
+it properly if provider is "temporarily" missing.
 
-This function could also fail for multiple reasons, so the return value
-should be checked.
-
-From patch "[01/21] opp: Manage empty OPP tables with clk handle" it seems
-ignoring errors is intended to be able to operate when no OPP table is
-specified. But even with that you want to return in case of certain errors,
-like an invalid OPP table, out of memory or -EPROBE_DEFER.
+... I think that in a longer run we should stop manually building the
+ACTMON's OPP table and instead define a proper OPP table (per-HW Speedo
+ID, with voltages) in a device-tree. But this is just a vague plans for
+the future for now.
