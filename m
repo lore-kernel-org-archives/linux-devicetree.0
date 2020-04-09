@@ -2,116 +2,136 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8DAC2BB85
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 18:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB054C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 19:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 254E620757
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 18:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FE5C208FE
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 19:00:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="icaxSU3o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HzZx14fO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgDISr6 (ORCPT
+        id S1726718AbgDITAS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 14:47:58 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38353 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726552AbgDISr6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 14:47:58 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w3so4151389plz.5;
-        Thu, 09 Apr 2020 11:47:58 -0700 (PDT)
+        Thu, 9 Apr 2020 15:00:18 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40926 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726470AbgDITAS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 15:00:18 -0400
+Received: by mail-lf1-f67.google.com with SMTP id j17so468593lfe.7;
+        Thu, 09 Apr 2020 12:00:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZDdniR7NTevPMDr1trPdIDslAxCkIb8J3cWVjAJceyA=;
-        b=icaxSU3owH1flf3ySVGW8jbknL98eJpTQhRfkvzKZyhtl2WOsWW0D7Qw/I13o35OoH
-         Xd0Q7g25IkBHotzhIOdvOSrU6fPrxM5Bj84Wchnpol2LH4wfht3vPQP2mi9HYNMFytgK
-         xyMJbeQC5Fmn15md2cZOlIZBHHYdOZ3PN5qNGnhGTb55XbCZJL4ugoJyc5N2TZtGG9ne
-         5SFsgAawRJKIB07MEyyPSRLXxRR9j2AeKlz5LmV00kN7CmL5IS5s0arFGwQNOmxaT08e
-         NSqbU+vK4WRg6FbIHFUvoUwOKfnKKGOKe0A6hvUGr8B8pMK5xZfhFng4zA4SUIW//b/p
-         x23A==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xSPvBLVxXTk7r4uWb9GSydHFAj4ViQiiOpEJD7YvZqM=;
+        b=HzZx14fOthqThXVovSEdzT9xxI/iYxCiakr7ChDEkTRBPbeg+0FtTsefFhjKcZbYso
+         08oR6Rv5DR5KJG/uJO42ACFWlWAw+D2taHz/o03ai1SgRLwNOQ0Apvc+nzMplJ1rU8RN
+         aHctEtXnwIhH5KRdLzylxrGAWrtuDctU8dbyJUhk9kw3NVGwzUw+Uz49grdCQrKslpTY
+         7bszUiajBg2cvJ7mkFzAP0Um88WcRGkZkzvRehzuEp6oySTCZohqWJhvM1xQde/ihFmP
+         h5a9SWQ051tA/0yCGkjSvy4KTySxs0VMcf6/RWSAgk6pGbaomPF3JgFIac5bW6UOhoIR
+         aacw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZDdniR7NTevPMDr1trPdIDslAxCkIb8J3cWVjAJceyA=;
-        b=EgfuEWRe890XoEnM+Wiwuvzz07lSgr1q79Q46P6i2TKEvmIUcdbrY4cH3grVkixFUn
-         Eyjvt0auVe+rwm4E/1LP5J15P9HAbBtSRs7+HhDxVqfx1pO1uPNkUn9djFtS5f5Nt6Pt
-         3ti+SEvmMTl2Pt2KlE9wSadzNGivEPevr1oMm5Wq3z0qTU9UTvt7oUPCr+bzbwnfK77R
-         AER7lY8ei+29bJt/oR5hsRKNQov8XOz8tz3jWN8YBJH06D1XVuuQp+i9w+9hiqiPlh1A
-         5O4OOy7KIZ6i2drwHIoFRlejClvmSokCPYVREKHIscC/+tbO2uVlIs480lyDLHL/Bjh/
-         JmZg==
-X-Gm-Message-State: AGi0PuZ/Z+esajIwUUnaDtb5cBUkXi19Or1m1zvDlT3FYOQESNdPF5JJ
-        LsQokjJEJ8bgBs1OUAlBMEOnu44GojCyixsIr7A=
-X-Google-Smtp-Source: APiQypIYTyu3DqCydfYcHdeX232tss9x+b0H5x2b1rs5sl8bYFrA6BUqpEbRPu1ngw+ImtFsojTUXW5qy6HYr9GUwiE=
-X-Received: by 2002:a17:902:b190:: with SMTP id s16mr970782plr.262.1586458077427;
- Thu, 09 Apr 2020 11:47:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200408181406.40389-1-alcooperx@gmail.com> <20200408181406.40389-5-alcooperx@gmail.com>
- <CAHp75Vd_nbgwdE5Fbm3oxd_+51BJZ=67sVyjKiN2zLS+J4X-Fw@mail.gmail.com>
- <CAOGqxeXQE0z=+6yuEME48am__2vtJhBpetYd_sZamJmm1h_TLQ@mail.gmail.com>
- <20200409123005.GZ3676135@smile.fi.intel.com> <CAOGqxeUounB5f5oht+d=y+bOiAFe_RM20GUACv2rkL6aR_DV2Q@mail.gmail.com>
-In-Reply-To: <CAOGqxeUounB5f5oht+d=y+bOiAFe_RM20GUACv2rkL6aR_DV2Q@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 9 Apr 2020 21:47:50 +0300
-Message-ID: <CAHp75VfjeY+0KRS92RC_rRayAu2piCSjMHG1mMVwVkgw9XWN8g@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] usb: host: Add ability to build new Broadcom STB
- USB drivers
-To:     Alan Cooper <alcooperx@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        USB <linux-usb@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xSPvBLVxXTk7r4uWb9GSydHFAj4ViQiiOpEJD7YvZqM=;
+        b=mFYJDSF2GuWZIVg8pXQiCZaloBS7QPjcfhVQXnoMrlMxDphWiRVtgZ9guevFd1ulM3
+         h2C253MiltL5VDwwdFxrufq/yAviljFXDOWhVVW33jKd2Dm2qqzZcNqnDNwvnPkQQUby
+         qOoqvV/xq6ipkrWatbrNXmFied4erUNS0/Wr0oM+tCLzlh9SMV/X1mU+dc205KCAYb2y
+         xus4ODYbfnvR1MMA3em39TKvHU1/uImJPmX46Cx2uKIwsr/VY5fK97HexdJONOQHzK2V
+         dzSURLv/iWZHK9CoVQqjvfrThUdA4HuhYOs/IhegkdqqWlBqhlBeUD1DwvDTyxNE7kMZ
+         0cqA==
+X-Gm-Message-State: AGi0PuYVFMSAOZvDJORIMOeoz6+G6JLZsvnCRm7Zf+rVzrfvTQ45HoXw
+        3hzooyKWTk1FhSvQ+C/oc+4=
+X-Google-Smtp-Source: APiQypIO0LHOpLrwPbAk/A6S3Mr6+az19yessXD75VrxMB9u640PipFFtRLBWK2axQvYqRJHAuHoVw==
+X-Received: by 2002:ac2:4c21:: with SMTP id u1mr394852lfq.99.1586458814856;
+        Thu, 09 Apr 2020 12:00:14 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id e12sm20086369ljl.36.2020.04.09.12.00.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Apr 2020 12:00:14 -0700 (PDT)
+Subject: Re: [PATCH v6 09/14] memory: tegra: Add EMC scaling support code for
+ Tegra210
+To:     Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200409175238.3586487-1-thierry.reding@gmail.com>
+ <20200409175238.3586487-10-thierry.reding@gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <7b2f8a7c-94f1-08d0-b0ce-c61f4eb0a436@gmail.com>
+Date:   Thu, 9 Apr 2020 22:00:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200409175238.3586487-10-thierry.reding@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 9:15 PM Alan Cooper <alcooperx@gmail.com> wrote:
-> On Thu, Apr 9, 2020 at 8:30 AM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Thu, Apr 09, 2020 at 07:49:52AM -0400, Alan Cooper wrote:
-> > > On Thu, Apr 9, 2020 at 5:08 AM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
-> > > > On Thu, Apr 9, 2020 at 12:52 AM Al Cooper <alcooperx@gmail.com> wrote:
+09.04.2020 20:52, Thierry Reding пишет:
+...
+> +static void tegra210_emc_debugfs_init(struct tegra210_emc *emc)
+> +{
+> +	struct device *dev = emc->dev;
+> +	unsigned int i;
+> +	int err;
+> +
+> +	emc->debugfs.min_rate = ULONG_MAX;
+> +	emc->debugfs.max_rate = 0;
+> +
+> +	for (i = 0; i < emc->num_timings; i++) {
+> +		if (emc->timings[i].rate * 1000UL < emc->debugfs.min_rate)
+> +			emc->debugfs.min_rate = emc->timings[i].rate * 1000UL;
+> +
+> +		if (emc->timings[i].rate * 1000UL > emc->debugfs.max_rate)
+> +			emc->debugfs.max_rate = emc->timings[i].rate * 1000UL;
+> +	}
+> +
+> +	if (!emc->num_timings) {
+> +		emc->debugfs.min_rate = clk_get_rate(emc->clk);
+> +		emc->debugfs.max_rate = emc->debugfs.min_rate;
+> +	}
+> +
+> +	err = clk_set_rate_range(emc->clk, emc->debugfs.min_rate,
+> +				 emc->debugfs.max_rate);
+> +	if (err < 0) {
+> +		dev_err(dev, "failed to set rate range [%lu-%lu] for %pC\n",
+> +			emc->debugfs.min_rate, emc->debugfs.max_rate,
+> +			emc->clk);
+> +		return;
+> +	}
+> +
+> +	emc->debugfs.root = debugfs_create_dir("emc", NULL);
+> +	if (!emc->debugfs.root) {
+> +		dev_err(dev, "failed to create debugfs directory\n");
+> +		return;
+> +	}
+> +
+> +	debugfs_create_file("available_rates", S_IRUGO, emc->debugfs.root, emc,
+> +			    &tegra210_emc_debug_available_rates_fops);
+> +	debugfs_create_file("min_rate", S_IRUGO | S_IWUSR, emc->debugfs.root,
+> +			    emc, &tegra210_emc_debug_min_rate_fops);
+> +	debugfs_create_file("max_rate", S_IRUGO | S_IWUSR, emc->debugfs.root,
+> +			    emc, &tegra210_emc_debug_max_rate_fops);
 
-> > > > > +BROADCOM BRCMSTB USB EHCI DRIVER
-> > > > > +M:     Al Cooper <alcooperx@gmail.com>
-> > > > > +L:     linux-usb@vger.kernel.org
-> > > > > +L:     bcm-kernel-feedback-list@broadcom.com
-> > > > > +S:     Maintained
-> > > > > +F:     drivers/usb/host/ehci-brcm.*
-> > > > > +F:     Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
-> > > >
-> > > > This has ordering issues.
-> > > > Run parse-maintainer.pl to fix. (Note, it creates by default a new
-> > > > file, you might need to run diff manually to see the difference).
-> > >
-> > > I'm not sure what you mean.
-> > > I ran "./scripts/parse-maintainers.pl" and did "diff MAINTAINERS
-> > > MAINTAINERS.new" and there are no differences in or around my entry.
-> >
-> > Perhaps --order should be added.
->
-> So you're asking me to swap the following lines?
->
-> F:    drivers/usb/host/ehci-brcm.*
-> F:    Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+I assume you used the checkpatch before sending the patches, no?
 
-Yes, that is correct.
+I sent out a patch recently to make the permissions readable, please
+take a look if you haven't seen it yet.
 
--- 
-With Best Regards,
-Andy Shevchenko
+https://patchwork.ozlabs.org/patch/1254301/
