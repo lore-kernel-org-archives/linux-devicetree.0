@@ -2,104 +2,138 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52505C2BB55
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 17:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF527C2BB86
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 17:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C23020769
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 17:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C948A20769
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 17:45:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i33YDFJb"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EM/IsWR2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbgDIRda (ORCPT
+        id S1726583AbgDIRpO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 13:33:30 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34077 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbgDIRda (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 13:33:30 -0400
-Received: by mail-lj1-f193.google.com with SMTP id m8so576279lji.1;
-        Thu, 09 Apr 2020 10:33:27 -0700 (PDT)
+        Thu, 9 Apr 2020 13:45:14 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37066 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726552AbgDIRpO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 13:45:14 -0400
+Received: by mail-pg1-f193.google.com with SMTP id r4so5297362pgg.4
+        for <devicetree@vger.kernel.org>; Thu, 09 Apr 2020 10:45:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=w6oua6pgdDdSLqZ3ElhE13JK0x2D0ixah/qXhh6Ol1s=;
-        b=i33YDFJbxAY1klyUDrn2OSxE4UVt9CzORk36sK2BG/j0PsNrBCtaMIKE+7iaPewQJt
-         PB4k7YFlnp7LTU0Rl9P9t+XEqXnQOuOK3m0fcKC7UBGcPKwDOD2KC7fYfGqZrpQqiLVH
-         4P4KUpeLgqtjuHbmkH1Kol4U6zu3/EtBcC+1xPcqiPY7gAU5/trfH4HZPStaH44Q8Ocj
-         YEDus66YJHWajYVDdHMSFW9zbAIi2/Ih9Q/AfLeqB6LGr/sWvSfOxRmv0X6c+6qh/n6u
-         Lt6BEuRkvBkEuU51VvtT34BKIta0ENM9TVh1jIjqxGeuypqu1VvVIaS6iPU0pIOy2M2U
-         Es3Q==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=b+KIwr8FsoUEl5I61MG+GNUlmWOmQgoJsz4NKGh8sQE=;
+        b=EM/IsWR2Q4BGmlK6wbm+C7xuN2DSW8OQJW1orjgIBlgjy0CCTWo8wTZ6MClTNKQqLp
+         tVaDV8+7xResGkEmZtYgBgxI3CFN6b/lj3gI2CoS+tXf453fTunv3/JymQBHTVptNcCR
+         TAV/5tE6KonpppwiPpyriF0/79D39SGsi2PG0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=w6oua6pgdDdSLqZ3ElhE13JK0x2D0ixah/qXhh6Ol1s=;
-        b=cdFW6oFBlGdCv1dN9alY+IrfSrbqlUmw89QuS8CtIoPz7aux/oTyxpsATBvuv4xTqb
-         GypLhejf51UX7khElaHEM0DFF3njAaky3KDK5mZ3ej90XJ0sI1rMm39wAeS+0kcyr5Ii
-         H1iHaEBeWKuYwlUzUPNfI/Mw5b0SvkYOIMeDiWqhf7VdooPi9fA/WEUjlWOX2EiejgWf
-         E/sE8vI/Yu/8vEFZl9KRsmGe6PPIcmQo8lCyZSeLUF3Ad0htfUNbxqcUgpYjDQBef7VL
-         pT8zMtDwR05si/+w85djwqPefODNwuYZgEj0A+49zWy9zqdhkNUQTbX0/2BQ00Q/hu4u
-         SGlA==
-X-Gm-Message-State: AGi0PuboZrUPPeWABNrd2orsI4ouRqBUgGzJNaGc9h03oFNj5pNwTyov
-        nAW4NAKtD+lSFfBPjNKQ1Xv1z9Vn
-X-Google-Smtp-Source: APiQypIFKzX2orBYpj3ZpvYChLybojahKGx4VgxULoLxhE1PIkc77vnIGEr1STj82ZoZhDpkUZ+Vhg==
-X-Received: by 2002:a2e:9757:: with SMTP id f23mr513176ljj.269.1586453606298;
-        Thu, 09 Apr 2020 10:33:26 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id y25sm10535877lfy.59.2020.04.09.10.33.25
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b+KIwr8FsoUEl5I61MG+GNUlmWOmQgoJsz4NKGh8sQE=;
+        b=PriVdAxZXB/6kpWOIlJUq2urWg4cOdRIj56LK9fbHh3/Ujlb9WC0se3UnC2xFiJ9lc
+         uy/aBBpKlBnmJ+VdqJD6tUNeFkoOzcMjcUVlEClGD87SvtmBb9dEUzVNkKodCZX7QlbT
+         xkKMWOu8dnPWzYUNZScI/DEddw7JU6lUSiSlxjKpOrvBSiTofGY5+T08wx9om/YtUID4
+         L43NQ7VukytsGXjIN92JY/QlGe5iuGD3q559HDauEqjWKgG0BS1P7lEpcjfBFCwYsUl1
+         YaiBQW14q43Mx4MGzeU0TC1EDkSUFKnGwsTUO/ydA0jdmRZo3yNGier+DRmq8RUeDVnC
+         As3A==
+X-Gm-Message-State: AGi0PuaNKIGNRoW0Smrwb5T6k5FrPXZlV+c4GR3g9tNNaDJ0eTG9PJ0n
+        TYRpNNGeTEwZlnhDPuPA9Dx+yw==
+X-Google-Smtp-Source: APiQypJAsRbKPh0K6LiNYiCgKXswiTofC5ZsRFTIpusxNBV1Bh4vrjByqBMUCjyy8FkeZllE6nnfkw==
+X-Received: by 2002:a62:2684:: with SMTP id m126mr650534pfm.153.1586454313469;
+        Thu, 09 Apr 2020 10:45:13 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id k12sm6010790pgj.33.2020.04.09.10.45.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 10:33:25 -0700 (PDT)
-Subject: Re: [PATCH v1 0/2] Support headset on Tegra boards that use WM8903
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Stephen Warren <swarren@wwwdotorg.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-References: <20200330204011.18465-1-digetx@gmail.com>
- <5c9c995a-a571-e543-e680-30739cb1561c@gmail.com>
- <848cc6c5-e8e4-2796-3ee1-3e12a3e92c54@wwwdotorg.org>
- <a7159a8e-4987-0c08-ce3a-fa82d926218e@gmail.com>
- <20200409172952.GG5399@sirena.org.uk>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <0a82ccac-7a4c-ca0c-9a88-3a77c7bc24e6@gmail.com>
-Date:   Thu, 9 Apr 2020 20:33:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 09 Apr 2020 10:45:12 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 10:45:11 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH 02/21] tty: serial: qcom_geni_serial: Use OPP API to set
+ clk/perf state
+Message-ID: <20200409174511.GS199755@google.com>
+References: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
+ <1586353607-32222-3-git-send-email-rnayak@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200409172952.GG5399@sirena.org.uk>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <1586353607-32222-3-git-send-email-rnayak@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-09.04.2020 20:29, Mark Brown пишет:
-> On Thu, Apr 09, 2020 at 08:13:54PM +0300, Dmitry Osipenko wrote:
-> 
->> The code change doesn't affect any of the old users, so it should be
->> safe anyways.
-> 
->> I understand that you don't feel comfortable to give an ACK if you're
->> unsure, but I assume that Jon is in the same position, and thus, I'm not
->> sure how to move forward.
-> 
->> Mark, could you please help with reviewing this series?
-> 
-> It is currently the merge window.  Nothing other than bug fixes is going
-> to get applied until the merge window is over, probably Sunday or Monday.
-> 
+Hi Rajendra,
 
-Will be awesome, thank you :)
+On Wed, Apr 08, 2020 at 07:16:28PM +0530, Rajendra Nayak wrote:
+> geni serial needs to express a perforamnce state requirement on CX
+> depending on the frequency of the clock rates. Use OPP table from
+> DT to register with OPP framework and use dev_pm_opp_set_rate() to
+> set the clk/perf state.
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Cc: Akash Asthana <akashast@codeaurora.org>
+> Cc: linux-serial@vger.kernel.org
+> ---
+>  drivers/tty/serial/qcom_geni_serial.c | 20 +++++++++++++++-----
+>  include/linux/qcom-geni-se.h          |  2 ++
+>  2 files changed, 17 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+> index 6119090..754eaf6 100644
+> --- a/drivers/tty/serial/qcom_geni_serial.c
+> +++ b/drivers/tty/serial/qcom_geni_serial.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+> +#include <linux/pm_opp.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/pm_wakeirq.h>
+> @@ -961,7 +962,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
+>  		goto out_restart_rx;
+>  
+>  	uport->uartclk = clk_rate;
+> -	clk_set_rate(port->se.clk, clk_rate);
+> +	dev_pm_opp_set_rate(uport->dev, clk_rate);
+>  	ser_clk_cfg = SER_CLK_EN;
+>  	ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
+>  
+> @@ -1198,8 +1199,10 @@ static void qcom_geni_serial_pm(struct uart_port *uport,
+>  	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF)
+>  		geni_se_resources_on(&port->se);
+>  	else if (new_state == UART_PM_STATE_OFF &&
+> -			old_state == UART_PM_STATE_ON)
+> +			old_state == UART_PM_STATE_ON) {
+> +		dev_pm_opp_set_rate(uport->dev, 0);
+>  		geni_se_resources_off(&port->se);
+> +	}
+>  }
+>  
+>  static const struct uart_ops qcom_geni_console_pops = {
+> @@ -1318,13 +1321,16 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
+>  	if (of_property_read_bool(pdev->dev.of_node, "cts-rts-swap"))
+>  		port->cts_rts_swap = true;
+>  
+> +	port->se.opp = dev_pm_opp_set_clkname(&pdev->dev, "se");
+
+dev_pm_opp_set_clkname() can fail for multiple reasons, it seems an error
+check would be warranted.
+
+Is it actually necessary to save the OPP table in 'struct geni_se'? Both
+the serial and the SPI driver save the table, but don't use it later (nor
+does the SE driver).
