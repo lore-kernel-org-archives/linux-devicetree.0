@@ -2,195 +2,122 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UPPERCASE_50_75,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A541C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 23:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E62E0C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 23:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D817920757
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 23:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD5F420757
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 23:56:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EBxEUf08"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZGFleZwj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbgDIXq3 (ORCPT
+        id S1726827AbgDIX46 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 19:46:29 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37850 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgDIXq3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 19:46:29 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u65so291667pfb.4;
-        Thu, 09 Apr 2020 16:46:27 -0700 (PDT)
+        Thu, 9 Apr 2020 19:56:58 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41256 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726779AbgDIX46 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 19:56:58 -0400
+Received: by mail-lf1-f67.google.com with SMTP id z23so200714lfh.8;
+        Thu, 09 Apr 2020 16:56:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=X1Y8bnD3QMGmRcwUVI82L0iDUV1q8Fy3GQNmvFYnS2I=;
-        b=EBxEUf08dMeA2iEQohC5/R3ZVAHRMWWtefrFAHbK3WBKDA3GsxHCGkxIMncKubJ14s
-         ZqP447beS2tDu8NLH1Z44HuydTaUOJwx4UvmH8w9UE66LnWULAeThpHVGv7KL/t1IQ0z
-         nXGlMIXpzqjB9hMb2IcXye17mn11vmGodw94zXUXdpypQtgltIkMQUBpX3lpyQLcQhKs
-         kQI2/Tz08GLv0yr0aet1S8RRQlqzSM7yN+zQ+e+KhdgepQmmcXKW4fxnkQaG1Dt82L0h
-         xYs6faP7szYqAUT2Vq+a4PoC+D7liwiWUMPO1Y6tmyF0KcAKHRiKCImaEY+I5eSH5Prx
-         zO6w==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=h7ou2+MWS5yebpK+PkJaL1qSzOXz/nH64pUokezkgN0=;
+        b=ZGFleZwjigSbIXhSeJj/RBOKq1ORM7YyqiRg8grGG6Po3qc4jpwEaMak9ZRmwk5wgN
+         WQsVxyJRGFydj9/1SpgNvPKwTWBHH1DEl36qBoV7xT2CEf54yhW1pnsXZ1UVO3dqjbkM
+         zyUcsUE7ua7lUZVMlhyOuRctiGCtcx7Xim3Yhv6JH0uKTJCfhX9G3UyieZDK5Tj1YlaK
+         r86f6QFFQZ9pCkzdHPTWxxRGZ5LKzctKjCaXbzDkhzv22N+HJSIPm4EsSN+yjkEFf6Af
+         8APR0MGmRFSoptFGAFCozmY3c4WBszAEVSfZKkAApzaPBRpZ66insE26eSaFkKPdd2m+
+         NbPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X1Y8bnD3QMGmRcwUVI82L0iDUV1q8Fy3GQNmvFYnS2I=;
-        b=k3dyzjRdfrMbravnNC7lg4kpvJooy29jyo12cVeKxCEmoS3vzkmAVw14WfU7OW2yfo
-         KPX7f9WMvwSsMzcYdNwKHtd0/LwC94g5LiA87rfWPKtbevl/uBe/qfLOr5TsLTejdU17
-         zCCyjBwhjnnZGlZPG1lZvYNL0GwBHr4J/CIds4kugSQG8E5uRSkH2KMERlrqj9ZE///j
-         uQXdvnAT3Q7OEELy8rR6pSJ+rk2B5nVjEYkJ51oKUhxfcOeQ2UEBb4aFiqoS6rmK12Aq
-         7pPR6slOjykBp9so88CzHkjWnlebwn9aa+s5/HMFKShF4eVL5NQCBkJNz5QmInh3b1OX
-         3DvQ==
-X-Gm-Message-State: AGi0PuZN9pfwlIF0s84F8nh8IhiSLoIpQ8SuXdlQOcLvnvPDYvZ/APzM
-        y0z/J7Vjusud9n7qOW1iqpc=
-X-Google-Smtp-Source: APiQypJ1xTM0Kzl/R2WKceZ2kuvIzhM7XWOQrpUymOEdXWNA+ZOn9J7ew7DVykXrVkUi5rHMe4xDrg==
-X-Received: by 2002:a62:648f:: with SMTP id y137mr2268339pfb.199.1586475986437;
-        Thu, 09 Apr 2020 16:46:26 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id w27sm191851pfq.211.2020.04.09.16.46.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 16:46:25 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 16:46:23 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Kamel Bouhara <kamel.bouhara@bootlin.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 2/3] Input: rotary-encoder-counter: add DT bindings
-Message-ID: <20200409234623.GU75430@dtor-ws>
-References: <20200406155806.1295169-1-kamel.bouhara@bootlin.com>
- <20200406155806.1295169-3-kamel.bouhara@bootlin.com>
- <20200409222115.GT75430@dtor-ws>
- <20200409223907.GW3628@piout.net>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=h7ou2+MWS5yebpK+PkJaL1qSzOXz/nH64pUokezkgN0=;
+        b=d3rqiFb8pwhmpbtsx17gOxtVd1/wKt924rltDQdp7VxYI7OFgG96BmgWJq2hQf9HkM
+         c5PlMPxig+1FTq8EXy2R8eJwxgsNdLGF2S/1AHkn3gZ51UIcva54+criPNErj9mO+X4R
+         JxmWU0szC+CSoTRk7tyRe1sXmqXGdOFXN9KNGbs4gf1Aorp6avowTiLVk77R7Mot++1q
+         znhReP5O88DswIlzqRVpT4hBGx0pHFKaNRMiCjwQ2mdRe5UnVDlQ/A+V6PKB8wC2VrnW
+         Ezz2LW8nhJH/dGp2aGaX3IER2lQdHEGzpip81GG/2CI1sI2NL4wl2ddgRm3w6v3h++4q
+         lX6g==
+X-Gm-Message-State: AGi0PuYcneq6vl+rTJde9kt1gltKK7bGCB8kYnPvnfVbEF2K4SE2EMXm
+        heDPKLq2H51V1Dit7VGIwf4=
+X-Google-Smtp-Source: APiQypJR6KOA3fPvqfWuaqk/S2szvx9gudiDB0qTYW3KcISCqn+kQOJFAM8qa4TSuauFyPNKMPiElg==
+X-Received: by 2002:a19:5f45:: with SMTP id a5mr1006421lfj.18.1586476614994;
+        Thu, 09 Apr 2020 16:56:54 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id i25sm131562ljg.82.2020.04.09.16.56.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Apr 2020 16:56:54 -0700 (PDT)
+Subject: Re: [PATCH v6 09/14] memory: tegra: Add EMC scaling support code for
+ Tegra210
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200409175238.3586487-1-thierry.reding@gmail.com>
+ <20200409175238.3586487-10-thierry.reding@gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <3e518dfa-cb3d-e2ce-a9b8-5e143e02fc61@gmail.com>
+Date:   Fri, 10 Apr 2020 02:56:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409223907.GW3628@piout.net>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200409175238.3586487-10-thierry.reding@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 12:39:07AM +0200, Alexandre Belloni wrote:
-> Hi Dmitry,
-> 
-> On 09/04/2020 15:21:15-0700, Dmitry Torokhov wrote:
-> > On Mon, Apr 06, 2020 at 05:58:05PM +0200, Kamel Bouhara wrote:
-> > > Add dt binding for the counter variant of the rotary encoder driver.
-> > > 
-> > > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> > > ---
-> > >  .../input/rotary-encoder-counter.yaml         | 67 +++++++++++++++++++
-> > >  1 file changed, 67 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
-> > > new file mode 100644
-> > > index 000000000000..a59f7c1faf0c
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
-> > > @@ -0,0 +1,67 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/input/rotary-encoder-counter.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Rotary Encoder Counter
-> > > +
-> > > +maintainers:
-> > > +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
-> > > +
-> > > +description:
-> > > +  Registers a Rotary encoder connected through a counter device.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: rotary-encoder-counter
-> > 
-> > I wonder if a separate driver is really needed. The original driver be
-> > taught to use counter device when available?
-> > 
-> 
-> By the original driver, do you mean drivers/input/misc/rotary_encoder.c
-> that is using gpios ?
+09.04.2020 20:52, Thierry Reding пишет:
+...
+> +#define CLK_RST_CONTROLLER_CLK_SOURCE_EMC		0x19c
+...
+> +#define CLK_RST_CONTROLLER_CLK_SOURCE_EMC_DLL		0x664
 
-Yes.
+I'd suggest to double check all the macros and remove everything unused,
+to not pollute the code.
 
-> 
-> > > +
-> > > +  counter:
-> > > +    description: Phandle for the counter device providing rotary position.
-> > > +
-> > > +  linux-axis:
-> > > +    description: The input subsystem axis to map to this rotary encoder.
-> > > +    type: boolean
-> > > +
-> > > +  qdec-mode:
-> > > +    description: |
-> > > +      Quadrature decoder function to set in the counter device.
-> > > +      3: x1-PHA
-> > > +      4: x1-PHB
-> > > +      5: x2-PHA
-> > > +      6: x2-PHB
-> > > +      7: x4-PHA and PHB
-> > 
-> > Is it really property of the rotary encoder itself or property of the
-> > counter device?
-> > 
-> 
-> The mode the quadrature decoder has to be put in depends on both the
-> rotary encoder and the qdec.
+...
+> +#define TRIM_REG(chan, rank, reg, byte)					\
+> +	(((EMC_PMACRO_OB_DDLL_LONG_DQ_RANK ## rank ## _ ## reg ##	\
+> +	   _OB_DDLL_LONG_DQ_RANK ## rank ## _BYTE ## byte ## _MASK &	\
+> +	   next->trim_regs[EMC_PMACRO_OB_DDLL_LONG_DQ_RANK ##		\
+> +				 rank ## _ ## reg ## _INDEX]) >>	\
+> +	  EMC_PMACRO_OB_DDLL_LONG_DQ_RANK ## rank ## _ ## reg ##	\
+> +	  _OB_DDLL_LONG_DQ_RANK ## rank ## _BYTE ## byte ## _SHIFT)	\
+> +	 +								\
+> +	 (((EMC_DATA_BRLSHFT_ ## rank ## _RANK ## rank ## _BYTE ##	\
+> +	    byte ## _DATA_BRLSHFT_MASK &				\
+> +	    next->trim_perch_regs[EMC ## chan ##			\
+> +			      _EMC_DATA_BRLSHFT_ ## rank ## _INDEX]) >>	\
+> +	   EMC_DATA_BRLSHFT_ ## rank ## _RANK ## rank ## _BYTE ##	\
+> +	   byte ## _DATA_BRLSHFT_SHIFT) * 64))
+> +
+> +#define CALC_TEMP(rank, reg, byte1, byte2, n)				\
+> +	(((new[n] << EMC_PMACRO_OB_DDLL_LONG_DQ_RANK ## rank ## _ ##	\
+> +	   reg ## _OB_DDLL_LONG_DQ_RANK ## rank ## _BYTE ## byte1 ## _SHIFT) & \
+> +	  EMC_PMACRO_OB_DDLL_LONG_DQ_RANK ## rank ## _ ## reg ##	\
+> +	  _OB_DDLL_LONG_DQ_RANK ## rank ## _BYTE ## byte1 ## _MASK)	\
+> +	 |								\
+> +	 ((new[n + 1] << EMC_PMACRO_OB_DDLL_LONG_DQ_RANK ## rank ## _ ##\
+> +	   reg ## _OB_DDLL_LONG_DQ_RANK ## rank ## _BYTE ## byte2 ## _SHIFT) & \
+> +	  EMC_PMACRO_OB_DDLL_LONG_DQ_RANK ## rank ## _ ## reg ##	\
+> +	  _OB_DDLL_LONG_DQ_RANK ## rank ## _BYTE ## byte2 ## _MASK))
 
-OK.
-
-> 
-> > > +
-> > > +  steps:
-> > > +    description: Number of steps in a full turnaround of the encoder.
-> > > +      Only relevant for absolute axis. Defaults to 24 which is a typical
-> > > +      value for such devices.
-> > > +
-> > > +  relative-axis:
-> > > +    description: Register a relative axis rather than an absolute one.
-> > > +    type: boolean
-> > > +
-> > > +  rollover:
-> > > +    description: Automatic rollover when the rotary value becomes greater
-> > > +      than the specified steps or smaller than 0. For absolute axis only.
-> > > +    type: boolean
-> > > +
-> > > +  poll-interval:
-> > > +    description: Poll interval at which the position is read from the counter
-> > > +      device (default 500ms).
-> > 
-> > Is there a way found counters to signal an interrupt?
-> > 
-> 
-> For some counters, there are interrupts available, this is not trivial
-> with the counter that is the target of this work but this is on the TODO
-> list. Of course, this will also require adding a bit more to the
-> in-kernel counter API to allow registering a callback that would be
-> called when an interrupt happens.
-
-Should it be a callback, or can counter create an irqchip so that users
-do not need to know how exactly it is wired up?
-
-Thanks.
-
--- 
-Dmitry
+My eyes.. :P
