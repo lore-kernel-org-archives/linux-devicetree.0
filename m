@@ -2,145 +2,175 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B40C2BB55
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 22:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99E9C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 22:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59EA22074F
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 22:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 924D02083E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 22:15:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ovvSPpNc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bxJf7lMT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgDIWBK (ORCPT
+        id S1726828AbgDIWPJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 18:01:10 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41208 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgDIWBK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 18:01:10 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 039M13xW030654;
-        Thu, 9 Apr 2020 17:01:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1586469663;
-        bh=1M+jwazQX4BDpMZKdqu/6bX8vsrM9v22p6tALsFhTxo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ovvSPpNcKyvxXg82NJUPUvrdqfAySOrq32XSWMJAs6XmnocP6RYdWcVLlNoWlAb+B
-         LbN3BgvVPbcmHKIEJRshorcFvq0Qm9HOd42XvaRgshF/tG7biFlg1RhDGJcsYFc9kd
-         DeYp9OM3QfLHkuOEHyMxmFzmG//8Pe6Zt/Xw6src=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 039M12UF067248
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 9 Apr 2020 17:01:02 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 9 Apr
- 2020 17:01:02 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 9 Apr 2020 17:01:02 -0500
-Received: from [10.250.86.212] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 039M12ax068082;
-        Thu, 9 Apr 2020 17:01:02 -0500
-Subject: Re: [PATCH 6/7] remoteproc/k3-r5: Initialize TCM memories for ECC
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thu, 9 Apr 2020 18:15:09 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36290 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbgDIWPJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 18:15:09 -0400
+Received: by mail-pf1-f195.google.com with SMTP id n10so186738pff.3;
+        Thu, 09 Apr 2020 15:15:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ujIvz9GcBjbJuHCPIeZlZ7rRjsp8syypvJqphKFEdJE=;
+        b=bxJf7lMTyc82+mfaQpWqRniXABYCY4giiTtvZqjIyeftjGKiIT9KnIVVZWVOi7LL36
+         djimTInYz+dOuBxZZl957si303OdBIQtk1T2xEdoq2hHcwS+bw1h6TOicDMsvswouiuk
+         1OT/RdrMGIlAGwSKmNMnDP47xbaR0ovqQu22WOZOXms2NvIHBj8Ja/FGFznJdmoklKo1
+         NmGGIOEjxWzy/9I5wKtnQa7eSvwO0y1gE7KYLwbl5iVvAk9dOTDM6I7PerlR9GQQ8lQk
+         AUyMK4yCwtZHcIFh9Oq4udFSWareLdhwaq/CXEZdkx9Yv7nQlADYpkNEQZpFR67z1AFU
+         gcNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ujIvz9GcBjbJuHCPIeZlZ7rRjsp8syypvJqphKFEdJE=;
+        b=lquQ0ZuYyz3RFfeCf0NoP+Ef7JGXcLaL/MQJJmVl3has4pieo08qwYiPPjlxcYtwKd
+         O6eO83ABdD2RMGNeYcGrqVbJx/kryFMeVT53zhoLZh5fRHGw7xLANbXyTIsG3pXecDFG
+         ZGoPyupJnHUTk5Zc9lqinoV0RjAEZeXpaCCcdkawD9s00tQhhtUGEn5P9UOG+B2hVFex
+         OIJ6QoBvgEaeFzdUD+3rGZ6E2d9pZV9g6klQb0Vji7EaBiSK1hYGB/Cg2srEF3UYeQnI
+         lJrjt/Y6InXkJxaZ6qCa9t0ubQn2l4zBWfndN/SDw2mMJpKM4O7QmFpSrA3qCZWsdRNm
+         Pvsg==
+X-Gm-Message-State: AGi0PuZ2K2XyouablEY2ZfTVxeqqNI1U0DxOjxYmT7LRbxF7IpWJKlO2
+        dqHWPKZR5hslZuyWacpD7Pc=
+X-Google-Smtp-Source: APiQypInhl9ZwTmwR4A+ZU5hQ66TzyPv70UkR4VTu5xufs/7Xigf6TeCLde4qQvqyvr889CSdFk5GA==
+X-Received: by 2002:aa7:96b2:: with SMTP id g18mr1877611pfk.221.1586470506825;
+        Thu, 09 Apr 2020 15:15:06 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id m29sm107299pgl.35.2020.04.09.15.15.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 15:15:06 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 15:15:03 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Andi Shyti <andi@etezian.org>, linux-input@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200324201819.23095-1-s-anna@ti.com>
- <20200324201819.23095-7-s-anna@ti.com> <20200409213633.GB32029@xps15>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <b7dfa5d6-53cc-362d-dd76-941639dfbf29@ti.com>
-Date:   Thu, 9 Apr 2020 17:01:02 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] Input: mms114 - add support for mms345l
+Message-ID: <20200409221503.GS75430@dtor-ws>
+References: <20200405170904.61512-1-stephan@gerhold.net>
 MIME-Version: 1.0
-In-Reply-To: <20200409213633.GB32029@xps15>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200405170904.61512-1-stephan@gerhold.net>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 4/9/20 4:36 PM, Mathieu Poirier wrote:
-> On Tue, Mar 24, 2020 at 03:18:18PM -0500, Suman Anna wrote:
->> The R5F processors on K3 SoCs all have two TCMs (ATCM and BTCM) that
->> support 32-bit ECC. The TCMs are typically loaded with some boot-up
->> code to initialize the R5 MPUs to further execute code out of DDR.
->> The ECC for the TCMs is enabled by default on K3 SoCs due to internal
->> default tie-off values, but the TCM memories are not initialized on
->> device power up. Any read access without the corresponding TCM memory
->> location initialized will generate an ECC error, and any such access
->> from a A72 or A53 core will trigger a SError.
->>
->> So, zero initialize both the TCM memories before loading any firmware
->> onto a R5F in remoteproc mode. Any R5F booted from U-Boot/SPL would
->> require a similar initialization in the bootloader. Note that both
->> the TCMs are initialized unconditionally as the TCM enable config bits
->> only manage the access and visibility from R5. The Core1 TCMs are not
->> used and accessible in LockStep mode, so they are only initialized
->> in Split-mode.
-> 
-> Everything was going well with this changelog until the last sentence.
-> Intuitively one is looking for the code that avoids the initialisation for
-> "Core1" in the patch but it is not there, and rightly so.  In locksetup mode the
-> second core is not registered with the remoteproc core and as such the
-> associated TCMs won't be initialised.
-> 
-> Simply put, I would just remove the last sentence as all it does (at least for
-> me) is add confusion.
+Hi Stephan,
 
-Yep, that was more of a "NOTE: " type comment on overall behavior. I
-will drop the sentence for v2.
-
-regards
-Suman
-
+On Sun, Apr 05, 2020 at 07:09:03PM +0200, Stephan Gerhold wrote:
+> MMS345L is another first generation touch screen from Melfas,
+> which uses the same registers as MMS152.
 > 
-> With that:
+> However, using I2C_M_NOSTART for it causes errors when reading:
 > 
-> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> 	i2c i2c-0: sendbytes: NAK bailout.
+> 	mms114 0-0048: __mms114_read_reg: i2c transfer failed (-5)
 > 
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> ---
->>  drivers/remoteproc/ti_k3_r5_remoteproc.c | 11 +++++++++++
->>  1 file changed, 11 insertions(+)
->>
->> diff --git a/drivers/remoteproc/ti_k3_r5_remoteproc.c b/drivers/remoteproc/ti_k3_r5_remoteproc.c
->> index 655f8f14c37d..8c9b7ae5d8b7 100644
->> --- a/drivers/remoteproc/ti_k3_r5_remoteproc.c
->> +++ b/drivers/remoteproc/ti_k3_r5_remoteproc.c
->> @@ -366,6 +366,17 @@ static int k3_r5_rproc_prepare(struct rproc *rproc)
->>  		dev_err(dev, "unable to enable cores for TCM loading, ret = %d\n",
->>  			ret);
->>  
->> +	/*
->> +	 * Zero out both TCMs unconditionally (access from v8 Arm core is not
->> +	 * affected by ATCM & BTCM enable configuration values) so that ECC
->> +	 * can be effective on all TCM addresses.
->> +	 */
->> +	dev_dbg(dev, "zeroing out ATCM memory\n");
->> +	memset(core->mem[0].cpu_addr, 0x00, core->mem[0].size);
->> +
->> +	dev_dbg(dev, "zeroing out BTCM memory\n");
->> +	memset(core->mem[1].cpu_addr, 0x00, core->mem[1].size);
->> +
->>  	return ret;
->>  }
->>  
->> -- 
->> 2.23.0
->>
+> The driver works fine as soon as I2C_M_NOSTART is removed.
+> 
+> Add a separate melfas,mms345l binding, and make use of I2C_M_NOSTART
+> only for MMS114 and MMS152.
+> 
+> Reviewed-by: Andi Shyti <andi@etezian.org>
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 
+Sorry for sitting on this for so long. I looked around, and I think that
+instead of adding separate handling for 345L we shoudl simply drop the
+"no start" bit for everyone. I am not sure what the original version
+tried to do here, as far as I can see in various public Android trees the
+driver for these devices does not use I2C_M_NOSTART.
+
+Actually, I wonder if the difference is not in the touch controller that
+is being used, but rather in the I2C controller the device in connected
+to.
+
+I would like to apply the version of the patch below.
+
+Thanks.
+
+-- 
+Dmitry
+
+
+Input: mms114 - fix handling of mms345l
+
+From: Stephan Gerhold <stephan@gerhold.net>
+
+MMS345L is another first generation touch screen from Melfas,
+which uses the same registers as MMS152.
+
+However, using I2C_M_NOSTART for it causes errors when reading:
+
+	i2c i2c-0: sendbytes: NAK bailout.
+	mms114 0-0048: __mms114_read_reg: i2c transfer failed (-5)
+
+The driver works fine as soon as I2C_M_NOSTART is removed.
+
+Reviewed-by: Andi Shyti <andi@etezian.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20200405170904.61512-1-stephan@gerhold.net
+Patchwork-Id: 11474771
+[dtor: removed separate mms345l handling, made everyone use standard
+transfer mode, propagated the 10bit addressing flag to the read part of the
+transfer as well.]
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ drivers/input/touchscreen/mms114.c |   12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/input/touchscreen/mms114.c b/drivers/input/touchscreen/mms114.c
+index 69c6d559eeb0..2ef1adaed9af 100644
+--- a/drivers/input/touchscreen/mms114.c
++++ b/drivers/input/touchscreen/mms114.c
+@@ -91,15 +91,15 @@ static int __mms114_read_reg(struct mms114_data *data, unsigned int reg,
+ 	if (reg <= MMS114_MODE_CONTROL && reg + len > MMS114_MODE_CONTROL)
+ 		BUG();
+ 
+-	/* Write register: use repeated start */
++	/* Write register */
+ 	xfer[0].addr = client->addr;
+-	xfer[0].flags = I2C_M_TEN | I2C_M_NOSTART;
++	xfer[0].flags = client->flags & I2C_M_TEN;
+ 	xfer[0].len = 1;
+ 	xfer[0].buf = &buf;
+ 
+ 	/* Read data */
+ 	xfer[1].addr = client->addr;
+-	xfer[1].flags = I2C_M_RD;
++	xfer[1].flags = (client->flags & I2C_M_TEN) | I2C_M_RD;
+ 	xfer[1].len = len;
+ 	xfer[1].buf = val;
+ 
+@@ -428,10 +428,8 @@ static int mms114_probe(struct i2c_client *client,
+ 	const void *match_data;
+ 	int error;
+ 
+-	if (!i2c_check_functionality(client->adapter,
+-				I2C_FUNC_PROTOCOL_MANGLING)) {
+-		dev_err(&client->dev,
+-			"Need i2c bus that supports protocol mangling\n");
++	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
++		dev_err(&client->dev, "Not supported I2C adapter\n");
+ 		return -ENODEV;
+ 	}
+ 
