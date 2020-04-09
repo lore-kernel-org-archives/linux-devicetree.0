@@ -2,112 +2,95 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71159C352B6
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 13:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4389DC2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 13:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49D23208FE
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 13:20:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586438448;
-	bh=UJxB5TdF2s647VvncnacBnt2X8C/0hrZcMPL6ldFmiU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OSb4FwC+yVvAqgbxFNDItj8Z5sZdOehXMH+oqmAqqYX5x5C2NnhzBNwxfywXj9qwI
-	 trWUfJWoOKcIITxiLD9H5UDAClLGdm1fHl6Pq9emNMItJyInJTfFA/PSsQX/gyI9DR
-	 obsESS/mvvNbaPoCeJ8MbgphZbfVlwUSqIQh1+Vs=
+	by mail.kernel.org (Postfix) with ESMTP id 1644820857
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 13:20:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgDINUp (ORCPT
+        id S1726728AbgDINUy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 09:20:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726621AbgDINUp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Apr 2020 09:20:45 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        Thu, 9 Apr 2020 09:20:54 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:33680 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbgDINUx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 09:20:53 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C15DD20857;
-        Thu,  9 Apr 2020 13:20:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586438445;
-        bh=UJxB5TdF2s647VvncnacBnt2X8C/0hrZcMPL6ldFmiU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BWF41pdVtvTXUhxJAJmumKrSZizBlL8HPNVuq9rwz+o/sm2uTvs/a/YjWSzMIMdS+
-         o7muK5fivLTzYG/1JcHsxSjA7MK2oT+HPUh9YbnlmpLe6dWk88i/nJepulMDa+zDLU
-         3Z87ik9Xs8GxCMg6Y+hXZ8BvJzzjovLppTz1uuE0=
-Date:   Thu, 9 Apr 2020 14:20:42 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     Akash Asthana <akashast@codeaurora.org>,
-        gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, mka@chromium.org,
-        dianders@chromium.org, evgreen@chromium.org
-Subject: Re: [PATCH V3 7/8] spi: spi-qcom-qspi: Add interconnect support
-Message-ID: <20200409132042.GD5399@sirena.org.uk>
-References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
- <1585652976-17481-8-git-send-email-akashast@codeaurora.org>
- <20200331112352.GB4802@sirena.org.uk>
- <f896d6e4-cc86-db46-a9b9-d7c98071b524@codeaurora.org>
- <20200407105542.GA5247@sirena.org.uk>
- <48c60fdf-03c6-650a-2671-b8f7cc1e5c82@codeaurora.org>
- <5644ef02-f984-0f5b-d745-eca3c9573726@linaro.org>
+        by asavdk4.altibox.net (Postfix) with ESMTPS id E8C0B8051B;
+        Thu,  9 Apr 2020 15:20:48 +0200 (CEST)
+Date:   Thu, 9 Apr 2020 15:20:47 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Pawel Dembicki <paweldembicki@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: vendor-prefixes: Add Check Point
+Message-ID: <20200409132047.GA8766@ravnborg.org>
+References: <20200409070448.3209-1-paweldembicki@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="76DTJ5CE0DCVQemd"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5644ef02-f984-0f5b-d745-eca3c9573726@linaro.org>
-X-Cookie: HUGH BEAUMONT died in 1982!!
+In-Reply-To: <20200409070448.3209-1-paweldembicki@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8
+        a=7gkXJVJtAAAA:8 a=Tf_gKVnhRyd_sxis4LQA:9 a=CjuIK1q_8ugA:10
+        a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Pawel.
 
---76DTJ5CE0DCVQemd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thu, Apr 09, 2020 at 09:04:43AM +0200, Pawel Dembicki wrote:
+> Check Point Software Technologies Ltd. is a company based in Israel and
+> USA. They manufacture network devices and provide software
+> products for IT security.
+> 
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
 
-On Thu, Apr 09, 2020 at 04:17:22PM +0300, Georgi Djakov wrote:
-> On 4/8/20 15:17, Akash Asthana wrote:
+Looks good now.
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 
-> > Can we centralize below logic of peak_bw selection for all the clients to ICC core?
+I expect someone else to pick it up.
 
-> I don't think this is a good idea for now, because this is very hardware
-> specific. A scaling factor that works for one client might not work for another.
-
-AIUI a driver can always override the setting if it's got a better idea.
-
-> My questions here is how did you decide on this "multiply by two"? I can imagine
-> that the traffic can be bursty on some interfaces, but is the factor here really
-> a "random number" or is this based on some data patterns or performance
-> analysis?
-
-The reason I'm pushing for this to go into the core is that the numbers
-seem to be just made up and not device specific at all (or at least
-there's a lot of devices with the same values).
-
---76DTJ5CE0DCVQemd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6PISkACgkQJNaLcl1U
-h9AfQQf/WkrH/6r/MBWHMg4gEKrdNaUWCSjrjiNgPboT5O7nrK2lrL5Tkih16zTO
-RHH0nUMIhb9hvcC6Dc7AxkEUZ7ZlACm0W+841q2VsJWhVUo9YdOvGUdbk6krvm0a
-f8DthfuTFHVl1aAZodO+Tmpl1/pUtO8qlK2k536SUCJ02sNXjEJQ7KrWjIKmJacV
-5M4WhOQFSzyWtoAojcHqgZAe8BEeRPbDgFMBTdLs9fCoeZj9icoejc1qjosC2tu2
-9ZLyTxXGRWah3WrRmyhXYPJIQeg8D37X9j+Q8kjd9CbKKlLHEmfsWuvHky8wVooD
-CempVL6UyMnRyxl2LbEk0kUS2L6emA==
-=du6T
------END PGP SIGNATURE-----
-
---76DTJ5CE0DCVQemd--
+	Sam
+> ---
+> Changes in v2:
+> - corrected line order
+> 
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index d3891386d671..3819192d035d 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -181,6 +181,8 @@ patternProperties:
+>      description: CDTech(H.K.) Electronics Limited
+>    "^ceva,.*":
+>      description: Ceva, Inc.
+> +  "^checkpoint,.*":
+> +    description: Check Point Software Technologies Ltd.
+>    "^chipidea,.*":
+>      description: Chipidea, Inc
+>    "^chipone,.*":
+> -- 
+> 2.20.1
