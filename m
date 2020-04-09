@@ -2,570 +2,322 @@ Return-Path: <SRS0=+eCa=5Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F07C2D0EA
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 04:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F4BC2BA1B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 04:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 894202078E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 04:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39D5520757
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Apr 2020 04:50:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FSUeT22q"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="QtJEoauo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725765AbgDIEko (ORCPT
+        id S1725785AbgDIEu3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 00:40:44 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34118 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725271AbgDIEkn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 00:40:43 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m8so1818484lji.1;
-        Wed, 08 Apr 2020 21:40:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YV7vj17vcdQJ+jVfwxKNxZrPKUkrDS7t9FLm47yDnRw=;
-        b=FSUeT22qW1aU2jRkIMS6j4cmQaUF633zAJzAcAz/QsRHHMjsOzkhj/7Q5iPEkbzQK2
-         MKGCJyznLt+U9EN3OS8osdghXo2ga5lx9ISXcWMR4YKgyG7G1p9UqoiEUFROfjIrtOky
-         rbyvc0NrIrsReCg9d8XBe3+t91Ni9IR4KzWzh/f0fS38JCsBDMkkWqi/WBQGFHDpxp3I
-         aXbS+8fogKKujvx6N5QQhoZyORkG3I0Z19CN39/i6S+7b4HqM6ii/6PC7suxZGf+4/9y
-         Tj2uZKH0gIvmwAuk85YAKn2aJ0D0bIEQGotdG3NF1ZMkXliqa8FqMIK9T2F0P35WZpA4
-         td0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YV7vj17vcdQJ+jVfwxKNxZrPKUkrDS7t9FLm47yDnRw=;
-        b=YygFZ7T71RBsHXTjMDbpOjRmjE0480i2z4oqLlqt8fbx4bLaMQzaDFi6pOvn/jgUkC
-         9LEuq4nOa2/dCS1J5YPaCyxNQAJem85sLImWvhpBO2HJvAGVk1fZihbU5XmkwNBNYfIP
-         232bvQ3TbDTrYrBD5z46lgQif4yreG3rJ2aFkxZNBpWjWSRtY0GDopNXsX7Zon3YWuqA
-         HZLDfXCDInulhaEzHWKyM9rr4ccky2LCzBHFijq8z9Id3rY1hEZwMhFVcJ82PbCQvJUv
-         BXOTDDOcpgSTMgwf5Zic995XLybYY9a2EYFtEu1aFqTidfiQTf8HJnHJWAXSoFXKAPvl
-         2ucQ==
-X-Gm-Message-State: AGi0PubKmZk+7pN1nvr0jSchtGABlXNKijYjMPCamw2Di5eqYJPnByap
-        0dXWZ3KF11hxcRlVu7PRvdx478WDSY0=
-X-Google-Smtp-Source: APiQypJXknoq1mPgYK7B1fYLwzQQYuUWCdGN//zm2+ld19+GAJe00FzWgFzCtRM4Y6hXf4tpPpeX5A==
-X-Received: by 2002:a2e:b8c1:: with SMTP id s1mr7323307ljp.0.1586407239863;
-        Wed, 08 Apr 2020 21:40:39 -0700 (PDT)
-Received: from localhost.localdomain ([185.188.71.122])
-        by smtp.gmail.com with ESMTPSA id h23sm12887893ljg.13.2020.04.08.21.40.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 21:40:39 -0700 (PDT)
-From:   Pawel Dembicki <paweldembicki@gmail.com>
-Cc:     Pawel Dembicki <paweldembicki@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/2] ARM: dts: kirkwood: Add Check Point L-50 board
-Date:   Thu,  9 Apr 2020 06:38:48 +0200
-Message-Id: <20200409043851.31217-2-paweldembicki@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200409043851.31217-1-paweldembicki@gmail.com>
-References: <20200409043851.31217-1-paweldembicki@gmail.com>
+        Thu, 9 Apr 2020 00:50:29 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:44913 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbgDIEu2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 00:50:28 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3CE848066C;
+        Thu,  9 Apr 2020 16:50:25 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1586407825;
+        bh=2a+QvJeEMgfgD8MYgpqL0txx98rA8ewZrzs/v7cLI4U=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=QtJEoauo9se31Krx156LMcL6r11M6YxhedYJLhgA9PrOq0hCfyrPc0NcUzwp8dUjR
+         hRHNXGhcwbUo3UsqG0cDrI9X4cF+SApW8LTWBhEnQGqkNxXWlAH3SHEqDEhy8StevT
+         7NxC55ddIY7zTYmwRRj6y5crQoPeWnbpZVSPowAJVRfE7Y4L/izlzNEwL/IhyHpvEZ
+         Mc6GvdRyhMrMblcyM761IXx9+AshhzFp1Jnu2R6dtBWQcP/NMfW9BUEsRIHvjjYYHL
+         xVAmppUHq8gMuOS7gH2qGCuMShZeP61tUTB7/eD4u1H+4x6MRRJfhPn4PjXxlQHL/r
+         eE7SUSh7tRYOw==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e8ea9910001>; Thu, 09 Apr 2020 16:50:25 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 9 Apr 2020 16:50:24 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Thu, 9 Apr 2020 16:50:24 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "jiaxun.yang@flygoat.com" <jiaxun.yang@flygoat.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Hamish Martin" <Hamish.Martin@alliedtelesis.co.nz>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: Dealing with holes in CPU address space
+Thread-Topic: Dealing with holes in CPU address space
+Thread-Index: AQHWDWSQGXFxFOrcR0ujeloVxC+pHKhuCuQAgADrvoCAAGz3gIAADTWA
+Date:   Thu, 9 Apr 2020 04:50:23 +0000
+Message-ID: <f5c7a3387dde5667be4fc462838edfaefae31e16.camel@alliedtelesis.co.nz>
+References: <fcb8f2655452f60a7c734e2ce54ac4d47eec7e92.camel@alliedtelesis.co.nz>
+         <20200408152922.14f90ff3@flygoat-x1e>
+         <2e10a19b6608a6c3413b52180c69500aa255a701.camel@alliedtelesis.co.nz>
+         <dd91aa7f-ed7d-44de-6887-ad25c7e4d4ff@gmail.com>
+In-Reply-To: <dd91aa7f-ed7d-44de-6887-ad25c7e4d4ff@gmail.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.14.96]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AD512F97C0BD0040B1C13BCBB461D74F@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds dts for the Check Point L-50 from 600/1100 series
-routers.
-
-Specification:
--CPU: Marvell Kirkwood 88F6821 1200MHz
--RAM: 512MB
--Flash: NAND 512MB
--WiFi: mPCIe card based on Atheros AR9287 b/g/n
--WAN: 1 Gigabit Port (Marvell 88E1116R PHY)
--LAN: 9 Gigabit Ports (2x Marvell 88E6171(5+3))
--USB: 2x USB2.0
--Express card slot
--SD card slot
--Serial console: RJ-45 115200 8n1
--Unsupported DSL
-
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
----
- arch/arm/boot/dts/Makefile          |   1 +
- arch/arm/boot/dts/kirkwood-l-50.dts | 441 ++++++++++++++++++++++++++++
- 2 files changed, 442 insertions(+)
- create mode 100644 arch/arm/boot/dts/kirkwood-l-50.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e8dd99201397..eba030b3ba69 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -279,6 +279,7 @@ dtb-$(CONFIG_MACH_KIRKWOOD) += \
- 	kirkwood-iomega_ix2_200.dtb \
- 	kirkwood-is2.dtb \
- 	kirkwood-km_kirkwood.dtb \
-+	kirkwood-l-50.dtb \
- 	kirkwood-laplug.dtb \
- 	kirkwood-linkstation-lsqvl.dtb \
- 	kirkwood-linkstation-lsvl.dtb \
-diff --git a/arch/arm/boot/dts/kirkwood-l-50.dts b/arch/arm/boot/dts/kirkwood-l-50.dts
-new file mode 100644
-index 000000000000..ab3a90287260
---- /dev/null
-+++ b/arch/arm/boot/dts/kirkwood-l-50.dts
-@@ -0,0 +1,441 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Check Point L-50 Board Description
-+ * Copyright 2020 Pawel Dembicki <paweldembicki@gmail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "kirkwood.dtsi"
-+#include "kirkwood-6281.dtsi"
-+
-+/ {
-+	model = "Check Point L-50";
-+	compatible = "checkpoint,l-50", "marvell,kirkwood-88f6281", "marvell,kirkwood";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00000000 0x20000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200n8";
-+		stdout-path = &uart0;
-+	};
-+
-+	ocp@f1000000 {
-+		pinctrl: pin-controller@10000 {
-+			pinctrl-0 = <&pmx_led38 &pmx_sysrst &pmx_button29>;
-+			pinctrl-names = "default";
-+
-+			pmx_sysrst: pmx-sysrst {
-+				marvell,pins = "mpp6";
-+				marvell,function = "sysrst";
-+			};
-+
-+			pmx_button29: pmx_button29 {
-+				marvell,pins = "mpp29";
-+				marvell,function = "gpio";
-+			};
-+
-+			pmx_led38: pmx_led38 {
-+				marvell,pins = "mpp38";
-+				marvell,function = "gpio";
-+			};
-+
-+			pmx_sdio_cd: pmx-sdio-cd {
-+				marvell,pins = "mpp46";
-+				marvell,function = "gpio";
-+			};
-+		};
-+
-+		serial@12000 {
-+			status = "okay";
-+		};
-+
-+		mvsdio@90000 {
-+			status = "okay";
-+			cd-gpios = <&gpio1 14 9>;
-+		};
-+
-+		i2c@11000 {
-+			status = "okay";
-+			clock-frequency = <400000>;
-+
-+			gpio2: gpio-expander@20{
-+				#gpio-cells = <2>;
-+				#interrupt-cells = <2>;
-+				compatible = "semtech,sx1505q";
-+				reg = <0x20>;
-+
-+				gpio-controller;
-+			};
-+
-+			/* Three GPIOs from 0x21 exp. are undescribed in dts:
-+			 * 1: DSL module reset (active low)
-+			 * 5: mPCIE reset (active low)
-+			 * 6: Express card reset (active low)
-+			 */
-+			gpio3: gpio-expander@21{
-+				#gpio-cells = <2>;
-+				#interrupt-cells = <2>;
-+				compatible = "semtech,sx1505q";
-+				reg = <0x21>;
-+
-+				gpio-controller;
-+			};
-+
-+			rtc@30 {
-+				compatible = "s35390a";
-+				reg = <0x30>;
-+			};
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		status_green {
-+			label = "l-50:green:status";
-+			gpios = <&gpio1 6 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		status_orange {
-+			label = "l-50:orange:status";
-+			gpios = <&gpio3 2 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		wifi {
-+			label = "l-50:green:wifi";
-+			gpios = <&gpio2 7 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "phy0tpt";
-+		};
-+
-+		internet_green {
-+			label = "l-50:green:internet";
-+			gpios = <&gpio2 3 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		internet_red {
-+			label = "l-50:red:internet";
-+			gpios = <&gpio2 1 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		usb1_green {
-+			label = "l-50:green:usb1";
-+			gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "usbport";
-+			trigger-sources = <&hub_port3>;
-+		};
-+
-+		usb1_red {
-+			label = "l-50:red:usb1";
-+			gpios = <&gpio2 4 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		usb2_green {
-+			label = "l-50:green:usb2";
-+			gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "usbport";
-+			trigger-sources = <&hub_port1>;
-+		};
-+
-+		usb2_red {
-+			label = "l-50:red:usb2";
-+			gpios = <&gpio2 5 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	usb2_pwr {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb2_pwr";
-+
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio3 3 GPIO_ACTIVE_LOW>;
-+		enable-active-low;
-+		regulator-always-on;
-+	};
-+
-+	usb1_pwr {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb1_pwr";
-+
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio3 4 GPIO_ACTIVE_LOW>;
-+		enable-active-low;
-+		regulator-always-on;
-+	};
-+
-+	mpcie_pwr {
-+		compatible = "regulator-fixed";
-+		regulator-name = "mpcie_pwr";
-+
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio3 5 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	express_card_pwr {
-+		compatible = "regulator-fixed";
-+		regulator-name = "express_card_pwr";
-+
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio3 7 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	keys {
-+		compatible = "gpio-keys-polled";
-+		poll-interval = <20>;
-+
-+		factory_defaults {
-+			label = "factory_defaults";
-+			gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_RESTART>;
-+		};
-+
-+	};
-+};
-+
-+&mdio {
-+	status = "okay";
-+
-+	ethphy0: ethernet-phy@8 {
-+		reg = <0x08>;
-+	};
-+
-+	switch0: switch@10 {
-+		compatible = "marvell,mv88e6085";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x10>;
-+		dsa,member = <0 0>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				label = "lan5";
-+			};
-+
-+			port@1 {
-+			       reg = <1>;
-+			       label = "lan1";
-+			};
-+
-+			port@2 {
-+			       reg = <2>;
-+			       label = "lan6";
-+			};
-+
-+			port@3 {
-+			       reg = <3>;
-+			       label = "lan2";
-+			};
-+
-+			port@4 {
-+				reg = <4>;
-+				label = "lan7";
-+			};
-+
-+			switch0port5: port@5 {
-+				reg = <5>;
-+				phy-mode = "rgmii-txid";
-+				link = <&switch1port5>;
-+				fixed-link {
-+					speed = <1000>;
-+					full-duplex;
-+				};
-+			};
-+
-+			port@6 {
-+				reg = <6>;
-+				label = "cpu";
-+				phy-mode = "rgmii-id";
-+				ethernet = <&eth1port>;
-+				fixed-link {
-+					speed = <1000>;
-+					full-duplex;
-+				};
-+			};
-+		};
-+	};
-+	switch@11 {
-+		compatible = "marvell,mv88e6085";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x11>;
-+		dsa,member = <0 1>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				label = "lan3";
-+			};
-+
-+			port@1 {
-+			       reg = <1>;
-+			       label = "lan8";
-+			};
-+
-+			port@2 {
-+			       reg = <2>;
-+			       label = "lan4";
-+			};
-+
-+			port@3 {
-+			       reg = <3>;
-+			       label = "dmz";
-+			};
-+
-+			switch1port5: port@5 {
-+				reg = <5>;
-+				phy-mode = "rgmii-txid";
-+				link = <&switch0port5>;
-+				fixed-link {
-+					speed = <1000>;
-+					full-duplex;
-+				};
-+			};
-+
-+			port@6 {
-+				reg = <6>;
-+				label = "dsl";
-+				fixed-link {
-+					speed = <100>;
-+					full-duplex;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&eth0 {
-+	status = "okay";
-+	ethernet0-port@0 {
-+		phy-handle = <&ethphy0>;
-+	};
-+};
-+
-+&eth1 {
-+	status = "okay";
-+	ethernet1-port@0 {
-+		speed = <1000>;
-+		duplex = <1>;
-+	};
-+};
-+
-+&nand {
-+	status = "okay";
-+	pinctrl-0 = <&pmx_nand>;
-+	pinctrl-names = "default";
-+
-+	partition@0 {
-+		label = "u-boot";
-+		reg = <0x0000000 0xc0000>;
-+	};
-+
-+	partition@a0000 {
-+		label = "bootldr-env";
-+		reg = <0x000c0000 0x40000>;
-+	};
-+
-+	partition@100000 {
-+		label = "kernel-1";
-+		reg = <0x00100000 0x800000>;
-+	};
-+
-+	partition@900000 {
-+		label = "rootfs-1";
-+		reg = <0x08200000 0x7100000>;
-+	};
-+
-+	partition@7a00000 {
-+		label = "kernel-2";
-+		reg = <0x07a00000 0x800000>;
-+	};
-+
-+	partition@8200000 {
-+		label = "rootfs-2";
-+		reg = <0x08200000 0x7100000>;
-+	};
-+
-+	partition@f300000 {
-+		label = "default_sw";
-+		reg = <0x0f300000 0x7900000>;
-+	};
-+
-+	partition@16c00000 {
-+		label = "logs";
-+		reg = <0x16c00000 0x1800000>;
-+	};
-+
-+	partition@18400000 {
-+		label = "preset_cfg";
-+		reg = <0x18400000 0x100000>;
-+	};
-+
-+	partition@18500000 {
-+		label = "adsl";
-+		reg = <0x18500000 0x100000>;
-+	};
-+
-+	partition@18600000 {
-+		label = "storage";
-+		reg = <0x18600000 0x7A00000>;
-+	};
-+};
-+
-+&rtc {
-+	status = "disabled";
-+};
-+
-+&pciec {
-+	status = "okay";
-+};
-+
-+&pcie0 {
-+	status = "okay";
-+};
-+
-+&sata_phy0 {
-+	status = "disabled";
-+};
-+
-+&sata_phy1 {
-+	status = "disabled";
-+};
-+
-+&usb0 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	port@1 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <1>;
-+		#trigger-source-cells = <0>;
-+
-+		hub_port1: port@1 {
-+			reg = <1>;
-+			#trigger-source-cells = <0>;
-+		};
-+
-+		hub_port3: port@3 {
-+			reg = <3>;
-+			#trigger-source-cells = <0>;
-+		};
-+	};
-+};
--- 
-2.20.1
-
+T24gV2VkLCAyMDIwLTA0LTA4IGF0IDIxOjAzIC0wNzAwLCBGbG9yaWFuIEZhaW5lbGxpIHdyb3Rl
+Og0KPiANCj4gT24gNC84LzIwMjAgMjozMyBQTSwgQ2hyaXMgUGFja2hhbSB3cm90ZToNCj4gPiBP
+biBXZWQsIDIwMjAtMDQtMDggYXQgMTU6MjkgKzA4MDAsIEppYXh1biBZYW5nIHdyb3RlOg0KPiA+
+ID4gT24gV2VkLCA4IEFwciAyMDIwIDA1OjE0OjIyICswMDAwDQo+ID4gPiBDaHJpcyBQYWNraGFt
+IDxDaHJpcy5QYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+IHdyb3RlOg0KPiA+ID4gDQo+ID4g
+PiA+IEhpIEFsbCwNCj4gPiA+ID4gDQo+ID4gPiA+IEknbSB0cnlpbmcgdG8gcG9ydCBhbiBvbGQg
+QnJvYWRjb20gTUlQUyBDUFUgKEJDTTUzMDAzKSB0byBhDQo+ID4gPiA+IHNoaW55DQo+ID4gPiA+
+IG5ldw0KPiA+ID4gPiBrZXJuZWwuIEkgaGF2ZSBzb21lIG9sZCBoaXN0b3JpYyBzb3VyY2UgZnJv
+bSBhIGxvbmcgZm9yZ290dGVuDQo+ID4gPiA+IEJyb2FkY29tDQo+ID4gPiA+IExESyBidXQgSSdk
+IHByZWZlciB0byBkbyB0aGluZ3MgdGhlIG1vZGVybiB3YXkgd2l0aCBkZXZpY2UtDQo+ID4gPiA+
+IHRyZWVzLg0KPiA+ID4gPiANCj4gPiA+ID4gVGhlIHByb2JsZW0gSSd2ZSBiZWVuIGdyYXBwbGlu
+ZyB3aXRoIGlzIHRyeWluZyB0byBvcGVuIHVwDQo+ID4gPiA+IGFjY2VzcyB0bw0KPiA+ID4gPiBh
+bGwgb2YgdGhlIFJBTSBvbiB0aGUgYm9hcmQuIEl0IGhhcyA1MTJNQiBvZiBERFIyLiBUaGUgQ1BV
+IGhhcw0KPiA+ID4gPiB0d28NCj4gPiA+ID4gYXJlYXMgd2hlcmUgdGhpcyBhcHBlYXJzLiBUaGUg
+Zmlyc3QgMTI4TUIgaXMgZnJvbSAwIHRvDQo+ID4gPiA+IDB4MDdmZmZmZmYNCj4gPiA+ID4gdGhl
+DQo+ID4gPiA+IHNlY29uZCBhcmVhIGlzIGZyb20gMHg4ODAwMDAwMCB0byAweDlmZmZmZmZmLg0K
+PiA+ID4gPiANCj4gPiA+ID4gU29DIHBlcmlwaGVyYWxzIGFyZSBhdCAweDE4MDAwMDAwIGFuZCB0
+aGVyZSBpcyBhbiBJTyB3aW5kb3cgZm9yDQo+ID4gPiA+IGZsYXNoDQo+ID4gPiA+IGF0IDB4MjAw
+MDAwMDAuDQo+ID4gPiA+IA0KPiA+ID4gPiBUaGUgb2xkIGNvZGUgaGFzIHNvbWUgY3VzdG9tIHRs
+YiBpbml0aWFsaXNhdGlvbiB0byBkZWFsIHdpdGgNCj4gPiA+ID4gdGhpcw0KPiA+ID4gPiBidXQN
+Cj4gPiA+ID4gSSBmaWd1cmVkIGl0IHNob3VsZCBiZSBwb3NzaWJsZSB3aXRoIHRoZSBmb2xsb3dp
+bmcgZHRzIHNuaXBwZXQuDQo+ID4gPiA+IA0KPiA+ID4gPiAgICAgICAgIG1lbW9yeUAwIHsNCj4g
+PiA+ID4gICAgICAgICAgICAgICAgIGRldmljZV90eXBlID0gIm1lbW9yeSI7DQo+ID4gPiA+ICAg
+ICAgICAgICAgICAgICByZWcgPSA8MHgwMDAwMDAwMCAweDA4MDAwMDAwDQo+ID4gPiA+ICAgICAg
+ICAgICAgICAgICAgICAgICAgMHg4ODAwMDAwMCAweDE4MDAwMDAwPjsNCj4gPiA+ID4gICAgICAg
+ICB9Ow0KPiA+ID4gPiANCj4gPiA+ID4gSSBlbmQgdXAgd2l0aCBvbmx5IDEyOE1CIGF2YWlsYWJs
+ZS4gVGhpcyBhcHBlYXJzIHRvIGJlDQo+ID4gPiA+IGJlY2F1c2UgdGhlIGRlZmF1bHQgSElHSE1F
+TV9TVEFSVCBvZiAweDIwMDAwMDAwIHN0b3BzIHRoZSByZXN0DQo+ID4gPiA+IGZyb20NCj4gPiA+
+ID4gYmVpbmcgbWFkZSBhdmFpbGFibGUuIElmIEkgYWRkIGFuIG92ZXJyaWRlIG9mIEhJR0hNRU1f
+U1RBUlQgdG8NCj4gPiA+ID4gMHhmZmZmZmZmZiBJIHNlZW0gdG8gaGF2ZSB0aGUgZnVsbCA1MTJN
+QiBhdmFpYWJsZSBidXQgdGhlbiBJDQo+ID4gPiA+IGdldCBhDQo+ID4gPiA+IGtlcm5lbCBwYW5p
+Yw0KPiA+ID4gDQo+ID4gPiBIaSwNCj4gPiA+IA0KPiA+ID4gSGF2ZSB5b3UgdHJpZWQgdG8gZW5h
+YmxlIENPTkZJR19ISUdITUVNPw0KPiA+ID4gDQo+ID4gDQo+ID4gSSBoYXZlIGJ1dCB0aGF0IGRp
+ZG4ndCBzZWVtIHRvIGhlbHAuIEFzIEkgdW5kZXJzdGFuZCBpdCBISUdITUVNIGlzDQo+ID4gaW50
+ZW5kZWQgZm9yIHNpdHVhdGlvbnMgd2hlbiB5b3UgaGF2ZSBtb3JlIHBoeXNpY2FsIFJBTSB0aGF0
+IGNhbiBiZQ0KPiA+IGFkZHJlc3NlZCAoZS5nLiA+NEdCIG9uIGEgMzItYml0IHN5c3RlbSkuDQo+
+IA0KPiBPbiBNSVBTIHlvdSBtYXkgaGF2ZSB0byBlbmFibGUgSElHSE1FTSBhcyBzb29uIGFzIHlv
+dSBydW4gb3V0IG9mDQo+IHZpcnR1YWwNCj4ga2VybmVsIGFkZHJlc3Mgc3BhY2UgdG8gbWFwIHRo
+ZSBlbnRpcmUgYW1vdW50IG9mIG1lbW9yeSB0aGF0IGlzDQo+IHBvcHVsYXRlZCBBRkFJQ1QuIFRo
+ZSBrZXJuZWwgaGFzIGEgbGl0dGxlIHVuZGVyIDFHQiBvZiB2aXJ0dWFsDQo+IGFkZHJlc3MNCj4g
+c3BhY2UgdGhhdCBjYW4gYmUgbWFwcGVkIHZpYSB0aGUgVExCIHNpbmNlIHRoZSBmaXJzdCA1MTJN
+QiBhcmUNCj4gb2NjdXBpZWQNCj4gYnkgS1NFRzAvMS4NCj4gDQoNCk15IGFkdmVudHVyZXMgdGh1
+cyBmYXIgd2l0aCBISUdITUVNIGhhdmUgZ290IGFzIGZhciBhcw0KDQogIFRoaXMgcHJvY2Vzc29y
+IGRvZXNuJ3Qgc3VwcG9ydCBoaWdobWVtLiAyNDkwMzY4ayBoaWdobWVtIGlnbm9yZWQNCg0KV2hp
+Y2ggSSB0aGluayBoYXMgc29tZXRoaW5nIHRvIGRvIHdpdGggdGhlIG1heF9sb3dfcGZuIGFuZCBo
+aWdoZW5kX3Bmbg0KYmVpbmcgZGlmZmVyZW50Lg0KDQoNCj4gPiANCj4gPiA+ID4gDQo+ID4gPiA+
+ICAgQ1BVIDAgVW5hYmxlIHRvIGhhbmRsZSBrZXJuZWwgcGFnaW5nIHJlcXVlc3QgYXQgdmlydHVh
+bA0KPiA+ID4gPiBhZGRyZXNzDQo+ID4gPiA+IDFmYzAwMDAwLCBlcGMgPT0gODAwMTY3YjgsIHJh
+ID09IDgwMGUyODYwDQo+ID4gPiA+IA0KPiA+ID4gPiAweDFmYzAwMDAwIGlzIGluIHRoZSByYW5n
+ZSB3aGVyZSB0aGUgU29DIHBlcmlwaGVyYWxzIGFyZSBzbyBJJ20NCj4gPiA+ID4gdGhpbmtpbmcg
+dGhhdCBpcyB0aGUgcHJvYmxlbS4gQnV0IHRoZW4gYWdhaW4gdGhhdCBpcyBhIHZpcnR1YWwNCj4g
+PiA+ID4gYWRkcmVzcw0KPiA+ID4gPiBzbyBtYXliZSBpdCdzIGp1c3QgYSBjby1pbmNpZGVuY2Uu
+DQo+ID4gPiANCj4gPiA+IDB4MWZjMDAwMDAgc2hvdWxkIGJlIHRoZSBCb290IFJPTSdzIHBoeXNp
+Y2FsIGFkZHJlc3MuIFByb2JhYmx5DQo+ID4gPiB5b3UNCj4gPiA+IGZvcmdvdCB0byBjb252ZXJ0
+IGl0IGludG8gdmlydHVhbCBhZGRyZXNzIGluIHlvdXIgcGxhdGZvcm0gY29kZT8NCj4gPiANCj4g
+PiBZZXMgdGhhdCdzIHJpZ2h0IGl0J3MgdGhlIGJvb3Ryb21zIFBBLiBJJ20gbm90IGludGl0ZW50
+aW9uYWxseQ0KPiA+IGRvaW5nDQo+ID4gYW55dGhpbmcgd2l0aCBpdCBidXQgbWF5YmUgdGhhdCdz
+IHRoZSBwcm9ibGVtLg0KPiANCj4gSWYgeW91IHdlcmUgYWNjZXNzaW5nIHRoaXMgYXMgYSB2aXJ0
+dWFsIGFkZHJlc3MgdGhlbiBpdCB3b3VsZCBiZQ0KPiBlaXRoZXINCj4gdmlhIEtTRUcwLzEgYW5k
+IHRoZSBhZGRyZXNzZXMgd291bGQgYmUgMHgxZmMwXzAwMDAgKyAweDgwMDBfMDAwMCBvcg0KPiAw
+eDFmYzBfMDAwMCArIDB4YTAwMF8wMDAwIGJ1dCBoZXJlIGl0IGxvb2tzIGxpa2UgdGhlIHJhdyBw
+aHlzaWNhbA0KPiBhZGRyZXNzIGlzIGJlaW5nIGFjY2Vzc2VkIHdoaWNoIHN1Z2dlc3RzIHRoZSBU
+TEIgaXMgaW5jb3JyZWN0bHkNCj4gcHJvZ3JhbW1lZCBzb21laG93Lg0KPiANCj4gPiANCj4gPiA+
+IA0KPiA+ID4gQ2hlY2sgdGhlIEVQQyBvZiBleGNlcHRpb24gaW4gdm1saW51eCB3aXRoIGFkZHIy
+bGluZSBtYXkgaGVscC4NCj4gPiA+IChEb24ndA0KPiA+ID4gZm9yZ2V0IHRvIGNvbXBpbGUgeW91
+ciBrZXJuZWwgd2l0aCBkZWJ1Z2luZm8pLiANCj4gPiA+IA0KPiA+IA0KPiA+IFRoZSBmdWxsIHBh
+bmljIGlzDQo+ID4gDQo+ID4gQ1BVIDAgVW5hYmxlIHRvIGhhbmRsZSBrZXJuZWwgcGFnaW5nIHJl
+cXVlc3QgYXQgdmlydHVhbCBhZGRyZXNzDQo+ID4gMWZjMDAwMDAsIGVwYyA9PSA4MDAxNjdiOCwg
+cmEgPT0NCj4gPiA4MDBlMjg2MCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgIA0KPiA+IE9v
+cHNbIzFdOiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+IENQVTogMCBQSUQ6IDAgQ29tbTogc3dhcHBl
+ciBOb3QgdGFpbnRlZCA1LjUuMC1hdDENCj4gPiAjNDYgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0K
+PiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+DQo+ID4gJCAwICAgOiAwMDAwMDAwMCAwMDAwMDAwMSAwMDAwMDAwMQ0KPiA+IDgwN2U0MjcwICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAN
+Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICANCj4gPiAkIDQgICA6IDFmYzAw
+MDAwIDAwMDAwMDAwIDFmYzAwZjgwDQo+ID4gMDAwMDAwMDEgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgDQo+ID4gIA0KPiA+ICQgOCAgIDogODNlNTJhMDAgODNlNTJhMjQgODA3ZjYy
+OGMNCj4gPiA4MDgwZmEwMCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAg
+DQo+ID4gJDEyICAgOiBmZmZmZmZmZiAwMDAwMDAwMSAwMDAwMDAwYg0KPiA+IGZmZmZmZmZmICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAN
+Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICANCj4gPiAkMTYgICA6IDgzZTUy
+YTIwIDgwMDAwMDAwIDgwODcwMDAwDQo+ID4gODNlNTJhMDAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgDQo+ID4gIA0KPiA+ICQyMCAgIDogODA4MGZkZDQgODA3ZGRlMDAgMDAwMDAw
+MDANCj4gPiA4MDgwZjliYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAg
+DQo+ID4gJDI0ICAgOiA4MDgwZmI2OA0KPiA+IGZmZmZmZjdmICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+
+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICANCj4gPiAkMjggICA6IDgwN2Rj
+MDAwIDgwN2RkZDM4IDgzZTUyYTAwDQo+ID4gODAwZTI4NjAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgDQo+ID4gIA0KPiA+IEhpICAgIDoNCj4gPiAwMDAwMDAwMCAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+DQo+ID4gTG8gICAgOg0KPiA+IDAwMDAwMDAwICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiBlcGMgICA6IDgwMDE2
+N2I4DQo+ID4gY2xlYXJfcGFnZSsweDE4LzB4MTI4ICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4g
+ICAgICAgICAgICAgICAgICAgIA0KPiA+IHJhICAgIDogODAwZTI4NjANCj4gPiBnZXRfcGFnZV9m
+cm9tX2ZyZWVsaXN0KzB4YTk0LzB4ZGQ0ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAg
+DQo+ID4gU3RhdHVzOiAxMTAwMDAwMiAgICAgICAgS0VSTkVMDQo+ID4gRVhMICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICANCj4gPiBDYXVzZSA6IDQwODAw
+MDBjIChFeGNDb2RlDQo+ID4gMDMpICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgDQo+ID4gICAgICAgICAgIA0KPiA+IEJhZFZBIDoNCj4gPiAxZmMwMDAwMCAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+DQo+ID4gUHJJZCAgOiAwMDAxOTc0OSAoTUlQUw0KPiA+IDc0S2MpICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICANCj4gPiBNb2R1bGVzIGxpbmtl
+ZA0KPiA+IGluOiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAg
+ICAgICAgICAgICAgICAgICAgIA0KPiA+IFByb2Nlc3Mgc3dhcHBlciAocGlkOiAwLCB0aHJlYWRp
+bmZvPShwdHJ2YWwpLCB0YXNrPShwdHJ2YWwpLA0KPiA+IHRscz0wMDAwMDAwMCkgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4g
+Kkh3VExTOg0KPiA+IGUxOWY3ZDNhICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0K
+PiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiBTdGFjayA6IDgwN2UwMDAwIDgw
+N2RkZTk4IDgwODY3Y2Q4IDgwNzkxODE0IDAwMDAwMDAxIDgwNjg3OTc0DQo+ID4gODA3ZGRlMTgN
+Cj4gPiAwMDAwMDAwMCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgDQo+ID4gICAgICAgICA4MDdmNWVkMCA4MDdmNjI4YyA4MDdmNjI4YyA4MDgw
+ZmRkNCA4MDg3MDAwMCAwMDAwMDAwMQ0KPiA+IDgwN2UwMDAwDQo+ID4gMDAwMDAwNDQgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAg
+ICAgICAgMDAwMDAwNWMgODA3ZGRlMDAgMDAwMDAwMDAgMDAwMDAwMDEgODA4MTAwMDAgODA3NWE2
+NjANCj4gPiA4MDg3MDAwMQ0KPiA+IDAwMDAwMDAwICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgIDAwMDAwMTAwIDAwMDAw
+MDAwIDgwN2UwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAxDQo+ID4gODA4NjAwMDANCj4g
+PiA4MDg0OTJiNCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgDQo+ID4gICAgICAgICA4N2Q3NTYwOCA4MDBlMzAyOCAwMDAwMDEwMCAwMDAwMDAw
+MCAwMDAwMDAwMSA4MDA1OGMwOA0KPiA+IDgwODcwMDAwDQo+ID4gODA4NzAwMDAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAg
+ICAgLi4uICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIA0KPiA+IENhbGwNCj4gPiBUcmFjZTogICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ID4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgDQo+ID4gWzw4MDAxNjdiOD5dDQo+ID4gY2xlYXJfcGFnZSsweDE4LzB4MTI4ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICANCj4gPiBbPDgwMGUyODYw
+Pl0NCj4gPiBnZXRfcGFnZV9mcm9tX2ZyZWVsaXN0KzB4YTk0LzB4ZGQ0ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAg
+ICAgICAgICAgICAgICAgICAgICAgIA0KPiA+IFs8ODAwZTMwMjg+XQ0KPiA+IF9fYWxsb2NfcGFn
+ZXNfbm9kZW1hc2srMHhmNC8weGJiOCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAN
+Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAg
+ICAgDQo+ID4gWzw4MDBlM2IwOD5dDQo+ID4gX19nZXRfZnJlZV9wYWdlcysweDFjLzB4NTggICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICANCj4gPiBbPDgwMDEzNDMw
+Pl0NCj4gPiBzZXR1cF96ZXJvX3BhZ2VzKzB4M2MvMHhlNCAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4gPiAg
+ICAgICAgICAgICAgICAgICAgICAgIA0KPiA+IFs8ODA4MjZlYWM+XQ0KPiA+IG1lbV9pbml0KzB4
+NDAvMHg1MCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAN
+Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAgICAgICAg
+ICAgDQo+ID4gWzw4MDgyMTljMD5dDQo+ID4gc3RhcnRfa2VybmVsKzB4MjUwLzB4NTEwICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA0KPiA+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCj4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICANCj4gPiBDb2RlOiBjYzll
+MDA0MCAgY2M5ZTAwNjAgIGNjOWUwMDgwIDxhYzgwMDAwMD4NCj4gPiBhYzgwMDAwNCAgYWM4MDAw
+MDggIGFjODAwMDBjICAyNDg0MDAyMCAgYWM4MGZmZjAgIA0KPiA+IA0KPiA+IEkgdGhpbmsgdGhp
+cyBpcyBqdXN0IHRoZSBlYXJseSBzZXR1cCBvZiB0aGUgcGFnZXMuDQo+ID4gDQo+ID4gPiA+IA0K
+PiA+ID4gPiBBbnl3YXkgSSdkIHJlYWxseSBhcHByZWNpYXRlIGFueSBndWlkYW5jZSB0aGF0IGFu
+eW9uZSBjb3VsZA0KPiA+ID4gPiBwcm92aWRlDQo+ID4gPiA+IG9uDQo+ID4gPiA+IHRoaXMuIEV2
+ZW4gaWYgaXQncyBqdXN0ICJnbyBsb29rIGF0IHRoaXMgU29DIi4NCj4gPiA+ID4gDQo+ID4gPiA+
+IFRoYW5rcywNCj4gPiA+ID4gQ2hyaXMNCj4gPiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gDQo+ID4g
+PiAtLQ0KPiA+ID4gSmlheHVuIFlhbmcNCj4gDQo+IA0K
