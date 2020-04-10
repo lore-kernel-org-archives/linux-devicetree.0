@@ -7,57 +7,56 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B104C2BB55
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 20:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6E5C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 20:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15EB72078E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 20:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71AB2206E9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 20:49:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kNO2u9EN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JYxrDAPP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgDJUq3 (ORCPT
+        id S1726638AbgDJUtW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Apr 2020 16:46:29 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39866 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726263AbgDJUq3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Apr 2020 16:46:29 -0400
-Received: by mail-lf1-f65.google.com with SMTP id m2so2194096lfo.6;
-        Fri, 10 Apr 2020 13:46:28 -0700 (PDT)
+        Fri, 10 Apr 2020 16:49:22 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37315 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgDJUtW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Apr 2020 16:49:22 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r24so3152467ljd.4;
+        Fri, 10 Apr 2020 13:49:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=I+22ZdLvG5Rujvbq/B2qtEVig1LNO+Yt4MNm4tY+6JM=;
-        b=kNO2u9ENzzNIXOmnOwjmNREPT3/M9v4uMOY++O3kr9ViuQLLx0++ZXjaoimcQWx08b
-         tmL/Lyq6MSMTohfP08eJ3TijhlhSChRqEpAyVn0sufycEaKel1BwL+duv1SPFhE/Rbs6
-         A+Ed1tI1dMtotWuta+NGlMk5sjwU7uiPM/3UVivB9N1FtkerKbrnTADbBGJtrchY0W+6
-         S4d3nupp5gLMOjoczlaTNMiYsDi22iHy++YDe636HKbomw3r/dmFCSjMwyp44XMGNUMs
-         GzjTfx/VnEFvXqKPABsgY+rDRnDuJQ16HyvJ/9dYqQYpbV6RNCfuO9RVHwfxcoUrLKi9
-         Nfrw==
+        bh=RtQay0p36yFoHHnkkvAKDptGQmyg6Qy1Y9oDL+R6OJs=;
+        b=JYxrDAPPO7YcJQGQmfkDNy78riHDRnxnk+1BuPlS7InbdQdxLTvIz8OEPZiFpOU0X9
+         ADT7Ft9odOWbzW9finqAX/+rKSLfnVSeR5Xa9J4oDuoZc8WSgiBXwkPvTWNMK5QpoSzN
+         1xg345q38jbniCJJ64eiSGzaeGA44fhbyi5H4thk4LUHgSXt58daDdfyPUcXv+0GjcGe
+         F4H5APl8W/ee6OkZLAkUhs4j7OpWcn9y25FlGh93o4+Mu+UEgQH6tmw2E6EOi8MUeF2i
+         2aPAZ/DjIos0ISMXOdtcg0a828pLKVjCvFrg05ZPhPQe7PmFCw5csXUaxkljrQ3P9JVy
+         8uGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=I+22ZdLvG5Rujvbq/B2qtEVig1LNO+Yt4MNm4tY+6JM=;
-        b=oYCL2c474Oqg+ktV1k2t8Ahgldbxz2r6GfBUVMdEc85fkWCAUX6iYBKNpB6LTPW62F
-         QbIZR2MoEeZfdLfPl3fAKfLote8qVt+dM2XnWlbzikweNdvL60SyjmPMo3Hc7v8cT52p
-         D3OLMPOwggbDFjsHqZKCI6GHnO+XbnZHlov1LKro/hUZO2jHEleBU3s5TAlXPuHqJslY
-         RmP1u1xR/BxCT7tLjJTQcZEBcu680OTS1dh5eCE4iaKheAJO53JXHVW7cpU/n5ad6ZiT
-         gd0eAEa7353WFz/7WtY5EaSEwQKayTCzhguHPDYqdX6atC8HRK4lv6+NILntOgYXvU74
-         FXIQ==
-X-Gm-Message-State: AGi0PuY0m6XxO2WAnVj03xSk3GKVNCprO2BcFAlodf6hp9MzZRReqB+h
-        1ofxIxAMj0fN1vj66EQWiCQ=
-X-Google-Smtp-Source: APiQypIoT9tmvJ8Grzu/GhsTxVJ9fNzQs2I967ArH5Rq3yRTbrZrU3tmptJ+UnCrQLYAuh5qjSqxog==
-X-Received: by 2002:a05:6512:695:: with SMTP id t21mr3575749lfe.158.1586551587266;
-        Fri, 10 Apr 2020 13:46:27 -0700 (PDT)
+        bh=RtQay0p36yFoHHnkkvAKDptGQmyg6Qy1Y9oDL+R6OJs=;
+        b=gymH4iAYrdD89KTYxC7WsOj2+8OzRw1wqKWTsYOEDtTAQ/lO0Gc5uA718WquVOybf/
+         ZDqBc+OOqj+AZJtMesbHUWTt3KooayzWAuuuEJoxG+tvSy3evPfZ4pgTyBRIgz1uUb04
+         XTXhh8hELz9jNWpVy74l34oonHj4gBFS7ReqP6ILsLebGCL4IdVitzqDxoNBpbDe7O/z
+         smE8L+CUgBrm4SUQlocx3j3YLRzPbCeJqQdleWLHr8tQoiJTFHG9r85IZvUgT3TxKeaf
+         uOaFCVuFYjVPywu3+1V1EGkg+7iQpnxvQQkYBXTwCcMYcYW57uae/ntlmXcxphLB7PrR
+         hDbQ==
+X-Gm-Message-State: AGi0PuZYmY40FIslkrKFrT/6VwBzsdF15vQjfYdZmrZYEgvM9PwZeP8U
+        DpZGYvK+elY7aLmd9ku2n3U=
+X-Google-Smtp-Source: APiQypKfmrULbbonnzAShBhrnEqTia/HO1FQk3qKGk14wKYdR6iNAa6QFkvw+u0KqefzQ/PvT2QTPg==
+X-Received: by 2002:a2e:b4d1:: with SMTP id r17mr3909160ljm.117.1586551760333;
+        Fri, 10 Apr 2020 13:49:20 -0700 (PDT)
 Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id j13sm1974258lfb.19.2020.04.10.13.46.25
+        by smtp.googlemail.com with ESMTPSA id v9sm1775739ljj.31.2020.04.10.13.49.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Apr 2020 13:46:26 -0700 (PDT)
-Subject: Re: [PATCH v6 09/14] memory: tegra: Add EMC scaling support code for
- Tegra210
+        Fri, 10 Apr 2020 13:49:19 -0700 (PDT)
+Subject: Re: [PATCH v6 07/14] clk: tegra: Implement Tegra210 EMC clock
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh+dt@kernel.org>
 Cc:     Jon Hunter <jonathanh@nvidia.com>,
@@ -67,14 +66,14 @@ Cc:     Jon Hunter <jonathanh@nvidia.com>,
         devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 References: <20200409175238.3586487-1-thierry.reding@gmail.com>
- <20200409175238.3586487-10-thierry.reding@gmail.com>
+ <20200409175238.3586487-8-thierry.reding@gmail.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <fae8e1f5-753b-b2ce-d14f-c6e8b2061fdd@gmail.com>
-Date:   Fri, 10 Apr 2020 23:46:25 +0300
+Message-ID: <0e040cf9-56cf-dd44-3523-ff4c82fb1f2c@gmail.com>
+Date:   Fri, 10 Apr 2020 23:49:18 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200409175238.3586487-10-thierry.reding@gmail.com>
+In-Reply-To: <20200409175238.3586487-8-thierry.reding@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -85,25 +84,20 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 09.04.2020 20:52, Thierry Reding пишет:
 ...
-> ---
-> Changes in v6:
-> - use __maybe_unused instead of #ifdef'ery for suspend/resume callbacks
-> - take exclusive control of EMC clock during suspend/resume
-> - move EMC driver changes from clk patch to this patch
-> - make the driver buildable as a module
-> - remove unnecessary suspend tracking
-> - remove duplicate register defines
-> - add tegra210-emc.h for Tegra210-specific registers
-> - detect number of channels, number of devices and DRAM type at probe
->   time and store them in struct tegra210_emc, remove the corresponding
->   function parameters where no longer needed
-> - properly clean up on failure
-> 
-> Changes in v5:
-> - major rework and cleanup
+> +int tegra210_clk_emc_attach(struct clk *clk,
+> +			    struct tegra210_clk_emc_provider *provider)
+> +{
+> +	struct clk_hw *hw = __clk_get_hw(clk);
+> +	struct tegra210_clk_emc *emc = to_tegra210_clk_emc(hw);
+> +	struct device *dev = provider->dev;
+> +	unsigned int i;
+> +	int err;
+> +
+> +	if (!try_module_get(provider->owner))
+> +		return -ENODEV;
 
-I happened to notice that the patches have an individual changelog only
-by accident :)
+Is the EMC driver module bumping its own refcount by itself?
 
-Next time will be nice if at least you could mention about this in the
-cover-letter, or move (or duplicate) the whole log in the cover-letter.
+In the other patch I already suggested that the EMC module should be
+disallowed to be unloaded once it has been loaded, seems you're already
+doing it. Correct?
