@@ -4,84 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F9BC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 17:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B37DCC2BB55
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 17:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E38B207FF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 17:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81EA0207FF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 17:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586540824;
-	bh=e4T6wr8Q4Nw+PsS/Yni6kuiQWpNyp462Qaw7cdynGDU=;
+	s=default; t=1586540939;
+	bh=eW/VTf8xV/UPmvXE5+jLFg+eBfAUu1ZoS1WZospefKs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d+6p/LX6L3MUW9idxmSVOLzCxnxmIshISkz3cSd13xiikrXHMRIgEGg9aPNAJ78Lx
-	 t7v8XTwFZlbpWvDj9KPb+Wf+pPWqQjkwzddG1LTwAXkOLicL0gApUs/QR56pFTgDhl
-	 Xwr/ObSRT/y/ckLExpVXF72l9PM3cIe3D0rZJLHE=
+	b=GGInMlGj5z6uLjrXTTXPoPq6bHsovMKFthh2amsMJB9y84iU1FJLHdBRshKRE7Ci0
+	 tMpdVDZMAB2ckOpDZ8phXiHD/QUKJyPSIG1YlNmTXEk9ou6CxLftgjddB22+sIgavL
+	 K0gfhdjXg8Eksq19ZX5xFq1VWlTEhkZ+A7jlLRqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgDJRrA (ORCPT
+        id S1726626AbgDJRs6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Apr 2020 13:47:00 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40560 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbgDJRrA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Apr 2020 13:47:00 -0400
-Received: by mail-oi1-f194.google.com with SMTP id a7so1979135oid.7;
-        Fri, 10 Apr 2020 10:47:00 -0700 (PDT)
+        Fri, 10 Apr 2020 13:48:58 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46772 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgDJRs6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Apr 2020 13:48:58 -0400
+Received: by mail-oi1-f195.google.com with SMTP id q204so1963494oia.13;
+        Fri, 10 Apr 2020 10:48:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YOlnayCpN0x6fsTC4gjjNKTPcCx7CoULGGzJuytpQFg=;
-        b=AiHs1HaJ2/kw4hHO9LuAUOnrosulrYIWvSYs5qRKMH/JdpHJfSOfdYHyURpP/dEbTj
-         ek7o4TH+GfurmIc5cDnWrjmsIuXMOdw9twGP5ccMTXXRj80jEZkDxI/e0xATq5kL6Cwu
-         RWPfLqSyhiOHnrL8fA/nCssRu6I5UKx2V5IAhi3Y2qM8Qj4w1OTQK0fF941xaSwLjKcy
-         9v/lBvBx8jZSUmZ9blqGTd1Z0NdC6ztciFoJu3QHpf+zpO/hh+dPCPO7gpMlbMDG5gka
-         wkFSLYXYymDvchvL4XiTLagyOwO3xQZpG+xQJsqjvrvKqoaDTqaQIavidwxEdTu9J9b6
-         hsLA==
-X-Gm-Message-State: AGi0PuZ1oYmGK5zlipIF2/FBBJzWTh+jLoSHGRfcfE8HjzUQouQ9Ho93
-        THoFUfAwrNpr8lIjUqbhxGQsuDk=
-X-Google-Smtp-Source: APiQypI+q90EcJYQgIP5foBVizKnUwxg5NykGbL2hgbN/7Z9tebeDhCVPgGy4H9xSz9z9wr3rhbSRQ==
-X-Received: by 2002:a54:4519:: with SMTP id l25mr4255258oil.92.1586540819869;
-        Fri, 10 Apr 2020 10:46:59 -0700 (PDT)
+        bh=+zNuF3LiP7kvgVV1lvcUDcmbeJ3DBvPeuSAiKMFaGnc=;
+        b=GThtrDsqq6diMLLWsmQsyGJvWA4V1m9jDMLiq045j/x8Dw7Wz0cfokp8blNFMmtxba
+         KBYWJu6KkmUjkXNUdEQttLZMQAfoc6OmnMN/ZpgYPdFwYnSzfjOiDiMrs8ZCnC6WmvCZ
+         lAHRZJUMs3XnkbrVoQz3DYNC4TWHsA1KtYQN/Im7YzC/ySMLdP9nj2JGtclj/2QWm6ug
+         0g9Va6nz/s0jXxQzfKBPbOU+7Cp1AT+qh+h89mj1BzqVYKU6s40K8ru2Xd5mgD2TyTan
+         ZC9p95ai2BeqF0BF9e0kCXgbMc4hrGnlgpUi8ejMTItDc+BvgPeKgzebW5xn1RjqoVLU
+         CCTA==
+X-Gm-Message-State: AGi0PuYc2KNe3qWW2GIlP+ni2dkd3VAJQsA3hFbOariKb62EuH0vJ51n
+        sJrjoioLKsqpr5G/2xW1hA==
+X-Google-Smtp-Source: APiQypIt0cEpMExqzLdxjcdCSCFkFwJgM3Jj7xITc2xbl8Ot3NQLeW5lxcuMi7lDACDtIRWU3GO5eQ==
+X-Received: by 2002:aca:3745:: with SMTP id e66mr3965165oia.153.1586540936614;
+        Fri, 10 Apr 2020 10:48:56 -0700 (PDT)
 Received: from rob-hp-laptop (ip-173-126-55-226.ftwttx.spcsdns.net. [173.126.55.226])
-        by smtp.gmail.com with ESMTPSA id d3sm1596066oib.15.2020.04.10.10.46.58
+        by smtp.gmail.com with ESMTPSA id u17sm1523713oiv.21.2020.04.10.10.48.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 10:46:59 -0700 (PDT)
-Received: (nullmailer pid 25668 invoked by uid 1000);
-        Fri, 10 Apr 2020 17:46:58 -0000
-Date:   Fri, 10 Apr 2020 12:46:58 -0500
+        Fri, 10 Apr 2020 10:48:56 -0700 (PDT)
+Received: (nullmailer pid 28391 invoked by uid 1000);
+        Fri, 10 Apr 2020 17:48:53 -0000
+Date:   Fri, 10 Apr 2020 11:48:53 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     linux-amlogic@lists.infradead.org, jbrunet@baylibre.com,
-        narmstrong@baylibre.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 1/2] clk: meson8b: export the HDMI system clock
-Message-ID: <20200410174658.GA25608@bogus>
-References: <20200330234535.3327513-1-martin.blumenstingl@googlemail.com>
- <20200330234535.3327513-2-martin.blumenstingl@googlemail.com>
+To:     Sharat Masetty <smasetty@codeaurora.org>
+Cc:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
+        mka@chromium.org, sibis@codeaurora.org, saravanak@google.com,
+        viresh.kumar@linaro.org, Sharat Masetty <smasetty@codeaurora.org>
+Subject: Re: [PATCH 5/5] dt-bindings: drm/msm/gpu: Document OPP phandle list
+ for the GPU
+Message-ID: <20200410174853.GA28335@bogus>
+References: <1585641353-23229-1-git-send-email-smasetty@codeaurora.org>
+ <1585641353-23229-6-git-send-email-smasetty@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200330234535.3327513-2-martin.blumenstingl@googlemail.com>
+In-Reply-To: <1585641353-23229-6-git-send-email-smasetty@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 31 Mar 2020 01:45:34 +0200, Martin Blumenstingl wrote:
-> Export the HDMI system clock (used by the HDMI transmitter) so it can be
-> used in the dt-bindings.
+On Tue, 31 Mar 2020 13:25:53 +0530, Sharat Masetty wrote:
+> Update the documentation for listing the multiple optional GPU and the
+> DDR OPP tables to help enable DDR scaling.
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
 > ---
->  drivers/clk/meson/meson8b.h              | 1 -
->  include/dt-bindings/clock/meson8b-clkc.h | 1 +
->  2 files changed, 1 insertion(+), 1 deletion(-)
+>  .../devicetree/bindings/display/msm/gpu.txt        | 63 +++++++++++++++++++++-
+>  1 file changed, 61 insertions(+), 2 deletions(-)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
