@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABACCC2BB86
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 02:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58CD8C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 02:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8429F20769
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 02:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FD1720769
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 02:33:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="en6Vh+d1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzo34WeH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgDJCcv (ORCPT
+        id S1726713AbgDJCdC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 22:32:51 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40156 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbgDJCcv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 22:32:51 -0400
-Received: by mail-lf1-f68.google.com with SMTP id 198so381031lfo.7;
-        Thu, 09 Apr 2020 19:32:48 -0700 (PDT)
+        Thu, 9 Apr 2020 22:33:02 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43212 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgDJCdC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 22:33:02 -0400
+Received: by mail-lj1-f196.google.com with SMTP id h25so599718lja.10;
+        Thu, 09 Apr 2020 19:32:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VWKi6VRDm5SDW3y0ubYhqiYe82Hc9AZr1BHz5r8B5mA=;
-        b=en6Vh+d1e9XamkEvUkTUxnRAjg7pJmsXs+ztaaiCVXZKTn2sWLWn3wbRwuHlScA4Xr
-         5IR8v6yHAfPI1rNoQWJxBEMG1b8kbkww0ReDLl0pLCfeEll4PTAfkM0h/9MMXqBJkHe9
-         WuOmXBqjU26af2jNTRQapA/oLaONrsXCBEVZLHszv1v6fKunB+x8TLi0P95+UtBbI86K
-         k+88BzWoDE00vPJ6eHl2cSO0fxdoditbmVrI5thrjtomwzJxtvGvPGmRqCI+o69yEzQ+
-         TNmINHtsWsXi4McxM1Pt3fg94tHWj9nlc45iWoHycm1nvCT1WNVecvA1EqTrheV9Shnf
-         nFIg==
+        bh=Jl9+MFoz9FOVeQYZvGEhfQsUzeR6H5+fWjwrI15x2z4=;
+        b=hzo34WeHzqF2MRVekRCB6qQ2to+82InUQzzrEI3aHJE38TD2HK0mkYL8XmXe5U8/Ug
+         dhkFmz32aonURvzYSQmBfDf4Y5bJgSRmK4c/7iZyejYluqqpH4j/cdkNAIVPEzkUNcEU
+         YJIXvLVax7P5GiAiNrZ8t86nFtsj3YK+PWZHSIsW6XIx+hHG0QQaG/fP+tDfiOeOD/d4
+         WeJXYjrHaWkGter4N//y0HIxIPAnlIfIB8R3jZC4kxgZx4ddyedcSUVXzBPuFem+41mw
+         i30TJGB5Bg+3URW5FqjCBBj8Tubreog0XYXPiXZoUcvH6VjSmEQwD40PZBHvtRG/JWhm
+         CjBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VWKi6VRDm5SDW3y0ubYhqiYe82Hc9AZr1BHz5r8B5mA=;
-        b=RIWeaVgpexRB2pxcRU40j7vov/gP/hHvKUFFtW401DdN2e+sN09+Kq+5gYNCtat69u
-         iVTNp72ij+xr6jsmVLpRq9IFt5oHnfIdcU4abYCImSZRmRPmCqDfPtFqFw3kTWYVzLG0
-         e8/FMYJ8Na8YMw0NfzT5swmX8/ZNUqlFw7GJfpkfQ/4QV+yW4oNESJN1X1qlbVFBPt/0
-         vDsMf+F3UB8vDiQgVkOXWmQr0Gx/WrCypbOrig1xOxR0DhEhxHm3MYNjwmBqzIHuWZaQ
-         xBZ12Q2yzrpLvIaoDMX4jn4jWKXGYSVyIeF5QcJnzMTJ0MY4brUX8bQztl/d/tt6UsS0
-         Cteg==
-X-Gm-Message-State: AGi0PubBwUPbOVzm0BQyS+cw6gSxpEE6Q1qLG6MaaVdDU28h+hJxCbVi
-        Cpm0o5/EryGFThJM/QYWCo8P8I5gP+ay6w==
-X-Google-Smtp-Source: APiQypKHmu6pb2IVpV0u1Uuc4X5XVu8meQGR4TaY71qteOknvUfldY2eA2qlks7OFDj/XazjtchAcg==
-X-Received: by 2002:a05:6512:3135:: with SMTP id p21mr1274558lfd.36.1586485967642;
-        Thu, 09 Apr 2020 19:32:47 -0700 (PDT)
+        bh=Jl9+MFoz9FOVeQYZvGEhfQsUzeR6H5+fWjwrI15x2z4=;
+        b=YbIeg6alQIoT0HOQs21zl/a80TgndsLvLBI+DQpEup866Fy+SXBC2AP05fL7CiGJn3
+         3A5cEuwSPS6nYLJVWfOjAnCS6MgBlRMjOIjlQYFEQdeN4XFtb2sq6J4edwpAXXIAFTkA
+         WybErX7XDE4flRUD876gvbMtJ9JiumdH/v7FjIL0N15DnXWn16cvotDj1f6fYhIHEnG1
+         p28nFM+iEfMze2BXmfZLAezGkXpV9fDaRt7gDA8hlKWiv7EpcyHPaB7VFkfp/D5sISrW
+         EFBVx+e5fx4S5MH1ZxqFVuMx7/F1Fkk9iG6H+DHitcNij8bwMw2AUDD5ibJ4pIaJEK3i
+         Ikzg==
+X-Gm-Message-State: AGi0PuZQ5c+rSeTZ4B8CxMf1SBmXUd03H88C+aw8bpStoX2b1vvZLfIA
+        kZwV1wez6Ooy5PXnB8IYocIaG7SE9BT84Q==
+X-Google-Smtp-Source: APiQypJWofmM8Qlyb2FI7O0p2padX/aOtgYx9otx/2dnfLObyekNxIuKl5+r6b20D5ZTWeEQ44DyKw==
+X-Received: by 2002:a2e:b52f:: with SMTP id z15mr1642957ljm.38.1586485973083;
+        Thu, 09 Apr 2020 19:32:53 -0700 (PDT)
 Received: from localhost ([213.191.183.145])
-        by smtp.gmail.com with ESMTPSA id u7sm433361lfu.3.2020.04.09.19.32.46
+        by smtp.gmail.com with ESMTPSA id f7sm274127ljj.4.2020.04.09.19.32.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 19:32:47 -0700 (PDT)
+        Thu, 09 Apr 2020 19:32:52 -0700 (PDT)
 From:   Iskren Chernev <iskren.chernev@gmail.com>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     Daniele Debernardi <drebrez@gmail.com>,
@@ -63,9 +63,9 @@ Cc:     Daniele Debernardi <drebrez@gmail.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: [PATCH 4/6] ARM: dts: qcom: msm8974-klte: Add sdhci1 node
-Date:   Fri, 10 Apr 2020 05:32:01 +0300
-Message-Id: <20200410023203.192048-5-iskren.chernev@gmail.com>
+Subject: [PATCH 6/6] ARM: dts: qcom: msm8974-klte: Add USB node
+Date:   Fri, 10 Apr 2020 05:32:03 +0300
+Message-Id: <20200410023203.192048-7-iskren.chernev@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200410023203.192048-1-iskren.chernev@gmail.com>
 References: <20200410023203.192048-1-iskren.chernev@gmail.com>
@@ -78,59 +78,45 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Daniele Debernardi <drebrez@gmail.com>
 
-This introduces the eMMC sdhci node and its pinctrl state
+This introduces the usb node which can be used e.g. for USB_ETH
 
 Signed-off-by: Daniele Debernardi <drebrez@gmail.com>
 ---
- .../boot/dts/qcom-msm8974-samsung-klte.dts    | 32 +++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ .../boot/dts/qcom-msm8974-samsung-klte.dts    | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
 diff --git a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-index 21335999a024..de0bf6b7e732 100644
+index ad26c83fee81..691a3cf2dd96 100644
 --- a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
 +++ b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-@@ -153,6 +153,9 @@ l19 {
- 					l20 {
- 						regulator-min-microvolt = <2950000>;
- 						regulator-max-microvolt = <2950000>;
-+
-+						regulator-allow-set-load;
-+						regulator-system-load = <200000>;
- 					};
- 
- 					l21 {
-@@ -232,6 +235,35 @@ volume-up {
- 			debounce-interval = <15>;
- 		};
+@@ -264,6 +264,31 @@ sdhci@f9824900 {
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&sdhc1_pin_a>;
  	};
 +
-+	pinctrl@fd510000 {
-+		sdhc1_pin_a: sdhc1-pin-active {
-+			clk {
-+				pins = "sdc1_clk";
-+				drive-strength = <4>;
-+				bias-disable;
-+			};
-+
-+			cmd-data {
-+				pins = "sdc1_cmd", "sdc1_data";
-+				drive-strength = <4>;
-+				bias-pull-up;
-+			};
-+		};
-+	};
-+
-+	sdhci@f9824900 {
++	usb@f9a55000 {
 +		status = "ok";
 +
-+		vmmc-supply = <&pma8084_l20>;
-+		vqmmc-supply = <&pma8084_s4>;
++		phys = <&usb_hs1_phy>;
++		phy-select = <&tcsr 0xb000 0>;
++		/*extcon = <&smbb>, <&usb_id>;*/
++		/*vbus-supply = <&chg_otg>;*/
 +
-+		bus-width = <8>;
-+		non-removable;
++		hnp-disable;
++		srp-disable;
++		adp-disable;
 +
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sdhc1_pin_a>;
++		ulpi {
++			phy@a {
++				status = "ok";
++
++				v1p8-supply = <&pma8084_l6>;
++				v3p3-supply = <&pma8084_l24>;
++
++				/*extcon = <&smbb>;*/
++				qcom,init-seq = /bits/ 8 <0x1 0x64>;
++			};
++		};
 +	};
  };
  
