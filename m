@@ -2,125 +2,94 @@ Return-Path: <SRS0=Z42x=52=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58CD8C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 02:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CD5C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 03:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FD1720769
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 02:33:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzo34WeH"
+	by mail.kernel.org (Postfix) with ESMTP id 0E32D20A8B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 03:46:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586490412;
+	bh=u8YqO5KRkDMJkvpaDUQlB5lQevXHKx6UCjjbjXQemGU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1AdT8UCeYgGFIb7/ZEl8GL/sF/cJjroeO3JzqJFJ2Lk++4Ik/sgqzV/hXW1PueoiH
+	 RjlqZJnrXjsJj3rDC3sUxPuQctPBLgfnTk8q59E2MpdZ7/Z7UT+1S6DY/OaYl6mbtD
+	 VIsajD4qMX7EJgpw57btd38dxgMDseBMGFYrv1Jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgDJCdC (ORCPT
+        id S1726843AbgDJDqu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 22:33:02 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43212 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgDJCdC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 22:33:02 -0400
-Received: by mail-lj1-f196.google.com with SMTP id h25so599718lja.10;
-        Thu, 09 Apr 2020 19:32:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Jl9+MFoz9FOVeQYZvGEhfQsUzeR6H5+fWjwrI15x2z4=;
-        b=hzo34WeHzqF2MRVekRCB6qQ2to+82InUQzzrEI3aHJE38TD2HK0mkYL8XmXe5U8/Ug
-         dhkFmz32aonURvzYSQmBfDf4Y5bJgSRmK4c/7iZyejYluqqpH4j/cdkNAIVPEzkUNcEU
-         YJIXvLVax7P5GiAiNrZ8t86nFtsj3YK+PWZHSIsW6XIx+hHG0QQaG/fP+tDfiOeOD/d4
-         WeJXYjrHaWkGter4N//y0HIxIPAnlIfIB8R3jZC4kxgZx4ddyedcSUVXzBPuFem+41mw
-         i30TJGB5Bg+3URW5FqjCBBj8Tubreog0XYXPiXZoUcvH6VjSmEQwD40PZBHvtRG/JWhm
-         CjBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Jl9+MFoz9FOVeQYZvGEhfQsUzeR6H5+fWjwrI15x2z4=;
-        b=YbIeg6alQIoT0HOQs21zl/a80TgndsLvLBI+DQpEup866Fy+SXBC2AP05fL7CiGJn3
-         3A5cEuwSPS6nYLJVWfOjAnCS6MgBlRMjOIjlQYFEQdeN4XFtb2sq6J4edwpAXXIAFTkA
-         WybErX7XDE4flRUD876gvbMtJ9JiumdH/v7FjIL0N15DnXWn16cvotDj1f6fYhIHEnG1
-         p28nFM+iEfMze2BXmfZLAezGkXpV9fDaRt7gDA8hlKWiv7EpcyHPaB7VFkfp/D5sISrW
-         EFBVx+e5fx4S5MH1ZxqFVuMx7/F1Fkk9iG6H+DHitcNij8bwMw2AUDD5ibJ4pIaJEK3i
-         Ikzg==
-X-Gm-Message-State: AGi0PuZQ5c+rSeTZ4B8CxMf1SBmXUd03H88C+aw8bpStoX2b1vvZLfIA
-        kZwV1wez6Ooy5PXnB8IYocIaG7SE9BT84Q==
-X-Google-Smtp-Source: APiQypJWofmM8Qlyb2FI7O0p2padX/aOtgYx9otx/2dnfLObyekNxIuKl5+r6b20D5ZTWeEQ44DyKw==
-X-Received: by 2002:a2e:b52f:: with SMTP id z15mr1642957ljm.38.1586485973083;
-        Thu, 09 Apr 2020 19:32:53 -0700 (PDT)
-Received: from localhost ([213.191.183.145])
-        by smtp.gmail.com with ESMTPSA id f7sm274127ljj.4.2020.04.09.19.32.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 19:32:52 -0700 (PDT)
-From:   Iskren Chernev <iskren.chernev@gmail.com>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Daniele Debernardi <drebrez@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: [PATCH 6/6] ARM: dts: qcom: msm8974-klte: Add USB node
-Date:   Fri, 10 Apr 2020 05:32:03 +0300
-Message-Id: <20200410023203.192048-7-iskren.chernev@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200410023203.192048-1-iskren.chernev@gmail.com>
-References: <20200410023203.192048-1-iskren.chernev@gmail.com>
+        Thu, 9 Apr 2020 23:46:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726821AbgDJDqt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Apr 2020 23:46:49 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CED320BED;
+        Fri, 10 Apr 2020 03:46:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586490409;
+        bh=u8YqO5KRkDMJkvpaDUQlB5lQevXHKx6UCjjbjXQemGU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FyehbGI3uKjc/GZqo3fKv7NKyuTxGogTcBsEaUy737dVauoUXEbgJKYQlQREV76dY
+         DieQNIysfQ3M/iI/FTUHFWwlRULY0rOlYo3PwI+OMG6t7CBzkbDX6vkZYArM0jkoXl
+         zJE5lVgAYyBOiGla1b0Pxr/9Vz9jsx+Q3f78jtG8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Mohammad Rasim <mohammad.rasim96@gmail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 11/68] media: arm64: dts: amlogic: add rc-videostrong-kii-pro keymap
+Date:   Thu,  9 Apr 2020 23:45:36 -0400
+Message-Id: <20200410034634.7731-11-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200410034634.7731-1-sashal@kernel.org>
+References: <20200410034634.7731-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Daniele Debernardi <drebrez@gmail.com>
+From: Mohammad Rasim <mohammad.rasim96@gmail.com>
 
-This introduces the usb node which can be used e.g. for USB_ETH
+[ Upstream commit 806d06161af045dba29f3c7747550c93b2ea3ca9 ]
 
-Signed-off-by: Daniele Debernardi <drebrez@gmail.com>
+videostrong kii pro comes with a nec rc, add the keymap to the dts
+
+Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../boot/dts/qcom-msm8974-samsung-klte.dts    | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-index ad26c83fee81..691a3cf2dd96 100644
---- a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-@@ -264,6 +264,31 @@ sdhci@f9824900 {
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&sdhc1_pin_a>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
+index 2f1f829450a29..6c9cc45fb417e 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
+@@ -76,3 +76,7 @@
+ 		};
  	};
-+
-+	usb@f9a55000 {
-+		status = "ok";
-+
-+		phys = <&usb_hs1_phy>;
-+		phy-select = <&tcsr 0xb000 0>;
-+		/*extcon = <&smbb>, <&usb_id>;*/
-+		/*vbus-supply = <&chg_otg>;*/
-+
-+		hnp-disable;
-+		srp-disable;
-+		adp-disable;
-+
-+		ulpi {
-+			phy@a {
-+				status = "ok";
-+
-+				v1p8-supply = <&pma8084_l6>;
-+				v3p3-supply = <&pma8084_l24>;
-+
-+				/*extcon = <&smbb>;*/
-+				qcom,init-seq = /bits/ 8 <0x1 0x64>;
-+			};
-+		};
-+	};
  };
- 
- &spmi_bus {
++
++&ir {
++	linux,rc-map-name = "rc-videostrong-kii-pro";
++};
 -- 
-2.26.0
+2.20.1
 
