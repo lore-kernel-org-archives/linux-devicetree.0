@@ -2,116 +2,97 @@ Return-Path: <SRS0=Z42x=52=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9862EC2D0EC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 17:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3096FC2BB55
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 18:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71711207FF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 17:52:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586541154;
-	bh=NSx+Q67i//I/6xT9Q3B5BFbOJfQ/XJkYOLB7WHdRK0c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uJM+ETdFJFgcFUaM89A3JrGmc2LNIdBKgVBIFzYl4n+4/gVu4ePWmVhARvuYDWoEx
-	 36E2R6ubDX9igWsiwxF0mWGNEt6U8YTtFYASOFl0rvqq8p1OQLNcJA+0s5SlUqhCLS
-	 Zewkc/uwHFRvKt/VGAR0P0mFYjcFlATcjG91y0lE=
+	by mail.kernel.org (Postfix) with ESMTP id 0EB5B2082D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 18:29:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SwMy/Qxr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgDJRwd (ORCPT
+        id S1726646AbgDJS22 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Apr 2020 13:52:33 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39044 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgDJRwd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Apr 2020 13:52:33 -0400
-Received: by mail-ot1-f66.google.com with SMTP id x11so2549647otp.6;
-        Fri, 10 Apr 2020 10:52:33 -0700 (PDT)
+        Fri, 10 Apr 2020 14:28:28 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35690 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgDJS22 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Apr 2020 14:28:28 -0400
+Received: by mail-lj1-f193.google.com with SMTP id k21so2824125ljh.2;
+        Fri, 10 Apr 2020 11:28:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=q+S9FQcm44gCkUcVdVprrI4SiEYMw4o+DCvVDXTf1yI=;
+        b=SwMy/QxroluHVUM/6FKQ9+IjMym0OdlVEJKFzpjegXVVqhuLuWEfr20uoodqRoOjw6
+         uq+cxx0rfMJPB6s2le8gCs8JBuibGGUBV+UL3HQzGhtDGpSXSoijrdjL9ZNPMPhHwd5R
+         YdUk53GHoolSl/2lIcXaByAF/ny4tC1WEYi3ppiPSOY9+g8nVM8+4kpvTQgvHoRYwaK0
+         uBrSLTeQFZw+9gp9cQAPvUIvnnBeQl4YfWTF13D2e8h0N8KzEzCuTZZEzej3/KVmfvfd
+         LEBwQRNlNzYStJK76cU/05M/P32BTPi90t2JfffuZzQ5nT407MJghhQu1deDjYOYKjLc
+         mZ4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Lrdln4dBvVFJR91vr9hlZjSH31XigTv0FjlsPXSoRUo=;
-        b=LYUmBAxqOn/A6GVstNklA+s8sLWlybiYvixCZrI3SftnppuP847ZIxc0wIlqfNBEFc
-         ynbc4VvHP0SYnPRoDFJoKJtPgscu5vGIL1ITksPSVhPWN1Hvab/jX6ud86g+ANQHzi7D
-         zsMUKs0boR3ji4VugPOF3kiRzMS61Q1a7VfQJ5ILBL6fYUHWVXq4gKjSzlUqHPNSmtPt
-         Job0cqfOuP96dm1rTxekPd8Wp3Sldl1Qpe9Uy7bcB8UonzEhn0EYQ8uGG7YgEybG8l6z
-         M1kPmj02zZBeuWgFSb1hDdsnD1IN3T0vamvFztNOI4WTmwF77Q5h8pyeHjFETZRT0X/t
-         almQ==
-X-Gm-Message-State: AGi0PuYuKMptGaEAfJ4asyyc71Ax20sOTV6LGKn8hZWJc5fB4hA7Kt8x
-        Rp7kRGxOAkKi2xUxCbS+BA==
-X-Google-Smtp-Source: APiQypIJzpPqxAkQRlPF/5U3xRWWYMkPbwF7Wx4paxMhG5vqpFOLez8zWuPdHwN38LwnKLQ3TbUQkw==
-X-Received: by 2002:a9d:77cf:: with SMTP id w15mr5195937otl.158.1586541152824;
-        Fri, 10 Apr 2020 10:52:32 -0700 (PDT)
-Received: from rob-hp-laptop (ip-173-126-55-226.ftwttx.spcsdns.net. [173.126.55.226])
-        by smtp.gmail.com with ESMTPSA id 26sm1698146oot.25.2020.04.10.10.52.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 10:52:32 -0700 (PDT)
-Received: (nullmailer pid 1070 invoked by uid 1000);
-        Fri, 10 Apr 2020 17:52:30 -0000
-Date:   Fri, 10 Apr 2020 12:52:30 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     heiko@sntech.de, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v3 2/2] ARM: dts: rockchip: fix yaml warnings for
- rk3288-pmu-sram compatible nodes
-Message-ID: <20200410175230.GA28412@bogus>
-References: <20200331121352.3825-1-jbx6244@gmail.com>
- <20200331121352.3825-2-jbx6244@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=q+S9FQcm44gCkUcVdVprrI4SiEYMw4o+DCvVDXTf1yI=;
+        b=bWBfBOvaIn4GxzEay+cYFhUfob7/34qpf5BveRoJBZrxlxkcvEA5YssyLWyD1wcohk
+         pUqXPqs1TNQvQrFGSSAI+pjH7j2bozI415pUnh8Bz9cjetx0Ihk3LwYBPeBAidTqIzFv
+         /TY4y5Qep4tEcrxi8ot4cHD8URoophn9fotO/ESUq3JgdckEAqwkWmTMRp1YVO6mFr8q
+         eIpODbgSfCsjUDTiqDwRaPKgHWV72kCeMUKs7DJ6HEnWMMasLe9wpdFEq7Sx/d6ShL/j
+         25gAisaJgsL0Z27y2+sjJJFIv4Gd7bxmUzuVzl+WddO/8rEOMnMR8o0oYDg2SeXkIrX9
+         bpug==
+X-Gm-Message-State: AGi0Pub9wys7lunZeI65Xab6ffJs4NhrZM5ZlaQZKHuGEsJL8LUsvyq7
+        ehId14RIUBGPl7r4LBUjMimTxg+R
+X-Google-Smtp-Source: APiQypJDMRwiWxqCQIVoO1DjqAKbxN9a3USsG+5h8JhkdiiSyqW5X2ClXQ9wa/FUBYCazlrhcZe10w==
+X-Received: by 2002:a2e:904b:: with SMTP id n11mr3658147ljg.171.1586543304167;
+        Fri, 10 Apr 2020 11:28:24 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id u13sm1487881lji.27.2020.04.10.11.28.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Apr 2020 11:28:23 -0700 (PDT)
+Subject: Re: [PATCH v2 05/22] dt-bindings: host1x: Document new interconnect
+ properties
+To:     Rob Herring <robh@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+References: <20200330010904.27643-1-digetx@gmail.com>
+ <20200330010904.27643-6-digetx@gmail.com> <20200410170929.GA1498@bogus>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <98d28983-0c50-1155-adc0-8ddbd15cc701@gmail.com>
+Date:   Fri, 10 Apr 2020 21:28:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331121352.3825-2-jbx6244@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200410170929.GA1498@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 02:13:52PM +0200, Johan Jonker wrote:
-> A test with the command below gives for example these warnings:
+10.04.2020 20:09, Rob Herring пишет:
+...
+>> +  Optional properties:
+>> +  - interconnects: Must contain entry for the MPE memory clients.
+>> +  - interconnect-names: Must include name of the interconnect path for each
+>> +    interconnect entry. Consult TRM documentation for information about
+>> +    available memory clients.
 > 
-> arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff720000:
-> '#address-cells' is a required property
-> arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff720000:
-> '#size-cells' is a required property
-> arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff720000:
-> 'ranges' is a required property
-> 
-> Fix this error by adding '#address-cells', '#size-cells' and
-> 'ranges' to the 'rockchip,rk3288-pmu-sram' compatible node
-> in rk3288.dtsi.
-> 
-> make ARCH=arm dtbs_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/sram/sram.yaml
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
-> Not tested with hardware.
-> 
-> Changed v2:
->   Fix dtsi.
-> ---
->  arch/arm/boot/dts/rk3288.dtsi | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index 9c8741bb1..f102fec69 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -730,6 +730,9 @@
->  	pmu_sram: sram@ff720000 {
->  		compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
->  		reg = <0x0 0xff720000 0x0 0x1000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0 0x0 0xff720000 0x1000>;
+> Is the TRM public? Perhaps refer to the header.
 
-I think we should make these optional instead if there's no child nodes. 
-And if there are child nodes, then these will be required.
+Yes, you can download it from NVIDIA website (after registration).
 
-Rob
+I'll add "Consult Memory Controller section of TRM..." in the next version.
