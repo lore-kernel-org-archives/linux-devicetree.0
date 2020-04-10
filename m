@@ -2,331 +2,94 @@ Return-Path: <SRS0=Z42x=52=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6F5C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 11:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B606C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 12:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99B2220753
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 11:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6EF2208E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 12:30:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Y1L9e7i/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhdOUThD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbgDJLXz (ORCPT
+        id S1726049AbgDJMad (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Apr 2020 07:23:55 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:40362 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgDJLXz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Apr 2020 07:23:55 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9976A329;
-        Fri, 10 Apr 2020 13:23:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1586517832;
-        bh=aeaAolB7sW6j82qCRABmz/gvzp/EpmroY6OY5hT5q4c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y1L9e7i/nMOh9GfBiwd0G2puGhZPaeqAGgg7WvNPWoOzGW/uHGsYUhx2Wt0T6bMSz
-         XuH6aDkMohnx/Fb4aLYqnKKSHh62+WDx7AKtJ7qM5mo/HGTylYJr0ghGyvAyB9ZVbU
-         ANq/NIIG/t8DUx2+uDr75UQJUJZBieMU+BsEprys=
-Date:   Fri, 10 Apr 2020 14:23:42 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Fri, 10 Apr 2020 08:30:33 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:47047 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbgDJMad (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Apr 2020 08:30:33 -0400
+Received: by mail-lf1-f66.google.com with SMTP id m19so1226324lfq.13;
+        Fri, 10 Apr 2020 05:30:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/wxc7mReIW0I/9bGXTr0ixTFqsRHmu5x96+RkLeeN6c=;
+        b=UhdOUThDXUsEVxm+BcFPoLrZbBISCqLbMnOIO/+ksl/iwGQHXK3T1IW0amcnMn/D7o
+         b7WR7IVdaR1vh0IEOCs7T3aESfBr8WerWgHuOqOfwflaChJolVe2Q+1zMXQW3mwqvbkN
+         hpa9JCs3OxbAtaB9qBquyWPyGIapVOVmhE5VzYsmd21eAqaHIXeZMlZ06TfMD/CMsKU5
+         brdw62stUhFRn2sTkPcSf76O5ane6G7uKY+5oDpe/vwLH0R6CITKNsFX0iJL2PTjk6b5
+         GZtH4lbj1RCvXIdLUmj70Y55HAF2B1rI6d4fJN459gL1mfBMRaXAq0AhE09Ux8rxpvBx
+         VFPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/wxc7mReIW0I/9bGXTr0ixTFqsRHmu5x96+RkLeeN6c=;
+        b=Y32xGH1IuMy/QAhLQGuQ9BKJsyuuumVoWcyAuuF3rr0o2xIIUczZSP1bilF9l/A2IY
+         PjFmRn2zAV41mTblR29YLuLLJQdO6ky4iU7/zEq7r9/ctVJznRZqWuzoe9pxIugCbbZU
+         Utv8ObYrsc+iJIukj3DJ5JAIKEZNNUr7QQpbx0eTUieldQQho/nUcrcTCZs1uTYG1QtE
+         8gyy93DOEZDvTTgl1Svw6MjnIbptOwdmdaZ/TdMvxZi4bqgSM4wnS4b+TDvz9sSEif6B
+         y37OeOoCagKTRhcoaEZfJEdqfGICASIsJlbW14oEE6xm7CTnrP/hn3U4fupOwuBTKtA2
+         MFVg==
+X-Gm-Message-State: AGi0PuaR9jU4mbrhrjcMd2pnETxpJcsEOvEHIFosbi4tpuibWc4Kw++y
+        Lva1+3tDeq5jN9ieSqRjUN3IULzEeVX8CxwIDh8IjKGp
+X-Google-Smtp-Source: APiQypKbT1f0FIBVJXC+bXz14yNA1I+1UT6w/M7bmkAigetfHQuvslFLulfIjNzdwy6W3aAIolbWZMQR+WwhVNs5wLc=
+X-Received: by 2002:ac2:57cc:: with SMTP id k12mr2456508lfo.69.1586521831805;
+ Fri, 10 Apr 2020 05:30:31 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200410004738.19668-1-ansuelsmth@gmail.com> <20200410004738.19668-3-ansuelsmth@gmail.com>
+ <CAOMZO5AKYO3xLsp4k6_fJCV9qW=rAtRKEGWnxksixU794dOw8A@mail.gmail.com> <003401d60f28$3d045190$b70cf4b0$@gmail.com>
+In-Reply-To: <003401d60f28$3d045190$b70cf4b0$@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Fri, 10 Apr 2020 09:31:00 -0300
+Message-ID: <CAOMZO5B+rEoQD_ujt9cx9VXO-i2oqfW2UN2cVeB5hZB3aVpGeQ@mail.gmail.com>
+Subject: Re: [PATCH 2/4] drivers: pci: dwc: pci-imx6: update binding to
+ generic name
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v11 1/2] dt-bindings: display/bridge: Add binding for NWL
- mipi dsi host controller
-Message-ID: <20200410112342.GB4751@pendragon.ideasonboard.com>
-References: <cover.1586427783.git.agx@sigxcpu.org>
- <147ffc1e4dee3a623e5dca25d84565d386a34112.1586427783.git.agx@sigxcpu.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <147ffc1e4dee3a623e5dca25d84565d386a34112.1586427783.git.agx@sigxcpu.org>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-pci@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Guido,
+Hi Ansuel,
 
-Thank you for the patch.
+On Fri, Apr 10, 2020 at 8:07 AM <ansuelsmth@gmail.com> wrote:
 
-On Thu, Apr 09, 2020 at 12:42:01PM +0200, Guido Günther wrote:
-> The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
-> 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> Tested-by: Robert Chiras <robert.chiras@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
-> ---
->  .../bindings/display/bridge/nwl-dsi.yaml      | 226 ++++++++++++++++++
->  1 file changed, 226 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> new file mode 100644
-> index 000000000000..8aff2d68fc33
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> @@ -0,0 +1,226 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/nwl-dsi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Northwest Logic MIPI-DSI controller on i.MX SoCs
-> +
-> +maintainers:
-> +  - Guido Gúnther <agx@sigxcpu.org>
-> +  - Robert Chiras <robert.chiras@nxp.com>
-> +
-> +description: |
-> +  NWL MIPI-DSI host controller found on i.MX8 platforms. This is a dsi bridge for
-> +  the SOCs NWL MIPI-DSI host controller.
-> +
-> +properties:
-> +  compatible:
-> +    const: fsl,imx8mq-nwl-dsi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +  clocks:
-> +    items:
-> +      - description: DSI core clock
-> +      - description: RX_ESC clock (used in escape mode)
-> +      - description: TX_ESC clock (used in escape mode)
-> +      - description: PHY_REF clock
-> +      - description: LCDIF clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: core
-> +      - const: rx_esc
-> +      - const: tx_esc
-> +      - const: phy_ref
-> +      - const: lcdif
-> +
-> +  mux-controls:
-> +    description:
-> +      mux controller node to use for operating the input mux
-> +
-> +  phys:
-> +    maxItems: 1
-> +    description:
-> +      A phandle to the phy module representing the DPHY
-> +
-> +  phy-names:
-> +    items:
-> +      - const: dphy
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    items:
-> +      - description: dsi byte reset line
-> +      - description: dsi dpi reset line
-> +      - description: dsi esc reset line
-> +      - description: dsi pclk reset line
-> +
-> +  reset-names:
-> +    items:
-> +      - const: byte
-> +      - const: dpi
-> +      - const: esc
-> +      - const: pclk
-> +
-> +  ports:
-> +    type: object
-> +    description:
-> +      A node containing DSI input & output port nodes with endpoint
-> +      definitions as documented in
-> +      Documentation/devicetree/bindings/graph.txt.
-> +    properties:
-> +      port@0:
-> +        type: object
-> +        description:
-> +          Input port node to receive pixel data from the
-> +          display controller. Exactly one endpoint must be
-> +          specified.
-> +        properties:
-> +          '#address-cells':
-> +            const: 1
-> +
-> +          '#size-cells':
-> +            const: 0
-> +
-> +          endpoint@0:
-> +            description: sub-node describing the input from LCDIF
-> +            type: object
-> +
-> +          endpoint@1:
-> +            description: sub-node describing the input from DCSS
-> +            type: object
+> so no chance of changing this?
 
-This models the two inputs to the IP core, that are connected to a mux
-internally, controlled through mux-controls, right ? Why is a single
-endpoint supported then, if there are two connections at the hardware
-level, and why is this using endpoints instead of ports as there are
-really two input ports ?
+Reading the commit log I don't see any explanation as to why you need
+to change the current bindings.
 
-Apart from that the bindings look ok to me.
-
-> +
-> +          reg:
-> +            const: 0
-> +
-> +        required:
-> +          - '#address-cells'
-> +          - '#size-cells'
-> +          - reg
-> +
-> +        oneOf:
-> +          - required:
-> +              - endpoint@0
-> +          - required:
-> +              - endpoint@1
-> +
-> +        additionalProperties: false
-> +
-> +      port@1:
-> +        type: object
-> +        description:
-> +          DSI output port node to the panel or the next bridge
-> +          in the chain
-> +
-> +      '#address-cells':
-> +        const: 1
-> +
-> +      '#size-cells':
-> +        const: 0
-> +
-> +    required:
-> +      - '#address-cells'
-> +      - '#size-cells'
-> +      - port@0
-> +      - port@1
-> +
-> +    additionalProperties: false
-> +
-> +patternProperties:
-> +  "^panel@[0-9]+$":
-> +    type: object
-> +
-> +required:
-> +  - '#address-cells'
-> +  - '#size-cells'
-> +  - clock-names
-> +  - clocks
-> +  - compatible
-> +  - interrupts
-> +  - mux-controls
-> +  - phy-names
-> +  - phys
-> +  - ports
-> +  - reg
-> +  - reset-names
-> +  - resets
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> + - |
-> +
-> +   #include <dt-bindings/clock/imx8mq-clock.h>
-> +   #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +   #include <dt-bindings/reset/imx8mq-reset.h>
-> +
-> +   mipi_dsi: mipi_dsi@30a00000 {
-> +              #address-cells = <1>;
-> +              #size-cells = <0>;
-> +              compatible = "fsl,imx8mq-nwl-dsi";
-> +              reg = <0x30A00000 0x300>;
-> +              clocks = <&clk IMX8MQ_CLK_DSI_CORE>,
-> +                       <&clk IMX8MQ_CLK_DSI_AHB>,
-> +                       <&clk IMX8MQ_CLK_DSI_IPG_DIV>,
-> +                       <&clk IMX8MQ_CLK_DSI_PHY_REF>,
-> +                       <&clk IMX8MQ_CLK_LCDIF_PIXEL>;
-> +              clock-names = "core", "rx_esc", "tx_esc", "phy_ref", "lcdif";
-> +              interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> +              mux-controls = <&mux 0>;
-> +              power-domains = <&pgc_mipi>;
-> +              resets = <&src IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N>,
-> +                       <&src IMX8MQ_RESET_MIPI_DSI_DPI_RESET_N>,
-> +                       <&src IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N>,
-> +                       <&src IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N>;
-> +              reset-names = "byte", "dpi", "esc", "pclk";
-> +              phys = <&dphy>;
-> +              phy-names = "dphy";
-> +
-> +              panel@0 {
-> +                      #address-cells = <1>;
-> +                      #size-cells = <0>;
-> +                      compatible = "rocktech,jh057n00900";
-> +                      reg = <0>;
-> +                      port@0 {
-> +                           reg = <0>;
-> +                           panel_in: endpoint {
-> +                                     remote-endpoint = <&mipi_dsi_out>;
-> +                           };
-> +                      };
-> +              };
-> +
-> +              ports {
-> +                    #address-cells = <1>;
-> +                    #size-cells = <0>;
-> +
-> +                    port@0 {
-> +                           #size-cells = <0>;
-> +                           #address-cells = <1>;
-> +                           reg = <0>;
-> +                           mipi_dsi_in: endpoint@0 {
-> +                                        reg = <0>;
-> +                                        remote-endpoint = <&lcdif_mipi_dsi>;
-> +                           };
-> +                    };
-> +                    port@1 {
-> +                           reg = <1>;
-> +                           mipi_dsi_out: endpoint {
-> +                                         remote-endpoint = <&panel_in>;
-> +                           };
-> +                    };
-> +              };
-> +      };
-
--- 
-Regards,
-
-Laurent Pinchart
+What is the motivation for doing this? Is this really worth it?
