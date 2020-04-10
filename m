@@ -2,70 +2,63 @@ Return-Path: <SRS0=Z42x=52=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C43C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 16:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB58C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 16:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0F16212CC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 16:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74BCF20769
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 16:43:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="vWMNP9Dd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="i3fRgdHS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgDJQ1w (ORCPT
+        id S1726177AbgDJQn4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Apr 2020 12:27:52 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:8228 "EHLO
+        Fri, 10 Apr 2020 12:43:56 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:9933 "EHLO
         esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbgDJQ1v (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Apr 2020 12:27:51 -0400
+        with ESMTP id S1726181AbgDJQn4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Apr 2020 12:43:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1586536071; x=1618072071;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=Eo6p7pz7SWCokkfrt5eRPXSs0G7FQfJNhTJCV7p33Xs=;
-  b=vWMNP9Ddq56yCpl3iP08c6qMbrwpY+FR/l/sOcMzJS62+xQyyzv3GQxf
-   cGQmAF7tYLvjEm4H6tG/tJea8B2laadKcsGMlRx/hSapdlKzESCA1qGMA
-   CUBH7RND0P0uG6oXxtFGkb5RzV1AaTdI79QtBIvc4Up4z5eHThJ56NN5y
-   h3asfbpsKV5GShefpaDnF55YuQXemkrrEsnOZ6q/VWpUZYwudL9ztcEiI
-   0IpEWZORYmuH/t8iN5ylmMkiFQ++LkKgH+zxvgHTk6lnMeJ86ulJFaNkj
-   9ElOQtzhJGQXGwmzwVb0anxbA5tPLRauegm40UqyyYFTbqelN/5WaIcZd
-   Q==;
-IronPort-SDR: 6AjG0RliC4W9S/dyMTnwaFK7Z5jnQrNDSajrnRVi9WQ8FDMQwgDLEfEQyQfYdt/XDsiKYVDPX2
- PCJ+pboexCDMyPhDPUk+mzAWX/KPZgyYzRBRRJwRiQM0dziGw9l8Y5BRXWUfkMTqf9FIXsGHNJ
- A+VmcUd5+RTxtIK21lubyhRLqL4HkweQmOtAv+pA4ojIWulof504n7U9yuerGxH+Z6+xJfiXzA
- P42OQnNy2pPHlp4j/yO3rqGBZBMHt7gLBUAOmgeBSu1nrD5optfq6bsrhxk5plyq3d84ibci03
- 89E=
+  t=1586537036; x=1618073036;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=IZtgr281NErrC4ObsXh3MQXKvxHUfMzv2fvTAErzi5s=;
+  b=i3fRgdHSLlxLX8yvx8K1kCDJS3Izh5vJc/eZnR4UjlD/zD4DO8fkz0UJ
+   a4rEeoDZRvKyAoXMP9f3X8l3OPtW7MSFSGLO6ysMeZrWgG13sVdPMjDE6
+   z1Sg4ZC4cVrX5Rh1nKoTEfsuic5X7m0BLgXKdFdtULGelqCDS9nt++14l
+   XupSn5R10CFe2IWPPR+aDOW7kuwPS3jWHQ+hYMklvu7LHduubdhercA6G
+   +7rduybxGppHTUr5pYZLbaPruQcxe3nid7acMQ1dsNaBUT2aaGGjifJ4y
+   fauZsC9HTf1opLmjPoDyFf51NqC/TKo5GwbRMsOTtgQLO84fCCQKv1Xqb
+   w==;
+IronPort-SDR: PXJOqZSFecMhn6NVignQpMzVGcP3WR0oAaJwMXHXQjJZXUM0iCdbt094IHyDB21H6SVQdf0Uo7
+ 2ALtn/JsADLBdmOwTP1XTMIbqbjdpHib3ranqxO0PuRIMTaPtV6Od8G2JKiyzakdJOjbWpI2mU
+ QVVQEVu7tYcbGJmsYU7WlA8aoLsV9H8/hYNZMBLfbEnTlXHmyaOdj5FPM4EkfGD05IgEevYSKa
+ eYYcAg56gZdXQKFGTaBXAtqOWzSLEdpSW1s6iBd4yhJHxqfmsv6JWmedSy+SF1iizx/oS/WRgT
+ Dwg=
 X-IronPort-AV: E=Sophos;i="5.72,367,1580799600"; 
-   d="scan'208";a="75498407"
+   d="scan'208";a="75501639"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Apr 2020 09:27:51 -0700
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Apr 2020 09:43:50 -0700
 Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 10 Apr 2020 09:27:51 -0700
-Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
+ 15.1.1713.5; Fri, 10 Apr 2020 09:43:50 -0700
+Received: from cristi-P53.amer.actel.com (10.10.115.15) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 10 Apr 2020 09:27:42 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <nicolas.ferre@microchip.com>, <ludovic.desroches@microchip.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>, <maz@kernel.org>
-CC:     <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH 5/5] rtc: at91sam9: add microchip,sam9x60-rtt
-Date:   Fri, 10 Apr 2020 19:26:59 +0300
-Message-ID: <1586536019-12348-6-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586536019-12348-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1586536019-12348-1-git-send-email-claudiu.beznea@microchip.com>
+ 15.1.1713.5 via Frontend Transport; Fri, 10 Apr 2020 09:43:43 -0700
+From:   <cristian.birsan@microchip.com>
+To:     <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <ludovic.desroches@microchip.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Cristian Birsan <cristian.birsan@microchip.com>
+Subject: [PATCH 0/2] ARM: at91: Add initial support for SAMA5D2-ICP
+Date:   Fri, 10 Apr 2020 19:43:18 +0300
+Message-ID: <20200410164320.7658-1-cristian.birsan@microchip.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
@@ -73,26 +66,23 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add microchip,sam9x60-rtt to compatible list.
+From: Cristian Birsan <cristian.birsan@microchip.com>
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch series adds initial support for SAMA5D2 Industrial
+Communication Platform.
 
-diff --git a/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt b/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
-index 6ae79d1843f3..b2f913ff6c69 100644
---- a/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
-+++ b/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
-@@ -1,7 +1,7 @@
- Atmel AT91SAM9260 Real Time Timer
- 
- Required properties:
--- compatible: should be: "atmel,at91sam9260-rtt"
-+- compatible: should be: "atmel,at91sam9260-rtt" or "microchip,sam9x60-rtt"
- - reg: should encode the memory region of the RTT controller
- - interrupts: rtt alarm/event interrupt
- - clocks: should contain the 32 KHz slow clk that will drive the RTT block.
+Codrin Ciubotariu (1):
+  dt-bindings: ARM: Document SAMA5D2-ICP
+
+Cristian Birsan (1):
+  ARM: dts: at91: sama5d2-icp: add SAMA5D2-ICP
+
+ .../devicetree/bindings/arm/atmel-at91.yaml   |   7 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/at91-sama5d2_icp.dts        | 797 ++++++++++++++++++
+ 3 files changed, 805 insertions(+)
+ create mode 100644 arch/arm/boot/dts/at91-sama5d2_icp.dts
+
 -- 
-2.7.4
+2.17.1
 
