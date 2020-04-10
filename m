@@ -2,149 +2,124 @@ Return-Path: <SRS0=Z42x=52=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B03C2D0EC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 18:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF24CC2D0EC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 19:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 294E920732
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 18:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B22B20732
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 19:02:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RAMPMs2d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RSyEvYJv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgDJS7N (ORCPT
+        id S1726652AbgDJTCj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Apr 2020 14:59:13 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1886 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbgDJS7M (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Apr 2020 14:59:12 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e90c1f30000>; Fri, 10 Apr 2020 11:58:59 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 10 Apr 2020 11:59:12 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 10 Apr 2020 11:59:12 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Apr
- 2020 18:59:12 +0000
-Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Apr
- 2020 18:59:10 +0000
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <9e317f65-8a02-3b15-cfec-8e0d8374130e@gmail.com>
- <97b35910-4c93-123a-43a0-eb14476ed0f3@nvidia.com>
- <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
- <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
- <0c425505-347f-7418-af7e-d121fe0d06dc@nvidia.com>
- <db7c7051-5674-cdb9-0aa4-ee94125b3024@gmail.com>
- <1a31cd60-739f-0660-1c45-31487d2f2128@nvidia.com>
- <603084a5-249a-4fe2-3646-e9335ef9ab43@nvidia.com>
- <7895b9c6-f27d-8939-73d7-67d785e1a8b7@nvidia.com>
- <ea60b489-990e-4b15-e215-d93381a1371e@nvidia.com>
- <b2405c2a-73c0-ad69-ccea-0388caf8045c@gmail.com>
- <15d8b525-67b5-b437-f7fd-89f80cd0d9f6@nvidia.com>
- <a638bb8e-bb50-7aa5-05a0-8de1c6207ba7@nvidia.com>
- <ced73258-6f4b-e970-4ca5-ecdf1808a4c3@nvidia.com>
- <ad646fde-2eed-eeeb-4d85-ec36d6613eb1@nvidia.com>
- <7288cacd-badc-cb01-1f4c-286dd024ca10@gmail.com>
- <77c88717-618f-b366-2b6a-f8b4abaa66cc@nvidia.com>
- <00708f34-cf45-e248-c6b0-c3d2286671ca@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <ab010164-e8ea-89e9-a7e9-d7213841fa90@nvidia.com>
-Date:   Fri, 10 Apr 2020 11:59:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 10 Apr 2020 15:02:39 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38770 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726646AbgDJTCj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Apr 2020 15:02:39 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v16so2894056ljg.5;
+        Fri, 10 Apr 2020 12:02:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PYKcTVIV4hyvh7eYr2ZVXran4rltE2Q1T3gTm8AMtDs=;
+        b=RSyEvYJvOqY0KhhjOQhe7BPWwgzk38OSAtjb4e86Zn6ANKrVOq2V4auUZJvD4Q3y2x
+         QkeWukpU82Xz48weMvWTAtLlRh4hhxR9naz+TXzRyH6STBreqv1nqvcUnvySEo5XESR3
+         hmTcNtzVuniuGue7H4AtHOuql4Hd8hY9zGUdiAcuMVyC/9EjDdNNgkyuqelJACt2zBjt
+         pRXqK/sRVqNfhmgYiC0KWBLwQ5606XyFwqBin/lduMQ0YdrvIGVwjEp0G2mwjbRyeG2Q
+         NjXDK951Y8D1tMy0aCFif/paZrqO9PrIk6RYkezrRnz4bTqeuQggGjrF0yiU/PddrrmP
+         Yu5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PYKcTVIV4hyvh7eYr2ZVXran4rltE2Q1T3gTm8AMtDs=;
+        b=Vs0yBr0gSW7q6gwYsI+9ZGzjeXcj1HURO/8ks3GPvhpv1Ocyq5fXbsxaUZRfkuTWeA
+         IdmXK5mIm/KJAF3k9a7whPCch0nx70P9tPnwTo79a0zi/e4P7ztYGEM7kTxnWza9fgvp
+         tH+1ZcwmQ/Inzq5ODrr0q4/vmsySvsD2VX8vXXzYIx4hr64SdEXS8dTij8j/d8vdMxAF
+         +qKYB8XJdCwtOuy8shweU70jrC2Rd39v+28xbQZAzNrt5qxcUPo2P3cwPVtni9vy2IIH
+         2MoES9bzkCHsaZ4v5wAR/Ow3Y+7UtweW/GPbyUnYR8NcoO/XX6/+ldbQ5yVMil/oXLlU
+         xfOw==
+X-Gm-Message-State: AGi0PuaDsz0eJIb9iov/mqbHd8K4PUV7eRTkLTRMdEVF40p1VyYhK7jZ
+        FplGv72GuwPxsx1hmgJgaGO2gmfE
+X-Google-Smtp-Source: APiQypJ7yEEZbmoRR3GUh5umTAf4/y8qh40+fhTFXAvoCq/oM8h7IMbGYuCADkYMUfcoKj0dLKvlTQ==
+X-Received: by 2002:a2e:9605:: with SMTP id v5mr3691202ljh.258.1586545357403;
+        Fri, 10 Apr 2020 12:02:37 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id k11sm2132420ljj.36.2020.04.10.12.02.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Apr 2020 12:02:36 -0700 (PDT)
+Subject: Re: [PATCH 4/9] dt-bindings: power: supply: Add device-tree binding
+ for Summit SMB3xx
+To:     Rob Herring <robh@kernel.org>, David Heidelberg <david@ixit.cz>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Jonghwa Lee <jonghwa3.lee@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Myungjoo Ham <myungjoo.ham@samsung.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        mika.westerberg@linux.intel.com, ramakrishna.pallala@intel.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20200329161552.215075-1-david@ixit.cz>
+ <20200329162128.218584-5-david@ixit.cz> <20200410164905.GA719@bogus>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <8c4ab1ce-1947-ab38-3f8c-9055406428e4@gmail.com>
+Date:   Fri, 10 Apr 2020 22:02:35 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <00708f34-cf45-e248-c6b0-c3d2286671ca@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200410164905.GA719@bogus>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586545139; bh=ZBW/PUHYOdwTpJyjsheKidgPJTMhxh/TzCO8TSSiZaA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=RAMPMs2dSQ3C9rlqNgf5QwxdldGUg2vgtt0b6tWvWms2EZWw1T8HxAPd9zbUND9D0
-         ozfTpaOQLJUY9v6l3hdIcdz09Fj9gFnUyJi64iz5c9RC1Du/8oLCzdBUAzVZ+AgQnl
-         KDE8JGetO1D4czpdTvUiu6f4BEIfh1PqqvfDsdVOrusmaI8R2JJ0/rPvSG+5P7aPNj
-         KxxMYkzOZgNaTT86APbzsQ0no8h4mSISzmykM0Q8aTnKoHhNG3JDVlFe0hE7A1Sy+p
-         FylfWXg7hcrlNpA+tWYjlefekzhIEFrQHQXMozcM4pUFwaM3ZTT3kVBXLMl8kLh3bI
-         FY4TvYl0nLxEw==
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+10.04.2020 19:49, Rob Herring пишет:
+...
+>> +  summit,max-chg-curr:
+>> +    description: Maximum current for charging (in uA)
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +
+>> +  summit,max-chg-volt:
+>> +    description: Maximum voltage for charging (in uV)
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +    minimum: 3500000
+>> +    maximum: 4500000
+>> +
+>> +  summit,pre-chg-curr:
+>> +    description: Pre-charging current for charging (in uA)
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +
+>> +  summit,term-curr:
+>> +    description: Charging cycle termination current (in uA)
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+...
+> These are all properties of the battery attached and we have standard 
+> properties for some/all of these.
 
-On 4/10/20 11:47 AM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 09.04.2020 21:28, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 4/9/20 7:50 AM, Dmitry Osipenko wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> 09.04.2020 06:38, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> ...
->>>> Tested with 3 buffers and by checking outstanding buffers in process b=
-y
->>>> VI hw and holding to start capture till one outstanding buffer in
->>>> process by HW.
->>>> Also tested with 2 buffers without checking for outstanding buffers.
->>>>
->>>> In both cases, I see same %CPU for the kthreads and is < 1%
->>>>
->>> I don't see where buffers queue max limit is set to 3 in the code, but
->>> should be okay if CPU isn't getting hogged. Looking forward to v7.
->> Sorry, correction I meant to say pre-queued buffers before streaming not
->> num_buffers.
->> vb2 queue min_buffers_needed was set to 3 as part of one of the issue
->> debug in earlier version which actually was irrelevant to that issue and
->> should have been removed. Will remove min_buffers_needed in v7.
->>
->> I added checking for outstanding requests by hardware just to be safer
->> although we may not hit this case of issuing more than 1 outstanding
->> frame capture to VI hardware as capture_frame() waits till it sees frame
->> start event through HW syncpt increment before proceeding for memory
->> write and issuing next frame capture.
->>
->> So issuing frame captures are synchronized with frame start and frame en=
-d.
->>
->> Will remove min_buffers_needed and also explicit check for outstanding
->> buffers in v7.
-> It's still not clear to me how the "pre-queued buffers" will be limited.
-> I'll take another look at the v7.
+Looks like only four properties seem to be matching the properties of
+the battery.txt binding.
 
-OK, but I don't understand what you mean by limit on pre-queued buffers.
+Are you suggesting that these matching properties should be renamed
+after the properties in battery.txt?
 
-I was saying vb2 queue has min_buffers_needed which was set to 3 where=20
-streaming will start only after 3 buffers got queued up.
+> Also, any property with units should have a unit suffix as defined in 
+> property-units.txt. And with that, you don't need to define the type.
 
-Regarding outstanding condition check to make sure no more than 2 syncpt=20
-trigger requests are in FIFO I added it to be safe where mostly we may=20
-not hit and also I only see capture start thread holding for it during=20
-initial frame capture as it issues single shot for 1st 2 buffers capture=20
-and holds 3 buffers which is already queued till at least one of those 2=20
-issued capture is done to make sure of not triggering syncpt condition=20
-when fifo already has 2 pending.
-
-In v7, will remove setting min_buffers_needed and also outstanding=20
-syncpt trigger check.
+Indeed, thank you for the suggestion.
