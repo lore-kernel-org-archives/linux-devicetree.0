@@ -8,64 +8,66 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED08C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 02:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37431C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 02:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05F2E20CC7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 02:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC0420B1F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 02:33:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i5j3PFiP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BBAYw+BG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgDJCcq (ORCPT
+        id S1726813AbgDJCcz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Apr 2020 22:32:46 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39032 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgDJCcq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 22:32:46 -0400
-Received: by mail-lf1-f68.google.com with SMTP id m2so383111lfo.6;
-        Thu, 09 Apr 2020 19:32:43 -0700 (PDT)
+        Thu, 9 Apr 2020 22:32:55 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44091 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgDJCcw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Apr 2020 22:32:52 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 131so368065lfh.11;
+        Thu, 09 Apr 2020 19:32:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1CEo3THdQrqkALDacLlhylmnLwp0CQxNGpQ3ynPcoU4=;
-        b=i5j3PFiPlZ8UAFsg3Mc9PbC9MGmVfAMp+JCu6mGobqXbOoD4kkLcRyI8pdXvgVziZq
-         r3T0ewRzae2SHJUlXCLK/hJIqcSA1WvkJacWSmfxyVMKr75+VYErMrcWfdicZRwauTq4
-         4iIAPKcVLqrB6SIMaF7snuB3i+1uL8/xZID+gqOrW9fKM8KV7OHV6ZvfhctEc/zR43sl
-         8V69c++sPsLIWp6ca4pY3zbLuMNWyz2rgw60ZAoiYmAzrD5O0llX8LOu8xrmgYwYYyF7
-         0CLxGdiDe14PqIoSvVVeXSjbcclRDkJ24MKTUuojgRixlQc90tPaIYgCoGTRxGz0ABdl
-         W9WQ==
+        bh=GRYexHiGlHYS2OWu1UqqdC4MhAnmblXrqW381GPECfY=;
+        b=BBAYw+BG3rrs+XEE4ed6Qv/Qmwavu8nNLw7Re8Pv9v8p7xNHcZK3AaLVX9cPOTmIFx
+         yUmOdmugsHW1ydXn0383VDZ31hDFyRIeiZlOAlZltuINRu/J2KcXF75SIMbTcEbVG84I
+         R5JBPn37l2mIxcAh8+JK/wve3Shc1S2zQ89bi9MYHoL7fEBRT5KJucWXBaWj7UCsHCjw
+         XyVrDnk77E/SCB2OxW6qmAjVS29vZd0r0hEdtJEBG5PuHDJDyuJFX0qRZBZXaPp++iCp
+         VhkjaQBCr5AzdJnlv90zVh1YDxp1jI+NikU9eNSGAmvfmXwy3YaDYiL0xN6yrhEsx3RN
+         1w3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1CEo3THdQrqkALDacLlhylmnLwp0CQxNGpQ3ynPcoU4=;
-        b=uZFW1X6s4IpcXf79jpLgFuRpgptsJesp695dB/rn37SIyop/wCu6icxykYtSsny3o8
-         b2klhJfj96kcOhrzlXcuo7B/vDkDiigcp2/6r2k2BXEH6tFI4OV9k+l1f9UkzKGofXO5
-         pviHKVIHCEoQ1gKunfjWHXuLFd28b0P+RJwzl8apG0ONEGplbT7a6rMzm/JewJp1Qqkb
-         GYmUIOsbvN5TPH6N+9Fmh/sfhJs6zx2vHVupmm484m/kFRp6sZNg+NIkJA1dfwcb56G0
-         f2Angljtthb1WvunfzwtKnf6kseC6Vf5iRq+vc4QKROnTvirGbENqk+vIXg4ebqZlQEt
-         ETEg==
-X-Gm-Message-State: AGi0PuaPRM0Z63j/PV1L3Ksuc2La6yYSRze+PpgIrw2/gXiXt0WGB4ba
-        o3pm/aJ0i2hUA7FIHRdLotH5gQCGgMwqPQ==
-X-Google-Smtp-Source: APiQypI4Ks8H4DdYDla9cXARasH4ua2bXjOd5Bm7Ywt/vfV7gQQZJNvS1R6zkzo6MGN0i0z6LldHZg==
-X-Received: by 2002:a19:e00e:: with SMTP id x14mr1295936lfg.111.1586485962299;
-        Thu, 09 Apr 2020 19:32:42 -0700 (PDT)
+        bh=GRYexHiGlHYS2OWu1UqqdC4MhAnmblXrqW381GPECfY=;
+        b=ZRBIP/ebmdt8kB2Nnubzg1VHE7jCbBFSygEN7cLqyBCBWxwzVpFK53w5vxOTaugBry
+         63oaHKavWxhN7zCzNcQK1xp8qUE5ldSmEgwZg5frXfsTISjz2WvyE5c1qEgzZIN0TkR8
+         V1qJq2at/1ur9LgMINBzpqJpf/zTtV4Fa1gQvmL05VrTvur3TBr53UIhjutRO13QdBqR
+         qveJZYRevRIVQq3/kjcSSJtB1MpB+yUjeDbFpylurFH4fANO96jak2IyWGA9BUL2Iwz4
+         QQqQsUFUPXAlnpMwECOrLFnlsn5sFCnzo2wA0PcOGLNneIHV6ILMVhYWE0B33XXrA2u1
+         HYRQ==
+X-Gm-Message-State: AGi0PuZFJWsVeSyYGk6AvS/WIRiY+QtvaRAzwjubyQo5HFNjwH7VYTGq
+        0EC+SQnl7+r2ia8KMG2b7roe5OR1YLxukA==
+X-Google-Smtp-Source: APiQypIAaoBNNNTErcLAiMjEaEPexcgivbo0e3XytA6AzZFotVDr8zQ4mmaN/zExBKg4F1qjX0VgIA==
+X-Received: by 2002:a05:6512:3049:: with SMTP id b9mr1320447lfb.176.1586485970329;
+        Thu, 09 Apr 2020 19:32:50 -0700 (PDT)
 Received: from localhost ([213.191.183.145])
-        by smtp.gmail.com with ESMTPSA id x17sm565567lfg.36.2020.04.09.19.32.40
+        by smtp.gmail.com with ESMTPSA id v3sm415033lfo.62.2020.04.09.19.32.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Apr 2020 19:32:41 -0700 (PDT)
+        Thu, 09 Apr 2020 19:32:49 -0700 (PDT)
 From:   Iskren Chernev <iskren.chernev@gmail.com>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     Daniele Debernardi <drebrez@gmail.com>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: [PATCH 2/6] ARM: dts: qcom: msm8974-klte: Add regulator nodes
-Date:   Fri, 10 Apr 2020 05:31:59 +0300
-Message-Id: <20200410023203.192048-3-iskren.chernev@gmail.com>
+        linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Iskren Chernev <iskren.chernev@gmail.com>
+Subject: [PATCH 5/6] ARM: dts: qcom: msm8974-klte: Remove inherited vreg_boost node
+Date:   Fri, 10 Apr 2020 05:32:02 +0300
+Message-Id: <20200410023203.192048-6-iskren.chernev@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200410023203.192048-1-iskren.chernev@gmail.com>
 References: <20200410023203.192048-1-iskren.chernev@gmail.com>
@@ -78,204 +80,33 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Daniele Debernardi <drebrez@gmail.com>
 
-The voltages are pulled from the vendor source tree.
+The Samsung klte does not have a vreg_boost node. vreg_boost also
+depends on pm8941-gpio which are not present on the klte.
 
 Signed-off-by: Daniele Debernardi <drebrez@gmail.com>
+Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
 ---
- .../boot/dts/qcom-msm8974-samsung-klte.dts    | 176 ++++++++++++++++++
- 1 file changed, 176 insertions(+)
+ arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-index eaa1001d0a46..6b184819f1ce 100644
+index de0bf6b7e732..ad26c83fee81 100644
 --- a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
 +++ b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-@@ -2,6 +2,7 @@
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
  #include "qcom-msm8974pro.dtsi"
- #include "qcom-pm8841.dtsi"
- #include "qcom-pm8941.dtsi"
-+#include "qcom-pma8084.dtsi"
- 
- / {
- 	model = "Samsung Galaxy S5";
-@@ -14,6 +15,181 @@ aliases {
- 	chosen {
- 		stdout-path = "serial0:115200n8";
+-#include "qcom-pm8841.dtsi"
+-#include "qcom-pm8941.dtsi"
+ #include "qcom-pma8084.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
+@@ -196,6 +194,8 @@ l27 {
+ 			};
+ 		};
  	};
 +
-+	smd {
-+		rpm {
-+			rpm_requests {
-+				pma8084-regulators {
-+					status = "okay";
-+
-+					s1 {
-+						regulator-min-microvolt = <675000>;
-+						regulator-max-microvolt = <1050000>;
-+					};
-+
-+					s2 {
-+						regulator-min-microvolt = <500000>;
-+						regulator-max-microvolt = <1050000>;
-+					};
-+
-+					s3 {
-+						regulator-min-microvolt = <1300000>;
-+						regulator-max-microvolt = <1300000>;
-+					};
-+
-+					s4 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+					};
-+
-+					s5 {
-+						regulator-min-microvolt = <2150000>;
-+						regulator-max-microvolt = <2150000>;
-+					};
-+
-+					s6 {
-+						regulator-min-microvolt = <1050000>;
-+						regulator-max-microvolt = <1050000>;
-+					};
-+
-+					l1 {
-+						regulator-min-microvolt = <1225000>;
-+						regulator-max-microvolt = <1225000>;
-+					};
-+
-+					l2 {
-+						regulator-min-microvolt = <1200000>;
-+						regulator-max-microvolt = <1200000>;
-+					};
-+
-+					l3 {
-+						regulator-min-microvolt = <1050000>;
-+						regulator-max-microvolt = <1200000>;
-+					};
-+
-+					l4 {
-+						regulator-min-microvolt = <1200000>;
-+						regulator-max-microvolt = <1225000>;
-+					};
-+
-+					l5 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+					};
-+
-+					l6 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+					};
-+
-+					l7 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+					};
-+
-+					l8 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+					};
-+
-+					l9 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <2950000>;
-+					};
-+
-+					l10 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <2950000>;
-+					};
-+
-+					l11 {
-+						regulator-min-microvolt = <1300000>;
-+						regulator-max-microvolt = <1300000>;
-+					};
-+
-+					l12 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+					};
-+
-+					l13 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <2950000>;
-+					};
-+
-+					l14 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+					};
-+
-+					l15 {
-+						regulator-min-microvolt = <2050000>;
-+						regulator-max-microvolt = <2050000>;
-+					};
-+
-+					l16 {
-+						regulator-min-microvolt = <2700000>;
-+						regulator-max-microvolt = <2700000>;
-+					};
-+
-+					l17 {
-+						regulator-min-microvolt = <2850000>;
-+						regulator-max-microvolt = <2850000>;
-+					};
-+
-+					l18 {
-+						regulator-min-microvolt = <2850000>;
-+						regulator-max-microvolt = <2850000>;
-+					};
-+
-+					l19 {
-+						regulator-min-microvolt = <2900000>;
-+						regulator-max-microvolt = <3300000>;
-+					};
-+
-+					l20 {
-+						regulator-min-microvolt = <2950000>;
-+						regulator-max-microvolt = <2950000>;
-+					};
-+
-+					l21 {
-+						regulator-min-microvolt = <2950000>;
-+						regulator-max-microvolt = <2950000>;
-+					};
-+
-+					l22 {
-+						regulator-min-microvolt = <3000000>;
-+						regulator-max-microvolt = <3300000>;
-+					};
-+
-+					l23 {
-+						regulator-min-microvolt = <3000000>;
-+						regulator-max-microvolt = <3000000>;
-+					};
-+
-+					l24 {
-+						regulator-min-microvolt = <3075000>;
-+						regulator-max-microvolt = <3075000>;
-+					};
-+
-+					l25 {
-+						regulator-min-microvolt = <2100000>;
-+						regulator-max-microvolt = <2100000>;
-+					};
-+
-+					l26 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <2050000>;
-+					};
-+
-+					l27 {
-+						regulator-min-microvolt = <1000000>;
-+						regulator-max-microvolt = <1225000>;
-+					};
-+				};
-+			};
-+		};
-+	};
++	/delete-node/ vreg-boost;
  };
  
  &soc {
