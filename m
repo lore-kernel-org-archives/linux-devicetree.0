@@ -2,206 +2,111 @@ Return-Path: <SRS0=Z42x=52=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D42BC2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 06:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8A9C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 07:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C26120787
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 06:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2392C208E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 07:17:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IoSCfIFZ"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="JZwCQi0B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgDJG4l (ORCPT
+        id S1726654AbgDJHRl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Apr 2020 02:56:41 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:31583 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726648AbgDJG4i (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 10 Apr 2020 02:56:38 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586501798; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=/7DOlq/mZIuFniPGwb6fsgLKfPBaw3AbbYqpvORj+k8=; b=IoSCfIFZ9wdUOtlUBQ4ZTWLxOE+QnOnGqmWpk3QtUZjkJxFTM9JA6hRm7anlgNaibFgVgDDE
- J4PcU/eBL8/qyvfSVQ5ZEaD4s8yQAQe25KRTl0gPEdTAzK0OfbSjfoD5Y9U0EAz3+UyDFAG8
- JAfWlct9vHgcyWGomNHhO008tnY=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e9018a5.7f5008108ea0-smtp-out-n02;
- Fri, 10 Apr 2020 06:56:37 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 153FEC433BA; Fri, 10 Apr 2020 06:56:37 +0000 (UTC)
-Received: from [192.168.0.10] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D623CC433D2;
-        Fri, 10 Apr 2020 06:56:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D623CC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH 02/21] tty: serial: qcom_geni_serial: Use OPP API to set
- clk/perf state
-To:     Rajendra Nayak <rnayak@codeaurora.org>, viresh.kumar@linaro.org,
-        sboyd@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-References: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
- <1586353607-32222-3-git-send-email-rnayak@codeaurora.org>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <5eb6c05e-893a-ef8a-c53e-a775b2f837d1@codeaurora.org>
-Date:   Fri, 10 Apr 2020 12:26:18 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 10 Apr 2020 03:17:41 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:8319 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725858AbgDJHRl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Apr 2020 03:17:41 -0400
+X-UUID: 7a06195a8f71485d999338faa905be88-20200410
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=vYfMs9/1iEBCtaElVkxErOIYD7/OvfRvtH3nKu3LNUQ=;
+        b=JZwCQi0BcDi3Z/Px6HO/Sb4JfPtAETUG5+XDpnZ9t5up8b5JVB+7Cd4FZMWziy7OjyyMapao3XGo1fDzFRA/UeOxvEAmsrMtUDlq8hqqe/KzDO7nvgLxynIK6W8ZenUBsjUaMulM3YhU9mg7eNEKzI8S4S15saBk2iZPL/B434o=;
+X-UUID: 7a06195a8f71485d999338faa905be88-20200410
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <louis.kuo@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1316574916; Fri, 10 Apr 2020 15:17:34 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 10 Apr 2020 15:17:30 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 10 Apr 2020 15:17:30 +0800
+From:   Louis Kuo <louis.kuo@mediatek.com>
+To:     <hans.verkuil@cisco.com>,
+        <laurent.pinchart+renesas@ideasonboard.com>, <tfiga@chromium.org>,
+        <keiichiw@chromium.org>, <matthias.bgg@gmail.com>,
+        <mchehab@kernel.org>
+CC:     <yuzhao@chromium.org>, <zwisler@chromium.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <Sean.Cheng@mediatek.com>,
+        <sj.huang@mediatek.com>, <christie.yu@mediatek.com>,
+        <louis.kuo@mediatek.com>, <frederic.chen@mediatek.com>,
+        <Jerry-ch.Chen@mediatek.com>, <jungo.lin@mediatek.com>,
+        <linux-media@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        <devicetree@vger.kernel.org>
+Subject: [RFC PATCH V6 0/3] media: support Mediatek sensor interface driver
+Date:   Fri, 10 Apr 2020 15:17:20 +0800
+Message-ID: <20200410071723.19720-1-louis.kuo@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-In-Reply-To: <1586353607-32222-3-git-send-email-rnayak@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rajendra,
+SGVsbG8sDQoNClRoaXMgaXMgdGhlIFJGQyBwYXRjaCBhZGRpbmcgU2Vuc29yIEluZmVyZmFjZShz
+ZW5pbmYpIGRyaXZlciBvbiBNZWRpYXRlayBtdDgxODMgU29DLCB3aGljaCB3aWxsIGJlIHVzZWQN
+CmluIGNhbWVyYSBmZWF0dXJlcyBvbiBDck9TIGFwcGxpY2F0aW9uLg0KSXQgYmVsb25ncyB0byB0
+aGUgZmlyc3QgTWVkaWF0ZWsncyBjYW1lcmEgZHJpdmVyIHNlcmllcyBiYXNlZCBvbiBWNEwyIGFu
+ZCBtZWRpYSBjb250cm9sbGVyIGZyYW1ld29yay4NCkkgcG9zdGVkIHRoZSBtYWluIHBhcnQgb2Yg
+dGhlIHNlbmluZiBkcml2ZXIgYXMgUkZDIHRvIGRpc2N1c3MgZmlyc3QgYW5kIHdvdWxkIGxpa2Ug
+c29tZSByZXZpZXcgY29tbWVudHMNCm9uIHRoZSBvdmVyYWxsIHN0cnVjdHVyZSBvZiB0aGUgZHJp
+dmVyLg0KDQpUaGUgZHJpdmVyIGlzIGltcGxlbWVudGVkIHdpdGggVjRMMiBmcmFtZXdvcmsuDQox
+LiBSZWdpc3RlciBhcyBhIFY0TDIgc3ViLWRldmljZS4NCjIuIE9ubHkgb25lIGVudGl0eSB3aXRo
+IHNpbmsgcGFkcyBsaW5rZWQgdG8gY2FtZXJhIHNlbnNvcnMgZm9yIGNob29zaW5nIGRlc2lyZWQg
+Y2FtZXJhIHNlbnNvciBieSBzZXR1cCBsaW5rDQogICBhbmQgd2l0aCBzb3VyY2UgcGFkcyBsaW5r
+ZWQgdG8gY2FtLWlvIGZvciByb3V0aW5nIGRpZmZlcmVudCB0eXBlcyBvZiBkZWNvZGVkIHBhY2tl
+dCBkYXRhcyB0byBQQVNTMSBkcml2ZXINCiAgIHRvIGdlbmVyYXRlIHNlbnNvciBpbWFnZSBmcmFt
+ZSBhbmQgbWV0YS1kYXRhLg0KDQpUaGUgb3ZlcmFsbCBmaWxlIHN0cnVjdHVyZSBvZiB0aGUgc2Vu
+aW5mIGRyaXZlciBpcyBhcyBmb2xsb3dpbmc6DQoNCiogbXRrX3NlbmluZi5jOiBJbXBsZW1lbnQg
+c29mdHdhcmUgYW5kIEhXIGNvbnRyb2wgZmxvdyBvZiBzZW5pbmYgZHJpdmVyLg0KKiBtdGtfc2Vu
+aW5mX3JlZy5oOiBEZWZpbmUgSFcgcmVnaXN0ZXIgUi9XIG1hY3JvcyBhbmQgSFcgcmVnaXN0ZXIg
+bmFtZXMuDQoqIG10a19zZW5pbmZfcnhfcmVnLmg6IERlZmluZSBIVyBSWCByZWdpc3RlciBSL1cg
+bWFjcm9zIGFuZCBIVyByZWdpc3RlciBuYW1lcy4NCg0KWyBWNjogQ2hhbmdlIHBhcnNlIGVuZHBv
+aW50cyBBUEksIGZpeCBjb2Rpbmcgc3R5bGUsIHJlZmluZSBlcnJvciBoYW5kbGluZyBhbmQgcmV0
+dXJuIHZhbHVlLA0KcmVtb3ZlIHJlZHVuZGFudCBtYWNyb3MgYW5kIGhlYWRlciBmaWxlc10NCg0K
+ICBtZWRpYTogcGxhdGZvcm06IG10ay1pc3A6IEFkZCBNZWRpYXRlayBzZW5zb3IgaW50ZXJmYWNl
+IGRyaXZlcg0KICBkdC1iaW5kaW5nczogbXQ4MTgzOiBBZGQgc2Vuc29yIGludGVyZmFjZSBkdC1i
+aW5kaW5ncw0KICBkdHM6IGFybTY0OiBtdDgxODM6IEFkZCBzZW5zb3IgaW50ZXJmYWNlIG5vZGVz
+DQoNCiAuLi4vYmluZGluZ3MvbWVkaWEvbWVkaWF0ZWstc2VuaW5mLnlhbWwgICAgICAgfCAgMjE5
+ICsrKw0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTgzLmR0c2kgICAgICB8ICAg
+MjUgKw0KIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vTWFrZWZpbGUgICAgICAgICAgICAgICB8ICAg
+IDEgKw0KIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWlzcC9LY29uZmlnICAgICAgICB8ICAg
+MTggKw0KIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWlzcC9NYWtlZmlsZSAgICAgICB8ICAg
+IDMgKw0KIC4uLi9tZWRpYS9wbGF0Zm9ybS9tdGstaXNwL3NlbmluZi9NYWtlZmlsZSAgICB8ICAg
+IDUgKw0KIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWlzcC9zZW5pbmYvVE9ETyAgICB8ICAg
+MTggKw0KIC4uLi9wbGF0Zm9ybS9tdGstaXNwL3NlbmluZi9tdGtfc2VuaW5mLmMgICAgICB8IDEx
+NzMgKysrKysrKysrKysrKw0KIC4uLi9wbGF0Zm9ybS9tdGstaXNwL3NlbmluZi9tdGtfc2VuaW5m
+X3JlZy5oICB8IDE0OTEgKysrKysrKysrKysrKysrKysNCiAuLi4vbXRrLWlzcC9zZW5pbmYvbXRr
+X3NlbmluZl9yeF9yZWcuaCAgICAgICAgfCAxMzk4ICsrKysrKysrKysrKysrKysNCiAxMCBmaWxl
+cyBjaGFuZ2VkLCA0MzUxIGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL21lZGlhdGVrLXNlbmluZi55YW1sDQog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWlzcC9LY29uZmln
+DQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWlzcC9NYWtl
+ZmlsZQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1pc3Av
+c2VuaW5mL01ha2VmaWxlDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWVkaWEvcGxhdGZv
+cm0vbXRrLWlzcC9zZW5pbmYvVE9ETw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21lZGlh
+L3BsYXRmb3JtL210ay1pc3Avc2VuaW5mL210a19zZW5pbmYuYw0KIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1pc3Avc2VuaW5mL210a19zZW5pbmZfcmVnLmgN
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstaXNwL3Nlbmlu
+Zi9tdGtfc2VuaW5mX3J4X3JlZy5oDQoNCg==
 
-On 4/8/2020 7:16 PM, Rajendra Nayak wrote:
-> geni serial needs to express a perforamnce state requirement on CX
-*performance
-> depending on the frequency of the clock rates. Use OPP table from
-> DT to register with OPP framework and use dev_pm_opp_set_rate() to
-> set the clk/perf state.
->
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Cc: Akash Asthana <akashast@codeaurora.org>
-> Cc: linux-serial@vger.kernel.org
-> ---
->   drivers/tty/serial/qcom_geni_serial.c | 20 +++++++++++++++-----
->   include/linux/qcom-geni-se.h          |  2 ++
->   2 files changed, 17 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-> index 6119090..754eaf6 100644
-> --- a/drivers/tty/serial/qcom_geni_serial.c
-> +++ b/drivers/tty/serial/qcom_geni_serial.c
-> @@ -9,6 +9,7 @@
->   #include <linux/module.h>
->   #include <linux/of.h>
->   #include <linux/of_device.h>
-> +#include <linux/pm_opp.h>
->   #include <linux/platform_device.h>
->   #include <linux/pm_runtime.h>
->   #include <linux/pm_wakeirq.h>
-> @@ -961,7 +962,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
->   		goto out_restart_rx;
->   
->   	uport->uartclk = clk_rate;
-> -	clk_set_rate(port->se.clk, clk_rate);
-> +	dev_pm_opp_set_rate(uport->dev, clk_rate);
-
-Is this change not intended for backward compatibility? If I don't pick 
-DT change for Geni drivers,  dev_pm_opp_set_rate is failing and causing 
-functionality issues.
-
->   	ser_clk_cfg = SER_CLK_EN;
->   	ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
->   
-> @@ -1198,8 +1199,10 @@ static void qcom_geni_serial_pm(struct uart_port *uport,
->   	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF)
->   		geni_se_resources_on(&port->se);
->   	else if (new_state == UART_PM_STATE_OFF &&
-> -			old_state == UART_PM_STATE_ON)
-> +			old_state == UART_PM_STATE_ON) {
-> +		dev_pm_opp_set_rate(uport->dev, 0);
->   		geni_se_resources_off(&port->se);
-> +	}
->   }
->   
->   static const struct uart_ops qcom_geni_console_pops = {
-> @@ -1318,13 +1321,16 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
->   	if (of_property_read_bool(pdev->dev.of_node, "cts-rts-swap"))
->   		port->cts_rts_swap = true;
->   
-> +	port->se.opp = dev_pm_opp_set_clkname(&pdev->dev, "se");
-> +	dev_pm_opp_of_add_table(&pdev->dev);
-> +
->   	uport->private_data = drv;
->   	platform_set_drvdata(pdev, port);
->   	port->handle_rx = console ? handle_rx_console : handle_rx_uart;
->   
->   	ret = uart_add_one_port(drv, uport);
->   	if (ret)
-> -		return ret;
-> +		goto err;
->   
->   	irq_set_status_flags(uport->irq, IRQ_NOAUTOEN);
->   	ret = devm_request_irq(uport->dev, uport->irq, qcom_geni_serial_isr,
-> @@ -1332,7 +1338,7 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
->   	if (ret) {
->   		dev_err(uport->dev, "Failed to get IRQ ret %d\n", ret);
->   		uart_remove_one_port(drv, uport);
-> -		return ret;
-> +		goto err;
->   	}
->   
->   	/*
-> @@ -1349,11 +1355,14 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
->   		if (ret) {
->   			device_init_wakeup(&pdev->dev, false);
->   			uart_remove_one_port(drv, uport);
-> -			return ret;
-> +			goto err;
->   		}
->   	}
->   
->   	return 0;
-> +err:
-> +	dev_pm_opp_of_remove_table(&pdev->dev);
-do we need to call "dev_pm_opp_put_clkname" here and in remove to 
-release clk resource grabbed by
-
-dev_pm_opp_set_clkname(&pdev->dev, "se");?
-
-Regards,
-Akash
-
-> +	return ret;
->   }
->   
->   static int qcom_geni_serial_remove(struct platform_device *pdev)
-> @@ -1361,6 +1370,7 @@ static int qcom_geni_serial_remove(struct platform_device *pdev)
->   	struct qcom_geni_serial_port *port = platform_get_drvdata(pdev);
->   	struct uart_driver *drv = port->uport.private_data;
->   
-> +	dev_pm_opp_of_remove_table(&pdev->dev);
->   	dev_pm_clear_wake_irq(&pdev->dev);
->   	device_init_wakeup(&pdev->dev, false);
->   	uart_remove_one_port(drv, &port->uport);
-> diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
-> index dd46494..737e713 100644
-> --- a/include/linux/qcom-geni-se.h
-> +++ b/include/linux/qcom-geni-se.h
-> @@ -24,6 +24,7 @@ enum geni_se_protocol_type {
->   
->   struct geni_wrapper;
->   struct clk;
-> +struct opp_table;
->   
->   /**
->    * struct geni_se - GENI Serial Engine
-> @@ -39,6 +40,7 @@ struct geni_se {
->   	struct device *dev;
->   	struct geni_wrapper *wrapper;
->   	struct clk *clk;
-> +	struct opp_table *opp;
->   	unsigned int num_clk_levels;
->   	unsigned long *clk_perf_tbl;
->   };
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
