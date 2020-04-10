@@ -4,187 +4,197 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22090C2BB55
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 17:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 557D6C2D0EC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 17:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F09A921655
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 17:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 298DD20936
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 17:38:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586540288;
-	bh=wVr6B9kRmsNiOzawAx+yaktObU+34iswRe7Ma4K0+7U=;
+	s=default; t=1586540301;
+	bh=IgHrpwy6tYQBjrE17FFczzNG6WrnWA6ZyedNREECqjE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VQxb43TCoBavt2A0LyxEvqRyWg9R0XxNtKX0y0olWl2y8gUouIdoXUSvkY9tYloRt
-	 OJOlsxwac56Lc0C5dFJRnX/AIv5lmHShTqXe7bKWjRHsQM9yoOVW9xhYdobl01dt7m
-	 Is2nfsDGDXAV81R1EHAeKOOHMqmnDiRY8DwfQDAE=
+	b=GOwm9iFZlUUWhv1Y/fyiH2eLE4XKcL7DXnu6HKKzhP8lspwXooj1dWHWi81+RaldW
+	 zAI7CyJALWlvhUHQngdLJ5Er47hSC2NACUsNGVK3ugacHdidXNCwUUlmCoIIhYuHP3
+	 CIjHoBh+M6S5j6wmvAGAbFs4AcYBsthgNwZrYiVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbgDJRiG (ORCPT
+        id S1726666AbgDJRiR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Apr 2020 13:38:06 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38547 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgDJRiG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Apr 2020 13:38:06 -0400
-Received: by mail-ot1-f68.google.com with SMTP id d18so2517091otc.5;
-        Fri, 10 Apr 2020 10:38:06 -0700 (PDT)
+        Fri, 10 Apr 2020 13:38:17 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38419 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgDJRiR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Apr 2020 13:38:17 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w2so1969304oic.5;
+        Fri, 10 Apr 2020 10:38:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=50MgVueUpRLYPxEqiQO+BlISCgjHmB6+RHj/Bt+hChk=;
-        b=i1Uw3rj9Jsi/ZJ4eQGCFxr5twSHq39BbAslofbSweiI6oUTPt5YgoAB7GsOcN8QjjA
-         BflfAL3ub7qWuTYA0RzExLS85xlaPTCGyh3eS3ObpxidVKCYoW55cWjrY8Rcn3tGTgkK
-         CptI8vOjfA5234pPy00dtTmfg8XRLbnaGmIVHp1OQvMxrSLkMllixfFpSTiicCaFWAAz
-         HWv6p5hWCFPCZaFJVDjcAsR0OCLkdQvJCjYPi3zkT9HIEji5Eq+yO7ntv6Dy5qE1F2hv
-         z5YFhtTRLlAll5xk8UIdtgu4u8oyBoN1iRQTf9+ox9PMG029Q3ceZBBvajZE6Dci7Ruu
-         Rrvg==
-X-Gm-Message-State: AGi0PuagJdBqh0hihpp3e+yktSnqf6ELyCoE14rOEw2qmQXjfuAvbWxZ
-        aIpvG1sXP8iKPb0HoEkxIS3ONb0=
-X-Google-Smtp-Source: APiQypLT0MlacQQNQZZQqIkajF6n5AyLq3+3It3FwTj1+j2Ey5SGoCvK6DDLKSDwBXipp0K8VdxJDA==
-X-Received: by 2002:a9d:5a9:: with SMTP id 38mr4505161otd.331.1586540285527;
-        Fri, 10 Apr 2020 10:38:05 -0700 (PDT)
-Received: from rob-hp-laptop (ip-99-203-29-27.pools.spcsdns.net. [99.203.29.27])
-        by smtp.gmail.com with ESMTPSA id c18sm1554480oig.53.2020.04.10.10.38.03
+        bh=xMUIst4uwZNit/kezR50BEXwVLAD+7IMlqqlt2PZF4M=;
+        b=MwN06PBL/Zz+t7pQqPpKtwGRhwv0uLVp6kWSeLkTUWLmw/YSEClMMAkk/0rMo5TLmv
+         fwcEo8nSrl/yW1Ra35tB+Qx48Cpl3z8rrY9CHpTiZf9ed0ZQqgyLnUvt31oLWhzB4Hfy
+         ErErJHK5ocFhbRhFaJWSykerVd1H31RyOC6PMMafzOGRl2Kzw65+xf3zwMPrV3r278tr
+         /oPJ+ox2bY1yXvGeqwG7rirZLfI+mvESXlvb5QZ5kOSJbNLxyhaaEQTGmld14MGG/ARe
+         VilhMp/GeVxz9DSiquYqkgmCFZ0aVxHKwE5k+LSoLErU8gJr9fNXh8HV6qBS8IvtvijZ
+         xQFw==
+X-Gm-Message-State: AGi0Pua0W++e08jKEEoo2WlJLxqz+oERP+omUjTabVkfoekaMFEt9kHa
+        f7IO+ZR6vhiAsPOWfWoFaouQ36M=
+X-Google-Smtp-Source: APiQypJwusuEqgU1CYkOWOgcrzLL32tqNKeweZKcGAtisZ1kThdf4338Sn41hKMfM5QqP5/sISiZCg==
+X-Received: by 2002:aca:891:: with SMTP id 139mr4109648oii.137.1586540295214;
+        Fri, 10 Apr 2020 10:38:15 -0700 (PDT)
+Received: from rob-hp-laptop (ip-99-203-29-27.pools.cgn.spcsdns.net. [99.203.29.27])
+        by smtp.gmail.com with ESMTPSA id 89sm1469196otj.66.2020.04.10.10.38.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 10:38:04 -0700 (PDT)
-Received: (nullmailer pid 29638 invoked by uid 1000);
-        Fri, 10 Apr 2020 17:04:35 -0000
-Date:   Fri, 10 Apr 2020 12:04:35 -0500
+        Fri, 10 Apr 2020 10:38:14 -0700 (PDT)
+Received: (nullmailer pid 12197 invoked by uid 1000);
+        Fri, 10 Apr 2020 16:52:01 -0000
+Date:   Fri, 10 Apr 2020 11:52:01 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH] i2c: regroup documentation of bindings
-Message-ID: <20200410170435.GA23398@bogus>
-References: <20200330002220.3575-1-wsa+renesas@sang-engineering.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        Philipp Rossak <embed3d@gmail.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v5 1/8] dt-bindings: add img,pvrsgx.yaml for Imagination
+ GPUs
+Message-ID: <20200410165201.GA9521@bogus>
+References: <cover.1585503505.git.hns@goldelico.com>
+ <000359713a45bb1a1adc0b609e4e659aedf99e6c.1585503505.git.hns@goldelico.com>
+ <0E273453-861D-45A2-8FA4-D5EC4B78F490@goldelico.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200330002220.3575-1-wsa+renesas@sang-engineering.com>
+In-Reply-To: <0E273453-861D-45A2-8FA4-D5EC4B78F490@goldelico.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 02:22:20AM +0200, Wolfram Sang wrote:
-> Some bindings are for the bus master, some are for the slaves.
-> Regroup them and give them seperate headings to make it clear.
+On Tue, Apr 07, 2020 at 09:00:48AM +0200, H. Nikolaus Schaller wrote:
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c.txt | 63 +++++++++++--------
->  1 file changed, 38 insertions(+), 25 deletions(-)
+> > Am 29.03.2020 um 19:38 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
+> > 
+> > The Imagination PVR/SGX GPU is part of several SoC from
+> > multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo,
+> > Allwinner A83 and others.
+> > 
+> > With this binding, we describe how the SGX processor is
+> > interfaced to the SoC (registers, interrupt etc.).
+> > 
+> > In most cases, Clock, Reset and power management is handled
+> > by a parent node or elsewhere (e.g. code in the driver).
+> > 
+> > Tested by make dt_binding_check dtbs_check
+> > 
+> > Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> > ---
+> > .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 109 ++++++++++++++++++
+> > 1 file changed, 109 insertions(+)
+> > create mode 100644 Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+> > new file mode 100644
+> > index 000000000000..aadfb2d9b012
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
+> > @@ -0,0 +1,109 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/gpu/img,pvrsgx.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Imagination PVR/SGX GPU
+> > +
+> > +maintainers:
+> > +  - H. Nikolaus Schaller <hns@goldelico.com>
+> > +
+> > +description: |+
+> > +  This binding describes the Imagination SGX5 series of 3D accelerators which
+> > +  are found in several different SoC like TI OMAP, Sitara, Ingenic JZ4780,
+> > +  Allwinner A83, and Intel Poulsbo and CedarView and more.
+> > +
+> > +  For an extensive list see: https://en.wikipedia.org/wiki/PowerVR#Implementations
+> > +
+> > +  The SGX node is usually a child node of some DT node belonging to the SoC
+> > +  which handles clocks, reset and general address space mapping of the SGX
+> > +  register area.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - description: SGX530-121 based SoC
+> > +        items:
+> > +          - enum:
+> > +            - ti,omap3-sgx530-121 # BeagleBoard A/B/C, OpenPandora 600MHz and similar
+> > +          - const: img,sgx530-121
+> > +          - const: img,sgx530
+> > +
+> > +      - description: SGX530-125 based SoC
+> > +        items:
+> > +          - enum:
+> > +            - ti,am3352-sgx530-125 # BeagleBone Black
+> > +            - ti,am3517-sgx530-125
+> > +            - ti,am4-sgx530-125
+> > +            - ti,omap3-sgx530-125 # BeagleBoard XM, GTA04, OpenPandora 1GHz and similar
+> > +            - ti,ti81xx-sgx530-125
+> > +          - const: ti,omap3-sgx530-125
+> > +          - const: img,sgx530-125
+> > +          - const: img,sgx530
+> > +
+> > +      - description: SGX535-116 based SoC
+> > +        items:
+> > +          - const: intel,poulsbo-gma500-sgx535 # Atom Z5xx
+> > +          - const: img,sgx535-116
+> > +          - const: img,sgx535
+> > +
+> > +      - description: SGX540-116 based SoC
+> > +        items:
+> > +          - const: intel,medfield-gma-sgx540 # Atom Z24xx
+> > +          - const: img,sgx540-116
+> > +          - const: img,sgx540
+> > +
+> > +      - description: SGX540-120 based SoC
+> > +        items:
+> > +          - enum:
+> > +            - ingenic,jz4780-sgx540-120 # CI20
+> > +            - ti,omap4-sgx540-120 # Pandaboard, Pandaboard ES and similar
+> > +          - const: img,sgx540-120
+> > +          - const: img,sgx540
+> > +
+> > +      - description: SGX544-112 based SoC
+> > +        items:
+> > +          - const: ti,omap4-sgx544-112
+> > +          - const: img,sgx544-112
+> > +          - const: img,sgx544
+> > +
+> > +      - description: SGX544-116 based SoC
+> > +        items:
+> > +          - enum:
+> > +            - allwinner,sun8i-a83t-sgx544-116 # Banana-Pi-M3 (Allwinner A83T) and similar
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
-> index 9a53df4243c6..aa74dd0e63e3 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c.txt
-> @@ -2,10 +2,10 @@ Generic device tree bindings for I2C busses
->  ===========================================
->  
->  This document describes generic bindings which can be used to describe I2C
-> -busses in a device tree.
-> +busses and their child devices in a device tree.
->  
-> -Required properties
-> --------------------
-> +Required properties (per bus)
-> +-----------------------------
->  
->  - #address-cells  - should be <1>. Read more about addresses below.
->  - #size-cells     - should be <0>.
-> @@ -16,18 +16,13 @@ For other required properties e.g. to describe register sets,
->  clocks, etc. check the binding documentation of the specific driver.
->  
->  The cells properties above define that an address of children of an I2C bus
-> -are described by a single value. This is usually a 7 bit address. However,
-> -flags can be attached to the address. I2C_TEN_BIT_ADDRESS is used to mark a 10
-> -bit address. It is needed to avoid the ambiguity between e.g. a 7 bit address
-> -of 0x50 and a 10 bit address of 0x050 which, in theory, can be on the same bus.
-> -Another flag is I2C_OWN_SLAVE_ADDRESS to mark addresses on which we listen to
-> -be devices ourselves.
-> +are described by a single value.
->  
-> -Optional properties
-> --------------------
-> +Optional properties (per bus)
-> +-----------------------------
->  
->  These properties may not be supported by all drivers. However, if a driver
-> -wants to support one of the below features, it should adapt the bindings below.
-> +wants to support one of the below features, it should adapt these bindings.
->  
->  - clock-frequency
->  	frequency of bus clock in Hz.
-> @@ -73,31 +68,49 @@ wants to support one of the below features, it should adapt the bindings below.
->  	i2c bus clock frequency (clock-frequency).
->  	Specified in Hz.
->  
-> -- interrupts
-> -	interrupts used by the device.
-> -
-> -- interrupt-names
-> -	"irq", "wakeup" and "smbus_alert" names are recognized by I2C core,
-> -	other names are	left to individual drivers.
-> -
-> -- host-notify
-> -	device uses SMBus host notify protocol instead of interrupt line.
-> -
->  - multi-master
->  	states that there is another master active on this bus. The OS can use
->  	this information to adapt power management to keep the arbitration awake
->  	all the time, for example.
->  
-> -- wakeup-source
-> -	device can be used as a wakeup source.
-> +Required properties (per child device)
-> +--------------------------------------
-> +
-> +- compatible
-> +	name of I2C slave device following generic names recommended practice.
+> Philipp Rossak reported on a different list [1] that the a83t tells to have a sgx544-115 inside.
+> 
+> So it needs a separate entry.
 
-generic names is for node names not compatibles.
+Okay, it looks fine otherwise.
 
->  
->  - reg
-> -	I2C slave addresses
-> +	One or many I2C slave addresses. These are usually a 7 bit addresses.
-> +	However, flags can be attached to an address. I2C_TEN_BIT_ADDRESS is
-> +	used to mark a 10 bit address. It is needed to avoid the ambiguity
-> +	between e.g. a 7 bit address of 0x50 and a 10 bit address of 0x050
-> +	which, in theory, can be on the same bus.
-> +	Another flag is I2C_OWN_SLAVE_ADDRESS to mark addresses on which we
-> +	listen to be devices ourselves.
-> +
-> +Optional properties (per child device)
-> +--------------------------------------
-> +
-> +These properties may not be supported by all drivers. However, if a driver
-> +wants to support one of the below features, it should adapt these bindings.
-> +
-> +- host-notify
-> +	device uses SMBus host notify protocol instead of interrupt line.
-> +
-> +- interrupts
-> +	interrupts used by the device.
-> +
-> +- interrupt-names
-> +	"irq", "wakeup" and "smbus_alert" names are recognized by I2C core,
-> +	other names are	left to individual drivers.
->  
->  - reg-names
->  	Names of map programmable addresses.
->  	It can contain any map needing another address than default one.
->  
-> +- wakeup-source
-> +	device can be used as a wakeup source.
-> +
->  Binding may contain optional "interrupts" property, describing interrupts
->  used by the device. I2C core will assign "irq" interrupt (or the very first
->  interrupt if not using interrupt names) as primary interrupt for the slave.
-> -- 
-> 2.20.1
-> 
+Rob
