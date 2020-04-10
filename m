@@ -2,89 +2,189 @@ Return-Path: <SRS0=Z42x=52=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6105CC2D0EC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 17:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22090C2BB55
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 17:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8D820936
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 17:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F09A921655
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Apr 2020 17:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586540285;
-	bh=lSRIw1JliHcXdcSoA4V55YZKAMz7OHNwkTNNZ/ncE7E=;
+	s=default; t=1586540288;
+	bh=wVr6B9kRmsNiOzawAx+yaktObU+34iswRe7Ma4K0+7U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=p3gnF2Vi6zlNpUEm7mcq4Xd97ndmwuCgniKcIxviLX8eMn1aFOg3uB+EF50QkPhvR
-	 RqvFxg2YtXdjUynyLzPuNpNpEVoSqXThp+eVNYZkd0gIx6ZAg9fhATsUobIlxHr+rH
-	 7BY5GnIYKx8E8uOlXLaaFchNA7IaOckojHBrc0lc=
+	b=VQxb43TCoBavt2A0LyxEvqRyWg9R0XxNtKX0y0olWl2y8gUouIdoXUSvkY9tYloRt
+	 OJOlsxwac56Lc0C5dFJRnX/AIv5lmHShTqXe7bKWjRHsQM9yoOVW9xhYdobl01dt7m
+	 Is2nfsDGDXAV81R1EHAeKOOHMqmnDiRY8DwfQDAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgDJRiA (ORCPT
+        id S1726916AbgDJRiG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Apr 2020 13:38:00 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36676 "EHLO
+        Fri, 10 Apr 2020 13:38:06 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38547 "EHLO
         mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgDJRiA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Apr 2020 13:38:00 -0400
-Received: by mail-ot1-f68.google.com with SMTP id l23so2526174otf.3;
-        Fri, 10 Apr 2020 10:38:00 -0700 (PDT)
+        with ESMTP id S1726177AbgDJRiG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Apr 2020 13:38:06 -0400
+Received: by mail-ot1-f68.google.com with SMTP id d18so2517091otc.5;
+        Fri, 10 Apr 2020 10:38:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Z+n7hy7rFWHZOTxNMWQy7RW9UsHyHmHBslRaPOEtLgo=;
-        b=uMgCOdfcRxOXT4IkPKBjClPSQTzDSJ1BoombcQa/XsBYfDVx+hf7l89LaZVMAplyqE
-         967BUe7Y2XRjEyUn5z1+sB/VrzPF4J++v0CE+sgx3usXcS6GScSGgrK6ASPfAT0Ih+bS
-         5OrOr3WKuxs5YHTs/J0Ipsy//h6DwioppMV9PXxL7N3KvYQw0z5nIKX42pdQx2AeuITs
-         CQeoUU0yd68PqleIbbnxqqOAKAuYtyURrbYPW7klUUcat4Gb/SqyM7nkLq2geuMurc7s
-         Dfjs/jyORBZVLKrW0Oqp0aO6J7sVU7YkYuneMMvL7Ll/yVdl+Nkfx0vWT/OKecFPS0/8
-         qD3g==
-X-Gm-Message-State: AGi0Pua3h3M/XhPGP17L/K+dRBdR4hFtVV6p++QX7nIMdplys+RZW7O9
-        51kMmDIImyBzkZeePn/jFiR4uRc=
-X-Google-Smtp-Source: APiQypIg6cdHup3w/mI8veji6zYX9S6G3uLYfY5aoWKwXOo49lGA8L/dhRUfTwcjpE+a5YwlYCuBSA==
-X-Received: by 2002:a9d:364b:: with SMTP id w69mr4950447otb.289.1586540280239;
-        Fri, 10 Apr 2020 10:38:00 -0700 (PDT)
+        bh=50MgVueUpRLYPxEqiQO+BlISCgjHmB6+RHj/Bt+hChk=;
+        b=i1Uw3rj9Jsi/ZJ4eQGCFxr5twSHq39BbAslofbSweiI6oUTPt5YgoAB7GsOcN8QjjA
+         BflfAL3ub7qWuTYA0RzExLS85xlaPTCGyh3eS3ObpxidVKCYoW55cWjrY8Rcn3tGTgkK
+         CptI8vOjfA5234pPy00dtTmfg8XRLbnaGmIVHp1OQvMxrSLkMllixfFpSTiicCaFWAAz
+         HWv6p5hWCFPCZaFJVDjcAsR0OCLkdQvJCjYPi3zkT9HIEji5Eq+yO7ntv6Dy5qE1F2hv
+         z5YFhtTRLlAll5xk8UIdtgu4u8oyBoN1iRQTf9+ox9PMG029Q3ceZBBvajZE6Dci7Ruu
+         Rrvg==
+X-Gm-Message-State: AGi0PuagJdBqh0hihpp3e+yktSnqf6ELyCoE14rOEw2qmQXjfuAvbWxZ
+        aIpvG1sXP8iKPb0HoEkxIS3ONb0=
+X-Google-Smtp-Source: APiQypLT0MlacQQNQZZQqIkajF6n5AyLq3+3It3FwTj1+j2Ey5SGoCvK6DDLKSDwBXipp0K8VdxJDA==
+X-Received: by 2002:a9d:5a9:: with SMTP id 38mr4505161otd.331.1586540285527;
+        Fri, 10 Apr 2020 10:38:05 -0700 (PDT)
 Received: from rob-hp-laptop (ip-99-203-29-27.pools.spcsdns.net. [99.203.29.27])
-        by smtp.gmail.com with ESMTPSA id c7sm1617939ooi.41.2020.04.10.10.37.55
+        by smtp.gmail.com with ESMTPSA id c18sm1554480oig.53.2020.04.10.10.38.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2020 10:37:59 -0700 (PDT)
-Received: (nullmailer pid 829 invoked by uid 1000);
-        Fri, 10 Apr 2020 17:06:57 -0000
-Date:   Fri, 10 Apr 2020 12:06:57 -0500
+        Fri, 10 Apr 2020 10:38:04 -0700 (PDT)
+Received: (nullmailer pid 29638 invoked by uid 1000);
+        Fri, 10 Apr 2020 17:04:35 -0000
+Date:   Fri, 10 Apr 2020 12:04:35 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 03/22] dt-bindings: memory: tegra30: mc: Document new
- interconnect property
-Message-ID: <20200410170657.GA769@bogus>
-References: <20200330010904.27643-1-digetx@gmail.com>
- <20200330010904.27643-4-digetx@gmail.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] i2c: regroup documentation of bindings
+Message-ID: <20200410170435.GA23398@bogus>
+References: <20200330002220.3575-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200330010904.27643-4-digetx@gmail.com>
+In-Reply-To: <20200330002220.3575-1-wsa+renesas@sang-engineering.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 30 Mar 2020 04:08:45 +0300, Dmitry Osipenko wrote:
-> Memory controller is interconnected with memory clients and with the
-> external memory controller. Document new interconnect property which
-> turns memory controller into interconnect provider.
+On Mon, Mar 30, 2020 at 02:22:20AM +0200, Wolfram Sang wrote:
+> Some bindings are for the bus master, some are for the slaves.
+> Regroup them and give them seperate headings to make it clear.
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 > ---
->  .../bindings/memory-controllers/nvidia,tegra30-mc.yaml       | 5 +++++
->  1 file changed, 5 insertions(+)
+>  Documentation/devicetree/bindings/i2c/i2c.txt | 63 +++++++++++--------
+>  1 file changed, 38 insertions(+), 25 deletions(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
+> index 9a53df4243c6..aa74dd0e63e3 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c.txt
+> @@ -2,10 +2,10 @@ Generic device tree bindings for I2C busses
+>  ===========================================
+>  
+>  This document describes generic bindings which can be used to describe I2C
+> -busses in a device tree.
+> +busses and their child devices in a device tree.
+>  
+> -Required properties
+> --------------------
+> +Required properties (per bus)
+> +-----------------------------
+>  
+>  - #address-cells  - should be <1>. Read more about addresses below.
+>  - #size-cells     - should be <0>.
+> @@ -16,18 +16,13 @@ For other required properties e.g. to describe register sets,
+>  clocks, etc. check the binding documentation of the specific driver.
+>  
+>  The cells properties above define that an address of children of an I2C bus
+> -are described by a single value. This is usually a 7 bit address. However,
+> -flags can be attached to the address. I2C_TEN_BIT_ADDRESS is used to mark a 10
+> -bit address. It is needed to avoid the ambiguity between e.g. a 7 bit address
+> -of 0x50 and a 10 bit address of 0x050 which, in theory, can be on the same bus.
+> -Another flag is I2C_OWN_SLAVE_ADDRESS to mark addresses on which we listen to
+> -be devices ourselves.
+> +are described by a single value.
+>  
+> -Optional properties
+> --------------------
+> +Optional properties (per bus)
+> +-----------------------------
+>  
+>  These properties may not be supported by all drivers. However, if a driver
+> -wants to support one of the below features, it should adapt the bindings below.
+> +wants to support one of the below features, it should adapt these bindings.
+>  
+>  - clock-frequency
+>  	frequency of bus clock in Hz.
+> @@ -73,31 +68,49 @@ wants to support one of the below features, it should adapt the bindings below.
+>  	i2c bus clock frequency (clock-frequency).
+>  	Specified in Hz.
+>  
+> -- interrupts
+> -	interrupts used by the device.
+> -
+> -- interrupt-names
+> -	"irq", "wakeup" and "smbus_alert" names are recognized by I2C core,
+> -	other names are	left to individual drivers.
+> -
+> -- host-notify
+> -	device uses SMBus host notify protocol instead of interrupt line.
+> -
+>  - multi-master
+>  	states that there is another master active on this bus. The OS can use
+>  	this information to adapt power management to keep the arbitration awake
+>  	all the time, for example.
+>  
+> -- wakeup-source
+> -	device can be used as a wakeup source.
+> +Required properties (per child device)
+> +--------------------------------------
+> +
+> +- compatible
+> +	name of I2C slave device following generic names recommended practice.
 
-Acked-by: Rob Herring <robh@kernel.org>
+generic names is for node names not compatibles.
+
+>  
+>  - reg
+> -	I2C slave addresses
+> +	One or many I2C slave addresses. These are usually a 7 bit addresses.
+> +	However, flags can be attached to an address. I2C_TEN_BIT_ADDRESS is
+> +	used to mark a 10 bit address. It is needed to avoid the ambiguity
+> +	between e.g. a 7 bit address of 0x50 and a 10 bit address of 0x050
+> +	which, in theory, can be on the same bus.
+> +	Another flag is I2C_OWN_SLAVE_ADDRESS to mark addresses on which we
+> +	listen to be devices ourselves.
+> +
+> +Optional properties (per child device)
+> +--------------------------------------
+> +
+> +These properties may not be supported by all drivers. However, if a driver
+> +wants to support one of the below features, it should adapt these bindings.
+> +
+> +- host-notify
+> +	device uses SMBus host notify protocol instead of interrupt line.
+> +
+> +- interrupts
+> +	interrupts used by the device.
+> +
+> +- interrupt-names
+> +	"irq", "wakeup" and "smbus_alert" names are recognized by I2C core,
+> +	other names are	left to individual drivers.
+>  
+>  - reg-names
+>  	Names of map programmable addresses.
+>  	It can contain any map needing another address than default one.
+>  
+> +- wakeup-source
+> +	device can be used as a wakeup source.
+> +
+>  Binding may contain optional "interrupts" property, describing interrupts
+>  used by the device. I2C core will assign "irq" interrupt (or the very first
+>  interrupt if not using interrupt names) as primary interrupt for the slave.
+> -- 
+> 2.20.1
+> 
