@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55577C2BB86
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 23:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0608EC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2266D206E9
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 23:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D108A2051A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647378;
-	bh=5E5acoX/23TDJSuUqQEMj3LTgMnNc8iD56xVZ48yBxg=;
+	s=default; t=1586647646;
+	bh=aWqExgihGyj1TfMUyTA5tPHVlHKweus6wnZ2PJwW7Yo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EnAeCyVQ+NeYCEo1ouT5pKM1YyN+/1w3ZpHaB6SgoxXDZsQSx//kd7hWsMKSwu+86
-	 OBrkaAm9D9/0XtovWjv+PX/AMEjHGxX0aN3te8UtZreDk89DEnX12i0pmeODzEJ0zv
-	 C8IBc3YVnBQ1S12J0n2FIOWd7/nTdKG2LNd6IUw8=
+	b=AU4wrC73r4j5LNAMXvfvOfVzXOqk4DFWzeAphDg4XJvW7V+0JqpcoMOPQ5dwEIkkL
+	 +DLRTRbGHJKf33vVTXB6lrg0kxOAYsjay7unP0NxB2j4Q958Ys1QL/+WADdnphSEw3
+	 loVmV1QGZ01IUKzIBgQvL5nli9iAung2z3jPU//g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729969AbgDKXNL (ORCPT
+        id S1730114AbgDKX1V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:13:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54084 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:27:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730355AbgDKXNL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:13:11 -0400
+        id S1729076AbgDKXLt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:11:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5902A20787;
-        Sat, 11 Apr 2020 23:13:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1565421744;
+        Sat, 11 Apr 2020 23:11:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646791;
-        bh=5E5acoX/23TDJSuUqQEMj3LTgMnNc8iD56xVZ48yBxg=;
+        s=default; t=1586646709;
+        bh=aWqExgihGyj1TfMUyTA5tPHVlHKweus6wnZ2PJwW7Yo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RF5KHJJIlTK7h5p3ZC2BtivGXPdrGmCk4xhbGuX/lO3W3VUIsgUU7ZiiEaIQCtm8c
-         J8tA+Ml2YLHZeHIy4iUQXs3jp3hlL7K+67ce8A/V7CRmLHBdQ7MGgFPfLg+GTu/m+d
-         eiK7zM3nwrjQjj2n3/NjmgF9gY+xfisUjWPP2P1s=
+        b=rnX/kuH21wyqrBvcdmBhhI9bSzj6TopufpTqO5Ol3fGY6vaeec4ABlNJmiKOWSFVH
+         1KN4PwM2rsmd+KjzN5vXIlOZMS3tYLSHUyHNWVJwOrJnKI0Y7K/HP6JCtAMa3MMz1w
+         /xwiC6mJojx0v5MN0RdPvCgIkNdBZBT/Oaiytui0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Patrick Daly <pdaly@codeaurora.org>,
-        "Isaac J . Manjarres" <isaacm@codeaurora.org>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 55/66] of: of_reserved_mem: Increase limit on number of reserved regions
-Date:   Sat, 11 Apr 2020 19:11:52 -0400
-Message-Id: <20200411231203.25933-55-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 101/108] arm64: dts: qcom: msm8998-mtp: Disable funnel 4 and 5
+Date:   Sat, 11 Apr 2020 19:09:36 -0400
+Message-Id: <20200411230943.24951-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
-References: <20200411231203.25933-1-sashal@kernel.org>
+In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
+References: <20200411230943.24951-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,42 +60,44 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Patrick Daly <pdaly@codeaurora.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ Upstream commit 632c99084052aef1c9dcfe43d2720306026d6d21 ]
+[ Upstream commit 3498d9c05f804414c4645a2c0bba0187630fe5f0 ]
 
-Certain SoCs need to support a large amount of reserved memory
-regions. For example, Qualcomm's SM8150 SoC requires that 20
-regions of memory be reserved for a variety of reasons (e.g.
-loading a peripheral subsystem's firmware image into a
-particular space).
+Disable Coresight funnel 4 and 5, for now, as these causes the MTP to
+crash when clock late_initcall disables unused clocks.
 
-When adding more reserved memory regions to cater to different
-usecases, the remaining number of reserved memory regions--12
-to be exact--becomes too small. Thus, double the existing
-limit of reserved memory regions.
-
-Signed-off-by: Patrick Daly <pdaly@codeaurora.org>
-Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20200308055445.1992189-1-bjorn.andersson@linaro.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/of_reserved_mem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 895c83e0c7b6c..794308b3b8b9a 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -21,7 +21,7 @@
- #include <linux/sort.h>
- #include <linux/slab.h>
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+index 8d15572d18e64..2c8b8e7218b90 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+@@ -80,11 +80,15 @@
+ };
  
--#define MAX_RESERVED_REGIONS	32
-+#define MAX_RESERVED_REGIONS	64
- static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
- static int reserved_mem_count;
+ &funnel4 {
+-	status = "okay";
++	// FIXME: Figure out why clock late_initcall crashes the board with
++	// this enabled.
++	// status = "okay";
+ };
  
+ &funnel5 {
+-	status = "okay";
++	// FIXME: Figure out why clock late_initcall crashes the board with
++	// this enabled.
++	// status = "okay";
+ };
+ 
+ &pm8005_lsid1 {
 -- 
 2.20.1
 
