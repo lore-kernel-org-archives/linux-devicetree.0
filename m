@@ -2,1604 +2,175 @@ Return-Path: <SRS0=gZHh=53=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A88C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 10:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57929C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 10:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD26E20732
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 10:25:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586600736;
-	bh=mZBHyY08yb/RL/B8g+yfu3proQ9q93s+PtXWiTOi2GQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jk5YfzYLKKERfrbTwomKtyEQho26vZlkFXot02rqTz+Rmq7K+ZiG60QTVBYElXS+3
-	 e+PH3BbYs3JqAf466p7ESIGXGuS/IWYX7bQcDNgD7kRhnfpSH/aEu3kwlKKKC+iZJc
-	 YWhS1j7vGnXfJ2UzPlVdnmyN4jw84SHxulbLxeeI=
+	by mail.kernel.org (Postfix) with ESMTP id 3AC732084D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 10:44:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726029AbgDKKZf (ORCPT
+        id S1726037AbgDKKn6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Apr 2020 06:25:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35040 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725951AbgDKKZf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 11 Apr 2020 06:25:35 -0400
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0287B20732;
-        Sat, 11 Apr 2020 10:25:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586600731;
-        bh=mZBHyY08yb/RL/B8g+yfu3proQ9q93s+PtXWiTOi2GQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ByCM2evhm+FG2zDDwqL4M2MuLXTuNqKJjzYBKP3jiV+k9IVonKLwNszBVQed21TEj
-         czEftQJMxjASGIOSbz0UNwuaJKmQ4ANyNhnFVYJlOPv37dKVx3TT/POyEnw1n3UwmB
-         6VQ2qWPxBP5ZOjrO2c+yX4n70gZdW70DsQdeP+i8=
-Received: by mail-ed1-f44.google.com with SMTP id cw6so5351332edb.9;
-        Sat, 11 Apr 2020 03:25:30 -0700 (PDT)
-X-Gm-Message-State: AGi0PubCVN4NTlbA+YHXjRMMWkbQvT1aQcJbGjTdTPGCTjiUNXKFMNxB
-        cavapJJv2AI3QiAimkMYMFwmYw2YUyW4t8i9MA==
-X-Google-Smtp-Source: APiQypJ3xQNxB1eM5D2uo+GQikSyq9Op/IkWZNLbcsnxOQdfCf+sm0VtphOJLvn6ZK66ze85HNDrfmRCHeWUoG/cBbc=
-X-Received: by 2002:a17:906:3b11:: with SMTP id g17mr7632818ejf.118.1586600728984;
- Sat, 11 Apr 2020 03:25:28 -0700 (PDT)
+        Sat, 11 Apr 2020 06:43:58 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:40009 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbgDKKn5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Apr 2020 06:43:57 -0400
+Received: from kb-xps (unknown [78.193.40.249])
+        (Authenticated sender: kamel.bouhara@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id AD555200008;
+        Sat, 11 Apr 2020 10:43:54 +0000 (UTC)
+Date:   Sat, 11 Apr 2020 12:43:53 +0200
+From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH 2/3] Input: rotary-encoder-counter: add DT bindings
+Message-ID: <20200411104353.GB161090@kb-xps>
+References: <20200406155806.1295169-1-kamel.bouhara@bootlin.com>
+ <20200406155806.1295169-3-kamel.bouhara@bootlin.com>
+ <20200409222115.GT75430@dtor-ws>
+ <20200409223907.GW3628@piout.net>
+ <20200409234623.GU75430@dtor-ws>
 MIME-Version: 1.0
-References: <20200410071723.19720-1-louis.kuo@mediatek.com> <20200410071723.19720-2-louis.kuo@mediatek.com>
-In-Reply-To: <20200410071723.19720-2-louis.kuo@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sat, 11 Apr 2020 18:25:15 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_-ixxLB8u8YU6yFR3JWYRz8ekN0M8wzeJX4jpcvMuLo3w@mail.gmail.com>
-Message-ID: <CAAOTY_-ixxLB8u8YU6yFR3JWYRz8ekN0M8wzeJX4jpcvMuLo3w@mail.gmail.com>
-Subject: Re: [RFC PATCH V6 1/3] media: platform: mtk-isp: Add Mediatek sensor
- interface driver
-To:     Louis Kuo <louis.kuo@mediatek.com>
-Cc:     hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com,
-        tfiga@chromium.org, keiichiw@chromium.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        devicetree@vger.kernel.org, Sean.Cheng@mediatek.com,
-        srv_heupstream@mediatek.com, Jerry-ch.Chen@mediatek.com,
-        jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, zwisler@chromium.org,
-        christie.yu@mediatek.com, frederic.chen@mediatek.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409234623.GU75430@dtor-ws>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Louis:
-
-Louis Kuo <louis.kuo@mediatek.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=8810=E6=
-=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=883:18=E5=AF=AB=E9=81=93=EF=BC=9A
+On Thu, Apr 09, 2020 at 04:46:23PM -0700, Dmitry Torokhov wrote:
+> On Fri, Apr 10, 2020 at 12:39:07AM +0200, Alexandre Belloni wrote:
+> > Hi Dmitry,
+> >
+> > On 09/04/2020 15:21:15-0700, Dmitry Torokhov wrote:
+> > > On Mon, Apr 06, 2020 at 05:58:05PM +0200, Kamel Bouhara wrote:
+> > > > Add dt binding for the counter variant of the rotary encoder driver.
+> > > >
+> > > > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> > > > ---
+> > > >  .../input/rotary-encoder-counter.yaml         | 67 +++++++++++++++++++
+> > > >  1 file changed, 67 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..a59f7c1faf0c
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> > > > @@ -0,0 +1,67 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/input/rotary-encoder-counter.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Rotary Encoder Counter
+> > > > +
+> > > > +maintainers:
+> > > > +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
+> > > > +
+> > > > +description:
+> > > > +  Registers a Rotary encoder connected through a counter device.
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    const: rotary-encoder-counter
+> > >
+> > > I wonder if a separate driver is really needed. The original driver be
+> > > taught to use counter device when available?
+> > >
+> >
+> > By the original driver, do you mean drivers/input/misc/rotary_encoder.c
+> > that is using gpios ?
 >
-> This patch adds Mediatek's sensor interface driver. Sensor interface driv=
-er
-> is a MIPI-CSI2 host driver, namely, a HW camera interface controller. It
-> support a widely adopted, simple, high-speed protocol primarily intended =
-for
-> point-to-point image and video transmission between cameras and host
-> devices. The mtk-isp directory will contain drivers for multiple IP block=
-s
-> found in Mediatek ISP system. It will include ISP Pass 1 driver, sensor i=
-nterface
-> driver, DIP driver and face detection driver.
->
-> Signed-off-by: Louis Kuo <louis.kuo@mediatek.com>
-> ---
->  drivers/media/platform/Makefile               |    1 +
->  drivers/media/platform/mtk-isp/Kconfig        |   18 +
->  drivers/media/platform/mtk-isp/Makefile       |    3 +
->  .../media/platform/mtk-isp/seninf/Makefile    |    5 +
->  drivers/media/platform/mtk-isp/seninf/TODO    |   18 +
->  .../platform/mtk-isp/seninf/mtk_seninf.c      | 1173 +++++++++++++
->  .../platform/mtk-isp/seninf/mtk_seninf_reg.h  | 1491 +++++++++++++++++
->  .../mtk-isp/seninf/mtk_seninf_rx_reg.h        | 1398 ++++++++++++++++
->  8 files changed, 4107 insertions(+)
->  create mode 100644 drivers/media/platform/mtk-isp/Kconfig
->  create mode 100644 drivers/media/platform/mtk-isp/Makefile
->  create mode 100644 drivers/media/platform/mtk-isp/seninf/Makefile
->  create mode 100644 drivers/media/platform/mtk-isp/seninf/TODO
->  create mode 100644 drivers/media/platform/mtk-isp/seninf/mtk_seninf.c
->  create mode 100644 drivers/media/platform/mtk-isp/seninf/mtk_seninf_reg.=
-h
->  create mode 100644 drivers/media/platform/mtk-isp/seninf/mtk_seninf_rx_r=
-eg.h
+> Yes.
 >
 
-[snip]
+Well, it could be the case if the counter device could provide such a
+way to signal interrupts.
 
-> diff --git a/drivers/media/platform/mtk-isp/seninf/mtk_seninf_rx_reg.h b/=
-drivers/media/platform/mtk-isp/seninf/mtk_seninf_rx_reg.h
-> new file mode 100644
-> index 000000000000..7e7c68853e11
-> --- /dev/null
-> +++ b/drivers/media/platform/mtk-isp/seninf/mtk_seninf_rx_reg.h
-> @@ -0,0 +1,1398 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +#ifndef __SENINF_RX_REG_H__
-> +#define __SENINF_RX_REG_H__
-> +
-> +#define BIT(nr) (1UL << (nr))
+> >
+> > > > +
+> > > > +  counter:
+> > > > +    description: Phandle for the counter device providing rotary position.
+> > > > +
+> > > > +  linux-axis:
+> > > > +    description: The input subsystem axis to map to this rotary encoder.
+> > > > +    type: boolean
+> > > > +
+> > > > +  qdec-mode:
+> > > > +    description: |
+> > > > +      Quadrature decoder function to set in the counter device.
+> > > > +      3: x1-PHA
+> > > > +      4: x1-PHB
+> > > > +      5: x2-PHA
+> > > > +      6: x2-PHB
+> > > > +      7: x4-PHA and PHB
+> > >
+> > > Is it really property of the rotary encoder itself or property of the
+> > > counter device?
+> > >
+> >
+> > The mode the quadrature decoder has to be put in depends on both the
+> > rotary encoder and the qdec.
+>
+> OK.
+>
+> >
+> > > > +
+> > > > +  steps:
+> > > > +    description: Number of steps in a full turnaround of the encoder.
+> > > > +      Only relevant for absolute axis. Defaults to 24 which is a typical
+> > > > +      value for such devices.
+> > > > +
+> > > > +  relative-axis:
+> > > > +    description: Register a relative axis rather than an absolute one.
+> > > > +    type: boolean
+> > > > +
+> > > > +  rollover:
+> > > > +    description: Automatic rollover when the rotary value becomes greater
+> > > > +      than the specified steps or smaller than 0. For absolute axis only.
+> > > > +    type: boolean
+> > > > +
+> > > > +  poll-interval:
+> > > > +    description: Poll interval at which the position is read from the counter
+> > > > +      device (default 500ms).
+> > >
+> > > Is there a way found counters to signal an interrupt?
+> > >
+> >
+> > For some counters, there are interrupts available, this is not trivial
+> > with the counter that is the target of this work but this is on the TODO
+> > list. Of course, this will also require adding a bit more to the
+> > in-kernel counter API to allow registering a callback that would be
+> > called when an interrupt happens.
+>
+> Should it be a callback, or can counter create an irqchip so that users
+> do not need to know how exactly it is wired up?
+>
 
-This has been defined in bits.h
+Maybe for some of them yes but for others the polling is still required.
 
-> +
-> +#define MIPI_RX_ANA00_CSI0A                                    0x0000
-> +#define MIPI_RX_ANA00_CSI0A_RG_CSI0A_CPHY_EN_SHIFT 0
-> +#define MIPI_RX_ANA00_CSI0A_RG_CSI0A_CPHY_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA00_CSI0A_RG_CSI0A_EQ_PROTECT_EN_SHIFT 1
-> +#define MIPI_RX_ANA00_CSI0A_RG_CSI0A_EQ_PROTECT_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA00_CSI0A_RG_CSI0A_BG_LPF_EN_SHIFT 2
-> +#define MIPI_RX_ANA00_CSI0A_RG_CSI0A_BG_LPF_EN_MASK BIT(2)
-> +#define MIPI_RX_ANA00_CSI0A_RG_CSI0A_BG_CORE_EN_SHIFT 3
-> +#define MIPI_RX_ANA00_CSI0A_RG_CSI0A_BG_CORE_EN_MASK BIT(3)
-> +#define MIPI_RX_ANA00_CSI0A_RG_CSI0A_DPHY_L0_CKMODE_EN_SHIFT 5
-> +#define MIPI_RX_ANA00_CSI0A_RG_CSI0A_DPHY_L0_CKMODE_EN_MASK BIT(5)
-> +#define MIPI_RX_ANA00_CSI0A_RG_CSI0A_DPHY_L0_CKSEL_SHIFT 6
-> +#define MIPI_RX_ANA00_CSI0A_RG_CSI0A_DPHY_L0_CKSEL_MASK BIT(6)
-> +#define MIPI_RX_ANA00_CSI0A_RG_CSI0A_DPHY_L1_CKMODE_EN_SHIFT 8
-> +#define MIPI_RX_ANA00_CSI0A_RG_CSI0A_DPHY_L1_CKMODE_EN_MASK BIT(8)
-> +#define MIPI_RX_ANA00_CSI0A_RG_CSI0A_DPHY_L1_CKSEL_SHIFT 9
-> +#define MIPI_RX_ANA00_CSI0A_RG_CSI0A_DPHY_L1_CKSEL_MASK BIT(9)
-> +#define MIPI_RX_ANA00_CSI0A_RG_CSI0A_DPHY_L2_CKMODE_EN_SHIFT 11
-> +#define MIPI_RX_ANA00_CSI0A_RG_CSI0A_DPHY_L2_CKMODE_EN_MASK BIT(11)
-> +#define MIPI_RX_ANA00_CSI0A_RG_CSI0A_DPHY_L2_CKSEL_SHIFT 12
-> +#define MIPI_RX_ANA00_CSI0A_RG_CSI0A_DPHY_L2_CKSEL_MASK BIT(12)
-> +#define MIPI_RX_ANA04_CSI0A                                    0x0004
-> +#define MIPI_RX_ANA04_CSI0A_RG_CSI0A_BG_LPRX_VTH_SEL_SHIFT 0
-> +#define MIPI_RX_ANA04_CSI0A_RG_CSI0A_BG_LPRX_VTH_SEL_MASK (0x7 << 0)
-> +#define MIPI_RX_ANA04_CSI0A_RG_CSI0A_BG_LPRX_VTL_SEL_SHIFT 4
-> +#define MIPI_RX_ANA04_CSI0A_RG_CSI0A_BG_LPRX_VTL_SEL_MASK (0x7 << 4)
-> +#define MIPI_RX_ANA04_CSI0A_RG_CSI0A_BG_HSDET_VTH_SEL_SHIFT 8
-> +#define MIPI_RX_ANA04_CSI0A_RG_CSI0A_BG_HSDET_VTH_SEL_MASK (0x7 << 8)
-> +#define MIPI_RX_ANA04_CSI0A_RG_CSI0A_BG_HSDET_VTL_SEL_SHIFT 12
-> +#define MIPI_RX_ANA04_CSI0A_RG_CSI0A_BG_HSDET_VTL_SEL_MASK (0x7 << 12)
-> +#define MIPI_RX_ANA04_CSI0A_RG_CSI0A_BG_VREF_SEL_SHIFT 16
-> +#define MIPI_RX_ANA04_CSI0A_RG_CSI0A_BG_VREF_SEL_MASK (0xf << 16)
-> +#define MIPI_RX_ANA04_CSI0A_RG_CSI0A_BG_MON_VREF_SEL_SHIFT 24
-> +#define MIPI_RX_ANA04_CSI0A_RG_CSI0A_BG_MON_VREF_SEL_MASK (0xf << 24)
-> +#define MIPI_RX_ANA04_CSI0A_RG_CSI0A_FORCE_HSRT_EN_SHIFT 28
-> +#define MIPI_RX_ANA04_CSI0A_RG_CSI0A_FORCE_HSRT_EN_MASK BIT(28)
-> +#define MIPI_RX_ANA08_CSI0A                                    0x0008
-> +#define MIPI_RX_ANA08_CSI0A_RG_CSI0A_L0P_T0A_HSRT_CODE_SHIFT 0
-> +#define MIPI_RX_ANA08_CSI0A_RG_CSI0A_L0P_T0A_HSRT_CODE_MASK (0x1f << 0)
-> +#define MIPI_RX_ANA08_CSI0A_RG_CSI0A_L0N_T0B_HSRT_CODE_SHIFT 8
-> +#define MIPI_RX_ANA08_CSI0A_RG_CSI0A_L0N_T0B_HSRT_CODE_MASK (0x1f << 8)
-> +#define MIPI_RX_ANA08_CSI0A_RG_CSI0A_L1P_T0C_HSRT_CODE_SHIFT 16
-> +#define MIPI_RX_ANA08_CSI0A_RG_CSI0A_L1P_T0C_HSRT_CODE_MASK (0x1f << 16)
-> +#define MIPI_RX_ANA08_CSI0A_RG_CSI0A_L1N_T1A_HSRT_CODE_SHIFT 24
-> +#define MIPI_RX_ANA08_CSI0A_RG_CSI0A_L1N_T1A_HSRT_CODE_MASK (0x1f << 24)
-> +#define MIPI_RX_ANA0C_CSI0A                                    0x000C
-> +#define MIPI_RX_ANA0C_CSI0A_RG_CSI0A_L2P_T1B_HSRT_CODE_SHIFT 0
-> +#define MIPI_RX_ANA0C_CSI0A_RG_CSI0A_L2P_T1B_HSRT_CODE_MASK (0x1f << 0)
-> +#define MIPI_RX_ANA0C_CSI0A_RG_CSI0A_L2N_T1C_HSRT_CODE_SHIFT 8
-> +#define MIPI_RX_ANA0C_CSI0A_RG_CSI0A_L2N_T1C_HSRT_CODE_MASK (0x1f << 8)
-> +#define MIPI_RX_ANA10_CSI0A                                    0x0010
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_DPHY_L0_DELAYCAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_DPHY_L0_DELAYCAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_DPHY_L0_DELAYCAL_RSTB_SHIFT 1
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_DPHY_L0_DELAYCAL_RSTB_MASK BIT(1)
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_DPHY_L0_VREF_SEL_SHIFT 2
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_DPHY_L0_VREF_SEL_MASK (0x3f << 2)
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_DPHY_L1_DELAYCAL_EN_SHIFT 8
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_DPHY_L1_DELAYCAL_EN_MASK BIT(8)
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_DPHY_L1_DELAYCAL_RSTB_SHIFT 9
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_DPHY_L1_DELAYCAL_RSTB_MASK BIT(9)
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_DPHY_L1_VREF_SEL_SHIFT 10
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_DPHY_L1_VREF_SEL_MASK (0x3f << 10)
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_DPHY_L2_DELAYCAL_EN_SHIFT 16
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_DPHY_L2_DELAYCAL_EN_MASK BIT(16)
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_DPHY_L2_DELAYCAL_RSTB_SHIFT 17
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_DPHY_L2_DELAYCAL_RSTB_MASK BIT(17)
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_DPHY_L2_VREF_SEL_SHIFT 18
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_DPHY_L2_VREF_SEL_MASK (0x3f << 18)
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_CPHY_T0_CDR_DELAYCAL_EN_SHIFT 24
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_CPHY_T0_CDR_DELAYCAL_EN_MASK BIT(24=
-)
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_CPHY_T0_CDR_DELAYCAL_RSTB_SHIFT 25
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_CPHY_T0_CDR_DELAYCAL_RSTB_MASK BIT(=
-25)
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_CPHY_T0_VREF_SEL_SHIFT 26
-> +#define MIPI_RX_ANA10_CSI0A_RG_CSI0A_CPHY_T0_VREF_SEL_MASK (0x3f << 26)
-> +#define MIPI_RX_ANA14_CSI0A                                    0x0014
-> +#define MIPI_RX_ANA14_CSI0A_RG_CSI0A_CPHY_T1_CDR_DELAYCAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA14_CSI0A_RG_CSI0A_CPHY_T1_CDR_DELAYCAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA14_CSI0A_RG_CSI0A_CPHY_T1_CDR_DELAYCAL_RSTB_SHIFT 1
-> +#define MIPI_RX_ANA14_CSI0A_RG_CSI0A_CPHY_T1_CDR_DELAYCAL_RSTB_MASK BIT(=
-1)
-> +#define MIPI_RX_ANA14_CSI0A_RG_CSI0A_CPHY_T1_VREF_SEL_SHIFT 2
-> +#define MIPI_RX_ANA14_CSI0A_RG_CSI0A_CPHY_T1_VREF_SEL_MASK (0x3f << 2)
-> +#define MIPI_RX_ANA18_CSI0A                                    0x0018
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_L0_T0AB_EQ_OS_CAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_L0_T0AB_EQ_OS_CAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_L0_T0AB_EQ_MON_EN_SHIFT 1
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_L0_T0AB_EQ_MON_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_L0_T0AB_EQ_SCA_SHIFT 2
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_L0_T0AB_EQ_SCA_MASK BIT(2)
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_L0_T0AB_EQ_SCB_SHIFT 3
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_L0_T0AB_EQ_SCB_MASK BIT(3)
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_L0_T0AB_EQ_IS_SHIFT 4
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_L0_T0AB_EQ_IS_MASK (0x3 << 4)
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_L0_T0AB_EQ_BW_SHIFT 6
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_L0_T0AB_EQ_BW_MASK (0x3 << 6)
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_L0_T0AB_EQ_SRA_SHIFT 8
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_L0_T0AB_EQ_SRA_MASK (0xf << 8)
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_L0_T0AB_EQ_SRB_SHIFT 12
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_L0_T0AB_EQ_SRB_MASK (0xf << 12)
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_XX_T0CA_EQ_OS_CAL_EN_SHIFT 16
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_XX_T0CA_EQ_OS_CAL_EN_MASK BIT(16)
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_XX_T0CA_EQ_MON_EN_SHIFT 17
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_XX_T0CA_EQ_MON_EN_MASK BIT(17)
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_XX_T0CA_EQ_SCA_SHIFT 18
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_XX_T0CA_EQ_SCA_MASK BIT(18)
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_XX_T0CA_EQ_SCB_SHIFT 19
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_XX_T0CA_EQ_SCB_MASK BIT(19)
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_XX_T0CA_EQ_IS_SHIFT 20
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_XX_T0CA_EQ_IS_MASK (0x3 << 20)
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_XX_T0CA_EQ_BW_SHIFT 22
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_XX_T0CA_EQ_BW_MASK (0x3 << 22)
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_XX_T0CA_EQ_SRA_SHIFT 24
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_XX_T0CA_EQ_SRA_MASK (0xf << 24)
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_XX_T0CA_EQ_SRB_SHIFT 28
-> +#define MIPI_RX_ANA18_CSI0A_RG_CSI0A_XX_T0CA_EQ_SRB_MASK (0xf << 28)
-> +#define MIPI_RX_ANA1C_CSI0A                                    0x001C
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_XX_T0BC_EQ_OS_CAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_XX_T0BC_EQ_OS_CAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_XX_T0BC_EQ_MON_EN_SHIFT 1
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_XX_T0BC_EQ_MON_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_XX_T0BC_EQ_SCA_SHIFT 2
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_XX_T0BC_EQ_SCA_MASK BIT(2)
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_XX_T0BC_EQ_SCB_SHIFT 3
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_XX_T0BC_EQ_SCB_MASK BIT(3)
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_XX_T0BC_EQ_IS_SHIFT 4
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_XX_T0BC_EQ_IS_MASK (0x3 << 4)
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_XX_T0BC_EQ_BW_SHIFT 6
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_XX_T0BC_EQ_BW_MASK (0x3 << 6)
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_XX_T0BC_EQ_SRA_SHIFT 8
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_XX_T0BC_EQ_SRA_MASK (0xf << 8)
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_XX_T0BC_EQ_SRB_SHIFT 12
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_XX_T0BC_EQ_SRB_MASK (0xf << 12)
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_L1_T1AB_EQ_OS_CAL_EN_SHIFT 16
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_L1_T1AB_EQ_OS_CAL_EN_MASK BIT(16)
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_L1_T1AB_EQ_MON_EN_SHIFT 17
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_L1_T1AB_EQ_MON_EN_MASK BIT(17)
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_L1_T1AB_EQ_SCA_SHIFT 18
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_L1_T1AB_EQ_SCA_MASK BIT(18)
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_L1_T1AB_EQ_SCB_SHIFT 19
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_L1_T1AB_EQ_SCB_MASK BIT(19)
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_L1_T1AB_EQ_IS_SHIFT 20
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_L1_T1AB_EQ_IS_MASK (0x3 << 20)
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_L1_T1AB_EQ_BW_SHIFT 22
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_L1_T1AB_EQ_BW_MASK (0x3 << 22)
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_L1_T1AB_EQ_SRA_SHIFT 24
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_L1_T1AB_EQ_SRA_MASK (0xf << 24)
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_L1_T1AB_EQ_SRB_SHIFT 28
-> +#define MIPI_RX_ANA1C_CSI0A_RG_CSI0A_L1_T1AB_EQ_SRB_MASK (0xf << 28)
-> +#define MIPI_RX_ANA20_CSI0A                                    0x0020
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_XX_T1CA_EQ_OS_CAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_XX_T1CA_EQ_OS_CAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_XX_T1CA_EQ_MON_EN_SHIFT 1
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_XX_T1CA_EQ_MON_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_XX_T1CA_EQ_SCA_SHIFT 2
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_XX_T1CA_EQ_SCA_MASK BIT(2)
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_XX_T1CA_EQ_SCB_SHIFT 3
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_XX_T1CA_EQ_SCB_MASK BIT(3)
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_XX_T1CA_EQ_IS_SHIFT 4
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_XX_T1CA_EQ_IS_MASK (0x3 << 4)
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_XX_T1CA_EQ_BW_SHIFT 6
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_XX_T1CA_EQ_BW_MASK (0x3 << 6)
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_XX_T1CA_EQ_SRA_SHIFT 8
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_XX_T1CA_EQ_SRA_MASK (0xf << 8)
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_XX_T1CA_EQ_SRB_SHIFT 12
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_XX_T1CA_EQ_SRB_MASK (0xf << 12)
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_L2_T1BC_EQ_OS_CAL_EN_SHIFT 16
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_L2_T1BC_EQ_OS_CAL_EN_MASK BIT(16)
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_L2_T1BC_EQ_MON_EN_SHIFT 17
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_L2_T1BC_EQ_MON_EN_MASK BIT(17)
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_L2_T1BC_EQ_SCA_SHIFT 18
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_L2_T1BC_EQ_SCA_MASK BIT(18)
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_L2_T1BC_EQ_SCB_SHIFT 19
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_L2_T1BC_EQ_SCB_MASK BIT(19)
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_L2_T1BC_EQ_IS_SHIFT 20
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_L2_T1BC_EQ_IS_MASK (0x3 << 20)
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_L2_T1BC_EQ_BW_SHIFT 22
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_L2_T1BC_EQ_BW_MASK (0x3 << 22)
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_L2_T1BC_EQ_SRA_SHIFT 24
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_L2_T1BC_EQ_SRA_MASK (0xf << 24)
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_L2_T1BC_EQ_SRB_SHIFT 28
-> +#define MIPI_RX_ANA20_CSI0A_RG_CSI0A_L2_T1BC_EQ_SRB_MASK (0xf << 28)
-> +#define MIPI_RX_ANA24_CSI0A                                    0x0024
-> +#define MIPI_RX_ANA24_CSI0A_RG_CSI0A_RESERVE_SHIFT 24
-> +#define MIPI_RX_ANA24_CSI0A_RG_CSI0A_RESERVE_MASK (0xff << 24)
-> +#define MIPI_RX_ANA28_CSI0A                                    0x0028
-> +#define MIPI_RX_ANA28_CSI0A_RG_CSI0A_CPHY_T0_CDR_DIRECT_EN_SHIFT 0
-> +#define MIPI_RX_ANA28_CSI0A_RG_CSI0A_CPHY_T0_CDR_DIRECT_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA28_CSI0A_RG_CSI0A_CPHY_T0_CDR_AUTOLOAD_EN_SHIFT 1
-> +#define MIPI_RX_ANA28_CSI0A_RG_CSI0A_CPHY_T0_CDR_AUTOLOAD_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA28_CSI0A_RG_CSI0A_CPHY_T0_CDR_LPF_CTRL_SHIFT 2
-> +#define MIPI_RX_ANA28_CSI0A_RG_CSI0A_CPHY_T0_CDR_LPF_CTRL_MASK (0x3 << 2=
-)
-> +#define MIPI_RX_ANA28_CSI0A_RG_CSI0A_CPHY_T0_CDR_AB_WIDTH_SHIFT 4
-> +#define MIPI_RX_ANA28_CSI0A_RG_CSI0A_CPHY_T0_CDR_AB_WIDTH_MASK (0xf << 4=
-)
-> +#define MIPI_RX_ANA28_CSI0A_RG_CSI0A_CPHY_T0_CDR_BC_WIDTH_SHIFT 8
-> +#define MIPI_RX_ANA28_CSI0A_RG_CSI0A_CPHY_T0_CDR_BC_WIDTH_MASK (0xf << 8=
-)
-> +#define MIPI_RX_ANA28_CSI0A_RG_CSI0A_CPHY_T0_CDR_CA_WIDTH_SHIFT 12
-> +#define MIPI_RX_ANA28_CSI0A_RG_CSI0A_CPHY_T0_CDR_CA_WIDTH_MASK (0xf << 1=
-2)
-> +#define MIPI_RX_ANA28_CSI0A_RG_CSI0A_CPHY_T0_CDR_CK_DELAY_SHIFT 16
-> +#define MIPI_RX_ANA28_CSI0A_RG_CSI0A_CPHY_T0_CDR_CK_DELAY_MASK (0xf << 1=
-6)
-> +#define MIPI_RX_ANA28_CSI0A_RG_CSI0A_CPHY_T0_HSDET_SEL_SHIFT 20
-> +#define MIPI_RX_ANA28_CSI0A_RG_CSI0A_CPHY_T0_HSDET_SEL_MASK (0x3 << 20)
-> +#define MIPI_RX_ANA28_CSI0A_RG_CSI0A_CPHY_T0_CDR_MANUAL_EN_SHIFT 24
-> +#define MIPI_RX_ANA28_CSI0A_RG_CSI0A_CPHY_T0_CDR_MANUAL_EN_MASK BIT(24)
-> +#define MIPI_RX_ANA2C_CSI0A                                    0x002C
-> +#define MIPI_RX_ANA2C_CSI0A_RG_CSI0A_CPHY_T0_CDR_INIT_CODE_SHIFT 0
-> +#define MIPI_RX_ANA2C_CSI0A_RG_CSI0A_CPHY_T0_CDR_INIT_CODE_MASK (0x1f <<=
- 0)
-> +#define MIPI_RX_ANA2C_CSI0A_RG_CSI0A_CPHY_T0_CDR_EARLY_CODE_SHIFT 8
-> +#define MIPI_RX_ANA2C_CSI0A_RG_CSI0A_CPHY_T0_CDR_EARLY_CODE_MASK (0x1f <=
-< 8)
-> +#define MIPI_RX_ANA2C_CSI0A_RG_CSI0A_CPHY_T0_CDR_LATE_CODE_SHIFT 16
-> +#define MIPI_RX_ANA2C_CSI0A_RG_CSI0A_CPHY_T0_CDR_LATE_CODE_MASK (0x1f <<=
- 16)
-> +#define MIPI_RX_ANA34_CSI0A                                    0x0034
-> +#define MIPI_RX_ANA34_CSI0A_RG_CSI0A_CPHY_T1_CDR_DIRECT_EN_SHIFT 0
-> +#define MIPI_RX_ANA34_CSI0A_RG_CSI0A_CPHY_T1_CDR_DIRECT_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA34_CSI0A_RG_CSI0A_CPHY_T1_CDR_AUTOLOAD_EN_SHIFT 1
-> +#define MIPI_RX_ANA34_CSI0A_RG_CSI0A_CPHY_T1_CDR_AUTOLOAD_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA34_CSI0A_RG_CSI0A_CPHY_T1_CDR_LPF_CTRL_SHIFT 2
-> +#define MIPI_RX_ANA34_CSI0A_RG_CSI0A_CPHY_T1_CDR_LPF_CTRL_MASK (0x3 << 2=
-)
-> +#define MIPI_RX_ANA34_CSI0A_RG_CSI0A_CPHY_T1_CDR_AB_WIDTH_SHIFT 4
-> +#define MIPI_RX_ANA34_CSI0A_RG_CSI0A_CPHY_T1_CDR_AB_WIDTH_MASK (0xf << 4=
-)
-> +#define MIPI_RX_ANA34_CSI0A_RG_CSI0A_CPHY_T1_CDR_BC_WIDTH_SHIFT 8
-> +#define MIPI_RX_ANA34_CSI0A_RG_CSI0A_CPHY_T1_CDR_BC_WIDTH_MASK (0xf << 8=
-)
-> +#define MIPI_RX_ANA34_CSI0A_RG_CSI0A_CPHY_T1_CDR_CA_WIDTH_SHIFT 12
-> +#define MIPI_RX_ANA34_CSI0A_RG_CSI0A_CPHY_T1_CDR_CA_WIDTH_MASK (0xf << 1=
-2)
-> +#define MIPI_RX_ANA34_CSI0A_RG_CSI0A_CPHY_T1_CDR_CK_DELAY_SHIFT 16
-> +#define MIPI_RX_ANA34_CSI0A_RG_CSI0A_CPHY_T1_CDR_CK_DELAY_MASK (0xf << 1=
-6)
-> +#define MIPI_RX_ANA34_CSI0A_RG_CSI0A_CPHY_T1_HSDET_SEL_SHIFT 20
-> +#define MIPI_RX_ANA34_CSI0A_RG_CSI0A_CPHY_T1_HSDET_SEL_MASK (0x3 << 20)
-> +#define MIPI_RX_ANA34_CSI0A_RG_CSI0A_CPHY_T1_CDR_MANUAL_EN_SHIFT 24
-> +#define MIPI_RX_ANA34_CSI0A_RG_CSI0A_CPHY_T1_CDR_MANUAL_EN_MASK BIT(24)
-> +#define MIPI_RX_ANA38_CSI0A                                    0x0038
-> +#define MIPI_RX_ANA38_CSI0A_RG_CSI0A_CPHY_T1_CDR_INIT_CODE_SHIFT 0
-> +#define MIPI_RX_ANA38_CSI0A_RG_CSI0A_CPHY_T1_CDR_INIT_CODE_MASK (0x1f <<=
- 0)
-> +#define MIPI_RX_ANA38_CSI0A_RG_CSI0A_CPHY_T1_CDR_EARLY_CODE_SHIFT 8
-> +#define MIPI_RX_ANA38_CSI0A_RG_CSI0A_CPHY_T1_CDR_EARLY_CODE_MASK (0x1f <=
-< 8)
-> +#define MIPI_RX_ANA38_CSI0A_RG_CSI0A_CPHY_T1_CDR_LATE_CODE_SHIFT 16
-> +#define MIPI_RX_ANA38_CSI0A_RG_CSI0A_CPHY_T1_CDR_LATE_CODE_MASK (0x1f <<=
- 16)
-> +#define MIPI_RX_ANA40_CSI0A                                    0x0040
-> +#define MIPI_RX_ANA40_CSI0A_RG_CSI0A_CPHY_FMCK_SEL_SHIFT 0
-> +#define MIPI_RX_ANA40_CSI0A_RG_CSI0A_CPHY_FMCK_SEL_MASK (0x3 << 0)
-> +#define MIPI_RX_ANA40_CSI0A_RG_CSI0A_ASYNC_OPTION_SHIFT 4
-> +#define MIPI_RX_ANA40_CSI0A_RG_CSI0A_ASYNC_OPTION_MASK (0xf << 4)
-> +#define MIPI_RX_ANA40_CSI0A_RG_CSI0A_CPHY_SPARE_SHIFT 16
-> +#define MIPI_RX_ANA40_CSI0A_RG_CSI0A_CPHY_SPARE_MASK (0xffff << 16)
-> +#define MIPI_RX_ANA48_CSI0A                                    0x0048
-> +#define MIPI_RX_ANA48_CSI0A_RGS_CSI0A_CDPHY_L0_T0AB_OS_CAL_CPLT_SHIFT 0
-> +#define MIPI_RX_ANA48_CSI0A_RGS_CSI0A_CDPHY_L0_T0AB_OS_CAL_CPLT_MASK BIT=
-(0)
-> +#define MIPI_RX_ANA48_CSI0A_RGS_CSI0A_CPHY_T0CA_OS_CAL_CPLT_SHIFT 1
-> +#define MIPI_RX_ANA48_CSI0A_RGS_CSI0A_CPHY_T0CA_OS_CAL_CPLT_MASK BIT(1)
-> +#define MIPI_RX_ANA48_CSI0A_RGS_CSI0A_CPHY_T0BC_OS_CAL_CPLT_SHIFT 2
-> +#define MIPI_RX_ANA48_CSI0A_RGS_CSI0A_CPHY_T0BC_OS_CAL_CPLT_MASK BIT(2)
-> +#define MIPI_RX_ANA48_CSI0A_RGS_CSI0A_CDPHY_L1_T1AB_OS_CAL_CPLT_SHIFT 3
-> +#define MIPI_RX_ANA48_CSI0A_RGS_CSI0A_CDPHY_L1_T1AB_OS_CAL_CPLT_MASK BIT=
-(3)
-> +#define MIPI_RX_ANA48_CSI0A_RGS_CSI0A_CPHY_T1CA_OS_CAL_CPLT_SHIFT 4
-> +#define MIPI_RX_ANA48_CSI0A_RGS_CSI0A_CPHY_T1CA_OS_CAL_CPLT_MASK BIT(4)
-> +#define MIPI_RX_ANA48_CSI0A_RGS_CSI0A_CDPHY_L2_T1BC_OS_CAL_CPLT_SHIFT 5
-> +#define MIPI_RX_ANA48_CSI0A_RGS_CSI0A_CDPHY_L2_T1BC_OS_CAL_CPLT_MASK BIT=
-(5)
-> +#define MIPI_RX_ANA48_CSI0A_RGS_CSI0A_OS_CAL_CODE_SHIFT 8
-> +#define MIPI_RX_ANA48_CSI0A_RGS_CSI0A_OS_CAL_CODE_MASK (0xff << 8)
-> +#define MIPI_RX_WRAPPER80_CSI0A                                0x0080
-> +#define MIPI_RX_WRAPPER80_CSI0A_CSR_CSI_CLK_MON_SHIFT 0
-> +#define MIPI_RX_WRAPPER80_CSI0A_CSR_CSI_CLK_MON_MASK BIT(0)
-> +#define MIPI_RX_WRAPPER80_CSI0A_CSR_CSI_CLK_EN_SHIFT 1
-> +#define MIPI_RX_WRAPPER80_CSI0A_CSR_CSI_CLK_EN_MASK BIT(1)
-> +#define MIPI_RX_WRAPPER80_CSI0A_CSR_CSI_MON_MUX_SHIFT 8
-> +#define MIPI_RX_WRAPPER80_CSI0A_CSR_CSI_MON_MUX_MASK (0xff << 8)
-> +#define MIPI_RX_WRAPPER80_CSI0A_CSR_CSI_RST_MODE_SHIFT 16
-> +#define MIPI_RX_WRAPPER80_CSI0A_CSR_CSI_RST_MODE_MASK (0x3 << 16)
-> +#define MIPI_RX_WRAPPER80_CSI0A_CSR_SW_RST_SHIFT 24
-> +#define MIPI_RX_WRAPPER80_CSI0A_CSR_SW_RST_MASK (0xf << 24)
-> +#define MIPI_RX_WRAPPER84_CSI0A                                0x0084
-> +#define MIPI_RX_WRAPPER84_CSI0A_CSI_DEBUG_OUT_SHIFT 0
-> +#define MIPI_RX_WRAPPER84_CSI0A_CSI_DEBUG_OUT_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER88_CSI0A                                0x0088
-> +#define MIPI_RX_WRAPPER88_CSI0A_CSR_SW_MODE_0_SHIFT 0
-> +#define MIPI_RX_WRAPPER88_CSI0A_CSR_SW_MODE_0_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER8C_CSI0A                                0x008C
-> +#define MIPI_RX_WRAPPER8C_CSI0A_CSR_SW_MODE_1_SHIFT 0
-> +#define MIPI_RX_WRAPPER8C_CSI0A_CSR_SW_MODE_1_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER90_CSI0A                                0x0090
-> +#define MIPI_RX_WRAPPER90_CSI0A_CSR_SW_MODE_2_SHIFT 0
-> +#define MIPI_RX_WRAPPER90_CSI0A_CSR_SW_MODE_2_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER94_CSI0A                                0x0094
-> +#define MIPI_RX_WRAPPER94_CSI0A_CSR_SW_VALUE_0_SHIFT 0
-> +#define MIPI_RX_WRAPPER94_CSI0A_CSR_SW_VALUE_0_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER98_CSI0A                                0x0098
-> +#define MIPI_RX_WRAPPER98_CSI0A_CSR_SW_VALUE_1_SHIFT 0
-> +#define MIPI_RX_WRAPPER98_CSI0A_CSR_SW_VALUE_1_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER9C_CSI0A                                0x009C
-> +#define MIPI_RX_WRAPPER9C_CSI0A_CSR_SW_VALUE_2_SHIFT 0
-> +#define MIPI_RX_WRAPPER9C_CSI0A_CSR_SW_VALUE_2_MASK (0xffffffff << 0)
-> +#define MIPI_RX_ANAA4_CSI0A                                    0x00A4
-> +#define MIPI_RX_ANAA4_CSI0A_RG_CSI0A_CDPHY_L0_T0_SYNC_INIT_SEL_SHIFT 0
-> +#define MIPI_RX_ANAA4_CSI0A_RG_CSI0A_CDPHY_L0_T0_SYNC_INIT_SEL_MASK BIT(=
-0)
-> +#define MIPI_RX_ANAA4_CSI0A_RG_CSI0A_CDPHY_L0_T0_FORCE_INIT_SHIFT 1
-> +#define MIPI_RX_ANAA4_CSI0A_RG_CSI0A_CDPHY_L0_T0_FORCE_INIT_MASK BIT(1)
-> +#define MIPI_RX_ANAA4_CSI0A_RG_CSI0A_DPHY_L1_SYNC_INIT_SEL_SHIFT 2
-> +#define MIPI_RX_ANAA4_CSI0A_RG_CSI0A_DPHY_L1_SYNC_INIT_SEL_MASK BIT(2)
-> +#define MIPI_RX_ANAA4_CSI0A_RG_CSI0A_DPHY_L1_FORCE_INIT_SHIFT 3
-> +#define MIPI_RX_ANAA4_CSI0A_RG_CSI0A_DPHY_L1_FORCE_INIT_MASK BIT(3)
-> +#define MIPI_RX_ANAA4_CSI0A_RG_CSI0A_CDPHY_L2_T1_SYNC_INIT_SEL_SHIFT 4
-> +#define MIPI_RX_ANAA4_CSI0A_RG_CSI0A_CDPHY_L2_T1_SYNC_INIT_SEL_MASK BIT(=
-4)
-> +#define MIPI_RX_ANAA4_CSI0A_RG_CSI0A_CDPHY_L2_T1_FORCE_INIT_SHIFT 5
-> +#define MIPI_RX_ANAA4_CSI0A_RG_CSI0A_CDPHY_L2_T1_FORCE_INIT_MASK BIT(5)
-> +#define MIPI_RX_ANAA8_CSI0A                                    0x00A8
-> +#define MIPI_RX_ANAA8_CSI0A_RG_CSI0A_CDPHY_L0_T0_BYTECK_INVERT_SHIFT 0
-> +#define MIPI_RX_ANAA8_CSI0A_RG_CSI0A_CDPHY_L0_T0_BYTECK_INVERT_MASK BIT(=
-0)
-> +#define MIPI_RX_ANAA8_CSI0A_RG_CSI0A_DPHY_L1_BYTECK_INVERT_SHIFT 1
-> +#define MIPI_RX_ANAA8_CSI0A_RG_CSI0A_DPHY_L1_BYTECK_INVERT_MASK BIT(1)
-> +#define MIPI_RX_ANAA8_CSI0A_RG_CSI0A_CDPHY_L2_T1_BYTECK_INVERT_SHIFT 2
-> +#define MIPI_RX_ANAA8_CSI0A_RG_CSI0A_CDPHY_L2_T1_BYTECK_INVERT_MASK BIT(=
-2)
-> +#define MIPI_RX_ANAA8_CSI0A_RG_CSI0A_DPHY_HSDET_LEVEL_MODE_EN_SHIFT 3
-> +#define MIPI_RX_ANAA8_CSI0A_RG_CSI0A_DPHY_HSDET_LEVEL_MODE_EN_MASK BIT(3=
-)
-> +#define MIPI_RX_ANAA8_CSI0A_RG_CSI0A_OS_CAL_SEL_SHIFT 4
-> +#define MIPI_RX_ANAA8_CSI0A_RG_CSI0A_OS_CAL_SEL_MASK (0x7 << 4)
-> +#define MIPI_RX_ANAA8_CSI0A_RG_CSI0A_DPHY_HSDET_DIG_BACK_EN_SHIFT 7
-> +#define MIPI_RX_ANAA8_CSI0A_RG_CSI0A_DPHY_HSDET_DIG_BACK_EN_MASK BIT(7)
-> +#define MIPI_RX_ANAA8_CSI0A_RG_CSI0A_CDPHY_DELAYCAL_CK_SEL_SHIFT 8
-> +#define MIPI_RX_ANAA8_CSI0A_RG_CSI0A_CDPHY_DELAYCAL_CK_SEL_MASK (0x7 << =
-8)
-> +#define MIPI_RX_ANAA8_CSI0A_RG_CSI0A_OS_CAL_DIV_SHIFT 11
-> +#define MIPI_RX_ANAA8_CSI0A_RG_CSI0A_OS_CAL_DIV_MASK (0x3 << 11)
-> +#define MIPI_RX_ANA00_CSI0B                                    0x1000
-> +#define MIPI_RX_ANA00_CSI0B_RG_CSI0B_CPHY_EN_SHIFT 0
-> +#define MIPI_RX_ANA00_CSI0B_RG_CSI0B_CPHY_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA00_CSI0B_RG_CSI0B_EQ_PROTECT_EN_SHIFT 1
-> +#define MIPI_RX_ANA00_CSI0B_RG_CSI0B_EQ_PROTECT_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA00_CSI0B_RG_CSI0B_BG_LPF_EN_SHIFT 2
-> +#define MIPI_RX_ANA00_CSI0B_RG_CSI0B_BG_LPF_EN_MASK BIT(2)
-> +#define MIPI_RX_ANA00_CSI0B_RG_CSI0B_BG_CORE_EN_SHIFT 3
-> +#define MIPI_RX_ANA00_CSI0B_RG_CSI0B_BG_CORE_EN_MASK BIT(3)
-> +#define MIPI_RX_ANA00_CSI0B_RG_CSI0B_DPHY_L0_CKMODE_EN_SHIFT 5
-> +#define MIPI_RX_ANA00_CSI0B_RG_CSI0B_DPHY_L0_CKMODE_EN_MASK BIT(5)
-> +#define MIPI_RX_ANA00_CSI0B_RG_CSI0B_DPHY_L0_CKSEL_SHIFT 6
-> +#define MIPI_RX_ANA00_CSI0B_RG_CSI0B_DPHY_L0_CKSEL_MASK BIT(6)
-> +#define MIPI_RX_ANA00_CSI0B_RG_CSI0B_DPHY_L1_CKMODE_EN_SHIFT 8
-> +#define MIPI_RX_ANA00_CSI0B_RG_CSI0B_DPHY_L1_CKMODE_EN_MASK BIT(8)
-> +#define MIPI_RX_ANA00_CSI0B_RG_CSI0B_DPHY_L1_CKSEL_SHIFT 9
-> +#define MIPI_RX_ANA00_CSI0B_RG_CSI0B_DPHY_L1_CKSEL_MASK BIT(9)
-> +#define MIPI_RX_ANA00_CSI0B_RG_CSI0B_DPHY_L2_CKMODE_EN_SHIFT 11
-> +#define MIPI_RX_ANA00_CSI0B_RG_CSI0B_DPHY_L2_CKMODE_EN_MASK BIT(11)
-> +#define MIPI_RX_ANA00_CSI0B_RG_CSI0B_DPHY_L2_CKSEL_SHIFT 12
-> +#define MIPI_RX_ANA00_CSI0B_RG_CSI0B_DPHY_L2_CKSEL_MASK BIT(12)
-> +#define MIPI_RX_ANA04_CSI0B                                    0x1004
-> +#define MIPI_RX_ANA04_CSI0B_RG_CSI0B_BG_LPRX_VTH_SEL_SHIFT 0
-> +#define MIPI_RX_ANA04_CSI0B_RG_CSI0B_BG_LPRX_VTH_SEL_MASK (0x7 << 0)
-> +#define MIPI_RX_ANA04_CSI0B_RG_CSI0B_BG_LPRX_VTL_SEL_SHIFT 4
-> +#define MIPI_RX_ANA04_CSI0B_RG_CSI0B_BG_LPRX_VTL_SEL_MASK (0x7 << 4)
-> +#define MIPI_RX_ANA04_CSI0B_RG_CSI0B_BG_HSDET_VTH_SEL_SHIFT 8
-> +#define MIPI_RX_ANA04_CSI0B_RG_CSI0B_BG_HSDET_VTH_SEL_MASK (0x7 << 8)
-> +#define MIPI_RX_ANA04_CSI0B_RG_CSI0B_BG_HSDET_VTL_SEL_SHIFT 12
-> +#define MIPI_RX_ANA04_CSI0B_RG_CSI0B_BG_HSDET_VTL_SEL_MASK (0x7 << 12)
-> +#define MIPI_RX_ANA04_CSI0B_RG_CSI0B_BG_VREF_SEL_SHIFT 16
-> +#define MIPI_RX_ANA04_CSI0B_RG_CSI0B_BG_VREF_SEL_MASK (0xf << 16)
-> +#define MIPI_RX_ANA04_CSI0B_RG_CSI0B_BG_MON_VREF_SEL_SHIFT 24
-> +#define MIPI_RX_ANA04_CSI0B_RG_CSI0B_BG_MON_VREF_SEL_MASK (0xf << 24)
-> +#define MIPI_RX_ANA04_CSI0B_RG_CSI0B_FORCE_HSRT_EN_SHIFT 28
-> +#define MIPI_RX_ANA04_CSI0B_RG_CSI0B_FORCE_HSRT_EN_MASK BIT(28)
-> +#define MIPI_RX_ANA08_CSI0B                                    0x1008
-> +#define MIPI_RX_ANA08_CSI0B_RG_CSI0B_L0P_T0A_HSRT_CODE_SHIFT 0
-> +#define MIPI_RX_ANA08_CSI0B_RG_CSI0B_L0P_T0A_HSRT_CODE_MASK (0x1f << 0)
-> +#define MIPI_RX_ANA08_CSI0B_RG_CSI0B_L0N_T0B_HSRT_CODE_SHIFT 8
-> +#define MIPI_RX_ANA08_CSI0B_RG_CSI0B_L0N_T0B_HSRT_CODE_MASK (0x1f << 8)
-> +#define MIPI_RX_ANA08_CSI0B_RG_CSI0B_L1P_T0C_HSRT_CODE_SHIFT 16
-> +#define MIPI_RX_ANA08_CSI0B_RG_CSI0B_L1P_T0C_HSRT_CODE_MASK (0x1f << 16)
-> +#define MIPI_RX_ANA08_CSI0B_RG_CSI0B_L1N_T1A_HSRT_CODE_SHIFT 24
-> +#define MIPI_RX_ANA08_CSI0B_RG_CSI0B_L1N_T1A_HSRT_CODE_MASK (0x1f << 24)
-> +#define MIPI_RX_ANA0C_CSI0B                                    0x100C
-> +#define MIPI_RX_ANA0C_CSI0B_RG_CSI0B_L2P_T1B_HSRT_CODE_SHIFT 0
-> +#define MIPI_RX_ANA0C_CSI0B_RG_CSI0B_L2P_T1B_HSRT_CODE_MASK (0x1f << 0)
-> +#define MIPI_RX_ANA0C_CSI0B_RG_CSI0B_L2N_T1C_HSRT_CODE_SHIFT 8
-> +#define MIPI_RX_ANA0C_CSI0B_RG_CSI0B_L2N_T1C_HSRT_CODE_MASK (0x1f << 8)
-> +#define MIPI_RX_ANA10_CSI0B                                    0x1010
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_DPHY_L0_DELAYCAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_DPHY_L0_DELAYCAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_DPHY_L0_DELAYCAL_RSTB_SHIFT 1
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_DPHY_L0_DELAYCAL_RSTB_MASK BIT(1)
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_DPHY_L0_VREF_SEL_SHIFT 2
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_DPHY_L0_VREF_SEL_MASK (0x3f << 2)
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_DPHY_L1_DELAYCAL_EN_SHIFT 8
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_DPHY_L1_DELAYCAL_EN_MASK BIT(8)
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_DPHY_L1_DELAYCAL_RSTB_SHIFT 9
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_DPHY_L1_DELAYCAL_RSTB_MASK BIT(9)
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_DPHY_L1_VREF_SEL_SHIFT 10
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_DPHY_L1_VREF_SEL_MASK (0x3f << 10)
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_DPHY_L2_DELAYCAL_EN_SHIFT 16
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_DPHY_L2_DELAYCAL_EN_MASK BIT(16)
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_DPHY_L2_DELAYCAL_RSTB_SHIFT 17
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_DPHY_L2_DELAYCAL_RSTB_MASK BIT(17)
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_DPHY_L2_VREF_SEL_SHIFT 18
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_DPHY_L2_VREF_SEL_MASK (0x3f << 18)
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_CPHY_T0_CDR_DELAYCAL_EN_SHIFT 24
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_CPHY_T0_CDR_DELAYCAL_EN_MASK BIT(24=
-)
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_CPHY_T0_CDR_DELAYCAL_RSTB_SHIFT 25
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_CPHY_T0_CDR_DELAYCAL_RSTB_MASK BIT(=
-25)
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_CPHY_T0_VREF_SEL_SHIFT 26
-> +#define MIPI_RX_ANA10_CSI0B_RG_CSI0B_CPHY_T0_VREF_SEL_MASK (0x3f << 26)
-> +#define MIPI_RX_ANA14_CSI0B                                    0x1014
-> +#define MIPI_RX_ANA14_CSI0B_RG_CSI0B_CPHY_T1_CDR_DELAYCAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA14_CSI0B_RG_CSI0B_CPHY_T1_CDR_DELAYCAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA14_CSI0B_RG_CSI0B_CPHY_T1_CDR_DELAYCAL_RSTB_SHIFT 1
-> +#define MIPI_RX_ANA14_CSI0B_RG_CSI0B_CPHY_T1_CDR_DELAYCAL_RSTB_MASK BIT(=
-1)
-> +#define MIPI_RX_ANA14_CSI0B_RG_CSI0B_CPHY_T1_VREF_SEL_SHIFT 2
-> +#define MIPI_RX_ANA14_CSI0B_RG_CSI0B_CPHY_T1_VREF_SEL_MASK (0x3f << 2)
-> +#define MIPI_RX_ANA18_CSI0B                                    0x1018
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_L0_T0AB_EQ_OS_CAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_L0_T0AB_EQ_OS_CAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_L0_T0AB_EQ_MON_EN_SHIFT 1
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_L0_T0AB_EQ_MON_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_L0_T0AB_EQ_SCA_SHIFT 2
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_L0_T0AB_EQ_SCA_MASK BIT(2)
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_L0_T0AB_EQ_SCB_SHIFT 3
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_L0_T0AB_EQ_SCB_MASK BIT(3)
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_L0_T0AB_EQ_IS_SHIFT 4
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_L0_T0AB_EQ_IS_MASK (0x3 << 4)
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_L0_T0AB_EQ_BW_SHIFT 6
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_L0_T0AB_EQ_BW_MASK (0x3 << 6)
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_L0_T0AB_EQ_SRA_SHIFT 8
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_L0_T0AB_EQ_SRA_MASK (0xf << 8)
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_L0_T0AB_EQ_SRB_SHIFT 12
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_L0_T0AB_EQ_SRB_MASK (0xf << 12)
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_XX_T0CA_EQ_OS_CAL_EN_SHIFT 16
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_XX_T0CA_EQ_OS_CAL_EN_MASK BIT(16)
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_XX_T0CA_EQ_MON_EN_SHIFT 17
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_XX_T0CA_EQ_MON_EN_MASK BIT(17)
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_XX_T0CA_EQ_SCA_SHIFT 18
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_XX_T0CA_EQ_SCA_MASK BIT(18)
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_XX_T0CA_EQ_SCB_SHIFT 19
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_XX_T0CA_EQ_SCB_MASK BIT(19)
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_XX_T0CA_EQ_IS_SHIFT 20
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_XX_T0CA_EQ_IS_MASK (0x3 << 20)
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_XX_T0CA_EQ_BW_SHIFT 22
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_XX_T0CA_EQ_BW_MASK (0x3 << 22)
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_XX_T0CA_EQ_SRA_SHIFT 24
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_XX_T0CA_EQ_SRA_MASK (0xf << 24)
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_XX_T0CA_EQ_SRB_SHIFT 28
-> +#define MIPI_RX_ANA18_CSI0B_RG_CSI0B_XX_T0CA_EQ_SRB_MASK (0xf << 28)
-> +#define MIPI_RX_ANA1C_CSI0B                                    0x101C
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_XX_T0BC_EQ_OS_CAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_XX_T0BC_EQ_OS_CAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_XX_T0BC_EQ_MON_EN_SHIFT 1
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_XX_T0BC_EQ_MON_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_XX_T0BC_EQ_SCA_SHIFT 2
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_XX_T0BC_EQ_SCA_MASK BIT(2)
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_XX_T0BC_EQ_SCB_SHIFT 3
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_XX_T0BC_EQ_SCB_MASK BIT(3)
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_XX_T0BC_EQ_IS_SHIFT 4
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_XX_T0BC_EQ_IS_MASK (0x3 << 4)
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_XX_T0BC_EQ_BW_SHIFT 6
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_XX_T0BC_EQ_BW_MASK (0x3 << 6)
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_XX_T0BC_EQ_SRA_SHIFT 8
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_XX_T0BC_EQ_SRA_MASK (0xf << 8)
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_XX_T0BC_EQ_SRB_SHIFT 12
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_XX_T0BC_EQ_SRB_MASK (0xf << 12)
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_L1_T1AB_EQ_OS_CAL_EN_SHIFT 16
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_L1_T1AB_EQ_OS_CAL_EN_MASK BIT(16)
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_L1_T1AB_EQ_MON_EN_SHIFT 17
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_L1_T1AB_EQ_MON_EN_MASK BIT(17)
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_L1_T1AB_EQ_SCA_SHIFT 18
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_L1_T1AB_EQ_SCA_MASK BIT(18)
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_L1_T1AB_EQ_SCB_SHIFT 19
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_L1_T1AB_EQ_SCB_MASK BIT(19)
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_L1_T1AB_EQ_IS_SHIFT 20
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_L1_T1AB_EQ_IS_MASK (0x3 << 20)
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_L1_T1AB_EQ_BW_SHIFT 22
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_L1_T1AB_EQ_BW_MASK (0x3 << 22)
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_L1_T1AB_EQ_SRA_SHIFT 24
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_L1_T1AB_EQ_SRA_MASK (0xf << 24)
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_L1_T1AB_EQ_SRB_SHIFT 28
-> +#define MIPI_RX_ANA1C_CSI0B_RG_CSI0B_L1_T1AB_EQ_SRB_MASK (0xf << 28)
-> +#define MIPI_RX_ANA20_CSI0B                                    0x1020
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_XX_T1CA_EQ_OS_CAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_XX_T1CA_EQ_OS_CAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_XX_T1CA_EQ_MON_EN_SHIFT 1
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_XX_T1CA_EQ_MON_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_XX_T1CA_EQ_SCA_SHIFT 2
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_XX_T1CA_EQ_SCA_MASK BIT(2)
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_XX_T1CA_EQ_SCB_SHIFT 3
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_XX_T1CA_EQ_SCB_MASK BIT(3)
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_XX_T1CA_EQ_IS_SHIFT 4
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_XX_T1CA_EQ_IS_MASK (0x3 << 4)
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_XX_T1CA_EQ_BW_SHIFT 6
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_XX_T1CA_EQ_BW_MASK (0x3 << 6)
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_XX_T1CA_EQ_SRA_SHIFT 8
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_XX_T1CA_EQ_SRA_MASK (0xf << 8)
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_XX_T1CA_EQ_SRB_SHIFT 12
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_XX_T1CA_EQ_SRB_MASK (0xf << 12)
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_L2_T1BC_EQ_OS_CAL_EN_SHIFT 16
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_L2_T1BC_EQ_OS_CAL_EN_MASK BIT(16)
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_L2_T1BC_EQ_MON_EN_SHIFT 17
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_L2_T1BC_EQ_MON_EN_MASK BIT(17)
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_L2_T1BC_EQ_SCA_SHIFT 18
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_L2_T1BC_EQ_SCA_MASK BIT(18)
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_L2_T1BC_EQ_SCB_SHIFT 19
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_L2_T1BC_EQ_SCB_MASK BIT(19)
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_L2_T1BC_EQ_IS_SHIFT 20
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_L2_T1BC_EQ_IS_MASK (0x3 << 20)
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_L2_T1BC_EQ_BW_SHIFT 22
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_L2_T1BC_EQ_BW_MASK (0x3 << 22)
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_L2_T1BC_EQ_SRA_SHIFT 24
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_L2_T1BC_EQ_SRA_MASK (0xf << 24)
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_L2_T1BC_EQ_SRB_SHIFT 28
-> +#define MIPI_RX_ANA20_CSI0B_RG_CSI0B_L2_T1BC_EQ_SRB_MASK (0xf << 28)
-> +#define MIPI_RX_ANA24_CSI0B                                    0x1024
-> +#define MIPI_RX_ANA24_CSI0B_RG_CSI0B_RESERVE_SHIFT 24
-> +#define MIPI_RX_ANA24_CSI0B_RG_CSI0B_RESERVE_MASK (0xff << 24)
-> +#define MIPI_RX_ANA28_CSI0B                                    0x1028
-> +#define MIPI_RX_ANA28_CSI0B_RG_CSI0B_CPHY_T0_CDR_DIRECT_EN_SHIFT 0
-> +#define MIPI_RX_ANA28_CSI0B_RG_CSI0B_CPHY_T0_CDR_DIRECT_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA28_CSI0B_RG_CSI0B_CPHY_T0_CDR_AUTOLOAD_EN_SHIFT 1
-> +#define MIPI_RX_ANA28_CSI0B_RG_CSI0B_CPHY_T0_CDR_AUTOLOAD_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA28_CSI0B_RG_CSI0B_CPHY_T0_CDR_LPF_CTRL_SHIFT 2
-> +#define MIPI_RX_ANA28_CSI0B_RG_CSI0B_CPHY_T0_CDR_LPF_CTRL_MASK (0x3 << 2=
-)
-> +#define MIPI_RX_ANA28_CSI0B_RG_CSI0B_CPHY_T0_CDR_AB_WIDTH_SHIFT 4
-> +#define MIPI_RX_ANA28_CSI0B_RG_CSI0B_CPHY_T0_CDR_AB_WIDTH_MASK (0xf << 4=
-)
-> +#define MIPI_RX_ANA28_CSI0B_RG_CSI0B_CPHY_T0_CDR_BC_WIDTH_SHIFT 8
-> +#define MIPI_RX_ANA28_CSI0B_RG_CSI0B_CPHY_T0_CDR_BC_WIDTH_MASK (0xf << 8=
-)
-> +#define MIPI_RX_ANA28_CSI0B_RG_CSI0B_CPHY_T0_CDR_CA_WIDTH_SHIFT 12
-> +#define MIPI_RX_ANA28_CSI0B_RG_CSI0B_CPHY_T0_CDR_CA_WIDTH_MASK (0xf << 1=
-2)
-> +#define MIPI_RX_ANA28_CSI0B_RG_CSI0B_CPHY_T0_CDR_CK_DELAY_SHIFT 16
-> +#define MIPI_RX_ANA28_CSI0B_RG_CSI0B_CPHY_T0_CDR_CK_DELAY_MASK (0xf << 1=
-6)
-> +#define MIPI_RX_ANA28_CSI0B_RG_CSI0B_CPHY_T0_HSDET_SEL_SHIFT 20
-> +#define MIPI_RX_ANA28_CSI0B_RG_CSI0B_CPHY_T0_HSDET_SEL_MASK (0x3 << 20)
-> +#define MIPI_RX_ANA28_CSI0B_RG_CSI0B_CPHY_T0_CDR_MANUAL_EN_SHIFT 24
-> +#define MIPI_RX_ANA28_CSI0B_RG_CSI0B_CPHY_T0_CDR_MANUAL_EN_MASK BIT(24)
-> +#define MIPI_RX_ANA2C_CSI0B                                    0x102C
-> +#define MIPI_RX_ANA2C_CSI0B_RG_CSI0B_CPHY_T0_CDR_INIT_CODE_SHIFT 0
-> +#define MIPI_RX_ANA2C_CSI0B_RG_CSI0B_CPHY_T0_CDR_INIT_CODE_MASK (0x1f <<=
- 0)
-> +#define MIPI_RX_ANA2C_CSI0B_RG_CSI0B_CPHY_T0_CDR_EARLY_CODE_SHIFT 8
-> +#define MIPI_RX_ANA2C_CSI0B_RG_CSI0B_CPHY_T0_CDR_EARLY_CODE_MASK (0x1f <=
-< 8)
-> +#define MIPI_RX_ANA2C_CSI0B_RG_CSI0B_CPHY_T0_CDR_LATE_CODE_SHIFT 16
-> +#define MIPI_RX_ANA2C_CSI0B_RG_CSI0B_CPHY_T0_CDR_LATE_CODE_MASK (0x1f <<=
- 16)
-> +#define MIPI_RX_ANA34_CSI0B                                    0x1034
-> +#define MIPI_RX_ANA34_CSI0B_RG_CSI0B_CPHY_T1_CDR_DIRECT_EN_SHIFT 0
-> +#define MIPI_RX_ANA34_CSI0B_RG_CSI0B_CPHY_T1_CDR_DIRECT_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA34_CSI0B_RG_CSI0B_CPHY_T1_CDR_AUTOLOAD_EN_SHIFT 1
-> +#define MIPI_RX_ANA34_CSI0B_RG_CSI0B_CPHY_T1_CDR_AUTOLOAD_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA34_CSI0B_RG_CSI0B_CPHY_T1_CDR_LPF_CTRL_SHIFT 2
-> +#define MIPI_RX_ANA34_CSI0B_RG_CSI0B_CPHY_T1_CDR_LPF_CTRL_MASK (0x3 << 2=
-)
-> +#define MIPI_RX_ANA34_CSI0B_RG_CSI0B_CPHY_T1_CDR_AB_WIDTH_SHIFT 4
-> +#define MIPI_RX_ANA34_CSI0B_RG_CSI0B_CPHY_T1_CDR_AB_WIDTH_MASK (0xf << 4=
-)
-> +#define MIPI_RX_ANA34_CSI0B_RG_CSI0B_CPHY_T1_CDR_BC_WIDTH_SHIFT 8
-> +#define MIPI_RX_ANA34_CSI0B_RG_CSI0B_CPHY_T1_CDR_BC_WIDTH_MASK (0xf << 8=
-)
-> +#define MIPI_RX_ANA34_CSI0B_RG_CSI0B_CPHY_T1_CDR_CA_WIDTH_SHIFT 12
-> +#define MIPI_RX_ANA34_CSI0B_RG_CSI0B_CPHY_T1_CDR_CA_WIDTH_MASK (0xf << 1=
-2)
-> +#define MIPI_RX_ANA34_CSI0B_RG_CSI0B_CPHY_T1_CDR_CK_DELAY_SHIFT 16
-> +#define MIPI_RX_ANA34_CSI0B_RG_CSI0B_CPHY_T1_CDR_CK_DELAY_MASK (0xf << 1=
-6)
-> +#define MIPI_RX_ANA34_CSI0B_RG_CSI0B_CPHY_T1_HSDET_SEL_SHIFT 20
-> +#define MIPI_RX_ANA34_CSI0B_RG_CSI0B_CPHY_T1_HSDET_SEL_MASK (0x3 << 20)
-> +#define MIPI_RX_ANA34_CSI0B_RG_CSI0B_CPHY_T1_CDR_MANUAL_EN_SHIFT 24
-> +#define MIPI_RX_ANA34_CSI0B_RG_CSI0B_CPHY_T1_CDR_MANUAL_EN_MASK BIT(24)
-> +#define MIPI_RX_ANA38_CSI0B                                    0x1038
-> +#define MIPI_RX_ANA38_CSI0B_RG_CSI0B_CPHY_T1_CDR_INIT_CODE_SHIFT 0
-> +#define MIPI_RX_ANA38_CSI0B_RG_CSI0B_CPHY_T1_CDR_INIT_CODE_MASK (0x1f <<=
- 0)
-> +#define MIPI_RX_ANA38_CSI0B_RG_CSI0B_CPHY_T1_CDR_EARLY_CODE_SHIFT 8
-> +#define MIPI_RX_ANA38_CSI0B_RG_CSI0B_CPHY_T1_CDR_EARLY_CODE_MASK (0x1f <=
-< 8)
-> +#define MIPI_RX_ANA38_CSI0B_RG_CSI0B_CPHY_T1_CDR_LATE_CODE_SHIFT 16
-> +#define MIPI_RX_ANA38_CSI0B_RG_CSI0B_CPHY_T1_CDR_LATE_CODE_MASK (0x1f <<=
- 16)
-> +#define MIPI_RX_ANA48_CSI0B                                    0x1048
-> +#define MIPI_RX_ANA48_CSI0B_RGS_CSI0B_CDPHY_L0_T0AB_OS_CAL_CPLT_SHIFT 0
-> +#define MIPI_RX_ANA48_CSI0B_RGS_CSI0B_CDPHY_L0_T0AB_OS_CAL_CPLT_MASK BIT=
-(0)
-> +#define MIPI_RX_ANA48_CSI0B_RGS_CSI0B_CPHY_T0CA_OS_CAL_CPLT_SHIFT 1
-> +#define MIPI_RX_ANA48_CSI0B_RGS_CSI0B_CPHY_T0CA_OS_CAL_CPLT_MASK BIT(1)
-> +#define MIPI_RX_ANA48_CSI0B_RGS_CSI0B_CPHY_T0BC_OS_CAL_CPLT_SHIFT 2
-> +#define MIPI_RX_ANA48_CSI0B_RGS_CSI0B_CPHY_T0BC_OS_CAL_CPLT_MASK BIT(2)
-> +#define MIPI_RX_ANA48_CSI0B_RGS_CSI0B_CDPHY_L1_T1AB_OS_CAL_CPLT_SHIFT 3
-> +#define MIPI_RX_ANA48_CSI0B_RGS_CSI0B_CDPHY_L1_T1AB_OS_CAL_CPLT_MASK BIT=
-(3)
-> +#define MIPI_RX_ANA48_CSI0B_RGS_CSI0B_CPHY_T1CA_OS_CAL_CPLT_SHIFT 4
-> +#define MIPI_RX_ANA48_CSI0B_RGS_CSI0B_CPHY_T1CA_OS_CAL_CPLT_MASK BIT(4)
-> +#define MIPI_RX_ANA48_CSI0B_RGS_CSI0B_CDPHY_L2_T1BC_OS_CAL_CPLT_SHIFT 5
-> +#define MIPI_RX_ANA48_CSI0B_RGS_CSI0B_CDPHY_L2_T1BC_OS_CAL_CPLT_MASK BIT=
-(5)
-> +#define MIPI_RX_ANA48_CSI0B_RGS_CSI0B_OS_CAL_CODE_SHIFT 8
-> +#define MIPI_RX_ANA48_CSI0B_RGS_CSI0B_OS_CAL_CODE_MASK (0xff << 8)
-> +#define MIPI_RX_WRAPPER80_CSI0B                                0x1080
-> +#define MIPI_RX_WRAPPER80_CSI0B_CSR_CSI_CLK_MON_SHIFT 0
-> +#define MIPI_RX_WRAPPER80_CSI0B_CSR_CSI_CLK_MON_MASK BIT(0)
-> +#define MIPI_RX_WRAPPER80_CSI0B_CSR_CSI_CLK_EN_SHIFT 1
-> +#define MIPI_RX_WRAPPER80_CSI0B_CSR_CSI_CLK_EN_MASK BIT(1)
-> +#define MIPI_RX_WRAPPER80_CSI0B_CSR_CSI_MON_MUX_SHIFT 8
-> +#define MIPI_RX_WRAPPER80_CSI0B_CSR_CSI_MON_MUX_MASK (0xff << 8)
-> +#define MIPI_RX_WRAPPER80_CSI0B_CSR_CSI_RST_MODE_SHIFT 16
-> +#define MIPI_RX_WRAPPER80_CSI0B_CSR_CSI_RST_MODE_MASK (0x3 << 16)
-> +#define MIPI_RX_WRAPPER80_CSI0B_CSR_SW_RST_SHIFT 24
-> +#define MIPI_RX_WRAPPER80_CSI0B_CSR_SW_RST_MASK (0xf << 24)
-> +#define MIPI_RX_WRAPPER84_CSI0B                                0x1084
-> +#define MIPI_RX_WRAPPER84_CSI0B_CSI_DEBUG_OUT_SHIFT 0
-> +#define MIPI_RX_WRAPPER84_CSI0B_CSI_DEBUG_OUT_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER88_CSI0B                                0x1088
-> +#define MIPI_RX_WRAPPER88_CSI0B_CSR_SW_MODE_0_SHIFT 0
-> +#define MIPI_RX_WRAPPER88_CSI0B_CSR_SW_MODE_0_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER8C_CSI0B                                0x108C
-> +#define MIPI_RX_WRAPPER8C_CSI0B_CSR_SW_MODE_1_SHIFT 0
-> +#define MIPI_RX_WRAPPER8C_CSI0B_CSR_SW_MODE_1_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER90_CSI0B                                0x1090
-> +#define MIPI_RX_WRAPPER90_CSI0B_CSR_SW_MODE_2_SHIFT 0
-> +#define MIPI_RX_WRAPPER90_CSI0B_CSR_SW_MODE_2_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER94_CSI0B                                0x1094
-> +#define MIPI_RX_WRAPPER94_CSI0B_CSR_SW_VALUE_0_SHIFT 0
-> +#define MIPI_RX_WRAPPER94_CSI0B_CSR_SW_VALUE_0_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER98_CSI0B                                0x1098
-> +#define MIPI_RX_WRAPPER98_CSI0B_CSR_SW_VALUE_1_SHIFT 0
-> +#define MIPI_RX_WRAPPER98_CSI0B_CSR_SW_VALUE_1_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER9C_CSI0B                                0x109C
-> +#define MIPI_RX_WRAPPER9C_CSI0B_CSR_SW_VALUE_2_SHIFT 0
-> +#define MIPI_RX_WRAPPER9C_CSI0B_CSR_SW_VALUE_2_MASK (0xffffffff << 0)
-> +#define MIPI_RX_ANAA4_CSI0B                                    0x10A4
-> +#define MIPI_RX_ANAA4_CSI0B_RG_CSI0B_CDPHY_L0_T0_SYNC_INIT_SEL_SHIFT 0
-> +#define MIPI_RX_ANAA4_CSI0B_RG_CSI0B_CDPHY_L0_T0_SYNC_INIT_SEL_MASK BIT(=
-0)
-> +#define MIPI_RX_ANAA4_CSI0B_RG_CSI0B_CDPHY_L0_T0_FORCE_INIT_SHIFT 1
-> +#define MIPI_RX_ANAA4_CSI0B_RG_CSI0B_CDPHY_L0_T0_FORCE_INIT_MASK BIT(1)
-> +#define MIPI_RX_ANAA4_CSI0B_RG_CSI0B_DPHY_L1_SYNC_INIT_SEL_SHIFT 2
-> +#define MIPI_RX_ANAA4_CSI0B_RG_CSI0B_DPHY_L1_SYNC_INIT_SEL_MASK BIT(2)
-> +#define MIPI_RX_ANAA4_CSI0B_RG_CSI0B_DPHY_L1_FORCE_INIT_SHIFT 3
-> +#define MIPI_RX_ANAA4_CSI0B_RG_CSI0B_DPHY_L1_FORCE_INIT_MASK BIT(3)
-> +#define MIPI_RX_ANAA4_CSI0B_RG_CSI0B_CDPHY_L2_T1_SYNC_INIT_SEL_SHIFT 4
-> +#define MIPI_RX_ANAA4_CSI0B_RG_CSI0B_CDPHY_L2_T1_SYNC_INIT_SEL_MASK BIT(=
-4)
-> +#define MIPI_RX_ANAA4_CSI0B_RG_CSI0B_CDPHY_L2_T1_FORCE_INIT_SHIFT 5
-> +#define MIPI_RX_ANAA4_CSI0B_RG_CSI0B_CDPHY_L2_T1_FORCE_INIT_MASK BIT(5)
-> +#define MIPI_RX_ANAA8_CSI0B                                    0x10A8
-> +#define MIPI_RX_ANAA8_CSI0B_RG_CSI0B_CDPHY_L0_T0_BYTECK_INVERT_SHIFT 0
-> +#define MIPI_RX_ANAA8_CSI0B_RG_CSI0B_CDPHY_L0_T0_BYTECK_INVERT_MASK BIT(=
-0)
-> +#define MIPI_RX_ANAA8_CSI0B_RG_CSI0B_DPHY_L1_BYTECK_INVERT_SHIFT 1
-> +#define MIPI_RX_ANAA8_CSI0B_RG_CSI0B_DPHY_L1_BYTECK_INVERT_MASK BIT(1)
-> +#define MIPI_RX_ANAA8_CSI0B_RG_CSI0B_CDPHY_L2_T1_BYTECK_INVERT_SHIFT 2
-> +#define MIPI_RX_ANAA8_CSI0B_RG_CSI0B_CDPHY_L2_T1_BYTECK_INVERT_MASK BIT(=
-2)
-> +#define MIPI_RX_ANAA8_CSI0B_RG_CSI0B_DPHY_HSDET_LEVEL_MODE_EN_SHIFT 3
-> +#define MIPI_RX_ANAA8_CSI0B_RG_CSI0B_DPHY_HSDET_LEVEL_MODE_EN_MASK BIT(3=
-)
-> +#define MIPI_RX_ANAA8_CSI0B_RG_CSI0B_OS_CAL_SEL_SHIFT 4
-> +#define MIPI_RX_ANAA8_CSI0B_RG_CSI0B_OS_CAL_SEL_MASK (0x7 << 4)
-> +#define MIPI_RX_ANAA8_CSI0B_RG_CSI0B_DPHY_HSDET_DIG_BACK_EN_SHIFT 7
-> +#define MIPI_RX_ANAA8_CSI0B_RG_CSI0B_DPHY_HSDET_DIG_BACK_EN_MASK BIT(7)
-> +#define MIPI_RX_ANAA8_CSI0B_RG_CSI0B_CDPHY_DELAYCAL_CK_SEL_SHIFT 8
-> +#define MIPI_RX_ANAA8_CSI0B_RG_CSI0B_CDPHY_DELAYCAL_CK_SEL_MASK (0x7 << =
-8)
-> +#define MIPI_RX_ANAA8_CSI0B_RG_CSI0B_OS_CAL_DIV_SHIFT 11
-> +#define MIPI_RX_ANAA8_CSI0B_RG_CSI0B_OS_CAL_DIV_MASK (0x3 << 11)
-> +#define MIPI_RX_ANA00_CSI1A                                    0x2000
-> +#define MIPI_RX_ANA00_CSI1A_RG_CSI1A_EQ_PROTECT_EN_SHIFT 1
-> +#define MIPI_RX_ANA00_CSI1A_RG_CSI1A_EQ_PROTECT_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA00_CSI1A_RG_CSI1A_BG_LPF_EN_SHIFT 2
-> +#define MIPI_RX_ANA00_CSI1A_RG_CSI1A_BG_LPF_EN_MASK BIT(2)
-> +#define MIPI_RX_ANA00_CSI1A_RG_CSI1A_BG_CORE_EN_SHIFT 3
-> +#define MIPI_RX_ANA00_CSI1A_RG_CSI1A_BG_CORE_EN_MASK BIT(3)
-> +#define MIPI_RX_ANA00_CSI1A_RG_CSI1A_DPHY_L0_CKMODE_EN_SHIFT 5
-> +#define MIPI_RX_ANA00_CSI1A_RG_CSI1A_DPHY_L0_CKMODE_EN_MASK BIT(5)
-> +#define MIPI_RX_ANA00_CSI1A_RG_CSI1A_DPHY_L0_CKSEL_SHIFT 6
-> +#define MIPI_RX_ANA00_CSI1A_RG_CSI1A_DPHY_L0_CKSEL_MASK BIT(6)
-> +#define MIPI_RX_ANA00_CSI1A_RG_CSI1A_DPHY_L1_CKMODE_EN_SHIFT 8
-> +#define MIPI_RX_ANA00_CSI1A_RG_CSI1A_DPHY_L1_CKMODE_EN_MASK BIT(8)
-> +#define MIPI_RX_ANA00_CSI1A_RG_CSI1A_DPHY_L1_CKSEL_SHIFT 9
-> +#define MIPI_RX_ANA00_CSI1A_RG_CSI1A_DPHY_L1_CKSEL_MASK BIT(9)
-> +#define MIPI_RX_ANA00_CSI1A_RG_CSI1A_DPHY_L2_CKMODE_EN_SHIFT 11
-> +#define MIPI_RX_ANA00_CSI1A_RG_CSI1A_DPHY_L2_CKMODE_EN_MASK BIT(11)
-> +#define MIPI_RX_ANA00_CSI1A_RG_CSI1A_DPHY_L2_CKSEL_SHIFT 12
-> +#define MIPI_RX_ANA00_CSI1A_RG_CSI1A_DPHY_L2_CKSEL_MASK BIT(12)
-> +#define MIPI_RX_ANA04_CSI1A                                    0x2004
-> +#define MIPI_RX_ANA04_CSI1A_RG_CSI1A_BG_LPRX_VTH_SEL_SHIFT 0
-> +#define MIPI_RX_ANA04_CSI1A_RG_CSI1A_BG_LPRX_VTH_SEL_MASK (0x7 << 0)
-> +#define MIPI_RX_ANA04_CSI1A_RG_CSI1A_BG_LPRX_VTL_SEL_SHIFT 4
-> +#define MIPI_RX_ANA04_CSI1A_RG_CSI1A_BG_LPRX_VTL_SEL_MASK (0x7 << 4)
-> +#define MIPI_RX_ANA04_CSI1A_RG_CSI1A_BG_HSDET_VTH_SEL_SHIFT 8
-> +#define MIPI_RX_ANA04_CSI1A_RG_CSI1A_BG_HSDET_VTH_SEL_MASK (0x7 << 8)
-> +#define MIPI_RX_ANA04_CSI1A_RG_CSI1A_BG_HSDET_VTL_SEL_SHIFT 12
-> +#define MIPI_RX_ANA04_CSI1A_RG_CSI1A_BG_HSDET_VTL_SEL_MASK (0x7 << 12)
-> +#define MIPI_RX_ANA04_CSI1A_RG_CSI1A_BG_VREF_SEL_SHIFT 16
-> +#define MIPI_RX_ANA04_CSI1A_RG_CSI1A_BG_VREF_SEL_MASK (0xf << 16)
-> +#define MIPI_RX_ANA04_CSI1A_RG_CSI1A_BG_MON_VREF_SEL_SHIFT 24
-> +#define MIPI_RX_ANA04_CSI1A_RG_CSI1A_BG_MON_VREF_SEL_MASK (0xf << 24)
-> +#define MIPI_RX_ANA04_CSI1A_RG_CSI1A_FORCE_HSRT_EN_SHIFT 28
-> +#define MIPI_RX_ANA04_CSI1A_RG_CSI1A_FORCE_HSRT_EN_MASK BIT(28)
-> +#define MIPI_RX_ANA08_CSI1A                                    0x2008
-> +#define MIPI_RX_ANA08_CSI1A_RG_CSI1A_L0P_HSRT_CODE_SHIFT 0
-> +#define MIPI_RX_ANA08_CSI1A_RG_CSI1A_L0P_HSRT_CODE_MASK (0x1f << 0)
-> +#define MIPI_RX_ANA08_CSI1A_RG_CSI1A_L0N_HSRT_CODE_SHIFT 8
-> +#define MIPI_RX_ANA08_CSI1A_RG_CSI1A_L0N_HSRT_CODE_MASK (0x1f << 8)
-> +#define MIPI_RX_ANA08_CSI1A_RG_CSI1A_L1P_HSRT_CODE_SHIFT 16
-> +#define MIPI_RX_ANA08_CSI1A_RG_CSI1A_L1P_HSRT_CODE_MASK (0x1f << 16)
-> +#define MIPI_RX_ANA08_CSI1A_RG_CSI1A_L1N_HSRT_CODE_SHIFT 24
-> +#define MIPI_RX_ANA08_CSI1A_RG_CSI1A_L1N_HSRT_CODE_MASK (0x1f << 24)
-> +#define MIPI_RX_ANA0C_CSI1A                                    0x200C
-> +#define MIPI_RX_ANA0C_CSI1A_RG_CSI1A_L2P_HSRT_CODE_SHIFT 0
-> +#define MIPI_RX_ANA0C_CSI1A_RG_CSI1A_L2P_HSRT_CODE_MASK (0x1f << 0)
-> +#define MIPI_RX_ANA0C_CSI1A_RG_CSI1A_L2N_HSRT_CODE_SHIFT 8
-> +#define MIPI_RX_ANA0C_CSI1A_RG_CSI1A_L2N_HSRT_CODE_MASK (0x1f << 8)
-> +#define MIPI_RX_ANA10_CSI1A                                    0x2010
-> +#define MIPI_RX_ANA10_CSI1A_RG_CSI1A_DPHY_L0_DELAYCAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA10_CSI1A_RG_CSI1A_DPHY_L0_DELAYCAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA10_CSI1A_RG_CSI1A_DPHY_L0_DELAYCAL_RSTB_SHIFT 1
-> +#define MIPI_RX_ANA10_CSI1A_RG_CSI1A_DPHY_L0_DELAYCAL_RSTB_MASK BIT(1)
-> +#define MIPI_RX_ANA10_CSI1A_RG_CSI1A_DPHY_L0_VREF_SEL_SHIFT 2
-> +#define MIPI_RX_ANA10_CSI1A_RG_CSI1A_DPHY_L0_VREF_SEL_MASK (0x3f << 2)
-> +#define MIPI_RX_ANA10_CSI1A_RG_CSI1A_DPHY_L1_DELAYCAL_EN_SHIFT 8
-> +#define MIPI_RX_ANA10_CSI1A_RG_CSI1A_DPHY_L1_DELAYCAL_EN_MASK BIT(8)
-> +#define MIPI_RX_ANA10_CSI1A_RG_CSI1A_DPHY_L1_DELAYCAL_RSTB_SHIFT 9
-> +#define MIPI_RX_ANA10_CSI1A_RG_CSI1A_DPHY_L1_DELAYCAL_RSTB_MASK BIT(9)
-> +#define MIPI_RX_ANA10_CSI1A_RG_CSI1A_DPHY_L1_VREF_SEL_SHIFT 10
-> +#define MIPI_RX_ANA10_CSI1A_RG_CSI1A_DPHY_L1_VREF_SEL_MASK (0x3f << 10)
-> +#define MIPI_RX_ANA10_CSI1A_RG_CSI1A_DPHY_L2_DELAYCAL_EN_SHIFT 16
-> +#define MIPI_RX_ANA10_CSI1A_RG_CSI1A_DPHY_L2_DELAYCAL_EN_MASK BIT(16)
-> +#define MIPI_RX_ANA10_CSI1A_RG_CSI1A_DPHY_L2_DELAYCAL_RSTB_SHIFT 17
-> +#define MIPI_RX_ANA10_CSI1A_RG_CSI1A_DPHY_L2_DELAYCAL_RSTB_MASK BIT(17)
-> +#define MIPI_RX_ANA10_CSI1A_RG_CSI1A_DPHY_L2_VREF_SEL_SHIFT 18
-> +#define MIPI_RX_ANA10_CSI1A_RG_CSI1A_DPHY_L2_VREF_SEL_MASK (0x3f << 18)
-> +#define MIPI_RX_ANA18_CSI1A                                    0x2018
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L0_EQ_OS_CAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L0_EQ_OS_CAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L0_EQ_MON_EN_SHIFT 1
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L0_EQ_MON_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L0_EQ_SCA_SHIFT 2
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L0_EQ_SCA_MASK BIT(2)
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L0_EQ_SCB_SHIFT 3
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L0_EQ_SCB_MASK BIT(3)
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L0_EQ_IS_SHIFT 4
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L0_EQ_IS_MASK (0x3 << 4)
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L0_EQ_BW_SHIFT 6
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L0_EQ_BW_MASK (0x3 << 6)
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L0_EQ_SRA_SHIFT 8
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L0_EQ_SRA_MASK (0xf << 8)
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L0_EQ_SRB_SHIFT 12
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L0_EQ_SRB_MASK (0xf << 12)
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L1_EQ_OS_CAL_EN_SHIFT 16
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L1_EQ_OS_CAL_EN_MASK BIT(16)
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L1_EQ_MON_EN_SHIFT 17
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L1_EQ_MON_EN_MASK BIT(17)
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L1_EQ_SCA_SHIFT 18
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L1_EQ_SCA_MASK BIT(18)
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L1_EQ_SCB_SHIFT 19
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L1_EQ_SCB_MASK BIT(19)
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L1_EQ_IS_SHIFT 20
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L1_EQ_IS_MASK (0x3 << 20)
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L1_EQ_BW_SHIFT 22
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L1_EQ_BW_MASK (0x3 << 22)
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L1_EQ_SRA_SHIFT 24
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L1_EQ_SRA_MASK (0xf << 24)
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L1_EQ_SRB_SHIFT 28
-> +#define MIPI_RX_ANA18_CSI1A_RG_CSI1A_L1_EQ_SRB_MASK (0xf << 28)
-> +#define MIPI_RX_ANA1C_CSI1A                                    0x201C
-> +#define MIPI_RX_ANA1C_CSI1A_RG_CSI1A_L2_EQ_OS_CAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA1C_CSI1A_RG_CSI1A_L2_EQ_OS_CAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA1C_CSI1A_RG_CSI1A_L2_EQ_MON_EN_SHIFT 1
-> +#define MIPI_RX_ANA1C_CSI1A_RG_CSI1A_L2_EQ_MON_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA1C_CSI1A_RG_CSI1A_L2_EQ_SCA_SHIFT 2
-> +#define MIPI_RX_ANA1C_CSI1A_RG_CSI1A_L2_EQ_SCA_MASK BIT(2)
-> +#define MIPI_RX_ANA1C_CSI1A_RG_CSI1A_L2_EQ_SCB_SHIFT 3
-> +#define MIPI_RX_ANA1C_CSI1A_RG_CSI1A_L2_EQ_SCB_MASK BIT(3)
-> +#define MIPI_RX_ANA1C_CSI1A_RG_CSI1A_L2_EQ_IS_SHIFT 4
-> +#define MIPI_RX_ANA1C_CSI1A_RG_CSI1A_L2_EQ_IS_MASK (0x3 << 4)
-> +#define MIPI_RX_ANA1C_CSI1A_RG_CSI1A_L2_EQ_BW_SHIFT 6
-> +#define MIPI_RX_ANA1C_CSI1A_RG_CSI1A_L2_EQ_BW_MASK (0x3 << 6)
-> +#define MIPI_RX_ANA1C_CSI1A_RG_CSI1A_L2_EQ_SRA_SHIFT 8
-> +#define MIPI_RX_ANA1C_CSI1A_RG_CSI1A_L2_EQ_SRA_MASK (0xf << 8)
-> +#define MIPI_RX_ANA1C_CSI1A_RG_CSI1A_L2_EQ_SRB_SHIFT 12
-> +#define MIPI_RX_ANA1C_CSI1A_RG_CSI1A_L2_EQ_SRB_MASK (0xf << 12)
-> +#define MIPI_RX_ANA24_CSI1A                                    0x2024
-> +#define MIPI_RX_ANA24_CSI1A_RG_CSI1A_RESERVE_SHIFT 24
-> +#define MIPI_RX_ANA24_CSI1A_RG_CSI1A_RESERVE_MASK (0xff << 24)
-> +#define MIPI_RX_ANA48_CSI1A                                    0x2048
-> +#define MIPI_RX_ANA48_CSI1A_RGS_CSI1A_DPHY_L0_OS_CAL_CPLT_SHIFT 3
-> +#define MIPI_RX_ANA48_CSI1A_RGS_CSI1A_DPHY_L0_OS_CAL_CPLT_MASK BIT(3)
-> +#define MIPI_RX_ANA48_CSI1A_RGS_CSI1A_DPHY_L1_OS_CAL_CPLT_SHIFT 4
-> +#define MIPI_RX_ANA48_CSI1A_RGS_CSI1A_DPHY_L1_OS_CAL_CPLT_MASK BIT(4)
-> +#define MIPI_RX_ANA48_CSI1A_RGS_CSI1A_DPHY_L2_OS_CAL_CPLT_SHIFT 5
-> +#define MIPI_RX_ANA48_CSI1A_RGS_CSI1A_DPHY_L2_OS_CAL_CPLT_MASK BIT(5)
-> +#define MIPI_RX_ANA48_CSI1A_RGS_CSI1A_OS_CAL_CODE_SHIFT 8
-> +#define MIPI_RX_ANA48_CSI1A_RGS_CSI1A_OS_CAL_CODE_MASK (0xff << 8)
-> +#define MIPI_RX_WRAPPER80_CSI1A                                0x2080
-> +#define MIPI_RX_WRAPPER80_CSI1A_CSR_CSI_CLK_MON_SHIFT 0
-> +#define MIPI_RX_WRAPPER80_CSI1A_CSR_CSI_CLK_MON_MASK BIT(0)
-> +#define MIPI_RX_WRAPPER80_CSI1A_CSR_CSI_MON_MUX_SHIFT 8
-> +#define MIPI_RX_WRAPPER80_CSI1A_CSR_CSI_MON_MUX_MASK (0xff << 8)
-> +#define MIPI_RX_WRAPPER80_CSI1A_CSR_CSI_RST_MODE_SHIFT 16
-> +#define MIPI_RX_WRAPPER80_CSI1A_CSR_CSI_RST_MODE_MASK (0x3 << 16)
-> +#define MIPI_RX_WRAPPER80_CSI1A_CSR_SW_RST_SHIFT 24
-> +#define MIPI_RX_WRAPPER80_CSI1A_CSR_SW_RST_MASK (0xf << 24)
-> +#define MIPI_RX_WRAPPER84_CSI1A                                0x2084
-> +#define MIPI_RX_WRAPPER84_CSI1A_CSI_DEBUG_OUT_SHIFT 0
-> +#define MIPI_RX_WRAPPER84_CSI1A_CSI_DEBUG_OUT_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER88_CSI1A                                0x2088
-> +#define MIPI_RX_WRAPPER88_CSI1A_CSR_SW_MODE_0_SHIFT 0
-> +#define MIPI_RX_WRAPPER88_CSI1A_CSR_SW_MODE_0_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER8C_CSI1A                                0x208C
-> +#define MIPI_RX_WRAPPER8C_CSI1A_CSR_SW_MODE_1_SHIFT 0
-> +#define MIPI_RX_WRAPPER8C_CSI1A_CSR_SW_MODE_1_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER90_CSI1A                                0x2090
-> +#define MIPI_RX_WRAPPER90_CSI1A_CSR_SW_MODE_2_SHIFT 0
-> +#define MIPI_RX_WRAPPER90_CSI1A_CSR_SW_MODE_2_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER94_CSI1A                                0x2094
-> +#define MIPI_RX_WRAPPER94_CSI1A_CSR_SW_VALUE_0_SHIFT 0
-> +#define MIPI_RX_WRAPPER94_CSI1A_CSR_SW_VALUE_0_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER98_CSI1A                                0x2098
-> +#define MIPI_RX_WRAPPER98_CSI1A_CSR_SW_VALUE_1_SHIFT 0
-> +#define MIPI_RX_WRAPPER98_CSI1A_CSR_SW_VALUE_1_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER9C_CSI1A                                0x209C
-> +#define MIPI_RX_WRAPPER9C_CSI1A_CSR_SW_VALUE_2_SHIFT 0
-> +#define MIPI_RX_WRAPPER9C_CSI1A_CSR_SW_VALUE_2_MASK (0xffffffff << 0)
-> +#define MIPI_RX_ANAA4_CSI1A                                    0x20A4
-> +#define MIPI_RX_ANAA4_CSI1A_RG_CSI1A_DPHY_L0_SYNC_INIT_SEL_SHIFT 0
-> +#define MIPI_RX_ANAA4_CSI1A_RG_CSI1A_DPHY_L0_SYNC_INIT_SEL_MASK BIT(0)
-> +#define MIPI_RX_ANAA4_CSI1A_RG_CSI1A_DPHY_L0_FORCE_INIT_SHIFT 1
-> +#define MIPI_RX_ANAA4_CSI1A_RG_CSI1A_DPHY_L0_FORCE_INIT_MASK BIT(1)
-> +#define MIPI_RX_ANAA4_CSI1A_RG_CSI1A_DPHY_L1_SYNC_INIT_SEL_SHIFT 2
-> +#define MIPI_RX_ANAA4_CSI1A_RG_CSI1A_DPHY_L1_SYNC_INIT_SEL_MASK BIT(2)
-> +#define MIPI_RX_ANAA4_CSI1A_RG_CSI1A_DPHY_L1_FORCE_INIT_SHIFT 3
-> +#define MIPI_RX_ANAA4_CSI1A_RG_CSI1A_DPHY_L1_FORCE_INIT_MASK BIT(3)
-> +#define MIPI_RX_ANAA4_CSI1A_RG_CSI1A_DPHY_L2_SYNC_INIT_SEL_SHIFT 4
-> +#define MIPI_RX_ANAA4_CSI1A_RG_CSI1A_DPHY_L2_SYNC_INIT_SEL_MASK BIT(4)
-> +#define MIPI_RX_ANAA4_CSI1A_RG_CSI1A_DPHY_L2_FORCE_INIT_SHIFT 5
-> +#define MIPI_RX_ANAA4_CSI1A_RG_CSI1A_DPHY_L2_FORCE_INIT_MASK BIT(5)
-> +#define MIPI_RX_ANAA8_CSI1A                                    0x20A8
-> +#define MIPI_RX_ANAA8_CSI1A_RG_CSI1A_DPHY_L0_BYTECK_INVERT_SHIFT 0
-> +#define MIPI_RX_ANAA8_CSI1A_RG_CSI1A_DPHY_L0_BYTECK_INVERT_MASK BIT(0)
-> +#define MIPI_RX_ANAA8_CSI1A_RG_CSI1A_DPHY_L1_BYTECK_INVERT_SHIFT 1
-> +#define MIPI_RX_ANAA8_CSI1A_RG_CSI1A_DPHY_L1_BYTECK_INVERT_MASK BIT(1)
-> +#define MIPI_RX_ANAA8_CSI1A_RG_CSI1A_DPHY_L2_BYTECK_INVERT_SHIFT 2
-> +#define MIPI_RX_ANAA8_CSI1A_RG_CSI1A_DPHY_L2_BYTECK_INVERT_MASK BIT(2)
-> +#define MIPI_RX_ANAA8_CSI1A_RG_CSI1A_DPHY_HSDET_LEVEL_MODE_EN_SHIFT 3
-> +#define MIPI_RX_ANAA8_CSI1A_RG_CSI1A_DPHY_HSDET_LEVEL_MODE_EN_MASK BIT(3=
-)
-> +#define MIPI_RX_ANAA8_CSI1A_RG_CSI1A_OS_CAL_SEL_SHIFT 4
-> +#define MIPI_RX_ANAA8_CSI1A_RG_CSI1A_OS_CAL_SEL_MASK (0x7 << 4)
-> +#define MIPI_RX_ANAA8_CSI1A_RG_CSI1A_DPHY_HSDET_DIG_BACK_EN_SHIFT 7
-> +#define MIPI_RX_ANAA8_CSI1A_RG_CSI1A_DPHY_HSDET_DIG_BACK_EN_MASK BIT(7)
-> +#define MIPI_RX_ANAA8_CSI1A_RG_CSI1A_DPHY_DELAYCAL_CK_SEL_SHIFT 8
-> +#define MIPI_RX_ANAA8_CSI1A_RG_CSI1A_DPHY_DELAYCAL_CK_SEL_MASK (0x7 << 8=
-)
-> +#define MIPI_RX_ANAA8_CSI1A_RG_CSI1A_OS_CAL_DIV_SHIFT 11
-> +#define MIPI_RX_ANAA8_CSI1A_RG_CSI1A_OS_CAL_DIV_MASK (0x3 << 11)
-> +#define MIPI_RX_ANA00_CSI1B                                    0x3000
-> +#define MIPI_RX_ANA00_CSI1B_RG_CSI1B_EQ_PROTECT_EN_SHIFT 1
-> +#define MIPI_RX_ANA00_CSI1B_RG_CSI1B_EQ_PROTECT_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA00_CSI1B_RG_CSI1B_BG_LPF_EN_SHIFT 2
-> +#define MIPI_RX_ANA00_CSI1B_RG_CSI1B_BG_LPF_EN_MASK BIT(2)
-> +#define MIPI_RX_ANA00_CSI1B_RG_CSI1B_BG_CORE_EN_SHIFT 3
-> +#define MIPI_RX_ANA00_CSI1B_RG_CSI1B_BG_CORE_EN_MASK BIT(3)
-> +#define MIPI_RX_ANA00_CSI1B_RG_CSI1B_DPHY_L0_CKMODE_EN_SHIFT 5
-> +#define MIPI_RX_ANA00_CSI1B_RG_CSI1B_DPHY_L0_CKMODE_EN_MASK BIT(5)
-> +#define MIPI_RX_ANA00_CSI1B_RG_CSI1B_DPHY_L0_CKSEL_SHIFT 6
-> +#define MIPI_RX_ANA00_CSI1B_RG_CSI1B_DPHY_L0_CKSEL_MASK BIT(6)
-> +#define MIPI_RX_ANA00_CSI1B_RG_CSI1B_DPHY_L1_CKMODE_EN_SHIFT 8
-> +#define MIPI_RX_ANA00_CSI1B_RG_CSI1B_DPHY_L1_CKMODE_EN_MASK BIT(8)
-> +#define MIPI_RX_ANA00_CSI1B_RG_CSI1B_DPHY_L1_CKSEL_SHIFT 9
-> +#define MIPI_RX_ANA00_CSI1B_RG_CSI1B_DPHY_L1_CKSEL_MASK BIT(9)
-> +#define MIPI_RX_ANA00_CSI1B_RG_CSI1B_DPHY_L2_CKMODE_EN_SHIFT 11
-> +#define MIPI_RX_ANA00_CSI1B_RG_CSI1B_DPHY_L2_CKMODE_EN_MASK BIT(11)
-> +#define MIPI_RX_ANA00_CSI1B_RG_CSI1B_DPHY_L2_CKSEL_SHIFT 12
-> +#define MIPI_RX_ANA00_CSI1B_RG_CSI1B_DPHY_L2_CKSEL_MASK BIT(12)
-> +#define MIPI_RX_ANA04_CSI1B                                    0x3004
-> +#define MIPI_RX_ANA04_CSI1B_RG_CSI1B_BG_LPRX_VTH_SEL_SHIFT 0
-> +#define MIPI_RX_ANA04_CSI1B_RG_CSI1B_BG_LPRX_VTH_SEL_MASK (0x7 << 0)
-> +#define MIPI_RX_ANA04_CSI1B_RG_CSI1B_BG_LPRX_VTL_SEL_SHIFT 4
-> +#define MIPI_RX_ANA04_CSI1B_RG_CSI1B_BG_LPRX_VTL_SEL_MASK (0x7 << 4)
-> +#define MIPI_RX_ANA04_CSI1B_RG_CSI1B_BG_HSDET_VTH_SEL_SHIFT 8
-> +#define MIPI_RX_ANA04_CSI1B_RG_CSI1B_BG_HSDET_VTH_SEL_MASK (0x7 << 8)
-> +#define MIPI_RX_ANA04_CSI1B_RG_CSI1B_BG_HSDET_VTL_SEL_SHIFT 12
-> +#define MIPI_RX_ANA04_CSI1B_RG_CSI1B_BG_HSDET_VTL_SEL_MASK (0x7 << 12)
-> +#define MIPI_RX_ANA04_CSI1B_RG_CSI1B_BG_VREF_SEL_SHIFT 16
-> +#define MIPI_RX_ANA04_CSI1B_RG_CSI1B_BG_VREF_SEL_MASK (0xf << 16)
-> +#define MIPI_RX_ANA04_CSI1B_RG_CSI1B_BG_MON_VREF_SEL_SHIFT 24
-> +#define MIPI_RX_ANA04_CSI1B_RG_CSI1B_BG_MON_VREF_SEL_MASK (0xf << 24)
-> +#define MIPI_RX_ANA04_CSI1B_RG_CSI1B_FORCE_HSRT_EN_SHIFT 28
-> +#define MIPI_RX_ANA04_CSI1B_RG_CSI1B_FORCE_HSRT_EN_MASK BIT(28)
-> +#define MIPI_RX_ANA08_CSI1B                                    0x3008
-> +#define MIPI_RX_ANA08_CSI1B_RG_CSI1B_L0P_HSRT_CODE_SHIFT 0
-> +#define MIPI_RX_ANA08_CSI1B_RG_CSI1B_L0P_HSRT_CODE_MASK (0x1f << 0)
-> +#define MIPI_RX_ANA08_CSI1B_RG_CSI1B_L0N_HSRT_CODE_SHIFT 8
-> +#define MIPI_RX_ANA08_CSI1B_RG_CSI1B_L0N_HSRT_CODE_MASK (0x1f << 8)
-> +#define MIPI_RX_ANA08_CSI1B_RG_CSI1B_L1P_HSRT_CODE_SHIFT 16
-> +#define MIPI_RX_ANA08_CSI1B_RG_CSI1B_L1P_HSRT_CODE_MASK (0x1f << 16)
-> +#define MIPI_RX_ANA08_CSI1B_RG_CSI1B_L1N_HSRT_CODE_SHIFT 24
-> +#define MIPI_RX_ANA08_CSI1B_RG_CSI1B_L1N_HSRT_CODE_MASK (0x1f << 24)
-> +#define MIPI_RX_ANA0C_CSI1B                                    0x300C
-> +#define MIPI_RX_ANA0C_CSI1B_RG_CSI1B_L2P_HSRT_CODE_SHIFT 0
-> +#define MIPI_RX_ANA0C_CSI1B_RG_CSI1B_L2P_HSRT_CODE_MASK (0x1f << 0)
-> +#define MIPI_RX_ANA0C_CSI1B_RG_CSI1B_L2N_HSRT_CODE_SHIFT 8
-> +#define MIPI_RX_ANA0C_CSI1B_RG_CSI1B_L2N_HSRT_CODE_MASK (0x1f << 8)
-> +#define MIPI_RX_ANA10_CSI1B                                    0x3010
-> +#define MIPI_RX_ANA10_CSI1B_RG_CSI1B_DPHY_L0_DELAYCAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA10_CSI1B_RG_CSI1B_DPHY_L0_DELAYCAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA10_CSI1B_RG_CSI1B_DPHY_L0_DELAYCAL_RSTB_SHIFT 1
-> +#define MIPI_RX_ANA10_CSI1B_RG_CSI1B_DPHY_L0_DELAYCAL_RSTB_MASK BIT(1)
-> +#define MIPI_RX_ANA10_CSI1B_RG_CSI1B_DPHY_L0_VREF_SEL_SHIFT 2
-> +#define MIPI_RX_ANA10_CSI1B_RG_CSI1B_DPHY_L0_VREF_SEL_MASK (0x3f << 2)
-> +#define MIPI_RX_ANA10_CSI1B_RG_CSI1B_DPHY_L1_DELAYCAL_EN_SHIFT 8
-> +#define MIPI_RX_ANA10_CSI1B_RG_CSI1B_DPHY_L1_DELAYCAL_EN_MASK BIT(8)
-> +#define MIPI_RX_ANA10_CSI1B_RG_CSI1B_DPHY_L1_DELAYCAL_RSTB_SHIFT 9
-> +#define MIPI_RX_ANA10_CSI1B_RG_CSI1B_DPHY_L1_DELAYCAL_RSTB_MASK BIT(9)
-> +#define MIPI_RX_ANA10_CSI1B_RG_CSI1B_DPHY_L1_VREF_SEL_SHIFT 10
-> +#define MIPI_RX_ANA10_CSI1B_RG_CSI1B_DPHY_L1_VREF_SEL_MASK (0x3f << 10)
-> +#define MIPI_RX_ANA10_CSI1B_RG_CSI1B_DPHY_L2_DELAYCAL_EN_SHIFT 16
-> +#define MIPI_RX_ANA10_CSI1B_RG_CSI1B_DPHY_L2_DELAYCAL_EN_MASK BIT(16)
-> +#define MIPI_RX_ANA10_CSI1B_RG_CSI1B_DPHY_L2_DELAYCAL_RSTB_SHIFT 17
-> +#define MIPI_RX_ANA10_CSI1B_RG_CSI1B_DPHY_L2_DELAYCAL_RSTB_MASK BIT(17)
-> +#define MIPI_RX_ANA10_CSI1B_RG_CSI1B_DPHY_L2_VREF_SEL_SHIFT 18
-> +#define MIPI_RX_ANA10_CSI1B_RG_CSI1B_DPHY_L2_VREF_SEL_MASK (0x3f << 18)
-> +#define MIPI_RX_ANA18_CSI1B                                    0x3018
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L0_EQ_OS_CAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L0_EQ_OS_CAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L0_EQ_MON_EN_SHIFT 1
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L0_EQ_MON_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L0_EQ_SCA_SHIFT 2
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L0_EQ_SCA_MASK BIT(2)
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L0_EQ_SCB_SHIFT 3
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L0_EQ_SCB_MASK BIT(3)
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L0_EQ_IS_SHIFT 4
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L0_EQ_IS_MASK (0x3 << 4)
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L0_EQ_BW_SHIFT 6
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L0_EQ_BW_MASK (0x3 << 6)
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L0_EQ_SRA_SHIFT 8
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L0_EQ_SRA_MASK (0xf << 8)
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L0_EQ_SRB_SHIFT 12
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L0_EQ_SRB_MASK (0xf << 12)
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L1_EQ_OS_CAL_EN_SHIFT 16
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L1_EQ_OS_CAL_EN_MASK BIT(16)
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L1_EQ_MON_EN_SHIFT 17
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L1_EQ_MON_EN_MASK BIT(17)
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L1_EQ_SCA_SHIFT 18
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L1_EQ_SCA_MASK BIT(18)
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L1_EQ_SCB_SHIFT 19
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L1_EQ_SCB_MASK BIT(19)
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L1_EQ_IS_SHIFT 20
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L1_EQ_IS_MASK (0x3 << 20)
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L1_EQ_BW_SHIFT 22
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L1_EQ_BW_MASK (0x3 << 22)
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L1_EQ_SRA_SHIFT 24
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L1_EQ_SRA_MASK (0xf << 24)
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L1_EQ_SRB_SHIFT 28
-> +#define MIPI_RX_ANA18_CSI1B_RG_CSI1B_L1_EQ_SRB_MASK (0xf << 28)
-> +#define MIPI_RX_ANA1C_CSI1B                                    0x301C
-> +#define MIPI_RX_ANA1C_CSI1B_RG_CSI1B_L2_EQ_OS_CAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA1C_CSI1B_RG_CSI1B_L2_EQ_OS_CAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA1C_CSI1B_RG_CSI1B_L2_EQ_MON_EN_SHIFT 1
-> +#define MIPI_RX_ANA1C_CSI1B_RG_CSI1B_L2_EQ_MON_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA1C_CSI1B_RG_CSI1B_L2_EQ_SCA_SHIFT 2
-> +#define MIPI_RX_ANA1C_CSI1B_RG_CSI1B_L2_EQ_SCA_MASK BIT(2)
-> +#define MIPI_RX_ANA1C_CSI1B_RG_CSI1B_L2_EQ_SCB_SHIFT 3
-> +#define MIPI_RX_ANA1C_CSI1B_RG_CSI1B_L2_EQ_SCB_MASK BIT(3)
-> +#define MIPI_RX_ANA1C_CSI1B_RG_CSI1B_L2_EQ_IS_SHIFT 4
-> +#define MIPI_RX_ANA1C_CSI1B_RG_CSI1B_L2_EQ_IS_MASK (0x3 << 4)
-> +#define MIPI_RX_ANA1C_CSI1B_RG_CSI1B_L2_EQ_BW_SHIFT 6
-> +#define MIPI_RX_ANA1C_CSI1B_RG_CSI1B_L2_EQ_BW_MASK (0x3 << 6)
-> +#define MIPI_RX_ANA1C_CSI1B_RG_CSI1B_L2_EQ_SRA_SHIFT 8
-> +#define MIPI_RX_ANA1C_CSI1B_RG_CSI1B_L2_EQ_SRA_MASK (0xf << 8)
-> +#define MIPI_RX_ANA1C_CSI1B_RG_CSI1B_L2_EQ_SRB_SHIFT 12
-> +#define MIPI_RX_ANA1C_CSI1B_RG_CSI1B_L2_EQ_SRB_MASK (0xf << 12)
-> +#define MIPI_RX_ANA24_CSI1B                                    0x3024
-> +#define MIPI_RX_ANA24_CSI1B_RG_CSI1B_RESERVE_SHIFT 24
-> +#define MIPI_RX_ANA24_CSI1B_RG_CSI1B_RESERVE_MASK (0xff << 24)
-> +#define MIPI_RX_ANA48_CSI1B                                    0x3048
-> +#define MIPI_RX_ANA48_CSI1B_RGS_CSI1B_DPHY_L0_OS_CAL_CPLT_SHIFT 3
-> +#define MIPI_RX_ANA48_CSI1B_RGS_CSI1B_DPHY_L0_OS_CAL_CPLT_MASK BIT(3)
-> +#define MIPI_RX_ANA48_CSI1B_RGS_CSI1B_DPHY_L1_OS_CAL_CPLT_SHIFT 4
-> +#define MIPI_RX_ANA48_CSI1B_RGS_CSI1B_DPHY_L1_OS_CAL_CPLT_MASK BIT(4)
-> +#define MIPI_RX_ANA48_CSI1B_RGS_CSI1B_DPHY_L2_OS_CAL_CPLT_SHIFT 5
-> +#define MIPI_RX_ANA48_CSI1B_RGS_CSI1B_DPHY_L2_OS_CAL_CPLT_MASK BIT(5)
-> +#define MIPI_RX_ANA48_CSI1B_RGS_CSI1B_OS_CAL_CODE_SHIFT 8
-> +#define MIPI_RX_ANA48_CSI1B_RGS_CSI1B_OS_CAL_CODE_MASK (0xff << 8)
-> +#define MIPI_RX_WRAPPER80_CSI1B                                0x3080
-> +#define MIPI_RX_WRAPPER80_CSI1B_CSR_CSI_CLK_MON_SHIFT 0
-> +#define MIPI_RX_WRAPPER80_CSI1B_CSR_CSI_CLK_MON_MASK BIT(0)
-> +#define MIPI_RX_WRAPPER80_CSI1B_CSR_CSI_MON_MUX_SHIFT 8
-> +#define MIPI_RX_WRAPPER80_CSI1B_CSR_CSI_MON_MUX_MASK (0xff << 8)
-> +#define MIPI_RX_WRAPPER80_CSI1B_CSR_CSI_RST_MODE_SHIFT 16
-> +#define MIPI_RX_WRAPPER80_CSI1B_CSR_CSI_RST_MODE_MASK (0x3 << 16)
-> +#define MIPI_RX_WRAPPER80_CSI1B_CSR_SW_RST_SHIFT 24
-> +#define MIPI_RX_WRAPPER80_CSI1B_CSR_SW_RST_MASK (0xf << 24)
-> +#define MIPI_RX_WRAPPER84_CSI1B                                0x3084
-> +#define MIPI_RX_WRAPPER84_CSI1B_CSI_DEBUG_OUT_SHIFT 0
-> +#define MIPI_RX_WRAPPER84_CSI1B_CSI_DEBUG_OUT_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER88_CSI1B                                0x3088
-> +#define MIPI_RX_WRAPPER88_CSI1B_CSR_SW_MODE_0_SHIFT 0
-> +#define MIPI_RX_WRAPPER88_CSI1B_CSR_SW_MODE_0_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER8C_CSI1B                                0x308C
-> +#define MIPI_RX_WRAPPER8C_CSI1B_CSR_SW_MODE_1_SHIFT 0
-> +#define MIPI_RX_WRAPPER8C_CSI1B_CSR_SW_MODE_1_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER90_CSI1B                                0x3090
-> +#define MIPI_RX_WRAPPER90_CSI1B_CSR_SW_MODE_2_SHIFT 0
-> +#define MIPI_RX_WRAPPER90_CSI1B_CSR_SW_MODE_2_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER94_CSI1B                                0x3094
-> +#define MIPI_RX_WRAPPER94_CSI1B_CSR_SW_VALUE_0_SHIFT 0
-> +#define MIPI_RX_WRAPPER94_CSI1B_CSR_SW_VALUE_0_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER98_CSI1B                                0x3098
-> +#define MIPI_RX_WRAPPER98_CSI1B_CSR_SW_VALUE_1_SHIFT 0
-> +#define MIPI_RX_WRAPPER98_CSI1B_CSR_SW_VALUE_1_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER9C_CSI1B                                0x309C
-> +#define MIPI_RX_WRAPPER9C_CSI1B_CSR_SW_VALUE_2_SHIFT 0
-> +#define MIPI_RX_WRAPPER9C_CSI1B_CSR_SW_VALUE_2_MASK (0xffffffff << 0)
-> +#define MIPI_RX_ANAA4_CSI1B                                    0x30A4
-> +#define MIPI_RX_ANAA4_CSI1B_RG_CSI1B_DPHY_L0_SYNC_INIT_SEL_SHIFT 0
-> +#define MIPI_RX_ANAA4_CSI1B_RG_CSI1B_DPHY_L0_SYNC_INIT_SEL_MASK BIT(0)
-> +#define MIPI_RX_ANAA4_CSI1B_RG_CSI1B_DPHY_L0_FORCE_INIT_SHIFT 1
-> +#define MIPI_RX_ANAA4_CSI1B_RG_CSI1B_DPHY_L0_FORCE_INIT_MASK BIT(1)
-> +#define MIPI_RX_ANAA4_CSI1B_RG_CSI1B_DPHY_L1_SYNC_INIT_SEL_SHIFT 2
-> +#define MIPI_RX_ANAA4_CSI1B_RG_CSI1B_DPHY_L1_SYNC_INIT_SEL_MASK BIT(2)
-> +#define MIPI_RX_ANAA4_CSI1B_RG_CSI1B_DPHY_L1_FORCE_INIT_SHIFT 3
-> +#define MIPI_RX_ANAA4_CSI1B_RG_CSI1B_DPHY_L1_FORCE_INIT_MASK BIT(3)
-> +#define MIPI_RX_ANAA4_CSI1B_RG_CSI1B_DPHY_L2_SYNC_INIT_SEL_SHIFT 4
-> +#define MIPI_RX_ANAA4_CSI1B_RG_CSI1B_DPHY_L2_SYNC_INIT_SEL_MASK BIT(4)
-> +#define MIPI_RX_ANAA4_CSI1B_RG_CSI1B_DPHY_L2_FORCE_INIT_SHIFT 5
-> +#define MIPI_RX_ANAA4_CSI1B_RG_CSI1B_DPHY_L2_FORCE_INIT_MASK BIT(5)
-> +#define MIPI_RX_ANAA8_CSI1B                                    0x30A8
-> +#define MIPI_RX_ANAA8_CSI1B_RG_CSI1B_DPHY_L0_BYTECK_INVERT_SHIFT 0
-> +#define MIPI_RX_ANAA8_CSI1B_RG_CSI1B_DPHY_L0_BYTECK_INVERT_MASK BIT(0)
-> +#define MIPI_RX_ANAA8_CSI1B_RG_CSI1B_DPHY_L1_BYTECK_INVERT_SHIFT 1
-> +#define MIPI_RX_ANAA8_CSI1B_RG_CSI1B_DPHY_L1_BYTECK_INVERT_MASK BIT(1)
-> +#define MIPI_RX_ANAA8_CSI1B_RG_CSI1B_DPHY_L2_BYTECK_INVERT_SHIFT 2
-> +#define MIPI_RX_ANAA8_CSI1B_RG_CSI1B_DPHY_L2_BYTECK_INVERT_MASK BIT(2)
-> +#define MIPI_RX_ANAA8_CSI1B_RG_CSI1B_DPHY_HSDET_LEVEL_MODE_EN_SHIFT 3
-> +#define MIPI_RX_ANAA8_CSI1B_RG_CSI1B_DPHY_HSDET_LEVEL_MODE_EN_MASK BIT(3=
-)
-> +#define MIPI_RX_ANAA8_CSI1B_RG_CSI1B_OS_CAL_SEL_SHIFT 4
-> +#define MIPI_RX_ANAA8_CSI1B_RG_CSI1B_OS_CAL_SEL_MASK (0x7 << 4)
-> +#define MIPI_RX_ANAA8_CSI1B_RG_CSI1B_DPHY_HSDET_DIG_BACK_EN_SHIFT 7
-> +#define MIPI_RX_ANAA8_CSI1B_RG_CSI1B_DPHY_HSDET_DIG_BACK_EN_MASK BIT(7)
-> +#define MIPI_RX_ANAA8_CSI1B_RG_CSI1B_DPHY_DELAYCAL_CK_SEL_SHIFT 8
-> +#define MIPI_RX_ANAA8_CSI1B_RG_CSI1B_DPHY_DELAYCAL_CK_SEL_MASK (0x7 << 8=
-)
-> +#define MIPI_RX_ANAA8_CSI1B_RG_CSI1B_OS_CAL_DIV_SHIFT 11
-> +#define MIPI_RX_ANAA8_CSI1B_RG_CSI1B_OS_CAL_DIV_MASK (0x3 << 11)
-> +#define MIPI_RX_ANA00_CSI2A                                    0x4000
-> +#define MIPI_RX_ANA00_CSI2A_RG_CSI2A_EQ_PROTECT_EN_SHIFT 1
-> +#define MIPI_RX_ANA00_CSI2A_RG_CSI2A_EQ_PROTECT_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA00_CSI2A_RG_CSI2A_BG_LPF_EN_SHIFT 2
-> +#define MIPI_RX_ANA00_CSI2A_RG_CSI2A_BG_LPF_EN_MASK BIT(2)
-> +#define MIPI_RX_ANA00_CSI2A_RG_CSI2A_BG_CORE_EN_SHIFT 3
-> +#define MIPI_RX_ANA00_CSI2A_RG_CSI2A_BG_CORE_EN_MASK BIT(3)
-> +#define MIPI_RX_ANA00_CSI2A_RG_CSI2A_DPHY_L0_CKMODE_EN_SHIFT 5
-> +#define MIPI_RX_ANA00_CSI2A_RG_CSI2A_DPHY_L0_CKMODE_EN_MASK BIT(5)
-> +#define MIPI_RX_ANA00_CSI2A_RG_CSI2A_DPHY_L0_CKSEL_SHIFT 6
-> +#define MIPI_RX_ANA00_CSI2A_RG_CSI2A_DPHY_L0_CKSEL_MASK BIT(6)
-> +#define MIPI_RX_ANA00_CSI2A_RG_CSI2A_DPHY_L1_CKMODE_EN_SHIFT 8
-> +#define MIPI_RX_ANA00_CSI2A_RG_CSI2A_DPHY_L1_CKMODE_EN_MASK BIT(8)
-> +#define MIPI_RX_ANA00_CSI2A_RG_CSI2A_DPHY_L1_CKSEL_SHIFT 9
-> +#define MIPI_RX_ANA00_CSI2A_RG_CSI2A_DPHY_L1_CKSEL_MASK BIT(9)
-> +#define MIPI_RX_ANA00_CSI2A_RG_CSI2A_DPHY_L2_CKMODE_EN_SHIFT 11
-> +#define MIPI_RX_ANA00_CSI2A_RG_CSI2A_DPHY_L2_CKMODE_EN_MASK BIT(11)
-> +#define MIPI_RX_ANA00_CSI2A_RG_CSI2A_DPHY_L2_CKSEL_SHIFT 12
-> +#define MIPI_RX_ANA00_CSI2A_RG_CSI2A_DPHY_L2_CKSEL_MASK BIT(12)
-> +#define MIPI_RX_ANA04_CSI2A                                    0x4004
-> +#define MIPI_RX_ANA04_CSI2A_RG_CSI2A_BG_LPRX_VTH_SEL_SHIFT 0
-> +#define MIPI_RX_ANA04_CSI2A_RG_CSI2A_BG_LPRX_VTH_SEL_MASK (0x7 << 0)
-> +#define MIPI_RX_ANA04_CSI2A_RG_CSI2A_BG_LPRX_VTL_SEL_SHIFT 4
-> +#define MIPI_RX_ANA04_CSI2A_RG_CSI2A_BG_LPRX_VTL_SEL_MASK (0x7 << 4)
-> +#define MIPI_RX_ANA04_CSI2A_RG_CSI2A_BG_HSDET_VTH_SEL_SHIFT 8
-> +#define MIPI_RX_ANA04_CSI2A_RG_CSI2A_BG_HSDET_VTH_SEL_MASK (0x7 << 8)
-> +#define MIPI_RX_ANA04_CSI2A_RG_CSI2A_BG_HSDET_VTL_SEL_SHIFT 12
-> +#define MIPI_RX_ANA04_CSI2A_RG_CSI2A_BG_HSDET_VTL_SEL_MASK (0x7 << 12)
-> +#define MIPI_RX_ANA04_CSI2A_RG_CSI2A_BG_VREF_SEL_SHIFT 16
-> +#define MIPI_RX_ANA04_CSI2A_RG_CSI2A_BG_VREF_SEL_MASK (0xf << 16)
-> +#define MIPI_RX_ANA04_CSI2A_RG_CSI2A_BG_MON_VREF_SEL_SHIFT 24
-> +#define MIPI_RX_ANA04_CSI2A_RG_CSI2A_BG_MON_VREF_SEL_MASK (0xf << 24)
-> +#define MIPI_RX_ANA04_CSI2A_RG_CSI2A_FORCE_HSRT_EN_SHIFT 28
-> +#define MIPI_RX_ANA04_CSI2A_RG_CSI2A_FORCE_HSRT_EN_MASK BIT(28)
-> +#define MIPI_RX_ANA08_CSI2A                                    0x4008
-> +#define MIPI_RX_ANA08_CSI2A_RG_CSI2A_L0P_HSRT_CODE_SHIFT 0
-> +#define MIPI_RX_ANA08_CSI2A_RG_CSI2A_L0P_HSRT_CODE_MASK (0x1f << 0)
-> +#define MIPI_RX_ANA08_CSI2A_RG_CSI2A_L0N_HSRT_CODE_SHIFT 8
-> +#define MIPI_RX_ANA08_CSI2A_RG_CSI2A_L0N_HSRT_CODE_MASK (0x1f << 8)
-> +#define MIPI_RX_ANA08_CSI2A_RG_CSI2A_L1P_HSRT_CODE_SHIFT 16
-> +#define MIPI_RX_ANA08_CSI2A_RG_CSI2A_L1P_HSRT_CODE_MASK (0x1f << 16)
-> +#define MIPI_RX_ANA08_CSI2A_RG_CSI2A_L1N_HSRT_CODE_SHIFT 24
-> +#define MIPI_RX_ANA08_CSI2A_RG_CSI2A_L1N_HSRT_CODE_MASK (0x1f << 24)
-> +#define MIPI_RX_ANA0C_CSI2A                                    0x400C
-> +#define MIPI_RX_ANA0C_CSI2A_RG_CSI2A_L2P_HSRT_CODE_SHIFT 0
-> +#define MIPI_RX_ANA0C_CSI2A_RG_CSI2A_L2P_HSRT_CODE_MASK (0x1f << 0)
-> +#define MIPI_RX_ANA0C_CSI2A_RG_CSI2A_L2N_HSRT_CODE_SHIFT 8
-> +#define MIPI_RX_ANA0C_CSI2A_RG_CSI2A_L2N_HSRT_CODE_MASK (0x1f << 8)
-> +#define MIPI_RX_ANA10_CSI2A                                    0x4010
-> +#define MIPI_RX_ANA10_CSI2A_RG_CSI2A_DPHY_L0_DELAYCAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA10_CSI2A_RG_CSI2A_DPHY_L0_DELAYCAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA10_CSI2A_RG_CSI2A_DPHY_L0_DELAYCAL_RSTB_SHIFT 1
-> +#define MIPI_RX_ANA10_CSI2A_RG_CSI2A_DPHY_L0_DELAYCAL_RSTB_MASK BIT(1)
-> +#define MIPI_RX_ANA10_CSI2A_RG_CSI2A_DPHY_L0_VREF_SEL_SHIFT 2
-> +#define MIPI_RX_ANA10_CSI2A_RG_CSI2A_DPHY_L0_VREF_SEL_MASK (0x3f << 2)
-> +#define MIPI_RX_ANA10_CSI2A_RG_CSI2A_DPHY_L1_DELAYCAL_EN_SHIFT 8
-> +#define MIPI_RX_ANA10_CSI2A_RG_CSI2A_DPHY_L1_DELAYCAL_EN_MASK BIT(8)
-> +#define MIPI_RX_ANA10_CSI2A_RG_CSI2A_DPHY_L1_DELAYCAL_RSTB_SHIFT 9
-> +#define MIPI_RX_ANA10_CSI2A_RG_CSI2A_DPHY_L1_DELAYCAL_RSTB_MASK BIT(9)
-> +#define MIPI_RX_ANA10_CSI2A_RG_CSI2A_DPHY_L1_VREF_SEL_SHIFT 10
-> +#define MIPI_RX_ANA10_CSI2A_RG_CSI2A_DPHY_L1_VREF_SEL_MASK (0x3f << 10)
-> +#define MIPI_RX_ANA10_CSI2A_RG_CSI2A_DPHY_L2_DELAYCAL_EN_SHIFT 16
-> +#define MIPI_RX_ANA10_CSI2A_RG_CSI2A_DPHY_L2_DELAYCAL_EN_MASK BIT(16)
-> +#define MIPI_RX_ANA10_CSI2A_RG_CSI2A_DPHY_L2_DELAYCAL_RSTB_SHIFT 17
-> +#define MIPI_RX_ANA10_CSI2A_RG_CSI2A_DPHY_L2_DELAYCAL_RSTB_MASK BIT(17)
-> +#define MIPI_RX_ANA10_CSI2A_RG_CSI2A_DPHY_L2_VREF_SEL_SHIFT 18
-> +#define MIPI_RX_ANA10_CSI2A_RG_CSI2A_DPHY_L2_VREF_SEL_MASK (0x3f << 18)
-> +#define MIPI_RX_ANA18_CSI2A                                    0x4018
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L0_EQ_OS_CAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L0_EQ_OS_CAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L0_EQ_MON_EN_SHIFT 1
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L0_EQ_MON_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L0_EQ_SCA_SHIFT 2
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L0_EQ_SCA_MASK BIT(2)
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L0_EQ_SCB_SHIFT 3
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L0_EQ_SCB_MASK BIT(3)
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L0_EQ_IS_SHIFT 4
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L0_EQ_IS_MASK (0x3 << 4)
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L0_EQ_BW_SHIFT 6
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L0_EQ_BW_MASK (0x3 << 6)
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L0_EQ_SRA_SHIFT 8
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L0_EQ_SRA_MASK (0xf << 8)
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L0_EQ_SRB_SHIFT 12
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L0_EQ_SRB_MASK (0xf << 12)
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L1_EQ_OS_CAL_EN_SHIFT 16
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L1_EQ_OS_CAL_EN_MASK BIT(16)
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L1_EQ_MON_EN_SHIFT 17
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L1_EQ_MON_EN_MASK BIT(17)
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L1_EQ_SCA_SHIFT 18
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L1_EQ_SCA_MASK BIT(18)
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L1_EQ_SCB_SHIFT 19
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L1_EQ_SCB_MASK BIT(19)
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L1_EQ_IS_SHIFT 20
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L1_EQ_IS_MASK (0x3 << 20)
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L1_EQ_BW_SHIFT 22
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L1_EQ_BW_MASK (0x3 << 22)
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L1_EQ_SRA_SHIFT 24
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L1_EQ_SRA_MASK (0xf << 24)
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L1_EQ_SRB_SHIFT 28
-> +#define MIPI_RX_ANA18_CSI2A_RG_CSI2A_L1_EQ_SRB_MASK (0xf << 28)
-> +#define MIPI_RX_ANA1C_CSI2A                                    0x401C
-> +#define MIPI_RX_ANA1C_CSI2A_RG_CSI2A_L2_EQ_OS_CAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA1C_CSI2A_RG_CSI2A_L2_EQ_OS_CAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA1C_CSI2A_RG_CSI2A_L2_EQ_MON_EN_SHIFT 1
-> +#define MIPI_RX_ANA1C_CSI2A_RG_CSI2A_L2_EQ_MON_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA1C_CSI2A_RG_CSI2A_L2_EQ_SCA_SHIFT 2
-> +#define MIPI_RX_ANA1C_CSI2A_RG_CSI2A_L2_EQ_SCA_MASK BIT(2)
-> +#define MIPI_RX_ANA1C_CSI2A_RG_CSI2A_L2_EQ_SCB_SHIFT 3
-> +#define MIPI_RX_ANA1C_CSI2A_RG_CSI2A_L2_EQ_SCB_MASK BIT(3)
-> +#define MIPI_RX_ANA1C_CSI2A_RG_CSI2A_L2_EQ_IS_SHIFT 4
-> +#define MIPI_RX_ANA1C_CSI2A_RG_CSI2A_L2_EQ_IS_MASK (0x3 << 4)
-> +#define MIPI_RX_ANA1C_CSI2A_RG_CSI2A_L2_EQ_BW_SHIFT 6
-> +#define MIPI_RX_ANA1C_CSI2A_RG_CSI2A_L2_EQ_BW_MASK (0x3 << 6)
-> +#define MIPI_RX_ANA1C_CSI2A_RG_CSI2A_L2_EQ_SRA_SHIFT 8
-> +#define MIPI_RX_ANA1C_CSI2A_RG_CSI2A_L2_EQ_SRA_MASK (0xf << 8)
-> +#define MIPI_RX_ANA1C_CSI2A_RG_CSI2A_L2_EQ_SRB_SHIFT 12
-> +#define MIPI_RX_ANA1C_CSI2A_RG_CSI2A_L2_EQ_SRB_MASK (0xf << 12)
-> +#define MIPI_RX_ANA24_CSI2A                                    0x4024
-> +#define MIPI_RX_ANA24_CSI2A_RG_CSI2A_RESERVE_SHIFT 24
-> +#define MIPI_RX_ANA24_CSI2A_RG_CSI2A_RESERVE_MASK (0xff << 24)
-> +#define MIPI_RX_ANA48_CSI2A                                    0x4048
-> +#define MIPI_RX_ANA48_CSI2A_RGS_CSI2A_DPHY_L0_OS_CAL_CPLT_SHIFT 3
-> +#define MIPI_RX_ANA48_CSI2A_RGS_CSI2A_DPHY_L0_OS_CAL_CPLT_MASK BIT(3)
-> +#define MIPI_RX_ANA48_CSI2A_RGS_CSI2A_DPHY_L1_OS_CAL_CPLT_SHIFT 4
-> +#define MIPI_RX_ANA48_CSI2A_RGS_CSI2A_DPHY_L1_OS_CAL_CPLT_MASK BIT(4)
-> +#define MIPI_RX_ANA48_CSI2A_RGS_CSI2A_DPHY_L2_OS_CAL_CPLT_SHIFT 5
-> +#define MIPI_RX_ANA48_CSI2A_RGS_CSI2A_DPHY_L2_OS_CAL_CPLT_MASK BIT(5)
-> +#define MIPI_RX_ANA48_CSI2A_RGS_CSI2A_OS_CAL_CODE_SHIFT 8
-> +#define MIPI_RX_ANA48_CSI2A_RGS_CSI2A_OS_CAL_CODE_MASK (0xff << 8)
-> +#define MIPI_RX_WRAPPER80_CSI2A                                0x4080
-> +#define MIPI_RX_WRAPPER80_CSI2A_CSR_CSI_CLK_MON_SHIFT 0
-> +#define MIPI_RX_WRAPPER80_CSI2A_CSR_CSI_CLK_MON_MASK BIT(0)
-> +#define MIPI_RX_WRAPPER80_CSI2A_CSR_CSI_MON_MUX_SHIFT 8
-> +#define MIPI_RX_WRAPPER80_CSI2A_CSR_CSI_MON_MUX_MASK (0xff << 8)
-> +#define MIPI_RX_WRAPPER80_CSI2A_CSR_CSI_RST_MODE_SHIFT 16
-> +#define MIPI_RX_WRAPPER80_CSI2A_CSR_CSI_RST_MODE_MASK (0x3 << 16)
-> +#define MIPI_RX_WRAPPER80_CSI2A_CSR_SW_RST_SHIFT 24
-> +#define MIPI_RX_WRAPPER80_CSI2A_CSR_SW_RST_MASK (0xf << 24)
-> +#define MIPI_RX_WRAPPER84_CSI2A                                0x4084
-> +#define MIPI_RX_WRAPPER84_CSI2A_CSI_DEBUG_OUT_SHIFT 0
-> +#define MIPI_RX_WRAPPER84_CSI2A_CSI_DEBUG_OUT_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER88_CSI2A                                0x4088
-> +#define MIPI_RX_WRAPPER88_CSI2A_CSR_SW_MODE_0_SHIFT 0
-> +#define MIPI_RX_WRAPPER88_CSI2A_CSR_SW_MODE_0_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER8C_CSI2A                                0x408C
-> +#define MIPI_RX_WRAPPER8C_CSI2A_CSR_SW_MODE_1_SHIFT 0
-> +#define MIPI_RX_WRAPPER8C_CSI2A_CSR_SW_MODE_1_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER90_CSI2A                                0x4090
-> +#define MIPI_RX_WRAPPER90_CSI2A_CSR_SW_MODE_2_SHIFT 0
-> +#define MIPI_RX_WRAPPER90_CSI2A_CSR_SW_MODE_2_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER94_CSI2A                                0x4094
-> +#define MIPI_RX_WRAPPER94_CSI2A_CSR_SW_VALUE_0_SHIFT 0
-> +#define MIPI_RX_WRAPPER94_CSI2A_CSR_SW_VALUE_0_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER98_CSI2A                                0x4098
-> +#define MIPI_RX_WRAPPER98_CSI2A_CSR_SW_VALUE_1_SHIFT 0
-> +#define MIPI_RX_WRAPPER98_CSI2A_CSR_SW_VALUE_1_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER9C_CSI2A                                0x409C
-> +#define MIPI_RX_WRAPPER9C_CSI2A_CSR_SW_VALUE_2_SHIFT 0
-> +#define MIPI_RX_WRAPPER9C_CSI2A_CSR_SW_VALUE_2_MASK (0xffffffff << 0)
-> +#define MIPI_RX_ANAA4_CSI2A                                    0x40A4
-> +#define MIPI_RX_ANAA4_CSI2A_RG_CSI2A_DPHY_L0_SYNC_INIT_SEL_SHIFT 0
-> +#define MIPI_RX_ANAA4_CSI2A_RG_CSI2A_DPHY_L0_SYNC_INIT_SEL_MASK BIT(0)
-> +#define MIPI_RX_ANAA4_CSI2A_RG_CSI2A_DPHY_L0_FORCE_INIT_SHIFT 1
-> +#define MIPI_RX_ANAA4_CSI2A_RG_CSI2A_DPHY_L0_FORCE_INIT_MASK BIT(1)
-> +#define MIPI_RX_ANAA4_CSI2A_RG_CSI2A_DPHY_L1_SYNC_INIT_SEL_SHIFT 2
-> +#define MIPI_RX_ANAA4_CSI2A_RG_CSI2A_DPHY_L1_SYNC_INIT_SEL_MASK BIT(2)
-> +#define MIPI_RX_ANAA4_CSI2A_RG_CSI2A_DPHY_L1_FORCE_INIT_SHIFT 3
-> +#define MIPI_RX_ANAA4_CSI2A_RG_CSI2A_DPHY_L1_FORCE_INIT_MASK BIT(3)
-> +#define MIPI_RX_ANAA4_CSI2A_RG_CSI2A_DPHY_L2_SYNC_INIT_SEL_SHIFT 4
-> +#define MIPI_RX_ANAA4_CSI2A_RG_CSI2A_DPHY_L2_SYNC_INIT_SEL_MASK BIT(4)
-> +#define MIPI_RX_ANAA4_CSI2A_RG_CSI2A_DPHY_L2_FORCE_INIT_SHIFT 5
-> +#define MIPI_RX_ANAA4_CSI2A_RG_CSI2A_DPHY_L2_FORCE_INIT_MASK BIT(5)
-> +#define MIPI_RX_ANAA8_CSI2A                                    0x40A8
-> +#define MIPI_RX_ANAA8_CSI2A_RG_CSI2A_DPHY_L0_BYTECK_INVERT_SHIFT 0
-> +#define MIPI_RX_ANAA8_CSI2A_RG_CSI2A_DPHY_L0_BYTECK_INVERT_MASK BIT(0)
-> +#define MIPI_RX_ANAA8_CSI2A_RG_CSI2A_DPHY_L1_BYTECK_INVERT_SHIFT 1
-> +#define MIPI_RX_ANAA8_CSI2A_RG_CSI2A_DPHY_L1_BYTECK_INVERT_MASK BIT(1)
-> +#define MIPI_RX_ANAA8_CSI2A_RG_CSI2A_DPHY_L2_BYTECK_INVERT_SHIFT 2
-> +#define MIPI_RX_ANAA8_CSI2A_RG_CSI2A_DPHY_L2_BYTECK_INVERT_MASK BIT(2)
-> +#define MIPI_RX_ANAA8_CSI2A_RG_CSI2A_DPHY_HSDET_LEVEL_MODE_EN_SHIFT 3
-> +#define MIPI_RX_ANAA8_CSI2A_RG_CSI2A_DPHY_HSDET_LEVEL_MODE_EN_MASK BIT(3=
-)
-> +#define MIPI_RX_ANAA8_CSI2A_RG_CSI2A_OS_CAL_SEL_SHIFT 4
-> +#define MIPI_RX_ANAA8_CSI2A_RG_CSI2A_OS_CAL_SEL_MASK (0x7 << 4)
-> +#define MIPI_RX_ANAA8_CSI2A_RG_CSI2A_DPHY_HSDET_DIG_BACK_EN_SHIFT 7
-> +#define MIPI_RX_ANAA8_CSI2A_RG_CSI2A_DPHY_HSDET_DIG_BACK_EN_MASK BIT(7)
-> +#define MIPI_RX_ANAA8_CSI2A_RG_CSI2A_DPHY_DELAYCAL_CK_SEL_SHIFT 8
-> +#define MIPI_RX_ANAA8_CSI2A_RG_CSI2A_DPHY_DELAYCAL_CK_SEL_MASK (0x7 << 8=
-)
-> +#define MIPI_RX_ANAA8_CSI2A_RG_CSI2A_OS_CAL_DIV_SHIFT 11
-> +#define MIPI_RX_ANAA8_CSI2A_RG_CSI2A_OS_CAL_DIV_MASK (0x3 << 11)
-> +#define MIPI_RX_ANA00_CSI2B                                    0x5000
-> +#define MIPI_RX_ANA00_CSI2B_RG_CSI2B_EQ_PROTECT_EN_SHIFT 1
-> +#define MIPI_RX_ANA00_CSI2B_RG_CSI2B_EQ_PROTECT_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA00_CSI2B_RG_CSI2B_BG_LPF_EN_SHIFT 2
-> +#define MIPI_RX_ANA00_CSI2B_RG_CSI2B_BG_LPF_EN_MASK BIT(2)
-> +#define MIPI_RX_ANA00_CSI2B_RG_CSI2B_BG_CORE_EN_SHIFT 3
-> +#define MIPI_RX_ANA00_CSI2B_RG_CSI2B_BG_CORE_EN_MASK BIT(3)
-> +#define MIPI_RX_ANA00_CSI2B_RG_CSI2B_DPHY_L0_CKMODE_EN_SHIFT 5
-> +#define MIPI_RX_ANA00_CSI2B_RG_CSI2B_DPHY_L0_CKMODE_EN_MASK BIT(5)
-> +#define MIPI_RX_ANA00_CSI2B_RG_CSI2B_DPHY_L0_CKSEL_SHIFT 6
-> +#define MIPI_RX_ANA00_CSI2B_RG_CSI2B_DPHY_L0_CKSEL_MASK BIT(6)
-> +#define MIPI_RX_ANA00_CSI2B_RG_CSI2B_DPHY_L1_CKMODE_EN_SHIFT 8
-> +#define MIPI_RX_ANA00_CSI2B_RG_CSI2B_DPHY_L1_CKMODE_EN_MASK BIT(8)
-> +#define MIPI_RX_ANA00_CSI2B_RG_CSI2B_DPHY_L1_CKSEL_SHIFT 9
-> +#define MIPI_RX_ANA00_CSI2B_RG_CSI2B_DPHY_L1_CKSEL_MASK BIT(9)
-> +#define MIPI_RX_ANA00_CSI2B_RG_CSI2B_DPHY_L2_CKMODE_EN_SHIFT 11
-> +#define MIPI_RX_ANA00_CSI2B_RG_CSI2B_DPHY_L2_CKMODE_EN_MASK BIT(11)
-> +#define MIPI_RX_ANA00_CSI2B_RG_CSI2B_DPHY_L2_CKSEL_SHIFT 12
-> +#define MIPI_RX_ANA00_CSI2B_RG_CSI2B_DPHY_L2_CKSEL_MASK BIT(12)
-> +#define MIPI_RX_ANA04_CSI2B                                    0x5004
-> +#define MIPI_RX_ANA04_CSI2B_RG_CSI2B_BG_LPRX_VTH_SEL_SHIFT 0
-> +#define MIPI_RX_ANA04_CSI2B_RG_CSI2B_BG_LPRX_VTH_SEL_MASK (0x7 << 0)
-> +#define MIPI_RX_ANA04_CSI2B_RG_CSI2B_BG_LPRX_VTL_SEL_SHIFT 4
-> +#define MIPI_RX_ANA04_CSI2B_RG_CSI2B_BG_LPRX_VTL_SEL_MASK (0x7 << 4)
-> +#define MIPI_RX_ANA04_CSI2B_RG_CSI2B_BG_HSDET_VTH_SEL_SHIFT 8
-> +#define MIPI_RX_ANA04_CSI2B_RG_CSI2B_BG_HSDET_VTH_SEL_MASK (0x7 << 8)
-> +#define MIPI_RX_ANA04_CSI2B_RG_CSI2B_BG_HSDET_VTL_SEL_SHIFT 12
-> +#define MIPI_RX_ANA04_CSI2B_RG_CSI2B_BG_HSDET_VTL_SEL_MASK (0x7 << 12)
-> +#define MIPI_RX_ANA04_CSI2B_RG_CSI2B_BG_VREF_SEL_SHIFT 16
-> +#define MIPI_RX_ANA04_CSI2B_RG_CSI2B_BG_VREF_SEL_MASK (0xf << 16)
-> +#define MIPI_RX_ANA04_CSI2B_RG_CSI2B_BG_MON_VREF_SEL_SHIFT 24
-> +#define MIPI_RX_ANA04_CSI2B_RG_CSI2B_BG_MON_VREF_SEL_MASK (0xf << 24)
-> +#define MIPI_RX_ANA04_CSI2B_RG_CSI2B_FORCE_HSRT_EN_SHIFT 28
-> +#define MIPI_RX_ANA04_CSI2B_RG_CSI2B_FORCE_HSRT_EN_MASK BIT(28)
-> +#define MIPI_RX_ANA08_CSI2B                                    0x5008
-> +#define MIPI_RX_ANA08_CSI2B_RG_CSI2B_L0P_HSRT_CODE_SHIFT 0
-> +#define MIPI_RX_ANA08_CSI2B_RG_CSI2B_L0P_HSRT_CODE_MASK (0x1f << 0)
-> +#define MIPI_RX_ANA08_CSI2B_RG_CSI2B_L0N_HSRT_CODE_SHIFT 8
-> +#define MIPI_RX_ANA08_CSI2B_RG_CSI2B_L0N_HSRT_CODE_MASK (0x1f << 8)
-> +#define MIPI_RX_ANA08_CSI2B_RG_CSI2B_L1P_HSRT_CODE_SHIFT 16
-> +#define MIPI_RX_ANA08_CSI2B_RG_CSI2B_L1P_HSRT_CODE_MASK (0x1f << 16)
-> +#define MIPI_RX_ANA08_CSI2B_RG_CSI2B_L1N_HSRT_CODE_SHIFT 24
-> +#define MIPI_RX_ANA08_CSI2B_RG_CSI2B_L1N_HSRT_CODE_MASK (0x1f << 24)
-> +#define MIPI_RX_ANA0C_CSI2B                                    0x500C
-> +#define MIPI_RX_ANA0C_CSI2B_RG_CSI2B_L2P_HSRT_CODE_SHIFT 0
-> +#define MIPI_RX_ANA0C_CSI2B_RG_CSI2B_L2P_HSRT_CODE_MASK (0x1f << 0)
-> +#define MIPI_RX_ANA0C_CSI2B_RG_CSI2B_L2N_HSRT_CODE_SHIFT 8
-> +#define MIPI_RX_ANA0C_CSI2B_RG_CSI2B_L2N_HSRT_CODE_MASK (0x1f << 8)
-> +#define MIPI_RX_ANA10_CSI2B                                    0x5010
-> +#define MIPI_RX_ANA10_CSI2B_RG_CSI2B_DPHY_L0_DELAYCAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA10_CSI2B_RG_CSI2B_DPHY_L0_DELAYCAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA10_CSI2B_RG_CSI2B_DPHY_L0_DELAYCAL_RSTB_SHIFT 1
-> +#define MIPI_RX_ANA10_CSI2B_RG_CSI2B_DPHY_L0_DELAYCAL_RSTB_MASK BIT(1)
-> +#define MIPI_RX_ANA10_CSI2B_RG_CSI2B_DPHY_L0_VREF_SEL_SHIFT 2
-> +#define MIPI_RX_ANA10_CSI2B_RG_CSI2B_DPHY_L0_VREF_SEL_MASK (0x3f << 2)
-> +#define MIPI_RX_ANA10_CSI2B_RG_CSI2B_DPHY_L1_DELAYCAL_EN_SHIFT 8
-> +#define MIPI_RX_ANA10_CSI2B_RG_CSI2B_DPHY_L1_DELAYCAL_EN_MASK BIT(8)
-> +#define MIPI_RX_ANA10_CSI2B_RG_CSI2B_DPHY_L1_DELAYCAL_RSTB_SHIFT 9
-> +#define MIPI_RX_ANA10_CSI2B_RG_CSI2B_DPHY_L1_DELAYCAL_RSTB_MASK BIT(9)
-> +#define MIPI_RX_ANA10_CSI2B_RG_CSI2B_DPHY_L1_VREF_SEL_SHIFT 10
-> +#define MIPI_RX_ANA10_CSI2B_RG_CSI2B_DPHY_L1_VREF_SEL_MASK (0x3f << 10)
-> +#define MIPI_RX_ANA10_CSI2B_RG_CSI2B_DPHY_L2_DELAYCAL_EN_SHIFT 16
-> +#define MIPI_RX_ANA10_CSI2B_RG_CSI2B_DPHY_L2_DELAYCAL_EN_MASK BIT(16)
-> +#define MIPI_RX_ANA10_CSI2B_RG_CSI2B_DPHY_L2_DELAYCAL_RSTB_SHIFT 17
-> +#define MIPI_RX_ANA10_CSI2B_RG_CSI2B_DPHY_L2_DELAYCAL_RSTB_MASK BIT(17)
-> +#define MIPI_RX_ANA10_CSI2B_RG_CSI2B_DPHY_L2_VREF_SEL_SHIFT 18
-> +#define MIPI_RX_ANA10_CSI2B_RG_CSI2B_DPHY_L2_VREF_SEL_MASK (0x3f << 18)
-> +#define MIPI_RX_ANA18_CSI2B                                    0x5018
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L0_EQ_OS_CAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L0_EQ_OS_CAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L0_EQ_MON_EN_SHIFT 1
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L0_EQ_MON_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L0_EQ_SCA_SHIFT 2
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L0_EQ_SCA_MASK BIT(2)
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L0_EQ_SCB_SHIFT 3
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L0_EQ_SCB_MASK BIT(3)
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L0_EQ_IS_SHIFT 4
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L0_EQ_IS_MASK (0x3 << 4)
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L0_EQ_BW_SHIFT 6
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L0_EQ_BW_MASK (0x3 << 6)
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L0_EQ_SRA_SHIFT 8
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L0_EQ_SRA_MASK (0xf << 8)
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L0_EQ_SRB_SHIFT 12
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L0_EQ_SRB_MASK (0xf << 12)
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L1_EQ_OS_CAL_EN_SHIFT 16
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L1_EQ_OS_CAL_EN_MASK BIT(16)
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L1_EQ_MON_EN_SHIFT 17
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L1_EQ_MON_EN_MASK BIT(17)
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L1_EQ_SCA_SHIFT 18
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L1_EQ_SCA_MASK BIT(18)
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L1_EQ_SCB_SHIFT 19
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L1_EQ_SCB_MASK BIT(19)
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L1_EQ_IS_SHIFT 20
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L1_EQ_IS_MASK (0x3 << 20)
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L1_EQ_BW_SHIFT 22
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L1_EQ_BW_MASK (0x3 << 22)
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L1_EQ_SRA_SHIFT 24
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L1_EQ_SRA_MASK (0xf << 24)
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L1_EQ_SRB_SHIFT 28
-> +#define MIPI_RX_ANA18_CSI2B_RG_CSI2B_L1_EQ_SRB_MASK (0xf << 28)
-> +#define MIPI_RX_ANA1C_CSI2B                                    0x501C
-> +#define MIPI_RX_ANA1C_CSI2B_RG_CSI2B_L2_EQ_OS_CAL_EN_SHIFT 0
-> +#define MIPI_RX_ANA1C_CSI2B_RG_CSI2B_L2_EQ_OS_CAL_EN_MASK BIT(0)
-> +#define MIPI_RX_ANA1C_CSI2B_RG_CSI2B_L2_EQ_MON_EN_SHIFT 1
-> +#define MIPI_RX_ANA1C_CSI2B_RG_CSI2B_L2_EQ_MON_EN_MASK BIT(1)
-> +#define MIPI_RX_ANA1C_CSI2B_RG_CSI2B_L2_EQ_SCA_SHIFT 2
-> +#define MIPI_RX_ANA1C_CSI2B_RG_CSI2B_L2_EQ_SCA_MASK BIT(2)
-> +#define MIPI_RX_ANA1C_CSI2B_RG_CSI2B_L2_EQ_SCB_SHIFT 3
-> +#define MIPI_RX_ANA1C_CSI2B_RG_CSI2B_L2_EQ_SCB_MASK BIT(3)
-> +#define MIPI_RX_ANA1C_CSI2B_RG_CSI2B_L2_EQ_IS_SHIFT 4
-> +#define MIPI_RX_ANA1C_CSI2B_RG_CSI2B_L2_EQ_IS_MASK (0x3 << 4)
-> +#define MIPI_RX_ANA1C_CSI2B_RG_CSI2B_L2_EQ_BW_SHIFT 6
-> +#define MIPI_RX_ANA1C_CSI2B_RG_CSI2B_L2_EQ_BW_MASK (0x3 << 6)
-> +#define MIPI_RX_ANA1C_CSI2B_RG_CSI2B_L2_EQ_SRA_SHIFT 8
-> +#define MIPI_RX_ANA1C_CSI2B_RG_CSI2B_L2_EQ_SRA_MASK (0xf << 8)
-> +#define MIPI_RX_ANA1C_CSI2B_RG_CSI2B_L2_EQ_SRB_SHIFT 12
-> +#define MIPI_RX_ANA1C_CSI2B_RG_CSI2B_L2_EQ_SRB_MASK (0xf << 12)
-> +#define MIPI_RX_ANA24_CSI2B                                    0x5024
-> +#define MIPI_RX_ANA24_CSI2B_RG_CSI2B_RESERVE_SHIFT 24
-> +#define MIPI_RX_ANA24_CSI2B_RG_CSI2B_RESERVE_MASK (0xff << 24)
-> +#define MIPI_RX_ANA48_CSI2B                                    0x5048
-> +#define MIPI_RX_ANA48_CSI2B_RGS_CSI2B_DPHY_L0_OS_CAL_CPLT_SHIFT 3
-> +#define MIPI_RX_ANA48_CSI2B_RGS_CSI2B_DPHY_L0_OS_CAL_CPLT_MASK BIT(3)
-> +#define MIPI_RX_ANA48_CSI2B_RGS_CSI2B_DPHY_L1_OS_CAL_CPLT_SHIFT 4
-> +#define MIPI_RX_ANA48_CSI2B_RGS_CSI2B_DPHY_L1_OS_CAL_CPLT_MASK BIT(4)
-> +#define MIPI_RX_ANA48_CSI2B_RGS_CSI2B_DPHY_L2_OS_CAL_CPLT_SHIFT 5
-> +#define MIPI_RX_ANA48_CSI2B_RGS_CSI2B_DPHY_L2_OS_CAL_CPLT_MASK BIT(5)
-> +#define MIPI_RX_ANA48_CSI2B_RGS_CSI2B_OS_CAL_CODE_SHIFT 8
-> +#define MIPI_RX_ANA48_CSI2B_RGS_CSI2B_OS_CAL_CODE_MASK (0xff << 8)
-> +#define MIPI_RX_WRAPPER80_CSI2B                                0x5080
-> +#define MIPI_RX_WRAPPER80_CSI2B_CSR_CSI_CLK_MON_SHIFT 0
-> +#define MIPI_RX_WRAPPER80_CSI2B_CSR_CSI_CLK_MON_MASK BIT(0)
-> +#define MIPI_RX_WRAPPER80_CSI2B_CSR_CSI_MON_MUX_SHIFT 8
-> +#define MIPI_RX_WRAPPER80_CSI2B_CSR_CSI_MON_MUX_MASK (0xff << 8)
-> +#define MIPI_RX_WRAPPER80_CSI2B_CSR_CSI_RST_MODE_SHIFT 16
-> +#define MIPI_RX_WRAPPER80_CSI2B_CSR_CSI_RST_MODE_MASK (0x3 << 16)
-> +#define MIPI_RX_WRAPPER80_CSI2B_CSR_SW_RST_SHIFT 24
-> +#define MIPI_RX_WRAPPER80_CSI2B_CSR_SW_RST_MASK (0xf << 24)
-> +#define MIPI_RX_WRAPPER84_CSI2B                                0x5084
-> +#define MIPI_RX_WRAPPER84_CSI2B_CSI_DEBUG_OUT_SHIFT 0
-> +#define MIPI_RX_WRAPPER84_CSI2B_CSI_DEBUG_OUT_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER88_CSI2B                                0x5088
-> +#define MIPI_RX_WRAPPER88_CSI2B_CSR_SW_MODE_0_SHIFT 0
-> +#define MIPI_RX_WRAPPER88_CSI2B_CSR_SW_MODE_0_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER8C_CSI2B                                0x508C
-> +#define MIPI_RX_WRAPPER8C_CSI2B_CSR_SW_MODE_1_SHIFT 0
-> +#define MIPI_RX_WRAPPER8C_CSI2B_CSR_SW_MODE_1_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER90_CSI2B                                0x5090
-> +#define MIPI_RX_WRAPPER90_CSI2B_CSR_SW_MODE_2_SHIFT 0
-> +#define MIPI_RX_WRAPPER90_CSI2B_CSR_SW_MODE_2_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER94_CSI2B                                0x5094
-> +#define MIPI_RX_WRAPPER94_CSI2B_CSR_SW_VALUE_0_SHIFT 0
-> +#define MIPI_RX_WRAPPER94_CSI2B_CSR_SW_VALUE_0_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER98_CSI2B                                0x5098
-> +#define MIPI_RX_WRAPPER98_CSI2B_CSR_SW_VALUE_1_SHIFT 0
-> +#define MIPI_RX_WRAPPER98_CSI2B_CSR_SW_VALUE_1_MASK (0xffffffff << 0)
-> +#define MIPI_RX_WRAPPER9C_CSI2B                                0x509C
-> +#define MIPI_RX_WRAPPER9C_CSI2B_CSR_SW_VALUE_2_SHIFT 0
-> +#define MIPI_RX_WRAPPER9C_CSI2B_CSR_SW_VALUE_2_MASK (0xffffffff << 0)
-> +#define MIPI_RX_ANAA4_CSI2B                                    0x50A4
-> +#define MIPI_RX_ANAA4_CSI2B_RG_CSI2B_DPHY_L0_SYNC_INIT_SEL_SHIFT 0
-> +#define MIPI_RX_ANAA4_CSI2B_RG_CSI2B_DPHY_L0_SYNC_INIT_SEL_MASK BIT(0)
-> +#define MIPI_RX_ANAA4_CSI2B_RG_CSI2B_DPHY_L0_FORCE_INIT_SHIFT 1
-> +#define MIPI_RX_ANAA4_CSI2B_RG_CSI2B_DPHY_L0_FORCE_INIT_MASK BIT(1)
-> +#define MIPI_RX_ANAA4_CSI2B_RG_CSI2B_DPHY_L1_SYNC_INIT_SEL_SHIFT 2
-> +#define MIPI_RX_ANAA4_CSI2B_RG_CSI2B_DPHY_L1_SYNC_INIT_SEL_MASK BIT(2)
-> +#define MIPI_RX_ANAA4_CSI2B_RG_CSI2B_DPHY_L1_FORCE_INIT_SHIFT 3
-> +#define MIPI_RX_ANAA4_CSI2B_RG_CSI2B_DPHY_L1_FORCE_INIT_MASK BIT(3)
-> +#define MIPI_RX_ANAA4_CSI2B_RG_CSI2B_DPHY_L2_SYNC_INIT_SEL_SHIFT 4
-> +#define MIPI_RX_ANAA4_CSI2B_RG_CSI2B_DPHY_L2_SYNC_INIT_SEL_MASK BIT(4)
-> +#define MIPI_RX_ANAA4_CSI2B_RG_CSI2B_DPHY_L2_FORCE_INIT_SHIFT 5
-> +#define MIPI_RX_ANAA4_CSI2B_RG_CSI2B_DPHY_L2_FORCE_INIT_MASK BIT(5)
-> +#define MIPI_RX_ANAA8_CSI2B                                    0x50A8
-> +#define MIPI_RX_ANAA8_CSI2B_RG_CSI2B_DPHY_L0_BYTECK_INVERT_SHIFT 0
-> +#define MIPI_RX_ANAA8_CSI2B_RG_CSI2B_DPHY_L0_BYTECK_INVERT_MASK BIT(0)
-> +#define MIPI_RX_ANAA8_CSI2B_RG_CSI2B_DPHY_L1_BYTECK_INVERT_SHIFT 1
-> +#define MIPI_RX_ANAA8_CSI2B_RG_CSI2B_DPHY_L1_BYTECK_INVERT_MASK BIT(1)
-> +#define MIPI_RX_ANAA8_CSI2B_RG_CSI2B_DPHY_L2_BYTECK_INVERT_SHIFT 2
-> +#define MIPI_RX_ANAA8_CSI2B_RG_CSI2B_DPHY_L2_BYTECK_INVERT_MASK BIT(2)
-> +#define MIPI_RX_ANAA8_CSI2B_RG_CSI2B_DPHY_HSDET_LEVEL_MODE_EN_SHIFT 3
-> +#define MIPI_RX_ANAA8_CSI2B_RG_CSI2B_DPHY_HSDET_LEVEL_MODE_EN_MASK BIT(3=
-)
-> +#define MIPI_RX_ANAA8_CSI2B_RG_CSI2B_OS_CAL_SEL_SHIFT 4
-> +#define MIPI_RX_ANAA8_CSI2B_RG_CSI2B_OS_CAL_SEL_MASK (0x7 << 4)
-> +#define MIPI_RX_ANAA8_CSI2B_RG_CSI2B_DPHY_HSDET_DIG_BACK_EN_SHIFT 7
-> +#define MIPI_RX_ANAA8_CSI2B_RG_CSI2B_DPHY_HSDET_DIG_BACK_EN_MASK BIT(7)
-> +#define MIPI_RX_ANAA8_CSI2B_RG_CSI2B_DPHY_DELAYCAL_CK_SEL_SHIFT 8
-> +#define MIPI_RX_ANAA8_CSI2B_RG_CSI2B_DPHY_DELAYCAL_CK_SEL_MASK (0x7 << 8=
-)
-> +#define MIPI_RX_ANAA8_CSI2B_RG_CSI2B_OS_CAL_DIV_SHIFT 11
-> +#define MIPI_RX_ANAA8_CSI2B_RG_CSI2B_OS_CAL_DIV_MASK (0x3 << 11)
-
-All the register definition of CSI0A, CSI0B, CSI1A, CSI1B, CSI2A,
-CSI2B are all the same. I think you could use only one definition with
-six different offset for these registers, so we could reduce these
-repeated definition.
-
-Regards,
-Chun-Kuang.
-
-> +
-> +#endif
+> Thanks.
+>
 > --
-> 2.18.0
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> Dmitry
+
+--
+Kamel Bouhara, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
