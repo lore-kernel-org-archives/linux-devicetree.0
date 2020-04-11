@@ -2,97 +2,102 @@ Return-Path: <SRS0=gZHh=53=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB2CC2BBFD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 23:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05676C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 23:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E98442051A
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 23:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C98D72051A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 23:34:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586648042;
+	bh=b8AGve6QsN7S5z6hZ5RO+3duXtCICqIIFesS5kE2Seo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EjugagWdMYes3N5REFtuvaQ6tcT72Q+Ncbhzd9cw95rJnZrLljHL5MatYJ3RpRc+r
+	 My59ZIZbIk6EcJ7do/65t3QDdclR6A5ez/1nMBzhRaQJZTrkE5MUCRLi3ThfcBnZcU
+	 /ih5ChhXrfOxX+MBavvbYy95kj8MlEEdRJAMuvxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729696AbgDKXbx (ORCPT
+        id S1728772AbgDKXJ0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:31:53 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:60361 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728753AbgDKXbs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Apr 2020 19:31:48 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id C998520004;
-        Sat, 11 Apr 2020 23:31:45 +0000 (UTC)
-Date:   Sun, 12 Apr 2020 01:31:45 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     Kamel Bouhara <kamel.bouhara@bootlin.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 0/3] Introduce a counter inkernel API
-Message-ID: <20200411233145.GC3628@piout.net>
-References: <20200406155806.1295169-1-kamel.bouhara@bootlin.com>
- <20200411172259.GB95806@icarus>
+        Sat, 11 Apr 2020 19:09:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729231AbgDKXJ0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:09:26 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE51221744;
+        Sat, 11 Apr 2020 23:09:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586646566;
+        bh=b8AGve6QsN7S5z6hZ5RO+3duXtCICqIIFesS5kE2Seo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IGnQTuqa4vbpWbGuMjffiXvTbnKibbUCPvkACfkaMZbZRgjZCXuAfy3wxBtACxjgy
+         l47aIIcsST48RtTCs1ZtmQJMPzzXi0p453NawMX2NWUMzVab2V4fOfootafB5FjJjo
+         5A8CjNRhjOj8Ogk34Azbnpf+XQOuPguGiTmpTAWI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 114/121] arm64: dts: qcom: msm8998-mtp: Disable funnel 4 and 5
+Date:   Sat, 11 Apr 2020 19:06:59 -0400
+Message-Id: <20200411230706.23855-114-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
+References: <20200411230706.23855-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200411172259.GB95806@icarus>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-On 11/04/2020 13:22:59-0400, William Breathitt Gray wrote:
-> I'm not inherently opposed to adding an in-kernel API for the Counter
-> subsystem, but I'm not sure yet if it's necessary for this particular
-> situation.
-> 
-> Is the purpose of this driver to allow users to poll on the rotary
-> encoder position value? If so, perhaps instead of an in-kernel API, the
-> polling functionality should be added as part of the Counter subsystem;
-> I can see this being a useful feature for many counter devices, and
-> it'll keep the code contained to a single subsystem.
-> 
-> By the way, I'm going to be submitting a major update to the Counter
-> subsystem code in the next couple weeks that isolates the sysfs code
-> from the rest of the subsystem -- it'll likely affect the interface and
-> code here -- so I'll probably wait to decide for certain until that
-> patch lands; I anticipate it making things easier for you here after
-> it's merged.
-> 
-> For now, I want to get a better high-level understanding about how users
-> would interact with this driver to use the device (input_setup_polling
-> is a new call for me). That should help me understand whether an
-> in-kernel API is the best choice here.
-> 
+[ Upstream commit 3498d9c05f804414c4645a2c0bba0187630fe5f0 ]
 
-Well, the goal is not really polling the counters but mainly exposing
-the correct userspace interface for the rotary encoders that are
-connected to quadrature decoders.
+Disable Coresight funnel 4 and 5, for now, as these causes the MTP to
+crash when clock late_initcall disables unused clocks.
 
-The input driver is using polling because this reduces the complexity of
-the patches but the ultimate goal is to also have interrupts working.
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20200308055445.1992189-1-bjorn.andersson@linaro.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-I'm pretty sure the in-kernel interface can also have other usages like
-for example iio triggers. I could envision having to read an ADC after x
-turns of a motor to check for the torque.
-
-I also think that having the sysfs code separate would help as it could
-be considered as one of the in-kernel interface user.
-
-BTW, do you have plans to add a character device interface?
-
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+index e08fcb426bbf8..38cc7cb347b74 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+@@ -95,11 +95,15 @@
+ };
+ 
+ &funnel4 {
+-	status = "okay";
++	// FIXME: Figure out why clock late_initcall crashes the board with
++	// this enabled.
++	// status = "okay";
+ };
+ 
+ &funnel5 {
+-	status = "okay";
++	// FIXME: Figure out why clock late_initcall crashes the board with
++	// this enabled.
++	// status = "okay";
+ };
+ 
+ &pm8005_lsid1 {
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.20.1
+
