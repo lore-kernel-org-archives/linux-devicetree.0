@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC72C2BB86
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6060C2BBC7
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79D3820674
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE25220787
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647665;
-	bh=Oz8l4a2+DuHtBPXpl9y0K8v+0yx9MzbKD4iUyuOn2i4=;
+	s=default; t=1586647671;
+	bh=omF1iRanyQ8S752QBPEFo8RD9YAGvCRHuHarTQ18A/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IB7+RPEfJLq52yLtyxosi3twYeuJEXBM3kbzyUI84cC3p/Eh1KXZOJ4tTTNeBgt1Y
-	 2ZPYB5LrFy8LZOzZC8Ap36u58N5NNaVDGDFj183wx3feBfPzF4EYn9VY2k88k04dDZ
-	 SmzT0VQx6R69zy+Rp+WU9hZbxov8YKvDZBZU1bVA=
+	b=Y8JDJM9N3p4blwRZVSKdSSA4Q1rf6l/MTE1eKszVSyMUjo8q0yBQMp7/q2RQgN+tr
+	 AyFOahoPKdo0kxOaNmwVgdk9CJpDHNjrMLqt2Rc9kQbTqBpwbt4gpCn8JutNxBKDmo
+	 0BbvRzXl5j0Kp9IENoUpsA1RBSO5r9FxdGjg9aJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbgDKX1g (ORCPT
+        id S1729949AbgDKXLf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:27:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51462 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:11:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728366AbgDKXLn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:11:43 -0400
+        id S1729945AbgDKXLf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:11:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F6342173E;
-        Sat, 11 Apr 2020 23:11:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70C792166E;
+        Sat, 11 Apr 2020 23:11:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646704;
-        bh=Oz8l4a2+DuHtBPXpl9y0K8v+0yx9MzbKD4iUyuOn2i4=;
+        s=default; t=1586646695;
+        bh=omF1iRanyQ8S752QBPEFo8RD9YAGvCRHuHarTQ18A/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZbnHuQrP9PA23Et/z1q6vFvBDR0x9/JLUc9xuDbCkZT+hucK5D1rBb3nSUmFiGDFq
-         Xt6X285SUYNKnz+lpLmvtVvFQTnIz/E3cb0c/9WOgDcV1Su0fLFJ135Gzwl+xsn0AT
-         8C+7mubO2dkvUssLZqprqSl1x1TSXKhDZ3fA616o=
+        b=PA20Y21KYVtl43pwTruFAxvNfFtQPS02sTtpj5aCgbSAocfHVl6fyZFCcvGaBQVsj
+         jLz+94hmxGUM79xwC0VvUKWUwh7GU4nAjfjLUn3F0puLmPzzu9VdSbLXfI9cCaq4/R
+         ErFEotWaLMN6Yk6dRZt7k/QvcdA7glWWX5L2w2GU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        Michael Srba <Michael.Srba@seznam.cz>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+Cc:     Patrick Daly <pdaly@codeaurora.org>,
+        "Isaac J . Manjarres" <isaacm@codeaurora.org>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 096/108] arm64: dts: qcom: msm8916-samsung-a2015: Reserve Samsung firmware memory
-Date:   Sat, 11 Apr 2020 19:09:31 -0400
-Message-Id: <20200411230943.24951-96-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 089/108] of: of_reserved_mem: Increase limit on number of reserved regions
+Date:   Sat, 11 Apr 2020 19:09:24 -0400
+Message-Id: <20200411230943.24951-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -61,64 +60,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Patrick Daly <pdaly@codeaurora.org>
 
-[ Upstream commit 8f4a7a00c1019df72cda3002643fb5823ef39183 ]
+[ Upstream commit 632c99084052aef1c9dcfe43d2720306026d6d21 ]
 
-At the moment, writing large amounts of data to the eMMC causes the device
-to freeze. The symptoms vary, sometimes the device reboots immediately,
-but usually it will just get stuck.
+Certain SoCs need to support a large amount of reserved memory
+regions. For example, Qualcomm's SM8150 SoC requires that 20
+regions of memory be reserved for a variety of reasons (e.g.
+loading a peripheral subsystem's firmware image into a
+particular space).
 
-It turns out that the issue is not actually related to the eMMC:
-Apparently, Samsung has made some modifications to the TrustZone firmware.
-These require additional memory which is reserved at 0x85500000-0x86000000.
-The downstream kernel describes this memory reservation as:
+When adding more reserved memory regions to cater to different
+usecases, the remaining number of reserved memory regions--12
+to be exact--becomes too small. Thus, double the existing
+limit of reserved memory regions.
 
-/* Additionally Reserved 6MB for TIMA and Increased the TZ app size
- * by 2MB [total 8 MB ]
- */
-
-This suggests that it is used for additional TZ apps, although the extra
-memory is actually 11 MB instead of the 8 MB mentioned in the comment.
-
-Writing to the protected memory causes the kernel to crash or freeze.
-In our case, writing to the eMMC causes the disk cache to fill
-the available RAM, until the kernel eventually crashes
-when attempting to use the reserved memory.
-
-Add the additional memory as reserved-memory to fix this problem.
-
-Fixes: 1329c1ab0730 ("arm64: dts: qcom: Add device tree for Samsung Galaxy A3U/A5U")
-Reported-by: Michael Srba <Michael.Srba@seznam.cz>
-Tested-by: Michael Srba <Michael.Srba@seznam.cz> # a3u
-Tested-by: Stephan Gerhold <stephan@gerhold.net> # a5u
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Link: https://lore.kernel.org/r/20191231112511.83342-1-stephan@gerhold.net
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Patrick Daly <pdaly@codeaurora.org>
+Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/of/of_reserved_mem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-index e675ff48fdd24..0cc5c5be0c21e 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-@@ -14,6 +14,14 @@
- 		stdout-path = "serial0";
- 	};
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 6bd610ee2cd73..1a84bc0d5fa80 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -22,7 +22,7 @@
+ #include <linux/slab.h>
+ #include <linux/memblock.h>
  
-+	reserved-memory {
-+		/* Additional memory used by Samsung firmware modifications */
-+		tz-apps@85500000 {
-+			reg = <0x0 0x85500000 0x0 0xb00000>;
-+			no-map;
-+		};
-+	};
-+
- 	soc {
- 		sdhci@7824000 {
- 			status = "okay";
+-#define MAX_RESERVED_REGIONS	32
++#define MAX_RESERVED_REGIONS	64
+ static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
+ static int reserved_mem_count;
+ 
 -- 
 2.20.1
 
