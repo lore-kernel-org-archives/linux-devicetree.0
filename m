@@ -2,102 +2,774 @@ Return-Path: <SRS0=gZHh=53=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B2EC2D0EC
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 02:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C58C2D0EC
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 02:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF988206A1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 02:21:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zFfH/Ijy"
+	by mail.kernel.org (Postfix) with ESMTP id 2871B20753
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 02:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgDKCVr (ORCPT
+        id S1726657AbgDKCkj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Apr 2020 22:21:47 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:36946 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbgDKCVr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Apr 2020 22:21:47 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03B2LeCO087819;
-        Fri, 10 Apr 2020 21:21:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1586571700;
-        bh=nIXY7QAeXSv8f9XHkzJPsSyBosxDw+h4kY/edLG+RLk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=zFfH/Ijy0vVIAU66wul/eHxMcqaa/j2W/sKnCWZm+5r+SIGuyCTiY4sH49KIi3dWk
-         qt+DIl0ua2SFyX1x5Cx4dtzaP2ieps9q+P2+73Af07bjwmhK1udIK1bGoL1VY+mH+W
-         kuBCMOyw6Oj4CFZ0ht9vXVWQMj9FVLXDEPaewKpM=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03B2LegC083286
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 Apr 2020 21:21:40 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 10
- Apr 2020 21:21:39 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 10 Apr 2020 21:21:40 -0500
-Received: from [10.250.133.142] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03B2LVFq000372;
-        Fri, 10 Apr 2020 21:21:33 -0500
-Subject: Re: [PATCH 1/3] dt-bindings: PCI: cadence: Deprecate inbound/outbound
- specific bindings
-To:     Rob Herring <robh@kernel.org>
-CC:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200327104727.4708-1-kishon@ti.com>
- <20200327104727.4708-2-kishon@ti.com> <20200410163817.GA24330@bogus>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <86f6679d-1a5d-16fe-fe1a-f7ae8f46617a@ti.com>
-Date:   Sat, 11 Apr 2020 07:51:31 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200410163817.GA24330@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 10 Apr 2020 22:40:39 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:45158 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726650AbgDKCki (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 10 Apr 2020 22:40:38 -0400
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 10 Apr 2020 19:40:38 -0700
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg04-sd.qualcomm.com with ESMTP; 10 Apr 2020 19:40:36 -0700
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id 8A8D3215DA; Sat, 11 Apr 2020 08:10:34 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Subject: [PATCH] arm64: dts: ipq8074: Re-arrange dts nodes based on address
+Date:   Sat, 11 Apr 2020 08:10:30 +0530
+Message-Id: <1586572830-22727-1-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This patch re-arranges ipq8074 device nodes based on node address
+followed by node names followed by node labels.
 
+Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/ipq8074-hk01.dts | 112 ++++---
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi     | 474 +++++++++++++++---------------
+ 2 files changed, 292 insertions(+), 294 deletions(-)
 
-On 4/10/2020 10:08 PM, Rob Herring wrote:
-> On Fri, 27 Mar 2020 16:17:25 +0530, Kishon Vijay Abraham I wrote:
->> Deprecate cdns,max-outbound-regions and cdns,no-bar-match-nbits for
->> host mode as both these could be derived from "ranges" and "dma-ranges"
->> property. "cdns,max-outbound-regions" property would still be required
->> for EP mode.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       |  2 +-
->>  .../bindings/pci/cdns,cdns-pcie-host.yaml     |  3 +--
->>  .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 25 +++++++++++++++++++
->>  .../bindings/pci/cdns-pcie-host.yaml          | 10 ++++++++
->>  .../devicetree/bindings/pci/cdns-pcie.yaml    |  8 ------
->>  5 files changed, 37 insertions(+), 11 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
->>
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+diff --git a/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts b/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
+index 70be3f9..6754cb0 100644
+--- a/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
++++ b/arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
+@@ -24,63 +24,61 @@
+ 		device_type = "memory";
+ 		reg = <0x0 0x40000000 0x0 0x20000000>;
+ 	};
++};
++
++&blsp1_i2c2 {
++	status = "ok";
++};
++
++&blsp1_spi1 {
++	status = "ok";
++
++	m25p80@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <50000000>;
++	};
++};
++
++&blsp1_uart3 {
++	status = "ok";
++};
++
++&blsp1_uart5 {
++	status = "ok";
++};
++
++&pcie0 {
++	status = "ok";
++	perst-gpio = <&tlmm 61 0x1>;
++};
++
++&pcie1 {
++	status = "ok";
++	perst-gpio = <&tlmm 58 0x1>;
++};
++
++&pcie_phy0 {
++	status = "ok";
++};
++
++&pcie_phy1 {
++	status = "ok";
++};
++
++&qpic_bam {
++	status = "ok";
++};
++
++&qpic_nand {
++	status = "ok";
+ 
+-	soc {
+-		serial@78b3000 {
+-			status = "ok";
+-		};
+-
+-		spi@78b5000 {
+-			status = "ok";
+-
+-			m25p80@0 {
+-				  #address-cells = <1>;
+-				  #size-cells = <1>;
+-				  compatible = "jedec,spi-nor";
+-				  reg = <0>;
+-				  spi-max-frequency = <50000000>;
+-			};
+-		};
+-
+-		serial@78b1000 {
+-			 status = "ok";
+-		};
+-
+-		i2c@78b6000 {
+-			 status = "ok";
+-		};
+-
+-		dma@7984000 {
+-			 status = "ok";
+-		};
+-
+-		nand@79b0000 {
+-			status = "ok";
+-
+-			nand@0 {
+-				reg = <0>;
+-				nand-ecc-strength = <4>;
+-				nand-ecc-step-size = <512>;
+-				nand-bus-width = <8>;
+-			};
+-		};
+-
+-		phy@86000 {
+-			status = "ok";
+-		};
+-
+-		phy@8e000 {
+-			status = "ok";
+-		};
+-
+-		pci@20000000 {
+-			status = "ok";
+-			perst-gpio = <&tlmm 58 0x1>;
+-		};
+-
+-		pci@10000000 {
+-			status = "ok";
+-			perst-gpio = <&tlmm 61 0x1>;
+-		};
++	nand@0 {
++		reg = <0>;
++		nand-ecc-strength = <4>;
++		nand-ecc-step-size = <512>;
++		nand-bus-width = <8>;
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+index 2b31823..5303821 100644
+--- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+@@ -10,15 +10,111 @@
+ 	model = "Qualcomm Technologies, Inc. IPQ8074";
+ 	compatible = "qcom,ipq8074";
+ 
++	clocks {
++		sleep_clk: sleep_clk {
++			compatible = "fixed-clock";
++			clock-frequency = <32000>;
++			#clock-cells = <0>;
++		};
++
++		xo: xo {
++			compatible = "fixed-clock";
++			clock-frequency = <19200000>;
++			#clock-cells = <0>;
++		};
++	};
++
++	cpus {
++		#address-cells = <0x1>;
++		#size-cells = <0x0>;
++
++		CPU0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0x0>;
++			next-level-cache = <&L2_0>;
++			enable-method = "psci";
++		};
++
++		CPU1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x1>;
++			next-level-cache = <&L2_0>;
++		};
++
++		CPU2: cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x2>;
++			next-level-cache = <&L2_0>;
++		};
++
++		CPU3: cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x3>;
++			next-level-cache = <&L2_0>;
++		};
++
++		L2_0: l2-cache {
++			compatible = "cache";
++			cache-level = <0x2>;
++		};
++	};
++
++	pmu {
++		compatible = "arm,armv8-pmuv3";
++		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
++	};
++
++	psci {
++		compatible = "arm,psci-1.0";
++		method = "smc";
++	};
++
+ 	soc: soc {
+ 		#address-cells = <0x1>;
+ 		#size-cells = <0x1>;
+ 		ranges = <0 0 0 0xffffffff>;
+ 		compatible = "simple-bus";
+ 
++		pcie_phy0: phy@86000 {
++			compatible = "qcom,ipq8074-qmp-pcie-phy";
++			reg = <0x00086000 0x1000>;
++			#phy-cells = <0>;
++			clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
++			clock-names = "pipe_clk";
++			clock-output-names = "pcie20_phy0_pipe_clk";
++
++			resets = <&gcc GCC_PCIE0_PHY_BCR>,
++				<&gcc GCC_PCIE0PHY_PHY_BCR>;
++			reset-names = "phy",
++				      "common";
++			status = "disabled";
++		};
++
++		pcie_phy1: phy@8e000 {
++			compatible = "qcom,ipq8074-qmp-pcie-phy";
++			reg = <0x0008e000 0x1000>;
++			#phy-cells = <0>;
++			clocks = <&gcc GCC_PCIE1_PIPE_CLK>;
++			clock-names = "pipe_clk";
++			clock-output-names = "pcie20_phy1_pipe_clk";
++
++			resets = <&gcc GCC_PCIE1_PHY_BCR>,
++				<&gcc GCC_PCIE1PHY_PHY_BCR>;
++			reset-names = "phy",
++				      "common";
++			status = "disabled";
++		};
++
+ 		tlmm: pinctrl@1000000 {
+ 			compatible = "qcom,ipq8074-pinctrl";
+-			reg = <0x1000000 0x300000>;
++			reg = <0x01000000 0x300000>;
+ 			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			gpio-ranges = <&tlmm 0 0 70>;
+@@ -66,102 +162,16 @@
+ 			};
+ 		};
+ 
+-		intc: interrupt-controller@b000000 {
+-			compatible = "qcom,msm-qgic2";
+-			interrupt-controller;
+-			#interrupt-cells = <0x3>;
+-			reg = <0xb000000 0x1000>, <0xb002000 0x1000>;
+-		};
+-
+-		timer {
+-			compatible = "arm,armv8-timer";
+-			interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+-				     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+-				     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+-				     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+-		};
+-
+-		timer@b120000 {
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			ranges;
+-			compatible = "arm,armv7-timer-mem";
+-			reg = <0xb120000 0x1000>;
+-			clock-frequency = <19200000>;
+-
+-			frame@b120000 {
+-				frame-number = <0>;
+-				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+-					     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+-				reg = <0xb121000 0x1000>,
+-				      <0xb122000 0x1000>;
+-			};
+-
+-			frame@b123000 {
+-				frame-number = <1>;
+-				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+-				reg = <0xb123000 0x1000>;
+-				status = "disabled";
+-			};
+-
+-			frame@b124000 {
+-				frame-number = <2>;
+-				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+-				reg = <0xb124000 0x1000>;
+-				status = "disabled";
+-			};
+-
+-			frame@b125000 {
+-				frame-number = <3>;
+-				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+-				reg = <0xb125000 0x1000>;
+-				status = "disabled";
+-			};
+-
+-			frame@b126000 {
+-				frame-number = <4>;
+-				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+-				reg = <0xb126000 0x1000>;
+-				status = "disabled";
+-			};
+-
+-			frame@b127000 {
+-				frame-number = <5>;
+-				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+-				reg = <0xb127000 0x1000>;
+-				status = "disabled";
+-			};
+-
+-			frame@b128000 {
+-				frame-number = <6>;
+-				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+-				reg = <0xb128000 0x1000>;
+-				status = "disabled";
+-			};
+-		};
+-
+ 		gcc: gcc@1800000 {
+ 			compatible = "qcom,gcc-ipq8074";
+-			reg = <0x1800000 0x80000>;
++			reg = <0x01800000 0x80000>;
+ 			#clock-cells = <0x1>;
+ 			#reset-cells = <0x1>;
+ 		};
+ 
+-		blsp1_uart5: serial@78b3000 {
+-			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+-			reg = <0x78b3000 0x200>;
+-			interrupts = <GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&gcc GCC_BLSP1_UART5_APPS_CLK>,
+-				 <&gcc GCC_BLSP1_AHB_CLK>;
+-			clock-names = "core", "iface";
+-			pinctrl-0 = <&serial_4_pins>;
+-			pinctrl-names = "default";
+-			status = "disabled";
+-		};
+-
+ 		blsp_dma: dma@7884000 {
+ 			compatible = "qcom,bam-v1.7.0";
+-			reg = <0x7884000 0x2b000>;
++			reg = <0x07884000 0x2b000>;
+ 			interrupts = <GIC_SPI 238 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_AHB_CLK>;
+ 			clock-names = "bam_clk";
+@@ -171,7 +181,7 @@
+ 
+ 		blsp1_uart1: serial@78af000 {
+ 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+-			reg = <0x78af000 0x200>;
++			reg = <0x078af000 0x200>;
+ 			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_UART1_APPS_CLK>,
+ 				 <&gcc GCC_BLSP1_AHB_CLK>;
+@@ -181,7 +191,7 @@
+ 
+ 		blsp1_uart3: serial@78b1000 {
+ 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+-			reg = <0x78b1000 0x200>;
++			reg = <0x078b1000 0x200>;
+ 			interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_UART3_APPS_CLK>,
+ 				<&gcc GCC_BLSP1_AHB_CLK>;
+@@ -194,11 +204,23 @@
+ 			status = "disabled";
+ 		};
+ 
++		blsp1_uart5: serial@78b3000 {
++			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
++			reg = <0x078b3000 0x200>;
++			interrupts = <GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_UART5_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			pinctrl-0 = <&serial_4_pins>;
++			pinctrl-names = "default";
++			status = "disabled";
++		};
++
+ 		blsp1_spi1: spi@78b5000 {
+ 			compatible = "qcom,spi-qup-v2.2.1";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-			reg = <0x78b5000 0x600>;
++			reg = <0x078b5000 0x600>;
+ 			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
+ 			spi-max-frequency = <50000000>;
+ 			clocks = <&gcc GCC_BLSP1_QUP1_SPI_APPS_CLK>,
+@@ -215,7 +237,7 @@
+ 			compatible = "qcom,i2c-qup-v2.2.1";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-			reg = <0x78b6000 0x600>;
++			reg = <0x078b6000 0x600>;
+ 			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
+ 				<&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>;
+@@ -232,7 +254,7 @@
+ 			compatible = "qcom,i2c-qup-v2.2.1";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-			reg = <0x78b7000 0x600>;
++			reg = <0x078b7000 0x600>;
+ 			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
+ 				<&gcc GCC_BLSP1_QUP3_I2C_APPS_CLK>;
+@@ -245,7 +267,7 @@
+ 
+ 		qpic_bam: dma@7984000 {
+ 			compatible = "qcom,bam-v1.7.0";
+-			reg = <0x7984000 0x1a000>;
++			reg = <0x07984000 0x1a000>;
+ 			interrupts = <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_QPIC_AHB_CLK>;
+ 			clock-names = "bam_clk";
+@@ -256,7 +278,7 @@
+ 
+ 		qpic_nand: nand@79b0000 {
+ 			compatible = "qcom,ipq8074-nand";
+-			reg = <0x79b0000 0x10000>;
++			reg = <0x079b0000 0x10000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			clocks = <&gcc GCC_QPIC_CLK>,
+@@ -272,104 +294,85 @@
+ 			status = "disabled";
+ 		};
+ 
+-		pcie_phy0: phy@86000 {
+-			compatible = "qcom,ipq8074-qmp-pcie-phy";
+-			reg = <0x86000 0x1000>;
+-			#phy-cells = <0>;
+-			clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
+-			clock-names = "pipe_clk";
+-			clock-output-names = "pcie20_phy0_pipe_clk";
++		intc: interrupt-controller@b000000 {
++			compatible = "qcom,msm-qgic2";
++			interrupt-controller;
++			#interrupt-cells = <0x3>;
++			reg = <0x0b000000 0x1000>, <0x0b002000 0x1000>;
++		};
+ 
+-			resets = <&gcc GCC_PCIE0_PHY_BCR>,
+-				<&gcc GCC_PCIE0PHY_PHY_BCR>;
+-			reset-names = "phy",
+-				      "common";
+-			status = "disabled";
++		timer {
++			compatible = "arm,armv8-timer";
++			interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++				     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+ 		};
+ 
+-		pcie0: pci@20000000 {
+-			compatible = "qcom,pcie-ipq8074";
+-			reg =  <0x20000000 0xf1d
+-				0x20000f20 0xa8
+-				0x80000 0x2000
+-				0x20100000 0x1000>;
+-			reg-names = "dbi", "elbi", "parf", "config";
+-			device_type = "pci";
+-			linux,pci-domain = <0>;
+-			bus-range = <0x00 0xff>;
+-			num-lanes = <1>;
+-			#address-cells = <3>;
+-			#size-cells = <2>;
++		timer@b120000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			compatible = "arm,armv7-timer-mem";
++			reg = <0x0b120000 0x1000>;
++			clock-frequency = <19200000>;
+ 
+-			phys = <&pcie_phy0>;
+-			phy-names = "pciephy";
++			frame@b120000 {
++				frame-number = <0>;
++				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0b121000 0x1000>,
++				      <0x0b122000 0x1000>;
++			};
+ 
+-			ranges = <0x81000000 0 0x20200000 0x20200000
+-				  0 0x100000   /* downstream I/O */
+-				  0x82000000 0 0x20300000 0x20300000
+-				  0 0xd00000>; /* non-prefetchable memory */
++			frame@b123000 {
++				frame-number = <1>;
++				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0b123000 0x1000>;
++				status = "disabled";
++			};
+ 
+-			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-names = "msi";
+-			#interrupt-cells = <1>;
+-			interrupt-map-mask = <0 0 0 0x7>;
+-			interrupt-map = <0 0 0 1 &intc 0 75
+-					 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+-					<0 0 0 2 &intc 0 78
+-					 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+-					<0 0 0 3 &intc 0 79
+-					 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+-					<0 0 0 4 &intc 0 83
+-					 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
++			frame@b124000 {
++				frame-number = <2>;
++				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0b124000 0x1000>;
++				status = "disabled";
++			};
+ 
+-			clocks = <&gcc GCC_SYS_NOC_PCIE0_AXI_CLK>,
+-				 <&gcc GCC_PCIE0_AXI_M_CLK>,
+-				 <&gcc GCC_PCIE0_AXI_S_CLK>,
+-				 <&gcc GCC_PCIE0_AHB_CLK>,
+-				 <&gcc GCC_PCIE0_AUX_CLK>;
++			frame@b125000 {
++				frame-number = <3>;
++				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0b125000 0x1000>;
++				status = "disabled";
++			};
+ 
+-			clock-names = "iface",
+-				      "axi_m",
+-				      "axi_s",
+-				      "ahb",
+-				      "aux";
+-			resets = <&gcc GCC_PCIE0_PIPE_ARES>,
+-				 <&gcc GCC_PCIE0_SLEEP_ARES>,
+-				 <&gcc GCC_PCIE0_CORE_STICKY_ARES>,
+-				 <&gcc GCC_PCIE0_AXI_MASTER_ARES>,
+-				 <&gcc GCC_PCIE0_AXI_SLAVE_ARES>,
+-				 <&gcc GCC_PCIE0_AHB_ARES>,
+-				 <&gcc GCC_PCIE0_AXI_MASTER_STICKY_ARES>;
+-			reset-names = "pipe",
+-				      "sleep",
+-				      "sticky",
+-				      "axi_m",
+-				      "axi_s",
+-				      "ahb",
+-				      "axi_m_sticky";
+-			status = "disabled";
+-		};
++			frame@b126000 {
++				frame-number = <4>;
++				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0b126000 0x1000>;
++				status = "disabled";
++			};
+ 
+-		pcie_phy1: phy@8e000 {
+-			compatible = "qcom,ipq8074-qmp-pcie-phy";
+-			reg = <0x8e000 0x1000>;
+-			#phy-cells = <0>;
+-			clocks = <&gcc GCC_PCIE1_PIPE_CLK>;
+-			clock-names = "pipe_clk";
+-			clock-output-names = "pcie20_phy1_pipe_clk";
++			frame@b127000 {
++				frame-number = <5>;
++				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0b127000 0x1000>;
++				status = "disabled";
++			};
+ 
+-			resets = <&gcc GCC_PCIE1_PHY_BCR>,
+-				<&gcc GCC_PCIE1PHY_PHY_BCR>;
+-			reset-names = "phy",
+-				      "common";
+-			status = "disabled";
++			frame@b128000 {
++				frame-number = <6>;
++				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0b128000 0x1000>;
++				status = "disabled";
++			};
+ 		};
+ 
+ 		pcie1: pci@10000000 {
+ 			compatible = "qcom,pcie-ipq8074";
+ 			reg =  <0x10000000 0xf1d
+ 				0x10000f20 0xa8
+-				0x88000 0x2000
++				0x00088000 0x2000
+ 				0x10100000 0x1000>;
+ 			reg-names = "dbi", "elbi", "parf", "config";
+ 			device_type = "pci";
+@@ -426,71 +429,68 @@
+ 				      "axi_m_sticky";
+ 			status = "disabled";
+ 		};
+-	};
+-
+-	cpus {
+-		#address-cells = <0x1>;
+-		#size-cells = <0x0>;
+-
+-		CPU0: cpu@0 {
+-			device_type = "cpu";
+-			compatible = "arm,cortex-a53";
+-			reg = <0x0>;
+-			next-level-cache = <&L2_0>;
+-			enable-method = "psci";
+-		};
+-
+-		CPU1: cpu@1 {
+-			device_type = "cpu";
+-			compatible = "arm,cortex-a53";
+-			enable-method = "psci";
+-			reg = <0x1>;
+-			next-level-cache = <&L2_0>;
+-		};
+ 
+-		CPU2: cpu@2 {
+-			device_type = "cpu";
+-			compatible = "arm,cortex-a53";
+-			enable-method = "psci";
+-			reg = <0x2>;
+-			next-level-cache = <&L2_0>;
+-		};
+-
+-		CPU3: cpu@3 {
+-			device_type = "cpu";
+-			compatible = "arm,cortex-a53";
+-			enable-method = "psci";
+-			reg = <0x3>;
+-			next-level-cache = <&L2_0>;
+-		};
++		pcie0: pci@20000000 {
++			compatible = "qcom,pcie-ipq8074";
++			reg =  <0x20000000 0xf1d
++				0x20000f20 0xa8
++				0x00080000 0x2000
++				0x20100000 0x1000>;
++			reg-names = "dbi", "elbi", "parf", "config";
++			device_type = "pci";
++			linux,pci-domain = <0>;
++			bus-range = <0x00 0xff>;
++			num-lanes = <1>;
++			#address-cells = <3>;
++			#size-cells = <2>;
+ 
+-		L2_0: l2-cache {
+-			compatible = "cache";
+-			cache-level = <0x2>;
+-		};
+-	};
++			phys = <&pcie_phy0>;
++			phy-names = "pciephy";
+ 
+-	psci {
+-		compatible = "arm,psci-1.0";
+-		method = "smc";
+-	};
++			ranges = <0x81000000 0 0x20200000 0x20200000
++				  0 0x100000   /* downstream I/O */
++				  0x82000000 0 0x20300000 0x20300000
++				  0 0xd00000>; /* non-prefetchable memory */
+ 
+-	pmu {
+-		compatible = "arm,armv8-pmuv3";
+-		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+-	};
++			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "msi";
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0x7>;
++			interrupt-map = <0 0 0 1 &intc 0 75
++					 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
++					<0 0 0 2 &intc 0 78
++					 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
++					<0 0 0 3 &intc 0 79
++					 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
++					<0 0 0 4 &intc 0 83
++					 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+ 
+-	clocks {
+-		sleep_clk: sleep_clk {
+-			compatible = "fixed-clock";
+-			clock-frequency = <32000>;
+-			#clock-cells = <0>;
+-		};
++			clocks = <&gcc GCC_SYS_NOC_PCIE0_AXI_CLK>,
++				 <&gcc GCC_PCIE0_AXI_M_CLK>,
++				 <&gcc GCC_PCIE0_AXI_S_CLK>,
++				 <&gcc GCC_PCIE0_AHB_CLK>,
++				 <&gcc GCC_PCIE0_AUX_CLK>;
+ 
+-		xo: xo {
+-			compatible = "fixed-clock";
+-			clock-frequency = <19200000>;
+-			#clock-cells = <0>;
++			clock-names = "iface",
++				      "axi_m",
++				      "axi_s",
++				      "ahb",
++				      "aux";
++			resets = <&gcc GCC_PCIE0_PIPE_ARES>,
++				 <&gcc GCC_PCIE0_SLEEP_ARES>,
++				 <&gcc GCC_PCIE0_CORE_STICKY_ARES>,
++				 <&gcc GCC_PCIE0_AXI_MASTER_ARES>,
++				 <&gcc GCC_PCIE0_AXI_SLAVE_ARES>,
++				 <&gcc GCC_PCIE0_AHB_ARES>,
++				 <&gcc GCC_PCIE0_AXI_MASTER_STICKY_ARES>;
++			reset-names = "pipe",
++				      "sleep",
++				      "sticky",
++				      "axi_m",
++				      "axi_s",
++				      "ahb",
++				      "axi_m_sticky";
++			status = "disabled";
+ 		};
+ 	};
+ };
+-- 
+2.7.4
 
-Thank you Rob!
-
-Regards
-Kishon
