@@ -2,162 +2,119 @@ Return-Path: <SRS0=gZHh=53=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 449E3C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 16:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F37BFC2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 16:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14D822078E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 16:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD5272075E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 16:57:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fNxHgv83"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="RWrw26nq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbgDKQBf (ORCPT
+        id S1726124AbgDKQ52 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Apr 2020 12:01:35 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:39710 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726155AbgDKQBe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Apr 2020 12:01:34 -0400
-Received: by mail-qt1-f195.google.com with SMTP id o10so3796043qtr.6;
-        Sat, 11 Apr 2020 09:01:34 -0700 (PDT)
+        Sat, 11 Apr 2020 12:57:28 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42508 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbgDKQ52 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Apr 2020 12:57:28 -0400
+Received: by mail-wr1-f68.google.com with SMTP id j2so5585342wrs.9;
+        Sat, 11 Apr 2020 09:57:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zhRskEKtP61k0yqbLaLsqJL1DLZl52yNBvZ6bXRfLCM=;
-        b=fNxHgv832WDYysIX0jD9QPCDscvmTf43PY81UgQokDRgCjw1x1ogToIhqT4QwC1E/D
-         jQV+i9/yOZevJrfP6URcG91dfGR9MznldAw4c9lwIRLy4K+ZkuSns4XOT1z3VBwCqQmU
-         XzTzVOGpvddRB382w7EZKk580NNwa5C89GZQQwQRRhXGgvtshGQX/A6MFnVfeYIDEOkX
-         dynKyb2bw0spA8bBE2buTF1e2TQArisyj26LhuTWPO95DRiiSIuwlSkiheCCjTpnk4Pp
-         lfMpv2u4xMOoIH+aZxcBEnjjJB/c0PWEva93mmt67JDYMVjP1vdZqgNOTnWVAdisd9Bd
-         qadA==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XHtQD/meuXaYe8UaCWq5ou0S7rpgnlSgQuuCrxXrgqE=;
+        b=RWrw26nqS4KT9PlkFPDn2JxIpRqcyPHhXMFaV2xV/LRA5u0k8ivXmdSjtFyCEqZfs/
+         w6d951CQrL1mkIvQKsxH9o9MjSCclbzSWvG8mH72tmFcKpKfRqa3g1YP8QzUIoSPuWRl
+         VfC7wxNrZMh142P0OaR5q4xJ3A8rcTAIzhZSXShlqTSlELXp0V+oV4zQjnrmXwL8gBp7
+         8Iy1gSh8L065we/ErvRTUYKpFeXymglr0A96fJfQmniKcFkQnfRxAr6e07HealZfhgrm
+         H0r7FiZGM1Np9CXQUXmq3rMU4WLM/x6xnx8oh3NXwpxvXewCfyiF5eM6LzfF1sZdS2hU
+         IflA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zhRskEKtP61k0yqbLaLsqJL1DLZl52yNBvZ6bXRfLCM=;
-        b=H2JIFgbt1KbidWeWTLWFrC6FXgPAVzIQx/Lns/9wZUzDiYPEwmYbO7EC3Gyy8uFzGS
-         uETzeEX0YJMtyhCD+VpkwXv0R0BdESaNpCEOof1BIiCogrVVbXTW6Dop7SdbeqosFXwt
-         aWhdBU8ndi690Gq4jmd/3sqNcGWqS2injdZtcURJpvL2MKxgZvtYQXdY/JmPKWrpSC67
-         /RnVxFU8eEcHsj4CIOuTO7Utn3DiHYm5eIb2NMd4x/LGZiVk0aqtfpRaeskCIXxdwAUh
-         i/ffZXzI0+g12WWVaLYnbmc/emCaoQTMuBgZ8I40QnBOYM22amSG1cWERMufhw2CW3eo
-         Dc1g==
-X-Gm-Message-State: AGi0PuZR4EeFl9NBI8T+9MlQ9ZIUuco9AOfKWfelW34n3Hjkf18FfQNO
-        9SpHuIxiW9OP1xb84ObI+3s=
-X-Google-Smtp-Source: APiQypLVRG/zAWgaDeXS+aPd3v3rXiHthdj4V64zP9c4KydlcwVH+GkllKXLr6/Q5Q4sF7pMJNhTqA==
-X-Received: by 2002:aed:3b75:: with SMTP id q50mr4232741qte.23.1586620893939;
-        Sat, 11 Apr 2020 09:01:33 -0700 (PDT)
-Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
-        by smtp.gmail.com with ESMTPSA id o13sm3853059qkg.111.2020.04.11.09.01.32
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XHtQD/meuXaYe8UaCWq5ou0S7rpgnlSgQuuCrxXrgqE=;
+        b=B08y4nEzMqW8RnKlM8UrFWHR+2Efmip+ZmFSg5uHWDprshvZdvwOgWEKyRnc0RIFNb
+         WOOTWUy58VrcdkN7vK4XCUQBCYINJa/UTyDg/KsLEgyVgI2Wbi940Tq+3sajt69j2sp/
+         Hge7k7xKdwS6WwDoGQQWczo6hEMJPN1K/SU+4rMzRUs85ElfNywrSgJe78FvxgmJ4DmU
+         igPH4tMPA9r006YdU0vwGEwI5+Nre/2CNY9DNF+fvlSGDVM4mBITfwxQAeRL6zbJ3uIv
+         miyRCtHi+9jVMqtGPyDGZEOIusFD7Po4P0BRlw49gnzCxJ7D+JesJFML4lL7E80DEyZX
+         i4FQ==
+X-Gm-Message-State: AGi0PuZE8iAcFoTH8dq0OzNcCrSqX21NRkH4v9GqGg2nce9mOKCoJOvR
+        F0Rz2AMQJhY83UnjOg5CliE=
+X-Google-Smtp-Source: APiQypI831li2YGPKN/VZUe6xPsQn9Sks+evd0nSUfRQDu+keljhtZbYvFFAXX996GgtLV3jKygrbA==
+X-Received: by 2002:adf:80af:: with SMTP id 44mr10792605wrl.241.1586624246453;
+        Sat, 11 Apr 2020 09:57:26 -0700 (PDT)
+Received: from localhost.localdomain (p200300F13710ED00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3710:ed00:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id z11sm7781992wrv.58.2020.04.11.09.57.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Apr 2020 09:01:32 -0700 (PDT)
-Date:   Sat, 11 Apr 2020 12:01:16 -0400
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] Atmel TCB capture driver
-Message-ID: <20200411160116.GA95806@icarus>
-References: <20200409141401.321222-1-kamel.bouhara@bootlin.com>
+        Sat, 11 Apr 2020 09:57:25 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     robh+dt@kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Qiang Yu <yuq825@gmail.com>
+Subject: [PATCH v5] dt-bindings: gpu: mali-utgard: Add the #cooling-cells property
+Date:   Sat, 11 Apr 2020 18:57:00 +0200
+Message-Id: <20200411165700.1576314-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
-Content-Disposition: inline
-In-Reply-To: <20200409141401.321222-1-kamel.bouhara@bootlin.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The GPU can be one of the big heat sources on a SoC. Allow the
+"#cooling-cells" property to be specified for ARM Mali Utgard GPUs so
+the GPU clock speeds (and voltages) can be reduced to prevent a SoC from
+overheating.
 
---J/dobhs11T7y2rNN
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Qiang Yu <yuq825@gmail.com>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+Changes since v4 at [0]:
+- Added Qiang's Reviewed-by (many thanks)
+- re-send because I missed the devicetree mailing list in v4
 
-On Thu, Apr 09, 2020 at 04:13:58PM +0200, Kamel Bouhara wrote:
-> Hello,
->=20
-> Here is a new counter driver to support Atmel TCB capture devices.
->=20
-> Each SoC has two TCB blocks, each one including three independent
-> channels.The following series adds support for two counter modes:
-> increase and quadrature decoder.
->=20
-> As for the atmel clocksource and pwm, the counter driver needs to fill
-> some tcb capabilities in order to operate with the right configuration.
-> This is achieved in first patch of this series.
->=20
-> Please feel free to comment.
->=20
-> Cheers,
->=20
-> Changes from v2:
->  - Fixed first patch not applying on mainline
->  - Updated return code to -EINVAL when user is requesting qdec mode on
->    a counter device not supporting it.
->  - Added an error case returning -EINVAL when action edge is performed in
->    qdec mode.
->  - Removed no need to explicity setting ops to NULL from static struct as
->    it is the default value.
->  - Changed confusing code by using snprintf for the sake of clarity.
->  - Changed code to use ARRAY_SIZE so that future reviewers will know
->    that num_counts matches what's in the atmel_tc_count array without
->    having to check so themselves.
->=20
-> Kamel Bouhara (3):
->   ARM: at91: add atmel tcb capabilities
->   dt-bindings: counter: atmel-tcb-capture counter
->   counter: Add atmel TCB capture counter
->=20
->  .../bindings/counter/atmel-tcb-capture.yaml   |  35 ++
->  drivers/counter/Kconfig                       |  11 +
->  drivers/counter/Makefile                      |   1 +
->  drivers/counter/atmel-tcb-capture.c           | 394 ++++++++++++++++++
->  include/soc/at91/atmel_tcb.h                  |   2 +
->  5 files changed, 443 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/counter/atmel-tcb-c=
-apture.yaml
->  create mode 100644 drivers/counter/atmel-tcb-capture.c
->=20
-> --
-> 2.25.0
 
-Thanks Kamel, this version applies nicely now. Fix the error messages
-Rob Herring pointed out in the dt-bindings patch and I should be able to
-sign off on these.
+[0] https://patchwork.kernel.org/patch/11448013/
 
-William Breathitt Gray
 
---J/dobhs11T7y2rNN
-Content-Type: application/pgp-signature; name="signature.asc"
+ Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+index f5401cc8de4a..4869258daadb 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+@@ -107,6 +107,9 @@ properties:
+ 
+   operating-points-v2: true
+ 
++  "#cooling-cells":
++    const: 2
++
+ required:
+   - compatible
+   - reg
+@@ -164,6 +167,7 @@ examples:
+       clocks = <&ccu 1>, <&ccu 2>;
+       clock-names = "bus", "core";
+       resets = <&ccu 1>;
++      #cooling-cells = <2>;
+     };
+ 
+ ...
+-- 
+2.26.0
 
-iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl6R6b8ACgkQhvpINdm7
-VJJT3hAAtJGYMWuStziOpn3oiehL6iBN7av6JLXQ1xaNk4DP0R6MyU0qGUQJCH27
-Cbckx4xNpwUmPK+7tV1NISlzXjBj9hEt3cRoPjf3Sd6Gw2x/F4GDSzbbcPot9KOD
-jqQL6HqJ/n9YPv/UYr5NtJ5Joh312TCf0mPdJ//GXWRCG7AzHa6b5CrBfz6bWb4x
-ylK0myhYbPEs5ViHlWSC69TUs+rrRqRgmIyJSBuaSukB0JYXFsj7BOMmgV7ymr9t
-91Qvf43jmzsXy0F4/lpp5u5d0DliHPhMk7J9LTILIECs7AvOxKB3D0mJSEoq++ws
-hugZXe1vbo39+gzf7QD1hEkVHOTwnWSG5wXUXxmjDpPqt7Ic9h1fu+mP3Nd8OLFx
-PmCeKyqBgkdQxUAb75Y+YObrgTDnBiWtnn391K0kpwy22aPQ10RzZYSCHY8pBvrB
-rkYsQs+KzHgH+/YtGkkohmPAialRUXEdMaGfIC/ZAggQdExxhdgtIEO49gV/yDL/
-+Cp4MDfoBlomK4oLX3m1sagP9/Fzh+6yREa2EBajPMn9ZQ692Sy4hQCXfE1pFCs6
-1IXRuFXRZFETnyvT+SWcDxbizKYCVm7yCrA0M55tczJvoaDQOC93/i4hNf2aVMaT
-glv8dfI+2oNtO+AUclf7F1EX3izFvCqvUD89nuxhKZxfHbKkmJA=
-=rbCt
------END PGP SIGNATURE-----
-
---J/dobhs11T7y2rNN--
