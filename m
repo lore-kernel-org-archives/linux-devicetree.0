@@ -2,100 +2,97 @@ Return-Path: <SRS0=gZHh=53=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6060C2BBC7
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB2CC2BBFD
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 23:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE25220787
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647671;
-	bh=omF1iRanyQ8S752QBPEFo8RD9YAGvCRHuHarTQ18A/E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y8JDJM9N3p4blwRZVSKdSSA4Q1rf6l/MTE1eKszVSyMUjo8q0yBQMp7/q2RQgN+tr
-	 AyFOahoPKdo0kxOaNmwVgdk9CJpDHNjrMLqt2Rc9kQbTqBpwbt4gpCn8JutNxBKDmo
-	 0BbvRzXl5j0Kp9IENoUpsA1RBSO5r9FxdGjg9aJA=
+	by mail.kernel.org (Postfix) with ESMTP id E98442051A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 23:31:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729949AbgDKXLf (ORCPT
+        id S1729696AbgDKXbx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:11:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729945AbgDKXLf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:11:35 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70C792166E;
-        Sat, 11 Apr 2020 23:11:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646695;
-        bh=omF1iRanyQ8S752QBPEFo8RD9YAGvCRHuHarTQ18A/E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PA20Y21KYVtl43pwTruFAxvNfFtQPS02sTtpj5aCgbSAocfHVl6fyZFCcvGaBQVsj
-         jLz+94hmxGUM79xwC0VvUKWUwh7GU4nAjfjLUn3F0puLmPzzu9VdSbLXfI9cCaq4/R
-         ErFEotWaLMN6Yk6dRZt7k/QvcdA7glWWX5L2w2GU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Patrick Daly <pdaly@codeaurora.org>,
-        "Isaac J . Manjarres" <isaacm@codeaurora.org>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 089/108] of: of_reserved_mem: Increase limit on number of reserved regions
-Date:   Sat, 11 Apr 2020 19:09:24 -0400
-Message-Id: <20200411230943.24951-89-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
-References: <20200411230943.24951-1-sashal@kernel.org>
+        Sat, 11 Apr 2020 19:31:53 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:60361 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728753AbgDKXbs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Apr 2020 19:31:48 -0400
+X-Originating-IP: 86.202.105.35
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id C998520004;
+        Sat, 11 Apr 2020 23:31:45 +0000 (UTC)
+Date:   Sun, 12 Apr 2020 01:31:45 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     Kamel Bouhara <kamel.bouhara@bootlin.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH 0/3] Introduce a counter inkernel API
+Message-ID: <20200411233145.GC3628@piout.net>
+References: <20200406155806.1295169-1-kamel.bouhara@bootlin.com>
+ <20200411172259.GB95806@icarus>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200411172259.GB95806@icarus>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Patrick Daly <pdaly@codeaurora.org>
+Hi,
 
-[ Upstream commit 632c99084052aef1c9dcfe43d2720306026d6d21 ]
+On 11/04/2020 13:22:59-0400, William Breathitt Gray wrote:
+> I'm not inherently opposed to adding an in-kernel API for the Counter
+> subsystem, but I'm not sure yet if it's necessary for this particular
+> situation.
+> 
+> Is the purpose of this driver to allow users to poll on the rotary
+> encoder position value? If so, perhaps instead of an in-kernel API, the
+> polling functionality should be added as part of the Counter subsystem;
+> I can see this being a useful feature for many counter devices, and
+> it'll keep the code contained to a single subsystem.
+> 
+> By the way, I'm going to be submitting a major update to the Counter
+> subsystem code in the next couple weeks that isolates the sysfs code
+> from the rest of the subsystem -- it'll likely affect the interface and
+> code here -- so I'll probably wait to decide for certain until that
+> patch lands; I anticipate it making things easier for you here after
+> it's merged.
+> 
+> For now, I want to get a better high-level understanding about how users
+> would interact with this driver to use the device (input_setup_polling
+> is a new call for me). That should help me understand whether an
+> in-kernel API is the best choice here.
+> 
 
-Certain SoCs need to support a large amount of reserved memory
-regions. For example, Qualcomm's SM8150 SoC requires that 20
-regions of memory be reserved for a variety of reasons (e.g.
-loading a peripheral subsystem's firmware image into a
-particular space).
+Well, the goal is not really polling the counters but mainly exposing
+the correct userspace interface for the rotary encoders that are
+connected to quadrature decoders.
 
-When adding more reserved memory regions to cater to different
-usecases, the remaining number of reserved memory regions--12
-to be exact--becomes too small. Thus, double the existing
-limit of reserved memory regions.
+The input driver is using polling because this reduces the complexity of
+the patches but the ultimate goal is to also have interrupts working.
 
-Signed-off-by: Patrick Daly <pdaly@codeaurora.org>
-Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/of/of_reserved_mem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'm pretty sure the in-kernel interface can also have other usages like
+for example iio triggers. I could envision having to read an ADC after x
+turns of a motor to check for the torque.
 
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 6bd610ee2cd73..1a84bc0d5fa80 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -22,7 +22,7 @@
- #include <linux/slab.h>
- #include <linux/memblock.h>
- 
--#define MAX_RESERVED_REGIONS	32
-+#define MAX_RESERVED_REGIONS	64
- static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
- static int reserved_mem_count;
- 
+I also think that having the sysfs code separate would help as it could
+be considered as one of the in-kernel interface user.
+
+BTW, do you have plans to add a character device interface?
+
 -- 
-2.20.1
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
