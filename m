@@ -2,119 +2,107 @@ Return-Path: <SRS0=gZHh=53=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F37BFC2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 16:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001AFC2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 17:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD5272075E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 16:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C59A12084D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 17:21:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="RWrw26nq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VR/wGsp6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbgDKQ52 (ORCPT
+        id S1726687AbgDKRVS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Apr 2020 12:57:28 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42508 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbgDKQ52 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Apr 2020 12:57:28 -0400
-Received: by mail-wr1-f68.google.com with SMTP id j2so5585342wrs.9;
-        Sat, 11 Apr 2020 09:57:27 -0700 (PDT)
+        Sat, 11 Apr 2020 13:21:18 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:32807 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbgDKRVS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Apr 2020 13:21:18 -0400
+Received: by mail-lf1-f66.google.com with SMTP id h6so3530695lfc.0;
+        Sat, 11 Apr 2020 10:21:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XHtQD/meuXaYe8UaCWq5ou0S7rpgnlSgQuuCrxXrgqE=;
-        b=RWrw26nqS4KT9PlkFPDn2JxIpRqcyPHhXMFaV2xV/LRA5u0k8ivXmdSjtFyCEqZfs/
-         w6d951CQrL1mkIvQKsxH9o9MjSCclbzSWvG8mH72tmFcKpKfRqa3g1YP8QzUIoSPuWRl
-         VfC7wxNrZMh142P0OaR5q4xJ3A8rcTAIzhZSXShlqTSlELXp0V+oV4zQjnrmXwL8gBp7
-         8Iy1gSh8L065we/ErvRTUYKpFeXymglr0A96fJfQmniKcFkQnfRxAr6e07HealZfhgrm
-         H0r7FiZGM1Np9CXQUXmq3rMU4WLM/x6xnx8oh3NXwpxvXewCfyiF5eM6LzfF1sZdS2hU
-         IflA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=oyBmc4xjNn3SLXRrYaMJxMSegPacZmPs2u2arwCQFwM=;
+        b=VR/wGsp6AL6Cgg3JswO7WRYpRv1nWBBEmrdCY+rNoLnt8YCpj8wbVXp3eIYczY8jFh
+         3XmMhQJnFPAzG7c0GvVfa/DN0/vBVx7G5vavJen+1HcXbtV67PXuyB+ffigY7AhNru+q
+         oPUxJhXgHzRo/5k0mEen8hRHKRet3vc39nuHlop3L2UEhFK2vtdRPkpFdCNXF4Q1kYMB
+         LKe05KupQYlHVjIBoW7I8/li2KsvyNDwGNYk3QzYI4ZaDtCprcwDBlzmQZwsA3Xs6l29
+         G0jQU+vTCzCEJHXKNmOGd2w93ip4Bicf1M0+D7ujgIUchKoKdS0k5gNPtvslEa107Xkh
+         e0OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XHtQD/meuXaYe8UaCWq5ou0S7rpgnlSgQuuCrxXrgqE=;
-        b=B08y4nEzMqW8RnKlM8UrFWHR+2Efmip+ZmFSg5uHWDprshvZdvwOgWEKyRnc0RIFNb
-         WOOTWUy58VrcdkN7vK4XCUQBCYINJa/UTyDg/KsLEgyVgI2Wbi940Tq+3sajt69j2sp/
-         Hge7k7xKdwS6WwDoGQQWczo6hEMJPN1K/SU+4rMzRUs85ElfNywrSgJe78FvxgmJ4DmU
-         igPH4tMPA9r006YdU0vwGEwI5+Nre/2CNY9DNF+fvlSGDVM4mBITfwxQAeRL6zbJ3uIv
-         miyRCtHi+9jVMqtGPyDGZEOIusFD7Po4P0BRlw49gnzCxJ7D+JesJFML4lL7E80DEyZX
-         i4FQ==
-X-Gm-Message-State: AGi0PuZE8iAcFoTH8dq0OzNcCrSqX21NRkH4v9GqGg2nce9mOKCoJOvR
-        F0Rz2AMQJhY83UnjOg5CliE=
-X-Google-Smtp-Source: APiQypI831li2YGPKN/VZUe6xPsQn9Sks+evd0nSUfRQDu+keljhtZbYvFFAXX996GgtLV3jKygrbA==
-X-Received: by 2002:adf:80af:: with SMTP id 44mr10792605wrl.241.1586624246453;
-        Sat, 11 Apr 2020 09:57:26 -0700 (PDT)
-Received: from localhost.localdomain (p200300F13710ED00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3710:ed00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id z11sm7781992wrv.58.2020.04.11.09.57.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Apr 2020 09:57:25 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     robh+dt@kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Qiang Yu <yuq825@gmail.com>
-Subject: [PATCH v5] dt-bindings: gpu: mali-utgard: Add the #cooling-cells property
-Date:   Sat, 11 Apr 2020 18:57:00 +0200
-Message-Id: <20200411165700.1576314-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.26.0
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=oyBmc4xjNn3SLXRrYaMJxMSegPacZmPs2u2arwCQFwM=;
+        b=CjmaQFKJMM67bQa2GWyUX49SW6Fpd4CoLYuHcjqPYJNFmXwrayws5Xm5d/I8yM2ttU
+         PECeHXOzthdyoOFytvBYp+7W1eNtqgEk1IN9l7ilE89fl4u4IU8EyT4n0gtkiAGea37Q
+         qKda2HE28gGFhuRmW5aSjQ0cpGkf85G1czPQQUpuDkDKogv2ZKqM+6gYPNdx/qxdTFC6
+         5LwajHvtC9KwPXE8x+Vp5UjBNOCQlJ1/+jUlfF2EGiihHUJxD7mSsmp4u5ZDskgfutEe
+         4sCXm4nslTjUhBKMteHWsSZUYb3sndl4i3BhA+D1wrfc8mRjXXt8oOdczmag5c+MC696
+         GbFg==
+X-Gm-Message-State: AGi0PuZFD9DqVqDAz7/G0TLLdjuS5XKN0pziD8HXk7xnLgWdEe9MhqKm
+        kAA7cj+O0IYZXuGejeCrpFqCKsTEiqyjzQ==
+X-Google-Smtp-Source: APiQypLeAJWvRiG4SW+wcKx7r0BSGgtySOu0j274CfwZ+izdGwEBBMzpQfpHUf4ztsokzU3wEqKAOQ==
+X-Received: by 2002:ac2:5930:: with SMTP id v16mr5715089lfi.103.1586625674889;
+        Sat, 11 Apr 2020 10:21:14 -0700 (PDT)
+Received: from [192.168.86.24] ([213.191.183.145])
+        by smtp.gmail.com with ESMTPSA id q21sm3769305ljh.38.2020.04.11.10.21.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 11 Apr 2020 10:21:14 -0700 (PDT)
+Subject: Re: [PATCH 5/6] ARM: dts: qcom: msm8974-klte: Remove inherited
+ vreg_boost node
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Daniele Debernardi <drebrez@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+References: <20200410023203.192048-1-iskren.chernev@gmail.com>
+ <20200410023203.192048-6-iskren.chernev@gmail.com>
+ <20200411013833.GI576963@builder.lan>
+From:   Iskren Chernev <iskren.chernev@gmail.com>
+Message-ID: <b43ee298-50b2-ec1d-9b40-5683663e96c5@gmail.com>
+Date:   Sat, 11 Apr 2020 20:21:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200411013833.GI576963@builder.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The GPU can be one of the big heat sources on a SoC. Allow the
-"#cooling-cells" property to be specified for ARM Mali Utgard GPUs so
-the GPU clock speeds (and voltages) can be reduced to prevent a SoC from
-overheating.
 
-Reviewed-by: Qiang Yu <yuq825@gmail.com>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
-Changes since v4 at [0]:
-- Added Qiang's Reviewed-by (many thanks)
-- re-send because I missed the devicetree mailing list in v4
+On 4/11/20 4:38 AM, Bjorn Andersson wrote:
+> May I ask what PMICs this device actually has, if it doesn't have a
+> PM8941 GPIO?
 
+In terms of power, the device has PMA8084, MAX77826 (pure PMIC for
+touchpad, camera, other peripherals), MAX77804k (MFD with fuel gauge,
+charger, a few regulators + other). I'm sending a MAX77826 patch
+shortly :)
 
-[0] https://patchwork.kernel.org/patch/11448013/
+In terms of GPIO controllers, PMA8084 has some pins, and the SoC
+itself (qcom,msm8974-pinctrl) has gpio pins.
 
+According to ./drivers/platform/msm/qpnp-revid.c from downstream,
+these devices are covered by similar drivers: "PM8941", "PM8841",
+"PM8019", "PM8226", "PM8110", "PMA8084", "PMI8962", "PMD9635", and my
+KLTE prints the PMA8084, after querying the hardware.
 
- Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+I still don't have the full picture yet, but I'm pretty confident
+there is no PM8941/PM8841 on the klte.
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
-index f5401cc8de4a..4869258daadb 100644
---- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
-@@ -107,6 +107,9 @@ properties:
- 
-   operating-points-v2: true
- 
-+  "#cooling-cells":
-+    const: 2
-+
- required:
-   - compatible
-   - reg
-@@ -164,6 +167,7 @@ examples:
-       clocks = <&ccu 1>, <&ccu 2>;
-       clock-names = "bus", "core";
-       resets = <&ccu 1>;
-+      #cooling-cells = <2>;
-     };
- 
- ...
--- 
-2.26.0
+Regards,
+Iskren
 
