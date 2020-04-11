@@ -2,137 +2,121 @@ Return-Path: <SRS0=gZHh=53=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A974FC2BBC7
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 05:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3F8C2BBC7
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 07:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8065B2078E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 05:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E811F2063A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 07:44:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q5aneZKK"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HANf0K7O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725866AbgDKFt5 (ORCPT
+        id S1725935AbgDKHoi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Apr 2020 01:49:57 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:38361 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbgDKFt5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Apr 2020 01:49:57 -0400
-Received: by mail-qv1-f67.google.com with SMTP id p60so1942754qva.5;
-        Fri, 10 Apr 2020 22:49:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UJrtFPh2k7Ocn2F2h4jgSLlpNWoMCuHTn40DR2631os=;
-        b=q5aneZKKA78xQ6o1kJ1rScGZMZivPxz9JT4IiA4AblcWrlcRjvjh6cpnmwnS62vv1T
-         bEbtqMxoHQvxkLa8HHlRwa3jMgYPeNd/k/3r9FuIGLgF0li7N2q7/0bUM8SSWLn3NE1U
-         Sh9VJhTkn84Wrr87C5rn69nla076gFroH9YBa/4+skYdmR+O380EnUnRCbREX4jQKHiO
-         0NXSGQXZv5jP6nMOdq3WowIdE0WqqKGcY5OOGEMtgqcYVBklvd2oZ19bMWyt+TdLtNg9
-         XZQbPs3z2fUy1Z+BidU3rnDt+GzWSSMIddxLw8EkUI9Exn9cRvtHi2azMDuvotyBa/Bk
-         mkjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UJrtFPh2k7Ocn2F2h4jgSLlpNWoMCuHTn40DR2631os=;
-        b=aZ/dL+TlZ2j8z5Kuj36/d/nK9k08Sqi4LZ6E0XwYPSNKxt2GznuDCM8jxNDgWzQyU1
-         ceTlv1GrliIaL24tObtycE5bcmhhW+z7TZp0uyq8t9h8RjEoHEYPnnxV4p0DbwK9KcNX
-         obPx9wAQ8NlizBX4z3QwwtcAb2xYHBn0wNoVeBG1us1WGARxfP9iOWTet93HxCUkVGPv
-         BaCHETHVyPv8GMsVapBHmQswkwwd7s7Mw9iGqh90N7TUYaYCsOhQAjIFe3Wz9EZOFHtR
-         1NcKUjCiRqpWLWFVPuyzaesGU/X7EpcewfqhGg3uC1cEVCFdTmvyNCRSy27S6FMvion3
-         Be/A==
-X-Gm-Message-State: AGi0PuY1AFeuc7EU5UCw6geDZOmMT9CEeePRJsuJeg53+nws1PRcf7wq
-        HIx19U3lesGefo6+G9EBQc0fN9QyQddTv8XEyUl+wGMKf8A=
-X-Google-Smtp-Source: APiQypJ+BVKiXkyfqlXZ3G20bGDwTrRdeBK+2RCyToQfCR2IikaFnt/ESyQeRXUJ6JCeNWMvUq6ai+h+x7+pUzlEZaM=
-X-Received: by 2002:ad4:4665:: with SMTP id z5mr8411234qvv.32.1586584194833;
- Fri, 10 Apr 2020 22:49:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1585726761.git.shengjiu.wang@nxp.com> <93531963f028aabf9176173de3c6038a200acb89.1585726761.git.shengjiu.wang@nxp.com>
- <20200406234819.GB20945@Asurada-Nvidia.nvidia.com>
-In-Reply-To: <20200406234819.GB20945@Asurada-Nvidia.nvidia.com>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Sat, 11 Apr 2020 13:49:43 +0800
-Message-ID: <CAA+D8AM69bhorQKikQGwwFRqgBYN8V2pXBW5JLZyFCVHWKkNGg@mail.gmail.com>
-Subject: Re: [PATCH v6 5/7] ASoC: fsl_asrc: Move common definition to fsl_asrc_common
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Sat, 11 Apr 2020 03:44:38 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:37086 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725899AbgDKHoh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Apr 2020 03:44:37 -0400
+X-UUID: ba456588f9db49a798718c0c55767750-20200411
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=AHxhUn2kmmaiTpuNqyuJ91haPBs27z9l86TI6FY89lo=;
+        b=HANf0K7OwymCJmRC/RqCZPhcDTIdxnfUP1R+AltCBZ+zuN5FxTUZf1Jmq7SZPjEA64Zo7Cm6k0iEUn8EBIKXUwqgzRMevEGEe2dXimYWLCTinPY5dR0tTEszinZQr2Ky1efo4hfI5SOZBRm67ReyBFyIbpnhiWeE8oSeXfJmGKE=;
+X-UUID: ba456588f9db49a798718c0c55767750-20200411
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1950745472; Sat, 11 Apr 2020 15:44:28 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
+ (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sat, 11 Apr
+ 2020 15:44:28 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
+ MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1497.2 via Frontend Transport; Sat, 11 Apr 2020 15:44:25 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
+        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
+        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Subject: [PATCH v6 3/4] drm/mediatek: add the mipitx driving control
+Date:   Sat, 11 Apr 2020 15:44:07 +0800
+Message-ID: <20200411074408.38090-4-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200411074408.38090-1-jitao.shi@mediatek.com>
+References: <20200411074408.38090-1-jitao.shi@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: F585F1D0662B1E91FEA6FA77DF2A7867D88A48573C1192C85F33AC2D99FED72D2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi
+QWRkIGEgcHJvcGVydHkgaW4gZGV2aWNlIHRyZWUgdG8gY29udHJvbCB0aGUgZHJpdmluZyBieSBk
+aWZmZXJlbnQNCmJvYXJkLg0KDQpSZXZpZXdlZC1ieTogQ2h1bi1LdWFuZyBIdSA8Y2h1bmt1YW5n
+Lmh1QGtlcm5lbC5vcmc+DQpSZXZpZXdlZC1ieTogTWF0dGhpYXMgQnJ1Z2dlciA8bWF0dGhpYXMu
+YmdnQGdtYWlsLmNvbT4NClNpZ25lZC1vZmYtYnk6IEppdGFvIFNoaSA8aml0YW8uc2hpQG1lZGlh
+dGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbWlwaV90eC5jICAg
+ICAgICB8IDE0ICsrKysrKysrKysrKysrDQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19t
+aXBpX3R4LmggICAgICAgIHwgIDEgKw0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbXQ4
+MTgzX21pcGlfdHguYyB8ICA3ICsrKysrKysNCiAzIGZpbGVzIGNoYW5nZWQsIDIyIGluc2VydGlv
+bnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbWlwaV90
+eC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBpX3R4LmMNCmluZGV4IGU0ZDM0
+NDg0ZWNjOC4uZTMwMWFmNjQ4MDllIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19taXBpX3R4LmMNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbWlw
+aV90eC5jDQpAQCAtMTI1LDYgKzEyNSwyMCBAQCBzdGF0aWMgaW50IG10a19taXBpX3R4X3Byb2Jl
+KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogCQlyZXR1cm4gcmV0Ow0KIAl9DQogDQor
+CXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKGRldi0+b2Zfbm9kZSwgImRyaXZlLXN0cmVuZ3Ro
+LW1pY3JvYW1wIiwNCisJCQkJICAgJm1pcGlfdHgtPm1pcGl0eF9kcml2ZSk7DQorCS8qIElmIGNh
+bid0IGdldCB0aGUgIm1pcGlfdHgtPm1pcGl0eF9kcml2ZSIsIHNldCBpdCBkZWZhdWx0IDB4OCAq
+Lw0KKwlpZiAocmV0IDwgMCkNCisJCW1pcGlfdHgtPm1pcGl0eF9kcml2ZSA9IDQ2MDA7DQorDQor
+CS8qIGNoZWNrIHRoZSBtaXBpdHhfZHJpdmUgdmFsaWQgKi8NCisJaWYgKG1pcGlfdHgtPm1pcGl0
+eF9kcml2ZSA+IDYwMDAgfHwgbWlwaV90eC0+bWlwaXR4X2RyaXZlIDwgMzAwMCkgew0KKwkJZGV2
+X3dhcm4oZGV2LCAiZHJpdmUtc3RyZW5ndGgtbWljcm9hbXAgaXMgaW52YWxpZCAlZCwgbm90IGlu
+IDMwMDAgfiA2MDAwXG4iLA0KKwkJCSBtaXBpX3R4LT5taXBpdHhfZHJpdmUpOw0KKwkJbWlwaV90
+eC0+bWlwaXR4X2RyaXZlID0gY2xhbXBfdmFsKG1pcGlfdHgtPm1pcGl0eF9kcml2ZSwgMzAwMCwN
+CisJCQkJCQkgIDYwMDApOw0KKwl9DQorDQogCXJlZl9jbGtfbmFtZSA9IF9fY2xrX2dldF9uYW1l
+KHJlZl9jbGspOw0KIA0KIAlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3N0cmluZyhkZXYtPm9mX25v
+ZGUsICJjbG9jay1vdXRwdXQtbmFtZXMiLA0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9t
+ZWRpYXRlay9tdGtfbWlwaV90eC5oIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBp
+X3R4LmgNCmluZGV4IDQxM2YzNWQ4NjIxOS4uZWVhNDQzMjdmZTlmIDEwMDY0NA0KLS0tIGEvZHJp
+dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBpX3R4LmgNCisrKyBiL2RyaXZlcnMvZ3B1L2Ry
+bS9tZWRpYXRlay9tdGtfbWlwaV90eC5oDQpAQCAtMjcsNiArMjcsNyBAQCBzdHJ1Y3QgbXRrX21p
+cGlfdHggew0KIAlzdHJ1Y3QgZGV2aWNlICpkZXY7DQogCXZvaWQgX19pb21lbSAqcmVnczsNCiAJ
+dTMyIGRhdGFfcmF0ZTsNCisJdTMyIG1pcGl0eF9kcml2ZTsNCiAJY29uc3Qgc3RydWN0IG10a19t
+aXBpdHhfZGF0YSAqZHJpdmVyX2RhdGE7DQogCXN0cnVjdCBjbGtfaHcgcGxsX2h3Ow0KIAlzdHJ1
+Y3QgY2xrICpwbGw7DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19t
+dDgxODNfbWlwaV90eC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19tdDgxODNfbWlw
+aV90eC5jDQppbmRleCA5MWYwOGEzNTFmZDAuLmU0Y2M5Njc3NTBjYiAxMDA2NDQNCi0tLSBhL2Ry
+aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbXQ4MTgzX21pcGlfdHguYw0KKysrIGIvZHJpdmVy
+cy9ncHUvZHJtL21lZGlhdGVrL210a19tdDgxODNfbWlwaV90eC5jDQpAQCAtMTcsNiArMTcsOSBA
+QA0KICNkZWZpbmUgUkdfRFNJX0JHX0NPUkVfRU4JCUJJVCg3KQ0KICNkZWZpbmUgUkdfRFNJX1BB
+RF9USUVMX1NFTAkJQklUKDgpDQogDQorI2RlZmluZSBNSVBJVFhfVk9MVEFHRV9TRUwJMHgwMDEw
+DQorI2RlZmluZSBSR19EU0lfSFNUWF9MRE9fUkVGX1NFTAkJKDB4ZiA8PCA2KQ0KKw0KICNkZWZp
+bmUgTUlQSVRYX1BMTF9QV1IJCTB4MDAyOA0KICNkZWZpbmUgTUlQSVRYX1BMTF9DT04wCQkweDAw
+MmMNCiAjZGVmaW5lIE1JUElUWF9QTExfQ09OMQkJMHgwMDMwDQpAQCAtMTIzLDYgKzEyNiwxMCBA
+QCBzdGF0aWMgdm9pZCBtdGtfbWlwaV90eF9wb3dlcl9vbl9zaWduYWwoc3RydWN0IHBoeSAqcGh5
+KQ0KIAltdGtfbWlwaV90eF9jbGVhcl9iaXRzKG1pcGlfdHgsIE1JUElUWF9EM19TV19DVExfRU4s
+IERTSV9TV19DVExfRU4pOw0KIAltdGtfbWlwaV90eF9jbGVhcl9iaXRzKG1pcGlfdHgsIE1JUElU
+WF9DS19TV19DVExfRU4sIERTSV9TV19DVExfRU4pOw0KIA0KKwltdGtfbWlwaV90eF91cGRhdGVf
+Yml0cyhtaXBpX3R4LCBNSVBJVFhfVk9MVEFHRV9TRUwsDQorCQkJCVJHX0RTSV9IU1RYX0xET19S
+RUZfU0VMLA0KKwkJCQkobWlwaV90eC0+bWlwaXR4X2RyaXZlIC0gMzAwMCkgLyAyMDAgPDwgNik7
+DQorDQogCW10a19taXBpX3R4X3NldF9iaXRzKG1pcGlfdHgsIE1JUElUWF9DS19DS01PREVfRU4s
+IERTSV9DS19DS01PREVfRU4pOw0KIH0NCiANCi0tIA0KMi4yMS4wDQo=
 
-On Tue, Apr 7, 2020 at 7:50 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> On Wed, Apr 01, 2020 at 04:45:38PM +0800, Shengjiu Wang wrote:
->
-> >  static int fsl_asrc_probe(struct platform_device *pdev)
-> >  {
-> >       struct device_node *np = pdev->dev.of_node;
-> >       struct fsl_asrc *asrc;
-> > +     struct fsl_asrc_priv *asrc_priv;
->
-> Could we move it before "struct fsl_asrc *asrc;"?
->
-> > diff --git a/sound/soc/fsl/fsl_asrc_common.h b/sound/soc/fsl/fsl_asrc_common.h
-> > new file mode 100644
-> > index 000000000000..5c93ccdfc30a
-> > --- /dev/null
-> > +++ b/sound/soc/fsl/fsl_asrc_common.h
->
-> > +#define PAIR_CTX_NUM  0x4
-> > +#define PAIR_PRIVAT_SIZE 0x400
->
-> "PRIVAT_" => "PRIVATE_"
->
-> > +/**
-> > + * fsl_asrc_pair: ASRC common data
->
-> "fsl_asrc_pair" => "fsl_asrc"
->
-> > + */
-> > +struct fsl_asrc {
->
-> > diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
-> > index b15946e03380..5cf0468ce6e3 100644
-> > --- a/sound/soc/fsl/fsl_asrc_dma.c
-> > +++ b/sound/soc/fsl/fsl_asrc_dma.c
->
-> > @@ -311,11 +311,12 @@ static int fsl_asrc_dma_startup(struct snd_soc_component *component,
-> >               return ret;
-> >       }
-> >
-> > -     pair = kzalloc(sizeof(struct fsl_asrc_pair), GFP_KERNEL);
-> > +     pair = kzalloc(sizeof(struct fsl_asrc_pair) + PAIR_PRIVAT_SIZE, GFP_KERNEL);
->
-> If we only use the PAIR_PRIVATE_SIZE here, maybe we can put the
-> define in this file too, rather than in the header file.
->
-> And could fit 80 characters:
->
-> +       pair = kzalloc(sizeof(*pair) + PAIR_PRIVAT_SIZE, GFP_KERNEL);
-
-I will use a function pointer
-    int (*get_pair_priv_size)(void)
-to avoid definition of  PAIR_PRIVATE_SIZE. which is not safe.
-
-best regards
-wang shengjiu
