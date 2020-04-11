@@ -2,155 +2,119 @@ Return-Path: <SRS0=gZHh=53=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UPPERCASE_50_75,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 742F5C2BB55
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 18:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BCDC2BBC7
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 20:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41B6E2145D
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 18:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD3D920936
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 20:39:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jygbu+3t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p6IKm4P6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgDKSWN (ORCPT
+        id S1726837AbgDKUjN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Apr 2020 14:22:13 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40296 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbgDKSWK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Apr 2020 14:22:10 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 142so4950100ljj.7;
-        Sat, 11 Apr 2020 11:22:09 -0700 (PDT)
+        Sat, 11 Apr 2020 16:39:13 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45074 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbgDKUjN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Apr 2020 16:39:13 -0400
+Received: by mail-lf1-f68.google.com with SMTP id f8so3714112lfe.12;
+        Sat, 11 Apr 2020 13:39:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bOxfbv/Ciuh7Y4q8Zjx3IHokX/Ks6vT2KzIOjwmY+B8=;
-        b=Jygbu+3tPUKqOqaKziwUpUsb/cgk2d7vossa21X73oEjr1d/9xmDVPUi6Af8mdbjkd
-         S/KSbUxx1liCowmHPOpXqFGmTHXHTihj1yZPOs4yfHs5aSJcco8saHBhGqFOwj37uHp5
-         uNrNw9Z8+lUYeYkZA0WmLN0lnJeUW2hThVwDnbXvRGjcfFIIVRnEEgqtPfA1Qi2bxj1E
-         IPMP3XYa/itq8dObS4eli2wKVUJXxx/RybwafC965w5jb800eRE/yxZZPn+zxCTlXe9s
-         QSLYtPmQp/TxTD7N4pvJqUtrALUUycux83tvwqdMmwMqTDdbpujb2Vm2OoZ7Qm/YaZdZ
-         /fIQ==
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dUvGhh7rtUygLtFL6NkahS3nxFZQQQrd2UgQKXcfbs8=;
+        b=p6IKm4P6WSbEAcbj6S3ltnZ2NHV2t8qTSW0NL2+R1TTGZLa2zbXXAMYSPOg3HVBLlL
+         B0yFCzrnvUvMCA115IQVPj0FnoUHUGTnoN2E9xgDUJlhqT2ELFNVI2zKmxrqx1KgPA44
+         UM48pJIiGIqE+sZgpbvelQmutKABl6UJE8DP+wwgnfTiamSfHHZu7Cbaxqj0makocRSi
+         Gib5ayNACzWZla1dCsAZi0BHo0ltCbFGSQw8nxkcsvEE61nImKKS9veEH2g+6hrXjGwb
+         Dc9V+WHNF7ldjSXauscKvQNCzhQMlN4G6jUkSRkXs0C5elMngQ+xd/8Kx+av69ix8NH8
+         d1BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bOxfbv/Ciuh7Y4q8Zjx3IHokX/Ks6vT2KzIOjwmY+B8=;
-        b=dIlvueVx9c8JY3rvJYGa8wKuD6EIW1Cvi1OTYtHx1wCg2fJ/D2+VGFkkXgATxHd8zZ
-         x8JXmLnGYQA1pK3YMFWowh9CbP52eCEO5rSyRZCpqc5/MP/PPPNAYvqThioSEbO0SxHI
-         Npg3YLaxjS2u5nSnwT1ik+QNZRVPADR9L8ywTKzglNZYAO1O2oDZk1SA2B8WBhPbzJMd
-         c5MHwtpBOqg5c4HzZGY2XnQ/pm0pgdzEOaU+QJ4SqLwC1zUHIOakRmXNjktBvaGQNUTI
-         Tce2sX/rLiXBBFC9ecPZl2N3+FgMlzHxO4tWvJ4pbOS6pRbAhpYBpGilJohT8CxujjIF
-         sZYQ==
-X-Gm-Message-State: AGi0Pua9Q+dBsJwoJMwgwCf8UB+K3Mu0eHqqtEboCT/F1hOtyf5+Epx/
-        L/MPkiRj9lEavLBsiv1Bp1mz5t6yvYjwmQ==
-X-Google-Smtp-Source: APiQypKlF9K/OEy64Bzqeayt5kKdbvSmUDabujd1geATcFyv4epSF1oplqQXKGkXamjCE9FnaE6qtA==
-X-Received: by 2002:a2e:a548:: with SMTP id e8mr6235426ljn.151.1586629328169;
-        Sat, 11 Apr 2020 11:22:08 -0700 (PDT)
-Received: from localhost ([213.191.183.145])
-        by smtp.gmail.com with ESMTPSA id h21sm4323517lfp.1.2020.04.11.11.22.06
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dUvGhh7rtUygLtFL6NkahS3nxFZQQQrd2UgQKXcfbs8=;
+        b=EBcr89trwDBhipjacftYPV4nu1ShuduBdAEM+z4j7Wnn8PN2/ues6b2uZ0NX2UP9hJ
+         Kv7d8nRtrj/X94dglN5yCYxjs51l+fLVkH2oiE77veLw79t+qBNRtDT0IQvSlacF1inw
+         UDTTF9iJc6iBCO2KXmXdewhZgw85QqRC24Z0K1JkaORJhwIPWMiIpxLGgGsmuws8qHIQ
+         f/biw4WPkavS/R0NGH4r+5CeIs/pQWgxZaQcjdKac5u8IIXIHS1T4FSJI8m8HRhWxKjL
+         2/s3jRIRhgwXbOzhSxcpr5kLeqLi5pPczqeP4s/4lGeNrXhDO2bs57DRrQiT5oCyqVOK
+         QdzA==
+X-Gm-Message-State: AGi0PuYwmXixWnDyshg/pVB41CSq8RvcJKP9TvwnP4vRu4hpWJV1Afnn
+        ETLm/VDYrHj5MPOuf41Bad0=
+X-Google-Smtp-Source: APiQypITUq6qdmf7TaiDE8oKDktp99wvNTm7FyxMm+PVWG07LwV9SMzTF9rfMVSJnQ9VQ9hHrT6pog==
+X-Received: by 2002:ac2:43b1:: with SMTP id t17mr6149082lfl.9.1586637550065;
+        Sat, 11 Apr 2020 13:39:10 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id u19sm2435448lji.61.2020.04.11.13.39.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Apr 2020 11:22:07 -0700 (PDT)
-From:   Iskren Chernev <iskren.chernev@gmail.com>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Daniele Debernardi <drebrez@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: [PATCH v2 3/5] ARM: dts: qcom: msm8974-klte: Add gpio-keys nodes
-Date:   Sat, 11 Apr 2020 21:21:20 +0300
-Message-Id: <20200411182122.2677248-4-iskren.chernev@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200411182122.2677248-1-iskren.chernev@gmail.com>
-References: <20200411182122.2677248-1-iskren.chernev@gmail.com>
+        Sat, 11 Apr 2020 13:39:09 -0700 (PDT)
+Subject: Re: [PATCH v6 09/14] memory: tegra: Add EMC scaling support code for
+ Tegra210
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200409175238.3586487-1-thierry.reding@gmail.com>
+ <20200409175238.3586487-10-thierry.reding@gmail.com>
+ <3e518dfa-cb3d-e2ce-a9b8-5e143e02fc61@gmail.com>
+Message-ID: <6976796c-6972-328e-3e9f-60c1737cf0e2@gmail.com>
+Date:   Sat, 11 Apr 2020 23:39:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <3e518dfa-cb3d-e2ce-a9b8-5e143e02fc61@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Daniele Debernardi <drebrez@gmail.com>
+> ...
+>> +#define TRIM_REG(chan, rank, reg, byte)					\
+>> +	(((EMC_PMACRO_OB_DDLL_LONG_DQ_RANK ## rank ## _ ## reg ##	\
+>> +	   _OB_DDLL_LONG_DQ_RANK ## rank ## _BYTE ## byte ## _MASK &	\
+>> +	   next->trim_regs[EMC_PMACRO_OB_DDLL_LONG_DQ_RANK ##		\
+>> +				 rank ## _ ## reg ## _INDEX]) >>	\
+>> +	  EMC_PMACRO_OB_DDLL_LONG_DQ_RANK ## rank ## _ ## reg ##	\
+>> +	  _OB_DDLL_LONG_DQ_RANK ## rank ## _BYTE ## byte ## _SHIFT)	\
+>> +	 +								\
+>> +	 (((EMC_DATA_BRLSHFT_ ## rank ## _RANK ## rank ## _BYTE ##	\
+>> +	    byte ## _DATA_BRLSHFT_MASK &				\
+>> +	    next->trim_perch_regs[EMC ## chan ##			\
+>> +			      _EMC_DATA_BRLSHFT_ ## rank ## _INDEX]) >>	\
+>> +	   EMC_DATA_BRLSHFT_ ## rank ## _RANK ## rank ## _BYTE ##	\
+>> +	   byte ## _DATA_BRLSHFT_SHIFT) * 64))
+>> +
+>> +#define CALC_TEMP(rank, reg, byte1, byte2, n)				\
+>> +	(((new[n] << EMC_PMACRO_OB_DDLL_LONG_DQ_RANK ## rank ## _ ##	\
+>> +	   reg ## _OB_DDLL_LONG_DQ_RANK ## rank ## _BYTE ## byte1 ## _SHIFT) & \
+>> +	  EMC_PMACRO_OB_DDLL_LONG_DQ_RANK ## rank ## _ ## reg ##	\
+>> +	  _OB_DDLL_LONG_DQ_RANK ## rank ## _BYTE ## byte1 ## _MASK)	\
+>> +	 |								\
+>> +	 ((new[n + 1] << EMC_PMACRO_OB_DDLL_LONG_DQ_RANK ## rank ## _ ##\
+>> +	   reg ## _OB_DDLL_LONG_DQ_RANK ## rank ## _BYTE ## byte2 ## _SHIFT) & \
+>> +	  EMC_PMACRO_OB_DDLL_LONG_DQ_RANK ## rank ## _ ## reg ##	\
+>> +	  _OB_DDLL_LONG_DQ_RANK ## rank ## _BYTE ## byte2 ## _MASK))
 
-This introduces the gpio-keys nodes for volume/home keys and the
-associated pinctrl state.
+What about replacing those barely readable concatenated macros with a
+raw values?
 
-Signed-off-by: Daniele Debernardi <drebrez@gmail.com>
----
- .../boot/dts/qcom-msm8974-samsung-klte.dts    | 49 +++++++++++++++++++
- 1 file changed, 49 insertions(+)
+Like:
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-index 36ad8ff071ca..752ab9e99a8c 100644
---- a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-@@ -1,6 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "qcom-msm8974pro.dtsi"
- #include "qcom-pma8084.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
- 
- / {
- 	model = "Samsung Galaxy S5";
-@@ -205,4 +208,50 @@ serial@f991e000 {
- 		status = "ok";
- 	};
- 
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		input-name = "gpio-keys";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gpio_keys_pin_a>;
-+
-+		volume-down {
-+			label = "volume_down";
-+			gpios = <&pma8084_gpios 2 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <1>;
-+			linux,code = <KEY_VOLUMEDOWN>;
-+			debounce-interval = <15>;
-+		};
-+
-+		home-key {
-+			label = "home_key";
-+			gpios = <&pma8084_gpios 3 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <1>;
-+			linux,code = <KEY_HOMEPAGE>;
-+			wakeup-source;
-+			debounce-interval = <15>;
-+		};
-+
-+		volume-up {
-+			label = "volume_up";
-+			gpios = <&pma8084_gpios 5 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <1>;
-+			linux,code = <KEY_VOLUMEUP>;
-+			debounce-interval = <15>;
-+		};
-+	};
-+};
-+
-+&spmi_bus {
-+	pma8084@0 {
-+		gpios@c000 {
-+			gpio_keys_pin_a: gpio-keys-active {
-+				pins = "gpio2", "gpio3", "gpio5";
-+				function = "normal";
-+
-+				bias-pull-up;
-+				power-source = <PMA8084_GPIO_S4>;
-+			};
-+		};
-+	};
- };
--- 
-2.26.0
-
+TRIM_REG(brlshft_idx, ob_ddll_long_dq_rank_mask, ...)
