@@ -2,47 +2,47 @@ Return-Path: <SRS0=gZHh=53=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A144C2BB85
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C244CC2BBC7
 	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 08:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A91B20692
+	by mail.kernel.org (Postfix) with ESMTP id 9BFDF20692
 	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 08:04:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QUWnkVIE"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RgpgQhN5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgDKIEg (ORCPT
+        id S1726689AbgDKIEh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Apr 2020 04:04:36 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:25069 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726689AbgDKIEc (ORCPT
+        Sat, 11 Apr 2020 04:04:37 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:31820 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726140AbgDKIEh (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Sat, 11 Apr 2020 04:04:32 -0400
+        Sat, 11 Apr 2020 04:04:37 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586592271; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1586592276; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=Bnz6MJ/qFfPiLKy+tJVoenTR3jVnJA77P0RTyIyn02s=; b=QUWnkVIEdgQeUXtS4j8MVgbLlEVF6ASWF9lhEOE5xUAJfLBXP8cQqL+EmFlWVcRwnWfQ/4wp
- F8MPciKE6o4O0pStFOfWyAl5tWL7pJLzFbwqhfnSN5lO4nycA1G2QeWEtCq/wCWrJWKy33OS
- LfLDH4GvztgIC2R++nDHGhxN3nA=
-X-Mailgun-Sending-Ip: 104.130.122.27
+ bh=CGSSIIgOQonIzRJ2aP9akavKHcdXJYuY2r+uW6Fff4s=; b=RgpgQhN5gsvG5kbcp2RtY4t7xOG7p5qZbnJoxuSB4IWOlJYLDB5BKW9VmQ+Lv3c8Re3xsptC
+ 0KKhIzM9ALDV4uXeK7zkKyWd3HGnH4JcRiE/gu7PdtpFsKGnQ5byGkmB8VD2Vxh+gAzBXKkK
+ nC3Ii9muTe4KWhZ07zSAfwTdUpA=
+X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e917a0f.7f0d06be3768-smtp-out-n04;
- Sat, 11 Apr 2020 08:04:31 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e917a14.7f62ea4f4c70-smtp-out-n03;
+ Sat, 11 Apr 2020 08:04:36 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BE094C433F2; Sat, 11 Apr 2020 08:04:30 +0000 (UTC)
+        id 9D8B8C433F2; Sat, 11 Apr 2020 08:04:35 +0000 (UTC)
 Received: from c-ajitp-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: ajitp)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B1E94C433CB;
-        Sat, 11 Apr 2020 08:04:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B1E94C433CB
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F031EC43636;
+        Sat, 11 Apr 2020 08:04:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F031EC43636
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ajitp@codeaurora.org
 From:   Ajit Pandey <ajitp@codeaurora.org>
@@ -51,9 +51,9 @@ To:     alsa-devel@alsa-project.org, broonie@kernel.org,
         bgoswami@codeaurora.org, srinivas.kandagatla@linaro.org
 Cc:     linux-kernel@vger.kernel.org, tiwai@suse.com,
         Ajit Pandey <ajitp@codeaurora.org>
-Subject: [PATCH 08/11] ASoC: qcom : lpass: Add support to configure dai's connection mode
-Date:   Sat, 11 Apr 2020 13:32:48 +0530
-Message-Id: <1586592171-31644-9-git-send-email-ajitp@codeaurora.org>
+Subject: [PATCH 09/11] device-tree: bindings: sound: lpass-cpu: Add new compatible soc
+Date:   Sat, 11 Apr 2020 13:32:49 +0530
+Message-Id: <1586592171-31644-10-git-send-email-ajitp@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1586592171-31644-1-git-send-email-ajitp@codeaurora.org>
 References: <1586592171-31644-1-git-send-email-ajitp@codeaurora.org>
@@ -62,141 +62,71 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Few dai configuration depends on board layout and use cases. Add new
-variables in dai_data to configure dai modes based on values defined
-in device tree configuration of board.
+SC7180 soc varaints of LPASS uses lpass-cpu node but required few extra
+devictree configuration. Update bindings documents with sc7180 compatible
+string specific dts properties.
 
 Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
 ---
- sound/soc/qcom/lpass-cpu.c | 70 ++++++++++++++++++++++++++++++++++++++++++++--
- sound/soc/qcom/lpass.h     |  6 ++++
- 2 files changed, 74 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  | 25 +++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
-index 006ba5a..f96338f 100644
---- a/sound/soc/qcom/lpass-cpu.c
-+++ b/sound/soc/qcom/lpass-cpu.c
-@@ -90,8 +90,9 @@ static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
- 		return bitwidth;
- 	}
+diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+index 727ec03..84bd95c 100644
+--- a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
++++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+@@ -23,6 +23,7 @@ properties:
+     enum:
+       - qcom,lpass-cpu
+       - qcom,apq8016-lpass-cpu
++      - qcom,lpass-cpu-sc7180
  
--	regval = LPAIF_I2SCTL(v, LOOPBACK_DISABLE);
--	regval |= LPAIF_I2SCTL(v, WSSRC_INTERNAL);
-+	/* default to Loopback disable & wssrc internal */
-+	regval = dai_data->loopback << (LPAIF_I2SCTL(v, LOOPBACK_SHIFT));
-+	regval |= dai_data->wssrc << (LPAIF_I2SCTL(v, WSSRC_SHIFT));
+   reg:
+     items:
+@@ -68,6 +69,14 @@ properties:
+     maxItems: 1
+     description: Phandle for the audio DSP node
  
- 	switch (bitwidth) {
- 	case 16:
-@@ -172,6 +173,28 @@ static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
- 		return ret;
- 	}
++  iommus:
++    maxItems: 1
++    description: Phandle to apps_smmu node with sid mask
++
++  power-domains:
++    maxItems: 1
++    description: Phandle for power domain node
++
+   '#sound-dai-cells':
+     const: 1
  
-+	/* Overwrite spk & mic mode bits with device tree value if specified */
-+	if (dai_data->spkmode != 0) {
-+		regval = dai_data->spkmode << (LPAIF_I2SCTL(v, SPKMODE_SHIFT));
-+		ret = regmap_update_bits(drvdata->lpaif_map,
-+			LPAIF_I2SCTL_REG(drvdata->variant, dai->driver->id),
-+			LPAIF_I2SCTL(v, SPKMODE_MASK), regval);
-+		if (ret)
-+			dev_err(dai->dev, "error writing to i2sctl reg: %d\n",
-+				ret);
-+	}
-+
-+
-+	if (dai_data->micmode != 0) {
-+		regval = dai_data->micmode << (LPAIF_I2SCTL(v, MICMODE_SHIFT));
-+		ret = regmap_update_bits(drvdata->lpaif_map,
-+			LPAIF_I2SCTL_REG(drvdata->variant, dai->driver->id),
-+			LPAIF_I2SCTL(v, MICMODE_MASK), regval);
-+		if (ret)
-+			dev_err(dai->dev, "error writing to i2sctl reg: %d\n",
-+				ret);
-+	}
-+
- 	ret = clk_set_rate(dai_data->bit_clk, rate * bitwidth * 2);
- 	if (ret) {
- 		dev_err(dai->dev, "error setting mi2s bitclk to %u: %d\n",
-@@ -423,6 +446,46 @@ static bool lpass_cpu_regmap_volatile(struct device *dev, unsigned int reg)
- 	.cache_type = REGCACHE_FLAT,
- };
+@@ -108,6 +117,17 @@ required:
+ optional:
+   - qcom,adsp
  
-+static void of_qcom_parse_dai_data(struct device *dev,
-+				    struct lpass_data *drvdata)
-+{
-+	struct device_node *node;
-+	struct lpass_dai *dai;
-+	int ret;
++if:
++  properties:
++    compatible:
++      contains:
++        const: qcom,lpass-cpu-sc7180
 +
-+	for_each_child_of_node(dev->of_node, node) {
-+		int id;
++then:
++  required:
++    - iommus
++    - power-domains
 +
-+		ret = of_property_read_u32(node, "id", &id);
-+		if (ret || id < 0 || id >= LPASS_MAX_MI2S_PORTS) {
-+			dev_err(dev, "valid dai id not found:%d\n", ret);
-+			continue;
-+		}
-+
-+		dai = drvdata->dai_priv[id];
-+		switch (id) {
-+		case MI2S_PRIMARY... MI2S_QUATERNARY:
-+			 /* MI2S specific properties */
-+			ret = of_property_read_u32(node, "qcom,spkmode-mask",
-+						   &dai->spkmode);
-+
-+			ret = of_property_read_u32(node, "qcom,micmode-mask",
-+						   &dai->micmode);
-+
-+			ret = of_property_read_u32(node, "qcom,wssrc-mask",
-+						   &dai->wssrc);
-+
-+			ret = of_property_read_u32(node, "qcom,loopback-mask",
-+						   &dai->loopback);
-+
-+			break;
-+		default:
-+			dev_err(dev, "valid dai not found:%d\n", id);
-+			break;
-+		}
-+	}
-+}
-+
- static int lpass_init_dai_clocks(struct device *dev,
- 			   struct lpass_data *drvdata)
- {
-@@ -501,6 +564,9 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
- 						GFP_KERNEL);
- 	}
+ examples:
+   lpass@28100000 {
+ 	compatible = "qcom,lpass-cpu";
+@@ -120,7 +140,10 @@ examples:
+ 		      "mi2s-bit-clk";
  
-+	/* parse dai data from dts */
-+	of_qcom_parse_dai_data(dev, drvdata);
+ 	interrupts = <0 85 1>;
+-	interrupt-names = "lpass-irq-lpaif";
++        interrupt-names = "lpass-irq-lpaif";
 +
- 	ret = lpass_init_dai_clocks(dev, drvdata);
- 	if (ret) {
- 		dev_err(&pdev->dev, "error intializing dai clock: %d\n", ret);
-diff --git a/sound/soc/qcom/lpass.h b/sound/soc/qcom/lpass.h
-index 384f4b8..960ee97 100644
---- a/sound/soc/qcom/lpass.h
-+++ b/sound/soc/qcom/lpass.h
-@@ -12,6 +12,7 @@
- #include <linux/compiler.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
-+#include <dt-bindings/sound/qcom,lpass.h>
++	iommus = <&apps_smmu 0x1020 0>;
++	power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
  
- #define LPASS_AHBIX_CLOCK_FREQUENCY            131072000
- #define LPASS_MAX_MI2S_PORTS                   (8)
-@@ -23,6 +24,11 @@
- struct lpass_dai {
- 	struct clk *osr_clk;
- 	struct clk *bit_clk;
-+
-+	uint32_t spkmode;
-+	uint32_t micmode;
-+	uint32_t wssrc;
-+	uint32_t loopback;
- };
- 
- /* Both the CPU DAI and platform drivers will access this data */
+ 	reg = <0x28100000 0x10000>;
+ 	reg-names = "lpass-lpaif";
 -- 
 1.9.1
