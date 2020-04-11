@@ -2,108 +2,162 @@ Return-Path: <SRS0=gZHh=53=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF57EC2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 12:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449E3C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 16:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8E9520732
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 12:34:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14D822078E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 16:01:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X+PpyUVo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fNxHgv83"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbgDKMeF (ORCPT
+        id S1726182AbgDKQBf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Apr 2020 08:34:05 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45175 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbgDKMeE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Apr 2020 08:34:04 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w11so2156848pga.12;
-        Sat, 11 Apr 2020 05:34:03 -0700 (PDT)
+        Sat, 11 Apr 2020 12:01:35 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39710 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbgDKQBe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Apr 2020 12:01:34 -0400
+Received: by mail-qt1-f195.google.com with SMTP id o10so3796043qtr.6;
+        Sat, 11 Apr 2020 09:01:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=NQZjjDOSKI1dwPpV3FbOsZ5gJfjZttSefQqUm/3OBQg=;
-        b=X+PpyUVoxb34SkOZe94dRXLLKOaf/NrlBDFCW/7o6fXNq6i1hGOIJanRVeohvhYa5S
-         qFjX3RvoAdheJHZg36gzcnJSMZHMOhMzGxW46UjPdtjO5hMo4Rylv3rlBQBlh2XjRVue
-         PT31xvZg5K/9JFYiqOhRpmz66+IgarSSUjJvkX8/kdSbBjYgmuGOHhFJOue5+nVvLFDV
-         i4rb3uQtBr4331ZUYcszXbpYRb6sLU6FdAvm0PVTVKF3iW55PdbcP44pNWnC304Pm+Ad
-         7a17EqGIDc34Yu24z+qxlDZlZEylr/9wRrpQ9zFHlaZgi2BiTEyaWze4e9RGpX9ympJo
-         Qjeg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zhRskEKtP61k0yqbLaLsqJL1DLZl52yNBvZ6bXRfLCM=;
+        b=fNxHgv832WDYysIX0jD9QPCDscvmTf43PY81UgQokDRgCjw1x1ogToIhqT4QwC1E/D
+         jQV+i9/yOZevJrfP6URcG91dfGR9MznldAw4c9lwIRLy4K+ZkuSns4XOT1z3VBwCqQmU
+         XzTzVOGpvddRB382w7EZKk580NNwa5C89GZQQwQRRhXGgvtshGQX/A6MFnVfeYIDEOkX
+         dynKyb2bw0spA8bBE2buTF1e2TQArisyj26LhuTWPO95DRiiSIuwlSkiheCCjTpnk4Pp
+         lfMpv2u4xMOoIH+aZxcBEnjjJB/c0PWEva93mmt67JDYMVjP1vdZqgNOTnWVAdisd9Bd
+         qadA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=NQZjjDOSKI1dwPpV3FbOsZ5gJfjZttSefQqUm/3OBQg=;
-        b=fmCvpnHneFLzXnq/wwrNC6/fY9AEnF6+PYzT9C4N8TQoHIv5Yrk9zZxB6Dpt76O2FP
-         7tyz2JVRuZUYzrxdI8k8XU7Vevi7Qfqvy7p9ISWgCjDWVqKBT+fWV6t01PICS1yiPYem
-         nErEaeXWTM/m5QZIEQKL4MBr45/oCKme23mXY2Y8NacujtoY5WksJ43PZQGIHbPvK5bI
-         oPqdbJ2vfLQFUnl5Z8hGFnbLIMmguJwuwEemZg+FCNX/eMGG5jpWYLOcff3ICjNaQn8F
-         cSJt5iJHAwhEKoghS+n5uyijp0u8VKTlFynX32MOOZOoyZbHK/KDs2GxTL2EOAhvvmim
-         ZWbw==
-X-Gm-Message-State: AGi0Pubn00pmPIgjGw5o+Wcy1QOJKtXPd32DWxsIHTPeVMbvmHR8alBV
-        ArB91rmFnPeRZTMGC199zwk=
-X-Google-Smtp-Source: APiQypKwguyuODBP4CsjPnGILxlyGR6I8n0khzaIAffSmN952rST7qQadqSzM2F6GTqMUEORbi9vWg==
-X-Received: by 2002:a63:2cd5:: with SMTP id s204mr8547295pgs.71.1586608443019;
-        Sat, 11 Apr 2020 05:34:03 -0700 (PDT)
-Received: from localhost.localdomain ([211.243.117.64])
-        by smtp.gmail.com with ESMTPSA id g2sm4117641pfh.193.2020.04.11.05.34.00
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zhRskEKtP61k0yqbLaLsqJL1DLZl52yNBvZ6bXRfLCM=;
+        b=H2JIFgbt1KbidWeWTLWFrC6FXgPAVzIQx/Lns/9wZUzDiYPEwmYbO7EC3Gyy8uFzGS
+         uETzeEX0YJMtyhCD+VpkwXv0R0BdESaNpCEOof1BIiCogrVVbXTW6Dop7SdbeqosFXwt
+         aWhdBU8ndi690Gq4jmd/3sqNcGWqS2injdZtcURJpvL2MKxgZvtYQXdY/JmPKWrpSC67
+         /RnVxFU8eEcHsj4CIOuTO7Utn3DiHYm5eIb2NMd4x/LGZiVk0aqtfpRaeskCIXxdwAUh
+         i/ffZXzI0+g12WWVaLYnbmc/emCaoQTMuBgZ8I40QnBOYM22amSG1cWERMufhw2CW3eo
+         Dc1g==
+X-Gm-Message-State: AGi0PuZR4EeFl9NBI8T+9MlQ9ZIUuco9AOfKWfelW34n3Hjkf18FfQNO
+        9SpHuIxiW9OP1xb84ObI+3s=
+X-Google-Smtp-Source: APiQypLVRG/zAWgaDeXS+aPd3v3rXiHthdj4V64zP9c4KydlcwVH+GkllKXLr6/Q5Q4sF7pMJNhTqA==
+X-Received: by 2002:aed:3b75:: with SMTP id q50mr4232741qte.23.1586620893939;
+        Sat, 11 Apr 2020 09:01:33 -0700 (PDT)
+Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id o13sm3853059qkg.111.2020.04.11.09.01.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Apr 2020 05:34:02 -0700 (PDT)
-From:   Hyunki Koo <hyunki00.koo@gmail.com>
-To:     gregkh@linuxfoundation.org, robh+dt@kernel.org, krzk@kernel.org
-Cc:     Hyunki Koo <hyunki00.koo@samsung.com>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v7 1/2] dt-bindings: serial: add reg-io-width compatible
-Date:   Sat, 11 Apr 2020 21:33:25 +0900
-Message-Id: <20200411123325.30501-2-hyunki00.koo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200411123325.30501-1-hyunki00.koo@gmail.com>
-References: <20200411123325.30501-1-hyunki00.koo@gmail.com>
+        Sat, 11 Apr 2020 09:01:32 -0700 (PDT)
+Date:   Sat, 11 Apr 2020 12:01:16 -0400
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] Atmel TCB capture driver
+Message-ID: <20200411160116.GA95806@icarus>
+References: <20200409141401.321222-1-kamel.bouhara@bootlin.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
+Content-Disposition: inline
+In-Reply-To: <20200409141401.321222-1-kamel.bouhara@bootlin.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Hyunki Koo <hyunki00.koo@samsung.com>
 
-Add reg-io-width compatible
+--J/dobhs11T7y2rNN
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
----
-v5: first added in this series
-v6: clean description of reg-io-width
-v7: correct build error on running 'make dt_binding_check' 
----
- .../devicetree/bindings/serial/samsung_uart.yaml          | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On Thu, Apr 09, 2020 at 04:13:58PM +0200, Kamel Bouhara wrote:
+> Hello,
+>=20
+> Here is a new counter driver to support Atmel TCB capture devices.
+>=20
+> Each SoC has two TCB blocks, each one including three independent
+> channels.The following series adds support for two counter modes:
+> increase and quadrature decoder.
+>=20
+> As for the atmel clocksource and pwm, the counter driver needs to fill
+> some tcb capabilities in order to operate with the right configuration.
+> This is achieved in first patch of this series.
+>=20
+> Please feel free to comment.
+>=20
+> Cheers,
+>=20
+> Changes from v2:
+>  - Fixed first patch not applying on mainline
+>  - Updated return code to -EINVAL when user is requesting qdec mode on
+>    a counter device not supporting it.
+>  - Added an error case returning -EINVAL when action edge is performed in
+>    qdec mode.
+>  - Removed no need to explicity setting ops to NULL from static struct as
+>    it is the default value.
+>  - Changed confusing code by using snprintf for the sake of clarity.
+>  - Changed code to use ARRAY_SIZE so that future reviewers will know
+>    that num_counts matches what's in the atmel_tc_count array without
+>    having to check so themselves.
+>=20
+> Kamel Bouhara (3):
+>   ARM: at91: add atmel tcb capabilities
+>   dt-bindings: counter: atmel-tcb-capture counter
+>   counter: Add atmel TCB capture counter
+>=20
+>  .../bindings/counter/atmel-tcb-capture.yaml   |  35 ++
+>  drivers/counter/Kconfig                       |  11 +
+>  drivers/counter/Makefile                      |   1 +
+>  drivers/counter/atmel-tcb-capture.c           | 394 ++++++++++++++++++
+>  include/soc/at91/atmel_tcb.h                  |   2 +
+>  5 files changed, 443 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/counter/atmel-tcb-c=
+apture.yaml
+>  create mode 100644 drivers/counter/atmel-tcb-capture.c
+>=20
+> --
+> 2.25.0
 
-diff --git a/Documentation/devicetree/bindings/serial/samsung_uart.yaml b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-index 9d2ce347875b..a57b1233c691 100644
---- a/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-+++ b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-@@ -29,6 +29,14 @@ properties:
-   reg:
-     maxItems: 1
- 
-+  reg-io-width:
-+    description: |
-+      The size (in bytes) of the IO accesses that should be performed
-+      on the device.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [ 1, 4 ]
-+
-   clocks:
-     minItems: 2
-     maxItems: 5
--- 
-2.17.1
+Thanks Kamel, this version applies nicely now. Fix the error messages
+Rob Herring pointed out in the dt-bindings patch and I should be able to
+sign off on these.
 
+William Breathitt Gray
+
+--J/dobhs11T7y2rNN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl6R6b8ACgkQhvpINdm7
+VJJT3hAAtJGYMWuStziOpn3oiehL6iBN7av6JLXQ1xaNk4DP0R6MyU0qGUQJCH27
+Cbckx4xNpwUmPK+7tV1NISlzXjBj9hEt3cRoPjf3Sd6Gw2x/F4GDSzbbcPot9KOD
+jqQL6HqJ/n9YPv/UYr5NtJ5Joh312TCf0mPdJ//GXWRCG7AzHa6b5CrBfz6bWb4x
+ylK0myhYbPEs5ViHlWSC69TUs+rrRqRgmIyJSBuaSukB0JYXFsj7BOMmgV7ymr9t
+91Qvf43jmzsXy0F4/lpp5u5d0DliHPhMk7J9LTILIECs7AvOxKB3D0mJSEoq++ws
+hugZXe1vbo39+gzf7QD1hEkVHOTwnWSG5wXUXxmjDpPqt7Ic9h1fu+mP3Nd8OLFx
+PmCeKyqBgkdQxUAb75Y+YObrgTDnBiWtnn391K0kpwy22aPQ10RzZYSCHY8pBvrB
+rkYsQs+KzHgH+/YtGkkohmPAialRUXEdMaGfIC/ZAggQdExxhdgtIEO49gV/yDL/
++Cp4MDfoBlomK4oLX3m1sagP9/Fzh+6yREa2EBajPMn9ZQ692Sy4hQCXfE1pFCs6
+1IXRuFXRZFETnyvT+SWcDxbizKYCVm7yCrA0M55tczJvoaDQOC93/i4hNf2aVMaT
+glv8dfI+2oNtO+AUclf7F1EX3izFvCqvUD89nuxhKZxfHbKkmJA=
+=rbCt
+-----END PGP SIGNATURE-----
+
+--J/dobhs11T7y2rNN--
