@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF0AC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC72C2BB86
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8214B20674
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D3820674
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Apr 2020 23:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586647654;
-	bh=S9W5pKRzZW7QaFWCeMpBQp2JqclXu0y6o6TP4of1WsI=;
+	s=default; t=1586647665;
+	bh=Oz8l4a2+DuHtBPXpl9y0K8v+0yx9MzbKD4iUyuOn2i4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fMtwxIAPPapqcRypXJnCjuGnDnxQ5vUAULxpsxVRGyqqKahh8VY4Co7BFdhPJnIqL
-	 60QeqcP1y83esifWOwIzy+2UoLXy2QF3zb5CQatrTJbefQjk7FF41/PnEZY5YalkXO
-	 auVlIiMhaFmRuHPaJajf0/cM67+u8bICeagW6xeA=
+	b=IB7+RPEfJLq52yLtyxosi3twYeuJEXBM3kbzyUI84cC3p/Eh1KXZOJ4tTTNeBgt1Y
+	 2ZPYB5LrFy8LZOzZC8Ap36u58N5NNaVDGDFj183wx3feBfPzF4EYn9VY2k88k04dDZ
+	 SmzT0VQx6R69zy+Rp+WU9hZbxov8YKvDZBZU1bVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730001AbgDKXLr (ORCPT
+        id S1728381AbgDKX1g (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Apr 2020 19:11:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51490 "EHLO mail.kernel.org"
+        Sat, 11 Apr 2020 19:27:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729618AbgDKXLq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:11:46 -0400
+        id S1728366AbgDKXLn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:11:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5787D21841;
-        Sat, 11 Apr 2020 23:11:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F6342173E;
+        Sat, 11 Apr 2020 23:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646706;
-        bh=S9W5pKRzZW7QaFWCeMpBQp2JqclXu0y6o6TP4of1WsI=;
+        s=default; t=1586646704;
+        bh=Oz8l4a2+DuHtBPXpl9y0K8v+0yx9MzbKD4iUyuOn2i4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i+Z4qNTydk+sZikAn5sLohpFUDufLp/XbODKRWFOWykHGxUS8MxxjGQdAqIYjb2xj
-         Wvo2nOq8ALB4Nj/G9iEiHzohVeARR8yYsnw1PVzQT2OJv6lDXZGE65+53+lTRkUje+
-         qL8U7Mk+MfMUMVawahhsL+FaiKg5Ueq+ETAQ+e7U=
+        b=ZbnHuQrP9PA23Et/z1q6vFvBDR0x9/JLUc9xuDbCkZT+hucK5D1rBb3nSUmFiGDFq
+         Xt6X285SUYNKnz+lpLmvtVvFQTnIz/E3cb0c/9WOgDcV1Su0fLFJ135Gzwl+xsn0AT
+         8C+7mubO2dkvUssLZqprqSl1x1TSXKhDZ3fA616o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>, Tim <elatllat@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Dongjin Kim <tobetter@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 098/108] arm64: dts: g12-common: add parkmode_disable_ss_quirk on DWC3 controller
-Date:   Sat, 11 Apr 2020 19:09:33 -0400
-Message-Id: <20200411230943.24951-98-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Michael Srba <Michael.Srba@seznam.cz>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 096/108] arm64: dts: qcom: msm8916-samsung-a2015: Reserve Samsung firmware memory
+Date:   Sat, 11 Apr 2020 19:09:31 -0400
+Message-Id: <20200411230943.24951-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
 References: <20200411230943.24951-1-sashal@kernel.org>
@@ -63,44 +61,64 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit a81bcfb6ac20cdd2e8dec3da14c8bbe1d18f6321 ]
+[ Upstream commit 8f4a7a00c1019df72cda3002643fb5823ef39183 ]
 
-When high load on the DWC3 SuperSpeed port, the controller crashes with:
-[  221.141621] xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
-[  221.157631] xhci-hcd xhci-hcd.0.auto: Host halt failed, -110
-[  221.157635] xhci-hcd xhci-hcd.0.auto: xHCI host controller not responding, assume dead
-[  221.159901] xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
-[  221.159961] hub 2-1.1:1.0: hub_ext_port_status failed (err = -22)
-[  221.160076] xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
-[  221.165946] usb 2-1.1-port1: cannot reset (err = -22)
+At the moment, writing large amounts of data to the eMMC causes the device
+to freeze. The symptoms vary, sometimes the device reboots immediately,
+but usually it will just get stuck.
 
-Setting the parkmode_disable_ss_quirk quirk fixes the issue.
+It turns out that the issue is not actually related to the eMMC:
+Apparently, Samsung has made some modifications to the TrustZone firmware.
+These require additional memory which is reserved at 0x85500000-0x86000000.
+The downstream kernel describes this memory reservation as:
 
-Reported-by: Tim <elatllat@gmail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Cc: Jianxin Pan <jianxin.pan@amlogic.com>
-CC: Dongjin Kim <tobetter@gmail.com>
-Link: https://lore.kernel.org/r/20200221091532.8142-4-narmstrong@baylibre.com
+/* Additionally Reserved 6MB for TIMA and Increased the TZ app size
+ * by 2MB [total 8 MB ]
+ */
+
+This suggests that it is used for additional TZ apps, although the extra
+memory is actually 11 MB instead of the 8 MB mentioned in the comment.
+
+Writing to the protected memory causes the kernel to crash or freeze.
+In our case, writing to the eMMC causes the disk cache to fill
+the available RAM, until the kernel eventually crashes
+when attempting to use the reserved memory.
+
+Add the additional memory as reserved-memory to fix this problem.
+
+Fixes: 1329c1ab0730 ("arm64: dts: qcom: Add device tree for Samsung Galaxy A3U/A5U")
+Reported-by: Michael Srba <Michael.Srba@seznam.cz>
+Tested-by: Michael Srba <Michael.Srba@seznam.cz> # a3u
+Tested-by: Stephan Gerhold <stephan@gerhold.net> # a5u
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20191231112511.83342-1-stephan@gerhold.net
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ .../arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-index 0ee8a369c5474..e79fef042d974 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-@@ -2381,6 +2381,7 @@
- 				dr_mode = "host";
- 				snps,dis_u2_susphy_quirk;
- 				snps,quirk-frame-length-adjustment;
-+				snps,parkmode-disable-ss-quirk;
- 			};
- 		};
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
+index e675ff48fdd24..0cc5c5be0c21e 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
+@@ -14,6 +14,14 @@
+ 		stdout-path = "serial0";
+ 	};
  
++	reserved-memory {
++		/* Additional memory used by Samsung firmware modifications */
++		tz-apps@85500000 {
++			reg = <0x0 0x85500000 0x0 0xb00000>;
++			no-map;
++		};
++	};
++
+ 	soc {
+ 		sdhci@7824000 {
+ 			status = "okay";
 -- 
 2.20.1
 
