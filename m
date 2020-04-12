@@ -2,62 +2,66 @@ Return-Path: <SRS0=a8L4=54=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D90EC2BB85
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 07:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D88C2BB86
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 08:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02702206E9
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 07:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6915720709
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 08:09:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m+nJBszF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbgDLHoE (ORCPT
+        id S1725878AbgDLIJt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Apr 2020 03:44:04 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:35137 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbgDLHoE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Apr 2020 03:44:04 -0400
-Received: from marcel-macpro.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id CD3BFCED27;
-        Sun, 12 Apr 2020 09:53:38 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v3 1/3] dt-bindings: net: bluetooth: Add
- rtl8723bs-bluetooth
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200412020644.355142-1-alistair@alistair23.me>
-Date:   Sun, 12 Apr 2020 09:44:02 +0200
-Cc:     netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org, mripard@kernel.org, wens@csie.org,
-        anarsoul@gmail.com, devicetree@vger.kernel.org,
-        alistair23@gmail.com, linux-arm-kernel@lists.infradead.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <AE147CB3-B2A4-4AF4-AE16-1C24F278B0BA@holtmann.org>
-References: <20200412020644.355142-1-alistair@alistair23.me>
-To:     Alistair Francis <alistair@alistair23.me>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Sun, 12 Apr 2020 04:09:49 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35304 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbgDLIJt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Apr 2020 04:09:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=JDEA4aSSIckcWLhH+0n2OyNXRY6oS0EWJxgESd0P7Gg=; b=m+nJBszFbsHkAkcCRyWRhrX4Zv
+        5NtrbyIG4/Y5IncFEmp2qIQxkoEF5KFIIq48pM7xQgC1GMz4xjGbLUc718zSdW5Od0AlqYbbbUax9
+        r88iM9tt2iOXp8h6GmY7QELnSiQFhrHv2j+RSSShbmeiJqSDp8qk0B6wK5X2elJHHhLBi9GCj8Snh
+        2SfJH+iY9pIJGHcV73jjj1fj2wjZjpqO3MQEVyJnZ+UMaZNjLly9DqLf3iJhc6qSxzGdhP74sZiRg
+        BWVggmTXTwsTbb01g/NvP5TG34P3zzYcg42vAhWEZUeooECbyY62rKILwUSjEs/AYYL3tKeBNCOMr
+        sfWZU0Mg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jNXgZ-0001kE-Rp; Sun, 12 Apr 2020 08:09:47 +0000
+Date:   Sun, 12 Apr 2020 01:09:47 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Alim Akhtar <alim.akhtar@samsung.com>
+Cc:     robh@kernel.org, devicetree@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
+        krzk@kernel.org, kwmad.kim@samsung.com, avri.altman@wdc.com,
+        cang@codeaurora.org, Seungwon Jeon <essuuj@gmail.com>,
+        stanley.chu@mediatek.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 4/5] scsi: ufs-exynos: add UFS host support for Exynos
+ SoCs
+Message-ID: <20200412080947.GA6524@infradead.org>
+References: <20200412073159.37747-1-alim.akhtar@samsung.com>
+ <CGME20200412074218epcas5p3ef7973c8a47533a15a359b069da8003c@epcas5p3.samsung.com>
+ <20200412073159.37747-5-alim.akhtar@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200412073159.37747-5-alim.akhtar@samsung.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Alistair,
+On Sun, Apr 12, 2020 at 01:01:58PM +0530, Alim Akhtar wrote:
+> This patch introduces Exynos UFS host controller driver,
+> which mainly handles vendor-specific operations including
+> link startup, power mode change and hibernation/unhibernation.
 
-> Add binding document for bluetooth part of RTL8723BS/RTL8723CS
-> 
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> Signed-off-by: Alistair Francis <alistair@alistair23.me>
-> ---
-> .../bindings/net/realtek,rtl8723bs-bt.yaml    | 52 +++++++++++++++++++
-
-follow the current names and use net/realtek-bluetooth.yaml.
-
-Regards
-
-Marcel
-
+So this doesn't actually require the various removed or not added quirks
+after all?
