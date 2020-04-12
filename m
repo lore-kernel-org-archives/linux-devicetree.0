@@ -2,65 +2,64 @@ Return-Path: <SRS0=a8L4=54=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DD1C2BBC7
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 18:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84827C2D0EC
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 18:30:11 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D38E20692
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 18:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BC4920692
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 18:30:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W/4THMap"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 5D38E20692
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ROGEJ/Ca"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 5BC4920692
 Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=devicetree-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727562AbgDLSaI (ORCPT
+        id S1727558AbgDLSaH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Apr 2020 14:30:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:43920 "EHLO
+        Sun, 12 Apr 2020 14:30:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:43938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727566AbgDLSaH (ORCPT
+        with ESMTP id S1727562AbgDLSaH (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Sun, 12 Apr 2020 14:30:07 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36A37C008776;
-        Sun, 12 Apr 2020 11:20:25 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id 198so4990492lfo.7;
-        Sun, 12 Apr 2020 11:20:25 -0700 (PDT)
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EA78C0A3BF2;
+        Sun, 12 Apr 2020 11:20:22 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id 198so4990415lfo.7;
+        Sun, 12 Apr 2020 11:20:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0pbLfr+nqgYUtCdJqqKNf5Tp0hM3f65yvGA3bZ3B05c=;
-        b=W/4THMap5VWgZDYSArlhOr/33w32rR4CrPznKwmf4eV2YeNbx38QUxz5LIYOC1XUvy
-         QynF4DiZhe7K72ILNnLVmWYt0LElk/+22TpObOkdthky9U2bZoHrBemU7FssxMaolzr9
-         OHnNY8ppUS93RaVSkq+1MUtg0yHEs2ORexVabJ8FFXQ9wqzZy9Uhks9s14AJnJKccOSR
-         Ua9ZyAM2UDq1YSxtliwJAe29MgAsRdIIjD6RATDIr5mSfBuq1NtATe57ARWO7qnvhnj5
-         zTbBmEA3msDdK4CFjFJwiiAFSeY7isfdvSuQawtCkuB+LqXv2VdPAiUgSe+YOjswPCkz
-         qTSw==
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tY4gV3mbBh6YlZ2Mos/NaX4/rY14UmtFD7+t3Jb3dMw=;
+        b=ROGEJ/CaGdsXBF+PbMesBFoHnpYqw7ZVM6SOtq5GVNwVH7JNVbYjZLzv1ohpJM5FKi
+         9yji4QogiO9wbeUziw3EMOSYGKDXOyQSuxnXSkto+8bG4DRbKQ9+kRMivEUZnc8Q41vj
+         GW+0MfxC5jUQX0SOEmjR7I9I57AVGTbYZEERr17C44weIY/7oc6XSfrJZYiHq+qPxkgm
+         MY0XEfA7eiuPrSoRWtWrIJHVaAACeP/rdLUMOSzIsppr8S9ACK4KdOp5t00VwhaYAxvG
+         vLWCdoJOe0/vqTEvmyYBmkEN0O2qtTmQ3g5EYShAMySr+h1z6SNs7YkoiBOoqp+VLysR
+         wCPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=0pbLfr+nqgYUtCdJqqKNf5Tp0hM3f65yvGA3bZ3B05c=;
-        b=XAxgJtSAZWPCU5E+nK5ptZWWYKAXEEhY9ASQrq2L9vK19Ojw7HTMqwYZXyDLPSDOxe
-         aBVnKM+B7tiic6AZCwDJkQ7YVz2Cs61tXwpZznx4l6iI9gJR5EKZsmPRoc4CFLeHLYcQ
-         2Zo77+Qaqc8Vk4FR5JfwTEFDD81GqGBZExYN+ArZJnB+NFZk2ahQ1uazxyRWACFk9wBz
-         BkEownQkWhWdv9XNDN2REYLPfKmZnf9mcpVCxZISuKRyXVMej5CDPbkRRl3aRhmItwKQ
-         v86qnWGc4I1kaI0NcVmTFubCLFGxIhPN2csWzQH18MBWODPGLuzr+y3NIQNtqOjcrxs/
-         ygiw==
-X-Gm-Message-State: AGi0PuaC0RfS5BQi+BcFLH+pTXdDI1Hz86btycOK9XtNtl9wzDWmsKl6
-        G64XIUWBt10WMZqW6Fs4yF9wIQpa9J0=
-X-Google-Smtp-Source: APiQypLNQSDf9U1QklVk237XXcfj1gMY0TpODl2xX9qpvSdr5iq3/V3MK6IVO8SZUNmLTlln272Snw==
-X-Received: by 2002:ac2:57cb:: with SMTP id k11mr8378106lfo.19.1586715623259;
-        Sun, 12 Apr 2020 11:20:23 -0700 (PDT)
+         :mime-version:content-transfer-encoding;
+        bh=tY4gV3mbBh6YlZ2Mos/NaX4/rY14UmtFD7+t3Jb3dMw=;
+        b=bsrFWwtYiZEPWhv2M/LC9J0Ue+Pg4+T4DdgKT5PBbEJoinbqM/wElgjlmMWb63bvYO
+         GTnkqKCy/XAjKgRbBySXpk4Vm4+50UsTP8k4qvwZ8d53qf1U7RvJXVMrofHjDTumEJ9I
+         P5k1vaun5EaSufRUAdrwzREvFHIkCuqbqOuPclnAVC6CoRrkzJFxWyL+XwDKAz83Ybi6
+         48kbqEggdJD2GsB6cTUmhfiYr1zMxRrOsp01cB5yX5Nld5UvGJp53Th3rFtQP00YkKqr
+         VwkZj+ljOCbjT8EkNVtel9beCnq/cNSC5ZQ0ePvzqdLzOGA2uXvWKwQfb4Yl8zxkNluP
+         7Q2g==
+X-Gm-Message-State: AGi0PuZcz0KGTkIeH8eMyxSb99zbbYs9wtVyNyzh8+bavR2M1u7blexB
+        Y0FTzLZv/o2+pMHXi4RjpeP0j8w3ni8=
+X-Google-Smtp-Source: APiQypIxqPYcw7sG0yOL2g9KSN6dtoshvVOHq2rXNtGX+hzY3j3+hLYI18RMgDenrT3GLFgvbP7kjQ==
+X-Received: by 2002:a05:6512:1c5:: with SMTP id f5mr8183363lfp.138.1586715620757;
+        Sun, 12 Apr 2020 11:20:20 -0700 (PDT)
 Received: from saturn.lan (18.158-248-194.customer.lyse.net. [158.248.194.18])
-        by smtp.gmail.com with ESMTPSA id m13sm6434394lfk.12.2020.04.12.11.20.22
+        by smtp.gmail.com with ESMTPSA id m13sm6434394lfk.12.2020.04.12.11.20.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Apr 2020 11:20:22 -0700 (PDT)
+        Sun, 12 Apr 2020 11:20:20 -0700 (PDT)
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
         dri-devel@lists.freedesktop.org
@@ -68,14 +67,11 @@ Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Boris Brezillon <bbrezillon@kernel.org>,
         Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH v1 2/4] dt-bindings: display: convert atmel lcdc to DT Schema
-Date:   Sun, 12 Apr 2020 20:20:10 +0200
-Message-Id: <20200412182012.27515-3-sam@ravnborg.org>
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH v1 0/4] dt-bindings: DT Schema variants of atmel lcdc, hlcdc
+Date:   Sun, 12 Apr 2020 20:20:08 +0200
+Message-Id: <20200412182012.27515-1-sam@ravnborg.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200412182012.27515-1-sam@ravnborg.org>
-References: <20200412182012.27515-1-sam@ravnborg.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -83,263 +79,53 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a new binding file to describe the bindings
-for the Atmel LCDC IP.
-This replaces the old txt based binding.
+The following four patches update the bindings for Atmel
+LCDC, HLCDC display controllers to DT Schema.
 
-The binding file describes the current binding,
-including properties to specify register values etc.
-The binding will be updated in a follow-up patch,
-the current binding describes the actual situation.
+The bindings were re-written in DT Schema format,
+and examples adjusted/updated to fit.
 
-This new binding file replaces the old .txt based
-binding which is deleted.
+This patch-set introduces a new endpoint property in video-interfaces
+used to tell if red and blue wiring is reversed.
+Red and blue wires are reversed as the LCDC IP natively supports BGR
+whereas most SW expects RGB. With the wires reversed the SW thinks
+the IP supports RGB.
+See more details in the changelog of the patch.
 
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
----
- .../bindings/display/atmel,lcdc.txt           |  88 -----------
- .../bindings/display/atmel/lcdc.yaml          | 137 ++++++++++++++++++
- 2 files changed, 137 insertions(+), 88 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/atmel,lcdc.txt
- create mode 100644 Documentation/devicetree/bindings/display/atmel/lcdc.yaml
+The Atmel lcdc binding deprecate a lot of properties in other
+to update it to an up-to-date binding. There are no users of the
+updated binding, thats something I work on.
 
-diff --git a/Documentation/devicetree/bindings/display/atmel,lcdc.txt b/Documentation/devicetree/bindings/display/atmel,lcdc.txt
-deleted file mode 100644
-index acb5a0132127..000000000000
---- a/Documentation/devicetree/bindings/display/atmel,lcdc.txt
-+++ /dev/null
-@@ -1,88 +0,0 @@
--Atmel LCDC Framebuffer
-------------------------------------------------------
--
--Required properties:
--- compatible :
--	"atmel,at91sam9261-lcdc" , 
--	"atmel,at91sam9263-lcdc" ,
--	"atmel,at91sam9g10-lcdc" ,
--	"atmel,at91sam9g45-lcdc" ,
--	"atmel,at91sam9g45es-lcdc" ,
--	"atmel,at91sam9rl-lcdc" ,
--	"atmel,at32ap-lcdc"
--- reg : Should contain 1 register ranges(address and length).
--	Can contain an additional register range(address and length)
--	for fixed framebuffer memory. Useful for dedicated memories.
--- interrupts : framebuffer controller interrupt
--- display: a phandle pointing to the display node
--
--Required nodes:
--- display: a display node is required to initialize the lcd panel
--	This should be in the board dts.
--- default-mode: a videomode within the display with timing parameters
--	as specified below.
--
--Optional properties:
--- lcd-supply: Regulator for LCD supply voltage.
--
--Example:
--
--	fb0: fb@00500000 {
--		compatible = "atmel,at91sam9g45-lcdc";
--		reg = <0x00500000 0x1000>;
--		interrupts = <23 3 0>;
--		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_fb>;
--		display = <&display0>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--
--	};
--
--Example for fixed framebuffer memory:
--
--	fb0: fb@00500000 {
--		compatible = "atmel,at91sam9263-lcdc";
--		reg = <0x00700000 0x1000 0x70000000 0x200000>;
--		[...]
--	};
--
--Atmel LCDC Display
-------------------------------------------------------
--Required properties (as per of_videomode_helper):
--
-- - atmel,dmacon: dma controller configuration
-- - atmel,lcdcon2: lcd controller configuration
-- - atmel,guard-time: lcd guard time (Delay in frame periods)
-- - bits-per-pixel: lcd panel bit-depth.
--
--Optional properties (as per of_videomode_helper):
-- - atmel,lcdcon-backlight: enable backlight
-- - atmel,lcdcon-backlight-inverted: invert backlight PWM polarity
-- - atmel,lcd-wiring-mode: lcd wiring mode "RGB" or "BRG"
-- - atmel,power-control-gpio: gpio to power on or off the LCD (as many as needed)
--
--Example:
--	display0: display {
--		bits-per-pixel = <32>;
--		atmel,lcdcon-backlight;
--		atmel,dmacon = <0x1>;
--		atmel,lcdcon2 = <0x80008002>;
--		atmel,guard-time = <9>;
--		atmel,lcd-wiring-mode = <1>;
--
--		display-timings {
--			native-mode = <&timing0>;
--			timing0: timing0 {
--				clock-frequency = <9000000>;
--				hactive = <480>;
--				vactive = <272>;
--				hback-porch = <1>;
--				hfront-porch = <1>;
--				vback-porch = <40>;
--				vfront-porch = <1>;
--				hsync-len = <45>;
--				vsync-len = <1>;
--			};
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/display/atmel/lcdc.yaml b/Documentation/devicetree/bindings/display/atmel/lcdc.yaml
-new file mode 100644
-index 000000000000..7dcb9a4d5902
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/atmel/lcdc.yaml
-@@ -0,0 +1,137 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/atmel/lcdc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Atmel LCDC (LCD Controller) display controller with PWM
-+
-+maintainers:
-+  - Sam Ravnborg <sam@ravnborg.org>
-+
-+description: |
-+  The Atmel LCDC Display Controller is display controller that
-+  includes a PWM for backlight/contrast.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - atmel,at91sam9261-lcdc
-+      - atmel,at91sam9263-lcdc
-+      - atmel,at91sam9g10-lcdc
-+      - atmel,at91sam9g45-lcdc
-+      - atmel,at91sam9g45es-lcdc
-+      - atmel,at91sam9g46-lcdc
-+      - atmel,at91sam9m10-lcdc
-+      - atmel,at91sam9m11-lcdc
-+      - atmel,at91sam9rl-lcdc
-+
-+  "#address-cells":
-+    const: 1
-+  "#size-cells":
-+    const: 0
-+
-+  reg:
-+    description: |
-+      Contains 1 register range (address and length).
-+      Can contain an additional register range (address and length)
-+      for fixed framebuffer memory
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  lcd-supply:
-+    description: Regulator for LCD supply voltage.
-+
-+  display:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: phandle to display node
-+
-+patternProperties:
-+  "^display[0-9]$":
-+    type: object
-+    description: |
-+      Display node is required to initialize the lcd panel.
-+      This should be in the board dts
-+
-+    properties:
-+            
-+      atmel,dmacon:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: DMA controller configuration
-+
-+      atmel,lcdcon2:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: LCD controller configuration
-+
-+      atmel,guard-time:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: LCD guard time (Delay in frame periods)
-+
-+      bits-per-pixel:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: LCD panel bit-depth.
-+
-+      atmel,lcdcon-backlight:
-+        type: boolean
-+        description: Enable backlight
-+
-+      atmel,lcdcon-backlight-inverted:
-+        type: boolean
-+        description: Invert backlight PWM polarity
-+
-+      atmel,lcd-wiring-mode:
-+        enum:
-+          - RGB
-+          - BGR
-+        description: LCD wiring mode
-+
-+      atmel,power-control-gpio:
-+        description: gpio to power on or off the LCD
-+
-+      display-timings:
-+        type: object
-+        description: |
-+          display-timings node as described in ../display-timings.yaml
-+
-+    required:
-+      - atmel,dmacon
-+      - atmel,lcdcon2
-+      - atmel,guard-time
-+      - bits-per-pixel
-+      - display-timings
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    fb {
-+        compatible = "atmel,at91sam9263-lcdc";
-+        reg = <0x00700000 0x1000>;
-+        interrupts = <23 3 0>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+    };
-+
-+  - |
-+    fb {
-+        compatible = "atmel,at91sam9263-lcdc";
-+        reg = <0x00700000 0x1000 0x70000000 0x200000>;
-+        display = <&display0>;
-+
-+        display0 {
-+            bits-per-pixel = <32>;
-+            atmel,lcdcon-backlight;
-+            atmel,dmacon = <0x1>;
-+            atmel,lcdcon2 = <0x80008002>;
-+            atmel,guard-time = <9>;
-+            atmel,lcd-wiring-mode = "BGR";
-+
-+            display-timings {
-+            };
-+        };
-+    };
-+
-+...
--- 
-2.20.1
+Note a big difference between LCDC and HLCDC.
+LCDC has all in one binding (interrupts, pwm, display controller).
+HLCDC has individual sub-nodes for the PWM and the display contoller.
+
+When posting an update on the old atmel,lcdc.txt file the feedback
+was back then that we did not want the split like done for hlcdc.
+And it makes for a simpler binding in this way - so feedback looks right.
+
+Despite that Microchip has purchased Atmel, the atmel name is kept.
+Also the files are placed in a directory named atmel/.
+
+Feedback welcome!
+
+	Sam
+
+Sam Ravnborg (4):
+      dt-bindings: display: convert atmel-hlcdc to DT Schema
+      dt-bindings: display: convert atmel lcdc to DT Schema
+      dt-bindings: media: add wiring property to video-interfaces
+      dt-bindings: display: add port support to atmel lcdc
+
+ .../devicetree/bindings/display/atmel,lcdc.txt     |  88 --------
+ .../devicetree/bindings/display/atmel/hlcdc-dc.txt |  75 -------
+ .../bindings/display/atmel/hlcdc-dc.yaml           | 102 +++++++++
+ .../devicetree/bindings/display/atmel/lcdc.yaml    | 229 +++++++++++++++++++++
+ .../devicetree/bindings/media/video-interfaces.txt |   3 +
+ .../devicetree/bindings/mfd/atmel-hlcdc.txt        |  55 -----
+ .../devicetree/bindings/mfd/atmel-hlcdc.yaml       |  78 +++++++
+ .../devicetree/bindings/pwm/atmel-hlcdc-pwm.txt    |  29 ---
+ .../devicetree/bindings/pwm/atmel-hlcdc-pwm.yaml   |  39 ++++
+ 9 files changed, 451 insertions(+), 247 deletions(-)
+
 
