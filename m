@@ -2,66 +2,93 @@ Return-Path: <SRS0=a8L4=54=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D88C2BB86
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 08:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D801C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 09:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6915720709
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 08:09:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m+nJBszF"
+	by mail.kernel.org (Postfix) with ESMTP id 31DEB20732
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 09:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725878AbgDLIJt (ORCPT
+        id S1726658AbgDLJdx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Apr 2020 04:09:49 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35304 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbgDLIJt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Apr 2020 04:09:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=JDEA4aSSIckcWLhH+0n2OyNXRY6oS0EWJxgESd0P7Gg=; b=m+nJBszFbsHkAkcCRyWRhrX4Zv
-        5NtrbyIG4/Y5IncFEmp2qIQxkoEF5KFIIq48pM7xQgC1GMz4xjGbLUc718zSdW5Od0AlqYbbbUax9
-        r88iM9tt2iOXp8h6GmY7QELnSiQFhrHv2j+RSSShbmeiJqSDp8qk0B6wK5X2elJHHhLBi9GCj8Snh
-        2SfJH+iY9pIJGHcV73jjj1fj2wjZjpqO3MQEVyJnZ+UMaZNjLly9DqLf3iJhc6qSxzGdhP74sZiRg
-        BWVggmTXTwsTbb01g/NvP5TG34P3zzYcg42vAhWEZUeooECbyY62rKILwUSjEs/AYYL3tKeBNCOMr
-        sfWZU0Mg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jNXgZ-0001kE-Rp; Sun, 12 Apr 2020 08:09:47 +0000
-Date:   Sun, 12 Apr 2020 01:09:47 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     robh@kernel.org, devicetree@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        martin.petersen@oracle.com, linux-kernel@vger.kernel.org,
-        krzk@kernel.org, kwmad.kim@samsung.com, avri.altman@wdc.com,
-        cang@codeaurora.org, Seungwon Jeon <essuuj@gmail.com>,
-        stanley.chu@mediatek.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 4/5] scsi: ufs-exynos: add UFS host support for Exynos
- SoCs
-Message-ID: <20200412080947.GA6524@infradead.org>
-References: <20200412073159.37747-1-alim.akhtar@samsung.com>
- <CGME20200412074218epcas5p3ef7973c8a47533a15a359b069da8003c@epcas5p3.samsung.com>
- <20200412073159.37747-5-alim.akhtar@samsung.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200412073159.37747-5-alim.akhtar@samsung.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Sun, 12 Apr 2020 05:33:53 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:52362 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725878AbgDLJdw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 12 Apr 2020 05:33:52 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CABDA1A11EB;
+        Sun, 12 Apr 2020 11:33:51 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 56D2E1A11D1;
+        Sun, 12 Apr 2020 11:33:48 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A7126402B4;
+        Sun, 12 Apr 2020 17:33:43 +0800 (SGT)
+From:   Biwen Li <biwen.li@oss.nxp.com>
+To:     shawnguo@kernel.org, ran.wang_1@nxp.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jiafei.pan@nxp.com, Biwen Li <biwen.li@nxp.com>
+Subject: [RESEND,v1 1/4] arm64: dts: lx2160a: add ftm_alarm0 DT node
+Date:   Sun, 12 Apr 2020 17:29:53 +0800
+Message-Id: <20200412092956.27859-1-biwen.li@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Apr 12, 2020 at 01:01:58PM +0530, Alim Akhtar wrote:
-> This patch introduces Exynos UFS host controller driver,
-> which mainly handles vendor-specific operations including
-> link startup, power mode change and hibernation/unhibernation.
+From: Biwen Li <biwen.li@nxp.com>
 
-So this doesn't actually require the various removed or not added quirks
-after all?
+The patch adds ftm_alarm0 DT node for Soc LX2160A
+FlexTimer1 module is used to wakeup the system in deep sleep
+
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+index e5ee5591e52b..e0d8d68ce070 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+@@ -16,6 +16,10 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 
++	aliases {
++		rtc1 = &ftm_alarm0;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -768,6 +772,20 @@
+ 			timeout-sec = <30>;
+ 		};
+ 
++		rcpm: rcpm@1e34040 {
++			compatible = "fsl,lx2160a-rcpm", "fsl,qoriq-rcpm-2.1+";
++			reg = <0x0 0x1e34040 0x0 0x1c>;
++			#fsl,rcpm-wakeup-cells = <7>;
++			little-endian;
++		};
++
++		ftm_alarm0: timer@2800000 {
++			compatible = "fsl,lx2160a-ftm-alarm";
++			reg = <0x0 0x2800000 0x0 0x10000>;
++			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0 0x0>;
++			interrupts = <0 44 4>;
++		};
++
+ 		usb0: usb@3100000 {
+ 			compatible = "snps,dwc3";
+ 			reg = <0x0 0x3100000 0x0 0x10000>;
+-- 
+2.17.1
+
