@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93F1C2BB86
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 18:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D74DC2BB55
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 18:30:11 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0F3206E9
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 18:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0967B20732
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 18:30:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f36j3/w4"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 7A0F3206E9
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O3gdcKnk"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 0967B20732
 Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=devicetree-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727567AbgDLSaH (ORCPT
+        id S1727578AbgDLSaJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Apr 2020 14:30:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:43914 "EHLO
+        Sun, 12 Apr 2020 14:30:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:43936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727558AbgDLSaG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Apr 2020 14:30:06 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01D85C0A88B8;
-        Sun, 12 Apr 2020 11:20:24 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id q22so6780638ljg.0;
-        Sun, 12 Apr 2020 11:20:23 -0700 (PDT)
+        with ESMTP id S1727566AbgDLSaI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Apr 2020 14:30:08 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54314C0086C2;
+        Sun, 12 Apr 2020 11:20:27 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id r17so4995808lff.2;
+        Sun, 12 Apr 2020 11:20:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ASiH77KqT+uIPGN2ZfFxNnHDvvgHobJSFotNpJNlIq0=;
-        b=f36j3/w4PIac6wI43iNe9WBgl5Y4J8foTCyQSghBaK1vuu7eDZMvJggaDzt/90gNYT
-         kYrPvi7VB6Zx7TZ/ns1h4qU7o7rmA6FaGK+ZXBO/FzhCxmRPWcIaPC0HmmHtRJYUaoMd
-         qZyfLZIw2zDJeqADcYJ3r7uRUV+adjlBe7Cq46f+ShgEvDe0Sx1IowH/UoI2VlbCNC5x
-         gg7ru6YJgt0KSpZhAY74HwF/srLxzuVBkOqjaDzJ9fgYDcDvpaLeAl64Gd8jOhFVNp2P
-         AYWRBrvw/YRTqefWPCk1I0Tfp/CYdbqIXYehzl9FnTqxPB3t85+73Lx89ZY+1AL2Lvfa
-         x57w==
+        bh=s7PyP7wM+hSmqY+Nl4dhHB6/+lR7BTTva1Z1R03Oe1A=;
+        b=O3gdcKnk6nH6vW/0o9T/tib9LsIjIxtq7DG8LrEag2qjwgCdtswUsLnNipTw+jT4mP
+         e6cbPPRL2CNlRKZQh2uOMyQo8DyoWKT/QaNU20nlUtHfdcRUNBK4L6HBlspqSom+34R3
+         j5TopCMaCD4NhkoQu4G+WM7fTFuXOdCPJ4KUsfEo9ysytuqSgn7sMNY/2udkVmdpe+Sq
+         E6lHiaVugK/D0cp8oht8TJynVaMa1uDkGVpjyHYgwvMMhfaYM0BhWCdi9naledajb1/J
+         HXbSROWbXH982peXfJctgLkwg1M88T2iLbE70T8ApVkffnPJ8+xumdNgXwejrBbJmrne
+         2Cog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=ASiH77KqT+uIPGN2ZfFxNnHDvvgHobJSFotNpJNlIq0=;
-        b=Hq69o8vtQ35uULG+qDTpzT47oHZXnqjY5eyw4cawAs9oxFUVrj2gr2rYjUbrhpuHsz
-         TOjmKPoglt1musYtMWmEckIk0gqD4HfsO1TCdTKYB6gwMr+oDsPND4sTXfJ2pCc6R5pn
-         1zbegIJaPxo02K077Cjjy439flv7ORoQ5jq3GIC7kxD2mfQM1d+bp9uNmraj+FnqnVzS
-         xh87RIVDappdEUew2OhSvDc+RQiQRy9YOawuWNuZwqGWJYP5fqCU80O1j5dYWEi0vYC/
-         WqjQgjXc3XPOq8ntbax3ZnBWzgywX3vkWiGf6+9rzK2JLFXHUzgLf8+GeVZnC1D/P372
-         mxNg==
-X-Gm-Message-State: AGi0PuZ4KD8SBsRazV8l+xuzKLEVKJmeQUDqhfPLoqopfc4AKV0KX0Uo
-        uuU8NoAs9g78rxHS/yPqyOzVP/r94eQ=
-X-Google-Smtp-Source: APiQypLohagm5VawXigAmzF4HYOmsoRJOvC1c2kS6bgTv+0U7HyuTnjttLKVJkQBLxtCAulwnyhYmQ==
-X-Received: by 2002:a2e:985a:: with SMTP id e26mr8617976ljj.17.1586715621920;
-        Sun, 12 Apr 2020 11:20:21 -0700 (PDT)
+        bh=s7PyP7wM+hSmqY+Nl4dhHB6/+lR7BTTva1Z1R03Oe1A=;
+        b=WuCqlVAHLVb9xjw+AnScpKBk8gbwKqUIWZjww3Jxc1tHtd1K/zvkjkBsrQAXnDRRih
+         KTaFTv1XTFGWsmLP+QHoKMJA7o/67L38DaNpOY4ILyBUfcdcJb00msU4XEKJHkM7kwju
+         46lzJ78RuaRCd9w9nUAqHSU996/ZETHuqFW4yUSE9lbUXl9xiVnT0WkBbDEO5LhxKPrv
+         x6OXPI2bDpzWe4V0/ov+eyMlN7Qew9G28eNQVlk3TMeRpjd1JSCWJL/lvZ1w0c+xSV2u
+         TfBjM/9LpcT/dNQ0bpPkdgpl06SQTdazPIqClA1WT/E0fHT1AffEPJONamJuRt0jzcoQ
+         tWhw==
+X-Gm-Message-State: AGi0PuZqDZ2qWonX5J66+PFTgCxjX22Op4WDX+r5ueFqZOolByu2e7hz
+        UtDRqDRnVsLPN/Sti1WJ1Ji2sdznhN8=
+X-Google-Smtp-Source: APiQypJSXZxot3B6tsVUM4YKg3cHraXKHQBplcVR54rLr6Cr3IwsfjmqDogPJQNAHRKGcEqAoTxaPg==
+X-Received: by 2002:a05:6512:10c9:: with SMTP id k9mr8379271lfg.183.1586715625482;
+        Sun, 12 Apr 2020 11:20:25 -0700 (PDT)
 Received: from saturn.lan (18.158-248-194.customer.lyse.net. [158.248.194.18])
-        by smtp.gmail.com with ESMTPSA id m13sm6434394lfk.12.2020.04.12.11.20.20
+        by smtp.gmail.com with ESMTPSA id m13sm6434394lfk.12.2020.04.12.11.20.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Apr 2020 11:20:21 -0700 (PDT)
+        Sun, 12 Apr 2020 11:20:25 -0700 (PDT)
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
         dri-devel@lists.freedesktop.org
@@ -70,9 +70,9 @@ Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
         Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH v1 1/4] dt-bindings: display: convert atmel-hlcdc to DT Schema
-Date:   Sun, 12 Apr 2020 20:20:09 +0200
-Message-Id: <20200412182012.27515-2-sam@ravnborg.org>
+Subject: [PATCH v1 4/4] dt-bindings: display: add port support to atmel lcdc
+Date:   Sun, 12 Apr 2020 20:20:12 +0200
+Message-Id: <20200412182012.27515-5-sam@ravnborg.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200412182012.27515-1-sam@ravnborg.org>
 References: <20200412182012.27515-1-sam@ravnborg.org>
@@ -83,192 +83,89 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-atmel hlcdc is a MFD devide with two sub-devices:
-- PWM
-- Display controller
+Update the Atmel LCDC binding to include:
+- pwm. Used for backlight
+- endpoints using port node
+  Used for handle to panel
+- Added wiring property that is used to describe
+  the wiring between the LCDC and the panel
 
-Add binding files for each device:
+Existing properties that should not be used in new
+bindings are deprecated.
 
- - mfd/atmel-hlcdc - this is overall device
- - pwm/atmel-hlcdc-pwm - the pwm part, used for backlight
- - display/atmel/hlcdc-dc - the display controller
-
-The hlcdc IP is present in several different chips from microchip
-(former Atmel). The individual chips has independent compatibles in
-the mfd binding, to allow for chip specific configuration.
-
-As the conversion is a full re-write there was no tie to the original
-license, and the standard license for bindings is used.
+Updated example to include the updated way to specify panel etc.
 
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Boris Brezillon <bbrezillon@kernel.org>
 ---
- .../bindings/display/atmel/hlcdc-dc.txt       |  75 -------------
- .../bindings/display/atmel/hlcdc-dc.yaml      | 102 ++++++++++++++++++
- .../devicetree/bindings/mfd/atmel-hlcdc.txt   |  55 ----------
- .../devicetree/bindings/mfd/atmel-hlcdc.yaml  |  78 ++++++++++++++
- .../bindings/pwm/atmel-hlcdc-pwm.txt          |  29 -----
- .../bindings/pwm/atmel-hlcdc-pwm.yaml         |  39 +++++++
- 6 files changed, 219 insertions(+), 159 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
- create mode 100644 Documentation/devicetree/bindings/display/atmel/hlcdc-dc.yaml
- delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/atmel-hlcdc.yaml
- delete mode 100644 Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
- create mode 100644 Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.yaml
+ .../bindings/display/atmel/lcdc.yaml          | 94 ++++++++++++++++++-
+ 1 file changed, 93 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
-deleted file mode 100644
-index 0398aec488ac..000000000000
---- a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
-+++ /dev/null
-@@ -1,75 +0,0 @@
--Device-Tree bindings for Atmel's HLCDC (High LCD Controller) DRM driver
--
--The Atmel HLCDC Display Controller is subdevice of the HLCDC MFD device.
--See ../../mfd/atmel-hlcdc.txt for more details.
--
--Required properties:
-- - compatible: value should be "atmel,hlcdc-display-controller"
-- - pinctrl-names: the pin control state names. Should contain "default".
-- - pinctrl-0: should contain the default pinctrl states.
-- - #address-cells: should be set to 1.
-- - #size-cells: should be set to 0.
--
--Required children nodes:
-- Children nodes are encoding available output ports and their connections
-- to external devices using the OF graph reprensentation (see ../graph.txt).
-- At least one port node is required.
--
--Optional properties in grandchild nodes:
-- Any endpoint grandchild node may specify a desired video interface
-- according to ../../media/video-interfaces.txt, specifically
-- - bus-width: recognized values are <12>, <16>, <18> and <24>, and
--   override any output mode selection heuristic, forcing "rgb444",
--   "rgb565", "rgb666" and "rgb888" respectively.
--
--Example:
--
--	hlcdc: hlcdc@f0030000 {
--		compatible = "atmel,sama5d3-hlcdc";
--		reg = <0xf0030000 0x2000>;
--		interrupts = <36 IRQ_TYPE_LEVEL_HIGH 0>;
--		clocks = <&lcdc_clk>, <&lcdck>, <&clk32k>;
--		clock-names = "periph_clk","sys_clk", "slow_clk";
--
--		hlcdc-display-controller {
--			compatible = "atmel,hlcdc-display-controller";
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--
--			port@0 {
--				#address-cells = <1>;
--				#size-cells = <0>;
--				reg = <0>;
--
--				hlcdc_panel_output: endpoint@0 {
--					reg = <0>;
--					remote-endpoint = <&panel_input>;
--				};
--			};
--		};
--
--		hlcdc_pwm: hlcdc-pwm {
--			compatible = "atmel,hlcdc-pwm";
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_lcd_pwm>;
--			#pwm-cells = <3>;
--		};
--	};
--
--Example 2: With a video interface override to force rgb565; as above
--but with these changes/additions:
--
--	&hlcdc {
--		hlcdc-display-controller {
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb565>;
--
--			port@0 {
--				hlcdc_panel_output: endpoint@0 {
--					bus-width = <16>;
--				};
--			};
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.yaml b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.yaml
-new file mode 100644
-index 000000000000..7eb6266a25a2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.yaml
-@@ -0,0 +1,102 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/atmel/hlcdc-dc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/Documentation/devicetree/bindings/display/atmel/lcdc.yaml b/Documentation/devicetree/bindings/display/atmel/lcdc.yaml
+index 7dcb9a4d5902..b5c2628f7805 100644
+--- a/Documentation/devicetree/bindings/display/atmel/lcdc.yaml
++++ b/Documentation/devicetree/bindings/display/atmel/lcdc.yaml
+@@ -28,6 +28,7 @@ properties:
+ 
+   "#address-cells":
+     const: 1
 +
-+title: Atmel HLCDC (High LCD Controller) display controller
+   "#size-cells":
+     const: 0
+ 
+@@ -43,13 +44,84 @@ properties:
+   lcd-supply:
+     description: Regulator for LCD supply voltage.
+ 
++  "#pwm-cells":
++    description:
++      This PWM chip use the default 3 cells bindings
++      defined in ../../pwm/pwm.yaml.
++    const: 3
 +
-+maintainers:
-+  - Sam Ravnborg <sam@ravnborg.org>
-+  - Boris Brezillon <bbrezillon@kernel.org>
++  clocks:
++    maxItems: 2
 +
-+description: |
-+  The Atmel HLCDC Display Controller is subdevice of the HLCDC MFD device.
-+  See ../../mfd/atmel-hlcdc.yaml for more details.
++  clock-names:
++    maxItems: 2
++    items:
++      - const: lcdc_clk
++      - const: hclk
 +
-+properties:
-+  compatible:
-+    const: atmel,hlcdc-display-controller
-+
-+  "#address-cells":
-+    const: 1
-+  "#size-cells":
-+    const: 0
-+
-+required:
-+  - compatible
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+patternProperties:
-+  "^port@[0-9]$":
++  port@0:
 +    type: object
-+    description: |
-+      A port node with endpoint definitions as defined in
-+      ../../media/video-interfaces.txt
++    description: Endpoints of the display controller
 +
 +    properties:
++
++      reg:
++        const: 0
++
 +      "#address-cells":
 +        const: 1
 +
 +      "#size-cells":
 +        const: 0
 +
-+      reg:
-+        maxItems: 1
-+        description: The virtual number of the port
-+
-+    patternProperties:
-+      "^endpoint(@[0-9])$":
++      endpoint@0:
 +        type: object
++        description: endpoint node that include phandle to panel
 +
 +        properties:
-+          reg:
-+            maxItems: 1
-+            description: The virtual number of the endpoint
 +
-+          bus-width:
-+            enum: [12, 16, 18, 24]
-+            description:
-+              Any endpoint node may specify a desired video interface
-+              according to ../../media/video-interfaces.txt, specifically
-+              Recognized values are <12>, <16>, <18> and <24>, and
-+              override any output mode selection heuristic, forcing
-+              "rgb444", "rgb565", "rgb666" and "rgb888" respectively.
++          reg:
++            const: 0
++
++          wiring:
++            enum:
++              - straight
++              - red-blue-reversed
++            description: |
++              The LCDC is based on a blue-green-red configuration but to adapt
++              to SW only supporting red-green-blue the data lines for red and blue
++              may be reversed.
++              See details in: http://ww1.microchip.com/downloads/en/AppNotes/doc6300.pdf
++              "straight" - default value. Data lines are not reversed, uses BGR
++              "red-blue-reversed" - red and green are reversed, uses RGB
 +
 +          remote-endpoint:
 +            $ref: /schemas/types.yaml#/definitions/phandle
@@ -277,260 +174,63 @@ index 000000000000..7eb6266a25a2
 +
 +        required:
 +          - reg
++          - remote-endpoint
++
++        additionalProperties: false
 +
 +    required:
 +      - "#address-cells"
 +      - "#size-cells"
 +      - reg
 +
-+additionalProperties: false
++    additionalProperties: false
 +
-+examples:
-+  - |
-+    hlcdc-display-controller {
-+        compatible = "atmel,hlcdc-display-controller";
-+        #address-cells = <1>;
-+        #size-cells = <0>;
+   display:
+     $ref: /schemas/types.yaml#/definitions/phandle
++    deprecated: true
+     description: phandle to display node
+ 
+ patternProperties:
+   "^display[0-9]$":
+     type: object
++    deprecated: true
+     description: |
+       Display node is required to initialize the lcd panel.
+       This should be in the board dts
+@@ -107,12 +179,32 @@ required:
+ 
+ examples:
+   - |
++    #include <dt-bindings/clock/at91.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
+     fb {
+         compatible = "atmel,at91sam9263-lcdc";
+         reg = <0x00700000 0x1000>;
+-        interrupts = <23 3 0>;
++        interrupts = <26 IRQ_TYPE_LEVEL_HIGH 3>;
++        clocks = <&pmc PMC_TYPE_PERIPHERAL 26>, <&pmc PMC_TYPE_PERIPHERAL 26>;
++        clock-names = "lcdc_clk", "hclk";
++
++        /* pwm for backlight */
++        #pwm-cells = <3>;
++
+         #address-cells = <1>;
+         #size-cells = <0>;
 +
 +        port@0 {
++            reg = <0>;
 +            #address-cells = <1>;
 +            #size-cells = <0>;
-+            reg = <0>;
-+
 +            endpoint@0 {
 +                reg = <0>;
-+                bus-width = <16>;
++                wiring = "red-blue-reversed";
 +                remote-endpoint = <&panel_input>;
 +            };
 +        };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt b/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
-deleted file mode 100644
-index 5f8880cc757e..000000000000
---- a/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
-+++ /dev/null
-@@ -1,55 +0,0 @@
--Device-Tree bindings for Atmel's HLCDC (High LCD Controller) MFD driver
--
--Required properties:
-- - compatible: value should be one of the following:
--   "atmel,at91sam9n12-hlcdc"
--   "atmel,at91sam9x5-hlcdc"
--   "atmel,sama5d2-hlcdc"
--   "atmel,sama5d3-hlcdc"
--   "atmel,sama5d4-hlcdc"
--   "microchip,sam9x60-hlcdc"
-- - reg: base address and size of the HLCDC device registers.
-- - clock-names: the name of the 3 clocks requested by the HLCDC device.
--   Should contain "periph_clk", "sys_clk" and "slow_clk".
-- - clocks: should contain the 3 clocks requested by the HLCDC device.
-- - interrupts: should contain the description of the HLCDC interrupt line
--
--The HLCDC IP exposes two subdevices:
-- - a PWM chip: see ../pwm/atmel-hlcdc-pwm.txt
-- - a Display Controller: see ../display/atmel/hlcdc-dc.txt
--
--Example:
--
--	hlcdc: hlcdc@f0030000 {
--		compatible = "atmel,sama5d3-hlcdc";
--		reg = <0xf0030000 0x2000>;
--		clocks = <&lcdc_clk>, <&lcdck>, <&clk32k>;
--		clock-names = "periph_clk","sys_clk", "slow_clk";
--		interrupts = <36 IRQ_TYPE_LEVEL_HIGH 0>;
--
--		hlcdc-display-controller {
--			compatible = "atmel,hlcdc-display-controller";
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--
--			port@0 {
--				#address-cells = <1>;
--				#size-cells = <0>;
--				reg = <0>;
--
--				hlcdc_panel_output: endpoint@0 {
--					reg = <0>;
--					remote-endpoint = <&panel_input>;
--				};
--			};
--		};
--
--		hlcdc_pwm: hlcdc-pwm {
--			compatible = "atmel,hlcdc-pwm";
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_lcd_pwm>;
--			#pwm-cells = <3>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/mfd/atmel-hlcdc.yaml b/Documentation/devicetree/bindings/mfd/atmel-hlcdc.yaml
-new file mode 100644
-index 000000000000..cad14fa173a1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/atmel-hlcdc.yaml
-@@ -0,0 +1,78 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/atmel-hlcdc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Device-Tree bindings for Atmel's HLCDC (High LCD Controller)
-+
-+maintainers:
-+  - Sam Ravnborg <sam@ravnborg.org>
-+  - Boris Brezillon <bbrezillon@kernel.org>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - atmel,at91sam9n12-hlcdc
-+      - atmel,at91sam9x5-hlcdc
-+      - atmel,sama5d2-hlcdc
-+      - atmel,sama5d3-hlcdc
-+      - atmel,sama5d4-hlcdc
-+      - microchip,sam9x60-hlcdc
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 3
-+
-+  clock-names:
-+    maxItems: 3
-+    items:
-+      - const: periph_clk
-+      - const: sys_clk
-+      - const: slow_clk
-+
-+  interrupts:
-+    description: The HLCDC interrupt line
-+    maxItems: 1
-+
-+  hlcdc_pwm:
-+    type: object
-+    description: |
-+      PWM controller - used for backlight.
-+      See ../pwm/atmel-hlcdc-pwm.yaml for details
-+
-+  hlcdc-display-controller:
-+    type: object
-+    description: |
-+      LCD display controller
-+      See ../display/atmel/hlcdc-dc.yaml for details
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    hlcdc {
-+        compatible = "atmel,sama5d3-hlcdc";
-+        reg = <0xf0030000 0x2000>;
-+        clocks = <&lcdc_clk>, <&lcdck>, <&clk32k>;
-+        clock-names = "periph_clk","sys_clk", "slow_clk";
-+        interrupts = <36 IRQ_TYPE_LEVEL_HIGH 0>;
-+
-+        hlcdc-display-controller {
-+        };
-+
-+        hlcdc_pwm {
-+        };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
-deleted file mode 100644
-index afa501bf7f94..000000000000
---- a/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
-+++ /dev/null
-@@ -1,29 +0,0 @@
--Device-Tree bindings for Atmel's HLCDC (High-end LCD Controller) PWM driver
--
--The Atmel HLCDC PWM is subdevice of the HLCDC MFD device.
--See ../mfd/atmel-hlcdc.txt for more details.
--
--Required properties:
-- - compatible: value should be one of the following:
--   "atmel,hlcdc-pwm"
-- - pinctr-names: the pin control state names. Should contain "default".
-- - pinctrl-0: should contain the pinctrl states described by pinctrl
--   default.
-- - #pwm-cells: should be set to 3. This PWM chip use the default 3 cells
--   bindings defined in pwm.yaml in this directory.
--
--Example:
--
--	hlcdc: hlcdc@f0030000 {
--		compatible = "atmel,sama5d3-hlcdc";
--		reg = <0xf0030000 0x2000>;
--		clocks = <&lcdc_clk>, <&lcdck>, <&clk32k>;
--		clock-names = "periph_clk","sys_clk", "slow_clk";
--
--		hlcdc_pwm: hlcdc-pwm {
--			compatible = "atmel,hlcdc-pwm";
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_lcd_pwm>;
--			#pwm-cells = <3>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.yaml b/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.yaml
-new file mode 100644
-index 000000000000..70d063b48260
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.yaml
-@@ -0,0 +1,39 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/atmel-hlcdc-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Device-Tree bindings for Atmel's HLCDC (High-end LCD Controller) PWM
-+
-+maintainers:
-+  - Sam Ravnborg <sam@ravnborg.org>
-+  - Boris Brezillon <bbrezillon@kernel.org>
-+
-+description: |
-+  The Atmel HLCDC PWM is subdevice of the HLCDC MFD device.
-+  See ../mfd/atmel-hlcdc.txt for more details.
-+
-+properties:
-+  compatible:
-+    const: atmel,hlcdc-pwm
-+
-+  "#pwm-cells":
-+    const: 3
-+    description:
-+      This PWM chip use the default 3 cells bindings defined in pwm.yaml.
-+
-+required:
-+  - compatible
-+  - "#pwm-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    hlcdc_pwm {
-+        compatible = "atmel,hlcdc-pwm";
-+        #pwm-cells = <3>;
-+    };
-+
-+...
+     };
+ 
+   - |
 -- 
 2.20.1
 
