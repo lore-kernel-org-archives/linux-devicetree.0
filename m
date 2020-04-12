@@ -2,133 +2,111 @@ Return-Path: <SRS0=a8L4=54=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBF9C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 18:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE5FC2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 18:15:23 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65EC6206E9
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 18:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5E732070A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 18:15:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oFtAxf5z"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 65EC6206E9
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=linaro.org
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="tKZgTR5H"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org E5E732070A
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=devicetree-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbgDLSPJ (ORCPT
+        id S1727490AbgDLSPG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Apr 2020 14:15:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:41438 "EHLO
+        Sun, 12 Apr 2020 14:15:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:41434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727518AbgDLSPH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Apr 2020 14:15:07 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 373E7C0A3BF5
-        for <devicetree@vger.kernel.org>; Sun, 12 Apr 2020 11:08:19 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id x4so7549065wmj.1
-        for <devicetree@vger.kernel.org>; Sun, 12 Apr 2020 11:08:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=G7A0r4JUqARkX7IMofNwZ/y7BM8uD5N9xl0sjaTO+x0=;
-        b=oFtAxf5znxgMMF5tE9ElyDpRsBD1PKKsrBEr2EHxMRHROtoDRoVrk/ry3nlcb/0gkZ
-         Gpcn1e5K87YWpebCzcHUbAw/tsCIodFRF2JjZxerAtkLRljbE68u3DD4GxajSLx2/+nd
-         Vs7i0U7yCxXPKXF0Hy3M1lTjHPa91aMYnILn+tNpF0J/H46p6qj2MVZe+3lH32KWjFhS
-         VpId7an3Q7d1bYIoOhqqSjWPXiw7oCe1G3SGGjEspApu1SaWdaV/25C7ne0evA8IWlKW
-         v9IXrlBr8rnP4qdrxCSZhE3+3ttDYP/IfMMPj3DcwsT6bcZzTGjD2wbGjh3poIsUi2cH
-         DsZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=G7A0r4JUqARkX7IMofNwZ/y7BM8uD5N9xl0sjaTO+x0=;
-        b=btmfvnXVPdcU0ubbQNp/30XsPclD/kTJtPhjlAtb3RVB+p7NKtbhpKrACLWvbOtDmj
-         FmWLyebpNaNukJEEDzEnH46wlxo5hnM8Qxh29Cy7poBJYN7LnsY6R8PQIaLLHKyq8u8u
-         u8uo3khTM5r3nRHn+tMm9KlHOWHI2xYBwAzv0kWuWKdvucZk+oJcfC71PvkYWm8P6xyN
-         BdiQoKXJnG+vHPpVjVJRoDGY1bxthBPVVoom6dEpMgbcbaLfGfxMIrYX7LB9B8GJIF3r
-         Cen7w8WokHpQQFe3dxML4G5pv2y4CWa8ufRcNc3SmRWvRWOeSWerYPHUQNrkO9HVyEru
-         nAfg==
-X-Gm-Message-State: AGi0PuayIoskEAzZl9j/bRgmq0rbB1Y1GxHPpTMMy29ULIEvmP3dMWnv
-        CPuayolnIElxlH0ZxRO7FPuncA==
-X-Google-Smtp-Source: APiQypKwHr3lRwcD+BBa7YFbVWW5NXzsQ9QvJh3397D/+e7rwwlz8dnW3xv5Lz9TfQ3dm5zbLeR5Kg==
-X-Received: by 2002:a1c:9e43:: with SMTP id h64mr12221022wme.0.1586714897600;
-        Sun, 12 Apr 2020 11:08:17 -0700 (PDT)
-Received: from [192.168.0.41] (lns-bzn-59-82-252-135-148.adsl.proxad.net. [82.252.135.148])
-        by smtp.googlemail.com with ESMTPSA id n131sm11216077wmf.35.2020.04.12.11.08.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Apr 2020 11:08:17 -0700 (PDT)
-Subject: Re: [PATCH 2/4] dt-bindings: thermal: Add the idle cooling device
-To:     Rob Herring <robh@kernel.org>
-Cc:     rafael@kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200329220324.8785-1-daniel.lezcano@linaro.org>
- <20200329220324.8785-2-daniel.lezcano@linaro.org>
- <20200410165915.GA12708@bogus>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <4ca7b16f-c0b0-23c3-08a3-8731c2bf5f35@linaro.org>
-Date:   Sun, 12 Apr 2020 20:08:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200410165915.GA12708@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        with ESMTP id S1727233AbgDLSPF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Apr 2020 14:15:05 -0400
+X-Greylist: delayed 313 seconds by postgrey-1.27 at vger.kernel.org; Sun, 12 Apr 2020 14:15:05 EDT
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C03DAC0A88B8;
+        Sun, 12 Apr 2020 11:09:58 -0700 (PDT)
+Received: from localhost.localdomain (unknown [157.50.0.25])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E80E4206E9;
+        Sun, 12 Apr 2020 18:09:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586714998;
+        bh=BUxT5IqaNvB9TgDMR7VN/qHcX2xgt0z3BHmRoAVi8ac=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tKZgTR5H9n/+i9uvei5y+H4cpl7/P9LBuQV/mbHcvLwYjnhiUvBzUgKziqmln0BMf
+         WMtSvMLCAXeyZryxOSU5YTztOHiOm75PVTsi6C8yxESQTxhFRuDVfYk9Uf0/68c/DM
+         B+ujRUPVFg89VKeOKHTM6wPiy+vAQohRPyOCk3b0=
+From:   mani@kernel.org
+To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
+Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <mani@kernel.org>
+Subject: [PATCH 1/2] dt-bindings: serial: Add binding for software flow control in STM32 UART
+Date:   Sun, 12 Apr 2020 23:39:22 +0530
+Message-Id: <20200412180923.30774-2-mani@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200412180923.30774-1-mani@kernel.org>
+References: <20200412180923.30774-1-mani@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Manivannan Sadhasivam <mani@kernel.org>
 
-Hi Rob,
+Add devicetree binding for software flow control in STM32 UART
+controller. While at it, let's also fix one schema error reported by
+`make dtbs_check`.
 
-thanks for the review.
+Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+---
 
-On 10/04/2020 18:59, Rob Herring wrote:
-> On Mon, Mar 30, 2020 at 12:03:18AM +0200, Daniel Lezcano wrote:
+Rob: Still the `dtbs_check` validation fails. This is due to the
+`linux,rs485-enabled-at-boot-time` property. I don't have any idea on how
+to fix this.
 
-[ ... ]
+ .../devicetree/bindings/serial/st,stm32-uart.yaml | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
->> +   '#cooling-cells':
->> +      const: 2
->> +      description: |
->> +         Must be 2, in order to specify minimum and maximum cooling state used in
->> +         the cooling-maps reference. The first cell is the minimum cooling state
->> +         and the second cell is the maximum cooling state requested.
->> +
->> +   duration:
->> +      $ref: /schemas/types.yaml#/definitions/uint32
->> +      description: |
->> +         The idle duration in microsecond the device begins to cool down.
->> +
->> +   latency:
->> +      $ref: /schemas/types.yaml#/definitions/uint32
->> +      description: |
->> +         The exit latency constraint in microsecond for the injected
->> +         idle state for the device.
-> 
-> Both of these should have unit suffix. And then they don't need a type 
-> def.
-
-Do you mean I should remove the $ref:
-/schemas/types.yaml#/definitions/uint32 and change the name to
-duration_us and latency_us ?
-
-[ ... ]
-
-
+diff --git a/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml b/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
+index 238c44192d31..ea5797a1b403 100644
+--- a/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
++++ b/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
+@@ -38,13 +38,26 @@ properties:
+     description: enable hardware flow control
+     $ref: /schemas/types.yaml#/definitions/flag
+ 
++  st,sw-flow-ctrl:
++    description: enable software flow control
++    $ref: /schemas/types.yaml#/definitions/flag
++
++  rts-gpios:
++    description: RTS pin used if st,sw-flow-ctrl is true
++    maxItems: 1
++
++  cts-gpios:
++    description: CTS pin used if st,sw-flow-ctrl is true
++    maxItems: 1
++
+   dmas:
+     minItems: 1
+     maxItems: 2
+ 
+   dma-names:
+     items:
+-      enum: [ rx, tx ]
++      - const: rx
++      - const: tx
+     minItems: 1
+     maxItems: 2
+ 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.17.1
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
