@@ -2,136 +2,94 @@ Return-Path: <SRS0=a8L4=54=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A47C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 11:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DFDC2BB86
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 11:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F18AB20708
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 11:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69E5220732
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 11:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586690922;
-	bh=A/TM2oZuIWL2EcklHfwd3IM6ORspyJc0stBXtKjtBtQ=;
+	s=default; t=1586692087;
+	bh=Cq2x5fenTwfIajDDtRYq+QYOfzEBDEJNTS6/wFH0wnA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=a2QKjwPc8/P8kUUf1B8yBVF7u4y2BznVRv9Y5Gbp42KcD+zpbwSXqeS9eetJZd53O
-	 6Wnx77rPc2XTlRdRJws02IHPwdtFf0jwuiEjvqlLIArxFRyVApl8yUEOiZj8wFqWbZ
-	 feCq+JyE9jzaMKgSn+/1eiu04JvmaRvk7vqgz7pQ=
+	b=2ENP6qlAWj7Q6nSB0LD40zVk5zwx7av4nDhWQW+zt4itmzRLkzEBxkLuwY3RjtSl6
+	 SMWD0bJznZUQ8l89Gf9t9uBnpI5GXtJtsJ/U7ZyfWxwKM2k+3mcg9qb0CD/8nYqOde
+	 mJ8a5VKKjR/EkjHoTJ2vREGfQU1BTzk1WzOXAQeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbgDLL2l (ORCPT
+        id S1726689AbgDLLsG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Apr 2020 07:28:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58088 "EHLO mail.kernel.org"
+        Sun, 12 Apr 2020 07:48:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726658AbgDLL2k (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 12 Apr 2020 07:28:40 -0400
+        id S1726139AbgDLLsG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 12 Apr 2020 07:48:06 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91102206E9;
-        Sun, 12 Apr 2020 11:28:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3806A20708;
+        Sun, 12 Apr 2020 11:48:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586690920;
-        bh=A/TM2oZuIWL2EcklHfwd3IM6ORspyJc0stBXtKjtBtQ=;
+        s=default; t=1586692086;
+        bh=Cq2x5fenTwfIajDDtRYq+QYOfzEBDEJNTS6/wFH0wnA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mjSBtzPdfD5aLHkxChC+xIurPEkwhk6c8vyItlQkRMN3s1SKoXc/TQl98/wLX7vIV
-         /RvUnWHx72Bw43ZtJGMnlJ+xHCQAWVocGyuSg6nBBhP5NuGtwg1AQWxTZIrmG1vBFM
-         +134sAzDi5k5DYt+DYnr8paJwxvNWI0j/fPF/DPI=
-Date:   Sun, 12 Apr 2020 12:28:35 +0100
+        b=KVBq1lBxrAB/gZLRyJXUWeDqee/ghOkTfyDneKfrEmlpaklywyjIH+axiQNG6ekmo
+         ctyLi2ve9WG82jsaWSQAAxZ+eDojz1vbWbFgvcZZWA2nAeTpn86p03k1yrLiKbjrJn
+         zhC0xlxCrVz3/XefEAVqql9vK2JrD94lMWI/r+lI=
+Date:   Sun, 12 Apr 2020 12:48:01 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>
-Cc:     Tomas Novotny <tomas@novotny.cz>, Hartmut Knaack <knaack.h@gmx.de>,
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "Sa, Nuno" <Nuno.Sa@analog.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Nishant Malpani <nish.malpani25@gmail.com>
-Subject: Re: [PATCH v4 2/5] dt-bindings: iio: Introduce common properties
- for iio sensors
-Message-ID: <20200412122835.15f82420@archlinux>
-In-Reply-To: <8b91f0b7fa76ca4b2f3cdc251411829f71f8d810.1586094535.git.agx@sigxcpu.org>
-References: <cover.1586094535.git.agx@sigxcpu.org>
-        <8b91f0b7fa76ca4b2f3cdc251411829f71f8d810.1586094535.git.agx@sigxcpu.org>
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>
+Subject: Re: [PATCH v4 5/6] iio: imu: Add support for adis16475
+Message-ID: <20200412124801.2a80b067@archlinux>
+In-Reply-To: <CAHp75VcOxjnNRetQxUR=8Z-WA=V6rzAFwCfhjNCmjQE3hgAEEA@mail.gmail.com>
+References: <20200406150846.878-1-nuno.sa@analog.com>
+        <20200406150846.878-6-nuno.sa@analog.com>
+        <CAHp75VeK8K0WHK3gDwyT3ZAaMaVdfZ5xVG94JY4O8fd2U0HEHg@mail.gmail.com>
+        <BN6PR03MB33476ECFB3F8454CC6C67F0E99C30@BN6PR03MB3347.namprd03.prod.outlook.com>
+        <CAHp75VcOxjnNRetQxUR=8Z-WA=V6rzAFwCfhjNCmjQE3hgAEEA@mail.gmail.com>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun,  5 Apr 2020 15:50:29 +0200
-Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
 
-> Introduce a file for common properties of iio sensors. So far this
-> contains the new proximity-near-level property for proximity sensors
-> that indicates when an object should be considered near.
->=20
-> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
-This works for me. However, I would like to give time for Rob and
-others to comment on the syntax, naming etc of this file.
 
-Thanks,
+> ...
+> 
+> > > > +                       if (scaled_out_freq < 1900 || scaled_out_freq > 2100) {
+> > > > +                               dev_err(dev,
+> > > > +                                       "Invalid value:%u for adi,scaled-output-hz",
+> > > > +                                       scaled_out_freq);  
+> > >
+> > > When there is no property or property has a value 0 this message can't
+> > > tell the difference.
+> > > Perhaps you have to check return code from device_property_read_u32()
+> > > call.
+> > >  
+> >
+> > Well, I think we don't really need to. If the sync mode is scaled, then this property is mandatory
+> > (and this is stated in the bindings). So, I don't really care if the property is not there or if it's just
+> > a wrong value. We should fail either way and I'm not sure an extra if with some other message will
+> > give us that extra value...  
+> 
+> Up to maintainer (I have no strong opinion about this)
 
-Jonathan
-
-> ---
->  .../devicetree/bindings/iio/common.yaml       | 35 +++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/common.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/common.yaml b/Document=
-ation/devicetree/bindings/iio/common.yaml
-> new file mode 100644
-> index 000000000000..97ffcb77043d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/common.yaml
-> @@ -0,0 +1,35 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/common.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Common properties for iio sensors
-> +
-> +maintainers:
-> +  - Jonathan Cameron <jic23@kernel.org>
-> +  - Guido G=C3=BCnther <agx@sigxcpu.org>
-> +
-> +description: |
-> +  This document defines device tree properties common to several iio
-> +  sensors. It doesn't constitue a device tree binding specification by i=
-tself but
-> +  is meant to be referenced by device tree bindings.
-> +
-> +  When referenced from sensor tree bindings the properties defined in th=
-is
-> +  document are defined as follows. The sensor tree bindings are responsi=
-ble for
-> +  defining whether each property is required or optional.
-> +
-> +properties:
-> +  proximity-near-level:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      For proximity sensors whether an object can be considered near to =
-the
-> +      device depends on parameters like sensor position, covering glass =
-and
-> +      aperture. This value gives an indication to userspace for which
-> +      sensor readings this is the case.
-> +
-> +      Raw proximity values equal or above this level should be
-> +      considered 'near' to the device (an object is near to the
-> +      sensor).
-> +
-> +...
+Nice to give a hint to the user about the two different cases so I'd check the
+return value as Andy first suggested.
 
