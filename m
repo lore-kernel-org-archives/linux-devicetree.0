@@ -2,311 +2,133 @@ Return-Path: <SRS0=a8L4=54=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FDBC2BB55
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBF9C2BA2B
 	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 18:15:19 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14C8520776
+	by mail.kernel.org (Postfix) with ESMTP id 65EC6206E9
 	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 18:15:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="SyBPTZnF"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 14C8520776
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oFtAxf5z"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 65EC6206E9
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=linaro.org
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=devicetree-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbgDLSPJ (ORCPT
+        id S1727519AbgDLSPJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Sun, 12 Apr 2020 14:15:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:41442 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:41438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727474AbgDLSPG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Apr 2020 14:15:06 -0400
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 653DAC008749;
-        Sun, 12 Apr 2020 11:10:04 -0700 (PDT)
-Received: from localhost.localdomain (unknown [157.50.0.25])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77BF8206DA;
-        Sun, 12 Apr 2020 18:09:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586715004;
-        bh=A+Q5c8ZprAFrfX84bhRceoLh8P6URdK3TI6udATXaeU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SyBPTZnFOwIDwpsYtkOw7Qy+ac1zBbq9NVN381s6JiZJBtWE6ghCNgedOeQijthQi
-         sVXQJBFdHR75itQlQoFAaNMoqlKkJvIL16yAE01TgViQcPVxKxDT0J5rb+S1oDh9Dw
-         jM5oOyqjSUWE7WCoBYS81KvmYFw6NvPSzXKYF5nQ=
-From:   mani@kernel.org
-To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
-Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <mani@kernel.org>
-Subject: [PATCH 2/2] tty: serial: Add software flow control support for STM32 USART
-Date:   Sun, 12 Apr 2020 23:39:23 +0530
-Message-Id: <20200412180923.30774-3-mani@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200412180923.30774-1-mani@kernel.org>
-References: <20200412180923.30774-1-mani@kernel.org>
+        with ESMTP id S1727518AbgDLSPH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Apr 2020 14:15:07 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 373E7C0A3BF5
+        for <devicetree@vger.kernel.org>; Sun, 12 Apr 2020 11:08:19 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id x4so7549065wmj.1
+        for <devicetree@vger.kernel.org>; Sun, 12 Apr 2020 11:08:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=G7A0r4JUqARkX7IMofNwZ/y7BM8uD5N9xl0sjaTO+x0=;
+        b=oFtAxf5znxgMMF5tE9ElyDpRsBD1PKKsrBEr2EHxMRHROtoDRoVrk/ry3nlcb/0gkZ
+         Gpcn1e5K87YWpebCzcHUbAw/tsCIodFRF2JjZxerAtkLRljbE68u3DD4GxajSLx2/+nd
+         Vs7i0U7yCxXPKXF0Hy3M1lTjHPa91aMYnILn+tNpF0J/H46p6qj2MVZe+3lH32KWjFhS
+         VpId7an3Q7d1bYIoOhqqSjWPXiw7oCe1G3SGGjEspApu1SaWdaV/25C7ne0evA8IWlKW
+         v9IXrlBr8rnP4qdrxCSZhE3+3ttDYP/IfMMPj3DcwsT6bcZzTGjD2wbGjh3poIsUi2cH
+         DsZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=G7A0r4JUqARkX7IMofNwZ/y7BM8uD5N9xl0sjaTO+x0=;
+        b=btmfvnXVPdcU0ubbQNp/30XsPclD/kTJtPhjlAtb3RVB+p7NKtbhpKrACLWvbOtDmj
+         FmWLyebpNaNukJEEDzEnH46wlxo5hnM8Qxh29Cy7poBJYN7LnsY6R8PQIaLLHKyq8u8u
+         u8uo3khTM5r3nRHn+tMm9KlHOWHI2xYBwAzv0kWuWKdvucZk+oJcfC71PvkYWm8P6xyN
+         BdiQoKXJnG+vHPpVjVJRoDGY1bxthBPVVoom6dEpMgbcbaLfGfxMIrYX7LB9B8GJIF3r
+         Cen7w8WokHpQQFe3dxML4G5pv2y4CWa8ufRcNc3SmRWvRWOeSWerYPHUQNrkO9HVyEru
+         nAfg==
+X-Gm-Message-State: AGi0PuayIoskEAzZl9j/bRgmq0rbB1Y1GxHPpTMMy29ULIEvmP3dMWnv
+        CPuayolnIElxlH0ZxRO7FPuncA==
+X-Google-Smtp-Source: APiQypKwHr3lRwcD+BBa7YFbVWW5NXzsQ9QvJh3397D/+e7rwwlz8dnW3xv5Lz9TfQ3dm5zbLeR5Kg==
+X-Received: by 2002:a1c:9e43:: with SMTP id h64mr12221022wme.0.1586714897600;
+        Sun, 12 Apr 2020 11:08:17 -0700 (PDT)
+Received: from [192.168.0.41] (lns-bzn-59-82-252-135-148.adsl.proxad.net. [82.252.135.148])
+        by smtp.googlemail.com with ESMTPSA id n131sm11216077wmf.35.2020.04.12.11.08.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 12 Apr 2020 11:08:17 -0700 (PDT)
+Subject: Re: [PATCH 2/4] dt-bindings: thermal: Add the idle cooling device
+To:     Rob Herring <robh@kernel.org>
+Cc:     rafael@kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200329220324.8785-1-daniel.lezcano@linaro.org>
+ <20200329220324.8785-2-daniel.lezcano@linaro.org>
+ <20200410165915.GA12708@bogus>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <4ca7b16f-c0b0-23c3-08a3-8731c2bf5f35@linaro.org>
+Date:   Sun, 12 Apr 2020 20:08:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200410165915.GA12708@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Manivannan Sadhasivam <mani@kernel.org>
 
-Add software flow control support for STM32 USART controller. This could
-be useful when the hardware RTS/CTS pins are not available in the
-design.
+Hi Rob,
 
-Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
----
- drivers/tty/serial/stm32-usart.c | 143 +++++++++++++++++++++++++++++--
- drivers/tty/serial/stm32-usart.h |   4 +
- 2 files changed, 141 insertions(+), 6 deletions(-)
+thanks for the review.
 
-diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index 5e93e8d40f59..f8adc108ae19 100644
---- a/drivers/tty/serial/stm32-usart.c
-+++ b/drivers/tty/serial/stm32-usart.c
-@@ -19,6 +19,7 @@
- #include <linux/irq.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/of_gpio.h>
- #include <linux/of_platform.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
-@@ -94,6 +95,20 @@ static void stm32_config_reg_rs485(u32 *cr1, u32 *cr3, u32 delay_ADE,
- 	*cr1 |= rs485_deat_dedt;
- }
- 
-+static irqreturn_t stm32_cts_handler(int irq, void *dev_id)
-+{
-+	struct stm32_port *stm32port = (struct stm32_port *)dev_id;
-+	struct uart_port *port = &stm32port->port;
-+
-+	spin_lock(&port->lock);
-+	if (gpio_is_valid(stm32port->cts_gpio) && stm32port->ms_enabled)
-+		uart_handle_cts_change(port,
-+				!gpio_get_value(stm32port->cts_gpio));
-+	spin_unlock(&port->lock);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static int stm32_config_rs485(struct uart_port *port,
- 			      struct serial_rs485 *rs485conf)
- {
-@@ -506,16 +521,39 @@ static void stm32_set_mctrl(struct uart_port *port, unsigned int mctrl)
- 	struct stm32_port *stm32_port = to_stm32_port(port);
- 	struct stm32_usart_offsets *ofs = &stm32_port->info->ofs;
- 
--	if ((mctrl & TIOCM_RTS) && (port->status & UPSTAT_AUTORTS))
--		stm32_set_bits(port, ofs->cr3, USART_CR3_RTSE);
--	else
--		stm32_clr_bits(port, ofs->cr3, USART_CR3_RTSE);
-+	if (stm32_port->hw_flow_control) {
-+		if ((mctrl & TIOCM_RTS) && (port->status & UPSTAT_AUTORTS))
-+			stm32_set_bits(port, ofs->cr3, USART_CR3_RTSE);
-+		else
-+			stm32_clr_bits(port, ofs->cr3, USART_CR3_RTSE);
-+	} else if (stm32_port->sw_flow_control) {
-+		if ((mctrl & TIOCM_RTS))
-+			gpio_set_value(stm32_port->rts_gpio, 0);
-+		else
-+			gpio_set_value(stm32_port->rts_gpio, 1);
-+	}
- }
- 
-+/* This routine is used to get signals of: DCD, DSR, RI, and CTS */
- static unsigned int stm32_get_mctrl(struct uart_port *port)
- {
--	/* This routine is used to get signals of: DCD, DSR, RI, and CTS */
-+	struct stm32_port *stm32_port = to_stm32_port(port);
-+
-+	if (!stm32_port->ms_enabled)
-+		goto cts_asserted;
-+
-+	if (stm32_port->sw_flow_control) {
-+		if (!gpio_get_value(stm32_port->cts_gpio))
-+			goto cts_asserted;
-+		else
-+			goto cts_deasserted;
-+	}
-+
-+cts_asserted:
- 	return TIOCM_CAR | TIOCM_DSR | TIOCM_CTS;
-+
-+cts_deasserted:
-+	return TIOCM_CAR | TIOCM_DSR;
- }
- 
- /* Transmit stop */
-@@ -582,6 +620,28 @@ static void stm32_break_ctl(struct uart_port *port, int break_state)
- {
- }
- 
-+static void stm32_enable_ms(struct uart_port *port)
-+{
-+	struct stm32_port *stm32_port = to_stm32_port(port);
-+
-+	if (!stm32_port->sw_flow_control)
-+		return;
-+
-+	stm32_port->ms_enabled = true;
-+	enable_irq(gpio_to_irq(stm32_port->cts_gpio));
-+}
-+
-+static void stm32_disable_ms(struct uart_port *port)
-+{
-+	struct stm32_port *stm32_port = to_stm32_port(port);
-+
-+	if (!stm32_port->sw_flow_control)
-+		return;
-+
-+	stm32_port->ms_enabled = false;
-+	disable_irq(gpio_to_irq(stm32_port->cts_gpio));
-+}
-+
- static int stm32_startup(struct uart_port *port)
- {
- 	struct stm32_port *stm32_port = to_stm32_port(port);
-@@ -615,6 +675,19 @@ static int stm32_startup(struct uart_port *port)
- 		val |= USART_CR1_FIFOEN;
- 	stm32_set_bits(port, ofs->cr1, val);
- 
-+	stm32_port->ms_enabled = false;
-+	if (stm32_port->sw_flow_control) {
-+		irq_modify_status(gpio_to_irq(stm32_port->cts_gpio),
-+				  IRQ_NOREQUEST, IRQ_NOAUTOEN);
-+		ret = request_irq(gpio_to_irq(stm32_port->cts_gpio),
-+			stm32_cts_handler, IRQF_TRIGGER_FALLING |
-+			IRQF_TRIGGER_RISING, "stm32_cts_irq", stm32_port);
-+		if (ret != 0) {
-+			dev_err(port->dev, "request gpio irq fail\n");
-+			return ret;
-+		}
-+	}
-+
- 	return 0;
- }
- 
-@@ -642,6 +715,14 @@ static void stm32_shutdown(struct uart_port *port)
- 	stm32_clr_bits(port, ofs->cr1, val);
- 
- 	free_irq(port->irq, port);
-+
-+	if (stm32_port->ms_enabled)
-+		stm32_disable_ms(port);
-+
-+	if (stm32_port->sw_flow_control) {
-+		gpio_set_value(stm32_port->rts_gpio, 1);
-+		free_irq(gpio_to_irq(stm32_port->cts_gpio), stm32_port);
-+	}
- }
- 
- static unsigned int stm32_get_databits(struct ktermios *termios)
-@@ -812,6 +893,14 @@ static void stm32_set_termios(struct uart_port *port, struct ktermios *termios,
- 	if ((termios->c_cflag & CREAD) == 0)
- 		port->ignore_status_mask |= USART_SR_DUMMY_RX;
- 
-+	if (UART_ENABLE_MS(port, termios->c_cflag)) {
-+		if (!stm32_port->ms_enabled)
-+			stm32_enable_ms(port);
-+	} else {
-+		if (stm32_port->ms_enabled)
-+			stm32_disable_ms(port);
-+	}
-+
- 	if (stm32_port->rx_ch)
- 		cr3 |= USART_CR3_DMAR;
- 
-@@ -898,6 +987,7 @@ static const struct uart_ops stm32_uart_ops = {
- 	.throttle	= stm32_throttle,
- 	.unthrottle	= stm32_unthrottle,
- 	.stop_rx	= stm32_stop_rx,
-+	.enable_ms	= stm32_enable_ms,
- 	.break_ctl	= stm32_break_ctl,
- 	.startup	= stm32_startup,
- 	.shutdown	= stm32_shutdown,
-@@ -970,7 +1060,7 @@ static int stm32_init_port(struct stm32_port *stm32port,
- static struct stm32_port *stm32_of_get_stm32_port(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
--	int id;
-+	int id, ret;
- 
- 	if (!np)
- 		return NULL;
-@@ -990,6 +1080,47 @@ static struct stm32_port *stm32_of_get_stm32_port(struct platform_device *pdev)
- 	stm32_ports[id].cr1_irq = USART_CR1_RXNEIE;
- 	stm32_ports[id].cr3_irq = 0;
- 	stm32_ports[id].last_res = RX_BUF_L;
-+
-+	stm32_ports[id].sw_flow_control = of_property_read_bool(np,
-+							"st,sw-flow-ctrl");
-+	if (stm32_ports[id].sw_flow_control) {
-+		if (of_find_property(np, "cts-gpios", NULL))
-+			stm32_ports[id].cts_gpio =
-+				of_get_named_gpio(np, "cts-gpios", 0);
-+		else
-+			stm32_ports[id].cts_gpio = -1;
-+
-+		if (of_find_property(np, "rts-gpios", NULL))
-+			stm32_ports[id].rts_gpio =
-+				of_get_named_gpio(np, "rts-gpios", 0);
-+		else
-+			stm32_ports[id].rts_gpio = -1;
-+
-+		if ((!gpio_is_valid(stm32_ports[id].cts_gpio)) ||
-+			(!gpio_is_valid(stm32_ports[id].rts_gpio))) {
-+				dev_err(&pdev->dev,
-+					"SW flow control must have cts and rts gpio");
-+				return NULL;
-+		}
-+
-+		ret = devm_gpio_request(&pdev->dev, stm32_ports[id].cts_gpio,
-+				"st-cts-gpio");
-+		if (ret) {
-+			dev_err(&pdev->dev, "Unable request cts gpio");
-+			return NULL;
-+		}
-+
-+		gpio_direction_input(stm32_ports[id].cts_gpio);
-+		ret = devm_gpio_request(&pdev->dev, stm32_ports[id].rts_gpio,
-+				"st-rts-gpio");
-+		if (ret) {
-+			dev_err(&pdev->dev, "Unable request rts gpio");
-+			return NULL;
-+		}
-+
-+		gpio_direction_output(stm32_ports[id].rts_gpio, 1);
-+	}
-+
- 	return &stm32_ports[id];
- }
- 
-diff --git a/drivers/tty/serial/stm32-usart.h b/drivers/tty/serial/stm32-usart.h
-index a175c1094dc8..87b30f514e15 100644
---- a/drivers/tty/serial/stm32-usart.h
-+++ b/drivers/tty/serial/stm32-usart.h
-@@ -274,6 +274,10 @@ struct stm32_port {
- 	bool fifoen;
- 	int wakeirq;
- 	int rdr_mask;		/* receive data register mask */
-+	bool sw_flow_control;
-+	unsigned int cts_gpio;
-+	unsigned int rts_gpio;
-+	bool ms_enabled;
- };
- 
- static struct stm32_port stm32_ports[STM32_MAX_PORTS];
+On 10/04/2020 18:59, Rob Herring wrote:
+> On Mon, Mar 30, 2020 at 12:03:18AM +0200, Daniel Lezcano wrote:
+
+[ ... ]
+
+>> +   '#cooling-cells':
+>> +      const: 2
+>> +      description: |
+>> +         Must be 2, in order to specify minimum and maximum cooling state used in
+>> +         the cooling-maps reference. The first cell is the minimum cooling state
+>> +         and the second cell is the maximum cooling state requested.
+>> +
+>> +   duration:
+>> +      $ref: /schemas/types.yaml#/definitions/uint32
+>> +      description: |
+>> +         The idle duration in microsecond the device begins to cool down.
+>> +
+>> +   latency:
+>> +      $ref: /schemas/types.yaml#/definitions/uint32
+>> +      description: |
+>> +         The exit latency constraint in microsecond for the injected
+>> +         idle state for the device.
+> 
+> Both of these should have unit suffix. And then they don't need a type 
+> def.
+
+Do you mean I should remove the $ref:
+/schemas/types.yaml#/definitions/uint32 and change the name to
+duration_us and latency_us ?
+
+[ ... ]
+
+
 -- 
-2.17.1
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
