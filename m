@@ -2,64 +2,65 @@ Return-Path: <SRS0=a8L4=54=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84827C2D0EC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E53F3C352B6
 	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 18:30:11 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC4920692
+	by mail.kernel.org (Postfix) with ESMTP id B931F2073E
 	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 18:30:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ROGEJ/Ca"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 5BC4920692
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hipBb+D/"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org B931F2073E
 Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=devicetree-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbgDLSaH (ORCPT
+        id S1727572AbgDLSaH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Sun, 12 Apr 2020 14:30:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:43938 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:43936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727562AbgDLSaH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Apr 2020 14:30:07 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EA78C0A3BF2;
-        Sun, 12 Apr 2020 11:20:22 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id 198so4990415lfo.7;
-        Sun, 12 Apr 2020 11:20:22 -0700 (PDT)
+        with ESMTP id S1727561AbgDLSaG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Apr 2020 14:30:06 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36A05C008778;
+        Sun, 12 Apr 2020 11:20:26 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id k21so6789590ljh.2;
+        Sun, 12 Apr 2020 11:20:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tY4gV3mbBh6YlZ2Mos/NaX4/rY14UmtFD7+t3Jb3dMw=;
-        b=ROGEJ/CaGdsXBF+PbMesBFoHnpYqw7ZVM6SOtq5GVNwVH7JNVbYjZLzv1ohpJM5FKi
-         9yji4QogiO9wbeUziw3EMOSYGKDXOyQSuxnXSkto+8bG4DRbKQ9+kRMivEUZnc8Q41vj
-         GW+0MfxC5jUQX0SOEmjR7I9I57AVGTbYZEERr17C44weIY/7oc6XSfrJZYiHq+qPxkgm
-         MY0XEfA7eiuPrSoRWtWrIJHVaAACeP/rdLUMOSzIsppr8S9ACK4KdOp5t00VwhaYAxvG
-         vLWCdoJOe0/vqTEvmyYBmkEN0O2qtTmQ3g5EYShAMySr+h1z6SNs7YkoiBOoqp+VLysR
-         wCPA==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=did1T2/HwLMbYWYOlmzUGj6USB2Yk/B/7FfjOftQ9s8=;
+        b=hipBb+D/jP/qEHd5BxbwYSODqx8BortuRIMkzRERp+XNGiT4yk7To7/dmj1lelc1as
+         +0NSQvV64w2t/PnzKb1LJ3XbFzahoqefh/RWPrxsSegizIkWgg36JQCN7Pzo1nK5cvN0
+         lJGNzou6X3se3VQTxHXXbePUXVNBOzKlaBO7QS8ktk7UZG46dTbDykrRvVjsRkLAqgvJ
+         nurSgm8718ek6yzWafK9i7ZgFVeXqFJyZ81gy03GMLVQhUJHCwpBjnj6wwSdxV6cn8Pu
+         EsR5rTAsyO+knJtNRCnAFVxaQC0KxbtqlP0eGap3QBlcASp7GH3XKhXAjIACUV/Pci/X
+         cG2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=tY4gV3mbBh6YlZ2Mos/NaX4/rY14UmtFD7+t3Jb3dMw=;
-        b=bsrFWwtYiZEPWhv2M/LC9J0Ue+Pg4+T4DdgKT5PBbEJoinbqM/wElgjlmMWb63bvYO
-         GTnkqKCy/XAjKgRbBySXpk4Vm4+50UsTP8k4qvwZ8d53qf1U7RvJXVMrofHjDTumEJ9I
-         P5k1vaun5EaSufRUAdrwzREvFHIkCuqbqOuPclnAVC6CoRrkzJFxWyL+XwDKAz83Ybi6
-         48kbqEggdJD2GsB6cTUmhfiYr1zMxRrOsp01cB5yX5Nld5UvGJp53Th3rFtQP00YkKqr
-         VwkZj+ljOCbjT8EkNVtel9beCnq/cNSC5ZQ0ePvzqdLzOGA2uXvWKwQfb4Yl8zxkNluP
-         7Q2g==
-X-Gm-Message-State: AGi0PuZcz0KGTkIeH8eMyxSb99zbbYs9wtVyNyzh8+bavR2M1u7blexB
-        Y0FTzLZv/o2+pMHXi4RjpeP0j8w3ni8=
-X-Google-Smtp-Source: APiQypIxqPYcw7sG0yOL2g9KSN6dtoshvVOHq2rXNtGX+hzY3j3+hLYI18RMgDenrT3GLFgvbP7kjQ==
-X-Received: by 2002:a05:6512:1c5:: with SMTP id f5mr8183363lfp.138.1586715620757;
-        Sun, 12 Apr 2020 11:20:20 -0700 (PDT)
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=did1T2/HwLMbYWYOlmzUGj6USB2Yk/B/7FfjOftQ9s8=;
+        b=gqenxPtsgrVf+7cDgUvJRSYBykZox9GQcxSgrqgWMq2rHG5hQ3vld0g0QT1CJpYZNs
+         jlyzJI8LvdPxEMVPvgM6Jzua7cdEcs+PbUdhunVB3YqKImMxY34XiV7Ky9e5aFETeXup
+         hayTDMatHXjPNZImEyoXWhsh59m0z92qTu453ATRa/Y8mEbqJ8c6m4APNCGazw7mwNCy
+         wvxBeVz9SmCLgTQlBbpvcPhhIr5mOQgsnizv8QqlJtoic8twIVfKEXK6wI5+6f6zZkuR
+         h3tFkpQoTuvrdssRIS/13yxbIerGol3tE9mVqGKIukNEhaF4Uj1CldJuHjMw45AndQzJ
+         lHGw==
+X-Gm-Message-State: AGi0PuaVHQ7AK4XScHG5Fp2d4pn3anaeKq6ow7iHEpgwOls4JIBXqg3c
+        EFKKIP1e8NTcJ7uxpNto5l5whAEilMQ=
+X-Google-Smtp-Source: APiQypLW6zIR1umbR/uxwiVl6Mu1txVZ1wgbVD7efr/eOYIQSegWjWS1ZWxFJ0MQHCvZ9C0SrDDCRg==
+X-Received: by 2002:a2e:7d09:: with SMTP id y9mr8491929ljc.146.1586715624424;
+        Sun, 12 Apr 2020 11:20:24 -0700 (PDT)
 Received: from saturn.lan (18.158-248-194.customer.lyse.net. [158.248.194.18])
-        by smtp.gmail.com with ESMTPSA id m13sm6434394lfk.12.2020.04.12.11.20.19
+        by smtp.gmail.com with ESMTPSA id m13sm6434394lfk.12.2020.04.12.11.20.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Apr 2020 11:20:20 -0700 (PDT)
+        Sun, 12 Apr 2020 11:20:23 -0700 (PDT)
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
         dri-devel@lists.freedesktop.org
@@ -67,11 +68,14 @@ Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Boris Brezillon <bbrezillon@kernel.org>,
         Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH v1 0/4] dt-bindings: DT Schema variants of atmel lcdc, hlcdc
-Date:   Sun, 12 Apr 2020 20:20:08 +0200
-Message-Id: <20200412182012.27515-1-sam@ravnborg.org>
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH v1 3/4] dt-bindings: media: add wiring property to video-interfaces
+Date:   Sun, 12 Apr 2020 20:20:11 +0200
+Message-Id: <20200412182012.27515-4-sam@ravnborg.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200412182012.27515-1-sam@ravnborg.org>
+References: <20200412182012.27515-1-sam@ravnborg.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -79,53 +83,49 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The following four patches update the bindings for Atmel
-LCDC, HLCDC display controllers to DT Schema.
+The wiring property is used to describe the wiring between
+the connector and the panel. The property can be used when the
+wiring is used to change the mode from for example
+BGR to RGB. The first users are the at91sam9 family where
+such a wiring trick is sometimes used.
+The possilbe values are so far limited to what is required
+by the at91sam9 family, but using "text" allows us to extend
+this in the future.
 
-The bindings were re-written in DT Schema format,
-and examples adjusted/updated to fit.
+There exists similar properties today:
+ - display/tilcdc/tilcdc.txt: blue-and-red-wiring
+ - display/atmel,lcdc.txt: atmel,lcd-wiring-mode
 
-This patch-set introduces a new endpoint property in video-interfaces
-used to tell if red and blue wiring is reversed.
-Red and blue wires are reversed as the LCDC IP natively supports BGR
-whereas most SW expects RGB. With the wires reversed the SW thinks
-the IP supports RGB.
-See more details in the changelog of the patch.
+Neither of the above are defined as endpoint properties.
 
-The Atmel lcdc binding deprecate a lot of properties in other
-to update it to an up-to-date binding. There are no users of the
-updated binding, thats something I work on.
+The new property "wiring" has a more general name and
+is defined as an endpoint property.
+It will replace atmel,lcd-wiring-mode and may replace
+blue-and-red-wiring.
 
-Note a big difference between LCDC and HLCDC.
-LCDC has all in one binding (interrupts, pwm, display controller).
-HLCDC has individual sub-nodes for the PWM and the display contoller.
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org
+---
+ Documentation/devicetree/bindings/media/video-interfaces.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-When posting an update on the old atmel,lcdc.txt file the feedback
-was back then that we did not want the split like done for hlcdc.
-And it makes for a simpler binding in this way - so feedback looks right.
-
-Despite that Microchip has purchased Atmel, the atmel name is kept.
-Also the files are placed in a directory named atmel/.
-
-Feedback welcome!
-
-	Sam
-
-Sam Ravnborg (4):
-      dt-bindings: display: convert atmel-hlcdc to DT Schema
-      dt-bindings: display: convert atmel lcdc to DT Schema
-      dt-bindings: media: add wiring property to video-interfaces
-      dt-bindings: display: add port support to atmel lcdc
-
- .../devicetree/bindings/display/atmel,lcdc.txt     |  88 --------
- .../devicetree/bindings/display/atmel/hlcdc-dc.txt |  75 -------
- .../bindings/display/atmel/hlcdc-dc.yaml           | 102 +++++++++
- .../devicetree/bindings/display/atmel/lcdc.yaml    | 229 +++++++++++++++++++++
- .../devicetree/bindings/media/video-interfaces.txt |   3 +
- .../devicetree/bindings/mfd/atmel-hlcdc.txt        |  55 -----
- .../devicetree/bindings/mfd/atmel-hlcdc.yaml       |  78 +++++++
- .../devicetree/bindings/pwm/atmel-hlcdc-pwm.txt    |  29 ---
- .../devicetree/bindings/pwm/atmel-hlcdc-pwm.yaml   |  39 ++++
- 9 files changed, 451 insertions(+), 247 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+index f884ada0bffc..c3bb87c5c9a9 100644
+--- a/Documentation/devicetree/bindings/media/video-interfaces.txt
++++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+@@ -141,6 +141,9 @@ Optional endpoint properties
+ - link-frequencies: Allowed data bus frequencies. For MIPI CSI-2, for
+   instance, this is the actual frequency of the bus, not bits per clock per
+   lane value. An array of 64-bit unsigned integers.
++- wiring: Wiring of data lines to display.
++  "straight" - normal wiring.
++  "red-blue-reversed" - red and blue lines reversed.
+ - lane-polarities: an array of polarities of the lanes starting from the clock
+   lane and followed by the data lanes in the same order as in data-lanes.
+   Valid values are 0 (normal) and 1 (inverted). The length of the array
+-- 
+2.20.1
 
