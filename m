@@ -4,107 +4,134 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F80BC2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 11:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A47C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 11:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC3CE20709
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 11:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F18AB20708
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 11:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586689514;
-	bh=/G9a5N4EsNqKH+T/lms89vJhplOJCs+R8Eje0o+5H/g=;
+	s=default; t=1586690922;
+	bh=A/TM2oZuIWL2EcklHfwd3IM6ORspyJc0stBXtKjtBtQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=C8VzHHWGCvSMhpF7tGlDX/cLEFc1sJe8zuSEpX+tKbcxkZsRb9uxRfUVoljo3E0Xl
-	 aBWxPxrN1VgWmTNXywnZWbGRJGbR0VHRBRwcMPB4s2cTh4rD5r9XrdKa7kgjippXfb
-	 1ZHZNMOcX0/LAIpcRtlKuPGuOCnBpc7AgUTgor5g=
+	b=a2QKjwPc8/P8kUUf1B8yBVF7u4y2BznVRv9Y5Gbp42KcD+zpbwSXqeS9eetJZd53O
+	 6Wnx77rPc2XTlRdRJws02IHPwdtFf0jwuiEjvqlLIArxFRyVApl8yUEOiZj8wFqWbZ
+	 feCq+JyE9jzaMKgSn+/1eiu04JvmaRvk7vqgz7pQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbgDLLFN (ORCPT
+        id S1726689AbgDLL2l (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Apr 2020 07:05:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51848 "EHLO mail.kernel.org"
+        Sun, 12 Apr 2020 07:28:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725909AbgDLLFN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 12 Apr 2020 07:05:13 -0400
+        id S1726658AbgDLL2k (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 12 Apr 2020 07:28:40 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21AD420708;
-        Sun, 12 Apr 2020 11:05:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91102206E9;
+        Sun, 12 Apr 2020 11:28:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586689513;
-        bh=/G9a5N4EsNqKH+T/lms89vJhplOJCs+R8Eje0o+5H/g=;
+        s=default; t=1586690920;
+        bh=A/TM2oZuIWL2EcklHfwd3IM6ORspyJc0stBXtKjtBtQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=peW511SVOWZkWEg26/N8B0miVNp8xXwo71gfsyfoLC33ReCMoc+KhXfWizXcHg4wT
-         I67gGAQBRYtjgLroZc56GIQInlGm7K3h837F7zY1P124px/vk9LEV1wbrjRyGhAYy4
-         zAmbjA0v7maQ5VeeXSlt9V8DkBwtbSlM/7sK0i1k=
-Date:   Sun, 12 Apr 2020 12:05:09 +0100
+        b=mjSBtzPdfD5aLHkxChC+xIurPEkwhk6c8vyItlQkRMN3s1SKoXc/TQl98/wLX7vIV
+         /RvUnWHx72Bw43ZtJGMnlJ+xHCQAWVocGyuSg6nBBhP5NuGtwg1AQWxTZIrmG1vBFM
+         +134sAzDi5k5DYt+DYnr8paJwxvNWI0j/fPF/DPI=
+Date:   Sun, 12 Apr 2020 12:28:35 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+To:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>
+Cc:     Tomas Novotny <tomas@novotny.cz>, Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: iio/dac: ltc2632.txt
-Message-ID: <20200412120431.03631ea8@archlinux>
-In-Reply-To: <20200408081029.11167-1-chris.ruehl@gtsys.com.hk>
-References: <20200408081029.11167-1-chris.ruehl@gtsys.com.hk>
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Nishant Malpani <nish.malpani25@gmail.com>
+Subject: Re: [PATCH v4 2/5] dt-bindings: iio: Introduce common properties
+ for iio sensors
+Message-ID: <20200412122835.15f82420@archlinux>
+In-Reply-To: <8b91f0b7fa76ca4b2f3cdc251411829f71f8d810.1586094535.git.agx@sigxcpu.org>
+References: <cover.1586094535.git.agx@sigxcpu.org>
+        <8b91f0b7fa76ca4b2f3cdc251411829f71f8d810.1586094535.git.agx@sigxcpu.org>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed,  8 Apr 2020 16:10:24 +0800
-Chris Ruehl <chris.ruehl@gtsys.com.hk> wrote:
+On Sun,  5 Apr 2020 15:50:29 +0200
+Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
 
-> This patch add support for Analog Devices (Linear Technology)
-> LTC26234 Quad 12-/10-/8-Bit Rail-to-Rail DAC.
-> Update ltc2632.txt with the expansions for it.
-> 
-> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Looks fine.
+> Introduce a file for common properties of iio sensors. So far this
+> contains the new proximity-near-level property for proximity sensors
+> that indicates when an object should be considered near.
+>=20
+> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
+This works for me. However, I would like to give time for Rob and
+others to comment on the syntax, naming etc of this file.
 
-We need to convert this over to yaml at somepoint.  If you are feeling
-particularly generous and want to do it would be much appreciated but
-it certainly isn't a requirement just to add IDs :)
+Thanks,
 
-thanks,
-
-jonathan
+Jonathan
 
 > ---
->  Documentation/devicetree/bindings/iio/dac/ltc2632.txt | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-> index 338c3220f01a..1ab9570cf219 100644
-> --- a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-> +++ b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-> @@ -1,4 +1,4 @@
-> -Linear Technology LTC2632/2636 DAC
-> +Linear Technology LTC2632/2634/2636 DAC
->  
->  Required properties:
->   - compatible: Has to contain one of the following:
-> @@ -8,6 +8,12 @@ Required properties:
->  	lltc,ltc2632-h12
->  	lltc,ltc2632-h10
->  	lltc,ltc2632-h8
-> +	lltc,ltc2634-l12
-> +	lltc,ltc2634-l10
-> +	lltc,ltc2634-l8
-> +	lltc,ltc2634-h12
-> +	lltc,ltc2634-h10
-> +	lltc,ltc2634-h8
->  	lltc,ltc2636-l12
->  	lltc,ltc2636-l10
->  	lltc,ltc2636-l8
+>  .../devicetree/bindings/iio/common.yaml       | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/common.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/common.yaml b/Document=
+ation/devicetree/bindings/iio/common.yaml
+> new file mode 100644
+> index 000000000000..97ffcb77043d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/common.yaml
+> @@ -0,0 +1,35 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/common.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Common properties for iio sensors
+> +
+> +maintainers:
+> +  - Jonathan Cameron <jic23@kernel.org>
+> +  - Guido G=C3=BCnther <agx@sigxcpu.org>
+> +
+> +description: |
+> +  This document defines device tree properties common to several iio
+> +  sensors. It doesn't constitue a device tree binding specification by i=
+tself but
+> +  is meant to be referenced by device tree bindings.
+> +
+> +  When referenced from sensor tree bindings the properties defined in th=
+is
+> +  document are defined as follows. The sensor tree bindings are responsi=
+ble for
+> +  defining whether each property is required or optional.
+> +
+> +properties:
+> +  proximity-near-level:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      For proximity sensors whether an object can be considered near to =
+the
+> +      device depends on parameters like sensor position, covering glass =
+and
+> +      aperture. This value gives an indication to userspace for which
+> +      sensor readings this is the case.
+> +
+> +      Raw proximity values equal or above this level should be
+> +      considered 'near' to the device (an object is near to the
+> +      sensor).
+> +
+> +...
 
