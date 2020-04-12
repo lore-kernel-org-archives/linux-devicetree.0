@@ -2,212 +2,80 @@ Return-Path: <SRS0=a8L4=54=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA16AC2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 13:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F3CC2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 13:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CB11206E5
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 13:35:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586698531;
-	bh=4p2YNKktYSmPfCxQd6u0rZRlru4MeJGH9CUkvjHp2F8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=miTBA1cNCDZj7sistWzLPZNB0TWHrzOP970ZgJ2CfR7SQO4V8QmVX8cxwrt0aE7G4
-	 DjsY8URkDyjoElMlK2Br2N/nSSNCMYhVTjvOelt3M6x8ZcomXUVKesguK93B7tFMn1
-	 3z1ykKbqtkDp4CPQcvolxWkRmc3UdZam0Y9krrBQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7738320753
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 13:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgDLNfa (ORCPT
+        id S1726139AbgDLNxq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Apr 2020 09:35:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60762 "EHLO mail.kernel.org"
+        Sun, 12 Apr 2020 09:53:46 -0400
+Received: from mga14.intel.com ([192.55.52.115]:43942 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbgDLNfa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 12 Apr 2020 09:35:30 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE474206B8;
-        Sun, 12 Apr 2020 13:35:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586698529;
-        bh=4p2YNKktYSmPfCxQd6u0rZRlru4MeJGH9CUkvjHp2F8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0FjNXapwCDGHnq+f69m8HBequQ+UJXpCjwTc11vGlCGMX6HMgVkyih0kkn+Jsw0Oz
-         xV54Ye6xMGXMms5QlCf0qST1irCAb3+kCct8Mhl2OEnBmfP0/RXN48fGepZpdoC7/X
-         yh/1EYXGjfG8+z5E8j1CnyULF5jnC1PPyth8pobI=
-Date:   Sun, 12 Apr 2020 14:35:24 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Nick Reitemeyer <nick.reitemeyer@web.de>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 3/3] iio: magnetometer: ak8974: add Alps hscdtd008a
-Message-ID: <20200412143524.377d2c16@archlinux>
-In-Reply-To: <20200406143113.GA126707@gerhold.net>
-References: <20200406141350.162036-1-nick.reitemeyer@web.de>
-        <20200406141350.162036-3-nick.reitemeyer@web.de>
-        <20200406143113.GA126707@gerhold.net>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725909AbgDLNxq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 12 Apr 2020 09:53:46 -0400
+IronPort-SDR: YSskhaiSOLg+TKevmKGqzvz1cOX05k9fgjrRiYnxIV90L4KBGaff06k22Z2wQ1+oFtPcIf2IfN
+ 8/PN3NyKCfBg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2020 06:53:46 -0700
+IronPort-SDR: IsDGhEKfyeBItsAE95C1LrP1UtZa3IOkzqwjtcURdqaKPfA2bBzVy/Csk8I+sZg9VBGzjJ6drV
+ dX8yJy80GvSw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,374,1580803200"; 
+   d="scan'208";a="399379453"
+Received: from apresura-mobl.ger.corp.intel.com (HELO localhost) ([10.252.61.246])
+  by orsmga004.jf.intel.com with ESMTP; 12 Apr 2020 06:53:40 -0700
+Date:   Sun, 12 Apr 2020 16:53:40 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Amir Mizinski <amirmizi6@gmail.com>
+Cc:     Eyal.Cohen@nuvoton.com, Oshri Alkobi <oshrialkoby85@gmail.com>,
+        Alexander Steffen <alexander.steffen@infineon.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, peterhuewe@gmx.de,
+        jgg@ziepe.ca, Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        IS20 Oshri Alkoby <oshri.alkoby@nuvoton.com>,
+        Tomer Maimon <tmaimon77@gmail.com>, gcwilson@us.ibm.com,
+        kgoldman@us.ibm.com, IS30 Dan Morav <Dan.Morav@nuvoton.com>,
+        oren.tanami@nuvoton.com, shmulik.hager@nuvoton.com,
+        amir.mizinski@nuvoton.com,
+        Christophe Ricard <christophe-h.ricard@st.com>
+Subject: Re: [PATCH v6 2/7] tpm: tpm_tis: Add check_data handle to
+ tpm_tis_phy_ops
+Message-ID: <20200412135340.GA68975@linux.intel.com>
+References: <20200407162044.168890-1-amirmizi6@gmail.com>
+ <20200407162044.168890-3-amirmizi6@gmail.com>
+ <20200408183324.GB33486@linux.intel.com>
+ <CAMHTsUUzQ9rpPfsnEtJruAC3THr+XNA=5Wk7OCteqZXOQ0L=UA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMHTsUUzQ9rpPfsnEtJruAC3THr+XNA=5Wk7OCteqZXOQ0L=UA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 6 Apr 2020 16:31:13 +0200
-Stephan Gerhold <stephan@gerhold.net> wrote:
+There is something seriously wrong in your email client.
+Please reconfigure your email client according to:
 
-> On Mon, Apr 06, 2020 at 04:13:53PM +0200, Nick Reitemeyer wrote:
-> > The hscdtd008a is similar to the AK8974:
-> > Only the whoami value and some registers are different.
-> > 
-> > Signed-off-by: Nick Reitemeyer <nick.reitemeyer@web.de>  
-> 
-> Thanks a lot for sending this patch upstream!
-> 
-> I checked this with the datasheet available here:
-> https://tech.alpsalpine.com/prod/c/pdf/sensor/geomagnetic/hscd/hscdtd008a_data.pdf
-> 
-> Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
-> 
-> ... and it seems to produce reasonable values on samsung-golden:
-> 
-> Tested-by: Stephan Gerhold <stephan@gerhold.net>
-> 
-> Linus Walleij might want to test this on his samsung-skomer :)
+https://www.kernel.org/doc/html/v5.5/process/email-clients.html
 
-Looks good to me, but I'll need a review on the binding (particularly
-the vendor prefix as it's in a generic file). 
+Then re-response.
 
-Thanks,
+This is.. I've lost to the count how many times I've requsted this.
 
-Jonathan
+Thanks.
 
-> 
-> Thanks,
-> Stephan
-> 
-> > ---
-> >  drivers/iio/magnetometer/ak8974.c | 38 ++++++++++++++++++++++++-------
-> >  1 file changed, 30 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/iio/magnetometer/ak8974.c b/drivers/iio/magnetometer/ak8974.c
-> > index d32996702110..ade4ed8f67d2 100644
-> > --- a/drivers/iio/magnetometer/ak8974.c
-> > +++ b/drivers/iio/magnetometer/ak8974.c
-> > @@ -49,6 +49,7 @@
-> >  #define AK8974_WHOAMI_VALUE_AMI306 0x46
-> >  #define AK8974_WHOAMI_VALUE_AMI305 0x47
-> >  #define AK8974_WHOAMI_VALUE_AK8974 0x48
-> > +#define AK8974_WHOAMI_VALUE_HSCDTD008A 0x49
-> > 
-> >  #define AK8974_DATA_X		0x10
-> >  #define AK8974_DATA_Y		0x12
-> > @@ -140,6 +141,12 @@
-> >  #define AK8974_INT_CTRL_PULSE	BIT(1) /* 0 = latched; 1 = pulse (50 usec) */
-> >  #define AK8974_INT_CTRL_RESDEF	(AK8974_INT_CTRL_XYZEN | AK8974_INT_CTRL_POL)
-> > 
-> > +/* HSCDTD008A-specific control register */
-> > +#define HSCDTD008A_CTRL4	0x1E
-> > +#define HSCDTD008A_CTRL4_MMD	BIT(7)	/* must be set to 1 */
-> > +#define HSCDTD008A_CTRL4_RANGE	BIT(4)	/* 0 = 14-bit output; 1 = 15-bit output */
-> > +#define HSCDTD008A_CTRL4_RESDEF	(HSCDTD008A_CTRL4_MMD | HSCDTD008A_CTRL4_RANGE)
-> > +
-> >  /* The AMI305 has elaborate FW version and serial number registers */
-> >  #define AMI305_VER		0xE8
-> >  #define AMI305_SN		0xEA
-> > @@ -241,10 +248,17 @@ static int ak8974_reset(struct ak8974 *ak8974)
-> >  	ret = regmap_write(ak8974->map, AK8974_CTRL3, AK8974_CTRL3_RESDEF);
-> >  	if (ret)
-> >  		return ret;
-> > -	ret = regmap_write(ak8974->map, AK8974_INT_CTRL,
-> > -			   AK8974_INT_CTRL_RESDEF);
-> > -	if (ret)
-> > -		return ret;
-> > +	if (ak8974->variant != AK8974_WHOAMI_VALUE_HSCDTD008A) {
-> > +		ret = regmap_write(ak8974->map, AK8974_INT_CTRL,
-> > +				   AK8974_INT_CTRL_RESDEF);
-> > +		if (ret)
-> > +			return ret;
-> > +	} else {
-> > +		ret = regmap_write(ak8974->map, HSCDTD008A_CTRL4,
-> > +				   HSCDTD008A_CTRL4_RESDEF);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > 
-> >  	/* After reset, power off is default state */
-> >  	return ak8974_set_power(ak8974, AK8974_PWR_OFF);
-> > @@ -267,6 +281,8 @@ static int ak8974_configure(struct ak8974 *ak8974)
-> >  		if (ret)
-> >  			return ret;
-> >  	}
-> > +	if (ak8974->variant == AK8974_WHOAMI_VALUE_HSCDTD008A)
-> > +		return 0;
-> >  	ret = regmap_write(ak8974->map, AK8974_INT_CTRL, AK8974_INT_CTRL_POL);
-> >  	if (ret)
-> >  		return ret;
-> > @@ -495,6 +511,10 @@ static int ak8974_detect(struct ak8974 *ak8974)
-> >  		name = "ak8974";
-> >  		dev_info(&ak8974->i2c->dev, "detected AK8974\n");
-> >  		break;
-> > +	case AK8974_WHOAMI_VALUE_HSCDTD008A:
-> > +		name = "hscdtd008a";
-> > +		dev_info(&ak8974->i2c->dev, "detected hscdtd008a\n");
-> > +		break;
-> >  	default:
-> >  		dev_err(&ak8974->i2c->dev, "unsupported device (%02x) ",
-> >  			whoami);
-> > @@ -674,18 +694,18 @@ static bool ak8974_writeable_reg(struct device *dev, unsigned int reg)
-> >  	case AK8974_INT_CTRL:
-> >  	case AK8974_INT_THRES:
-> >  	case AK8974_INT_THRES + 1:
-> > +		return true;
-> >  	case AK8974_PRESET:
-> >  	case AK8974_PRESET + 1:
-> > -		return true;
-> > +		return ak8974->variant != AK8974_WHOAMI_VALUE_HSCDTD008A;
-> >  	case AK8974_OFFSET_X:
-> >  	case AK8974_OFFSET_X + 1:
-> >  	case AK8974_OFFSET_Y:
-> >  	case AK8974_OFFSET_Y + 1:
-> >  	case AK8974_OFFSET_Z:
-> >  	case AK8974_OFFSET_Z + 1:
-> > -		if (ak8974->variant == AK8974_WHOAMI_VALUE_AK8974)
-> > -			return true;
-> > -		return false;
-> > +		return ak8974->variant == AK8974_WHOAMI_VALUE_AK8974 ||
-> > +		       ak8974->variant == AK8974_WHOAMI_VALUE_HSCDTD008A;
-> >  	case AMI305_OFFSET_X:
-> >  	case AMI305_OFFSET_X + 1:
-> >  	case AMI305_OFFSET_Y:
-> > @@ -926,12 +946,14 @@ static const struct i2c_device_id ak8974_id[] = {
-> >  	{"ami305", 0 },
-> >  	{"ami306", 0 },
-> >  	{"ak8974", 0 },
-> > +	{"hscdtd008a", 0 },
-> >  	{}
-> >  };
-> >  MODULE_DEVICE_TABLE(i2c, ak8974_id);
-> > 
-> >  static const struct of_device_id ak8974_of_match[] = {
-> >  	{ .compatible = "asahi-kasei,ak8974", },
-> > +	{ .compatible = "alps,hscdtd008a", },
-> >  	{}
-> >  };
-> >  MODULE_DEVICE_TABLE(of, ak8974_of_match);
-> > --
-> > 2.26.0
-> >   
-
+/Jarkko
