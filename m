@@ -2,142 +2,159 @@ Return-Path: <SRS0=/QBj=55=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FF8C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 04:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA09C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 05:34:02 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0252920678
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 04:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C522F206A1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 05:34:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eBiubb27"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 0252920678
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="VndDFV/L"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org C522F206A1
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=devicetree-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbgDMEbv (ORCPT
+        id S1727545AbgDMFeB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 00:31:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:60532 "EHLO
+        Mon, 13 Apr 2020 01:34:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:41406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgDMEbv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Apr 2020 00:31:51 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68237C0A3BE0;
-        Sun, 12 Apr 2020 21:31:50 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ng8so3381498pjb.2;
-        Sun, 12 Apr 2020 21:31:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cncGDqt7fHMkXaI3l27jxuKAAcyo4TLpPS8jKmBxrB8=;
-        b=eBiubb27eRyfe+lqxro+fYFl17BREZ/tw3ox6LXKc1U/ONkBvPz2I8GVeROXQJ7wDj
-         73JzWAIKxOS6cEpL+iXc7cNlFy4hOHVYSpV2w2OIpeUVoVobgJyP9i2q44KFCf+GPyTA
-         GEmZWDuoMpA/fBn/CbKSP/HizQZT8hPsyzwWOuSvUMHbN5NJrtiAmVQlR5zSrtAMfkI8
-         mJS7YB+LNizev96VgVNzWAlIAP3/zo/zBcFnaNiAITdOTfpSuS931MEfKZxM4IJAtaM1
-         Ia/LZKRL2Y0qjmSeQ4mOprXlig5OGHKdATdfieX4b1exDKqvz7H5VVd0obql2UrtLT+m
-         Ppsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cncGDqt7fHMkXaI3l27jxuKAAcyo4TLpPS8jKmBxrB8=;
-        b=n30odw/ahWGR1Vo9rpgfcqrGd+qUzFyc0yNS9eAB+CNMjAiftBH3X70lMuMATcBh8S
-         jnwXKzx9ReGfHeXTZdvyIuoV+fOMLCBvxGX/Vuw4o43A9NQDx+yXv1/yOnKGgGgUuhCH
-         v5AkY3U5ZlpW5KqXLMGrHhbj5AA+tqI3hISqEkAnpBuEXn16M2uOUIGaJOXZlXdqh+pD
-         FqMGLxTc5BTEa7vwuSZMILd2bb/DqexTP/Da7IQF1SdxmOvxhbP0aEJnITcvSk43t7ou
-         uGh1CKhWDR3kwxTHty0meivrawSQX44796/wb86WYff1yi9o0Jj9frlyUwaqroYyLw1k
-         JaDg==
-X-Gm-Message-State: AGi0PubquyEmuL6frSAtGYafvquUzm5scgABEHt5dFDC3nHgl4pxSRTH
-        1nrv/C355FDi0UfHJ61fdp4=
-X-Google-Smtp-Source: APiQypIRcMeZlHWm/EdnTHFU5olUz6v2AbqayudJLIZ+rDTXU5dozNE4arV7AQtDkr6IOFCAM0uXRg==
-X-Received: by 2002:a17:902:784c:: with SMTP id e12mr15604537pln.191.1586752309748;
-        Sun, 12 Apr 2020 21:31:49 -0700 (PDT)
-Received: from Asurada (c-73-162-191-63.hsd1.ca.comcast.net. [73.162.191.63])
-        by smtp.gmail.com with ESMTPSA id m9sm7546835pff.93.2020.04.12.21.31.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 12 Apr 2020 21:31:49 -0700 (PDT)
-Date:   Sun, 12 Apr 2020 21:31:43 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 5/7] ASoC: fsl_asrc: Move common definition to
- fsl_asrc_common
-Message-ID: <20200413043143.GA9116@Asurada>
-References: <cover.1585726761.git.shengjiu.wang@nxp.com>
- <93531963f028aabf9176173de3c6038a200acb89.1585726761.git.shengjiu.wang@nxp.com>
- <20200406234819.GB20945@Asurada-Nvidia.nvidia.com>
- <CAA+D8AM69bhorQKikQGwwFRqgBYN8V2pXBW5JLZyFCVHWKkNGg@mail.gmail.com>
- <20200412020814.GA5984@Asurada>
- <CAA+D8AOapHbw_AREcJmef2tnM4aNiU11FLacW3HS7CXQThs80Q@mail.gmail.com>
+        with ESMTP id S1727498AbgDMFeA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Apr 2020 01:34:00 -0400
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D22CBC00860C;
+        Sun, 12 Apr 2020 22:33:59 -0700 (PDT)
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48F762076A;
+        Mon, 13 Apr 2020 05:33:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586756039;
+        bh=qt4NrQHfEP5adB0UUWrWKeKpLWTnRpj9zG8trfqPOIY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VndDFV/LAmxNxyZTDsCrBrgVrIh/nLeNPouMebChS7yrWETkr5J8Nnx2q88B5oV0E
+         XsD3CAqnUwg6xPP+bXZX0hYv0gLkJVr9SyFZIe4OOvGxL0QjRr703qXbA49oohR1yf
+         w25tl0GPD5wC7YgRTjLx24o6+SWxXKPHrbvqagkU=
+Received: by mail-wr1-f46.google.com with SMTP id s8so9035786wrt.7;
+        Sun, 12 Apr 2020 22:33:59 -0700 (PDT)
+X-Gm-Message-State: AGi0PubkCeFK3gOg7DjXrEvsKkodUQyISKh62B2UI6JuHespvmq68F1a
+        nVsYfeBxCGOMmqDq+S3RLmsrtMjJz6mkYJVzaSk=
+X-Google-Smtp-Source: APiQypLgboXHD3XZiUO90AwxZLJ/yV/Vrt0c+3sy6PCwIvSdLMeJ7KtlYHXP+6JpGZSwGC046WzmNEMiiA47Tvr5sAU=
+X-Received: by 2002:adf:f04a:: with SMTP id t10mr4827742wro.64.1586756037667;
+ Sun, 12 Apr 2020 22:33:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA+D8AOapHbw_AREcJmef2tnM4aNiU11FLacW3HS7CXQThs80Q@mail.gmail.com>
-User-Agent: Mutt/1.5.22 (2013-10-16)
+References: <20200327030414.5903-2-wens@kernel.org> <684a08e6-7dfe-4cb1-2ae5-c1fb4128976b@gmail.com>
+ <CAGb2v65ayZwN14S-Pzu2ip1K=fgzTbNB=ZzUcpou-jtv8m6vBA@mail.gmail.com>
+ <ccf35a92-7005-9c6d-a8a2-c17b714a60bc@arm.com> <20200406091313.GF31120@duo.ucw.cz>
+In-Reply-To: <20200406091313.GF31120@duo.ucw.cz>
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Mon, 13 Apr 2020 13:33:47 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64bcVLmQPxfAUafa-Grbr1MRCVb0j=HYUrXdihbmVB2Mw@mail.gmail.com>
+Message-ID: <CAGb2v64bcVLmQPxfAUafa-Grbr1MRCVb0j=HYUrXdihbmVB2Mw@mail.gmail.com>
+Subject: Re: [PATCH 1/6] arm64: dts: rockchip: rk3399-roc-pc: Fix MMC
+ numbering for LED triggers
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Chen-Yu Tsai <wens@kernel.org>,
+        Johan Jonker <jbx6244@gmail.com>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        jacek.anaszewski@gmail.com, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 11:16:31AM +0800, Shengjiu Wang wrote:
-> On Sun, Apr 12, 2020 at 10:08 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
-> >
-> > On Sat, Apr 11, 2020 at 01:49:43PM +0800, Shengjiu Wang wrote:
-> >
-> > > > > diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
-> > > > > index b15946e03380..5cf0468ce6e3 100644
-> > > > > --- a/sound/soc/fsl/fsl_asrc_dma.c
-> > > > > +++ b/sound/soc/fsl/fsl_asrc_dma.c
-> > > >
-> > > > > @@ -311,11 +311,12 @@ static int fsl_asrc_dma_startup(struct snd_soc_component *component,
-> > > > >               return ret;
-> > > > >       }
-> > > > >
-> > > > > -     pair = kzalloc(sizeof(struct fsl_asrc_pair), GFP_KERNEL);
-> > > > > +     pair = kzalloc(sizeof(struct fsl_asrc_pair) + PAIR_PRIVAT_SIZE, GFP_KERNEL);
-> > > >
-> > > > If we only use the PAIR_PRIVATE_SIZE here, maybe we can put the
-> > > > define in this file too, rather than in the header file.
-> > > >
-> > > > And could fit 80 characters:
-> > > >
-> > > > +       pair = kzalloc(sizeof(*pair) + PAIR_PRIVAT_SIZE, GFP_KERNEL);
-> >
-> > > I will use a function pointer
-> > >     int (*get_pair_priv_size)(void)
-> >
-> > Since it's the size of pair or cts structure, could be just a
-> > size_t variable?
-> 
-> Yes, should be "size_t (*get_pair_priv_size)(void)"
+Hi Pavel,
 
-Does it have to be a function? -- how about this:
+On Mon, Apr 6, 2020 at 5:13 PM Pavel Machek <pavel@ucw.cz> wrote:
+>
+> Hi!
+>
+> > > > arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dt.yaml: leds:
+> > > > diy-led:linux,default-trigger:0: 'mmc2' is not one of ['backlight',
+> > > > 'default-on', 'heartbeat', 'disk-activity', 'ide-disk', 'timer', 'pattern']
+> > > > arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dt.yaml: leds:
+> > > > yellow-led:linux,default-trigger:0: 'mmc1' is not one of ['backlight',
+> > > > 'default-on', 'heartbeat', 'disk-activity', 'ide-disk', 'timer', 'pattern']
+> > >
+> > > Maybe we should just get rid of linux,default-trigger then?
+> >
+> > In this particular case, I'd say it's probably time to reevaluate the rather
+> > out-of-date binding. The apparent intent of the "linux,default-trigger"
+> > property seems to be to describe any trigger supported by Linux, so either
+> > the binding wants to be kept in sync with all the triggers Linux actually
+> > supports, or perhaps it should just be redefined as a free-form
+>
+> It is enough to keep it in sync with all the triggers we actually use :-).
+>
+> > I'd be slightly inclined towards the latter, since the schema validator
+> > can't know whether the given trigger actually corresponds to the correct
+> > thing for whatever the LED is physically labelled on the board/case, nor
+> > whether the version(s) of Linux that people intend to use actually support
+> > that trigger (since it doesn't have to be the version contemporary with the
+> > schema definition), so strict validation of this particular property seems
+> > to be of limited value.
+>
+> But freeform seems acceptable, too.
 
-struct pair {
-	...
-	size_t private_size;
-	void *private;
-};
+I'd say free form is easier to manage. Being in the list of valid triggers
+doesn't mean the kernel actually has support for it enabled.
 
-probe/or-somewhere() {
-	...
-	pair->private = pair_priv;
-	pair->private_size = sizeof(*pair_priv);
-	...
-}
+> > > > > -             diy-led {
+> > > > > +             diy_led: diy-led {
+> > > > >                        label = "red:diy";
+> > > > >                        gpios = <&gpio0 RK_PB5 GPIO_ACTIVE_HIGH>;
+> > > > >                        default-state = "off";
+> > > > >                        linux,default-trigger = "mmc1";
+> > > > >                };
+>
+> This label probably should be "mmc1:red:activity" or something like that.
+
+Is changing this after it has been in some kernel releases OK? Wouldn't
+it be considered a break of sysfs ABI?
+
+Also, is there some guideline on how to name the labels? For sunxi we've
+been doing "${vendor}:${color}:${function}" since forever.
+
+As far as I can tell, the hardware vendor [1] has no specific uses for
+these two (red and yellow) LEDs designed in. And their GPIO lines are
+simply labeled "DIY" (for the red one) and "YELLOW". So I'm not sure
+if putting "our" interpretations and the default-trigger into the
+label is wise.
+
+For reference, the green one has its GPIO line labeled "WORK", and their
+intention from [1] is to have it as some sort of power / activity indicator.
+Hence it is named / labeled "work".
+
+As for the node names, I think we can keep it as is for now. It's not
+the preferred form, but there's really no need to change it either.
+And some overlay or script might actually expect that name.
+
+Regards
+ChenYu
+
+
+[1] http://wiki.t-firefly.com/en/ROC-RK3399-PC/driver_led.html
+
+> > > > > -             yellow-led {
+> > > > > +             yellow_led: yellow-led {
+> > > > >                        label = "yellow:yellow-led";
+> > > > >                        gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
+> > > > >                        default-state = "off";
+>
+> And this label should be changed, too.
+>
+> Best regards,
+>                                                                         Pavel
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
