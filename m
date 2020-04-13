@@ -2,150 +2,114 @@ Return-Path: <SRS0=/QBj=55=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0D4C2BBFD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 18:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC950C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 19:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE57520732
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 18:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A89832064A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 19:37:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yuZ5KYO8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XV7U7X1u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733129AbgDMS50 (ORCPT
+        id S2387946AbgDMThE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 14:57:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52702 "EHLO
+        Mon, 13 Apr 2020 15:37:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727825AbgDMS5Y (ORCPT
+        by vger.kernel.org with ESMTP id S2387935AbgDMThD (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Apr 2020 14:57:24 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F8F8C0A3BE2
-        for <devicetree@vger.kernel.org>; Mon, 13 Apr 2020 11:57:24 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id h6so7405548lfc.0
-        for <devicetree@vger.kernel.org>; Mon, 13 Apr 2020 11:57:24 -0700 (PDT)
+        Mon, 13 Apr 2020 15:37:03 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D45CC0A3BDC;
+        Mon, 13 Apr 2020 12:37:03 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a25so11439926wrd.0;
+        Mon, 13 Apr 2020 12:37:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=nnFhaYdn8r144w8Y8HQM6rwFTDCQ2TRjM0zl6Xk6Hbs=;
-        b=yuZ5KYO8vk9sY0oppJp4fk/tUdUNLVbdp3hmeGyTprfOlJbFWhbbynnrM66UJJ56V2
-         Lc1PZ2+dFgQoAxrRphjf//X9FZmzv4LM8Qq0gkeouKl/S6KN3uZJNUvQfHfRunEJxNYj
-         v5sUTFrv8iOAHopDd+BHqDZfphZw0VeOjEIOJ1oi3RbdPdinTPvbsTowuWioIPtKUXsl
-         yD+8BlrQozryzTNEvyeWojrRr6bikU+Uk+qi86EclWtq0n5/ITyPNH2cmUaUGA8ALmX6
-         VCto1hUfqsfWu3OeJkD4ONBv+xKHCKoTyixraQrAx2RiBRvJuqfhYVEnLorg67EJuctM
-         nbxQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=IL8UM2G8ckEvz5Q1HLyYzF8mVCI5/VI6cQ0z6c472EQ=;
+        b=XV7U7X1uveyRb9PqFljNV4aJTxa3bkX51B52APKWQ966g3JSC5gvNoJEzwMITXvu4w
+         8WpFgNgK3PYryJPfcnHdA2tdc5pEiqnZwrjX/EFiy1skmg9LqAER1U7Fvc9ozcKXNnd+
+         X74GyxoMg6w5PmxaQbeq0BkHivsnaSSItAbCEC7nMfw/h48FJ6xZJJzjndZqHyfpiVuf
+         hjwj8hRiy6jk7Oo2QTQeDKtIKyWR/3OkYUQrdlTWqBDVYgU3w1UJJEKzLoqug9CsS2kV
+         vD1DLdh1amsg09ityJ4RQFMUYoNN620mliVCKOf4GCjk1bCieTf0vo2d6hjZHvUC0Z4W
+         udcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=nnFhaYdn8r144w8Y8HQM6rwFTDCQ2TRjM0zl6Xk6Hbs=;
-        b=KXz3F2gLmJhTLCKOi9DZxdkf0r1NvoDSB+anvljc6dMjRtAGYp4CvSrEKcKJCwDNYs
-         8SIv4AHGUQoWrw8i3rif34wIBNPB8iyZjacmXoigsnlCt7J/Ml+n/sRk5ye81AA+Ay7j
-         TF7Q5CU1d1USGIypG+f3g7sRsKLk83ZbuqYvqcEa4TPHjXbYXxkzV+rlw+5ysZwHA8tj
-         Jxzj+ZN5Ae/ZY+HdJyyVJwY01dl/jtzf/wi8qqmFEzQpm/MZci5ATK+OPYGe27/kWlzg
-         4MumdGHE8JKPGhiies6d9Zv82U1DqvSS60yqIXX84Pwntva1n7PlLVs3IRqC5hxgeROq
-         g2Zg==
-X-Gm-Message-State: AGi0PuacQAPbhWvJfUx/SNn0SGkdsU5EYDz18ovPn2F1vYeBDnMyHtXv
-        B7EmGdxOLPvqSLSi3N6z3jjFs5eoMIOxmuA7Vw53YA==
-X-Google-Smtp-Source: APiQypIMkmyGlF3uCVpf3EjDwPW+WmpqbHG8XbB06TkJ1rIxipqbhKw8fK48Vz7k9u3QMh/yUAngrRulqJXAEhL6d+4=
-X-Received: by 2002:a05:6512:d1:: with SMTP id c17mr11465758lfp.167.1586804242634;
- Mon, 13 Apr 2020 11:57:22 -0700 (PDT)
-MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 14 Apr 2020 00:27:10 +0530
-Message-ID: <CA+G9fYsDgghO+4zMY-AF2RgUmAfjZyA+tjeg5m5F1rEgEtw5fg@mail.gmail.com>
-Subject: BUG: spinlock bad magic - lock: msm_uart_ports
-To:     linux-arm-msm@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-serial@vger.kernel.org
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        agross@kernel.org,
-        =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        lkft-triage@lists.linaro.org,
-        Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=IL8UM2G8ckEvz5Q1HLyYzF8mVCI5/VI6cQ0z6c472EQ=;
+        b=CdFMiffn+UqAAxr8f1DhOYTWR9DJpz3GmtEEqMIQBnH4KSwEmHZ+rn+ox8vl7tuIyf
+         qKZV1Mx3e1Xjb8HHiv9ed7Xd3yVSmINVzVL1VMi2rNgLugn9L5N6nuYUFJqw9q/Mndb+
+         hL3IqqNQ3hM/aEyHkGnHOgYNY68DhGuSoYSWOXVGLAxj4LFqQFjuF1ZJgOUgTYokaTdX
+         igMn9XfpAjwK3ZFWaMVkRwwyZaO1pbCFEVRyuhUtMZuei/v1c8cxo4HDRiPRHmA9koU8
+         6by9J56Z1zl0COVaPybks17QYrYvvy2t38HgG22yqmoAJXKxxYobicCEaqNyn/GDjUVr
+         o33g==
+X-Gm-Message-State: AGi0PuYxpZyoir7Nnj09g/2M5oMMQEuoCV3OVOuklPDkgKeIFZ+KOC/4
+        82zoS848EhIJWnagxm19wv+i2UOL
+X-Google-Smtp-Source: APiQypL9aZQMlpGKhdYWyFuCrzaNq51hpaS4p3qbtjobH7zo8hHacrhQXSiGqmJXkX1J+79WQN70IQ==
+X-Received: by 2002:adf:f8d2:: with SMTP id f18mr20903930wrq.139.1586806621899;
+        Mon, 13 Apr 2020 12:37:01 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id b4sm11121659wrv.42.2020.04.13.12.37.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 Apr 2020 12:37:01 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: rockchip: remove bus-width from mmc nodes in rk3308.dtsi
+Date:   Mon, 13 Apr 2020 21:36:52 +0200
+Message-Id: <20200413193652.1952-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The kernel BUG reported on arm64 Dragonboard 410c (APQ 8016 SBC)
-while booting Linux mainline kernel 5.6.0
+The 'bus-width' property for mmc nodes is defined both in
+'rk3308.dtsi' and 'rk3308-roc-cc.dts'.
+In line with the other Rockchip SoCs define that in a user dts only,
+so remove all entries from mmc nodes in 'rk3308.dtsi'.
 
-The kernel configs (with extra fragments) and full boot log links
-provided below.
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3308.dtsi | 3 ---
+ 1 file changed, 3 deletions(-)
 
-boot log:
------------
-[ 0.000000] Linux version 5.6.0 (oe-user@oe-host) (gcc version 7.3.0
-(GCC), GNU ld (GNU Binutils) 2.30.0.20180208) #1 SMP PREEMPT Sun Apr
-12 11:44:21 UTC 2020
-[ 0.000000] Machine model: Qualcomm Technologies, Inc. APQ 8016 SBC
-[ 0.000000] efi: UEFI not found.
-<>
-[    2.550066] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
-[    2.564493] SuperH (H)SCI(F) driver initialized
-[    2.568321] msm_serial 78af000.serial: msm_serial: detected port #1
-[    2.568457] msm_serial 78af000.serial: uartclk = 19200000
-[    2.568724] 78af000.serial: ttyMSM1 at MMIO 0x78af000 (irq = 9,
-base_baud = 1200000) is a MSM
-[    2.572081] msm_serial 78b0000.serial: msm_serial: detected port #0
-[    2.572210] msm_serial 78b0000.serial: uartclk = 7372800
-[    2.572423] 78b0000.serial: ttyMSM0 at MMIO 0x78b0000 (irq = 10,
-base_baud = 460800) is a MSM
-[    2.572508] BUG: spinlock bad magic on CPU#3, swapper/0/1
-[    2.572534]  lock: msm_uart_ports+0x0/0x7e0, .magic: 00000000,
-.owner: <none>/-1, .owner_cpu: 0
-[    2.572552] CPU: 3 PID: 1 Comm: swapper/0 Not tainted 5.6.0 #1
-[    2.572565] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-[    2.572578] Call trace:
-[    2.572594]  dump_backtrace+0x0/0x1e0
-[    2.572609]  show_stack+0x24/0x30
-[    2.572627]  dump_stack+0xe8/0x150
-[    2.572643]  spin_dump+0x84/0xb8
-[    2.572658]  do_raw_spin_lock+0xf8/0x120
-[    2.572675]  _raw_spin_lock_irqsave+0x68/0x80
-[    2.572692]  uart_add_one_port+0x3ac/0x4e8
-[    2.572709]  msm_serial_probe+0x168/0x208
-[    2.572725]  platform_drv_probe+0x58/0xa8
-[    2.572739]  really_probe+0x290/0x498
-[    2.572754]  driver_probe_device+0x12c/0x148
-[    2.572768]  device_driver_attach+0x74/0x98
-[    2.572782]  __driver_attach+0xc4/0x178
-[    2.572798]  bus_for_each_dev+0x84/0xd8
-[    2.572811]  driver_attach+0x30/0x40
-[    2.572827]  bus_add_driver+0x170/0x258
-[    2.572841]  driver_register+0x64/0x118
-[    2.572856]  __platform_driver_register+0x54/0x60
-[    2.572872]  msm_serial_init+0x40/0x70
-[    2.572887]  do_one_initcall+0x94/0x460
-[    2.572904]  kernel_init_freeable+0x274/0x2dc
-[    2.572920]  kernel_init+0x18/0x110
-[    2.572936]  ret_from_fork+0x10/0x18
-[    2.572966] msm_serial: console setup on port #0
-[    3.664259] printk: console [ttyMSM0] enabled
+diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+index a9b98555d..130771ede 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+@@ -587,7 +587,6 @@
+ 		compatible = "rockchip,rk3308-dw-mshc", "rockchip,rk3288-dw-mshc";
+ 		reg = <0x0 0xff480000 0x0 0x4000>;
+ 		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+-		bus-width = <4>;
+ 		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
+ 			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
+ 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+@@ -602,7 +601,6 @@
+ 		compatible = "rockchip,rk3308-dw-mshc", "rockchip,rk3288-dw-mshc";
+ 		reg = <0x0 0xff490000 0x0 0x4000>;
+ 		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+-		bus-width = <8>;
+ 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
+ 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
+ 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+@@ -615,7 +613,6 @@
+ 		compatible = "rockchip,rk3308-dw-mshc", "rockchip,rk3288-dw-mshc";
+ 		reg = <0x0 0xff4a0000 0x0 0x4000>;
+ 		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
+-		bus-width = <4>;
+ 		clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
+ 			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
+ 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+-- 
+2.11.0
 
-Full test log,
-https://lkft.validation.linaro.org/scheduler/job/1361080#L3679
-https://lkft.validation.linaro.org/scheduler/job/1361079#L3730
-
-metadata:
-  git branch: master
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-  kernel-config:
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-mainline/2607/config
-dtb:
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-mainline/2607/Image.gz--5.6+git0+b753101a4a-r0-apq8016-sbc-20200412114028-2607.dtb
-
---
-Linaro LKFT
-https://lkft.linaro.org
