@@ -2,112 +2,89 @@ Return-Path: <SRS0=/QBj=55=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5E2C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 22:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCFCC2BBC7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 22:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E74D20735
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 22:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D631520678
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 22:23:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNqF5LQD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mEZwI6Ln"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389415AbgDMWBF (ORCPT
+        id S1728183AbgDMWXk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 18:01:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53102 "EHLO
+        Mon, 13 Apr 2020 18:23:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389414AbgDMWBE (ORCPT
+        by vger.kernel.org with ESMTP id S2389528AbgDMWXj (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Apr 2020 18:01:04 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A31BBC0A3BDC
-        for <devicetree@vger.kernel.org>; Mon, 13 Apr 2020 15:01:03 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id k21so10411979ljh.2
-        for <devicetree@vger.kernel.org>; Mon, 13 Apr 2020 15:01:03 -0700 (PDT)
+        Mon, 13 Apr 2020 18:23:39 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61920C0A3BE2
+        for <devicetree@vger.kernel.org>; Mon, 13 Apr 2020 15:23:38 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h25so10382230lja.10
+        for <devicetree@vger.kernel.org>; Mon, 13 Apr 2020 15:23:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=beTCdjD9mBgR4YFC6YHzV+CN3PBybk3lFl2C+p4DAr8=;
-        b=aNqF5LQDjh4Jp0mxwWNgS0pt/uW2vrMEbddCLpbtPMleQOwSqg5qsugFI1V9mUlGbD
-         ftrMhnFk9sy9a8perUPxaIuwSrshwZSYBCFSRyDKdNWeUgWDmNm1yefqEouqJQKi3aL5
-         OSr7jygpgTbU0vL9lNW8cVo309JUUldgCEIjF9TdqAB6l82nP9rF9m84vLEKwNKTerNB
-         ANuf7D0mn2wVK23++i23E9LAomqYnbTWPrfvgc4lBWMg6uTC3LH7DHfmVJ/mZvu+TmLt
-         O+s+mBzuVH8VU1IDOnrDP8aktTHgv14DKUkOmK/6Zc84BXQNIJ5JWzQUBxJ4g5Gt3ii8
-         ou6Q==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YO7GrPNetmdR0BRplZ8joqlR6+g0nmzlZ3ZAN/HxoxU=;
+        b=mEZwI6LnrfdXvRaG0Kde9NnIgbjXuzg9iIGO1yT6N76afmjUaU4l/N2en41UcoCZ4C
+         M4tKqZsZkitXLRTrRK5j2l/q7vES0G2bm07kqQVh17ZGSfiC4L5NQKfKPzacoZpJ11AK
+         YgG2QfnAGzQGklzabiW73F6ijEmNEC/urcvrbGZGIAD3geFxngiCMDbYMnPehjzGbIia
+         yJhWu74KvE3U35Sr6cbJzZpPdgavSAgZuKEqOeYoJkO/gQoUUIfwlArz/Sks63GxrJYo
+         CrD62SgDIS69o4RWfithv7rfYu7o+KhaUp4J0rGQPN5KpSz3e/fb3a3v3dULUPtRh2/y
+         AbyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=beTCdjD9mBgR4YFC6YHzV+CN3PBybk3lFl2C+p4DAr8=;
-        b=pvXZqgvYYgANErdxDhy/t1HrSMHZ6h9nASN8BIIqH0GbbTzSqgZWQgz6iR/nmQihKw
-         n4CEjtX5nGklZmYBK9PpePMyf35zwI/0vFa/70XpFT3yrb+tXgaIDZm8aKwz1WvPWyVL
-         J4N9UaZ4Z6AbShRjcxTRBFDbBQtYnf3DGeJf/sYQ23WOpbg0SGby80+NfeK+4BHINUyw
-         OVoUfTWBl8Ni59hepx6om4gaGmGVctLhnK3XXsFYDR++Fk/ferZxvABbX4Urq+BBdIIr
-         KVbNcp/pRG7R6tU4EZdaDCE7yttxQaiWbIwFP3AKJXpmsh3+SlKuAiX/HnjthL309wXZ
-         S2QA==
-X-Gm-Message-State: AGi0PuaVN2VUMwlCsmBu12Tv2mNvLyEdhDJ5aOyjPjKKAGOzg3hwq3Zh
-        S6BnHZoW5eHA9k6AUNhN8dECNuVe
-X-Google-Smtp-Source: APiQypK3XR6vxv0lxmZIgBdXP2rEtblb0MiCnDiaK3vm6MF2w9zA8bW20rxretqwoRZBcqnHTACpOw==
-X-Received: by 2002:a2e:86d8:: with SMTP id n24mr4349639ljj.129.1586815261957;
-        Mon, 13 Apr 2020 15:01:01 -0700 (PDT)
-Received: from curiosity (ip-195-182-157-78.clients.cmk.ru. [195.182.157.78])
-        by smtp.gmail.com with ESMTPSA id c4sm8871509lfg.82.2020.04.13.15.00.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 15:01:01 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 01:05:20 +0300
-From:   Sergey Matyukevich <geomatsi@gmail.com>
-To:     Russell King <linux@armlinux.org.uk>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [bug report] armada-8040-mcbin: 5.6-rc5 boot failure
-Message-ID: <20200413220520.GA25917@curiosity>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YO7GrPNetmdR0BRplZ8joqlR6+g0nmzlZ3ZAN/HxoxU=;
+        b=o+Ep4iNPGZGAMxflstK5jzJ0LKTnYO076RSWe1xqlLJhsPcs6sya2H9MG9wdJPlBW/
+         QTo4QvTgs/2v3EHvNfWzhKjCBXvmtd1edvGyressinf4RIHoFhVH1yzha0GO48f8BEL4
+         6+Aj7OKNC9i+WbMJ8ICrYl12Qgw43smDVr32NlytzNT00b+cN0Wsah8rxAZbxV5bgSj1
+         xalmtVEg2sUxqOQoxUdOKBcV5XTzRBE5s795h59CVElEtfOwkLFy+aJWCv455CfjAaRP
+         Jh9IylMBdM1G/OSyUNB3E0z8HnLrXPQuXX14YAOiCwmPtdJ6bgFWAJ2W5cHQ+WAlpsY/
+         Rs/A==
+X-Gm-Message-State: AGi0PuZ117kOS7a3Qs+ke1DG0pi8P6HBxrETxCXTF/24SEyYzMQh1Bn7
+        7CFyZCy9NHJbbX0NYoM+A4O95esOma/kCPE1fxZ2u37w
+X-Google-Smtp-Source: APiQypL6L1l9yVGcwlBWq8a8A43u6FR9g6WHFZ04KouAm0YqYK1D2zNeJ7aWgM6ye+HHxGJ5k6ZuxKrq3u+6pcLvFN4=
+X-Received: by 2002:a05:651c:28a:: with SMTP id b10mr11979366ljo.223.1586816616804;
+ Mon, 13 Apr 2020 15:23:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20200406141350.162036-1-nick.reitemeyer@web.de>
+In-Reply-To: <20200406141350.162036-1-nick.reitemeyer@web.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 14 Apr 2020 00:23:25 +0200
+Message-ID: <CACRpkdY1p3jBzm6cTY9OJJRPmwhKQa=HGUFSXUFuTOD0FNdQNg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: vendor-prefixes: Add Alps
+To:     Nick Reitemeyer <nick.reitemeyer@web.de>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Russel, Miquel, and all,
+On Mon, Apr 6, 2020 at 4:23 PM Nick Reitemeyer <nick.reitemeyer@web.de> wrote:
 
-MacchiatoBin Double-shot board fails to boot v5.6-rc5 kernel properly:
-USB, PCIe, and ethernet interfaces are not enabled. Before that I have
-been running v5.3 kernel w/o any noticeable issues.
+> Alps Electric Co., Ltd. is a japanese electronics company:
+> https://www.alps.com/
+>
+> Signed-off-by: Nick Reitemeyer <nick.reitemeyer@web.de>
 
-In brief, USB and PCIe devices are not detected, ethernet PHY fails
-to initialize with the following warnings:
-[    2.444150] mvebu-comphy f4120000.phy: unsupported SMC call, try updating your firmware
-[    2.452191] mvebu-comphy f4120000.phy: Firmware could not configure PHY 0 with mode 15 (ret: -1), trying legacy method
-[    2.474615] mvpp2 f4000000.ethernet eth2: Using firmware node mac address ...
-[    2.484420] mvebu-comphy f4120000.phy: unsupported SMC call, try updating your firmware
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-After quick bisection of the board dts files, I came to the following results:
-
-- USB works again after reverting the following two commits:
-  -- 96018a6fafb1 ("arm64: dts: marvell: Convert 7k/8k usb-phy properties to phy-supply")
-  -- 01d0deba28f6 ("arm64: dts: marvell: Add 7k/8k PHYs in USB3 nodes")
-
-- PCIe works again after reverting armada-8040-mcbin.dtsi parts of the
-  following two commits:
-  -- 1399672e48b5 ("arm64: dts: marvell: Drop PCIe I/O ranges from CP11x file")
-  -- ce55522c035e ("arm64: dts: marvell: Add 7k/8k PHYs in PCIe nodes")
-
-- ethernet: not yet...
-
-However looking at firmware version complaints, I guess that the actual
-reason of all those issues could be in ATF version rather than in the
-latest DTS changes. Probably I am using ATF version which is too old
-to work with up-to-date kernel: armada-17.10.3 from atf-marvell
-repository on github. If this is indeed the actual root cause of all
-the issues, then could you please recommend a preferable ATF version
-to test with ?
-
-Regards,
-Sergey
+Yours,
+Linus Walleij
