@@ -2,108 +2,104 @@ Return-Path: <SRS0=/QBj=55=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77037C2BBFD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 16:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E63C2BBFD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 16:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49C0C2072C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 16:27:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586795248;
-	bh=SG3tyY+QA76N57A8euSxUFRadA775l4wTg04eR/Ax98=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vt0grjuflqTuH5RgfNT6e9xtUXoxrFNwSf/jtbKo+CqfOsc3sgIxYzbpSX46a0dIS
-	 57g3KpHjRXFvRvkbXVy30vnZ7IIf5I6UBVrhdVWOkYtNVLxZ4nqkW7U8JNq39T1d4D
-	 Matf8x1F74bwPyVCzNVv45PZKXNxBY8eEn0M8Ozw=
+	by mail.kernel.org (Postfix) with ESMTP id 4B6662073E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 16:45:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qf9+EI92"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731527AbgDMQ11 (ORCPT
+        id S1731716AbgDMQpC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 12:27:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53534 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731526AbgDMQ11 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Apr 2020 12:27:27 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF47A20692;
-        Mon, 13 Apr 2020 16:27:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586795246;
-        bh=SG3tyY+QA76N57A8euSxUFRadA775l4wTg04eR/Ax98=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rJoXKZXpNOkpEMCQc/XanWQU0BCF75DO/feDoj2Me4AhLC2H2hq5j7w4wPGyFKtOO
-         D1RwbHkhHdTw5HBdRQxZVwdZxd0i6h8jJZLnaBg/8CWWt0Myx4tC7jtPZxHgouTaTo
-         tgo4xMoYTLIO0jWBoQikvKpGGGODzRjGr8I22tKM=
-Date:   Mon, 13 Apr 2020 17:27:22 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Mon, 13 Apr 2020 12:45:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731652AbgDMQpA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Apr 2020 12:45:00 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5942CC0A3BDC;
+        Mon, 13 Apr 2020 09:45:00 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id l14so2405912ljj.5;
+        Mon, 13 Apr 2020 09:45:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zfG62zcpiV13tvGYAxxYuWs3RV9RU5HlKcZKPVR46ns=;
+        b=qf9+EI92bcA5XY1SuzrhlGerPxNkVxijynrkyzDdM7NcY+GL/k7rCbDPeqEjMMwi4a
+         nNkeaGj4//z1ZcrxTizExz26chnhy/ILnNYVy9ev782Hm89xggwuZH4M+OSN8JGJOetq
+         cCqBIwYSuS9lMQxo/EkCnO/LDss1lfsxOhAgzZERDD6+3ZIa102umGMyMuzLGFtSCTBP
+         JBD+gMHmyvfZu+9R6wvoxDfqntq+60D+CxUvNJ+GtVuTb8zhiqIgbZjOnniQvQnHlK3P
+         YZVcpGsBG1FW7bmg07ANIB7FuPpicq+SO8qK342WAL2VDHNQztxW8+O9SExABPxiSONL
+         kT/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zfG62zcpiV13tvGYAxxYuWs3RV9RU5HlKcZKPVR46ns=;
+        b=aZ4bhmwcEyQkYO6N87DGTxyh6UEPowXA3OgURGO5f/0r5WAcR5qFmj3mKGkefpn9Va
+         P/dA9AlNYqPGeZ8Os3l1vNFBCiRgwu9u0O6vk3zlkq+4uP5BV5+xYH4xJMm/Fidq5u7Q
+         hcVPfqfHKeH4gxQH75RbgNbCQt+gjmbzYafl1JJHKM5GgDLf2Oxh43mg4eO92vFznTSK
+         BE/jn1CVfMzfav5U3IZgwxKoWur2T6EmTLvbhkrCYH7U7OPF8oAZL3fZ6Gfs0nETkiGv
+         4vp40Jww/k88S7QN5DCtpVnSuT8IG1oTiO8lO4PBe3tIBaJtEM0pevoPhdeWVBIeotOY
+         dY7g==
+X-Gm-Message-State: AGi0PuZqKtxqw3+T8eNvtkpNi1Va0rNYo374c3Tq5W4Q3ZjSaY8YIQSD
+        0Dd+TYak3FiMGQemBHD8PeRrWu33SAAGBw==
+X-Google-Smtp-Source: APiQypL5thoDq6pWgnkhIVne/nBCh0GH00l1i75sFnWHdvhBcjXz57fRoqqJYnxbr3mZ6avk/7aTug==
+X-Received: by 2002:a2e:8793:: with SMTP id n19mr3807878lji.46.1586796298473;
+        Mon, 13 Apr 2020 09:44:58 -0700 (PDT)
+Received: from localhost ([213.191.183.145])
+        by smtp.gmail.com with ESMTPSA id l18sm1170388lje.19.2020.04.13.09.44.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Apr 2020 09:44:57 -0700 (PDT)
+From:   Iskren Chernev <iskren.chernev@gmail.com>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-Subject: Re: [PATCH v5 0/6] Support ADIS16475 and similar IMUs
-Message-ID: <20200413172722.1cb5f55e@archlinux>
-In-Reply-To: <20200413082445.17324-1-nuno.sa@analog.com>
-References: <20200413082445.17324-1-nuno.sa@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Iskren Chernev <iskren.chernev@gmail.com>
+Subject: [PATCH 0/3] regulator: max77826: Add MAX77826 support
+Date:   Mon, 13 Apr 2020 19:44:37 +0300
+Message-Id: <20200413164440.1138178-1-iskren.chernev@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 13 Apr 2020 10:24:39 +0200
-Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
+The MAX77826 is a PMIC found on the Samsung Galaxy S5 (klte) and possibly other
+devices. It is produced by Maxim Integrated and contains 15 LDOs a buck and
+a buck boost regulator.
 
-> This series adds support for the adis16475 and similar IMUs. This driver
-> will be the first user of some changes on the adis library. Hence, the
-> first three patches are related to the library:
->  * Add anaged device functions for registering triggers with the library;
->  * Updates the way `irq_mask` is passed to `request_irq()`;
->  * It adds an update_bits() like API.
->=20
-> A new patch was introduced (iio: adis: Add burst_max_len variable) in
-> order to make burst32 configuration at runtime.
+Iskren Chernev (3):
+  regulator: max77826: Add max77826 regulator driver
+  dt-bindings: regulator: Add document bindings for max77826
+  ARM: dts: qcom: msm8974-klte: Add max77826 pmic node
 
-Series looks good to me, but I'd like to allow a bit of time for DT
-review + anyone else who wants to take another look.
+ .../bindings/regulator/maxim,max77826.yaml    |  70 ++++
+ .../boot/dts/qcom-msm8974-samsung-klte.dts    | 110 +++++++
+ arch/arm/boot/dts/qcom-msm8974.dtsi           |  11 +
+ drivers/regulator/Kconfig                     |  10 +
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/max77826-regulator.c        | 301 ++++++++++++++++++
+ 6 files changed, 503 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/maxim,max77826.yaml
+ create mode 100644 drivers/regulator/max77826-regulator.c
 
-Thanks,
 
-Jonathan
-
->=20
-> Nuno S=C3=A1 (6):
->   iio: imu: adis: Add Managed device functions
->   iio: imu: adis: Add irq mask variable
->   iio: adis: Add adis_update_bits() APIs
->   iio: adis: Support different burst sizes
->   iio: imu: Add support for adis16475
->   dt-bindings: iio: Add adis16475 documentation
->=20
->  .../bindings/iio/imu/adi,adis16475.yaml       |  137 ++
->  MAINTAINERS                                   |    8 +
->  drivers/iio/imu/Kconfig                       |   13 +
->  drivers/iio/imu/Makefile                      |    1 +
->  drivers/iio/imu/adis.c                        |   25 +
->  drivers/iio/imu/adis16400.c                   |    2 +-
->  drivers/iio/imu/adis16475.c                   | 1336 +++++++++++++++++
->  drivers/iio/imu/adis_buffer.c                 |   58 +-
->  drivers/iio/imu/adis_trigger.c                |   72 +-
->  include/linux/iio/imu/adis.h                  |   87 +-
->  10 files changed, 1728 insertions(+), 11 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis164=
-75.yaml
->  create mode 100644 drivers/iio/imu/adis16475.c
->=20
+base-commit: 3b2804993d1e9f2b01f4264993009d3e48722e0d
+--
+2.26.0
 
