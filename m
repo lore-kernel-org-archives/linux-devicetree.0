@@ -2,113 +2,497 @@ Return-Path: <SRS0=/QBj=55=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 404C3C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 15:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D614FC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 15:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A54720732
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 15:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E1852072C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 15:27:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFN6Q/Qg"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="uK67vhGu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729960AbgDMPSH (ORCPT
+        id S1730089AbgDMP1O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 11:18:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50480 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729618AbgDMPSF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Apr 2020 11:18:05 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 728EAC0A3BDC;
-        Mon, 13 Apr 2020 08:18:05 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id u15so4549030ljd.3;
-        Mon, 13 Apr 2020 08:18:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GdKC161+a5UeWpGOznjCxdPHuVYqeTMUmqQiY/jkoXQ=;
-        b=TFN6Q/Qgniz7+QYsjrimIJAqCoe+peI4ByNh8FPtgWl+IxMFdtouuBQ3DdCfB3D8PN
-         oFoEqruP2xgPxXpyoHNn7qkhyEfX/knBklwQHC5cEDT3c8wCkZh5Ant45cCoCf7L+MnY
-         H9jUYnfTNe6PyAgtlZ+i/fuxbnZVf4Dbs1zi4RBwYbjaTw5yYEp0ctKxn78YOe65eoPN
-         rx8ERcL3GJNubbv3oJRiJylWBD6nwN0AzKmhs876f815+Z0TA5E5rUylFvQ6uRI0yiFm
-         WPyD5sUC/vewP9l6d/8A9aE7jafPavBULRPl6+/Xcp/ROcHhElXempcZia6FYjyLEN61
-         iDoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GdKC161+a5UeWpGOznjCxdPHuVYqeTMUmqQiY/jkoXQ=;
-        b=OqQxRhw8KrDurPNG806ifDojrf3ea2/cBx4r9mb714hzMQlTzy1xUxgmLO3hV3ZgKC
-         KcVStm+r4W233qsXsaYw8nKSylNphoWhZFYY2GsyezDGenOG0Ukx8scM8rhAdS9jqlbW
-         xu0flqlLuCTpO40OOze2VQD2KOoFzPjkGlWjFd8mDBiZW97cFhmvG7Cm+8DkEnn0gItW
-         uCr6796aXbV9WsS57jOF46LDT619aaaaAyTOCNZldgOwjxXAuY7Bd9/imSdjL4SWyhhW
-         jFYhX3xNRFmcQGSQonS7xAu7w7Qi5YH2VcDYnwmFsHJLBhl41m0Pm76ROqLUhA59fVPl
-         1aEA==
-X-Gm-Message-State: AGi0PuZgnnIWZdX0accSqktqutm6EVcEdjaAXEWjuEaAHJO/kyV5JkkS
-        5920Gch3ORFL2ETbDrUD3YjlvtLX
-X-Google-Smtp-Source: APiQypKxQ/EghHVYpg1HOEBLhbZ8HlHRew/LfP6ed1H+YL6pEvyGOKxv7C+tCEfvFdT33UG6L9Hk1g==
-X-Received: by 2002:a05:651c:120e:: with SMTP id i14mr7500365lja.12.1586791083641;
-        Mon, 13 Apr 2020 08:18:03 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id 64sm8427382lfh.32.2020.04.13.08.18.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Apr 2020 08:18:02 -0700 (PDT)
-Subject: Re: [PATCH v2 17/22] memory: tegra30-emc: Register as interconnect
- provider
-To:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-References: <20200330010904.27643-1-digetx@gmail.com>
- <20200330010904.27643-18-digetx@gmail.com>
- <d8e39d8b-b3f3-4a30-cb5a-67fcbe18a957@linaro.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <8d072775-aec8-5a55-8fd7-7166e2a34c95@gmail.com>
-Date:   Mon, 13 Apr 2020 18:18:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 13 Apr 2020 11:27:14 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:39604 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730200AbgDMP1N (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Apr 2020 11:27:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1586791630; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=BpUJKSG1QLwuJ8g/pPckTiPCHG4DN8mcNSgmsGC72ho=;
+        b=uK67vhGuVa81RDQWDAezncZS76DHPz9eoSBJb+3/UCrpQpWgLa0yAaJhD26+340Lp1My99
+        QddxVaHBAgzVRwcmuROY0KVpuvoCLWre0a4UMDUL3F4Xgi4sDjCVMwUmZp0Nmk6NssqWph
+        wKog0aR0w6Pdd98mDTuouLWERdjPkNU=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     od@zcrc.me,
+        =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0?= <zhouyanjie@wanyeetech.com>,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 01/13] dt-bindings: timer: Convert ingenic,tcu.txt to YAML
+Date:   Mon, 13 Apr 2020 17:26:21 +0200
+Message-Id: <20200413152633.198301-1-paul@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <d8e39d8b-b3f3-4a30-cb5a-67fcbe18a957@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-13.04.2020 15:44, Georgi Djakov пишет:
-...
-> All the above seems like a duplicate of what we already have in the previous
-> patch for tegra20-emc. Can we have a single driver for both? Maybe extract the
-> above as a separate interconnect provider driver.
+Convert the ingenic,tcu.txt file to YAML.
 
-Perhaps we could do it later on, once the work on the drivers will
-settle down. I think it should be okay to have some minor duplication
-for now, we already have some other small things duplicated in these
-drivers.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
 
->>  static int tegra_emc_probe(struct platform_device *pdev)
->>  {
->>  	struct platform_device *mc;
->> @@ -1344,6 +1452,13 @@ static int tegra_emc_probe(struct platform_device *pdev)
->>  	platform_set_drvdata(pdev, emc);
->>  	tegra_emc_debugfs_init(emc);
->>  
->> +	if (IS_ENABLED(CONFIG_INTERCONNECT)) {
->> +		err = tegra_emc_interconnect_init(emc);
-> 
-> How about registering a platform device that will use the same driver to handle
-> the interconnect functionality for both tegra20 and tegra30?
+Notes:
+    This one patch was sent as standalone before, so it's technically
+    a V2. Support for 'assigned-clocks', 'assigned-clock-parents',
+    'assigned-clock-rates' was added.
 
-It should be possible. But it also should be possible to make all these
-drivers modular, which I'm going to try out.
+ .../devicetree/bindings/timer/ingenic,tcu.txt | 138 ---------
+ .../bindings/timer/ingenic,tcu.yaml           | 281 ++++++++++++++++++
+ 2 files changed, 281 insertions(+), 138 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
+
+diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+deleted file mode 100644
+index 91f704951845..000000000000
+--- a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
++++ /dev/null
+@@ -1,138 +0,0 @@
+-Ingenic JZ47xx SoCs Timer/Counter Unit devicetree bindings
+-==========================================================
+-
+-For a description of the TCU hardware and drivers, have a look at
+-Documentation/mips/ingenic-tcu.rst.
+-
+-Required properties:
+-
+-- compatible: Must be one of:
+-  * ingenic,jz4740-tcu
+-  * ingenic,jz4725b-tcu
+-  * ingenic,jz4770-tcu
+-  * ingenic,x1000-tcu
+-  followed by "simple-mfd".
+-- reg: Should be the offset/length value corresponding to the TCU registers
+-- clocks: List of phandle & clock specifiers for clocks external to the TCU.
+-  The "pclk", "rtc" and "ext" clocks should be provided. The "tcu" clock
+-  should be provided if the SoC has it.
+-- clock-names: List of name strings for the external clocks.
+-- #clock-cells: Should be <1>;
+-  Clock consumers specify this argument to identify a clock. The valid values
+-  may be found in <dt-bindings/clock/ingenic,tcu.h>.
+-- interrupt-controller : Identifies the node as an interrupt controller
+-- #interrupt-cells : Specifies the number of cells needed to encode an
+-  interrupt source. The value should be 1.
+-- interrupts : Specifies the interrupt the controller is connected to.
+-
+-Optional properties:
+-
+-- ingenic,pwm-channels-mask: Bitmask of TCU channels reserved for PWM use.
+-  Default value is 0xfc.
+-
+-
+-Children nodes
+-==========================================================
+-
+-
+-PWM node:
+----------
+-
+-Required properties:
+-
+-- compatible: Must be one of:
+-  * ingenic,jz4740-pwm
+-  * ingenic,jz4725b-pwm
+-- #pwm-cells: Should be 3. See ../pwm/pwm.yaml for a description of the cell
+-  format.
+-- clocks: List of phandle & clock specifiers for the TCU clocks.
+-- clock-names: List of name strings for the TCU clocks.
+-
+-
+-Watchdog node:
+---------------
+-
+-Required properties:
+-
+-- compatible: Must be "ingenic,jz4740-watchdog"
+-- clocks: phandle to the WDT clock
+-- clock-names: should be "wdt"
+-
+-
+-OS Timer node:
+----------
+-
+-Required properties:
+-
+-- compatible: Must be one of:
+-  * ingenic,jz4725b-ost
+-  * ingenic,jz4770-ost
+-- clocks: phandle to the OST clock
+-- clock-names: should be "ost"
+-- interrupts : Specifies the interrupt the OST is connected to.
+-
+-
+-Example
+-==========================================================
+-
+-#include <dt-bindings/clock/jz4770-cgu.h>
+-#include <dt-bindings/clock/ingenic,tcu.h>
+-
+-/ {
+-	tcu: timer@10002000 {
+-		compatible = "ingenic,jz4770-tcu", "simple-mfd";
+-		reg = <0x10002000 0x1000>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges = <0x0 0x10002000 0x1000>;
+-
+-		#clock-cells = <1>;
+-
+-		clocks = <&cgu JZ4770_CLK_RTC
+-			  &cgu JZ4770_CLK_EXT
+-			  &cgu JZ4770_CLK_PCLK>;
+-		clock-names = "rtc", "ext", "pclk";
+-
+-		interrupt-controller;
+-		#interrupt-cells = <1>;
+-
+-		interrupt-parent = <&intc>;
+-		interrupts = <27 26 25>;
+-
+-		watchdog: watchdog@0 {
+-			compatible = "ingenic,jz4740-watchdog";
+-			reg = <0x0 0xc>;
+-
+-			clocks = <&tcu TCU_CLK_WDT>;
+-			clock-names = "wdt";
+-		};
+-
+-		pwm: pwm@40 {
+-			compatible = "ingenic,jz4740-pwm";
+-			reg = <0x40 0x80>;
+-
+-			#pwm-cells = <3>;
+-
+-			clocks = <&tcu TCU_CLK_TIMER0
+-				  &tcu TCU_CLK_TIMER1
+-				  &tcu TCU_CLK_TIMER2
+-				  &tcu TCU_CLK_TIMER3
+-				  &tcu TCU_CLK_TIMER4
+-				  &tcu TCU_CLK_TIMER5
+-				  &tcu TCU_CLK_TIMER6
+-				  &tcu TCU_CLK_TIMER7>;
+-			clock-names = "timer0", "timer1", "timer2", "timer3",
+-				      "timer4", "timer5", "timer6", "timer7";
+-		};
+-
+-		ost: timer@e0 {
+-			compatible = "ingenic,jz4770-ost";
+-			reg = <0xe0 0x20>;
+-
+-			clocks = <&tcu TCU_CLK_OST>;
+-			clock-names = "ost";
+-
+-			interrupts = <15>;
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml b/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
+new file mode 100644
+index 000000000000..e21e9972ed65
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
+@@ -0,0 +1,281 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/timer/ingenic,tcu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Ingenic SoCs Timer/Counter Unit (TCU) devicetree bindings
++
++description: |
++  For a description of the TCU hardware and drivers, have a look at
++  Documentation/mips/ingenic-tcu.rst.
++
++maintainers:
++  - Paul Cercueil <paul@crapouillou.net>
++
++select:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - ingenic,jz4740-tcu
++          - ingenic,jz4725b-tcu
++          - ingenic,jz4770-tcu
++          - ingenic,jz4780-tcu
++          - ingenic,x1000-tcu
++  required:
++    - compatible
++
++properties:
++  $nodename:
++    pattern: "^timer@[0-9a-f]+$"
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 1
++
++  "#clock-cells":
++    const: 1
++
++  "#interrupt-cells":
++    const: 1
++
++  interrupt-controller: true
++
++  ranges: true
++
++  compatible:
++    oneOf:
++      - items:
++        - enum:
++          - ingenic,jz4740-tcu
++          - ingenic,jz4725b-tcu
++          - ingenic,jz4770-tcu
++          - ingenic,x1000-tcu
++        - const: simple-mfd
++      - items:
++        - const: ingenic,jz4780-tcu
++        - const: ingenic,jz4770-tcu
++        - const: simple-mfd
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: RTC clock
++      - description: EXT clock
++      - description: PCLK clock
++      - description: TCU clock
++    minItems: 3
++
++  clock-names:
++    items:
++      - const: rtc
++      - const: ext
++      - const: pclk
++      - const: tcu
++    minItems: 3
++
++  interrupts:
++    items:
++      - description: TCU0 interrupt
++      - description: TCU1 interrupt
++      - description: TCU2 interrupt
++    minItems: 1
++
++  assigned-clocks:
++    minItems: 1
++    maxItems: 8
++
++  assigned-clock-parents:
++    minItems: 1
++    maxItems: 8
++
++  assigned-clock-rates:
++    minItems: 1
++    maxItems: 8
++
++  ingenic,pwm-channels-mask:
++    description: Bitmask of TCU channels reserved for PWM use.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 0x00
++      - maximum: 0xff
++      - default: 0xfc
++
++patternProperties:
++  "^watchdog@[a-f0-9]+$":
++    type: object
++    allOf: [ $ref: ../watchdog/watchdog.yaml# ]
++    properties:
++      compatible:
++        oneOf:
++          - enum:
++            - ingenic,jz4740-watchdog
++            - ingenic,jz4780-watchdog
++          - items:
++            - const: ingenic,jz4770-watchdog
++            - const: ingenic,jz4740-watchdog
++
++      reg:
++        maxItems: 1
++
++      clocks:
++        maxItems: 1
++
++      clock-names:
++        const: wdt
++
++    required:
++      - compatible
++      - reg
++      - clocks
++      - clock-names
++
++  "^pwm@[a-f0-9]+$":
++    type: object
++    allOf: [ $ref: ../pwm/pwm.yaml# ]
++    properties:
++      compatible:
++        oneOf:
++          - enum:
++            - ingenic,jz4740-pwm
++          - items:
++            - enum:
++              - ingenic,jz4770-pwm
++              - ingenic,jz4780-pwm
++            - const: ingenic,jz4740-pwm
++
++      reg:
++        maxItems: 1
++
++      clocks:
++        minItems: 6
++        maxItems: 8
++
++      clock-names:
++        items:
++          - const: timer0
++          - const: timer1
++          - const: timer2
++          - const: timer3
++          - const: timer4
++          - const: timer5
++          - const: timer6
++          - const: timer7
++        minItems: 6
++
++    required:
++      - compatible
++      - reg
++      - clocks
++      - clock-names
++
++  "^timer@[a-f0-9]+$":
++    type: object
++    properties:
++      compatible:
++        oneOf:
++          - enum:
++            - ingenic,jz4725b-ost
++            - ingenic,jz4770-ost
++          - items:
++            - const: ingenic,jz4780-ost
++            - const: ingenic,jz4770-ost
++
++      reg:
++        maxItems: 1
++
++      clocks:
++        maxItems: 1
++
++      clock-names:
++        const: ost
++
++      interrupts:
++        maxItems: 1
++
++    required:
++      - compatible
++      - reg
++      - clocks
++      - clock-names
++      - interrupts
++
++    additionalProperties: false
++
++required:
++  - "#clock-cells"
++  - "#interrupt-cells"
++  - interrupt-controller
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/jz4770-cgu.h>
++    #include <dt-bindings/clock/ingenic,tcu.h>
++    tcu: timer@10002000 {
++      compatible = "ingenic,jz4770-tcu", "simple-mfd";
++      reg = <0x10002000 0x1000>;
++      #address-cells = <1>;
++      #size-cells = <1>;
++      ranges = <0x0 0x10002000 0x1000>;
++
++      #clock-cells = <1>;
++
++      clocks = <&cgu JZ4770_CLK_RTC>,
++               <&cgu JZ4770_CLK_EXT>,
++               <&cgu JZ4770_CLK_PCLK>;
++      clock-names = "rtc", "ext", "pclk";
++
++      interrupt-controller;
++      #interrupt-cells = <1>;
++
++      interrupt-parent = <&intc>;
++      interrupts = <27 26 25>;
++
++      watchdog: watchdog@0 {
++        compatible = "ingenic,jz4770-watchdog", "ingenic,jz4740-watchdog";
++        reg = <0x0 0xc>;
++
++        clocks = <&tcu TCU_CLK_WDT>;
++        clock-names = "wdt";
++      };
++
++      pwm: pwm@40 {
++        compatible = "ingenic,jz4770-pwm", "ingenic,jz4740-pwm";
++        reg = <0x40 0x80>;
++
++        #pwm-cells = <3>;
++
++        clocks = <&tcu TCU_CLK_TIMER0>,
++                 <&tcu TCU_CLK_TIMER1>,
++                 <&tcu TCU_CLK_TIMER2>,
++                 <&tcu TCU_CLK_TIMER3>,
++                 <&tcu TCU_CLK_TIMER4>,
++                 <&tcu TCU_CLK_TIMER5>,
++                 <&tcu TCU_CLK_TIMER6>,
++                 <&tcu TCU_CLK_TIMER7>;
++        clock-names = "timer0", "timer1", "timer2", "timer3",
++                "timer4", "timer5", "timer6", "timer7";
++      };
++
++      ost: timer@e0 {
++        compatible = "ingenic,jz4770-ost";
++        reg = <0xe0 0x20>;
++
++        clocks = <&tcu TCU_CLK_OST>;
++        clock-names = "ost";
++
++        interrupts = <15>;
++      };
++    };
+-- 
+2.25.1
+
