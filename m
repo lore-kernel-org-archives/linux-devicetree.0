@@ -2,63 +2,64 @@ Return-Path: <SRS0=/QBj=55=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E63C2BBFD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 16:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 388C0C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 16:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B6662073E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 16:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1471F2063A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 16:45:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qf9+EI92"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YP83sfYk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731716AbgDMQpC (ORCPT
+        id S1731748AbgDMQpU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 12:45:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45146 "EHLO
+        Mon, 13 Apr 2020 12:45:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731652AbgDMQpA (ORCPT
+        by vger.kernel.org with ESMTP id S1731735AbgDMQpN (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Apr 2020 12:45:00 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5942CC0A3BDC;
-        Mon, 13 Apr 2020 09:45:00 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id l14so2405912ljj.5;
-        Mon, 13 Apr 2020 09:45:00 -0700 (PDT)
+        Mon, 13 Apr 2020 12:45:13 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 880D2C0A3BDC;
+        Mon, 13 Apr 2020 09:45:13 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id 131so7017530lfh.11;
+        Mon, 13 Apr 2020 09:45:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zfG62zcpiV13tvGYAxxYuWs3RV9RU5HlKcZKPVR46ns=;
-        b=qf9+EI92bcA5XY1SuzrhlGerPxNkVxijynrkyzDdM7NcY+GL/k7rCbDPeqEjMMwi4a
-         nNkeaGj4//z1ZcrxTizExz26chnhy/ILnNYVy9ev782Hm89xggwuZH4M+OSN8JGJOetq
-         cCqBIwYSuS9lMQxo/EkCnO/LDss1lfsxOhAgzZERDD6+3ZIa102umGMyMuzLGFtSCTBP
-         JBD+gMHmyvfZu+9R6wvoxDfqntq+60D+CxUvNJ+GtVuTb8zhiqIgbZjOnniQvQnHlK3P
-         YZVcpGsBG1FW7bmg07ANIB7FuPpicq+SO8qK342WAL2VDHNQztxW8+O9SExABPxiSONL
-         kT/A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=2YVpEsdAD3gdou5O12iibPQ3XhGh37dAHJSGf0NXN0w=;
+        b=YP83sfYkJzjjL19EAeyMmpmI97iR/GfkRrCy6ay6bm3o6v6P9RxZbQiSkOfz+GbOmY
+         DTqA1h9WVANaT5ADT/C+SLfLBfwZCEsrB9bsHsTNBIEQyZ18pOBwJmbvApGhxBhY86KK
+         67jaP7Y031u5l3u7dBNCAYL+Bhv0alpKIjvw0/1dW3bISdLgMwxZz0b07ZsiOap82ulA
+         7ulpP1iRJECuGuPeXn840GpJJ3JzhJctzeYYEsZkL+1biT4EKtLUug2DMKTnvmAsS0dP
+         ysjZWFSHzAybk9J8CT4rOHJ3w1S1qxgeMeNdtEZva3xr8iAOa5ej2s357w2AaPS0h0US
+         VEKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zfG62zcpiV13tvGYAxxYuWs3RV9RU5HlKcZKPVR46ns=;
-        b=aZ4bhmwcEyQkYO6N87DGTxyh6UEPowXA3OgURGO5f/0r5WAcR5qFmj3mKGkefpn9Va
-         P/dA9AlNYqPGeZ8Os3l1vNFBCiRgwu9u0O6vk3zlkq+4uP5BV5+xYH4xJMm/Fidq5u7Q
-         hcVPfqfHKeH4gxQH75RbgNbCQt+gjmbzYafl1JJHKM5GgDLf2Oxh43mg4eO92vFznTSK
-         BE/jn1CVfMzfav5U3IZgwxKoWur2T6EmTLvbhkrCYH7U7OPF8oAZL3fZ6Gfs0nETkiGv
-         4vp40Jww/k88S7QN5DCtpVnSuT8IG1oTiO8lO4PBe3tIBaJtEM0pevoPhdeWVBIeotOY
-         dY7g==
-X-Gm-Message-State: AGi0PuZqKtxqw3+T8eNvtkpNi1Va0rNYo374c3Tq5W4Q3ZjSaY8YIQSD
-        0Dd+TYak3FiMGQemBHD8PeRrWu33SAAGBw==
-X-Google-Smtp-Source: APiQypL5thoDq6pWgnkhIVne/nBCh0GH00l1i75sFnWHdvhBcjXz57fRoqqJYnxbr3mZ6avk/7aTug==
-X-Received: by 2002:a2e:8793:: with SMTP id n19mr3807878lji.46.1586796298473;
-        Mon, 13 Apr 2020 09:44:58 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2YVpEsdAD3gdou5O12iibPQ3XhGh37dAHJSGf0NXN0w=;
+        b=r28lMVNblZZeTmm9KI5NHmUks5fRu3985SM+vs2WIiXOv15yk/hZMIAOKBzbBwlZ54
+         IxJzvOo6yZ8DxDs9athPeMEVcVrYJ04wdfaHjxXtNs3CgJkzjJQxtIgB3RNfEhsqZ5Oe
+         ug6wwfHCRFxHwwgwrWWHeJKVdmExen1Xq0cLwTxsat/KdDAdH0Q7uxKLuVeVr11OfFNl
+         Xq90MaXgX2ZZzKgJ7coOtLPfNbYaAdcGU2/hXbnvvmZYQstwZBVLgMyAcPx6RIV1CT81
+         8grQ5iXrapT6wiVI1ieXdCLRFnhPJnqYqpT9ayCjtj5EE0e4qcD1mKCLrBiz04iponwd
+         aBYg==
+X-Gm-Message-State: AGi0PuZ9zPrv7hu11SxGrj0l8mKosuP/taVVRjn4gZwRSz8Llm1DsBA3
+        UI1wQdhEsSUuN0VdCQ7xzy/HOOhG6t8S8g==
+X-Google-Smtp-Source: APiQypJniJ22q9ejT6dHNBXLjaeOMXx81p9W4vXAMZiLxguhcg8uVdZVBz7Hmz6Om+kNT50l6LRtYA==
+X-Received: by 2002:a05:6512:1109:: with SMTP id l9mr2428352lfg.12.1586796311588;
+        Mon, 13 Apr 2020 09:45:11 -0700 (PDT)
 Received: from localhost ([213.191.183.145])
-        by smtp.gmail.com with ESMTPSA id l18sm1170388lje.19.2020.04.13.09.44.56
+        by smtp.gmail.com with ESMTPSA id f4sm2256280lfa.24.2020.04.13.09.45.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Apr 2020 09:44:57 -0700 (PDT)
+        Mon, 13 Apr 2020 09:45:10 -0700 (PDT)
 From:   Iskren Chernev <iskren.chernev@gmail.com>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     Andy Gross <agross@kernel.org>,
@@ -68,10 +69,12 @@ Cc:     Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         ~postmarketos/upstreaming@lists.sr.ht,
         Iskren Chernev <iskren.chernev@gmail.com>
-Subject: [PATCH 0/3] regulator: max77826: Add MAX77826 support
-Date:   Mon, 13 Apr 2020 19:44:37 +0300
-Message-Id: <20200413164440.1138178-1-iskren.chernev@gmail.com>
+Subject: [PATCH 3/3] ARM: dts: qcom: msm8974-klte: Add max77826 pmic node
+Date:   Mon, 13 Apr 2020 19:44:40 +0300
+Message-Id: <20200413164440.1138178-4-iskren.chernev@gmail.com>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200413164440.1138178-1-iskren.chernev@gmail.com>
+References: <20200413164440.1138178-1-iskren.chernev@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -79,27 +82,156 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The MAX77826 is a PMIC found on the Samsung Galaxy S5 (klte) and possibly other
-devices. It is produced by Maxim Integrated and contains 15 LDOs a buck and
-a buck boost regulator.
+This introduces the MAX77826 PMIC that powers some pheripherals on the
+klte, like the touchpad, touchkeys and camera.
 
-Iskren Chernev (3):
-  regulator: max77826: Add max77826 regulator driver
-  dt-bindings: regulator: Add document bindings for max77826
-  ARM: dts: qcom: msm8974-klte: Add max77826 pmic node
+Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
+---
+ .../boot/dts/qcom-msm8974-samsung-klte.dts    | 110 ++++++++++++++++++
+ arch/arm/boot/dts/qcom-msm8974.dtsi           |  11 ++
+ 2 files changed, 121 insertions(+)
 
- .../bindings/regulator/maxim,max77826.yaml    |  70 ++++
- .../boot/dts/qcom-msm8974-samsung-klte.dts    | 110 +++++++
- arch/arm/boot/dts/qcom-msm8974.dtsi           |  11 +
- drivers/regulator/Kconfig                     |  10 +
- drivers/regulator/Makefile                    |   1 +
- drivers/regulator/max77826-regulator.c        | 301 ++++++++++++++++++
- 6 files changed, 503 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/maxim,max77826.yaml
- create mode 100644 drivers/regulator/max77826-regulator.c
-
-
-base-commit: 3b2804993d1e9f2b01f4264993009d3e48722e0d
---
+diff --git a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
+index eaa1001d0a46..f6d3a9dcf0de 100644
+--- a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
++++ b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
+@@ -21,4 +21,114 @@ serial@f991e000 {
+ 		status = "ok";
+ 	};
+ 
++	pinctrl@fd510000 {
++		i2c6_pins: i2c6 {
++			mux {
++				pins = "gpio29", "gpio30";
++				function = "blsp_i2c6";
++
++				drive-strength = <2>;
++				bias-disable;
++			};
++		};
++	};
++
++	i2c@f9928000 {
++		status = "okay";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c6_pins>;
++
++		pmic@60 {
++			reg = <0x60>;
++			compatible = "maxim,max77826-regulator";
++
++			regulators {
++				max77826_ldo1: LDO1 {
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++				};
++
++				max77826_ldo2: LDO2 {
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1000000>;
++				};
++
++				max77826_ldo3: LDO3 {
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++				};
++
++				max77826_ldo4: LDO4 {
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++				};
++
++				max77826_ldo5: LDO5 {
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++				};
++
++				max77826_ldo6: LDO6 {
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <3300000>;
++				};
++
++				max77826_ldo7: LDO7 {
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++				};
++
++				max77826_ldo8: LDO8 {
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <3300000>;
++				};
++
++				max77826_ldo9: LDO9 {
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++				};
++
++				max77826_ldo10: LDO10 {
++					regulator-min-microvolt = <2800000>;
++					regulator-max-microvolt = <2950000>;
++				};
++
++				max77826_ldo11: LDO11 {
++					regulator-min-microvolt = <2700000>;
++					regulator-max-microvolt = <2950000>;
++				};
++
++				max77826_ldo12: LDO12 {
++					regulator-min-microvolt = <2500000>;
++					regulator-max-microvolt = <3300000>;
++				};
++
++				max77826_ldo13: LDO13 {
++					regulator-min-microvolt = <3300000>;
++					regulator-max-microvolt = <3300000>;
++				};
++
++				max77826_ldo14: LDO14 {
++					regulator-min-microvolt = <3300000>;
++					regulator-max-microvolt = <3300000>;
++				};
++
++				max77826_ldo15: LDO15 {
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++				};
++
++				max77826_buck: BUCK {
++					regulator-min-microvolt = <1225000>;
++					regulator-max-microvolt = <1225000>;
++				};
++
++				max77826_buckboost: BUCKBOOST {
++					regulator-min-microvolt = <3400000>;
++					regulator-max-microvolt = <3400000>;
++				};
++			};
++		};
++	};
+ };
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index 2ea2308d91b3..51f5f904f9eb 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -974,6 +974,17 @@ blsp_i2c3: i2c@f9925000 {
+ 			#size-cells = <0>;
+ 		};
+ 
++		blsp_i2c6: i2c@f9928000 {
++			status = "disabled";
++			compatible = "qcom,i2c-qup-v2.1.1";
++			reg = <0xf9928000 0x1000>;
++			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_QUP6_I2C_APPS_CLK>, <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
+ 		blsp_i2c8: i2c@f9964000 {
+ 			status = "disabled";
+ 			compatible = "qcom,i2c-qup-v2.1.1";
+-- 
 2.26.0
 
