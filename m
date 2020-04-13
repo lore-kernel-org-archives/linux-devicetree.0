@@ -2,113 +2,288 @@ Return-Path: <SRS0=/QBj=55=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 999B3C2BBFD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 07:53:47 +0000 (UTC)
-Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68161206A1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 07:53:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f7pV8rfF"
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 68161206A1
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABECC2BBC7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 08:28:11 +0000 (UTC)
+X-Greylist: delayed 172 seconds by postgrey-1.34 at mail.kernel.org; Mon, 13 Apr 2020 08:28:11 UTC
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 4A40B20692
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=analog.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=devicetree-owner@vger.kernel.org
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.18])
+	by mail.kernel.org (Postfix) with ESMTP id 4A40B20692
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 08:28:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729460AbgDMHxo (ORCPT
+        id S1727926AbgDMIZS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 03:53:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:37240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727480AbgDMHxo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Apr 2020 03:53:44 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71E97C008651;
-        Mon, 13 Apr 2020 00:53:42 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k11so8657169wrp.5;
-        Mon, 13 Apr 2020 00:53:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=spiyZxT4E+JmLBsDsV1seik/2tk8bWL3YTlzlnavzgI=;
-        b=f7pV8rfFH7lOGO3h5/nULD5HFllQxOEL05FTUF2SiEU7MAF1JJPc8mKH7k/3mp1dKC
-         FdUtjdGVIhPaaHxiz+2ZaWsvZCsBdBLkUc0vwbtipe+jfJJ55AY7x9j9o7z3iU3ftoEb
-         Bv3Ej6Xplpkv9hOYt6QwjKJzP4A3G62gst9hKhD5eBAYTvgF9Wr4JygtFDUu1AyZxBEn
-         wNjlO5+VD0sorsLos6LHRByHb8qvslGj1FTporIbvRQfVEods0O9oLMrmXmySRNdjWmj
-         QcA6UC/bsomklfXgRa3zN0/xG2DhA+CKHljfC40QOQW0cpHOsm/s4JnXCNvoy3PfS2Za
-         3XdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=spiyZxT4E+JmLBsDsV1seik/2tk8bWL3YTlzlnavzgI=;
-        b=DIMJWxM4zBkKNwQ6oMnScO2gTlJCd+r3SgpUlLO4gpNWyo9Ie+BZt3Mj85LlYmkR9Z
-         B3hfhU9kTwcwk1ULP0xNNblvPOYaFEHsoJCxbSvNnGuXJFMMXwKX4/NgMAvCAqpwFZYW
-         Gfob1fCSvP1XWaG8ZG7H9IUZRzCD1cl9MwkxOPAtM8fhVa03yhH7xM1MeCgOa6yIz5Cn
-         K5uAui3L2y/CccFwe16om9VvBG3ociv8fmrFE0EZh90JhaC1Y4pD0suG97iCfgEG38nL
-         nzDUusyGIiUvMViJBLPFIRfyDwmVbCLV5IddqVIZD3AKQJGpfUosDlwjtG0pJ8gPUgeF
-         DPYQ==
-X-Gm-Message-State: AGi0Pua9lwaUaflpYSub3eCaYGYNoiLQb1lojdsk2ZS86JgSvjxtDu1X
-        xF/s4nrl/90CiV0vg3kG3aU=
-X-Google-Smtp-Source: APiQypI3ADIddYujUXFFd3J7qJbmarkuNkmp+vZH8NiU3NHgBxky845LmO+SMRcLmZhfAGYfIIblKg==
-X-Received: by 2002:a5d:6785:: with SMTP id v5mr3023648wru.376.1586764421177;
-        Mon, 13 Apr 2020 00:53:41 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2da9:2f00:c0be:812e:7fb0:ebe0])
-        by smtp.gmail.com with ESMTPSA id s14sm14009619wme.33.2020.04.13.00.53.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 00:53:40 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Maxime Ripard <maxime@cerno.tech>, Rob Herring <robh+dt@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: point to display schemas in DRM DRIVERS FOR ALLWINNER A10
-Date:   Mon, 13 Apr 2020 09:53:29 +0200
-Message-Id: <20200413075329.10717-1-lukas.bulwahn@gmail.com>
+        Mon, 13 Apr 2020 04:25:18 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:62018 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727792AbgDMIZR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Apr 2020 04:25:17 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03D8I5hq003260;
+        Mon, 13 Apr 2020 04:24:58 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 30bat4p9c5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Apr 2020 04:24:58 -0400
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 03D8OuYc020722
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Mon, 13 Apr 2020 04:24:56 -0400
+Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
+ SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 13 Apr 2020 01:24:55 -0700
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
+ SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 13 Apr 2020 01:24:55 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Mon, 13 Apr 2020 01:24:54 -0700
+Received: from NSA-L01.ad.analog.com (nsa-l01.ad.analog.com [10.32.224.203])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03D8Om3t026405;
+        Mon, 13 Apr 2020 04:24:51 -0400
+From:   =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>
+To:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>
+Subject: [PATCH v5 1/6] iio: imu: adis: Add Managed device functions
+Date:   Mon, 13 Apr 2020 10:24:40 +0200
+Message-ID: <20200413082445.17324-2-nuno.sa@analog.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200413082445.17324-1-nuno.sa@analog.com>
+References: <20200413082445.17324-1-nuno.sa@analog.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-13_02:2020-04-12,2020-04-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ lowpriorityscore=0 priorityscore=1501 clxscore=1015 adultscore=0
+ mlxlogscore=946 bulkscore=0 malwarescore=0 phishscore=0 suspectscore=2
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004130074
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Commit f5a98bfe7b37 ("dt-bindings: display: Convert Allwinner display
-pipeline to schemas") replaced sunxi/sun4i-drm.txt with
-allwinner,sun*.yaml files in Documentation/devicetree/bindings/display/,
-but did not adjust DRM DRIVERS FOR ALLWINNER A10.
+This patch adds support for a managed device version of
+adis_setup_buffer_and_trigger. It works exactly as the original
+one but it calls all the devm_iio_* functions to setup an iio
+buffer and trigger. Hence we do not need to care about cleaning those
+and we do not need to support a remove() callback for every driver using
+the adis library.
 
-Since then, ./scripts/get_maintainer.pl --self-test complains:
-
-  warning: no file matches \
-  F: Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-
-Point to allwinner display schemas in DRM DRIVERS FOR ALLWINNER A10.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: Nuno Sá <nuno.sa@analog.com>
 ---
-Maxime, please ack.
-Rob, please pick this non-urgent minor clean-up patch.
+Changes in v2:
+ * Added blank lines for readability.
 
+Changes in V3:
+ * Removed unnecessary inline;
+ * Free buffer resources.
 
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v4:
+ * Make use of irq_handler_t.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e64e5db31497..1f6c9bec872a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5552,7 +5552,7 @@ M:	Chen-Yu Tsai <wens@csie.org>
- L:	dri-devel@lists.freedesktop.org
- S:	Supported
- T:	git git://anongit.freedesktop.org/drm/drm-misc
--F:	Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-+F:	Documentation/devicetree/bindings/display/allwinner,sun*.yaml
- F:	drivers/gpu/drm/sun4i/
+Changes in v5:
+ * Nothing changed.
+
+ drivers/iio/imu/adis_buffer.c  | 45 ++++++++++++++++++++++++++++++++++
+ drivers/iio/imu/adis_trigger.c | 41 ++++++++++++++++++++++++++++---
+ include/linux/iio/imu/adis.h   | 17 +++++++++++++
+ 3 files changed, 100 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/iio/imu/adis_buffer.c b/drivers/iio/imu/adis_buffer.c
+index 04e5e2a0fd6b..8fdc4dca10c0 100644
+--- a/drivers/iio/imu/adis_buffer.c
++++ b/drivers/iio/imu/adis_buffer.c
+@@ -156,6 +156,14 @@ static irqreturn_t adis_trigger_handler(int irq, void *p)
+ 	return IRQ_HANDLED;
+ }
  
- DRM DRIVERS FOR AMLOGIC SOCS
++static void adis_buffer_cleanup(void *arg)
++{
++	struct adis *adis = arg;
++
++	kfree(adis->buffer);
++	kfree(adis->xfer);
++}
++
+ /**
+  * adis_setup_buffer_and_trigger() - Sets up buffer and trigger for the adis device
+  * @adis: The adis device.
+@@ -198,6 +206,43 @@ int adis_setup_buffer_and_trigger(struct adis *adis, struct iio_dev *indio_dev,
+ }
+ EXPORT_SYMBOL_GPL(adis_setup_buffer_and_trigger);
+ 
++/**
++ * devm_adis_setup_buffer_and_trigger() - Sets up buffer and trigger for
++ *					  the managed adis device
++ * @adis: The adis device
++ * @indio_dev: The IIO device
++ * @trigger_handler: Optional trigger handler, may be NULL.
++ *
++ * Returns 0 on success, a negative error code otherwise.
++ *
++ * This function perfoms exactly the same as adis_setup_buffer_and_trigger()
++ */
++int
++devm_adis_setup_buffer_and_trigger(struct adis *adis, struct iio_dev *indio_dev,
++				   irq_handler_t trigger_handler)
++{
++	int ret;
++
++	if (!trigger_handler)
++		trigger_handler = adis_trigger_handler;
++
++	ret = devm_iio_triggered_buffer_setup(&adis->spi->dev, indio_dev,
++					      &iio_pollfunc_store_time,
++					      trigger_handler, NULL);
++	if (ret)
++		return ret;
++
++	if (adis->spi->irq) {
++		ret = devm_adis_probe_trigger(adis, indio_dev);
++		if (ret)
++			return ret;
++	}
++
++	return devm_add_action_or_reset(&adis->spi->dev, adis_buffer_cleanup,
++					adis);
++}
++EXPORT_SYMBOL_GPL(devm_adis_setup_buffer_and_trigger);
++
+ /**
+  * adis_cleanup_buffer_and_trigger() - Free buffer and trigger resources
+  * @adis: The adis device.
+diff --git a/drivers/iio/imu/adis_trigger.c b/drivers/iio/imu/adis_trigger.c
+index 8b9cd02c0f9f..a36810e0b1ab 100644
+--- a/drivers/iio/imu/adis_trigger.c
++++ b/drivers/iio/imu/adis_trigger.c
+@@ -27,6 +27,13 @@ static const struct iio_trigger_ops adis_trigger_ops = {
+ 	.set_trigger_state = &adis_data_rdy_trigger_set_state,
+ };
+ 
++static void adis_trigger_setup(struct adis *adis)
++{
++	adis->trig->dev.parent = &adis->spi->dev;
++	adis->trig->ops = &adis_trigger_ops;
++	iio_trigger_set_drvdata(adis->trig, adis);
++}
++
+ /**
+  * adis_probe_trigger() - Sets up trigger for a adis device
+  * @adis: The adis device
+@@ -45,9 +52,7 @@ int adis_probe_trigger(struct adis *adis, struct iio_dev *indio_dev)
+ 	if (adis->trig == NULL)
+ 		return -ENOMEM;
+ 
+-	adis->trig->dev.parent = &adis->spi->dev;
+-	adis->trig->ops = &adis_trigger_ops;
+-	iio_trigger_set_drvdata(adis->trig, adis);
++	adis_trigger_setup(adis);
+ 
+ 	ret = request_irq(adis->spi->irq,
+ 			  &iio_trigger_generic_data_rdy_poll,
+@@ -73,6 +78,36 @@ int adis_probe_trigger(struct adis *adis, struct iio_dev *indio_dev)
+ }
+ EXPORT_SYMBOL_GPL(adis_probe_trigger);
+ 
++/**
++ * devm_adis_probe_trigger() - Sets up trigger for a managed adis device
++ * @adis: The adis device
++ * @indio_dev: The IIO device
++ *
++ * Returns 0 on success or a negative error code
++ */
++int devm_adis_probe_trigger(struct adis *adis, struct iio_dev *indio_dev)
++{
++	int ret;
++
++	adis->trig = devm_iio_trigger_alloc(&adis->spi->dev, "%s-dev%d",
++					    indio_dev->name, indio_dev->id);
++	if (!adis->trig)
++		return -ENOMEM;
++
++	adis_trigger_setup(adis);
++
++	ret = devm_request_irq(&adis->spi->dev, adis->spi->irq,
++			       &iio_trigger_generic_data_rdy_poll,
++			       IRQF_TRIGGER_RISING,
++			       indio_dev->name,
++			       adis->trig);
++	if (ret)
++		return ret;
++
++	return devm_iio_trigger_register(&adis->spi->dev, adis->trig);
++}
++EXPORT_SYMBOL_GPL(devm_adis_probe_trigger);
++
+ /**
+  * adis_remove_trigger() - Remove trigger for a adis devices
+  * @adis: The adis device
+diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
+index dd8219138c2e..e70814d96e1c 100644
+--- a/include/linux/iio/imu/adis.h
++++ b/include/linux/iio/imu/adis.h
+@@ -448,11 +448,15 @@ struct adis_burst {
+ 	unsigned int	extra_len;
+ };
+ 
++int
++devm_adis_setup_buffer_and_trigger(struct adis *adis, struct iio_dev *indio_dev,
++				   irq_handler_t trigger_handler);
+ int adis_setup_buffer_and_trigger(struct adis *adis,
+ 	struct iio_dev *indio_dev, irqreturn_t (*trigger_handler)(int, void *));
+ void adis_cleanup_buffer_and_trigger(struct adis *adis,
+ 	struct iio_dev *indio_dev);
+ 
++int devm_adis_probe_trigger(struct adis *adis, struct iio_dev *indio_dev);
+ int adis_probe_trigger(struct adis *adis, struct iio_dev *indio_dev);
+ void adis_remove_trigger(struct adis *adis);
+ 
+@@ -461,6 +465,13 @@ int adis_update_scan_mode(struct iio_dev *indio_dev,
+ 
+ #else /* CONFIG_IIO_BUFFER */
+ 
++static inline int
++devm_adis_setup_buffer_and_trigger(struct adis *adis, struct iio_dev *indio_dev,
++				   irq_handler_t trigger_handler)
++{
++	return 0;
++}
++
+ static inline int adis_setup_buffer_and_trigger(struct adis *adis,
+ 	struct iio_dev *indio_dev, irqreturn_t (*trigger_handler)(int, void *))
+ {
+@@ -472,6 +483,12 @@ static inline void adis_cleanup_buffer_and_trigger(struct adis *adis,
+ {
+ }
+ 
++static inline int devm_adis_probe_trigger(struct adis *adis,
++					  struct iio_dev *indio_dev)
++{
++	return 0;
++}
++
+ static inline int adis_probe_trigger(struct adis *adis,
+ 	struct iio_dev *indio_dev)
+ {
 -- 
 2.17.1
 
