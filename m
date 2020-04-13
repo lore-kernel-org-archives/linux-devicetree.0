@@ -2,257 +2,313 @@ Return-Path: <SRS0=/QBj=55=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FAEC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 16:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8329EC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 17:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 493272076D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 16:58:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586797099;
-	bh=YqZ5wVla+WWpQKBP5kfizBtWI8bMEeFycRYBZ3wpUAQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=VOBqzRowbDa0fG4RWXQdpmbCHf8GsFkBE2XFBVOezME0FEVbiPlix0HKpdn2jamFa
-	 x0HjwTLLpXCpYJv+BPijNh5kb/VlCZR9EU3MK4TGgmCbGRhorDaHtX50Vr4cdBhDU3
-	 9fTbawWyBo976HWi8dMyqDCvS4WKYpvcu2Yh4jmg=
+	by mail.kernel.org (Postfix) with ESMTP id 5A09C2063A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 17:01:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="Kpa31S9W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732241AbgDMQ6S (ORCPT
+        id S1732279AbgDMRBV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 12:58:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50522 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732238AbgDMQ6R (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Apr 2020 12:58:17 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47D8820739;
-        Mon, 13 Apr 2020 16:58:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586797096;
-        bh=YqZ5wVla+WWpQKBP5kfizBtWI8bMEeFycRYBZ3wpUAQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=taVVjTIo9Hfx/n2w7Tsv5p5Zex3H/KQ+VzQtd1OqD3P1znUncwu8OgPmgAhtKrwoh
-         E5rGC2VMeVNpJWiYD09KCyqJnVwnaZvMrv5Ro5fXUt0KZpqZHB+1pMLFBmdYswKT+Q
-         U2QRY6uCWo5b9lRbM0mIQ9ciBYXJ4hGATNnhUqi0=
-Date:   Mon, 13 Apr 2020 17:58:12 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     mani@kernel.org
-Cc:     robh+dt@kernel.org, narcisaanamaria12@gmail.com, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] iio: chemical: Add support for external Reset and
- Wakeup in CCS811
-Message-ID: <20200413175812.6392c887@archlinux>
-In-Reply-To: <20200412183658.6755-3-mani@kernel.org>
-References: <20200412183658.6755-1-mani@kernel.org>
-        <20200412183658.6755-3-mani@kernel.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 13 Apr 2020 13:01:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50472 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732122AbgDMRBU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Apr 2020 13:01:20 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31A00C0A3BDC
+        for <devicetree@vger.kernel.org>; Mon, 13 Apr 2020 10:01:20 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id u13so10387496wrp.3
+        for <devicetree@vger.kernel.org>; Mon, 13 Apr 2020 10:01:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ifz7eEgQDkI/yAEt03RoeGqs19nYSssxU5j/gJ4Dim0=;
+        b=Kpa31S9WV4DB2epJ0brmlqCYF1LhiH7z0L6PGh4Wbzcd03Fn0R+4GpBmxvFEB7UwNs
+         tfXfQdPF8/Hp/4af5lAokIt68Wyxat3WatIWk7ZEitiTrGuHw2acegBAEv0i/7Hn0iuy
+         ZSPISg9Pl1NZZW2DtFYy5nSyOoczsqC5qAUIGoV9LT7y7SwQGQZ5a4RcFT1bcdGDEYKv
+         7CH50QYVjnEq1z3Mvr4EV4bIV4wAY6Btp5ypPFZETulZ0qzAG6e0LAgVC6tKR3VCE58z
+         Y9E0wIaZm1/uVvZIw3Nc8wtYDlya9c8AWTu7VRTCXRgJRDBptbDHNrPZtl608d5u+QJY
+         2vwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ifz7eEgQDkI/yAEt03RoeGqs19nYSssxU5j/gJ4Dim0=;
+        b=SvKdVIYREce8feTHChazHneuAkt/8Ri80xOmdDHK75p+bbhmi4wos56pMwBEaFf5T6
+         OmOGhK0WVu0pheC1FpRsdJCmYkpwNgotgNxxFazZpCvtNjlkBYNa/rv/Ecibj7VEhVoP
+         URk6HSttUvsd+ajU3Ad3qKcrtwiQH429QRBgR8WxTY5QLrmgLLGGXITkK58R9DPjS1Lh
+         rNHF/O7XzNTRZH+0Eq+8K7QXw+TbVGEVGjISYgIy6uiI6shEMfz00Gf1b5kktkYWZC9X
+         R1pGXOE64QfVRGZF0byxHfLRTSPQw9ivdYoZzue//25Mug6pof+tqf+DB+Ks0EFH6K7v
+         THww==
+X-Gm-Message-State: AGi0PuaUTa4KI7N/rTLW23cmt6aDkBNbh5hocTIjUtp284N7QO/zIlw5
+        Y1hWdzGCargrDwtEfQG0N8yYJA==
+X-Google-Smtp-Source: APiQypI5L7HxfafpOR4GRvpAW8MC8kqY/R8iWGtx4F0odEFkYwngaQANZQgPqx5hNnsILB/TjEYY0w==
+X-Received: by 2002:adf:e3ca:: with SMTP id k10mr2020584wrm.53.1586797278826;
+        Mon, 13 Apr 2020 10:01:18 -0700 (PDT)
+Received: from localhost.localdomain ([2001:470:1f1b:192:29fe:7bf:41fe:904d])
+        by smtp.googlemail.com with ESMTPSA id q187sm15443268wma.41.2020.04.13.10.01.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 10:01:18 -0700 (PDT)
+From:   Robert Marko <robert.marko@sartura.hr>
+To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     Robert Marko <robert.marko@sartura.hr>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: [PATCH 1/3] net: phy: mdio: add IPQ40xx MDIO driver
+Date:   Mon, 13 Apr 2020 19:01:05 +0200
+Message-Id: <20200413170107.246509-1-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 13 Apr 2020 00:06:57 +0530
-mani@kernel.org wrote:
+This patch adds the driver for the MDIO interface
+inside of Qualcomm IPQ40xx series SoC-s.
 
-> From: Manivannan Sadhasivam <mani@kernel.org>
-> 
-> CCS811 VOC sensor exposes nRESET and nWAKE pins which can be connected
-> to GPIO pins of the host controller. These pins can be used to externally
-> release the device from reset and also to wake it up before any I2C
-> transaction. The initial driver support assumed that the nRESET pin is not
-> connected and the nWAKE pin is tied to ground.
-> 
-> This commit improves it by adding support for controlling those two pins
-> externally using a host controller. For the case of reset, if the hardware
-> reset is not available, the mechanism to do software reset is also added.
-> 
-> As a side effect of doing this, the IIO device allocation needs to be
-> slightly moved to top of probe to make use of priv data early.
-> 
-> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+Cc: Luka Perkov <luka.perkov@sartura.hr>
+---
+ drivers/net/phy/Kconfig        |   7 ++
+ drivers/net/phy/Makefile       |   1 +
+ drivers/net/phy/mdio-ipq40xx.c | 180 +++++++++++++++++++++++++++++++++
+ 3 files changed, 188 insertions(+)
+ create mode 100644 drivers/net/phy/mdio-ipq40xx.c
 
-One trivial thing inline to allow things to work if we have deferred probing
-and the gpio provider isn't ready yet.  Currently you eat the error code
-rather than passing it on.
-
-Otherwise looks good to me.
-
-Thanks,
-
-Jonathan
-> ---
->  drivers/iio/chemical/ccs811.c | 88 +++++++++++++++++++++++++++++++----
->  1 file changed, 80 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/iio/chemical/ccs811.c b/drivers/iio/chemical/ccs811.c
-> index 2ebdfc35bcda..6cd92c49c348 100644
-> --- a/drivers/iio/chemical/ccs811.c
-> +++ b/drivers/iio/chemical/ccs811.c
-> @@ -16,6 +16,7 @@
->   */
->  
->  #include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/i2c.h>
->  #include <linux/iio/iio.h>
->  #include <linux/iio/buffer.h>
-> @@ -36,6 +37,7 @@
->  #define CCS811_ERR		0xE0
->  /* Used to transition from boot to application mode */
->  #define CCS811_APP_START	0xF4
-> +#define CCS811_SW_RESET		0xFF
->  
->  /* Status register flags */
->  #define CCS811_STATUS_ERROR		BIT(0)
-> @@ -74,6 +76,7 @@ struct ccs811_data {
->  	struct mutex lock; /* Protect readings */
->  	struct ccs811_reading buffer;
->  	struct iio_trigger *drdy_trig;
-> +	struct gpio_desc *wakeup_gpio;
->  	bool drdy_trig_on;
->  };
->  
-> @@ -166,10 +169,25 @@ static int ccs811_setup(struct i2c_client *client)
->  					 CCS811_MODE_IAQ_1SEC);
->  }
->  
-> +static void ccs811_set_wakeup(struct ccs811_data *data, bool enable)
-> +{
-> +	if (!data->wakeup_gpio)
-> +		return;
-> +
-> +	gpiod_set_value(data->wakeup_gpio, enable);
-> +
-> +	if (enable)
-> +		usleep_range(50, 60);
-> +	else
-> +		usleep_range(20, 30);
-> +}
-> +
->  static int ccs811_get_measurement(struct ccs811_data *data)
->  {
->  	int ret, tries = 11;
->  
-> +	ccs811_set_wakeup(data, true);
-> +
->  	/* Maximum waiting time: 1s, as measurements are made every second */
->  	while (tries-- > 0) {
->  		ret = i2c_smbus_read_byte_data(data->client, CCS811_STATUS);
-> @@ -183,9 +201,12 @@ static int ccs811_get_measurement(struct ccs811_data *data)
->  	if (!(ret & CCS811_STATUS_DATA_READY))
->  		return -EIO;
->  
-> -	return i2c_smbus_read_i2c_block_data(data->client,
-> +	ret = i2c_smbus_read_i2c_block_data(data->client,
->  					    CCS811_ALG_RESULT_DATA, 8,
->  					    (char *)&data->buffer);
-> +	ccs811_set_wakeup(data, false);
-> +
-> +	return ret;
->  }
->  
->  static int ccs811_read_raw(struct iio_dev *indio_dev,
-> @@ -336,6 +357,42 @@ static irqreturn_t ccs811_data_rdy_trigger_poll(int irq, void *private)
->  	return IRQ_HANDLED;
->  }
->  
-> +static int ccs811_reset(struct i2c_client *client)
-> +{
-> +	struct gpio_desc *reset_gpio;
-> +	int ret;
-> +
-> +	reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
-> +					     GPIOD_OUT_LOW);
-> +	if (IS_ERR(reset_gpio)) {
-> +		dev_err(&client->dev, "Failed to acquire reset gpio\n");
-> +		return -EINVAL;
-
-return PTR_ERR as it may well be a deferred signal to say try again later
-after the gpio provide device has been initialized.
-
-> +	}
-> +
-> +	/* Try to reset using nRESET pin if available else do SW reset */
-> +	if (reset_gpio) {
-> +		gpiod_set_value(reset_gpio, 1);
-> +		usleep_range(20, 30);
-> +		gpiod_set_value(reset_gpio, 0);
-> +	} else {
-> +		static const u8 reset_seq[] = {
-> +			0xFF, 0x11, 0xE5, 0x72, 0x8A,
-> +		};
-> +
-> +		ret = i2c_smbus_write_i2c_block_data(client, CCS811_SW_RESET,
-> +					     sizeof(reset_seq), reset_seq);
-> +		if (ret < 0) {
-> +			dev_err(&client->dev, "Failed to reset sensor\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	/* tSTART delay required after reset */
-> +	usleep_range(1000, 2000);
-> +
-> +	return 0;
-> +}
-> +
->  static int ccs811_probe(struct i2c_client *client,
->  			const struct i2c_device_id *id)
->  {
-> @@ -348,6 +405,27 @@ static int ccs811_probe(struct i2c_client *client,
->  				     | I2C_FUNC_SMBUS_READ_I2C_BLOCK))
->  		return -EOPNOTSUPP;
->  
-> +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	data = iio_priv(indio_dev);
-> +	i2c_set_clientdata(client, indio_dev);
-> +	data->client = client;
-> +
-> +	data->wakeup_gpio = devm_gpiod_get_optional(&client->dev, "wakeup",
-> +						    GPIOD_OUT_HIGH);
-> +	if (IS_ERR(data->wakeup_gpio)) {
-> +		dev_err(&client->dev, "Failed to acquire wakeup gpio\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ccs811_set_wakeup(data, true);
-> +
-> +	ret = ccs811_reset(client);
-> +	if (ret)
-> +		return ret;
-> +
->  	/* Check hardware id (should be 0x81 for this family of devices) */
->  	ret = i2c_smbus_read_byte_data(client, CCS811_HW_ID);
->  	if (ret < 0)
-> @@ -367,17 +445,11 @@ static int ccs811_probe(struct i2c_client *client,
->  		return -ENODEV;
->  	}
->  
-> -	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-> -	if (!indio_dev)
-> -		return -ENOMEM;
-> -
->  	ret = ccs811_setup(client);
->  	if (ret < 0)
->  		return ret;
->  
-> -	data = iio_priv(indio_dev);
-> -	i2c_set_clientdata(client, indio_dev);
-> -	data->client = client;
-> +	ccs811_set_wakeup(data, false);
->  
->  	mutex_init(&data->lock);
->  
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 9dabe03a668c..614d08635012 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -157,6 +157,13 @@ config MDIO_I2C
+ 
+ 	  This is library mode.
+ 
++config MDIO_IPQ40XX
++	tristate "Qualcomm IPQ40xx MDIO interface"
++	depends on HAS_IOMEM && OF
++	help
++	  This driver supports the MDIO interface found in Qualcomm
++	  IPQ40xx series Soc-s.
++
+ config MDIO_MOXART
+ 	tristate "MOXA ART MDIO interface support"
+ 	depends on ARCH_MOXART || COMPILE_TEST
+diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+index fe5badf13b65..c89fc187fd74 100644
+--- a/drivers/net/phy/Makefile
++++ b/drivers/net/phy/Makefile
+@@ -36,6 +36,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+= mdio-cavium.o
+ obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
+ obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
+ obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
++obj-$(CONFIG_MDIO_IPQ40XX)	+= mdio-ipq40xx.o
+ obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
+ obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
+ obj-$(CONFIG_MDIO_OCTEON)	+= mdio-octeon.o
+diff --git a/drivers/net/phy/mdio-ipq40xx.c b/drivers/net/phy/mdio-ipq40xx.c
+new file mode 100644
+index 000000000000..8068f1e6a077
+--- /dev/null
++++ b/drivers/net/phy/mdio-ipq40xx.c
+@@ -0,0 +1,180 @@
++// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
++/* Copyright (c) 2015, The Linux Foundation. All rights reserved. */
++
++#include <linux/delay.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/io.h>
++#include <linux/of_address.h>
++#include <linux/of_mdio.h>
++#include <linux/phy.h>
++#include <linux/platform_device.h>
++
++#define MDIO_CTRL_0_REG		0x40
++#define MDIO_CTRL_1_REG		0x44
++#define MDIO_CTRL_2_REG		0x48
++#define MDIO_CTRL_3_REG		0x4c
++#define MDIO_CTRL_4_REG		0x50
++#define MDIO_CTRL_4_ACCESS_BUSY		BIT(16)
++#define MDIO_CTRL_4_ACCESS_START		BIT(8)
++#define MDIO_CTRL_4_ACCESS_CODE_READ		0
++#define MDIO_CTRL_4_ACCESS_CODE_WRITE	1
++#define CTRL_0_REG_DEFAULT_VALUE	0x150FF
++
++#define IPQ40XX_MDIO_RETRY	1000
++#define IPQ40XX_MDIO_DELAY	10
++
++struct ipq40xx_mdio_data {
++	struct mii_bus	*mii_bus;
++	void __iomem	*membase;
++	struct device	*dev;
++};
++
++static int ipq40xx_mdio_wait_busy(struct ipq40xx_mdio_data *am)
++{
++	int i;
++
++	for (i = 0; i < IPQ40XX_MDIO_RETRY; i++) {
++		unsigned int busy;
++
++		busy = readl(am->membase + MDIO_CTRL_4_REG) &
++			MDIO_CTRL_4_ACCESS_BUSY;
++		if (!busy)
++			return 0;
++
++		/* BUSY might take to be cleard by 15~20 times of loop */
++		udelay(IPQ40XX_MDIO_DELAY);
++	}
++
++	dev_err(am->dev, "%s: MDIO operation timed out\n", am->mii_bus->name);
++
++	return -ETIMEDOUT;
++}
++
++static int ipq40xx_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
++{
++	struct ipq40xx_mdio_data *am = bus->priv;
++	int value = 0;
++	unsigned int cmd = 0;
++
++	lockdep_assert_held(&bus->mdio_lock);
++
++	if (ipq40xx_mdio_wait_busy(am))
++		return -ETIMEDOUT;
++
++	/* issue the phy address and reg */
++	writel((mii_id << 8) | regnum, am->membase + MDIO_CTRL_1_REG);
++
++	cmd = MDIO_CTRL_4_ACCESS_START | MDIO_CTRL_4_ACCESS_CODE_READ;
++
++	/* issue read command */
++	writel(cmd, am->membase + MDIO_CTRL_4_REG);
++
++	/* Wait read complete */
++	if (ipq40xx_mdio_wait_busy(am))
++		return -ETIMEDOUT;
++
++	/* Read data */
++	value = readl(am->membase + MDIO_CTRL_3_REG);
++
++	return value;
++}
++
++static int ipq40xx_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
++							 u16 value)
++{
++	struct ipq40xx_mdio_data *am = bus->priv;
++	unsigned int cmd = 0;
++
++	lockdep_assert_held(&bus->mdio_lock);
++
++	if (ipq40xx_mdio_wait_busy(am))
++		return -ETIMEDOUT;
++
++	/* issue the phy address and reg */
++	writel((mii_id << 8) | regnum, am->membase + MDIO_CTRL_1_REG);
++
++	/* issue write data */
++	writel(value, am->membase + MDIO_CTRL_2_REG);
++
++	cmd = MDIO_CTRL_4_ACCESS_START | MDIO_CTRL_4_ACCESS_CODE_WRITE;
++	/* issue write command */
++	writel(cmd, am->membase + MDIO_CTRL_4_REG);
++
++	/* Wait write complete */
++	if (ipq40xx_mdio_wait_busy(am))
++		return -ETIMEDOUT;
++
++	return 0;
++}
++
++static int ipq40xx_mdio_probe(struct platform_device *pdev)
++{
++	struct ipq40xx_mdio_data *am;
++	struct resource *res;
++
++	am = devm_kzalloc(&pdev->dev, sizeof(*am), GFP_KERNEL);
++	if (!am)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		dev_err(&pdev->dev, "no iomem resource found\n");
++		return -ENXIO;
++	}
++
++	am->membase = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(am->membase)) {
++		dev_err(&pdev->dev, "unable to ioremap registers\n");
++		return PTR_ERR(am->membase);
++	}
++
++	am->mii_bus = devm_mdiobus_alloc(&pdev->dev);
++	if (!am->mii_bus)
++		return  -ENOMEM;
++
++	writel(CTRL_0_REG_DEFAULT_VALUE, am->membase + MDIO_CTRL_0_REG);
++
++	am->mii_bus->name = "ipq40xx_mdio";
++	am->mii_bus->read = ipq40xx_mdio_read;
++	am->mii_bus->write = ipq40xx_mdio_write;
++	am->mii_bus->priv = am;
++	am->mii_bus->parent = &pdev->dev;
++	snprintf(am->mii_bus->id, MII_BUS_ID_SIZE, "%s", dev_name(&pdev->dev));
++
++	am->dev = &pdev->dev;
++	platform_set_drvdata(pdev, am);
++
++	return of_mdiobus_register(am->mii_bus, pdev->dev.of_node);
++}
++
++static int ipq40xx_mdio_remove(struct platform_device *pdev)
++{
++	struct ipq40xx_mdio_data *am = platform_get_drvdata(pdev);
++
++	mdiobus_unregister(am->mii_bus);
++
++	return 0;
++}
++
++static const struct of_device_id ipq40xx_mdio_dt_ids[] = {
++	{ .compatible = "qcom,ipq40xx-mdio" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ipq40xx_mdio_dt_ids);
++
++static struct platform_driver ipq40xx_mdio_driver = {
++	.probe = ipq40xx_mdio_probe,
++	.remove = ipq40xx_mdio_remove,
++	.driver = {
++		.name = "ipq40xx-mdio",
++		.of_match_table = ipq40xx_mdio_dt_ids,
++	},
++};
++
++module_platform_driver(ipq40xx_mdio_driver);
++
++MODULE_DESCRIPTION("IPQ40XX MDIO interface driver");
++MODULE_AUTHOR("Qualcomm Atheros");
++MODULE_LICENSE("Dual BSD/GPL");
+-- 
+2.26.0
 
