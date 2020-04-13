@@ -2,113 +2,105 @@ Return-Path: <SRS0=/QBj=55=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14245C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 00:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B098BC2BB55
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 02:01:38 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D24F720692
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 00:17:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org D24F720692
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=suse.de
+	by mail.kernel.org (Postfix) with ESMTP id 630FA206C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 02:01:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="iqt/rTHq"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 630FA206C3
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=devicetree-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgDMARH (ORCPT
+        id S1727088AbgDMCBh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Apr 2020 20:17:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:47442 "EHLO
+        Sun, 12 Apr 2020 22:01:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:36070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbgDMARH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Apr 2020 20:17:07 -0400
-Received: from mx2.suse.de (mx2.suse.de [195.135.220.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B4AC0A3BE0;
-        Sun, 12 Apr 2020 17:17:07 -0700 (PDT)
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6812EAC12;
-        Mon, 13 Apr 2020 00:17:05 +0000 (UTC)
-Subject: Re: [PATCH v3 1/2] dt-bindings: arm: realtek: Document RTD1319 and
- Realtek PymParticle EVB
-To:     James Tai <james.tai@realtek.com>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20200204145207.28622-1-james.tai@realtek.com>
- <20200204145207.28622-2-james.tai@realtek.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <bf55ccbe-cbdf-7ba7-d701-aa84c20204e3@suse.de>
-Date:   Mon, 13 Apr 2020 02:17:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        with ESMTP id S1727081AbgDMCBg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Apr 2020 22:01:36 -0400
+Received: from conuserg-12.nifty.com (conuserg-12.nifty.com [210.131.2.79])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04E9DC0A3BE0;
+        Sun, 12 Apr 2020 19:01:36 -0700 (PDT)
+Received: from oscar.flets-west.jp (softbank060142179096.bbtec.net [60.142.179.96]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id 03D2168W004103;
+        Mon, 13 Apr 2020 11:01:06 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 03D2168W004103
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1586743267;
+        bh=EA/9hQHvqlSNL9Mk9ru4doPHnzdLNfO1YTTXQLdfKBk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=iqt/rTHq5QHpUXCz9fD+GGP3Ad4AKApI6PGmjTXa8XMJVGJyAL2J4uUGtoxLZLb8G
+         N4DqwbDRH36dRyEZlkE0UL6S0oFibR+NtiAH7bBLNUp0v7WRqrDkfu3dhU6lC/W8zm
+         QRx2T6tS8zGET67Isp6/vHS2hrRGxHu5K5/60DTntYGbxh7qsmpRjbInoixiqlKMzj
+         pibk2RYcJXbkgvBDWcPgV71J9hWSzoOV+6OFG+sHGQUcRNEKWgucycBbiwp/yWRMfh
+         bYep8J4eX6YpYp60ERoBBKdOv69jy59bzpWejebG/BVq6H5OHuAVvw9vto3QgmxdEy
+         AHAMEM8ZvPRXw==
+X-Nifty-SrcIP: [60.142.179.96]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        uclinux-h8-devel@lists.sourceforge.jp
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH] h8300: set stdout-path to a string, not a phandle
+Date:   Mon, 13 Apr 2020 11:00:57 +0900
+Message-Id: <20200413020057.30808-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200204145207.28622-2-james.tai@realtek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi James,
+stdout-path must be a node path, not a phandle.
 
-Am 04.02.20 um 15:52 schrieb James Tai:
-> Define compatible strings for Realtek RTD1319 SoC and Realtek PymParticle
-> EVB.
-> 
-> Signed-off-by: James Tai <james.tai@realtek.com>
-> ---
->   v2 -> v3: Unchanged
-> 
->   v1 -> v2:
->   * Put string in alphabetical order
-> 
->   Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml b/Documentation/devicetree/bindings/arm/realtek.yaml
-> index 845f9c76d6f7..3b48ae71fdd8 100644
-> --- a/Documentation/devicetree/bindings/arm/realtek.yaml
-> +++ b/Documentation/devicetree/bindings/arm/realtek.yaml
-> @@ -42,6 +42,12 @@ properties:
->                 - synology,ds418 # Synology DiskStation DS418
->             - const: realtek,rtd1296
->   
-> +      # RTD1319 SoC based boards
-> +      - items:
-> +          - enum:
-> +              - realtek,pymparticle # Realtek PymParticle EVB
+DTC warns like follows:
 
-The board seems labelled "PYM_PARTICLES".
+  DTC     arch/h8300/boot/dts/h8s_sim.dtb
+arch/h8300/boot/dts/h8s_sim.dts:11.3-25: Warning (chosen_node_stdout_path): /chosen:stdout-path: property is not a string
 
-While Wikipedia has nothing on that, I found this explanation:
-https://marvel.fandom.com/wiki/Pym_Particles
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-So, are you sure it's PymParticle and not "Pym Particle" with space or 
-"Pym Particles" with space and plural S? The S would affect also the 
-.dts filename. For the compatible string the question is pymparticle or 
-pym-particle.
+ arch/h8300/boot/dts/h8300h_sim.dts | 2 +-
+ arch/h8300/boot/dts/h8s_sim.dts    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-By comparison, LION-SKIN was named lion-skin in the compatible and 
-spelled Lion Skin in textual form. If you believe that should be fixed, 
-now would be the time to revisit those patches that didn't make v5.7.
-
-Thanks,
-Andreas
-
-> +          - const: realtek,rtd1319
-> +
->         # RTD1395 SoC based boards
->         - items:
->             - enum:
-
+diff --git a/arch/h8300/boot/dts/h8300h_sim.dts b/arch/h8300/boot/dts/h8300h_sim.dts
+index 595398b9d018..e1d4d9b7f6b4 100644
+--- a/arch/h8300/boot/dts/h8300h_sim.dts
++++ b/arch/h8300/boot/dts/h8300h_sim.dts
+@@ -8,7 +8,7 @@ / {
+ 
+ 	chosen {
+ 		bootargs = "earlyprintk=h8300-sim";
+-		stdout-path = <&sci0>;
++		stdout-path = &sci0;
+ 	};
+ 	aliases {
+ 		serial0 = &sci0;
+diff --git a/arch/h8300/boot/dts/h8s_sim.dts b/arch/h8300/boot/dts/h8s_sim.dts
+index 932cc3c5a81b..4848e40e607e 100644
+--- a/arch/h8300/boot/dts/h8s_sim.dts
++++ b/arch/h8300/boot/dts/h8s_sim.dts
+@@ -8,7 +8,7 @@ / {
+ 
+ 	chosen {
+ 		bootargs = "earlyprintk=h8300-sim";
+-		stdout-path = <&sci0>;
++		stdout-path = &sci0;
+ 	};
+ 	aliases {
+ 		serial0 = &sci0;
 -- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+2.25.1
+
