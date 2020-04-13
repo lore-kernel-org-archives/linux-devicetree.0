@@ -2,103 +2,134 @@ Return-Path: <SRS0=/QBj=55=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F336DC2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 17:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E03C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 17:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5AD820735
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 17:19:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586798375;
-	bh=cOHgDLG2OEFMbA+A0xqNSmIjg/9Q/4+VZgYjP32HOK4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aY/fY/YgSCw2QdqenneVodQkTyojw5GscV7EJJrkZ/d+8lwao6noArMqlecGRI1jb
-	 +gqnPCNSCrEKz0Edj4dv7pyQmNqJBCcVhjZhpZw85NJfJH2gr0IjSdt8uT36sCQ4di
-	 V+ldGxExkv9FNSpFsIwJTBaAxpTJuhv6dRE9+xH4=
+	by mail.kernel.org (Postfix) with ESMTP id 19F382072D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 17:20:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVh1MHnI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732722AbgDMRT3 (ORCPT
+        id S1732746AbgDMRUv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 13:19:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40442 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732579AbgDMRTL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Apr 2020 13:19:11 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7FC22072D;
-        Mon, 13 Apr 2020 17:19:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586798351;
-        bh=cOHgDLG2OEFMbA+A0xqNSmIjg/9Q/4+VZgYjP32HOK4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YvkMhGDzbkQJ5IvqSsLJMy9CWA6UNG4IxfMvS+UoFAsU+UEO9UNkS9b4YcZRdQ6Bk
-         vhcfTLFDkgguW6HkI5Ex8GY07MxcpUl3o6V6yBIgeg8hpaLIzcNX5Mkk3yhuWrLuK+
-         uZul8kU6tCSbErGxg5cODhWOZynWgcEIdPYFLRWg=
-Date:   Mon, 13 Apr 2020 13:19:09 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sean Young <sean@mess.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Mohammad Rasim <mohammad.rasim96@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH AUTOSEL 5.6 11/68] media: arm64: dts: amlogic: add
- rc-videostrong-kii-pro keymap
-Message-ID: <20200413171909.GP27528@sasha-vm>
-References: <20200410034634.7731-1-sashal@kernel.org>
- <20200410034634.7731-11-sashal@kernel.org>
- <20200410060712.GA13759@gofer.mess.org>
+        Mon, 13 Apr 2020 13:20:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732579AbgDMRUu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Apr 2020 13:20:50 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E98C5C0A3BDC;
+        Mon, 13 Apr 2020 10:20:49 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id k11so10316307wrp.5;
+        Mon, 13 Apr 2020 10:20:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kWgwtw6mnshP7OT2kiE97Ap+wsoZZptwcvaDrs1tDsI=;
+        b=bVh1MHnIU7qEHoYKTXnX8K/41raLAhstyBAr9OgkIlaMU8CkeYDVbSuj2MVqY6E5dC
+         qLA+7Z8aDDgXtfRRRqEt0JirV+9D3Kq0As4DptSjqE9XC0ru6jAEs0RursW6IqmT1Zig
+         sI5edIfwkeSg6nTxBG35L3EVBdv/yJQ/xXc/2hlNlq1c87BhsJFy0UQbTYqwrCW9wi+m
+         +UMcaGJA1UvnpJqFD/eQh1Kb4j9Rttzq1LN53LMaa6FQiRsPQtUzk7u8/c6uuQi/fWnZ
+         FUJhWMCikBA3WxTFmBgTIrX+2cTVVd4s1z5j5ATbYWQ5BQnVkFcCL7dNGbK7P1nIsN/d
+         axFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kWgwtw6mnshP7OT2kiE97Ap+wsoZZptwcvaDrs1tDsI=;
+        b=Ryse9ZksgEQsHvy42kpIfmiCut9nMkbLvkhedcFApneXqfMbKjjRGT2dBss9OhBdKY
+         clNF4UZtfNhAfHFfPHQ9n5RZ9i5SogpdMPcsSWcnF0uE19hI+yrbJUGpiwQCVBZk51Qz
+         rzsKLAE+RNZgsrdmhF3WrDAkFgxJGbpESOB/1bnNGlAc+B4v6wCNlPxi3E/JtsUuYKXb
+         L+7BfTYC6iWdMVnGM2ZIzfl0V9xvv6RjIOPg7u8rEQ2XPkzqSncdRyOA5YFPMmw/beFY
+         a+7b+mTzXy/GN+KpRdFiai7kHFrEvwKgvu7NB8A0e5eFZrn8oXHiy35eYfiaPmwAUup1
+         u2Rg==
+X-Gm-Message-State: AGi0PubrV/S4wvGM7Ky18UmX0W9CSLYZMUFXsHFtE6Db3as99yGKwGOK
+        D4G6qV3F1sqd1H+yJQlZ4WM=
+X-Google-Smtp-Source: APiQypIs6QMkRZ3InN+DdxIArcJcpkp8vBmkZ8YZyLT4LbLHkZc845IeZsR13A1TTF2jkLK0weALmQ==
+X-Received: by 2002:a5d:698f:: with SMTP id g15mr5867707wru.135.1586798448730;
+        Mon, 13 Apr 2020 10:20:48 -0700 (PDT)
+Received: from linux-gy6r.site ([213.195.113.243])
+        by smtp.gmail.com with ESMTPSA id d13sm6835546wmb.39.2020.04.13.10.20.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Apr 2020 10:20:48 -0700 (PDT)
+Subject: Re: [PATCH v7 5/5] media: mtk-mdp: Use correct aliases name
+To:     Hsin-Yi Wang <hsinyi@chromium.org>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Daniel Kurtz <djkurtz@chromium.org>
+References: <20200210063523.133333-1-hsinyi@chromium.org>
+ <20200210063523.133333-6-hsinyi@chromium.org>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+X-Pep-Version: 2.0
+Message-ID: <7f08c5a8-8635-7e97-9585-601ac9c21ded@gmail.com>
+Date:   Mon, 13 Apr 2020 19:20:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200410060712.GA13759@gofer.mess.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200210063523.133333-6-hsinyi@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 07:07:12AM +0100, Sean Young wrote:
->On Thu, Apr 09, 2020 at 11:45:36PM -0400, Sasha Levin wrote:
->> From: Mohammad Rasim <mohammad.rasim96@gmail.com>
->>
->> [ Upstream commit 806d06161af045dba29f3c7747550c93b2ea3ca9 ]
->>
->> videostrong kii pro comes with a nec rc, add the keymap to the dts
->>
->> Signed-off-by: Mohammad Rasim <mohammad.rasim96@gmail.com>
->> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
->> Signed-off-by: Sean Young <sean@mess.org>
->> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
->> index 2f1f829450a29..6c9cc45fb417e 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
->> @@ -76,3 +76,7 @@
->>  		};
->>  	};
->>  };
->> +
->> +&ir {
->> +	linux,rc-map-name = "rc-videostrong-kii-pro";
->> +};
->
->The will need the keymap itself as well. It was added in commit
->30defecb98400575349a7d32f0526e1dc42ea83e.
 
-I'll grab it too, thanks!
 
--- 
-Thanks,
-Sasha
+On 2/10/20 7:35 AM, Hsin-Yi Wang wrote:
+> aliases property name must include only lowercase and '-'. Fix in dts
+> and driver.
+>=20
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
+>  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c b/drivers/me=
+dia/platform/mtk-mdp/mtk_mdp_comp.c
+> index 9afe8161a8c0..0c4788af78dd 100644
+> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
+> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
+
+When resubmitting this, please make sure to use
+scripts/get_maintainer.pl
+
+The To and CC list are missing the relevant people and mailinglists,
+porbably that's why you never got a response. The patch is trivial feel
+free to add:
+
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+> @@ -15,10 +15,10 @@
+> =20
+> =20
+>  static const char * const mtk_mdp_comp_stem[MTK_MDP_COMP_TYPE_MAX] =3D=
+ {
+> -	"mdp_rdma",
+> -	"mdp_rsz",
+> -	"mdp_wdma",
+> -	"mdp_wrot",
+> +	"mdp-rdma",
+> +	"mdp-rsz",
+> +	"mdp-wdma",
+> +	"mdp-wrot",
+>  };
+> =20
+>  struct mtk_mdp_comp_match {
+>=20
+
