@@ -4,229 +4,192 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CE9C2BBC7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 10:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2C1C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 10:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62F2520732
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 10:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FAE420737
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 10:30:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgDMKZp (ORCPT
+        id S1727833AbgDMKa6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 06:25:45 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:9968 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727833AbgDMKZo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Apr 2020 06:25:44 -0400
-X-IronPort-AV: E=Sophos;i="5.72,378,1580742000"; 
-   d="scan'208";a="44354095"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 13 Apr 2020 19:25:42 +0900
-Received: from localhost.localdomain (unknown [10.166.252.89])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id BC4F640061BC;
-        Mon, 13 Apr 2020 19:25:42 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     joro@8bytes.org, robh+dt@kernel.org
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH] dt-bndings: iommu: renesas,ipmmu-vmsa: convert to json-schema
-Date:   Mon, 13 Apr 2020 19:25:33 +0900
-Message-Id: <1586773533-8893-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 13 Apr 2020 06:30:58 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57114 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727806AbgDMKa6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Apr 2020 06:30:58 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: rcn)
+        with ESMTPSA id 0C2862A008C
+From:   =?UTF-8?q?Ricardo=20Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
+To:     heiko@sntech.de, srinivas.kandagatla@linaro.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Cc:     kernel@collabora.com
+Subject: [PATCH] dt-bindings: nvmem: Convert rockchip-efuse bindings to yaml
+Date:   Mon, 13 Apr 2020 12:30:47 +0200
+Message-Id: <20200413103047.26437-1-ricardo.canuelo@collabora.com>
+X-Mailer: git-send-email 2.18.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert Renesas VMSA-Compatible IOMMU bindings documentation
-to json-schema.
+Convert the existing rockchip-efuse binding to json-schema. No changes
+were done to the binding except for small changes in the documentation
+strings.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+This deletes the rockchip-efuse.txt binding and replaces it with
+rockchip-efuse.yaml.
+
+Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
 ---
- .../bindings/iommu/renesas,ipmmu-vmsa.txt          | 73 ------------------
- .../bindings/iommu/renesas,ipmmu-vmsa.yaml         | 90 ++++++++++++++++++++++
- 2 files changed, 90 insertions(+), 73 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
- create mode 100644 Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
+ .../bindings/nvmem/rockchip-efuse.txt         | 54 --------------
+ .../bindings/nvmem/rockchip-efuse.yaml        | 70 +++++++++++++++++++
+ 2 files changed, 70 insertions(+), 54 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
+ create mode 100644 Documentation/devicetree/bindings/nvmem/rockchip-efuse.yaml
 
-diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
+diff --git a/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt b/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
 deleted file mode 100644
-index 020d6f2..00000000
---- a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
+index 265bdb7dc8aa..000000000000
+--- a/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
 +++ /dev/null
-@@ -1,73 +0,0 @@
--* Renesas VMSA-Compatible IOMMU
+@@ -1,54 +0,0 @@
+-= Rockchip eFuse device tree bindings =
 -
--The IPMMU is an IOMMU implementation compatible with the ARM VMSA page tables.
--It provides address translation for bus masters outside of the CPU, each
--connected to the IPMMU through a port called micro-TLB.
--
--
--Required Properties:
--
--  - compatible: Must contain SoC-specific and generic entry below in case
--    the device is compatible with the R-Car Gen2 VMSA-compatible IPMMU.
--
--    - "renesas,ipmmu-r8a73a4" for the R8A73A4 (R-Mobile APE6) IPMMU.
--    - "renesas,ipmmu-r8a7743" for the R8A7743 (RZ/G1M) IPMMU.
--    - "renesas,ipmmu-r8a7744" for the R8A7744 (RZ/G1N) IPMMU.
--    - "renesas,ipmmu-r8a7745" for the R8A7745 (RZ/G1E) IPMMU.
--    - "renesas,ipmmu-r8a774a1" for the R8A774A1 (RZ/G2M) IPMMU.
--    - "renesas,ipmmu-r8a774b1" for the R8A774B1 (RZ/G2N) IPMMU.
--    - "renesas,ipmmu-r8a774c0" for the R8A774C0 (RZ/G2E) IPMMU.
--    - "renesas,ipmmu-r8a7790" for the R8A7790 (R-Car H2) IPMMU.
--    - "renesas,ipmmu-r8a7791" for the R8A7791 (R-Car M2-W) IPMMU.
--    - "renesas,ipmmu-r8a7793" for the R8A7793 (R-Car M2-N) IPMMU.
--    - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
--    - "renesas,ipmmu-r8a7795" for the R8A7795 (R-Car H3) IPMMU.
--    - "renesas,ipmmu-r8a7796" for the R8A7796 (R-Car M3-W) IPMMU.
--    - "renesas,ipmmu-r8a77965" for the R8A77965 (R-Car M3-N) IPMMU.
--    - "renesas,ipmmu-r8a77970" for the R8A77970 (R-Car V3M) IPMMU.
--    - "renesas,ipmmu-r8a77980" for the R8A77980 (R-Car V3H) IPMMU.
--    - "renesas,ipmmu-r8a77990" for the R8A77990 (R-Car E3) IPMMU.
--    - "renesas,ipmmu-r8a77995" for the R8A77995 (R-Car D3) IPMMU.
--    - "renesas,ipmmu-vmsa" for generic R-Car Gen2 or RZ/G1 VMSA-compatible
--			   IPMMU.
--
--  - reg: Base address and size of the IPMMU registers.
--  - interrupts: Specifiers for the MMU fault interrupts. For instances that
--    support secure mode two interrupts must be specified, for non-secure and
--    secure mode, in that order. For instances that don't support secure mode a
--    single interrupt must be specified. Not required for cache IPMMUs.
--
--  - #iommu-cells: Must be 1.
+-Required properties:
+-- compatible: Should be one of the following.
+-  - "rockchip,rk3066a-efuse" - for RK3066a SoCs.
+-  - "rockchip,rk3188-efuse" - for RK3188 SoCs.
+-  - "rockchip,rk3228-efuse" - for RK3228 SoCs.
+-  - "rockchip,rk3288-efuse" - for RK3288 SoCs.
+-  - "rockchip,rk3328-efuse" - for RK3328 SoCs.
+-  - "rockchip,rk3368-efuse" - for RK3368 SoCs.
+-  - "rockchip,rk3399-efuse" - for RK3399 SoCs.
+-- reg: Should contain the registers location and exact eFuse size
+-- clocks: Should be the clock id of eFuse
+-- clock-names: Should be "pclk_efuse"
 -
 -Optional properties:
+-- rockchip,efuse-size: Should be exact eFuse size in byte, the eFuse
+-  size in property <reg> will be invalid if define this property.
 -
--  - renesas,ipmmu-main: reference to the main IPMMU instance in two cells.
--    The first cell is a phandle to the main IPMMU and the second cell is
--    the interrupt bit number associated with the particular cache IPMMU device.
--    The interrupt bit number needs to match the main IPMMU IMSSTR register.
--    Only used by cache IPMMU instances.
+-Deprecated properties:
+-- compatible: "rockchip,rockchip-efuse"
+-  Old efuse compatible value compatible to rk3066a, rk3188 and rk3288
+-  efuses
 -
+-= Data cells =
+-Are child nodes of eFuse, bindings of which as described in
+-bindings/nvmem/nvmem.txt
 -
--Each bus master connected to an IPMMU must reference the IPMMU in its device
--node with the following property:
+-Example:
 -
--  - iommus: A reference to the IPMMU in two cells. The first cell is a phandle
--    to the IPMMU and the second cell the number of the micro-TLB that the
--    device is connected to.
+-	efuse: efuse@ffb40000 {
+-		compatible = "rockchip,rk3288-efuse";
+-		reg = <0xffb40000 0x20>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		clocks = <&cru PCLK_EFUSE256>;
+-		clock-names = "pclk_efuse";
 -
--
--Example: R8A7791 IPMMU-MX and VSP1-D0 bus master
--
--	ipmmu_mx: mmu@fe951000 {
--		compatible = "renasas,ipmmu-r8a7791", "renasas,ipmmu-vmsa";
--		reg = <0 0xfe951000 0 0x1000>;
--		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 221 IRQ_TYPE_LEVEL_HIGH>;
--		#iommu-cells = <1>;
+-		/* Data cells */
+-		cpu_leakage: cpu_leakage {
+-			reg = <0x17 0x1>;
+-		};
 -	};
 -
--	vsp@fe928000 {
+-= Data consumers =
+-Are device nodes which consume nvmem data cells.
+-
+-Example:
+-
+-	cpu_leakage {
 -		...
--		iommus = <&ipmmu_mx 13>;
--		...
+-		nvmem-cells = <&cpu_leakage>;
+-		nvmem-cell-names = "cpu_leakage";
 -	};
-diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
+diff --git a/Documentation/devicetree/bindings/nvmem/rockchip-efuse.yaml b/Documentation/devicetree/bindings/nvmem/rockchip-efuse.yaml
 new file mode 100644
-index 00000000..3820b10
+index 000000000000..3ae00b0b23bc
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
-@@ -0,0 +1,90 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++++ b/Documentation/devicetree/bindings/nvmem/rockchip-efuse.yaml
+@@ -0,0 +1,70 @@
++# SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/iommu/renesas,ipmmu-vmsa.yaml#
++$id: http://devicetree.org/schemas/nvmem/rockchip-efuse.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Renesas VMSA-Compatible IOMMU
++title: Rockchip eFuse device tree bindings
 +
 +maintainers:
-+  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
++  - Heiko Stuebner <heiko@sntech.de>
 +
-+description:
-+  The IPMMU is an IOMMU implementation compatible with the ARM VMSA page tables.
-+  It provides address translation for bus masters outside of the CPU, each
-+  connected to the IPMMU through a port called micro-TLB.
++allOf:
++  - $ref: "nvmem.yaml#"
 +
 +properties:
 +  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - renesas,ipmmu-r8a7743  # RZ/G1M
-+              - renesas,ipmmu-r8a7744  # RZ/G1N
-+              - renesas,ipmmu-r8a7745  # RZ/G1E
-+              - renesas,ipmmu-r8a7790  # R-Car H2
-+              - renesas,ipmmu-r8a7791  # R-Car M2-W
-+              - renesas,ipmmu-r8a7793  # R-Car M2-N
-+              - renesas,ipmmu-r8a7794  # R-Car E2
-+              - renesas,ipmmu-r8a7795  # R-Car H3
-+          - const: renesas,ipmmu-vmsa  # R-Car Gen2 or RZ/G1
-+      - items:
-+          - enum:
-+              - renesas,ipmmu-r8a73a4  # R-Mobile APE6
-+              - renesas,ipmmu-r8a774a1 # RZ/G2M
-+              - renesas,ipmmu-r8a774b1 # RZ/G2N
-+              - renesas,ipmmu-r8a774c0 # RZ/G2E
-+              - renesas,ipmmu-r8a7796  # R-Car M3-W
-+              - renesas,ipmmu-r8a77965 # R-Car M3-N
-+              - renesas,ipmmu-r8a77970 # R-Car V3M
-+              - renesas,ipmmu-r8a77980 # R-Car V3H
-+              - renesas,ipmmu-r8a77990 # R-Car E3
-+              - renesas,ipmmu-r8a77995 # R-Car D3
++    enum:
++      - rockchip,rk3066a-efuse
++      - rockchip,rk3188-efuse
++      - rockchip,rk3228-efuse
++      - rockchip,rk3288-efuse
++      - rockchip,rk3328-efuse
++      - rockchip,rk3368-efuse
++      - rockchip,rk3399-efuse
++
++      # Deprecated: old compatible value for rk3066a, rk3188 and rk3288
++      - rockchip,rockchip-efuse
 +
 +  reg:
++    description:
++      Registers location and eFuse size.
 +    maxItems: 1
 +
-+  interrupts:
-+    minItems: 1
-+    maxItems: 2
++  clocks:
 +    description:
-+      Specifiers for the MMU fault interrupts. For instances that support
-+      secure mode two interrupts must be specified, for non-secure and secure
-+      mode, in that order. For instances that don't support secure mode a
-+      single interrupt must be specified. Not required for cache IPMMUs.
-+
-+  '#iommu-cells':
-+    const: 1
-+
-+  power-domains:
++      eFuse clock id.
 +    maxItems: 1
 +
-+  renesas,ipmmu-main:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
++  clock-names:
++    const: pclk_efuse
++
++  rockchip,efuse-size:
 +    description:
-+      Reference to the main IPMMU instance in two cells. The first cell is
-+      a phandle to the main IPMMU and the second cell is the interrupt bit
-+      number associated with the particular cache IPMMU device. The interrupt
-+      bit number needs to match the main IPMMU IMSSTR register. Only used by
-+      cache IPMMU instances.
++      eFuse size in bytes. The eFuse size in property <reg> will be invalid if
++      this property is defined.
++    $ref: /schemas/types.yaml#/definitions/uint32
 +
 +required:
 +  - compatible
 +  - reg
-+  - '#iommu-cells'
-+
-+additionalProperties: false
++  - clocks
++  - clock-names
 +
 +examples:
 +  - |
-+    #include <dt-bindings/clock/r8a7791-cpg-mssr.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/power/r8a7791-sysc.h>
++    #include <dt-bindings/clock/rk3288-cru.h>
++    efuse: efuse@ffb40000 {
++            compatible = "rockchip,rk3288-efuse";
++            reg = <0xffb40000 0x20>;
++            #address-cells = <1>;
++            #size-cells = <1>;
++            clocks = <&cru PCLK_EFUSE256>;
++            clock-names = "pclk_efuse";
 +
-+    ipmmu_mx: mmu@fe951000 {
-+        compatible = "renasas,ipmmu-r8a7791", "renasas,ipmmu-vmsa";
-+        reg = <0xfe951000 0x1000>;
-+        interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
-+        #iommu-cells = <1>;
++            /* Data cells */
++            cpu_leakage: cpu_leakage@17 {
++                    reg = <0x17 0x1>;
++            };
 +    };
++...
 -- 
-2.7.4
+2.18.0
 
