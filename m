@@ -2,131 +2,103 @@ Return-Path: <SRS0=/QBj=55=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9214C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 14:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBA4C352B6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 15:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9848D2075E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 14:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB8AA20656
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 15:01:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mh5l9mA6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y6rUG6M+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbgDMOu4 (ORCPT
+        id S1728651AbgDMPBN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 10:50:56 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:53445 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730886AbgDMOuz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Apr 2020 10:50:55 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586789454; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=uvf3bpTwOKniLL1tkFEZ8lUYaBxnlGE9DNXjmA347Xc=;
- b=mh5l9mA6SKpJ/Vc/uniqz97Bvp46QVMiMK0uBDtRkCiLQfH37WuXUA6wkCyNjoc4jw9+eOvT
- j3M1WO8fr5jupyUk8hm1n3XSMdvLWsFUB7a390YDxgJ2w7s63RFPCfyf+xwKYef0DnduqeJf
- 7Cx86zhjVbp8iYuTmsHNqSQLe0U=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e947c4a.7f33307f5ab0-smtp-out-n01;
- Mon, 13 Apr 2020 14:50:50 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 85830C433BA; Mon, 13 Apr 2020 14:50:48 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kgunda)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A50E3C433F2;
-        Mon, 13 Apr 2020 14:50:47 +0000 (UTC)
+        Mon, 13 Apr 2020 11:01:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45590 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728537AbgDMPBM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Apr 2020 11:01:12 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C87E7C0A3BDC;
+        Mon, 13 Apr 2020 08:01:10 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id 131so6737128lfh.11;
+        Mon, 13 Apr 2020 08:01:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ru0QSPI9P9UnB6fBmE8CYo+keKBVUlIYNIIDkobQ4LQ=;
+        b=Y6rUG6M+j0aiSfmg6JaVatWMejLQsTEbkp+Py4z65rU+aUir3yH4IntWg02ep3JdhB
+         Usx5lvplfJa0s5cxCQggtxc7W1wuy/8j1mK4AZtTraerenGI/fqV/T+OEco9I8hWTw3G
+         H5eZJiTMnm9GprAVPGhUU7X7wHFEgQoqJDxH1gSMg4mpw4wjthr9obdVLEixRldPLNnf
+         XW/AIcU3Kw0c7BABMeRaSSqzB//NmqUeCTH+hoMqFLxXYzFcNL0yf5+hERb3K+Zb1/T1
+         oO1zLQ4iHnn+63mj5PtkZjuKKVjSrvSA7ffFDGrGQdVV2vvFVpai2yo/VXtWCSj+XtIx
+         wcvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ru0QSPI9P9UnB6fBmE8CYo+keKBVUlIYNIIDkobQ4LQ=;
+        b=lN9GcXayvEg4PNXmLwRpfz7PMMOlj9k/o9d7FZaSSKOQh2/0nX5u3CHAbt+BBeJd4H
+         48CXHLJIO+JbzmffdCyLPxlajiDFgUDEFqnrBk5XGNRElNNVb3WKd5P0SKIEW7tknFcK
+         XMIHnvM1XKq1bn7CU/q3EJH2HDakyqNOUh/ZhN7ZccI7KDKkwGJcDlj/AbeIFY3S+h5q
+         0QKuqo7rN2BlQzCJut17hmoG0UiuVNc0UG52IfK23uEg7fvdN0M4AGvGaczPikOw8dpS
+         NYfaY9AuG9UzYW6HxcQ2Tf8CjyzIXW45sDY+egt8VUIZp6uQrFOHNNXlD6UVoNAmyWoQ
+         YJTQ==
+X-Gm-Message-State: AGi0PuYGN9StUygYG2BWk0Mgtl7qwlKUA2sulFLnjJWLI7/QTeZseVbS
+        JBxP2T3eSS7vRD4jBYFFthhbafIU
+X-Google-Smtp-Source: APiQypJuMbGzqumA19vjCipPNUMuK6knNtWelRmhSmQ7RHP5iQyyKfnbir6+7o6qjvFvRW6ssE2yTw==
+X-Received: by 2002:a19:ee06:: with SMTP id g6mr9366702lfb.90.1586790069000;
+        Mon, 13 Apr 2020 08:01:09 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id b28sm8190875lfo.46.2020.04.13.08.01.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Apr 2020 08:01:08 -0700 (PDT)
+Subject: Re: [PATCH v2 11/22] memory: tegra: Register as interconnect provider
+To:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+References: <20200330010904.27643-1-digetx@gmail.com>
+ <20200330010904.27643-12-digetx@gmail.com>
+ <70f724d6-5cb2-0ebe-ffc1-5dbb77d9dc74@linaro.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <8d8dd1aa-71b3-e090-5637-578e23150bf1@gmail.com>
+Date:   Mon, 13 Apr 2020 18:01:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 13 Apr 2020 20:20:47 +0530
-From:   kgunda@codeaurora.org
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Rob Herring <robh@kernel.org>, bjorn.andersson@linaro.org,
-        jingoohan1@gmail.com, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, mark.rutland@arm.com, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dan Murphy <dmurphy@ti.com>, linux-arm-msm@vger.kernel.org,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH V4 1/4] backlight: qcom-wled: convert the wled bindings to
- .yaml format
-In-Reply-To: <20200406085024.GF30614@dell>
-References: <1584985618-25689-1-git-send-email-kgunda@codeaurora.org>
- <1584985618-25689-2-git-send-email-kgunda@codeaurora.org>
- <20200331175401.GA9791@bogus>
- <ac8f25113a3bb233c11fd7cd9e62c2cf@codeaurora.org>
- <20200403114651.m6rholzufzqinanc@holly.lan> <20200406085024.GF30614@dell>
-Message-ID: <4fb0643342e512a248f57198cbafe50c@codeaurora.org>
-X-Sender: kgunda@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <70f724d6-5cb2-0ebe-ffc1-5dbb77d9dc74@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-04-06 14:20, Lee Jones wrote:
-> On Fri, 03 Apr 2020, Daniel Thompson wrote:
+Hello Georgi,
+
+13.04.2020 15:43, Georgi Djakov пишет:
+...
+>> +	if (IS_ENABLED(CONFIG_INTERCONNECT)) {
 > 
->> On Fri, Apr 03, 2020 at 04:45:49PM +0530, kgunda@codeaurora.org wrote:
->> > On 2020-03-31 23:24, Rob Herring wrote:
->> > > On Mon, Mar 23, 2020 at 11:16:55PM +0530, Kiran Gunda wrote:
->> > > > diff --git
->> > > > a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
->> > > > b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
->> > > > new file mode 100644
->> > > > index 0000000..8a388bf
->> > > > --- /dev/null
->> > > > +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
->> > > > @@ -0,0 +1,184 @@
->> > > > +# SPDX-License-Identifier: GPL-2.0-only
->> > > > +%YAML 1.2
->> > > > +---
->> > > > +$id: http://devicetree.org/schemas/leds/backlight/qcom-wled.yaml#
->> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> > > > +
->> > > > +title: Binding for Qualcomm Technologies, Inc. WLED driver
->> > > > +
->> > > > +maintainers:
->> > > > +  - Lee Jones <lee.jones@linaro.org>
->> > >
->> > > Should be the h/w owner (you), not who applies patches.
->> > >
->> > will address in next post.
->> > <snip>
->> > will address in next post.
->> > <snip>
->> > will address in next post.
->> > <snip>
->> > will address in next post.
->> > <snip>
->> > will address in next post.
->> > <snip>
->> > will address in next post.
->> > <snip>
->> > will address in next post.
->> > <snip>
->> > will address in next post.
->> > <snip>
->> > will address in next post.
->> 
->> If you agree on all points raised I doubt there is any need for a 
->> point
->> by point reply since everyone who reads it will have to scroll down
->> simply to find out that you agree on all points.
->> 
->> Better just to acknowledge the feedback and reply to the first one
->> saying you'll agree on all points and will address all feedback in the
->> next revision (and then trim the reply to keep it short).
+> The interconnect framework can be also a module and the then the build will fail.
+
+That's a good catch!
+
+>> +		err = tegra_mc_interconnect_setup(mc);
 > 
-> Or better still, just submit the next revision with all the fixes. :)
-Noted.
+> Maybe register the interconnect provider as a platform sub-device instead?
+
+The sub-device sound like a bit too much of hassle. I'm curious whether
+we could try to make all the tegra-memory drivers modular, please let me
+try..
