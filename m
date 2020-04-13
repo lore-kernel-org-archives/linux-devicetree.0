@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A20F8C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 13:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C550DC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 14:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 828B92072C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 13:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FC4F20692
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 14:03:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bH9JdeHX"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Y/Q8SgwQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730186AbgDMN6y (ORCPT
+        id S1730228AbgDMODT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 09:58:54 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:49377 "EHLO
+        Mon, 13 Apr 2020 10:03:19 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:41257 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730187AbgDMN6v (ORCPT
+        by vger.kernel.org with ESMTP id S1730249AbgDMODQ (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Apr 2020 09:58:51 -0400
+        Mon, 13 Apr 2020 10:03:16 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586786329; h=Content-Transfer-Encoding: Content-Type:
+ s=smtp; t=1586786595; h=Content-Transfer-Encoding: Content-Type:
  In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Y/gdVVe6BVm6JgYV9eCeY9S+PgE2k5W+l+hDimM0Yso=; b=bH9JdeHXhLqJNd00EQ2YQTWU6qHildHHyfsfHCvc2+ZL2/ACh78w/Pd0hyjj41AYl37oa0jk
- g/8VWawtfVPIOFOT6FwMGqzwGUr2XbXSuc3ZJBnO+9yutskx5IFiHMjvHVN2OtQCBCH+SDHT
- BSmLQXlvLt/RBN7Ye8hdINa+wHc=
+ Subject: Sender; bh=qhJil9YUxNlGzvVoOFb/1gH7xdIkydJzl1S9v+bheZM=; b=Y/Q8SgwQX+wzTXW6580GBGRaE6uTcRJKg/A6HeEHaVJcyxt8z00qXQEs5+uB+ya7iBRboctz
+ c3KkAEIa/o8PLVl52x0wPjw0Z0QdyWJlZGT7T39sV7Oe9tR6K10F7wYlcBixbC731Q8XmUHE
+ 16YaQOtETgZ6ZIQkIPjz+zrtfok=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e947017.7f6220e1cd18-smtp-out-n01;
- Mon, 13 Apr 2020 13:58:47 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e947107.7f59ab7ff7a0-smtp-out-n03;
+ Mon, 13 Apr 2020 14:02:47 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BB972C433F2; Mon, 13 Apr 2020 13:58:47 +0000 (UTC)
+        id 73ABBC43637; Mon, 13 Apr 2020 14:02:46 +0000 (UTC)
 Received: from [10.111.193.245] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EF2DFC433CB;
-        Mon, 13 Apr 2020 13:58:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EF2DFC433CB
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EEFA9C433CB;
+        Mon, 13 Apr 2020 14:02:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EEFA9C433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH 02/21] tty: serial: qcom_geni_serial: Use OPP API to set
- clk/perf state
+Subject: Re: [PATCH 03/21] spi: spi-geni-qcom: Use OPP API to set clk/perf
+ state
 To:     Matthias Kaehlcke <mka@chromium.org>
 Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
         bjorn.andersson@linaro.org, agross@kernel.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>,
         Akash Asthana <akashast@codeaurora.org>,
-        linux-serial@vger.kernel.org
+        linux-spi@vger.kernel.org
 References: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
- <1586353607-32222-3-git-send-email-rnayak@codeaurora.org>
- <20200409174511.GS199755@google.com>
+ <1586353607-32222-4-git-send-email-rnayak@codeaurora.org>
+ <20200409182021.GT199755@google.com>
 From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <e3aa9e6f-14f5-de51-7087-094b5089d16b@codeaurora.org>
-Date:   Mon, 13 Apr 2020 19:28:39 +0530
+Message-ID: <ef2fc62f-bc43-5689-d1a5-d1b28342b7d6@codeaurora.org>
+Date:   Mon, 13 Apr 2020 19:32:33 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200409174511.GS199755@google.com>
+In-Reply-To: <20200409182021.GT199755@google.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -72,84 +72,90 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Matthias,
 
-On 4/9/2020 11:15 PM, Matthias Kaehlcke wrote:
+On 4/9/2020 11:50 PM, Matthias Kaehlcke wrote:
 > Hi Rajendra,
 > 
-> On Wed, Apr 08, 2020 at 07:16:28PM +0530, Rajendra Nayak wrote:
->> geni serial needs to express a perforamnce state requirement on CX
+> On Wed, Apr 08, 2020 at 07:16:29PM +0530, Rajendra Nayak wrote:
+>> geni spi needs to express a perforamnce state requirement on CX
 >> depending on the frequency of the clock rates. Use OPP table from
 >> DT to register with OPP framework and use dev_pm_opp_set_rate() to
 >> set the clk/perf state.
 >>
 >> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> Cc: Alok Chauhan <alokc@codeaurora.org>
 >> Cc: Akash Asthana <akashast@codeaurora.org>
->> Cc: linux-serial@vger.kernel.org
+>> Cc: linux-spi@vger.kernel.org
 >> ---
->>   drivers/tty/serial/qcom_geni_serial.c | 20 +++++++++++++++-----
->>   include/linux/qcom-geni-se.h          |  2 ++
->>   2 files changed, 17 insertions(+), 5 deletions(-)
+>>   drivers/spi/spi-geni-qcom.c | 14 +++++++++++---
+>>   1 file changed, 11 insertions(+), 3 deletions(-)
 >>
->> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
->> index 6119090..754eaf6 100644
->> --- a/drivers/tty/serial/qcom_geni_serial.c
->> +++ b/drivers/tty/serial/qcom_geni_serial.c
->> @@ -9,6 +9,7 @@
+>> diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+>> index c397242..ce387dc 100644
+>> --- a/drivers/spi/spi-geni-qcom.c
+>> +++ b/drivers/spi/spi-geni-qcom.c
+>> @@ -7,6 +7,7 @@
+>>   #include <linux/log2.h>
 >>   #include <linux/module.h>
->>   #include <linux/of.h>
->>   #include <linux/of_device.h>
->> +#include <linux/pm_opp.h>
 >>   #include <linux/platform_device.h>
+>> +#include <linux/pm_opp.h>
 >>   #include <linux/pm_runtime.h>
->>   #include <linux/pm_wakeirq.h>
->> @@ -961,7 +962,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
->>   		goto out_restart_rx;
+>>   #include <linux/qcom-geni-se.h>
+>>   #include <linux/spi/spi.h>
+>> @@ -95,7 +96,6 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
+>>   {
+>>   	unsigned long sclk_freq;
+>>   	unsigned int actual_hz;
+>> -	struct geni_se *se = &mas->se;
+>>   	int ret;
 >>   
->>   	uport->uartclk = clk_rate;
->> -	clk_set_rate(port->se.clk, clk_rate);
->> +	dev_pm_opp_set_rate(uport->dev, clk_rate);
->>   	ser_clk_cfg = SER_CLK_EN;
->>   	ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
+>>   	ret = geni_se_clk_freq_match(&mas->se,
+>> @@ -112,9 +112,9 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
 >>   
->> @@ -1198,8 +1199,10 @@ static void qcom_geni_serial_pm(struct uart_port *uport,
->>   	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF)
->>   		geni_se_resources_on(&port->se);
->>   	else if (new_state == UART_PM_STATE_OFF &&
->> -			old_state == UART_PM_STATE_ON)
->> +			old_state == UART_PM_STATE_ON) {
->> +		dev_pm_opp_set_rate(uport->dev, 0);
->>   		geni_se_resources_off(&port->se);
->> +	}
+>>   	dev_dbg(mas->dev, "req %u=>%u sclk %lu, idx %d, div %d\n", speed_hz,
+>>   				actual_hz, sclk_freq, *clk_idx, *clk_div);
+>> -	ret = clk_set_rate(se->clk, sclk_freq);
+>> +	ret = dev_pm_opp_set_rate(mas->dev, sclk_freq);
+>>   	if (ret)
+>> -		dev_err(mas->dev, "clk_set_rate failed %d\n", ret);
+>> +		dev_err(mas->dev, "dev_pm_opp_set_rate failed %d\n", ret);
+>>   	return ret;
 >>   }
 >>   
->>   static const struct uart_ops qcom_geni_console_pops = {
->> @@ -1318,13 +1321,16 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
->>   	if (of_property_read_bool(pdev->dev.of_node, "cts-rts-swap"))
->>   		port->cts_rts_swap = true;
+>> @@ -553,6 +553,7 @@ static int spi_geni_probe(struct platform_device *pdev)
+>>   	if (!spi)
+>>   		return -ENOMEM;
 >>   
->> +	port->se.opp = dev_pm_opp_set_clkname(&pdev->dev, "se");
+>> +
+>>   	platform_set_drvdata(pdev, spi);
+>>   	mas = spi_master_get_devdata(spi);
+>>   	mas->irq = irq;
+>> @@ -561,6 +562,8 @@ static int spi_geni_probe(struct platform_device *pdev)
+>>   	mas->se.wrapper = dev_get_drvdata(dev->parent);
+>>   	mas->se.base = base;
+>>   	mas->se.clk = clk;
+>> +	mas->se.opp = dev_pm_opp_set_clkname(&pdev->dev, "se");
 > 
-> dev_pm_opp_set_clkname() can fail for multiple reasons, it seems an error
-> check would be warranted.
+> As commented on the serial patch, it seems an error check is needed
+> and the OPP table saved in 'struct geni_se' is never used.
 
-right, looks like I should put some error check there
+right, I explained about the OPP table in the other patch.
 
-> Is it actually necessary to save the OPP table in 'struct geni_se'? Both
-> the serial and the SPI driver save the table, but don't use it later (nor
-> does the SE driver).
+> 
+>> +	dev_pm_opp_of_add_table(&pdev->dev);
+> 
+> This function could also fail for multiple reasons, so the return value
+> should be checked.
+> 
+>  From patch "[01/21] opp: Manage empty OPP tables with clk handle" it seems
+> ignoring errors is intended to be able to operate when no OPP table is
+> specified. But even with that you want to return in case of certain errors,
+> like an invalid OPP table, out of memory or -EPROBE_DEFER.
 
-I think I did that initially because I wanted to use that to call into
-dev_pm_opp_put_clkname during cleanup. That however never worked since
-the way the clk_put is done in dev_pm_opp_put_clkname() and _opp_table_kref_release()
-seems buggy. I kind of forgot about fixing it up, I will figure our whats the right
-way to do it, and either not call dev_pm_opp_put_clkname() or not store the
-opp table returned by it.
-
-thanks for taking time to review.
-
-- Rajendra
-  
+Thats correct, my intention of not checking the errors was in cases where its
+optional, and I did not want to break anything with existing DT. I will go back and
+check if its indeed possible for it to return a -EPROBE_DEFER and others which
+I should handle.
 
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
