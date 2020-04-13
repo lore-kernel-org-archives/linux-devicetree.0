@@ -6,174 +6,227 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9E9C2BBC7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 09:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CE9C2BBC7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 10:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3250E20775
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 09:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62F2520732
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 10:25:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgDMJs5 (ORCPT
+        id S1728076AbgDMKZp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 05:48:57 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:45488 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727793AbgDMJs4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Apr 2020 05:48:56 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4EA80200216;
-        Mon, 13 Apr 2020 11:48:54 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3636B201410;
-        Mon, 13 Apr 2020 11:48:49 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id F0284402B4;
-        Mon, 13 Apr 2020 17:48:42 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] dt-bindings: gpio: Convert i.MX to json-schema
-Date:   Mon, 13 Apr 2020 17:40:49 +0800
-Message-Id: <1586770849-15693-1-git-send-email-Anson.Huang@nxp.com>
+        Mon, 13 Apr 2020 06:25:45 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:9968 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727833AbgDMKZo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Apr 2020 06:25:44 -0400
+X-IronPort-AV: E=Sophos;i="5.72,378,1580742000"; 
+   d="scan'208";a="44354095"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 13 Apr 2020 19:25:42 +0900
+Received: from localhost.localdomain (unknown [10.166.252.89])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id BC4F640061BC;
+        Mon, 13 Apr 2020 19:25:42 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     joro@8bytes.org, robh+dt@kernel.org
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH] dt-bndings: iommu: renesas,ipmmu-vmsa: convert to json-schema
+Date:   Mon, 13 Apr 2020 19:25:33 +0900
+Message-Id: <1586773533-8893-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the i.MX GPIO binding to DT schema format using json-schema.
+Convert Renesas VMSA-Compatible IOMMU bindings documentation
+to json-schema.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- .../devicetree/bindings/gpio/fsl-imx-gpio.txt      | 35 -----------
- .../devicetree/bindings/gpio/fsl-imx-gpio.yaml     | 72 ++++++++++++++++++++++
- 2 files changed, 72 insertions(+), 35 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+ .../bindings/iommu/renesas,ipmmu-vmsa.txt          | 73 ------------------
+ .../bindings/iommu/renesas,ipmmu-vmsa.yaml         | 90 ++++++++++++++++++++++
+ 2 files changed, 90 insertions(+), 73 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
+ create mode 100644 Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
 
-diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
+diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
 deleted file mode 100644
-index b4cd9f90..0000000
---- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
+index 020d6f2..00000000
+--- a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
 +++ /dev/null
-@@ -1,35 +0,0 @@
--* Freescale i.MX/MXC GPIO controller
+@@ -1,73 +0,0 @@
+-* Renesas VMSA-Compatible IOMMU
 -
--Required properties:
--- compatible : Should be "fsl,<soc>-gpio"
--- reg : Address and length of the register set for the device
--- interrupts : Should be the port interrupt shared by all 32 pins, if
--  one number.  If two numbers, the first one is the interrupt shared
--  by low 16 pins and the second one is for high 16 pins.
--- gpio-controller : Marks the device node as a gpio controller.
--- #gpio-cells : Should be two.  The first cell is the pin number and
--  the second cell is used to specify the gpio polarity:
--      0 = active high
--      1 = active low
--- interrupt-controller: Marks the device node as an interrupt controller.
--- #interrupt-cells : Should be 2.  The first cell is the GPIO number.
--  The second cell bits[3:0] is used to specify trigger type and level flags:
--      1 = low-to-high edge triggered.
--      2 = high-to-low edge triggered.
--      4 = active high level-sensitive.
--      8 = active low level-sensitive.
+-The IPMMU is an IOMMU implementation compatible with the ARM VMSA page tables.
+-It provides address translation for bus masters outside of the CPU, each
+-connected to the IPMMU through a port called micro-TLB.
+-
+-
+-Required Properties:
+-
+-  - compatible: Must contain SoC-specific and generic entry below in case
+-    the device is compatible with the R-Car Gen2 VMSA-compatible IPMMU.
+-
+-    - "renesas,ipmmu-r8a73a4" for the R8A73A4 (R-Mobile APE6) IPMMU.
+-    - "renesas,ipmmu-r8a7743" for the R8A7743 (RZ/G1M) IPMMU.
+-    - "renesas,ipmmu-r8a7744" for the R8A7744 (RZ/G1N) IPMMU.
+-    - "renesas,ipmmu-r8a7745" for the R8A7745 (RZ/G1E) IPMMU.
+-    - "renesas,ipmmu-r8a774a1" for the R8A774A1 (RZ/G2M) IPMMU.
+-    - "renesas,ipmmu-r8a774b1" for the R8A774B1 (RZ/G2N) IPMMU.
+-    - "renesas,ipmmu-r8a774c0" for the R8A774C0 (RZ/G2E) IPMMU.
+-    - "renesas,ipmmu-r8a7790" for the R8A7790 (R-Car H2) IPMMU.
+-    - "renesas,ipmmu-r8a7791" for the R8A7791 (R-Car M2-W) IPMMU.
+-    - "renesas,ipmmu-r8a7793" for the R8A7793 (R-Car M2-N) IPMMU.
+-    - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
+-    - "renesas,ipmmu-r8a7795" for the R8A7795 (R-Car H3) IPMMU.
+-    - "renesas,ipmmu-r8a7796" for the R8A7796 (R-Car M3-W) IPMMU.
+-    - "renesas,ipmmu-r8a77965" for the R8A77965 (R-Car M3-N) IPMMU.
+-    - "renesas,ipmmu-r8a77970" for the R8A77970 (R-Car V3M) IPMMU.
+-    - "renesas,ipmmu-r8a77980" for the R8A77980 (R-Car V3H) IPMMU.
+-    - "renesas,ipmmu-r8a77990" for the R8A77990 (R-Car E3) IPMMU.
+-    - "renesas,ipmmu-r8a77995" for the R8A77995 (R-Car D3) IPMMU.
+-    - "renesas,ipmmu-vmsa" for generic R-Car Gen2 or RZ/G1 VMSA-compatible
+-			   IPMMU.
+-
+-  - reg: Base address and size of the IPMMU registers.
+-  - interrupts: Specifiers for the MMU fault interrupts. For instances that
+-    support secure mode two interrupts must be specified, for non-secure and
+-    secure mode, in that order. For instances that don't support secure mode a
+-    single interrupt must be specified. Not required for cache IPMMUs.
+-
+-  - #iommu-cells: Must be 1.
 -
 -Optional properties:
--- clocks: the clock for clocking the GPIO silicon
 -
--Example:
+-  - renesas,ipmmu-main: reference to the main IPMMU instance in two cells.
+-    The first cell is a phandle to the main IPMMU and the second cell is
+-    the interrupt bit number associated with the particular cache IPMMU device.
+-    The interrupt bit number needs to match the main IPMMU IMSSTR register.
+-    Only used by cache IPMMU instances.
 -
--gpio0: gpio@73f84000 {
--	compatible = "fsl,imx51-gpio", "fsl,imx35-gpio";
--	reg = <0x73f84000 0x4000>;
--	interrupts = <50 51>;
--	gpio-controller;
--	#gpio-cells = <2>;
--	interrupt-controller;
--	#interrupt-cells = <2>;
--};
-diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+-
+-Each bus master connected to an IPMMU must reference the IPMMU in its device
+-node with the following property:
+-
+-  - iommus: A reference to the IPMMU in two cells. The first cell is a phandle
+-    to the IPMMU and the second cell the number of the micro-TLB that the
+-    device is connected to.
+-
+-
+-Example: R8A7791 IPMMU-MX and VSP1-D0 bus master
+-
+-	ipmmu_mx: mmu@fe951000 {
+-		compatible = "renasas,ipmmu-r8a7791", "renasas,ipmmu-vmsa";
+-		reg = <0 0xfe951000 0 0x1000>;
+-		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
+-			     <0 221 IRQ_TYPE_LEVEL_HIGH>;
+-		#iommu-cells = <1>;
+-	};
+-
+-	vsp@fe928000 {
+-		...
+-		iommus = <&ipmmu_mx 13>;
+-		...
+-	};
+diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
 new file mode 100644
-index 0000000..465104c
+index 00000000..3820b10
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
+@@ -0,0 +1,90 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/gpio/fsl-imx-gpio.yaml#
++$id: http://devicetree.org/schemas/iommu/renesas,ipmmu-vmsa.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Freescale i.MX/MXC GPIO controller
++title: Renesas VMSA-Compatible IOMMU
 +
 +maintainers:
-+  - Anson Huang <Anson.Huang@nxp.com>
++  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
++
++description:
++  The IPMMU is an IOMMU implementation compatible with the ARM VMSA page tables.
++  It provides address translation for bus masters outside of the CPU, each
++  connected to the IPMMU through a port called micro-TLB.
 +
 +properties:
 +  compatible:
 +    oneOf:
 +      - items:
 +          - enum:
-+              - fsl,imx1-gpio
-+              - fsl,imx21-gpio
-+              - fsl,imx31-gpio
-+              - fsl,imx35-gpio
-+              - fsl,imx7d-gpio
++              - renesas,ipmmu-r8a7743  # RZ/G1M
++              - renesas,ipmmu-r8a7744  # RZ/G1N
++              - renesas,ipmmu-r8a7745  # RZ/G1E
++              - renesas,ipmmu-r8a7790  # R-Car H2
++              - renesas,ipmmu-r8a7791  # R-Car M2-W
++              - renesas,ipmmu-r8a7793  # R-Car M2-N
++              - renesas,ipmmu-r8a7794  # R-Car E2
++              - renesas,ipmmu-r8a7795  # R-Car H3
++          - const: renesas,ipmmu-vmsa  # R-Car Gen2 or RZ/G1
++      - items:
++          - enum:
++              - renesas,ipmmu-r8a73a4  # R-Mobile APE6
++              - renesas,ipmmu-r8a774a1 # RZ/G2M
++              - renesas,ipmmu-r8a774b1 # RZ/G2N
++              - renesas,ipmmu-r8a774c0 # RZ/G2E
++              - renesas,ipmmu-r8a7796  # R-Car M3-W
++              - renesas,ipmmu-r8a77965 # R-Car M3-N
++              - renesas,ipmmu-r8a77970 # R-Car V3M
++              - renesas,ipmmu-r8a77980 # R-Car V3H
++              - renesas,ipmmu-r8a77990 # R-Car E3
++              - renesas,ipmmu-r8a77995 # R-Car D3
 +
 +  reg:
 +    maxItems: 1
 +
 +  interrupts:
-+    description: |
-+      Should be the port interrupt shared by all 32 pins, if one number.
-+      If two numbers, the first one is the interrupt shared by low 16 pins
-+      and the second one is for high 16 pins.
 +    minItems: 1
 +    maxItems: 2
++    description:
++      Specifiers for the MMU fault interrupts. For instances that support
++      secure mode two interrupts must be specified, for non-secure and secure
++      mode, in that order. For instances that don't support secure mode a
++      single interrupt must be specified. Not required for cache IPMMUs.
 +
-+  interrupt-controller: true
++  '#iommu-cells':
++    const: 1
 +
-+  "#interrupt-cells":
-+    const: 2
-+
-+  clocks:
-+    description: |
-+      The clock for clocking the GPIO silicon.
++  power-domains:
 +    maxItems: 1
 +
-+  "#gpio-cells":
-+    const: 2
-+
-+  gpio-controller: true
++  renesas,ipmmu-main:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description:
++      Reference to the main IPMMU instance in two cells. The first cell is
++      a phandle to the main IPMMU and the second cell is the interrupt bit
++      number associated with the particular cache IPMMU device. The interrupt
++      bit number needs to match the main IPMMU IMSSTR register. Only used by
++      cache IPMMU instances.
 +
 +required:
 +  - compatible
 +  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - "#gpio-cells"
-+  - gpio-controller
++  - '#iommu-cells'
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    gpio0: gpio@73f84000 {
-+        compatible = "fsl,imx35-gpio";
-+        reg = <0x73f84000 0x4000>;
-+        interrupts = <50 51>;
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+    };
++    #include <dt-bindings/clock/r8a7791-cpg-mssr.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/power/r8a7791-sysc.h>
 +
-+...
++    ipmmu_mx: mmu@fe951000 {
++        compatible = "renasas,ipmmu-r8a7791", "renasas,ipmmu-vmsa";
++        reg = <0xfe951000 0x1000>;
++        interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
++        #iommu-cells = <1>;
++    };
 -- 
 2.7.4
 
