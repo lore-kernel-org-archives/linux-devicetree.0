@@ -1,4 +1,4 @@
-Return-Path: <SRS0=a8L4=54=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=/QBj=55=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
@@ -6,126 +6,109 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E52C2D0EC
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 20:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14245C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 00:17:09 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAE1520708
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Apr 2020 20:04:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org AAE1520708
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
+	by mail.kernel.org (Postfix) with ESMTP id D24F720692
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 00:17:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org D24F720692
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=suse.de
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=devicetree-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgDLUEy (ORCPT
+        id S1726810AbgDMARH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Apr 2020 16:04:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:59640 "EHLO
+        Sun, 12 Apr 2020 20:17:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:47442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727315AbgDLUEy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Apr 2020 16:04:54 -0400
-Received: from asavdk4.altibox.net (asavdk4.altibox.net [109.247.116.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3CC2C0A3BF0
-        for <devicetree@vger.kernel.org>; Sun, 12 Apr 2020 13:04:53 -0700 (PDT)
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 7FE5E80478;
-        Sun, 12 Apr 2020 22:04:51 +0200 (CEST)
-Date:   Sun, 12 Apr 2020 22:04:50 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        devicetree@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v2 01/36] dt-bindings: display: allow port and ports in
- panel-lvds
-Message-ID: <20200412200450.GB711@ravnborg.org>
-References: <20200408195109.32692-1-sam@ravnborg.org>
- <20200408195109.32692-2-sam@ravnborg.org>
- <CAL_JsqKp9r6sQuyKtqZnx26-2kzwkQSaa7N6Lbs2g6rC-Rpx1w@mail.gmail.com>
+        with ESMTP id S1726185AbgDMARH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Apr 2020 20:17:07 -0400
+Received: from mx2.suse.de (mx2.suse.de [195.135.220.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B4AC0A3BE0;
+        Sun, 12 Apr 2020 17:17:07 -0700 (PDT)
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6812EAC12;
+        Mon, 13 Apr 2020 00:17:05 +0000 (UTC)
+Subject: Re: [PATCH v3 1/2] dt-bindings: arm: realtek: Document RTD1319 and
+ Realtek PymParticle EVB
+To:     James Tai <james.tai@realtek.com>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200204145207.28622-1-james.tai@realtek.com>
+ <20200204145207.28622-2-james.tai@realtek.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <bf55ccbe-cbdf-7ba7-d701-aa84c20204e3@suse.de>
+Date:   Mon, 13 Apr 2020 02:17:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKp9r6sQuyKtqZnx26-2kzwkQSaa7N6Lbs2g6rC-Rpx1w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=yC-0_ovQAAAA:8 a=pGLkceISAAAA:8 a=VwQbUJbxAAAA:8 a=e5mUnYsNAAAA:8
-        a=FrqY3B3J1LyIZVayq4MA:9 a=CjuIK1q_8ugA:10 a=CojVow1nldcA:10
-        a=E9Po1WZjFZOl8hwRPBS3:22 a=QsnFDINu91a9xkgZirup:22
-        a=AjGcO6oz07-iQ99wixmX:22 a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <20200204145207.28622-2-james.tai@realtek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob.
+Hi James,
 
-On Thu, Apr 09, 2020 at 10:11:10AM -0600, Rob Herring wrote:
-> On Wed, Apr 8, 2020 at 1:51 PM Sam Ravnborg <sam@ravnborg.org> wrote:
-> >
-> > Both port and ports names may be used.
-> > port - for a single port
-> > ports - if there is more than one port in sub-nodes
-> >
-> > Fixes the following warning:
-> > advantech,idk-2121wr.example.dt.yaml: panel-lvds: 'port' is a required property
-> >
-> > advantech,idk-2121wr.yaml needs several ports, so uses a ports node.
-> >
-> > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> > Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Cc: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > Cc: Sam Ravnborg <sam@ravnborg.org>
-> > ---
-> >  Documentation/devicetree/bindings/display/panel/lvds.yaml | 8 +++++++-
-> >  1 file changed, 7 insertions(+), 1 deletion(-)
+Am 04.02.20 um 15:52 schrieb James Tai:
+> Define compatible strings for Realtek RTD1319 SoC and Realtek PymParticle
+> EVB.
 > 
+> Signed-off-by: James Tai <james.tai@realtek.com>
+> ---
+>   v2 -> v3: Unchanged
 > 
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/panel/lvds.yaml b/Documentation/devicetree/bindings/display/panel/lvds.yaml
-> > index d0083301acbe..f9132d50821c 100644
-> > --- a/Documentation/devicetree/bindings/display/panel/lvds.yaml
-> > +++ b/Documentation/devicetree/bindings/display/panel/lvds.yaml
-> > @@ -102,6 +102,12 @@ required:
-> >    - width-mm
-> >    - height-mm
-> >    - panel-timing
-> > -  - port
-> > +
-> > +if:
-> > +  required:
-> > +    - port
-> > +else:
-> > +  required:
-> > +    - ports
+>   v1 -> v2:
+>   * Put string in alphabetical order
 > 
-> Humm, I guess 'then' is not required. That's a bit weird IMO.
+>   Documentation/devicetree/bindings/arm/realtek.yaml | 6 ++++++
+>   1 file changed, 6 insertions(+)
 > 
-> I usually do a 'oneOf' for these cases.
+> diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml b/Documentation/devicetree/bindings/arm/realtek.yaml
+> index 845f9c76d6f7..3b48ae71fdd8 100644
+> --- a/Documentation/devicetree/bindings/arm/realtek.yaml
+> +++ b/Documentation/devicetree/bindings/arm/realtek.yaml
+> @@ -42,6 +42,12 @@ properties:
+>                 - synology,ds418 # Synology DiskStation DS418
+>             - const: realtek,rtd1296
+>   
+> +      # RTD1319 SoC based boards
+> +      - items:
+> +          - enum:
+> +              - realtek,pymparticle # Realtek PymParticle EVB
 
-For the record, I re-did this patch using oneOf - much nicer.
-And since the patch was re-written I dropped you r-b.
+The board seems labelled "PYM_PARTICLES".
 
-> 
-> Either way, please apply this to drm-misc-fixes (or
-> drm-misc-next-fixes depending on the state of the tree). Or I can take
-> it. I'd like to get all the warnings cleared up by rc2.
+While Wikipedia has nothing on that, I found this explanation:
+https://marvel.fandom.com/wiki/Pym_Particles
 
-Will take care after -rc1 is out. Needs drm-fixes to be updated with -rc1 first.
-Will make sure to cover all bindings warnigns in panel/
+So, are you sure it's PymParticle and not "Pym Particle" with space or 
+"Pym Particles" with space and plural S? The S would affect also the 
+.dts filename. For the compatible string the question is pymparticle or 
+pym-particle.
 
-	Sam
+By comparison, LION-SKIN was named lion-skin in the compatible and 
+spelled Lion Skin in textual form. If you believe that should be fixed, 
+now would be the time to revisit those patches that didn't make v5.7.
 
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> Rob
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Thanks,
+Andreas
+
+> +          - const: realtek,rtd1319
+> +
+>         # RTD1395 SoC based boards
+>         - items:
+>             - enum:
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
