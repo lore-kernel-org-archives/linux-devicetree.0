@@ -2,130 +2,112 @@ Return-Path: <SRS0=/QBj=55=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77250C2BB86
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 20:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5E2C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 22:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C55820735
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 20:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E74D20735
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 22:01:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNqF5LQD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388590AbgDMUsw (ORCPT
+        id S2389415AbgDMWBF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 16:48:52 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34186 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388526AbgDMUsv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Apr 2020 16:48:51 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 60CA22A132F
-Received: by earth.universe (Postfix, from userid 1000)
-        id 7C6B13C08C7; Mon, 13 Apr 2020 22:48:47 +0200 (CEST)
-Date:   Mon, 13 Apr 2020 22:48:47 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v8 4/6] power: supply: Add support for mps mp2629 battery
- charger
-Message-ID: <20200413204847.ni7dsrn5tslrorqn@earth.universe>
-References: <20200413173656.28522-1-sravanhome@gmail.com>
- <20200413173656.28522-5-sravanhome@gmail.com>
- <CAHp75VeYFY1CW4AH+D4HAgzppMZ5J8dL8kKPYmcwsXNVGNSYjQ@mail.gmail.com>
- <6cfab0a6-c3eb-bd9b-6572-b49e3205524f@gmail.com>
+        Mon, 13 Apr 2020 18:01:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389414AbgDMWBE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Apr 2020 18:01:04 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A31BBC0A3BDC
+        for <devicetree@vger.kernel.org>; Mon, 13 Apr 2020 15:01:03 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id k21so10411979ljh.2
+        for <devicetree@vger.kernel.org>; Mon, 13 Apr 2020 15:01:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=beTCdjD9mBgR4YFC6YHzV+CN3PBybk3lFl2C+p4DAr8=;
+        b=aNqF5LQDjh4Jp0mxwWNgS0pt/uW2vrMEbddCLpbtPMleQOwSqg5qsugFI1V9mUlGbD
+         ftrMhnFk9sy9a8perUPxaIuwSrshwZSYBCFSRyDKdNWeUgWDmNm1yefqEouqJQKi3aL5
+         OSr7jygpgTbU0vL9lNW8cVo309JUUldgCEIjF9TdqAB6l82nP9rF9m84vLEKwNKTerNB
+         ANuf7D0mn2wVK23++i23E9LAomqYnbTWPrfvgc4lBWMg6uTC3LH7DHfmVJ/mZvu+TmLt
+         O+s+mBzuVH8VU1IDOnrDP8aktTHgv14DKUkOmK/6Zc84BXQNIJ5JWzQUBxJ4g5Gt3ii8
+         ou6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=beTCdjD9mBgR4YFC6YHzV+CN3PBybk3lFl2C+p4DAr8=;
+        b=pvXZqgvYYgANErdxDhy/t1HrSMHZ6h9nASN8BIIqH0GbbTzSqgZWQgz6iR/nmQihKw
+         n4CEjtX5nGklZmYBK9PpePMyf35zwI/0vFa/70XpFT3yrb+tXgaIDZm8aKwz1WvPWyVL
+         J4N9UaZ4Z6AbShRjcxTRBFDbBQtYnf3DGeJf/sYQ23WOpbg0SGby80+NfeK+4BHINUyw
+         OVoUfTWBl8Ni59hepx6om4gaGmGVctLhnK3XXsFYDR++Fk/ferZxvABbX4Urq+BBdIIr
+         KVbNcp/pRG7R6tU4EZdaDCE7yttxQaiWbIwFP3AKJXpmsh3+SlKuAiX/HnjthL309wXZ
+         S2QA==
+X-Gm-Message-State: AGi0PuaVN2VUMwlCsmBu12Tv2mNvLyEdhDJ5aOyjPjKKAGOzg3hwq3Zh
+        S6BnHZoW5eHA9k6AUNhN8dECNuVe
+X-Google-Smtp-Source: APiQypK3XR6vxv0lxmZIgBdXP2rEtblb0MiCnDiaK3vm6MF2w9zA8bW20rxretqwoRZBcqnHTACpOw==
+X-Received: by 2002:a2e:86d8:: with SMTP id n24mr4349639ljj.129.1586815261957;
+        Mon, 13 Apr 2020 15:01:01 -0700 (PDT)
+Received: from curiosity (ip-195-182-157-78.clients.cmk.ru. [195.182.157.78])
+        by smtp.gmail.com with ESMTPSA id c4sm8871509lfg.82.2020.04.13.15.00.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 15:01:01 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 01:05:20 +0300
+From:   Sergey Matyukevich <geomatsi@gmail.com>
+To:     Russell King <linux@armlinux.org.uk>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: [bug report] armada-8040-mcbin: 5.6-rc5 boot failure
+Message-ID: <20200413220520.GA25917@curiosity>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mr33cvt5svcy3hmn"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6cfab0a6-c3eb-bd9b-6572-b49e3205524f@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Russel, Miquel, and all,
 
---mr33cvt5svcy3hmn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+MacchiatoBin Double-shot board fails to boot v5.6-rc5 kernel properly:
+USB, PCIe, and ethernet interfaces are not enabled. Before that I have
+been running v5.3 kernel w/o any noticeable issues.
 
-Hi,
+In brief, USB and PCIe devices are not detected, ethernet PHY fails
+to initialize with the following warnings:
+[    2.444150] mvebu-comphy f4120000.phy: unsupported SMC call, try updating your firmware
+[    2.452191] mvebu-comphy f4120000.phy: Firmware could not configure PHY 0 with mode 15 (ret: -1), trying legacy method
+[    2.474615] mvpp2 f4000000.ethernet eth2: Using firmware node mac address ...
+[    2.484420] mvebu-comphy f4120000.phy: unsupported SMC call, try updating your firmware
 
-On Mon, Apr 13, 2020 at 10:28:19PM +0200, saravanan sekar wrote:
-> Hi Andy,
->=20
-> On 13/04/20 10:10 pm, Andy Shevchenko wrote:
-> > On Mon, Apr 13, 2020 at 8:37 PM Saravanan Sekar <sravanhome@gmail.com> =
-wrote:
-> > > The mp2629 provides switching-mode battery charge management for
-> > > single-cell Li-ion or Li-polymer battery. Driver supports the
-> > > access/control input source and battery charging parameters.
-> > ...
-> >=20
-> > > +static int mp2629_charger_probe(struct platform_device *pdev)
-> > > +{
-> > > +       irq =3D platform_get_irq(to_platform_device(pdev->dev.parent)=
-, 0);
-> > Why not to use temporary variable dev?
-> >=20
-> > This should be platform_get_irq_optional().
->=20
-> Platform_get_irq in turn calls platform_get_irq_optional. It was suggested
-> by Lee and is it mandatory to change it?
+After quick bisection of the board dts files, I came to the following results:
 
-platform_get_irq is fine.
+- USB works again after reverting the following two commits:
+  -- 96018a6fafb1 ("arm64: dts: marvell: Convert 7k/8k usb-phy properties to phy-supply")
+  -- 01d0deba28f6 ("arm64: dts: marvell: Add 7k/8k PHYs in USB3 nodes")
 
-> > > +       if (irq) {
+- PCIe works again after reverting armada-8040-mcbin.dtsi parts of the
+  following two commits:
+  -- 1399672e48b5 ("arm64: dts: marvell: Drop PCIe I/O ranges from CP11x file")
+  -- ce55522c035e ("arm64: dts: marvell: Add 7k/8k PHYs in PCIe nodes")
 
-But this must be
+- ethernet: not yet...
 
-if (irq > 0)
+However looking at firmware version complaints, I guess that the actual
+reason of all those issues could be in ATF version rather than in the
+latest DTS changes. Probably I am using ATF version which is too old
+to work with up-to-date kernel: armada-17.10.3 from atf-marvell
+repository on github. If this is indeed the actual root cause of all
+the issues, then could you please recommend a preferable ATF version
+to test with ?
 
-or you will also try to continue with error codes.
-
-> > > +               ret =3D devm_request_irq(dev, irq, mp2629_irq_handler,
-> > > +                                IRQF_TRIGGER_RISING, "mp2629-charger=
-",
-> > > +                                charger);
-> > > +               if (ret) {
-> > > +                       dev_err(dev, "failed to request gpio IRQ\n");
-> > > +                       goto iio_fail;
-> > > +               }
-> > > +       }
-> > > +}
-
--- Sebastian
-
---mr33cvt5svcy3hmn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6U0C8ACgkQ2O7X88g7
-+pp/Ag//YmXQ4Axy8vgozTsLCfwYOWz6Cyg5LfVbnQzgc36I0X9NcH4CUT4VYJfH
-PJx/mk5BusfFIXg+fF4Q02QDwmg3iphkka9buegvGafESzimOObozq9+bmGOp7VT
-HtXrxvydNs8QXplo09gD+8tkzUJ0dbiwfCU0S5TY3c1n7xo86gejqOOTYhXLJv2G
-xYDSjUeLcX04ttyZsck6bYaK0wrDMrQmJqn1bnCDYCHYa9bytDGIIPx+NSr0mKeU
-TqqnzbH4dEx2BlhPUGUA4v7q5p4BtLVj43nc2JRE5JpKsQgnTTLwvYRkLZGOg0cP
-9w4NCqL9UZCL15TSTpok8Hfq0XXmSu0/vfPuuPpmNuAlhChkFQ2kXnypQCW9dcsz
-tGwfa92Atb1XVNNdDew85Ab2557iHzF4kHrsUipn4DFthyVSV10kLiiKc9mCTzsT
-9155zGcJWySzqwJ6b2YsTP77iYqbCEWstYewvhtNnmUbPkIMJ2XNnGtR2MBlPtbO
-gdwrQ/fioGkhivS8de/7/okczvY8iuVjG57fOsarjvly//XVOZngt4QkiEc+Xqfh
-Lw8EuiJWvLkfTLglWw6bdC6suqa6gvsNhXD493iXYUn0HTXIG0EKeEvgqvV3EyiB
-np8CQSB98e9BDmwJonJI8UmBmJw5Q2OsEKcsEX5meYzc6T0+2F0=
-=VWLZ
------END PGP SIGNATURE-----
-
---mr33cvt5svcy3hmn--
+Regards,
+Sergey
