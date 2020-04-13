@@ -2,161 +2,157 @@ Return-Path: <SRS0=/QBj=55=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C550DC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 14:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D682DC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 14:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC4F20692
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 14:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADAFD206DA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 14:09:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Y/Q8SgwQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="YxvMsK8Q";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="T2ZbURgC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730228AbgDMODT (ORCPT
+        id S1730285AbgDMOJb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 10:03:19 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:41257 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730249AbgDMODQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Apr 2020 10:03:16 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586786595; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=qhJil9YUxNlGzvVoOFb/1gH7xdIkydJzl1S9v+bheZM=; b=Y/Q8SgwQX+wzTXW6580GBGRaE6uTcRJKg/A6HeEHaVJcyxt8z00qXQEs5+uB+ya7iBRboctz
- c3KkAEIa/o8PLVl52x0wPjw0Z0QdyWJlZGT7T39sV7Oe9tR6K10F7wYlcBixbC731Q8XmUHE
- 16YaQOtETgZ6ZIQkIPjz+zrtfok=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e947107.7f59ab7ff7a0-smtp-out-n03;
- Mon, 13 Apr 2020 14:02:47 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 73ABBC43637; Mon, 13 Apr 2020 14:02:46 +0000 (UTC)
-Received: from [10.111.193.245] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EEFA9C433CB;
-        Mon, 13 Apr 2020 14:02:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EEFA9C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH 03/21] spi: spi-geni-qcom: Use OPP API to set clk/perf
- state
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-spi@vger.kernel.org
-References: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
- <1586353607-32222-4-git-send-email-rnayak@codeaurora.org>
- <20200409182021.GT199755@google.com>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <ef2fc62f-bc43-5689-d1a5-d1b28342b7d6@codeaurora.org>
-Date:   Mon, 13 Apr 2020 19:32:33 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200409182021.GT199755@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 13 Apr 2020 10:09:31 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:23954 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730361AbgDMOJa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Apr 2020 10:09:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1586786968; x=1618322968;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=JnXSZ379qRkkfEv87vw5+JmNSNxkHGW1u7TU/vPKT00=;
+  b=YxvMsK8QiNPkZBSe5BbHhrUuDS7zvatLC4ovfrRXAoO8XYmajlK5g71h
+   jevQeL6GFAzvfQiCbltreh5CZz2E5GA9PXZA2vd1qjzdniaoqIA+Y15XJ
+   WuCqRbIDPK7Xv5OHTsOh7o2rMf40F7IjuYEQYNMTWdzBga/mkcB9fBUSi
+   hvnyyaJWWXZFulxdifIjxUlHHZ5pOJW1yK8uqGFSMnFGmny+TP7jI9Cvw
+   fGqiYjMiBVXdUieETGm052AkpG5LBsxLezNm1kXW5g4zE2mB8r2/F2S/v
+   f8+wjsgAX+zFkAnAhoIEIEXzWzdzkrLgGpEdlHda57oLRRfzA6ZWcEFZa
+   w==;
+IronPort-SDR: 5UPko/UFTbXU/P3441GfgJHvwVtYh6A+hThTAB+n4VxGiDtZhHLY4CTMJpu3Oba5DyEg2VKFlZ
+ ckFhEtnZkA1HvB1gF8szyZ9t47OTqaKJg7N28pumiW4oP54Non58iPEH+mP6hJ029DHX79XQis
+ aXc7ER5iJ//gNVmg/0p+kaaZv8DU4/qJOtRcvg+6nt62vVgbOx+FYzYRVBBZvxhr1OHzsZtgrX
+ X8jbx1Xjfy7cO5TgLDBN6AqxqMLb2OFrrSVYRXtxVvkYMjOcsRUaBm6rJEmdVwXio1rodgNYzX
+ N9s=
+X-IronPort-AV: E=Sophos;i="5.72,378,1580799600"; 
+   d="scan'208";a="70150515"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Apr 2020 07:09:28 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 13 Apr 2020 07:09:27 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 13 Apr 2020 07:09:27 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TPd75aWcU3kOuxRnBP87QYfAxgzHxHDMnSnnmuvH09qz7fLt0KOEGroPAXRSy5mZPv9Imj0CzrfrnRHRvjpvLYwLvFBwoy5hTTBGzkhiUgcq3InZuQgcl1MCYAJdypS2nSdyr1arAlf9T6QDsJZmkit3xerJXUOu3yKzUnpDLXHqxH3PNSWTNAPxLnUDmyteHLvs53uDlAHQcSLNQY7HREiMLI5mN90/dl5XxWr8zFwfrEp3XY5eSloyFMwZ9yJ4QKXkdmMnCgybeUKEpTW+H9lYJc7ELx/sxd/6gAZx7g/ZnIUULcADv7QAt/HeSr9zkDNUCl6IdF+MMx5CrjZiVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dtzS1hxVqt++OLXjX2IYHlYrx39ZzfFXS29eRWbmRa4=;
+ b=AIpQ70wyNYFXu4rsv/Wu0rPWuKXmmIaykKC1e70S0Bh1/KBcN5XpUK48xzipmyZEkds4GQmslWhCs1rwKRLAeWCoJJ6k2e0gC9eiDVKm8bWeLWNOV8pydmrtZmpcNhup0wfzhCC9Ii+UfAO+3pss9v0JlsgsUlsCliLk4lRacBFyW6os69XArOoMmMRMOOa9Yg7S5ocBpP9UFUa/utSYK73mLUMOWgPzZhz8NNTeitvaC9gc2TLSHMUxIPV9aCtuUGckGs0rFYTuySv/SbHkzwQp9VeO8WqXKUN4wdwpXJMApcpEQ5dvmVnjysdmgyCEW1qYc1Es+LY5TBWUO5XP+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dtzS1hxVqt++OLXjX2IYHlYrx39ZzfFXS29eRWbmRa4=;
+ b=T2ZbURgCSWW/QLh+AVAqexQFiBvP+A211g5NzODlvkJ0+8qAUug9TVnl0KAxCETXZaCwkwwG1hrTCPG73m787NdEXfpcCvyK/7WDA8x4jIf2E5I9qijX8r/G2/4bX67jKCebIQd7+cPQWRWm15S8EozRRePU/wI9QhLB5sNd/+k=
+Received: from BY5PR11MB4419.namprd11.prod.outlook.com (2603:10b6:a03:1c8::13)
+ by BY5PR11MB4500.namprd11.prod.outlook.com (2603:10b6:a03:1c3::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Mon, 13 Apr
+ 2020 14:09:25 +0000
+Received: from BY5PR11MB4419.namprd11.prod.outlook.com
+ ([fe80::d847:5d58:5325:c536]) by BY5PR11MB4419.namprd11.prod.outlook.com
+ ([fe80::d847:5d58:5325:c536%7]) with mapi id 15.20.2900.028; Mon, 13 Apr 2020
+ 14:09:25 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <Ludovic.Desroches@microchip.com>
+CC:     <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <Tudor.Ambarus@microchip.com>
+Subject: [PATCH] ARM: dts: at91: sama5d27_wlsom1: Add alias for i2c0
+Thread-Topic: [PATCH] ARM: dts: at91: sama5d27_wlsom1: Add alias for i2c0
+Thread-Index: AQHWEZ0jFkAKqwF//E++5sIL47bPHA==
+Date:   Mon, 13 Apr 2020 14:09:25 +0000
+Message-ID: <20200413140922.154886-1-tudor.ambarus@microchip.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Tudor.Ambarus@microchip.com; 
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ef1cba8a-baf9-49f1-d389-08d7dfb445ed
+x-ms-traffictypediagnostic: BY5PR11MB4500:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR11MB450045F30E2CABA9FEBC4BFEF0DD0@BY5PR11MB4500.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 037291602B
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4419.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(366004)(136003)(396003)(39860400002)(376002)(346002)(8936002)(86362001)(478600001)(2616005)(8676002)(81156014)(6486002)(186003)(2906002)(71200400001)(26005)(6636002)(54906003)(64756008)(107886003)(6512007)(5660300002)(66446008)(66556008)(66476007)(91956017)(6506007)(1076003)(316002)(76116006)(4744005)(4326008)(36756003)(110136005)(66946007)(138113003);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: xQZq0w92Xv5qV0MFW+AKGkQoznlDa3kY6tf0r1FFz3nWREXKJxx2XyY/GRp4eKM87Wv8MHSeUVFRr1IgCT6b3SFxPgr56hVDxR0QVnVotVDtRbtwOeGtX4MYcBjqm80KNUTdJgxWrz91EBvZDeh2IB4Kfp1mfwie43w27AqidIaa65aMNx0nFC4xHSIEY+dco0YW2EHVwfop+2NxFxMKnvo+gdTKwX8bUmDclbZd95Eak9UvR8I+a7yoieZWAnFIbjAHFTomoRjbSn9dWR4G9mpU+tdPi9ZWxL3g58OlaZKNNyVSbfJJcNHZ8JyoJlJlHIsxjnaTfQmKUt5eYpsOZzCDKbMwHEE97dg1JOKFZPGpUOnxBoQh33EvwZ18reNRJeVhcFYy4Hk8+aftzOMi7gi6Vdj67MrPpaFOiBdlqW4HpJm5R1q8o2lge+ifIWIsOl0VnaTkYjDDwgHKFf78zYK6KP68anHrFb0mu1cblGY2qYXjq31PC9NvD9OKraoc
+x-ms-exchange-antispam-messagedata: Df7gYqBh9zPmjegLBTaO+dEii8cFYKLP3rVIwsqkRfvO8sQn8WiW7e3x3uVCJMzJAtP1Rs5CKJYJTf9QOZUfa6rNeyHBHnIPp4mKB/kyOL0sF9cVYDhj/RLwoST0mcSmNeyrXSau7Xc6WA9IyutUXA==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef1cba8a-baf9-49f1-d389-08d7dfb445ed
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Apr 2020 14:09:25.4497
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hUSAweF2EcEN4eZNK5yojLumsSljo1z79u27LpJADe33Y6fmOnAV2H/UWnyXhi8GHSDkAuxakagyZBron9yogA8wlOzitCcN4dEn1K2O880=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4500
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-On 4/9/2020 11:50 PM, Matthias Kaehlcke wrote:
-> Hi Rajendra,
-> 
-> On Wed, Apr 08, 2020 at 07:16:29PM +0530, Rajendra Nayak wrote:
->> geni spi needs to express a perforamnce state requirement on CX
->> depending on the frequency of the clock rates. Use OPP table from
->> DT to register with OPP framework and use dev_pm_opp_set_rate() to
->> set the clk/perf state.
->>
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->> Cc: Alok Chauhan <alokc@codeaurora.org>
->> Cc: Akash Asthana <akashast@codeaurora.org>
->> Cc: linux-spi@vger.kernel.org
->> ---
->>   drivers/spi/spi-geni-qcom.c | 14 +++++++++++---
->>   1 file changed, 11 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
->> index c397242..ce387dc 100644
->> --- a/drivers/spi/spi-geni-qcom.c
->> +++ b/drivers/spi/spi-geni-qcom.c
->> @@ -7,6 +7,7 @@
->>   #include <linux/log2.h>
->>   #include <linux/module.h>
->>   #include <linux/platform_device.h>
->> +#include <linux/pm_opp.h>
->>   #include <linux/pm_runtime.h>
->>   #include <linux/qcom-geni-se.h>
->>   #include <linux/spi/spi.h>
->> @@ -95,7 +96,6 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
->>   {
->>   	unsigned long sclk_freq;
->>   	unsigned int actual_hz;
->> -	struct geni_se *se = &mas->se;
->>   	int ret;
->>   
->>   	ret = geni_se_clk_freq_match(&mas->se,
->> @@ -112,9 +112,9 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
->>   
->>   	dev_dbg(mas->dev, "req %u=>%u sclk %lu, idx %d, div %d\n", speed_hz,
->>   				actual_hz, sclk_freq, *clk_idx, *clk_div);
->> -	ret = clk_set_rate(se->clk, sclk_freq);
->> +	ret = dev_pm_opp_set_rate(mas->dev, sclk_freq);
->>   	if (ret)
->> -		dev_err(mas->dev, "clk_set_rate failed %d\n", ret);
->> +		dev_err(mas->dev, "dev_pm_opp_set_rate failed %d\n", ret);
->>   	return ret;
->>   }
->>   
->> @@ -553,6 +553,7 @@ static int spi_geni_probe(struct platform_device *pdev)
->>   	if (!spi)
->>   		return -ENOMEM;
->>   
->> +
->>   	platform_set_drvdata(pdev, spi);
->>   	mas = spi_master_get_devdata(spi);
->>   	mas->irq = irq;
->> @@ -561,6 +562,8 @@ static int spi_geni_probe(struct platform_device *pdev)
->>   	mas->se.wrapper = dev_get_drvdata(dev->parent);
->>   	mas->se.base = base;
->>   	mas->se.clk = clk;
->> +	mas->se.opp = dev_pm_opp_set_clkname(&pdev->dev, "se");
-> 
-> As commented on the serial patch, it seems an error check is needed
-> and the OPP table saved in 'struct geni_se' is never used.
+wlsom1 has an ATECC608A-TNGTLS Secure Element connected on the i2c0
+bus. Add alias for the i2c device to not rely on probe order for the
+i2c device numbering.
 
-right, I explained about the OPP table in the other patch.
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+---
+ arch/arm/boot/dts/at91-sama5d27_wlsom1.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> 
->> +	dev_pm_opp_of_add_table(&pdev->dev);
-> 
-> This function could also fail for multiple reasons, so the return value
-> should be checked.
-> 
->  From patch "[01/21] opp: Manage empty OPP tables with clk handle" it seems
-> ignoring errors is intended to be able to operate when no OPP table is
-> specified. But even with that you want to return in case of certain errors,
-> like an invalid OPP table, out of memory or -EPROBE_DEFER.
-
-Thats correct, my intention of not checking the errors was in cases where its
-optional, and I did not want to break anything with existing DT. I will go back and
-check if its indeed possible for it to return a -EPROBE_DEFER and others which
-I should handle.
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+diff --git a/arch/arm/boot/dts/at91-sama5d27_wlsom1.dtsi b/arch/arm/boot/dt=
+s/at91-sama5d27_wlsom1.dtsi
+index db3e2239eee8..bea3d60b9722 100644
+--- a/arch/arm/boot/dts/at91-sama5d27_wlsom1.dtsi
++++ b/arch/arm/boot/dts/at91-sama5d27_wlsom1.dtsi
+@@ -17,6 +17,10 @@
+ 	model =3D "Microchip SAMA5D27 WLSOM1";
+ 	compatible =3D "microchip,sama5d27-wlsom1", "atmel,sama5d27", "atmel,sama=
+5d2", "atmel,sama5";
+=20
++	aliases {
++		i2c0 =3D &i2c0;
++	};
++
+ 	clocks {
+ 		slow_xtal {
+ 			clock-frequency =3D <32768>;
+--=20
+2.23.0
