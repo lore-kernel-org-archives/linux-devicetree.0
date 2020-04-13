@@ -2,138 +2,147 @@ Return-Path: <SRS0=/QBj=55=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE1DC2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 17:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C83C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 17:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 977DD20735
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 17:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355222072D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 17:14:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="FxHHTce6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OZf3KhdY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732280AbgDMRBc (ORCPT
+        id S1732581AbgDMROZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 13:01:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50510 "EHLO
+        Mon, 13 Apr 2020 13:14:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732296AbgDMRB2 (ORCPT
+        by vger.kernel.org with ESMTP id S1732565AbgDMROX (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Apr 2020 13:01:28 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73202C00860A
-        for <devicetree@vger.kernel.org>; Mon, 13 Apr 2020 10:01:26 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id r26so10702776wmh.0
-        for <devicetree@vger.kernel.org>; Mon, 13 Apr 2020 10:01:26 -0700 (PDT)
+        Mon, 13 Apr 2020 13:14:23 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49173C0A3BDC;
+        Mon, 13 Apr 2020 10:14:23 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id i10so10891241wrv.10;
+        Mon, 13 Apr 2020 10:14:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=JkyvlKP4pHrJ8AdiuVHbCpIXULnDIYo0wPYklEdrEI0=;
-        b=FxHHTce6kUJpnTuVqBEebcyuVduLLI3MDxCnmXLzQvF9W3QrB7+QIxbokfNCr7pLCs
-         wrVSaK4KajytYNVxvM1R9kGh4X3+Csq+BtIsmZSauaoYn10y4aE+jS7aUyWmcXN5aB7R
-         0y+EDhH8klxRKA1Xa4V48yr2cTSD4ApiPj/p2MFKFoP5ysqHJDi3LDsOmVm5q3dtVUH+
-         pbwr9mrv8VEvahdHePsPeO9KF1214yZI22kRz+PTHX+PKRdxkyN3XQcmISb9pFErsEAR
-         Ro5vrVW9MJlBzCbsZruCvN1COWWiYI6FXKBlEZyt1ePyq5TzJu5ZL/D64x7xzhEd0V5M
-         w5Ag==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NCloB/ogzJdXAIh9tkhxO1+IyWpGxa0FMmYj1590ZJk=;
+        b=OZf3KhdYgA5GM+fEitWdpnlSiJ2vDS8L0Y4nBAvQ6ZFEQotkmBnNIAJzs5WOYVseB7
+         lRMP7tSBp0lZQfq3TKTCL9m9rCKt9HyT3bJJeCQ0qiOfFsCVRCzaTEZ3f/6h9Sf+SZE4
+         vtw3h2bcuu/VGEbUDMNlgL0K5ofgF10NmP7ztEkJYHzvh1CmAIAi/ldnFNTkw0dV+Kdv
+         5UZqpXOpO/zzCxYlN2+Sr/segF/fjjkmoib0/E3dnHSI0SsYSwdPRQ4tD3giOg2d6hje
+         co9onkLfZ0gOmn9hS/e2s/7g56V43MDpPhDwtP/tEEBe1rNR/dC9brfGpcjyVsUSbDXE
+         cc8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=JkyvlKP4pHrJ8AdiuVHbCpIXULnDIYo0wPYklEdrEI0=;
-        b=XGy0wI3Wwf43uwMPMwLSlW79a7W4xn6rFVIJfW7e5cElYutq+MI6tmfLd07FOK8ogw
-         0j12auwIW74yTOS9B/IOnIm7FugxovdMqsLcJx1N1kvhDWQpA/C5Al8j8mZnZdyOEdts
-         w805Svh+oqjRIT/ST1xqKwgWOTq9F10lOwMR5KYs0s7snSBSmPgNeBt9z921ggr84QZ2
-         NzS2eZEJapqoNaXMkLw03/NzfhidQf39wrKXw4awozb97OkY6mf/+GCXn/BcFtOP++PE
-         sYH5cCgEOkSvNPhDKtJcX65bzy1dhUVCTMbqRqoHUH2d50BJgZ7h1ZXj4Tw3RU0E2j8o
-         UoZw==
-X-Gm-Message-State: AGi0Pubtd3Waa40yYxynjIIzr4WS9NKjeMxAAZU8ybrr/M16bRF5n9EJ
-        Apk2wFfqjULyP171169zNLS5YQ==
-X-Google-Smtp-Source: APiQypJO8z0SusDHMvM2B2HYR3lG5GDTJa102Xjb6xK/nW9B/iuDf2ZoA7bxlxWdOqWiHzKXzwXxBQ==
-X-Received: by 2002:a05:600c:2c04:: with SMTP id q4mr18746719wmg.7.1586797285096;
-        Mon, 13 Apr 2020 10:01:25 -0700 (PDT)
-Received: from localhost.localdomain ([2001:470:1f1b:192:29fe:7bf:41fe:904d])
-        by smtp.googlemail.com with ESMTPSA id q187sm15443268wma.41.2020.04.13.10.01.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 10:01:24 -0700 (PDT)
-From:   Robert Marko <robert.marko@sartura.hr>
-To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     Robert Marko <robert.marko@sartura.hr>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Subject: [PATCH 3/3] dts: ipq4019: add MDIO node
-Date:   Mon, 13 Apr 2020 19:01:07 +0200
-Message-Id: <20200413170107.246509-3-robert.marko@sartura.hr>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200413170107.246509-1-robert.marko@sartura.hr>
-References: <20200413170107.246509-1-robert.marko@sartura.hr>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NCloB/ogzJdXAIh9tkhxO1+IyWpGxa0FMmYj1590ZJk=;
+        b=YjIr0lkX3EDgzKAsPjQuohc66tNa4ZlURg3W4N4Goz5AHpZigsizwSzCTbEQlEebrI
+         PqLwRciszQtxOza3kJmHps+4ylFQMnwN+qUlk/3L+RCrnGY3ouZFuCMBn0wSPNBgF6AR
+         IcSU8qQYG3dTYm2vF7q0q77Nx6yLGENzcqm0A1Soihcxm2WEWC6ds6e36AH+ur7EYZSC
+         vYGew55a3IBNeswP6NuYWzxpWlFPOtGXsOBtSx3zUqvJ6UTNW0rZ9Hr3LaxOLNYqePaV
+         qNVRQ5gJyLyjed+Ey/NREmZfuGCvqhWsqMXsjz8RHRqi0MrbdL3SjbWO/xDQJkN1iqe4
+         GXRA==
+X-Gm-Message-State: AGi0PuYC+hSzqjYbMpDeyiuHKO6eC5d4y7KcuH9R12B+YYo6nYfiIDQj
+        dMQiuGHHbbbxJ2dRvsZSkbDk7YWWmM8=
+X-Google-Smtp-Source: APiQypJNWzMbdOu+UjgqIt+HASwu4uE8Q9/xNGWNMGLnYPc83wWmOXZG4+pKQ8LwKjoAL1knRePmqA==
+X-Received: by 2002:a5d:4012:: with SMTP id n18mr17131148wrp.387.1586798062068;
+        Mon, 13 Apr 2020 10:14:22 -0700 (PDT)
+Received: from linux-gy6r.site ([213.195.113.243])
+        by smtp.gmail.com with ESMTPSA id h17sm3957607wmm.6.2020.04.13.10.14.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Apr 2020 10:14:21 -0700 (PDT)
+Subject: Re: [PATCH v7 1/5] dt-bindings: arm64: dts: mediatek: Add mt8173 elm
+ and hana
+To:     Hsin-Yi Wang <hsinyi@chromium.org>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Daniel Kurtz <djkurtz@chromium.org>
+References: <20200210063523.133333-1-hsinyi@chromium.org>
+ <20200210063523.133333-2-hsinyi@chromium.org>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+X-Pep-Version: 2.0
+Message-ID: <ec131e02-1556-d986-3628-ab1e00060643@gmail.com>
+Date:   Mon, 13 Apr 2020 19:14:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200210063523.133333-2-hsinyi@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds the necessary MDIO interface node
-to the Qualcomm IPQ4019 DTSI.
 
-Built-in QCA8337N switch is managed using it,
-and since we have a driver for it lets add it.
 
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-Cc: Luka Perkov <luka.perkov@sartura.hr>
----
- arch/arm/boot/dts/qcom-ipq4019.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+On 2/10/20 7:35 AM, Hsin-Yi Wang wrote:
+> Elm is Acer Chromebook R13. Hana is Lenovo Chromebook. Both uses mt8173=
 
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index b4803a428340..80d0a69e9fed 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -578,6 +578,34 @@ wifi1: wifi@a800000 {
- 			status = "disabled";
- 		};
- 
-+		mdio: mdio@90000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "qcom,ipq40xx-mdio";
-+			reg = <0x90000 0x64>;
-+			status = "disabled";
-+
-+			ethphy0: ethernet-phy@0 {
-+				reg = <0>;
-+			};
-+
-+			ethphy1: ethernet-phy@1 {
-+				reg = <1>;
-+			};
-+
-+			ethphy2: ethernet-phy@2 {
-+				reg = <2>;
-+			};
-+
-+			ethphy3: ethernet-phy@3 {
-+				reg = <3>;
-+			};
-+
-+			ethphy4: ethernet-phy@4 {
-+				reg = <4>;
-+			};
-+		};
-+
- 		usb3_ss_phy: ssphy@9a000 {
- 			compatible = "qcom,usb-ss-ipq4019-phy";
- 			#phy-cells = <0>;
--- 
-2.26.0
+> SoC.
+>=20
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+
+Applied to v5.7-next/dts64
+
+Thanks!
+
+> ---
+>  .../devicetree/bindings/arm/mediatek.yaml     | 22 +++++++++++++++++++=
+
+>  1 file changed, 22 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Docu=
+mentation/devicetree/bindings/arm/mediatek.yaml
+> index 4043c5046441..abc544dde692 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek.yaml
+> +++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
+> @@ -84,6 +84,28 @@ properties:
+>            - enum:
+>                - mediatek,mt8135-evbp1
+>            - const: mediatek,mt8135
+> +      - description: Google Elm (Acer Chromebook R13)
+> +        items:
+> +          - const: google,elm-rev8
+> +          - const: google,elm-rev7
+> +          - const: google,elm-rev6
+> +          - const: google,elm-rev5
+> +          - const: google,elm-rev4
+> +          - const: google,elm-rev3
+> +          - const: google,elm
+> +          - const: mediatek,mt8173
+> +      - description: Google Hana (Lenovo Chromebook N23 Yoga, C330, 30=
+0e,...)
+> +        items:
+> +          - const: google,hana-rev6
+> +          - const: google,hana-rev5
+> +          - const: google,hana-rev4
+> +          - const: google,hana-rev3
+> +          - const: google,hana
+> +          - const: mediatek,mt8173
+> +      - description: Google Hana rev7 (Poin2 Chromebook 11C)
+> +        items:
+> +          - const: google,hana-rev7
+> +          - const: mediatek,mt8173
+>        - items:
+>            - enum:
+>                - mediatek,mt8173-evb
+>=20
 
