@@ -2,237 +2,279 @@ Return-Path: <SRS0=/QBj=55=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA56DC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 12:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F56C2BBC7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 12:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 909CF20753
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 12:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1111B2075E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 12:49:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QEzpxnaj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RE4ia3j7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbgDMMTo (ORCPT
+        id S1728571AbgDMMtr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 08:19:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52866 "EHLO
+        Mon, 13 Apr 2020 08:49:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728344AbgDMMTn (ORCPT
+        by vger.kernel.org with ESMTP id S1728556AbgDMMtq (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Apr 2020 08:19:43 -0400
-X-Greylist: delayed 487 seconds by postgrey-1.27 at vger.kernel.org; Mon, 13 Apr 2020 08:19:42 EDT
+        Mon, 13 Apr 2020 08:49:46 -0400
 Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4794AC03BC80;
-        Mon, 13 Apr 2020 05:11:35 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id h2so9096521wmb.4;
-        Mon, 13 Apr 2020 05:11:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD6D6C00860B
+        for <devicetree@vger.kernel.org>; Mon, 13 Apr 2020 05:43:30 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id x4so9201832wmj.1
+        for <devicetree@vger.kernel.org>; Mon, 13 Apr 2020 05:43:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sDwufY0StyILZp3PnMldwC+D1HdNes1kw0On06OjlNc=;
-        b=QEzpxnaj561i77JZ7ZNh0LM/iLxJwlEiaDrn7dsRcTFkvaNFGcumBPUMQd05Ux0BYK
-         F/LQz2RoIXPuCmlpR76yCbRN9I70l2370ijzF+kRxy9jalAJyGuw8oRjzV4dq6/WfQLA
-         1b6dQQ6pHi4qr7xjcNZCPjIj9RwKCkhvRK2pG3DCLjtXA10xkqEBk2uXl3VuYdsFYv2c
-         0SBzg344UBOVx8gVqvNXNFcHm3KwQz3sfbJCw/Xn2MhLH39M8TPPW92ksyfb0E6ZJnC+
-         P6r4CBTAipE7aAh8117KNByDS8XzKiQ8VVF3+dlC6uAtij0JqI6dA3PtcT4d8n1vCPiH
-         DRtg==
+        bh=BTUVXI9DctOVk+L9CKrvHrPM1tgKqkK29Fg2+XZ+kwU=;
+        b=RE4ia3j7Jv9x2M1TlMR9t51ULvrcP4esShTZoSwtkkqsa0yRXrEqDlz9lmN5kuw9vP
+         gD1yjeKlvh+qPmztI9GFI6t7Mb/myD98R3sSkT6bp5RHqnO8XnfwnjEuMsQiTcTPUe/2
+         Y5uIYleorL3mz8qfyr1ZYDKav/rMDn3+aFeNKYE27jXHgTnpYfshKt8g5GVYQ/Q1pQ5S
+         eIcW7rvWt/wZig9SnRDYgIwVbyvYLX5VURdt8pggHvUZIfIr/p5mUf5FNYLaZDr5VY2c
+         m1FUKWzkyYsgY5To7cSiM1Z+sLn9AgJcGsx3fayR7g9dwzmRf6NWVm6MTEtjk9JNRxh1
+         yH+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=sDwufY0StyILZp3PnMldwC+D1HdNes1kw0On06OjlNc=;
-        b=GqCJPp1Uyp31UWUX1Ujby/AFQT8wcm76JbtWKIcQN7Cm1myQknQJKiH0xzpMyXuDsu
-         U1xVM1UqrmAES1PSB6vASwBISVEqb7jdyP1DYwIC1pVkHMNhYrKvElPhUMgmO17asG4n
-         Y9vwZs5MTUiJKDJAjJMiTZUkhNzr36T1FuH/g0T9mX93qlE3a8lldSRk/L36yEyIeaAl
-         13PwbhvlumvNZaUfTGnWTDQZ3R2wGsa/+RMDQa+wHPkF7MiWS3JX7M3WrkJ4qpJlTMn7
-         PQ72wMvVYR9GKLEfULyn+mQgXBOU+1wnQUgVtMcjFf99ol6rSLw6BFxqziOVyxU/Y8kN
-         HoSw==
-X-Gm-Message-State: AGi0PuYpUDYJoMztYHAQNJ+4x73XRrSNK/poWo9JNPnwfWZo+IPREzdL
-        H8Ixean4+cIpqMRWZzBZBmWSDJbYyZ4=
-X-Google-Smtp-Source: APiQypJQ7DrprTjeXvq8sveC8OXT02qGyxyLpRoUKZrLIBevOvVFkBeHAB/K6XO4aeY6ZcAxdyiibQ==
-X-Received: by 2002:a05:600c:21d6:: with SMTP id x22mr19342632wmj.95.1586779863908;
-        Mon, 13 Apr 2020 05:11:03 -0700 (PDT)
-Received: from linux-gy6r.site ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id p16sm8136294wro.21.2020.04.13.05.11.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Apr 2020 05:11:03 -0700 (PDT)
-Subject: Re: [PATCH v2] arm64: dts: mt8173: Add gce setting in mmsys and
- display node
-To:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-References: <20200409055012.199320-1-hsinyi@chromium.org>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-X-Pep-Version: 2.0
-Message-ID: <032911c9-ba57-4586-969b-90358be19a10@gmail.com>
-Date:   Mon, 13 Apr 2020 14:11:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        bh=BTUVXI9DctOVk+L9CKrvHrPM1tgKqkK29Fg2+XZ+kwU=;
+        b=sXXNFFlkk/qi2I8kR1ehDFvYq7jCBsEQHNjNcPJJ2YSwM2sSiiERl+cDJvK8GsgUac
+         UwDTrHltXb7qf1pJPAolhX1XLMz5+oK9yhJ0wWqKnXredZ8FziJqJLfORCwpT/MIW7YH
+         0X7pwZXrtsN3zZB6D9YMZxzQZ9njXgWKKPGveatgtbBuoBFa1VA17Yobma6LaGLG4cJN
+         /uJ6AUg5SLtxmu6354OLJQjsYZY3XQWJKc+5jOu+GUX2yy6FTEhDWimilSxtzkaQG7dH
+         cOcZx29wkhSdHQBl0W0bCRK6ojuBw+hPz/4HyiP1U91h2LTq45qYTuG5NieWDa+rZSFT
+         IYDg==
+X-Gm-Message-State: AGi0PuaBbaUpuhRDIZ7k04HLZErk5jsAIDKOCuI7DAVrVqHKLT4pSnFg
+        eIJRBr5D+YycrdCy2kYSi6Vk/MEunrg=
+X-Google-Smtp-Source: APiQypJWlY8Vhb0j9yg4ncMpWfaLBXMsHAHGpuiGaLjbHnBswD5RHtimtxdXhPBkWpbWIybn972WAw==
+X-Received: by 2002:a1c:ed18:: with SMTP id l24mr18236614wmh.122.1586781809093;
+        Mon, 13 Apr 2020 05:43:29 -0700 (PDT)
+Received: from [192.168.0.136] ([87.120.218.65])
+        by smtp.googlemail.com with ESMTPSA id h10sm16582206wrq.33.2020.04.13.05.43.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 Apr 2020 05:43:28 -0700 (PDT)
+Subject: Re: [PATCH v2 11/22] memory: tegra: Register as interconnect provider
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+References: <20200330010904.27643-1-digetx@gmail.com>
+ <20200330010904.27643-12-digetx@gmail.com>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <70f724d6-5cb2-0ebe-ffc1-5dbb77d9dc74@linaro.org>
+Date:   Mon, 13 Apr 2020 15:43:26 +0300
 MIME-Version: 1.0
-In-Reply-To: <20200409055012.199320-1-hsinyi@chromium.org>
+In-Reply-To: <20200330010904.27643-12-digetx@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Dmitry,
 
+Thank you for the patchset!
 
-On 4/9/20 7:50 AM, Hsin-Yi Wang wrote:
-> In order to use GCE function, we need add some informations
-> into display node (mboxes, mediatek,gce-client-reg, mediatek,gce-events=
-).
->=20
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> Reviewed-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+On 3/30/20 04:08, Dmitry Osipenko wrote:
+> Now memory controller is a memory interconnection provider. This allows us
+> to use interconnect API in order to change memory configuration.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
+>  drivers/memory/tegra/mc.c | 118 ++++++++++++++++++++++++++++++++++++++
+>  drivers/memory/tegra/mc.h |   8 +++
+>  include/soc/tegra/mc.h    |   3 +
+>  3 files changed, 129 insertions(+)
+> 
+> diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+> index ec8403557ed4..bcf0478c5f5a 100644
+> --- a/drivers/memory/tegra/mc.c
+> +++ b/drivers/memory/tegra/mc.c
+> @@ -591,6 +591,117 @@ static __maybe_unused irqreturn_t tegra20_mc_irq(int irq, void *data)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static int tegra_mc_icc_set(struct icc_node *src, struct icc_node *dst)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int tegra_mc_icc_aggregate(struct icc_node *node,
+> +				  u32 tag, u32 avg_bw, u32 peak_bw,
+> +				  u32 *agg_avg, u32 *agg_peak)
+> +{
+> +	*agg_avg = min((u64)avg_bw + (*agg_avg), (u64)U32_MAX);
+> +	*agg_peak = max(*agg_peak, peak_bw);
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Memory Controller (MC) has few Memory Clients that are issuing memory
+> + * bandwidth allocation requests to the MC interconnect provider. The MC
+> + * provider aggregates the requests and then sends the aggregated request
+> + * up to the External Memory Controller (EMC) interconnect provider which
+> + * re-configures hardware interface to External Memory (EMEM) in accordance
+> + * to the required bandwidth. Each MC interconnect node represents an
+> + * individual Memory Client.
+> + *
+> + * Memory interconnect topology:
+> + *
+> + *               +----+
+> + * +--------+    |    |
+> + * | TEXSRD +--->+    |
+> + * +--------+    |    |
+> + *               |    |    +-----+    +------+
+> + *    ...        | MC +--->+ EMC +--->+ EMEM |
+> + *               |    |    +-----+    +------+
+> + * +--------+    |    |
+> + * | DISP.. +--->+    |
+> + * +--------+    |    |
+> + *               +----+
+> + */
+> +static int tegra_mc_interconnect_setup(struct tegra_mc *mc)
+> +{
+> +	struct icc_onecell_data *data;
+> +	struct icc_node *node;
+> +	unsigned int num_nodes;
+> +	unsigned int i;
+> +	int err;
+> +
+> +	/* older device-trees don't have interconnect properties */
+> +	if (!of_find_property(mc->dev->of_node, "#interconnect-cells", NULL))
+> +		return 0;
+> +
+> +	num_nodes = mc->soc->num_clients;
+> +
+> +	data = devm_kzalloc(mc->dev, struct_size(data, nodes, num_nodes),
+> +			    GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	mc->provider.dev = mc->dev;
+> +	mc->provider.set = tegra_mc_icc_set;
+> +	mc->provider.data = data;
+> +	mc->provider.xlate = of_icc_xlate_onecell;
+> +	mc->provider.aggregate = tegra_mc_icc_aggregate;
+> +
+> +	err = icc_provider_add(&mc->provider);
+> +	if (err)
+> +		return err;
+> +
+> +	/* create Memory Controller node */
+> +	node = icc_node_create(TEGRA_ICC_MC);
+> +	err = PTR_ERR_OR_ZERO(node);
+> +	if (err)
+> +		goto del_provider;
+> +
+> +	node->name = "Memory Controller";
+> +	icc_node_add(node, &mc->provider);
+> +
+> +	/* link Memory Controller to External Memory Controller */
+> +	err = icc_link_create(node, TEGRA_ICC_EMC);
+> +	if (err)
+> +		goto remove_nodes;
+> +
+> +	for (i = 0; i < num_nodes; i++) {
+> +		/* create MC client node */
+> +		node = icc_node_create(mc->soc->clients[i].id);
+> +		err = PTR_ERR_OR_ZERO(node);
+> +		if (err)
+> +			goto remove_nodes;
+> +
+> +		node->name = mc->soc->clients[i].name;
+> +		icc_node_add(node, &mc->provider);
+> +
+> +		/* link Memory Client to Memory Controller */
+> +		err = icc_link_create(node, TEGRA_ICC_MC);
+> +		if (err)
+> +			goto remove_nodes;
+> +
+> +		data->nodes[i] = node;
+> +	}
+> +	data->num_nodes = num_nodes;
+> +
+> +	return 0;
+> +
+> +remove_nodes:
+> +	icc_nodes_remove(&mc->provider);
+> +
+> +del_provider:
+> +	icc_provider_del(&mc->provider);
+> +
+> +	return err;
+> +}
+> +
+>  static int tegra_mc_probe(struct platform_device *pdev)
+>  {
+>  	struct resource *res;
+> @@ -699,6 +810,13 @@ static int tegra_mc_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> +	if (IS_ENABLED(CONFIG_INTERCONNECT)) {
 
-Applied to v5.7-next/dts64
+The interconnect framework can be also a module and the then the build will fail.
 
-Thanks!
+> +		err = tegra_mc_interconnect_setup(mc);
 
-> change log:
-> v1->v2: align with
-> 19d8e335d58a ("dt-binding: gce: remove atomic_exec in mboxes property")=
+Maybe register the interconnect provider as a platform sub-device instead?
 
-> 60fa8c13ab1a ("drm/mediatek: Move gce event property to mutex device no=
-de")
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot=
-/dts/mediatek/mt8173.dtsi
-> index ccb8e88a60c5..8337ba42845d 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -549,7 +549,7 @@ gce: mailbox@10212000 {
->  			interrupts =3D <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
->  			clocks =3D <&infracfg CLK_INFRA_GCE>;
->  			clock-names =3D "gce";
-> -			#mbox-cells =3D <3>;
-> +			#mbox-cells =3D <2>;
->  		};
-> =20
->  		mipi_tx0: mipi-dphy@10215000 {
-> @@ -916,6 +916,9 @@ mmsys: clock-controller@14000000 {
->  			assigned-clocks =3D <&topckgen CLK_TOP_MM_SEL>;
->  			assigned-clock-rates =3D <400000000>;
->  			#clock-cells =3D <1>;
-> +			mboxes =3D <&gce 0 CMDQ_THR_PRIO_HIGHEST>,
-> +				 <&gce 1 CMDQ_THR_PRIO_HIGHEST>;
-> +			mediatek,gce-client-reg =3D <&gce SUBSYS_1400XXXX 0 0x1000>;
->  		};
-> =20
->  		mdp_rdma0: rdma@14001000 {
-> @@ -996,6 +999,7 @@ ovl0: ovl@1400c000 {
->  			clocks =3D <&mmsys CLK_MM_DISP_OVL0>;
->  			iommus =3D <&iommu M4U_PORT_DISP_OVL0>;
->  			mediatek,larb =3D <&larb0>;
-> +			mediatek,gce-client-reg =3D <&gce SUBSYS_1400XXXX 0xc000 0x1000>;
->  		};
-> =20
->  		ovl1: ovl@1400d000 {
-> @@ -1006,6 +1010,7 @@ ovl1: ovl@1400d000 {
->  			clocks =3D <&mmsys CLK_MM_DISP_OVL1>;
->  			iommus =3D <&iommu M4U_PORT_DISP_OVL1>;
->  			mediatek,larb =3D <&larb4>;
-> +			mediatek,gce-client-reg =3D <&gce SUBSYS_1400XXXX 0xd000 0x1000>;
->  		};
-> =20
->  		rdma0: rdma@1400e000 {
-> @@ -1016,6 +1021,7 @@ rdma0: rdma@1400e000 {
->  			clocks =3D <&mmsys CLK_MM_DISP_RDMA0>;
->  			iommus =3D <&iommu M4U_PORT_DISP_RDMA0>;
->  			mediatek,larb =3D <&larb0>;
-> +			mediatek,gce-client-reg =3D <&gce SUBSYS_1400XXXX 0xe000 0x1000>;
->  		};
-> =20
->  		rdma1: rdma@1400f000 {
-> @@ -1026,6 +1032,7 @@ rdma1: rdma@1400f000 {
->  			clocks =3D <&mmsys CLK_MM_DISP_RDMA1>;
->  			iommus =3D <&iommu M4U_PORT_DISP_RDMA1>;
->  			mediatek,larb =3D <&larb4>;
-> +			mediatek,gce-client-reg =3D <&gce SUBSYS_1400XXXX 0xf000 0x1000>;
->  		};
-> =20
->  		rdma2: rdma@14010000 {
-> @@ -1036,6 +1043,7 @@ rdma2: rdma@14010000 {
->  			clocks =3D <&mmsys CLK_MM_DISP_RDMA2>;
->  			iommus =3D <&iommu M4U_PORT_DISP_RDMA2>;
->  			mediatek,larb =3D <&larb4>;
-> +			mediatek,gce-client-reg =3D <&gce SUBSYS_1401XXXX 0 0x1000>;
->  		};
-> =20
->  		wdma0: wdma@14011000 {
-> @@ -1046,6 +1054,7 @@ wdma0: wdma@14011000 {
->  			clocks =3D <&mmsys CLK_MM_DISP_WDMA0>;
->  			iommus =3D <&iommu M4U_PORT_DISP_WDMA0>;
->  			mediatek,larb =3D <&larb0>;
-> +			mediatek,gce-client-reg =3D <&gce SUBSYS_1401XXXX 0x1000 0x1000>;
->  		};
-> =20
->  		wdma1: wdma@14012000 {
-> @@ -1056,6 +1065,7 @@ wdma1: wdma@14012000 {
->  			clocks =3D <&mmsys CLK_MM_DISP_WDMA1>;
->  			iommus =3D <&iommu M4U_PORT_DISP_WDMA1>;
->  			mediatek,larb =3D <&larb4>;
-> +			mediatek,gce-client-reg =3D <&gce SUBSYS_1401XXXX 0x2000 0x1000>;
->  		};
-> =20
->  		color0: color@14013000 {
-> @@ -1064,6 +1074,7 @@ color0: color@14013000 {
->  			interrupts =3D <GIC_SPI 187 IRQ_TYPE_LEVEL_LOW>;
->  			power-domains =3D <&scpsys MT8173_POWER_DOMAIN_MM>;
->  			clocks =3D <&mmsys CLK_MM_DISP_COLOR0>;
-> +			mediatek,gce-client-reg =3D <&gce SUBSYS_1401XXXX 0x3000 0x1000>;
->  		};
-> =20
->  		color1: color@14014000 {
-> @@ -1072,6 +1083,7 @@ color1: color@14014000 {
->  			interrupts =3D <GIC_SPI 188 IRQ_TYPE_LEVEL_LOW>;
->  			power-domains =3D <&scpsys MT8173_POWER_DOMAIN_MM>;
->  			clocks =3D <&mmsys CLK_MM_DISP_COLOR1>;
-> +			mediatek,gce-client-reg =3D <&gce SUBSYS_1401XXXX 0x4000 0x1000>;
->  		};
-> =20
->  		aal@14015000 {
-> @@ -1080,6 +1092,7 @@ aal@14015000 {
->  			interrupts =3D <GIC_SPI 189 IRQ_TYPE_LEVEL_LOW>;
->  			power-domains =3D <&scpsys MT8173_POWER_DOMAIN_MM>;
->  			clocks =3D <&mmsys CLK_MM_DISP_AAL>;
-> +			mediatek,gce-client-reg =3D <&gce SUBSYS_1401XXXX 0x5000 0x1000>;
->  		};
-> =20
->  		gamma@14016000 {
-> @@ -1088,6 +1101,7 @@ gamma@14016000 {
->  			interrupts =3D <GIC_SPI 190 IRQ_TYPE_LEVEL_LOW>;
->  			power-domains =3D <&scpsys MT8173_POWER_DOMAIN_MM>;
->  			clocks =3D <&mmsys CLK_MM_DISP_GAMMA>;
-> +			mediatek,gce-client-reg =3D <&gce SUBSYS_1401XXXX 0x6000 0x1000>;
->  		};
-> =20
->  		merge@14017000 {
-> @@ -1193,6 +1207,8 @@ mutex: mutex@14020000 {
->  			interrupts =3D <GIC_SPI 169 IRQ_TYPE_LEVEL_LOW>;
->  			power-domains =3D <&scpsys MT8173_POWER_DOMAIN_MM>;
->  			clocks =3D <&mmsys CLK_MM_MUTEX_32K>;
-> +			mediatek,gce-events =3D <CMDQ_EVENT_MUTEX0_STREAM_EOF>,
-> +                                              <CMDQ_EVENT_MUTEX1_STREA=
-M_EOF>;
->  		};
-> =20
->  		larb0: larb@14021000 {
->=20
-
+Thanks,
+Georgi
