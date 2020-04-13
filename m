@@ -2,90 +2,103 @@ Return-Path: <SRS0=/QBj=55=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6359DC2BBC7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 06:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99269C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 07:00:43 +0000 (UTC)
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D91E206A1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 06:25:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 3D91E206A1
-Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=siol.net
+	by mail.kernel.org (Postfix) with ESMTP id 66910206A1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 07:00:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CR8c8Hlx"
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 66910206A1
+Authentication-Results: mail.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=devicetree-owner@vger.kernel.org
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgDMGYy (ORCPT
+        id S1728874AbgDMHAm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 02:24:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:50122 "EHLO
+        Mon, 13 Apr 2020 03:00:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:55942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728279AbgDMGYx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Apr 2020 02:24:53 -0400
-Received: from mail.siol.net (mailoutvs18.siol.net [185.57.226.209])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97A79C0A3BE0;
-        Sun, 12 Apr 2020 23:24:54 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTP id 5C5E1522E4D;
-        Mon, 13 Apr 2020 08:24:53 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 8Np3a-S-7_aZ; Mon, 13 Apr 2020 08:24:53 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTPS id 1BC9C522E48;
-        Mon, 13 Apr 2020 08:24:53 +0200 (CEST)
-Received: from localhost.localdomain (89-212-178-211.dynamic.t-2.net [89.212.178.211])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Zimbra) with ESMTPSA id D8CA3522E4D;
-        Mon, 13 Apr 2020 08:24:50 +0200 (CEST)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, wens@csie.org
-Cc:     robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: [PATCH 2/3] arm64: dts: allwinner: h6: orangepi: Disable OTG mode
-Date:   Mon, 13 Apr 2020 08:24:32 +0200
-Message-Id: <20200413062433.1145043-3-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200413062433.1145043-1-jernej.skrabec@siol.net>
-References: <20200413062433.1145043-1-jernej.skrabec@siol.net>
+        with ESMTP id S1727692AbgDMHAm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Apr 2020 03:00:42 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82575C008651;
+        Mon, 13 Apr 2020 00:00:41 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id i3so67133pgk.1;
+        Mon, 13 Apr 2020 00:00:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vq9fVC/+atcm9sq/MZsavv/suvJU7kj+o+ueUYxNyc4=;
+        b=CR8c8HlxxuKiXNyCthLNzWYOFiWWWq/N2EQHg+YZb11uAbVxigFRy6IHJFMOy07j/i
+         Qt1LJfKU7HudAz5rsUO7sCAOTSPeqkjXR8qjS8LPCfnt/ymY8xXDHTeQK0iB+V+6mgKs
+         WJe3AaawQB54O2xlpb7A1YXAWUUrQhmqntkwSVanEw7sHLXg96bEVSJAaPGavaySrtOT
+         Ds9cjEztjHzfZmUEGnCr5RVmsDAaJp+SfEdVGX1bl914YR9KHfwJ+GZOT9CENuBGQJdu
+         6LwCgY2Lgf2cQjBE5JgWozwcUGJvSgCIQx0I7kXkpqNSlk/uD+PRAVKnhybHWf2nmU1+
+         d+lA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vq9fVC/+atcm9sq/MZsavv/suvJU7kj+o+ueUYxNyc4=;
+        b=RjMEU/tc2Lcj1JvCXkqYpO8M7Y2Cp0ckXGx+ywhkjQAk+Q6phu4XRmyAmoak6LK6xH
+         9FCmEYSiQO5NKvmloc1X7FxQMx4c6UfVyxow/7emzE3rUeSW3UbRwxLXALa69N9yFsT3
+         KE7S1tuAyGIa2mYM2Xaw3A/LlQAI2PMARWLmqLvSBwheKe5VETQGTYaucfmWKH5IWq/J
+         EZZ0M0BIAi5runRy0ucX0/QlgmXStgI//hLCmyrp2YIbztZT6R1+Vj4MWnPuth4FZy64
+         rQzZEkVAYzRFzUjvVI/i26VTyjXCtnE0ZADJiLH7wr4tv4euTwm0XqxAa0ShpwV2lh+v
+         rW6Q==
+X-Gm-Message-State: AGi0PuaVkeN2qpnt8nj8QTg+K9j4A89WNd3evfazZ8Yc3ApjOHQaxR+E
+        z1NMP3gWtfzZWnQaWQiu5RQ=
+X-Google-Smtp-Source: APiQypJXOLKJmWnL8c+MQV5lQGIKFp6AH0keWS6hBKsja5EQEQiaT3oQ5MtfGpxL0FMP2zNbuBvbrg==
+X-Received: by 2002:a63:230f:: with SMTP id j15mr15933448pgj.393.1586761241161;
+        Mon, 13 Apr 2020 00:00:41 -0700 (PDT)
+Received: from ubt.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id p4sm7815670pfg.163.2020.04.13.00.00.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 00:00:40 -0700 (PDT)
+From:   zhang.lyra@gmail.com
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: [RFC PATCH v1 0/2] allow idle state to be found as deepest state for s2idle only
+Date:   Mon, 13 Apr 2020 15:00:12 +0800
+Message-Id: <20200413070014.12960-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-As can be seen from OrangePi Lite 2 and One Plus schematics, VBUS pin on
-USB OTG port is directly connected to 5 V power supply. This mean that
-OTG port can safely operate only in host mode, even though these two
-boards have ID pin connected.
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+We can add a new c-state to let system suspend enter into the same deep
+state as s2ram when using s2idle, but we don't want other cases to use
+that c-state, such as play_idle() which would find the deepest state by
+invoking find_deepest_state() as well. This patch-set provides users
+an option which can restrict c-state to be found as deepest state for
+s2idle only.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch=
-/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-index f1be3dd558ca..ebc120a9232f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-@@ -251,7 +251,12 @@ &uart0 {
- };
-=20
- &usb2otg {
--	dr_mode =3D "otg";
-+	/*
-+	 * OrangePi Lite 2 and One Plus, where this DT is used, don't
-+	 * have a controllable VBUS even though they do have an ID pin.
-+	 * Using it as anything but a USB host is unsafe.
-+	 */
-+	dr_mode =3D "host";
- 	status =3D "okay";
- };
-=20
---=20
-2.26.0
+Chunyan Zhang (2):
+  cpuidle: allow idle state to be found as deepest state for s2idle only
+  dt-bindings: arm: Add description to the new property for-s2idle-only
+
+ Documentation/devicetree/bindings/arm/idle-states.yaml | 10 +++++++++-
+ drivers/cpuidle/cpuidle.c                              |  3 ++-
+ drivers/cpuidle/dt_idle_states.c                       |  3 +++
+ include/linux/cpuidle.h                                |  1 +
+ 4 files changed, 15 insertions(+), 2 deletions(-)
+
+-- 
+2.20.1
 
