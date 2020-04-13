@@ -2,310 +2,435 @@ Return-Path: <SRS0=/QBj=55=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E0CC2BB86
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 13:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 794B2C2BB86
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 13:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69CC32073E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 13:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59F0B2073E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Apr 2020 13:36:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbgDMNbW (ORCPT
+        id S1730045AbgDMNgm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 09:31:22 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:50846 "EHLO inva021.nxp.com"
+        Mon, 13 Apr 2020 09:36:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:41600 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729860AbgDMNbV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Apr 2020 09:31:21 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0E92320001B;
-        Mon, 13 Apr 2020 15:31:19 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F3DDF200008;
-        Mon, 13 Apr 2020 15:31:18 +0200 (CEST)
-Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id DC5732039E;
-        Mon, 13 Apr 2020 15:31:18 +0200 (CEST)
-Date:   Mon, 13 Apr 2020 16:31:18 +0300
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        id S1730032AbgDMNgl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Apr 2020 09:36:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C77131FB;
+        Mon, 13 Apr 2020 06:36:39 -0700 (PDT)
+Received: from ssg-dev-vb.arm.com (unknown [10.57.58.121])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFCA13F68F;
+        Mon, 13 Apr 2020 06:36:27 -0700 (PDT)
+From:   Hadar Gat <hadar.gat@arm.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sandy Huang <hjc@rock-chips.com>,
+        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Tony Lindgren <tony@atomide.com>,
         Lee Jones <lee.jones@linaro.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH v2 12/13] reset: imx: Add audiomix reset controller
- support
-Message-ID: <20200413133118.3qtf5znahvvgmnfw@fsr-ub1664-175>
-References: <1585150731-3354-1-git-send-email-abel.vesa@nxp.com>
- <1585150731-3354-13-git-send-email-abel.vesa@nxp.com>
- <3e31d193605897bdfad3a3e7cde66bd03a3a8acd.camel@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3e31d193605897bdfad3a3e7cde66bd03a3a8acd.camel@pengutronix.de>
-User-Agent: NeoMutt/20180622
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>, JC Kuo <jckuo@nvidia.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <ofir.drang@arm.com>, Hadar Gat <hadar.gat@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org,
+        linux-rockchip@lists.infradead.org, linux-iio@vger.kernel.org,
+        linux-tegra@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH] of_device: removed #include that caused a recursion in included headers
+Date:   Mon, 13 Apr 2020 16:35:53 +0300
+Message-Id: <1586784960-22692-1-git-send-email-hadar.gat@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-03-26 11:50:47, Philipp Zabel wrote:
+Both of_platform.h and of_device.h were included each other.
+In of_device.h, removed unneeded #include to of_platform.h
+and added include to of_platform.h in the files that needs it.
 
-Sorry for the late response. Please see my inline comments.
+Signed-off-by: Hadar Gat <hadar.gat@arm.com>
+---
+ drivers/base/platform.c                           | 1 +
+ drivers/bus/vexpress-config.c                     | 1 +
+ drivers/dma/at_hdmac.c                            | 1 +
+ drivers/dma/stm32-dmamux.c                        | 1 +
+ drivers/dma/ti/dma-crossbar.c                     | 1 +
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c             | 1 +
+ drivers/gpu/drm/msm/hdmi/hdmi.c                   | 1 +
+ drivers/gpu/drm/msm/msm_drv.c                     | 1 +
+ drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   | 1 +
+ drivers/gpu/drm/sun4i/sun4i_tcon.c                | 1 +
+ drivers/iio/adc/stm32-adc-core.c                  | 1 +
+ drivers/iio/adc/stm32-dfsdm-adc.c                 | 1 +
+ drivers/iio/adc/stm32-dfsdm-core.c                | 1 +
+ drivers/iommu/tegra-smmu.c                        | 1 +
+ drivers/memory/atmel-ebi.c                        | 1 +
+ drivers/mfd/palmas.c                              | 1 +
+ drivers/mfd/ssbi.c                                | 1 +
+ drivers/mtd/nand/raw/omap2.c                      | 1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 1 +
+ drivers/net/ethernet/ti/cpsw.c                    | 1 +
+ drivers/phy/tegra/xusb.c                          | 1 +
+ drivers/pinctrl/nomadik/pinctrl-nomadik.c         | 1 +
+ drivers/soc/samsung/exynos-pmu.c                  | 1 +
+ drivers/soc/sunxi/sunxi_sram.c                    | 1 +
+ include/linux/of_device.h                         | 2 --
+ lib/genalloc.c                                    | 1 +
+ 26 files changed, 25 insertions(+), 2 deletions(-)
 
-> Hi Abel,
-> 
-> On Wed, 2020-03-25 at 17:38 +0200, Abel Vesa wrote:
-> > The imx-mix MFD driver registers some devices, one of which, in case of
-> > audiomix, maps correctly to a reset controller type. This driver registers
-> > a reset controller for that. For now, only the EARC specific resets are added.
-> 
-> I am still confused about what the runtime PM actually does. Maybe it
-> would help me understand if you could point me to the EARC driver that
-> is using this reset controller.
-> 
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 5255550..f549274b 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -12,6 +12,7 @@
+ #include <linux/string.h>
+ #include <linux/platform_device.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/of_irq.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+diff --git a/drivers/bus/vexpress-config.c b/drivers/bus/vexpress-config.c
+index ff70575..12b8b0b 100644
+--- a/drivers/bus/vexpress-config.c
++++ b/drivers/bus/vexpress-config.c
+@@ -8,6 +8,7 @@
+ #include <linux/init.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/vexpress.h>
+ 
+ 
+diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
+index 672c73b..51337b4 100644
+--- a/drivers/dma/at_hdmac.c
++++ b/drivers/dma/at_hdmac.c
+@@ -20,6 +20,7 @@
+ #include <linux/slab.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/of_dma.h>
+ 
+ #include "at_hdmac_regs.h"
+diff --git a/drivers/dma/stm32-dmamux.c b/drivers/dma/stm32-dmamux.c
+index 3c89bd3..74695b9 100644
+--- a/drivers/dma/stm32-dmamux.c
++++ b/drivers/dma/stm32-dmamux.c
+@@ -16,6 +16,7 @@
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/of_dma.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/reset.h>
+diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
+index f255056..10c6d23 100644
+--- a/drivers/dma/ti/dma-crossbar.c
++++ b/drivers/dma/ti/dma-crossbar.c
+@@ -10,6 +10,7 @@
+ #include <linux/io.h>
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/of_dma.h>
+ 
+ #define TI_XBAR_DRA7		0
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+index c4e71ab..f523254 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+@@ -6,6 +6,7 @@
+ #include <linux/interconnect.h>
+ #include <linux/pm_domain.h>
+ #include <linux/pm_opp.h>
++#include <linux/of_platform.h>
+ #include <soc/qcom/cmd-db.h>
+ 
+ #include "a6xx_gpu.h"
+diff --git a/drivers/gpu/drm/msm/hdmi/hdmi.c b/drivers/gpu/drm/msm/hdmi/hdmi.c
+index 737453b..5034d40 100644
+--- a/drivers/gpu/drm/msm/hdmi/hdmi.c
++++ b/drivers/gpu/drm/msm/hdmi/hdmi.c
+@@ -7,6 +7,7 @@
+ 
+ #include <linux/of_irq.h>
+ #include <linux/of_gpio.h>
++#include <linux/of_platform.h>
+ 
+ #include <sound/hdmi-codec.h>
+ #include "hdmi.h"
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index 29295de..ddc9e85 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -8,6 +8,7 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/kthread.h>
+ #include <linux/uaccess.h>
++#include <linux/of_platform.h>
+ #include <uapi/linux/sched/types.h>
+ 
+ #include <drm/drm_drv.h>
+diff --git a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
+index 6e1270e..d038bae 100644
+--- a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
++++ b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
+@@ -12,6 +12,7 @@
+ #include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/phy/phy.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/regmap.h>
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index 624437b..aa35757 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -11,6 +11,7 @@
+ #include <linux/module.h>
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/of_irq.h>
+ #include <linux/regmap.h>
+ #include <linux/reset.h>
+diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
+index 2df88d2..3dc3453 100644
+--- a/drivers/iio/adc/stm32-adc-core.c
++++ b/drivers/iio/adc/stm32-adc-core.c
+@@ -17,6 +17,7 @@
+ #include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
+index 76a60d9..e83848cb 100644
+--- a/drivers/iio/adc/stm32-dfsdm-adc.c
++++ b/drivers/iio/adc/stm32-dfsdm-adc.c
+@@ -20,6 +20,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+diff --git a/drivers/iio/adc/stm32-dfsdm-core.c b/drivers/iio/adc/stm32-dfsdm-core.c
+index 26e2011..f6a53ab 100644
+--- a/drivers/iio/adc/stm32-dfsdm-core.c
++++ b/drivers/iio/adc/stm32-dfsdm-core.c
+@@ -12,6 +12,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/regmap.h>
+diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
+index 63a147b..3797caa 100644
+--- a/drivers/iommu/tegra-smmu.c
++++ b/drivers/iommu/tegra-smmu.c
+@@ -10,6 +10,7 @@
+ #include <linux/kernel.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/dma-mapping.h>
+diff --git a/drivers/memory/atmel-ebi.c b/drivers/memory/atmel-ebi.c
+index 14386d0..272b1a8 100644
+--- a/drivers/memory/atmel-ebi.c
++++ b/drivers/memory/atmel-ebi.c
+@@ -13,6 +13,7 @@
+ #include <linux/mfd/syscon/atmel-smc.h>
+ #include <linux/init.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/regmap.h>
+ #include <soc/at91/atmel-sfr.h>
+ 
+diff --git a/drivers/mfd/palmas.c b/drivers/mfd/palmas.c
+index f5b3fa9..cca44bc 100644
+--- a/drivers/mfd/palmas.c
++++ b/drivers/mfd/palmas.c
+@@ -19,6 +19,7 @@
+ #include <linux/mfd/core.h>
+ #include <linux/mfd/palmas.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ 
+ static const struct regmap_config palmas_regmap_config[PALMAS_NUM_CLIENTS] = {
+ 	{
+diff --git a/drivers/mfd/ssbi.c b/drivers/mfd/ssbi.c
+index 94f60df..72cd45a 100644
+--- a/drivers/mfd/ssbi.c
++++ b/drivers/mfd/ssbi.c
+@@ -20,6 +20,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ 
+ /* SSBI 2.0 controller registers */
+ #define SSBI2_CMD			0x0008
+diff --git a/drivers/mtd/nand/raw/omap2.c b/drivers/mtd/nand/raw/omap2.c
+index ad77c11..d851ec7 100644
+--- a/drivers/mtd/nand/raw/omap2.c
++++ b/drivers/mtd/nand/raw/omap2.c
+@@ -22,6 +22,7 @@
+ #include <linux/slab.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ 
+ #include <linux/mtd/nand_bch.h>
+ #include <linux/platform_data/elm.h>
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+index 58e0511..d704d57 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -12,6 +12,7 @@
+ #include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/of_mdio.h>
+ #include <linux/of_net.h>
+ #include <linux/phy.h>
+diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+index c2c5bf8..6932945 100644
+--- a/drivers/net/ethernet/ti/cpsw.c
++++ b/drivers/net/ethernet/ti/cpsw.c
+@@ -28,6 +28,7 @@
+ #include <linux/of_mdio.h>
+ #include <linux/of_net.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/if_vlan.h>
+ #include <linux/kmemleak.h>
+ #include <linux/sys_soc.h>
+diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
+index de4a46f..0eac1b8 100644
+--- a/drivers/phy/tegra/xusb.c
++++ b/drivers/phy/tegra/xusb.c
+@@ -9,6 +9,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/phy/phy.h>
+ #include <linux/phy/tegra/xusb.h>
+ #include <linux/platform_device.h>
+diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.c b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+index 95f864d..d61ee59 100644
+--- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c
++++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+@@ -19,6 +19,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/slab.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/of_address.h>
+ #include <linux/bitops.h>
+ #include <linux/pinctrl/machine.h>
+diff --git a/drivers/soc/samsung/exynos-pmu.c b/drivers/soc/samsung/exynos-pmu.c
+index 17304fa..25129b0 100644
+--- a/drivers/soc/samsung/exynos-pmu.c
++++ b/drivers/soc/samsung/exynos-pmu.c
+@@ -8,6 +8,7 @@
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/platform_device.h>
+ #include <linux/delay.h>
+diff --git a/drivers/soc/sunxi/sunxi_sram.c b/drivers/soc/sunxi/sunxi_sram.c
+index 1b0d50f..423cec3 100644
+--- a/drivers/soc/sunxi/sunxi_sram.c
++++ b/drivers/soc/sunxi/sunxi_sram.c
+@@ -16,6 +16,7 @@
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+ 
+diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+index 8d31e39..752999b 100644
+--- a/include/linux/of_device.h
++++ b/include/linux/of_device.h
+@@ -4,8 +4,6 @@
+ 
+ #include <linux/cpu.h>
+ #include <linux/platform_device.h>
+-#include <linux/of_platform.h> /* temporary until merge */
+-
+ #include <linux/of.h>
+ #include <linux/mod_devicetable.h>
+ 
+diff --git a/lib/genalloc.c b/lib/genalloc.c
+index 7f1244b..08e21eeb 100644
+--- a/lib/genalloc.c
++++ b/lib/genalloc.c
+@@ -33,6 +33,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/genalloc.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/vmalloc.h>
+ 
+ static inline size_t chunk_size(const struct gen_pool_chunk *chunk)
+-- 
+2.7.4
 
-The documentation for the i.MX8MP is not public yet, so I'll try to explain
-with my own words how this works.
-
-The audiomix is a HW mix that concentrates multiple GPRs that are audio subsystem
-related into one single IP. These mixes (hdmitx, mediamix, etc) have their own power
-domains, that's why the runtime PM.
-
-> > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> > ---
-> >  drivers/reset/Kconfig              |   7 +++
-> >  drivers/reset/Makefile             |   1 +
-> >  drivers/reset/reset-imx-audiomix.c | 122 +++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 130 insertions(+)
-> >  create mode 100644 drivers/reset/reset-imx-audiomix.c
-> > 
-> > diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> > index d9efbfd..2f8d9b3 100644
-> > --- a/drivers/reset/Kconfig
-> > +++ b/drivers/reset/Kconfig
-> > @@ -81,6 +81,13 @@ config RESET_INTEL_GW
-> >  	  Say Y to control the reset signals provided by reset controller.
-> >  	  Otherwise, say N.
-> >  
-> > +config RESET_IMX_AUDIOMIX
-> > +	bool "i.MX Audiomix Reset Driver" if COMPILE_TEST
-> > +	depends on HAS_IOMEM
-> > +	default ARCH_MXC
-> > +	help
-> > +	  This enables the audiomix reset controller driver for i.MX SoCs.
-> > +
-> >  config RESET_LANTIQ
-> >  	bool "Lantiq XWAY Reset Driver" if COMPILE_TEST
-> >  	default SOC_TYPE_XWAY
-> > diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> > index 249ed35..cf23d38 100644
-> > --- a/drivers/reset/Makefile
-> > +++ b/drivers/reset/Makefile
-> > @@ -12,6 +12,7 @@ obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
-> >  obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
-> >  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
-> >  obj-$(CONFIG_RESET_INTEL_GW) += reset-intel-gw.o
-> > +obj-$(CONFIG_RESET_IMX_AUDIOMIX) += reset-imx-audiomix.o
-> 
-> The cover letter mentions hdmimix, dispmix and mediamix. Are there going
-> to be a bunch of those mix reset drivers? How do they differ?
-
-Well, each mix will deal with a different bunch of GPRs. Again, the mix
-is a conglomerate of GPRs specific to one subsystem (like audio, display, hdmi, and so on).
-
-> 
-> >  obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
-> >  obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
-> >  obj-$(CONFIG_RESET_MESON) += reset-meson.o
-> > diff --git a/drivers/reset/reset-imx-audiomix.c b/drivers/reset/reset-imx-audiomix.c
-> > new file mode 100644
-> > index 00000000..d1c62ef
-> > --- /dev/null
-> > +++ b/drivers/reset/reset-imx-audiomix.c
-> > @@ -0,0 +1,122 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> 
-> I think GPL-2.0 has been deprecated in the SPDX license list, better use
-> GPL-2.0-only for new files.
-
-Will fix in the next version.
-
-> 
-> > +/*
-> > + * Copyright 2019 NXP.
-> > + */
-> > +
-> > +#include <dt-bindings/reset/imx-audiomix-reset.h>
-> > +#include <linux/err.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pm_runtime.h>
-> > +#include <linux/reset-controller.h>
-> > +
-> > +#define IMX_AUDIOMIX_EARC_CTRL_REG	0x200
-> > +
-> > +#define IMX_AUDIOMIX_EARC_RESET_BIT	0x0
-> > +#define IMX_AUDIOMIX_EARC_PHY_RESET_BIT	0x1
-> > +
-> > +struct imx_audiomix_reset_data {
-> > +	void __iomem *base;
-> > +	struct reset_controller_dev rcdev;
-> > +	spinlock_t lock;
-> > +};
-> > +
-> > +static int imx_audiomix_reset_set(struct reset_controller_dev *rcdev,
-> > +			  unsigned long id, bool assert)
-> > +{
-> > +	struct imx_audiomix_reset_data *drvdata = container_of(rcdev,
-> > +			struct imx_audiomix_reset_data, rcdev);
-> > +	void __iomem *reg_addr = drvdata->base;
-> > +	unsigned long flags;
-> > +	unsigned int offset;
-> > +	u32 reg;
-> > +
-> > +	switch (id) {
-> > +	case IMX_AUDIOMIX_EARC_PHY_RESET:
-> > +		reg_addr += IMX_AUDIOMIX_EARC_CTRL_REG;
-> > +		offset = IMX_AUDIOMIX_EARC_PHY_RESET_BIT;
-> > +		break;
-> > +	case IMX_AUDIOMIX_EARC_RESET:
-> > +		reg_addr += IMX_AUDIOMIX_EARC_CTRL_REG;
-> > +		offset = IMX_AUDIOMIX_EARC_RESET_BIT;
-> > +		break;
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	if (assert) {
-> > +		pm_runtime_get_sync(rcdev->dev);
-> 
-> This driver and the parent MFD driver do not implement runtime PM ops,
-> and the device tree bindings do not specify any power domains. What does
-> this actually do?
-
-The power domains will be sent in the near future. Maybe I should just drop
-the pm_runtime for now and submit that part when the PD are already in.
-
-> 
-> > +		spin_lock_irqsave(&drvdata->lock, flags);
-> > +		reg = readl(reg_addr);
-> > +		writel(reg & ~BIT(offset), reg_addr);
-> > +		spin_unlock_irqrestore(&drvdata->lock, flags);
-> > +	} else {
-> > +		spin_lock_irqsave(&drvdata->lock, flags);
-> > +		reg = readl(reg_addr);
-> > +		writel(reg | BIT(offset), reg_addr);
-> > +		spin_unlock_irqrestore(&drvdata->lock, flags);
-> > +		pm_runtime_put(rcdev->dev);
-> 
-> Assuming this disables the power domain that powers the whole Audiomix,
-> what happens to the reset lines in this case? Do they float? Are they
-> guaranteed to stay deasserted?
-
-AFAIK, they stay deasserted. But this audiomix should only be suspended
-only after all the resets and clocks users have already suspended. So the
-actual state of the resets should not matter at that point.
-
-> 
-> Note that the reset API does not require consumers to call
-> reset_control_assert() on an exclusive reset control before calling
-> reset_control_deassert(), so this could easily lead to issues with the
-> device usage counter.
-
-Hmm, you're right. It seems I need to keep count of each assertion/deassertion
-for each reset id. As I said before, maybe for now I should drop the runtime pm
-for the entire thing.
-
-Am I the first one to make use of runtime PM for a reset controller ?!
-Is the 'reset controller with its own PD" something I'm the only one dealing with EVER ?
-Grepping the drivers/reset for the runtime, it seems I am. THAT'S WEIRD ! :D
-
-> 
-> Shared reset controls call deassert first, and assert after the last
-> user is gone, so if the driver would start with deasserting both EARC
-> and EARC_PHY reset lines via shared reset controls, this would underflow
-> the device usage counter right away.
-
-Right again. I'll definitely drop the runtime PM for now.
-
-> 
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int imx_audiomix_reset_assert(struct reset_controller_dev *rcdev,
-> > +			     unsigned long id)
-> > +{
-> > +	return imx_audiomix_reset_set(rcdev, id, true);
-> > +}
-> > +
-> > +static int imx_audiomix_reset_deassert(struct reset_controller_dev *rcdev,
-> > +			       unsigned long id)
-> > +{
-> > +	return imx_audiomix_reset_set(rcdev, id, false);
-> > +}
-> > +
-> > +static const struct reset_control_ops imx_audiomix_reset_ops = {
-> > +	.assert		= imx_audiomix_reset_assert,
-> > +	.deassert	= imx_audiomix_reset_deassert,
-> > +};
-> > +
-> > +static int imx_audiomix_reset_probe(struct platform_device *pdev)
-> > +{
-> > +	struct imx_audiomix_reset_data *drvdata;
-> > +	struct device *dev = &pdev->dev;
-> > +
-> > +	drvdata = devm_kzalloc(&pdev->dev, sizeof(*drvdata), GFP_KERNEL);
-> > +	if (drvdata == NULL)
-> > +		return -ENOMEM;
-> > +
-> > +	drvdata->base = dev_get_drvdata(dev->parent);
-> > +
-> > +	platform_set_drvdata(pdev, drvdata);
-> > +
-> > +	pm_runtime_enable(dev);
-> > +
-> > +	spin_lock_init(&drvdata->lock);
-> > +
-> > +	drvdata->rcdev.owner     = THIS_MODULE;
-> > +	drvdata->rcdev.nr_resets = IMX_AUDIOMIX_RESET_NUM;
-> > +	drvdata->rcdev.ops       = &imx_audiomix_reset_ops;
-> > +	drvdata->rcdev.of_node   = dev->of_node;
-> > +	drvdata->rcdev.dev	 = dev;
-> > +
-> > +	return devm_reset_controller_register(dev, &drvdata->rcdev);
-> > +}
-> > +
-> > +static const struct of_device_id imx_audiomix_reset_dt_ids[] = {
-> > +	{ .compatible = "fsl,imx8mp-audiomix-reset", },
-> > +	{ /* sentinel */ },
-> > +};
-> > +
-> > +static struct platform_driver imx_audiomix_reset_driver = {
-> > +	.probe	= imx_audiomix_reset_probe,
-> > +	.driver = {
-> > +		.name		= KBUILD_MODNAME,
-> > +		.of_match_table	= imx_audiomix_reset_dt_ids,
-> > +	},
-> > +};
-> > +module_platform_driver(imx_audiomix_reset_driver);
-> 
-> regards
-> Philipp
