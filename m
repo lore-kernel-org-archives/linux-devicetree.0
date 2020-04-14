@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DE5C54F70
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AA7C54FCC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8C7020678
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8424620678
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:05:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gaVetWIT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s8kwev4q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391591AbgDNREu (ORCPT
+        id S2391490AbgDNRFE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:04:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34614 "EHLO
+        Tue, 14 Apr 2020 13:05:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391557AbgDNREq (ORCPT
+        by vger.kernel.org with ESMTP id S2391235AbgDNREZ (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:04:46 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E2DFC0610D5
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:46 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id d27so6044379wra.1
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:46 -0700 (PDT)
+        Tue, 14 Apr 2020 13:04:25 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A87FFC061A0F
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:24 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id e26so13824071wmk.5
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=D0bn8eYz56VMgxOp5ayoExfg5jGvgwB4FphM9uY9cuk=;
-        b=gaVetWITwcst6bu/nPvp9HMtqfUjFV8jNuR5DTxjtDB5fKnw4UC1WpM0ialzVE04YJ
-         aUTCOZCoH6xMH/pcYvzE14g/LWvFJeIGDMM4bbM2Xv23UMZAqzbaBOf3DW7r7emWqfWu
-         P74iWnOqiylnkhEnvcb/QDYz8b2LjhHXJNQ9vXxtONtwUVwG7wbLCDIQYJkvfUHwMNFM
-         585ermQHWlAsr56de4uYSqQOLq+Ln0ys9qZJE/c5E2jIipl3ODDZgZVH0KJivAAXt/6Z
-         VSLToAvZ0G8jFDFeJynK4H7UNh5u8xJq73tAg5ay36N7Z15IH/HuICTVJh+B2QQCljjk
-         /pXg==
+        bh=VGMc5wLgmgx1eLWq9RQ7RG7NMxWRw2tpIDY5WHUtd3w=;
+        b=s8kwev4qB+FwMlvJnZIEgUlpsfPv5PqQmyfezwvPiaaBckIACLW3XMkbvKRq6DnKDi
+         t2UKqeUTPQYcigtkMp+zlJsyJsWC29+hzyF/YILdw1kem5LX+rUdahvgddngTIewGKPI
+         Ls9qOOWbX1+GZLw2eHVDQ0C+3Q+XuIo7i0CpC5yzUkrPvbUvTws6yMxrz4kHGk4gH7S2
+         lLF7B3VkEZoHfACdrS90vN31rEj3/80zND2C7VWgfzHYgNywd5gdWfI831crvwFJA6Fr
+         T0J9K0/WC/Dm3PeoZXFwuI8vTy1x6RYRQz3w1oY7B7IC5RAT8PsArjVC3oEpvuMEqYG7
+         NofQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=D0bn8eYz56VMgxOp5ayoExfg5jGvgwB4FphM9uY9cuk=;
-        b=lBLr5pTbUd7C2CXciGJBfcRHCWD4DCFBG5rsGmtG73rAnS3Gfs64on+uFOuq81Uuk/
-         Ve5Ii6ngNjDkycxIHKm+/31a1p0gkWtQZXPSUFtcS/jDu9PsFPigpgM3RqRCpNPOf/FV
-         aSqGil/MW2Tq2fE+iOfoSkfP/jPM6Dsc5Ghx6rAkhR2zWtYPwnH3J7M7YYm+Gt8DC4zw
-         oZy2VJx09Rg5lOEyzWk2wZERgM/5c+mT5X1hP4caEd3lKn62WgycFjGxGk+aEeVd86Ad
-         RRwd5PetdZSN8MDZAXfUcdk6Ti6eDunlqsXo2Rs+v36v+Y8r8yXvM0HGpGaDTW303vLs
-         B2vw==
-X-Gm-Message-State: AGi0PubgqeJSEtACObOHuUVQ106dIWfByPfNh7U7NsFXvDSd70uUDt4W
-        Gx+gSMbtMvR790aBxQ4b0I47xQ==
-X-Google-Smtp-Source: APiQypIcTdHMtDvgZ2K33+lxk/gMLeR1nAQxEQBMjbieoGuouiMjyc3vdc5F4dRl+5YUbbh9Wf+MWQ==
-X-Received: by 2002:adf:9788:: with SMTP id s8mr1224774wrb.84.1586883885010;
-        Tue, 14 Apr 2020 10:04:45 -0700 (PDT)
+        bh=VGMc5wLgmgx1eLWq9RQ7RG7NMxWRw2tpIDY5WHUtd3w=;
+        b=ije7XmV1C4Y3ODWEWKyX5/Y+bmZYsABl6xzw4BjcLPhGhFryp8o70m2vkzrx0if03j
+         XPp4ghxE0lV8MTnalB35cIflC2CzrCh38N3sRCebkFo3vlp2ZBF9FAvfuggUsbYN1ZIm
+         FfTS/rENgVCmLRjKEonRIShOrYi7slRhxRX0l6S/WZh7WP5a8C0zFUIXrViPaIDQqy2r
+         yAg9h5foIx7tzHab4zbNEh+J0OpDmzSmThM7IYaZ6kgqCGDt1hBgWVcJYeEydPLq1ql6
+         zpmwWqzl9e+E3RD/paHvuqB11NvLC8tQLD19wQphe8pIZMUDSTtXHPNVETHMQLFwdUvg
+         XxwA==
+X-Gm-Message-State: AGi0PuaeF5agZYHMxq3yDU2ObS+kLVEos6qZUgsdnD5R84Zqx+v7NfCV
+        R/hEpH0gkTb9IvUGqZNnJIrBoA==
+X-Google-Smtp-Source: APiQypL42n0W5SIMAbcNDaJARHcsQO61MSaD9RMrsbqmlsVv6uHGjdhQFjv16aEzCb2QZXgo0ox3nw==
+X-Received: by 2002:a1c:e906:: with SMTP id q6mr775518wmc.62.1586883863302;
+        Tue, 14 Apr 2020 10:04:23 -0700 (PDT)
 Received: from localhost.localdomain ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id x18sm19549147wrs.11.2020.04.14.10.04.43
+        by smtp.gmail.com with ESMTPSA id x18sm19549147wrs.11.2020.04.14.10.04.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 10:04:44 -0700 (PDT)
+        Tue, 14 Apr 2020 10:04:22 -0700 (PDT)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
@@ -69,9 +69,9 @@ Cc:     joro@8bytes.org, catalin.marinas@arm.com, will@kernel.org,
         jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
         zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
         Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: [PATCH v5 19/25] iommu/arm-smmu-v3: Add support for Hardware Translation Table Update
-Date:   Tue, 14 Apr 2020 19:02:47 +0200
-Message-Id: <20200414170252.714402-20-jean-philippe@linaro.org>
+Subject: [PATCH v5 04/25] iommu/sva: Search mm by PASID
+Date:   Tue, 14 Apr 2020 19:02:32 +0200
+Message-Id: <20200414170252.714402-5-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200414170252.714402-1-jean-philippe@linaro.org>
 References: <20200414170252.714402-1-jean-philippe@linaro.org>
@@ -82,105 +82,62 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-If the SMMU supports it and the kernel was built with HTTU support, enable
-hardware update of access and dirty flags. This is essential for shared
-page tables, to reduce the number of access faults on the fault queue.
-
-We can enable HTTU even if CPUs don't support it, because the kernel
-always checks for HW dirty bit and updates the PTE flags atomically.
+The fault handler will need to find an mm given its PASID. This is the
+reason we have an IDR for storing address spaces, so hook it up.
 
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
-v4->v5: bump feature bits
----
- drivers/iommu/arm-smmu-v3.c | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+ include/linux/iommu.h     |  9 +++++++++
+ drivers/iommu/iommu-sva.c | 19 +++++++++++++++++++
+ 2 files changed, 28 insertions(+)
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index c4bffb14461aa..4ed9df15581af 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -57,6 +57,8 @@
- #define IDR0_ASID16			(1 << 12)
- #define IDR0_ATS			(1 << 10)
- #define IDR0_HYP			(1 << 9)
-+#define IDR0_HD				(1 << 7)
-+#define IDR0_HA				(1 << 6)
- #define IDR0_BTM			(1 << 5)
- #define IDR0_COHACC			(1 << 4)
- #define IDR0_TTF			GENMASK(3, 2)
-@@ -308,6 +310,9 @@
- #define CTXDESC_CD_0_TCR_IPS		GENMASK_ULL(34, 32)
- #define CTXDESC_CD_0_TCR_TBI0		(1ULL << 38)
- 
-+#define CTXDESC_CD_0_TCR_HA		(1UL << 43)
-+#define CTXDESC_CD_0_TCR_HD		(1UL << 42)
-+
- #define CTXDESC_CD_0_AA64		(1UL << 41)
- #define CTXDESC_CD_0_S			(1UL << 44)
- #define CTXDESC_CD_0_R			(1UL << 45)
-@@ -659,6 +664,8 @@ struct arm_smmu_device {
- #define ARM_SMMU_FEAT_E2H		(1 << 16)
- #define ARM_SMMU_FEAT_BTM		(1 << 17)
- #define ARM_SMMU_FEAT_SVA		(1 << 18)
-+#define ARM_SMMU_FEAT_HA		(1 << 19)
-+#define ARM_SMMU_FEAT_HD		(1 << 20)
- 	u32				features;
- 
- #define ARM_SMMU_OPT_SKIP_PREFETCH	(1 << 0)
-@@ -1689,10 +1696,17 @@ static int __arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
- 		 * this substream's traffic
- 		 */
- 	} else { /* (1) and (2) */
-+		u64 tcr = cd->tcr;
-+
- 		cdptr[1] = cpu_to_le64(cd->ttbr & CTXDESC_CD_1_TTB0_MASK);
- 		cdptr[2] = 0;
- 		cdptr[3] = cpu_to_le64(cd->mair);
- 
-+		if (!(smmu->features & ARM_SMMU_FEAT_HD))
-+			tcr &= ~CTXDESC_CD_0_TCR_HD;
-+		if (!(smmu->features & ARM_SMMU_FEAT_HA))
-+			tcr &= ~CTXDESC_CD_0_TCR_HA;
-+
- 		/*
- 		 * STE is live, and the SMMU might read dwords of this CD in any
- 		 * order. Ensure that it observes valid values before reading
-@@ -1700,7 +1714,7 @@ static int __arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
- 		 */
- 		arm_smmu_sync_cd(smmu_domain, ssid, true);
- 
--		val = cd->tcr |
-+		val = tcr |
- #ifdef __BIG_ENDIAN
- 			CTXDESC_CD_0_ENDI |
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 5a3d092c2568a..4b9c25d7246d5 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -1081,6 +1081,15 @@ void iommu_debugfs_setup(void);
+ static inline void iommu_debugfs_setup(void) {}
  #endif
-@@ -1943,10 +1957,12 @@ static struct arm_smmu_ctx_desc *arm_smmu_alloc_shared_cd(struct mm_struct *mm)
- 		return old_cd;
- 	}
  
-+	/* HA and HD will be filtered out later if not supported by the SMMU */
- 	tcr = FIELD_PREP(CTXDESC_CD_0_TCR_T0SZ, 64ULL - VA_BITS) |
- 	      FIELD_PREP(CTXDESC_CD_0_TCR_IRGN0, ARM_LPAE_TCR_RGN_WBWA) |
- 	      FIELD_PREP(CTXDESC_CD_0_TCR_ORGN0, ARM_LPAE_TCR_RGN_WBWA) |
- 	      FIELD_PREP(CTXDESC_CD_0_TCR_SH0, ARM_LPAE_TCR_SH_IS) |
-+	      CTXDESC_CD_0_TCR_HA | CTXDESC_CD_0_TCR_HD |
- 	      CTXDESC_CD_0_TCR_EPD1 | CTXDESC_CD_0_AA64;
- 
- 	switch (PAGE_SIZE) {
-@@ -4309,6 +4325,12 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
- 			smmu->features |= ARM_SMMU_FEAT_E2H;
- 	}
- 
-+	if (reg & (IDR0_HA | IDR0_HD)) {
-+		smmu->features |= ARM_SMMU_FEAT_HA;
-+		if (reg & IDR0_HD)
-+			smmu->features |= ARM_SMMU_FEAT_HD;
-+	}
++#ifdef CONFIG_IOMMU_SVA
++extern struct mm_struct *iommu_sva_find(int pasid);
++#else /* !CONFIG_IOMMU_SVA */
++static inline struct mm_struct *iommu_sva_find(int pasid)
++{
++	return NULL;
++}
++#endif /* !CONFIG_IOMMU_SVA */
 +
- 	/*
- 	 * If the CPU is using VHE, but the SMMU doesn't support it, the SMMU
- 	 * will create TLB entries for NH-EL1 world and will miss the
+ #ifdef CONFIG_IOMMU_PAGE_FAULT
+ extern int iommu_queue_iopf(struct iommu_fault *fault, void *cookie);
+ 
+diff --git a/drivers/iommu/iommu-sva.c b/drivers/iommu/iommu-sva.c
+index 7fecc74a9f7d6..b177d6cbf4fff 100644
+--- a/drivers/iommu/iommu-sva.c
++++ b/drivers/iommu/iommu-sva.c
+@@ -525,3 +525,22 @@ int iommu_sva_get_pasid_generic(struct iommu_sva *handle)
+ 	return bond->io_mm->pasid;
+ }
+ EXPORT_SYMBOL_GPL(iommu_sva_get_pasid_generic);
++
++/* ioasid wants a void * argument */
++static bool __mmget_not_zero(void *mm)
++{
++	return mmget_not_zero(mm);
++}
++
++/**
++ * iommu_sva_find() - Find mm associated to the given PASID
++ * @pasid: Process Address Space ID assigned to the mm
++ *
++ * Returns the mm corresponding to this PASID, or an error if not found. A
++ * reference to the mm is taken, and must be released with mmput().
++ */
++struct mm_struct *iommu_sva_find(int pasid)
++{
++	return ioasid_find(&shared_pasid, pasid, __mmget_not_zero);
++}
++EXPORT_SYMBOL_GPL(iommu_sva_find);
 -- 
 2.26.0
 
