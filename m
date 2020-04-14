@@ -2,145 +2,119 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1E8C352BE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 16:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67ACFC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 16:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EFC920678
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 16:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C2E1206E9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 16:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586882651;
-	bh=ebMzOpuIt9dXZbE+2Z/ikNbXxDt+34cNjVaGtOHoy0o=;
+	s=default; t=1586882843;
+	bh=p5nc/lS/aFuat40LXs0jVuAPU/GrR8x1nNVZ6fkkebQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zogl3kVEjMQz50Mm42YDwqvLAfTpfsl9+KVm08UCrlN7RSQO/cz+sP3PJpaofOC+Z
-	 OnHyT8t0eq1LL30250Q0S34+3A8ICKL5HPFZL9LvZkyPzNodDkxrHgw/wMBpb+YaLx
-	 KVFphbIdPJBD8aupt4moR2b/vGWYey1OcYbRoUPg=
+	b=eBYwNm/iPF2uMt/h01DCGHJesG5UmCWkkahdCPnG98f+oF7FlX/IzOPkATmngz0Oz
+	 1Dw8WLC525guQxoobA01rQDslJKTmTjm/6mWlKqT5SA9l7HJnfvixMab70umHozDeU
+	 A9N9UMTqD5gsSB04vWCowyrq1ZzorqzCSQYSsSn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437212AbgDNQoD (ORCPT
+        id S2440047AbgDNQrW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:44:03 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38898 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437160AbgDNQoB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 12:44:01 -0400
-Received: by mail-ot1-f68.google.com with SMTP id k21so278401otl.5;
-        Tue, 14 Apr 2020 09:44:00 -0700 (PDT)
+        Tue, 14 Apr 2020 12:47:22 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:44980 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729756AbgDNQrU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 12:47:20 -0400
+Received: by mail-oi1-f194.google.com with SMTP id o25so10946787oic.11;
+        Tue, 14 Apr 2020 09:47:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mdJGN+n2VYiCEYSu8u8xlSZpkqPfV2n6FeIMEPtdiVw=;
-        b=jRawnFkhpMXRAk9E226hLegLZOwJm+sg5V2l2IliKC7kTYlv3AjUbLNF2Q/3Db2pG8
-         /kBLzUav3peM7gUMIYvigwE7gudFjwgnz5cgfkvZaBIEmTKPPMwy21G9B/mNL19P0q+u
-         RnRmLqPM6octnPqaWHTIeyAzVkUP1eqT5CxQ+EQLFFSo5E3Mut6TtUNXCoiT+xikwlw8
-         o4EOKK1f3egKel9MXtX8QR4O0SnZQ7KJJxhMuX5CycDZ1j950fQCO+wXDhRdANxD+A/N
-         sCw5YYCzQa4ob6TORHTfkpqBzF6UeZV4grvYJZmGRw3Ll8N3V0Kt80ikIwcC8Gae8mtE
-         LH9w==
-X-Gm-Message-State: AGi0PuYsill/UOYWVcuAPTo1VL4eUTb985sb7O5B8uo3WEl08upTdoj1
-        qt2ARle7JPS4CPTrL/Hnyw==
-X-Google-Smtp-Source: APiQypINczSaAx3RvBdTvMgP/hZFPK9N4KYJKAMcgw+8KVN2riIwZXpaqEpmPb+hOROqaiW2MJnmaw==
-X-Received: by 2002:a4a:a98b:: with SMTP id w11mr19105677oom.80.1586882640106;
-        Tue, 14 Apr 2020 09:44:00 -0700 (PDT)
+        bh=3RufIOjAax09z6p+EG1YT6Ob64oYyYsdH4DdGZYIwPE=;
+        b=t6W4aJmpnQ+Y8eDhQp7N57PM+aiIBHGwEo581ait+eh17QpWKMq26bFli4sgjZw7pv
+         LZccZK5Mw9++H2Hn32GUST08ckdUlRpI9MIY/Pfb+W11fFxE1Cv9Gh9AQhjlE/dDvpka
+         gT15QwpxDuP0XWxMrvOmjBn1lMZKLE+uMXXP8N13UM/CidaI0ZAYDGt8zak50NynMY4Y
+         sPJoHvhPgVfo7hAy7o+xrLmpGld0eLuyZjQLWe43mnZRyFmXJni9jIcrpa3LP9qj4Fla
+         +X6v5S2dBZC0gTqhddFG0X5uN7iRqAzb0LY890TNOkJzDy1QUwE2ZtlZ2rCEplqAacya
+         9CdA==
+X-Gm-Message-State: AGi0PuaEnvqSZpfjkKtODLACAfCoquC5hyEf3m9PxuruzhF2TJ1vKY+i
+        fghsOrl0cadnfX992+osreGngEY=
+X-Google-Smtp-Source: APiQypKKZktvfxf4TYtboqo5jbTYGG17/gcuEfCVgh6QLUUyxPMNxWbzj1tHXUOYAziyjSGn8NwTSA==
+X-Received: by 2002:aca:ad87:: with SMTP id w129mr10028297oie.173.1586882839593;
+        Tue, 14 Apr 2020 09:47:19 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w15sm6274633ooq.24.2020.04.14.09.43.57
+        by smtp.gmail.com with ESMTPSA id c18sm5738621oig.53.2020.04.14.09.47.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 09:43:59 -0700 (PDT)
-Received: (nullmailer pid 11212 invoked by uid 1000);
-        Tue, 14 Apr 2020 16:43:57 -0000
-Date:   Tue, 14 Apr 2020 11:43:57 -0500
+        Tue, 14 Apr 2020 09:47:18 -0700 (PDT)
+Received: (nullmailer pid 15830 invoked by uid 1000);
+        Tue, 14 Apr 2020 16:47:17 -0000
+Date:   Tue, 14 Apr 2020 11:47:17 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        lukasz.luba@arm.com, daniel.lezcano@linaro.org,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Talel Shenhar <talel@amazon.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Mans Rullgard <mans@mansr.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH] dt-bindings: thermal: Get rid of thermal.txt and replace
- references
-Message-ID: <20200414164357.GA11178@bogus>
-References: <cbd70c2f0f5ddae0d8e418fcb1e03101e408f6c2.1585753313.git.amit.kucheria@linaro.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v7 1/3] dt-bindings: phy: Add DT bindings for Xilinx
+ ZynqMP PSGTR PHY
+Message-ID: <20200414164717.GA11384@bogus>
+References: <20200401221025.26087-1-laurent.pinchart@ideasonboard.com>
+ <20200401221025.26087-2-laurent.pinchart@ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cbd70c2f0f5ddae0d8e418fcb1e03101e408f6c2.1585753313.git.amit.kucheria@linaro.org>
+In-Reply-To: <20200401221025.26087-2-laurent.pinchart@ideasonboard.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed,  1 Apr 2020 20:35:50 +0530, Amit Kucheria wrote:
-> Now that we have yaml bindings for the thermal subsystem, get rid of the
-> old bindings (thermal.txt).
+On Thu, Apr 02, 2020 at 01:10:23AM +0300, Laurent Pinchart wrote:
+> From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
 > 
-> Replace all references to thermal.txt in the Documentation with a link
-> to the appropriate YAML bindings using the following search and replace
-> pattern:
->  - If the reference is specific to the thermal-sensor-cells property,
->  replace with a pointer to thermal-sensor.yaml
->  - If the reference is to the cooling-cells property, replace with a
->  pointer to thermal-cooling-devices.yaml
->  - If the reference is generic thermal bindings, replace with a
->  reference to thermal*.yaml.
+> Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
+> Processing System Gigabit Transceiver which provides PHY capabilities to
+> USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
 > 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 > ---
->  .../devicetree/bindings/arm/arm,scmi.txt      |   2 +-
->  .../devicetree/bindings/arm/arm,scpi.txt      |   2 +-
->  .../arm/marvell/ap80x-system-controller.txt   |   2 +-
->  .../arm/marvell/cp110-system-controller.txt   |   2 +-
->  .../bindings/cpufreq/cpufreq-dt.txt           |   3 +-
->  .../bindings/cpufreq/cpufreq-mediatek.txt     |   4 +-
->  .../devicetree/bindings/hwmon/gpio-fan.txt    |   3 +-
->  .../devicetree/bindings/hwmon/lm90.txt        |   4 +-
->  .../thermal/allwinner,sun8i-a83t-ths.yaml     |   2 +-
->  .../bindings/thermal/amazon,al-thermal.txt    |   2 +-
->  .../bindings/thermal/brcm,avs-ro-thermal.yaml |   2 +-
->  .../bindings/thermal/brcm,bcm2835-thermal.txt |   2 +-
->  .../bindings/thermal/hisilicon-thermal.txt    |   2 +-
->  .../bindings/thermal/max77620_thermal.txt     |   6 +-
->  .../bindings/thermal/mediatek-thermal.txt     |   2 +-
->  .../thermal/nvidia,tegra124-soctherm.txt      |  10 +-
->  .../thermal/nvidia,tegra186-bpmp-thermal.txt  |   2 +-
->  .../bindings/thermal/qcom-spmi-temp-alarm.txt |   2 +-
->  .../bindings/thermal/rockchip-thermal.txt     |   2 +-
->  .../bindings/thermal/tango-thermal.txt        |   2 +-
->  .../bindings/thermal/thermal-generic-adc.txt  |   2 +-
->  .../devicetree/bindings/thermal/thermal.txt   | 586 ------------------
->  .../bindings/thermal/uniphier-thermal.txt     |   2 +-
->  23 files changed, 33 insertions(+), 615 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/thermal/thermal.txt
+> Changes since v6:
 > 
+> - Fixed specification of compatible-dependent xlnx,tx-termination-fix
+>   property
+> - Dropped status property from example
+> - Use 4 spaces to indent example
+> 
+> Changes since v5:
+> 
+> - Document clocks and clock-names properties
+> - Document resets and reset-names properties
+> - Replace subnodes with an additional entry in the PHY cells
+> - Drop lane frequency PHY cell, replaced by reference clock phandle
+> - Convert bindings to YAML
+> - Reword the subject line
+> - Drop Rob's R-b as the bindings have significantly changed
+> - Drop resets and reset-names properties
+> ---
+>  .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 105 ++++++++++++++++++
+>  include/dt-bindings/phy/phy.h                 |   1 +
+>  2 files changed, 106 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> new file mode 100644
+> index 000000000000..d28ddca7b90e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> @@ -0,0 +1,105 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I think I said this already, but dual license please.
+
+Rob
