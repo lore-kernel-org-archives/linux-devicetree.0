@@ -5,92 +5,96 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D7BC38A29
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BD1C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6993720767
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E586F206A2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:44:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586900631;
-	bh=qZPk2As+hfAlY6M9MR4jZAZC2vEwk9TkrJMLBU+a3GU=;
+	s=default; t=1586900687;
+	bh=EYM9DzGXhALV2lxpMVZWWxznJSNpIBJFFRKkKAwCSwM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eOK/87SQBgFeJVOC9nutsehN4G4dDuYWqGjeNfExzcYbUaMyBXqngdt5reqDXmUaO
-	 cRSquJEKInryoQMfrW+lMXn+tqxZs0GSAdlgCy4t83lV4MM0HeQEfS5DZvZI2XBEiK
-	 00jR/Bs9sM0mc5PEO5PysI9MYKn/vGyFgW3YsGeE=
+	b=soWZjkB2d0OhE71CnCOH1aOk2VNRyOEIxvq69NbbwQ2o0iVVExYmhR8PU1SRu9lAy
+	 G57jANS+qUhS6ZuyCJs1fL90M6ypU1Exhia/wrjbX0U1gzMHH8jUAa4vE+z/4S529q
+	 Ks+9EOSfpnTL6WDKzjcu+K47CgX1Wp38j8UpH3pM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634066AbgDNVnj (ORCPT
+        id S2634092AbgDNVoo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 17:43:39 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42919 "EHLO
+        Tue, 14 Apr 2020 17:44:44 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37088 "EHLO
         mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2634063AbgDNVnf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 17:43:35 -0400
-Received: by mail-ot1-f68.google.com with SMTP id l21so1293192otd.9;
-        Tue, 14 Apr 2020 14:43:34 -0700 (PDT)
+        with ESMTP id S2634022AbgDNVog (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 17:44:36 -0400
+Received: by mail-ot1-f68.google.com with SMTP id z17so1331712oto.4;
+        Tue, 14 Apr 2020 14:44:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uvozqtfEr9bESGHX3UpchnJ8A2PhYWDydvpfuPdbYhc=;
-        b=LFvHQf8Mk/gqumaNa/DXw9NVbBhHqkurBN4w0C1wN3WZK14YO6wkHWu5EKDErI5fZS
-         YNMXBR8hxKofRgqXuyj5SEkdUIIqCvj3LatYo9RydZ88U+bxKBdhxfw+j/886sFYHfsZ
-         6wx5dZuv2sVzh2Ld6VV4TBHw0QF6TM3BhTOS9yeM+kIkqephzqxnMXmfNhoC7EG/pHyr
-         SULuh4JaLOUJ8qAPCdcUp46mfuUMWBZdKhpazOBLQYWJQeudkwLCnOk14Q83WwmaBdwW
-         UoyEoG3rAE+2eMSebAFIK5z6ncv9LGodjPjvsmb8JrNRBe3MXkubmz2mUNlZebg8UH2i
-         YG9g==
-X-Gm-Message-State: AGi0PuYpxBY0vOPvNeGqqKdgXN5WpuKZWBUehgAjz+M+3dwuwv0yu2m/
-        xVxw2Mtzx03yW/AhcZMMYQ==
-X-Google-Smtp-Source: APiQypKkc3mkxopBmD8q3Q9BAh/YpU4AikDfqfbekmDrulLTaWnF6YhmPFGgCuE0Wn2xDDc3dm4eEw==
-X-Received: by 2002:a9d:24a4:: with SMTP id z33mr20460527ota.105.1586900614278;
-        Tue, 14 Apr 2020 14:43:34 -0700 (PDT)
+        bh=1rbtN7N+ptVDeQQdbAIqZEIk2V0QAROfk/PV0WHMjRE=;
+        b=ZosH/jfgJtUIf0XyZFDTyR2BJmAA3Ga6u2mvbdK0rzmgBr+ZEBmyNdMiEx3l3waieY
+         QPfEtQyJZzPIefcUZ+iKleSZqfM8lu1jnO6/pmSvrmeTYDDkbw+LeC8v6lBsMhmvl0+r
+         J07TIrZCOvXwpaGpAPjjyiU0mmpt1zMxPwAkXzCihx7bA2HQu/QTBeM3dFbdaqQta0tH
+         7KeaxCun9U5VO+FvGZ5v8eVDFn2oDzPIwrsyFsUyJ+rOPhngM0qDjQsqgcy8GCr5DmDg
+         no33Frb7fsHTyMSJF6mtr+cy8ew4y9C9rKbOu2BpvHwxIbXjMcfKrnUtRfRZTophb0pH
+         qWGg==
+X-Gm-Message-State: AGi0PuaYDwhCz2TjlxkpdOBR/rkmegSK2Kf5x1qZgr91JoRYYAHq1/z+
+        N+7GlfXQq8PYPumh0nWQbg==
+X-Google-Smtp-Source: APiQypL96hB6UYPUf5qDgTbGQ//SKC8rB0d/g8MUB8WJ16O3Kia4xlS7p8LgovR0p7mxbY0QwQJLCw==
+X-Received: by 2002:a9d:3988:: with SMTP id y8mr10467743otb.352.1586900675157;
+        Tue, 14 Apr 2020 14:44:35 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e3sm4970371oii.6.2020.04.14.14.43.32
+        by smtp.gmail.com with ESMTPSA id r67sm5788491oie.19.2020.04.14.14.44.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 14:43:33 -0700 (PDT)
-Received: (nullmailer pid 9000 invoked by uid 1000);
-        Tue, 14 Apr 2020 21:43:32 -0000
-Date:   Tue, 14 Apr 2020 16:43:32 -0500
+        Tue, 14 Apr 2020 14:44:34 -0700 (PDT)
+Received: (nullmailer pid 10522 invoked by uid 1000);
+        Tue, 14 Apr 2020 21:44:33 -0000
+Date:   Tue, 14 Apr 2020 16:44:33 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH 2/2] dt-bindings: watchdog: Convert i.MX7ULP to
- json-schema
-Message-ID: <20200414214332.GA8620@bogus>
-References: <1586831568-24635-1-git-send-email-Anson.Huang@nxp.com>
- <1586831568-24635-2-git-send-email-Anson.Huang@nxp.com>
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: Document the Synopsys ARC HDMI TX
+ bindings
+Message-ID: <20200414214433.GA10013@bogus>
+References: <20200414144402.27643-1-Eugeniy.Paltsev@synopsys.com>
+ <20200414144402.27643-3-Eugeniy.Paltsev@synopsys.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1586831568-24635-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20200414144402.27643-3-Eugeniy.Paltsev@synopsys.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 14 Apr 2020 10:32:48 +0800, Anson Huang wrote:
-> Convert the i.MX7ULP watchdog binding to DT schema format using json-schema.
+On Tue, 14 Apr 2020 17:44:02 +0300, Eugeniy Paltsev wrote:
+> This patch adds documentation of device tree bindings for the Synopsys
+> HDMI 2.0 TX encoder driver for ARC SoCs.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 > ---
->  .../bindings/watchdog/fsl-imx7ulp-wdt.txt          | 22 --------
->  .../bindings/watchdog/fsl-imx7ulp-wdt.yaml         | 60 ++++++++++++++++++++++
->  2 files changed, 60 insertions(+), 22 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
->  create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml
+>  .../display/bridge/snps,arc-dw-hdmi.yaml      | 131 ++++++++++++++++++
+>  1 file changed, 131 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.example.dt.yaml: watchdog@403d0000: 'timeout-sec' does not match any of the regexes: 'pinctrl-[0-9]+'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.example.dt.yaml: example-0: 'hdmi@0x10000' does not match any of the regexes: '.*-names$', '.*-supply$', '^#.*-cells$', '^#[a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-fA-F]+(,[0-9a-fA-F]+)*$', '^__.*__$', 'pinctrl-[0-9]+'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.example.dt.yaml: hdmi@0x10000: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
 
-See https://patchwork.ozlabs.org/patch/1270024
+See https://patchwork.ozlabs.org/patch/1270389
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
