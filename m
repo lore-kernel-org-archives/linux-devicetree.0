@@ -2,294 +2,99 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDD9C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 09:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 854A6C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 10:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 153962064A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 09:50:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yJpe/IZa"
+	by mail.kernel.org (Postfix) with ESMTP id 5FF8F20732
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 10:03:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437937AbgDNJuh (ORCPT
+        id S2438087AbgDNKDB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 05:50:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437884AbgDNJub (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 05:50:31 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E63FC03C1A6
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 02:50:24 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id x66so12476869qkd.9
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 02:50:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/DhJ4EzT/qK/S+BlKlO4uoMzq/4I59+oyG4OzepvYlA=;
-        b=yJpe/IZa7MG2vVVoYih+Gt4OkeMZMIvXQy0ofjG6eCtenRILevCwunlUaag128HxX0
-         llUMyq9HY/d0RA/S0LzMJe749ahbdp6VIi1IRrO3LzEQMi9DEgG1QfFESgbczZg4zbqx
-         xmwE3xvH7zCCy39akXq6NFDYZmW4Y8zcHs2wRX9BnXCq4zt7G/xnAccSNXX/Y2c0b+dL
-         dxysTNdJ2ZLkdH4xkyQGJUTeHnfYgrJjHIAPmN000ubmzePf6Q4XA0WtiZvlRZiaUOiQ
-         wOsikaEjb1PlflvbiZOzGTYL+e6HEifR7zEi+mpmfAWgAKqALFp+lIxpz1jPSVhW7O+2
-         KjGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/DhJ4EzT/qK/S+BlKlO4uoMzq/4I59+oyG4OzepvYlA=;
-        b=ODwTt/orvQws4pvNvV5NEbifezWwVWZLUrjW5M+etCQmEgDp1X8YbnyAjzfXFBJWZ+
-         lkXTgkdvIKWsTAeM0PtyA6QBA+nPVi8Qdlb0bbdKkzjwUuRdg1rNcRktnf+ZlyrHJ3sh
-         PlAtFbN1dkF14r+5aJ6toQCnUisyYLEOBl/8/3ukI51qRukguAfjFFgi29yQ5nZOz2Yn
-         gWrRd59vhiP/3t4Gw3qDNztK+ZNmURAa5vLiNvIiZT/vS3XPPXD/H1Z9Htyfs2nCTqSd
-         N7uiQ6PxoqdKLWAnl4tgFVO3TlrKLBStPx8EK+SeMIMCLKcroBCYyn0WA54/w6ygUrNz
-         OrVA==
-X-Gm-Message-State: AGi0PuYhCS4G81BC9GOK9P5npiz/vavRkfdx5aDo40EDPEww1GZq5xlL
-        7zmNG007yB3qCPWDyeFnHPs1dr0Yp64/CSTU1G2RtQ==
-X-Google-Smtp-Source: APiQypLRnSNRTZ7adXEhjoANPp4O6Cddg20KUv7l9FAno3ZccIj+4u1/MYSt+Ss+59XVof24kucbUMpsSRx+R0RnkaI=
-X-Received: by 2002:a05:620a:1289:: with SMTP id w9mr5503980qki.263.1586857822917;
- Tue, 14 Apr 2020 02:50:22 -0700 (PDT)
+        Tue, 14 Apr 2020 06:03:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:52260 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438072AbgDNKDA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Apr 2020 06:03:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3CE641FB;
+        Tue, 14 Apr 2020 03:02:59 -0700 (PDT)
+Received: from [10.57.33.145] (unknown [10.57.33.145])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1E4E63F6C4;
+        Tue, 14 Apr 2020 03:02:57 -0700 (PDT)
+Subject: Re: [PATCH] arm64: dts: rockchip: remove bus-width from mmc nodes in
+ rk3308.dtsi
+To:     Johan Jonker <jbx6244@gmail.com>, heiko@sntech.de
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+References: <20200413193652.1952-1-jbx6244@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <20c81edc-247c-8db0-2b3c-a6c2fcad6b4e@arm.com>
+Date:   Tue, 14 Apr 2020 11:02:46 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200402203656.27047-1-michael@walle.cc> <20200402203656.27047-11-michael@walle.cc>
- <CAMpxmJVE3PgVCxkQ-ryc5=KSrKcpdmk1cnJUxJBz9QFCx-e_+A@mail.gmail.com> <80bd8661ec8a1f5eda3f09a267846eaa@walle.cc>
-In-Reply-To: <80bd8661ec8a1f5eda3f09a267846eaa@walle.cc>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 14 Apr 2020 11:50:11 +0200
-Message-ID: <CAMpxmJVC7e9JnHzBo-h8M1+KmcA32=Rvxo7+znH=-kAbcCr_LQ@mail.gmail.com>
-Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using regmap
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200413193652.1952-1-jbx6244@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-pon., 6 kwi 2020 o 12:10 Michael Walle <michael@walle.cc> napisa=C5=82(a):
->
->
-> Hi Bartosz, Hi Mark Brown,
->
-> Am 2020-04-06 09:47, schrieb Bartosz Golaszewski:
-> > czw., 2 kwi 2020 o 22:37 Michael Walle <michael@walle.cc> napisa=C5=82(=
-a):
-> >>
-> >> There are quite a lot simple GPIO controller which are using regmap to
-> >> access the hardware. This driver tries to be a base to unify existing
-> >> code into one place. This won't cover everything but it should be a
-> >> good
-> >> starting point.
-> >>
-> >> It does not implement its own irq_chip because there is already a
-> >> generic one for regmap based devices. Instead, the irq_chip will be
-> >> instanciated in the parent driver and its irq domain will be associate
-> >> to this driver.
-> >>
-> >> For now it consists of the usual registers, like set (and an optional
-> >> clear) data register, an input register and direction registers.
-> >> Out-of-the-box, it supports consecutive register mappings and mappings
-> >> where the registers have gaps between them with a linear mapping
-> >> between
-> >> GPIO offset and bit position. For weirder mappings the user can
-> >> register
-> >> its own .xlate().
-> >>
-> >> Signed-off-by: Michael Walle <michael@walle.cc>
-> >
-> > Hi Michael,
-> >
-> > Thanks for doing this! When looking at other generic drivers:
-> > gpio-mmio and gpio-reg I can see there are some corner-cases and more
-> > specific configuration options we could add
->
-> I didn't want to copy every bit without being able to test it.
->
+On 2020-04-13 8:36 pm, Johan Jonker wrote:
+> The 'bus-width' property for mmc nodes is defined both in
+> 'rk3308.dtsi' and 'rk3308-roc-cc.dts'.
+> In line with the other Rockchip SoCs define that in a user dts only,
+> so remove all entries from mmc nodes in 'rk3308.dtsi'.
 
-Sure, I didn't mean we need to do it now - just set it as the future goal.
+Judging by the pinctrl entries, these represent the number of pins 
+provided by the SoC itself. Obviously boards need to override that if 
+for some reason they don't wire up all the available data lines, but it 
+seems backwards to have every board restate the SoC's default value.
 
-> > but it's not a blocker,
-> > we'll probably be extending this one as we convert more drivers to
-> > using it.
->
-> correct, that was also my plan.
->
-> > Personally I'd love to see gpio-mmio and gpio-reg removed
-> > and replaced by a single, generic regmap interface eventually.
->
-> agreed.
->
->
+In fact, having brought it up, for this particular case the pinctrl 
+setting is inherently related to the bus width, so having one without 
+the other in either place doesn't smell right.
 
-[snip!]
+Robin.
 
-> >> +
-> >> +/**
-> >> + * gpio_regmap_simple_xlate() - translate base/offset to reg/mask
-> >> + *
-> >> + * Use a simple linear mapping to translate the offset to the
-> >> bitmask.
-> >> + */
-> >> +int gpio_regmap_simple_xlate(struct gpio_regmap *gpio, unsigned int
-> >> base,
-> >> +                            unsigned int offset,
-> >> +                            unsigned int *reg, unsigned int *mask)
-> >> +{
-> >> +       unsigned int line =3D offset % gpio->ngpio_per_reg;
-> >> +       unsigned int stride =3D offset / gpio->ngpio_per_reg;
-> >> +
-> >> +       *reg =3D base + stride * gpio->reg_stride;
-> >> +       *mask =3D BIT(line);
-> >> +
-> >> +       return 0;
-> >> +}
-> >> +EXPORT_SYMBOL_GPL(gpio_regmap_simple_xlate);
-> >
-> > Why does this need to be exported?
->
-> Mh, the idea was that a user could also set this xlate() by himself (for
-> whatever reason). But since it is the default, it is not really
-> necessary.
-> That being said, I don't care if its only local to this module.
->
-
-Let's only export symbols that have external users then.
-
-[snip!]
-
-> >> +
-> >> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
-> >> +MODULE_DESCRIPTION("GPIO generic regmap driver core");
-> >> +MODULE_LICENSE("GPL");
-> >> diff --git a/include/linux/gpio-regmap.h b/include/linux/gpio-regmap.h
-> >> new file mode 100644
-> >> index 000000000000..ad63955e0e43
-> >> --- /dev/null
-> >> +++ b/include/linux/gpio-regmap.h
-> >> @@ -0,0 +1,88 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0-only */
-> >> +
-> >> +#ifndef _LINUX_GPIO_REGMAP_H
-> >> +#define _LINUX_GPIO_REGMAP_H
-> >> +
-> >> +struct gpio_regmap_addr {
-> >> +       unsigned int addr;
-> >> +       bool valid;
-> >> +};
-> >
-> > I'm not quite sure what the meaning behind the valid field here is.
-> > When would we potentially set it to false?
->
-> Some base addresses are optional, but on the other hand, a base address
-> of 0 could also be valid. So I cannot use 0 as an indicator whether a
-> base address is set or not. The generic mmio driver has some special
-> case for the ack base, where there is a use_ack flag which forces to
-> use the ack register even if its zero. So I've had a look at the kernel
-> if there is a better idiom for that, but I haven't found anything.
->
-> So the best from a user perspective I've could come up with was:
->
->    ->base_reg =3D GPIO_REGMAP_ADDR(addr);
->
-> I'm open for suggestions.
->
-
-Maybe setting the pointer to ERR_PTR(-ENOENT) which will result in
-IS_ERR() returning true?
-
-> >
-> >> +#define GPIO_REGMAP_ADDR(_addr) \
-> >> +       ((struct gpio_regmap_addr) { .addr =3D _addr, .valid =3D true =
-})
-> >> +
-> >> +/**
-> >> + * struct gpio_regmap - Description of a generic regmap gpio_chip.
-> >> + *
-> >> + * @parent:            The parent device
-> >> + * @regmap:            The regmap use to access the registers
-> >
-> > s/use/used/
-> >
-> >> + *                     given, the name of the device is used
-> >> + * @label:             (Optional) Descriptive name for GPIO
-> >> controller.
-> >> + *                     If not given, the name of the device is used.
-> >> + * @ngpio:             Number of GPIOs
-> >> + * @reg_dat_base:      (Optional) (in) register base address
-> >> + * @reg_set_base:      (Optional) set register base address
-> >> + * @reg_clr_base:      (Optional) clear register base address
-> >> + * @reg_dir_in_base:   (Optional) out setting register base address
-> >> + * @reg_dir_out_base:  (Optional) in setting register base address
-> >> + * @reg_stride:                (Optional) May be set if the registers
-> >> (of the
-> >> + *                     same type, dat, set, etc) are not consecutive.
-> >> + * @ngpio_per_reg:     Number of GPIOs per register
-> >> + * @irq_domain:                (Optional) IRQ domain if the
-> >> controller is
-> >> + *                     interrupt-capable
-> >> + * @reg_mask_xlate:     (Optional) Translates base address and GPIO
-> >> + *                     offset to a register/bitmask pair. If not
-> >> + *                     given the default gpio_regmap_simple_xlate()
-> >> + *                     is used.
-> >> + * @to_irq:            (Optional) Maps GPIO offset to a irq number.
-> >> + *                     By default assumes a linear mapping of the
-> >> + *                     given irq_domain.
-> >> + * @driver_data:       Pointer to the drivers private data. Not used
-> >> by
-> >> + *                     gpio-regmap.
-> >> + *
-> >> + * The reg_mask_xlate translates a given base address and GPIO offset
-> >> to
-> >> + * register and mask pair. The base address is one of the given
-> >> reg_*_base.
-> >> + */
-> >> +struct gpio_regmap {
-> >
-> > I'd prefer to follow a pattern seen in other such APIs of calling this
-> > structure gpio_regmap_config and creating another private structure
-> > called gpio_regmap used in callbacks that would only contain necessary
-> > fields.
->
-> something like the following?
->
-> struct gpio_regmap *gpio_regmap_register(struct gpio_regmap_config *)
->
-> but if that structure is private, how can a callback access individual
-> elements? Or do you mean private in "local to the gpio drivers"?
->
-
-Either making the structure local to drivers/gpio or making it
-entirely opaque and providing accessor functions. Depending on how
-much of the structure one may want to access.
-
-> Also I was unsure about the naming, eg. some use
-> stuff_register()/stuff_unregister() and some stuff_add()/stuff_remove().
->
-
-register/unregister is fine with me.
-
-Bart
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> ---
+>   arch/arm64/boot/dts/rockchip/rk3308.dtsi | 3 ---
+>   1 file changed, 3 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+> index a9b98555d..130771ede 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+> @@ -587,7 +587,6 @@
+>   		compatible = "rockchip,rk3308-dw-mshc", "rockchip,rk3288-dw-mshc";
+>   		reg = <0x0 0xff480000 0x0 0x4000>;
+>   		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+> -		bus-width = <4>;
+>   		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
+>   			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
+>   		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+> @@ -602,7 +601,6 @@
+>   		compatible = "rockchip,rk3308-dw-mshc", "rockchip,rk3288-dw-mshc";
+>   		reg = <0x0 0xff490000 0x0 0x4000>;
+>   		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+> -		bus-width = <8>;
+>   		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
+>   			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
+>   		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+> @@ -615,7 +613,6 @@
+>   		compatible = "rockchip,rk3308-dw-mshc", "rockchip,rk3288-dw-mshc";
+>   		reg = <0x0 0xff4a0000 0x0 0x4000>;
+>   		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
+> -		bus-width = <4>;
+>   		clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
+>   			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
+>   		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+> 
