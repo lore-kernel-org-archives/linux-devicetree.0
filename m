@@ -2,103 +2,106 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A36FC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FE2C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E8B220575
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:42:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586889746;
-	bh=lfSCUvZbahM1QeSSb7gds/7IyrvOA74gzlG0YM7J3PQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lP5uyxtUUlsc/z2H2HSW3F6i9enusFk/+yfcC1TXv0F+V4BD3xohZkpt6vy18yc5I
-	 JnHZJwcmNPBFbBwWa6/LfarwrqBJDkR6X05oMYXUHjv9jo1jDhqCLtSLEKjSdJYgNh
-	 C0ApVsaBuFphEPePLFXG/MrY4q+18RcQk5EbpiVI=
+	by mail.kernel.org (Postfix) with ESMTP id B880520575
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:44:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="p1MBv7OC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504188AbgDNSmW (ORCPT
+        id S2504248AbgDNSn7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:42:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39228 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 14:43:59 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:37374 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2504184AbgDNSmR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:42:17 -0400
-Received: from localhost.localdomain (unknown [157.50.36.11])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C7B2208FE;
-        Tue, 14 Apr 2020 18:42:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586889737;
-        bh=lfSCUvZbahM1QeSSb7gds/7IyrvOA74gzlG0YM7J3PQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kq9hj8bzUBKBAXYzKGghDESvE+FHwmEbLm3Uo1eZ7vJlewn1ZeIz02zPskSlR1lAH
-         Lv+7741CN1QAw45svmDXbfSzkRXBriwJ4b65yLNqtrViWmn9dgo43DcDx7bn16yRJj
-         ERq1lG1O7baibJqrwl5OwpcTR39ZM9U/6Tzb5lgg=
-From:   mani@kernel.org
-To:     jic23@kernel.org, robh+dt@kernel.org, narcisaanamaria12@gmail.com
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com,
-        Manivannan Sadhasivam <mani@kernel.org>
-Subject: [PATCH v3 3/3] dt-bindings: serial: Add binding for software flow control in STM32 UART
-Date:   Wed, 15 Apr 2020 00:11:47 +0530
-Message-Id: <20200414184147.4857-4-mani@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200414184147.4857-1-mani@kernel.org>
-References: <20200414184147.4857-1-mani@kernel.org>
+        id S1729658AbgDNSn4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Apr 2020 14:43:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=/TPZArQkhShtB5ieni8kCIGplQcFUqW8Ye4PfsxgJyI=; b=p1MBv7OCUWAJRl3FJ41+ai4tSW
+        9g4Uc4/uF7LPeOej+g4Ln6soOyb8O48n1gjCWLI0ASKqxJNlKzxmOO2P//xrzEespKM+2DKIuEJrM
+        2nR996wV6B60AciyaOBi6jrUezcqahMKCI62Kh8YMOWBb1UvK1tTJzftmDZ6+57s/5Ck=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jOQXC-002i09-IY; Tue, 14 Apr 2020 20:43:46 +0200
+Date:   Tue, 14 Apr 2020 20:43:46 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Robert Marko <robert.marko@sartura.hr>
+Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: Re: [PATCH v2 1/3] net: phy: mdio: add IPQ40xx MDIO driver
+Message-ID: <20200414184346.GC637127@lunn.ch>
+References: <20200414181012.114905-1-robert.marko@sartura.hr>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414181012.114905-1-robert.marko@sartura.hr>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Manivannan Sadhasivam <mani@kernel.org>
+Hi Robert
 
-Add devicetree binding for software flow control in STM32 UART
-controller. While at it, let's also fix one schema error reported by
-`make dtbs_check`.
+This is looking better
 
-Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
----
- .../devicetree/bindings/serial/st,stm32-uart.yaml | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+> +#include <linux/delay.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
 
-diff --git a/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml b/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
-index 238c44192d31..ea5797a1b403 100644
---- a/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
-+++ b/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
-@@ -38,13 +38,26 @@ properties:
-     description: enable hardware flow control
-     $ref: /schemas/types.yaml#/definitions/flag
- 
-+  st,sw-flow-ctrl:
-+    description: enable software flow control
-+    $ref: /schemas/types.yaml#/definitions/flag
-+
-+  rts-gpios:
-+    description: RTS pin used if st,sw-flow-ctrl is true
-+    maxItems: 1
-+
-+  cts-gpios:
-+    description: CTS pin used if st,sw-flow-ctrl is true
-+    maxItems: 1
-+
-   dmas:
-     minItems: 1
-     maxItems: 2
- 
-   dma-names:
-     items:
--      enum: [ rx, tx ]
-+      - const: rx
-+      - const: tx
-     minItems: 1
-     maxItems: 2
- 
--- 
-2.17.1
+I don't think you need this header. There are no mutexes here.
 
+> +#include <linux/io.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_mdio.h>
+> +#include <linux/phy.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define MDIO_CTRL_0_REG		0x40
+> +#define MDIO_CTRL_1_REG		0x44
+> +#define MDIO_CTRL_2_REG		0x48
+> +#define MDIO_CTRL_3_REG		0x4c
+> +#define MDIO_CTRL_4_REG		0x50
+
+So your next version will hopefully have better names.
+
+> +static int ipq40xx_mdio_wait_busy(struct mii_bus *bus)
+> +{
+> +	struct ipq40xx_mdio_data *priv = bus->priv;
+> +	int i;
+> +
+> +	for (i = 0; i < IPQ40XX_MDIO_RETRY; i++) {
+> +		unsigned int busy;
+> +
+> +		busy = readl(priv->membase + MDIO_CTRL_4_REG) &
+> +			MDIO_CTRL_4_ACCESS_BUSY;
+> +		if (!busy)
+> +			return 0;
+> +
+> +		/* BUSY might take to be cleard by 15~20 times of loop */
+> +		udelay(IPQ40XX_MDIO_DELAY);
+> +	}
+> +
+> +	dev_err(bus->parent, "MDIO operation timed out\n");
+> +
+> +	return -ETIMEDOUT;
+> +}
+
+You can probably make use of include/linux/iopoll.h 
+
+    Andrew
