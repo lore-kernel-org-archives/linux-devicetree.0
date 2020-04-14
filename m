@@ -2,236 +2,165 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E52C352BE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8F8C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 250FD20678
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:23:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QwwrqjZD"
+	by mail.kernel.org (Postfix) with ESMTP id 43CF320737
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:38:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586885925;
+	bh=BlRdEu7bWkoJW8GKNHvreZ6ibTBfjVJvw4Fqm/MWRIU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UVG2cQkYnnS8UCIIui6YaSVWpmaplnhXvdPZ2GEP4v81+rccb0JyvW8gSmAZyl2Ci
+	 GLpHQ7JW6Uw3hZAejfv3EG0TFCpGuVfYfr31xArI5KetROCIMeUgq7vtYR3IZ96FXP
+	 LLABArEu/WOFrpaZZAYbqakOr+5sHq875HtWZvV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407657AbgDNRXm (ORCPT
+        id S1730281AbgDNRio (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:23:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2407654AbgDNRXl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:23:41 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0088DC061A0C;
-        Tue, 14 Apr 2020 10:23:40 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id l14so659294ljj.5;
-        Tue, 14 Apr 2020 10:23:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=K+oWkwpXyNNFimgUSFgG1jkwmIfT4ADb+XI7Ut8Zv0Y=;
-        b=QwwrqjZDHlh9J8PBS5HJxe9tmEvIlNakfU919mjjz+pdGr+vSKcobhO2gK40YWnkZA
-         5x8jdsUPQ8eAbAawU0NWSXpR19j50meEnq+rTKGIFhwPC4ZDi4BFVxTTY4Rr9MeZy2l6
-         ZMZmZgNRqWe8AbYRNEGkBACm33jeuOCJ8MYuILnW5yhuMzIjLNL0BrN0i2xmZbNdL20x
-         McAkluZ6D3WLSGOX3dvGSjVwxbhk2jlwoe0V+koBM9VSEoECD4klA/pxoOkeu3vrSyuZ
-         ephvcBzgtdjcNcJJVXggnAcGJeIqeNhhcMJw4U6k81Iz59bIqrHjn9DGtuYIZAxSO+W4
-         /aSw==
+        Tue, 14 Apr 2020 13:38:44 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43058 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730099AbgDNRil (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 13:38:41 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g14so451589otg.10;
+        Tue, 14 Apr 2020 10:38:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=K+oWkwpXyNNFimgUSFgG1jkwmIfT4ADb+XI7Ut8Zv0Y=;
-        b=KuyOLce1LVfwUpcOZWxyNM2V0A0LeHxNk+gFUG0HzAn0PNOPmCf9DcnscLsgWwHtU2
-         mP4qxK6tMCNSg3l6ShDgcmX/wqqqZWNxEOJ96j/7KDLxXwHL9jCqddwutE8kVtILRbw0
-         4TCBUXmO7PGS27wiAKwjT0klj/O6YryjKZy4G1JFm8Sz1poJRfsGyuGX44DVe1NaEJYF
-         gjSlqoag9mrolKeZyyn0elU7/8CHL2SoK+nY7C6ue1AzexFN9+j4ynIuIQc62I6uAT0m
-         X3/bicIUPn4QHlbyna8CtqoPotyEwvoykaT4WAgoCMR0BbIQoxu0X2CYUeHvf25pVKYu
-         lx1g==
-X-Gm-Message-State: AGi0PubLqlkcuN1hl99qHqSe59eUxTojPyz03uloDLJhUeecEGuJAzo2
-        /os2TcWYWnp6AaD9ciL2QaTEg4eJfjbOZA==
-X-Google-Smtp-Source: APiQypLAU1SjIDPk067UihTLYs9vY3h7H/v2/+JAsSR7mX9aKg/hiQe92RQvh8cukXPAlwKhAE7N/Q==
-X-Received: by 2002:a2e:5746:: with SMTP id r6mr705204ljd.15.1586885018770;
-        Tue, 14 Apr 2020 10:23:38 -0700 (PDT)
-Received: from localhost ([213.191.183.145])
-        by smtp.gmail.com with ESMTPSA id c21sm10687273lfh.16.2020.04.14.10.23.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Apr 2020 10:23:37 -0700 (PDT)
-From:   Iskren Chernev <iskren.chernev@gmail.com>
-To:     linux-arm-msm@vger.kernel.org
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8Nz3sKqk6tf6wfMqMfDxAKL6dU6xyEXZ2XEc3RZw1kA=;
+        b=HAea2NfyN4EFRHBhVGk45x5b1ywH72yfmLIX+OIf4N7IU41ZZgJQlIsdkf9JzvKfWd
+         aDGUkIWXXNgf6OruWAIYGOXvogoqXyXN5Pqx7BSf0nOa+fPplI7anS1zgRRs1Tvat5U7
+         ksCGk9BG9xvyZh8qd3c3UFRCQlGYgcYgFq35smDJcIUQIbGasG9NbttBq6eUTYjUTqc5
+         e/KEkTZ6je/8bY0GnCNzVU3mYAuHk9LCsKmo7UqFzV75fHgO7aS8WKLIPPG2zNf4GOhQ
+         B/Bw9LiGsKzUSSMBxPGhQSQr/oqgjypOpK294XQ/a7sCMIVaJl3KpQH+bwIjlMziPHD+
+         rySA==
+X-Gm-Message-State: AGi0PuamumCRgqT3zCvTLvm2P0jC+yyFY0t0A5n8DwUsWmeYuw5XsrXa
+        cQMLy6QPcUPg8Fv19mnMWQ==
+X-Google-Smtp-Source: APiQypLLc0miyc2capf1MVVpp0fAaq2ltXN508BsmSUu5FT95kopV2NU4H4Jg7eQPEjl2rrJC7bPYg==
+X-Received: by 2002:a9d:2c1:: with SMTP id 59mr699714otl.321.1586885920167;
+        Tue, 14 Apr 2020 10:38:40 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id d61sm5640680otb.53.2020.04.14.10.38.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 10:38:39 -0700 (PDT)
+Received: (nullmailer pid 2638 invoked by uid 1000);
+        Tue, 14 Apr 2020 17:38:38 -0000
+Date:   Tue, 14 Apr 2020 12:38:38 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
 Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Iskren Chernev <iskren.chernev@gmail.com>
-Subject: [PATCH v2 3/3] ARM: dts: qcom: msm8974-klte: Add max77826 pmic node
-Date:   Tue, 14 Apr 2020 20:22:50 +0300
-Message-Id: <20200414172250.2363235-4-iskren.chernev@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200414172250.2363235-1-iskren.chernev@gmail.com>
-References: <20200414172250.2363235-1-iskren.chernev@gmail.com>
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] devicetree: bindings: phy: Document dwc3 qcom phy
+Message-ID: <20200414173838.GA29176@bogus>
+References: <20200403002608.946-1-ansuelsmth@gmail.com>
+ <20200403002608.946-2-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403002608.946-2-ansuelsmth@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This introduces the MAX77826 PMIC that powers some pheripherals on the
-klte, like the touchpad, touchkeys and camera.
+On Fri, Apr 03, 2020 at 02:26:05AM +0200, Ansuel Smith wrote:
+> Document dwc3 qcom phy hs and ss phy bindings needed to correctly
+> inizialize and use usb on ipq806x SoC
+> 
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  .../bindings/phy/qcom,dwc3-hs-usb-phy.yaml    | 65 +++++++++++++++++++
+>  .../bindings/phy/qcom,dwc3-ss-usb-phy.yaml    | 65 +++++++++++++++++++
+>  2 files changed, 130 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,dwc3-ss-usb-phy.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml
+> new file mode 100644
+> index 000000000000..0bb59e3c2ab8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml
+> @@ -0,0 +1,65 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/qcom,dwc3-hs-usb-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm DWC3 HS PHY CONTROLLER
+> +
+> +maintainers:
+> +  - Ansuel Smith <ansuelsmth@gmail.com>
+> +
+> +description:
+> +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
+> +  controllers. Each DWC3 PHY controller should have its own node.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,dwc3-hs-usb-phy
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  regmap:
+> +    maxItems: 1
+> +    description: phandle to usb3 dts definition
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    description: |
+> +      - "ref" Is required
+> +      - "xo"	Optional external reference clock
+> +    items:
+> +      - const: ref
+> +      - const: xo
+> +
+> +required:
+> +  - compatible
+> +  - "#phy-cells"
+> +  - regmap
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
+> +
+> +    hs_phy_0: hs_phy_0 {
+> +      compatible = "qcom,dwc3-hs-usb-phy";
+> +      regmap = <&usb3_0>;
 
-Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
----
- .../boot/dts/qcom-msm8974-samsung-klte.dts    | 110 ++++++++++++++++++
- arch/arm/boot/dts/qcom-msm8974.dtsi           |  11 ++
- 2 files changed, 121 insertions(+)
+If the registers for the phy are part of 'qcom,dwc3' then make this node 
+a child of it.
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-index eaa1001d0a46..d5697218caf6 100644
---- a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-@@ -21,4 +21,114 @@ serial@f991e000 {
- 		status = "ok";
- 	};
- 
-+	pinctrl@fd510000 {
-+		i2c6_pins: i2c6 {
-+			mux {
-+				pins = "gpio29", "gpio30";
-+				function = "blsp_i2c6";
-+
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
-+		};
-+	};
-+
-+	i2c@f9928000 {
-+		status = "okay";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c6_pins>;
-+
-+		pmic@60 {
-+			reg = <0x60>;
-+			compatible = "maxim,max77826";
-+
-+			regulators {
-+				max77826_ldo1: LDO1 {
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1200000>;
-+				};
-+
-+				max77826_ldo2: LDO2 {
-+					regulator-min-microvolt = <1000000>;
-+					regulator-max-microvolt = <1000000>;
-+				};
-+
-+				max77826_ldo3: LDO3 {
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1200000>;
-+				};
-+
-+				max77826_ldo4: LDO4 {
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+				};
-+
-+				max77826_ldo5: LDO5 {
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+				};
-+
-+				max77826_ldo6: LDO6 {
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <3300000>;
-+				};
-+
-+				max77826_ldo7: LDO7 {
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+				};
-+
-+				max77826_ldo8: LDO8 {
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <3300000>;
-+				};
-+
-+				max77826_ldo9: LDO9 {
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+				};
-+
-+				max77826_ldo10: LDO10 {
-+					regulator-min-microvolt = <2800000>;
-+					regulator-max-microvolt = <2950000>;
-+				};
-+
-+				max77826_ldo11: LDO11 {
-+					regulator-min-microvolt = <2700000>;
-+					regulator-max-microvolt = <2950000>;
-+				};
-+
-+				max77826_ldo12: LDO12 {
-+					regulator-min-microvolt = <2500000>;
-+					regulator-max-microvolt = <3300000>;
-+				};
-+
-+				max77826_ldo13: LDO13 {
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+				};
-+
-+				max77826_ldo14: LDO14 {
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+				};
-+
-+				max77826_ldo15: LDO15 {
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+				};
-+
-+				max77826_buck: BUCK {
-+					regulator-min-microvolt = <1225000>;
-+					regulator-max-microvolt = <1225000>;
-+				};
-+
-+				max77826_buckboost: BUCKBOOST {
-+					regulator-min-microvolt = <3400000>;
-+					regulator-max-microvolt = <3400000>;
-+				};
-+			};
-+		};
-+	};
- };
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index 2ea2308d91b3..51f5f904f9eb 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -974,6 +974,17 @@ blsp_i2c3: i2c@f9925000 {
- 			#size-cells = <0>;
- 		};
- 
-+		blsp_i2c6: i2c@f9928000 {
-+			status = "disabled";
-+			compatible = "qcom,i2c-qup-v2.1.1";
-+			reg = <0xf9928000 0x1000>;
-+			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_QUP6_I2C_APPS_CLK>, <&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
- 		blsp_i2c8: i2c@f9964000 {
- 			status = "disabled";
- 			compatible = "qcom,i2c-qup-v2.1.1";
--- 
-2.26.0
+> +      clocks = <&gcc USB30_0_UTMI_CLK>;
+> +      clock-names = "ref";
+> +      #phy-cells = <0>;
+> +    };
+> +
+> +    usb3_0: usb3@110f8800 {
+> +      compatible = "qcom,dwc3", "syscon";
+> +      reg = <0x110f8800 0x8000>;
+> +
+> +      /* ... */
 
+Incomplete examples should or will fail validation.
+
+> +    };
