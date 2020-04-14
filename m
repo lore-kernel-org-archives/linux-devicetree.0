@@ -2,151 +2,135 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD709C2BBC7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 11:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4956CC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 11:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C40120732
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 11:45:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZYG/M7Mv"
+	by mail.kernel.org (Postfix) with ESMTP id 2428C2075E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 11:52:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586865129;
+	bh=Fdj1YVdp//ceZ9oMqGAN8F8tYVPLTWDDFpuFS8d9ZK0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Vzwn0btStrP3JKIuSvQT4+jaMkx9OyoEmXW44DqIO/4434OC94uP6AD+WSevCWyTF
+	 wwEuYY0vkVJoQr954q6aWtg2gmUtEo+miVqf0PT6GgyasHFP/misED+vJaDufW5ziU
+	 9sTAlIgjiJ4RQ2mlo34YCZ9lCtTr1qumoBPKZEEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439551AbgDNLpR (ORCPT
+        id S1729608AbgDNLwI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:45:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2439532AbgDNLpF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 07:45:05 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95B6AC061A0C;
-        Tue, 14 Apr 2020 04:45:04 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id y24so13571603wma.4;
-        Tue, 14 Apr 2020 04:45:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=H1H+WW/rfol3XCr99+J5WEL3zWbHBKA7AHfmHx0QHrA=;
-        b=ZYG/M7Mv2RWSGdB7XWVJLwSLyM1KyjyOyAfs0l5PvfKAF/NfeSrXtK33UlQq+rFubE
-         BRvv0vA7QQXSsW3JqL9zAlN9/3dMqPpj8Eq4itpJSB4SbUOuxZFzAthjQ3miYsn+SfLY
-         7YhdSlC6Y2DnoBFYV4YkmtjQAN4sq/PplVYxPMUbjEt9DFXbRLbqL3s9qftHjsVwy4oR
-         OjgRKMZQY0luC92TIO8UwzayBEblh3B4uyPpMk/4OLLp0mE8z+ciUxb8viesohCqxkv8
-         qIM95iwTmYHxCugZrUp05M/ypr/Xs2d9AYlV5QT9Sd3bdtc+wB46oDSZNM3r/Fi6kYGK
-         qyqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=H1H+WW/rfol3XCr99+J5WEL3zWbHBKA7AHfmHx0QHrA=;
-        b=ksHS/BTLZJeyg7eDqKKshBV6hG6zDnT5v9R/Fk2boCk1KScsG2+g7pNmiv8PyJoPjg
-         ZCEG+ViEQXgXIQGU4cEAN+KdNdjHeSwUAF05H493ot0IMGoH8ox9Qrj6zsbDGl+V+6JQ
-         1LQJXZFyZgn4vNFbhWEX4wGAxS4GBX0vegDmPjZgkJWzJW078J6ij19ciuocsBspWts1
-         vK9OdTyKpt5vlN1qWxrmgSgVFBGyK2nxo+TkmP9xd9X74k5u7u82PFxGvHAn/e8sJwby
-         eD90PLplAAI0jgd7APWumhr5wkSafzAButJCpqkD2ijLq+MUnPGMZToCUblCudNuhHsx
-         srlQ==
-X-Gm-Message-State: AGi0PubgeWgkzRWHowufX3H2FINgB/gTAhpbGRuBKTWWILN9UGRTXYWP
-        ht5h1+WK4AH0Qu0N+SQuasE=
-X-Google-Smtp-Source: APiQypI+pzhmOtvHbjeu5Az00+oZWfw3LuLDn5G0O9eSh9lLsvK6ekfBlcuQ+ZBlenp/Szsmw7pxdg==
-X-Received: by 2002:a1c:ded4:: with SMTP id v203mr23311735wmg.106.1586864703169;
-        Tue, 14 Apr 2020 04:45:03 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id 138sm19207778wmb.14.2020.04.14.04.45.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Apr 2020 04:45:02 -0700 (PDT)
-Subject: Re: [PATCH] arm64: dts: rockchip: remove bus-width from mmc nodes in
- rk3308.dtsi
-To:     Robin Murphy <robin.murphy@arm.com>, heiko@sntech.de
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-References: <20200413193652.1952-1-jbx6244@gmail.com>
- <20c81edc-247c-8db0-2b3c-a6c2fcad6b4e@arm.com>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <f19b6b48-2950-abca-7dee-31c24118c3ef@gmail.com>
-Date:   Tue, 14 Apr 2020 13:45:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 14 Apr 2020 07:52:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728476AbgDNLwG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Apr 2020 07:52:06 -0400
+Received: from Mani-XPS-13-9360 (unknown [157.46.102.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC477206D5;
+        Tue, 14 Apr 2020 11:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586865126;
+        bh=Fdj1YVdp//ceZ9oMqGAN8F8tYVPLTWDDFpuFS8d9ZK0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xvLl7gxIK83JbrlKz158gl7mOTjXgiogxIFkzAfjjz+oIY5zBWsHqzrNFmgAqOLbA
+         P/zzA3lQB9Qd8GhjnQIg/w6omdvO2ltpJYdcrpsC36+XJuHHDFS9eJQhe7h7x2Ost3
+         nxZiqNMd+376EhOyEglUhGg3Hizw1Q0W+Df/EDvc=
+Date:   Tue, 14 Apr 2020 17:21:53 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     robh+dt@kernel.org, narcisaanamaria12@gmail.com, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] iio: chemical: Add OF match table for CCS811 VOC
+ sensor
+Message-ID: <20200414115153.GC21559@Mani-XPS-13-9360>
+References: <20200412183658.6755-1-mani@kernel.org>
+ <20200412183658.6755-4-mani@kernel.org>
+ <20200413175054.626283dc@archlinux>
 MIME-Version: 1.0
-In-Reply-To: <20c81edc-247c-8db0-2b3c-a6c2fcad6b4e@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200413175054.626283dc@archlinux>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Robin, Heiko,
-
-If the Rockchip DT maintainers(= Heiko) agree that the new line for the
-'bus-width' properties is that it should be placed in dtsi I'll produce
-a version 2. Please advise what should be done with the other Rockchip
-SoCs. Change them too?
-
-Johan.
-
-On 4/14/20 12:02 PM, Robin Murphy wrote:
-> On 2020-04-13 8:36 pm, Johan Jonker wrote:
->> The 'bus-width' property for mmc nodes is defined both in
->> 'rk3308.dtsi' and 'rk3308-roc-cc.dts'.
->> In line with the other Rockchip SoCs define that in a user dts only,
->> so remove all entries from mmc nodes in 'rk3308.dtsi'.
+On Mon, Apr 13, 2020 at 05:50:54PM +0100, Jonathan Cameron wrote:
+> On Mon, 13 Apr 2020 00:06:58 +0530
+> mani@kernel.org wrote:
 > 
-> Judging by the pinctrl entries, these represent the number of pins
-> provided by the SoC itself. Obviously boards need to override that if
-> for some reason they don't wire up all the available data lines, but it
-> seems backwards to have every board restate the SoC's default value.
+> > From: Manivannan Sadhasivam <mani@kernel.org>
+> > 
+> > Add devicetree OF match table support for CCS811 VOC sensor.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
 > 
-> In fact, having brought it up, for this particular case the pinctrl
-> setting is inherently related to the bus width, so having one without
-> the other in either place doesn't smell right.
+> Hi,
 > 
-> Robin.
+> A few small things to clean up inline
 > 
->> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
->> ---
->>   arch/arm64/boot/dts/rockchip/rk3308.dtsi | 3 ---
->>   1 file changed, 3 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
->> b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
->> index a9b98555d..130771ede 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
->> @@ -587,7 +587,6 @@
->>           compatible = "rockchip,rk3308-dw-mshc",
->> "rockchip,rk3288-dw-mshc";
->>           reg = <0x0 0xff480000 0x0 0x4000>;
->>           interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
->> -        bus-width = <4>;
->>           clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
->>                <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
->>           clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
->> @@ -602,7 +601,6 @@
->>           compatible = "rockchip,rk3308-dw-mshc",
->> "rockchip,rk3288-dw-mshc";
->>           reg = <0x0 0xff490000 0x0 0x4000>;
->>           interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
->> -        bus-width = <8>;
->>           clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
->>                <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
->>           clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
->> @@ -615,7 +613,6 @@
->>           compatible = "rockchip,rk3308-dw-mshc",
->> "rockchip,rk3288-dw-mshc";
->>           reg = <0x0 0xff4a0000 0x0 0x4000>;
->>           interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
->> -        bus-width = <4>;
->>           clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
->>                <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
->>           clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
->>
+> Thanks,
+> 
+> Jonathan
+> 
+> > ---
+> >  drivers/iio/chemical/ccs811.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/drivers/iio/chemical/ccs811.c b/drivers/iio/chemical/ccs811.c
+> > index 6cd92c49c348..313931208f61 100644
+> > --- a/drivers/iio/chemical/ccs811.c
+> > +++ b/drivers/iio/chemical/ccs811.c
+> > @@ -24,6 +24,7 @@
+> >  #include <linux/iio/triggered_buffer.h>
+> >  #include <linux/iio/trigger_consumer.h>
+> >  #include <linux/module.h>
+> > +#include <linux/of.h>
+> 
+> You are including this just to get things in mod_devicetable.h
+> so include that directly instead.
+> 
 
+I added this include for of_match_ptr. Since it is not needed anymore, I'll drop
+this.
+
+> >  
+> >  #define CCS811_STATUS		0x00
+> >  #define CCS811_MEAS_MODE	0x01
+> > @@ -538,9 +539,16 @@ static const struct i2c_device_id ccs811_id[] = {
+> >  };
+> >  MODULE_DEVICE_TABLE(i2c, ccs811_id);
+> >  
+> > +static const struct of_device_id ccs811_dt_ids[] = {
+> > +	{ .compatible = "ams,ccs811" },
+> > +	{ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, ccs811_dt_ids);
+> > +
+> >  static struct i2c_driver ccs811_driver = {
+> >  	.driver = {
+> >  		.name = "ccs811",
+> > +		.of_match_table = of_match_ptr(ccs811_dt_ids),
+> No need for the of_match_ptr macro.  It has several issues.
+> 
+> 1) Blocks PRP001 ACPI magic device types being used to instantiate
+> this using the device tree binding but under ACPI.
+> 2) Will give warnings about ccs811_dt_ids being unused on no
+>    device tree builds.
+> 
+
+Okay, will use ccs811_dt_ids directly.
+
+Thanks,
+Mani
+
+> >  	},
+> >  	.probe = ccs811_probe,
+> >  	.remove = ccs811_remove,
+> 
