@@ -2,104 +2,82 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AFEC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 13:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00445C38A29
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 13:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 919BE20644
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 13:41:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lNzKcqtQ"
+	by mail.kernel.org (Postfix) with ESMTP id D2AA5206A2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 13:50:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586872213;
+	bh=J219MSRXUKPZH2EStCL5siV8XbW4jBEU9sMYg+idjEs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sDcDUftpVLpr5LtYZZ4mbUZewLKStcaiRW/zovyXC5biEeImaxFNrG0OAwK+RZXit
+	 0tMypjNuKnIEk3Ah/AiIeKhFPCXsjIPQElFrP2XXLiay0iBXUj4upwvgs8OOUefq0A
+	 4GIYgcLMYtdcp0Gx7KVsEwTFObNJW7n3fukqrO4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502655AbgDNNOJ (ORCPT
+        id S1732895AbgDNNuL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:14:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502653AbgDNNOG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 09:14:06 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F844C061A0C;
-        Tue, 14 Apr 2020 06:14:06 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id u10so8180074lfo.8;
-        Tue, 14 Apr 2020 06:14:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=TwanPYDMNjwsdCZf99BwEwFxyfAbUGx0ihTeXWNRhe8=;
-        b=lNzKcqtQbCw7svBeyfiCxylKZs/JH3ObkWG10wkqPNqlJxNoGQwHf7fcXBO0snOALd
-         X77ccfHRCEiHrXncn/sIsPliBESv8IFf2V0++EFPVLEK2JOqnNyRcGDtRqKzMjSf8y4w
-         3vMjsaryxNLGzs7zskjkiKetPDJ4tT4Fh5rPfF7eoZvgIPy/2LJrbY3kVlZz2/vLtPPD
-         zPMl5jM14tvVfN9GDu0IPy2QKfrUmH6diCa99yIhTTFTCh1xyTjurfXB8kgesJJgauoM
-         D4i6LwFVvpnyGzSZQ2NNUCMdi4YRhHhnNw/pCnEoUHUO5e2Z5dENIZtXPbct0O+FjJmm
-         yjGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=TwanPYDMNjwsdCZf99BwEwFxyfAbUGx0ihTeXWNRhe8=;
-        b=sL1qKFrfhvsqlXdWBxPwAduCcjU5kkqz9ANdS0GKgo9ofCHvJa4EDdOSH0pO6VTgeE
-         6sykLxP46brIO6NIEaXXrKoJHRYTKPv/NcY/RlJQsoZfRZrXK0WZyWflOX7C9c+i4+k9
-         3estFRTsng2qvBdjuq61SFh2x78srdgdxhz0pTTP1LYI6yZXajMy9HPsiif+Eoo/cYl3
-         HcrNwTDY8U9gnoT+0pAXqhkbgKc1qgJ4OFRcKy8Trc7mTw4y9ZXU5CgjQrcQ3n0T1MJ5
-         Y1LtCBA2fgvgqGq8PUG+8BnE9Q6Txrk/3NHz8tHYwRiuk1C413Nwc0PRzTT7ffnKXjoK
-         LIEQ==
-X-Gm-Message-State: AGi0PuZS+LfQ4CC92ljfqTFtXfnoXG107sCwNWtNyat81BpkOmyvnxva
-        vY71IdgKZQv25+DXVCqMneQ=
-X-Google-Smtp-Source: APiQypLa/KxVEJAuwOK/hWdTm1YU8JrHLqXCaAxUYLJM1nn3mtGtpnTVOFU77TpHqHnoVQGPtH1qFA==
-X-Received: by 2002:ac2:4853:: with SMTP id 19mr13296940lfy.171.1586870044950;
-        Tue, 14 Apr 2020 06:14:04 -0700 (PDT)
-Received: from [192.168.86.24] ([213.191.183.145])
-        by smtp.gmail.com with ESMTPSA id h14sm10658884lfm.60.2020.04.14.06.14.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Apr 2020 06:14:03 -0700 (PDT)
-Subject: Re: [PATCH 0/3] regulator: max77826: Add MAX77826 support
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht
-References: <20200413164440.1138178-1-iskren.chernev@gmail.com>
- <20200414105725.GB5412@sirena.org.uk>
-From:   Iskren Chernev <iskren.chernev@gmail.com>
-Message-ID: <f167d50f-c0d7-f359-a167-2782040ae7c3@gmail.com>
-Date:   Tue, 14 Apr 2020 16:14:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 14 Apr 2020 09:50:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39354 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728705AbgDNNuG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Apr 2020 09:50:06 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A0EE20578;
+        Tue, 14 Apr 2020 13:50:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586872206;
+        bh=J219MSRXUKPZH2EStCL5siV8XbW4jBEU9sMYg+idjEs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oX+bu2h0Y1hGAhPHf6J3887A1OwNuPr2ZMmG5bn9cVof2u+3AYfQlCGxGAMom7Xds
+         bneoXL403uvuGTUNdKfDlw/bqXhuMwn2DHthPPuX7uoRY5wNvewA+pyrXRDz7QBELM
+         pjId3Cl1Fkk8EsapDeQJuF7dwtHeHWvm6coJpPak=
+Date:   Tue, 14 Apr 2020 21:49:57 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Igor Opaniuk <igor.opaniuk@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Robert Jones <rjones@gateworks.com>,
+        =?iso-8859-1?Q?S=E9bastien?= Szymanski 
+        <sebastien.szymanski@armadeus.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] dt-bindings: arm: fsl: add nxp based toradex
+ colibri bindings
+Message-ID: <20200414134956.GF30676@dragon>
+References: <20200316143345.30823-1-igor.opaniuk@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200414105725.GB5412@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200316143345.30823-1-igor.opaniuk@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Mar 16, 2020 at 04:33:44PM +0200, Igor Opaniuk wrote:
+> From: Igor Opaniuk <igor.opaniuk@toradex.com>
+> 
+> Document Colibri iMX6S/DL V1.1x re-design devicetree binding.
+> 
+> Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
 
-On 4/14/20 1:57 PM, Mark Brown wrote:
-> On Mon, Apr 13, 2020 at 07:44:37PM +0300, Iskren Chernev wrote:
->> The MAX77826 is a PMIC found on the Samsung Galaxy S5 (klte) and possibly other
->> devices. It is produced by Maxim Integrated and contains 15 LDOs a buck and
->> a buck boost regulator.
->>
->> Iskren Chernev (3):
->>   regulator: max77826: Add max77826 regulator driver
->>   dt-bindings: regulator: Add document bindings for max77826
->
-> Aside from the compatible string and the subject prefix on the DT
-> binding patch this looks good to me.
-
-About the subject -- I guess you mean the suffix is wrong, it should be:
-
-  dt-bindings: regulator: Document bindings for max77826
-
-I'll also change the compatible string.
-
+Applied both, thanks.
