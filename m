@@ -4,94 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C869C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95708C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E00772076B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68A9C20771
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586901062;
-	bh=7tksp8DJqvv4aFKzOAsBYA42hPh+JG5SvGguvYOTEh4=;
+	s=default; t=1586901388;
+	bh=DIo+n7WfEzghLrXgz4MIJEAD9e9dHJ7ZQP88sWs0nqY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PzKzZcs0V8qnovBMRZcg2KLozkOqOWyqsxnf+GmuuZg0WrjWGGN7C2BtLDeMPEk6S
-	 Zz3tNZ8hn8f29PM5xbkdsbnXvTnghf1jPCzucRpxD6E16q0HyyJhzMunFsgOc5H4V0
-	 MRrfUyn2gtQlwxQ+DUB1MqOIG0IztKY2GDBkCuz8=
+	b=Z/Iqxta72nRdF7Qrl5SZPOyfDc2I37jBPZPLbimssDGc190w3wLHiz/Wy1xQzMYvW
+	 PoZ9SdTLg+imZ9KOq1Ikysub6RMTydPVxoQ8tCAIOqjA7Jgxvpe6AG2CcgfhFl3sDR
+	 6hoYiHvANL/bO9UsoOWQjj72I/UbuYcRPPV+1XbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440925AbgDNVuz (ORCPT
+        id S1729976AbgDNV41 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 17:50:55 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37595 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440819AbgDNVuT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 17:50:19 -0400
-Received: by mail-ot1-f68.google.com with SMTP id z17so1346921oto.4;
-        Tue, 14 Apr 2020 14:50:18 -0700 (PDT)
+        Tue, 14 Apr 2020 17:56:27 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44868 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729713AbgDNV4Y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 17:56:24 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j4so1313936otr.11;
+        Tue, 14 Apr 2020 14:56:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=r6xzZ1b4JHWGtxEECvqX1ZeFiRv8Q65WRsOrzmnGvfQ=;
-        b=pbJpBVaGtsjyamyR7k92/WWs2lcU0j2mDUF6sDJo12fDCEpi267bV4fX/0qnokVSiB
-         EBLlEfm/DdYmMA2U2FgRDulbZWS4ITC0CbqL0hOGE1xPpGJJkOiFjUijqpxWKBa0NyC7
-         i/Jo9yq+rVSEifohUO1Njb5/RJLFD22WuJpvvQs1jFZ/bjWOZxCM2+mVTzPYmmxTNluV
-         6Z2iHFhPgWGoXqR3P4pTPG/y/UuqQGjyfvolooQZkWtLm2lkDgaz0cRqZd+PRERc2azR
-         +B8+KeUB+UxQMiDaW0SvJ9+whzWn64DADT0Fg4OegnCd43u1247T9P6Ios+Gq2kYCkNr
-         Fx2A==
-X-Gm-Message-State: AGi0PuZRFxoc0gFxuUUZDjpxzhITaHSzAzQFUhDFZ4xLrwK1oupYrg0w
-        erj9dyQSGWycQyS/N47QUQ==
-X-Google-Smtp-Source: APiQypI4T5IhspzuZMGUVQLSFU+HW4jJmxEf4RMXRC/Ht0Wg9mRzSEMEd8lT6Oa91uUR9Pib4mx+KA==
-X-Received: by 2002:a05:6830:1b64:: with SMTP id d4mr19628904ote.368.1586901018496;
-        Tue, 14 Apr 2020 14:50:18 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+o2yriNr4v3rniMWdemUISKQYsPGQxqAvPZbiefW6UE=;
+        b=pLFnVXLsZjSdzzf8JdCaeDAHmIwbidkhQ8EWRTpNDF2BNk7PK1Nrp3cj5+Ssl4YhsT
+         gY54BXPDpshu0Rp3DfYUqAu4dkGboRKwJx8b5kg23KqQG7suATZOLdo44Vi3ClT7bpzM
+         XptMeYnTaBoKjl+Tx3tjQ9ngsAHkmsSS+SiwqU+8Mev8Ye02ebREfgAuL63FG9w1e4Cu
+         m+rKdvJDyG5f5MVeBp4vvH7KF972TJ5JCvj3vkrvx8GX6Z9SItvlWFXMAbOTjoiYs3hJ
+         YxK+jbN4KHveJctGjszEUs6y6mRzdHrWfqLRx2V1ft3zEpzgqjDt1TpcbRD2P0h3rx8S
+         iGWQ==
+X-Gm-Message-State: AGi0PuYF4qhtmnYRtiQ9eR+WG4BsEUEE4Y4DyLI7GzDDqrJam/4+K8ml
+        +a3fpHKd/2ReS06EVEuzKV3TljQ=
+X-Google-Smtp-Source: APiQypLhFPB4rMGpKjdNYF2xubgNfmpg+NIvA1YQpl0vgKNyYqbR+tf3if9hzLDvVOEv6qMG8K/tig==
+X-Received: by 2002:a05:6830:60b:: with SMTP id w11mr18023314oti.96.1586901383492;
+        Tue, 14 Apr 2020 14:56:23 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t20sm2576523ott.51.2020.04.14.14.50.17
+        by smtp.gmail.com with ESMTPSA id r24sm5890903otq.9.2020.04.14.14.56.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 14:50:17 -0700 (PDT)
-Received: (nullmailer pid 22631 invoked by uid 1000);
-        Tue, 14 Apr 2020 21:50:16 -0000
-Date:   Tue, 14 Apr 2020 16:50:16 -0500
+        Tue, 14 Apr 2020 14:56:22 -0700 (PDT)
+Received: (nullmailer pid 31154 invoked by uid 1000);
+        Tue, 14 Apr 2020 21:56:21 -0000
+Date:   Tue, 14 Apr 2020 16:56:21 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Tomas Novotny <tomas@novotny.cz>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Nishant Malpani <nish.malpani25@gmail.com>
-Subject: Re: [PATCH v4 3/5] dt-bindings: iio: light: vcnl4000: Add
- proximity-near-level
-Message-ID: <20200414215016.GA22563@bogus>
-References: <cover.1586094535.git.agx@sigxcpu.org>
- <9bbbc30e5e8e67e50ddacb4cadc180fa5c7f7bd0.1586094535.git.agx@sigxcpu.org>
+To:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: Re: [PATCH 1/4] dt-bindings: display: bridge: Reject additional
+ properties in ports node
+Message-ID: <20200414215621.GA31081@bogus>
+References: <20200405232318.26833-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20200405232318.26833-2-laurent.pinchart+renesas@ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9bbbc30e5e8e67e50ddacb4cadc180fa5c7f7bd0.1586094535.git.agx@sigxcpu.org>
+In-Reply-To: <20200405232318.26833-2-laurent.pinchart+renesas@ideasonboard.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun,  5 Apr 2020 15:50:30 +0200, =?UTF-8?q?Guido=20G=C3=BCnther?= wrote:
-> This value indicates when userspace should consider an object
-> near to the sensor/device.
+On Mon,  6 Apr 2020 02:23:15 +0300, Laurent Pinchart wrote:
+> Document the #address-cells and #size-cells properties of the ports node
+> in the schemas of the bridge DT bindings, and set additionalProperties
+> to false to reject additional properties.
 > 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 > ---
->  .../devicetree/bindings/iio/light/vishay,vcnl4000.yaml     | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/display/bridge/anx6345.yaml       | 8 ++++++++
+>  .../devicetree/bindings/display/bridge/lvds-codec.yaml    | 8 ++++++++
+>  .../devicetree/bindings/display/bridge/ps8640.yaml        | 8 ++++++++
+>  3 files changed, 24 insertions(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
