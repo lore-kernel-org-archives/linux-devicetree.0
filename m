@@ -2,30 +2,34 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E62AAC352BE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 07:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D60C352BE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 07:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C441C2076C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 07:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C6B206E9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 07:21:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406390AbgDNHFK (ORCPT
+        id S2406541AbgDNHVj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 03:05:10 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38646 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406330AbgDNHFI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 03:05:08 -0400
+        Tue, 14 Apr 2020 03:21:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56738 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406537AbgDNHVi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 03:21:38 -0400
+X-Greylist: delayed 993 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Apr 2020 00:21:38 PDT
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3681C0A3BDC;
+        Tue, 14 Apr 2020 00:21:38 -0700 (PDT)
 Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0AA5D2A1469;
-        Tue, 14 Apr 2020 08:05:02 +0100 (BST)
-Date:   Tue, 14 Apr 2020 09:04:59 +0200
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 147262A14A0;
+        Tue, 14 Apr 2020 08:21:37 +0100 (BST)
+Date:   Tue, 14 Apr 2020 09:21:32 +0200
 From:   Boris Brezillon <boris.brezillon@collabora.com>
 To:     "Ramuthevar,Vadivel MuruganX" 
         <vadivel.muruganx.ramuthevar@linux.intel.com>
@@ -37,12 +41,12 @@ Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
         piotrs@cadence.com, robh+dt@kernel.org,
         andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
         cheol.yong.kim@intel.com
-Subject: Re: [PATCH v1 1/2] dt-bindings: mtd: Add YAML for Nand Flash
- Controller support
-Message-ID: <20200414090459.3c37c961@collabora.com>
-In-Reply-To: <20200414022433.36622-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200414092132.525053f1@collabora.com>
+In-Reply-To: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
 References: <20200414022433.36622-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200414022433.36622-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
 Organization: Collabora
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
@@ -53,89 +57,33 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 14 Apr 2020 10:24:32 +0800
+Hello Ramuthevar,
+
+On Tue, 14 Apr 2020 10:24:33 +0800
 "Ramuthevar,Vadivel MuruganX"
 <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> Add YAML file for dt-bindings to support NAND Flash Controller
-> on Intel's Lightning Mountain SoC.
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> ---
->  .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 61 ++++++++++++++++++++++
->  1 file changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
-> new file mode 100644
-> index 000000000000..361e5051c602
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
-> @@ -0,0 +1,61 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mtd/intel,lgm-nand.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +	lgm_host->chip.legacy.read_byte = lgm_read_byte;
+> +	lgm_host->chip.legacy.read_buf = lgm_read_buf;
+> +	lgm_host->chip.legacy.write_buf = lgm_write_buf;
+> +	lgm_host->chip.legacy.select_chip = lgm_select_chip;
+> +	lgm_host->chip.legacy.dev_ready = lgm_dev_ready;
+> +	lgm_host->chip.legacy.cmd_ctrl = lgm_cmd_ctrl;
+> +	lgm_host->chip.legacy.chip_delay = 30;
+> +	lgm_host->chip.legacy.dummy_controller.ops = &lgm_nand_controller_ops;
 > +
-> +title: Intel LGM SoC NAND Controller Device Tree Bindings
-> +
-> +allOf:
-> +  - $ref: "nand-controller.yaml"
-> +
-> +maintainers:
-> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: intel,lgm-nand
 
-intel,lgm-nand-controller
+Seriously, what's not clear in [1]? Okay, let's say you overlooked this
+comment, isn't the name of the field explicit enough? We received a
+few other drivers implementing the legacy interface in the last few
+months so maybe there's something to improve on our end (update the
+doc, move legacy drivers to a legacy sub-dir?).
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  dmas:
-> +    maxItems: 2
-> +
-> +  dma-names:
-> +    enum:
-> +      - rx
-> +      - tx
-> +
-> +  pinctrl-names: true
-> +
-> +patternProperties:
-> +  "^pinctrl-[0-9]+$": true
-> +
-> +  "^nand@[a-f0-9]+$":
-> +    type: object
-> +    properties:
-> +      reg:
-> +        minimum: 0
-> +        maximum: 7
-> +
-> +      nand-ecc-mode: true
-> +
-> +      nand-ecc-algo:
-> +        const: hw
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - dmas
-> +
-> +additionalProperties: false
-> +
-> +...
+Back to more constructive comment now: please implement ->exec_op() to
+replace those legacy hooks.
 
+Regards,
+
+Boris
+
+[1]https://elixir.bootlin.com/linux/v5.7-rc1/source/include/linux/mtd/rawnand.h#L987
