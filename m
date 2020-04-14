@@ -2,164 +2,341 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA57FC352BE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 22:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34731C38A29
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 23:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BABF2076B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 22:11:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dpdUzP76"
+	by mail.kernel.org (Postfix) with ESMTP id 094E92054F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 23:10:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586905812;
+	bh=0Hgn3rozHbgSBMN0uA0qJTwL82xs0UurswWtNLVM4Pw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R2MaZaCldGb48KRHGB1XMg1byMJ1qpzLVOvIxe/TStPM44N9OpoOz9jEo/wHq3CSe
+	 rEzCpnou4Qx5OKMjk0aa7Z2k3J1qB+ujRLjxIVTfQcCdEKrzmd/AfDlW6ML8dxPKEt
+	 XzJJ+NyLbz3BjcRQXtYR/Woyd9K/UC8rJW4XOWxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634276AbgDNWLw (ORCPT
+        id S2441012AbgDNXKL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 18:11:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2634196AbgDNWKD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 18:10:03 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3206C061A0E;
-        Tue, 14 Apr 2020 15:10:01 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id q22so1571203ljg.0;
-        Tue, 14 Apr 2020 15:10:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=F0XPwxdFCjJHTuSbnS2w6zqorjjc9RWVXqyjiI/jIis=;
-        b=dpdUzP76QV7sTI3nok9EmoFs3mfQ1Co9VYbw/a3nyURD6+kqJhVSzly9jO3vV4wqvy
-         ssBZrTUThPra2QqU4vWEX67XOAk7/GhHDG2oUY8PaRBNjJ1FDyz69atAKd99SIPhUIvE
-         jilM5R8pCrvuWEWk/1Hg9X+udDVYk8BW6CdgJJyG6eap2Fjiq1bUBx76cixcTh9jImJ3
-         21sBnI4clZ+HyT0uvnzIBdUaVRw3LkVYDxCJiETJo5Y5Bg8tCxLlbn2MUHLc4fddlFdu
-         pfS273xaNWyZxrvOdQCJb5gFWZverpcLzKWs3k6RItrNeIK6dDInuhSsGAjLjMZ3oXQB
-         Whjw==
+        Tue, 14 Apr 2020 19:10:11 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34402 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731377AbgDNXKJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 19:10:09 -0400
+Received: by mail-oi1-f196.google.com with SMTP id x10so2558912oie.1;
+        Tue, 14 Apr 2020 16:10:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=F0XPwxdFCjJHTuSbnS2w6zqorjjc9RWVXqyjiI/jIis=;
-        b=IUwSpA/U7+JxXewBv5v34UzVR/rMLxQeCUcAe9M7Yv3+ARu+oe2fImehZwUpueotZG
-         b55JxK8WfWeISt5DISHTzj/PLjAMbuimrpSyIAS951BsScMUlF83LKWYhaGuYKfpJYjc
-         2YkrD2UH/2sR7eWVlBDLSPAK98wNP+K9tqnQv+RM1ImWMCbJRH42EJW5zvHKbQwDcBBV
-         5erMZzHoUeF8iQE1mOc1s6KsCVRa1ejf9pNQKpFJtdpWJ+VXFtL2OrHeypyNNyzDBeCA
-         B8gZXqyyQJujKiq/zY8GJgncvQTi4cbqJF/dsyYQFvM8UPZXwbHSx80HVhqf/3cYQSX9
-         xDGQ==
-X-Gm-Message-State: AGi0PuZ6vfW8CFsmJONQoib2T0oC+gxd1i8P7tVk9bpSnctwgXWLTyEp
-        qzD8Q0eB3zpnk98or+NbYqc=
-X-Google-Smtp-Source: APiQypLlrZjm0kkuuIk+cj7F9b+2hImgbX9ulv04uvR3P0Uia+i65n+ywVvG9BUpZuc5iL5d6G3zJA==
-X-Received: by 2002:a2e:8e68:: with SMTP id t8mr1407493ljk.20.1586902200388;
-        Tue, 14 Apr 2020 15:10:00 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id w27sm13663044lfn.45.2020.04.14.15.09.57
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nnA+hiteX7SC+b7tbnuixdpiQ4jhYp1NDyyYVqLC8Kk=;
+        b=hiTUlddg9FvQsc7chItOZstOKRAkWUc2OEY3rEzTU1yLtD/5AMu18tebh1ZgemhEn8
+         ypD+dpSmbACDUK/oXFvKX7prIFD/9JC6K20wk4G22T9MQEzpTRT5SYU6BPQDuKMkmZDD
+         bcM17O4BeAPP+iCHYuQtT5KG+Cxa8MggAA8r2ZxmlqZhT1cLTvKGITn4vjHOgWJpjwr0
+         3ecaMRt2ip3EX9hgZ3SonYHmldRZTJ8fHbvXyvDfj4A6OP5FUeEQREDYtIElWXZOFBSj
+         qxzTPggJzqaCtXBJS4q0RqUF2GNf6gC/0roRGvYVx4OQGZOCbsTY7scQzf7jDdPdSw6l
+         +kiw==
+X-Gm-Message-State: AGi0PuZz1hWSBeemmjaACE8DgEnY/a0MT5QaiPosehO0pDSf9oNE0jR2
+        MPywqRrQ1EgacliOdhL8tg==
+X-Google-Smtp-Source: APiQypJtzbcIYHC3GUgn2zyO2j2evzOR6eKeQ7eqShmZOkQRjj/3ILyd6wKDsY7XyxDA98fIRmPd5w==
+X-Received: by 2002:aca:f541:: with SMTP id t62mr2857983oih.148.1586905807549;
+        Tue, 14 Apr 2020 16:10:07 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a131sm5937481oii.30.2020.04.14.16.10.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 15:09:58 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        =?UTF-8?q?Pedro=20=C3=82ngelo?= <pangelo@void.io>,
-        Matt Merhar <mattmerhar@protonmail.com>
-Cc:     linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 0/6] Support NVIDIA Tegra-based Acer A500 and Nexus 7 devices
-Date:   Wed, 15 Apr 2020 01:07:53 +0300
-Message-Id: <20200414220759.29146-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
+        Tue, 14 Apr 2020 16:10:06 -0700 (PDT)
+Received: (nullmailer pid 4550 invoked by uid 1000);
+        Tue, 14 Apr 2020 23:10:05 -0000
+Date:   Tue, 14 Apr 2020 18:10:05 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Maxime Ripard <maxime@cerno.tech>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mark Yao <mark.yao@rock-chips.com>,
+        Sandy Huang <hjc@rock-chips.com>, Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH/RFC 4/6] dt-bindings: display: rockchip: dw-hdmi: Convert
+ binding to YAML
+Message-ID: <20200414231005.GA24462@bogus>
+References: <20200405233935.27599-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20200405233935.27599-5-laurent.pinchart+renesas@ideasonboard.com>
+ <20200406080032.zlszhkjqmjeoa4ti@gilmour.lan>
+ <20200406111927.GD4757@pendragon.ideasonboard.com>
+ <20200406170915.x2ztz4q446h6vx2y@gilmour.lan>
+ <20200406175028.GI16885@pendragon.ideasonboard.com>
+ <20200407071251.npibrmzywiyigu2a@gilmour.lan>
+ <20200408114552.GC4881@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408114552.GC4881@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+On Wed, Apr 08, 2020 at 02:45:52PM +0300, Laurent Pinchart wrote:
+> Hi Maxime,
+> 
+> On Tue, Apr 07, 2020 at 09:12:51AM +0200, Maxime Ripard wrote:
+> > On Mon, Apr 06, 2020 at 08:50:28PM +0300, Laurent Pinchart wrote:
+> > > On Mon, Apr 06, 2020 at 07:09:15PM +0200, Maxime Ripard wrote:
+> > > > On Mon, Apr 06, 2020 at 02:19:27PM +0300, Laurent Pinchart wrote:
+> > > > > On Mon, Apr 06, 2020 at 10:00:32AM +0200, Maxime Ripard wrote:
+> > > > > > On Mon, Apr 06, 2020 at 02:39:33AM +0300, Laurent Pinchart wrote:
+> > > > > > > Convert the Rockchip HDMI TX text binding to YAML.
+> > > > > > >
+> > > > > > > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > > > > > > ---
+> > > > > > >  .../display/rockchip/dw_hdmi-rockchip.txt     |  74 --------
+> > > > > > >  .../display/rockchip/rockchip,dw-hdmi.yaml    | 178 ++++++++++++++++++
+> > > > > > >  2 files changed, 178 insertions(+), 74 deletions(-)
+> > > > > > >  delete mode 100644 Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+> > > > > > >  create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
+> > > > > > >
+> > > > > > > diff --git a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+> > > > > > > deleted file mode 100644
+> > > > > > > index 3d32ce137e7f..000000000000
+> > > > > > > --- a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+> > > > > > > +++ /dev/null
+> > > > > > > @@ -1,74 +0,0 @@
+> > > > > > > -Rockchip DWC HDMI TX Encoder
+> > > > > > > -============================
+> > > > > > > -
+> > > > > > > -The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
+> > > > > > > -with a companion PHY IP.
+> > > > > > > -
+> > > > > > > -These DT bindings follow the Synopsys DWC HDMI TX bindings defined in
+> > > > > > > -Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt with the
+> > > > > > > -following device-specific properties.
+> > > > > > > -
+> > > > > > > -
+> > > > > > > -Required properties:
+> > > > > > > -
+> > > > > > > -- compatible: should be one of the following:
+> > > > > > > -		"rockchip,rk3228-dw-hdmi"
+> > > > > > > -		"rockchip,rk3288-dw-hdmi"
+> > > > > > > -		"rockchip,rk3328-dw-hdmi"
+> > > > > > > -		"rockchip,rk3399-dw-hdmi"
+> > > > > > > -- reg: See dw_hdmi.txt.
+> > > > > > > -- reg-io-width: See dw_hdmi.txt. Shall be 4.
+> > > > > > > -- interrupts: HDMI interrupt number
+> > > > > > > -- clocks: See dw_hdmi.txt.
+> > > > > > > -- clock-names: Shall contain "iahb" and "isfr" as defined in dw_hdmi.txt.
+> > > > > > > -- ports: See dw_hdmi.txt. The DWC HDMI shall have a single port numbered 0
+> > > > > > > -  corresponding to the video input of the controller. The port shall have two
+> > > > > > > -  endpoints, numbered 0 and 1, connected respectively to the vopb and vopl.
+> > > > > > > -- rockchip,grf: Shall reference the GRF to mux vopl/vopb.
+> > > > > > > -
+> > > > > > > -Optional properties
+> > > > > > > -
+> > > > > > > -- ddc-i2c-bus: The HDMI DDC bus can be connected to either a system I2C master
+> > > > > > > -  or the functionally-reduced I2C master contained in the DWC HDMI. When
+> > > > > > > -  connected to a system I2C master this property contains a phandle to that
+> > > > > > > -  I2C master controller.
+> > > > > > > -- clock-names: See dw_hdmi.txt. The "cec" clock is optional.
+> > > > > > > -- clock-names: May contain "cec" as defined in dw_hdmi.txt.
+> > > > > > > -- clock-names: May contain "grf", power for grf io.
+> > > > > > > -- clock-names: May contain "vpll", external clock for some hdmi phy.
+> > > > > > > -- phys: from general PHY binding: the phandle for the PHY device.
+> > > > > > > -- phy-names: Should be "hdmi" if phys references an external phy.
+> > > > > > > -
+> > > > > > > -Optional pinctrl entry:
+> > > > > > > -- If you have both a "unwedge" and "default" pinctrl entry, dw_hdmi
+> > > > > > > -  will switch to the unwedge pinctrl state for 10ms if it ever gets an
+> > > > > > > -  i2c timeout.  It's intended that this unwedge pinctrl entry will
+> > > > > > > -  cause the SDA line to be driven low to work around a hardware
+> > > > > > > -  errata.
+> > > > > > > -
+> > > > > > > -Example:
+> > > > > > > -
+> > > > > > > -hdmi: hdmi@ff980000 {
+> > > > > > > -	compatible = "rockchip,rk3288-dw-hdmi";
+> > > > > > > -	reg = <0xff980000 0x20000>;
+> > > > > > > -	reg-io-width = <4>;
+> > > > > > > -	ddc-i2c-bus = <&i2c5>;
+> > > > > > > -	rockchip,grf = <&grf>;
+> > > > > > > -	interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > > > -	clocks = <&cru  PCLK_HDMI_CTRL>, <&cru SCLK_HDMI_HDCP>;
+> > > > > > > -	clock-names = "iahb", "isfr";
+> > > > > > > -	ports {
+> > > > > > > -		hdmi_in: port {
+> > > > > > > -			#address-cells = <1>;
+> > > > > > > -			#size-cells = <0>;
+> > > > > > > -			hdmi_in_vopb: endpoint@0 {
+> > > > > > > -				reg = <0>;
+> > > > > > > -				remote-endpoint = <&vopb_out_hdmi>;
+> > > > > > > -			};
+> > > > > > > -			hdmi_in_vopl: endpoint@1 {
+> > > > > > > -				reg = <1>;
+> > > > > > > -				remote-endpoint = <&vopl_out_hdmi>;
+> > > > > > > -			};
+> > > > > > > -		};
+> > > > > > > -	};
+> > > > > > > -};
+> > > > > > > diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
+> > > > > > > new file mode 100644
+> > > > > > > index 000000000000..8ff544ae0ac2
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
+> > > > > > > @@ -0,0 +1,178 @@
+> > > > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > > > > +%YAML 1.2
+> > > > > > > +---
+> > > > > > > +$id: http://devicetree.org/schemas/display/rockchip/rockchip,dw-hdmi.yaml#
+> > > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > > > +
+> > > > > > > +title: Rockchip DWC HDMI TX Encoder
+> > > > > > > +
+> > > > > > > +maintainers:
+> > > > > > > +  - Mark Yao <mark.yao@rock-chips.com>
+> > > > > > > +
+> > > > > > > +description: |
+> > > > > > > +  The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
+> > > > > > > +  with a companion PHY IP.
+> > > > > > > +
+> > > > > > > +allOf:
+> > > > > > > +  - $ref: ../bridge/synopsys,dw-hdmi.yaml#
+> > > > > > > +
+> > > > > > > +properties:
+> > > > > > > +  compatible:
+> > > > > > > +    enum:
+> > > > > > > +      - rockchip,rk3228-dw-hdmi
+> > > > > > > +      - rockchip,rk3288-dw-hdmi
+> > > > > > > +      - rockchip,rk3328-dw-hdmi
+> > > > > > > +      - rockchip,rk3399-dw-hdmi
+> > > > > > > +
+> > > > > > > +  reg: true
+> > > > > > > +
+> > > > > > > +  reg-io-width:
+> > > > > > > +    const: 4
+> > > > > > > +
+> > > > > > > +  clocks:
+> > > > > > > +    minItems: 2
+> > > > > > > +    maxItems: 5
+> > > > > > > +    items:
+> > > > > > > +      - description: The bus clock for either AHB and APB
+> > > > > > > +      - description: The internal register configuration clock
+> > > > > > > +      - description: The HDMI CEC controller main clock
+> > > > > > > +      - description: Power for GRF IO
+> > > > > > > +      - description: External clock for some HDMI PHY
+> > > > > > > +
+> > > > > > > +  clock-names:
+> > > > > > > +    minItems: 2
+> > > > > > > +    maxItems: 5
+> > > > > > > +    items:
+> > > > > > > +      - const: iahb
+> > > > > > > +      - const: isfr
+> > > > > > > +      - enum:
+> > > > > > > +        - cec
+> > > > > > > +        - grf
+> > > > > > > +        - vpll
+> > > > > > > +      - enum:
+> > > > > > > +        - cec
+> > > > > > > +        - grf
+> > > > > > > +        - vpll
+> > > > > > > +      - enum:
+> > > > > > > +        - cec
+> > > > > > > +        - grf
+> > > > > > > +        - vpll
+> > > > > >
+> > > > > > IIRC Rob wanted us to standardize the order of the clocks if possible,
+> > > > > > since it's a pain to support properly here, and your description won't
+> > > > > > match what you describe here either (and in general it's just a best
+> > > > > > practice), so if all your DTs have the same order you should just set
+> > > > > > that order in stone.
+> > > > >
+> > > > > But how do we handle the case where any of the cec, grf and vpll clocks
+> > > > > can be set ? Assuming, for instance, that
+> > > > >
+> > > > > 	clock-names = "iahb", "isfr", "cec";
+> > > > > 	clock-names = "iahb", "isfr", "vpll";
+> > > > > 	clock-names = "iahb", "isfr", "cec", "vpll";
+> > > > >
+> > > > > would all be valid.
+> > > >
+> > > > It would be painful then...
+> > > >
+> > > > The easiest way to do so would be to simply use an enum there, and not
+> > > > bother checking the array at all. You'll get a warning if there's
+> > > > multiple occurences of the same string, and I guess that's what you
+> > > > would be really concerned about.
+> > > >
+> > > > However, now that I think about it, what's the interaction between the
+> > > > generic binding and this one when it comes to the third clock? The
+> > > > generic one expects it to be cec, and here you have other options?
+> > >
+> > > I'm not too familiar with the platform, but as far as I understand, any
+> > > of the cec, grf and vpll clock is optional (if someone could confirm
+> > > that, it would be useful). I don't care so much about the order, but
+> > > iahb and isfr are mandatory, and thus need to be specified as two const
+> > > items in the beginning as far as I understand. It would be nice to set
+> > > something along the lines of
+> > >
+> > >   minItems: 2
+> > >   maxItems: 5
+> > >   items:
+> > >     - const: iahb
+> > >     - const: isfr
+> > >     - enum:
+> > >       - cec
+> > >       - grf
+> > >       - vpll
+> > 
+> > I guess you could do something like:
+> > 
+> > in the generic schema:
+> > 
+> > clock-names:
+> >   allOf:
+> >     - minItems: 2
+> >     - enum:
+> >        - iahb
+> >        - isfr
+> >        - cec
+> >       additonalItems: true
+> >     - items:
+> >       - iahb
+> >       - isfr
+> > 
+> > Or something along those lines, I haven't tested it, but the basic
+> > idea is that you want to enforce that:
+> >   a) there's a minimum of two clocks
+> >   b) valid clock names are iahb, isfr and cec, but we will allow more
+> >   c) the first two clocks are iahb and isfr
+> 
+> Interesting idea. I've tried
+> 
+>   clock-names:
+>     allOf:
+>       - minItems: 2
+>       - enum:
+>         - iahb
+>         - isfr
+>         - cec
+>         additionalItems: true
 
-This series introduces upstream kernel support for Acer Iconia Tab A500
-and ASUS Google Nexus 7 tablet devices. Please review and apply, thanks
-in advance.
+Instead of these 2, you want:
 
-Changelog:
+items:
+  enum: [ iahb, isfr, cec ]
+minItems: 2
+maxItems: 3
 
-v4: - Corrected CPU's thermal zone on both A500 and Nexus 7, which
-      should use the remote thermal sensor (Tegra chip) instead of the
-      local ("skin" temperature).
+Though I assume there's some others missing as with this and below, the 
+3rd clock can only be 'cec'.
 
-    - Added default PMIC pinmux state on Nexus 7, for completeness.
+>       - items:
+>         - const: iahb
+>         - const: isfr
 
-    - Added PMIC cpu_pwr_req GPIO hog on Nexus 7, for completeness.
+And this needs 'maxItems: 3' added.
 
-    - Renamed thermal sensor node label to NCT72 on Nexus 7 to match the
-      actual hardware (NCT72 is compatible with NCT1008). For completeness.
-
-    - Added always-on USB AVDD regulator on Nexus 7, which is controlled by
-      the PMIC GPIO. For completeness.
-
-    - Added PMIC GPIO enable-control to the 3v3_sys regulator on Nexus 7,
-      for completeness.
-
-    - Added CONFIG_NAMESPACES, CONFIG_USER_NS, CONFIG_SECCOMP and
-      CONFIG_PINCTRL_MAX77620 to the tegra_defconfig. The first three
-      options are must-have for the modern userspace, the last is somewhat
-      actual now since the default PMIC pinmux state is added to the N7 DT.
-
-v3: - Improved device-tree node-names in accordance to review comments that
-      were made by Thierry Reding to v2.
-
-    - Corrected LVDS encoder powerdown-GPIO polarity on both A500 and Nexus 7
-      because I implemented the DRM bridges support in the Tegra DRM driver
-      and found that there was a mistake in the device-trees. The updated
-      polarity also matches the boards schematics. Now DRM bridges support
-      becomes mandatory since LVDS is getting disabled during of the encoder
-      driver probing. I'll send the DRM patch separately from this series.
-
-    - Replaced recently deprecated CONFIG_DRM_LVDS_ENCODER with the new
-      CONFIG_DRM_LVDS_CODEC in tegra_defconfig.
-
-    - Added more config options to tegra_defconfig, like pstore and thermal.
-
-    - Added atmel,cfg_name to the A500 DT, which is a new upcoming property
-      in 5.8+ that allows to specify the per-board hardware config file name.
-
-v2: - Corrected "volume down" key-label in the grouper's device-tree and
-      improved some other names in device-trees.
-
-    - Added optional (upcoming in 5.8+) VDD/AVDD regulators to the touchscreen
-      node in A500 device-tree.
-
-Dmitry Osipenko (6):
-  ARM: tegra: Add device-tree for Acer Iconia Tab A500
-  ARM: tegra: Add device-tree for ASUS Google Nexus 7
-  dt-bindings: Add vendor prefix for Acer Inc.
-  dt-bindings: ARM: tegra: Add Acer Iconia Tab A500
-  dt-bindings: ARM: tegra: Add ASUS Google Nexus 7
-  ARM: tegra_defconfig: Enable options useful for Nexus 7 and Acer A500
-
- .../devicetree/bindings/arm/tegra.yaml        |   10 +
- .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
- arch/arm/boot/dts/Makefile                    |    3 +
- .../boot/dts/tegra20-acer-a500-picasso.dts    | 1458 +++++++++
- .../tegra30-asus-nexus7-grouper-common.dtsi   | 2680 +++++++++++++++++
- .../boot/dts/tegra30-asus-nexus7-grouper.dts  |  463 +++
- .../boot/dts/tegra30-asus-nexus7-tilapia.dts  |  549 ++++
- arch/arm/configs/tegra_defconfig              |   42 +
- 8 files changed, 5207 insertions(+)
- create mode 100644 arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
- create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi
- create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper.dts
- create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-tilapia.dts
-
--- 
-2.26.0
-
+Rob
