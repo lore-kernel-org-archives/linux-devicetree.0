@@ -2,277 +2,103 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C9EC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 16:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 635C8C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 16:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4F82076B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 16:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE2B20775
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 16:27:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bDBtwzIu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JU9OD2Gm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391571AbgDNQ1n (ORCPT
+        id S2391595AbgDNQ1x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:27:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56926 "EHLO
+        Tue, 14 Apr 2020 12:27:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391538AbgDNQ1B (ORCPT
+        by vger.kernel.org with ESMTP id S2391589AbgDNQ1r (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:27:01 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2F50C061A10
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 09:27:00 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f13so15050712wrm.13
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 09:27:00 -0700 (PDT)
+        Tue, 14 Apr 2020 12:27:47 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE259C061A0E;
+        Tue, 14 Apr 2020 09:27:46 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id m2so233890lfo.6;
+        Tue, 14 Apr 2020 09:27:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0wQPQbGJht3YZ6tPmD0dkDDmaWW0wAJqmi6Tnr9hkAw=;
-        b=bDBtwzIuoe6MdAuz3KzfVxZnPwT5XFqFzDm/WBlEgZqbtIz/0eMWVl1IEtvF+SX4u7
-         bOUd32MFJoiaeHeJMjvfkizW5cbY9ttlTlfLEstOq5lIbnlvjl6PUZRObebP6jq1huzF
-         EIFbmLR2B07haz5Iy2HvGAEhbtoEqenH0oiSxyswANNx+JxZi4n19d5jZh5Td5szib2v
-         KzOMsw21/8ZAwLVQYZLw1sBI5Be7gXSZXup7OzRc+OMJnW/vM/rDekONXaxfNaR0q+1A
-         rO73rjBbEQ1wmaBZEYcIpwBBIfo1L/ntx5BOJbAU/bJLzB1s8YWZ1Z/RbIg7540DQbgv
-         WgOQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wItdl1kg1ho/UCt0W/llhzqoO/4ewYoe347wz3vvN28=;
+        b=JU9OD2GmTJxJzR7SI4BSza5QS7a+nLF2rIyiM0O4JOYm9/yfjrce7nyvTUJAljDxk6
+         GRc9hWnVaw+cOR+LpQ+1qk9iB19WdQ3H6n0OVUvOGIkqqB3Ym0e6RVZ+gLDmvuCk/tBU
+         v62qrV8mqw/y2a0RuWQy80IS0Sb7KXoXQ3UYICIqe9e+dKFaHLsMzwAO2sToe/0CQzmk
+         Nq9utwFgN5ecpsTm4jVcTNmd/1/gsXgpw2lXmK7PLAgpggIZqXZgv7GnU5Uv+1QJO905
+         S1HWQ9CdgXvR2h36WKVxPz0P6alNB2fk3VotkD5dnUTdp5PxDNOBx/DrlpxlhJi+04Ha
+         ezHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=0wQPQbGJht3YZ6tPmD0dkDDmaWW0wAJqmi6Tnr9hkAw=;
-        b=eKsGyYS1AEjJY/cbrqa9HXqt3UOXPJQbTFtZgE6wkOIwTIeXRdVWutXquDuDYxnmqF
-         /Y4jv3vmRd2SZz901CyWOIiduCcn5qbIxKpjX+de8iU2sjfa+MIRiPEz48tS2Kd0DJXP
-         eCQUs3OKF5Pfone1TtHXzN+Gwu0jaa0HoylpV39qkbVCgFN0+suyvJtK20rE0wJZOKpH
-         1dqXq1EtKoyjcNiDwNunb7e24JxRM0lI3O6sKrO05GNJjlJ3GzbS1hrjX+F7rRFBWGL+
-         xEzqRY2A7BM3pF9OULvVbjcpDrrR4wYjp3XF1uUvwXdGoKsGpv+NkZ7Na/a2kLXWKjm7
-         6hzw==
-X-Gm-Message-State: AGi0PuZ8RCY3jtlm1Dzi4CWg2insZ3EB7zK3kWNGIIm8PGQ6+PYEs4dW
-        TNiJYsK9VeDq3v+9J0J25sctkA==
-X-Google-Smtp-Source: APiQypKzi3XRg0iM08BIyraPnmuefAZkEulO/7MjOJSM29InbTaH2umsng4ZbJ1T7p44f9s3PqL58A==
-X-Received: by 2002:a5d:634d:: with SMTP id b13mr14371200wrw.353.1586881619204;
-        Tue, 14 Apr 2020 09:26:59 -0700 (PDT)
-Received: from localhost.localdomain (lns-bzn-59-82-252-135-148.adsl.proxad.net. [82.252.135.148])
-        by smtp.gmail.com with ESMTPSA id s14sm20199388wme.33.2020.04.14.09.26.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 09:26:58 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     daniel.lezcano@linaro.org, rui.zhang@intel.com
-Cc:     amit.kucheria@verdurent.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-pm@vger.kernel.org (open list:THERMAL),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 2/4] dt-bindings: thermal: Add the idle cooling device
-Date:   Tue, 14 Apr 2020 18:26:27 +0200
-Message-Id: <20200414162634.1867-2-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200414162634.1867-1-daniel.lezcano@linaro.org>
-References: <20200414162634.1867-1-daniel.lezcano@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wItdl1kg1ho/UCt0W/llhzqoO/4ewYoe347wz3vvN28=;
+        b=Ry6zNU2qRwAC0jjmur6gMPZwHoPOuR7ThYysXX4EVySNuxYa5FVio+wbZeWc0jzP1A
+         JZ8eGYdhzuJaCFuPaIpk8m4p8EDcLyemqeY+yQGdCoN2uca7HseT4d69EuuK4nyYj7P5
+         yxMcNFBJ1epEWGIRN0qe5iZEXOOecJSc1o5YfVmXZDSvqUjfPWrEcuGAtYeZbDViDApr
+         6hqX9fg3wafo3lschsEmevxOKwrsMX+ftrwA4dOZQ/MIjN2YGw5on2nc2AtmP1aCaKVx
+         UPzZSCahTelRb37b1tBeVgJSoWFOizL2Lol4C52kBtqRryeWjkK38uBFbD/EsTyUIX70
+         B9Mw==
+X-Gm-Message-State: AGi0PuZgVnKbSwcpMdpV5SQnJ19gdkW5a0ME6EcdRIdq2BvH5qUV93DG
+        f83DmZ0FDOaYxPfJBgRYIsw=
+X-Google-Smtp-Source: APiQypLfq8BURObkeqYvmT3aWY78Mdp4f1m77k1SBUPP6KkCEAuVyA/nceq/cBM66WxaiSQA/ECeuQ==
+X-Received: by 2002:a19:760a:: with SMTP id c10mr394527lff.126.1586881665309;
+        Tue, 14 Apr 2020 09:27:45 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id x29sm10673621lfn.64.2020.04.14.09.27.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Apr 2020 09:27:44 -0700 (PDT)
+Subject: Re: [PATCH v6 10/14] memory: tegra: Add EMC scaling sequence code for
+ Tegra210
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200409175238.3586487-1-thierry.reding@gmail.com>
+ <20200409175238.3586487-11-thierry.reding@gmail.com>
+ <682c661d-ea3a-7b9a-42f0-d5473b969aa2@gmail.com>
+ <20200414154526.GP3593749@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e050baee-89cb-dba1-544e-77b1662ac6b7@gmail.com>
+Date:   Tue, 14 Apr 2020 19:27:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200414154526.GP3593749@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some devices are not able to cool down by reducing their voltage /
-frequency because it could be not available or the system does not
-allow voltage scaling. In this configuration, it is not possible to
-use this strategy and the idle injection cooling device can be used
-instead.
+14.04.2020 18:45, Thierry Reding пишет:
+...
+>> What about to try to replace this massive egyptian construction with a
+>> single "u32 val;" ?
+> 
+> I actually tried that after condensing what this used to look like into
+> the above. The result was a huge failure because some of these temporary
+> values end up being reused, so I ended up writing bogus values into some
+> of these registers.
 
-One idle cooling device is now present for the CPU as implemented by
-the combination of the idle injection framework belonging to the power
-capping framework and the thermal cooling device. The missing part is
-the DT binding providing a way to describe how the cooling device will
-work on the system.
-
-A first iteration was done by making the cooling device to point to
-the idle state. Unfortunately it does not make sense because it would
-need to duplicate the idle state description for each CPU in order to
-have a different phandle and make the thermal internal framework
-happy.
-
-It was proposed to add an cooling-cells to <3>, unfortunately the
-thermal framework is expecting a value of <2> as stated by the
-documentation and it is not possible from the cooling device generic
-code to loop this third value to the back end cooling device.
-
-Another proposal was to add a child 'thermal-idle' node as the SCMI
-does. This approach allows to have a self-contained configuration for
-the idle cooling device without colliding with the cpufreq cooling
-device which is based on the CPU node. In addition, it allows to have
-the cpufreq cooling device and the idle cooling device to co-exist
-together as shown in the example.
-
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- - V2:
-   - Fixed comment type
-   - Added dual license
-   - Fixed description s/begins to/should/
-   - Changed name s/duration/duration-us/
-   - Changed name s/latency/exit-latency-us/
-   - Removed types for latency / duration
-   - Fixed s/idle-thermal/thermal-idle/
----
- .../bindings/thermal/thermal-idle.yaml        | 146 ++++++++++++++++++
- 1 file changed, 146 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/thermal-idle.yaml
-
-diff --git a/Documentation/devicetree/bindings/thermal/thermal-idle.yaml b/Documentation/devicetree/bindings/thermal/thermal-idle.yaml
-new file mode 100644
-index 000000000000..760308fcd2fb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/thermal-idle.yaml
-@@ -0,0 +1,146 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright 2020 Linaro Ltd.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/thermal-idle.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Thermal idle cooling device binding
-+
-+maintainers:
-+  - Daniel Lezcano <daniel.lezcano@linaro.org>
-+
-+description: |
-+  The thermal idle cooling device allows the system to passively
-+  mitigate the temperature on the device by injecting idle cycles,
-+  forcing it to cool down.
-+
-+  This binding describes the thermal idle node.
-+
-+properties:
-+   $nodename:
-+     const: thermal-idle
-+     description: |
-+        A thermal-idle node describes the idle cooling device properties to
-+        cool down efficiently the attached thermal zone.
-+
-+   '#cooling-cells':
-+      const: 2
-+      description: |
-+         Must be 2, in order to specify minimum and maximum cooling state used in
-+         the cooling-maps reference. The first cell is the minimum cooling state
-+         and the second cell is the maximum cooling state requested.
-+
-+   duration-us:
-+      description: |
-+         The idle duration in microsecond the device should cool down.
-+
-+   exit-latency-us:
-+      description: |
-+         The exit latency constraint in microsecond for the injected
-+         idle state for the device. It is the latency constraint to
-+         apply when selecting an idle state from among all the present
-+         ones.
-+	 
-+
-+required:
-+  - '#cooling-cells'
-+
-+examples:
-+  - |
-+    #include <dt-bindings/thermal/thermal.h>
-+
-+    // Example: Combining idle cooling device on big CPUs with cpufreq cooling device
-+    cpus {
-+            #address-cells = <2>;
-+            #size-cells = <0>;
-+
-+            /* ... */
-+
-+                 cpu_b0: cpu@100 {
-+                         device_type = "cpu";
-+                         compatible = "arm,cortex-a72";
-+                         reg = <0x0 0x100>;
-+                         enable-method = "psci";
-+                         capacity-dmips-mhz = <1024>;
-+                         dynamic-power-coefficient = <436>;
-+                         #cooling-cells = <2>; /* min followed by max */
-+                         cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
-+                         thermal-idle {
-+                                 #cooling-cells = <2>;
-+                                 duration-us = <10000>;
-+                                 exit-latency-us = <500>;
-+                         };
-+                };
-+
-+                cpu_b1: cpu@101 {
-+                        device_type = "cpu";
-+                        compatible = "arm,cortex-a72";
-+                        reg = <0x0 0x101>;
-+                        enable-method = "psci";
-+                        capacity-dmips-mhz = <1024>;
-+                        dynamic-power-coefficient = <436>;
-+                        #cooling-cells = <2>; /* min followed by max */
-+                        cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
-+                        thermal-idle {
-+                                #cooling-cells = <2>;
-+                                duration-us = <10000>;
-+                                exit-latency-us = <500>;
-+                        };
-+                 };
-+
-+          /* ... */
-+
-+    };
-+
-+    /* ... */
-+
-+    thermal_zones {
-+         cpu_thermal: cpu {
-+                polling-delay-passive = <100>;
-+                polling-delay = <1000>;
-+
-+                /* ... */
-+
-+                trips {
-+                        cpu_alert0: cpu_alert0 {
-+                                    temperature = <65000>;
-+                                    hysteresis = <2000>;
-+                                    type = "passive";
-+                        };
-+
-+                        cpu_alert1: cpu_alert1 {
-+                                    temperature = <70000>;
-+                                    hysteresis = <2000>;
-+                                    type = "passive";
-+                        };
-+
-+                        cpu_alert2: cpu_alert2 {
-+                                    temperature = <75000>;
-+                                    hysteresis = <2000>;
-+                                    type = "passive";
-+                        };
-+
-+                        cpu_crit: cpu_crit {
-+                                    temperature = <95000>;
-+                                    hysteresis = <2000>;
-+                                    type = "critical";
-+                        };
-+                };
-+
-+                cooling-maps {
-+                        map0 {
-+                             trip = <&cpu_alert1>;
-+                             cooling-device = <&{/cpus/cpu@100/thermal-idle} 0 15 >,
-+                                              <&{/cpus/cpu@101/thermal-idle} 0 15>;
-+                        };
-+
-+                        map1 {
-+                             trip = <&cpu_alert2>;
-+                             cooling-device =
-+                                        <&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+                                        <&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+                       };
-+                };
-+          };
-+    };
--- 
-2.17.1
-
+It should be fine to keep those variables that are getting re-used. It
+looks like there are much more variables that are never re-used, and
+thus, they could be replaced.
