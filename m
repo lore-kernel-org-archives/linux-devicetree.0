@@ -2,92 +2,225 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DE1C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 10:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A10C2BB86
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 10:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64140206D5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 10:56:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586861783;
-	bh=OrDXTih3RBsU8OWNI07hoBDWpLOY9wKKaAm9RMEBMLo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=szu14ZWF2YRCx9SwAkw3jSoYVitsBEY2V2VXAJLVMMNsXVG29FfkAf080JGoZSJyI
-	 rytWZIWr89bW/pyi1mM1zm3kVs8gpNo/99I/P9vp/lx+nT4rw9FX1MXWpgRGoNDyQw
-	 VAHXYR27BTSsPWxzA0ODqN0dDm83pAUvsEsYZqUY=
+	by mail.kernel.org (Postfix) with ESMTP id A2443206D5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 10:57:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438727AbgDNK4U (ORCPT
+        id S2438769AbgDNK52 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 06:56:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34376 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438723AbgDNK4R (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 06:56:17 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AA5F206D5;
-        Tue, 14 Apr 2020 10:56:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586861776;
-        bh=OrDXTih3RBsU8OWNI07hoBDWpLOY9wKKaAm9RMEBMLo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DCQ8zOM8onMVoMA8YgwBGyLC1/QVhufjI6QTVJehdIFRa7fZE4jxzxfAfyYEVNrDI
-         0Tt9M6ND2DZidl1hKAIHyJGiLWANYgB/T/Sc9P47Km+bzJJnt0QRY/v9QL5tZY0d34
-         FrzZxNlYGLoXLHeVz2Zr8dKsOF0dbdIqo4qgWhC4=
-Date:   Tue, 14 Apr 2020 11:56:14 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Iskren Chernev <iskren.chernev@gmail.com>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 1/3] regulator: max77826: Add max77826 regulator driver
-Message-ID: <20200414105613.GA5412@sirena.org.uk>
-References: <20200413164440.1138178-1-iskren.chernev@gmail.com>
- <20200413164440.1138178-2-iskren.chernev@gmail.com>
+        Tue, 14 Apr 2020 06:57:28 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54315 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438355AbgDNKcK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 06:32:10 -0400
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mtr@pengutronix.de>)
+        id 1jOIrN-0007BX-EI; Tue, 14 Apr 2020 12:32:05 +0200
+Received: from mtr by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mtr@pengutronix.de>)
+        id 1jOIrM-000189-Ta; Tue, 14 Apr 2020 12:32:04 +0200
+From:   Michael Tretter <m.tretter@pengutronix.de>
+To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     Rohit Visavalia <rohit.visavalia@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Dhaval Shah <dshah@xilinx.com>, kernel@pengutronix.de,
+        Michael Tretter <m.tretter@pengutronix.de>
+Subject: [PATCH v2 3/6] soc: xilinx: vcu: implement clock provider for output clocks
+Date:   Tue, 14 Apr 2020 12:31:59 +0200
+Message-Id: <20200414103202.4288-4-m.tretter@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200414103202.4288-1-m.tretter@pengutronix.de>
+References: <20200414103202.4288-1-m.tretter@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
-Content-Disposition: inline
-In-Reply-To: <20200413164440.1138178-2-iskren.chernev@gmail.com>
-X-Cookie: I've only got 12 cards.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mtr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The VCU System-Level Control uses an internal PLL to drive the core and
+MCU clock for the allegro encoder and decoder based on an external PL
+clock.
 
---EVF5PPMfhYS0aIcm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In order be able to ensure that the clocks are enabled and to get their
+rate from other drivers, the module must implement a clock provider and
+register the clocks at the common clock framework. Other drivers are
+then able to access the clock via devicetree bindings.
 
-On Mon, Apr 13, 2020 at 07:44:38PM +0300, Iskren Chernev wrote:
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+---
+Changelog:
 
-> +static const struct of_device_id max77826_of_match[] = {
-> +	{ .compatible = "maxim,max77826-regulator" },
+v1 -> v2:
+- unregister registered clocks when removing the driver
+---
+ drivers/soc/xilinx/Kconfig    |  2 +-
+ drivers/soc/xilinx/xlnx_vcu.c | 76 ++++++++++++++++++++++++++++++++++-
+ 2 files changed, 75 insertions(+), 3 deletions(-)
 
-This should just be maxim,max77826 - there's no need to disambiguate or
-describe the device in the compatible string.
+diff --git a/drivers/soc/xilinx/Kconfig b/drivers/soc/xilinx/Kconfig
+index 223f1f9d0922..331f124902e8 100644
+--- a/drivers/soc/xilinx/Kconfig
++++ b/drivers/soc/xilinx/Kconfig
+@@ -3,7 +3,7 @@ menu "Xilinx SoC drivers"
+ 
+ config XILINX_VCU
+ 	tristate "Xilinx VCU logicoreIP Init"
+-	depends on HAS_IOMEM
++	depends on HAS_IOMEM && COMMON_CLK
+ 	help
+ 	  Provides the driver to enable and disable the isolation between the
+ 	  processing system and programmable logic part by using the logicoreIP
+diff --git a/drivers/soc/xilinx/xlnx_vcu.c b/drivers/soc/xilinx/xlnx_vcu.c
+index dcd8e7824b06..f07a1361a2a8 100644
+--- a/drivers/soc/xilinx/xlnx_vcu.c
++++ b/drivers/soc/xilinx/xlnx_vcu.c
+@@ -7,6 +7,7 @@
+  * Contacts   Dhaval Shah <dshah@xilinx.com>
+  */
+ #include <linux/clk.h>
++#include <linux/clk-provider.h>
+ #include <linux/device.h>
+ #include <linux/errno.h>
+ #include <linux/io.h>
+@@ -14,6 +15,8 @@
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ 
++#include <dt-bindings/clock/xlnx-vcu.h>
++
+ /* Address map for different registers implemented in the VCU LogiCORE IP. */
+ #define VCU_ECODER_ENABLE		0x00
+ #define VCU_DECODER_ENABLE		0x04
+@@ -108,7 +111,9 @@ struct xvcu_device {
+ 	struct clk *aclk;
+ 	void __iomem *logicore_reg_ba;
+ 	void __iomem *vcu_slcr_ba;
++	struct clk_onecell_data clk_data;
+ 	u32 coreclk;
++	u32 mcuclk;
+ };
+ 
+ /**
+@@ -375,10 +380,10 @@ static int xvcu_set_vcu_pll_info(struct xvcu_device *xvcu)
+ 	}
+ 
+ 	xvcu->coreclk = pll_clk / divisor_core;
+-	mcuclk = pll_clk / divisor_mcu;
++	xvcu->mcuclk = pll_clk / divisor_mcu;
+ 	dev_dbg(xvcu->dev, "Actual Ref clock freq is %uHz\n", refclk);
+ 	dev_dbg(xvcu->dev, "Actual Core clock freq is %uHz\n", xvcu->coreclk);
+-	dev_dbg(xvcu->dev, "Actual Mcu clock freq is %uHz\n", mcuclk);
++	dev_dbg(xvcu->dev, "Actual Mcu clock freq is %uHz\n", xvcu->mcuclk);
+ 
+ 	vcu_pll_ctrl &= ~(VCU_PLL_CTRL_FBDIV_MASK << VCU_PLL_CTRL_FBDIV_SHIFT);
+ 	vcu_pll_ctrl |= (found->fbdiv & VCU_PLL_CTRL_FBDIV_MASK) <<
+@@ -485,6 +490,63 @@ static int xvcu_set_pll(struct xvcu_device *xvcu)
+ 	return -ETIMEDOUT;
+ }
+ 
++static int xvcu_register_clock_provider(struct xvcu_device *xvcu)
++{
++	struct device *dev = xvcu->dev;
++	const char *parent_name = __clk_get_name(xvcu->pll_ref);
++	struct clk_onecell_data *data = &xvcu->clk_data;
++	struct clk **clks;
++	size_t num_clks = CLK_XVCU_MAX;
++
++	clks = devm_kcalloc(dev, num_clks, sizeof(*clks), GFP_KERNEL);
++	if (!clks)
++		return -ENOMEM;
++
++	data->clk_num = num_clks;
++	data->clks = clks;
++
++	clks[CLK_XVCU_ENC_CORE] =
++		clk_register_fixed_rate(dev, "venc_core_clk",
++					parent_name, 0, xvcu->coreclk);
++	clks[CLK_XVCU_ENC_MCU] =
++		clk_register_fixed_rate(dev, "venc_mcu_clk",
++					parent_name, 0, xvcu->mcuclk);
++	clks[CLK_XVCU_DEC_CORE] =
++		clk_register_fixed_rate(dev, "vdec_core_clk",
++					parent_name, 0, xvcu->coreclk);
++	clks[CLK_XVCU_DEC_MCU] =
++		clk_register_fixed_rate(dev, "vdec_mcu_clk",
++					parent_name, 0, xvcu->mcuclk);
++
++	return of_clk_add_provider(dev->of_node, of_clk_src_onecell_get, data);
++}
++
++static void xvcu_unregister_clock_provider(struct xvcu_device *xvcu)
++{
++	struct device *dev = xvcu->dev;
++	struct clk_onecell_data *data = &xvcu->clk_data;
++	struct clk **clks = data->clks;
++
++	of_clk_del_provider(dev->of_node);
++
++	clk_unregister_fixed_rate(clks[CLK_XVCU_DEC_MCU]);
++	clk_unregister_fixed_rate(clks[CLK_XVCU_DEC_CORE]);
++	clk_unregister_fixed_rate(clks[CLK_XVCU_ENC_MCU]);
++	clk_unregister_fixed_rate(clks[CLK_XVCU_ENC_CORE]);
++}
++
++static void xvcu_reset(struct xvcu_device *xvcu)
++{
++	if (!xvcu->reset_gpio)
++		return;
++
++	gpiod_set_value(xvcu->reset_gpio, 0);
++	/* min 2 clock cycle of vcu pll_ref, slowest freq is 33.33KHz */
++	usleep_range(60, 120);
++	gpiod_set_value(xvcu->reset_gpio, 1);
++	usleep_range(60, 120);
++}
++
+ /**
+  * xvcu_probe - Probe existence of the logicoreIP
+  *			and initialize PLL
+@@ -569,10 +631,18 @@ static int xvcu_probe(struct platform_device *pdev)
+ 		goto error_pll_ref;
+ 	}
+ 
++	ret = xvcu_register_clock_provider(xvcu);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to register clock provider\n");
++		goto error_clk_provider;
++	}
++
+ 	dev_set_drvdata(&pdev->dev, xvcu);
+ 
+ 	return 0;
+ 
++error_clk_provider:
++	xvcu_unregister_clock_provider(xvcu);
+ error_pll_ref:
+ 	clk_disable_unprepare(xvcu->pll_ref);
+ error_aclk:
+@@ -596,6 +666,8 @@ static int xvcu_remove(struct platform_device *pdev)
+ 	if (!xvcu)
+ 		return -ENODEV;
+ 
++	xvcu_unregister_clock_provider(xvcu);
++
+ 	/* Add the the Gasket isolation and put the VCU in reset. */
+ 	xvcu_write(xvcu->logicore_reg_ba, VCU_GASKET_INIT, 0);
+ 
+-- 
+2.20.1
 
---EVF5PPMfhYS0aIcm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6Vls0ACgkQJNaLcl1U
-h9DjzAf/bkHB+lOn620nAMtWbpwdBWX+2Uv646XBlc6Izk+UvqWnyvBAD4FpP3BH
-+1S4uEVp6jlP9TYMuYlmwr7WfAYBYtbIqPXdAw7l0M8M19Ni/p4IXnTnIMKfrzVK
-AYujzozp5R7AXDQQQhup0EjkRptTxAk9fH4tLraifsGua0JPuDddsGpZO1SQ8iuQ
-/D2XG1FzxZI/Q9NP/OYnc59AR2xXcIGG28sH6b8ijk448NrET2JYEcKfJJzzQBPt
-vBh+865uKZY3j/91aitNg6Dlpf3OyK1ea0M9fIeRf1UcQwqAtdvwsRRnZ9q/7IHS
-RfHRs+rUGwd7sGVmMZsar80m/Sq2Rw==
-=gAMH
------END PGP SIGNATURE-----
-
---EVF5PPMfhYS0aIcm--
