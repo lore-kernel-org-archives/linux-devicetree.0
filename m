@@ -2,96 +2,141 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B15DC352BE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB0BC2BB85
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D92922076C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:40:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586889651;
-	bh=LOMuRSLTUCRGXLA7zRhfhbeyWO9SNkOoCTP8uwprb4I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=y+kLaVkqraovAO8CT2HPdwdkRB/KMpMfm3om+6ZYWteUvZlh1tYeeYxOyDqIp1vMO
-	 px9HV+yVSJa1YYYTmziEKmOSQcDVg6syE5/e6QU0xFfkaBxGrMWXPaNwyOLUhA6ult
-	 d6AgLkR68zAGG3msDRi7OyDXzvXF48WEjDVNsKKc=
+	by mail.kernel.org (Postfix) with ESMTP id 0E5C02074D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:41:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="rtveXxXS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504142AbgDNSku (ORCPT
+        id S2504153AbgDNSl4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:40:50 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33813 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729777AbgDNSkt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 14:40:49 -0400
-Received: by mail-ot1-f68.google.com with SMTP id m2so762809otr.1
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 11:40:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KkcW3PdTI/Hsj4/ijXufE9rkYCN5W1Y05YTfaknuX9A=;
-        b=bkLMdE/8Bw/2mNO70JW1gQqnCOX3xmXN2Tr61PTjp0xLqXhEBEvoMI73aBIbY7ahZ+
-         8L8JDEfl+gvst1vJIwU41qmRCQnWrhvAhEa4txJ7DpoKEx5ydV3kOBosk+bRaiYk46NS
-         TIcw4R+eUyMKJRKbDUvups4uZRogchccf2XXbmMJAU0nf5mKCpHckbO/P7CXdIP+IEGH
-         rrTXEQ1qsjZDyHD/RdJPjCAxstah+3s+B/2ray6uMT7N9VHHmSSh/q5X88cJRyC4Kfag
-         nHgOyFt/pXcnIc44i74T0AMlLfu7JLK1AMxDhLuzYxoP/7vJNZwRAccpaxIta4Hei/3T
-         olnw==
-X-Gm-Message-State: AGi0Pua4endC81MCEdyW0lo+ztuhbykJ8/jEun7BfyplpJoJ6KB+FVFF
-        VYbgogoEYhW07tSfu7Lg0Q==
-X-Google-Smtp-Source: APiQypIPw4X/A2RKry8QYu2nDNT1IsuWpYGzapkLof0bj2UPf8N8i6SL1lsfy++AWvi6blm+mRV0uw==
-X-Received: by 2002:a9d:4b98:: with SMTP id k24mr18841219otf.26.1586889648697;
-        Tue, 14 Apr 2020 11:40:48 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i23sm5669790otp.74.2020.04.14.11.40.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 11:40:47 -0700 (PDT)
-Received: (nullmailer pid 22369 invoked by uid 1000);
-        Tue, 14 Apr 2020 18:40:47 -0000
-Date:   Tue, 14 Apr 2020 13:40:47 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel@lists.freedesktop.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        devicetree@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v2 22/36] dt-bindings: display: convert samsung,ld9040 to
- DT Schema
-Message-ID: <20200414184046.GA22330@bogus>
-References: <20200408195109.32692-1-sam@ravnborg.org>
- <20200408195109.32692-23-sam@ravnborg.org>
+        Tue, 14 Apr 2020 14:41:56 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:42151 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729777AbgDNSlw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 14:41:52 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 02BB72222E;
+        Tue, 14 Apr 2020 20:41:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1586889706;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=l8iSoKOFISTm7e3WSV4reMrghBve1U8G6s6rKNmMUNA=;
+        b=rtveXxXS06F/NYmV9F2bGS5feXtMfE9gJBoboXZn8qEe9Lv/Pdw+PkB3WYbQaCUuxLEI6I
+        01s6XbVlOTMD8dnUpTguXYKOq3sSaQOCnztQCPF9doXoASZlztSVASr7gO1ILou1R9B2WC
+        mzBh5hFIxbe65adMWQoMX24W8N21isE=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408195109.32692-23-sam@ravnborg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Tue, 14 Apr 2020 20:41:45 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using
+ regmap
+In-Reply-To: <CAMpxmJW1x4Orh1BZ4TUoCsYeaAAZ4NBUNvoMG9JgP0iLvXTOtg@mail.gmail.com>
+References: <20200402203656.27047-1-michael@walle.cc>
+ <20200402203656.27047-11-michael@walle.cc>
+ <CAMpxmJVE3PgVCxkQ-ryc5=KSrKcpdmk1cnJUxJBz9QFCx-e_+A@mail.gmail.com>
+ <80bd8661ec8a1f5eda3f09a267846eaa@walle.cc>
+ <CAMpxmJVC7e9JnHzBo-h8M1+KmcA32=Rvxo7+znH=-kAbcCr_LQ@mail.gmail.com>
+ <e0388a2137e23d76b2415a7549c01dd1@walle.cc>
+ <CAMpxmJW1x4Orh1BZ4TUoCsYeaAAZ4NBUNvoMG9JgP0iLvXTOtg@mail.gmail.com>
+Message-ID: <62d157198a75a59ada15c496deeab49b@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 02BB72222E
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[23];
+         NEURAL_HAM(-0.00)[-1.082];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,linaro.org,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed,  8 Apr 2020 21:50:55 +0200, Sam Ravnborg wrote:
-> v2:
->   - drop use of spi-slave.yaml (Maxime)
->   - added unevaluatedProperties (Maxime)
->   - added type to width/height properties (Rob)
+Am 2020-04-14 19:00, schrieb Bartosz Golaszewski:
+> wt., 14 kwi 2020 o 12:07 Michael Walle <michael@walle.cc> napisał(a):
+>> >>
+>> >> So the best from a user perspective I've could come up with was:
+>> >>
+>> >>    ->base_reg = GPIO_REGMAP_ADDR(addr);
+>> >>
+>> >> I'm open for suggestions.
+>> >>
+>> >
+>> > Maybe setting the pointer to ERR_PTR(-ENOENT) which will result in
+>> > IS_ERR() returning true?
+>> 
+>> Unfortunatly, its not a pointer, but only a regular unsigned int (ie
+>> the type the regmap API has for its "reg" property). It could be a
+>> pointer of course but then the user would have to allocate additional
+>> memory.
+>> 
+>> -michael
+>> 
 > 
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Andrzej Hajda <a.hajda@samsung.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> ---
->  .../bindings/display/panel/samsung,ld9040.txt |  66 -----------
->  .../display/panel/samsung,ld9040.yaml         | 107 ++++++++++++++++++
->  2 files changed, 107 insertions(+), 66 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/panel/samsung,ld9040.txt
->  create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,ld9040.yaml
-> 
+> Eek, of course it's not a pointer. If possible I'd like to avoid this
+> GPIO_REGMAP_ADDR() macro, so how about having some separate field for
+> invalid offsets making every offset 'valid' by default?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+IMHO this has the same problems as mentioned in the response to Mark's
+idea. Normally, the user sets only some addresses, thus he has to mark
+all other as invalid. And if you add another address, you have to touch
+all the drivers to mark it as invalid.
+
+We could add some force bits like the "use_ack" flag in the bgpio 
+driver,
+where you can force the use of the value 0. But I'd really like to find
+a better way..
+
+-michael
+
+> 
+> Linus: do you have a better idea?
+> 
+> Bart
