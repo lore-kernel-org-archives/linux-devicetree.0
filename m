@@ -7,117 +7,116 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AC5C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 07:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1841CC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 07:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC98220767
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 07:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E875820575
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 07:30:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="PXG4m4ef";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="3pGPxyk4"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="zE/jGiuF";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nq9aL/sI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406619AbgDNH1A (ORCPT
+        id S2406643AbgDNHaY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 03:27:00 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:46785 "EHLO
+        Tue, 14 Apr 2020 03:30:24 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:60607 "EHLO
         wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2406601AbgDNH07 (ORCPT
+        by vger.kernel.org with ESMTP id S2406631AbgDNHaU (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 03:26:59 -0400
+        Tue, 14 Apr 2020 03:30:20 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 53153D5D;
-        Tue, 14 Apr 2020 03:26:57 -0400 (EDT)
+        by mailout.west.internal (Postfix) with ESMTP id B2BC5D32;
+        Tue, 14 Apr 2020 03:30:19 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 14 Apr 2020 03:26:57 -0400
+  by compute4.internal (MEProxy); Tue, 14 Apr 2020 03:30:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=z5MESemy4at/XiMeE9culKqPajy
-        dX3epVv5bu8NCS5w=; b=PXG4m4efaHFOdBKDqGRkoY2NYHF2ZZYCSBMozPP5yrd
-        nnkZAXOdrI7nGrf5+VAo/62LK2HK9ZW9wDsN575yJcSUBWn4xRvTxXBXkeNVPFes
-        du6tju/KHaxU5dAcJ1PBcqOjYsuarlTS+42JExPvkjv3aUUj1J3mDGOpgTnsltS0
-        FMdZDF0hJ7TMWq6el7FyAseVd5XTfqR3ZkDDftKudGzNYh7Rg2vAKaqcOUPUeD6I
-        /XRFIUq61uu+BdxQ81B5nqYNOamVQk/G6nSp2XjhtqBbid5/+2mvvuwKk8YKF9xT
-        SYTS11RzebGWUAC1IdM9AzZ4GEoh4EFvs5p+CR5YvEQ==
+        :content-type:in-reply-to; s=fm2; bh=n8uUxVj2O6wC8BBvVzkUMzLkQR/
+        W6dq7ltsB0YDVqY4=; b=zE/jGiuFNG2fMrdB/Bi9+JqxyycaHke4V7PkoCmi+b9
+        HORrYxEBIEAoV2NCXzmsxIbYPGXeS1AHUrdqXgNdXVnlQrohkJASvtLkA8Axr9O7
+        bY+aeeHGj0Vqvox0bSAFZQ4bk4LOcDrwIab6U5mWJGDmMWrJb7MQDRjO9BC3A4rx
+        tqZSw3F5vQq93lj/qL8EIyB0p9dFZLSGVyiMVUSL7iI8mr0eowO1Qpa3Bi8KNxd0
+        Dn4yhAHL0FQJ4Vvn96HkiLfwxNduXdsFzKVv1zIHECMFSd+JFWfEJhcbDtiJ9FY5
+        ZFfRHDFAtnVqeKJtJo4ykFjm/kZUojMI9ukRhbd5ViA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=z5MESe
-        my4at/XiMeE9culKqPajydX3epVv5bu8NCS5w=; b=3pGPxyk4nmhLT2XV141JuX
-        x2T8ZazVfOyohOVn0CIKFQyoY4b6Om3gMbnppgBRtp204W4UQDe8eM98AAtHNbot
-        Uy9/KP9dfxDVkL760mbxzrVuh+w1E3iKTQPxziukmm238VgmNrZwbITQNoKJWSNt
-        bEL0uJdMuklClnxU+qKCpSdQVovD1gsAER5LlQpeFZ+i5ckbbVDUMMW7hwblHVzA
-        FZ2AiOddZQZQ5JgYTGVOp2wYNaF/i0c7NDnvLM+XvsCckwQ4IZsQax9f4LWLX56i
-        RLEqS/XMEshBwCdO5ZWv/8K5pstBaTixJdWVnmx3fQ1sHJTyb/85C64u30TDj+pw
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=n8uUxV
+        j2O6wC8BBvVzkUMzLkQR/W6dq7ltsB0YDVqY4=; b=nq9aL/sICld4Oxszs3w7vg
+        pcSgGRGgUYtKAvmtqzAGoOd3KXWa05yl++VMDpVgW+/9pVqlRwuN7amaUgMToFso
+        JlyMEzobMRUxR63KCR884TYmmuI8brwemTYOho9rHa7HAKNzMfMHQlJyeULiHF3+
+        vtOd2q+meqPfvhAQc3LOoFqzmNNs1L0N4s4qfgDORCGW2o+gxK5ZgZjcsaHeMjjV
+        6UqgjM0iIuCjWYbrG3tssq/Q8wTmXGmNgS6cHf/m1DcE+i7MOAey4YKwZXVDOtK+
+        sMzgvifpt2jVamN8bba4guBuokXZYAz6Kdx/RaLnvFWPf/2o1BHPl0lawVEMr1eg
         ==
-X-ME-Sender: <xms:wGWVXjaMgOfD0xad5bMbf6M25CsI48g4oQh7HcdxthdHjFvJC6DtzQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfedtgdduudegucetufdoteggodetrfdotf
+X-ME-Sender: <xms:imaVXg3gNZwcb1EbhpbiE22rpUEKrAfkPIvS6JlG6HgfFii_3qJJvw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfedtgdduudehucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:wGWVXmosoca5IhQD4qQOWu1xdUoFNPGEyHW8sYuDSINnKQhOfupgMw>
-    <xmx:wGWVXg8S6v-WWIYvAaRCWVx7H6CEidQ6W9pDJdAW3mW3LltU3x2qag>
-    <xmx:wGWVXt8ztvlroAi1N_2A33jFe05gAxvbdMKUJdFYYwHRcAnysWS0_w>
-    <xmx:wGWVXljUWYsWAlO-k7eSnaW4xx1k7xiMHBwrHOUzNYWP44J_F7bYcg>
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddunecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuffhomhgrih
+    hnpegsrghnrghnrgdqphhirdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvse
+    gtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:imaVXlohIirwGi2SsenxxMbnGlZE4SBaJutpFgbla72X2XGTDHktew>
+    <xmx:imaVXlcdlz5Ni2FvP6C2iTF5s0OJVR4gpId7IOpQw3vgvLeY2TyS1Q>
+    <xmx:imaVXsrdKJYiETffIHCEYuoeZUyX2Ghlt3ujM7eWg-a1bkfFJ6Y1SA>
+    <xmx:i2aVXmsh5wZrIIAt9aBZ14ZdmjLjwC2lIObNO6jry51Lj3DljSKIwQ>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5C2C0328006A;
-        Tue, 14 Apr 2020 03:26:56 -0400 (EDT)
-Date:   Tue, 14 Apr 2020 09:26:53 +0200
+        by mail.messagingengine.com (Postfix) with ESMTPA id 800FF3280065;
+        Tue, 14 Apr 2020 03:30:18 -0400 (EDT)
+Date:   Tue, 14 Apr 2020 09:30:17 +0200
 From:   Maxime Ripard <maxime@cerno.tech>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: point to display schemas in DRM DRIVERS FOR
- ALLWINNER A10
-Message-ID: <20200414072653.x2mvytbsvnjiqiij@gilmour.lan>
-References: <20200413075329.10717-1-lukas.bulwahn@gmail.com>
+To:     Vincent =?utf-8?Q?Stehl=C3=A9?= <vincent.stehle@laposte.net>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH] ARM: dts: sun8i-h2-plus-bananapi-m2-zero: Fix led
+ polarity
+Message-ID: <20200414073017.ctfvws2ph67gqgit@gilmour.lan>
+References: <20200411174843.4112-1-vincent.stehle@laposte.net>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kdkzdphvlzzoj572"
+        protocol="application/pgp-signature"; boundary="3day4t7c5vd65lny"
 Content-Disposition: inline
-In-Reply-To: <20200413075329.10717-1-lukas.bulwahn@gmail.com>
+In-Reply-To: <20200411174843.4112-1-vincent.stehle@laposte.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---kdkzdphvlzzoj572
-Content-Type: text/plain; charset=us-ascii
+--3day4t7c5vd65lny
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 13, 2020 at 09:53:29AM +0200, Lukas Bulwahn wrote:
-> Commit f5a98bfe7b37 ("dt-bindings: display: Convert Allwinner display
-> pipeline to schemas") replaced sunxi/sun4i-drm.txt with
-> allwinner,sun*.yaml files in Documentation/devicetree/bindings/display/,
-> but did not adjust DRM DRIVERS FOR ALLWINNER A10.
+On Sat, Apr 11, 2020 at 07:48:43PM +0200, Vincent Stehl=E9 wrote:
+> The PWR-LED on the bananapi m2 zero board is on when gpio PL10 is low.
+> This has been verified on a board and in the schematics [1].
 >
-> Since then, ./scripts/get_maintainer.pl --self-test complains:
+> [1]: http://wiki.banana-pi.org/Banana_Pi_BPI-M2_ZERO#Documents
 >
->   warning: no file matches \
->   F: Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
->
-> Point to allwinner display schemas in DRM DRIVERS FOR ALLWINNER A10.
->
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> Fixes: 8b8061fcbfae ("ARM: dts: sun8i: h2+: add support for Banana Pi M2 =
+Zero board")
+> Signed-off-by: Vincent Stehl=E9 <vincent.stehle@laposte.net>
+> Cc: Icenowy Zheng <icenowy@aosc.io>
+> Cc: Maxime Ripard <mripard@kernel.org>
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
+Applied, thanks
 
-Thanks!
 Maxime
 
---kdkzdphvlzzoj572
+--3day4t7c5vd65lny
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpVlvQAKCRDj7w1vZxhR
-xVrnAPwPo+G3ObIsBJnK9D9AJ9dsl+LIKPP4Qz+TT7i4cgMDMAEAvnuVM7N5ZdVk
-yXUCRUxY6YQ5gMDbTD43X/MsWZqHmQ8=
-=gv8H
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpVmiQAKCRDj7w1vZxhR
+xSL2AP4pPm/60fbnUXcvq+Sg3y4w2PbhMA606DmAdxn+7ecfbgEAqJyhGyhAizfV
+mjIB3RBOPA9GVgyRlZqz3GmsgnzCRwo=
+=JZo2
 -----END PGP SIGNATURE-----
 
---kdkzdphvlzzoj572--
+--3day4t7c5vd65lny--
