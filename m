@@ -2,84 +2,91 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 054CDC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 23:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C695C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 23:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD5352072D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 23:19:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586906392;
-	bh=DvMXI8pG3S4O9cptIwGDiAIynukGXID5r0pBvcHSfZs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xK6rGLoyDskuZ8k4sC9HRnzV49R8qE5rFoxdqdiF2ehcIPS6pkrrTGfH/sJ1Hw+wu
-	 K8JfBXR1glfDk26uga/TLURBbAwN8mJjlHFZa81KRat30ZvE3soKgyIke8E5pW/nhU
-	 nzP6gFb4yqJIp0Vs2BDRGOXHtqkoypcDa/x8FHzs=
+	by mail.kernel.org (Postfix) with ESMTP id C9EA020678
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 23:29:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="I9YbktXP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731254AbgDNXTu (ORCPT
+        id S1731546AbgDNX3p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 19:19:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731159AbgDNXTq (ORCPT
+        Tue, 14 Apr 2020 19:29:45 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:51542 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731159AbgDNX3o (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 19:19:46 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B53A6C061A0E;
-        Tue, 14 Apr 2020 16:12:11 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id e20so1570145otl.2;
-        Tue, 14 Apr 2020 16:12:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3LvyUE2GUTR0pHYEnmT2tUO1UdeQFGwAkp9xm1vgbDE=;
-        b=r7KnoE1Rf0QB6fpyKgG1zNAtU62O5MI8aVvjcVSHWL09B+7LTqa9uSItn7s/TC8aSw
-         KogZXmBpftxyvLGDLWwleZITx9MGqvghol0yYRRiuOf1yNe49/VmosnldvFbZrTSCY2a
-         vThVGqtqJax2MZEnCS3LsnXhMqSeC9lxGMk8G4Uf/3iMzQx3nac6SRGiAFw0BGM7ZO0u
-         y5nQWtzw23+GyuNHpHu02Xx/sGTcszMtZa6kt/E3h+y54f9ixkouBorScxcRsgekFM2W
-         PpcbMQ/OwWgN1ibdYXNgojQm8HMoNK6nghQHJiKBVdrQrIQ0JozWVI0Cdy3WlIU4B5A8
-         sFlw==
-X-Gm-Message-State: AGi0PuZnKo4ZSXoqhCubfVZkC/6rzsTee3MnMkJcPn9i0fvaFJop5+yJ
-        KuffyQvXSogL5Fbk/Ro6liY4oFc=
-X-Google-Smtp-Source: APiQypLk3qLcQHFn2yII+iHdQeLwDivd6L18ckP1XjH5hhG+LHdjUeIJ5HA6/l0lOU/TzU6subtL1Q==
-X-Received: by 2002:a9d:5381:: with SMTP id w1mr10846785otg.288.1586905930992;
-        Tue, 14 Apr 2020 16:12:10 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n184sm5538526oih.58.2020.04.14.16.12.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 16:12:10 -0700 (PDT)
-Received: (nullmailer pid 7707 invoked by uid 1000);
-        Tue, 14 Apr 2020 23:12:09 -0000
-Date:   Tue, 14 Apr 2020 18:12:09 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Felix Fietkau <nbd@nbd.name>
-Cc:     linux-wireless@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/4] dt-bindings: net: wireless: mt76: document
- mediatek,eeprom-merge-otp property
-Message-ID: <20200414231209.GA7642@bogus>
-References: <20200406102203.54450-1-nbd@nbd.name>
+        Tue, 14 Apr 2020 19:29:44 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D0DC6C00CC;
+        Tue, 14 Apr 2020 23:29:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1586906982; bh=cbwVPNBBMDU3Qsse2SdkAJsbA5fiCp4ztKxUhtvleWQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=I9YbktXPbOUEqFICj4aMMImlRJrFxMgJgrPXue5z/GF4twcfeXC/PudnuBQn/VckG
+         UR6hyiuapJKc6nnZJDCLPw9BhOl2EvPC3lUesbR3nRrOEupwJl/JhCZI0Qq3qpqaSi
+         s3vpDOALJcUmc5XQnImHE2OW97N8JMnMhcns0wW8/Yz4A5AJQsu6X42DHNof/xPm3T
+         vU79f60Ouz3TYNOu9mPeLnfLmNjj/l9XwNgQDGTO9ny9ZV32AtbPMnqeYa7v96JpZ7
+         NjleVLXs3Rs23sIhNZkjNnuwq5KLIDG+s6ITwpIUXowkS/VvMPE62/Vd3Rm7Jd3IrZ
+         x3+BBCnZoG6uQ==
+Received: from paltsev-e7480.internal.synopsys.com (ru20-e7250.internal.synopsys.com [10.225.48.89])
+        by mailhost.synopsys.com (Postfix) with ESMTP id C1FB0A005C;
+        Tue, 14 Apr 2020 23:29:35 +0000 (UTC)
+From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+To:     dri-devel@lists.freedesktop.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH v3 0/2] DRM: ARC: add HDMI 2.0 TX encoder support
+Date:   Wed, 15 Apr 2020 02:29:27 +0300
+Message-Id: <20200414232929.22788-1-Eugeniy.Paltsev@synopsys.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200406102203.54450-1-nbd@nbd.name>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon,  6 Apr 2020 12:22:00 +0200, Felix Fietkau wrote:
-> It is used to enable merging of Flash EEPROM data with OTP ROM calibration.
-> 
-> Signed-off-by: Felix Fietkau <nbd@nbd.name>
-> ---
->  .../devicetree/bindings/net/wireless/mediatek,mt76.txt         | 3 +++
->  1 file changed, 3 insertions(+)
-> 
+Changes v1->v2:
+ * use DT Schema format please (.yaml files) for DT bindings
 
-Acked-by: Rob Herring <robh@kernel.org>
+Changes v2->v3:
+ * Add missing 'interrupts' property in DT bindings
+ * Drop dummy 'dw_hdmi_bridge_mode_valid'
+ * Change bracing format of 'of_device_id' structure
+ * Change compatible string to "snps,arc-dw-hdmi-hsdk"
+   Now DT binding file is snps,arc-dw-hdmi.yaml and compatible is
+   "snps,arc-dw-hdmi-<soc/board>"
+ * Minor fixes
+
+Eugeniy Paltsev (2):
+  DRM: ARC: add HDMI 2.0 TX encoder support
+  dt-bindings: Document the Synopsys ARC HDMI TX bindings
+
+ .../display/bridge/snps,arc-dw-hdmi.yaml      | 136 ++++++++++++++++++
+ MAINTAINERS                                   |   6 +
+ drivers/gpu/drm/Makefile                      |   2 +-
+ drivers/gpu/drm/arc/Kconfig                   |   7 +
+ drivers/gpu/drm/arc/Makefile                  |   1 +
+ drivers/gpu/drm/arc/arc-dw-hdmi.c             | 116 +++++++++++++++
+ 6 files changed, 267 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.yaml
+ create mode 100644 drivers/gpu/drm/arc/arc-dw-hdmi.c
+
+-- 
+2.21.1
+
