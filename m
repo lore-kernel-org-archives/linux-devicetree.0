@@ -2,125 +2,90 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B9BC2BB85
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 09:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2449DC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 09:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12ED52063A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 09:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E4982064A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 09:46:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hrh7iBsM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="OTU6wspY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437437AbgDNJLJ (ORCPT
+        id S1729507AbgDNJq0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 05:11:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45448 "EHLO
+        Tue, 14 Apr 2020 05:46:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437407AbgDNJLD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 05:11:03 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1FBCC0A3BD0;
-        Tue, 14 Apr 2020 02:11:03 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id r14so5773123pfl.12;
-        Tue, 14 Apr 2020 02:11:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=32ds5tL0YEBK/fjJ+CT4RkbpJZ2m0HbKxbVRo9m7pVg=;
-        b=hrh7iBsMf81wW8o2XOz392GPw9NQQ+0GNz5p1FysFnPSRSMyPwH4RoxYvPfP0ajscY
-         xUdofOONEWCkmE4tGN16loAG2e3/82SExQU4WGMsVazrNyhzifvxLgeO3kiOu7HT/QLR
-         pThArRqDhqmfY4NqkQzz6krhQs5TY5lnSVFpydOnDdFo3SmOwv75Lp0+m3v1ZYxpnz8z
-         kiKHtoB0kLpmVKFgnjp85MqboIeflrwvwGtrQqsgHhfejLRfyKYXDFsT7DAMMFELQDo9
-         1YJLo7QlGpi/bRONcHni6cP4lSp5ezYGFRxXEvJ6upEBdNiYeLsVIxQUmYGXaU5bEY5I
-         4nSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=32ds5tL0YEBK/fjJ+CT4RkbpJZ2m0HbKxbVRo9m7pVg=;
-        b=Qpj7Mxi5LR6ktNaX/ccRFa0i67e1zEWoFijW2EU+O905jtEng8ex++lpU9nuOQryiI
-         lfReq7dJdFlZpRS0oOlVincM6ojYGLID9E9KfwhKuRMwjwqWSdlQ3DYcbx6G5NoO0pWm
-         38AJ2PZffufPsvPTvPQ8KtG15EhATATCArb/T4dNo+WrZgu+Ar9lLDk4GT4G2NT+siio
-         aDjwQrDZuc7LwTaUFfMwtjwXNMzruTMEAE6EP4vDhHR1h29T/g9WzcIs+/0SjfzBkcSQ
-         PRfBr59MBeGfuEbA/26JQix7tpZHRnn3y/Ol5bQAyrffHjuHZ0hBvRguYa+/0Yb3Lg32
-         XV2A==
-X-Gm-Message-State: AGi0PuYVyk+QaLSITw9jYwEIFFlxx29Oukl4LJxN+AguW9dy54sKuJ4k
-        d2V3UFyAUBiY8ZupWM0HAhF7gWB1sl1Y+vpomwM=
-X-Google-Smtp-Source: APiQypLZHb9q22KG1TM33678SbhBoclm0DhV+XJRNjOggDfRSvaXtIguQHLzedNRUEV1rBir3XaigO6BiPQArS8wfNI=
-X-Received: by 2002:a63:1d4:: with SMTP id 203mr20275328pgb.74.1586855463228;
- Tue, 14 Apr 2020 02:11:03 -0700 (PDT)
+        with ESMTP id S1729503AbgDNJqZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 05:46:25 -0400
+X-Greylist: delayed 173 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Apr 2020 02:46:24 PDT
+Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B20C2C0A3BD0;
+        Tue, 14 Apr 2020 02:46:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586857583;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=wffEAJzLw5r0Krn8zuK2Pz6LtbsEFk3IEtvF5z6tdE0=;
+        b=OTU6wspYXuBjm1dcx+QStTAVoXJDAOeN+cvXm3Hr9L25TPRj5mR4rUDDl8XKzBhpyD
+        jsekrKKXz3D1zTRp1YGjMo0DrQ3+s1idXv4Muiswa9yZx/SCqoMbilqpsHj/cBfwde33
+        +f8Gi9k1QGBgu5eG94qUMxJnNXZChx0wHHOwFb+Crqm2AGgCqjkXAzBmQ9gwjY7fAQdj
+        hzgVc9hEt9UQZ6UmKXyyIxqopmPKZmXK6bL4otPlMUs2ofr5skNsupogxIEd6pZyAXie
+        oRpX7qdzqaLl8MkhDM0grel6MNDHoN9YXBA5HPRMEBMwypViyj9BIEcMupEzPvqGhgmc
+        Yafw==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j7Ic/CaIo="
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
+        with ESMTPSA id u043b8w3E9hNd2c
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Tue, 14 Apr 2020 11:43:23 +0200 (CEST)
+Date:   Tue, 14 Apr 2020 11:43:17 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 2/2] ARM: defconfig: u8500: Enable CONFIG_GP2AP002
+Message-ID: <20200414094317.GA5896@gerhold.net>
+References: <20200405173252.67614-1-stephan@gerhold.net>
+ <20200405173252.67614-2-stephan@gerhold.net>
+ <CACRpkdYW930B-riUi5OnmsDCJD_piJ+321rgB40bq93ndzSp5A@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200408175058.2.I1f56fe698017f22d6e825c913c256d5afc2ad69f@changeid>
- <CAHp75VcuPoVK_+KV+88Di1dUFZ9S8-1nNqo2s8a_n3vgSMoecg@mail.gmail.com> <CAHcu+VZMiFVt9L9kNCTtsmxUP-7tO+pBpCOtMHQPotuye_2w1A@mail.gmail.com>
-In-Reply-To: <CAHcu+VZMiFVt9L9kNCTtsmxUP-7tO+pBpCOtMHQPotuye_2w1A@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 14 Apr 2020 12:10:56 +0300
-Message-ID: <CAHp75VemvD0mvDHWorSFhqOKaQ1Y_vLYVAQmnb8iz30AH431+Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2 v8] iio: Add SEMTECH SX9310/9311 sensor driver
-To:     Daniel Campello <campello@google.com>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Andreas Klinger <ak@it-klinger.de>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYW930B-riUi5OnmsDCJD_piJ+321rgB40bq93ndzSp5A@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 1:56 AM Daniel Campello <campello@google.com> wrote:
-> On Fri, Apr 10, 2020 at 4:52 AM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Thu, Apr 9, 2020 at 2:54 AM Daniel Campello <campello@chromium.org> wrote:
-
-As far I understand you agreed on the rest.
-Correct?
-
-...
-
-> > > Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> > > Signed-off-by: Enrico Granata <egranata@chromium.org>
+On Tue, Apr 14, 2020 at 11:08:38AM +0200, Linus Walleij wrote:
+> On Sun, Apr 5, 2020 at 7:34 PM Stephan Gerhold <stephan@gerhold.net> wrote:
+> 
+> > sharp,gp2ap002s00f is used as a proximity sensor in
+> > samsung-golden and samsung-skomer.
 > >
-> > This is not understandable. Are they who helped you develop the code
-> > (we have a special tag, i.e. Co-developed-by in addition to SoB), or
-> > just people in the middle? Then the question is, how come author is
-> > you and not Gwendal?
-> >
-> This patch was initially developed by Gwendal and Enrico (here:
-> crrev.com/c/1089826).
+> > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> 
+> Ooops I saw now that I already had this in my "Skomer and misc"
+> enablement patch. (rebasing my trees today).
+> 
+> I can put this in front of that patch and take it out of mine if you
+> prefer stepwise enablement.
+> 
 
-So, tags should include
- SoB: Gwendal ...
- Co-developed-by: Enrico ...
- SoB: Enrico ...
- Co-developed-by: yours (if you developed it)
- SoB: yours
+Do you mean the "ARM: defconfig: u8500: Enable new drivers for ux500"
+patch? It doesn't matter which commit/patch adds it, as long as it ends
+up in the u8500_defconfig :)
 
-and on top git commit --amend --author="Gwendal  ..."
-
-...
-
-> > > +#define SX9310_REG_IRQ_MSK                             0x03
-> >
-> > Is MSK abbreviation in datasheet? Please spell it how it's in datasheet.
-> Yes, they indead use MSK.
-
-Okay!
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Stephan
