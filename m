@@ -6,63 +6,62 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D43CEC2BB85
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3B3C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF3D620737
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A31BC20678
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407566AbgDNRPn (ORCPT
+        id S2407533AbgDNRR5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:15:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:60356 "EHLO foss.arm.com"
+        Tue, 14 Apr 2020 13:17:57 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:34592 "EHLO 1wt.eu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407532AbgDNRPl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:15:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D186C30E;
-        Tue, 14 Apr 2020 10:15:38 -0700 (PDT)
-Received: from [10.57.33.145] (unknown [10.57.33.145])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D2BE93F6C4;
-        Tue, 14 Apr 2020 10:15:37 -0700 (PDT)
-Subject: Re: [PATCH] dt-bndings: iommu: renesas, ipmmu-vmsa: convert to
- json-schema
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        joro@8bytes.org, robh+dt@kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-References: <1586773533-8893-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <fef59497-e5ef-bfe4-e845-389fd623783b@arm.com>
-Date:   Tue, 14 Apr 2020 18:15:35 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S2407532AbgDNRR4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Apr 2020 13:17:56 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 03EHHiGB021479;
+        Tue, 14 Apr 2020 19:17:44 +0200
+Date:   Tue, 14 Apr 2020 19:17:44 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Sergey Matyukevich <geomatsi@gmail.com>,
+        devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [bug report] armada-8040-mcbin: 5.6-rc5 boot failure
+Message-ID: <20200414171744.GC21441@1wt.eu>
+References: <20200413220520.GA25917@curiosity>
+ <20200413222645.GT25745@shell.armlinux.org.uk>
+ <20200414160354.GA463339@curiosity>
+ <20200414160838.GA21435@1wt.eu>
+ <20200414165533.GX25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <1586773533-8893-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414165533.GX25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-04-13 11:25 am, Yoshihiro Shimoda wrote:
-[...]
-> -Each bus master connected to an IPMMU must reference the IPMMU in its device
-> -node with the following property:
-> -
-> -  - iommus: A reference to the IPMMU in two cells. The first cell is a phandle
-> -    to the IPMMU and the second cell the number of the micro-TLB that the
-> -    device is connected to.
+Hi Russell,
 
-This definition of what the phandle argument means...
+On Tue, Apr 14, 2020 at 05:55:33PM +0100, Russell King - ARM Linux admin wrote:
+> > CONFIG_MDIO_BITBANG=y
+> 
+> Macchiatobin doesn't bitbang the MDIO bus.
+> 
+> > CONFIG_MDIO_BUS_MUX=y
+> 
+> There's no MDIO bus muxing on Macchiatobin.
+> 
+> > CONFIG_FIXED_PHY=y
+> 
+> CONFIG_FIXED_PHY should no longer be required.
+(...)
 
-[...]
-> +  '#iommu-cells':
-> +    const: 1
- > +
-
-...deserves to be captured in a description here.
-
-Robin.
+Thanks for clearing these ones out, I'll drop them on next build!
+Willy
