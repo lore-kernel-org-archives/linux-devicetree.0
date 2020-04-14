@@ -4,52 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4ACC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 14:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C01AC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 14:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 314CC20578
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 14:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0920420936
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 14:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586875604;
-	bh=g00iJtPzZcf8VyQjYtKqA/aEufNyrZ17hJE2UFDSDTQ=;
+	s=default; t=1586875642;
+	bh=8l8qvAdkG3irVaNUvMR5e7sGi6NgrQ7nNnMN7lU+Ypw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=uRtQyxj1M07CkoKs1omWg+kdYNNE9cN2xI27w/0oAX+a+GiyNn/wYtXm6F6BIaled
-	 J66jR2kjqOD5RCTy9ZSFnsd6KhYQSYUt+8N1o9xRG+xVpENhD8AC/bmpzj1116+4qt
-	 LUBxLti/3zDGzY33Y5H3mw3zZq66QvN6aK2Tmz9o=
+	b=UzMfubgwx2WgzhrlLKbE0uwNW7A2UP/MCpheRMo3VO3da3vVjo4Zqm6522DoP505b
+	 IdeqzW3JoNvN7Ft26huUIgXLRYHzJgKC2NCAOVfybBcTJOWSb3paV9+LFqawFx07HT
+	 Fcm+4jg0CpvLJSjdcEOspV28HR8xuAiOakc2gre4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404806AbgDNOqm (ORCPT
+        id S2404884AbgDNOrT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 10:46:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44310 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 10:47:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404805AbgDNOqk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 10:46:40 -0400
+        id S2404752AbgDNOrQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Apr 2020 10:47:16 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A724320578;
-        Tue, 14 Apr 2020 14:46:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 726D820CC7;
+        Tue, 14 Apr 2020 14:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586875600;
-        bh=g00iJtPzZcf8VyQjYtKqA/aEufNyrZ17hJE2UFDSDTQ=;
+        s=default; t=1586875636;
+        bh=8l8qvAdkG3irVaNUvMR5e7sGi6NgrQ7nNnMN7lU+Ypw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=GfyFgj1INwbbPMiBOE/dh73dseOTY8FQWx5w2qLHZcdhWARYrmAhDHLVzbscAufN5
-         MjP3PjLHDbYM7xri2xXaWV5AiJ3LgXzuw+tL8R2mKxCfgeObRfdlDX9o18UKWA3Tzy
-         VYxT8QgDXyqRREidWCFZZA3Ck8Eu9LioF5Nqy4CY=
-Date:   Tue, 14 Apr 2020 15:46:37 +0100
+        b=H5dFdqx6nIDqdZkcysqi+odJ4NkyCs6vNMSeVV+Gp6uXhKAvOresbwHMCiOV10NID
+         X6vS2GogFkMfGhAVMdNlI6D6dS9ZCwIT5krpEM7YboD1DmfrH4Z/ph8xasLiKshilH
+         A5c5Xi2LenPDrv/r9hHEOkbV/a9rcY5TFv3NUvRo=
+Date:   Tue, 14 Apr 2020 15:47:13 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        devicetree@vger.kernel.org, heiko@sntech.de, lgirdwood@gmail.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Mark Brown <broonie@kernel.org>, robh+dt@kernel.org
-Subject: Applied "ASoC: convert rockchip spdif bindings to yaml" to the asoc tree
-In-Reply-To:  <20200404115225.4314-1-jbx6244@gmail.com>
-Message-Id:  <applied-20200404115225.4314-1-jbx6244@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: tegra-wm8903: Document new nvidia, headset property" to the asoc tree
+In-Reply-To:  <20200330204011.18465-2-digetx@gmail.com>
+Message-Id:  <applied-20200330204011.18465-2-digetx@gmail.com>
 X-Patchwork-Hint: ignore
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -58,7 +62,7 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: convert rockchip spdif bindings to yaml
+   ASoC: tegra-wm8903: Document new nvidia, headset property
 
 has been applied to the asoc tree at
 
@@ -83,183 +87,36 @@ to this mail.
 Thanks,
 Mark
 
-From 4d1a015a203c0249e3332ea217a38ec978118daa Mon Sep 17 00:00:00 2001
-From: Johan Jonker <jbx6244@gmail.com>
-Date: Sat, 4 Apr 2020 13:52:23 +0200
-Subject: [PATCH] ASoC: convert rockchip spdif bindings to yaml
+From 8240fe6c91b884b5f1f861a8c22721d6ea4c53c9 Mon Sep 17 00:00:00 2001
+From: Dmitry Osipenko <digetx@gmail.com>
+Date: Mon, 30 Mar 2020 23:40:10 +0300
+Subject: [PATCH] ASoC: tegra-wm8903: Document new nvidia, headset property
 
-Current dts files with 'spdif' nodes are manually verified.
-In order to automate this process rockchip-spdif.txt
-has to be converted to yaml.
+Some devices have a 4-pin headset jack instead of 3-pin microphone jack.
+The new boolean nvidia,headset property tells that the Mic Jack represents
+the state of a headset microphone. This additional hardware description is
+needed because microphone detection procedure differs in a case of a 4-pin
+jack from a 3-pin jack.
 
-Also rk3188.dtsi, rk3288.dtsi use an extra fallback string,
-so change this in the documentation.
-
-Changed:
-"rockchip,rk3188-spdif", "rockchip,rk3066-spdif"
-"rockchip,rk3288-spdif", "rockchip,rk3066-spdif"
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20200404115225.4314-1-jbx6244@gmail.com
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Link: https://lore.kernel.org/r/20200330204011.18465-2-digetx@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../bindings/sound/rockchip-spdif.txt         | 45 ---------
- .../bindings/sound/rockchip-spdif.yaml        | 93 +++++++++++++++++++
- 2 files changed, 93 insertions(+), 45 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/rockchip-spdif.txt
- create mode 100644 Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
+ .../devicetree/bindings/sound/nvidia,tegra-audio-wm8903.txt      | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-spdif.txt b/Documentation/devicetree/bindings/sound/rockchip-spdif.txt
-deleted file mode 100644
-index ec20c1271e92..000000000000
---- a/Documentation/devicetree/bindings/sound/rockchip-spdif.txt
-+++ /dev/null
-@@ -1,45 +0,0 @@
--* Rockchip SPDIF transceiver
--
--The S/PDIF audio block is a stereo transceiver that allows the
--processor to receive and transmit digital audio via an coaxial cable or
--a fibre cable.
--
--Required properties:
--
--- compatible: should be one of the following:
--   - "rockchip,rk3066-spdif"
--   - "rockchip,rk3188-spdif"
--   - "rockchip,rk3228-spdif"
--   - "rockchip,rk3288-spdif"
--   - "rockchip,rk3328-spdif"
--   - "rockchip,rk3366-spdif"
--   - "rockchip,rk3368-spdif"
--   - "rockchip,rk3399-spdif"
--- reg: physical base address of the controller and length of memory mapped
--  region.
--- interrupts: should contain the SPDIF interrupt.
--- dmas: DMA specifiers for tx dma. See the DMA client binding,
--  Documentation/devicetree/bindings/dma/dma.txt
--- dma-names: should be "tx"
--- clocks: a list of phandle + clock-specifier pairs, one for each entry
--  in clock-names.
--- clock-names: should contain following:
--   - "hclk": clock for SPDIF controller
--   - "mclk" : clock for SPDIF bus
--
--Required properties on RK3288:
--  - rockchip,grf: the phandle of the syscon node for the general register
--                   file (GRF)
--
--Example for the rk3188 SPDIF controller:
--
--spdif: spdif@1011e000 {
--	compatible = "rockchip,rk3188-spdif", "rockchip,rk3066-spdif";
--	reg = <0x1011e000 0x2000>;
--	interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
--	dmas = <&dmac1_s 8>;
--	dma-names = "tx";
--	clock-names = "hclk", "mclk";
--	clocks = <&cru HCLK_SPDIF>, <&cru SCLK_SPDIF>;
--	#sound-dai-cells = <0>;
--};
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
-new file mode 100644
-index 000000000000..bfd44fd8ecbc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
-@@ -0,0 +1,93 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/rockchip-spdif.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip SPDIF transceiver
-+
-+description:
-+  The S/PDIF audio block is a stereo transceiver that allows the
-+  processor to receive and transmit digital audio via a coaxial or
-+  fibre cable.
-+
-+maintainers:
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: rockchip,rk3066-spdif
-+      - const: rockchip,rk3228-spdif
-+      - const: rockchip,rk3328-spdif
-+      - const: rockchip,rk3366-spdif
-+      - const: rockchip,rk3368-spdif
-+      - const: rockchip,rk3399-spdif
-+      - items:
-+          - enum:
-+            - rockchip,rk3188-spdif
-+            - rockchip,rk3288-spdif
-+          - const: rockchip,rk3066-spdif
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: clock for SPDIF bus
-+      - description: clock for SPDIF controller
-+
-+  clock-names:
-+    items:
-+      - const: mclk
-+      - const: hclk
-+
-+  dmas:
-+    maxItems: 1
-+
-+  dma-names:
-+    const: tx
-+
-+  rockchip,grf:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      The phandle of the syscon node for the GRF register.
-+      Required property on RK3288.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - dmas
-+  - dma-names
-+
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        const: rockchip,rk3288-spdif
-+
-+then:
-+  required:
-+    - rockchip,grf
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rk3188-cru.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    spdif: spdif@1011e000 {
-+      compatible = "rockchip,rk3188-spdif", "rockchip,rk3066-spdif";
-+      reg = <0x1011e000 0x2000>;
-+      interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&cru SCLK_SPDIF>, <&cru HCLK_SPDIF>;
-+      clock-names = "mclk", "hclk";
-+      dmas = <&dmac1_s 8>;
-+      dma-names = "tx";
-+    };
+diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8903.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8903.txt
+index a8f2b0c56c79..bbd581a8c5bc 100644
+--- a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8903.txt
++++ b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8903.txt
+@@ -29,6 +29,7 @@ Optional properties:
+ - nvidia,hp-det-gpios : The GPIO that detect headphones are plugged in
+ - nvidia,int-mic-en-gpios : The GPIO that enables the internal microphone
+ - nvidia,ext-mic-en-gpios : The GPIO that enables the external microphone
++- nvidia,headset : The Mic Jack represents state of the headset microphone pin
+ 
+ Example:
+ 
 -- 
 2.20.1
 
