@@ -2,88 +2,56 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BA4C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 16:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD1DC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 16:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4107C20678
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 16:37:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586882256;
-	bh=k9hJ2JywJenfK0iQECFcgZSz1u57nIXVFT2CZ5krMbc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SiGTMTbnrZVl8BAvFlZP86lOSYCKAE0tSB4NmaF7+6W9NiXY0JW+14mUpsoP7GGUb
-	 ScyN3qsrBx8nTmp5+Xk/JoYibYwz9ELjqSgQYgefaWdtItD6GoaHDptqHEOnVQj3Zl
-	 2nJxNVxvoUqTt8SKHOnpLupejiEHBf1mesz4EdxI=
+	by mail.kernel.org (Postfix) with ESMTP id 0A58A20678
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 16:40:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391847AbgDNQh2 (ORCPT
+        id S2404444AbgDNQkH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:37:28 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36517 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391833AbgDNQhO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 12:37:14 -0400
-Received: by mail-oi1-f194.google.com with SMTP id s202so7731006oih.3;
-        Tue, 14 Apr 2020 09:37:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jIvUlA66uFvx/00EVYaR8kJpiN2UPVF0b3hCl4OA1xo=;
-        b=pRgxHbfceiXyLwFLafSsbbkd1hUwznWXO79Q8R9WvExzTiG/mGUtOQyY+CKxai+e3Q
-         Bn5mmfgWBOVSTb3LojtctSVZPEtBv10KqmFa3vh8Hc8/bCLPJP8FJJRmd5twtVoMouMc
-         hb3UliKIJF9ZIonUNuwrdXMgRGdokgiVwZ1/5ofW2ArKsG7uAeQlRZQyL2tCzG+Xe827
-         0qB0UwbO4pkXEzy7YFvuMLbZTfNNG3ox6W7CDp/GrctVfBIPF5TVBXwPhpOZu+yKuK4L
-         rnV06fo8r1NrBW+q5SzrTJ/e6XELFsHuB9sLR5u8NrCffrnJ+XLpidkR77qqsaWSicev
-         O53w==
-X-Gm-Message-State: AGi0PubXwupLN30D+WRR6chc06w28eu16vJNry6TOKcI7Gm/SBW0D80J
-        LVNsZDVpAQC8FyvvnbS/97jXgtE=
-X-Google-Smtp-Source: APiQypJkR6UcoYGEVORAFHlppvN5+UL0qeZSEHtFMBgD+pYKqCNXMKo+xTy5m/Hcu35x0L0MxMOJGg==
-X-Received: by 2002:aca:c7c5:: with SMTP id x188mr16226493oif.130.1586882233216;
-        Tue, 14 Apr 2020 09:37:13 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c13sm1173992otf.35.2020.04.14.09.37.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 09:37:12 -0700 (PDT)
-Received: (nullmailer pid 1195 invoked by uid 1000);
-        Tue, 14 Apr 2020 16:37:11 -0000
-Date:   Tue, 14 Apr 2020 11:37:11 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
-Cc:     devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
-        linux-i2c@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
-Subject: Re: [PATCH] dt-bindings: i2c: xiic: Migrate i2c-xiic documentation
- to YAML
-Message-ID: <20200414163711.GA1139@bogus>
-References: <20200401134709.60421-1-iwamatsu@nigauri.org>
+        Tue, 14 Apr 2020 12:40:07 -0400
+Received: from mail.manjaro.org ([176.9.38.148]:47480 "EHLO mail.manjaro.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404433AbgDNQkG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Apr 2020 12:40:06 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id 6926A3742B3D;
+        Tue, 14 Apr 2020 18:40:03 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id LtX2ZRwLkphG; Tue, 14 Apr 2020 18:40:00 +0200 (CEST)
+From:   Tobias Schramm <t.schramm@manjaro.org>
+To:     Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc:     devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Tobias Schramm <t.schramm@manjaro.org>
+Subject: [PATCH 0/2] Fix some GPIO setup on Pinebook Pro
+Date:   Tue, 14 Apr 2020 18:39:50 +0200
+Message-Id: <20200414163952.1093784-1-t.schramm@manjaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401134709.60421-1-iwamatsu@nigauri.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed,  1 Apr 2020 22:47:09 +0900, Nobuhiro Iwamatsu wrote:
-> The document was migrated to YAML format and renamed xlnx,xps-iic-2.00.a.yaml
-> 
-> Signed-off-by: Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
-> ---
->  .../devicetree/bindings/i2c/i2c-xiic.txt      | 25 ----------
->  .../bindings/i2c/xlnx,xps-iic-2.00.a.yaml     | 49 +++++++++++++++++++
->  MAINTAINERS                                   |  2 +-
->  3 files changed, 50 insertions(+), 26 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-xiic.txt
->  create mode 100644 Documentation/devicetree/bindings/i2c/xlnx,xps-iic-2.00.a.yaml
-> 
+This patchset contains two small fixes for the dts of the Pinebook Pro.
+The first fixes inverted logic on the headphone detect GPIO.
+The second patch fixes unreliable DC charger detection.
 
-Applied, thanks.
+Tobias Schramm (2):
+  arm64: dts: rockchip: fix inverted headphone detection
+  arm64: dts: rockchip: enable DC charger detection pullup
 
-Rob
+ arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+-- 
+2.26.0
+
