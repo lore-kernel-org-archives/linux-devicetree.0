@@ -2,132 +2,126 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C617EC38A29
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A74BC38A2B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C91720771
+	by mail.kernel.org (Postfix) with ESMTP id D611720771
 	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:49:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SiskKmQU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DhsWQxH8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440735AbgDNVsl (ORCPT
+        id S2440776AbgDNVts (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 17:48:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52958 "EHLO
+        Tue, 14 Apr 2020 17:49:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2440734AbgDNVsX (ORCPT
+        by vger.kernel.org with ESMTP id S2440752AbgDNVtr (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 17:48:23 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C215C061A0E
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 14:48:21 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id l11so1003720lfc.5
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 14:48:21 -0700 (PDT)
+        Tue, 14 Apr 2020 17:49:47 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCF8AC061A0F
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 14:49:46 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id y24so16159492wma.4
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 14:49:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hpWgqKZEMKAYtEzy1pWxF1ovmxOedCdsPJgCqZeJZZc=;
-        b=SiskKmQUlzQlfIRqLeroGTc4op1A8Z924aUFvfgea000jB0f3mQM+qDWREzkH/xY0w
-         sk7P14GIDz/2LZe9sLw8Sfd8G180xjeA6GVXLP8vDNh/dl6himkKLCMt+RSULuuJHHKk
-         HOE0q+vvqkbEpfh0HOVPMH2Ss3EBiO3Wkq5mvzsjLlaYWoi1YGkEjnNNS2TpKkwDbMKt
-         S0oE97q2gpb3631NmuHwWYMWzyHD2pK7rpKgzhqIvpRgnQTtU07Ub0BXivBDcJuSQ0rV
-         xaKWNX+PZZm81FT8toPB1+Eg3l6F3c8lyw8y6j3LUYPHBsyKfueLahC0hwMivu6Se+WZ
-         hyvQ==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lLu0lDjOuieHB5rYFFB3f7WiEo1gndmAxrF4xwTxJdI=;
+        b=DhsWQxH8nmCAK1PslhefQsGiSmVRGPV2C48zxDbAw+oQWBdo9hCDs8vO1ONpqDN/ZZ
+         0bz/HssycdFvoO7X3Iesav1WJkrV/TzZ8z1A2cYIFwxDLpmiHDaHFAWeW1CL6SPLhYmU
+         lZHTH7t8+H+50T6hyqE/VczVZrP0k7Yam75JGCk4tqKGgVg/hd8f5PzicIVTsN8l8wf9
+         0d7w2hKZQlina8KT9FJPENgYhD12ZaSSfJ9EFc5c82a/zaqtSwByCfK5H7WE/lt/S0RJ
+         ZqXOLu6xUN/HVpfbnQ/0i/WvJqbIY+SX3vK/d/QuS5EuF4moAadgaBELrhQpbFEgXMGh
+         noPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hpWgqKZEMKAYtEzy1pWxF1ovmxOedCdsPJgCqZeJZZc=;
-        b=uTM5D1rhLuAyBvTCjP5WItwzUjeinnLSlcVi+7ZAVxRvVkd/09JEtSBpfdbVpQm3lN
-         HHvr1vxPobNPaV30fHO4ewjCclatWrqxogYApPHgt19Qm6CyJe8l/vEjIa3+ZUkcVkLu
-         d0gsnoM0dBR3mhLEbaSPa6G5iRT87AkKoXm/xdfZAESbPr48V1lVKzObLIzEgRAK5ySe
-         3f8mEDN2JLwA1yKM+gsQT4grSYjO8NBcQtsBjxU6gQ04hakRux+NPNG5x8Bt2GeWpt8g
-         b4VOJxbP3kSz/LzvoZoDycm05P0jdKM17s0AV7rZAz7M7DLZKQtxZLZ4jjJiOKVNpkmg
-         DtdA==
-X-Gm-Message-State: AGi0Pua8lfzw8njHzQa8f86vPEPHvvPXb5HWwAUvM8Cgnvg1xkvBwhFG
-        5CGuZe2okLsT84n69EoPPUM=
-X-Google-Smtp-Source: APiQypLntGnJZtL0ubJlkyaw3rmTwB5lz961XDjd4JNK0NeYLpAByBVxvrsiVK57RJfIkqdu8ssbaA==
-X-Received: by 2002:ac2:4a9d:: with SMTP id l29mr1023681lfp.4.1586900900104;
-        Tue, 14 Apr 2020 14:48:20 -0700 (PDT)
-Received: from curiosity (ip-195-182-157-78.clients.cmk.ru. [195.182.157.78])
-        by smtp.gmail.com with ESMTPSA id b2sm6554193lfi.14.2020.04.14.14.48.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 14:48:19 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 00:52:39 +0300
-From:   Sergey Matyukevich <geomatsi@gmail.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Willy Tarreau <w@1wt.eu>, devicetree@vger.kernel.org,
-        Baruch Siach <baruch@tkos.co.il>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [bug report] armada-8040-mcbin: 5.6-rc5 boot failure
-Message-ID: <20200414215239.GA471879@curiosity>
-References: <20200413220520.GA25917@curiosity>
- <20200413222645.GT25745@shell.armlinux.org.uk>
- <20200414160354.GA463339@curiosity>
- <20200414160838.GA21435@1wt.eu>
- <20200414165533.GX25745@shell.armlinux.org.uk>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lLu0lDjOuieHB5rYFFB3f7WiEo1gndmAxrF4xwTxJdI=;
+        b=M57X+2NE7uUZg23+lREt1KJ94SHqsgQH/+Ib/A2hKdrn+pdekZu2mYGYtbuH0JlUFn
+         HMFu9uiQzqiBugrsh7UAcr2jtibjwfeZCtC7GbjhcRunCOpRL8z1EBMw+3SGyOVaxK39
+         UwMN5uyJXnRZ+GKvg+rKBUEE58qawg0a0OaBI4vYHnafIl0L61TbbuAfnFirN4/BfrTg
+         xAETJn7k5CpBp34pHKOfJ2G0rKjZJ2wt6wJs35Vc7R6EIY6ayEfRo4LpTj9JsnVAvGI3
+         QZ2cf+lNd/ltdGoxzXxwJ4tK8mBu9LHDeaZt5YZnxVlN2QlUV7WJiniJ+QFEX6gVeUKx
+         xaAQ==
+X-Gm-Message-State: AGi0Pua1/T/llMXZh+e6v/46XJ/jGz1DFd7Yro+O5HSod+92FihSWBGL
+        ZMAGBo2QGbbGTkbAIyDiYMczeg==
+X-Google-Smtp-Source: APiQypL0+9U7VuiJ8stS+8CjpDdryFrogKFubugLUq0tYDBk79fADkOCK7EquRDegrfCnG/uugEJyQ==
+X-Received: by 2002:a1c:1d4b:: with SMTP id d72mr1784657wmd.19.1586900985207;
+        Tue, 14 Apr 2020 14:49:45 -0700 (PDT)
+Received: from [192.168.0.41] (lns-bzn-59-82-252-135-148.adsl.proxad.net. [82.252.135.148])
+        by smtp.googlemail.com with ESMTPSA id b4sm15868876wrv.42.2020.04.14.14.49.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Apr 2020 14:49:44 -0700 (PDT)
+Subject: Re: [PATCH v2 2/4] dt-bindings: thermal: Add the idle cooling device
+To:     Rob Herring <robh@kernel.org>
+Cc:     rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200414162634.1867-1-daniel.lezcano@linaro.org>
+ <20200414162634.1867-2-daniel.lezcano@linaro.org>
+ <20200414214509.GA10673@bogus>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <882e9605-a2e6-1af8-26e3-b03f2a7bcb5e@linaro.org>
+Date:   Tue, 14 Apr 2020 23:49:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414165533.GX25745@shell.armlinux.org.uk>
+In-Reply-To: <20200414214509.GA10673@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> > > I have not changed configuration since 5.3, so all the marvell phy
-> > > drivers are in place. Is there anything in configuration that could
-> > > be missed after moving from 5.3 to 5.6 kernel ?
-> > 
-> > FWIW mine works perfectly fine with 5.4 at 1G/2.5G/10G. From what I can
-> > quickly check here are the relevant parts in my config for ethernet (not
-> > sure all are needed though):
-> > 
-> > CONFIG_NET_VENDOR_MARVELL=y
-> > CONFIG_MVMDIO=y
-> > CONFIG_MVPP2=y
-> > CONFIG_MDIO_DEVICE=y
-> > CONFIG_MDIO_BUS=y
-> > CONFIG_MDIO_BITBANG=y
-> 
-> Macchiatobin doesn't bitbang the MDIO bus.
-> 
-> > CONFIG_MDIO_BUS_MUX=y
-> > CONFIG_MDIO_BUS_MUX_MMIOREG=y
-> > CONFIG_MDIO_BUS_MUX_MULTIPLEXER=y
-> 
-> There's no MDIO bus muxing on Macchiatobin.
-> 
-> > CONFIG_MDIO_I2C=y
-> > CONFIG_PHYLINK=y
-> > CONFIG_PHYLIB=y
-> > CONFIG_SWPHY=y
-> > CONFIG_SFP=y
-> > CONFIG_FIXED_PHY=y
-> 
-> CONFIG_FIXED_PHY should no longer be required.
-> 
-> > CONFIG_MARVELL_PHY=y
-> > CONFIG_MARVELL_10G_PHY=y
-> > 
-> > Not tested 5.6 yet.
+On 14/04/2020 23:45, Rob Herring wrote:
+> On Tue, 14 Apr 2020 18:26:27 +0200, Daniel Lezcano wrote:
 
-Thanks ! I tested mainline kernels 5.6-rc5, 5.6, 5.7-rc1: all of them
-worked just fine on MacchiatoBin. After that I finally figured out what
-was wrong with my setup even after updating ATF to 18.12.
+[ ... ]
 
-Initally I used wireless-drivers-next kernel tree v5.6-rc1. It turned
-out that this tree at that point included commit e1f550dc44a ("net:
-mvmdio: avoid error message for optional IRQ") but did not included its
-subsequent revert...
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> Documentation/devicetree/bindings/thermal/thermal-idle.yaml:  while scanning a block scalar
+>   in "<unicode string>", line 39, column 20
+> found a tab character where an indentation space is expected
+>   in "<unicode string>", line 44, column 1
+> Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/thermal/thermal-idle.example.dts' failed
+> make[1]: *** [Documentation/devicetree/bindings/thermal/thermal-idle.example.dts] Error 1
+> make[1]: *** Waiting for unfinished jobs....
+> warning: no schema found in file: Documentation/devicetree/bindings/thermal/thermal-idle.yaml
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-idle.yaml: ignoring, error parsing file
+> Makefile:1264: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+> 
+> See https://patchwork.ozlabs.org/patch/1270492
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+> 
+> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> 
+> Please check and re-submit.
 
-Regards,
-Sergey
+Sorry for that, I forgot to re-run the binding check and my editor is
+automatically replacing spaces with tabs.
+
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
