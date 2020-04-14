@@ -2,131 +2,97 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2417C352BE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F0EC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D57D720774
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75E3C2078A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586888825;
-	bh=hFNLUX5d/6VjCP7/nuZYKMX4WhCYb5wTCkL0pjVz/cc=;
+	s=default; t=1586888872;
+	bh=h8+HAupVka4ue/iBJS8z6lBawgwrpDwZPlCRrCdXgdg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=piWOyL5/ddkqDNlUptW2g8/ES82Nwopjk3TSgOclV1UDSGLQj3dvxKPc9GsGCNOXS
-	 CqCMk9kXLB9dcflG3JNynn1TAQACc2EToNucX7We1+d3Rz8CnhJmaeF4XgTy2u9vFc
-	 I82czJ+oibOvG4GdI3dBxqhsWYyJVUZUbGwvqBfg=
+	b=i5UzhDrHi5tS7v8sLf5o204HPSYIZ7JNCD/buu7kIcyRoF5UbJFzoy5FjdZcgN2h6
+	 BE9Mio0lok7K8jOw8xvEXM8vX31ICRiaNtQ4yQvnI4VA62cg2K9M28vpz43Ma4XgXE
+	 bm4eNDPHUoFMBAvuKHSsBL1F27zk82GM9R8ZeIZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729776AbgDNS1E (ORCPT
+        id S2503976AbgDNS1r (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:27:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38434 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729695AbgDNS1D (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:27:03 -0400
-Received: from Mani-XPS-13-9360 (unknown [157.50.36.11])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 695D420575;
-        Tue, 14 Apr 2020 18:26:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586888822;
-        bh=hFNLUX5d/6VjCP7/nuZYKMX4WhCYb5wTCkL0pjVz/cc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XfkRvFH+I62D7vY0osPBoSlwtLFj+YlTQoGNl+0cFfI0eT8RGcsAOzn9YFaFgBr30
-         yYmRl17e3QJGZhIT+P46p+34M/AZjL9kgNbvoIAPXaroKE/5s9lvflOytQJkBEaLHD
-         z/MAq1RwZ2lakZ8V3g78Ch4POz83wHQ77jekgUKU=
-Date:   Tue, 14 Apr 2020 23:56:52 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, narcisaanamaria12@gmail.com,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] iio: chemical: Add support for external Reset and
- Wakeup in CCS811
-Message-ID: <20200414182652.GA29921@Mani-XPS-13-9360>
-References: <20200414153415.957-1-mani@kernel.org>
- <20200414153415.957-3-mani@kernel.org>
- <CAHp75Vf1wzBD+r5L7XFPW=ydxFLBfBNr6Jc4b6sMWR4Rci-Acw@mail.gmail.com>
- <20200414170547.GB3334@Mani-XPS-13-9360>
- <CAHp75Vfk3aw30j8U+BJiobU6s2KsOis_VyUv4+6csbYLFnV9eg@mail.gmail.com>
- <20200414191259.5fbfdc2a@archlinux>
+        Tue, 14 Apr 2020 14:27:47 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43131 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503947AbgDNS1p (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 14:27:45 -0400
+Received: by mail-ot1-f67.google.com with SMTP id g14so641733otg.10
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 11:27:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kI/3eiVm1kw4HQZBFlJCA+YGkg5qdFUWdYWaFflp6bI=;
+        b=BolWY725tPuuVmrmiE7t1F++Cgwwr6CgpKn60gihjK7PYO/rfmAQXCNWE6zL5g5O19
+         zSTEggZl7T5jyOsbi/lTk9uconDnhytbp8bFRzfY1IZ4JyCkAm5Gsajytq49V81HXjss
+         tS7U1OPoLZmrOdxHzBCbj9SPRth3+536v58GMshrEcpWFzFl4Dn/2rjs461AIL3qyQbS
+         Fu2m9blJJFbHC6lzApL6XFjH729+t9LL7sE5YG7ojh1BYB0jHjsVHP1QOLloyzmUrkD7
+         2Kyq7GLCTsX5auwFRF62hQvVJIbHg9IefJeUQvF+c2OrZlJrxjBCrbzUJj1Hl5TmL6ou
+         GDdg==
+X-Gm-Message-State: AGi0Puau+VSiQy+gv7AOzXeNCB+Y5BXwj8gucpURsAnt0wUPrnLyqf7B
+        11A31DcBs7o3u1vFdT/8liSTX44=
+X-Google-Smtp-Source: APiQypKdQLaKyJWhc/iZn1zA/BiC+KbyuEb28QVeOulOmFvbUxPbd8MM+Vxfne8Y5494a4QtdCw3FQ==
+X-Received: by 2002:a4a:b489:: with SMTP id b9mr2193705ooo.71.1586888864743;
+        Tue, 14 Apr 2020 11:27:44 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k4sm5681554otl.13.2020.04.14.11.27.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 11:27:43 -0700 (PDT)
+Received: (nullmailer pid 22415 invoked by uid 1000);
+        Tue, 14 Apr 2020 18:27:42 -0000
+Date:   Tue, 14 Apr 2020 13:27:42 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     dri-devel@lists.freedesktop.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        devicetree@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH v2 08/36] dt-bindings: display: convert ilitek,ili9881c
+ to DT Schema
+Message-ID: <20200414182742.GA22348@bogus>
+References: <20200408195109.32692-1-sam@ravnborg.org>
+ <20200408195109.32692-9-sam@ravnborg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414191259.5fbfdc2a@archlinux>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200408195109.32692-9-sam@ravnborg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 07:12:59PM +0100, Jonathan Cameron wrote:
-> On Tue, 14 Apr 2020 20:54:49 +0300
-> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+On Wed,  8 Apr 2020 21:50:41 +0200, Sam Ravnborg wrote:
+> Updating this binding identified an issue in the example in
+> the allwinner,sun6i-a31-mipi-dsi binding.
+> Fix the example so no new warnings are introduced.
 > 
-> > On Tue, Apr 14, 2020 at 8:06 PM Manivannan Sadhasivam <mani@kernel.org> wrote:
-> > > On Tue, Apr 14, 2020 at 07:42:24PM +0300, Andy Shevchenko wrote:  
-> > > > On Tue, Apr 14, 2020 at 6:34 PM <mani@kernel.org> wrote:  
-> > 
-> > ...
-> > 
-> > > > > +       reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
-> > > > > +                                            GPIOD_OUT_LOW);
-> > > > > +       if (IS_ERR(reset_gpio)) {  
-> > > >  
-> > > > > +               dev_err(&client->dev, "Failed to acquire reset gpio\n");  
-> > > >
-> > > > If it's a deferred probe, it would spam the log.
-> > > >  
-> > >
-> > > Hmm. But error is an error isn't it? Would you recommend doing a debug print
-> > > or completely removing the logging?  
-> > 
-> > I would remove completely, but better to wait for Jonathan to comment.
-> > Maybe he prefers something like
-> >   if (err != EPROBE_DEFER)
-> >     dev_err()
+> v2:
+>   - fix example in allwinner,sun6i-a31-mipi-dsi (Rob)
 > 
-> Not fussed.  Either drop it or do the check for defer - one I leave up to the
-> author.
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> ---
+>  .../display/allwinner,sun6i-a31-mipi-dsi.yaml |  2 +-
+>  .../display/panel/ilitek,ili9881c.txt         | 20 --------
+>  .../display/panel/ilitek,ili9881c.yaml        | 50 +++++++++++++++++++
+>  3 files changed, 51 insertions(+), 21 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml
 > 
 
-Okay, will just drop it.
-
-Thanks,
-Mani
-
-> > 
-> > > > > +               return PTR_ERR(reset_gpio);
-> > > > > +       }  
-> > > >
-> > > > ...
-> > > >  
-> > > > > +               static const u8 reset_seq[] = {
-> > > > > +                       0xFF, 0x11, 0xE5, 0x72, 0x8A,
-> > > > > +               };  
-> > > >
-> > > > I would suggest to comment above from where you got this and the
-> > > > meaning of the numbers.
-> > > >  
-> > >
-> > > The datasheet doesn't specify the meaning of these values. But will add a
-> > > comment.  
-> > 
-> > Thanks!
-> > 
-> > > Btw, just noticed that 0xFF is not needed and only 4 values are
-> > > sufficient for SW reset.  
-> > 
-> > Better to do exactly what datasheet suggests (in case it's not clear
-> > or deductible what is going on).
-> > 
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
