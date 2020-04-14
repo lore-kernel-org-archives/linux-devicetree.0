@@ -2,139 +2,140 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42114C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 03:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8904C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 05:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADB320644
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 03:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6BDE2072D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 05:26:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EY8JmNgm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IYW4YTrY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404774AbgDNDdj (ORCPT
+        id S2405497AbgDNF0f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 23:33:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49750 "EHLO
+        Tue, 14 Apr 2020 01:26:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404768AbgDNDdj (ORCPT
+        by vger.kernel.org with ESMTP id S1726552AbgDNF0e (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Apr 2020 23:33:39 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8C10C0A3BDC;
-        Mon, 13 Apr 2020 20:33:37 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id c138so5490617pfc.0;
-        Mon, 13 Apr 2020 20:33:37 -0700 (PDT)
+        Tue, 14 Apr 2020 01:26:34 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43F68C0A3BDC
+        for <devicetree@vger.kernel.org>; Mon, 13 Apr 2020 22:26:34 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id cb27so15315208edb.11
+        for <devicetree@vger.kernel.org>; Mon, 13 Apr 2020 22:26:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Uwxa46CvTM5ECW30BkNGZjhjXbVyQcR87+DO9oGqllg=;
-        b=EY8JmNgmW7H9htEThBUa78x9wE3NotQ2DvieTb/jrPF75Lx6DvXjOk/UrKmGo3kW2e
-         jEgX5BhdbFeuxbLfWkVOmQLUfv2V2YnDVEZffWIi6dzJvUR9ce6yzBilCf7+TW6+PVwQ
-         BlHtku8pTz3r4zs9MfCPbiP4nmyqk/1QM4pWk4owXgK65LEQTESiNM9e3tJ+iBQh7GQN
-         +W5abENv8FeC5Hr/eBUbx4Rouj0y9NHWKS1PxK+JbceKBEtLDUSuJuEPaTQKkenjQqkm
-         PGdH5tw9h1ITt5Kpd3+K/E7Z3MjW+0TkAM+CD/NokEYiAqqxN2wgx/XhFa/3sVc3Oo5y
-         2Viw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=uuPdzsYrCELKJnGVxoANM1PIXJOyrUjt5nhJHbZTcKo=;
+        b=IYW4YTrYfy+kuwOU/lYSO3bgdbsS6ahDQGbWQz2pVXyf3gpqKiVGpSqAGXtloLGD2M
+         WA6XxacLcQak2MEzhhTV0X5U/dR3yiLyx5qEePcdC4cRvL0T7jdFdGi3CGg8DESOCPws
+         lsm3aaw0P2r+rWFW6Jf015OyCD5/EKke57c2kACRLYYaHvTXrpOJn8pSD0QXt63mP9H2
+         NunKHb4PkJIIeZPyu3B0BstWYB74PnnGOaUD6TXxgbVwrVMYLY1FJV/Hp2oxnAh234Zl
+         xFnItRaPtPJptW3rvZuQD06WVCaVjjK96ry+TXpdxrM5IgHrbsgb77anjgstT6SY1QLw
+         ZSug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Uwxa46CvTM5ECW30BkNGZjhjXbVyQcR87+DO9oGqllg=;
-        b=PD05dg0du7uM1qIZ813cxoYbmHuK4ZHaw2d0n67qUaNfLh9Zwd5tc7CSZTjZhF5cHP
-         zFJDRWfXOIuPOfJm32Jkgo/322Oa25W9RVtcJH7SkNIvDV/f5DkM7lTpy4tR+cKnbMnm
-         hHyPLkluhcAnRb3um5rKJAS5yb/gTqiVa+j9gfmNEQSitowDHe4uUeP1yx72pwVEN8C4
-         AJfkwoMX3e1CWuMAfhhy512IuEZ6aGrc3MCLjcJygPRpWGk8zf8AiSrSflDm/ScCsDNC
-         yhiD091VWn+wiglgnIzq+dZSeB9NrIJEFsernaohDsAATbk04FbczlxHecKdx8+nCb/6
-         Wg3A==
-X-Gm-Message-State: AGi0PuaRNmKoksxEr/MMT3YonU8pSCBXXRCve0JHxO7NBN4L0Tlv3aAz
-        lBH1IYeaIyDnyViRBK/ZhLvPxk5YLmY=
-X-Google-Smtp-Source: APiQypIQNfUxVZ0FUWV2rhTkaDY9U+2PR0qRypwfUt63vnffCAnKTW2eQnfwgrpDh5mj68nhUx0Zdg==
-X-Received: by 2002:a63:1060:: with SMTP id 32mr21172267pgq.271.1586835217209;
-        Mon, 13 Apr 2020 20:33:37 -0700 (PDT)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id 140sm5612440pge.49.2020.04.13.20.33.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 20:33:36 -0700 (PDT)
-From:   zhang.lyra@gmail.com
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: [PATCH v2 1/4] clk: sprd: check its parent status before reading gate clock
-Date:   Tue, 14 Apr 2020 11:33:22 +0800
-Message-Id: <20200414033325.26536-2-zhang.lyra@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200414033325.26536-1-zhang.lyra@gmail.com>
-References: <20200414033325.26536-1-zhang.lyra@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=uuPdzsYrCELKJnGVxoANM1PIXJOyrUjt5nhJHbZTcKo=;
+        b=FuG0xKnQmJuL5ZBNKWqLsfjA4tS0mOkPgU7uKMD5IJu3m3YZe6LWNq2BqN2DfL4Fjy
+         J7rspHSM+vXJLR911vAv6Xwu/ukRcJsSU6tw/F4bRryJNDxoYIcpbR0g8W1LdOtED8Of
+         ewjlw7RgB8FqhHRrYqOAo+1XtZB8J6l3Q+nBYu6kAFO6AT4BJI5C2KgfnZgSJCYjP5QZ
+         rDk/wu0fa6xavfaY0Nz9O368X/daRNQm3BVriO27dMb9dSp19VjmLt/oR6R15bKN/eiZ
+         0xTsFVt30zrA53FqQTDiYFocexrOxddmMHJM++ECtxKNWaXNq3jggAUrDKdkSwvbQeSL
+         tf3Q==
+X-Gm-Message-State: AGi0Pubj4ihwAHvWCs0v325JEFek8RdP+DvBB1A2Pw+b0PmMyaSziwPE
+        mbmXQJymeMDDHYrn5T90FWW39a7eCLSvM0k6Id4DDQ==
+X-Google-Smtp-Source: APiQypI+OHSx7I0zAFNl0j3kM4YuBCc2AJy2aRhhIsVV8UZqht0LfkdSl9kXkAtfkBw1fMhlpmo+n7+6X8Ap0UyfKBQ=
+X-Received: by 2002:a50:d71e:: with SMTP id t30mr969087edi.246.1586841992805;
+ Mon, 13 Apr 2020 22:26:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
+ <1586353607-32222-3-git-send-email-rnayak@codeaurora.org> <20200409174511.GS199755@google.com>
+ <CABymUCNdX=K1vFuC0Rt-u0h-CRYcKtXogyOkAiGZpDfKSVAYqA@mail.gmail.com> <13907000-e3b0-12d6-0768-fd8a7ab100d9@codeaurora.org>
+In-Reply-To: <13907000-e3b0-12d6-0768-fd8a7ab100d9@codeaurora.org>
+From:   Jun Nie <jun.nie@linaro.org>
+Date:   Tue, 14 Apr 2020 13:26:21 +0800
+Message-ID: <CABymUCM+WjSxKhhvqbBSxub_3wxvnJ8aOVgtWD9JOoxA3MuY2A@mail.gmail.com>
+Subject: Re: [PATCH 02/21] tty: serial: qcom_geni_serial: Use OPP API to set
+ clk/perf state
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, sboyd@kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-serial@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Rajendra Nayak <rnayak@codeaurora.org> =E4=BA=8E2020=E5=B9=B44=E6=9C=8813=
+=E6=97=A5=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=8810:22=E5=86=99=E9=81=93=EF=BC=
+=9A
+>
+>
+>
+> On 4/10/2020 2:06 PM, Jun Nie wrote:
+> >>> @@ -961,7 +962,7 @@ static void qcom_geni_serial_set_termios(struct u=
+art_port *uport,
+> >>>                goto out_restart_rx;
+> >>>
+> >>>        uport->uartclk =3D clk_rate;
+> >>> -     clk_set_rate(port->se.clk, clk_rate);
+> >>> +     dev_pm_opp_set_rate(uport->dev, clk_rate);
+> >
+> > Hi Rajendra,
+>
+> Hi Jun,
+>
+> > I see lowest rpmhpd_opp_low_svs opp is for 75MHz. It is a bit higher
+> > for a serial.
+> > I am just curious about this.
+>
+> Well these OPP tables are technically what we call as fmax tables, which =
+means
+> you can get the clock to a max of 75MHz at that perf level. You need to g=
+o
+> to the next perf level if you want to go higher.
+> That however does not mean that serial cannot run at clocks lower than 75=
+Mhz.
+>
+> > I also want to confirm that the rpmhpd_opp_low_svs voltage restriction
+> > is for serial
+> > controller, not for clock controller? Because I see there is similar
+> > restriction to clock
+> > controller on another platform, the restriction is for branch clock,
+> > not leaf clock that
+> > consumer device will get.
+>
+> yes, its a serial controller restriction and not of the clock provider.
+> On your note on the branch clock vs leaf clock I am not sure I understand
+> the point you are making.
 
-Some clocks only can be accessed if their parent is enabled. mipi_csi_xx
-clocks on SC9863A are an examples. We have to ensure the parent clock is
-enabled when reading those clocks.
+For the leaf clock, I mean the clock that consumer get with devm_clk_get().=
+ The
+branch clock means it is not for consumer directly, and its child
+clock or grandchild
+clock is for consumer. In that case, the restriction has to be done in
+clock driver,
+not in clock consumer driver. Sorry for confusing you. I just want to
+know more about
+what function this patch set provide. Because I am working on the
+clock controller
+restriction of fmax/voltage. Thanks!
 
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
----
- drivers/clk/sprd/gate.c | 7 +++++++
- drivers/clk/sprd/gate.h | 9 +++++++++
- 2 files changed, 16 insertions(+)
-
-diff --git a/drivers/clk/sprd/gate.c b/drivers/clk/sprd/gate.c
-index 574cfc116bbc..56e1714b541e 100644
---- a/drivers/clk/sprd/gate.c
-+++ b/drivers/clk/sprd/gate.c
-@@ -94,8 +94,15 @@ static int sprd_gate_is_enabled(struct clk_hw *hw)
- {
- 	struct sprd_gate *sg = hw_to_sprd_gate(hw);
- 	struct sprd_clk_common *common = &sg->common;
-+	struct clk_hw *parent;
- 	unsigned int reg;
- 
-+	if (sg->flags & SPRD_GATE_NON_AON) {
-+		parent = clk_hw_get_parent(hw);
-+		if (!parent || !clk_hw_is_enabled(parent))
-+			return 0;
-+	}
-+
- 	regmap_read(common->regmap, common->reg, &reg);
- 
- 	if (sg->flags & CLK_GATE_SET_TO_DISABLE)
-diff --git a/drivers/clk/sprd/gate.h b/drivers/clk/sprd/gate.h
-index b55817869367..e738dafa4fe9 100644
---- a/drivers/clk/sprd/gate.h
-+++ b/drivers/clk/sprd/gate.h
-@@ -19,6 +19,15 @@ struct sprd_gate {
- 	struct sprd_clk_common	common;
- };
- 
-+/*
-+ * sprd_gate->flags is used for:
-+ * CLK_GATE_SET_TO_DISABLE	BIT(0)
-+ * CLK_GATE_HIWORD_MASK		BIT(1)
-+ * CLK_GATE_BIG_ENDIAN		BIT(2)
-+ * so we define new flags from	BIT(3)
-+ */
-+#define SPRD_GATE_NON_AON BIT(3) /* not alway powered on, check before read */
-+
- #define SPRD_SC_GATE_CLK_HW_INIT_FN(_struct, _name, _parent, _reg,	\
- 				    _sc_offset, _enable_mask, _flags,	\
- 				    _gate_flags, _udelay, _ops, _fn)	\
--- 
-2.20.1
-
+Jun
+>
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
