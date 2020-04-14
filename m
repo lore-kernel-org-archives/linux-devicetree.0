@@ -2,139 +2,121 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2AFC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 15:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEC0C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 15:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 287D5206D5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 15:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C608D20656
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 15:59:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BBCuPhLf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Knet1f2Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440921AbgDNPsI (ORCPT
+        id S2391213AbgDNP7i (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:48:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50784 "EHLO
+        Tue, 14 Apr 2020 11:59:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2440919AbgDNPr5 (ORCPT
+        by vger.kernel.org with ESMTP id S1732397AbgDNP7g (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:47:57 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C513C061A0C;
-        Tue, 14 Apr 2020 08:47:57 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id x25so13514769wmc.0;
-        Tue, 14 Apr 2020 08:47:57 -0700 (PDT)
+        Tue, 14 Apr 2020 11:59:36 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02E03C061A0C
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 08:59:36 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id q19so317608ljp.9
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 08:59:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dtEhtg3V0XhnUJ3vLOoW6oMCs8PMCorqBPl+EaqQeLI=;
-        b=BBCuPhLf+ty7IXCYq+5AILovgI5KqRQjdXB1eqO18/Exqs4SaPcTL32yZTYLQbvrwo
-         PEINDwuUgnEQBA6ie3Kuno5Aa6Smiap4YEis+5Et1XK/Q07C5m8XemAL4iSVHEtqP+eT
-         3tpjW/6Bm1fhwqtCGMiWLwriytiXBtxgsBOGhFMsiPpHh7DMhnBhnmWyQm+KD4rcomQJ
-         WObLKL/MiwexLbBYoFTIc5aP4Vuw+oW9S0JPsJ8opujJ99JTw2rFLoS5tyhRfP5586A3
-         PSbSxPI6ZF/M6TLx/x24kBhYoz/SM+pFBhwK4ivQtVeJXbyyS4TgNZ4EoTI912nlYhUi
-         x7zg==
+         :content-disposition:in-reply-to;
+        bh=Rms6uY6CaVS0vSi3goxkK0o2bZJ2P/sEKrGiTc8JDbs=;
+        b=Knet1f2YFczx+Bvkly4ATsCcdhmrsklTebUitDqlLsMrw3LqMzvVruqj3CQPZKV1Yj
+         /ycBcRyNhoItxGuHJPwS5RlOu6J5b+tRlSpyQpky4b7DCAZVp3IWHe0eFjX+25qzXN4j
+         T56HyXBHYqBKKaGTA5TytiwH64ksyAH9Ai653dTMo1Kw5uisWioqbeKHdeo+IBOmRdix
+         o/1MUYYNYJfED04KUzqhbJdrDwnRbHUQoRQ74Aop0Cn5LIATsrWwIuZOO64noMdNVpns
+         G7GjhicmqH3L3N6dB1nOyQUq2nB7C5L84kfOO7NB6ytZ+tkaHGDdowd471QUwf/fNBTh
+         zB2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dtEhtg3V0XhnUJ3vLOoW6oMCs8PMCorqBPl+EaqQeLI=;
-        b=OFUEnXmJV++QjVnA4q0yKNsdxrhaj+FGeWr4S82gAgk4w2+S1suKqq9CNs0A8xRv+b
-         Bx1nZZJAdKW8m93b0r1Fh3zyhnAykYLp4jDTG2owN3KL7VA0InktoDosNdGmxku9ZKas
-         jhbz1y2k1v2uEFh1N5awMHmGrsObLJZRyDsciL2KK4E/qBwHZ+sx39Qog4HZMiNZxBbk
-         /refS+WQNj71D604CwhPQhObPRjT2bOEnNfrlaK+5tL29yLC6ep6WEZSrFzr7rI+438+
-         474LBJxlbTsafsBiSvZtTOz+GNAvITfiHdLDJyFbeHZSZ1+8nJMJ9ZLtgAYjZyghN4R7
-         H5/Q==
-X-Gm-Message-State: AGi0PuYAoMRgnw+ykD9bipN9/VX+b2jOQ0oNrKLqjpDwX8TogX7i9Y32
-        HrY97we9shbSUrUFXq8JImw=
-X-Google-Smtp-Source: APiQypL+nMY5gY9tIEHLtexZ8cB50IQWLclIQoRNELFR2lKge7Lg0909hOyuaODL8bt6tAMRiSrlpQ==
-X-Received: by 2002:a7b:cb59:: with SMTP id v25mr517878wmj.13.1586879275890;
-        Tue, 14 Apr 2020 08:47:55 -0700 (PDT)
-Received: from localhost (pD9E51D62.dip0.t-ipconnect.de. [217.229.29.98])
-        by smtp.gmail.com with ESMTPSA id 19sm11461613wmo.3.2020.04.14.08.47.54
+         :mime-version:content-disposition:in-reply-to;
+        bh=Rms6uY6CaVS0vSi3goxkK0o2bZJ2P/sEKrGiTc8JDbs=;
+        b=HgOibWcDL+VvPQJcIfBU/KQj0fzEw0cGJjHhp5htmRofgSWvy5OgBdSeScJHT3b6R2
+         d7NAROsHNS8SYzlbJ8kr41j/Pmr6RpOHH+/LWj+messjOSPqtSLgHy8RuSo7rfZRRwM/
+         KL8SIJYR5bgTdC4/ofsCmMuPXXhcSGnqa9DJpTVprv5R9ei1h+U0gdy7pidohMMANPnb
+         7Kh6m/8tKnLdiZNuHoJvimpCr+A2las/pbK2EWhKVdA4sclLv7L/5IQSA8bd6jVeRDoI
+         ne2ZRP0PRyNMIqXrB4sbIJaHLY4Zp4mIeGr/svH8PxUCvJ68yQyLX4CAbNAWhYBFSA/i
+         xVYw==
+X-Gm-Message-State: AGi0PubDX6x24xlKfv1YNBZENaMR1LA+VM76UtwXYyHNCDxCOJ7IUeAI
+        2SwjmVbkbRCWXju69CCFHFUGMVDR5Uo=
+X-Google-Smtp-Source: APiQypKoehuSnG4FD3G0KCu9dyHnNmILoTThe26Z09YTqPw9oyFO24Qc3tSrK+0QjMZ4BVcUiGn4rQ==
+X-Received: by 2002:a2e:854e:: with SMTP id u14mr504262ljj.182.1586879974504;
+        Tue, 14 Apr 2020 08:59:34 -0700 (PDT)
+Received: from curiosity (ip-195-182-157-78.clients.cmk.ru. [195.182.157.78])
+        by smtp.gmail.com with ESMTPSA id r20sm7278237ljk.42.2020.04.14.08.59.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 08:47:54 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 17:47:53 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 11/14] memory: tegra: Support derated timings on
- Tegra210
-Message-ID: <20200414154753.GQ3593749@ulmo>
-References: <20200409175238.3586487-1-thierry.reding@gmail.com>
- <20200409175238.3586487-12-thierry.reding@gmail.com>
- <7f23f140-4c56-3d9a-946e-f29bc569f40c@gmail.com>
+        Tue, 14 Apr 2020 08:59:33 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 19:03:54 +0300
+From:   Sergey Matyukevich <geomatsi@gmail.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Baruch Siach <baruch@tkos.co.il>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [bug report] armada-8040-mcbin: 5.6-rc5 boot failure
+Message-ID: <20200414160354.GA463339@curiosity>
+References: <20200413220520.GA25917@curiosity>
+ <20200413222645.GT25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zfSPj0+0wxNpTjLN"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7f23f140-4c56-3d9a-946e-f29bc569f40c@gmail.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <20200413222645.GT25745@shell.armlinux.org.uk>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+> > Hi Russel, Miquel, and all,
+> > 
+> > MacchiatoBin Double-shot board fails to boot v5.6-rc5 kernel properly:
+> > USB, PCIe, and ethernet interfaces are not enabled. Before that I have
+> > been running v5.3 kernel w/o any noticeable issues.
 
---zfSPj0+0wxNpTjLN
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+...
+ 
+> > However looking at firmware version complaints, I guess that the actual
+> > reason of all those issues could be in ATF version rather than in the
+> > latest DTS changes. Probably I am using ATF version which is too old
+> > to work with up-to-date kernel: armada-17.10.3 from atf-marvell
+> > repository on github. If this is indeed the actual root cause of all
+> > the issues, then could you please recommend a preferable ATF version
+> > to test with ?
+> 
+> I would strongly recommend upgrading the firmware in any case, because
+> of work I did (and submitted back through Jon @ SolidRun) to improve
+> the eye mask on the 10G Ethernet interfaces.  I'm using the 18.12
+> version.  Firmware build instructions can be found at:
+> 
+> https://developer.solid-run.com/knowledge-base/armada-8040-machiatobin-u-boot-and-atf/
+> 
+> I've booted 5.6 recently on a number of Armada 8040 based boards
+> without issue, likely all running the later firmware.
 
-On Fri, Apr 10, 2020 at 02:44:16AM +0300, Dmitry Osipenko wrote:
-> 09.04.2020 20:52, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> ...
-> >  	tegra210_emc_debugfs_init(emc);
-> > =20
-> > +	cd =3D devm_thermal_of_cooling_device_register(emc->dev, np, "emc", e=
-mc,
-> > +						     &tegra210_emc_cd_ops);
-> > +	if (IS_ERR(cd)) {
-> > +		err =3D PTR_ERR(cd);
-> > +		dev_err(emc->dev, "failed to register cooling device: %d\n",
-> > +			err);
->=20
-> > +		goto detach;
->=20
-> I think it's not really worthwhile to fail whole EMC driver because of
-> the failed CDEV.
+Thanks ! After ATF update to 18.12 both USB and PCIe are working fine
+without any changes to DTS. But network interfaces including 1G copper
+interface still do not work as expected:
 
-Well, we do kind of need this cooling device mechanism in order for the
-memory to continue to operate properly at high temperatures. It's also
-very unlikely that this will ever fail, so I don't see any harm in
-making this mandatory.
+$ ip link set eth0 up                                                                                                                                                                             
+[  626.774003] mvpp2 f2000000.ethernet eth0: could not attach PHY (-19) RTNETLINK answers: No such device
+$ ip link set eth2 up
+[  504.054084] mvpp2 f4000000.ethernet eth2: could not attach PHY (-19) RTNETLINK answers: No such device
 
-Thierry
+I have not changed configuration since 5.3, so all the marvell phy
+drivers are in place. Is there anything in configuration that could
+be missed after moving from 5.3 to 5.6 kernel ?
 
---zfSPj0+0wxNpTjLN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6V2ykACgkQ3SOs138+
-s6EAeA/+IsxKWQvGh2RYgVTWhjjt4UXdnCKicikH4x5BNbL8tXenzOzKPEmGNWD5
-Ts2RFpne3QaRGscpN0bTZry+XjKv8UHoInOHgYZtd1KyS1+yJUbgZYeoHBA87Z+P
-bF7X/Pq8ZJPhqgvn6dAuNO2GWl/EpR9h5ne+TI7cEL84bqgAfaqRQjdqnyJdnc6X
-gg2eP8U7dff0CO9jR4JJHt1PckFrb/r6cwsCg9WlYbu+MBXj8mCXJzo0PvXHM9ea
-uLVXjEDdN8RV9kqypiiDiLpWxdaDBZqwD14yvdOfTYSXW/S/Ai8txPjlD2NqaqJE
-v+WikKx5xk3wUx4ul+v21cj3Xm1IClxl30UULyvznZGm5MqNHf/Nh+t/2ehgVslS
-CyzybTooPUv5qDkvlOPV+0ipG4UEask6NU80mNE90f27g9d5JhghOD2OgFKjiNLH
-hhzBwzz2innAetUGUI92suwYpXf3MyJqLnXdS9aGOQTT/lS68zMYRzCQvNwebT1K
-RzRzzPIywb2oegonGMCc6Y2aokC3dMmlyXaAkzmZD4rgjGjU8Q4i4iAvgqgAsRzu
-ZJdWtLqmc9IzFjWLDS1ThvojvXWSqtp/o08teaSw8Wv259svK8sfOm5/2K5zFKdk
-AmE9XGUvw/1zolMRomOMUkvvbDH9M7vBzeQbQqPwBBHAnz75HO8=
-=4S/7
------END PGP SIGNATURE-----
-
---zfSPj0+0wxNpTjLN--
+Regards,
+Sergey
