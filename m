@@ -2,305 +2,137 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A325C3815B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 15:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80424C352BE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 15:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68E4520787
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 15:38:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586878698;
-	bh=wsnp91rcwdxYBpYao46YELhWn6oIvD6jIFh28S6ADA8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=k598N22OusHsjFbL8N40kFawbZO+ZZThHeeqnhqkEOQCHsmi5iikqbVK2LsUt20Vq
-	 DoDbsoC+0znxgRi99FNMcFi+4St2ZPe54ThhanfiuJg2YcVVZXagvgtgoCpy3WS+eT
-	 v8tQWZUx4EWnERWAdQ8/s/Nrfrs6GB6+f8vcy3AA=
+	by mail.kernel.org (Postfix) with ESMTP id 5FFEA20678
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 15:40:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gSs78mzV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440542AbgDNPiB (ORCPT
+        id S2440641AbgDNPj7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:38:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440529AbgDNPhx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:37:53 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 217052075E;
-        Tue, 14 Apr 2020 15:37:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586878671;
-        bh=wsnp91rcwdxYBpYao46YELhWn6oIvD6jIFh28S6ADA8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=eaPNXm0eBthNtlwBsPDfapYe+Lln6DcD+Fs92BFAyuuJ6c8XZ+IMegeGcMfBWcPOf
-         UaMKwqoNjvUXSXYI/GatTtDnNYZ+Q8guQSDr701azEr1WhvnRDeT9uDU0typ7VXcna
-         P3BXeGoNg2eXfaGm6h9+Q0lnYCMLyknBkMBDsiTo=
-Date:   Tue, 14 Apr 2020 16:37:49 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Li Yang <leoyang.li@nxp.com>, Marc Zyngier <maz@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Subject: Applied "regmap-irq: make it possible to add irq_chip do a specific device node" to the regmap tree
-In-Reply-To:  <20200402203656.27047-5-michael@walle.cc>
-Message-Id:  <applied-20200402203656.27047-5-michael@walle.cc>
-X-Patchwork-Hint: ignore
+        Tue, 14 Apr 2020 11:39:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49408 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2440636AbgDNPjx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Apr 2020 11:39:53 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA616C061A0C;
+        Tue, 14 Apr 2020 08:39:52 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id a201so14141889wme.1;
+        Tue, 14 Apr 2020 08:39:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=U8GTwHnMm7fOWiSJPOBSV6m2y2+1A4gg/neQHtMHeu4=;
+        b=gSs78mzVUPzzb0Vtyt4Lc1QixoWe7H7cf6B6egjWdVtHb9B5L6NVmzrZUx9t7dQODf
+         G3pnNRIkj73wSgRSASKAOjVj3VmsRNMftpE/15acQ6ThjmXwFcdpr8l52NAUxS9Xy0DX
+         a1QBBW5FV+oPu87GsBA6+e4EqYf06QE7qk/mVvM7O4uox1MJqh2jtGye7KQxgFhEidzW
+         qr5hAxjM8ekqexWSqATS4QqfcNot12W2p2P4RopdGtg6taxyDROuXe0QYS1Dmrx0tn6b
+         7cFTDr8bkjCs/a7bR5D8Drfwl6HpJ6GjdwVogV5LtVeV5LU9yXArXZiK9MpiGzegagS8
+         e2ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=U8GTwHnMm7fOWiSJPOBSV6m2y2+1A4gg/neQHtMHeu4=;
+        b=RVEKvIAF4ctdfQ73OVJowPk4rZCXvVFx1bLJevlhsbDUa0ixaesWeMRcvWs/g1QieJ
+         Rii81HoBj00d7SNLQxzLl7Bj6RHzVOMnUPyXLybWXBXARy+SPETxxumDg7aPF9FImuSv
+         9++cNRZVjdHv7GqHLU1sC2tUR622Yi0XI7FMNThdogMIE6ExD6Ulg3ytLYp4Qe+9Ja/8
+         7O7IQg0D6MBAU1nmqt+bS8krpSD/nLedylkzsflt5Gcg91HHIPglv+jvPUt9qcdecWDe
+         AQDPGd5lBuBynz9hFMmRw2PFfWpLJHEGQtebWP1H/9aRM8i0gEeiDbLnz+3Gi57wzuQL
+         WsPg==
+X-Gm-Message-State: AGi0PuZrr6bNqKuauPZ0ILiixMRyC3wqRkVLAafWJwFVm/CUO7KpiCz9
+        PQ4lVNO6rCUZH66051yuXFg=
+X-Google-Smtp-Source: APiQypK/HbILUE64zYGJ4iCNavoetIFjifDKWsRL8QZtl/ZK/muMlXMnhBuOMRFkXujuT8XNkoTovQ==
+X-Received: by 2002:a7b:c642:: with SMTP id q2mr466521wmk.41.1586878791725;
+        Tue, 14 Apr 2020 08:39:51 -0700 (PDT)
+Received: from localhost (pD9E51D62.dip0.t-ipconnect.de. [217.229.29.98])
+        by smtp.gmail.com with ESMTPSA id t67sm20474257wmg.40.2020.04.14.08.39.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 08:39:50 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 17:39:49 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 09/14] memory: tegra: Add EMC scaling support code for
+ Tegra210
+Message-ID: <20200414153846.GN3593749@ulmo>
+References: <20200409175238.3586487-1-thierry.reding@gmail.com>
+ <20200409175238.3586487-10-thierry.reding@gmail.com>
+ <14cfd13a-5fde-f167-64cb-a61cba119a97@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="0fZkDq/H4AmqaB8D"
+Content-Disposition: inline
+In-Reply-To: <14cfd13a-5fde-f167-64cb-a61cba119a97@gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
 
-   regmap-irq: make it possible to add irq_chip do a specific device node
+--0fZkDq/H4AmqaB8D
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-has been applied to the regmap tree at
+On Fri, Apr 10, 2020 at 05:26:23PM +0300, Dmitry Osipenko wrote:
+> 09.04.2020 20:52, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > +static int tegra210_emc_table_device_init(struct reserved_mem *rmem,
+> > +					  struct device *dev)
+> > +{
+> > +	struct tegra210_emc *emc =3D dev_get_drvdata(dev);
+> > +	unsigned int i;
+> > +	void *table;
+> > +
+> > +	table =3D memremap(rmem->base, rmem->size, MEMREMAP_WB);
+> > +	if (!table) {
+> > +		dev_err(dev, "failed to map EMC table\n");
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	emc->timings =3D (struct tegra210_emc_timing *)table;
+>=20
+> No need to cast the void.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git 
+Indeed, looks like I can get rid of that table variable altogether.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Thierry
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+--0fZkDq/H4AmqaB8D
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+-----BEGIN PGP SIGNATURE-----
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6V2UUACgkQ3SOs138+
+s6GmYg//WAKvtCE2533jvRwm9viWE7gIwO4+5Qc+gBHrtYeZc/s1jQZHipianYQu
+9kbwBh6XO6UgeyzaaK7f3qQQrgjyy3zqy8dyINW6FgQBBJndPDTzN45cZ3rjVpoZ
+FMnnJotiX/1tl+YBkMbr84hh1ZYDucuH/BktLynsv/nowYs/0gAMExQs/wShOWz6
+E7+D4uddL567mbQLN/ssHJb5HysMLNwAIMg2IeFa+kUXq9gC/x3PbstpRCeY9L7r
+/gCwTnWGRscH9JT6Cyw1qoSr00CX5jZSXP2A4dY81YsGyfmNqJsrkd+X+oemqV27
+oBTJFFZvTY2ShEP8AXKyP91BUzSsECpY7iPYM0ji7a1l4avpFBJCrKOHkhHZukUZ
++VAWpr2XnQgeJtHMz6dAfFJQyPw+KPEhdRFMgqcZYUzYFiVe0b3W4D1WIkl50oJL
+rFLUGhnjgpGhnNezkWwHN1NYbgf+GsCe2gkk99IKLHAnfj/ds2sUNOZD7qIVrTAm
+6Otq32sdI3T2T0BeRkY/ysF5ChkASMGjmD6xkDGFrk9Ddz94WNPa+wwrCiUnrr4e
+Ceu/4HxF8ncU63g+f7N35dpfdZZpb/qWwrfFkDtEZ48tVf4fkKBs8YKyzuPliGIM
+dAt7FZL3/mTm3l263IjkJuYarBBB+Ggs/hR4NB/ulB0oleeCD1A=
+=MoN0
+-----END PGP SIGNATURE-----
 
-Thanks,
-Mark
-
-From 12479382877dcf6623af4676caa8d3c647469a1b Mon Sep 17 00:00:00 2001
-From: Michael Walle <michael@walle.cc>
-Date: Thu, 2 Apr 2020 22:36:44 +0200
-Subject: [PATCH] regmap-irq: make it possible to add irq_chip do a specific
- device node
-
-Add a new function regmap_add_irq_chip_np() with its corresponding
-devm_regmap_add_irq_chip_np() variant. Sometimes one want to register
-the IRQ domain on a different device node that the one of the regmap
-node. For example when using a MFD where there are different interrupt
-controllers and particularly for the generic regmap gpio_chip/irq_chip
-driver. In this case it is not desireable to have the IRQ domain on
-the parent node.
-
-Signed-off-by: Michael Walle <michael@walle.cc>
-Link: https://lore.kernel.org/r/20200402203656.27047-5-michael@walle.cc
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/base/regmap/regmap-irq.c | 84 ++++++++++++++++++++++++++------
- include/linux/regmap.h           | 10 ++++
- 2 files changed, 78 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/base/regmap/regmap-irq.c b/drivers/base/regmap/regmap-irq.c
-index 3d64c9331a82..4340e1d268b6 100644
---- a/drivers/base/regmap/regmap-irq.c
-+++ b/drivers/base/regmap/regmap-irq.c
-@@ -541,8 +541,9 @@ static const struct irq_domain_ops regmap_domain_ops = {
- };
- 
- /**
-- * regmap_add_irq_chip() - Use standard regmap IRQ controller handling
-+ * regmap_add_irq_chip_np() - Use standard regmap IRQ controller handling
-  *
-+ * @np: The device_node where the IRQ domain should be added to.
-  * @map: The regmap for the device.
-  * @irq: The IRQ the device uses to signal interrupts.
-  * @irq_flags: The IRQF_ flags to use for the primary interrupt.
-@@ -556,9 +557,10 @@ static const struct irq_domain_ops regmap_domain_ops = {
-  * register cache.  The chip driver is responsible for restoring the
-  * register values used by the IRQ controller over suspend and resume.
-  */
--int regmap_add_irq_chip(struct regmap *map, int irq, int irq_flags,
--			int irq_base, const struct regmap_irq_chip *chip,
--			struct regmap_irq_chip_data **data)
-+int regmap_add_irq_chip_np(struct device_node *np, struct regmap *map, int irq,
-+			   int irq_flags, int irq_base,
-+			   const struct regmap_irq_chip *chip,
-+			   struct regmap_irq_chip_data **data)
- {
- 	struct regmap_irq_chip_data *d;
- 	int i;
-@@ -769,12 +771,10 @@ int regmap_add_irq_chip(struct regmap *map, int irq, int irq_flags,
- 	}
- 
- 	if (irq_base)
--		d->domain = irq_domain_add_legacy(map->dev->of_node,
--						  chip->num_irqs, irq_base, 0,
--						  &regmap_domain_ops, d);
-+		d->domain = irq_domain_add_legacy(np, chip->num_irqs, irq_base,
-+						  0, &regmap_domain_ops, d);
- 	else
--		d->domain = irq_domain_add_linear(map->dev->of_node,
--						  chip->num_irqs,
-+		d->domain = irq_domain_add_linear(np, chip->num_irqs,
- 						  &regmap_domain_ops, d);
- 	if (!d->domain) {
- 		dev_err(map->dev, "Failed to create IRQ domain\n");
-@@ -808,6 +808,30 @@ int regmap_add_irq_chip(struct regmap *map, int irq, int irq_flags,
- 	kfree(d);
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(regmap_add_irq_chip_np);
-+
-+/**
-+ * regmap_add_irq_chip() - Use standard regmap IRQ controller handling
-+ *
-+ * @map: The regmap for the device.
-+ * @irq: The IRQ the device uses to signal interrupts.
-+ * @irq_flags: The IRQF_ flags to use for the primary interrupt.
-+ * @irq_base: Allocate at specific IRQ number if irq_base > 0.
-+ * @chip: Configuration for the interrupt controller.
-+ * @data: Runtime data structure for the controller, allocated on success.
-+ *
-+ * Returns 0 on success or an errno on failure.
-+ *
-+ * This is the same as regmap_add_irq_chip_np, except that the device
-+ * node of the regmap is used.
-+ */
-+int regmap_add_irq_chip(struct regmap *map, int irq, int irq_flags,
-+			int irq_base, const struct regmap_irq_chip *chip,
-+			struct regmap_irq_chip_data **data)
-+{
-+	return regmap_add_irq_chip_np(map->dev->of_node, map, irq, irq_flags,
-+				      irq_base, chip, data);
-+}
- EXPORT_SYMBOL_GPL(regmap_add_irq_chip);
- 
- /**
-@@ -875,9 +899,10 @@ static int devm_regmap_irq_chip_match(struct device *dev, void *res, void *data)
- }
- 
- /**
-- * devm_regmap_add_irq_chip() - Resource manager regmap_add_irq_chip()
-+ * devm_regmap_add_irq_chip_np() - Resource manager regmap_add_irq_chip_np()
-  *
-  * @dev: The device pointer on which irq_chip belongs to.
-+ * @np: The device_node where the IRQ domain should be added to.
-  * @map: The regmap for the device.
-  * @irq: The IRQ the device uses to signal interrupts
-  * @irq_flags: The IRQF_ flags to use for the primary interrupt.
-@@ -890,10 +915,11 @@ static int devm_regmap_irq_chip_match(struct device *dev, void *res, void *data)
-  * The &regmap_irq_chip_data will be automatically released when the device is
-  * unbound.
-  */
--int devm_regmap_add_irq_chip(struct device *dev, struct regmap *map, int irq,
--			     int irq_flags, int irq_base,
--			     const struct regmap_irq_chip *chip,
--			     struct regmap_irq_chip_data **data)
-+int devm_regmap_add_irq_chip_np(struct device *dev, struct device_node *np,
-+				struct regmap *map, int irq, int irq_flags,
-+				int irq_base,
-+				const struct regmap_irq_chip *chip,
-+				struct regmap_irq_chip_data **data)
- {
- 	struct regmap_irq_chip_data **ptr, *d;
- 	int ret;
-@@ -903,8 +929,8 @@ int devm_regmap_add_irq_chip(struct device *dev, struct regmap *map, int irq,
- 	if (!ptr)
- 		return -ENOMEM;
- 
--	ret = regmap_add_irq_chip(map, irq, irq_flags, irq_base,
--				  chip, &d);
-+	ret = regmap_add_irq_chip_np(np, map, irq, irq_flags, irq_base,
-+				     chip, &d);
- 	if (ret < 0) {
- 		devres_free(ptr);
- 		return ret;
-@@ -915,6 +941,32 @@ int devm_regmap_add_irq_chip(struct device *dev, struct regmap *map, int irq,
- 	*data = d;
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(devm_regmap_add_irq_chip_np);
-+
-+/**
-+ * devm_regmap_add_irq_chip() - Resource manager regmap_add_irq_chip()
-+ *
-+ * @dev: The device pointer on which irq_chip belongs to.
-+ * @map: The regmap for the device.
-+ * @irq: The IRQ the device uses to signal interrupts
-+ * @irq_flags: The IRQF_ flags to use for the primary interrupt.
-+ * @irq_base: Allocate at specific IRQ number if irq_base > 0.
-+ * @chip: Configuration for the interrupt controller.
-+ * @data: Runtime data structure for the controller, allocated on success
-+ *
-+ * Returns 0 on success or an errno on failure.
-+ *
-+ * The &regmap_irq_chip_data will be automatically released when the device is
-+ * unbound.
-+ */
-+int devm_regmap_add_irq_chip(struct device *dev, struct regmap *map, int irq,
-+			     int irq_flags, int irq_base,
-+			     const struct regmap_irq_chip *chip,
-+			     struct regmap_irq_chip_data **data)
-+{
-+	return devm_regmap_add_irq_chip_np(dev, map->dev->of_node, map, irq,
-+					   irq_flags, irq_base, chip, data);
-+}
- EXPORT_SYMBOL_GPL(devm_regmap_add_irq_chip);
- 
- /**
-diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-index 40b07168fd8e..ae5034b2d7c3 100644
---- a/include/linux/regmap.h
-+++ b/include/linux/regmap.h
-@@ -21,6 +21,7 @@
- struct module;
- struct clk;
- struct device;
-+struct device_node;
- struct i2c_client;
- struct i3c_device;
- struct irq_domain;
-@@ -1310,12 +1311,21 @@ struct regmap_irq_chip_data;
- int regmap_add_irq_chip(struct regmap *map, int irq, int irq_flags,
- 			int irq_base, const struct regmap_irq_chip *chip,
- 			struct regmap_irq_chip_data **data);
-+int regmap_add_irq_chip_np(struct device_node *np, struct regmap *map, int irq,
-+			   int irq_flags, int irq_base,
-+			   const struct regmap_irq_chip *chip,
-+			   struct regmap_irq_chip_data **data);
- void regmap_del_irq_chip(int irq, struct regmap_irq_chip_data *data);
- 
- int devm_regmap_add_irq_chip(struct device *dev, struct regmap *map, int irq,
- 			     int irq_flags, int irq_base,
- 			     const struct regmap_irq_chip *chip,
- 			     struct regmap_irq_chip_data **data);
-+int devm_regmap_add_irq_chip_np(struct device *dev, struct device_node *np,
-+				struct regmap *map, int irq, int irq_flags,
-+				int irq_base,
-+				const struct regmap_irq_chip *chip,
-+				struct regmap_irq_chip_data **data);
- void devm_regmap_del_irq_chip(struct device *dev, int irq,
- 			      struct regmap_irq_chip_data *data);
- 
--- 
-2.20.1
-
+--0fZkDq/H4AmqaB8D--
