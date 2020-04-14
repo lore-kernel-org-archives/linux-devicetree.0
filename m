@@ -2,98 +2,136 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF600C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 16:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A935C352BE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 16:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D24E20737
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 16:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9974206E9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 16:42:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PipUNxux"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fweroCpS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405218AbgDNQlA (ORCPT
+        id S2407469AbgDNQmj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:41:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59096 "EHLO
+        Tue, 14 Apr 2020 12:42:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404908AbgDNQk6 (ORCPT
+        by vger.kernel.org with ESMTP id S2407456AbgDNQmc (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:40:58 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18597C061A0C;
-        Tue, 14 Apr 2020 09:40:58 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id l14so499900ljj.5;
-        Tue, 14 Apr 2020 09:40:58 -0700 (PDT)
+        Tue, 14 Apr 2020 12:42:32 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B86AC061A0C;
+        Tue, 14 Apr 2020 09:42:32 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id d24so138449pll.8;
+        Tue, 14 Apr 2020 09:42:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=42zN/JWZMrImPOHqxaziIrOnovVE6HSOm6ZZB3qclDs=;
-        b=PipUNxuxy3Q6sLRqz5k1a/Npe7zldh+VoHciAjWwpKNErtKr8tfgneF3cIcmDBppP5
-         sbUjTK8ubc5x1aKFktL3nhoxYA4bsRwv9kRUNV+N7MRxcWwVoN+tG3mcRLq23qxfMqs/
-         N13AiKb9ZenPnaIqf2o+g1Ek7GX2F851aM7WK+VJVA2BZYBhBZ3a8bwkin052ZRUd8Za
-         pqB4djj8qbZfyY0Fx65++1zu83iPtDs71tzW0enbb/I6st1Wkzh4QMvFLW3TReiIuahJ
-         /ZgqUcEVVXnSES/SzeKljm5HMOFJ5MRjl+7Z2vUgfFS9ruNWde/KvgtcE9yUqnGYyS1A
-         wn0g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BaE5xtuaHnNpipifyvaW4HHNFdG1qUBuWSeqScaNbPg=;
+        b=fweroCpStL7FmPM6ywlL5me8387DKQfxTELUYOKM6hnR5nkCuIXo+jd2DIdGpZr21I
+         ug510Km+8tWS8mOatSSm0wf6MjCAbKKFD2e9oLSU0PBGecsFYGiwblybXHRA8hpuC7sZ
+         j14iF8Z7c6kgDEQ/UjMmPxlNCwaU4tSZMC4ehCfTgY2eQacq3MCCY++b1W1EcCK3BdWs
+         6Xiynfj+lOnOnnEyl2ezb8wW9UPYYS1wcig+T6LCXikEqWKzWXMW5ux+sWL7z5l7ttlp
+         /B35yycb7y2HCp7FofY2w2UzLbS3OgavjGjKDHE44iVHwBtp4pJ9WK/aV8GZN5LrhtQh
+         lT6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=42zN/JWZMrImPOHqxaziIrOnovVE6HSOm6ZZB3qclDs=;
-        b=eQEsrh89vns8D0OwYeslGQBvW/GTkj3dg68qmew+PiNIR1uzZHI5iSO0sbAXTjkKHd
-         xeOYieX3TRRTHDwkqBfgKsSvJjiJpeQcpx38sonTuB/rGXjJLA9wgpmJsbFcwLUmK+xf
-         mMY3qF/9sE7YWJktr6VJ4xvhJCGNTjahAL/9DPsIHfyzBPCqLaP4CxjEPA8ykPAQ7JYR
-         m6h3dxtOCCWW6Igb3JQSve8hchxognOhm5/Sy9mBtK7CZihhfInWyJMehdOShAhZowcz
-         1fsv/YZ7k22WdNxRsa4FOJGQoKpjSWDOvSdmeNVhXHIz4QILlAE2X4egaku4ZVZMOUzH
-         1pZw==
-X-Gm-Message-State: AGi0PuafFa1l9zK9QB+ieT9MPD/Ki6XSzTWm0T4LLyh8WZbPfZncvRjZ
-        8JgLbm0jiIuQYegBJZ72FLM=
-X-Google-Smtp-Source: APiQypIsIVTReol7rZyJyAlFKw87DWeZ7xkU4PVTXTRJYLKhxkNO6FDzjCKYW+CTaMG6SrEu8MK46g==
-X-Received: by 2002:a2e:6c15:: with SMTP id h21mr635259ljc.248.1586882456643;
-        Tue, 14 Apr 2020 09:40:56 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id l13sm9448259ljc.84.2020.04.14.09.40.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Apr 2020 09:40:56 -0700 (PDT)
-Subject: Re: [PATCH v6 11/14] memory: tegra: Support derated timings on
- Tegra210
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200409175238.3586487-1-thierry.reding@gmail.com>
- <20200409175238.3586487-12-thierry.reding@gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <543bfc3b-2bb9-01d3-62da-89d1f0b18a5b@gmail.com>
-Date:   Tue, 14 Apr 2020 19:40:55 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BaE5xtuaHnNpipifyvaW4HHNFdG1qUBuWSeqScaNbPg=;
+        b=som2/a1yT4M5k6+C8TBVT4IXMiF+HlPw0lfhhY7VLwxUZc0joDjZepbw3n37suHNrH
+         L9JoZ1siNPhN3YZVgV1oJBq/i2OEkwAifw2IfqAGgGWRHDuePjl6CmVxOznv850dX9Ad
+         pZVCJrhIo7cCHRzwrJDBMqQd2JNxblNy6ejpYjL2+tyPYCiv6OMXRt6tiKHT5DRrb4a3
+         iFuhgwuOighHenjugwhLVh+yE2/XVjZN8k/qIQIAnDFdrQwOoarg+ctkYWZ9EvlSkK6F
+         wiK9NVnq59aNzF6qfn6ETQlYV68U/2AYrE0DiqcxqNRyzMLmcgVqgF8d1Trxr0qveecs
+         SaKQ==
+X-Gm-Message-State: AGi0PuZkeaHsp9JAZCh5yncTEeswI/K62GkWBQid1pWM+KGEXXrDnV/7
+        JMHFOqlirrjFyGbjFI+x1WbHNxCLdvkthNr+zQ/VQlWzRlg=
+X-Google-Smtp-Source: APiQypICgAp4y1bVzeBiwyAyp3p0BOH+vDzleW7tdIJIbAlPpNL7hdC9qQlXOzBPFIPzy8RUcoeGBHwsW9/bWU66MF8=
+X-Received: by 2002:a17:902:aa09:: with SMTP id be9mr832961plb.18.1586882551514;
+ Tue, 14 Apr 2020 09:42:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200409175238.3586487-12-thierry.reding@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200414153415.957-1-mani@kernel.org> <20200414153415.957-3-mani@kernel.org>
+In-Reply-To: <20200414153415.957-3-mani@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 14 Apr 2020 19:42:24 +0300
+Message-ID: <CAHp75Vf1wzBD+r5L7XFPW=ydxFLBfBNr6Jc4b6sMWR4Rci-Acw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] iio: chemical: Add support for external Reset and
+ Wakeup in CCS811
+To:     mani@kernel.org
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, narcisaanamaria12@gmail.com,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-09.04.2020 20:52, Thierry Reding пишет:
-> -	/* EMC training timer */
+On Tue, Apr 14, 2020 at 6:34 PM <mani@kernel.org> wrote:
+>
+> From: Manivannan Sadhasivam <mani@kernel.org>
+>
+> CCS811 VOC sensor exposes nRESET and nWAKE pins which can be connected
+> to GPIO pins of the host controller. These pins can be used to externally
+> release the device from reset and also to wake it up before any I2C
+> transaction. The initial driver support assumed that the nRESET pin is not
+> connected and the nWAKE pin is tied to ground.
+>
+> This commit improves it by adding support for controlling those two pins
+> externally using a host controller. For the case of reset, if the hardware
+> reset is not available, the mechanism to do software reset is also added.
+>
+> As a side effect of doing this, the IIO device allocation needs to be
+> slightly moved to top of probe to make use of priv data early.
 
-Guess this comment isn't really needed from the start, or should it be kept?
+Thank you for an update, my comments below.
 
-> +	timer_setup(&emc->refresh_timer, tegra210_emc_poll_refresh,
-> +		    TIMER_DEFERRABLE);
-> +	atomic_set(&emc->refresh_poll, 0);
-> +	emc->refresh_poll_interval = 1000;
+...
 
+> +       reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
+> +                                            GPIOD_OUT_LOW);
+> +       if (IS_ERR(reset_gpio)) {
+
+> +               dev_err(&client->dev, "Failed to acquire reset gpio\n");
+
+If it's a deferred probe, it would spam the log.
+
+> +               return PTR_ERR(reset_gpio);
+> +       }
+
+...
+
+> +               static const u8 reset_seq[] = {
+> +                       0xFF, 0x11, 0xE5, 0x72, 0x8A,
+> +               };
+
+I would suggest to comment above from where you got this and the
+meaning of the numbers.
+
+...
+
+> +       data->wakeup_gpio = devm_gpiod_get_optional(&client->dev, "wakeup",
+> +                                                   GPIOD_OUT_HIGH);
+> +       if (IS_ERR(data->wakeup_gpio)) {
+
+> +               dev_err(&client->dev, "Failed to acquire wakeup gpio\n");
+
+Ditto.
+
+> +               return PTR_ERR(data->wakeup_gpio);
+> +       }
+
+-- 
+With Best Regards,
+Andy Shevchenko
