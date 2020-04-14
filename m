@@ -2,100 +2,119 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC35C3815B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 13:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74732C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 13:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB6620768
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 13:55:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586872540;
-	bh=+J2f9KdDNgTVZtbleTkNmcNiPRwoBR610Xf6hemYWzI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tcyy0KTSX5Htk5WoVWdCkBb+peezkxc6IcDDlu3XyUzwzCxOIOvQyXi0t/XOyyytV
-	 l5rt3S9bt6+kvQ5PtaLWInY2B3D7fZ2zASaNcShbzmc8sCvxKxzIrp4P8bT8jd9h8W
-	 A2SUl2NR7vOUxVIPEoUyLRXfz1tJ5soECr+CZksA=
+	by mail.kernel.org (Postfix) with ESMTP id 545B620656
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 13:59:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S8NeGjG7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388336AbgDNNzj (ORCPT
+        id S2388567AbgDNN7E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 09:55:39 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33315 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727867AbgDNNzi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 09:55:38 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 103so12854949otv.0;
-        Tue, 14 Apr 2020 06:55:37 -0700 (PDT)
+        Tue, 14 Apr 2020 09:59:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33600 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388513AbgDNN7B (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 09:59:01 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38A97C061A0C;
+        Tue, 14 Apr 2020 06:59:01 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id a201so13685796wme.1;
+        Tue, 14 Apr 2020 06:59:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7Fwja0jTZZxHULJJjIpfSBVIH0kL/ZYNsx3rY4WniWg=;
+        b=S8NeGjG7yF7hADzFixrkOxE5I3ohu1+J8/XRQeH5MakFJHk3gcePLmSDT6RRpKjFSx
+         0ojnbxpZPkQl5KScZQl8XgJm0lcavf3MJEgcKy7zBW0P3U/aX3E4CRAXm2cvB2mRhqic
+         nLJ4mpUXoGY6AsfI2xDN0j5Lubo1BFS8phuaF5dUUiqBuDBzy0sZe7gZ7Pa/agV9axQB
+         6ACFXjJ1QAl1QPFyrqIlKXdla5US194fOE5JoH2VyjaZrIp5VvOZQax4xS/nAtCMzf3H
+         1yVVaTk7gAuqVmvPx7BBGX325oC/vazj35M/XSYQQtRt7agX9k22ts8rhnzRx4IOcDJ3
+         9L7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MPnBVuMb9gERNtPk1qaCs0pkeSDmOcTJZhbSPaMIInQ=;
-        b=tHTCJMkPAo3bZ09ydcX/+1SDvg8rD64QpQQJBbbO0Dp2Bqb5y1RiYUB9VROWj+nrGo
-         TWeohppU7mOB9OZ6XrNdbltPLKZO0mYmsIcYutoY5/gtOy5pcif9pQi02H8171FhdYSp
-         Fj7dDuH1eAwNFOH5R1+FS/1mlJ7i90BUGJ20ZVO/jlxLzKXUl48/oLrNZoh6kgvE4bGh
-         nkU7/HUAoH6UC+26/J0V61PfAikebw/QUMLV6ThYe0lj6bg0p2xY0FvIi+JCJ1jBhBwH
-         y8z7KhGa8So6cLvxJWyjRg6H6TwX/PCRfv3vQQ2D88oWGt7iwY5bQKKOb+oOytJw4i2f
-         64Gg==
-X-Gm-Message-State: AGi0PuYcFiyYeRABKYf7iiJGcty9IbPWXVBnscQ2z7sdYo1qMIHe/ouk
-        Q7Awd3/dgvkHpk77HsboMg==
-X-Google-Smtp-Source: APiQypJyEmmSmrZw1imbtJEg7HOnNBo7KdO2HJ4aRVczpnTT3rEGdeMvfO3dmGmCaFLZv459u6BWYg==
-X-Received: by 2002:a9d:c61:: with SMTP id 88mr19218457otr.144.1586872537121;
-        Tue, 14 Apr 2020 06:55:37 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f26sm4128832otp.28.2020.04.14.06.55.35
+        bh=7Fwja0jTZZxHULJJjIpfSBVIH0kL/ZYNsx3rY4WniWg=;
+        b=c4lvl80n1uv1SXaEtarkRXvb6rmlLjUZ+f4/hqloxAiWaMHMJIzfcxw6+9O065i11R
+         KpitVVpzD6aOTMwNZS06Nh8K0I6C/XaEkEJFE7zs7CBZekx/bEZI0x3f4dPBj8pwxlIo
+         ujUnfV1rmF/LCQlbtiXGSeTiP7ZevSqd9iHEb9F2HJFcZE9kWOkHjvkvKIfgTIqMx3v2
+         ZJDxL6hfMluada5JTNDVWzIbfo0KE9JgYNoLTiU73GB5sMqlQNX5QNqj8+0JtUsUFL2b
+         g+HZmbZcdZAWur9mdWZorzbuaTqHCiUI7utmxzuQsFiv+JK990n3+EotBf5SvUhBHm5C
+         +i3w==
+X-Gm-Message-State: AGi0PubuG5+9f6u4xNSsdjJpefjq+ZxQs/6wsya26c0Z5WSS53Q9txme
+        9kNyNNepKzgtY4ujr49nAuA=
+X-Google-Smtp-Source: APiQypJ9SYhb1oBz7bLLqc6vCchiGFM/jv4+fVqvUnelj4QZ+8LMbgEgAIwIEz5Ua7vmqqW2ldpPiQ==
+X-Received: by 2002:a1c:7d90:: with SMTP id y138mr25373864wmc.121.1586872740016;
+        Tue, 14 Apr 2020 06:59:00 -0700 (PDT)
+Received: from localhost (pD9E51D62.dip0.t-ipconnect.de. [217.229.29.98])
+        by smtp.gmail.com with ESMTPSA id c83sm16329703wmd.23.2020.04.14.06.58.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 06:55:36 -0700 (PDT)
-Received: (nullmailer pid 29325 invoked by uid 1000);
-        Tue, 14 Apr 2020 13:55:35 -0000
-Date:   Tue, 14 Apr 2020 08:55:35 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH v5 1/5] media: dt-bindings: media: i2c: Deprecate usage
- of the clock-frequency property
-Message-ID: <20200414135535.GA29221@bogus>
-References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1586191361-16598-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Tue, 14 Apr 2020 06:58:58 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 15:58:57 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     u.kleine-koenig@pengutronix.de, robh+dt@kernel.org,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pwm: rcar: add r8a77961 support
+Message-ID: <20200414135857.GC3593749@ulmo>
+References: <1586510057-31562-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="XWOWbaMNXpFDWE00"
 Content-Disposition: inline
-In-Reply-To: <1586191361-16598-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1586510057-31562-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon,  6 Apr 2020 17:42:37 +0100, Lad Prabhakar wrote:
-> OV5645 sensor supports input clock frequency ranging from 6MHz to 27MHz
-> but the driver strictly expects this to be 24MHz (with tolerance of 1%)
-> with this restrictions let the driver enforce the clock frequency
-> internally to 24MHz rather then being passed as dt-property.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+--XWOWbaMNXpFDWE00
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Apr 10, 2020 at 06:14:17PM +0900, Yoshihiro Shimoda wrote:
+> Add support for r8a77961 (R-Car M3-W+).
+>=20
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 > ---
->  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 2 --
->  1 file changed, 2 deletions(-)
-> 
+>  Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Applied, thanks.
 
-If a tag was not added on purpose, please state why and what changed.
+Thierry
+
+--XWOWbaMNXpFDWE00
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6VwaEACgkQ3SOs138+
+s6Fe9Q//fr0nAlK4lEV73Mu5TBQST85GbYfF00kdpEgT6q9qy1T9yinF3arvJwjV
+WH5+983n/26B2bNLkhF+ATUpxVIeoSetfPATFJmNtEUguBTlrpnSOJa4yFHmBzyN
+cfGXRFdprtXSHV4L4qctvaWJgOcyEYQYCK6E+Z2x+seNo77C20wM9M/mPKiu8mBe
+aEo48oqEvmhvEBEA4oUQydBos9yUlPEtanI7Dizwjj8ER6GY+poAR3HzRryMbCo9
+mQkLkk4S5uttWAdyAnlumXzRwiNN2cOxPJBKlDTcrOXY88GvFl1ZeYRwI8YznY8J
+I3Ba3drdvweftAK8Zw34OBPCXGUBmhd1ClPSKPFB0+AMud1DY4q13yv7zSJTUB5I
+ScKiWFdiB9uZbPjot0Q0CNIGSylh7JYFSH+D+nklou0NkJk2/iEUiT1vr11PrOgh
+B2ey8UvJI2o+Dzw1eV328EfXo+I4p1etFT4r5fgV2MDVF1rZybJ9UFEL6xSzbRVK
+ArqtKyYkFogm8/sAufcAfO47QAAFTP1jM96AnCHb7eZbPOSgJFD/7+abB9qpP02L
+6IgUih+xDg8ei+iilFLzMvrXcBnEeYKO1oSXXpLcuTwQVAAdSqMVhPbq2cyl+ryq
+s/0zV+gfYJIL8NofnnfuwFsVBZb1eDD+3qLgcRuaqxg3owU/ccw=
+=n1RL
+-----END PGP SIGNATURE-----
+
+--XWOWbaMNXpFDWE00--
