@@ -2,90 +2,155 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B011C2BBC7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 10:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FF9C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 11:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B66F2072D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 10:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D24820732
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 11:16:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438359AbgDNK57 (ORCPT
+        id S2390855AbgDNLQJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 06:57:59 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:57203 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729506AbgDNKcK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 06:32:10 -0400
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mtr@pengutronix.de>)
-        id 1jOIrN-0007BW-EF; Tue, 14 Apr 2020 12:32:05 +0200
-Received: from mtr by dude02.lab.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mtr@pengutronix.de>)
-        id 1jOIrM-000186-TB; Tue, 14 Apr 2020 12:32:04 +0200
-From:   Michael Tretter <m.tretter@pengutronix.de>
-To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc:     Rohit Visavalia <rohit.visavalia@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Dhaval Shah <dshah@xilinx.com>, kernel@pengutronix.de,
-        Michael Tretter <m.tretter@pengutronix.de>
-Subject: [PATCH v2 2/6] ARM: dts: define indexes for output clocks
-Date:   Tue, 14 Apr 2020 12:31:58 +0200
-Message-Id: <20200414103202.4288-3-m.tretter@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200414103202.4288-1-m.tretter@pengutronix.de>
-References: <20200414103202.4288-1-m.tretter@pengutronix.de>
+        Tue, 14 Apr 2020 07:16:09 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:58671 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390852AbgDNLQH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 07:16:07 -0400
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id E9207240008;
+        Tue, 14 Apr 2020 11:16:00 +0000 (UTC)
+Date:   Tue, 14 Apr 2020 13:16:00 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Claudiu.Beznea@microchip.com
+Cc:     a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com,
+        Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com,
+        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] ARM: dts: sam9x60: add rtt
+Message-ID: <20200414111600.GE34509@piout.net>
+References: <1586536019-12348-1-git-send-email-claudiu.beznea@microchip.com>
+ <1586536019-12348-5-git-send-email-claudiu.beznea@microchip.com>
+ <20200410222658.GB3628@piout.net>
+ <c4d46198-488b-c5d6-2a66-865a16840dc4@microchip.com>
+ <20200413104652.GE3628@piout.net>
+ <3116d1fc-af96-1e0c-aa07-3b34cbd58209@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mtr@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3116d1fc-af96-1e0c-aa07-3b34cbd58209@microchip.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The VCU System-Level Control provides 4 clocks. Defined indexes for
-these clocks.
+On 14/04/2020 08:42:08+0000, Claudiu.Beznea@microchip.com wrote:
+> > Why would one use the RTT while the RTC is far superior?
+> 
+> I didn't enabled this for a particular use case, but: couldn't this be used
+> by some user that wants to generate multiple alarms? from multiple RTCs?
+> 
 
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
----
-Changelog:
+I very much doubt that as Linux is able to properly multiplex alarms and
+basically, the only one we are interested in is actually wakeup.
 
-v1 -> v2:
-- none
----
- include/dt-bindings/clock/xlnx-vcu.h | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
- create mode 100644 include/dt-bindings/clock/xlnx-vcu.h
+> Moreover, this IP's counter has the possibility of being clocked at 1Hz.
+> Couldn't this minimize the power consumption while being in a power saving
+> mode?
+> 
 
-diff --git a/include/dt-bindings/clock/xlnx-vcu.h b/include/dt-bindings/clock/xlnx-vcu.h
-new file mode 100644
-index 000000000000..f2a5ea9c4155
---- /dev/null
-+++ b/include/dt-bindings/clock/xlnx-vcu.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2020 Pengutronix, Michael Tretter <kernel@pengutronix.de>
-+ */
-+
-+#ifndef _DT_BINDINGS_CLOCK_XLNX_VCU_H
-+#define _DT_BINDINGS_CLOCK_XLNX_VCU_H
-+
-+#define CLK_XVCU_ENC_CORE		0
-+#define CLK_XVCU_ENC_MCU		1
-+#define CLK_XVCU_DEC_CORE		2
-+#define CLK_XVCU_DEC_MCU		3
-+#define CLK_XVCU_MAX			4
-+
-+#endif /* _DT_BINDINGS_CLOCK_XLNX_VCU_H */
+And that 1Hz clock is coming from the RTC so using the RTC is
+definitively consuming less power.
+
+> > 
+> >>>
+> >>> In any case, this diff should be merge with the other at91-sam9x60ek.dts
+> >>> change instead of being with the dtsi change.
+> >>
+> >> The changes in this patch are related to enabling the RTT. The other dts
+> >> change is related to enabling gpbr. The RTT uses that enabled gpbr -> one
+> >> change per patch.
+> >>
+> >> If you still want to merge then, I'll do it, but then it becomes mixed.
+> >>
+> > 
+> > This patch is already mixing add the gpbr in sam9x60ek and add the node
+> > in sam9x60.dtsi which is worse.
+> 
+> This patch is like this:
+> 
+> diff --git a/arch/arm/boot/dts/at91-sam9x60ek.dts
+> b/arch/arm/boot/dts/at91-sam9x60ek.dts
+> index ab3d2d9a420a..4020e79a958e 100644
+> --- a/arch/arm/boot/dts/at91-sam9x60ek.dts
+> +++ b/arch/arm/boot/dts/at91-sam9x60ek.dts
+> @@ -617,6 +617,11 @@
+>  	};
+>  };
+> 
+> +&rtt {
+> +	atmel,rtt-rtc-time-reg = <&gpbr 0x0>;
+> +	status = "okay";
+> +};
+> +
+>  &shutdown_controller {
+>  	atmel,shdwc-debouncer = <976>;
+>  	status = "okay";
+> diff --git a/arch/arm/boot/dts/sam9x60.dtsi b/arch/arm/boot/dts/sam9x60.dtsi
+> index 326b39328b58..e1d8e3a4cb0b 100644
+> --- a/arch/arm/boot/dts/sam9x60.dtsi
+> +++ b/arch/arm/boot/dts/sam9x60.dtsi
+> @@ -661,6 +661,13 @@
+>  				status = "disabled";
+>  			};
+> 
+> +			rtt: rtt@fffffe20 {
+> +				compatible = "microchip,sam9x60-rtt";
+> +				reg = <0xfffffe20 0x20>;
+> +				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
+> +				clocks = <&clk32k 0>;
+> +			};
+> +
+> 
+> It doesn't adds the GPBR in sam9x60ek, it adds rtt in sam9x60ek which uses
+> GPBR.
+> 
+> > 
+> > Just have one patch adding the rtt node to the sam9x60.dtsi and then a
+> > patch adding the RTT to sam9x60ek.
+> 
+> Ok, I understand this.
+> 
+> > Because the RTT uses the gpbr, it is
+> > a good time to add enable the gpbr, this is a single functionnal change.
+> > 
+> > Let's say that for some reason, the RTT patch on sam9x60ek has to be
+> > reverted, then the RTT node is still defined which is good for all the
+> > other eventual users.
+> 
+> RTT node would still be defined but GPBR node will not be enabled.
+> 
+> If RTT patch contains this change that I understand you want me to merge here:
+> 
+> +&gpbr {
+> +	status = "okay";
+> +};
+> +
+> 
+> then, theoretically, some other IPs using the GPBR (RTC have the
+> possibility of doing this), may be broken by reverting the RTT patch that
+> includes the GPBR enabling patch.
+> 
+
+But this is very unlikely to happen because this would be limited to a
+single board device tree instead of impact every sam9x60 based boards.
+
+
 -- 
-2.20.1
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
