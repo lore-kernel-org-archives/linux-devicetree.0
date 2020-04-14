@@ -2,132 +2,101 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B11C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB9BC352BE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1523420656
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:09:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="HUV9qAl0"
+	by mail.kernel.org (Postfix) with ESMTP id B7A7E20767
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:10:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586887822;
+	bh=EbmMqfwZdQ48vvGP4gUEgE4gk1uvCdbJHR7To1L+RzQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KfNGZjsRKgDg61WEIQHycNbZKQq7GC4PUD2AuTaC1u/EQKp8DyT7JS/3mEE/U0x3g
+	 Ou8gIIwJLEBlxZHq/etDQNFfZT9hmK685S1Iz2HrG8VbnKkE7zkpL2qQxTlSBCZ2BR
+	 KwyVSBqPah0mcS6DXS+VJY60wsJmolXDGoaxJvkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503393AbgDNSJS (ORCPT
+        id S1731267AbgDNSKQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:09:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44714 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731265AbgDNSJO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:09:14 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78322C061A0C
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 11:09:14 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id v7so14388347qkc.0
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 11:09:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bv0sJf01GOa0wIzpOx9SRUfmEHLHh5Wp99C/Vrgdaec=;
-        b=HUV9qAl0/LTHa4gW9R5GB8bZskgMoquMycxLWoNqVXVK2lCPXRRchgd9fNWmRJ3r3E
-         MwOpBF6IYEAIRmh+0P+Mk/Xdy5ihB9c56BGZ9huMOY7437gGh4cXj2ES77WCdjN3h14P
-         vz4I9nCHk4olhkup2TXyZYzBKURBuBpg2EVTYcri8bZwVCHw5clEERw7k1EtxwCQTnnM
-         VJSbHXiqAULOv3ywp1xrIzqfxDneUHsXKLo7wHnHwkX7qU6WFdjY2E7rloSUWnmAC5gN
-         4MMiLhwcwPZJrM0qv+cchcfFMGuVM8+32TSi5HJ9+6a8/GOL1PH/AfPEODAh7ce0zWHj
-         Orfw==
+        Tue, 14 Apr 2020 14:10:16 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36266 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503440AbgDNSKF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 14:10:05 -0400
+Received: by mail-oi1-f196.google.com with SMTP id s202so8027437oih.3;
+        Tue, 14 Apr 2020 11:10:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bv0sJf01GOa0wIzpOx9SRUfmEHLHh5Wp99C/Vrgdaec=;
-        b=V2b+iEeQfV52QVRsOoTeNKTWNEPGssSGgypAU6U1lXq49aPmYghwLUThFKtqdmiUHF
-         n3Y1BiOioqh69A1XTLOgmOCnxFJ93qMDbzKVGkkfrudoGsJfL0kfNI9w8MiQKj1eOWls
-         D1TXddo7O51NH07A7SEg//DEuVEUBJ2q53clonTC/6bqnR0MD0KFeDkXvyREMYY7oTaZ
-         Er8nk3m95B7Cm6Oy6DOB578UdG5Q0FHMuvd2QIUDNu+Y9eFvn+26Jas/LmFO9u5BQKjx
-         T7EWiKaLoLX0Jb1Fv8hKwttrIuGfBzScDUhcmINnrpO4Tn8OxQpAM/yhrbV9VN1bVGzF
-         Hh0w==
-X-Gm-Message-State: AGi0PuYJ7o+2HTFkC+U4nfg6TO6BlvDMoalCNt1hEYIeggY8/JYolcGC
-        dyCU75tpoCgkDZ8lFxMX/c10iQ==
-X-Google-Smtp-Source: APiQypLF3T0ctlDMYDCZmNS5QXnrk26ya+xUobfqsrIExRvDdUeoVWUu8wspkPshY2Cg+OHu4MKS2Q==
-X-Received: by 2002:a37:8645:: with SMTP id i66mr23325550qkd.229.1586887753646;
-        Tue, 14 Apr 2020 11:09:13 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id f13sm11354811qti.47.2020.04.14.11.09.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Apr 2020 11:09:13 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jOPzk-0007ib-Gs; Tue, 14 Apr 2020 15:09:12 -0300
-Date:   Tue, 14 Apr 2020 15:09:12 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
-        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
-        zhangfei.gao@linaro.org, xuzaibo@huawei.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dimitri Sivanich <sivanich@sgi.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v5 01/25] mm/mmu_notifiers: pass private data down to
- alloc_notifier()
-Message-ID: <20200414180912.GH5100@ziepe.ca>
-References: <20200414170252.714402-1-jean-philippe@linaro.org>
- <20200414170252.714402-2-jean-philippe@linaro.org>
+        bh=Gk9v81jHbK3iR48L6X7HK2W2hW2idFCYLNnsfsLJ5DI=;
+        b=RhIBHdLmpH5b82iqnJh1wB1tjsulhqO2PWtMksh7mLPeS1gZY0+VPtnGAsywDxa39a
+         SFBmk6t5wejd2uRwzx7HHxrs3/sdcCbE/3h8jf5G+UiAjNRx/lsegHtifoXEoUysKnfU
+         I9TtiUGHhkUwrijNgQW+rALnItJ38XZy9NwWQOrCSchvUvN4Q1gWJoE83d8XNulnnI3E
+         GVpIbuVOUfRolu2MpfKCqRIgRuMJkrap0VsG4gj95kfQ5J7KDDRKGe0a3wsfJQnKf7ZF
+         +Kx6Mjos42lv1t90unKHkPH4A3ZdUR0e50BWIpbaKKBktiYMyRBmcnFD89kJpgzIDcQb
+         9lDg==
+X-Gm-Message-State: AGi0PubA6Bft/6+0S82ARV2fUtN1tc4QkwcU2O4GpCgAiIgeH1fgsYcH
+        OotH/3f9V2OC/rUxPH+Rxg==
+X-Google-Smtp-Source: APiQypJDRGMEJXG8wmRe/NiPBnSGRAZWCVmHL7lGBysJHnkMXrQCbeU+veI2YWGa/oKKLMFumNHrzA==
+X-Received: by 2002:a54:4e0e:: with SMTP id a14mr16768498oiy.88.1586887804608;
+        Tue, 14 Apr 2020 11:10:04 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id f45sm5697664otf.30.2020.04.14.11.10.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 11:10:04 -0700 (PDT)
+Received: (nullmailer pid 4320 invoked by uid 1000);
+        Tue, 14 Apr 2020 18:10:03 -0000
+Date:   Tue, 14 Apr 2020 13:10:03 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     devicetree@vger.kernel.org, Jason Kridner <jkridner@gmail.com>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jyri Sarha <jsarha@ti.com>, linux-kernel@vger.kernel.org,
+        Caleb Robey <c-robey@ti.com>, Jason Kridner <jdk@ti.com>
+Subject: Re: [PATCH v4] dt-bindings: Add vendor prefix for BeagleBoard.org
+Message-ID: <20200414181003.GA4231@bogus>
+References: <20200403191931.GA31296@x1>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414170252.714402-2-jean-philippe@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200403191931.GA31296@x1>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 07:02:29PM +0200, Jean-Philippe Brucker wrote:
-> The new allocation scheme introduced by commit 2c7933f53f6b
-> ("mm/mmu_notifiers: add a get/put scheme for the registration") provides
-> a convenient way for users to attach notifier data to an mm. However, it
-> would be even better to create this notifier data atomically.
+On Fri, 3 Apr 2020 21:19:31 +0200, Drew Fustini wrote:
+> Add vendor prefix for BeagleBoard.org Foundation
 > 
-> Since the alloc_notifier() callback only takes an mm argument at the
-> moment, some users have to perform the allocation in two times.
-> alloc_notifier() initially creates an incomplete structure, which is
-> then finalized using more context once mmu_notifier_get() returns. This
-> second step requires extra care to order memory accesses against live
-> invalidation.
+> Signed-off-by: Jason Kridner <jdk@ti.com>
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> ---
+> Changes in v4:
+>   - rebase on robh/for-next branch
 > 
-> The IOMMU SVA module, which attaches an mm to multiple devices,
-> exemplifies this situation. In essence it does:
+> Changes in v3:
+>   - add SoB from drew@beagleboard.org
+>   - email patch from drew@beagleboard.org
 > 
-> 	mmu_notifier_get()
-> 	  alloc_notifier()
-> 	     A = kzalloc()
-> 	  /* MMU notifier is published */
-> 	A->ctx = ctx;				// (1)
-> 	device->A = A;
-> 	list_add_rcu(device, A->devices);	// (2)
+> Changes in v2:
+>   - Use 'beagle' rather than 'beagleboard.org' to be shorter and avoid
+>     needing to quote within a yaml regular expression.
+>   - Assign 'from' to author e-mail address.
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> The invalidate notifier, which may start running before A is fully
-> initialized, does the following:
-> 
-> 	io_mm_invalidate(A)
-> 	  list_for_each_entry_rcu(device, A->devices)
-> 	    device->invalidate(A->ctx)
 
-This could probably also have been reliably fixed by not having A->ctx
-be allocated memory, but inlined into the notifier struct
+Applied, thanks.
 
-But I can't think of a down side to not add a params either.
-
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-
-Regards,
-Jason
+Rob
