@@ -7,89 +7,84 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D23EC2BB85
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 558B6C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB8842074D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 396C820575
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586889527;
-	bh=JzNN/LJBWDgLyRz1XV7pfTYRU7LI4L7W5G6DCzALRVU=;
+	s=default; t=1586889564;
+	bh=lRX8+PsSpTAjjdNjMzr6z5Ir3dgXccSzyzF8IyCaF+E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vWrG+tthNhr/F8k4uAZg6h5DVoOtlXJ9KLJL/CUV/F2UH+7xJPKZA56wcMg8YQ6GJ
-	 7HgFxoYSa25p3kDR0I7ASAj4wXsJXlF+wTVKL1lcE2IhIKKF0L3Izk/YiS6rgQj31U
-	 L/SWr/D/jIj1OMyY18NZLHL8H1MGpeJ7XGRq6PqA=
+	b=plCHofs4GTpk/R9Q5uAqFH7XlsVktz2FX+h/xseZhnJ25kCV2TydiiErX5TQDwJNp
+	 U8L1XnBi8Kmf0j25osRaRAnTmwZx/w3sa2yJVLmNOoQIpWi7oGG6jXgQIXMfDnmyTB
+	 7SNcW4jJjZou2IpOzmQHWFD79IwPKXi+4OPj+CCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504105AbgDNSip (ORCPT
+        id S2504115AbgDNSjX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:38:45 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:38077 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504089AbgDNSin (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 14:38:43 -0400
-Received: by mail-ot1-f66.google.com with SMTP id k21so720956otl.5
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 11:38:43 -0700 (PDT)
+        Tue, 14 Apr 2020 14:39:23 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43504 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504089AbgDNSjV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 14:39:21 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g14so683215otg.10
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 11:39:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DJ6qutt9QAJXdSjtS7AiyWEiRTP/1mJ7eO7lJ6/te3M=;
-        b=bI/bz09SmaAQ2WFSLtkO8h02yVrpIdXqvppAyYUSZkaVGd/YZweqnGdXXNyhjrAyUu
-         PlzqRfXTF97sbznQ1VdIT48qKRd6CpJI04CXHOozPbAHYPSuD8rU9L0zLl1h3GJpu+XI
-         M3+r3oY+xIpNokvjnztZt0y5VChJEDg6uCIJy7eMA9GuZXE44PLXn2C5t0dGUANV9UKU
-         OCNg7ApXjU5Rt69fgfFsp7e7hdjZgxc7ebAt4X5fXXU+HRLXzXhw8qa1FHlNv9W8gqMo
-         Dk3oQGt3oP87iYOQfl+5gDwv7C8L2gNqvRl6+r3RHtbW5uLyGL/lgRO+sJiRdT7xumE+
-         dzFQ==
-X-Gm-Message-State: AGi0PuaJLcI/5ZIf6TMnEjLjndKSECmFdOHzRBEz0rvVpMYCE8hVA/yb
-        /XSwNXBB3nou4yT4AIAcuA==
-X-Google-Smtp-Source: APiQypJF2iwEBUqeei9FlSDy4sc9fA3N7uV/9740Mn9KpGuZHZ9c2PF8pIusgP7rg//TsoPHjFw7vA==
-X-Received: by 2002:a9d:134:: with SMTP id 49mr11644354otu.57.1586889522906;
-        Tue, 14 Apr 2020 11:38:42 -0700 (PDT)
+        bh=dEiaIAvFJTlzpo/PB1mU+6ATHN9pj5y1SOOp368ZN78=;
+        b=hfm5T0VeFKh2stdyoX9wfeQ74ZLHymc0pgTu7D6viUYYiSXP3uwVZyu9IzeYiwYDsc
+         vvt+rxt2R2L4Eler2I1TDQe4kgXpeusdMKbcttl/9xuw0R6cE+EkbtiQzngsxWfcoVZb
+         YKwN1D0fxEN+ihBYHrnKYLnKOsTX3YdwC3BKgc48ygQzu9SJ6NQaT/qjpxZPzpI7UHZV
+         iulkzk4eRqfbWf2msiqQaIf6Gohfp50D6kSX34W5rOixnMMnvxQJ6xgkvDcVstzjQgYP
+         Sgw7haFfYN/FT+n0cDBZkXTwXKrmDk4yYcA04qDmgVHj9lE4463H4D9HgaNDskwqaU4T
+         vnGA==
+X-Gm-Message-State: AGi0PubdtpxHEffnxuwiuIlmh/A1rFQDLkOK61eeo1CxXKSiFASFCRFh
+        HzPoeQcSJ2KGSXPv2srzCA==
+X-Google-Smtp-Source: APiQypJkzZHUyWzUu8THoFBytfHvNhQ5r8JEg6EMKILNV27nlLwjpWy4NwOIziv0ZO4AxsNR3rkUuA==
+X-Received: by 2002:a9d:7201:: with SMTP id u1mr19997253otj.293.1586889560773;
+        Tue, 14 Apr 2020 11:39:20 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k132sm5817615oih.9.2020.04.14.11.38.41
+        by smtp.gmail.com with ESMTPSA id z12sm5688036otk.24.2020.04.14.11.39.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 11:38:42 -0700 (PDT)
-Received: (nullmailer pid 18913 invoked by uid 1000);
-        Tue, 14 Apr 2020 18:38:41 -0000
-Date:   Tue, 14 Apr 2020 13:38:41 -0500
+        Tue, 14 Apr 2020 11:39:20 -0700 (PDT)
+Received: (nullmailer pid 19914 invoked by uid 1000);
+        Tue, 14 Apr 2020 18:39:19 -0000
+Date:   Tue, 14 Apr 2020 13:39:19 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Sam Ravnborg <sam@ravnborg.org>
 Cc:     dri-devel@lists.freedesktop.org,
         Thierry Reding <thierry.reding@gmail.com>,
         devicetree@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: Re: [PATCH v2 20/36] dt-bindings: display: convert samsung AMOLED to
- DT Schema
-Message-ID: <20200414183841.GA18856@bogus>
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 21/36] dt-bindings: display: convert samsung,s6d16d0
+ to DT Schema
+Message-ID: <20200414183919.GA19853@bogus>
 References: <20200408195109.32692-1-sam@ravnborg.org>
- <20200408195109.32692-21-sam@ravnborg.org>
+ <20200408195109.32692-22-sam@ravnborg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200408195109.32692-21-sam@ravnborg.org>
+In-Reply-To: <20200408195109.32692-22-sam@ravnborg.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed,  8 Apr 2020 21:50:53 +0200, Sam Ravnborg wrote:
-> For samsung there was two AMOLED panels with the same
-> description.
-> Collect them in one binding file.
-> 
+On Wed,  8 Apr 2020 21:50:54 +0200, Sam Ravnborg wrote:
 > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
 > Cc: Thierry Reding <thierry.reding@gmail.com>
 > Cc: Sam Ravnborg <sam@ravnborg.org>
 > ---
->  .../panel/samsung,amoled-mipi-dsi.yaml        | 65 +++++++++++++++++++
->  .../display/panel/samsung,s6e3ha2.txt         | 31 ---------
->  .../display/panel/samsung,s6e63j0x03.txt      | 24 -------
->  3 files changed, 65 insertions(+), 55 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,amoled-mipi-dsi.yaml
->  delete mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e3ha2.txt
->  delete mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e63j0x03.txt
+>  .../display/panel/samsung,s6d16d0.txt         | 30 ----------
+>  .../display/panel/samsung,s6d16d0.yaml        | 56 +++++++++++++++++++
+>  2 files changed, 56 insertions(+), 30 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6d16d0.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6d16d0.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
