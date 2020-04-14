@@ -2,63 +2,63 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0711C5518C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D767C54FCF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B330A20787
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6284720678
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jqFtlIyg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JkRjzmM2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391603AbgDNRFB (ORCPT
+        id S2391612AbgDNRE6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:05:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34612 "EHLO
+        Tue, 14 Apr 2020 13:04:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391560AbgDNREt (ORCPT
+        by vger.kernel.org with ESMTP id S2391625AbgDNRE4 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:04:49 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4F70C061A0C
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:47 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id t14so2022867wrw.12
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:47 -0700 (PDT)
+        Tue, 14 Apr 2020 13:04:56 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC060C061A41
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:54 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id c195so12967709wme.1
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ziXn9cuAo3hWn7QvHOmH9I+6k//lxfM5D1HJDZVO87w=;
-        b=jqFtlIygnpRkdoo/DUtdMETTCRxI0N4eUUSigJNlEVxlgrz28IgCqEj8v6Q1v7Nsvo
-         qMv0+NEx0ii8FkVGbxR6P7Ztzb7zXdFfYUl9rGgPMERfdEXA0k92R/EEHYkdDos4WG/n
-         8KPR8DjYiXZdxyk568iPI43bGu4VQbYGi4oqoZgCb+KkkA79mmPsSNrJxTxUqGuT3tm8
-         mSaKqEoLaQKoD4U/P/QhJUPwOlZPGcJmt0PDHOKLNIbQMl7Nl1z5Lbdopvviq8scUaFh
-         bl/Gp1srzFDSB5IAO0esHKnDZ9BbQT8v9zXYzEPOLujjlX7R5cTxMz4topW0IPPFA5BQ
-         ytyA==
+        bh=u0HAzwSaZgER/8QZ83ZQZ3tP3MIVx8mETnUVm6/V0ok=;
+        b=JkRjzmM2nMv/rv2CSYLN179blYrWt4qE24gHB6fvaK7iiCOzcyiruWS8RU9vxYUOUd
+         0DZH/sOQaty0opTw21po0Pm0ce4idbw6mhOoJyXv3eY9TOcKLpYHanIILGQXh0SPsuBH
+         h9azjdsiRzdAW07LSYDzEApf7YxGv371mAn1Xh9vAcvWKSIsmFS44VWE5+1YU+JMwimg
+         mWkknrUrtlHzRjoS5eJYOwn673r7L12TP2n2Mx4tjf3LC5ho++Wq5QhNzHWG6JpcdRzo
+         mzkuOLuA/vuC/zDAS62oUNeZMqxysc/T5vD8EvfiVKBMC5a1CYf1g6Tcih7PJmG6ir92
+         ekMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ziXn9cuAo3hWn7QvHOmH9I+6k//lxfM5D1HJDZVO87w=;
-        b=q5EJchNNwlgXsPw5G24JjTAhfkGyhIjKm/wWacDKrk+ak4ha9BbpnA7UAVdsGBmkhd
-         a0iRqZRHxaK5lawFMT+aXzqR5stIsFTUsuAsq7RlaottxLPmvo8xcIVx8tImlSfMy7f2
-         iafTpmNa6DGJPRvdb/AC+psyPgIwwya8NfjXGNtrIdXsT39CPYIg1QTf5tbA9N5aUUE5
-         3hTUR9AOJrC44r1dtpZ9Jme0Hdh1x0GyGido8kjOptdNVJYzK4Ok+yxmhLtCvf9AtwJm
-         MULZV5RsmdAjE1clHl83nEH92lYHsSuaFKSPTQKF6bLvikODCc0RQPMcDsyaNWNDTzVj
-         K+yA==
-X-Gm-Message-State: AGi0PuaZ53aUmUAZOtxqgNK619EmPgw5vWyVqJSeUcrnOqQl/fmkNhxD
-        NakSl22H05iVXcT7qw55q9TiQw==
-X-Google-Smtp-Source: APiQypJO/8SkAooycOoQPU8+P4slVytA4jO8u1PhB2ro5n46YQOs0g8ggCHEEo4DYWtebCT4ztxr9g==
-X-Received: by 2002:adf:9e01:: with SMTP id u1mr23732272wre.37.1586883886355;
-        Tue, 14 Apr 2020 10:04:46 -0700 (PDT)
+        bh=u0HAzwSaZgER/8QZ83ZQZ3tP3MIVx8mETnUVm6/V0ok=;
+        b=s0BOxKNjWtg1K8KiN/gaWQ+aGzcj9eeVYVGekAD01yPtfno8be/Z0yoT7NDuIu7+vF
+         A5XalieD62gNbUdzdJDaNK4rq0B58M4ajgvUzy60Ua78Ebb9OjXmvrahoGu7t8g3ICuP
+         CvEj+R2EWon3vv6F+J+II5IQqefNN3VKmYH5QLAfFDwrFOxktJ+QQx9YVhhvsiBYlwQP
+         T4YTsis947UNvaOGGvz1J8pXyCvC5dRbH4uEjFJ6YRqq5kzBK57xcFu0FCv5NLprw+YO
+         sijsBEOEnCABta24YA9Xjg7Lqgb2RasXHRJ5ghXk1W+lmYgA/+wsgrOimrawOrNZhP3H
+         FIpw==
+X-Gm-Message-State: AGi0PuY5TyHOhwhaCnvoOzewtcBcOijrr20HECX80RWtpGQIuICIZJtj
+        32YfzpAsSbj87ypF7c3RbRsl3qs6D27nbQ==
+X-Google-Smtp-Source: APiQypLUqywIpZq3/12p2mCLDdQ4JGrywsXNVqfp8FvSh3tZw2ecvsNlH/ESSfnJwGNoxP55MEbspw==
+X-Received: by 2002:a7b:c459:: with SMTP id l25mr796940wmi.52.1586883893294;
+        Tue, 14 Apr 2020 10:04:53 -0700 (PDT)
 Received: from localhost.localdomain ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id x18sm19549147wrs.11.2020.04.14.10.04.45
+        by smtp.gmail.com with ESMTPSA id x18sm19549147wrs.11.2020.04.14.10.04.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 10:04:45 -0700 (PDT)
+        Tue, 14 Apr 2020 10:04:52 -0700 (PDT)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
@@ -69,9 +69,9 @@ Cc:     joro@8bytes.org, catalin.marinas@arm.com, will@kernel.org,
         jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
         zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
         Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: [PATCH v5 20/25] iommu/arm-smmu-v3: Maintain a SID->device structure
-Date:   Tue, 14 Apr 2020 19:02:48 +0200
-Message-Id: <20200414170252.714402-21-jean-philippe@linaro.org>
+Subject: [PATCH v5 25/25] iommu/arm-smmu-v3: Add support for PRI
+Date:   Tue, 14 Apr 2020 19:02:53 +0200
+Message-Id: <20200414170252.714402-26-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200414170252.714402-1-jean-philippe@linaro.org>
 References: <20200414170252.714402-1-jean-philippe@linaro.org>
@@ -82,298 +82,467 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-When handling faults from the event or PRI queue, we need to find the
-struct device associated to a SID. Add a rb_tree to keep track of SIDs.
+For PCI devices that support it, enable the PRI capability and handle PRI
+Page Requests with the generic fault handler. It is enabled on demand by
+iommu_sva_device_init().
 
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 179 +++++++++++++++++++++++++++++-------
- 1 file changed, 147 insertions(+), 32 deletions(-)
+ drivers/iommu/arm-smmu-v3.c | 284 +++++++++++++++++++++++++++++-------
+ 1 file changed, 234 insertions(+), 50 deletions(-)
 
 diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 4ed9df15581af..7a4c5914a2fe2 100644
+index a7becf1c5347e..8017700c33c46 100644
 --- a/drivers/iommu/arm-smmu-v3.c
 +++ b/drivers/iommu/arm-smmu-v3.c
-@@ -697,6 +697,15 @@ struct arm_smmu_device {
+@@ -251,6 +251,7 @@
+ #define STRTAB_STE_1_S1COR		GENMASK_ULL(5, 4)
+ #define STRTAB_STE_1_S1CSH		GENMASK_ULL(7, 6)
  
- 	/* IOMMU core code handle */
- 	struct iommu_device		iommu;
-+
-+	struct rb_root			streams;
-+	struct mutex			streams_mutex;
-+};
-+
-+struct arm_smmu_stream {
-+	u32				id;
-+	struct arm_smmu_master		*master;
-+	struct rb_node			node;
++#define STRTAB_STE_1_PPAR		(1UL << 18)
+ #define STRTAB_STE_1_S1STALLD		(1UL << 27)
+ 
+ #define STRTAB_STE_1_EATS		GENMASK_ULL(29, 28)
+@@ -381,6 +382,9 @@
+ #define CMDQ_PRI_0_SID			GENMASK_ULL(63, 32)
+ #define CMDQ_PRI_1_GRPID		GENMASK_ULL(8, 0)
+ #define CMDQ_PRI_1_RESP			GENMASK_ULL(13, 12)
++#define CMDQ_PRI_1_RESP_FAILURE		0UL
++#define CMDQ_PRI_1_RESP_INVALID		1UL
++#define CMDQ_PRI_1_RESP_SUCCESS		2UL
+ 
+ #define CMDQ_RESUME_0_SID		GENMASK_ULL(63, 32)
+ #define CMDQ_RESUME_0_RESP_TERM		0UL
+@@ -453,12 +457,6 @@ module_param_named(disable_bypass, disable_bypass, bool, S_IRUGO);
+ MODULE_PARM_DESC(disable_bypass,
+ 	"Disable bypass streams such that incoming transactions from devices that are not attached to an iommu domain will report an abort back to the device and will not be allowed to pass through the SMMU.");
+ 
+-enum pri_resp {
+-	PRI_RESP_DENY = 0,
+-	PRI_RESP_FAIL = 1,
+-	PRI_RESP_SUCC = 2,
+-};
+-
+ enum arm_smmu_msi_index {
+ 	EVTQ_MSI_INDEX,
+ 	GERROR_MSI_INDEX,
+@@ -545,7 +543,7 @@ struct arm_smmu_cmdq_ent {
+ 			u32			sid;
+ 			u32			ssid;
+ 			u16			grpid;
+-			enum pri_resp		resp;
++			u8			resp;
+ 		} pri;
+ 
+ 		#define CMDQ_OP_RESUME		0x44
+@@ -623,6 +621,7 @@ struct arm_smmu_evtq {
+ 
+ struct arm_smmu_priq {
+ 	struct arm_smmu_queue		q;
++	struct iopf_queue		*iopf;
  };
  
- /* SMMU private data for each master */
-@@ -705,8 +714,8 @@ struct arm_smmu_master {
- 	struct device			*dev;
- 	struct arm_smmu_domain		*domain;
- 	struct list_head		domain_head;
--	u32				*sids;
--	unsigned int			num_sids;
-+	struct arm_smmu_stream		*streams;
-+	unsigned int			num_streams;
+ /* High-level stream table and context descriptor structures */
+@@ -756,6 +755,8 @@ struct arm_smmu_master {
+ 	unsigned int			num_streams;
  	bool				ats_enabled;
+ 	bool				stall_enabled;
++	bool				pri_supported;
++	bool				prg_resp_needs_ssid;
  	unsigned int			ssid_bits;
  };
-@@ -1592,8 +1601,8 @@ static void arm_smmu_sync_cd(struct arm_smmu_domain *smmu_domain,
  
- 	spin_lock_irqsave(&smmu_domain->devices_lock, flags);
- 	list_for_each_entry(master, &smmu_domain->devices, domain_head) {
--		for (i = 0; i < master->num_sids; i++) {
--			cmd.cfgi.sid = master->sids[i];
-+		for (i = 0; i < master->num_streams; i++) {
-+			cmd.cfgi.sid = master->streams[i].id;
- 			arm_smmu_cmdq_batch_add(smmu, &cmds, &cmd);
- 		}
- 	}
-@@ -2222,6 +2231,32 @@ static int arm_smmu_init_l2_strtab(struct arm_smmu_device *smmu, u32 sid)
- 	return 0;
- }
- 
-+__maybe_unused
-+static struct arm_smmu_master *
-+arm_smmu_find_master(struct arm_smmu_device *smmu, u32 sid)
-+{
-+	struct rb_node *node;
-+	struct arm_smmu_stream *stream;
-+	struct arm_smmu_master *master = NULL;
-+
-+	mutex_lock(&smmu->streams_mutex);
-+	node = smmu->streams.rb_node;
-+	while (node) {
-+		stream = rb_entry(node, struct arm_smmu_stream, node);
-+		if (stream->id < sid) {
-+			node = node->rb_right;
-+		} else if (stream->id > sid) {
-+			node = node->rb_left;
-+		} else {
-+			master = stream->master;
-+			break;
-+		}
-+	}
-+	mutex_unlock(&smmu->streams_mutex);
-+
-+	return master;
-+}
-+
- /* IRQ and event handlers */
- static irqreturn_t arm_smmu_evtq_thread(int irq, void *dev)
+@@ -1034,14 +1035,6 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
+ 		cmd[0] |= FIELD_PREP(CMDQ_PRI_0_SSID, ent->pri.ssid);
+ 		cmd[0] |= FIELD_PREP(CMDQ_PRI_0_SID, ent->pri.sid);
+ 		cmd[1] |= FIELD_PREP(CMDQ_PRI_1_GRPID, ent->pri.grpid);
+-		switch (ent->pri.resp) {
+-		case PRI_RESP_DENY:
+-		case PRI_RESP_FAIL:
+-		case PRI_RESP_SUCC:
+-			break;
+-		default:
+-			return -EINVAL;
+-		}
+ 		cmd[1] |= FIELD_PREP(CMDQ_PRI_1_RESP, ent->pri.resp);
+ 		break;
+ 	case CMDQ_OP_RESUME:
+@@ -1621,6 +1614,7 @@ static int arm_smmu_page_response(struct device *dev,
  {
-@@ -2455,8 +2490,8 @@ static int arm_smmu_atc_inv_master(struct arm_smmu_master *master, int ssid)
+ 	struct arm_smmu_cmdq_ent cmd = {0};
+ 	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
++	bool pasid_valid = resp->flags & IOMMU_PAGE_RESP_PASID_VALID;
+ 	int sid = master->streams[0].id;
  
- 	arm_smmu_atc_inv_to_cmd(ssid, 0, 0, &cmd);
- 
--	for (i = 0; i < master->num_sids; i++) {
--		cmd.atc.sid = master->sids[i];
-+	for (i = 0; i < master->num_streams; i++) {
-+		cmd.atc.sid = master->streams[i].id;
- 		arm_smmu_cmdq_issue_cmd(master->smmu, &cmd);
- 	}
- 
-@@ -2499,8 +2534,8 @@ static int arm_smmu_atc_inv_domain(struct arm_smmu_domain *smmu_domain,
- 		if (!master->ats_enabled)
- 			continue;
- 
--		for (i = 0; i < master->num_sids; i++) {
--			cmd.atc.sid = master->sids[i];
-+		for (i = 0; i < master->num_streams; i++) {
-+			cmd.atc.sid = master->streams[i].id;
- 			arm_smmu_cmdq_batch_add(smmu_domain->smmu, &cmds, &cmd);
+ 	if (master->stall_enabled) {
+@@ -1638,8 +1632,27 @@ static int arm_smmu_page_response(struct device *dev,
+ 		default:
+ 			return -EINVAL;
  		}
- 	}
-@@ -2906,13 +2941,13 @@ static void arm_smmu_install_ste_for_dev(struct arm_smmu_master *master)
- 	int i, j;
- 	struct arm_smmu_device *smmu = master->smmu;
- 
--	for (i = 0; i < master->num_sids; ++i) {
--		u32 sid = master->sids[i];
-+	for (i = 0; i < master->num_streams; ++i) {
-+		u32 sid = master->streams[i].id;
- 		__le64 *step = arm_smmu_get_step_for_sid(smmu, sid);
- 
- 		/* Bridged PCI devices may end up with duplicated IDs */
- 		for (j = 0; j < i; j++)
--			if (master->sids[j] == sid)
-+			if (master->streams[j].id == sid)
- 				break;
- 		if (j < i)
- 			continue;
-@@ -3171,8 +3206,8 @@ static void arm_smmu_mm_invalidate(struct device *dev, int pasid, void *entry,
- 
- 	arm_smmu_atc_inv_to_cmd(pasid, iova, size, &cmd);
- 
--	for (i = 0; i < master->num_sids; i++) {
--		cmd.atc.sid = master->sids[i];
-+	for (i = 0; i < master->num_streams; i++) {
-+		cmd.atc.sid = master->streams[i].id;
- 		arm_smmu_cmdq_batch_add(master->smmu, &cmds, &cmd);
++	} else if (master->pri_supported) {
++		cmd.opcode		= CMDQ_OP_PRI_RESP;
++		cmd.substream_valid	= pasid_valid &&
++					  master->prg_resp_needs_ssid;
++		cmd.pri.sid		= sid;
++		cmd.pri.ssid		= resp->pasid;
++		cmd.pri.grpid		= resp->grpid;
++		switch (resp->code) {
++		case IOMMU_PAGE_RESP_FAILURE:
++			cmd.pri.resp = CMDQ_PRI_1_RESP_FAILURE;
++			break;
++		case IOMMU_PAGE_RESP_INVALID:
++			cmd.pri.resp = CMDQ_PRI_1_RESP_INVALID;
++			break;
++		case IOMMU_PAGE_RESP_SUCCESS:
++			cmd.pri.resp = CMDQ_PRI_1_RESP_SUCCESS;
++			break;
++		default:
++			return -EINVAL;
++		}
+ 	} else {
+-		/* TODO: insert PRI response here */
+ 		return -ENODEV;
  	}
  
-@@ -3304,11 +3339,101 @@ static bool arm_smmu_sid_in_range(struct arm_smmu_device *smmu, u32 sid)
- 	return sid < limit;
+@@ -2236,6 +2249,9 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
+ 			 FIELD_PREP(STRTAB_STE_1_S1CSH, ARM_SMMU_SH_ISH) |
+ 			 FIELD_PREP(STRTAB_STE_1_STRW, strw));
+ 
++		if (master->prg_resp_needs_ssid)
++			dst[1] |= STRTAB_STE_1_PPAR;
++
+ 		if (smmu->features & ARM_SMMU_FEAT_STALLS &&
+ 		    !master->stall_enabled)
+ 			dst[1] |= cpu_to_le64(STRTAB_STE_1_S1STALLD);
+@@ -2480,61 +2496,110 @@ static irqreturn_t arm_smmu_evtq_thread(int irq, void *dev)
+ 
+ static void arm_smmu_handle_ppr(struct arm_smmu_device *smmu, u64 *evt)
+ {
+-	u32 sid, ssid;
+-	u16 grpid;
+-	bool ssv, last;
+-
+-	sid = FIELD_GET(PRIQ_0_SID, evt[0]);
+-	ssv = FIELD_GET(PRIQ_0_SSID_V, evt[0]);
+-	ssid = ssv ? FIELD_GET(PRIQ_0_SSID, evt[0]) : 0;
+-	last = FIELD_GET(PRIQ_0_PRG_LAST, evt[0]);
+-	grpid = FIELD_GET(PRIQ_1_PRG_IDX, evt[1]);
+-
+-	dev_info(smmu->dev, "unexpected PRI request received:\n");
+-	dev_info(smmu->dev,
+-		 "\tsid 0x%08x.0x%05x: [%u%s] %sprivileged %s%s%s access at iova 0x%016llx\n",
+-		 sid, ssid, grpid, last ? "L" : "",
+-		 evt[0] & PRIQ_0_PERM_PRIV ? "" : "un",
+-		 evt[0] & PRIQ_0_PERM_READ ? "R" : "",
+-		 evt[0] & PRIQ_0_PERM_WRITE ? "W" : "",
+-		 evt[0] & PRIQ_0_PERM_EXEC ? "X" : "",
+-		 evt[1] & PRIQ_1_ADDR_MASK);
+-
+-	if (last) {
+-		struct arm_smmu_cmdq_ent cmd = {
+-			.opcode			= CMDQ_OP_PRI_RESP,
+-			.substream_valid	= ssv,
+-			.pri			= {
+-				.sid	= sid,
+-				.ssid	= ssid,
+-				.grpid	= grpid,
+-				.resp	= PRI_RESP_DENY,
+-			},
++	u32 sid = FIELD_PREP(PRIQ_0_SID, evt[0]);
++
++	bool pasid_valid, last;
++	struct arm_smmu_master *master;
++	struct iommu_fault_event fault_evt = {
++		.fault.type = IOMMU_FAULT_PAGE_REQ,
++		.fault.prm = {
++			.pasid		= FIELD_GET(PRIQ_0_SSID, evt[0]),
++			.grpid		= FIELD_GET(PRIQ_1_PRG_IDX, evt[1]),
++			.addr		= evt[1] & PRIQ_1_ADDR_MASK,
++		},
++	};
++	struct iommu_fault_page_request *pr = &fault_evt.fault.prm;
++
++	pasid_valid = evt[0] & PRIQ_0_SSID_V;
++	last = evt[0] & PRIQ_0_PRG_LAST;
++
++	/* Discard Stop PASID marker, it isn't used */
++	if (!(evt[0] & (PRIQ_0_PERM_READ | PRIQ_0_PERM_WRITE)) && last)
++		return;
++
++	if (last)
++		pr->flags |= IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE;
++	if (pasid_valid)
++		pr->flags |= IOMMU_FAULT_PAGE_REQUEST_PASID_VALID;
++	if (evt[0] & PRIQ_0_PERM_READ)
++		pr->perm |= IOMMU_FAULT_PERM_READ;
++	if (evt[0] & PRIQ_0_PERM_WRITE)
++		pr->perm |= IOMMU_FAULT_PERM_WRITE;
++	if (evt[0] & PRIQ_0_PERM_EXEC)
++		pr->perm |= IOMMU_FAULT_PERM_EXEC;
++	if (evt[0] & PRIQ_0_PERM_PRIV)
++		pr->perm |= IOMMU_FAULT_PERM_PRIV;
++
++	master = arm_smmu_find_master(smmu, sid);
++	if (WARN_ON(!master))
++		return;
++
++	if (iommu_report_device_fault(master->dev, &fault_evt)) {
++		/*
++		 * No handler registered, so subsequent faults won't produce
++		 * better results. Try to disable PRI.
++		 */
++		struct iommu_page_response resp = {
++			.flags		= pasid_valid ?
++					  IOMMU_PAGE_RESP_PASID_VALID : 0,
++			.pasid		= pr->pasid,
++			.grpid		= pr->grpid,
++			.code		= IOMMU_PAGE_RESP_FAILURE,
+ 		};
+ 
+-		arm_smmu_cmdq_issue_cmd(smmu, &cmd);
++		dev_warn(master->dev,
++			 "PPR 0x%x:0x%llx 0x%x: nobody cared, disabling PRI\n",
++			 pasid_valid ? pr->pasid : 0, pr->addr, pr->perm);
++		if (last)
++			arm_smmu_page_response(master->dev, NULL, &resp);
+ 	}
  }
  
-+static int arm_smmu_insert_master(struct arm_smmu_device *smmu,
-+				  struct arm_smmu_master *master)
-+{
-+	int i;
-+	int ret = 0;
-+	struct arm_smmu_stream *new_stream, *cur_stream;
-+	struct rb_node **new_node, *parent_node = NULL;
-+	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(master->dev);
-+
-+	master->streams = kcalloc(fwspec->num_ids,
-+				  sizeof(struct arm_smmu_stream), GFP_KERNEL);
-+	if (!master->streams)
-+		return -ENOMEM;
-+	master->num_streams = fwspec->num_ids;
-+
-+	mutex_lock(&smmu->streams_mutex);
-+	for (i = 0; i < fwspec->num_ids && !ret; i++) {
-+		u32 sid = fwspec->ids[i];
-+
-+		new_stream = &master->streams[i];
-+		new_stream->id = sid;
-+		new_stream->master = master;
-+
-+		/*
-+		 * Check the SIDs are in range of the SMMU and our stream table
-+		 */
-+		if (!arm_smmu_sid_in_range(smmu, sid)) {
-+			ret = -ERANGE;
-+			break;
-+		}
-+
-+		/* Ensure l2 strtab is initialised */
-+		if (smmu->features & ARM_SMMU_FEAT_2_LVL_STRTAB) {
-+			ret = arm_smmu_init_l2_strtab(smmu, sid);
-+			if (ret)
-+				break;
-+		}
-+
-+		/* Insert into SID tree */
-+		new_node = &(smmu->streams.rb_node);
-+		while (*new_node) {
-+			cur_stream = rb_entry(*new_node, struct arm_smmu_stream,
-+					      node);
-+			parent_node = *new_node;
-+			if (cur_stream->id > new_stream->id) {
-+				new_node = &((*new_node)->rb_left);
-+			} else if (cur_stream->id < new_stream->id) {
-+				new_node = &((*new_node)->rb_right);
-+			} else {
-+				dev_warn(master->dev,
-+					 "stream %u already in tree\n",
-+					 cur_stream->id);
-+				ret = -EINVAL;
-+				break;
+ static irqreturn_t arm_smmu_priq_thread(int irq, void *dev)
+ {
++	int num_handled = 0;
++	bool overflow = false;
+ 	struct arm_smmu_device *smmu = dev;
+ 	struct arm_smmu_queue *q = &smmu->priq.q;
+ 	struct arm_smmu_ll_queue *llq = &q->llq;
++	size_t queue_size = 1 << llq->max_n_shift;
+ 	u64 evt[PRIQ_ENT_DWORDS];
+ 
++	spin_lock(&q->wq.lock);
+ 	do {
+-		while (!queue_remove_raw(q, evt))
++		while (!queue_remove_raw(q, evt)) {
++			spin_unlock(&q->wq.lock);
+ 			arm_smmu_handle_ppr(smmu, evt);
++			spin_lock(&q->wq.lock);
++			if (++num_handled == queue_size) {
++				q->batch++;
++				wake_up_all_locked(&q->wq);
++				num_handled = 0;
 +			}
 +		}
-+
-+		if (!ret) {
-+			rb_link_node(&new_stream->node, parent_node, new_node);
-+			rb_insert_color(&new_stream->node, &smmu->streams);
+ 
+-		if (queue_sync_prod_in(q) == -EOVERFLOW)
++		if (queue_sync_prod_in(q) == -EOVERFLOW) {
+ 			dev_err(smmu->dev, "PRIQ overflow detected -- requests lost\n");
++			overflow = true;
 +		}
+ 	} while (!queue_empty(llq));
+ 
+ 	/* Sync our overflow flag, as we believe we're up to speed */
+ 	llq->cons = Q_OVF(llq->prod) | Q_WRP(llq, llq->cons) |
+ 		      Q_IDX(llq, llq->cons);
+ 	queue_sync_cons_out(q);
++
++	wake_up_all_locked(&q->wq);
++	spin_unlock(&q->wq.lock);
++
++	/*
++	 * On overflow, the SMMU might have discarded the last PPR in a group.
++	 * There is no way to know more about it, so we have to discard all
++	 * partial faults already queued.
++	 */
++	if (overflow)
++		iopf_queue_discard_partial(smmu->priq.iopf);
++
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -2569,6 +2634,36 @@ static int arm_smmu_flush_evtq(void *cookie, struct device *dev, int pasid)
+ 	return ret;
+ }
+ 
++/*
++ * arm_smmu_flush_priq - wait until all requests currently in the queue have
++ *                       been consumed.
++ *
++ * See arm_smmu_flush_evtq().
++ */
++static int arm_smmu_flush_priq(void *cookie, struct device *dev, int pasid)
++{
++	int ret;
++	u64 batch;
++	bool overflow = false;
++	struct arm_smmu_device *smmu = cookie;
++	struct arm_smmu_queue *q = &smmu->priq.q;
++
++	spin_lock(&q->wq.lock);
++	if (queue_sync_prod_in(q) == -EOVERFLOW) {
++		dev_err(smmu->dev, "priq overflow detected -- requests lost\n");
++		overflow = true;
 +	}
 +
-+	if (ret) {
-+		for (; i > 0; i--)
-+			rb_erase(&master->streams[i].node, &smmu->streams);
-+		kfree(master->streams);
-+	}
-+	mutex_unlock(&smmu->streams_mutex);
++	batch = q->batch;
++	ret = wait_event_interruptible_locked(q->wq, queue_empty(&q->llq) ||
++					      q->batch >= batch + 2);
++	spin_unlock(&q->wq.lock);
 +
++	if (overflow)
++		iopf_queue_discard_partial(smmu->priq.iopf);
 +	return ret;
 +}
 +
-+static void arm_smmu_remove_master(struct arm_smmu_device *smmu,
-+				   struct arm_smmu_master *master)
+ static int arm_smmu_device_disable(struct arm_smmu_device *smmu);
+ 
+ static irqreturn_t arm_smmu_gerror_handler(int irq, void *dev)
+@@ -3270,6 +3365,75 @@ static void arm_smmu_disable_pasid(struct arm_smmu_master *master)
+ 	pci_disable_pasid(pdev);
+ }
+ 
++static int arm_smmu_init_pri(struct arm_smmu_master *master)
 +{
-+	int i;
-+	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(master->dev);
++	int pos;
++	struct pci_dev *pdev;
 +
-+	if (!master->streams)
-+		return;
++	if (!dev_is_pci(master->dev))
++		return -EINVAL;
 +
-+	mutex_lock(&smmu->streams_mutex);
-+	for (i = 0; i < fwspec->num_ids; i++)
-+		rb_erase(&master->streams[i].node, &smmu->streams);
-+	mutex_unlock(&smmu->streams_mutex);
++	if (!(master->smmu->features & ARM_SMMU_FEAT_PRI))
++		return 0;
 +
-+	kfree(master->streams);
++	pdev = to_pci_dev(master->dev);
++	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI);
++	if (!pos)
++		return 0;
++
++	/* If the device supports PASID and PRI, set STE.PPAR */
++	if (master->ssid_bits)
++		master->prg_resp_needs_ssid = pci_prg_resp_pasid_required(pdev);
++
++	master->pri_supported = true;
++	return 0;
 +}
 +
- static struct iommu_ops arm_smmu_ops;
- 
- static int arm_smmu_add_device(struct device *dev)
- {
--	int i, ret;
++static int arm_smmu_enable_pri(struct arm_smmu_master *master)
++{
 +	int ret;
- 	struct arm_smmu_device *smmu;
- 	struct arm_smmu_master *master;
- 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
-@@ -3330,26 +3455,11 @@ static int arm_smmu_add_device(struct device *dev)
- 
- 	master->dev = dev;
- 	master->smmu = smmu;
--	master->sids = fwspec->ids;
--	master->num_sids = fwspec->num_ids;
- 	dev_iommu_priv_set(dev, master);
- 
--	/* Check the SIDs are in range of the SMMU and our stream table */
--	for (i = 0; i < master->num_sids; i++) {
--		u32 sid = master->sids[i];
--
--		if (!arm_smmu_sid_in_range(smmu, sid)) {
--			ret = -ERANGE;
--			goto err_free_master;
--		}
--
--		/* Ensure l2 strtab is initialised */
--		if (smmu->features & ARM_SMMU_FEAT_2_LVL_STRTAB) {
--			ret = arm_smmu_init_l2_strtab(smmu, sid);
--			if (ret)
--				goto err_free_master;
--		}
--	}
-+	ret = arm_smmu_insert_master(smmu, master);
-+	if (ret)
-+		goto err_free_master;
- 
- 	master->ssid_bits = min(smmu->ssid_bits, fwspec->num_pasid_bits);
- 
-@@ -3384,6 +3494,7 @@ static int arm_smmu_add_device(struct device *dev)
- 	iommu_device_unlink(&smmu->iommu, dev);
- err_disable_pasid:
- 	arm_smmu_disable_pasid(master);
-+	arm_smmu_remove_master(smmu, master);
- err_free_master:
- 	kfree(master);
- 	dev_iommu_priv_set(dev, NULL);
-@@ -3406,6 +3517,7 @@ static void arm_smmu_remove_device(struct device *dev)
- 	iommu_group_remove_device(dev);
- 	iommu_device_unlink(&smmu->iommu, dev);
- 	arm_smmu_disable_pasid(master);
-+	arm_smmu_remove_master(smmu, master);
- 	kfree(master);
- 	iommu_fwspec_free(dev);
- }
-@@ -3849,6 +3961,9 @@ static int arm_smmu_init_structures(struct arm_smmu_device *smmu)
- {
- 	int ret;
- 
-+	mutex_init(&smmu->streams_mutex);
-+	smmu->streams = RB_ROOT;
++	struct pci_dev *pdev;
++	/*
++	 * TODO: find a good inflight PPR number. We should divide the PRI queue
++	 * by the number of PRI-capable devices, but it's impossible to know
++	 * about future (probed late or hotplugged) devices. So we're at risk of
++	 * dropping PPRs (and leaking pending requests in the FQ).
++	 */
++	size_t max_inflight_pprs = 16;
 +
- 	ret = arm_smmu_init_queues(smmu);
++	if (!master->pri_supported || !master->ats_enabled)
++		return -ENODEV;
++
++	pdev = to_pci_dev(master->dev);
++
++	ret = pci_reset_pri(pdev);
++	if (ret)
++		return ret;
++
++	ret = pci_enable_pri(pdev, max_inflight_pprs);
++	if (ret) {
++		dev_err(master->dev, "cannot enable PRI: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static void arm_smmu_disable_pri(struct arm_smmu_master *master)
++{
++	struct pci_dev *pdev;
++
++	if (!dev_is_pci(master->dev))
++		return;
++
++	pdev = to_pci_dev(master->dev);
++
++	if (!pdev->pri_enabled)
++		return;
++
++	pci_disable_pri(pdev);
++}
++
+ static void arm_smmu_detach_dev(struct arm_smmu_master *master)
+ {
+ 	unsigned long flags;
+@@ -3705,6 +3869,8 @@ static int arm_smmu_add_device(struct device *dev)
+ 	    smmu->features & ARM_SMMU_FEAT_STALL_FORCE)
+ 		master->stall_enabled = true;
+ 
++	arm_smmu_init_pri(master);
++
+ 	ret = iommu_device_link(&smmu->iommu, dev);
  	if (ret)
- 		return ret;
+ 		goto err_disable_pasid;
+@@ -3741,6 +3907,7 @@ static void arm_smmu_remove_device(struct device *dev)
+ 	master = dev_iommu_priv_get(dev);
+ 	smmu = master->smmu;
+ 	iopf_queue_remove_device(smmu->evtq.iopf, dev);
++	iopf_queue_remove_device(smmu->priq.iopf, dev);
+ 	WARN_ON(iommu_sva_disable(dev));
+ 	arm_smmu_detach_dev(master);
+ 	iommu_group_remove_device(dev);
+@@ -3864,7 +4031,7 @@ static void arm_smmu_get_resv_regions(struct device *dev,
+ 
+ static bool arm_smmu_iopf_supported(struct arm_smmu_master *master)
+ {
+-	return master->stall_enabled;
++	return master->stall_enabled || master->pri_supported;
+ }
+ 
+ static bool arm_smmu_dev_has_feature(struct device *dev,
+@@ -3922,6 +4089,15 @@ static int arm_smmu_dev_enable_sva(struct device *dev)
+ 		ret = iopf_queue_add_device(master->smmu->evtq.iopf, dev);
+ 		if (ret)
+ 			goto err_disable_sva;
++	} else if (master->pri_supported) {
++		ret = iopf_queue_add_device(master->smmu->priq.iopf, dev);
++		if (ret)
++			goto err_disable_sva;
++
++		if (arm_smmu_enable_pri(master)) {
++			iopf_queue_remove_device(master->smmu->priq.iopf, dev);
++			goto err_disable_sva;
++		}
+ 	}
+ 	return 0;
+ 
+@@ -3957,7 +4133,9 @@ static int arm_smmu_dev_disable_feature(struct device *dev,
+ 
+ 	switch (feat) {
+ 	case IOMMU_DEV_FEAT_SVA:
++		arm_smmu_disable_pri(master);
+ 		iopf_queue_remove_device(master->smmu->evtq.iopf, dev);
++		iopf_queue_remove_device(master->smmu->priq.iopf, dev);
+ 		return iommu_sva_disable(dev);
+ 	default:
+ 		return -EINVAL;
+@@ -4101,6 +4279,11 @@ static int arm_smmu_init_queues(struct arm_smmu_device *smmu)
+ 	if (!(smmu->features & ARM_SMMU_FEAT_PRI))
+ 		return 0;
+ 
++	smmu->priq.iopf = iopf_queue_alloc(dev_name(smmu->dev),
++					   arm_smmu_flush_priq, smmu);
++	if (!smmu->priq.iopf)
++		return -ENOMEM;
++
+ 	return arm_smmu_init_one_queue(smmu, &smmu->priq.q, ARM_SMMU_PRIQ_PROD,
+ 				       ARM_SMMU_PRIQ_CONS, PRIQ_ENT_DWORDS,
+ 				       "priq");
+@@ -5078,6 +5261,7 @@ static int arm_smmu_device_remove(struct platform_device *pdev)
+ 	iommu_device_sysfs_remove(&smmu->iommu);
+ 	arm_smmu_device_disable(smmu);
+ 	iopf_queue_free(smmu->evtq.iopf);
++	iopf_queue_free(smmu->priq.iopf);
+ 
+ 	return 0;
+ }
 -- 
 2.26.0
 
