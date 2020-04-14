@@ -2,165 +2,93 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8F8C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9662AC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43CF320737
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 660A0206B6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586885925;
-	bh=BlRdEu7bWkoJW8GKNHvreZ6ibTBfjVJvw4Fqm/MWRIU=;
+	s=default; t=1586886073;
+	bh=t/deTsl6/TeGzwQZ/UF53ZuXQ4kDyH5rS9H05EbtuQ8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UVG2cQkYnnS8UCIIui6YaSVWpmaplnhXvdPZ2GEP4v81+rccb0JyvW8gSmAZyl2Ci
-	 GLpHQ7JW6Uw3hZAejfv3EG0TFCpGuVfYfr31xArI5KetROCIMeUgq7vtYR3IZ96FXP
-	 LLABArEu/WOFrpaZZAYbqakOr+5sHq875HtWZvV8=
+	b=Zsd7wxZgQ2TCaSQhoZCFfaby0LJWz/Jsh9lL7YXGQkqa7rl2abP/bQWGoqcZbjkRo
+	 Q913fyy8iuJS8p0Km1T1SUZWj6KWMWWwumM41zkTrNRQfuumDelRpghE2K7wcOUyYC
+	 QrMMiF8lMFwDhp5p9f7ntqJpZEoHrD321l3PtLvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730281AbgDNRio (ORCPT
+        id S1730416AbgDNRlM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:38:44 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43058 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730099AbgDNRil (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 13:38:41 -0400
-Received: by mail-ot1-f68.google.com with SMTP id g14so451589otg.10;
-        Tue, 14 Apr 2020 10:38:40 -0700 (PDT)
+        Tue, 14 Apr 2020 13:41:12 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39608 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728863AbgDNRlK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 13:41:10 -0400
+Received: by mail-oi1-f195.google.com with SMTP id 8so917211oiy.6;
+        Tue, 14 Apr 2020 10:41:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8Nz3sKqk6tf6wfMqMfDxAKL6dU6xyEXZ2XEc3RZw1kA=;
-        b=HAea2NfyN4EFRHBhVGk45x5b1ywH72yfmLIX+OIf4N7IU41ZZgJQlIsdkf9JzvKfWd
-         aDGUkIWXXNgf6OruWAIYGOXvogoqXyXN5Pqx7BSf0nOa+fPplI7anS1zgRRs1Tvat5U7
-         ksCGk9BG9xvyZh8qd3c3UFRCQlGYgcYgFq35smDJcIUQIbGasG9NbttBq6eUTYjUTqc5
-         e/KEkTZ6je/8bY0GnCNzVU3mYAuHk9LCsKmo7UqFzV75fHgO7aS8WKLIPPG2zNf4GOhQ
-         B/Bw9LiGsKzUSSMBxPGhQSQr/oqgjypOpK294XQ/a7sCMIVaJl3KpQH+bwIjlMziPHD+
-         rySA==
-X-Gm-Message-State: AGi0PuamumCRgqT3zCvTLvm2P0jC+yyFY0t0A5n8DwUsWmeYuw5XsrXa
-        cQMLy6QPcUPg8Fv19mnMWQ==
-X-Google-Smtp-Source: APiQypLLc0miyc2capf1MVVpp0fAaq2ltXN508BsmSUu5FT95kopV2NU4H4Jg7eQPEjl2rrJC7bPYg==
-X-Received: by 2002:a9d:2c1:: with SMTP id 59mr699714otl.321.1586885920167;
-        Tue, 14 Apr 2020 10:38:40 -0700 (PDT)
+        bh=oy5Pa2pThiwkYu8G4GkTHJjme1DMBn7sY2MflS7Zuig=;
+        b=qOacL+1yiiU3D1dvAGnDear7Q4j/mFwaYsyB6Yfax93e5m7QfWYnZghKZP3FaiTo+q
+         jpJ7kixQOc1OD/2k1pwKmm4VpCQrmKJ8uYviGrhNgvHFUa5JXyTZDP6FU/iVQtC62KKw
+         mHFoD/JgMO7F+OZGinDbPwwznZ5BgG2JGlxw+xk3SCyZullR76jAeKkTabgljqDShMVs
+         IOKrujU68Vc/WCWAorM6TVRYwEJxt70guJ4+wskWDBEWU3ofbsMC8f645zGtn4E1FgFI
+         QfXdx7mIb9YeUvgP/SgYHYfyc5KHIQxY8z1hyS2L1sMNfHMdDZ90E7A2BpDDbbRR7TRE
+         KgGA==
+X-Gm-Message-State: AGi0PubZkdiyUkyGPMVUrAO6KraT+05wQs1hcLN/I6oIpqyyTALgVaJG
+        ud0zWi7dG40dp9uFI3kIzA==
+X-Google-Smtp-Source: APiQypKD41PgBlcTSotaK7Yjth1ocx/nKnHfnnEGSNYS9OULrLgLODfCIhLnCRAsdGgLQ4hyeSvY7w==
+X-Received: by 2002:aca:ef82:: with SMTP id n124mr15636268oih.73.1586886069014;
+        Tue, 14 Apr 2020 10:41:09 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d61sm5640680otb.53.2020.04.14.10.38.39
+        by smtp.gmail.com with ESMTPSA id e22sm3984048otk.59.2020.04.14.10.41.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 10:38:39 -0700 (PDT)
-Received: (nullmailer pid 2638 invoked by uid 1000);
-        Tue, 14 Apr 2020 17:38:38 -0000
-Date:   Tue, 14 Apr 2020 12:38:38 -0500
+        Tue, 14 Apr 2020 10:41:08 -0700 (PDT)
+Received: (nullmailer pid 6218 invoked by uid 1000);
+        Tue, 14 Apr 2020 17:41:07 -0000
+Date:   Tue, 14 Apr 2020 12:41:07 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] devicetree: bindings: phy: Document dwc3 qcom phy
-Message-ID: <20200414173838.GA29176@bogus>
-References: <20200403002608.946-1-ansuelsmth@gmail.com>
- <20200403002608.946-2-ansuelsmth@gmail.com>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com,
+        Jitao Shi <jitao.shi@mediatek.com>
+Subject: Re: [PATCH v14 1/3] dt-bindings: display: mediatek: control dpi pins
+ mode to avoid leakage
+Message-ID: <20200414174107.GA6165@bogus>
+References: <20200403080350.95826-1-jitao.shi@mediatek.com>
+ <20200403080350.95826-2-jitao.shi@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200403002608.946-2-ansuelsmth@gmail.com>
+In-Reply-To: <20200403080350.95826-2-jitao.shi@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 02:26:05AM +0200, Ansuel Smith wrote:
-> Document dwc3 qcom phy hs and ss phy bindings needed to correctly
-> inizialize and use usb on ipq806x SoC
+On Fri, 3 Apr 2020 16:03:48 +0800, Jitao Shi wrote:
+> Add property "pinctrl-names" to swap pin mode between gpio and dpi mode. Set
+> the dpi pins to gpio mode and output-low to avoid leakage current when dpi
+> disabled.
 > 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 > ---
->  .../bindings/phy/qcom,dwc3-hs-usb-phy.yaml    | 65 +++++++++++++++++++
->  .../bindings/phy/qcom,dwc3-ss-usb-phy.yaml    | 65 +++++++++++++++++++
->  2 files changed, 130 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,dwc3-ss-usb-phy.yaml
+>  .../devicetree/bindings/display/mediatek/mediatek,dpi.txt   | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml
-> new file mode 100644
-> index 000000000000..0bb59e3c2ab8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml
-> @@ -0,0 +1,65 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/qcom,dwc3-hs-usb-phy.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm DWC3 HS PHY CONTROLLER
-> +
-> +maintainers:
-> +  - Ansuel Smith <ansuelsmth@gmail.com>
-> +
-> +description:
-> +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-> +  controllers. Each DWC3 PHY controller should have its own node.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,dwc3-hs-usb-phy
-> +
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +  regmap:
-> +    maxItems: 1
-> +    description: phandle to usb3 dts definition
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    description: |
-> +      - "ref" Is required
-> +      - "xo"	Optional external reference clock
-> +    items:
-> +      - const: ref
-> +      - const: xo
-> +
-> +required:
-> +  - compatible
-> +  - "#phy-cells"
-> +  - regmap
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-> +
-> +    hs_phy_0: hs_phy_0 {
-> +      compatible = "qcom,dwc3-hs-usb-phy";
-> +      regmap = <&usb3_0>;
 
-If the registers for the phy are part of 'qcom,dwc3' then make this node 
-a child of it.
-
-> +      clocks = <&gcc USB30_0_UTMI_CLK>;
-> +      clock-names = "ref";
-> +      #phy-cells = <0>;
-> +    };
-> +
-> +    usb3_0: usb3@110f8800 {
-> +      compatible = "qcom,dwc3", "syscon";
-> +      reg = <0x110f8800 0x8000>;
-> +
-> +      /* ... */
-
-Incomplete examples should or will fail validation.
-
-> +    };
+Acked-by: Rob Herring <robh@kernel.org>
