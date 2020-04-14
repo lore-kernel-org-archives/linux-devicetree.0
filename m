@@ -2,88 +2,122 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D60C352BE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 07:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AC5C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 07:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82C6B206E9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 07:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC98220767
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 07:27:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="PXG4m4ef";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="3pGPxyk4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406541AbgDNHVj (ORCPT
+        id S2406619AbgDNH1A (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 03:21:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406537AbgDNHVi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 03:21:38 -0400
-X-Greylist: delayed 993 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Apr 2020 00:21:38 PDT
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3681C0A3BDC;
-        Tue, 14 Apr 2020 00:21:38 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 147262A14A0;
-        Tue, 14 Apr 2020 08:21:37 +0100 (BST)
-Date:   Tue, 14 Apr 2020 09:21:32 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
-        brendanhiggins@google.com, tglx@linutronix.de,
-        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
-        piotrs@cadence.com, robh+dt@kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com
-Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200414092132.525053f1@collabora.com>
-In-Reply-To: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200414022433.36622-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 14 Apr 2020 03:27:00 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:46785 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2406601AbgDNH07 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Apr 2020 03:26:59 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 53153D5D;
+        Tue, 14 Apr 2020 03:26:57 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 14 Apr 2020 03:26:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=z5MESemy4at/XiMeE9culKqPajy
+        dX3epVv5bu8NCS5w=; b=PXG4m4efaHFOdBKDqGRkoY2NYHF2ZZYCSBMozPP5yrd
+        nnkZAXOdrI7nGrf5+VAo/62LK2HK9ZW9wDsN575yJcSUBWn4xRvTxXBXkeNVPFes
+        du6tju/KHaxU5dAcJ1PBcqOjYsuarlTS+42JExPvkjv3aUUj1J3mDGOpgTnsltS0
+        FMdZDF0hJ7TMWq6el7FyAseVd5XTfqR3ZkDDftKudGzNYh7Rg2vAKaqcOUPUeD6I
+        /XRFIUq61uu+BdxQ81B5nqYNOamVQk/G6nSp2XjhtqBbid5/+2mvvuwKk8YKF9xT
+        SYTS11RzebGWUAC1IdM9AzZ4GEoh4EFvs5p+CR5YvEQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=z5MESe
+        my4at/XiMeE9culKqPajydX3epVv5bu8NCS5w=; b=3pGPxyk4nmhLT2XV141JuX
+        x2T8ZazVfOyohOVn0CIKFQyoY4b6Om3gMbnppgBRtp204W4UQDe8eM98AAtHNbot
+        Uy9/KP9dfxDVkL760mbxzrVuh+w1E3iKTQPxziukmm238VgmNrZwbITQNoKJWSNt
+        bEL0uJdMuklClnxU+qKCpSdQVovD1gsAER5LlQpeFZ+i5ckbbVDUMMW7hwblHVzA
+        FZ2AiOddZQZQ5JgYTGVOp2wYNaF/i0c7NDnvLM+XvsCckwQ4IZsQax9f4LWLX56i
+        RLEqS/XMEshBwCdO5ZWv/8K5pstBaTixJdWVnmx3fQ1sHJTyb/85C64u30TDj+pw
+        ==
+X-ME-Sender: <xms:wGWVXjaMgOfD0xad5bMbf6M25CsI48g4oQh7HcdxthdHjFvJC6DtzQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfedtgdduudegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:wGWVXmosoca5IhQD4qQOWu1xdUoFNPGEyHW8sYuDSINnKQhOfupgMw>
+    <xmx:wGWVXg8S6v-WWIYvAaRCWVx7H6CEidQ6W9pDJdAW3mW3LltU3x2qag>
+    <xmx:wGWVXt8ztvlroAi1N_2A33jFe05gAxvbdMKUJdFYYwHRcAnysWS0_w>
+    <xmx:wGWVXljUWYsWAlO-k7eSnaW4xx1k7xiMHBwrHOUzNYWP44J_F7bYcg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5C2C0328006A;
+        Tue, 14 Apr 2020 03:26:56 -0400 (EDT)
+Date:   Tue, 14 Apr 2020 09:26:53 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, Joe Perches <joe@perches.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: point to display schemas in DRM DRIVERS FOR
+ ALLWINNER A10
+Message-ID: <20200414072653.x2mvytbsvnjiqiij@gilmour.lan>
+References: <20200413075329.10717-1-lukas.bulwahn@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="kdkzdphvlzzoj572"
+Content-Disposition: inline
+In-Reply-To: <20200413075329.10717-1-lukas.bulwahn@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Ramuthevar,
 
-On Tue, 14 Apr 2020 10:24:33 +0800
-"Ramuthevar,Vadivel MuruganX"
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+--kdkzdphvlzzoj572
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +	lgm_host->chip.legacy.read_byte = lgm_read_byte;
-> +	lgm_host->chip.legacy.read_buf = lgm_read_buf;
-> +	lgm_host->chip.legacy.write_buf = lgm_write_buf;
-> +	lgm_host->chip.legacy.select_chip = lgm_select_chip;
-> +	lgm_host->chip.legacy.dev_ready = lgm_dev_ready;
-> +	lgm_host->chip.legacy.cmd_ctrl = lgm_cmd_ctrl;
-> +	lgm_host->chip.legacy.chip_delay = 30;
-> +	lgm_host->chip.legacy.dummy_controller.ops = &lgm_nand_controller_ops;
-> +
+On Mon, Apr 13, 2020 at 09:53:29AM +0200, Lukas Bulwahn wrote:
+> Commit f5a98bfe7b37 ("dt-bindings: display: Convert Allwinner display
+> pipeline to schemas") replaced sunxi/sun4i-drm.txt with
+> allwinner,sun*.yaml files in Documentation/devicetree/bindings/display/,
+> but did not adjust DRM DRIVERS FOR ALLWINNER A10.
+>
+> Since then, ./scripts/get_maintainer.pl --self-test complains:
+>
+>   warning: no file matches \
+>   F: Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+>
+> Point to allwinner display schemas in DRM DRIVERS FOR ALLWINNER A10.
+>
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
-Seriously, what's not clear in [1]? Okay, let's say you overlooked this
-comment, isn't the name of the field explicit enough? We received a
-few other drivers implementing the legacy interface in the last few
-months so maybe there's something to improve on our end (update the
-doc, move legacy drivers to a legacy sub-dir?).
+Acked-by: Maxime Ripard <mripard@kernel.org>
 
-Back to more constructive comment now: please implement ->exec_op() to
-replace those legacy hooks.
+Thanks!
+Maxime
 
-Regards,
+--kdkzdphvlzzoj572
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Boris
+-----BEGIN PGP SIGNATURE-----
 
-[1]https://elixir.bootlin.com/linux/v5.7-rc1/source/include/linux/mtd/rawnand.h#L987
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpVlvQAKCRDj7w1vZxhR
+xVrnAPwPo+G3ObIsBJnK9D9AJ9dsl+LIKPP4Qz+TT7i4cgMDMAEAvnuVM7N5ZdVk
+yXUCRUxY6YQ5gMDbTD43X/MsWZqHmQ8=
+=gv8H
+-----END PGP SIGNATURE-----
+
+--kdkzdphvlzzoj572--
