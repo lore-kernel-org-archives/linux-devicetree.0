@@ -7,87 +7,82 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F70DC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2887FC352BE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 487212074D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00C162074D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586890384;
-	bh=Md+Ye8TBOgbJ0JVun4fYdXtwnJDSrDI/BDicJzZ741Q=;
+	s=default; t=1586890403;
+	bh=AAp5bITzFd7ZJlEcc+3WflxFsSieRSn/D7/0KNGLzYo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QLKubuiBqnjXWl4mNmo0BrZWKUk3STG5giJwvF7dgHZWLYFF9y4FffcfpRIfSGEve
-	 a9BEiYnk9Yu04m+AHYxjdbGPRApyNTwYfPRdZs4SpCzei6H7Vo+5WD0YuDpZOsbduf
-	 /aV9ki5Wlhq4Ge3TQiDV41UX9WIk2wKxaw++V5Q8=
+	b=UXQ2/9d728fGa94dD4feiYQIR8lFtYZHeB0Hp4PP+CwEhnhpGOSKMtHpqs0W2gesM
+	 8mj3QK+2Bj9J+4SD6n/ouPlKLTiu4SVz4fysvbi0YmAWWDEjU7hD8wFyFvJm6t34rh
+	 ZKITko+TKY8YVFkMF/ygGmpUb/I7AjQS8lvtlQNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504478AbgDNSxD (ORCPT
+        id S2504414AbgDNSxV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:53:03 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34866 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504414AbgDNSw7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 14:52:59 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e20so795600otl.2
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 11:52:59 -0700 (PDT)
+        Tue, 14 Apr 2020 14:53:21 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34501 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504481AbgDNSxU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 14:53:20 -0400
+Received: by mail-oi1-f196.google.com with SMTP id x10so1952594oie.1
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 11:53:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vBZW4t/QR6QOLzl/ULJ1MHgp2jUs56TsnBvH3b8AW/Y=;
-        b=WsOliT2+esty9AAVZ2gIx4a+fBQ9DZe3lL8C1w806WXc1PBy2FwgqU26uq3sje1Q6W
-         kylh2uI9q07HPy9QHQ2Sr+4DEHtYoIpsYBYI57N4YCkfOGjKhc3CqxhwpH9XE4XHlX99
-         Q5gAzomsKiZbZgYr6OmyEfangXRF+s1b9tc+M9HVjoKu0+xkjnNCqfPBVI0Sb5XvmU3s
-         H+dEEY1Lev0xwYOwZcbp6EGIlHADPlb4MeGpIQVyXYVMSICfX2Egp82vCTSP584nRrUU
-         c9R2TB8P29wM2rTZhLcSYj7L3OywnuwzJ3IqDg6A7gdm6xFJy7aI7DfRovZ7eIF5SXJr
-         +vAw==
-X-Gm-Message-State: AGi0Pub/i7QfjUTKfPgnFE2Ojq7N5HPOIrc2bIk0Gis5C3zZIArLeQhf
-        3mObntg780d+ZMAuTWKO4g==
-X-Google-Smtp-Source: APiQypIvDthHOU9FMjetA2A+LsuxKXj3r8h27pVbxCJLM5178ny/A/1RuyJx24uUsw812iIqgdpnSw==
-X-Received: by 2002:a9d:907:: with SMTP id 7mr19508096otp.312.1586890378740;
-        Tue, 14 Apr 2020 11:52:58 -0700 (PDT)
+        bh=DnUIm0pCTMjrJlKf0PE9TFv9cjSyYhQx6LzvNIdhMAk=;
+        b=JpedOlZAzFu5tV1AVlMelJudTU3Wzlq1eufLXDfVratsjQ4mc9pDUT5fvKamTU59jG
+         RQNboXOVgCsfmlpaAQ/XrlwA1dsv2v9GHkFZdMC94gT97VOk2no2VmiLMFQoNvaKLsBh
+         0ZuH4vw65oeU/4j8c3o11BgT4rIPxHCGEFWX1oS40ihWV26Qnf+dR6PsaDksdBvRCE8F
+         PdbKOjLm3jaqKURcLllg5IxvvZHOFHHKvh+q+DfbwI8OpjAVIp4uWpPQWy7VJ3JceHFp
+         EDSe+KWzJdlVmNTEzY2kk962lHBLeVL6IMSwpZdfI5MEkI/A+H8CYP2tiLd5dr8U2TiB
+         h00A==
+X-Gm-Message-State: AGi0PuazVqt0rWSm9JUqWRbA0Esk7lu+khJM2T1ov/6Nu16Gdkx2i0Zs
+        qohLlh2PCECCodrIhLuvyA==
+X-Google-Smtp-Source: APiQypJO2aj/ViwEJv6VhOEdbrE3T0CJhw4JlEHWkOQn2ENl7Wbc+x7CT6tgWq3Ota34btutjtgABQ==
+X-Received: by 2002:aca:b143:: with SMTP id a64mr6140775oif.1.1586890398871;
+        Tue, 14 Apr 2020 11:53:18 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c81sm5537585oib.35.2020.04.14.11.52.57
+        by smtp.gmail.com with ESMTPSA id v15sm6372807ook.37.2020.04.14.11.53.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 11:52:58 -0700 (PDT)
-Received: (nullmailer pid 7412 invoked by uid 1000);
-        Tue, 14 Apr 2020 18:52:57 -0000
-Date:   Tue, 14 Apr 2020 13:52:57 -0500
+        Tue, 14 Apr 2020 11:53:18 -0700 (PDT)
+Received: (nullmailer pid 8012 invoked by uid 1000);
+        Tue, 14 Apr 2020 18:53:17 -0000
+Date:   Tue, 14 Apr 2020 13:53:17 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Sam Ravnborg <sam@ravnborg.org>
 Cc:     dri-devel@lists.freedesktop.org,
         Thierry Reding <thierry.reding@gmail.com>,
-        devicetree@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH v2 27/36] dt-bindings: display: convert sitronix,st7789v
- to DT Schema
-Message-ID: <20200414185257.GA7358@bogus>
+        devicetree@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v2 28/36] dt-bindings: display: drop unused
+ simple-panel.txt
+Message-ID: <20200414185317.GA7959@bogus>
 References: <20200408195109.32692-1-sam@ravnborg.org>
- <20200408195109.32692-28-sam@ravnborg.org>
+ <20200408195109.32692-29-sam@ravnborg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200408195109.32692-28-sam@ravnborg.org>
+In-Reply-To: <20200408195109.32692-29-sam@ravnborg.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed,  8 Apr 2020 21:51:00 +0200, Sam Ravnborg wrote:
-> v2:
->     - dropped use of spi-slave.yaml (Maxime)
->     - added unevaluatedProperties (Maxime)
+On Wed,  8 Apr 2020 21:51:01 +0200, Sam Ravnborg wrote:
+> There are no more references to simple-panel.txt.
+> Delete it.
 > 
 > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Maxime Ripard <mripard@kernel.org>
 > Cc: Thierry Reding <thierry.reding@gmail.com>
 > Cc: Sam Ravnborg <sam@ravnborg.org>
 > ---
->  .../display/panel/sitronix,st7789v.txt        | 37 -----------
->  .../display/panel/sitronix,st7789v.yaml       | 63 +++++++++++++++++++
->  2 files changed, 63 insertions(+), 37 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/panel/sitronix,st7789v.txt
->  create mode 100644 Documentation/devicetree/bindings/display/panel/sitronix,st7789v.yaml
+>  Documentation/devicetree/bindings/display/panel/simple-panel.txt | 1 -
+>  1 file changed, 1 deletion(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/panel/simple-panel.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
