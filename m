@@ -2,121 +2,84 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB49C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 23:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 054CDC2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 23:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5DE721569
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 23:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD5352072D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 23:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586906337;
-	bh=TIDIviyEYvN23MqFWk6rl7nwsfElsevepgo9cj0fDa0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EHWgPT10MZbV9cvui/vpeUCtkB/4VLbY5ssmPWoDTaiOM0GdPOaZjJqiXoKK7Ap/4
-	 0f5LH17YuaCDkUD8iXrK4/gxNAnYmqzS+62wzDxaVzWud2t//kgq4W1KRtLMlEwLoi
-	 padKnILg+vagCXvCVYBV0tFALbHlkXAYEQu7kbL4=
+	s=default; t=1586906392;
+	bh=DvMXI8pG3S4O9cptIwGDiAIynukGXID5r0pBvcHSfZs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xK6rGLoyDskuZ8k4sC9HRnzV49R8qE5rFoxdqdiF2ehcIPS6pkrrTGfH/sJ1Hw+wu
+	 K8JfBXR1glfDk26uga/TLURBbAwN8mJjlHFZa81KRat30ZvE3soKgyIke8E5pW/nhU
+	 nzP6gFb4yqJIp0Vs2BDRGOXHtqkoypcDa/x8FHzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392091AbgDNXSv (ORCPT
+        id S1731254AbgDNXTu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 19:18:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392083AbgDNXSv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 19:18:51 -0400
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D68C2072D;
-        Tue, 14 Apr 2020 23:18:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586906330;
-        bh=TIDIviyEYvN23MqFWk6rl7nwsfElsevepgo9cj0fDa0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BlTi57WWPhRfW7sJMv5MxtonFNkCoY3uTo3bX4GCktl3OJfOEMkXo/jFDOgJC3Xhx
-         YYZwkDurIo88TwaWUqFS6rvVSLyvaJpZb+mYFSf0te1Mrgh938AILR0wS/rK6kk+wG
-         zu0wwxVhweZhfP5OXayIki3MMJ01LkvWJNk014kg=
-Received: by mail-ed1-f44.google.com with SMTP id s10so1941321edy.9;
-        Tue, 14 Apr 2020 16:18:50 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaXBhiHzKA+fXdcC18G/yCx4pfV5NTJRnBkoXF4KiJeysm0wNhl
-        QYzYb1EV/IczxYeoL+msTnchvztQi0CDJpk6UA==
-X-Google-Smtp-Source: APiQypLlqRYq43AAFMZg/IO4wBtIyFmNe19LoGBoUzW3+lEwF9tJ5dD9i42daP7Zkk0pVFZPG7mhoy00oQKf+v9hKRU=
-X-Received: by 2002:aa7:c649:: with SMTP id z9mr8144084edr.288.1586906328844;
- Tue, 14 Apr 2020 16:18:48 -0700 (PDT)
+        Tue, 14 Apr 2020 19:19:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38996 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731159AbgDNXTq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Apr 2020 19:19:46 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B53A6C061A0E;
+        Tue, 14 Apr 2020 16:12:11 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id e20so1570145otl.2;
+        Tue, 14 Apr 2020 16:12:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3LvyUE2GUTR0pHYEnmT2tUO1UdeQFGwAkp9xm1vgbDE=;
+        b=r7KnoE1Rf0QB6fpyKgG1zNAtU62O5MI8aVvjcVSHWL09B+7LTqa9uSItn7s/TC8aSw
+         KogZXmBpftxyvLGDLWwleZITx9MGqvghol0yYRRiuOf1yNe49/VmosnldvFbZrTSCY2a
+         vThVGqtqJax2MZEnCS3LsnXhMqSeC9lxGMk8G4Uf/3iMzQx3nac6SRGiAFw0BGM7ZO0u
+         y5nQWtzw23+GyuNHpHu02Xx/sGTcszMtZa6kt/E3h+y54f9ixkouBorScxcRsgekFM2W
+         PpcbMQ/OwWgN1ibdYXNgojQm8HMoNK6nghQHJiKBVdrQrIQ0JozWVI0Cdy3WlIU4B5A8
+         sFlw==
+X-Gm-Message-State: AGi0PuZnKo4ZSXoqhCubfVZkC/6rzsTee3MnMkJcPn9i0fvaFJop5+yJ
+        KuffyQvXSogL5Fbk/Ro6liY4oFc=
+X-Google-Smtp-Source: APiQypLk3qLcQHFn2yII+iHdQeLwDivd6L18ckP1XjH5hhG+LHdjUeIJ5HA6/l0lOU/TzU6subtL1Q==
+X-Received: by 2002:a9d:5381:: with SMTP id w1mr10846785otg.288.1586905930992;
+        Tue, 14 Apr 2020 16:12:10 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n184sm5538526oih.58.2020.04.14.16.12.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 16:12:10 -0700 (PDT)
+Received: (nullmailer pid 7707 invoked by uid 1000);
+        Tue, 14 Apr 2020 23:12:09 -0000
+Date:   Tue, 14 Apr 2020 18:12:09 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Felix Fietkau <nbd@nbd.name>
+Cc:     linux-wireless@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: net: wireless: mt76: document
+ mediatek,eeprom-merge-otp property
+Message-ID: <20200414231209.GA7642@bogus>
+References: <20200406102203.54450-1-nbd@nbd.name>
 MIME-Version: 1.0
-References: <20200414030815.192104-1-hsinyi@chromium.org> <20200414030815.192104-2-hsinyi@chromium.org>
-In-Reply-To: <20200414030815.192104-2-hsinyi@chromium.org>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Wed, 15 Apr 2020 07:18:37 +0800
-X-Gmail-Original-Message-ID: <CAAOTY__oL1LxFxmBSp+cC__ZcGVifQ3f+gPKSWFZKJV4aRCDJw@mail.gmail.com>
-Message-ID: <CAAOTY__oL1LxFxmBSp+cC__ZcGVifQ3f+gPKSWFZKJV4aRCDJw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] media: mtk-mdp: Use correct aliases name
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        devicetree@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200406102203.54450-1-nbd@nbd.name>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Hsin-Yi:
-
-Hsin-Yi Wang <hsinyi@chromium.org> =E6=96=BC 2020=E5=B9=B44=E6=9C=8814=E6=
-=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=8811:08=E5=AF=AB=E9=81=93=EF=BC=
-=9A
->
-> aliases property name must include only lowercase and '-'. Fix in dts
-> and driver.
->
-
-Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+On Mon,  6 Apr 2020 12:22:00 +0200, Felix Fietkau wrote:
+> It is used to enable merging of Flash EEPROM data with OTP ROM calibration.
+> 
+> Signed-off-by: Felix Fietkau <nbd@nbd.name>
 > ---
->  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c b/drivers/medi=
-a/platform/mtk-mdp/mtk_mdp_comp.c
-> index 14991685adb7..58abfbdfb82d 100644
-> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-> @@ -15,10 +15,10 @@
->
->
->  static const char * const mtk_mdp_comp_stem[MTK_MDP_COMP_TYPE_MAX] =3D {
-> -       "mdp_rdma",
-> -       "mdp_rsz",
-> -       "mdp_wdma",
-> -       "mdp_wrot",
-> +       "mdp-rdma",
-> +       "mdp-rsz",
-> +       "mdp-wdma",
-> +       "mdp-wrot",
->  };
->
->  struct mtk_mdp_comp_match {
-> --
-> 2.26.0.110.g2183baf09c-goog
->
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+>  .../devicetree/bindings/net/wireless/mediatek,mt76.txt         | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+
+Acked-by: Rob Herring <robh@kernel.org>
