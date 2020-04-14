@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6E8C38A30
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFA8C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5397420678
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19FB62074D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h9+T4NKl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JI5QkA97"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391537AbgDNREl (ORCPT
+        id S2391557AbgDNREu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:04:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34598 "EHLO
+        Tue, 14 Apr 2020 13:04:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391371AbgDNREj (ORCPT
+        by vger.kernel.org with ESMTP id S2391450AbgDNREp (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:04:39 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A659C061A0E
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:38 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id a201so14547302wme.1
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:38 -0700 (PDT)
+        Tue, 14 Apr 2020 13:04:45 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02558C061A0F
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:45 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id d27so6044228wra.1
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XYjzYLucwyMWs5ATd69ukU535fMinAQdw/Sa1FQ9874=;
-        b=h9+T4NKlDIuEuOboHRkQ9VM5O6C305HktEqTd1ZjCrXyVdjGXpKMut+cm0j25dz8L8
-         qED+RLh1oJwzxEXRlXzbxme6N1keKufeYV9dapDPQtGb3afujRsD37DcAqdUwlABi+kY
-         6+AD1XXWqkoRRFGeAhAXRueOoV8MzRbnmuvkLQUNpXIZcveXEGWfkMnnceb6fPbrFvux
-         k+IrqpGZ8iqZSSXdseYwd+fkjbxj05n2Va1tkNh5llSnOQ3uPgo2WjZy0jga6vHpGoLM
-         ImtsA+n+pkrR86mvRcRxAaM8Z1T/E7yFwFVTV3O3UFgsvbJf2Prxmyrzb1TDgj8KqAPd
-         Q+ew==
+        bh=iFQo4eLK0C51ieV33vlbkwWvrpzk0Iu0nUGg4g65CHs=;
+        b=JI5QkA97eezOSapi2fPqRY+esAG4E9fuADRTO9KkwAXqshRxQg2LKwGOVpQ8bEJ81f
+         7XPxMj7271i5R78HnNq28pZSLk3B7jV9yN0c4/bTfJRpnWpYm9Lt2jtqPzuqS2HV02Z2
+         hkq9kvDb8FIDY1FaOeaNgULZXDgiAcMd9YqMGytbbSvWq4fOyoPZG5zIKdYtbwIwjSXa
+         /p9Mczkd/c2xupqo0EB5V5OSAvg3O/E1/F5JPD2SgV6IMuTc6+yiI7lkQVerTEvPWxXm
+         XspXwZKvxZ42rz0b7zJEQWuYEyF6WUnRsl/SYo5BgSVSgOvKFQDMOtkvWsn7y2Hxn6V5
+         9ulA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XYjzYLucwyMWs5ATd69ukU535fMinAQdw/Sa1FQ9874=;
-        b=uEgnl9MLNIf3ANuKevcZCNEXl5LyOjOAodAbUnihHkovPKi0KiwDo6b8Fjsv60m8lr
-         iejsr2LAL9YGU7RVlQOhPxIDVoqK/ymbQfxqt4w9MZbulSja0bh7JbEWEyVS6Ze6asSJ
-         8EgNASki7f7Fn2i7RCD8RCgEJIwFS4qeIg5mjyggd2sd/Tu5URwN9oV8myozf5qq0vh1
-         O93P2tGymrmHHYN/BH5uIFFGuNaIlQlupZPjqp3qkk3ofKiCw88mB1DBmV2I0vbFKmUS
-         F1dSpN/woUiuDrdQyxLHwsFREox2rwwL5rB/Y22LPLg5UGgH2TZwJDVTkjB0rKNBhavw
-         tzgw==
-X-Gm-Message-State: AGi0PuZOnp2Ur2AUIZCSxvOTCTO5nUQPRVhV9rhWoFZvMSfPCl4iMKmz
-        a7xgFK79i/do9YA+gRZ3scP5Mw==
-X-Google-Smtp-Source: APiQypI7JCLr3IUyR+gNk8YroVsmo+Ju0KwL83AHQIeXPjqzPAV1RnhANqCP4fKquYyiz4/jl6+90g==
-X-Received: by 2002:a7b:cc88:: with SMTP id p8mr777259wma.108.1586883876735;
-        Tue, 14 Apr 2020 10:04:36 -0700 (PDT)
+        bh=iFQo4eLK0C51ieV33vlbkwWvrpzk0Iu0nUGg4g65CHs=;
+        b=S81IIEDN5jSaeiSg9ajK7vuIBdC+R89z1wSfjRxZ+D1ZEfy00uxIE6w4w1WCKv735V
+         T5J1s8crBVYVA2n0uPq0Gbj+FPkdzZNZAIVkDcu+126p/PihZ88flWxdmYEqQFB1fbtU
+         5ASIFHz1wfTqQ886WbO0o9+Mag8KlX96szvJ44ikxeUYXSbh3oFlCLkcZiNC0NOeZYGM
+         FkCyGz1eB5NXyqgXfcXO7/sgoVd83xXJcifA7qfssZkzxXmoiYpJVSpFR5Yr/OpH3nki
+         GcButU1X3oUXQMNpY14obyCmBlTXgFJGd8q7obR+3zzCMM6itS0msNEHIkQ6vlp2FqoN
+         JOgQ==
+X-Gm-Message-State: AGi0PuauJu1Hw3UlB+niQ6OyLTOfk7zJbsbEgWv9dpVWVHaHjVjWUndy
+        HUb8DRB+BWB714B9h9dQDyriEA==
+X-Google-Smtp-Source: APiQypLZa+lawPw64nTDrcMPpw0HQPprW6BlaWllx/hPptH94lEGFoejVXa1lUE2ugeNThH+6x6yTQ==
+X-Received: by 2002:a5d:4085:: with SMTP id o5mr23364377wrp.327.1586883883718;
+        Tue, 14 Apr 2020 10:04:43 -0700 (PDT)
 Received: from localhost.localdomain ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id x18sm19549147wrs.11.2020.04.14.10.04.34
+        by smtp.gmail.com with ESMTPSA id x18sm19549147wrs.11.2020.04.14.10.04.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 10:04:35 -0700 (PDT)
+        Tue, 14 Apr 2020 10:04:43 -0700 (PDT)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
@@ -69,9 +69,9 @@ Cc:     joro@8bytes.org, catalin.marinas@arm.com, will@kernel.org,
         jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
         zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
         Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: [PATCH v5 13/25] iommu/arm-smmu-v3: Seize private ASID
-Date:   Tue, 14 Apr 2020 19:02:41 +0200
-Message-Id: <20200414170252.714402-14-jean-philippe@linaro.org>
+Subject: [PATCH v5 18/25] iommu/arm-smmu-v3: Hook up ATC invalidation to mm ops
+Date:   Tue, 14 Apr 2020 19:02:46 +0200
+Message-Id: <20200414170252.714402-19-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200414170252.714402-1-jean-philippe@linaro.org>
 References: <20200414170252.714402-1-jean-philippe@linaro.org>
@@ -82,184 +82,141 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The SMMU has a single ASID space, the union of shared and private ASID
-sets. This means that the SMMU driver competes with the arch allocator
-for ASIDs. Shared ASIDs are those of Linux processes, allocated by the
-arch, and contribute in broadcast TLB maintenance. Private ASIDs are
-allocated by the SMMU driver and used for "classic" map/unmap DMA. They
-require explicit TLB invalidations.
-
-When we pin down an mm_context and get an ASID that is already in use by
-the SMMU, it belongs to a private context. We used to simply abort the
-bind, but this is unfair to users that would be unable to bind a few
-seemingly random processes. Try to allocate a new private ASID for the
-context, and make the old ASID shared.
-
-Introduce a new lock to prevent races when rewriting context
-descriptors. Unfortunately it has to be a spinlock since we take it
-while holding the asid lock, which will be held in non-sleepable context
-(freeing ASIDs from an RCU callback).
+iommu-sva calls us when an mm is modified. Perform the required ATC
+invalidations.
 
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 83 +++++++++++++++++++++++++++++--------
- 1 file changed, 66 insertions(+), 17 deletions(-)
+v4->v5: more comments
+---
+ drivers/iommu/arm-smmu-v3.c | 70 ++++++++++++++++++++++++++++++-------
+ 1 file changed, 58 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 09f4f712fb103..8fbc5da133ae4 100644
+index 6640c2ac2a7c5..c4bffb14461aa 100644
 --- a/drivers/iommu/arm-smmu-v3.c
 +++ b/drivers/iommu/arm-smmu-v3.c
-@@ -730,6 +730,7 @@ struct arm_smmu_option_prop {
- };
+@@ -2375,6 +2375,20 @@ arm_smmu_atc_inv_to_cmd(int ssid, unsigned long iova, size_t size,
+ 	size_t inval_grain_shift = 12;
+ 	unsigned long page_start, page_end;
  
- static DEFINE_XARRAY_ALLOC1(asid_xa);
-+static DEFINE_SPINLOCK(contexts_lock);
- 
- static struct arm_smmu_option_prop arm_smmu_options[] = {
- 	{ ARM_SMMU_OPT_SKIP_PREFETCH, "hisilicon,broken-prefetch-cmd" },
-@@ -1534,6 +1535,17 @@ static int arm_smmu_cmdq_batch_submit(struct arm_smmu_device *smmu,
- }
- 
- /* Context descriptor manipulation functions */
-+static void arm_smmu_tlb_inv_asid(struct arm_smmu_device *smmu, u16 asid)
-+{
-+	struct arm_smmu_cmdq_ent cmd = {
-+		.opcode = CMDQ_OP_TLBI_NH_ASID,
-+		.tlbi.asid = asid,
-+	};
-+
-+	arm_smmu_cmdq_issue_cmd(smmu, &cmd);
-+	arm_smmu_cmdq_issue_sync(smmu);
-+}
-+
- static void arm_smmu_sync_cd(struct arm_smmu_domain *smmu_domain,
- 			     int ssid, bool leaf)
- {
-@@ -1568,7 +1580,7 @@ static int arm_smmu_alloc_cd_leaf_table(struct arm_smmu_device *smmu,
- 	size_t size = CTXDESC_L2_ENTRIES * (CTXDESC_CD_DWORDS << 3);
- 
- 	l1_desc->l2ptr = dmam_alloc_coherent(smmu->dev, size,
--					     &l1_desc->l2ptr_dma, GFP_KERNEL);
-+					     &l1_desc->l2ptr_dma, GFP_ATOMIC);
- 	if (!l1_desc->l2ptr) {
- 		dev_warn(smmu->dev,
- 			 "failed to allocate context descriptor table\n");
-@@ -1614,8 +1626,8 @@ static __le64 *arm_smmu_get_cd_ptr(struct arm_smmu_domain *smmu_domain,
- 	return l1_desc->l2ptr + idx * CTXDESC_CD_DWORDS;
- }
- 
--static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
--				   int ssid, struct arm_smmu_ctx_desc *cd)
-+static int __arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
-+				     int ssid, struct arm_smmu_ctx_desc *cd)
- {
- 	/*
- 	 * This function handles the following cases:
-@@ -1691,6 +1703,17 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
- 	return 0;
- }
- 
-+static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
-+				   int ssid, struct arm_smmu_ctx_desc *cd)
-+{
-+	int ret;
-+
-+	spin_lock(&contexts_lock);
-+	ret = __arm_smmu_write_ctx_desc(smmu_domain, ssid, cd);
-+	spin_unlock(&contexts_lock);
-+	return ret;
-+}
-+
- static int arm_smmu_alloc_cd_tables(struct arm_smmu_domain *smmu_domain)
- {
- 	int ret;
-@@ -1794,9 +1817,18 @@ static bool arm_smmu_free_asid(struct arm_smmu_ctx_desc *cd)
- 	return free;
- }
- 
-+/*
-+ * Try to reserve this ASID in the SMMU. If it is in use, try to steal it from
-+ * the private entry. Careful here, we may be modifying the context tables of
-+ * another SMMU!
-+ */
- static struct arm_smmu_ctx_desc *arm_smmu_share_asid(u16 asid)
- {
-+	int ret;
-+	u32 new_asid;
- 	struct arm_smmu_ctx_desc *cd;
-+	struct arm_smmu_device *smmu;
-+	struct arm_smmu_domain *smmu_domain;
- 
- 	cd = xa_load(&asid_xa, asid);
- 	if (!cd)
-@@ -1812,11 +1844,31 @@ static struct arm_smmu_ctx_desc *arm_smmu_share_asid(u16 asid)
- 		return cd;
- 	}
- 
-+	smmu_domain = container_of(cd, struct arm_smmu_domain, s1_cfg.cd);
-+	smmu = smmu_domain->smmu;
-+
 +	/*
-+	 * Race with unmap: TLB invalidations will start targeting the new ASID,
-+	 * which isn't assigned yet. We'll do an invalidate-all on the old ASID
-+	 * later, so it doesn't matter.
++	 * ATS and PASID:
++	 *
++	 * If substream_valid is clear, the PCIe TLP is sent without a PASID
++	 * prefix. In that case all ATC entries within the address range are
++	 * invalidated, including those that were requested with a PASID! There
++	 * is no way to invalidate only entries without PASID.
++	 *
++	 * When using STRTAB_STE_1_S1DSS_SSID0 (reserving CD 0 for non-PASID
++	 * traffic), translation requests without PASID create ATC entries
++	 * without PASID, which must be invalidated with substream_valid clear.
++	 * This has the unpleasant side-effect of invalidating all PASID-tagged
++	 * ATC entries within the address range.
 +	 */
-+	ret = __xa_alloc(&asid_xa, &new_asid, cd,
-+			 XA_LIMIT(1, 1 << smmu->asid_bits), GFP_ATOMIC);
-+	if (ret)
-+		return ERR_PTR(-ENOSPC);
-+	cd->asid = new_asid;
-+
- 	/*
--	 * Ouch, ASID is already in use for a private cd.
--	 * TODO: seize it.
-+	 * Update ASID and invalidate CD in all associated masters. There will
-+	 * be some overlap between use of both ASIDs, until we invalidate the
-+	 * TLB.
- 	 */
--	return ERR_PTR(-EEXIST);
-+	arm_smmu_write_ctx_desc(smmu_domain, 0, cd);
-+
-+	/* Invalidate TLB entries previously associated with that context */
-+	arm_smmu_tlb_inv_asid(smmu, asid);
-+
-+	return NULL;
+ 	*cmd = (struct arm_smmu_cmdq_ent) {
+ 		.opcode			= CMDQ_OP_ATC_INV,
+ 		.substream_valid	= !!ssid,
+@@ -2418,12 +2432,12 @@ arm_smmu_atc_inv_to_cmd(int ssid, unsigned long iova, size_t size,
+ 	cmd->atc.size	= log2_span;
  }
  
- __maybe_unused
-@@ -2407,15 +2459,6 @@ static void arm_smmu_tlb_inv_context(void *cookie)
- 	struct arm_smmu_device *smmu = smmu_domain->smmu;
+-static int arm_smmu_atc_inv_master(struct arm_smmu_master *master)
++static int arm_smmu_atc_inv_master(struct arm_smmu_master *master, int ssid)
+ {
+ 	int i;
  	struct arm_smmu_cmdq_ent cmd;
  
--	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
--		cmd.opcode	= CMDQ_OP_TLBI_NH_ASID;
--		cmd.tlbi.asid	= smmu_domain->s1_cfg.cd.asid;
--		cmd.tlbi.vmid	= 0;
--	} else {
--		cmd.opcode	= CMDQ_OP_TLBI_S12_VMALL;
--		cmd.tlbi.vmid	= smmu_domain->s2_cfg.vmid;
--	}
--
- 	/*
- 	 * NOTE: when io-pgtable is in non-strict mode, we may get here with
- 	 * PTEs previously cleared by unmaps on the current CPU not yet visible
-@@ -2423,8 +2466,14 @@ static void arm_smmu_tlb_inv_context(void *cookie)
- 	 * insertion to guarantee those are observed before the TLBI. Do be
- 	 * careful, 007.
+-	arm_smmu_atc_inv_to_cmd(0, 0, 0, &cmd);
++	arm_smmu_atc_inv_to_cmd(ssid, 0, 0, &cmd);
+ 
+ 	for (i = 0; i < master->num_sids; i++) {
+ 		cmd.atc.sid = master->sids[i];
+@@ -2934,7 +2948,7 @@ static void arm_smmu_disable_ats(struct arm_smmu_master *master)
+ 	 * ATC invalidation via the SMMU.
  	 */
--	arm_smmu_cmdq_issue_cmd(smmu, &cmd);
--	arm_smmu_cmdq_issue_sync(smmu);
-+	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
-+		arm_smmu_tlb_inv_asid(smmu, smmu_domain->s1_cfg.cd.asid);
-+	} else {
-+		cmd.opcode	= CMDQ_OP_TLBI_S12_VMALL;
-+		cmd.tlbi.vmid	= smmu_domain->s2_cfg.vmid;
-+		arm_smmu_cmdq_issue_cmd(smmu, &cmd);
-+		arm_smmu_cmdq_issue_sync(smmu);
-+	}
- 	arm_smmu_atc_inv_domain(smmu_domain, 0, 0, 0);
+ 	wmb();
+-	arm_smmu_atc_inv_master(master);
++	arm_smmu_atc_inv_master(master, 0);
+ 	atomic_dec(&smmu_domain->nr_ats_masters);
  }
  
+@@ -3131,7 +3145,22 @@ arm_smmu_iova_to_phys(struct iommu_domain *domain, dma_addr_t iova)
+ static void arm_smmu_mm_invalidate(struct device *dev, int pasid, void *entry,
+ 				   unsigned long iova, size_t size)
+ {
+-	/* TODO: Invalidate ATC */
++	int i;
++	struct arm_smmu_cmdq_ent cmd;
++	struct arm_smmu_cmdq_batch cmds = {};
++	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
++
++	if (!master->ats_enabled)
++		return;
++
++	arm_smmu_atc_inv_to_cmd(pasid, iova, size, &cmd);
++
++	for (i = 0; i < master->num_sids; i++) {
++		cmd.atc.sid = master->sids[i];
++		arm_smmu_cmdq_batch_add(master->smmu, &cmds, &cmd);
++	}
++
++	arm_smmu_cmdq_batch_submit(master->smmu, &cmds);
+ }
+ 
+ static int arm_smmu_mm_attach(struct device *dev, int pasid, void *entry,
+@@ -3168,26 +3197,43 @@ static void arm_smmu_mm_clear(struct device *dev, int pasid, void *entry)
+ 	 * for this ASID, so we need to do it manually.
+ 	 */
+ 	arm_smmu_tlb_inv_asid(smmu_domain->smmu, cd->asid);
+-
+-	/* TODO: invalidate ATC */
++	arm_smmu_atc_inv_domain(smmu_domain, pasid, 0, 0);
+ }
+ 
+ static void arm_smmu_mm_detach(struct device *dev, int pasid, void *entry,
+ 			       bool detach_domain, bool cleared)
+ {
+ 	struct arm_smmu_ctx_desc *cd = entry;
++	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
+ 	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+ 	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+ 
+-	if (detach_domain) {
++	if (detach_domain)
+ 		arm_smmu_write_ctx_desc(smmu_domain, pasid, NULL);
+ 
+-		if (!cleared)
+-			/* See comment in arm_smmu_mm_clear() */
+-			arm_smmu_tlb_inv_asid(smmu_domain->smmu, cd->asid);
+-	}
++	/*
++	 * If we went through clear(), we've already invalidated, and no new TLB
++	 * entry can have been formed.
++	 */
++	if (cleared)
++		return;
++
++	if (detach_domain) {
++		/* See comment in arm_smmu_mm_clear() */
++		arm_smmu_tlb_inv_asid(smmu_domain->smmu, cd->asid);
++		arm_smmu_atc_inv_domain(smmu_domain, pasid, 0, 0);
+ 
+-	/* TODO: invalidate ATC */
++	} else if (master->ats_enabled) {
++		/*
++		 * There are more devices bound with this PASID in this domain,
++		 * so we cannot yet clear the PASID entry, and this device could
++		 * create new ATC entries. Invalidate the ATC for the sake of
++		 * it. On unbinding the last device we'll properly invalidate
++		 * all ATCs in the domain. Alternatively, an early detach_dev()
++		 * on this device will also flush the ATC.
++		 */
++		arm_smmu_atc_inv_master(master, pasid);
++	}
+ }
+ 
+ static void *arm_smmu_mm_alloc(struct mm_struct *mm)
 -- 
 2.26.0
 
