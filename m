@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DCFC2BB85
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 20:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B7DC352BE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 20:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44BCD2076A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 20:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2678B20774
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 20:32:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DI0GDNcW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dw8jLdsb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633133AbgDNUay (ORCPT
+        id S2633176AbgDNUb5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:30:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38934 "EHLO
+        Tue, 14 Apr 2020 16:31:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729298AbgDNUas (ORCPT
+        by vger.kernel.org with ESMTP id S2633161AbgDNUbn (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:30:48 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2354C061A0E
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 13:30:48 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x3so465678pfp.7
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 13:30:48 -0700 (PDT)
+        Tue, 14 Apr 2020 16:31:43 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E226C061A0F
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 13:31:43 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id y25so470157pfn.5
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 13:31:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:content-transfer-encoding:in-reply-to:references
          :subject:from:cc:to:date:message-id:user-agent;
-        bh=fSEFHqlQPWjh+eO1zQvk6FlxgyhPbRWA0nRwzXY+ICo=;
-        b=DI0GDNcWCaSKUzojr44APUQ2g87h7tlXam1IW/LVnZhwiGN7iX2KJtlZI5R+UiNDfu
-         DZF+uvx/5gEssBaQxrGn4yJQ3UomR6yu12eYC9INAa7bhWe6L3xj6e4qV1jmHXr+apyW
-         1Br2PWFOsLPo73h3of8BD4ggO6KRXWFIckqv8=
+        bh=KvEg77doNLDzNxGfMI9Rhj8uKkWfoxdVPh7FOq7KA9M=;
+        b=dw8jLdsbWZ6CDS0pB0qnJU6MRd4mZxnk1zNvrKzhqaB11JoxWnZpGsRSVr2kJPPScC
+         arQcdoCVyvvxJxWV0uoessbrRiJfQzkEooIeCiKz8iRFD2IDarymsBzgPX+GZLQde0KB
+         y6Rr/DECD+Nav1GKv2jK6kvc+gdVYf+2txjHs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:content-transfer-encoding
          :in-reply-to:references:subject:from:cc:to:date:message-id
          :user-agent;
-        bh=fSEFHqlQPWjh+eO1zQvk6FlxgyhPbRWA0nRwzXY+ICo=;
-        b=hO/kbah0BxGgVWsTo8TwvsdctBpoDONjBhPSGWWBsiqsbJvKoNT1U2vV2wmtHBtD/A
-         a4d8fXMD67u9iSMEXPFf1+QTaHHwAmwDDij6Oaxqz0mK4BFptmQP28JkaNiecU4NINyZ
-         gBQjbUWGChdmt6ZnabsmGFcWBtUBnm0jxzJOXAKQFAqEXSobqF6flI4IUydP8TK94sVB
-         HvXo+RQ6f8bEO6L/o1PVb1b4lTOCUgxY4bN7JeYFMXvFKTAJIW+ZM0VP6seG2HC+1M4M
-         U59q26Z2Ib1aphk5COcj6w0c9/Mw6l8D8Yu0sYSgfAhJVC6vNyQ8swWComoohPe1hoOE
-         kdFA==
-X-Gm-Message-State: AGi0Pubo9gna5ruTSCuvKxysBcxd1J5VYgIVUylDMXrPZu0/2laACHQ5
-        STbwoUBe9E1TMBrtE8Rg9AtNbA==
-X-Google-Smtp-Source: APiQypK7j30AyIlG7FThLusdHeZXiMK6nQsQdNpWtZSQ6V+9S0RcjrpG2nccWcW5xJlP3E2y/EjX+A==
-X-Received: by 2002:a62:27c2:: with SMTP id n185mr24066849pfn.203.1586896248214;
-        Tue, 14 Apr 2020 13:30:48 -0700 (PDT)
+        bh=KvEg77doNLDzNxGfMI9Rhj8uKkWfoxdVPh7FOq7KA9M=;
+        b=iGZam9r3pFnmCnPO10NaOcJcX0nUNkH0HMW84S7ek7fZlAdIlOQ1WUOzImSHbRIH1t
+         Aa6SLJVA+5sBX0PcnTfnIYJrYuIT2cRZr7DF4HogDrTEuQ7LfGOqfMD649NC2PzwbmHG
+         F51fZ/JosD1OYxcRph8RMp2rNaJdnpbGHaWeLqwZ1g9CwIwYJ20mFXoRQSQAS1Pixw3V
+         TblO37jtRUr0NMAlSl7qc3qoxuA82rgVXb1VfvSr77uzlCUdKEYp1tC1xmFafSqhBBd4
+         g+8tqXCqCjBrJmN9/7Ia0dInshMCQm6jkAQ5ykorIsWy7EhbXPP1diQMLGIBzfEJBF8Z
+         VRDw==
+X-Gm-Message-State: AGi0PuZ3HurDrSAzmucAzqKEEoa3/V0371ux/etHcqlkaJAZc40L48i/
+        8JI8tySotogctYnvLxlg4ZqMdA==
+X-Google-Smtp-Source: APiQypINr7mOtduZ95fKBHP8P8/xhtFbUcbxNm92yMg8RWHL43ZBo6qn6/7qsqN6lHTlsu3cTO+mmg==
+X-Received: by 2002:aa7:9471:: with SMTP id t17mr24339663pfq.272.1586896302796;
+        Tue, 14 Apr 2020 13:31:42 -0700 (PDT)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id m3sm11025978pgt.27.2020.04.14.13.30.47
+        by smtp.gmail.com with ESMTPSA id t126sm10887477pfb.29.2020.04.14.13.31.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 13:30:47 -0700 (PDT)
+        Tue, 14 Apr 2020 13:31:42 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1585718145-29537-2-git-send-email-sanm@codeaurora.org>
-References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org> <1585718145-29537-2-git-send-email-sanm@codeaurora.org>
-Subject: Re: [PATCH v7 1/4] dt-bindings: usb: qcom,dwc3: Introduce interconnect properties for Qualcomm DWC3 driver
+In-Reply-To: <1585718145-29537-4-git-send-email-sanm@codeaurora.org>
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org> <1585718145-29537-4-git-send-email-sanm@codeaurora.org>
+Subject: Re: [PATCH v7 3/4] arm64: dts: qcom: sdm845: Add interconnect properties for USB
 From:   Stephen Boyd <swboyd@chromium.org>
 Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -78,17 +78,16 @@ To:     Andy Gross <agross@kernel.org>,
         Matthias Kaehlcke <mka@chromium.org>,
         Rob Herring <robh+dt@kernel.org>,
         Sandeep Maheswaram <sanm@codeaurora.org>
-Date:   Tue, 14 Apr 2020 13:30:46 -0700
-Message-ID: <158689624666.105027.3280804524840557421@swboyd.mtv.corp.google.com>
+Date:   Tue, 14 Apr 2020 13:31:41 -0700
+Message-ID: <158689630151.105027.14207551281305119256@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Sandeep Maheswaram (2020-03-31 22:15:42)
-> Add documentation for the interconnects and interconnect-names
-> properties for USB.
+Quoting Sandeep Maheswaram (2020-03-31 22:15:44)
+> Populate USB DT nodes with interconnect properties.
 >=20
 > Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 > ---
