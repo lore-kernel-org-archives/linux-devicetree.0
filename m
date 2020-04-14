@@ -2,144 +2,132 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F9CC352BE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C617EC38A29
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 706FE20767
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:45:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586900724;
-	bh=rMbn3USIs+ZPyYBG+bzKPuMyGNVpE23phhFil4hi5EY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=deeTSUR4Pho0kZA6sTjHZE1LIRRhHLYgVxYPUmDtqRtlyOCTKbo827O3AmB9HFEh0
-	 9XnxN31s7T3effZ7srUozJJqCMOrVv2VLU9pI86553rMRJoe68eVIgJjLn/sDX8HSV
-	 Qnshkg/ySCOpmr7rmFjR/DkBqYsZUr3C2Mv5DO0o=
+	by mail.kernel.org (Postfix) with ESMTP id 9C91720771
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:49:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SiskKmQU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634108AbgDNVpU (ORCPT
+        id S2440735AbgDNVsl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 17:45:20 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43433 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2634106AbgDNVpM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 17:45:12 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g14so1294637otg.10;
-        Tue, 14 Apr 2020 14:45:12 -0700 (PDT)
+        Tue, 14 Apr 2020 17:48:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2440734AbgDNVsX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Apr 2020 17:48:23 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C215C061A0E
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 14:48:21 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id l11so1003720lfc.5
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 14:48:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hpWgqKZEMKAYtEzy1pWxF1ovmxOedCdsPJgCqZeJZZc=;
+        b=SiskKmQUlzQlfIRqLeroGTc4op1A8Z924aUFvfgea000jB0f3mQM+qDWREzkH/xY0w
+         sk7P14GIDz/2LZe9sLw8Sfd8G180xjeA6GVXLP8vDNh/dl6himkKLCMt+RSULuuJHHKk
+         HOE0q+vvqkbEpfh0HOVPMH2Ss3EBiO3Wkq5mvzsjLlaYWoi1YGkEjnNNS2TpKkwDbMKt
+         S0oE97q2gpb3631NmuHwWYMWzyHD2pK7rpKgzhqIvpRgnQTtU07Ub0BXivBDcJuSQ0rV
+         xaKWNX+PZZm81FT8toPB1+Eg3l6F3c8lyw8y6j3LUYPHBsyKfueLahC0hwMivu6Se+WZ
+         hyvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Go4RGtgIqyKHKCRRcfy17L5oN8SY3r4Jf8gKD8EXnBo=;
-        b=eX76WRCKBpppPEt1+rredZjszBhkGnJo0c5xNqOCBLK1dHSNhkf8Ft4lUqPwesFLsj
-         39yUwM6027e5nKQQ/WnMuxvPm+/TL0vpsme86VYQJkSpL3Jt/vG0Zt38qUZEMlj8ywZg
-         zPxWLLy6LH+wDNTmhOCDvkkxsRwfTx8FoZ/rR8D44wAH/wM6fERrEvXywAWwDGNGHyM+
-         XMTG7o37yIj+FDTiz0M5EXV5erDsG8YNZ7RXJbVBj/tyt1C5hQD7MBiKfXy6bLCz8CG1
-         NU4SqrSZarZk+0pL0J1/KXwTWAsuJCduqzPEmbegJ6yyErJoa/GgpojLJVAzwSiTYYAt
-         frEw==
-X-Gm-Message-State: AGi0PuZbTPDH1E4O63PMzdhYC8RR4SzeoS8gSKXD4Pw7qSUOrUFlqcZZ
-        m2u1kFw4Aj0OjQ2C0q6B2w==
-X-Google-Smtp-Source: APiQypLTtqcTnJWfsv36vUyoHTSuRXCgSB1Jwv9bbH0db5LUR+jzkUKlGIny0dvYJFig5ipNz4fcFg==
-X-Received: by 2002:a9d:a0d:: with SMTP id 13mr9279315otg.222.1586900711492;
-        Tue, 14 Apr 2020 14:45:11 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o26sm2206162otj.39.2020.04.14.14.45.09
+         :mime-version:content-disposition:in-reply-to;
+        bh=hpWgqKZEMKAYtEzy1pWxF1ovmxOedCdsPJgCqZeJZZc=;
+        b=uTM5D1rhLuAyBvTCjP5WItwzUjeinnLSlcVi+7ZAVxRvVkd/09JEtSBpfdbVpQm3lN
+         HHvr1vxPobNPaV30fHO4ewjCclatWrqxogYApPHgt19Qm6CyJe8l/vEjIa3+ZUkcVkLu
+         d0gsnoM0dBR3mhLEbaSPa6G5iRT87AkKoXm/xdfZAESbPr48V1lVKzObLIzEgRAK5ySe
+         3f8mEDN2JLwA1yKM+gsQT4grSYjO8NBcQtsBjxU6gQ04hakRux+NPNG5x8Bt2GeWpt8g
+         b4VOJxbP3kSz/LzvoZoDycm05P0jdKM17s0AV7rZAz7M7DLZKQtxZLZ4jjJiOKVNpkmg
+         DtdA==
+X-Gm-Message-State: AGi0Pua8lfzw8njHzQa8f86vPEPHvvPXb5HWwAUvM8Cgnvg1xkvBwhFG
+        5CGuZe2okLsT84n69EoPPUM=
+X-Google-Smtp-Source: APiQypLntGnJZtL0ubJlkyaw3rmTwB5lz961XDjd4JNK0NeYLpAByBVxvrsiVK57RJfIkqdu8ssbaA==
+X-Received: by 2002:ac2:4a9d:: with SMTP id l29mr1023681lfp.4.1586900900104;
+        Tue, 14 Apr 2020 14:48:20 -0700 (PDT)
+Received: from curiosity (ip-195-182-157-78.clients.cmk.ru. [195.182.157.78])
+        by smtp.gmail.com with ESMTPSA id b2sm6554193lfi.14.2020.04.14.14.48.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 14:45:10 -0700 (PDT)
-Received: (nullmailer pid 11414 invoked by uid 1000);
-        Tue, 14 Apr 2020 21:45:09 -0000
-Date:   Tue, 14 Apr 2020 16:45:09 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     daniel.lezcano@linaro.org, rui.zhang@intel.com,
-        amit.kucheria@verdurent.com, Mark Rutland <mark.rutland@arm.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/4] dt-bindings: thermal: Add the idle cooling device
-Message-ID: <20200414214509.GA10673@bogus>
-References: <20200414162634.1867-1-daniel.lezcano@linaro.org>
- <20200414162634.1867-2-daniel.lezcano@linaro.org>
+        Tue, 14 Apr 2020 14:48:19 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 00:52:39 +0300
+From:   Sergey Matyukevich <geomatsi@gmail.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Willy Tarreau <w@1wt.eu>, devicetree@vger.kernel.org,
+        Baruch Siach <baruch@tkos.co.il>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [bug report] armada-8040-mcbin: 5.6-rc5 boot failure
+Message-ID: <20200414215239.GA471879@curiosity>
+References: <20200413220520.GA25917@curiosity>
+ <20200413222645.GT25745@shell.armlinux.org.uk>
+ <20200414160354.GA463339@curiosity>
+ <20200414160838.GA21435@1wt.eu>
+ <20200414165533.GX25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414162634.1867-2-daniel.lezcano@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200414165533.GX25745@shell.armlinux.org.uk>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 14 Apr 2020 18:26:27 +0200, Daniel Lezcano wrote:
-> Some devices are not able to cool down by reducing their voltage /
-> frequency because it could be not available or the system does not
-> allow voltage scaling. In this configuration, it is not possible to
-> use this strategy and the idle injection cooling device can be used
-> instead.
+> > > I have not changed configuration since 5.3, so all the marvell phy
+> > > drivers are in place. Is there anything in configuration that could
+> > > be missed after moving from 5.3 to 5.6 kernel ?
+> > 
+> > FWIW mine works perfectly fine with 5.4 at 1G/2.5G/10G. From what I can
+> > quickly check here are the relevant parts in my config for ethernet (not
+> > sure all are needed though):
+> > 
+> > CONFIG_NET_VENDOR_MARVELL=y
+> > CONFIG_MVMDIO=y
+> > CONFIG_MVPP2=y
+> > CONFIG_MDIO_DEVICE=y
+> > CONFIG_MDIO_BUS=y
+> > CONFIG_MDIO_BITBANG=y
 > 
-> One idle cooling device is now present for the CPU as implemented by
-> the combination of the idle injection framework belonging to the power
-> capping framework and the thermal cooling device. The missing part is
-> the DT binding providing a way to describe how the cooling device will
-> work on the system.
+> Macchiatobin doesn't bitbang the MDIO bus.
 > 
-> A first iteration was done by making the cooling device to point to
-> the idle state. Unfortunately it does not make sense because it would
-> need to duplicate the idle state description for each CPU in order to
-> have a different phandle and make the thermal internal framework
-> happy.
+> > CONFIG_MDIO_BUS_MUX=y
+> > CONFIG_MDIO_BUS_MUX_MMIOREG=y
+> > CONFIG_MDIO_BUS_MUX_MULTIPLEXER=y
 > 
-> It was proposed to add an cooling-cells to <3>, unfortunately the
-> thermal framework is expecting a value of <2> as stated by the
-> documentation and it is not possible from the cooling device generic
-> code to loop this third value to the back end cooling device.
+> There's no MDIO bus muxing on Macchiatobin.
 > 
-> Another proposal was to add a child 'thermal-idle' node as the SCMI
-> does. This approach allows to have a self-contained configuration for
-> the idle cooling device without colliding with the cpufreq cooling
-> device which is based on the CPU node. In addition, it allows to have
-> the cpufreq cooling device and the idle cooling device to co-exist
-> together as shown in the example.
+> > CONFIG_MDIO_I2C=y
+> > CONFIG_PHYLINK=y
+> > CONFIG_PHYLIB=y
+> > CONFIG_SWPHY=y
+> > CONFIG_SFP=y
+> > CONFIG_FIXED_PHY=y
 > 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  - V2:
->    - Fixed comment type
->    - Added dual license
->    - Fixed description s/begins to/should/
->    - Changed name s/duration/duration-us/
->    - Changed name s/latency/exit-latency-us/
->    - Removed types for latency / duration
->    - Fixed s/idle-thermal/thermal-idle/
-> ---
->  .../bindings/thermal/thermal-idle.yaml        | 146 ++++++++++++++++++
->  1 file changed, 146 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-idle.yaml
+> CONFIG_FIXED_PHY should no longer be required.
 > 
+> > CONFIG_MARVELL_PHY=y
+> > CONFIG_MARVELL_10G_PHY=y
+> > 
+> > Not tested 5.6 yet.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Thanks ! I tested mainline kernels 5.6-rc5, 5.6, 5.7-rc1: all of them
+worked just fine on MacchiatoBin. After that I finally figured out what
+was wrong with my setup even after updating ATF to 18.12.
 
-Documentation/devicetree/bindings/thermal/thermal-idle.yaml:  while scanning a block scalar
-  in "<unicode string>", line 39, column 20
-found a tab character where an indentation space is expected
-  in "<unicode string>", line 44, column 1
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/thermal/thermal-idle.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/thermal/thermal-idle.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-warning: no schema found in file: Documentation/devicetree/bindings/thermal/thermal-idle.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-idle.yaml: ignoring, error parsing file
-Makefile:1264: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+Initally I used wireless-drivers-next kernel tree v5.6-rc1. It turned
+out that this tree at that point included commit e1f550dc44a ("net:
+mvmdio: avoid error message for optional IRQ") but did not included its
+subsequent revert...
 
-See https://patchwork.ozlabs.org/patch/1270492
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+Regards,
+Sergey
