@@ -6,51 +6,51 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAB4C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D0DC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E673820767
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F5420767
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:05:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586887517;
-	bh=iy+PrHDAwEPdDxk766EprvyUdB3MsAwUR5bB7gv/Csc=;
+	s=default; t=1586887531;
+	bh=B7MJIEXmm+4iO69/Bb8pRP3Uz824oXrGuqMon+GaMcU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qgtHvzsb4VWzMmPa8ogofhuHnPiWV/N8hhFMo2VDo2slmvq4R3Xntkk3426GkkiIZ
-	 Had+Ifg2WO9qLJ0ODDzKyU3FuUNfEaeGHeQmnqPtplBwBmxuw4hPc1qNr7eWPNCDlO
-	 mrqGlbKGBKDEr+DDAVXX6ZiDl3SpWijRbBNKCWR0=
+	b=1FkIC035rFIEMQEgeim30UK7sW1hfho1Zr+u835dX2ZTEwVvmEFyVG8qhWz6srmkN
+	 L6lji1h24kvFPxfV+y7ereCCam0tosUSqldhxR4EbkbzCHCm6GaqN5lPqbhQMt7dvI
+	 fIreh6xYx/gAD06DX0jjeKemxAGpepk6hjXT1TJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503323AbgDNSFP (ORCPT
+        id S2503320AbgDNSFa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:05:15 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38889 "EHLO
+        Tue, 14 Apr 2020 14:05:30 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45057 "EHLO
         mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503320AbgDNSFM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 14:05:12 -0400
-Received: by mail-ot1-f68.google.com with SMTP id k21so593738otl.5;
-        Tue, 14 Apr 2020 11:05:11 -0700 (PDT)
+        with ESMTP id S2407784AbgDNSEd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 14:04:33 -0400
+Received: by mail-ot1-f68.google.com with SMTP id i22so531888otp.12;
+        Tue, 14 Apr 2020 11:04:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zyyunDAx2uwMbONH8a30TAmLrXMLmxuwK8FL24ovkME=;
-        b=JFxQUOQkSPavTwKxaFjhv/X3LDTpupPeFo0eKLKjS5poICwObiX7bA7UcKA1wRQuiu
-         KJlvG/PpnEDRMiyV6LDM9WCniJWHA+BcX5aQNDKmVF3HZPvSWWCQSlZab5KNAAXOwuw0
-         809MLwv5cW3O3PGGhUsDoU7swVQv/m8XrIPLTMZ+m2th6reXvqc5jp9aT9Lq90rZ0UYz
-         TQPuvSDxxY6H9+AZSEGGqlXvywCb06mWNwErHyZPsGeDgZVjKHx95ro0poiPwcXSG8qv
-         VHaAEditzZStcFuSQ9VPz+lE22Bx6spXVj+DJm/bPa7KJH0LJZXrL9BnpWDlB76v8yPJ
-         8Abw==
-X-Gm-Message-State: AGi0PuZu0IURcrgbcTftmzKk25SxkVgTPf7gG0r2hA0u0rmKIWFgl6y/
-        9tDC7CE+3jTOfYgpIeJAD9ToBvI=
-X-Google-Smtp-Source: APiQypLDJoJx7Di661s5byWD9ZVHoJghminhZPKnbjGm47MDfVVSc1w/i75wcXKy25C30Z1LkclSBg==
-X-Received: by 2002:a9d:b8c:: with SMTP id 12mr19626038oth.205.1586887511542;
-        Tue, 14 Apr 2020 11:05:11 -0700 (PDT)
+        bh=X8HnP8qvwXULBtvNF32k/xLU2uHML1H+p2xHE6J9vac=;
+        b=eyb775zagT+mwpFNkJJXurRNxjMbWnanvSb3K1/u2jtpoLhcxnZRI+qclBIJf14kp1
+         5+S831a/q1KNeTIf9WyLMSr1yIjCfg5SpxNnhfmoZmxBaWECjcx5ikTJw4jOM8SWAOxB
+         nS5+eJdjTopL8VYUfiAgeY0SbQhsDYN+peJEcVs+WDVNngEk+fhy0IRv65RDLYQD9P+T
+         zE3HxPBfoUrxsvGZM+I0DMEPsIJlYGztg6fwKEf6IXZ+GsXU+xJbIQyHud2rw15bjq4K
+         8Q84amchhLAEHgWkxtWJMMVmZL3t2rxMjVgc5MZd+T5oPoOC3Jt5w9c219KzJ58XxyxL
+         DYqQ==
+X-Gm-Message-State: AGi0Pua5iqBe5dn6ZaaXsYNG+ORnzK2QCeq+bW46DbN9hesz8hNf+PTh
+        1ZckNTnX+zOmJ0a+btNgLQ==
+X-Google-Smtp-Source: APiQypKU3vXmgT04leTbcZl+K+74cxsiUS9r32WTmebpcpqG/ivXWoMLBr8jyRZWS5laaRPbzqwoKA==
+X-Received: by 2002:a4a:3ec1:: with SMTP id t184mr19168387oot.3.1586887472468;
+        Tue, 14 Apr 2020 11:04:32 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e21sm6180403ooh.31.2020.04.14.11.05.10
+        by smtp.gmail.com with ESMTPSA id g30sm6238585oof.39.2020.04.14.11.04.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 11:05:11 -0700 (PDT)
-Received: (nullmailer pid 22106 invoked by uid 1000);
-        Tue, 14 Apr 2020 18:05:10 -0000
-Date:   Tue, 14 Apr 2020 13:05:09 -0500
+        Tue, 14 Apr 2020 11:04:31 -0700 (PDT)
+Received: (nullmailer pid 19544 invoked by uid 1000);
+        Tue, 14 Apr 2020 18:04:30 -0000
+Date:   Tue, 14 Apr 2020 13:04:30 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Christophe Roullier <christophe.roullier@st.com>
 Cc:     davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
@@ -61,31 +61,29 @@ Cc:     davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
         christophe.roullier@st.com, linux-kernel@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V2 2/2] dt-bindings: net: dwmac: Convert stm32 dwmac to
- DT schema
-Message-ID: <20200414180509.GA21967@bogus>
+Subject: Re: [PATCH V2 1/2] dt-bindings: net: dwmac: increase 'maxItems' for
+ 'clocks', 'clock-names' properties
+Message-ID: <20200414180430.GA19162@bogus>
 References: <20200403140415.29641-1-christophe.roullier@st.com>
- <20200403140415.29641-3-christophe.roullier@st.com>
+ <20200403140415.29641-2-christophe.roullier@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200403140415.29641-3-christophe.roullier@st.com>
+In-Reply-To: <20200403140415.29641-2-christophe.roullier@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 3 Apr 2020 16:04:15 +0200, Christophe Roullier wrote:
-> Convert stm32 dwmac to DT schema.
+On Fri, 3 Apr 2020 16:04:14 +0200, Christophe Roullier wrote:
+> This change is needed for some soc based on snps,dwmac, which have
+> more than 3 clocks.
 > 
 > Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
 > ---
->  .../devicetree/bindings/net/stm32-dwmac.txt   |  44 -----
->  .../devicetree/bindings/net/stm32-dwmac.yaml  | 150 ++++++++++++++++++
->  2 files changed, 150 insertions(+), 44 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/net/stm32-dwmac.txt
->  create mode 100644 Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+>  Documentation/devicetree/bindings/net/snps,dwmac.yaml | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 > 
 
 Applied, thanks.
