@@ -2,264 +2,121 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 741F7C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 08:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649F6C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 08:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4883A206E9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 08:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BFA92074D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 08:28:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Kq0iiCN6";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PBCjk96V"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oNajzL3g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436811AbgDNI2K (ORCPT
+        id S2436819AbgDNI2Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 04:28:10 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:51605 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2436781AbgDNI2I (ORCPT
+        Tue, 14 Apr 2020 04:28:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2436781AbgDNI2M (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 04:28:08 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 63B26B34;
-        Tue, 14 Apr 2020 04:28:06 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 14 Apr 2020 04:28:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=JFPo3P/ogXd9mYgq1lTrnURkg3G
-        K316i1UBGh+ZNSj0=; b=Kq0iiCN6F5a0zhqu0NSJX7TiRC0KsxldKcBvWwnD4ja
-        bjT4AfoFrBGrwu87abBZls5MSTr0iaQ/44rxNgGfwCloGBTfXCWsiFvdl76cBrs3
-        N9VdKftdIJAdnmWc44flznOqmpPdO1WCOXOsF5WbVufrZyeOph1omTZSVH74s4JI
-        0RUAW0duLxDrvyWt25/iBT3G8ncETrdn6E21fczt8QsC0uQg/Tb2Uz5x5TP/823Q
-        J4k20iLE3qCoL2X+oEfM5hA4K6Z+zFO6l5Cl4p8gK1wYscKbiy12gTRMg6EfpXTS
-        fLkCVV9IayvKVkXd6JTZaBMVw68MU7eF971G+z3U+5A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=JFPo3P
-        /ogXd9mYgq1lTrnURkg3GK316i1UBGh+ZNSj0=; b=PBCjk96VAiWJqcoEPe+SJY
-        yWF2SnRjOjUhIn0QW60Gxvdx3cyoHKHlfabFxEgsstDkaxge40CqubetqzyUMV2n
-        zrrhBN9GuOdhXDI2pl+GggBP5U5HM3jQeQXeIzI6aKUJhTL4vPuwAGS++Hn9rCDS
-        jCX00GG09VnnybEQu6gVbQtVa3XhDBi2pbiOxhT9gFA8gP4Azew8Gcs6V11Kumg4
-        t46jMimiIySax2JtTtf6jfzAAMrHiqB5FS0XsKnFjZGL/ILvK2r/GLJAJcbmjRQ3
-        cj0DHlGXiPTLvpZl7/MpFINnUjIRLIPCldx0XxDo03mGyK+TU5B6+J9ro3+XVemQ
-        ==
-X-ME-Sender: <xms:FXSVXnuBmWR3eYET2Z9MgBfz__Q8mjY6mWJBakKIjV3kw_3KRWJ3IA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfedugddtgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
-    epuggvvhhitggvthhrvggvrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehl
-    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvse
-    gtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:FXSVXsuYOWilsWshQSQEN5IXz0MgYBQHF47jhckdIVoQfARkluILjg>
-    <xmx:FXSVXlxdm8ZSD4qpDGkve2dzNh7DAs3FJ9VbHcQGewsFcbVZRXSUUg>
-    <xmx:FXSVXqhx1g03UCsS6Bd61q5jcCDNcm4wTyaTWOcOCVqTiwBFlvYWOA>
-    <xmx:FnSVXq0lretqr5VzwkTBOofhco5UnEPTdf_ucnMw7OuzPCv4yzm7kQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0B547328005E;
-        Tue, 14 Apr 2020 04:28:04 -0400 (EDT)
-Date:   Tue, 14 Apr 2020 10:28:03 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v1 1/4] dt-bindings: display: convert atmel-hlcdc to DT
- Schema
-Message-ID: <20200414082803.exblunwe7bufbiht@gilmour.lan>
-References: <20200412182012.27515-1-sam@ravnborg.org>
- <20200412182012.27515-2-sam@ravnborg.org>
+        Tue, 14 Apr 2020 04:28:12 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61AF8C0A3BE2
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 01:28:11 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id i10so13257356wrv.10
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 01:28:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=3eKkxZpCnC5XTfujNcsY6AIiLZS5NSMLsZAyRTcNdtw=;
+        b=oNajzL3gc4X6uBZq8NlN+noAZv2Gkphhx7BrqsinHbStxRK3mBSRyLl7uclZpNXySg
+         hAKLdqCSypJnoRELxkRHDz3MkoVbkKTGLOcapNEJx5yYflGhMbDA2sOPdoaL0Mt5m7uF
+         WDmZPNzuk3lBb7VlrPJCvT+SnY9UpA7v5Ry9dfYp2LCKE2SSH2vwUOX01e8fcqdapqev
+         DT+rbiEBVy73g2jZ/jnni8D8oaG88+bkHRzUMokgsPbNPNYcLuDJGoeNs9YLm5HwISxI
+         JZsjnqdYri1FBSu9hFLVNJkqg22lNndUkfXVSUev2XS+ZWNSlXA73Cg9xO4qIJEMYjO9
+         kzNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=3eKkxZpCnC5XTfujNcsY6AIiLZS5NSMLsZAyRTcNdtw=;
+        b=ei/iBxogtUk7tp+ALeG+127LW/RKX9dt7uAkJp7TIhV9OIqnnM/VuFMD6h8EeSrkd7
+         8vWhW0sjTfQCajQKY5ivkzj3+Y1BTUuMU6H6XHoZWSPavd7AHqWd4hyLdFx/3SV4dUgo
+         u5a82NitCOHHANumDOVPMFQQtZJ3zGn0qJfTzSo0bS74Ek+vy0nBAd/4rcmf+ByYfTVw
+         r344rXzDSNhX1piLPf+tPS6/VuuI0/WLjeOcIkXFE6CcNbQpQ6L1thCDEB4bFdqGHZ79
+         YzqzLbh6KDhUElF2VBUOx0h4Sn0ANustqn9i1rXloGVxnqUYTxX+0E4aE7ERk19VFJom
+         XWHg==
+X-Gm-Message-State: AGi0PuahS7WoUfI5+hWJ4tBQkH6e7RcB+QmqHVTobTalTLi4EHX5gtmj
+        OqIHE7JpQwmrjy71HDUiaMSAc4I7VPw=
+X-Google-Smtp-Source: APiQypKYndSXbbLZy+b9xprQxfpL21vClPJkI92BRNsvzRKxpgVqTLytk2+trMx1JQaEpJnlT5Z1UQ==
+X-Received: by 2002:adf:b78b:: with SMTP id s11mr21748716wre.235.1586852890065;
+        Tue, 14 Apr 2020 01:28:10 -0700 (PDT)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id k23sm17635677wmi.46.2020.04.14.01.28.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 01:28:09 -0700 (PDT)
+References: <20200122092526.2436421-1-jbrunet@baylibre.com> <6f661498f58c6a519095d0657413f4b89d3ef21e.camel@pengutronix.de>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: reset: meson: add gxl internal dac reset
+In-reply-to: <6f661498f58c6a519095d0657413f4b89d3ef21e.camel@pengutronix.de>
+Date:   Tue, 14 Apr 2020 10:28:08 +0200
+Message-ID: <1jimi2tqsn.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jmsbjzfjeb57pove"
-Content-Disposition: inline
-In-Reply-To: <20200412182012.27515-2-sam@ravnborg.org>
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---jmsbjzfjeb57pove
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thu 23 Jan 2020 at 11:13, Philipp Zabel <p.zabel@pengutronix.de> wrote:
 
-Hi Sam,
+> On Wed, 2020-01-22 at 10:25 +0100, Jerome Brunet wrote:
+>> Add the reset line of the internal DAC found on the amlogic gxl SoC family
+>> 
+>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> ---
+>>  include/dt-bindings/reset/amlogic,meson-gxbb-reset.h | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> 
+>> diff --git a/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h b/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
+>> index ea5058618863..883bfd3bcbad 100644
+>> --- a/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
+>> +++ b/include/dt-bindings/reset/amlogic,meson-gxbb-reset.h
+>> @@ -69,7 +69,7 @@
+>>  #define RESET_SYS_CPU_L2		58
+>>  #define RESET_SYS_CPU_P			59
+>>  #define RESET_SYS_CPU_MBIST		60
+>> -/*					61	*/
+>> +#define RESET_ACODEC			61
+>>  /*					62	*/
+>>  /*					63	*/
+>>  /*	RESET2					*/
+>
+> Thank you, applied to reset/next.
 
-On Sun, Apr 12, 2020 at 08:20:09PM +0200, Sam Ravnborg wrote:
-> diff --git a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.yaml b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.yaml
-> new file mode 100644
-> index 000000000000..7eb6266a25a2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.yaml
-> @@ -0,0 +1,102 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/atmel/hlcdc-dc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Atmel HLCDC (High LCD Controller) display controller
-> +
-> +maintainers:
-> +  - Sam Ravnborg <sam@ravnborg.org>
-> +  - Boris Brezillon <bbrezillon@kernel.org>
-> +
-> +description: |
-> +  The Atmel HLCDC Display Controller is subdevice of the HLCDC MFD device.
-> +  See ../../mfd/atmel-hlcdc.yaml for more details.
-> +
-> +properties:
-> +  compatible:
-> +    const: atmel,hlcdc-display-controller
-> +
-> +  "#address-cells":
-> +    const: 1
-> +  "#size-cells":
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +patternProperties:
-> +  "^port@[0-9]$":
-> +    type: object
-> +    description: |
-> +      A port node with endpoint definitions as defined in
-> +      ../../media/video-interfaces.txt
-> +
-> +    properties:
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
-> +      reg:
-> +        maxItems: 1
-> +        description: The virtual number of the port
-> +
-> +    patternProperties:
-> +      "^endpoint(@[0-9])$":
+Hi Philip,
 
-I guess you meant ^endpoint(@[0-9])?$ instead?
+It seems reset/next has not made it to v5.7-rc1
 
-> +        type: object
-> +
-> +        properties:
-> +          reg:
-> +            maxItems: 1
-> +            description: The virtual number of the endpoint
-> +
-> +          bus-width:
-> +            enum: [12, 16, 18, 24]
-> +            description:
-> +              Any endpoint node may specify a desired video interface
-> +              according to ../../media/video-interfaces.txt, specifically
-> +              Recognized values are <12>, <16>, <18> and <24>, and
-> +              override any output mode selection heuristic, forcing
-> +              "rgb444", "rgb565", "rgb666" and "rgb888" respectively.
-> +
-> +          remote-endpoint:
-> +            $ref: /schemas/types.yaml#/definitions/phandle
-> +            description:
-> +              phandle to the panel node
-> +
-> +        required:
-> +          - reg
+Would it be possible to provide an immutable branch with this change, or
+maybe let Kevin apply this change through the amlogic tree ?
 
-And if so, reg depends on whether the unit-address is set or not, so
-you can't really enforce that.
+It would allow us to progress on some DT changes during this new cycle.
 
-> diff --git a/Documentation/devicetree/bindings/mfd/atmel-hlcdc.yaml b/Documentation/devicetree/bindings/mfd/atmel-hlcdc.yaml
-> new file mode 100644
-> index 000000000000..cad14fa173a1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/atmel-hlcdc.yaml
-> @@ -0,0 +1,78 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/atmel-hlcdc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Device-Tree bindings for Atmel's HLCDC (High LCD Controller)
-> +
-> +maintainers:
-> +  - Sam Ravnborg <sam@ravnborg.org>
-> +  - Boris Brezillon <bbrezillon@kernel.org>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - atmel,at91sam9n12-hlcdc
-> +      - atmel,at91sam9x5-hlcdc
-> +      - atmel,sama5d2-hlcdc
-> +      - atmel,sama5d3-hlcdc
-> +      - atmel,sama5d4-hlcdc
-> +      - microchip,sam9x60-hlcdc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 3
+Thanks
+Jerome
 
-Having descirptions of what those clocks are would be nice.
+>
+> regards
+> Philipp
 
-> +  clock-names:
-> +    maxItems: 3
-> +    items:
-> +      - const: periph_clk
-> +      - const: sys_clk
-> +      - const: slow_clk
-> +
-> +  interrupts:
-> +    description: The HLCDC interrupt line
-> +    maxItems: 1
-> +
-> +  hlcdc_pwm:
-> +    type: object
-> +    description: |
-> +      PWM controller - used for backlight.
-> +      See ../pwm/atmel-hlcdc-pwm.yaml for details
-> +
-> +  hlcdc-display-controller:
-> +    type: object
-> +    description: |
-> +      LCD display controller
-> +      See ../display/atmel/hlcdc-dc.yaml for details
-
-I guess you could include those two schemas to make sure that it's
-valid? Otherwise, if you have an hlcdc-display-controller (or pwm)
-node without a compatible, it will not be checked here, and will not
-be checked by the hlcdc-dc.yaml schemas either since it matches on the
-compatible.
-
-Maxime
-
---jmsbjzfjeb57pove
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpV0EwAKCRDj7w1vZxhR
-xdwLAQC4by4PgosznV+p4IdHObNQzfxqPCjqjhyEcpaRB6WTDQEA4IURhU5p2H7t
-kBc5B8X3W23gG4cKdAEc7QBEdFBZcA0=
-=9LzM
------END PGP SIGNATURE-----
-
---jmsbjzfjeb57pove--
