@@ -2,109 +2,130 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E89EC2BBC7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 11:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EEFC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 12:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D85D520732
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 11:53:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586865200;
-	bh=D43Bu/ZLpshHkAJBUbBrh5xBrdOB1DSsVsdvcQSwfNo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ISwE3KwtTDO7DySA+Ev2U0B09lTX83+neOwDwyviiRa0mMIr0n6LGzIoGF66KHW/3
-	 AhlrapMJ9tHHbU/gNZ5Vox5FK1lskwisD1D3Al+i3vr2EKhkir/BSXIAlxufQHIapl
-	 ac/QZD6SsT7fSy/ewffe42gnFS/3cFDw/344Hgpg=
+	by mail.kernel.org (Postfix) with ESMTP id 022EA2075E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 12:01:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728476AbgDNLxT (ORCPT
+        id S1729744AbgDNMBZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 07:53:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60270 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 08:01:25 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:40032 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439662AbgDNLxQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 07:53:16 -0400
-Received: from Mani-XPS-13-9360 (unknown [157.46.102.247])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59A81206D5;
-        Tue, 14 Apr 2020 11:53:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586865196;
-        bh=D43Bu/ZLpshHkAJBUbBrh5xBrdOB1DSsVsdvcQSwfNo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Clj8lQN7P3dEhHGhulq35t2RhO+AitzH5UFcJfbxLwpvj5tOrA7liaLMG5iPlzNOo
-         w1KOI6Z7f9B0dKQoiXz+FUYHBBE2CCLrhsqn+0YQDaR72qpxhr3QoTU269zf1iz6RJ
-         zlSfCPGL/h7PtgJ08tEvoNSYoYk9pg+sRLjFV6QQ=
-Date:   Tue, 14 Apr 2020 17:23:06 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, narcisaanamaria12@gmail.com,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] iio: chemical: Add OF match table for CCS811 VOC
- sensor
-Message-ID: <20200414115306.GA28064@Mani-XPS-13-9360>
-References: <20200412183658.6755-1-mani@kernel.org>
- <20200412183658.6755-4-mani@kernel.org>
- <CAHp75VeHctOu7+o6nMsqNU7q7gcJnK=n=dPX3xVMSgR9PsWjAA@mail.gmail.com>
+        id S2439755AbgDNMBY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Apr 2020 08:01:24 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1jOKFk-0008I1-1j; Tue, 14 Apr 2020 14:01:20 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH] arm64: dts: rockchip: remove bus-width from mmc nodes in rk3308.dtsi
+Date:   Tue, 14 Apr 2020 14:01:19 +0200
+Message-ID: <2038198.JSHZf9jCco@diego>
+In-Reply-To: <f19b6b48-2950-abca-7dee-31c24118c3ef@gmail.com>
+References: <20200413193652.1952-1-jbx6244@gmail.com> <20c81edc-247c-8db0-2b3c-a6c2fcad6b4e@arm.com> <f19b6b48-2950-abca-7dee-31c24118c3ef@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VeHctOu7+o6nMsqNU7q7gcJnK=n=dPX3xVMSgR9PsWjAA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 11:23:03PM +0300, Andy Shevchenko wrote:
-> On Mon, Apr 13, 2020 at 10:23 AM <mani@kernel.org> wrote:
-> >
-> > From: Manivannan Sadhasivam <mani@kernel.org>
-> >
-> > Add devicetree OF match table support for CCS811 VOC sensor.
+Hi Johan,
+
+Am Dienstag, 14. April 2020, 13:45:00 CEST schrieb Johan Jonker:
+> Hi Robin, Heiko,
 > 
-> ...
+> If the Rockchip DT maintainers(= Heiko) agree that the new line for the
+> 'bus-width' properties is that it should be placed in dtsi I'll produce
+> a version 2. Please advise what should be done with the other Rockchip
+> SoCs. Change them too?
+
+(1) as Robin pointed out bus-width and pinctrl containing the bus-pins
+    should be in the same file, as they describe parts of the same property
+(2) essentially it is ok for pinctrl-defaults to live in the dtsi, when there
+    are no pin variants ... (like the uartX_mY pin variants), so if you enable
+    a node and only have essentially one pin variant to enable, this should
+    live in the soc dtsi (like essentially all boards using 4-pin sdmmc
+    and 8-pin emmc)
+(3) Fixing other devicetrees is optional, so I won't oppose it of course
+    but it's also not something "that must be done" ;-)
+
+
+Heiko
+
+
+> On 4/14/20 12:02 PM, Robin Murphy wrote:
+> > On 2020-04-13 8:36 pm, Johan Jonker wrote:
+> >> The 'bus-width' property for mmc nodes is defined both in
+> >> 'rk3308.dtsi' and 'rk3308-roc-cc.dts'.
+> >> In line with the other Rockchip SoCs define that in a user dts only,
+> >> so remove all entries from mmc nodes in 'rk3308.dtsi'.
+> > 
+> > Judging by the pinctrl entries, these represent the number of pins
+> > provided by the SoC itself. Obviously boards need to override that if
+> > for some reason they don't wire up all the available data lines, but it
+> > seems backwards to have every board restate the SoC's default value.
+> > 
+> > In fact, having brought it up, for this particular case the pinctrl
+> > setting is inherently related to the bus width, so having one without
+> > the other in either place doesn't smell right.
+> > 
+> > Robin.
+> > 
+> >> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> >> ---
+> >>   arch/arm64/boot/dts/rockchip/rk3308.dtsi | 3 ---
+> >>   1 file changed, 3 deletions(-)
+> >>
+> >> diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+> >> b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+> >> index a9b98555d..130771ede 100644
+> >> --- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+> >> +++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+> >> @@ -587,7 +587,6 @@
+> >>           compatible = "rockchip,rk3308-dw-mshc",
+> >> "rockchip,rk3288-dw-mshc";
+> >>           reg = <0x0 0xff480000 0x0 0x4000>;
+> >>           interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+> >> -        bus-width = <4>;
+> >>           clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
+> >>                <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
+> >>           clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+> >> @@ -602,7 +601,6 @@
+> >>           compatible = "rockchip,rk3308-dw-mshc",
+> >> "rockchip,rk3288-dw-mshc";
+> >>           reg = <0x0 0xff490000 0x0 0x4000>;
+> >>           interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+> >> -        bus-width = <8>;
+> >>           clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
+> >>                <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
+> >>           clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+> >> @@ -615,7 +613,6 @@
+> >>           compatible = "rockchip,rk3308-dw-mshc",
+> >> "rockchip,rk3288-dw-mshc";
+> >>           reg = <0x0 0xff4a0000 0x0 0x4000>;
+> >>           interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
+> >> -        bus-width = <4>;
+> >>           clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
+> >>                <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
+> >>           clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+> >>
 > 
-> > +#include <linux/of.h>
-> 
-> Why?
 > 
 
-As replied to Jonathan, will drop this and of_match_ptr.
 
-Thanks,
-Mani
 
-> ...
-> 
-> > +static const struct of_device_id ccs811_dt_ids[] = {
-> > +       { .compatible = "ams,ccs811" },
-> > +       { }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, ccs811_dt_ids);
-> 
-> Since it has no ugly ifdeffery...
-> 
-> >  static struct i2c_driver ccs811_driver = {
-> >         .driver = {
-> >                 .name = "ccs811",
-> > +               .of_match_table = of_match_ptr(ccs811_dt_ids),
-> 
-> ...use of of_match_ptr() brings a compiler warning.
-> 
-> Drop of_match_ptr() for good. And thus drop redundant of.h.
-> 
-> >         },
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+
