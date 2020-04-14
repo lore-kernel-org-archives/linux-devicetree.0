@@ -4,153 +4,154 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F53C2BBC7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 02:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A510AC2BBC7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 02:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D85712075E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 02:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 860C32085B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 02:55:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404165AbgDNClB (ORCPT
+        id S2404227AbgDNCza (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 22:41:01 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:52776 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404155AbgDNClA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Apr 2020 22:41:00 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 51A89200261;
-        Tue, 14 Apr 2020 04:40:58 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 52A09200269;
-        Tue, 14 Apr 2020 04:40:53 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 56D514030C;
-        Tue, 14 Apr 2020 10:40:45 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Mon, 13 Apr 2020 22:55:30 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:51904 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404222AbgDNCza (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Apr 2020 22:55:30 -0400
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 13 Apr 2020 19:55:29 -0700
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 13 Apr 2020 19:55:25 -0700
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id 23252216A4; Tue, 14 Apr 2020 08:25:24 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 2/2] dt-bindings: watchdog: Convert i.MX7ULP to json-schema
-Date:   Tue, 14 Apr 2020 10:32:48 +0800
-Message-Id: <1586831568-24635-2-git-send-email-Anson.Huang@nxp.com>
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Subject: [PATCH V3 2/8] dt-bindings: clock: Add YAML schemas for QCOM A53 PLL
+Date:   Tue, 14 Apr 2020 08:25:16 +0530
+Message-Id: <1586832922-29191-3-git-send-email-sivaprak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586831568-24635-1-git-send-email-Anson.Huang@nxp.com>
-References: <1586831568-24635-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <1586832922-29191-1-git-send-email-sivaprak@codeaurora.org>
+References: <1586832922-29191-1-git-send-email-sivaprak@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the i.MX7ULP watchdog binding to DT schema format using json-schema.
+This patch adds schema for primary CPU PLL found on few Qualcomm
+platforms.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
- .../bindings/watchdog/fsl-imx7ulp-wdt.txt          | 22 --------
- .../bindings/watchdog/fsl-imx7ulp-wdt.yaml         | 60 ++++++++++++++++++++++
- 2 files changed, 60 insertions(+), 22 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml
+[V3]
+ * Fixed dt binding error in "$id" field.
 
-diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
+ .../devicetree/bindings/clock/qcom,a53pll.txt      | 22 --------
+ .../devicetree/bindings/clock/qcom,a53pll.yaml     | 60 ++++++++++++++++++++++
+ 2 files changed, 60 insertions(+), 22 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
+
+diff --git a/Documentation/devicetree/bindings/clock/qcom,a53pll.txt b/Documentation/devicetree/bindings/clock/qcom,a53pll.txt
 deleted file mode 100644
-index f902508..0000000
---- a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
+index e3fa811..0000000
+--- a/Documentation/devicetree/bindings/clock/qcom,a53pll.txt
 +++ /dev/null
 @@ -1,22 +0,0 @@
--* Freescale i.MX7ULP Watchdog Timer (WDT) Controller
+-Qualcomm MSM8916 A53 PLL Binding
+---------------------------------
+-The A53 PLL on MSM8916 platforms is the main CPU PLL used used for frequencies
+-above 1GHz.
 -
--Required properties:
--- compatible : Should be "fsl,imx7ulp-wdt"
--- reg : Should contain WDT registers location and length
--- interrupts : Should contain WDT interrupt
--- clocks: Should contain a phandle pointing to the gated peripheral clock.
+-Required properties :
+-- compatible : Shall contain only one of the following:
 -
--Optional properties:
--- timeout-sec : Contains the watchdog timeout in seconds
+-		"qcom,msm8916-a53pll"
 -
--Examples:
+-- reg : shall contain base register location and length
 -
--wdog1: watchdog@403d0000 {
--	compatible = "fsl,imx7ulp-wdt";
--	reg = <0x403d0000 0x10000>;
--	interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
--	clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
--	assigned-clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
--	assigned-clocks-parents = <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>;
--	timeout-sec = <40>;
--};
-diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml
+-- #clock-cells : must be set to <0>
+-
+-Example:
+-
+-	a53pll: clock@b016000 {
+-		compatible = "qcom,msm8916-a53pll";
+-		reg = <0xb016000 0x40>;
+-		#clock-cells = <0>;
+-	};
+-
+diff --git a/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml b/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
 new file mode 100644
-index 0000000..0fe0ef9
+index 0000000..c865293
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
 @@ -0,0 +1,60 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/watchdog/fsl-imx7ulp-wdt.yaml#
++$id: http://devicetree.org/schemas/clock/qcom,a53pll.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Freescale i.MX7ULP Watchdog Timer (WDT) Controller
++title: Qualcomm A53 PLL Binding
 +
 +maintainers:
-+  - Anson Huang <Anson.Huang@nxp.com>
++  - Sivaprakash Murugesan <sivaprak@codeaurora.org>
 +
-+allOf:
-+  - $ref: "watchdog.yaml#"
++description:
++  The A53 PLL on few Qualcomm platforms is the main CPU PLL used used for
++  frequencies above 1GHz.
 +
 +properties:
 +  compatible:
 +    enum:
-+      - fsl,imx7ulp-wdt
++      - qcom,msm8916-a53pll
++      - qcom,ipq6018-a53pll
 +
 +  reg:
 +    maxItems: 1
 +
-+  interrupts:
-+    maxItems: 1
++  '#clock-cells':
++    const: 0
 +
 +  clocks:
-+    description: |
-+      Watchdog's clock source.
++    description: clocks required for this controller.
 +    maxItems: 1
 +
-+  assigned-clocks:
-+    maxItems: 1
-+
-+  assigned-clocks-parents:
++  clock-names:
++    description: clock output names of required clocks.
 +    maxItems: 1
 +
 +required:
 +  - compatible
-+  - interrupts
 +  - reg
-+  - clocks
++  - '#clock-cells'
 +
 +additionalProperties: false
 +
 +examples:
++  #Example 1 - A53 PLL found on MSM8916 devices
 +  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/imx7ulp-clock.h>
-+
-+    wdog1: watchdog@403d0000 {
-+        compatible = "fsl,imx7ulp-wdt";
-+        reg = <0x403d0000 0x10000>;
-+        interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
-+        assigned-clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
-+        assigned-clocks-parents = <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>;
-+        timeout-sec = <40>;
++    a53pll: clock@b016000 {
++        compatible = "qcom,msm8916-a53pll";
++        reg = <0xb016000 0x40>;
++        #clock-cells = <0>;
 +    };
 +
-+...
++  #Example 2 - A53 PLL found on IPQ6018 devices
++  - |
++    a53pll_ipq: clock@b116000 {
++        compatible = "qcom,ipq6018-a53pll";
++        reg = <0x0b116000 0x40>;
++        #clock-cells = <0>;
++        clocks = <&xo>;
++        clock-names = "xo";
++    };
 -- 
 2.7.4
 
