@@ -2,137 +2,97 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C49C38A29
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 14:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADC2C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 14:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 397992076D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 14:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CCFF20578
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 14:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586875651;
-	bh=MeT05xutcLyt46QAxJJeGX5eCJ3rJjq4JQ++BK18pMo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=1n0xDEhN5ww14X5df1GIxNCQfP6pshXMbn2vBnaYfvjTpv4/sa0eFQQeGzErl/6LM
-	 vPuEHkuSgm91HpDgfoAgAK3UUFF2vmLlj9FL3rUhwyQtNXOYij3GfeSeltKP2XP3gV
-	 Bt83UO3LhU7nKkcxzJ7ZgSZJNOXK8hJmNgTY/Sds=
+	s=default; t=1586875991;
+	bh=tv4R4Kv4g8B0l2zpuIbUZpyLwIuD0Vzz4VJWL+g5//E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x5NWrDRBiOSV5+KSmTWKKTfAuZ/hUB5sieonc1iVfElDeFJH2Pr+9oXRZT09SyoHM
+	 0WlS1TDksqn1P6iYRNbQAeSTMrpHL2u5liwSD9YhN5z94FZQDYQICu9BhyOPM6+hCq
+	 WY2YrqUhRrSB7kb6aaIHIDLBju7WC/8HQ5w75IS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404907AbgDNOr2 (ORCPT
+        id S2405217AbgDNOxI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 10:47:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44766 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 10:53:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404893AbgDNOrW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 10:47:22 -0400
+        id S2405178AbgDNOxE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Apr 2020 10:53:04 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E3E220787;
-        Tue, 14 Apr 2020 14:47:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8E7C20787;
+        Tue, 14 Apr 2020 14:53:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586875641;
-        bh=MeT05xutcLyt46QAxJJeGX5eCJ3rJjq4JQ++BK18pMo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=TFsPuBZ7FSNOtnSAug8XW4IXwbyWaVpeFFbM9cedU9et3qHJyz1nV2uAJsPo6rIVN
-         gdqQ7KdGTJHWPQR4XxT+sUOSTDXOd6zT7eAGdKDy0PdIPwIkTEC4VtnkHp6sPDwEj9
-         H50SXjgTY0FPCRLNGDSp0IPfRiLn6Bf0tLf8kIKE=
-Date:   Tue, 14 Apr 2020 15:47:18 +0100
+        s=default; t=1586875984;
+        bh=tv4R4Kv4g8B0l2zpuIbUZpyLwIuD0Vzz4VJWL+g5//E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DpQH9u4F0GF0tMVItK3pYSbL4NuklFrH04SaZxWwL5AaLEOkDQqGnqv5AeDBCTtWT
+         XuHrv/YtN40Fd9wEkQCg0FD3SWkyPvpV20CaxnWKhQXK3sbOhaXTlgn2DDOUNHXx+f
+         FWihgb2qQLFHpy8PgS1Y2iieb2PY4DNjqwaYMJu8=
+Date:   Tue, 14 Apr 2020 15:53:01 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: tegra: tegra_wm8903: Support nvidia, headset property" to the asoc tree
-In-Reply-To:  <20200330204011.18465-3-digetx@gmail.com>
-Message-Id:  <applied-20200330204011.18465-3-digetx@gmail.com>
-X-Patchwork-Hint: ignore
+To:     Iskren Chernev <iskren.chernev@gmail.com>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 0/3] regulator: max77826: Add MAX77826 support
+Message-ID: <20200414145301.GE5412@sirena.org.uk>
+References: <20200413164440.1138178-1-iskren.chernev@gmail.com>
+ <20200414105725.GB5412@sirena.org.uk>
+ <f167d50f-c0d7-f359-a167-2782040ae7c3@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gDGSpKKIBgtShtf+"
+Content-Disposition: inline
+In-Reply-To: <f167d50f-c0d7-f359-a167-2782040ae7c3@gmail.com>
+X-Cookie: I've only got 12 cards.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
 
-   ASoC: tegra: tegra_wm8903: Support nvidia, headset property
+--gDGSpKKIBgtShtf+
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-has been applied to the asoc tree at
+On Tue, Apr 14, 2020 at 04:14:01PM +0300, Iskren Chernev wrote:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+> > Aside from the compatible string and the subject prefix on the DT
+> > binding patch this looks good to me.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> About the subject -- I guess you mean the suffix is wrong, it should be:
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+> =A0 dt-bindings: regulator: Document bindings for max77826
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+No, it should just be regulator:.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+--gDGSpKKIBgtShtf+
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-Mark
+-----BEGIN PGP SIGNATURE-----
 
-From 3ef9d5073b552d56bd6daf2af1e89b7e8d4df183 Mon Sep 17 00:00:00 2001
-From: Dmitry Osipenko <digetx@gmail.com>
-Date: Mon, 30 Mar 2020 23:40:11 +0300
-Subject: [PATCH] ASoC: tegra: tegra_wm8903: Support nvidia, headset property
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6Vzk0ACgkQJNaLcl1U
+h9ARMwf/bwHr+jF3xwnTh1E+/hYfYVM2pXxt7TKtP2olD6Yqbp3H993TrgzlUBvo
+ZM04pDydRwUS9niN6fNyd5MfxIr7WWoFlRFNelqQil2aQUyF3RHPinsVb1xUoEgh
+0CPMGfa/FzKpUZy4Wbact47MVqZ12hjKyg354p+de/VaFVuL2VP/qGVFY/x/96aG
+QX4nkhiPqsmmES1kF6ofzAFfwBiTi1Ee1N9mMNeEgTTLc49dI3NKS/RVelp9vjFB
+n9CpV268Oxgk6bd3KIpYC7m/7MIVaYpfLHxvx68F+BwDlKeKRbxDjxsQX67wqg5N
+opnkynIRmQkTpRooSZN8hRZAxAeiwA==
+=QVYH
+-----END PGP SIGNATURE-----
 
-The microphone-jack state needs to be masked in a case of a 4-pin jack
-when microphone and ground pins are shorted. Presence of nvidia,headset
-tells that WM8903 CODEC driver should mask microphone's status if short
-circuit is detected, i.e headphones are inserted.
-
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Link: https://lore.kernel.org/r/20200330204011.18465-3-digetx@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/tegra/tegra_wm8903.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/sound/soc/tegra/tegra_wm8903.c b/sound/soc/tegra/tegra_wm8903.c
-index 9b5651502f12..3aca354f9e08 100644
---- a/sound/soc/tegra/tegra_wm8903.c
-+++ b/sound/soc/tegra/tegra_wm8903.c
-@@ -177,6 +177,7 @@ static int tegra_wm8903_init(struct snd_soc_pcm_runtime *rtd)
- 	struct snd_soc_component *component = codec_dai->component;
- 	struct snd_soc_card *card = rtd->card;
- 	struct tegra_wm8903 *machine = snd_soc_card_get_drvdata(card);
-+	int shrt = 0;
- 
- 	if (gpio_is_valid(machine->gpio_hp_det)) {
- 		tegra_wm8903_hp_jack_gpio.gpio = machine->gpio_hp_det;
-@@ -189,12 +190,15 @@ static int tegra_wm8903_init(struct snd_soc_pcm_runtime *rtd)
- 					&tegra_wm8903_hp_jack_gpio);
- 	}
- 
-+	if (of_property_read_bool(card->dev->of_node, "nvidia,headset"))
-+		shrt = SND_JACK_MICROPHONE;
-+
- 	snd_soc_card_jack_new(rtd->card, "Mic Jack", SND_JACK_MICROPHONE,
- 			      &tegra_wm8903_mic_jack,
- 			      tegra_wm8903_mic_jack_pins,
- 			      ARRAY_SIZE(tegra_wm8903_mic_jack_pins));
- 	wm8903_mic_detect(component, &tegra_wm8903_mic_jack, SND_JACK_MICROPHONE,
--				0);
-+				shrt);
- 
- 	snd_soc_dapm_force_enable_pin(&card->dapm, "MICBIAS");
- 
--- 
-2.20.1
-
+--gDGSpKKIBgtShtf+--
