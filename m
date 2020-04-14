@@ -2,119 +2,116 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56C5C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 12:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF83C2BBC7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 12:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB70820768
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 12:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6090E20768
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 12:52:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PDJLx9zi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502193AbgDNMrs (ORCPT
+        id S2502265AbgDNMwB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 08:47:48 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:60679 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502184AbgDNMrp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 08:47:45 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id A6D5220000E;
-        Tue, 14 Apr 2020 12:47:41 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 14:47:41 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Claudiu.Beznea@microchip.com
-Cc:     a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com,
-        Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com,
-        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] ARM: dts: sam9x60: add rtt
-Message-ID: <20200414124741.GJ34509@piout.net>
-References: <1586536019-12348-1-git-send-email-claudiu.beznea@microchip.com>
- <1586536019-12348-5-git-send-email-claudiu.beznea@microchip.com>
- <20200410222658.GB3628@piout.net>
- <c4d46198-488b-c5d6-2a66-865a16840dc4@microchip.com>
- <20200413104652.GE3628@piout.net>
- <3116d1fc-af96-1e0c-aa07-3b34cbd58209@microchip.com>
- <20200414111600.GE34509@piout.net>
- <a07d841e-efa9-6c01-69e2-0ed33f9759c5@microchip.com>
+        Tue, 14 Apr 2020 08:52:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730138AbgDNMv6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Apr 2020 08:51:58 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E707BC061A0C;
+        Tue, 14 Apr 2020 05:51:57 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id a25so14205889wrd.0;
+        Tue, 14 Apr 2020 05:51:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=INaiMxSFr4KNjl3DpxnWtwrHIDn60Dm1USBtEnWrWrc=;
+        b=PDJLx9zi1OI+5VbYzQkd02uKzO1waQSh/zV5F3EvUj4R0lf428LvqkmNSdRd79LqxN
+         yh0X6/0sK/jTdSuQbifotYjj3rhQz2aq1vtnVuNxbaP2fDl+wljpd1k8kfAXvU7ERGJf
+         eMSnKtacrGcdgQJGOgFdKNPHZJlFU2gPZl9tcACIWKiMEhmBR66bSDNNeFXm+22SYGuo
+         lfUmhXZ1J1d9b1G3YyWws1cHO5kNdsjF2swkcOotXYdE4xJtx2vRJxWdnK0yyKplYpSZ
+         rt5eDjHEGFa+OX6BnSQ4Oo6BYIR2W/WrYq8wVh1dPt5OvweJz78ZBjx6r6xAJJKS8pw9
+         +xbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=INaiMxSFr4KNjl3DpxnWtwrHIDn60Dm1USBtEnWrWrc=;
+        b=JgCIC4SH1yPLo8Kr4d9mA4L8/dYxrRta1YvyAZdqxJ1NHCqZstRYdZrcQ8v5pL1i20
+         Qt/L09bOqfOL7GR1OXB2QIwEVbrVWBbV7b5MxZIMwm+ohCzLFBr1c3RVBle0OVScoIRu
+         2FQOGQG8K2xVaEwnaFo14+g2yXV49AvLj46p/2Dr+qcDOLU9AeRYvlOcy1ZIlITrVOWh
+         zqUmtlgH8c/w3RWP2p5BMyeUZ1NyMmdGZ1bJKzztR11d2Eow3/piMJcUcwJbJ9VZ4/EZ
+         TvlEHirREcEkNvWEXWhVfg3qdmpjcgR8ItQRj6ebNpprm6/9OL4B0yxm4/YOtBFN/Nui
+         XQNw==
+X-Gm-Message-State: AGi0Pubsg6D/2l386UQwilhO6PB4/qdFUezd84tUdKm5ywzvr5NAayje
+        ewJdXIjyZKGhA+BPkgdtsng=
+X-Google-Smtp-Source: APiQypLreekvmOTIyJjoRiEofhwIQiv4aipsIMKjDOyMD8hF5sTi0Hn3DIqB4xhgEstTN6UiwtD3pQ==
+X-Received: by 2002:adf:e90e:: with SMTP id f14mr24068876wrm.106.1586868716187;
+        Tue, 14 Apr 2020 05:51:56 -0700 (PDT)
+Received: from AnsuelXPS (host93-255-dynamic.47-79-r.retail.telecomitalia.it. [79.47.255.93])
+        by smtp.gmail.com with ESMTPSA id p10sm18476895wrm.6.2020.04.14.05.51.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 Apr 2020 05:51:55 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Florian Fainelli'" <f.fainelli@gmail.com>,
+        <devicetree@vger.kernel.org>
+Cc:     "'Mark Rutland'" <mark.rutland@arm.com>,
+        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
+        "'Richard Zhu'" <hongxing.zhu@nxp.com>,
+        "'Fabio Estevam'" <festevam@gmail.com>,
+        "'Sascha Hauer'" <s.hauer@pengutronix.de>,
+        <linux-kernel@vger.kernel.org>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'NXP Linux Team'" <linux-imx@nxp.com>,
+        "'Pengutronix Kernel Team'" <kernel@pengutronix.de>,
+        <linux-pci@vger.kernel.org>,
+        "'Bjorn Helgaas'" <bhelgaas@google.com>,
+        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
+        "'Shawn Guo'" <shawnguo@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        "'Lucas Stach'" <l.stach@pengutronix.de>
+References: <20200410004738.19668-1-ansuelsmth@gmail.com> <20200410004738.19668-2-ansuelsmth@gmail.com> <26080c25-cda5-cd3f-a906-a09a79cb1922@gmail.com>
+In-Reply-To: <26080c25-cda5-cd3f-a906-a09a79cb1922@gmail.com>
+Subject: R: [PATCH 1/4] devicetree: bindings: pci: document tx-deempth tx swing and rx-eq property
+Date:   Tue, 14 Apr 2020 14:51:51 +0200
+Message-ID: <01ea01d6125b$79590790$6c0b16b0$@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a07d841e-efa9-6c01-69e2-0ed33f9759c5@microchip.com>
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQJxOzeYiZkD8UITQ1/aTwnouqE5vALuml4iApJiW/inFjd00A==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 14/04/2020 12:13:46+0000, Claudiu.Beznea@microchip.com wrote:
+> On 4/9/2020 5:47 PM, Ansuel Smith wrote:
+> > Document tx-deempth, tx swing and rx-eq property property used on
+> some
+> > device (qcom ipq806x or imx6q) to tune and fix init error of the pci
+> > bridge.
 > 
-> 
-> On 14.04.2020 14:16, Alexandre Belloni wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> > 
-> > On 14/04/2020 08:42:08+0000, Claudiu.Beznea@microchip.com wrote:
-> >>> Why would one use the RTT while the RTC is far superior?
-> >>
-> >> I didn't enabled this for a particular use case, but: couldn't this be used
-> >> by some user that wants to generate multiple alarms? from multiple RTCs?
-> >>
-> > 
-> > I very much doubt that as Linux is able to properly multiplex alarms and
-> > basically, the only one we are interested in is actually wakeup.
-> 
-> I think you can use the wakealarm sysfs exported file to prepare an alarm
-> and take user space actions based on that without being suspended.
-> 
-> > 
-> >> Moreover, this IP's counter has the possibility of being clocked at 1Hz.
-> >> Couldn't this minimize the power consumption while being in a power saving
-> >> mode?
-> >>
-> > 
-> > And that 1Hz clock is coming from the RTC so using the RTC is
-> > definitively consuming less power.
-> 
-> Datasheet specifies this: "Configuring the RTPRES field value to 0x8000
-> (default value) corresponds to feeding the real-time counter with a
-> 
-> 1Hz signal (if the slow clock is 32.768 kHz)."
-> 
-> So, it is not the RTC, it is the slow clock divided by 32768.
+> Those properties are not specific to the host bridge per-se, but to the
+> PCIe PHY, therefore, one would expect to find those properties within
+> the PCIe PHY node if it exists. Given you want this binding to be
+> generic, this is an important thing to correct here.
+> --
+> Florian
 
-This is not what you described previously, using RTPRES means running
-the RTT at 32kHz. This is exactly what happens with the RTC but you get
-the added clock calibration circuitry that is probably not drawing to
-much power but the added consumption of the configurable prescaler
-versus the static prescaler of the RTC is probably similar.
+So where should I put these? If I understand this properly I should move 
+this to the PHY directory but no PCIe PHY node exist for both imx6q 
+and ipq806x. How I should proceed? 
+It would be better to just drop this and add qcom specific binding to the
+driver? 
 
-Using RTC1HZ would be driving the RTT at 1Hz.
-
-> > But this is very unlikely to happen because this would be limited to a
-> > single board device tree instead of impact every sam9x60 based boards.
-> 
-> Very unlikely but a having a patch with diff like this:
-> 
-> +&gpbr {
-> +     status = "okay";
-> +};
-> +
-> +&rtt {
-> +     atmel,rtt-rtc-time-reg = <&gpbr 0x0>;
-> +     status = "okay";
-> +};
-> +
-> 
-> and reverting it may affect the other users of gpbr in sam9x60ek.dts.
-> 
-
-Again, this affects only sam9x60ek.dts instead of possibly multiple DTs
-that may be out of tree. So the risk of doing that is null.
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
