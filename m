@@ -2,151 +2,92 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B486C2BB86
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 10:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DE1C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 10:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 296F5206D5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 10:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64140206D5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 10:56:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586861783;
+	bh=OrDXTih3RBsU8OWNI07hoBDWpLOY9wKKaAm9RMEBMLo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=szu14ZWF2YRCx9SwAkw3jSoYVitsBEY2V2VXAJLVMMNsXVG29FfkAf080JGoZSJyI
+	 rytWZIWr89bW/pyi1mM1zm3kVs8gpNo/99I/P9vp/lx+nT4rw9FX1MXWpgRGoNDyQw
+	 VAHXYR27BTSsPWxzA0ODqN0dDm83pAUvsEsYZqUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438637AbgDNKts (ORCPT
+        id S2438727AbgDNK4U (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 06:49:48 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41798 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438636AbgDNKtc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 06:49:32 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id B221B2A186D
-Received: by earth.universe (Postfix, from userid 1000)
-        id AD1183C08C7; Tue, 14 Apr 2020 12:49:26 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 12:49:26 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     saravanan sekar <sravanhome@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v8 4/6] power: supply: Add support for mps mp2629 battery
- charger
-Message-ID: <20200414104926.2yxpxclsqdp2gz3f@earth.universe>
-References: <20200413173656.28522-1-sravanhome@gmail.com>
- <20200413173656.28522-5-sravanhome@gmail.com>
- <CAHp75VeYFY1CW4AH+D4HAgzppMZ5J8dL8kKPYmcwsXNVGNSYjQ@mail.gmail.com>
- <6cfab0a6-c3eb-bd9b-6572-b49e3205524f@gmail.com>
- <20200413204847.ni7dsrn5tslrorqn@earth.universe>
- <CAHp75VdRXWVtveRnvR-k8wqH5R_P7owfQvFf7YT3qM_oVEY3vg@mail.gmail.com>
+        Tue, 14 Apr 2020 06:56:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34376 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438723AbgDNK4R (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Apr 2020 06:56:17 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AA5F206D5;
+        Tue, 14 Apr 2020 10:56:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586861776;
+        bh=OrDXTih3RBsU8OWNI07hoBDWpLOY9wKKaAm9RMEBMLo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DCQ8zOM8onMVoMA8YgwBGyLC1/QVhufjI6QTVJehdIFRa7fZE4jxzxfAfyYEVNrDI
+         0Tt9M6ND2DZidl1hKAIHyJGiLWANYgB/T/Sc9P47Km+bzJJnt0QRY/v9QL5tZY0d34
+         FrzZxNlYGLoXLHeVz2Zr8dKsOF0dbdIqo4qgWhC4=
+Date:   Tue, 14 Apr 2020 11:56:14 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Iskren Chernev <iskren.chernev@gmail.com>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 1/3] regulator: max77826: Add max77826 regulator driver
+Message-ID: <20200414105613.GA5412@sirena.org.uk>
+References: <20200413164440.1138178-1-iskren.chernev@gmail.com>
+ <20200413164440.1138178-2-iskren.chernev@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rlcmmezjuw4wenk5"
+        protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
 Content-Disposition: inline
-In-Reply-To: <CAHp75VdRXWVtveRnvR-k8wqH5R_P7owfQvFf7YT3qM_oVEY3vg@mail.gmail.com>
+In-Reply-To: <20200413164440.1138178-2-iskren.chernev@gmail.com>
+X-Cookie: I've only got 12 cards.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---rlcmmezjuw4wenk5
+--EVF5PPMfhYS0aIcm
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Mon, Apr 13, 2020 at 07:44:38PM +0300, Iskren Chernev wrote:
 
-On Tue, Apr 14, 2020 at 12:05:15PM +0300, Andy Shevchenko wrote:
-> On Mon, Apr 13, 2020 at 11:48 PM Sebastian Reichel
-> <sebastian.reichel@collabora.com> wrote:
-> > On Mon, Apr 13, 2020 at 10:28:19PM +0200, saravanan sekar wrote:
-> > > On 13/04/20 10:10 pm, Andy Shevchenko wrote:
-> > > > On Mon, Apr 13, 2020 at 8:37 PM Saravanan Sekar <sravanhome@gmail.c=
-om> wrote:
->=20
-> ...
->=20
-> > > > > +       irq =3D platform_get_irq(to_platform_device(pdev->dev.par=
-ent), 0);
-> > > > Why not to use temporary variable dev?
-> > > >
-> > > > This should be platform_get_irq_optional().
-> > >
-> > > Platform_get_irq in turn calls platform_get_irq_optional. It was sugg=
-ested
-> > > by Lee and is it mandatory to change it?
-> >
-> > platform_get_irq is fine.
->=20
-> I don't think so. It will spill an error in case there is no IRQ or
-> error happened.
+> +static const struct of_device_id max77826_of_match[] = {
+> +	{ .compatible = "maxim,max77826-regulator" },
 
-I suppose even for an optional IRQ we want an error message when an
-error happens (i.e. IRQ is specified, but not used because $reason).
+This should just be maxim,max77826 - there's no need to disambiguate or
+describe the device in the compatible string.
 
-> So, either is should be _optional, or below conditional simply wrong, sho=
-uld be
->   if (irq < 0)
->     return irq;
-
-In other words: Making the irq mandatory. Sounds reasonable to me
-considering the driver code. Without IRQ userspace needs to poll to
-know about error states like thermal shutdown.
-
--- Sebastian
->=20
-> > > > > +       if (irq) {
-> >
-> > But this must be
-> >
-> > if (irq > 0)
-> >
-> > or you will also try to continue with error codes.
-> >
-> > > > > +               ret =3D devm_request_irq(dev, irq, mp2629_irq_han=
-dler,
-> > > > > +                                IRQF_TRIGGER_RISING, "mp2629-cha=
-rger",
-> > > > > +                                charger);
-> > > > > +               if (ret) {
-> > > > > +                       dev_err(dev, "failed to request gpio IRQ\=
-n");
-> > > > > +                       goto iio_fail;
-> > > > > +               }
-> > > > > +       }
-> > > > > +}
->=20
-> --=20
-> With Best Regards,
-> Andy Shevchenko
-
---rlcmmezjuw4wenk5
+--EVF5PPMfhYS0aIcm
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6VlTYACgkQ2O7X88g7
-+pp4Pw/7Bn+7UvIz8i2/PkRw+aYkOp53iodrsxMP38OY6owBwJ2WtgN0Bk43IrzB
-h2v4VXpaI/CtXmb8P4/wtr9eNDuZ3jWksI3zMh6QPtBt+8z3kwzesMFXDIl6pDtC
-AD358+a89lKanBayAXNC28JQuOjP3r5LXbnfusUK2zo21A6ZAj8nu/WcmZ+tzxnI
-5wJpjyuLnwOIgyzKlYeL7KFZghfSK4uCaoMDS4FQ7t1mWgslqiUcH5M8CyVXURNh
-BM1ljZkq4APaBcVmG0Lgj8WPxn+b++8dazKPpV83uUz4X71/Tt5iGetUQjsQwDK8
-yHUa24/qwfTi1hD6LjUqxKtngbfksddIf3GeTqPfxARotCtMEUMSQ1eIcaQ71f43
-DLEfb4CHOO7Y3SK9u984AbFiD6Br34Wuk22qasl4g2sNKLRLOJPictqfjRNyTzH9
-KYHXVpzZLH1D1gEOtca5xupI1W2G2PSQ5pHuY18o/1EhwZuL6yPBekywczjNmjSp
-xVHVusojDvBZCnbZdCR18QsCcTzEcwcxUS5jk8CPcV3sQh0/5JSysC2rw34p9buB
-upfx8jwp9dWhs2HxMOUCFaDMyCMLg9m14cl/mGM/f09gE1+HPBYTvK3aRoQqNCHc
-gxmLpwvBDuC4mlKU2/o8GIv/NwDPmrgpNScaTxnx8gTX9Dh2+W0=
-=Qvky
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6Vls0ACgkQJNaLcl1U
+h9DjzAf/bkHB+lOn620nAMtWbpwdBWX+2Uv646XBlc6Izk+UvqWnyvBAD4FpP3BH
++1S4uEVp6jlP9TYMuYlmwr7WfAYBYtbIqPXdAw7l0M8M19Ni/p4IXnTnIMKfrzVK
+AYujzozp5R7AXDQQQhup0EjkRptTxAk9fH4tLraifsGua0JPuDddsGpZO1SQ8iuQ
+/D2XG1FzxZI/Q9NP/OYnc59AR2xXcIGG28sH6b8ijk448NrET2JYEcKfJJzzQBPt
+vBh+865uKZY3j/91aitNg6Dlpf3OyK1ea0M9fIeRf1UcQwqAtdvwsRRnZ9q/7IHS
+RfHRs+rUGwd7sGVmMZsar80m/Sq2Rw==
+=gAMH
 -----END PGP SIGNATURE-----
 
---rlcmmezjuw4wenk5--
+--EVF5PPMfhYS0aIcm--
