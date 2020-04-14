@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FEAC54F70
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9480C54FD2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 063DE20678
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B3A4206A2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z0Yp2WFw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="po6t4my3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391395AbgDNREh (ORCPT
+        id S2391287AbgDNREb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:04:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34542 "EHLO
+        Tue, 14 Apr 2020 13:04:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391390AbgDNREe (ORCPT
+        by vger.kernel.org with ESMTP id S2391194AbgDNRE2 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:04:34 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F519C061A0F
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:34 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id r26so14958650wmh.0
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:34 -0700 (PDT)
+        Tue, 14 Apr 2020 13:04:28 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6485EC061A10
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:28 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id o81so8229725wmo.2
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=aOn2/ivBf+XmB6Al4WmdsHcps0QyIiLuo8qefeV2C0s=;
-        b=Z0Yp2WFwHT70u0R7Wr7R5AhtdbVQPNTMNufdFuXd+ENpRenI7zcZxRtj1eDH/8DVxK
-         w7N9nOpW7sEG9K/u3l1KC6rScagAtd4Om9U5KNXAa5xEBG0aKQFAomBQj49jMwAx80bm
-         VnyWFWc4Yzp3RbBcbzqkmhqjzSXUGlBrfV9Kgixw0dzjGUnOx/ApPNVuQ8gPPBhxSY5/
-         4wGrHj0nf+rS03Agdvzb84edls0jQzbEhQ/0sOzl94i50gjL44IGJs4I98eE/dCmXuXl
-         D4QQcRCEFAxwwKcohtYfh0JlVaKZdefOyxLVJTOa7V2u0lkZCvT24PKYz706K9mF45p0
-         UpIA==
+        bh=GCsqjS+Tnwu1hr3WMvNuD+P9uXkPM0pVKS2lTlLCiJU=;
+        b=po6t4my3Go9g7beq4oi5gBqHe0K8I8gLjjolwSf6g7Inuex/2pKCElDmTw05chnprB
+         VpcDmTm9mJndKQ44OUnWiFNGWAnRefKxTsOEpgZkGH6fmib0dAJkrwdNZzEReQlfHRLw
+         zmHfO/enRYNLngF50Q/ItNGZfOVNZOP1Wjn1Tm/UzlvI3Aq2ub4XSW6+HyraLp5KrRtN
+         gUQ66eIR/V7LC06nJlZF2rLHNx0sFnWE5LcK9o3Z9V83oIkL5irCCS39MKos1xZK1qWT
+         MZY9xrqkkCHiVCztI/hzFS5XxD5U/SGIE/6AMMBqlAMbF3wtNCRxo5V2z/5fM3LcFagm
+         S0GQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=aOn2/ivBf+XmB6Al4WmdsHcps0QyIiLuo8qefeV2C0s=;
-        b=VOWmp5mCffOWbm58ori36BUvr7ezL+kk0fyB7YZAcw2ENd5VqUnE62Qq3AHSAfM9Eh
-         7hQ8RTitXKToZomor+PWi6qonhI+U/Uy7Fcn1z6fguu44OGAgnczFKiuxIue0/6XtUM1
-         AXp7VA4pTcbRoWzV03O6oyu+6IkQZ9/8g6/knteies+gjY2qSNLsnDXCTAObhH2uDFue
-         WcmXf/K+fFtt8FwAuFRjPn4DHEwN2YHDHHx6HmSsaprlkooQ0btdde2oiBGzM042Nhj9
-         nrRj64FWserk+8kjNYJGYo42q8AC+P3419nloXa/lpt77piiyAQLwR9JscYUzyBsfkH3
-         ohvg==
-X-Gm-Message-State: AGi0PuYtj8JU6WnlCCdcHAnelE4BzxNbwzKt1KLkyTEj3y36kHZoQ4GC
-        cH/CEyWHmk5QxegwON0E2SmV8A==
-X-Google-Smtp-Source: APiQypJHABOUo0l69p8cEPC/4JaEesvnVVdt7c8KNCFhOJxICd+3rtd3OwSved0AadUjHTnKij1dPw==
-X-Received: by 2002:a1c:e906:: with SMTP id q6mr776151wmc.62.1586883872984;
-        Tue, 14 Apr 2020 10:04:32 -0700 (PDT)
+        bh=GCsqjS+Tnwu1hr3WMvNuD+P9uXkPM0pVKS2lTlLCiJU=;
+        b=Ovs+tVewHFnchSUbjxuAf/klycQyqlM4pFkSNJO5KdIuunA8C0+YN0UAbB/O9LqEcU
+         RA6PYdOXX+Hst8hutNd4AiX6g3WLY2WzhqOa6xYrVpIJKwqXxtZoAU4HHjdawcNwavA/
+         Ia41vebvnoYg1F0Oc3IVnbqLzAfs6cmg2nZKDXwRUEykBltUsbkW166FAEacAgYyoqZf
+         hhS6sxA7iPby/4bYt/BZGjbjV2gTh6Tx+G31wiX7d/71NmlgJ57TJqq1Rtszc7WY51m7
+         No02WQo7Sh0gKD7NZnj6FyoDnrVDLJ4Mrz371c/u3kV0par22A0FMcgH2guzjlhT8uHb
+         Zg/w==
+X-Gm-Message-State: AGi0PuZLiqEZTcRlV0L3Q+zOrjB2G6Wbp93f6qH50LrpRNpiufbazn8v
+        s7lIojfX5V+sdI/u5VF7ttVQ5Q==
+X-Google-Smtp-Source: APiQypItrJFyYm1dKZ3R07kVZC02nj/EnEUI4s9HX58/CnIZwkPk4I7z7a9PSJbV36nuH4swD5HWaA==
+X-Received: by 2002:a1c:3281:: with SMTP id y123mr814694wmy.30.1586883867167;
+        Tue, 14 Apr 2020 10:04:27 -0700 (PDT)
 Received: from localhost.localdomain ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id x18sm19549147wrs.11.2020.04.14.10.04.31
+        by smtp.gmail.com with ESMTPSA id x18sm19549147wrs.11.2020.04.14.10.04.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 10:04:32 -0700 (PDT)
+        Tue, 14 Apr 2020 10:04:26 -0700 (PDT)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
@@ -68,11 +68,10 @@ Cc:     joro@8bytes.org, catalin.marinas@arm.com, will@kernel.org,
         baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
         jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
         zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v5 11/25] arm64: cpufeature: Export symbol read_sanitised_ftr_reg()
-Date:   Tue, 14 Apr 2020 19:02:39 +0200
-Message-Id: <20200414170252.714402-12-jean-philippe@linaro.org>
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Subject: [PATCH v5 07/25] arm64: mm: Add asid_gen_match() helper
+Date:   Tue, 14 Apr 2020 19:02:35 +0200
+Message-Id: <20200414170252.714402-8-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200414170252.714402-1-jean-philippe@linaro.org>
 References: <20200414170252.714402-1-jean-philippe@linaro.org>
@@ -83,28 +82,49 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The SMMUv3 driver would like to read the MMFR0 PARANGE field in order to
-share CPU page tables with devices. Allow the driver to be built as
-module by exporting the read_sanitized_ftr_reg() cpufeature symbol.
+Add a macro to check if an ASID is from the current generation, since a
+subsequent patch will introduce a third user for this test.
 
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- arch/arm64/kernel/cpufeature.c | 1 +
- 1 file changed, 1 insertion(+)
+v4->v5: new
+---
+ arch/arm64/mm/context.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 9fac745aa7bb2..5f6adbf4ae893 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -841,6 +841,7 @@ u64 read_sanitised_ftr_reg(u32 id)
- 	BUG_ON(!regp);
- 	return regp->sys_val;
+diff --git a/arch/arm64/mm/context.c b/arch/arm64/mm/context.c
+index 9b26f9a88724f..d702d60e64dab 100644
+--- a/arch/arm64/mm/context.c
++++ b/arch/arm64/mm/context.c
+@@ -92,6 +92,9 @@ static void set_reserved_asid_bits(void)
+ 		bitmap_clear(asid_map, 0, NUM_USER_ASIDS);
  }
-+EXPORT_SYMBOL_GPL(read_sanitised_ftr_reg);
  
- #define read_sysreg_case(r)	\
- 	case r:		return read_sysreg_s(r)
++#define asid_gen_match(asid) \
++	(!(((asid) ^ atomic64_read(&asid_generation)) >> asid_bits))
++
+ static void flush_context(void)
+ {
+ 	int i;
+@@ -220,8 +223,7 @@ void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
+ 	 *   because atomic RmWs are totally ordered for a given location.
+ 	 */
+ 	old_active_asid = atomic64_read(&per_cpu(active_asids, cpu));
+-	if (old_active_asid &&
+-	    !((asid ^ atomic64_read(&asid_generation)) >> asid_bits) &&
++	if (old_active_asid && asid_gen_match(asid) &&
+ 	    atomic64_cmpxchg_relaxed(&per_cpu(active_asids, cpu),
+ 				     old_active_asid, asid))
+ 		goto switch_mm_fastpath;
+@@ -229,7 +231,7 @@ void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
+ 	raw_spin_lock_irqsave(&cpu_asid_lock, flags);
+ 	/* Check that our ASID belongs to the current generation. */
+ 	asid = atomic64_read(&mm->context.id);
+-	if ((asid ^ atomic64_read(&asid_generation)) >> asid_bits) {
++	if (!asid_gen_match(asid)) {
+ 		asid = new_context(mm);
+ 		atomic64_set(&mm->context.id, asid);
+ 	}
 -- 
 2.26.0
 
