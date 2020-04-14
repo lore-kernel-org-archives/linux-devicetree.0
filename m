@@ -2,137 +2,93 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 633ABC3815B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AFDC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 439B12074D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:58:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ez1U5xHO"
+	by mail.kernel.org (Postfix) with ESMTP id 286562076B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:58:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586890728;
+	bh=mzqmXZwWcjLn1fqvRjFNq+jNJfOMWMRovEF7bTcwTT4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eJUDKmX843yuGryuChL48dAI7o9A3KPk5kJHTdkcJYEvsbQcci4PdwPnWKqiaqxP4
+	 ph8JuOL70JxPstnAp0Vmbb/JAGVTKHF8y6Ub2nzrHHoe0FtRHcXHMlSotVy0TDQF8Y
+	 +tVgRE03D8K3tEK+t5+d60iDSKNikwe/nRrp6Dlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504518AbgDNS6m (ORCPT
+        id S2504526AbgDNS6n (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:58:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2504520AbgDNS5u (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:57:50 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40503C061A0E
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 11:57:50 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id t16so283546plo.7
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 11:57:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=eLhNg8kDFNpBIRgI1oareY/yJAWpxKnYxH3HqcN0OKc=;
-        b=ez1U5xHOxFaBocYyvpYcUW3fff2IH0WXHGkc5ZTFQ9vHmRlorLGiAGbqRVF3ylGzl6
-         aQuz4yVKzjIFAREzZf8GrBsBXWjVIBOjMo5r3VdcGcdKizW34CI91N8KY/0Fp0Ij+jLe
-         3i6A1zhISgRJ1FvCLFcHCSxzTQE3IhloAOm6a10IcaU/DwxQp10GpZxVQES2LrO8RaWs
-         Yk7lMqRiNiXoPWrx6+7aZoRGI77G1c6nX7wOfiF4iKknvXx70ba7kqkM6lMPqmLOEmCi
-         8Anbggy4C2herkaUy8MlH3ygKEbO4ekWk1bdySIiPLiy1wadSFSJfb1EViD49iJxegxs
-         gEZg==
+        Tue, 14 Apr 2020 14:58:43 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45532 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504523AbgDNS6c (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 14:58:32 -0400
+Received: by mail-ot1-f68.google.com with SMTP id i22so728304otp.12
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 11:58:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=eLhNg8kDFNpBIRgI1oareY/yJAWpxKnYxH3HqcN0OKc=;
-        b=oCtXobJU8uczvh8cWA+bmck4l+7DVYGnDS0zFp2ESeGmfMu69C3NXMhUGCeLizoHq4
-         aAxATffqPAKG1nL6Z7t3Qww/12IpR80/EYMcGcVdk/X6gbriXfQ7eQ/MolduZImp3PDw
-         Q1v+7DLE5bZiyAC2kk4rg/QTNZ8Vqot8Lv0CoubD0Pbtnea1aan3j66gpLLEGSguoAv6
-         Y/vZkp8p9IJwpR8DuEwSGyqmFafJK8Nk6uKngxGZLKOqQ4fvZV4fY/4z9MTfTw+TUH6t
-         8DlwsQWbcpYVW6OR2NwXLUKhyy5sm2fWnCPax9WjuNLWsMQHI+gbPbP8G0YK8F95ODrO
-         JDDg==
-X-Gm-Message-State: AGi0PuaoZvmkFuMunSHxn+N/oRtF7MTfe7uAJP56PQJjditAEagDJZf+
-        uv2cVl8oVTinzaxGlJwRfkgmVg==
-X-Google-Smtp-Source: APiQypIQqv3aTGpX5KMbNC05HSpYyKy/zSB3plcdQbijP6ouAUwBS3T+FFgq7tSGMMQkTN4B1//L6Q==
-X-Received: by 2002:a17:902:8a89:: with SMTP id p9mr1280398plo.286.1586890669483;
-        Tue, 14 Apr 2020 11:57:49 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id a13sm1865870pfo.85.2020.04.14.11.57.47
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Yng5I6SxhHzfkzr2Hr0xo1uj8i038bsOL/UPbVnFotM=;
+        b=lMXllEEA4EFDxiJ79EiKjxe5c90MbwZiTe8oPo/YA6pzE5ev6947YMxLzhQBbVCNz9
+         +ARFn7HRcILe/gFF8CCqlOH98M3J6WEeZBH/B8YImCS5j8Slms97+l8A0mtuVh6UNd1B
+         VVeyD08AUkI/yjsZBa7qgstArCVhFeQ4A4pgeE2MV5CzE3OECR2bVSvDSy0cYd3OF529
+         FsAzN4Ouug1PEj0urufpe6v2PnccUH1ztpff3eTaB0t0vS2ItaYsdD9WQ68k5r2R68PJ
+         DrbplxcVR6iva/Mc7X0YUH8Z96K2aB5bK4kUygyUvillWLsIjAha7qx4QJITmpIaG082
+         mx/w==
+X-Gm-Message-State: AGi0PuYa0xaveE/q+Yx05KFvYTSlGtRjjfanITy2plvSVO34a20loCOd
+        PzLlg2FdLpXCB7emrq6pDg==
+X-Google-Smtp-Source: APiQypJAXLhCXOxbvzoI0+y87beqq2cSSLCYqoDH1f37RG8woHymrKR90IKI0Ay88yoSJW1lCaVPjA==
+X-Received: by 2002:a05:6830:11d8:: with SMTP id v24mr20303578otq.258.1586890711805;
+        Tue, 14 Apr 2020 11:58:31 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 85sm803962oie.17.2020.04.14.11.58.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 11:57:48 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [RESEND][PATCH v2] phy: qcom-qusb2: Re add "qcom,sdm845-qusb2-phy" compat string
-Date:   Tue, 14 Apr 2020 18:57:44 +0000
-Message-Id: <20200414185744.84581-1-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 14 Apr 2020 11:58:31 -0700 (PDT)
+Received: (nullmailer pid 15450 invoked by uid 1000);
+        Tue, 14 Apr 2020 18:58:30 -0000
+Date:   Tue, 14 Apr 2020 13:58:30 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     dri-devel@lists.freedesktop.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        devicetree@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 31/36] dt-bindings: display: convert sharp,ls037v7dw01
+ to DT Schema
+Message-ID: <20200414185830.GA15392@bogus>
+References: <20200408195109.32692-1-sam@ravnborg.org>
+ <20200408195109.32692-32-sam@ravnborg.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408195109.32692-32-sam@ravnborg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch fixes a regression in 5.7-rc1.
+On Wed,  8 Apr 2020 21:51:04 +0200, Sam Ravnborg wrote:
+> v2:
+>   - Add min/maxItems to mode-gpios (Rob)
+>   - Fix bug in description, mode is up to three gpios (Rob)
+> 
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> ---
+>  .../display/panel/sharp,ls037v7dw01.txt       | 43 ------------
+>  .../display/panel/sharp,ls037v7dw01.yaml      | 68 +++++++++++++++++++
+>  2 files changed, 68 insertions(+), 43 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/panel/sharp,ls037v7dw01.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,ls037v7dw01.yaml
+> 
 
-In commit 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2
-PHY support"), the change was made to add "qcom,qusb2-v2-phy"
-as a generic compat string. However the change also removed
-the "qcom,sdm845-qusb2-phy" compat string, which is documented
-in the binding and already in use.
-
-This patch re-adds the "qcom,sdm845-qusb2-phy" compat string
-which allows the driver to continue to work with existing dts
-entries such as found on the db845c.
-
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Doug Anderson <dianders@chromium.org>
-Cc: Manu Gautam <mgautam@codeaurora.org>
-Cc: Sandeep Maheswaram <sanm@codeaurora.org>
-Cc: Matthias Kaehlcke <mka@chromium.org>
-Cc: Stephen Boyd <swboyd@chromium.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Fixes: 8fe75cd4cddf ("phy: qcom-qusb2: Add generic QUSB2 V2 PHY support")
-Reported-by: YongQin Liu <yongqin.liu@linaro.org>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
-v2: Add deprecation note on "qcom,sdm845-qusb2-phy" string
-    as suggested by Doug.
----
- drivers/phy/qualcomm/phy-qcom-qusb2.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-index 3708d43b7508..393011a05b48 100644
---- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-@@ -815,6 +815,13 @@ static const struct of_device_id qusb2_phy_of_match_table[] = {
- 	}, {
- 		.compatible	= "qcom,msm8998-qusb2-phy",
- 		.data		= &msm8998_phy_cfg,
-+	}, {
-+		/*
-+		 * Deprecated. Only here to support legacy device
-+		 * trees that didn't include "qcom,qusb2-v2-phy"
-+		 */
-+		.compatible	= "qcom,sdm845-qusb2-phy",
-+		.data		= &qusb2_v2_phy_cfg,
- 	}, {
- 		.compatible	= "qcom,qusb2-v2-phy",
- 		.data		= &qusb2_v2_phy_cfg,
--- 
-2.17.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
