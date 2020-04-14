@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B15CCC38A29
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 15:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7EAC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 15:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85FD1206D5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 15:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DB8D206D5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 15:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586878494;
-	bh=Oc9ojVnSei1ncXI3HlXO8s4gqtOD7PSAftmFoOPklOY=;
+	s=default; t=1586878504;
+	bh=8NmgVLUUS5Ln4TZqfeKplY2vLy6j085/h6+xraogB48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=icFUqpmkuBKi9+AjMLVwr+1iJZLqj6xxsoV7t1AtYFGDT+vkhq76W/2sUDNu/V9iT
-	 UFLJ3Ndb0eTpzTxAr5xfuECjn1Z+3WtOyNFyUMRKdUy0c/Rt0Bxspbfp5XD4MpoSt0
-	 /eTjJNTs6Vro1ZLa89GpzWUPcwMNRK487CLW2r1E=
+	b=dD2dtLdO2762iKz7PKlNahF9XQtfZu9p8iutyMEtr1v/QUVMZOGDau7EbBAhK6O/W
+	 x4ZOyThvYvl2anguIHjnQJqFih49RnDBdp4PnTNgknhP5y7hKrqxnDlJWka/5aR733
+	 M8Z7wVty8T/iHR1ixtRKE0dqN9qNQR2GMvKBleCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439893AbgDNPeu (ORCPT
+        id S2439871AbgDNPei (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 11:34:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51870 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 11:34:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439882AbgDNPep (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:34:45 -0400
+        id S2439849AbgDNPee (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Apr 2020 11:34:34 -0400
 Received: from localhost.localdomain (unknown [157.50.36.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4DDD20678;
-        Tue, 14 Apr 2020 15:34:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A8182075E;
+        Tue, 14 Apr 2020 15:34:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586878484;
-        bh=Oc9ojVnSei1ncXI3HlXO8s4gqtOD7PSAftmFoOPklOY=;
+        s=default; t=1586878473;
+        bh=8NmgVLUUS5Ln4TZqfeKplY2vLy6j085/h6+xraogB48=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=enZpW1mZ6n3HX88iREH1EmVvt8RxSbz6X/eYdqubeNcGeWvc633gbp6FGhVNgj7XO
-         LgJoHPshqy6WMTUyZ3S7XsQaMrHbi+9wwCRaoTQN/BsZnfpM699Qn/F5NzEqXNZ5BH
-         EuYzQN1PnBRvx+fskzc47UcfSFBlgscEDAwqRttc=
+        b=aytUxXRcWQpLpAZMwoqdlUAAitOGoeLB2iKU10rczRmAGB8XSWNTxk+1WLVNjQXf2
+         khWBAaKcD3xDk+6QVHdrLWenYDU+ufSpdOgOjmStTJbIAjoR7zm9dpEIZN5eN8W6LC
+         AUnefMLIdw4+y21DqeaGTGbr07hY4mWZzomhYSeo=
 From:   mani@kernel.org
 To:     jic23@kernel.org, robh+dt@kernel.org, narcisaanamaria12@gmail.com
 Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
         linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com,
         Manivannan Sadhasivam <mani@kernel.org>
-Subject: [PATCH v2 3/3] iio: chemical: Add OF match table for CCS811 VOC sensor
-Date:   Tue, 14 Apr 2020 21:04:15 +0530
-Message-Id: <20200414153415.957-4-mani@kernel.org>
+Subject: [PATCH v2 1/3] dt-bindings: iio: chemical: Add binding for CCS811 VOC sensor
+Date:   Tue, 14 Apr 2020 21:04:13 +0530
+Message-Id: <20200414153415.957-2-mani@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200414153415.957-1-mani@kernel.org>
 References: <20200414153415.957-1-mani@kernel.org>
@@ -58,34 +58,71 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Manivannan Sadhasivam <mani@kernel.org>
 
-Add devicetree OF match table support for CCS811 VOC sensor.
+This commit adds devicetree binding for AMS CCS811 VOC sensor.
 
 Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
 ---
- drivers/iio/chemical/ccs811.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ .../bindings/iio/chemical/ams,ccs811.yaml     | 51 +++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
 
-diff --git a/drivers/iio/chemical/ccs811.c b/drivers/iio/chemical/ccs811.c
-index 951358710f64..310e9dedc9ba 100644
---- a/drivers/iio/chemical/ccs811.c
-+++ b/drivers/iio/chemical/ccs811.c
-@@ -538,9 +538,16 @@ static const struct i2c_device_id ccs811_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, ccs811_id);
- 
-+static const struct of_device_id ccs811_dt_ids[] = {
-+	{ .compatible = "ams,ccs811" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ccs811_dt_ids);
+diff --git a/Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml b/Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
+new file mode 100644
+index 000000000000..5cb068666a3e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/chemical/ams,ccs811.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- static struct i2c_driver ccs811_driver = {
- 	.driver = {
- 		.name = "ccs811",
-+		.of_match_table = ccs811_dt_ids,
- 	},
- 	.probe = ccs811_probe,
- 	.remove = ccs811_remove,
++title: AMS CCS811 VOC Sensor
++
++maintainers:
++  - Narcisa Vasile <narcisaanamaria12@gmail.com>
++
++description: |
++  Ultra-Low Power Digital Gas Sensor for Monitoring Indoor Air Quality.
++
++properties:
++  compatible:
++    enum:
++      - ams,ccs811
++  reg:
++    maxItems: 1
++
++  reset-gpios:
++    description: GPIO connected to the nRESET line. This is an active low
++                 input to CCS811.
++    maxItems: 1
++
++  wakeup-gpios:
++    description: GPIO connected to the nWAKE line. This is an active low
++                 input to CCS811.
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      voc@5b {
++        compatible = "ams,ccs811";
++        reg = <0x5b>;
++        reset-gpios = <&gpioa 11 GPIO_ACTIVE_LOW>;
++        wakeup-gpios = <&gpioa 12 GPIO_ACTIVE_LOW>;
++      };
++    };
++
++...
 -- 
 2.17.1
 
