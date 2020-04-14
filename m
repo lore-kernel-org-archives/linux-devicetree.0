@@ -2,135 +2,161 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DF8C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 20:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56855C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 20:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C839020644
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 20:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3314320644
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 20:57:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SbDjzXio"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Hwu3PZpm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633479AbgDNU4m (ORCPT
+        id S2633494AbgDNU5W (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:56:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44872 "EHLO
+        Tue, 14 Apr 2020 16:57:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2633476AbgDNU4i (ORCPT
+        by vger.kernel.org with ESMTP id S2633447AbgDNU5J (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:56:38 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6D42C061A0C;
-        Tue, 14 Apr 2020 13:56:36 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id w145so916558lff.3;
-        Tue, 14 Apr 2020 13:56:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VXIck97a0Aek/aAV52HpZ0MXWHfB9oEpMa5wcF3XgGk=;
-        b=SbDjzXioUzTK32wnVrOp+mrUtzSJSwM9ueiRLctq5tLHRvYwiSJElJDhHCBoZUsG/t
-         vMpPxeF17vsyiNu4qfxNsQhviSI4eW3UJ5aFa8gO2TKLKXb1YEl1kYhQBc+rRbf+QStB
-         2Pb/rJJ7LKgjsHveBSwOCZxamYEVaf3RbfYsFfO4mYSjn0wKPmIOsHsu0Ex39oJoqy2i
-         xtgJ9RTwK+kuvDYwjkxZ0vlxohaEJ+7y1Kb1RhUbxAvzopQa4EuY7eYgMhg1uqGn9B0e
-         FVXp0h00rjH+v7gS0SCDYIHGw9O2nj4sniBJITJpE52MNdnWnB6jU/fwl3YWDL1YrJdT
-         crPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VXIck97a0Aek/aAV52HpZ0MXWHfB9oEpMa5wcF3XgGk=;
-        b=iAFoYTCH5MBhAnZ0Q+0zB+wc3Q+CjFyUhvYz2nPo9EWuuceKCgjjC+GCCpmlKpQyTN
-         3cQ/A/WW3N9yscPkXpYGqP3g70DZU9UbSEx7rDzOcleQ7i9PfebFhP/A1RayIcbm1LqZ
-         UveAguPjwRjRo93Hb9aHqQb7ZSBaUxyMwXOy5/ExkwLkYP8i7+5Stlx1SUc5vfzynaYr
-         Y0A3cFG6iwmbPXCOfxkaevXIvjXU6829vVlsfKBl0Y/MW+q+84KnQun/fDPVKy+eg7wy
-         /zVIsWZXsvSs7fgtswxgEaRdaTqK0bQGRotObCrm0ydym41v5Iou78CI52sDokg8tabu
-         PF9Q==
-X-Gm-Message-State: AGi0PuZDKOqZ/DJOyZLPj0L9N02B/57rvK7KzUtWt5Q4wqRg/EO+m4PR
-        UQZbo+Ce2Pzl9H/bjYrepm4=
-X-Google-Smtp-Source: APiQypKtH1bUDHRdjihShdon0tmZ0zNWbYZQeiYG5Hr+bD+QTuphwkvgyVN2rrgzBmXRVqqdsJ4sSQ==
-X-Received: by 2002:ac2:43c7:: with SMTP id u7mr1002725lfl.50.1586897795282;
-        Tue, 14 Apr 2020 13:56:35 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id t8sm11485093lfe.31.2020.04.14.13.56.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Apr 2020 13:56:34 -0700 (PDT)
-Subject: Re: [PATCH v6 09/14] memory: tegra: Add EMC scaling support code for
- Tegra210
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200409175238.3586487-1-thierry.reding@gmail.com>
- <20200409175238.3586487-10-thierry.reding@gmail.com>
- <5616bbe7-d185-1a6a-1fc5-e4ee5d2f65e6@gmail.com>
-Message-ID: <1ed62d87-4194-6dca-e28c-ff99988b6697@gmail.com>
-Date:   Tue, 14 Apr 2020 23:56:33 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 14 Apr 2020 16:57:09 -0400
+X-Greylist: delayed 62 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Apr 2020 13:57:08 PDT
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86AE0C061A0C;
+        Tue, 14 Apr 2020 13:57:08 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 13C81521;
+        Tue, 14 Apr 2020 22:57:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586897827;
+        bh=+opjKMJynJ2yyGq/b6mxDNSq3e8f5ZXoGqlv0GJOl4c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Hwu3PZpm77wy9qhNgn34zcCfb8HT0nsEaRmSyepW5eBqDSjv/PUGzdc0Gw9UzJP7Q
+         1PlZPJcIoaT11Li8C2XvOTx875+2WLYsx57TjIbr1/JbQ2AHjXV91dvPFkDZJzugNy
+         FufJ5UISqswefu7BV6wUkjGeAC/ZTDCfDlEsCg8w=
+Date:   Tue, 14 Apr 2020 23:56:55 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency
+ dt-property
+Message-ID: <20200414205655.GO19819@pendragon.ideasonboard.com>
+References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200406165108.GA7646@kekkonen.localdomain>
+ <20200406173234.GD16885@pendragon.ideasonboard.com>
+ <20200407062241.GA8883@kekkonen.localdomain>
+ <20200407122106.GD4751@pendragon.ideasonboard.com>
+ <20200407151401.GA5206@paasikivi.fi.intel.com>
+ <20200414205552.GN19819@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <5616bbe7-d185-1a6a-1fc5-e4ee5d2f65e6@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <20200414205552.GN19819@pendragon.ideasonboard.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-14.04.2020 23:46, Dmitry Osipenko пишет:
-> 09.04.2020 20:52, Thierry Reding пишет:
-> ...
->> +static void tegra210_change_dll_src(struct tegra210_emc *emc,
->> +				    u32 clksrc)
->> +{
->> +	u32 dll_setting = emc->next->dll_clk_src;
->> +	u32 emc_clk_src;
->> +	u32 emc_clk_div;
->> +
->> +	emc_clk_src = (clksrc & EMC_CLK_EMC_2X_CLK_SRC_MASK) >>
->> +		       EMC_CLK_EMC_2X_CLK_SRC_SHIFT;
->> +	emc_clk_div = (clksrc & EMC_CLK_EMC_2X_CLK_DIVISOR_MASK) >>
->> +		       EMC_CLK_EMC_2X_CLK_DIVISOR_SHIFT;
->> +
->> +	dll_setting &= ~(DLL_CLK_EMC_DLL_CLK_SRC_MASK |
->> +			 DLL_CLK_EMC_DLL_CLK_DIVISOR_MASK);
->> +	dll_setting |= emc_clk_src << DLL_CLK_EMC_DLL_CLK_SRC_SHIFT;
->> +	dll_setting |= emc_clk_div << DLL_CLK_EMC_DLL_CLK_DIVISOR_SHIFT;
->> +
->> +	dll_setting &= ~DLL_CLK_EMC_DLL_DDLL_CLK_SEL_MASK;
->> +	if (emc_clk_src == EMC_CLK_SOURCE_PLLMB_LJ)
->> +		dll_setting |= (PLLM_VCOB <<
->> +				DLL_CLK_EMC_DLL_DDLL_CLK_SEL_SHIFT);
->> +	else if (emc_clk_src == EMC_CLK_SOURCE_PLLM_LJ)
->> +		dll_setting |= (PLLM_VCOA <<
->> +				DLL_CLK_EMC_DLL_DDLL_CLK_SEL_SHIFT);
->> +	else
->> +		dll_setting |= (EMC_DLL_SWITCH_OUT <<
->> +				DLL_CLK_EMC_DLL_DDLL_CLK_SEL_SHIFT);
->> +
->> +	tegra210_clk_emc_dll_update_setting(dll_setting);
->> +
->> +	if (emc->next->clk_out_enb_x_0_clk_enb_emc_dll)
->> +		tegra210_clk_emc_dll_enable(true);
->> +	else
->> +		tegra210_clk_emc_dll_enable(false);
-> 
-> Isn't something like fence_udelay(1) needed after touching clk registers?
-> 
+Hi Sakari,
 
-Won't be better to move this whole function into clk/tegra?
+On Tue, Apr 14, 2020 at 11:55:54PM +0300, Laurent Pinchart wrote:
+> On Tue, Apr 07, 2020 at 06:14:01PM +0300, Sakari Ailus wrote:
+> > On Tue, Apr 07, 2020 at 03:21:06PM +0300, Laurent Pinchart wrote:
+> >> On Tue, Apr 07, 2020 at 09:22:41AM +0300, Sakari Ailus wrote:
+> >>> On Mon, Apr 06, 2020 at 08:32:34PM +0300, Laurent Pinchart wrote:
+> >>>> On Mon, Apr 06, 2020 at 07:51:08PM +0300, Sakari Ailus wrote:
+> >>>>> On Mon, Apr 06, 2020 at 05:42:38PM +0100, Lad Prabhakar wrote:
+> >>>>>> Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
+> >>>>>> as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
+> >>>>>> 24MHz. So instead making clock-frequency as dt-property just let the
+> >>>>>> driver enforce the required clock frequency.
+> >>>>> 
+> >>>>> Even if some current systems where the driver is used are using 24 MHz
+> >>>>> clock, that doesn't mean there wouldn't be systems using another frequency
+> >>>>> that the driver does not support right now.
+> >>>>> 
+> >>>>> The driver really should not set the frequency unless it gets it from DT,
+> >>>>> but I think the preferred means is to use assigned-clock-rates instead, and
+> >>>>> not to involve the driver with setting the frequency.
+> >>>>> 
+> >>>>> Otherwise we'll make it impossible to support other frequencies, at least
+> >>>>> without more or less random defaults.
+> >>>> 
+> >>>> We're running in circles here.
+> >>>> 
+> >>>> As the driver only supports 24MHz at the moment, the frequency should be
+> >>>> set by the driver, as it's a driver limitation. We can then work on
+> >>>> supporting additional frequencies, which will require DT to provide a
+> >>>> list of supported frequencies for the system, but that can be done on
+> >>>> top.
+> >>> 
+> >>> I guess it would be possible to use different external clock frequencies on
+> >>> a sensor in a given system but that seems to be a bit far fetched, to the
+> >>> extent I've never seen anyone doing that in practice.
+> >>> 
+> >>> Originally, the driver set the frequency based on the clock-frequency
+> >>> property. If we're removing that but use a fixed frequency instead, then
+> >>> how is that going to work going forward when someone adds support for other
+> >>> frequencies in the driver and has a system requiring that, while there are
+> >>> some other platforms relying on the driver setting a particular frequency?
+> >> 
+> >> The standard property for this is link-frequencies, not clock-frequency.
+> >> Deprecating clock-frequency now paves the way to use the standard
+> >> property later when/if someone implements support for additional
+> >> frequencies.
+> > 
+> > The external clock frequency and link frequency are different indeed, but
+> > they are related. The link frequency has been selected in a way that it is
+> > possible to generate that exact frequency using the chosen external clock
+> > frequency. If you change the external clock frequency, chances are good
+> > there is no PLL configuration to generate that link frequency.
+> 
+> But aren't we supposed to pick the clock frequency based on the link
+> frequency specified in DT ?
+> 
+> In any case, this policy needs to be carefully documented.
 
-It feels a bit dirty that a raw clk pointer is passed to the EMC code.
-I'd factor all the clk functions into clk/tegra to have a clean
-separation of the code.
+And by this I mean in a central place, not leaving it to individual
+bindings.
+
+Maxime, we've previously discussed this issue privately on IRC, what's
+your opinion ?
+
+> >>> Although, if you're saying that this driver only needs to work with DT that
+> >>> comes with the kernel and you don't care about DT binary compatibility,
+> >>> this would be fine.
+> >> 
+> >> I believe this series to not break backward compatibility, as the driver
+> >> only works with a 24MHz clock, so I expect all DTs to specify that.
+> > 
+> > What you're still doing here is defining the DT bindings based on the
+> > current driver implementation, not the device properties.
+> 
+> Quite the contrary, the device doesn't require any particular input
+> clock frequency, so we're removing that from DT :-) Specifying the clock
+> frequency in DT is in my opinion a manual workaround for not computing
+> it at runtime based on the desired link frequency, while the link
+> frequency is a property of the system as it specifies the range of link
+> frequencies that are safe to use from an EMC point of view.
+
+-- 
+Regards,
+
+Laurent Pinchart
