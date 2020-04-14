@@ -2,63 +2,64 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 598A5C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 03:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F96FC2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 03:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3280320644
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 03:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B5052075E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 03:33:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F03OGL1N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kwDIRG+v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404758AbgDNDdf (ORCPT
+        id S2404768AbgDNDdo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Apr 2020 23:33:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49738 "EHLO
+        Mon, 13 Apr 2020 23:33:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404756AbgDNDdf (ORCPT
+        by vger.kernel.org with ESMTP id S2404787AbgDNDdn (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Apr 2020 23:33:35 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B890BC0A3BDC;
-        Mon, 13 Apr 2020 20:33:33 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id x26so4233139pgc.10;
-        Mon, 13 Apr 2020 20:33:33 -0700 (PDT)
+        Mon, 13 Apr 2020 23:33:43 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDDD2C0A3BDC;
+        Mon, 13 Apr 2020 20:33:41 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id np9so4719553pjb.4;
+        Mon, 13 Apr 2020 20:33:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=e1I6YF+VJ57pEb1USvw1okp6yWunIg/IfHp9i2omTR0=;
-        b=F03OGL1NGLi1sgHbYBhEZNMP48siZFUj5XoT+Gyy9eeLJUCt7IjIoBFDkuohdy9um6
-         Z+eIV1Nnhl5f/Rnlh5TPju7t9FiEA9CEwSMr0fUw7T8C08qLMecp5YHhmb+q+y1NcCHu
-         S/50B+TqnCtl8F7vQ+Fv8B5iYXiD7en+BS0d+++VodBkLe/CUE3TEtGoXMqt6gToago6
-         Zdz2Xew+u5bc1tPNyd+sa8quuu+h2oOjv3uE5/VP5LOWd3PraeYiwvvTU1NHYusGc9wU
-         3yrJ0nFClaPnXsKw8GHk4nD7XG3iPHXOYCQdm8+g2xPiy7M3IK+QwJXW0Zg68INKG+OR
-         KvyA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Yq44qY1NsSkf+l5SZ0WYBQFjUQwT8TcW89f6+pzAZf0=;
+        b=kwDIRG+vmkVlvGrG1CoLDm24up96GCmQRj4ZFfkQaH2q+aDsglgI49KYLTDtm85vEO
+         Pe4tpGT/iWhgc4ZT/4Ndr5v/uqvcM3+F0R63SWHYxumDHWcWDsv/RNo3IxMpqJ4r98zK
+         kYlFkYmZ//Fk2akid77aryGmbBKlOonkGJFdL2b7oPPTkzu1BzJXpf/kcGWQqjNUW5fH
+         GaACGkjcqqVIDiJIZFUUoqkYD4q0TG2dPq5e8rn7FPqPu29F2FQcRcmlHzDbzMH0P9Yd
+         m4RfFEWkoYglWjpqGFhBrdeaLMoT33SSkFmMHap1tFZwOISDW2x2TLl1UmrZA/bNqeWu
+         qSLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=e1I6YF+VJ57pEb1USvw1okp6yWunIg/IfHp9i2omTR0=;
-        b=g+GGFCZXEPEoV4Y9UtAlwPJOBBkMGI0mZaKcLXqvp/68jHo7EvWL8KyM5PHaZ2bz+X
-         4ippF3SjZuTz25RLq1ywEuKLGduqLIOFm4LKDC1tkoNGxu0LbjfUiV3nO59VnHo+/ggd
-         iUDtuuAR34sNNhBmuCwbRqN/ppBKUEu7FUm6n5Ls93h2U9n+Fxl/AqoJ+imKHRHmqC92
-         nJKbX7sfVS4zof/4yMi9OEBHUNPkslUPaZKmg99hhdFwlPxL3qp/nl8m2paXJbJggWd7
-         r8rep5+3Gy+f0mh9no8DgZ0Zw8fdUADXHDEoTaq9R+n2pFW5chi+vJvsQ4kP6YZ9yRqb
-         60ig==
-X-Gm-Message-State: AGi0PuZy9b7TlOOIqsf83itlWGQveakEmKbBVkb4/g6IiwgQo9lCql0o
-        /MEveZhQ865IlK0VaNqP1Lc=
-X-Google-Smtp-Source: APiQypIFuvcgiaYOp3jBFttcXV/yqL76ouid7CoBnHHhWLQBwaNNFqlAJAiN6wOhME3K7vZQuxGJWw==
-X-Received: by 2002:aa7:9f0e:: with SMTP id g14mr297123pfr.75.1586835213326;
-        Mon, 13 Apr 2020 20:33:33 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Yq44qY1NsSkf+l5SZ0WYBQFjUQwT8TcW89f6+pzAZf0=;
+        b=tlq02a1UHDsdtSPEnrxkzLEhsspRWwge2cGct/gyxJodBOXwNqizBeyDw9KbaCUVzx
+         frgTFMRLt1LuoL5LeQl8s7kbatp7LBvHDy818U8+CESuV7s24AQ1ctwtWgOtriBGBcPy
+         UDq7kZYnRf9OC3gmBXELahqvMcaN1E2xz0yX3cr/LxGdlSv+++2ti/yFQzqZD4AR2hUO
+         41nveKNPTAlUFWHerzN08elBoBehO46nDGcgzPZcXSvJ8EDztqtLJ43SQquIcdmNn4/J
+         pWo+KKYrnMdi8ayWiTqrRio43PLKwiov9iETskXqv2TQIbgNY7JNhXgp1MPItNtQ6Bzn
+         pP5g==
+X-Gm-Message-State: AGi0Pub4fpQe3rhpdrkAfrew0P3pTN8WDqKRLlr9S3L+DwH/MqBxr4mu
+        VwXHffVUyYUm2UWHgahZDFc=
+X-Google-Smtp-Source: APiQypLT8IBv2sVuESWM1xz1uKyLRVuCRs6A7sU13393F0Zqevl4IhDYTISaV/yg8T2/4QqCWjv83g==
+X-Received: by 2002:a17:90a:3287:: with SMTP id l7mr1059512pjb.126.1586835221520;
+        Mon, 13 Apr 2020 20:33:41 -0700 (PDT)
 Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id 140sm5612440pge.49.2020.04.13.20.33.29
+        by smtp.gmail.com with ESMTPSA id 140sm5612440pge.49.2020.04.13.20.33.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 20:33:32 -0700 (PDT)
+        Mon, 13 Apr 2020 20:33:40 -0700 (PDT)
 From:   zhang.lyra@gmail.com
 To:     Stephen Boyd <sboyd@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -69,10 +70,12 @@ Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         Baolin Wang <baolin.wang7@gmail.com>,
         Chunyan Zhang <zhang.lyra@gmail.com>,
         Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: [PATCH v2 0/4] add mipi_csi_xx gate clocks for SC9863A
-Date:   Tue, 14 Apr 2020 11:33:21 +0800
-Message-Id: <20200414033325.26536-1-zhang.lyra@gmail.com>
+Subject: [PATCH v2 2/4] dt-bindings: clk: sprd: add mipi_csi_xx clocks for SC9863A
+Date:   Tue, 14 Apr 2020 11:33:23 +0800
+Message-Id: <20200414033325.26536-3-zhang.lyra@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200414033325.26536-1-zhang.lyra@gmail.com>
+References: <20200414033325.26536-1-zhang.lyra@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -82,27 +85,26 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-mipi_csi_xx clocks are used by camera sensors. These clocks cannot be
-accessed (even read) if their parent gate clock is disabled. So this
-patchset also add a check to parent clocks when reading these gate
-clocks which marked with the specific flag (SPRD_GATE_NON_AON).
+mipi_csi_xx clocks are used by camera sensors.
 
-changes from v1:
-* added Rob's acked-by;
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Chunyan Zhang (4):
-  clk: sprd: check its parent status before reading gate clock
-  dt-bindings: clk: sprd: add mipi_csi_xx clocks for SC9863A
-  clk: sprd: add dt-bindings include for mipi_csi_xx clocks
-  clk: sprd: add mipi_csi_xx gate clocks
-
- .../bindings/clock/sprd,sc9863a-clk.yaml      |  1 +
- drivers/clk/sprd/gate.c                       |  7 ++++
- drivers/clk/sprd/gate.h                       |  9 ++++++
- drivers/clk/sprd/sc9863a-clk.c                | 32 +++++++++++++++++++
- include/dt-bindings/clock/sprd,sc9863a-clk.h  |  5 +++
- 5 files changed, 54 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+index bb3a78d8105e..87e8349a539a 100644
+--- a/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
++++ b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+@@ -28,6 +28,7 @@ properties:
+       - sprd,sc9863a-rpll
+       - sprd,sc9863a-dpll
+       - sprd,sc9863a-mm-gate
++      - sprd,sc9863a-mm-clk
+       - sprd,sc9863a-apapb-gate
+ 
+   clocks:
 -- 
 2.20.1
 
