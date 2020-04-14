@@ -4,92 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E120C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E2AC352BE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CDAD2074D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC512074D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586898244;
-	bh=IEPA8EAo6GEHtO3JgqEzYGhe3BBUs+SZRAd1fHALJxM=;
+	s=default; t=1586898362;
+	bh=z0zYO2pHSoLKqTeX1dBRt486SmVD82CBD9beqhsEdEc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dkdokrzwdrHWs93IFzu3ZR+GEMSoqt8smRScJb99Bh+P7Z5r0TX2/HlUaxFTPUEW3
-	 8HOI7Wg9nWYmGYljZzv3D8PPAK6mCDxWf91RyRsNwB3su8fJxofufGsOKsFV1yCilN
-	 U1VLLG6YwfcB2J/YLf9S6zt8Pltk0otfBNqKvQ5U=
+	b=XhoZCZq/rblX7hLu/a1TUnXPOjVZLlunBXHU77DZZ7u6EokXkrMMkVDSUCfv/UBn1
+	 MLSvm5MINC08AfKkuyveA+KDCPWkNNLmSH82enlGS2Fd5QUIPa7I8ROxOJg+PVUV2+
+	 3VwPSsszaUtF8k/9ZaHkNY2zGoDnBhERvyd5S0Uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633624AbgDNVD6 (ORCPT
+        id S2633682AbgDNVF4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 17:03:58 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43257 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2633589AbgDNVCV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 17:02:21 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g14so1170735otg.10;
-        Tue, 14 Apr 2020 14:02:21 -0700 (PDT)
+        Tue, 14 Apr 2020 17:05:56 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:46542 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2633551AbgDNVBc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 17:01:32 -0400
+Received: by mail-oi1-f194.google.com with SMTP id q204so11682878oia.13;
+        Tue, 14 Apr 2020 14:01:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9MY/dlKLTuZil2riiVa0/9Eb/2zBtz5HqkHealjLMWs=;
-        b=T51FbA6ftj/Hfoje5hSGAL015T1DIIeHfM6T3BPYazymT6bem55aEHxQzAkbBIkQ9s
-         iCrwXkJZg2joMX3Ftrdks02rVdhg0m6afZ6tzyxYxGU5nI649SgZuO/6Xic1gUS5W94O
-         HVtvb0HP0KArgdEh4p1DMTopXQFr5Yx0ZeDZHJWKmwEBlSP7EqHuybewUp/Q0XtxNNbB
-         /y4qrT/9yrWK2bPxRyKFonNuZmMLDMBhLCYMatd3R+1TQbL8ygzCCYU41dBx3YoiJqRV
-         rWYNTtFpNVKnop1PINVweFWqwMIFRW4e2IjOA4c3bzUF7jC5PXIvnvCVobYGOSzofUjU
-         MPTQ==
-X-Gm-Message-State: AGi0PuY4NfYAlxzUX269ruac54WoqL3zi5HN8c3QuSAUiKDujFoXvfgE
-        9bFJYSNcEUYYGgOllY9Log==
-X-Google-Smtp-Source: APiQypLZU+zH1H3PmR7mpM0KydZcPZZRdURdwW0Z0j09EtkFyflB/iPfFy/cR2DtAw2h0lMojnFh7Q==
-X-Received: by 2002:a05:6830:1305:: with SMTP id p5mr18706002otq.345.1586898140783;
-        Tue, 14 Apr 2020 14:02:20 -0700 (PDT)
+        bh=/4q9z9CtbQoeUL4sjp69CWFYfpcu9GjxICIs0C/YRTE=;
+        b=hzxH4wZVRTjkuuoll0KwHDeNBQ2dAcHr4nIvt4rCg1eaWwsfiPuJ8Ikqs6TJ7Ratub
+         /5afsp9RucGpvQ3+WIGB6rU0t8GJNF2Ybivew3vFuCDDaNTWdXgWC14yqwhyA3O/wrdk
+         ZFTPRuZBhGQd8P3kJytli1BRYN02XIiUNKk4u1CPdWZmRBLEyxfSlTCF7H4WlLostI96
+         DLtXH17Fu9nM2htCKl8aptLHyeOQS+YqG/CP12AUFwBD/PTRzGA4bIWFyB9XFQoSg0Cu
+         C/39o5zWyjEew+TcmH+/bzloj2/laAQfCwvfdwgVJ3v/i5B7lV75tA+j7qUIeno4FWTz
+         FMKQ==
+X-Gm-Message-State: AGi0PuaQGZTEW43Hb0GzSN8cbYlHzax2wK1+e/5ymHO/e53kDnmJnv+2
+        KJi7q+lAyImkdIvro4YkRg==
+X-Google-Smtp-Source: APiQypI6YZD7oeKx39WNYQypRqxQiWc8g9J/Skpj6aGznKhkptIeKHcBjqvf0DXjF7vScaZA6pawWw==
+X-Received: by 2002:aca:4286:: with SMTP id p128mr16319888oia.29.1586898084666;
+        Tue, 14 Apr 2020 14:01:24 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a3sm5793648oti.27.2020.04.14.14.02.19
+        by smtp.gmail.com with ESMTPSA id g12sm1166031otk.71.2020.04.14.14.01.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 14:02:19 -0700 (PDT)
-Received: (nullmailer pid 4807 invoked by uid 1000);
-        Tue, 14 Apr 2020 21:02:18 -0000
-Date:   Tue, 14 Apr 2020 16:02:18 -0500
+        Tue, 14 Apr 2020 14:01:23 -0700 (PDT)
+Received: (nullmailer pid 3300 invoked by uid 1000);
+        Tue, 14 Apr 2020 21:01:22 -0000
+Date:   Tue, 14 Apr 2020 16:01:22 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Matthias Brugger <mbrugger@suse.com>, netdev@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 24/33] docs: dt: fix a broken reference for a file
- converted to json
-Message-ID: <20200414210218.GA4755@bogus>
+Subject: Re: [PATCH v2 23/33] docs: dt: qcom,dwc3.txt: fix cross-reference
+ for a converted file
+Message-ID: <20200414210122.GA3250@bogus>
 References: <cover.1586881715.git.mchehab+huawei@kernel.org>
- <9b1603e254d39c9607bfedefeedaafd2c44aeb19.1586881715.git.mchehab+huawei@kernel.org>
+ <a055c564f2a79aa748064329d938db8b3c8edd58.1586881715.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9b1603e254d39c9607bfedefeedaafd2c44aeb19.1586881715.git.mchehab+huawei@kernel.org>
+In-Reply-To: <a055c564f2a79aa748064329d938db8b3c8edd58.1586881715.git.mchehab+huawei@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 14 Apr 2020 18:48:50 +0200, Mauro Carvalho Chehab wrote:
-> Changeset 32ced09d7903 ("dt-bindings: serial: Convert slave-device bindings to json-schema")
-> moved a binding to json and updated the links.
+On Tue, 14 Apr 2020 18:48:49 +0200, Mauro Carvalho Chehab wrote:
+> The qcom-qusb2-phy.txt file was converted and renamed to yaml.
+> Update cross-reference accordingly.
 > 
-> Yet, one link was not changed, due to a merge conflict.
-> 
-> Update this one too.
-> 
-> Fixes: 32ced09d7903 ("dt-bindings: serial: Convert slave-device bindings to json-schema")
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Fixes: 8ce65d8d38df ("dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bindings to yaml")
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->  Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/usb/qcom,dwc3.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 
 Applied, thanks.
