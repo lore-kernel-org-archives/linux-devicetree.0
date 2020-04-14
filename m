@@ -2,268 +2,175 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DECCC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 14:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A5AC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 14:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 062142076B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 14:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAA2A2076D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 14:45:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="EBzaK+3S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dH1SVmnb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404314AbgDNOod (ORCPT
+        id S2404543AbgDNOpb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 10:44:33 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:37010 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2391053AbgDNOoK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 10:44:10 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id EA6994047D;
-        Tue, 14 Apr 2020 14:44:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1586875449; bh=fOFAIwfV92Nxl+N2d1KwfN84aJoQPKpCZ6SCsZMgqQM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EBzaK+3SOYURUIXN7oZK4SO48aMksclGaqUwH8mu10O6Hve8AWUjpseUvWt0oo9Kk
-         I5Cw24Ot0RcIVlAXKtg5nq5MsNrqCBxi/I5ALCaw/DrjHs/jrpTi6k4CCuGkTr0LVO
-         2jXp3bwl+VL5PAa8Z9Lb7aicnOR0hrPcA1X12DtI1KdWRfVc66fUu+oMCfACy30gSk
-         gUVrgkncM0TBu0jPMbKSft0uhmU65f3OPLa5qdSwz5G7WXGcM/5+9xt1Quj7kyI365
-         Dia8H2nq2z95M3vfzKFriy4M8B77Guzyx3wgHoAgC6tlL9POrFWs+bLL0WGk451AZC
-         66mdyG7GRpz2g==
-Received: from paltsev-e7480.internal.synopsys.com (unknown [10.225.48.89])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 39016A0062;
-        Tue, 14 Apr 2020 14:44:06 +0000 (UTC)
-From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-To:     dri-devel@lists.freedesktop.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH v2 1/2] DRM: ARC: add HDMI 2.0 TX encoder support
-Date:   Tue, 14 Apr 2020 17:44:01 +0300
-Message-Id: <20200414144402.27643-2-Eugeniy.Paltsev@synopsys.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200414144402.27643-1-Eugeniy.Paltsev@synopsys.com>
-References: <20200414144402.27643-1-Eugeniy.Paltsev@synopsys.com>
+        Tue, 14 Apr 2020 10:45:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404511AbgDNOp3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 10:45:29 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B78BC061A0C;
+        Tue, 14 Apr 2020 07:45:29 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id o81so7667799wmo.2;
+        Tue, 14 Apr 2020 07:45:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=S5LW6D/JcvIQbts8mNWNWJg+lFlcHdJhPjdhCsJJX+o=;
+        b=dH1SVmnbLSEtE5Nag8z/s8FzhNR23uclW3TSHMu8V+do40TBTY1Z8sGsJUANArQbG3
+         2V334Fe5n+zCW5Hq023W8cud2/enlRi6ZvMDhwNm96BF4r2uKn1N2DnHO8pa/cjI834n
+         2WIZeqtYuv8pjKHOsYXEk3KH+SCw+2VshFn3QDBtcLuH4IBK6v+9UfvUbY8WE3hZxIzN
+         dIGBwP5hMJbHBT4xwplhv25+Aqwlse4IT8/+lDPi4td0xIVZb2vt7C16AV9n0Igl2I9O
+         Vxwbyw/uRWet/5A9UDnFutVGGet1EIvbShUHBOXlRzk2+pluD27vgscnwFfbnMZwIqeW
+         iJIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=S5LW6D/JcvIQbts8mNWNWJg+lFlcHdJhPjdhCsJJX+o=;
+        b=TFTEpOCdqCdBf3yYM/E3vowhwUIuxL6LPKakrnWLpYlOdAUU4bve5vCJ3yjyKYiEDT
+         NA753jKCQT3T6xmojmq01Qydth2Pv3YVJZBehDqfzh3IRgcgOzp0CHaSXxS4iqqC7Q9U
+         gySQK7893jhoT9w+HIzYh1Dvg5/pDAe4ht3pOvpAwXj3giXv6XYz8S7N4740ilKpaEJH
+         /K0XBLRf828WNtREWnryIMi7dlTJXsWxvDbaSH5wiRZJneCumJvZdfHSW7vcMtiZzRK+
+         fGh9Wa4Mbp5ducrGu81kqljq5xAaCgeHmI9uEQlvil6W1G3onwEWf+XqR+7XDyCIasdy
+         5TAQ==
+X-Gm-Message-State: AGi0PubiDkz1XyOZ3GF6iKF+Op2bW9vgobfHaMPNKgW353V7x8CQU5wH
+        ZXj8kH8ATCqa8gf2qxT9mWo=
+X-Google-Smtp-Source: APiQypJydRRmPqeZPePM/ORVt+TFEv+iAXAOLY9ehjv1P9T718jiOAQJnqvWZKHsT/FYkPvGrPKKsQ==
+X-Received: by 2002:a05:600c:2341:: with SMTP id 1mr175764wmq.153.1586875527952;
+        Tue, 14 Apr 2020 07:45:27 -0700 (PDT)
+Received: from localhost (pD9E51D62.dip0.t-ipconnect.de. [217.229.29.98])
+        by smtp.gmail.com with ESMTPSA id f79sm18139610wme.32.2020.04.14.07.45.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 07:45:26 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 16:45:25 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 09/14] memory: tegra: Add EMC scaling support code for
+ Tegra210
+Message-ID: <20200414144525.GI3593749@ulmo>
+References: <20200409175238.3586487-1-thierry.reding@gmail.com>
+ <20200409175238.3586487-10-thierry.reding@gmail.com>
+ <7b2f8a7c-94f1-08d0-b0ce-c61f4eb0a436@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="VaKJWhUROU/xPxjb"
+Content-Disposition: inline
+In-Reply-To: <7b2f8a7c-94f1-08d0-b0ce-c61f4eb0a436@gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Synopsys ARC SoCs (like HSDK4xD) include on-chip DesignWare HDMI
-encoders. Support them with a platform driver to provide platform glue
-data to the dw-hdmi driver.
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
- MAINTAINERS                       |   6 ++
- drivers/gpu/drm/Makefile          |   2 +-
- drivers/gpu/drm/arc/Kconfig       |   7 ++
- drivers/gpu/drm/arc/Makefile      |   1 +
- drivers/gpu/drm/arc/arc-dw-hdmi.c | 126 ++++++++++++++++++++++++++++++
- 5 files changed, 141 insertions(+), 1 deletion(-)
- create mode 100644 drivers/gpu/drm/arc/arc-dw-hdmi.c
+--VaKJWhUROU/xPxjb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a6fbdf354d34..2aaed1190370 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1258,6 +1258,12 @@ S:	Supported
- F:	drivers/gpu/drm/arc/
- F:	Documentation/devicetree/bindings/display/snps,arcpgu.txt
- 
-+ARC DW HDMI DRIVER
-+M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-+S:	Supported
-+F:	drivers/gpu/drm/arc/arc-dw-hdmi.c
-+F:	Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.yaml
-+
- ARCNET NETWORK LAYER
- M:	Michael Grzeschik <m.grzeschik@pengutronix.de>
- L:	netdev@vger.kernel.org
-diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-index 6493088a0fdd..5b0bcf7f45cd 100644
---- a/drivers/gpu/drm/Makefile
-+++ b/drivers/gpu/drm/Makefile
-@@ -109,7 +109,7 @@ obj-y			+= panel/
- obj-y			+= bridge/
- obj-$(CONFIG_DRM_FSL_DCU) += fsl-dcu/
- obj-$(CONFIG_DRM_ETNAVIV) += etnaviv/
--obj-$(CONFIG_DRM_ARCPGU)+= arc/
-+obj-y			+= arc/
- obj-y			+= hisilicon/
- obj-$(CONFIG_DRM_ZTE)	+= zte/
- obj-$(CONFIG_DRM_MXSFB)	+= mxsfb/
-diff --git a/drivers/gpu/drm/arc/Kconfig b/drivers/gpu/drm/arc/Kconfig
-index e8f3d63e0b91..baec9d2a4fba 100644
---- a/drivers/gpu/drm/arc/Kconfig
-+++ b/drivers/gpu/drm/arc/Kconfig
-@@ -8,3 +8,10 @@ config DRM_ARCPGU
- 	  Choose this option if you have an ARC PGU controller.
- 
- 	  If M is selected the module will be called arcpgu.
-+
-+config DRM_ARC_DW_HDMI
-+	tristate "ARC DW HDMI"
-+	depends on DRM && OF
-+	select DRM_DW_HDMI
-+	help
-+	  Synopsys DW HDMI driver for various ARC development boards
-diff --git a/drivers/gpu/drm/arc/Makefile b/drivers/gpu/drm/arc/Makefile
-index c7028b7427b3..7a156d8c2c3c 100644
---- a/drivers/gpu/drm/arc/Makefile
-+++ b/drivers/gpu/drm/arc/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- arcpgu-y := arcpgu_crtc.o arcpgu_hdmi.o arcpgu_sim.o arcpgu_drv.o
- obj-$(CONFIG_DRM_ARCPGU) += arcpgu.o
-+obj-$(CONFIG_DRM_ARC_DW_HDMI) += arc-dw-hdmi.o
-diff --git a/drivers/gpu/drm/arc/arc-dw-hdmi.c b/drivers/gpu/drm/arc/arc-dw-hdmi.c
-new file mode 100644
-index 000000000000..4869dd668a51
---- /dev/null
-+++ b/drivers/gpu/drm/arc/arc-dw-hdmi.c
-@@ -0,0 +1,126 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// Synopsys DW HDMI driver for various ARC development boards
-+//
-+// Copyright (C) 2020 Synopsys
-+// Author: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-+
-+#include <linux/component.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <drm/bridge/dw_hdmi.h>
-+#include <drm/drm_crtc_helper.h>
-+#include <drm/drm_edid.h>
-+#include <drm/drm_encoder_slave.h>
-+#include <drm/drm_of.h>
-+
-+static const struct dw_hdmi_mpll_config snps_hdmi_mpll_cfg[] = {
-+	{
-+		27000000, {
-+			{ 0x00B3, 0x0000 },
-+			{ 0x00B3, 0x0000 },
-+			{ 0x00B3, 0x0000 }
-+		},
-+	}, {
-+		74250000, {
-+			{ 0x0072, 0x0001},
-+			{ 0x0072, 0x0001},
-+			{ 0x0072, 0x0001}
-+		},
-+	}, {
-+		148500000, {
-+			{ 0x0051, 0x0002},
-+			{ 0x0051, 0x0002},
-+			{ 0x0051, 0x0002}
-+		},
-+	}, {
-+		~0UL, {
-+			{ 0x00B3, 0x0000 },
-+			{ 0x00B3, 0x0000 },
-+			{ 0x00B3, 0x0000 },
-+		},
-+	}
-+};
-+
-+static const struct dw_hdmi_curr_ctrl snps_hdmi_cur_ctr[] = {
-+	/* pixelclk    bpp8    bpp10   bpp12 */
-+	{ 27000000,  { 0x0000, 0x0000, 0x0000 }, },
-+	{ 74250000,  { 0x0008, 0x0008, 0x0008 }, },
-+	{ 148500000, { 0x001b, 0x001b, 0x001b }, },
-+	{ ~0UL,      { 0x0000, 0x0000, 0x0000 }, }
-+};
-+
-+
-+static const struct dw_hdmi_phy_config snps_hdmi_phy_config[] = {
-+	/* pixelclk   symbol  term    vlev */
-+	{ 27000000,   0x8009, 0x0004, 0x0232},
-+	{ 74250000,   0x8009, 0x0004, 0x0232},
-+	{ 148500000,  0x8009, 0x0004, 0x0232},
-+	{ ~0UL,       0x8009, 0x0004, 0x0232}
-+};
-+
-+static enum drm_mode_status snps_dw_hdmi_mode_valid(struct drm_connector *con,
-+						    const struct drm_display_mode *mode)
-+{
-+	return MODE_OK;
-+}
-+
-+static struct dw_hdmi_plat_data snps_dw_hdmi_drv_data = {
-+	.mpll_cfg   = snps_hdmi_mpll_cfg,
-+	.cur_ctr    = snps_hdmi_cur_ctr,
-+	.phy_config = snps_hdmi_phy_config,
-+	.mode_valid = snps_dw_hdmi_mode_valid,
-+};
-+
-+static const struct of_device_id snps_dw_hdmi_dt_ids[] = {
-+	{
-+		.compatible = "snps,dw-hdmi-hsdk",
-+		.data = &snps_dw_hdmi_drv_data
-+	}, { /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, snps_dw_hdmi_dt_ids);
-+
-+static int snps_dw_hdmi_probe(struct platform_device *pdev)
-+{
-+	const struct dw_hdmi_plat_data *plat_data;
-+	const struct of_device_id *match;
-+	struct dw_hdmi *hdmi;
-+
-+	if (!pdev->dev.of_node)
-+		return -ENODEV;
-+
-+	match = of_match_node(snps_dw_hdmi_dt_ids, pdev->dev.of_node);
-+	plat_data = match->data;
-+
-+	hdmi = dw_hdmi_probe(pdev, plat_data);
-+	if (IS_ERR(hdmi))
-+		return PTR_ERR(hdmi);
-+
-+	platform_set_drvdata(pdev, hdmi);
-+
-+	return 0;
-+}
-+
-+static int snps_dw_hdmi_remove(struct platform_device *pdev)
-+{
-+	struct dw_hdmi *hdmi = platform_get_drvdata(pdev);
-+
-+	dw_hdmi_remove(hdmi);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver snps_dw_hdmi_platform_driver = {
-+	.probe  = snps_dw_hdmi_probe,
-+	.remove = snps_dw_hdmi_remove,
-+	.driver = {
-+		.name = KBUILD_MODNAME,
-+		.of_match_table = snps_dw_hdmi_dt_ids,
-+	},
-+};
-+module_platform_driver(snps_dw_hdmi_platform_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("ARC specific DW-HDMI driver extension");
-+MODULE_AUTHOR("Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>");
--- 
-2.21.1
+On Thu, Apr 09, 2020 at 10:00:13PM +0300, Dmitry Osipenko wrote:
+> 09.04.2020 20:52, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> ...
+> > +static void tegra210_emc_debugfs_init(struct tegra210_emc *emc)
+> > +{
+> > +	struct device *dev =3D emc->dev;
+> > +	unsigned int i;
+> > +	int err;
+> > +
+> > +	emc->debugfs.min_rate =3D ULONG_MAX;
+> > +	emc->debugfs.max_rate =3D 0;
+> > +
+> > +	for (i =3D 0; i < emc->num_timings; i++) {
+> > +		if (emc->timings[i].rate * 1000UL < emc->debugfs.min_rate)
+> > +			emc->debugfs.min_rate =3D emc->timings[i].rate * 1000UL;
+> > +
+> > +		if (emc->timings[i].rate * 1000UL > emc->debugfs.max_rate)
+> > +			emc->debugfs.max_rate =3D emc->timings[i].rate * 1000UL;
+> > +	}
+> > +
+> > +	if (!emc->num_timings) {
+> > +		emc->debugfs.min_rate =3D clk_get_rate(emc->clk);
+> > +		emc->debugfs.max_rate =3D emc->debugfs.min_rate;
+> > +	}
+> > +
+> > +	err =3D clk_set_rate_range(emc->clk, emc->debugfs.min_rate,
+> > +				 emc->debugfs.max_rate);
+> > +	if (err < 0) {
+> > +		dev_err(dev, "failed to set rate range [%lu-%lu] for %pC\n",
+> > +			emc->debugfs.min_rate, emc->debugfs.max_rate,
+> > +			emc->clk);
+> > +		return;
+> > +	}
+> > +
+> > +	emc->debugfs.root =3D debugfs_create_dir("emc", NULL);
+> > +	if (!emc->debugfs.root) {
+> > +		dev_err(dev, "failed to create debugfs directory\n");
+> > +		return;
+> > +	}
+> > +
+> > +	debugfs_create_file("available_rates", S_IRUGO, emc->debugfs.root, em=
+c,
+> > +			    &tegra210_emc_debug_available_rates_fops);
+> > +	debugfs_create_file("min_rate", S_IRUGO | S_IWUSR, emc->debugfs.root,
+> > +			    emc, &tegra210_emc_debug_min_rate_fops);
+> > +	debugfs_create_file("max_rate", S_IRUGO | S_IWUSR, emc->debugfs.root,
+> > +			    emc, &tegra210_emc_debug_max_rate_fops);
+>=20
+> I assume you used the checkpatch before sending the patches, no?
 
+I have a pre-commit hook that runs checkpatch, but for some reason it
+was disabled. Fixed these to be numeric now.
+
+> I sent out a patch recently to make the permissions readable, please
+> take a look if you haven't seen it yet.
+>=20
+> https://patchwork.ozlabs.org/patch/1254301/
+
+I've applied this now.
+
+Thierry
+
+--VaKJWhUROU/xPxjb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6VzIUACgkQ3SOs138+
+s6FpRRAAk0TEKZBPjG+SsTHg1xIN9BMOUI9LqXdMGnagdaP0yEi/mTRNkmrsImxZ
+awLe6BQXHKI9FGW/mrjyB1d3Ly+FQSerx04N5iwg6imigOmaTXRyuy4gXuEH6+D1
+R4U84Jnx74lntZsS3aqcg/P1gNborKoirVl1xkcvn/mJ4K+BhFBq3NqbgyKJ7xGa
+51izgm0mPVSldljky86GBwHfYiyirLXF4K6+Qg3Is1m40p01z3jhrUGYXtnD0cOr
+29VnWLSpJs+Qrzs0Fy9Q66C3h5f+ZeshjDCdQJorVDbaiXp8+7YIUW1LPCZcwUrI
+tCBxKuzyi7KpFpZmno/li8nOEv+ByqEcg3fF0SrDton95JKMuK/WplZJsVisQ/lN
+8SQePeIzU005hN5GwnPfoQVMqLsMqans4M0lh+qRtdzqX4JlH1aBjHsG6UHPcwQb
+7ePg54J49LruLhrDaipx5YMZ+zfRuidiat4l5lxvtgxoKImx2iKXRS+w0X1kNVX5
+byOLywrBi5wNbAz5G4nsCwA67f3JuB+M5m6VA48MoY3NANz4AdRtE3gcsmmgK2Ac
+rM+asAhZyI3p+b1iQujqDdRBE5FvOBFEkS3CwZzZ5kl+wdFTdWPXVDwGYbCKS7NR
+bH9mSiKbX48G/8pq6m4xFteYGr91cstkAwv1o7Km4Pe1vsOZN54=
+=WHMF
+-----END PGP SIGNATURE-----
+
+--VaKJWhUROU/xPxjb--
