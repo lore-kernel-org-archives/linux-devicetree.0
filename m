@@ -2,220 +2,115 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6B0C352BE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 23:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D12C38A2C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 23:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B31B92085B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 23:29:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ld35b5F/"
+	by mail.kernel.org (Postfix) with ESMTP id 07CA72076B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 23:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586907994;
+	bh=4rbyWDgLDZjy6NYYWTZki40ddban1nySvuDdLPadRnA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=U7gPSwA0ffAEBpZqJORglc0QYBN1oKP5E8A01kcNeZI10owgeq2l7NgXT660LiHio
+	 bKDKi60nF+MovVHlnpbwv1s/8Y3Yh8ymvd+KmyxVGoB1VFmv5N619i4VwYSYis6e0Y
+	 foFSNJBMt74APWWerq2I54q4QavQAIR0akSk+L9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392138AbgDNX3q (ORCPT
+        id S2634387AbgDNXqa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 19:29:46 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:51558 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731280AbgDNX3o (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 19:29:44 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A98DFC00DE;
-        Tue, 14 Apr 2020 23:29:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1586906982; bh=tNu4Scr083t5TpR/FgPDRPLMswuTZmLX+MVL6F246l8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ld35b5F/22iSy4ujhnk9XA69Db+XLvF8r5GbDNw98Ky+EapwNFKzH6fWXathYC/sd
-         rpPjVxISeXcG5TnQTtGdyV9gzCDHkmjgz34PUtX4FlLQ4OKUSGFSHGWB1Sg4iy2sbl
-         ujG33FON9BrY8B1ZFAEMrwsIDnDw8XfxYjezBSyha4WU1fPyI9SCuOm6V4y0HAh61b
-         2s0D13KGqKpwCM50sAH96yO0+psKlMkUW4r6s90y8cXWyhat2yCn7Ar/qs5SKn9jXx
-         z2kTa9LlODtCZQZjDFgk3B6iWP8ZzFmRNP5AkQWLLGuv5RUqvhtKVyMk7l8I4lAS6L
-         vVd3Cu7zPminw==
-Received: from paltsev-e7480.internal.synopsys.com (ru20-e7250.internal.synopsys.com [10.225.48.89])
-        by mailhost.synopsys.com (Postfix) with ESMTP id E28A5A0063;
-        Tue, 14 Apr 2020 23:29:38 +0000 (UTC)
-From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-To:     dri-devel@lists.freedesktop.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH v3 2/2] dt-bindings: Document the Synopsys ARC HDMI TX bindings
-Date:   Wed, 15 Apr 2020 02:29:29 +0300
-Message-Id: <20200414232929.22788-3-Eugeniy.Paltsev@synopsys.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200414232929.22788-1-Eugeniy.Paltsev@synopsys.com>
-References: <20200414232929.22788-1-Eugeniy.Paltsev@synopsys.com>
+        Tue, 14 Apr 2020 19:46:30 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40149 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2634364AbgDNXq0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 19:46:26 -0400
+Received: by mail-oi1-f194.google.com with SMTP id t199so8645396oif.7;
+        Tue, 14 Apr 2020 16:46:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8xSRt0kOxv48xywgi4ujHIQh1bkXuUAWN4jdwbwVrmg=;
+        b=hnBwT31oe7gv7p9y5SoUsmhZWJfiWLghVW7jcjF1y1+9UEYxkzeygcDvVnrD/rUsWs
+         0SLiY6W9YlZdWxSOcS2+wXS58wUeY56qbnOuZjzCNsDfLZxc1ZTJfD+edTq92+ehjvU7
+         xaz5a5rEBnzSMIkCZhIA9GTZCoQALoZ9dc6HihF6c4UrLm2klxy5bt0Xc+v1B9vguDJN
+         Q8AxvRAIZXxIZjQtDdGt6QZuMw4J4vb08cpQ4GH6vEjiZsxdsoOQlbeQpzcuTfQAsjTF
+         Lg2LoHNSug7N+e+26aj3Xzry20DEURC9nTCYv4FOYp0FBlkGQ7lPihsAC5NV1exf1nPq
+         D6xQ==
+X-Gm-Message-State: AGi0PuZPJvWevUgff1sQn+o6HCjDGSiyuyL8w9AMU6XMj/gxKw62Rjy4
+        58z4T7O3lLmaoIc/vw9/Ag==
+X-Google-Smtp-Source: APiQypLjJgia8DtwmXlglhQCkIfrCQUjRk7EaaiM7wZQW5xPrKj1csIO6d+59LYkgp2CRhzOkOeC4w==
+X-Received: by 2002:aca:3106:: with SMTP id x6mr5969478oix.94.1586907985808;
+        Tue, 14 Apr 2020 16:46:25 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 76sm5895152otg.68.2020.04.14.16.46.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 16:46:25 -0700 (PDT)
+Received: (nullmailer pid 22578 invoked by uid 1000);
+        Tue, 14 Apr 2020 23:46:23 -0000
+Date:   Tue, 14 Apr 2020 18:46:23 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Leonard Crestez <leonard.crestez@nxp.com>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Alexandre Bailon <abailon@baylibre.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Angus Ainslie <angus@akkea.ca>,
+        Martin Kepplinger <martink@posteo.de>,
+        Silvano di Ninno <silvano.dininno@nxp.com>,
+        linux-pm@vger.kernel.org, kernel@pengutronix.de, linux-imx@nxp.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/8] dt-bindings: interconnect: Add bindings for imx8m
+ noc
+Message-ID: <20200414234623.GA22499@bogus>
+References: <cover.1586174566.git.leonard.crestez@nxp.com>
+ <8b341d91e9aee679ae69feb22a2c842b2aeb2137.1586174566.git.leonard.crestez@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8b341d91e9aee679ae69feb22a2c842b2aeb2137.1586174566.git.leonard.crestez@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds documentation of device tree bindings for the Synopsys
-HDMI 2.0 TX encoder driver for ARC SoCs.
+On Mon,  6 Apr 2020 15:03:06 +0300, Leonard Crestez wrote:
+> Add initial dt bindings for the interconnects inside i.MX chips.
+> Multiple external IPs are involved but SOC integration means the
+> software controllable interfaces are very similar.
+> 
+> Main NOC node acts as interconnect provider if #interconnect-cells is
+> present. Currently there is a single imx interconnect provider for the
+> whole SOC.
+> 
+> Other pieces of scalable interconnects can be present, each with their
+> own OPP table.
+> 
+> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+> ---
+>  .../bindings/interconnect/fsl,imx8m-noc.yaml  | 101 ++++++++++++++++++
+>  1 file changed, 101 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/fsl,imx8m-noc.yaml
+> 
 
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
- .../display/bridge/snps,arc-dw-hdmi.yaml      | 136 ++++++++++++++++++
- 1 file changed, 136 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.yaml b/Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.yaml
-new file mode 100644
-index 000000000000..9b2fdfecd5b3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.yaml
-@@ -0,0 +1,136 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/snps,arc-dw-hdmi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Synopsys DesignWare HDMI 2.0 TX encoder driver
-+
-+maintainers:
-+  - Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-+
-+description: |
-+  The HDMI transmitter is a Synopsys DesignWare HDMI 2.0 TX controller IP
-+  with a companion of Synopsys DesignWare HDMI 2.0 TX PHY IP.
-+
-+  These DT bindings follow the Synopsys DWC HDMI TX bindings defined in
-+  Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt
-+  with the following device-specific properties.
-+
-+properties:
-+  compatible:
-+    const: snps,arc-dw-hdmi-hsdk
-+
-+  reg:
-+    maxItems: 1
-+    description: |
-+      Memory mapped base address and length of the DWC HDMI TX registers.
-+
-+  clocks:
-+    items:
-+      - description: The bus clock for AHB / APB
-+      - description: The internal register configuration clock
-+
-+  clock-names:
-+    items:
-+      - const: iahb
-+      - const: isfr
-+
-+  interrupts:
-+    maxItems: 1
-+    description: Reference to the DWC HDMI TX interrupt
-+
-+  reg-io-width:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [1, 4]
-+        description: |
-+          Width of the registers specified by the reg property. The
-+          value is expressed in bytes and must be equal to 1 or 4 if specified.
-+          The register width defaults to 1 if the property is not present.
-+
-+  ports:
-+    type: object
-+    description: |
-+      A ports node with endpoint definitions as defined in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt
-+
-+    properties:
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+      port@0:
-+        type: object
-+        description: |
-+          Video input endpoints of the controller.
-+          Usually it is associated with ARC PGU.
-+
-+      port@1:
-+        type: object
-+        description: |
-+          Output endpoints of the controller. HDMI connector.
-+
-+    required:
-+      - "#address-cells"
-+      - "#size-cells"
-+      - port@0
-+      - port@1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    hdmi@10000 {
-+        compatible = "snps,arc-dw-hdmi-hsdk";
-+        reg = <0x10000 0x10000>;
-+        reg-io-width = <4>;
-+        interrupts = <14>;
-+        clocks = <&apbclk>, <&hdmi_pix_clk>;
-+        clock-names = "iahb", "isfr";
-+
-+        ports {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            port@0 {
-+                reg = <0>;
-+                hdmi_enc_input: endpoint {
-+                    remote-endpoint = <&pgu_output>;
-+                };
-+            };
-+
-+            port@1 {
-+                reg = <1>;
-+                hdmi_enc_out: endpoint {
-+                    remote-endpoint = <&hdmi_con>;
-+                };
-+            };
-+        };
-+    };
-+
-+    hdmi-out {
-+        port {
-+            hdmi_con: endpoint {
-+                remote-endpoint = <&hdmi_enc_out>;
-+            };
-+        };
-+    };
-+
-+    pgu {
-+        port_o: port {
-+            pgu_output: endpoint {
-+                remote-endpoint = <&hdmi_enc_input>;
-+            };
-+        };
-+    };
--- 
-2.21.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
