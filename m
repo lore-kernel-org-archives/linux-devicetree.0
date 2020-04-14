@@ -2,63 +2,63 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9480C54FD2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C7BC38A2C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3A4206A2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 005AD2078A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="po6t4my3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hSOw4eWI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391287AbgDNREb (ORCPT
+        id S2391417AbgDNREh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:04:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34546 "EHLO
+        Tue, 14 Apr 2020 13:04:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391194AbgDNRE2 (ORCPT
+        by vger.kernel.org with ESMTP id S2391373AbgDNREc (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:04:28 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6485EC061A10
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:28 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id o81so8229725wmo.2
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:28 -0700 (PDT)
+        Tue, 14 Apr 2020 13:04:32 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90285C061A41
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:32 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id e26so13824576wmk.5
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GCsqjS+Tnwu1hr3WMvNuD+P9uXkPM0pVKS2lTlLCiJU=;
-        b=po6t4my3Go9g7beq4oi5gBqHe0K8I8gLjjolwSf6g7Inuex/2pKCElDmTw05chnprB
-         VpcDmTm9mJndKQ44OUnWiFNGWAnRefKxTsOEpgZkGH6fmib0dAJkrwdNZzEReQlfHRLw
-         zmHfO/enRYNLngF50Q/ItNGZfOVNZOP1Wjn1Tm/UzlvI3Aq2ub4XSW6+HyraLp5KrRtN
-         gUQ66eIR/V7LC06nJlZF2rLHNx0sFnWE5LcK9o3Z9V83oIkL5irCCS39MKos1xZK1qWT
-         MZY9xrqkkCHiVCztI/hzFS5XxD5U/SGIE/6AMMBqlAMbF3wtNCRxo5V2z/5fM3LcFagm
-         S0GQ==
+        bh=uHUqHTfoGR+1ZkqPou9Z5HBhwxdn8u/b73K/p08vGt4=;
+        b=hSOw4eWIOpcUGkqXNPQ9dtdmR/ipT2mxWsiI3pMLVH0qgRPNjHSMENCRjHZ4NJar66
+         7/UT+rWF0VVOTwd6Qq1Ko5BGuW+jxJLwAD3xaf5wYQROloGanuLGb7IPMnVJv7HK78+I
+         6ngZrW4BxXtksLmLmfoiWffLmjWadvjH0C7qLcRN+lO7dVaEm1JGvGctjkYtl4N944aK
+         W3n+wj6bEmpU/CznO6UiFv/JDUuQBgZiEQyXklusRoJ6jwr/CH6Wy/hgVNh5izNnczuz
+         90748Du66RWc5+QokDus/aLjad+8nROeHW3JEc7vfg8mwm0Xu+810td/BaN7JKL0CQ6H
+         pY3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GCsqjS+Tnwu1hr3WMvNuD+P9uXkPM0pVKS2lTlLCiJU=;
-        b=Ovs+tVewHFnchSUbjxuAf/klycQyqlM4pFkSNJO5KdIuunA8C0+YN0UAbB/O9LqEcU
-         RA6PYdOXX+Hst8hutNd4AiX6g3WLY2WzhqOa6xYrVpIJKwqXxtZoAU4HHjdawcNwavA/
-         Ia41vebvnoYg1F0Oc3IVnbqLzAfs6cmg2nZKDXwRUEykBltUsbkW166FAEacAgYyoqZf
-         hhS6sxA7iPby/4bYt/BZGjbjV2gTh6Tx+G31wiX7d/71NmlgJ57TJqq1Rtszc7WY51m7
-         No02WQo7Sh0gKD7NZnj6FyoDnrVDLJ4Mrz371c/u3kV0par22A0FMcgH2guzjlhT8uHb
-         Zg/w==
-X-Gm-Message-State: AGi0PuZLiqEZTcRlV0L3Q+zOrjB2G6Wbp93f6qH50LrpRNpiufbazn8v
-        s7lIojfX5V+sdI/u5VF7ttVQ5Q==
-X-Google-Smtp-Source: APiQypItrJFyYm1dKZ3R07kVZC02nj/EnEUI4s9HX58/CnIZwkPk4I7z7a9PSJbV36nuH4swD5HWaA==
-X-Received: by 2002:a1c:3281:: with SMTP id y123mr814694wmy.30.1586883867167;
-        Tue, 14 Apr 2020 10:04:27 -0700 (PDT)
+        bh=uHUqHTfoGR+1ZkqPou9Z5HBhwxdn8u/b73K/p08vGt4=;
+        b=EeIohj8QCv2zIfiQFgo5xCsya3cCxwnlsrE+tFYGkMC2yDVKTuvpQHkf7xo2hEghNv
+         drxJclQjFO0bxacMT6sLfoZPK+S0Sq+k8zX7uwgpjelUKBkM+NGtH2yiaWUCH89enNxD
+         TKKvCOwR+0IOfkXFp9Gy80+pJtX8pfIcX7V1Mws3jPIcOmWu+G1ogh72VJB5HvBIur7M
+         fzFquOzoL/gmBWQebr+o24jc3ufQoxDtl4oOCTCT89KPRONI7L5l7lhgld3ZsMWVFD9i
+         GklW77VwwZKnlYEKBcJiK1h87zgHLLeopWdULRgfwIc17VDZ/0Pa8wNgu7OVxL2km+6P
+         YKFg==
+X-Gm-Message-State: AGi0PuZTsKz5CuwBtXewPns6IzH4FiDywISVHoQ6Fa+1IJmOvJxBCXjj
+        VqQqXDZioI10l8/qtKrgZV/i9A==
+X-Google-Smtp-Source: APiQypKS0JuC3gKtoh+XCp+shpu7gwSGraLZSLm/eXL7WMGLNhlt6UWbZ/JnbP6LfEz+El1lwsxHkg==
+X-Received: by 2002:a1c:2506:: with SMTP id l6mr784909wml.44.1586883871278;
+        Tue, 14 Apr 2020 10:04:31 -0700 (PDT)
 Received: from localhost.localdomain ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id x18sm19549147wrs.11.2020.04.14.10.04.26
+        by smtp.gmail.com with ESMTPSA id x18sm19549147wrs.11.2020.04.14.10.04.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 10:04:26 -0700 (PDT)
+        Tue, 14 Apr 2020 10:04:30 -0700 (PDT)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
@@ -69,9 +69,9 @@ Cc:     joro@8bytes.org, catalin.marinas@arm.com, will@kernel.org,
         jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
         zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
         Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: [PATCH v5 07/25] arm64: mm: Add asid_gen_match() helper
-Date:   Tue, 14 Apr 2020 19:02:35 +0200
-Message-Id: <20200414170252.714402-8-jean-philippe@linaro.org>
+Subject: [PATCH v5 10/25] iommu/arm-smmu-v3: Manage ASIDs with xarray
+Date:   Tue, 14 Apr 2020 19:02:38 +0200
+Message-Id: <20200414170252.714402-11-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200414170252.714402-1-jean-philippe@linaro.org>
 References: <20200414170252.714402-1-jean-philippe@linaro.org>
@@ -82,49 +82,93 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a macro to check if an ASID is from the current generation, since a
-subsequent patch will introduce a third user for this test.
+In preparation for sharing some ASIDs with the CPU, use a global xarray to
+store ASIDs and their context. ASID#0 is now reserved, and the ASID
+space is global.
 
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
-v4->v5: new
----
- arch/arm64/mm/context.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/iommu/arm-smmu-v3.c | 27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/mm/context.c b/arch/arm64/mm/context.c
-index 9b26f9a88724f..d702d60e64dab 100644
---- a/arch/arm64/mm/context.c
-+++ b/arch/arm64/mm/context.c
-@@ -92,6 +92,9 @@ static void set_reserved_asid_bits(void)
- 		bitmap_clear(asid_map, 0, NUM_USER_ASIDS);
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 60a415e8e2b6f..96ee60002e85e 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -664,7 +664,6 @@ struct arm_smmu_device {
+ 
+ #define ARM_SMMU_MAX_ASIDS		(1 << 16)
+ 	unsigned int			asid_bits;
+-	DECLARE_BITMAP(asid_map, ARM_SMMU_MAX_ASIDS);
+ 
+ #define ARM_SMMU_MAX_VMIDS		(1 << 16)
+ 	unsigned int			vmid_bits;
+@@ -724,6 +723,8 @@ struct arm_smmu_option_prop {
+ 	const char *prop;
+ };
+ 
++static DEFINE_XARRAY_ALLOC1(asid_xa);
++
+ static struct arm_smmu_option_prop arm_smmu_options[] = {
+ 	{ ARM_SMMU_OPT_SKIP_PREFETCH, "hisilicon,broken-prefetch-cmd" },
+ 	{ ARM_SMMU_OPT_PAGE0_REGS_ONLY, "cavium,cn9900-broken-page1-regspace"},
+@@ -1763,6 +1764,14 @@ static void arm_smmu_free_cd_tables(struct arm_smmu_domain *smmu_domain)
+ 	cdcfg->cdtab = NULL;
  }
  
-+#define asid_gen_match(asid) \
-+	(!(((asid) ^ atomic64_read(&asid_generation)) >> asid_bits))
++static void arm_smmu_free_asid(struct arm_smmu_ctx_desc *cd)
++{
++	if (!cd->asid)
++		return;
 +
- static void flush_context(void)
++	xa_erase(&asid_xa, cd->asid);
++}
++
+ /* Stream table manipulation functions */
+ static void
+ arm_smmu_write_strtab_l1_desc(__le64 *dst, struct arm_smmu_strtab_l1_desc *desc)
+@@ -2448,10 +2457,9 @@ static void arm_smmu_domain_free(struct iommu_domain *domain)
+ 	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
+ 		struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
+ 
+-		if (cfg->cdcfg.cdtab) {
++		if (cfg->cdcfg.cdtab)
+ 			arm_smmu_free_cd_tables(smmu_domain);
+-			arm_smmu_bitmap_free(smmu->asid_map, cfg->cd.asid);
+-		}
++		arm_smmu_free_asid(&cfg->cd);
+ 	} else {
+ 		struct arm_smmu_s2_cfg *cfg = &smmu_domain->s2_cfg;
+ 		if (cfg->vmid)
+@@ -2466,14 +2474,15 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
+ 				       struct io_pgtable_cfg *pgtbl_cfg)
  {
- 	int i;
-@@ -220,8 +223,7 @@ void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
- 	 *   because atomic RmWs are totally ordered for a given location.
- 	 */
- 	old_active_asid = atomic64_read(&per_cpu(active_asids, cpu));
--	if (old_active_asid &&
--	    !((asid ^ atomic64_read(&asid_generation)) >> asid_bits) &&
-+	if (old_active_asid && asid_gen_match(asid) &&
- 	    atomic64_cmpxchg_relaxed(&per_cpu(active_asids, cpu),
- 				     old_active_asid, asid))
- 		goto switch_mm_fastpath;
-@@ -229,7 +231,7 @@ void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
- 	raw_spin_lock_irqsave(&cpu_asid_lock, flags);
- 	/* Check that our ASID belongs to the current generation. */
- 	asid = atomic64_read(&mm->context.id);
--	if ((asid ^ atomic64_read(&asid_generation)) >> asid_bits) {
-+	if (!asid_gen_match(asid)) {
- 		asid = new_context(mm);
- 		atomic64_set(&mm->context.id, asid);
- 	}
+ 	int ret;
+-	int asid;
++	u32 asid;
+ 	struct arm_smmu_device *smmu = smmu_domain->smmu;
+ 	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
+ 	typeof(&pgtbl_cfg->arm_lpae_s1_cfg.tcr) tcr = &pgtbl_cfg->arm_lpae_s1_cfg.tcr;
+ 
+-	asid = arm_smmu_bitmap_alloc(smmu->asid_map, smmu->asid_bits);
+-	if (asid < 0)
+-		return asid;
++	ret = xa_alloc(&asid_xa, &asid, &cfg->cd,
++		       XA_LIMIT(1, (1 << smmu->asid_bits) - 1), GFP_KERNEL);
++	if (ret)
++		return ret;
+ 
+ 	cfg->s1cdmax = master->ssid_bits;
+ 
+@@ -2506,7 +2515,7 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
+ out_free_cd_tables:
+ 	arm_smmu_free_cd_tables(smmu_domain);
+ out_free_asid:
+-	arm_smmu_bitmap_free(smmu->asid_map, asid);
++	arm_smmu_free_asid(&cfg->cd);
+ 	return ret;
+ }
+ 
 -- 
 2.26.0
 
