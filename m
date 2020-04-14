@@ -4,86 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 077BDC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 23:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF72C352BE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 23:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF4F12054F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 23:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A089C2072D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 23:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586905886;
-	bh=ZZ8q7yfHpsDElnsFwm/1sSB5PmM/iwEciLmHLEXnI3A=;
+	s=default; t=1586905993;
+	bh=sy+Whlg2RCdb35wEFhj/BGmcgA87Vhsr6L2apXyQFl4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R4FvieiFGF+Mpi7mqHHnkXU7J17ZS4PG7hhtUsvrxAFUYsr1qLVJW9WEsWm+/r9ye
-	 1HM2WRgnVu6ChWnqkM1UefHHuqr3BJI2Wnxv9iax34SNjvaIdwBFbQQn/lQPAPtvct
-	 zS0ugU+KK8CY2egKZG04rCH7xwEIqzEARI1nWaY0=
+	b=FHsO2yXQc9N2Mh6efgEpw/YujOJqxWnLpfuCzISy2ncK7LTbg/cpX7qxV3tl+Gq9y
+	 WRa/hi3RVHcntenyVYhj6r5hNnvUaKom0/FUpoaY8radjsdIEeX+A6yV0VmeXj8qlh
+	 O+cXWYczssWtRySBer5MFiqDiclfz+aMZHoub/34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441028AbgDNXLZ (ORCPT
+        id S1732619AbgDNXNK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 19:11:25 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39619 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2441018AbgDNXLW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 19:11:22 -0400
-Received: by mail-ot1-f66.google.com with SMTP id x11so1530969otp.6;
-        Tue, 14 Apr 2020 16:11:21 -0700 (PDT)
+        Tue, 14 Apr 2020 19:13:10 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43764 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729358AbgDNXNJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 19:13:09 -0400
+Received: by mail-oi1-f196.google.com with SMTP id j16so11979822oih.10;
+        Tue, 14 Apr 2020 16:13:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uQbA1hm4F1ECx3Q8+dWpAWgcwSDF1dFS3d3ZIaptT0s=;
-        b=DB+mBfYobMoaRdKaeemG2Q+iQOYlDdFnCv1P+j7Y0Fn5/z+SW50st5Q0ia8dBJltsE
-         MqYWKxDyofYFgDEVh09THB/xPjOHpa1duij6TFlgV5Y6zTIwriclfRxRdXIdV1v+Frsa
-         qQwcPz+4Gb3IwbnyXU/pvKsLWQW6OwWc2lrqv1K6RVVP2VMaLXbMMa1c5qrcwFxTT3uM
-         I9wc+Qa8ne925YtCiy/U4uxOG4xpSY+yAO1R6wR5vLAp8lRPnf3BFGuGf+bh5caLwzKC
-         tDNDsDH3JqdDw2k/5za9POGcXt6tbiufvb/+nu9od2B/f9gFmU/azQJrkO2rzt/fJzpi
-         j9CA==
-X-Gm-Message-State: AGi0PuZ1gwE1+DPLrm68YlUZjHGeB9XVkvrqXLkl54zSY7OQxsJJs0yh
-        x7V6ztt401/iPGi1OJbk4A==
-X-Google-Smtp-Source: APiQypK8ZzZ8C2d2xHIP7/hVcEIpx48D8sjnAVUS4VjaxOXBvRO5TMBQWpnOXEbSUqJLeeI5tihRSg==
-X-Received: by 2002:a4a:e151:: with SMTP id p17mr16389352oot.28.1586905879376;
-        Tue, 14 Apr 2020 16:11:19 -0700 (PDT)
+        bh=VvYN+POzUP/HxZIW68dFGmEkR5GANu8XsXmHkqwh3r4=;
+        b=LuYvRXYeP411lHfgR4fLTUPU7Og85b7wQxEkF2BBtbTvlzLrtELtbYrXQ0IwZQ1J2o
+         6vhiT5fDDdNlnVLNr+/DU3LgmscXOzpPiHDXL+oRf/95CZey2gmLM651cchi+GHUAxmI
+         brIgLwKhPZkR8dfeI47chcH18/I/VYav0iVOUqPf/QQy4LSDI6pGaABXfEK1kdUeOsGI
+         /VQqbNMwhYPFg4O3NmLPpwQaTEi2PNJHEBp0W13QXisQsda464B95Ezhc1U5hRod9cgQ
+         xitniWvRx5odmlTfrdFBgb1yD6OY877KFoF8V0Ji56liLQCsmYdOp4bl4OSzlJACvC35
+         IZMA==
+X-Gm-Message-State: AGi0PubKXB/F40v1Z6NJLiQswXheK3goSsq678YJXWy2IsAFbqZXdxcz
+        I8utuO3hCf7WTBU4tc1FzQ==
+X-Google-Smtp-Source: APiQypK61RTHR9kuSvlYPwIECBbuocsSAp6KyPuha5OGWWkV7afY5lGlf+sLaVr7JcOhZjc7RQrgHw==
+X-Received: by 2002:aca:403:: with SMTP id 3mr12694157oie.166.1586905989246;
+        Tue, 14 Apr 2020 16:13:09 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p130sm5952795oig.51.2020.04.14.16.11.18
+        by smtp.gmail.com with ESMTPSA id i7sm5911183otl.12.2020.04.14.16.13.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 16:11:18 -0700 (PDT)
-Received: (nullmailer pid 6378 invoked by uid 1000);
-        Tue, 14 Apr 2020 23:11:18 -0000
-Date:   Tue, 14 Apr 2020 18:11:18 -0500
+        Tue, 14 Apr 2020 16:13:08 -0700 (PDT)
+Received: (nullmailer pid 9163 invoked by uid 1000);
+        Tue, 14 Apr 2020 23:13:06 -0000
+Date:   Tue, 14 Apr 2020 18:13:06 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org,
-        Maxime Ripard <maxime@cerno.tech>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mark Yao <mark.yao@rock-chips.com>,
-        Sandy Huang <hjc@rock-chips.com>, Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH/RFC 6/6] dt-bindings: display: bridge: Remove deprecated
- dw_hdmi.txt
-Message-ID: <20200414231118.GA6328@bogus>
-References: <20200405233935.27599-1-laurent.pinchart+renesas@ideasonboard.com>
- <20200405233935.27599-7-laurent.pinchart+renesas@ideasonboard.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hyunki Koo <hyunki00.koo@samsung.com>
+Subject: Re: [PATCH] dt-bindings: memory-controllers: exynos-srom: Remove
+ unneeded type for reg-io-width
+Message-ID: <20200414231306.GA9106@bogus>
+References: <20200406104554.29773-1-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200405233935.27599-7-laurent.pinchart+renesas@ideasonboard.com>
+In-Reply-To: <20200406104554.29773-1-krzk@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon,  6 Apr 2020 02:39:35 +0300, Laurent Pinchart wrote:
-> dw_hdmi.txt has been replaced with synopsys,dw-hdmi.yaml, and all
-> references to the old file have been converted. Remove it.
+On Mon,  6 Apr 2020 12:45:54 +0200, Krzysztof Kozlowski wrote:
+> 'reg-io-width' property is an enum so there is no need to specify its
+> type.
 > 
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  .../bindings/display/bridge/dw_hdmi.txt       | 33 -------------------
->  1 file changed, 33 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt
+>  .../devicetree/bindings/memory-controllers/exynos-srom.yaml   | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
