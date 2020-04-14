@@ -2,95 +2,93 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF53C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 16:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC17C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 16:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D92B620678
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 16:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D6C820678
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 16:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586883058;
-	bh=JNdzVpz9Z7yg2D0nVFa2uGzWJ8/+Wsh+62E+aydGZzQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0shXGyj/RFIGgkeFLf20Hwyz1kysswdMlmw1vkFXgX2YOSvmgvdPDaBXijMruTYJd
-	 CJ8arCaK+KijofdVZlUPIPiPwN8wsD62eopLM0uCm5CK3bCfK0yQA9EAXFNwfUZvqq
-	 a8UDUfTLMjzPczu3CkR/lp6KHhkAYrp+mBj/aaTY=
+	s=default; t=1586883102;
+	bh=XKo43H/WISKC0mbYjvAH0yYREpDezLZK9JxzqEgfMvA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WuNBYBZUiVJBGir2zH3fQqh/iQhQOL5OkJClbVsYWL+k2pVqTUEAmCdCRqhpNfJv5
+	 5AIl82s7z3+vFN+C81R/BtAHcAv9Tlz3/tyG8u5NgrL1HsBzjIl7XHeMOIilSob0VD
+	 XW4E0Z0okPAXfssZ870Y3003DsAXG5/1XDkzNVto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440419AbgDNQtZ (ORCPT
+        id S2440681AbgDNQve (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 12:49:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55218 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2440313AbgDNQtP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:49:15 -0400
-Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1910221D7F;
-        Tue, 14 Apr 2020 16:49:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586882943;
-        bh=JNdzVpz9Z7yg2D0nVFa2uGzWJ8/+Wsh+62E+aydGZzQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pUCG8jhe86W6kanMzas8ZHncgj+seFcThXs2JKTePr++6of8aHjZRl2WoSnQy8Zt3
-         T49S/q3HImd1aMdkf9B+4gU8kiqpaW8+FQkgnohanObJadYJhPYzLMUz+yQrHBiBfD
-         mw/wgqoqBheU4SBpIwxEWuTUdsRqfRojQSVwPhGQ=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jOOk9-0068mp-BS; Tue, 14 Apr 2020 18:49:01 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Matthias Brugger <mbrugger@suse.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v2 24/33] docs: dt: fix a broken reference for a file converted to json
-Date:   Tue, 14 Apr 2020 18:48:50 +0200
-Message-Id: <9b1603e254d39c9607bfedefeedaafd2c44aeb19.1586881715.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <cover.1586881715.git.mchehab+huawei@kernel.org>
-References: <cover.1586881715.git.mchehab+huawei@kernel.org>
+        Tue, 14 Apr 2020 12:51:34 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33416 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2440657AbgDNQv3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 12:51:29 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j26so93979ots.0;
+        Tue, 14 Apr 2020 09:51:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=E0UhtU0hOfN1mtluPKd6UxG6VtUuYZXqq6zaVbM+sI0=;
+        b=O8kJaC2uYpCUsb7tA1jLJBmfhVAcro4KT01QHr2VDCVsIj+OXRheog2EKQwxW+llxt
+         fX7l8xEkfhpEKvqJHJ3Q/AKbgzMlLR88KKw0B96nN5Y7DFEMm+iE7IuCBnm9Pp3B3180
+         Jf9ztI/xyBVp5PHQn5CR3SUu5tGpJDYi61KtPitYYqh7T6PzFSDAdb0DpFOVE77er1fo
+         w7tiwVt4A9IzSsi/rFXWXwlBQ9Cx0S6BCE/QoATyQa8d1Rb1Oabv/Brt0mrLQyUgYx5r
+         MrFFdVXpfO8wIDyLro2fvS120+YYFWbEKwY4bWfSV2xXW6E+2Y2H6iGiqrO9znjynSvx
+         5y5w==
+X-Gm-Message-State: AGi0PubS6VP6TvVriGwsGZDfV6LMqop6Y2/MOCSeM4L496Nd0EiQK6gL
+        8FRsEaGAnLm0jBdgFwtpIQ==
+X-Google-Smtp-Source: APiQypIcslAsL6nTfjJohaUj1ZXbBo8tbhnBXcKvkKOBU0ppY4P1+HG4u8r7j/Gyi1aadTNcJDyzCw==
+X-Received: by 2002:a4a:e0d1:: with SMTP id e17mr9696815oot.53.1586883088742;
+        Tue, 14 Apr 2020 09:51:28 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s13sm6235555oov.28.2020.04.14.09.51.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 09:51:28 -0700 (PDT)
+Received: (nullmailer pid 22116 invoked by uid 1000);
+        Tue, 14 Apr 2020 16:51:27 -0000
+Date:   Tue, 14 Apr 2020 11:51:27 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: Re: [PATCH v5 1/3] dt-bindings: phy: qcom,qmp: Convert QMP PHY
+ bindings to yaml
+Message-ID: <20200414165127.GA21637@bogus>
+References: <1585809534-11244-1-git-send-email-sanm@codeaurora.org>
+ <1585809534-11244-2-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585809534-11244-2-git-send-email-sanm@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Changeset 32ced09d7903 ("dt-bindings: serial: Convert slave-device bindings to json-schema")
-moved a binding to json and updated the links.
+On Thu,  2 Apr 2020 12:08:52 +0530, Sandeep Maheswaram wrote:
+> Convert QMP PHY bindings to DT schema format using json-schema.
+> 
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> ---
+>  .../devicetree/bindings/phy/qcom,qmp-phy.yaml      | 332 +++++++++++++++++++++
+>  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 242 ---------------
+>  2 files changed, 332 insertions(+), 242 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> 
 
-Yet, one link was not changed, due to a merge conflict.
-
-Update this one too.
-
-Fixes: 32ced09d7903 ("dt-bindings: serial: Convert slave-device bindings to json-schema")
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-index beca6466d59a..d2202791c1d4 100644
---- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-@@ -29,7 +29,7 @@ Required properties for compatible string qcom,wcn399x-bt:
- 
- Optional properties for compatible string qcom,wcn399x-bt:
- 
-- - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
-+ - max-speed: see Documentation/devicetree/bindings/serial/serial.yaml
-  - firmware-name: specify the name of nvm firmware to load
-  - clocks: clock provided to the controller
- 
--- 
-2.25.2
-
+Reviewed-by: Rob Herring <robh@kernel.org>
