@@ -2,309 +2,211 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DBFC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 08:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A16C352BE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 08:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21A7A206D5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 08:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF904206D5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 08:42:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="M6dwhgEo";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yYFNiXlR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="RVp2XAGC";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="QSsHB+AA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436859AbgDNIaX (ORCPT
+        id S2436988AbgDNImP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 04:30:23 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:43541 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2436826AbgDNIaO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 04:30:14 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id C8F08B58;
-        Tue, 14 Apr 2020 04:30:12 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 14 Apr 2020 04:30:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=/CfHmA7c0jO7pf77t3C7Oki3S52
-        gFaZ76bqIpouc54w=; b=M6dwhgEoBoIB2y7rp4DoAkl7KoyebJxJRYc4WPRjBGS
-        A6lt9HmBvrU+e5GSpfhsS7DUFTqI02NtpfgUBx8ao19zARJv/jVCbeWtAlr4ZdBa
-        s6nsR2Xe/9x2RkcZoEudpE3dVeaBCnDSdnACRQD5mZmO8iYZkrhZ1NpzP0zTeNca
-        0gxltG3aP1kQQ0JQs4U79aqoIBevWlSuKLIhqdBM2jqrdA88U1V1mxAsKo/xtDzP
-        fmOYFOey1FM0ULiPT1e+k778LOy0uxw37xjtm1/8Ccb2jSkHWpV1d9tkPFX8vZUl
-        gMfk2XglbjmaZFyim2ukdeKgLfO/IakxKStrUAVCk+g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=/CfHmA
-        7c0jO7pf77t3C7Oki3S52gFaZ76bqIpouc54w=; b=yYFNiXlR8f1qiG4USZL8ae
-        m5g2jLSyKfP/ywlD/ISHgwfAfSEchaeMC21gQ8p1d6H2TNTKgL72PhyQUuO/S/kT
-        XpX98niE7i4/84edcIl+cWorHWQ+OZl7qE/Q/XqN1liywiOnBppmy6EnK0MFwVTU
-        jJvunYUrBSrgMN34LDm0gKMeKWuHafDZTRonTTXqzvTNUzCMwaKgtKNjt506x2C/
-        VK6soNdSYo83suzx1cwMkC/DeF63XTAch5BnwS5IyvvonueqmzPXXRDW3QUqwWkv
-        CNUD6xdk1Iid1Bu8z1SZf0sYam481Tm8OuiANzYIENp9e/HwSNusWr8uYzLZuoOA
-        ==
-X-ME-Sender: <xms:k3SVXsNFv4siq4nJowLJJumE3X7BmqiH4V-Hg7bw3Urd4ehNbLCgkA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfedugddthecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
-    epuggvvhhitggvthhrvggvrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehl
-    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvse
-    gtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:k3SVXkY40XT7yDdpznDdFSpd3c3p0CrgmYVGh45uEb3hqshgaAgzsw>
-    <xmx:k3SVXuoR4m5dLWQz6WxAr2L7Px6XIhTk1SE30E6NbF5metSJB3C_xw>
-    <xmx:k3SVXhzRcNw-02hZ06hjAZLscFrrh6rWj2Nhw588Oxqt_qZvMMjXaQ>
-    <xmx:lHSVXjLNqIRAORGVzAfiSRbavqM4snT6_ETcIITZSEQKbSPWRk1Kfw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A9EE2306005E;
-        Tue, 14 Apr 2020 04:30:11 -0400 (EDT)
-Date:   Tue, 14 Apr 2020 10:30:10 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v1 2/4] dt-bindings: display: convert atmel lcdc to DT
- Schema
-Message-ID: <20200414083010.qztgtj6v6b53qgjh@gilmour.lan>
-References: <20200412182012.27515-1-sam@ravnborg.org>
- <20200412182012.27515-3-sam@ravnborg.org>
+        Tue, 14 Apr 2020 04:42:15 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:24048 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436845AbgDNImN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 04:42:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1586853732; x=1618389732;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=YyqlXQy+5+tIBi9vWs7cGdgbh2uZRxgJymCKCnTpy+M=;
+  b=RVp2XAGCDQ1tyL9alUTYoybV6+0al+Epao9VMpXwX3wi5CkzYeizdGay
+   I3gN9vfJoETsuvX9uqcdVQrcPZ2KnYxv6tiECDUMs0CT3LxY47riAQbPW
+   /09719rW1LJQv1EaSU0NxuFKG4ncKwSA2Glafzqr+WTlTSiKGT9aciNs7
+   3SEbHCme64h0+AZD5qhQtIw4l0GyXot4OdC3zV/TiJPTOdv+fWS3UKfFm
+   yGWmyEjQj3TGZxUFakg823SHqVEFgvGAqPALtsnxcfXY1ExitSKviz2rR
+   DifDGmEEB92MktEx2I4qez7sGbc5X6cXOf4aTB/NC96GNKIqXRK6sTn75
+   Q==;
+IronPort-SDR: v4RgAcfhcgbYLdiH05blLF7t1UOCsUz8+DChRMq4qkHJRzWoxB9OJdL5Ht9IS4HZEH6WkaO4G3
+ xbtMt1jjbQudI5fCsMyrt7N6DwHROtWYHonELN1m2q/pMOkNaYT0TdJqw9DSfEK00f0giUCImN
+ 2j6XZgS6k89EzFcFcX81Vb6T+2pumbbgPPQ5/w+d3onucoWH1p/3Dq4doa5GF0cK+8qlh+17xn
+ 4H7tSHalQiXe5RGLBtnlOHCh3bPWZ2VlQ6B9VyxeN1OP2XFA7TGWGReVxpab48XIr0zmF0Jx3n
+ nE4=
+X-IronPort-AV: E=Sophos;i="5.72,382,1580799600"; 
+   d="scan'208";a="9052643"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Apr 2020 01:42:11 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 14 Apr 2020 01:42:11 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 14 Apr 2020 01:42:11 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M9Fn42FfZuwhniiAYbK2AwV8Z8DZyrpnDKj9mfQg+GRdAQpWthAvZWzl44qak6LxhVu3bWwnV0E1hmIZiY1f7DlGUEaQHJAxcXisaJb0VPBfwvjGwEwqcRRmfhHh9pNkQspnbtXN3G0JbTT+yug2XjTEehKPQNwMhe5ziuZDa8LTRDcMnBYb8znFNN8xBqOPWkHX2WOfvgXEYubKXSLMq66Q+bImwSjU9WNc9XvBW6pYSbXFDHVRwqxbcrbh1s7Dope4ytHh/eRJEcsxVhbW3tEjq3HSslYA7O4acX9V9qIxg0bByk41Gq7r3o/DbqpPR5YDfKmRkaF0HgR7xJNTcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YyqlXQy+5+tIBi9vWs7cGdgbh2uZRxgJymCKCnTpy+M=;
+ b=AKmzy/Lx6pvUPy7pHfE/hR1IKD2+FFyqz+HiyBRP7Y110mdljJGdRMG0pKDA8qgsAHkpA7dJ2eeRnx4mVna85Vx5p4UCcGLSDIbptcrHmRUPCCwnVrMS22n5qX7R0RJltmgHb2gMLBNSphDt5pBK10q8v5dmh4ufCuMLykaQzB/H9goLrC/8EAr+hbJY7VsDzEXcN24jSVR7Z62Wky3ZyVFzVeBXqNDKdfcCZseI5heID2V1CKc37laj9q2/L7yvxP7Mxvc5ONH54aRATuq9wEvJ3fc06BnLawLhvjs1oLArwvu778fAOvutG8vWTWYgYcU5P6V7ouPsliAtWke6Eg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YyqlXQy+5+tIBi9vWs7cGdgbh2uZRxgJymCKCnTpy+M=;
+ b=QSsHB+AA1ULtYkB09qBMp4w11qcxzfacvpjJLXGkdUaWeivriJIm4S+Ioish+lMX7SpoOEr/r2vUPgYsCAWuZRD6zFV79Y4s0ujf+D7mLOLqzQ5FvzuYd26c7Sn2LxSLirO9mOyvYcwKrpsjRn2Ee2RB3Dwb/Km5cVHDCjc+L5I=
+Received: from DM6PR11MB3420.namprd11.prod.outlook.com (2603:10b6:5:69::31) by
+ DM6PR11MB3962.namprd11.prod.outlook.com (2603:10b6:5:192::26) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2900.26; Tue, 14 Apr 2020 08:42:08 +0000
+Received: from DM6PR11MB3420.namprd11.prod.outlook.com
+ ([fe80::91cb:6555:db9b:53fa]) by DM6PR11MB3420.namprd11.prod.outlook.com
+ ([fe80::91cb:6555:db9b:53fa%7]) with mapi id 15.20.2900.028; Tue, 14 Apr 2020
+ 08:42:08 +0000
+From:   <Claudiu.Beznea@microchip.com>
+To:     <alexandre.belloni@bootlin.com>
+CC:     <a.zummo@towertech.it>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <Nicolas.Ferre@microchip.com>,
+        <Ludovic.Desroches@microchip.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <maz@kernel.org>,
+        <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/5] ARM: dts: sam9x60: add rtt
+Thread-Topic: [PATCH 4/5] ARM: dts: sam9x60: add rtt
+Thread-Index: AQHWEXCuyP8yxRbKYUqiuXPeALwxyw==
+Date:   Tue, 14 Apr 2020 08:42:08 +0000
+Message-ID: <3116d1fc-af96-1e0c-aa07-3b34cbd58209@microchip.com>
+References: <1586536019-12348-1-git-send-email-claudiu.beznea@microchip.com>
+ <1586536019-12348-5-git-send-email-claudiu.beznea@microchip.com>
+ <20200410222658.GB3628@piout.net>
+ <c4d46198-488b-c5d6-2a66-865a16840dc4@microchip.com>
+ <20200413104652.GE3628@piout.net>
+In-Reply-To: <20200413104652.GE3628@piout.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Claudiu.Beznea@microchip.com; 
+x-originating-ip: [86.120.235.162]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 013119d4-b562-4d37-51ce-08d7e04fb7c7
+x-ms-traffictypediagnostic: DM6PR11MB3962:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB3962783B69C37EB3E839ED0387DA0@DM6PR11MB3962.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0373D94D15
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3420.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(366004)(6506007)(53546011)(186003)(5660300002)(64756008)(7416002)(31686004)(6486002)(76116006)(66446008)(2906002)(26005)(6512007)(66476007)(66946007)(6916009)(66556008)(8936002)(498600001)(36756003)(54906003)(4326008)(71200400001)(2616005)(81156014)(91956017)(966005)(86362001)(31696002)(8676002);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ISctB5nizLt110GeaQxYM2RymcColc5kT4AFlycr+FXOZpdI69iNFiBx9pLwajcPJppkgxkz0wCUMfhQPeBMrFl0hV9xORjNxyuGxwlAhHQquYFFySBGSIK60K99v8O2Ycdz797y2t0e04btdjJqhTprca6TSHbG5NrH4L4P0wEXDzV4w8Tx4AuSadhqOW0+FAqZ/i2Z6ZCHpRn9hiZp/wCENrhhkWKglRTdoesNTsXEr4WbaodNGTahlOoz8m4VO8A9MI5zPbo+RKTk/m/r35hteTZPU+SMEVtLrnjyBK9MH75WxVa9u2arwqdGXRhTGOevIzDv4mKR14wq2GJh9O4Y8ecgoao/SiJJbP8CwAw/dsGa0b/KUy6iASVdxK5FmQeDq6SX+FSKGnT5FHDQliqKqbkZdPu/nd5SDHlbAHOLUmoepOyaZCgcUPJv0km0pPbxK9iv7YCFcCMD4ZU358rnaQhUJkM6UaaY1yOXSC0Ckim+bnDaEqKECkrT7cAeOG4aqd0xX/tgS2GT9Bu8LQ==
+x-ms-exchange-antispam-messagedata: MwIS9kDZotA19AurzirqH41oxj0KXddKOkRwblq0C3+OeCZgMaQrzR61YZmiuW56nvyEL/9DTwXsJGfKK2KuT6tQHEnAIyU8fbjtIjj+ucd7CYf9Yv50Pqll5Zrvizqc2THUH6clfA6dTJ1pq3FGCw==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F36CB46DEE071B4BB9A3E12636A192D4@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kpecuiezqczpcjng"
-Content-Disposition: inline
-In-Reply-To: <20200412182012.27515-3-sam@ravnborg.org>
+X-MS-Exchange-CrossTenant-Network-Message-Id: 013119d4-b562-4d37-51ce-08d7e04fb7c7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2020 08:42:08.4616
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Z8yjNyIz+OqCl2srr3rOSs6cTmUa+bu0wqrzoXKusIsZWL4d8PqadMpZf0uqG2PxoIqpNfzjO8jKAJSXMYpcMIHsRnJp+UcEZwFC7j7gMfk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3962
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---kpecuiezqczpcjng
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Sun, Apr 12, 2020 at 08:20:10PM +0200, Sam Ravnborg wrote:
-> Add a new binding file to describe the bindings
-> for the Atmel LCDC IP.
-> This replaces the old txt based binding.
->
-> The binding file describes the current binding,
-> including properties to specify register values etc.
-> The binding will be updated in a follow-up patch,
-> the current binding describes the actual situation.
->
-> This new binding file replaces the old .txt based
-> binding which is deleted.
->
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> ---
->  .../bindings/display/atmel,lcdc.txt           |  88 -----------
->  .../bindings/display/atmel/lcdc.yaml          | 137 ++++++++++++++++++
->  2 files changed, 137 insertions(+), 88 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/atmel,lcdc.txt
->  create mode 100644 Documentation/devicetree/bindings/display/atmel/lcdc.yaml
->
-> diff --git a/Documentation/devicetree/bindings/display/atmel,lcdc.txt b/Documentation/devicetree/bindings/display/atmel,lcdc.txt
-> deleted file mode 100644
-> index acb5a0132127..000000000000
-> --- a/Documentation/devicetree/bindings/display/atmel,lcdc.txt
-> +++ /dev/null
-> @@ -1,88 +0,0 @@
-> -Atmel LCDC Framebuffer
-> ------------------------------------------------------
-> -
-> -Required properties:
-> -- compatible :
-> -	"atmel,at91sam9261-lcdc" ,
-> -	"atmel,at91sam9263-lcdc" ,
-> -	"atmel,at91sam9g10-lcdc" ,
-> -	"atmel,at91sam9g45-lcdc" ,
-> -	"atmel,at91sam9g45es-lcdc" ,
-> -	"atmel,at91sam9rl-lcdc" ,
-> -	"atmel,at32ap-lcdc"
-> -- reg : Should contain 1 register ranges(address and length).
-> -	Can contain an additional register range(address and length)
-> -	for fixed framebuffer memory. Useful for dedicated memories.
-> -- interrupts : framebuffer controller interrupt
-> -- display: a phandle pointing to the display node
-> -
-> -Required nodes:
-> -- display: a display node is required to initialize the lcd panel
-> -	This should be in the board dts.
-> -- default-mode: a videomode within the display with timing parameters
-> -	as specified below.
-> -
-> -Optional properties:
-> -- lcd-supply: Regulator for LCD supply voltage.
-> -
-> -Example:
-> -
-> -	fb0: fb@00500000 {
-> -		compatible = "atmel,at91sam9g45-lcdc";
-> -		reg = <0x00500000 0x1000>;
-> -		interrupts = <23 3 0>;
-> -		pinctrl-names = "default";
-> -		pinctrl-0 = <&pinctrl_fb>;
-> -		display = <&display0>;
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
-> -
-> -	};
-> -
-> -Example for fixed framebuffer memory:
-> -
-> -	fb0: fb@00500000 {
-> -		compatible = "atmel,at91sam9263-lcdc";
-> -		reg = <0x00700000 0x1000 0x70000000 0x200000>;
-> -		[...]
-> -	};
-> -
-> -Atmel LCDC Display
-> ------------------------------------------------------
-> -Required properties (as per of_videomode_helper):
-> -
-> - - atmel,dmacon: dma controller configuration
-> - - atmel,lcdcon2: lcd controller configuration
-> - - atmel,guard-time: lcd guard time (Delay in frame periods)
-> - - bits-per-pixel: lcd panel bit-depth.
-> -
-> -Optional properties (as per of_videomode_helper):
-> - - atmel,lcdcon-backlight: enable backlight
-> - - atmel,lcdcon-backlight-inverted: invert backlight PWM polarity
-> - - atmel,lcd-wiring-mode: lcd wiring mode "RGB" or "BRG"
-> - - atmel,power-control-gpio: gpio to power on or off the LCD (as many as needed)
-> -
-> -Example:
-> -	display0: display {
-> -		bits-per-pixel = <32>;
-> -		atmel,lcdcon-backlight;
-> -		atmel,dmacon = <0x1>;
-> -		atmel,lcdcon2 = <0x80008002>;
-> -		atmel,guard-time = <9>;
-> -		atmel,lcd-wiring-mode = <1>;
-> -
-> -		display-timings {
-> -			native-mode = <&timing0>;
-> -			timing0: timing0 {
-> -				clock-frequency = <9000000>;
-> -				hactive = <480>;
-> -				vactive = <272>;
-> -				hback-porch = <1>;
-> -				hfront-porch = <1>;
-> -				vback-porch = <40>;
-> -				vfront-porch = <1>;
-> -				hsync-len = <45>;
-> -				vsync-len = <1>;
-> -			};
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/display/atmel/lcdc.yaml b/Documentation/devicetree/bindings/display/atmel/lcdc.yaml
-> new file mode 100644
-> index 000000000000..7dcb9a4d5902
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/atmel/lcdc.yaml
-> @@ -0,0 +1,137 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/atmel/lcdc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Atmel LCDC (LCD Controller) display controller with PWM
-> +
-> +maintainers:
-> +  - Sam Ravnborg <sam@ravnborg.org>
-> +
-> +description: |
-> +  The Atmel LCDC Display Controller is display controller that
-> +  includes a PWM for backlight/contrast.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - atmel,at91sam9261-lcdc
-> +      - atmel,at91sam9263-lcdc
-> +      - atmel,at91sam9g10-lcdc
-> +      - atmel,at91sam9g45-lcdc
-> +      - atmel,at91sam9g45es-lcdc
-> +      - atmel,at91sam9g46-lcdc
-> +      - atmel,at91sam9m10-lcdc
-> +      - atmel,at91sam9m11-lcdc
-> +      - atmel,at91sam9rl-lcdc
-> +
-> +  "#address-cells":
-> +    const: 1
-> +  "#size-cells":
-> +    const: 0
-> +
-> +  reg:
-> +    description: |
-> +      Contains 1 register range (address and length).
-> +      Can contain an additional register range (address and length)
-> +      for fixed framebuffer memory
-
-So, minItems: 1 , maxItems: 2?
-
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  lcd-supply:
-> +    description: Regulator for LCD supply voltage.
-> +
-> +  display:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: phandle to display node
-> +
-> +patternProperties:
-> +  "^display[0-9]$":
-> +    type: object
-> +    description: |
-> +      Display node is required to initialize the lcd panel.
-> +      This should be in the board dts
-> +
-> +    properties:
-> +
-> +      atmel,dmacon:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: DMA controller configuration
-> +
-> +      atmel,lcdcon2:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: LCD controller configuration
-> +
-> +      atmel,guard-time:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: LCD guard time (Delay in frame periods)
-> +
-> +      bits-per-pixel:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: LCD panel bit-depth.
-
-Those properties aren't documented anywhere?
-
-Maxime
-
---kpecuiezqczpcjng
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpV0kQAKCRDj7w1vZxhR
-xba9AQDmrxYaMT55KbrVTmc0PvlNdbW8UOTkZx6RHCf7DesFnAD/bx2BEZuSu1JQ
-/oSXtj39Ax0HAmrvnx0b6Rmn23btawE=
-=I8D4
------END PGP SIGNATURE-----
-
---kpecuiezqczpcjng--
+DQoNCk9uIDEzLjA0LjIwMjAgMTM6NDYsIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KPiBFWFRF
+Uk5BTCBFTUFJTDogRG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNz
+IHlvdSBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUNCj4gDQo+IE9uIDEzLzA0LzIwMjAgMDg6NTE6
+MTIrMDAwMCwgQ2xhdWRpdS5CZXpuZWFAbWljcm9jaGlwLmNvbSB3cm90ZToNCj4+DQo+Pg0KPj4g
+T24gMTEuMDQuMjAyMCAwMToyNiwgQWxleGFuZHJlIEJlbGxvbmkgd3JvdGU6DQo+Pj4gRVhURVJO
+QUwgRU1BSUw6IERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVzcyB5
+b3Uga25vdyB0aGUgY29udGVudCBpcyBzYWZlDQo+Pj4NCj4+PiBPbiAxMC8wNC8yMDIwIDE5OjI2
+OjU4KzAzMDAsIENsYXVkaXUgQmV6bmVhIHdyb3RlOg0KPj4+PiBBZGQgUlRULg0KPj4+Pg0KPj4+
+PiBTaWduZWQtb2ZmLWJ5OiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRpdS5iZXpuZWFAbWljcm9jaGlw
+LmNvbT4NCj4+Pj4gLS0tDQo+Pj4+ICBhcmNoL2FybS9ib290L2R0cy9hdDkxLXNhbTl4NjBlay5k
+dHMgfCA1ICsrKysrDQo+Pj4+ICBhcmNoL2FybS9ib290L2R0cy9zYW05eDYwLmR0c2kgICAgICAg
+fCA3ICsrKysrKysNCj4+Pj4gIDIgZmlsZXMgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKQ0KPj4+
+Pg0KPj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1zYW05eDYwZWsuZHRz
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1zYW05eDYwZWsuZHRzDQo+Pj4+IGluZGV4IGFiM2Qy
+ZDlhNDIwYS4uNDAyMGU3OWE5NThlIDEwMDY0NA0KPj4+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0
+cy9hdDkxLXNhbTl4NjBlay5kdHMNCj4+Pj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1z
+YW05eDYwZWsuZHRzDQo+Pj4+IEBAIC02MTcsNiArNjE3LDExIEBADQo+Pj4+ICAgICAgIH07DQo+
+Pj4+ICB9Ow0KPj4+Pg0KPj4+PiArJnJ0dCB7DQo+Pj4+ICsgICAgIGF0bWVsLHJ0dC1ydGMtdGlt
+ZS1yZWcgPSA8JmdwYnIgMHgwPjsNCj4+Pj4gKyAgICAgc3RhdHVzID0gIm9rYXkiOw0KPj4+DQo+
+Pj4gSXMgdGhlcmUgYW55IHBvaW50IHVzaW5nIGEgZ3BiciByZWdpc3RlciB3aGlsZSB0aGVyZSBp
+cyBhbHJlYWR5IGEgbXVjaA0KPj4+IGJldHRlciBSVEMgaW4gdGhlIHN5c3RlbT8NCj4+DQo+PiBP
+bmx5IHRvIGhhdmUgaXQgYWxzbyBlbmFibGVkLg0KPj4NCj4gDQo+IFdoeSB3b3VsZCBvbmUgdXNl
+IHRoZSBSVFQgd2hpbGUgdGhlIFJUQyBpcyBmYXIgc3VwZXJpb3I/DQoNCkkgZGlkbid0IGVuYWJs
+ZWQgdGhpcyBmb3IgYSBwYXJ0aWN1bGFyIHVzZSBjYXNlLCBidXQ6IGNvdWxkbid0IHRoaXMgYmUg
+dXNlZA0KYnkgc29tZSB1c2VyIHRoYXQgd2FudHMgdG8gZ2VuZXJhdGUgbXVsdGlwbGUgYWxhcm1z
+PyBmcm9tIG11bHRpcGxlIFJUQ3M/DQoNCk1vcmVvdmVyLCB0aGlzIElQJ3MgY291bnRlciBoYXMg
+dGhlIHBvc3NpYmlsaXR5IG9mIGJlaW5nIGNsb2NrZWQgYXQgMUh6Lg0KQ291bGRuJ3QgdGhpcyBt
+aW5pbWl6ZSB0aGUgcG93ZXIgY29uc3VtcHRpb24gd2hpbGUgYmVpbmcgaW4gYSBwb3dlciBzYXZp
+bmcNCm1vZGU/DQoNCj4gDQo+Pj4NCj4+PiBJbiBhbnkgY2FzZSwgdGhpcyBkaWZmIHNob3VsZCBi
+ZSBtZXJnZSB3aXRoIHRoZSBvdGhlciBhdDkxLXNhbTl4NjBlay5kdHMNCj4+PiBjaGFuZ2UgaW5z
+dGVhZCBvZiBiZWluZyB3aXRoIHRoZSBkdHNpIGNoYW5nZS4NCj4+DQo+PiBUaGUgY2hhbmdlcyBp
+biB0aGlzIHBhdGNoIGFyZSByZWxhdGVkIHRvIGVuYWJsaW5nIHRoZSBSVFQuIFRoZSBvdGhlciBk
+dHMNCj4+IGNoYW5nZSBpcyByZWxhdGVkIHRvIGVuYWJsaW5nIGdwYnIuIFRoZSBSVFQgdXNlcyB0
+aGF0IGVuYWJsZWQgZ3BiciAtPiBvbmUNCj4+IGNoYW5nZSBwZXIgcGF0Y2guDQo+Pg0KPj4gSWYg
+eW91IHN0aWxsIHdhbnQgdG8gbWVyZ2UgdGhlbiwgSSdsbCBkbyBpdCwgYnV0IHRoZW4gaXQgYmVj
+b21lcyBtaXhlZC4NCj4+DQo+IA0KPiBUaGlzIHBhdGNoIGlzIGFscmVhZHkgbWl4aW5nIGFkZCB0
+aGUgZ3BiciBpbiBzYW05eDYwZWsgYW5kIGFkZCB0aGUgbm9kZQ0KPiBpbiBzYW05eDYwLmR0c2kg
+d2hpY2ggaXMgd29yc2UuDQoNClRoaXMgcGF0Y2ggaXMgbGlrZSB0aGlzOg0KDQpkaWZmIC0tZ2l0
+IGEvYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1zYW05eDYwZWsuZHRzDQpiL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL2F0OTEtc2FtOXg2MGVrLmR0cw0KaW5kZXggYWIzZDJkOWE0MjBhLi40MDIwZTc5YTk1OGUg
+MTAwNjQ0DQotLS0gYS9hcmNoL2FybS9ib290L2R0cy9hdDkxLXNhbTl4NjBlay5kdHMNCisrKyBi
+L2FyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtc2FtOXg2MGVrLmR0cw0KQEAgLTYxNyw2ICs2MTcsMTEg
+QEANCiAJfTsNCiB9Ow0KDQorJnJ0dCB7DQorCWF0bWVsLHJ0dC1ydGMtdGltZS1yZWcgPSA8Jmdw
+YnIgMHgwPjsNCisJc3RhdHVzID0gIm9rYXkiOw0KK307DQorDQogJnNodXRkb3duX2NvbnRyb2xs
+ZXIgew0KIAlhdG1lbCxzaGR3Yy1kZWJvdW5jZXIgPSA8OTc2PjsNCiAJc3RhdHVzID0gIm9rYXki
+Ow0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3NhbTl4NjAuZHRzaSBiL2FyY2gvYXJt
+L2Jvb3QvZHRzL3NhbTl4NjAuZHRzaQ0KaW5kZXggMzI2YjM5MzI4YjU4Li5lMWQ4ZTNhNGNiMGIg
+MTAwNjQ0DQotLS0gYS9hcmNoL2FybS9ib290L2R0cy9zYW05eDYwLmR0c2kNCisrKyBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL3NhbTl4NjAuZHRzaQ0KQEAgLTY2MSw2ICs2NjEsMTMgQEANCiAJCQkJc3Rh
+dHVzID0gImRpc2FibGVkIjsNCiAJCQl9Ow0KDQorCQkJcnR0OiBydHRAZmZmZmZlMjAgew0KKwkJ
+CQljb21wYXRpYmxlID0gIm1pY3JvY2hpcCxzYW05eDYwLXJ0dCI7DQorCQkJCXJlZyA9IDwweGZm
+ZmZmZTIwIDB4MjA+Ow0KKwkJCQlpbnRlcnJ1cHRzID0gPDEgSVJRX1RZUEVfTEVWRUxfSElHSCA3
+PjsNCisJCQkJY2xvY2tzID0gPCZjbGszMmsgMD47DQorCQkJfTsNCisNCg0KSXQgZG9lc24ndCBh
+ZGRzIHRoZSBHUEJSIGluIHNhbTl4NjBlaywgaXQgYWRkcyBydHQgaW4gc2FtOXg2MGVrIHdoaWNo
+IHVzZXMNCkdQQlIuDQoNCj4gDQo+IEp1c3QgaGF2ZSBvbmUgcGF0Y2ggYWRkaW5nIHRoZSBydHQg
+bm9kZSB0byB0aGUgc2FtOXg2MC5kdHNpIGFuZCB0aGVuIGENCj4gcGF0Y2ggYWRkaW5nIHRoZSBS
+VFQgdG8gc2FtOXg2MGVrLg0KDQpPaywgSSB1bmRlcnN0YW5kIHRoaXMuDQoNCj4gQmVjYXVzZSB0
+aGUgUlRUIHVzZXMgdGhlIGdwYnIsIGl0IGlzDQo+IGEgZ29vZCB0aW1lIHRvIGFkZCBlbmFibGUg
+dGhlIGdwYnIsIHRoaXMgaXMgYSBzaW5nbGUgZnVuY3Rpb25uYWwgY2hhbmdlLg0KPiANCj4gTGV0
+J3Mgc2F5IHRoYXQgZm9yIHNvbWUgcmVhc29uLCB0aGUgUlRUIHBhdGNoIG9uIHNhbTl4NjBlayBo
+YXMgdG8gYmUNCj4gcmV2ZXJ0ZWQsIHRoZW4gdGhlIFJUVCBub2RlIGlzIHN0aWxsIGRlZmluZWQg
+d2hpY2ggaXMgZ29vZCBmb3IgYWxsIHRoZQ0KPiBvdGhlciBldmVudHVhbCB1c2Vycy4NCg0KUlRU
+IG5vZGUgd291bGQgc3RpbGwgYmUgZGVmaW5lZCBidXQgR1BCUiBub2RlIHdpbGwgbm90IGJlIGVu
+YWJsZWQuDQoNCklmIFJUVCBwYXRjaCBjb250YWlucyB0aGlzIGNoYW5nZSB0aGF0IEkgdW5kZXJz
+dGFuZCB5b3Ugd2FudCBtZSB0byBtZXJnZSBoZXJlOg0KDQorJmdwYnIgew0KKwlzdGF0dXMgPSAi
+b2theSI7DQorfTsNCisNCg0KdGhlbiwgdGhlb3JldGljYWxseSwgc29tZSBvdGhlciBJUHMgdXNp
+bmcgdGhlIEdQQlIgKFJUQyBoYXZlIHRoZQ0KcG9zc2liaWxpdHkgb2YgZG9pbmcgdGhpcyksIG1h
+eSBiZSBicm9rZW4gYnkgcmV2ZXJ0aW5nIHRoZSBSVFQgcGF0Y2ggdGhhdA0KaW5jbHVkZXMgdGhl
+IEdQQlIgZW5hYmxpbmcgcGF0Y2guDQoNCj4gDQo+IA0KPiAtLQ0KPiBBbGV4YW5kcmUgQmVsbG9u
+aSwgQm9vdGxpbg0KPiBFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVuZ2luZWVyaW5nDQo+IGh0
+dHBzOi8vYm9vdGxpbi5jb20NCj4g
