@@ -2,322 +2,220 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EDEC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF90C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1557620767
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:16:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="gqYmzl18"
+	by mail.kernel.org (Postfix) with ESMTP id 0C72F20774
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:18:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503716AbgDNSPr (ORCPT
+        id S2503764AbgDNSSx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:15:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45764 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2503709AbgDNSPj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:15:39 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F122C061A0E
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 11:15:39 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id z17so643832oto.4
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 11:15:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=311Ki1TayWq2eeNSKCfJ9oo9ldzggmhLsDapa5DYoDs=;
-        b=gqYmzl18R7dYSMCGDAnJIqGqGaOsVxCrWxYNro4lrIR5BmPyweFDaSIg7IPVrP2hTR
-         5Ij8NbE2oT/pDa95NEBc7oX03YFSadAHNj7nAYKhvHTwjmsCjNm54fBYvTeyycMOqTSp
-         3NZifFagMAJgOx5pFOoXEy0KjV+I+ii15/yvtBJ/vjZcC5l6EzNL+8lUr/4i+O0H5FRi
-         f+b1/oslzVQpBP6XG76bqYDqi2tbj/Y59ER8jR8N5csJxSu/lKQsI0oFduaDTLOZzR9j
-         /REDXXHng/PXkT5+ZJG/h36znxbG1O1MPvkrh8JWadmHCVrrSDputuV8eQTel3ZlzHFX
-         NDzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=311Ki1TayWq2eeNSKCfJ9oo9ldzggmhLsDapa5DYoDs=;
-        b=Tl5RDUjQB9VqWLeErEl03hJObXBesIfbtACBBPHwxliZ/hgStZmtVwNZFOU7tT+MEB
-         daNukF/Rq9e+n7ABfd0q7wWoRsVJAqfUn2ac5C6DKzdYjv723GUPAa1nmvCH3G5qnej/
-         ragib83CzldtM73dBtLeMSl/XuovupzH2Sfm8N/PR1qKnyFkyMbJDlKrZADAKfG9SmoT
-         kRneP+sh9dkn9EvnHeYcucupQPyJgfo22rSZd2ox6lw43coQAlDhhjxUT432K+XBNe03
-         4ZHvESfDygdcMi3OoM5NlnzMHyXHvVaqq3GZ72exqrBn7suwQdnbmK1cRXBSPgcNfA9x
-         Aa/Q==
-X-Gm-Message-State: AGi0PuZW7/WKR9j2juegDIuHy5tBo15oUOIBhOdfJPmi6/oGz2gcE1lI
-        bruMopFWzxk0tipZTe8aQX1pKMs2vx5ExTPUnRN56w==
-X-Google-Smtp-Source: APiQypJ7880lb72c5yAW+klTFHXowNzhF/TD3UkRRP9dfwmkA4vImAC5OG87XN4glONyeHJ9ROt9dacjemejij/Mnh4=
-X-Received: by 2002:a9d:ef8:: with SMTP id 111mr19768445otj.94.1586888138571;
- Tue, 14 Apr 2020 11:15:38 -0700 (PDT)
+        Tue, 14 Apr 2020 14:18:53 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:43818 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2503749AbgDNSSw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 14:18:52 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id ABE0380441;
+        Tue, 14 Apr 2020 20:18:48 +0200 (CEST)
+Date:   Tue, 14 Apr 2020 20:18:47 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: Document the Synopsys ARC HDMI TX
+ bindings
+Message-ID: <20200414181847.GB21071@ravnborg.org>
+References: <20200414144402.27643-1-Eugeniy.Paltsev@synopsys.com>
+ <20200414144402.27643-3-Eugeniy.Paltsev@synopsys.com>
 MIME-Version: 1.0
-References: <20200413170107.246509-1-robert.marko@sartura.hr> <787129c5-f711-5f85-9306-35fb93c68d7b@gmail.com>
-In-Reply-To: <787129c5-f711-5f85-9306-35fb93c68d7b@gmail.com>
-From:   Robert Marko <robert.marko@sartura.hr>
-Date:   Tue, 14 Apr 2020 20:15:27 +0200
-Message-ID: <CA+HBbNFhzRGWdXYm+f2okXYSOPZyADz8ysPCttuU2uK_VoV+wg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] net: phy: mdio: add IPQ40xx MDIO driver
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, f.fainelli@gmail.com,
-        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414144402.27643-3-Eugeniy.Paltsev@synopsys.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=jIQo8A4GAAAA:8
+        a=7gkXJVJtAAAA:8 a=gEfo2CItAAAA:8 a=_sfh-jedi5NWomO9Eu8A:9
+        a=Bidoa8gpE23jXAbx:21 a=7WcnEqVqqvUY8Xlb:21 a=CjuIK1q_8ugA:10
+        a=Lf5xNeLK5dgiOs8hzIjU:22 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=sptkURWiP4Gy88Gu7hUp:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 7:18 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
->
-> On 13.04.2020 19:01, Robert Marko wrote:
-> > This patch adds the driver for the MDIO interface
-> > inside of Qualcomm IPQ40xx series SoC-s.
-> >
-> > Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-> > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> > Cc: Luka Perkov <luka.perkov@sartura.hr>
-> > ---
-> >  drivers/net/phy/Kconfig        |   7 ++
-> >  drivers/net/phy/Makefile       |   1 +
-> >  drivers/net/phy/mdio-ipq40xx.c | 180 +++++++++++++++++++++++++++++++++
-> >  3 files changed, 188 insertions(+)
-> >  create mode 100644 drivers/net/phy/mdio-ipq40xx.c
-> >
-> > diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> > index 9dabe03a668c..614d08635012 100644
-> > --- a/drivers/net/phy/Kconfig
-> > +++ b/drivers/net/phy/Kconfig
-> > @@ -157,6 +157,13 @@ config MDIO_I2C
-> >
-> >         This is library mode.
-> >
-> > +config MDIO_IPQ40XX
-> > +     tristate "Qualcomm IPQ40xx MDIO interface"
-> > +     depends on HAS_IOMEM && OF
-> > +     help
-> > +       This driver supports the MDIO interface found in Qualcomm
-> > +       IPQ40xx series Soc-s.
-> > +
-> >  config MDIO_MOXART
-> >       tristate "MOXA ART MDIO interface support"
-> >       depends on ARCH_MOXART || COMPILE_TEST
-> > diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-> > index fe5badf13b65..c89fc187fd74 100644
-> > --- a/drivers/net/phy/Makefile
-> > +++ b/drivers/net/phy/Makefile
-> > @@ -36,6 +36,7 @@ obj-$(CONFIG_MDIO_CAVIUM)   += mdio-cavium.o
-> >  obj-$(CONFIG_MDIO_GPIO)              += mdio-gpio.o
-> >  obj-$(CONFIG_MDIO_HISI_FEMAC)        += mdio-hisi-femac.o
-> >  obj-$(CONFIG_MDIO_I2C)               += mdio-i2c.o
-> > +obj-$(CONFIG_MDIO_IPQ40XX)   += mdio-ipq40xx.o
-> >  obj-$(CONFIG_MDIO_MOXART)    += mdio-moxart.o
-> >  obj-$(CONFIG_MDIO_MSCC_MIIM) += mdio-mscc-miim.o
-> >  obj-$(CONFIG_MDIO_OCTEON)    += mdio-octeon.o
-> > diff --git a/drivers/net/phy/mdio-ipq40xx.c b/drivers/net/phy/mdio-ipq40xx.c
-> > new file mode 100644
-> > index 000000000000..8068f1e6a077
-> > --- /dev/null
-> > +++ b/drivers/net/phy/mdio-ipq40xx.c
-> > @@ -0,0 +1,180 @@
-> > +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
-> > +/* Copyright (c) 2015, The Linux Foundation. All rights reserved. */
-> > +
-> > +#include <linux/delay.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/mutex.h>
-> > +#include <linux/io.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of_mdio.h>
-> > +#include <linux/phy.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +#define MDIO_CTRL_0_REG              0x40
-> > +#define MDIO_CTRL_1_REG              0x44
-> > +#define MDIO_CTRL_2_REG              0x48
-> > +#define MDIO_CTRL_3_REG              0x4c
-> > +#define MDIO_CTRL_4_REG              0x50
-> > +#define MDIO_CTRL_4_ACCESS_BUSY              BIT(16)
-> > +#define MDIO_CTRL_4_ACCESS_START             BIT(8)
-> > +#define MDIO_CTRL_4_ACCESS_CODE_READ         0
-> > +#define MDIO_CTRL_4_ACCESS_CODE_WRITE        1
-> > +#define CTRL_0_REG_DEFAULT_VALUE     0x150FF
-> > +
-> > +#define IPQ40XX_MDIO_RETRY   1000
-> > +#define IPQ40XX_MDIO_DELAY   10
-> > +
-> > +struct ipq40xx_mdio_data {
-> > +     struct mii_bus  *mii_bus;
-> > +     void __iomem    *membase;
-> > +     struct device   *dev;
-> > +};
-> > +
-> > +static int ipq40xx_mdio_wait_busy(struct ipq40xx_mdio_data *am)
-> > +{
-> > +     int i;
-> > +
-> > +     for (i = 0; i < IPQ40XX_MDIO_RETRY; i++) {
-> > +             unsigned int busy;
-> > +
-> > +             busy = readl(am->membase + MDIO_CTRL_4_REG) &
-> > +                     MDIO_CTRL_4_ACCESS_BUSY;
-> > +             if (!busy)
-> > +                     return 0;
-> > +
-> > +             /* BUSY might take to be cleard by 15~20 times of loop */
-> > +             udelay(IPQ40XX_MDIO_DELAY);
-> > +     }
-> > +
-> > +     dev_err(am->dev, "%s: MDIO operation timed out\n", am->mii_bus->name);
-> > +
-> > +     return -ETIMEDOUT;
-> > +}
-> > +
-> > +static int ipq40xx_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
-> > +{
-> > +     struct ipq40xx_mdio_data *am = bus->priv;
-> > +     int value = 0;
-> > +     unsigned int cmd = 0;
-> > +
-> > +     lockdep_assert_held(&bus->mdio_lock);
-> > +
-> > +     if (ipq40xx_mdio_wait_busy(am))
-> > +             return -ETIMEDOUT;
-> > +
-> > +     /* issue the phy address and reg */
-> > +     writel((mii_id << 8) | regnum, am->membase + MDIO_CTRL_1_REG);
-> > +
-> > +     cmd = MDIO_CTRL_4_ACCESS_START | MDIO_CTRL_4_ACCESS_CODE_READ;
-> > +
-> > +     /* issue read command */
-> > +     writel(cmd, am->membase + MDIO_CTRL_4_REG);
-> > +
-> > +     /* Wait read complete */
-> > +     if (ipq40xx_mdio_wait_busy(am))
-> > +             return -ETIMEDOUT;
-> > +
-> > +     /* Read data */
-> > +     value = readl(am->membase + MDIO_CTRL_3_REG);
-> > +
-> > +     return value;
-> > +}
-> > +
-> > +static int ipq40xx_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
-> > +                                                      u16 value)
-> > +{
-> > +     struct ipq40xx_mdio_data *am = bus->priv;
-> > +     unsigned int cmd = 0;
-> > +
-> > +     lockdep_assert_held(&bus->mdio_lock);
-> > +
-> > +     if (ipq40xx_mdio_wait_busy(am))
-> > +             return -ETIMEDOUT;
-> > +
-> > +     /* issue the phy address and reg */
-> > +     writel((mii_id << 8) | regnum, am->membase + MDIO_CTRL_1_REG);
-> > +
-> > +     /* issue write data */
-> > +     writel(value, am->membase + MDIO_CTRL_2_REG);
-> > +
-> > +     cmd = MDIO_CTRL_4_ACCESS_START | MDIO_CTRL_4_ACCESS_CODE_WRITE;
-> > +     /* issue write command */
-> > +     writel(cmd, am->membase + MDIO_CTRL_4_REG);
-> > +
-> > +     /* Wait write complete */
-> > +     if (ipq40xx_mdio_wait_busy(am))
-> > +             return -ETIMEDOUT;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int ipq40xx_mdio_probe(struct platform_device *pdev)
-> > +{
-> > +     struct ipq40xx_mdio_data *am;
-> > +     struct resource *res;
-> > +
-> > +     am = devm_kzalloc(&pdev->dev, sizeof(*am), GFP_KERNEL);
-> > +     if (!am)
-> > +             return -ENOMEM;
-> > +
-> > +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +     if (!res) {
-> > +             dev_err(&pdev->dev, "no iomem resource found\n");
-> > +             return -ENXIO;
-> > +     }
-> > +
-> > +     am->membase = devm_ioremap_resource(&pdev->dev, res);
->
-> You can use devm_platform_ioremap_resource() here.
-Thanks, its now used in v2.
->
-> > +     if (IS_ERR(am->membase)) {
-> > +             dev_err(&pdev->dev, "unable to ioremap registers\n");
-> > +             return PTR_ERR(am->membase);
-> > +     }
-> > +
-> > +     am->mii_bus = devm_mdiobus_alloc(&pdev->dev);
-> > +     if (!am->mii_bus)
-> > +             return  -ENOMEM;
-> > +
->
-> You could use devm_mdiobus_alloc_size() and omit allocating am
-> separately.
-Thanks, I switched to it in v2 along some other improvements.
->
-> > +     writel(CTRL_0_REG_DEFAULT_VALUE, am->membase + MDIO_CTRL_0_REG);
-> > +
-> > +     am->mii_bus->name = "ipq40xx_mdio";
-> > +     am->mii_bus->read = ipq40xx_mdio_read;
-> > +     am->mii_bus->write = ipq40xx_mdio_write;
-> > +     am->mii_bus->priv = am;
-> > +     am->mii_bus->parent = &pdev->dev;
-> > +     snprintf(am->mii_bus->id, MII_BUS_ID_SIZE, "%s", dev_name(&pdev->dev));
-> > +
-> > +     am->dev = &pdev->dev;
-> > +     platform_set_drvdata(pdev, am);
-> > +
-> > +     return of_mdiobus_register(am->mii_bus, pdev->dev.of_node);
-> > +}
-> > +
-> > +static int ipq40xx_mdio_remove(struct platform_device *pdev)
-> > +{
-> > +     struct ipq40xx_mdio_data *am = platform_get_drvdata(pdev);
-> > +
-> > +     mdiobus_unregister(am->mii_bus);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct of_device_id ipq40xx_mdio_dt_ids[] = {
-> > +     { .compatible = "qcom,ipq40xx-mdio" },
-> > +     { }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, ipq40xx_mdio_dt_ids);
-> > +
-> > +static struct platform_driver ipq40xx_mdio_driver = {
-> > +     .probe = ipq40xx_mdio_probe,
-> > +     .remove = ipq40xx_mdio_remove,
-> > +     .driver = {
-> > +             .name = "ipq40xx-mdio",
-> > +             .of_match_table = ipq40xx_mdio_dt_ids,
-> > +     },
-> > +};
-> > +
-> > +module_platform_driver(ipq40xx_mdio_driver);
-> > +
-> > +MODULE_DESCRIPTION("IPQ40XX MDIO interface driver");
-> > +MODULE_AUTHOR("Qualcomm Atheros");
-> > +MODULE_LICENSE("Dual BSD/GPL");
-> >
->
+Hi Eugeniy.
+
+On Tue, Apr 14, 2020 at 05:44:02PM +0300, Eugeniy Paltsev wrote:
+> This patch adds documentation of device tree bindings for the Synopsys
+> HDMI 2.0 TX encoder driver for ARC SoCs.
+> 
+> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+
+with a few nits addressed.
+
+As already mentioned - the filename confuses.
+Maybe tell why in changelog - og fix filename to follow compatible.
+
+> ---
+>  .../display/bridge/snps,arc-dw-hdmi.yaml      | 131 ++++++++++++++++++
+>  1 file changed, 131 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.yaml b/Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.yaml
+> new file mode 100644
+> index 000000000000..f52fc3b114b0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.yaml
+> @@ -0,0 +1,131 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/snps,arc-dw-hdmi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Synopsys DesignWare HDMI 2.0 TX encoder driver
+> +
+> +maintainers:
+> +  - Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> +
+> +description: |
+> +  The HDMI transmitter is a Synopsys DesignWare HDMI 2.0 TX controller IP
+> +  with a companion of Synopsys DesignWare HDMI 2.0 TX PHY IP.
+> +
+> +  These DT bindings follow the Synopsys DWC HDMI TX bindings defined in
+> +  Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt
+> +  with the following device-specific properties.
+> +
+> +properties:
+> +  compatible:
+> +    const: snps,dw-hdmi-hsdk
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: |
+> +      Memory mapped base address and length of the DWC HDMI TX registers.
+> +
+> +  clocks:
+> +    items:
+> +      - description: The bus clock for AHB / APB
+> +      - description: The internal register configuration clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: iahb
+> +      - const: isfr
+> +
+> +  reg-io-width:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [1, 4]
+> +        description:
+> +          Width of the registers specified by the reg property. The
+> +          value is expressed in bytes and must be equal to 1 or 4 if specified.
+> +          The register width defaults to 1 if the property is not present.
+> +
+> +  ports:
+> +    type: object
+> +    description: |
+> +      A ports node with endpoint definitions as defined in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +      port@0:
+> +        type: object
+> +        description: |
+> +          Video input endpoints of the controller.
+> +          Usually the associated with PGU.
+Please rephrase this sentence. I am not sure how to read it.
+
+> +
+> +      port@1:
+> +        type: object
+> +        description: |
+> +          Output endpoints of the controller. HDMI connector.
+> +
+> +    required:
+> +      - "#address-cells"
+> +      - "#size-cells"
+> +      - port@0
+> +      - port@1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    hdmi: hdmi@0x10000 {
+hdmi
+> +        compatible = "snps,dw-hdmi-hsdk";
+> +        reg = <0x10000 0x10000>;
+> +        reg-io-width = <4>;
+> +        interrupts = <14>;
+> +        clocks = <&apbclk>, <&hdmi_pix_clk>;
+> +        clock-names = "iahb", "isfr";
+> +
+> +        ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            port@0 {
+> +                reg = <0>;
+> +                hdmi_enc_input: endpoint {
+> +                    remote-endpoint = <&pgu_output>;
+> +                };
+> +            };
+> +
+> +            port@1 {
+> +                reg = <1>;
+> +                hdmi_enc_out: endpoint {
+> +                    remote-endpoint = <&hdmi_con>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +    hdmi-out {
+> +        port {
+> +            hdmi_con: endpoint {
+> +                remote-endpoint = <&hdmi_enc_out>;
+> +            };
+> +        };
+> +    };
+> +
+> +    pgu {
+> +        port_o: port {
+> +            pgu_output: endpoint {
+> +                remote-endpoint = <&hdmi_enc_input>;
+> +            };
+> +        };
+> +    };
+> -- 
+> 2.21.1
