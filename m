@@ -2,125 +2,182 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79658C352BE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 19:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB518C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 19:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59B47206E9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 19:41:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586893261;
-	bh=XyBF/72+iOiw1nNvQfYZcbTIcV7ruXT3171R7WvN40g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TrIGOSQAP3tOq3ZxC6OWB64b9lKepQsqeProzfo8xBwMDI9pZnQzbJuIiXkn7aSLy
-	 TWB1xEFfcxIKbXAZRngFUHUgV5r19UVivsq/wEbX3j4T4fvrHyoxtbJrJDKzmndg/d
-	 w4GlF0PTbVjI58wD3UE3Pa45Ntndn9xzL/gZldaQ=
+	by mail.kernel.org (Postfix) with ESMTP id B738720656
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 19:43:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PIrTpU7m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504935AbgDNTlA (ORCPT
+        id S2505115AbgDNTnG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 15:41:00 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41189 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505065AbgDNTk5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 15:40:57 -0400
-Received: by mail-ot1-f67.google.com with SMTP id f52so914914otf.8;
-        Tue, 14 Apr 2020 12:40:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rA3IETH0xgn8ebwBJlBRbndhRKsHnPU2NvYNY3hNsKA=;
-        b=nZFluG9hEo7sfn8b+ldOOvfj2fhe2WTx3SjvcYS5A0qWJYOytQr42p7WhgMn3avC9m
-         WNXL4dLpQ+MBgjC1tSOVwQ29ntDd1nssIuN4CZHlbazbyaqtirEv6nSpnPDVun9I7j0B
-         qJ9WnJNr7iMIjLjoYF3I8Fcdjl1PmBnCDux0UuUWlcJrXG6XRJnjpq8jJOiscx40iFYj
-         FSw9XmwfuXuylYgpe/CpS1UGMMNfbZWLSLsZNu+SPlHtfHDbl+l1fgM46rb8gdru8a26
-         d6up8Z+KGDPHnk93sXSudBYw5qN+4HB73E+4OCaauP+DaD4gG5P7kS3vgm+2YEG8ph3N
-         P8MA==
-X-Gm-Message-State: AGi0PuZWr3MwdPckGVjBM4JAEfXZMgMVFIAzK1AiXljfIoqDyL45WHFd
-        RCSM2elKrR03/kgjMzU0uA==
-X-Google-Smtp-Source: APiQypLI/AKUFg7kJsQaGhZnEKT2eudBr8nOypqMfZWA4MgD+9PzQn1dP3iPfKOpVxnuDsfLnEXp4g==
-X-Received: by 2002:a9d:24a4:: with SMTP id z33mr18571236ota.326.1586893255888;
-        Tue, 14 Apr 2020 12:40:55 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h14sm2044908oov.11.2020.04.14.12.40.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 12:40:55 -0700 (PDT)
-Received: (nullmailer pid 14986 invoked by uid 1000);
-        Tue, 14 Apr 2020 19:40:54 -0000
-Date:   Tue, 14 Apr 2020 14:40:54 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v1 3/4] dt-bindings: media: add wiring property to
- video-interfaces
-Message-ID: <20200414194054.GB29184@bogus>
-References: <20200412182012.27515-1-sam@ravnborg.org>
- <20200412182012.27515-4-sam@ravnborg.org>
+        Tue, 14 Apr 2020 15:43:06 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1180 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504949AbgDNTnF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 15:43:05 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e96120e0001>; Tue, 14 Apr 2020 12:42:06 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 14 Apr 2020 12:43:04 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 14 Apr 2020 12:43:04 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Apr
+ 2020 19:43:04 +0000
+Received: from [10.26.73.15] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Apr
+ 2020 19:43:01 +0000
+Subject: Re: [PATCH] of: Rework and simplify phandle cache to use a fixed size
+To:     Rob Herring <robh@kernel.org>, Karol Herbst <karolherbst@gmail.com>
+CC:     <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Segher Boessenkool" <segher@kernel.crashing.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <20191211232345.24810-1-robh@kernel.org>
+ <5386e959-f9c4-2748-ed08-34ab361aee2c@nvidia.com>
+ <CAL_JsqLmth0bYcG2VnxU-jk_VoC4TgvWD8_e6r1_8WqVwYGq0g@mail.gmail.com>
+ <93314ff5-aa89-cd99-393c-f75f31d9d6e5@nvidia.com>
+ <CAL_JsqL84LvUrNy095E_sC2UJnB3SFBgsw6wjOKmFM249BHMOA@mail.gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <97c0d1f4-f73e-98bd-380b-d1b8658b965a@nvidia.com>
+Date:   Tue, 14 Apr 2020 20:43:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200412182012.27515-4-sam@ravnborg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAL_JsqL84LvUrNy095E_sC2UJnB3SFBgsw6wjOKmFM249BHMOA@mail.gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586893326; bh=5SeSWnlnNXu3ix6j1SQBL1b0Wj2Lu1/GlzCZkTlRGbk=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=PIrTpU7mjRDGrDY2LHI80qDLR80IqS9UwjwB7/Mx/Nyz4Z0eS028r3+i078Vbz/gY
+         y/iSQGye3+oAJjdeHO0nuxzCeotZHg9iy0DNYjdFvxGnAc66VqMQFu9QE74mg5ocMu
+         Mt6TNg7rdTpiUG8ghbG4/cCSgRSiF5cnTYBMu0GTIPBzolQZD3u2ixvaBkHJU/S2iJ
+         rNDlFHEK2iLFNx+ZVxn00cE+wGlIAFl96BIKhYf9tfzfPcupAFUtqcGCM113Khuk7b
+         dbxELKjTprzhvrIjFTN86kU3ymrbvEQxMQzak4rbmsX8fBxaMXEhlLGwwgKgZLwYIX
+         BE4n4sjftafAQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Apr 12, 2020 at 08:20:11PM +0200, Sam Ravnborg wrote:
-> The wiring property is used to describe the wiring between
-> the connector and the panel. The property can be used when the
-> wiring is used to change the mode from for example
-> BGR to RGB. The first users are the at91sam9 family where
-> such a wiring trick is sometimes used.
-> The possilbe values are so far limited to what is required
-> by the at91sam9 family, but using "text" allows us to extend
-> this in the future.
+On 14/04/2020 16:00, Rob Herring wrote:
+> +Karol
 > 
-> There exists similar properties today:
->  - display/tilcdc/tilcdc.txt: blue-and-red-wiring
->  - display/atmel,lcdc.txt: atmel,lcd-wiring-mode
+> On Mon, Jan 13, 2020 at 5:12 AM Jon Hunter <jonathanh@nvidia.com> wrote:
+>>
+>>
+>> On 10/01/2020 23:50, Rob Herring wrote:
+>>> On Tue, Jan 7, 2020 at 4:22 AM Jon Hunter <jonathanh@nvidia.com> wrote:
+>>>>
+>>>> Hi Rob,
+>>>>
+>>>> On 11/12/2019 23:23, Rob Herring wrote:
+>>>>> The phandle cache was added to speed up of_find_node_by_phandle() by
+>>>>> avoiding walking the whole DT to find a matching phandle. The
+>>>>> implementation has several shortcomings:
+>>>>>
+>>>>>   - The cache is designed to work on a linear set of phandle values.
+>>>>>     This is true for dtc generated DTs, but not for other cases such as
+>>>>>     Power.
+>>>>>   - The cache isn't enabled until of_core_init() and a typical system
+>>>>>     may see hundreds of calls to of_find_node_by_phandle() before that
+>>>>>     point.
+>>>>>   - The cache is freed and re-allocated when the number of phandles
+>>>>>     changes.
+>>>>>   - It takes a raw spinlock around a memory allocation which breaks on
+>>>>>     RT.
+>>>>>
+>>>>> Change the implementation to a fixed size and use hash_32() as the
+>>>>> cache index. This greatly simplifies the implementation. It avoids
+>>>>> the need for any re-alloc of the cache and taking a reference on nodes
+>>>>> in the cache. We only have a single source of removing cache entries
+>>>>> which is of_detach_node().
+>>>>>
+>>>>> Using hash_32() removes any assumption on phandle values improving
+>>>>> the hit rate for non-linear phandle values. The effect on linear values
+>>>>> using hash_32() is about a 10% collision. The chances of thrashing on
+>>>>> colliding values seems to be low.
+>>>>>
+>>>>> To compare performance, I used a RK3399 board which is a pretty typical
+>>>>> system. I found that just measuring boot time as done previously is
+>>>>> noisy and may be impacted by other things. Also bringing up secondary
+>>>>> cores causes some issues with measuring, so I booted with 'nr_cpus=1'.
+>>>>> With no caching, calls to of_find_node_by_phandle() take about 20124 us
+>>>>> for 1248 calls. There's an additional 288 calls before time keeping is
+>>>>> up. Using the average time per hit/miss with the cache, we can calculate
+>>>>> these calls to take 690 us (277 hit / 11 miss) with a 128 entry cache
+>>>>> and 13319 us with no cache or an uninitialized cache.
+>>>>>
+>>>>> Comparing the 3 implementations the time spent in
+>>>>> of_find_node_by_phandle() is:
+>>>>>
+>>>>> no cache:        20124 us (+ 13319 us)
+>>>>> 128 entry cache:  5134 us (+ 690 us)
+>>>>> current cache:     819 us (+ 13319 us)
+>>>>>
+>>>>> We could move the allocation of the cache earlier to improve the
+>>>>> current cache, but that just further complicates the situation as it
+>>>>> needs to be after slab is up, so we can't do it when unflattening (which
+>>>>> uses memblock).
+>>>>>
+>>>>> Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+>>>>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>>>>> Cc: Segher Boessenkool <segher@kernel.crashing.org>
+>>>>> Cc: Frank Rowand <frowand.list@gmail.com>
+>>>>> Signed-off-by: Rob Herring <robh@kernel.org>
+>>>>
+>>>> With next-20200106 I have noticed a regression on Tegra210 where it
+>>>> appears that only one of the eMMC devices is being registered. Bisect is
+>>>> pointing to this patch and reverting on top of next fixes the problem.
+>>>> That is as far as I have got so far, so if you have any ideas, please
+>>>> let me know. Unfortunately, there do not appear to be any obvious errors
+>>>> from the bootlog.
+>>>
+>>> I guess that's tegra210-p2371-2180.dts because none of the others have
+>>> 2 SD hosts enabled. I don't see anything obvious though. Are you doing
+>>> any runtime mods to the DT?
+>>
+>> I have noticed that the bootloader is doing some runtime mods and so
+>> checking if this is the cause. I will let you know, but most likely,
+>> seeing as I cannot find anything wrong with this change itself.
 > 
-> Neither of the above are defined as endpoint properties.
+> Did you figure out the problem here? Karol sees a similar problem on
+> Tegra210 with the gpu node regulator.
 > 
-> The new property "wiring" has a more general name and
-> is defined as an endpoint property.
-> It will replace atmel,lcd-wiring-mode and may replace
-> blue-and-red-wiring.
-> 
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Hans Verkuil <hverkuil@xs4all.nl>
-> Cc: linux-media@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/media/video-interfaces.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> index f884ada0bffc..c3bb87c5c9a9 100644
-> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> @@ -141,6 +141,9 @@ Optional endpoint properties
->  - link-frequencies: Allowed data bus frequencies. For MIPI CSI-2, for
->    instance, this is the actual frequency of the bus, not bits per clock per
->    lane value. An array of 64-bit unsigned integers.
-> +- wiring: Wiring of data lines to display.
-> +  "straight" - normal wiring.
+> It looks like /external-memory-controller@7001b000 has a duplicate
+> phandle. Comparing the dtb in the filesystem with what the kernel
+> gets, that node is added by the bootloader. So the bootloader is
+> definitely creating a broken dtb.
 
-Don't really need a property to express this...
+Yes it was caused by the bootloader, u-boot, incorrectly copying some
+nodes. After preventing u-boot from doing that, it was fine. There are
+some u-boot environment variables [0] that you can try clearing to
+prevent this. Alternatively, if you use a upstream u-boot that should
+also work.
 
-> +  "red-blue-reversed" - red and blue lines reversed.
+Cheers
+Jon
 
-For a common property, I think this needs to be looked at in terms of 
-formats and some of the format negotiation work Boris was doing.
+[0] https://elinux.org/Jetson/TX1_Upstream_Kernel#Upstream_Linux_kernel
 
-Rob
+-- 
+nvpublic
