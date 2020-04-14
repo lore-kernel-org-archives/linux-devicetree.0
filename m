@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AEBC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4E9C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDC4720767
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B58FE20787
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:14:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="op0QuF5o"
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="i3/RJsjO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503624AbgDNSOJ (ORCPT
+        id S2503658AbgDNSOd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:14:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45502 "EHLO
+        Tue, 14 Apr 2020 14:14:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2503623AbgDNSOH (ORCPT
+        by vger.kernel.org with ESMTP id S2503656AbgDNSOb (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:14:07 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B0ABC061A0E
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 11:14:07 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id a81so15274947wmf.5
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 11:14:07 -0700 (PDT)
+        Tue, 14 Apr 2020 14:14:31 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9BB1C061A0C
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 11:14:30 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id d17so8674947wrg.11
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 11:14:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sartura-hr.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=rKEIBuodM54/jIsOflqk2y5mQUf0xeA0ySBI7eRUbbA=;
-        b=op0QuF5o7KM2geCjMTJ9l2SXLIdI+tfmh0VqUaUn5gu7/Q979iv5Gr25yZJThV3/Wg
-         2gj58yuEuT3HLa93eYIlFphRqiTpteGIWOR+/KM5tX2Rlbcw6FWK27kC7ounWe1M1CRH
-         pwjBVYq3PnNKqCkrk9qwlrw1UlL1oQEaC8JyGAYKBtI2y7PBwHznOjVqrsoMKmskRNp8
-         tJvirX/mDEevHIZwgzl+nio4PtPsdPJwjcYv2zNIRd/dyw8K3tvJjy5TP25soZ6snY7S
-         dPrO44rNstJ2DzTVhertdW15zkWX2Sdw/ICjkadkTtCEsFtTEdD4GEC2sskh1JHCV4qp
-         KqNw==
+        bh=JkyvlKP4pHrJ8AdiuVHbCpIXULnDIYo0wPYklEdrEI0=;
+        b=i3/RJsjOiDyODApqcCHy5k6pUbD94Xgeu24o+JvyJIO0/hUev+OnyeoBeZUgiakGf8
+         cp1FGWJ2T3J5BY1mSv0W+CQD8k6aIy13OhLWPyvd5Oir5QAl47ngBE9vCogp28eH8FFu
+         Kr03rbEX2PcMMC7gxtPsrcLvZY3Qj+IlDw70oBumA/eMaZBjBNF/ISO0zfnTl787SSs+
+         fC05nyPsgEObHjd9uYNHw6MRJtN69fmlMOikk5tkQhbTgqalmG1MvrKL1xcQ6n51LLHr
+         +lQaCzUSSvF/GP/5639o77troTwlp4ZsiEl0z1wfoTkQJWNNzdgPzH8Y9QeMeL3jU7qe
+         jFRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rKEIBuodM54/jIsOflqk2y5mQUf0xeA0ySBI7eRUbbA=;
-        b=fgDq3JylUbLFDk/7jIVBciIlPguM58zRKIlj90y8fQ/ace729QWu7D42z7sUDIPQa/
-         24R5te/6FTS1zfNGAJ4wH768Vx+hPM4r0/X7wqYwnpel8ibfJzl2cmNlGYMFyue4NPNV
-         aEtgfKGXrQDZ6g/j5Fr44/gG5kTywRpR3424sHJXAnDt9X91VcTvhawrlG0EMIh+7Qoz
-         BK4BxGUUqGg/jnbwSZPrs0EiMtQITKyTPiDUnjJIAh2yanv5covO1vRmZM9yK6+2fAbg
-         YMEr2GWX87LHxNmgIlalTDiSLwm2++2tjkZr25RHMdrZ7C2GSdCUhmmq36EU9ZnzsoOl
-         P4tw==
-X-Gm-Message-State: AGi0PuZPuf1pnCW2Fx+FKYEZsMiaDBgddHQ2Cjl3+PEv/GRigwb3GaVA
-        bd03e7wu/IRPsVPCElH07phyFA==
-X-Google-Smtp-Source: APiQypKSOh+5deo6wcOrMT7bpCM+o1kPTCXNMnVPx6TFrYyM03oN+vSVOxcaV5uRzDdsNRb4azMBMg==
-X-Received: by 2002:a7b:c250:: with SMTP id b16mr1143293wmj.100.1586888045816;
-        Tue, 14 Apr 2020 11:14:05 -0700 (PDT)
+        bh=JkyvlKP4pHrJ8AdiuVHbCpIXULnDIYo0wPYklEdrEI0=;
+        b=D2xCXROLhFBKFDP9FBO+GljcK6aJOtajSkgq+HdhWrSre5aMzqyd/zwS2DKgIGc/yl
+         ddQo8npk22pRPkc8Ynq5AVrb2OBeziP/RlQmmyGGRo4rg0grmoVvG+Blr/oGiq6TQdyu
+         qXkWJK0QUwVHv++JOP4n45zkbvj767pd2vOHAQkEacC0vnw1j4M1KeyzQ27z34TlZUKk
+         VJvGXqwb2t1gDbxg9ip2OaSbHLjApbXhY419B7QPvNvIedKN0YrRYDyhCxWdy2WHlure
+         ZdmXM3dBnQxMSCTdm4SEFyu2PiLrtiki6uU+7IuLVP64KFppBUt9BUfVIqLdT204iZqM
+         rhEg==
+X-Gm-Message-State: AGi0Pub9K+Kd+pYjXckL7gBSEsxAjVRp0FzyfQLCnEWscdSWJlRWeeNG
+        sh2dXg2zW0AL3W2lb4ueCRenTg==
+X-Google-Smtp-Source: APiQypKuhwoq30JHZAbW4ywOg0qHXXSg5sZ8KHXcL7JXIhJgwQOYdAIWuzx+IL/PNq9ZS+9GksFmwg==
+X-Received: by 2002:a5d:4306:: with SMTP id h6mr24048996wrq.234.1586888069502;
+        Tue, 14 Apr 2020 11:14:29 -0700 (PDT)
 Received: from localhost.localdomain (dh207-97-22.xnet.hr. [88.207.97.22])
-        by smtp.googlemail.com with ESMTPSA id w12sm5387763wrk.56.2020.04.14.11.14.04
+        by smtp.googlemail.com with ESMTPSA id w12sm5387763wrk.56.2020.04.14.11.14.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 11:14:05 -0700 (PDT)
+        Tue, 14 Apr 2020 11:14:29 -0700 (PDT)
 From:   Robert Marko <robert.marko@sartura.hr>
 To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
         linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
@@ -67,10 +67,11 @@ To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
         mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org
 Cc:     Robert Marko <robert.marko@sartura.hr>,
+        Christian Lamparter <chunkeey@gmail.com>,
         Luka Perkov <luka.perkov@sartura.hr>
-Subject: [PATCH v2 2/3] dt-bindings: add Qualcomm IPQ4019 MDIO bindings
-Date:   Tue, 14 Apr 2020 20:10:13 +0200
-Message-Id: <20200414181012.114905-2-robert.marko@sartura.hr>
+Subject: [PATCH v2 3/3] dts: ipq4019: add MDIO node
+Date:   Tue, 14 Apr 2020 20:10:16 +0200
+Message-Id: <20200414181012.114905-3-robert.marko@sartura.hr>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200414181012.114905-1-robert.marko@sartura.hr>
 References: <20200414181012.114905-1-robert.marko@sartura.hr>
@@ -81,83 +82,58 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds the binding document for the IPQ40xx MDIO driver.
+This patch adds the necessary MDIO interface node
+to the Qualcomm IPQ4019 DTSI.
 
+Built-in QCA8337N switch is managed using it,
+and since we have a driver for it lets add it.
+
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
 Signed-off-by: Robert Marko <robert.marko@sartura.hr>
 Cc: Luka Perkov <luka.perkov@sartura.hr>
 ---
- .../bindings/net/qcom,ipq40xx-mdio.yaml       | 62 +++++++++++++++++++
- 1 file changed, 62 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
+ arch/arm/boot/dts/qcom-ipq4019.dtsi | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
-new file mode 100644
-index 000000000000..3e2ccf417fb6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/qcom,ipq40xx-mdio.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/qcom,ipq40xx-mdio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+index b4803a428340..80d0a69e9fed 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -578,6 +578,34 @@ wifi1: wifi@a800000 {
+ 			status = "disabled";
+ 		};
+ 
++		mdio: mdio@90000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "qcom,ipq40xx-mdio";
++			reg = <0x90000 0x64>;
++			status = "disabled";
 +
-+title: Qualcomm IPQ40xx MDIO Controller Device Tree Bindings
++			ethphy0: ethernet-phy@0 {
++				reg = <0>;
++			};
 +
-+maintainers:
-+  - Robert Marko <robert.marko@sartura.hr>
++			ethphy1: ethernet-phy@1 {
++				reg = <1>;
++			};
 +
-+allOf:
-+  - $ref: "mdio.yaml#"
++			ethphy2: ethernet-phy@2 {
++				reg = <2>;
++			};
 +
-+properties:
-+  compatible:
-+    const: qcom,ipq40xx-mdio
++			ethphy3: ethernet-phy@3 {
++				reg = <3>;
++			};
 +
-+  "#address-cells":
-+    const: 1
++			ethphy4: ethernet-phy@4 {
++				reg = <4>;
++			};
++		};
 +
-+  "#size-cells":
-+    const: 0
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+examples:
-+  - |
-+    mdio@90000 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      compatible = "qcom,ipq40xx-mdio";
-+      reg = <0x90000 0x64>;
-+      status = "disabled";
-+
-+      ethphy0: ethernet-phy@0 {
-+        reg = <0>;
-+      };
-+
-+      ethphy1: ethernet-phy@1 {
-+        reg = <1>;
-+      };
-+
-+      ethphy2: ethernet-phy@2 {
-+        reg = <2>;
-+      };
-+
-+      ethphy3: ethernet-phy@3 {
-+        reg = <3>;
-+      };
-+
-+      ethphy4: ethernet-phy@4 {
-+        reg = <4>;
-+      };
-+    };
+ 		usb3_ss_phy: ssphy@9a000 {
+ 			compatible = "qcom,usb-ss-ipq4019-phy";
+ 			#phy-cells = <0>;
 -- 
 2.26.0
 
