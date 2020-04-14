@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73449C54FC9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF11C54FD2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51EDD20678
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6120206A2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KSZ3slzL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GQc1HJyS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391569AbgDNRE6 (ORCPT
+        id S2391553AbgDNRE5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:04:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34614 "EHLO
+        Tue, 14 Apr 2020 13:04:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391592AbgDNREv (ORCPT
+        by vger.kernel.org with ESMTP id S2391609AbgDNREy (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:04:51 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DFE6C061A0E
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:51 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id i10so15238219wrv.10
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:51 -0700 (PDT)
+        Tue, 14 Apr 2020 13:04:54 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A05BC061A0F
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:53 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id y24so14907135wma.4
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=dxDAAgL2UYsehlg428ECGLr43fDkT+szEz8iWolntSk=;
-        b=KSZ3slzLde6NozRQYn2Ai7oqpucgG9X78qXMfbMZBdcER7nRY1kUNT7Qt/IDN4MDjl
-         vb8Pwa0ulpEZSn0BBnH4dvqEPTE7RcoGq9Z0W234cFc+SVbRftS1kIvCyI853alAlB+Y
-         rEPDG1qUaGZ8aDnk0qSGGOfVXMDaGzZE9CbxCxqT/oC+CO1OIwkFRvN+6kDc104C4vkE
-         8G9SDBWgw+ffbm6VeWoWzvyoCQ+PUbDkthqAws5ZdzYv2p4NNty/Nv1AQXZJv7O+3rA/
-         yHUo655cjGXVw0ER+P3ankuAQ6Jt9og6eLbHOvkwVehp8uN30C+g/z+zrhkAnk1Cf6Kl
-         OqWw==
+        bh=vE2itLZu3hqvC4LzqU2NUCFx+9C8ab/nGgmunlfocw4=;
+        b=GQc1HJySAIFGl4e9JGBFURgN/vl21Fb+oCGY0ghVUDlr5r96ZmZmw/X83yVkMwCMvt
+         DVAASgUR/v3/ZKBKl9O60CQVrNvn4oMMVLsH3g9JXWg+IeYIxVCppffgWVDw7kFLs+SL
+         qL185/o63pqZqsBw6EgV8XD0/UHJpB1qI+n6vwa7Qv2mwO4fdLqiqOvJiR2hZWZH7Me1
+         eoakZAu9sIB1oOiShcxlx+56zauDP7aBZBVxrI01fRfnSKCQXLcXyLhFUPuBdcSxvOTp
+         gidl1cZtbaXu5tx9otKpXSBohIzzToXZC0tS5fggLOAxV0+H42kV0oHqDEtXsMF2hNlm
+         qwfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dxDAAgL2UYsehlg428ECGLr43fDkT+szEz8iWolntSk=;
-        b=QtPbc3ncBgPfKnxh23e46he1tPwQzHkfK7CYqofe/ZvRR6IxN+yxX21cTWYyPkfFjm
-         JAaEu2CWvalZ7xT8PHg63KL2/rMZMLNY6DQykZftL31F21nKNQKuiQ9lpplTSPSpLbUe
-         bqd7ccjRoOaCpp6dsdMVVw9gtEpLzGs9055LZJos6cJIzMyLGt1XwFv/auZ8FAjREkBR
-         SD+YijnT/o/Ul9hKp7CHF2e3uya5Kp8yVY3gQjmZBGZZxVOQdGECzDtF9P2KD+HxhBHP
-         z7uFR88BJAWgu/hDvzN1ft/ycAZVY/zLZCrtChQFzzy/OQOz2VEWbbmP9Lx//8dcsdAe
-         yEag==
-X-Gm-Message-State: AGi0PubhgGNsEVFKPOaoPJh29srWTnsSDK7hNVQEvYCREAOZetl+Z+s7
-        TOfWWA0H2n2M7SOdVPLQoPhbWg==
-X-Google-Smtp-Source: APiQypLvU1DM9P6089K9k3mSfMy8oJyq3WdIaLTthIKtphu5RdduiyeU/R3KBAD03tQZ8c5tQnffKg==
-X-Received: by 2002:a5d:4447:: with SMTP id x7mr2258833wrr.299.1586883890363;
-        Tue, 14 Apr 2020 10:04:50 -0700 (PDT)
+        bh=vE2itLZu3hqvC4LzqU2NUCFx+9C8ab/nGgmunlfocw4=;
+        b=hMWX12E/Hf5/xgEvldFGFOrnKGD2Cce/6nUQIGpMleY5aIXpkg8wNV2koivuqHrccD
+         h+5r++ek/jjPC16AaqRoPv+/LUYGdpBLHzsUGKmU2002PoZY12pPnSyI9bvfWDxMcjOh
+         1U8NRawg8k1IeSNBK+CIoO80b1Azn0p6UrEUdUYe1SHrd55UNvDpwHhBOD33yGjQlCse
+         Y6MRAeH5TjsAnRQgQhqRqzWLfsJjC/pCaz5FEdr8hF7sfetpbXuJ2dN1qbz5FfScrdHK
+         2MVUyX9Dao5v/HV01t6hgjftlM8WFxG/jg9MHaUGYfCE2wzogfoLRpgA3Q5n9m4B8HDn
+         K6uw==
+X-Gm-Message-State: AGi0PuZAj+i6OguNTLPuWXr+XgkLPDqGud9ptvMkefQPeityjyyuWGVC
+        /M4VnlyXKp1+FBqAyzqBFnTPSw==
+X-Google-Smtp-Source: APiQypIBMdNPHOZOhnCMJH0FJPJY2Rdi+r/VG4B2wmIYz2z44PksUMUJ1Q8ZKmB8ryyXqmfTYJG52Q==
+X-Received: by 2002:a1c:3c08:: with SMTP id j8mr814017wma.30.1586883892098;
+        Tue, 14 Apr 2020 10:04:52 -0700 (PDT)
 Received: from localhost.localdomain ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id x18sm19549147wrs.11.2020.04.14.10.04.48
+        by smtp.gmail.com with ESMTPSA id x18sm19549147wrs.11.2020.04.14.10.04.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 10:04:49 -0700 (PDT)
+        Tue, 14 Apr 2020 10:04:51 -0700 (PDT)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
@@ -70,9 +70,9 @@ Cc:     joro@8bytes.org, catalin.marinas@arm.com, will@kernel.org,
         zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
         Jean-Philippe Brucker <jean-philippe@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v5 23/25] PCI/ATS: Add PRI stubs
-Date:   Tue, 14 Apr 2020 19:02:51 +0200
-Message-Id: <20200414170252.714402-24-jean-philippe@linaro.org>
+Subject: [PATCH v5 24/25] PCI/ATS: Export PRI functions
+Date:   Tue, 14 Apr 2020 19:02:52 +0200
+Message-Id: <20200414170252.714402-25-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200414170252.714402-1-jean-philippe@linaro.org>
 References: <20200414170252.714402-1-jean-philippe@linaro.org>
@@ -83,33 +83,49 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The SMMUv3 driver, which can be built without CONFIG_PCI, will soon gain
-support for PRI.  Partially revert commit c6e9aefbf9db ("PCI/ATS: Remove
-unused PRI and PASID stubs") to re-introduce the PRI stubs, and avoid
-adding more #ifdefs to the SMMU driver.
+The SMMUv3 driver uses pci_{enable,disable}_pri() and related
+functions. Export those functions to allow the driver to be built as a
+module.
 
 Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- include/linux/pci-ats.h | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/pci/ats.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-index f75c307f346de..e9e266df9b37c 100644
---- a/include/linux/pci-ats.h
-+++ b/include/linux/pci-ats.h
-@@ -28,6 +28,14 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
- void pci_disable_pri(struct pci_dev *pdev);
- int pci_reset_pri(struct pci_dev *pdev);
- int pci_prg_resp_pasid_required(struct pci_dev *pdev);
-+#else /* CONFIG_PCI_PRI */
-+static inline int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
-+{ return -ENODEV; }
-+static inline void pci_disable_pri(struct pci_dev *pdev) { }
-+static inline int pci_reset_pri(struct pci_dev *pdev)
-+{ return -ENODEV; }
-+static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
-+{ return 0; }
+diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+index bbfd0d42b8b97..fc8fc6fc8bd55 100644
+--- a/drivers/pci/ats.c
++++ b/drivers/pci/ats.c
+@@ -197,6 +197,7 @@ void pci_pri_init(struct pci_dev *pdev)
+ 	if (status & PCI_PRI_STATUS_PASID)
+ 		pdev->pasid_required = 1;
+ }
++EXPORT_SYMBOL_GPL(pci_pri_init);
+ 
+ /**
+  * pci_enable_pri - Enable PRI capability
+@@ -243,6 +244,7 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(pci_enable_pri);
+ 
+ /**
+  * pci_disable_pri - Disable PRI capability
+@@ -322,6 +324,7 @@ int pci_reset_pri(struct pci_dev *pdev)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(pci_reset_pri);
+ 
+ /**
+  * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
+@@ -337,6 +340,7 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+ 
+ 	return pdev->pasid_required;
+ }
++EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
  #endif /* CONFIG_PCI_PRI */
  
  #ifdef CONFIG_PCI_PASID
