@@ -2,295 +2,123 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D23C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1305C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A34B20767
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3ABD20767
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:13:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586887998;
+	bh=MxhcnlW81VsV17mkWy15j+5bMW2ccK4uq1z9d7Gyt30=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=P5NI3sa5ryXoBcJzVbODzqa4JBtfnXdzT+xnev0t/dD56hC4w2/g8xYV4WGHBh8Bf
+	 30y9TnkxS4wd05D4wOhHFW/XzH1B2uL75KUk4VNwqBJnkm9PWMyuH4zOOJUOXliLJh
+	 fXTkFhPOjABw2zqvqwDscM0gvXo9nN8RFPseroZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503547AbgDNSM2 (ORCPT
+        id S2503591AbgDNSNP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:12:28 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:43392 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2503483AbgDNSMN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 14:12:13 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
+        Tue, 14 Apr 2020 14:13:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38792 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2503582AbgDNSNE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Apr 2020 14:13:04 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id E06EC80441;
-        Tue, 14 Apr 2020 20:12:01 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 20:11:55 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] DRM: ARC: add HDMI 2.0 TX encoder support
-Message-ID: <20200414181155.GA21071@ravnborg.org>
-References: <20200414144402.27643-1-Eugeniy.Paltsev@synopsys.com>
- <20200414144402.27643-2-Eugeniy.Paltsev@synopsys.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B67D2076B;
+        Tue, 14 Apr 2020 18:13:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586887983;
+        bh=MxhcnlW81VsV17mkWy15j+5bMW2ccK4uq1z9d7Gyt30=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rkSGqsd+MOUZtr5bJdl0CYKZlO1iMXVNnBSkKtqwQjN4byXGPLyVjzL0sd4VHex8s
+         v9028qp/IP9VM8GjEbKhLFnMM7Jri2eD4EKHBu06HwT3ROuE8WhWgZKjuau2UFHWML
+         RUUHut1mYQXH8pS+pnHzx8YHrLGMOK1LuIh7h1Ik=
+Date:   Tue, 14 Apr 2020 19:12:59 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Manivannan Sadhasivam <mani@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, narcisaanamaria12@gmail.com,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] iio: chemical: Add support for external Reset
+ and Wakeup in CCS811
+Message-ID: <20200414191259.5fbfdc2a@archlinux>
+In-Reply-To: <CAHp75Vfk3aw30j8U+BJiobU6s2KsOis_VyUv4+6csbYLFnV9eg@mail.gmail.com>
+References: <20200414153415.957-1-mani@kernel.org>
+        <20200414153415.957-3-mani@kernel.org>
+        <CAHp75Vf1wzBD+r5L7XFPW=ydxFLBfBNr6Jc4b6sMWR4Rci-Acw@mail.gmail.com>
+        <20200414170547.GB3334@Mani-XPS-13-9360>
+        <CAHp75Vfk3aw30j8U+BJiobU6s2KsOis_VyUv4+6csbYLFnV9eg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414144402.27643-2-Eugeniy.Paltsev@synopsys.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=jIQo8A4GAAAA:8 a=VwQbUJbxAAAA:8 a=irhMBndJ4tJQUlVCqRwA:9
-        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=Lf5xNeLK5dgiOs8hzIjU:22
-        a=AjGcO6oz07-iQ99wixmX:22
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Eugeniy.
+On Tue, 14 Apr 2020 20:54:49 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-On Tue, Apr 14, 2020 at 05:44:01PM +0300, Eugeniy Paltsev wrote:
-> The Synopsys ARC SoCs (like HSDK4xD) include on-chip DesignWare HDMI
-> encoders. Support them with a platform driver to provide platform glue
-> data to the dw-hdmi driver.
+> On Tue, Apr 14, 2020 at 8:06 PM Manivannan Sadhasivam <mani@kernel.org> wrote:
+> > On Tue, Apr 14, 2020 at 07:42:24PM +0300, Andy Shevchenko wrote:  
+> > > On Tue, Apr 14, 2020 at 6:34 PM <mani@kernel.org> wrote:  
+> 
+> ...
+> 
+> > > > +       reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
+> > > > +                                            GPIOD_OUT_LOW);
+> > > > +       if (IS_ERR(reset_gpio)) {  
+> > >  
+> > > > +               dev_err(&client->dev, "Failed to acquire reset gpio\n");  
+> > >
+> > > If it's a deferred probe, it would spam the log.
+> > >  
+> >
+> > Hmm. But error is an error isn't it? Would you recommend doing a debug print
+> > or completely removing the logging?  
+> 
+> I would remove completely, but better to wait for Jonathan to comment.
+> Maybe he prefers something like
+>   if (err != EPROBE_DEFER)
+>     dev_err()
 
-
-Drivers looks lean and clean.
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-
-But really take this as I found no whitespace erros or something...
-
-A few drive-by comments below.
-
-	Sam
+Not fussed.  Either drop it or do the check for defer - one I leave up to the
+author.
 
 > 
-> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> ---
->  MAINTAINERS                       |   6 ++
->  drivers/gpu/drm/Makefile          |   2 +-
->  drivers/gpu/drm/arc/Kconfig       |   7 ++
->  drivers/gpu/drm/arc/Makefile      |   1 +
->  drivers/gpu/drm/arc/arc-dw-hdmi.c | 126 ++++++++++++++++++++++++++++++
->  5 files changed, 141 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/gpu/drm/arc/arc-dw-hdmi.c
+> > > > +               return PTR_ERR(reset_gpio);
+> > > > +       }  
+> > >
+> > > ...
+> > >  
+> > > > +               static const u8 reset_seq[] = {
+> > > > +                       0xFF, 0x11, 0xE5, 0x72, 0x8A,
+> > > > +               };  
+> > >
+> > > I would suggest to comment above from where you got this and the
+> > > meaning of the numbers.
+> > >  
+> >
+> > The datasheet doesn't specify the meaning of these values. But will add a
+> > comment.  
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a6fbdf354d34..2aaed1190370 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1258,6 +1258,12 @@ S:	Supported
->  F:	drivers/gpu/drm/arc/
->  F:	Documentation/devicetree/bindings/display/snps,arcpgu.txt
->  
-> +ARC DW HDMI DRIVER
-> +M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> +S:	Supported
-> +F:	drivers/gpu/drm/arc/arc-dw-hdmi.c
-> +F:	Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.yaml
+> Thanks!
+> 
+> > Btw, just noticed that 0xFF is not needed and only 4 values are
+> > sufficient for SW reset.  
+> 
+> Better to do exactly what datasheet suggests (in case it's not clear
+> or deductible what is going on).
+> 
 
-I am confused about the filename of the binding.
-Binding files are often named after their compatible.
-But the compatible is: snps,dw-hdmi-hsdk
-
-And the biding file seems to be named after the driver name.
-This seems wrong - and I do nto see it explained.
-
-> +
->  ARCNET NETWORK LAYER
->  M:	Michael Grzeschik <m.grzeschik@pengutronix.de>
->  L:	netdev@vger.kernel.org
-> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-> index 6493088a0fdd..5b0bcf7f45cd 100644
-> --- a/drivers/gpu/drm/Makefile
-> +++ b/drivers/gpu/drm/Makefile
-> @@ -109,7 +109,7 @@ obj-y			+= panel/
->  obj-y			+= bridge/
->  obj-$(CONFIG_DRM_FSL_DCU) += fsl-dcu/
->  obj-$(CONFIG_DRM_ETNAVIV) += etnaviv/
-> -obj-$(CONFIG_DRM_ARCPGU)+= arc/
-> +obj-y			+= arc/
->  obj-y			+= hisilicon/
->  obj-$(CONFIG_DRM_ZTE)	+= zte/
->  obj-$(CONFIG_DRM_MXSFB)	+= mxsfb/
-> diff --git a/drivers/gpu/drm/arc/Kconfig b/drivers/gpu/drm/arc/Kconfig
-> index e8f3d63e0b91..baec9d2a4fba 100644
-> --- a/drivers/gpu/drm/arc/Kconfig
-> +++ b/drivers/gpu/drm/arc/Kconfig
-> @@ -8,3 +8,10 @@ config DRM_ARCPGU
->  	  Choose this option if you have an ARC PGU controller.
->  
->  	  If M is selected the module will be called arcpgu.
-> +
-> +config DRM_ARC_DW_HDMI
-> +	tristate "ARC DW HDMI"
-> +	depends on DRM && OF
-> +	select DRM_DW_HDMI
-> +	help
-> +	  Synopsys DW HDMI driver for various ARC development boards
-> diff --git a/drivers/gpu/drm/arc/Makefile b/drivers/gpu/drm/arc/Makefile
-> index c7028b7427b3..7a156d8c2c3c 100644
-> --- a/drivers/gpu/drm/arc/Makefile
-> +++ b/drivers/gpu/drm/arc/Makefile
-> @@ -1,3 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  arcpgu-y := arcpgu_crtc.o arcpgu_hdmi.o arcpgu_sim.o arcpgu_drv.o
->  obj-$(CONFIG_DRM_ARCPGU) += arcpgu.o
-> +obj-$(CONFIG_DRM_ARC_DW_HDMI) += arc-dw-hdmi.o
-> diff --git a/drivers/gpu/drm/arc/arc-dw-hdmi.c b/drivers/gpu/drm/arc/arc-dw-hdmi.c
-> new file mode 100644
-> index 000000000000..4869dd668a51
-> --- /dev/null
-> +++ b/drivers/gpu/drm/arc/arc-dw-hdmi.c
-> @@ -0,0 +1,126 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +//
-> +// Synopsys DW HDMI driver for various ARC development boards
-> +//
-> +// Copyright (C) 2020 Synopsys
-> +// Author: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> +
-> +#include <linux/component.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <drm/bridge/dw_hdmi.h>
-> +#include <drm/drm_crtc_helper.h>
-> +#include <drm/drm_edid.h>
-> +#include <drm/drm_encoder_slave.h>
-> +#include <drm/drm_of.h>
-> +
-> +static const struct dw_hdmi_mpll_config snps_hdmi_mpll_cfg[] = {
-> +	{
-> +		27000000, {
-> +			{ 0x00B3, 0x0000 },
-> +			{ 0x00B3, 0x0000 },
-> +			{ 0x00B3, 0x0000 }
-> +		},
-> +	}, {
-> +		74250000, {
-> +			{ 0x0072, 0x0001},
-> +			{ 0x0072, 0x0001},
-> +			{ 0x0072, 0x0001}
-> +		},
-> +	}, {
-> +		148500000, {
-> +			{ 0x0051, 0x0002},
-> +			{ 0x0051, 0x0002},
-> +			{ 0x0051, 0x0002}
-> +		},
-> +	}, {
-> +		~0UL, {
-> +			{ 0x00B3, 0x0000 },
-> +			{ 0x00B3, 0x0000 },
-> +			{ 0x00B3, 0x0000 },
-> +		},
-> +	}
-> +};
-> +
-> +static const struct dw_hdmi_curr_ctrl snps_hdmi_cur_ctr[] = {
-> +	/* pixelclk    bpp8    bpp10   bpp12 */
-This comment is very useful. Could you put one on top of
-snps_hdmi_mpll_cfg too?
-
-> +	{ 27000000,  { 0x0000, 0x0000, 0x0000 }, },
-> +	{ 74250000,  { 0x0008, 0x0008, 0x0008 }, },
-> +	{ 148500000, { 0x001b, 0x001b, 0x001b }, },
-> +	{ ~0UL,      { 0x0000, 0x0000, 0x0000 }, }
-> +};
-> +
-> +
-> +static const struct dw_hdmi_phy_config snps_hdmi_phy_config[] = {
-> +	/* pixelclk   symbol  term    vlev */
-> +	{ 27000000,   0x8009, 0x0004, 0x0232},
-> +	{ 74250000,   0x8009, 0x0004, 0x0232},
-> +	{ 148500000,  0x8009, 0x0004, 0x0232},
-> +	{ ~0UL,       0x8009, 0x0004, 0x0232}
-> +};
-> +
-> +static enum drm_mode_status snps_dw_hdmi_mode_valid(struct drm_connector *con,
-> +						    const struct drm_display_mode *mode)
-> +{
-> +	return MODE_OK;
-> +}
-
-dw_hdmi_bridge_mode_valid() will return MODE_OK if no operation
-is assigned to .mode_valid.
-So I think it is not needed.
-
-Or I have missed something, which is also quite possible.
-
-> +
-> +static struct dw_hdmi_plat_data snps_dw_hdmi_drv_data = {
-> +	.mpll_cfg   = snps_hdmi_mpll_cfg,
-> +	.cur_ctr    = snps_hdmi_cur_ctr,
-> +	.phy_config = snps_hdmi_phy_config,
-> +	.mode_valid = snps_dw_hdmi_mode_valid,
-> +};
-> +
-static const struct of_device_id snps_dw_hdmi_dt_ids[] = {
-	{ .compatible = "snps,dw-hdmi-hsdk", .data = &snps_dw_hdmi_drv_data },
-	{ /* sentinel */ },
-	
-Bracing looked strange. Consider the above format.
-Ignore if line becomes a few char too long (IMO).
-
-	Sam
-
-> +};
-> +MODULE_DEVICE_TABLE(of, snps_dw_hdmi_dt_ids);
-> +
-> +static int snps_dw_hdmi_probe(struct platform_device *pdev)
-> +{
-> +	const struct dw_hdmi_plat_data *plat_data;
-> +	const struct of_device_id *match;
-> +	struct dw_hdmi *hdmi;
-> +
-> +	if (!pdev->dev.of_node)
-> +		return -ENODEV;
-> +
-> +	match = of_match_node(snps_dw_hdmi_dt_ids, pdev->dev.of_node);
-> +	plat_data = match->data;
-> +
-> +	hdmi = dw_hdmi_probe(pdev, plat_data);
-> +	if (IS_ERR(hdmi))
-> +		return PTR_ERR(hdmi);
-> +
-> +	platform_set_drvdata(pdev, hdmi);
-> +
-> +	return 0;
-> +}
-> +
-> +static int snps_dw_hdmi_remove(struct platform_device *pdev)
-> +{
-> +	struct dw_hdmi *hdmi = platform_get_drvdata(pdev);
-> +
-> +	dw_hdmi_remove(hdmi);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver snps_dw_hdmi_platform_driver = {
-> +	.probe  = snps_dw_hdmi_probe,
-> +	.remove = snps_dw_hdmi_remove,
-> +	.driver = {
-> +		.name = KBUILD_MODNAME,
-> +		.of_match_table = snps_dw_hdmi_dt_ids,
-> +	},
-> +};
-> +module_platform_driver(snps_dw_hdmi_platform_driver);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("ARC specific DW-HDMI driver extension");
-> +MODULE_AUTHOR("Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>");
-> -- 
-> 2.21.1
