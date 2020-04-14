@@ -2,126 +2,136 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EFAC55190
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABE1C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34B212076B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:05:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F8zREYkz"
+	by mail.kernel.org (Postfix) with ESMTP id D93CE206A2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:06:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586883966;
+	bh=Xcd8OczNfFdGZEF3wPW0kOHvO/XmMZqNiHT1ft2gcp4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CH0kBI5lq3ZytWBS3jFS9Js/5/bPEIlGvwEXsFHcvFtKiSC2XOJn16ueR9asv7zlv
+	 3Np4f/NoXZ+0uGfHh8h27hLFPMk0n4VscWmwS0y3/8kg5VSlDAsgn6S5yR/jHAqhHj
+	 efCDIPCXnV6DBLHlp+Zduj1kGftib2XPuNYH7wJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391574AbgDNRFC (ORCPT
+        id S2388692AbgDNRGC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:05:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391584AbgDNREt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:04:49 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2AEEC061A10
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:48 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f13so15228273wrm.13
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ftC8/er1w4cYUOvkGIk6/FxjhZRdex8XjZifggKsOVc=;
-        b=F8zREYkzXEOjBIICh52aRBSsx0KYydBsiSeX1vLg3BjO4xVUHlOuGYyrqsAzk0um9g
-         3hU3Mthe396hmS7rS6NIcIUl8Y8KnOQtGN0ORHag7JZrgh3uEV356dXEM4xwqqY8Pwze
-         ZgNtKerpX4ZsyYd6DLVCLnyGotM1ATwYAczIh0xraXRquNJjV3GlWXMKOjri7lBsWJKF
-         9GslApQWbeYRl93+vN13YZV/onxTemXTIrjfGUFMghYYcHdVO5B/9YbOhJhgVpL2U8MP
-         LFuuUzzxRxcGmg4CxBLLzH1v25WazSQ9EmXw0gGw5UejA1+P+S/9YYiR3yZFbn2OR5Ms
-         1UAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ftC8/er1w4cYUOvkGIk6/FxjhZRdex8XjZifggKsOVc=;
-        b=mxmY5seOAttSVRQw3Bsyh9TZVcgDJQiVf8A7WkLJIu75uj1aNIP0/nIS6XYrUTHpNi
-         ZdEYxnoTUUg+d5IEYYu35WC/qLpnmElC0L3cpFQacV9Ojko3h4aDo/RfRgOBOkpqlpke
-         D4Ulm/OzDp4wzy0QmO5R7ZFbqz0JaEj7sP+saVuMjXoa3td/0PPHZ02eu2yqUSNUfzrM
-         HoFNMKghposRvZny2D048I2/buzt0O0enZXmj5ImGKygOsijoE7j8T6ojaIQyIIG27mI
-         o3T0BT72GqPiOAA1RxEkSnl9s9Yu8lhHk64CXjbzxRD873cHC67uLLi+pIA40gE9K0pK
-         lVOQ==
-X-Gm-Message-State: AGi0PuYBJwGDDhTAkMIQbTByEjI65EbeIRwZEf6EyvAF6GN9Kgo+Ywkq
-        ap2kjY5pD+bTSDVXwUSRtbIOnA==
-X-Google-Smtp-Source: APiQypIujMWDDt9womD2KtF8tCtmfig9Jpg4Oo+YzImaXPUr4DRwtpc2ABhB4671zuBVFTAOKxmNLQ==
-X-Received: by 2002:a5d:568f:: with SMTP id f15mr23573543wrv.48.1586883887656;
-        Tue, 14 Apr 2020 10:04:47 -0700 (PDT)
-Received: from localhost.localdomain ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id x18sm19549147wrs.11.2020.04.14.10.04.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 10:04:47 -0700 (PDT)
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org
-Cc:     joro@8bytes.org, catalin.marinas@arm.com, will@kernel.org,
-        robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
-        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v5 21/25] dt-bindings: document stall property for IOMMU masters
-Date:   Tue, 14 Apr 2020 19:02:49 +0200
-Message-Id: <20200414170252.714402-22-jean-philippe@linaro.org>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200414170252.714402-1-jean-philippe@linaro.org>
-References: <20200414170252.714402-1-jean-philippe@linaro.org>
+        Tue, 14 Apr 2020 13:06:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732423AbgDNRGA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Apr 2020 13:06:00 -0400
+Received: from Mani-XPS-13-9360 (unknown [157.50.36.11])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3116120678;
+        Tue, 14 Apr 2020 17:05:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586883959;
+        bh=Xcd8OczNfFdGZEF3wPW0kOHvO/XmMZqNiHT1ft2gcp4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MAYu5Wo6SyKz8OOXUZxB0yCmcnYI/DANdYKf/LLtqG58SEPGSGt3QieOisCBupp8O
+         vcJ5lrB5Tw3WUxzV7qtaa6JNmagze/ZLZ6yLqOYv5AOTziSR15RGF7sSU+Db+w0MLz
+         zYf4DKe5j9ROPxXB1JQgmDIdC6VJa1d1VMeqFamY=
+Date:   Tue, 14 Apr 2020 22:35:47 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, narcisaanamaria12@gmail.com,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] iio: chemical: Add support for external Reset and
+ Wakeup in CCS811
+Message-ID: <20200414170547.GB3334@Mani-XPS-13-9360>
+References: <20200414153415.957-1-mani@kernel.org>
+ <20200414153415.957-3-mani@kernel.org>
+ <CAHp75Vf1wzBD+r5L7XFPW=ydxFLBfBNr6Jc4b6sMWR4Rci-Acw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vf1wzBD+r5L7XFPW=ydxFLBfBNr6Jc4b6sMWR4Rci-Acw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On ARM systems, some platform devices behind an IOMMU may support stall,
-which is the ability to recover from page faults. Let the firmware tell us
-when a device supports stall.
+On Tue, Apr 14, 2020 at 07:42:24PM +0300, Andy Shevchenko wrote:
+> On Tue, Apr 14, 2020 at 6:34 PM <mani@kernel.org> wrote:
+> >
+> > From: Manivannan Sadhasivam <mani@kernel.org>
+> >
+> > CCS811 VOC sensor exposes nRESET and nWAKE pins which can be connected
+> > to GPIO pins of the host controller. These pins can be used to externally
+> > release the device from reset and also to wake it up before any I2C
+> > transaction. The initial driver support assumed that the nRESET pin is not
+> > connected and the nWAKE pin is tied to ground.
+> >
+> > This commit improves it by adding support for controlling those two pins
+> > externally using a host controller. For the case of reset, if the hardware
+> > reset is not available, the mechanism to do software reset is also added.
+> >
+> > As a side effect of doing this, the IIO device allocation needs to be
+> > slightly moved to top of probe to make use of priv data early.
+> 
+> Thank you for an update, my comments below.
+> 
+> ...
+> 
+> > +       reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
+> > +                                            GPIOD_OUT_LOW);
+> > +       if (IS_ERR(reset_gpio)) {
+> 
+> > +               dev_err(&client->dev, "Failed to acquire reset gpio\n");
+> 
+> If it's a deferred probe, it would spam the log.
+> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
----
- .../devicetree/bindings/iommu/iommu.txt        | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Hmm. But error is an error isn't it? Would you recommend doing a debug print
+or completely removing the logging?
 
-diff --git a/Documentation/devicetree/bindings/iommu/iommu.txt b/Documentation/devicetree/bindings/iommu/iommu.txt
-index 3c36334e4f942..26ba9e530f138 100644
---- a/Documentation/devicetree/bindings/iommu/iommu.txt
-+++ b/Documentation/devicetree/bindings/iommu/iommu.txt
-@@ -92,6 +92,24 @@ Optional properties:
-   tagging DMA transactions with an address space identifier. By default,
-   this is 0, which means that the device only has one address space.
- 
-+- dma-can-stall: When present, the master can wait for a transaction to
-+  complete for an indefinite amount of time. Upon translation fault some
-+  IOMMUs, instead of aborting the translation immediately, may first
-+  notify the driver and keep the transaction in flight. This allows the OS
-+  to inspect the fault and, for example, make physical pages resident
-+  before updating the mappings and completing the transaction. Such IOMMU
-+  accepts a limited number of simultaneous stalled transactions before
-+  having to either put back-pressure on the master, or abort new faulting
-+  transactions.
-+
-+  Firmware has to opt-in stalling, because most buses and masters don't
-+  support it. In particular it isn't compatible with PCI, where
-+  transactions have to complete before a time limit. More generally it
-+  won't work in systems and masters that haven't been designed for
-+  stalling. For example the OS, in order to handle a stalled transaction,
-+  may attempt to retrieve pages from secondary storage in a stalled
-+  domain, leading to a deadlock.
-+
- 
- Notes:
- ======
--- 
-2.26.0
+> > +               return PTR_ERR(reset_gpio);
+> > +       }
+> 
+> ...
+> 
+> > +               static const u8 reset_seq[] = {
+> > +                       0xFF, 0x11, 0xE5, 0x72, 0x8A,
+> > +               };
+> 
+> I would suggest to comment above from where you got this and the
+> meaning of the numbers.
+> 
 
+The datasheet doesn't specify the meaning of these values. But will add a
+comment. Btw, just noticed that 0xFF is not needed and only 4 values are
+sufficient for SW reset.
+
+Thanks,
+Mani
+
+> ...
+> 
+> > +       data->wakeup_gpio = devm_gpiod_get_optional(&client->dev, "wakeup",
+> > +                                                   GPIOD_OUT_HIGH);
+> > +       if (IS_ERR(data->wakeup_gpio)) {
+> 
+> > +               dev_err(&client->dev, "Failed to acquire wakeup gpio\n");
+> 
+> Ditto.
+> 
+> > +               return PTR_ERR(data->wakeup_gpio);
+> > +       }
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
