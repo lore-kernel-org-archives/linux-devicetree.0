@@ -2,90 +2,98 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E89C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81219C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3078920774
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:02:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586887372;
-	bh=PtAFfHJJmm+j+Kb6LPSRoxHltnduIZpLutVkxDiIp6M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=anM8TDNnm1AmFbgGZmfn1CtcrYsfAyFrD1tVPMt2o49DXLEoU3lWFCQoGqsYdtDrV
-	 qc46991f6sjVUV5CMRfzMChxyRNGCHg0xGvDDfVsWM/+hE6/3mRFapATYTKceltpEi
-	 Zt2mOQLy9r2SqJpR9B/yWnpDaawCv27Hv6iXk++Q=
+	by mail.kernel.org (Postfix) with ESMTP id 6C98F20767
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 18:03:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503284AbgDNSCq (ORCPT
+        id S2407745AbgDNSDg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 14:02:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58798 "EHLO mail.kernel.org"
+        Tue, 14 Apr 2020 14:03:36 -0400
+Received: from mga06.intel.com ([134.134.136.31]:43163 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2503187AbgDNSB1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:01:27 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3922A20767;
-        Tue, 14 Apr 2020 18:01:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586887287;
-        bh=PtAFfHJJmm+j+Kb6LPSRoxHltnduIZpLutVkxDiIp6M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PNGC55v0Lk+cz0A6FXEaVrU1+fhb/3ILrbT3nI3yKEMti6V/jdpmJEqkcIzPAVtUW
-         pm/J+Q3/0/XbKwkpE9qJ1O0MrF/cz56h3K53dF2MyIKuWxOxyUCAwXHqHcvviyZkzq
-         3Xpro0hMvZ+5shzFBI0w52SsOG8ok9SJpGIQZQeE=
-Date:   Tue, 14 Apr 2020 19:01:22 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Steve Winslow <swinslow@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] iio: patch set ltc2632
-Message-ID: <20200414190122.6881a478@archlinux>
-In-Reply-To: <20200414062648.19013-1-chris.ruehl@gtsys.com.hk>
-References: <20200414062648.19013-1-chris.ruehl@gtsys.com.hk>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S2407740AbgDNSDd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Apr 2020 14:03:33 -0400
+IronPort-SDR: x8rRgoPDPLAJKqR99Bj142EoFIexz0sjoFTYVBvp66/JYLLo7xztYppSojeXo5VqKtmREh6kqb
+ qZhev8Zj9G0A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 11:03:32 -0700
+IronPort-SDR: SFfWWKn9a+9EaRfpA/3Wbs/x3kQaNMzka6GrGJ2jeWBmbZqBLlTRxdEhB2Ad2MBBRdX9vd5tu9
+ ICwTpVsFz5Dw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,383,1580803200"; 
+   d="scan'208";a="271475675"
+Received: from swwoldee-mobl1.amr.corp.intel.com (HELO [10.251.15.118]) ([10.251.15.118])
+  by orsmga002.jf.intel.com with ESMTP; 14 Apr 2020 11:03:28 -0700
+Subject: Re: [PATCH v5 23/25] PCI/ATS: Add PRI stubs
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org
+Cc:     joro@8bytes.org, catalin.marinas@arm.com, will@kernel.org,
+        robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
+        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20200414170252.714402-1-jean-philippe@linaro.org>
+ <20200414170252.714402-24-jean-philippe@linaro.org>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <b595b3a1-7444-eeac-412a-85d453c32095@linux.intel.com>
+Date:   Tue, 14 Apr 2020 11:03:25 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200414170252.714402-24-jean-philippe@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 14 Apr 2020 14:26:43 +0800
-Chris Ruehl <chris.ruehl@gtsys.com.hk> wrote:
+Hi,
 
-> Patchset to extend ltc2632 spi driver to support the similar chip set
-> ltc2634.
-> * Patch v2 1/3 update documentation struct ltc2632_chip_info
-> * Patch v2 2/3 patch ltc2632.c,Kconfig,ltc2632.txt(devtree)
-> * Patch v2 3/3 convert ltc2632.txt to yaml format named lltc,ltc2632.yaml
-Hi Chris,
-
-Still something going on with your git send-email.  Are you sending these one
-by one perhaps?  Or maybe have something odd in your .git/config?
-
-These have turned up as a series of independent messages as the in-reply-to
-field isn't set in the patches (which should point to this one).
-git-send-email will do that automatically by default if pointed at all the
-files in one go.
-
-Thanks,
-
-Jonathan
+On 4/14/20 10:02 AM, Jean-Philippe Brucker wrote:
+> The SMMUv3 driver, which can be built without CONFIG_PCI, will soon gain
+> support for PRI.  Partially revert commit c6e9aefbf9db ("PCI/ATS: Remove
+> unused PRI and PASID stubs") to re-introduce the PRI stubs, and avoid
+> adding more #ifdefs to the SMMU driver.
 > 
-> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Reviewed-by: Kuppuswamy Sathyanarayanan 
+<sathyanarayanan.kuppuswamy@linux.intel.com>
 > ---
+>   include/linux/pci-ats.h | 8 ++++++++
+>   1 file changed, 8 insertions(+)
 > 
-
+> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+> index f75c307f346de..e9e266df9b37c 100644
+> --- a/include/linux/pci-ats.h
+> +++ b/include/linux/pci-ats.h
+> @@ -28,6 +28,14 @@ int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
+>   void pci_disable_pri(struct pci_dev *pdev);
+>   int pci_reset_pri(struct pci_dev *pdev);
+>   int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+> +#else /* CONFIG_PCI_PRI */
+> +static inline int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
+> +{ return -ENODEV; }
+> +static inline void pci_disable_pri(struct pci_dev *pdev) { }
+> +static inline int pci_reset_pri(struct pci_dev *pdev)
+> +{ return -ENODEV; }
+> +static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+> +{ return 0; }
+>   #endif /* CONFIG_PCI_PRI */
+>   
+>   #ifdef CONFIG_PCI_PASID
+> 
