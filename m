@@ -2,120 +2,115 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B71EC2BB85
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96171C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECCE6206A2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:00:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="WJK29o3K"
+	by mail.kernel.org (Postfix) with ESMTP id 6E62C206A2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:03:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586883831;
+	bh=hwHnQDgIoW19lCoLAnrpKBo69x4YnM2jX32aKx4IPd0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=miYNgA84A1nQcYIl+IlP00y8arsNfZexymuVP0xJFBhQMpz5AKnfRO0bUR3eLMqP4
+	 UuQoPiABXTwckm5mZMijjeufsfQbtFOG05ZJsksU4JU5bTkTOMZ7DQwALhN6f7Ff6k
+	 gija2w/S+bDAyGT6cigD1pfH487QSYx4xbHo6SMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732562AbgDNRAv (ORCPT
+        id S2388069AbgDNRDu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:00:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733117AbgDNRAr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:00:47 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 348FFC0610D5
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:00:43 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id w70so9801225qkb.7
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:00:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GIN7IF6qYtKF4gSfr/AeRIvPX7/eCFsh4TApVUETWoE=;
-        b=WJK29o3K5MXm6p3VWzbGrHsk0KBRUyWWpDHcGXG/HUX36uIXx5JyvHKhiu1s3JtLtU
-         V7gkFI/q1KmdLMhMMUxBqFlgpBaa0ZkNYnWmTKON4gWBw5jxIE0XBUAq91eeIGYap3zZ
-         OYhvWUkFkEL5+ErE8/pYC7Unq7WRkY9b6ox3OTtr13DORJy7fe4UWueM3dLYCpcH+haM
-         7s83titQwzbdrha9nbAnzXASShQuNXplRRlunOROJBdfg3Qf8CHG61pH9bI8Yw4wFfA2
-         c4dSOcHuk/T/b5dEH1oSwrARzE52d5vcmU9CxIdgyuhRNmOaqHvCyIjmpsCkx6zA/Qs+
-         xdOw==
+        Tue, 14 Apr 2020 13:03:50 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46593 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728549AbgDNRDk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 13:03:40 -0400
+Received: by mail-ot1-f65.google.com with SMTP id w12so292990otm.13;
+        Tue, 14 Apr 2020 10:03:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GIN7IF6qYtKF4gSfr/AeRIvPX7/eCFsh4TApVUETWoE=;
-        b=uNKs3Z3POXZWeRehJRRxZJd3cVopsa1OAzWPJTEceqvVnwFDXpi7ZwOq+szntQJiFC
-         1bRqBvrK9OzY9AQGH1RZo4zqZ0Vmd43dlyQcPDpuOxgyXzh7kdGHoVbBxRs+Soxl30zh
-         +KD8VhPI/skmF0HarrTn/jdpUSwtGZ83pKrpKuqPs61lZgeA02g6y2CNDWqLAD0n/HPB
-         azSlvuNqFZ44xLjCJBGiPPY+27ncWExrVFT7xTGpfeB8SQR+v8CMvga3RmHHlaXCc0iC
-         W7nk7aLm6s9u5OKNRzYZvTU0bxA5zHvTJMvoXiyTDFYYHPAi3QxLq8IkITMfkJW/C83j
-         qhHw==
-X-Gm-Message-State: AGi0PuZOTh5LvSV22nRBiug+VFKvSNcamxw7YGTQn7kTGTlwvWTHyPTo
-        Lo83glPvh0StXlffzko6J4qTcqqXFf+RWr8+j18UQA==
-X-Google-Smtp-Source: APiQypJAVUbx87PMTgMxPYPAUoh9xIaPNebw3vKNOCwEq+Xku6Borru68lB1wY/XGBsCVLhWsPFHE8/a8s5sITgt6DA=
-X-Received: by 2002:a05:620a:5f1:: with SMTP id z17mr18160792qkg.21.1586883642039;
- Tue, 14 Apr 2020 10:00:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jaXxYQ2FYpSVQsJaEvJ0tlJfoyPl68Crc2WxdCdXIYU=;
+        b=T51wxXppjDfrn19kOTet2iKoIIax3Lvy7J2tfyYErQUs+ptzGw3teNlRyst2v6pCu2
+         xRsEtgeLzSLWq7us729b+lMu7DKfqneVydKzZNJ96VRTlMnhyadM5opWIQZCRYXYJAb/
+         ygMx6Su0biE/1qYB5sheh1yz9lENdKolmyKaMFiBfr31lMJfePOg6byZAEX0YYJJKPtH
+         rqNtfnbNAk25sIZwus5XlJSNVT4XFNKVXPafMZagkDn//7iupBy/EvtitKKvVOMjSSqc
+         OLk/xEep9pooENBWno03epvwwZBBYsPYddYQHQ6jmfgnMMfcLfl79ilTAJrLaYrLV2vD
+         Wy9A==
+X-Gm-Message-State: AGi0PuZftsD04c7TZ7DC4MxXzSw0cGntOhq/wfnBY7NFigEeR3zJAjVM
+        vww4MBKrHneK/FREPZJC3g==
+X-Google-Smtp-Source: APiQypJLVVe9ZYo0KcdXWrYnv+be8t6aET3lPXMMKhLrbG6rm1kd16c0H9/OvnOO9p4vB30IOLnDaw==
+X-Received: by 2002:a4a:c408:: with SMTP id y8mr19491246oop.42.1586883819021;
+        Tue, 14 Apr 2020 10:03:39 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s73sm1275570oih.14.2020.04.14.10.03.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 10:03:37 -0700 (PDT)
+Received: (nullmailer pid 6695 invoked by uid 1000);
+        Tue, 14 Apr 2020 17:03:36 -0000
+Date:   Tue, 14 Apr 2020 12:03:36 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Mateusz Holenko <mholenko@antmicro.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org, Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mateusz Holenko <mholenko@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/5] dt-bindings: soc: document LiteX SoC Controller
+  bindings
+Message-ID: <20200414170336.GA6657@bogus>
+References: <20200402084513.4173306-0-mholenko@antmicro.com>
+ <20200402084513.4173306-2-mholenko@antmicro.com>
 MIME-Version: 1.0
-References: <20200402203656.27047-1-michael@walle.cc> <20200402203656.27047-11-michael@walle.cc>
- <CAMpxmJVE3PgVCxkQ-ryc5=KSrKcpdmk1cnJUxJBz9QFCx-e_+A@mail.gmail.com>
- <80bd8661ec8a1f5eda3f09a267846eaa@walle.cc> <CAMpxmJVC7e9JnHzBo-h8M1+KmcA32=Rvxo7+znH=-kAbcCr_LQ@mail.gmail.com>
- <e0388a2137e23d76b2415a7549c01dd1@walle.cc>
-In-Reply-To: <e0388a2137e23d76b2415a7549c01dd1@walle.cc>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 14 Apr 2020 19:00:30 +0200
-Message-ID: <CAMpxmJW1x4Orh1BZ4TUoCsYeaAAZ4NBUNvoMG9JgP0iLvXTOtg@mail.gmail.com>
-Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using regmap
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200402084513.4173306-2-mholenko@antmicro.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-wt., 14 kwi 2020 o 12:07 Michael Walle <michael@walle.cc> napisa=C5=82(a):
-> >>
-> >> So the best from a user perspective I've could come up with was:
-> >>
-> >>    ->base_reg =3D GPIO_REGMAP_ADDR(addr);
-> >>
-> >> I'm open for suggestions.
-> >>
-> >
-> > Maybe setting the pointer to ERR_PTR(-ENOENT) which will result in
-> > IS_ERR() returning true?
->
-> Unfortunatly, its not a pointer, but only a regular unsigned int (ie
-> the type the regmap API has for its "reg" property). It could be a
-> pointer of course but then the user would have to allocate additional
-> memory.
->
-> -michael
->
+On Thu, 2 Apr 2020 08:45:54 +0200, Mateusz Holenko wrote:
+> From: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
+> 
+> Add documentation for LiteX SoC Controller bindings.
+> 
+> Signed-off-by: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
+> Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+> ---
+> 
+> Notes:
+>     Changes in v4:
+>     - changes compatible to "litex,soc-controller"
+>     - fixed yaml's header
+>     - removed unnecessary sections from yaml
+>     - fixed indentation in yaml
+> 
+>     This commit has been introduced in v3 of the patchset.
+> 
+>  .../soc/litex/litex,soc-controller.yaml       | 39 +++++++++++++++++++
+>  MAINTAINERS                                   |  6 +++
+>  2 files changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc-controller.yaml
+> 
 
-Eek, of course it's not a pointer. If possible I'd like to avoid this
-GPIO_REGMAP_ADDR() macro, so how about having some separate field for
-invalid offsets making every offset 'valid' by default?
-
-Linus: do you have a better idea?
-
-Bart
+Reviewed-by: Rob Herring <robh@kernel.org>
