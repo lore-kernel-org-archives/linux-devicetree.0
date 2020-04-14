@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63610C38A2C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5651C4CC77
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC252075E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8353D2076A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 17:04:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GCakNvEs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EJcosvT8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391418AbgDNREo (ORCPT
+        id S2391259AbgDNREp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 13:04:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34546 "EHLO
+        Tue, 14 Apr 2020 13:04:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391259AbgDNRE0 (ORCPT
+        by vger.kernel.org with ESMTP id S2391518AbgDNREl (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:04:26 -0400
+        Tue, 14 Apr 2020 13:04:41 -0400
 Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D2DFC0610D5
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:26 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id o81so8229546wmo.2
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2603C061A0C
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:40 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id o81so8230696wmo.2
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 10:04:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IomOGED94uQ/sc+mw27XI7cICJqvlx4xPsMfu0J0FYY=;
-        b=GCakNvEsC05vdQy4s9DM45xHnKiEYteUAcD7FyLCP/uTecd/VeAwPmTWPNoushPNYV
-         RNOeq6evl2T3CwdSNOB3ZpQ8cQguPZLXa9JzggKMQe0IU5xiemwq49jBFoG/HPGeV5jO
-         t5dRmLK1E+Zg1wNi1JpDKCqwSf5Ft+LyS2I11G3Rk/AuaDJ9hliSq44RchEHC4khzI/7
-         FQ+xSbVGbSikxMid35s3BjzOuv/5EQZX04YWVmmNkddVLvKqNh1lYoDuSClEnEiZ8YjH
-         NZ4PeV/mancwfAQfD0talcSAEJdsbDvnh3PrfKQsvpIiQI7cQ+G3rTKfZSYDXsO+GCmi
-         Ua2Q==
+        bh=WbxTMbV/4pSZQY8//KTZeKZ9tN56Paf1UOPOW4z/8RA=;
+        b=EJcosvT8tFkBoFeE83VxfL3JFEp9wWkEoSy/u9HV1nMiRCsFuVEFCg34QhFQ0Ig2kd
+         5RlmWmu750PxzLmkcygnohAcg49vEEDeNfjWtg5MKWWP6XFcyM2tj355kGY9uGF4ZAs4
+         VBovUW//PIawkzdqzgeX1UNUTp2dC+P5BJ8PDfNxvR5iJK2NKUeVHSGq8m2iRyQCBYUr
+         zAMqLF1jFxkHBxRtHTgX8Bt6G/4FEITLfhTi1sJBtKT3dPfkMTCxXA73c5L6GS3LRuAO
+         VLIhcAN5rTerG5x4f/Bpu5puRhb3XuwkTyEhwJVJxBMzkVzzIn0g0hmFa9UkKW6yNlQZ
+         8rtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IomOGED94uQ/sc+mw27XI7cICJqvlx4xPsMfu0J0FYY=;
-        b=bM+p4MhNweq1TeMB10L86IgDuKJ1uPNh0Gc5OiKAR/1VCwyKvjcyLBzA4npfehB+2z
-         HtNEMjGWQrhwpNVsW5SoJxUJ1BYlI2phxmb2PKXWn8fZt6qbd0VpIE+vomA40HuAhbLV
-         ZA8DtB0XTA7c2X4K2tmhXtqSAIh9Ciatv4EO/hUR2WWDZVDr4A5Y085q3L7EIsLFASp0
-         WIjP0X/MFee3h6G4kcSAgBgARtKIH4dVhBQ2s3ckUa/ZIpdrIJs59N9wvwNPzZhhWCmx
-         Rd+9JmEljlkzV9iZcpYcUMV+UP8LbpMHCdVCgnssFqG19aWTCN3dWLoR4is3WTwEp6q8
-         UcHw==
-X-Gm-Message-State: AGi0PuZcJ0jK9/EOuqGcHdzQ6Ht7zkbD8Yraxb/n6/opK2XyEMgyjzBR
-        cXnfh+jyHiNks0SZrgstcxiLYw==
-X-Google-Smtp-Source: APiQypKbiaMvR8TIzKGaRea1UGF3OINaumxymb+GpCM64htK1x8XN0yXUI9IxJx+k4Q82m6PfxgfWw==
-X-Received: by 2002:a7b:cc88:: with SMTP id p8mr776491wma.108.1586883864753;
-        Tue, 14 Apr 2020 10:04:24 -0700 (PDT)
+        bh=WbxTMbV/4pSZQY8//KTZeKZ9tN56Paf1UOPOW4z/8RA=;
+        b=nGp6Jw4/ZSdsT7I+l5AUy9VYtRtxHH80rIDzUoh1k2cfUUfzZReiNdIlGYk079A2He
+         a8Rx8ffZo22BYpp1AiQWIPBTobs3L18LwPXkAnhGJmznM8W6rf622rr7ftSr3xnrCAMv
+         G4XR6QyeJ1rdz7Refc93iqPh3phT3eQp93KwmMAffc9F0FX/+aVZybLqi7U1InwifeP8
+         ceWOQeYrsaI4g+wJY9taeTC06kjYDyUGj7lWmIiFa8OXkQpklm5GjE8qfBWXl5MO5gdu
+         GcQ6H6czUQ6Y/95QY+aciMgA8g8nOraYGhiPpnUfVVf6rJ/z+bzi+m8rtDLUuDQ1b5IX
+         p1qA==
+X-Gm-Message-State: AGi0PuZmFoQHHUh9wlol+MEtbEqAzgP09WRNsmmEXN/PWqhZQ10NTVvt
+        NiKfYwk0WF01T+KSJMzBNVNenKM3U1AgVg==
+X-Google-Smtp-Source: APiQypLVdIym/zn6jkDftt+MJ2EfuiypDwrDx/YKm8MzyYUO/W3AgP2uDmxEurb3a37PkHFH7PvBWg==
+X-Received: by 2002:a1c:ed18:: with SMTP id l24mr783359wmh.122.1586883879712;
+        Tue, 14 Apr 2020 10:04:39 -0700 (PDT)
 Received: from localhost.localdomain ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id x18sm19549147wrs.11.2020.04.14.10.04.23
+        by smtp.gmail.com with ESMTPSA id x18sm19549147wrs.11.2020.04.14.10.04.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 10:04:24 -0700 (PDT)
+        Tue, 14 Apr 2020 10:04:39 -0700 (PDT)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
@@ -69,9 +69,9 @@ Cc:     joro@8bytes.org, catalin.marinas@arm.com, will@kernel.org,
         jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
         zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com,
         Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: [PATCH v5 05/25] iommu/iopf: Handle mm faults
-Date:   Tue, 14 Apr 2020 19:02:33 +0200
-Message-Id: <20200414170252.714402-6-jean-philippe@linaro.org>
+Subject: [PATCH v5 15/25] iommu/arm-smmu-v3: Enable broadcast TLB maintenance
+Date:   Tue, 14 Apr 2020 19:02:43 +0200
+Message-Id: <20200414170252.714402-16-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200414170252.714402-1-jean-philippe@linaro.org>
 References: <20200414170252.714402-1-jean-philippe@linaro.org>
@@ -82,119 +82,89 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-When a recoverable page fault is handled by the fault workqueue, find the
-associated mm and call handle_mm_fault.
+The SMMUv3 can handle invalidation targeted at TLB entries with shared
+ASIDs. If the implementation supports broadcast TLB maintenance, enable it
+and keep track of it in a feature bit. The SMMU will then be affected by
+inner-shareable TLB invalidations from other agents.
+
+A major side-effect of this change is that stage-2 translation contexts
+are now affected by all invalidations by VMID. VMIDs are all shared and
+the only ways to prevent over-invalidation, since the stage-2 page tables
+are not shared between CPU and SMMU, are to either disable BTM or allocate
+different VMIDs. This patch does not address the problem.
 
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
-v4->v5: no need to call mmput_async() anymore, since the MMU release()
-        doesn't flush the IOPF queue anymore.
+v4->v5: bump feature bit
 ---
- drivers/iommu/io-pgfault.c | 77 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 75 insertions(+), 2 deletions(-)
+ drivers/iommu/arm-smmu-v3.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/io-pgfault.c b/drivers/iommu/io-pgfault.c
-index 5bba8e6a13be2..fd4244023b33f 100644
---- a/drivers/iommu/io-pgfault.c
-+++ b/drivers/iommu/io-pgfault.c
-@@ -7,6 +7,7 @@
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 21d458d817fc2..e7de8a7459fa4 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -56,6 +56,7 @@
+ #define IDR0_ASID16			(1 << 12)
+ #define IDR0_ATS			(1 << 10)
+ #define IDR0_HYP			(1 << 9)
++#define IDR0_BTM			(1 << 5)
+ #define IDR0_COHACC			(1 << 4)
+ #define IDR0_TTF			GENMASK(3, 2)
+ #define IDR0_TTF_AARCH64		2
+@@ -655,6 +656,7 @@ struct arm_smmu_device {
+ #define ARM_SMMU_FEAT_VAX		(1 << 14)
+ #define ARM_SMMU_FEAT_RANGE_INV		(1 << 15)
+ #define ARM_SMMU_FEAT_E2H		(1 << 16)
++#define ARM_SMMU_FEAT_BTM		(1 << 17)
+ 	u32				features;
  
- #include <linux/iommu.h>
- #include <linux/list.h>
-+#include <linux/sched/mm.h>
- #include <linux/slab.h>
- #include <linux/workqueue.h>
+ #define ARM_SMMU_OPT_SKIP_PREFETCH	(1 << 0)
+@@ -3814,11 +3816,14 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
+ 	writel_relaxed(reg, smmu->base + ARM_SMMU_CR1);
  
-@@ -76,8 +77,57 @@ static int iopf_complete_group(struct device *dev, struct iopf_fault *iopf,
- static enum iommu_page_response_code
- iopf_handle_single(struct iopf_fault *iopf)
+ 	/* CR2 (random crap) */
+-	reg = CR2_PTM | CR2_RECINVSID;
++	reg = CR2_RECINVSID;
+ 
+ 	if (smmu->features & ARM_SMMU_FEAT_E2H)
+ 		reg |= CR2_E2H;
+ 
++	if (!(smmu->features & ARM_SMMU_FEAT_BTM))
++		reg |= CR2_PTM;
++
+ 	writel_relaxed(reg, smmu->base + ARM_SMMU_CR2);
+ 
+ 	/* Stream table */
+@@ -3929,6 +3934,7 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
  {
--	/* TODO */
--	return -ENODEV;
-+	vm_fault_t ret;
-+	struct mm_struct *mm;
-+	struct vm_area_struct *vma;
-+	unsigned int access_flags = 0;
-+	unsigned int fault_flags = FAULT_FLAG_REMOTE;
-+	struct iommu_fault_page_request *prm = &iopf->fault.prm;
-+	enum iommu_page_response_code status = IOMMU_PAGE_RESP_INVALID;
-+
-+	if (!(prm->flags & IOMMU_FAULT_PAGE_REQUEST_PASID_VALID))
-+		return status;
-+
-+	mm = iommu_sva_find(prm->pasid);
-+	if (IS_ERR_OR_NULL(mm))
-+		return status;
-+
-+	down_read(&mm->mmap_sem);
-+
-+	vma = find_extend_vma(mm, prm->addr);
-+	if (!vma)
-+		/* Unmapped area */
-+		goto out_put_mm;
-+
-+	if (prm->perm & IOMMU_FAULT_PERM_READ)
-+		access_flags |= VM_READ;
-+
-+	if (prm->perm & IOMMU_FAULT_PERM_WRITE) {
-+		access_flags |= VM_WRITE;
-+		fault_flags |= FAULT_FLAG_WRITE;
-+	}
-+
-+	if (prm->perm & IOMMU_FAULT_PERM_EXEC) {
-+		access_flags |= VM_EXEC;
-+		fault_flags |= FAULT_FLAG_INSTRUCTION;
-+	}
-+
-+	if (!(prm->perm & IOMMU_FAULT_PERM_PRIV))
-+		fault_flags |= FAULT_FLAG_USER;
-+
-+	if (access_flags & ~vma->vm_flags)
-+		/* Access fault */
-+		goto out_put_mm;
-+
-+	ret = handle_mm_fault(vma, prm->addr, fault_flags);
-+	status = ret & VM_FAULT_ERROR ? IOMMU_PAGE_RESP_INVALID :
-+		IOMMU_PAGE_RESP_SUCCESS;
-+
-+out_put_mm:
-+	up_read(&mm->mmap_sem);
-+	mmput(mm);
-+
-+	return status;
- }
+ 	u32 reg;
+ 	bool coherent = smmu->features & ARM_SMMU_FEAT_COHERENCY;
++	bool vhe = cpus_have_cap(ARM64_HAS_VIRT_HOST_EXTN);
  
- static void iopf_handle_group(struct work_struct *work)
-@@ -112,6 +162,29 @@ static void iopf_handle_group(struct work_struct *work)
-  *
-  * Add a fault to the device workqueue, to be handled by mm.
-  *
-+ * This module doesn't handle PCI PASID Stop Marker; IOMMU drivers must discard
-+ * them before reporting faults. A PASID Stop Marker (LRW = 0b100) doesn't
-+ * expect a response. It may be generated when disabling a PASID (issuing a
-+ * PASID stop request) by some PCI devices.
-+ *
-+ * The PASID stop request is issued by the device driver before unbind(). Once
-+ * it completes, no page request is generated for this PASID anymore and
-+ * outstanding ones have been pushed to the IOMMU (as per PCIe 4.0r1.0 - 6.20.1
-+ * and 10.4.1.2 - Managing PASID TLP Prefix Usage). Some PCI devices will wait
-+ * for all outstanding page requests to come back with a response before
-+ * completing the PASID stop request. Others do not wait for page responses, and
-+ * instead issue this Stop Marker that tells us when the PASID can be
-+ * reallocated.
-+ *
-+ * It is safe to discard the Stop Marker because it is an optimization.
-+ * a. Page requests, which are posted requests, have been flushed to the IOMMU
-+ *    when the stop request completes.
-+ * b. We flush all fault queues on unbind() before freeing the PASID.
-+ *
-+ * So even though the Stop Marker might be issued by the device *after* the stop
-+ * request completes, outstanding faults will have been dealt with by the time
-+ * we free the PASID.
-+ *
-  * Return: 0 on success and <0 on error.
-  */
- int iommu_queue_iopf(struct iommu_fault *fault, void *cookie)
+ 	/* IDR0 */
+ 	reg = readl_relaxed(smmu->base + ARM_SMMU_IDR0);
+@@ -3978,10 +3984,19 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
+ 
+ 	if (reg & IDR0_HYP) {
+ 		smmu->features |= ARM_SMMU_FEAT_HYP;
+-		if (cpus_have_cap(ARM64_HAS_VIRT_HOST_EXTN))
++		if (vhe)
+ 			smmu->features |= ARM_SMMU_FEAT_E2H;
+ 	}
+ 
++	/*
++	 * If the CPU is using VHE, but the SMMU doesn't support it, the SMMU
++	 * will create TLB entries for NH-EL1 world and will miss the
++	 * broadcasted TLB invalidations that target EL2-E2H world. Don't enable
++	 * BTM in that case.
++	 */
++	if (reg & IDR0_BTM && (!vhe || reg & IDR0_HYP))
++		smmu->features |= ARM_SMMU_FEAT_BTM;
++
+ 	/*
+ 	 * The coherency feature as set by FW is used in preference to the ID
+ 	 * register, but warn on mismatch.
 -- 
 2.26.0
 
