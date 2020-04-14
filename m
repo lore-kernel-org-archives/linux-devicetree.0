@@ -2,89 +2,125 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562A3C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 19:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79658C352BE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 19:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30BDB20656
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 19:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B47206E9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 19:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586893204;
-	bh=TrRQQ3fiGJCAvTp/UTMeqJHypUJ5wqjgww01eADsWY4=;
+	s=default; t=1586893261;
+	bh=XyBF/72+iOiw1nNvQfYZcbTIcV7ruXT3171R7WvN40g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KE4rE+UGh5hENwqX0V9OvjKHc+qn/NUu/Y4UcCn0sFC333JKHlBkDZLy/MKgR8Thn
-	 FSemerWJZ+CPC1QMIRHlXJb/9mzZOMw0nCtLsHfcpjMSTsNOmER858Yak6VwFzporR
-	 6kF1veDqaJ+Gi6tNV9nutBTWVHS8wH83CR/PGSyg=
+	b=TrIGOSQAP3tOq3ZxC6OWB64b9lKepQsqeProzfo8xBwMDI9pZnQzbJuIiXkn7aSLy
+	 TWB1xEFfcxIKbXAZRngFUHUgV5r19UVivsq/wEbX3j4T4fvrHyoxtbJrJDKzmndg/d
+	 w4GlF0PTbVjI58wD3UE3Pa45Ntndn9xzL/gZldaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505023AbgDNTj4 (ORCPT
+        id S2504935AbgDNTlA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 15:39:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2505028AbgDNTjq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 15:39:46 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59671C061A0C
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 12:03:35 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id k133so10676623oih.12
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 12:03:35 -0700 (PDT)
+        Tue, 14 Apr 2020 15:41:00 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41189 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505065AbgDNTk5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 15:40:57 -0400
+Received: by mail-ot1-f67.google.com with SMTP id f52so914914otf.8;
+        Tue, 14 Apr 2020 12:40:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=neZixX1FgRDvn70WcsvMU0lLKZGE4eRWJlNGOjVP1O8=;
-        b=UYfk+XaexRCJh+jbvOXBtvzsO2vLuDuAKScYB6+yktAusuViI5VmNM5dIxYygQHIvZ
-         mvZYzvwy0a4d9Po6JDK4EMwW1RyisC9bAShLkPiZqGB76qCyVcQuPbgWhjLxalXnqPCH
-         x1XBgk9JJZYqSL5eRvh5pJKu3K1hG2j2GyfT20oXUDob/Otd7pL4zB1/lvth0eAlmYhE
-         TKY9WhruPruEWCnKSakyCQXFQCKyZJropFMdD6z3ONKSE36CJ+A3ObxWBUGBfNExLD1T
-         eg7riT+Zm0e2AUuKmyZ1W+ieHgsSJYd4u7D4NRggnUJdB1po4xeRuWi++30yog0klqQ6
-         wpog==
-X-Gm-Message-State: AGi0PuYzr5JBP2kCpy+LA2dFVFr+5x1JRhyohjOE/O9jwNdEkHUZaGDD
-        1SsMfDoYueniZpz4GI0Ycg==
-X-Google-Smtp-Source: APiQypKoje5VL7Nleh38k5MtuQV+rjMMY1W8ziSp8EW17y/skbV1g7KgZ3blwmjGx9sfECEGd+8Q6Q==
-X-Received: by 2002:aca:4408:: with SMTP id r8mr14596592oia.14.1586891014583;
-        Tue, 14 Apr 2020 12:03:34 -0700 (PDT)
+        bh=rA3IETH0xgn8ebwBJlBRbndhRKsHnPU2NvYNY3hNsKA=;
+        b=nZFluG9hEo7sfn8b+ldOOvfj2fhe2WTx3SjvcYS5A0qWJYOytQr42p7WhgMn3avC9m
+         WNXL4dLpQ+MBgjC1tSOVwQ29ntDd1nssIuN4CZHlbazbyaqtirEv6nSpnPDVun9I7j0B
+         qJ9WnJNr7iMIjLjoYF3I8Fcdjl1PmBnCDux0UuUWlcJrXG6XRJnjpq8jJOiscx40iFYj
+         FSw9XmwfuXuylYgpe/CpS1UGMMNfbZWLSLsZNu+SPlHtfHDbl+l1fgM46rb8gdru8a26
+         d6up8Z+KGDPHnk93sXSudBYw5qN+4HB73E+4OCaauP+DaD4gG5P7kS3vgm+2YEG8ph3N
+         P8MA==
+X-Gm-Message-State: AGi0PuZWr3MwdPckGVjBM4JAEfXZMgMVFIAzK1AiXljfIoqDyL45WHFd
+        RCSM2elKrR03/kgjMzU0uA==
+X-Google-Smtp-Source: APiQypLI/AKUFg7kJsQaGhZnEKT2eudBr8nOypqMfZWA4MgD+9PzQn1dP3iPfKOpVxnuDsfLnEXp4g==
+X-Received: by 2002:a9d:24a4:: with SMTP id z33mr18571236ota.326.1586893255888;
+        Tue, 14 Apr 2020 12:40:55 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l7sm3592378oii.26.2020.04.14.12.03.33
+        by smtp.gmail.com with ESMTPSA id h14sm2044908oov.11.2020.04.14.12.40.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 12:03:34 -0700 (PDT)
-Received: (nullmailer pid 25576 invoked by uid 1000);
-        Tue, 14 Apr 2020 19:03:33 -0000
-Date:   Tue, 14 Apr 2020 14:03:33 -0500
+        Tue, 14 Apr 2020 12:40:55 -0700 (PDT)
+Received: (nullmailer pid 14986 invoked by uid 1000);
+        Tue, 14 Apr 2020 19:40:54 -0000
+Date:   Tue, 14 Apr 2020 14:40:54 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel@lists.freedesktop.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        devicetree@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v2 03/36] dt-bindings: display: add te-gpios to
- panel-common
-Message-ID: <20200414190333.GA25534@bogus>
-References: <20200408195109.32692-1-sam@ravnborg.org>
- <20200408195109.32692-4-sam@ravnborg.org>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH v1 3/4] dt-bindings: media: add wiring property to
+ video-interfaces
+Message-ID: <20200414194054.GB29184@bogus>
+References: <20200412182012.27515-1-sam@ravnborg.org>
+ <20200412182012.27515-4-sam@ravnborg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200408195109.32692-4-sam@ravnborg.org>
+In-Reply-To: <20200412182012.27515-4-sam@ravnborg.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed,  8 Apr 2020 21:50:36 +0200, Sam Ravnborg wrote:
-> Several bindings specifies a "te-gpios" for tearing effect signal.
-> Add this to panel-common so we have a shared definition.
+On Sun, Apr 12, 2020 at 08:20:11PM +0200, Sam Ravnborg wrote:
+> The wiring property is used to describe the wiring between
+> the connector and the panel. The property can be used when the
+> wiring is used to change the mode from for example
+> BGR to RGB. The first users are the at91sam9 family where
+> such a wiring trick is sometimes used.
+> The possilbe values are so far limited to what is required
+> by the at91sam9 family, but using "text" allows us to extend
+> this in the future.
+> 
+> There exists similar properties today:
+>  - display/tilcdc/tilcdc.txt: blue-and-red-wiring
+>  - display/atmel,lcdc.txt: atmel,lcd-wiring-mode
+> 
+> Neither of the above are defined as endpoint properties.
+> 
+> The new property "wiring" has a more general name and
+> is defined as an endpoint property.
+> It will replace atmel,lcd-wiring-mode and may replace
+> blue-and-red-wiring.
 > 
 > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Hans Verkuil <hverkuil@xs4all.nl>
+> Cc: linux-media@vger.kernel.org
 > ---
->  .../devicetree/bindings/display/panel/panel-common.yaml    | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  Documentation/devicetree/bindings/media/video-interfaces.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> index f884ada0bffc..c3bb87c5c9a9 100644
+> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> @@ -141,6 +141,9 @@ Optional endpoint properties
+>  - link-frequencies: Allowed data bus frequencies. For MIPI CSI-2, for
+>    instance, this is the actual frequency of the bus, not bits per clock per
+>    lane value. An array of 64-bit unsigned integers.
+> +- wiring: Wiring of data lines to display.
+> +  "straight" - normal wiring.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Don't really need a property to express this...
+
+> +  "red-blue-reversed" - red and blue lines reversed.
+
+For a common property, I think this needs to be looked at in terms of 
+formats and some of the format negotiation work Boris was doing.
+
+Rob
