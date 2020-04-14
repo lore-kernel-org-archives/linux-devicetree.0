@@ -3,113 +3,263 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8DEC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 08:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 741F7C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 08:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B89D92076C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 08:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4883A206E9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 08:28:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QkbFwgp1"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Kq0iiCN6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PBCjk96V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406984AbgDNIJq (ORCPT
+        id S2436811AbgDNI2K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 04:09:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2407007AbgDNIJk (ORCPT
+        Tue, 14 Apr 2020 04:28:10 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:51605 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2436781AbgDNI2I (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 04:09:40 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E36EC0A3BDC
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 01:09:39 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id r26so12928475wmh.0
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 01:09:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=BcPvPDgBERdit+Xn+lJRIaxxdEbWDEThNehuHj9urkI=;
-        b=QkbFwgp1f5e2ka7kemm4skNAxC9Y321LFReQye8PqVNdhUK+k/w7lZaAm+J7eD4Ira
-         KDU36gxiVD0m3i0h4yXzWp2i0LjnOh5P2rBdCpUyFnfOFsQdp+WlX0CXx0sodISjrTRB
-         T88J9dKZU+6FIoJUSqM3xoGxu4Yp8vQCHB93XDh332k0JuRl9v1sQEPI9dga3AAEk2Rt
-         FsGjN9HgffTrm7+YYSR6kExc8ErLrQP4NnkK7b1YnaAaRv3rOonc/3/pPyh1IkF+OiqK
-         dJwmZklLMAQoFXSewDB1J20EuPQE++5B5Uc2m2FnHgVR1NqasRvEcohFCXFUXESNRIOQ
-         DrVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=BcPvPDgBERdit+Xn+lJRIaxxdEbWDEThNehuHj9urkI=;
-        b=shNvKyr4ESNOwA3k7331p1Z3sXsyLdfoR4g3uy4vL74aBTIN9R0nvzDlrxyiDluwO0
-         9CumrFMjbg8Xk2sKoP1W4CrCY1gsP97SU9O9SBDK7iwhGAdIoNyeN5Wa0iS+3PCwk2Dg
-         U6ml1O+4OqMUb0cKWGYff4Iy5rl05v7ZqmGxpSaZrrlmN2+Y9tqohDdLBw78Ly5i2Qv9
-         ouwDGgoseBeHnF7+pjPd9FUsO26ZgrJ8NQWldexaVrohY+xGejjzolFVeUFEk6xDqG3U
-         rnQMQt10nCiZaQfVC9R5C5/4qh7BIvyeeNBRxHRF8Y7YE63mn+dxwjfJiFLpJNWWscIQ
-         ZLIw==
-X-Gm-Message-State: AGi0Pua5Cgw6/HRMzkugc89bIvu1irQsMA7TjTXuU2F1htUdkH83Hkmn
-        qyllNzusj3dvUWVxAz0k3x852Ys1J0g=
-X-Google-Smtp-Source: APiQypIcxmgvB72hCCzwLyIf8yGou0MAelssXnzkUeucLPux9dAfshBB5oNoGYWIQD4hUWKjcEoWXQ==
-X-Received: by 2002:a1c:82:: with SMTP id 124mr21081344wma.63.1586851777991;
-        Tue, 14 Apr 2020 01:09:37 -0700 (PDT)
-Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id t16sm17207764wmi.27.2020.04.14.01.09.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 01:09:37 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 09:10:37 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Ikjoon Jang <ikjn@chromium.org>
-Cc:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Nicolas Boitchat <drinkcat@chromium.org>,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v7] dt-bindings: mfd: Convert ChromeOS EC bindings to
- json-schema
-Message-ID: <20200414081037.GD2167633@dell>
-References: <20200306085513.76024-1-ikjn@chromium.org>
- <20200312192023.GA19701@bogus>
- <CAATdQgBFMbLLwkntKu6dgU1S0DAxx9yTffh0ERac6CM90-G0bA@mail.gmail.com>
+        Tue, 14 Apr 2020 04:28:08 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 63B26B34;
+        Tue, 14 Apr 2020 04:28:06 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 14 Apr 2020 04:28:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=JFPo3P/ogXd9mYgq1lTrnURkg3G
+        K316i1UBGh+ZNSj0=; b=Kq0iiCN6F5a0zhqu0NSJX7TiRC0KsxldKcBvWwnD4ja
+        bjT4AfoFrBGrwu87abBZls5MSTr0iaQ/44rxNgGfwCloGBTfXCWsiFvdl76cBrs3
+        N9VdKftdIJAdnmWc44flznOqmpPdO1WCOXOsF5WbVufrZyeOph1omTZSVH74s4JI
+        0RUAW0duLxDrvyWt25/iBT3G8ncETrdn6E21fczt8QsC0uQg/Tb2Uz5x5TP/823Q
+        J4k20iLE3qCoL2X+oEfM5hA4K6Z+zFO6l5Cl4p8gK1wYscKbiy12gTRMg6EfpXTS
+        fLkCVV9IayvKVkXd6JTZaBMVw68MU7eF971G+z3U+5A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=JFPo3P
+        /ogXd9mYgq1lTrnURkg3GK316i1UBGh+ZNSj0=; b=PBCjk96VAiWJqcoEPe+SJY
+        yWF2SnRjOjUhIn0QW60Gxvdx3cyoHKHlfabFxEgsstDkaxge40CqubetqzyUMV2n
+        zrrhBN9GuOdhXDI2pl+GggBP5U5HM3jQeQXeIzI6aKUJhTL4vPuwAGS++Hn9rCDS
+        jCX00GG09VnnybEQu6gVbQtVa3XhDBi2pbiOxhT9gFA8gP4Azew8Gcs6V11Kumg4
+        t46jMimiIySax2JtTtf6jfzAAMrHiqB5FS0XsKnFjZGL/ILvK2r/GLJAJcbmjRQ3
+        cj0DHlGXiPTLvpZl7/MpFINnUjIRLIPCldx0XxDo03mGyK+TU5B6+J9ro3+XVemQ
+        ==
+X-ME-Sender: <xms:FXSVXnuBmWR3eYET2Z9MgBfz__Q8mjY6mWJBakKIjV3kw_3KRWJ3IA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfedugddtgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
+    epuggvvhhitggvthhrvggvrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvse
+    gtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:FXSVXsuYOWilsWshQSQEN5IXz0MgYBQHF47jhckdIVoQfARkluILjg>
+    <xmx:FXSVXlxdm8ZSD4qpDGkve2dzNh7DAs3FJ9VbHcQGewsFcbVZRXSUUg>
+    <xmx:FXSVXqhx1g03UCsS6Bd61q5jcCDNcm4wTyaTWOcOCVqTiwBFlvYWOA>
+    <xmx:FnSVXq0lretqr5VzwkTBOofhco5UnEPTdf_ucnMw7OuzPCv4yzm7kQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0B547328005E;
+        Tue, 14 Apr 2020 04:28:04 -0400 (EDT)
+Date:   Tue, 14 Apr 2020 10:28:03 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH v1 1/4] dt-bindings: display: convert atmel-hlcdc to DT
+ Schema
+Message-ID: <20200414082803.exblunwe7bufbiht@gilmour.lan>
+References: <20200412182012.27515-1-sam@ravnborg.org>
+ <20200412182012.27515-2-sam@ravnborg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jmsbjzfjeb57pove"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAATdQgBFMbLLwkntKu6dgU1S0DAxx9yTffh0ERac6CM90-G0bA@mail.gmail.com>
+In-Reply-To: <20200412182012.27515-2-sam@ravnborg.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 08 Apr 2020, Ikjoon Jang wrote:
 
-> On Fri, Mar 13, 2020 at 3:20 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Fri,  6 Mar 2020 16:55:13 +0800, Ikjoon Jang wrote:
-> > > Convert the ChromeOS EC bindings to json-schema.
-> > >
-> > > Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
-> > > Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > > ---
-> > >  .../devicetree/bindings/mfd/cros-ec.txt       |  76 -----------
-> > >  .../bindings/mfd/google,cros-ec.yaml          | 129 ++++++++++++++++++
-> > >  2 files changed, 129 insertions(+), 76 deletions(-)
-> > >  delete mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
-> > >
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> This patch should go through Lee Jones tree?
+--jmsbjzfjeb57pove
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The way we are operating at the moment, it's a coin flip (50/50)!
+Hi Sam,
 
-Happy either way at the moment to be honest.
+On Sun, Apr 12, 2020 at 08:20:09PM +0200, Sam Ravnborg wrote:
+> diff --git a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.yaml b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.yaml
+> new file mode 100644
+> index 000000000000..7eb6266a25a2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.yaml
+> @@ -0,0 +1,102 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/atmel/hlcdc-dc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Atmel HLCDC (High LCD Controller) display controller
+> +
+> +maintainers:
+> +  - Sam Ravnborg <sam@ravnborg.org>
+> +  - Boris Brezillon <bbrezillon@kernel.org>
+> +
+> +description: |
+> +  The Atmel HLCDC Display Controller is subdevice of the HLCDC MFD device.
+> +  See ../../mfd/atmel-hlcdc.yaml for more details.
+> +
+> +properties:
+> +  compatible:
+> +    const: atmel,hlcdc-display-controller
+> +
+> +  "#address-cells":
+> +    const: 1
+> +  "#size-cells":
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +patternProperties:
+> +  "^port@[0-9]$":
+> +    type: object
+> +    description: |
+> +      A port node with endpoint definitions as defined in
+> +      ../../media/video-interfaces.txt
+> +
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +      reg:
+> +        maxItems: 1
+> +        description: The virtual number of the port
+> +
+> +    patternProperties:
+> +      "^endpoint(@[0-9])$":
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+I guess you meant ^endpoint(@[0-9])?$ instead?
+
+> +        type: object
+> +
+> +        properties:
+> +          reg:
+> +            maxItems: 1
+> +            description: The virtual number of the endpoint
+> +
+> +          bus-width:
+> +            enum: [12, 16, 18, 24]
+> +            description:
+> +              Any endpoint node may specify a desired video interface
+> +              according to ../../media/video-interfaces.txt, specifically
+> +              Recognized values are <12>, <16>, <18> and <24>, and
+> +              override any output mode selection heuristic, forcing
+> +              "rgb444", "rgb565", "rgb666" and "rgb888" respectively.
+> +
+> +          remote-endpoint:
+> +            $ref: /schemas/types.yaml#/definitions/phandle
+> +            description:
+> +              phandle to the panel node
+> +
+> +        required:
+> +          - reg
+
+And if so, reg depends on whether the unit-address is set or not, so
+you can't really enforce that.
+
+> diff --git a/Documentation/devicetree/bindings/mfd/atmel-hlcdc.yaml b/Documentation/devicetree/bindings/mfd/atmel-hlcdc.yaml
+> new file mode 100644
+> index 000000000000..cad14fa173a1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/atmel-hlcdc.yaml
+> @@ -0,0 +1,78 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/atmel-hlcdc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Device-Tree bindings for Atmel's HLCDC (High LCD Controller)
+> +
+> +maintainers:
+> +  - Sam Ravnborg <sam@ravnborg.org>
+> +  - Boris Brezillon <bbrezillon@kernel.org>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - atmel,at91sam9n12-hlcdc
+> +      - atmel,at91sam9x5-hlcdc
+> +      - atmel,sama5d2-hlcdc
+> +      - atmel,sama5d3-hlcdc
+> +      - atmel,sama5d4-hlcdc
+> +      - microchip,sam9x60-hlcdc
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 3
+
+Having descirptions of what those clocks are would be nice.
+
+> +  clock-names:
+> +    maxItems: 3
+> +    items:
+> +      - const: periph_clk
+> +      - const: sys_clk
+> +      - const: slow_clk
+> +
+> +  interrupts:
+> +    description: The HLCDC interrupt line
+> +    maxItems: 1
+> +
+> +  hlcdc_pwm:
+> +    type: object
+> +    description: |
+> +      PWM controller - used for backlight.
+> +      See ../pwm/atmel-hlcdc-pwm.yaml for details
+> +
+> +  hlcdc-display-controller:
+> +    type: object
+> +    description: |
+> +      LCD display controller
+> +      See ../display/atmel/hlcdc-dc.yaml for details
+
+I guess you could include those two schemas to make sure that it's
+valid? Otherwise, if you have an hlcdc-display-controller (or pwm)
+node without a compatible, it will not be checked here, and will not
+be checked by the hlcdc-dc.yaml schemas either since it matches on the
+compatible.
+
+Maxime
+
+--jmsbjzfjeb57pove
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpV0EwAKCRDj7w1vZxhR
+xdwLAQC4by4PgosznV+p4IdHObNQzfxqPCjqjhyEcpaRB6WTDQEA4IURhU5p2H7t
+kBc5B8X3W23gG4cKdAEc7QBEdFBZcA0=
+=9LzM
+-----END PGP SIGNATURE-----
+
+--jmsbjzfjeb57pove--
