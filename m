@@ -2,161 +2,97 @@ Return-Path: <SRS0=DG9v=56=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56855C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 20:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D37C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3314320644
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 20:57:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Hwu3PZpm"
+	by mail.kernel.org (Postfix) with ESMTP id 5F3B72076A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Apr 2020 21:01:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586898083;
+	bh=iAaI96UO9jO0nmyHDUvCt1c5ZT2a84A5TIYscM+YLpc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QOlOWxGgsL6gzmbineL5HwwM4W8t47zD9dDQqX5FvtSC/nJa+X/+34d4jOs2X3Eyp
+	 uTqiObS/fT5Gv8cHwDnuw7VUXJ2g0OY+cY5kFpC/Y+MxYxHPyrszdNlk+fOeOM3niN
+	 sv82b6cLMhzJerw7+TZkTZ/7nic3QxwhXwrv7voc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633494AbgDNU5W (ORCPT
+        id S2633547AbgDNVBM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 16:57:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44952 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2633447AbgDNU5J (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 16:57:09 -0400
-X-Greylist: delayed 62 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Apr 2020 13:57:08 PDT
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86AE0C061A0C;
-        Tue, 14 Apr 2020 13:57:08 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 13C81521;
-        Tue, 14 Apr 2020 22:57:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1586897827;
-        bh=+opjKMJynJ2yyGq/b6mxDNSq3e8f5ZXoGqlv0GJOl4c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Hwu3PZpm77wy9qhNgn34zcCfb8HT0nsEaRmSyepW5eBqDSjv/PUGzdc0Gw9UzJP7Q
-         1PlZPJcIoaT11Li8C2XvOTx875+2WLYsx57TjIbr1/JbQ2AHjXV91dvPFkDZJzugNy
-         FufJ5UISqswefu7BV6wUkjGeAC/ZTDCfDlEsCg8w=
-Date:   Tue, 14 Apr 2020 23:56:55 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency
- dt-property
-Message-ID: <20200414205655.GO19819@pendragon.ideasonboard.com>
-References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200406165108.GA7646@kekkonen.localdomain>
- <20200406173234.GD16885@pendragon.ideasonboard.com>
- <20200407062241.GA8883@kekkonen.localdomain>
- <20200407122106.GD4751@pendragon.ideasonboard.com>
- <20200407151401.GA5206@paasikivi.fi.intel.com>
- <20200414205552.GN19819@pendragon.ideasonboard.com>
+        Tue, 14 Apr 2020 17:01:12 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43223 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2633541AbgDNVBI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 17:01:08 -0400
+Received: by mail-oi1-f196.google.com with SMTP id j16so11700668oih.10;
+        Tue, 14 Apr 2020 14:01:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2tnI9OFnswT+j7ufoqi84C+8316n65ZdA2j48i1vU10=;
+        b=uOzhGkswrjuWE4gpstlr+MZoBaKrHDK0U0WXesXuKFu6b3hpWtJi+nIufd7BrKPi7z
+         li/4h0edLbp9DQ2oXRwz03PUTEE1F/dDUZ4aY/sH/ztcz5DKRZKbt8CEUzP8sdp5xIGH
+         awyyMgZxrR2VCTU9vdYcnbWbNsJ4bUhYgbjlBmT/OpQccOdJ67QRq2x9fmYpfX7/WgsH
+         hQZhWsnME4pqerew1tnKCpSI82qjEkhMW3/v+LsfV/w26Qgg86ldr/BFWNT769tvgO7j
+         bp6YCP+YxoZX7MSQ83BiXtXHjRzV6Jmq9OL/L5AOwNdm6GNcgJjkNrQR1kfC66btbP6n
+         Xm/Q==
+X-Gm-Message-State: AGi0PuZRLHdfVWXfv29L25uwF1kf3GIqcKe9SKwPOBry2vx6Qqo7fuUE
+        PdHFxfjRoXaMhS0e9Jk3Bm2du2M=
+X-Google-Smtp-Source: APiQypI88cfV+Vx4EqdyKBvxYVVd0MKPigaGXZDKD8HyL53QwsqxG0yMTlV8exKkTgUJ2NGdCF/Omw==
+X-Received: by 2002:aca:c385:: with SMTP id t127mr16945398oif.49.1586898066938;
+        Tue, 14 Apr 2020 14:01:06 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s10sm332886oig.56.2020.04.14.14.01.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 14:01:06 -0700 (PDT)
+Received: (nullmailer pid 2708 invoked by uid 1000);
+        Tue, 14 Apr 2020 21:01:04 -0000
+Date:   Tue, 14 Apr 2020 16:01:04 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Yuti Amonkar <yamonkar@cadence.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 08/33] docs: dt: fix broken reference to
+ phy-cadence-torrent.yaml
+Message-ID: <20200414210104.GA2508@bogus>
+References: <cover.1586881715.git.mchehab+huawei@kernel.org>
+ <3f1cf6d74e392f3ee9f894d82cb7ee29d04c1b6d.1586881715.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414205552.GN19819@pendragon.ideasonboard.com>
+In-Reply-To: <3f1cf6d74e392f3ee9f894d82cb7ee29d04c1b6d.1586881715.git.mchehab+huawei@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sakari,
-
-On Tue, Apr 14, 2020 at 11:55:54PM +0300, Laurent Pinchart wrote:
-> On Tue, Apr 07, 2020 at 06:14:01PM +0300, Sakari Ailus wrote:
-> > On Tue, Apr 07, 2020 at 03:21:06PM +0300, Laurent Pinchart wrote:
-> >> On Tue, Apr 07, 2020 at 09:22:41AM +0300, Sakari Ailus wrote:
-> >>> On Mon, Apr 06, 2020 at 08:32:34PM +0300, Laurent Pinchart wrote:
-> >>>> On Mon, Apr 06, 2020 at 07:51:08PM +0300, Sakari Ailus wrote:
-> >>>>> On Mon, Apr 06, 2020 at 05:42:38PM +0100, Lad Prabhakar wrote:
-> >>>>>> Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
-> >>>>>> as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
-> >>>>>> 24MHz. So instead making clock-frequency as dt-property just let the
-> >>>>>> driver enforce the required clock frequency.
-> >>>>> 
-> >>>>> Even if some current systems where the driver is used are using 24 MHz
-> >>>>> clock, that doesn't mean there wouldn't be systems using another frequency
-> >>>>> that the driver does not support right now.
-> >>>>> 
-> >>>>> The driver really should not set the frequency unless it gets it from DT,
-> >>>>> but I think the preferred means is to use assigned-clock-rates instead, and
-> >>>>> not to involve the driver with setting the frequency.
-> >>>>> 
-> >>>>> Otherwise we'll make it impossible to support other frequencies, at least
-> >>>>> without more or less random defaults.
-> >>>> 
-> >>>> We're running in circles here.
-> >>>> 
-> >>>> As the driver only supports 24MHz at the moment, the frequency should be
-> >>>> set by the driver, as it's a driver limitation. We can then work on
-> >>>> supporting additional frequencies, which will require DT to provide a
-> >>>> list of supported frequencies for the system, but that can be done on
-> >>>> top.
-> >>> 
-> >>> I guess it would be possible to use different external clock frequencies on
-> >>> a sensor in a given system but that seems to be a bit far fetched, to the
-> >>> extent I've never seen anyone doing that in practice.
-> >>> 
-> >>> Originally, the driver set the frequency based on the clock-frequency
-> >>> property. If we're removing that but use a fixed frequency instead, then
-> >>> how is that going to work going forward when someone adds support for other
-> >>> frequencies in the driver and has a system requiring that, while there are
-> >>> some other platforms relying on the driver setting a particular frequency?
-> >> 
-> >> The standard property for this is link-frequencies, not clock-frequency.
-> >> Deprecating clock-frequency now paves the way to use the standard
-> >> property later when/if someone implements support for additional
-> >> frequencies.
-> > 
-> > The external clock frequency and link frequency are different indeed, but
-> > they are related. The link frequency has been selected in a way that it is
-> > possible to generate that exact frequency using the chosen external clock
-> > frequency. If you change the external clock frequency, chances are good
-> > there is no PLL configuration to generate that link frequency.
+On Tue, 14 Apr 2020 18:48:34 +0200, Mauro Carvalho Chehab wrote:
+> This file was removed, and another file was added instead of
+> it, on two separate commits.
 > 
-> But aren't we supposed to pick the clock frequency based on the link
-> frequency specified in DT ?
+> Splitting a single logical change (doc conversion) on two
+> patches is a bad thing, as it makes harder to discover what
+> crap happened.
 > 
-> In any case, this policy needs to be carefully documented.
-
-And by this I mean in a central place, not leaving it to individual
-bindings.
-
-Maxime, we've previously discussed this issue privately on IRC, what's
-your opinion ?
-
-> >>> Although, if you're saying that this driver only needs to work with DT that
-> >>> comes with the kernel and you don't care about DT binary compatibility,
-> >>> this would be fine.
-> >> 
-> >> I believe this series to not break backward compatibility, as the driver
-> >> only works with a 24MHz clock, so I expect all DTs to specify that.
-> > 
-> > What you're still doing here is defining the DT bindings based on the
-> > current driver implementation, not the device properties.
+> Anyway, this patch fixes the broken reference, making it
+> pointing to the new location of the file.
 > 
-> Quite the contrary, the device doesn't require any particular input
-> clock frequency, so we're removing that from DT :-) Specifying the clock
-> frequency in DT is in my opinion a manual workaround for not computing
-> it at runtime based on the desired link frequency, while the link
-> frequency is a property of the system as it specifies the range of link
-> frequencies that are safe to use from an EMC point of view.
+> Fixes: 922003733d42 ("dt-bindings: phy: Remove Cadence MHDP PHY dt binding")
+> Fixes: c6d8eef38b7f ("dt-bindings: phy: Add Cadence MHDP PHY bindings in YAML format.")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
--- 
-Regards,
+Applied, thanks.
 
-Laurent Pinchart
+Rob
