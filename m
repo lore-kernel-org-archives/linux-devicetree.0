@@ -2,105 +2,129 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B06C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 05:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDE0C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 05:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 105B520767
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 05:47:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e1ym/P6f"
+	by mail.kernel.org (Postfix) with ESMTP id 20019206A2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 05:49:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408017AbgDOFr3 (ORCPT
+        id S2437642AbgDOFtQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 01:47:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2408014AbgDOFr0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 01:47:26 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE6B8C061A0C
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 22:47:26 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id z6so846008plk.10
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 22:47:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PbCLHFwgNaw3ZaUwaZNGYdMdqu/fhnEMqK0b1QVqZFU=;
-        b=e1ym/P6fygMoKKZH0+G14RZAeJsDa5QGU9ZOIJkpCxsqyGYu1BHQAeJESmWzwsd36V
-         Ywa7cE+V4CiGIS6Nbenlmu+c6xPeBkJAC3Yo+PZhCOjb/dxrY5+uwUh1qCw9TI/62/eU
-         zC1fFdDt7Tso56yJwsBGYP8kLLl7UNwO8t9tW7hkMCqY7WMKHxw8p+6JX6gGwN6TFMYL
-         5WHg3K0MN9RN2fQgd4kYl71nlvEsHqnusZgl4bMIjMPKZd+sfxLDpXiV41L21J3N9999
-         gFZ8WksZs+8P5bqbJB5Xkv5X8tU93C5UIgDqXILGYggU7PQsu7/IPIKuCS63W4Jq9Xap
-         DNYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PbCLHFwgNaw3ZaUwaZNGYdMdqu/fhnEMqK0b1QVqZFU=;
-        b=RXlG4QYB7L/dNtDkdg633qyesoaRaoEzmUdZfYmJvWjUNFSfIrDRIBcUHzM5ulBUvB
-         41ekYgfemv99ZEwU5HBBTWEoGLkA90aUuuKGUhqXC2egXKbtzkRSulIfscsBwsnshyFZ
-         cMXGU4lUZPt85cQcExggeofQco7nmSwduR6ZorK6dmGLnbLtDFECTqLQJJbvmhR4haAJ
-         4uAscEXZ7FYa8RSHU0l8rLfFJOxYHVbMgo9CjC7/fWBMeArNuzrKPF+hKYMlOeCl9Mqi
-         5iEL1eaMXvXRTesMSsgSygWdZNVApxiggiPejwpOOGdWSTYgA+Np18S3XJYQhRk8lfhx
-         t9Tw==
-X-Gm-Message-State: AGi0PuZurgB5ySkMQiqL7KXAfSLiZ0ll4tZRQSCf6dIvVDzRZK4640+Z
-        5iaZaNthUvDkPi+dSNEefIvGxg==
-X-Google-Smtp-Source: APiQypLaaaRD6tAlETGmsRLyfzqLu30J+TcGAOihkWaMHSv/hOxYRgiC1NVlECpycdABMCEphvy+qw==
-X-Received: by 2002:a17:902:8d8d:: with SMTP id v13mr3479658plo.260.1586929646167;
-        Tue, 14 Apr 2020 22:47:26 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 17sm7773904pgg.76.2020.04.14.22.47.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 22:47:25 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: qcom: sm8250: Fix PDC compatible and reg
-Date:   Tue, 14 Apr 2020 22:47:03 -0700
-Message-Id: <20200415054703.739507-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
+        Wed, 15 Apr 2020 01:49:16 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38375 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390006AbgDOFtO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 01:49:14 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jOav3-0006jl-3p; Wed, 15 Apr 2020 07:49:05 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jOav1-0004nR-Dw; Wed, 15 Apr 2020 07:49:03 +0200
+Date:   Wed, 15 Apr 2020 07:49:03 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     peng.fan@nxp.com
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org,
+        jaswinder.singh@linaro.org, linux@rempel-privat.de,
+        devicetree@vger.kernel.org, Anson.Huang@nxp.com,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] dt-bindings: mailbox: imx-mu: correct example
+Message-ID: <20200415054903.uywcv5fzuq4fs26l@pengutronix.de>
+References: <1586870668-32630-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4bzghxigj66j6f6n"
+Content-Disposition: inline
+In-Reply-To: <1586870668-32630-1-git-send-email-peng.fan@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:45:17 up 151 days, 21:03, 164 users,  load average: 0.10, 0.04,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The pdc node suffers from both too narrow compatible and insufficient
-cells in the reg, fix these.
 
-Fixes: 60378f1a171e ("arm64: dts: qcom: sm8250: Add sm8250 dts file")
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/sm8250.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+--4bzghxigj66j6f6n
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-index 891d83b2afea..2a7eaefd221d 100644
---- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-@@ -314,8 +314,8 @@ intc: interrupt-controller@17a00000 {
- 		};
- 
- 		pdc: interrupt-controller@b220000 {
--			compatible = "qcom,sm8250-pdc";
--			reg = <0x0b220000 0x30000>, <0x17c000f0 0x60>;
-+			compatible = "qcom,sm8250-pdc", "qcom,pdc";
-+			reg = <0 0x0b220000 0 0x30000>, <0 0x17c000f0 0 0x60>;
- 			qcom,pdc-ranges = <0 480 94>, <94 609 31>,
- 					  <125 63 1>, <126 716 12>;
- 			#interrupt-cells = <2>;
--- 
-2.24.0
+On Tue, Apr 14, 2020 at 09:24:27PM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+>=20
+> The example use i.MX8QXP MU, but actually the MU is compatible with
+> i.MX6SX, so add the compatible.
+>=20
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
+Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
+
+> ---
+>  Documentation/devicetree/bindings/mailbox/fsl,mu.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt b/Docum=
+entation/devicetree/bindings/mailbox/fsl,mu.txt
+> index 31486c9f6443..26b7a88c2fea 100644
+> --- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> @@ -51,7 +51,7 @@ Optional properties:
+>  Examples:
+>  --------
+>  lsio_mu0: mailbox@5d1b0000 {
+> -	compatible =3D "fsl,imx8qxp-mu";
+> +	compatible =3D "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
+>  	reg =3D <0x0 0x5d1b0000 0x0 0x10000>;
+>  	interrupts =3D <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
+>  	#mbox-cells =3D <2>;
+> --=20
+> 2.16.4
+>=20
+>=20
+>=20
+
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--4bzghxigj66j6f6n
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6WoEMACgkQ4omh9DUa
+UbMn5g//alHPJwdl+12HdDu5J7K5lGVY2ASoGoXkEd1qRc+qAKC+kXjb2JBL+dCF
+AOjKPpxxpvby8yd0r41D0Fks9eS63COq/YlWpOHo2HwVmGDqa+bgiXozgQM/JJ1B
+K5nxMZaMFmFmC1/zFmD3Wr2mZLlH1AEnqWTBrLwQpDBO8hjnieA8Br0bFLNqZWGu
+0Xry1XW9+26Aa7WwlltfOnwfKjSfyDfg2r/zxoPusSXnBZzxcZt3jjDZ+Gr9DQ1C
+Ivo1L5fjU8soOZ12SyLMGQTTwKBQQdt8ek4d88lao+Zoj64sho+evm/ux668Nd/7
+q/Pp/1LYjphQYydzoqfRYeN+vKFbZtu9foEJbCbliOiMd7eFrit3yV4XrjeKx8F8
+cCHeh5lZB2uKe60rrfwOP5+ynm8rJHGLKEFkGiTuZbR7KtK1ZqVAsdFiJYvjxC+K
+m8sHuZfp9/7Eo8Y0oO8m+eJCw7fXPxduBH+28UTqcvzQ1e7Bke6iVAraNMJ5eIPc
+qWcrznDmGZtTZp+48HxkmomsCPf0D/VWtzRA+29/ebumJyLU8ub7zrQxtIJ8o0l7
+sx3Pi97n6745dNNBczhQc12dpdRAmjp6mpfexl8rR4sgOuuHJE1u7e/R/N3UmIHZ
+NPUaoxI7DbQ6cX3nQoNAAyYtD9VliU6v4u8KJy8iKNYjJsMQXE8=
+=5pgf
+-----END PGP SIGNATURE-----
+
+--4bzghxigj66j6f6n--
