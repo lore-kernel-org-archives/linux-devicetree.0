@@ -2,96 +2,240 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1719CC3815B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40865C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01ED420737
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FDDB206E9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:02:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408219AbgDOI6i (ORCPT
+        id S2390640AbgDOJC3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:58:38 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:41521 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405268AbgDOI6f (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 04:58:35 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 03F8wAq55024222, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 03F8wAq55024222
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 15 Apr 2020 16:58:10 +0800
-Received: from RTEXMB05.realtek.com.tw (172.21.6.98) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 15 Apr 2020 16:58:09 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXMB05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 15 Apr 2020 16:58:09 +0800
-Received: from RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d]) by
- RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d%8]) with mapi id
- 15.01.1779.005; Wed, 15 Apr 2020 16:58:09 +0800
-From:   =?utf-8?B?SmFtZXMgVGFpIFvmiLTlv5fls7Bd?= <james.tai@realtek.com>
-To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-CC:     "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH v3 1/2] dt-bindings: arm: realtek: Document RTD1319 and Realtek PymParticle EVB
-Thread-Topic: [PATCH v3 1/2] dt-bindings: arm: realtek: Document RTD1319 and
- Realtek PymParticle EVB
-Thread-Index: AQHV22q6vab9CDECFUe3xrmWUlkzCah2FMYAgAQvoVA=
-Date:   Wed, 15 Apr 2020 08:58:09 +0000
-Message-ID: <a9685d4560a6445d81c4919b2a323f68@realtek.com>
-References: <20200204145207.28622-1-james.tai@realtek.com>
- <20200204145207.28622-2-james.tai@realtek.com>
- <bf55ccbe-cbdf-7ba7-d701-aa84c20204e3@suse.de>
-In-Reply-To: <bf55ccbe-cbdf-7ba7-d701-aa84c20204e3@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.190.154]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Wed, 15 Apr 2020 05:02:29 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:17199 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390601AbgDOJC0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:02:26 -0400
+X-IronPort-AV: E=Sophos;i="5.72,386,1580742000"; 
+   d="scan'208";a="44568584"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 15 Apr 2020 18:02:24 +0900
+Received: from localhost.localdomain (unknown [10.166.252.89])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 967D14009BF5;
+        Wed, 15 Apr 2020 18:02:24 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     joro@8bytes.org, robh+dt@kernel.org
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2] dt-bindings: iommu: renesas,ipmmu-vmsa: convert to json-schema
+Date:   Wed, 15 Apr 2020 18:02:17 +0900
+Message-Id: <1586941337-20842-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgQW5kcmVhcywNCg0KVGhhbmtzIGZvciB5b3VyIHJldmlldyENCg0KPg0KPiA+IGRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3JlYWx0ZWsueWFtbA0K
-PiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9yZWFsdGVrLnlhbWwN
-Cj4gPiBpbmRleCA4NDVmOWM3NmQ2ZjcuLjNiNDhhZTcxZmRkOCAxMDA2NDQNCj4gPiAtLS0gYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3JlYWx0ZWsueWFtbA0KPiA+ICsr
-KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vcmVhbHRlay55YW1sDQo+
-ID4gQEAgLTQyLDYgKzQyLDEyIEBAIHByb3BlcnRpZXM6DQo+ID4gICAgICAgICAgICAgICAgIC0g
-c3lub2xvZ3ksZHM0MTggIyBTeW5vbG9neSBEaXNrU3RhdGlvbiBEUzQxOA0KPiA+ICAgICAgICAg
-ICAgIC0gY29uc3Q6IHJlYWx0ZWsscnRkMTI5Ng0KPiA+DQo+ID4gKyAgICAgICMgUlREMTMxOSBT
-b0MgYmFzZWQgYm9hcmRzDQo+ID4gKyAgICAgIC0gaXRlbXM6DQo+ID4gKyAgICAgICAgICAtIGVu
-dW06DQo+ID4gKyAgICAgICAgICAgICAgLSByZWFsdGVrLHB5bXBhcnRpY2xlICMgUmVhbHRlayBQ
-eW1QYXJ0aWNsZSBFVkINCj4gDQo+IFRoZSBib2FyZCBzZWVtcyBsYWJlbGxlZCAiUFlNX1BBUlRJ
-Q0xFUyIuDQo+IA0KPiBXaGlsZSBXaWtpcGVkaWEgaGFzIG5vdGhpbmcgb24gdGhhdCwgSSBmb3Vu
-ZCB0aGlzIGV4cGxhbmF0aW9uOg0KPiBodHRwczovL21hcnZlbC5mYW5kb20uY29tL3dpa2kvUHlt
-X1BhcnRpY2xlcw0KPiANCj4gU28sIGFyZSB5b3Ugc3VyZSBpdCdzIFB5bVBhcnRpY2xlIGFuZCBu
-b3QgIlB5bSBQYXJ0aWNsZSIgd2l0aCBzcGFjZSBvciAiUHltDQo+IFBhcnRpY2xlcyIgd2l0aCBz
-cGFjZSBhbmQgcGx1cmFsIFM/IFRoZSBTIHdvdWxkIGFmZmVjdCBhbHNvIHRoZSAuZHRzIGZpbGVu
-YW1lLg0KPg0KSSBzaG91bGQgY2hhbmdlIHRoZSBzdHJpbmcgdG8gIlB5bSBQYXJ0aWNsZXMiLg0K
-DQo+IEZvciB0aGUgY29tcGF0aWJsZSBzdHJpbmcgdGhlIHF1ZXN0aW9uIGlzIHB5bXBhcnRpY2xl
-IG9yIHB5bS1wYXJ0aWNsZS4NCj4gDQpUaGUgY29tcGF0aWJsZSBzdHJpbmcgaXMgInB5bS1wYXJ0
-aWNsZXMiLg0KDQo+IEJ5IGNvbXBhcmlzb24sIExJT04tU0tJTiB3YXMgbmFtZWQgbGlvbi1za2lu
-IGluIHRoZSBjb21wYXRpYmxlIGFuZCBzcGVsbGVkDQo+IExpb24gU2tpbiBpbiB0ZXh0dWFsIGZv
-cm0uIElmIHlvdSBiZWxpZXZlIHRoYXQgc2hvdWxkIGJlIGZpeGVkLCBub3cgd291bGQgYmUgdGhl
-DQo+IHRpbWUgdG8gcmV2aXNpdCB0aG9zZSBwYXRjaGVzIHRoYXQgZGlkbid0IG1ha2UgdjUuNy4N
-Cj4gDQpJJ2xsIGNoZWNrIHRob3NlIHJlbGV2YW50IHBhdGNoZXMuDQoNClRoYW5rIHlvdS4NCg0K
-UmVnYXJkcywNCkphbWVzDQoNCg0K
+Convert Renesas VMSA-Compatible IOMMU bindings documentation
+to json-schema.
+
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ Changes from v1:
+ - Fix typo in the subject.
+ - Add a description on #iommu-cells.
+ https://patchwork.kernel.org/patch/11485415/
+
+ .../bindings/iommu/renesas,ipmmu-vmsa.txt          | 73 -----------------
+ .../bindings/iommu/renesas,ipmmu-vmsa.yaml         | 94 ++++++++++++++++++++++
+ 2 files changed, 94 insertions(+), 73 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
+ create mode 100644 Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
+
+diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
+deleted file mode 100644
+index 020d6f2..00000000
+--- a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
++++ /dev/null
+@@ -1,73 +0,0 @@
+-* Renesas VMSA-Compatible IOMMU
+-
+-The IPMMU is an IOMMU implementation compatible with the ARM VMSA page tables.
+-It provides address translation for bus masters outside of the CPU, each
+-connected to the IPMMU through a port called micro-TLB.
+-
+-
+-Required Properties:
+-
+-  - compatible: Must contain SoC-specific and generic entry below in case
+-    the device is compatible with the R-Car Gen2 VMSA-compatible IPMMU.
+-
+-    - "renesas,ipmmu-r8a73a4" for the R8A73A4 (R-Mobile APE6) IPMMU.
+-    - "renesas,ipmmu-r8a7743" for the R8A7743 (RZ/G1M) IPMMU.
+-    - "renesas,ipmmu-r8a7744" for the R8A7744 (RZ/G1N) IPMMU.
+-    - "renesas,ipmmu-r8a7745" for the R8A7745 (RZ/G1E) IPMMU.
+-    - "renesas,ipmmu-r8a774a1" for the R8A774A1 (RZ/G2M) IPMMU.
+-    - "renesas,ipmmu-r8a774b1" for the R8A774B1 (RZ/G2N) IPMMU.
+-    - "renesas,ipmmu-r8a774c0" for the R8A774C0 (RZ/G2E) IPMMU.
+-    - "renesas,ipmmu-r8a7790" for the R8A7790 (R-Car H2) IPMMU.
+-    - "renesas,ipmmu-r8a7791" for the R8A7791 (R-Car M2-W) IPMMU.
+-    - "renesas,ipmmu-r8a7793" for the R8A7793 (R-Car M2-N) IPMMU.
+-    - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
+-    - "renesas,ipmmu-r8a7795" for the R8A7795 (R-Car H3) IPMMU.
+-    - "renesas,ipmmu-r8a7796" for the R8A7796 (R-Car M3-W) IPMMU.
+-    - "renesas,ipmmu-r8a77965" for the R8A77965 (R-Car M3-N) IPMMU.
+-    - "renesas,ipmmu-r8a77970" for the R8A77970 (R-Car V3M) IPMMU.
+-    - "renesas,ipmmu-r8a77980" for the R8A77980 (R-Car V3H) IPMMU.
+-    - "renesas,ipmmu-r8a77990" for the R8A77990 (R-Car E3) IPMMU.
+-    - "renesas,ipmmu-r8a77995" for the R8A77995 (R-Car D3) IPMMU.
+-    - "renesas,ipmmu-vmsa" for generic R-Car Gen2 or RZ/G1 VMSA-compatible
+-			   IPMMU.
+-
+-  - reg: Base address and size of the IPMMU registers.
+-  - interrupts: Specifiers for the MMU fault interrupts. For instances that
+-    support secure mode two interrupts must be specified, for non-secure and
+-    secure mode, in that order. For instances that don't support secure mode a
+-    single interrupt must be specified. Not required for cache IPMMUs.
+-
+-  - #iommu-cells: Must be 1.
+-
+-Optional properties:
+-
+-  - renesas,ipmmu-main: reference to the main IPMMU instance in two cells.
+-    The first cell is a phandle to the main IPMMU and the second cell is
+-    the interrupt bit number associated with the particular cache IPMMU device.
+-    The interrupt bit number needs to match the main IPMMU IMSSTR register.
+-    Only used by cache IPMMU instances.
+-
+-
+-Each bus master connected to an IPMMU must reference the IPMMU in its device
+-node with the following property:
+-
+-  - iommus: A reference to the IPMMU in two cells. The first cell is a phandle
+-    to the IPMMU and the second cell the number of the micro-TLB that the
+-    device is connected to.
+-
+-
+-Example: R8A7791 IPMMU-MX and VSP1-D0 bus master
+-
+-	ipmmu_mx: mmu@fe951000 {
+-		compatible = "renasas,ipmmu-r8a7791", "renasas,ipmmu-vmsa";
+-		reg = <0 0xfe951000 0 0x1000>;
+-		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
+-			     <0 221 IRQ_TYPE_LEVEL_HIGH>;
+-		#iommu-cells = <1>;
+-	};
+-
+-	vsp@fe928000 {
+-		...
+-		iommus = <&ipmmu_mx 13>;
+-		...
+-	};
+diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
+new file mode 100644
+index 00000000..2c69f1f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
+@@ -0,0 +1,94 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iommu/renesas,ipmmu-vmsa.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas VMSA-Compatible IOMMU
++
++maintainers:
++  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
++
++description:
++  The IPMMU is an IOMMU implementation compatible with the ARM VMSA page tables.
++  It provides address translation for bus masters outside of the CPU, each
++  connected to the IPMMU through a port called micro-TLB.
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - renesas,ipmmu-r8a7743  # RZ/G1M
++              - renesas,ipmmu-r8a7744  # RZ/G1N
++              - renesas,ipmmu-r8a7745  # RZ/G1E
++              - renesas,ipmmu-r8a7790  # R-Car H2
++              - renesas,ipmmu-r8a7791  # R-Car M2-W
++              - renesas,ipmmu-r8a7793  # R-Car M2-N
++              - renesas,ipmmu-r8a7794  # R-Car E2
++              - renesas,ipmmu-r8a7795  # R-Car H3
++          - const: renesas,ipmmu-vmsa  # R-Car Gen2 or RZ/G1
++      - items:
++          - enum:
++              - renesas,ipmmu-r8a73a4  # R-Mobile APE6
++              - renesas,ipmmu-r8a774a1 # RZ/G2M
++              - renesas,ipmmu-r8a774b1 # RZ/G2N
++              - renesas,ipmmu-r8a774c0 # RZ/G2E
++              - renesas,ipmmu-r8a7796  # R-Car M3-W
++              - renesas,ipmmu-r8a77965 # R-Car M3-N
++              - renesas,ipmmu-r8a77970 # R-Car V3M
++              - renesas,ipmmu-r8a77980 # R-Car V3H
++              - renesas,ipmmu-r8a77990 # R-Car E3
++              - renesas,ipmmu-r8a77995 # R-Car D3
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 1
++    maxItems: 2
++    description:
++      Specifiers for the MMU fault interrupts. For instances that support
++      secure mode two interrupts must be specified, for non-secure and secure
++      mode, in that order. For instances that don't support secure mode a
++      single interrupt must be specified. Not required for cache IPMMUs.
++
++  '#iommu-cells':
++    const: 1
++    description:
++      A reference to the IPMMU in two cells. The first cell is a phandle
++      to the IPMMU and the second cell the number of the micro-TLB that the
++      device is connected to.
++
++  power-domains:
++    maxItems: 1
++
++  renesas,ipmmu-main:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description:
++      Reference to the main IPMMU instance in two cells. The first cell is
++      a phandle to the main IPMMU and the second cell is the interrupt bit
++      number associated with the particular cache IPMMU device. The interrupt
++      bit number needs to match the main IPMMU IMSSTR register. Only used by
++      cache IPMMU instances.
++
++required:
++  - compatible
++  - reg
++  - '#iommu-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/r8a7791-cpg-mssr.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/power/r8a7791-sysc.h>
++
++    ipmmu_mx: mmu@fe951000 {
++        compatible = "renasas,ipmmu-r8a7791", "renasas,ipmmu-vmsa";
++        reg = <0xfe951000 0x1000>;
++        interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
++        #iommu-cells = <1>;
++    };
+-- 
+2.7.4
+
