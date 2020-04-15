@@ -2,122 +2,120 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8138EC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 18:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C7DC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 18:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6CA2076D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 18:23:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qHK0VzOe"
+	by mail.kernel.org (Postfix) with ESMTP id 7E1F820787
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 18:26:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586975216;
+	bh=O8Rv/a2UmwQbWNosSeIJknrKfumGwTOghfCPFiZtrYk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=wPYZXRJ7FViQP/doKgF7oEsIbBdcGkJLzcjMLM0a4PHijY6dkejOnpm8aq5HI3Kzv
+	 UZkjbmneZwe/bC9nVwsal4Ct2Aos58qqqT0HNWAX7SXI3GkzYdtX+mcKMDXz2AhXHW
+	 MgTpaj9KAG/xIJ4eP2hy4T+WpguY945CArAI1TXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416700AbgDOSXg (ORCPT
+        id S1416814AbgDOS0z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 14:23:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47094 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1416695AbgDOSXe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 14:23:34 -0400
-Received: from mail-oo1-xc44.google.com (mail-yw1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67D54C061A0C
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 11:23:33 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id i9so81210ool.5
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 11:23:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N/364UOQV/F9OhYoUwCrLEZcG1FusHWS5bcvrl8jz2w=;
-        b=qHK0VzOeMeIvWuDEg9DQg3oOZt+awXi4JnTR3FkSp4lyaHjbHcD88TAqCzyg6xrVRB
-         8sf7+NG2SbK9iPYxmqKBn5PSTFASpoKEOmWWw0JFr8vidNprFyZkL/r6DOaxnx0iE1Fp
-         fg3az2zIXslQ3beoYX1vk5E6lUsOId7CkSFy0UHWr/IxFNsdLzbZjzzt+D7AlUKlaCei
-         NOQdA5ycXHdB1AuZYdL2SiFwPN5Zdi1MnDgyV3wumYGPqwSETLbezsMZqpnsxOfcpNmJ
-         o8BhT15ghclPxAbsrG34l8vgJ2HzV9y56WBnFbYBSnCA+wwEte8wEwTjCTl3OFHE4CKG
-         n0dg==
+        Wed, 15 Apr 2020 14:26:55 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36866 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1416773AbgDOS0m (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 14:26:42 -0400
+Received: by mail-oi1-f193.google.com with SMTP id r25so4472984oij.4;
+        Wed, 15 Apr 2020 11:26:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N/364UOQV/F9OhYoUwCrLEZcG1FusHWS5bcvrl8jz2w=;
-        b=uLuApgGdQp1eyc+d+mPc14p7EJtV1i3bgJRnTYSZ8unLROkPDMhLcm6TsNHfW6WO9P
-         6fQQl3nFysJzFhYTfngZhTKhg+ja34X5qHRiTMOOkvswtQtKh+s8+JSlDxIE67uBwW+U
-         7qXwfy6J9qV4K3MJ4DlNJ7gpNp8ol4vKI8o3kmPujxbPXp7a9CP74r7EkRUBTYK01x38
-         fnFgmdjxHBaT45ETuOeTICOoZI5EL/Kdf/Afd0aI7U7fM3nTHI2OBWe2hKFkRGEoV25d
-         1RzGMW4XSvnZ7qXXZ+3vcPMKx7wo0vUCHhy3HZ2ou5P2QHDZSAQ470Z60SodoDE+z5EZ
-         9b3A==
-X-Gm-Message-State: AGi0PuaF8cvwIrd73GJxSDuEMPKL2wdBjI7gKJfi31qalinpQXFCVJsI
-        De0vVJCyv3kdHU/COZm0WMdEsCfFfqBZ6F4eFfNd6Q==
-X-Google-Smtp-Source: APiQypL40RhF6vlHXSbiQX7ID3/5K6fuLLYdzVlTCNywKin+vKrOPqEX+sTqWif0e5PqnxV6i8UV+TU6VE70Paun67U=
-X-Received: by 2002:a4a:615d:: with SMTP id u29mr2702657ooe.15.1586975012444;
- Wed, 15 Apr 2020 11:23:32 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GOQPtpvUxmmtoqM4sCMHO0noy2hG9IMRj4zLo4bodko=;
+        b=M8lYosc1DuirpiGQ7Gu4HJbEsw3MepUpBX8+WpLIKs3rx/dGbFhnvWR0CS7vfcUcEj
+         j2oDzJqWTYYh8KgK2uMZ5NPsiie3xSTvyBJyDa54Y+HMhuDuzgmdUFglz1wEs4wVjic7
+         VQ3xcLjaepLTHTnXBZkizg06gJTwgjEigAmILj4kkLHQh3p5+Ck6KLGfmsNYF10/luEs
+         PM5ZpkBq7zv6BLFgbWdmbjZeQyNjOAie3T48k8ffpJ3hiecmx0/v8zOtJDPD4K0ItfiI
+         cvrcyIMlrEtxNuoHSKSH1yzGBDiL67PJIMMbCxzw6C4HhScsGn+Mx6FfSRjxhXQu2oR7
+         4hEw==
+X-Gm-Message-State: AGi0PuaxY4YYMT+T1dW8p6np7JO0o3RHQX1zi+T9zLoOJrK82rDMbCV4
+        Xq2kNwg+jpw60qZ5f0pR2ZSfwJ/QKg==
+X-Google-Smtp-Source: APiQypIkmUJHofMrMWSmFECjbIqPYqBmqGI/9Got6TMQR2A18rHtb+NpU4030rrtiIRTx/Ir/HQQ3A==
+X-Received: by 2002:a05:6808:a08:: with SMTP id n8mr410305oij.91.1586975201199;
+        Wed, 15 Apr 2020 11:26:41 -0700 (PDT)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id o186sm6573687oia.27.2020.04.15.11.26.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 11:26:40 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>, linux-pwm@vger.kernel.org
+Subject: [PATCH] dt-bindings: pwm: Fix cros-ec-pwm example dtc 'reg' warning
+Date:   Wed, 15 Apr 2020 13:26:39 -0500
+Message-Id: <20200415182639.18534-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200415150550.28156-1-nsaenzjulienne@suse.de> <20200415150550.28156-2-nsaenzjulienne@suse.de>
-In-Reply-To: <20200415150550.28156-2-nsaenzjulienne@suse.de>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 15 Apr 2020 11:22:56 -0700
-Message-ID: <CAGETcx_+i9=+a4OEY-rySY4vNDg1jt4160zAMPR7U-UG38Ysww@mail.gmail.com>
-Subject: Re: [PATCH 1/4] of: property: Fix create device links for all
- child-supplier dependencies
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Actually a few more nits about the commit text.
+The example for the CrOS EC PWM is incomplete and now generates a dtc
+warning:
 
-On Wed, Apr 15, 2020 at 8:06 AM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
->
-> Upon adding a new platform device we scan its properties and its
+Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.example.dts:17.11-23.11:
+Warning (unit_address_vs_reg): /example-0/cros-ec@0: node has a unit name, but no reg or ranges property
 
-This code runs for all devices created from a DT node. Not just
-platform devices. So fix this paragraph appropriately?
+Fixing this results in more warnings as a parent spi node is needed as
+well.
 
-Upon adding a new device from a DT node, we scan... ?
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
+Cc: Benson Leung <bleung@chromium.org>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Guenter Roeck <groeck@chromium.org>
+Cc: linux-pwm@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/pwm/google,cros-ec-pwm.yaml        | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
--Saravana
+diff --git a/Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml b/Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
+index 24c217b76580..41ece1d85315 100644
+--- a/Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
++++ b/Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
+@@ -31,10 +31,17 @@ additionalProperties: false
+ 
+ examples:
+   - |
+-    cros-ec@0 {
+-        compatible = "google,cros-ec-spi";
+-        cros_ec_pwm: ec-pwm {
+-            compatible = "google,cros-ec-pwm";
+-            #pwm-cells = <1>;
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        cros-ec@0 {
++            compatible = "google,cros-ec-spi";
++            reg = <0>;
++
++            cros_ec_pwm: ec-pwm {
++                compatible = "google,cros-ec-pwm";
++                #pwm-cells = <1>;
++            };
+         };
+     };
+-- 
+2.20.1
 
-> children's properties in order to create a consumer/supplier
-> relationship between the device and the property supplier.
->
-> That said, it's possible for some of the node's children to be disabled,
-> which will create links that'll never be fulfilled.
->
-> To get around this, use the for_each_available_child_of_node() function
-> instead of for_each_available_node() when iterating over the node's
-> children.
->
-> Fixes: d4387cd11741 ("of: property: Create device links for all child-supplier depencencies")
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->  drivers/of/property.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index b4916dcc9e725..a8c2b13521b27 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -1296,7 +1296,7 @@ static int of_link_to_suppliers(struct device *dev,
->                 if (of_link_property(dev, con_np, p->name))
->                         ret = -ENODEV;
->
-> -       for_each_child_of_node(con_np, child)
-> +       for_each_available_child_of_node(con_np, child)
->                 if (of_link_to_suppliers(dev, child) && !ret)
->                         ret = -EAGAIN;
->
-> --
-> 2.26.0
->
