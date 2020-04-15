@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 575A9C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E079C3815B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30D3820575
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D8F521556
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:15:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586956460;
-	bh=2OzrXsnZI6VeFmjEUumNOJf3tK1Ls686mWfBeZijVvc=;
+	s=default; t=1586956524;
+	bh=VyOZnvDN6v7p/4EWitshi6AaubiDqI05pzbnVO4r8mA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YszwC4lyPhcyjim1UP51ulkkmyofdt+tLKXhrbj3q655IJyQDfDJoP/SA1L1RZQV1
-	 xUyYhXyadQNzx44x/s8DjQMW/1dsDPLm+rT32xKRtiXHtjTNgidMQvGtLrTLqS/Wcx
-	 T/q+0LEHX6yPs7lnoKKDewYXyBr5BVRbUupH53c4=
+	b=FYnY3AbSnHctjCMMRy3aDMdvd/d0036q1FRxBU+W2SGfixGoRVKHKOaw9WYpDTE23
+	 Aq+tVPjnk+DjDQkrQO7IZr1pSXcaSeezIeZi94PWLRUQND+AR7tjwprBc/CVXGcLQu
+	 z74eO9zNg39vStHBlKsvdimStzCCpdByJ43HxqLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506181AbgDONOR (ORCPT
+        id S2897047AbgDONOq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:14:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54652 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 09:14:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897044AbgDOLfV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:21 -0400
+        id S2897041AbgDOLfT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74B6A2076D;
-        Wed, 15 Apr 2020 11:35:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 251C220775;
+        Wed, 15 Apr 2020 11:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950521;
-        bh=2OzrXsnZI6VeFmjEUumNOJf3tK1Ls686mWfBeZijVvc=;
+        s=default; t=1586950518;
+        bh=VyOZnvDN6v7p/4EWitshi6AaubiDqI05pzbnVO4r8mA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K3EfCy95V58RCDA5Gl42bAh4u82KRqec/YB5RwxVPhpicjUcqa8j8rOAjG/6+xLqe
-         f1M1/K40Ny0GyZYfmsHWh01qzxyRDoIhMTD2GF8+D0sKz/1HDA9aZd/zujLSrRagHs
-         iBHDhDGyoI65orJeod0q+adTZPecf+LFxtJgEGio=
+        b=pHecc/lv0CeaDB9mMCQZOmkzMEvZ/OZR1TA3xrg2i8FZNoeQs/Q91l3F1kCaLBYeD
+         s43GMM/kujtTkGsf5exvu2m5ssNAdlcnxraIKFpU+r6Q7XXJuRh6him1/TFlhqEqjz
+         cMAuMgwM0qFsFQnv9vGZiQVrjoPkp+9YM/hazP2k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
+Cc:     Tomasz Maciej Nowak <tmn505@gmail.com>,
         Gregory CLEMENT <gregory.clement@bootlin.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 030/129] arm64: dts: marvell: Fix cpu compatible for AP807-quad
-Date:   Wed, 15 Apr 2020 07:33:05 -0400
-Message-Id: <20200415113445.11881-30-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 028/129] arm64: dts: marvell: espressobin: add ethernet alias
+Date:   Wed, 15 Apr 2020 07:33:03 -0400
+Message-Id: <20200415113445.11881-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
 References: <20200415113445.11881-1-sashal@kernel.org>
@@ -60,124 +60,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Amit Kucheria <amit.kucheria@linaro.org>
+From: Tomasz Maciej Nowak <tmn505@gmail.com>
 
-[ Upstream commit d136d2588b21b1a07515632ed61120c9f262909b ]
+[ Upstream commit 5253cb8c00a6f4356760efb38bca0e0393aa06de ]
 
-make -k ARCH=arm64 dtbs_check shows the following errors. Fix them by
-removing the "arm,armv8" compatible.
+The maker of this board and its variants, stores MAC address in U-Boot
+environment. Add alias for bootloader to recognise, to which ethernet
+node inject the factory MAC address.
 
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-cpu@0: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-cpu@0: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long CHECK
-arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex.dt.yaml
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-cpu@1: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-cpu@1: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-cpu@100: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-cpu@100: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-cpu@101: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-cpu@101: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-cpu@0: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-cpu@0: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-cpu@1: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-cpu@1: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-cpu@100: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-cpu@100: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-cpu@101: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-cpu@101: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-cpu@0: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-cpu@0: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-cpu@1: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-cpu@1: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-cpu@100: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-cpu@100: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-cpu@101: compatible: Additional items are not allowed ('arm,armv8' was
-unexpected)
-/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-cpu@101: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Tomasz Maciej Nowak <tmn505@gmail.com>
 Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi b/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
-index 840466e143b47..68782f161f122 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
-@@ -17,7 +17,7 @@
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
+index 53b8ac55a7f3d..e5262dab28f58 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
+@@ -13,6 +13,12 @@
+ #include "armada-372x.dtsi"
  
- 		cpu0: cpu@0 {
- 			device_type = "cpu";
--			compatible = "arm,cortex-a72", "arm,armv8";
-+			compatible = "arm,cortex-a72";
- 			reg = <0x000>;
- 			enable-method = "psci";
- 			#cooling-cells = <2>;
-@@ -32,7 +32,7 @@
- 		};
- 		cpu1: cpu@1 {
- 			device_type = "cpu";
--			compatible = "arm,cortex-a72", "arm,armv8";
-+			compatible = "arm,cortex-a72";
- 			reg = <0x001>;
- 			enable-method = "psci";
- 			#cooling-cells = <2>;
-@@ -47,7 +47,7 @@
- 		};
- 		cpu2: cpu@100 {
- 			device_type = "cpu";
--			compatible = "arm,cortex-a72", "arm,armv8";
-+			compatible = "arm,cortex-a72";
- 			reg = <0x100>;
- 			enable-method = "psci";
- 			#cooling-cells = <2>;
-@@ -62,7 +62,7 @@
- 		};
- 		cpu3: cpu@101 {
- 			device_type = "cpu";
--			compatible = "arm,cortex-a72", "arm,armv8";
-+			compatible = "arm,cortex-a72";
- 			reg = <0x101>;
- 			enable-method = "psci";
- 			#cooling-cells = <2>;
+ / {
++	aliases {
++		ethernet0 = &eth0;
++		serial0 = &uart0;
++		serial1 = &uart1;
++	};
++
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
 -- 
 2.20.1
 
