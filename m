@@ -2,110 +2,147 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5BEC2BA19
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5FDC38A2C
 	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BCDB20775
+	by mail.kernel.org (Postfix) with ESMTP id 099FC206F9
 	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:06:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635513AbgDOIGi (ORCPT
+        id S2635514AbgDOIGi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Wed, 15 Apr 2020 04:06:38 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:39770 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408045AbgDOID2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:03:28 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5A4E61A078C;
-        Wed, 15 Apr 2020 10:03:07 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4B8731A077A;
-        Wed, 15 Apr 2020 10:03:07 +0200 (CEST)
-Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id B19C1202B0;
-        Wed, 15 Apr 2020 10:03:06 +0200 (CEST)
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Lee Jones <lee.jones@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>
-Cc:     NXP Linux Team <linux-imx@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v3 03/13] arm64: dts: imx8mp: Add AIPS 4 and 5
-Date:   Wed, 15 Apr 2020 11:02:43 +0300
-Message-Id: <1586937773-5836-4-git-send-email-abel.vesa@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
-References: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:33067 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2408053AbgDOIFU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 04:05:20 -0400
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <a.fatoum@pengutronix.de>)
+        id 1jOd2o-0006dC-VQ; Wed, 15 Apr 2020 10:05:15 +0200
+Subject: Re: [PATCH v2] nvmem: core: don't consider subnodes not matching
+ binding
+From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     devicetree@vger.kernel.org, Christian Eggers <CEggers@arri.de>,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de
+References: <20200323152850.32657-1-a.fatoum@pengutronix.de>
+ <d59007d1-f4e3-f550-cecd-64b788a534bc@linaro.org>
+ <bb0dcf33-f67d-7078-9341-08282d8da217@pengutronix.de>
+Message-ID: <4e861088-c17d-0eca-6efa-c50b55fdecd1@pengutronix.de>
+Date:   Wed, 15 Apr 2020 10:05:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <bb0dcf33-f67d-7078-9341-08282d8da217@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There are 5 AIPS maps in total, according to the RM. Add the missing
-ones here.
+On 4/6/20 4:20 PM, Ahmad Fatoum wrote:
+> Hello,
+> 
+> On 4/6/20 2:33 PM, Srinivas Kandagatla wrote:
+>>
+>>
+>> On 23/03/2020 15:28, Ahmad Fatoum wrote:
+>>> The nvmem cell binding applies to objects which match "^.*@[0-9a-f]+$",
+>>> but so far the driver has matched all objects and failed if they didn't
+>>> have the expected properties.
+>>>
+>>> The driver's behavior in this regard precludes future extension of
+>>> EEPROMs by child nodes other than nvmem and clashes with the barebox
+>>> bootloader binding that extends the fixed-partitions MTD binding to
+>>> EEPROMs as it tries to interpret the "fixed-partitions"-compatible
+>>> partitions node as a nvmem cell.
+>>>
+>>> Solve this issue by skipping all subnodes that don't contain an @.
+>>>
+>>> This still allows for cell names like `partitions@0,0', but this
+>> NACK.. thats nasty hack!
+>> Its standard practice as per device tree specs to have nodes name as "node-name@unit-address"
+>>
+>> Ref: https://github.com/devicetree-org/devicetree-specification/releases/download/v0.3/devicetree-specification-v0.3.pdf
+> 
+> I didn't say otherwise. I just argued if we verify there's a @ symbol in the
+> node name, before considering whether it is a NVMEM cell, we will skip fixed-partitions
+> while adhering to the NVMEM cell binding.
+> 
+>>> is much less likely to cause future collisions.
+>>
+>> There have been discussions on this topic in the past at:
+>>
+>> https://patchwork.ozlabs.org/patch/890741/
+>>
+>> We need to come up with a better solution!
+> 
+> Thanks for the link, I didn't find it when I searched whether this has
+> come up before.
+> 
+> As you probably noticed, your suggested approach there wouldn't work for me though,
+> because this time it can't be worked around in the MTD driver.
+> If the suggestion here is not palatable, how do you think about (in
+> my preferred order):
+> 
+> - If the cell has a compatible node, it must be "nvmem-cell".
+>   Otherwise, a cell with a compatible node is skipped.
+> 
+> - Adding a nvmem cell container with a compatible and making support for
+>   the old binding configurable
+> 
+> - Skipping cells that are malformed and lack a reg = < > property _without_
+>   error
 
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mp.dtsi | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+gentle ping. I can prepare another patch if you indicate which approach
+you'd prefer.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-index 9b1616e..c08156f 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-@@ -318,7 +318,7 @@
- 
- 		aips2: bus@30400000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
--			reg = <0x305f0000 0x400000>;
-+			reg = <0x305f0000 0x10000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
-@@ -378,7 +378,7 @@
- 
- 		aips3: bus@30800000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
--			reg = <0x309f0000 0x400000>;
-+			reg = <0x309f0000 0x10000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
-@@ -641,6 +641,22 @@
- 			};
- 		};
- 
-+		aips4: bus@32c00000 {
-+			compatible = "fsl,aips-bus", "simple-bus";
-+			reg = <0x32c00000 0x10000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+		};
-+
-+		aips5: bus@30c00000 {
-+			compatible = "fsl,aips-bus", "simple-bus";
-+			reg = <0x30c00000 0x10000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+		};
-+
- 		gic: interrupt-controller@38800000 {
- 			compatible = "arm,gic-v3";
- 			reg = <0x38800000 0x10000>,
+> 
+> Cheers
+> Ahmad
+> 
+>>
+>> --srini
+>>
+>>>
+>>> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+>>> ---
+>>> v1 -> v2:
+>>>    use ->full_name instead of ->name as to not break existing correct
+>>>    cells (Christian)
+>>> ---
+>>>   drivers/nvmem/core.c | 2 ++
+>>>   1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+>>> index ef326f243f36..f051051fb1a8 100644
+>>> --- a/drivers/nvmem/core.c
+>>> +++ b/drivers/nvmem/core.c
+>>> @@ -278,6 +278,8 @@ static int nvmem_add_cells_from_of(struct nvmem_device *nvmem)
+>>>       parent = dev->of_node;
+>>>         for_each_child_of_node(parent, child) {
+>>> +        if (!strchr(kbasename(child->full_name), '@'))
+>>> +            continue;
+>>>           addr = of_get_property(child, "reg", &len);
+>>>           if (!addr || (len < 2 * sizeof(u32))) {
+>>>               dev_err(dev, "nvmem: invalid reg on %pOF\n", child);
+>>>
+>>
+> 
+
 -- 
-2.7.4
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
