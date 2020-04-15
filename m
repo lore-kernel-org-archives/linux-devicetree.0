@@ -2,93 +2,188 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DE7C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 824D2C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F8F6206A2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:39:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586950777;
-	bh=DhilV2LGjOn6gl5KU5PoNhKIEfaaPV1J4VIyQKZ1zVU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UK5NCAHqttnRVEMj7syXdAmLO/YQe3prt/osDQsgWQJwRHiLLcBa+L1QsxTT2m3/n
-	 BeOr/89lZjNToZHx4h/hGop0dMF23VrE1nLUr7zbA8/bf/kzcKLalU/EzsbkACc3eT
-	 GJS4v1RONhGPOR9E3vMKPZfEsun9M3O0UvdtbqJc=
+	by mail.kernel.org (Postfix) with ESMTP id 651E1206A2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897296AbgDOLjP (ORCPT
+        id S2897399AbgDOLlc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:39:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59078 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 07:41:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53278 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897287AbgDOLjD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:39:03 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC96A20768;
-        Wed, 15 Apr 2020 11:39:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950742;
-        bh=DhilV2LGjOn6gl5KU5PoNhKIEfaaPV1J4VIyQKZ1zVU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QSW4csO/lzL0+++NeIP5apIz9UXvOMrwUJzFbUcMJkQV3Dzwax5rfFSrigbQVSYmP
-         D52NhrGUiQ2j2lkSVX4laTA0+Py/5VoNzjnkF60vvGUAaMKHnz7WZo8qZY9meWyzRX
-         NJc2v6ypYK30LwkinlCgfU+/A4wT1OZkz8phDdvQ=
-Date:   Wed, 15 Apr 2020 12:39:00 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de,
-        mark.rutland@arm.com, robh+dt@kernel.org, georgi.djakov@linaro.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, mka@chromium.org,
-        dianders@chromium.org, evgreen@chromium.org
-Subject: Re: [PATCH V4 6/9] spi: spi-geni-qcom: Add interconnect support
-Message-ID: <20200415113900.GD5265@sirena.org.uk>
-References: <1586946198-13912-1-git-send-email-akashast@codeaurora.org>
- <1586946198-13912-7-git-send-email-akashast@codeaurora.org>
+        id S2897395AbgDOLlT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:41:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E7CA0AEE7;
+        Wed, 15 Apr 2020 11:41:15 +0000 (UTC)
+Subject: Re: [PATCH v3 2/2] arm64: dts: realtek: Add RTD1319 SoC and Realtek
+ PymParticle EVB
+To:     James Tai <james.tai@realtek.com>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200204145207.28622-1-james.tai@realtek.com>
+ <20200204145207.28622-3-james.tai@realtek.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <842e8a9d-cdd6-cb85-ce85-17f20ff7b626@suse.de>
+Date:   Wed, 15 Apr 2020 13:41:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="NtwzykIc2mflq5ck"
-Content-Disposition: inline
-In-Reply-To: <1586946198-13912-7-git-send-email-akashast@codeaurora.org>
-X-Cookie: Hire the morally handicapped.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200204145207.28622-3-james.tai@realtek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi James,
 
---NtwzykIc2mflq5ck
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+A couple more nits to consider for v4:
 
-On Wed, Apr 15, 2020 at 03:53:15PM +0530, Akash Asthana wrote:
-> Get the interconnect paths for SPI based Serial Engine device
-> and vote according to the current bus speed of the driver.
+Am 04.02.20 um 15:52 schrieb James Tai:
+> diff --git a/arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts b/arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts
+> new file mode 100644
+> index 000000000000..2a36d220fef6
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts
+> @@ -0,0 +1,43 @@
+> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+> +/*
+> + * Copyright (c) 2019 Realtek Semiconductor Corp.
 
-Acked-by: Mark Brown <broonie@kernel.org>
+2019-2020? (also elsewhere)
 
---NtwzykIc2mflq5ck
-Content-Type: application/pgp-signature; name="signature.asc"
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "rtd1319.dtsi"
+> +
+> +/ {
+> +	compatible = "realtek,pymparticle", "realtek,rtd1319";
+> +	model = "Realtek PymParticle EVB";
+> +
+> +	memory@2e000 {
+> +		device_type = "memory";
+> +		reg = <0x2e000 0x3ffd2000>; /* boot ROM to 1 GiB or 2 GiB */
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:460800n8";
+> +	};
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +		serial1 = &uart1;
+> +		serial2 = &uart2;
+> +	};
+> +};
+> +
+> +/* debug console (J1) */
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +/* M.2 slot (CON8) */
 
------BEGIN PGP SIGNATURE-----
+Also J14 and CON2 (unless the board is mislabeled?).
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6W8lMACgkQJNaLcl1U
-h9ALhAf+LSYOHFhnvd51g9KqXmq4MWJ/4WJ3CyCeJfrLwmHC077oaiBT8uI+nwAw
-ryqlhyzHhYhQycNDTAbEVON72KCQuHrc2cjO9FPiKnvZ6fxcfDE/fq0G17v2y3UO
-4OXDoYkpYbnBK/cA1D9O1kIh3YxD3H926UfjBowT43Vc5mrTTdb4TheyZsGYXNuW
-bcGVnXNFVfdNcqKT8mJ2is6EhfIU0417YR9YaFnmRsCivRxR79y4K5wg8DWSALfy
-oCfm8pWX3ivmbQ7utQShrc4gnACwK2zlO5v10LupYTKQJBAbFUXntqyJ3U6PcAmh
-QyjDriQmcqykA2os0xc1CftFuoMgVw==
-=NU9L
------END PGP SIGNATURE-----
+/* J14 and M.2 slots (CON2, CON8) */ ?
 
---NtwzykIc2mflq5ck--
+> +&uart1 {
+> +	status = "disabled";
+> +};
+> +
+> +/* GPIO connector (T1) */
+> +&uart2 {
+> +	status = "disabled";
+> +};
+> diff --git a/arch/arm64/boot/dts/realtek/rtd1319.dtsi b/arch/arm64/boot/dts/realtek/rtd1319.dtsi
+> new file mode 100644
+> index 000000000000..1dcee00009cd
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/realtek/rtd1319.dtsi
+> @@ -0,0 +1,12 @@
+> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+> +/*
+> + * Realtek RTD1319 SoC
+> + *
+> + * Copyright (c) 2019 Realtek Semiconductor Corp.
+> + */
+> +
+> +#include "rtd13xx.dtsi"
+> +
+> +/ {
+> +	compatible = "realtek,rtd1319";
+> +};
+> diff --git a/arch/arm64/boot/dts/realtek/rtd13xx.dtsi b/arch/arm64/boot/dts/realtek/rtd13xx.dtsi
+> new file mode 100644
+> index 000000000000..f6d73f18345d
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/realtek/rtd13xx.dtsi
+> @@ -0,0 +1,213 @@
+> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+> +/*
+> + * Realtek RTD13xx SoC family
+> + *
+> + * Copyright (c) 2019 Realtek Semiconductor Corp.
+> + */
+> +
+> +/memreserve/	0x0000000000000000 0x000000000002e000; /* Boot ROM */
+
+Can you check whether your U-Boot and LK respectively need this 
+memreserve entry, here and for previous SoCs? Because for RTD16xx we 
+don't seem to have any memreserve entries at all. We do have it in 
+rtd139x.dtsi, rtd129x.dtsi and rtd1195.dtsi.
+
+Unrelated: Since we're carving out the 2e000 or so from /memory node and 
+mapping ranges for /soc, I've been wondering whether we should represent 
+the Boot ROM as node somehow. But since it's a ROM with (I assume) 
+binary code only, I didn't see any need to have it accessible as mtd-rom 
+device, so it's way down my to-do list to research how other mainline 
+platforms might model their boot ROMs... (maybe your team has time, or 
+someone reading happens to know?)
+
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
+
+> +/memreserve/	0x000000000002e000 0x0000000000100000; /* Boot loader */
+
+Is this a) correctly sized (not 0xd2000?) and b) still needed? I thought 
+the documented sub-0x100000 memory corruption were fixed in newer BSPs?
+
+> +/memreserve/	0x000000000f400000 0x0000000000500000; /* Video FW */
+> +/memreserve/	0x000000000f900000 0x0000000000500000; /* Audio FW */
+> +/memreserve/	0x0000000010000000 0x0000000000014000; /* Audio FW RAM */
+[snip]
+
+Are these needed for the bootloader not to overwrite preloaded firmware, 
+or could these become /mem-reserve sub-nodes instead?
+
+Long-term I'm assuming we would move the responsibility for loading 
+these to the new kernel drivers (so that the bootloader doesn't need to 
+take care anymore) and ship the needed blobs in linux-firmware.git?
+
+Or is the video FW needed by the bootloader itself for HDMI/DP output?
+
+Thanks,
+Andreas
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
