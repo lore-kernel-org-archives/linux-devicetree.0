@@ -2,176 +2,319 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22227C3815B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC90C3815B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05842206F9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:27:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B09206F9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:30:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586968257;
+	bh=WUC8Bsx6n4kPP/2IvmXcJuk2IZsO1uij3Y2K4ebkwag=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FifG2Bq8b72L79GYG7X85MX7wSNp3EQWEzm7oJ4OfKdvZ6yb74Uem+or+PZtERioD
+	 2XB3IbGGgAze/KqBjyF/V6KBGkkIDF3OZmk3MSbHZjOm2p1A31HrMtNztjyfU1O/YK
+	 O3gxtxKPmgT/P1O3bc/KaTxsS3TbP3YFy+Sxchc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1415939AbgDOQ1s (ORCPT
+        id S1416060AbgDOQaz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:27:48 -0400
-Received: from mga03.intel.com ([134.134.136.65]:47706 "EHLO mga03.intel.com"
+        Wed, 15 Apr 2020 12:30:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1415915AbgDOQ1e (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:27:34 -0400
-IronPort-SDR: uW+unV75qdgb2U3L5czKZHvzFBcd+OVz2xdv1KqZvh/+6GDzdW8MNMCQSEhJZcPlI6TZAlltid
- WwtLZa9AIqqQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 09:27:32 -0700
-IronPort-SDR: 5eJIAnbaBUkT7vmvZkQM8f4n6QiHLKkUwZB9EHJFNVj+7PpXC3EXfK7UzRjNtMHYpKIkPPTApK
- LtRhGUpSvepA==
-X-IronPort-AV: E=Sophos;i="5.72,387,1580803200"; 
-   d="scan'208";a="256907570"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 09:27:25 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id C6B5D20606; Wed, 15 Apr 2020 19:27:22 +0300 (EEST)
-Date:   Wed, 15 Apr 2020 19:27:22 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency
- dt-property
-Message-ID: <20200415162722.GG27762@paasikivi.fi.intel.com>
-References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200406165108.GA7646@kekkonen.localdomain>
- <20200406173234.GD16885@pendragon.ideasonboard.com>
- <20200407062241.GA8883@kekkonen.localdomain>
- <20200407122106.GD4751@pendragon.ideasonboard.com>
- <20200407151401.GA5206@paasikivi.fi.intel.com>
- <20200414205552.GN19819@pendragon.ideasonboard.com>
+        id S1415869AbgDOQaw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:30:52 -0400
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9308A20737;
+        Wed, 15 Apr 2020 16:30:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586968250;
+        bh=WUC8Bsx6n4kPP/2IvmXcJuk2IZsO1uij3Y2K4ebkwag=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VSNg3Z3X30deKJh7htdB+FeC2GCn1KVh6gkkB9WpXoQrnElTk8ipYlfjjk3bHKc64
+         fwTsNSSb6+YhX8ws7uAdURtfuValrmgvx2/fWYgaIRgmpEwNPob79V4rypL1I5uFDy
+         qG9ZUregTlRKGEuRyu8SkEx4IS/+s0uS8uLS/V3g=
+Received: by mail-ed1-f53.google.com with SMTP id i7so5730740edq.3;
+        Wed, 15 Apr 2020 09:30:50 -0700 (PDT)
+X-Gm-Message-State: AGi0PuahOdW0blAKtK2u29AqYWh22TxOwOxh+myWOM812B5Q8548FR7U
+        0oQf3ZRhjTGMpx7cwSBB4EGGScJ8zEVUX3LqNw==
+X-Google-Smtp-Source: APiQypLfzJMiKrjaHEhydOXdTWRa66BOG1MrE7lZ2rSnRI+v5Qgh7UJQS5J8mNuhBAJkynBr6SvIvV6gJxqWvKUSWUc=
+X-Received: by 2002:a17:906:124f:: with SMTP id u15mr5582102eja.360.1586968247593;
+ Wed, 15 Apr 2020 09:30:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414205552.GN19819@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1586949506-22990-1-git-send-email-anthony.huang@mediatek.com> <1586949506-22990-2-git-send-email-anthony.huang@mediatek.com>
+In-Reply-To: <1586949506-22990-2-git-send-email-anthony.huang@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Thu, 16 Apr 2020 00:30:35 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_8VbgUtzCTv7NpCkZ0qVx4aXmX6ZWa_QA0Ph2JGx2GTfA@mail.gmail.com>
+Message-ID: <CAAOTY_8VbgUtzCTv7NpCkZ0qVx4aXmX6ZWa_QA0Ph2JGx2GTfA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: soc: mediatek: Add document for mmdvfs driver
+To:     Anthony Huang <anthony.huang@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org, wsd_upstream@mediatek.com,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hi, Anthony:
 
-On Tue, Apr 14, 2020 at 11:55:52PM +0300, Laurent Pinchart wrote:
-> Hi Sakari,
-> 
-> On Tue, Apr 07, 2020 at 06:14:01PM +0300, Sakari Ailus wrote:
-> > On Tue, Apr 07, 2020 at 03:21:06PM +0300, Laurent Pinchart wrote:
-> > > On Tue, Apr 07, 2020 at 09:22:41AM +0300, Sakari Ailus wrote:
-> > >> On Mon, Apr 06, 2020 at 08:32:34PM +0300, Laurent Pinchart wrote:
-> > >>> On Mon, Apr 06, 2020 at 07:51:08PM +0300, Sakari Ailus wrote:
-> > >>>> On Mon, Apr 06, 2020 at 05:42:38PM +0100, Lad Prabhakar wrote:
-> > >>>>> Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
-> > >>>>> as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
-> > >>>>> 24MHz. So instead making clock-frequency as dt-property just let the
-> > >>>>> driver enforce the required clock frequency.
-> > >>>> 
-> > >>>> Even if some current systems where the driver is used are using 24 MHz
-> > >>>> clock, that doesn't mean there wouldn't be systems using another frequency
-> > >>>> that the driver does not support right now.
-> > >>>> 
-> > >>>> The driver really should not set the frequency unless it gets it from DT,
-> > >>>> but I think the preferred means is to use assigned-clock-rates instead, and
-> > >>>> not to involve the driver with setting the frequency.
-> > >>>> 
-> > >>>> Otherwise we'll make it impossible to support other frequencies, at least
-> > >>>> without more or less random defaults.
-> > >>> 
-> > >>> We're running in circles here.
-> > >>> 
-> > >>> As the driver only supports 24MHz at the moment, the frequency should be
-> > >>> set by the driver, as it's a driver limitation. We can then work on
-> > >>> supporting additional frequencies, which will require DT to provide a
-> > >>> list of supported frequencies for the system, but that can be done on
-> > >>> top.
-> > >> 
-> > >> I guess it would be possible to use different external clock frequencies on
-> > >> a sensor in a given system but that seems to be a bit far fetched, to the
-> > >> extent I've never seen anyone doing that in practice.
-> > >> 
-> > >> Originally, the driver set the frequency based on the clock-frequency
-> > >> property. If we're removing that but use a fixed frequency instead, then
-> > >> how is that going to work going forward when someone adds support for other
-> > >> frequencies in the driver and has a system requiring that, while there are
-> > >> some other platforms relying on the driver setting a particular frequency?
-> > > 
-> > > The standard property for this is link-frequencies, not clock-frequency.
-> > > Deprecating clock-frequency now paves the way to use the standard
-> > > property later when/if someone implements support for additional
-> > > frequencies.
-> > 
-> > The external clock frequency and link frequency are different indeed, but
-> > they are related. The link frequency has been selected in a way that it is
-> > possible to generate that exact frequency using the chosen external clock
-> > frequency. If you change the external clock frequency, chances are good
-> > there is no PLL configuration to generate that link frequency.
-> 
-> But aren't we supposed to pick the clock frequency based on the link
-> frequency specified in DT ?
+Anthony Huang <anthony.huang@mediatek.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=
+=8815=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=887:19=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+>
+> This document describes the properties what mtk mmdvfs
+> device node support.
+>
+> Signed-off-by: Anthony Huang <anthony.huang@mediatek.com>
+> ---
+>  .../devicetree/bindings/soc/mediatek/mmdvfs.yaml   |  198 ++++++++++++++=
+++++++
+>  1 file changed, 198 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mmdvfs=
+.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/soc/mediatek/mmdvfs.yaml b=
+/Documentation/devicetree/bindings/soc/mediatek/mmdvfs.yaml
+> new file mode 100644
+> index 0000000..9ef1833
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/mediatek/mmdvfs.yaml
+> @@ -0,0 +1,198 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/mediatek/mmdvfs.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Mediatek MMDVFS driver binding
+> +
+> +maintainers:
+> +  - Rob Herring <robh+dt@kernel.org>
+> +  - Mark Rutland <mark.rutland@arm.com>
+> +
+> +description: |
+> +  The Mediatek MMDVFS(Multimedia Dynamic Voltage and Frequency Scaling) =
+driver
+> +  is used to set clk for Mediatek multimedia hardwares, such as display,
+> +  camera, mdp and video codec. MMDVFS driver reads which clock muxes and=
+ clock
+> +  sources are used on this platform from DTS, and sets current clock acc=
+ording
+> +  to current voltage informed by regulator callback.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: mediatek,mmdvfs
+> +
+> +  operating-points-v2:
+> +    description:
+> +      Contains any one of opp tables for multimedia modules.
+> +      MMDVFS uses it to get voltage setting on this platform.
+> +
+> +  mediatek,support_mux:
+> +    description: A list of clock mux names defined in clock-names.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/string-array
+> +
+> +  clocks:
+> +    description:
+> +      A list of phandles of clock muxes and clock sources for
+> +      multimedia hardwares.
+> +
+> +  clock-names:
+> +    description:
+> +      A list of name strings of clock muxes and clock sources for
+> +      multimedia hardwares.
+> +
+> +  # If the platform needs frequency hopping for some clock sources, thes=
+e
+> +  # following properties should be set.
+> +
+> +  mediatek,support_hopping:
+> +    description: a list of clock names supporting frequency hopping.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/string-array
+> +
+> +  mediatek,action:
+> +    description:
+> +      A cell with one entry.
+> +      It represents the action taken when setting clocks.
+> +      0 means not setting frequency hopping and just set clock mux.
+> +      1 means setting frequency hopping first if the voltage is increasi=
+ng, but
+> +      setting clock mux first if the voltage is decreasing.
+> +    allOf:
+> +      - $ref: "/schemas/types.yaml#/definitions/uint32"
+> +      - enum: [0, 1]
+> +    maxItems: 1
+> +
+> +patternProperties:
+> +  "^mediatek,mux_+$":
+> +    description:
+> +      A series of properties with "mediatek,mux_" prefix.
+> +      Each property represents one clock mux, and its value is a list of=
+ all
+> +      the clock sources for it. The postfix and every item in the proper=
+ty
+> +      must be from the clock-names.
+> +
+> +  "^mediatek,hopping_+$":
+> +    description:
+> +      A cell with the same size as opp numbers of an opp table for any M=
+M module
+> +      and each entry represents the clock rate for each opp. For example=
+, the
+> +      first entry is the clock rate set in opp-0, and the second entry i=
+s the
+> +      clock rate set in opp-1.
+> +
+> +required:
+> +  - compatible
+> +  - operating-points-v2
+> +  - mediatek,support_mux
+> +  - clock
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/mt6779-clk.h>
+> +
+> +    opp_table_mm: opp-table-mm {
+> +        compatible =3D "operating-points-v2";
+> +
+> +        opp-0 {
+> +            opp-hz =3D /bits/ 64 <315000000>;
+> +            opp-microvolt =3D <650000>;
+> +        };
+> +        opp-1 {
+> +            opp-hz =3D /bits/ 64 <450000000>;
+> +            opp-microvolt =3D <725000>;
+> +        };
+> +        opp-2 {
+> +            opp-hz =3D /bits/ 64 <606000000>;
+> +            opp-microvolt =3D <825000>;
+> +        };
+> +    };
+> +
+> +    opp_table_cam: opp-table-cam {
+> +        compatible =3D "operating-points-v2";
+> +
+> +        opp-0 {
+> +            opp-hz =3D /bits/ 64 <315000000>;
+> +            opp-microvolt =3D <650000>;
+> +        };
+> +        opp-1 {
+> +            opp-hz =3D /bits/ 64 <416000000>;
+> +            opp-microvolt =3D <725000>;
+> +        };
+> +        opp-2 {
+> +            opp-hz =3D /bits/ 64 <560000000>;
+> +            opp-microvolt =3D <825000>;
+> +        };
+> +    };
+> +
+> +    /* Other opp tables for multimedia modules */
+> +
+> +    mmdvfs {
+> +        compatible =3D "mediatek,mmdvfs";
+> +
+> +        operating-points-v2 =3D <&opp_table_mm>;
+> +
+> +        mediatek,support_mux =3D "mm", "cam", "img", "ipe",
+> +            "venc", "vdec", "dpe", "ccu";
+> +
+> +        mediatek,mux_mm =3D "clk_mmpll_d5_d2",
+> +            "clk_mmpll_d7", "clk_tvdpll_mainpll_d2_ck";
+> +        mediatek,mux_cam =3D "clk_mmpll_d5_d2",
+> +            "clk_univpll_d3", "clk_adsppll_d5";
+> +        mediatek,mux_img =3D "clk_mmpll_d5_d2",
+> +            "clk_univpll_d3", "clk_tvdpll_mainpll_d2_ck";
+> +        mediatek,mux_ipe =3D "clk_mmpll_d5_d2",
+> +            "clk_univpll_d3", "clk_mainpll_d2";
+> +        mediatek,mux_venc =3D "clk_mainpll_d3",
+> +            "clk_mmpll_d7", "clk_mmpll_d5";
+> +        mediatek,mux_vdec =3D "clk_univpll_d2_d2",
+> +            "clk_univpll_d3", "clk_univpll_d2";
+> +        mediatek,mux_dpe =3D "clk_mainpll_d3",
+> +            "clk_mmpll_d7", "clk_mainpll_d2";
+> +        mediatek,mux_ccu =3D "clk_mmpll_d5_d2",
+> +            "clk_univpll_d3", "clk_adsppll_d5";
+> +
+> +        mediatek,support_hopping =3D "clk_mmpll_ck";
+> +        mediatek,hopping_clk_mmpll_ck =3D <630000000 630000000 650000000=
+>;
+> +        mediatek,action =3D <1>;
+> +
+> +
+> +        clocks =3D <&topckgen CLK_TOP_MM>,
+> +                <&topckgen CLK_TOP_CAM>,
+> +                <&topckgen CLK_TOP_IMG>,
+> +                <&topckgen CLK_TOP_IPE>,
+> +                <&topckgen CLK_TOP_VENC>,
+> +                <&topckgen CLK_TOP_VDEC>,
+> +                <&topckgen CLK_TOP_DPE>,
+> +                <&topckgen CLK_TOP_CCU>,
+> +                <&topckgen CLK_TOP_MMPLL_D5>,
+> +                <&topckgen CLK_TOP_UNIVPLL_D2>,
+> +                <&topckgen CLK_TOP_TVDPLL_MAINPLL_D2_CK>,
+> +                <&topckgen CLK_TOP_ADSPPLL_D5>,
+> +                <&topckgen CLK_TOP_MAINPLL_D2>,
+> +                <&topckgen CLK_TOP_MMPLL_D6>,
+> +                <&topckgen CLK_TOP_MMPLL_D7>,
+> +                <&topckgen CLK_TOP_UNIVPLL_D3>,
+> +                <&topckgen CLK_TOP_MAINPLL_D3>,
+> +                <&topckgen CLK_TOP_MMPLL_D5_D2>,
+> +                <&topckgen CLK_TOP_UNIVPLL_D2_D2>,
+> +                <&topckgen CLK_TOP_MMPLL_CK>;
+> +        clock-names =3D "mm",
+> +                "cam",
+> +                "img",
+> +                "ipe",
+> +                "venc",
+> +                "vdec",
+> +                "dpe",
+> +                "ccu",
+> +                "clk_mmpll_d5",
+> +                "clk_univpll_d2",
+> +                "clk_tvdpll_mainpll_d2_ck",
+> +                "clk_adsppll_d5",
+> +                "clk_mainpll_d2",
+> +                "clk_mmpll_d6",
+> +                "clk_mmpll_d7",
+> +                "clk_univpll_d3",
+> +                "clk_mainpll_d3",
+> +                "clk_mmpll_d5_d2",
+> +                "clk_univpll_d2_d2",
+> +                "clk_mmpll_ck";
+> +    };
 
-No. In a general case there is no reliable way to come up with an external
-clock frequency based on another, different if related, frequency.
+We do not like a virtual device which does not map to a real hardware
+because device tree is used to describe hardware. All mmdvfs driver do
+is to controll the clock, so I think you should move the driver into
+drivers/clk/mediatek, move opp_table into driver, and forget anything
+in device tree.
 
-> 
-> In any case, this policy needs to be carefully documented.
-
-I thought after ten or so years this would be already an established
-practice. :-)
-
-I agree it should be documented. We don't seem to have specific
-documentation for camera sensor drivers at the moment. I can submit a
-patch...
-
-> 
-> > >> Although, if you're saying that this driver only needs to work with DT that
-> > >> comes with the kernel and you don't care about DT binary compatibility,
-> > >> this would be fine.
-> > > 
-> > > I believe this series to not break backward compatibility, as the driver
-> > > only works with a 24MHz clock, so I expect all DTs to specify that.
-> > 
-> > What you're still doing here is defining the DT bindings based on the
-> > current driver implementation, not the device properties.
-> 
-> Quite the contrary, the device doesn't require any particular input
-> clock frequency, so we're removing that from DT :-) Specifying the clock
-> frequency in DT is in my opinion a manual workaround for not computing
-> it at runtime based on the desired link frequency, while the link
-> frequency is a property of the system as it specifies the range of link
-> frequencies that are safe to use from an EMC point of view.
-
-The external clock frequency is significantly lower than the link frequency
-(usually), but it still comes out of the SoC (or a PMIC chip). The clock
-signal track on PCB as well as wiring may also be rather long, depending on
-where the camera sensor is --- quite possibly tens of centimetres.
-Therefore I wouldn't categorically rule out possible EMC issues with that
-one either.
-
-The bottom line is: use a known-good, safe frequency.
-
--- 
 Regards,
+Chun-Kuang.
 
-Sakari Ailus
+> +...
+> --
+> 1.7.9.5
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
