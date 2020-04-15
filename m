@@ -2,147 +2,108 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5FDC38A2C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51078C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 099FC206F9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C0762051A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:08:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635514AbgDOIGi (ORCPT
+        id S2635521AbgDOIGj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:06:38 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33067 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408053AbgDOIFU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 04:05:20 -0400
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <a.fatoum@pengutronix.de>)
-        id 1jOd2o-0006dC-VQ; Wed, 15 Apr 2020 10:05:15 +0200
-Subject: Re: [PATCH v2] nvmem: core: don't consider subnodes not matching
- binding
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     devicetree@vger.kernel.org, Christian Eggers <CEggers@arri.de>,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-References: <20200323152850.32657-1-a.fatoum@pengutronix.de>
- <d59007d1-f4e3-f550-cecd-64b788a534bc@linaro.org>
- <bb0dcf33-f67d-7078-9341-08282d8da217@pengutronix.de>
-Message-ID: <4e861088-c17d-0eca-6efa-c50b55fdecd1@pengutronix.de>
-Date:   Wed, 15 Apr 2020 10:05:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <bb0dcf33-f67d-7078-9341-08282d8da217@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+        Wed, 15 Apr 2020 04:06:39 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:39686 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403805AbgDOID1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:03:27 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5A0641A079A;
+        Wed, 15 Apr 2020 10:03:05 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4C4851A078C;
+        Wed, 15 Apr 2020 10:03:05 +0200 (CEST)
+Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id B19C5202B0;
+        Wed, 15 Apr 2020 10:03:04 +0200 (CEST)
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Lee Jones <lee.jones@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>
+Cc:     NXP Linux Team <linux-imx@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH v3 00/13] Add generic MFD i.MX mix and audiomix support
+Date:   Wed, 15 Apr 2020 11:02:40 +0300
+Message-Id: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 4/6/20 4:20 PM, Ahmad Fatoum wrote:
-> Hello,
-> 
-> On 4/6/20 2:33 PM, Srinivas Kandagatla wrote:
->>
->>
->> On 23/03/2020 15:28, Ahmad Fatoum wrote:
->>> The nvmem cell binding applies to objects which match "^.*@[0-9a-f]+$",
->>> but so far the driver has matched all objects and failed if they didn't
->>> have the expected properties.
->>>
->>> The driver's behavior in this regard precludes future extension of
->>> EEPROMs by child nodes other than nvmem and clashes with the barebox
->>> bootloader binding that extends the fixed-partitions MTD binding to
->>> EEPROMs as it tries to interpret the "fixed-partitions"-compatible
->>> partitions node as a nvmem cell.
->>>
->>> Solve this issue by skipping all subnodes that don't contain an @.
->>>
->>> This still allows for cell names like `partitions@0,0', but this
->> NACK.. thats nasty hack!
->> Its standard practice as per device tree specs to have nodes name as "node-name@unit-address"
->>
->> Ref: https://github.com/devicetree-org/devicetree-specification/releases/download/v0.3/devicetree-specification-v0.3.pdf
-> 
-> I didn't say otherwise. I just argued if we verify there's a @ symbol in the
-> node name, before considering whether it is a NVMEM cell, we will skip fixed-partitions
-> while adhering to the NVMEM cell binding.
-> 
->>> is much less likely to cause future collisions.
->>
->> There have been discussions on this topic in the past at:
->>
->> https://patchwork.ozlabs.org/patch/890741/
->>
->> We need to come up with a better solution!
-> 
-> Thanks for the link, I didn't find it when I searched whether this has
-> come up before.
-> 
-> As you probably noticed, your suggested approach there wouldn't work for me though,
-> because this time it can't be worked around in the MTD driver.
-> If the suggestion here is not palatable, how do you think about (in
-> my preferred order):
-> 
-> - If the cell has a compatible node, it must be "nvmem-cell".
->   Otherwise, a cell with a compatible node is skipped.
-> 
-> - Adding a nvmem cell container with a compatible and making support for
->   the old binding configurable
-> 
-> - Skipping cells that are malformed and lack a reg = < > property _without_
->   error
+The i.MX8MP has some new IPs called mixes. They are formed usually by some
+GPRs that can be split into different functionalities. The first example
+here is the audiomix which has dedicated registers that can be registered
+as a clock controller and some other registers that can be registered as
+a reset controller, plus some dedicated ones that will be registered as
+syscon and used by each dedicated audio IP.
 
-gentle ping. I can prepare another patch if you indicate which approach
-you'd prefer.
+More mixes to be following the same structure are to come, like hdmimix,
+dispmix and mediamix. They will all be populated and registered by the MFD
+imx-mix generic driver.
 
-> 
-> Cheers
-> Ahmad
-> 
->>
->> --srini
->>
->>>
->>> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
->>> ---
->>> v1 -> v2:
->>>    use ->full_name instead of ->name as to not break existing correct
->>>    cells (Christian)
->>> ---
->>>   drivers/nvmem/core.c | 2 ++
->>>   1 file changed, 2 insertions(+)
->>>
->>> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
->>> index ef326f243f36..f051051fb1a8 100644
->>> --- a/drivers/nvmem/core.c
->>> +++ b/drivers/nvmem/core.c
->>> @@ -278,6 +278,8 @@ static int nvmem_add_cells_from_of(struct nvmem_device *nvmem)
->>>       parent = dev->of_node;
->>>         for_each_child_of_node(parent, child) {
->>> +        if (!strchr(kbasename(child->full_name), '@'))
->>> +            continue;
->>>           addr = of_get_property(child, "reg", &len);
->>>           if (!addr || (len < 2 * sizeof(u32))) {
->>>               dev_err(dev, "nvmem: invalid reg on %pOF\n", child);
->>>
->>
-> 
+Changes since v2:
+ * removed the runtime PM for now
+ * changed the new SPDX identifiers to GPL-2.0-only
+ * took care of the DT schema comment
+
+Abel Vesa (13):
+  mfd: Add i.MX generic mix support
+  Documentation: mfd: Add DT bindings for i.MX Mix
+  arm64: dts: imx8mp: Add AIPS 4 and 5
+  arm64: dts: imx8mp: Add audiomix node
+  clk: imx: gate2: Allow single bit gating clock
+  clk: imx: pll14xx: Add the device as argument when registering
+  clk: imx: Add helpers for passing the device as argument
+  dt-bindings: clocks: imx8mp: Add ids for audiomix clocks
+  clk: imx: Add audiomix clock controller support
+  arm64: dts: imx8mp: Add audiomix clock controller node
+  dt-bindings: reset: imx8mp: Add ids for audiomix reset
+  reset: imx: Add audiomix reset controller support
+  arm64: dts: imx8mp: Add audiomix reset controller node
+
+ .../devicetree/bindings/mfd/fsl,imx-mix.yaml       |  34 ++++
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi          |  41 ++++-
+ drivers/clk/imx/Makefile                           |   2 +-
+ drivers/clk/imx/clk-audiomix.c                     | 175 +++++++++++++++++++++
+ drivers/clk/imx/clk-gate2.c                        |  31 +++-
+ drivers/clk/imx/clk-pll14xx.c                      |   8 +-
+ drivers/clk/imx/clk.h                              |  55 ++++++-
+ drivers/mfd/Kconfig                                |  11 ++
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/imx-mix.c                              |  48 ++++++
+ drivers/reset/Kconfig                              |   7 +
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-imx-audiomix.c                 | 117 ++++++++++++++
+ include/dt-bindings/clock/imx8mp-clock.h           |  62 ++++++++
+ include/dt-bindings/reset/imx-audiomix-reset.h     |  15 ++
+ 15 files changed, 590 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/fsl,imx-mix.yaml
+ create mode 100644 drivers/clk/imx/clk-audiomix.c
+ create mode 100644 drivers/mfd/imx-mix.c
+ create mode 100644 drivers/reset/reset-imx-audiomix.c
+ create mode 100644 include/dt-bindings/reset/imx-audiomix-reset.h
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.7.4
+
