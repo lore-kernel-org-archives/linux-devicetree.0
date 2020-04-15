@@ -2,162 +2,118 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1CCC2BB55
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E92B0C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD1521569
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:15:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586956541;
-	bh=ZhmmQ2uQggeQBv8vRD13OM1tsKFrpXqz7RaKpwCXUT0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z5+9BusTOvArhV4Ro2ytVVPWPpCGZ5kVKjO07CEjI39gtszNrJ0wqHVJNKbpsnJge
-	 DmNIufMkiToczMCe8P9H1GLV1b4xLxHaM3Z2NtpmxF0TzJTVK1ime84BTNikGNqsWs
-	 lwJPYaC9UexJd+Zp3fXkcm2N17Tc5vObCuVpfvSc=
+	by mail.kernel.org (Postfix) with ESMTP id CD5452078B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:16:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370687AbgDONPg (ORCPT
+        id S370698AbgDONQY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:15:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54634 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 09:16:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:45576 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897032AbgDOLfP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:15 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A23720737;
-        Wed, 15 Apr 2020 11:35:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950515;
-        bh=ZhmmQ2uQggeQBv8vRD13OM1tsKFrpXqz7RaKpwCXUT0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q99amnyvGewC+rN8aRmSBpPwXShqNTwpeAPuNmD2T0y7DkBi+8KH7b+0vHUiuIIxG
-         /SOt4Yonzs2kAJWu4MpAQPsKmsNXNLixOj4lEKuE6WZUTESSCfA2Hys2DBuS6Kxn45
-         lrtO528fL/lpOlny3ztP9em9OOpavAw5ufE3qKcw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 025/129] arm64: tegra: Fix Tegra194 PCIe compatible string
-Date:   Wed, 15 Apr 2020 07:33:00 -0400
-Message-Id: <20200415113445.11881-25-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
-References: <20200415113445.11881-1-sashal@kernel.org>
+        id S2505190AbgDONQT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 09:16:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 016531063;
+        Wed, 15 Apr 2020 06:16:18 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D75C3F6C4;
+        Wed, 15 Apr 2020 06:16:15 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 14:16:12 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Etienne Carriere <etienne.carriere@linaro.org>
+Cc:     peng.fan@nxp.com, devicetree@vger.kernel.org, f.fainelli@gmail.com,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        viresh.kumar@linaro.org, Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH V5 2/2] firmware: arm_scmi: add smc/hvc transport
+Message-ID: <20200415131612.GC31928@bogus>
+References: <1583673879-20714-3-git-send-email-peng.fan@nxp.com>
+ <5e96e916.1c69fb81.14365.050b@mx.google.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5e96e916.1c69fb81.14365.050b@mx.google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jon Hunter <jonathanh@nvidia.com>
+On Wed, Apr 15, 2020 at 12:58:58PM +0200, Etienne Carriere wrote:
+> Hello Peng,
+>
+> I  have 2 comments on this change. The main is about using
+> arm_smccc_1_1_invoke(). Below some details and I added comments
+> inside you patch. The second of on SMC return value, see my
+> comment in your patch below.
+>
+> About arm_smccc_1_1_invoke(), this functon currently relies on PSCI
+> driver to define a conduit method but SCMI agent driver does not
+> mandate CONFIG_PSCI to be enable.
+>
 
-[ Upstream commit f9f711efd441ad0d22874be49986d92121862335 ]
+Yes this was discussed and it is done so deliberately. I have added the
+build dependency when I merged the patch. There's no dependency on
+CONFIG_PSCI.
 
-If the kernel configuration option CONFIG_PCIE_DW_PLAT_HOST is enabled
-then this can cause the kernel to incorrectly probe the generic
-designware PCIe platform driver instead of the Tegra194 designware PCIe
-driver. This causes a boot failure on Tegra194 because the necessary
-configuration to access the hardware is not performed.
+> Could you add an optional "method" property for "arm,scmi-smc" for platforms
+> willing to not rely on PSCI Linux driver? If no property "method" is
+> defined in the FDT, invocation relies on arm_smccc_1_1_invoke().
+>
 
-The order in which the compatible strings are populated in Device-Tree
-is not relevant in this case, because the kernel will attempt to probe
-the device as soon as a driver is loaded and if the generic designware
-PCIe driver is loaded first, then this driver will be probed first.
-Therefore, to fix this problem, remove the "snps,dw-pcie" string from
-the compatible string as we never want this driver to be probe on
-Tegra194.
+Nope, we don't want mixture here. Why is the system not using PSCI/SMCCC ?
 
-Fixes: 2602c32f15e7 ("arm64: tegra: Add P2U and PCIe controller nodes to Tegra194 DT")
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../devicetree/bindings/pci/nvidia,tegra194-pcie.txt |  2 +-
- arch/arm64/boot/dts/nvidia/tegra194.dtsi             | 12 ++++++------
- 2 files changed, 7 insertions(+), 7 deletions(-)
+> "method" naming mimics what is done in the OP-TEE driver (drivers/tee/optee/).
+> Here is a proposal for the documenting property "method" in
+> Documentation/arm,scmi.txt:
+>
+> - method : "smc" or "hvc"
+>             Optional property defining the conduit method for to be used
+> 	    for invoking the SCMI server in secure world.
+> 	    "smc" states instruction SMC #0 is used whereas "hvc" states
+> 	    instruction HVC #0 is used.
+>
+>
 
-diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-index b739f92da58e5..1f90eb39870be 100644
---- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-@@ -118,7 +118,7 @@ Tegra194:
- --------
- 
- 	pcie@14180000 {
--		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-+		compatible = "nvidia,tegra194-pcie";
- 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
- 		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
- 		       0x00 0x38000000 0x0 0x00040000   /* configuration space (256K) */
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index 844e7fac30c58..a8f024662e60e 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -1208,7 +1208,7 @@
- 	};
- 
- 	pcie@14100000 {
--		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-+		compatible = "nvidia,tegra194-pcie";
- 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
- 		reg = <0x00 0x14100000 0x0 0x00020000   /* appl registers (128K)      */
- 		       0x00 0x30000000 0x0 0x00040000   /* configuration space (256K) */
-@@ -1253,7 +1253,7 @@
- 	};
- 
- 	pcie@14120000 {
--		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-+		compatible = "nvidia,tegra194-pcie";
- 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
- 		reg = <0x00 0x14120000 0x0 0x00020000   /* appl registers (128K)      */
- 		       0x00 0x32000000 0x0 0x00040000   /* configuration space (256K) */
-@@ -1298,7 +1298,7 @@
- 	};
- 
- 	pcie@14140000 {
--		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-+		compatible = "nvidia,tegra194-pcie";
- 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
- 		reg = <0x00 0x14140000 0x0 0x00020000   /* appl registers (128K)      */
- 		       0x00 0x34000000 0x0 0x00040000   /* configuration space (256K) */
-@@ -1343,7 +1343,7 @@
- 	};
- 
- 	pcie@14160000 {
--		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-+		compatible = "nvidia,tegra194-pcie";
- 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX4A>;
- 		reg = <0x00 0x14160000 0x0 0x00020000   /* appl registers (128K)      */
- 		       0x00 0x36000000 0x0 0x00040000   /* configuration space (256K) */
-@@ -1388,7 +1388,7 @@
- 	};
- 
- 	pcie@14180000 {
--		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-+		compatible = "nvidia,tegra194-pcie";
- 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
- 		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
- 		       0x00 0x38000000 0x0 0x00040000   /* configuration space (256K) */
-@@ -1433,7 +1433,7 @@
- 	};
- 
- 	pcie@141a0000 {
--		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
-+		compatible = "nvidia,tegra194-pcie";
- 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8A>;
- 		reg = <0x00 0x141a0000 0x0 0x00020000   /* appl registers (128K)      */
- 		       0x00 0x3a000000 0x0 0x00040000   /* configuration space (256K) */
--- 
-2.20.1
+It was rejected, you can try your luck with OPTEE :)
+We will just use the system conduit here with SCMI for SMC/HVC transport.
+Details in previous version of the patch.
 
+[...]
+
+> > +struct scmi_smc {
+> > +	struct scmi_chan_info *cinfo;
+> > +	struct scmi_shared_mem __iomem *shmem;
+> > +	u32 func_id;
+> > +};
+>
+> Add here a field for the secure world invocation function handler:
+>
+> 	scmi_arm_smccc_invoke_fn *invoke_fn;
+>
+
+As stated not needed if we use  arm_smccc_1_1_invoke()
+
+[...]
+
+>
+> The SCMI server is likely not to return a errno compliant value.
+>
+> SMCCC specification states that unsupported function IDs should return signed
+> extended -1. I suggest to change the return above with:
+>
+> 	return res.a0 == ~0 ? -EINVAL : 0;
+>
+
+I need to check that.
+
+--
+Regards,
+Sudeep
