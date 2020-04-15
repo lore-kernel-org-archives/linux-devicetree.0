@@ -2,122 +2,95 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1CFC2BB85
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B83C2C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C543206F9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9968E20936
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:50:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="SrwbUbdC"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qm4DBBPq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895030AbgDOIrx (ORCPT
+        id S2895074AbgDOIuH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:47:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42072 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2895028AbgDOIr1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:47:27 -0400
-Received: from mo6-p04-ob.smtp.rzone.de (mo6-p04-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5304::7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D623AC061A0C;
-        Wed, 15 Apr 2020 01:47:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586940444;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=NojKpJsr295KKzeE6Kfg0J7/g3gnxL5pXSLXeEqbQIE=;
-        b=SrwbUbdC8esLCmZKrChaDGfBHXjiHxMIDzUGSwUHSGx+b4tn/15g0pm/Pw1LnfO+55
-        2aDCqb4Xz1NqesKyA0hTUJt3yWaH13dZjwxavRXAEPtAPlWRclZQMedD2QiR42u5cuRt
-        4Lcim19SJjmA+KyGupF0POOb9oPcbG6MeeRJKabhEJ/ZGNBTSXTTTjaGZ8M7w0Bk5L69
-        zjp60yXihALmGV3SyyhwQhFC99qsbCoP5jpmThj35sVm5yfXLk4yWQ+pX2xA8fwl2WEw
-        S/mn3vGrJxlrF7GhNnfFnGzuEuJBF2t/PxC5d6CAbOcFlwDO48ybZY4ZM3MW70uU/kU8
-        /sWQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7O2CKN9ej"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.4.0 DYNA|AUTH)
-        with ESMTPSA id 6028a2w3F8ZS0Iv
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 15 Apr 2020 10:35:28 +0200 (CEST)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Wed, 15 Apr 2020 04:50:07 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:56190 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2895072AbgDOIuE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 04:50:04 -0400
+X-UUID: e78e873eeda4492e89e02e3ffed20e99-20200415
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=2WBZ7hM0YoXBpJcKelYpQ39XyX/1btRpalqAnJewDts=;
+        b=qm4DBBPq3UOibVVZjRUbkjuc5E5WyrgY52SLx1r2KN0Ld2PNz1/xASFtpYQ6Mc8hnyFhvXcl9D2TvD7ppzE0qV1wqbbKic1Me59ZVyMYKc5PlsAVbZFOyddyRlBG4SIJicQwGwH+qlSZifREBlIRGIrvKaKasvHd4PPOHrCM4Fg=;
+X-UUID: e78e873eeda4492e89e02e3ffed20e99-20200415
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1288575515; Wed, 15 Apr 2020 16:49:59 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 15 Apr 2020 16:49:56 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 15 Apr 2020 16:49:55 +0800
+Message-ID: <1586940598.5007.0.camel@mtksdaap41>
+Subject: Re: [PATCH v12 1/2] dt-binding: i2c: add bus-supply property
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+CC:     Tomasz Figa <tfiga@chromium.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        "Nicolas Boichat" <drinkcat@chromium.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        "H . Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v6 09/12] ARM: dts: sun6i: a31: add sgx gpu child node
-Date:   Wed, 15 Apr 2020 10:35:16 +0200
-Message-Id: <65bf7033dfedf303387d2e5882c6ce672832a9c8.1586939718.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1586939718.git.hns@goldelico.com>
-References: <cover.1586939718.git.hns@goldelico.com>
+        "Mark Rutland" <mark.rutland@arm.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Date:   Wed, 15 Apr 2020 16:49:58 +0800
+In-Reply-To: <20200324103448.GE1134@ninjato>
+References: <20200306034946.11223-1-bibby.hsieh@mediatek.com>
+         <20200306034946.11223-2-bibby.hsieh@mediatek.com>
+         <20200322130710.GA1091@ninjato>
+         <CAAFQd5ANJcReHD_n0LorS+bjE8Cn_W-kY5LNgGG+L+jMmywYfA@mail.gmail.com>
+         <20200324103448.GE1134@ninjato>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Philipp Rossak <embed3d@gmail.com>
-
-We are adding the devicetree binding for the PVR-SGX-544-115 gpu.
-
-This driver is currently under development in the openpvrsgx-devgroup.
-Right now the full binding is not figured out, so we provide here a
-placeholder. It will be completed as soon as there is a demo available.
-
-The currently used binding that is used during development is more
-complete and was already verifyed by loading the kernelmodule successful.
-
-Signed-off-by: Philipp Rossak <embed3d@gmail.com>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- arch/arm/boot/dts/sun6i-a31.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index f3425a66fc0a..933a825bf460 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -1417,5 +1417,16 @@ p2wi: i2c@1f03400 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 		};
-+
-+		gpu: gpu@1c400000 {
-+			compatible = "allwinner,sun8i-a31-sgx544-115",
-+				     "img,sgx544-115", "img,sgx544";
-+			reg = <0x01c40000 0x10000>;
-+			/*
-+			 * This node is currently a placeholder for the gpu.
-+			 * This will be completed when a full demonstration
-+			 * of the openpvrsgx driver is available for this board.
-+			 */
-+		};
- 	};
- };
--- 
-2.25.1
+T24gVHVlLCAyMDIwLTAzLTI0IGF0IDExOjM0ICswMTAwLCBXb2xmcmFtIFNhbmcgd3JvdGU6DQo+
+ID4gPiA+ICstIGJ1cy1zdXBwbHkNCj4gPiA+ID4gKyAgICAgcGhhbmRsZSB0byB0aGUgcmVndWxh
+dG9yIHRoYXQgcHJvdmlkZXMgcG93ZXIgdG8gaTJjLg0KPiA+ID4NCj4gPiA+IEkgdGhpbmsgdGhp
+cyBpcyBub3QgY2xlYXIgZW5vdWdoLiBJIGFzc3VtZSBpdCBtZWFucyB0aGUgcmVndWxhdG9yIGZv
+cg0KPiA+ID4gZHJpdmluZyBTQ0wvU0RBPyBJbiB0aGUgY292ZXJsZXR0ZXIgeW91IG1lbnRpb24g
+YWxzbyBhbiBFRVBST00uIEluIHlvdXINCj4gPiA+IGNhc2UsIHRoaXMgaXMgZHJpdmVuIGJ5IHRo
+ZSBzYW1lIHJlZ3VsYXRvcj8gSSBhbSBza2VwdGljYWwgd2UgY2FuDQo+ID4gPiBhYnN0cmFjdCBp
+dCBsaWtlIHRoaXMgYmVjYXVzZSBJMkMgZGV2aWNlcyBjb3VsZCBiZSBkcml2ZW4gYnkgdmFyaW91
+cw0KPiA+ID4gcmVndWxhdG9ycyBpbiB0aGUgc3lzdGVtLCBzbyB0aGVyZSBjb3VsZG4ndCBiZSBv
+bmUgImJ1cyByZWd1bGF0b3IiLiBUaGUNCj4gPiA+IHJlZ3VsYXRvciBmb3IgdGhlIEVFUFJPTSBz
+aG91bGQgYmUgZGVzY3JpYmVkIGluIHRoZSBFRVBST00gbm9kZS4gU28sDQo+ID4gPiB0aGlzICJi
+dXMgc3VwcGx5IiBpcyBvbmx5IGZvciBkcml2aW5nIFNDTC9TREE/DQo+ID4gDQo+ID4gSW4gb3Vy
+IGNhc2UgdGhlIGJ1cy1zdXBwbHkgcmVndWxhdG9yIGRyaXZlcyB0aGUgdm9sdGFnZSByYWlsIHRv
+IHdoaWNoDQo+ID4gU0NML1NEQSBhcmUgcHVsbGVkIHVwIGFuZCB0aGVyZSBpcyBhbiBFRVBST00g
+b24gdGhlIGJ1cywgcG93ZXJlZCBieQ0KPiA+IHlldCBhbm90aGVyIHJhaWwuIFRoZXJlIGlzIGFs
+c28gYW5vdGhlciBzbGF2ZSBvbiB0aGUgYnVzIHdoaWNoIHVzZXMNCj4gPiB0aGUgc2FtZSByZWd1
+bGF0b3IgYXMgdGhlIGJ1cy1zdXBwbHkgZm9yIGl0cyBvd24gcG93ZXIuDQo+ID4gDQo+ID4gSW4g
+b3RoZXIgd29yZHMsIGJ1cy1zdXBwbHkgb25seSBlbnN1cmVzIHRoYXQgU0NMIGFuZCBTREEgYXJl
+IGluIGENCj4gPiB1c2FibGUgc3RhdGUuIE90aGVyIGNvbnN1bWVycyBuZWVkIHRvIHJlZmVyIHRv
+IHRoZSByZWd1bGF0b3IgaW4gdGhlaXINCj4gPiBvd24gc3VwcGxpZXMgaWYgdGhleSBuZWVkIGl0
+IGZvciB0aGVpciBvd24gcG93ZXIuDQo+ID4gDQo+ID4gRG9lcyB0aGlzIGFuc3dlciB5b3VyIHF1
+ZXN0aW9ucz8NCj4gDQo+IFllcywgdGhpcyB3YXMgZXhhY3RseSB3aGF0IEkgd2FzIGFzc3VtaW5n
+Lg0KPiANCj4gU28sIEkgdGhpbmsgdGhlIGFib3ZlIGRvY3VtZW50YXRpb24gc2hvdWxkIGJlIGNo
+YW5nZWQ6IHN8aTJjfFNDTC9TREF8DQo+IA0KPiBEJ2FjY29yZD8NCj4gDQpZZXMsIEkgdGhpbmsg
+U0NML1NEQSBpcyBiZXR0ZXIgdGhhbiBpMmMNCg0KVG9tYXN6LCBIb3cgYWJvdXQgaXQ/DQoNClRo
+YW5rcw0KDQpCaWJieQ0KDQo=
 
