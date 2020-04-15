@@ -2,172 +2,194 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50625C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE8EC3815B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3913321556
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79C0B20857
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:21:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="waLFJKVz";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZiCvEuIi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387709AbgDOOV2 (ORCPT
+        id S2388057AbgDOOVg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:21:28 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36908 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732547AbgDOOVX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 10:21:23 -0400
-Received: by mail-ot1-f68.google.com with SMTP id z17so46335oto.4;
-        Wed, 15 Apr 2020 07:21:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dnvZD4Dm4e5FRgntE759Yt2PxA+q1fuND8zsrub9kLs=;
-        b=UqtbL2HMOw6/i35h9bZLflohsFzQ/M1dB4gFcuozzKn9CfG/nTMWnYbj+u2atl8WHI
-         qdBU4zqzb/7aw3IgITxhK3SCrb1lxbxobo/+DRwqMOEqQ13WUzuS1d2Ij/oNmVj+B9n0
-         q3y9V2GMw2Zzx2ec+aukCino5ZR8mR/998WKiZBaazTt7tLAtlTivJTZ31y1txJFFnUI
-         pax5faAWq1pDa7JCKdRc4oA9BhwI4nRyVrHnQkpfcfGbI1MpanyUe/kMdGWVOrxZx7Mp
-         j+hRoeTYB+deE5X90aCqUe5zYunZM7ZmUsdd3ISxY04sv67fNiYWpq0KxdGISOrCr3xO
-         QNrg==
-X-Gm-Message-State: AGi0PuarkBcjqXmaF0tIHIqWOwB09t3hbDq6FRkeUMARpiS7hBeJwdko
-        yYtFMHiJRqTqSUjtYBpfLamJ/GvRJcAEKfoKwYA=
-X-Google-Smtp-Source: APiQypIG2ckswGmQ7Vt/axIUAX+BtAwJOJQokWKIZnojuoFp2TeGwYdTsUd02L9Tf1SQqNYp+XNW0q+iQh9SWBYejGA=
-X-Received: by 2002:a9d:76c7:: with SMTP id p7mr21994872otl.145.1586960482326;
- Wed, 15 Apr 2020 07:21:22 -0700 (PDT)
+        Wed, 15 Apr 2020 10:21:36 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:58249 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732547AbgDOOVd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:21:33 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 5D5B5580480;
+        Wed, 15 Apr 2020 10:21:28 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 15 Apr 2020 10:21:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=w57xZePTsGqsUDOlfC/90iLeGpy
+        1FlxyNG+H0a7Xz8A=; b=waLFJKVzJ1gz4Hh3SifRoYfFdJNEt2qRDGZPEgQiRVv
+        6jkzESd3CY6Oc3i2ZpPdobWyw0ab8WfQvnFKUO56Sbm6//6u+mKmbexyjoJ0cnOw
+        RF93kgS+2GuBfrdB0KUCXmBg0YpKtxYRvgMIwGCyomGynx+2KCN7Em0XOYCnFkgw
+        J1mWDeIQOgD9hZisI227UvtFdsCvTBD+nzUGW7lALcRLymCqmau213LfjSVNHmv+
+        59dc1QnftSXXZQOuRHjvVKnCK1b8Vl+tyMf+cu9KYr9EA/oYnetVcCSLLiMhiKJg
+        9owal3XtjQVIIYpYooAWJa48xaWPZrUjg/pnuC0Chqg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=w57xZe
+        PTsGqsUDOlfC/90iLeGpy1FlxyNG+H0a7Xz8A=; b=ZiCvEuIistCq+I4LcQwEfW
+        Qyg/X1liF2iY4Y79UN8i/5imy6gN2PUlGkr+jvw+PLzd5hDoC1DhIB2+Rqr6UCTI
+        o0bm44HtOGdwnZ4+w2oevQESQ+PpjeSubBsQxEE633xb56bf/Ou1Go+xV4y+XL61
+        eqCtbaaUaUnxCNBHFOyo4KdeTlAMIH2CBW7WJ8eXnppGRAR6HFGK4pzcoz9Ohoe5
+        MUxrYnCV6uzhOrFjysQdB68Qf8n5Af/nhXTCLK5LoAUCdha/qTawAHb2hjHJUpPY
+        lizQ3xv4NnOPWVGq6lc4q2/vA93sP8RVeBn9PT3F9hOjzKVIBJUSO8dWAywaBOMw
+        ==
+X-ME-Sender: <xms:ZhiXXnmhOKw4K1AOTYHdnTUQEbMU7bg_a5FoSDsaU2t4-IMnTxxvpg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeefgdeihecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:ZhiXXpmUnYfgmUXjZWNNqgX47hkEI1-ZFNVCI7wWEZYYnRfYegrX1Q>
+    <xmx:ZhiXXtNDAwIfZe76drexh9IE-OGHGS2aS5UFo-B-yEis7tg0VAEMNg>
+    <xmx:ZhiXXp64DuzBVqKn0BtAgkhnuT1ce2TcjxPp_Qx9I7HZtoreOUfJRA>
+    <xmx:aBiXXvtNHYQJhIMBsiVAXeZCa6iOafIjCoTJluOekGcBbk5EM_-hGQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 08B123280064;
+        Wed, 15 Apr 2020 10:21:26 -0400 (EDT)
+Date:   Wed, 15 Apr 2020 16:21:24 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        James Hogan <jhogan@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>,
+        linux-samsung-soc@vger.kernel.org, letux-kernel@openphoenux.org,
+        Paul Burton <paulburton@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Tony Lindgren <tony@atomide.com>, Chen-Yu Tsai <wens@csie.org>,
+        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        openpvrsgx-devgroup@letux.org, linux-kernel@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Daniel Vetter <daniel@ffwll.ch>, kernel@pyra-handheld.com
+Subject: Re: [PATCH v6 01/12] dt-bindings: add img, pvrsgx.yaml for
+ Imagination GPUs
+Message-ID: <20200415142124.yzfh6mtqq7cdq22e@gilmour.lan>
+References: <cover.1586939718.git.hns@goldelico.com>
+ <06fb6569259bb9183d0a0d0fe70ec4f3033b8aab.1586939718.git.hns@goldelico.com>
+ <20200415101251.o3wi5t6xvf56xmhq@gilmour.lan>
+ <72919514-0657-4B71-902F-3E775E528F64@goldelico.com>
+ <f4fdca8a-d18c-a8d2-7f51-d1ebbbab3647@baylibre.com>
+ <535CAEBE-F43E-4BFC-B989-612C81F0D7EF@goldelico.com>
 MIME-Version: 1.0
-References: <1586773533-8893-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1586773533-8893-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 15 Apr 2020 16:21:10 +0200
-Message-ID: <CAMuHMdXvZp5GFY5-SjXP0PLE8MiwYencVMti93wU4E3N2c0QVg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bndings: iommu: renesas,ipmmu-vmsa: convert to json-schema
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="oowgclrabb5rh4qg"
+Content-Disposition: inline
+In-Reply-To: <535CAEBE-F43E-4BFC-B989-612C81F0D7EF@goldelico.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
 
-On Tue, Apr 14, 2020 at 2:26 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> Convert Renesas VMSA-Compatible IOMMU bindings documentation
-> to json-schema.
+--oowgclrabb5rh4qg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Apr 15, 2020 at 03:17:25PM +0200, H. Nikolaus Schaller wrote:
+> Hi Neil,
 >
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > Am 15.04.2020 um 14:54 schrieb Neil Armstrong <narmstrong@baylibre.com>:
+> >
+> > Hi,
+> >
+> > On 15/04/2020 14:43, H. Nikolaus Schaller wrote:
+> >>
+> >>> Am 15.04.2020 um 12:12 schrieb Maxime Ripard <maxime@cerno.tech>:
+> >>>
+> >>> Hi,
+> >>>
+> >>> On Wed, Apr 15, 2020 at 10:35:08AM +0200, H. Nikolaus Schaller wrote:
+> >>>> The Imagination PVR/SGX GPU is part of several SoC from
+> >>>> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo,
+> >>>> Allwinner A83 and others.
+> >>>>
+> >>>> With this binding, we describe how the SGX processor is
+> >>>> interfaced to the SoC (registers, interrupt etc.).
+> >>>>
+> >>>> In most cases, Clock, Reset and power management is handled
+> >>>> by a parent node or elsewhere (e.g. code in the driver).
+> >>>
+> >>> Wouldn't the "code in the driver" still require the clock / reset /
+> >>> power domain to be set in the DT?
+> >>
+> >> Well, some SoC seem to use existing clocks and have no reset.
+> >> Or, although not recommended, they may have the io-address range
+> >> hard-coded.
+> >
+> > The possible clocks and resets should be added, even if optional.
+> >
+> > Please look at the arm utgard, midgard and bifrost bindings.
+>
+> Interesting to compare to. Maybe we should also add the
+> $nodename: pattern: '^gpu@[a-f0-9]+$'
+>
+> But the sgx binding is difficult to grasp here. Some SoC like the
+> omap series have their own ti,sysc based target modules and the
+> gpu nodes is a child of it lacking any clock and reset references
+> for purpose.
+>
+> The jz4780 and some other need a clocks definition, but no reset.
+> Having a reset seems to be an option for the SoC designer and
+> not mandated by img. So is it part of the pvrsgx bindings or the
+> SoC?
+>
+> Well we could add clocks and resets as optional but that would
+> allow to wrongly define omap.
+>
+> Or delegate them to a parent "simple-pm-bus" node.
+>
+> I have to study that material more to understand what you seem
+> to expect.
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
-> @@ -0,0 +1,90 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iommu/renesas,ipmmu-vmsa.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas VMSA-Compatible IOMMU
-> +
-> +maintainers:
-> +  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> +
-> +description:
-> +  The IPMMU is an IOMMU implementation compatible with the ARM VMSA page tables.
-> +  It provides address translation for bus masters outside of the CPU, each
-> +  connected to the IPMMU through a port called micro-TLB.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - renesas,ipmmu-r8a7743  # RZ/G1M
-> +              - renesas,ipmmu-r8a7744  # RZ/G1N
-> +              - renesas,ipmmu-r8a7745  # RZ/G1E
-> +              - renesas,ipmmu-r8a7790  # R-Car H2
-> +              - renesas,ipmmu-r8a7791  # R-Car M2-W
-> +              - renesas,ipmmu-r8a7793  # R-Car M2-N
-> +              - renesas,ipmmu-r8a7794  # R-Car E2
-> +              - renesas,ipmmu-r8a7795  # R-Car H3
-> +          - const: renesas,ipmmu-vmsa  # R-Car Gen2 or RZ/G1
-> +      - items:
-> +          - enum:
-> +              - renesas,ipmmu-r8a73a4  # R-Mobile APE6
+The thing is, once that binding is in, it has to be backward
+compatible. So every thing that you leave out is something that you'll
+need to support in the driver eventually.
 
-I believe the R-Mobile APE6 IPMMU is similar to the R-Car Gen2 IPMMU,
-and thus belongs in the section above instead.
+If you don't want it to be a complete nightmare, you'll want to figure
+out as much as possible on how the GPU is integrated and make a
+binding out of that. If OMAP is too much of a pain, you can also make
+a separate binding for it, and a generic one for the rest of us.
 
-> +              - renesas,ipmmu-r8a774a1 # RZ/G2M
-> +              - renesas,ipmmu-r8a774b1 # RZ/G2N
-> +              - renesas,ipmmu-r8a774c0 # RZ/G2E
-> +              - renesas,ipmmu-r8a7796  # R-Car M3-W
-> +              - renesas,ipmmu-r8a77965 # R-Car M3-N
-> +              - renesas,ipmmu-r8a77970 # R-Car V3M
-> +              - renesas,ipmmu-r8a77980 # R-Car V3H
-> +              - renesas,ipmmu-r8a77990 # R-Car E3
-> +              - renesas,ipmmu-r8a77995 # R-Car D3
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 1
-> +    maxItems: 2
-> +    description:
-> +      Specifiers for the MMU fault interrupts. For instances that support
-> +      secure mode two interrupts must be specified, for non-secure and secure
-> +      mode, in that order. For instances that don't support secure mode a
-> +      single interrupt must be specified. Not required for cache IPMMUs.
+I'd say that it's pretty unlikely that the clocks, interrupts (and
+even regulators) are optional. It might be fixed on some SoCs, but
+that's up to the DT to express that using fixed clocks / regulators,
+not the GPU binding itself.
 
-    items:
-      - description: <non-secure ...>
-      - description: <secure ...>
+Maxime
 
-> +
-> +  '#iommu-cells':
-> +    const: 1
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  renesas,ipmmu-main:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description:
-> +      Reference to the main IPMMU instance in two cells. The first cell is
-> +      a phandle to the main IPMMU and the second cell is the interrupt bit
-> +      number associated with the particular cache IPMMU device. The interrupt
-> +      bit number needs to match the main IPMMU IMSSTR register. Only used by
-> +      cache IPMMU instances.
+--oowgclrabb5rh4qg
+Content-Type: application/pgp-signature; name="signature.asc"
 
-This property is not valid only on R-Car Gen2 and R-Mobile APE6.
+-----BEGIN PGP SIGNATURE-----
 
-(untested)
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpcYZAAKCRDj7w1vZxhR
+xT0JAQCiWOePc99saTFkub5XKNoxg+0OWfORXzWEdHfaNN9pAQD6ApKRwjY9uv1z
+NzDdNQ4q1aRrmR/SI1oU48l8V/B3kg0=
+=Apgq
+-----END PGP SIGNATURE-----
 
-oneOf:
-  - properties:
-      contains:
-        const: renesas,ipmmu-vmsa
-  - properties:
-      renesas,ipmmu-main:
-        $ref: /schemas/types.yaml#/definitions/phandle-array
-        description:
-          [...]
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--oowgclrabb5rh4qg--
