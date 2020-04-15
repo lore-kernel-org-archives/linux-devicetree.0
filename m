@@ -4,353 +4,254 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D95C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA99CC3815B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 289AA2074F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D35120575
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:19:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aSavr5fc"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="nvIzJXr3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408853AbgDOLJ4 (ORCPT
+        id S2896861AbgDOLTX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:09:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408851AbgDOLJr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 07:09:47 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AAECC061A0E
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 03:59:36 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id r26so18489618wmh.0
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 03:59:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:from:to:cc:subject:date:in-reply-to:references
-         :in-reply-to;
-        bh=gyOymjuJpKySMZCoUKVOaXwQZFqz9S9M2EkURePP5JQ=;
-        b=aSavr5fcI+OXIFlvsLqoQHRmt7boXGXEmcyhWu3T0F/omWnvm4iDIcBBIohbmgnj5W
-         JvCt1uK3Qgu3BYPz6Oe9maleNLiKPYVM3LyoQj27hZGEnUktPHRshqd3ReGBuJBbNbTc
-         87Y5jNWK0EBZZLyDTy14UnxYUGD+b+1A2lPKjcFpnQrVSPPKyUVE8Wnw72JE/vx3D94U
-         jyz3lw/s0r/IJN9epLTv+ldfuM32xCbAaOOPRIlq91RwBHs2Mj/Q0cpk5DRB2gS44219
-         3i0XpwtgUrrU3ZrU3rXDP4sG9jeoFYcGRYmPW19rZBq1pV7W88XFq91BqrliFYLSRNZb
-         9dAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:from:to:cc:subject:date:in-reply-to
-         :references:in-reply-to;
-        bh=gyOymjuJpKySMZCoUKVOaXwQZFqz9S9M2EkURePP5JQ=;
-        b=DqVX4J8hJHGxp+8H3TZ2w2y8Qn38+QWPkUB0Ngdqm7ht224hr9YcXI90gaeOIByVkE
-         8Qif8IR5Ql0GV6Nj9dukxZ1g7y9MDy87N4J8fxr/GTRLDMozMRzb6REwdcWNZJyuDtfv
-         L4s+tl66SIMYgBQFyYD0c6HrzZJY1MFlUfpgZPcDS9hSAPA3jmSH0ZPbYq2Yzk3bgId6
-         srh59FJVGBXI1mPQyktmBdal/08q88gNVzPkNeMBWP0RxFbwlr73X2bWhirK7l5bLkK3
-         OLwnuTmxlojBfEGw0IjOKQIhFBBArv5Mkhwcb7HJzf71I4+iYzi2EFbG5jRFPuYzA9Ap
-         CVZw==
-X-Gm-Message-State: AGi0PuZL8SzawKAAWlHmKFcRn0BWQdTbM6+zdFhgJ96j1XIBAv3KGh6m
-        oOzMn8so6DwbXKbrvjJ5fysYTg==
-X-Google-Smtp-Source: APiQypJztDCWY3SxxxokhuvLaaPLo3CbRWDQ/iFxWNphnpUZe0SQ/R33vBiYdtlOrGu0yYj3ol714Q==
-X-Received: by 2002:a1c:7d90:: with SMTP id y138mr4956426wmc.121.1586948375471;
-        Wed, 15 Apr 2020 03:59:35 -0700 (PDT)
-Received: from lmecxl0524.home (2a01cb058702ff002dd4025d621b0504.ipv6.abo.wanadoo.fr. [2a01:cb05:8702:ff00:2dd4:25d:621b:504])
-        by smtp.gmail.com with ESMTPSA id c83sm20122796wmd.23.2020.04.15.03.59.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 03:59:34 -0700 (PDT)
-Message-ID: <5e96e916.1c69fb81.14365.050b@mx.google.com>
-X-Google-Original-Message-ID: <1583673879-20714-3-git-send-email-peng.fan@nxp.com> (raw)
-From:   Etienne Carriere <etienne.carriere@linaro.org>
-To:     peng.fan@nxp.com
-Cc:     devicetree@vger.kernel.org, f.fainelli@gmail.com,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        sudeep.holla@arm.com, viresh.kumar@linaro.org
-Subject: [PATCH V5 2/2] firmware: arm_scmi: add smc/hvc transport
-Date:   Wed, 15 Apr 2020 12:58:58 +0200
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <1583673879-20714-3-git-send-email-peng.fan@nxp.com>
-References: <1583673879-20714-3-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1583673879-20714-1-git-send-email-peng.fan@nxp.com>
+        Wed, 15 Apr 2020 07:19:23 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:9265 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2896858AbgDOLTJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 07:19:09 -0400
+X-UUID: 0277912be41c405c8fc1407cde400487-20200415
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=s8GgCZPCh7kWb4VzWAwJtZCWmv2Jo3zNL+utsDUlB6c=;
+        b=nvIzJXr3E9DX/YXit1LLKx4KgkMtUPaB8HL4KNvy7De/VY+u33Y5J554VDsRURsRQ+KvUwTvGuh9Lm8kTBZwpiesiG8gp80cdc3SO1Gy/dLbM38c2W/ebmDMLIAg9UqNNxsF2BTW/i2sUb5Xa4pqJF31tV3jZ+3KikR65pWHbxI=;
+X-UUID: 0277912be41c405c8fc1407cde400487-20200415
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <anthony.huang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1688044152; Wed, 15 Apr 2020 19:19:00 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 15 Apr 2020 19:18:55 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 15 Apr 2020 19:18:56 +0800
+From:   Anthony Huang <anthony.huang@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Anthony Huang <anthony.huang@mediatek.com>
+Subject: [PATCH 2/2] soc: mediatek: Add mtk-mmdvfs driver
+Date:   Wed, 15 Apr 2020 19:18:26 +0800
+Message-ID: <1586949506-22990-3-git-send-email-anthony.huang@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1586949506-22990-1-git-send-email-anthony.huang@mediatek.com>
+References: <1586949506-22990-1-git-send-email-anthony.huang@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Peng,
+TWVkaWF0ZWsgTU1EVkZTIGRyaXZlciBpcyB1c2VkIHRvIHNldCBjbGsgZm9yIE1lZGlhdGVrIG11
+bHRpbWVkaWENCmhhcmR3YXJlcy4gVGhlIE1NRFZGUyByZWdpc3RlcnMgYSByZWd1bGF0b3IgY2Fs
+bGJhY2sgYW5kIG11bHRpbWVkaWENCmhhcmR3YXJlcyBzZXQgdm9sdGFnZSBieSByZWd1bGF0b3Ig
+QVBJIGFuZCB0aGVuIHRoaXMgY2FsbGJhY2sgd2lsbCBiZQ0KdHJpZ2dlcmVkLiBUaGUgTU1EVkZT
+IHdpbGwgZ2V0IGN1cnJlbnQgb3BwIGxldmVsIGZyb20gb3BwIHRhYmxlIGFjY29yZGluZw0KdG8g
+dGhlIHZvbHRhZ2UsIGFuZCB0aGVuIHRoZSBNTURWRlMgc2V0cyBhbGwgdGhlIGNsb2NrIE1VWHMg
+dG8gdGhlIGNsb2NrDQpzb3VyY2VzIGFjY29yZGluZyB0byB0aGUgb3BwIGxldmVsLg0KDQpPbiBz
+b21lIHBsYXRmb3JtcywgYm90aCBjbG9jayBNVVggYW5kIGZyZXF1ZW5jeSBob3BwaW5nIG5lZWQg
+dG8gYmUgdXNlZA0KdG9nZXRoZXIuIFRoZSBNTURWRlMgc3VwcG9ydHMgdGhlc2UgdHdvIGNsb2Nr
+IHNldHRpbmcgbWV0aG9kcyBhbmQgdGhlDQpleGVjdXRpb24gc2VxdWVuY2Ugb2YgdGhlbSBjYW4g
+YmUgY29uZmlndXJlZCBpbiBEVFMuDQoNClNpZ25lZC1vZmYtYnk6IEFudGhvbnkgSHVhbmcgPGFu
+dGhvbnkuaHVhbmdAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvS2Nv
+bmZpZyAgICAgIHwgICAgOSArKw0KIGRyaXZlcnMvc29jL21lZGlhdGVrL01ha2VmaWxlICAgICB8
+ICAgIDEgKw0KIGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1tbWR2ZnMuYyB8ICAzMTIgKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KIDMgZmlsZXMgY2hhbmdlZCwgMzIyIGlu
+c2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRr
+LW1tZHZmcy5jDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9LY29uZmlnIGIv
+ZHJpdmVycy9zb2MvbWVkaWF0ZWsvS2NvbmZpZw0KaW5kZXggMjExNGI1Ni4uZTkyNzYyYiAxMDA2
+NDQNCi0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL0tjb25maWcNCisrKyBiL2RyaXZlcnMvc29j
+L21lZGlhdGVrL0tjb25maWcNCkBAIC00NCw0ICs0NCwxMyBAQCBjb25maWcgTVRLX1NDUFNZUw0K
+IAkgIFNheSB5ZXMgaGVyZSB0byBhZGQgc3VwcG9ydCBmb3IgdGhlIE1lZGlhVGVrIFNDUFNZUyBw
+b3dlciBkb21haW4NCiAJICBkcml2ZXIuDQogDQorY29uZmlnIE1US19NTURWRlMNCisJdHJpc3Rh
+dGUgIk1lZGlhVGVrIE1NRFZGUyBTdXBwb3J0Ig0KKwlkZXBlbmRzIG9uIEFSQ0hfTUVESUFURUsg
+fHwgQ09NUElMRV9URVNUDQorCWhlbHANCisJICBTYXkgeWVzIGhlcmUgdG8gYWRkIHN1cHBvcnQg
+Zm9yIHRoZSBNZWRpYVRlayBNdWx0aW1lZGlhIERWRlMgKE1NRFZGUykNCisJICBkcml2ZXIuIFRo
+ZSBNTURWRlMgaXMgdXNlZCB0byBzZXQgY2xrIGZvciBNZWRpYXRlayBtdWx0aW1lZGlhIGhhcmR3
+YXJlcw0KKwkgICwgc3VjaCBhcyBkaXNwbGF5LCBjYW1lcmEsIG1kcCBhbmQgdmlkZW8gY29kZWMu
+IFNheSBubyBpZiB5b3VyIGRldmljZQ0KKwkgIGRvZXMgbm90IG5lZWQgdG8gZG8gRFZGUyBmb3Ig
+TXVsdGltZWRpYSBoYXJkd2FyZXMuDQorDQogZW5kbWVudQ0KZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+c29jL21lZGlhdGVrL01ha2VmaWxlIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvTWFrZWZpbGUNCmlu
+ZGV4IGIwMTczMzAuLmZhZjUyOTQ0IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsv
+TWFrZWZpbGUNCisrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL01ha2VmaWxlDQpAQCAtMSw1ICsx
+LDYgQEANCiAjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wLW9ubHkNCiBvYmotJChD
+T05GSUdfTVRLX0NNRFEpICs9IG10ay1jbWRxLWhlbHBlci5vDQogb2JqLSQoQ09ORklHX01US19J
+TkZSQUNGRykgKz0gbXRrLWluZnJhY2ZnLm8NCitvYmotJChDT05GSUdfTVRLX01NRFZGUykgKz0g
+bXRrLW1tZHZmcy5vDQogb2JqLSQoQ09ORklHX01US19QTUlDX1dSQVApICs9IG10ay1wbWljLXdy
+YXAubw0KIG9iai0kKENPTkZJR19NVEtfU0NQU1lTKSArPSBtdGstc2Nwc3lzLm8NCmRpZmYgLS1n
+aXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstbW1kdmZzLmMgYi9kcml2ZXJzL3NvYy9tZWRp
+YXRlay9tdGstbW1kdmZzLmMNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAwLi40
+NjZkMjY2DQotLS0gL2Rldi9udWxsDQorKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstbW1k
+dmZzLmMNCkBAIC0wLDAgKzEsMzEyIEBADQorLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQ
+TC0yLjANCisvKg0KKyAqIENvcHlyaWdodCAoQykgMjAxOSBNZWRpYVRlayBJbmMuDQorICovDQor
+I2luY2x1ZGUgPGxpbnV4L2Nsay5oPg0KKyNpbmNsdWRlIDxsaW51eC9kZXZpY2UuaD4NCisjaW5j
+bHVkZSA8bGludXgvZXJyLmg+DQorI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KKyNpbmNsdWRl
+IDxsaW51eC9vZl9kZXZpY2UuaD4NCisjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+
+DQorI2luY2x1ZGUgPGxpbnV4L3BtX29wcC5oPg0KKyNpbmNsdWRlIDxsaW51eC9yZWd1bGF0b3Iv
+Y29uc3VtZXIuaD4NCisNCisjZGVmaW5lIE1BWF9PUFBfTlVNICg2KQ0KKyNkZWZpbmUgTUFYX01V
+WF9OVU0gKDEwKQ0KKyNkZWZpbmUgTUFYX0hPUFBJTkdfQ0xLX05VTSAoMikNCisNCitlbnVtIHsN
+CisJQUNUSU9OX0RFRkFVTFQsDQorCUFDVElPTl9JSERNLCAvKiBWb2x0YWdlIEluY3JlYXNlOiBI
+b3BwaW5nIEZpcnN0LCBEZWNyZWFzZTogTVVYIEZpcnN0Ki8NCit9Ow0KKw0KK3N0cnVjdCBtbWR2
+ZnNfbXV4X2RhdGEgew0KKwljb25zdCBjaGFyICptdXhfbmFtZTsNCisJc3RydWN0IGNsayAqbXV4
+Ow0KKwlzdHJ1Y3QgY2xrICpjbGtfc3JjW01BWF9PUFBfTlVNXTsNCit9Ow0KKw0KK3N0cnVjdCBt
+bWR2ZnNfaG9wcGluZ19kYXRhIHsNCisJY29uc3QgY2hhciAqaG9wcGluZ19uYW1lOw0KKwlzdHJ1
+Y3QgY2xrICpob3BwaW5nX2NsazsNCisJdTMyIGhvcHBpbmdfcmF0ZVtNQVhfT1BQX05VTV07DQor
+fTsNCisNCitzdHJ1Y3QgbW1kdmZzX2Rydl9kYXRhIHsNCisJYm9vbCBuZWVkX2NoYW5nZV92b2x0
+YWdlOw0KKwl1MzIgcmVxdWVzdF92b2x0YWdlOw0KKwl1MzIgbnVtX211eGVzOw0KKwlzdHJ1Y3Qg
+bW1kdmZzX211eF9kYXRhIG11eGVzW01BWF9NVVhfTlVNXTsNCisJdTMyIG51bV9ob3BwaW5nczsN
+CisJc3RydWN0IG1tZHZmc19ob3BwaW5nX2RhdGEgaG9wcGluZ3NbTUFYX0hPUFBJTkdfQ0xLX05V
+TV07DQorCXUzMiBhY3Rpb247DQorCXN0cnVjdCBub3RpZmllcl9ibG9jayBuYjsNCisJdTMyIHZv
+bHRhZ2VzW01BWF9PUFBfTlVNXTsNCit9Ow0KKw0KK3N0YXRpYyB2b2lkIHNldF9hbGxfbXV4ZXMo
+c3RydWN0IG1tZHZmc19kcnZfZGF0YSAqZHJ2X2RhdGEsIHUzMiBvcHBfbGV2ZWwpDQorew0KKwl1
+MzIgbnVtX211eGVzID0gZHJ2X2RhdGEtPm51bV9tdXhlczsNCisJdTMyIGk7DQorCXN0cnVjdCBj
+bGsgKm11eCwgKmNsa19zcmM7DQorCXMzMiBlcnI7DQorDQorCWZvciAoaSA9IDA7IGkgPCBudW1f
+bXV4ZXM7IGkrKykgew0KKwkJbXV4ID0gZHJ2X2RhdGEtPm11eGVzW2ldLm11eDsNCisJCWNsa19z
+cmMgPSBkcnZfZGF0YS0+bXV4ZXNbaV0uY2xrX3NyY1tvcHBfbGV2ZWxdOw0KKwkJZXJyID0gY2xr
+X3ByZXBhcmVfZW5hYmxlKG11eCk7DQorDQorCQlpZiAoZXJyKSB7DQorCQkJcHJfbm90aWNlKCJw
+cmVwYXJlIG11eCglcykgZmFpbDolZCBvcHBfbGV2ZWw6JWRcbiIsDQorCQkJCSAgZHJ2X2RhdGEt
+Pm11eGVzW2ldLm11eF9uYW1lLCBlcnIsIG9wcF9sZXZlbCk7DQorCQkJY29udGludWU7DQorCQl9
+DQorCQllcnIgPSBjbGtfc2V0X3BhcmVudChtdXgsIGNsa19zcmMpOw0KKwkJaWYgKGVycikNCisJ
+CQlwcl9ub3RpY2UoInNldCBwYXJlbnQoJXMpIGZhaWw6JWQgb3BwX2xldmVsOiVkXG4iLA0KKwkJ
+CQkgIGRydl9kYXRhLT5tdXhlc1tpXS5tdXhfbmFtZSwgZXJyLCBvcHBfbGV2ZWwpOw0KKwkJY2xr
+X2Rpc2FibGVfdW5wcmVwYXJlKG11eCk7DQorCX0NCit9DQorDQorc3RhdGljIHZvaWQgc2V0X2Fs
+bF9ob3BwaW5ncyhzdHJ1Y3QgbW1kdmZzX2Rydl9kYXRhICpkcnZfZGF0YSwgdTMyIG9wcF9sZXZl
+bCkNCit7DQorCXUzMiBudW1faG9wcGluZ3MgPSBkcnZfZGF0YS0+bnVtX2hvcHBpbmdzOw0KKwl1
+MzIgaSwgaG9wcGluZ19yYXRlOw0KKwlzdHJ1Y3QgY2xrICpob3BwaW5nOw0KKwlzMzIgZXJyOw0K
+Kw0KKwlmb3IgKGkgPSAwOyBpIDwgbnVtX2hvcHBpbmdzOyBpKyspIHsNCisJCWhvcHBpbmcgPSBk
+cnZfZGF0YS0+aG9wcGluZ3NbaV0uaG9wcGluZ19jbGs7DQorCQlob3BwaW5nX3JhdGUgPSBkcnZf
+ZGF0YS0+aG9wcGluZ3NbaV0uaG9wcGluZ19yYXRlW29wcF9sZXZlbF07DQorCQllcnIgPSBjbGtf
+cHJlcGFyZV9lbmFibGUoaG9wcGluZyk7DQorDQorCQlpZiAoZXJyKSB7DQorCQkJcHJfbm90aWNl
+KCJwcmVwYXJlIGhvcHBpbmcoJXMpIGZhaWw6JWQgb3BwX2xldmVsOiVkXG4iLA0KKwkJCQkgIGRy
+dl9kYXRhLT5ob3BwaW5nc1tpXS5ob3BwaW5nX25hbWUsDQorCQkJCSAgZXJyLCBvcHBfbGV2ZWwp
+Ow0KKwkJCWNvbnRpbnVlOw0KKwkJfQ0KKwkJZXJyID0gY2xrX3NldF9yYXRlKGhvcHBpbmcsIGhv
+cHBpbmdfcmF0ZSk7DQorCQlpZiAoZXJyKQ0KKwkJCXByX25vdGljZSgic2V0ICVzIHJhdGUoJXUp
+IGZhaWw6JWQgb3BwX2xldmVsOiVkXG4iLA0KKwkJCQkgIGRydl9kYXRhLT5ob3BwaW5nc1tpXS5o
+b3BwaW5nX25hbWUsDQorCQkJCSAgaG9wcGluZ19yYXRlLCBlcnIsIG9wcF9sZXZlbCk7DQorCQlj
+bGtfZGlzYWJsZV91bnByZXBhcmUoaG9wcGluZyk7DQorCX0NCit9DQorDQorc3RhdGljIHZvaWQg
+c2V0X2FsbF9jbGsoc3RydWN0IG1tZHZmc19kcnZfZGF0YSAqZHJ2X2RhdGEsDQorCQkJdTMyIHZv
+bHRhZ2UsIGJvb2wgdm9sX2luYykNCit7DQorCXUzMiBpOw0KKwl1MzIgb3BwX2xldmVsOw0KKw0K
+Kwlmb3IgKGkgPSAwOyBpIDwgTUFYX09QUF9OVU07IGkrKykgew0KKwkJaWYgKGRydl9kYXRhLT52
+b2x0YWdlc1tpXSA9PSB2b2x0YWdlKSB7DQorCQkJb3BwX2xldmVsID0gaTsNCisJCQlicmVhazsN
+CisJCX0NCisJfQ0KKwlpZiAoaSA9PSBNQVhfT1BQX05VTSkgew0KKwkJcHJfbm90aWNlKCJ2b2x0
+YWdlKCVkKSBpcyBub3QgZm91bmRcbiIsIHZvbHRhZ2UpOw0KKwkJcmV0dXJuOw0KKwl9DQorDQor
+CXN3aXRjaCAoZHJ2X2RhdGEtPmFjdGlvbikgew0KKwkvKiBWb2x0YWdlIEluY3JlYXNlOiBIb3Bw
+aW5nIEZpcnN0LCBEZWNyZWFzZTogTVVYIEZpcnN0Ki8NCisJY2FzZSBBQ1RJT05fSUhETToNCisJ
+CWlmICh2b2xfaW5jKSB7DQorCQkJc2V0X2FsbF9ob3BwaW5ncyhkcnZfZGF0YSwgb3BwX2xldmVs
+KTsNCisJCQlzZXRfYWxsX211eGVzKGRydl9kYXRhLCBvcHBfbGV2ZWwpOw0KKwkJfSBlbHNlIHsN
+CisJCQlzZXRfYWxsX211eGVzKGRydl9kYXRhLCBvcHBfbGV2ZWwpOw0KKwkJCXNldF9hbGxfaG9w
+cGluZ3MoZHJ2X2RhdGEsIG9wcF9sZXZlbCk7DQorCQl9DQorCQlicmVhazsNCisJZGVmYXVsdDoN
+CisJCXNldF9hbGxfbXV4ZXMoZHJ2X2RhdGEsIG9wcF9sZXZlbCk7DQorCQlicmVhazsNCisJfQ0K
+Kwlwcl9kZWJ1Zygic2V0IGNsayB0byBvcHAgbGV2ZWw6JWRcbiIsIG9wcF9sZXZlbCk7DQorfQ0K
+Kw0KK3N0YXRpYyBpbnQgcmVndWxhdG9yX2V2ZW50X25vdGlmeShzdHJ1Y3Qgbm90aWZpZXJfYmxv
+Y2sgKm5iLA0KKwkJCQkgIHVuc2lnbmVkIGxvbmcgZXZlbnQsIHZvaWQgKmRhdGEpDQorew0KKwl1
+bnNpZ25lZCBsb25nIHVWOw0KKwlzdHJ1Y3QgbW1kdmZzX2Rydl9kYXRhICpkcnZfZGF0YTsNCisJ
+c3RydWN0IHByZV92b2x0YWdlX2NoYW5nZV9kYXRhICpwdmNfZGF0YTsNCisNCisJZHJ2X2RhdGEg
+PSBjb250YWluZXJfb2YobmIsIHN0cnVjdCBtbWR2ZnNfZHJ2X2RhdGEsIG5iKTsNCisNCisJaWYg
+KGV2ZW50ID09IFJFR1VMQVRPUl9FVkVOVF9QUkVfVk9MVEFHRV9DSEFOR0UpIHsNCisJCXB2Y19k
+YXRhID0gZGF0YTsNCisJCXVWID0gcHZjX2RhdGEtPm1pbl91VjsNCisNCisJCWlmICh1ViA8IHB2
+Y19kYXRhLT5vbGRfdVYpIHsNCisJCQlzZXRfYWxsX2NsayhkcnZfZGF0YSwgdVYsIGZhbHNlKTsN
+CisJCQlkcnZfZGF0YS0+cmVxdWVzdF92b2x0YWdlID0gdVY7DQorCQl9IGVsc2UgaWYgKHVWID4g
+cHZjX2RhdGEtPm9sZF91Vikgew0KKwkJCWRydl9kYXRhLT5uZWVkX2NoYW5nZV92b2x0YWdlID0g
+dHJ1ZTsNCisJCX0NCisJCXByX2RlYnVnKCJyZWd1bGF0b3IgZXZlbnQ9UFJFX1ZPTFRBR0VfQ0hB
+TkdFIG9sZD0lbHUgbmV3PSVsdVxuIiwNCisJCQkgcHZjX2RhdGEtPm9sZF91ViwgcHZjX2RhdGEt
+Pm1pbl91Vik7DQorCX0gZWxzZSBpZiAoZXZlbnQgPT0gUkVHVUxBVE9SX0VWRU5UX1ZPTFRBR0Vf
+Q0hBTkdFKSB7DQorCQl1ViA9ICh1bnNpZ25lZCBsb25nKWRhdGE7DQorCQlpZiAoZHJ2X2RhdGEt
+Pm5lZWRfY2hhbmdlX3ZvbHRhZ2UpIHsNCisJCQlzZXRfYWxsX2NsayhkcnZfZGF0YSwgdVYsIHRy
+dWUpOw0KKwkJCWRydl9kYXRhLT5uZWVkX2NoYW5nZV92b2x0YWdlID0gZmFsc2U7DQorCQkJZHJ2
+X2RhdGEtPnJlcXVlc3Rfdm9sdGFnZSA9IHVWOw0KKwkJfQ0KKwkJcHJfZGVidWcoInJlZ3VsYXRv
+ciBldmVudD1WT0xUQUdFX0NIQU5HRSB2b2x0YWdlPSVsdVxuIiwgdVYpOw0KKwl9IGVsc2UgaWYg
+KGV2ZW50ID09IFJFR1VMQVRPUl9FVkVOVF9BQk9SVF9WT0xUQUdFX0NIQU5HRSkgew0KKwkJdVYg
+PSAodW5zaWduZWQgbG9uZylkYXRhOw0KKwkJLyogSWYgY2xrIHdhcyBjaGFuZ2VkLCByZXN0b3Jl
+IHRvIHByZXZpb3VzIHNldHRpbmcgKi8NCisJCWlmICh1ViAhPSBkcnZfZGF0YS0+cmVxdWVzdF92
+b2x0YWdlKSB7DQorCQkJc2V0X2FsbF9jbGsoZHJ2X2RhdGEsIHVWLA0KKwkJCQkgICAgdVYgPiBk
+cnZfZGF0YS0+cmVxdWVzdF92b2x0YWdlKTsNCisJCQlkcnZfZGF0YS0+bmVlZF9jaGFuZ2Vfdm9s
+dGFnZSA9IGZhbHNlOw0KKwkJCWRydl9kYXRhLT5yZXF1ZXN0X3ZvbHRhZ2UgPSB1VjsNCisJCX0N
+CisJCXByX2luZm8oInJlZ3VsYXRvciBldmVudD1BQk9SVF9WT0xUQUdFX0NIQU5HRSB2b2x0YWdl
+PSVsdVxuIiwNCisJCQl1Vik7DQorCX0NCisJcmV0dXJuIDA7DQorfQ0KKw0KK3N0YXRpYyBjb25z
+dCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG9mX21tZHZmc19tYXRjaF90YmxbXSA9IHsNCisJew0KKwkJ
+LmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbW1kdmZzIiwNCisJfSwNCisJe30NCit9Ow0KKw0KK3N0
+YXRpYyBpbnQgbW1kdmZzX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQorew0K
+KwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Ow0KKwlzdHJ1Y3QgbW1kdmZzX2Rydl9k
+YXRhICpkcnZfZGF0YTsNCisJc3RydWN0IHJlZ3VsYXRvciAqcmVnOw0KKwl1MzIgbnVtX211eCA9
+IDAsIG51bV9ob3BwaW5nID0gMDsNCisJdTMyIG51bV9jbGtzcmMsIGluZGV4LCBob3BwaW5nX3Jh
+dGUsIG51bV9ob3BwaW5nX3JhdGU7DQorCXN0cnVjdCBwcm9wZXJ0eSAqbXV4X3Byb3AsICpjbGtz
+cmNfcHJvcDsNCisJc3RydWN0IHByb3BlcnR5ICpob3BwaW5nX3Byb3AsICpob3BwaW5nX3JhdGVf
+cHJvcDsNCisJY29uc3QgY2hhciAqbXV4X25hbWUsICpjbGtzcmNfbmFtZSwgKmhvcHBpbmdfbmFt
+ZTsNCisJY2hhciBwcm9wX25hbWVbMzJdOw0KKwljb25zdCBfX2JlMzIgKnA7DQorCXMzMiByZXQ7
+DQorCXVuc2lnbmVkIGxvbmcgZnJlcTsNCisJc3RydWN0IGRldl9wbV9vcHAgKm9wcDsNCisNCisJ
+ZHJ2X2RhdGEgPSBkZXZtX2t6YWxsb2MoZGV2LCBzaXplb2YoKmRydl9kYXRhKSwgR0ZQX0tFUk5F
+TCk7DQorCWlmICghZHJ2X2RhdGEpDQorCQlyZXR1cm4gLUVOT01FTTsNCisNCisJb2ZfcHJvcGVy
+dHlfZm9yX2VhY2hfc3RyaW5nKGRldi0+b2Zfbm9kZSwgIm1lZGlhdGVrLHN1cHBvcnRfbXV4IiwN
+CisJCQkJICAgIG11eF9wcm9wLCBtdXhfbmFtZSkgew0KKwkJaWYgKG51bV9tdXggPj0gTUFYX01V
+WF9OVU0pIHsNCisJCQlwcl9ub3RpY2UoIlRvbyBtYW55IGl0ZW1zIGluIHN1cHBvcnRfbXV4XG4i
+KTsNCisJCQlyZXR1cm4gLUVJTlZBTDsNCisJCX0NCisJCWRydl9kYXRhLT5tdXhlc1tudW1fbXV4
+XS5tdXggPSBkZXZtX2Nsa19nZXQoZGV2LCBtdXhfbmFtZSk7DQorCQlkcnZfZGF0YS0+bXV4ZXNb
+bnVtX211eF0ubXV4X25hbWUgPSBtdXhfbmFtZTsNCisJCXNucHJpbnRmKHByb3BfbmFtZSwgc2l6
+ZW9mKHByb3BfbmFtZSkgLSAxLA0KKwkJCSAibWVkaWF0ZWssbXV4XyVzIiwgbXV4X25hbWUpOw0K
+KwkJbnVtX2Nsa3NyYyA9IDA7DQorCQlvZl9wcm9wZXJ0eV9mb3JfZWFjaF9zdHJpbmcoZGV2LT5v
+Zl9ub2RlLCBwcm9wX25hbWUsDQorCQkJCQkgICAgY2xrc3JjX3Byb3AsIGNsa3NyY19uYW1lKSB7
+DQorCQkJaWYgKG51bV9jbGtzcmMgPj0gTUFYX09QUF9OVU0pIHsNCisJCQkJcHJfbm90aWNlKCJU
+b28gbWFueSBpdGVtcyBpbiAlc1xuIiwgcHJvcF9uYW1lKTsNCisJCQkJcmV0dXJuIC1FSU5WQUw7
+DQorCQkJfQ0KKwkJCWRydl9kYXRhLT5tdXhlc1tudW1fbXV4XS5jbGtfc3JjW251bV9jbGtzcmNd
+ID0NCisJCQkJZGV2bV9jbGtfZ2V0KGRldiwgY2xrc3JjX25hbWUpOw0KKwkJCW51bV9jbGtzcmMr
+KzsNCisJCX0NCisJCW51bV9tdXgrKzsNCisJfQ0KKwlkcnZfZGF0YS0+bnVtX211eGVzID0gbnVt
+X211eDsNCisNCisJb2ZfcHJvcGVydHlfZm9yX2VhY2hfc3RyaW5nKGRldi0+b2Zfbm9kZSwgIm1l
+ZGlhdGVrLHN1cHBvcnRfaG9wcGluZyIsDQorCQkJCSAgICBob3BwaW5nX3Byb3AsIGhvcHBpbmdf
+bmFtZSkgew0KKwkJaWYgKG51bV9ob3BwaW5nID49IE1BWF9IT1BQSU5HX0NMS19OVU0pIHsNCisJ
+CQlwcl9ub3RpY2UoIlRvbyBtYW55IGl0ZW1zIGluIHN1cHBvcnRfaG9wcGluZ1xuIik7DQorCQkJ
+cmV0dXJuIC1FSU5WQUw7DQorCQl9DQorCQlkcnZfZGF0YS0+aG9wcGluZ3NbbnVtX2hvcHBpbmdd
+LmhvcHBpbmdfY2xrID0NCisJCQkJCWRldm1fY2xrX2dldChkZXYsIGhvcHBpbmdfbmFtZSk7DQor
+CQlkcnZfZGF0YS0+aG9wcGluZ3NbbnVtX2hvcHBpbmddLmhvcHBpbmdfbmFtZSA9IGhvcHBpbmdf
+bmFtZTsNCisJCXNucHJpbnRmKHByb3BfbmFtZSwgc2l6ZW9mKHByb3BfbmFtZSkgLSAxLA0KKwkJ
+CSAibWVkaWF0ZWssaG9wcGluZ18lcyIsIGhvcHBpbmdfbmFtZSk7DQorCQludW1faG9wcGluZ19y
+YXRlID0gMDsNCisJCW9mX3Byb3BlcnR5X2Zvcl9lYWNoX3UzMihkZXYtPm9mX25vZGUsIHByb3Bf
+bmFtZSwNCisJCQkJCSBob3BwaW5nX3JhdGVfcHJvcCwgcCwgaG9wcGluZ19yYXRlKSB7DQorCQkJ
+aWYgKG51bV9ob3BwaW5nX3JhdGUgPj0gTUFYX09QUF9OVU0pIHsNCisJCQkJcHJfbm90aWNlKCJU
+b28gbWFueSBpdGVtcyBpbiAlc1xuIiwgcHJvcF9uYW1lKTsNCisJCQkJcmV0dXJuIC1FSU5WQUw7
+DQorCQkJfQ0KKwkJCWRydl9kYXRhLT5ob3BwaW5nc1tudW1faG9wcGluZ10uaG9wcGluZ19yYXRl
+DQorCQkJCQlbbnVtX2hvcHBpbmdfcmF0ZV0gPSBob3BwaW5nX3JhdGU7DQorCQkJbnVtX2hvcHBp
+bmdfcmF0ZSsrOw0KKwkJfQ0KKwkJbnVtX2hvcHBpbmcrKzsNCisJfQ0KKwlkcnZfZGF0YS0+bnVt
+X2hvcHBpbmdzID0gbnVtX2hvcHBpbmc7DQorDQorCW9mX3Byb3BlcnR5X3JlYWRfdTMyKGRldi0+
+b2Zfbm9kZSwNCisJCQkgICAgICJtZWRpYXRlayxhY3Rpb24iLCAmZHJ2X2RhdGEtPmFjdGlvbik7
+DQorDQorCS8qIEdldCB2b2x0YWdlIGluZm8gZnJvbSBvcHAgdGFibGUgKi8NCisJZGV2X3BtX29w
+cF9vZl9hZGRfdGFibGUoZGV2KTsNCisJZnJlcSA9IDA7DQorCWluZGV4ID0gMDsNCisJd2hpbGUg
+KCFJU19FUlIob3BwID0gZGV2X3BtX29wcF9maW5kX2ZyZXFfY2VpbChkZXYsICZmcmVxKSkpIHsN
+CisJCWRydl9kYXRhLT52b2x0YWdlc1tpbmRleF0gPSBkZXZfcG1fb3BwX2dldF92b2x0YWdlKG9w
+cCk7DQorCQlmcmVxKys7DQorCQlpbmRleCsrOw0KKwkJZGV2X3BtX29wcF9wdXQob3BwKTsNCisJ
+fQ0KKw0KKwlyZWcgPSBkZXZtX3JlZ3VsYXRvcl9nZXQoZGV2LCAiZHZmc3JjLXZjb3JlIik7DQor
+CWlmIChJU19FUlIocmVnKSkNCisJCXJldHVybiBQVFJfRVJSKHJlZyk7DQorDQorCWRydl9kYXRh
+LT5uYi5ub3RpZmllcl9jYWxsID0gcmVndWxhdG9yX2V2ZW50X25vdGlmeTsNCisJcmV0ID0gZGV2
+bV9yZWd1bGF0b3JfcmVnaXN0ZXJfbm90aWZpZXIocmVnLCAmZHJ2X2RhdGEtPm5iKTsNCisJaWYg
+KHJldCkNCisJCXByX25vdGljZSgiRmFpbGVkIHRvIHJlZ2lzdGVyIG5vdGlmaWVyOiAlZFxuIiwg
+cmV0KTsNCisNCisJcmV0dXJuIHJldDsNCit9DQorDQorc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9k
+cml2ZXIgbW1kdmZzX2RydiA9IHsNCisJLnByb2JlID0gbW1kdmZzX3Byb2JlLA0KKwkuZHJpdmVy
+ID0gew0KKwkJLm5hbWUgPSAibXRrLW1tZHZmcyIsDQorCQkub2ZfbWF0Y2hfdGFibGUgPSBvZl9t
+bWR2ZnNfbWF0Y2hfdGJsLA0KKwl9LA0KK307DQorDQorc3RhdGljIGludCBfX2luaXQgbXRrX21t
+ZHZmc19pbml0KHZvaWQpDQorew0KKwlzMzIgc3RhdHVzOw0KKw0KKwlzdGF0dXMgPSBwbGF0Zm9y
+bV9kcml2ZXJfcmVnaXN0ZXIoJm1tZHZmc19kcnYpOw0KKwlpZiAoc3RhdHVzKSB7DQorCQlwcl9u
+b3RpY2UoIkZhaWxlZCB0byByZWdpc3RlciBNTURWRlMgZHJpdmVyKCVkKVxuIiwgc3RhdHVzKTsN
+CisJCXJldHVybiAtRU5PREVWOw0KKwl9DQorCXJldHVybiAwOw0KK30NCisNCitzdGF0aWMgdm9p
+ZCBfX2V4aXQgbXRrX21tZHZmc19leGl0KHZvaWQpDQorew0KKwlwbGF0Zm9ybV9kcml2ZXJfdW5y
+ZWdpc3RlcigmbW1kdmZzX2Rydik7DQorfQ0KKw0KK21vZHVsZV9pbml0KG10a19tbWR2ZnNfaW5p
+dCk7DQorbW9kdWxlX2V4aXQobXRrX21tZHZmc19leGl0KTsNCisNCitNT0RVTEVfREVTQ1JJUFRJ
+T04oIk1USyBNTURWRlMgZHJpdmVyIik7DQorTU9EVUxFX0FVVEhPUigiQW50aG9ueSBIdWFuZzxh
+bnRob255Lmh1YW5nQG1lZGlhdGVrLmNvbT4iKTsNCitNT0RVTEVfTElDRU5TRSgiR1BMIik7DQot
+LSANCjEuNy45LjUNCg==
 
-I  have 2 comments on this change. The main is about using
-arm_smccc_1_1_invoke(). Below some details and I added comments
-inside you patch. The second of on SMC return value, see my
-comment in your patch below.
-
-
-About arm_smccc_1_1_invoke(), this functon currently relies on PSCI
-driver to define a conduit method but SCMI agent driver does not
-mandate CONFIG_PSCI to be enable.
-
-Could you add an optional "method" property for "arm,scmi-smc" for platforms
-willing to not rely on PSCI Linux driver? If no property "method" is
-defined in the FDT, invocation relies on arm_smccc_1_1_invoke().
-
-"method" naming mimics what is done in the OP-TEE driver (drivers/tee/optee/).
-Here is a proposal for the documenting property "method" in 
-Documentation/arm,scmi.txt:
-
-- method : "smc" or "hvc"
-            Optional property defining the conduit method for to be used
-	    for invoking the SCMI server in secure world.
-	    "smc" states instruction SMC #0 is used whereas "hvc" states
-	    instruction HVC #0 is used.
-
-
-
-Regards,
-Etienne
-
-
-> From: Peng Fan <peng.fan@nxp.commm>
-> 
-> Take arm,smc-id as the 1st arg, leave the other args as zero for now.
-> There is no Rx, only Tx because of smc/hvc not support Rx.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
->
-> (...)
->
-> diff --git a/drivers/firmware/arm_scmi/smc.c b/drivers/firmware/arm_scmi/smc.c
-> new file mode 100644
-> index 000000000000..336168e40f49
-> --- /dev/null
-> +++ b/drivers/firmware/arm_scmi/smc.c
-> @@ -0,0 +1,152 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * System Control and Management Interface (SCMI) Message SMC/HVC
-> + * Transport driver
-> + *
-> + * Copyright 2020 NXP
-> + */
-> +
-> +#include <linux/arm-smccc.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/slab.h>
-> +
-> +#include "common.h"
-> +
-> +/**
-> + * struct scmi_smc - Structure representing a SCMI smc transport
-> + *
-> + * @cinfo: SCMI channel info
-> + * @shmem: Transmit/Receive shared memory area
-> + * @func_id: smc/hvc call function id
-> + */
-> +
-> +struct scmi_smc {
-> +	struct scmi_chan_info *cinfo;
-> +	struct scmi_shared_mem __iomem *shmem;
-> +	u32 func_id;
-> +};
-
-Add here a field for the secure world invocation function handler:
-
-	scmi_arm_smccc_invoke_fn *invoke_fn;
-
-With function proto type defined:
-
-  typedef void (scmi_arm_smccc_invoke_fn)(unsigned long, struct arm_smccc_res *);
-
-And materials to set the invocation hanlder:
-
-/* Simple wrapper functions to be able to use a function pointer */
-static void _smccc_smc(unsigned long func_id, struct arm_smccc_res *res)
-{
-	arm_smccc_smc(func_id, 0, 0, 0, 0, 0, 0, 0, res);
-}
-
-static void _smccc_hvc(unsigned long func_id, struct arm_smccc_res *res)
-{
-        arm_smccc_hvc(func_id, 0, 0, 0, 0, 0, 0, 0, res);
-}
-
-static void _smccc_1_1(unsigned long func_id, struct arm_smccc_res *res)
-{
-	arm_smccc_1_1_invoke(func_id, 0, 0, 0, 0, 0, 0, 0, res);
-}
-
-static scmi_arm_smccc_invoke_fn *get_invoke_function(struct device *dev)
-{
-        const char *method;
-
-        if (device_property_read_string(dev, "method", &method))
-		return _smccc_1_1;
-
-        if (!strcmp("hvc", method))
-                return _smccc_hvc;
-
-        if (!strcmp("smc", method))
-                return _smccc_smc;
-
-        dev_err(dev, "Invalid \"method\" property: %s\n", method);
-        return ERR_PTR(-EINVAL);
-}
- 
-> +
-> +static DEFINE_MUTEX(smc_mutex);
-> +
-> +static bool smc_chan_available(struct device *dev, int idx)
-> +{
-> +	return true;
-> +}
-> +
-> +static int smc_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
-> +			  bool tx)
-> +{
-> +	struct device *cdev = cinfo->dev;
-> +	struct scmi_smc *scmi_info;
-> +	resource_size_t size;
-> +	struct resource res;
-> +	struct device_node *np;
-> +	u32 func_id;
-> +	int ret;
-> +
-> +	if (!tx)
-> +		return -ENODEV;
-> +
-> +	scmi_info = devm_kzalloc(dev, sizeof(*scmi_info), GFP_KERNEL);
-> +	if (!scmi_info)
-> +		return -ENOMEM;
-> +
-> +	np = of_parse_phandle(cdev->of_node, "shmem", 0> );
-> +	if (!np)
-> +		np = of_parse_phandle(dev->of_node, "shmem", 0);
-> +	ret = of_address_to_resource(np, 0, &res);
-> +	of_node_put(np);
-> +	if (ret) {
-> +		dev_err(cdev, "failed to get SCMI Tx shared memory\n");
-> +		return ret;
-> +	}
-> +
-> +	size = resource_size(&res);
-> +	scmi_info->shmem = devm_ioremap(dev, res.start, size);
-> +	if (!scmi_info->shmem) {
-> +		dev_err(dev, "failed to ioremap SCMI Tx shared memory\n");
-> +		return -EADDRNOTAVAIL;
-> +	}
-> +
-> +	ret = of_property_read_u32(dev->of_node, "arm,smc-id", &func_id);
-> +	if (ret < 0)
-> +		return ret;
-
-Here to get the handler for the invocation method:
-
-	scmi_info->invoke_fn = get_invoke_function(dev);
-	if (IS_ERR(scmi_info->invoke_fn))
-		return PTR_ERR(scmi_info->invoke_fn);
- 
-> +
-> +	scmi_info->func_id = func_id;
-> +	scmi_info->cinfo = cinfo;
-> +	cinfo->transport_info = scmi_info;
-> +
-> +	return 0;
-> +}
-> +
-> +static int smc_chan_free(int id, void *p, void *data)
-> +{
-> +	struct scmi_chan_info *cinfo = p;
-> +	struct scmi_smc *scmi_info = cinfo->transport_info;
-> +
-> +	cinfo->transport_info = NULL;
-> +	scmi_info->cinfo = NULL;
-> +
-> +	scmi_free_channel(cinfo, data, id);
-> +
-> +	return 0;
-> +}
-> +
-> +static int smc_send_message(struct scmi_chan_info *cinfo,
-> +			    struct scmi_xfer *xfer)
-> +{
-> +	struct scmi_smc *scmi_info = cinfo->transport_info;
-> +	struct arm_smccc_res res;
-> +
-> +	mutex_lock(&smc_mutex);
-> +
-> +	shmem_tx_prepare(scmi_info->shmem, xfer);
-> +
-> +	arm_smccc_1_1_invoke(scmi_info->func_id, 0, 0, 0, 0, 0, 0, 0, &res);
-
-Last, here would rahter call the registered handler instead:
-
-	scmi_info->invoke_fn(scmi_info->func_id, &res);
-
-
-> +	scmi_rx_callback(scmi_info->cinfo, shmem_read_header(scmi_info->shmem));
-> +
-> +	mutex_unlock(&smc_mutex);
-> +
-> +	return res.a0;
-
-
-The SCMI server is likely not to return a errno compliant value.
-
-SMCCC specification states that unsupported function IDs should return signed
-extended -1. I suggest to change the return above with:
-
-	return res.a0 == ~0 ? -EINVAL : 0;
-
-
-Regards,
-Etienne
-
-> +}
-> +
-> +static void smc_mark_txdone(struct scmi_chan_info *cinfo, int ret)
-> +{
-> +}
-> +
-> +static void smc_fetch_response(struct scmi_chan_info *cinfo,
-> +			       struct scmi_xfer *xfer)
-> +{
-> +	struct scmi_smc *scmi_info = cinfo->transport_info;
-> +
-> +	shmem_fetch_response(scmi_info->shmem, xfer);
-> +}
-> +
-> +static bool
-> +smc_poll_done(struct scmi_chan_info *cinfo, struct scmi_xfer *xfer)
-> +{
-> +	struct scmi_smc *scmi_info = cinfo->transport_info;
-> +
-> +	return shmem_poll_done(scmi_info->shmem, xfer);
-> +}
-> +
-> +static struct scmi_transport_ops scmi_smc_ops = {
-> +	.chan_available = smc_chan_available,
-> +	.chan_setup = smc_chan_setup,
-> +	.chan_free = smc_chan_free,
-> +	.send_message = smc_send_message,
-> +	.mark_txdone = smc_mark_txdone,
-> +	.fetch_response = smc_fetch_response,
-> +	.poll_done = smc_poll_done,
-> +};
-> +
-> +const struct scmi_desc scmi_smc_desc = {
-> +	.ops = &scmi_smc_ops,
-> +	.max_rx_timeout_ms = 30,
-> +	.max_msg = 1,
-> +	.max_msg_size = 128,
-> +};
-> -- 
-> 2.16.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
