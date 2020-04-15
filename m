@@ -2,95 +2,233 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B83C2C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127EAC3815B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9968E20936
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBCCA206F9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:51:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qm4DBBPq"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="EAPLwH0N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895074AbgDOIuH (ORCPT
+        id S2505534AbgDOIvV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:50:07 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:56190 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2895072AbgDOIuE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 04:50:04 -0400
-X-UUID: e78e873eeda4492e89e02e3ffed20e99-20200415
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=2WBZ7hM0YoXBpJcKelYpQ39XyX/1btRpalqAnJewDts=;
-        b=qm4DBBPq3UOibVVZjRUbkjuc5E5WyrgY52SLx1r2KN0Ld2PNz1/xASFtpYQ6Mc8hnyFhvXcl9D2TvD7ppzE0qV1wqbbKic1Me59ZVyMYKc5PlsAVbZFOyddyRlBG4SIJicQwGwH+qlSZifREBlIRGIrvKaKasvHd4PPOHrCM4Fg=;
-X-UUID: e78e873eeda4492e89e02e3ffed20e99-20200415
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1288575515; Wed, 15 Apr 2020 16:49:59 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 15 Apr 2020 16:49:56 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 15 Apr 2020 16:49:55 +0800
-Message-ID: <1586940598.5007.0.camel@mtksdaap41>
-Subject: Re: [PATCH v12 1/2] dt-binding: i2c: add bus-supply property
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-CC:     Tomasz Figa <tfiga@chromium.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        "Nicolas Boichat" <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Date:   Wed, 15 Apr 2020 16:49:58 +0800
-In-Reply-To: <20200324103448.GE1134@ninjato>
-References: <20200306034946.11223-1-bibby.hsieh@mediatek.com>
-         <20200306034946.11223-2-bibby.hsieh@mediatek.com>
-         <20200322130710.GA1091@ninjato>
-         <CAAFQd5ANJcReHD_n0LorS+bjE8Cn_W-kY5LNgGG+L+jMmywYfA@mail.gmail.com>
-         <20200324103448.GE1134@ninjato>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 15 Apr 2020 04:51:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2505532AbgDOIvP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:51:15 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1CC6C061A0E
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 01:51:14 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id e26so16429581wmk.5
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 01:51:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=v0vxNepfmbCVO2pjiPVGMZ1nlG/9vSikCXlDStur+y8=;
+        b=EAPLwH0NhIMDwtJJ2bWprHprO73wldrdAUl3IDOWpyt5N7xZRpSq4v7ZRrtkKWGhQs
+         afP7RRQWt4rSqLdbjO/X/pNyNgSLzE5LnmVxvlRWh709Z0Z3FtjQOExo6/N5cA30UT9w
+         Dts29jC0BvLi0Wz0EhvYpur3H3BIYQYFQ0vgi2oLsSZwh9lm3I39JYwOsDaE58fnl2Mi
+         IXU/gm17YSXEXCtT9cthm0BPliM2ezFOrdMXmCMB9SuqQOXgaIL6j7nnQ7qFqAObPdLg
+         uwPAA2IielMHS/3xI8VKgdYnl40Qhvp6oIBOtP/025MI+jakSnpo19XZ+su5qWxjzO/s
+         1Hjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=v0vxNepfmbCVO2pjiPVGMZ1nlG/9vSikCXlDStur+y8=;
+        b=nTUyt6VjVkJaEVowevnBKHk2kVaO9b0aetr0oNDqJesnI4pnkS7tq0gAarNCCC3TTs
+         G85/7O0LI2qPa9nuvZfptnCJ4dQtkzHsJxqQZIo18a5v5gMRQSGmQ8H3pWA64rJ2IX3C
+         H+Jz4qwsPm+RSgItxR4Qmxz08mJvEYCruJUypOEVD9NHb3EuJ2Pa8ydXhl5uCE97ZdVs
+         LXGiCk5UIUgQ9+L4rPbQDKVWuVzOyn4RpioCPT3d77cRitqObmN17yC1VZ5YKGe9njaJ
+         GzaMfeVuxktHLa6hth/AXs1oqCd6zY7Tq3Y1/u11WCEL/UPh03dsNPKuo97+bGQPnTyF
+         nUbQ==
+X-Gm-Message-State: AGi0PuYLnB2tHaJNPUULKak+y7uhURHqMta5THNE+uUqrDm/PXOInqYH
+        kAwWtGVOsFyCe47TyLX8QrJK4RuAfX3EFQ==
+X-Google-Smtp-Source: APiQypLF5toBswWpyDxDYMtR9h6DMT/RcYmPvwszy/EWIgrvbtujo1PdN/K4Bn4pMuQJfjiFF4TaCA==
+X-Received: by 2002:a1c:c302:: with SMTP id t2mr4181612wmf.85.1586940672963;
+        Wed, 15 Apr 2020 01:51:12 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56? ([2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56])
+        by smtp.gmail.com with ESMTPSA id v16sm21906787wml.30.2020.04.15.01.51.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Apr 2020 01:51:12 -0700 (PDT)
+Subject: Re: [PATCH RFC v1 2/4] dt-bindings: power: meson-ee-pwrc: add support
+ for the Meson GX SoCs
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        robh+dt@kernel.org, khilman@baylibre.com,
+        linux-amlogic@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20200414201457.229131-1-martin.blumenstingl@googlemail.com>
+ <20200414201457.229131-3-martin.blumenstingl@googlemail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <907211b1-c8d5-39cd-5d2b-dd41efbdc7a7@baylibre.com>
+Date:   Wed, 15 Apr 2020 10:51:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200414201457.229131-3-martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTAzLTI0IGF0IDExOjM0ICswMTAwLCBXb2xmcmFtIFNhbmcgd3JvdGU6DQo+
-ID4gPiA+ICstIGJ1cy1zdXBwbHkNCj4gPiA+ID4gKyAgICAgcGhhbmRsZSB0byB0aGUgcmVndWxh
-dG9yIHRoYXQgcHJvdmlkZXMgcG93ZXIgdG8gaTJjLg0KPiA+ID4NCj4gPiA+IEkgdGhpbmsgdGhp
-cyBpcyBub3QgY2xlYXIgZW5vdWdoLiBJIGFzc3VtZSBpdCBtZWFucyB0aGUgcmVndWxhdG9yIGZv
-cg0KPiA+ID4gZHJpdmluZyBTQ0wvU0RBPyBJbiB0aGUgY292ZXJsZXR0ZXIgeW91IG1lbnRpb24g
-YWxzbyBhbiBFRVBST00uIEluIHlvdXINCj4gPiA+IGNhc2UsIHRoaXMgaXMgZHJpdmVuIGJ5IHRo
-ZSBzYW1lIHJlZ3VsYXRvcj8gSSBhbSBza2VwdGljYWwgd2UgY2FuDQo+ID4gPiBhYnN0cmFjdCBp
-dCBsaWtlIHRoaXMgYmVjYXVzZSBJMkMgZGV2aWNlcyBjb3VsZCBiZSBkcml2ZW4gYnkgdmFyaW91
-cw0KPiA+ID4gcmVndWxhdG9ycyBpbiB0aGUgc3lzdGVtLCBzbyB0aGVyZSBjb3VsZG4ndCBiZSBv
-bmUgImJ1cyByZWd1bGF0b3IiLiBUaGUNCj4gPiA+IHJlZ3VsYXRvciBmb3IgdGhlIEVFUFJPTSBz
-aG91bGQgYmUgZGVzY3JpYmVkIGluIHRoZSBFRVBST00gbm9kZS4gU28sDQo+ID4gPiB0aGlzICJi
-dXMgc3VwcGx5IiBpcyBvbmx5IGZvciBkcml2aW5nIFNDTC9TREE/DQo+ID4gDQo+ID4gSW4gb3Vy
-IGNhc2UgdGhlIGJ1cy1zdXBwbHkgcmVndWxhdG9yIGRyaXZlcyB0aGUgdm9sdGFnZSByYWlsIHRv
-IHdoaWNoDQo+ID4gU0NML1NEQSBhcmUgcHVsbGVkIHVwIGFuZCB0aGVyZSBpcyBhbiBFRVBST00g
-b24gdGhlIGJ1cywgcG93ZXJlZCBieQ0KPiA+IHlldCBhbm90aGVyIHJhaWwuIFRoZXJlIGlzIGFs
-c28gYW5vdGhlciBzbGF2ZSBvbiB0aGUgYnVzIHdoaWNoIHVzZXMNCj4gPiB0aGUgc2FtZSByZWd1
-bGF0b3IgYXMgdGhlIGJ1cy1zdXBwbHkgZm9yIGl0cyBvd24gcG93ZXIuDQo+ID4gDQo+ID4gSW4g
-b3RoZXIgd29yZHMsIGJ1cy1zdXBwbHkgb25seSBlbnN1cmVzIHRoYXQgU0NMIGFuZCBTREEgYXJl
-IGluIGENCj4gPiB1c2FibGUgc3RhdGUuIE90aGVyIGNvbnN1bWVycyBuZWVkIHRvIHJlZmVyIHRv
-IHRoZSByZWd1bGF0b3IgaW4gdGhlaXINCj4gPiBvd24gc3VwcGxpZXMgaWYgdGhleSBuZWVkIGl0
-IGZvciB0aGVpciBvd24gcG93ZXIuDQo+ID4gDQo+ID4gRG9lcyB0aGlzIGFuc3dlciB5b3VyIHF1
-ZXN0aW9ucz8NCj4gDQo+IFllcywgdGhpcyB3YXMgZXhhY3RseSB3aGF0IEkgd2FzIGFzc3VtaW5n
-Lg0KPiANCj4gU28sIEkgdGhpbmsgdGhlIGFib3ZlIGRvY3VtZW50YXRpb24gc2hvdWxkIGJlIGNo
-YW5nZWQ6IHN8aTJjfFNDTC9TREF8DQo+IA0KPiBEJ2FjY29yZD8NCj4gDQpZZXMsIEkgdGhpbmsg
-U0NML1NEQSBpcyBiZXR0ZXIgdGhhbiBpMmMNCg0KVG9tYXN6LCBIb3cgYWJvdXQgaXQ/DQoNClRo
-YW5rcw0KDQpCaWJieQ0KDQo=
+On 14/04/2020 22:14, Martin Blumenstingl wrote:
+> The power domains on the GX SoCs are very similar to G12A. The only
+> known differences so far are:
+> - The GX SoCs do not have the HHI_VPU_MEM_PD_REG2 register (for the
+>   VPU power-domain)
+> - The GX SoCs have an additional reset line called "dvin"
+> 
+> Add a new compatible string and adjust the reset line expectations for
+> these SoCs.
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  .../bindings/power/amlogic,meson-ee-pwrc.yaml | 27 +++++++++++++++++++
+>  include/dt-bindings/power/meson-gxbb-power.h  | 13 +++++++++
+>  2 files changed, 40 insertions(+)
+>  create mode 100644 include/dt-bindings/power/meson-gxbb-power.h
+> 
+> diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
+> index a0e4cf143b9c..15a29ed19327 100644
+> --- a/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
+> +++ b/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
+> @@ -26,6 +26,7 @@ properties:
+>        - amlogic,meson8-pwrc
+>        - amlogic,meson8b-pwrc
+>        - amlogic,meson8m2-pwrc
+> +      - amlogic,meson-gxbb-pwrc
+>        - amlogic,meson-g12a-pwrc
+>        - amlogic,meson-sm1-pwrc
+>  
+> @@ -42,6 +43,7 @@ properties:
+>  
+>    resets:
+>      minItems: 11
+> +    maxItems: 12
+>  
+>    "#power-domain-cells":
+>      const: 1
+> @@ -77,6 +79,31 @@ allOf:
+>          - resets
+>          - reset-names
+>  
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - amlogic,meson-gxbb-pwrc
+> +    then:
+> +      properties:
+> +        reset-names:
+> +          items:
+> +            - const: viu
+> +            - const: venc
+> +            - const: vcbus
+> +            - const: bt656
+> +            - const: dvin
+> +            - const: rdma
+> +            - const: venci
+> +            - const: vencp
+> +            - const: vdac
+> +            - const: vdi6
+> +            - const: vencl
+> +            - const: vid_lock
+> +      required:
+> +        - resets
+> +        - reset-names
+> +
+>    - if:
+>        properties:
+>          compatible:
+> diff --git a/include/dt-bindings/power/meson-gxbb-power.h b/include/dt-bindings/power/meson-gxbb-power.h
+> new file mode 100644
+> index 000000000000..57ab38dcb6bb
+> --- /dev/null
+> +++ b/include/dt-bindings/power/meson-gxbb-power.h
+> @@ -0,0 +1,13 @@
+> +/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
+> +/*
+> + * Copyright (c) 2019 BayLibre, SAS
+> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+> + */
+> +
+> +#ifndef _DT_BINDINGS_MESON_GXBB_POWER_H
+> +#define _DT_BINDINGS_MESON_GXBB_POWER_H
+> +
+> +#define PWRC_GXBB_VPU_ID		0
+> +#define PWRC_GXBB_ETH_ID		1
 
+Should be PWRC_GXBB_ETHERNET_MEM_ID like meson8 bindings.
+
+> +
+> +#endif
+> 
+
+
+Apart that, itlooks ok.
+
+Neil
