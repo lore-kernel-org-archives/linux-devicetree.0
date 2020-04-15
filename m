@@ -2,163 +2,110 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C0DC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 00:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BACBC38A2B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 00:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 658E720737
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 00:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65B762076C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 00:54:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eVHUoiht"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634700AbgDOAsr (ORCPT
+        id S1733241AbgDOAyn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 20:48:47 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:57138 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392429AbgDOAsc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 20:48:32 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6F22C200675;
-        Wed, 15 Apr 2020 02:48:22 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 49A35200651;
-        Wed, 15 Apr 2020 02:48:17 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 15CB1402B4;
-        Wed, 15 Apr 2020 08:48:11 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 2/2] dt-bindings: watchdog: Convert i.MX7ULP to json-schema
-Date:   Wed, 15 Apr 2020 08:40:11 +0800
-Message-Id: <1586911211-1141-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586911211-1141-1-git-send-email-Anson.Huang@nxp.com>
-References: <1586911211-1141-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 14 Apr 2020 20:54:43 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:39256 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733230AbgDOAyl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 20:54:41 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8A422521;
+        Wed, 15 Apr 2020 02:54:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586912079;
+        bh=t/s3cFaprX7TQgkKtf3BVyw0MwfDpYj0dFVoO/TDuXw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eVHUoihtAmBgramO/GhT99Seqkul5d/u62tGrXDHYQvQSqbUU7Sw+ZUl0suUDOBjH
+         Ib2qE7AMpG3vFcOfNBOrzXsQYevvUVThKSZpee18Yn8tRP5LgXr/QGWHYm+YK8gz1t
+         UQJHwhWVButreXqgrcjjJoQkFuUrkhU+iHWlrva4=
+Date:   Wed, 15 Apr 2020 03:54:27 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: Re: [PATCH 2/4] dt-bindings: display: bridge: Convert simple-bridge
+ bindings to YAML
+Message-ID: <20200415005427.GY19819@pendragon.ideasonboard.com>
+References: <20200405232318.26833-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20200405232318.26833-3-laurent.pinchart+renesas@ideasonboard.com>
+ <20200414220000.GA31265@bogus>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200414220000.GA31265@bogus>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the i.MX7ULP watchdog binding to DT schema format using json-schema.
+Hi Rob,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V1:
-	- Add 'timeout-sec' property to avoid build error.
----
- .../bindings/watchdog/fsl-imx7ulp-wdt.txt          | 22 --------
- .../bindings/watchdog/fsl-imx7ulp-wdt.yaml         | 65 ++++++++++++++++++++++
- 2 files changed, 65 insertions(+), 22 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml
+On Tue, Apr 14, 2020 at 05:00:00PM -0500, Rob Herring wrote:
+> On Mon, Apr 06, 2020 at 02:23:16AM +0300, Laurent Pinchart wrote:
+> > The simple-bridge driver supports multiple simple or dumb bridges,
+> > covered by different compatible strings but otherwise identical DT
+> > bindings. Some of those bridges have undocumented bindings, while others
+> > are documented in text form in separate files. Group them all in a
+> > single binding and convert it to YAML.
+> > 
+> > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > ---
+> >  .../bindings/display/bridge/adi,adv7123.txt   | 50 ----------
+> >  .../bindings/display/bridge/dumb-vga-dac.txt  | 50 ----------
+> >  .../display/bridge/simple-bridge.yaml         | 99 +++++++++++++++++++
+> >  .../bindings/display/bridge/ti,ths813x.txt    | 51 ----------
+> >  4 files changed, 99 insertions(+), 151 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/display/bridge/adi,adv7123.txt
+> >  delete mode 100644 Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
+> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/simple-bridge.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,ths813x.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7123.txt b/Documentation/devicetree/bindings/display/bridge/adi,adv7123.txt
+> > deleted file mode 100644
+> > index a6b2b2b8f3d9..000000000000
+> > --- a/Documentation/devicetree/bindings/display/bridge/adi,adv7123.txt
+> > +++ /dev/null
+> > @@ -1,50 +0,0 @@
+> > -Analog Device ADV7123 Video DAC
+> > --------------------------------
+> > -
+> > -The ADV7123 is a digital-to-analog converter that outputs VGA signals from a
+> > -parallel video input.
+> > -
+> > -Required properties:
+> > -
+> > -- compatible: Should be "adi,adv7123"
+> > -
+> > -Optional properties:
+> > -
+> > -- psave-gpios: Power save control GPIO
+> 
+> Not documented in the new schema. Did you intend to change to 
+> 'enable-gpios'?
 
-diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
-deleted file mode 100644
-index f902508..0000000
---- a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
-+++ /dev/null
-@@ -1,22 +0,0 @@
--* Freescale i.MX7ULP Watchdog Timer (WDT) Controller
--
--Required properties:
--- compatible : Should be "fsl,imx7ulp-wdt"
--- reg : Should contain WDT registers location and length
--- interrupts : Should contain WDT interrupt
--- clocks: Should contain a phandle pointing to the gated peripheral clock.
--
--Optional properties:
--- timeout-sec : Contains the watchdog timeout in seconds
--
--Examples:
--
--wdog1: watchdog@403d0000 {
--	compatible = "fsl,imx7ulp-wdt";
--	reg = <0x403d0000 0x10000>;
--	interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
--	clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
--	assigned-clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
--	assigned-clocks-parents = <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>;
--	timeout-sec = <40>;
--};
-diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml
-new file mode 100644
-index 0000000..86b4d93
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/watchdog/fsl-imx7ulp-wdt.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale i.MX7ULP Watchdog Timer (WDT) Controller
-+
-+maintainers:
-+  - Anson Huang <Anson.Huang@nxp.com>
-+
-+allOf:
-+  - $ref: "watchdog.yaml#"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,imx7ulp-wdt
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    description: |
-+      Watchdog's clock source.
-+    maxItems: 1
-+
-+  assigned-clocks:
-+    maxItems: 1
-+
-+  assigned-clocks-parents:
-+    maxItems: 1
-+
-+  timeout-sec:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Contains the watchdog timeout in seconds.
-+
-+required:
-+  - compatible
-+  - interrupts
-+  - reg
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/imx7ulp-clock.h>
-+
-+    wdog1: watchdog@403d0000 {
-+        compatible = "fsl,imx7ulp-wdt";
-+        reg = <0x403d0000 0x10000>;
-+        interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
-+        assigned-clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
-+        assigned-clocks-parents = <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>;
-+        timeout-sec = <40>;
-+    };
-+
-+...
+Oops, I forgot to mention that, my bad. The psave GPIO isn't supported
+by the driver, and isn't used in any upstream DT files, so I thought it
+would be safe to drop it, and add support it later (possibly through the
+enable GPIO) if/when needed. I'll mention it in the commit message.
+
 -- 
-2.7.4
+Regards,
 
+Laurent Pinchart
