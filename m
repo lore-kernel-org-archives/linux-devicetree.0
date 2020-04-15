@@ -2,163 +2,163 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5DDC2BB55
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39179C2BB55
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF3D2078B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:12:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586959943;
-	bh=g9zc9gWFrZts6nCro79E4zNLwGrqjr25+7GmsmkzvQs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yITBoSPzWHIIrLtzSdTy1T0dRTRwJnaBQ3m8ly2xfU8n2eCXoHWk2tfqBA4VrOLRs
-	 4uHHMNlciCgIKRciOmJPZxI8p3NNBJNRG17Zv0+D6vk7nofnFVnCC1ad2C9HmZnsd8
-	 4hO95Z6fJiQOa+a5VIvB0ba7d/XibuSUlLxkgsO4=
+	by mail.kernel.org (Postfix) with ESMTP id 18843208FE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:15:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TCBII8Gd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636468AbgDOOMU (ORCPT
+        id S2636540AbgDOOPk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:12:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49622 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2636464AbgDOOMN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:12:13 -0400
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77B722078B;
-        Wed, 15 Apr 2020 14:12:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586959932;
-        bh=g9zc9gWFrZts6nCro79E4zNLwGrqjr25+7GmsmkzvQs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZdESDpha5XBMMH2NumasO7B5X8dXw9HFSztHTSiLifxEnAtw7voFnYGdpI6EuoHdU
-         /ExqpEmsqp0/LnjQX+zOXaD6GTUv5AQ5l84baZvQtB4517udMY6ZG9NdsAZfO/Opr3
-         DN9/nwsr2l7i0O6illGKVq5zZAke9OzzviJ626A8=
-Received: by mail-qt1-f178.google.com with SMTP id x2so13298084qtr.0;
-        Wed, 15 Apr 2020 07:12:12 -0700 (PDT)
-X-Gm-Message-State: AGi0PuagO850FeY1scw2rjKb/80hAINyNkQzSXYbA7vSp8oIqAtX4fkq
-        04+/o0Tmt1IH7xGdoChOGMlis7ngC7L0MLWCJw==
-X-Google-Smtp-Source: APiQypKpcfRLgsq5L44xqX/Nd5yT1RL98k+9haGwOML5QU4TMV8UysP823kpICcUXqUoiZVvAG/C9S9NizqCtatbW/E=
-X-Received: by 2002:ac8:6695:: with SMTP id d21mr21432863qtp.110.1586959931603;
- Wed, 15 Apr 2020 07:12:11 -0700 (PDT)
+        Wed, 15 Apr 2020 10:15:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2634150AbgDOOPh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:15:37 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1009C061A0E
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 07:15:36 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id q19so3814499ljp.9
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 07:15:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iD9DiJbsjFvR0l8VWA77X1IH3xwznCsLM8hKGPl+PRU=;
+        b=TCBII8GdGPliEdTt5zYPCbSfN/GirM3CNA1L+hF8wVCUcb+iXhsn7f4YnEpddGWFHV
+         lndjOYl1+Ns7/wuISMz2Dd0D+/VawofNWW5V73ksyTbJB5ra4IO6JKqx91XgSn1JhF40
+         nZuZv+M+5bEI1JnwoyBiAEOkCtd4T1RpAF7rCY5QFU0LCjN0ubdhmg+9YC3+sTOeGY7K
+         ZHKAFY9iv12Ap88OB7TIzT3ncKuekNYZTwCBD7GgsLT79eRn//B2ibp8bMrWjLZp8QEs
+         1BvhUkRp9v2avwM7XwqJKPmnl/Zj3hF+0DaW4/KdN90Q+6RKfJWxkK/aCb1XpBHgtM+S
+         Lifw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iD9DiJbsjFvR0l8VWA77X1IH3xwznCsLM8hKGPl+PRU=;
+        b=nz6Ujrv+9hJKT+4DWgRVMDpt1xVOWWwNi7DfeuPcO5GkjyQqW+rfuhwWDkjmqBKEhf
+         NKj1MxAqieUoeJxkUUCUYgFCqLysXRb9oUVzaQzc5FofMIE9e9IYEIPAp29fMf2go11A
+         cIqcJRBZ4SJiEfng1B/IM2d8Q05DSqEllMXg131y5rBAFCKxSj+8sTeBPySu8M5SLagC
+         LDy3u1SpMh1Mhv4lMD1/ZuVgJqkpxPSGwrCxQxMxHcmxqGGYAqZqOQg78sgDVG8UtMvM
+         qBEIlkSWPMU2Clur5V6NTdaM/Qi8JC67xO2Nf+Ksylir0JrNL4i7vIrFa4JuhPhSr4MM
+         wDnw==
+X-Gm-Message-State: AGi0PuYOHuLzu+kEF2rbeSMcgBpTGnymqduAF2RH280HTIeam/6fEqD1
+        G2e0IFB1xh1h8NR501XfqZ8PXAnikt9CPJTFm00mfA==
+X-Google-Smtp-Source: APiQypIcyGvGInNcx/iI+quCACUkFCbt3D6BOE2RxrRaAY7YSDkYMPEja+ESZ2QVxtJaLPp2pbfh6o6G0FQktdlPVf0=
+X-Received: by 2002:a05:651c:20a:: with SMTP id y10mr3324332ljn.69.1586960134977;
+ Wed, 15 Apr 2020 07:15:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1585726761.git.shengjiu.wang@nxp.com> <68208297b49e85adfddf843bc205d154790a49de.1585726761.git.shengjiu.wang@nxp.com>
- <20200414154643.GA29098@bogus> <CAA+D8AP2CiRT7qkNa7yBDH0Dbd=i1eyqL4g4zobRmR-vEx4VBQ@mail.gmail.com>
-In-Reply-To: <CAA+D8AP2CiRT7qkNa7yBDH0Dbd=i1eyqL4g4zobRmR-vEx4VBQ@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 15 Apr 2020 09:11:58 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+Uk1zPT=JyZczH5WRWP617Mqhaur+LwbKKYDBGBhd-cQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+Uk1zPT=JyZczH5WRWP617Mqhaur+LwbKKYDBGBhd-cQ@mail.gmail.com>
-Subject: Re: [PATCH v6 6/7] ASoC: dt-bindings: fsl_easrc: Add document for EASRC
-To:     Shengjiu Wang <shengjiu.wang@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <1583673879-20714-3-git-send-email-peng.fan@nxp.com>
+ <5e96e916.1c69fb81.14365.050b@mx.google.com> <20200415131612.GC31928@bogus>
+In-Reply-To: <20200415131612.GC31928@bogus>
+From:   Etienne Carriere <etienne.carriere@linaro.org>
+Date:   Wed, 15 Apr 2020 16:15:23 +0200
+Message-ID: <CAN5uoS9CSspCeMWX8JWVDdLtjX81F-15GL0QqrqzNgnnRiMpxQ@mail.gmail.com>
+Subject: Re: [PATCH V5 2/2] firmware: arm_scmi: add smc/hvc transport
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Peng Fan <peng.fan@nxp.com>, devicetree@vger.kernel.org,
+        f.fainelli@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, Viresh Kumar <viresh.kumar@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 9:56 PM Shengjiu Wang <shengjiu.wang@gmail.com> wrote:
+Hello Sudeep,
+
+On Wed, 15 Apr 2020 at 15:16, Sudeep Holla <sudeep.holla@arm.com> wrote:
 >
-> Hi Rob
->
-> On Tue, Apr 14, 2020 at 11:49 PM Rob Herring <robh@kernel.org> wrote:
+> On Wed, Apr 15, 2020 at 12:58:58PM +0200, Etienne Carriere wrote:
+> > Hello Peng,
 > >
-> > On Wed, Apr 01, 2020 at 04:45:39PM +0800, Shengjiu Wang wrote:
-> > > EASRC (Enhanced Asynchronous Sample Rate Converter) is a new
-> > > IP module found on i.MX8MN.
-> > >
-> > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > > ---
-> > >  .../devicetree/bindings/sound/fsl,easrc.yaml  | 101 ++++++++++++++++++
-> > >  1 file changed, 101 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/sound/fsl,easrc.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/sound/fsl,easrc.yaml b/Documentation/devicetree/bindings/sound/fsl,easrc.yaml
-> > > new file mode 100644
-> > > index 000000000000..14ea60084420
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/sound/fsl,easrc.yaml
-> > > @@ -0,0 +1,101 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/sound/fsl,easrc.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: NXP Asynchronous Sample Rate Converter (ASRC) Controller
-> > > +
-> > > +maintainers:
-> > > +  - Shengjiu Wang <shengjiu.wang@nxp.com>
-> > > +
-> > > +properties:
-> > > +  $nodename:
-> > > +    pattern: "^easrc@.*"
-> > > +
-> > > +  compatible:
-> > > +    const: fsl,imx8mn-easrc
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  clocks:
-> > > +    items:
-> > > +      - description: Peripheral clock
-> > > +
-> > > +  clock-names:
-> > > +    items:
-> > > +      - const: mem
-> > > +
-> > > +  dmas:
-> > > +    maxItems: 8
-> > > +
-> > > +  dma-names:
-> > > +    items:
-> > > +      - const: ctx0_rx
-> > > +      - const: ctx0_tx
-> > > +      - const: ctx1_rx
-> > > +      - const: ctx1_tx
-> > > +      - const: ctx2_rx
-> > > +      - const: ctx2_tx
-> > > +      - const: ctx3_rx
-> > > +      - const: ctx3_tx
-> > > +
-> > > +  firmware-name:
-> > > +    allOf:
-> > > +      - $ref: /schemas/types.yaml#/definitions/string
-> > > +      - const: imx/easrc/easrc-imx8mn.bin
-> > > +    description: The coefficient table for the filters
-> > > +
-> > > +  fsl,asrc-rate:
+> > I  have 2 comments on this change. The main is about using
+> > arm_smccc_1_1_invoke(). Below some details and I added comments
+> > inside you patch. The second of on SMC return value, see my
+> > comment in your patch below.
 > >
-> > fsl,asrc-rate-hz
+> > About arm_smccc_1_1_invoke(), this functon currently relies on PSCI
+> > driver to define a conduit method but SCMI agent driver does not
+> > mandate CONFIG_PSCI to be enable.
+> >
 >
-> Can we keep "fsl,asrc-rate", because I want this property
-> align with the one in fsl,asrc.txt.  These two asrc modules
-> can share same property name.
+> Yes this was discussed and it is done so deliberately. I have added the
+> build dependency when I merged the patch. There's no dependency on
+> CONFIG_PSCI.
 
-Oh, yes.
+Ok, I understand your point.
+Yet it seems to me there is still a dependency on CONFIG_ARM_PSCI_FW
+and also a dependency on a PSCI node in the DT.
 
-So with the example fixed:
+However, I must admit I don't know yet a platform that enables
+CONFIG_ARM_SCMI_PROTOCOL but not CONFIG_ARM_PSCI_FW, hence
+so far, so good.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
+About dependencies, it think the dependency on MAILBOX in
+firmware/Kconfig should be updated:
+
+ config ARM_SCMI_PROTOCOL
+         bool "ARM System Control and Management Interface (SCMI)
+Message Protocol"
+         depends on ARM || ARM64 || COMPILE_TEST
+-        depends on MAILBOX
++        depends on MAILBOX | HAVE_ARM_SMCCC
+         help
+
+>
+> > Could you add an optional "method" property for "arm,scmi-smc" for platforms
+> > willing to not rely on PSCI Linux driver? If no property "method" is
+> > defined in the FDT, invocation relies on arm_smccc_1_1_invoke().
+> >
+>
+> Nope, we don't want mixture here. Why is the system not using PSCI/SMCCC ?
+
+Ok, as I staed above, I don't know any platform that enables
+CONFIG_ARM_SCMI_PROTOCOL but not CONFIG_ARM_PSCI_FW.
+
+>
+> > "method" naming mimics what is done in the OP-TEE driver (drivers/tee/optee/).
+> > Here is a proposal for the documenting property "method" in
+> > Documentation/arm,scmi.txt:
+> >
+> > - method : "smc" or "hvc"
+> >             Optional property defining the conduit method for to be used
+> >           for invoking the SCMI server in secure world.
+> >           "smc" states instruction SMC #0 is used whereas "hvc" states
+> >           instruction HVC #0 is used.
+> >
+> >
+>
+> It was rejected, you can try your luck with OPTEE :)
+> We will just use the system conduit here with SCMI for SMC/HVC transport.
+> Details in previous version of the patch.
+>
+> [...]
+>
+> > > +struct scmi_smc {
+> > > +   struct scmi_chan_info *cinfo;
+> > > +   struct scmi_shared_mem __iomem *shmem;
+> > > +   u32 func_id;
+> > > +};
+> >
+> > Add here a field for the secure world invocation function handler:
+> >
+> >       scmi_arm_smccc_invoke_fn *invoke_fn;
+> >
+>
+> As stated not needed if we use  arm_smccc_1_1_invoke()
+>
+> [...]
+>
+
+Regards,
+Etienne
