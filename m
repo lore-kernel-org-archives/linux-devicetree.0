@@ -2,155 +2,270 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 262D3C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BECEC2BB85
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02DA8208E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C25F214D8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:22:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aB+8LAPe"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="MTTjB7zb";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VW+8LawD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1415637AbgDOQVW (ORCPT
+        id S1415680AbgDOQWA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:21:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56228 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1415559AbgDOQUm (ORCPT
+        Wed, 15 Apr 2020 12:22:00 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:53755 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1415627AbgDOQV5 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:20:42 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F941C061A0C;
-        Wed, 15 Apr 2020 09:20:42 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id x25so251148wmc.0;
-        Wed, 15 Apr 2020 09:20:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=kaq0gyVDK71RemoPPD/qDBGyBcEjT8bXtwKNY1omfRQ=;
-        b=aB+8LAPenu8u8j1QpgHPfqtPuw+2gk7m44m/yASBm7pHbXhE/pfhpizNu1p3P7UFv9
-         am3QPD3QN4JqJbymGvLY2IyNNCapui35nO/wjAk7bgEBBWv+kq5+aYyNTNs15WXq2jJG
-         hRjbMG2qnlciQcBi8HFzjotzGsB1D3vRYD+Z7YGDbGgcFzyuiakjoy+zAo0rihDzZteK
-         OLV53B3F4+9XcGB4Qh2Etb4eIM8eaZfZBEZzv4t4xrvK8VkuRu+6Tx/gQ+hObroBYUVq
-         BYgYPvecwi6otXKHaH9CmBLFfqfAryvVMKBqnSLZPr42tEwgP1R7QIbIAaiUuOVQEVjk
-         99+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=kaq0gyVDK71RemoPPD/qDBGyBcEjT8bXtwKNY1omfRQ=;
-        b=TPdkQgd1fdIqNERZ/PsveuuGsepqOR3NsAZlHKtJF1J3rLKPlSlJgBhmTClt1pjylW
-         V3qvZ09WjXuMLZvopDIUSaca+4sF3cYFQua/er24wdTBC83AvlDJPUoGQTmSUl5ZbkvA
-         Duoj/s85JM2OA2TSnOY+lylK++CoJrUFKTUOCxIar2f8Xqc2ghiB1Em+/i+6RK3RDEQ/
-         44uWByeuKhXr/TGeDtgOGTAp84l/K9XlHTRXjDUOjE5rz07KRUU2Jzl201c33yeVXcB7
-         2rvRIsj7WPLTJmDTGhVJriTZVJk7eo5vfoyRFXIfowhfp5GsbrexHB+1EWeTDcErbksS
-         Judw==
-X-Gm-Message-State: AGi0PubFIj4Moz1CLCIbO4lJSeauSPEDQm5Pag0Z+omKLwT0qJAPfUgQ
-        yjfGP3x/FZ5Ut+pJwC+Q4s4=
-X-Google-Smtp-Source: APiQypK85StzSV6YhdZGFDOnj8XwLjnRbBVLo1rlb4at4q3Cl2x6KDIPfaGL+5DfyV1TfoM18T42+g==
-X-Received: by 2002:a1c:678a:: with SMTP id b132mr6166355wmc.107.1586967640041;
-        Wed, 15 Apr 2020 09:20:40 -0700 (PDT)
-Received: from localhost.localdomain (p5B3F6CCC.dip0.t-ipconnect.de. [91.63.108.204])
-        by smtp.gmail.com with ESMTPSA id 17sm102526wmo.2.2020.04.15.09.20.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 09:20:39 -0700 (PDT)
-From:   Saravanan Sekar <sravanhome@gmail.com>
-To:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
-        robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
-        Saravanan Sekar <sravanhome@gmail.com>
-Subject: [PATCH v9 1/6] dt-bindings: mfd: add document bindings for mp2629
-Date:   Wed, 15 Apr 2020 18:20:25 +0200
-Message-Id: <20200415162030.16414-2-sravanhome@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200415162030.16414-1-sravanhome@gmail.com>
-References: <20200415162030.16414-1-sravanhome@gmail.com>
+        Wed, 15 Apr 2020 12:21:57 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 3E027580133;
+        Wed, 15 Apr 2020 12:21:55 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 15 Apr 2020 12:21:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=u9scvMZX0d04Kn3R0y+CYoy7IVW
+        oF9BUIBhBMZ7xTQ4=; b=MTTjB7zbrBmqyMSWXv7QRhsmX2Q1vGgqO+YM7nHlyCz
+        C1LNlyMorpxShEuJf2md4RxGK5nIGMKIcj6UroWHCoPMTZu2UZ1ZyWBcak71X57N
+        bkCkS/SzxYxu3YP7dvK+R7C4J5j9sDlloifFD2Uny8p2t05p2OeyYQuMmppF80qv
+        8UFAjNPuLiqCbBTrsY9wM/Oftztaw+6yI00noEzhHgbKDGIfLJI/fTLSQCkOLg0N
+        Po90TKLlEJpDqyWTPaq+V3LPX1g3IGW0DSwranqmS4w0rr2q1hm3UUsTUIFYTmj1
+        MPFdzeC65CKFW7CG3Z4SZ2PxMA3aOgLiGdShESqWBhA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=u9scvM
+        ZX0d04Kn3R0y+CYoy7IVWoF9BUIBhBMZ7xTQ4=; b=VW+8LawDZdtk7jKnlusa8f
+        0j0jUmRLsYCwbK6kqpfjHSPVbujw7FvpOjCiVzfg8PRdVY2igHyC0ffQ8Qs9CXI1
+        6MaPtRW2y/VN1k1eKp7tX/503/m4whChKErTvNnwmlCB0qxBCt28TKnKE8Q5LBCD
+        AJo4Zkfww+08FJ1kXQ6Tr1CdcxiWGRqCHfaLGfPy4HtRjpsW4a8y5cvzgZuNHYUM
+        ufmUGKTz/SbpHvcomPx07lVUa06GkJnL73PjwH5CbRzCgZQwpkucTecpCPop1SEz
+        X5ooxv+wfX+XCW7vHwMyz4i8+sgtAwql3AW++j2ZS1UpvvGggsD/54zLlNumMO/g
+        ==
+X-ME-Sender: <xms:oTSXXoIWnMvlqGVy8AaStKXEUhQPrkvTcQ86pmg8HWSqUs3uANtqTg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeefgdeltdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:oTSXXsZWqwp5ohe7OpVmOzP-_EQI_bDpXSWr2pKmZzhJrg7nq6Qo7Q>
+    <xmx:oTSXXjvDHO9_QmqdCkTjvg2-Zj78oQPE0lPP4iy7yWuuzc3-0kQdkw>
+    <xmx:oTSXXpsrCdreATG0MCLBoDdeITl5U9d7Josa7Th3OY0r4Lnm0pgXKw>
+    <xmx:ozSXXtSsjCJYztWsp3i-3gOwsHTwJ-4VBerx14NJRu-GtrkbjDF6bw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D563D3280066;
+        Wed, 15 Apr 2020 12:21:52 -0400 (EDT)
+Date:   Wed, 15 Apr 2020 18:21:51 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        James Hogan <jhogan@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>,
+        linux-samsung-soc@vger.kernel.org, letux-kernel@openphoenux.org,
+        Paul Burton <paulburton@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Tony Lindgren <tony@atomide.com>, Chen-Yu Tsai <wens@csie.org>,
+        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        openpvrsgx-devgroup@letux.org, linux-kernel@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Daniel Vetter <daniel@ffwll.ch>, kernel@pyra-handheld.com
+Subject: Re: [PATCH v6 01/12] dt-bindings: add img, pvrsgx.yaml for
+ Imagination GPUs
+Message-ID: <20200415162151.rwym4ioqz27migfn@gilmour.lan>
+References: <cover.1586939718.git.hns@goldelico.com>
+ <06fb6569259bb9183d0a0d0fe70ec4f3033b8aab.1586939718.git.hns@goldelico.com>
+ <20200415101251.o3wi5t6xvf56xmhq@gilmour.lan>
+ <72919514-0657-4B71-902F-3E775E528F64@goldelico.com>
+ <f4fdca8a-d18c-a8d2-7f51-d1ebbbab3647@baylibre.com>
+ <535CAEBE-F43E-4BFC-B989-612C81F0D7EF@goldelico.com>
+ <20200415142124.yzfh6mtqq7cdq22e@gilmour.lan>
+ <DC0A2DE2-3D77-46F8-8DE1-55050FDACC9B@goldelico.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tfobgrwcfdirkzal"
+Content-Disposition: inline
+In-Reply-To: <DC0A2DE2-3D77-46F8-8DE1-55050FDACC9B@goldelico.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device tree binding information for mp2629 mfd driver.
 
-Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
----
- .../devicetree/bindings/mfd/mps,mp2629.yaml   | 60 +++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+--tfobgrwcfdirkzal
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-new file mode 100644
-index 000000000000..e71c554802a8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-@@ -0,0 +1,60 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MP2629 Battery Charger PMIC from Monolithic Power System.
-+
-+maintainers:
-+  - Saravanan Sekar <sravanhome@gmail.com>
-+
-+description: |
-+  MP2629 is a PMIC providing battery charging and power supply for smartphones,
-+  wireless camera and portable devices. Chip is contrlled over I2C.
-+
-+  The battery charge management device handles battery charger controller and
-+  ADC IIO device for battery, system voltage
-+
-+properties:
-+  compatible:
-+    const: mps,mp2629
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+    description:
-+      The first cell is the IRQ number, the second cell is the trigger type.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/input/linux-event-codes.h>
-+    i2c@7e205000 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        pmic@4b {
-+            compatible = "mps,mp2629";
-+            reg = <0x4b>;
-+
-+            interrupt-controller;
-+            interrupt-parent = <&gpio2>;
-+            #interrupt-cells = <2>;
-+            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-+        };
-+    };
--- 
-2.17.1
+On Wed, Apr 15, 2020 at 05:09:45PM +0200, H. Nikolaus Schaller wrote:
+> Hi Maxime,
+>
+> > Am 15.04.2020 um 16:21 schrieb Maxime Ripard <maxime@cerno.tech>:
+> >
+> >>
+> >> Well we could add clocks and resets as optional but that would
+> >> allow to wrongly define omap.
+> >>
+> >> Or delegate them to a parent "simple-pm-bus" node.
+> >>
+> >> I have to study that material more to understand what you seem
+> >> to expect.
+> >
+> > The thing is, once that binding is in, it has to be backward
+> > compatible. So every thing that you leave out is something that you'll
+> > need to support in the driver eventually.
+>
+> >
+> > If you don't want it to be a complete nightmare, you'll want to figure
+> > out as much as possible on how the GPU is integrated and make a
+> > binding out of that.
+>
+> Hm. Yes. We know that there likely are clocks and maybe reset
+> but for some SoC this seems to be undocumented and the reset
+> line the VHDL of the sgx gpu provides may be permanently tied
+> to "inactive".
+>
+> So if clocks are optional and not provided, a driver simply can assume
+> they are enabled somewhere else and does not have to care about. If
+> they are specified, the driver can enable/disable them.
 
+Except that at the hardware level, the clock is always going to be
+there. You can't control it, but it's there.
+
+> > If OMAP is too much of a pain, you can also make
+> > a separate binding for it, and a generic one for the rest of us.
+>
+> No, omap isn't any pain at all.
+>
+> The pain is that some other SoC are most easily defined by clocks in
+> the gpu node which the omap doesn't need to explicitly specify.
+>
+> I would expect a much bigger nightmare if we split this into two
+> bindings variants.
+>
+> > I'd say that it's pretty unlikely that the clocks, interrupts (and
+> > even regulators) are optional. It might be fixed on some SoCs, but
+> > that's up to the DT to express that using fixed clocks / regulators,
+> > not the GPU binding itself.
+>
+> omap already has these defined them not to be part of the GPU binding.
+> The reason seems to be that this needs special clock gating control
+> especially for idle states which is beyond simple clock-enable.
+>
+> This sysc target-module@56000000 node is already merged and therefore
+> we are only adding the gpu child node. Without defining clocks.
+>
+> For example:
+>
+> 		sgx_module: target-module@56000000 {
+> 			compatible = "ti,sysc-omap4", "ti,sysc";
+> 			reg = <0x5600fe00 0x4>,
+> 			      <0x5600fe10 0x4>;
+> 			reg-names = "rev", "sysc";
+> 			ti,sysc-midle = <SYSC_IDLE_FORCE>,
+> 					<SYSC_IDLE_NO>,
+> 					<SYSC_IDLE_SMART>;
+> 			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
+> 					<SYSC_IDLE_NO>,
+> 					<SYSC_IDLE_SMART>;
+> 			clocks = <&gpu_clkctrl OMAP5_GPU_CLKCTRL 0>;
+> 			clock-names = "fck";
+> 			#address-cells = <1>;
+> 			#size-cells = <1>;
+> 			ranges = <0 0x56000000 0x2000000>;
+>
+> 			gpu: gpu@0 {
+> 				compatible = "ti,omap5-sgx544-116", "img,sgx544-116", "img,sgx544";
+> 				reg = <0x0 0x10000>;
+> 				interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+> 			};
+> 		};
+>
+> The jz4780 example will like this:
+>
+> 	gpu: gpu@13040000 {
+> 		compatible = "ingenic,jz4780-sgx540-130", "img,sgx540-130", "img,sgx540";
+> 		reg = <0x13040000 0x4000>;
+>
+> 		clocks = <&cgu JZ4780_CLK_GPU>;
+> 		clock-names = "gpu";
+>
+> 		interrupt-parent = <&intc>;
+> 		interrupts = <63>;
+> 	};
+>
+> So the question is which one is "generic for the rest of us"?
+
+I'd say the latter.
+
+> And how can we make a single binding for the sgx. Not one for each
+> special SoC variant that may exist.
+>
+> IMHO the best answer is to make clocks an optional property.
+> Or if we do not want to define them explicitly, we use
+> additionalProperties: true.
+
+If your clock is optional, then you define it but don't mandate
+it. Not documenting it will only result in a mess where everyone will
+put some clock into it, possibly with different semantics each and
+every time.
+
+> An alternative could be to use a simple-pm-bus like:
+>
+> 	sgx_module: sgx_module@13040000 {
+> 		compatible = "simple-pm-bus";
+>
+> 		clocks = <&cgu JZ4780_CLK_GPU>;
+> 		clock-names = "gpu";
+>
+> 		#address-cells = <1>;
+> 		#size-cells = <1>;
+> 		ranges = <0 0x13040000 0x10000>;
+>
+> 		gpu: gpu@0 {
+> 			compatible = "ingenic,jz4780-sgx540-130", "img,sgx540-130", "img,sgx540";
+> 			reg = <0x0 0x4000>;
+>
+> 			interrupt-parent = <&intc>;
+> 			interrupts = <63>;
+> 		};
+> 	};
+>
+> This gets rid of any clock, reset and pm definitions for the sgx bindings.
+> But how this is done is outside this sgx bindings.
+>
+> With such a scheme, the binding I propose here would be complete and fully
+> generic. We can even add additionalProperties: false.
+
+This has nothing to do with the binding being complete. And if you use
+a binding like this one, you'll be severely limited when you'll want
+to implement things like DVFS.
+
+Maxime
+
+--tfobgrwcfdirkzal
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpc0nwAKCRDj7w1vZxhR
+xUDXAQCc7y/+vAoavZRmglq4lR2jquJFLRkH7PYZvWPuzBNdAAD/cb0ol1cdNUpA
+oCJwB2WILZ+2E78cCeIXmjyL7nqW6AA=
+=GQ1H
+-----END PGP SIGNATURE-----
+
+--tfobgrwcfdirkzal--
