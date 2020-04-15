@@ -2,132 +2,100 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D94EFC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08082C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA40920768
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC4A820768
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:19:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="QmYfPFax"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gG4jrSdW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635969AbgDOJPf (ORCPT
+        id S2895262AbgDOJSt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:15:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46468 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2635933AbgDOJPa (ORCPT
+        Wed, 15 Apr 2020 05:18:49 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:58124 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2895194AbgDOJSs (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:15:30 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87350C061A0E
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 02:15:29 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id h25so2836886lja.10
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 02:15:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=69T9ZGqlIy7aImGgwrs75/hfGvsilwincFfwWiQFobg=;
-        b=QmYfPFaxi91fzgnYBmzUnbNLZxOG0Qvv9XHtQXYm/D+sTky/Yc25iONfxBlY/7wqsB
-         fRtQYUCgyxgK4p3vjoCdR1E4K1nsTfSz3bWGNyVBA7FGlzJ7W7xAZUor5i5MsgsA0hU6
-         1sVmcbUlUP1cDxtb+3jC+HIaRfadnrNzRFcNUoV22EicSEE5dlVf6RJieO6E9yC3PemP
-         qMb4hRiVMAXxE1MiwCuSopLulXmT+VCKUbpRSEH+BCrvLMZ4tKOYKabhdtdCWnXgNuRk
-         9lpcy+vti6/lVgJJk2gVDZg/BOarCjaD0Ak6NlGy7RcdUdyYk3SImWtP+7AMtEZqo2NA
-         +piQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=69T9ZGqlIy7aImGgwrs75/hfGvsilwincFfwWiQFobg=;
-        b=IWnFOjUqLqsHMWMOILzSsZl4DdSU9BR7zVkD+MaKfGzKniUW6o1p+dXcH6hoM7UBaR
-         p6fdTLF1JWJ1c2p0u3DW+vV2cHhnUdEaa+uIQ6u+DHgxg6DrE+BwJYZO0aGCfwA8q2+w
-         q/BcRpNmDmRdlP4qE0MzwKM8HRU3cUevfFweNjtYl+TYOGIfuYOWyag7wrb3eBRB3/Se
-         mhAUcS4ZadhghZEYFaY8tvZUJPC5jcj7BI2u5PctSxj+E6DTd7XjgjcM++9NEJa+ByCf
-         05ybplT6B8zMlTsNyA9AtfZF4fczdFo9Ly+jPvdqqV/VAOJrhgiRoJzU7ZnEGJl2i+dA
-         NGjA==
-X-Gm-Message-State: AGi0PubrX3Bdyzf0dJuBE/dizgXoOeb0sJPkOBpXB7uGpoNknOn0xBdW
-        CIulKczKqzi8LdJoXHNAQp8mkQ==
-X-Google-Smtp-Source: APiQypJt4bgg1yrZutHX1jnCNUTiEGk5PA6dcO1xYRoqGEwzcnoywOgKJNgJRfEssnCyTOQijG6tmA==
-X-Received: by 2002:a2e:6c0a:: with SMTP id h10mr2542581ljc.195.1586942127891;
-        Wed, 15 Apr 2020 02:15:27 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:81b:6e8d:a1dd:9870:4166:dead? ([2a00:1fa0:81b:6e8d:a1dd:9870:4166:dead])
-        by smtp.gmail.com with ESMTPSA id m13sm12192031lfk.12.2020.04.15.02.15.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Apr 2020 02:15:27 -0700 (PDT)
-Subject: Re: [PATCH v6 08/12] arm: dts: s5pv210: Add G3D node
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        Jonathan Bakker <xc-racer2@live.ca>
-References: <cover.1586939718.git.hns@goldelico.com>
- <b6733f80546bf3e6b3799f716b9c8e0f407de03d.1586939718.git.hns@goldelico.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <b6ffa74a-acef-f329-0d9e-981483499e16@cogentembedded.com>
-Date:   Wed, 15 Apr 2020 12:15:17 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <b6733f80546bf3e6b3799f716b9c8e0f407de03d.1586939718.git.hns@goldelico.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 15 Apr 2020 05:18:48 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586942327; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=pWIsL9+BX5RenGIZyGa2avU6QthIkCiMCu6wFKZKjCw=; b=gG4jrSdW7UuRqIxnNwN1opI37Zx/BPlJ/tLunjJzZs0O0J+RxHE8JHvfTw707xXPEFoiokhX
+ cAb6PSachbGPIuwAJyvNvwD4Bo/UbahW41KPMsYK3V6rE3B5qQnD62pGW26bTW7W/Pq7d4DS
+ 2WRkeSdg3q71CbT/mEcieExCXU0=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e96d16e.7f3975753688-smtp-out-n01;
+ Wed, 15 Apr 2020 09:18:38 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0F348C44788; Wed, 15 Apr 2020 09:18:37 +0000 (UTC)
+Received: from jprakash-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jprakash)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A9194C433CB;
+        Wed, 15 Apr 2020 09:18:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A9194C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jprakash@codeaurora.org
+From:   Jishnu Prakash <jprakash@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, linus.walleij@linaro.org,
+        Jonathan.Cameron@huawei.com, smohanad@codeaurora.org,
+        kgunda@codeaurora.org, aghayal@codeaurora.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org,
+        Jishnu Prakash <jprakash@codeaurora.org>
+Subject: [PATCH V2 0/3] iio: adc: Add support for QCOM SPMI PMIC7 ADC
+Date:   Wed, 15 Apr 2020 14:47:43 +0530
+Message-Id: <1586942266-21480-1-git-send-email-jprakash@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello!
+The following changes are made in V2 for the three patches:
 
-On 15.04.2020 11:35, H. Nikolaus Schaller wrote:
+Added checks for the values of some ADC DT properties in the first patch,
+wherever applicable. Also updated channel node regex and provided example.
 
-> From: Jonathan Bakker <xc-racer2@live.ca>
-> 
-> to add support for SGX540 GPU.
-> 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->   arch/arm/boot/dts/s5pv210.dtsi | 15 +++++++++++++++
->   1 file changed, 15 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
-> index 2ad642f51fd9..e7fc709c0cca 100644
-> --- a/arch/arm/boot/dts/s5pv210.dtsi
-> +++ b/arch/arm/boot/dts/s5pv210.dtsi
-> @@ -512,6 +512,21 @@ vic3: interrupt-controller@f2300000 {
->   			#interrupt-cells = <1>;
->   		};
->   
-> +		g3d: g3d@f3000000 {
+Added the DT header files in the second patch, previously
+added in third patch.
 
-    Should be named generically, "gpu@f3000000", according to the DT spec 0.2, 
-section 2.2.2. It's either "gpu" or "display" TTBOMK...
+Removed the DT header files and made several recommended minor changes
+in the third patch.
 
-[...]
+Jishnu Prakash (3):
+  iio: adc: Convert the QCOM SPMI ADC bindings to .yaml format
+  iio: adc: Add PMIC7 ADC bindings
+  iio: adc: Add support for PMIC7 ADC
 
-MBR, Sergei
+ .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt | 173 --------------
+ .../bindings/iio/adc/qcom,spmi-vadc.yaml           | 214 +++++++++++++++++
+ drivers/iio/adc/qcom-spmi-adc5.c                   | 257 ++++++++++++++++++--
+ drivers/iio/adc/qcom-vadc-common.c                 | 258 +++++++++++++++++++++
+ drivers/iio/adc/qcom-vadc-common.h                 |  15 ++
+ include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h    |  67 ++++++
+ include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h   |  88 +++++++
+ include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h   |  46 ++++
+ include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h   |  28 +++
+ include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h   |  28 +++
+ include/dt-bindings/iio/qcom,spmi-vadc.h           |  78 ++++++-
+ 11 files changed, 1065 insertions(+), 187 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
+ create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h
+ create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h
+ create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h
+ create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h
+ create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
