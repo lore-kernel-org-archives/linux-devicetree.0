@@ -2,123 +2,388 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 729D0C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD283C3815B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52A242074F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B83272078B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:50:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586958485;
-	bh=oLKtnM9QAPjMl4JNf72BCQ9JFS6WqeJtCw7dnd9y5h0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wfi23lSPc0cFKlDwagl2wx4FKrN++SGCD5KZgc8q52avlgXb1FK47v44U6+Xyuc+7
-	 h1PppaK4MuRvlleWXUhg2Buy5MCWMSX+W7N5z7RqpCpLOY5TbVraQRL9QNgxDFGz0S
-	 vzncj0R8DUC4Dr2MelqAsqDbuovBKKDQ5fhrB8mM=
+	s=default; t=1586958623;
+	bh=53nFtvqHdyIgnypxB2RMpy1E3WnulTpS940anTDT8/M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uGqQixB6lI0mNHv1IuKEVAxUQ1zD/TdpqNGWVLT1gYsrnTmKC/f1RLbx45+F1/qYD
+	 0p+mCNhGRZPWMG7HGL0I43+WV+Yulz75D7pzyvOiShJiIJQfWg+0BLkod10Meh3TUO
+	 97yKWpPTnAuTNHzpR1fNv+tFrFMhsWReGXQi3kVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636250AbgDONsE (ORCPT
+        id S2633551AbgDONuW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:48:04 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:36671 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2633569AbgDONsA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 09:48:00 -0400
-Received: by mail-ed1-f67.google.com with SMTP id i7so4907187edq.3;
-        Wed, 15 Apr 2020 06:47:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mIOZ/sd96Rx46ThWOAXmWIaAK4iqfwYtds7TxEtsnA0=;
-        b=b65oEdfKBbQENn+m6r1YGJMnQQK5bSe4g1HPaD3KzwgECpObb3/ACMCvwfhpuEcPQj
-         KF89eStc3t0zv4U+T9zsDUbnT2GnrJOmEHGN8wyEf8wX+p/H+Jn6yQiQLAaQmmW4TVAV
-         4bHmw205FEzwXRexi12XK4wWpeYDtL3ZA8KuggwqI/XvALFXT+9PehUCAr2e+kaAE5FV
-         Tc3LllCimCp+J0jG3XVup0qKyH3A/jZpwrhYDM+PyQmxOLGoBmmTVu5xIYqRFC/wgwrY
-         708HaR3jBZD9POXaX4cpG18kxrzisNG0G4+BNvvsiIxzhmIugnwLU29fBH8idXJH1hco
-         C+ng==
-X-Gm-Message-State: AGi0PuZdk/gYNsO0DBCI0AgfaOWgGe1zQJXZWlq/N8GDNvq2ZHlS7ZyR
-        1BgDX/jcGj1pfYxjK3gTSjU=
-X-Google-Smtp-Source: APiQypL993rtIwMeMfH5wHZyMs+H8Y65XYCjw99y7Fo0rlwZe8pf8YowOuo4m22Vp9YytQslngDtFA==
-X-Received: by 2002:aa7:c2c3:: with SMTP id m3mr18170324edp.10.1586958478322;
-        Wed, 15 Apr 2020 06:47:58 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.125])
-        by smtp.googlemail.com with ESMTPSA id gf12sm2524950ejb.62.2020.04.15.06.47.56
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 Apr 2020 06:47:57 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 15:47:54 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap@vger.kernel.org, openpvrsgx-devgroup@letux.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
-        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>
-Subject: Re: [PATCH v6 07/12] ARM: DTS: omap5: add sgx gpu child node
-Message-ID: <20200415134754.GB21120@kozik-lap>
-References: <cover.1586939718.git.hns@goldelico.com>
- <004611c9660943759b635a87484932869927cf74.1586939718.git.hns@goldelico.com>
- <CAJKOXPdEkWniffmGZmf=S6E5UxWTdVGXnycqTFftXwo_45rz3w@mail.gmail.com>
- <EFA7F2F0-96EA-45D9-B8C8-00DC8C72344D@goldelico.com>
+        Wed, 15 Apr 2020 09:50:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732815AbgDONuQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 09:50:16 -0400
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4649F20775;
+        Wed, 15 Apr 2020 13:50:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586958615;
+        bh=53nFtvqHdyIgnypxB2RMpy1E3WnulTpS940anTDT8/M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GuN9hmJH60vwU/dgm2fayA+8neORrahqcuLDYYBvzXKwBdLCu07hilcBV5damZoye
+         rOW0oarkc679i09GzcdL/7n9kkoqFasX7jL3+TsuvLxHYhHCBsbDivBYJNTm4yT/cu
+         J68/yNBTSuQohBn1nG2CHZi4AyMrg/yPG9STo8f8=
+Received: by mail-qk1-f181.google.com with SMTP id b62so17207426qkf.6;
+        Wed, 15 Apr 2020 06:50:15 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZ1zC3aeoyHEQR1qdQvy7CKJQ3WC+kf4ejedM2mMWQN+/MfxLib
+        CCzhzw6+iXNxbHQL/Y9XJn46KwIxntuAUZL5ZQ==
+X-Google-Smtp-Source: APiQypJUnhFeABv9P0F814Z+p+B5Q4yhQFZZ9hVOY7koZh7lZJDfPlV3W5rtAhAuBySOBChpx4uaiKFo1iYLgHXov6Q=
+X-Received: by 2002:a37:4a85:: with SMTP id x127mr26789090qka.152.1586958614150;
+ Wed, 15 Apr 2020 06:50:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <EFA7F2F0-96EA-45D9-B8C8-00DC8C72344D@goldelico.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200405233935.27599-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20200405233935.27599-5-laurent.pinchart+renesas@ideasonboard.com>
+ <20200406080032.zlszhkjqmjeoa4ti@gilmour.lan> <20200406111927.GD4757@pendragon.ideasonboard.com>
+ <20200406170915.x2ztz4q446h6vx2y@gilmour.lan> <20200406175028.GI16885@pendragon.ideasonboard.com>
+ <20200407071251.npibrmzywiyigu2a@gilmour.lan> <20200408114552.GC4881@pendragon.ideasonboard.com>
+ <20200414231005.GA24462@bogus> <20200415010615.GZ19819@pendragon.ideasonboard.com>
+In-Reply-To: <20200415010615.GZ19819@pendragon.ideasonboard.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 15 Apr 2020 08:50:01 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKEnfK0BJMmb1XHNCkRYiAf7FVgRKdPpmcpz1TFvUU01g@mail.gmail.com>
+Message-ID: <CAL_JsqKEnfK0BJMmb1XHNCkRYiAf7FVgRKdPpmcpz1TFvUU01g@mail.gmail.com>
+Subject: Re: [PATCH/RFC 4/6] dt-bindings: display: rockchip: dw-hdmi: Convert
+ binding to YAML
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Maxime Ripard <maxime@cerno.tech>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        devicetree@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mark Yao <mark.yao@rock-chips.com>,
+        Sandy Huang <hjc@rock-chips.com>, Chen-Yu Tsai <wens@csie.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 01:46:06PM +0200, H. Nikolaus Schaller wrote:
-> Hi Krzysztof,
-> 
-> > Am 15.04.2020 um 13:38 schrieb Krzysztof Kozlowski <krzk@kernel.org>:
-> > 
-> > On Wed, 15 Apr 2020 at 10:36, H. Nikolaus Schaller <hns@goldelico.com> wrote:
-> >> 
-> >> and add interrupt.
-> >> 
-> >> Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # Pyra-Handheld.
-> > 
-> > Don't add your own Tested-by tags. These are implied by authorship,
-> > otherwise all patches people make should have such tag.
-> 
-> Ok I see. AFAIR it originates in several phases of editing to report on which device it was tested.
-> 
-> Is there a canonical way of writing "tested-on: ${HARDWARE}"?
-> 
-> E.g. would this be ok?
-> 
-> Signed-off: H. Nikolaus Schaller <hns@goldelico.com> # tested on Pyra-Handheld
+On Tue, Apr 14, 2020 at 8:06 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Rob,
+>
+> On Tue, Apr 14, 2020 at 06:10:05PM -0500, Rob Herring wrote:
+> > On Wed, Apr 08, 2020 at 02:45:52PM +0300, Laurent Pinchart wrote:
+> > > On Tue, Apr 07, 2020 at 09:12:51AM +0200, Maxime Ripard wrote:
+> > >> On Mon, Apr 06, 2020 at 08:50:28PM +0300, Laurent Pinchart wrote:
+> > >>> On Mon, Apr 06, 2020 at 07:09:15PM +0200, Maxime Ripard wrote:
+> > >>>> On Mon, Apr 06, 2020 at 02:19:27PM +0300, Laurent Pinchart wrote:
+> > >>>>> On Mon, Apr 06, 2020 at 10:00:32AM +0200, Maxime Ripard wrote:
+> > >>>>>> On Mon, Apr 06, 2020 at 02:39:33AM +0300, Laurent Pinchart wrote:
+> > >>>>>>> Convert the Rockchip HDMI TX text binding to YAML.
+> > >>>>>>>
+> > >>>>>>> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > >>>>>>> ---
+> > >>>>>>>  .../display/rockchip/dw_hdmi-rockchip.txt     |  74 --------
+> > >>>>>>>  .../display/rockchip/rockchip,dw-hdmi.yaml    | 178 ++++++++++++++++++
+> > >>>>>>>  2 files changed, 178 insertions(+), 74 deletions(-)
+> > >>>>>>>  delete mode 100644 Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+> > >>>>>>>  create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
+> > >>>>>>>
+> > >>>>>>> diff --git a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+> > >>>>>>> deleted file mode 100644
+> > >>>>>>> index 3d32ce137e7f..000000000000
+> > >>>>>>> --- a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+> > >>>>>>> +++ /dev/null
+> > >>>>>>> @@ -1,74 +0,0 @@
+> > >>>>>>> -Rockchip DWC HDMI TX Encoder
+> > >>>>>>> -============================
+> > >>>>>>> -
+> > >>>>>>> -The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
+> > >>>>>>> -with a companion PHY IP.
+> > >>>>>>> -
+> > >>>>>>> -These DT bindings follow the Synopsys DWC HDMI TX bindings defined in
+> > >>>>>>> -Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt with the
+> > >>>>>>> -following device-specific properties.
+> > >>>>>>> -
+> > >>>>>>> -
+> > >>>>>>> -Required properties:
+> > >>>>>>> -
+> > >>>>>>> -- compatible: should be one of the following:
+> > >>>>>>> -             "rockchip,rk3228-dw-hdmi"
+> > >>>>>>> -             "rockchip,rk3288-dw-hdmi"
+> > >>>>>>> -             "rockchip,rk3328-dw-hdmi"
+> > >>>>>>> -             "rockchip,rk3399-dw-hdmi"
+> > >>>>>>> -- reg: See dw_hdmi.txt.
+> > >>>>>>> -- reg-io-width: See dw_hdmi.txt. Shall be 4.
+> > >>>>>>> -- interrupts: HDMI interrupt number
+> > >>>>>>> -- clocks: See dw_hdmi.txt.
+> > >>>>>>> -- clock-names: Shall contain "iahb" and "isfr" as defined in dw_hdmi.txt.
+> > >>>>>>> -- ports: See dw_hdmi.txt. The DWC HDMI shall have a single port numbered 0
+> > >>>>>>> -  corresponding to the video input of the controller. The port shall have two
+> > >>>>>>> -  endpoints, numbered 0 and 1, connected respectively to the vopb and vopl.
+> > >>>>>>> -- rockchip,grf: Shall reference the GRF to mux vopl/vopb.
+> > >>>>>>> -
+> > >>>>>>> -Optional properties
+> > >>>>>>> -
+> > >>>>>>> -- ddc-i2c-bus: The HDMI DDC bus can be connected to either a system I2C master
+> > >>>>>>> -  or the functionally-reduced I2C master contained in the DWC HDMI. When
+> > >>>>>>> -  connected to a system I2C master this property contains a phandle to that
+> > >>>>>>> -  I2C master controller.
+> > >>>>>>> -- clock-names: See dw_hdmi.txt. The "cec" clock is optional.
+> > >>>>>>> -- clock-names: May contain "cec" as defined in dw_hdmi.txt.
+> > >>>>>>> -- clock-names: May contain "grf", power for grf io.
+> > >>>>>>> -- clock-names: May contain "vpll", external clock for some hdmi phy.
+> > >>>>>>> -- phys: from general PHY binding: the phandle for the PHY device.
+> > >>>>>>> -- phy-names: Should be "hdmi" if phys references an external phy.
+> > >>>>>>> -
+> > >>>>>>> -Optional pinctrl entry:
+> > >>>>>>> -- If you have both a "unwedge" and "default" pinctrl entry, dw_hdmi
+> > >>>>>>> -  will switch to the unwedge pinctrl state for 10ms if it ever gets an
+> > >>>>>>> -  i2c timeout.  It's intended that this unwedge pinctrl entry will
+> > >>>>>>> -  cause the SDA line to be driven low to work around a hardware
+> > >>>>>>> -  errata.
+> > >>>>>>> -
+> > >>>>>>> -Example:
+> > >>>>>>> -
+> > >>>>>>> -hdmi: hdmi@ff980000 {
+> > >>>>>>> -     compatible = "rockchip,rk3288-dw-hdmi";
+> > >>>>>>> -     reg = <0xff980000 0x20000>;
+> > >>>>>>> -     reg-io-width = <4>;
+> > >>>>>>> -     ddc-i2c-bus = <&i2c5>;
+> > >>>>>>> -     rockchip,grf = <&grf>;
+> > >>>>>>> -     interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
+> > >>>>>>> -     clocks = <&cru  PCLK_HDMI_CTRL>, <&cru SCLK_HDMI_HDCP>;
+> > >>>>>>> -     clock-names = "iahb", "isfr";
+> > >>>>>>> -     ports {
+> > >>>>>>> -             hdmi_in: port {
+> > >>>>>>> -                     #address-cells = <1>;
+> > >>>>>>> -                     #size-cells = <0>;
+> > >>>>>>> -                     hdmi_in_vopb: endpoint@0 {
+> > >>>>>>> -                             reg = <0>;
+> > >>>>>>> -                             remote-endpoint = <&vopb_out_hdmi>;
+> > >>>>>>> -                     };
+> > >>>>>>> -                     hdmi_in_vopl: endpoint@1 {
+> > >>>>>>> -                             reg = <1>;
+> > >>>>>>> -                             remote-endpoint = <&vopl_out_hdmi>;
+> > >>>>>>> -                     };
+> > >>>>>>> -             };
+> > >>>>>>> -     };
+> > >>>>>>> -};
+> > >>>>>>> diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
+> > >>>>>>> new file mode 100644
+> > >>>>>>> index 000000000000..8ff544ae0ac2
+> > >>>>>>> --- /dev/null
+> > >>>>>>> +++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-hdmi.yaml
+> > >>>>>>> @@ -0,0 +1,178 @@
+> > >>>>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > >>>>>>> +%YAML 1.2
+> > >>>>>>> +---
+> > >>>>>>> +$id: http://devicetree.org/schemas/display/rockchip/rockchip,dw-hdmi.yaml#
+> > >>>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > >>>>>>> +
+> > >>>>>>> +title: Rockchip DWC HDMI TX Encoder
+> > >>>>>>> +
+> > >>>>>>> +maintainers:
+> > >>>>>>> +  - Mark Yao <mark.yao@rock-chips.com>
+> > >>>>>>> +
+> > >>>>>>> +description: |
+> > >>>>>>> +  The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
+> > >>>>>>> +  with a companion PHY IP.
+> > >>>>>>> +
+> > >>>>>>> +allOf:
+> > >>>>>>> +  - $ref: ../bridge/synopsys,dw-hdmi.yaml#
+> > >>>>>>> +
+> > >>>>>>> +properties:
+> > >>>>>>> +  compatible:
+> > >>>>>>> +    enum:
+> > >>>>>>> +      - rockchip,rk3228-dw-hdmi
+> > >>>>>>> +      - rockchip,rk3288-dw-hdmi
+> > >>>>>>> +      - rockchip,rk3328-dw-hdmi
+> > >>>>>>> +      - rockchip,rk3399-dw-hdmi
+> > >>>>>>> +
+> > >>>>>>> +  reg: true
+> > >>>>>>> +
+> > >>>>>>> +  reg-io-width:
+> > >>>>>>> +    const: 4
+> > >>>>>>> +
+> > >>>>>>> +  clocks:
+> > >>>>>>> +    minItems: 2
+> > >>>>>>> +    maxItems: 5
+> > >>>>>>> +    items:
+> > >>>>>>> +      - description: The bus clock for either AHB and APB
+> > >>>>>>> +      - description: The internal register configuration clock
+> > >>>>>>> +      - description: The HDMI CEC controller main clock
+> > >>>>>>> +      - description: Power for GRF IO
+> > >>>>>>> +      - description: External clock for some HDMI PHY
+> > >>>>>>> +
+> > >>>>>>> +  clock-names:
+> > >>>>>>> +    minItems: 2
+> > >>>>>>> +    maxItems: 5
+> > >>>>>>> +    items:
+> > >>>>>>> +      - const: iahb
+> > >>>>>>> +      - const: isfr
+> > >>>>>>> +      - enum:
+> > >>>>>>> +        - cec
+> > >>>>>>> +        - grf
+> > >>>>>>> +        - vpll
+> > >>>>>>> +      - enum:
+> > >>>>>>> +        - cec
+> > >>>>>>> +        - grf
+> > >>>>>>> +        - vpll
+> > >>>>>>> +      - enum:
+> > >>>>>>> +        - cec
+> > >>>>>>> +        - grf
+> > >>>>>>> +        - vpll
+> > >>>>>>
+> > >>>>>> IIRC Rob wanted us to standardize the order of the clocks if possible,
+> > >>>>>> since it's a pain to support properly here, and your description won't
+> > >>>>>> match what you describe here either (and in general it's just a best
+> > >>>>>> practice), so if all your DTs have the same order you should just set
+> > >>>>>> that order in stone.
+> > >>>>>
+> > >>>>> But how do we handle the case where any of the cec, grf and vpll clocks
+> > >>>>> can be set ? Assuming, for instance, that
+> > >>>>>
+> > >>>>>         clock-names = "iahb", "isfr", "cec";
+> > >>>>>         clock-names = "iahb", "isfr", "vpll";
+> > >>>>>         clock-names = "iahb", "isfr", "cec", "vpll";
+> > >>>>>
+> > >>>>> would all be valid.
+> > >>>>
+> > >>>> It would be painful then...
+> > >>>>
+> > >>>> The easiest way to do so would be to simply use an enum there, and not
+> > >>>> bother checking the array at all. You'll get a warning if there's
+> > >>>> multiple occurences of the same string, and I guess that's what you
+> > >>>> would be really concerned about.
+> > >>>>
+> > >>>> However, now that I think about it, what's the interaction between the
+> > >>>> generic binding and this one when it comes to the third clock? The
+> > >>>> generic one expects it to be cec, and here you have other options?
+> > >>>
+> > >>> I'm not too familiar with the platform, but as far as I understand, any
+> > >>> of the cec, grf and vpll clock is optional (if someone could confirm
+> > >>> that, it would be useful). I don't care so much about the order, but
+> > >>> iahb and isfr are mandatory, and thus need to be specified as two const
+> > >>> items in the beginning as far as I understand. It would be nice to set
+> > >>> something along the lines of
+> > >>>
+> > >>>   minItems: 2
+> > >>>   maxItems: 5
+> > >>>   items:
+> > >>>     - const: iahb
+> > >>>     - const: isfr
+> > >>>     - enum:
+> > >>>       - cec
+> > >>>       - grf
+> > >>>       - vpll
+> > >>
+> > >> I guess you could do something like:
+> > >>
+> > >> in the generic schema:
+> > >>
+> > >> clock-names:
+> > >>   allOf:
+> > >>     - minItems: 2
+> > >>     - enum:
+> > >>        - iahb
+> > >>        - isfr
+> > >>        - cec
+> > >>       additonalItems: true
+> > >>     - items:
+> > >>       - iahb
+> > >>       - isfr
+> > >>
+> > >> Or something along those lines, I haven't tested it, but the basic
+> > >> idea is that you want to enforce that:
+> > >>   a) there's a minimum of two clocks
+> > >>   b) valid clock names are iahb, isfr and cec, but we will allow more
+> > >>   c) the first two clocks are iahb and isfr
+> > >
+> > > Interesting idea. I've tried
+> > >
+> > >   clock-names:
+> > >     allOf:
+> > >       - minItems: 2
+> > >       - enum:
+> > >         - iahb
+> > >         - isfr
+> > >         - cec
+> > >         additionalItems: true
+> >
+> > Instead of these 2, you want:
+> >
+> > items:
+> >   enum: [ iahb, isfr, cec ]
+> > minItems: 2
+> > maxItems: 3
+> >
+> > Though I assume there's some others missing as with this and below, the
+> > 3rd clock can only be 'cec'.
+>
+> But with this bindings that include this base schema and extend the
+> number of clocks will not validate :-( I'd like a way for the base
+> schema to provide an overridable check, but I don't think that's
+> possible. I then tried to specify a check that would be valid for
+> extensions too, and that would verify that
 
-If you think tested platform is worth mentioning in the commit msg
-(it will stay there forever, ever, ever) then just add a line like:
+But this is not the base schema?
 
-"Add SGX GPU node. Tested on Pyra-Handheld."
+> - There are at least two clocks and maybe more (that should be easy by
+>   setting minItems: 2 and leaving maxItems unspecified, but the
+>   dt-validate tool then adds a maxItems automatically :-()
 
-From time to time we add such information to note that only one platform
-was actually tested.  I am not sure what benefit it brings to most
-cases... but your commit msg is so short that adding one more sentence
-seems reasonable. :)
+That's to avoid boilerplate in the vast majority of cases.
 
-Best regards,
-Krzysztof
+Can't you just do 'maxItems: 1000' or some sane limit?
 
+>
+> - The first two clock names are 'iahb' and 'isfr', and additional clock
+>   names can be anything.
+
+So, in the base schema:
+
+items:
+  - const: iahb
+  - const: isfr
+minItems: 2
+maxItems: 10
+additionalItems: true
+
+In the device schema you can do something like:
+
+items:
+  - {}
+  - {}
+  - enum: [ a, b, c ]
+  - enum: [ a, b, c ]
+
+If there's no order of the last items. Or you can use the schema
+flavor (rather than list) of 'items' and list iahb and isfr again.
+
+> Maybe YAML schemas can't support this, and I need to specify all
+> constraints explicitly in derived bindings ? The base
+> bridge/synopsys,dw-hdmi.yaml file would then be dropped completely, with
+> its contents copied to derived bindings. Or maybe I should selectively
+> include rules from the base schema in rockchip,dw-hdmi.yaml ? That's not
+> very user-friendly though.
+
+You could get into using definitions and referencing those
+individually, but I wouldn't recommend it.
+
+My hope is in new bindings the difficulty in expressing all the schema
+variations will prevent some of this needless variation. The reality
+is for the same IP block, the clocks and other resources shouldn't
+vary so much. :)
+
+Rob
