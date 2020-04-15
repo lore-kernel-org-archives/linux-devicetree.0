@@ -2,232 +2,355 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2E6C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D95C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A82E2074F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 289AA2074F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:18:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qbZFV3Bl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aSavr5fc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896843AbgDOLQm (ORCPT
+        id S2408853AbgDOLJ4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:16:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36130 "EHLO
+        Wed, 15 Apr 2020 07:09:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2896749AbgDOLLA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 07:11:00 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B96DBC061A0F
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 04:10:25 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id m2so3018284otr.1
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 04:10:25 -0700 (PDT)
+        with ESMTP id S2408851AbgDOLJr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 07:09:47 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AAECC061A0E
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 03:59:36 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id r26so18489618wmh.0
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 03:59:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7VVkEWhFDrQp1FEX/xgl0zHsV0VTqPDsyKWDKAx8HhU=;
-        b=qbZFV3BlewRqWWzxURbMbQyWSKBolKHBMmxFyRO94vFBV6mxHqqIfEqv7TQ+iFMsv1
-         1nR6ZF1eviwKR/cFpxfubIZegHBYf5A9fKZpT/SD1eypiranG1RGxGa8bt/mztgvzH0O
-         lRdJSE8wksvgW1oflK34Dfw86IJu+n2MDsOLG0TmbOw2qYhXqvI5YLUl90jjXi2+BoGD
-         5Ut/KoR5fHbvxYX9jIBvCVED3OAVRGVpkDIiMqTnmGTVfvt3RHx9SzNS965hXOLgSJ6w
-         c0FdkNtJt+PbSfJK0R4rHF+gUW0tMZYaPGv8NNqx/nUOY1FtoYN0ozthEOySpYMU6rY9
-         K+6w==
+        h=message-id:from:to:cc:subject:date:in-reply-to:references
+         :in-reply-to;
+        bh=gyOymjuJpKySMZCoUKVOaXwQZFqz9S9M2EkURePP5JQ=;
+        b=aSavr5fcI+OXIFlvsLqoQHRmt7boXGXEmcyhWu3T0F/omWnvm4iDIcBBIohbmgnj5W
+         JvCt1uK3Qgu3BYPz6Oe9maleNLiKPYVM3LyoQj27hZGEnUktPHRshqd3ReGBuJBbNbTc
+         87Y5jNWK0EBZZLyDTy14UnxYUGD+b+1A2lPKjcFpnQrVSPPKyUVE8Wnw72JE/vx3D94U
+         jyz3lw/s0r/IJN9epLTv+ldfuM32xCbAaOOPRIlq91RwBHs2Mj/Q0cpk5DRB2gS44219
+         3i0XpwtgUrrU3ZrU3rXDP4sG9jeoFYcGRYmPW19rZBq1pV7W88XFq91BqrliFYLSRNZb
+         9dAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7VVkEWhFDrQp1FEX/xgl0zHsV0VTqPDsyKWDKAx8HhU=;
-        b=S1egJ2m2XpgbSfClK/vEXvxgSN6sw2vM1hqgaheDAp1+JPr/324ZKwFYu4hbzSBcN8
-         9tNLq7wzFp5dpFXqoHm9zER5waZ24uW1HgMPFAcZjeg8RgxoGa1gs14YM4c1P0PJqo+2
-         NebZrBFabAVApXBpms1fyuZPSdf6aM1p4EECuK9nvqvyE52pdk0FvBBjPxHReuBlAd42
-         399ilRu4WYIdCQhymY7SzsehBeVMvN9GtmjprSnVKjimz8mtJvlnDM8tPdWoE/czCWxg
-         hVR6+jx7xG5kNuZd0jxPLNjkf5yPP2q74fezGz7b60sFJhpXxojquZ/5nUh91SzbHprH
-         TVFg==
-X-Gm-Message-State: AGi0Pube+uNdhP5TSEzebfWp+w97hdEL1C9bVkLDzBKAv3M7kNItcFpk
-        BOybEjO4k5D9xK8pUGq7KNo00qlbdmVS+U06cFiTGQ==
-X-Google-Smtp-Source: APiQypKrS72Nlq041eBAW9UAVyqi65PxH6uWOvyYyKbEtQStukn4+Tv0Z3Kt2Jd1GG4lYlHXm0r71jFbO/ZLPXrEEI0=
-X-Received: by 2002:a05:6830:1e4e:: with SMTP id e14mr3795854otj.91.1586949024721;
- Wed, 15 Apr 2020 04:10:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200407123232.ktvaifhqntgzvkap@gilmour.lan> <CAG3jFysSrZJRE2TvL0bWoRFNnscgDGj8yGr-iwWBm4=1wMbJ9A@mail.gmail.com>
- <20200407163916.GL6127@valkosipuli.retiisi.org.uk> <CAAFQd5BGFB5znb9QyyPVL47kc809Ktu33bssvqg5eA-WwvMgOw@mail.gmail.com>
- <20200407172035.GM6127@valkosipuli.retiisi.org.uk> <20200408122127.i27hrmjh3pbjeulk@gilmour.lan>
- <CAAFQd5DNyQra-XksVaSfT_FCkOHTzm9mbn+tMd1vACV=pb9_8g@mail.gmail.com>
- <20200408134315.a7cemmto6bi26arg@gilmour.lan> <20200408152857.GO6127@valkosipuli.retiisi.org.uk>
- <20200408153051.GP6127@valkosipuli.retiisi.org.uk> <20200415101827.owf5babnigev2vit@gilmour.lan>
-In-Reply-To: <20200415101827.owf5babnigev2vit@gilmour.lan>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Wed, 15 Apr 2020 13:10:13 +0200
-Message-ID: <CAG3jFyuqjg5Hcj0ftANE5BzgfSpFKEgnq-AiuT1t=Y5k0AXtMg@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:message-id:from:to:cc:subject:date:in-reply-to
+         :references:in-reply-to;
+        bh=gyOymjuJpKySMZCoUKVOaXwQZFqz9S9M2EkURePP5JQ=;
+        b=DqVX4J8hJHGxp+8H3TZ2w2y8Qn38+QWPkUB0Ngdqm7ht224hr9YcXI90gaeOIByVkE
+         8Qif8IR5Ql0GV6Nj9dukxZ1g7y9MDy87N4J8fxr/GTRLDMozMRzb6REwdcWNZJyuDtfv
+         L4s+tl66SIMYgBQFyYD0c6HrzZJY1MFlUfpgZPcDS9hSAPA3jmSH0ZPbYq2Yzk3bgId6
+         srh59FJVGBXI1mPQyktmBdal/08q88gNVzPkNeMBWP0RxFbwlr73X2bWhirK7l5bLkK3
+         OLwnuTmxlojBfEGw0IjOKQIhFBBArv5Mkhwcb7HJzf71I4+iYzi2EFbG5jRFPuYzA9Ap
+         CVZw==
+X-Gm-Message-State: AGi0PuZL8SzawKAAWlHmKFcRn0BWQdTbM6+zdFhgJ96j1XIBAv3KGh6m
+        oOzMn8so6DwbXKbrvjJ5fysYTg==
+X-Google-Smtp-Source: APiQypJztDCWY3SxxxokhuvLaaPLo3CbRWDQ/iFxWNphnpUZe0SQ/R33vBiYdtlOrGu0yYj3ol714Q==
+X-Received: by 2002:a1c:7d90:: with SMTP id y138mr4956426wmc.121.1586948375471;
+        Wed, 15 Apr 2020 03:59:35 -0700 (PDT)
+Received: from lmecxl0524.home (2a01cb058702ff002dd4025d621b0504.ipv6.abo.wanadoo.fr. [2a01:cb05:8702:ff00:2dd4:25d:621b:504])
+        by smtp.gmail.com with ESMTPSA id c83sm20122796wmd.23.2020.04.15.03.59.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 03:59:34 -0700 (PDT)
+Message-ID: <5e96e916.1c69fb81.14365.050b@mx.google.com>
+X-Google-Original-Message-ID: <1583673879-20714-3-git-send-email-peng.fan@nxp.com> (raw)
+From:   Etienne Carriere <etienne.carriere@linaro.org>
+To:     peng.fan@nxp.com
+Cc:     devicetree@vger.kernel.org, f.fainelli@gmail.com,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        sudeep.holla@arm.com, viresh.kumar@linaro.org
+Subject: [PATCH V5 2/2] firmware: arm_scmi: add smc/hvc transport
+Date:   Wed, 15 Apr 2020 12:58:58 +0200
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <1583673879-20714-3-git-send-email-peng.fan@nxp.com>
+References: <1583673879-20714-3-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1583673879-20714-1-git-send-email-peng.fan@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 15 Apr 2020 at 12:18, Maxime Ripard <maxime@cerno.tech> wrote:
->
-> On Wed, Apr 08, 2020 at 06:30:51PM +0300, Sakari Ailus wrote:
-> > Cc'ing Laurent as well.
-> >
-> > On Wed, Apr 08, 2020 at 06:28:57PM +0300, Sakari Ailus wrote:
-> > > Hi Maxime,
-> > >
-> > > On Wed, Apr 08, 2020 at 03:43:15PM +0200, Maxime Ripard wrote:
-> > > > On Wed, Apr 08, 2020 at 02:35:28PM +0200, Tomasz Figa wrote:
-> > > > > On Wed, Apr 8, 2020 at 2:21 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> > > > > > On Tue, Apr 07, 2020 at 08:20:35PM +0300, Sakari Ailus wrote:
-> > > > > > > On Tue, Apr 07, 2020 at 06:46:06PM +0200, Tomasz Figa wrote:
-> > > > > > > > On Tue, Apr 7, 2020 at 6:40 PM Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> > > > > > > > >
-> > > > > > > > > On Tue, Apr 07, 2020 at 05:47:41PM +0200, Robert Foss wrote:
-> > > > > > > > > > On Tue, 7 Apr 2020 at 14:32, Maxime Ripard <maxime@cerno.tech> wrote:
-> > > > > > > > > > >
-> > > > > > > > > > > Hi Robert,
-> > > > > > > > > > >
-> > > > > > > > > > > On Tue, Apr 07, 2020 at 01:29:05PM +0200, Robert Foss wrote:
-> > > > > > > > > > > > On Tue, 7 Apr 2020 at 10:36, Maxime Ripard <maxime@cerno.tech> wrote:
-> > > > > > > > > > > > > On Mon, Apr 06, 2020 at 11:35:07AM +0300, Sakari Ailus wrote:
-> > > > > > > > > > > > > > > But that 19.2MHz is not a limitation of the device itself, it's a
-> > > > > > > > > > > > > > > limitation of our implementation, so we can instead implement
-> > > > > > > > > > > > > > > something equivalent in Linux using a clk_set_rate to 19.2MHz (to make
-> > > > > > > > > > > > > > > sure that our parent clock is configured at the right rate) and the
-> > > > > > > > > > > > > > > clk_get_rate and compare that to 19.2MHz (to make sure that it's not
-> > > > > > > > > > > > > > > been rounded too far apart from the frequency we expect).
-> > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > This is doing exactly the same thing, except that we don't encode our
-> > > > > > > > > > > > > > > implementation limitations in the DT, but in the driver instead.
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > What I really wanted to say that a driver that doesn't get the clock
-> > > > > > > > > > > > > > frequency from DT but still sets that frequency is broken.
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > This frequency is highly system specific, and in many cases only a certain
-> > > > > > > > > > > > > > frequency is usable, for a few reasons: On many SoCs, not all common
-> > > > > > > > > > > > > > frequencies can be used (e.g. 9,6 MHz, 19,2 MHz and 24 MHz; while others
-> > > > > > > > > > > > > > are being used as well), and then that frequency affects the usable CSI-2
-> > > > > > > > > > > > > > bus frequencies directly --- and of those, only safe, known-good ones
-> > > > > > > > > > > > > > should be used. IOW, getting the external clock frequency wrong typically
-> > > > > > > > > > > > > > has an effect that that none of the known-good CSI-2 bus clock frequencies
-> > > > > > > > > > > > > > are available.
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > So clock-frequency is not about the "Frequency of the xvclk clock in
-> > > > > > > > > > > > > Hertz", but the frequency at which that clock must run on this
-> > > > > > > > > > > > > particular SoC / board to be functional?
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > If so, then yeah, we should definitely keep it, but the documentation
-> > > > > > > > > > > > > of the binding should be made clearer as well.
-> > > > > > > > > > > >
-> > > > > > > > > > > > Alright so, let me summarise the desired approach then.
-> > > > > > > > > > >
-> > > > > > > > > > > There's a separate discussion on the same topic here:
-> > > > > > > > > > > https://lore.kernel.org/linux-media/20200407122106.GD4751@pendragon.ideasonboard.com/
-> > > > > > > > > >
-> > > > > > > > > > Thanks for the link.
-> > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > > > ACPI:
-> > > > > > > > > > > >   - Fetch the "clock-frequency" property
-> > > > > > > > > > > >   - Verify it to be 19.2Mhz
-> > > > > > > > > > > >
-> > > > > > > > > > > > DT:
-> > > > > > > > > > > >   - Fetch the "clock-frequency" property
-> > > > > > > > > > > >   - Verify it to be 19.2Mhz
-> > > > > > > > > > > >   - Get xvclk clock
-> > > > > > > > > > > >   - Get xvclk clock rate
-> > > > > > > > > > > >   - Verify xvclk clock rate to be 19.2Mhz
-> > > > > > > > > > >
-> > > > > > > > > > > The current status is that you should
-> > > > > > > > > > > 's/clock-frequency/link-frequencies/', and in order to replace
-> > > > > > > > > > > assigned-clock-rates, you'll want to have a clk_set_rate to 19.2MHz
-> > > > > > > > > > > between steps 3 and 4
-> > > > > > > > > >
-> > > > > > > > > > Would we want to 's/clock-frequency/link-frequencies/' for ACPI too?
-> > > > > > > > > > I imagine that would cause some breakage.
-> > > > > > > > >
-> > > > > > > > > It would, yes, and it would be no more correct on DT either.
-> > > > > > > > >
-> > > > > > > > > There are basically two possibilities here; either use the clock-frequency
-> > > > > > > > > property and set the frequency, or rely on assigned-clock-rates, and get
-> > > > > > > > > the frequency instead.
-> > > > > > > > >
-> > > > > > > > > The latter, while I understand it is generally preferred, comes with having
-> > > > > > > > > to figure out the register list set that closest matches the frequency
-> > > > > > > > > obtained. The former generally gets around this silently by the clock
-> > > > > > > > > driver setting the closest frequency it can support.
-> > > > > > > >
-> > > > > > > > Wouldn't the former actually cause problems, because the closest
-> > > > > > > > frequency the clock driver can support could be pretty far from the
-> > > > > > > > one requested? (E.g. 19.2 MHz vs 24 MHz) The driver needs to check the
-> > > > > > > > resulting frequency anyway.
-> > > > > > >
-> > > > > > > That's possible, yes; in this case there wouldn't be a guarantee the
-> > > > > > > frequency wouldn't be far off.
-> > > > > >
-> > > > > > assigned-clock-rates is really fragile... There's zero guarantee on
-> > > > > > how far the actual rate is going to be from the asked one, but more
-> > > > > > importantly you have zero guarantee on the time frame that rate is
-> > > > > > going to be enforced for.
-> > > > >
-> > > > > Is there such a guarantee if clk_set_rate() is called?
-> > > >
-> > > > with clk_set_rate itself, no, but...
-> > > >
-> > > > > > It's simply going to change the rate as a one-off thing, and if
-> > > > > > there's the next millisecond someone else is going to change its rate
-> > > > > > one way or another, it's going to do so and you won't have any
-> > > > > > notification.
-> > > >
-> > > > You can get notified, and you can use clk_set_rate_exclusive if you
-> > > > *really* want to enforce it.
-> > >
-> > > Is the conclusion then we should go back to relying on the clock-frequency
-> > > property?
->
-> clock-frequency or link-frequencies. link-frequencies seems to be a
-> better fit here, but we don't really have the choice for older
-> bindings.
+Hello Peng,
 
-Alright, so since this is a new binding, let's aim for link-frequencies then.
+I  have 2 comments on this change. The main is about using
+arm_smccc_1_1_invoke(). Below some details and I added comments
+inside you patch. The second of on SMC return value, see my
+comment in your patch below.
 
-I don't think I understand what they look like on the driver side.
-Do you know an example of what a link-frequencies based driver would look like?
 
+About arm_smccc_1_1_invoke(), this functon currently relies on PSCI
+driver to define a conduit method but SCMI agent driver does not
+mandate CONFIG_PSCI to be enable.
+
+Could you add an optional "method" property for "arm,scmi-smc" for platforms
+willing to not rely on PSCI Linux driver? If no property "method" is
+defined in the FDT, invocation relies on arm_smccc_1_1_invoke().
+
+"method" naming mimics what is done in the OP-TEE driver (drivers/tee/optee/).
+Here is a proposal for the documenting property "method" in 
+Documentation/arm,scmi.txt:
+
+- method : "smc" or "hvc"
+            Optional property defining the conduit method for to be used
+	    for invoking the SCMI server in secure world.
+	    "smc" states instruction SMC #0 is used whereas "hvc" states
+	    instruction HVC #0 is used.
+
+
+
+Regards,
+Etienne
+
+
+> From: Peng Fan <peng.fan@nxp.commm>
+> 
+> Take arm,smc-id as the 1st arg, leave the other args as zero for now.
+> There is no Rx, only Tx because of smc/hvc not support Rx.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 >
-> > > This has been discussed multiple times over the years, and I don't really
-> > > disagree with the above. The frequency is typically indeed hand-picked for
-> > > the hardware, and no other frequency should be used in any circumstances.
-> > >
-> > > No sensor driver I've seen has used clk_set_rate_exclusive() but I guess
-> > > they should. The absence of practical problems has been probably because of
-> > > two factors; firstly, these are typically clocks dedicated to the sensors
-> > > and secondly, good luck.
+> (...)
 >
-> My point was that at least with handling the clock rate within the
-> driver (as opposed to assigned-clock-rates) you have multiple options
-> in dealing with changing colck rates / parents (Modelling the sensor
-> clock as a clock itself, using clk_set_rate_exclusive, using a
-> notifier, etc).. Some are more intrusive to the rest of the system
-> than others (especially clk_set_rate_exclusive), so I'm not really
-> advocating for any here, but we should make sure we have them in the
-> first place.
->
-> Maxime
+> diff --git a/drivers/firmware/arm_scmi/smc.c b/drivers/firmware/arm_scmi/smc.c
+> new file mode 100644
+> index 000000000000..336168e40f49
+> --- /dev/null
+> +++ b/drivers/firmware/arm_scmi/smc.c
+> @@ -0,0 +1,152 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * System Control and Management Interface (SCMI) Message SMC/HVC
+> + * Transport driver
+> + *
+> + * Copyright 2020 NXP
+> + */
+> +
+> +#include <linux/arm-smccc.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/slab.h>
+> +
+> +#include "common.h"
+> +
+> +/**
+> + * struct scmi_smc - Structure representing a SCMI smc transport
+> + *
+> + * @cinfo: SCMI channel info
+> + * @shmem: Transmit/Receive shared memory area
+> + * @func_id: smc/hvc call function id
+> + */
+> +
+> +struct scmi_smc {
+> +	struct scmi_chan_info *cinfo;
+> +	struct scmi_shared_mem __iomem *shmem;
+> +	u32 func_id;
+> +};
+
+Add here a field for the secure world invocation function handler:
+
+	scmi_arm_smccc_invoke_fn *invoke_fn;
+
+With function proto type defined:
+
+  typedef void (scmi_arm_smccc_invoke_fn)(unsigned long, struct arm_smccc_res *);
+
+And materials to set the invocation hanlder:
+
+/* Simple wrapper functions to be able to use a function pointer */
+static void _smccc_smc(unsigned long func_id, struct arm_smccc_res *res)
+{
+	arm_smccc_smc(func_id, 0, 0, 0, 0, 0, 0, 0, res);
+}
+
+static void _smccc_hvc(unsigned long func_id, struct arm_smccc_res *res)
+{
+        arm_smccc_hvc(func_id, 0, 0, 0, 0, 0, 0, 0, res);
+}
+
+static void _smccc_1_1(unsigned long func_id, struct arm_smccc_res *res)
+{
+	arm_smccc_1_1_invoke(func_id, 0, 0, 0, 0, 0, 0, 0, res);
+}
+
+static scmi_arm_smccc_invoke_fn *get_invoke_function(struct device *dev)
+{
+        const char *method;
+
+        if (device_property_read_string(dev, "method", &method))
+		return _smccc_1_1;
+
+        if (!strcmp("hvc", method))
+                return _smccc_hvc;
+
+        if (!strcmp("smc", method))
+                return _smccc_smc;
+
+        dev_err(dev, "Invalid \"method\" property: %s\n", method);
+        return ERR_PTR(-EINVAL);
+}
+ 
+> +
+> +static DEFINE_MUTEX(smc_mutex);
+> +
+> +static bool smc_chan_available(struct device *dev, int idx)
+> +{
+> +	return true;
+> +}
+> +
+> +static int smc_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
+> +			  bool tx)
+> +{
+> +	struct device *cdev = cinfo->dev;
+> +	struct scmi_smc *scmi_info;
+> +	resource_size_t size;
+> +	struct resource res;
+> +	struct device_node *np;
+> +	u32 func_id;
+> +	int ret;
+> +
+> +	if (!tx)
+> +		return -ENODEV;
+> +
+> +	scmi_info = devm_kzalloc(dev, sizeof(*scmi_info), GFP_KERNEL);
+> +	if (!scmi_info)
+> +		return -ENOMEM;
+> +
+> +	np = of_parse_phandle(cdev->of_node, "shmem", 0> );
+> +	if (!np)
+> +		np = of_parse_phandle(dev->of_node, "shmem", 0);
+> +	ret = of_address_to_resource(np, 0, &res);
+> +	of_node_put(np);
+> +	if (ret) {
+> +		dev_err(cdev, "failed to get SCMI Tx shared memory\n");
+> +		return ret;
+> +	}
+> +
+> +	size = resource_size(&res);
+> +	scmi_info->shmem = devm_ioremap(dev, res.start, size);
+> +	if (!scmi_info->shmem) {
+> +		dev_err(dev, "failed to ioremap SCMI Tx shared memory\n");
+> +		return -EADDRNOTAVAIL;
+> +	}
+> +
+> +	ret = of_property_read_u32(dev->of_node, "arm,smc-id", &func_id);
+> +	if (ret < 0)
+> +		return ret;
+
+Here to get the handler for the invocation method:
+
+	scmi_info->invoke_fn = get_invoke_function(dev);
+	if (IS_ERR(scmi_info->invoke_fn))
+		return PTR_ERR(scmi_info->invoke_fn);
+ 
+> +
+> +	scmi_info->func_id = func_id;
+> +	scmi_info->cinfo = cinfo;
+> +	cinfo->transport_info = scmi_info;
+> +
+> +	return 0;
+> +}
+> +
+> +static int smc_chan_free(int id, void *p, void *data)
+> +{
+> +	struct scmi_chan_info *cinfo = p;
+> +	struct scmi_smc *scmi_info = cinfo->transport_info;
+> +
+> +	cinfo->transport_info = NULL;
+> +	scmi_info->cinfo = NULL;
+> +
+> +	scmi_free_channel(cinfo, data, id);
+> +
+> +	return 0;
+> +}
+> +
+> +static int smc_send_message(struct scmi_chan_info *cinfo,
+> +			    struct scmi_xfer *xfer)
+> +{
+> +	struct scmi_smc *scmi_info = cinfo->transport_info;
+> +	struct arm_smccc_res res;
+> +
+> +	mutex_lock(&smc_mutex);
+> +
+> +	shmem_tx_prepare(scmi_info->shmem, xfer);
+> +
+> +	arm_smccc_1_1_invoke(scmi_info->func_id, 0, 0, 0, 0, 0, 0, 0, &res);
+
+Last, here would rahter call the registered handler instead:
+
+	scmi_info->invoke_fn(scmi_info->func_id, &res);
+
+
+> +	scmi_rx_callback(scmi_info->cinfo, shmem_read_header(scmi_info->shmem));
+> +
+> +	mutex_unlock(&smc_mutex);
+> +
+> +	return res.a0;
+
+
+The SCMI server is likely not to return a errno compliant value.
+
+SMCCC specification states that unsupported function IDs should return signed
+extended -1. I suggest to change the return above with:
+
+	return res.a0 == ~0 ? -EINVAL : 0;
+
+
+Regards,
+Etienne
+
+> +}
+> +
+> +static void smc_mark_txdone(struct scmi_chan_info *cinfo, int ret)
+> +{
+> +}
+> +
+> +static void smc_fetch_response(struct scmi_chan_info *cinfo,
+> +			       struct scmi_xfer *xfer)
+> +{
+> +	struct scmi_smc *scmi_info = cinfo->transport_info;
+> +
+> +	shmem_fetch_response(scmi_info->shmem, xfer);
+> +}
+> +
+> +static bool
+> +smc_poll_done(struct scmi_chan_info *cinfo, struct scmi_xfer *xfer)
+> +{
+> +	struct scmi_smc *scmi_info = cinfo->transport_info;
+> +
+> +	return shmem_poll_done(scmi_info->shmem, xfer);
+> +}
+> +
+> +static struct scmi_transport_ops scmi_smc_ops = {
+> +	.chan_available = smc_chan_available,
+> +	.chan_setup = smc_chan_setup,
+> +	.chan_free = smc_chan_free,
+> +	.send_message = smc_send_message,
+> +	.mark_txdone = smc_mark_txdone,
+> +	.fetch_response = smc_fetch_response,
+> +	.poll_done = smc_poll_done,
+> +};
+> +
+> +const struct scmi_desc scmi_smc_desc = {
+> +	.ops = &scmi_smc_ops,
+> +	.max_rx_timeout_ms = 30,
+> +	.max_msg = 1,
+> +	.max_msg_size = 128,
+> +};
+> -- 
+> 2.16.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
