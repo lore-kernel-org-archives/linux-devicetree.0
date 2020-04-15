@@ -2,200 +2,103 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 456FAC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C470BC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19C9820737
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:59:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uhm/3Ie0"
+	by mail.kernel.org (Postfix) with ESMTP id 99BB0206A2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636378AbgDON7M (ORCPT
+        id S2633879AbgDOOAn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:59:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2633783AbgDON7E (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:59:04 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16255C061A0C
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 06:59:04 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id u13so18812232wrp.3
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 06:59:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EBkkrpN1JldiWzSdxdAKYWJCIXmqL3+YV8OzsPNmat0=;
-        b=uhm/3Ie067i5hmZbiX2s7iEa4gWmMkn8zbCB4zZaAW2ORNX91MNCZ1jjcIP2/VorVP
-         0BWzv5pngsWGFBCw4zaa6/QCszdSQZGd3p+/AnYWU6bqiJY3RbF2suB+Zb8cejKklafp
-         8eyfo1ph5zmV+bu0Jbls5JAQZhsmFXvyZvh9+V5ftlg+tmYah8xsHbYaBSAoiCOLpxJY
-         q+MNSbvB0FOwAW98wNf4CSSU9Ke2DINk2cT382hefJv/wgdBUdDR2FJ1sVh7oa9dhY/r
-         9UATB1+AKF/8/EpWd4/LTrDOGuzpUj2QFx29lwSJU5NQTCnhlAs0w0aEs09AmRlicHrB
-         iIjQ==
+        Wed, 15 Apr 2020 10:00:43 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44279 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2633864AbgDOOAl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 10:00:41 -0400
+Received: by mail-oi1-f196.google.com with SMTP id o25so13482623oic.11;
+        Wed, 15 Apr 2020 07:00:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EBkkrpN1JldiWzSdxdAKYWJCIXmqL3+YV8OzsPNmat0=;
-        b=J24H5Z8gt9Bl8JXwMYcM10hqzsP7erGHZ8aR3b9XGShb/8rL7swmLKNGcQf4vQ9VNe
-         krxZCm/iydp07YLw2QowNowc6QtZYRE5M8zol9crmTeko48Kn4Ra/LiO3gJlsJg/oClj
-         a3uAGS2KO/DuheS9IGF/kISWwl73HErFynR0UbiWsI/Y5E+g5FfIh5BY8gPDEI/+g25X
-         7I1NFl58kJyekqGLqn1BLibClFj7jJF3x9Bs44ScBaPXvhm3Swkuj4d7xwD99IF8NMyD
-         rNXzbgdL3O+/nHZtBz7wuCDSYaHTw2cdY3T0fGDNxO+lSa/K9rmMrrS2G7bNZ2pyzYNO
-         i2Cw==
-X-Gm-Message-State: AGi0PuYeBRQx3uH5K3opzfKXPFqDGcCDnXS4rnUQjx2LLzk2Z89KmZHm
-        lyqzs4Ep4Xjgr02yac0/O1V3zg==
-X-Google-Smtp-Source: APiQypJ0Sml9Mx5kPP3Urh14rrw/Ewpj/dAuPK1uPUm+XmXE7vf4+a6LRdBe8N24mjTc8FePKZI03w==
-X-Received: by 2002:a5d:4d8f:: with SMTP id b15mr8157211wru.107.1586959142726;
-        Wed, 15 Apr 2020 06:59:02 -0700 (PDT)
-Received: from [192.168.0.136] ([87.120.218.65])
-        by smtp.googlemail.com with ESMTPSA id n6sm22158491wmc.28.2020.04.15.06.59.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Apr 2020 06:59:01 -0700 (PDT)
-Subject: Re: [v2 1/3] drm/msm/dpu: add support for clk and bw scaling for
- display
-To:     Krishna Manikandan <mkrishn@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-References: <1585810370-6099-1-git-send-email-mkrishn@codeaurora.org>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <80ce1cfd-59ac-6565-bcbd-a6816592e586@linaro.org>
-Date:   Wed, 15 Apr 2020 16:59:00 +0300
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=LLkurERwPqup0U06ZSkreXeLskweCKS6mJwG3ZnhpC8=;
+        b=kKi5hIYdYZENld8RAV2ADFMjK8I6cwqpHkMjZKROfjQG6gAF2989Sg2MWU+CxiscDh
+         TOVaUhBzw1ZxCLv792smLy4vL6/m51i9qnhCVpqluRv9ZmkZxxuaMqRbLR8NuqFTuqWq
+         lJx5MWcqfZ49wh53vU70q6jJBxlbkmSVVHtz8jWqKcnuFdKUHYYS9oB2+q8OzY914fiY
+         jcvgZOI/h9SFfLFVCnUKBGc0cieIV0jsZWF10vzl442oG6RyEjH/ykMMo1WXLO9TGSme
+         4g/29d4bDFQAzTxKan2Rzq3ghrPl7G6YiwJZtDYUaUtXDN5LYJl3gKsIdw+ygv7hxwAp
+         tmrA==
+X-Gm-Message-State: AGi0PuYw3uabWvEL0URRe3bA8c4n5kUl9wO3YYXG1GauFUjwI6lGNa/C
+        hZ+DokMTv7TtESc1A31m/f3ycWjfZJwQXESrhK77TEiv
+X-Google-Smtp-Source: APiQypJZSNfOtMzStekV30aR4PWnFiXUrZgHZKLGs0Qhj3g/g5DRmWjolGUwdRYrVoNcGSRspNdndWqwnqTPJk6OYZY=
+X-Received: by 2002:a05:6808:8cf:: with SMTP id k15mr8390047oij.54.1586959239624;
+ Wed, 15 Apr 2020 07:00:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1585810370-6099-1-git-send-email-mkrishn@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200411092719.1170489-1-niklas.soderlund+renesas@ragnatech.se>
+In-Reply-To: <20200411092719.1170489-1-niklas.soderlund+renesas@ragnatech.se>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 15 Apr 2020 16:00:28 +0200
+Message-ID: <CAMuHMdU5E3kLrn=dGCfpUD8+CS8NvcnD2PjnJERvKbytf8ggow@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: thermal: rcar-gen3-thermal: Convert
+ bindings to json-schema
+To:     =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Krishna,
+Hi Niklas,
 
-Thanks for the patch!
-
-On 4/2/20 09:52, Krishna Manikandan wrote:
-> This change adds support to scale src clk and bandwidth as
-> per composition requirements.
-> 
-> Interconnect registration for bw has been moved to mdp
-> device node from mdss to facilitate the scaling.
-
-No Signed-off-by ?
-
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c  | 106 +++++++++++++++++++++----
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c |   5 +-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h |   4 +
->  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c        |  37 ++++++++-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h        |   4 +
->  drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c       |   9 ++-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c      |  82 +++++++++++++++++++
->  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h      |   4 +
->  8 files changed, 228 insertions(+), 23 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-
-[..]
-> @@ -186,10 +247,21 @@ static int _dpu_core_perf_crtc_update_bus(struct dpu_kms *kms,
->  			perf.max_per_pipe_ib = max(perf.max_per_pipe_ib,
->  					dpu_cstate->new_perf.max_per_pipe_ib);
->  
-> -			DPU_DEBUG("crtc=%d bw=%llu\n", tmp_crtc->base.id,
-> -					dpu_cstate->new_perf.bw_ctl);
-> +			perf.bw_ctl += dpu_cstate->new_perf.bw_ctl;
-> +
-> +			DPU_DEBUG("crtc=%d bw=%llu paths:%d\n",
-> +				  tmp_crtc->base.id,
-> +				  dpu_cstate->new_perf.bw_ctl, kms->num_paths);
->  		}
->  	}
-> +
-> +	avg_bw = kms->num_paths ?
-> +			perf.bw_ctl / kms->num_paths : 0;
-> +
-> +	for (i = 0; i < kms->num_paths; i++)
-> +		icc_set_bw(kms->path[i],
-> +			Bps_to_icc(avg_bw), (perf.max_per_pipe_ib));
-
-In what units is max_per_pipe_ib? Can you use Bps_to_icc() or KBps_to_icc()?
-
-> +
->  	return ret;
->  }
+On Sat, Apr 11, 2020 at 11:27 AM Niklas Söderlund
+<niklas.soderlund+renesas@ragnatech.se> wrote:
+> Convert Renesas R-Car Gen3 Thermal bindings documentation to
+> json-schema.
 >
+> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-[..]
+Thanks for your patch!
 
-> @@ -1037,8 +1065,15 @@ static int __maybe_unused dpu_runtime_resume(struct device *dev)
->  	struct drm_encoder *encoder;
->  	struct drm_device *ddev;
->  	struct dss_module_power *mp = &dpu_kms->mp;
-> +	int i;
->  
->  	ddev = dpu_kms->dev;
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.yaml
+
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/power/r8a7795-sysc.h>
 > +
-> +	/* Min vote of BW is required before turning on AXI clk */
-> +	for (i = 0; i < dpu_kms->num_paths; i++)
-> +		icc_set_bw(dpu_kms->path[i], 0,
-> +			dpu_kms->catalog->perf.min_dram_ib);
+> +    tsc: thermal@e6198000 {
+> +            compatible = "renesas,r8a7795-thermal";
+> +            reg = <0 0xe6198000 0 0x100>,
+> +                  <0 0xe61a0000 0 0x100>,
+> +                  <0 0xe61a8000 0 0x100>;
 
-Bps_to_icc() ?
+Examples are build with #{address,size}-cells = <1>, hence please use
 
-Thanks,
-Georgi
+    reg = <0xe6198000 0x100>, ...
+
+With the above fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
