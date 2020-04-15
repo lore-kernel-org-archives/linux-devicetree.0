@@ -2,163 +2,113 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F76C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 07:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BD4C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 07:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA8D20784
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 07:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD9020771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 07:11:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b="QURp4N+8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404023AbgDOHAt (ORCPT
+        id S2404622AbgDOHLG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 03:00:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403948AbgDOHAq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 03:00:46 -0400
-X-Greylist: delayed 436 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 15 Apr 2020 00:00:46 PDT
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3ED2C061A0C
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 00:00:46 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        Wed, 15 Apr 2020 03:11:06 -0400
+Received: from gproxy1-pub.mail.unifiedlayer.com ([69.89.25.95]:56105 "EHLO
+        gproxy1-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404013AbgDOHLE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 03:11:04 -0400
+X-Greylist: delayed 889 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 Apr 2020 03:11:04 EDT
+Received: from CMGW (unknown [10.9.0.13])
+        by gproxy1.mail.unifiedlayer.com (Postfix) with ESMTP id 3D6A14DA36B17
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 00:56:11 -0600 (MDT)
+Received: from md-in-79.webhostbox.net ([43.225.55.182])
+        by cmsmtp with ESMTP
+        id Obxwj6lK6toKZObxyjkeJR; Wed, 15 Apr 2020 00:56:11 -0600
+X-Authority-Reason: nr=8
+X-Authority-Analysis: v=2.2 cv=AaTBJzfG c=1 sm=1 tr=0
+ a=LfuyaZh/8e9VOkaVZk0aRw==:117 a=LfuyaZh/8e9VOkaVZk0aRw==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=cl8xLZFz6L8A:10
+ a=oz0wMknONp8A:10 a=iGRvdBzYb-_JTU_o6kgA:9 a=QEXdDO2ut3YA:10
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=linumiz.com
+        ; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-Id
+        :Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=ALV3zzlDkukeDYnEo1NPcnPQetl1UF6t3xq2o+loRlk=; b=QURp4N+8jazK9kQG9PESkXsDQA
+        b2enx04j9CT+C1fHKkwwUt4o9HLxj2BflmXiY83vnfk0vgcS0uAaKcLN1a26MNrfHR4NETXARaqi2
+        ih84tBHgLD2lwD4W6EaQOz10dv8CfN/t3qfsJmpmUXQ37xk01FyuaAn1jsc4QjpCFnDz0c9Yfwdtu
+        vMxFGZbpTYYCFBTJk6WAi9nfManbgxeLpUlq9sMxrvH5yx9Yt8ja5O5TyMy+tVAKwLRKchxjNK9BX
+        MNhdSdHjJUVK9qnhhxieVrtI0rsiTxyFbvjv5NZeLnqzrIDhnY0B01gvrie+VOavCxHHBow8M/WEE
+        EZykbnvA==;
+Received: from p5b3f6ccc.dip0.t-ipconnect.de ([91.63.108.204]:49262 helo=localhost.localdomain)
+        by md-in-79.webhostbox.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jOc27-0006DZ-RA; Wed, 15 Apr 2020 09:00:27 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jOc25-0007Ko-JT; Wed, 15 Apr 2020 09:00:25 +0200
-Date:   Wed, 15 Apr 2020 09:00:25 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Alexandru Tachici <alexandru.tachici@analog.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] iio: DAC extension for ltc2634-12/10/8
-Message-ID: <20200415070025.6isvybjzpfhh3ts3@pengutronix.de>
-References: <20200414235609.20125-1-chris.ruehl@gtsys.com.hk>
- <20200414235609.20125-3-chris.ruehl@gtsys.com.hk>
+        (envelope-from <saravanan@linumiz.com>)
+        id 1jObxv-0000eI-91; Wed, 15 Apr 2020 06:56:07 +0000
+From:   Saravanan Sekar <saravanan@linumiz.com>
+To:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, broonie@kernel.org,
+        lgirdwood@gmail.com, saravanan@linumiz.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Subject: [PATCH 0/4] Add driver for wsen-itds accelerometer sensor
+Date:   Wed, 15 Apr 2020 08:55:31 +0200
+Message-Id: <20200415065535.7753-1-saravanan@linumiz.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200414235609.20125-3-chris.ruehl@gtsys.com.hk>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - md-in-79.webhostbox.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - linumiz.com
+X-BWhitelist: no
+X-Source-IP: 91.63.108.204
+X-Source-L: No
+X-Exim-ID: 1jObxv-0000eI-91
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: p5b3f6ccc.dip0.t-ipconnect.de (localhost.localdomain) [91.63.108.204]:49262
+X-Source-Auth: saravanan@linumiz.com
+X-Email-Count: 3
+X-Source-Cap: bGludW1jbWM7aG9zdGdhdG9yO21kLWluLTc5LndlYmhvc3Rib3gubmV0
+X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 07:56:03AM +0800, Chris Ruehl wrote:
-> This patch add support for Analog Devices (Linear Technology)
-> LTC2634 Quad 12-/10-/8-Bit Rail-to-Rail DAC.
-> The SPI functionality based on them from LTC2632 therefor
-> add the definitions only and update the Kconfig.
-> 
-> V2:
-> Send the documentation fix in a extra patch
-> Kconfig simplify the driver description, details to the help text
-> ltc2632.txt add to this patch-set (prepare to convert to yaml)
-> 
-> V3:
-> Consistens decimal separator in help text
+The patch series add support for wurth elektronic wsen-itds 3-axis
+accelerometer. Driver supports the acceleration, temperature data reading and
+supports configuring of output data rate, operating mode and scale.
 
-The description about how the patch evolves usually goes below the ---
-and S-o-b area. This way it doesn't make it into the commit history.
-> 
-> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
-> ---
->  .../devicetree/bindings/iio/dac/ltc2632.txt   |  8 ++-
->  drivers/iio/dac/Kconfig                       |  6 +-
->  drivers/iio/dac/ltc2632.c                     | 60 +++++++++++++++++++
->  3 files changed, 70 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-> index 338c3220f01a..1ab9570cf219 100644
-> --- a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-> +++ b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-> @@ -1,4 +1,4 @@
-> -Linear Technology LTC2632/2636 DAC
-> +Linear Technology LTC2632/2634/2636 DAC
->  
->  Required properties:
->   - compatible: Has to contain one of the following:
-> @@ -8,6 +8,12 @@ Required properties:
->  	lltc,ltc2632-h12
->  	lltc,ltc2632-h10
->  	lltc,ltc2632-h8
-> +	lltc,ltc2634-l12
-> +	lltc,ltc2634-l10
-> +	lltc,ltc2634-l8
-> +	lltc,ltc2634-h12
-> +	lltc,ltc2634-h10
-> +	lltc,ltc2634-h8
->  	lltc,ltc2636-l12
->  	lltc,ltc2636-l10
->  	lltc,ltc2636-l8
-> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
-> index 93744011b63f..aee13ced6ddf 100644
-> --- a/drivers/iio/dac/Kconfig
-> +++ b/drivers/iio/dac/Kconfig
-> @@ -279,12 +279,12 @@ config LTC1660
->  	  module will be called ltc1660.
->  
->  config LTC2632
-> -	tristate "Linear Technology LTC2632-12/10/8 and LTC2636-12/10/8 DAC spi driver"
-> +	tristate "Linear Technology LTC2632-12/10/8 and similar DAC spi driver"
->  	depends on SPI
->  	help
->  	  Say yes here to build support for Linear Technology
-> -	  LTC2632-12, LTC2632-10, LTC2632-8, LTC2636-12, LTC2636-10 and
-> -	  LTC2636-8 converters (DAC).
-> +	  LTC2632, LTC2634 and LTC2636 DAC resolution 12/10/8 bit
-> +	  low 0-2.5V and high 0-4.096V range converters.
->  
+Thanks,
+Saravanan
 
-The naming pattern seems to be:
+Saravanan Sekar (4):
+  dt-bindings: Add an entry for WÃ¼rth Elektronik, we
+  dt-bindings: iio: add document bindings for wsen-itds accel sensor
+  iio: accel: Add driver for wsen-itds accelerometer sensor
+  MAINTAINERS: Add entry for wsen-itds accelerometer sensor
 
-	LTC263ab-cc
-
-with:
-
-	a = 2 -> 2 channels
-	a = 4 -> 4 channels
-	a = 6 -> 8 channels
-
-	b = L -> Vref = 2.5V
-	b = H -> Vref = 4.096V
-
-	cc = 8 -> 8 bit precision
-	cc = 10 -> 10 bit precision
-	cc = 12 -> 12 bit precision
-
-Would it make sense to document this somewhere?
-
-But as this is (somewhat) orthogonal to this patch:
-
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-
-Best regards
-Uwe
+ .../bindings/iio/accel/we,wsen-itds.yaml      |  53 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   6 +
+ drivers/iio/accel/Kconfig                     |  14 +
+ drivers/iio/accel/Makefile                    |   1 +
+ drivers/iio/accel/wsen-itds.c                 | 978 ++++++++++++++++++
+ 6 files changed, 1054 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/accel/we,wsen-itds.yaml
+ create mode 100644 drivers/iio/accel/wsen-itds.c
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.17.1
+
