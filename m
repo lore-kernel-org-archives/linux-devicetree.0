@@ -2,111 +2,116 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B422AC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 19:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF0AC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 19:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA4F20768
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 19:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1766720768
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 19:53:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EPWOSpRu"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GoFcaSGn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437232AbgDOTvq (ORCPT
+        id S2441893AbgDOTxG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:51:46 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10177 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406367AbgDOTvk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 15:51:40 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e97655b0000>; Wed, 15 Apr 2020 12:49:47 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 15 Apr 2020 12:51:37 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 15 Apr 2020 12:51:37 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
- 2020 19:51:36 +0000
-Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
- 2020 19:51:35 +0000
-Subject: Re: [RFC PATCH v7 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <frankc@nvidia.com>, <hverkuil@xs4all.nl>, <sakari.ailus@iki.fi>,
-        <helen.koike@collabora.com>, <sboyd@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1586919463-30542-1-git-send-email-skomatineni@nvidia.com>
- <1586919463-30542-7-git-send-email-skomatineni@nvidia.com>
- <4118112f-f865-5460-6319-d71271fd78d1@gmail.com>
- <a69a8b34-beea-3ad0-e08e-f7df8b9e7047@nvidia.com>
- <6afa951e-d904-f3c0-053f-82a02fb18979@nvidia.com>
- <b1c78827-13ea-0c94-a575-97b5afc0ede1@nvidia.com>
- <5954a7e1-910e-7f48-56d3-e671b56ead74@nvidia.com>
- <d6a9e07c-474a-a076-8313-32f5f4ca8d64@nvidia.com>
- <786949a9-8507-7723-f29b-b91a216bfd28@nvidia.com>
- <f831408b-bbf4-3047-20e3-5bebfa9fc1ad@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <2ad9352f-cb65-1643-e540-a21f9c570266@nvidia.com>
-Date:   Wed, 15 Apr 2020 12:51:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 15 Apr 2020 15:53:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2406367AbgDOTxF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 15:53:05 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB4A6C061A0C
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 12:53:04 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id d24so419601pll.8
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 12:53:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=wqYFqvgnJLp6jfCb/pT1ltjRniXVG7wFzSm2iZUIg6w=;
+        b=GoFcaSGnLowNKUY4YRjMhjiMRBGA/jdKAlUVUZTQPxoBsFvIFSTTlnUehLhjTt6XW/
+         pkYTbEE6cy80TR2qnidJEqejtnyMCFJlEJd5Ry68Rf8bPBDYeQI2nD1yeqTmG3b971Pj
+         BWwmiYOx0iPDY1vbwU8QfuFYq/OFuzuNQYDwU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=wqYFqvgnJLp6jfCb/pT1ltjRniXVG7wFzSm2iZUIg6w=;
+        b=dsxCb2Nkg0x04om5KmctQQ5wIZz/7UHa4DjOBgHKKDz0zP9bwhv4lXevqyslZKc8kB
+         2cMD3AleD1hbmn5IxY7ox8jwx0XdFmsNQM88bf5dcBDYbvltw0kEXMwTUL1VlRZcoWtx
+         sg+UtCaaQHbCvxiO9KvD/0dOs8pVVL33fcdSel+V62nKgb7WNg7UMFyNMYIXhwVQsxij
+         6pl+hF9an3NwD670QZyS8qPEhRRWam1mtPao3eK0qiPUHltOg/tAYQC0DKwpcqlRO73t
+         yMxHyeyhC9wzQe2CnoDY2IkG5JPi/JCqFIr+nbNBeGWmVsy7Ix8WyanV9vvLOkDqT/XF
+         Adhg==
+X-Gm-Message-State: AGi0PuY8SPT9GKv/2WIkvqQc16AsqU0q2YkafTg+bARhVtHq6coWkgfv
+        CS8qugEhoOgCjNLo4bT2yYtEtw==
+X-Google-Smtp-Source: APiQypKW2QCwYlYY+1tV4ZUdnxB7+EL5+2eKfXLs2OXbzTVeg9HjP9FGOirAs7OCA3jRywMzN3Tt7g==
+X-Received: by 2002:a17:90a:17ce:: with SMTP id q72mr892159pja.139.1586980384222;
+        Wed, 15 Apr 2020 12:53:04 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id x76sm14312883pfc.190.2020.04.15.12.53.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 12:53:03 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <f831408b-bbf4-3047-20e3-5bebfa9fc1ad@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586980187; bh=YmoGzPhSYhYGSWM5wgpNyYVYjJV4XWVyBHmrFTZns4A=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=EPWOSpRu7TsrjEd/ScsdhZxozGsUk37bS5oPWzI1MM/YA6irJ9u7NeG9BF7JQTPBx
-         ZCpQXx/Fu/DvwCEu68r8L6meReI4ZmKxao2VBmu2ndU2q+oCbvg43Tl6WLq0bmTN9n
-         WeG6Q3BVdAf/nkpqrKpW/ltQG2XMnpeUDkkn9c0tHPKFeFXXnFogTElu4eaD42zMKH
-         zC8gaARqM7sEu5ojCgV49LZ/TntagOM6QBJwnCWTUMxzyEXc8Ngku8EfnvkVV8bMLF
-         evNNeubKyN+hTRC6RQAAGihjeYch5ara8kXQbMVxqhtFAvmlT/WTvYiZE4lkhzRCVd
-         f+K6faAr3Ca0w==
+In-Reply-To: <20200415084758.2.Ic98f6622c60a1aa547ed85781f2c3b9d3e56b734@changeid>
+References: <20200415084758.1.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid> <20200415084758.2.Ic98f6622c60a1aa547ed85781f2c3b9d3e56b734@changeid>
+Subject: Re: [PATCH 2/3] dt-bindings: drm/bridge: ti-sn65dsi86: Add hpd-gpios to the bindings
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     jonas@kwiboo.se, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, jeffrey.l.hugo@gmail.com,
+        jernej.skrabec@siol.net, linux-arm-msm@vger.kernel.org,
+        robdclark@chromium.org, dri-devel@lists.freedesktop.org,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org
+To:     Douglas Anderson <dianders@chromium.org>,
+        Laurent.pinchart@ideasonboard.com, a.hajda@samsung.com,
+        airlied@linux.ie, daniel@ffwll.ch, narmstrong@baylibre.com,
+        robh+dt@kernel.org, spanda@codeaurora.org
+Date:   Wed, 15 Apr 2020 12:53:02 -0700
+Message-ID: <158698038289.105027.2860892334897893887@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Quoting Douglas Anderson (2020-04-15 08:48:40)
+> Allow people to specify to use a GPIO for hot-plug-detect.  Add an
+> example.
+>=20
+> NOTE: The current patch adding support for hpd-gpios to the Linux
+> driver for hpd-gpios only adds enough support to the driver so that
+> the bridge can use one of its own GPIOs.  The bindings, however, are
+> written generically.
+>=20
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>=20
+>  .../bindings/display/bridge/ti,sn65dsi86.yaml          | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi8=
+6.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> index 8cacc6db33a9..554bfd003000 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> +++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> @@ -60,6 +60,10 @@ properties:
+>      const: 1
+>      description: See ../../pwm/pwm.yaml for description of the cell form=
+ats.
+> =20
+> +  hpd-gpios:
+> +    maxItems: 1
+> +    description: If present use the given GPIO for hot-plug-detect.
 
-On 4/15/20 12:21 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 15.04.2020 21:53, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> ...
->>>>>>>> Have you tried to test this driver under KASAN? I suspect that
->>>>>>>> you just
->>>>>>>> masked the problem, instead of fixing it.
->> Tested with kmemleak scan and did not see any memory leaks
-> You should get use-after-free and not memleak.
-I don't see use-after-free bugs during the testing.
-
-But as mentioned when direct vi/csi client driver unbind happens while=20
-video device node is kept opened, vi driver remove will free vi=20
-structure memory but actual video device memory which is part of=20
-channels remains but list head gets lost when vi structure is freed.
-
-So, when device node is released and executes release callback as list=20
-head is lost it can't free allocated channels which is not good.
-
-This happens only with direct host1x client vi/csi driver unbind.
-
-Need to find better place to free host1x client driver data structure to=20
-allow direct client driver unbind->bind.
-
+Shouldn't this go in the panel node? And the panel driver should get the
+gpio and poll it after powering up the panel? Presumably that's why we
+have the no-hpd property in the simple panel binding vs. putting it here
+in the bridge.
