@@ -2,98 +2,137 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4E6C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 20:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F41C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 20:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2801320787
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 20:33:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="GQiAUrd7"
+	by mail.kernel.org (Postfix) with ESMTP id 8B58F2078A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 20:36:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586982971;
+	bh=V2P/p0WdlVmm6s1T99zNgD7LVt8conGYoIAN3hef6OU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=B5cxaVMz9saQn/boUfxinvWyETGSt6E8bcoF693dMTTTaoGbsrbtXwxnhAam7et6/
+	 PDskjC5C0g2Sld/opska2BGTFVkGupu+kr0lWqUxvpsLwJ1/RoZ/WhO1oEfprHW2jc
+	 6hP63VnJV4ixXriyGP70vMK6hZs41ZZUktZ7+YgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S371268AbgDOUdN (ORCPT
+        id S2442079AbgDOUgJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 16:33:13 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:38086 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S371264AbgDOUdM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 16:33:12 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4BCC8DD3;
-        Wed, 15 Apr 2020 22:33:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1586982789;
-        bh=ZWrQLQiITcnJHS7w+LOALjXfWMs5iz+rT8aFRxucxtw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GQiAUrd7WJjvq8jNIeeljZaHhBNFa/QhJS4yGJW5WND2eu3EUuqC3ud3FcqdxopQf
-         XSO0UCi7+yJP0gda51b3GJ5gC4HhTREnnvjaC0aBVqfHLALAzWwxAUjKVIJuL19Bua
-         VngkH6/jze8rIhCrN/ha0VSue9EADOCMji40G+to=
-Date:   Wed, 15 Apr 2020 23:32:56 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Douglas Anderson <dianders@chromium.org>, a.hajda@samsung.com,
-        airlied@linux.ie, daniel@ffwll.ch, narmstrong@baylibre.com,
-        robh+dt@kernel.org, spanda@codeaurora.org, jonas@kwiboo.se,
-        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
-        jeffrey.l.hugo@gmail.com, jernej.skrabec@siol.net,
-        linux-arm-msm@vger.kernel.org, robdclark@chromium.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: drm/bridge: ti-sn65dsi86: Add hpd-gpios
- to the bindings
-Message-ID: <20200415203256.GP4758@pendragon.ideasonboard.com>
-References: <20200415084758.1.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
- <20200415084758.2.Ic98f6622c60a1aa547ed85781f2c3b9d3e56b734@changeid>
- <158698038289.105027.2860892334897893887@swboyd.mtv.corp.google.com>
+        Wed, 15 Apr 2020 16:36:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54594 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2442076AbgDOUgB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 16:36:01 -0400
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55D9E206E9;
+        Wed, 15 Apr 2020 20:35:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586982959;
+        bh=V2P/p0WdlVmm6s1T99zNgD7LVt8conGYoIAN3hef6OU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JX5bJsh7HfaWQESZbbi6MVq7mW90DmIKBBFqeqbmwH+e0OqOboWC4eRQmjh75EJeC
+         qL5kfxEzLkqNZWb6NhJGvSpBPfIafaS1LK5avXYtJJjHTYlUfBdLVPGXwFkS0ZqZV6
+         gngu+0fPBs5TZLnT7ey1i9OneourIzPGBOc+bYKw=
+Received: by mail-qt1-f182.google.com with SMTP id s30so14609478qth.2;
+        Wed, 15 Apr 2020 13:35:59 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaXsMCkfTu+93B3idDFJZqbEkVKjOvW/c6nJh9kS3HhURoApryu
+        ilnfuYCj7FtGNtIlAzvwYdrpxcAvFUQERF5XTw==
+X-Google-Smtp-Source: APiQypKdAtKOLeMWJ/D1BvB7ZXEW29X4XYOYycR6x8j+EJbzgjzjIbaXHkX74YNb0tcs08YeLBbvDSIhg3w7EhgjYpw=
+X-Received: by 2002:ac8:39e5:: with SMTP id v92mr23150670qte.224.1586982958434;
+ Wed, 15 Apr 2020 13:35:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <158698038289.105027.2860892334897893887@swboyd.mtv.corp.google.com>
+References: <20200415182639.18534-1-robh@kernel.org> <20200415192928.tjmh2m6a63lmnp3b@pengutronix.de>
+In-Reply-To: <20200415192928.tjmh2m6a63lmnp3b@pengutronix.de>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 15 Apr 2020 15:35:46 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJs1mvJU53RFsv0PeGkzaX0xdryrqBA1SWm5Ka_a8uJ=Q@mail.gmail.com>
+Message-ID: <CAL_JsqJs1mvJU53RFsv0PeGkzaX0xdryrqBA1SWm5Ka_a8uJ=Q@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pwm: Fix cros-ec-pwm example dtc 'reg' warning
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     devicetree@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 12:53:02PM -0700, Stephen Boyd wrote:
-> Quoting Douglas Anderson (2020-04-15 08:48:40)
-> > Allow people to specify to use a GPIO for hot-plug-detect.  Add an
-> > example.
-> > 
-> > NOTE: The current patch adding support for hpd-gpios to the Linux
-> > driver for hpd-gpios only adds enough support to the driver so that
-> > the bridge can use one of its own GPIOs.  The bindings, however, are
-> > written generically.
-> > 
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+On Wed, Apr 15, 2020 at 2:29 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello Rob,
+>
+> On Wed, Apr 15, 2020 at 01:26:39PM -0500, Rob Herring wrote:
+> > The example for the CrOS EC PWM is incomplete and now generates a dtc
+> > warning:
+> >
+> > Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.example.dts:17=
+.11-23.11:
+> > Warning (unit_address_vs_reg): /example-0/cros-ec@0: node has a unit na=
+me, but no reg or ranges property
+> >
+> > Fixing this results in more warnings as a parent spi node is needed as
+> > well.
+> >
+> > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > Cc: "Uwe Kleine-K=C3=B6nig" <u.kleine-koenig@pengutronix.de>
+> > Cc: Benson Leung <bleung@chromium.org>
+> > Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > Cc: Guenter Roeck <groeck@chromium.org>
+> > Cc: linux-pwm@vger.kernel.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
 > > ---
-> > 
-> >  .../bindings/display/bridge/ti,sn65dsi86.yaml          | 10 +++++++++-
-> >  1 file changed, 9 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-> > index 8cacc6db33a9..554bfd003000 100644
-> > --- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-> > +++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-> > @@ -60,6 +60,10 @@ properties:
-> >      const: 1
-> >      description: See ../../pwm/pwm.yaml for description of the cell formats.
-> >  
-> > +  hpd-gpios:
-> > +    maxItems: 1
-> > +    description: If present use the given GPIO for hot-plug-detect.
-> 
-> Shouldn't this go in the panel node? And the panel driver should get the
-> gpio and poll it after powering up the panel? Presumably that's why we
-> have the no-hpd property in the simple panel binding vs. putting it here
-> in the bridge.
+> >  .../bindings/pwm/google,cros-ec-pwm.yaml        | 17 ++++++++++++-----
+> >  1 file changed, 12 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.y=
+aml b/Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
+> > index 24c217b76580..41ece1d85315 100644
+> > --- a/Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
+> > +++ b/Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
+> > @@ -31,10 +31,17 @@ additionalProperties: false
+> >
+> >  examples:
+> >    - |
+> > -    cros-ec@0 {
+> > -        compatible =3D "google,cros-ec-spi";
+> > -        cros_ec_pwm: ec-pwm {
+> > -            compatible =3D "google,cros-ec-pwm";
+> > -            #pwm-cells =3D <1>;
+> > +    spi {
+> > +        #address-cells =3D <1>;
+> > +        #size-cells =3D <0>;
+> > +
+> > +        cros-ec@0 {
+> > +            compatible =3D "google,cros-ec-spi";
+> > +            reg =3D <0>;
+> > +
+> > +            cros_ec_pwm: ec-pwm {
+> > +                compatible =3D "google,cros-ec-pwm";
+> > +                #pwm-cells =3D <1>;
+> > +            };
+>
+> Looks reasonable
+>
+> Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 
-Same question really, I think this belongs to the panel (or connector)
-node indeed.
+Thanks.
 
--- 
-Regards,
+> Is this supposed to go via the pwm tree, or do you apply yourself via a
+> device-tree tree?
 
-Laurent Pinchart
+I'll take it for rc2.
+
+Rob
