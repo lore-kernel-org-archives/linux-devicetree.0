@@ -2,200 +2,95 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064EFC3815B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 17:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C939FC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 18:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D62CB2078B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 17:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3A7D20784
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 18:05:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RjcoQOzs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1B9gtJS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411494AbgDORsu (ORCPT
+        id S2404727AbgDOSE7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:48:50 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4134 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2411463AbgDORso (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 13:48:44 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e97488e0001>; Wed, 15 Apr 2020 10:46:54 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 15 Apr 2020 10:48:44 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 15 Apr 2020 10:48:44 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
- 2020 17:48:44 +0000
-Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
- 2020 17:48:43 +0000
-Subject: Re: [RFC PATCH v7 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1586919463-30542-1-git-send-email-skomatineni@nvidia.com>
- <1586919463-30542-7-git-send-email-skomatineni@nvidia.com>
- <4118112f-f865-5460-6319-d71271fd78d1@gmail.com>
- <a69a8b34-beea-3ad0-e08e-f7df8b9e7047@nvidia.com>
- <6afa951e-d904-f3c0-053f-82a02fb18979@nvidia.com>
- <b1c78827-13ea-0c94-a575-97b5afc0ede1@nvidia.com>
-Message-ID: <5954a7e1-910e-7f48-56d3-e671b56ead74@nvidia.com>
-Date:   Wed, 15 Apr 2020 10:48:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 15 Apr 2020 14:04:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44236 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404681AbgDOSE4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 14:04:56 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBEDFC061A0C;
+        Wed, 15 Apr 2020 11:04:55 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id b11so1025274wrs.6;
+        Wed, 15 Apr 2020 11:04:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/8FRo478arD7m2qucaLnwOdz/3bXv43FR5ZsgyXv6Ho=;
+        b=R1B9gtJSvwts8ntK8Ij1ZQRxo8KVqPjQ6/oq/phrw5hrO5rLWL2vP1nB3wa5pny7rt
+         WSRQrcQvkGUI8Twji47UJrYONgw77+rFQKPQfQkSDNdUC/ieAMbtaRKm8sow9kWRXLng
+         +8DL+vVHegL0QTBbH0DAp76R5w33ZHKqeAy2yTiEz8OM312FtqDi5lpoBa3ASRWQiDqP
+         oGwfwqwXRu3UwLf9m2NR/DsSLLrEqTtvr28dRJqs3Ip4yRnIgwO6z8t9NSH0J9KuFsJT
+         u8L2LrqO2uhCbzznqVIB87X3lhf68FDIcYpOE0YSKKwWWBp29Qxf00vQFTZvzrxibsVR
+         gPZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/8FRo478arD7m2qucaLnwOdz/3bXv43FR5ZsgyXv6Ho=;
+        b=a3xADp5VagEA9o2wXLXGWiR3hdEpSqi6D/jJMJHWpdhiJQfB1eSLwbrkIGL77zrnMK
+         y1NSefbsuLQqXthQafoKLHXGC8iybiCmtMpu5ZJOXm64UuZ3nrElh+66Wb+X2abkyryK
+         v+AhcdCuL8MqJqSaqYSMrLfKc12DqTgdAhUaRlO6fEoB0+s08Oq0VmRRGrbBNBx8qvtC
+         z2l7uBwrK/9PRa1Dj9dfNwlYqCgr9OU66K2xxrzFtyVSCUpmMOG7v55scPo0L0VVSq0T
+         5AB/8AOTwSovpBCa5LIQPtHu5TQHKFnv4+VwH50EO39nd6apA3n0JNptToArLYHT4CfU
+         9Vkw==
+X-Gm-Message-State: AGi0PuYGHTkmaKcPPPtyWGvn+ZhLwPQBjoZCE84nzgso9hMegX0eOrek
+        igVDa95aTAcXgtjOcOGxS4Z3jTxCr1boP57WNL46p6Ut
+X-Google-Smtp-Source: APiQypLa70wxauBl8Umg57eLoV2a9izwUGC+7DVCaUZ6CGZwb2JceU+aC/f7UF2fV14mwbXBnJnREvKjneYMEJflMqU=
+X-Received: by 2002:a5d:420d:: with SMTP id n13mr30497310wrq.204.1586973894505;
+ Wed, 15 Apr 2020 11:04:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <b1c78827-13ea-0c94-a575-97b5afc0ede1@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586972814; bh=0IjbbYpWt22c2ICcfjJ3RaB+wcJhHtA9EFoR3fkmRWw=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=RjcoQOzseawg6p4wUclOWhZbD5rwb2+jzGt3UYzW1srAPfXLPBwdR0sBJggHZJHcz
-         V8rseSuCp/vVes0k4OOTy5k/aSGTJa8YWW0c5TYztV0m8HJrvZAKO6hARW/PoQjE8c
-         CpBPICtAh3ub37eoMwduk5gp9xU1LT3aNfa3m/n4cEFn/scnyppa1R9X9luP0s4LfH
-         bVOqyl40qh+ePMkzrZYi5MJ6IqewtHIHOyGrfaS0IhNXi/dvWiTQrViLVkuandTd3O
-         EPGuGOJnRZb142zMHgZ61k/6zzhQWZmV/zVjXZavUAo324VQVfzeUjnA5M6E1+JYfP
-         vAiHguUmto+hw==
+References: <20200331203551.20914-1-mporter@konsulko.com>
+In-Reply-To: <20200331203551.20914-1-mporter@konsulko.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Wed, 15 Apr 2020 21:04:43 +0300
+Message-ID: <CAEnQRZCqeJkRPEUYL3k8seuNusLZ6QpT-X-A7E20AMHSYcmaUA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: imx8mm: fix dma peripheral type for SAI nodes
+To:     Matt Porter <mporter@konsulko.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        yibin.gong@nxp.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Mar 31, 2020 at 11:36 PM Matt Porter <mporter@konsulko.com> wrote:
+>
+> The peripheral type specified in the dma phandle for each SAI node
+> is incorrect. Change it to specify the SAI peripheral.
+>
+> Signed-off-by: Matt Porter <mporter@konsulko.com>
 
-On 4/15/20 10:47 AM, Sowjanya Komatineni wrote:
->
-> On 4/15/20 10:21 AM, Sowjanya Komatineni wrote:
->>
->> On 4/15/20 9:54 AM, Sowjanya Komatineni wrote:
->>>
->>> On 4/15/20 7:22 AM, Dmitry Osipenko wrote:
->>>> External email: Use caution opening links or attachments
->>>>
->>>>
->>>> 15.04.2020 05:57, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> +static int tegra_csi_remove(struct platform_device *pdev)
->>>>> +{
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_csi *csi =3D platform_get_drvd=
-ata(pdev);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 int err;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 err =3D host1x_client_unregister(&csi->clie=
-nt);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (err < 0) {
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 dev_err(csi->dev,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "failed to unregiste=
-r host1x client: %d\n",=20
->>>>> err);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 return err;
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 pm_runtime_disable(csi->dev);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 kfree(csi);
->>>> IIRC, the driver removal is invoked on the unbinding. Hence, I'm not
->>>> sure how moving away from the resource-managed API helps here.=20
->>>> Could you
->>>> please explain in a more details?
->>>>
->>>> Have you tried to test this driver under KASAN? I suspect that you=20
->>>> just
->>>> masked the problem, instead of fixing it.
->>> Using devm_kzalloc for vi/csi structures based on prior feedback=20
->>> request to switch to use kzalloc all over this driver.
->>>
->>> Hi Hans,
->>>
->>> video devices lifetime is till video device nodes are released. So,=20
->>> v4l2 device release callback does the release of tegra channel=20
->>> allocation which hold video device.
->>>
->>> Below are the 3 possible cases of unbind/unload,
->>>
->>> 1. during tegra-video module unload, if v4l2 device refcnt is not 0=20
->>> which is the case when any of video device node handle is kept=20
->>> opened then unloading module will not happen and module refcnt is=20
->>> also non-zero and unloading tegra-video module reports module in use.
->>>
->>> 2. during tegra-video driver unbind, tegra-video driver removal will=20
->>> do vi/csi clients exit ops which unregisters video device allocated=20
->>> memory during release callback of v4l2 device. vi/csi structure=20
->>> allocation remains same as vi/csi driver removal will not happen in=20
->>> this case.
->>>
->>>
->>> 3. during direct host1x client drivers vi/csi unbind, both=20
->>> host1x_clients vi/csi gets unregistered, deletes host1x logical=20
->>> device which executes tegra-video driver removal() -> vi/csi exit()=20
->>> before vi/csi memory gets freed in vi/csi driver remove().
->>>
->>> So, any active streaming will stop and video devices are=20
->>> unregistered during direct client driver unbind prior to freeing=20
->>> vi/csi memory.
->>>
->>> Also vi/csi driver remove does explicit free vi/csi as its allocated=20
->>> with kzalloc. So not sure how using kzalloc is different to=20
->>> devm_kzalloc for vi/csi structure in terms of when vi/csi memory=20
->>> gets freed?
->>>
->>> Except for channel allocation which holds video device and as video=20
->>> device life time is beyond tegra-video module unbind->vi exit(),=20
->>> looks like we can use devm_kzalloc for vi/csi.
->>>
->>>
->>> Can you please comment if you still think we need to use kzalloc=20
->>> rather than devm_kzalloc for vi/csi structure allocation?
->>>
->>> Thanks
->>>
->>> Sowjanya
->>>
->> One more case is when video device node is kept opened with v4l2-ctl=20
->> sleep (rather than streaming), where it will keep device node open=20
->> for specified time and if direct vi client driver unbind happens then=20
->> vi driver remove() will free vi memory before v4l2 device release=20
->> happens.
->>
->> But I don't see any crash or errors with this case.
->>
->> Also if we allow direct client driver unbind, then vi structure=20
->> memory lifetime should also be till v4l2 device release happens.
->>
->> But we can free vi in v4l2 device release callback as in case when=20
->> device node is not kept opened, video device release happens=20
->> immediate and we cant free vi that early.
->
-> typo fix:
->
-> But we can't free vi structure memory allocation in v4l2 device=20
-> release callback as in case when device node is not kept opened,=20
-> device release happens immediate and we can't free vi structure memory=20
-> that early.
->
->>
->> Hans/Thierry, Can you please comment on this case?
->>
->> Thanks
->>
->> Sowjanya
->>
-Also, Can you please help explain on cases where we do/need direct=20
-host1x clients vi/csi drivers unbind?
+Hi Matt,
+
+Why do you think this is incorrect?  AFAIK script number 2 works fine
+for SAI. Can you add
+more details on what bug are you encountering?
+
+Adding Robin the owner of SDMA.
