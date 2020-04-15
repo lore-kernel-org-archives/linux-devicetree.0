@@ -2,100 +2,183 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 339F5C3815B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 23:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1731C2BB55
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 23:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 126462078B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 23:37:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586993866;
-	bh=7JQLMa1r9P+5uVg2RKaO1qFO4AfI5Die3TppthdAnqM=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=wi0LcRCsFr06KTQnsl4V9b8B3YbR1h8eKTmxF8MqcBdJJ2K7uvQ4iI+frWFaumnx5
-	 /O6bhIylzQCzRv30QdtjFUbvwTED/uvqtvPEJ8eO8cH44LGaBpAIPz59dBnMu44y37
-	 R+8//ab8ldB1cLr0r1Hq50QVFfG8ZS9Quw0VZdfc=
+	by mail.kernel.org (Postfix) with ESMTP id 8D78F20787
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 23:49:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="6awfTXYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389617AbgDOXhM (ORCPT
+        id S2388092AbgDOXs5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 19:37:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35116 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 19:48:57 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:40504 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389819AbgDOXgn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 19:36:43 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 625832076A;
-        Wed, 15 Apr 2020 23:36:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586993802;
-        bh=7JQLMa1r9P+5uVg2RKaO1qFO4AfI5Die3TppthdAnqM=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=pgkkqn/A60JlXlGe4/ux04qhA+jIQ1y6X+N3KbR+YapQRZWkLg2Zgu2RAQSn88zFq
-         ptHt/Fj6SVmkPrjVX31WW4XR1vC+t/bK9SMCVFfgbk6ikAuvU3yfqr6VvIxUT7Aown
-         mUNfgwbxw0HChfa4WNUKWoDE+fdVc7vBEqS+qwDk=
-Date:   Thu, 16 Apr 2020 00:36:40 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Daniel Baluta <daniel.baluta@oss.nxp.com>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        ranjani.sridharan@linux.intel.com, kai.vehmanen@linux.intel.com,
-        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        festevam@gmail.com, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, pierre-louis.bossart@linux.intel.com,
-        shengjiu.wang@nxp.com, linux-imx@nxp.com
-In-Reply-To: <20200409071832.2039-1-daniel.baluta@oss.nxp.com>
-References: <20200409071832.2039-1-daniel.baluta@oss.nxp.com>
-Subject: Re: [PATCH v2 0/5] Add support for SOF on i.MX8M
-Message-Id: <158699320580.11316.13339627985998445155.b4-ty@kernel.org>
+        id S1733274AbgDOXs4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 19:48:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=xNSi6HaGmscxmARt5mgNwzUpQcF/jonukO+FRnCwvvs=; b=6awfTXYL7Q73QbBZWCu8TLLwdj
+        odPxj6TI1yu/dT28BW340Acs8rG0u+HHboan/FDBlg2TH1RBzjer3dkrw5ckXCGh/kGlzKkMzs0ss
+        ukBZAC/xlNhAHW4ham4rWvQqg8ig64WGQlrKmbdUF4HMZOsLA6u6KrXS5k+S4q/mBKhA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jOrls-002yQt-F4; Thu, 16 Apr 2020 01:48:44 +0200
+Date:   Thu, 16 Apr 2020 01:48:44 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Robert Marko <robert.marko@sartura.hr>
+Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: Re: [PATCH v3 1/3] net: phy: mdio: add IPQ40xx MDIO driver
+Message-ID: <20200415234844.GH611399@lunn.ch>
+References: <20200415150244.2737206-1-robert.marko@sartura.hr>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415150244.2737206-1-robert.marko@sartura.hr>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 9 Apr 2020 10:18:27 +0300, Daniel Baluta wrote:
-> From: Daniel Baluta <daniel.baluta@nxp.com>
+Hi Robert
+
+I should of said this earlier. With a patch set, you should include a
+cover note, patch 0 of X, explaining the big picture of what the
+patches do.
+
+Also, for network patches, the subject line should indicate which tree
+these patches are for. So
+
+[PATCH net-next v3 0/3] 
+
+On Wed, Apr 15, 2020 at 05:02:43PM +0200, Robert Marko wrote:
+> This patch adds the driver for the MDIO interface
+> inside of Qualcomm IPQ40xx series SoC-s.
 > 
-> This patch series adds support for SOF on i.MX8M family. First board
-> from this family that has a DSP is i.MX8MP.
+> Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> Cc: Luka Perkov <luka.perkov@sartura.hr>
+> ---
+> Changes from v2 to v3:
+> * Rename registers
+> * Remove unnecessary variable initialisations
+> * Switch to readl_poll_timeout() instead of custom solution
+> * Drop unused header
 > 
-> First 2 patches are trying to fix some compilation issues, the next two
-> are adding the imx8m support and the last one adds the devicetree
-> binding.
+> Changes from v1 to v2:
+> * Remove magic default value
+> * Remove lockdep_assert_held
+> * Add C45 check
+> * Simplify the driver
+> * Drop device and mii_bus structs from private struct
+> * Use devm_mdiobus_alloc_size()
 > 
-> [...]
+>  drivers/net/phy/Kconfig        |   7 ++
+>  drivers/net/phy/Makefile       |   1 +
+>  drivers/net/phy/mdio-ipq40xx.c | 160 +++++++++++++++++++++++++++++++++
+>  3 files changed, 168 insertions(+)
+>  create mode 100644 drivers/net/phy/mdio-ipq40xx.c
+> 
+> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+> index 3fa33d27eeba..23bb5db033e3 100644
+> --- a/drivers/net/phy/Kconfig
+> +++ b/drivers/net/phy/Kconfig
+> @@ -157,6 +157,13 @@ config MDIO_I2C
+>  
+>  	  This is library mode.
+>  
+> +config MDIO_IPQ40XX
+> +	tristate "Qualcomm IPQ40xx MDIO interface"
+> +	depends on HAS_IOMEM && OF_MDIO
+> +	help
+> +	  This driver supports the MDIO interface found in Qualcomm
+> +	  IPQ40xx series Soc-s.
+> +
+>  config MDIO_IPQ8064
+>  	tristate "Qualcomm IPQ8064 MDIO interface support"
+>  	depends on HAS_IOMEM && OF_MDIO
+> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+> index 2f5c7093a65b..36aafc6128c4 100644
+> --- a/drivers/net/phy/Makefile
+> +++ b/drivers/net/phy/Makefile
+> @@ -37,6 +37,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+= mdio-cavium.o
+>  obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
+>  obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
+>  obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
+> +obj-$(CONFIG_MDIO_IPQ40XX)	+= mdio-ipq40xx.o
+>  obj-$(CONFIG_MDIO_IPQ8064)	+= mdio-ipq8064.o
+>  obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
+>  obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
+> diff --git a/drivers/net/phy/mdio-ipq40xx.c b/drivers/net/phy/mdio-ipq40xx.c
+> new file mode 100644
+> index 000000000000..acf1230341bd
+> --- /dev/null
+> +++ b/drivers/net/phy/mdio-ipq40xx.c
+> @@ -0,0 +1,160 @@
+> +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+> +/* Copyright (c) 2015, The Linux Foundation. All rights reserved. */
+> +/* Copyright (c) 2020 Sartura Ltd. */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_mdio.h>
+> +#include <linux/phy.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define MDIO_ADDR_REG				0x44
+> +#define MDIO_DATA_WRITE_REG			0x48
+> +#define MDIO_DATA_READ_REG			0x4c
+> +#define MDIO_CMD_REG				0x50
+> +#define MDIO_CMD_ACCESS_BUSY		BIT(16)
+> +#define MDIO_CMD_ACCESS_START		BIT(8)
+> +#define MDIO_CMD_ACCESS_CODE_READ	0
+> +#define MDIO_CMD_ACCESS_CODE_WRITE	1
+> +
+> +#define IPQ40XX_MDIO_TIMEOUT	10000
+> +#define IPQ40XX_MDIO_SLEEP		10
+> +
+> +struct ipq40xx_mdio_data {
+> +	void __iomem	*membase;
+> +};
+> +
+> +static int ipq40xx_mdio_wait_busy(struct mii_bus *bus)
+> +{
+> +	struct ipq40xx_mdio_data *priv = bus->priv;
+> +	unsigned int busy;
+> +
+> +	return readl_poll_timeout(priv->membase + MDIO_CMD_REG, busy,
+> +				  (busy & MDIO_CMD_ACCESS_BUSY) == 0, 
+> +				  IPQ40XX_MDIO_SLEEP, IPQ40XX_MDIO_TIMEOUT);
 
-Applied, thanks!
+Do you have any documentation about _START and _BUSY? You are making
+the assumption that the next read after writing the START bit will
+have the BUSY bit set. That the hardware reacts that fast. It is not
+an unreasonable assumption, but i've seen more designed where the
+START bit is also the BUSY bit, so the write implicitly sets the busy
+bit, and the hardware needs to clear it when it is done.
 
-[1/5] ASoC: SOF: imx8: Fix randbuild error
-      commit: fe17e6cdc0fefca96ba9659be4b2b07487cbf0c5
-[2/5] ASoC: SOF: imx: fix undefined reference issue
-      commit: cb0312f61c3e95c71ec8955a94d42bf7eb5ba617
-[3/5] ASoC: SOF: imx: Add i.MX8M HW support
-      commit: afb93d716533ddef20fc70e626f7b43f204cb411
-[4/5] ASoC: SOF: Add i.MX8MP device descriptor
-      commit: 58825cc2253986ec3a4d0d67b8b4dc30945afb52
-[5/5] dt-bindings: dsp: fsl: Add fsl,imx8mp-dsp entry
-      commit: 35a0f242520520dfa1e8eaf66f20d297b12e413e
+As i said, this is not unreasonable, so:
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+    Andrew
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
