@@ -5,293 +5,186 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2BDC2BB55
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DC9C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 429B62078A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16498208FE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:26:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zjri4U5b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hDPG2ZP6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897939AbgDOL5E (ORCPT
+        id S369240AbgDOM0F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:57:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41922 "EHLO
+        Wed, 15 Apr 2020 08:26:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409393AbgDOLrs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 07:47:48 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDD99C061A0C;
-        Wed, 15 Apr 2020 04:47:47 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id i3so1379726pgk.1;
-        Wed, 15 Apr 2020 04:47:47 -0700 (PDT)
+        with ESMTP id S369235AbgDOM0D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 08:26:03 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8A71C061A0C;
+        Wed, 15 Apr 2020 05:26:02 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id g12so10924149wmh.3;
+        Wed, 15 Apr 2020 05:26:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GdlccVqvEfoDxvHoO56bT+qL7Fs8cbKZNv7I5qYxJpo=;
-        b=Zjri4U5bbnxcnCr9oo3j6Ct5z65XWfJc7E7Uuny4h9zIU3R6EO8QrHVUVP34ufXxge
-         fyCZ6jWtxHvL02WKA8exXr72Po2MxJf8OO3DZZSeRq4M7SmzjwRN7zuXJa/jN18kcCtJ
-         1B76ukYKpPj52LRP8wXL3GTBSyFU0SSwczl/MNxWCpC4G2FFHMpUoLAaTlsMsHGpCbNO
-         bGxwbMedW3nn21tO2G2eEu2ukP/ja+N4CEjF71cwbMtMw+XhCrnm2EnijQeUZIAjhJsj
-         eb60vIKZPD1fgcAX8UkKbxbu+Zdg8t+6YecK+oAjls3cOe0bBOVrEHfmi0dAhHKxJLT5
-         HfMA==
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=skeYTYKzmzw0IuNoRhgN9uuu5AMw+zDWRV9qTkZ9/wo=;
+        b=hDPG2ZP6hRayOhxEl9bl96wKYSY4jI3Pl4DzEBF/myeQDcEbcS9vgku/khXjehcANC
+         7rTxMn9Jf8keGqwZ3Ou/eVkjpFx6lskO/XH1+ypIrr+hFPRpEQdPE5CKnnMWCmKNYmtj
+         WX9g+PPxXeqn9ci5LhVNWQx8SfNXT0AV5I9eAVw/VGrbekPpaiHbHJgO+XiWsqtHVxZv
+         yCGIJ/4jAId0wNWXvYVHMr44yXGQB/E7W9jzwzQGa5w4zovl7M3oSsk2L/i2sAlHLPX/
+         HsSb+MdwIW6WPr6Wh4GOx2qwOkXrwBafKhOqxNNGr32WTjkakff0USOZ7nOZTqiSeGTN
+         ziDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GdlccVqvEfoDxvHoO56bT+qL7Fs8cbKZNv7I5qYxJpo=;
-        b=pZiUyVSVCXnYOcnYNNtqlq4KcKWOtJgkAyE1E2wBzCyVr0HXb+TLpQUSPk/9Q39/OV
-         1sq7V7O7ZAvBB3sHQQLFfxZPgagskn02vJayft7qVfJmpHYkPZuOK9DJBc/iDS1U+NGi
-         FkNL8u90SZWurzYUpoKp3q2xNEM+SaTzcSO369uqZG3HWyF7+ywYZC1hGBVi86SuqjMD
-         4TuCEQkAI5qSKx4rlXTgTwri3fOYGlJ3wT4rAFcySi1QTRuJYd+O6KPCPG/KyL9K6y5O
-         APn61Xqq8DkXgb06lJAloqDiZZauDcxDvW1frRrrCmG8yjK2b085bn6VH2tQ4MRG9b1j
-         l8TQ==
-X-Gm-Message-State: AGi0Pub8aY5jiZYp7XeWlojc2TG/Ft0EZr24wqI4Ox1tz96cbReavSJc
-        j/SfPU5vh/bN5AJMp12KeKHJg9zLphrjgIBM2H8=
-X-Google-Smtp-Source: APiQypJDGbJc1gp4F746Bb3HTqtzQemI8dHZMHU/r0nsd//x3v3uGSUQtVoVXvLwQIZYjFUa1tLyRPTumSJ9YrrUNrg=
-X-Received: by 2002:aa7:8192:: with SMTP id g18mr27092058pfi.36.1586951267273;
- Wed, 15 Apr 2020 04:47:47 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=skeYTYKzmzw0IuNoRhgN9uuu5AMw+zDWRV9qTkZ9/wo=;
+        b=Kabw1x+ouHCuIw/2eAk7qsSjo4OLiSjYPMAK+n1sNdo81M4QwkYEcafPxqMN6o+oDf
+         RC83FRONjeynxw5KL2lYZ/vfZVzAgErxBkWPHPE1GAuNLo7Cc1djEnmKb8LgsrMDAMxv
+         zMu8KGsaOAX1/Ymr3fPYNFFvH7hzCmrdmgHSuSEt3jhzmYlfOFBjs28eJigBOVrKABt7
+         F/L7LcO1vbfgyo/7gBvCkAuSQfQq13EdWBJnR5SxNmJoGIfspCxs3pn8do/gizX2NKfP
+         +RVQ+mt2kSaADJsGslqF2fYPX34tY5/Zj+Dx3iB23+xbI3/0fbE6OruVpUpW2sFJFnAe
+         VhSw==
+X-Gm-Message-State: AGi0PubitDKhCN6gKn+mdieUsULTFPY+Zk8Fsqj0q9BQM6YyrsbY+1E7
+        zttyMiiCgpBAlOCyCmwt2cc=
+X-Google-Smtp-Source: APiQypJMJYcnfbVBUme6jDVi8ODCrKszURt7owpXGAMirtadx3ULLtgfHaIuqV50q7p41kabgFStgA==
+X-Received: by 2002:a7b:c759:: with SMTP id w25mr5489166wmk.68.1586953561420;
+        Wed, 15 Apr 2020 05:26:01 -0700 (PDT)
+Received: from AnsuelXPS (host93-255-dynamic.47-79-r.retail.telecomitalia.it. [79.47.255.93])
+        by smtp.gmail.com with ESMTPSA id j68sm23853010wrj.32.2020.04.15.05.25.59
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 Apr 2020 05:26:00 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Rob Herring'" <robh@kernel.org>
+Cc:     "'Andy Gross'" <agross@kernel.org>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+        "'Kishon Vijay Abraham I'" <kishon@ti.com>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200403002608.946-1-ansuelsmth@gmail.com> <20200403002608.946-2-ansuelsmth@gmail.com> <20200414173838.GA29176@bogus>
+In-Reply-To: <20200414173838.GA29176@bogus>
+Subject: R: [PATCH 2/2] devicetree: bindings: phy: Document dwc3 qcom phy
+Date:   Wed, 15 Apr 2020 14:25:58 +0200
+Message-ID: <00bb01d61321$05bf9b20$113ed160$@gmail.com>
 MIME-Version: 1.0
-References: <20200414184930.5576-1-mani@kernel.org> <20200414184930.5576-3-mani@kernel.org>
-In-Reply-To: <20200414184930.5576-3-mani@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 15 Apr 2020 14:47:40 +0300
-Message-ID: <CAHp75Vd6Fd89_WgXN+hFrF5effQ88GX0j5PeFOr9RU0LdxYNfw@mail.gmail.com>
-Subject: Re: [RESEND PATCH v3 2/3] iio: chemical: Add support for external
- Reset and Wakeup in CCS811
-To:     mani@kernel.org
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, narcisaanamaria12@gmail.com,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQHTPQd2IBqR3z6CHNBmVjX+r+AcmAGqTdeSAYw2ek+oZhM/sA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 9:49 PM <mani@kernel.org> wrote:
->
-> From: Manivannan Sadhasivam <mani@kernel.org>
->
-> CCS811 VOC sensor exposes nRESET and nWAKE pins which can be connected
-> to GPIO pins of the host controller. These pins can be used to externally
-> release the device from reset and also to wake it up before any I2C
-> transaction. The initial driver support assumed that the nRESET pin is not
-> connected and the nWAKE pin is tied to ground.
->
-> This commit improves it by adding support for controlling those two pins
-> externally using a host controller. For the case of reset, if the hardware
-> reset is not available, the mechanism to do software reset is also added.
->
-> As a side effect of doing this, the IIO device allocation needs to be
-> slightly moved to top of probe to make use of priv data early.
->
+> On Fri, Apr 03, 2020 at 02:26:05AM +0200, Ansuel Smith wrote:
+> > Document dwc3 qcom phy hs and ss phy bindings needed to correctly
+> > inizialize and use usb on ipq806x SoC
+> >
+> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > ---
+> >  .../bindings/phy/qcom,dwc3-hs-usb-phy.yaml    | 65
+> +++++++++++++++++++
+> >  .../bindings/phy/qcom,dwc3-ss-usb-phy.yaml    | 65
+> +++++++++++++++++++
+> >  2 files changed, 130 insertions(+)
+> >  create mode 100644
+> Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml
+> >  create mode 100644
+> Documentation/devicetree/bindings/phy/qcom,dwc3-ss-usb-phy.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-
+> phy.yaml b/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-
+> phy.yaml
+> > new file mode 100644
+> > index 000000000000..0bb59e3c2ab8
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-
+> phy.yaml
+> > @@ -0,0 +1,65 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/phy/qcom,dwc3-hs-usb-phy.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Qualcomm DWC3 HS PHY CONTROLLER
+> > +
+> > +maintainers:
+> > +  - Ansuel Smith <ansuelsmth@gmail.com>
+> > +
+> > +description:
+> > +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical
+> layer
+> > +  controllers. Each DWC3 PHY controller should have its own node.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: qcom,dwc3-hs-usb-phy
+> > +
+> > +  "#phy-cells":
+> > +    const: 0
+> > +
+> > +  regmap:
+> > +    maxItems: 1
+> > +    description: phandle to usb3 dts definition
+> > +
+> > +  clocks:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +
+> > +  clock-names:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +    description: |
+> > +      - "ref" Is required
+> > +      - "xo"	Optional external reference clock
+> > +    items:
+> > +      - const: ref
+> > +      - const: xo
+> > +
+> > +required:
+> > +  - compatible
+> > +  - "#phy-cells"
+> > +  - regmap
+> > +  - clocks
+> > +  - clock-names
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
+> > +
+> > +    hs_phy_0: hs_phy_0 {
+> > +      compatible = "qcom,dwc3-hs-usb-phy";
+> > +      regmap = <&usb3_0>;
+> 
+> If the registers for the phy are part of 'qcom,dwc3' then make this node
+> a child of it.
+> 
 
-LGTM,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Making this node a child of qcom,dwc3 cause malfunction of the driver.
 
-> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
-> ---
->  drivers/iio/chemical/ccs811.c | 105 ++++++++++++++++++++++++++++++----
->  1 file changed, 94 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/iio/chemical/ccs811.c b/drivers/iio/chemical/ccs811.c
-> index 2ebdfc35bcda..1500e4b0dfbd 100644
-> --- a/drivers/iio/chemical/ccs811.c
-> +++ b/drivers/iio/chemical/ccs811.c
-> @@ -16,6 +16,7 @@
->   */
->
->  #include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/i2c.h>
->  #include <linux/iio/iio.h>
->  #include <linux/iio/buffer.h>
-> @@ -36,6 +37,7 @@
->  #define CCS811_ERR             0xE0
->  /* Used to transition from boot to application mode */
->  #define CCS811_APP_START       0xF4
-> +#define CCS811_SW_RESET                0xFF
->
->  /* Status register flags */
->  #define CCS811_STATUS_ERROR            BIT(0)
-> @@ -74,6 +76,7 @@ struct ccs811_data {
->         struct mutex lock; /* Protect readings */
->         struct ccs811_reading buffer;
->         struct iio_trigger *drdy_trig;
-> +       struct gpio_desc *wakeup_gpio;
->         bool drdy_trig_on;
->  };
->
-> @@ -166,10 +169,25 @@ static int ccs811_setup(struct i2c_client *client)
->                                          CCS811_MODE_IAQ_1SEC);
->  }
->
-> +static void ccs811_set_wakeup(struct ccs811_data *data, bool enable)
-> +{
-> +       if (!data->wakeup_gpio)
-> +               return;
-> +
-> +       gpiod_set_value(data->wakeup_gpio, enable);
-> +
-> +       if (enable)
-> +               usleep_range(50, 60);
-> +       else
-> +               usleep_range(20, 30);
-> +}
-> +
->  static int ccs811_get_measurement(struct ccs811_data *data)
->  {
->         int ret, tries = 11;
->
-> +       ccs811_set_wakeup(data, true);
-> +
->         /* Maximum waiting time: 1s, as measurements are made every second */
->         while (tries-- > 0) {
->                 ret = i2c_smbus_read_byte_data(data->client, CCS811_STATUS);
-> @@ -183,9 +201,12 @@ static int ccs811_get_measurement(struct ccs811_data *data)
->         if (!(ret & CCS811_STATUS_DATA_READY))
->                 return -EIO;
->
-> -       return i2c_smbus_read_i2c_block_data(data->client,
-> +       ret = i2c_smbus_read_i2c_block_data(data->client,
->                                             CCS811_ALG_RESULT_DATA, 8,
->                                             (char *)&data->buffer);
-> +       ccs811_set_wakeup(data, false);
-> +
-> +       return ret;
->  }
->
->  static int ccs811_read_raw(struct iio_dev *indio_dev,
-> @@ -336,6 +357,45 @@ static irqreturn_t ccs811_data_rdy_trigger_poll(int irq, void *private)
->         return IRQ_HANDLED;
->  }
->
-> +static int ccs811_reset(struct i2c_client *client)
-> +{
-> +       struct gpio_desc *reset_gpio;
-> +       int ret;
-> +
-> +       reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
-> +                                            GPIOD_OUT_LOW);
-> +       if (IS_ERR(reset_gpio))
-> +               return PTR_ERR(reset_gpio);
-> +
-> +       /* Try to reset using nRESET pin if available else do SW reset */
-> +       if (reset_gpio) {
-> +               gpiod_set_value(reset_gpio, 1);
-> +               usleep_range(20, 30);
-> +               gpiod_set_value(reset_gpio, 0);
-> +       } else {
-> +               /*
-> +                * As per the datasheet, this sequence of values needs to be
-> +                * written to the SW_RESET register for triggering the soft
-> +                * reset in the device and placing it in boot mode.
-> +                */
-> +               static const u8 reset_seq[] = {
-> +                       0x11, 0xE5, 0x72, 0x8A,
-> +               };
-> +
-> +               ret = i2c_smbus_write_i2c_block_data(client, CCS811_SW_RESET,
-> +                                            sizeof(reset_seq), reset_seq);
-> +               if (ret < 0) {
-> +                       dev_err(&client->dev, "Failed to reset sensor\n");
-> +                       return ret;
-> +               }
-> +       }
-> +
-> +       /* tSTART delay required after reset */
-> +       usleep_range(1000, 2000);
-> +
-> +       return 0;
-> +}
-> +
->  static int ccs811_probe(struct i2c_client *client,
->                         const struct i2c_device_id *id)
->  {
-> @@ -348,36 +408,59 @@ static int ccs811_probe(struct i2c_client *client,
->                                      | I2C_FUNC_SMBUS_READ_I2C_BLOCK))
->                 return -EOPNOTSUPP;
->
-> +       indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-> +       if (!indio_dev)
-> +               return -ENOMEM;
-> +
-> +       data = iio_priv(indio_dev);
-> +       i2c_set_clientdata(client, indio_dev);
-> +       data->client = client;
-> +
-> +       data->wakeup_gpio = devm_gpiod_get_optional(&client->dev, "wakeup",
-> +                                                   GPIOD_OUT_HIGH);
-> +       if (IS_ERR(data->wakeup_gpio))
-> +               return PTR_ERR(data->wakeup_gpio);
-> +
-> +       ccs811_set_wakeup(data, true);
-> +
-> +       ret = ccs811_reset(client);
-> +       if (ret) {
-> +               ccs811_set_wakeup(data, false);
-> +               return ret;
-> +       }
-> +
->         /* Check hardware id (should be 0x81 for this family of devices) */
->         ret = i2c_smbus_read_byte_data(client, CCS811_HW_ID);
-> -       if (ret < 0)
-> +       if (ret < 0) {
-> +               ccs811_set_wakeup(data, false);
->                 return ret;
-> +       }
->
->         if (ret != CCS811_HW_ID_VALUE) {
->                 dev_err(&client->dev, "hardware id doesn't match CCS81x\n");
-> +               ccs811_set_wakeup(data, false);
->                 return -ENODEV;
->         }
->
->         ret = i2c_smbus_read_byte_data(client, CCS811_HW_VERSION);
-> -       if (ret < 0)
-> +       if (ret < 0) {
-> +               ccs811_set_wakeup(data, false);
->                 return ret;
-> +       }
->
->         if ((ret & CCS811_HW_VERSION_MASK) != CCS811_HW_VERSION_VALUE) {
->                 dev_err(&client->dev, "no CCS811 sensor\n");
-> +               ccs811_set_wakeup(data, false);
->                 return -ENODEV;
->         }
->
-> -       indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-> -       if (!indio_dev)
-> -               return -ENOMEM;
-> -
->         ret = ccs811_setup(client);
-> -       if (ret < 0)
-> +       if (ret < 0) {
-> +               ccs811_set_wakeup(data, false);
->                 return ret;
-> +       }
->
-> -       data = iio_priv(indio_dev);
-> -       i2c_set_clientdata(client, indio_dev);
-> -       data->client = client;
-> +       ccs811_set_wakeup(data, false);
->
->         mutex_init(&data->lock);
->
-> --
-> 2.17.1
->
+> > +      clocks = <&gcc USB30_0_UTMI_CLK>;
+> > +      clock-names = "ref";
+> > +      #phy-cells = <0>;
+> > +    };
+> > +
+> > +    usb3_0: usb3@110f8800 {
+> > +      compatible = "qcom,dwc3", "syscon";
+> > +      reg = <0x110f8800 0x8000>;
+> > +
+> > +      /* ... */
+> 
+> Incomplete examples should or will fail validation.
+> 
+> > +    };
 
-
--- 
-With Best Regards,
-Andy Shevchenko
