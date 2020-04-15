@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A443C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA61C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9D6206D5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06EE0206D5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586955112;
-	bh=Ovw4O+bQIjjYv0PGALGX8rJlm27Kw+SfdVJ5q442p7o=;
+	s=default; t=1586955136;
+	bh=HA/6hgyu6HpfGD6DRIjXKBLT95W1xF9Q0/ETbreVlm8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZufAyxqwwyVLI53ZAugPthqx2amFFFz/aeGYdW3MISzViN/pOP4VzbxVO7oHMKlpO
-	 kzTOJc6ZMJ7bky4cEU68D3HmHHHyNlDGr3raQykdhaNsSgSUnTn+CbE2i2HusUGu7Z
-	 GSuqLzpN+2G/4S5Ky092dl6vvDnVUcq+YyAf0Wk4=
+	b=nYMvEzdz3wAwaPX6Ak+WW5IBC9VZB+7smWXhZx0HNZgASXSR+EHBQdZ6jBuNUPTlf
+	 OWfOmpsAr5UpejAcA/QfZuLNceEPxlc8NpvUx605GfbFlrmN7KooA29xGuwvw7y07j
+	 wMfDVjHw0EZ4zK6Tgi7O731eCJPgzllRWDa/GZx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370490AbgDOMvq (ORCPT
+        id S370520AbgDOMwM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:51:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34128 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 08:52:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897496AbgDOLmm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:42:42 -0400
+        id S2897492AbgDOLmk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:42:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D41AA20737;
-        Wed, 15 Apr 2020 11:42:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3C9020936;
+        Wed, 15 Apr 2020 11:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950961;
-        bh=Ovw4O+bQIjjYv0PGALGX8rJlm27Kw+SfdVJ5q442p7o=;
+        s=default; t=1586950960;
+        bh=HA/6hgyu6HpfGD6DRIjXKBLT95W1xF9Q0/ETbreVlm8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aNbLJbzxl5I9eaQ+dQvSZ0RvzNDRbw2fsYNA0Erq3EgAEhF3k9O7UZXflVvEHBHyK
-         6e8ZVELdk5CXCcBA1NwaSSjhv7gJ7L/S3QUaPfQcy3cgN2PH66ypCZNmsfO8uRFRpw
-         u55B73db5NzLgfLqtzWbJImNNXfakp5v9rCN91SQ=
+        b=qdSkvFOhu2KKBkv0QjeDPCROZ10eBuKJFu/TruasHkrh5GT8CMdBWEYQHnczJpaHL
+         bf48YdSII4sNeNNceVBZzGLoIHOnVPEgBG08wPJnnOTVKIVkLmzT5glb/Ngh8G00pP
+         3vJ7BbILFTAVg55XIfXY+4J6oC0bvmwLz2EjSHBY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 012/106] ARM: dts: rockchip: fix vqmmc-supply property name for rk3188-bqedison2qc
-Date:   Wed, 15 Apr 2020 07:40:52 -0400
-Message-Id: <20200415114226.13103-12-sashal@kernel.org>
+Cc:     "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Martin Kepplinger <martin.kepplinger@puri.sm>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 011/106] arm64: dts: librem5-devkit: add a vbus supply to usb0
+Date:   Wed, 15 Apr 2020 07:40:51 -0400
+Message-Id: <20200415114226.13103-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -60,59 +61,33 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Johan Jonker <jbx6244@gmail.com>
+From: "Angus Ainslie (Purism)" <angus@akkea.ca>
 
-[ Upstream commit 9cd568dc588c5d168615bf34f325fabe33b2c9a0 ]
+[ Upstream commit dde061b865598ad91f50140760e1d224e5045db9 ]
 
-A test with the command below does not detect all errors
-in combination with 'additionalProperties: false' and
-allOf:
-  - $ref: "synopsys-dw-mshc-common.yaml#"
-allOf:
-  - $ref: "mmc-controller.yaml#"
+Without a VBUS supply the dwc3 driver won't go into otg mode.
 
-'additionalProperties' applies to all properties that are not
-accounted-for by 'properties' or 'patternProperties' in
-the immediate schema.
-
-First when we combine rockchip-dw-mshc.yaml,
-synopsys-dw-mshc-common.yaml and mmc-controller.yaml it gives
-this error:
-
-arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml: mmc@10218000:
-'vmmcq-supply' does not match any of the regexes:
-'^.*@[0-9]+$',
-'^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|
-uhs-(sdr(12|25|50|104)|ddr50))$',
-'pinctrl-[0-9]+'
-
-'vmmcq-supply' is not a valid property name for mmc nodes.
-Fix this error by renaming it to 'vqmmc-supply'.
-
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200307134841.13803-1-jbx6244@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Fixes: eb4ea0857c83 ("arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit")
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3188-bqedison2qc.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/rk3188-bqedison2qc.dts b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-index ad1afd403052a..8afb2fd5d9f1b 100644
---- a/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-+++ b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-@@ -465,7 +465,7 @@
- 	non-removable;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sd1_clk>, <&sd1_cmd>, <&sd1_bus4>;
--	vmmcq-supply = <&vccio_wl>;
-+	vqmmc-supply = <&vccio_wl>;
- 	#address-cells = <1>;
- 	#size-cells = <0>;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+index 596bc65f475c2..b2cf6f1925257 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+@@ -743,6 +743,7 @@
+ };
+ 
+ &usb3_phy0 {
++	vbus-supply = <&reg_5v_p>;
  	status = "okay";
+ };
+ 
 -- 
 2.20.1
 
