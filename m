@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5B6C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0F0C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 982F1206F9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C3482051A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:04:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635428AbgDOIDs (ORCPT
+        id S2635422AbgDOIDp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:03:48 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:40272 "EHLO inva020.nxp.com"
+        Wed, 15 Apr 2020 04:03:45 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:47156 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2635410AbgDOIDf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:03:35 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AB29B1A07A2;
-        Wed, 15 Apr 2020 10:03:12 +0200 (CEST)
+        id S2635409AbgDOIDd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:03:33 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 09F3D2007B6;
+        Wed, 15 Apr 2020 10:03:14 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9F3C41A077A;
-        Wed, 15 Apr 2020 10:03:12 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F190C2007A0;
+        Wed, 15 Apr 2020 10:03:13 +0200 (CEST)
 Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 08134202B0;
-        Wed, 15 Apr 2020 10:03:11 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 59AFD202B0;
+        Wed, 15 Apr 2020 10:03:13 +0200 (CEST)
 From:   Abel Vesa <abel.vesa@nxp.com>
 To:     Lee Jones <lee.jones@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
         Peng Fan <peng.fan@nxp.com>,
@@ -41,9 +41,9 @@ Cc:     NXP Linux Team <linux-imx@nxp.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v3 11/13] dt-bindings: reset: imx8mp: Add ids for audiomix reset
-Date:   Wed, 15 Apr 2020 11:02:51 +0300
-Message-Id: <1586937773-5836-12-git-send-email-abel.vesa@nxp.com>
+Subject: [PATCH v3 13/13] arm64: dts: imx8mp: Add audiomix reset controller node
+Date:   Wed, 15 Apr 2020 11:02:53 +0300
+Message-Id: <1586937773-5836-14-git-send-email-abel.vesa@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
 References: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
@@ -53,35 +53,29 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add all the reset ids for the audiomix reset.
+Add the audiomix reset controller as part of the audiomix MFD.
 
 Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 ---
- include/dt-bindings/reset/imx-audiomix-reset.h | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
- create mode 100644 include/dt-bindings/reset/imx-audiomix-reset.h
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/include/dt-bindings/reset/imx-audiomix-reset.h b/include/dt-bindings/reset/imx-audiomix-reset.h
-new file mode 100644
-index 00000000..67392c3
---- /dev/null
-+++ b/include/dt-bindings/reset/imx-audiomix-reset.h
-@@ -0,0 +1,15 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright 2019 NXP.
-+ */
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+index 03ace7f..882c91ff 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+@@ -670,6 +670,11 @@
+ 						      "audio_ahb",
+ 						      "audio_axi_div";
+ 				};
 +
-+#ifndef DT_BINDING_RESET_IMX_AUDIOMIX_H
-+#define DT_BINDING_RESET_IMX_AUDIOMIX_H
-+
-+#define IMX_AUDIOMIX_EARC_RESET		0x0
-+#define IMX_AUDIOMIX_EARC_PHY_RESET	0x1
-+
-+#define IMX_AUDIOMIX_RESET_NUM		2
-+
-+#endif
-+
++				audiomix_reset: reset-controller {
++					compatible = "fsl,imx8mp-audiomix-reset";
++					#reset-cells = <1>;
++				};
+ 			};
+ 		};
+ 
 -- 
 2.7.4
 
