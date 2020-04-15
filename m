@@ -2,89 +2,122 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C46F4C3815B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 19:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC3DC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 19:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A251120784
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 19:27:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wo1kcmGu"
+	by mail.kernel.org (Postfix) with ESMTP id 313FF20732
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 19:29:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406269AbgDOT1e (ORCPT
+        id S2437700AbgDOT3w (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:27:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57058 "EHLO
+        Wed, 15 Apr 2020 15:29:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404592AbgDOT1a (ORCPT
+        by vger.kernel.org with ESMTP id S2436712AbgDOT3e (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 15:27:30 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31A7FC061A0F;
-        Wed, 15 Apr 2020 12:27:30 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id v9so4958783ljk.12;
-        Wed, 15 Apr 2020 12:27:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=47rQ3+FA2D3LJs/1g842b1siYUlXkXN6VqdcwjogJq4=;
-        b=Wo1kcmGuq3Ni6b11dpMKa6BWqZWI7iFPQlOO6XuZ3kg2OCLqLnmtNfu/sPcqyQWleQ
-         4kwKK+VMgYzFYdxJ4QOKV1lSoP5aiyMIxTt1Z4+BHUQSigz2EvLFOQ236TFdusZts2ds
-         q5Lvj/WIu4fTVBFN9XqTbFE7NFuT0ZH8UFj+g2N4AqQpg7WE2r2PubGJJgFxnTUFSmID
-         WXmSW3k0PfGfoHcO8D2QISDIfsCoPmKaCbNaWwQf4vfqmqkPHofAM85BoL8eQcsSqdAc
-         npOQPuniuxgTHrChKAuUdhvgl3qrCt1b6ukw5j2mIEa3myXxAd7/+N7aeHKUn7xr2pI3
-         1BvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=47rQ3+FA2D3LJs/1g842b1siYUlXkXN6VqdcwjogJq4=;
-        b=XmY56cq8oIEkirdIyvGRnrYMwabfdcGYRWh5IiDB0w7EvCiel8pHV/02OVAE2IHSs4
-         Gq4drUeBmI3LSBw/Uni+qHbWSVMAMFRFrsWdVR4AC64l2lp3p4ABZK5NKYKSvV6gMMS1
-         CLtXl9Bm8s/awL9iL/IRedTWMwtKkojMIUcb0/5hKuySenewKJopaol20nfe3kyNtari
-         ijSAe/nsaOTf/vsyPe47lLg1UhRthW9rmWstr+YS8WYsM5JSA7qm4b990pLQkFvRqMHJ
-         ma3L+plt4dC2c/HqbwTtlsg/ilIsGzUYgPM06ETAD+rPhpDEmcztkacd3KM02CcSNnQP
-         KQ3w==
-X-Gm-Message-State: AGi0PuYjFp/OIvhpnnwov5T9MuL5srvJcvKJ7jEOEkUJZB0nTd3kOfU1
-        Ng+AhoEDa/kHoCOni0JJySYgY1uv8X4lfbkK/tU=
-X-Google-Smtp-Source: APiQypJfKLCHWzDvZAs+sC93xTgAqt8ibneXwnMKrWfuDDNeT8PGQvOG6N7qZNWFRwp0sNft7o5NTBLjkEGHEpe+nNI=
-X-Received: by 2002:a2e:9b4a:: with SMTP id o10mr4114274ljj.117.1586978848666;
- Wed, 15 Apr 2020 12:27:28 -0700 (PDT)
+        Wed, 15 Apr 2020 15:29:34 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BF23C061A0F
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 12:29:34 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jOniz-0007ev-Qa; Wed, 15 Apr 2020 21:29:29 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jOniy-00028a-S7; Wed, 15 Apr 2020 21:29:28 +0200
+Date:   Wed, 15 Apr 2020 21:29:28 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pwm: Fix cros-ec-pwm example dtc 'reg'
+ warning
+Message-ID: <20200415192928.tjmh2m6a63lmnp3b@pengutronix.de>
+References: <20200415182639.18534-1-robh@kernel.org>
 MIME-Version: 1.0
-References: <20200415185941.13956-1-mporter@konsulko.com>
-In-Reply-To: <20200415185941.13956-1-mporter@konsulko.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 15 Apr 2020 16:27:52 -0300
-Message-ID: <CAOMZO5Ct+cpdvfTEvk1PtQpScJM4iyoMFyChbtGromvuAV291w@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: imx8mm: specify #sound-dai-cells for SAI nodes
-To:     Matt Porter <mporter@konsulko.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200415182639.18534-1-robh@kernel.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Matt,
+Hello Rob,
 
-On Wed, Apr 15, 2020 at 4:00 PM Matt Porter <mporter@konsulko.com> wrote:
->
-> Add #sound-dai-cells properties to SAI nodes.
->
-> Signed-off-by: Matt Porter <mporter@konsulko.com>
+On Wed, Apr 15, 2020 at 01:26:39PM -0500, Rob Herring wrote:
+> The example for the CrOS EC PWM is incomplete and now generates a dtc
+> warning:
+> 
+> Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.example.dts:17.11-23.11:
+> Warning (unit_address_vs_reg): /example-0/cros-ec@0: node has a unit name, but no reg or ranges property
+> 
+> Fixing this results in more warnings as a parent spi node is needed as
+> well.
+> 
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
+> Cc: Benson Leung <bleung@chromium.org>
+> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Cc: Guenter Roeck <groeck@chromium.org>
+> Cc: linux-pwm@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/pwm/google,cros-ec-pwm.yaml        | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml b/Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
+> index 24c217b76580..41ece1d85315 100644
+> --- a/Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
+> @@ -31,10 +31,17 @@ additionalProperties: false
+>  
+>  examples:
+>    - |
+> -    cros-ec@0 {
+> -        compatible = "google,cros-ec-spi";
+> -        cros_ec_pwm: ec-pwm {
+> -            compatible = "google,cros-ec-pwm";
+> -            #pwm-cells = <1>;
+> +    spi {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        cros-ec@0 {
+> +            compatible = "google,cros-ec-spi";
+> +            reg = <0>;
+> +
+> +            cros_ec_pwm: ec-pwm {
+> +                compatible = "google,cros-ec-pwm";
+> +                #pwm-cells = <1>;
+> +            };
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Looks reasonable
+
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+
+Is this supposed to go via the pwm tree, or do you apply yourself via a
+device-tree tree?
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
