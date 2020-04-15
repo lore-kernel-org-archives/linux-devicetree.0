@@ -2,284 +2,191 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC57C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 17:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21068C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 17:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C92CD2076D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 17:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F303020787
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 17:48:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JblkkjYG"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="haLg/+Du"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411356AbgDOReF (ORCPT
+        id S2411479AbgDORr6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 13:34:05 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:10776 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2411348AbgDOReD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:34:03 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586972042; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
- To: From: Sender; bh=CCqk7JpvsFChy4Ee1MmUL0h8jw+HCmWT+Rb1fKKzvFE=; b=JblkkjYGlLsbfCPNNzv1QDGxHOfsIoUqFMMpVu83z0ux3DYOj2y3VzhEOzX059iKFUtzFI5O
- UXodk5xok8hg2+a2U5DxlGE+otPOC86KM6ECjv7GUC0e/WUcLXdmPjR3I7a/Pm2F0eDD5v8T
- aDuuObv/Df1VRQ+FaKOtc5LlsCk=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e974579.7f7ecd54ec38-smtp-out-n01;
- Wed, 15 Apr 2020 17:33:45 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0D5E0C433BA; Wed, 15 Apr 2020 17:33:44 +0000 (UTC)
-Received: from Pillair (unknown [183.83.66.17])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 10D9EC433BA;
-        Wed, 15 Apr 2020 17:33:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 10D9EC433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
-From:   <pillair@codeaurora.org>
-To:     <ath10k@lists.infradead.org>
-Cc:     <linux-wireless@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1585134100-5944-1-git-send-email-pillair@codeaurora.org> <1585134100-5944-4-git-send-email-pillair@codeaurora.org>
-In-Reply-To: <1585134100-5944-4-git-send-email-pillair@codeaurora.org>
-Subject: RE: [PATCH v2 3/3] ath10k: Add support for targets without trustzone
-Date:   Wed, 15 Apr 2020 23:03:35 +0530
-Message-ID: <001401d6134c$01b5c420$05214c60$@codeaurora.org>
+        Wed, 15 Apr 2020 13:47:58 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:10983 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2411463AbgDORrw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 13:47:52 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e9748bb0000>; Wed, 15 Apr 2020 10:47:39 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 15 Apr 2020 10:47:52 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 15 Apr 2020 10:47:52 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
+ 2020 17:47:52 +0000
+Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
+ 2020 17:47:51 +0000
+Subject: Re: [RFC PATCH v7 6/9] media: tegra: Add Tegra210 Video input driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1586919463-30542-1-git-send-email-skomatineni@nvidia.com>
+ <1586919463-30542-7-git-send-email-skomatineni@nvidia.com>
+ <4118112f-f865-5460-6319-d71271fd78d1@gmail.com>
+ <a69a8b34-beea-3ad0-e08e-f7df8b9e7047@nvidia.com>
+ <6afa951e-d904-f3c0-053f-82a02fb18979@nvidia.com>
+Message-ID: <b1c78827-13ea-0c94-a575-97b5afc0ede1@nvidia.com>
+Date:   Wed, 15 Apr 2020 10:47:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQI6fc28eknFIs45cOq24ZTPq1i0fwKMRWarp50564A=
-Content-Language: en-us
+In-Reply-To: <6afa951e-d904-f3c0-053f-82a02fb18979@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586972859; bh=XpBvxqSOaLK00KhnfApKv+53mQiolPx3hdWSSyk6dPk=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=haLg/+Du/o7GZJdojnWDi4qzLbjggF33ntcXqUYukQxBxsEtQmzcqFjfWEJAeOBIt
+         WxbnSxGh6OOvbcOA01X4DR7OQJ9YjdMirQWmbjFsvTMOrl/uCcIK4yMOF8LQiO2R7J
+         QpUsi1UObJW0/07a9e4JjLPSh9naG0hczADD+1n4QEl/aTmwMpV0cosOToHbi7jWso
+         KHx4NqzkKJpvee05p1tDXMdc11Br7BzkBRCZIP2MZfZF8Jnq8YRmE/Xgxf4suk5snQ
+         V9AYUJfNEF/PkhF0BtrCjVUEtSk7HJoMa13OlzNx4XfXKCaDySN4cRR3sDLTmU1PKR
+         fF04mqopYTNKQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Kalle,
 
-I have sent out v3 for this patchset after correcting the firmware structure
-name which was added in ath10k snoc structure
+On 4/15/20 10:21 AM, Sowjanya Komatineni wrote:
+>
+> On 4/15/20 9:54 AM, Sowjanya Komatineni wrote:
+>>
+>> On 4/15/20 7:22 AM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> 15.04.2020 05:57, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> +static int tegra_csi_remove(struct platform_device *pdev)
+>>>> +{
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_csi *csi =3D platform_get_drvda=
+ta(pdev);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 int err;
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 err =3D host1x_client_unregister(&csi->clien=
+t);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (err < 0) {
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 dev_err(csi->dev,
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "failed to unregister h=
+ost1x client: %d\n",=20
+>>>> err);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 return err;
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 pm_runtime_disable(csi->dev);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 kfree(csi);
+>>> IIRC, the driver removal is invoked on the unbinding. Hence, I'm not
+>>> sure how moving away from the resource-managed API helps here. Could=20
+>>> you
+>>> please explain in a more details?
+>>>
+>>> Have you tried to test this driver under KASAN? I suspect that you just
+>>> masked the problem, instead of fixing it.
+>> Using devm_kzalloc for vi/csi structures based on prior feedback=20
+>> request to switch to use kzalloc all over this driver.
+>>
+>> Hi Hans,
+>>
+>> video devices lifetime is till video device nodes are released. So,=20
+>> v4l2 device release callback does the release of tegra channel=20
+>> allocation which hold video device.
+>>
+>> Below are the 3 possible cases of unbind/unload,
+>>
+>> 1. during tegra-video module unload, if v4l2 device refcnt is not 0=20
+>> which is the case when any of video device node handle is kept opened=20
+>> then unloading module will not happen and module refcnt is also=20
+>> non-zero and unloading tegra-video module reports module in use.
+>>
+>> 2. during tegra-video driver unbind, tegra-video driver removal will=20
+>> do vi/csi clients exit ops which unregisters video device allocated=20
+>> memory during release callback of v4l2 device. vi/csi structure=20
+>> allocation remains same as vi/csi driver removal will not happen in=20
+>> this case.
+>>
+>>
+>> 3. during direct host1x client drivers vi/csi unbind, both=20
+>> host1x_clients vi/csi gets unregistered, deletes host1x logical=20
+>> device which executes tegra-video driver removal() -> vi/csi exit()=20
+>> before vi/csi memory gets freed in vi/csi driver remove().
+>>
+>> So, any active streaming will stop and video devices are unregistered=20
+>> during direct client driver unbind prior to freeing vi/csi memory.
+>>
+>> Also vi/csi driver remove does explicit free vi/csi as its allocated=20
+>> with kzalloc. So not sure how using kzalloc is different to=20
+>> devm_kzalloc for vi/csi structure in terms of when vi/csi memory gets=20
+>> freed?
+>>
+>> Except for channel allocation which holds video device and as video=20
+>> device life time is beyond tegra-video module unbind->vi exit(),=20
+>> looks like we can use devm_kzalloc for vi/csi.
+>>
+>>
+>> Can you please comment if you still think we need to use kzalloc=20
+>> rather than devm_kzalloc for vi/csi structure allocation?
+>>
+>> Thanks
+>>
+>> Sowjanya
+>>
+> One more case is when video device node is kept opened with v4l2-ctl=20
+> sleep (rather than streaming), where it will keep device node open for=20
+> specified time and if direct vi client driver unbind happens then vi=20
+> driver remove() will free vi memory before v4l2 device release happens.
+>
+> But I don't see any crash or errors with this case.
+>
+> Also if we allow direct client driver unbind, then vi structure memory=20
+> lifetime should also be till v4l2 device release happens.
+>
+> But we can free vi in v4l2 device release callback as in case when=20
+> device node is not kept opened, video device release happens immediate=20
+> and we cant free vi that early.
 
-Thanks,
-Rakesh Pillai.
+typo fix:
 
-> -----Original Message-----
-> From: Rakesh Pillai <pillair@codeaurora.org>
-> Sent: Wednesday, March 25, 2020 4:32 PM
-> To: ath10k@lists.infradead.org
-> Cc: linux-wireless@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Rakesh Pillai <pillair@codeaurora.org>
-> Subject: [PATCH v2 3/3] ath10k: Add support for targets without trustzone
-> 
-> Add the support to attach and map iommu
-> domain for targets which do not have the
-> support of TrustZone.
-> 
-> Tested HW: WCN3990
-> Tested FW: WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
-> 
-> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-> ---
->  drivers/net/wireless/ath/ath10k/snoc.c | 118
-> ++++++++++++++++++++++++++++++++-
->  drivers/net/wireless/ath/ath10k/snoc.h |   7 ++
->  2 files changed, 124 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/ath/ath10k/snoc.c
-> b/drivers/net/wireless/ath/ath10k/snoc.c
-> index 3633ea5..7a7e79b 100644
-> --- a/drivers/net/wireless/ath/ath10k/snoc.c
-> +++ b/drivers/net/wireless/ath/ath10k/snoc.c
-> @@ -12,6 +12,7 @@
->  #include <linux/property.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/of_address.h>
-> +#include <linux/iommu.h>
-> 
->  #include "ce.h"
->  #include "coredump.h"
-> @@ -1499,6 +1500,111 @@ static int ath10k_setup_msa_resources(struct
-> ath10k *ar, u32 msa_size)
->  	return 0;
->  }
-> 
-> +static int ath10k_fw_init(struct ath10k *ar)
-> +{
-> +	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
-> +	struct device *host_dev = &ar_snoc->dev->dev;
-> +	struct platform_device_info info;
-> +	struct iommu_domain *iommu_dom;
-> +	struct platform_device *pdev;
-> +	struct device_node *node;
-> +	int ret;
-> +
-> +	node = of_get_child_by_name(host_dev->of_node, "wifi-
-> firmware");
-> +	if (!node) {
-> +		ar_snoc->use_tz = true;
-> +		return 0;
-> +	}
-> +
-> +	memset(&info, 0, sizeof(info));
-> +	info.fwnode = &node->fwnode;
-> +	info.parent = host_dev;
-> +	info.name = node->name;
-> +	info.dma_mask = DMA_BIT_MASK(32);
-> +
-> +	pdev = platform_device_register_full(&info);
-> +	if (IS_ERR(pdev)) {
-> +		of_node_put(node);
-> +		return PTR_ERR(pdev);
-> +	}
-> +
-> +	pdev->dev.of_node = node;
-> +
-> +	ret = of_dma_configure(&pdev->dev, node, true);
-> +	if (ret) {
-> +		ath10k_err(ar, "dma configure fail: %d\n", ret);
-> +		goto err_unregister;
-> +	}
-> +
-> +	ar_snoc->fw.dev = &pdev->dev;
-> +
-> +	iommu_dom = iommu_domain_alloc(&platform_bus_type);
-> +	if (!iommu_dom) {
-> +		ath10k_err(ar, "failed to allocate iommu domain\n");
-> +		ret = -ENOMEM;
-> +		goto err_unregister;
-> +	}
-> +
-> +	ret = iommu_attach_device(iommu_dom, ar_snoc->fw.dev);
-> +	if (ret) {
-> +		ath10k_err(ar, "could not attach device: %d\n", ret);
-> +		goto err_iommu_free;
-> +	}
-> +
-> +	ar_snoc->fw.iommu_domain = iommu_dom;
-> +	ar_snoc->fw.fw_start_addr = ar->msa.paddr;
-> +
-> +	ret = iommu_map(iommu_dom, ar_snoc->fw.fw_start_addr,
-> +			ar->msa.paddr, ar->msa.mem_size,
-> +			IOMMU_READ | IOMMU_WRITE);
-> +	if (ret) {
-> +		ath10k_err(ar, "failed to map firmware region: %d\n", ret);
-> +		goto err_iommu_detach;
-> +	}
-> +
-> +	of_node_put(node);
-> +
-> +	return 0;
-> +
-> +err_iommu_detach:
-> +	iommu_detach_device(iommu_dom, ar_snoc->fw.dev);
-> +
-> +err_iommu_free:
-> +	iommu_domain_free(iommu_dom);
-> +
-> +err_unregister:
-> +	platform_device_unregister(pdev);
-> +	of_node_put(node);
-> +
-> +	return ret;
-> +}
-> +
-> +static int ath10k_fw_deinit(struct ath10k *ar)
-> +{
-> +	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
-> +	const size_t mapped_size = ar_snoc->fw.mapped_mem_size;
-> +	struct iommu_domain *iommu;
-> +	size_t unmapped_size;
-> +
-> +	if (ar_snoc->use_tz)
-> +		return 0;
-> +
-> +	iommu = ar_snoc->fw.iommu_domain;
-> +
-> +	unmapped_size = iommu_unmap(iommu, ar_snoc-
-> >fw.fw_start_addr,
-> +				    mapped_size);
-> +	if (unmapped_size != mapped_size)
-> +		ath10k_err(ar, "failed to unmap firmware: %zu\n",
-> +			   unmapped_size);
-> +
-> +	iommu_detach_device(iommu, ar_snoc->fw.dev);
-> +	iommu_domain_free(iommu);
-> +
-> +	platform_device_unregister(to_platform_device(ar_snoc->fw.dev));
-> +
-> +	return 0;
-> +}
-> +
->  static const struct of_device_id ath10k_snoc_dt_match[] = {
->  	{ .compatible = "qcom,wcn3990-wifi",
->  	 .data = &drv_priv,
-> @@ -1607,16 +1713,25 @@ static int ath10k_snoc_probe(struct
-> platform_device *pdev)
->  		goto err_power_off;
->  	}
-> 
-> +	ret = ath10k_fw_init(ar);
-> +	if (ret) {
-> +		ath10k_err(ar, "failed to initialize firmware: %d\n", ret);
-> +		goto err_power_off;
-> +	}
-> +
->  	ret = ath10k_qmi_init(ar, msa_size);
->  	if (ret) {
->  		ath10k_warn(ar, "failed to register wlfw qmi client: %d\n",
-> ret);
-> -		goto err_power_off;
-> +		goto err_fw_deinit;
->  	}
-> 
->  	ath10k_dbg(ar, ATH10K_DBG_SNOC, "snoc probe\n");
-> 
->  	return 0;
-> 
-> +err_fw_deinit:
-> +	ath10k_fw_deinit(ar);
-> +
->  err_power_off:
->  	ath10k_hw_power_off(ar);
-> 
-> @@ -1648,6 +1763,7 @@ static int ath10k_snoc_remove(struct
-> platform_device *pdev)
-> 
->  	ath10k_core_unregister(ar);
->  	ath10k_hw_power_off(ar);
-> +	ath10k_fw_deinit(ar);
->  	ath10k_snoc_free_irq(ar);
->  	ath10k_snoc_release_resource(ar);
->  	ath10k_qmi_deinit(ar);
-> diff --git a/drivers/net/wireless/ath/ath10k/snoc.h
-> b/drivers/net/wireless/ath/ath10k/snoc.h
-> index c05df45..18e19fb 100644
-> --- a/drivers/net/wireless/ath/ath10k/snoc.h
-> +++ b/drivers/net/wireless/ath/ath10k/snoc.h
-> @@ -55,6 +55,13 @@ struct regulator_bulk_data;
->  struct ath10k_snoc {
->  	struct platform_device *dev;
->  	struct ath10k *ar;
-> +	unsigned int use_tz;
-> +	struct video_firmware {
-> +		struct device *dev;
-> +		dma_addr_t fw_start_addr;
-> +		struct iommu_domain *iommu_domain;
-> +		size_t mapped_mem_size;
-> +	} fw;
->  	void __iomem *mem;
->  	dma_addr_t mem_pa;
->  	struct ath10k_snoc_target_info target_info;
-> --
-> 2.7.4
+But we can't free vi structure memory allocation in v4l2 device release=20
+callback as in case when device node is not kept opened, device release=20
+happens immediate and we can't free vi structure memory that early.
 
+>
+> Hans/Thierry, Can you please comment on this case?
+>
+> Thanks
+>
+> Sowjanya
+>
