@@ -4,53 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42E2C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC39C2BB55
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFD57208FE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AB542076D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586961967;
-	bh=VYrdfxPvSnlAugkruISgIrBzyDsUwFovOIfuhVj7+P8=;
+	s=default; t=1586961983;
+	bh=ygdLxe7J62lfuyTfl7GYvfFKZVzkmZyuH6fwVFe7bTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NiZq0x0KjJO4kb9tThvg3lihoDkZxZlO1KwsyfNM0YHbcoV+uPpVVHDI8dOnBzf4C
-	 IjuvIJoK/PGF4DyCZThCyoqJK53w/tvK+Y/dUbgn97iJDwsRam8lJR4TqOAdQtH5xh
-	 PqowyVdH1h9IIJVib3/f+nU0A8ygoEkxsUo3HGG4=
+	b=xKM+8ub1VmrkJ+qa3RYisT0PA1NT+ZtCQdVukm04quw916FRXd4U/kNuvpagSV77j
+	 J6+MtHE8932qYmhbxRBjnMBHiX7w5ruugVkfvCbzf7aRpZf9PMyT9yrU412drOMtt8
+	 n69sHv6tkVUj0KSXTEVRf62csysL5b9hDNuGYbuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392322AbgDOOph (ORCPT
+        id S2634652AbgDOOqV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:45:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39900 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 10:46:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2634601AbgDOOp3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:45:29 -0400
+        id S2636794AbgDOOpd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:45:33 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D119D2076D;
-        Wed, 15 Apr 2020 14:45:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F1EC21841;
+        Wed, 15 Apr 2020 14:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1586961929;
-        bh=VYrdfxPvSnlAugkruISgIrBzyDsUwFovOIfuhVj7+P8=;
+        bh=ygdLxe7J62lfuyTfl7GYvfFKZVzkmZyuH6fwVFe7bTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PiM4EXpPDrRBwxkowPnGLMDIDOWNN2E/dtaRmmR7brxfG/y3F6HHSZCvSwTptfsqY
-         ncooAM4fpvzpjOerde2faQqfdSu3x+lkuMn5T8InoJfeA7UhX3oIm/w5wDs69kF4TJ
-         AC2hj9IYRdphC7nvL1sSiYOVbjI+KyO71wc0fAOE=
+        b=ad/xTao9wbvey6I7S429/jl7sCbbJcL2DXT6bIxDQVzSw0ZXhGkVKnwz5xFlq7jEK
+         G/hxdauQyDp40xJbrr9DK0tm69g5W5ENN1CCEv6Ea5V3u95q/vWFf8UkCdK25uapgc
+         7w6tJgkC0CXoQSwasdCOEJwxXF2Ae2XN+gIdiYCg=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jOjI7-006kZF-47; Wed, 15 Apr 2020 16:45:27 +0200
+        id 1jOjI7-006kZz-Ga; Wed, 15 Apr 2020 16:45:27 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org
-Subject: [PATCH v3 02/12] docs: dt: convert usage-model.txt to ReST
-Date:   Wed, 15 Apr 2020 16:45:16 +0200
-Message-Id: <cfec677ffc34540f5f5b63c393f2d0fae4383787.1586961793.git.mchehab+huawei@kernel.org>
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Andy Whitcroft <apw@canonical.com>,
+        Joe Perches <joe@perches.com>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        Jacob Huisman <jacobhuisman@kernelthusiast.com>,
+        devicetree@vger.kernel.org
+Subject: [PATCH v3 11/12] docs: dt: convert submitting-patches.txt to ReST format
+Date:   Wed, 15 Apr 2020 16:45:25 +0200
+Message-Id: <887f9e25944831d8c285a80e4deeea5b1cf38803.1586961793.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1586961793.git.mchehab+huawei@kernel.org>
 References: <cover.1586961793.git.mchehab+huawei@kernel.org>
@@ -62,169 +67,133 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 - Add a SPDX header;
-- Adjust document title;
-- Use footnoote markups;
-- Some whitespace fixes and new line breaks;
+- Adjust document and section titles;
 - Mark literal blocks as such;
-- Add it to devicetree/index.rst.
+- Add it to bindings/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/devicetree/index.rst            |  1 +
- Documentation/devicetree/of_unittest.txt      |  2 +-
- .../{usage-model.txt => usage-model.rst}      | 35 +++++++++++--------
- include/linux/mfd/core.h                      |  2 +-
- 4 files changed, 23 insertions(+), 17 deletions(-)
- rename Documentation/devicetree/{usage-model.txt => usage-model.rst} (97%)
+ Documentation/devicetree/bindings/index.rst          |  1 +
+ ...submitting-patches.txt => submitting-patches.rst} | 12 +++++++++---
+ .../devicetree/bindings/writing-bindings.txt         |  2 +-
+ Documentation/process/submitting-patches.rst         |  2 +-
+ .../it_IT/process/submitting-patches.rst             |  2 +-
+ scripts/checkpatch.pl                                |  2 +-
+ 6 files changed, 14 insertions(+), 7 deletions(-)
+ rename Documentation/devicetree/bindings/{submitting-patches.txt => submitting-patches.rst} (92%)
 
-diff --git a/Documentation/devicetree/index.rst b/Documentation/devicetree/index.rst
-index a11efe26f205..7a6aad7d384a 100644
---- a/Documentation/devicetree/index.rst
-+++ b/Documentation/devicetree/index.rst
-@@ -7,4 +7,5 @@ Open Firmware and Device Tree
- .. toctree::
+diff --git a/Documentation/devicetree/bindings/index.rst b/Documentation/devicetree/bindings/index.rst
+index 98ebdab24b51..6b87875a049c 100644
+--- a/Documentation/devicetree/bindings/index.rst
++++ b/Documentation/devicetree/bindings/index.rst
+@@ -8,3 +8,4 @@ Device Tree
     :maxdepth: 1
  
-+   usage-model
-    writing-schema
-diff --git a/Documentation/devicetree/of_unittest.txt b/Documentation/devicetree/of_unittest.txt
-index 3e4e7d48ae93..9fdd2de9b770 100644
---- a/Documentation/devicetree/of_unittest.txt
-+++ b/Documentation/devicetree/of_unittest.txt
-@@ -11,7 +11,7 @@ architecture.
- 
- It is recommended to read the following documents before moving ahead.
- 
--[1] Documentation/devicetree/usage-model.txt
-+[1] Documentation/devicetree/usage-model.rst
- [2] http://www.devicetree.org/Device_Tree_Usage
- 
- OF Selftest has been designed to test the interface (include/linux/of.h)
-diff --git a/Documentation/devicetree/usage-model.txt b/Documentation/devicetree/usage-model.rst
-similarity index 97%
-rename from Documentation/devicetree/usage-model.txt
-rename to Documentation/devicetree/usage-model.rst
-index 33a8aaac02a8..326d7af10c5b 100644
---- a/Documentation/devicetree/usage-model.txt
-+++ b/Documentation/devicetree/usage-model.rst
-@@ -1,14 +1,18 @@
+    ABI
++   submitting-patches
+diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.rst
+similarity index 92%
+rename from Documentation/devicetree/bindings/submitting-patches.txt
+rename to Documentation/devicetree/bindings/submitting-patches.rst
+index 98bee6240b65..0aab2b3f16d0 100644
+--- a/Documentation/devicetree/bindings/submitting-patches.txt
++++ b/Documentation/devicetree/bindings/submitting-patches.rst
+@@ -1,13 +1,17 @@
 +.. SPDX-License-Identifier: GPL-2.0
-+
-+=========================
- Linux and the Device Tree
---------------------------
-+=========================
-+
- The Linux usage model for device tree data
  
--Author: Grant Likely <grant.likely@secretlab.ca>
-+:Author: Grant Likely <grant.likely@secretlab.ca>
+-  Submitting devicetree (DT) binding patches
++==========================================
++Submitting devicetree (DT) binding patches
++==========================================
  
- This article describes how Linux uses the device tree.  An overview of
- the device tree data format can be found on the device tree usage page
--at devicetree.org[1].
-+at devicetree.org\ [1]_.
+ I. For patch submitters
++=======================
  
--[1] http://devicetree.org/Device_Tree_Usage
-+.. [1] http://devicetree.org/Device_Tree_Usage
+   0) Normal patch submission rules from Documentation/process/submitting-patches.rst
+      applies.
  
- The "Open Firmware Device Tree", or simply Device Tree (DT), is a data
- structure and language for describing hardware.  More specifically, it
-@@ -57,7 +61,7 @@ Tree (FDT) was created which could be passed to the kernel as a binary
- blob without requiring a real Open Firmware implementation.  U-Boot,
- kexec, and other bootloaders were modified to support both passing a
- Device Tree Binary (dtb) and to modify a dtb at boot time.  DT was
--also added to the PowerPC boot wrapper (arch/powerpc/boot/*) so that
-+also added to the PowerPC boot wrapper (``arch/powerpc/boot/*``) so that
- a dtb could be wrapped up with the kernel image to support booting
- existing non-DT aware firmware.
+   1) The Documentation/ and include/dt-bindings/ portion of the patch should
+-     be a separate patch. The preferred subject prefix for binding patches is:
++     be a separate patch. The preferred subject prefix for binding patches is::
  
-@@ -68,7 +72,7 @@ out of mainline (nios) have some level of DT support.
+        "dt-bindings: <binding dir>: ..."
  
- 2. Data Model
- -------------
--If you haven't already read the Device Tree Usage[1] page,
-+If you haven't already read the Device Tree Usage\ [1]_ page,
- then go read it now.  It's okay, I'll wait....
+@@ -17,7 +21,7 @@ I. For patch submitters
  
- 2.1 High Level View
-@@ -88,6 +92,7 @@ duplication and make it easier to support a wide range of hardware
- with a single kernel image.
+   2) DT binding files are written in DT schema format using json-schema
+      vocabulary and YAML file format. The DT binding files must pass validation
+-     by running:
++     by running::
  
- Linux uses DT data for three major purposes:
-+
- 1) platform identification,
- 2) runtime configuration, and
- 3) device population.
-@@ -117,7 +122,7 @@ The 'compatible' property contains a sorted list of strings starting
- with the exact name of the machine, followed by an optional list of
- boards it is compatible with sorted from most compatible to least.  For
- example, the root compatible properties for the TI BeagleBoard and its
--successor, the BeagleBoard xM board might look like, respectively:
-+successor, the BeagleBoard xM board might look like, respectively::
+        make dt_binding_check
  
- 	compatible = "ti,omap3-beagleboard", "ti,omap3450", "ti,omap3";
- 	compatible = "ti,omap3-beagleboard-xm", "ti,omap3450", "ti,omap3";
-@@ -183,7 +188,7 @@ configuration data like the kernel parameters string and the location
- of an initrd image.
+@@ -60,6 +64,7 @@ I. For patch submitters
  
- Most of this data is contained in the /chosen node, and when booting
--Linux it will look something like this:
-+Linux it will look something like this::
  
- 	chosen {
- 		bootargs = "console=ttyS0,115200 loglevel=8";
-@@ -251,9 +256,9 @@ platform devices roughly correspond to device nodes at the root of the
- tree and children of simple memory mapped bus nodes.
+ II. For kernel maintainers
++==========================
  
- About now is a good time to lay out an example.  Here is part of the
--device tree for the NVIDIA Tegra board.
-+device tree for the NVIDIA Tegra board::
+   1) If you aren't comfortable reviewing a given binding, reply to it and ask
+      the devicetree maintainers for guidance.  This will help them prioritize
+@@ -76,6 +81,7 @@ II. For kernel maintainers
+      kept with the driver using the binding.
  
--/{
-+  /{
- 	compatible = "nvidia,harmony", "nvidia,tegra20";
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-@@ -313,7 +318,7 @@ device tree for the NVIDIA Tegra board.
- 		i2s-controller = <&i2s1>;
- 		i2s-codec = <&wm8903>;
- 	};
--};
-+  };
+ III. Notes
++==========
  
- At .init_machine() time, Tegra board support code will need to look at
- this DT and decide which nodes to create platform_devices for.
-@@ -379,13 +384,13 @@ device tree support code reflects that and makes the above example
- simpler.  The second argument to of_platform_populate() is an
- of_device_id table, and any node that matches an entry in that table
- will also get its child nodes registered.  In the Tegra case, the code
--can look something like this:
-+can look something like this::
+   0) Please see ...bindings/ABI.txt for details regarding devicetree ABI.
  
--static void __init harmony_init_machine(void)
--{
-+  static void __init harmony_init_machine(void)
-+  {
- 	/* ... */
- 	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
--}
-+  }
+diff --git a/Documentation/devicetree/bindings/writing-bindings.txt b/Documentation/devicetree/bindings/writing-bindings.txt
+index 27dfd2d8016e..ca024b9c7433 100644
+--- a/Documentation/devicetree/bindings/writing-bindings.txt
++++ b/Documentation/devicetree/bindings/writing-bindings.txt
+@@ -4,7 +4,7 @@ This is a list of common review feedback items focused on binding design. With
+ every rule, there are exceptions and bindings have many gray areas.
  
- "simple-bus" is defined in the Devicetree Specification as a property
- meaning a simple memory mapped bus, so the of_platform_populate() code
-diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-index d01d1299e49d..21718c8b2b48 100644
---- a/include/linux/mfd/core.h
-+++ b/include/linux/mfd/core.h
-@@ -74,7 +74,7 @@ struct mfd_cell {
+ For guidelines related to patches, see
+-Documentation/devicetree/bindings/submitting-patches.txt
++Documentation/devicetree/bindings/submitting-patches.rst
  
- 	/*
- 	 * Device Tree compatible string
--	 * See: Documentation/devicetree/usage-model.txt Chapter 2.2 for details
-+	 * See: Documentation/devicetree/usage-model.rst Chapter 2.2 for details
- 	 */
- 	const char		*of_compatible;
+ 
+ Overall design
+diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
+index ba5e944c7a63..1699b7f8e63a 100644
+--- a/Documentation/process/submitting-patches.rst
++++ b/Documentation/process/submitting-patches.rst
+@@ -16,7 +16,7 @@ for a list of items to check before
+ submitting code.  If you are submitting a driver, also read
+ :ref:`Documentation/process/submitting-drivers.rst <submittingdrivers>`;
+ for device tree binding patches, read
+-Documentation/devicetree/bindings/submitting-patches.txt.
++Documentation/devicetree/bindings/submitting-patches.rst.
+ 
+ Many of these steps describe the default behavior of the ``git`` version
+ control system; if you use ``git`` to prepare your patches, you'll find much
+diff --git a/Documentation/translations/it_IT/process/submitting-patches.rst b/Documentation/translations/it_IT/process/submitting-patches.rst
+index cba1f8cb61ed..7c23c08e4401 100644
+--- a/Documentation/translations/it_IT/process/submitting-patches.rst
++++ b/Documentation/translations/it_IT/process/submitting-patches.rst
+@@ -21,7 +21,7 @@ Leggete anche :ref:`Documentation/translations/it_IT/process/submit-checklist.rs
+ per una lista di punti da verificare prima di inviare del codice.  Se state
+ inviando un driver, allora leggete anche :ref:`Documentation/translations/it_IT/process/submitting-drivers.rst <it_submittingdrivers>`;
+ per delle patch relative alle associazioni per Device Tree leggete
+-Documentation/devicetree/bindings/submitting-patches.txt.
++Documentation/devicetree/bindings/submitting-patches.rst.
+ 
+ Molti di questi passi descrivono il comportamento di base del sistema di
+ controllo di versione ``git``; se utilizzate ``git`` per preparare le vostre
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index d64c67b67e3c..7d237a4598ae 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2594,7 +2594,7 @@ sub process {
+ 				if (($last_binding_patch != -1) &&
+ 				    ($last_binding_patch ^ $is_binding_patch)) {
+ 					WARN("DT_SPLIT_BINDING_PATCH",
+-					     "DT binding docs and includes should be a separate patch. See: Documentation/devicetree/bindings/submitting-patches.txt\n");
++					     "DT binding docs and includes should be a separate patch. See: Documentation/devicetree/bindings/submitting-patches.rst\n");
+ 				}
+ 			}
  
 -- 
 2.25.2
