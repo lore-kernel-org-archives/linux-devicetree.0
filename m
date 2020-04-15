@@ -2,104 +2,176 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC042C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22227C3815B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB18420737
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:27:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586968032;
-	bh=LWfFbupRx/XswUr5kigXBAfxzxhwYoQenxtzW80yBGw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zsxxMb5J6vXKN3Q9QsLucCRRcW8P9u2LJNMzaa+jy6dkXl1VW0mglSqPisUc88tx4
-	 Bu0LRzGXoZ6lQC7ObU4QCchmLmXQ89Gj4I43eTDHMZfpt+ppoANOFPE7JOOAqWuszE
-	 IsVwhEX5vIrZYr7g50KVRzlBIL/dP3QPSga6p95g=
+	by mail.kernel.org (Postfix) with ESMTP id 05842206F9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:27:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1415901AbgDOQ1L (ORCPT
+        id S1415939AbgDOQ1s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:27:11 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42680 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1415896AbgDOQ1J (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 12:27:09 -0400
-Received: by mail-oi1-f196.google.com with SMTP id d7so8918993oif.9;
-        Wed, 15 Apr 2020 09:27:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QoWSyptq3r7jFBqwiB+wzQmxtvTTslBNIl5gglBkLNo=;
-        b=HY1i5U29vF/9GOuib82x0MVY4aPTAJ1kByhH7rd5InEXWPflAEuLXmhks+XhRIzS14
-         6t/iQAil6k6AG4A4gZRtb/4VzEAXCXFTHsa8q3/UMooQPbCc9wIALQRr5aYO0KrM5VCm
-         T0v6H0YqB4hITny2oMPHS2BiytbsOA2MG4fw7cYf0SylC4nlg+AsWxcc9qTTOaxJHNwC
-         FLyrPd0WFwP4kArXg0bxmm+2Q5Or2zZWmZDeDOPPd9PnQdN4fXI/g/0NeKhFja+R8Id3
-         byBhiVX/ywbpE3Y7Fd7JY7i2KlRYzYIOF6UHDc4kTKbY1ZvIBC4uS0h/xj13XLGBkWJV
-         hfSA==
-X-Gm-Message-State: AGi0PuZBYeE6WOy1iV4aiVJJRJZbMfUvwMP2YhG1VzXAtxDTdsRToXTb
-        +/mcHkMGdloQkKsrXGrVmQ==
-X-Google-Smtp-Source: APiQypIQ2YEOM2xPkhIK1e7H2ZCsw87caX8t1G4qJ1Op/t60CQS2o6DAcnKl4kvVepkYzIq8a/Hyow==
-X-Received: by 2002:aca:5d8a:: with SMTP id r132mr5493oib.129.1586968027427;
-        Wed, 15 Apr 2020 09:27:07 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i17sm6365730otc.16.2020.04.15.09.27.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 09:27:06 -0700 (PDT)
-Received: (nullmailer pid 5651 invoked by uid 1000);
-        Wed, 15 Apr 2020 16:27:05 -0000
-Date:   Wed, 15 Apr 2020 11:27:05 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 08/14] dt-bindings: memory: tegra: Add external memory
- controller binding for Tegra210
-Message-ID: <20200415162705.GA5587@bogus>
-References: <20200409175238.3586487-1-thierry.reding@gmail.com>
- <20200409175238.3586487-9-thierry.reding@gmail.com>
+        Wed, 15 Apr 2020 12:27:48 -0400
+Received: from mga03.intel.com ([134.134.136.65]:47706 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1415915AbgDOQ1e (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:27:34 -0400
+IronPort-SDR: uW+unV75qdgb2U3L5czKZHvzFBcd+OVz2xdv1KqZvh/+6GDzdW8MNMCQSEhJZcPlI6TZAlltid
+ WwtLZa9AIqqQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 09:27:32 -0700
+IronPort-SDR: 5eJIAnbaBUkT7vmvZkQM8f4n6QiHLKkUwZB9EHJFNVj+7PpXC3EXfK7UzRjNtMHYpKIkPPTApK
+ LtRhGUpSvepA==
+X-IronPort-AV: E=Sophos;i="5.72,387,1580803200"; 
+   d="scan'208";a="256907570"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 09:27:25 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id C6B5D20606; Wed, 15 Apr 2020 19:27:22 +0300 (EEST)
+Date:   Wed, 15 Apr 2020 19:27:22 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency
+ dt-property
+Message-ID: <20200415162722.GG27762@paasikivi.fi.intel.com>
+References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200406165108.GA7646@kekkonen.localdomain>
+ <20200406173234.GD16885@pendragon.ideasonboard.com>
+ <20200407062241.GA8883@kekkonen.localdomain>
+ <20200407122106.GD4751@pendragon.ideasonboard.com>
+ <20200407151401.GA5206@paasikivi.fi.intel.com>
+ <20200414205552.GN19819@pendragon.ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200409175238.3586487-9-thierry.reding@gmail.com>
+In-Reply-To: <20200414205552.GN19819@pendragon.ideasonboard.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu,  9 Apr 2020 19:52:32 +0200, Thierry Reding wrote:
-> From: Joseph Lo <josephl@nvidia.com>
-> 
-> Add the binding document for the external memory controller (EMC) which
-> communicates with external LPDDR4 devices. It includes the bindings of
-> the EMC node and a sub-node of EMC table which under the reserved memory
-> node. The EMC table contains the data of the rates that EMC supported.
-> 
-> Signed-off-by: Joseph Lo <josephl@nvidia.com>
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
-> Changes in v6:
-> - fix example by changing #address-cells and #size-cells
-> - remove status property from example
-> 
-> Changes in v5:
-> - convert to dt-schema
-> 
->  .../nvidia,tegra210-emc.yaml                  | 82 +++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra210-emc.yaml
-> 
+Hi Laurent,
 
-Applied, thanks.
+On Tue, Apr 14, 2020 at 11:55:52PM +0300, Laurent Pinchart wrote:
+> Hi Sakari,
+> 
+> On Tue, Apr 07, 2020 at 06:14:01PM +0300, Sakari Ailus wrote:
+> > On Tue, Apr 07, 2020 at 03:21:06PM +0300, Laurent Pinchart wrote:
+> > > On Tue, Apr 07, 2020 at 09:22:41AM +0300, Sakari Ailus wrote:
+> > >> On Mon, Apr 06, 2020 at 08:32:34PM +0300, Laurent Pinchart wrote:
+> > >>> On Mon, Apr 06, 2020 at 07:51:08PM +0300, Sakari Ailus wrote:
+> > >>>> On Mon, Apr 06, 2020 at 05:42:38PM +0100, Lad Prabhakar wrote:
+> > >>>>> Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
+> > >>>>> as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
+> > >>>>> 24MHz. So instead making clock-frequency as dt-property just let the
+> > >>>>> driver enforce the required clock frequency.
+> > >>>> 
+> > >>>> Even if some current systems where the driver is used are using 24 MHz
+> > >>>> clock, that doesn't mean there wouldn't be systems using another frequency
+> > >>>> that the driver does not support right now.
+> > >>>> 
+> > >>>> The driver really should not set the frequency unless it gets it from DT,
+> > >>>> but I think the preferred means is to use assigned-clock-rates instead, and
+> > >>>> not to involve the driver with setting the frequency.
+> > >>>> 
+> > >>>> Otherwise we'll make it impossible to support other frequencies, at least
+> > >>>> without more or less random defaults.
+> > >>> 
+> > >>> We're running in circles here.
+> > >>> 
+> > >>> As the driver only supports 24MHz at the moment, the frequency should be
+> > >>> set by the driver, as it's a driver limitation. We can then work on
+> > >>> supporting additional frequencies, which will require DT to provide a
+> > >>> list of supported frequencies for the system, but that can be done on
+> > >>> top.
+> > >> 
+> > >> I guess it would be possible to use different external clock frequencies on
+> > >> a sensor in a given system but that seems to be a bit far fetched, to the
+> > >> extent I've never seen anyone doing that in practice.
+> > >> 
+> > >> Originally, the driver set the frequency based on the clock-frequency
+> > >> property. If we're removing that but use a fixed frequency instead, then
+> > >> how is that going to work going forward when someone adds support for other
+> > >> frequencies in the driver and has a system requiring that, while there are
+> > >> some other platforms relying on the driver setting a particular frequency?
+> > > 
+> > > The standard property for this is link-frequencies, not clock-frequency.
+> > > Deprecating clock-frequency now paves the way to use the standard
+> > > property later when/if someone implements support for additional
+> > > frequencies.
+> > 
+> > The external clock frequency and link frequency are different indeed, but
+> > they are related. The link frequency has been selected in a way that it is
+> > possible to generate that exact frequency using the chosen external clock
+> > frequency. If you change the external clock frequency, chances are good
+> > there is no PLL configuration to generate that link frequency.
+> 
+> But aren't we supposed to pick the clock frequency based on the link
+> frequency specified in DT ?
 
-Rob
+No. In a general case there is no reliable way to come up with an external
+clock frequency based on another, different if related, frequency.
+
+> 
+> In any case, this policy needs to be carefully documented.
+
+I thought after ten or so years this would be already an established
+practice. :-)
+
+I agree it should be documented. We don't seem to have specific
+documentation for camera sensor drivers at the moment. I can submit a
+patch...
+
+> 
+> > >> Although, if you're saying that this driver only needs to work with DT that
+> > >> comes with the kernel and you don't care about DT binary compatibility,
+> > >> this would be fine.
+> > > 
+> > > I believe this series to not break backward compatibility, as the driver
+> > > only works with a 24MHz clock, so I expect all DTs to specify that.
+> > 
+> > What you're still doing here is defining the DT bindings based on the
+> > current driver implementation, not the device properties.
+> 
+> Quite the contrary, the device doesn't require any particular input
+> clock frequency, so we're removing that from DT :-) Specifying the clock
+> frequency in DT is in my opinion a manual workaround for not computing
+> it at runtime based on the desired link frequency, while the link
+> frequency is a property of the system as it specifies the range of link
+> frequencies that are safe to use from an EMC point of view.
+
+The external clock frequency is significantly lower than the link frequency
+(usually), but it still comes out of the SoC (or a PMIC chip). The clock
+signal track on PCB as well as wiring may also be rather long, depending on
+where the camera sensor is --- quite possibly tens of centimetres.
+Therefore I wouldn't categorically rule out possible EMC issues with that
+one either.
+
+The bottom line is: use a known-good, safe frequency.
+
+-- 
+Regards,
+
+Sakari Ailus
