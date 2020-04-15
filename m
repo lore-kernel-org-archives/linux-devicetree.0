@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4441BC2BB85
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DC8C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F355206D9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3D220784
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:53:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895847AbgDOJtE (ORCPT
+        id S2405241AbgDOJx3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:49:04 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:33321 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2895839AbgDOJs7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 05:48:59 -0400
+        Wed, 15 Apr 2020 05:53:29 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:38755 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2895830AbgDOJs4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 05:48:56 -0400
 X-Originating-IP: 86.202.105.35
 Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 8BE45C000F;
-        Wed, 15 Apr 2020 09:48:55 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id C1B7A20007;
+        Wed, 15 Apr 2020 09:48:51 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -32,9 +32,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v2 8/9] clocksource/drivers/timer-atmel-tcb: allow selecting first divider
-Date:   Wed, 15 Apr 2020 11:48:25 +0200
-Message-Id: <20200415094826.132562-9-alexandre.belloni@bootlin.com>
+Subject: [PATCH v2 5/9] clocksource/drivers/timer-atmel-tcb: rework 32khz clock selection
+Date:   Wed, 15 Apr 2020 11:48:22 +0200
+Message-Id: <20200415094826.132562-6-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200415094826.132562-1-alexandre.belloni@bootlin.com>
 References: <20200415094826.132562-1-alexandre.belloni@bootlin.com>
@@ -45,32 +45,57 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The divider selection algorithm never allowed to get index 0. It was also
-continuing to look for dividers, trying to find the slow clock selection.
-This is not necessary anymore.
+On all the supported SoCs, the slow clock is always ATMEL_TC_TIMER_CLOCK5,
+avoid looking it up and pass it directly to setup_clkevents.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/clocksource/timer-atmel-tcb.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/clocksource/timer-atmel-tcb.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/clocksource/timer-atmel-tcb.c b/drivers/clocksource/timer-atmel-tcb.c
-index 8fcd4d74c54b..ccb77b9cb489 100644
+index 7427b07495a8..b255a4a1a36b 100644
 --- a/drivers/clocksource/timer-atmel-tcb.c
 +++ b/drivers/clocksource/timer-atmel-tcb.c
-@@ -432,10 +432,8 @@ static int __init tcb_clksrc_init(struct device_node *node)
+@@ -346,7 +346,7 @@ static void __init tcb_setup_single_chan(struct atmel_tc *tc, int mck_divisor_id
+ 	writel(ATMEL_TC_SYNC, tcaddr + ATMEL_TC_BCR);
+ }
  
+-static const u8 atmel_tcb_divisors[5] = { 2, 8, 32, 128, 0, };
++static const u8 atmel_tcb_divisors[] = { 2, 8, 32, 128 };
+ 
+ static const struct of_device_id atmel_tcb_of_match[] = {
+ 	{ .compatible = "atmel,at91rm9200-tcb", .data = (void *)16, },
+@@ -362,7 +362,6 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 	u64 (*tc_sched_clock)(void);
+ 	u32 rate, divided_rate = 0;
+ 	int best_divisor_idx = -1;
+-	int clk32k_divisor_idx = -1;
+ 	int bits;
+ 	int i;
+ 	int ret;
+@@ -416,12 +415,6 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 		unsigned divisor = atmel_tcb_divisors[i];
+ 		unsigned tmp;
+ 
+-		/* remember 32 KiHz clock for later */
+-		if (!divisor) {
+-			clk32k_divisor_idx = i;
+-			continue;
+-		}
+-
  		tmp = rate / divisor;
  		pr_debug("TC: %u / %-3u [%d] --> %u\n", rate, divisor, i, tmp);
--		if (best_divisor_idx > 0) {
--			if (tmp < 5 * 1000 * 1000)
--				continue;
--		}
-+		if ((best_divisor_idx >= 0) && (tmp < 5 * 1000 * 1000))
-+			break;
- 		divided_rate = tmp;
- 		best_divisor_idx = i;
- 	}
+ 		if (best_divisor_idx > 0) {
+@@ -467,7 +460,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 		goto err_disable_t1;
+ 
+ 	/* channel 2:  periodic and oneshot timer support */
+-	ret = setup_clkevents(&tc, clk32k_divisor_idx);
++	ret = setup_clkevents(&tc, ATMEL_TC_TIMER_CLOCK5);
+ 	if (ret)
+ 		goto err_unregister_clksrc;
+ 
 -- 
 2.25.2
 
