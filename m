@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39125C3815B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D595CC2BB55
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A568206D5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B129920737
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586954964;
-	bh=yZRJLnU4ErUB6W+jl5bb662sTl3GJZbnFAsMghgK1O4=;
+	s=default; t=1586955004;
+	bh=2OzrXsnZI6VeFmjEUumNOJf3tK1Ls686mWfBeZijVvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yma7YeGLAU42OjadB86wZvzQasop/hAF+utLbZJdWFuQpS3xxLtYDW2Rjcko4/yOA
-	 ccXNraa8squLuW8c8Eg2SL8cX42BOH2LvgyNxrvuwAV8cEyNGIj8dmEHNOY2eIIr+M
-	 1N/Htm+rYr2J215c54y1fzOTcuGE7ebWieD2N05U=
+	b=biHvOv3b/UhFZy8/+qGiseuwz/ENKndLWYEEI2+1z/AFhYGQ2OkHXbAt+zVPhQE0H
+	 p9YHL84Fh0fhVFffP/ciZ1xEc91oBev8tTUzpVnMZa0vGDMSHza1erAWmTV1BNRG7T
+	 1GIpVaaly2jPLBpybOhO9XbaBzRK0f/FOoju2jeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370316AbgDOMtB (ORCPT
+        id S370390AbgDOMuB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:49:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34128 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 08:50:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408945AbgDOLnB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:43:01 -0400
+        id S2408929AbgDOLmy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:42:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7193C206A2;
-        Wed, 15 Apr 2020 11:43:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1795F20737;
+        Wed, 15 Apr 2020 11:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950981;
-        bh=yZRJLnU4ErUB6W+jl5bb662sTl3GJZbnFAsMghgK1O4=;
+        s=default; t=1586950973;
+        bh=2OzrXsnZI6VeFmjEUumNOJf3tK1Ls686mWfBeZijVvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oPMxqEFSN6W8/xv/LoymzbM2FBBS7DI767JB0/3NdORgkdGbM32CSFi1gkYi4N187
-         EAA1h01VfElfDRbd0Ptw7P/xhSnuoJoO6HhMCrk4QZAeGAs9lHO9D2Tsh9A8EjksMw
-         E8+7uzdY7sQyVHqQHAyrNdqHhkp0fm0egTh3K5RM=
+        b=IQ9xDvyuS1GP5fq7hVmKzMxReRi0rrmImiwzGBI//XZu1simA2aS4V5AC/j9g82fQ
+         9eMc28J2wOTr+Yw0qHvZRVODA9NkgBDaM541W2LvdxH4faPeNvXiU7m6HcQyhGsW/u
+         2sVGQHkAo0V4uQ+Kl6ZOA9vp1rDOHSKW6vX7HYg0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
+Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 029/106] ARM: dts: rockchip: fix lvds-encoder ports subnode for rk3188-bqedison2qc
-Date:   Wed, 15 Apr 2020 07:41:09 -0400
-Message-Id: <20200415114226.13103-29-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 022/106] arm64: dts: marvell: Fix cpu compatible for AP807-quad
+Date:   Wed, 15 Apr 2020 07:41:02 -0400
+Message-Id: <20200415114226.13103-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -60,71 +60,124 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Johan Jonker <jbx6244@gmail.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
 
-[ Upstream commit 1a7e99599dffd836fcb720cdc0eaf3cd43d7af4a ]
+[ Upstream commit d136d2588b21b1a07515632ed61120c9f262909b ]
 
-A test with the command below gives this error:
+make -k ARCH=arm64 dtbs_check shows the following errors. Fix them by
+removing the "arm,armv8" compatible.
 
-arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml: lvds-encoder:
-'ports' is a required property
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
+cpu@0: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
+cpu@0: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long CHECK
+arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex.dt.yaml
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
+cpu@1: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
+cpu@1: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
+cpu@100: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
+cpu@100: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
+cpu@101: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
+cpu@101: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
 
-Fix error by adding a ports wrapper for port@0 and port@1
-inside the 'lvds-encoder' node for rk3188-bqedison2qc.
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
+cpu@0: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
+cpu@0: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
+cpu@1: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
+cpu@1: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
+cpu@100: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
+cpu@100: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
+cpu@101: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
+cpu@101: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
 
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/
-bridge/lvds-codec.yaml
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
+cpu@0: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
+cpu@0: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
+cpu@1: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
+cpu@1: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
+cpu@100: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
+cpu@100: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
+cpu@101: compatible: Additional items are not allowed ('arm,armv8' was
+unexpected)
+/home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
+cpu@101: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200316174647.5598-1-jbx6244@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3188-bqedison2qc.dts | 27 ++++++++++++++----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+ arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3188-bqedison2qc.dts b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-index 8afb2fd5d9f1b..66a0ff196eb1f 100644
---- a/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-+++ b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-@@ -58,20 +58,25 @@
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi b/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
+index 840466e143b47..68782f161f122 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
+@@ -17,7 +17,7 @@
  
- 	lvds-encoder {
- 		compatible = "ti,sn75lvds83", "lvds-encoder";
--		#address-cells = <1>;
--		#size-cells = <0>;
- 
--		port@0 {
--			reg = <0>;
--			lvds_in_vop0: endpoint {
--				remote-endpoint = <&vop0_out_lvds>;
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				lvds_in_vop0: endpoint {
-+					remote-endpoint = <&vop0_out_lvds>;
-+				};
- 			};
--		};
- 
--		port@1 {
--			reg = <1>;
--			lvds_out_panel: endpoint {
--				remote-endpoint = <&panel_in_lvds>;
-+			port@1 {
-+				reg = <1>;
-+
-+				lvds_out_panel: endpoint {
-+					remote-endpoint = <&panel_in_lvds>;
-+				};
- 			};
+ 		cpu0: cpu@0 {
+ 			device_type = "cpu";
+-			compatible = "arm,cortex-a72", "arm,armv8";
++			compatible = "arm,cortex-a72";
+ 			reg = <0x000>;
+ 			enable-method = "psci";
+ 			#cooling-cells = <2>;
+@@ -32,7 +32,7 @@
  		};
- 	};
+ 		cpu1: cpu@1 {
+ 			device_type = "cpu";
+-			compatible = "arm,cortex-a72", "arm,armv8";
++			compatible = "arm,cortex-a72";
+ 			reg = <0x001>;
+ 			enable-method = "psci";
+ 			#cooling-cells = <2>;
+@@ -47,7 +47,7 @@
+ 		};
+ 		cpu2: cpu@100 {
+ 			device_type = "cpu";
+-			compatible = "arm,cortex-a72", "arm,armv8";
++			compatible = "arm,cortex-a72";
+ 			reg = <0x100>;
+ 			enable-method = "psci";
+ 			#cooling-cells = <2>;
+@@ -62,7 +62,7 @@
+ 		};
+ 		cpu3: cpu@101 {
+ 			device_type = "cpu";
+-			compatible = "arm,cortex-a72", "arm,armv8";
++			compatible = "arm,cortex-a72";
+ 			reg = <0x101>;
+ 			enable-method = "psci";
+ 			#cooling-cells = <2>;
 -- 
 2.20.1
 
