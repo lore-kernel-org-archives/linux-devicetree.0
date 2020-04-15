@@ -2,86 +2,162 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71306C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3535C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A6A32074F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3FBA2076D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:54:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586958861;
+	bh=B15MaIVrWewq/916Cap1EesX1id/d+R6e9kbZ3N8wiQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=U+4Hozz6EAqUgCOoZTnv/vksgYVVULirrx/TwrMvVf6pCPxWaqKLCDOAJHWx/t7ee
+	 Rg/JN01Y3+iVHjFjSTPHjgvyidG3rdXtXssidioT9k3a0vo/+jaP9UK2o7Knw9T9tT
+	 dtaj1gwyylKUTVkvt3HCvHF0Qp+KGwCeTxZQDGfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636299AbgDONxN (ORCPT
+        id S2636307AbgDONyT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:53:13 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34345 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2636290AbgDONxI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 09:53:08 -0400
-Received: by mail-ot1-f65.google.com with SMTP id m2so3490885otr.1;
-        Wed, 15 Apr 2020 06:53:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BLcFv5whL5EjTbt6b2FbQSBshbkRbokQxYkiiI7yDlo=;
-        b=EstvoWp0GCOpxnHCw65gvbFVQByHzZSEDRCh6XmZOGRBYF6g5RBf/7nZf/V4ydYTVK
-         v5IzjZoJ5G6rcmlIolFJs17TPSvjONs+JxKTHtQZWIIFVYkef3ZmK7dcsr+tNSppIOBf
-         OvM0D9oaQriBTkStdchSp6VSTsOu78CarVIBIegKLzjigPxxWo6ZYIx+sObWn6/zNWCL
-         qJYnKiOxwTvkskqRDJn5SZhkgghhbsWWI6O3NEqLlEx19byTomVOtDUISl1g6X8e/0VC
-         bMjVQV5gMrDhmiP+o8+/M50s1gNiRE9n39yW87pego9dNgV/dUvRKqklMmDpuzY5V12U
-         Mbug==
-X-Gm-Message-State: AGi0PubEi0qkxreF0zyNMl7BKMPqTT9E270iEn1tFIes8m2QZV8eOusY
-        uaNwFsRaGGwzdujkwV2Hp8VcVpejQP2FHwu+0xE=
-X-Google-Smtp-Source: APiQypJ7e+qd8UvZuq2hYGRTkssWX3YA5bdATEvTb4+Avw03fyZoXFjFFBAs/hA//LhoXCPcrFtaIIdJaNMJ885/n7s=
-X-Received: by 2002:a9d:76c7:: with SMTP id p7mr21888214otl.145.1586958786901;
- Wed, 15 Apr 2020 06:53:06 -0700 (PDT)
+        Wed, 15 Apr 2020 09:54:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41648 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2636302AbgDONyS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 09:54:18 -0400
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F28F020857;
+        Wed, 15 Apr 2020 13:54:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586958857;
+        bh=B15MaIVrWewq/916Cap1EesX1id/d+R6e9kbZ3N8wiQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ahglTXwgdwXbfVZcOtNDx1KsOOau6yffgj9Ih4cOkgwpTOrX6P2BqHNUuEFbN3D6O
+         cz/UpstDmxXC01/8iUOi130PdlpRtglOr1msICrVlCTAeRYNZF4ynxNf7Y70si0NH9
+         PIba5HxCfXgGfkb3kepnhfJp+Xp2FxifyyJBkdiE=
+Received: by mail-qt1-f172.google.com with SMTP id w29so12806665qtv.3;
+        Wed, 15 Apr 2020 06:54:16 -0700 (PDT)
+X-Gm-Message-State: AGi0Puav4lMPZxenCWTac/sq/rgfxBTtaAeIlkGVSbOGPomDzE3KB0IS
+        A8AZ8C0ZBvOYPaca7AkTELtYjCxTf5Qmatgiyw==
+X-Google-Smtp-Source: APiQypKI6qV3r6q6jt+02uZBi1c0wucvc4BEiZrv0E6a0Z2pq81a4adZDUqe6s+84azNEKAJXSrtxJKnuAPPyKpC9P0=
+X-Received: by 2002:ac8:7cba:: with SMTP id z26mr11595071qtv.143.1586958855988;
+ Wed, 15 Apr 2020 06:54:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <1586512923-21739-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1586512923-21739-2-git-send-email-yoshihiro.shimoda.uh@renesas.com> <CAMuHMdULExMNnKJWsjAonR1sVeTyQCH0shwO--Wo6dLzrWV_tQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdULExMNnKJWsjAonR1sVeTyQCH0shwO--Wo6dLzrWV_tQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 15 Apr 2020 15:52:55 +0200
-Message-ID: <CAMuHMdWp8kNnZYXpp8LnKcE01OWZi2x7U29MLjQ4BTAcYJUyeQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: dma: renesas,rcar-dmac: convert bindings
- to json-schema
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Vinod <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+References: <20200403002608.946-1-ansuelsmth@gmail.com> <20200403002608.946-2-ansuelsmth@gmail.com>
+ <20200414173838.GA29176@bogus> <00bb01d61321$05bf9b20$113ed160$@gmail.com>
+In-Reply-To: <00bb01d61321$05bf9b20$113ed160$@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 15 Apr 2020 08:54:04 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLyEy_++q5+JsUmg=gpgh=xkSP7XiQrDvje7tiUHzB8KQ@mail.gmail.com>
+Message-ID: <CAL_JsqLyEy_++q5+JsUmg=gpgh=xkSP7XiQrDvje7tiUHzB8KQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] devicetree: bindings: phy: Document dwc3 qcom phy
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
-
-On Wed, Apr 15, 2020 at 3:09 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Fri, Apr 10, 2020 at 12:02 PM Yoshihiro Shimoda
-> <yoshihiro.shimoda.uh@renesas.com> wrote:
-> > Convert Renesas R-Car and RZ/G DMA Controller bindings
-> > documentation to json-schema.
+On Wed, Apr 15, 2020 at 7:26 AM <ansuelsmth@gmail.com> wrote:
+>
+> > On Fri, Apr 03, 2020 at 02:26:05AM +0200, Ansuel Smith wrote:
+> > > Document dwc3 qcom phy hs and ss phy bindings needed to correctly
+> > > inizialize and use usb on ipq806x SoC
+> > >
+> > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > > ---
+> > >  .../bindings/phy/qcom,dwc3-hs-usb-phy.yaml    | 65
+> > +++++++++++++++++++
+> > >  .../bindings/phy/qcom,dwc3-ss-usb-phy.yaml    | 65
+> > +++++++++++++++++++
+> > >  2 files changed, 130 insertions(+)
+> > >  create mode 100644
+> > Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-phy.yaml
+> > >  create mode 100644
+> > Documentation/devicetree/bindings/phy/qcom,dwc3-ss-usb-phy.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-
+> > phy.yaml b/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-
+> > phy.yaml
+> > > new file mode 100644
+> > > index 000000000000..0bb59e3c2ab8
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/phy/qcom,dwc3-hs-usb-
+> > phy.yaml
+> > > @@ -0,0 +1,65 @@
+> > > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/phy/qcom,dwc3-hs-usb-phy.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Qualcomm DWC3 HS PHY CONTROLLER
+> > > +
+> > > +maintainers:
+> > > +  - Ansuel Smith <ansuelsmth@gmail.com>
+> > > +
+> > > +description:
+> > > +  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical
+> > layer
+> > > +  controllers. Each DWC3 PHY controller should have its own node.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: qcom,dwc3-hs-usb-phy
+> > > +
+> > > +  "#phy-cells":
+> > > +    const: 0
+> > > +
+> > > +  regmap:
+> > > +    maxItems: 1
+> > > +    description: phandle to usb3 dts definition
+> > > +
+> > > +  clocks:
+> > > +    minItems: 1
+> > > +    maxItems: 2
+> > > +
+> > > +  clock-names:
+> > > +    minItems: 1
+> > > +    maxItems: 2
+> > > +    description: |
+> > > +      - "ref" Is required
+> > > +      - "xo"       Optional external reference clock
+> > > +    items:
+> > > +      - const: ref
+> > > +      - const: xo
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - "#phy-cells"
+> > > +  - regmap
+> > > +  - clocks
+> > > +  - clock-names
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
+> > > +
+> > > +    hs_phy_0: hs_phy_0 {
+> > > +      compatible = "qcom,dwc3-hs-usb-phy";
+> > > +      regmap = <&usb3_0>;
 > >
-> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > If the registers for the phy are part of 'qcom,dwc3' then make this node
+> > a child of it.
+> >
 >
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> One question below...
+> Making this node a child of qcom,dwc3 cause malfunction of the driver.
 
-Sorry, I missed something at first: shouldn't "power-domains" and "resets"
-be mandatory as well?
+Fix the driver then.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Rob
