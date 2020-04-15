@@ -2,92 +2,144 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77372C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3DDC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48D402074F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A192137B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586956922;
-	bh=WX4FlKyay9j1hWgu6xpp6v0VrZMy0wIewRZTNsRtM3U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tqexLkgInSwBk+FdeosHtMHM0KMSe+E/IaJfGP1AfthbWb+Wz+PKowqnFRvPXl+IC
-	 lBKGjsqwD7LfrtV1myc1Frz++SpK2kITG4urNwCEAvZguLTx4NO+lfxN7B+mPiwEO/
-	 OhcYiH1ey8kFB4638ZeEDavSQDwFrP1Pp6XYIqiU=
+	s=default; t=1586958267;
+	bh=LBaT8ZJQGI5DoX0BaOKcay3nNpJ8jL6vioLVwcpw1hM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vVkmZ8Qfax6jXnrrgaUtIuY5NEJgh7q4LdCoRjbnB7VPGNB+GacfmERc7ZxMmFUbk
+	 U1lxEGgFJbNFQqgLQPQbrIp3ed+X70gFMNknEcCShnT3WPWqofEGCwG731gOskqV8c
+	 u5+RsN8c/KRqzIYCuT8Q4AolfypgGC42M5eQlHUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635995AbgDONWB (ORCPT
+        id S2633454AbgDONo0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:22:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54332 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897014AbgDOLfE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:35:04 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 064722137B;
-        Wed, 15 Apr 2020 11:35:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950503;
-        bh=WX4FlKyay9j1hWgu6xpp6v0VrZMy0wIewRZTNsRtM3U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XqBtNRbGmcY6ben3e4djsiE6BYEQbjImAOqJoyXDSCamKDLpCUjcKAtzuq0An4Zd8
-         0SA5mbfu1DLzxIDzZd8WT3hF58wgy3u1qCaBPo1Ak4NAECXtDMJwh9JztwZ39MWD0n
-         PjfDtRnT/UEXl197EDaowgJ00O0wtslID9WcnC6s=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 015/129] arm64: dts: librem5-devkit: add a vbus supply to usb0
-Date:   Wed, 15 Apr 2020 07:32:50 -0400
-Message-Id: <20200415113445.11881-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
-References: <20200415113445.11881-1-sashal@kernel.org>
+        Wed, 15 Apr 2020 09:44:26 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38760 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730647AbgDONoW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 09:44:22 -0400
+Received: by mail-ed1-f66.google.com with SMTP id e5so4874383edq.5;
+        Wed, 15 Apr 2020 06:44:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ue1uYbSCM3f3qpA8DP0y7k1ImrV8BLgfQdpHr8wCsNY=;
+        b=rpO9MnuZ7LUd/ZIOmj2qbKe0/TaEjah/TLCxkZpXoXGjK/A3yPVenorS7cbNxROyh7
+         WfrRYLna0DDCJX9HtDBU9Tbt0TcWRQ7g8YIGVUmRNB1eT2VySRHIAPGFUzs0PR4ZDAM3
+         gLwZzmwMxxNsOBlwzCj/81AChokwFjuV2BEmeZMVa5ONQ6B0lvkEe6dx11hrNXlKjPGB
+         PVPGEVLBOgme4fJu727b3Zn4fVRmtzfApq6jFdwMacNwRK8TJ+XvKDO/eYML/ZW7EFD6
+         bLqAhgpREjkbK5m8Mizjp0mlUttn56QaIDDyAcysI7ZO7EdXf/E8dQHxSEXAqJqhMagR
+         Ahnw==
+X-Gm-Message-State: AGi0Pua+I8RsrF+K0p94JD3SRwtP2Pa6sEZ4fTZ32X0fVJWvvwSE81v2
+        6ujeTK0oP6HHd4LFsORbvwjpodqc
+X-Google-Smtp-Source: APiQypKNYzTDTcjJXJkyJ1tW3CmeNRTTMuezBm45FxKlxDAUOBaCIldgd2OqLmdaCh5e2z6JTgFDtA==
+X-Received: by 2002:a17:907:118b:: with SMTP id uz11mr4894575ejb.89.1586958259236;
+        Wed, 15 Apr 2020 06:44:19 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id bs8sm2626297ejb.92.2020.04.15.06.44.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 Apr 2020 06:44:18 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 15:44:15 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Jonathan Bakker <xc-racer2@live.ca>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap@vger.kernel.org, openpvrsgx-devgroup@letux.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>
+Subject: Re: [PATCH v6 08/12] arm: dts: s5pv210: Add G3D node
+Message-ID: <20200415134415.GA21120@kozik-lap>
+References: <cover.1586939718.git.hns@goldelico.com>
+ <b6733f80546bf3e6b3799f716b9c8e0f407de03d.1586939718.git.hns@goldelico.com>
+ <CAJKOXPcb9KWNAem-CAx_zCS+sZoEHYc0J8x0nk1xjY9hD4-M4w@mail.gmail.com>
+ <AB9B8741-CFF7-414D-9489-D381B539538D@goldelico.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <AB9B8741-CFF7-414D-9489-D381B539538D@goldelico.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: "Angus Ainslie (Purism)" <angus@akkea.ca>
+On Wed, Apr 15, 2020 at 02:50:31PM +0200, H. Nikolaus Schaller wrote:
+> 
+> > Am 15.04.2020 um 13:49 schrieb Krzysztof Kozlowski <krzk@kernel.org>:
+> > 
+> > On Wed, 15 Apr 2020 at 10:36, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+> >> 
+> >> From: Jonathan Bakker <xc-racer2@live.ca>
+> >> 
+> >> to add support for SGX540 GPU.
+> > 
+> > Do not continue the subject in commit msg like it is one sentence.
+> > These are two separate sentences, so commit msg starts with capital
+> > letter and it is sentence by itself.
+> > 
+> >> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> >> ---
+> >> arch/arm/boot/dts/s5pv210.dtsi | 15 +++++++++++++++
+> >> 1 file changed, 15 insertions(+)
+> >> 
+> >> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
+> >> index 2ad642f51fd9..e7fc709c0cca 100644
+> >> --- a/arch/arm/boot/dts/s5pv210.dtsi
+> >> +++ b/arch/arm/boot/dts/s5pv210.dtsi
+> >> @@ -512,6 +512,21 @@ vic3: interrupt-controller@f2300000 {
+> >>                        #interrupt-cells = <1>;
+> >>                };
+> >> 
+> >> +               g3d: g3d@f3000000 {
+> >> +                       compatible = "samsung,s5pv210-sgx540-120";
+> >> +                       reg = <0xf3000000 0x10000>;
+> >> +                       interrupt-parent = <&vic2>;
+> >> +                       interrupts = <10>;
+> >> +                       clock-names = "sclk";
+> >> +                       clocks = <&clocks CLK_G3D>;
+> > 
+> > Not part of bindings, please remove or add to the bindings.
+> 
+> Well, the bindings should describe what is common for all SoC
+> and they are quite different in what they need in addition.
+> 
+> Thererfore we have no "additionalProperties: false" in the
+> bindings [PATCH v6 01/12].
 
-[ Upstream commit dde061b865598ad91f50140760e1d224e5045db9 ]
+If these properties are needed for Exynos-specific implementation, they
+should be in the bindings. If they are not needed, they should not be
+here.
 
-Without a VBUS supply the dwc3 driver won't go into otg mode.
+Take a look at midgard bindings for example. This is a nice starting
+point for these here.
 
-Fixes: eb4ea0857c83 ("arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit")
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-index 764a4cb4e1251..161406445fafe 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -750,6 +750,7 @@
- };
- 
- &usb3_phy0 {
-+	vbus-supply = <&reg_5v_p>;
- 	status = "okay";
- };
- 
--- 
-2.20.1
-
+Best regards,
+Krzysztof
