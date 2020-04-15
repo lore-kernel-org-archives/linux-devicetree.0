@@ -2,188 +2,94 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 824D2C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA56C2BB55
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 651E1206A2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D918620768
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:42:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586950967;
+	bh=GKSjlZDpSsH34pag1b7kvu2cZ6Kl6/zbeisGVvWw0j4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Cu7xW4sWJmFobeUNG3RMEASxNCOVAwdtYspuCL6VAPSnsGoXdPclm/uvdZG+NhuCu
+	 4UmtgprtWCn/dTJxBcVF/d7CKq3Uieoptgp2amexMD6LuxGrFen3N8UIEQVfX3INJc
+	 TOXEkcYRYsAM780vdo3jwMrUiK5fDXfVReEcUYlY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897399AbgDOLlc (ORCPT
+        id S2408905AbgDOLmp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:41:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53278 "EHLO mx2.suse.de"
+        Wed, 15 Apr 2020 07:42:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897395AbgDOLlT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:41:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E7CA0AEE7;
-        Wed, 15 Apr 2020 11:41:15 +0000 (UTC)
-Subject: Re: [PATCH v3 2/2] arm64: dts: realtek: Add RTD1319 SoC and Realtek
- PymParticle EVB
-To:     James Tai <james.tai@realtek.com>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20200204145207.28622-1-james.tai@realtek.com>
- <20200204145207.28622-3-james.tai@realtek.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <842e8a9d-cdd6-cb85-ce85-17f20ff7b626@suse.de>
-Date:   Wed, 15 Apr 2020 13:41:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S2897500AbgDOLmn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:42:43 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B2D820775;
+        Wed, 15 Apr 2020 11:42:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950962;
+        bh=GKSjlZDpSsH34pag1b7kvu2cZ6Kl6/zbeisGVvWw0j4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Fe9YshogVe9zh40cXSQr0xmAAU4S9SYyIGeLcik9a2+LppJMhLd4q9qNrKQH0OmJD
+         USr7uc6ZCWsJzYDpyRO1J2H9Za1lCmzPUQIXCvkKe45CbntIscJe0PoitiqIqstswv
+         +XzKiAMKcL8Xy/9vMCw43Sv70M7mvMPdACz1C+C4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 013/106] arm64: dts: allwinner: a64: Fix display clock register range
+Date:   Wed, 15 Apr 2020 07:40:53 -0400
+Message-Id: <20200415114226.13103-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
+References: <20200415114226.13103-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200204145207.28622-3-james.tai@realtek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi James,
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-A couple more nits to consider for v4:
+[ Upstream commit 3e9a1a8b7f811de3eb1445d72f68766b704ad17c ]
 
-Am 04.02.20 um 15:52 schrieb James Tai:
-> diff --git a/arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts b/arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts
-> new file mode 100644
-> index 000000000000..2a36d220fef6
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts
-> @@ -0,0 +1,43 @@
-> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-> +/*
-> + * Copyright (c) 2019 Realtek Semiconductor Corp.
+Register range of display clocks is 0x10000, as it can be seen from
+DE2 documentation.
 
-2019-2020? (also elsewhere)
+Fix it.
 
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "rtd1319.dtsi"
-> +
-> +/ {
-> +	compatible = "realtek,pymparticle", "realtek,rtd1319";
-> +	model = "Realtek PymParticle EVB";
-> +
-> +	memory@2e000 {
-> +		device_type = "memory";
-> +		reg = <0x2e000 0x3ffd2000>; /* boot ROM to 1 GiB or 2 GiB */
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:460800n8";
-> +	};
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +		serial1 = &uart1;
-> +		serial2 = &uart2;
-> +	};
-> +};
-> +
-> +/* debug console (J1) */
-> +&uart0 {
-> +	status = "okay";
-> +};
-> +
-> +/* M.2 slot (CON8) */
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Fixes: 2c796fc8f5dbd ("arm64: dts: allwinner: a64: add necessary device tree nodes for DE2 CCU")
+[wens@csie.org: added fixes tag]
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Also J14 and CON2 (unless the board is mislabeled?).
-
-/* J14 and M.2 slots (CON2, CON8) */ ?
-
-> +&uart1 {
-> +	status = "disabled";
-> +};
-> +
-> +/* GPIO connector (T1) */
-> +&uart2 {
-> +	status = "disabled";
-> +};
-> diff --git a/arch/arm64/boot/dts/realtek/rtd1319.dtsi b/arch/arm64/boot/dts/realtek/rtd1319.dtsi
-> new file mode 100644
-> index 000000000000..1dcee00009cd
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/realtek/rtd1319.dtsi
-> @@ -0,0 +1,12 @@
-> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-> +/*
-> + * Realtek RTD1319 SoC
-> + *
-> + * Copyright (c) 2019 Realtek Semiconductor Corp.
-> + */
-> +
-> +#include "rtd13xx.dtsi"
-> +
-> +/ {
-> +	compatible = "realtek,rtd1319";
-> +};
-> diff --git a/arch/arm64/boot/dts/realtek/rtd13xx.dtsi b/arch/arm64/boot/dts/realtek/rtd13xx.dtsi
-> new file mode 100644
-> index 000000000000..f6d73f18345d
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/realtek/rtd13xx.dtsi
-> @@ -0,0 +1,213 @@
-> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-> +/*
-> + * Realtek RTD13xx SoC family
-> + *
-> + * Copyright (c) 2019 Realtek Semiconductor Corp.
-> + */
-> +
-> +/memreserve/	0x0000000000000000 0x000000000002e000; /* Boot ROM */
-
-Can you check whether your U-Boot and LK respectively need this 
-memreserve entry, here and for previous SoCs? Because for RTD16xx we 
-don't seem to have any memreserve entries at all. We do have it in 
-rtd139x.dtsi, rtd129x.dtsi and rtd1195.dtsi.
-
-Unrelated: Since we're carving out the 2e000 or so from /memory node and 
-mapping ranges for /soc, I've been wondering whether we should represent 
-the Boot ROM as node somehow. But since it's a ROM with (I assume) 
-binary code only, I didn't see any need to have it accessible as mtd-rom 
-device, so it's way down my to-do list to research how other mainline 
-platforms might model their boot ROMs... (maybe your team has time, or 
-someone reading happens to know?)
-
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-
-> +/memreserve/	0x000000000002e000 0x0000000000100000; /* Boot loader */
-
-Is this a) correctly sized (not 0xd2000?) and b) still needed? I thought 
-the documented sub-0x100000 memory corruption were fixed in newer BSPs?
-
-> +/memreserve/	0x000000000f400000 0x0000000000500000; /* Video FW */
-> +/memreserve/	0x000000000f900000 0x0000000000500000; /* Audio FW */
-> +/memreserve/	0x0000000010000000 0x0000000000014000; /* Audio FW RAM */
-[snip]
-
-Are these needed for the bootloader not to overwrite preloaded firmware, 
-or could these become /mem-reserve sub-nodes instead?
-
-Long-term I'm assuming we would move the responsibility for loading 
-these to the new kernel drivers (so that the bootloader doesn't need to 
-take care anymore) and ship the needed blobs in linux-firmware.git?
-
-Or is the video FW needed by the bootloader itself for HDMI/DP output?
-
-Thanks,
-Andreas
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 27e48234f1c23..38ecd227c34c1 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -227,7 +227,7 @@
+ 
+ 			display_clocks: clock@0 {
+ 				compatible = "allwinner,sun50i-a64-de2-clk";
+-				reg = <0x0 0x100000>;
++				reg = <0x0 0x10000>;
+ 				clocks = <&ccu CLK_BUS_DE>,
+ 					 <&ccu CLK_DE>;
+ 				clock-names = "bus",
 -- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+2.20.1
+
