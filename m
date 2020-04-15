@@ -2,112 +2,122 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93832C38A2E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD9FC2BB55
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71D9020737
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F88820775
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:06:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586955995;
+	bh=009fT8XnlNWgSGFjkqzi9WHS52wJSOjnMq5vvLMSftE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=A8dxITmcQHo9xD+0dHN9IjnGbSngiPnEwWI5OAHFuasMSKC6psG235hUVyPwyyAwn
+	 hWp56Tisl+03dMkyIt3N7MOBLnWlOOOpNKLsf1XU3Pu1CNAbJ2jFNek03xE7hBVmiF
+	 y33Fr0d+qqk2DxQx2L9yH33G6+lOVm28YplJ4TGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505908AbgDONFx (ORCPT
+        id S2897112AbgDOLgF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:05:53 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:47305 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505896AbgDONFL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 09:05:11 -0400
-X-Originating-IP: 78.193.40.249
-Received: from localhost (unknown [78.193.40.249])
-        (Authenticated sender: kamel.bouhara@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 9671DFF80A;
-        Wed, 15 Apr 2020 13:05:08 +0000 (UTC)
-From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org,
-        Kamel Bouhara <kamel.bouhara@bootlin.com>
-Subject: [PATCH v3 2/3] dt-bindings: counter: microchip-tcb-capture counter
-Date:   Wed, 15 Apr 2020 15:04:54 +0200
-Message-Id: <20200415130455.2222019-3-kamel.bouhara@bootlin.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200415130455.2222019-1-kamel.bouhara@bootlin.com>
-References: <20200415130455.2222019-1-kamel.bouhara@bootlin.com>
+        Wed, 15 Apr 2020 07:36:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2897100AbgDOLgA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:36:00 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D57C214AF;
+        Wed, 15 Apr 2020 11:35:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950559;
+        bh=009fT8XnlNWgSGFjkqzi9WHS52wJSOjnMq5vvLMSftE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dWMCTIG+EBPiQVPRSf1ARyILE7crI0o0Y1tT4EbX9ipNl26SPdYyebUIPrLsaA50a
+         oqsOwHXBKDi0B+Brb457ER6zU2CFiscxKEJKDwabeXaMoLM8v1kKM86tqye6D7xem0
+         qdx9cet8jOb+HlciuFDTpxqyh1lcBBDZhR7AI8bo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 064/129] dt-bindings: thermal: tsens: Fix nvmem-cell-names schema
+Date:   Wed, 15 Apr 2020 07:33:39 -0400
+Message-Id: <20200415113445.11881-64-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
+References: <20200415113445.11881-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Describe the devicetree binding for the Microchip TCB module.
-Each counter blocks exposes three independent counters.
+From: Rob Herring <robh@kernel.org>
 
-However, when configured in quadrature decoder, both channel <0> and <1>
-are required for speed/position and rotation capture (yet only the
-position is captured).
+[ Upstream commit b9589def9f9af93d9d4c5969c9a6c166f070e36e ]
 
-Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+There's a typo 'nvmem-cells-names' in the schema which means the correct
+'nvmem-cell-names' in the examples are not checked. The possible values
+are wrong too both in that the 2nd entry is not specified correctly and the
+values are just wrong based on the dts files in the kernel.
+
+Fixes: a877e768f655 ("dt-bindings: thermal: tsens: Convert over to a yaml schema")
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Changes from v3:
- - Updated the brand name: s/atmel/microchip/.
+ .../devicetree/bindings/thermal/qcom-tsens.yaml          | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-Changes from v2:
- - Fixed errors reported by dt_binding_check
-
- .../counter/microchip-tcb-capture.yaml        | 33 +++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/counter/microchip-tcb-capture.yaml
-
-diff --git a/Documentation/devicetree/bindings/counter/microchip-tcb-capture.yaml b/Documentation/devicetree/bindings/counter/microchip-tcb-capture.yaml
-new file mode 100644
-index 000000000000..183e9ee4c049
---- /dev/null
-+++ b/Documentation/devicetree/bindings/counter/microchip-tcb-capture.yaml
-@@ -0,0 +1,33 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/counter/microchip-tcb-capture.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Microchip TCB Counter
-+
-+maintainers:
-+  - Kamel Bouhara <kamel.bouhara@bootlin.com>
-+
-+properties:
-+  compatible:
-+    const: "microchip,tcb-capture"
-+
-+  reg:
-+    description: TCB capture channel to register as counter device.
-+      Each channel is independent therefore only one channel is
-+      registered by default execpt for the QDEC mode where both TCB0's
-+      channels <0> and  <1> are required.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    tcb0: timer@f800c000 {
-+        compatible = "microchip,tcb-capture";
-+        reg = <0>, <1>;
-+    };
+diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+index eef13b9446a87..a4df53228122a 100644
+--- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
++++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+@@ -53,13 +53,12 @@ properties:
+     description:
+       Reference to an nvmem node for the calibration data
+ 
+-  nvmem-cells-names:
++  nvmem-cell-names:
+     minItems: 1
+     maxItems: 2
+     items:
+-      - enum:
+-        - caldata
+-        - calsel
++      - const: calib
++      - const: calib_sel
+ 
+   "#qcom,sensors":
+     allOf:
+@@ -125,7 +124,7 @@ examples:
+                  <0x4a8000 0x1000>; /* SROT */
+ 
+            nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
+-           nvmem-cell-names = "caldata", "calsel";
++           nvmem-cell-names = "calib", "calib_sel";
+ 
+            interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
+            interrupt-names = "uplow";
 -- 
-2.25.0
+2.20.1
 
