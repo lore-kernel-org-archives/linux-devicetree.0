@@ -2,195 +2,123 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E626C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D98C38A2C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D73CA20771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 473DA20775
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:47:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="RT3bIBBA"
+	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="NMrJNqcK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895599AbgDOJdy (ORCPT
+        id S2895805AbgDOJr2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:33:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49404 "EHLO
+        Wed, 15 Apr 2020 05:47:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2895596AbgDOJdw (ORCPT
+        by vger.kernel.org with ESMTP id S2895801AbgDOJrZ (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:33:52 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D494C061A0C;
-        Wed, 15 Apr 2020 02:33:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CB95q0U4UuPiM6nQZ5HbjcNj7VGPk6sg9SK/YZr2Y2A=; b=RT3bIBBAPMnHkIktW9eMa8cCC
-        uqGjonEHM4JQhPX8TijjW5fTPAiQE/gKV+86By4YCpaLk4Pn8RlfkMW+TJYSSS0dCh2cQyjp3AVlI
-        j+82uCSHhgMXY9esoIyugbb0rhbz+am8ST9FTMSADQCaYq8v8QrXyRTk78QVaSd8OSz8baHju7z27
-        SQDQzGOhUfWqO9s8mWGnidG/0ltIGk7ZlP2/PmUs3rp3NpWYTz/KOOEgHPIunESnM9olMoPK92TOW
-        VDOEYWKU53tLn7YkQg11KOZ1LnHU5EmvOHlnC+JHUh/VPtW12LUhnqdyQoXMESG87YF8WlHXh1iIn
-        hWWAbwcCg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50358)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jOeQP-0005Sy-Kx; Wed, 15 Apr 2020 10:33:41 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jOeQI-0000nm-SM; Wed, 15 Apr 2020 10:33:34 +0100
-Date:   Wed, 15 Apr 2020 10:33:34 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Robert Marko <robert.marko@sartura.hr>
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Subject: Re: [PATCH v2 1/3] net: phy: mdio: add IPQ40xx MDIO driver
-Message-ID: <20200415093334.GC25745@shell.armlinux.org.uk>
-References: <20200414181012.114905-1-robert.marko@sartura.hr>
+        Wed, 15 Apr 2020 05:47:25 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7032BC061A10
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 02:47:24 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id l14so2956374ljj.5
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 02:47:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=flowbird.group; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B0qy5LvgHxuRhiqgWueJQ6xJ9sv8tPQCF7n+fvQHiOs=;
+        b=NMrJNqcK5eyfNz31lPbY+TyReQxJrnuEFiiI4ZHZ0RnGAep4m9OjU2s0Rahr5YHYpY
+         6WRSCNOS4baRnCAsvEYr+dpc/PQ6WzUxxo3xfLtRealkbI7fZee+//V3BHy5FJKc/9j9
+         90g6sX9fD4OSQuzvj6/DnLoV1DG5J9cQYAgGEEpl7v2ioZmNBalV6Oq5fKi3raobEXpa
+         Fp4AYfeeJ57k3lRyyTphoQPXEhGnFLELLopIT5C+oSfwpe9Y9ZLHBDQBYPctrB/9Po8g
+         pPMCcgWu8JTWAkQEFXN3DYv2QwvGGVaPmM/bcRIGn8n8FtTHP0YX3J5KDzH3zs6zIy7y
+         xLWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B0qy5LvgHxuRhiqgWueJQ6xJ9sv8tPQCF7n+fvQHiOs=;
+        b=UI0nUa+LUvVwJ59MHwjkWExRZFZzobWGgOu1rO4CNdqQQOb0W72OgTOFrX2GrKhOwU
+         mitmYNX5e/q/eznTH1oAYYYenMqD7OUnH0BzTVSXf4UOxFkriXTacT5z0HwZ2HvUNbdv
+         1UHkNznDsSnI8TcENq8hEM5QFli0CosJkPmvdUF+zTouB5htUy6V9BjM0C1AdNwhfz3M
+         hsnaBaZosVFWYbp4LqXz2a68cBjkIQs9wr/9psLAVPxrxU7XvlEJr7al0nvIbAhxDlh7
+         r8pR1HgUcdzIAElD6LgQNDuv2ptiBKtJgudPPP5d8HSHUlVKTxa+i20BLeIGfAbVgNpz
+         FCpw==
+X-Gm-Message-State: AGi0PuYpbUU9MpwKeCZYPmsJLRyKthHho0DGZsWczeeEbGtOaT2maPMU
+        Ia1pyEZ6bVwsULr4UMeZCih9TTo8XSmbV2/yvVKt0A==
+X-Google-Smtp-Source: APiQypL8XMn5RnIEI3l+oru1L0UvcAugx1E2ZOCgi2uoo8JXWePaVPOi0V09wbIxJKMCZ9MtgPVJV073Y9PJRgdOM4M=
+X-Received: by 2002:a2e:5746:: with SMTP id r6mr2665731ljd.15.1586944042730;
+ Wed, 15 Apr 2020 02:47:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200414181012.114905-1-robert.marko@sartura.hr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1583944596-23410-1-git-send-email-yibin.gong@nxp.com>
+In-Reply-To: <1583944596-23410-1-git-send-email-yibin.gong@nxp.com>
+From:   "Fuzzey, Martin" <martin.fuzzey@flowbird.group>
+Date:   Wed, 15 Apr 2020 11:47:11 +0200
+Message-ID: <CANh8QzwanSewjJ98HL_yR1juiHo1RN77JQyNNKrMrud3B0dnww@mail.gmail.com>
+Subject: Re: [PATCH v7 00/13] add ecspi ERR009165 for i.mx6/7 soc family
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>, vkoul@kernel.org,
+        Shawn Guo <shawnguo@kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>, dan.j.williams@intel.com,
+        mark.rutland@arm.com, catalin.marinas@arm.com,
+        Will Deacon <will.deacon@arm.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 08:10:11PM +0200, Robert Marko wrote:
-> diff --git a/drivers/net/phy/mdio-ipq40xx.c b/drivers/net/phy/mdio-ipq40xx.c
-> new file mode 100644
-> index 000000000000..d8c11c621f20
-> --- /dev/null
-> +++ b/drivers/net/phy/mdio-ipq40xx.c
-> @@ -0,0 +1,176 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
-> +/* Copyright (c) 2015, The Linux Foundation. All rights reserved. */
-> +/* Copyright (c) 2020 Sartura Ltd. */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/io.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_mdio.h>
-> +#include <linux/phy.h>
-> +#include <linux/platform_device.h>
-> +
+Hi Robin,
 
-Looking at how these registers are used, they could be renamed:
 
-> +#define MDIO_CTRL_0_REG		0x40
+On Wed, 11 Mar 2020 at 09:35, Robin Gong <yibin.gong@nxp.com> wrote:
+>
+> There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
+> transfer to be send twice in DMA mode. Please get more information from:
+> https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is adding
+> new sdma ram script which works in XCH  mode as PIO inside sdma instead
+> of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should be
+> exist on all legacy i.mx6/7 soc family before i.mx6ul.
+> NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
+> 6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips
+> still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
+> for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errata
+> or not.
+> The first two reverted patches should be the same issue, though, it
+> seems 'fixed' by changing to other shp script. Hope Sean or Sascha could
+> have the chance to test this patch set if could fix their issues.
+> Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
+> on i.mx8mm because the event id is zero.
+>
+> PS:
+>    Please get sdma firmware from below linux-firmware and copy it to your
+> local rootfs /lib/firmware/imx/sdma.
+> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/imx/sdma
+>
 
-This seems to be unused.
+A couple of questions
 
-> +#define MDIO_CTRL_1_REG		0x44
+1) Is this series needed for the i.MX6DL? (the document you linked
+only seems to mention i.MX6D/Q
+2) If the laterst SDMA firmware mentionned above is used will this
+break systems running mainline kernels without this patch series
+applied?
 
-MDIO_ADDR_REG
+Regards,
 
-> +#define MDIO_CTRL_2_REG		0x48
-
-MDIO_DATA_WRITE_REG
-
-> +#define MDIO_CTRL_3_REG		0x4c
-
-MDIO_DATA_READ_REG
-
-> +#define MDIO_CTRL_4_REG		0x50
-> +#define MDIO_CTRL_4_ACCESS_BUSY		BIT(16)
-> +#define MDIO_CTRL_4_ACCESS_START		BIT(8)
-> +#define MDIO_CTRL_4_ACCESS_CODE_READ		0
-> +#define MDIO_CTRL_4_ACCESS_CODE_WRITE	1
-
-MDIO_CMD_* ?
-
-> +
-> +#define IPQ40XX_MDIO_RETRY	1000
-> +#define IPQ40XX_MDIO_DELAY	10
-> +
-> +struct ipq40xx_mdio_data {
-> +	void __iomem	*membase;
-> +};
-> +
-> +static int ipq40xx_mdio_wait_busy(struct mii_bus *bus)
-> +{
-> +	struct ipq40xx_mdio_data *priv = bus->priv;
-> +	int i;
-> +
-> +	for (i = 0; i < IPQ40XX_MDIO_RETRY; i++) {
-> +		unsigned int busy;
-> +
-> +		busy = readl(priv->membase + MDIO_CTRL_4_REG) &
-> +			MDIO_CTRL_4_ACCESS_BUSY;
-> +		if (!busy)
-> +			return 0;
-> +
-> +		/* BUSY might take to be cleard by 15~20 times of loop */
-> +		udelay(IPQ40XX_MDIO_DELAY);
-> +	}
-> +
-> +	dev_err(bus->parent, "MDIO operation timed out\n");
-> +
-> +	return -ETIMEDOUT;
-> +}
-> +
-> +static int ipq40xx_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
-> +{
-> +	struct ipq40xx_mdio_data *priv = bus->priv;
-> +	int value = 0;
-> +	unsigned int cmd = 0;
-
-No need to initialise either of these, and you can eliminate "value"
-which will then satisfy davem's requirement for reverse-christmas-tree
-ordering of variable declarations.
-
-> +
-> +	/* Reject clause 45 */
-> +	if (regnum & MII_ADDR_C45)
-> +		return -EOPNOTSUPP;
-> +
-> +	if (ipq40xx_mdio_wait_busy(bus))
-> +		return -ETIMEDOUT;
-> +
-> +	/* issue the phy address and reg */
-> +	writel((mii_id << 8) | regnum, priv->membase + MDIO_CTRL_1_REG);
-> +
-> +	cmd = MDIO_CTRL_4_ACCESS_START | MDIO_CTRL_4_ACCESS_CODE_READ;
-> +
-> +	/* issue read command */
-> +	writel(cmd, priv->membase + MDIO_CTRL_4_REG);
-> +
-> +	/* Wait read complete */
-> +	if (ipq40xx_mdio_wait_busy(bus))
-> +		return -ETIMEDOUT;
-> +
-> +	/* Read data */
-> +	value = readl(priv->membase + MDIO_CTRL_3_REG);
-> +
-> +	return value;
-> +}
-> +
-> +static int ipq40xx_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
-> +							 u16 value)
-> +{
-> +	struct ipq40xx_mdio_data *priv = bus->priv;
-> +	unsigned int cmd = 0;
-
-No need to initialise cmd.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+Martin
