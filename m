@@ -2,107 +2,151 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE832C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7046C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B66BE20857
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8466220771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:25:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pmeerw.net header.i=@pmeerw.net header.b="mhtg0s+g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408411AbgDOJU7 (ORCPT
+        id S2895466AbgDOJZm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:20:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39360 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2895288AbgDOJTk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:19:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 19217ADCC;
-        Wed, 15 Apr 2020 09:19:38 +0000 (UTC)
-Subject: Re: [PATCH v3 1/2] dt-bindings: arm: realtek: Document RTD1319 and
- Realtek PymParticle EVB
-To:     =?UTF-8?B?SmFtZXMgVGFpIFvmiLTlv5fls7Bd?= <james.tai@realtek.com>
-Cc:     "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200204145207.28622-1-james.tai@realtek.com>
- <20200204145207.28622-2-james.tai@realtek.com>
- <bf55ccbe-cbdf-7ba7-d701-aa84c20204e3@suse.de>
- <a9685d4560a6445d81c4919b2a323f68@realtek.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <cb724434-bebf-2a23-fd90-8cd82078459d@suse.de>
-Date:   Wed, 15 Apr 2020 11:19:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 15 Apr 2020 05:25:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2895392AbgDOJZj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:25:39 -0400
+X-Greylist: delayed 545 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 15 Apr 2020 02:25:39 PDT
+Received: from ns.pmeerw.net (ns.pmeerw.net [IPv6:2001:1b60:2:23:1033:103:0:1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51540C061A0C
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 02:25:39 -0700 (PDT)
+Received: by ns.pmeerw.net (Postfix, from userid 1000)
+        id BF03DE01FA; Wed, 15 Apr 2020 11:16:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pmeerw.net; s=mail;
+        t=1586942181; bh=ncylDpaKZtZ3lQN73jxuqouhPNIAVzjx8bLjlP9nz5k=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=mhtg0s+g0ilGFTzcsBfizbiURCnXTRRY1jX0Qb/JFJFYM5LSyE8sWSn8+3NVJlVCO
+         5AS6xpO0shx+tUAqCmjgRX32ZBqzEpbLUHcmnrZXCGo7VrGoKGCsitOxujArgSoBuR
+         HMc+e0mDtENmCVSP23nb8IED4MeTFgThhkbL/h5c=
+Received: from localhost (localhost [127.0.0.1])
+        by ns.pmeerw.net (Postfix) with ESMTP id B46E9E019D;
+        Wed, 15 Apr 2020 11:16:21 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 11:16:21 +0200 (CEST)
+From:   Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+To:     Saravanan Sekar <saravanan@linumiz.com>
+cc:     robh+dt@kernel.org, jic23@kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH 2/4] dt-bindings: iio: add document bindings for wsen-itds
+ accel sensor
+In-Reply-To: <20200415065535.7753-3-saravanan@linumiz.com>
+Message-ID: <alpine.DEB.2.21.2004151114590.22614@vps.pmeerw.net>
+References: <20200415065535.7753-1-saravanan@linumiz.com> <20200415065535.7753-3-saravanan@linumiz.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <a9685d4560a6445d81c4919b2a323f68@realtek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="324302256-1364362776-1586942181=:22614"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi James,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Am 15.04.20 um 10:58 schrieb James Tai [戴志峰]:
->>> diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml
->>> b/Documentation/devicetree/bindings/arm/realtek.yaml
->>> index 845f9c76d6f7..3b48ae71fdd8 100644
->>> --- a/Documentation/devicetree/bindings/arm/realtek.yaml
->>> +++ b/Documentation/devicetree/bindings/arm/realtek.yaml
->>> @@ -42,6 +42,12 @@ properties:
->>>                  - synology,ds418 # Synology DiskStation DS418
->>>              - const: realtek,rtd1296
->>>
->>> +      # RTD1319 SoC based boards
->>> +      - items:
->>> +          - enum:
->>> +              - realtek,pymparticle # Realtek PymParticle EVB
->>
->> The board seems labelled "PYM_PARTICLES".
->>
->> While Wikipedia has nothing on that, I found this explanation:
->> https://marvel.fandom.com/wiki/Pym_Particles
->>
->> So, are you sure it's PymParticle and not "Pym Particle" with space or "Pym
->> Particles" with space and plural S? The S would affect also the .dts filename.
->>
-> I should change the string to "Pym Particles".
+--324302256-1364362776-1586942181=:22614
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-Okay, in that case I suggest rtd1319-pymparticles.dts for consistency. 
-Unless you want to change rtd1395-lionskin.dts to rtd1395-lion-skin.dts.
+On Wed, 15 Apr 2020, Saravanan Sekar wrote:
 
->> For the compatible string the question is pymparticle or pym-particle.
->>
-> The compatible string is "pym-particles".
+comments below, some typos
 
-Works for me. (always assuming we both imply the "realtek," prefix)
+> Add device tree binding information for wsen-itds accel sensor driver.
+> 
+> Signed-off-by: Saravanan Sekar <saravanan@linumiz.com>
+> ---
+>  .../bindings/iio/accel/we,wsen-itds.yaml      | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/we,wsen-itds.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/accel/we,wsen-itds.yaml b/Documentation/devicetree/bindings/iio/accel/we,wsen-itds.yaml
+> new file mode 100644
+> index 000000000000..165cdf71966d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/accel/we,wsen-itds.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/accel/we,wsen-itds.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Würth Elektronik WSEN-ITDS triaxial acceleration sensor
+> +
+> +maintainers:
+> +  - Saravanan Sekar <saravanan@linumiz.com>
+> +
+> +description: |
+> +  Acceleration and temperature iio sensors with an i2c interface.
 
-If you send a v4, please double-check the comments in patch 2/2.
+sensor
 
->> By comparison, LION-SKIN was named lion-skin in the compatible and spelled
->> Lion Skin in textual form. If you believe that should be fixed, now would be the
->> time to revisit those patches that didn't make v5.7.
->>
-> I'll check those relevant patches.
+> +  The sensor provies additional application specific features like
 
-Thanks,
-Andreas
+provides
+
+> +  tap detection, 6D Orinetation, Free-fall, Motion and Activity.
+
+orientation
+
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - we,wsen-itds
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  vdd-supply:
+> +    description: phandle to the regulator that provides power to the accelerometer
+> +
+> +  vddio-supply:
+> +    description: phandle to the regulator that provides power to the sensor's IO
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      accelerometer@18 {
+> +        compatible = "we,wsen-itds";
+> +        reg = <0x18>;
+> +        vdd-supply = <&vdd>;
+> +        vddio-supply = <&vddio>;
+> +        interrupt-parent = <&gpio0>;
+> +        interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+> +      };
+> +    };
+> 
 
 -- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+
+Peter Meerwald-Stadler
+Mobile: +43 664 24 44 418
+--324302256-1364362776-1586942181=:22614--
