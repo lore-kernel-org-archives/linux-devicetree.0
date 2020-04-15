@@ -2,104 +2,183 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC77BC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F45C3815B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 10:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A842D20768
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00F1020768
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 10:10:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+a6HRSY"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Ov/r13gv";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XCrhzL/X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408514AbgDOJ7i (ORCPT
+        id S2896226AbgDOKKU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:59:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53378 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2408508AbgDOJ7f (ORCPT
+        Wed, 15 Apr 2020 06:10:20 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:54639 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2896152AbgDOKKQ (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:59:35 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B638DC061A0C;
-        Wed, 15 Apr 2020 02:59:34 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id l11so2156283lfc.5;
-        Wed, 15 Apr 2020 02:59:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=63vRFQmPky+5Sun2Opkz9FUwUHHMbnn+8rcnJyfbXrg=;
-        b=O+a6HRSYtexYUcRf2vogJPvF/gD1KELnuZj6kV7IzsLHhvD1ryxo8ZXyhMxj9oja2I
-         T3mKdn9yFI5+RKfmhbvG/nbjMxrVSpPhpXgZJAboj11pvYuLsGQSReYdnaLgOCHE6G70
-         bM789lHrYlz91lpKf5MMGdPttYhx6aCoBWj482d6qI2D++FdHz0GPAOhRJOhGqw84OjZ
-         GL+AOHaLE9BipLjl54B36Jn9AdGtgJE0TeS6xZnq3WKfUPqz+/Me09yAa5zw2gjZIE5s
-         2Dw/JWCO54aVJPPX7f6DTt9e3njJ9IJIkxbexcOSKvXRgIdiO6mFVGSiO6BvJNNAfsKe
-         1IXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=63vRFQmPky+5Sun2Opkz9FUwUHHMbnn+8rcnJyfbXrg=;
-        b=TAghxwsHOqiKeKKSd8AT+pNpqZJRCMRaX4m9DQfsjuFRAUxi5lE5Q+cOGaD9GIOz7B
-         jWSNwLq1d1S0tV6INvlP2SMPemdC84fxKRgkxtZ9cExPLGEP3XN/+a0Xs0+mUzBpMs6I
-         FP3DgK5dC4ESxZ3oUt3Uxz9+XYu/itUCIAnELag/MI9J5yeWpoyH4A4ey8aRMd6Avvd1
-         +PcdyLf9eOcr0qp9xYfAQihCIIvNbMoSm/3SON6H3eObLRt5IumdjdKSIDfiEySgkUKQ
-         kvG1SCi9DebQ41cyTZNokScN2Eshkgxlcfei/lD0v38esWhM+Sh6Q+n3ULBHB/xuIE4g
-         ZKnA==
-X-Gm-Message-State: AGi0Puai0MLHseKk7BcaCrpT3wJST2RSbi8+kwAHAnUfs26mFK46NNXn
-        Rx/AHBolCloCYhF2P2R+cVU=
-X-Google-Smtp-Source: APiQypKvCI1atszqVmdui44gkRzNjRuvl0XeDay9w1RcX0HQfX4ZxaC9Ip6qE2cjuqz9J8NIMZa19g==
-X-Received: by 2002:a05:6512:304e:: with SMTP id b14mr2479583lfb.119.1586944773169;
-        Wed, 15 Apr 2020 02:59:33 -0700 (PDT)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id m13sm12290424lfk.12.2020.04.15.02.59.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 02:59:32 -0700 (PDT)
-From:   chewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
+        Wed, 15 Apr 2020 06:10:16 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 62196580375;
+        Wed, 15 Apr 2020 06:10:13 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 15 Apr 2020 06:10:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=tiwnh7t3J9dCc6nvhOkiy49H6Ti
+        N6hjDJXDgkFXp10U=; b=Ov/r13gv/FzeqiK7EXa2MVeWNvbtGoln8v1lZeNVTDo
+        d/OBMcFNmf93rYl1dCE1+t8hxGIcBvwQn1digYa/muGYf7q0QPqzHkNxIrfTvAC5
+        tOh+VmGGScNRPukR67X3s70Aaxb+m3l57KrJbUGZjPSpm1PHG5zaKEypCDS6Jzbf
+        zcaXRlSFpb60fySXUEgbzV1gECrM87+2LNevWftl3sL0+W9p8Fhjx6MAEda4JGxo
+        2jXL2xrhs95ybDu2qfjPAvTQtYXUljlb0vtPswczOxmkqAcFgD3JwLc6TChCwIum
+        37fgD3VAhGbEFg2XQa1P7XfklKkVnMWkJL3YUqsc2TA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=tiwnh7
+        t3J9dCc6nvhOkiy49H6TiN6hjDJXDgkFXp10U=; b=XCrhzL/Xe6ze4BgUhH61Sd
+        8T4PZhQ5yllJD1PxNmKHkEWWP7xApPJG12ii/tljCURwuQeB1KjLvAxx6b8wXcqW
+        9Gy47bQoLliDjRVR8/t7x3NnG4zsZ/cAnTOIBxhdc7KXJYLVYeNbWtzbieH2hiyw
+        uPfCPPkRVoe+KFOvDrqzuE9uWqtGmHABy6xIM6h1jKLLKVelBWk9s11yjmRJVI6Y
+        OcNkemPNftLCWhOaoPV3gFTaab8hRa+0Vd+EfjQyZbjY4u4sMOfWF+eKkHljqP1c
+        9lM0B58UTX/I6NxoBLvbWMCYCs4aRH8IBRUxJOC5ewLgoFDHglS80fZvTNbdRmFQ
+        ==
+X-ME-Sender: <xms:gt2WXnImK0S9xi3AqSCkzOFDvgdNet3Kkr6Vn01_cxH_u_hDqsKq2w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeefgddugecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:gt2WXoiiH3RLarjfPLHQ89zKsXtEVIU2fDv1eDj90V1IMXnSM3kd3A>
+    <xmx:gt2WXnDb4Hsh0ws82UIxfQqGZt0NnEmLFSogaEeqXcPk7GvYkVBJ2Q>
+    <xmx:gt2WXq535ML7IV_YSCHAHCRK2WpKKG6MhBYv3IlvKdn-hD4R3r3gCg>
+    <xmx:hd2WXrM1KZACbLXcsL4KatHHzZI3aT0OIxW_WxpKcDuk9zkIasNyaw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D579F3280066;
+        Wed, 15 Apr 2020 06:10:09 -0400 (EDT)
+Date:   Wed, 15 Apr 2020 12:10:08 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH] arm64: dts: meson-g12b-khadas-vim3: fix missing frddr_a node
-Date:   Wed, 15 Apr 2020 09:59:27 +0000
-Message-Id: <20200415095927.3780-1-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the
+ PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
+Message-ID: <20200415101008.zxzxca2vlfsefpdv@gilmour.lan>
+References: <cover.1586939718.git.hns@goldelico.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="spbhycqlgpxqdc65"
+Content-Disposition: inline
+In-Reply-To: <cover.1586939718.git.hns@goldelico.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Christian Hewitt <christianshewitt@gmail.com>
 
-The frddr_a node was accidently deleted when creating a common dtsi for the
-Khadas VIM3/VIM3L boards, preventing audio from working on the VIM3.
+--spbhycqlgpxqdc65
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Fixes: 4f26cc1c96c9 ("arm64: dts: khadas-vim3: move common nodes into meson-khadas-vim3.dtsi")
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+Hi,
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-index c33e85fbdaba..c6c8caed8327 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-@@ -154,6 +154,10 @@
- 	clock-latency = <50000>;
- };
- 
-+&frddr_a {
-+	status = "okay";
-+};
-+
- &frddr_b {
- 	status = "okay";
- };
--- 
-2.17.1
+On Wed, Apr 15, 2020 at 10:35:07AM +0200, H. Nikolaus Schaller wrote:
+> * rebased to v5.7-rc1
+> * added DTS for for a31, a31s, a83t - by Philipp Rossak <embed3d@gmail.com>
+> * added DTS for "samsung,s5pv210-sgx540-120" - by Jonathan Bakker <xc-racer2@live.ca>
+> * bindings.yaml fixes:
+>   - added a31, a31
+>   - fixes for omap4470
+>   - jz4780 contains an sgx540-130 and not -120
+>   - a83t contains an sgx544-115 and not -116
+>   - removed "additionalProperties: false" because some SoC may need additional properties
+>
+> PATCH V5 2020-03-29 19:38:32:
+> * reworked YAML bindings to pass dt_binding_check and be better grouped
+> * rename all nodes to "gpu: gpu@<address>"
+> * removed "img,sgx5" from example - suggested by Rob Herring <robh+dt@kernel.org>
+>
+> PATCH V4 2019-12-17 19:02:11:
+> * MIPS: DTS: jz4780: removed "img,sgx5" from bindings
+> * YAML bindings: updated according to suggestions by Rob Herring
+> * MIPS: DTS: jz4780: insert-sorted gpu node by register address - suggested by Paul Cercueil
+>
+> PATCH V3 2019-11-24 12:40:33:
+> * reworked YAML format with help by Rob Herring
+> * removed .txt binding document
+> * change compatible "ti,am335x-sgx" to "ti,am3352-sgx" - suggested by Tony Lindgren
+>
+> PATCH V2 2019-11-07 12:06:17:
+> * tried to convert bindings to YAML format - suggested by Rob Herring
+> * added JZ4780 DTS node (proven to load the driver)
+> * removed timer and img,cores properties until we know we really need them - suggested by Rob Herring
+>
+> PATCH V1 2019-10-18 20:46:35:
+>
+> This patch series defines child nodes for the SGX5xx interface inside
+> different SoC so that a driver can be found and probed by the
+> compatible strings and can retrieve information about the SGX revision
+> that is included in a specific SoC. It also defines the interrupt number
+> to be used by the SGX driver.
+>
+> There is currently no mainline driver for these GPUs, but a project
+> [1] is ongoing with the goal to get the open-source part as provided
+> by TI/IMG and others into drivers/gpu/drm/pvrsgx.
 
+Just a heads up, DRM requires an open-source user-space, so if your
+plan is to move the open-source kernel driver while using the
+closed-source library (as that page seem to suggest), that might
+change a few things.
+
+> The kernel modules built from this project have successfully
+> demonstrated to work with the DTS definitions from this patch set on
+> AM335x BeagleBone Black, DM3730 and OMAP5 Pyra and Droid 4. They
+> partially work on OMAP3530 and PandaBoard ES but that is likely a
+> problem in the kernel driver or the (non-free) user-space libraries
+> and binaries.
+>
+> Wotk for JZ4780 (CI20 board) is in progress and there is potential
+> to extend this work to e.g. BananaPi-M3 (A83) and some Intel Poulsbo
+> and CedarView devices.
+
+If it's not been tested on any Allwinner board yet, I'll leave it
+aside until it's been properly shown to work.
+
+Maxime
+
+--spbhycqlgpxqdc65
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpbdgAAKCRDj7w1vZxhR
+xfFrAP93okt+UedPkk9I3Q8d4NjjJQupvTn5SXqE9t4DNT4cOAD/UrA0Qy0Kn9Tr
+R9ol+rlZA6+bkgWLM1ddBT4uVccQmQw=
+=uJBG
+-----END PGP SIGNATURE-----
+
+--spbhycqlgpxqdc65--
