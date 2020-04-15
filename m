@@ -2,163 +2,62 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1A4C2BB55
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 23:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF43C2BB55
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 23:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3607A20768
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 23:12:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ii7+b4Ty"
+	by mail.kernel.org (Postfix) with ESMTP id 93EA620784
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 23:21:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388465AbgDOXMs (ORCPT
+        id S2388934AbgDOXVa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 19:12:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35492 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388104AbgDOXMo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 19:12:44 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6719C061A0C;
-        Wed, 15 Apr 2020 16:12:43 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x18so2569668wrq.2;
-        Wed, 15 Apr 2020 16:12:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=Gm2Rd5l6DnoYokZ1IoTpz0zKlkvip4QX12cLk0Sh6/Y=;
-        b=Ii7+b4Ty/DtxMiNuZpivZZjQ3R8YyWC+6OAPG6Csb0Ff18LTuHK5Kc54s7zo7FopNt
-         Fjs8JVkdqkT2UHwxkraislcANwMZbYs2JoH/8TwFgA14VGFO+rXyuL8OdzFtG7k2oRGr
-         5thp0XbD6cfvool2rYkxBgVmRFH9n9NzcPmoaRmQLTelO7NZ+SY4zic/g2+/1FPM88Qg
-         BMc+1QEhXzECwfrpZVcFZxYwb8ZOyISzYLzsOaOZj5hxw7OkmRGaEdQTJFoByKu0oLO3
-         0oP7p5lAN7eB5WHVrk9QVfd/pE6ztuS3lz6bQiFMA9abRjOHcpyFFKrJ+MOrzHSAB1Iw
-         SToQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=Gm2Rd5l6DnoYokZ1IoTpz0zKlkvip4QX12cLk0Sh6/Y=;
-        b=Kr4jk7+0gqXr4xf1Pv1cJhaFmN8TL7P3iVQT6J31zcwQeMMqrcpY3OFHSqal6KP6cz
-         mZTlEBR3O3h8hochrVCf2fO5kpGvp1rrgKN/Ses3I13aRMODHccRH6Ih7eUiU9p4w0Vw
-         NALS9AVwbBsVHECx4ve6CtHYHFabAtw/4Q1MXLd/Ckvff4fmSTpwigiCsq3wuqPADxHZ
-         3R+OaxP6dYnL8taOVfNd4jMc7WddLlVIWqvYI8unV/3O3kPC6twK2fCzG8TP18Gf5H+N
-         FQil521dUT3UX7gCbKRIP4R8++zxRZ17T5NJPVCdGdni1HH7XcHMDcrTjEPfX8uqeMAd
-         D/WQ==
-X-Gm-Message-State: AGi0Puaoe723tFxk6dBZeLvNpDioGnIJVNjtfN7J+w0zNG2zRDyZiBcw
-        JDblhQG2RSNBISygjv0QiPsRWMpcfv+hsgnb
-X-Google-Smtp-Source: APiQypICyCFJ/9PIcka/IfQfq2zd/BrN9iZHxRR5P1Zp5e6XGgqSpT7CshecraQpcd+sI0I+m/Is9Q==
-X-Received: by 2002:a5d:6688:: with SMTP id l8mr14527286wru.179.1586992362312;
-        Wed, 15 Apr 2020 16:12:42 -0700 (PDT)
-Received: from AnsuelXPS (host93-255-dynamic.47-79-r.retail.telecomitalia.it. [79.47.255.93])
-        by smtp.gmail.com with ESMTPSA id p16sm18711418wro.21.2020.04.15.16.12.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Apr 2020 16:12:41 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Stephen Boyd'" <sboyd@kernel.org>,
-        "'Andy Gross'" <agross@kernel.org>
-Cc:     "'Mathieu Olivari'" <mathieu@codeaurora.org>,
-        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
-        "'Rob Herring'" <robh+dt@kernel.org>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        "'Michael Turquette'" <mturquette@baylibre.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>
-References: <20200330205647.24806-1-ansuelsmth@gmail.com> <158587766752.125146.7582840761926137726@swboyd.mtv.corp.google.com> <00f701d60958$a9ed46c0$fdc7d440$@gmail.com> <158605625697.158626.12280118012638752686@swboyd.mtv.corp.google.com>
-In-Reply-To: <158605625697.158626.12280118012638752686@swboyd.mtv.corp.google.com>
-Subject: R: R: [PATCH v2] ARM: qcom: Disable i2c device on gsbi4 for ipq806x
-Date:   Thu, 16 Apr 2020 01:12:39 +0200
-Message-ID: <011701d6137b$5cc6dcd0$16549670$@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQGo1QQgHzu0HPOv8BNyQx6G4xhnEwIGzuWZAjtxbVgBYzMGUaioH+Tg
+        Wed, 15 Apr 2020 19:21:30 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:47048 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388889AbgDOXV1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 19:21:27 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8C67E120ED569;
+        Wed, 15 Apr 2020 16:21:26 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 16:21:25 -0700 (PDT)
+Message-Id: <20200415.162125.2094896562695820757.davem@davemloft.net>
+To:     jbx6244@gmail.com
+Cc:     heiko@sntech.de, robh+dt@kernel.org, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: net: ethernet-phy: add desciption for
+ ethernet-phy-id1234.d400
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200415200149.16986-1-jbx6244@gmail.com>
+References: <20200415200149.16986-1-jbx6244@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 15 Apr 2020 16:21:27 -0700 (PDT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Johan Jonker <jbx6244@gmail.com>
+Date: Wed, 15 Apr 2020 22:01:49 +0200
 
+> The description below is already in use in
+> 'rk3228-evb.dts', 'rk3229-xms6.dts' and 'rk3328.dtsi'
+> but somehow never added to a document, so add
+> "ethernet-phy-id1234.d400", "ethernet-phy-ieee802.3-c22"
+> for ethernet-phy nodes on Rockchip platforms to
+> 'ethernet-phy.yaml'.
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
-> -----Messaggio originale-----
-> Da: Stephen Boyd <sboyd@kernel.org>
-> Inviato: domenica 5 aprile 2020 05:11
-> A: 'Andy Gross' <agross@kernel.org>; ansuelsmth@gmail.com
-> Cc: 'Mathieu Olivari' <mathieu@codeaurora.org>; 'Bjorn Andersson'
-> <bjorn.andersson@linaro.org>; 'Rob Herring' <robh+dt@kernel.org>; =
-'Mark
-> Rutland' <mark.rutland@arm.com>; 'Michael Turquette'
-> <mturquette@baylibre.com>; linux-arm-msm@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> clk@vger.kernel.org
-> Oggetto: Re: R: [PATCH v2] ARM: qcom: Disable i2c device on gsbi4 for
-> ipq806x
->=20
-> Quoting ansuelsmth@gmail.com (2020-04-02 18:39:04)
-> >
-> >
-> > > -----Messaggio originale-----
-> > > Da: Stephen Boyd <sboyd@kernel.org>
-> > > Inviato: venerd=C3=AC 3 aprile 2020 03:34
-> > > A: Andy Gross <agross@kernel.org>; Ansuel Smith
-> > > <ansuelsmth@gmail.com>
-> > > Cc: Ansuel Smith <ansuelsmth@gmail.com>; Mathieu Olivari
-> > > <mathieu@codeaurora.org>; Bjorn Andersson
-> > > <bjorn.andersson@linaro.org>; Rob Herring <robh+dt@kernel.org>;
-> Mark
-> > > Rutland <mark.rutland@arm.com>; Michael Turquette
-> > > <mturquette@baylibre.com>; linux-arm-msm@vger.kernel.org;
-> > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> > > clk@vger.kernel.org
-> > > Oggetto: Re: [PATCH v2] ARM: qcom: Disable i2c device on gsbi4 for
-> > > ipq806x
-> > >
-> > > Quoting Ansuel Smith (2020-03-30 13:56:46)
-> > > > diff --git a/drivers/clk/qcom/gcc-ipq806x.c =
-b/drivers/clk/qcom/gcc-
-> > > ipq806x.c
-> > > > index b0eee0903807..f7d7a2bc84c1 100644
-> > > > --- a/drivers/clk/qcom/gcc-ipq806x.c
-> > > > +++ b/drivers/clk/qcom/gcc-ipq806x.c
-> > > > @@ -991,6 +991,7 @@ static struct clk_branch gsbi4_h_clk =3D {
-> > > >                 .hw.init =3D &(struct clk_init_data){
-> > > >                         .name =3D "gsbi4_h_clk",
-> > > >                         .ops =3D &clk_branch_ops,
-> > > > +                       .flags =3D CLK_IGNORE_UNUSED,
-> > >
-> > > Is this necessary? Shouldn't we skip clks that are protected =
-during the
-> > > unused phase?
-> > >
-> >
-> > gsbi4_h_clk is not protected. gsbi4_h_clk needs to not be disabled =
-if
-> unused
-> > (as it's used by rpm) but can't be protected since it's used by uart =
-gsbi4.
-> > (With some test protecting also this clk cause the malfunction of =
-uart
-> gsb4)
-> >
->=20
-> Who owns gsbi4 on this platform? Is it RPM? If so, it should be
-> protected and we shouldn't touch this clk from the kernel.
-
-Sorry for the late replay. Trying to protect gsbi4 clk cause the uart =
-serial to
-not work at all as it can't be used by the driver. If for some=20
-reason some dev decide to not use gsbi4 uart, GSBI4_CLK gets disabled=20
-(as it would be not used), this is the reason of the IGNORE_UNUSED.=20
-I really can't find another way to keep both gsbi4 protected and and =
-permit
-gsbi4 uart to use it.
-
+I'll take this via my net tree, thanks.
