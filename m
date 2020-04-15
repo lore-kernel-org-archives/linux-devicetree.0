@@ -4,58 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC39C2BB55
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 826CDC38A2D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AB542076D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 600142076D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586961983;
-	bh=ygdLxe7J62lfuyTfl7GYvfFKZVzkmZyuH6fwVFe7bTA=;
+	s=default; t=1586961985;
+	bh=zjaZ+FY9k5t0F298mGBFOd6P5KCDBR9N1LMntsYEq9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xKM+8ub1VmrkJ+qa3RYisT0PA1NT+ZtCQdVukm04quw916FRXd4U/kNuvpagSV77j
-	 J6+MtHE8932qYmhbxRBjnMBHiX7w5ruugVkfvCbzf7aRpZf9PMyT9yrU412drOMtt8
-	 n69sHv6tkVUj0KSXTEVRf62csysL5b9hDNuGYbuQ=
+	b=LDf0p7bJkCnE1SV73jGfdI231M9L2BCnlbe40fvD3vTMK/845XhETqTBaXv77JOhJ
+	 93HVdCUNBfm1OqfiHA1t/sPohHn3c0HrWBvgkvQDRx8dvzoB1phR000V/WKWd7olo1
+	 wGq8HJnemXrUvEq4utewRxuEr+0kdkpl86U6YAvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634652AbgDOOqV (ORCPT
+        id S370894AbgDOOqY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:46:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40252 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 10:46:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2636794AbgDOOpd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S2636790AbgDOOpd (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Wed, 15 Apr 2020 10:45:33 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F1EC21841;
+        by mail.kernel.org (Postfix) with ESMTPSA id 1608121556;
         Wed, 15 Apr 2020 14:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1586961929;
-        bh=ygdLxe7J62lfuyTfl7GYvfFKZVzkmZyuH6fwVFe7bTA=;
+        bh=zjaZ+FY9k5t0F298mGBFOd6P5KCDBR9N1LMntsYEq9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ad/xTao9wbvey6I7S429/jl7sCbbJcL2DXT6bIxDQVzSw0ZXhGkVKnwz5xFlq7jEK
-         G/hxdauQyDp40xJbrr9DK0tm69g5W5ENN1CCEv6Ea5V3u95q/vWFf8UkCdK25uapgc
-         7w6tJgkC0CXoQSwasdCOEJwxXF2Ae2XN+gIdiYCg=
+        b=RjiW4sfNN3VQYHu759vgsitq4kOPElObnihHUZu0byStwRHmUBWi0zfWdN2uUINFt
+         9jN7vHmsnAWqYnrf+9ZYqazIgsPvlwkcOG6rXl1h4TKxQ0675MUPTjw5cRx3Hz4W0R
+         in8opOwOp7lzOD4pk1CrosXFd6nV1GLpT2PoWcJ4=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jOjI7-006kZz-Ga; Wed, 15 Apr 2020 16:45:27 +0200
+        id 1jOjI7-006kZa-9O; Wed, 15 Apr 2020 16:45:27 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Frank Rowand <frowand.list@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Andy Whitcroft <apw@canonical.com>,
-        Joe Perches <joe@perches.com>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        Jacob Huisman <jacobhuisman@kernelthusiast.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         devicetree@vger.kernel.org
-Subject: [PATCH v3 11/12] docs: dt: convert submitting-patches.txt to ReST format
-Date:   Wed, 15 Apr 2020 16:45:25 +0200
-Message-Id: <887f9e25944831d8c285a80e4deeea5b1cf38803.1586961793.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v3 06/12] docs: dt: convert dynamic-resolution-notes.txt to ReST
+Date:   Wed, 15 Apr 2020 16:45:20 +0200
+Message-Id: <aa9be5085f574d924b74b1e58d07ebee39ad8dad.1586961793.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1586961793.git.mchehab+huawei@kernel.org>
 References: <cover.1586961793.git.mchehab+huawei@kernel.org>
@@ -67,134 +66,70 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 - Add a SPDX header;
-- Adjust document and section titles;
-- Mark literal blocks as such;
-- Add it to bindings/index.rst.
+- Adjust document title;
+- Add it to devicetree/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/devicetree/bindings/index.rst          |  1 +
- ...submitting-patches.txt => submitting-patches.rst} | 12 +++++++++---
- .../devicetree/bindings/writing-bindings.txt         |  2 +-
- Documentation/process/submitting-patches.rst         |  2 +-
- .../it_IT/process/submitting-patches.rst             |  2 +-
- scripts/checkpatch.pl                                |  2 +-
- 6 files changed, 14 insertions(+), 7 deletions(-)
- rename Documentation/devicetree/bindings/{submitting-patches.txt => submitting-patches.rst} (92%)
+ ...mic-resolution-notes.txt => dynamic-resolution-notes.rst} | 5 ++++-
+ Documentation/devicetree/index.rst                           | 1 +
+ Documentation/devicetree/overlay-notes.txt                   | 2 +-
+ MAINTAINERS                                                  | 2 +-
+ 4 files changed, 7 insertions(+), 3 deletions(-)
+ rename Documentation/devicetree/{dynamic-resolution-notes.txt => dynamic-resolution-notes.rst} (90%)
 
-diff --git a/Documentation/devicetree/bindings/index.rst b/Documentation/devicetree/bindings/index.rst
-index 98ebdab24b51..6b87875a049c 100644
---- a/Documentation/devicetree/bindings/index.rst
-+++ b/Documentation/devicetree/bindings/index.rst
-@@ -8,3 +8,4 @@ Device Tree
-    :maxdepth: 1
- 
-    ABI
-+   submitting-patches
-diff --git a/Documentation/devicetree/bindings/submitting-patches.txt b/Documentation/devicetree/bindings/submitting-patches.rst
-similarity index 92%
-rename from Documentation/devicetree/bindings/submitting-patches.txt
-rename to Documentation/devicetree/bindings/submitting-patches.rst
-index 98bee6240b65..0aab2b3f16d0 100644
---- a/Documentation/devicetree/bindings/submitting-patches.txt
-+++ b/Documentation/devicetree/bindings/submitting-patches.rst
-@@ -1,13 +1,17 @@
+diff --git a/Documentation/devicetree/dynamic-resolution-notes.txt b/Documentation/devicetree/dynamic-resolution-notes.rst
+similarity index 90%
+rename from Documentation/devicetree/dynamic-resolution-notes.txt
+rename to Documentation/devicetree/dynamic-resolution-notes.rst
+index c24ec366c5dc..570b7e1f39eb 100644
+--- a/Documentation/devicetree/dynamic-resolution-notes.txt
++++ b/Documentation/devicetree/dynamic-resolution-notes.rst
+@@ -1,5 +1,8 @@
 +.. SPDX-License-Identifier: GPL-2.0
++
++==================================
+ Device Tree Dynamic Resolver Notes
+-----------------------------------
++==================================
  
--  Submitting devicetree (DT) binding patches
-+==========================================
-+Submitting devicetree (DT) binding patches
-+==========================================
+ This document describes the implementation of the in-kernel
+ Device Tree resolver, residing in drivers/of/resolver.c
+diff --git a/Documentation/devicetree/index.rst b/Documentation/devicetree/index.rst
+index 64c78c3ffea6..308cac9d7021 100644
+--- a/Documentation/devicetree/index.rst
++++ b/Documentation/devicetree/index.rst
+@@ -11,3 +11,4 @@ Open Firmware and Device Tree
+    writing-schema
+    booting-without-of
+    changesets
++   dynamic-resolution-notes
+diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/devicetree/overlay-notes.txt
+index 725fb8d255c1..3f20a39e4bc2 100644
+--- a/Documentation/devicetree/overlay-notes.txt
++++ b/Documentation/devicetree/overlay-notes.txt
+@@ -3,7 +3,7 @@ Device Tree Overlay Notes
  
- I. For patch submitters
-+=======================
+ This document describes the implementation of the in-kernel
+ device tree overlay functionality residing in drivers/of/overlay.c and is a
+-companion document to Documentation/devicetree/dynamic-resolution-notes.txt[1]
++companion document to Documentation/devicetree/dynamic-resolution-notes.rst[1]
  
-   0) Normal patch submission rules from Documentation/process/submitting-patches.rst
-      applies.
- 
-   1) The Documentation/ and include/dt-bindings/ portion of the patch should
--     be a separate patch. The preferred subject prefix for binding patches is:
-+     be a separate patch. The preferred subject prefix for binding patches is::
- 
-        "dt-bindings: <binding dir>: ..."
- 
-@@ -17,7 +21,7 @@ I. For patch submitters
- 
-   2) DT binding files are written in DT schema format using json-schema
-      vocabulary and YAML file format. The DT binding files must pass validation
--     by running:
-+     by running::
- 
-        make dt_binding_check
- 
-@@ -60,6 +64,7 @@ I. For patch submitters
- 
- 
- II. For kernel maintainers
-+==========================
- 
-   1) If you aren't comfortable reviewing a given binding, reply to it and ask
-      the devicetree maintainers for guidance.  This will help them prioritize
-@@ -76,6 +81,7 @@ II. For kernel maintainers
-      kept with the driver using the binding.
- 
- III. Notes
-+==========
- 
-   0) Please see ...bindings/ABI.txt for details regarding devicetree ABI.
- 
-diff --git a/Documentation/devicetree/bindings/writing-bindings.txt b/Documentation/devicetree/bindings/writing-bindings.txt
-index 27dfd2d8016e..ca024b9c7433 100644
---- a/Documentation/devicetree/bindings/writing-bindings.txt
-+++ b/Documentation/devicetree/bindings/writing-bindings.txt
-@@ -4,7 +4,7 @@ This is a list of common review feedback items focused on binding design. With
- every rule, there are exceptions and bindings have many gray areas.
- 
- For guidelines related to patches, see
--Documentation/devicetree/bindings/submitting-patches.txt
-+Documentation/devicetree/bindings/submitting-patches.rst
- 
- 
- Overall design
-diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
-index ba5e944c7a63..1699b7f8e63a 100644
---- a/Documentation/process/submitting-patches.rst
-+++ b/Documentation/process/submitting-patches.rst
-@@ -16,7 +16,7 @@ for a list of items to check before
- submitting code.  If you are submitting a driver, also read
- :ref:`Documentation/process/submitting-drivers.rst <submittingdrivers>`;
- for device tree binding patches, read
--Documentation/devicetree/bindings/submitting-patches.txt.
-+Documentation/devicetree/bindings/submitting-patches.rst.
- 
- Many of these steps describe the default behavior of the ``git`` version
- control system; if you use ``git`` to prepare your patches, you'll find much
-diff --git a/Documentation/translations/it_IT/process/submitting-patches.rst b/Documentation/translations/it_IT/process/submitting-patches.rst
-index cba1f8cb61ed..7c23c08e4401 100644
---- a/Documentation/translations/it_IT/process/submitting-patches.rst
-+++ b/Documentation/translations/it_IT/process/submitting-patches.rst
-@@ -21,7 +21,7 @@ Leggete anche :ref:`Documentation/translations/it_IT/process/submit-checklist.rs
- per una lista di punti da verificare prima di inviare del codice.  Se state
- inviando un driver, allora leggete anche :ref:`Documentation/translations/it_IT/process/submitting-drivers.rst <it_submittingdrivers>`;
- per delle patch relative alle associazioni per Device Tree leggete
--Documentation/devicetree/bindings/submitting-patches.txt.
-+Documentation/devicetree/bindings/submitting-patches.rst.
- 
- Molti di questi passi descrivono il comportamento di base del sistema di
- controllo di versione ``git``; se utilizzate ``git`` per preparare le vostre
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index d64c67b67e3c..7d237a4598ae 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2594,7 +2594,7 @@ sub process {
- 				if (($last_binding_patch != -1) &&
- 				    ($last_binding_patch ^ $is_binding_patch)) {
- 					WARN("DT_SPLIT_BINDING_PATCH",
--					     "DT binding docs and includes should be a separate patch. See: Documentation/devicetree/bindings/submitting-patches.txt\n");
-+					     "DT binding docs and includes should be a separate patch. See: Documentation/devicetree/bindings/submitting-patches.rst\n");
- 				}
- 			}
- 
+ How overlays work
+ -----------------
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 58725773cec4..12fb85313e1b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12553,7 +12553,7 @@ M:	Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+ M:	Frank Rowand <frowand.list@gmail.com>
+ L:	devicetree@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/devicetree/dynamic-resolution-notes.txt
++F:	Documentation/devicetree/dynamic-resolution-notes.rst
+ F:	Documentation/devicetree/overlay-notes.txt
+ F:	drivers/of/overlay.c
+ F:	drivers/of/resolver.c
 -- 
 2.25.2
 
