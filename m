@@ -2,95 +2,213 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=FORGED_MUA_MOZILLA,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C939FC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 18:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60213C38A2B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 18:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3A7D20784
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 18:05:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1B9gtJS"
+	by mail.kernel.org (Postfix) with ESMTP id 48B1F20787
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 18:17:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404727AbgDOSE7 (ORCPT
+        id S2411723AbgDOSRc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 14:04:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44236 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404681AbgDOSE4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 14:04:56 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBEDFC061A0C;
-        Wed, 15 Apr 2020 11:04:55 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id b11so1025274wrs.6;
-        Wed, 15 Apr 2020 11:04:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/8FRo478arD7m2qucaLnwOdz/3bXv43FR5ZsgyXv6Ho=;
-        b=R1B9gtJSvwts8ntK8Ij1ZQRxo8KVqPjQ6/oq/phrw5hrO5rLWL2vP1nB3wa5pny7rt
-         WSRQrcQvkGUI8Twji47UJrYONgw77+rFQKPQfQkSDNdUC/ieAMbtaRKm8sow9kWRXLng
-         +8DL+vVHegL0QTBbH0DAp76R5w33ZHKqeAy2yTiEz8OM312FtqDi5lpoBa3ASRWQiDqP
-         oGwfwqwXRu3UwLf9m2NR/DsSLLrEqTtvr28dRJqs3Ip4yRnIgwO6z8t9NSH0J9KuFsJT
-         u8L2LrqO2uhCbzznqVIB87X3lhf68FDIcYpOE0YSKKwWWBp29Qxf00vQFTZvzrxibsVR
-         gPZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/8FRo478arD7m2qucaLnwOdz/3bXv43FR5ZsgyXv6Ho=;
-        b=a3xADp5VagEA9o2wXLXGWiR3hdEpSqi6D/jJMJHWpdhiJQfB1eSLwbrkIGL77zrnMK
-         y1NSefbsuLQqXthQafoKLHXGC8iybiCmtMpu5ZJOXm64UuZ3nrElh+66Wb+X2abkyryK
-         v+AhcdCuL8MqJqSaqYSMrLfKc12DqTgdAhUaRlO6fEoB0+s08Oq0VmRRGrbBNBx8qvtC
-         z2l7uBwrK/9PRa1Dj9dfNwlYqCgr9OU66K2xxrzFtyVSCUpmMOG7v55scPo0L0VVSq0T
-         5AB/8AOTwSovpBCa5LIQPtHu5TQHKFnv4+VwH50EO39nd6apA3n0JNptToArLYHT4CfU
-         9Vkw==
-X-Gm-Message-State: AGi0PuYGHTkmaKcPPPtyWGvn+ZhLwPQBjoZCE84nzgso9hMegX0eOrek
-        igVDa95aTAcXgtjOcOGxS4Z3jTxCr1boP57WNL46p6Ut
-X-Google-Smtp-Source: APiQypLa70wxauBl8Umg57eLoV2a9izwUGC+7DVCaUZ6CGZwb2JceU+aC/f7UF2fV14mwbXBnJnREvKjneYMEJflMqU=
-X-Received: by 2002:a5d:420d:: with SMTP id n13mr30497310wrq.204.1586973894505;
- Wed, 15 Apr 2020 11:04:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200331203551.20914-1-mporter@konsulko.com>
-In-Reply-To: <20200331203551.20914-1-mporter@konsulko.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Wed, 15 Apr 2020 21:04:43 +0300
-Message-ID: <CAEnQRZCqeJkRPEUYL3k8seuNusLZ6QpT-X-A7E20AMHSYcmaUA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: imx8mm: fix dma peripheral type for SAI nodes
-To:     Matt Porter <mporter@konsulko.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
+        Wed, 15 Apr 2020 14:17:32 -0400
+Received: from mail-oln040092004101.outbound.protection.outlook.com ([40.92.4.101]:62515
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2406366AbgDOSR2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 14:17:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cKsYw22Jdn4RnDwUfvKUz45jCp4ostZYV6998+bBAWVR59m9+Lqh5FaycLdvzKelwNrL3/oxJMCOt+7fgKmKL2zCnAlLuD73UQUkH/onphbBlJ9V4xleMXU1NaYgUTouRmQWnWHCGg58b9aJ2Kmf3LowihgcEc4/mYl0Bn/Aw2ZrEN7lnzFdLKk5+dPySCQmseZ0FFBFI5Xytr5iUDJdXbFWVMccAvwA7YNaI2VZ2xBewEViebRX9d2uUOogSXCbdcS0NrR3Qd1nWvG1x2KPiWN8CtBWQdkNDrZ5v+JBC0ayps/HKVLGi2gGVMuR1TWlPNMihzeG5QyC1lZ2g/P/jA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6qm0J12ynSYfizp+lk8C4gGwJh5pUu+JJ25HKljGqzc=;
+ b=YAJEDDH1MbPFwDcV7ZLTWrHltNrze0V4ZdyUAjuLozgS2S+YjKXMRnsTDhB4Ul/zu6IvENJWHkGe/Z1W1prwSuz4OKKfkihJBuQo2fV4yVni78e3HgPY4rU1NQPZ44XU1As89Y3DwM3kD4ocN+PiF87xp3BQ7Lzu8BtIjgplTHbUChJoE0f+D4KwqIt4ikXNgGny1iToCrBLSegTXZ4iiSWLQx+GFXF+qmrXJ1fCzFaKJejzWLMFAGm0aDHpWPJApsMNbwmg9NIQEVag8w07Xr2g+/l1RFQhqeb/6aRJSbf4QjfPj/q7ldcL0bG4WHGm8JDVdDsKyZtQaDxT29bk1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
+ header.d=live.ca; arc=none
+Received: from BL2NAM02FT046.eop-nam02.prod.protection.outlook.com
+ (10.152.76.51) by BL2NAM02HT009.eop-nam02.prod.protection.outlook.com
+ (10.152.77.83) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25; Wed, 15 Apr
+ 2020 18:17:22 +0000
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ (2a01:111:e400:7e46::53) by BL2NAM02FT046.mail.protection.outlook.com
+ (2a01:111:e400:7e46::118) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend
+ Transport; Wed, 15 Apr 2020 18:17:22 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:8BD68E2A26C952ABD585DB347D4BADB994C1700DADB921EE431499921C4B8EA2;UpperCasedChecksum:85458A7AC59CC987BE425960761D72725327EDA927052EB94E85E11BFC6396EB;SizeAsReceived:10107;Count:50
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2900.028; Wed, 15 Apr 2020
+ 18:17:22 +0000
+Subject: Re: [PATCH v6 08/12] arm: dts: s5pv210: Add G3D node
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        yibin.gong@nxp.com
-Content-Type: text/plain; charset="UTF-8"
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap@vger.kernel.org, openpvrsgx-devgroup@letux.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>
+References: <cover.1586939718.git.hns@goldelico.com>
+ <b6733f80546bf3e6b3799f716b9c8e0f407de03d.1586939718.git.hns@goldelico.com>
+ <CAJKOXPcb9KWNAem-CAx_zCS+sZoEHYc0J8x0nk1xjY9hD4-M4w@mail.gmail.com>
+ <AB9B8741-CFF7-414D-9489-D381B539538D@goldelico.com>
+From:   Jonathan Bakker <xc-racer2@live.ca>
+Message-ID: <BN6PR04MB0660640B15550F75C8CCD4DEA3DB0@BN6PR04MB0660.namprd04.prod.outlook.com>
+Date:   Wed, 15 Apr 2020 11:17:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+In-Reply-To: <AB9B8741-CFF7-414D-9489-D381B539538D@goldelico.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MWHPR12CA0067.namprd12.prod.outlook.com
+ (2603:10b6:300:103::29) To BN6PR04MB0660.namprd04.prod.outlook.com
+ (2603:10b6:404:d9::21)
+X-Microsoft-Original-Message-ID: <ada9183b-f363-cd20-1f9d-386525b03c95@live.ca>
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2001:569:fb67:7300:9f89:4b96:de0b:cd14] (2001:569:fb67:7300:9f89:4b96:de0b:cd14) by MWHPR12CA0067.namprd12.prod.outlook.com (2603:10b6:300:103::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend Transport; Wed, 15 Apr 2020 18:17:19 +0000
+X-Microsoft-Original-Message-ID: <ada9183b-f363-cd20-1f9d-386525b03c95@live.ca>
+X-TMN:  [U2G2OSqe5A/BZuCGGWOHtqUzj1cujfbs+umOObyOl+oDyfyAAsfjGd2eoRhHsiD0]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 50
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: 30933129-d48e-48d1-e9cf-08d7e1693dc0
+X-MS-TrafficTypeDiagnostic: BL2NAM02HT009:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Gp3BiXN1m8OUI9TUXrEcbDnQB9zzSz88GXXW103qz0KuM0Zg94zLf6W4p8efgOxI+d1OTcBJWheBrYX+EXRjQqwvqFsw9BKU8x8PDiXbg+A9uYvM+ON6CYgpKaLMavDNOS2PBRFsMEMoh4nsPl2JNIU32k+fiP80519ML+w0mr2AiKu4hq9DKSuj3uCh4XfC
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: onrRf+pkiHCwQy/Q/3gVZHQrKcjInLcW20cEMXd8uF4+NSQTUzhoAODCmzzeqGGFuHe/zVe8a2ePYbAQOV+elESnWpx/32G/WpIdgoaQzZqmqgDfNtQuLL5el+yr8OIEKZay23wVidb4uYhu3EG3Qj4/1dq5ob2hBKDtEnHjWZqwpaXJ7zBJh8HkRPf149AVYqJ0G2rdUOLqlHjnyczX4w==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 30933129-d48e-48d1-e9cf-08d7e1693dc0
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2020 18:17:22.5620
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL2NAM02HT009
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 11:36 PM Matt Porter <mporter@konsulko.com> wrote:
->
-> The peripheral type specified in the dma phandle for each SAI node
-> is incorrect. Change it to specify the SAI peripheral.
->
-> Signed-off-by: Matt Porter <mporter@konsulko.com>
+Hi Nikolaus,
 
-Hi Matt,
+On 2020-04-15 5:50 a.m., H. Nikolaus Schaller wrote:
+> 
+>> Am 15.04.2020 um 13:49 schrieb Krzysztof Kozlowski <krzk@kernel.org>:
+>>
+>> On Wed, 15 Apr 2020 at 10:36, H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>>>
+>>> From: Jonathan Bakker <xc-racer2@live.ca>
+>>>
+>>> to add support for SGX540 GPU.
+>>
+>> Do not continue the subject in commit msg like it is one sentence.
+>> These are two separate sentences, so commit msg starts with capital
+>> letter and it is sentence by itself.
+>>
 
-Why do you think this is incorrect?  AFAIK script number 2 works fine
-for SAI. Can you add
-more details on what bug are you encountering?
+Sorry, that's my fault, I should know better.
 
-Adding Robin the owner of SDMA.
+Nikolaus took this from my testing tree and I apparently didn't have it in
+as good as state as I should have.
+
+>>> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>>> ---
+>>> arch/arm/boot/dts/s5pv210.dtsi | 15 +++++++++++++++
+>>> 1 file changed, 15 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
+>>> index 2ad642f51fd9..e7fc709c0cca 100644
+>>> --- a/arch/arm/boot/dts/s5pv210.dtsi
+>>> +++ b/arch/arm/boot/dts/s5pv210.dtsi
+>>> @@ -512,6 +512,21 @@ vic3: interrupt-controller@f2300000 {
+>>>                        #interrupt-cells = <1>;
+>>>                };
+>>>
+>>> +               g3d: g3d@f3000000 {
+>>> +                       compatible = "samsung,s5pv210-sgx540-120";
+>>> +                       reg = <0xf3000000 0x10000>;
+>>> +                       interrupt-parent = <&vic2>;
+>>> +                       interrupts = <10>;
+>>> +                       clock-names = "sclk";
+>>> +                       clocks = <&clocks CLK_G3D>;
+>>
+>> Not part of bindings, please remove or add to the bindings.
+> 
+> Well, the bindings should describe what is common for all SoC
+> and they are quite different in what they need in addition.
+> 
+> Thererfore we have no "additionalProperties: false" in the
+> bindings [PATCH v6 01/12].
+> 
+>>
+>>> +
+>>> +                       power-domains = <&pd S5PV210_PD_G3D>;
+>>
+>> Ditto
+> 
+> In this case it might be possible to add the clock/power-domains
+> etc. to a wrapper node compatible to "simple-pm-bus" or similar
+> and make the gpu a child of it.
+> 
+> @Jontahan: can you please give it a try?
+> 
+> 
+
+The power-domains comes from a (so far) non-upstreamed power domain driver
+for s5pv210 that I've been playing around with.  It's not necessary for proper
+operation as it's on by default.
+
+Looking at simple-pm-bus, I don't really understand its purpose.  Is it a way of separating
+out a power domain from a main device's node?  Or is it designed for when you have multiple
+devices under the same power domain?
+
+Nikolaus, I can regenerate a proper patch for you if you want that's not based on my testing tree.
+
+>>
+>>> +
+>>> +                       assigned-clocks = <&clocks MOUT_G3D>, <&clocks DOUT_G3D>;
+>>> +                       assigned-clock-rates = <0>, <66700000>;
+>>> +                       assigned-clock-parents = <&clocks MOUT_MPLL>;
+>>
+>> Probably this should have status disabled because you do not set
+>> regulator supply.
+
+I don't believe there is a regulator on s5pv210, if there is, then it is a
+fixed regulator with no control on both s5pv210 devices that I have.
+
+The vendor driver did use the regulator framework for its power domain
+implementation, but that definitely shouldn't be upstreamed.
+
+> BR and thanks,
+> Nikolaus
+> 
+
+Thanks,
+Jonathan
