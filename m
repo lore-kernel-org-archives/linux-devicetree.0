@@ -2,100 +2,92 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73423C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 19:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A63BC3815B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 19:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D7E82084D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 19:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C85F20771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 19:27:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k6JVHoQX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="la6Ifd5m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506513AbgDOTVd (ORCPT
+        id S2405528AbgDOT1K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:21:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56102 "EHLO
+        Wed, 15 Apr 2020 15:27:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2506493AbgDOTVQ (ORCPT
+        by vger.kernel.org with ESMTP id S2404530AbgDOT0H (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 15:21:16 -0400
+        Wed, 15 Apr 2020 15:26:07 -0400
 Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB262C061A0C;
-        Wed, 15 Apr 2020 12:21:14 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id m8so5034270lji.1;
-        Wed, 15 Apr 2020 12:21:14 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49B67C061A0F
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 12:26:07 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id u6so3405972ljl.6
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 12:26:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ceph2IeaEjNXlv8kF7Vc08ScVo4hOK+Niuv5P5aPoWQ=;
-        b=k6JVHoQX7gCVPi30Hb3X3dztd4RHj2MHZ80uLjW0UjXHwFwJDR6nA4BkWMhyCwYhY3
-         rPK1ckm1Lmi3UWFumP8T5PIEdgBjtHpS5sNVyXC8IPEyGUDfcZPIzgE6f2vzQFw6ESa+
-         7nYmDloEa1YOGmP2AHBSipFCv5ozM1q+eStBAV9klnEVvQac1F2H4evs2RAQFk/uMDcz
-         hIoemCK0TdCyZUQw2vlaYIv2btU/5oqMFiJQf7RWjb8S0M/6Nyispwjh8SmazvQuqycq
-         rlR/5tb51y4NgeBLTuk9imqsAKkglUELU3hpGJyXj26GsJD473ufr/a3/Uffj8OajxYZ
-         GEJw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yEerOtnVW9ReUwhRZoIaZrpuT6uVSPq8/qTkpaJjzuA=;
+        b=la6Ifd5mctiojkxzlf3AZj7V6OkRYDgq28hif+VciJJN1wUH96THFJ23JXYosHaMWx
+         NjR3wB8DgAL53DLVyDdlCePvXfn7oyccyILjV2iwRbWrR9YM2dVp3JANlsgJ/dhm4dQw
+         DfrAKi2Hz7xaSg4SMlt1+qcrsIiSpg8EcxaUaF0kqGGyQbm/Bkty91BuMJ+ynyFHjx7g
+         r0yaWYI8a4fEdvxBrKi4vuBwkxg6jWC4dDEW5oy7LlQAwaXPrI7YcevVmUGAWy04/m9g
+         /FFzls0Tky61cMNOO2WNKdD9FkTrHvnLEDVyGlutqk+bw2eckX+vhwHQXPqxWBAnRgQ4
+         Da7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ceph2IeaEjNXlv8kF7Vc08ScVo4hOK+Niuv5P5aPoWQ=;
-        b=PXzDT7IRUkb53Bo38fVCNKpu/jODfnRHlfVC0NXNkxOXuBlJ78EXKwnxw7RDnMq75C
-         4GVSqAxKjH30f8bBLC07wm+Fsfc7cxRgBtF1m0BWZTJmo2mJfU8lotSFnvWLedfSl6El
-         O0FJ2QWlM7WGrx3I8eJ6pGrvt3F805CAjLT8FX767zfWLy0QJgLJwp7KFS/w0rEFXtwZ
-         bhmISVle1V35t4R9QTMu+pqtaLbvNqw/4Kb647wfazV5i6nT6rdw3mNoBIr4OhhzE00z
-         ePT9G4m/2JVa7H+OKLeA0+Hj2jUC6p4NOmZN6IN8yp5Hq9lF20OCghy+bbtBD+Z9ByKa
-         mB9g==
-X-Gm-Message-State: AGi0PuYlpfxaEC4UZoN+vmCiIwp5bBCvCppxx8Srf5KcSxm62FZ7qRVA
-        d4mP9Nnt7AGpIThNpR9N683LKVM3
-X-Google-Smtp-Source: APiQypJKa94Wc+Qyg+6OmleCPlfwn8YZOss69+KxzmFGWV8nb0nU3agrGVoCgfA5KA61fUHD0u/l0g==
-X-Received: by 2002:a05:651c:1064:: with SMTP id y4mr4178286ljm.49.1586978473089;
-        Wed, 15 Apr 2020 12:21:13 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id l7sm14099870lfg.79.2020.04.15.12.21.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Apr 2020 12:21:12 -0700 (PDT)
-Subject: Re: [RFC PATCH v7 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com,
-        sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1586919463-30542-1-git-send-email-skomatineni@nvidia.com>
- <1586919463-30542-7-git-send-email-skomatineni@nvidia.com>
- <4118112f-f865-5460-6319-d71271fd78d1@gmail.com>
- <a69a8b34-beea-3ad0-e08e-f7df8b9e7047@nvidia.com>
- <6afa951e-d904-f3c0-053f-82a02fb18979@nvidia.com>
- <b1c78827-13ea-0c94-a575-97b5afc0ede1@nvidia.com>
- <5954a7e1-910e-7f48-56d3-e671b56ead74@nvidia.com>
- <d6a9e07c-474a-a076-8313-32f5f4ca8d64@nvidia.com>
- <786949a9-8507-7723-f29b-b91a216bfd28@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f831408b-bbf4-3047-20e3-5bebfa9fc1ad@gmail.com>
-Date:   Wed, 15 Apr 2020 22:21:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yEerOtnVW9ReUwhRZoIaZrpuT6uVSPq8/qTkpaJjzuA=;
+        b=nBy5v5CKgCIPu+OWBEvYuEozf+EJB7T4NYcttzG98az1t3kvyxthdKT9TT+BHUXDMA
+         fQM72sEgeqf95H5lF0/vPU5lDaa5PKesSYABR6Zqc0B59AkBuvNbIHCIgDAOvoRjXO6S
+         Yfan7jN1y1MnTO1OnG86DovLDY5GDhBcDohRU/Tu6xCpwG7ktjgqIcjVRg0Gheg8MwHT
+         c1G7kJU/RUSUoOXhHO2ulfS3cICRcHqEuXDsYgjP8mIWBpavoxyrkI7bIlLLChK86pBN
+         L4ukn8xSuFoml6GExFmg0J+azdEP4MLH3tZHZPPavsfwGa2tBAfepHIBRJnInIgihVl3
+         BH0A==
+X-Gm-Message-State: AGi0PubzHUc7CU4sWhoDult6Z/PNY65w/w+pSxp+ThNE3qxP1dl2y5oT
+        X076UMvqQVg9P+L7kEqOQtbZJURde8xd6QMewjk=
+X-Google-Smtp-Source: APiQypJXYy+GeInxhHxdIoYEC7BRlvmB+2gusgqFCjO+/tFRcwuY8FsLZ2/VepirEG/UjnrzbEuus26C3gedMNa7o0g=
+X-Received: by 2002:a2e:7006:: with SMTP id l6mr4088422ljc.269.1586978765639;
+ Wed, 15 Apr 2020 12:26:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <786949a9-8507-7723-f29b-b91a216bfd28@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <E1jOkD3-00067R-RZ@rmk-PC.armlinux.org.uk>
+In-Reply-To: <E1jOkD3-00067R-RZ@rmk-PC.armlinux.org.uk>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 15 Apr 2020 16:26:35 -0300
+Message-ID: <CAOMZO5Ahj9XRk-hG8ZxVzQP1424qPCkNX4BuWDJs-NW5f-jvAg@mail.gmail.com>
+Subject: Re: [PATCH] arm: dts: imx6-sr-som: add ethernet PHY configuration
+To:     Russell King <rmk+kernel@armlinux.org.uk>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Oleksij Rempel <o.rempel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-15.04.2020 21:53, Sowjanya Komatineni пишет:
-...
->>>>>>> Have you tried to test this driver under KASAN? I suspect that
->>>>>>> you just
->>>>>>> masked the problem, instead of fixing it.
-> Tested with kmemleak scan and did not see any memory leaks
+Hi Russell,
 
-You should get use-after-free and not memleak.
+On Wed, Apr 15, 2020 at 12:44 PM Russell King
+<rmk+kernel@armlinux.org.uk> wrote:
+>
+> Add ethernet PHY configuration ahead of removing the quirk that
+> configures the clocking mode for the PHY.  The RGMII delay is
+> already set correctly.
+>
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
