@@ -2,115 +2,99 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CF3C3815B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EE4C3815B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBAD320737
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59E2120737
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:11:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586956264;
+	bh=Mc1pIuQsFh+DB+kAcRNt4P2NwE+ll1nbXbIDWqB5Y6M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Yom5SPrhQh/Iz48uDfwGNsbAeHkfHPuGI1n8RGgNcULyZKMNCgXY1iWrfE6Uh87K4
+	 W0oFywWGrzwF34iupBoxlk0Tu+wjV4q/oUqQwC6lO/ecS69CL19xmhtp7RvOvgRtY6
+	 TIO14DgV3O25XwjffRMZ4bZHDt9MP7LShUxocebQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506000AbgDONKV (ORCPT
+        id S2504283AbgDONKu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:10:21 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40984 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504628AbgDONKD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 09:10:03 -0400
-Received: by mail-ot1-f65.google.com with SMTP id f52so3283019otf.8;
-        Wed, 15 Apr 2020 06:10:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V9qFaonjPRW9YmEnwpksQX2HJ6Eu2laaNELJr4ZepKs=;
-        b=UsRMem+4nQ//2nHIUdfqW5L2C/Wo3qHzMPnrfFDOf9VpxNpGGGFiGoP2Hvbwb5BFBS
-         1ptvSCRn/kAi00NBjpAjmcpbGVz5BQFAIaqsGvrBxpiGgK4MuCR/UJrzqIuaq2pmuAnS
-         XNJk2xi71wSNQhm4W5OjDMwk1xvsuskidrhToY5+IMVvl2ta2m63Oqhe0HkHDUtL7BFB
-         a/sU/OayLZHK+rj42xjGUl+0V6g1p3oMY+6p63RxnOlvkUzxTEG8SpeYU4bndpFbVhIU
-         LdmIPT8dNVCoww0kgPbEIJ70WbZ/05TJpNkRwQxH3UwRn//gWBjZl2b7mDmkX5NAm+Ib
-         gRTg==
-X-Gm-Message-State: AGi0PuYiGLo7txRGJrJrpozJJfSNCf1p06mOj3AuAA9ICZ93U8dQldFs
-        rDD8Gfu3H8wPWB/X7R6XMedaY3lZoukEDUYngiQ=
-X-Google-Smtp-Source: APiQypLShKZQeszRkfUd4JX09QyAsJLhw1FNdbkBHMtLuShW145jHc+V4wPdNtNpXwRXxnGu4ITkOPujBryR9ze8Mnc=
-X-Received: by 2002:a4a:e1af:: with SMTP id 15mr1097315ooy.40.1586956201952;
- Wed, 15 Apr 2020 06:10:01 -0700 (PDT)
+        Wed, 15 Apr 2020 09:10:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55270 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2897071AbgDOLfl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:35:41 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4005C20775;
+        Wed, 15 Apr 2020 11:35:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586950541;
+        bh=Mc1pIuQsFh+DB+kAcRNt4P2NwE+ll1nbXbIDWqB5Y6M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RhPH6ZraU6gLKYwP/Bz7uX1p9NRo1axFCHYoPReu1wzYAhv1J1iyjSzM2WOzISc6F
+         4rQKZ9vEuvFQIkpayv5HYgHIWbMl5/oycOcqJooz10u8aBl9ta7HVz7MPf43dGxSGJ
+         TfJ4199XfFEspLPdOufsUBI7BNrYyX/DK2QB45fo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Alex Smith <alex.smith@imgtec.com>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 048/129] MIPS: DTS: CI20: add DT node for IR sensor
+Date:   Wed, 15 Apr 2020 07:33:23 -0400
+Message-Id: <20200415113445.11881-48-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
+References: <20200415113445.11881-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <1586512923-21739-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1586512923-21739-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1586512923-21739-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 15 Apr 2020 15:09:49 +0200
-Message-ID: <CAMuHMdULExMNnKJWsjAonR1sVeTyQCH0shwO--Wo6dLzrWV_tQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: dma: renesas,rcar-dmac: convert bindings
- to json-schema
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Vinod <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
+From: Alex Smith <alex.smith@imgtec.com>
 
-On Fri, Apr 10, 2020 at 12:02 PM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> Convert Renesas R-Car and RZ/G DMA Controller bindings
-> documentation to json-schema.
->
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+[ Upstream commit f5e8fcf85a25bac26c32a0000dbab5857ead9113 ]
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+The infrared sensor on the CI20 board is connected to a GPIO and can
+be operated by using the gpio-ir-recv driver. Add a DT node for the
+sensor to allow that driver to be used.
 
-One question below...
+Signed-off-by: Alex Smith <alex.smith@imgtec.com>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/mips/boot/dts/ingenic/ci20.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.yaml
-
-> +  interrupt-names:
-> +    minItems: 9
-> +    maxItems: 17
-> +    items:
-> +      - const: error
-> +      - pattern: "^ch([0-9]|1[0-5])$"
-> +      - pattern: "^ch([0-9]|1[0-5])$"
-> +      - pattern: "^ch([0-9]|1[0-5])$"
-> +      - pattern: "^ch([0-9]|1[0-5])$"
-> +      - pattern: "^ch([0-9]|1[0-5])$"
-> +      - pattern: "^ch([0-9]|1[0-5])$"
-> +      - pattern: "^ch([0-9]|1[0-5])$"
-> +      - pattern: "^ch([0-9]|1[0-5])$"
-> +      - pattern: "^ch([0-9]|1[0-5])$"
-> +      - pattern: "^ch([0-9]|1[0-5])$"
-> +      - pattern: "^ch([0-9]|1[0-5])$"
-> +      - pattern: "^ch([0-9]|1[0-5])$"
-> +      - pattern: "^ch([0-9]|1[0-5])$"
-> +      - pattern: "^ch([0-9]|1[0-5])$"
-> +      - pattern: "^ch([0-9]|1[0-5])$"
-> +      - pattern: "^ch([0-9]|1[0-5])$"
-
-Would it make sense to just put the actual names here?
-
-    - const: error
-    - const: ch0
-    - const: ch1
-      [...]
-    - const: ch 15
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index c340f947baa03..fc4e64200c3d5 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -62,6 +62,11 @@
+ 		enable-active-high;
+ 	};
+ 
++	ir: ir {
++		compatible = "gpio-ir-receiver";
++		gpios = <&gpe 3 GPIO_ACTIVE_LOW>;
++	};
++
+ 	wlan0_power: fixedregulator@1 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "wlan0_power";
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.20.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
