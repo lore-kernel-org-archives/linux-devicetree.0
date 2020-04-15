@@ -2,117 +2,403 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDFCC38A2B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 02:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F41CC2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 02:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E4FD20774
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 02:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 114A22072D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 02:19:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="gSC5ttgw"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="o50zeO4q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392786AbgDOCAO (ORCPT
+        id S2392932AbgDOCTa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 22:00:14 -0400
-Received: from mail-eopbgr1400115.outbound.protection.outlook.com ([40.107.140.115]:37920
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387766AbgDOCAM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Apr 2020 22:00:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HJF+4axQ3p25WNc9azufmlpUXd1y6nU/Wkv5lRQHf8TWHh+A5+1a+LGU6k3Q7D30NzlSNSaBJBl4EMNLc0Riz/W32fhQWHvOlfOukKzy9vv3rRv5N/JTM2I33YbGs3WAPVXCxlNnYsYIobekErAJfvqSb5Qzq/js1YwVxQYH5ZQdLzIFWfKoEwAK0/174kPq3WYRmAYuoM2eaw+VsTkcNJZr2vWuWDsd0tXCP3m9bKD7bo8X7wISqsPMuH9pG8yaHsta23/Hhm+MoCsZZ70UJE0RQusbEZa50j7VRqkqDvXcpRgumCXAnbyLnDQHcUfVLmB1aP/QUscAMx3DnPCXDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oW84VRQHUm8XVO+2rLPV9WEuX3gDX+ExJuC6NsIs+Zs=;
- b=VLsj5Cp5zmUokhNc3Q4ScOyJuBaGhAJX+4O873xplFMi3qV92wzT0Zfz37xO3GDB9uHyM4UUl5EuX1v65v1k4btRMJIaxc19lPb+6RteirKyl2Lc8ObBLsNtpgBZ9wx8JyQDecPAIVGBs7oTQ3z5arHmJa1ORzFXHT02akezEV4ErZ/OpP+jfNtVAWvl7JHRId1FH+HL6+zBPggpo/HCdrCrh7hA6q0WRtM93NOtlc8rgQ/x/d+Z1iualkGPDWuPKsd3fC1SY7eLmVGjFsuKL/t0Ego2PKnOX61SWrpc/+IKrJj3fNYWL1TeMm3U74Q5NOmZubeDQ0kT3uydcPUr8Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oW84VRQHUm8XVO+2rLPV9WEuX3gDX+ExJuC6NsIs+Zs=;
- b=gSC5ttgwmoBE9HoTMbPsWPK8MEMYmxJYVgc8W3SuiQYSjVgKoUBmVO/DgylTNCoVCU34gZP2LTomtk3ASTRkXKoZ+m1kJg6IAX7lWJJiot6HRgCOXG3zbEhhcnR/OWHGDd3LauEjCo7CiaZpfdk6QHUGDi9vCtr8WB3xbvf7mB8=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB3520.jpnprd01.prod.outlook.com (20.178.137.208) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2900.15; Wed, 15 Apr 2020 02:00:08 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2900.028; Wed, 15 Apr 2020
- 02:00:08 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Subject: RE: [PATCH] dt-bndings: iommu: renesas, ipmmu-vmsa: convert to
- json-schema
-Thread-Topic: [PATCH] dt-bndings: iommu: renesas, ipmmu-vmsa: convert to
- json-schema
-Thread-Index: AQHWEoBV45dVUwCDv0GH/0iVUxi6YKh5bfPg
-Date:   Wed, 15 Apr 2020 02:00:08 +0000
-Message-ID: <TYAPR01MB454430982D630B6B7973C11BD8DB0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <1586773533-8893-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <fef59497-e5ef-bfe4-e845-389fd623783b@arm.com>
-In-Reply-To: <fef59497-e5ef-bfe4-e845-389fd623783b@arm.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 35be0a30-2028-4419-6a7e-08d7e0e0b98d
-x-ms-traffictypediagnostic: TYAPR01MB3520:
-x-microsoft-antispam-prvs: <TYAPR01MB352049823309AE4A7949DDB6D8DB0@TYAPR01MB3520.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0374433C81
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(396003)(136003)(346002)(39860400002)(376002)(366004)(6506007)(53546011)(478600001)(9686003)(7696005)(110136005)(316002)(55016002)(2906002)(55236004)(4326008)(5660300002)(71200400001)(186003)(76116006)(33656002)(52536014)(66446008)(8936002)(66556008)(66946007)(64756008)(86362001)(66476007)(4744005)(54906003)(26005)(8676002)(81156014);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ttBIFz3kQMH8dB6SMg4SgzcZRj0057kIYtsgVHPsD2n0Jgzdz57GYKKo3PozhV5lcuP9rQRj/f1OnftIpy4UZ+LLI962QVn+byFmVcyBPmQwX1eA/s08TDq8Jdbbd+KIJdODKKeFTx3tSr6VLcqya9Put4ZHPLjvw0clVcrp7mIhrBuNvJ76XflvD8i7PUYPlUWPGMudReAojR7PlDd3LCZ0UuSZIJo1pH+Ohy6bbPxuCSwnCfAnUuicoNX+vVkKB8+Y2x1dnBHClWwOMz6zMwvY3Z283TaiP+i4Xis8WoYDOB38uG4dgJKGdEN3vS0umqGYrqKYKEeyTZNvM0PGInRm5Vkr+ZLlOZNYAeb4HMfJI8tyfvSzbVa85z1eHMrTlKNTk5BxIsuUWSY8bU7U1wFvTuO2oavHQ/j3VdcQ1Rwsr47DidUmWzpO+8bh7Faa
-x-ms-exchange-antispam-messagedata: aqCgtKSbn94lR9PqGk+C/ASj2sBDswoH2ZqGWKLKeCdW8nUltGbxgM0Nl1MnHf/6pTYwj1l2jBAcOzfXq+RGaUTug3AuNPPsyzGmBY2R2c4EUGyf1ZbvXoVcL4ACy41FzDglrzIV0eOl9aQZ/5C8Ng==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 14 Apr 2020 22:19:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392934AbgDOCTY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 22:19:24 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63563C061A0C;
+        Tue, 14 Apr 2020 19:19:24 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6F2032D1;
+        Wed, 15 Apr 2020 04:19:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586917160;
+        bh=tCMsVdkuBTSbuG7qe/D7439fgOuKvf3pWe38yt2askU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=o50zeO4qyxrwgUTYWstmx1eDr+CAlNSTP2/NiSOJfIPnOmSkv+SlIVvT371fZARqC
+         4zIjXj3sJCYSDvQzEsKvP+5+Baw6xQKDD7FR/RQ1+TCav8euezJcqBp/rKaAtokOax
+         hD7KAwe4UJsWDzYcZ4ZENZ+YAprPDA4osxNqGGPU=
+Date:   Wed, 15 Apr 2020 05:19:08 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v11 1/2] dt-bindings: display/bridge: Add binding for NWL
+ mipi dsi host controller
+Message-ID: <20200415021908.GH19819@pendragon.ideasonboard.com>
+References: <cover.1586427783.git.agx@sigxcpu.org>
+ <147ffc1e4dee3a623e5dca25d84565d386a34112.1586427783.git.agx@sigxcpu.org>
+ <20200410112342.GB4751@pendragon.ideasonboard.com>
+ <20200410124516.GA27532@bogon.m.sigxcpu.org>
+ <20200410125732.GE4751@pendragon.ideasonboard.com>
+ <20200412163835.GB4007@bogon.m.sigxcpu.org>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 35be0a30-2028-4419-6a7e-08d7e0e0b98d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2020 02:00:08.5723
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HgLfysfL2PxvfDKC2itExWo40yPlLApEbJoj4ROxyur7lzaot8GzL7XJ9hHGQX6EXvVb0KMBIimoZcW5DhvP8Vvm78dbb0AaX+UdpzBMEfDL2CbiC3HubVSL3mFtHYwe
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3520
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200412163835.GB4007@bogon.m.sigxcpu.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgUm9iaW4sDQoNCj4gRnJvbTogUm9iaW4gTXVycGh5LCBTZW50OiBXZWRuZXNkYXksIEFwcmls
-IDE1LCAyMDIwIDI6MTYgQU0NCj4gDQo+IE9uIDIwMjAtMDQtMTMgMTE6MjUgYW0sIFlvc2hpaGly
-byBTaGltb2RhIHdyb3RlOg0KPiBbLi4uXQ0KPiA+IC1FYWNoIGJ1cyBtYXN0ZXIgY29ubmVjdGVk
-IHRvIGFuIElQTU1VIG11c3QgcmVmZXJlbmNlIHRoZSBJUE1NVSBpbiBpdHMgZGV2aWNlDQo+ID4g
-LW5vZGUgd2l0aCB0aGUgZm9sbG93aW5nIHByb3BlcnR5Og0KPiA+IC0NCj4gPiAtICAtIGlvbW11
-czogQSByZWZlcmVuY2UgdG8gdGhlIElQTU1VIGluIHR3byBjZWxscy4gVGhlIGZpcnN0IGNlbGwg
-aXMgYSBwaGFuZGxlDQo+ID4gLSAgICB0byB0aGUgSVBNTVUgYW5kIHRoZSBzZWNvbmQgY2VsbCB0
-aGUgbnVtYmVyIG9mIHRoZSBtaWNyby1UTEIgdGhhdCB0aGUNCj4gPiAtICAgIGRldmljZSBpcyBj
-b25uZWN0ZWQgdG8uDQo+IA0KPiBUaGlzIGRlZmluaXRpb24gb2Ygd2hhdCB0aGUgcGhhbmRsZSBh
-cmd1bWVudCBtZWFucy4uLg0KPiANCj4gWy4uLl0NCj4gPiArICAnI2lvbW11LWNlbGxzJzoNCj4g
-PiArICAgIGNvbnN0OiAxDQo+ICA+ICsNCj4gDQo+IC4uLmRlc2VydmVzIHRvIGJlIGNhcHR1cmVk
-IGluIGEgZGVzY3JpcHRpb24gaGVyZS4NCg0KVGhhbmsgeW91IGZvciB0aGUgY29tbWVudCEgSSds
-bCBmaXggdGhpcy4NCg0KQmVzdCByZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0KPiBSb2Jp
-bi4NCg==
+Hi Guido,
+
+On Sun, Apr 12, 2020 at 06:38:35PM +0200, Guido Günther wrote:
+> On Fri, Apr 10, 2020 at 03:57:32PM +0300, Laurent Pinchart wrote:
+> > On Fri, Apr 10, 2020 at 02:45:16PM +0200, Guido Günther wrote:
+> >> On Fri, Apr 10, 2020 at 02:23:42PM +0300, Laurent Pinchart wrote:
+> >>> On Thu, Apr 09, 2020 at 12:42:01PM +0200, Guido Günther wrote:
+> >>>> The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
+> >>>> 
+> >>>> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> >>>> Tested-by: Robert Chiras <robert.chiras@nxp.com>
+> >>>> Reviewed-by: Rob Herring <robh@kernel.org>
+> >>>> Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> >>>> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+> >>>> ---
+> >>>>  .../bindings/display/bridge/nwl-dsi.yaml      | 226 ++++++++++++++++++
+> >>>>  1 file changed, 226 insertions(+)
+> >>>>  create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> >>>> 
+> >>>> diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> >>>> new file mode 100644
+> >>>> index 000000000000..8aff2d68fc33
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> >>>> @@ -0,0 +1,226 @@
+> >>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >>>> +%YAML 1.2
+> >>>> +---
+> >>>> +$id: http://devicetree.org/schemas/display/bridge/nwl-dsi.yaml#
+> >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>>> +
+> >>>> +title: Northwest Logic MIPI-DSI controller on i.MX SoCs
+> >>>> +
+> >>>> +maintainers:
+> >>>> +  - Guido Gúnther <agx@sigxcpu.org>
+> >>>> +  - Robert Chiras <robert.chiras@nxp.com>
+> >>>> +
+> >>>> +description: |
+> >>>> +  NWL MIPI-DSI host controller found on i.MX8 platforms. This is a dsi bridge for
+> >>>> +  the SOCs NWL MIPI-DSI host controller.
+> >>>> +
+> >>>> +properties:
+> >>>> +  compatible:
+> >>>> +    const: fsl,imx8mq-nwl-dsi
+> >>>> +
+> >>>> +  reg:
+> >>>> +    maxItems: 1
+> >>>> +
+> >>>> +  interrupts:
+> >>>> +    maxItems: 1
+> >>>> +
+> >>>> +  '#address-cells':
+> >>>> +    const: 1
+> >>>> +
+> >>>> +  '#size-cells':
+> >>>> +    const: 0
+> >>>> +
+> >>>> +  clocks:
+> >>>> +    items:
+> >>>> +      - description: DSI core clock
+> >>>> +      - description: RX_ESC clock (used in escape mode)
+> >>>> +      - description: TX_ESC clock (used in escape mode)
+> >>>> +      - description: PHY_REF clock
+> >>>> +      - description: LCDIF clock
+> >>>> +
+> >>>> +  clock-names:
+> >>>> +    items:
+> >>>> +      - const: core
+> >>>> +      - const: rx_esc
+> >>>> +      - const: tx_esc
+> >>>> +      - const: phy_ref
+> >>>> +      - const: lcdif
+> >>>> +
+> >>>> +  mux-controls:
+> >>>> +    description:
+> >>>> +      mux controller node to use for operating the input mux
+> >>>> +
+> >>>> +  phys:
+> >>>> +    maxItems: 1
+> >>>> +    description:
+> >>>> +      A phandle to the phy module representing the DPHY
+> >>>> +
+> >>>> +  phy-names:
+> >>>> +    items:
+> >>>> +      - const: dphy
+> >>>> +
+> >>>> +  power-domains:
+> >>>> +    maxItems: 1
+> >>>> +
+> >>>> +  resets:
+> >>>> +    items:
+> >>>> +      - description: dsi byte reset line
+> >>>> +      - description: dsi dpi reset line
+> >>>> +      - description: dsi esc reset line
+> >>>> +      - description: dsi pclk reset line
+> >>>> +
+> >>>> +  reset-names:
+> >>>> +    items:
+> >>>> +      - const: byte
+> >>>> +      - const: dpi
+> >>>> +      - const: esc
+> >>>> +      - const: pclk
+> >>>> +
+> >>>> +  ports:
+> >>>> +    type: object
+> >>>> +    description:
+> >>>> +      A node containing DSI input & output port nodes with endpoint
+> >>>> +      definitions as documented in
+> >>>> +      Documentation/devicetree/bindings/graph.txt.
+> >>>> +    properties:
+> >>>> +      port@0:
+> >>>> +        type: object
+> >>>> +        description:
+> >>>> +          Input port node to receive pixel data from the
+> >>>> +          display controller. Exactly one endpoint must be
+> >>>> +          specified.
+> >>>> +        properties:
+> >>>> +          '#address-cells':
+> >>>> +            const: 1
+> >>>> +
+> >>>> +          '#size-cells':
+> >>>> +            const: 0
+> >>>> +
+> >>>> +          endpoint@0:
+> >>>> +            description: sub-node describing the input from LCDIF
+> >>>> +            type: object
+> >>>> +
+> >>>> +          endpoint@1:
+> >>>> +            description: sub-node describing the input from DCSS
+> >>>> +            type: object
+> >>> 
+> >>> This models the two inputs to the IP core, that are connected to a mux
+> >>> internally, controlled through mux-controls, right ? Why is a single
+> >>> endpoint supported then, if there are two connections at the hardware
+> >>> level, and why is this using endpoints instead of ports as there are
+> >>> really two input ports ?
+> >> 
+> >> That came out of
+> >> 
+> >> https://lore.kernel.org/linux-arm-kernel/c86b7ca2-7799-eafd-c380-e4b551520837@samsung.com/
+> >> 
+> >> # If the ip has separate lines for DCSS and LCDIF you should distinguish
+> >> # by port number. If they are shared
+> >> # you can use endpoint number to specify DCSS or LCDIF, in both cases
+> >> # bindings should be adjusted.
+> >> 
+> >> I read that as
+> >> 
+> >> - distinguish by endpoint number:
+> >> 
+> >>     eLCDIF--\    |
+> >>              ----| nwl
+> >>     DCSS----/    |
+> >> 
+> >> - distinguish by port number:
+> >> 
+> >>     eLCDIF-------|
+> >>                  | nwl
+> >>     DCSS --------|
+> > 
+> > I fully agree with you here, but in the first case I would expect the
+> > mux to be outside of the NWL, while in the second case it would be
+> > inside. If I understand the issue correctly, the mux is not part of the
+> > NWL, right ? The endpoint model would then be good, but leaves the issue
+> > Documentation/devicetree/bindings/media/video-mux.txt, but that would
+> > require some support on the driver side. Do you think it would be a good
+> > way forward ?
+> 
+> Binding wise that looks like a good fit. I then thought about the
+> implementation and figured we'd end up with something like a bridge that
+> basically muxes inputs - or did you have something different in mind? That
+> sounds generally useful when we e.g. look at runtime switching the input
+> display controller.
+
+That's exactly what I have in mind. There's a video-mux driver in V4L2
+that does exactly this, we would need something similar for DRM/KMS.
+There's an additional challenge in that bridges are supposed to have a
+single input and a single output at the moment, so API extensions would
+be needed, which could take some time to get right. Shortcuts may be
+possible to achieve a first implementation that would hardcode a
+particular input, as long as the DT bindings are fine.
+
+> > The alternative is to consider the mux + NWL as one device (more or less
+> > an i.MX8M-specific integration wrapper of the NWL), but in that case
+> > there should be two ports I believe.
+> 
+> I'd go with that for the moment and fold in the above at a later
+> point if needed. I'm happy to work on that but would like to work on
+> some parts of the imx8mq display stack first.
+
+There's no specific urgency on my side, if not for the fact that DT
+bindings are supposed to be a stable ABI. If we have to change this, it
+would be best to do it before v5.7-rc6 in order to get the changes in
+v5.8. A delay until v5.8-rcX may still be acceptable as this could be
+considered as a fix, but the more we wait, the bigger the risk is.
+
+> >> From the imx8mq ref manual i didn't see separate input lines for DCSS vs
+> >> eLCDIF the the NWL IP so i went with endpoints instead of ports.  I'm
+> >> happy to change that if i got it wrong.
+> >> 
+> >>> Apart from that the bindings look ok to me.
+> >>> 
+> >>>> +
+> >>>> +          reg:
+> >>>> +            const: 0
+> >>>> +
+> >>>> +        required:
+> >>>> +          - '#address-cells'
+> >>>> +          - '#size-cells'
+> >>>> +          - reg
+> >>>> +
+> >>>> +        oneOf:
+> >>>> +          - required:
+> >>>> +              - endpoint@0
+> >>>> +          - required:
+> >>>> +              - endpoint@1
+> >>>> +
+> >>>> +        additionalProperties: false
+> >>>> +
+> >>>> +      port@1:
+> >>>> +        type: object
+> >>>> +        description:
+> >>>> +          DSI output port node to the panel or the next bridge
+> >>>> +          in the chain
+> >>>> +
+> >>>> +      '#address-cells':
+> >>>> +        const: 1
+> >>>> +
+> >>>> +      '#size-cells':
+> >>>> +        const: 0
+> >>>> +
+> >>>> +    required:
+> >>>> +      - '#address-cells'
+> >>>> +      - '#size-cells'
+> >>>> +      - port@0
+> >>>> +      - port@1
+> >>>> +
+> >>>> +    additionalProperties: false
+> >>>> +
+> >>>> +patternProperties:
+> >>>> +  "^panel@[0-9]+$":
+> >>>> +    type: object
+> >>>> +
+> >>>> +required:
+> >>>> +  - '#address-cells'
+> >>>> +  - '#size-cells'
+> >>>> +  - clock-names
+> >>>> +  - clocks
+> >>>> +  - compatible
+> >>>> +  - interrupts
+> >>>> +  - mux-controls
+> >>>> +  - phy-names
+> >>>> +  - phys
+> >>>> +  - ports
+> >>>> +  - reg
+> >>>> +  - reset-names
+> >>>> +  - resets
+> >>>> +
+> >>>> +additionalProperties: false
+> >>>> +
+> >>>> +examples:
+> >>>> + - |
+> >>>> +
+> >>>> +   #include <dt-bindings/clock/imx8mq-clock.h>
+> >>>> +   #include <dt-bindings/interrupt-controller/arm-gic.h>
+> >>>> +   #include <dt-bindings/reset/imx8mq-reset.h>
+> >>>> +
+> >>>> +   mipi_dsi: mipi_dsi@30a00000 {
+> >>>> +              #address-cells = <1>;
+> >>>> +              #size-cells = <0>;
+> >>>> +              compatible = "fsl,imx8mq-nwl-dsi";
+> >>>> +              reg = <0x30A00000 0x300>;
+> >>>> +              clocks = <&clk IMX8MQ_CLK_DSI_CORE>,
+> >>>> +                       <&clk IMX8MQ_CLK_DSI_AHB>,
+> >>>> +                       <&clk IMX8MQ_CLK_DSI_IPG_DIV>,
+> >>>> +                       <&clk IMX8MQ_CLK_DSI_PHY_REF>,
+> >>>> +                       <&clk IMX8MQ_CLK_LCDIF_PIXEL>;
+> >>>> +              clock-names = "core", "rx_esc", "tx_esc", "phy_ref", "lcdif";
+> >>>> +              interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> >>>> +              mux-controls = <&mux 0>;
+> >>>> +              power-domains = <&pgc_mipi>;
+> >>>> +              resets = <&src IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N>,
+> >>>> +                       <&src IMX8MQ_RESET_MIPI_DSI_DPI_RESET_N>,
+> >>>> +                       <&src IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N>,
+> >>>> +                       <&src IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N>;
+> >>>> +              reset-names = "byte", "dpi", "esc", "pclk";
+> >>>> +              phys = <&dphy>;
+> >>>> +              phy-names = "dphy";
+> >>>> +
+> >>>> +              panel@0 {
+> >>>> +                      #address-cells = <1>;
+> >>>> +                      #size-cells = <0>;
+> >>>> +                      compatible = "rocktech,jh057n00900";
+> >>>> +                      reg = <0>;
+> >>>> +                      port@0 {
+> >>>> +                           reg = <0>;
+> >>>> +                           panel_in: endpoint {
+> >>>> +                                     remote-endpoint = <&mipi_dsi_out>;
+> >>>> +                           };
+> >>>> +                      };
+> >>>> +              };
+> >>>> +
+> >>>> +              ports {
+> >>>> +                    #address-cells = <1>;
+> >>>> +                    #size-cells = <0>;
+> >>>> +
+> >>>> +                    port@0 {
+> >>>> +                           #size-cells = <0>;
+> >>>> +                           #address-cells = <1>;
+> >>>> +                           reg = <0>;
+> >>>> +                           mipi_dsi_in: endpoint@0 {
+> >>>> +                                        reg = <0>;
+> >>>> +                                        remote-endpoint = <&lcdif_mipi_dsi>;
+> >>>> +                           };
+> >>>> +                    };
+> >>>> +                    port@1 {
+> >>>> +                           reg = <1>;
+> >>>> +                           mipi_dsi_out: endpoint {
+> >>>> +                                         remote-endpoint = <&panel_in>;
+> >>>> +                           };
+> >>>> +                    };
+> >>>> +              };
+> >>>> +      };
+
+-- 
+Regards,
+
+Laurent Pinchart
