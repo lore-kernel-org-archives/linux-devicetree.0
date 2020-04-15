@@ -2,88 +2,108 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00122C3815B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A852CC2BB85
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D57E720656
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:19:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586967540;
-	bh=L95kJh7HNDA8E7vAGBe8r5mm7PU08bWVJSFatZogGHo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bU8ih9dqIIOgEPjWXu1U1ikrwDyN7yBM6TugXIVuV00cQ+Ka8/p7YOdgfcrYHkfZW
-	 M6hRsrgESD/KdY5Rj4qkbJ4l0XWf41wh3xX/A63LiDYmDfkUrsTI+7erbJSX8aQFzz
-	 BW3HBXAH/17nEJpQlt3EAJ77nWDUQ1KMVk/ahWJQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8851A20737
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:20:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EP84ogsh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436576AbgDOQSp (ORCPT
+        id S1415594AbgDOQUv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:18:45 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37656 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436549AbgDOQSn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 12:18:43 -0400
-Received: by mail-oi1-f196.google.com with SMTP id r25so4082592oij.4;
-        Wed, 15 Apr 2020 09:18:42 -0700 (PDT)
+        Wed, 15 Apr 2020 12:20:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1415581AbgDOQUs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:20:48 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57D9FC061A0F;
+        Wed, 15 Apr 2020 09:20:47 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id u13so599720wrp.3;
+        Wed, 15 Apr 2020 09:20:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=6QvXfJZlpggMK4ANi6m9pBKzrWALkcbq78l8N8OifPg=;
+        b=EP84ogsh9NDfuDeE3+br9QlLD4Ex+blgDu0bl4JdBBHijrvMwx5Ayx/lPq1UAL5HkP
+         2iSzrh/x+r7yzQ1U7l/AKcTZ43apbQd3njUyoO2GRcPEGUig69BWCbdqxCx3bs2Qxvnr
+         lG4EE1ojjT+tMWb7o76l9kk1lkJbfiNaJQVzZKTFO/HYFOOoqXpaTA2SJGW6FVL3z0EG
+         4puC9NsOetsqDZ24YZArV7JkLS5GtldAWsfVkMyTLcv2/nOy+roSyHFSR8k13eLjP6ru
+         AB756opL2neDY1SHhJ3ByHiVjyUJnldUPor22kbx3Vqmv0a49eHK2hx1+3hhDUsgLBM9
+         hmsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=y6mEF3x+XYhXpSM89WxwJmLStGtmC7gvxiAfRjFJhog=;
-        b=FY5zmqzD/JrdhypqYtm+g0IwFLW5r2c3TxbKKb+DSVNr6L45ZDeMw6tbnCoaInv4R4
-         zV0PQ/k/0IdlIYqS6gQEtHN62kpLjWiOk2zpM2/wfP3sjaI4jS/9gzDAKHCD2qHybn83
-         pHghFKMpun1/TkfI3bRVIc2mi3hqh4Zd14LbL7k3NXxOAu1anCJBEGyAqZzU/7F0Kf0/
-         q1pBu7WGjnofilt71g9xSJCN5hTzUV99934NzVEjbZ0JSaH/pOVsZulNncm9BWuK+Lnw
-         m6ZfN8KIDUst7FIyUjfvuwT4WXtPoYNEdA5u2GmT2jWq9qDDs5u2QiEs4kFRHpnfqe/q
-         El4Q==
-X-Gm-Message-State: AGi0PuZ0XmgdtLOtwa93OXCGJWsvc/x7QAuhcTo7l6Hyd/ULD16gimzr
-        nbQubTJnXwUcpRzPJec1UgTPbihIdA==
-X-Google-Smtp-Source: APiQypIBe/N4FYeGBZid7490V9jbXplYDI3CpXW1MwryQ9Vj0f3c8l1tvBVcbq/Vuo/BErnQtibVSg==
-X-Received: by 2002:aca:e08a:: with SMTP id x132mr19364361oig.93.1586967522289;
-        Wed, 15 Apr 2020 09:18:42 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 85sm1487345oie.17.2020.04.15.09.18.40
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=6QvXfJZlpggMK4ANi6m9pBKzrWALkcbq78l8N8OifPg=;
+        b=dpbiHl15dkm2CQFCCpvEqXFEBhVnf14tB5qjuFLDSDMgkKyluCmUZnQ6UaPOmRbyb1
+         9HLzFo4kecUdvlUMvcO0YnqZtenXtZ3joglfsUbQKUUV7Ttp5/iVuRJ90UM02oCslXfA
+         Yf3Dyu30Kjn15JgNVzb6d47hRDSqzVUIiMtTAc6EMRIaEd3EsYpCq3vNPm/qr16IQmu/
+         RrJ2dVeRGjJZY9CbQs2aPa4z2n5RjdoqiRSEc5dHX7btgn4LV++gntKkg3ZExp3BE/Af
+         WwkPRWdYfXMfr2RYYVbvSpEeY3+CXbU5m50FmRZfiszffySiHTAcL3mBlXF68nlknQJf
+         M/vQ==
+X-Gm-Message-State: AGi0Puaxl3L9gCzMZxC5MvzRUjzXqzMZ30ueyp7/ojMOUqAlPFWwybws
+        EPo3yMywfIfirirP1AgMM0U=
+X-Google-Smtp-Source: APiQypKL0zfT975PKTD7SEXe+SHz+UWGx2gUY//ZiH52Ft9oqq66VmUYnhmuvVWOGYGTFrF1iwr8rQ==
+X-Received: by 2002:adf:cd8c:: with SMTP id q12mr31592637wrj.419.1586967646072;
+        Wed, 15 Apr 2020 09:20:46 -0700 (PDT)
+Received: from localhost.localdomain (p5B3F6CCC.dip0.t-ipconnect.de. [91.63.108.204])
+        by smtp.gmail.com with ESMTPSA id 17sm102526wmo.2.2020.04.15.09.20.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 09:18:41 -0700 (PDT)
-Received: (nullmailer pid 25712 invoked by uid 1000);
-        Wed, 15 Apr 2020 16:18:40 -0000
-Date:   Wed, 15 Apr 2020 11:18:40 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Pawel Dembicki <paweldembicki@gmail.com>
-Cc:     Pawel Dembicki <paweldembicki@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: vendor-prefixes: Add Check Point
-Message-ID: <20200415161759.GA24696@bogus>
-References: <20200409070448.3209-1-paweldembicki@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409070448.3209-1-paweldembicki@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 15 Apr 2020 09:20:45 -0700 (PDT)
+From:   Saravanan Sekar <sravanhome@gmail.com>
+To:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
+        robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
+        Saravanan Sekar <sravanhome@gmail.com>
+Subject: [PATCH v9 6/6] MAINTAINERS: Add entry for mp2629 Battery Charger driver
+Date:   Wed, 15 Apr 2020 18:20:30 +0200
+Message-Id: <20200415162030.16414-7-sravanhome@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200415162030.16414-1-sravanhome@gmail.com>
+References: <20200415162030.16414-1-sravanhome@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu,  9 Apr 2020 09:04:43 +0200, Pawel Dembicki wrote:
-> Check Point Software Technologies Ltd. is a company based in Israel and
-> USA. They manufacture network devices and provide software
-> products for IT security.
-> 
-> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
-> ---
-> Changes in v2:
-> - corrected line order
-> 
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+Add MAINTAINERS entry for Monolithic Power Systems mp2629 Charger driver.
 
-Applied, thanks.
+Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+---
+ MAINTAINERS | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Rob
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 32a95d162f06..0f82d5a7a614 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11358,10 +11358,15 @@ F:	drivers/tty/mxser.*
+ MONOLITHIC POWER SYSTEM PMIC DRIVER
+ M:	Saravanan Sekar <sravanhome@gmail.com>
+ S:	Maintained
++F:	Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+ F:	Documentation/devicetree/bindings/regulator/mps,mp*.yaml
++F:	drivers/iio/adc/mp2629_adc.c
++F:	drivers/mfd/mp2629.c
++F:	drivers/power/supply/mp2629_charger.c
+ F:	drivers/regulator/mp5416.c
+ F:	drivers/regulator/mpq7920.c
+ F:	drivers/regulator/mpq7920.h
++F:	include/linux/mfd/mp2629.h
+ 
+ MR800 AVERMEDIA USB FM RADIO DRIVER
+ M:	Alexey Klimov <klimov.linux@gmail.com>
+-- 
+2.17.1
+
