@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4421C2BB55
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D85AC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC69C2074F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E580620767
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953840;
-	bh=W78xDKL9vZeAOmKKhIvU94QXZNobNiSeA2UTlKqPmz8=;
+	s=default; t=1586953880;
+	bh=x3s5st2H0lALnwOPZGbSBw57FqPK0nzULfLkX85UHk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cd99lavScjNOS4uv1NXW8kyQOfrz68OuFHemchE67D8V7EmMh41LfJm52RwJAivex
-	 9CT7v01sT1aJyNy3u9/WFCyEM1T27sG4OIUNPXwNb+LjbihqfeN7cmjhUiDZx9N3gX
-	 3uDgrxaTmMneTsWnkkxrPjz6FGrehyOR3M6jtAy0=
+	b=lUSsnoNy0SE6SwWLl5iFSVp290XFwHgOYCRWh0AJSH795TGNN6FyVo58s/UufnyMw
+	 iiv3tqQO+5ZgTTyWA1MhCRbKdp8DyaCdqamD2bq0VE/L+vzGfq30/IA9JQiMBiYluS
+	 PmlYZaHxH/qcPyS8REnkgB7VNcMJfwuAlU6JAQzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369464AbgDOMaW (ORCPT
+        id S369496AbgDOMal (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:30:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37428 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 08:30:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409110AbgDOLow (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:44:52 -0400
+        id S2409106AbgDOLou (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:44:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CFC82137B;
-        Wed, 15 Apr 2020 11:44:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDA7C217D8;
+        Wed, 15 Apr 2020 11:44:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951092;
-        bh=W78xDKL9vZeAOmKKhIvU94QXZNobNiSeA2UTlKqPmz8=;
+        s=default; t=1586951089;
+        bh=x3s5st2H0lALnwOPZGbSBw57FqPK0nzULfLkX85UHk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w5b1lejBbPRapuazUXqeLCU30Sx2Awzsj8GFAUTUnqBNfkLH2KDrx+/2tSDxFRp+V
-         argjYTUc+kYaYsGPy3u+xf6K+EkaQHPX9eVE7UdpOJmPVDbm+9wLyUGAryy60nqMlj
-         /rxF8CrqrdtV+YA9lB6p9ZPnFzHi8DAHYY+ltE/o=
+        b=0UBoi2eRYqNvCwzO3tdaNoLAjVRvfCXTRBkaCFp+IqKJrYWO0GOG6coAMwFRDo4fb
+         jrUoqnicsUeuXCJ23P9bZxrkbfUYdQ45DVCWeLwtCopFEtxLxsfv14BUD0UyFaYOph
+         jRQDZX3N+45DOjLGDrCjWmiVRFu+eec5TIpPEUdU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 08/84] arm64: dts: allwinner: a64: Fix display clock register range
-Date:   Wed, 15 Apr 2020 07:43:25 -0400
-Message-Id: <20200415114442.14166-8-sashal@kernel.org>
+Cc:     "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Martin Kepplinger <martin.kepplinger@puri.sm>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 06/84] arm64: dts: librem5-devkit: add a vbus supply to usb0
+Date:   Wed, 15 Apr 2020 07:43:23 -0400
+Message-Id: <20200415114442.14166-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
@@ -59,37 +61,33 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: "Angus Ainslie (Purism)" <angus@akkea.ca>
 
-[ Upstream commit 3e9a1a8b7f811de3eb1445d72f68766b704ad17c ]
+[ Upstream commit dde061b865598ad91f50140760e1d224e5045db9 ]
 
-Register range of display clocks is 0x10000, as it can be seen from
-DE2 documentation.
+Without a VBUS supply the dwc3 driver won't go into otg mode.
 
-Fix it.
-
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Fixes: 2c796fc8f5dbd ("arm64: dts: allwinner: a64: add necessary device tree nodes for DE2 CCU")
-[wens@csie.org: added fixes tag]
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Fixes: eb4ea0857c83 ("arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit")
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index ba41c1b85887a..367699c8c9028 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -227,7 +227,7 @@
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+index 98cfe67b7db7b..19b427f68dad2 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+@@ -743,6 +743,7 @@
+ };
  
- 			display_clocks: clock@0 {
- 				compatible = "allwinner,sun50i-a64-de2-clk";
--				reg = <0x0 0x100000>;
-+				reg = <0x0 0x10000>;
- 				clocks = <&ccu CLK_BUS_DE>,
- 					 <&ccu CLK_DE>;
- 				clock-names = "bus",
+ &usb3_phy0 {
++	vbus-supply = <&reg_5v_p>;
+ 	status = "okay";
+ };
+ 
 -- 
 2.20.1
 
