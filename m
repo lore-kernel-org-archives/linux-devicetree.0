@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FBDC3815B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8A0C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4D3720784
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 140AD20775
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895844AbgDOJtB (ORCPT
+        id S2895849AbgDOJtF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:49:01 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:44969 "EHLO
+        Wed, 15 Apr 2020 05:49:05 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:37533 "EHLO
         relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2895835AbgDOJs5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 05:48:57 -0400
+        with ESMTP id S2895841AbgDOJs7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 05:48:59 -0400
 X-Originating-IP: 86.202.105.35
 Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 8664920009;
-        Wed, 15 Apr 2020 09:48:54 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 1B46C20008;
+        Wed, 15 Apr 2020 09:48:57 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -32,9 +32,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v2 7/9] clocksource/drivers/timer-atmel-tcb: stop using the 32kHz for clockevents
-Date:   Wed, 15 Apr 2020 11:48:24 +0200
-Message-Id: <20200415094826.132562-8-alexandre.belloni@bootlin.com>
+Subject: [PATCH v2 9/9] clocksource/drivers/timer-atmel-tcb: add sama5d2 support
+Date:   Wed, 15 Apr 2020 11:48:26 +0200
+Message-Id: <20200415094826.132562-10-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200415094826.132562-1-alexandre.belloni@bootlin.com>
 References: <20200415094826.132562-1-alexandre.belloni@bootlin.com>
@@ -45,162 +45,46 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Stop using the slow clock as the clock source for 32 bit counters because
-even at 10MHz, they are able to handle delays up to two minutes. This
-provides a way better resolution.
+The first divisor for the sama5d2 is actually the gclk selector. Because
+the currently remaining divisors are fitting the use case, currently ensure
+it is skipped.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/clocksource/timer-atmel-tcb.c | 61 ++++++++++++++-------------
- 1 file changed, 32 insertions(+), 29 deletions(-)
+ drivers/clocksource/timer-atmel-tcb.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/clocksource/timer-atmel-tcb.c b/drivers/clocksource/timer-atmel-tcb.c
-index 423af2f9835f..8fcd4d74c54b 100644
+index ccb77b9cb489..e373b02d509a 100644
 --- a/drivers/clocksource/timer-atmel-tcb.c
 +++ b/drivers/clocksource/timer-atmel-tcb.c
-@@ -27,9 +27,10 @@
-  *   - Some chips support 32 bit counter. A single channel is used for
-  *     this 32 bit free-running counter. the second channel is not used.
-  *
-- *   - The third channel may be used to provide a 16-bit clockevent
-- *     source, used in either periodic or oneshot mode.  This runs
-- *     at 32 KiHZ, and can handle delays of up to two seconds.
-+ *   - The third channel may be used to provide a clockevent source, used in
-+ *   either periodic or oneshot mode. For 16-bit counter its runs at 32 KiHZ,
-+ *   and can handle delays of up to two seconds. For 32-bit counters, it runs at
-+ *   the same rate as the clocksource
-  *
-  * REVISIT behavior during system suspend states... we should disable
-  * all clocks and save the power.  Easily done for clockevent devices,
-@@ -47,6 +48,8 @@ static struct
- } tcb_cache[3];
- static u32 bmr_cache;
- 
-+static const u8 atmel_tcb_divisors[] = { 2, 8, 32, 128 };
-+
- static u64 tc_get_cycles(struct clocksource *cs)
- {
- 	unsigned long	flags;
-@@ -151,13 +154,6 @@ static struct tc_clkevt_device *to_tc_clkevt(struct clock_event_device *clkevt)
- 	return container_of(clkevt, struct tc_clkevt_device, clkevt);
- }
- 
--/* For now, we always use the 32K clock ... this optimizes for NO_HZ,
-- * because using one of the divided clocks would usually mean the
-- * tick rate can never be less than several dozen Hz (vs 0.5 Hz).
-- *
-- * A divided clock could be good for high resolution timers, since
-- * 30.5 usec resolution can seem "low".
-- */
- static u32 timer_clock;
- 
- static int tc_shutdown(struct clock_event_device *d)
-@@ -183,7 +179,7 @@ static int tc_set_oneshot(struct clock_event_device *d)
- 
- 	clk_enable(tcd->clk);
- 
--	/* slow clock, count up to RC, then irq and stop */
-+	/* count up to RC, then irq and stop */
- 	writel(timer_clock | ATMEL_TC_CPCSTOP | ATMEL_TC_WAVE |
- 		     ATMEL_TC_WAVESEL_UP_AUTO, regs + ATMEL_TC_REG(2, CMR));
- 	writel(ATMEL_TC_CPCS, regs + ATMEL_TC_REG(2, IER));
-@@ -205,7 +201,7 @@ static int tc_set_periodic(struct clock_event_device *d)
- 	 */
- 	clk_enable(tcd->clk);
- 
--	/* slow clock, count up to RC, then irq and restart */
-+	/* count up to RC, then irq and restart */
- 	writel(timer_clock | ATMEL_TC_WAVE | ATMEL_TC_WAVESEL_UP_AUTO,
- 		     regs + ATMEL_TC_REG(2, CMR));
- 	writel((32768 + HZ / 2) / HZ, tcaddr + ATMEL_TC_REG(2, RC));
-@@ -256,47 +252,56 @@ static irqreturn_t ch2_irq(int irq, void *handle)
- 	return IRQ_NONE;
- }
- 
--static int __init setup_clkevents(struct atmel_tc *tc, int clk32k_divisor_idx)
-+static int __init setup_clkevents(struct atmel_tc *tc, int divisor_idx)
- {
-+	u32 rate;
- 	int ret;
- 	struct clk *t2_clk = tc->clk[2];
- 	int irq = tc->irq[2];
--
--	ret = clk_prepare_enable(tc->slow_clk);
--	if (ret)
--		return ret;
-+	int bits = tc->tcb_config->counter_width;
- 
- 	/* try to enable t2 clk to avoid future errors in mode change */
- 	ret = clk_prepare_enable(t2_clk);
--	if (ret) {
--		clk_disable_unprepare(tc->slow_clk);
-+	if (ret)
- 		return ret;
--	}
--
--	clk_disable(t2_clk);
- 
- 	clkevt.regs = tc->regs;
- 	clkevt.clk = t2_clk;
- 
--	timer_clock = clk32k_divisor_idx;
-+	if (bits == 32) {
-+		timer_clock = divisor_idx;
-+		rate = clk_get_rate(t2_clk) / atmel_tcb_divisors[divisor_idx];
-+	} else {
-+		ret = clk_prepare_enable(tc->slow_clk);
-+		if (ret) {
-+			clk_disable_unprepare(t2_clk);
-+			return ret;
-+		}
-+
-+		rate = clk_get_rate(tc->slow_clk);
-+		timer_clock = ATMEL_TC_TIMER_CLOCK5;
-+	}
-+
-+	clk_disable(t2_clk);
- 
- 	clkevt.clkevt.cpumask = cpumask_of(0);
- 
- 	ret = request_irq(irq, ch2_irq, IRQF_TIMER, "tc_clkevt", &clkevt);
- 	if (ret) {
- 		clk_unprepare(t2_clk);
--		clk_disable_unprepare(tc->slow_clk);
-+		if (bits != 32)
-+			clk_disable_unprepare(tc->slow_clk);
- 		return ret;
- 	}
- 
--	clockevents_config_and_register(&clkevt.clkevt, 32768, 1, 0xffff);
-+	clockevents_config_and_register(&clkevt.clkevt, rate, 1, BIT(bits) - 1);
- 
- 	return ret;
- }
- 
- #else /* !CONFIG_GENERIC_CLOCKEVENTS */
- 
--static int __init setup_clkevents(struct atmel_tc *tc, int clk32k_divisor_idx)
-+static int __init setup_clkevents(struct atmel_tc *tc, int divisor_idx)
- {
- 	/* NOTHING */
- 	return 0;
-@@ -346,8 +351,6 @@ static void __init tcb_setup_single_chan(struct atmel_tc *tc, int mck_divisor_id
- 	writel(ATMEL_TC_SYNC, tcaddr + ATMEL_TC_BCR);
- }
- 
--static const u8 atmel_tcb_divisors[] = { 2, 8, 32, 128 };
--
- static struct atmel_tcb_config tcb_rm9200_config = {
- 	.counter_width = 16,
+@@ -359,9 +359,15 @@ static struct atmel_tcb_config tcb_sam9x5_config = {
+ 	.counter_width = 32,
  };
-@@ -472,7 +475,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
- 		goto err_disable_t1;
  
- 	/* channel 2:  periodic and oneshot timer support */
--	ret = setup_clkevents(&tc, ATMEL_TC_TIMER_CLOCK5);
-+	ret = setup_clkevents(&tc, best_divisor_idx);
- 	if (ret)
- 		goto err_unregister_clksrc;
++static struct atmel_tcb_config tcb_sama5d2_config = {
++	.counter_width = 32,
++	.has_gclk = 1,
++};
++
+ static const struct of_device_id atmel_tcb_of_match[] = {
+ 	{ .compatible = "atmel,at91rm9200-tcb", .data = &tcb_rm9200_config, },
+ 	{ .compatible = "atmel,at91sam9x5-tcb", .data = &tcb_sam9x5_config, },
++	{ .compatible = "atmel,sama5d2-tcb", .data = &tcb_sama5d2_config, },
+ 	{ /* sentinel */ }
+ };
+ 
+@@ -426,7 +432,10 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 
+ 	/* How fast will we be counting?  Pick something over 5 MHz.  */
+ 	rate = (u32) clk_get_rate(t0_clk);
+-	for (i = 0; i < ARRAY_SIZE(atmel_tcb_divisors); i++) {
++	i = 0;
++	if (tc.tcb_config->has_gclk)
++		i = 1;
++	for (; i < ARRAY_SIZE(atmel_tcb_divisors); i++) {
+ 		unsigned divisor = atmel_tcb_divisors[i];
+ 		unsigned tmp;
  
 -- 
 2.25.2
