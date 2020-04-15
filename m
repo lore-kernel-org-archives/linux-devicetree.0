@@ -2,146 +2,140 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEE1C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 23:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6489C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 23:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67EE920784
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 23:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A28F32076A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 23:35:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="B7RqrbPG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbs07HG4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389335AbgDOX2t (ORCPT
+        id S1729934AbgDOXfn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 19:28:49 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3970 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389251AbgDOX2r (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 19:28:47 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e9798a00000>; Wed, 15 Apr 2020 16:28:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 15 Apr 2020 16:28:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 15 Apr 2020 16:28:45 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
- 2020 23:28:44 +0000
-Received: from [10.2.171.241] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Apr
- 2020 23:28:43 +0000
-Subject: Re: [RFC PATCH v7 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <frankc@nvidia.com>, <hverkuil@xs4all.nl>, <sakari.ailus@iki.fi>,
-        <helen.koike@collabora.com>, <sboyd@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1586919463-30542-1-git-send-email-skomatineni@nvidia.com>
- <1586919463-30542-7-git-send-email-skomatineni@nvidia.com>
- <4118112f-f865-5460-6319-d71271fd78d1@gmail.com>
- <a69a8b34-beea-3ad0-e08e-f7df8b9e7047@nvidia.com>
- <6afa951e-d904-f3c0-053f-82a02fb18979@nvidia.com>
- <b1c78827-13ea-0c94-a575-97b5afc0ede1@nvidia.com>
- <5954a7e1-910e-7f48-56d3-e671b56ead74@nvidia.com>
- <d6a9e07c-474a-a076-8313-32f5f4ca8d64@nvidia.com>
- <786949a9-8507-7723-f29b-b91a216bfd28@nvidia.com>
- <f831408b-bbf4-3047-20e3-5bebfa9fc1ad@gmail.com>
- <2ad9352f-cb65-1643-e540-a21f9c570266@nvidia.com>
- <31924f2b-8f85-d28d-4f5d-4e232bff94a5@nvidia.com>
-Message-ID: <c95cd2b6-8036-8c0a-25f3-6ea3fe35334a@nvidia.com>
-Date:   Wed, 15 Apr 2020 16:28:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 15 Apr 2020 19:35:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbgDOXfi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 19:35:38 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 279FCC061A0C;
+        Wed, 15 Apr 2020 16:35:36 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id e26so2257353wmk.5;
+        Wed, 15 Apr 2020 16:35:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3yhHiCLFkHALyeh9n0R+g91ZtL3ZmiOJYx7G3Acd2uE=;
+        b=gbs07HG4V/IKn6V8g2AD2wilrTRYsbSeFe271v80vZurPTgdqencH8ctUgGfERhv1t
+         qBnPynXX9mLJAfQ8TfIneuxPl9mB4Cvy3KQuiddCPqwz2v6sEUDgs8/0z0Y/2WHxPhAr
+         5OcsNAJNh9xx4D+tuSIBF+UC5oxU2OUQx7LjddiaGs2WzxdZKAxoyHRQ7trRu25Ii+mo
+         3ksN1xJZrXtUKjTXUvoFORg8kp5rA1MdTexsa5SxRE//IPnXhQcwtkl8pXNizXhDTX9O
+         QsrIrbtuq34wy6gEtrYqTQFHLgx36DuppZZnnsZ6q+ejaemRsLypJKUWhNT9zmM4CunD
+         1lUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3yhHiCLFkHALyeh9n0R+g91ZtL3ZmiOJYx7G3Acd2uE=;
+        b=NUq7zt6mq9DN8OxiKwQwA78tRBIgh9oqsC4CaJeOk2+xl+qR7kqoBU2EQrVJwbJHot
+         soeH7rTT6//yM6zmpr24uNEJrW4LnXSwRpfH9h+FKDvaimQ0H31ZWhd5IQMq2WIgqqST
+         jd7wUaqlAFWlXeQ3cD2sogh9/BGBN9j8P6AJ0mDgpCgwhiqLNFVjK2XwfTU5ONtl1SSa
+         fitQNQhZ6xLyzj3A4j1kdthGlR/yKBhABRo90Rl+MJc08w3kcjNRjkbogPao+FUoBiAX
+         DKPerCkouIFgsDH1ocCE9w+H3wDC616wc3OCJbODphISWWAk7z6RiGfz8GqHPBR5N3Tz
+         v6eA==
+X-Gm-Message-State: AGi0PuaD6p8wGFb7VGd2C0m9XOqc96jz/aCZaCiGnys/AWwam+IHySgZ
+        Lwu6Mp2WDkt3Ax8Rc1WI1a0=
+X-Google-Smtp-Source: APiQypIiHqj2LxiVZTz3NAfRabiq9kyGk4NLhgDJx+t58Jb/8In6qOQg2YwYZUe6S3Y9vrypStN4nQ==
+X-Received: by 2002:a7b:c399:: with SMTP id s25mr1613933wmj.169.1586993734863;
+        Wed, 15 Apr 2020 16:35:34 -0700 (PDT)
+Received: from localhost (pD9E51D62.dip0.t-ipconnect.de. [217.229.29.98])
+        by smtp.gmail.com with ESMTPSA id h6sm1368044wmf.31.2020.04.15.16.35.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 16:35:32 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 01:35:32 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 02/14] of: reserved-memory: Support lookup of regions
+ by name
+Message-ID: <20200415233532.GA211822@ulmo>
+References: <20200409175238.3586487-1-thierry.reding@gmail.com>
+ <20200409175238.3586487-3-thierry.reding@gmail.com>
+ <20200415162449.GA1842@bogus>
 MIME-Version: 1.0
-In-Reply-To: <31924f2b-8f85-d28d-4f5d-4e232bff94a5@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586993312; bh=ICREte8mX5YUPIFrhY1710Iw4rpBoVPzTv3ozhTn9IQ=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=B7RqrbPG3SxfbK/LMSLj3LRx5OE7G4VnGv/9K9BbpYBLlc/c02latfD7klMQQPpsW
-         DmK2qBDQKXnxZJaj2iBMOIwxaoouNqh9xnFAPa3t++oo3qFYKg7yCbiNFtFZInI6vV
-         86Pu5hHJwoW3NyGu4pUHDdZ3YqsjGuaz/WevEHFlh/FYN8W4UMSsO7cd6YORRROL1C
-         umfret7nuupHVgHkJzBEO/wbs6cE819Nips86flhMuaDD2E3wdXYjNpEFk1+cdTPG0
-         0Xn6EHqr+5WbRkj8XtpqiniD3lXxL/cckKNArjHhx4Yd1WiTCrDBHffmFUBPODdPXN
-         fMIj6L5A/Hh3A==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
+Content-Disposition: inline
+In-Reply-To: <20200415162449.GA1842@bogus>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sorry please ignore.
 
-We can't free vi during v4l2 device release as when no device nodes are=20
-opened, vi free happens right away during host1x_video_remove.
+--7AUc2qLy4jB3hD7Z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-With this tegra-video driver unbind ->bind will not work as vi memory=20
-allocated during vi_probe gets freed during v4l2 device release so=20
-during bind init() callback execution will crash as vi got freed while=20
-vi driver is still bound to device.
+On Wed, Apr 15, 2020 at 11:24:49AM -0500, Rob Herring wrote:
+> On Thu,  9 Apr 2020 19:52:26 +0200, Thierry Reding wrote:
+> > From: Thierry Reding <treding@nvidia.com>
+> >=20
+> > Add support for looking up memory regions by name. This looks up the
+> > given name in the newly introduced memory-region-names property and
+> > returns the memory region at the corresponding index in the memory-
+> > region(s) property.
+> >=20
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > ---
+> >  drivers/of/of_reserved_mem.c    | 19 +++++++++++++++++++
+> >  include/linux/of_reserved_mem.h | 11 +++++++++++
+> >  2 files changed, 30 insertions(+)
+> >=20
+>=20
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Will wait for Hans/Thierry comments as I see dependency depending on=20
-where unbind/bind happens.
+Hi Rob,
 
+thanks for the review. Do you want me to apply this and patch 3/14 to a
+stable branch and send to you as a pull request? That way I could use
+that same branch to resolve the dependency in the Tegra tree for the
+memory controller driver patches.
 
-On 4/15/20 4:08 PM, Sowjanya Komatineni wrote:
-> With minor change of not using vi reference after=20
-> host1x_client_unregister and freeing vi during v4l2 device release works.
->
-> For csi, we can use devm_kzalloc for now untill we decide later if we=20
-> want to expose async subdev nodes during sensor support.
->
-> Will have this fix in v8 with a comment in vi_remove to make sure not=20
-> to use vi reference after host1x_client_unregister.
->
-> Will test more and will release v8 with above fix to allow direct=20
-> host1x client driver unbind.
->
-> Thanks
->
-> sowjanya
->
->
-> On 4/15/20 12:51 PM, Sowjanya Komatineni wrote:
->>
->> On 4/15/20 12:21 PM, Dmitry Osipenko wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> 15.04.2020 21:53, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> ...
->>>>>>>>>> Have you tried to test this driver under KASAN? I suspect that
->>>>>>>>>> you just
->>>>>>>>>> masked the problem, instead of fixing it.
->>>> Tested with kmemleak scan and did not see any memory leaks
->>> You should get use-after-free and not memleak.
->> I don't see use-after-free bugs during the testing.
->>
->> But as mentioned when direct vi/csi client driver unbind happens=20
->> while video device node is kept opened, vi driver remove will free vi=20
->> structure memory but actual video device memory which is part of=20
->> channels remains but list head gets lost when vi structure is freed.
->>
->> So, when device node is released and executes release callback as=20
->> list head is lost it can't free allocated channels which is not good.
->>
->> This happens only with direct host1x client vi/csi driver unbind.
->>
->> Need to find better place to free host1x client driver data structure=20
->> to allow direct client driver unbind->bind.
->>
+Thierry
+
+--7AUc2qLy4jB3hD7Z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6XmkEACgkQ3SOs138+
+s6Ez0hAAhoJ+N1kIOrfHX3YiD1o4HnSvBdA5fzev2mOBfWSzcbDQtQuO7PYw6yCq
+IeyEbUuehKpQL/OQASwHkJ4m3iRr8tH5PddGl1DF36Vu3bqAxr8opKZIi1S2hXHE
+2iXFY48PzN9aDvLIilAylO12RtZoTD0yI30BpucJYhATovmkzvzNuhaJ8CDYjf07
+4OJ0HoH7hOn9rhjHNQVq755OESyUTtRIqHxEw0150PJG33O1cjruRc9WgI5GVjO7
+4MQSqFHmyOcfNWZZTins29E9Cnd/zy2nkj+YXsp7eBRG2QFjrlN+y7evCduhOdbP
+moJzOF+e4dqEOZDwlVeqPni6UVFu4Zr5HWJw790osuG1oOCwB4NVpNRz34VjM7kD
+nYoZaqIm9X5Foeus0Rl94cBreI0Bg1lCsM8CCoANE42t2NOlumnMsJoLWt4T+cBb
+F5JoiSCC4JKIbuYedHI00W/9U6LcPqBcd/NZ2ZxYSVAibApDfG/APsy8a5gRLRgZ
+460CNbf4e7p7lyN5c4l58DLJvEsT/jYd/ap09KZnUZmQgcfxAHmCVQUMFq+VIb2k
+1gePNObVfuvOC6Q1KwGEcbgYlNKd/e6uGwn2FP5jzWYQr9Co8R8L+kRvIaHkuVl5
+o7TOw5dujpA6zalLJnecmj8XrL5uGRTvE6AwpGujw1UgN4QTGVs=
+=W/7i
+-----END PGP SIGNATURE-----
+
+--7AUc2qLy4jB3hD7Z--
