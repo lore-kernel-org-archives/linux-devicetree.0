@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D52CC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B766C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FAD62076D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3F0D208E4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586962032;
-	bh=a1eyqEdmzN0DfOJU1eSZCMjYbz9xksLR9xHit1mh8r8=;
+	s=default; t=1586962038;
+	bh=ZsscMf1AfiINRcBazOWFTEXY2GF/mu4vBXJRAZLmuwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rTjybl6MS6DlMez4RSnnydJClxMvyAqbviXXzjzUTJyETp+xcihkCmKRwzSQknB8X
-	 ArSp/YhY9RbyAZWmAu4XIaea+YQp+RHnfxLVgR1BPITKx1XmdBqlUHxaBYIfCh9A0f
-	 ERmq4PPp0xxnK4a/wpMU+zG3Hadckcdrt1VFM2rQ=
+	b=nkrl3c1jghPab1qyefo3MQ4+mat5ynWWhfQqotyDVfI2zB2DHgbdVGEfAXN4hteM1
+	 JM5lgObSV+NjG6J8zJi6SQAoUoFf4jM5+bG/rTT4Ta4zFQhi4UQCC6506QpCZR6U3E
+	 9rHNBbb2vYehopFiJ7Q/P8JSTlLA6t6Ojf9dVVds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636789AbgDOOrK (ORCPT
+        id S371028AbgDOOrL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:47:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39962 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 10:47:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2634635AbgDOOp3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S2634618AbgDOOp3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Wed, 15 Apr 2020 10:45:29 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9F8A2137B;
+        by mail.kernel.org (Postfix) with ESMTPSA id D9B4F20936;
         Wed, 15 Apr 2020 14:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1586961929;
-        bh=a1eyqEdmzN0DfOJU1eSZCMjYbz9xksLR9xHit1mh8r8=;
+        bh=ZsscMf1AfiINRcBazOWFTEXY2GF/mu4vBXJRAZLmuwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KlheR7OZFIOZpLzBn7hNLdU5/4QWs9zy1nGbgebiwZPxdc7gz9ORQLmmN2kqVAghY
-         qnx7Plkm62MtehKP6H32vzSjXKortR29qSDIKrXpMnTyN0W2CMHGiyJlOGx7xePZFE
-         oRh4oZyTVgDMkWMaN2mnYAFzbte9+bclBUI/Xkgg=
+        b=GIhwo/yjnbYuhcaHmXv9Vj0iktmwEQdGF4mSg4TsFuSoHgjDj8vkfjtekGmb8RJgd
+         XyJzsK3vTtOixEb3ULWtFRZ55aVQfqVivvq3Vh2vxrhiIIwlfYwNuQlWn34W99/y0l
+         kHrzk9CTNhZw1dn+qt7Sp3TauwT8eex5A4wAKjes=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jOjI7-006kZB-2c; Wed, 15 Apr 2020 16:45:27 +0200
+        id 1jOjI7-006kZJ-5e; Wed, 15 Apr 2020 16:45:27 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v3 01/12] docs: dt: add an index.rst file for devicetree
-Date:   Wed, 15 Apr 2020 16:45:15 +0200
-Message-Id: <ccce3ccc02f7b4cbb90558065de38858b9e37c3c.1586961793.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v3 03/12] docs: dt: usage_model.rst: fix link for DT usage
+Date:   Wed, 15 Apr 2020 16:45:17 +0200
+Message-Id: <5af2521377cecc4b5f7cc9253600ff335c596ee2.1586961793.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1586961793.git.mchehab+huawei@kernel.org>
 References: <cover.1586961793.git.mchehab+huawei@kernel.org>
@@ -60,51 +60,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There are some device tree documentation under
-Documentation/devicetree. Add a top index file for it and
-add the already-existing ReST file on it.
+The devicetree.org doesn't host the Device_Tree_Usage page
+anymore. So, fix the link to point to a new address.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/devicetree/index.rst | 10 ++++++++++
- Documentation/index.rst            |  3 +++
- 2 files changed, 13 insertions(+)
- create mode 100644 Documentation/devicetree/index.rst
+ Documentation/devicetree/usage-model.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/index.rst b/Documentation/devicetree/index.rst
-new file mode 100644
-index 000000000000..a11efe26f205
---- /dev/null
-+++ b/Documentation/devicetree/index.rst
-@@ -0,0 +1,10 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=============================
-+Open Firmware and Device Tree
-+=============================
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   writing-schema
-diff --git a/Documentation/index.rst b/Documentation/index.rst
-index 9599c0f3eea8..c7f89cb204d1 100644
---- a/Documentation/index.rst
-+++ b/Documentation/index.rst
-@@ -1,3 +1,5 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
+diff --git a/Documentation/devicetree/usage-model.rst b/Documentation/devicetree/usage-model.rst
+index 326d7af10c5b..e1b42dc63f01 100644
+--- a/Documentation/devicetree/usage-model.rst
++++ b/Documentation/devicetree/usage-model.rst
+@@ -12,7 +12,7 @@ This article describes how Linux uses the device tree.  An overview of
+ the device tree data format can be found on the device tree usage page
+ at devicetree.org\ [1]_.
  
- .. The Linux Kernel documentation master file, created by
-    sphinx-quickstart on Fri Feb 12 13:51:46 2016.
-@@ -46,6 +48,7 @@ platform firmwares.
-    :maxdepth: 2
+-.. [1] http://devicetree.org/Device_Tree_Usage
++.. [1] https://elinux.org/Device_Tree_Usage
  
-    firmware-guide/index
-+   devicetree/index
- 
- Application-developer documentation
- -----------------------------------
+ The "Open Firmware Device Tree", or simply Device Tree (DT), is a data
+ structure and language for describing hardware.  More specifically, it
 -- 
 2.25.2
 
