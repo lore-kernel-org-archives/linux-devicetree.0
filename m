@@ -2,152 +2,195 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4285AC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E626C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2166D20771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D73CA20771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:33:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="reeYQ8Wn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="RT3bIBBA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895531AbgDOJaU (ORCPT
+        id S2895599AbgDOJdy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:30:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48860 "EHLO
+        Wed, 15 Apr 2020 05:33:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2895530AbgDOJaT (ORCPT
+        by vger.kernel.org with ESMTP id S2895596AbgDOJdw (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:30:19 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8506C061A0E
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 02:30:17 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k1so11041915wrx.4
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 02:30:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=OBdwBYebBJuoimbTaQN5QWpwweg/EKkjkWJ4yfY8dv8=;
-        b=reeYQ8WnjncSc2T7Jajbw6ovboRJQxLghh5cijCOXyREaR7Dl+S8j8D2XG5mStUhwl
-         mVaew31PHI9qkmosAPw9GSGyLyVe5zlsjJcDZbr2vAxywVnS2SzWx3Uw8e6jEuwJHU1S
-         iovJsQeMZQzBbgYX7Ak1PVka6TVJl0082uVSrQOu3EXpRLsnNLNh2+LkgyIK6Qq6qylD
-         inE+/o9g1hR6fynzjHgA+07E+Z+6ltXE+i3BF6w7+/XFpA60n0zNBMiVB7MNGlepPvYQ
-         Q7pAST5/u+Eea4/A9OZEen4ukNfsQHOesmlMaqlowLF/1zDMwgQ8VPrh9/fzd0xNJdB+
-         LzDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=OBdwBYebBJuoimbTaQN5QWpwweg/EKkjkWJ4yfY8dv8=;
-        b=G2ngtx/o/nkQORJYY7tgdamaZ4DseE6lsmDYljcWLhqTV/wXjOusUgXPiskwU2kf+P
-         QuogH9DNkLWm9HsWbvIU5Wmudvwqq7Ky/Wvw90tT/XBNj3V+I9wVwxpIXd/ywKc1quEw
-         WfG7j0Y3ocZtUU12T37Y6pEbe9o4fWddZTdlR5D4s0NCYnun87aHq5Rv7ptQbc1eong4
-         wH/MCFfp03APT1xYY6qXAhLYiGLRjYZK17Icky730vyz1VgDi9ZhE4VEfFDIFL6SdFGE
-         ZxHBubI84p83klho7WWUOtOUr798VxBe3jdmqfn30lCjI4an0Ju9b0+XxbmbJ4CEhb9Z
-         /XNw==
-X-Gm-Message-State: AGi0PuY0/oYN3t6EvRmWWzVBWjvR9cJqFr51y8hQsnS5wLToUU9BGD2B
-        jYs4/wO6og3U9VTTUjjugd7ufQ==
-X-Google-Smtp-Source: APiQypJzG0axis5t2o+sttyC3y5d8wml7TaIbWStXxtN12O7zTtqqsicoGy8Ok1q7cM6FamBaWXPaw==
-X-Received: by 2002:a5d:6607:: with SMTP id n7mr5205782wru.150.1586943016404;
-        Wed, 15 Apr 2020 02:30:16 -0700 (PDT)
-Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id h13sm11465797wrs.22.2020.04.15.02.30.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 02:30:15 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 10:31:16 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kishon@ti.com, robh@kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@intel.com
-Subject: Re: [PATCH v5 1/4] mfd: syscon: Add fwnode_to_regmap
-Message-ID: <20200415093116.GH2167633@dell>
-References: <cover.1585103753.git.eswara.kota@linux.intel.com>
- <9953bb25281397553cb87b09d641c968d8432dd9.1585103753.git.eswara.kota@linux.intel.com>
+        Wed, 15 Apr 2020 05:33:52 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D494C061A0C;
+        Wed, 15 Apr 2020 02:33:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=CB95q0U4UuPiM6nQZ5HbjcNj7VGPk6sg9SK/YZr2Y2A=; b=RT3bIBBAPMnHkIktW9eMa8cCC
+        uqGjonEHM4JQhPX8TijjW5fTPAiQE/gKV+86By4YCpaLk4Pn8RlfkMW+TJYSSS0dCh2cQyjp3AVlI
+        j+82uCSHhgMXY9esoIyugbb0rhbz+am8ST9FTMSADQCaYq8v8QrXyRTk78QVaSd8OSz8baHju7z27
+        SQDQzGOhUfWqO9s8mWGnidG/0ltIGk7ZlP2/PmUs3rp3NpWYTz/KOOEgHPIunESnM9olMoPK92TOW
+        VDOEYWKU53tLn7YkQg11KOZ1LnHU5EmvOHlnC+JHUh/VPtW12LUhnqdyQoXMESG87YF8WlHXh1iIn
+        hWWAbwcCg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50358)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jOeQP-0005Sy-Kx; Wed, 15 Apr 2020 10:33:41 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jOeQI-0000nm-SM; Wed, 15 Apr 2020 10:33:34 +0100
+Date:   Wed, 15 Apr 2020 10:33:34 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Robert Marko <robert.marko@sartura.hr>
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: Re: [PATCH v2 1/3] net: phy: mdio: add IPQ40xx MDIO driver
+Message-ID: <20200415093334.GC25745@shell.armlinux.org.uk>
+References: <20200414181012.114905-1-robert.marko@sartura.hr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9953bb25281397553cb87b09d641c968d8432dd9.1585103753.git.eswara.kota@linux.intel.com>
+In-Reply-To: <20200414181012.114905-1-robert.marko@sartura.hr>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 25 Mar 2020, Dilip Kota wrote:
+On Tue, Apr 14, 2020 at 08:10:11PM +0200, Robert Marko wrote:
+> diff --git a/drivers/net/phy/mdio-ipq40xx.c b/drivers/net/phy/mdio-ipq40xx.c
+> new file mode 100644
+> index 000000000000..d8c11c621f20
+> --- /dev/null
+> +++ b/drivers/net/phy/mdio-ipq40xx.c
+> @@ -0,0 +1,176 @@
+> +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+> +/* Copyright (c) 2015, The Linux Foundation. All rights reserved. */
+> +/* Copyright (c) 2020 Sartura Ltd. */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/io.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_mdio.h>
+> +#include <linux/phy.h>
+> +#include <linux/platform_device.h>
+> +
 
-> Traverse regmap handle entry from firmware node handle.
-> 
-> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> ---
-> Changes on v5:
->   No changes
-> 
-> Changes on v4:
->   No changes
-> 
->  drivers/mfd/syscon.c       | 8 ++++++++
->  include/linux/mfd/syscon.h | 6 ++++++
->  2 files changed, 14 insertions(+)
+Looking at how these registers are used, they could be renamed:
 
-I think you'll find it very difficult to have a patch merged if you do
-not send it to any Maintainers of the associated subsystem(s).
+> +#define MDIO_CTRL_0_REG		0x40
 
-Did you use `scripts/get_maintainer.pl` at all?
+This seems to be unused.
 
-> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-> index e22197c832e8..08064ffc5394 100644
-> --- a/drivers/mfd/syscon.c
-> +++ b/drivers/mfd/syscon.c
-> @@ -178,6 +178,14 @@ struct regmap *device_node_to_regmap(struct device_node *np)
->  }
->  EXPORT_SYMBOL_GPL(device_node_to_regmap);
->  
-> +struct regmap *fwnode_to_regmap(struct fwnode_handle *fwnode)
+> +#define MDIO_CTRL_1_REG		0x44
+
+MDIO_ADDR_REG
+
+> +#define MDIO_CTRL_2_REG		0x48
+
+MDIO_DATA_WRITE_REG
+
+> +#define MDIO_CTRL_3_REG		0x4c
+
+MDIO_DATA_READ_REG
+
+> +#define MDIO_CTRL_4_REG		0x50
+> +#define MDIO_CTRL_4_ACCESS_BUSY		BIT(16)
+> +#define MDIO_CTRL_4_ACCESS_START		BIT(8)
+> +#define MDIO_CTRL_4_ACCESS_CODE_READ		0
+> +#define MDIO_CTRL_4_ACCESS_CODE_WRITE	1
+
+MDIO_CMD_* ?
+
+> +
+> +#define IPQ40XX_MDIO_RETRY	1000
+> +#define IPQ40XX_MDIO_DELAY	10
+> +
+> +struct ipq40xx_mdio_data {
+> +	void __iomem	*membase;
+> +};
+> +
+> +static int ipq40xx_mdio_wait_busy(struct mii_bus *bus)
 > +{
-> +	struct device_node *np = to_of_node(fwnode);
+> +	struct ipq40xx_mdio_data *priv = bus->priv;
+> +	int i;
 > +
-> +	return device_node_get_regmap(np, false);
+> +	for (i = 0; i < IPQ40XX_MDIO_RETRY; i++) {
+> +		unsigned int busy;
+> +
+> +		busy = readl(priv->membase + MDIO_CTRL_4_REG) &
+> +			MDIO_CTRL_4_ACCESS_BUSY;
+> +		if (!busy)
+> +			return 0;
+> +
+> +		/* BUSY might take to be cleard by 15~20 times of loop */
+> +		udelay(IPQ40XX_MDIO_DELAY);
+> +	}
+> +
+> +	dev_err(bus->parent, "MDIO operation timed out\n");
+> +
+> +	return -ETIMEDOUT;
 > +}
-> +EXPORT_SYMBOL_GPL(fwnode_to_regmap);
 > +
->  struct regmap *syscon_node_to_regmap(struct device_node *np)
->  {
->  	if (!of_device_is_compatible(np, "syscon"))
-> diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
-> index 112dc66262cc..a024dd88bdd4 100644
-> --- a/include/linux/mfd/syscon.h
-> +++ b/include/linux/mfd/syscon.h
-> @@ -18,6 +18,7 @@ struct device_node;
->  
->  #ifdef CONFIG_MFD_SYSCON
->  extern struct regmap *device_node_to_regmap(struct device_node *np);
-> +extern struct regmap *fwnode_to_regmap(struct fwnode_handle *fwnode);
->  extern struct regmap *syscon_node_to_regmap(struct device_node *np);
->  extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
->  extern struct regmap *syscon_regmap_lookup_by_phandle(
-> @@ -29,6 +30,11 @@ static inline struct regmap *device_node_to_regmap(struct device_node *np)
->  	return ERR_PTR(-ENOTSUPP);
->  }
->  
-> +static inline struct regmap *fwnode_to_regmap(struct fwnode_handle *fwnode)
+> +static int ipq40xx_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
 > +{
-> +	return ERR_PTR(-ENOTSUPP);
+> +	struct ipq40xx_mdio_data *priv = bus->priv;
+> +	int value = 0;
+> +	unsigned int cmd = 0;
+
+No need to initialise either of these, and you can eliminate "value"
+which will then satisfy davem's requirement for reverse-christmas-tree
+ordering of variable declarations.
+
+> +
+> +	/* Reject clause 45 */
+> +	if (regnum & MII_ADDR_C45)
+> +		return -EOPNOTSUPP;
+> +
+> +	if (ipq40xx_mdio_wait_busy(bus))
+> +		return -ETIMEDOUT;
+> +
+> +	/* issue the phy address and reg */
+> +	writel((mii_id << 8) | regnum, priv->membase + MDIO_CTRL_1_REG);
+> +
+> +	cmd = MDIO_CTRL_4_ACCESS_START | MDIO_CTRL_4_ACCESS_CODE_READ;
+> +
+> +	/* issue read command */
+> +	writel(cmd, priv->membase + MDIO_CTRL_4_REG);
+> +
+> +	/* Wait read complete */
+> +	if (ipq40xx_mdio_wait_busy(bus))
+> +		return -ETIMEDOUT;
+> +
+> +	/* Read data */
+> +	value = readl(priv->membase + MDIO_CTRL_3_REG);
+> +
+> +	return value;
 > +}
 > +
->  static inline struct regmap *syscon_node_to_regmap(struct device_node *np)
->  {
->  	return ERR_PTR(-ENOTSUPP);
+> +static int ipq40xx_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
+> +							 u16 value)
+> +{
+> +	struct ipq40xx_mdio_data *priv = bus->priv;
+> +	unsigned int cmd = 0;
+
+No need to initialise cmd.
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
