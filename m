@@ -2,161 +2,194 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3750BC2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 06:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A603EC2BB85
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 06:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 131EF2076A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 06:22:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X7rhER9V"
+	by mail.kernel.org (Postfix) with ESMTP id 9062F206D9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 06:26:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634818AbgDOGWs (ORCPT
+        id S2634856AbgDOG06 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 02:22:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2393545AbgDOGWT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 02:22:19 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C3E8C0610D5
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 23:22:19 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id g2so885499plo.3
-        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 23:22:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=m0wKJOnOp7WnSwAhhU9/YwBjXZo896nHbiajmhX/TkI=;
-        b=X7rhER9V+7D6xbrDFU5DyH6dKQUob8pQjifY3E+BOrJAbC90Wl9+qWdKont6wNvyRL
-         wRlM/Yof+1XQ1RbYJ4gPkJZoCogepwr8C+vcziATrQtSqM0rC0dMvjYW53NEcns2gaXm
-         Q4aFN5LSYyLt/25CSC5OojAbDmBSjIoIxNpgiKtXEUlqHF4HTM+iRCM3l6ioft0bDdHD
-         yAOqAzmWDBXpTYfLwh0zrlVuqpeKpvo9mGXZH41BfzI+E9zZn3L3k3lLBkO2zU3XSgH9
-         66qEpZgkyeQyHv3spFbB8HfWdqVWNhgymKgr7YDvXpAnhV39VzvASbbDBZ7uQ+f37ppA
-         bnsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=m0wKJOnOp7WnSwAhhU9/YwBjXZo896nHbiajmhX/TkI=;
-        b=oyB9cpCQOZbY/+6CGB+dObW5DxKe7SODXX2av02kH3S3oeA3lHmcTQu8at7JDbB0aj
-         a01+wGGY9XqiOHwsW5lSN10evuImEAiTzUmtwU7pY1+shJ1WHnkHCiLvgR0I92zSbEWh
-         r9ASAnB0+LxxwszeOTraJtS/dbhYOOboRvLvwH7vEUnulS360uZlfHFYkePyE988H3+q
-         w0oEx/3+r/Dazm72F8kir2Rhxwklhubr0nmsBiQgTk2yRSTclm9iXotaXQTGnetxVF9/
-         ulQ+PGm7NNwmBREaqiOsh4QBt9rq779GJl86VAiq/kRyGwBEf4I39QV9dqK1V4WY6eVw
-         llQQ==
-X-Gm-Message-State: AGi0PuaT/zWTM2iXRD/L9j6/8G98nCV/OFUSWsUQb+Q9IIYgEgCnvObg
-        GDA0Ly6JFQ0+99YYSlTmvaM9SA==
-X-Google-Smtp-Source: APiQypLBvo8HG6RqaxwQaTA2YJFeNp3xTsShLNtx1gsmY1f1yHP5m1Ijxq1G2gYLXswby7M/CyILNw==
-X-Received: by 2002:a17:902:7c8f:: with SMTP id y15mr3390229pll.202.1586931738637;
-        Tue, 14 Apr 2020 23:22:18 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id nu13sm14032899pjb.22.2020.04.14.23.22.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 23:22:18 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] soc: qcom: rpmhpd: Add SM8250 power domains
-Date:   Tue, 14 Apr 2020 23:21:53 -0700
-Message-Id: <20200415062154.741179-2-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200415062154.741179-1-bjorn.andersson@linaro.org>
-References: <20200415062154.741179-1-bjorn.andersson@linaro.org>
+        Wed, 15 Apr 2020 02:26:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2634828AbgDOG0z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 02:26:55 -0400
+X-Greylist: delayed 71687 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Apr 2020 23:26:54 PDT
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 709D7C061A0C
+        for <devicetree@vger.kernel.org>; Tue, 14 Apr 2020 23:26:54 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mtr@pengutronix.de>)
+        id 1jObVc-0002qR-TC; Wed, 15 Apr 2020 08:26:52 +0200
+Received: from mtr by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mtr@pengutronix.de>)
+        id 1jObVc-0000vN-CE; Wed, 15 Apr 2020 08:26:52 +0200
+Date:   Wed, 15 Apr 2020 08:26:52 +0200
+From:   Michael Tretter <m.tretter@pengutronix.de>
+To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     Rohit Visavalia <rohit.visavalia@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Dhaval Shah <dshah@xilinx.com>, kernel@pengutronix.de
+Subject: Re: [PATCH v2 3/6] soc: xilinx: vcu: implement clock provider for
+ output clocks
+Message-ID: <20200415062652.GB1078@pengutronix.de>
+References: <20200414103202.4288-1-m.tretter@pengutronix.de>
+ <20200414103202.4288-4-m.tretter@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200414103202.4288-4-m.tretter@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 08:23:31 up 55 days, 13:54, 86 users,  load average: 0.02, 0.10,
+ 0.14
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: mtr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- .../devicetree/bindings/power/qcom,rpmpd.yaml |  1 +
- drivers/soc/qcom/rpmhpd.c                     | 19 +++++++++++++++++++
- include/dt-bindings/power/qcom-rpmpd.h        | 12 ++++++++++++
- 3 files changed, 32 insertions(+)
+On Tue, Apr 14, 2020 at 12:31:59PM +0200, Michael Tretter wrote:
+> The VCU System-Level Control uses an internal PLL to drive the core and
+> MCU clock for the allegro encoder and decoder based on an external PL
+> clock.
+> 
+> In order be able to ensure that the clocks are enabled and to get their
+> rate from other drivers, the module must implement a clock provider and
+> register the clocks at the common clock framework. Other drivers are
+> then able to access the clock via devicetree bindings.
+> 
+> Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+> ---
+> Changelog:
+> 
+> v1 -> v2:
+> - unregister registered clocks when removing the driver
+> ---
+>  drivers/soc/xilinx/Kconfig    |  2 +-
+>  drivers/soc/xilinx/xlnx_vcu.c | 76 ++++++++++++++++++++++++++++++++++-
+>  2 files changed, 75 insertions(+), 3 deletions(-)
+> 
+[...]
+> diff --git a/drivers/soc/xilinx/xlnx_vcu.c b/drivers/soc/xilinx/xlnx_vcu.c
+> index dcd8e7824b06..f07a1361a2a8 100644
+> --- a/drivers/soc/xilinx/xlnx_vcu.c
+> +++ b/drivers/soc/xilinx/xlnx_vcu.c
+[...]
+> @@ -485,6 +490,63 @@ static int xvcu_set_pll(struct xvcu_device *xvcu)
+>  	return -ETIMEDOUT;
+>  }
+>  
+> +static int xvcu_register_clock_provider(struct xvcu_device *xvcu)
+> +{
+> +	struct device *dev = xvcu->dev;
+> +	const char *parent_name = __clk_get_name(xvcu->pll_ref);
+> +	struct clk_onecell_data *data = &xvcu->clk_data;
+> +	struct clk **clks;
+> +	size_t num_clks = CLK_XVCU_MAX;
+> +
+> +	clks = devm_kcalloc(dev, num_clks, sizeof(*clks), GFP_KERNEL);
+> +	if (!clks)
+> +		return -ENOMEM;
+> +
+> +	data->clk_num = num_clks;
+> +	data->clks = clks;
+> +
+> +	clks[CLK_XVCU_ENC_CORE] =
+> +		clk_register_fixed_rate(dev, "venc_core_clk",
+> +					parent_name, 0, xvcu->coreclk);
+> +	clks[CLK_XVCU_ENC_MCU] =
+> +		clk_register_fixed_rate(dev, "venc_mcu_clk",
+> +					parent_name, 0, xvcu->mcuclk);
+> +	clks[CLK_XVCU_DEC_CORE] =
+> +		clk_register_fixed_rate(dev, "vdec_core_clk",
+> +					parent_name, 0, xvcu->coreclk);
+> +	clks[CLK_XVCU_DEC_MCU] =
+> +		clk_register_fixed_rate(dev, "vdec_mcu_clk",
+> +					parent_name, 0, xvcu->mcuclk);
+> +
+> +	return of_clk_add_provider(dev->of_node, of_clk_src_onecell_get, data);
+> +}
+> +
+> +static void xvcu_unregister_clock_provider(struct xvcu_device *xvcu)
+> +{
+> +	struct device *dev = xvcu->dev;
+> +	struct clk_onecell_data *data = &xvcu->clk_data;
+> +	struct clk **clks = data->clks;
+> +
+> +	of_clk_del_provider(dev->of_node);
+> +
+> +	clk_unregister_fixed_rate(clks[CLK_XVCU_DEC_MCU]);
+> +	clk_unregister_fixed_rate(clks[CLK_XVCU_DEC_CORE]);
+> +	clk_unregister_fixed_rate(clks[CLK_XVCU_ENC_MCU]);
+> +	clk_unregister_fixed_rate(clks[CLK_XVCU_ENC_CORE]);
+> +}
+> +
+> +static void xvcu_reset(struct xvcu_device *xvcu)
+> +{
+> +	if (!xvcu->reset_gpio)
+> +		return;
+> +
+> +	gpiod_set_value(xvcu->reset_gpio, 0);
+> +	/* min 2 clock cycle of vcu pll_ref, slowest freq is 33.33KHz */
+> +	usleep_range(60, 120);
+> +	gpiod_set_value(xvcu->reset_gpio, 1);
+> +	usleep_range(60, 120);
+> +}
+> +
 
-diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
-index ba605310abeb..8058955fb3b9 100644
---- a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
-+++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
-@@ -23,6 +23,7 @@ properties:
-       - qcom,sc7180-rpmhpd
-       - qcom,sdm845-rpmhpd
-       - qcom,sm8150-rpmhpd
-+      - qcom,sm8250-rpmhpd
- 
-   '#power-domain-cells':
-     const: 1
-diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-index 4d264d0672c4..7baa39a91412 100644
---- a/drivers/soc/qcom/rpmhpd.c
-+++ b/drivers/soc/qcom/rpmhpd.c
-@@ -166,6 +166,24 @@ static const struct rpmhpd_desc sm8150_desc = {
- 	.num_pds = ARRAY_SIZE(sm8150_rpmhpds),
- };
- 
-+static struct rpmhpd *sm8250_rpmhpds[] = {
-+	[SM8250_CX] = &sdm845_cx,
-+	[SM8250_CX_AO] = &sdm845_cx_ao,
-+	[SM8250_EBI] = &sdm845_ebi,
-+	[SM8250_GFX] = &sdm845_gfx,
-+	[SM8250_LCX] = &sdm845_lcx,
-+	[SM8250_LMX] = &sdm845_lmx,
-+	[SM8250_MMCX] = &sm8150_mmcx,
-+	[SM8250_MMCX_AO] = &sm8150_mmcx_ao,
-+	[SM8250_MX] = &sdm845_mx,
-+	[SM8250_MX_AO] = &sdm845_mx_ao,
-+};
-+
-+static const struct rpmhpd_desc sm8250_desc = {
-+	.rpmhpds = sm8250_rpmhpds,
-+	.num_pds = ARRAY_SIZE(sm8250_rpmhpds),
-+};
-+
- /* SC7180 RPMH powerdomains */
- static struct rpmhpd *sc7180_rpmhpds[] = {
- 	[SC7180_CX] = &sdm845_cx,
-@@ -187,6 +205,7 @@ static const struct of_device_id rpmhpd_match_table[] = {
- 	{ .compatible = "qcom,sc7180-rpmhpd", .data = &sc7180_desc },
- 	{ .compatible = "qcom,sdm845-rpmhpd", .data = &sdm845_desc },
- 	{ .compatible = "qcom,sm8150-rpmhpd", .data = &sm8150_desc },
-+	{ .compatible = "qcom,sm8250-rpmhpd", .data = &sm8250_desc },
- 	{ }
- };
- 
-diff --git a/include/dt-bindings/power/qcom-rpmpd.h b/include/dt-bindings/power/qcom-rpmpd.h
-index 3f74096d5a7c..dc146e44228b 100644
---- a/include/dt-bindings/power/qcom-rpmpd.h
-+++ b/include/dt-bindings/power/qcom-rpmpd.h
-@@ -28,6 +28,18 @@
- #define SM8150_MMCX	9
- #define SM8150_MMCX_AO	10
- 
-+/* SM8250 Power Domain Indexes */
-+#define SM8250_CX	0
-+#define SM8250_CX_AO	1
-+#define SM8250_EBI	2
-+#define SM8250_GFX	3
-+#define SM8250_LCX	4
-+#define SM8250_LMX	5
-+#define SM8250_MMCX	6
-+#define SM8250_MMCX_AO	7
-+#define SM8250_MX	8
-+#define SM8250_MX_AO	9
-+
- /* SC7180 Power Domain Indexes */
- #define SC7180_CX	0
- #define SC7180_CX_AO	1
--- 
-2.24.0
+The xvcu_reset function shouldn't have been there at all. Looks like it
+slipped through, when I rebased the patches. I'll send a v3.
 
+Michael
+
+>  /**
+>   * xvcu_probe - Probe existence of the logicoreIP
+>   *			and initialize PLL
+> @@ -569,10 +631,18 @@ static int xvcu_probe(struct platform_device *pdev)
+>  		goto error_pll_ref;
+>  	}
+>  
+> +	ret = xvcu_register_clock_provider(xvcu);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to register clock provider\n");
+> +		goto error_clk_provider;
+> +	}
+> +
+>  	dev_set_drvdata(&pdev->dev, xvcu);
+>  
+>  	return 0;
+>  
+> +error_clk_provider:
+> +	xvcu_unregister_clock_provider(xvcu);
+>  error_pll_ref:
+>  	clk_disable_unprepare(xvcu->pll_ref);
+>  error_aclk:
+> @@ -596,6 +666,8 @@ static int xvcu_remove(struct platform_device *pdev)
+>  	if (!xvcu)
+>  		return -ENODEV;
+>  
+> +	xvcu_unregister_clock_provider(xvcu);
+> +
+>  	/* Add the the Gasket isolation and put the VCU in reset. */
+>  	xvcu_write(xvcu->logicore_reg_ba, VCU_GASKET_INIT, 0);
+>  
+> -- 
+> 2.20.1
+> 
+> 
