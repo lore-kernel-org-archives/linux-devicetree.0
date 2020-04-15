@@ -2,91 +2,153 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E90C38A29
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 00:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1A5C38A2B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 00:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90E2020857
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 00:09:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586909392;
-	bh=DMsd3FROr2+kiSCRzJn1n5QaWjuDCE0b5hexfO1ddiU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FgMXkiIz94aEKZQo4ijgsi0C1oW1ju2VNDSZQhfMZ2OSWlgFx+XlL6f8Rvw3awG+P
-	 xmNpZjTVvzF1zz+Xj5aJiaj28PRQrLxY6qIA41mbOOXmELwREs9X2P1PMI0nS2BvPI
-	 8ezGLltzgDh9AOBNWLW0SDVphP8m0MuQPd9pyPBk=
+	by mail.kernel.org (Postfix) with ESMTP id 77E2120737
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 00:48:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392275AbgDOAJu (ORCPT
+        id S2634692AbgDOAsp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Apr 2020 20:09:50 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38475 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732131AbgDOAJr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Apr 2020 20:09:47 -0400
-Received: by mail-ot1-f68.google.com with SMTP id k21so1665839otl.5;
-        Tue, 14 Apr 2020 17:09:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=an6bZAAya5UFMVN64A13WIP7W1tgVhL6AmvavG0wN9I=;
-        b=hwucFLlbpj2T5QmzRGY8Np9g3L/DPcGn24rJ2615LwYhfJnNd+zvovXhJIuzt70DD7
-         kv1dJL4uUPH93eYI8Zl3hqBal6qmIjFm+7NDEcNNpWU70x/5khS+RFpGjHIsFmHS3a2R
-         FNiQN0AfVQ98QrE3rfWfEvdfdBgQz3neW8wCWBcHgJhJSfqZnjRK9b/aFKqe1qtY0x11
-         tKZTFfqMp2VQ2RHRkHcOiwXeXDVKe1xbqVSu+Qf/1lCyW3hxEXnpbivJdeeQkJLa6Wfr
-         hPJdrJ/UTONJT5bfxq775pEsDvMeyjoo4JT1K/VicRW0Gkp6Jr4cqJJp21Y+wiAbxRqd
-         NSrw==
-X-Gm-Message-State: AGi0PuZWlATaxV4Kx19HEBlDv32iIhZaHNb1ghT6XWCs1y64gxyDFCM7
-        97FIX1JK9wmO3zidouLEJA==
-X-Google-Smtp-Source: APiQypK/zIt8lYl2EV56gNELd6fXPPLg7t8f0BxW64vml85d8mUdZm916anEyGrITFe6sOhlmcIIlw==
-X-Received: by 2002:a4a:d258:: with SMTP id e24mr20556711oos.93.1586909386602;
-        Tue, 14 Apr 2020 17:09:46 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c7sm1615962otp.3.2020.04.14.17.09.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 17:09:46 -0700 (PDT)
-Received: (nullmailer pid 24234 invoked by uid 1000);
-        Wed, 15 Apr 2020 00:09:45 -0000
-Date:   Tue, 14 Apr 2020 19:09:45 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Nick Reitemeyer <nick.reitemeyer@web.de>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org,
-        Nick Reitemeyer <nick.reitemeyer@web.de>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/3] dt-bindings: magnetometer: ak8974: Add Alps
- hscdtd008a
-Message-ID: <20200415000945.GA24169@bogus>
-References: <20200406141350.162036-1-nick.reitemeyer@web.de>
- <20200406141350.162036-2-nick.reitemeyer@web.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200406141350.162036-2-nick.reitemeyer@web.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 14 Apr 2020 20:48:45 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:34042 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388115AbgDOAsc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Apr 2020 20:48:32 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 32AA71A0616;
+        Wed, 15 Apr 2020 02:48:21 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 44B661A0613;
+        Wed, 15 Apr 2020 02:48:16 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 1107240293;
+        Wed, 15 Apr 2020 08:48:10 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 1/2] dt-bindings: watchdog: Convert i.MX to json-schema
+Date:   Wed, 15 Apr 2020 08:40:10 +0800
+Message-Id: <1586911211-1141-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon,  6 Apr 2020 16:13:51 +0200, Nick Reitemeyer wrote:
-> 
-> Add binding documentation for the Alps HSCDTD008A, which is similar
-> to the ak8974.
-> 
-> Signed-off-by: Nick Reitemeyer <nick.reitemeyer@web.de>
-> ---
->  Documentation/devicetree/bindings/iio/magnetometer/ak8974.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
+Convert the i.MX watchdog binding to DT schema format using json-schema.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+No change.
+---
+ .../devicetree/bindings/watchdog/fsl-imx-wdt.txt   | 24 ----------
+ .../devicetree/bindings/watchdog/fsl-imx-wdt.yaml  | 56 ++++++++++++++++++++++
+ 2 files changed, 56 insertions(+), 24 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
+
+diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+deleted file mode 100644
+index adc6b76..0000000
+--- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
++++ /dev/null
+@@ -1,24 +0,0 @@
+-* Freescale i.MX Watchdog Timer (WDT) Controller
+-
+-Required properties:
+-- compatible : Should be "fsl,<soc>-wdt"
+-- reg : Should contain WDT registers location and length
+-- interrupts : Should contain WDT interrupt
+-
+-Optional properties:
+-- big-endian: If present the watchdog device's registers are implemented
+-  in big endian mode, otherwise in native mode(same with CPU), for more
+-  detail please see: Documentation/devicetree/bindings/regmap/regmap.txt.
+-- fsl,ext-reset-output: If present the watchdog device is configured to
+-  assert its external reset (WDOG_B) instead of issuing a software reset.
+-- timeout-sec : Contains the watchdog timeout in seconds
+-
+-Examples:
+-
+-wdt@73f98000 {
+-	compatible = "fsl,imx51-wdt", "fsl,imx21-wdt";
+-	reg = <0x73f98000 0x4000>;
+-	interrupts = <58>;
+-	big-endian;
+-	timeout-sec = <20>;
+-};
+diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
+new file mode 100644
+index 0000000..674d902
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
+@@ -0,0 +1,56 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/watchdog/fsl-imx-wdt.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale i.MX Watchdog Timer (WDT) Controller
++
++maintainers:
++  - Anson Huang <Anson.Huang@nxp.com>
++
++allOf:
++  - $ref: "watchdog.yaml#"
++
++properties:
++  compatible:
++    enum:
++      - fsl,imx21-wdt
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    description: |
++      Watchdog's clock source.
++    maxItems: 1
++
++  fsl,ext-reset-output:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      If present, the watchdog device is configured to assert its
++      external reset (WDOG_B) instead of issuing a software reset.
++
++required:
++  - compatible
++  - interrupts
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/imx6qdl-clock.h>
++
++    wdog1: watchdog@20bc000 {
++        compatible = "fsl,imx21-wdt";
++        reg = <0x020bc000 0x4000>;
++        interrupts = <0 80 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clks IMX6QDL_CLK_IPG>;
++    };
++
++...
+-- 
+2.7.4
+
