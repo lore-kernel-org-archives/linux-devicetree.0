@@ -2,125 +2,126 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B30D4C2BB55
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 15:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C488CC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 15:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 951E42078B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 15:24:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586964284;
-	bh=pe4mUZoSClmSOdJbx5BRqCfcV9Bl4p2V6l2UGqLg5pI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YudDDvehg0ZzurwFfVKLaC8sTuTRHxZNvM6qT0xhMhoX/ZDBTtqDAitF2iQK0kNov
-	 Cp5W4xOZ4skd2jZZsCAp9YX7K2uHVz3cTUzhO7Mg0hXz4hDsVjmIgU1v+qnBu9ZylG
-	 zTh23tMtG3WqPJseJBZ8Eq6g7YK91607tJEE+fso=
+	by mail.kernel.org (Postfix) with ESMTP id A57982078B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 15:25:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LgduLYE1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506430AbgDOPYn (ORCPT
+        id S2636877AbgDOPZk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:24:43 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43319 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505511AbgDOPYm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 11:24:42 -0400
-Received: by mail-oi1-f195.google.com with SMTP id j16so13776881oih.10;
-        Wed, 15 Apr 2020 08:24:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jhBF/0NDo7VWagdd1bbsqqHnNKZNs8SZkRbVtCJaHvo=;
-        b=qE6cFqBzL9Y0TlEtOgt9XHYqzKx8UNpBYvk53CeOGCjBqm41rm1SskfTQT5gN3QIvM
-         zkpTHTMjjm4sTEMWV30edO2yqaBa1O5dDpF6D7vDT0bGuyApAn/cMWP3VtxwwDVSCoQD
-         /dS74/FNTJXvJqUZN9scaHKnzhWT45RZyVbJ5OF/Z5diuxQgLjg2JYBz6blCmOQAohWx
-         7d4zy3Oelxe3/HO/BtHzeSfBOpAHhH1c5lyKa225yz27XLnPeB6mhkSjzZBUc79p1Iim
-         s8KSFz69r7DsOwfsl928YAtKnCIVOukBrrBJI4uAapVSOgcKATU/W0a3AuEv5eOu69FO
-         Vgnw==
-X-Gm-Message-State: AGi0PuYR0ZJ0UDAQQdMZ8N526kohM1Mq37z1eg8NN9BD63ArFKLR8g+4
-        olsLxxlVFk50TeW7+ReDiQ==
-X-Google-Smtp-Source: APiQypK60RgLEmAsFyOZF/N+fWwAL92n4oq7mY6wF7D/JLdoeMdx6S6XMdXiReUTulsqlMeSpxJPaw==
-X-Received: by 2002:aca:dd55:: with SMTP id u82mr19163342oig.27.1586964280896;
-        Wed, 15 Apr 2020 08:24:40 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w6sm402075ooa.6.2020.04.15.08.24.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 08:24:40 -0700 (PDT)
-Received: (nullmailer pid 14651 invoked by uid 1000);
-        Wed, 15 Apr 2020 15:24:39 -0000
-Date:   Wed, 15 Apr 2020 10:24:39 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Tanmay Shah <tanmay@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, seanpaul@chromium.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        abhinavk@codeaurora.org, robdclark@gmail.com,
-        aravindh@codeaurora.org, varar@codeaurora.org
-Subject: Re: [PATCH 1/2] dt-bindings: msm: disp: Add Display Port HPD GPIO
- bindings
-Message-ID: <20200415152439.GA9882@bogus>
-References: <1586299709-14222-1-git-send-email-tanmay@codeaurora.org>
+        Wed, 15 Apr 2020 11:25:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47584 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2636868AbgDOPZh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 11:25:37 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AFDDC061A0C;
+        Wed, 15 Apr 2020 08:25:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=daO92Tw6mjzwnZTWWONfVVOWvOshJIiguRIHq2MkEXQ=; b=LgduLYE1WQCRvj65hfnqVRbukl
+        d1nSnLh+yFv+To4VmD2YoCLw8NB5ksC0uTTLLIau0Aft2pIpliUcXbBJUuCuEd8n4sYXLUDby0qX3
+        8YFnLRbJZiw+UyCPUXyqHhlUbdS9dh1Vd45uIsNJcCnb2Bfy94ra3rS5TqWcRx6Mz+5mrfJn5uwBk
+        /RTxUaeM6gNL1fIp42j755QfgL3k49KEavXKfhz5ANp4u051hjnSjjdHHDV3FYWdi3J34HC30JQmo
+        RBq0L/n+iM7TtcjM9pQ6TSOsHKmCWyfEXYART8LncTYxX6wrnYQw4/IR3/m4uPLF/Dgnp1haHFIF+
+        gl3hmvjQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOjuw-0006aD-Ab; Wed, 15 Apr 2020 15:25:35 +0000
+Subject: Re: [PATCH 2/2] soc: mediatek: Add mtk-mmdvfs driver
+To:     Anthony Huang <anthony.huang@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
+References: <1586949506-22990-1-git-send-email-anthony.huang@mediatek.com>
+ <1586949506-22990-3-git-send-email-anthony.huang@mediatek.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <1296cbb7-c470-4169-8499-89f723308f85@infradead.org>
+Date:   Wed, 15 Apr 2020 08:25:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586299709-14222-1-git-send-email-tanmay@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1586949506-22990-3-git-send-email-anthony.huang@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 03:48:28PM -0700, Tanmay Shah wrote:
-> Add Display Port HPD GPIO description in bindings
-> 
-> This Patch depends on:
-> 	https://patchwork.kernel.org/patch/11468505/
+Hi--
 
-This belongs below the '---' and probably means you should send all this 
-as one series.
 
+On 4/15/20 4:18 AM, Anthony Huang wrote:
+> Mediatek MMDVFS driver is used to set clk for Mediatek multimedia
+> hardwares. The MMDVFS registers a regulator callback and multimedia
+
+  hardware.
+
+> hardwares set voltage by regulator API and then this callback will be
+
+  hardware
+
+> triggered. The MMDVFS will get current opp level from opp table according
+> to the voltage, and then the MMDVFS sets all the clock MUXs to the clock
+> sources according to the opp level.
 > 
-> Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
+> On some platforms, both clock MUX and frequency hopping need to be used
+> together. The MMDVFS supports these two clock setting methods and the
+> execution sequence of them can be configured in DTS.
+> 
+> Signed-off-by: Anthony Huang <anthony.huang@mediatek.com>
 > ---
->  Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  drivers/soc/mediatek/Kconfig      |    9 ++
+>  drivers/soc/mediatek/Makefile     |    1 +
+>  drivers/soc/mediatek/mtk-mmdvfs.c |  312 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 322 insertions(+)
+>  create mode 100644 drivers/soc/mediatek/mtk-mmdvfs.c
 > 
-> diff --git a/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
-> index 761a01d..003f5f7 100644
-> --- a/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
-> +++ b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
-> @@ -155,6 +155,11 @@ properties:
->       data-lanes:
->         description: Maximum number of lanes that can be used for Display port.
+> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
+> index 2114b56..e92762b 100644
+> --- a/drivers/soc/mediatek/Kconfig
+> +++ b/drivers/soc/mediatek/Kconfig
+> @@ -44,4 +44,13 @@ config MTK_SCPSYS
+>  	  Say yes here to add support for the MediaTek SCPSYS power domain
+>  	  driver.
 >  
-> +     dp-hpd-gpio:
+> +config MTK_MMDVFS
+> +	tristate "MediaTek MMDVFS Support"
+> +	depends on ARCH_MEDIATEK || COMPILE_TEST
+> +	help
+> +	  Say yes here to add support for the MediaTek Multimedia DVFS (MMDVFS)
+> +	  driver. The MMDVFS is used to set clk for Mediatek multimedia hardwares
 
-We already have a standard property for this. Use it. 
+	                                                                hardware,
 
-It belongs in the connector node as HPD is part of the connector.
+> +	  , such as display, camera, mdp and video codec. Say no if your device
 
-> +       maxItems: 1
-> +       description: Specifies HPD gpio for DP connector without
-> +                    USB PHY or AUX switch.
+	  ^drop that comma.
+
+> +	  does not need to do DVFS for Multimedia hardwares.
+
+	                                          hardware.
+
 > +
->       usbplug-cc-gpio:
+>  endmenu
 
-Note that this too should be in a connector node.
 
->         maxItems: 1
->         description: Specifies the usbplug orientation gpio.
-> @@ -282,6 +287,8 @@ examples:
->          aux-sel-gpio = <&msmgpio 110 1>;
->          usbplug-cc-gpio = <&msmgpio 90 1>;
->  
-> +        dp-hpd-gpio = <&msmgpio 117 0>;
-> +
->          ports {
->              #address-cells = <1>;
->              #size-cells = <0>;
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+thanks.
+-- 
+~Randy
+
