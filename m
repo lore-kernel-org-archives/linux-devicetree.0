@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF18BC2BB55
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC45FC38A2C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A09DE2078A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8D652074F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953775;
-	bh=yZRJLnU4ErUB6W+jl5bb662sTl3GJZbnFAsMghgK1O4=;
+	s=default; t=1586953777;
+	bh=FuwEmhHqtJHJQqebXlx5aIR78KRZjDzvHcsUNRBbHZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=08uaDYmdQY9jUKzz2Y796/m5yzo5g6RashkgdmxuWuZFgOuEeQJSlN0vWiMuEg5yR
-	 WUsVQPiyNq1wI20CuEGUb7VIZlQXUukY8H/hrAMVU+5u5S9gAuaPKGGS2ZUSyPqJAQ
-	 vyoDv7SMZFZrsw1h+EVhMqfWkchZSBV0fw8Ggo0g=
+	b=FnfovRVHkX57FOCwhLBhWlEeCUG5NBG+Dk+UvTTSPjK9Dn+XbL1IoS6UgwZNIpYLY
+	 EmPzvAvGSkQa1XDQJ4Idk/qK/6T5rQvGkzcp9kDDNebR2bhGGLcBvne9WQY9zKyIfE
+	 R8nHbXxtRCmNy15C7bKVeL7KO53RzAb6foQZGK+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369361AbgDOM2x (ORCPT
+        id S369410AbgDOM3g (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:28:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38270 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 08:29:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409125AbgDOLpF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:45:05 -0400
+        id S2409108AbgDOLo5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:44:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D4C02137B;
-        Wed, 15 Apr 2020 11:45:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03E8C206A2;
+        Wed, 15 Apr 2020 11:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951105;
-        bh=yZRJLnU4ErUB6W+jl5bb662sTl3GJZbnFAsMghgK1O4=;
+        s=default; t=1586951096;
+        bh=FuwEmhHqtJHJQqebXlx5aIR78KRZjDzvHcsUNRBbHZo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JhD9O9eD8hK7vfx3CuZwgXPgHLg++G45LFXntPY1DCLU9Oz+e3ZQgje0H+sxuJRRJ
-         D5mCzK6WnEPnn1hlITuBC7FJTgHhwzWA4+MrxSpbh894Q08Y1QXaUQ5Dbd6Tqoz/Wg
-         0CkFoTChmuay/OcukbaUcH57sfMegUeeYpX2sKCY=
+        b=hvsHBAimPdePTFw1iPblY5fNZjUxANklhs6HMVjasRQ8G9hRmprSO99cvPF28imNt
+         x7NWT8ko4LJY2Ys0BCa7mnfAWR+RjqEA2e2oJNE3oYp21bKk/6yKtYMafPj3RFFgsp
+         6tx87mygpU5sxWLeDnmqU+5HEeMJNW9uLXrVD680=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 20/84] ARM: dts: rockchip: fix lvds-encoder ports subnode for rk3188-bqedison2qc
-Date:   Wed, 15 Apr 2020 07:43:37 -0400
-Message-Id: <20200415114442.14166-20-sashal@kernel.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 12/84] arm64: tegra: Fix Tegra194 PCIe compatible string
+Date:   Wed, 15 Apr 2020 07:43:29 -0400
+Message-Id: <20200415114442.14166-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
@@ -60,71 +60,104 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Johan Jonker <jbx6244@gmail.com>
+From: Jon Hunter <jonathanh@nvidia.com>
 
-[ Upstream commit 1a7e99599dffd836fcb720cdc0eaf3cd43d7af4a ]
+[ Upstream commit f9f711efd441ad0d22874be49986d92121862335 ]
 
-A test with the command below gives this error:
+If the kernel configuration option CONFIG_PCIE_DW_PLAT_HOST is enabled
+then this can cause the kernel to incorrectly probe the generic
+designware PCIe platform driver instead of the Tegra194 designware PCIe
+driver. This causes a boot failure on Tegra194 because the necessary
+configuration to access the hardware is not performed.
 
-arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml: lvds-encoder:
-'ports' is a required property
+The order in which the compatible strings are populated in Device-Tree
+is not relevant in this case, because the kernel will attempt to probe
+the device as soon as a driver is loaded and if the generic designware
+PCIe driver is loaded first, then this driver will be probed first.
+Therefore, to fix this problem, remove the "snps,dw-pcie" string from
+the compatible string as we never want this driver to be probe on
+Tegra194.
 
-Fix error by adding a ports wrapper for port@0 and port@1
-inside the 'lvds-encoder' node for rk3188-bqedison2qc.
-
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/
-bridge/lvds-codec.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200316174647.5598-1-jbx6244@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Fixes: 2602c32f15e7 ("arm64: tegra: Add P2U and PCIe controller nodes to Tegra194 DT")
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3188-bqedison2qc.dts | 27 ++++++++++++++----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+ .../devicetree/bindings/pci/nvidia,tegra194-pcie.txt |  2 +-
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi             | 12 ++++++------
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3188-bqedison2qc.dts b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-index 8afb2fd5d9f1b..66a0ff196eb1f 100644
---- a/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-+++ b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-@@ -58,20 +58,25 @@
+diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+index b739f92da58e5..1f90eb39870be 100644
+--- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+@@ -118,7 +118,7 @@ Tegra194:
+ --------
  
- 	lvds-encoder {
- 		compatible = "ti,sn75lvds83", "lvds-encoder";
--		#address-cells = <1>;
--		#size-cells = <0>;
- 
--		port@0 {
--			reg = <0>;
--			lvds_in_vop0: endpoint {
--				remote-endpoint = <&vop0_out_lvds>;
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				lvds_in_vop0: endpoint {
-+					remote-endpoint = <&vop0_out_lvds>;
-+				};
- 			};
--		};
- 
--		port@1 {
--			reg = <1>;
--			lvds_out_panel: endpoint {
--				remote-endpoint = <&panel_in_lvds>;
-+			port@1 {
-+				reg = <1>;
-+
-+				lvds_out_panel: endpoint {
-+					remote-endpoint = <&panel_in_lvds>;
-+				};
- 			};
- 		};
+ 	pcie@14180000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
+ 		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x38000000 0x0 0x00040000   /* configuration space (256K) */
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index 57adcbb7352d6..457b815d57f40 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -1151,7 +1151,7 @@
  	};
+ 
+ 	pcie@14100000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
+ 		reg = <0x00 0x14100000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x30000000 0x0 0x00040000   /* configuration space (256K) */
+@@ -1197,7 +1197,7 @@
+ 	};
+ 
+ 	pcie@14120000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
+ 		reg = <0x00 0x14120000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x32000000 0x0 0x00040000   /* configuration space (256K) */
+@@ -1243,7 +1243,7 @@
+ 	};
+ 
+ 	pcie@14140000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX1A>;
+ 		reg = <0x00 0x14140000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x34000000 0x0 0x00040000   /* configuration space (256K) */
+@@ -1289,7 +1289,7 @@
+ 	};
+ 
+ 	pcie@14160000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX4A>;
+ 		reg = <0x00 0x14160000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x36000000 0x0 0x00040000   /* configuration space (256K) */
+@@ -1335,7 +1335,7 @@
+ 	};
+ 
+ 	pcie@14180000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
+ 		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x38000000 0x0 0x00040000   /* configuration space (256K) */
+@@ -1381,7 +1381,7 @@
+ 	};
+ 
+ 	pcie@141a0000 {
+-		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		compatible = "nvidia,tegra194-pcie";
+ 		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8A>;
+ 		reg = <0x00 0x141a0000 0x0 0x00020000   /* appl registers (128K)      */
+ 		       0x00 0x3a000000 0x0 0x00040000   /* configuration space (256K) */
 -- 
 2.20.1
 
