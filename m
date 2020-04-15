@@ -2,139 +2,89 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4756DC38A2D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 276B6C3815B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 279DA206F9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:00:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="zxVPhSIX"
+	by mail.kernel.org (Postfix) with ESMTP id 07E6E2076A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:00:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586966431;
+	bh=56sT1iHc2rESmqs7uYkeyojUhIDWZOhEvUqmQU4BKjE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zvCQpfrCysZSTgXUZCWAno7WlIqSJEEsHi8yOnQd+QvGilCjybl6JZ5eUVdfRNKR5
+	 +zpaw5BaRFjb6wqnjQs1lVF7E86Q1feX5SvvE0hk6sDgn5+Ywrc1t0P63MEySEfBTK
+	 MtMF661+wy6yxg813xkmPFEOudnz2e8nOhiY5nEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1415117AbgDOQAX (ORCPT
+        id S1415066AbgDOQAW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:00:23 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:17542 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2410029AbgDOP67 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:58:59 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03FFX9Hr020652;
-        Wed, 15 Apr 2020 17:58:41 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=ysOQdhxkH/yrY5LkPt2G2khgQ9eVt+ECxotn643GF5M=;
- b=zxVPhSIXIipKdyN43ht2fZhnWd2je/Ls21V8h85LhCNHLSrJvKD3jhO/1M+GhJjG6RAd
- aRWJkbPx5oxTdC+fi9f+2p1VWrgWptTcD4YA1dQeB17HVUS32g4PuuF+HQzCqbngkZRe
- c/1R6B45PMIpx+OdlIGWMfWi97NRl+/M25gx0ws8S4dFcfYteZmln85vK4Co0n2hs2fQ
- Iq3LFQbeZ9pdHNs7dla4TBBl8AR+HG4GN5/+p2ocj4uwnLW0Hs+iFJw54PPqR78nOqcF
- yJ1dFwl4LDQe5IyQixNkpxkl7uxXLjFsNcpg6uAxNdi2UArX1q/nuwMsS0r23ANwsM83 TQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30dn6svygw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Apr 2020 17:58:41 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E24D2100039;
-        Wed, 15 Apr 2020 17:58:40 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CDF302AF597;
-        Wed, 15 Apr 2020 17:58:40 +0200 (CEST)
-Received: from localhost (10.75.127.49) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 15 Apr 2020 17:58:40
- +0200
-From:   Christophe Kerello <christophe.kerello@st.com>
-To:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-        <lee.jones@linaro.org>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <tony@atomide.com>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>, <marex@denx.de>,
-        Christophe Kerello <christophe.kerello@st.com>
-Subject: [PATCH v2 04/12] mtd: rawnand: stm32_fmc2: manage all errors cases at probe time
-Date:   Wed, 15 Apr 2020 17:57:28 +0200
-Message-ID: <1586966256-29548-5-git-send-email-christophe.kerello@st.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
-References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
+        Wed, 15 Apr 2020 12:00:22 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46832 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1415033AbgDOP7X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 11:59:23 -0400
+Received: by mail-ot1-f66.google.com with SMTP id w12so340272otm.13;
+        Wed, 15 Apr 2020 08:59:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SAF4YLo18AVSTjr/wfbj6WC+7BWE0mGsD5hCj1/7WQw=;
+        b=gT/O38TpATvRrKmqbuHWjlMwwfdjD8KCx3MWLTn7dViF+1Krs8FqK4qTzQhCLtBNRn
+         EaXiLU8fv0w+TyKtdbiOy1aT3OnWp2csUrv5/lVSfGumMCT40tE6wwW+qoFOPHdQko8I
+         0y1HOOUqx7k3loQ8ayDZ7swbbrd2xK262iuprfZUdxJfaQ/4+4g5oaY2LAjmkWEOfqeL
+         kW1RVW17YrE34BEpRvSbTLwO6Hp36V6pkhHV6rX2Ma28OosKfxEqp52qnKZFjnurwOrO
+         1t7PvG83eG1TMPimV+XkZmNFF6/We9ub1RS1z9NuwdlNfbOWTt2ApYwtiJAp13wmGNiy
+         thVQ==
+X-Gm-Message-State: AGi0PuZjTR0Kb5543n4M8zb2WjvfEBlVwZmPNxUa7p2+7js1Y3VTSUQj
+        TGyHr2GWLnxNAbhcIc98+vIbTee1NA==
+X-Google-Smtp-Source: APiQypKbPqwG5FUIUFJ/dfqhD7t+dJzqhbjje+7XefQT59bwn8uIk9f1Vt+2WZhGWq5VdAvdMs4LYw==
+X-Received: by 2002:a4a:b489:: with SMTP id b9mr5715887ooo.71.1586966362475;
+        Wed, 15 Apr 2020 08:59:22 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id f1sm880414otq.41.2020.04.15.08.59.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 08:59:21 -0700 (PDT)
+Received: (nullmailer pid 30581 invoked by uid 1000);
+        Wed, 15 Apr 2020 15:59:20 -0000
+Date:   Wed, 15 Apr 2020 10:59:20 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH] spi: dt-bindings: rspi: Convert to json-schema
+Message-ID: <20200415155920.GA30523@bogus>
+References: <20200408091129.25429-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-15_05:2020-04-14,2020-04-15 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408091129.25429-1-geert+renesas@glider.be>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch defers its probe when the expected reset control is not
-yet ready. This patch also handles properly all errors cases at probe
-time.
+On Wed,  8 Apr 2020 11:11:29 +0200, Geert Uytterhoeven wrote:
+> Convert the Renesas (Quad) Serial Peripheral Interface (RSPI/QSPI)
+> Device Tree binding documentation to json-schema.
+> 
+> Document missing properties.
+> Update the second example to match reality.
+> Drop the first example, as it doesn't add much value.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  .../devicetree/bindings/spi/renesas,rspi.yaml | 144 ++++++++++++++++++
+>  .../devicetree/bindings/spi/spi-rspi.txt      |  73 ---------
+>  2 files changed, 144 insertions(+), 73 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/spi/renesas,rspi.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/spi/spi-rspi.txt
+> 
 
-Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
----
- drivers/mtd/nand/raw/stm32_fmc2_nand.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-index b6d45cd..0a96797 100644
---- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-+++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-@@ -1967,7 +1967,11 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
- 	}
- 
- 	rstc = devm_reset_control_get(dev, NULL);
--	if (!IS_ERR(rstc)) {
-+	if (IS_ERR(rstc)) {
-+		ret = PTR_ERR(rstc);
-+		if (ret == -EPROBE_DEFER)
-+			goto err_clk_disable;
-+	} else {
- 		reset_control_assert(rstc);
- 		reset_control_deassert(rstc);
- 	}
-@@ -1975,7 +1979,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
- 	/* DMA setup */
- 	ret = stm32_fmc2_dma_setup(fmc2);
- 	if (ret)
--		return ret;
-+		goto err_dma_setup;
- 
- 	/* FMC2 init routine */
- 	stm32_fmc2_init(fmc2);
-@@ -1997,7 +2001,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
- 	/* Scan to find existence of the device */
- 	ret = nand_scan(chip, nand->ncs);
- 	if (ret)
--		goto err_scan;
-+		goto err_dma_setup;
- 
- 	ret = mtd_device_register(mtd, NULL, 0);
- 	if (ret)
-@@ -2010,7 +2014,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
- err_device_register:
- 	nand_cleanup(chip);
- 
--err_scan:
-+err_dma_setup:
- 	if (fmc2->dma_ecc_ch)
- 		dma_release_channel(fmc2->dma_ecc_ch);
- 	if (fmc2->dma_tx_ch)
-@@ -2021,6 +2025,7 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
- 	sg_free_table(&fmc2->dma_data_sg);
- 	sg_free_table(&fmc2->dma_ecc_sg);
- 
-+err_clk_disable:
- 	clk_disable_unprepare(fmc2->clk);
- 
- 	return ret;
--- 
-1.9.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
