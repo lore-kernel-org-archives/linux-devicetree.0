@@ -2,1124 +2,179 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB34CC2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 07:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0D0C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 07:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0022206F9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 07:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48CBB20771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 07:53:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b="SgsHELD0"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="CirdU7N6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393665AbgDOHXO (ORCPT
+        id S2390621AbgDOHxq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 03:23:14 -0400
-Received: from gproxy6-pub.mail.unifiedlayer.com ([67.222.39.168]:56422 "EHLO
-        gproxy6-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2393666AbgDOHXM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 03:23:12 -0400
-Received: from cmgw11.unifiedlayer.com (unknown [10.9.0.11])
-        by gproxy6.mail.unifiedlayer.com (Postfix) with ESMTP id 9D98A1E06F4
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 00:56:24 -0600 (MDT)
-Received: from md-in-79.webhostbox.net ([43.225.55.182])
-        by cmsmtp with ESMTP
-        id Oby9jRlKoVKjoObyBjvzh8; Wed, 15 Apr 2020 00:56:24 -0600
-X-Authority-Reason: nr=8
-X-Authority-Analysis: v=2.3 cv=ONYJIxSB c=1 sm=1 tr=0
- a=LfuyaZh/8e9VOkaVZk0aRw==:117 a=LfuyaZh/8e9VOkaVZk0aRw==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
- a=IkcTkHD0fZMA:10:nop_charset_1 a=cl8xLZFz6L8A:10:nop_rcvd_month_year
- a=oz0wMknONp8A:10:endurance_base64_authed_username_1 a=vU9dKmh3AAAA:8
- a=I3rDmXkFPg_7Nv1lI34A:9 a=KWntJOfHXSHpKsIS:21 a=z28oGt1q3h8XXXqV:21
- a=QEXdDO2ut3YA:10:nop_charset_2 a=8teeR8OajY8A:10:phone_number_3
- a=rsP06fVo5MYu2ilr0aT5:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=linumiz.com
-        ; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References
-        :In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Ug+LY9Kvt/tJkAV/bW2LWX0VIs/cS3dNUMNGI6YE5Mw=; b=SgsHELD0UOWFUYmbfR7XXS+jca
-        N0ByllGfc45mhMN/ca1f9zMYezB34762XlVhEfzy6tPiGM78UBEAVnpk+vYqMrkxnpCrJY8W6YvYh
-        hYxu2wfNzly4fp9aTtoVVB7atoiWD+DX35vq1GFU8URpcyZdNJHfK4XYX/wETDNeVn2qm3PQPzZTe
-        P6BA3UYZfeeaEV6TYJi9cXKBKzMOT4Y6r/FxXXgulYHOuqUVOTtQyvCKqbG7Wcq8z/v55XKXMpkXs
-        5RZnEKuWIDsiA0zGlAYtetBy4MAhfGxp56s7WvAKXDDeN8xSDzBOPOM8vU+sVQu6zXxCbgLCDHxY8
-        +baGXT7w==;
-Received: from p5b3f6ccc.dip0.t-ipconnect.de ([91.63.108.204]:49262 helo=localhost.localdomain)
-        by md-in-79.webhostbox.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <saravanan@linumiz.com>)
-        id 1jOby8-0000eI-4v; Wed, 15 Apr 2020 06:56:20 +0000
-From:   Saravanan Sekar <saravanan@linumiz.com>
-To:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, broonie@kernel.org,
-        lgirdwood@gmail.com, saravanan@linumiz.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: [PATCH 3/4] iio: accel: Add driver for wsen-itds accelerometer sensor
-Date:   Wed, 15 Apr 2020 08:55:34 +0200
-Message-Id: <20200415065535.7753-4-saravanan@linumiz.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200415065535.7753-1-saravanan@linumiz.com>
-References: <20200415065535.7753-1-saravanan@linumiz.com>
+        Wed, 15 Apr 2020 03:53:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2635323AbgDOHwc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 03:52:32 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DB94C061A0C
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 00:52:32 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id h9so17902700wrc.8
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 00:52:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zA1RW0E4LHbvRiBzYVD9TW8bj9I50h1yfH2fmmj+Mvk=;
+        b=CirdU7N6WykwfPV7PkyDF1Ybr40ofovSUwAyT5PW/Ax0hL9RPrAKlpScBP5P+1ZXFb
+         MbnCIBmfjgEsWsTerE5o57V+RXcJfuS/brs68rS2AJZMYXDwxOhbLZzfUb9YPftTUGPb
+         hrf3usocc7y+ghLY1mdESXQr0ImZ1zO85bLUZ49NunQfQiGHUIlNwBpeY5TcDnvo9cLN
+         6qNhzXEFFO6xpIzuDxziQzYdNQgbFWFwfD94R9/CV0cYbMmIsOriNZmWBPVDSv9l6g2u
+         TNeuexHzNB0Pz5Ag/aWrDLqKDWOXChwpIzcOKii3Wdq2g6LjXGn0VX58MJ82/msW6QT5
+         KOjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=zA1RW0E4LHbvRiBzYVD9TW8bj9I50h1yfH2fmmj+Mvk=;
+        b=bnlK4Z11R2jLjyjAv8R/BvDFDvCpXnJOBmsNPhErVubCG960r2SonEJeeauQJV4jlz
+         g7XsN0+OXniRm/XLaLPwfsjU36W+3ihYVZeZ8sKhRoqbIRuhu3COIrVeeYG/gVVuwhwT
+         xNtmZlfPcxPJTA43cMCW1xOflp2OIe5tb4+b7HV/1kLhShCZ8udmwOg9HjzzuITUBXpZ
+         Dk9ELNiA9/Y2cOlpFXcWFS305N/xWZsUr+Zr78pcyxgcYF1CrJUnPVI+U5xuKez5gmbB
+         KUmGa5g84AJIqoGb0CjseVwUA5QIavrIDQYbumHnIpUXbtKPYj/3ymbCqTHg6tU5a+w6
+         G6Ew==
+X-Gm-Message-State: AGi0Pua8qtFMcjtDfDWY50WFBD+46Tn3DYsXt3nFwv2aQB63KrJrGDmO
+        6s68M6elLyQIdNoUqAi3JLPkFoMMLHBc4A==
+X-Google-Smtp-Source: APiQypJvUOD448z0Y8+mNOfEKPlgI6V+0hgfkD6U4XBybk9YAPMSasJfzRC9jBrXNw0u9bPSdGw2kw==
+X-Received: by 2002:adf:fecd:: with SMTP id q13mr19617087wrs.12.1586937151035;
+        Wed, 15 Apr 2020 00:52:31 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56? ([2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56])
+        by smtp.gmail.com with ESMTPSA id u17sm24626982wra.63.2020.04.15.00.52.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Apr 2020 00:52:29 -0700 (PDT)
+Subject: Re: [PATCH v5] dt-bindings: gpu: mali-utgard: Add the #cooling-cells
+ property
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        robh+dt@kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+Cc:     linux-amlogic@lists.infradead.org, Qiang Yu <yuq825@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20200411165700.1576314-1-martin.blumenstingl@googlemail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <8f2b7074-98b3-dd17-dffd-ef0c10f6aeba@baylibre.com>
+Date:   Wed, 15 Apr 2020 09:52:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - md-in-79.webhostbox.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - linumiz.com
-X-BWhitelist: no
-X-Source-IP: 91.63.108.204
-X-Source-L: No
-X-Exim-ID: 1jOby8-0000eI-4v
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: p5b3f6ccc.dip0.t-ipconnect.de (localhost.localdomain) [91.63.108.204]:49262
-X-Source-Auth: saravanan@linumiz.com
-X-Email-Count: 33
-X-Source-Cap: bGludW1jbWM7aG9zdGdhdG9yO21kLWluLTc5LndlYmhvc3Rib3gubmV0
-X-Local-Domain: yes
+In-Reply-To: <20200411165700.1576314-1-martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add an iio driver for the wurth elektronic wsen-itds 3-axis accelerometer.
-The driver supports the acceleration, temperature data reading and
-supports configuring of output data rate, operating mode and scale.
+On 11/04/2020 18:57, Martin Blumenstingl wrote:
+> The GPU can be one of the big heat sources on a SoC. Allow the
+> "#cooling-cells" property to be specified for ARM Mali Utgard GPUs so
+> the GPU clock speeds (and voltages) can be reduced to prevent a SoC from
+> overheating.
+> 
+> Reviewed-by: Qiang Yu <yuq825@gmail.com>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+> Changes since v4 at [0]:
+> - Added Qiang's Reviewed-by (many thanks)
+> - re-send because I missed the devicetree mailing list in v4
+> 
+> 
+> [0] https://patchwork.kernel.org/patch/11448013/
+> 
+> 
+>  Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+> index f5401cc8de4a..4869258daadb 100644
+> --- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+> @@ -107,6 +107,9 @@ properties:
+>  
+>    operating-points-v2: true
+>  
+> +  "#cooling-cells":
+> +    const: 2
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -164,6 +167,7 @@ examples:
+>        clocks = <&ccu 1>, <&ccu 2>;
+>        clock-names = "bus", "core";
+>        resets = <&ccu 1>;
+> +      #cooling-cells = <2>;
+>      };
+>  
+>  ...
+> 
 
-Signed-off-by: Saravanan Sekar <saravanan@linumiz.com>
----
- drivers/iio/accel/Kconfig     |  14 +
- drivers/iio/accel/Makefile    |   1 +
- drivers/iio/accel/wsen-itds.c | 978 ++++++++++++++++++++++++++++++++++
- 3 files changed, 993 insertions(+)
- create mode 100644 drivers/iio/accel/wsen-itds.c
-
-diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
-index 5d91a6dda894..9fbefc94e33e 100644
---- a/drivers/iio/accel/Kconfig
-+++ b/drivers/iio/accel/Kconfig
-@@ -450,4 +450,18 @@ config STK8BA50
- 	  Choosing M will build the driver as a module. If so, the module
- 	  will be called stk8ba50.
- 
-+config WSEN_ITDS
-+	tristate "Wurth Elektronik WSEN-ITDS 3-Axis Accelerometer Driver"
-+	depends on I2C
-+	select IIO_BUFFER
-+	select IIO_TRIGGERED_BUFFER
-+	select REGMAP_I2C
-+	help
-+	  Say yes here to build support for the WSEN-ITDS 3-axis
-+	  accelerometer.
-+
-+	  The sensor provies 3-axis Acceleration, Tempreature data and
-+	  application specific features like tap, 6D Orinetation, Free-fall
-+	  Motion, Activity etc
-+
- endmenu
-diff --git a/drivers/iio/accel/Makefile b/drivers/iio/accel/Makefile
-index 3a051cf37f40..942cab3e1d16 100644
---- a/drivers/iio/accel/Makefile
-+++ b/drivers/iio/accel/Makefile
-@@ -61,3 +61,4 @@ st_accel-$(CONFIG_IIO_BUFFER) += st_accel_buffer.o
- 
- obj-$(CONFIG_IIO_ST_ACCEL_I2C_3AXIS) += st_accel_i2c.o
- obj-$(CONFIG_IIO_ST_ACCEL_SPI_3AXIS) += st_accel_spi.o
-+obj-$(CONFIG_WSEN_ITDS) += wsen-itds.o
-diff --git a/drivers/iio/accel/wsen-itds.c b/drivers/iio/accel/wsen-itds.c
-new file mode 100644
-index 000000000000..0846fb28a1b9
---- /dev/null
-+++ b/drivers/iio/accel/wsen-itds.c
-@@ -0,0 +1,978 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * WSEN-ITDS 3-axis accel sensor driver
-+ *
-+ * Copyright 2020 Linumiz
-+ *
-+ * Author: Saravanan Sekar <saravanan@linumiz.com>
-+ *
-+ * TODO : events - 6D, Orientation, Free-fall, Tap, Motion
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/iio/buffer.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/iio/trigger.h>
-+#include <linux/iio/trigger_consumer.h>
-+#include <linux/iio/triggered_buffer.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/slab.h>
-+
-+#define	ITDS_REG_TEMP_L			0x0d
-+#define	ITDS_REG_DEV_ID			0x0f
-+#define	ITDS_REG_CTRL1			0x20
-+#define	ITDS_REG_CTRL2			0x21
-+#define	ITDS_REG_CTRL3			0x22
-+#define	ITDS_REG_CTRL4			0x23
-+#define	ITDS_REG_CTRL5			0x24
-+#define	ITDS_REG_CTRL6			0x25
-+#define	ITDS_REG_STATUS			0x27
-+#define	ITDS_REG_X_OUT_L		0x28
-+#define	ITDS_REG_Y_OUT_L		0x2a
-+#define	ITDS_REG_Z_OUT_L		0x2c
-+#define	ITDS_REG_FIFO_CTRL		0x2e
-+#define	ITDS_REG_FIFO_SAMPLES		0x2f
-+#define	ITDS_REG_STATUS_DETECT		0x37
-+#define	ITDS_REG_WAKEUP_EVENT		0x38
-+#define	ITDS_REG_CTRL7			0x3f
-+
-+#define	ITDS_MASK_SCALE			GENMASK(5, 4)
-+#define	ITDS_MASK_BDU_INC_ADD		GENMASK(3, 2)
-+#define	ITDS_MASK_FIFOTH		GENMASK(4, 0)
-+#define	ITDS_MASK_FIFOMODE		GENMASK(7, 5)
-+#define	ITDS_MASK_MODE			GENMASK(3, 0)
-+#define	ITDS_MASK_SAMPLES_COUNT		GENMASK(5, 0)
-+#define	ITDS_MASK_ODR			GENMASK(7, 4)
-+#define	ITDS_MASK_INT_DRDY		BIT(0)
-+#define	ITDS_MASK_INT_FIFOTH		BIT(1)
-+#define	ITDS_MASK_INT_EN		BIT(5)
-+
-+#define	ITDS_EVENT_DRDY			BIT(0)
-+#define	ITDS_EVENT_DRDY_T		BIT(6)
-+#define	ITDS_EVENT_FIFO_TH		BIT(7)
-+#define	ITDS_DEVICE_ID			0x44
-+#define	ITDS_ACCL_FIFO_SIZE		32
-+
-+#define ITDS_ACC_CHAN(_axis, _idx) {					\
-+	.type = IIO_ACCEL,						\
-+	.modified = 1,							\
-+	.channel2 = IIO_MOD_##_axis,					\
-+	.scan_index = _idx,						\
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),			\
-+	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SAMP_FREQ) |	\
-+				BIT(IIO_CHAN_INFO_SCALE),		\
-+	.scan_type = {							\
-+		.sign = 's',						\
-+		.realbits = 14,						\
-+		.storagebits = 16,					\
-+		.shift = 2,						\
-+		.endianness = IIO_LE,					\
-+	},								\
-+}
-+
-+enum itds_operating_mode {
-+	ITDS_MODE_LOW_POWER,
-+	ITDS_MODE_NORMAL = BIT(0),
-+	ITDS_MODE_HIGH_PERFORMANCE = BIT(1),
-+	ITDS_MODE_SINGLE_SHOT = BIT(2),
-+	ITDS_MODE_INVALID = 4
-+};
-+
-+enum itds_fifo_mode {
-+	ITDS_MODE_BYPASS,
-+	ITDS_MODE_FIFO,
-+	ITDS_MODE_CONTINUES,
-+	ITDS_MODE_CONTINUES_TO_FIFO,
-+	ITDS_MODE_BYPASS_TO_CONTINUES,
-+	ITDS_MODE_END
-+};
-+
-+struct itds_info {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	struct iio_trigger *trig;
-+	struct regulator *vdd_supply;
-+	struct regulator *vddio_supply;
-+	unsigned int scale;
-+	enum itds_operating_mode op_mode;
-+	enum itds_fifo_mode fifo_mode;
-+	struct mutex mutex;
-+	int64_t timestamp;
-+	u8 fifo_threshold;
-+	bool is_hwfifo_enabled;
-+};
-+
-+struct itds_samp_freq {
-+	int val;
-+	int val2;
-+};
-+
-+struct itds_fifo_modes {
-+	char *str;
-+	int rval;
-+};
-+
-+static const char *operating_mode[ITDS_MODE_INVALID] = {
-+	"lowpower",
-+	"normal",
-+	"high_perf",
-+	"single_shot"
-+};
-+
-+static const struct itds_samp_freq sample_freq[][10] = {
-+	{
-+		{0}, {1, 600000}, {12, 500000}, {25}, {50},
-+		{100}, {200}, {200}, {200}, {200}
-+	},
-+
-+	/* high performance mode */
-+	{
-+		{0}, {12, 500000}, {12, 500000}, {25}, {50},
-+		{100}, {200}, {400}, {800}, {1600}
-+	}
-+};
-+
-+static const unsigned long itds_scan_masks[] = {0x7, 0};
-+
-+/* 2g, 4g, 8g, 16g */
-+unsigned int sensitivity_scale[][4] = {
-+	{976, 1952, 3904, 7808},
-+
-+	/* high performance mode */
-+	{244, 488, 976, 1952}
-+};
-+
-+static const struct iio_chan_spec itds_channels[] = {
-+	ITDS_ACC_CHAN(X, 0),
-+	ITDS_ACC_CHAN(Y, 1),
-+	ITDS_ACC_CHAN(Z, 2),
-+	{
-+		.type = IIO_TEMP,
-+		.scan_index = 3,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |
-+				 BIT(IIO_CHAN_INFO_OFFSET),
-+	}
-+};
-+
-+static struct itds_fifo_modes fifo_modes[ITDS_MODE_END] = {
-+	{"bypass", 0},
-+	{"fifo", 1},
-+	{"continues", 3},
-+	{"continues_fifo", 4},
-+	{"bypass_continues", 6},
-+};
-+
-+static struct regmap_config itds_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = 0x3f,
-+};
-+
-+static ssize_t itds_accel_scale_avail(struct device *dev,
-+				      struct device_attribute *attr,
-+				      char *buf)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct itds_info *info = iio_priv(indio_dev);
-+	int len = 0, i;
-+	bool mode;
-+
-+	mode = !!(info->op_mode & ITDS_MODE_HIGH_PERFORMANCE);
-+
-+	for (i = 0; i < ARRAY_SIZE(sensitivity_scale[0]); i++)
-+		len += sprintf(buf + len, "%d ", sensitivity_scale[mode][i]);
-+
-+	buf[len - 1] = '\n';
-+
-+	return len;
-+}
-+
-+static ssize_t itds_samp_freq_avail(struct device *dev,
-+				struct device_attribute *attr,
-+				char *buf)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct itds_info *info = iio_priv(indio_dev);
-+	int len = 0, i;
-+	bool mode;
-+
-+	mode = !!(info->op_mode & ITDS_MODE_HIGH_PERFORMANCE);
-+
-+	for (i = 0; i < ARRAY_SIZE(sample_freq[0]); i++) {
-+		len += sprintf(buf + len, "%d.%d ", sample_freq[mode][i].val,
-+					 sample_freq[mode][i].val2);
-+	}
-+	buf[len - 1] = '\n';
-+
-+	return len;
-+}
-+
-+static int itds_get_temp(struct itds_info *info, int *val)
-+{
-+	unsigned int regval;
-+	int ret;
-+	__le16 rval;
-+
-+	ret = regmap_read(info->regmap, ITDS_REG_STATUS_DETECT, &regval);
-+	if (ret)
-+		return ret;
-+
-+	if (!(regval & ITDS_EVENT_DRDY_T))
-+		return -EAGAIN;
-+
-+	ret = regmap_bulk_read(info->regmap, ITDS_REG_TEMP_L,
-+				   &rval, sizeof(rval));
-+	if (ret) {
-+		dev_err(info->dev, "failed to read TEMP reg\n");
-+		return ret;
-+	}
-+
-+	rval  = rval >> 4;
-+	regval = sign_extend32(le16_to_cpu(rval), 11);
-+	*val = regval * 625;
-+
-+	return IIO_VAL_INT;
-+}
-+
-+static int itds_get_accel(struct itds_info *info,
-+			  const struct iio_chan_spec *chan,
-+			  int *val)
-+{
-+	unsigned int regval;
-+	int reg, ret;
-+	__le16 rval;
-+
-+	if (info->is_hwfifo_enabled)
-+		return -EBUSY;
-+
-+	ret = regmap_read(info->regmap, ITDS_REG_STATUS, &regval);
-+	if (ret)
-+		return ret;
-+
-+	if (!(regval & ITDS_EVENT_DRDY))
-+		return -EAGAIN;
-+
-+	switch (chan->channel2) {
-+	case IIO_MOD_X:
-+		reg = ITDS_REG_X_OUT_L;
-+		break;
-+	case IIO_MOD_Y:
-+		reg = ITDS_REG_Y_OUT_L;
-+		break;
-+	case IIO_MOD_Z:
-+		reg = ITDS_REG_Z_OUT_L;
-+		break;
-+	default:
-+		dev_err(info->dev, "invalid axis modifier\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = regmap_bulk_read(info->regmap, reg, &rval, sizeof(rval));
-+	if (ret)
-+		return ret;
-+
-+	mutex_lock(&info->mutex);
-+
-+	if (info->op_mode & ITDS_MODE_HIGH_PERFORMANCE ||
-+	    info->op_mode & ITDS_MODE_NORMAL) {
-+		rval = rval >> chan->scan_type.shift;
-+		*val = sign_extend32(le16_to_cpu(rval),
-+				     chan->scan_type.realbits - 1);
-+	} else {
-+		rval = rval >> (chan->scan_type.shift + 2);
-+		*val = sign_extend32(le16_to_cpu(rval),
-+				     chan->scan_type.realbits - 3);
-+	}
-+
-+	mutex_unlock(&info->mutex);
-+
-+	return IIO_VAL_INT;
-+}
-+
-+static int itds_set_odr(struct itds_info *info, int val, int val2)
-+{
-+	int ret, i;
-+	bool mode;
-+
-+	mode = !!(info->op_mode & ITDS_MODE_HIGH_PERFORMANCE);
-+
-+	for (i = 0; i < ARRAY_SIZE(sample_freq[0]); i++) {
-+		if ((val == sample_freq[mode][i].val) &&
-+		    (val2 == sample_freq[mode][i].val2)) {
-+
-+			ret = regmap_update_bits(info->regmap, ITDS_REG_CTRL1,
-+						 ITDS_MASK_ODR, i << 4);
-+			return ret;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int itds_get_odr(struct itds_info *info, int *val, int *val2)
-+{
-+	int ret;
-+	unsigned int rval;
-+	bool mode;
-+
-+	ret = regmap_read(info->regmap, ITDS_REG_CTRL1, &rval);
-+	if (ret)
-+		return ret;
-+
-+	rval = (rval & ITDS_MASK_ODR) >> 4;
-+	mode = !!(info->op_mode & ITDS_MODE_HIGH_PERFORMANCE);
-+	*val = sample_freq[mode][rval].val;
-+	*val2 = sample_freq[mode][rval].val2;
-+
-+	return IIO_VAL_INT_PLUS_MICRO;
-+}
-+
-+static int itds_set_scale(struct itds_info *info, int val)
-+{
-+	int i, ret = -EINVAL;
-+	bool mode;
-+
-+	mutex_lock(&info->mutex);
-+	mode = !!(info->op_mode & ITDS_MODE_HIGH_PERFORMANCE);
-+	for (i = 0; i < ARRAY_SIZE(sensitivity_scale[0]); i++) {
-+		if (val == sensitivity_scale[mode][i])
-+			break;
-+	}
-+
-+	if (i == ARRAY_SIZE(sensitivity_scale[0]))
-+		goto ret_unlock;
-+
-+	ret = regmap_update_bits(info->regmap, ITDS_REG_CTRL6,
-+				 ITDS_MASK_SCALE, i << 4);
-+	if (ret)
-+		goto ret_unlock;
-+
-+	info->scale = 1000 * sensitivity_scale[mode][i];
-+
-+ret_unlock:
-+	mutex_unlock(&info->mutex);
-+	return ret;
-+}
-+
-+static int itds_get_scale(struct itds_info *info)
-+{
-+	int ret;
-+	unsigned int rval;
-+	bool mode;
-+
-+	ret = regmap_read(info->regmap, ITDS_REG_CTRL6, &rval);
-+	if (ret)
-+		return ret;
-+
-+	rval = (rval & ITDS_MASK_SCALE) >> 4;
-+	mode = !!(info->op_mode & ITDS_MODE_HIGH_PERFORMANCE);
-+	info->scale = 1000 * sensitivity_scale[mode][rval];
-+
-+	return 0;
-+}
-+
-+int itds_set_trigger_state(struct iio_trigger *trig, bool state)
-+{
-+	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
-+	struct itds_info *info = iio_priv(indio_dev);
-+	unsigned int enable;
-+	int ret;
-+
-+	enable = state ? ITDS_MASK_INT_EN : 0;
-+	ret = regmap_update_bits(info->regmap, ITDS_REG_CTRL7,
-+				 ITDS_MASK_INT_EN, enable);
-+	if (ret)
-+		dev_err(info->dev, "interrupt en/dis fail %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static int itds_fifo_flush(struct iio_dev *indio_dev, unsigned int count)
-+{
-+	struct itds_info *info = iio_priv(indio_dev);
-+	struct device *dev = info->dev;
-+	unsigned int rval;
-+	int ret, i;
-+	/* 3x16 bits data + timestamp 64 bits */
-+	__le16 buffer[7];
-+	u8 samples;
-+
-+	ret = regmap_read(info->regmap, ITDS_REG_FIFO_SAMPLES, &rval);
-+	if (ret < 0) {
-+		dev_err(dev, "FIFO count err %d\n", ret);
-+		return ret;
-+	}
-+
-+	if (!(rval & ITDS_EVENT_FIFO_TH))
-+		return 0;
-+
-+	samples = rval & ITDS_MASK_SAMPLES_COUNT;
-+	if (!count)
-+		return 0;
-+
-+	samples = samples < count ? samples : count;
-+	for (i = 0; i < samples; i++) {
-+		ret = regmap_raw_read(info->regmap, ITDS_REG_X_OUT_L,
-+				      buffer, 3 * sizeof(u16));
-+		if (ret)
-+			return i;
-+
-+		iio_push_to_buffers_with_timestamp(indio_dev, buffer,
-+						   info->timestamp);
-+	}
-+
-+	return samples;
-+}
-+
-+static ssize_t itds_accel_get_fifo_threshold(struct device *dev,
-+					     struct device_attribute *attr,
-+					     char *buf)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct itds_info *info = iio_priv(indio_dev);
-+	int wm;
-+
-+	mutex_lock(&info->mutex);
-+	wm = info->fifo_threshold;
-+	mutex_unlock(&info->mutex);
-+
-+	return sprintf(buf, "%d\n", wm);
-+}
-+
-+static int itds_accel_set_fifo_threshold(struct iio_dev *indio_dev,
-+					 unsigned int val)
-+{
-+	struct itds_info *info = iio_priv(indio_dev);
-+
-+	if (val >= ITDS_ACCL_FIFO_SIZE)
-+		val = ITDS_ACCL_FIFO_SIZE - 1;
-+
-+	mutex_lock(&info->mutex);
-+	info->fifo_threshold = val;
-+	mutex_unlock(&info->mutex);
-+
-+	return 0;
-+}
-+
-+static ssize_t itds_accel_set_fifo_mode(struct device *dev,
-+					struct device_attribute *attr,
-+					const char *buf,
-+					size_t count)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct itds_info *info = iio_priv(indio_dev);
-+	int i;
-+
-+	mutex_lock(&info->mutex);
-+
-+	for (i = 0; i < ITDS_MODE_END; i++) {
-+		if (!strcmp(buf, fifo_modes[i].str)) {
-+			info->fifo_mode = i;
-+			goto ret_unlock;
-+		}
-+	}
-+	count = -EINVAL;
-+
-+ret_unlock:
-+	mutex_unlock(&info->mutex);
-+	return count;
-+}
-+
-+static ssize_t itds_accel_get_fifo_mode(struct device *dev,
-+					struct device_attribute *attr,
-+					char *buf)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct itds_info *info = iio_priv(indio_dev);
-+	int mode;
-+
-+	mutex_lock(&info->mutex);
-+	mode = info->fifo_mode;
-+	mutex_unlock(&info->mutex);
-+
-+	return sprintf(buf, "%s\n", fifo_modes[mode].str);
-+}
-+
-+static int itds_set_operating_mode(struct itds_info *info,
-+				enum itds_operating_mode mode)
-+{
-+	int ret;
-+
-+	ret = regmap_update_bits(info->regmap, ITDS_REG_CTRL1,
-+				 ITDS_MASK_MODE, 1 << mode);
-+	if (!ret) {
-+		info->op_mode = mode;
-+
-+		/* update scale according to new operating mode */
-+		itds_get_scale(info);
-+	}
-+
-+	return ret;
-+}
-+
-+static ssize_t itds_accel_set_operating_mode(struct device *dev,
-+					     struct device_attribute *attr,
-+					     const char *buf,
-+					     size_t count)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct itds_info *info = iio_priv(indio_dev);
-+	int ret = -EINVAL;
-+	int i;
-+
-+	mutex_lock(&info->mutex);
-+
-+	for (i = 0; i < ITDS_MODE_INVALID; i++) {
-+		if (!strcmp(buf, operating_mode[i])) {
-+			ret = itds_set_operating_mode(info, i);
-+			if (!ret)
-+				ret = count;
-+
-+			break;
-+		}
-+	}
-+
-+	mutex_unlock(&info->mutex);
-+	return ret;
-+}
-+
-+static ssize_t itds_accel_get_operating_mode(struct device *dev,
-+					struct device_attribute *attr,
-+					char *buf)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct itds_info *info = iio_priv(indio_dev);
-+	int mode;
-+
-+	mutex_lock(&info->mutex);
-+	mode = info->op_mode;
-+	mutex_unlock(&info->mutex);
-+
-+	return sprintf(buf, "%s\n", operating_mode[mode]);
-+}
-+
-+static ssize_t itds_accel_get_fifo_state(struct device *dev,
-+					 struct device_attribute *attr,
-+					 char *buf)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct itds_info *info = iio_priv(indio_dev);
-+	bool is_enabled;
-+
-+	mutex_lock(&info->mutex);
-+	is_enabled = info->is_hwfifo_enabled;
-+	mutex_unlock(&info->mutex);
-+
-+	return sprintf(buf, "%d\n", is_enabled);
-+}
-+
-+static IIO_CONST_ATTR(hwfifo_threshold_min, "1");
-+static IIO_CONST_ATTR(hwfifo_threshold_max, __stringify(ITDS_ACCL_FIFO_SIZE));
-+static IIO_DEVICE_ATTR(hwfifo_enabled, 0444,
-+		       itds_accel_get_fifo_state, NULL, 0);
-+static IIO_DEVICE_ATTR(hwfifo_threshold, 0444,
-+		       itds_accel_get_fifo_threshold, NULL, 0);
-+static IIO_DEVICE_ATTR(hwfifo_mode, 0644, itds_accel_get_fifo_mode,
-+			itds_accel_set_fifo_mode, 0);
-+static IIO_DEVICE_ATTR(operating_mode, 0644, itds_accel_get_operating_mode,
-+		       itds_accel_set_operating_mode, 0);
-+static IIO_DEVICE_ATTR(in_accel_samp_freq_available, 0444,
-+		       itds_samp_freq_avail, NULL, 0);
-+static IIO_DEVICE_ATTR(in_accel_scale_available, 0444,
-+		       itds_accel_scale_avail, NULL, 0);
-+
-+static struct attribute *itds_accel_fifo_attributes[] = {
-+	&iio_const_attr_hwfifo_threshold_min.dev_attr.attr,
-+	&iio_const_attr_hwfifo_threshold_max.dev_attr.attr,
-+	&iio_dev_attr_hwfifo_threshold.dev_attr.attr,
-+	&iio_dev_attr_hwfifo_enabled.dev_attr.attr,
-+	&iio_dev_attr_hwfifo_mode.dev_attr.attr,
-+	&iio_dev_attr_operating_mode.dev_attr.attr,
-+	&iio_dev_attr_in_accel_samp_freq_available.dev_attr.attr,
-+	&iio_dev_attr_in_accel_scale_available.dev_attr.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group itds_attrs_group = {
-+	.attrs = itds_accel_fifo_attributes,
-+};
-+
-+static irqreturn_t itds_trigger_handler(int irq, void *p)
-+{
-+	struct iio_poll_func *pf = p;
-+	struct iio_dev *indio_dev = pf->indio_dev;
-+	struct itds_info *info = iio_priv(indio_dev);
-+
-+	if (info->is_hwfifo_enabled)
-+		itds_fifo_flush(indio_dev, ITDS_ACCL_FIFO_SIZE);
-+
-+	iio_trigger_notify_done(indio_dev->trig);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t itds_accel_irq_thread_handler(int irq, void *private)
-+{
-+	struct iio_dev *indio_dev = private;
-+	struct itds_info *info = iio_priv(indio_dev);
-+	unsigned int rval;
-+	int ret;
-+
-+	ret = regmap_read(info->regmap, ITDS_REG_STATUS, &rval);
-+	if (ret)
-+		return IRQ_NONE;
-+
-+	if (rval & ITDS_EVENT_FIFO_TH)
-+		iio_trigger_poll_chained(info->trig);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t itds_accel_irq_handler(int irq, void *private)
-+{
-+	struct iio_dev *indio_dev = private;
-+	struct itds_info *info = iio_priv(indio_dev);
-+
-+	if (info->is_hwfifo_enabled) {
-+		info->timestamp = iio_get_time_ns(indio_dev);
-+		return IRQ_WAKE_THREAD;
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int itds_accel_buffer_postdisable(struct iio_dev *indio_dev)
-+{
-+	struct itds_info *info = iio_priv(indio_dev);
-+
-+	if (!info->is_hwfifo_enabled)
-+		return 0;
-+
-+	regmap_update_bits(info->regmap, ITDS_REG_FIFO_CTRL,
-+				 ITDS_MASK_FIFOTH | ITDS_MASK_FIFOMODE, 0);
-+	regmap_update_bits(info->regmap, ITDS_REG_CTRL4,
-+				 ITDS_MASK_INT_FIFOTH, 0);
-+
-+	info->is_hwfifo_enabled = false;
-+
-+	return 0;
-+}
-+
-+static int itds_accel_buffer_postenable(struct iio_dev *indio_dev)
-+{
-+	struct itds_info *info = iio_priv(indio_dev);
-+	unsigned int rval;
-+	int ret = 0;
-+
-+	if (info->is_hwfifo_enabled)
-+		return 0;
-+
-+	if (!info->fifo_mode)
-+		return -EINVAL;
-+
-+	ret = regmap_read(info->regmap, ITDS_REG_CTRL1, &rval);
-+	if (ret)
-+		return ret;
-+
-+	if (!(rval & ITDS_MASK_ODR))
-+		return -EINVAL;
-+
-+	ret = regmap_update_bits(info->regmap, ITDS_REG_FIFO_CTRL,
-+				 ITDS_MASK_FIFOTH, info->fifo_threshold);
-+	if (ret)
-+		goto out_err;
-+
-+	ret = regmap_update_bits(info->regmap, ITDS_REG_FIFO_CTRL,
-+				 ITDS_MASK_FIFOMODE,
-+				 fifo_modes[info->fifo_mode].rval << 5);
-+	if (ret)
-+		goto out_err;
-+
-+	info->is_hwfifo_enabled = true;
-+	ret = regmap_update_bits(info->regmap, ITDS_REG_CTRL4,
-+				 ITDS_MASK_INT_FIFOTH,
-+				 ITDS_MASK_INT_FIFOTH);
-+	if (ret)
-+		goto disable_fifo;
-+
-+	if (indio_dev->currentmode == INDIO_BUFFER_TRIGGERED)
-+		iio_triggered_buffer_postenable(indio_dev);
-+
-+	return 0;
-+
-+disable_fifo:
-+	regmap_update_bits(info->regmap, ITDS_REG_FIFO_CTRL,
-+				 ITDS_MASK_FIFOTH | ITDS_MASK_FIFOMODE, 0);
-+
-+out_err:
-+	return ret;
-+}
-+
-+static int itds_read_raw(struct iio_dev *indio_dev,
-+			 struct iio_chan_spec const *chan, int *val,
-+			 int *val2, long mask)
-+{
-+	struct itds_info *info = iio_priv(indio_dev);
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		if (chan->type == IIO_ACCEL)
-+			ret = itds_get_accel(info, chan, val);
-+		else
-+			ret = itds_get_temp(info, val);
-+		return ret;
-+
-+	case IIO_CHAN_INFO_SCALE:
-+		*val = 0;
-+		if (chan->type == IIO_ACCEL)
-+			*val2 = info->scale;
-+		else
-+			*val2 = 100;
-+		return IIO_VAL_INT_PLUS_MICRO;
-+
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		ret = itds_get_odr(info, val, val2);
-+		return ret;
-+
-+	case IIO_CHAN_INFO_OFFSET:
-+		if (chan->type == IIO_TEMP)
-+			*val = 250000;
-+		else
-+			*val = 0;
-+
-+		return IIO_VAL_INT;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int itds_write_raw(struct iio_dev *indio_dev,
-+			  struct iio_chan_spec const *chan,
-+			  int val, int val2, long mask)
-+{
-+	struct itds_info *info = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		return itds_set_odr(info, val, val2);
-+
-+	case IIO_CHAN_INFO_SCALE:
-+		return itds_set_scale(info, val);
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_trigger_ops itds_trigger_ops = {
-+	.set_trigger_state = itds_set_trigger_state,
-+};
-+
-+static const struct iio_buffer_setup_ops itds_accel_buffer_ops = {
-+	.postenable = itds_accel_buffer_postenable,
-+	.predisable = iio_triggered_buffer_predisable,
-+	.postdisable = itds_accel_buffer_postdisable,
-+};
-+
-+static const struct iio_info itds_accel_info = {
-+	.attrs			= &itds_attrs_group,
-+	.read_raw		= itds_read_raw,
-+	.write_raw		= itds_write_raw,
-+	.hwfifo_flush_to_buffer = itds_fifo_flush,
-+	.hwfifo_set_watermark	= itds_accel_set_fifo_threshold,
-+};
-+
-+static int itds_probe(struct i2c_client *client, const struct i2c_device_id *id)
-+{
-+	struct device *dev = &client->dev;
-+	struct iio_dev *indio_dev;
-+	struct itds_info *info;
-+	struct regmap *regmap;
-+	unsigned int rval;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*info));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	regmap = devm_regmap_init_i2c(client, &itds_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		dev_err(dev, "Failed to allocate regmap!\n");
-+		return PTR_ERR(regmap);
-+	}
-+
-+	info = iio_priv(indio_dev);
-+	info->regmap = regmap;
-+	info->dev = dev;
-+	i2c_set_clientdata(client, indio_dev);
-+	mutex_init(&info->mutex);
-+
-+	info->vdd_supply = devm_regulator_get_optional(dev, "vdd");
-+	info->vddio_supply = devm_regulator_get_optional(dev, "vddio");
-+
-+	if (!IS_ERR_OR_NULL(info->vdd_supply) &&
-+	    !IS_ERR_OR_NULL(info->vddio_supply)) {
-+
-+		ret = regulator_set_voltage(info->vdd_supply, 1700000, 3600000);
-+		if (ret)
-+			goto out_err;
-+
-+		ret = regulator_set_voltage(info->vddio_supply,
-+						 1200000, 3700000);
-+		if (ret)
-+			goto out_err;
-+
-+		ret = regulator_enable(info->vdd_supply);
-+		if (ret) {
-+			dev_err(dev, "Failed to enable vdd: %d\n", ret);
-+			goto out_err;
-+		}
-+
-+		ret = regulator_enable(info->vddio_supply);
-+		if (ret) {
-+			dev_err(dev, "Failed to enable vddio: %d\n", ret);
-+			goto out_disable_vdd;
-+		}
-+
-+		/* chip boot sequence takes 20ms */
-+		usleep_range(20000, 21000);
-+	}
-+
-+	ret = regmap_read(info->regmap, ITDS_REG_DEV_ID, &rval);
-+	if (ret && (rval != ITDS_DEVICE_ID)) {
-+		dev_info(dev, "err %d device id %X not matched\n", ret, rval);
-+		goto out_disable_vddio;
-+	}
-+
-+	ret = regmap_update_bits(info->regmap, ITDS_REG_CTRL2,
-+				 ITDS_MASK_BDU_INC_ADD, ITDS_MASK_BDU_INC_ADD);
-+	if (ret) {
-+		dev_err(dev, "unable to set block data update!\n");
-+		goto out_disable_vddio;
-+	}
-+
-+	ret = regmap_update_bits(info->regmap, ITDS_REG_WAKEUP_EVENT, 0xff, 0);
-+	if (ret) {
-+		dev_err(dev, "disable wakeup event fail!\n");
-+		goto out_disable_vddio;
-+	}
-+
-+	indio_dev->name = dev_name(dev);
-+	indio_dev->dev.parent = dev;
-+	indio_dev->channels = itds_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(itds_channels);
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->available_scan_masks = itds_scan_masks;
-+	indio_dev->info = &itds_accel_info;
-+
-+	ret = devm_iio_triggered_buffer_setup(dev, indio_dev,
-+					      NULL,
-+					      itds_trigger_handler,
-+					      &itds_accel_buffer_ops);
-+	if (ret) {
-+		dev_err(dev, "unable to setup iio triggered buffer\n");
-+		goto out_disable_vddio;
-+	}
-+
-+	if (client->irq > 0) {
-+		ret = devm_request_threaded_irq(dev, client->irq,
-+						itds_accel_irq_handler,
-+						itds_accel_irq_thread_handler,
-+						IRQF_TRIGGER_RISING,
-+						"itds_event", indio_dev);
-+		if (ret) {
-+			dev_err(dev, "unable to request IRQ\n");
-+			goto out_disable_vddio;
-+		}
-+
-+		info->trig = devm_iio_trigger_alloc(dev, "%s-dev%d",
-+					indio_dev->name, indio_dev->id);
-+		if (!info->trig) {
-+			ret = -ENOMEM;
-+			goto out_disable_vddio;
-+		}
-+
-+		info->trig->dev.parent = dev;
-+		info->trig->ops = &itds_trigger_ops;
-+		iio_trigger_set_drvdata(info->trig, indio_dev);
-+		indio_dev->trig = iio_trigger_get(info->trig);
-+
-+		ret = devm_iio_trigger_register(dev, info->trig);
-+		if (ret)
-+			goto out_disable_vddio;
-+	}
-+
-+	ret = devm_iio_device_register(dev, indio_dev);
-+	if (ret) {
-+		dev_err(dev, "IIO device register fail: %d\n", ret);
-+		goto out_disable_vddio;
-+	}
-+
-+	dev_set_drvdata(dev, indio_dev);
-+
-+	return 0;
-+
-+out_disable_vddio:
-+	if (!IS_ERR_OR_NULL(info->vddio_supply))
-+		regulator_disable(info->vddio_supply);
-+
-+out_disable_vdd:
-+	if (!IS_ERR_OR_NULL(info->vdd_supply))
-+		regulator_disable(info->vdd_supply);
-+
-+out_err:
-+	return ret;
-+}
-+
-+static int itds_remove(struct i2c_client *client)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-+	struct itds_info *info = iio_priv(indio_dev);
-+
-+	regmap_update_bits(info->regmap, ITDS_REG_CTRL1, ITDS_MASK_MODE, 0);
-+	if (!IS_ERR_OR_NULL(info->vdd_supply))
-+		regulator_disable(info->vdd_supply);
-+
-+	if (!IS_ERR_OR_NULL(info->vddio_supply))
-+		regulator_disable(info->vddio_supply);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id itds_of_match[] = {
-+	{ .compatible = "we,wsen-itds"},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, itds_of_match);
-+
-+static const struct i2c_device_id itds_id[] = {
-+	{ "wsen-itds", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(i2c, itds_id);
-+
-+static struct i2c_driver itds_driver = {
-+	.driver = {
-+		.name = "wsen-itds",
-+		.of_match_table = of_match_ptr(itds_of_match),
-+	},
-+	.probe		= itds_probe,
-+	.remove		= itds_remove,
-+	.id_table	= itds_id,
-+};
-+module_i2c_driver(itds_driver);
-+
-+MODULE_AUTHOR("Saravanan Sekar <saravanan@linumiz.com>");
-+MODULE_DESCRIPTION("Würth Elektronik WSEN-ITDS 3-axis accel driver");
-+MODULE_LICENSE("GPL");
--- 
-2.17.1
-
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
