@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E15C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A925EC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB31F2076A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709BF206F9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:00:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ROwyPgke"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ebKO/pfU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1415086AbgDOQAA (ORCPT
+        id S1415036AbgDOP7X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:00:00 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:17746 "EHLO
+        Wed, 15 Apr 2020 11:59:23 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:17538 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1415066AbgDOP7v (ORCPT
+        by vger.kernel.org with ESMTP id S2410043AbgDOP7F (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:59:51 -0400
+        Wed, 15 Apr 2020 11:59:05 -0400
 Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03FFX6Lf020610;
-        Wed, 15 Apr 2020 17:59:24 +0200
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03FFX7Dh020617;
+        Wed, 15 Apr 2020 17:58:36 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=/1bPHaDYOYvbqHD3PNPeFG90zEu7tQ//rFA29wyKOjU=;
- b=ROwyPgkeWfbPWSg9r7PWkYdwj7Gfc4YI3SLa0XnNEoQHfch0CdHb5MNY8VEMdJTW2iu5
- C85BNtM7UZloYMru2j7btzDp+2bawSVN6tIJIneao8TnlMMTt+4IlEtIbKWyBOvrFcWV
- Itfq7U2kKRWQL/TLs8XvWhrvuo+bMi2cJ5uhkGBsRN+06KJPhLxRAVD/lB8MEHRBbTiv
- Yod065mCiMeCimAzMAxCYasKQdKj7bWfvVSLdVyuTk+adUJlYGQP9sT5+yNaqP8Zraj5
- yptiyXPDSxTvO1cBfI2c42rWhA5T1h0tRZkFjFd3kwwnp8eaepAhej1RoliINU0B/Z0T BA== 
+ bh=EwHTI1j3wU7XXWavG0RvpMfKA+ZP+AaGxMqpL9GvqDw=;
+ b=ebKO/pfUSWpBIdQTvds7VYrDqF044zQ37eQRso6xH44moqrWgKAPnMHl+sf1qbL7Mfyb
+ uW1S35NWV2RAB5IEQ7XchtoJ9KkrSoccxsKVQTNFvgzmB9MOjXGhU0t4xMPF+lSSLkOA
+ YV7CpZzyQLC4FtYo8k68L/sb362/th2z4IOaS2WSCe6DWN7MGfHclT8peVJRREj+l5mW
+ VfSzENlPEjzk0Z15Y6AAGjZuQMDlkrYTS3RrNVYV+wBHdVAALyW0tLvW6jitJeQJv3fI
+ nzdnlSO4ChHinlztJKsjGtDrMQV6wjOAZJl3ZlszrUTgKg85Qpc0e88WM8Sz3AFD3gNR vQ== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30dn6svynr-1
+        by mx07-00178001.pphosted.com with ESMTP id 30dn6svygd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Apr 2020 17:59:24 +0200
+        Wed, 15 Apr 2020 17:58:36 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C1D6B100034;
-        Wed, 15 Apr 2020 17:59:23 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 611C0100038;
+        Wed, 15 Apr 2020 17:58:36 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AE2B32B213E;
-        Wed, 15 Apr 2020 17:59:23 +0200 (CEST)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4F1202AF583;
+        Wed, 15 Apr 2020 17:58:36 +0200 (CEST)
 Received: from localhost (10.75.127.50) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 15 Apr 2020 17:59:20
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 15 Apr 2020 17:58:29
  +0200
 From:   Christophe Kerello <christophe.kerello@st.com>
 To:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
@@ -56,16 +56,16 @@ CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <devicetree@vger.kernel.org>, <marex@denx.de>,
         Christophe Kerello <christophe.kerello@st.com>
-Subject: [PATCH v2 11/12] mtd: rawnand: stm32_fmc2: use stm32_fmc2 structure in nfc controller
-Date:   Wed, 15 Apr 2020 17:57:35 +0200
-Message-ID: <1586966256-29548-12-git-send-email-christophe.kerello@st.com>
+Subject: [PATCH v2 03/12] bus: stm32-fmc2-ebi: add STM32 FMC2 EBI controller driver
+Date:   Wed, 15 Apr 2020 17:57:27 +0200
+Message-ID: <1586966256-29548-4-git-send-email-christophe.kerello@st.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
 References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG6NODE2.st.com
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG6NODE2.st.com
  (10.75.127.17)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-15_05:2020-04-14,2020-04-15 signatures=0
@@ -74,599 +74,1153 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch moves common used resources (registers base, clocks, ...)
-in stm32_fmc2 structure.
+The driver adds the support for the STMicroelectronics FMC2 EBI controller
+found on STM32MP SOCs.
 
 Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+Tested-by: Marek Vasut <marex@denx.de>
 ---
 Changes in v2:
  - call 2 APIs to manage FMC2 enable/disable instead of ops
  - call 2 APIs to manage FMC2 NWAIT shared signal instead of ops
 
- drivers/mtd/nand/raw/Kconfig           |   1 +
- drivers/mtd/nand/raw/stm32_fmc2_nand.c | 188 ++++++++++++++++++++++-----------
- 2 files changed, 128 insertions(+), 61 deletions(-)
+ drivers/bus/Kconfig          |   11 +
+ drivers/bus/Makefile         |    1 +
+ drivers/bus/stm32-fmc2-ebi.c | 1091 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 1103 insertions(+)
+ create mode 100644 drivers/bus/stm32-fmc2-ebi.c
 
-diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
-index 12b715a..ad7d887 100644
---- a/drivers/mtd/nand/raw/Kconfig
-+++ b/drivers/mtd/nand/raw/Kconfig
-@@ -421,6 +421,7 @@ config MTD_NAND_STM32_FMC2
- 	depends on MACH_STM32MP157 || COMPILE_TEST
- 	select REGMAP
- 	select REGMAP_MMIO
+diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+index 6095b6d..367f015 100644
+--- a/drivers/bus/Kconfig
++++ b/drivers/bus/Kconfig
+@@ -200,6 +200,17 @@ config DA8XX_MSTPRI
+ 	  configuration. Allows to adjust the priorities of all master
+ 	  peripherals.
+ 
++config STM32_FMC2_EBI
++	tristate "Support for FMC2 External Bus Interface on STM32MP SoCs"
++	depends on MACH_STM32MP157 || COMPILE_TEST
++	select REGMAP
 +	select MFD_STM32_FMC2
- 	help
- 	  Enables support for NAND Flash chips on SoCs containing the FMC2
- 	  NAND controller. This controller is found on STM32MP SoCs.
-diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-index a3c2a11..4f931e2 100644
---- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-+++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-@@ -99,14 +99,12 @@ static inline struct stm32_fmc2_nand *to_fmc2_nand(struct nand_chip *chip)
- struct stm32_fmc2_nfc {
- 	struct nand_controller base;
- 	struct stm32_fmc2_nand nand;
-+	struct stm32_fmc2 *fmc2;
- 	struct device *dev;
--	struct regmap *regmap;
- 	void __iomem *data_base[FMC2_MAX_CE];
- 	void __iomem *cmd_base[FMC2_MAX_CE];
- 	void __iomem *addr_base[FMC2_MAX_CE];
--	phys_addr_t io_phys_addr;
- 	phys_addr_t data_phys_addr[FMC2_MAX_CE];
--	struct clk *clk;
- 	u8 irq_state;
- 
- 	struct dma_chan *dma_tx_ch;
-@@ -135,10 +133,11 @@ static void stm32_fmc2_nfc_timings_init(struct nand_chip *chip)
- 	struct stm32_fmc2_nfc *nfc = to_stm32_nfc(chip->controller);
- 	struct stm32_fmc2_nand *nand = to_fmc2_nand(chip);
- 	struct stm32_fmc2_timings *timings = &nand->timings;
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
- 	u32 pmem, patt;
- 
- 	/* Set tclr/tar timings */
--	regmap_update_bits(nfc->regmap, FMC2_PCR,
-+	regmap_update_bits(fmc2->regmap, FMC2_PCR,
- 			   FMC2_PCR_TCLR | FMC2_PCR_TAR,
- 			   FIELD_PREP(FMC2_PCR_TCLR, timings->tclr) |
- 			   FIELD_PREP(FMC2_PCR_TAR, timings->tar));
-@@ -148,19 +147,20 @@ static void stm32_fmc2_nfc_timings_init(struct nand_chip *chip)
- 	pmem |= FIELD_PREP(FMC2_PMEM_MEMWAIT, timings->twait);
- 	pmem |= FIELD_PREP(FMC2_PMEM_MEMHOLD, timings->thold_mem);
- 	pmem |= FIELD_PREP(FMC2_PMEM_MEMHIZ, timings->thiz);
--	regmap_write(nfc->regmap, FMC2_PMEM, pmem);
-+	regmap_write(fmc2->regmap, FMC2_PMEM, pmem);
- 
- 	/* Set tset/twait/thold/thiz timings in attribut bank */
- 	patt = FIELD_PREP(FMC2_PATT_ATTSET, timings->tset_att);
- 	patt |= FIELD_PREP(FMC2_PATT_ATTWAIT, timings->twait);
- 	patt |= FIELD_PREP(FMC2_PATT_ATTHOLD, timings->thold_att);
- 	patt |= FIELD_PREP(FMC2_PATT_ATTHIZ, timings->thiz);
--	regmap_write(nfc->regmap, FMC2_PATT, patt);
-+	regmap_write(fmc2->regmap, FMC2_PATT, patt);
- }
- 
- static void stm32_fmc2_nfc_setup(struct nand_chip *chip)
- {
- 	struct stm32_fmc2_nfc *nfc = to_stm32_nfc(chip->controller);
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
- 	u32 pcr = 0, pcr_mask;
- 
- 	/* Configure ECC algorithm (default configuration is Hamming) */
-@@ -182,13 +182,14 @@ static void stm32_fmc2_nfc_setup(struct nand_chip *chip)
- 	pcr_mask |= FMC2_PCR_ECCSS;
- 	pcr |= FIELD_PREP(FMC2_PCR_ECCSS, FMC2_PCR_ECCSS_512);
- 
--	regmap_update_bits(nfc->regmap, FMC2_PCR, pcr_mask, pcr);
-+	regmap_update_bits(fmc2->regmap, FMC2_PCR, pcr_mask, pcr);
- }
- 
- static int stm32_fmc2_nfc_select_chip(struct nand_chip *chip, int chipnr)
- {
- 	struct stm32_fmc2_nfc *nfc = to_stm32_nfc(chip->controller);
- 	struct stm32_fmc2_nand *nand = to_fmc2_nand(chip);
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
- 	struct dma_slave_config dma_cfg;
- 	int ret;
- 
-@@ -227,7 +228,7 @@ static int stm32_fmc2_nfc_select_chip(struct nand_chip *chip, int chipnr)
- 		 * BCH4/BCH8: we read BCHDSRSx registers
- 		 */
- 		memset(&dma_cfg, 0, sizeof(dma_cfg));
--		dma_cfg.src_addr = nfc->io_phys_addr;
-+		dma_cfg.src_addr = fmc2->reg_phys_addr;
- 		dma_cfg.src_addr += chip->ecc.strength == FMC2_ECC_HAM ?
- 				    FMC2_HECCR : FMC2_BCHDSR0;
- 		dma_cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-@@ -248,55 +249,68 @@ static int stm32_fmc2_nfc_select_chip(struct nand_chip *chip, int chipnr)
- 
- static void stm32_fmc2_nfc_set_buswidth_16(struct stm32_fmc2_nfc *nfc, bool set)
- {
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
- 	u32 pcr;
- 
- 	pcr = set ? FIELD_PREP(FMC2_PCR_PWID, FMC2_PCR_PWID_BUSWIDTH_16) :
- 		    FIELD_PREP(FMC2_PCR_PWID, FMC2_PCR_PWID_BUSWIDTH_8);
- 
--	regmap_update_bits(nfc->regmap, FMC2_PCR, FMC2_PCR_PWID, pcr);
-+	regmap_update_bits(fmc2->regmap, FMC2_PCR, FMC2_PCR_PWID, pcr);
- }
- 
- static void stm32_fmc2_nfc_set_ecc(struct stm32_fmc2_nfc *nfc, bool enable)
- {
--	regmap_update_bits(nfc->regmap, FMC2_PCR, FMC2_PCR_ECCEN,
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
++	help
++	  Select this option to enable the STM32 FMC2 External Bus Interface
++	  controller. This driver configures the transactions with external
++	  devices (like SRAM, ethernet adapters, FPGAs, LCD displays, ...) on
++	  SOCs containing the FMC2 External Bus Interface.
 +
-+	regmap_update_bits(fmc2->regmap, FMC2_PCR, FMC2_PCR_ECCEN,
- 			   enable ? FMC2_PCR_ECCEN : 0);
- }
+ source "drivers/bus/fsl-mc/Kconfig"
  
- static void stm32_fmc2_nfc_enable_seq_irq(struct stm32_fmc2_nfc *nfc)
- {
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
+ endmenu
+diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
+index 1320bcf..e2d7992 100644
+--- a/drivers/bus/Makefile
++++ b/drivers/bus/Makefile
+@@ -25,6 +25,7 @@ obj-$(CONFIG_QCOM_EBI2)		+= qcom-ebi2.o
+ obj-$(CONFIG_SUN50I_DE2_BUS)	+= sun50i-de2.o
+ obj-$(CONFIG_SUNXI_RSB)		+= sunxi-rsb.o
+ obj-$(CONFIG_SIMPLE_PM_BUS)	+= simple-pm-bus.o
++obj-$(CONFIG_STM32_FMC2_EBI)	+= stm32-fmc2-ebi.o
+ obj-$(CONFIG_TEGRA_ACONNECT)	+= tegra-aconnect.o
+ obj-$(CONFIG_TEGRA_GMI)		+= tegra-gmi.o
+ obj-$(CONFIG_TI_PWMSS)		+= ti-pwmss.o
+diff --git a/drivers/bus/stm32-fmc2-ebi.c b/drivers/bus/stm32-fmc2-ebi.c
+new file mode 100644
+index 0000000..0ec327c
+--- /dev/null
++++ b/drivers/bus/stm32-fmc2-ebi.c
+@@ -0,0 +1,1091 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) STMicroelectronics 2020
++ */
 +
- 	nfc->irq_state = FMC2_IRQ_SEQ;
- 
--	regmap_update_bits(nfc->regmap, FMC2_CSQIER,
-+	regmap_update_bits(fmc2->regmap, FMC2_CSQIER,
- 			   FMC2_CSQIER_TCIE, FMC2_CSQIER_TCIE);
- }
- 
- static void stm32_fmc2_nfc_disable_seq_irq(struct stm32_fmc2_nfc *nfc)
- {
--	regmap_update_bits(nfc->regmap, FMC2_CSQIER, FMC2_CSQIER_TCIE, 0);
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
++#include <linux/mfd/stm32-fmc2.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
 +
-+	regmap_update_bits(fmc2->regmap, FMC2_CSQIER, FMC2_CSQIER_TCIE, 0);
- 
- 	nfc->irq_state = FMC2_IRQ_UNKNOWN;
- }
- 
- static void stm32_fmc2_nfc_clear_seq_irq(struct stm32_fmc2_nfc *nfc)
- {
--	regmap_write(nfc->regmap, FMC2_CSQICR, FMC2_CSQICR_CLEAR_IRQ);
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
++#define FMC2_MAX_EBI_CE			4
 +
-+	regmap_write(fmc2->regmap, FMC2_CSQICR, FMC2_CSQICR_CLEAR_IRQ);
- }
- 
- static void stm32_fmc2_nfc_enable_bch_irq(struct stm32_fmc2_nfc *nfc, int mode)
- {
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
++#define FMC2_BCR_CPSIZE_0		0x0
++#define FMC2_BCR_CPSIZE_128		0x1
++#define FMC2_BCR_CPSIZE_256		0x2
++#define FMC2_BCR_CPSIZE_512		0x3
++#define FMC2_BCR_CPSIZE_1024		0x4
 +
- 	nfc->irq_state = FMC2_IRQ_BCH;
- 
- 	if (mode == NAND_ECC_WRITE)
--		regmap_update_bits(nfc->regmap, FMC2_BCHIER,
-+		regmap_update_bits(fmc2->regmap, FMC2_BCHIER,
- 				   FMC2_BCHIER_EPBRIE, FMC2_BCHIER_EPBRIE);
- 	else
--		regmap_update_bits(nfc->regmap, FMC2_BCHIER,
-+		regmap_update_bits(fmc2->regmap, FMC2_BCHIER,
- 				   FMC2_BCHIER_DERIE, FMC2_BCHIER_DERIE);
- }
- 
- static void stm32_fmc2_nfc_disable_bch_irq(struct stm32_fmc2_nfc *nfc)
- {
--	regmap_update_bits(nfc->regmap, FMC2_BCHIER,
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
++#define FMC2_BCR_MWID_8			0x0
++#define FMC2_BCR_MWID_16		0x1
 +
-+	regmap_update_bits(fmc2->regmap, FMC2_BCHIER,
- 			   FMC2_BCHIER_DERIE | FMC2_BCHIER_EPBRIE, 0);
- 
- 	nfc->irq_state = FMC2_IRQ_UNKNOWN;
-@@ -304,7 +318,9 @@ static void stm32_fmc2_nfc_disable_bch_irq(struct stm32_fmc2_nfc *nfc)
- 
- static void stm32_fmc2_nfc_clear_bch_irq(struct stm32_fmc2_nfc *nfc)
- {
--	regmap_write(nfc->regmap, FMC2_BCHICR, FMC2_BCHICR_CLEAR_IRQ);
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
++#define FMC2_BCR_MTYP_SRAM		0x0
++#define FMC2_BCR_MTYP_PSRAM		0x1
++#define FMC2_BCR_MTYP_NOR		0x2
 +
-+	regmap_write(fmc2->regmap, FMC2_BCHICR, FMC2_BCHICR_CLEAR_IRQ);
- }
- 
- /*
-@@ -314,11 +330,12 @@ static void stm32_fmc2_nfc_clear_bch_irq(struct stm32_fmc2_nfc *nfc)
- static void stm32_fmc2_nfc_hwctl(struct nand_chip *chip, int mode)
- {
- 	struct stm32_fmc2_nfc *nfc = to_stm32_nfc(chip->controller);
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
- 
- 	stm32_fmc2_nfc_set_ecc(nfc, false);
- 
- 	if (chip->ecc.strength != FMC2_ECC_HAM) {
--		regmap_update_bits(nfc->regmap, FMC2_PCR, FMC2_PCR_WEN,
-+		regmap_update_bits(fmc2->regmap, FMC2_PCR, FMC2_PCR_WEN,
- 				   mode == NAND_ECC_WRITE ? FMC2_PCR_WEN : 0);
- 
- 		reinit_completion(&nfc->complete);
-@@ -345,10 +362,11 @@ static int stm32_fmc2_nfc_ham_calculate(struct nand_chip *chip, const u8 *data,
- 					u8 *ecc)
- {
- 	struct stm32_fmc2_nfc *nfc = to_stm32_nfc(chip->controller);
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
- 	u32 sr, heccr;
- 	int ret;
- 
--	ret = regmap_read_poll_timeout(nfc->regmap, FMC2_SR, sr,
-+	ret = regmap_read_poll_timeout(fmc2->regmap, FMC2_SR, sr,
- 				       sr & FMC2_SR_NWRF, 1,
- 				       1000 * FMC2_TIMEOUT_MS);
- 	if (ret) {
-@@ -356,7 +374,7 @@ static int stm32_fmc2_nfc_ham_calculate(struct nand_chip *chip, const u8 *data,
- 		return ret;
- 	}
- 
--	regmap_read(nfc->regmap, FMC2_HECCR, &heccr);
-+	regmap_read(fmc2->regmap, FMC2_HECCR, &heccr);
- 	stm32_fmc2_nfc_ham_set_ecc(heccr, ecc);
- 	stm32_fmc2_nfc_set_ecc(nfc, false);
- 
-@@ -424,6 +442,7 @@ static int stm32_fmc2_nfc_bch_calculate(struct nand_chip *chip, const u8 *data,
- 					u8 *ecc)
- {
- 	struct stm32_fmc2_nfc *nfc = to_stm32_nfc(chip->controller);
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
- 	u32 bchpbr;
- 
- 	/* Wait until the BCH code is ready */
-@@ -435,13 +454,13 @@ static int stm32_fmc2_nfc_bch_calculate(struct nand_chip *chip, const u8 *data,
- 	}
- 
- 	/* Read parity bits */
--	regmap_read(nfc->regmap, FMC2_BCHPBR1, &bchpbr);
-+	regmap_read(fmc2->regmap, FMC2_BCHPBR1, &bchpbr);
- 	ecc[0] = bchpbr;
- 	ecc[1] = bchpbr >> 8;
- 	ecc[2] = bchpbr >> 16;
- 	ecc[3] = bchpbr >> 24;
- 
--	regmap_read(nfc->regmap, FMC2_BCHPBR2, &bchpbr);
-+	regmap_read(fmc2->regmap, FMC2_BCHPBR2, &bchpbr);
- 	ecc[4] = bchpbr;
- 	ecc[5] = bchpbr >> 8;
- 	ecc[6] = bchpbr >> 16;
-@@ -449,13 +468,13 @@ static int stm32_fmc2_nfc_bch_calculate(struct nand_chip *chip, const u8 *data,
- 	if (chip->ecc.strength == FMC2_ECC_BCH8) {
- 		ecc[7] = bchpbr >> 24;
- 
--		regmap_read(nfc->regmap, FMC2_BCHPBR3, &bchpbr);
-+		regmap_read(fmc2->regmap, FMC2_BCHPBR3, &bchpbr);
- 		ecc[8] = bchpbr;
- 		ecc[9] = bchpbr >> 8;
- 		ecc[10] = bchpbr >> 16;
- 		ecc[11] = bchpbr >> 24;
- 
--		regmap_read(nfc->regmap, FMC2_BCHPBR4, &bchpbr);
-+		regmap_read(fmc2->regmap, FMC2_BCHPBR4, &bchpbr);
- 		ecc[12] = bchpbr;
- 	}
- 
-@@ -507,6 +526,7 @@ static int stm32_fmc2_nfc_bch_correct(struct nand_chip *chip, u8 *dat,
- 				      u8 *read_ecc, u8 *calc_ecc)
- {
- 	struct stm32_fmc2_nfc *nfc = to_stm32_nfc(chip->controller);
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
- 	u32 ecc_sta[5];
- 
- 	/* Wait until the decoding error is ready */
-@@ -517,7 +537,7 @@ static int stm32_fmc2_nfc_bch_correct(struct nand_chip *chip, u8 *dat,
- 		return -ETIMEDOUT;
- 	}
- 
--	regmap_bulk_read(nfc->regmap, FMC2_BCHDSR0, ecc_sta, 5);
-+	regmap_bulk_read(fmc2->regmap, FMC2_BCHDSR0, ecc_sta, 5);
- 
- 	stm32_fmc2_nfc_set_ecc(nfc, false);
- 
-@@ -591,6 +611,7 @@ static void stm32_fmc2_nfc_rw_page_init(struct nand_chip *chip, int page,
- 					int raw, bool write_data)
- {
- 	struct stm32_fmc2_nfc *nfc = to_stm32_nfc(chip->controller);
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
- 	struct mtd_info *mtd = nand_to_mtd(chip);
- 	u32 ecc_offset = mtd->writesize + FMC2_BBM_LEN;
- 	/*
-@@ -599,7 +620,7 @@ static void stm32_fmc2_nfc_rw_page_init(struct nand_chip *chip, int page,
- 	 */
- 	u32 cfg[5];
- 
--	regmap_update_bits(nfc->regmap, FMC2_PCR, FMC2_PCR_WEN,
-+	regmap_update_bits(fmc2->regmap, FMC2_PCR, FMC2_PCR_WEN,
- 			   write_data ? FMC2_PCR_WEN : 0);
- 
- 	/*
-@@ -674,7 +695,7 @@ static void stm32_fmc2_nfc_rw_page_init(struct nand_chip *chip, int page,
- 		cfg[0] |= FIELD_PREP(FMC2_CSQCFGR1_ACYNBR, 4);
- 	}
- 
--	regmap_bulk_write(nfc->regmap, FMC2_CSQCFGR1, cfg, 5);
-+	regmap_bulk_write(fmc2->regmap, FMC2_CSQCFGR1, cfg, 5);
- }
- 
- static void stm32_fmc2_nfc_dma_callback(void *arg)
-@@ -687,6 +708,7 @@ static int stm32_fmc2_nfc_xfer(struct nand_chip *chip, const u8 *buf,
- 			       int raw, bool write_data)
- {
- 	struct stm32_fmc2_nfc *nfc = to_stm32_nfc(chip->controller);
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
- 	struct dma_async_tx_descriptor *desc_data, *desc_ecc;
- 	struct scatterlist *sg;
- 	struct dma_chan *dma_ch = nfc->dma_rx_ch;
-@@ -769,7 +791,7 @@ static int stm32_fmc2_nfc_xfer(struct nand_chip *chip, const u8 *buf,
- 	stm32_fmc2_nfc_enable_seq_irq(nfc);
- 
- 	/* Start the transfer */
--	regmap_update_bits(nfc->regmap, FMC2_CSQCR,
-+	regmap_update_bits(fmc2->regmap, FMC2_CSQCR,
- 			   FMC2_CSQCR_CSQSTART, FMC2_CSQCR_CSQSTART);
- 
- 	/* Wait end of sequencer transfer */
-@@ -865,9 +887,10 @@ static int stm32_fmc2_nfc_seq_write_page_raw(struct nand_chip *chip,
- /* Get a status indicating which sectors have errors */
- static u16 stm32_fmc2_nfc_get_mapping_status(struct stm32_fmc2_nfc *nfc)
- {
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
- 	u32 csqemsr;
- 
--	regmap_read(nfc->regmap, FMC2_CSQEMSR, &csqemsr);
-+	regmap_read(fmc2->regmap, FMC2_CSQEMSR, &csqemsr);
- 
- 	return FIELD_GET(FMC2_CSQEMSR_SEM, csqemsr);
- }
-@@ -1121,11 +1144,12 @@ static int stm32_fmc2_nfc_waitrdy(struct nand_chip *chip,
- 				  unsigned long timeout_ms)
- {
- 	struct stm32_fmc2_nfc *nfc = to_stm32_nfc(chip->controller);
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
- 	const struct nand_sdr_timings *timings;
- 	u32 isr, sr;
- 
- 	/* Check if there is no pending requests to the NAND flash */
--	if (regmap_read_poll_timeout(nfc->regmap, FMC2_SR, sr,
-+	if (regmap_read_poll_timeout(fmc2->regmap, FMC2_SR, sr,
- 				     sr & FMC2_SR_NWRF, 1,
- 				     1000 * FMC2_TIMEOUT_MS))
- 		dev_warn(nfc->dev, "Waitrdy timeout\n");
-@@ -1135,10 +1159,10 @@ static int stm32_fmc2_nfc_waitrdy(struct nand_chip *chip,
- 	ndelay(PSEC_TO_NSEC(timings->tWB_max));
- 
- 	/* R/B# signal is low, clear high level flag */
--	regmap_write(nfc->regmap, FMC2_ICR, FMC2_ICR_CIHLF);
-+	regmap_write(fmc2->regmap, FMC2_ICR, FMC2_ICR_CIHLF);
- 
- 	/* Wait R/B# signal is high */
--	return regmap_read_poll_timeout(nfc->regmap, FMC2_ISR, isr,
-+	return regmap_read_poll_timeout(fmc2->regmap, FMC2_ISR, isr,
- 					isr & FMC2_ISR_IHLF, 5,
- 					1000 * FMC2_TIMEOUT_MS);
- }
-@@ -1198,9 +1222,10 @@ static int stm32_fmc2_nfc_exec_op(struct nand_chip *chip,
- 
- static void stm32_fmc2_nfc_init(struct stm32_fmc2_nfc *nfc)
- {
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
- 	u32 pcr;
- 
--	regmap_read(nfc->regmap, FMC2_PCR, &pcr);
-+	regmap_read(fmc2->regmap, FMC2_PCR, &pcr);
- 
- 	/* Set CS used to undefined */
- 	nfc->cs_sel = -1;
-@@ -1230,13 +1255,9 @@ static void stm32_fmc2_nfc_init(struct stm32_fmc2_nfc *nfc)
- 	pcr &= ~FMC2_PCR_TAR;
- 	pcr |= FIELD_PREP(FMC2_PCR_TAR, FMC2_PCR_TAR_DEFAULT);
- 
--	/* Enable FMC2 controller */
--	regmap_update_bits(nfc->regmap, FMC2_BCR1,
--			   FMC2_BCR1_FMC2EN, FMC2_BCR1_FMC2EN);
--
--	regmap_write(nfc->regmap, FMC2_PCR, pcr);
--	regmap_write(nfc->regmap, FMC2_PMEM, FMC2_PMEM_DEFAULT);
--	regmap_write(nfc->regmap, FMC2_PATT, FMC2_PATT_DEFAULT);
-+	regmap_write(fmc2->regmap, FMC2_PCR, pcr);
-+	regmap_write(fmc2->regmap, FMC2_PMEM, FMC2_PMEM_DEFAULT);
-+	regmap_write(fmc2->regmap, FMC2_PATT, FMC2_PATT_DEFAULT);
- }
- 
- static void stm32_fmc2_nfc_calc_timings(struct nand_chip *chip,
-@@ -1245,7 +1266,8 @@ static void stm32_fmc2_nfc_calc_timings(struct nand_chip *chip,
- 	struct stm32_fmc2_nfc *nfc = to_stm32_nfc(chip->controller);
- 	struct stm32_fmc2_nand *nand = to_fmc2_nand(chip);
- 	struct stm32_fmc2_timings *tims = &nand->timings;
--	unsigned long hclk = clk_get_rate(nfc->clk);
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
-+	unsigned long hclk = clk_get_rate(fmc2->clk);
- 	unsigned long hclkp = NSEC_PER_SEC / (hclk / 1000);
- 	unsigned long timing, tar, tclr, thiz, twait;
- 	unsigned long tset_mem, tset_att, thold_mem, thold_att;
-@@ -1662,17 +1684,43 @@ static int stm32_fmc2_nfc_parse_dt(struct stm32_fmc2_nfc *nfc)
- 	return ret;
- }
- 
-+static int stm32_fmc2_nfc_set_mmio_clk(struct platform_device *pdev,
-+				       struct stm32_fmc2 *fmc2)
++#define FMC2_BXTR_EXTMOD_A		0x0
++#define FMC2_BXTR_EXTMOD_B		0x1
++#define FMC2_BXTR_EXTMOD_C		0x2
++#define FMC2_BXTR_EXTMOD_D		0x3
++
++#define FMC2_BCR_NBLSET_MAX		0x3
++#define FMC2_BXTR_ADDSET_MAX		0xf
++#define FMC2_BXTR_ADDHLD_MAX		0xf
++#define FMC2_BXTR_DATAST_MAX		0xff
++#define FMC2_BXTR_BUSTURN_MAX		0xf
++#define FMC2_BXTR_DATAHLD_MAX		0x3
++#define FMC2_BTR_CLKDIV_MAX		0xf
++#define FMC2_BTR_DATLAT_MAX		0xf
++#define FMC2_PCSCNTR_CSCOUNT_MAX	0xff
++
++enum stm32_fmc2_ebi_register_type {
++	FMC2_REG_BCR = 1,
++	FMC2_REG_BTR,
++	FMC2_REG_BWTR,
++	FMC2_REG_PCSCNTR
++};
++
++enum stm32_fmc2_ebi_transaction_type {
++	FMC2_ASYNC_MODE_1_SRAM = 0,
++	FMC2_ASYNC_MODE_1_PSRAM,
++	FMC2_ASYNC_MODE_A_SRAM,
++	FMC2_ASYNC_MODE_A_PSRAM,
++	FMC2_ASYNC_MODE_2_NOR,
++	FMC2_ASYNC_MODE_B_NOR,
++	FMC2_ASYNC_MODE_C_NOR,
++	FMC2_ASYNC_MODE_D_NOR,
++	FMC2_SYNC_READ_SYNC_WRITE_PSRAM,
++	FMC2_SYNC_READ_ASYNC_WRITE_PSRAM,
++	FMC2_SYNC_READ_SYNC_WRITE_NOR,
++	FMC2_SYNC_READ_ASYNC_WRITE_NOR
++};
++
++enum stm32_fmc2_ebi_buswidth {
++	FMC2_BUSWIDTH_8 = 8,
++	FMC2_BUSWIDTH_16 = 16
++};
++
++enum stm32_fmc2_ebi_cpsize {
++	FMC2_CPSIZE_0 = 0,
++	FMC2_CPSIZE_128 = 128,
++	FMC2_CPSIZE_256 = 256,
++	FMC2_CPSIZE_512 = 512,
++	FMC2_CPSIZE_1024 = 1024
++};
++
++struct stm32_fmc2_ebi {
++	u32 bcr[FMC2_MAX_EBI_CE];
++	u32 btr[FMC2_MAX_EBI_CE];
++	u32 bwtr[FMC2_MAX_EBI_CE];
++	u32 pcscntr;
++	u8 cs_assigned;
++};
++
++/*
++ * struct stm32_fmc2_prop - STM32 FMC2 EBI property
++ * @name: the device tree binding name of the property
++ * @bprop: indicate that it is a boolean property
++ * @mprop: indicate that it is a mandatory property
++ * @reg_type: the register that have to be modified
++ * @reg_mask: the bit that have to be modified in the selected register
++ *            in case of it is a boolean property
++ * @reset_val: the default value that have to be set in case the property
++ *             has not been defined in the device tree
++ * @check: this callback ckecks that the property is compliant with the
++ *         transaction type selected
++ * @calculate: this callback is called to calculate for exemple a timing
++ *             set in ns in the device tree in clock cycles
++ * @set: this callback applies the values in the registers
++ */
++struct stm32_fmc2_prop {
++	const char *name;
++	bool bprop;
++	bool mprop;
++	int reg_type;
++	u32 reg_mask;
++	u32 reset_val;
++	int (*check)(struct stm32_fmc2 *fmc2,
++		     const struct stm32_fmc2_prop *prop, int cs);
++	u32 (*calculate)(struct stm32_fmc2 *fmc2, u32 setup);
++	int (*set)(struct stm32_fmc2 *fmc2, const struct stm32_fmc2_prop *prop,
++		   int cs, u32 setup);
++};
++
++static int stm32_fmc2_ebi_check_mux(struct stm32_fmc2 *fmc2,
++				    const struct stm32_fmc2_prop *prop,
++				    int cs)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+	void __iomem *mmio;
++	u32 bcr;
 +
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	mmio = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(mmio))
-+		return PTR_ERR(mmio);
++	regmap_read(fmc2->regmap, FMC2_BCR(cs), &bcr);
 +
-+	fmc2->regmap = devm_regmap_init_mmio(dev, mmio, &stm32_fmc2_regmap_cfg);
-+	if (IS_ERR(fmc2->regmap))
-+		return PTR_ERR(fmc2->regmap);
++	if (bcr & FMC2_BCR_MTYP)
++		return 0;
 +
-+	fmc2->reg_phys_addr = res->start;
++	return -EINVAL;
++}
 +
-+	fmc2->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(fmc2->clk))
-+		return PTR_ERR(fmc2->clk);
++static int stm32_fmc2_ebi_check_waitcfg(struct stm32_fmc2 *fmc2,
++					const struct stm32_fmc2_prop *prop,
++					int cs)
++{
++	u32 bcr, val = FIELD_PREP(FMC2_BCR_MTYP, FMC2_BCR_MTYP_NOR);
++
++	regmap_read(fmc2->regmap, FMC2_BCR(cs), &bcr);
++
++	if ((bcr & FMC2_BCR_MTYP) == val && bcr & FMC2_BCR_BURSTEN)
++		return 0;
++
++	return -EINVAL;
++}
++
++static int stm32_fmc2_ebi_check_sync_trans(struct stm32_fmc2 *fmc2,
++					   const struct stm32_fmc2_prop *prop,
++					   int cs)
++{
++	u32 bcr;
++
++	regmap_read(fmc2->regmap, FMC2_BCR(cs), &bcr);
++
++	if (bcr & FMC2_BCR_BURSTEN)
++		return 0;
++
++	return -EINVAL;
++}
++
++static int stm32_fmc2_ebi_check_async_trans(struct stm32_fmc2 *fmc2,
++					    const struct stm32_fmc2_prop *prop,
++					    int cs)
++{
++	u32 bcr;
++
++	regmap_read(fmc2->regmap, FMC2_BCR(cs), &bcr);
++
++	if (!(bcr & FMC2_BCR_BURSTEN) || !(bcr & FMC2_BCR_CBURSTRW))
++		return 0;
++
++	return -EINVAL;
++}
++
++static int stm32_fmc2_ebi_check_cpsize(struct stm32_fmc2 *fmc2,
++				       const struct stm32_fmc2_prop *prop,
++				       int cs)
++{
++	u32 bcr, val = FIELD_PREP(FMC2_BCR_MTYP, FMC2_BCR_MTYP_PSRAM);
++
++	regmap_read(fmc2->regmap, FMC2_BCR(cs), &bcr);
++
++	if ((bcr & FMC2_BCR_MTYP) == val && bcr & FMC2_BCR_BURSTEN)
++		return 0;
++
++	return -EINVAL;
++}
++
++static int stm32_fmc2_ebi_check_address_hold(struct stm32_fmc2 *fmc2,
++					     const struct stm32_fmc2_prop *prop,
++					     int cs)
++{
++	u32 bcr, bxtr, val = FIELD_PREP(FMC2_BXTR_ACCMOD, FMC2_BXTR_EXTMOD_D);
++
++	regmap_read(fmc2->regmap, FMC2_BCR(cs), &bcr);
++	if (prop->reg_type == FMC2_REG_BWTR)
++		regmap_read(fmc2->regmap, FMC2_BWTR(cs), &bxtr);
++	else
++		regmap_read(fmc2->regmap, FMC2_BTR(cs), &bxtr);
++
++	if ((!(bcr & FMC2_BCR_BURSTEN) || !(bcr & FMC2_BCR_CBURSTRW)) &&
++	    ((bxtr & FMC2_BXTR_ACCMOD) == val || bcr & FMC2_BCR_MUXEN))
++		return 0;
++
++	return -EINVAL;
++}
++
++static int stm32_fmc2_ebi_check_clk_period(struct stm32_fmc2 *fmc2,
++					   const struct stm32_fmc2_prop *prop,
++					   int cs)
++{
++	u32 bcr, bcr1;
++
++	regmap_read(fmc2->regmap, FMC2_BCR(cs), &bcr);
++	if (cs)
++		regmap_read(fmc2->regmap, FMC2_BCR(0), &bcr1);
++	else
++		bcr1 = bcr;
++
++	if (bcr & FMC2_BCR_BURSTEN && (!cs || !(bcr1 & FMC2_BCR1_CCLKEN)))
++		return 0;
++
++	return -EINVAL;
++}
++
++static int stm32_fmc2_ebi_check_cclk(struct stm32_fmc2 *fmc2,
++				     const struct stm32_fmc2_prop *prop,
++				     int cs)
++{
++	if (cs)
++		return -EINVAL;
++
++	return stm32_fmc2_ebi_check_sync_trans(fmc2, prop, cs);
++}
++
++static u32 stm32_fmc2_ebi_timing_ns_to_clock_cycles(struct stm32_fmc2 *fmc2,
++						    u32 setup)
++{
++	unsigned long hclk = clk_get_rate(fmc2->clk);
++	unsigned long hclkp = NSEC_PER_SEC / (hclk / 1000);
++
++	return DIV_ROUND_UP(setup * 1000, hclkp);
++}
++
++static int stm32_fmc2_ebi_get_reg(int reg_type, int cs, u32 *reg)
++{
++	switch (reg_type) {
++	case FMC2_REG_BCR:
++		*reg = FMC2_BCR(cs);
++		break;
++	case FMC2_REG_BTR:
++		*reg = FMC2_BTR(cs);
++		break;
++	case FMC2_REG_BWTR:
++		*reg = FMC2_BWTR(cs);
++		break;
++	case FMC2_REG_PCSCNTR:
++		*reg = FMC2_PCSCNTR;
++		break;
++	default:
++		return -EINVAL;
++	}
 +
 +	return 0;
 +}
 +
- static int stm32_fmc2_nfc_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct reset_control *rstc;
-+	struct stm32_fmc2 *fmc2;
- 	struct stm32_fmc2_nfc *nfc;
- 	struct stm32_fmc2_nand *nand;
- 	struct resource *res;
- 	struct mtd_info *mtd;
- 	struct nand_chip *chip;
--	void __iomem *mmio;
- 	int chip_cs, mem_region, ret, irq;
-+	int num_region = 0;
- 
- 	nfc = devm_kzalloc(dev, sizeof(*nfc), GFP_KERNEL);
- 	if (!nfc)
-@@ -1686,18 +1734,21 @@ static int stm32_fmc2_nfc_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	mmio = devm_ioremap_resource(dev, res);
--	if (IS_ERR(mmio))
--		return PTR_ERR(mmio);
-+	fmc2 = dev_get_drvdata(dev->parent);
-+	if (!fmc2) {
-+		num_region = 1;
- 
--	nfc->regmap = devm_regmap_init_mmio(dev, mmio, &stm32_fmc2_regmap_cfg);
--	if (IS_ERR(nfc->regmap))
--		return PTR_ERR(nfc->regmap);
-+		fmc2 = devm_kzalloc(dev, sizeof(*fmc2), GFP_KERNEL);
-+		if (!fmc2)
-+			return -ENOMEM;
- 
--	nfc->io_phys_addr = res->start;
-+		ret = stm32_fmc2_nfc_set_mmio_clk(pdev, fmc2);
-+		if (ret)
++static int stm32_fmc2_ebi_set_bit_field(struct stm32_fmc2 *fmc2,
++					const struct stm32_fmc2_prop *prop,
++					int cs, u32 setup)
++{
++	u32 reg;
++	int ret;
++
++	ret = stm32_fmc2_ebi_get_reg(prop->reg_type, cs, &reg);
++	if (ret)
++		return ret;
++
++	regmap_update_bits(fmc2->regmap, reg, prop->reg_mask,
++			   setup ? prop->reg_mask : 0);
++
++	return 0;
++}
++
++static int stm32_fmc2_ebi_set_trans_type(struct stm32_fmc2 *fmc2,
++					 const struct stm32_fmc2_prop *prop,
++					 int cs, u32 setup)
++{
++	u32 bcr_mask, bcr = FMC2_BCR_WREN;
++	u32 btr_mask, btr = 0;
++	u32 bwtr_mask, bwtr = 0;
++
++	bwtr_mask = FMC2_BXTR_ACCMOD;
++	btr_mask = FMC2_BXTR_ACCMOD;
++	bcr_mask = FMC2_BCR_MUXEN | FMC2_BCR_MTYP | FMC2_BCR_FACCEN |
++		   FMC2_BCR_WREN | FMC2_BCR_WAITEN | FMC2_BCR_BURSTEN |
++		   FMC2_BCR_EXTMOD | FMC2_BCR_CBURSTRW;
++
++	switch (setup) {
++	case FMC2_ASYNC_MODE_1_SRAM:
++		bcr |= FIELD_PREP(FMC2_BCR_MTYP, FMC2_BCR_MTYP_SRAM);
++		/*
++		 * MUXEN = 0, MTYP = 0, FACCEN = 0, BURSTEN = 0, WAITEN = 0,
++		 * WREN = 1, EXTMOD = 0, CBURSTRW = 0, ACCMOD = 0
++		 */
++		break;
++	case FMC2_ASYNC_MODE_1_PSRAM:
++		/*
++		 * MUXEN = 0, MTYP = 1, FACCEN = 0, BURSTEN = 0, WAITEN = 0,
++		 * WREN = 1, EXTMOD = 0, CBURSTRW = 0, ACCMOD = 0
++		 */
++		bcr |= FIELD_PREP(FMC2_BCR_MTYP, FMC2_BCR_MTYP_PSRAM);
++		break;
++	case FMC2_ASYNC_MODE_A_SRAM:
++		/*
++		 * MUXEN = 0, MTYP = 0, FACCEN = 0, BURSTEN = 0, WAITEN = 0,
++		 * WREN = 1, EXTMOD = 1, CBURSTRW = 0, ACCMOD = 0
++		 */
++		bcr |= FIELD_PREP(FMC2_BCR_MTYP, FMC2_BCR_MTYP_SRAM);
++		bcr |= FMC2_BCR_EXTMOD;
++		btr |= FIELD_PREP(FMC2_BXTR_ACCMOD, FMC2_BXTR_EXTMOD_A);
++		bwtr |= FIELD_PREP(FMC2_BXTR_ACCMOD, FMC2_BXTR_EXTMOD_A);
++		break;
++	case FMC2_ASYNC_MODE_A_PSRAM:
++		/*
++		 * MUXEN = 0, MTYP = 1, FACCEN = 0, BURSTEN = 0, WAITEN = 0,
++		 * WREN = 1, EXTMOD = 1, CBURSTRW = 0, ACCMOD = 0
++		 */
++		bcr |= FIELD_PREP(FMC2_BCR_MTYP, FMC2_BCR_MTYP_PSRAM);
++		bcr |= FMC2_BCR_EXTMOD;
++		btr |= FIELD_PREP(FMC2_BXTR_ACCMOD, FMC2_BXTR_EXTMOD_A);
++		bwtr |= FIELD_PREP(FMC2_BXTR_ACCMOD, FMC2_BXTR_EXTMOD_A);
++		break;
++	case FMC2_ASYNC_MODE_2_NOR:
++		/*
++		 * MUXEN = 0, MTYP = 2, FACCEN = 1, BURSTEN = 0, WAITEN = 0,
++		 * WREN = 1, EXTMOD = 0, CBURSTRW = 0, ACCMOD = 0
++		 */
++		bcr |= FIELD_PREP(FMC2_BCR_MTYP, FMC2_BCR_MTYP_NOR);
++		bcr |= FMC2_BCR_FACCEN;
++		break;
++	case FMC2_ASYNC_MODE_B_NOR:
++		/*
++		 * MUXEN = 0, MTYP = 2, FACCEN = 1, BURSTEN = 0, WAITEN = 0,
++		 * WREN = 1, EXTMOD = 1, CBURSTRW = 0, ACCMOD = 1
++		 */
++		bcr |= FIELD_PREP(FMC2_BCR_MTYP, FMC2_BCR_MTYP_NOR);
++		bcr |= FMC2_BCR_FACCEN | FMC2_BCR_EXTMOD;
++		btr |= FIELD_PREP(FMC2_BXTR_ACCMOD, FMC2_BXTR_EXTMOD_B);
++		bwtr |= FIELD_PREP(FMC2_BXTR_ACCMOD, FMC2_BXTR_EXTMOD_B);
++		break;
++	case FMC2_ASYNC_MODE_C_NOR:
++		/*
++		 * MUXEN = 0, MTYP = 2, FACCEN = 1, BURSTEN = 0, WAITEN = 0,
++		 * WREN = 1, EXTMOD = 1, CBURSTRW = 0, ACCMOD = 2
++		 */
++		bcr |= FIELD_PREP(FMC2_BCR_MTYP, FMC2_BCR_MTYP_NOR);
++		bcr |= FMC2_BCR_FACCEN | FMC2_BCR_EXTMOD;
++		btr |= FIELD_PREP(FMC2_BXTR_ACCMOD, FMC2_BXTR_EXTMOD_C);
++		bwtr |= FIELD_PREP(FMC2_BXTR_ACCMOD, FMC2_BXTR_EXTMOD_C);
++		break;
++	case FMC2_ASYNC_MODE_D_NOR:
++		/*
++		 * MUXEN = 0, MTYP = 2, FACCEN = 1, BURSTEN = 0, WAITEN = 0,
++		 * WREN = 1, EXTMOD = 1, CBURSTRW = 0, ACCMOD = 3
++		 */
++		bcr |= FIELD_PREP(FMC2_BCR_MTYP, FMC2_BCR_MTYP_NOR);
++		bcr |= FMC2_BCR_FACCEN | FMC2_BCR_EXTMOD;
++		btr |= FIELD_PREP(FMC2_BXTR_ACCMOD, FMC2_BXTR_EXTMOD_D);
++		bwtr |= FIELD_PREP(FMC2_BXTR_ACCMOD, FMC2_BXTR_EXTMOD_D);
++		break;
++	case FMC2_SYNC_READ_SYNC_WRITE_PSRAM:
++		/*
++		 * MUXEN = 0, MTYP = 1, FACCEN = 0, BURSTEN = 1, WAITEN = 0,
++		 * WREN = 1, EXTMOD = 0, CBURSTRW = 1, ACCMOD = 0
++		 */
++		bcr |= FIELD_PREP(FMC2_BCR_MTYP, FMC2_BCR_MTYP_PSRAM);
++		bcr |= FMC2_BCR_BURSTEN | FMC2_BCR_CBURSTRW;
++		break;
++	case FMC2_SYNC_READ_ASYNC_WRITE_PSRAM:
++		/*
++		 * MUXEN = 0, MTYP = 1, FACCEN = 0, BURSTEN = 1, WAITEN = 0,
++		 * WREN = 1, EXTMOD = 0, CBURSTRW = 0, ACCMOD = 0
++		 */
++		bcr |= FIELD_PREP(FMC2_BCR_MTYP, FMC2_BCR_MTYP_PSRAM);
++		bcr |= FMC2_BCR_BURSTEN;
++		break;
++	case FMC2_SYNC_READ_SYNC_WRITE_NOR:
++		/*
++		 * MUXEN = 0, MTYP = 2, FACCEN = 1, BURSTEN = 1, WAITEN = 0,
++		 * WREN = 1, EXTMOD = 0, CBURSTRW = 1, ACCMOD = 0
++		 */
++		bcr |= FIELD_PREP(FMC2_BCR_MTYP, FMC2_BCR_MTYP_NOR);
++		bcr |= FMC2_BCR_FACCEN | FMC2_BCR_BURSTEN | FMC2_BCR_CBURSTRW;
++		break;
++	case FMC2_SYNC_READ_ASYNC_WRITE_NOR:
++		/*
++		 * MUXEN = 0, MTYP = 2, FACCEN = 1, BURSTEN = 1, WAITEN = 0,
++		 * WREN = 1, EXTMOD = 0, CBURSTRW = 0, ACCMOD = 0
++		 */
++		bcr |= FIELD_PREP(FMC2_BCR_MTYP, FMC2_BCR_MTYP_NOR);
++		bcr |= FMC2_BCR_FACCEN | FMC2_BCR_BURSTEN;
++		break;
++	default:
++		/* Type of transaction not supported */
++		return -EINVAL;
++	}
++
++	if (bcr & FMC2_BCR_EXTMOD)
++		regmap_update_bits(fmc2->regmap, FMC2_BWTR(cs),
++				   bwtr_mask, bwtr);
++	regmap_update_bits(fmc2->regmap, FMC2_BTR(cs), btr_mask, btr);
++	regmap_update_bits(fmc2->regmap, FMC2_BCR(cs), bcr_mask, bcr);
++
++	return 0;
++}
++
++static int stm32_fmc2_ebi_set_buswidth(struct stm32_fmc2 *fmc2,
++				       const struct stm32_fmc2_prop *prop,
++				       int cs, u32 setup)
++{
++	u32 val;
++
++	switch (setup) {
++	case FMC2_BUSWIDTH_8:
++		val = FIELD_PREP(FMC2_BCR_MWID, FMC2_BCR_MWID_8);
++		break;
++	case FMC2_BUSWIDTH_16:
++		val = FIELD_PREP(FMC2_BCR_MWID, FMC2_BCR_MWID_16);
++		break;
++	default:
++		/* Buswidth not supported */
++		return -EINVAL;
++	}
++
++	regmap_update_bits(fmc2->regmap, FMC2_BCR(cs), FMC2_BCR_MWID, val);
++
++	return 0;
++}
++
++static int stm32_fmc2_ebi_set_cpsize(struct stm32_fmc2 *fmc2,
++				     const struct stm32_fmc2_prop *prop,
++				     int cs, u32 setup)
++{
++	u32 val;
++
++	switch (setup) {
++	case FMC2_CPSIZE_0:
++		val = FIELD_PREP(FMC2_BCR_CPSIZE, FMC2_BCR_CPSIZE_0);
++		break;
++	case FMC2_CPSIZE_128:
++		val = FIELD_PREP(FMC2_BCR_CPSIZE, FMC2_BCR_CPSIZE_128);
++		break;
++	case FMC2_CPSIZE_256:
++		val = FIELD_PREP(FMC2_BCR_CPSIZE, FMC2_BCR_CPSIZE_256);
++		break;
++	case FMC2_CPSIZE_512:
++		val = FIELD_PREP(FMC2_BCR_CPSIZE, FMC2_BCR_CPSIZE_512);
++		break;
++	case FMC2_CPSIZE_1024:
++		val = FIELD_PREP(FMC2_BCR_CPSIZE, FMC2_BCR_CPSIZE_1024);
++		break;
++	default:
++		/* Cpsize not supported */
++		return -EINVAL;
++	}
++
++	regmap_update_bits(fmc2->regmap, FMC2_BCR(cs), FMC2_BCR_CPSIZE, val);
++
++	return 0;
++}
++
++static int stm32_fmc2_ebi_set_bl_setup(struct stm32_fmc2 *fmc2,
++				       const struct stm32_fmc2_prop *prop,
++				       int cs, u32 setup)
++{
++	u32 val;
++
++	val = min_t(u32, setup, FMC2_BCR_NBLSET_MAX);
++	val = FIELD_PREP(FMC2_BCR_NBLSET, val);
++	regmap_update_bits(fmc2->regmap, FMC2_BCR(cs), FMC2_BCR_NBLSET, val);
++
++	return 0;
++}
++
++static int stm32_fmc2_ebi_set_address_setup(struct stm32_fmc2 *fmc2,
++					    const struct stm32_fmc2_prop *prop,
++					    int cs, u32 setup)
++{
++	u32 bcr, bxtr, reg;
++	u32 val = FIELD_PREP(FMC2_BXTR_ACCMOD, FMC2_BXTR_EXTMOD_D);
++	int ret;
++
++	ret = stm32_fmc2_ebi_get_reg(prop->reg_type, cs, &reg);
++	if (ret)
++		return ret;
++
++	regmap_read(fmc2->regmap, FMC2_BCR(cs), &bcr);
++	if (prop->reg_type == FMC2_REG_BWTR)
++		regmap_read(fmc2->regmap, FMC2_BWTR(cs), &bxtr);
++	else
++		regmap_read(fmc2->regmap, FMC2_BTR(cs), &bxtr);
++
++	if ((bxtr & FMC2_BXTR_ACCMOD) == val || bcr & FMC2_BCR_MUXEN)
++		val = clamp_val(setup, 1, FMC2_BXTR_ADDSET_MAX);
++	else
++		val = min_t(u32, setup, FMC2_BXTR_ADDSET_MAX);
++	val = FIELD_PREP(FMC2_BXTR_ADDSET, val);
++	regmap_update_bits(fmc2->regmap, reg, FMC2_BXTR_ADDSET, val);
++
++	return 0;
++}
++
++static int stm32_fmc2_ebi_set_address_hold(struct stm32_fmc2 *fmc2,
++					   const struct stm32_fmc2_prop *prop,
++					   int cs, u32 setup)
++{
++	u32 val, reg;
++	int ret;
++
++	ret = stm32_fmc2_ebi_get_reg(prop->reg_type, cs, &reg);
++	if (ret)
++		return ret;
++
++	val = clamp_val(setup, 1, FMC2_BXTR_ADDHLD_MAX);
++	val = FIELD_PREP(FMC2_BXTR_ADDHLD, val);
++	regmap_update_bits(fmc2->regmap, reg, FMC2_BXTR_ADDHLD, val);
++
++	return 0;
++}
++
++static int stm32_fmc2_ebi_set_data_setup(struct stm32_fmc2 *fmc2,
++					 const struct stm32_fmc2_prop *prop,
++					 int cs, u32 setup)
++{
++	u32 val, reg;
++	int ret;
++
++	ret = stm32_fmc2_ebi_get_reg(prop->reg_type, cs, &reg);
++	if (ret)
++		return ret;
++
++	val = clamp_val(setup, 1, FMC2_BXTR_DATAST_MAX);
++	val = FIELD_PREP(FMC2_BXTR_DATAST, val);
++	regmap_update_bits(fmc2->regmap, reg, FMC2_BXTR_DATAST, val);
++
++	return 0;
++}
++
++static int stm32_fmc2_ebi_set_bus_turnaround(struct stm32_fmc2 *fmc2,
++					     const struct stm32_fmc2_prop *prop,
++					     int cs, u32 setup)
++{
++	u32 val, reg;
++	int ret;
++
++	ret = stm32_fmc2_ebi_get_reg(prop->reg_type, cs, &reg);
++	if (ret)
++		return ret;
++
++	val = setup ? min_t(u32, setup - 1, FMC2_BXTR_BUSTURN_MAX) : 0;
++	val = FIELD_PREP(FMC2_BXTR_BUSTURN, val);
++	regmap_update_bits(fmc2->regmap, reg, FMC2_BXTR_BUSTURN, val);
++
++	return 0;
++}
++
++static int stm32_fmc2_ebi_set_data_hold(struct stm32_fmc2 *fmc2,
++					const struct stm32_fmc2_prop *prop,
++					int cs, u32 setup)
++{
++	u32 val, reg;
++	int ret;
++
++	ret = stm32_fmc2_ebi_get_reg(prop->reg_type, cs, &reg);
++	if (ret)
++		return ret;
++
++	if (prop->reg_type == FMC2_REG_BWTR)
++		val = setup ? min_t(u32, setup - 1, FMC2_BXTR_DATAHLD_MAX) : 0;
++	else
++		val = min_t(u32, setup, FMC2_BXTR_DATAHLD_MAX);
++	val = FIELD_PREP(FMC2_BXTR_DATAHLD, val);
++	regmap_update_bits(fmc2->regmap, reg, FMC2_BXTR_DATAHLD, val);
++
++	return 0;
++}
++
++static int stm32_fmc2_ebi_set_clk_period(struct stm32_fmc2 *fmc2,
++					 const struct stm32_fmc2_prop *prop,
++					 int cs, u32 setup)
++{
++	u32 val;
++
++	val = setup ? clamp_val(setup - 1, 1, FMC2_BTR_CLKDIV_MAX) : 1;
++	val = FIELD_PREP(FMC2_BTR_CLKDIV, val);
++	regmap_update_bits(fmc2->regmap, FMC2_BTR(cs), FMC2_BTR_CLKDIV, val);
++
++	return 0;
++}
++
++static int stm32_fmc2_ebi_set_data_latency(struct stm32_fmc2 *fmc2,
++					   const struct stm32_fmc2_prop *prop,
++					   int cs, u32 setup)
++{
++	u32 val;
++
++	val = min_t(u32, setup, FMC2_BTR_DATLAT_MAX);
++	val = FIELD_PREP(FMC2_BTR_DATLAT, val);
++	regmap_update_bits(fmc2->regmap, FMC2_BTR(cs), FMC2_BTR_DATLAT, val);
++
++	return 0;
++}
++
++static int stm32_fmc2_ebi_set_max_low_pulse(struct stm32_fmc2 *fmc2,
++					    const struct stm32_fmc2_prop *prop,
++					    int cs, u32 setup)
++{
++	u32 old_val, new_val, pcscntr;
++
++	if (setup < 1)
++		return 0;
++
++	regmap_read(fmc2->regmap, FMC2_PCSCNTR, &pcscntr);
++
++	/* Enable counter for the bank */
++	regmap_update_bits(fmc2->regmap, FMC2_PCSCNTR,
++			   FMC2_PCSCNTR_CNTBEN(cs),
++			   FMC2_PCSCNTR_CNTBEN(cs));
++
++	new_val = min_t(u32, setup - 1, FMC2_PCSCNTR_CSCOUNT_MAX);
++	old_val = FIELD_GET(FMC2_PCSCNTR_CSCOUNT, pcscntr);
++	if (old_val && new_val > old_val)
++		/* Keep current counter value */
++		return 0;
++
++	new_val = FIELD_PREP(FMC2_PCSCNTR_CSCOUNT, new_val);
++	regmap_update_bits(fmc2->regmap, FMC2_PCSCNTR,
++			   FMC2_PCSCNTR_CSCOUNT, new_val);
++
++	return 0;
++}
++
++static const struct stm32_fmc2_prop stm32_fmc2_child_props[] = {
++	/* st,fmc2_ebi_cs_trans_type must be the first property */
++	{
++		.name = "st,fmc2_ebi_cs_transaction_type",
++		.mprop = true,
++		.set = stm32_fmc2_ebi_set_trans_type,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_cclk_enable",
++		.bprop = true,
++		.reg_type = FMC2_REG_BCR,
++		.reg_mask = FMC2_BCR1_CCLKEN,
++		.check = stm32_fmc2_ebi_check_cclk,
++		.set = stm32_fmc2_ebi_set_bit_field,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_mux_enable",
++		.bprop = true,
++		.reg_type = FMC2_REG_BCR,
++		.reg_mask = FMC2_BCR_MUXEN,
++		.check = stm32_fmc2_ebi_check_mux,
++		.set = stm32_fmc2_ebi_set_bit_field,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_buswidth",
++		.reset_val = FMC2_BUSWIDTH_16,
++		.set = stm32_fmc2_ebi_set_buswidth,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_waitpol_high",
++		.bprop = true,
++		.reg_type = FMC2_REG_BCR,
++		.reg_mask = FMC2_BCR_WAITPOL,
++		.set = stm32_fmc2_ebi_set_bit_field,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_waitcfg_enable",
++		.bprop = true,
++		.reg_type = FMC2_REG_BCR,
++		.reg_mask = FMC2_BCR_WAITCFG,
++		.check = stm32_fmc2_ebi_check_waitcfg,
++		.set = stm32_fmc2_ebi_set_bit_field,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_wait_enable",
++		.bprop = true,
++		.reg_type = FMC2_REG_BCR,
++		.reg_mask = FMC2_BCR_WAITEN,
++		.check = stm32_fmc2_ebi_check_sync_trans,
++		.set = stm32_fmc2_ebi_set_bit_field,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_asyncwait_enable",
++		.bprop = true,
++		.reg_type = FMC2_REG_BCR,
++		.reg_mask = FMC2_BCR_ASYNCWAIT,
++		.check = stm32_fmc2_ebi_check_async_trans,
++		.set = stm32_fmc2_ebi_set_bit_field,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_cpsize",
++		.check = stm32_fmc2_ebi_check_cpsize,
++		.set = stm32_fmc2_ebi_set_cpsize,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_byte_lane_setup",
++		.calculate = stm32_fmc2_ebi_timing_ns_to_clock_cycles,
++		.set = stm32_fmc2_ebi_set_bl_setup,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_address_setup",
++		.reg_type = FMC2_REG_BTR,
++		.reset_val = FMC2_BXTR_ADDSET_MAX,
++		.check = stm32_fmc2_ebi_check_async_trans,
++		.calculate = stm32_fmc2_ebi_timing_ns_to_clock_cycles,
++		.set = stm32_fmc2_ebi_set_address_setup,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_address_hold",
++		.reg_type = FMC2_REG_BTR,
++		.reset_val = FMC2_BXTR_ADDHLD_MAX,
++		.check = stm32_fmc2_ebi_check_address_hold,
++		.calculate = stm32_fmc2_ebi_timing_ns_to_clock_cycles,
++		.set = stm32_fmc2_ebi_set_address_hold,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_data_setup",
++		.reg_type = FMC2_REG_BTR,
++		.reset_val = FMC2_BXTR_DATAST_MAX,
++		.check = stm32_fmc2_ebi_check_async_trans,
++		.calculate = stm32_fmc2_ebi_timing_ns_to_clock_cycles,
++		.set = stm32_fmc2_ebi_set_data_setup,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_bus_turnaround",
++		.reg_type = FMC2_REG_BTR,
++		.reset_val = FMC2_BXTR_BUSTURN_MAX + 1,
++		.calculate = stm32_fmc2_ebi_timing_ns_to_clock_cycles,
++		.set = stm32_fmc2_ebi_set_bus_turnaround,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_data_hold",
++		.reg_type = FMC2_REG_BTR,
++		.check = stm32_fmc2_ebi_check_async_trans,
++		.calculate = stm32_fmc2_ebi_timing_ns_to_clock_cycles,
++		.set = stm32_fmc2_ebi_set_data_hold,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_clk_period",
++		.reset_val = FMC2_BTR_CLKDIV_MAX + 1,
++		.check = stm32_fmc2_ebi_check_clk_period,
++		.calculate = stm32_fmc2_ebi_timing_ns_to_clock_cycles,
++		.set = stm32_fmc2_ebi_set_clk_period,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_data_latency",
++		.check = stm32_fmc2_ebi_check_sync_trans,
++		.set = stm32_fmc2_ebi_set_data_latency,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_write_address_setup",
++		.reg_type = FMC2_REG_BWTR,
++		.reset_val = FMC2_BXTR_ADDSET_MAX,
++		.check = stm32_fmc2_ebi_check_async_trans,
++		.calculate = stm32_fmc2_ebi_timing_ns_to_clock_cycles,
++		.set = stm32_fmc2_ebi_set_address_setup,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_write_address_hold",
++		.reg_type = FMC2_REG_BWTR,
++		.reset_val = FMC2_BXTR_ADDHLD_MAX,
++		.check = stm32_fmc2_ebi_check_address_hold,
++		.calculate = stm32_fmc2_ebi_timing_ns_to_clock_cycles,
++		.set = stm32_fmc2_ebi_set_address_hold,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_write_data_setup",
++		.reg_type = FMC2_REG_BWTR,
++		.reset_val = FMC2_BXTR_DATAST_MAX,
++		.check = stm32_fmc2_ebi_check_async_trans,
++		.calculate = stm32_fmc2_ebi_timing_ns_to_clock_cycles,
++		.set = stm32_fmc2_ebi_set_data_setup,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_write_bus_turnaround",
++		.reg_type = FMC2_REG_BWTR,
++		.reset_val = FMC2_BXTR_BUSTURN_MAX + 1,
++		.calculate = stm32_fmc2_ebi_timing_ns_to_clock_cycles,
++		.set = stm32_fmc2_ebi_set_bus_turnaround,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_write_data_hold",
++		.reg_type = FMC2_REG_BWTR,
++		.check = stm32_fmc2_ebi_check_async_trans,
++		.calculate = stm32_fmc2_ebi_timing_ns_to_clock_cycles,
++		.set = stm32_fmc2_ebi_set_data_hold,
++	},
++	{
++		.name = "st,fmc2_ebi_cs_max_low_pulse",
++		.calculate = stm32_fmc2_ebi_timing_ns_to_clock_cycles,
++		.set = stm32_fmc2_ebi_set_max_low_pulse,
++	},
++};
++
++static void stm32_fmc2_ebi_set_bank(struct stm32_fmc2 *fmc2,
++				    int cs, bool enable)
++{
++	regmap_update_bits(fmc2->regmap, FMC2_BCR(cs), FMC2_BCR_MBKEN,
++			   enable ? FMC2_BCR_MBKEN : 0);
++}
++
++static int stm32_fmc2_ebi_parse_prop(struct device *dev,
++				     struct device_node *dev_node,
++				     const struct stm32_fmc2_prop *prop,
++				     int cs)
++{
++	struct stm32_fmc2 *fmc2 = dev_get_drvdata(dev->parent);
++	u32 setup = 0;
++
++	if (!prop->set) {
++		dev_err(dev, "property %s is not well defined\n", prop->name);
++		return -EINVAL;
++	}
++
++	if (prop->check && prop->check(fmc2, prop, cs))
++		/* Skeep this property */
++		return 0;
++
++	if (prop->bprop) {
++		const __be32 *bprop = of_get_property(dev_node,
++						      prop->name, NULL);
++
++		if (prop->mprop && !bprop) {
++			dev_err(dev, "mandatory property %s not defined in the device tree\n",
++				prop->name);
++			return -EINVAL;
++		}
++
++		if (bprop)
++			setup = 1;
++	} else {
++		u32 val;
++		int ret;
++
++		ret = of_property_read_u32(dev_node, prop->name, &val);
++		if (prop->mprop && ret) {
++			dev_err(dev, "mandatory property %s not defined in the device tree\n",
++				prop->name);
 +			return ret;
++		}
++
++		if (ret)
++			setup = prop->reset_val;
++		else if (prop->calculate)
++			setup = prop->calculate(fmc2, val);
++		else
++			setup = val;
 +	}
-+	nfc->fmc2 = fmc2;
- 
--	for (chip_cs = 0, mem_region = 1; chip_cs < FMC2_MAX_CE;
-+	for (chip_cs = 0, mem_region = num_region; chip_cs < FMC2_MAX_CE;
- 	     chip_cs++, mem_region += 3) {
- 		if (!(nfc->cs_assigned & BIT(chip_cs)))
- 			continue;
-@@ -1735,11 +1786,7 @@ static int stm32_fmc2_nfc_probe(struct platform_device *pdev)
- 
- 	init_completion(&nfc->complete);
- 
--	nfc->clk = devm_clk_get(dev, NULL);
--	if (IS_ERR(nfc->clk))
--		return PTR_ERR(nfc->clk);
--
--	ret = clk_prepare_enable(nfc->clk);
++
++	return prop->set(fmc2, prop, cs, setup);
++}
++
++static int stm32_fmc2_ebi_setup_cs(struct device *dev,
++				   struct device_node *dev_node,
++				   u32 cs)
++{
++	struct stm32_fmc2 *fmc2 = dev_get_drvdata(dev->parent);
++	unsigned int i;
++	int ret;
++
++	/* Disable the bank */
++	stm32_fmc2_ebi_set_bank(fmc2, cs, false);
++
++	for (i = 0; i < ARRAY_SIZE(stm32_fmc2_child_props); i++) {
++		const struct stm32_fmc2_prop *p = &stm32_fmc2_child_props[i];
++
++		ret = stm32_fmc2_ebi_parse_prop(dev, dev_node, p, cs);
++		if (ret) {
++			dev_err(dev, "property %s could not be set: %d\n",
++				p->name, ret);
++			return ret;
++		}
++	}
++
++	/* Enable the bank */
++	stm32_fmc2_ebi_set_bank(fmc2, cs, true);
++
++	return 0;
++}
++
++static int stm32_fmc2_ebi_parse_dt(struct device *dev,
++				   struct stm32_fmc2_ebi *ebi)
++{
++	struct device_node *child;
++	bool child_found = false;
++	u32 cs;
++	int ret;
++
++	for_each_available_child_of_node(dev->of_node, child) {
++		ret = of_property_read_u32(child, "reg", &cs);
++		if (ret) {
++			dev_err(dev, "could not retrieve reg property: %d\n",
++				ret);
++			return ret;
++		}
++
++		if (cs > FMC2_MAX_EBI_CE) {
++			dev_err(dev, "invalid reg value: %d\n", cs);
++			return -EINVAL;
++		}
++
++		if (ebi->cs_assigned & BIT(cs)) {
++			dev_err(dev, "cs already assigned: %d\n", cs);
++			return -EINVAL;
++		}
++
++		ret = stm32_fmc2_ebi_setup_cs(dev, child, cs);
++		if (ret) {
++			dev_err(dev, "setup chip select %d failed: %d\n",
++				cs, ret);
++			return ret;
++		}
++
++		ebi->cs_assigned |= BIT(cs);
++		child_found = true;
++	}
++
++	if (!child_found) {
++		dev_warn(dev, "no subnodes found, disable the driver.\n");
++		return -ENODEV;
++	}
++
++	return of_platform_default_populate(dev->of_node, NULL, dev);
++}
++
++static void stm32_fmc2_ebi_save_setup(struct stm32_fmc2 *fmc2,
++				      struct stm32_fmc2_ebi *ebi)
++{
++	unsigned int cs;
++
++	for (cs = 0; cs < FMC2_MAX_EBI_CE; cs++) {
++		regmap_read(fmc2->regmap, FMC2_BCR(cs), &ebi->bcr[cs]);
++		regmap_read(fmc2->regmap, FMC2_BTR(cs), &ebi->btr[cs]);
++		regmap_read(fmc2->regmap, FMC2_BWTR(cs), &ebi->bwtr[cs]);
++	}
++
++	regmap_read(fmc2->regmap, FMC2_PCSCNTR, &ebi->pcscntr);
++}
++
++static void stm32_fmc2_ebi_set_setup(struct stm32_fmc2 *fmc2,
++				     struct stm32_fmc2_ebi *ebi)
++{
++	unsigned int cs;
++
++	for (cs = 0; cs < FMC2_MAX_EBI_CE; cs++) {
++		regmap_write(fmc2->regmap, FMC2_BCR(cs), ebi->bcr[cs]);
++		regmap_write(fmc2->regmap, FMC2_BTR(cs), ebi->btr[cs]);
++		regmap_write(fmc2->regmap, FMC2_BWTR(cs), ebi->bwtr[cs]);
++	}
++
++	regmap_write(fmc2->regmap, FMC2_PCSCNTR, ebi->pcscntr);
++}
++
++static bool stm32_fmc2_ebi_check_nwait_is_used(struct stm32_fmc2 *fmc2,
++					       struct stm32_fmc2_ebi *ebi)
++{
++	unsigned int cs;
++	u32 bcr;
++
++	for (cs = 0; cs < FMC2_MAX_EBI_CE; cs++) {
++		if (!(ebi->cs_assigned & BIT(cs)))
++			continue;
++
++		regmap_read(fmc2->regmap, FMC2_BCR(cs), &bcr);
++		if (bcr & FMC2_BCR_WAITEN || bcr & FMC2_BCR_ASYNCWAIT)
++			return true;
++	}
++
++	return false;
++}
++
++static void stm32_fmc2_ebi_disable_banks(struct stm32_fmc2 *fmc2,
++					 struct stm32_fmc2_ebi *ebi)
++{
++	unsigned int cs;
++
++	for (cs = 0; cs < FMC2_MAX_EBI_CE; cs++) {
++		if (!(ebi->cs_assigned & BIT(cs)))
++			continue;
++
++		stm32_fmc2_ebi_set_bank(fmc2, cs, false);
++	}
++}
++
++static int stm32_fmc2_ebi_probe(struct platform_device *pdev)
++{
++	struct stm32_fmc2 *fmc2 = dev_get_drvdata(pdev->dev.parent);
++	struct stm32_fmc2_ebi *ebi;
++	int ret;
++
++	ebi = devm_kzalloc(&pdev->dev, sizeof(*ebi), GFP_KERNEL);
++	if (!ebi)
++		return -ENOMEM;
++
 +	ret = clk_prepare_enable(fmc2->clk);
- 	if (ret) {
- 		dev_err(dev, "can not enable the clock\n");
- 		return ret;
-@@ -1759,6 +1806,12 @@ static int stm32_fmc2_nfc_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_dma_setup;
- 
-+	if (!stm32_fmc2_get_nwait(fmc2)) {
++	if (ret)
++		return ret;
++
++	ret = stm32_fmc2_ebi_parse_dt(&pdev->dev, ebi);
++	if (ret)
++		goto out;
++
++	if (stm32_fmc2_ebi_check_nwait_is_used(fmc2, ebi) &&
++	    !stm32_fmc2_get_nwait(fmc2)) {
 +		ret = -EINVAL;
-+		goto err_dma_setup;
++		goto out;
 +	}
 +
++	stm32_fmc2_ebi_save_setup(fmc2, ebi);
 +	stm32_fmc2_enable(fmc2);
- 	stm32_fmc2_nfc_init(nfc);
- 
- 	nand = &nfc->nand;
-@@ -1778,7 +1831,7 @@ static int stm32_fmc2_nfc_probe(struct platform_device *pdev)
- 	/* Scan to find existence of the device */
- 	ret = nand_scan(chip, nand->ncs);
- 	if (ret)
--		goto err_dma_setup;
-+		goto err_nand_scan;
- 
- 	ret = mtd_device_register(mtd, NULL, 0);
- 	if (ret)
-@@ -1791,6 +1844,11 @@ static int stm32_fmc2_nfc_probe(struct platform_device *pdev)
- err_device_register:
- 	nand_cleanup(chip);
- 
-+err_nand_scan:
-+	regmap_update_bits(fmc2->regmap, FMC2_PCR, FMC2_PCR_PBKEN, 0);
-+	stm32_fmc2_put_nwait(fmc2);
-+	stm32_fmc2_disable(fmc2);
++	platform_set_drvdata(pdev, ebi);
 +
- err_dma_setup:
- 	if (nfc->dma_ecc_ch)
- 		dma_release_channel(nfc->dma_ecc_ch);
-@@ -1803,7 +1861,7 @@ static int stm32_fmc2_nfc_probe(struct platform_device *pdev)
- 	sg_free_table(&nfc->dma_ecc_sg);
- 
- err_clk_disable:
--	clk_disable_unprepare(nfc->clk);
++	return 0;
++
++out:
++	stm32_fmc2_ebi_disable_banks(fmc2, ebi);
 +	clk_disable_unprepare(fmc2->clk);
- 
- 	return ret;
- }
-@@ -1812,7 +1870,11 @@ static int stm32_fmc2_nfc_remove(struct platform_device *pdev)
- {
- 	struct stm32_fmc2_nfc *nfc = platform_get_drvdata(pdev);
- 	struct stm32_fmc2_nand *nand = &nfc->nand;
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
- 
-+	regmap_update_bits(fmc2->regmap, FMC2_PCR, FMC2_PCR_PBKEN, 0);
-+	stm32_fmc2_put_nwait(fmc2);
-+	stm32_fmc2_disable(fmc2);
- 	nand_release(&nand->chip);
- 
- 	if (nfc->dma_ecc_ch)
-@@ -1825,7 +1887,7 @@ static int stm32_fmc2_nfc_remove(struct platform_device *pdev)
- 	sg_free_table(&nfc->dma_data_sg);
- 	sg_free_table(&nfc->dma_ecc_sg);
- 
--	clk_disable_unprepare(nfc->clk);
-+	clk_disable_unprepare(fmc2->clk);
- 
- 	return 0;
- }
-@@ -1833,8 +1895,10 @@ static int stm32_fmc2_nfc_remove(struct platform_device *pdev)
- static int __maybe_unused stm32_fmc2_nfc_suspend(struct device *dev)
- {
- 	struct stm32_fmc2_nfc *nfc = dev_get_drvdata(dev);
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
- 
--	clk_disable_unprepare(nfc->clk);
++
++	return ret;
++}
++
++static int stm32_fmc2_ebi_remove(struct platform_device *pdev)
++{
++	struct stm32_fmc2 *fmc2 = dev_get_drvdata(pdev->dev.parent);
++	struct stm32_fmc2_ebi *ebi = platform_get_drvdata(pdev);
++
++	if (stm32_fmc2_ebi_check_nwait_is_used(fmc2, ebi))
++		stm32_fmc2_put_nwait(fmc2);
++	stm32_fmc2_ebi_disable_banks(fmc2, ebi);
 +	stm32_fmc2_disable(fmc2);
 +	clk_disable_unprepare(fmc2->clk);
- 
- 	pinctrl_pm_select_sleep_state(dev);
- 
-@@ -1845,16 +1909,18 @@ static int __maybe_unused stm32_fmc2_nfc_resume(struct device *dev)
- {
- 	struct stm32_fmc2_nfc *nfc = dev_get_drvdata(dev);
- 	struct stm32_fmc2_nand *nand = &nfc->nand;
-+	struct stm32_fmc2 *fmc2 = nfc->fmc2;
- 	int chip_cs, ret;
- 
- 	pinctrl_pm_select_default_state(dev);
- 
--	ret = clk_prepare_enable(nfc->clk);
++
++	return 0;
++}
++
++static int __maybe_unused stm32_fmc2_ebi_suspend(struct device *dev)
++{
++	struct stm32_fmc2 *fmc2 = dev_get_drvdata(dev->parent);
++
++	stm32_fmc2_disable(fmc2);
++	clk_disable_unprepare(fmc2->clk);
++
++	return 0;
++}
++
++static int __maybe_unused stm32_fmc2_ebi_resume(struct device *dev)
++{
++	struct stm32_fmc2 *fmc2 = dev_get_drvdata(dev->parent);
++	struct stm32_fmc2_ebi *ebi = dev_get_drvdata(dev);
++	int ret;
++
 +	ret = clk_prepare_enable(fmc2->clk);
- 	if (ret) {
- 		dev_err(dev, "can not enable the clock\n");
- 		return ret;
- 	}
- 
++	if (ret)
++		return ret;
++
++	stm32_fmc2_ebi_set_setup(fmc2, ebi);
 +	stm32_fmc2_enable(fmc2);
- 	stm32_fmc2_nfc_init(nfc);
- 
- 	for (chip_cs = 0; chip_cs < FMC2_MAX_CE; chip_cs++) {
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(stm32_fmc2_ebi_pm_ops, stm32_fmc2_ebi_suspend,
++			 stm32_fmc2_ebi_resume);
++
++static const struct of_device_id stm32_fmc2_ebi_match[] = {
++	{.compatible = "st,stm32mp1-fmc2-ebi"},
++	{}
++};
++MODULE_DEVICE_TABLE(of, stm32_fmc2_ebi_match);
++
++static struct platform_driver stm32_fmc2_ebi_driver = {
++	.probe	= stm32_fmc2_ebi_probe,
++	.remove	= stm32_fmc2_ebi_remove,
++	.driver	= {
++		.name = "stm32_fmc2_ebi",
++		.of_match_table = stm32_fmc2_ebi_match,
++		.pm = &stm32_fmc2_ebi_pm_ops,
++	},
++};
++module_platform_driver(stm32_fmc2_ebi_driver);
++
++MODULE_ALIAS("platform:stm32_fmc2_ebi");
++MODULE_AUTHOR("Christophe Kerello <christophe.kerello@st.com>");
++MODULE_DESCRIPTION("STMicroelectronics STM32 FMC2 ebi driver");
++MODULE_LICENSE("GPL v2");
 -- 
 1.9.1
 
