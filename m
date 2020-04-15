@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 100A3C2BB55
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2DEC3815B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D109A20767
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 537422078A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 12:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586953818;
-	bh=oooFEStGUZHNuhXxGFvK4GTwAIxHao8rhtCGvyKcdGo=;
+	s=default; t=1586953823;
+	bh=akMjQJ64mNR3wfa9mHacNmsGeQLx5+Kc0AWod/pu0pk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q2zI58NTJl8tnaGuig09VYcfMvHYhaVfy3+Do2mNL+tb0oSaA39z0yeQk/VuDaBTZ
-	 NOxxxWYEU04qUop9bDgtWJvMBrzRYhh7+pajGQF/+8b0cTDo83COppHcibKv753IOK
-	 IKqJ1DKs/L9Ayswf/o3DmO40b+I6GMct0xVc2WK0=
+	b=bMXk3ZRdFt+uAsV3mBmEsJhr1Oc//jZrXvAk/biXICWTUUH0nyfYlk35i5uCd9EGF
+	 rmSLtGoQWYldP1CnX9Bi4qMVN1OKdunHpxLBXFqxATErBgPHirNCf42ZT3bCktip6z
+	 0pKXrxH4XUjBH7RF8gJtXAka2Z4YmOd4FeeYhZ4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409916AbgDOM3g (ORCPT
+        id S2409930AbgDOMaW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 08:29:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38008 "EHLO mail.kernel.org"
+        Wed, 15 Apr 2020 08:30:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409115AbgDOLo6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:44:58 -0400
+        id S2406022AbgDOLoz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:44:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 354E220768;
-        Wed, 15 Apr 2020 11:44:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3E7620737;
+        Wed, 15 Apr 2020 11:44:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951098;
-        bh=oooFEStGUZHNuhXxGFvK4GTwAIxHao8rhtCGvyKcdGo=;
+        s=default; t=1586951095;
+        bh=akMjQJ64mNR3wfa9mHacNmsGeQLx5+Kc0AWod/pu0pk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sSemOUDfmah1SaVX3BQLP6BeihBz7XMZ0TouLc8Si3UPspi3GkSrXXNGba/IJ+AT7
-         yo2lc3qxzhmvyhQwKmBhHU+yunZolP5EEcqhrEysP/JalDUInKQmkgmIU2jbsdQ/KM
-         CLnooNyIUW5Qmt7AekYyxekdLqVS3Xn1Gt3fHdyc=
+        b=GoJ/7ppDsVRX+MJOZDOGAE+U4eiHhrwBpTYpoZtuIQ1HdnzyOD5w0zmMBfbT/9kX7
+         Tjx+9YwhfeCuk4tNkfc9R5gCUiyR8qAa6TaOriK1FIUqJ4VgrBJglElWw2hZcSEYOz
+         qOij9znVOnECBiGF4Li/CYVbvR8HiXdxtXY12IPY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 13/84] arm64: dts: clearfog-gt-8k: set gigabit PHY reset deassert delay
-Date:   Wed, 15 Apr 2020 07:43:30 -0400
-Message-Id: <20200415114442.14166-13-sashal@kernel.org>
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 11/84] arm64: tegra: Add PCIe endpoint controllers nodes for Tegra194
+Date:   Wed, 15 Apr 2020 07:43:28 -0400
+Message-Id: <20200415114442.14166-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114442.14166-1-sashal@kernel.org>
 References: <20200415114442.14166-1-sashal@kernel.org>
@@ -61,42 +60,130 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Vidya Sagar <vidyas@nvidia.com>
 
-[ Upstream commit 46f94c7818e7ab82758fca74935ef3d454340b4e ]
+[ Upstream commit 0c988b731e6430f0081991fdb4f63f7fc837df9a ]
 
-If the mv88e6xxx DSA driver is built as a module, it causes the
-ethernet driver to re-probe when it's loaded. This in turn causes
-the gigabit PHY to be momentarily reset and reprogrammed. However,
-we attempt to reprogram the PHY immediately after deasserting reset,
-and the PHY ignores the writes.
+Add endpoint mode controllers nodes for the dual mode PCIe controllers
+present in Tegra194 SoC.
 
-This results in the PHY operating in the wrong mode, and the copper
-link states down.
-
-Set a reset deassert delay of 10ms for the gigabit PHY to avoid this.
-
-Fixes: babc5544c293 ("arm64: dts: clearfog-gt-8k: 1G eth PHY reset signal")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Acked-by: Baruch Siach <baruch@tkos.co.il>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 99 ++++++++++++++++++++++++
+ 1 file changed, 99 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-index a211a046b2f2f..b90d78a5724b2 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-@@ -367,6 +367,7 @@
- 		pinctrl-0 = <&cp0_copper_eth_phy_reset>;
- 		reset-gpios = <&cp0_gpio2 11 GPIO_ACTIVE_LOW>;
- 		reset-assert-us = <10000>;
-+		reset-deassert-us = <10000>;
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index 3c0cf54f0aab3..57adcbb7352d6 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -1430,6 +1430,105 @@
+ 			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
  	};
  
- 	switch0: switch0@4 {
++	pcie_ep@14160000 {
++		compatible = "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX4A>;
++		reg = <0x00 0x14160000 0x0 0x00020000   /* appl registers (128K)      */
++		       0x00 0x36040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
++		       0x00 0x36080000 0x0 0x00040000   /* DBI reg space (256K)       */
++		       0x14 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
++		reg-names = "appl", "atu_dma", "dbi", "addr_space";
++
++		status = "disabled";
++
++		num-lanes = <4>;
++		num-ib-windows = <2>;
++		num-ob-windows = <8>;
++
++		clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_4>;
++		clock-names = "core";
++
++		resets = <&bpmp TEGRA194_RESET_PEX0_CORE_4_APB>,
++			 <&bpmp TEGRA194_RESET_PEX0_CORE_4>;
++		reset-names = "apb", "core";
++
++		interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;	/* controller interrupt */
++		interrupt-names = "intr";
++
++		nvidia,bpmp = <&bpmp 4>;
++
++		nvidia,aspm-cmrt-us = <60>;
++		nvidia,aspm-pwr-on-t-us = <20>;
++		nvidia,aspm-l0s-entrance-latency-us = <3>;
++	};
++
++	pcie_ep@14180000 {
++		compatible = "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
++		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
++		       0x00 0x38040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
++		       0x00 0x38080000 0x0 0x00040000   /* DBI reg space (256K)       */
++		       0x18 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
++		reg-names = "appl", "atu_dma", "dbi", "addr_space";
++
++		status = "disabled";
++
++		num-lanes = <8>;
++		num-ib-windows = <2>;
++		num-ob-windows = <8>;
++
++		clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_0>;
++		clock-names = "core";
++
++		resets = <&bpmp TEGRA194_RESET_PEX0_CORE_0_APB>,
++			 <&bpmp TEGRA194_RESET_PEX0_CORE_0>;
++		reset-names = "apb", "core";
++
++		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;	/* controller interrupt */
++		interrupt-names = "intr";
++
++		nvidia,bpmp = <&bpmp 0>;
++
++		nvidia,aspm-cmrt-us = <60>;
++		nvidia,aspm-pwr-on-t-us = <20>;
++		nvidia,aspm-l0s-entrance-latency-us = <3>;
++	};
++
++	pcie_ep@141a0000 {
++		compatible = "nvidia,tegra194-pcie-ep", "snps,dw-pcie-ep";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8A>;
++		reg = <0x00 0x141a0000 0x0 0x00020000   /* appl registers (128K)      */
++		       0x00 0x3a040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
++		       0x00 0x3a080000 0x0 0x00040000   /* DBI reg space (256K)       */
++		       0x1c 0x00000000 0x4 0x00000000>; /* Address Space (16G)        */
++		reg-names = "appl", "atu_dma", "dbi", "addr_space";
++
++		status = "disabled";
++
++		num-lanes = <8>;
++		num-ib-windows = <2>;
++		num-ob-windows = <8>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&clkreq_c5_bi_dir_state>;
++
++		clocks = <&bpmp TEGRA194_CLK_PEX1_CORE_5>;
++		clock-names = "core";
++
++		resets = <&bpmp TEGRA194_RESET_PEX1_CORE_5_APB>,
++			 <&bpmp TEGRA194_RESET_PEX1_CORE_5>;
++		reset-names = "apb", "core";
++
++		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;	/* controller interrupt */
++		interrupt-names = "intr";
++
++		nvidia,bpmp = <&bpmp 5>;
++
++		nvidia,aspm-cmrt-us = <60>;
++		nvidia,aspm-pwr-on-t-us = <20>;
++		nvidia,aspm-l0s-entrance-latency-us = <3>;
++	};
++
+ 	sysram@40000000 {
+ 		compatible = "nvidia,tegra194-sysram", "mmio-sram";
+ 		reg = <0x0 0x40000000 0x0 0x50000>;
 -- 
 2.20.1
 
