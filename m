@@ -2,125 +2,152 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B62E4C38A2C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4285AC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 976EE20775
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2166D20771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 09:30:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="qlAD48Fi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="reeYQ8Wn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895508AbgDOJ05 (ORCPT
+        id S2895531AbgDOJaU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 05:26:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48344 "EHLO
+        Wed, 15 Apr 2020 05:30:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2895494AbgDOJ04 (ORCPT
+        by vger.kernel.org with ESMTP id S2895530AbgDOJaT (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:26:56 -0400
-Received: from mo6-p04-ob.smtp.rzone.de (mo6-p04-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5304::12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B167EC061A0C;
-        Wed, 15 Apr 2020 02:26:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586942812;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=QSUY1yUiWe9X6ZGNIO1eH3insGRwBB0CwHRK6fHg7uQ=;
-        b=qlAD48FijIaBoAx9ezb9opMkPMPwJpEBYm7kVCbfB14p09Yq5qj0+PrIOI7a5QHsgS
-        A6f7DumiHE8MZ4Bo5cP5+BCuQgzTgomwBDVFdtGkDE5Cas7onZSDZ85F05pGoTMlAxyr
-        o1LOgQmVrSwLM4o0aG4m39+j+V2AbyNlWeebGdnWol/VOo2Xw3gDGvmqBE03mzYFR4Yz
-        9+vSGEkqV1JQuahiBJ/M3qTRyW4OT9CgiNG5DWNJKMWUWl/KL4Ab3LCzpg3nngAb6skv
-        eBcjdzHVUAChMfWwzgBgWVFfWTgedno9mf8idJn84ToAR47waXQBwCu0Zd+LNHYRY+O7
-        XlGQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PtwDConyM="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.4.0 DYNA|AUTH)
-        with ESMTPSA id 6028a2w3F9Qa0oW
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Wed, 15 Apr 2020 11:26:36 +0200 (CEST)
-Subject: Re: [PATCH v6 08/12] arm: dts: s5pv210: Add G3D node
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <b6ffa74a-acef-f329-0d9e-981483499e16@cogentembedded.com>
-Date:   Wed, 15 Apr 2020 11:26:35 +0200
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        Jonathan Bakker <xc-racer2@live.ca>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B1E898A7-73BB-4C20-98D2-2D32F0DC170F@goldelico.com>
-References: <cover.1586939718.git.hns@goldelico.com> <b6733f80546bf3e6b3799f716b9c8e0f407de03d.1586939718.git.hns@goldelico.com> <b6ffa74a-acef-f329-0d9e-981483499e16@cogentembedded.com>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Jonathan Bakker <xc-racer2@live.ca>
-X-Mailer: Apple Mail (2.3124)
+        Wed, 15 Apr 2020 05:30:19 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8506C061A0E
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 02:30:17 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k1so11041915wrx.4
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 02:30:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=OBdwBYebBJuoimbTaQN5QWpwweg/EKkjkWJ4yfY8dv8=;
+        b=reeYQ8WnjncSc2T7Jajbw6ovboRJQxLghh5cijCOXyREaR7Dl+S8j8D2XG5mStUhwl
+         mVaew31PHI9qkmosAPw9GSGyLyVe5zlsjJcDZbr2vAxywVnS2SzWx3Uw8e6jEuwJHU1S
+         iovJsQeMZQzBbgYX7Ak1PVka6TVJl0082uVSrQOu3EXpRLsnNLNh2+LkgyIK6Qq6qylD
+         inE+/o9g1hR6fynzjHgA+07E+Z+6ltXE+i3BF6w7+/XFpA60n0zNBMiVB7MNGlepPvYQ
+         Q7pAST5/u+Eea4/A9OZEen4ukNfsQHOesmlMaqlowLF/1zDMwgQ8VPrh9/fzd0xNJdB+
+         LzDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=OBdwBYebBJuoimbTaQN5QWpwweg/EKkjkWJ4yfY8dv8=;
+        b=G2ngtx/o/nkQORJYY7tgdamaZ4DseE6lsmDYljcWLhqTV/wXjOusUgXPiskwU2kf+P
+         QuogH9DNkLWm9HsWbvIU5Wmudvwqq7Ky/Wvw90tT/XBNj3V+I9wVwxpIXd/ywKc1quEw
+         WfG7j0Y3ocZtUU12T37Y6pEbe9o4fWddZTdlR5D4s0NCYnun87aHq5Rv7ptQbc1eong4
+         wH/MCFfp03APT1xYY6qXAhLYiGLRjYZK17Icky730vyz1VgDi9ZhE4VEfFDIFL6SdFGE
+         ZxHBubI84p83klho7WWUOtOUr798VxBe3jdmqfn30lCjI4an0Ju9b0+XxbmbJ4CEhb9Z
+         /XNw==
+X-Gm-Message-State: AGi0PuY0/oYN3t6EvRmWWzVBWjvR9cJqFr51y8hQsnS5wLToUU9BGD2B
+        jYs4/wO6og3U9VTTUjjugd7ufQ==
+X-Google-Smtp-Source: APiQypJzG0axis5t2o+sttyC3y5d8wml7TaIbWStXxtN12O7zTtqqsicoGy8Ok1q7cM6FamBaWXPaw==
+X-Received: by 2002:a5d:6607:: with SMTP id n7mr5205782wru.150.1586943016404;
+        Wed, 15 Apr 2020 02:30:16 -0700 (PDT)
+Received: from dell ([95.149.164.124])
+        by smtp.gmail.com with ESMTPSA id h13sm11465797wrs.22.2020.04.15.02.30.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 02:30:15 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 10:31:16 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kishon@ti.com, robh@kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com
+Subject: Re: [PATCH v5 1/4] mfd: syscon: Add fwnode_to_regmap
+Message-ID: <20200415093116.GH2167633@dell>
+References: <cover.1585103753.git.eswara.kota@linux.intel.com>
+ <9953bb25281397553cb87b09d641c968d8432dd9.1585103753.git.eswara.kota@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9953bb25281397553cb87b09d641c968d8432dd9.1585103753.git.eswara.kota@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sergei and Jonathan,
+On Wed, 25 Mar 2020, Dilip Kota wrote:
 
-> Am 15.04.2020 um 11:15 schrieb Sergei Shtylyov =
-<sergei.shtylyov@cogentembedded.com>:
->=20
-> Hello!
->=20
-> On 15.04.2020 11:35, H. Nikolaus Schaller wrote:
->=20
->> From: Jonathan Bakker <xc-racer2@live.ca>
->> to add support for SGX540 GPU.
->> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->>  arch/arm/boot/dts/s5pv210.dtsi | 15 +++++++++++++++
->>  1 file changed, 15 insertions(+)
->> diff --git a/arch/arm/boot/dts/s5pv210.dtsi =
-b/arch/arm/boot/dts/s5pv210.dtsi
->> index 2ad642f51fd9..e7fc709c0cca 100644
->> --- a/arch/arm/boot/dts/s5pv210.dtsi
->> +++ b/arch/arm/boot/dts/s5pv210.dtsi
->> @@ -512,6 +512,21 @@ vic3: interrupt-controller@f2300000 {
->>  			#interrupt-cells =3D <1>;
->>  		};
->>  +		g3d: g3d@f3000000 {
->=20
->   Should be named generically, "gpu@f3000000", according to the DT =
-spec 0.2, section 2.2.2. It's either "gpu" or "display" TTBOMK...
+> Traverse regmap handle entry from firmware node handle.
+> 
+> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> ---
+> Changes on v5:
+>   No changes
+> 
+> Changes on v4:
+>   No changes
+> 
+>  drivers/mfd/syscon.c       | 8 ++++++++
+>  include/linux/mfd/syscon.h | 6 ++++++
+>  2 files changed, 14 insertions(+)
 
-Yes, you are right and we have named it such for all other
-devices in this series. I just missed that.
+I think you'll find it very difficult to have a patch merged if you do
+not send it to any Maintainers of the associated subsystem(s).
 
-Jonathan, if you are ok, I'll fix that.
+Did you use `scripts/get_maintainer.pl` at all?
 
->=20
-> [...]
->=20
-> MBR, Sergei
+> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> index e22197c832e8..08064ffc5394 100644
+> --- a/drivers/mfd/syscon.c
+> +++ b/drivers/mfd/syscon.c
+> @@ -178,6 +178,14 @@ struct regmap *device_node_to_regmap(struct device_node *np)
+>  }
+>  EXPORT_SYMBOL_GPL(device_node_to_regmap);
+>  
+> +struct regmap *fwnode_to_regmap(struct fwnode_handle *fwnode)
+> +{
+> +	struct device_node *np = to_of_node(fwnode);
+> +
+> +	return device_node_get_regmap(np, false);
+> +}
+> +EXPORT_SYMBOL_GPL(fwnode_to_regmap);
+> +
+>  struct regmap *syscon_node_to_regmap(struct device_node *np)
+>  {
+>  	if (!of_device_is_compatible(np, "syscon"))
+> diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
+> index 112dc66262cc..a024dd88bdd4 100644
+> --- a/include/linux/mfd/syscon.h
+> +++ b/include/linux/mfd/syscon.h
+> @@ -18,6 +18,7 @@ struct device_node;
+>  
+>  #ifdef CONFIG_MFD_SYSCON
+>  extern struct regmap *device_node_to_regmap(struct device_node *np);
+> +extern struct regmap *fwnode_to_regmap(struct fwnode_handle *fwnode);
+>  extern struct regmap *syscon_node_to_regmap(struct device_node *np);
+>  extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
+>  extern struct regmap *syscon_regmap_lookup_by_phandle(
+> @@ -29,6 +30,11 @@ static inline struct regmap *device_node_to_regmap(struct device_node *np)
+>  	return ERR_PTR(-ENOTSUPP);
+>  }
+>  
+> +static inline struct regmap *fwnode_to_regmap(struct fwnode_handle *fwnode)
+> +{
+> +	return ERR_PTR(-ENOTSUPP);
+> +}
+> +
+>  static inline struct regmap *syscon_node_to_regmap(struct device_node *np)
+>  {
+>  	return ERR_PTR(-ENOTSUPP);
 
-BR and thanks,
-Nikolaus
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
