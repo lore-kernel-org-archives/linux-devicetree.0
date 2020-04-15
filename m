@@ -2,184 +2,302 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B55EAC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C557C3815B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 894A9208E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7500D206F9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 16:58:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="m0OikrsD"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="L1ZDKSFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1416339AbgDOQ5r (ORCPT
+        id S2404289AbgDOQ65 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 12:57:47 -0400
-Received: from mail-db8eur05on2086.outbound.protection.outlook.com ([40.107.20.86]:6045
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1416336AbgDOQ5p (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:57:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OMwdD/g/g4ofbxc8CqDaF/4KUrg09nWZU1RcPY+uuQJtwlpUXiNINesBWKZwM2nHk3BWrsETnk8z7o/uwVahFj74eaw7DBOafMSDc+FZMQubglNSMj+GnOvp/fYg4V6NK08RgxJ3QJu4WR0/9MC1KuteplHeVcIJvCjLrUdDKxGx7ZHNQtDKY9FJyXwlGhkdTzsBVasqoD+vOTvI5yiqLBOjdJ+iPsNYUIXoyaKrnB+Sn4QnByP+QrwEPix6MT7jkxLMT6kpY0HgLtVw0/vt4YuQYeM64UYOgVZGOgYS653ORSOHMHtHCrEVWVCXc4lLNZpe9Jfi3crPUPJ3XCy5cA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4uiJAnAt3Zl/mTOT9ytV+2KEBbFreL5o0Ha78CUVw9A=;
- b=Rr7SSwIuZzSrRaFG5DLZ3zUvrh5W6Ll1pvgTewIQ2rU/lSbruK3mVxFB/ltLGfDCEj1ii76geVlNEd7IPqtCfHjBQqyf8JKiLRdfVggticsfZBkndS0HRgPstKoQg6I6YVEWVzt2cBfO+myWrOvMyV8RX5pl2mAcccFxMX4gkHpkL6ECtb8WPAjYbm3AG0yBmBljPOTubSpmjlAyPZHF9YRYAmzcR7NtK9fOrsj2vtmcC0jqqmTiNMcQF7V10ZfLnXV3O2/9OybBsza4Q5AbMd49qmjuJqkOJpCJyL1Y35n0Ek2XIYq1h0A0BI1/6AzHEyyDqkZNrjm4ugyuvE+dxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4uiJAnAt3Zl/mTOT9ytV+2KEBbFreL5o0Ha78CUVw9A=;
- b=m0OikrsD0QbMwlkxO4QnQiPM8RUihLcW1HR76/f6B9U8atNbBWosQuhA5xwWcHlJsFD/1u1rDuk19datJIlU1e5KC5BBu8o6RLtDruAJ9IzUTglXxf7Uvrcjy1abA8EJ/kkuy/t9LUbeXTGZEWqHrs500R9YHZpBHMGC0jgv4AY=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (2603:10a6:803:7::25)
- by VI1PR0402MB2910.eurprd04.prod.outlook.com (2603:10a6:800:b6::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Wed, 15 Apr
- 2020 16:57:40 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::751e:7e8d:ed4:ef5f]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::751e:7e8d:ed4:ef5f%7]) with mapi id 15.20.2900.028; Wed, 15 Apr 2020
- 16:57:40 +0000
-Subject: Re: [PATCH v2 6/6] Input: snvs_pwrkey - only IRQ_HANDLED for our own
- events
-From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
-To:     Adam Ford <aford173@gmail.com>,
-        =?UTF-8?Q?Andr=c3=a9_Draszik?= <git@andred.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Robin Gong <yibin.gong@nxp.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-References: <20200225161201.1975-1-git@andred.net>
- <20200225161201.1975-6-git@andred.net>
- <VI1PR0402MB3485A743C94442533B6840F298E70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <CAHCN7x+NJLaKF9SfHw9sDpw6zDUGs_TuD_co7USjQ5hgFDeaHg@mail.gmail.com>
- <fd36d0ae-f3fa-6608-9179-3e7562068433@nxp.com>
-Message-ID: <ad07da3c-19c4-67cd-b819-63cf3746caf6@nxp.com>
-Date:   Wed, 15 Apr 2020 19:57:36 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-In-Reply-To: <fd36d0ae-f3fa-6608-9179-3e7562068433@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM0P190CA0005.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:208:190::15) To VI1PR0402MB3485.eurprd04.prod.outlook.com
- (2603:10a6:803:7::25)
+        Wed, 15 Apr 2020 12:58:57 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:57024 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728755AbgDOQ6z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 12:58:55 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 42A6B2D1;
+        Wed, 15 Apr 2020 18:58:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586969931;
+        bh=dDCRMO0GaF4F11m8Dy4CmaaUYTeAclyywgcyTHRJM0k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=L1ZDKSFAAGYIvOOGf+V7YT5tiA8qYXIqugXk3F1Qc7BkA9FGyn6mGxRIWCH/QNkxI
+         8K09u6bLg9IsFvz1+VCUnHyzqt6Amec/AofpozbZ2DExAynnxN5BXc1YFEAZfNUC5X
+         mhEsz7HJhjBBatEJFPeayiJG/T/v1U7BgTXMlg0c=
+Date:   Wed, 15 Apr 2020 19:58:39 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Hyun Kwon <hyun.kwon@xilinx.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Michal Simek <michals@xilinx.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Satish Kumar Nagireddy <SATISHNA@xilinx.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v11 1/5] dt-bindings: display: xlnx: Add ZynqMP DP
+ subsystem bindings
+Message-ID: <20200415165839.GJ4758@pendragon.ideasonboard.com>
+References: <20200318153728.25843-1-laurent.pinchart@ideasonboard.com>
+ <20200318153728.25843-2-laurent.pinchart@ideasonboard.com>
+ <20200318192651.GA28612@ravnborg.org>
+ <20200319010857.GC27556@smtp.xilinx.com>
+ <20200402031125.GA31187@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.129] (84.117.251.185) by AM0P190CA0005.EURP190.PROD.OUTLOOK.COM (2603:10a6:208:190::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.16 via Frontend Transport; Wed, 15 Apr 2020 16:57:38 +0000
-X-Originating-IP: [84.117.251.185]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 5913c546-319c-417f-d52a-08d7e15e1b79
-X-MS-TrafficTypeDiagnostic: VI1PR0402MB2910:|VI1PR0402MB2910:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0402MB29109A9D9D64EFBBD112F7B298DB0@VI1PR0402MB2910.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:826;
-X-Forefront-PRVS: 0374433C81
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(376002)(346002)(396003)(16576012)(53546011)(966005)(478600001)(16526019)(26005)(7416002)(4326008)(81156014)(31686004)(36756003)(86362001)(8676002)(66556008)(6486002)(8936002)(66946007)(66476007)(5660300002)(2906002)(956004)(2616005)(6636002)(316002)(31696002)(54906003)(186003)(52116002)(110136005);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: r8rfUuqtdyQIwPzA6+bw+IMYavnOs1FssBjHp/b09AxxLDzOxjimnh5DiS/31cRGNIMEf/nwEKIf5LC/XBohe0hTZcbX7t0xalv0tWW1FL+JgxVgOwq75mQdk8Z1GCibTsm+bXSigOqAe1XyBSRBvl50PPNTzYpk6nqfm8MVpHMMzVEoeWXLVxW9+caYbhOUndZP2mmo2mkDMcMmFdNy2Hxsd/W8kp4alBRtSkJn4aBovdpvCACSLE4h7Ahm908xhUgsQFos3XB3ad13DWdbew5pPRi6WzPzMIGkfYBOj95uNr8QJZwBE09JyMMYYztbaYbu5wu9MRz85mPWYuETio/wW/bpmyaKF4+FHA82j5/DcTzIGgT2kX7V6fLytFHiBYRMQfl+aMSZZz8mw3aISgftxkGxx0g4nkcqjcqa4LSO1EjFyUhkeb//1R/p85mo+JbaH7ppJ3BqGoLejWsZsEbDbRjo4xWQWRmahiJAI3RE6IcEVIya9Ap4tjveSh4c4/XjgoGpCI9xNh/HIezwcw==
-X-MS-Exchange-AntiSpam-MessageData: 04n3zeKF2X3sjudQLttXVQAMC9CIJmHsDn4222SluwsMvB8da/tpQt0hjmQD+zvyD+VyXW5XJPO+4+yaWkvJXhAooldyM/Zj81JG6Ri0VO0NFnFgqp9N+nZzf/fpz2tVAIqAK4A7kyiZ6UdzAghn7w==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5913c546-319c-417f-d52a-08d7e15e1b79
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2020 16:57:40.4426
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: N/6yRHg1XJd/R2RMBwAWGvOfe6WO2jmfNZI1Xft2DYPKZ8JDpqoX22Zditk+5PMLfZIwA2AThE5AkRibqxwI2A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2910
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200402031125.GA31187@pendragon.ideasonboard.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Herbert, Dmitry,
+Hi Hyun,
 
-On 4/1/2020 11:58 AM, Horia Geanta wrote:
-> On 3/28/2020 5:43 AM, Adam Ford wrote:
->> On Mon, Mar 2, 2020 at 3:22 AM Horia Geanta <horia.geanta@nxp.com> wrote:
->>>
->>> On 2/25/2020 6:12 PM, André Draszik wrote:
->>>> The snvs_pwrkey shares the SNVS LPSR status register with the snvs_rtc.
->>>>
->>>> This driver here should only return IRQ_HANDLED if the status register
->>>> indicates that the event we're handling in the irq handler was genuinely
->>>> intended for this driver. Otheriwse the interrupt subsystem will
->>>> assume the interrupt was handled successfully even though it wasn't
->>>> at all.
->>>>
->>>> Signed-off-by: André Draszik <git@andred.net>
->>>> Cc: "Horia Geantă" <horia.geanta@nxp.com>
->>>> Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
->>>> Cc: Herbert Xu <herbert@gondor.apana.org.au>
->>>> Cc: "David S. Miller" <davem@davemloft.net>
->>>> Cc: Rob Herring <robh+dt@kernel.org>
->>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>> Cc: Shawn Guo <shawnguo@kernel.org>
->>>> Cc: Sascha Hauer <s.hauer@pengutronix.de>
->>>> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
->>>> Cc: Fabio Estevam <festevam@gmail.com>
->>>> Cc: NXP Linux Team <linux-imx@nxp.com>
->>>> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->>>> Cc: Anson Huang <Anson.Huang@nxp.com>
->>>> Cc: Robin Gong <yibin.gong@nxp.com>
->>>> Cc: linux-crypto@vger.kernel.org
->>>> Cc: devicetree@vger.kernel.org
->>>> Cc: linux-arm-kernel@lists.infradead.org
->>>> Cc: linux-input@vger.kernel.org
->>> For patches 2-6:
->>> Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
->>>
->>> Also imx8mn.dtsi and imx8mp.dtsi will have to be updated.
->>
->> Is there an update coming for the 8mn family?  I am seeing it not wake
->> from the power key, and I was hoping to resolve that before i make a
->> push to submit a new 8MN board for review.
->>
-> Starting with linux-next next-20200320, there's commit
-> arm64: dts: imx8mn: Add snvs clock to powerkey
+On Thu, Apr 02, 2020 at 06:11:25AM +0300, Laurent Pinchart wrote:
+> On Wed, Mar 18, 2020 at 06:08:57PM -0700, Hyun Kwon wrote:
+> > On Wed, 2020-03-18 at 12:26:51 -0700, Sam Ravnborg wrote:
+> >> On Wed, Mar 18, 2020 at 05:37:24PM +0200, Laurent Pinchart wrote:
+> >>> From: Hyun Kwon <hyun.kwon@xilinx.com>
+> >>> 
+> >>> The bindings describe the ZynqMP DP subsystem. They don't support the
+> >>> interface with the programmable logic (FPGA) or audio yet.
+> >>> 
+> >>> Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
+> >>> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >>> Reviewed-by: Rob Herring <robh@kernel.org>
+> >> 
+> >> Bikeshedding - examples with indent on 4 spaces to make them easier to
+> >> read.
+> >> 
+> >> Would it be possible to make this binding: (GPL-2.0-only OR BSD-2-Clause)
+> >> This is preferred for new bindings.
+> >> In this case asking Hyun Kwon should be enough?
+> > 
+> > It should be possible. But to be safer and if needed, I need to check with
+> > corperate policy before I can confirm.
+> > 
+> > Michal, have you already checked about adding 'OR BSD-2-Clause'? or should I
+> > take it up to Xilinx legal?
 > 
-> Could you confirm you've tested with a tree including it?
-> 
-Seems that from this series:
-https://lore.kernel.org/linux-crypto/20200225161201.1975-5-git@andred.net/T/
-only DT patches (2,3,4) were applied.
+> Have you been able to get an answer on this ? I though the
+> double-license was encouraged for new bindings, but it now seems to be a
+> hard requirement to get them merged.
 
-Would it be ok to go via crypto tree with:
-[PATCH v2 1/6] dt-bindings: crypto: fsl-sec4: add snvs clock to pwrkey
+Gentle ping.
 
-and via input tree with:
-[PATCH v2 5/6] Input: snvs_pwrkey - enable snvs clock as needed
-[PATCH v2 6/6] Input: snvs_pwrkey - only IRQ_HANDLED for our own events
-?
+> >> With or without the suggestions above:
+> >> Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> >> 
+> >> 	Sam
+> >> 
+> >>> ---
+> >>> Changes since v10:
+> >>> 
+> >>> - Update example to new PHY DT bindings without subnodes
+> >>> - Add resets property
+> >>> 
+> >>> Changes since v9:
+> >>> 
+> >>> - Fix constraints on clock-names
+> >>> - Document dp_apb_clk as the APB clock, not the AXI clock
+> >>> 
+> >>> Changes since v8:
+> >>> 
+> >>> - Convert to yaml
+> >>> - Rename aclk to dp_apb_clk
+> >>> ---
+> >>>  .../display/xlnx/xlnx,zynqmp-dpsub.yaml       | 174 ++++++++++++++++++
+> >>>  1 file changed, 174 insertions(+)
+> >>>  create mode 100644 Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
+> >>> 
+> >>> diff --git a/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
+> >>> new file mode 100644
+> >>> index 000000000000..05e6a14de75c
+> >>> --- /dev/null
+> >>> +++ b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
+> >>> @@ -0,0 +1,174 @@
+> >>> +# SPDX-License-Identifier: GPL-2.0
+> >>> +%YAML 1.2
+> >>> +---
+> >>> +$id: http://devicetree.org/schemas/display/xlnx/xlnx,zynqmp-dpsub.yaml#
+> >>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>> +
+> >>> +title: Xilinx ZynqMP DisplayPort Subsystem
+> >>> +
+> >>> +description: |
+> >>> +  The DisplayPort subsystem of Xilinx ZynqMP (Zynq UltraScale+ MPSoC)
+> >>> +  implements the display and audio pipelines based on the DisplayPort v1.2
+> >>> +  standard. The subsystem includes multiple functional blocks as below:
+> >>> +
+> >>> +               +------------------------------------------------------------+
+> >>> +  +--------+   | +----------------+     +-----------+                       |
+> >>> +  | DPDMA  | --->|                | --> |   Video   | Video +-------------+ |
+> >>> +  | 4x vid |   | |                |     | Rendering | -+--> |             | |   +------+
+> >>> +  | 2x aud |   | |  Audio/Video   | --> | Pipeline  |  |    | DisplayPort |---> | PHY0 |
+> >>> +  +--------+   | | Buffer Manager |     +-----------+  |    |   Source    | |   +------+
+> >>> +               | |    and STC     |     +-----------+  |    | Controller  | |   +------+
+> >>> +  Live Video --->|                | --> |   Audio   | Audio |             |---> | PHY1 |
+> >>> +               | |                |     |   Mixer   | --+-> |             | |   +------+
+> >>> +  Live Audio --->|                | --> |           |  ||   +-------------+ |
+> >>> +               | +----------------+     +-----------+  ||                   |
+> >>> +               +---------------------------------------||-------------------+
+> >>> +                                                       vv
+> >>> +                                                 Blended Video and
+> >>> +                                                 Mixed Audio to PL
+> >>> +
+> >>> +  The Buffer Manager interacts with external interface such as DMA engines or
+> >>> +  live audio/video streams from the programmable logic. The Video Rendering
+> >>> +  Pipeline blends the video and graphics layers and performs colorspace
+> >>> +  conversion. The Audio Mixer mixes the incoming audio streams. The DisplayPort
+> >>> +  Source Controller handles the DisplayPort protocol and connects to external
+> >>> +  PHYs.
+> >>> +
+> >>> +  The subsystem supports 2 video and 2 audio streams, and various pixel formats
+> >>> +  and depths up to 4K@30 resolution.
+> >>> +
+> >>> +  Please refer to "Zynq UltraScale+ Device Technical Reference Manual"
+> >>> +  (https://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultrascale-trm.pdf)
+> >>> +  for more details.
+> >>> +
+> >>> +maintainers:
+> >>> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >>> +
+> >>> +properties:
+> >>> +  compatible:
+> >>> +    const: xlnx,zynqmp-dpsub-1.7
+> >>> +
+> >>> +  reg:
+> >>> +    maxItems: 4
+> >>> +  reg-names:
+> >>> +    items:
+> >>> +      - const: dp
+> >>> +      - const: blend
+> >>> +      - const: av_buf
+> >>> +      - const: aud
+> >>> +
+> >>> +  interrupts:
+> >>> +    maxItems: 1
+> >>> +
+> >>> +  clocks:
+> >>> +    description:
+> >>> +      The APB clock and at least one video clock are mandatory, the audio clock
+> >>> +      is optional.
+> >>> +    minItems: 2
+> >>> +    maxItems: 4
+> >>> +    items:
+> >>> +      - description: dp_apb_clk is the APB clock
+> >>> +      - description: dp_aud_clk is the Audio clock
+> >>> +      - description:
+> >>> +          dp_vtc_pixel_clk_in is the non-live video clock (from Processing
+> >>> +          System)
+> >>> +      - description:
+> >>> +          dp_live_video_in_clk is the live video clock (from Programmable
+> >>> +          Logic)
+> >>> +  clock-names:
+> >>> +    oneOf:
+> >>> +      - minItems: 2
+> >>> +        maxItems: 3
+> >>> +        items:
+> >>> +          - const: dp_apb_clk
+> >>> +          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
+> >>> +          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
+> >>> +      - minItems: 3
+> >>> +        maxItems: 4
+> >>> +        items:
+> >>> +          - const: dp_apb_clk
+> >>> +          - const: dp_aud_clk
+> >>> +          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
+> >>> +          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
+> >>> +
+> >>> +  power-domains:
+> >>> +    maxItems: 1
+> >>> +
+> >>> +  resets:
+> >>> +    maxItems: 1
+> >>> +
+> >>> +  dmas:
+> >>> +    maxItems: 4
+> >>> +    items:
+> >>> +      - description: Video layer, plane 0 (RGB or luma)
+> >>> +      - description: Video layer, plane 1 (U/V or U)
+> >>> +      - description: Video layer, plane 2 (V)
+> >>> +      - description: Graphics layer
+> >>> +  dma-names:
+> >>> +    items:
+> >>> +      - const: vid0
+> >>> +      - const: vid1
+> >>> +      - const: vid2
+> >>> +      - const: gfx0
+> >>> +
+> >>> +  phys:
+> >>> +    description: PHYs for the DP data lanes
+> >>> +    minItems: 1
+> >>> +    maxItems: 2
+> >>> +  phy-names:
+> >>> +    minItems: 1
+> >>> +    maxItems: 2
+> >>> +    items:
+> >>> +      - const: dp-phy0
+> >>> +      - const: dp-phy1
+> >>> +
+> >>> +required:
+> >>> +  - compatible
+> >>> +  - reg
+> >>> +  - reg-names
+> >>> +  - interrupts
+> >>> +  - clocks
+> >>> +  - clock-names
+> >>> +  - power-domains
+> >>> +  - resets
+> >>> +  - dmas
+> >>> +  - dma-names
+> >>> +  - phys
+> >>> +  - phy-names
+> >>> +
+> >>> +additionalProperties: false
+> >>> +
+> >>> +examples:
+> >>> +  - |
+> >>> +    #include <dt-bindings/phy/phy.h>
+> >>> +    #include <dt-bindings/reset/xlnx-zynqmp-resets.h>
+> >>> +
+> >>> +    display@fd4a0000 {
+> >>> +      compatible = "xlnx,zynqmp-dpsub-1.7";
+> >>> +      reg = <0x0 0xfd4a0000 0x0 0x1000>,
+> >>> +            <0x0 0xfd4aa000 0x0 0x1000>,
+> >>> +            <0x0 0xfd4ab000 0x0 0x1000>,
+> >>> +            <0x0 0xfd4ac000 0x0 0x1000>;
+> >>> +      reg-names = "dp", "blend", "av_buf", "aud";
+> >>> +      interrupts = <0 119 4>;
+> >>> +      interrupt-parent = <&gic>;
+> >>> +
+> >>> +      clock-names = "dp_apb_clk", "dp_aud_clk", "dp_live_video_in_clk";
+> >>> +      clocks = <&dp_aclk>, <&clkc 17>, <&si570_1>;
+> >>> +
+> >>> +      power-domains = <&pd_dp>;
+> >>> +      resets = <&reset ZYNQMP_RESET_DP>;
+> >>> +
+> >>> +      dma-names = "vid0", "vid1", "vid2", "gfx0";
+> >>> +      dmas = <&xlnx_dpdma 0>,
+> >>> +             <&xlnx_dpdma 1>,
+> >>> +             <&xlnx_dpdma 2>,
+> >>> +             <&xlnx_dpdma 3>;
+> >>> +
+> >>> +      phys = <&psgtr 1 PHY_TYPE_DP 0 3 27000000>,
+> >>> +             <&psgtr 0 PHY_TYPE_DP 1 3 27000000>;
+> >>> +
+> >>> +      phy-names = "dp-phy0", "dp-phy1";
+> >>> +    };
+> >>> +
+> >>> +...
 
-Thanks,
-Horia
+-- 
+Regards,
+
+Laurent Pinchart
