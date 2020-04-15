@@ -2,194 +2,107 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE8EC3815B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 361C9C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79C0B20857
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F52F206D5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:22:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="waLFJKVz";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZiCvEuIi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KWTAORPr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388057AbgDOOVg (ORCPT
+        id S2634270AbgDOOWr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:21:36 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:58249 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732547AbgDOOVd (ORCPT
+        Wed, 15 Apr 2020 10:22:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37758 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2391838AbgDOOWn (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:21:33 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 5D5B5580480;
-        Wed, 15 Apr 2020 10:21:28 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 15 Apr 2020 10:21:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=w57xZePTsGqsUDOlfC/90iLeGpy
-        1FlxyNG+H0a7Xz8A=; b=waLFJKVzJ1gz4Hh3SifRoYfFdJNEt2qRDGZPEgQiRVv
-        6jkzESd3CY6Oc3i2ZpPdobWyw0ab8WfQvnFKUO56Sbm6//6u+mKmbexyjoJ0cnOw
-        RF93kgS+2GuBfrdB0KUCXmBg0YpKtxYRvgMIwGCyomGynx+2KCN7Em0XOYCnFkgw
-        J1mWDeIQOgD9hZisI227UvtFdsCvTBD+nzUGW7lALcRLymCqmau213LfjSVNHmv+
-        59dc1QnftSXXZQOuRHjvVKnCK1b8Vl+tyMf+cu9KYr9EA/oYnetVcCSLLiMhiKJg
-        9owal3XtjQVIIYpYooAWJa48xaWPZrUjg/pnuC0Chqg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=w57xZe
-        PTsGqsUDOlfC/90iLeGpy1FlxyNG+H0a7Xz8A=; b=ZiCvEuIistCq+I4LcQwEfW
-        Qyg/X1liF2iY4Y79UN8i/5imy6gN2PUlGkr+jvw+PLzd5hDoC1DhIB2+Rqr6UCTI
-        o0bm44HtOGdwnZ4+w2oevQESQ+PpjeSubBsQxEE633xb56bf/Ou1Go+xV4y+XL61
-        eqCtbaaUaUnxCNBHFOyo4KdeTlAMIH2CBW7WJ8eXnppGRAR6HFGK4pzcoz9Ohoe5
-        MUxrYnCV6uzhOrFjysQdB68Qf8n5Af/nhXTCLK5LoAUCdha/qTawAHb2hjHJUpPY
-        lizQ3xv4NnOPWVGq6lc4q2/vA93sP8RVeBn9PT3F9hOjzKVIBJUSO8dWAywaBOMw
-        ==
-X-ME-Sender: <xms:ZhiXXnmhOKw4K1AOTYHdnTUQEbMU7bg_a5FoSDsaU2t4-IMnTxxvpg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeefgdeihecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:ZhiXXpmUnYfgmUXjZWNNqgX47hkEI1-ZFNVCI7wWEZYYnRfYegrX1Q>
-    <xmx:ZhiXXtNDAwIfZe76drexh9IE-OGHGS2aS5UFo-B-yEis7tg0VAEMNg>
-    <xmx:ZhiXXp64DuzBVqKn0BtAgkhnuT1ce2TcjxPp_Qx9I7HZtoreOUfJRA>
-    <xmx:aBiXXvtNHYQJhIMBsiVAXeZCa6iOafIjCoTJluOekGcBbk5EM_-hGQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 08B123280064;
-        Wed, 15 Apr 2020 10:21:26 -0400 (EDT)
-Date:   Wed, 15 Apr 2020 16:21:24 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        James Hogan <jhogan@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>,
-        linux-samsung-soc@vger.kernel.org, letux-kernel@openphoenux.org,
-        Paul Burton <paulburton@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Tony Lindgren <tony@atomide.com>, Chen-Yu Tsai <wens@csie.org>,
-        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        openpvrsgx-devgroup@letux.org, linux-kernel@vger.kernel.org,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Daniel Vetter <daniel@ffwll.ch>, kernel@pyra-handheld.com
-Subject: Re: [PATCH v6 01/12] dt-bindings: add img, pvrsgx.yaml for
- Imagination GPUs
-Message-ID: <20200415142124.yzfh6mtqq7cdq22e@gilmour.lan>
-References: <cover.1586939718.git.hns@goldelico.com>
- <06fb6569259bb9183d0a0d0fe70ec4f3033b8aab.1586939718.git.hns@goldelico.com>
- <20200415101251.o3wi5t6xvf56xmhq@gilmour.lan>
- <72919514-0657-4B71-902F-3E775E528F64@goldelico.com>
- <f4fdca8a-d18c-a8d2-7f51-d1ebbbab3647@baylibre.com>
- <535CAEBE-F43E-4BFC-B989-612C81F0D7EF@goldelico.com>
+        Wed, 15 Apr 2020 10:22:43 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61A7DC061A0E;
+        Wed, 15 Apr 2020 07:22:43 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id r24so3885989ljd.4;
+        Wed, 15 Apr 2020 07:22:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yzzMWqy+OD4Sj0S39fbp3R3eS6fFNXX/dFDozNIagPM=;
+        b=KWTAORPrZ9yvy2jm6Ap6fsX3FfC6VKBcC0qtVLW22TSIvQGUqfa9ZFqAE1mcQI5H27
+         sh6X1jq0IReze++5Oioq6uIiLMUIygFHw82W/+Hsa1RBWVla9KHhjQmC6YGjkZOnEzPh
+         WzMtMStHr6tzuj6G3d9NYhLE18RqLXCBUlF038DeYkEG6h9tH7MT8Zn/BdfWGmXw2TWp
+         68GzOO8BYt1H/L6ZWeKsLsGDme7/cJAhnGR8Mfr0fTC5bMYBlQiLut+VJGwpN99brNwm
+         CKo3+PYwpg+ra/MJdYYMgEdlxKZ3SqYAOR9wFyYdNz26ECLZxIT46/U4VsLTPvBPij5x
+         g/wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yzzMWqy+OD4Sj0S39fbp3R3eS6fFNXX/dFDozNIagPM=;
+        b=eqcEd8t9S4UrhaHvDFFlxnSepII/TRx2aYQ480VQkRB5oAZF4uJZs/vDtgGR+edlBE
+         ujTc3LdgLphmGbhEm55gLS/l20pQGFvB74eMqLEliUfeDSLnvukfN3/6atj+eyZHqiP0
+         MTI+UR7mZ6g2I7y629Uiehxv6hpEYe0oH+BI3UYIGqrTiac/IuhfCXH7gMYATJfEXAoZ
+         TR/8y76Pydc8c3ShEJgv5P2b3HTzTHc/G+Yn9gf1dGOtgGiWMkFZZoTt9xrpfTozagBe
+         fcIapmI4Iq6b8uYftwus7eOkrJy/Lc18rY7t6V9bZQ3bYnJ0gRsUISPvxiwhHEUH8XFc
+         vj6g==
+X-Gm-Message-State: AGi0PuammHIfVcMMRN5yT6mZhTGYeXLwyqAt1TIoLmKOKIQY1Avbh7GG
+        W6BZTFIO5pIh4s48OcixHOB+W3kp
+X-Google-Smtp-Source: APiQypLMYU1bFrRYsDqjdUgL9OS1QiNz+30o8kG5V5EZ+R7+XtORGUcbqKGG7ZBWbfUmpihoYf9NZA==
+X-Received: by 2002:a2e:2245:: with SMTP id i66mr3534404lji.191.1586960559886;
+        Wed, 15 Apr 2020 07:22:39 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id o17sm12834558lff.70.2020.04.15.07.22.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Apr 2020 07:22:28 -0700 (PDT)
+Subject: Re: [RFC PATCH v7 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1586919463-30542-1-git-send-email-skomatineni@nvidia.com>
+ <1586919463-30542-7-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4118112f-f865-5460-6319-d71271fd78d1@gmail.com>
+Date:   Wed, 15 Apr 2020 17:22:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="oowgclrabb5rh4qg"
-Content-Disposition: inline
-In-Reply-To: <535CAEBE-F43E-4BFC-B989-612C81F0D7EF@goldelico.com>
+In-Reply-To: <1586919463-30542-7-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+15.04.2020 05:57, Sowjanya Komatineni пишет:
+> +static int tegra_csi_remove(struct platform_device *pdev)
+> +{
+> +	struct tegra_csi *csi = platform_get_drvdata(pdev);
+> +	int err;
+> +
+> +	err = host1x_client_unregister(&csi->client);
+> +	if (err < 0) {
+> +		dev_err(csi->dev,
+> +			"failed to unregister host1x client: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	pm_runtime_disable(csi->dev);
+> +	kfree(csi);
 
---oowgclrabb5rh4qg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+IIRC, the driver removal is invoked on the unbinding. Hence, I'm not
+sure how moving away from the resource-managed API helps here. Could you
+please explain in a more details?
 
-On Wed, Apr 15, 2020 at 03:17:25PM +0200, H. Nikolaus Schaller wrote:
-> Hi Neil,
->
-> > Am 15.04.2020 um 14:54 schrieb Neil Armstrong <narmstrong@baylibre.com>:
-> >
-> > Hi,
-> >
-> > On 15/04/2020 14:43, H. Nikolaus Schaller wrote:
-> >>
-> >>> Am 15.04.2020 um 12:12 schrieb Maxime Ripard <maxime@cerno.tech>:
-> >>>
-> >>> Hi,
-> >>>
-> >>> On Wed, Apr 15, 2020 at 10:35:08AM +0200, H. Nikolaus Schaller wrote:
-> >>>> The Imagination PVR/SGX GPU is part of several SoC from
-> >>>> multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo,
-> >>>> Allwinner A83 and others.
-> >>>>
-> >>>> With this binding, we describe how the SGX processor is
-> >>>> interfaced to the SoC (registers, interrupt etc.).
-> >>>>
-> >>>> In most cases, Clock, Reset and power management is handled
-> >>>> by a parent node or elsewhere (e.g. code in the driver).
-> >>>
-> >>> Wouldn't the "code in the driver" still require the clock / reset /
-> >>> power domain to be set in the DT?
-> >>
-> >> Well, some SoC seem to use existing clocks and have no reset.
-> >> Or, although not recommended, they may have the io-address range
-> >> hard-coded.
-> >
-> > The possible clocks and resets should be added, even if optional.
-> >
-> > Please look at the arm utgard, midgard and bifrost bindings.
->
-> Interesting to compare to. Maybe we should also add the
-> $nodename: pattern: '^gpu@[a-f0-9]+$'
->
-> But the sgx binding is difficult to grasp here. Some SoC like the
-> omap series have their own ti,sysc based target modules and the
-> gpu nodes is a child of it lacking any clock and reset references
-> for purpose.
->
-> The jz4780 and some other need a clocks definition, but no reset.
-> Having a reset seems to be an option for the SoC designer and
-> not mandated by img. So is it part of the pvrsgx bindings or the
-> SoC?
->
-> Well we could add clocks and resets as optional but that would
-> allow to wrongly define omap.
->
-> Or delegate them to a parent "simple-pm-bus" node.
->
-> I have to study that material more to understand what you seem
-> to expect.
-
-The thing is, once that binding is in, it has to be backward
-compatible. So every thing that you leave out is something that you'll
-need to support in the driver eventually.
-
-If you don't want it to be a complete nightmare, you'll want to figure
-out as much as possible on how the GPU is integrated and make a
-binding out of that. If OMAP is too much of a pain, you can also make
-a separate binding for it, and a generic one for the rest of us.
-
-I'd say that it's pretty unlikely that the clocks, interrupts (and
-even regulators) are optional. It might be fixed on some SoCs, but
-that's up to the DT to express that using fixed clocks / regulators,
-not the GPU binding itself.
-
-Maxime
-
---oowgclrabb5rh4qg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpcYZAAKCRDj7w1vZxhR
-xT0JAQCiWOePc99saTFkub5XKNoxg+0OWfORXzWEdHfaNN9pAQD6ApKRwjY9uv1z
-NzDdNQ4q1aRrmR/SI1oU48l8V/B3kg0=
-=Apgq
------END PGP SIGNATURE-----
-
---oowgclrabb5rh4qg--
+Have you tried to test this driver under KASAN? I suspect that you just
+masked the problem, instead of fixing it.
