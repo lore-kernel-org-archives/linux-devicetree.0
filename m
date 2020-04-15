@@ -2,272 +2,125 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A44C3815B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D65F4C2BB55
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC4B22076D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B48212078B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586961840;
-	bh=kaxOs6wWIr1OGIXR5LzKmWs66PFaa1OjoPc/IuSo3vk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kF1DxMnlJ7KMma+5MSY3LXuCkDfPcX6/PR6Srz+b4wBVgl1P+W/Bc2TPMWU44mpft
-	 mIjmvgkFJZvu/+LAhKHIH0w7hFsABpXEnYnoGVjWR0B6ImrQqUZwtcmmOeXFYVsZDI
-	 HwsQEjyEgP0QITOukAQ5LJeafnDh0afg1nm9T9GU=
+	s=default; t=1586961940;
+	bh=Tgx8bhgHklE3FDZN9i6EsAGZk7UfLJB3Oy+zSTpJTjQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pUHiumHQD2KRS+xOAtgPCjT45mahM3kblWHml5EqmI1yrLIImEro/0bVPFnn5PbA1
+	 nWKy24Q0/7naUsIb4RtAJkbDdfnYznGZE7K+iCVTL89xejZrYBCCvl4AxvdSKeh4C6
+	 X5rXFsEmISepw7jgvj1JlBmNhp/YEDnKwkHREPdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636772AbgDOOnx (ORCPT
+        id S2636799AbgDOOpj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:43:53 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:38690 "EHLO
-        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S370876AbgDOOnm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 10:43:42 -0400
-Received: by mail-oo1-f68.google.com with SMTP id i9so880ool.5;
-        Wed, 15 Apr 2020 07:43:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aS1Is431wFo8Y/I/7OGLepWmzb0NQKhnSdzX/bpKCuI=;
-        b=B8Q96YOIJ9XJ+R+Wr5e8QhVSY8tPtC6K+vRwuLr+JgMBmXmKYH84rkW1fK38VT8tAl
-         ol7ongFAIAS1xtcwJFTE+poAOmY7PPAVzD4Ek0xncMreDETVbzwvUdWie4ALa8hJU4LE
-         kAYfUZPf54z0capKh1ns/KOd8ED+Ao7o/SOpcHf4Z/yKfgHDMIdyjVM404/0aguB7fzY
-         T16DjkVyZRpw+2Vel1AA9aRbD+Bk3gE1wc2cO1Nnnfdc8gGzFz6cEHFgbzhxSNxi0Zp+
-         ZCir0qQQP6N6F2MXTyXeFAvne+sDGqnZHdkiUBTT0kxmilmY6Qudqa5u9hlboe+vj9GL
-         WywA==
-X-Gm-Message-State: AGi0Pub/lRmtTrsjVx0mJS6AdJgYxNwAkSI0dJwVewzw05Ez1s4FxNTK
-        dte0HVd6I7HRl4HnVMFvqA==
-X-Google-Smtp-Source: APiQypJGYusZTJBkcMjHaBqRyKb0biS2xVvK01uI9ULQOUjb61LqMow83eT3yRCjWJJmofFaIfh/Rg==
-X-Received: by 2002:a4a:db7b:: with SMTP id o27mr22967195ood.25.1586961819086;
-        Wed, 15 Apr 2020 07:43:39 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k132sm6454033oih.9.2020.04.15.07.43.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 07:43:37 -0700 (PDT)
-Received: (nullmailer pid 16201 invoked by uid 1000);
-        Wed, 15 Apr 2020 14:43:36 -0000
-Date:   Wed, 15 Apr 2020 09:43:36 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v5 5/5] media: dt-bindings: media: i2c: convert ov5645
- bindings to json-schema
-Message-ID: <20200415144336.GA11960@bogus>
-References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1586191361-16598-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200406174346.GH16885@pendragon.ideasonboard.com>
+        Wed, 15 Apr 2020 10:45:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40254 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2636795AbgDOOpd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:45:33 -0400
+Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46D72218AC;
+        Wed, 15 Apr 2020 14:45:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586961929;
+        bh=Tgx8bhgHklE3FDZN9i6EsAGZk7UfLJB3Oy+zSTpJTjQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Qy38bo6tXyunOd7fssISCteEmQC1jwS+lxtVXlNgBuwUsCE1XBnGqltK8LvvfU38O
+         N2qgx9t7zxpsbTrfhqCb2N3TorkMRnTTDQBaX02kYlJNP+Rn28JogIJyaA5xT8Wmdw
+         hjai+vMqj0Mhhi6NEwCsGQmds4IRE5GmSuy6ng84=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jOjI7-006ka3-I8; Wed, 15 Apr 2020 16:45:27 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH v3 12/12] docs: dt: convert writing-bindings.txt to ReST
+Date:   Wed, 15 Apr 2020 16:45:26 +0200
+Message-Id: <f2fb27f86a12c16d4b20d9051dec405d4f29a2bb.1586961793.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <cover.1586961793.git.mchehab+huawei@kernel.org>
+References: <cover.1586961793.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200406174346.GH16885@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 08:43:46PM +0300, Laurent Pinchart wrote:
-> Hi Prabhakar,
-> 
-> Thank you for the patch.
-> 
-> On Mon, Apr 06, 2020 at 05:42:41PM +0100, Lad Prabhakar wrote:
-> > Convert ov5645 bindings to json-schema.
-> > 
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  .../devicetree/bindings/media/i2c/ov5645.txt  |  52 --------
-> >  .../devicetree/bindings/media/i2c/ov5645.yaml | 126 ++++++++++++++++++
-> >  2 files changed, 126 insertions(+), 52 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > deleted file mode 100644
-> > index a55bb728ea48..000000000000
-> > --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > +++ /dev/null
-> > @@ -1,52 +0,0 @@
-> > -* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
-> > -
-> > -The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
-> > -an active array size of 2592H x 1944V. It is programmable through a serial I2C
-> > -interface.
-> > -
-> > -Required Properties:
-> > -- compatible: Value should be "ovti,ov5645".
-> > -- clocks: Reference to the xclk clock.
-> > -- clock-names: Should be "xclk".
-> > -- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-> > -  to the hardware pin PWDNB which is physically active low.
-> > -- reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-> > -  the hardware pin RESETB.
-> > -- vdddo-supply: Chip digital IO regulator.
-> > -- vdda-supply: Chip analog regulator.
-> > -- vddd-supply: Chip digital core regulator.
-> > -
-> > -The device node must contain one 'port' child node for its digital output
-> > -video port, in accordance with the video interface bindings defined in
-> > -Documentation/devicetree/bindings/media/video-interfaces.txt.
-> > -
-> > -Example:
-> > -
-> > -	&i2c1 {
-> > -		...
-> > -
-> > -		ov5645: ov5645@3c {
-> > -			compatible = "ovti,ov5645";
-> > -			reg = <0x3c>;
-> > -
-> > -			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
-> > -			reset-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
-> > -			pinctrl-names = "default";
-> > -			pinctrl-0 = <&camera_rear_default>;
-> > -
-> > -			clocks = <&clks 200>;
-> > -			clock-names = "xclk";
-> > -
-> > -			vdddo-supply = <&camera_dovdd_1v8>;
-> > -			vdda-supply = <&camera_avdd_2v8>;
-> > -			vddd-supply = <&camera_dvdd_1v2>;
-> > -
-> > -			port {
-> > -				ov5645_ep: endpoint {
-> > -					clock-lanes = <1>;
-> > -					data-lanes = <0 2>;
-> > -					remote-endpoint = <&csi0_ep>;
-> > -				};
-> > -			};
-> > -		};
-> > -	};
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.yaml b/Documentation/devicetree/bindings/media/i2c/ov5645.yaml
-> > new file mode 100644
-> > index 000000000000..d5cdcf9a1c76
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.yaml
-> > @@ -0,0 +1,126 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/media/i2c/ov5645.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Omnivision 1/4-Inch 5MP CMOS Digital Image Sensor
-> > +
-> > +maintainers:
-> > +  - Sakari Ailus <sakari.ailus@linux.intel.com>
-> > +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > +
-> > +description: |-
-> > + The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
-> > + an active array size of 2592H x 1944V. It is programmable through a serial I2C
-> > + interface.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: ovti,ov5645
-> > +
-> > +  reg:
-> > +    description: I2C device address
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    description: External clock frequency should range between 6MHz to 27MHz.
-> > +    maxItems: 1
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: xclk
-> > +
-> > +  enable-gpios:
-> > +    description: |-
-> > +      Chip enable GPIO. This corresponds to the hardware pin PWDNB which is
-> > +      physically active low.
-> > +
-> > +  reset-gpios:
-> > +    description: Chip reset GPIO. This corresponds to the hardware pin RESETB.
-> > +
-> > +  vdddo-supply:
-> > +    description: Chip digital IO regulator.
-> > +
-> > +  vdda-supply:
-> > +    description: Chip analog regulator.
-> > +
-> > +  vddd-supply:
-> > +    description: Chip digital core regulator.
-> > +
-> > +  # See ../video-interfaces.txt for more details
-> > +  port:
-> > +    type: object
-> > +    properties:
-> > +      endpoint:
-> > +        type: object
-> > +
-> > +        properties:
-> > +          data-lanes:
-> 
-> Don't you need
-> 
-> 		minItems: 1
-> 		maxItems: 2
-> 
-> here ?
+- Add a SPDX header;
+- Adjust document and section titles;
+- Mark literal blocks as such;
+- Add it to bindings/index.rst.
 
-Yes.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/devicetree/bindings/index.rst                | 1 +
+ .../{writing-bindings.txt => writing-bindings.rst}         | 7 +++++++
+ 2 files changed, 8 insertions(+)
+ rename Documentation/devicetree/bindings/{writing-bindings.txt => writing-bindings.rst} (92%)
 
-> > +            description: |-
-> > +              The sensor supports either one-lane, or two-lane operation.
-> > +              For one-lane operation the property must be set to <1> and
-> > +              for two-lane operation the property must be set to <1 2>.
-> > +            items:
-> > +              - const: 1
-> > +              - const: 2
-> > +
-> > +          clock-lanes:
-> 
-> Same here,
-> 
-> 		maxItems: 1
-> 
-> ?
+diff --git a/Documentation/devicetree/bindings/index.rst b/Documentation/devicetree/bindings/index.rst
+index 6b87875a049c..3837b17c234f 100644
+--- a/Documentation/devicetree/bindings/index.rst
++++ b/Documentation/devicetree/bindings/index.rst
+@@ -9,3 +9,4 @@ Device Tree
+ 
+    ABI
+    submitting-patches
++   writing-bindings
+diff --git a/Documentation/devicetree/bindings/writing-bindings.txt b/Documentation/devicetree/bindings/writing-bindings.rst
+similarity index 92%
+rename from Documentation/devicetree/bindings/writing-bindings.txt
+rename to Documentation/devicetree/bindings/writing-bindings.rst
+index ca024b9c7433..45ff426d0019 100644
+--- a/Documentation/devicetree/bindings/writing-bindings.txt
++++ b/Documentation/devicetree/bindings/writing-bindings.rst
+@@ -1,4 +1,8 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++============================================================
+ DOs and DON'Ts for designing and writing Devicetree bindings
++============================================================
+ 
+ This is a list of common review feedback items focused on binding design. With
+ every rule, there are exceptions and bindings have many gray areas.
+@@ -8,6 +12,7 @@ Documentation/devicetree/bindings/submitting-patches.rst
+ 
+ 
+ Overall design
++==============
+ 
+ - DO attempt to make bindings complete even if a driver doesn't support some
+   features. For example, if a device has an interrupt, then include the
+@@ -32,6 +37,7 @@ Overall design
+ 
+ 
+ Properties
++==========
+ 
+ - DO make 'compatible' properties specific. DON'T use wildcards in compatible
+   strings. DO use fallback compatibles when devices are the same as or a subset
+@@ -53,6 +59,7 @@ Properties
+ 
+ 
+ Board/SoC .dts Files
++====================
+ 
+ - DO put all MMIO devices under a bus node and not at the top-level.
+ 
+-- 
+2.25.2
 
-No, because the default is number of entries in 'items'.
-
-> 
-> > +            description:
-> > +              should be set to <0> (clock lane on hardware lane 0).
-> 
-> I think you can drop the description, with the items below it's clear
-> that the value has to be <0>.
-> 
-> > +            items:
-> > +              - const: 0
-> > +
-> > +          remote-endpoint: true
-> 
-> Should this be
-> 
->              remote-endpoint:
-> 	       $ref: /schemas/types.yaml#/definitions/phandle
-
-No, we can assume this has a type definition already.
-
-Rob
