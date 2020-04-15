@@ -2,107 +2,123 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 361C9C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21008C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F52F206D5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:22:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KWTAORPr"
+	by mail.kernel.org (Postfix) with ESMTP id EF6222078A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 14:28:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586960889;
+	bh=ZB6JwYNcMXtDqUpFqr+tucEk39Yxv3CVPGoD0O1qI9k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HMFFwNbVL1oH92gVPCk6lAZ44LCM7YY8TkbRp/eUBbB1ahY4EnWjrvbkXVjKIAFFu
+	 XEaT7Ri/i2YTe6LDbjK5MTlwHYc/L1Ydfh/TxOq/6ybyps3QXmCDAIpGp84jERMxmn
+	 j3HeVGOutfz1rVLmmQpzs4WhDyIBaztGMDgOfzpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634270AbgDOOWr (ORCPT
+        id S2392061AbgDOO2F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 10:22:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391838AbgDOOWn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:22:43 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61A7DC061A0E;
-        Wed, 15 Apr 2020 07:22:43 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id r24so3885989ljd.4;
-        Wed, 15 Apr 2020 07:22:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yzzMWqy+OD4Sj0S39fbp3R3eS6fFNXX/dFDozNIagPM=;
-        b=KWTAORPrZ9yvy2jm6Ap6fsX3FfC6VKBcC0qtVLW22TSIvQGUqfa9ZFqAE1mcQI5H27
-         sh6X1jq0IReze++5Oioq6uIiLMUIygFHw82W/+Hsa1RBWVla9KHhjQmC6YGjkZOnEzPh
-         WzMtMStHr6tzuj6G3d9NYhLE18RqLXCBUlF038DeYkEG6h9tH7MT8Zn/BdfWGmXw2TWp
-         68GzOO8BYt1H/L6ZWeKsLsGDme7/cJAhnGR8Mfr0fTC5bMYBlQiLut+VJGwpN99brNwm
-         CKo3+PYwpg+ra/MJdYYMgEdlxKZ3SqYAOR9wFyYdNz26ECLZxIT46/U4VsLTPvBPij5x
-         g/wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yzzMWqy+OD4Sj0S39fbp3R3eS6fFNXX/dFDozNIagPM=;
-        b=eqcEd8t9S4UrhaHvDFFlxnSepII/TRx2aYQ480VQkRB5oAZF4uJZs/vDtgGR+edlBE
-         ujTc3LdgLphmGbhEm55gLS/l20pQGFvB74eMqLEliUfeDSLnvukfN3/6atj+eyZHqiP0
-         MTI+UR7mZ6g2I7y629Uiehxv6hpEYe0oH+BI3UYIGqrTiac/IuhfCXH7gMYATJfEXAoZ
-         TR/8y76Pydc8c3ShEJgv5P2b3HTzTHc/G+Yn9gf1dGOtgGiWMkFZZoTt9xrpfTozagBe
-         fcIapmI4Iq6b8uYftwus7eOkrJy/Lc18rY7t6V9bZQ3bYnJ0gRsUISPvxiwhHEUH8XFc
-         vj6g==
-X-Gm-Message-State: AGi0PuammHIfVcMMRN5yT6mZhTGYeXLwyqAt1TIoLmKOKIQY1Avbh7GG
-        W6BZTFIO5pIh4s48OcixHOB+W3kp
-X-Google-Smtp-Source: APiQypLMYU1bFrRYsDqjdUgL9OS1QiNz+30o8kG5V5EZ+R7+XtORGUcbqKGG7ZBWbfUmpihoYf9NZA==
-X-Received: by 2002:a2e:2245:: with SMTP id i66mr3534404lji.191.1586960559886;
-        Wed, 15 Apr 2020 07:22:39 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id o17sm12834558lff.70.2020.04.15.07.22.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Apr 2020 07:22:28 -0700 (PDT)
-Subject: Re: [RFC PATCH v7 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1586919463-30542-1-git-send-email-skomatineni@nvidia.com>
- <1586919463-30542-7-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <4118112f-f865-5460-6319-d71271fd78d1@gmail.com>
-Date:   Wed, 15 Apr 2020 17:22:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 15 Apr 2020 10:28:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729551AbgDOO2C (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:28:02 -0400
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FE362137B;
+        Wed, 15 Apr 2020 14:28:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586960881;
+        bh=ZB6JwYNcMXtDqUpFqr+tucEk39Yxv3CVPGoD0O1qI9k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EdiMO3msQAgzx0TyMSchthqY2rs2o5vaaovfnRG9lP0sq2zRvSd7A5QMdCQu0XiW5
+         uXdY7A/C7z5pANdqM7vdXpHOqvF+/a1K/sl74bMMKu9+Sx9F8tCvvrpCb/AwQAy0r7
+         2owN22MwmG4CKqQ5uKU7THxXQD4eJIJx09UaBv1c=
+Received: by mail-qv1-f51.google.com with SMTP id di6so78414qvb.10;
+        Wed, 15 Apr 2020 07:28:01 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaxPsZ2sH6+7fEAC4bgOx5Bb6QfaCNZ1i5DfYDOecdNR3rQtC0V
+        DVtUBF+kUf2L03+tH+JEjiEHCkTr2XgbnI845Q==
+X-Google-Smtp-Source: APiQypLsz6XmmIsYo7wzUtEP93/5Mi9D1CSe82grG2qT7IqkeUxM3r49phjnJKjx+Z5cjvQrWQxLKQ0q/vwRTjsscsU=
+X-Received: by 2002:a05:6214:a8a:: with SMTP id ev10mr4632235qvb.20.1586960880451;
+ Wed, 15 Apr 2020 07:28:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1586919463-30542-7-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200329161552.215075-1-david@ixit.cz> <20200329162128.218584-5-david@ixit.cz>
+ <20200410164905.GA719@bogus> <8c4ab1ce-1947-ab38-3f8c-9055406428e4@gmail.com>
+In-Reply-To: <8c4ab1ce-1947-ab38-3f8c-9055406428e4@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 15 Apr 2020 09:27:46 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJgZaQux04vdkShX4vkmOK5T-H6tOXt7Da19jgG0P76-Q@mail.gmail.com>
+Message-ID: <CAL_JsqJgZaQux04vdkShX4vkmOK5T-H6tOXt7Da19jgG0P76-Q@mail.gmail.com>
+Subject: Re: [PATCH 4/9] dt-bindings: power: supply: Add device-tree binding
+ for Summit SMB3xx
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     David Heidelberg <david@ixit.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Jonghwa Lee <jonghwa3.lee@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Myungjoo Ham <myungjoo.ham@samsung.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        ramakrishna.pallala@intel.com,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-15.04.2020 05:57, Sowjanya Komatineni пишет:
-> +static int tegra_csi_remove(struct platform_device *pdev)
-> +{
-> +	struct tegra_csi *csi = platform_get_drvdata(pdev);
-> +	int err;
-> +
-> +	err = host1x_client_unregister(&csi->client);
-> +	if (err < 0) {
-> +		dev_err(csi->dev,
-> +			"failed to unregister host1x client: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	pm_runtime_disable(csi->dev);
-> +	kfree(csi);
+On Fri, Apr 10, 2020 at 2:02 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> 10.04.2020 19:49, Rob Herring =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> ...
+> >> +  summit,max-chg-curr:
+> >> +    description: Maximum current for charging (in uA)
+> >> +    allOf:
+> >> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> >> +
+> >> +  summit,max-chg-volt:
+> >> +    description: Maximum voltage for charging (in uV)
+> >> +    allOf:
+> >> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> >> +    minimum: 3500000
+> >> +    maximum: 4500000
+> >> +
+> >> +  summit,pre-chg-curr:
+> >> +    description: Pre-charging current for charging (in uA)
+> >> +    allOf:
+> >> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> >> +
+> >> +  summit,term-curr:
+> >> +    description: Charging cycle termination current (in uA)
+> >> +    allOf:
+> >> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> ...
+> > These are all properties of the battery attached and we have standard
+> > properties for some/all of these.
+>
+> Looks like only four properties seem to be matching the properties of
+> the battery.txt binding.
+>
+> Are you suggesting that these matching properties should be renamed
+> after the properties in battery.txt?
 
-IIRC, the driver removal is invoked on the unbinding. Hence, I'm not
-sure how moving away from the resource-managed API helps here. Could you
-please explain in a more details?
+Yes, and that there should be a battery node. Possibly you should add
+new properties battery.txt. It's curious that different properties are
+needed. Ultimately, for a given battery technology I would expect
+there's a fixed set of properties needed to describe how to charge
+them. Perhaps some of these properties can just be derived from other
+properties and folks are just picking what a specific charger wants.
+Unfortunately, we have just a mess of stuff made up for each charger
+out there. I don't have the time nor the experience in this area to do
+much more than say do better.
 
-Have you tried to test this driver under KASAN? I suspect that you just
-masked the problem, instead of fixing it.
+Rob
