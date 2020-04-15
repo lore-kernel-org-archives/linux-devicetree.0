@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68702C2BB55
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 15:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB656C2BB55
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 15:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BBEA2076A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 15:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC9BD20857
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 15:59:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="dD0vBGZT"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="rfReXrFG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410062AbgDOP7J (ORCPT
+        id S1415046AbgDOP72 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 11:59:09 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:21762 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2410051AbgDOP7F (ORCPT
+        Wed, 15 Apr 2020 11:59:28 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:44340 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1415027AbgDOP7Z (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 11:59:05 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03FFW5Hp032217;
-        Wed, 15 Apr 2020 17:58:46 +0200
+        Wed, 15 Apr 2020 11:59:25 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03FFXqhu002772;
+        Wed, 15 Apr 2020 17:59:03 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=Khc/U1sUR95Aj2cY969DKti/dzXYr2tJdsiqM1nCHow=;
- b=dD0vBGZTW/7pq4LFVz7FHtV46GmihzFC636+ak1yV/xA6cBKTpaQ2WU+HBhTXjJU7Sen
- tmD+VfUh2eLZCp+5JItD1U6mgLVq2wITRiauilVZ1Ds/pCm5I/aqUukJarxG1siCBjse
- P63jojI20enLafnRlRxc4Kxf1ZZbSI4dkFXFVrCPmi0q2cGnvp+WfqWZqKCq+VqMGxsy
- QpaCHoRC5L5ZgwXZ0qK4LbkSu8b7Louvz4p6dZyOQwqPeLxC+L50NVbsk09Ivdvw6Nkq
- b8qj318uhT7gb46bv/Ki3DRiDkRbrNkUO0mMW0B7zJ5KOmPBLfzvoDdQptKXVnZyjrtu Zw== 
+ bh=CqyYyg1hqEyPGJdOAAKlTdHo595F6ovJE5aSd4s3ldE=;
+ b=rfReXrFGXDvaVesoS+JEsXG4A9dF8c9oVtrDxL4ZcK1EedXhekqgWPx+KRZUltsy9e6a
+ 999X3qwQ/fTSWmEUIPoc3R0zctAa0Ez5WJZuQh3341L6jxYW1mJ9+K3Ty51YrrCxgQU0
+ XW/+MiDm9vqHLML69vpfqRGsHgbQqZLBLDxfn891RfhpxzLP0Dc9EEETxcK0d6WnyplK
+ Qn7gbneT0z7igwhckna9nETcvWB7wk6QYwyeBypJACTZr44UgPaxzApwLpvGQRnLMpzB
+ Lj0MhdGUdE/q6BAsO7wZ8QbqBc7P93dF0qKzt99yJmUXISScoiB4A3lAWHSNK3azmMks kA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30dn94cxy7-1
+        by mx07-00178001.pphosted.com with ESMTP id 30dn75mxhf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Apr 2020 17:58:46 +0200
+        Wed, 15 Apr 2020 17:59:03 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 221F1100038;
-        Wed, 15 Apr 2020 17:58:46 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E77E6100034;
+        Wed, 15 Apr 2020 17:59:02 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0EDDB2AF597;
-        Wed, 15 Apr 2020 17:58:46 +0200 (CEST)
-Received: from localhost (10.75.127.51) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 15 Apr 2020 17:58:43
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D5BB62B213D;
+        Wed, 15 Apr 2020 17:59:02 +0200 (CEST)
+Received: from localhost (10.75.127.50) by SFHDAG6NODE2.st.com (10.75.127.17)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 15 Apr 2020 17:59:01
  +0200
 From:   Christophe Kerello <christophe.kerello@st.com>
 To:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
@@ -56,16 +56,16 @@ CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <devicetree@vger.kernel.org>, <marex@denx.de>,
         Christophe Kerello <christophe.kerello@st.com>
-Subject: [PATCH v2 05/12] mtd: rawnand: stm32_fmc2: remove useless inline comments
-Date:   Wed, 15 Apr 2020 17:57:29 +0200
-Message-ID: <1586966256-29548-6-git-send-email-christophe.kerello@st.com>
+Subject: [PATCH v2 08/12] mtd: rawnand: stm32_fmc2: use FIELD_PREP/FIELD_GET macros
+Date:   Wed, 15 Apr 2020 17:57:32 +0200
+Message-ID: <1586966256-29548-9-git-send-email-christophe.kerello@st.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
 References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG6NODE2.st.com
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG6NODE2.st.com
  (10.75.127.17)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-15_05:2020-04-14,2020-04-15 signatures=0
@@ -74,279 +74,362 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Remove inline comments that are useless since function label are
-self explanatory.
+This patch removes custom macros and uses FIELD_PREP and FIELD_GET macros.
 
 Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
 ---
- drivers/mtd/nand/raw/stm32_fmc2_nand.c | 40 ----------------------------------
- 1 file changed, 40 deletions(-)
+ drivers/mtd/nand/raw/stm32_fmc2_nand.c | 177 ++++++++++++++++-----------------
+ 1 file changed, 85 insertions(+), 92 deletions(-)
 
 diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-index 0a96797..ab53314 100644
+index 9ce405d..e0a7c08 100644
 --- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
 +++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
-@@ -281,7 +281,6 @@ static inline struct stm32_fmc2_nfc *to_stm32_nfc(struct nand_controller *base)
- 	return container_of(base, struct stm32_fmc2_nfc, base);
- }
+@@ -4,6 +4,7 @@
+  * Author: Christophe Kerello <christophe.kerello@st.com>
+  */
  
--/* Timings configuration */
- static void stm32_fmc2_timings_init(struct nand_chip *chip)
- {
- 	struct stm32_fmc2_nfc *fmc2 = to_stm32_nfc(chip->controller);
-@@ -313,7 +312,6 @@ static void stm32_fmc2_timings_init(struct nand_chip *chip)
- 	writel_relaxed(patt, fmc2->io_base + FMC2_PATT);
- }
++#include <linux/bitfield.h>
+ #include <linux/clk.h>
+ #include <linux/dmaengine.h>
+ #include <linux/dma-mapping.h>
+@@ -84,20 +85,16 @@
+ /* Register: FMC2_PCR */
+ #define FMC2_PCR_PWAITEN		BIT(1)
+ #define FMC2_PCR_PBKEN			BIT(2)
+-#define FMC2_PCR_PWID_MASK		GENMASK(5, 4)
+-#define FMC2_PCR_PWID(x)		(((x) & 0x3) << 4)
++#define FMC2_PCR_PWID			GENMASK(5, 4)
+ #define FMC2_PCR_PWID_BUSWIDTH_8	0
+ #define FMC2_PCR_PWID_BUSWIDTH_16	1
+ #define FMC2_PCR_ECCEN			BIT(6)
+ #define FMC2_PCR_ECCALG			BIT(8)
+-#define FMC2_PCR_TCLR_MASK		GENMASK(12, 9)
+-#define FMC2_PCR_TCLR(x)		(((x) & 0xf) << 9)
++#define FMC2_PCR_TCLR			GENMASK(12, 9)
+ #define FMC2_PCR_TCLR_DEFAULT		0xf
+-#define FMC2_PCR_TAR_MASK		GENMASK(16, 13)
+-#define FMC2_PCR_TAR(x)			(((x) & 0xf) << 13)
++#define FMC2_PCR_TAR			GENMASK(16, 13)
+ #define FMC2_PCR_TAR_DEFAULT		0xf
+-#define FMC2_PCR_ECCSS_MASK		GENMASK(19, 17)
+-#define FMC2_PCR_ECCSS(x)		(((x) & 0x7) << 17)
++#define FMC2_PCR_ECCSS			GENMASK(19, 17)
+ #define FMC2_PCR_ECCSS_512		1
+ #define FMC2_PCR_ECCSS_2048		3
+ #define FMC2_PCR_BCHECC			BIT(24)
+@@ -107,17 +104,17 @@
+ #define FMC2_SR_NWRF			BIT(6)
  
--/* Controller configuration */
- static void stm32_fmc2_setup(struct nand_chip *chip)
- {
- 	struct stm32_fmc2_nfc *fmc2 = to_stm32_nfc(chip->controller);
-@@ -341,7 +339,6 @@ static void stm32_fmc2_setup(struct nand_chip *chip)
- 	writel_relaxed(pcr, fmc2->io_base + FMC2_PCR);
- }
+ /* Register: FMC2_PMEM */
+-#define FMC2_PMEM_MEMSET(x)		(((x) & 0xff) << 0)
+-#define FMC2_PMEM_MEMWAIT(x)		(((x) & 0xff) << 8)
+-#define FMC2_PMEM_MEMHOLD(x)		(((x) & 0xff) << 16)
+-#define FMC2_PMEM_MEMHIZ(x)		(((x) & 0xff) << 24)
++#define FMC2_PMEM_MEMSET		GENMASK(7, 0)
++#define FMC2_PMEM_MEMWAIT		GENMASK(15, 8)
++#define FMC2_PMEM_MEMHOLD		GENMASK(23, 16)
++#define FMC2_PMEM_MEMHIZ		GENMASK(31, 24)
+ #define FMC2_PMEM_DEFAULT		0x0a0a0a0a
  
--/* Select target */
- static int stm32_fmc2_select_chip(struct nand_chip *chip, int chipnr)
- {
- 	struct stm32_fmc2_nfc *fmc2 = to_stm32_nfc(chip->controller);
-@@ -353,11 +350,7 @@ static int stm32_fmc2_select_chip(struct nand_chip *chip, int chipnr)
- 		return 0;
+ /* Register: FMC2_PATT */
+-#define FMC2_PATT_ATTSET(x)		(((x) & 0xff) << 0)
+-#define FMC2_PATT_ATTWAIT(x)		(((x) & 0xff) << 8)
+-#define FMC2_PATT_ATTHOLD(x)		(((x) & 0xff) << 16)
+-#define FMC2_PATT_ATTHIZ(x)		(((x) & 0xff) << 24)
++#define FMC2_PATT_ATTSET		GENMASK(7, 0)
++#define FMC2_PATT_ATTWAIT		GENMASK(15, 8)
++#define FMC2_PATT_ATTHOLD		GENMASK(23, 16)
++#define FMC2_PATT_ATTHIZ		GENMASK(31, 24)
+ #define FMC2_PATT_DEFAULT		0x0a0a0a0a
  
- 	fmc2->cs_sel = nand->cs_used[chipnr];
--
--	/* FMC2 setup routine */
- 	stm32_fmc2_setup(chip);
--
--	/* Apply timings */
- 	stm32_fmc2_timings_init(chip);
+ /* Register: FMC2_ISR */
+@@ -132,9 +129,9 @@
+ /* Register: FMC2_CSQCFGR1 */
+ #define FMC2_CSQCFGR1_CMD2EN		BIT(1)
+ #define FMC2_CSQCFGR1_DMADEN		BIT(2)
+-#define FMC2_CSQCFGR1_ACYNBR(x)		(((x) & 0x7) << 4)
+-#define FMC2_CSQCFGR1_CMD1(x)		(((x) & 0xff) << 8)
+-#define FMC2_CSQCFGR1_CMD2(x)		(((x) & 0xff) << 16)
++#define FMC2_CSQCFGR1_ACYNBR		GENMASK(6, 4)
++#define FMC2_CSQCFGR1_CMD1		GENMASK(15, 8)
++#define FMC2_CSQCFGR1_CMD2		GENMASK(23, 16)
+ #define FMC2_CSQCFGR1_CMD1T		BIT(24)
+ #define FMC2_CSQCFGR1_CMD2T		BIT(25)
  
- 	if (fmc2->dma_tx_ch && fmc2->dma_rx_ch) {
-@@ -407,7 +400,6 @@ static int stm32_fmc2_select_chip(struct nand_chip *chip, int chipnr)
- 	return 0;
- }
+@@ -142,13 +139,13 @@
+ #define FMC2_CSQCFGR2_SQSDTEN		BIT(0)
+ #define FMC2_CSQCFGR2_RCMD2EN		BIT(1)
+ #define FMC2_CSQCFGR2_DMASEN		BIT(2)
+-#define FMC2_CSQCFGR2_RCMD1(x)		(((x) & 0xff) << 8)
+-#define FMC2_CSQCFGR2_RCMD2(x)		(((x) & 0xff) << 16)
++#define FMC2_CSQCFGR2_RCMD1		GENMASK(15, 8)
++#define FMC2_CSQCFGR2_RCMD2		GENMASK(23, 16)
+ #define FMC2_CSQCFGR2_RCMD1T		BIT(24)
+ #define FMC2_CSQCFGR2_RCMD2T		BIT(25)
  
--/* Set bus width to 16-bit or 8-bit */
- static void stm32_fmc2_set_buswidth_16(struct stm32_fmc2_nfc *fmc2, bool set)
- {
- 	u32 pcr = readl_relaxed(fmc2->io_base + FMC2_PCR);
-@@ -418,7 +410,6 @@ static void stm32_fmc2_set_buswidth_16(struct stm32_fmc2_nfc *fmc2, bool set)
- 	writel_relaxed(pcr, fmc2->io_base + FMC2_PCR);
- }
+ /* Register: FMC2_CSQCFGR3 */
+-#define FMC2_CSQCFGR3_SNBR(x)		(((x) & 0x1f) << 8)
++#define FMC2_CSQCFGR3_SNBR		GENMASK(13, 8)
+ #define FMC2_CSQCFGR3_AC1T		BIT(16)
+ #define FMC2_CSQCFGR3_AC2T		BIT(17)
+ #define FMC2_CSQCFGR3_AC3T		BIT(18)
+@@ -159,15 +156,15 @@
+ #define FMC2_CSQCFGR3_RAC2T		BIT(23)
  
--/* Enable/disable ECC */
- static void stm32_fmc2_set_ecc(struct stm32_fmc2_nfc *fmc2, bool enable)
- {
- 	u32 pcr = readl(fmc2->io_base + FMC2_PCR);
-@@ -429,7 +420,6 @@ static void stm32_fmc2_set_ecc(struct stm32_fmc2_nfc *fmc2, bool enable)
- 	writel(pcr, fmc2->io_base + FMC2_PCR);
- }
+ /* Register: FMC2_CSQCAR1 */
+-#define FMC2_CSQCAR1_ADDC1(x)		(((x) & 0xff) << 0)
+-#define FMC2_CSQCAR1_ADDC2(x)		(((x) & 0xff) << 8)
+-#define FMC2_CSQCAR1_ADDC3(x)		(((x) & 0xff) << 16)
+-#define FMC2_CSQCAR1_ADDC4(x)		(((x) & 0xff) << 24)
++#define FMC2_CSQCAR1_ADDC1		GENMASK(7, 0)
++#define FMC2_CSQCAR1_ADDC2		GENMASK(15, 8)
++#define FMC2_CSQCAR1_ADDC3		GENMASK(23, 16)
++#define FMC2_CSQCAR1_ADDC4		GENMASK(31, 24)
  
--/* Enable irq sources in case of the sequencer is used */
- static inline void stm32_fmc2_enable_seq_irq(struct stm32_fmc2_nfc *fmc2)
- {
- 	u32 csqier = readl_relaxed(fmc2->io_base + FMC2_CSQIER);
-@@ -441,7 +431,6 @@ static inline void stm32_fmc2_enable_seq_irq(struct stm32_fmc2_nfc *fmc2)
- 	writel_relaxed(csqier, fmc2->io_base + FMC2_CSQIER);
- }
+ /* Register: FMC2_CSQCAR2 */
+-#define FMC2_CSQCAR2_ADDC5(x)		(((x) & 0xff) << 0)
+-#define FMC2_CSQCAR2_NANDCEN(x)		(((x) & 0x3) << 10)
+-#define FMC2_CSQCAR2_SAO(x)		(((x) & 0xffff) << 16)
++#define FMC2_CSQCAR2_ADDC5		GENMASK(7, 0)
++#define FMC2_CSQCAR2_NANDCEN		GENMASK(11, 10)
++#define FMC2_CSQCAR2_SAO		GENMASK(31, 16)
  
--/* Disable irq sources in case of the sequencer is used */
- static inline void stm32_fmc2_disable_seq_irq(struct stm32_fmc2_nfc *fmc2)
- {
- 	u32 csqier = readl_relaxed(fmc2->io_base + FMC2_CSQIER);
-@@ -453,13 +442,11 @@ static inline void stm32_fmc2_disable_seq_irq(struct stm32_fmc2_nfc *fmc2)
- 	fmc2->irq_state = FMC2_IRQ_UNKNOWN;
- }
+ /* Register: FMC2_CSQIER */
+ #define FMC2_CSQIER_TCIE		BIT(0)
+@@ -188,28 +185,23 @@
+ /* Register: FMC2_BCHDSR0 */
+ #define FMC2_BCHDSR0_DUE		BIT(0)
+ #define FMC2_BCHDSR0_DEF		BIT(1)
+-#define FMC2_BCHDSR0_DEN_MASK		GENMASK(7, 4)
+-#define FMC2_BCHDSR0_DEN_SHIFT		4
++#define FMC2_BCHDSR0_DEN		GENMASK(7, 4)
  
--/* Clear irq sources in case of the sequencer is used */
- static inline void stm32_fmc2_clear_seq_irq(struct stm32_fmc2_nfc *fmc2)
- {
- 	writel_relaxed(FMC2_CSQICR_CLEAR_IRQ, fmc2->io_base + FMC2_CSQICR);
- }
+ /* Register: FMC2_BCHDSR1 */
+-#define FMC2_BCHDSR1_EBP1_MASK		GENMASK(12, 0)
+-#define FMC2_BCHDSR1_EBP2_MASK		GENMASK(28, 16)
+-#define FMC2_BCHDSR1_EBP2_SHIFT		16
++#define FMC2_BCHDSR1_EBP1		GENMASK(12, 0)
++#define FMC2_BCHDSR1_EBP2		GENMASK(28, 16)
  
--/* Enable irq sources in case of bch is used */
- static inline void stm32_fmc2_enable_bch_irq(struct stm32_fmc2_nfc *fmc2,
- 					     int mode)
- {
-@@ -475,7 +462,6 @@ static inline void stm32_fmc2_enable_bch_irq(struct stm32_fmc2_nfc *fmc2,
- 	writel_relaxed(bchier, fmc2->io_base + FMC2_BCHIER);
- }
+ /* Register: FMC2_BCHDSR2 */
+-#define FMC2_BCHDSR2_EBP3_MASK		GENMASK(12, 0)
+-#define FMC2_BCHDSR2_EBP4_MASK		GENMASK(28, 16)
+-#define FMC2_BCHDSR2_EBP4_SHIFT		16
++#define FMC2_BCHDSR2_EBP3		GENMASK(12, 0)
++#define FMC2_BCHDSR2_EBP4		GENMASK(28, 16)
  
--/* Disable irq sources in case of bch is used */
- static inline void stm32_fmc2_disable_bch_irq(struct stm32_fmc2_nfc *fmc2)
- {
- 	u32 bchier = readl_relaxed(fmc2->io_base + FMC2_BCHIER);
-@@ -488,7 +474,6 @@ static inline void stm32_fmc2_disable_bch_irq(struct stm32_fmc2_nfc *fmc2)
- 	fmc2->irq_state = FMC2_IRQ_UNKNOWN;
- }
+ /* Register: FMC2_BCHDSR3 */
+-#define FMC2_BCHDSR3_EBP5_MASK		GENMASK(12, 0)
+-#define FMC2_BCHDSR3_EBP6_MASK		GENMASK(28, 16)
+-#define FMC2_BCHDSR3_EBP6_SHIFT		16
++#define FMC2_BCHDSR3_EBP5		GENMASK(12, 0)
++#define FMC2_BCHDSR3_EBP6		GENMASK(28, 16)
  
--/* Clear irq sources in case of bch is used */
- static inline void stm32_fmc2_clear_bch_irq(struct stm32_fmc2_nfc *fmc2)
- {
- 	writel_relaxed(FMC2_BCHICR_CLEAR_IRQ, fmc2->io_base + FMC2_BCHICR);
-@@ -549,10 +534,7 @@ static int stm32_fmc2_ham_calculate(struct nand_chip *chip, const u8 *data,
+ /* Register: FMC2_BCHDSR4 */
+-#define FMC2_BCHDSR4_EBP7_MASK		GENMASK(12, 0)
+-#define FMC2_BCHDSR4_EBP8_MASK		GENMASK(28, 16)
+-#define FMC2_BCHDSR4_EBP8_SHIFT		16
++#define FMC2_BCHDSR4_EBP7		GENMASK(12, 0)
++#define FMC2_BCHDSR4_EBP8		GENMASK(28, 16)
+ 
+ enum stm32_fmc2_ecc {
+ 	FMC2_ECC_HAM = 1,
+@@ -289,22 +281,22 @@ static void stm32_fmc2_nfc_timings_init(struct nand_chip *chip)
+ 	u32 pmem, patt;
+ 
+ 	/* Set tclr/tar timings */
+-	pcr &= ~FMC2_PCR_TCLR_MASK;
+-	pcr |= FMC2_PCR_TCLR(timings->tclr);
+-	pcr &= ~FMC2_PCR_TAR_MASK;
+-	pcr |= FMC2_PCR_TAR(timings->tar);
++	pcr &= ~FMC2_PCR_TCLR;
++	pcr |= FIELD_PREP(FMC2_PCR_TCLR, timings->tclr);
++	pcr &= ~FMC2_PCR_TAR;
++	pcr |= FIELD_PREP(FMC2_PCR_TAR, timings->tar);
+ 
+ 	/* Set tset/twait/thold/thiz timings in common bank */
+-	pmem = FMC2_PMEM_MEMSET(timings->tset_mem);
+-	pmem |= FMC2_PMEM_MEMWAIT(timings->twait);
+-	pmem |= FMC2_PMEM_MEMHOLD(timings->thold_mem);
+-	pmem |= FMC2_PMEM_MEMHIZ(timings->thiz);
++	pmem = FIELD_PREP(FMC2_PMEM_MEMSET, timings->tset_mem);
++	pmem |= FIELD_PREP(FMC2_PMEM_MEMWAIT, timings->twait);
++	pmem |= FIELD_PREP(FMC2_PMEM_MEMHOLD, timings->thold_mem);
++	pmem |= FIELD_PREP(FMC2_PMEM_MEMHIZ, timings->thiz);
+ 
+ 	/* Set tset/twait/thold/thiz timings in attribut bank */
+-	patt = FMC2_PATT_ATTSET(timings->tset_att);
+-	patt |= FMC2_PATT_ATTWAIT(timings->twait);
+-	patt |= FMC2_PATT_ATTHOLD(timings->thold_att);
+-	patt |= FMC2_PATT_ATTHIZ(timings->thiz);
++	patt = FIELD_PREP(FMC2_PATT_ATTSET, timings->tset_att);
++	patt |= FIELD_PREP(FMC2_PATT_ATTWAIT, timings->twait);
++	patt |= FIELD_PREP(FMC2_PATT_ATTHOLD, timings->thold_att);
++	patt |= FIELD_PREP(FMC2_PATT_ATTHIZ, timings->thiz);
+ 
+ 	writel_relaxed(pcr, nfc->io_base + FMC2_PCR);
+ 	writel_relaxed(pmem, nfc->io_base + FMC2_PMEM);
+@@ -327,13 +319,13 @@ static void stm32_fmc2_nfc_setup(struct nand_chip *chip)
  	}
  
- 	heccr = readl_relaxed(fmc2->io_base + FMC2_HECCR);
--
- 	stm32_fmc2_ham_set_ecc(heccr, ecc);
--
--	/* Disable ECC */
- 	stm32_fmc2_set_ecc(fmc2, false);
- 
- 	return 0;
-@@ -654,13 +636,11 @@ static int stm32_fmc2_bch_calculate(struct nand_chip *chip, const u8 *data,
- 		ecc[12] = bchpbr;
- 	}
- 
--	/* Disable ECC */
- 	stm32_fmc2_set_ecc(fmc2, false);
- 
- 	return 0;
- }
- 
--/* BCH algorithm correction */
- static int stm32_fmc2_bch_decode(int eccsize, u8 *dat, u32 *ecc_sta)
- {
- 	u32 bchdsr0 = ecc_sta[0];
-@@ -720,7 +700,6 @@ static int stm32_fmc2_bch_correct(struct nand_chip *chip, u8 *dat,
- 	ecc_sta[3] = readl_relaxed(fmc2->io_base + FMC2_BCHDSR3);
- 	ecc_sta[4] = readl_relaxed(fmc2->io_base + FMC2_BCHDSR4);
- 
--	/* Disable ECC */
- 	stm32_fmc2_set_ecc(fmc2, false);
- 
- 	return stm32_fmc2_bch_decode(chip->ecc.size, dat, ecc_sta);
-@@ -1054,7 +1033,6 @@ static int stm32_fmc2_sequencer_write_page(struct nand_chip *chip,
- {
- 	int ret;
- 
--	/* Select the target */
- 	ret = stm32_fmc2_select_chip(chip, chip->cur_cs);
- 	if (ret)
- 		return ret;
-@@ -1069,7 +1047,6 @@ static int stm32_fmc2_sequencer_write_page_raw(struct nand_chip *chip,
- {
- 	int ret;
- 
--	/* Select the target */
- 	ret = stm32_fmc2_select_chip(chip, chip->cur_cs);
- 	if (ret)
- 		return ret;
-@@ -1153,7 +1130,6 @@ static int stm32_fmc2_sequencer_read_page(struct nand_chip *chip, u8 *buf,
- 	u16 sta_map;
- 	int ret;
- 
--	/* Select the target */
- 	ret = stm32_fmc2_select_chip(chip, chip->cur_cs);
- 	if (ret)
- 		return ret;
-@@ -1199,7 +1175,6 @@ static int stm32_fmc2_sequencer_read_page_raw(struct nand_chip *chip, u8 *buf,
- 	struct mtd_info *mtd = nand_to_mtd(chip);
- 	int ret;
- 
--	/* Select the target */
- 	ret = stm32_fmc2_select_chip(chip, chip->cur_cs);
- 	if (ret)
- 		return ret;
-@@ -1409,7 +1384,6 @@ static int stm32_fmc2_exec_op(struct nand_chip *chip,
- 	return ret;
- }
- 
--/* Controller initialization */
- static void stm32_fmc2_init(struct stm32_fmc2_nfc *fmc2)
- {
- 	u32 pcr = readl_relaxed(fmc2->io_base + FMC2_PCR);
-@@ -1452,7 +1426,6 @@ static void stm32_fmc2_init(struct stm32_fmc2_nfc *fmc2)
- 	writel_relaxed(FMC2_PATT_DEFAULT, fmc2->io_base + FMC2_PATT);
- }
- 
--/* Controller timings */
- static void stm32_fmc2_calc_timings(struct nand_chip *chip,
- 				    const struct nand_sdr_timings *sdrt)
- {
-@@ -1596,14 +1569,11 @@ static int stm32_fmc2_setup_interface(struct nand_chip *chip, int chipnr,
- 		return 0;
- 
- 	stm32_fmc2_calc_timings(chip, sdrt);
--
--	/* Apply timings */
- 	stm32_fmc2_timings_init(chip);
- 
- 	return 0;
- }
- 
--/* DMA configuration */
- static int stm32_fmc2_dma_setup(struct stm32_fmc2_nfc *fmc2)
- {
- 	int ret = 0;
-@@ -1667,7 +1637,6 @@ static int stm32_fmc2_dma_setup(struct stm32_fmc2_nfc *fmc2)
- 	return ret;
- }
- 
--/* NAND callbacks setup */
- static void stm32_fmc2_nand_callbacks_setup(struct nand_chip *chip)
- {
- 	struct stm32_fmc2_nfc *fmc2 = to_stm32_nfc(chip->controller);
-@@ -1708,7 +1677,6 @@ static void stm32_fmc2_nand_callbacks_setup(struct nand_chip *chip)
- 		chip->ecc.bytes = chip->options & NAND_BUSWIDTH_16 ? 8 : 7;
- }
- 
--/* FMC2 layout */
- static int stm32_fmc2_nand_ooblayout_ecc(struct mtd_info *mtd, int section,
- 					 struct mtd_oob_region *oobregion)
- {
-@@ -1744,7 +1712,6 @@ static int stm32_fmc2_nand_ooblayout_free(struct mtd_info *mtd, int section,
- 	.free = stm32_fmc2_nand_ooblayout_free,
- };
- 
--/* FMC2 caps */
- static int stm32_fmc2_calc_ecc_bytes(int step_size, int strength)
- {
- 	/* Hamming */
-@@ -1763,7 +1730,6 @@ static int stm32_fmc2_calc_ecc_bytes(int step_size, int strength)
- 		     FMC2_ECC_STEP_SIZE,
- 		     FMC2_ECC_HAM, FMC2_ECC_BCH4, FMC2_ECC_BCH8);
- 
--/* FMC2 controller ops */
- static int stm32_fmc2_attach_chip(struct nand_chip *chip)
- {
- 	struct stm32_fmc2_nfc *fmc2 = to_stm32_nfc(chip->controller);
-@@ -1797,13 +1763,10 @@ static int stm32_fmc2_attach_chip(struct nand_chip *chip)
- 	if (chip->bbt_options & NAND_BBT_USE_FLASH)
- 		chip->bbt_options |= NAND_BBT_NO_OOB;
- 
--	/* NAND callbacks setup */
- 	stm32_fmc2_nand_callbacks_setup(chip);
- 
--	/* Define ECC layout */
- 	mtd_set_ooblayout(mtd, &stm32_fmc2_nand_ooblayout_ops);
- 
--	/* Configure bus width to 16-bit */
+ 	/* Set buswidth */
+-	pcr &= ~FMC2_PCR_PWID_MASK;
++	pcr &= ~FMC2_PCR_PWID;
  	if (chip->options & NAND_BUSWIDTH_16)
- 		stm32_fmc2_set_buswidth_16(fmc2, true);
+-		pcr |= FMC2_PCR_PWID(FMC2_PCR_PWID_BUSWIDTH_16);
++		pcr |= FIELD_PREP(FMC2_PCR_PWID, FMC2_PCR_PWID_BUSWIDTH_16);
  
-@@ -1816,7 +1779,6 @@ static int stm32_fmc2_attach_chip(struct nand_chip *chip)
- 	.setup_data_interface = stm32_fmc2_setup_interface,
- };
+ 	/* Set ECC sector size */
+-	pcr &= ~FMC2_PCR_ECCSS_MASK;
+-	pcr |= FMC2_PCR_ECCSS(FMC2_PCR_ECCSS_512);
++	pcr &= ~FMC2_PCR_ECCSS;
++	pcr |= FIELD_PREP(FMC2_PCR_ECCSS, FMC2_PCR_ECCSS_512);
  
--/* FMC2 probe */
- static int stm32_fmc2_parse_child(struct stm32_fmc2_nfc *fmc2,
- 				  struct device_node *dn)
+ 	writel_relaxed(pcr, nfc->io_base + FMC2_PCR);
+ }
+@@ -403,9 +395,9 @@ static void stm32_fmc2_nfc_set_buswidth_16(struct stm32_fmc2_nfc *nfc, bool set)
  {
-@@ -1976,12 +1938,10 @@ static int stm32_fmc2_probe(struct platform_device *pdev)
- 		reset_control_deassert(rstc);
+ 	u32 pcr = readl_relaxed(nfc->io_base + FMC2_PCR);
+ 
+-	pcr &= ~FMC2_PCR_PWID_MASK;
++	pcr &= ~FMC2_PCR_PWID;
+ 	if (set)
+-		pcr |= FMC2_PCR_PWID(FMC2_PCR_PWID_BUSWIDTH_16);
++		pcr |= FIELD_PREP(FMC2_PCR_PWID, FMC2_PCR_PWID_BUSWIDTH_16);
+ 	writel_relaxed(pcr, nfc->io_base + FMC2_PCR);
+ }
+ 
+@@ -659,16 +651,16 @@ static int stm32_fmc2_nfc_bch_decode(int eccsize, u8 *dat, u32 *ecc_sta)
+ 	if (unlikely(bchdsr0 & FMC2_BCHDSR0_DUE))
+ 		return -EBADMSG;
+ 
+-	pos[0] = bchdsr1 & FMC2_BCHDSR1_EBP1_MASK;
+-	pos[1] = (bchdsr1 & FMC2_BCHDSR1_EBP2_MASK) >> FMC2_BCHDSR1_EBP2_SHIFT;
+-	pos[2] = bchdsr2 & FMC2_BCHDSR2_EBP3_MASK;
+-	pos[3] = (bchdsr2 & FMC2_BCHDSR2_EBP4_MASK) >> FMC2_BCHDSR2_EBP4_SHIFT;
+-	pos[4] = bchdsr3 & FMC2_BCHDSR3_EBP5_MASK;
+-	pos[5] = (bchdsr3 & FMC2_BCHDSR3_EBP6_MASK) >> FMC2_BCHDSR3_EBP6_SHIFT;
+-	pos[6] = bchdsr4 & FMC2_BCHDSR4_EBP7_MASK;
+-	pos[7] = (bchdsr4 & FMC2_BCHDSR4_EBP8_MASK) >> FMC2_BCHDSR4_EBP8_SHIFT;
++	pos[0] = FIELD_GET(FMC2_BCHDSR1_EBP1, bchdsr1);
++	pos[1] = FIELD_GET(FMC2_BCHDSR1_EBP2, bchdsr1);
++	pos[2] = FIELD_GET(FMC2_BCHDSR2_EBP3, bchdsr2);
++	pos[3] = FIELD_GET(FMC2_BCHDSR2_EBP4, bchdsr2);
++	pos[4] = FIELD_GET(FMC2_BCHDSR3_EBP5, bchdsr3);
++	pos[5] = FIELD_GET(FMC2_BCHDSR3_EBP6, bchdsr3);
++	pos[6] = FIELD_GET(FMC2_BCHDSR4_EBP7, bchdsr4);
++	pos[7] = FIELD_GET(FMC2_BCHDSR4_EBP8, bchdsr4);
+ 
+-	den = (bchdsr0 & FMC2_BCHDSR0_DEN_MASK) >> FMC2_BCHDSR0_DEN_SHIFT;
++	den = FIELD_GET(FMC2_BCHDSR0_DEN, bchdsr0);
+ 	for (i = 0; i < den; i++) {
+ 		if (pos[i] < eccsize * 8) {
+ 			change_bit(pos[i], (unsigned long *)dat);
+@@ -790,11 +782,11 @@ static void stm32_fmc2_nfc_rw_page_init(struct nand_chip *chip, int page,
+ 	 */
+ 	csqcfgr1 = FMC2_CSQCFGR1_DMADEN | FMC2_CSQCFGR1_CMD1T;
+ 	if (write_data)
+-		csqcfgr1 |= FMC2_CSQCFGR1_CMD1(NAND_CMD_SEQIN);
++		csqcfgr1 |= FIELD_PREP(FMC2_CSQCFGR1_CMD1, NAND_CMD_SEQIN);
+ 	else
+-		csqcfgr1 |= FMC2_CSQCFGR1_CMD1(NAND_CMD_READ0) |
++		csqcfgr1 |= FIELD_PREP(FMC2_CSQCFGR1_CMD1, NAND_CMD_READ0) |
+ 			    FMC2_CSQCFGR1_CMD2EN |
+-			    FMC2_CSQCFGR1_CMD2(NAND_CMD_READSTART) |
++			    FIELD_PREP(FMC2_CSQCFGR1_CMD2, NAND_CMD_READSTART) |
+ 			    FMC2_CSQCFGR1_CMD2T;
+ 
+ 	/*
+@@ -804,11 +796,12 @@ static void stm32_fmc2_nfc_rw_page_init(struct nand_chip *chip, int page,
+ 	 * - Set timings
+ 	 */
+ 	if (write_data)
+-		csqcfgr2 = FMC2_CSQCFGR2_RCMD1(NAND_CMD_RNDIN);
++		csqcfgr2 = FIELD_PREP(FMC2_CSQCFGR2_RCMD1, NAND_CMD_RNDIN);
+ 	else
+-		csqcfgr2 = FMC2_CSQCFGR2_RCMD1(NAND_CMD_RNDOUT) |
++		csqcfgr2 = FIELD_PREP(FMC2_CSQCFGR2_RCMD1, NAND_CMD_RNDOUT) |
+ 			   FMC2_CSQCFGR2_RCMD2EN |
+-			   FMC2_CSQCFGR2_RCMD2(NAND_CMD_RNDOUTSTART) |
++			   FIELD_PREP(FMC2_CSQCFGR2_RCMD2,
++				      NAND_CMD_RNDOUTSTART) |
+ 			   FMC2_CSQCFGR2_RCMD1T |
+ 			   FMC2_CSQCFGR2_RCMD2T;
+ 	if (!raw) {
+@@ -820,7 +813,7 @@ static void stm32_fmc2_nfc_rw_page_init(struct nand_chip *chip, int page,
+ 	 * - Set the number of sectors to be written
+ 	 * - Set timings
+ 	 */
+-	csqcfgr3 = FMC2_CSQCFGR3_SNBR(chip->ecc.steps - 1);
++	csqcfgr3 = FIELD_PREP(FMC2_CSQCFGR3_SNBR, chip->ecc.steps - 1);
+ 	if (write_data) {
+ 		csqcfgr3 |= FMC2_CSQCFGR3_RAC2T;
+ 		if (chip->options & NAND_ROW_ADDR_3)
+@@ -834,8 +827,8 @@ static void stm32_fmc2_nfc_rw_page_init(struct nand_chip *chip, int page,
+ 	 * Byte 1 and byte 2 => column, we start at 0x0
+ 	 * Byte 3 and byte 4 => page
+ 	 */
+-	csqar1 = FMC2_CSQCAR1_ADDC3(page);
+-	csqar1 |= FMC2_CSQCAR1_ADDC4(page >> 8);
++	csqar1 = FIELD_PREP(FMC2_CSQCAR1_ADDC3, page);
++	csqar1 |= FIELD_PREP(FMC2_CSQCAR1_ADDC4, page >> 8);
+ 
+ 	/*
+ 	 * - Set chip enable number
+@@ -843,16 +836,16 @@ static void stm32_fmc2_nfc_rw_page_init(struct nand_chip *chip, int page,
+ 	 * - Calculate the number of address cycles to be issued
+ 	 * - Set byte 5 of address cycle if needed
+ 	 */
+-	csqar2 = FMC2_CSQCAR2_NANDCEN(nfc->cs_sel);
++	csqar2 = FIELD_PREP(FMC2_CSQCAR2_NANDCEN, nfc->cs_sel);
+ 	if (chip->options & NAND_BUSWIDTH_16)
+-		csqar2 |= FMC2_CSQCAR2_SAO(ecc_offset >> 1);
++		csqar2 |= FIELD_PREP(FMC2_CSQCAR2_SAO, ecc_offset >> 1);
+ 	else
+-		csqar2 |= FMC2_CSQCAR2_SAO(ecc_offset);
++		csqar2 |= FIELD_PREP(FMC2_CSQCAR2_SAO, ecc_offset);
+ 	if (chip->options & NAND_ROW_ADDR_3) {
+-		csqcfgr1 |= FMC2_CSQCFGR1_ACYNBR(5);
+-		csqar2 |= FMC2_CSQCAR2_ADDC5(page >> 16);
++		csqcfgr1 |= FIELD_PREP(FMC2_CSQCFGR1_ACYNBR, 5);
++		csqar2 |= FIELD_PREP(FMC2_CSQCAR2_ADDC5, page >> 16);
+ 	} else {
+-		csqcfgr1 |= FMC2_CSQCFGR1_ACYNBR(4);
++		csqcfgr1 |= FIELD_PREP(FMC2_CSQCFGR1_ACYNBR, 4);
  	}
  
--	/* DMA setup */
- 	ret = stm32_fmc2_dma_setup(fmc2);
- 	if (ret)
- 		goto err_dma_setup;
+ 	writel_relaxed(csqcfgr1, nfc->io_base + FMC2_CSQCFGR1);
+@@ -1393,7 +1386,7 @@ static void stm32_fmc2_nfc_init(struct stm32_fmc2_nfc *nfc)
+ 	pcr |= FMC2_PCR_PBKEN;
  
--	/* FMC2 init routine */
- 	stm32_fmc2_init(fmc2);
+ 	/* Set buswidth to 8 bits mode for identification */
+-	pcr &= ~FMC2_PCR_PWID_MASK;
++	pcr &= ~FMC2_PCR_PWID;
  
- 	nand = &fmc2->nand;
+ 	/* ECC logic is disabled */
+ 	pcr &= ~FMC2_PCR_ECCEN;
+@@ -1404,14 +1397,14 @@ static void stm32_fmc2_nfc_init(struct stm32_fmc2_nfc *nfc)
+ 	pcr &= ~FMC2_PCR_WEN;
+ 
+ 	/* Set default ECC sector size */
+-	pcr &= ~FMC2_PCR_ECCSS_MASK;
+-	pcr |= FMC2_PCR_ECCSS(FMC2_PCR_ECCSS_2048);
++	pcr &= ~FMC2_PCR_ECCSS;
++	pcr |= FIELD_PREP(FMC2_PCR_ECCSS, FMC2_PCR_ECCSS_2048);
+ 
+ 	/* Set default tclr/tar timings */
+-	pcr &= ~FMC2_PCR_TCLR_MASK;
+-	pcr |= FMC2_PCR_TCLR(FMC2_PCR_TCLR_DEFAULT);
+-	pcr &= ~FMC2_PCR_TAR_MASK;
+-	pcr |= FMC2_PCR_TAR(FMC2_PCR_TAR_DEFAULT);
++	pcr &= ~FMC2_PCR_TCLR;
++	pcr |= FIELD_PREP(FMC2_PCR_TCLR, FMC2_PCR_TCLR_DEFAULT);
++	pcr &= ~FMC2_PCR_TAR;
++	pcr |= FIELD_PREP(FMC2_PCR_TAR, FMC2_PCR_TAR_DEFAULT);
+ 
+ 	/* Enable FMC2 controller */
+ 	bcr1 |= FMC2_BCR1_FMC2EN;
 -- 
 1.9.1
 
