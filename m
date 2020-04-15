@@ -2,192 +2,295 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1490AC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 884DDC3815B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFFF920575
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:19:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="nZjtaCi1"
+	by mail.kernel.org (Postfix) with ESMTP id 6C3C920575
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 11:27:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896864AbgDOLT3 (ORCPT
+        id S2896976AbgDOL1e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 07:19:29 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:10954 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2896859AbgDOLTO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 07:19:14 -0400
-X-UUID: 4689c1e6803b44e585c94d0e9fcdfbbb-20200415
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=WnKlsLhJX74YWfoFdl9oaQ0btahiulghMcD1I/yVavU=;
-        b=nZjtaCi1meAdYaffwGqz32mxfL5Fl0K/uVStM+X+K+8b6TZDsAp8GA2lrKm8XEHQNudNOdK1NGqmnYS/wpri6DWm7r/YspRVbhh2SASwENguGU6kep5BH0RUq/8g1cg5NuBOYJcCbT44zMExSEUJF0MGzjIbthY2q5sH7QemBJ8=;
-X-UUID: 4689c1e6803b44e585c94d0e9fcdfbbb-20200415
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
-        (envelope-from <anthony.huang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1370799082; Wed, 15 Apr 2020 19:19:04 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 15 Apr 2020 19:18:58 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 15 Apr 2020 19:18:56 +0800
-From:   Anthony Huang <anthony.huang@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Anthony Huang <anthony.huang@mediatek.com>
-Subject: [PATCH 1/2] dt-bindings: soc: mediatek: Add document for mmdvfs driver
-Date:   Wed, 15 Apr 2020 19:18:25 +0800
-Message-ID: <1586949506-22990-2-git-send-email-anthony.huang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1586949506-22990-1-git-send-email-anthony.huang@mediatek.com>
-References: <1586949506-22990-1-git-send-email-anthony.huang@mediatek.com>
+        Wed, 15 Apr 2020 07:27:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38728 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2896945AbgDOL1U (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 07:27:20 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD3BBC061A0C;
+        Wed, 15 Apr 2020 04:27:18 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id BB2FA2A0A37
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-imx@nxp.com,
+        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
+        Rob Herring <robh@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Adrian Pop <pop.adrian61@gmail.com>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+        Sjoerd Simons <sjoerd.simons@collabora.com>,
+        Martyn Welch <martyn.welch@collabora.com>
+Subject: Re: [PATCH v6 5/8] dt-bindings: display: add i.MX6 MIPI DSI host
+ controller doc
+In-Reply-To: <20200414204202.GL19819@pendragon.ideasonboard.com>
+References: <20200414151955.311949-1-adrian.ratiu@collabora.com>
+ <20200414151955.311949-6-adrian.ratiu@collabora.com>
+ <20200414204202.GL19819@pendragon.ideasonboard.com>
+Date:   Wed, 15 Apr 2020 14:28:25 +0300
+Message-ID: <87wo6hj8di.fsf@iwork.i-did-not-set--mail-host-address--so-tickle-me>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 6E8016FB62832FDC77AFD38C32ECD32F9BA2BAC1C9D6B2D6531A95EF5A3DC4142000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; format=flowed
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-VGhpcyBkb2N1bWVudCBkZXNjcmliZXMgdGhlIHByb3BlcnRpZXMgd2hhdCBtdGsgbW1kdmZzDQpk
-ZXZpY2Ugbm9kZSBzdXBwb3J0Lg0KDQpTaWduZWQtb2ZmLWJ5OiBBbnRob255IEh1YW5nIDxhbnRo
-b255Lmh1YW5nQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Nv
-Yy9tZWRpYXRlay9tbWR2ZnMueWFtbCAgIHwgIDE5OCArKysrKysrKysrKysrKysrKysrKw0KIDEg
-ZmlsZSBjaGFuZ2VkLCAxOTggaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL21tZHZmcy55YW1sDQoN
-CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlh
-dGVrL21tZHZmcy55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9t
-ZWRpYXRlay9tbWR2ZnMueWFtbA0KbmV3IGZpbGUgbW9kZSAxMDA2NDQNCmluZGV4IDAwMDAwMDAu
-LjllZjE4MzMNCi0tLSAvZGV2L251bGwNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9zb2MvbWVkaWF0ZWsvbW1kdmZzLnlhbWwNCkBAIC0wLDAgKzEsMTk4IEBADQorIyBT
-UERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KKyVZQU1MIDEuMg0KKy0tLQ0KKyRpZDog
-aHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvc29jL21lZGlhdGVrL21tZHZmcy55YW1sIw0K
-KyRzY2hlbWE6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIw0K
-Kw0KK3RpdGxlOiBNZWRpYXRlayBNTURWRlMgZHJpdmVyIGJpbmRpbmcNCisNCittYWludGFpbmVy
-czoNCisgIC0gUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4NCisgIC0gTWFyayBSdXRs
-YW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4NCisNCitkZXNjcmlwdGlvbjogfA0KKyAgVGhlIE1l
-ZGlhdGVrIE1NRFZGUyhNdWx0aW1lZGlhIER5bmFtaWMgVm9sdGFnZSBhbmQgRnJlcXVlbmN5IFNj
-YWxpbmcpIGRyaXZlcg0KKyAgaXMgdXNlZCB0byBzZXQgY2xrIGZvciBNZWRpYXRlayBtdWx0aW1l
-ZGlhIGhhcmR3YXJlcywgc3VjaCBhcyBkaXNwbGF5LA0KKyAgY2FtZXJhLCBtZHAgYW5kIHZpZGVv
-IGNvZGVjLiBNTURWRlMgZHJpdmVyIHJlYWRzIHdoaWNoIGNsb2NrIG11eGVzIGFuZCBjbG9jaw0K
-KyAgc291cmNlcyBhcmUgdXNlZCBvbiB0aGlzIHBsYXRmb3JtIGZyb20gRFRTLCBhbmQgc2V0cyBj
-dXJyZW50IGNsb2NrIGFjY29yZGluZw0KKyAgdG8gY3VycmVudCB2b2x0YWdlIGluZm9ybWVkIGJ5
-IHJlZ3VsYXRvciBjYWxsYmFjay4NCisNCitwcm9wZXJ0aWVzOg0KKyAgY29tcGF0aWJsZToNCisg
-ICAgaXRlbXM6DQorICAgICAgLSBjb25zdDogbWVkaWF0ZWssbW1kdmZzDQorDQorICBvcGVyYXRp
-bmctcG9pbnRzLXYyOg0KKyAgICBkZXNjcmlwdGlvbjoNCisgICAgICBDb250YWlucyBhbnkgb25l
-IG9mIG9wcCB0YWJsZXMgZm9yIG11bHRpbWVkaWEgbW9kdWxlcy4NCisgICAgICBNTURWRlMgdXNl
-cyBpdCB0byBnZXQgdm9sdGFnZSBzZXR0aW5nIG9uIHRoaXMgcGxhdGZvcm0uDQorDQorICBtZWRp
-YXRlayxzdXBwb3J0X211eDoNCisgICAgZGVzY3JpcHRpb246IEEgbGlzdCBvZiBjbG9jayBtdXgg
-bmFtZXMgZGVmaW5lZCBpbiBjbG9jay1uYW1lcy4NCisgICAgYWxsT2Y6DQorICAgICAgLSAkcmVm
-OiAvc2NoZW1hcy90eXBlcy55YW1sIy9kZWZpbml0aW9ucy9zdHJpbmctYXJyYXkNCisNCisgIGNs
-b2NrczoNCisgICAgZGVzY3JpcHRpb246DQorICAgICAgQSBsaXN0IG9mIHBoYW5kbGVzIG9mIGNs
-b2NrIG11eGVzIGFuZCBjbG9jayBzb3VyY2VzIGZvcg0KKyAgICAgIG11bHRpbWVkaWEgaGFyZHdh
-cmVzLg0KKw0KKyAgY2xvY2stbmFtZXM6DQorICAgIGRlc2NyaXB0aW9uOg0KKyAgICAgIEEgbGlz
-dCBvZiBuYW1lIHN0cmluZ3Mgb2YgY2xvY2sgbXV4ZXMgYW5kIGNsb2NrIHNvdXJjZXMgZm9yDQor
-ICAgICAgbXVsdGltZWRpYSBoYXJkd2FyZXMuDQorDQorICAjIElmIHRoZSBwbGF0Zm9ybSBuZWVk
-cyBmcmVxdWVuY3kgaG9wcGluZyBmb3Igc29tZSBjbG9jayBzb3VyY2VzLCB0aGVzZQ0KKyAgIyBm
-b2xsb3dpbmcgcHJvcGVydGllcyBzaG91bGQgYmUgc2V0Lg0KKw0KKyAgbWVkaWF0ZWssc3VwcG9y
-dF9ob3BwaW5nOg0KKyAgICBkZXNjcmlwdGlvbjogYSBsaXN0IG9mIGNsb2NrIG5hbWVzIHN1cHBv
-cnRpbmcgZnJlcXVlbmN5IGhvcHBpbmcuDQorICAgIGFsbE9mOg0KKyAgICAgIC0gJHJlZjogL3Nj
-aGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvc3RyaW5nLWFycmF5DQorDQorICBtZWRpYXRl
-ayxhY3Rpb246DQorICAgIGRlc2NyaXB0aW9uOg0KKyAgICAgIEEgY2VsbCB3aXRoIG9uZSBlbnRy
-eS4NCisgICAgICBJdCByZXByZXNlbnRzIHRoZSBhY3Rpb24gdGFrZW4gd2hlbiBzZXR0aW5nIGNs
-b2Nrcy4NCisgICAgICAwIG1lYW5zIG5vdCBzZXR0aW5nIGZyZXF1ZW5jeSBob3BwaW5nIGFuZCBq
-dXN0IHNldCBjbG9jayBtdXguDQorICAgICAgMSBtZWFucyBzZXR0aW5nIGZyZXF1ZW5jeSBob3Bw
-aW5nIGZpcnN0IGlmIHRoZSB2b2x0YWdlIGlzIGluY3JlYXNpbmcsIGJ1dA0KKyAgICAgIHNldHRp
-bmcgY2xvY2sgbXV4IGZpcnN0IGlmIHRoZSB2b2x0YWdlIGlzIGRlY3JlYXNpbmcuDQorICAgIGFs
-bE9mOg0KKyAgICAgIC0gJHJlZjogIi9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3Vp
-bnQzMiINCisgICAgICAtIGVudW06IFswLCAxXQ0KKyAgICBtYXhJdGVtczogMQ0KKw0KK3BhdHRl
-cm5Qcm9wZXJ0aWVzOg0KKyAgIl5tZWRpYXRlayxtdXhfKyQiOg0KKyAgICBkZXNjcmlwdGlvbjoN
-CisgICAgICBBIHNlcmllcyBvZiBwcm9wZXJ0aWVzIHdpdGggIm1lZGlhdGVrLG11eF8iIHByZWZp
-eC4NCisgICAgICBFYWNoIHByb3BlcnR5IHJlcHJlc2VudHMgb25lIGNsb2NrIG11eCwgYW5kIGl0
-cyB2YWx1ZSBpcyBhIGxpc3Qgb2YgYWxsDQorICAgICAgdGhlIGNsb2NrIHNvdXJjZXMgZm9yIGl0
-LiBUaGUgcG9zdGZpeCBhbmQgZXZlcnkgaXRlbSBpbiB0aGUgcHJvcGVydHkNCisgICAgICBtdXN0
-IGJlIGZyb20gdGhlIGNsb2NrLW5hbWVzLg0KKw0KKyAgIl5tZWRpYXRlayxob3BwaW5nXyskIjoN
-CisgICAgZGVzY3JpcHRpb246DQorICAgICAgQSBjZWxsIHdpdGggdGhlIHNhbWUgc2l6ZSBhcyBv
-cHAgbnVtYmVycyBvZiBhbiBvcHAgdGFibGUgZm9yIGFueSBNTSBtb2R1bGUNCisgICAgICBhbmQg
-ZWFjaCBlbnRyeSByZXByZXNlbnRzIHRoZSBjbG9jayByYXRlIGZvciBlYWNoIG9wcC4gRm9yIGV4
-YW1wbGUsIHRoZQ0KKyAgICAgIGZpcnN0IGVudHJ5IGlzIHRoZSBjbG9jayByYXRlIHNldCBpbiBv
-cHAtMCwgYW5kIHRoZSBzZWNvbmQgZW50cnkgaXMgdGhlDQorICAgICAgY2xvY2sgcmF0ZSBzZXQg
-aW4gb3BwLTEuDQorDQorcmVxdWlyZWQ6DQorICAtIGNvbXBhdGlibGUNCisgIC0gb3BlcmF0aW5n
-LXBvaW50cy12Mg0KKyAgLSBtZWRpYXRlayxzdXBwb3J0X211eA0KKyAgLSBjbG9jaw0KKyAgLSBj
-bG9jay1uYW1lcw0KKw0KK2V4YW1wbGVzOg0KKyAgLSB8DQorICAgICNpbmNsdWRlIDxkdC1iaW5k
-aW5ncy9jbG9jay9tdDY3NzktY2xrLmg+DQorDQorICAgIG9wcF90YWJsZV9tbTogb3BwLXRhYmxl
-LW1tIHsNCisgICAgICAgIGNvbXBhdGlibGUgPSAib3BlcmF0aW5nLXBvaW50cy12MiI7DQorDQor
-ICAgICAgICBvcHAtMCB7DQorICAgICAgICAgICAgb3BwLWh6ID0gL2JpdHMvIDY0IDwzMTUwMDAw
-MDA+Ow0KKyAgICAgICAgICAgIG9wcC1taWNyb3ZvbHQgPSA8NjUwMDAwPjsNCisgICAgICAgIH07
-DQorICAgICAgICBvcHAtMSB7DQorICAgICAgICAgICAgb3BwLWh6ID0gL2JpdHMvIDY0IDw0NTAw
-MDAwMDA+Ow0KKyAgICAgICAgICAgIG9wcC1taWNyb3ZvbHQgPSA8NzI1MDAwPjsNCisgICAgICAg
-IH07DQorICAgICAgICBvcHAtMiB7DQorICAgICAgICAgICAgb3BwLWh6ID0gL2JpdHMvIDY0IDw2
-MDYwMDAwMDA+Ow0KKyAgICAgICAgICAgIG9wcC1taWNyb3ZvbHQgPSA8ODI1MDAwPjsNCisgICAg
-ICAgIH07DQorICAgIH07DQorDQorICAgIG9wcF90YWJsZV9jYW06IG9wcC10YWJsZS1jYW0gew0K
-KyAgICAgICAgY29tcGF0aWJsZSA9ICJvcGVyYXRpbmctcG9pbnRzLXYyIjsNCisNCisgICAgICAg
-IG9wcC0wIHsNCisgICAgICAgICAgICBvcHAtaHogPSAvYml0cy8gNjQgPDMxNTAwMDAwMD47DQor
-ICAgICAgICAgICAgb3BwLW1pY3Jvdm9sdCA9IDw2NTAwMDA+Ow0KKyAgICAgICAgfTsNCisgICAg
-ICAgIG9wcC0xIHsNCisgICAgICAgICAgICBvcHAtaHogPSAvYml0cy8gNjQgPDQxNjAwMDAwMD47
-DQorICAgICAgICAgICAgb3BwLW1pY3Jvdm9sdCA9IDw3MjUwMDA+Ow0KKyAgICAgICAgfTsNCisg
-ICAgICAgIG9wcC0yIHsNCisgICAgICAgICAgICBvcHAtaHogPSAvYml0cy8gNjQgPDU2MDAwMDAw
-MD47DQorICAgICAgICAgICAgb3BwLW1pY3Jvdm9sdCA9IDw4MjUwMDA+Ow0KKyAgICAgICAgfTsN
-CisgICAgfTsNCisNCisgICAgLyogT3RoZXIgb3BwIHRhYmxlcyBmb3IgbXVsdGltZWRpYSBtb2R1
-bGVzICovDQorDQorICAgIG1tZHZmcyB7DQorICAgICAgICBjb21wYXRpYmxlID0gIm1lZGlhdGVr
-LG1tZHZmcyI7DQorDQorICAgICAgICBvcGVyYXRpbmctcG9pbnRzLXYyID0gPCZvcHBfdGFibGVf
-bW0+Ow0KKw0KKyAgICAgICAgbWVkaWF0ZWssc3VwcG9ydF9tdXggPSAibW0iLCAiY2FtIiwgImlt
-ZyIsICJpcGUiLA0KKyAgICAgICAgICAgICJ2ZW5jIiwgInZkZWMiLCAiZHBlIiwgImNjdSI7DQor
-DQorICAgICAgICBtZWRpYXRlayxtdXhfbW0gPSAiY2xrX21tcGxsX2Q1X2QyIiwNCisgICAgICAg
-ICAgICAiY2xrX21tcGxsX2Q3IiwgImNsa190dmRwbGxfbWFpbnBsbF9kMl9jayI7DQorICAgICAg
-ICBtZWRpYXRlayxtdXhfY2FtID0gImNsa19tbXBsbF9kNV9kMiIsDQorICAgICAgICAgICAgImNs
-a191bml2cGxsX2QzIiwgImNsa19hZHNwcGxsX2Q1IjsNCisgICAgICAgIG1lZGlhdGVrLG11eF9p
-bWcgPSAiY2xrX21tcGxsX2Q1X2QyIiwNCisgICAgICAgICAgICAiY2xrX3VuaXZwbGxfZDMiLCAi
-Y2xrX3R2ZHBsbF9tYWlucGxsX2QyX2NrIjsNCisgICAgICAgIG1lZGlhdGVrLG11eF9pcGUgPSAi
-Y2xrX21tcGxsX2Q1X2QyIiwNCisgICAgICAgICAgICAiY2xrX3VuaXZwbGxfZDMiLCAiY2xrX21h
-aW5wbGxfZDIiOw0KKyAgICAgICAgbWVkaWF0ZWssbXV4X3ZlbmMgPSAiY2xrX21haW5wbGxfZDMi
-LA0KKyAgICAgICAgICAgICJjbGtfbW1wbGxfZDciLCAiY2xrX21tcGxsX2Q1IjsNCisgICAgICAg
-IG1lZGlhdGVrLG11eF92ZGVjID0gImNsa191bml2cGxsX2QyX2QyIiwNCisgICAgICAgICAgICAi
-Y2xrX3VuaXZwbGxfZDMiLCAiY2xrX3VuaXZwbGxfZDIiOw0KKyAgICAgICAgbWVkaWF0ZWssbXV4
-X2RwZSA9ICJjbGtfbWFpbnBsbF9kMyIsDQorICAgICAgICAgICAgImNsa19tbXBsbF9kNyIsICJj
-bGtfbWFpbnBsbF9kMiI7DQorICAgICAgICBtZWRpYXRlayxtdXhfY2N1ID0gImNsa19tbXBsbF9k
-NV9kMiIsDQorICAgICAgICAgICAgImNsa191bml2cGxsX2QzIiwgImNsa19hZHNwcGxsX2Q1IjsN
-CisNCisgICAgICAgIG1lZGlhdGVrLHN1cHBvcnRfaG9wcGluZyA9ICJjbGtfbW1wbGxfY2siOw0K
-KyAgICAgICAgbWVkaWF0ZWssaG9wcGluZ19jbGtfbW1wbGxfY2sgPSA8NjMwMDAwMDAwIDYzMDAw
-MDAwMCA2NTAwMDAwMDA+Ow0KKyAgICAgICAgbWVkaWF0ZWssYWN0aW9uID0gPDE+Ow0KKw0KKw0K
-KyAgICAgICAgY2xvY2tzID0gPCZ0b3Bja2dlbiBDTEtfVE9QX01NPiwNCisgICAgICAgICAgICAg
-ICAgPCZ0b3Bja2dlbiBDTEtfVE9QX0NBTT4sDQorICAgICAgICAgICAgICAgIDwmdG9wY2tnZW4g
-Q0xLX1RPUF9JTUc+LA0KKyAgICAgICAgICAgICAgICA8JnRvcGNrZ2VuIENMS19UT1BfSVBFPiwN
-CisgICAgICAgICAgICAgICAgPCZ0b3Bja2dlbiBDTEtfVE9QX1ZFTkM+LA0KKyAgICAgICAgICAg
-ICAgICA8JnRvcGNrZ2VuIENMS19UT1BfVkRFQz4sDQorICAgICAgICAgICAgICAgIDwmdG9wY2tn
-ZW4gQ0xLX1RPUF9EUEU+LA0KKyAgICAgICAgICAgICAgICA8JnRvcGNrZ2VuIENMS19UT1BfQ0NV
-PiwNCisgICAgICAgICAgICAgICAgPCZ0b3Bja2dlbiBDTEtfVE9QX01NUExMX0Q1PiwNCisgICAg
-ICAgICAgICAgICAgPCZ0b3Bja2dlbiBDTEtfVE9QX1VOSVZQTExfRDI+LA0KKyAgICAgICAgICAg
-ICAgICA8JnRvcGNrZ2VuIENMS19UT1BfVFZEUExMX01BSU5QTExfRDJfQ0s+LA0KKyAgICAgICAg
-ICAgICAgICA8JnRvcGNrZ2VuIENMS19UT1BfQURTUFBMTF9ENT4sDQorICAgICAgICAgICAgICAg
-IDwmdG9wY2tnZW4gQ0xLX1RPUF9NQUlOUExMX0QyPiwNCisgICAgICAgICAgICAgICAgPCZ0b3Bj
-a2dlbiBDTEtfVE9QX01NUExMX0Q2PiwNCisgICAgICAgICAgICAgICAgPCZ0b3Bja2dlbiBDTEtf
-VE9QX01NUExMX0Q3PiwNCisgICAgICAgICAgICAgICAgPCZ0b3Bja2dlbiBDTEtfVE9QX1VOSVZQ
-TExfRDM+LA0KKyAgICAgICAgICAgICAgICA8JnRvcGNrZ2VuIENMS19UT1BfTUFJTlBMTF9EMz4s
-DQorICAgICAgICAgICAgICAgIDwmdG9wY2tnZW4gQ0xLX1RPUF9NTVBMTF9ENV9EMj4sDQorICAg
-ICAgICAgICAgICAgIDwmdG9wY2tnZW4gQ0xLX1RPUF9VTklWUExMX0QyX0QyPiwNCisgICAgICAg
-ICAgICAgICAgPCZ0b3Bja2dlbiBDTEtfVE9QX01NUExMX0NLPjsNCisgICAgICAgIGNsb2NrLW5h
-bWVzID0gIm1tIiwNCisgICAgICAgICAgICAgICAgImNhbSIsDQorICAgICAgICAgICAgICAgICJp
-bWciLA0KKyAgICAgICAgICAgICAgICAiaXBlIiwNCisgICAgICAgICAgICAgICAgInZlbmMiLA0K
-KyAgICAgICAgICAgICAgICAidmRlYyIsDQorICAgICAgICAgICAgICAgICJkcGUiLA0KKyAgICAg
-ICAgICAgICAgICAiY2N1IiwNCisgICAgICAgICAgICAgICAgImNsa19tbXBsbF9kNSIsDQorICAg
-ICAgICAgICAgICAgICJjbGtfdW5pdnBsbF9kMiIsDQorICAgICAgICAgICAgICAgICJjbGtfdHZk
-cGxsX21haW5wbGxfZDJfY2siLA0KKyAgICAgICAgICAgICAgICAiY2xrX2Fkc3BwbGxfZDUiLA0K
-KyAgICAgICAgICAgICAgICAiY2xrX21haW5wbGxfZDIiLA0KKyAgICAgICAgICAgICAgICAiY2xr
-X21tcGxsX2Q2IiwNCisgICAgICAgICAgICAgICAgImNsa19tbXBsbF9kNyIsDQorICAgICAgICAg
-ICAgICAgICJjbGtfdW5pdnBsbF9kMyIsDQorICAgICAgICAgICAgICAgICJjbGtfbWFpbnBsbF9k
-MyIsDQorICAgICAgICAgICAgICAgICJjbGtfbW1wbGxfZDVfZDIiLA0KKyAgICAgICAgICAgICAg
-ICAiY2xrX3VuaXZwbGxfZDJfZDIiLA0KKyAgICAgICAgICAgICAgICAiY2xrX21tcGxsX2NrIjsN
-CisgICAgfTsNCisuLi4NCi0tIA0KMS43LjkuNQ0K
+On Tue, 14 Apr 2020, Laurent Pinchart 
+<laurent.pinchart@ideasonboard.com> wrote:
+> Hi Adrian, 
+> 
+> Thank you for the patch. 
 
+Hi Laurent,
+
+Thank you for the review - you raised some good points which will 
+be addressed in the next revision (will leave this on review a bit 
+more).
+
+I will also convert the dw_mipi_dsi.txt to yaml as you suggest and 
+send that as a separate patch.
+
+Best wishes,
+Adrian
+
+> 
+> On Tue, Apr 14, 2020 at 06:19:52PM +0300, Adrian Ratiu wrote: 
+>> This provides an example DT binding for the MIPI DSI host 
+>> controller present on the i.MX6 SoC based on Synopsis 
+>> DesignWare v1.01 IP.   Cc: Rob Herring <robh@kernel.org> Cc: 
+>> Neil Armstrong <narmstrong@baylibre.com> Cc: Fabio Estevam 
+>> <festevam@gmail.com> Cc: devicetree@vger.kernel.org Tested-by: 
+>> Adrian Pop <pop.adrian61@gmail.com> Tested-by: Arnaud Ferraris 
+>> <arnaud.ferraris@collabora.com> Signed-off-by: Sjoerd Simons 
+>> <sjoerd.simons@collabora.com> Signed-off-by: Martyn Welch 
+>> <martyn.welch@collabora.com> Signed-off-by: Adrian Ratiu 
+>> <adrian.ratiu@collabora.com> --- Changes since v5: 
+>>   - Fixed missing reg warning (Fabio) - Updated dt-schema and 
+>>   fixed warnings (Rob) 
+>>  Changes since v4: 
+>>   - Fixed yaml binding to pass `make dt_binding_check 
+>>   dtbs_check` and addressed received binding feedback (Rob) 
+>>  Changes since v3: 
+>>   - Added commit message (Neil) - Converted to yaml format 
+>>   (Neil) - Minor dt node + driver fixes (Rob) - Added small 
+>>   panel example to the host controller binding 
+>>  Changes since v2: 
+>>   - Fixed commit tags (Emil) 
+>> --- 
+>>  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 139 
+>>  ++++++++++++++++++ 1 file changed, 139 insertions(+) create 
+>>  mode 100644 
+>>  Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml 
+>>  diff --git 
+>> a/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml 
+>> b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml 
+>> new file mode 100644 index 000000000000..10e289ea219a --- 
+>> /dev/null +++ 
+>> b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml 
+>> @@ -0,0 +1,139 @@ +# SPDX-License-Identifier: (GPL-2.0-only OR 
+>> BSD-2-Clause) +%YAML 1.2 +--- +$id: 
+>> http://devicetree.org/schemas/display/imx/fsl,mipi-dsi-imx6.yaml# 
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml# + 
+>> +title: Freescale i.MX6 DW MIPI DSI Host Controller + 
+>> +maintainers: +  - Adrian Ratiu <adrian.ratiu@collabora.com> + 
+>> +description: | +  The i.MX6 DSI host controller is a Synopsys 
+>> DesignWare MIPI DSI v1.01 +  IP block with a companion PHY IP. 
+>> + +  These DT bindings follow the Synopsys DW MIPI DSI bindings 
+>> defined in + 
+>> Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt 
+>> with +  the following device-specific properties. 
+> 
+> Not necessarily a prerequisite for this patch, but it would be 
+> nice to get that converted to yaml, and included here with 
+> 
+> allOf: 
+>   $ref: ../bridge/snps,dw-mipi-dsi.yaml# 
+> 
+> (assuming that's how the file will be called). 
+>
+
+Yes, I will do this conversion but in a separate patch to avoid 
+making this series bigger.
+
+Thanks,
+Adrian
+
+>> +
+>> +properties:
+>> +  compatible:
+>> +    items:
+>> +      - const: fsl,imx6q-mipi-dsi
+>> +      - const: snps,dw-mipi-dsi
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: Module Clock
+>> +      - description: DSI bus clock
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: ref
+>> +      - const: pclk
+>> +
+>> +  fsl,gpr:
+>> +    description: Phandle to the iomuxc-gpr region containing the multiplexer control register.
+>
+> Could you please wrap liens at a 80 columns boundary ?
+>
+>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>> +
+>> +  ports:
+>> +    type: object
+>> +    description: |
+>> +      A node containing DSI input & output port nodes with endpoint
+>> +      definitions as documented in
+>> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+>> +      Documentation/devicetree/bindings/graph.txt
+>> +    properties:
+>
+> You should add
+>
+>        '#address-cells':
+>          const: 1
+>
+>        '#size-cells':
+>          const: 0
+>
+>> +      port@0:
+>> +        type: object
+>> +        description:
+>> +          DSI input port node, connected to the ltdc rgb output port.
+>> +
+>> +      port@1:
+>> +        type: object
+>> +        description:
+>> +          DSI output port node, connected to a panel or a bridge input port"
+>
+>
+> Should this be "RGB output port node" ? And s/"/./
+>
+> And here you should add
+>
+>        additionalProperties: false
+>
+>> +
+>> +patternProperties:
+>> +  "^panel@[0-3]$":
+>> +    type: object
+>> +    description: |
+>> +      A node containing the panel or bridge description as documented in
+>> +      Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+>> +    properties:
+>> +      port:
+>> +        type: object
+>> +        description:
+>> +          Panel or bridge port node, connected to the DSI output port (port@1)
+>
+> Does this belong here ? I think the port property for the panel needs to
+> be described in the panel's binding instead.
+>
+>> +
+>> +  "#address-cells":
+>> +    const: 1
+>> +
+>> +  "#size-cells":
+>> +    const: 0
+>
+> These two properties are not pattern properties, right ? Should they be
+> listed under the properties above ?
+>
+>> +
+>> +required:
+>> +  - "#address-cells"
+>> +  - "#size-cells"
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +  - clocks
+>> +  - clock-names
+>> +  - ports
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |+
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +    #include <dt-bindings/clock/imx6qdl-clock.h>
+>> +    #include <dt-bindings/gpio/gpio.h>
+>
+> Alphabetical order ?
+>
+>> +
+>> +    dsi: dsi@21e0000 {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +        compatible = "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi";
+>> +        reg = <0x021e0000 0x4000>;
+>> +        interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
+>> +        fsl,gpr = <&gpr>;
+>> +        clocks = <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
+>> +                 <&clks IMX6QDL_CLK_MIPI_IPG>;
+>> +        clock-names = "ref", "pclk";
+>> +
+>> +        ports {
+>> +            #address-cells = <1>;
+>> +            #size-cells = <0>;
+>> +            port@1 {
+>> +                reg = <1>;
+>> +                dsi_out: endpoint {
+>> +                    remote-endpoint = <&panel_in>;
+>> +                };
+>> +            };
+>> +        };
+>> +
+>> +        panel@0 {
+>> +            compatible = "sharp,ls032b3sx01";
+>> +            reg = <0>;
+>> +            reset-gpios = <&gpio6 8 GPIO_ACTIVE_LOW>;
+>> +            ports {
+>> +                #address-cells = <1>;
+>> +                #size-cells = <0>;
+>> +                port@0 {
+>> +                    reg = <0>;
+>> +                    panel_in: endpoint {
+>> +                        remote-endpoint = <&dsi_out>;
+>> +                    };
+>> +                };
+>> +            };
+>> +        };
+>> +    };
+>> +
+>> +...
+>
+> -- 
+> Regards,
+>
+> Laurent Pinchart
