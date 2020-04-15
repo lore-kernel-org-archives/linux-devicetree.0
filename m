@@ -2,114 +2,149 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D393AC2BB85
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45933C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF0AE2078A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 266F320775
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 08:47:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F3qihdN+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="o7ukuLz9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894959AbgDOIqW (ORCPT
+        id S2895025AbgDOIra (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 04:46:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41858 "EHLO
+        Wed, 15 Apr 2020 04:47:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2894947AbgDOIqJ (ORCPT
+        by vger.kernel.org with ESMTP id S2895026AbgDOIrY (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 04:46:09 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DCC9C061A0E
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 01:46:09 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id i10so18088910wrv.10
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 01:46:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lb3moszYSo2LYaFHhhjcM4cay/uCeXv+Lh9QwOM6xww=;
-        b=F3qihdN+hdMsdaequFznceWvdWp2yRYp6M0u/gv/QPRYwCuF2F2BEBTam/Ubmu2DiB
-         kQ2LjUBrvbB+hZ2Jj1eu4mFZ8lgMGCOHya0X7hcjtf2QIDKHwMw0QARNb0d9qPXd+H4I
-         KzgFFFraGgC73Dd8b8TRiZAIG+0uejxT3AGlQH/8z+9cTcMJoqQAB/+D9Fwl/9kgWGgM
-         pbIPOW14C/NSHaQOOIT46SiQp5B1gjfncnD/JwBI5gQngJ/wO4Hun+WdyU+9z+ggwde4
-         ix0LeV+ClcRiv6mtmh4ZHgkbvoB3cWAPQNo0I+1y8hu2CnRhT0BLqu3NhQUbKAcDcgEP
-         zRpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lb3moszYSo2LYaFHhhjcM4cay/uCeXv+Lh9QwOM6xww=;
-        b=GwDnxnaF+lM5dtguSVMQF2+ph7mOkPCnOydlfvBFVUptVUYdv/AqqcrtO8o+ZWhlSu
-         7ccAY6vsxL/mUiizluRm5KOXVvCqHdKu0LyMK8LF0rmIjAHhqNA0WhStB3ACG7XZXxYj
-         rRobtf+x0b4exMOVdzi0jbnrLJMTXZdoF/hUGVWr1CdUrAltukSO4YRmv8LCvHGkkDY9
-         OA8863nu7ekwoVfERRmm8SrzYUmNLFBkrrV4T4M8GiiEHZsafYXjWIZiOBqQlTvqXTya
-         fo445Xbbxm8b2R4GuRsZSmq5Xv07djVs1B9CpWL53Y5H0j59/ZL8M9DIOAerNECtt51+
-         x/qA==
-X-Gm-Message-State: AGi0PubcOc9SqGa6rtQii8tX8f3uSotymGSPWnUaPgFNrnNaZxfF0hRh
-        UL3u+M8+U02fpa432nUI+ewlxA==
-X-Google-Smtp-Source: APiQypJX2Hn8rvIm/Bda14cICmCTQkvC79OqyYyl28y3z6WA9exR5415whsbX7Vr7wHEoZBySMlD3g==
-X-Received: by 2002:adf:ce0a:: with SMTP id p10mr12446654wrn.89.1586940368320;
-        Wed, 15 Apr 2020 01:46:08 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id n124sm22480815wma.11.2020.04.15.01.46.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Apr 2020 01:46:07 -0700 (PDT)
-Subject: Re: [PATCH v2] nvmem: core: don't consider subnodes not matching
- binding
-To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc:     devicetree@vger.kernel.org, Christian Eggers <CEggers@arri.de>,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-References: <20200323152850.32657-1-a.fatoum@pengutronix.de>
- <d59007d1-f4e3-f550-cecd-64b788a534bc@linaro.org>
- <bb0dcf33-f67d-7078-9341-08282d8da217@pengutronix.de>
- <4e861088-c17d-0eca-6efa-c50b55fdecd1@pengutronix.de>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <d0dc571f-4faf-f75c-1388-d1fab10f4aa8@linaro.org>
-Date:   Wed, 15 Apr 2020 09:46:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 15 Apr 2020 04:47:24 -0400
+Received: from mo6-p04-ob.smtp.rzone.de (mo6-p04-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5304::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65B21C061A0E;
+        Wed, 15 Apr 2020 01:47:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586940441;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=6++awsC9MQ9UWUKEnojY9Xy95sI3Ppl7eM2gLntDGuI=;
+        b=o7ukuLz9EHLhwERjjgs9jCRXeIOnEX+Kje+jM9ZN+JGunR4MLTeAMRO+k9SVjActJk
+        FRxHvrivmqKIkyh+nzU311GU7uEeLU4R2E5avHiZex0S8c8Zc3N2n+5gfwIVfXXOsyi4
+        SDeOdaMAZay+MAePKM4dKNk8S3Vy+M9dp75fO+8GCM6FGXDrjjcB6TdBLimWMYNO4R3C
+        IzxjKAWGz2q7IKtpmnXU+lRfRj9I781tvMI11r5KoaESk2WC50XADIBHWIMmwUP66Qbu
+        5iJSsX6mQ6vlXAdDAgqHEIR4b8BIY/cytulUusPk9PV+My3VM9VRl0KvYA41y0IBwwn1
+        ipxQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7O2CKN9ej"
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.4.0 DYNA|AUTH)
+        with ESMTPSA id 6028a2w3F8ZP0Ir
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 15 Apr 2020 10:35:25 +0200 (CEST)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v6 06/12] ARM: DTS: omap4: add sgx gpu child node
+Date:   Wed, 15 Apr 2020 10:35:13 +0200
+Message-Id: <dc8ff147e82d9b7862f0122801d30600a80f314c.1586939718.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1586939718.git.hns@goldelico.com>
+References: <cover.1586939718.git.hns@goldelico.com>
 MIME-Version: 1.0
-In-Reply-To: <4e861088-c17d-0eca-6efa-c50b55fdecd1@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+and add interrupt.
 
+Since omap4420/30/60 and omap4470 come with different SGX variants
+we need to introduce a new omap4470.dtsi. If an omap4470 board
+does not want to use SGX it is no problem to still include
+omap4460.dtsi.
 
-On 15/04/2020 09:05, Ahmad Fatoum wrote:
->> - If the cell has a compatible node, it must be "nvmem-cell".
->>    Otherwise, a cell with a compatible node is skipped.
->>
-This one sounds more sensible!
-If we go this way, it needs to be properly documented in the bindings too.
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # PandaBoard ES
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ arch/arm/boot/dts/omap4.dtsi   | 11 ++++++-----
+ arch/arm/boot/dts/omap4470.dts | 15 +++++++++++++++
+ 2 files changed, 21 insertions(+), 5 deletions(-)
+ create mode 100644 arch/arm/boot/dts/omap4470.dts
 
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 763bdea8c829..15ff3d7146af 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -389,7 +389,7 @@ abb_iva: regulator-abb-iva {
+ 			status = "disabled";
+ 		};
+ 
+-		target-module@56000000 {
++		sgx_module: target-module@56000000 {
+ 			compatible = "ti,sysc-omap4", "ti,sysc";
+ 			reg = <0x5600fe00 0x4>,
+ 			      <0x5600fe10 0x4>;
+@@ -408,10 +408,11 @@ target-module@56000000 {
+ 			#size-cells = <1>;
+ 			ranges = <0 0x56000000 0x2000000>;
+ 
+-			/*
+-			 * Closed source PowerVR driver, no child device
+-			 * binding or driver in mainline
+-			 */
++			gpu: gpu@0 {
++				compatible = "ti,omap4-sgx540-120", "img,sgx540-120", "img,sgx540";
++				reg = <0x0 0x2000000>;	/* 32MB */
++				interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
++			};
+ 		};
+ 
+ 		/*
+diff --git a/arch/arm/boot/dts/omap4470.dts b/arch/arm/boot/dts/omap4470.dts
+new file mode 100644
+index 000000000000..f29c581300bf
+--- /dev/null
++++ b/arch/arm/boot/dts/omap4470.dts
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Device Tree Source for OMAP4470 SoC
++ *
++ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++#include "omap4460.dtsi"
++
++&sgx {
++	compatible = "ti,omap4470-sgx544-112", "img,sgx544-112", "img,sgx544";
++};
+-- 
+2.25.1
 
->> - Adding a nvmem cell container with a compatible and making support for
->>    the old binding configurable
-
-Older bindings should be still supported but we should encourage to use 
-compatible string for new additions.
-
->>
->> - Skipping cells that are malformed and lack a reg = < > property_without_
->>    error
-Currently we only support Offset and Size with address cell and size 
-cells of 1. Adding an extra check here to see if its malformed makes 
-sense too!
-
-
-Thanks,
-srini
-
-> gentle ping. I can prepare another patch if you indicate which approach
-> you'd prefer.
-> 
