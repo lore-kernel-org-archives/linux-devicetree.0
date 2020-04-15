@@ -2,124 +2,128 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7CEC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 22:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96857C3815B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 22:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 760A62076D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 22:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 728EF206E9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 22:29:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Vww20jGh"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gXSGbTR0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728907AbgDOWGC (ORCPT
+        id S1732128AbgDOW3s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 18:06:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53416 "EHLO
+        Wed, 15 Apr 2020 18:29:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728606AbgDOWF7 (ORCPT
+        by vger.kernel.org with ESMTP id S1732111AbgDOW3o (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 18:05:59 -0400
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98910C061A0C;
-        Wed, 15 Apr 2020 15:05:59 -0700 (PDT)
-Received: by mail-wm1-x32b.google.com with SMTP id e26so1735376wmk.5;
-        Wed, 15 Apr 2020 15:05:59 -0700 (PDT)
+        Wed, 15 Apr 2020 18:29:44 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7E58C061A10
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 15:29:42 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id i3so18928213ioo.13
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 15:29:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TSH8Zz/0+b8V3ai1FRug8rbeA2NpMDawQ7Swr68gBQE=;
-        b=Vww20jGh73nudzgVXWPkzHO1ftBq0ZQCF/ZP+oJYJ9pF8DrKmMd6GoCN/lVIAE1wpk
-         v7JvSGO+4fxgRvBMDlf4ZlibwzTh36VuE+r2kqxHATwwOCNTARIwBkj7FRKqampszJ8Q
-         SdorBSvdH6knY3L9C5C6YrcyP7z5LqrQsQLxmrdSxg+O1RFLzA3tTxRu5buI6L9mFtU6
-         Z2jqaJ4rLg+Oyjc7xjuQVymUgmv1Drxt3V6/1n4uNMYOUxLVHGVPuay+7YpGK6drj0R/
-         U3nrtJBeoeI8cibx8AvCDcbFNWrdjUvexuGHQ7UEBOMfZ9S7m/V2TnsehOR6dX3w5zAZ
-         gryA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PVtGYrIeBI2+9xVgD4LCkJpnGBHTWG+8tKFXeAJgTRU=;
+        b=gXSGbTR09MscBjxHvvT6Zy0GE7nYGjJ8nQRhWPJMjuaPZPTM411vSTxLoPH1wb/lRH
+         E6Z4jtglLRMXQKommS2CbxodCJi11rjz7cgYPRAWFMxtk1Sc3UXB1U2xuagdbDr83VUY
+         5gnHcn+7SSgE8W9/iOMJ1SOy7cFoMYxBGg8EM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TSH8Zz/0+b8V3ai1FRug8rbeA2NpMDawQ7Swr68gBQE=;
-        b=PhtjDFIBKAh0lGjYgGcwl2ts+AyJ4DiHGqN12RJTrLany6INi6Qm7LOtheyD7+usAz
-         hdQquFqUO6Qe/bU5eAxqdjPi0Km9ClYGzKZHbDyy8cRT6n8BMzemC8mOLy6lPaesme3F
-         FpUjbQuFTEIn7x0KmSUbvYcsZUKFC7tngBbnK7GiV2nT0FHmWF75aQBFQRF9TfrwJn+t
-         tRxp5OGHQNpNLOP3V+/xFhQur4sTpZqrs8o89y/u+3v8x3kZAdbnsmtEH8sF18Bhqhvc
-         voUee+WtP0ahpU1Fj0uWUMLn++9nvUxmklO8lj+X6ASLYMRdFXSWAl+GgrQOT5+Jjw3g
-         Xb1A==
-X-Gm-Message-State: AGi0PubANrD1W3tnyZTuY5hyIqGbAF2Gap1OJQe4vfqreCyLOfQRHdF5
-        BGvMr+L6PJObqTcxX5Xxi7s=
-X-Google-Smtp-Source: APiQypJ+keUVSmlKkrPVJTacLNMuwb6cbVrGFBfXXLMRDpS5EHRHjFEdNrwFzqXVPgBuEqM+JFkkqA==
-X-Received: by 2002:a7b:c5cd:: with SMTP id n13mr1323555wmk.125.1586988358165;
-        Wed, 15 Apr 2020 15:05:58 -0700 (PDT)
-Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id n4sm1045064wmi.20.2020.04.15.15.05.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 15:05:57 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     vadivel.muruganx.ramuthevar@linux.intel.com
-Cc:     anders.roxell@linaro.org, andriy.shevchenko@intel.com,
-        arnd@arndb.de, boris.brezillon@collabora.com,
-        brendanhiggins@google.com, cheol.yong.kim@intel.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, masonccyang@mxic.com.tw,
-        miquel.raynal@bootlin.com, piotrs@cadence.com,
-        qi-ming.wu@intel.com, richard@nod.at, robh+dt@kernel.org,
-        tglx@linutronix.de, vigneshr@ti.com
-Subject: RE: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on Intel LGM SoC
-Date:   Thu, 16 Apr 2020 00:05:33 +0200
-Message-Id: <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PVtGYrIeBI2+9xVgD4LCkJpnGBHTWG+8tKFXeAJgTRU=;
+        b=gM/D7YSG2LyO9xyZrbogtzCn7w0/AUehrJtRL8dopiHK9n9U5O9QvIwuh6i9inkMg3
+         ArfKr3ga/NrjbUfk3W983hLo/hLwdyPkvn5t5qqLM7mFNz3BvdVZsB1g+cpwa9f28qcG
+         d0puSivHwY53vo+cQlV69Fk8YiKh6KPmZFnCck9uu/aUWTTbzqNUV3r7GHhegt7V90fj
+         HJa8VMsxrX2iEorBHJr+fm4DfGDJQpsUAQPqwfwz4a3zmV1xe5OlDNgmJ+wfHhZS1C6V
+         ShkiL2EvIBkjH9+Zhju/lXSexhzXb6+JlWS6ZPbMe1F9YJJjEbnLltQpjuV6vE1rhvZV
+         DLuw==
+X-Gm-Message-State: AGi0PuaibjxqmQIEgwibtllxDCsHlzG/CFmnLcJT94jN8OrD2fpxeEWQ
+        qvLgysjMT+9h1qyE8BFJYOiEh4Ywu6PFMmRy6brpQQ==
+X-Google-Smtp-Source: APiQypJ3eoCymVEhOWkVktr1qddf2Xa0knAtkx0Gy+/ySRR66TTx2i5h4oQ94XSCgON3AJO5/Bo8xzGkGGc86wd33Kk=
+X-Received: by 2002:a05:6602:1302:: with SMTP id h2mr28555486iov.186.1586989781796;
+ Wed, 15 Apr 2020 15:29:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200403052900.258855-1-evanbenn@chromium.org>
+ <CAKz_xw0gV+w_gMkLfB4qUBdULLfFoiv1TBWp9_PHy33wP_XWyA@mail.gmail.com>
+ <890948ef-7276-fdae-d270-eb30eff3eab2@amlogic.com> <243e107c-35c1-2d14-5285-c9e13744963c@amlogic.com>
+In-Reply-To: <243e107c-35c1-2d14-5285-c9e13744963c@amlogic.com>
+From:   Julius Werner <jwerner@chromium.org>
+Date:   Wed, 15 Apr 2020 15:29:29 -0700
+Message-ID: <CAODwPW9RSB37+4EJ2QXAwz=ShFB23L1GKC2mLYE5L5JuQR2tPw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Add a watchdog driver that uses ARM Secure Monitor Calls.
+To:     Xingyu Chen <xingyu.chen@amlogic.com>
+Cc:     Evan Benn <evanbenn@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Julius Werner <jwerner@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Vinod Koul <vkoul@kernel.org>, Will Deacon <will@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Yonghui Yu <yonghui.yu@amlogic.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+> In addition, It looks more reasonable to use the "msec" as the unit of
+> timeout parameter for the ATF fw interface with SMCWD_SET_TIMEOUT:
+>
+> - The fw interface will compatible with the uboot generic watchdog
+> interface at [0], and there is no need to convert timeout from msec
+> to sec.
 
-first of all: thank you for working on upstreaming this.
-Especially since you are going to use the new exec_op style in v2 as
-Boris suggested.
+I think we're trying hard to keep this compatible to a Trusted
+Firmware counterpart that we have already shipped, so we would prefer
+to keep it at seconds if possible. That's what the Linux watchdog core
+uses as well after all, so it just seems natural. I don't really see
+how what U-Boot does would have anything to do with this.
 
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> This patch adds the new IP of Nand Flash Controller(NFC) support
-> on Intel's Lightning Mountain(LGM) SoC.
-> 
-> DMA is used for burst data transfer operation, also DMA HW supports
-> aligned 32bit memory address and aligned data access by default.
-> DMA burst of 8 supported. Data register used to support the read/write
-> operation from/to device.
-I am wondering how this new hardware is different from the Lantiq NAND
-controller IP - for which there is already a driver in mainline (it's
-in drivers/mtd/nand/raw/xway_nand.c).
-The CON and WAIT registers look suspiciously similar.
+> - Some vendor's watchdog may be not support the "wdt_trigger_reset"
+> reset operation, but they can use the method below to reset the system
+> by the watchdog right now.
+>
+> watchdog_set_time(1);  //1ms
+> watchdog_enable();
 
-As far as I understand the "old" SoCs (VRX200 and earlier) don't have
-a built-in ECC engine. This seems to have changed with ARX300 though
-(again, AFAIK).
-
-A bit of lineage on these SoCs (initially these were developed by
-Infineon. Lantiq then started as an Infineon spin-off in 2009 and
-was then acquired by Intel in 2015):
-- Danube
-- ARX100 from 2008/2009
-- VRX200 from 2009/2010
-- ARX300 from 2014
-- GRX350 from 2015/2016
-- GRX550 from 2017
-- and now finally: LGM from 2020 (est.)
-
-The existing xway_nand driver supports the Danube, ARX100 and VRX200
-SoCs.
-
-
-Best regards,
-Martin
+They can still do that but they should do that on the Trusted Firmware
+side. Emulating a missing reset functionality should be handled by the
+hardware abstraction layer (in this case Trusted Firmware), not at the
+Linux API level. So Linux would still send a PSCI_SYSTEM_RESET SMC,
+but then Trusted Firmware can choose to implement that by setting the
+watchdog to the smallest possible timeout (which it can because it's
+accessing it directly, not through this SMC interface) and letting it
+expire.
