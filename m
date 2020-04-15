@@ -2,51 +2,51 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 786A9C3815B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 22:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99053C2BB55
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 22:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE06206E9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 22:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 582A720784
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 22:44:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Jfk7ugRg"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WP3XmJHt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732572AbgDOWaq (ORCPT
+        id S1732652AbgDOWox (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 18:30:46 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:37204 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732112AbgDOWam (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 18:30:42 -0400
+        Wed, 15 Apr 2020 18:44:53 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:56910 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgDOWot (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 18:44:49 -0400
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03FMUPpT112046;
-        Wed, 15 Apr 2020 17:30:25 -0500
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03FMiY4R125572;
+        Wed, 15 Apr 2020 17:44:34 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1586989826;
-        bh=Prr1eRtKmbwViOtqJnRlGyAymeBKiA0eM87taJBBS90=;
+        s=ti-com-17Q1; t=1586990674;
+        bh=/QpOnWDHlIsUBsD0986QH7zhIUP26cPO4nIq9U2kLUw=;
         h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Jfk7ugRg7E51XnskjuwvIWlGBU9dxDJPvQ7Ax+9WAKZje1pLsDtyHJ+jAF71w5EQA
-         zubDt6Y12gYldn77w31D0h1Bhon7+FuDCgnLdXiG12UtE0UES9xgUwwTVnF3bQvvy8
-         RTyRmzsn3GQtO/Z7vlm+CtnVAHXncFMD8MhMnOaE=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03FMUPBD001501
+        b=WP3XmJHtGkbs2JaMMSesj5gsrRsMAoToSZfYZF4eE5epTLdyBFlc3Am0TcFNctMlv
+         KCBrj+G7LS3zHQs8a5VJC1wbopOtE2da1flE6iUVzgmp3NXMkp1vDDhbZq/o5/+Adr
+         zV7BeRXi2sX4SQzFPGQtahmkc/0N2L5AmSUmMvN0=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03FMiY7R023345
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Apr 2020 17:30:25 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 15 Apr 2020 17:44:34 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 15
- Apr 2020 17:30:25 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2020 17:44:33 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 15 Apr 2020 17:30:25 -0500
+ Frontend Transport; Wed, 15 Apr 2020 17:44:33 -0500
 Received: from [10.250.70.56] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03FMUOSQ077202;
-        Wed, 15 Apr 2020 17:30:24 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03FMiXvO008733;
+        Wed, 15 Apr 2020 17:44:33 -0500
 Subject: Re: [PATCH 5/7] remoteproc/k3-r5: Add a remoteproc driver for R5F
  subsystem
 To:     Mathieu Poirier <mathieu.poirier@linaro.org>
@@ -57,14 +57,14 @@ CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>
 References: <20200324201819.23095-1-s-anna@ti.com>
- <20200324201819.23095-6-s-anna@ti.com> <20200408193818.GA3504@xps15>
+ <20200324201819.23095-6-s-anna@ti.com> <20200409212501.GA32029@xps15>
 From:   Suman Anna <s-anna@ti.com>
-Message-ID: <0ac71dde-c9e2-2dde-ae66-3f10665b1523@ti.com>
-Date:   Wed, 15 Apr 2020 17:30:24 -0500
+Message-ID: <2d83c22a-9302-1ab9-e241-87fbd7a30dbf@ti.com>
+Date:   Wed, 15 Apr 2020 17:44:33 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200408193818.GA3504@xps15>
+In-Reply-To: <20200409212501.GA32029@xps15>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -74,9 +74,7 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mathieu,
-
-On 4/8/20 2:38 PM, Mathieu Poirier wrote:
+On 4/9/20 4:25 PM, Mathieu Poirier wrote:
 > On Tue, Mar 24, 2020 at 03:18:17PM -0500, Suman Anna wrote:
 >> The TI K3 family of SoCs typically have one or more dual-core Arm Cortex
 >> R5F processor clusters/subsystems (R5FSS). This R5F subsystem/cluster
@@ -488,6 +486,14 @@ On 4/8/20 2:38 PM, Mathieu Poirier wrote:
 >> +
 >> +	/* enable PSC modules on all applicable cores */
 >> +	list_for_each_entry_reverse(core, &cluster->cores, elem) {
+> 
+> Out of curiosity, any HW specific reason to start with the last core?
+
+Yeah, that is the order required by HW. We have different sequencing 
+between LockStep and Split-modes. Please see the comments added in the 
+descriptions for k3_r5_rproc_start() and k3_r5_rproc_stop() functions below.
+
+> 
 >> +		ret = core->ti_sci->ops.dev_ops.get_device(core->ti_sci,
 >> +							   core->ti_sci_id);
 >> +		if (ret) {
@@ -623,6 +629,14 @@ On 4/8/20 2:38 PM, Mathieu Poirier wrote:
 >> +			PTR_ERR(kproc->mbox));
 >> +		return ret;
 >> +	}
+> 
+> Does this needs to be done every time a remote processor is booted or could it
+> be done just once in k3_r5_core_of_init()?
+
+This is to ensure that we are not registering any mailbox callbacks 
+until the resource table is parsed and allocated.
+
+> 
 >> +
 >> +	/*
 >> +	 * Ping the remote processor, this is only for sanity-sake for now;
@@ -640,6 +654,12 @@ On 4/8/20 2:38 PM, Mathieu Poirier wrote:
 >> +	boot_addr = rproc->bootaddr;
 >> +	/* TODO: add boot_addr sanity checking */
 >> +	dev_err(dev, "booting R5F core using boot addr = 0x%x\n", boot_addr);
+> 
+> s/dev_err()/dev_dbg()
+
+Yes, ok.
+
+> 
 >> +
 >> +	/* boot vector need not be programmed for Core1 in LockStep mode */
 >> +	core = kproc->core;
@@ -821,14 +841,6 @@ On 4/8/20 2:38 PM, Mathieu Poirier wrote:
 >> +
 >> +	core0 = list_first_entry(&cluster->cores, struct k3_r5_core, elem);
 >> +	core = cluster->mode ? core0 : kproc->core;
-> 
-> The above two lines generated interesting mental gymnastic - please sprinkle
-> with comments in order to disambiguate what is going on.
-
-Yeah, I will add some comments or add some top-level description above 
-the function for v2.
-
-> 
 >> +
 >> +	ret = ti_sci_proc_get_status(core->tsp, &boot_vec, &cfg, &ctrl,
 >> +				     &stat);
@@ -880,26 +892,6 @@ the function for v2.
 >> +		 */
 >> +		list_for_each_entry(temp, &cluster->cores, elem) {
 >> +			ret = k3_r5_core_halt(core);
-> 
-> When I first read this I thought this was an error and what was really needed
-> was k3_r5_core_halt(temp)... But no, this is correct because
-> k3_r5_rproc_configure() is called for each core in the cluster in function
-> k3_r5_cluster_rproc_init().  But then again why halting the same for each of the
-> cores found in the system?
-> 
-> So something seems wrong here.  Either call k3_r5_core_halt(temp) or move
-> k3_r5_core_halt(core) outside of the if (cluster->mode) to avoid more confusion.
-
-LockStep-mode in general still requires operating/managing both the 
-cores. Let me double-check this again, the halt should be done on both 
-the cores for sure, so it does appear that I should be using 
-k3_r5_core_halt(temp) indeed.
-
-This function is not called a second time if the cluster is in LockStep 
-mode. I break out of the loop at the end in k3_r5_cluster_rproc_init()
-if the cluster is in LockStep mode.
-
-> 
 >> +			if (ret)
 >> +				goto out;
 >> +
@@ -986,6 +978,19 @@ if the cluster is in LockStep mode.
 >> +		kproc->rmem[i].bus_addr = rmem->base;
 >> +		/* 64-bit address regions currently not supported */
 >> +		kproc->rmem[i].dev_addr = (u32)rmem->base;
+> 
+> Because the bus and the device addresses are the same I have to deduce the AP
+> and the R5 have the same view of the memory.  Please add a comment to assert
+> that is really the case.
+
+Yes for now, since we are not using the Region Address Translator yet 
+which would have provided address extension from 32-bit device addresses 
+to 64-bit bus addresses.
+
+regards
+Suman
+
+> 
 >> +		kproc->rmem[i].size = rmem->size;
 >> +		kproc->rmem[i].cpu_addr = ioremap_wc(rmem->base, rmem->size);
 >> +		if (!kproc->rmem[i].cpu_addr) {
@@ -1087,15 +1092,6 @@ if the cluster is in LockStep mode.
 >> +
 >> +		/* create only one rproc in lockstep mode */
 >> +		if (cluster->mode)
-> 
-> Here and throughout the file, please use the cluster mode enumeration in order
-> to improve readability, i.e
-> 
->                  if (cluster->mode == CLUSTER_MODE_LOCKSTEP)
-
-OK.
-
-> 
 >> +			break;
 >> +	}
 >> +
@@ -1234,18 +1230,6 @@ OK.
 >> +	}
 >> +	if (core->mem)
 >> +		devm_kfree(dev, core->mem);
-> 
-> Since the devm_ API has been used for memory allocation all this should be
-> called automatically when of_platform_depopulate() is called.
-
-The per-core platform devices do not use a dedicated platform driver 
-associated with them, so there were no probe/remove functions associated 
-with them. I added these since some of them do not have devm_ 
-equivalents, and it was easier to balance everything. Let me retest 
-these and get back to you, if of_platform_depopulate() takes care 
-automatically and without any ordering issues.
-
-> 
 >> +	return ret;
 >> +}
 >> +
@@ -1263,10 +1247,6 @@ automatically and without any ordering issues.
 >> +		return ERR_PTR(ret);
 >> +
 >> +	tsp = kzalloc(sizeof(*tsp), GFP_KERNEL);
-> 
-> Here @dev is available, I would just call devm_kzalloc() and get rid of the
-> kfree() in the error path of k3_r5_core_of_init() and k3_r5_core_of_exit().
-> 
 >> +	if (!tsp)
 >> +		return ERR_PTR(-ENOMEM);
 >> +
@@ -1294,13 +1274,6 @@ automatically and without any ordering issues.
 >> +	core->atcm_enable = 0;
 >> +	core->btcm_enable = 1;
 >> +	core->loczrama = 1;
-> 
-> Please add a comment that justifies the selection of default value.  Otherwise
-> this looks very esoteric.
-
-Yeah sure. These are default values on the SoC.
-
-> 
 >> +
 >> +	ret = of_property_read_u32(np, "atcm-enable", &core->atcm_enable);
 >> +	if (ret < 0 && ret != -EINVAL) {
@@ -1384,17 +1357,8 @@ Yeah sure. These are default values on the SoC.
 >> +	ret1 = ti_sci_put_handle(core->ti_sci);
 >> +	if (ret1)
 >> +		dev_err(dev, "failed to put ti_sci handle, ret = %d\n", ret1);
-> 
-> s/"ret = %d"/"ret1 = %d"
-
-OK
-
-> 
 >> +err_of:
 >> +	devm_kfree(dev, core);
-> 
-> Same comment as above, this should be called automatically.
-> 
 >> +	return ret;
 >> +}
 >> +
@@ -1429,20 +1393,6 @@ OK
 >> +
 >> +	platform_set_drvdata(pdev, NULL);
 >> +	devm_kfree(dev, core);
-> 
-> Same comment regarding the devm_ API, this should be called automatically.
-
-Yeah, will relook at the devm_ usage at all places.
-
-Thanks for the review.
-
-regards,
-Suman
-
-> 
-> I will continue tomorrow,
-> Mathieu
-> 
 >> +
 >> +	return ret;
 >> +}
