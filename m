@@ -2,114 +2,103 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A29C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7ACC3815B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2847620732
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:04:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="F+hKm3C3"
+	by mail.kernel.org (Postfix) with ESMTP id 15C8820737
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:05:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505857AbgDONE1 (ORCPT
+        id S2505902AbgDONFH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:04:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2505845AbgDONES (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:04:18 -0400
-Received: from mo6-p03-ob.smtp.rzone.de (mo6-p03-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5303::12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3063C061A0C;
-        Wed, 15 Apr 2020 06:04:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586955856;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=CdHAABA4O4WBpGafReQS38iVaIL+NYE+i3qxsiPxeAo=;
-        b=F+hKm3C3XOqEnTBDZBXnjx3O3HH1Va/Qp8roEBX1UbgZttATFHbN4Z6n8DeoxdWTID
-        LJW0Tz+xqOF5eiUenpEg39HyhB4YVGuKG7nPH45zfd6e5co8uV9GDaIUvxSqHnV7Lmlh
-        cqmyt+YYneMN4Z/MXySw4m6Z8JTipneBQhEUNqz/lDMoys2y7p4jo4kQ+G1LeM4UCk7g
-        J0bv6y19KvyWs0lg2w9Mm8jSTCVwDIufJQuC/bxYXJ9b7awJva1WNigZ2mPoa065vCYb
-        7MFcCXXaquEqHUM44jLoxQ0oTVu3cvh0WGOeJKKuifCM/taOOuJFEufUSGelk+cpm6V8
-        06oQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/PtwDConyM="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.4.0 DYNA|AUTH)
-        with ESMTPSA id 6028a2w3FD47231
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Wed, 15 Apr 2020 15:04:07 +0200 (CEST)
-Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200415130233.rgn7xrtwqicptke2@gilmour.lan>
-Date:   Wed, 15 Apr 2020 15:04:07 +0200
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Wed, 15 Apr 2020 09:05:07 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:46327 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505896AbgDONFC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 09:05:02 -0400
+X-Originating-IP: 78.193.40.249
+Received: from localhost (unknown [78.193.40.249])
+        (Authenticated sender: kamel.bouhara@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id C089DFF80D;
+        Wed, 15 Apr 2020 13:04:58 +0000 (UTC)
+From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        linux-mips@vger.kernel.org,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com>
-References: <cover.1586939718.git.hns@goldelico.com> <20200415101008.zxzxca2vlfsefpdv@gilmour.lan> <2E3401F1-A106-4396-8FE6-51CAB72926A4@goldelico.com> <20200415130233.rgn7xrtwqicptke2@gilmour.lan>
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Philipp Rossak <embed3d@gmail.com>
-X-Mailer: Apple Mail (2.3124)
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org,
+        Kamel Bouhara <kamel.bouhara@bootlin.com>
+Subject: [PATCH v3 0/3] Microchip TCB Capture driver
+Date:   Wed, 15 Apr 2020 15:04:52 +0200
+Message-Id: <20200415130455.2222019-1-kamel.bouhara@bootlin.com>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hello,
 
-> Am 15.04.2020 um 15:02 schrieb Maxime Ripard <maxime@cerno.tech>:
-> 
-> On Wed, Apr 15, 2020 at 02:41:52PM +0200, H. Nikolaus Schaller wrote:
->>>> The kernel modules built from this project have successfully
->>>> demonstrated to work with the DTS definitions from this patch set on
->>>> AM335x BeagleBone Black, DM3730 and OMAP5 Pyra and Droid 4. They
->>>> partially work on OMAP3530 and PandaBoard ES but that is likely a
->>>> problem in the kernel driver or the (non-free) user-space libraries
->>>> and binaries.
->>>> 
->>>> Wotk for JZ4780 (CI20 board) is in progress and there is potential
->>>> to extend this work to e.g. BananaPi-M3 (A83) and some Intel Poulsbo
->>>> and CedarView devices.
->>> 
->>> If it's not been tested on any Allwinner board yet, I'll leave it
->>> aside until it's been properly shown to work.
->> 
->> Phillip has tested something on a83.
-> 
-> I'm a bit skeptical on that one since it doesn't even list the
-> interrupts connected to the GPU that the binding mandates.
+Here is a new counter driver to support Microchip TCB capture devices.
 
-I think he left it out for a future update.
-But best he comments himself.
+Each SoC has two TCB blocks, each one including three independent
+channels.The following series adds support for two counter modes:
+increase and quadrature decoder.
 
-BR and thanks,
-Nikolaus
+As for the atmel clocksource and pwm, the counter driver needs to fill
+some tcb capabilities in order to operate with the right configuration.
+This is achieved in first patch of this series.
+
+Please feel free to comment.
+
+Cheers,
+
+Changes from v3:
+ - Updated the brand name: s/atmel/microchip/.
+ - Added missing kernel doc for new elements introduced in structure
+   atmel_tcb_config.
+ - Removed useless blank line
+ - Added an explicit clock removing path using devm_add_action_or_reset
+
+Changes from v2:
+ - Fixed first patch not applying on mainline
+ - Updated return code to -EINVAL when user is requesting qdec mode on
+   a counter device not supporting it.
+ - Added an error case returning -EINVAL when action edge is performed in
+   qdec mode.
+ - Removed no need to explicity setting ops to NULL from static struct as
+   it is the default value.
+ - Changed confusing code by using snprintf for the sake of clarity.
+ - Changed code to use ARRAY_SIZE so that future reviewers will know
+   that num_counts matches what's in the atmel_tc_count array without
+   having to check so themselves.
+ - Fixed errors reported by dt_binding_check
+
+
+Kamel Bouhara (3):
+  ARM: at91: add atmel tcb capabilities
+  dt-bindings: counter: microchip-tcb-capture counter
+  counter: Add microchip TCB capture counter
+
+ .../counter/microchip-tcb-capture.yaml        |  33 ++
+ drivers/counter/Kconfig                       |  11 +
+ drivers/counter/Makefile                      |   1 +
+ drivers/counter/microchip-tcb-capture.c       | 397 ++++++++++++++++++
+ include/soc/at91/atmel_tcb.h                  |   5 +
+ 5 files changed, 447 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/counter/microchip-tcb-capture.yaml
+ create mode 100644 drivers/counter/microchip-tcb-capture.c
+
+-- 
+2.25.0
 
