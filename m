@@ -2,141 +2,200 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 605BEC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 456FAC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8392074F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C9820737
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 13:59:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="erhi/KoY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uhm/3Ie0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636367AbgDON5a (ORCPT
+        id S2636378AbgDON7M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 09:57:30 -0400
-Received: from mail-db8eur05on2079.outbound.protection.outlook.com ([40.107.20.79]:53569
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2636336AbgDON5Z (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:57:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ju8E65IMg9sHvQ2J3fNfvnLu9Y/URhwBJx95H1O0vOZJBIEPJteiLkG6rr3q80ZWFafg3gfbGZNYanb9TulApHRByMwBLikJcWG7o3aBU4K2McPmNiGC5uQiHlLLVXKbSiX09ZYthzwK0LHiSiIj+y8S26eDxKKPrFD/U0QMkqUMyxY5zuVsjALLu5FCE6N+jZL5Iq6zXJ/XuxpvcbJ1AX35fldAQHU1pHK+Y2c+c/kbu+w0HmjTf/F6/tbg95Pfa1h3oqg07n2J5DeabO6dsrN/4Wq7PglrPqqzkp+tzz/0NJ0BM16FO5a1tWhUGs1Sr56Nd9XexXvSVP9LlNk5ZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hmm4XmG0HRJCozo83YuBx7rDVrhGVHvuaePiudKcuxA=;
- b=TK+RKKOkl26v+1nhuni2p2iekxJFlWf6Y7anX2ah1JvWBlHEArjXBEC/XwBMU7rcU/nap7tssOe1eoLvJTgsZ4khEx2vwFbJApQcTkPfOHTPmHu5sJjcx2XPG8Ng/dCTzTstD4DrF9JUdxgsNRLbagf5fIy10CP+qR5qXh8szbI5F3PGxwAJLzpAYNVI6icAt49KJr8K9+UVOqM+WaT2exykmyNvtrIb50SwV0iYqMj4vRDFhPRCV5j7fRZ5puNukFgE+n2ia3Qbyw+DUJE2VOSGkdqnd+NIjD+j9z47uKP90YiODzgHqX3eIAfGrYB74nvYGAY9bv3ZArk5DkbNkA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hmm4XmG0HRJCozo83YuBx7rDVrhGVHvuaePiudKcuxA=;
- b=erhi/KoY+58LColgiP0YGdTeUCqeeW9vXAezu8OLgJoRkaWUcLw/92CuWl8nxpzJ0fXZ7sHescZMuG6eSZJLoxkZd8LtAyyQ04dQuTmm7G5+NQ972ttcuAeDPTsWhRBwkpn9L0Pmtjjyvzb8g/ghppFXSXol7z7DcMZw9SmR+5k=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6735.eurprd04.prod.outlook.com (2603:10a6:803:124::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15; Wed, 15 Apr
- 2020 13:57:20 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::d5f0:c948:6ab0:c2aa]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::d5f0:c948:6ab0:c2aa%4]) with mapi id 15.20.2900.028; Wed, 15 Apr 2020
- 13:57:20 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH v7 00/13] add ecspi ERR009165 for i.mx6/7 soc family
-Thread-Topic: [PATCH v7 00/13] add ecspi ERR009165 for i.mx6/7 soc family
-Thread-Index: AQHV93/7B768gsXihk2i42KIYKNYiqh6E8wAgAALJICAAEzJsA==
-Date:   Wed, 15 Apr 2020 13:57:20 +0000
-Message-ID: <VE1PR04MB6638C99F592E5FEEB08A3A8589DB0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <1583944596-23410-1-git-send-email-yibin.gong@nxp.com>
- <VE1PR04MB6638AE84CD338AE1CF26FDFD89DB0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200415091931.GA5265@sirena.org.uk>
-In-Reply-To: <20200415091931.GA5265@sirena.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [183.192.239.221]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8fba9e2a-b011-4945-8612-08d7e144eabc
-x-ms-traffictypediagnostic: VE1PR04MB6735:|VE1PR04MB6735:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB673572BF2D2B3B6FD9980A3689DB0@VE1PR04MB6735.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0374433C81
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(346002)(396003)(376002)(39860400002)(136003)(26005)(53546011)(186003)(54906003)(2906002)(71200400001)(6506007)(7696005)(6916009)(86362001)(9686003)(64756008)(8936002)(4326008)(8676002)(76116006)(66476007)(81156014)(66946007)(66446008)(55016002)(7416002)(66556008)(33656002)(5660300002)(52536014)(316002)(478600001);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zJA73oMKLigpMaayhHSExAfEAQwOg9TgfTOQz/tga42tVFl4fy0qa555n8SSX64iwzx9gTKBSARQ1ZIRuhIOL6iLHmI7LTwcTdoPHJyisLXOOFVB7mTDFNkKg/cpKPTKot/txtcVYplBY0JeZypmeMnqW4lsCFmbWn02iL6d+TmdMTpqQDQj7ZW/XLd4pfyT/Zwos700h2llmKeMsYfe/L/afdFYR7AwDGG0fSVGvuALISKZ89JDpyE8DAXpAsz2K3Bgbbx1lX9Th6S4R0SpxiB+h/ENZ28nS4Yf72Yfe5J9wMfS1ISGeyg8//jHUrEpppQ1/KFvQE12ILlfVUdJThBex4oshzAQEU4FpPxk9/FUdE4BBxkbk7uo2w8WwtAFqJftiEeRof3+kOQCZE2KM1e8Ms/ab/T56GGxELjRiYKult1k0W6cVFbaMdO6kFO6
-x-ms-exchange-antispam-messagedata: FVGiIcarUBwt0h07Y8XNtPByXba9vfTwPTt8dzeE7JNe0LxjdhaUB1OBC2wMOF/8dmP2tqkT8/mweGafZty80lDsKXpj44rtDL+2vUXICR+XSLgivWyd7dI/i/3Gt4QJh/B1WjWjilQstAH5TeiFKA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 15 Apr 2020 09:59:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34106 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2633783AbgDON7E (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 09:59:04 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16255C061A0C
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 06:59:04 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id u13so18812232wrp.3
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 06:59:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EBkkrpN1JldiWzSdxdAKYWJCIXmqL3+YV8OzsPNmat0=;
+        b=uhm/3Ie067i5hmZbiX2s7iEa4gWmMkn8zbCB4zZaAW2ORNX91MNCZ1jjcIP2/VorVP
+         0BWzv5pngsWGFBCw4zaa6/QCszdSQZGd3p+/AnYWU6bqiJY3RbF2suB+Zb8cejKklafp
+         8eyfo1ph5zmV+bu0Jbls5JAQZhsmFXvyZvh9+V5ftlg+tmYah8xsHbYaBSAoiCOLpxJY
+         q+MNSbvB0FOwAW98wNf4CSSU9Ke2DINk2cT382hefJv/wgdBUdDR2FJ1sVh7oa9dhY/r
+         9UATB1+AKF/8/EpWd4/LTrDOGuzpUj2QFx29lwSJU5NQTCnhlAs0w0aEs09AmRlicHrB
+         iIjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EBkkrpN1JldiWzSdxdAKYWJCIXmqL3+YV8OzsPNmat0=;
+        b=J24H5Z8gt9Bl8JXwMYcM10hqzsP7erGHZ8aR3b9XGShb/8rL7swmLKNGcQf4vQ9VNe
+         krxZCm/iydp07YLw2QowNowc6QtZYRE5M8zol9crmTeko48Kn4Ra/LiO3gJlsJg/oClj
+         a3uAGS2KO/DuheS9IGF/kISWwl73HErFynR0UbiWsI/Y5E+g5FfIh5BY8gPDEI/+g25X
+         7I1NFl58kJyekqGLqn1BLibClFj7jJF3x9Bs44ScBaPXvhm3Swkuj4d7xwD99IF8NMyD
+         rNXzbgdL3O+/nHZtBz7wuCDSYaHTw2cdY3T0fGDNxO+lSa/K9rmMrrS2G7bNZ2pyzYNO
+         i2Cw==
+X-Gm-Message-State: AGi0PuYeBRQx3uH5K3opzfKXPFqDGcCDnXS4rnUQjx2LLzk2Z89KmZHm
+        lyqzs4Ep4Xjgr02yac0/O1V3zg==
+X-Google-Smtp-Source: APiQypJ0Sml9Mx5kPP3Urh14rrw/Ewpj/dAuPK1uPUm+XmXE7vf4+a6LRdBe8N24mjTc8FePKZI03w==
+X-Received: by 2002:a5d:4d8f:: with SMTP id b15mr8157211wru.107.1586959142726;
+        Wed, 15 Apr 2020 06:59:02 -0700 (PDT)
+Received: from [192.168.0.136] ([87.120.218.65])
+        by smtp.googlemail.com with ESMTPSA id n6sm22158491wmc.28.2020.04.15.06.59.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 Apr 2020 06:59:01 -0700 (PDT)
+Subject: Re: [v2 1/3] drm/msm/dpu: add support for clk and bw scaling for
+ display
+To:     Krishna Manikandan <mkrishn@codeaurora.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+References: <1585810370-6099-1-git-send-email-mkrishn@codeaurora.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ mQINBFjTuRcBEACyAOVzghvyN19Sa/Nit4LPBWkICi5W20p6bwiZvdjhtuh50H5q4ktyxJtp
+ 1+s8dMSa/j58hAWhrc2SNL3fttOCo+MM1bQWwe8uMBQJP4swgXf5ZUYkSssQlXxGKqBSbWLB
+ uFHOOBTzaQBaNgsdXo+mQ1h8UCgM0zQOmbs2ort8aHnH2i65oLs5/Xgv/Qivde/FcFtvEFaL
+ 0TZ7odM67u+M32VetH5nBVPESmnEDjRBPw/DOPhFBPXtal53ZFiiRr6Bm1qKVu3dOEYXHHDt
+ nF13gB+vBZ6x5pjl02NUEucSHQiuCc2Aaavo6xnuBc3lnd4z/xk6GLBqFP3P/eJ56eJv4d0B
+ 0LLgQ7c1T3fU4/5NDRRCnyk6HJ5+HSxD4KVuluj0jnXW4CKzFkKaTxOp7jE6ZD/9Sh74DM8v
+ etN8uwDjtYsM07I3Szlh/I+iThxe/4zVtUQsvgXjwuoOOBWWc4m4KKg+W4zm8bSCqrd1DUgL
+ f67WiEZgvN7tPXEzi84zT1PiUOM98dOnmREIamSpKOKFereIrKX2IcnZn8jyycE12zMkk+Sc
+ ASMfXhfywB0tXRNmzsywdxQFcJ6jblPNxscnGMh2VlY2rezmqJdcK4G4Lprkc0jOHotV/6oJ
+ mj9h95Ouvbq5TDHx+ERn8uytPygDBR67kNHs18LkvrEex/Z1cQARAQABtChHZW9yZ2kgRGph
+ a292IDxnZW9yZ2kuZGpha292QGxpbmFyby5vcmc+iQI+BBMBAgAoBQJY07kXAhsDBQkHhM4A
+ BgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRCyi/eZcnWWUuvsD/4miikUeAO6fU2Xy3fT
+ l7RUCeb2Uuh1/nxYoE1vtXcow6SyAvIVTD32kHXucJJfYy2zFzptWpvD6Sa0Sc58qe4iLY4j
+ M54ugOYK7XeRKkQHFqqR2T3g/toVG1BOLS2atooXEU+8OFbpLkBXbIdItqJ1M1SEw8YgKmmr
+ JlLAaKMq3hMb5bDQx9erq7PqEKOB/Va0nNu17IL58q+Q5Om7S1x54Oj6LiG/9kNOxQTklOQZ
+ t61oW1Ewjbl325fW0/Lk0QzmfLCrmGXXiedFEMRLCJbVImXVKdIt/Ubk6SAAUrA5dFVNBzm2
+ L8r+HxJcfDeEpdOZJzuwRyFnH96u1Xz+7X2V26zMU6Wl2+lhvr2Tj7spxjppR+nuFiybQq7k
+ MIwyEF0mb75RLhW33sdGStCZ/nBsXIGAUS7OBj+a5fm47vQKv6ekg60oRTHWysFSJm1mlRyq
+ exhI6GwUo5GM/vE36rIPSJFRRgkt6nynoba/1c4VXxfhok2rkP0x3CApJ5RimbvITTnINY0o
+ CU6f1ng1I0A1UTi2YcLjFq/gmCdOHExT4huywfu1DDf0p1xDyPA1FJaii/gJ32bBP3zK53hM
+ dj5S7miqN7F6ZpvGSGXgahQzkGyYpBR5pda0m0k8drV2IQn+0W8Qwh4XZ6/YdfI81+xyFlXc
+ CJjljqsMCJW6PdgEH7kCDQRY07kXARAAvupGd4Jdd8zRRiF+jMpv6ZGz8L55Di1fl1YRth6m
+ lIxYTLwGf0/p0oDLIRldKswena3fbWh5bbTMkJmRiOQ/hffhPSNSyyh+WQeLY2kzl6geiHxD
+ zbw37e2hd3rWAEfVFEXOLnmenaUeJFyhA3Wd8OLdRMuoV+RaLhNfeHctiEn1YGy2gLCq4VNb
+ 4Wj5hEzABGO7+LZ14hdw3hJIEGKtQC65Jh/vTayGD+qdwedhINnIqslk9tCQ33a+jPrCjXLW
+ X29rcgqigzsLHH7iVHWA9R5Aq7pCy5hSFsl4NBn1uV6UHlyOBUuiHBDVwTIAUnZ4S8EQiwgv
+ WQxEkXEWLM850V+G6R593yZndTr3yydPgYv0xEDACd6GcNLR/x8mawmHKzNmnRJoOh6Rkfw2
+ fSiVGesGo83+iYq0NZASrXHAjWgtZXO1YwjW9gCQ2jYu9RGuQM8zIPY1VDpQ6wJtjO/KaOLm
+ NehSR2R6tgBJK7XD9it79LdbPKDKoFSqxaAvXwWgXBj0Oz+Y0BqfClnAbxx3kYlSwfPHDFYc
+ R/ppSgnbR5j0Rjz/N6Lua3S42MDhQGoTlVkgAi1btbdV3qpFE6jglJsJUDlqnEnwf03EgjdJ
+ 6KEh0z57lyVcy5F/EUKfTAMZweBnkPo+BF2LBYn3Qd+CS6haZAWaG7vzVJu4W/mPQzsAEQEA
+ AYkCJQQYAQIADwUCWNO5FwIbDAUJB4TOAAAKCRCyi/eZcnWWUhlHD/0VE/2x6lKh2FGP+QHH
+ UTKmiiwtMurYKJsSJlQx0T+j/1f+zYkY3MDX+gXa0d0xb4eFv8WNlEjkcpSPFr+pQ7CiAI33
+ 99kAVMQEip/MwoTYvM9NXSMTpyRJ/asnLeqa0WU6l6Z9mQ41lLzPFBAJ21/ddT4xeBDv0dxM
+ GqaH2C6bSnJkhSfSja9OxBe+F6LIAZgCFzlogbmSWmUdLBg+sh3K6aiBDAdZPUMvGHzHK3fj
+ gHK4GqGCFK76bFrHQYgiBOrcR4GDklj4Gk9osIfdXIAkBvRGw8zg1zzUYwMYk+A6v40gBn00
+ OOB13qJe9zyKpReWMAhg7BYPBKIm/qSr82aIQc4+FlDX2Ot6T/4tGUDr9MAHaBKFtVyIqXBO
+ xOf0vQEokkUGRKWBE0uA3zFVRfLiT6NUjDQ0vdphTnsdA7h01MliZLQ2lLL2Mt5lsqU+6sup
+ Tfql1omgEpjnFsPsyFebzcKGbdEr6vySGa3Cof+miX06hQXKe99a5+eHNhtZJcMAIO89wZmj
+ 7ayYJIXFqjl/X0KBcCbiAl4vbdBw1bqFnO4zd1lMXKVoa29UHqby4MPbQhjWNVv9kqp8A39+
+ E9xw890l1xdERkjVKX6IEJu2hf7X3MMl9tOjBK6MvdOUxvh1bNNmXh7OlBL1MpJYY/ydIm3B
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <80ce1cfd-59ac-6565-bcbd-a6816592e586@linaro.org>
+Date:   Wed, 15 Apr 2020 16:59:00 +0300
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8fba9e2a-b011-4945-8612-08d7e144eabc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2020 13:57:20.7274
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pUypouwSZkh7VO5Ei0wHV3T1f5BOIo/oP8eEOGRSttMsj3bBfxEVyT0n3a/KIfRA56XZ//v6dvgE+wpg7bX3kQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6735
+In-Reply-To: <1585810370-6099-1-git-send-email-mkrishn@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020/04/15 17:20 Mark Brown <broonie@kernel.org> wrote:
-> On Wed, Apr 15, 2020 at 08:41:17AM +0000, Robin Gong wrote:
-> > Ping....
-> > On 2020/03/11 16:35 Robin Gong <yibin.gong@nxp.com> wrote:
-> > > There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
-> > > transfer to
->=20
-> Please don't send content free pings and please allow a reasonable time f=
-or
-> review.  People get busy, go on holiday, attend conferences and so on so
-> unless there is some reason for urgency (like critical bug fixes) please =
-allow at
-> least a couple of weeks for review.  If there have been review comments t=
-hen
-> people may be waiting for those to be addressed.
->=20
-> Sending content free pings adds to the mail volume (if they are seen at
-> all) which is often the problem and since they can't be reviewed directly=
- if
-> something has gone wrong you'll have to resend the patches anyway, so
-> sending again is generally a better approach though there are some other
-> maintainers who like them - if in doubt look at how patches for the subsy=
-stem
-> are normally handled.
-Thanks Mark for the kind reminding. Will resend patches instead.
+Hi Krishna,
+
+Thanks for the patch!
+
+On 4/2/20 09:52, Krishna Manikandan wrote:
+> This change adds support to scale src clk and bandwidth as
+> per composition requirements.
+> 
+> Interconnect registration for bw has been moved to mdp
+> device node from mdss to facilitate the scaling.
+
+No Signed-off-by ?
+
+> ---
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c  | 106 +++++++++++++++++++++----
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c |   5 +-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h |   4 +
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c        |  37 ++++++++-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h        |   4 +
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c       |   9 ++-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c      |  82 +++++++++++++++++++
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h      |   4 +
+>  8 files changed, 228 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+
+[..]
+> @@ -186,10 +247,21 @@ static int _dpu_core_perf_crtc_update_bus(struct dpu_kms *kms,
+>  			perf.max_per_pipe_ib = max(perf.max_per_pipe_ib,
+>  					dpu_cstate->new_perf.max_per_pipe_ib);
+>  
+> -			DPU_DEBUG("crtc=%d bw=%llu\n", tmp_crtc->base.id,
+> -					dpu_cstate->new_perf.bw_ctl);
+> +			perf.bw_ctl += dpu_cstate->new_perf.bw_ctl;
+> +
+> +			DPU_DEBUG("crtc=%d bw=%llu paths:%d\n",
+> +				  tmp_crtc->base.id,
+> +				  dpu_cstate->new_perf.bw_ctl, kms->num_paths);
+>  		}
+>  	}
+> +
+> +	avg_bw = kms->num_paths ?
+> +			perf.bw_ctl / kms->num_paths : 0;
+> +
+> +	for (i = 0; i < kms->num_paths; i++)
+> +		icc_set_bw(kms->path[i],
+> +			Bps_to_icc(avg_bw), (perf.max_per_pipe_ib));
+
+In what units is max_per_pipe_ib? Can you use Bps_to_icc() or KBps_to_icc()?
+
+> +
+>  	return ret;
+>  }
+>
+
+[..]
+
+> @@ -1037,8 +1065,15 @@ static int __maybe_unused dpu_runtime_resume(struct device *dev)
+>  	struct drm_encoder *encoder;
+>  	struct drm_device *ddev;
+>  	struct dss_module_power *mp = &dpu_kms->mp;
+> +	int i;
+>  
+>  	ddev = dpu_kms->dev;
+> +
+> +	/* Min vote of BW is required before turning on AXI clk */
+> +	for (i = 0; i < dpu_kms->num_paths; i++)
+> +		icc_set_bw(dpu_kms->path[i], 0,
+> +			dpu_kms->catalog->perf.min_dram_ib);
+
+Bps_to_icc() ?
+
+Thanks,
+Georgi
