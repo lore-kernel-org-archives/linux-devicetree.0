@@ -2,499 +2,411 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 192C6C3815B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 20:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6456C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 20:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E07B4206F9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 20:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92F8A20774
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 20:31:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E2yAgqUk"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ZDU7S0Fc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406920AbgDOUNn (ORCPT
+        id S2438336AbgDOUbX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 16:13:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2406385AbgDOUNl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 16:13:41 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCDC8C061A0C
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 13:13:40 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id h2so1227971wmb.4
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 13:13:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=8af/RFdyIBTlOshnQlAji0XlVTbSeXDHEU8nA/HGD04=;
-        b=E2yAgqUkv7WoEUnb27swRXuuTna8EaA9GA/kCDLIuG7e9+4OLmlIwFbBNCwKT4PiUJ
-         tW+IopCAIwlh8sJouFMJ+/GgS+3k5J6mUK+IKIS4uKaAjALj1rKGxKQDe4tfNpBYcYes
-         yHAg/NnlhdumQRnyZJYCaW0s8G9IjsFYsXna1ta1zMDBvr7veUrWJlEQxKQAxQmxR8W/
-         odwtWRnbWboGLRvYD3wrN4sSimFaEjty3KVByQ5hI8FnK0dVpLutRb6+LnoAsrdhx5ch
-         QpZ8F/hnmx873SCIG14LyFWrv1EoUcYL4AQwlYDu/ffkHuHCHX+rjY0dKWZ0hONzUhqG
-         3Rzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8af/RFdyIBTlOshnQlAji0XlVTbSeXDHEU8nA/HGD04=;
-        b=OXXK2FpF37vddx5ITs7bKiacFEQLQ3WaQUwyywybTHiKVhDikB8m9qgYTvL4XmrWie
-         C0+nycvNlyDLXPnnYzr9CS0zQ+KpbwJBa5FL97I3RWFEiR0aZrbY9R95rE0SwnVd8VSQ
-         Z4CQ5uDXYp3nXReRqLK8S9/CFdknQkV84eqn1AN7VKkaYJ6oldEvi7rUk30UtDuHhlDR
-         EFlSwi2fiuL6FrEHjOD7h9VeUBpw+BXgQZ8pKzmJ/wuzz+X8sYXcgtyin8o+a18DKiQa
-         CuvjEa96cOCUWWsWAy6SJPa4/5t0sNc8hnqa21IhKc+qDMShR1OTpO6fOxbs5UIn0f7q
-         eeOQ==
-X-Gm-Message-State: AGi0PuYqlf/XTlq3K1AwXiG+j9DV7bgcDgv0aOvWreRD3gD6eur+SHbd
-        apreM/9LLT1btEStpRSP8hYkdA==
-X-Google-Smtp-Source: APiQypJq1ArmO2NOvQNV1RJoAR/JYKAn3P+Mt7Gycrl6+3TNAxm/LY+poA5PjS7q8fCr6Ith4F+46Q==
-X-Received: by 2002:a1c:6a17:: with SMTP id f23mr935649wmc.136.1586981619346;
-        Wed, 15 Apr 2020 13:13:39 -0700 (PDT)
-Received: from linaro.org ([2a00:23c5:6801:1801:8bee:312:6092:58f2])
-        by smtp.gmail.com with ESMTPSA id z15sm12396894wrs.47.2020.04.15.13.13.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 13:13:38 -0700 (PDT)
-From:   Mike Leach <mike.leach@linaro.org>
-To:     liviu.dudau@arm.com, sudeep.holla@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        coresight@lists.linaro.org
-Cc:     mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
-        Mike Leach <mike.leach@linaro.org>
-Subject: [PATCH] dt-bindings: arm: Juno platform - add CTI entries to device tree
-Date:   Wed, 15 Apr 2020 21:13:30 +0100
-Message-Id: <20200415201330.15894-1-mike.leach@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 15 Apr 2020 16:31:23 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:38040 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438404AbgDOUbU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 16:31:20 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 35CF02D1;
+        Wed, 15 Apr 2020 22:31:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586982675;
+        bh=BELz4vXphr08t8lphrY0ghkwE4w2DtBnvU/u2zI6FTE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZDU7S0Fc9ZTnGvAYzJSrLQbA80VrDpR8YD9sWgc1KOn9yxgaCE8nEEWWJbb3ZJS/i
+         PvqZAbgHusAyUmag5BixvbzMDExAyLrj/bn4FHQqZpAd9Z2A3GzDp6cX50UK0wcCUG
+         SbLVEkk3I+mVCI1HmNdiWF5OP/pSj4k5lSUOLjWs=
+Date:   Wed, 15 Apr 2020 23:31:03 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
+        narmstrong@baylibre.com, a.hajda@samsung.com,
+        spanda@codeaurora.org, jonas@kwiboo.se, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, jeffrey.l.hugo@gmail.com,
+        swboyd@chromium.org, jernej.skrabec@siol.net,
+        linux-arm-msm@vger.kernel.org, robdclark@chromium.org,
+        dri-devel@lists.freedesktop.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: drm/bridge: ti-sn65dsi86: Convert to
+ yaml
+Message-ID: <20200415203103.GO4758@pendragon.ideasonboard.com>
+References: <20200415084758.1.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200415084758.1.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add in CTI entries for Juno r0, r1 and r2 to device tree entries.
+Hi Douglas,
 
-Tested on Linux 5.7-rc1
+Thank you for the patch.
 
-Signed-off-by: Mike Leach <mike.leach@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
- arch/arm64/boot/dts/arm/juno-base.dtsi    | 162 +++++++++++++++++++++-
- arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi |  37 ++++-
- arch/arm64/boot/dts/arm/juno-r1.dts       |  25 ++++
- arch/arm64/boot/dts/arm/juno-r2.dts       |  25 ++++
- arch/arm64/boot/dts/arm/juno.dts          |  25 ++++
- 5 files changed, 269 insertions(+), 5 deletions(-)
+On Wed, Apr 15, 2020 at 08:48:39AM -0700, Douglas Anderson wrote:
+> This moves the bindings over, based a lot on toshiba,tc358768.yaml.
+> Unless there's someone known to be better, I've set the maintainer in
+> the yaml as the first person to submit bindings.
 
-diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
-index f5889281545f..d65b4e949ef0 100644
---- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-@@ -119,7 +119,7 @@
- 	 * The actual size is just 4K though 64K is reserved. Access to the
- 	 * unmapped reserved region results in a DECERR response.
- 	 */
--	etf@20010000 { /* etf0 */
-+	etf_sys0: etf@20010000 { /* etf0 */
- 		compatible = "arm,coresight-tmc", "arm,primecell";
- 		reg = <0 0x20010000 0 0x1000>;
- 
-@@ -143,7 +143,7 @@
- 		};
- 	};
- 
--	tpiu@20030000 {
-+	tpiu_sys: tpiu@20030000 {
- 		compatible = "arm,coresight-tpiu", "arm,primecell";
- 		reg = <0 0x20030000 0 0x1000>;
- 
-@@ -196,7 +196,7 @@
- 		};
- 	};
- 
--	etr@20070000 {
-+	etr_sys: etr@20070000 {
- 		compatible = "arm,coresight-tmc", "arm,primecell";
- 		reg = <0 0x20070000 0 0x1000>;
- 		iommus = <&smmu_etr 0>;
-@@ -214,7 +214,7 @@
- 		};
- 	};
- 
--	stm@20100000 {
-+	stm_sys: stm@20100000 {
- 		compatible = "arm,coresight-stm", "arm,primecell";
- 		reg = <0 0x20100000 0 0x1000>,
- 		      <0 0x28000000 0 0x1000000>;
-@@ -291,6 +291,18 @@
- 		};
- 	};
- 
-+	cti0: cti@22020000 {
-+		compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-+			     "arm,primecell";
-+		reg = <0 0x22020000 0 0x1000>;
-+
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+		power-domains = <&scpi_devpd 0>;
-+
-+		arm,cs-dev-assoc = <&etm0>;
-+	};
-+
- 	funnel@220c0000 { /* cluster0 funnel */
- 		compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
- 		reg = <0 0x220c0000 0 0x1000>;
-@@ -351,6 +363,18 @@
- 		};
- 	};
- 
-+	cti1: cti@22120000 {
-+		compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-+			     "arm,primecell";
-+		reg = <0 0x22120000 0 0x1000>;
-+
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+		power-domains = <&scpi_devpd 0>;
-+
-+		arm,cs-dev-assoc = <&etm1>;
-+	};
-+
- 	cpu_debug2: cpu-debug@23010000 {
- 		compatible = "arm,coresight-cpu-debug", "arm,primecell";
- 		reg = <0x0 0x23010000 0x0 0x1000>;
-@@ -376,6 +400,18 @@
- 		};
- 	};
- 
-+	cti2: cti@23020000 {
-+		compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-+			     "arm,primecell";
-+		reg = <0 0x23020000 0 0x1000>;
-+
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+		power-domains = <&scpi_devpd 0>;
-+
-+		arm,cs-dev-assoc = <&etm2>;
-+	};
-+
- 	funnel@230c0000 { /* cluster1 funnel */
- 		compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
- 		reg = <0 0x230c0000 0 0x1000>;
-@@ -448,6 +484,18 @@
- 		};
- 	};
- 
-+	cti3: cti@23120000 {
-+		compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-+			     "arm,primecell";
-+		reg = <0 0x23120000 0 0x1000>;
-+
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+		power-domains = <&scpi_devpd 0>;
-+
-+		arm,cs-dev-assoc = <&etm3>;
-+	};
-+
- 	cpu_debug4: cpu-debug@23210000 {
- 		compatible = "arm,coresight-cpu-debug", "arm,primecell";
- 		reg = <0x0 0x23210000 0x0 0x1000>;
-@@ -473,6 +521,18 @@
- 		};
- 	};
- 
-+	cti4: cti@23220000 {
-+		compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-+			     "arm,primecell";
-+		reg = <0 0x23220000 0 0x1000>;
-+
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+		power-domains = <&scpi_devpd 0>;
-+
-+		arm,cs-dev-assoc = <&etm4>;
-+	};
-+
- 	cpu_debug5: cpu-debug@23310000 {
- 		compatible = "arm,coresight-cpu-debug", "arm,primecell";
- 		reg = <0x0 0x23310000 0x0 0x1000>;
-@@ -498,6 +558,100 @@
- 		};
- 	};
- 
-+	cti5: cti@23320000 {
-+		compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-+			     "arm,primecell";
-+		reg = <0 0x23320000 0 0x1000>;
-+
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+		power-domains = <&scpi_devpd 0>;
-+
-+		arm,cs-dev-assoc = <&etm5>;
-+	};
-+
-+	cti@20020000 { /* sys_cti_0 */
-+		compatible = "arm,coresight-cti", "arm,primecell";
-+		reg = <0 0x20020000 0 0x1000>;
-+
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+		power-domains = <&scpi_devpd 0>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		trig-conns@0 {
-+			reg = <0>;
-+			arm,trig-in-sigs=<2 3>;
-+			arm,trig-in-types=<SNK_FULL SNK_ACQCOMP>;
-+			arm,trig-out-sigs=<0 1>;
-+			arm,trig-out-types=<SNK_FLUSHIN SNK_TRIGIN>;
-+			arm,cs-dev-assoc = <&etr_sys>;
-+		};
-+
-+		trig-conns@1 {
-+			reg = <1>;
-+			arm,trig-in-sigs=<0 1>;
-+			arm,trig-in-types=<SNK_FULL SNK_ACQCOMP>;
-+			arm,trig-out-sigs=<7 6>;
-+			arm,trig-out-types=<SNK_FLUSHIN SNK_TRIGIN>;
-+			arm,cs-dev-assoc = <&etf_sys0>;
-+		};
-+
-+		trig-conns@2 {
-+			reg = <2>;
-+			arm,trig-in-sigs=<4 5 6 7>;
-+			arm,trig-in-types=<STM_TOUT_SPTE STM_TOUT_SW
-+					   STM_TOUT_HETE STM_ASYNCOUT>;
-+			arm,trig-out-sigs=<4 5>;
-+			arm,trig-out-types=<STM_HWEVENT STM_HWEVENT>;
-+			arm,cs-dev-assoc = <&stm_sys>;
-+		};
-+
-+		trig-conns@3 {
-+			reg = <3>;
-+			arm,trig-out-sigs=<2 3>;
-+			arm,trig-out-types=<SNK_FLUSHIN SNK_TRIGIN>;
-+			arm,cs-dev-assoc = <&tpiu_sys>;
-+		};
-+	};
-+
-+	cti@20110000 { /* sys_cti_1 */
-+		compatible = "arm,coresight-cti", "arm,primecell";
-+		reg = <0 0x20110000 0 0x1000>;
-+
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+		power-domains = <&scpi_devpd 0>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		trig-conns@0 {
-+			reg = <0>;
-+			arm,trig-in-sigs=<0>;
-+			arm,trig-in-types=<GEN_INTREQ>;
-+			arm,trig-out-sigs=<0>;
-+			arm,trig-out-types=<GEN_HALTREQ>;
-+			arm,trig-conn-name = "sys_profiler";
-+		};
-+
-+		trig-conns@1 {
-+			reg = <1>;
-+			arm,trig-out-sigs=<2 3>;
-+			arm,trig-out-types=<GEN_HALTREQ GEN_RESTARTREQ>;
-+			arm,trig-conn-name = "watchdog";
-+		};
-+
-+		trig-conns@2 {
-+			reg = <2>;
-+			arm,trig-out-sigs=<1 6>;
-+			arm,trig-out-types=<GEN_HALTREQ GEN_RESTARTREQ>;
-+			arm,trig-conn-name = "g_counter";
-+		};
-+	};
-+
- 	gpu: gpu@2d000000 {
- 		compatible = "arm,juno-mali", "arm,mali-t624";
- 		reg = <0 0x2d000000 0 0x10000>;
-diff --git a/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi b/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
-index eda3d9e18af6..752b05f8bf31 100644
---- a/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
-@@ -23,7 +23,7 @@
- 		};
- 	};
- 
--	etf@20140000 { /* etf1 */
-+	etf_sys1: etf@20140000 { /* etf1 */
- 		compatible = "arm,coresight-tmc", "arm,primecell";
- 		reg = <0 0x20140000 0 0x1000>;
- 
-@@ -82,4 +82,39 @@
- 
- 		};
- 	};
-+
-+	cti@20160000 { /* sys_cti_2 */
-+		compatible = "arm,coresight-cti", "arm,primecell";
-+		reg = <0 0x20160000 0 0x1000>;
-+
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+		power-domains = <&scpi_devpd 0>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		trig-conns@0 {
-+			reg = <0>;
-+			arm,trig-in-sigs=<0 1>;
-+			arm,trig-in-types=<SNK_FULL SNK_ACQCOMP>;
-+			arm,trig-out-sigs=<0 1>;
-+			arm,trig-out-types=<SNK_FLUSHIN SNK_TRIGIN>;
-+			arm,cs-dev-assoc = <&etf_sys1>;
-+		};
-+
-+		trig-conns@1 {
-+			reg = <1>;
-+			arm,trig-in-sigs=<2 3 4>;
-+			arm,trig-in-types=<ELA_DBGREQ ELA_TSTART ELA_TSTOP>;
-+			arm,trig-conn-name = "ela_clus_0";
-+		};
-+
-+		trig-conns@2 {
-+			reg = <2>;
-+			arm,trig-in-sigs=<5 6 7>;
-+			arm,trig-in-types=<ELA_DBGREQ ELA_TSTART ELA_TSTOP>;
-+			arm,trig-conn-name = "ela_clus_1";
-+		};
-+	};
- };
-diff --git a/arch/arm64/boot/dts/arm/juno-r1.dts b/arch/arm64/boot/dts/arm/juno-r1.dts
-index 5f290090b0cf..02aa51eb311d 100644
---- a/arch/arm64/boot/dts/arm/juno-r1.dts
-+++ b/arch/arm64/boot/dts/arm/juno-r1.dts
-@@ -9,6 +9,7 @@
- /dts-v1/;
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/arm/coresight-cti-dt.h>
- #include "juno-base.dtsi"
- #include "juno-cs-r1r2.dtsi"
- 
-@@ -309,3 +310,27 @@
- &cpu_debug5 {
- 	cpu = <&A53_3>;
- };
-+
-+&cti0 {
-+	cpu = <&A57_0>;
-+};
-+
-+&cti1 {
-+	cpu = <&A57_1>;
-+};
-+
-+&cti2 {
-+	cpu = <&A53_0>;
-+};
-+
-+&cti3 {
-+	cpu = <&A53_1>;
-+};
-+
-+&cti4 {
-+	cpu = <&A53_2>;
-+};
-+
-+&cti5 {
-+	cpu = <&A53_3>;
-+};
-diff --git a/arch/arm64/boot/dts/arm/juno-r2.dts b/arch/arm64/boot/dts/arm/juno-r2.dts
-index 305300dd521c..75bb27c2d4dc 100644
---- a/arch/arm64/boot/dts/arm/juno-r2.dts
-+++ b/arch/arm64/boot/dts/arm/juno-r2.dts
-@@ -9,6 +9,7 @@
- /dts-v1/;
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/arm/coresight-cti-dt.h>
- #include "juno-base.dtsi"
- #include "juno-cs-r1r2.dtsi"
- 
-@@ -315,3 +316,27 @@
- &cpu_debug5 {
- 	cpu = <&A53_3>;
- };
-+
-+&cti0 {
-+	cpu = <&A72_0>;
-+};
-+
-+&cti1 {
-+	cpu = <&A72_1>;
-+};
-+
-+&cti2 {
-+	cpu = <&A53_0>;
-+};
-+
-+&cti3 {
-+	cpu = <&A53_1>;
-+};
-+
-+&cti4 {
-+	cpu = <&A53_2>;
-+};
-+
-+&cti5 {
-+	cpu = <&A53_3>;
-+};
-diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
-index f00cffbd032c..dbc22e70b62c 100644
---- a/arch/arm64/boot/dts/arm/juno.dts
-+++ b/arch/arm64/boot/dts/arm/juno.dts
-@@ -9,6 +9,7 @@
- /dts-v1/;
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/arm/coresight-cti-dt.h>
- #include "juno-base.dtsi"
- 
- / {
-@@ -295,3 +296,27 @@
- &cpu_debug5 {
- 	cpu = <&A53_3>;
- };
-+
-+&cti0 {
-+	cpu = <&A57_0>;
-+};
-+
-+&cti1 {
-+	cpu = <&A57_1>;
-+};
-+
-+&cti2 {
-+	cpu = <&A53_0>;
-+};
-+
-+&cti3 {
-+	cpu = <&A53_1>;
-+};
-+
-+&cti4 {
-+	cpu = <&A53_2>;
-+};
-+
-+&cti5 {
-+	cpu = <&A53_3>;
-+};
+You can also add your name ;-)
+
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+>  .../bindings/display/bridge/ti,sn65dsi86.txt  |  87 --------
+>  .../bindings/display/bridge/ti,sn65dsi86.yaml | 188 ++++++++++++++++++
+>  2 files changed, 188 insertions(+), 87 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
+> deleted file mode 100644
+> index 8ec4a7f2623a..000000000000
+> --- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
+> +++ /dev/null
+> @@ -1,87 +0,0 @@
+> -SN65DSI86 DSI to eDP bridge chip
+> ---------------------------------
+> -
+> -This is the binding for Texas Instruments SN65DSI86 bridge.
+> -http://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=sn65dsi86&fileType=pdf
+> -
+> -Required properties:
+> -- compatible: Must be "ti,sn65dsi86"
+> -- reg: i2c address of the chip, 0x2d as per datasheet
+> -- enable-gpios: gpio specification for bridge_en pin (active high)
+> -
+> -- vccio-supply: A 1.8V supply that powers up the digital IOs.
+> -- vpll-supply: A 1.8V supply that powers up the displayport PLL.
+> -- vcca-supply: A 1.2V supply that powers up the analog circuits.
+> -- vcc-supply: A 1.2V supply that powers up the digital core.
+> -
+> -Optional properties:
+> -- interrupts-extended: Specifier for the SN65DSI86 interrupt line.
+> -
+> -- gpio-controller: Marks the device has a GPIO controller.
+> -- #gpio-cells    : Should be two. The first cell is the pin number and
+> -                   the second cell is used to specify flags.
+> -                   See ../../gpio/gpio.txt for more information.
+> -- #pwm-cells : Should be one. See ../../pwm/pwm.yaml for description of
+> -               the cell formats.
+> -
+> -- clock-names: should be "refclk"
+> -- clocks: Specification for input reference clock. The reference
+> -	  clock rate must be 12 MHz, 19.2 MHz, 26 MHz, 27 MHz or 38.4 MHz.
+> -
+> -- data-lanes: See ../../media/video-interface.txt
+> -- lane-polarities: See ../../media/video-interface.txt
+> -
+> -- suspend-gpios: specification for GPIO1 pin on bridge (active low)
+
+Where has suspend-gpios gone ? :-)
+
+> -
+> -Required nodes:
+> -This device has two video ports. Their connections are modelled using the
+> -OF graph bindings specified in Documentation/devicetree/bindings/graph.txt.
+> -
+> -- Video port 0 for DSI input
+> -- Video port 1 for eDP output
+> -
+> -Example
+> --------
+> -
+> -edp-bridge@2d {
+> -	compatible = "ti,sn65dsi86";
+> -	#address-cells = <1>;
+> -	#size-cells = <0>;
+> -	reg = <0x2d>;
+> -
+> -	enable-gpios = <&msmgpio 33 GPIO_ACTIVE_HIGH>;
+> -	suspend-gpios = <&msmgpio 34 GPIO_ACTIVE_LOW>;
+> -
+> -	interrupts-extended = <&gpio3 4 IRQ_TYPE_EDGE_FALLING>;
+> -
+> -	vccio-supply = <&pm8916_l17>;
+> -	vcca-supply = <&pm8916_l6>;
+> -	vpll-supply = <&pm8916_l17>;
+> -	vcc-supply = <&pm8916_l6>;
+> -
+> -	clock-names = "refclk";
+> -	clocks = <&input_refclk>;
+> -
+> -	ports {
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -
+> -		port@0 {
+> -			reg = <0>;
+> -
+> -			edp_bridge_in: endpoint {
+> -				remote-endpoint = <&dsi_out>;
+> -			};
+> -		};
+> -
+> -		port@1 {
+> -			reg = <1>;
+> -
+> -			edp_bridge_out: endpoint {
+> -				data-lanes = <2 1 3 0>;
+> -				lane-polarities = <0 1 0 1>;
+> -				remote-endpoint = <&edp_panel_in>;
+> -			};
+> -		};
+> -	};
+> -}
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> new file mode 100644
+> index 000000000000..8cacc6db33a9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> @@ -0,0 +1,188 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/ti,sn65dsi86.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: SN65DSI86 DSI to eDP bridge chip
+> +
+> +maintainers:
+> +  - Sandeep Panda <spanda@codeaurora.org>
+> +
+> +description: |
+> +  The Texas Instruments SN65DSI86 bridge takes MIPI DSI in and outputs eDP.
+> +  http://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=sn65dsi86&fileType=pdf
+> +
+> +properties:
+> +  compatible:
+> +    const: ti,sn65dsi86
+> +
+> +  reg:
+> +    const: 0x2d
+> +
+> +  enable-gpios:
+> +    maxItems: 1
+> +    description: GPIO specification for bridge_en pin (active high).
+> +
+> +  vccio-supply:
+> +    description: A 1.8V supply that powers up the digital IOs.
+> +
+> +  vpll-supply:
+> +    description: A 1.8V supply that powers up the DisplayPort PLL.
+> +
+> +  vcca-supply:
+> +    description: A 1.2V supply that powers up the analog circuits.
+> +
+> +  vcc-supply:
+> +    description: A 1.2V supply that powers up the digital core.
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description:
+> +      Specification for input reference clock. The reference clock rate must
+> +      be 12 MHz, 19.2 MHz, 26 MHz, 27 MHz or 38.4 MHz.
+> +
+> +  clock-names:
+> +    const: refclk
+> +
+> +  gpio-controller: true
+> +  '#gpio-cells':
+> +    const: 2
+> +    description:
+> +      First cell is pin number, second cell is flags.  GPIO pin numbers are
+> +      1-based to match the datasheet.  See ../../gpio/gpio.txt for more
+> +      information.
+> +
+> +  '#pwm-cells':
+> +    const: 1
+> +    description: See ../../pwm/pwm.yaml for description of the cell formats.
+> +
+> +  data-lanes:
+
+Should this have
+
+	minItems: 1
+	maxItems: 4
+	items:
+	  enum:
+	    - 0
+	    - 1
+	    - 2
+	    - 3
+
+> +    description: See ../../media/video-interface.txt
+> +
+> +  lane-polarities:
+> +    description: See ../../media/video-interface.txt
+
+And something similar here,
+
+	minItems: 1
+	maxItems: 4
+	items:
+	  enum:
+	    - 0
+	    - 1
+	uniqueItems: false
+
+I'm not entirely sure where uniqueItems should be placed. I'm also not
+sure how to specify that both data-lanes and lane-polarities need to
+have the same number of items, maybe
+
+dependencies:
+  data-lanes: [lane-polarities]
+
+> +
+> +  ports:
+> +    type: object
+> +
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +      port@0:
+> +        type: object
+> +        additionalProperties: false
+> +
+> +        description:
+> +          Video port for MIPI DSI input
+> +
+> +        properties:
+> +          reg:
+> +            const: 0
+> +
+> +        patternProperties:
+> +          endpoint:
+
+If there's a single endpoint, you don't need patternProperties, it can
+be specified in properties.
+
+> +            type: object
+> +            additionalProperties: false
+> +
+> +            properties:
+> +              remote-endpoint: true
+> +
+> +        required:
+> +          - reg
+> +
+> +      port@1:
+> +        type: object
+> +        additionalProperties: false
+> +
+> +        description:
+> +          Video port for eDP output (panel or connector).
+> +
+> +        properties:
+> +          reg:
+> +            const: 1
+> +
+> +        patternProperties:
+> +          endpoint:
+
+Same here.
+
+> +            type: object
+> +            additionalProperties: false
+> +
+> +            properties:
+> +              remote-endpoint: true
+> +
+> +        required:
+> +          - reg
+> +
+> +    required:
+> +      - "#address-cells"
+> +      - "#size-cells"
+> +      - port@0
+> +      - port@1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - enable-gpios
+> +  - vccio-supply
+> +  - vpll-supply
+> +  - vcca-supply
+> +  - vcc-supply
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,rpmh.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    i2c1 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      bridge@2d {
+> +        compatible = "ti,sn65dsi86";
+> +        reg = <0x2d>;
+> +
+> +        interrupt-parent = <&tlmm>;
+> +        interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +        enable-gpios = <&tlmm 102 GPIO_ACTIVE_HIGH>;
+> +
+> +        vpll-supply = <&src_pp1800_s4a>;
+> +        vccio-supply = <&src_pp1800_s4a>;
+> +        vcca-supply = <&src_pp1200_l2a>;
+> +        vcc-supply = <&src_pp1200_l2a>;
+> +
+> +        clocks = <&rpmhcc RPMH_LN_BB_CLK2>;
+> +        clock-names = "refclk";
+> +
+> +        ports {
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +
+> +          port@0 {
+> +            reg = <0>;
+> +            endpoint {
+> +              remote-endpoint = <&dsi0_out>;
+> +            };
+> +          };
+> +
+> +          port@1 {
+> +            reg = <1>;
+> +            endpoint {
+> +              remote-endpoint = <&panel_in_edp>;
+> +            };
+> +          };
+> +        };
+> +      };
+> +    };
+> +
+
 -- 
-2.17.1
+Regards,
 
+Laurent Pinchart
