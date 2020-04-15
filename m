@@ -2,72 +2,144 @@ Return-Path: <SRS0=bvxT=57=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2B1C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 19:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2CBC2BB85
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 19:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 817AE20768
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 19:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5748220768
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Apr 2020 19:08:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pmeerw.net header.i=@pmeerw.net header.b="mvLltGiK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411748AbgDOTHs (ORCPT
+        id S2411762AbgDOTH6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 15:07:48 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:44107 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1416887AbgDOS4M (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 14:56:12 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 0D37E200002;
-        Wed, 15 Apr 2020 18:56:09 +0000 (UTC)
-Date:   Wed, 15 Apr 2020 20:56:09 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Bastian Krause <bst@pengutronix.de>
-Cc:     linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnaud Ebalard <arno@natisbad.org>,
-        Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: Re: [PATCH 2/3] dt-bindings: rtc: add chargeable flag for rx8130
-Message-ID: <20200415185609.GP34509@piout.net>
-References: <20200415163701.21989-1-bst@pengutronix.de>
- <20200415163701.21989-2-bst@pengutronix.de>
+        Wed, 15 Apr 2020 15:07:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2411734AbgDOTH1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Apr 2020 15:07:27 -0400
+Received: from ns.pmeerw.net (ns.pmeerw.net [IPv6:2001:1b60:2:23:1033:103:0:1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7532C061A10;
+        Wed, 15 Apr 2020 12:07:26 -0700 (PDT)
+Received: by ns.pmeerw.net (Postfix, from userid 1000)
+        id 0D51AE0851; Wed, 15 Apr 2020 21:07:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pmeerw.net; s=mail;
+        t=1586977644; bh=6kKOP9MD30yOGMfU+pNu0Hgt58IVDIYTyfhvXAfdje0=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=mvLltGiKZ+SX2dhw5gFV0PSGDlLVI3B7O6o+hVS9+bm6kTo0egsMam0IEMDoqmmkM
+         JiMZ7smuPvSLFzgBjG07AW72uF4kJ51b5hV3V105DT2NFfWRCIrQGamAuoCipS1i1k
+         79CO93pFUwKpy5vbDTz3WBplGLZgTODVoB5wY8LU=
+Received: from localhost (localhost [127.0.0.1])
+        by ns.pmeerw.net (Postfix) with ESMTP id 028A8E0451;
+        Wed, 15 Apr 2020 21:07:24 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 21:07:23 +0200 (CEST)
+From:   Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+cc:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
+        robh+dt@kernel.org, jic23@kernel.org, devicetree@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH v9 1/6] dt-bindings: mfd: add document bindings for
+ mp2629
+In-Reply-To: <20200415162030.16414-2-sravanhome@gmail.com>
+Message-ID: <alpine.DEB.2.21.2004152106160.18914@vps.pmeerw.net>
+References: <20200415162030.16414-1-sravanhome@gmail.com> <20200415162030.16414-2-sravanhome@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415163701.21989-2-bst@pengutronix.de>
+Content-Type: text/plain; charset=US-ASCII
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 15/04/2020 18:37:00+0200, Bastian Krause wrote:
-> Signed-off-by: Bastian Krause <bst@pengutronix.de>
-> ---
->  Documentation/devicetree/bindings/rtc/rtc-ds1307.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-> index 66f0a31ae9ce..987a0c9e0cd7 100644
-> --- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-> @@ -34,6 +34,9 @@ Optional properties:
->  - trickle-diode-disable : ds1339, ds1340 and ds 1388 only
->  	Do not use internal trickle charger diode
->  	Should be given if internal trickle charger diode should be disabled
-> +- aux-voltage-chargeable: rx8130 only
-> +	Epsons's rx8130 supports a backup battery/supercap.
-> +	This flag tells	whether the battery/supercap is chargeable or not.
->  
+On Wed, 15 Apr 2020, Saravanan Sekar wrote:
 
-I think we should make that a generic property and this should supersede
-trickle-diode-disable which is a bit wonky as I would prefer the default
-to be disabled instead of enabled with the current semantics.
+comment below
+
+> Add device tree binding information for mp2629 mfd driver.
+> 
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> ---
+>  .../devicetree/bindings/mfd/mps,mp2629.yaml   | 60 +++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> new file mode 100644
+> index 000000000000..e71c554802a8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MP2629 Battery Charger PMIC from Monolithic Power System.
+> +
+> +maintainers:
+> +  - Saravanan Sekar <sravanhome@gmail.com>
+> +
+> +description: |
+> +  MP2629 is a PMIC providing battery charging and power supply for smartphones,
+> +  wireless camera and portable devices. Chip is contrlled over I2C.
+
+controlled
+
+> +
+> +  The battery charge management device handles battery charger controller and
+> +  ADC IIO device for battery, system voltage
+> +
+> +properties:
+> +  compatible:
+> +    const: mps,mp2629
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +    description:
+> +      The first cell is the IRQ number, the second cell is the trigger type.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - "#interrupt-cells"
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/input/linux-event-codes.h>
+> +    i2c@7e205000 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        pmic@4b {
+> +            compatible = "mps,mp2629";
+> +            reg = <0x4b>;
+> +
+> +            interrupt-controller;
+> +            interrupt-parent = <&gpio2>;
+> +            #interrupt-cells = <2>;
+> +            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
+> +        };
+> +    };
+> 
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+
+Peter Meerwald-Stadler
+Mobile: +43 664 24 44 418
