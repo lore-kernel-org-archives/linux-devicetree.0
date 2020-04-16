@@ -2,153 +2,183 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84696C38A2B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 06:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A759EC2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 06:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59DBE206D6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 06:43:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="pG92PCpD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ybg5/gOx"
+	by mail.kernel.org (Postfix) with ESMTP id 912AE214D8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 06:47:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408168AbgDPGnz (ORCPT
+        id S2408146AbgDPGrl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:43:55 -0400
-Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:40991 "EHLO
-        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2408163AbgDPGnx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:43:53 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id C15CD717;
-        Thu, 16 Apr 2020 02:43:34 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 16 Apr 2020 02:43:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=eYZf6ks0Ag4vWkdY+FBeNSBOYxZ
-        kZ9RWoI7L/wXDw/Q=; b=pG92PCpDKEaySEE6b3KK5owRlyOg6omtcBJRh6H2P9g
-        A4+dSJ8ZhNWYumPEo8RSeGX3Y1ofqBKY5EwBKyaQ4uWCzw59hiXAUOxV0z1366xq
-        iuHHZUldbuzXYDjsaxnBz0RsGbyN9Oo/wuSRdS/D5gtGdR/DOID4nUO++5rp07K7
-        LG4gEmPTqHamlJRrP5V34H6lR2pNC4zXGMW/GSE2CyOUmLq5FhAQ7reYixyNSF9S
-        Sk3l1mb29qIgPDMYY0/5m7I+DShBoF71j+C3gAVSuV2Nq12oir1/bimsDQytaFI9
-        rw3mdDAsOxKY1bvJX6PjvfGpx+6c3IrKClpgJXpZ0wA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=eYZf6k
-        s0Ag4vWkdY+FBeNSBOYxZkZ9RWoI7L/wXDw/Q=; b=Ybg5/gOxzIy3RezsVgMA1k
-        TNS1SpWdG/vSznxDhwvoLrldOuulzJrzOesiyd4OdIPHp7Pvdeido6VN49AZFJjX
-        vpbJjlQnZcrl0XVEenAR8HUbxv1iPLz1X4h7y0gO3Y8YvGQ+Gxco5vWU8dTZpAOa
-        BZauQ/RaI9M2F28kXPygdaAyXtkuoiRko9nhnLAnG7Fj/vpriF3MX/GnDqw3vD54
-        E2nE7ygWUQnJK7D2pMU5A92RDAXmSDVWG2auXATUw58gux8Zcplt8XXxS8uZEPyq
-        dwoVwWzcbh8nau5x1J4Tli8kmRSzPV5DdHht5f7hGV1AlT9ldV7F13ym9Jw80idw
-        ==
-X-ME-Sender: <xms:lv6XXlbZsjXCgRSobpV_OahNA0F2bAh_xQnNz30ENtpJCk6C2O5pKw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeeggdduudduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:lv6XXtpOixejZqr7iO1LBzaErDc2trud85HnQReIvup6Nj_ECC1-ug>
-    <xmx:lv6XXtQpwDnG3Phz4jTAefVSpE0PDruqeQW4tMGm8dv07y5H0bXPXQ>
-    <xmx:lv6XXhnZDnOcsLKYGPwKo5ewvcFCHv464DpLD_f1alqPkiWElJ017g>
-    <xmx:lv6XXk2v6et9oVVZCGJreRdM-Z9u-aFhl26_bHzMhmr4x9e7prVi_X54wQY>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D7E56306005F;
-        Thu, 16 Apr 2020 02:43:33 -0400 (EDT)
-Date:   Thu, 16 Apr 2020 08:43:32 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: Remove cases of 'allOf' containing a
- '$ref'
-Message-ID: <20200416064332.cbtmgnbwjityninz@gilmour.lan>
-References: <20200416005549.9683-1-robh@kernel.org>
- <20200416005549.9683-2-robh@kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wl56qmwukpbi7dfb"
-Content-Disposition: inline
-In-Reply-To: <20200416005549.9683-2-robh@kernel.org>
+        Thu, 16 Apr 2020 02:47:41 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:54454 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2408188AbgDPGri (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 02:47:38 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D8B181A0C1F;
+        Thu, 16 Apr 2020 08:47:30 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B6B081A0C1D;
+        Thu, 16 Apr 2020 08:47:25 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 81D84402A8;
+        Thu, 16 Apr 2020 14:47:19 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 1/5] dt-bindings: clock: Convert i.MX6Q clock to json-schema
+Date:   Thu, 16 Apr 2020 14:39:14 +0800
+Message-Id: <1587019158-12143-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Convert the i.MX6Q clock binding to DT schema format using json-schema.
 
---wl56qmwukpbi7dfb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V1:
+	- remove minItem of interrupts;
+	- remove '...' at the end of file
+---
+ .../devicetree/bindings/clock/imx6q-clock.txt      | 41 --------------
+ .../devicetree/bindings/clock/imx6q-clock.yaml     | 66 ++++++++++++++++++++++
+ 2 files changed, 66 insertions(+), 41 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/imx6q-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/imx6q-clock.yaml
 
-On Wed, Apr 15, 2020 at 07:55:49PM -0500, Rob Herring wrote:
-> json-schema versions draft7 and earlier have a weird behavior in that
-> any keywords combined with a '$ref' are ignored (silently). The correct
-> form was to put a '$ref' under an 'allOf'. This behavior is now changed
-> in the 2019-09 json-schema spec and '$ref' can be mixed with other
-> keywords. The json-schema library doesn't yet support this, but the
-> tooling now does a fixup for this and either way works.
->
-> This has been a constant source of review comments, so let's change this
-> treewide so everyone copies the simpler syntax.
->
-> Signed-off-by: Rob Herring <robh@kernel.org>
+diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+deleted file mode 100644
+index 13d36d4..0000000
+--- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
++++ /dev/null
+@@ -1,41 +0,0 @@
+-* Clock bindings for Freescale i.MX6 Quad
+-
+-Required properties:
+-- compatible: Should be "fsl,imx6q-ccm"
+-- reg: Address and length of the register set
+-- interrupts: Should contain CCM interrupt
+-- #clock-cells: Should be <1>
+-
+-Optional properties:
+-- fsl,pmic-stby-poweroff: Configure CCM to assert PMIC_STBY_REQ signal
+-  on power off.
+-  Use this property if the SoC should be powered off by external power
+-  management IC (PMIC) triggered via PMIC_STBY_REQ signal.
+-  Boards that are designed to initiate poweroff on PMIC_ON_REQ signal should
+-  be using "syscon-poweroff" driver instead.
+-- clocks: list of clock specifiers, must contain an entry for each entry
+-          in clock-names
+-- clock-names: valid names are "osc", "ckil", "ckih1", "anaclk1" and "anaclk2"
+-
+-The clock consumer should specify the desired clock by having the clock
+-ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6qdl-clock.h
+-for the full list of i.MX6 Quad and DualLite clock IDs.
+-
+-Examples:
+-
+-#include <dt-bindings/clock/imx6qdl-clock.h>
+-
+-clks: ccm@20c4000 {
+-	compatible = "fsl,imx6q-ccm";
+-	reg = <0x020c4000 0x4000>;
+-	interrupts = <0 87 0x04 0 88 0x04>;
+-	#clock-cells = <1>;
+-};
+-
+-uart1: serial@2020000 {
+-	compatible = "fsl,imx6q-uart", "fsl,imx21-uart";
+-	reg = <0x02020000 0x4000>;
+-	interrupts = <0 26 0x04>;
+-	clocks = <&clks IMX6QDL_CLK_UART_IPG>, <&clks IMX6QDL_CLK_UART_SERIAL>;
+-	clock-names = "ipg", "per";
+-};
+diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.yaml b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+new file mode 100644
+index 0000000..1c6e600
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+@@ -0,0 +1,66 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/imx6q-clock.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Clock bindings for Freescale i.MX6 Quad
++
++maintainers:
++  - Anson Huang <Anson.Huang@nxp.com>
++
++properties:
++  compatible:
++    const: fsl,imx6q-ccm
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 2
++
++  '#clock-cells':
++    const: 1
++
++  clocks:
++    items:
++      - description: 24m osc
++      - description: 32k osc
++      - description: ckih1 clock input
++      - description: anaclk1 clock input
++      - description: anaclk2 clock input
++
++  clock-names:
++    items:
++      - const: osc
++      - const: ckil
++      - const: ckih1
++      - const: anaclk1
++      - const: anaclk2
++
++  fsl,pmic-stby-poweroff:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Use this property if the SoC should be powered off by external power
++      management IC (PMIC) triggered via PMIC_STBY_REQ signal.
++      Boards that are designed to initiate poweroff on PMIC_ON_REQ signal should
++      be using "syscon-poweroff" driver instead.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - '#clock-cells'
++
++examples:
++  # Clock Control Module node:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    clks: clock-controller@20c4000 {
++        compatible = "fsl,imx6q-ccm";
++        reg = <0x020c4000 0x4000>;
++        interrupts = <0 87 IRQ_TYPE_LEVEL_HIGH>,
++                     <0 88 IRQ_TYPE_LEVEL_HIGH>;
++        #clock-cells = <1>;
++    };
+-- 
+2.7.4
 
-For allwinner,
-Acked-by: Maxime Ripard <mripard@kernel.org>
-
-Maxime
-
---wl56qmwukpbi7dfb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpf+lAAKCRDj7w1vZxhR
-xfXZAP9GMb4mpNd2CMjZwk5BxMrLzEIpKJTiQ4orqceXOWVHrwEA79RK8mnQLFzA
-6mFAQXdPtJjk58zdTQSSSDo30M+OtQk=
-=foV0
------END PGP SIGNATURE-----
-
---wl56qmwukpbi7dfb--
