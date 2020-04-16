@@ -2,122 +2,110 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4985BC2BB55
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 17:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB45C352BE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 17:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24FCD2223D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 17:37:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587058645;
-	bh=c6RjcLo9mHi0Qj+iI/ymrQ+8S7krFiwa/crVExYtMzc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y04eHpQ950uS0NVG4bhIdbBq336AZIyZ72zFx62QhkdE8QkNC2aebdmbI/KKdhioS
-	 sv73GXilWFz+vqutLkXl8eM8BdyU/YSv/Ja7Yn2jstuVxWfET2wuNLKhhtb0zcELJp
-	 gkuu/fx3NB99GTTB/35K9AHBZfVrBM/iCiXYKUTY=
+	by mail.kernel.org (Postfix) with ESMTP id 3790F2064A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 17:43:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DKwO1bPF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbgDPRhY (ORCPT
+        id S1725953AbgDPRna (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 13:37:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729673AbgDPRhW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 13:37:22 -0400
-Received: from Mani-XPS-13-9360 (unknown [157.50.106.138])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D183A2076D;
-        Thu, 16 Apr 2020 17:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587058642;
-        bh=c6RjcLo9mHi0Qj+iI/ymrQ+8S7krFiwa/crVExYtMzc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MPW/w2Hfnyk6tUbCwgA+epGBp7s9x8qUWJj1HiCBq+J9LTkOTM2QYZTP/j5uo/wrm
-         Zu7E5RQleCiRVXkZUgTILmP6u9Q5+x1hOTZEgCwX8xxgd1Ay9ngjsrcfWax9ah1H31
-         eWIhS2p6dEJvzP9lw8E2V62BIIK92l1CFStWvCOY=
-Date:   Thu, 16 Apr 2020 23:07:10 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/2] Add software flow control support for STM32 UART
-Message-ID: <20200416173710.GA4548@Mani-XPS-13-9360>
-References: <20200412180923.30774-1-mani@kernel.org>
- <CAHp75VfDUoFMWg42OFHZtKQ972eoR3UDLVAs+BQjJm3h3-fOGw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfDUoFMWg42OFHZtKQ972eoR3UDLVAs+BQjJm3h3-fOGw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 16 Apr 2020 13:43:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725906AbgDPRn3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 13:43:29 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D1BCC061A0C;
+        Thu, 16 Apr 2020 10:43:29 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id z6so5891483wml.2;
+        Thu, 16 Apr 2020 10:43:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Xzp810wwKqNPBd/XxF90MmmQUKarKbudjOQw99K54mY=;
+        b=DKwO1bPFHPvvMFBTU8JvDGcfCggBHgUUGQDZwQy69Cv/VWAvOlkUf5f/VQcSPF/7CV
+         EfIu2+DIDl2+/d8XJ1jpDlGogvP2xB/uuZDeZWfiWcgT2f1f6CPlbGQdf0UnSwKwpU/z
+         01ATQJUMEj5BPflvnI38K/PcvJlnOPBCz11BfJps86tdwzKCAxYzNVkzlWcYRm+3SeZl
+         ovLOUhEq/EoGlNE+3e/EvY1GFtnC222PY/Pg1LrtB4m1rMWmb9cUORGpxTuoN75OEN6w
+         aRsPaPXHQKsjekkFjtdgmQLPT6F1IPAD3676XP952lo9O6Gm0BkIrKouGIYTqoKuIeOA
+         s5Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Xzp810wwKqNPBd/XxF90MmmQUKarKbudjOQw99K54mY=;
+        b=HY1Ka9Q43Xxy3q9znLNmILfNtXLQdK4+hi+u9H5N3/FBUNeA55yz+dgG8egebmjF/U
+         pAVBNEYAviaaND3LhGPCEqexfFyuK4y9tM42zpzEYSIHt5Uc3Vgi9iEodjjLcCTQJWSu
+         HmQkqyaJC68sC8il98zn9C/b+0Qmv02thENQv1bd3y48/gwD8KXXO1H3FKea6ZdKYl4J
+         TybZ6MFJByLvbtY+9uFqrqYB7IZbL8Pk1AzWNR6ipqUnrYWDbfJ35XiTFGfJA4cF+5RE
+         a7D2uIEMHJ/u5tRKgRdVNzn3MGb2JjfPsc1NVcTYpdjUD4g9HafLIvd1/2U0sHRjzNnP
+         KykA==
+X-Gm-Message-State: AGi0PubkVg1VHTzSLRi2ARL+DO7NCDY0ENItIefwGWIMZcvCnhMXJ3Vd
+        CVqz5HKznXDGUplB92wAOgM=
+X-Google-Smtp-Source: APiQypK9c36KsWLZ1dqEBikbcbA0aVNuTc/rhtVbF2X+ZIXredLS5QQYBppcegCaUd3dwmxZ6+pR3w==
+X-Received: by 2002:a1c:4603:: with SMTP id t3mr5882686wma.103.1587059008176;
+        Thu, 16 Apr 2020 10:43:28 -0700 (PDT)
+Received: from mail.broadcom.com ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id p7sm28736296wrf.31.2020.04.16.10.43.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 10:43:27 -0700 (PDT)
+From:   Kamal Dasu <kdasu.kdev@gmail.com>
+To:     Kamal Dasu <kdasu.kdev@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [Patch 2/9] dt: bindings: spi: Add support for mspi on brcmstb SoCs
+Date:   Thu, 16 Apr 2020 13:43:02 -0400
+Message-Id: <20200416174309.34044-2-kdasu.kdev@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200416174309.34044-1-kdasu.kdev@gmail.com>
+References: <20200416174309.34044-1-kdasu.kdev@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andy,
+Added documentation for compatibility for brcmstb SoCs :
+7425, 7429, 7435, 7216, 7278
 
-On Mon, Apr 13, 2020 at 12:17:21PM +0300, Andy Shevchenko wrote:
-> On Mon, Apr 13, 2020 at 7:06 AM <mani@kernel.org> wrote:
-> >
-> > From: Manivannan Sadhasivam <mani@kernel.org>
-> >
-> > Hello,
-> >
-> > This patchset adds software flow control support for STM32 UART controller.
-> > This is necessary for the upcoming STM32MP1 based board called Stinger96
-> > IoT-Box. On that board, a bluetooth chip is connected to one of the UART
-> > controller but the CTS/RTS lines got swapped mistakenly. So in order to
-> > workaround that hardware bug and also to support the usecase of using only
-> > Tx/Rx pins, this patchset adds software flow control support.
-> >
-> > This patchset has been validated w/ Stinger96 IoT-Box connected to Murata
-> > WiFi-BT combo chip.
-> >
-> 
-> I think it's a mix of terminology or so. Looking into the patches I
-> found that it's required to have GPIOs for SW flow control.
-> No, SW flow control does not require any additional signals, except RxD/TxD.
-> 
+Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+---
+ .../devicetree/bindings/spi/brcm,spi-bcm-qspi.txt      | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Yikes. Yes I got it wrong. 'st,hw-flow-ctrl' property confused me :)
+diff --git a/Documentation/devicetree/bindings/spi/brcm,spi-bcm-qspi.txt b/Documentation/devicetree/bindings/spi/brcm,spi-bcm-qspi.txt
+index ad7ac80a3841..f5e518d099f2 100644
+--- a/Documentation/devicetree/bindings/spi/brcm,spi-bcm-qspi.txt
++++ b/Documentation/devicetree/bindings/spi/brcm,spi-bcm-qspi.txt
+@@ -26,6 +26,16 @@ Required properties:
+     "brcm,spi-bcm-qspi", "brcm,spi-brcmstb-qspi" : MSPI+BSPI on BRCMSTB SoCs
+     "brcm,spi-bcm-qspi", "brcm,spi-brcmstb-mspi" : Second Instance of MSPI
+ 						   BRCMSTB  SoCs
++    "brcm,spi-bcm7425-qspi", "brcm,spi-bcm-qspi", "brcm,spi-brcmstb-mspi" : Second Instance of MSPI
++    			     			  			    BRCMSTB  SoCs
++    "brcm,spi-bcm7429-qspi", "brcm,spi-bcm-qspi", "brcm,spi-brcmstb-mspi" : Second Instance of MSPI
++    			     			  			    BRCMSTB  SoCs
++    "brcm,spi-bcm7435-qspi", "brcm,spi-bcm-qspi", "brcm,spi-brcmstb-mspi" : Second Instance of MSPI
++    			     			  			    BRCMSTB  SoCs
++    "brcm,spi-bcm7216-qspi", "brcm,spi-bcm-qspi", "brcm,spi-brcmstb-mspi" : Second Instance of MSPI
++    			     			  			    BRCMSTB  SoCs
++    "brcm,spi-bcm7278-qspi", "brcm,spi-bcm-qspi", "brcm,spi-brcmstb-mspi" : Second Instance of MSPI
++    			     			  			    BRCMSTB  SoCs
+     "brcm,spi-bcm-qspi", "brcm,spi-nsp-qspi"     : MSPI+BSPI on Cygnus, NSP
+     "brcm,spi-bcm-qspi", "brcm,spi-ns2-qspi"     : NS2 SoCs
+ 
+-- 
+2.17.1
 
-> On top of that, it seems you adding mctrl-gpio functionality. Why
-> can't you use that one? And thus no bindings needs to be updated.
-> 
-
-Sure. This looks feasible. Will submit a follow up patch.
-
-Thanks,
-Mani
-
-> > Thanks,
-> > Mani
-> >
-> > Manivannan Sadhasivam (2):
-> >   dt-bindings: serial: Add binding for software flow control in STM32
-> >     UART
-> >   tty: serial: Add software flow control support for STM32 USART
-> >
-> >  .../bindings/serial/st,stm32-uart.yaml        |  15 +-
-> >  drivers/tty/serial/stm32-usart.c              | 143 +++++++++++++++++-
-> >  drivers/tty/serial/stm32-usart.h              |   4 +
-> >  3 files changed, 155 insertions(+), 7 deletions(-)
-> >
-> > --
-> > 2.17.1
-> >
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
