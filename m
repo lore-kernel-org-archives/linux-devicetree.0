@@ -2,250 +2,124 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 122F8C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58085C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFCCB206D5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 326DC206D5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:17:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LJXSpv4K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438012AbgDPHO2 (ORCPT
+        id S2439037AbgDPHRk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:14:28 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:47794 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S2437959AbgDPHOZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 03:14:25 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 9C978200E7EC;
-        Thu, 16 Apr 2020 15:14:14 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id cUck7dk6dGh3; Thu, 16 Apr 2020 15:14:14 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 6FDE7200E7CA;
-        Thu, 16 Apr 2020 15:14:14 +0800 (HKT)
-Received: from [10.128.2.32] (unknown [124.217.188.146])
-        by s01.gtsys.com.hk (Postfix) with ESMTPSA id 39206C019EC;
-        Thu, 16 Apr 2020 15:14:13 +0800 (HKT)
-Subject: Re: [PATCH v4 2/3] iio: DAC extension for ltc2634-12/10/8
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexandru Tachici <alexandru.tachici@analog.com>,
-        Steve Winslow <swinslow@gmail.com>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200416012016.21422-1-chris.ruehl@gtsys.com.hk>
- <20200416012016.21422-3-chris.ruehl@gtsys.com.hk>
- <20200416065655.cxy67hlj267dpjrw@pengutronix.de>
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Message-ID: <e4a6af21-a8ec-e9b5-2c5e-1e109888f0c7@gtsys.com.hk>
-Date:   Thu, 16 Apr 2020 15:14:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 16 Apr 2020 03:17:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2437060AbgDPHRi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 03:17:38 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF1EFC061A0C
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 00:17:36 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a25so3598837wrd.0
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 00:17:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=wxbpA+gkMQzP49NMDgYKzmcFDKrFFfhXbq9DHHrnuNU=;
+        b=LJXSpv4KpEVnkUH8WFCBWBaib2J9uL1w43yQ2BA7ThHLLvSV9NKeh+SoX9WTHLiwa5
+         1sM9bpENrVAgMyEhNzNSWe7bv2T6VIXjXtdYhTWj+pnD2UauH6Sb9D8y3bGXpUGP6Adr
+         611auVtBf5IclwqCjtLvu+19UUYwIl25KMATsGFHrae8OzX7tsUtofGOt6Mxa2Y8QGSb
+         jXPsXYtGRIpObdQMxjwBmi/XSQWjfsBiOnRJbDxONdfeEnSoEEIYCIiXObkBNtrZ+80D
+         ddVaftTGpbpJpfqCEq8P5gjYLFFSUW6PkWzaeyBKQFplWqRAzX45rXPwTv4Be3UNu4Bc
+         Whag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=wxbpA+gkMQzP49NMDgYKzmcFDKrFFfhXbq9DHHrnuNU=;
+        b=mvaF0pNwepI/fHmcECPz5w2pwsvO6BvZYz2BJE3fTSAyLGNvekv1lj1fhivBEdRx8+
+         noarjcwDMX6TQpND5fgWryPUJ9W91MbhUuq1qC6a2LhvdC/2IVnFAePQdPX1cG+c/M0u
+         /OjZzAKQMHo9MEIvV0oZr+nzyEyufOS+2dSJwQwNTFUPkqq1oynCgAieCwJXxLDI3qdI
+         B8tbhOa8mAU/pwgJHFm0g1QJJ3JsemTkqp4v35U2FVU0woft1CWTMU6MQkHNnfYEUkmi
+         FSqQRZgCTehOTRXtXXio7OGIQ+HbscWS40gw+L3E3KDWdjj3qMlH027wTTJvUEcs/Jbk
+         zLuA==
+X-Gm-Message-State: AGi0PuZR+5l0tFE1sawQSvitbaDjZzQBugPZFTiiS1277bAJ+0OCKwOA
+        +5L0HzFY42mtfrti3INAzebCRg==
+X-Google-Smtp-Source: APiQypJZ6oLLqIKvsbJo/X2R5PGU1Kjo53h8hr94MPus2CWNL1NzO6VzQpwajJvKPdifJbTZsraJOg==
+X-Received: by 2002:a05:6000:192:: with SMTP id p18mr34168071wrx.398.1587021455171;
+        Thu, 16 Apr 2020 00:17:35 -0700 (PDT)
+Received: from dell ([95.149.164.124])
+        by smtp.gmail.com with ESMTPSA id h1sm2565341wme.42.2020.04.16.00.17.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 00:17:34 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 08:18:35 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kishon@ti.com, robh@kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com
+Subject: Re: [PATCH v5 1/4] mfd: syscon: Add fwnode_to_regmap
+Message-ID: <20200416071835.GR2167633@dell>
+References: <cover.1585103753.git.eswara.kota@linux.intel.com>
+ <9953bb25281397553cb87b09d641c968d8432dd9.1585103753.git.eswara.kota@linux.intel.com>
+ <20200415093116.GH2167633@dell>
+ <0adafade-7228-58d3-3db0-b06325712468@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200416065655.cxy67hlj267dpjrw@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <0adafade-7228-58d3-3db0-b06325712468@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-On 16/4/2020 2:56 pm, Uwe Kleine-König wrote:
-> Hello,
-> 
-> dropped stefan.popa@analog.com from recipents as the address bounces for
-> me.
-the maintainer script added this email automatically , I will remove it
-in the future mails.
-
-Thanks.
+On Thu, 16 Apr 2020, Dilip Kota wrote:
 
 > 
-> On Thu, Apr 16, 2020 at 09:20:10AM +0800, Chris Ruehl wrote:
->> This patch add support for Analog Devices (Linear Technology)
->> LTC2634 Quad 12-/10-/8-Bit Rail-to-Rail DAC.
->> The SPI functionality based on them from LTC2632 therefor
->> add the definitions only and update the Kconfig.
->>
->> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
->> ---
->> v4:
->> -hide version from commit text
->> v3:
->> -Consistens decimal separator in help text
->> v2:
->> -Send the documentation fix in a extra patch
->> -Kconfig simplify the driver description, details to the help text
->> -ltc2632.txt add to this patch-set (prepare to convert to yaml)
->>
->>   .../devicetree/bindings/iio/dac/ltc2632.txt   |  8 ++-
->>   drivers/iio/dac/Kconfig                       |  6 +-
->>   drivers/iio/dac/ltc2632.c                     | 60 +++++++++++++++++++
->>   3 files changed, 70 insertions(+), 4 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
->> index 338c3220f01a..1ab9570cf219 100644
->> --- a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
->> +++ b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
->> @@ -1,4 +1,4 @@
->> -Linear Technology LTC2632/2636 DAC
->> +Linear Technology LTC2632/2634/2636 DAC
->>   
->>   Required properties:
->>    - compatible: Has to contain one of the following:
->> @@ -8,6 +8,12 @@ Required properties:
->>   	lltc,ltc2632-h12
->>   	lltc,ltc2632-h10
->>   	lltc,ltc2632-h8
->> +	lltc,ltc2634-l12
->> +	lltc,ltc2634-l10
->> +	lltc,ltc2634-l8
->> +	lltc,ltc2634-h12
->> +	lltc,ltc2634-h10
->> +	lltc,ltc2634-h8
->>   	lltc,ltc2636-l12
->>   	lltc,ltc2636-l10
->>   	lltc,ltc2636-l8
->> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
->> index 93744011b63f..aee13ced6ddf 100644
->> --- a/drivers/iio/dac/Kconfig
->> +++ b/drivers/iio/dac/Kconfig
->> @@ -279,12 +279,12 @@ config LTC1660
->>   	  module will be called ltc1660.
->>   
->>   config LTC2632
->> -	tristate "Linear Technology LTC2632-12/10/8 and LTC2636-12/10/8 DAC spi driver"
->> +	tristate "Linear Technology LTC2632-12/10/8 and similar DAC spi driver"
->>   	depends on SPI
->>   	help
->>   	  Say yes here to build support for Linear Technology
->> -	  LTC2632-12, LTC2632-10, LTC2632-8, LTC2636-12, LTC2636-10 and
->> -	  LTC2636-8 converters (DAC).
->> +	  LTC2632, LTC2634 and LTC2636 DAC resolution 12/10/8 bit
->> +	  low 0-2.5V and high 0-4.096V range converters.
->>   
->>   	  To compile this driver as a module, choose M here: the
->>   	  module will be called ltc2632.
->> diff --git a/drivers/iio/dac/ltc2632.c b/drivers/iio/dac/ltc2632.c
->> index 2a84ea654645..e939d7f81014 100644
->> --- a/drivers/iio/dac/ltc2632.c
->> +++ b/drivers/iio/dac/ltc2632.c
->> @@ -54,6 +54,12 @@ enum ltc2632_supported_device_ids {
->>   	ID_LTC2632H12,
->>   	ID_LTC2632H10,
->>   	ID_LTC2632H8,
->> +	ID_LTC2634L12,
->> +	ID_LTC2634L10,
->> +	ID_LTC2634L8,
->> +	ID_LTC2634H12,
->> +	ID_LTC2634H10,
->> +	ID_LTC2634H8,
->>   	ID_LTC2636L12,
->>   	ID_LTC2636L10,
->>   	ID_LTC2636L8,
->> @@ -236,6 +242,36 @@ static const struct ltc2632_chip_info ltc2632_chip_info_tbl[] = {
->>   		.num_channels	= 2,
->>   		.vref_mv	= 4096,
->>   	},
->> +	[ID_LTC2634L12] = {
->> +		.channels	= ltc2632x12_channels,
->> +		.num_channels	= 4,
->> +		.vref_mv	= 2500,
->> +	},
->> +	[ID_LTC2634L10] = {
->> +		.channels	= ltc2632x10_channels,
->> +		.num_channels	= 4,
->> +		.vref_mv	= 2500,
->> +	},
->> +	[ID_LTC2634L8] =  {
->> +		.channels	= ltc2632x8_channels,
->> +		.num_channels	= 4,
->> +		.vref_mv	= 2500,
->> +	},
->> +	[ID_LTC2634H12] = {
->> +		.channels	= ltc2632x12_channels,
->> +		.num_channels	= 4,
->> +		.vref_mv	= 4096,
->> +	},
->> +	[ID_LTC2634H10] = {
->> +		.channels	= ltc2632x10_channels,
->> +		.num_channels	= 4,
->> +		.vref_mv	= 4096,
->> +	},
->> +	[ID_LTC2634H8] =  {
->> +		.channels	= ltc2632x8_channels,
->> +		.num_channels	= 4,
->> +		.vref_mv	= 4096,
->> +	},
->>   	[ID_LTC2636L12] = {
->>   		.channels	= ltc2632x12_channels,
->>   		.num_channels	= 8,
->> @@ -357,6 +393,12 @@ static const struct spi_device_id ltc2632_id[] = {
->>   	{ "ltc2632-h12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H12] },
->>   	{ "ltc2632-h10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H10] },
->>   	{ "ltc2632-h8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2632H8] },
->> +	{ "ltc2634-l12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634L12] },
->> +	{ "ltc2634-l10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634L10] },
->> +	{ "ltc2634-l8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634L8] },
->> +	{ "ltc2634-h12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634H12] },
->> +	{ "ltc2634-h10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634H10] },
->> +	{ "ltc2634-h8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2634H8] },
->>   	{ "ltc2636-l12", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L12] },
->>   	{ "ltc2636-l10", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L10] },
->>   	{ "ltc2636-l8", (kernel_ulong_t)&ltc2632_chip_info_tbl[ID_LTC2636L8] },
->> @@ -386,6 +428,24 @@ static const struct of_device_id ltc2632_of_match[] = {
->>   	}, {
->>   		.compatible = "lltc,ltc2632-h8",
->>   		.data = &ltc2632_chip_info_tbl[ID_LTC2632H8]
->> +	}, {
->> +		.compatible = "lltc,ltc2634-l12",
->> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634L12]
->> +	}, {
->> +		.compatible = "lltc,ltc2634-l10",
->> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634L10]
->> +	}, {
->> +		.compatible = "lltc,ltc2634-l8",
->> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634L8]
->> +	}, {
->> +		.compatible = "lltc,ltc2634-h12",
->> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634H12]
->> +	}, {
->> +		.compatible = "lltc,ltc2634-h10",
->> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634H10]
->> +	}, {
->> +		.compatible = "lltc,ltc2634-h8",
->> +		.data = &ltc2632_chip_info_tbl[ID_LTC2634H8]
->>   	}, {
->>   		.compatible = "lltc,ltc2636-l12",
->>   		.data = &ltc2632_chip_info_tbl[ID_LTC2636L12]
+> On 4/15/2020 5:31 PM, Lee Jones wrote:
+> > On Wed, 25 Mar 2020, Dilip Kota wrote:
+> > 
+> > > Traverse regmap handle entry from firmware node handle.
+> > > 
+> > > Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> > > ---
+> > > Changes on v5:
+> > >    No changes
+> > > 
+> > > Changes on v4:
+> > >    No changes
+> > > 
+> > >   drivers/mfd/syscon.c       | 8 ++++++++
+> > >   include/linux/mfd/syscon.h | 6 ++++++
+> > >   2 files changed, 14 insertions(+)
+> > I think you'll find it very difficult to have a patch merged if you do
+> > not send it to any Maintainers of the associated subsystem(s).
+> Sorry, i completely missed adding the system configuration Maintainers. I
+> was completely thinking about the PHY driver( in doing changes and upgrades)
+> while sending the patches.
+> I have noticed it, and already sent v6 patch series by adding you and
+> arnd@arndb.de
 > 
-> Looks good to me:
+> "[RESEND PATCH v6 0/4] Add Intel ComboPhy driver"
+> Snippet from the mail.
 > 
-> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> 
-> Thanks
-> Uwe
-> 
+> "Re-sending the patches v6 by adding the system configuration Maintainers,
+> which i missed to add them."
+
+I have it now.  Thanks.
 
 -- 
-GTSYS Limited RFID Technology
-9/F, Unit E, R07, Kwai Shing Industrial Building Phase 2,
-42-46 Tai Lin Pai Road, Kwai Chung, N.T., Hong Kong
-Tel (852) 9079 9521
-
-Disclaimer: https://www.gtsys.com.hk/email/classified.html
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
