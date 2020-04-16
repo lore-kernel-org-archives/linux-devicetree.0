@@ -2,657 +2,127 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BCEC2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DC2C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DC41216FD
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02F3F206E9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:13:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZaSm3efi"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="sLWJGOSK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440758AbgDPH46 (ORCPT
+        id S2441205AbgDPINd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:56:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2440093AbgDPH4f (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:56:35 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EB38C061A0C
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 00:56:34 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id k11so3673965wrp.5
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 00:56:34 -0700 (PDT)
+        Thu, 16 Apr 2020 04:13:33 -0400
+Received: from mail-eopbgr1400117.outbound.protection.outlook.com ([40.107.140.117]:14353
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2440433AbgDPINK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 04:13:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iZWFQt+yumk0kCPy0Gn6K6MfAWceSz23G3Uem+sa64f8M/AGEWOGG+BzIYfkb2Kv7E678V6Wm8ex1ng4hnBmLNJM9og/BHQJfK7+oZtQW+ahsnP1CGw7pJBUKRNRo/TcnrycSTNt7S8yLtyjJyTV0yPKsmhNZktvZY3YLtAKIGq0QsgUUuclrW/hgATw5agql+5t+N1IGbvb+qmrFu3lqI6Q+tZLFGxrN704LjUHy0AjpCTMXhfygZbzCtZVmNzDOJTUXAxKcYIns+ad4ZzwrJlARHKbwyBtQ2EHG7fsQy7qSDbPHuGQ0p8JB+gC6EG6v5WHQ+2WcliuxI0IOunfrg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Kz5uinTdjVCVp0YrzopkP+oDJKTb2K89yvlM6ohUyDw=;
+ b=c7OcFAfAOfAmcwzg0QqjvVYShTHeDi+X8Fty/QJK+g+4wRf/AfBCCnhJ+xph9/ZmiTwPSOe1cBy5IBX0v6nKAe9i4GTgCntYn3gsIa/16A3KUrYen/GxlEej4+SfKawL4UPbImhMK1tA0WslGvUtUsrds8znjRPW0yg3eZ91CB/jE1mDIXzscf1u05Oipbela3IlN8LGKQPe9YoGtCg+/ozrGbiwqGoROG8cJzeqDAkc3qKroYgjLip1PmnLf3pE//jKd/ddRUvReaEmW4ule8lQYW7ppTluqAhqEHafM9ff35TjLiIIOCQSWG0YDmeFeZwXMBiTFG8tvL7+GuNoIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0VpzNN+nEUfeKwRNL2u+lzKJzPxeD20kV5Qtq81EhEA=;
-        b=ZaSm3efibTXvYHJ5j5wVG4+FJLqnXv2G+nMoVNz9uZdCLJSth3H36QnskC1b/fYs6z
-         PrQv4kk8LppqCpUTR+JbqzqRk+E7scGdQOFsAk3wggMPkQ4Imm2c1yQPltkm4DlDabez
-         zXpPDJ3A6qWT0rqO+voJUoKfGR4bP8TITO4WuDV6nzJojILn2s7S5Hcz4YI19CCbNGFE
-         9pJfOgKLP7JQunoul9qETYqmd6lDEwg8oV9VTwSGULBuLpXR1pnT3ZGq4EF8WPH/2Xr2
-         xZi+ZEB8cVVmdW5mihiATTGR1tZ9l2ZzRL71yCJRlDoaZMJvzv4XbcCnfBuG/d2CMjpW
-         XFEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0VpzNN+nEUfeKwRNL2u+lzKJzPxeD20kV5Qtq81EhEA=;
-        b=VcHiP587C9Gh2UmE4GnF1k7n3MUuxa8LJlCRdhOYhbPXiRg5AHs5j4WaP0r0+Jhwsr
-         vO8RKT725rJ5VNrZctvkHIxnN+vEyL1tSIiQeFrJ9XF82+WkHKUbpBR9tuX1zWhO/mcB
-         Ya9zcpYIaCNpRUS8tQ4JTIy/gavEhyx72ERltPNxQGGYxzc5GoNGMDdpcXWHAVTMBOEa
-         sFRev5ncSYVuE+vt6Ab1T9uh+11bJKyQi6SLgp8pq9ILm6yiAvzgh1tcAvLTLZglxVrJ
-         QFrmtjG2bCZSjfgP0vzR01QE2b0mPHv5ZlsbUZTnGZu9h7pWABgdsFcwWwb6244pojS4
-         R5QQ==
-X-Gm-Message-State: AGi0PuaEEu3CQCuDp4VuhDuTz3LDPWVCi5PuUGwf2z/62cUgYlW/UlHZ
-        wImeu6I7TttI/VeudQm6tHD/BA==
-X-Google-Smtp-Source: APiQypKRi7+L1yYsupMsdCU2RLIx/oH+WetQkFwHRXQyW369xeGr7YGkwU/Ea43uZ4GIdLBz7HV5CQ==
-X-Received: by 2002:a05:6000:12c5:: with SMTP id l5mr34570594wrx.185.1587023792860;
-        Thu, 16 Apr 2020 00:56:32 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id x132sm2674185wmg.33.2020.04.16.00.56.31
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Apr 2020 00:56:32 -0700 (PDT)
-Subject: Re: [PATCH 05/11] ASoC: qcom: lpass: Add support for newer lpass
- version
-To:     Ajit Pandey <ajitp@codeaurora.org>, alsa-devel@alsa-project.org,
-        broonie@kernel.org, devicetree@vger.kernel.org,
-        plai@codeaurora.org, bgoswami@codeaurora.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.com
-References: <1586592171-31644-1-git-send-email-ajitp@codeaurora.org>
- <1586592171-31644-6-git-send-email-ajitp@codeaurora.org>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <1af5face-507a-5866-d5ae-24ab050dad81@linaro.org>
-Date:   Thu, 16 Apr 2020 08:56:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Kz5uinTdjVCVp0YrzopkP+oDJKTb2K89yvlM6ohUyDw=;
+ b=sLWJGOSK4Qb53B77CJnNbkTN/Jq7IizsucjUsPHCyJbDSU7NWamRnqbxs3olzD+aJKRiYZwIU2+6PlWl8O/nByg5z7WFhr2sYaOusgFoYRCil18nyW15tp/Lpwc4tq4EiOTnrNwfKs3OQKdthIzQUsQMeNcmQy2Opgocr2OkVjo=
+Received: from OSAPR01MB4529.jpnprd01.prod.outlook.com (20.179.176.20) by
+ OSAPR01MB1907.jpnprd01.prod.outlook.com (52.134.236.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2900.25; Thu, 16 Apr 2020 08:13:03 +0000
+Received: from OSAPR01MB4529.jpnprd01.prod.outlook.com
+ ([fe80::3056:e118:8a8e:b3ad]) by OSAPR01MB4529.jpnprd01.prod.outlook.com
+ ([fe80::3056:e118:8a8e:b3ad%7]) with mapi id 15.20.2878.023; Thu, 16 Apr 2020
+ 08:13:03 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Vinod <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH 2/2] dt-bindings: dma: renesas,usb-dmac: convert bindings
+ to json-schema
+Thread-Topic: [PATCH 2/2] dt-bindings: dma: renesas,usb-dmac: convert bindings
+ to json-schema
+Thread-Index: AQHWDx8gtNeFxgyfAE26KaVsY8FTY6h6POmAgADJxGCAAGI2AIAABivg
+Date:   Thu, 16 Apr 2020 08:13:02 +0000
+Message-ID: <OSAPR01MB45292EC62BA96BC551EAB0CFD8D80@OSAPR01MB4529.jpnprd01.prod.outlook.com>
+References: <1586512923-21739-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1586512923-21739-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdWziQYKFeZZt7ZOCYMEWxD8e3mjqf+x0xsAcA7XDzZHWQ@mail.gmail.com>
+ <OSAPR01MB452933886B2C83A6E054AE50D8D80@OSAPR01MB4529.jpnprd01.prod.outlook.com>
+ <CAMuHMdXauwb2zwxUSPw_d-wZiOAfuo939r+TWYFVDjqmpbg_2A@mail.gmail.com>
+In-Reply-To: <CAMuHMdXauwb2zwxUSPw_d-wZiOAfuo939r+TWYFVDjqmpbg_2A@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f221d2b9-8b69-4c89-a89a-08d7e1ddfc58
+x-ms-traffictypediagnostic: OSAPR01MB1907:
+x-microsoft-antispam-prvs: <OSAPR01MB1907C02C1F6CFB467C1DD630D8D80@OSAPR01MB1907.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0375972289
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB4529.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(396003)(376002)(136003)(39860400002)(346002)(7696005)(55016002)(8676002)(9686003)(76116006)(8936002)(33656002)(81156014)(6916009)(64756008)(66446008)(66946007)(66476007)(86362001)(66556008)(4326008)(186003)(54906003)(478600001)(5660300002)(316002)(71200400001)(6506007)(52536014)(55236004)(26005)(53546011)(2906002)(142933001);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2NrOxlAjW4rBR3KXUsM95l/Uq94jDfeIoakcDD1/YekGAsQHITcrHw/bReYtLIQMeNxLaxjI9hn6B52Pyo8TK2rn+858WixWpsdl9FMsMeEgDNfnytWn5tAwRZSNSZ6vQoKsCdLwdQzBsBp7LFlWSKlv7P21L8KTeCSJf/7/1EFXSGtLWZw0lYgKd8AyZtBggApK86SqTeMOThe+m5EhjfFgyVEf4Y3auI99wC8y3+Oz/pxd67qepGpsoAn4k8MmH64W52Np0LgycYRtTavkQkIXiZ/ZbllS7AVxEDR6TKL0ceZ2NodQYkYTFthvNA4S8a4x5rvKv+xrb//osliAsEkBPlSTtHzduiBGgqQ9Gpvjqfd3l2ge/Qj+xN3mXuDVCeK8pprS6/bvmkJXB7+hkOWOf7RBJ2vNevusVeFUkyiP78+DH8tVnRJh4LNWaRw2OQYpKYbIWTj2RiF5Hp0A0vMy0mrs1hF56dydSxMIrVOIJHE6HJojqt72GwwZVKTf
+x-ms-exchange-antispam-messagedata: KbGy5Dlnf7CUUScPkd+sg7k2MPzhbiJoIZSANQSagI2qQ1Ivo/u2PT2NFhZ5SQhzSwIjDyonFrxIgk6v+TejdYNhQYy/oiEwzddiqgViOGrFw1JlSZIquAl+w8nHOxeOfeWelCCr97cKchHcUDMwTw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <1586592171-31644-6-git-send-email-ajitp@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f221d2b9-8b69-4c89-a89a-08d7e1ddfc58
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2020 08:13:03.1996
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zFvMH9RRJ4zST7iTb8WNL04cEKTdqLynRIAOUb24eD9JZcnr6mPukjvsoMU5bbMl2SA4n4p3zsFgR+VRpG2CywEm1VmWrikl7caQ8R3eqHPwLAX17rhKFtnOxaIiUOqb
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB1907
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 11/04/2020 09:02, Ajit Pandey wrote:
-> Few control registers bit offset of lpaif in newer lpass variants
-> are changed. Added "id" field in variant struct and changes macros
-> configuration of registers to calculate bit mask & offset based on
-> variant id.
-> 
-
-These fields are handled much nicely with regmap_field, you should 
-consider using that. If not we will add overhead of check for every mask.
-
-
-> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
-> ---
->   sound/soc/qcom/lpass-cpu.c       |  77 +++++++++--------
->   sound/soc/qcom/lpass-lpaif-reg.h | 182 ++++++++++++++++++++++++++++++++++++++-
->   sound/soc/qcom/lpass-platform.c  |  31 +++----
->   sound/soc/qcom/lpass.h           |   6 ++
->   4 files changed, 241 insertions(+), 55 deletions(-)
-> 
-> diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
-> index f177932..006ba5a 100644
-> --- a/sound/soc/qcom/lpass-cpu.c
-> +++ b/sound/soc/qcom/lpass-cpu.c
-> @@ -77,6 +77,7 @@ static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
->   {
->   	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
->   	struct lpass_dai *dai_data = drvdata->dai_priv[dai->driver->id];
-> +	struct lpass_variant *v = drvdata->variant;
->   	snd_pcm_format_t format = params_format(params);
->   	unsigned int channels = params_channels(params);
->   	unsigned int rate = params_rate(params);
-> @@ -89,18 +90,18 @@ static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
->   		return bitwidth;
->   	}
->   
-> -	regval = LPAIF_I2SCTL_LOOPBACK_DISABLE |
-> -			LPAIF_I2SCTL_WSSRC_INTERNAL;
-> +	regval = LPAIF_I2SCTL(v, LOOPBACK_DISABLE);
-> +	regval |= LPAIF_I2SCTL(v, WSSRC_INTERNAL);
->   
->   	switch (bitwidth) {
->   	case 16:
-> -		regval |= LPAIF_I2SCTL_BITWIDTH_16;
-> +		regval |= LPAIF_I2SCTL(v, BITWIDTH_16);
->   		break;
->   	case 24:
-> -		regval |= LPAIF_I2SCTL_BITWIDTH_24;
-> +		regval |= LPAIF_I2SCTL(v, BITWIDTH_24);
->   		break;
->   	case 32:
-> -		regval |= LPAIF_I2SCTL_BITWIDTH_32;
-> +		regval |= LPAIF_I2SCTL(v, BITWIDTH_32);
->   		break;
->   	default:
->   		dev_err(dai->dev, "invalid bitwidth given: %d\n", bitwidth);
-> @@ -110,24 +111,24 @@ static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
->   	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
->   		switch (channels) {
->   		case 1:
-> -			regval |= LPAIF_I2SCTL_SPKMODE_SD0;
-> -			regval |= LPAIF_I2SCTL_SPKMONO_MONO;
-> +			regval |= LPAIF_I2SCTL(v, SPKMODE_SD0);
-> +			regval |= LPAIF_I2SCTL(v, SPKMONO_MONO);
->   			break;
->   		case 2:
-> -			regval |= LPAIF_I2SCTL_SPKMODE_SD0;
-> -			regval |= LPAIF_I2SCTL_SPKMONO_STEREO;
-> +			regval |= LPAIF_I2SCTL(v, SPKMODE_SD0);
-> +			regval |= LPAIF_I2SCTL(v, SPKMONO_STEREO);
->   			break;
->   		case 4:
-> -			regval |= LPAIF_I2SCTL_SPKMODE_QUAD01;
-> -			regval |= LPAIF_I2SCTL_SPKMONO_STEREO;
-> +			regval |= LPAIF_I2SCTL(v, SPKMODE_QUAD01);
-> +			regval |= LPAIF_I2SCTL(v, SPKMONO_STEREO);
->   			break;
->   		case 6:
-> -			regval |= LPAIF_I2SCTL_SPKMODE_6CH;
-> -			regval |= LPAIF_I2SCTL_SPKMONO_STEREO;
-> +			regval |= LPAIF_I2SCTL(v, SPKMODE_6CH);
-> +			regval |= LPAIF_I2SCTL(v, SPKMONO_STEREO);
->   			break;
->   		case 8:
-> -			regval |= LPAIF_I2SCTL_SPKMODE_8CH;
-> -			regval |= LPAIF_I2SCTL_SPKMONO_STEREO;
-> +			regval |= LPAIF_I2SCTL(v, SPKMODE_8CH);
-> +			regval |= LPAIF_I2SCTL(v, SPKMONO_STEREO);
->   			break;
->   		default:
->   			dev_err(dai->dev, "invalid channels given: %u\n",
-> @@ -137,24 +138,24 @@ static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
->   	} else {
->   		switch (channels) {
->   		case 1:
-> -			regval |= LPAIF_I2SCTL_MICMODE_SD0;
-> -			regval |= LPAIF_I2SCTL_MICMONO_MONO;
-> +			regval |= LPAIF_I2SCTL(v, MICMODE_SD0);
-> +			regval |= LPAIF_I2SCTL(v, MICMONO_MONO);
->   			break;
->   		case 2:
-> -			regval |= LPAIF_I2SCTL_MICMODE_SD0;
-> -			regval |= LPAIF_I2SCTL_MICMONO_STEREO;
-> +			regval |= LPAIF_I2SCTL(v, MICMODE_SD0);
-> +			regval |= LPAIF_I2SCTL(v, MICMONO_STEREO);
->   			break;
->   		case 4:
-> -			regval |= LPAIF_I2SCTL_MICMODE_QUAD01;
-> -			regval |= LPAIF_I2SCTL_MICMONO_STEREO;
-> +			regval |= LPAIF_I2SCTL(v, MICMODE_QUAD01);
-> +			regval |= LPAIF_I2SCTL(v, MICMONO_STEREO);
->   			break;
->   		case 6:
-> -			regval |= LPAIF_I2SCTL_MICMODE_6CH;
-> -			regval |= LPAIF_I2SCTL_MICMONO_STEREO;
-> +			regval |= LPAIF_I2SCTL(v, MICMODE_6CH);
-> +			regval |= LPAIF_I2SCTL(v, MICMONO_STEREO);
->   			break;
->   		case 8:
-> -			regval |= LPAIF_I2SCTL_MICMODE_8CH;
-> -			regval |= LPAIF_I2SCTL_MICMONO_STEREO;
-> +			regval |= LPAIF_I2SCTL(v, MICMODE_8CH);
-> +			regval |= LPAIF_I2SCTL(v, MICMONO_STEREO);
->   			break;
->   		default:
->   			dev_err(dai->dev, "invalid channels given: %u\n",
-> @@ -200,15 +201,16 @@ static int lpass_cpu_daiops_prepare(struct snd_pcm_substream *substream,
->   		struct snd_soc_dai *dai)
->   {
->   	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
-> +	struct lpass_variant *v = drvdata->variant;
->   	int ret;
->   	unsigned int val, mask;
->   
->   	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-> -		val = LPAIF_I2SCTL_SPKEN_ENABLE;
-> -		mask = LPAIF_I2SCTL_SPKEN_MASK;
-> +		val = LPAIF_I2SCTL(v, SPKEN_ENABLE);
-> +		mask = LPAIF_I2SCTL(v, SPKEN_MASK);
->   	} else  {
-> -		val = LPAIF_I2SCTL_MICEN_ENABLE;
-> -		mask = LPAIF_I2SCTL_MICEN_MASK;
-> +		val = LPAIF_I2SCTL(v, MICEN_ENABLE);
-> +		mask = LPAIF_I2SCTL(v, MICEN_MASK);
->   	}
->   
->   	ret = regmap_update_bits(drvdata->lpaif_map,
-> @@ -224,6 +226,7 @@ static int lpass_cpu_daiops_trigger(struct snd_pcm_substream *substream,
->   		int cmd, struct snd_soc_dai *dai)
->   {
->   	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
-> +	struct lpass_variant *v = drvdata->variant;
->   	int ret = -EINVAL;
->   	unsigned int val, mask;
->   
-> @@ -232,11 +235,11 @@ static int lpass_cpu_daiops_trigger(struct snd_pcm_substream *substream,
->   	case SNDRV_PCM_TRIGGER_RESUME:
->   	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
->   		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-> -			val = LPAIF_I2SCTL_SPKEN_ENABLE;
-> -			mask = LPAIF_I2SCTL_SPKEN_MASK;
-> +			val = LPAIF_I2SCTL(v, SPKEN_ENABLE);
-> +			mask = LPAIF_I2SCTL(v, SPKEN_MASK);
->   		} else  {
-> -			val = LPAIF_I2SCTL_MICEN_ENABLE;
-> -			mask = LPAIF_I2SCTL_MICEN_MASK;
-> +			val = LPAIF_I2SCTL(v, MICEN_ENABLE);
-> +			mask = LPAIF_I2SCTL(v, MICEN_MASK);
->   		}
->   
->   		ret = regmap_update_bits(drvdata->lpaif_map,
-> @@ -251,11 +254,11 @@ static int lpass_cpu_daiops_trigger(struct snd_pcm_substream *substream,
->   	case SNDRV_PCM_TRIGGER_SUSPEND:
->   	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
->   		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-> -			val = LPAIF_I2SCTL_SPKEN_DISABLE;
-> -			mask = LPAIF_I2SCTL_SPKEN_MASK;
-> +			val = LPAIF_I2SCTL(v, SPKEN_DISABLE);
-> +			mask = LPAIF_I2SCTL(v, SPKEN_MASK);
->   		} else  {
-> -			val = LPAIF_I2SCTL_MICEN_DISABLE;
-> -			mask = LPAIF_I2SCTL_MICEN_MASK;
-> +			val = LPAIF_I2SCTL(v, MICEN_DISABLE);
-> +			mask = LPAIF_I2SCTL(v, MICEN_MASK);
->   		}
->   
->   		ret = regmap_update_bits(drvdata->lpaif_map,
-> diff --git a/sound/soc/qcom/lpass-lpaif-reg.h b/sound/soc/qcom/lpass-lpaif-reg.h
-> index 3d74ae1..4251aa6 100644
-> --- a/sound/soc/qcom/lpass-lpaif-reg.h
-> +++ b/sound/soc/qcom/lpass-lpaif-reg.h
-> @@ -17,11 +17,28 @@
->   #define LPAIF_I2SCTL_LOOPBACK_DISABLE	(0 << LPAIF_I2SCTL_LOOPBACK_SHIFT)
->   #define LPAIF_I2SCTL_LOOPBACK_ENABLE	(1 << LPAIF_I2SCTL_LOOPBACK_SHIFT)
->   
-> +#define LPAIF_I2SCTL_LOOPBACK_MASK_V2	 0x20000
-> +#define LPAIF_I2SCTL_LOOPBACK_SHIFT_V2	 17
-> +#define LPAIF_I2SCTL_LOOPBACK_DISABLE_V2 (0 << LPAIF_I2SCTL_LOOPBACK_SHIFT_V2)
-> +#define LPAIF_I2SCTL_LOOPBACK_ENABLE_V2	 (1 << LPAIF_I2SCTL_LOOPBACK_SHIFT_V2)
-> +
->   #define LPAIF_I2SCTL_SPKEN_MASK		0x4000
->   #define LPAIF_I2SCTL_SPKEN_SHIFT	14
->   #define LPAIF_I2SCTL_SPKEN_DISABLE	(0 << LPAIF_I2SCTL_SPKEN_SHIFT)
->   #define LPAIF_I2SCTL_SPKEN_ENABLE	(1 << LPAIF_I2SCTL_SPKEN_SHIFT)
->   
-> +#define LPAIF_I2SCTL_SPKEN_MASK_V2	0x10000
-> +#define LPAIF_I2SCTL_SPKEN_SHIFT_V2	16
-> +#define LPAIF_I2SCTL_SPKEN_DISABLE_V2	(0 << LPAIF_I2SCTL_SPKEN_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKEN_ENABLE_V2	(1 << LPAIF_I2SCTL_SPKEN_SHIFT_V2)
-> +
-> +#define __LPAIF_I2S_CTL(v, bit)  \
-> +	((v->id ==  LPASS_VARIANT_V2) ? \
-> +		LPAIF_I2SCTL_##bit##_V2 : \
-> +		LPAIF_I2SCTL_##bit)
-> +
-> +#define LPAIF_I2SCTL(v, bit)		__LPAIF_I2S_CTL(v, bit)
-> +
->   #define LPAIF_I2SCTL_SPKMODE_MASK	0x3C00
->   #define LPAIF_I2SCTL_SPKMODE_SHIFT	10
->   #define LPAIF_I2SCTL_SPKMODE_NONE	(0 << LPAIF_I2SCTL_SPKMODE_SHIFT)
-> @@ -34,16 +51,49 @@
->   #define LPAIF_I2SCTL_SPKMODE_6CH	(7 << LPAIF_I2SCTL_SPKMODE_SHIFT)
->   #define LPAIF_I2SCTL_SPKMODE_8CH	(8 << LPAIF_I2SCTL_SPKMODE_SHIFT)
->   
-> +#define LPAIF_I2SCTL_SPKMODE_MASK_V2	0xF800
-> +#define LPAIF_I2SCTL_SPKMODE_SHIFT_V2	11
-> +#define LPAIF_I2SCTL_SPKMODE_NONE_V2	(0 << LPAIF_I2SCTL_SPKMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKMODE_SD0_V2	(1 << LPAIF_I2SCTL_SPKMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKMODE_SD1_V2	(2 << LPAIF_I2SCTL_SPKMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKMODE_SD2_V2	(3 << LPAIF_I2SCTL_SPKMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKMODE_SD3_V2	(4 << LPAIF_I2SCTL_SPKMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKMODE_QUAD01_V2	(5 << LPAIF_I2SCTL_SPKMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKMODE_QUAD23_V2	(6 << LPAIF_I2SCTL_SPKMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKMODE_6CH_V2	(7 << LPAIF_I2SCTL_SPKMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKMODE_8CH_V2	(8 << LPAIF_I2SCTL_SPKMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKMODE_10CH_V2	(9 << LPAIF_I2SCTL_SPKMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKMODE_12CH_V2	(10 << LPAIF_I2SCTL_SPKMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKMODE_14CH_V2	(11 << LPAIF_I2SCTL_SPKMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKMODE_16CH_V2	(12 << LPAIF_I2SCTL_SPKMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKMODE_SD4_V2	(13 << LPAIF_I2SCTL_SPKMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKMODE_SD5_V2	(14 << LPAIF_I2SCTL_SPKMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKMODE_SD6_V2	(15 << LPAIF_I2SCTL_SPKMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKMODE_SD7_V2	(16 << LPAIF_I2SCTL_SPKMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKMODE_QUAD45_V2	(17 << LPAIF_I2SCTL_SPKMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKMODE_QUAD47_V2	(18 << LPAIF_I2SCTL_SPKMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKMODE_8CH_2_V2	(19 << LPAIF_I2SCTL_SPKMODE_SHIFT_V2)
-> +
->   #define LPAIF_I2SCTL_SPKMONO_MASK	0x0200
->   #define LPAIF_I2SCTL_SPKMONO_SHIFT	9
->   #define LPAIF_I2SCTL_SPKMONO_STEREO	(0 << LPAIF_I2SCTL_SPKMONO_SHIFT)
->   #define LPAIF_I2SCTL_SPKMONO_MONO	(1 << LPAIF_I2SCTL_SPKMONO_SHIFT)
->   
-> +#define LPAIF_I2SCTL_SPKMONO_MASK_V2	0x0400
-> +#define LPAIF_I2SCTL_SPKMONO_SHIFT_V2	10
-> +#define LPAIF_I2SCTL_SPKMONO_STEREO_V2	(0 << LPAIF_I2SCTL_SPKMONO_SHIFT_V2)
-> +#define LPAIF_I2SCTL_SPKMONO_MONO_V2	(1 << LPAIF_I2SCTL_SPKMONO_SHIFT_V2)
-> +
->   #define LPAIF_I2SCTL_MICEN_MASK		GENMASK(8, 8)
->   #define LPAIF_I2SCTL_MICEN_SHIFT	8
->   #define LPAIF_I2SCTL_MICEN_DISABLE	(0 << LPAIF_I2SCTL_MICEN_SHIFT)
->   #define LPAIF_I2SCTL_MICEN_ENABLE	(1 << LPAIF_I2SCTL_MICEN_SHIFT)
->   
-> +#define LPAIF_I2SCTL_MICEN_MASK_V2	0x0200
-> +#define LPAIF_I2SCTL_MICEN_SHIFT_V2	9
-> +#define LPAIF_I2SCTL_MICEN_DISABLE_V2	(0 << LPAIF_I2SCTL_MICEN_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICEN_ENABLE_V2	(1 << LPAIF_I2SCTL_MICEN_SHIFT_V2)
-> +
->   #define LPAIF_I2SCTL_MICMODE_MASK	GENMASK(7, 4)
->   #define LPAIF_I2SCTL_MICMODE_SHIFT	4
->   #define LPAIF_I2SCTL_MICMODE_NONE	(0 << LPAIF_I2SCTL_MICMODE_SHIFT)
-> @@ -56,22 +106,61 @@
->   #define LPAIF_I2SCTL_MICMODE_6CH	(7 << LPAIF_I2SCTL_MICMODE_SHIFT)
->   #define LPAIF_I2SCTL_MICMODE_8CH	(8 << LPAIF_I2SCTL_MICMODE_SHIFT)
->   
-> +#define LPAIF_I2SCTL_MICMODE_MASK_V2	GENMASK(8, 4)
-> +#define LPAIF_I2SCTL_MICMODE_SHIFT_V2	4
-> +#define LPAIF_I2SCTL_MICMODE_NONE_V2	(0 << LPAIF_I2SCTL_MICMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICMODE_SD0_V2	(1 << LPAIF_I2SCTL_MICMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICMODE_SD1_V2	(2 << LPAIF_I2SCTL_MICMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICMODE_SD2_V2	(3 << LPAIF_I2SCTL_MICMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICMODE_SD3_V2	(4 << LPAIF_I2SCTL_MICMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICMODE_QUAD01_V2	(5 << LPAIF_I2SCTL_MICMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICMODE_QUAD23_V2	(6 << LPAIF_I2SCTL_MICMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICMODE_6CH_V2	(7 << LPAIF_I2SCTL_MICMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICMODE_8CH_V2	(8 << LPAIF_I2SCTL_MICMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICMODE_10CH_V2	(9 << LPAIF_I2SCTL_MICMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICMODE_12CH_V2	(10 << LPAIF_I2SCTL_MICMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICMODE_14CH_V2	(11 << LPAIF_I2SCTL_MICMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICMODE_16CH_V2	(12 << LPAIF_I2SCTL_MICMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICMODE_SD4_V2	(13 << LPAIF_I2SCTL_MICMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICMODE_SD5_V2	(14 << LPAIF_I2SCTL_MICMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICMODE_SD6_V2	(15 << LPAIF_I2SCTL_MICMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICMODE_SD7_V2	(16 << LPAIF_I2SCTL_MICMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICMODE_QUAD45_V2	(17 << LPAIF_I2SCTL_MICMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICMODE_QUAD47_V2	(18 << LPAIF_I2SCTL_MICMODE_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICMODE_8CH_2_V2	(19 << LPAIF_I2SCTL_MICMODE_SHIFT_V2)
-> +
->   #define LPAIF_I2SCTL_MIMONO_MASK	GENMASK(3, 3)
->   #define LPAIF_I2SCTL_MICMONO_SHIFT	3
->   #define LPAIF_I2SCTL_MICMONO_STEREO	(0 << LPAIF_I2SCTL_MICMONO_SHIFT)
->   #define LPAIF_I2SCTL_MICMONO_MONO	(1 << LPAIF_I2SCTL_MICMONO_SHIFT)
->   
-> +#define LPAIF_I2SCTL_MICMONO_MASK_V2	GENMASK(3, 3)
-> +#define LPAIF_I2SCTL_MICMONO_SHIFT_V2	3
-> +#define LPAIF_I2SCTL_MICMONO_STEREO_V2	(0 << LPAIF_I2SCTL_MICMONO_SHIFT_V2)
-> +#define LPAIF_I2SCTL_MICMONO_MONO_V2	(1 << LPAIF_I2SCTL_MICMONO_SHIFT_V2)
-> +
->   #define LPAIF_I2SCTL_WSSRC_MASK		0x0004
->   #define LPAIF_I2SCTL_WSSRC_SHIFT	2
->   #define LPAIF_I2SCTL_WSSRC_INTERNAL	(0 << LPAIF_I2SCTL_WSSRC_SHIFT)
->   #define LPAIF_I2SCTL_WSSRC_EXTERNAL	(1 << LPAIF_I2SCTL_WSSRC_SHIFT)
->   
-> +#define LPAIF_I2SCTL_WSSRC_MASK_V2	0x0004
-> +#define LPAIF_I2SCTL_WSSRC_SHIFT_V2	2
-> +#define LPAIF_I2SCTL_WSSRC_INTERNAL_V2	(0 << LPAIF_I2SCTL_WSSRC_SHIFT_V2)
-> +#define LPAIF_I2SCTL_WSSRC_EXTERNAL_V2	(1 << LPAIF_I2SCTL_WSSRC_SHIFT_V2)
-> +
->   #define LPAIF_I2SCTL_BITWIDTH_MASK	0x0003
->   #define LPAIF_I2SCTL_BITWIDTH_SHIFT	0
->   #define LPAIF_I2SCTL_BITWIDTH_16	(0 << LPAIF_I2SCTL_BITWIDTH_SHIFT)
->   #define LPAIF_I2SCTL_BITWIDTH_24	(1 << LPAIF_I2SCTL_BITWIDTH_SHIFT)
->   #define LPAIF_I2SCTL_BITWIDTH_32	(2 << LPAIF_I2SCTL_BITWIDTH_SHIFT)
->   
-> +#define LPAIF_I2SCTL_BITWIDTH_MASK_V2	0x0003
-> +#define LPAIF_I2SCTL_BITWIDTH_SHIFT_V2	0
-> +#define LPAIF_I2SCTL_BITWIDTH_16_V2	(0 << LPAIF_I2SCTL_BITWIDTH_SHIFT_V2)
-> +#define LPAIF_I2SCTL_BITWIDTH_24_V2	(1 << LPAIF_I2SCTL_BITWIDTH_SHIFT_V2)
-> +#define LPAIF_I2SCTL_BITWIDTH_32_V2	(2 << LPAIF_I2SCTL_BITWIDTH_SHIFT_V2)
-> +
->   /* LPAIF IRQ */
->   #define LPAIF_IRQ_REG_ADDR(v, addr, port) \
->   	(v->irq_reg_base + (addr) + v->irq_reg_stride * (port))
-> @@ -91,7 +180,6 @@
->   #define LPAIF_IRQ_ALL(chan)		(7 << (LPAIF_IRQ_BITSTRIDE * (chan)))
->   
->   /* LPAIF DMA */
-> -
->   #define LPAIF_RDMA_REG_ADDR(v, addr, chan) \
->   	(v->rdma_reg_base + (addr) + v->rdma_reg_stride * (chan))
->   
-> @@ -143,7 +231,7 @@
->   
->   #define LPAIF_DMACTL_AUDINTF_MASK	0x0F0
->   #define LPAIF_DMACTL_AUDINTF_SHIFT	4
-> -#define LPAIF_DMACTL_AUDINTF(id)	(id << LPAIF_DMACTL_AUDINTF_SHIFT)
-> +#define LPAIF_DMACTL_AUDINTF(port)	(port << LPAIF_DMACTL_AUDINTF_SHIFT)
->   
->   #define LPAIF_DMACTL_FIFOWM_MASK	0x00E
->   #define LPAIF_DMACTL_FIFOWM_SHIFT	1
-> @@ -158,11 +246,99 @@
->   
->   #define LPAIF_DMACTL_ENABLE_MASK	0x1
->   #define LPAIF_DMACTL_ENABLE_SHIFT	0
-> -#define LPAIF_DMACTL_ENABLE_OFF	(0 << LPAIF_DMACTL_ENABLE_SHIFT)
-> +#define LPAIF_DMACTL_ENABLE_OFF		(0 << LPAIF_DMACTL_ENABLE_SHIFT)
->   #define LPAIF_DMACTL_ENABLE_ON		(1 << LPAIF_DMACTL_ENABLE_SHIFT)
->   
-> +#define LPAIF_IRQ_BITSTRIDE		3
-> +
-> +#define LPAIF_IRQ_PER(chan)		(1 << (LPAIF_IRQ_BITSTRIDE * (chan)))
-> +#define LPAIF_IRQ_XRUN(chan)		(2 << (LPAIF_IRQ_BITSTRIDE * (chan)))
-> +#define LPAIF_IRQ_ERR(chan)		(4 << (LPAIF_IRQ_BITSTRIDE * (chan)))
-> +
-> +#define LPAIF_IRQ_ALL(chan)		(7 << (LPAIF_IRQ_BITSTRIDE * (chan)))
-> +
->   #define LPAIF_DMACTL_DYNCLK_MASK	BIT(12)
->   #define LPAIF_DMACTL_DYNCLK_SHIFT	12
->   #define LPAIF_DMACTL_DYNCLK_OFF	(0 << LPAIF_DMACTL_DYNCLK_SHIFT)
->   #define LPAIF_DMACTL_DYNCLK_ON		(1 << LPAIF_DMACTL_DYNCLK_SHIFT)
-> +
-> +#define LPAIF_DMACTL_BURSTEN_MASK_V2	0x100000
-> +#define LPAIF_DMACTL_BURSTEN_SHIFT_V2	20
-> +#define LPAIF_DMACTL_BURSTEN_SINGLE_V2	(0 << LPAIF_DMACTL_BURSTEN_SHIFT_V2)
-> +#define LPAIF_DMACTL_BURSTEN_INCR4_V2	(1 << LPAIF_DMACTL_BURSTEN_SHIFT_V2)
-> +
-> +#define LPAIF_DMACTL_WPSCNT_MASK_V2	0xF0000
-> +#define LPAIF_DMACTL_WPSCNT_SHIFT_V2	16
-> +#define LPAIF_DMACTL_WPSCNT_ONE_V2	(0 << LPAIF_DMACTL_WPSCNT_SHIFT_V2)
-> +#define LPAIF_DMACTL_WPSCNT_TWO_V2	(1 << LPAIF_DMACTL_WPSCNT_SHIFT_V2)
-> +#define LPAIF_DMACTL_WPSCNT_THREE_V2	(2 << LPAIF_DMACTL_WPSCNT_SHIFT_V2)
-> +#define LPAIF_DMACTL_WPSCNT_FOUR_V2	(3 << LPAIF_DMACTL_WPSCNT_SHIFT_V2)
-> +#define LPAIF_DMACTL_WPSCNT_SIX_V2	(5 << LPAIF_DMACTL_WPSCNT_SHIFT_V2)
-> +#define LPAIF_DMACTL_WPSCNT_EIGHT_V2	(7 << LPAIF_DMACTL_WPSCNT_SHIFT_V2)
-> +#define LPAIF_DMACTL_WPSCNT_TEN_V2	(9 << LPAIF_DMACTL_WPSCNT_SHIFT_V2)
-> +#define LPAIF_DMACTL_WPSCNT_TWELVE_V2	(11 << LPAIF_DMACTL_WPSCNT_SHIFT_V2)
-> +#define LPAIF_DMACTL_WPSCNT_FOURTEEN_V2	(13 << LPAIF_DMACTL_WPSCNT_SHIFT_V2)
-> +#define LPAIF_DMACTL_WPSCNT_SIXTEEN_V2	(15 << LPAIF_DMACTL_WPSCNT_SHIFT_V2)
-> +
-> +#define LPAIF_DMACTL_AUDINTF_MASK_V2	0xF000
-> +#define LPAIF_DMACTL_AUDINTF_SHIFT_V2	12
-> +#define LPAIF_DMACTL_AUDINTF_V2(port)	(port << LPAIF_DMACTL_AUDINTF_SHIFT_V2)
-> +
-> +#define LPAIF_DMACTL_AUD_INTF(v, port)  \
-> +	((v->id ==  LPASS_VARIANT_V2) ? \
-> +		LPAIF_DMACTL_AUDINTF_V2(port) : \
-> +		LPAIF_DMACTL_AUDINTF(port))
-> +
-> +#define LPAIF_DMACTL_FIFOWM_MASK_V2	0x3E
-> +#define LPAIF_DMACTL_FIFOWM_SHIFT_V2	1
-> +#define LPAIF_DMACTL_FIFOWM_1_V2	(0 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_2_V2	(1 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_3_V2	(2 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_4_V2	(3 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_5_V2	(4 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_6_V2	(5 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_7_V2	(6 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_8_V2	(7 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_9_V2	(8 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_10_V2	(9 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_11_V2	(10 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_12_V2	(11 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_13_V2	(12 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_14_V2	(13 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_15_V2	(14 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_16_V2	(15 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_17_V2	(16 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_18_V2	(17 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_19_V2	(18 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_20_V2	(19 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_21_V2	(20 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_22_V2	(21 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_23_V2	(22 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_24_V2	(23 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_25_V2	(24 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_26_V2	(25 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_27_V2	(26 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_28_V2	(27 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_29_V2	(28 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_30_V2	(29 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_31_V2	(30 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +#define LPAIF_DMACTL_FIFOWM_32_V2	(31 << LPAIF_DMACTL_FIFOWM_SHIFT_V2)
-> +
-> +#define LPAIF_DMACTL_ENABLE_MASK_V2	0x1
-> +#define LPAIF_DMACTL_ENABLE_SHIFT_V2	0
-> +#define LPAIF_DMACTL_ENABLE_OFF_V2	(0 << LPAIF_DMACTL_ENABLE_SHIFT_V2)
-> +#define LPAIF_DMACTL_ENABLE_ON_V2	(1 << LPAIF_DMACTL_ENABLE_SHIFT_V2)
-> +
-> +#define LPAIF_DMACTL_DYNCLK_MASK_V2	BIT(21)
-> +#define LPAIF_DMACTL_DYNCLK_SHIFT_V2	21
-> +#define LPAIF_DMACTL_DYNCLK_OFF_V2	(0 << LPAIF_DMACTL_DYNCLK_SHIFT_V2)
-> +#define LPAIF_DMACTL_DYNCLK_ON_V2	(1 << LPAIF_DMACTL_DYNCLK_SHIFT_V2)
-> +
-> +#define __LPAIF_DMA_CTL(v, bit)  \
-> +	((v->id ==  LPASS_VARIANT_V2) ? \
-> +		LPAIF_DMACTL_##bit##_V2 : \
-> +		LPAIF_DMACTL_##bit)
-> +
-> +#define LPAIF_DMACTL(v, bit)		__LPAIF_DMA_CTL(v, bit)
-> +
->   #endif /* __LPASS_LPAIF_REG_H__ */
-> diff --git a/sound/soc/qcom/lpass-platform.c b/sound/soc/qcom/lpass-platform.c
-> index b05091c2..821599e 100644
-> --- a/sound/soc/qcom/lpass-platform.c
-> +++ b/sound/soc/qcom/lpass-platform.c
-> @@ -146,25 +146,26 @@ static int lpass_platform_pcmops_hw_params(struct snd_soc_component *component,
->   		return bitwidth;
->   	}
->   
-> -	regval = LPAIF_DMACTL_BURSTEN_INCR4 |
-> -			LPAIF_DMACTL_AUDINTF(dma_port) |
-> -			LPAIF_DMACTL_FIFOWM_8;
-> +
-> +	regval = LPAIF_DMACTL(v, BURSTEN_INCR4);
-> +	regval |= LPAIF_DMACTL(v, FIFOWM_8);
-> +	regval |= LPAIF_DMACTL_AUD_INTF(v, dma_port);
->   
->   	switch (bitwidth) {
->   	case 16:
->   		switch (channels) {
->   		case 1:
->   		case 2:
-> -			regval |= LPAIF_DMACTL_WPSCNT_ONE;
-> +			regval |= LPAIF_DMACTL(v, WPSCNT_ONE);
->   			break;
->   		case 4:
-> -			regval |= LPAIF_DMACTL_WPSCNT_TWO;
-> +			regval |= LPAIF_DMACTL(v, WPSCNT_TWO);
->   			break;
->   		case 6:
-> -			regval |= LPAIF_DMACTL_WPSCNT_THREE;
-> +			regval |= LPAIF_DMACTL(v, WPSCNT_THREE);
->   			break;
->   		case 8:
-> -			regval |= LPAIF_DMACTL_WPSCNT_FOUR;
-> +			regval |= LPAIF_DMACTL(v, WPSCNT_FOUR);
->   			break;
->   		default:
->   			dev_err(soc_runtime->dev,
-> @@ -177,19 +178,19 @@ static int lpass_platform_pcmops_hw_params(struct snd_soc_component *component,
->   	case 32:
->   		switch (channels) {
->   		case 1:
-> -			regval |= LPAIF_DMACTL_WPSCNT_ONE;
-> +			regval |= LPAIF_DMACTL(v, WPSCNT_ONE);
->   			break;
->   		case 2:
-> -			regval |= LPAIF_DMACTL_WPSCNT_TWO;
-> +			regval |= LPAIF_DMACTL(v, WPSCNT_TWO);
->   			break;
->   		case 4:
-> -			regval |= LPAIF_DMACTL_WPSCNT_FOUR;
-> +			regval |= LPAIF_DMACTL(v, WPSCNT_FOUR);
->   			break;
->   		case 6:
-> -			regval |= LPAIF_DMACTL_WPSCNT_SIX;
-> +			regval |= LPAIF_DMACTL(v, WPSCNT_SIX);
->   			break;
->   		case 8:
-> -			regval |= LPAIF_DMACTL_WPSCNT_EIGHT;
-> +			regval |= LPAIF_DMACTL(v, WPSCNT_EIGHT);
->   			break;
->   		default:
->   			dev_err(soc_runtime->dev,
-> @@ -277,7 +278,7 @@ static int lpass_platform_pcmops_prepare(struct snd_soc_component *component,
->   
->   	ret = regmap_update_bits(drvdata->lpaif_map,
->   			LPAIF_DMACTL_REG(v, ch, dir),
-> -			LPAIF_DMACTL_ENABLE_MASK, LPAIF_DMACTL_ENABLE_ON);
-> +			LPAIF_DMACTL(v, ENABLE_MASK), LPAIF_DMACTL_ENABLE_ON);
->   	if (ret) {
->   		dev_err(soc_runtime->dev, "error writing to rdmactl reg: %d\n",
->   			ret);
-> @@ -326,7 +327,7 @@ static int lpass_platform_pcmops_trigger(struct snd_soc_component *component,
->   
->   		ret = regmap_update_bits(drvdata->lpaif_map,
->   				LPAIF_DMACTL_REG(v, ch, dir),
-> -				LPAIF_DMACTL_ENABLE_MASK,
-> +				LPAIF_DMACTL(v, ENABLE_MASK),
->   				LPAIF_DMACTL_ENABLE_ON);
->   		if (ret) {
->   			dev_err(soc_runtime->dev,
-> @@ -339,7 +340,7 @@ static int lpass_platform_pcmops_trigger(struct snd_soc_component *component,
->   	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
->   		ret = regmap_update_bits(drvdata->lpaif_map,
->   				LPAIF_DMACTL_REG(v, ch, dir),
-> -				LPAIF_DMACTL_ENABLE_MASK,
-> +				LPAIF_DMACTL(v, ENABLE_MASK),
->   				LPAIF_DMACTL_ENABLE_OFF);
->   		if (ret) {
->   			dev_err(soc_runtime->dev,
-> diff --git a/sound/soc/qcom/lpass.h b/sound/soc/qcom/lpass.h
-> index 279cd02..384f4b8 100644
-> --- a/sound/soc/qcom/lpass.h
-> +++ b/sound/soc/qcom/lpass.h
-> @@ -17,6 +17,9 @@
->   #define LPASS_MAX_MI2S_PORTS                   (8)
->   #define LPASS_MAX_DMA_CHANNELS                 (8)
->   
-> +#define LPASS_VARIANT				0
-> +#define LPASS_VARIANT_V2			1
-> +
->   struct lpass_dai {
->   	struct clk *osr_clk;
->   	struct clk *bit_clk;
-> @@ -91,6 +94,9 @@ struct lpass_variant {
->   	/* SOC specific clocks configuration */
->   	const char **clk_name;
->   	int num_clks;
-> +
-> +	/* LPASS Version id */
-> +	int id;
-
-May be spelling this out like "version_id" would make it more readable.
-
-thanks,
-srini
-
-
->   };
->   
->   /* register the platform driver from the CPU DAI driver */
-> 
+SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogVGh1cnNk
+YXksIEFwcmlsIDE2LCAyMDIwIDQ6NTAgUE0NCj4gDQo+IEhpIFNoaW1vZGEtc2FuLA0KPiANCj4g
+T24gVGh1LCBBcHIgMTYsIDIwMjAgYXQgNDowNCBBTSBZb3NoaWhpcm8gU2hpbW9kYQ0KPiA8eW9z
+aGloaXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+ID4gRnJvbTogR2VlcnQg
+VXl0dGVyaG9ldmVuLCBTZW50OiBXZWRuZXNkYXksIEFwcmlsIDE1LCAyMDIwIDEwOjU2IFBNDQo+
+ID4gPHNuaXA+DQo+ID4gPiA+IC0tLSAvZGV2L251bGwNCj4gPiA+ID4gKysrIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9yZW5lc2FzLHVzYi1kbWFjLnlhbWwNCj4gPiA+
+ID4gKyAgaW50ZXJydXB0czoNCj4gPiA+ID4gKyAgICBtYXhJdGVtczogMg0KPiA+ID4NCj4gPiA+
+IElzIHRoZXJlIGEgdXNlIGNhc2UgZm9yIHNwZWNpZnlpbmcgYSBzaW5nbGUgaW50ZXJydXB0Pw0K
+PiA+DQo+ID4gTm8uIEFsbCBVU0ItRE1BQyBvZiBSLUNhciBHZW4yLzMgYW5kIFJaL0duIGhhcyAy
+IGNoYW5uZWxzLg0KPiA+IEluIGNhc2Ugb2YgUi1DYXIgR2VuMywgcGxlYXNlIHJlZmVyIHRvIHRo
+ZSBGaWd1cmUgNzUuMSBVU0ItRE1BQyBCbG9jayBEaWFncmFtLg0KPiA+IFRoZXNlIFVTQi1ETUFD
+biBoYXZlIENIMCBhbmQgQ0gxDQo+IA0KPiBUaGFua3MgZm9yIGNvbmZpcm1pbmchDQo+IA0KPiA+
+ID4gPiArICBkbWEtY2hhbm5lbHM6DQo+ID4gPiA+ICsgICAgbWF4aW11bTogMg0KPiA+ID4NCj4g
+PiA+IElzIHRoZXJlIGEgdXNlIGNhc2UgZm9yIHNwZWNpZnlpbmcgYSBzaW5nbGUgY2hhbm5lbD8N
+Cj4gPiA+DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgaW9tbXVzOg0KPiA+ID4gPiArICAgIG1heEl0
+ZW1zOiAyDQo+ID4gPg0KPiA+ID4gTGlrZXdpc2U/DQo+ID4NCj4gPiBBcyBJIG1lbnRpb25lZCBh
+Ym92ZSwgdGhlcmUgaXMgbm90IGEgdXNlIGNhc2UgZm9yIHNwZWNpZnlpbmcgYSBzaW5nbGUgY2hh
+bm5lbC4NCj4gDQo+IEhlbmNlIEkgdGhpbmsgYWxsIG9mIHRoZXNlIHNob3VsZCBoYXZlICJjb25z
+dDogMiIgb3IgIm1pbkl0ZW1zOiAyIi4NCg0KVGhhbmsgeW91IGZvciB0aGUgcHJvcG9zYWwuIEkg
+Z290IGl0LiBJJ2xsIGZpeCBpdC4NCg0KQmVzdCByZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1vZGEN
+Cg0K
