@@ -2,186 +2,72 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F84BC352BE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A42C2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48D8D206D5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F68D214D8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:29:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="zSIcztlU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="G6Uw3TQH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZQMTfiSf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439259AbgDPH2Z (ORCPT
+        id S2439264AbgDPH24 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:28:25 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:60961 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2439247AbgDPH2Y (ORCPT
+        Thu, 16 Apr 2020 03:28:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2439247AbgDPH2y (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:28:24 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id DB7856C8;
-        Thu, 16 Apr 2020 03:28:22 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 16 Apr 2020 03:28:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=oWvboizClBIQCLsIM+QeCQyJEOn
-        4qOWnj1Q+s++lsjs=; b=zSIcztlUz8NKqb7WKKpyAEkcZ1dTraBzvn03Zfzy9A5
-        B+h+d0EccRHd61F+h9HgZ048hy261vUnQJealj3ZWMpO1o7w3u2GAcfD63Nnxb/c
-        iNm6QbEE7TArhYYza3xaEYWi9FOSoi0f/c010l/YRe4+67Am1N59RC8ez1Lqeofo
-        3mzV1ofHkLPYSTAaK+OaUeunBnq0ol6rOLTCnIrqnaEeH0J/WfHjgvoZwJFwfzr/
-        i9KAwgA57QoR9r8uc0QCJ6okJlGk+ae9nJ1SMubPtNaFdiOTks1JoP/WZe0YdG3o
-        cLkh3Qkqy6bCcr4PptQFzgdmhyQu4YOzt/qFz0EbLdA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=oWvboi
-        zClBIQCLsIM+QeCQyJEOn4qOWnj1Q+s++lsjs=; b=G6Uw3TQHyi5VmNPG6Wn5Yb
-        7ey5AyRNaYPpvzgnX/alNu/CrDkMQLCs15YxG4wP9nJ5mVFJfLW5Cx8Zu5/aZGIg
-        7S/G4GDfhgH2/b8+pWmq/OWjAVYwDfggxiA12TY68Lutd6PnqgmCvwEID1NRfJo9
-        IxKlIMZ9YM16RStAhU5KfncdPMjWU6IYSMIftwhdEx3UTOlazk0KbRqD4ElztuLu
-        t9QA7T8rPdmcdr0aoSIT8YDnJP/mr2Co0jyKxLdQu1VdVs/QErPCcsBkXYGIcL7a
-        hZxWEGEGtoeL8yZ6Rolu/ha4SkmC1gl/g7kyquIAm/Faz4PaPGDUr3nGxrm4fkng
-        ==
-X-ME-Sender: <xms:FQmYXujE1KNDZjwwxcLHqAY3RKBJYZ_JObe5_MfOWQxtmrdnf8ZtVQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeeggdduvddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuffhomhgrih
-    hnpeguvghvihgtvghtrhgvvgdrohhrghenucfkphepledtrdekledrieekrdejieenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvg
-    estggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:FQmYXrUzC2IVvL9NVt0jEwUx4KLQUB8fFxLkmCmcEqNFIXqVA80XZg>
-    <xmx:FQmYXo2rFH-LZClwK_K-LJO1UO466yvvJKvejb0g_tE84XrpQFEqWw>
-    <xmx:FQmYXpFYffKWDwhGT52n7INhew0EB4kuo4UDmyCvYWGNIgZjD6LeFA>
-    <xmx:FgmYXl4y38Nz2SXzyM9WNko6ZU3zss0377Fg-TIyiu3ToNx6GbcgPA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 89FC9328005A;
-        Thu, 16 Apr 2020 03:28:21 -0400 (EDT)
-Date:   Thu, 16 Apr 2020 09:28:20 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     devicetree@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        dri-devel@lists.freedesktop.org, Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH v1 1/4] dt-bindings: display: convert atmel-hlcdc to DT
- Schema
-Message-ID: <20200416072820.lizjyhk5dbvnujwv@gilmour.lan>
-References: <20200412182012.27515-1-sam@ravnborg.org>
- <20200412182012.27515-2-sam@ravnborg.org>
- <20200414082803.exblunwe7bufbiht@gilmour.lan>
- <20200415163956.GB7965@ravnborg.org>
+        Thu, 16 Apr 2020 03:28:54 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA613C061A0C;
+        Thu, 16 Apr 2020 00:28:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=jphD0QxUkx58Leqoht9un+IW160yDSl4a16sN6p0wp0=; b=ZQMTfiSf0WNZaROzM2Vhq2JZIW
+        flXWEldz7UFTJIRSqBk3edg5nQSUF6LsWtPN+mawKB4PsOsdkxYadKG8t1s+1HIyvjGViM+/4u9XJ
+        sgPwv3FT/YG+CfgsVteNEl5xbrhxqk9RuXFgnRaUgaEUWVkwUoI4/jt/bXvBlrJVdXXG3LOUI7axo
+        EZJxFj7JnlE9kwMDzkbS/YdTknhS9MaRxElQ9Zw+X7NQaTkjHzqWCOaA3K7u8MzLxFSeFj+5JpGfy
+        g45mkULRGMxSAE63aQiVISOPNMz3DDBt98u/jefGfgi26MakebbHZn+tDgCIHIRaECC9QSl/RRB5L
+        zV3sruZQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jOyxA-00058d-St; Thu, 16 Apr 2020 07:28:52 +0000
+Date:   Thu, 16 Apr 2020 00:28:52 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
+        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com
+Subject: Re: [PATCH v5 02/25] iommu/sva: Manage process address spaces
+Message-ID: <20200416072852.GA32000@infradead.org>
+References: <20200414170252.714402-1-jean-philippe@linaro.org>
+ <20200414170252.714402-3-jean-philippe@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lplp3n3i5fwlo3st"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415163956.GB7965@ravnborg.org>
+In-Reply-To: <20200414170252.714402-3-jean-philippe@linaro.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+> +	rcu_read_lock();
+> +	hlist_for_each_entry_rcu(bond, &io_mm->devices, mm_node)
+> +		io_mm->ops->invalidate(bond->sva.dev, io_mm->pasid, io_mm->ctx,
+> +				       start, end - start);
+> +	rcu_read_unlock();
+> +}
 
---lplp3n3i5fwlo3st
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Apr 15, 2020 at 06:39:56PM +0200, Sam Ravnborg wrote:
-> Hi Maxime.
->
-> On Tue, Apr 14, 2020 at 10:28:03AM +0200, Maxime Ripard wrote:
-> > Hi Sam,
-> >
-> > On Sun, Apr 12, 2020 at 08:20:09PM +0200, Sam Ravnborg wrote:
-> > > diff --git a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.yaml b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.yaml
-> > > new file mode 100644
-> > > index 000000000000..7eb6266a25a2
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.yaml
-> > > @@ -0,0 +1,102 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/display/atmel/hlcdc-dc.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Atmel HLCDC (High LCD Controller) display controller
-> > > +
-> > > +maintainers:
-> > > +  - Sam Ravnborg <sam@ravnborg.org>
-> > > +  - Boris Brezillon <bbrezillon@kernel.org>
-> > > +
-> > > +description: |
-> > > +  The Atmel HLCDC Display Controller is subdevice of the HLCDC MFD device.
-> > > +  See ../../mfd/atmel-hlcdc.yaml for more details.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: atmel,hlcdc-display-controller
-> > > +
-> > > +  "#address-cells":
-> > > +    const: 1
-> > > +  "#size-cells":
-> > > +    const: 0
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - "#address-cells"
-> > > +  - "#size-cells"
-> > > +
-> > > +patternProperties:
-> > > +  "^port@[0-9]$":
-> > > +    type: object
-> > > +    description: |
-> > > +      A port node with endpoint definitions as defined in
-> > > +      ../../media/video-interfaces.txt
-> > > +
-> > > +    properties:
-> > > +      "#address-cells":
-> > > +        const: 1
-> > > +
-> > > +      "#size-cells":
-> > > +        const: 0
-> > > +
-> > > +      reg:
-> > > +        maxItems: 1
-> > > +        description: The virtual number of the port
-> > > +
-> > > +    patternProperties:
-> > > +      "^endpoint(@[0-9])$":
-> >
-> > I guess you meant ^endpoint(@[0-9])?$ instead?
->
-> I think "^endpoint@[0-9]$" will do the trick.
-> No need for endpoints with numbers higher than 9.
-
-If you want to stick to pedantic DT, then if there's a single
-endpoint, you should avoid reg and the unit-address, and this is
-something that dtc will complain about (even though it's silenced in
-Linux), so yeah, ? seems the way to go.
-
-Maxime
-
---lplp3n3i5fwlo3st
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpgJFAAKCRDj7w1vZxhR
-xWxgAQCiEz5pDVYTAZAQHIEYCYsDFUgxa56uIAMS+stmFXHAbgD/RnKsMfVPjvNi
-ihHhyUqtRGFrbbr0ZK29Y5ZAVxRAVAI=
-=VL7j
------END PGP SIGNATURE-----
-
---lplp3n3i5fwlo3st--
+What is the reason that the devices don't register their own notifiers?
+This kinds of multiplexing is always rather messy, and you do it for
+all the methods.
