@@ -2,103 +2,106 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 142E0C2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 09:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA61C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 09:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7A5321BE5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 09:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 517AD21BE5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 09:41:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QREs/SmD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503590AbgDPJjt (ORCPT
+        id S2503980AbgDPJli (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:39:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48246 "EHLO
+        Thu, 16 Apr 2020 05:41:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2503833AbgDPJjl (ORCPT
+        by vger.kernel.org with ESMTP id S2503936AbgDPJlc (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:39:41 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA627C061A10
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 02:39:40 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jP0zd-0002ad-L6; Thu, 16 Apr 2020 11:39:33 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jP0zc-0008A1-NM; Thu, 16 Apr 2020 11:39:32 +0200
-Date:   Thu, 16 Apr 2020 11:39:32 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V2 1/5] dt-bindings: clock: Convert i.MX6Q clock to
- json-schema
-Message-ID: <20200416093932.2mkcyv4rs6v6a24a@pengutronix.de>
-References: <1587019158-12143-1-git-send-email-Anson.Huang@nxp.com>
+        Thu, 16 Apr 2020 05:41:32 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 021A2C061A41
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 02:41:32 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id u6so5480564ljl.6
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 02:41:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5cXqd/FYXB0lbGufBrqDJUqh9/OZeedfUjtBKEKKPBY=;
+        b=QREs/SmDJvEf1zq17GMjwgTqEIyMlkJEjg5f3v/HeaLYKjVC8QYC1tgHS9NiE8NKcc
+         TGpmQwdmfUl79CLFpobpVIg7Y71DLmUEMoO4SybCkM0m/qJTWd8TH7fD8AW6GTjZh5E2
+         3xB3Gmop1M/FTGW91HEFmJs0231flS44BMs2mjhSI3HDKbtBPY4kMr+le/vVy6MecdtM
+         36GNDW5Lz27hb9BKmDCXci7WaRgb054h8OPccGeiMoEExPEgMfHxCK1ZBv+Rux+HEuDy
+         gMC87Sq8XSDg34xBrMmEcMt62x/S+my0Xke4M9RSm63NB88ahjLVCRWh9rFJMdVUhp5/
+         d7RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5cXqd/FYXB0lbGufBrqDJUqh9/OZeedfUjtBKEKKPBY=;
+        b=M4EktwHdmOFBbh/J901BgODyzGYzM7iBlUkmxN7XVBuqgxn72C0kvY/D/3p/2GnRcS
+         ITja/IsVHz5aJ9ey+w5P3S90gG0lLFXwcnToeuUAeTIRD/VgxGxQnE4jA8agZZ9CjS+I
+         jGW4Ipjo7jfyNGRl99pQyBy6w5X7DkMtJGY9HmrS+yKo1QW2myW0NgMtDiRiYw5HHRVF
+         3sS5tJC1YQi7luiIlBxuA1ZP0i2RbOFAgXKkN5Un3/0bpO/zfpV38g/JQEsp53UliyPO
+         QGlEZyeTXpKToDWbt+zeEoIr14T5Db1t7SZr3844lJlJGCA2tVZ7ss7QU2pfjs4hCJsI
+         5bLw==
+X-Gm-Message-State: AGi0PuasbQePow11ba5xgp2Wg31XJIFrGhwJWmwVraHbcL1vkY2J3tr4
+        ofoPuQK8ilNjoYU+wUjfuAjwEC936N1X3Drt+x6ZUg==
+X-Google-Smtp-Source: APiQypJnieW207MTrrcDCpD/6xCHVrwXn13tNVmDwtrOVmdK3UPhTDARFtiYg95ApfvlUAdHmjKJ2IVQP/pmqh19PEI=
+X-Received: by 2002:a2e:5048:: with SMTP id v8mr5437034ljd.99.1587030090524;
+ Thu, 16 Apr 2020 02:41:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587019158-12143-1-git-send-email-Anson.Huang@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 11:37:20 up 153 days, 55 min, 168 users,  load average: 0.00, 0.06,
- 0.07
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <1585306559-13973-1-git-send-email-Anson.Huang@nxp.com> <1585306559-13973-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1585306559-13973-2-git-send-email-Anson.Huang@nxp.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 16 Apr 2020 11:41:19 +0200
+Message-ID: <CACRpkdajgsshQ25eCsx8FS5qZ10AMcG9_PC5bwQfqGTXSprSvg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] pinctrl: imx: Add imx8dxl driver
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Peng Fan <peng.fan@nxp.com>, Andy Duan <fugang.duan@nxp.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>, Olof Johansson <olof@lixom.net>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Anson,
+On Fri, Mar 27, 2020 at 12:03 PM Anson Huang <Anson.Huang@nxp.com> wrote:
 
-On 20-04-16 14:39, Anson Huang wrote:
+> i.MX8DXL contains a system controller that is responsible for controlling
+> the pad setting of the IPs that are present. Communication between the
+> host processor running an OS and the system controller happens through
+> a SCU protocol, add support for the SCU based i.MX8DXL pinctrl driver.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-...
+Patch applied.
 
-> diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.yaml b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
-> new file mode 100644
-> index 0000000..1c6e600
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
-> @@ -0,0 +1,66 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/imx6q-clock.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Clock bindings for Freescale i.MX6 Quad
-> +
-> +maintainers:
-> +  - Anson Huang <Anson.Huang@nxp.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: fsl,imx6q-ccm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 2
-
-IMHO I would force them to have exactly two so we need
-minItems: 2 too here.
-
-Regards,
-  Marco
+Yours,
+Linus Walleij
