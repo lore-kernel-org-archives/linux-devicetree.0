@@ -2,360 +2,178 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B27F3C2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0009C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F11321569
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:24:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587021891;
-	bh=x6NCyy3rYXB3kwgxR8qraQyKLgISx/cBtU574sdfPv0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=PQZu+FOG/VwaX/jI1G49f80ekzVqE+2EMV+AW7//AA1zqCQDmXr8Kwv1cK5kUYKgl
-	 ymAxRnQnFmO7ZYl/a7Jvgzlmhhb+AlBphOJpRgYctwzuCzoLgyA+Es8bcDzw0yTAkl
-	 5O7OsZt1Dv7sMbHUprNboSbopj/LLWFE/pCgS1ww=
+	by mail.kernel.org (Postfix) with ESMTP id C9DDC206D5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:27:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NJcoaFeb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438711AbgDPHYu (ORCPT
+        id S2439026AbgDPH11 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:24:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438815AbgDPHYs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:24:48 -0400
-Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DACEF206D5;
-        Thu, 16 Apr 2020 07:24:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587021887;
-        bh=x6NCyy3rYXB3kwgxR8qraQyKLgISx/cBtU574sdfPv0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JMkIDt6bYkpCDwdlTR1HBWiwaWcjcn9/eWNDsBzjqC0pufHD1MyeXCjp6lsk2X38E
-         VgV9qyz00frxrRdijzMewVdthAB1z5zeRmhrbsxX31SeymqATa6mNF8RbvDQJGQHI8
-         sIlN1CRQxMgIl2OZntsdwXGF3RX32bIKvWmKbqhg=
-Date:   Thu, 16 Apr 2020 09:24:41 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rishi Gupta <gupt21@gmail.com>
-Cc:     gregkh@linuxfoundation.org, jslaby@suse.com, robh+dt@kernel.org,
-        corbet@lwn.net, andriy.shevchenko@linux.intel.com,
-        devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] tty: documentation: document how to use ttyvs
- driver
-Message-ID: <20200416092441.4216ffe3@coco.lan>
-In-Reply-To: <1587012974-21219-4-git-send-email-gupt21@gmail.com>
-References: <1587012974-21219-1-git-send-email-gupt21@gmail.com>
-        <1587012974-21219-4-git-send-email-gupt21@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 16 Apr 2020 03:27:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2438944AbgDPH1Y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 03:27:24 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E632C061A0C
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 00:27:23 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id h9so3559209wrc.8
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 00:27:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QxpHiucnhhWIScTRux26ZlKVnMyZxog3DZwM1hu74UY=;
+        b=NJcoaFebkFEC/7qlTmJhtWoHhwkOt2K/gdRXFxzWdbjoaCzZkTTDYWJMPxpTxW8ORd
+         aqdKBnWmj8kePfOpjU8NPE/K9DebqACnnOY/FjoNYBlalaz3Y7bsKDEIL5UA88ARoLMm
+         jLsTpzXX2PUz8MV0Z0FvA4bkhGRJ5KWyld1m4wWCMZo3MjNRlWk17d4JYVtk1hLZ67bj
+         s26VJ9CmUDcD6Kc/BNZxY+sr/GLlB5EAsCx8/v0s5n9op7aXDrmyBtKYhq0sSya8+Lvx
+         /0YWTdD9FXCJAaR3d/Fsy4pbFIRIFBBLratFGfQH62kukXlOmPMjjWGyit+QrJKZBOrX
+         v45w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QxpHiucnhhWIScTRux26ZlKVnMyZxog3DZwM1hu74UY=;
+        b=XcGk5w90BR00xvBeKtlbk1I0/9rI5Io7ZfGO1syMkkZiYTP+D/c5/W3fPG8wBevZCl
+         nROpNPGmp6QmcHHudauufy7Y0TaFN/MZPIeg94qPF8vxJ9FRWfUqWfAGySOpHPf+UzQh
+         AI+ZbEocQ1UFOabXbWhiRBMRAQhAWR5ckf1DCl/85JrGgQzULD5WHmP7hQTN/EUfggkF
+         nCK5jSrU+SUwwyHkJ4V6OmgblLsiCtxw7YIAvZmN8e7iqwlsXzfCZ4lxBvwsXV+zBm59
+         7I8CY1RLDqBzZOk4SlfuEnCyqpJmUYWjrCpjL+kdspG0ep24IwrX+5ATwaQKk2tbZ+Zm
+         jLmQ==
+X-Gm-Message-State: AGi0PuaVe+0jrdv3bvFcPIjh9mGGlaVdZd9WJqynq2IElViBekdBhQFi
+        WizFGm5p0+5Nbk1KAosh3036nw==
+X-Google-Smtp-Source: APiQypJqsIciqFOzLwVCqcUPSlriBEOlFHJnwMEFkwbNqkG6VNGQqvq0iwyOSnnG1sOY8gY5eFSegw==
+X-Received: by 2002:a5d:49d2:: with SMTP id t18mr16202952wrs.85.1587022041753;
+        Thu, 16 Apr 2020 00:27:21 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id b191sm2542521wmd.39.2020.04.16.00.27.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 Apr 2020 00:27:20 -0700 (PDT)
+Subject: Re: [PATCH 2/2] dt-bindings: soc: qcom: apr: Use generic node names
+ for APR services
+To:     Stephan Gerhold <stephan@gerhold.net>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, alsa-devel@alsa-project.org
+References: <20200415081159.1098-1-stephan@gerhold.net>
+ <20200415081159.1098-2-stephan@gerhold.net>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <f0735d41-d274-841e-f6d3-69c301726883@linaro.org>
+Date:   Thu, 16 Apr 2020 08:27:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200415081159.1098-2-stephan@gerhold.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Em Thu, 16 Apr 2020 10:26:14 +0530
-Rishi Gupta <gupt21@gmail.com> escreveu:
 
-> The commit documents how to use ttyvs driver to create/delete
-> virtual tty devices, how to emulate various serial port events
-> through this driver etc.
+
+On 15/04/2020 09:11, Stephan Gerhold wrote:
+> Device nodes should be named according to the class of devices
+> they belong to. Change the suggested names of the subnodes to
+> apr-service@<id>, which is already in use in
+> arch/arm64/boot/dts/qcom/sdm845.dtsi.
 > 
-> Signed-off-by: Rishi Gupta <gupt21@gmail.com>
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
+
 > ---
-> Changes in v3:
-> - Rebased on top of v5.7-rc1
-> - Moved virtual-tty-ttyvs.rst from Documentation/virtual to Documentation/admin-guide
+>   .../devicetree/bindings/soc/qcom/qcom,apr.txt | 20 +++++++++----------
+>   1 file changed, 10 insertions(+), 10 deletions(-)
 > 
-> Changes in v2:
-> - Added this file from v2 only
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> index f8fa71f5d84b..2e2f6dc351c0 100644
+> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> @@ -65,30 +65,30 @@ which uses apr as communication between Apps and QDSP.
+>   		compatible = "qcom,apr-v2";
+>   		qcom,apr-domain = <APR_DOMAIN_ADSP>;
+>   
+> -		q6core@3 {
+> +		apr-service@3 {
+>   			compatible = "qcom,q6core";
+>   			reg = <APR_SVC_ADSP_CORE>;
+>   		};
+>   
+> -		q6afe@4 {
+> +		apr-service@4 {
+>   			compatible = "qcom,q6afe";
+>   			reg = <APR_SVC_AFE>;
+>   
+>   			dais {
+>   				#sound-dai-cells = <1>;
+> -				hdmi@1 {
+> -					reg = <1>;
+> +				dai@1 {
+> +					reg = <HDMI_RX>;
+>   				};
+>   			};
+>   		};
+>   
+> -		q6asm@7 {
+> +		apr-service@7 {
+>   			compatible = "qcom,q6asm";
+>   			reg = <APR_SVC_ASM>;
+>   			...
+>   		};
+>   
+> -		q6adm@8 {
+> +		apr-service@8 {
+>   			compatible = "qcom,q6adm";
+>   			reg = <APR_SVC_ADM>;
+>   			...
+> @@ -106,26 +106,26 @@ have no such dependency.
+>   		qcom,glink-channels = "apr_audio_svc";
+>   		qcom,apr-domain = <APR_DOMAIN_ADSP>;
+>   
+> -		q6core {
+> +		apr-service@3 {
+>   			compatible = "qcom,q6core";
+>   			reg = <APR_SVC_ADSP_CORE>;
+>   		};
+>   
+> -		q6afe: q6afe {
+> +		q6afe: apr-service@4 {
+>   			compatible = "qcom,q6afe";
+>   			reg = <APR_SVC_AFE>;
+>   			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
+>   			...
+>   		};
+>   
+> -		q6asm: q6asm {
+> +		q6asm: apr-service@7 {
+>   			compatible = "qcom,q6asm";
+>   			reg = <APR_SVC_ASM>;
+>   			qcom,protection-domain = "tms/servreg", "msm/slpi/sensor_pd";
+>   			...
+>   		};
+>   
+> -		q6adm: q6adm {
+> +		q6adm: apr-service@8 {
+>   			compatible = "qcom,q6adm";
+>   			reg = <APR_SVC_ADM>;
+>   			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
 > 
->  Documentation/admin-guide/index.rst             |   1 +
->  Documentation/admin-guide/virtual-tty-ttyvs.rst | 142 ++++++++++++++++++++++++
->  2 files changed, 143 insertions(+)
->  create mode 100644 Documentation/admin-guide/virtual-tty-ttyvs.rst
-> 
-> diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-> index 5a6269f..9a72fb8 100644
-> --- a/Documentation/admin-guide/index.rst
-> +++ b/Documentation/admin-guide/index.rst
-> @@ -50,6 +50,7 @@ ABI will be found here.
->     :maxdepth: 1
->  
->     sysfs-rules
-> +   virtual-tty-ttyvs
->  
->  The rest of this manual consists of various unordered guides on how to
->  configure specific aspects of kernel behavior to your liking.
-> diff --git a/Documentation/admin-guide/virtual-tty-ttyvs.rst b/Documentation/admin-guide/virtual-tty-ttyvs.rst
-> new file mode 100644
-> index 0000000..c30b768
-> --- /dev/null
-> +++ b/Documentation/admin-guide/virtual-tty-ttyvs.rst
-> @@ -0,0 +1,142 @@
-> +================================================
-> +Kernel driver for virtual tty null modem devices
-> +================================================
-> +
-> +Author: Rishi Gupta <gupt21@gmail.com>
-> +
-> +The ttyvs driver (drivers/tty/ttyvs.c) creates virtual tty devices
-> +that can be used with standard POSIX APIs for terminal devices.
-> +
-> +Applications can write to the sysfs file provided by this driver to
-> +emulate various serial port communication events and error conditions.
-> +
-> +This driver creates a virtual card which can have 0 to 65535 virtual
-> +tty devices.
-> +
-> +Use cases
-> +=========
-> +- Automated performance and scalability testing
-> +- Serial port redirector to any other subsystem like TCP/IP
-> +- Feeding data to GPS simulator
-> +- Segregating hardware issues from software bugs quickly
-> +- Serial port communication sniffer or test sniffer application itself
-> +- Application development when hardware is still not available
-> +- Testing user space drivers & corner case by injecting handcrafted data
-> +- Migrate binary only or legacy applications to new communication medium
-> +- Analyze and reverse-engineer serial protocols
-> +- Cases where socat utility does not meet requirements for unix-like OS
-> +- Cases where available physical serial ports don't meet requirements
-> +- Product demo where data from hardware needs to be sent to the GUI app
-> +- Stress and corner case testing of user space application
-> +
-> +How to create devices
-> +=====================
-> +There are two ways to create devices:
-> +
-> +1. Using device tree:
-> +The card is modelled as a node with zero or more child nodes each
-> +representing a virtual tty device. To create a device simply define
-> +a child node with the required device parameters. This is explained
-> +in detail in DT binding file:
-> +Documentation/devicetree/bindings/serial/ttyvs.yaml
-
-There's a typo there: "modelled" -> "modeled"
-
--
-
-I suspect you didn't try to build it with Sphinx [1]. The html output of the
-above would be:
-
-	"1. Using device tree: The card is modelled as a node with zero or more child nodes each representing a virtual tty device. To create a device simply define a child node with the required device parameters. This is explained in detail in DT binding file: Documentation/devicetree/bindings/serial/ttyvs.yaml"
-
-(E.g. everything on a single line).
-
-
-[1] To build, just use:
-		make htmldocs
-
-    it will likely point you some packages to install, in order to be
-    able to generate both html and pdf outputs. After installing them,
-    run "make htmldocs" again. The output should be under:
-
-	Documentation/output/admin-guide/virtual-tty-ttyvs.html
-
-
-For Sphinx, a paragraph requires an extra blank line. So, the
-above should be written, instead, as:
-
-	1. Using device tree:
-
-	The card is modeled as a node with zero or more child nodes each
-	representing a virtual tty device. To create a device simply define
-	a child node with the required device parameters. This is explained
-	in detail in DT binding file:
-
-	Documentation/devicetree/bindings/serial/ttyvs.yaml
-
-Personally, I would make it look a little nicer writing it instead as:
-
-	1. Using device tree
-	--------------------
-
-	The card is modeled as a node with zero or more child nodes each
-	representing a virtual tty device. To create a device simply define
-	a child node with the required device parameters. This is explained
-	in detail in DT binding file:
-
-	- Documentation/devicetree/bindings/serial/ttyvs.yaml
-
-> +
-> +2. Using configfs:
-> +When ttyvs driver is loaded, it will create ttyvs directory inside
-> +configfs mount point. For ex; if configfs is mounted at /config, then
-> +/config/ttyvs directory will be created. To create a device, simply
-> +create directory inside this, write values to be used as device
-> +parameters and finally write 1 to create attribute. Defining ownidx
-> +and devtype is mandatory.
-
-Same as above.
-
-> +
-> +Pin mappings are bit maps; set bit 0 to connect a pin to CTS pin,
-> +set bit 1 to connect to DCD pin, set bit 2 to connect to DSR and
-> +set bit 3 to connect to RI. Pin naming conventions are follows
-> +standard RS232 DB9 connector naming conventions.
-
-As Randy suggested, use a table here, like:
-
-Pin mappings are bit maps:
-
-	===  =========================================
-	bit  meaning
-	===  =========================================
-	0    connect a pin to CTS pin
-...
-	3    connect to RI
-	===  =========================================
-
-> +
-> +An example to create a loop-back device with device number as 0
-> +(/dev/ttyvs0), RTS and DTR pins unconnected, no need to assert DTR
-> +when device is opened would be something like this:
-> +
-> +.. code-block:: sh
-> +
-> + mkdir /config/ttyvs/devlb-0
-> + echo 0 > /config/ttyvs/devlb-0/ownidx
-> + echo lb > /config/ttyvs/devlb-0/devtype
-> + echo 0 > /config/ttyvs/devlb-0/ortsmap
-> + echo 0 > /config/ttyvs/devlb-0/odtrmap
-> + echo 0 > /config/ttyvs/devlb-0/odtratopn
-> + echo 1 > /config/ttyvs/devlb-0/create
-
-You need to add spaces (or tabs) at the lines under the code-block,
-as otherwise Sphinx will ignore it (and place everything on a single
-line).
-
-> +
-> +An example to create a standard null modem pair with device numbers
-> +0 and 1 with pin numbers as per RS232 standards will be something
-> +like this:
-> +
-> +.. code-block:: sh
-
-Hmm... the code below is not shell script. Btw, I would use, instead, "::"
-notation:
-
-	An example to create a standard null modem pair with device numbers
-	0 and 1 with pin numbers as per RS232 standards will be something
-	like this::
-
-		/dev/ttyvs0        /dev/ttyvs1
-...
-
-
-> +
-> + /dev/ttyvs0        /dev/ttyvs1
-> +   TX  (3)   ---->    (2) RX
-> +   RX  (2)   <----    (3) TX
-> +   RTS (7)   ---->    (8) CTS
-> +   DTR (4)   --+->    (1) DCD
-> +               +->    (6) DSR
-> +   CTS (8)   <----    (7) RTS
-> +   DCD (1)   <-+--    (4) DTR
-> +   DSR (6)   <-+
-
-
-> +
-> + mkdir /config/ttyvs/devnm-0-1
-> + echo nm > /config/ttyvs/devnm-0-1/devtype
-> + echo 0 > /config/ttyvs/devnm-0-1/ownidx
-> + echo 1 > /config/ttyvs/devnm-0-1/ortsmap
-> + echo 6 > /config/ttyvs/devnm-0-1/odtrmap
-> + echo 0 > /config/ttyvs/devnm-0-1/odtratopn
-> + echo 1 > /config/ttyvs/devnm-0-1/peeridx
-> + echo 1 > /config/ttyvs/devnm-0-1/prtsmap
-> + echo 6 > /config/ttyvs/devnm-0-1/pdtrmap
-> + echo 0 > /config/ttyvs/devnm-0-1/pdtratopn
-> + echo 1 > /config/ttyvs/devnm-0-1/create
-
-Ok, the above is a shell code block, but it is not part of the 
-ASCII artwork. So, it deserves its own code block.
-
-> +
-> +Directory name devnm-0-1 can be user defined. We used this simple style
-> +as it is intuitive to understand that the device is null modem with
-> +numbers 0 and 1. Further, to use configfs based approach, kernel must
-> +be compiled with CONFIG_CONFIGFS_FS=y option.
-
-While not mandatory, I would use this for constants:
-
-	``CONFIG_CONFIGFS_FS=y``
-
-(this changes the font to monotonic).
-
-On the documents I write myself, I use this for variables, paths, modprobe
-parameters, config options, inlined code snippets, etc.
-
-A side effect is that several text editors (emacs, pico, vim, kate, ...) that
-will highlight those in-lined code blocks with a different color, with helps 
-a lot, even when looking on them as plain texts.
-
-> +
-> +How to delete devices
-> +=====================
-> +To delete a device created by configfs simply delete the directory
-> +created in /config/ttyvs directory. If the device is part of a null
-> +modem pair, peer device will also be deleted automatically.
-> +
-> +How to emulate events
-> +=====================
-> +When a virtual tty device is created, an event sysfs file will also
-> +be created by the driver (/sys/class/tty/ttyvsN/event N is device
-> +number).
-> +
-> +1. Emulating framing error: the driver inserts -7 in data buffer as
-> +the byte that got corrupted due to framing error while receiving data.
-> +To emulate this write 1 to /sys/class/tty/ttyvsN/event file.
-
-You need to properly indent lists:
-
-	1. Emulating framing error: the driver inserts -7 in data buffer as
-	   the byte that got corrupted due to framing error while receiving data.
-	   To emulate this write 1 to /sys/class/tty/ttyvsN/event file.
-
-
-> +
-> +2. Emulating parity error: the driver inserts -8 in data buffer as
-> +the byte that got corrupted due to parity error while receiving data.
-> +To emulate this write 2 to /sys/class/tty/ttyvsN/event file.
-> +
-> +3. Emulating overrun error: the driver reports to tty layer that an
-> +overrun has happened.To emulate this write 3 to /sys/class/tty/ttyvsN/event
-> +file.
-> +
-> +4. Emulating ring indication: to emulate as if ring indication has been
-> +observed write 4 to the event file. To emulate as if ring indication has
-> +been removed write 5 to the event file.
-> +
-> +5. Emulate break received: to emulate as if break condition has been received
-> +write 6 to the /sys/class/tty/ttyvsN/event file.
-> +
-> +6. Emulate faulty cable: to emulate as if the cable is faulty write 7
-> +to the event file. In this case data sent from sender will not be received
-> +by the receiver end. To remove this condition write 8 to the event file.
-> +
-> +How to support more devices
-> +===========================
-> +By default ttyvs driver supports upto 64 devices. This can be
-
-	upto -> up to
-
-(ok, "upto" is a sort of slang, but I would prefer to avoid slangs on
- documents).
-
-> +changed by passing module parameter max_num_vs_devs or by defining
-> +max-num-vs-devs device tree property.
-
-Thanks,
-Mauro
