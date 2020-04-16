@@ -2,108 +2,197 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 708B8C3815B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 14:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C4FC2BB55
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 14:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A7D52051A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 14:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A292051A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 14:58:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732194AbgDPO4E (ORCPT
+        id S2390822AbgDPO6K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:56:04 -0400
-Received: from mail.manjaro.org ([176.9.38.148]:33370 "EHLO mail.manjaro.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394833AbgDPO4C (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:56:02 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.manjaro.org (Postfix) with ESMTP id 735653702995;
-        Thu, 16 Apr 2020 16:55:59 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at manjaro.org
-Received: from mail.manjaro.org ([127.0.0.1])
-        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Erx_frVr7CfS; Thu, 16 Apr 2020 16:55:57 +0200 (CEST)
-From:   Tobias Schramm <t.schramm@manjaro.org>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Thu, 16 Apr 2020 10:58:10 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:58899 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728330AbgDPNz0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 09:55:26 -0400
+Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 491B2100006;
+        Thu, 16 Apr 2020 13:55:20 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 15:55:19 +0200
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Tobias Schramm <t.schramm@manjaro.org>
-Subject: [PATCH] arm64: dts: rockchip: add micro SD card regulator to rockpro64
-Date:   Thu, 16 Apr 2020 16:55:34 +0200
-Message-Id: <20200416145534.1263575-1-t.schramm@manjaro.org>
+        Jacob Chen <jacob-chen@iotwrt.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hansverk@cisco.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 2/4] arm64: dts: rockchip: Add RGA support to the PX30
+Message-ID: <20200416135519.GJ125838@aptenodytes>
+References: <20200416115047.233720-1-paul.kocialkowski@bootlin.com>
+ <20200416115047.233720-3-paul.kocialkowski@bootlin.com>
+ <478f0a8b-f819-62f4-83b8-27918c4c2431@gmail.com>
+ <20200416132442.GI125838@aptenodytes>
+ <f4ad8ea4-7904-1458-e564-2d20c87ed417@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5me2qT3T17SWzdxI"
+Content-Disposition: inline
+In-Reply-To: <f4ad8ea4-7904-1458-e564-2d20c87ed417@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds the RockPro64's micro SD card regulator to the
-RockPro64 dtsi. The regulator is present on all revisions of the
-device.
-Previously the regular was missing, resulting in unreliable boot
-behaviour when booting from SD card.
 
-Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
----
- .../boot/dts/rockchip/rk3399-rockpro64.dtsi   | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
+--5me2qT3T17SWzdxI
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
-index 9bca25801260..6788ab28f89a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
-@@ -96,6 +96,24 @@ vcc1v8_s3: vcca1v8_s3: vcc1v8-s3 {
- 		vin-supply = <&vcc_1v8>;
- 	};
- 
-+	/* micro SD card power */
-+	vcc3v0_sd: vcc3v0-sd {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio0 RK_PA1 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sdmmc0_pwr_h>;
-+		regulator-name = "vcc3v0_sd";
-+		regulator-always-on;
-+		regulator-min-microvolt = <3000000>;
-+		regulator-max-microvolt = <3000000>;
-+		vin-supply = <&vcc3v3_sys>;
-+
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
-+	};
-+
- 	vcc3v3_pcie: vcc3v3-pcie-regulator {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
-@@ -603,6 +621,13 @@ vsel2_gpio: vsel2-gpio {
- 		};
- 	};
- 
-+	sdcard {
-+		sdmmc0_pwr_h: sdmmc0-pwr-h {
-+			rockchip,pins = <0 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+	};
-+
- 	sdio-pwrseq {
- 		wifi_enable_h: wifi-enable-h {
- 			rockchip,pins = <0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
-@@ -661,6 +686,8 @@ &sdmmc {
- 	max-frequency = <150000000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>;
-+	vmmc-supply = <&vcc3v0_sd>;
-+	vqmmc-supply = <&vcc_sdio>;
- 	status = "okay";
- };
- 
--- 
-2.26.0
+Hi,
 
+On Thu 16 Apr 20, 15:44, Johan Jonker wrote:
+> On 4/16/20 3:24 PM, Paul Kocialkowski wrote:
+> > Hi,
+> >=20
+> > On Thu 16 Apr 20, 15:02, Johan Jonker wrote:
+> >> Hi Paul,
+> >>
+> >> The conversion of rockchip-rga.txt to rockchip-rga.yaml by myself just
+> >> has been approved by robh.
+> >=20
+> > Huh, I looked around for ongoing related work but missed it.
+> > I'll definitely rebase on top of your series and use the yaml descripti=
+on
+> > instead. Thanks!
+> >=20
+> >> Maybe place dts patches at the end of a patch serie.
+> >> Could you include a &rga patch if your device is supported in mainline,
+> >> so we can test with:
+> >> make ARCH=3Darm64 dtbs_check
+> >> DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/media/rockchip-rga=
+=2Eyaml
+> >=20
+> > I tested with the PX30 EVB so I can surely add a node there if that tur=
+ns
+> > out necessary (see below).
+> >=20
+> >> Johan
+> >>
+> >> On 4/16/20 1:50 PM, Paul Kocialkowski wrote:
+> >>> The PX30 features a RGA block: add the necessary node to support it.
+> >>>
+> >>> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> >>> ---
+> >>>  arch/arm64/boot/dts/rockchip/px30.dtsi | 11 +++++++++++
+> >>>  1 file changed, 11 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot=
+/dts/rockchip/px30.dtsi
+> >>> index 75908c587511..4bfbee9d4123 100644
+> >>> --- a/arch/arm64/boot/dts/rockchip/px30.dtsi
+> >>> +++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
+> >>> @@ -1104,6 +1104,17 @@ vopl_mmu: iommu@ff470f00 {
+> >>>  		status =3D "disabled";
+> >>>  	};
+> >>> =20
+> >>> +	rga: rga@ff480000 {
+> >>> +		compatible =3D "rockchip,px30-rga";
+> >>> +		reg =3D <0x0 0xff480000 0x0 0x10000>;
+> >>> +		interrupts =3D <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH 0>;
+> >>> +		clocks =3D <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA_CORE>;
+> >>> +		clock-names =3D "aclk", "hclk", "sclk";
+> >>> +		resets =3D <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
+> >>> +		reset-names =3D "core", "axi", "ahb";
+> >>> +		power-domains =3D <&power PX30_PD_VO>;
+> >>
+> >> 		status =3D "disabled";
+> >=20
+> > As of 5.6, the rk3399 has the node enabled by default. Did that change?
+>=20
+> 'status' disappeared during review for rk3399 between v2 and v3, but
+> doesn't mention the reason. If someone can give more info here?
+>=20
+> https://lore.kernel.org/lkml/1500101920-24039-5-git-send-email-jacob-chen=
+@iotwrt.com/
+>=20
+> https://lore.kernel.org/lkml/1501470460-12014-5-git-send-email-jacob-chen=
+@iotwrt.com/
+>=20
+> >=20
+> > Since it's a standalone block that has no I/O dependency, I don't reall=
+y see
+> > the point of disabling it by default.
+>=20
+> Vop, hdmi and other video devices are also disabled.
+> Follow the rest I think...
+
+Well, these blocks do have related I/O ports so it makes sense not to enable
+them by default because of pinmux, or because there might be no connector
+populated/routed.
+
+For a memory to memory internal block, I don't see any reason why.
+It's definitely not board-specific and having to add these nodes for every =
+board
+that has them is kind of a pain and might be overlooked. This will easily r=
+esult
+in the feature not being available for end users without having to change t=
+he
+dt.
+
+Also, the vpu node is always enabled on rockchip (and sunxi) platforms.
+I think these are better examples to follow.
+
+Cheers,
+
+Paul
+
+> >=20
+> > What do you think?
+> >=20
+> > Cheers,
+> >=20
+> > Paul
+> >=20
+> >>> +	};
+> >>> +
+> >>>  	qos_gmac: qos@ff518000 {
+> >>>  		compatible =3D "syscon";
+> >>>  		reg =3D <0x0 0xff518000 0x0 0x20>;
+> >>>
+> >>
+> >=20
+>=20
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--5me2qT3T17SWzdxI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl6YY8cACgkQ3cLmz3+f
+v9HFdQf/Ucl4BsyAk0vmxKBrLrYibjhWFadjBl0GYEQ9ZVUmMP+VemCFEYed3jWw
+HrmVkh1G/pdP3WesXwKxEJxhmfxJqdbD6MqyA9RIhGNOO36Mojbe2Q+xSA2UGVRA
+bvo3jg1Gb+DrWPDhYXrcTHWrGn6zdMXNYbzR9HHJvOFqbUHM2fBIWZBafuz2ph/T
+yzgVoCwWEuxfxAYcGdFn/qkm6F+Afq/DOmXxTjwk3t80f4lCsgzmRecXTZibktpV
+E5XjKumCb6FGHFOyKTROrY0y4sKbWygQNDdzZ7NIW3UIY3ViiudG3poAcxCjxL4Y
+LCHF/9ORJJ71RasTzUB+aDbe4OaBUA==
+=+2Ry
+-----END PGP SIGNATURE-----
+
+--5me2qT3T17SWzdxI--
