@@ -2,136 +2,266 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF58C352BE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 15:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A289AC352BE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 15:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE3121927
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 15:23:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qzuDzGpL"
+	by mail.kernel.org (Postfix) with ESMTP id 7DA6C22241
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 15:23:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587050622;
+	bh=IzkNZB35W1ndrDT9IYOyxKuHacGeFfTHARmLelJ2Y4A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=K/a9AcQiKaliALq2xXdFuQ6wnNSeN02kZIW2WJrU4oqDWjCkSjqnkt3Z/XbR5xQNc
+	 zfc8TIpPQiRL4a34I0BvJes4Hq0mpT7R3vbktwf4mGiaL5GW3ftAYltoZhAyLebSiQ
+	 Ocolh/IXDpafmYRPUMB+IuNe1tj8FIbuSnoJCess=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392355AbgDPPX3 (ORCPT
+        id S2395165AbgDPPXk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:23:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45414 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2392261AbgDPPX0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:23:26 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70E55C061A0C;
-        Thu, 16 Apr 2020 08:23:26 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id k21so3381056otl.5;
-        Thu, 16 Apr 2020 08:23:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sDKDxRsvr9/0tnocd3cnf/IOYw0smGMIaggntAhf7sA=;
-        b=qzuDzGpLCGu7BUgaNTFhhEejkw0MvAlN2DPmQLMrBqU1v4yWsiG1tEqyPbXbNvUjeo
-         bLcBrNKgxIgnQVm4Pew28MRBLZUTdZVShPop7K3izBQBymzxAxLjDf6pXZI5xRsDE7L5
-         DVkwvDK0nGVpckgYmdkRer8sDuQ5EMrmIx6eKhPKl4sCoDB7+KxvNX7MYKmPAjWWLCJ0
-         iIre7bCji+qEPwN41tTHgeU2eKhSv57vbXZhW06MIRJSa+wsQRo27LG+aJYSnQM3YJF9
-         26R5vq4zelVgz+BGRozeyaD1U/bEVK1Eq0pZrVtUTBjnxuO7kf4VDUqrvmuqMD08k6LF
-         8skg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sDKDxRsvr9/0tnocd3cnf/IOYw0smGMIaggntAhf7sA=;
-        b=M67WDtCELfvAqgpF53XJhtwjgbGH72wr0Rn4P05y8TAueRUNRIF3S+bC0BosjoZ/6B
-         XaeJ/VLRbU6gyzBb+5CEZWxKQAtKneegl5hyTHiBynById/61zJLVEk6aW7QxvAeYnFL
-         YQOqIcALQsmWfxqdrryVWUVyd0HmpRrCOgGQMndRbrUsXVUO1o6ki8JO7FpwKaHsvah7
-         lV0+y4SXVmAABr+4ZXBhptICQxuOBPRrAnY9rL+1VamHTp2o7gbFNFfhMW0+7kBJlJkX
-         LIdxmp3ZLJoCLgZXy6kIl0kIOpLmFtNR1KkSelgt+gRH1E14rwBo4wcPsheNSCgH9uG0
-         hurA==
-X-Gm-Message-State: AGi0PuaVOUK8kBQyNrmZ1RVlMzTPc8kkgx4Xu9mSBZZB8OoQ1LQqKUtL
-        W+OGeMkuz+xwYpZzKq7eQ/5+14LDd4X2MJpg/Ho=
-X-Google-Smtp-Source: APiQypJE2h+x6KBr6qqRxBMg3KHROW+KikW03R+TXV1d2SClZNdS7Dc8Qzpwvc2hixH/5z7JnCNbiVjdFOBVmuUm0oU=
-X-Received: by 2002:a9d:19ca:: with SMTP id k68mr27607601otk.232.1587050605773;
- Thu, 16 Apr 2020 08:23:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200416001414.25746-1-TheSven73@gmail.com> <20200416001414.25746-2-TheSven73@gmail.com>
- <20200416124239.GH5354@sirena.org.uk>
-In-Reply-To: <20200416124239.GH5354@sirena.org.uk>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Thu, 16 Apr 2020 11:23:14 -0400
-Message-ID: <CAGngYiVXk+1Qzs3yLwyne3X567_yvbuRfXkjihmGc0EigHo50A@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] ASoC: Add initial ZL38060 driver
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        alsa-devel@alsa-project.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 16 Apr 2020 11:23:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2395158AbgDPPXh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:23:37 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD784206D6;
+        Thu, 16 Apr 2020 15:23:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587050616;
+        bh=IzkNZB35W1ndrDT9IYOyxKuHacGeFfTHARmLelJ2Y4A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=0itGvQ0TRTSbAX89qQPxyd624QQHZgcthxDJZuTh1ggkUswcN5j1nXOLbnVSHqJue
+         fYC5kBVkTgl2kBYymGsgWY89hXTA2mmnHCprGo8W0vppPvtvfHjsNtmrF91M2+aoJN
+         narHOBRK3+6V5J429mTBb+5Vu4V1rhQRkEBtNaf4=
+Date:   Thu, 16 Apr 2020 16:23:33 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     alsa-devel@alsa-project.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-msm@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Applied "ASoC: qdsp6: Suggest more generic node names" to the asoc tree
+In-Reply-To:  <20200415081159.1098-1-stephan@gerhold.net>
+Message-Id:  <applied-20200415081159.1098-1-stephan@gerhold.net>
+X-Patchwork-Hint: ignore
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Thank you Mark for the constructive feedback !
-A few follow-up questions below.
+The patch
 
-On Thu, Apr 16, 2020 at 8:42 AM Mark Brown <broonie@kernel.org> wrote:
->
-> > +++ b/sound/soc/codecs/zl38060.c
-> > @@ -0,0 +1,643 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Codec driver for Microsemi ZL38060 Connected Home Audio Processor.
-> > + *
->
-> Please make the entire comment a C++ one so things look more
-> intentional.
+   ASoC: qdsp6: Suggest more generic node names
 
-The 'weird' combination of // SPDX and /* Description/copyright */ seems to
-be a kernel-wide standard (for C files, at least) ?
+has been applied to the asoc tree at
 
-E.g.:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/sound/soc/codecs/wm9090.c?h=v5.7-rc1#n2
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/sound/soc/codecs/wm8904.c?h=v5.7-rc1#n2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-Ok to keep?
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
->
-> > +skip_setup:
-> > +     if (priv->amp_en_gpio && tx) {
-> > +             /* enable the external amplifier before playback starts */
-> > +             gpiod_set_value_cansleep(priv->amp_en_gpio, 1);
-> > +             if (priv->amp_startup_delay_ms)
-> > +                     msleep(priv->amp_startup_delay_ms);
-> > +     }
->
-> This external amplifier support shouldn't be here, if there's other
-> devices in the system then they will have their own drivers and the
-> machine driver will take care of linking things together.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-In our application, the amp is a "dumb" class-D amp with a single enable line:
-https://www.onsemi.com/pub/Collateral/FAB3103-D.pdf
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-I am not sure how I could make this more general. Could you point me to an
-example somewhere in the tree?
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
->
-> > +     priv->regmap = devm_regmap_init(dev, &zl38_regmap_bus, spi,
-> > +                                     &zl38_regmap_conf);
-> > +     if (IS_ERR(priv->regmap))
-> > +             return PTR_ERR(priv->regmap);
->
-> devm_regmap_init_spi()
+Thanks,
+Mark
 
-I wish !! This chip has complex SPI addressing, using an "address" which:
-- is variable length, depending on the page of the register being accessed;
-- contains a field with the length of the data to follow.
+From 35c638d039bbabbca7affb52960d468951d811c1 Mon Sep 17 00:00:00 2001
+From: Stephan Gerhold <stephan@gerhold.net>
+Date: Wed, 15 Apr 2020 10:11:58 +0200
+Subject: [PATCH] ASoC: qdsp6: Suggest more generic node names
 
-Unfortunately, during firmware programming, multi-writes are mandatory
-(usually address header + 32 data bytes).
+Change the listed examples to use more generic node names, representing
+the class of the device nodes:
 
-Implementing my own regmap_bus looked like the only way out.
+  - apr-service@<id>
+  - dai@<id>
+
+Both names are already in use in arch/arm64/boot/dts/qcom/sdm845.dtsi.
+
+Also add #address-cells + #size-cells to the q6asm example,
+without them the example produces dtc warnings.
+
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Link: https://lore.kernel.org/r/20200415081159.1098-1-stephan@gerhold.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../devicetree/bindings/sound/qcom,q6adm.txt  |  2 +-
+ .../devicetree/bindings/sound/qcom,q6afe.txt  | 46 +++++++++----------
+ .../devicetree/bindings/sound/qcom,q6asm.txt  |  7 ++-
+ .../devicetree/bindings/sound/qcom,q6core.txt |  2 +-
+ 4 files changed, 30 insertions(+), 27 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/qcom,q6adm.txt b/Documentation/devicetree/bindings/sound/qcom,q6adm.txt
+index bbae426cdfb1..15c353a20de8 100644
+--- a/Documentation/devicetree/bindings/sound/qcom,q6adm.txt
++++ b/Documentation/devicetree/bindings/sound/qcom,q6adm.txt
+@@ -29,7 +29,7 @@ used by the apr service device.
+ 	Definition: Must be 0
+ 
+ = EXAMPLE
+-q6adm@8 {
++apr-service@8 {
+ 	compatible = "qcom,q6adm";
+ 	reg = <APR_SVC_ADM>;
+ 	q6routing: routing {
+diff --git a/Documentation/devicetree/bindings/sound/qcom,q6afe.txt b/Documentation/devicetree/bindings/sound/qcom,q6afe.txt
+index d74888b9f1bb..4916dd6a0896 100644
+--- a/Documentation/devicetree/bindings/sound/qcom,q6afe.txt
++++ b/Documentation/devicetree/bindings/sound/qcom,q6afe.txt
+@@ -100,7 +100,7 @@ configuration of each dai. Must contain the following properties.
+ 
+ = EXAMPLE
+ 
+-q6afe@4 {
++apr-service@4 {
+ 	compatible = "qcom,q6afe";
+ 	reg = <APR_SVC_AFE>;
+ 
+@@ -110,12 +110,12 @@ q6afe@4 {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		hdmi@1 {
+-			reg = <1>;
++		dai@1 {
++			reg = <HDMI_RX>;
+ 		};
+ 
+-		tdm@24 {
+-			reg = <24>;
++		dai@24 {
++			reg = <PRIMARY_TDM_RX_0>;
+ 			qcom,tdm-sync-mode = <1>:
+ 			qcom,tdm-sync-src = <1>;
+ 			qcom,tdm-data-out = <0>;
+@@ -125,8 +125,8 @@ q6afe@4 {
+ 
+ 		};
+ 
+-		tdm@25 {
+-			reg = <25>;
++		dai@25 {
++			reg = <PRIMARY_TDM_TX_0>;
+ 			qcom,tdm-sync-mode = <1>:
+ 			qcom,tdm-sync-src = <1>;
+ 			qcom,tdm-data-out = <0>;
+@@ -135,43 +135,43 @@ q6afe@4 {
+ 			qcom,tdm-data-align = <0>;
+ 		};
+ 
+-		prim-mi2s-rx@16 {
+-			reg = <16>;
++		dai@16 {
++			reg = <PRIMARY_MI2S_RX>;
+ 			qcom,sd-lines = <0 2>;
+ 		};
+ 
+-		prim-mi2s-tx@17 {
+-			reg = <17>;
++		dai@17 {
++			reg = <PRIMARY_MI2S_TX>;
+ 			qcom,sd-lines = <1>;
+ 		};
+ 
+-		sec-mi2s-rx@18 {
+-			reg = <18>;
++		dai@18 {
++			reg = <SECONDARY_MI2S_RX>;
+ 			qcom,sd-lines = <0 3>;
+ 		};
+ 
+-		sec-mi2s-tx@19 {
+-			reg = <19>;
++		dai@19 {
++			reg = <SECONDARY_MI2S_TX>;
+ 			qcom,sd-lines = <1>;
+ 		};
+ 
+-		tert-mi2s-rx@20 {
+-			reg = <20>;
++		dai@20 {
++			reg = <TERTIARY_MI2S_RX>;
+ 			qcom,sd-lines = <1 3>;
+ 		};
+ 
+-		tert-mi2s-tx@21 {
+-			reg = <21>;
++		dai@21 {
++			reg = <TERTIARY_MI2S_TX>;
+ 			qcom,sd-lines = <0>;
+ 		};
+ 
+-		quat-mi2s-rx@22 {
+-			reg = <22>;
++		dai@22 {
++			reg = <QUATERNARY_MI2S_RX>;
+ 			qcom,sd-lines = <0>;
+ 		};
+ 
+-		quat-mi2s-tx@23 {
+-			reg = <23>;
++		dai@23 {
++			reg = <QUATERNARY_MI2S_TX>;
+ 			qcom,sd-lines = <1>;
+ 		};
+ 	};
+diff --git a/Documentation/devicetree/bindings/sound/qcom,q6asm.txt b/Documentation/devicetree/bindings/sound/qcom,q6asm.txt
+index 9f5378c51686..6b9a88d0ea3f 100644
+--- a/Documentation/devicetree/bindings/sound/qcom,q6asm.txt
++++ b/Documentation/devicetree/bindings/sound/qcom,q6asm.txt
+@@ -51,13 +51,16 @@ configuration of each dai. Must contain the following properties.
+ 
+ = EXAMPLE
+ 
+-q6asm@7 {
++apr-service@7 {
+ 	compatible = "qcom,q6asm";
+ 	reg = <APR_SVC_ASM>;
+ 	q6asmdai: dais {
+ 		compatible = "qcom,q6asm-dais";
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 		#sound-dai-cells = <1>;
+-		mm@0 {
++
++		dai@0 {
+ 			reg = <0>;
+ 			direction = <2>;
+ 			is-compress-dai;
+diff --git a/Documentation/devicetree/bindings/sound/qcom,q6core.txt b/Documentation/devicetree/bindings/sound/qcom,q6core.txt
+index 7f36ff8bec18..5cd4cc9b1fde 100644
+--- a/Documentation/devicetree/bindings/sound/qcom,q6core.txt
++++ b/Documentation/devicetree/bindings/sound/qcom,q6core.txt
+@@ -15,7 +15,7 @@ used by the apr service device.
+ 		   example "qcom,q6core-v2.0"
+ 
+ = EXAMPLE
+-q6core@3 {
++apr-service@3 {
+ 	compatible = "qcom,q6core";
+ 	reg = <APR_SVC_ADSP_CORE>;
+ };
+-- 
+2.20.1
+
