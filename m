@@ -2,105 +2,135 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7123EC2BB55
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 12:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 957BEC2BB55
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 12:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52EA320767
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 12:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C4A20767
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 12:12:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ys8YKsXM"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="mKKE9Wpf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635057AbgDPMIy (ORCPT
+        id S2634744AbgDPMMk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 08:08:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43468 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2635053AbgDPMIu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 08:08:50 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A00CC061A10
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 05:08:50 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id w145so5399859lff.3
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 05:08:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CLvpaW+uUne5it3kIWzMOUIojoXmf6oiO8ThkN3cpkY=;
-        b=Ys8YKsXM6fXzEeMjXeuG+QrbM/PhTPcxJ/fam+5PAoc1qC2WvmrsY0zCOurzWs1M5I
-         3sVoZJJLm1ofXVvre/Sc6/ghosEAS1wVxrAOvEzOCdRTBb/WK+AgqD8Nmy+CnyFizLUZ
-         L/EvT45dNlnZ6otQAvt2GzByEZbLdahUAYxuljFzlLSWJcku7egzOHNJrCWuYclSWmEv
-         WYf4EuwTF3S84+A9OCLMOsvtxAmXAPegR3uJp/VlbGXa3otOO/iaw4fwur65G2SuCAGG
-         zdyjLkTZYkbaQb+RCwu0LL/FfPrD3chTjG9bSUI1CHcHY2lqFBF5mRbAd+PmDEB8x7DV
-         PaWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CLvpaW+uUne5it3kIWzMOUIojoXmf6oiO8ThkN3cpkY=;
-        b=gSAn1qlv/5Rmke6anoQ42AgT0hOEHnz9L+a59mkRtTE/QkQMhzjytcI/RXYCZslsJR
-         pAnjz1gByeH6CGo6WGEU2tmJN8KZZoKIbYuZhqNJ/esfl4agAotIhU5CK8zA4tdaHNd3
-         Au14fNc5aHfOKLwqxHJmRnsecOpDSMBgwKPFFVL6xwWrkDZAIRW8OR9UF/msvkGXUT4t
-         8BljWpprp+W3naQM0Rxc5rj/l3YZ+1Sq6iRxWpeqPF/qDG7WqIygw7tzBfjuCyiiWvE9
-         otShHdfGnBVlV+bBAfN9J9Ni/iaci3VB3HW4s+czJCUkSh62PmAdaDTPYh99ZpcAb30i
-         mVzw==
-X-Gm-Message-State: AGi0PuaH6SkhaTaaSnQGguykb8en7cKB0lfjCeFlg0U0DhcmNF/AGW/x
-        1hKD3Z/zj9tMb+HvrTJDle7Qp+48TJxJ/8SYW5M9cA==
-X-Google-Smtp-Source: APiQypJzhCYUXv7QXcnsa/vkCVwefo5n3281I83Ws1Af1XZup/G2mwOYqWP5CDfj73shqpvSNrbcQ8jDk5V1Fzze4mQ=
-X-Received: by 2002:a19:700b:: with SMTP id h11mr6005687lfc.89.1587038928602;
- Thu, 16 Apr 2020 05:08:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200329104549.GX25745@shell.armlinux.org.uk> <CACRpkdaL4-Z36aKOVW4o2MtCG9fbqm4gxZN3QjejVRPBZrzxxA@mail.gmail.com>
- <20200416081412.GG25745@shell.armlinux.org.uk>
-In-Reply-To: <20200416081412.GG25745@shell.armlinux.org.uk>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Apr 2020 14:08:36 +0200
-Message-ID: <CACRpkdYFBGvQX3i4P1+cF5ExXOSKieT6cJNPTNuKFxEhtJVEjQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/6] PWM fan support on Clearfog gt8k
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-pwm@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thu, 16 Apr 2020 08:12:40 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:40786 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2635117AbgDPMMi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 08:12:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1587039154; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=76j3ly/5QeUK0nU5At79+0K8FzkW6UhXLLI7ltlDc94=;
+        b=mKKE9WpfheAjp4lEN7VFRI14wXWhly5wR90q1yqwBrVPc/ep5xXAZOtB7Ech97698uehCX
+        9Vt72zd+0n3G2kwXRfb+IBJq9B00RXVNhPJd8BK822EspVWkylZPQuSczs9F0k33Yf6Txt
+        fAxx7xVMZrqyEufR39itoEkItwbRd/o=
+Date:   Thu, 16 Apr 2020 14:12:17 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v8 1/7] memory: jz4780_nemc: Only request IO memory the
+ driver will use
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Mathieu Malaterre <malat@debian.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Message-Id: <H8RV8Q.GPAP9MLER1RC@crapouillou.net>
+In-Reply-To: <551a8560261543c1decb1d4d1671ec4b7fa52fdb.1582905653.git.hns@goldelico.com>
+References: <cover.1582905653.git.hns@goldelico.com>
+        <551a8560261543c1decb1d4d1671ec4b7fa52fdb.1582905653.git.hns@goldelico.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 10:14 AM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
-> On Thu, Apr 16, 2020 at 09:51:37AM +0200, Linus Walleij wrote:
+Greg:
 
-> > The gpio changes all look fine to me +/- fixes for review comments.
->
-> I think Uwe is incorrect for his GPIO comments; the clock is only
-> optional on A8040.  We know this because A8040 has worked fine
-> without PWM support without the clock, whereas for Armada 370,
-> the driver has hard-failed if the clock is not present.
+Can you take this patch? Since there is no maintainer for=20
+drivers/memory/. It still applies fine on top of 5.7-rc1.
 
-It's fine. You are running the hardware and it should work for you.
-I usually go by the IETF motto "rough consensus and running code".
+Cheers,
+-Paul
 
-> About the only change I would make is to move the check introduced
-> in patch 2 into patch 3 instead, inside the MVEBU_PWM_SOC_VARIANT_A8K
-> case, so that deferring for the clock works (which is necessary for
-> the PWM driver to be useful.)
 
-OK let's go with this.
+Le ven. 28 f=E9vr. 2020 =E0 17:00, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> From: Paul Cercueil <paul@crapouillou.net>
+>=20
+> The driver only uses the registers up to offset 0x54. Since the EFUSE
+> registers are in the middle of the NEMC registers, we only request
+> the registers we will use for now - that way the EFUSE driver can
+> probe too.
+>=20
+> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  drivers/memory/jz4780-nemc.c | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/memory/jz4780-nemc.c=20
+> b/drivers/memory/jz4780-nemc.c
+> index b232ed279fc3..647267ea8c63 100644
+> --- a/drivers/memory/jz4780-nemc.c
+> +++ b/drivers/memory/jz4780-nemc.c
+> @@ -8,6 +8,7 @@
+>=20
+>  #include <linux/clk.h>
+>  #include <linux/init.h>
+> +#include <linux/io.h>
+>  #include <linux/math64.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> @@ -288,7 +289,19 @@ static int jz4780_nemc_probe(struct=20
+> platform_device *pdev)
+>  	nemc->dev =3D dev;
+>=20
+>  	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	nemc->base =3D devm_ioremap_resource(dev, res);
+> +
+> +	/*
+> +	 * The driver only uses the registers up to offset 0x54. Since the=20
+> EFUSE
+> +	 * registers are in the middle of the NEMC registers, we only=20
+> request
+> +	 * the registers we will use for now - that way the EFUSE driver can
+> +	 * probe too.
+> +	 */
+> +	if (!devm_request_mem_region(dev, res->start, 0x54, dev_name(dev)))=20
+> {
+> +		dev_err(dev, "unable to request I/O memory region\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	nemc->base =3D devm_ioremap(dev, res->start, resource_size(res));
+>  	if (IS_ERR(nemc->base)) {
+>  		dev_err(dev, "failed to get I/O memory\n");
+>  		return PTR_ERR(nemc->base);
+> --
+> 2.23.0
+>=20
 
-Yours,
-Linus Walleij
+
