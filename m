@@ -2,96 +2,128 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8CFC2BB55
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B583AC352BE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4423E21D91
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E2E821D7F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:57:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634483AbgDPL4Q (ORCPT
+        id S2634303AbgDPL51 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:56:16 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:37353 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2634471AbgDPL4N (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 07:56:13 -0400
-X-Originating-IP: 93.29.109.196
-Received: from localhost.localdomain (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id A53EA60015;
-        Thu, 16 Apr 2020 11:55:15 +0000 (UTC)
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Jacob Chen <jacob-chen@iotwrt.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hansverk@cisco.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH 4/4] media: rockchip: rga: Only set output CSC mode for RGB input
-Date:   Thu, 16 Apr 2020 13:50:47 +0200
-Message-Id: <20200416115047.233720-5-paul.kocialkowski@bootlin.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200416115047.233720-1-paul.kocialkowski@bootlin.com>
-References: <20200416115047.233720-1-paul.kocialkowski@bootlin.com>
+        Thu, 16 Apr 2020 07:57:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2634515AbgDPL5Q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 07:57:16 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27E91C061A0C;
+        Thu, 16 Apr 2020 04:57:16 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0630D2A0A54;
+        Thu, 16 Apr 2020 12:57:13 +0100 (BST)
+Date:   Thu, 16 Apr 2020 13:57:11 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        anders.roxell@linaro.org, andriy.shevchenko@intel.com,
+        arnd@arndb.de, brendanhiggins@google.com, cheol.yong.kim@intel.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, masonccyang@mxic.com.tw,
+        miquel.raynal@bootlin.com, piotrs@cadence.com,
+        qi-ming.wu@intel.com, richard@nod.at, robh+dt@kernel.org,
+        tglx@linutronix.de, vigneshr@ti.com
+Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200416135711.039ba85c@collabora.com>
+In-Reply-To: <de9f50b8-9215-d294-9914-e49701552185@linux.intel.com>
+References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
+        <c33c8653-16a2-5bcd-97a9-511d958b755a@linux.intel.com>
+        <20200416113822.2ef326cb@collabora.com>
+        <18568cf6-2955-472e-7b68-eb35e654a906@linux.intel.com>
+        <20200416122619.2c481792@collabora.com>
+        <d3e137fa-54a0-b4ec-eb24-3984eab2a247@linux.intel.com>
+        <20200416131725.51259573@collabora.com>
+        <de9f50b8-9215-d294-9914-e49701552185@linux.intel.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Setting the output CSC mode is required for a YUV output, but must not
-be set when the input is also YUV. Doing this (as tested with a YUV420P
-to YUV420P conversion) results in wrong colors.
+On Thu, 16 Apr 2020 19:38:03 +0800
+"Ramuthevar, Vadivel MuruganX"
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 
-Adapt the logic to only set the CSC mode when the output is YUV and the
-input is RGB.
+> On 16/4/2020 7:17 pm, Boris Brezillon wrote:
+> > On Thu, 16 Apr 2020 18:40:53 +0800
+> > "Ramuthevar, Vadivel MuruganX"
+> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> >  
+> >>>>> we'll be happy to have one more of the existing driver converted to  
+> >>>>> ->exec_op() ;-).  
+> >>>> I have completely adapted to ->exec_op() hook up to replace the legacy
+> >>>> call-back.  
+> >>> I suspect porting what you've done to the xway driver shouldn't be too
+> >>> complicated.  
+> >> Not ported from xway_nand.c driver , we have developed from the scratch
+> >> to make it work on
+> >> Intel LGM SoC , it's new x86 ATOM based SoC, IP itself completely
+> >> different and most of the registers won't match.
+> >> if we port then it would be ugly and also what are the problem may occur
+> >> we do not know.  
+> > Sorry but IMO they look similar enough to try to merge them.  
+> 
+> Thanks! Boris, need suggestion from you since you are maintainer and 
+> also expertise on mtd-subsystem.
 
-Fixes: f7e7b48e6d79 ("[media] rockchip/rga: v4l2 m2m support")
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
----
- drivers/media/platform/rockchip/rga/rga-hw.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+I *was* the maintainer :).
 
-diff --git a/drivers/media/platform/rockchip/rga/rga-hw.c b/drivers/media/platform/rockchip/rga/rga-hw.c
-index 4be6dcf292ff..cbffcf986ccf 100644
---- a/drivers/media/platform/rockchip/rga/rga-hw.c
-+++ b/drivers/media/platform/rockchip/rga/rga-hw.c
-@@ -216,13 +216,17 @@ static void rga_cmd_set_trans_info(struct rga_ctx *ctx)
- 	}
- 
- 	if (ctx->out.fmt->hw_format >= RGA_COLOR_FMT_YUV422SP) {
--		switch (ctx->out.colorspace) {
--		case V4L2_COLORSPACE_REC709:
--			dst_info.data.csc_mode = RGA_SRC_CSC_MODE_BT709_R0;
--			break;
--		default:
--			dst_info.data.csc_mode = RGA_DST_CSC_MODE_BT601_R0;
--			break;
-+		if (ctx->in.fmt->hw_format < RGA_COLOR_FMT_YUV422SP) {
-+			switch (ctx->out.colorspace) {
-+			case V4L2_COLORSPACE_REC709:
-+				dst_info.data.csc_mode =
-+					RGA_SRC_CSC_MODE_BT709_R0;
-+				break;
-+			default:
-+				dst_info.data.csc_mode =
-+					RGA_DST_CSC_MODE_BT601_R0;
-+				break;
-+			}
- 		}
- 	}
- 
--- 
-2.26.0
+> 
+> There are different features involved and lines of code is more, if we 
+> add new driver patches over xway-nand driver
 
+How about retro-fitting the xway logic into your driver then? I mean,
+adding a 100 lines of code to your driver to get rid of the 500+ lines
+we have in xway_nand.c is still a win.
+
+> 
+> is completely looks ugly and it may disturb the existing functionality 
+> as well since we don't have platform to validate:'(.
+
+How ugly? Can you show us? Maybe we can come with a solution to make it
+less ugly.
+
+As for the testing part, there are 4 scenarios:
+
+1/ Your changes work perfectly fine on older platforms. Yay \o/!
+2/ You break the xway driver and existing users notice it before this
+   series gets merged. Now you found someone to validate your changes.
+3/ You break the xway driver and none of the existing users notice it
+   before the driver is merged, but they notice it afterwards. Too bad
+   this happened after we've merged the driver, but now you've found
+   someone to help you fix the problem :P.
+4/ You break things for old platforms but no one ever complains about
+   it, either because there's no users left or because they never
+   update their kernels. In any case, that's no longer your problem.
+   Someone will remove those old platforms one day and get rid of the
+   unneeded code in the NAND driver.
+
+What's more likely to happen is #3 or #4, and I think the NAND
+maintainer would be fine with both.
+
+Note that the NAND subsystem is full of unmaintained legacy drivers, so
+every time we see someone who could help us get rid or update one of
+them we have to take this opportunity.
