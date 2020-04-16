@@ -6,92 +6,100 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D08CC2BB85
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 271BDC352BE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16AA0208E4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1214320656
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:34:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633486AbgDPLdI (ORCPT
+        id S2633351AbgDPLec (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:33:08 -0400
-Received: from mga01.intel.com ([192.55.52.88]:49755 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2633425AbgDPLcz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:32:55 -0400
-IronPort-SDR: AQf1YNrfXGFCkTaTDHusUA6EYcszOs1nRzVxfCN++NR4blKKfVXkFwajp+jqFP3B9pW5KzVMIy
- 5N8DcMoFjPhA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 04:32:52 -0700
-IronPort-SDR: JLjViU3I/7OhNUNFa14OtK4jxawo6cL4DIbAiuwxDw0aNbt8rAsEQeI/aVasFOrEUV6+diXta5
- ZTj7u56OWrjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
-   d="scan'208";a="454295922"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 16 Apr 2020 04:32:48 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1jP2lG-00113k-Db; Thu, 16 Apr 2020 14:32:50 +0300
-Date:   Thu, 16 Apr 2020 14:32:50 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        anders.roxell@linaro.org, arnd@arndb.de, brendanhiggins@google.com,
-        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        masonccyang@mxic.com.tw, miquel.raynal@bootlin.com,
-        piotrs@cadence.com, qi-ming.wu@intel.com, richard@nod.at,
-        robh+dt@kernel.org, tglx@linutronix.de, vigneshr@ti.com
-Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200416113250.GA185537@smile.fi.intel.com>
-References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
- <c33c8653-16a2-5bcd-97a9-511d958b755a@linux.intel.com>
- <20200416113822.2ef326cb@collabora.com>
- <18568cf6-2955-472e-7b68-eb35e654a906@linux.intel.com>
- <20200416122619.2c481792@collabora.com>
- <d3e137fa-54a0-b4ec-eb24-3984eab2a247@linux.intel.com>
- <20200416131725.51259573@collabora.com>
+        Thu, 16 Apr 2020 07:34:32 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:40817 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505994AbgDPLG1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 07:06:27 -0400
+Received: from mail-qv1-f41.google.com ([209.85.219.41]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MKuGD-1jfrsG1L01-00LHUK; Thu, 16 Apr 2020 13:06:21 +0200
+Received: by mail-qv1-f41.google.com with SMTP id fb4so1757613qvb.7;
+        Thu, 16 Apr 2020 04:06:20 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaSvvMp9m1tMfteBe4olxFcPVlNYZujxRfIpxWBlTH6vmgHoldJ
+        kLHJKJr/iRBTpYsi1xsZ1UMJ84o9XdDDn232gxk=
+X-Google-Smtp-Source: APiQypJzY6wdNpssRHLhvMyuGwgKaiwvITbQDAj2pM7kuaKPd0vFoDCisOpCP9I71XZKDqhKEbCeSABwbe+DZEKENjM=
+X-Received: by 2002:a0c:a602:: with SMTP id s2mr9731166qva.222.1587035179954;
+ Thu, 16 Apr 2020 04:06:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416131725.51259573@collabora.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 16 Apr 2020 13:06:03 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3FLRotVmMnBAyBKFMbXeEx760S-Cvqr19VPMi81PKJgw@mail.gmail.com>
+Message-ID: <CAK8P3a3FLRotVmMnBAyBKFMbXeEx760S-Cvqr19VPMi81PKJgw@mail.gmail.com>
+Subject: Re: [RFC 00/11] Add generic MFD i.MX mix and audiomix support
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:17TGPvNG4k9uXehcE4DgfleCdpohxRcC9Bv50dxRREvMID4VOFk
+ W10UrfBa4o9XD2UjLI0OoLvqXi9XvfDUf9ylEKkN4a4nOikfC2UdxWmBk+TlBmvl1BWlMVr
+ izIkHPvlGHg2gUzf/Tn3USImvLr4ln5qniXLxzIh6q2xC17IzZpnG6e5AdZVYZ+sRgKMVTd
+ jOHqByw1u3bE5NMomnOGw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:F+ZgWz7O4f8=:+Y+jf8jYbd+WpdgieuC5RR
+ fM5PfyAclvuvByjZ+VkyoG3ORzjArAbnN4YGduzJZ3sWTf+VShgzDzXbPB2eiWemuDIVDdyBx
+ kp+UKJfnSyHgacSZ+b3nI0zkIPWBSAvCpBixqNr6TLgmQNEBFt7g2rZFIvBYkGVSL/fulNLcX
+ wrJk92pS3ZYqZGyNuXgFCcbMjRfkpQd2zKf9/C3MHOz4cxU2HQ8EFs4fwaHe502omgnAQRV76
+ HUgXx6RSibsxRFtSr+A8a+NtingdnR6Teo4RRxOjIHrPDhjDIPx8JAYtbudy6TnR55PhDDsdk
+ MaQ7tOQbTi+aDWM4UL7ASf5HIsmPBR3pc4CbHokd2t6CG2C83xSg2P7d0iQRU6JuKnyMHG57y
+ fJom1YdvA0mh+PFvNUsl1wcNfPFxt/Ow6y+IrL+L0njjRa7rOKf3nW/grBbUsEfYJh1jbe7lr
+ znlY7o/oceBjJNf3gi73S0MrCsQ78zzbuoHf6eqaPKy5f63qK+zZ6eVeeeHp8Pu3cGB0h2XWq
+ HpQMwkXfAeyp8HTgA/HX+8FmybN2zfTDWQtuf5XKJ+Gp4eejqiBo7bWUuspDL0XyLyM0W7NZP
+ qaJ9H2leaaZisUEYlBfQTik0LUjy/BDITUt2TKqZ+zMuZC4ksn4Alo69hroiC3KCpOesR8BFA
+ dsTxmktKJJAXLjTKldEO2H6QXOElhu/Jz7JEY1e3CZD1P0eXp1H1OZ4O61XnCBVm+eDVz9Ilh
+ shiShYDCOUvTyNVduB61pZHxthNqicRi0zZf1+WvxrEu69E9XPN9cYTEXlu28TwSySH6MzDHW
+ SeBvSO+Nq4dw36cSIEar/yBAIElqtpGFMMsd8Gkf0vgyUuvCMs=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 01:17:25PM +0200, Boris Brezillon wrote:
-> On Thu, 16 Apr 2020 18:40:53 +0800
-> "Ramuthevar, Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> 
-> > >>> we'll be happy to have one more of the existing driver converted to  
-> > >>> ->exec_op() ;-).  
-> > >> I have completely adapted to ->exec_op() hook up to replace the legacy
-> > >> call-back.  
-> > > I suspect porting what you've done to the xway driver shouldn't be too
-> > > complicated.  
-> > Not ported from xway_nand.c driver , we have developed from the scratch 
-> > to make it work on
-> > Intel LGM SoC , it's new x86 ATOM based SoC, IP itself completely 
-> > different and most of the registers won't match.
-> > if we port then it would be ugly and also what are the problem may occur 
-> > we do not know.
-> 
-> Sorry but IMO they look similar enough to try to merge them.
+On Tue, Mar 3, 2020 at 10:04 AM Abel Vesa <abel.vesa@nxp.com> wrote:
+>
+> The i.MX8MP has some new IPs called mixes. They are formed usually by some
+> GPRs that can be split into different functionalities. The first example
+> here is the audiomix which has dedicated registers that can be registered
+> as a clock controller and some other registers that can be registered as
+> a reset controller, plus some dedicated ones that will be registered as
+> syscon and used by each dedicated audio IP.
+>
+> More mixes to be following the same structure are to come, like hdmimix,
+> dispmix and mediamix. They will all be populated and registered by the MFD
+> imx-mix generic driver.
 
-I agree. I tried to convince them internally... but here we are.
+Can you enumerate what functionality is in each one?
 
--- 
-With Best Regards,
-Andy Shevchenko
+I'm not convinced that using an MFD driver is the best solution here,
+compared to e.g. a clk driver with a few extra bits in it, if most of the
+code for the child drivers ends up being for the clk subsystem.
 
+Lee suggested maybe having a generic (platform independent) driver
+for it, which may help here, as it would let others share the trivial
+mfd portion.
 
+Another option that we are using on several platforms today is to
+have a single syscon node and have other drivers that reference
+that one using a phandle to get at the regmap.
+
+      Arnd
