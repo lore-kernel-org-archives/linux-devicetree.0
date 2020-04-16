@@ -2,99 +2,104 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23151C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 06:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B8FC2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 06:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB12C2087E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 06:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB4712087E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 06:53:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436970AbgDPGwS (ORCPT
+        id S2437332AbgDPGxM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:52:18 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:41448 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436898AbgDPGwN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:52:13 -0400
-Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1jOyMh-0005IU-H1; Thu, 16 Apr 2020 16:51:12 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 16 Apr 2020 16:51:11 +1000
-Date:   Thu, 16 Apr 2020 16:51:11 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Hadar Gat <hadar.gat@arm.com>
-Cc:     Matt Mackall <mpm@selenic.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        Thu, 16 Apr 2020 02:53:12 -0400
+Received: from smtprelay0116.hostedemail.com ([216.40.44.116]:37100 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2436919AbgDPGwq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 02:52:46 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 0A616100E7B43;
+        Thu, 16 Apr 2020 06:51:59 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: wheel34_84bb3b9f86d3c
+X-Filterd-Recvd-Size: 3344
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf07.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 16 Apr 2020 06:51:52 +0000 (UTC)
+Message-ID: <d93f90bbcc99967ed5ba458ba99d7e73de12e3b2.camel@perches.com>
+Subject: Re: [PATCH 2/2] dt-bindings: Remove cases of 'allOf' containing a
+ '$ref'
+From:   Joe Perches <joe@perches.com>
+To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <ofir.drang@arm.com>
-Subject: Re: [PATCH v7 0/3] hw_random: introduce Arm CryptoCell TRNG driver
-Message-ID: <20200416065111.GC7901@gondor.apana.org.au>
-References: <1585289423-18440-1-git-send-email-hadar.gat@arm.com>
+        Linus Walleij <linus.walleij@linaro.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org
+Date:   Wed, 15 Apr 2020 23:49:40 -0700
+In-Reply-To: <20200416005549.9683-2-robh@kernel.org>
+References: <20200416005549.9683-1-robh@kernel.org>
+         <20200416005549.9683-2-robh@kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585289423-18440-1-git-send-email-hadar.gat@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 09:10:20AM +0300, Hadar Gat wrote:
-> The Arm CryptoCell is a hardware security engine.
-> This patch introduces driver for its TRNG (True Random Number Generator)
-> engine.
+On Wed, 2020-04-15 at 19:55 -0500, Rob Herring wrote:
+> json-schema versions draft7 and earlier have a weird behavior in that
+> any keywords combined with a '$ref' are ignored (silently). The correct
+> form was to put a '$ref' under an 'allOf'. This behavior is now changed
+> in the 2019-09 json-schema spec and '$ref' can be mixed with other
+> keywords. The json-schema library doesn't yet support this, but the
+> tooling now does a fixup for this and either way works.
 > 
-> v7 change: in arm-cctrng.yaml, removed unneeded 'minitems'
-> 
-> v6 change: add missing initialization of hwrng quality.
-> 
-> v5 changes:
-> 	1. in arm-cctrng.yaml, fixed error in 'make dt_binding_check'
-> 	2. in cctrng.c, clean up cctrng clock handling
-> 
-> v4 changes: update arm-cctrng.yaml to conform with json-schema standard.
-> 
-> v3 change: removed few unneeded "#ifdef CONFIG_PM" from the code.
-> 
-> v2 changes: fixed 'make dt_bnding_check' errors.
-> 
-> Hadar Gat (3):
->   dt-bindings: add device tree binding for Arm CryptoCell trng engine
->   hw_random: cctrng: introduce Arm CryptoCell driver
->   MAINTAINERS: add HG as cctrng maintainer
-> 
->  .../devicetree/bindings/rng/arm-cctrng.yaml        |  54 ++
->  MAINTAINERS                                        |   9 +
->  drivers/char/hw_random/Kconfig                     |  12 +
->  drivers/char/hw_random/Makefile                    |   1 +
->  drivers/char/hw_random/cctrng.c                    | 736 +++++++++++++++++++++
->  drivers/char/hw_random/cctrng.h                    |  72 ++
->  6 files changed, 884 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rng/arm-cctrng.yaml
->  create mode 100644 drivers/char/hw_random/cctrng.c
->  create mode 100644 drivers/char/hw_random/cctrng.h
+> This has been a constant source of review comments, so let's change this
+> treewide so everyone copies the simpler syntax.
 
-All applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+This is a large change.
+
+Was this done manually or by some script?
+If it was done manually, how likely is it there are defects
+in the conversion?
+
+
