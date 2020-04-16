@@ -2,116 +2,99 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 597ABC352BE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EBEC2BB85
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 365E520784
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E374E20732
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:54:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iTUUxmnx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LLp5LveC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502979AbgDPIwE (ORCPT
+        id S2503010AbgDPIyp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 04:52:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40800 "EHLO
+        Thu, 16 Apr 2020 04:54:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502964AbgDPIvi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 04:51:38 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CABD9C061A41
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 01:51:34 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id h2so3670272wmb.4
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 01:51:34 -0700 (PDT)
+        with ESMTP id S2502988AbgDPIyR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 04:54:17 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCAFBC061A10
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 01:54:12 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id h26so3856559wrb.7
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 01:54:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=aQURq1REwHEPMxWj0A/UhXFxGHBPx1Zt6Uxv60umXok=;
-        b=iTUUxmnxUoqM1iP5zj7BbzhwKQK2NqYbdVMK0rIh0CiAAy9/it6DIt1DL4Ooif9/bE
-         Pul6F77qct+LdTVwj/1QFZe9JzU7U365RE9K2ngJq6+qZ15SxAPXTQR3XQRAdySjswRR
-         9JYky000loQpUPX3wnZRvPFFa45uhJxKiqbju2/rslkJy7h3NmXl0ZIYzg2ZbfnCQ5dc
-         AsNg7kMa9TiJe/4kUyOORB8GNBgxQrV21VfhsiPqvwyuyliDY3hqDbicfevTFn5hB8rm
-         ++qfzQ5FGFbm9rT/GFdYCl8cOGCJR7Yj/AL+Xc5pcZgU+6DZeOb6aSyklfhfqZMu9KiT
-         XbEQ==
+         :content-disposition:in-reply-to;
+        bh=ZEfcdbyCoFlwcBaVZ+sf0k9hPs9ies0vbK3IcfLzskw=;
+        b=LLp5LveCwz1C/4FgavId+LAMO+lPQeQAh5i6g/dwBkd5KRmxdDAOZ9/FDSM6LaE2DO
+         Td6D1PD2vfJMUfU418BKIvqN2n542k0/GOSD1zFfk3KEg6YVnVpiYcQElgtfTWfhW1Hc
+         pyRHcoAoIzLIeqmthE1eiaqNblTBPZh2QK//NuiYOH4m49CJlMjlge+Af8W0dLnPXfDM
+         TI6i6FGWr2uL3dkWfiES2q+uTGrtmI8VH2eWwpnuQoWS1aDfIKdtLlIrcAMs/dkatob5
+         C2RU6qFiWHenxSdOpD61IuhKr0PagtaYgwqeoLijcAccCZ9r8LhwudjqfQNZwoQRmc4d
+         jdrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=aQURq1REwHEPMxWj0A/UhXFxGHBPx1Zt6Uxv60umXok=;
-        b=LdTh/H5dwTtvSU4dIxixsSBDkCHQ8NXhBklDQDmnY/+12Eptq8hoEW4qk4ZmX5Sj50
-         /ix/dbc3SlGTfjBzgOJaXPlFaTh0kqPAobojPAAuaxP/FOenp6W36QmKA8JCWfibivsu
-         BgquxlE1VwuNTFbBWj9ZmXoY+B0aEkHx0UGQQPo/2Tsg9NtlwCDmIzDZPqy8gPyMv2KZ
-         020l5PmwfAltHqXdqpRRq/K4tVBqH8SEXAWqbsg7ZPtrZqrB0t/JVyB4HiHyCRcsg9WA
-         KYju9SdB8/YQr7apn26pZ9F5mcFxBsJAt+AXPbAhz1aBppJnp0VH4P3eM9d4tLWRVW5b
-         DLiw==
-X-Gm-Message-State: AGi0PuaUJal2LfzZ8MpsklswHtoeu1/Ti5sQ18ZDSqce3nzKJzTSqBDI
-        NiFQTuQST1MMWhs/6qBJT28L5g==
-X-Google-Smtp-Source: APiQypKU3qRZVCXuxnBOouk3e3DEAX4zubXTv+zywdpux61f+2SAQwvIpImS075eYrYQxApgGH0znw==
-X-Received: by 2002:a7b:c147:: with SMTP id z7mr4036229wmi.52.1587027093347;
-        Thu, 16 Apr 2020 01:51:33 -0700 (PDT)
-Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id q8sm2740501wmg.22.2020.04.16.01.51.32
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZEfcdbyCoFlwcBaVZ+sf0k9hPs9ies0vbK3IcfLzskw=;
+        b=NwuPkWJ7YH617QJEPQxXDJV8eqXqMYdbUYxs0mcweQptT4siK33g2IKVQy2VgRq8bu
+         CKk/KZcCjiSdoZgPNoul9vJSrHNikgotwVh3snyWAFt5DWRWiQ+2I7CQ+F0W5oP0pZ5J
+         Ag+EBn+Zg+oLqLMP5AQ7LTCJgqHc77tFxfljGS/qQjvlhaBsNbDR2oppvpi6CNFXPiUq
+         1Gq5TQhOW+TXQPRxsTwi3LHmDI2CbQSeoAPXaYAUN52zeVvyZ+uV0dW1Ez6ZHzY3t5tq
+         K3WF7r4sbZqJPAL7rr2f4S2gpqggH/AICQRkw80joXlbsuASsSY4szOZN68E1STbTNkt
+         2fCA==
+X-Gm-Message-State: AGi0PuYV/yLJjCDA4rciTiLfFxWpHCcKYQ5OUy7NAoNSLLmK4glTNmo3
+        sMazPSM4s2R9AETVyvt0oePlEA==
+X-Google-Smtp-Source: APiQypL1oyr16FXQx+dkfWQBU6EhMLZhnOgOJbCMSB0gnYSQVADLx4g3CAzdUNtaCRw76OTkBu7LoA==
+X-Received: by 2002:a5d:6305:: with SMTP id i5mr34790010wru.203.1587027251542;
+        Thu, 16 Apr 2020 01:54:11 -0700 (PDT)
+Received: from myrica ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id u7sm3027041wmg.41.2020.04.16.01.54.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 01:51:32 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 09:52:33 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ran Bi <ran.bi@mediatek.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        srv_heupstream@mediatek.com
-Subject: Re: [PATCH v12 2/6] mfd: mt6397: Trim probe function to support
- different chips more cleanly
-Message-ID: <20200416085233.GY2167633@dell>
-References: <1586333531-21641-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1586333531-21641-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Thu, 16 Apr 2020 01:54:11 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 10:54:02 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
+        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com
+Subject: Re: [PATCH v5 02/25] iommu/sva: Manage process address spaces
+Message-ID: <20200416085402.GB1286150@myrica>
+References: <20200414170252.714402-1-jean-philippe@linaro.org>
+ <20200414170252.714402-3-jean-philippe@linaro.org>
+ <20200416072852.GA32000@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1586333531-21641-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <20200416072852.GA32000@infradead.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 08 Apr 2020, Hsin-Hsiung Wang wrote:
-
-> Add new struct members for mfd-cells and irq initial function, so we can
-> call devm_mfd_add_devices() only once.
+On Thu, Apr 16, 2020 at 12:28:52AM -0700, Christoph Hellwig wrote:
+> > +	rcu_read_lock();
+> > +	hlist_for_each_entry_rcu(bond, &io_mm->devices, mm_node)
+> > +		io_mm->ops->invalidate(bond->sva.dev, io_mm->pasid, io_mm->ctx,
+> > +				       start, end - start);
+> > +	rcu_read_unlock();
+> > +}
 > 
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> ---
->  drivers/mfd/mt6397-core.c | 35 ++++++++++++++---------------------
->  1 file changed, 14 insertions(+), 21 deletions(-)
+> What is the reason that the devices don't register their own notifiers?
+> This kinds of multiplexing is always rather messy, and you do it for
+> all the methods.
 
-For my own reference (apply this as-is to your sign-off block):
+This sends TLB and ATC invalidations through the IOMMU, it doesn't go
+through device drivers
 
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks,
+Jean
