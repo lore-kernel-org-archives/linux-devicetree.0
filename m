@@ -2,116 +2,194 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B51C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C573C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 149AD2076A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E8A20784
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:50:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="DVK1/Z0U"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qMyY08os"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502821AbgDPIrL (ORCPT
+        id S2502481AbgDPIuQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 04:47:11 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:42003 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2502833AbgDPIqt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:46:49 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id P05fjxrLMlKa1P05ijR4UE; Thu, 16 Apr 2020 10:41:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1587026514; bh=nDiiDq5VxoANMFzKvaHDm5u5hBfjVUKYxuJ4Vl53I9E=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=DVK1/Z0UttgiZCFRsZ3bMTL/5GO0v6WyWPweVBM3xhNdgn7WUS+HvaQJIyfNoxg9U
-         nNMA8ToP6CIp+RnJG6vuaXWnYGzu+4NZuC049wgxmMcFTJ6H61SiS+GOG8hNSfOkx6
-         xmSi8LHOxShK0bj4hZPSQ1po5fP+AQxsladHKTrI4EkQEQdwY8BKsCTvQaspqDQn91
-         CoRtJJ1qmc9pgfQ+ptbFkflqY+rTeiV+nwm0DXh/aOR4p+0N2vR6d8QOuaM9Sh0Trb
-         g/4WO/y+nAfVLi5pNRzWWnVqQJAVIgbAOqLLJqQHnsqz4mSQqpmaw2aV22auz3T9GZ
-         JFfiyYkQ2rJmw==
-Subject: Re: [PATCH 1/2] arm64: dts: mt8173: fix mdp aliases property name
-To:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Cc:     Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Thu, 16 Apr 2020 04:50:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502928AbgDPIsT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 04:48:19 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E469C0610D6
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 01:48:12 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id t14so3791733wrw.12
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 01:48:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=gCC6rxpfNBHEEJoswTl2+v3GlY13e+wv1Apu4C5uUJ0=;
+        b=qMyY08os0xXarDJEQ8j9nJU1G/4i1ajvSN1547JGWNAU4kptYy+l0ETyItzmwelvLC
+         nCDep5Cl1t95mbiIhlCDcowJNJGFakofRU/UeiPQv049DorrDQDyvOhQ0iXlohLp8hin
+         3bAdw+39EFnaQiFiejH+534QfsSXNhMyYx4ZtJs1O8APzJpuT9KiZORIU2xx8m9me3GJ
+         nRCzeSz6fhZnRuGUV65gJOj0k8DMrASVs1ffDMfO5wQ+4MKhMzyo1Hf7xWdNJii/ENzy
+         uOrTcZOmWLeo1D6phvtKajqfSbjF0JkyzG19tN5chV4GtOZYui9witk4RNmc7L0KIuBW
+         GEOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=gCC6rxpfNBHEEJoswTl2+v3GlY13e+wv1Apu4C5uUJ0=;
+        b=Gp2gP4rhWomtZfuYk37RuPhUtNGm/e5+Z8xCO/fE5jeI+FGexwyz05HEWmbKx7n/Y1
+         PUm+mrKHu5I2P2dTlaAnjPHiZhaZE5a7HPXw6En7ISZyCMAZYjT6LtzitnwadQ2MUF8A
+         RF1ATWbrSyK3DDgdquuTH8U3lmECq6m+x/vpDla5OJci7T6msrfeAA6pjiiuRbRnQw/Q
+         6gPlErDb0xLC37OrscffLjBzDr4BsS6h6Yp9oeOZPE6YgCqL3eo/BNro5E7eJNUilho5
+         EPAwYNoJUobwZuqbLOcZFKu//SlwKFzECH+vklP5cDKpXDC//qiGrFGOT/G26/eZn7Qr
+         6euw==
+X-Gm-Message-State: AGi0PuYQ1kbRPMqO2DKKfKZ7ukrA/aL+WzzXoZHnIIqjxjQGQhKmtGEz
+        CYb+BMjnl8X3r8PIBlnNTuiRyA==
+X-Google-Smtp-Source: APiQypLyhDVW4E+VOlBHWErivAdlGrtxixDqwonOAkbRNQamJnKVsV0vJKLtvSLryabLtX0HhH0tLg==
+X-Received: by 2002:a5d:4286:: with SMTP id k6mr21252278wrq.222.1587026890846;
+        Thu, 16 Apr 2020 01:48:10 -0700 (PDT)
+Received: from dell ([95.149.164.124])
+        by smtp.gmail.com with ESMTPSA id z15sm14429845wrs.47.2020.04.16.01.48.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 01:48:10 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 09:49:10 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-References: <20200414030815.192104-1-hsinyi@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <4e335bc7-a45d-4688-a578-1e9793a61229@xs4all.nl>
-Date:   Thu, 16 Apr 2020 10:41:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ran Bi <ran.bi@mediatek.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        srv_heupstream@mediatek.com
+Subject: Re: [PATCH v12 1/6] mfd: mt6397: Modify suspend/resume behavior
+Message-ID: <20200416084910.GX2167633@dell>
+References: <1586333531-21641-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1586333531-21641-2-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200414030815.192104-1-hsinyi@chromium.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfMRXhIiwag2O6pLuQ2S1/m/UzBg8JrrSZagIUAA4xYEUDBHly1PbuCwb4LDhizYpEfFs3dPdy9Dod0YG8uUWitCPx80aF9uzvLyby9dTr2yyBl9eApiU
- knu5VuVPUdx0VdZXYeZxUbWth/4x8GzHPCpbEJzaPjFfu5skGd+DYtgTCFmZ4f81p3BoDxc8zZyVUA0liIVCkfyRRoOutPpY2JRTvGu9ZSDr5KFwI+Ipp+qK
- nn+itAIR5S/QaxpBjCv/Lh7OS7WDBzxQXCVv+lt/cfWaSXCk2W1VOEVdAIpUKW5cWCNH/QtxgFDsJvJEovCcrr0pnVR5gXahpCWXmXXMJXhD0N7BbIarJB/v
- JcZ8XNAaMvoddbwLF601Bh41gLzgoKdUBBPdu/25m4Ytk/Y0wRakVq4TAfLixO/jJP3g1d5xP9QU7xFs4FE3W0sbvReAP0RLIILVohO6j0oTJSeqLsN3t0IY
- HpBdwLonp7Vg7QIIxigMTh7YxYrvcWTU+KcgXWwRlh/EPv3dfBclZ/rX3x366N5BG2PUEP5mog2ms28P2nkpY2uueEIzsAFCNhA+tdcLbpmt/vqVNusF/xkk
- wu/db57jEKXRh48AoAgObV4V
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1586333531-21641-2-git-send-email-hsin-hsiung.wang@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 14/04/2020 05:08, Hsin-Yi Wang wrote:
-> Fix warning:
-> Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+On Wed, 08 Apr 2020, Hsin-Hsiung Wang wrote:
+
+> Some pmics don't need backup interrupt settings, so we change to use
+> pm notifier for the pmics which are necessary to store settings.
 > 
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
 > ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-
-I'll merge patch 2/2 for 5.8. I assume that this dtsi patch is merged through
-a mediatek subsystem?
-
-Regards,
-
-	Hans
-
+>  drivers/mfd/mt6397-core.c       | 30 ------------------------------
+>  drivers/mfd/mt6397-irq.c        | 35 ++++++++++++++++++++++++++++++++++-
+>  include/linux/mfd/mt6397/core.h |  2 ++
+>  3 files changed, 36 insertions(+), 31 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index a212bf124e81..d1e9c41004b4 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -42,14 +42,14 @@ aliases {
->  		dpi0 = &dpi0;
->  		dsi0 = &dsi0;
->  		dsi1 = &dsi1;
-> -		mdp_rdma0 = &mdp_rdma0;
-> -		mdp_rdma1 = &mdp_rdma1;
-> -		mdp_rsz0 = &mdp_rsz0;
-> -		mdp_rsz1 = &mdp_rsz1;
-> -		mdp_rsz2 = &mdp_rsz2;
-> -		mdp_wdma0 = &mdp_wdma0;
-> -		mdp_wrot0 = &mdp_wrot0;
-> -		mdp_wrot1 = &mdp_wrot1;
-> +		mdp-rdma0 = &mdp_rdma0;
-> +		mdp-rdma1 = &mdp_rdma1;
-> +		mdp-rsz0 = &mdp_rsz0;
-> +		mdp-rsz1 = &mdp_rsz1;
-> +		mdp-rsz2 = &mdp_rsz2;
-> +		mdp-wdma0 = &mdp_wdma0;
-> +		mdp-wrot0 = &mdp_wrot0;
-> +		mdp-wrot1 = &mdp_wrot1;
->  		serial0 = &uart0;
->  		serial1 = &uart1;
->  		serial2 = &uart2;
-> 
+> diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+> index 0437c85..d2e70d8 100644
+> --- a/drivers/mfd/mt6397-core.c
+> +++ b/drivers/mfd/mt6397-core.c
+> @@ -100,35 +100,6 @@ static const struct mfd_cell mt6397_devs[] = {
+>  	}
+>  };
+>  
+> -#ifdef CONFIG_PM_SLEEP
+> -static int mt6397_irq_suspend(struct device *dev)
+> -{
+> -	struct mt6397_chip *chip = dev_get_drvdata(dev);
+> -
+> -	regmap_write(chip->regmap, chip->int_con[0], chip->wake_mask[0]);
+> -	regmap_write(chip->regmap, chip->int_con[1], chip->wake_mask[1]);
+> -
+> -	enable_irq_wake(chip->irq);
+> -
+> -	return 0;
+> -}
+> -
+> -static int mt6397_irq_resume(struct device *dev)
+> -{
+> -	struct mt6397_chip *chip = dev_get_drvdata(dev);
+> -
+> -	regmap_write(chip->regmap, chip->int_con[0], chip->irq_masks_cur[0]);
+> -	regmap_write(chip->regmap, chip->int_con[1], chip->irq_masks_cur[1]);
+> -
+> -	disable_irq_wake(chip->irq);
+> -
+> -	return 0;
+> -}
+> -#endif
+> -
+> -static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_irq_suspend,
+> -			mt6397_irq_resume);
+> -
+>  struct chip_data {
+>  	u32 cid_addr;
+>  	u32 cid_shift;
+> @@ -238,7 +209,6 @@ static struct platform_driver mt6397_driver = {
+>  	.driver = {
+>  		.name = "mt6397",
+>  		.of_match_table = of_match_ptr(mt6397_of_match),
+> -		.pm = &mt6397_pm_ops,
+>  	},
+>  	.id_table = mt6397_id,
+>  };
+> diff --git a/drivers/mfd/mt6397-irq.c b/drivers/mfd/mt6397-irq.c
+> index b2d3ce1..2924919 100644
+> --- a/drivers/mfd/mt6397-irq.c
+> +++ b/drivers/mfd/mt6397-irq.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/of_irq.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+> +#include <linux/suspend.h>
+>  #include <linux/mfd/mt6323/core.h>
+>  #include <linux/mfd/mt6323/registers.h>
+>  #include <linux/mfd/mt6397/core.h>
+> @@ -81,7 +82,7 @@ static struct irq_chip mt6397_irq_chip = {
+>  static void mt6397_irq_handle_reg(struct mt6397_chip *mt6397, int reg,
+>  				  int irqbase)
+>  {
+> -	unsigned int status;
+> +	unsigned int status = 0;
 
+This looks like an unrelated change, no?
+
+>  	int i, irq, ret;
+>  
+>  	ret = regmap_read(mt6397->regmap, reg, &status);
+> @@ -128,6 +129,36 @@ static const struct irq_domain_ops mt6397_irq_domain_ops = {
+>  	.map = mt6397_irq_domain_map,
+>  };
+
+Other than that.
+
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
