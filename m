@@ -2,341 +2,88 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE7EC2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0A9C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E87A22078B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9784920784
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:34:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="QMV7/UVS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="3YS352+k"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Cvry6dAq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438921AbgDPHbh (ORCPT
+        id S2439341AbgDPHeq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:31:37 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:50021 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2438944AbgDPHbe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:31:34 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 55DAB681;
-        Thu, 16 Apr 2020 03:31:33 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 16 Apr 2020 03:31:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=W+EWBAvvjltFQn1vI0zsiOXRz1m
-        8NYYI47sCEw0ADk0=; b=QMV7/UVSapjFb+v+wA7XYXucYljXj4/Vb90QCRC3MQ+
-        /sYrI1O2dVTbW4cWCWoVAkMuplNy092cKAyIPgoWM2BdK+F8H7cKdPz0/nQBEZh4
-        Dcklqe38ltfVJx3VjRBUfNFe+TEAF0zOTNT5LeKIE31Aae29vVo4sJTzdJ736mp9
-        YiL0gXuBNvNjMjcvrjDUzzi6RXmXNeFZ/QQ2N6/+Y+B6H7NMA/TGbp8fH2Z5MUAB
-        akkRESEMTBHpgi6Bn4eRx86z66dv/68Rw/p+VrOgh/6XJP7l+qcqNFflDb3v9Peh
-        8wPJysw8lEgQtpvCEbPjIXgy9ObdfUG9ehDTIwoyQ3A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=W+EWBA
-        vvjltFQn1vI0zsiOXRz1m8NYYI47sCEw0ADk0=; b=3YS352+kYINH42g5b8bAVt
-        424+2AHW3aRTZZ+sISMBlH489+u3jCCZHVWpSLnxlU6ZWvwaXxwg9LNxcGygyULg
-        NnrEE9Vb9uXgRCgNfL+hM6qjBmX6SMuou65mqBGaiAybDWu480LIeZ6Vf6NdrYOd
-        3cZaGX4k/7zBmx0zfRVaUv09FVozVkO0Sqg1CuWNLRmVE791G99JJe8q1IvhjyAW
-        Tp3FuAjO/A/+x4k8PLykO6e6w6QNAirjF1qgFE5FXo7yfXKz2PW/az6IbM7lpzsi
-        tay7+Mwv1NujyQblzHZUnvgiZCfzDSgyBo2Pj9p1ZxyV47zqjREJmbkPYutztkjw
-        ==
-X-ME-Sender: <xms:1AmYXjb_vu5cqR6L9QuudHN1dwqYdJcy3yLkk9rN7xEf8gtFhAcGYw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeeggdduvdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuffhomhgrih
-    hnpeguvghvihgtvghtrhgvvgdrohhrghenucfkphepledtrdekledrieekrdejieenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvg
-    estggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:1AmYXrM8wKqA1iz-Bo7pJ7pS2mCDQyj0tuKX-P5EzMYB5c2Ose8oHg>
-    <xmx:1AmYXsiXjSmCBFhlPKcYveHQxwaOw519QE29WPb2ZbnuKxayn-NNCQ>
-    <xmx:1AmYXnDlCjRpT_aSajm0fgpoIOrQ3b2t2q-6l3QwnkHQxbcpbf44YA>
-    <xmx:1AmYXicl53aCn78R3bXpkWyvOzfIcfwvcnobppaou8lC3DdjgvT1pg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D87CD328005D;
-        Thu, 16 Apr 2020 03:31:31 -0400 (EDT)
-Date:   Thu, 16 Apr 2020 09:31:30 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     devicetree@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        dri-devel@lists.freedesktop.org, Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH v1 2/4] dt-bindings: display: convert atmel lcdc to DT
- Schema
-Message-ID: <20200416073130.uwv3nphqlczk6fqc@gilmour.lan>
-References: <20200412182012.27515-1-sam@ravnborg.org>
- <20200412182012.27515-3-sam@ravnborg.org>
- <20200414083010.qztgtj6v6b53qgjh@gilmour.lan>
- <20200415164427.GC7965@ravnborg.org>
+        Thu, 16 Apr 2020 03:34:46 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:6231 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438944AbgDPHep (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 03:34:45 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e980a870001>; Thu, 16 Apr 2020 00:34:31 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 16 Apr 2020 00:34:44 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 16 Apr 2020 00:34:44 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Apr
+ 2020 07:34:44 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 16 Apr 2020 07:34:44 +0000
+Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e980a910000>; Thu, 16 Apr 2020 00:34:44 -0700
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>,
+        Nagarjuna Kristam <nkristam@nvidia.com>
+Subject: [PATCH V1 0/4] Tegra XUDC support on Tegra194 Soc
+Date:   Thu, 16 Apr 2020 13:04:16 +0530
+Message-ID: <1587022460-31988-1-git-send-email-nkristam@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bi3t3lca2w6eed6j"
-Content-Disposition: inline
-In-Reply-To: <20200415164427.GC7965@ravnborg.org>
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587022471; bh=WGWsXBGjVNAF9MTyr/8Av9p7t7MtwWUDSCVP9RaLjYU=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=Cvry6dAqsoE//M0k5t/Ig/f/O6aNpjTasH5/9RZxrnFQLm9Zb2qXn1LHK8VHzBT9U
+         hUlLfwRqhu7iGm17G70Yu6C8TP3StMEB+cMSbFsFFusG0VKLTl3jluSqhl0yFaK3k7
+         XneTv3btVWvmR8KAIdwhxwU+ezxHc8SvWncsVH4CTca0NysFXSPn8fovumLdEtcN4o
+         JI22c1TZOpJlMvCvg6wEIhXh0EurT7uJ9sUi7neh8EvHiBobsryQ3pUWO/rwCqfy3F
+         B2oL7ocn+ruL+28aSLXQXScvEzDH1IzWRvbCEJmUw+eIlg/oiMt8rsyBMAIm39z1Ea
+         SoLNJjhTg97iw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This patch series adds support for XUSB Device Mode support on Tegra194 SoCs.
 
---bi3t3lca2w6eed6j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This patchset is composed with:
+ - dt bindings of XUDC driver.
+ - dt changes to add xudc node on Tegra194 Soc.
+ - USB driver changes to tegra-xudc to add support on Tegra194 Soc. 
 
-On Wed, Apr 15, 2020 at 06:44:27PM +0200, Sam Ravnborg wrote:
-> Hi Maxime.
->
-> On Tue, Apr 14, 2020 at 10:30:10AM +0200, Maxime Ripard wrote:
-> > On Sun, Apr 12, 2020 at 08:20:10PM +0200, Sam Ravnborg wrote:
-> > > Add a new binding file to describe the bindings
-> > > for the Atmel LCDC IP.
-> > > This replaces the old txt based binding.
-> > >
-> > > The binding file describes the current binding,
-> > > including properties to specify register values etc.
-> > > The binding will be updated in a follow-up patch,
-> > > the current binding describes the actual situation.
-> > >
-> > > This new binding file replaces the old .txt based
-> > > binding which is deleted.
-> > >
-> > > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> > > ---
-> > >  .../bindings/display/atmel,lcdc.txt           |  88 -----------
-> > >  .../bindings/display/atmel/lcdc.yaml          | 137 ++++++++++++++++++
-> > >  2 files changed, 137 insertions(+), 88 deletions(-)
-> > >  delete mode 100644 Documentation/devicetree/bindings/display/atmel,lcdc.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/display/atmel/lcdc.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/display/atmel,lcdc.txt b/Documentation/devicetree/bindings/display/atmel,lcdc.txt
-> > > deleted file mode 100644
-> > > index acb5a0132127..000000000000
-> > > --- a/Documentation/devicetree/bindings/display/atmel,lcdc.txt
-> > > +++ /dev/null
-> > > @@ -1,88 +0,0 @@
-> > > -Atmel LCDC Framebuffer
-> > > ------------------------------------------------------
-> > > -
-> > > -Required properties:
-> > > -- compatible :
-> > > -	"atmel,at91sam9261-lcdc" ,
-> > > -	"atmel,at91sam9263-lcdc" ,
-> > > -	"atmel,at91sam9g10-lcdc" ,
-> > > -	"atmel,at91sam9g45-lcdc" ,
-> > > -	"atmel,at91sam9g45es-lcdc" ,
-> > > -	"atmel,at91sam9rl-lcdc" ,
-> > > -	"atmel,at32ap-lcdc"
-> > > -- reg : Should contain 1 register ranges(address and length).
-> > > -	Can contain an additional register range(address and length)
-> > > -	for fixed framebuffer memory. Useful for dedicated memories.
-> > > -- interrupts : framebuffer controller interrupt
-> > > -- display: a phandle pointing to the display node
-> > > -
-> > > -Required nodes:
-> > > -- display: a display node is required to initialize the lcd panel
-> > > -	This should be in the board dts.
-> > > -- default-mode: a videomode within the display with timing parameters
-> > > -	as specified below.
-> > > -
-> > > -Optional properties:
-> > > -- lcd-supply: Regulator for LCD supply voltage.
-> > > -
-> > > -Example:
-> > > -
-> > > -	fb0: fb@00500000 {
-> > > -		compatible = "atmel,at91sam9g45-lcdc";
-> > > -		reg = <0x00500000 0x1000>;
-> > > -		interrupts = <23 3 0>;
-> > > -		pinctrl-names = "default";
-> > > -		pinctrl-0 = <&pinctrl_fb>;
-> > > -		display = <&display0>;
-> > > -		#address-cells = <1>;
-> > > -		#size-cells = <1>;
-> > > -
-> > > -	};
-> > > -
-> > > -Example for fixed framebuffer memory:
-> > > -
-> > > -	fb0: fb@00500000 {
-> > > -		compatible = "atmel,at91sam9263-lcdc";
-> > > -		reg = <0x00700000 0x1000 0x70000000 0x200000>;
-> > > -		[...]
-> > > -	};
-> > > -
-> > > -Atmel LCDC Display
-> > > ------------------------------------------------------
-> > > -Required properties (as per of_videomode_helper):
-> > > -
-> > > - - atmel,dmacon: dma controller configuration
-> > > - - atmel,lcdcon2: lcd controller configuration
-> > > - - atmel,guard-time: lcd guard time (Delay in frame periods)
-> > > - - bits-per-pixel: lcd panel bit-depth.
-> > > -
-> > > -Optional properties (as per of_videomode_helper):
-> > > - - atmel,lcdcon-backlight: enable backlight
-> > > - - atmel,lcdcon-backlight-inverted: invert backlight PWM polarity
-> > > - - atmel,lcd-wiring-mode: lcd wiring mode "RGB" or "BRG"
-> > > - - atmel,power-control-gpio: gpio to power on or off the LCD (as many as needed)
-> > > -
-> > > -Example:
-> > > -	display0: display {
-> > > -		bits-per-pixel = <32>;
-> > > -		atmel,lcdcon-backlight;
-> > > -		atmel,dmacon = <0x1>;
-> > > -		atmel,lcdcon2 = <0x80008002>;
-> > > -		atmel,guard-time = <9>;
-> > > -		atmel,lcd-wiring-mode = <1>;
-> > > -
-> > > -		display-timings {
-> > > -			native-mode = <&timing0>;
-> > > -			timing0: timing0 {
-> > > -				clock-frequency = <9000000>;
-> > > -				hactive = <480>;
-> > > -				vactive = <272>;
-> > > -				hback-porch = <1>;
-> > > -				hfront-porch = <1>;
-> > > -				vback-porch = <40>;
-> > > -				vfront-porch = <1>;
-> > > -				hsync-len = <45>;
-> > > -				vsync-len = <1>;
-> > > -			};
-> > > -		};
-> > > -	};
-> > > diff --git a/Documentation/devicetree/bindings/display/atmel/lcdc.yaml b/Documentation/devicetree/bindings/display/atmel/lcdc.yaml
-> > > new file mode 100644
-> > > index 000000000000..7dcb9a4d5902
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/display/atmel/lcdc.yaml
-> > > @@ -0,0 +1,137 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/display/atmel/lcdc.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Atmel LCDC (LCD Controller) display controller with PWM
-> > > +
-> > > +maintainers:
-> > > +  - Sam Ravnborg <sam@ravnborg.org>
-> > > +
-> > > +description: |
-> > > +  The Atmel LCDC Display Controller is display controller that
-> > > +  includes a PWM for backlight/contrast.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - atmel,at91sam9261-lcdc
-> > > +      - atmel,at91sam9263-lcdc
-> > > +      - atmel,at91sam9g10-lcdc
-> > > +      - atmel,at91sam9g45-lcdc
-> > > +      - atmel,at91sam9g45es-lcdc
-> > > +      - atmel,at91sam9g46-lcdc
-> > > +      - atmel,at91sam9m10-lcdc
-> > > +      - atmel,at91sam9m11-lcdc
-> > > +      - atmel,at91sam9rl-lcdc
-> > > +
-> > > +  "#address-cells":
-> > > +    const: 1
-> > > +  "#size-cells":
-> > > +    const: 0
-> > > +
-> > > +  reg:
-> > > +    description: |
-> > > +      Contains 1 register range (address and length).
-> > > +      Can contain an additional register range (address and length)
-> > > +      for fixed framebuffer memory
-> >
-> > So, minItems: 1 , maxItems: 2?
-> The syntax is either:
->
->     reg = <0x00700000 0x1000>;
->
-> or
->
->     reg = <0x00700000 0x1000 0x70000000 0x200000>;
->
-> So always minItems: 1
+Nagarjuna Kristam (4):
+  dt-bindings: usb: tegra-xudc: Add Tegra194 XUSB controller support
+  arm64: tegra: Add xudc node for Tegra194
+  usb: gadget: tegra-xudc: Add Tegra194 support
+  usb: gadget: tegra-xudc: add port_speed_quirk
 
-Yeah, but <0x00700000 0x1000 0x70000000 0x200000 0x70000000 0x200000>;
-would be invalid, right?
+ .../devicetree/bindings/usb/nvidia,tegra-xudc.yaml |   2 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi           |  18 +++
+ drivers/usb/gadget/udc/tegra-xudc.c                | 130 +++++++++++++++++++++
+ 3 files changed, 150 insertions(+)
 
-> >
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  lcd-supply:
-> > > +    description: Regulator for LCD supply voltage.
-> > > +
-> > > +  display:
-> > > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > > +    description: phandle to display node
-> > > +
-> > > +patternProperties:
-> > > +  "^display[0-9]$":
-> > > +    type: object
-> > > +    description: |
-> > > +      Display node is required to initialize the lcd panel.
-> > > +      This should be in the board dts
-> > > +
-> > > +    properties:
-> > > +
-> > > +      atmel,dmacon:
-> > > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > > +        description: DMA controller configuration
-> > > +
-> > > +      atmel,lcdcon2:
-> > > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > > +        description: LCD controller configuration
-> > > +
-> > > +      atmel,guard-time:
-> > > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > > +        description: LCD guard time (Delay in frame periods)
-> > > +
-> > > +      bits-per-pixel:
-> > > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > > +        description: LCD panel bit-depth.
-> >
-> > Those properties aren't documented anywhere?
->
-> Not more than this and then by their use in the driver(s).
->
-> In the current patchset the node is deprecated in next patch.
-> I plan to do in two patches:
->   - delete properites which is not used in kernel, barebox, u-boot)
->   - Mark all the old properties deprecated
->
-> And for the soon-to-be deprecated properties we need no detailed
-> description.
+-- 
+2.7.4
 
-Even if they are going to be deprecated, and it never was done, it
-seems to be a good occasion to document them properly.
-
-Maxime
-
---bi3t3lca2w6eed6j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpgJ0gAKCRDj7w1vZxhR
-xWBKAP4s9+x5BuHw/HL8XygQ35smR4G2Z3jON4UkrosWknQ/VAD9FxRLwKxRY86l
-bnqBuKSa7h7ecCDV7wX1bngdQUQRswY=
-=MbWq
------END PGP SIGNATURE-----
-
---bi3t3lca2w6eed6j--
