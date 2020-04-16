@@ -2,109 +2,267 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30942C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 10:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 898ABC352BE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 10:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14A0F21D91
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 10:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 749A121974
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 10:39:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503293AbgDPK0l (ORCPT
+        id S2505113AbgDPKjh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 06:26:41 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38016 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504681AbgDPK00 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 06:26:26 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7C98B2A1375;
-        Thu, 16 Apr 2020 11:26:23 +0100 (BST)
-Date:   Thu, 16 Apr 2020 12:26:19 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        anders.roxell@linaro.org, andriy.shevchenko@intel.com,
-        arnd@arndb.de, brendanhiggins@google.com, cheol.yong.kim@intel.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, masonccyang@mxic.com.tw,
-        miquel.raynal@bootlin.com, piotrs@cadence.com,
-        qi-ming.wu@intel.com, richard@nod.at, robh+dt@kernel.org,
-        tglx@linutronix.de, vigneshr@ti.com
-Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200416122619.2c481792@collabora.com>
-In-Reply-To: <18568cf6-2955-472e-7b68-eb35e654a906@linux.intel.com>
-References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
-        <c33c8653-16a2-5bcd-97a9-511d958b755a@linux.intel.com>
-        <20200416113822.2ef326cb@collabora.com>
-        <18568cf6-2955-472e-7b68-eb35e654a906@linux.intel.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 16 Apr 2020 06:39:37 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:54501 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2505144AbgDPKjJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 06:39:09 -0400
+X-Originating-IP: 2.224.242.101
+Received: from uno.homenet.telecomitalia.it (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 0620660010;
+        Thu, 16 Apr 2020 10:38:56 +0000 (UTC)
+From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
+To:     kieran.bingham+renesas@ideasonboard.com,
+        linux-renesas-soc@vger.kernel.org, robh@kernel.org
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se,
+        hyunk@xilinx.com, manivannan.sadhasivam@linaro.org,
+        devicetree@vger.kernel.org
+Subject: [v8-rc1 19/20] dt-bindings: media: i2c: Add bindings for IMI RDACM2x
+Date:   Thu, 16 Apr 2020 12:40:51 +0200
+Message-Id: <20200416104052.2643098-20-jacopo+renesas@jmondi.org>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200416104052.2643098-1-jacopo+renesas@jmondi.org>
+References: <20200416104052.2643098-1-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 16 Apr 2020 17:45:49 +0800
-"Ramuthevar, Vadivel MuruganX"
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+The IMI RDACM20 and IMI RDACM21 are Gigabit Multimedia Serial Link (GMSL) camera
+capable of transmitting video and I2C control messages on a coax cable
+physical link for automotive applications.
 
-> >>>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> >>>>
-> >>>> This patch adds the new IP of Nand Flash Controller(NFC) support
-> >>>> on Intel's Lightning Mountain(LGM) SoC.
-> >>>>
-> >>>> DMA is used for burst data transfer operation, also DMA HW supports
-> >>>> aligned 32bit memory address and aligned data access by default.
-> >>>> DMA burst of 8 supported. Data register used to support the read/write
-> >>>> operation from/to device.  
-> >>> I am wondering how this new hardware is different from the Lantiq NAND
-> >>> controller IP - for which there is already a driver in mainline (it's
-> >>> in drivers/mtd/nand/raw/xway_nand.c).
-> >>> The CON and WAIT registers look suspiciously similar.
-> >>>
-> >>> As far as I understand the "old" SoCs (VRX200 and earlier) don't have
-> >>> a built-in ECC engine. This seems to have changed with ARX300 though
-> >>> (again, AFAIK).
-> >>>
-> >>> A bit of lineage on these SoCs (initially these were developed by
-> >>> Infineon. Lantiq then started as an Infineon spin-off in 2009 and
-> >>> was then acquired by Intel in 2015):
-> >>> - Danube
-> >>> - ARX100 from 2008/2009
-> >>> - VRX200 from 2009/2010
-> >>> - ARX300 from 2014
-> >>> - GRX350 from 2015/2016
-> >>> - GRX550 from 2017
-> >>> - and now finally: LGM from 2020 (est.)
-> >>>
-> >>> The existing xway_nand driver supports the Danube, ARX100 and VRX200
-> >>> SoCs.  
-> >> Lantiq upstreamed a driver for an older version of this IP core 8 years
-> >> ago, see here:
-> >> https://elixir.bootlin.com/linux/v5.5.6/source/drivers/mtd/nand/raw/xway_nand.c
-> >> It does not support DMA and ECC.  
-> > Then let's just extend this driver to support the new features. Plus,  
-> We do not have the platform to test also it's very old legacy driver .
+Document their device tree bindings.
 
-Well, if it's similar enough, we want to have one driver.
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-> > we'll be happy to have one more of the existing driver converted to  
-> > ->exec_op() ;-).  
-> 
-> I have completely adapted to ->exec_op() hook up to replace the legacy 
-> call-back.
+---
+v2:
+ - Provide imi vendor prefix
+ - Fix minor spelling
 
-I suspect porting what you've done to the xway driver shouldn't be too
-complicated.
+v3:
+ - update binding descriptions
+
+v4:
+ - No change
+
+v5:
+ - Specify optional third reg address for the MCU
+
+v7:
+ [Jacopo]
+ - Rename to imi,rdacm2x-gmsl.yaml
+ - Exand bindings to describe RDACM21
+
+v8:
+ - no changes
+
+---
+ .../bindings/media/i2c/imi,rdacm2x-gmsl.yaml  | 161 ++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ 2 files changed, 163 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml b/Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml
+new file mode 100644
+index 000000000000..8476e99b46b5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml
+@@ -0,0 +1,161 @@
++# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
++# Copyright (C) 2019 Renesas Electronics Corp.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/i2c/imi,rdacm2x-gmsl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title:  IMI D&D RDACM20 and RDACM21 Automotive Camera Platforms
++
++maintainers:
++  - Jacopo Mondi <jacopo+renesas@jmondi.org>
++  - Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
++  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
++  - Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
++
++description: -|
++  The IMI D&D RDACM20 and RDACM21 are GMSL-compatible camera designed for
++  automotive applications.
++
++  The RDACM20 camera module encloses a Maxim Integrated MAX9271 GMSL serializer,
++  coupled with an OV10635 image sensor and an embedded MCU. Both the MCU and
++  the image sensor are connected to the serializer local I2C bus and are
++  accessible by the host SoC by direct addressing.
++
++  The RDACM21 camera module encloses the same serializer, coupled with an
++  OV10640 image sensor and an OV490 ISP. Only the OV490 ISP is interfaced to
++  the serializer local I2C bus while the image sensor is not accessible from
++  the host SoC.
++
++  They both connect to a remote GMSL endpoint through a coaxial cable.
++
++                                                   IMI RDACM20
++  +---------------+                        +--------------------------------+
++  |      GMSL     |   <- Video Stream      |       <- Video--------\        |
++  |               |< === GMSL Link ====== >|MAX9271<- I2C bus-> <-->OV10635 |
++  | de-serializer |   <- I2C messages ->   |                   \<-->MCU     |
++  +---------------+                        +--------------------------------+
++
++                                                   IMI RDACM21
++  +---------------+                        +--------------------------------+
++  |      GMSL     |   <- Video Stream      |       <- Video--------\        |
++  |               |< === GMSL Link ====== >|MAX9271<- I2C bus-> <-->OV490   |
++  |               |   <- I2C messages ->   |                          |     |
++  | de-serializer |                        |          OV10640 <-------|     |
++  +---------------+                        +--------------------------------+
++
++  Both camera modules serialize video data generated by the embedded camera
++  sensor on the GMSL serial channel to a remote GMSL de-serializer. They also
++  receive and transmit I2C messages encapsulated and transmitted on the GMSL
++  bidirectional control channel.
++
++  All I2C traffic received on the GMSL link not directed to the serializer is
++  propagated on the local I2C bus to the remote device there connected. All the
++  I2C traffic generated on the local I2C bus not directed to the serializer is
++  propagated to the remote de-serializer encapsulated in the GMSL control
++  channel.
++
++  The RDACM20 and RDACM21 DT node should be a direct child of the GMSL
++  deserializer's I2C bus corresponding to the GMSL link that the camera is
++  attached to.
++
++properties:
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++  compatible:
++    oneOf:
++      - items:
++        - enum:
++          - imi,rdacm20
++          - imi,rdacm21
++
++  reg:
++    description: -|
++      I2C device addresses, the first to be assigned to the serializer, the
++      following ones to be assigned to the remote devices.
++
++      For RDACM20 the second entry of the property is assigned to the
++      OV10635 image sensor and the optional third one to the embedded MCU.
++
++      For RDACM21 the second entry is assigned to the OV490 ISP and the optional
++      third one ignored.
++
++    minItems: 2
++    maxItems: 3
++
++  port:
++    type: object
++    additionalProperties: false
++    description: -|
++      Connection to the remote GMSL endpoint are modelled using the OF graph
++      bindings in accordance with the video interface bindings defined in
++      Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++      The device node contains a single "port" child node with a single
++      "endpoint" sub-device.
++
++    properties:
++      endpoint:
++        type: object
++        additionalProperties: false
++
++        properties:
++          remote-endpoint:
++            description: -|
++              phandle to the remote GMSL endpoint sub-node in the remote node
++              port.
++            maxItems: 1
++
++        required:
++          - remote-endpoint
++
++    required:
++      - endpoint
++
++required:
++  - compatible
++  - reg
++  - port
++
++examples:
++  - |
++    i2c@e66d8000 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      reg = <0 0xe66d8000 0 0x40>;
++
++      camera@31 {
++        compatible = "imi,rdacm20";
++        reg = <0x31>, <0x41>, <0x51>;
++
++        port {
++          rdacm20_out0: endpoint {
++            remote-endpoint = <&max9286_in0>;
++          };
++        };
++      };
++    };
++
++  - |
++    i2c@e66d8000 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      reg = <0 0xe66d8000 0 0x40>;
++
++      camera@31 {
++        compatible = "imi,rdacm21";
++        reg = <0x31>, <0x41>;
++
++        port {
++          rdacm21_out0: endpoint {
++            remote-endpoint = <&max9286_in0>;
++          };
++        };
++      };
++    };
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index d3891386d671..dcbecdc58731 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -453,6 +453,8 @@ patternProperties:
+     description: Ingenieurburo Fur Ic-Technologie (I/F/I)
+   "^ilitek,.*":
+     description: ILI Technology Corporation (ILITEK)
++  "^imi,.*":
++    description: Integrated Micro-Electronics Inc.
+   "^img,.*":
+     description: Imagination Technologies Ltd.
+   "^incircuit,.*":
+--
+2.26.0
+
