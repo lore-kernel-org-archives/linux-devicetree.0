@@ -2,64 +2,64 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C573C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597ABC352BE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54E8A20784
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:50:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 365E520784
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:53:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qMyY08os"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iTUUxmnx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502481AbgDPIuQ (ORCPT
+        id S2502979AbgDPIwE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 04:50:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40280 "EHLO
+        Thu, 16 Apr 2020 04:52:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502928AbgDPIsT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 04:48:19 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E469C0610D6
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 01:48:12 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id t14so3791733wrw.12
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 01:48:12 -0700 (PDT)
+        with ESMTP id S2502964AbgDPIvi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 04:51:38 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CABD9C061A41
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 01:51:34 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id h2so3670272wmb.4
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 01:51:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=gCC6rxpfNBHEEJoswTl2+v3GlY13e+wv1Apu4C5uUJ0=;
-        b=qMyY08os0xXarDJEQ8j9nJU1G/4i1ajvSN1547JGWNAU4kptYy+l0ETyItzmwelvLC
-         nCDep5Cl1t95mbiIhlCDcowJNJGFakofRU/UeiPQv049DorrDQDyvOhQ0iXlohLp8hin
-         3bAdw+39EFnaQiFiejH+534QfsSXNhMyYx4ZtJs1O8APzJpuT9KiZORIU2xx8m9me3GJ
-         nRCzeSz6fhZnRuGUV65gJOj0k8DMrASVs1ffDMfO5wQ+4MKhMzyo1Hf7xWdNJii/ENzy
-         uOrTcZOmWLeo1D6phvtKajqfSbjF0JkyzG19tN5chV4GtOZYui9witk4RNmc7L0KIuBW
-         GEOQ==
+        bh=aQURq1REwHEPMxWj0A/UhXFxGHBPx1Zt6Uxv60umXok=;
+        b=iTUUxmnxUoqM1iP5zj7BbzhwKQK2NqYbdVMK0rIh0CiAAy9/it6DIt1DL4Ooif9/bE
+         Pul6F77qct+LdTVwj/1QFZe9JzU7U365RE9K2ngJq6+qZ15SxAPXTQR3XQRAdySjswRR
+         9JYky000loQpUPX3wnZRvPFFa45uhJxKiqbju2/rslkJy7h3NmXl0ZIYzg2ZbfnCQ5dc
+         AsNg7kMa9TiJe/4kUyOORB8GNBgxQrV21VfhsiPqvwyuyliDY3hqDbicfevTFn5hB8rm
+         ++qfzQ5FGFbm9rT/GFdYCl8cOGCJR7Yj/AL+Xc5pcZgU+6DZeOb6aSyklfhfqZMu9KiT
+         XbEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=gCC6rxpfNBHEEJoswTl2+v3GlY13e+wv1Apu4C5uUJ0=;
-        b=Gp2gP4rhWomtZfuYk37RuPhUtNGm/e5+Z8xCO/fE5jeI+FGexwyz05HEWmbKx7n/Y1
-         PUm+mrKHu5I2P2dTlaAnjPHiZhaZE5a7HPXw6En7ISZyCMAZYjT6LtzitnwadQ2MUF8A
-         RF1ATWbrSyK3DDgdquuTH8U3lmECq6m+x/vpDla5OJci7T6msrfeAA6pjiiuRbRnQw/Q
-         6gPlErDb0xLC37OrscffLjBzDr4BsS6h6Yp9oeOZPE6YgCqL3eo/BNro5E7eJNUilho5
-         EPAwYNoJUobwZuqbLOcZFKu//SlwKFzECH+vklP5cDKpXDC//qiGrFGOT/G26/eZn7Qr
-         6euw==
-X-Gm-Message-State: AGi0PuYQ1kbRPMqO2DKKfKZ7ukrA/aL+WzzXoZHnIIqjxjQGQhKmtGEz
-        CYb+BMjnl8X3r8PIBlnNTuiRyA==
-X-Google-Smtp-Source: APiQypLyhDVW4E+VOlBHWErivAdlGrtxixDqwonOAkbRNQamJnKVsV0vJKLtvSLryabLtX0HhH0tLg==
-X-Received: by 2002:a5d:4286:: with SMTP id k6mr21252278wrq.222.1587026890846;
-        Thu, 16 Apr 2020 01:48:10 -0700 (PDT)
+        bh=aQURq1REwHEPMxWj0A/UhXFxGHBPx1Zt6Uxv60umXok=;
+        b=LdTh/H5dwTtvSU4dIxixsSBDkCHQ8NXhBklDQDmnY/+12Eptq8hoEW4qk4ZmX5Sj50
+         /ix/dbc3SlGTfjBzgOJaXPlFaTh0kqPAobojPAAuaxP/FOenp6W36QmKA8JCWfibivsu
+         BgquxlE1VwuNTFbBWj9ZmXoY+B0aEkHx0UGQQPo/2Tsg9NtlwCDmIzDZPqy8gPyMv2KZ
+         020l5PmwfAltHqXdqpRRq/K4tVBqH8SEXAWqbsg7ZPtrZqrB0t/JVyB4HiHyCRcsg9WA
+         KYju9SdB8/YQr7apn26pZ9F5mcFxBsJAt+AXPbAhz1aBppJnp0VH4P3eM9d4tLWRVW5b
+         DLiw==
+X-Gm-Message-State: AGi0PuaUJal2LfzZ8MpsklswHtoeu1/Ti5sQ18ZDSqce3nzKJzTSqBDI
+        NiFQTuQST1MMWhs/6qBJT28L5g==
+X-Google-Smtp-Source: APiQypKU3qRZVCXuxnBOouk3e3DEAX4zubXTv+zywdpux61f+2SAQwvIpImS075eYrYQxApgGH0znw==
+X-Received: by 2002:a7b:c147:: with SMTP id z7mr4036229wmi.52.1587027093347;
+        Thu, 16 Apr 2020 01:51:33 -0700 (PDT)
 Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id z15sm14429845wrs.47.2020.04.16.01.48.09
+        by smtp.gmail.com with ESMTPSA id q8sm2740501wmg.22.2020.04.16.01.51.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 01:48:10 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 09:49:10 +0100
+        Thu, 16 Apr 2020 01:51:32 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 09:52:33 +0100
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -81,15 +81,16 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
         srv_heupstream@mediatek.com
-Subject: Re: [PATCH v12 1/6] mfd: mt6397: Modify suspend/resume behavior
-Message-ID: <20200416084910.GX2167633@dell>
+Subject: Re: [PATCH v12 2/6] mfd: mt6397: Trim probe function to support
+ different chips more cleanly
+Message-ID: <20200416085233.GY2167633@dell>
 References: <1586333531-21641-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1586333531-21641-2-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1586333531-21641-3-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1586333531-21641-2-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <1586333531-21641-3-git-send-email-hsin-hsiung.wang@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -97,95 +98,16 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Wed, 08 Apr 2020, Hsin-Hsiung Wang wrote:
 
-> Some pmics don't need backup interrupt settings, so we change to use
-> pm notifier for the pmics which are necessary to store settings.
+> Add new struct members for mfd-cells and irq initial function, so we can
+> call devm_mfd_add_devices() only once.
 > 
 > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
 > ---
->  drivers/mfd/mt6397-core.c       | 30 ------------------------------
->  drivers/mfd/mt6397-irq.c        | 35 ++++++++++++++++++++++++++++++++++-
->  include/linux/mfd/mt6397/core.h |  2 ++
->  3 files changed, 36 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
-> index 0437c85..d2e70d8 100644
-> --- a/drivers/mfd/mt6397-core.c
-> +++ b/drivers/mfd/mt6397-core.c
-> @@ -100,35 +100,6 @@ static const struct mfd_cell mt6397_devs[] = {
->  	}
->  };
->  
-> -#ifdef CONFIG_PM_SLEEP
-> -static int mt6397_irq_suspend(struct device *dev)
-> -{
-> -	struct mt6397_chip *chip = dev_get_drvdata(dev);
-> -
-> -	regmap_write(chip->regmap, chip->int_con[0], chip->wake_mask[0]);
-> -	regmap_write(chip->regmap, chip->int_con[1], chip->wake_mask[1]);
-> -
-> -	enable_irq_wake(chip->irq);
-> -
-> -	return 0;
-> -}
-> -
-> -static int mt6397_irq_resume(struct device *dev)
-> -{
-> -	struct mt6397_chip *chip = dev_get_drvdata(dev);
-> -
-> -	regmap_write(chip->regmap, chip->int_con[0], chip->irq_masks_cur[0]);
-> -	regmap_write(chip->regmap, chip->int_con[1], chip->irq_masks_cur[1]);
-> -
-> -	disable_irq_wake(chip->irq);
-> -
-> -	return 0;
-> -}
-> -#endif
-> -
-> -static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_irq_suspend,
-> -			mt6397_irq_resume);
-> -
->  struct chip_data {
->  	u32 cid_addr;
->  	u32 cid_shift;
-> @@ -238,7 +209,6 @@ static struct platform_driver mt6397_driver = {
->  	.driver = {
->  		.name = "mt6397",
->  		.of_match_table = of_match_ptr(mt6397_of_match),
-> -		.pm = &mt6397_pm_ops,
->  	},
->  	.id_table = mt6397_id,
->  };
-> diff --git a/drivers/mfd/mt6397-irq.c b/drivers/mfd/mt6397-irq.c
-> index b2d3ce1..2924919 100644
-> --- a/drivers/mfd/mt6397-irq.c
-> +++ b/drivers/mfd/mt6397-irq.c
-> @@ -9,6 +9,7 @@
->  #include <linux/of_irq.h>
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
-> +#include <linux/suspend.h>
->  #include <linux/mfd/mt6323/core.h>
->  #include <linux/mfd/mt6323/registers.h>
->  #include <linux/mfd/mt6397/core.h>
-> @@ -81,7 +82,7 @@ static struct irq_chip mt6397_irq_chip = {
->  static void mt6397_irq_handle_reg(struct mt6397_chip *mt6397, int reg,
->  				  int irqbase)
->  {
-> -	unsigned int status;
-> +	unsigned int status = 0;
+>  drivers/mfd/mt6397-core.c | 35 ++++++++++++++---------------------
+>  1 file changed, 14 insertions(+), 21 deletions(-)
 
-This looks like an unrelated change, no?
+For my own reference (apply this as-is to your sign-off block):
 
->  	int i, irq, ret;
->  
->  	ret = regmap_read(mt6397->regmap, reg, &status);
-> @@ -128,6 +129,36 @@ static const struct irq_domain_ops mt6397_irq_domain_ops = {
->  	.map = mt6397_irq_domain_map,
->  };
-
-Other than that.
-
-For my own reference:
   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
 -- 
