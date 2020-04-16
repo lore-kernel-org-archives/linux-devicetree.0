@@ -7,74 +7,74 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F90C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 873BBC2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 624D6206E9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 644822076A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:56:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V+92JQII"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YZAXeH8R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440672AbgDPH4h (ORCPT
+        id S2440718AbgDPH4v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:56:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60310 "EHLO
+        Thu, 16 Apr 2020 03:56:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2439745AbgDPH43 (ORCPT
+        by vger.kernel.org with ESMTP id S2440705AbgDPH4n (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:56:29 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 079AAC061A0C
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 00:56:29 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id y24so3713619wma.4
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 00:56:28 -0700 (PDT)
+        Thu, 16 Apr 2020 03:56:43 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30831C061A0C
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 00:56:42 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id y24so3714311wma.4
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 00:56:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Kox1QxtahOd3osgWGMNatL/3WlQIWrSz32253M5/lF0=;
-        b=V+92JQIIZjdcgco4btvgFG/iteh1q+0MLX70rPI2MGIuuDVP3vVQReGKfMarxs+Zta
-         C5CQG5qoCn3eIgicA17GU2C9WDKmoL80EmGMBpU1/LUvdZwASEN95FstsDrQopoTuNtU
-         3i9E9Dyfk6Wpx1xGAL7NfoYq7EclvZumOHRPwoBbIUHpqZpEr08EUVVu4y1zQOYvq5ju
-         FTaoVpYkmqtpq+lp+Oi4b2Q/p17S146c52E4qOC5KnjlPTtm7sjj3lLqM0VGYgdly4Go
-         ztIxXGmG+gVvETvZ/IBzNn6dM71b0ZCuXzh8Zrwyf2OnSCDVwnGRyqwzHyh+pooLiAru
-         IuIw==
+        bh=4wXkP4Jg2SpgPLNlNFxv80H5dUcR070Yf66C9Z6HJMk=;
+        b=YZAXeH8R6EFGR93FoMZPfjyXgVNnyB0Hj/WwXWZygT+Ji3pVWI+parN1ZoWtEhaDl9
+         Q5U1HRaEdkgXXziWJzOXdmEnQi+Ixv+kRHTfAOXqNtvoy5Y+ULWZLjJOMVe48WEcB6Px
+         9IjKWu91KhFbHP2oBSRpE5zJPUhJjO8yUaqypUToh0XIemuI5LSKcMExLW5++px7ylp4
+         Q+G4EnPTSv1BEBVGHaPxUAOG1bAwEQlhBiphm65QiixLfh+8iQHpxgvRp4rmmVbCiXgP
+         +G4eE2PpKXkDAwInyc0+aM47axZ8RYq2j82JaF++aF79ay7+PFxVbO97/5J+1l6VOgsI
+         vETg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Kox1QxtahOd3osgWGMNatL/3WlQIWrSz32253M5/lF0=;
-        b=LGb+RqcfmQ1RdGbQVqwL/Sytz1z3Jmtt6Cn4drn+my1UUMG/+JiqLrZeiz76Ebll0z
-         TqPYgn7xFyN10TXpIApMgUKRxP04oyN5WcsZI/F4C5SnKrhP7xZEZPdIY7rs9vb4Ejvy
-         hoKJtD/pIyCtbwtlU7XTs6+gE/F6VfauK0fOqRntIhC+rul8gXpyof+7q/WHo0WT7g/t
-         Cmry/baZ0cpf2fd+77c9yU6s5s+SRUY9MAu/MwS3v5ozvF+W8ECpJ+jJGgGIkbAl0P3a
-         IRzqdsP3+rw9E44Hgy0zYu9/L7+E9OhSXr6XT0atQyjVtB6NnZ7WETSRgdfUOXcFzV0p
-         vHww==
-X-Gm-Message-State: AGi0PuaH8o+Bj3z42cL1IxdRIS9YTaqzhLpN2jdiTuOhAqlbh60vb6gJ
-        tFABvkz+6/vZZdFiAPKf33vzog==
-X-Google-Smtp-Source: APiQypLjmf5r74x3HUYZnkW/IPjGxXrvT2N38yPWo5rdm9IEUQaAASgf3S69VUg0RsMZ+W2jo4ynZg==
-X-Received: by 2002:a1c:9e42:: with SMTP id h63mr3297924wme.115.1587023787696;
-        Thu, 16 Apr 2020 00:56:27 -0700 (PDT)
+        bh=4wXkP4Jg2SpgPLNlNFxv80H5dUcR070Yf66C9Z6HJMk=;
+        b=d2XV6xDZJbd/Wc5xRBEv5YPcEEhw6xvNSbTKQ3HCuwzEKnKK+NYIL358rwkIvyxWJl
+         9//FGLYXmoqPnG+sVkwwSZFcSw26eQJU/xR6IoBmIFDMkpbKu3ShpTbA/84oa76uOmKa
+         nvwjYUuxIiTTREwk2E9BaxVtt0bDLNQmbizLeGNpLDcjF0dmnEDPt00Wfhao161zsiom
+         UYgzN+iWCSEicgxGyUagYwW1yQRYkvg0IGbSh9yE15TB53m4W4BR0S5q6tof8WFJrP/x
+         1gfCoQWmCKV+amKGdZ6gTwQtZfTK+OyRcq8NvGxM05IzullUzCsguW84Q6tEWBAHkcgh
+         l7Qw==
+X-Gm-Message-State: AGi0PuZclDe00jQ+BBIgAuFw38/F0TMMOwaTf0pyqQwwdANeP0F/Nb1h
+        AQ8MK3uMiwHyZI2SoM6Cx59tLHLp9yk=
+X-Google-Smtp-Source: APiQypJ2lrl6otM+G6nBiL9EeuYXvwsGAiqWvjGN+NlyKiETI4Foz9VmV53MzLWFGIjTfPzr5oJS6Q==
+X-Received: by 2002:a1c:2007:: with SMTP id g7mr3478215wmg.70.1587023800838;
+        Thu, 16 Apr 2020 00:56:40 -0700 (PDT)
 Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id c17sm26766247wrp.28.2020.04.16.00.56.26
+        by smtp.googlemail.com with ESMTPSA id l16sm11451926wrp.91.2020.04.16.00.56.39
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Apr 2020 00:56:27 -0700 (PDT)
-Subject: Re: [PATCH 04/11] ASoC: qcom: lpass-cpu: Make "ahbix-clk" an optional
- clock.
+        Thu, 16 Apr 2020 00:56:40 -0700 (PDT)
+Subject: Re: [PATCH 07/11] Documentation: dt-bindings: sound: Add details for
+ new dai properties
 To:     Ajit Pandey <ajitp@codeaurora.org>, alsa-devel@alsa-project.org,
         broonie@kernel.org, devicetree@vger.kernel.org,
         plai@codeaurora.org, bgoswami@codeaurora.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.com
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.com, stephan@gerhold.net
 References: <1586592171-31644-1-git-send-email-ajitp@codeaurora.org>
- <1586592171-31644-5-git-send-email-ajitp@codeaurora.org>
+ <1586592171-31644-8-git-send-email-ajitp@codeaurora.org>
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <090b1b81-3c33-7d37-e0bb-a5f73ab76ad0@linaro.org>
-Date:   Thu, 16 Apr 2020 08:56:26 +0100
+Message-ID: <d7ed94e7-639e-9c94-6092-e769a2fc6ad1@linaro.org>
+Date:   Thu, 16 Apr 2020 08:56:39 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1586592171-31644-5-git-send-email-ajitp@codeaurora.org>
+In-Reply-To: <1586592171-31644-8-git-send-email-ajitp@codeaurora.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -86,70 +86,75 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 On 11/04/2020 09:02, Ajit Pandey wrote:
-> AHB-I/X bus clocks inside LPASS coreis not a mandatory clocks for
-s/coreis/core is/
-> newer lpass variants, hence make it an optional one.
+> Add changes related to new sub node defining MI2S dai's properties. Such
+> properties needs to be configured via board specific dts files.
 > 
++Adding Stephan Gerlhold
 
-Can you add more detail on which version of IP would not have this clk.
-
-> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
-> ---
->   sound/soc/qcom/lpass-cpu.c | 31 ++++++++++++++++++-------------
->   1 file changed, 18 insertions(+), 13 deletions(-)
-> 
-> diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
-> index 492f27b..f177932 100644
-> --- a/sound/soc/qcom/lpass-cpu.c
-> +++ b/sound/soc/qcom/lpass-cpu.c
-> @@ -504,26 +504,31 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
->   		return ret;
->   	}
->   
-> -	drvdata->ahbix_clk = devm_clk_get(&pdev->dev, "ahbix-clk");
-> +	drvdata->ahbix_clk = devm_clk_get_optional(&pdev->dev, "ahbix-clk");
->   	if (IS_ERR(drvdata->ahbix_clk)) {
->   		dev_err(&pdev->dev, "error getting ahbix-clk: %ld\n",
->   			PTR_ERR(drvdata->ahbix_clk));
->   		return PTR_ERR(drvdata->ahbix_clk);
->   	}
->   
-> -	ret = clk_set_rate(drvdata->ahbix_clk, LPASS_AHBIX_CLOCK_FREQUENCY);
-> -	if (ret) {
-> -		dev_err(&pdev->dev, "error setting rate on ahbix_clk: %d\n",
-> -			ret);
-> -		return ret;
-> -	}
-> -	dev_dbg(&pdev->dev, "set ahbix_clk rate to %lu\n",
-> -		clk_get_rate(drvdata->ahbix_clk));
-> +	if (drvdata->ahbix_clk != NULL) {
-
-No need for NULL checks here, clk apis already have checks.
+Have a look at https://www.spinics.net/lists/alsa-devel/msg107224.html 
+patches from Stephan Gerlhold which has better version of specifying sd 
+line mask and is inline with DSP based solution too.
 
 --srini
 
-> +		ret = clk_set_rate(drvdata->ahbix_clk,
-> +				   LPASS_AHBIX_CLOCK_FREQUENCY);
-> +		if (ret) {
-> +			dev_err(&pdev->dev,
-> +				"error setting rate on ahbix_clk: %d\n", ret);
-> +			return ret;
-> +		}
+> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
+> ---
+>   .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  | 33 ++++++++++++++++++++++
+>   1 file changed, 33 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+> index a87a406..727ec03 100644
+> --- a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+> @@ -16,6 +16,8 @@ description: |
+>     configure Low-Power Audio Interface(LPAIF) core registers across different
+>     IP versions.
 >   
-> -	ret = clk_prepare_enable(drvdata->ahbix_clk);
-> -	if (ret) {
-> -		dev_err(&pdev->dev, "error enabling ahbix_clk: %d\n", ret);
-> -		return ret;
-> +		dev_dbg(&pdev->dev, "set ahbix_clk rate to %lu\n",
-> +			clk_get_rate(drvdata->ahbix_clk));
+> +  See also dt-bindings/sound/qcom,lpass.h.
 > +
-> +		ret = clk_prepare_enable(drvdata->ahbix_clk);
-> +		if (ret) {
-> +			dev_err(&pdev->dev,
-> +				"error enabling ahbix_clk: %d\n", ret);
-> +			return ret;
-> +		}
->   	}
+>   properties:
+>     compatible:
+>       enum:
+> @@ -69,6 +71,30 @@ properties:
+>     '#sound-dai-cells':
+>       const: 1
 >   
->   	ret = devm_snd_soc_register_component(&pdev->dev,
+> +  dai-name:
+> +    - description: Each node represents an MI2S dai and conatins dai specific
+> +        properties that may change with board layout & dai connections.
+> +    - type: object
+> +    - properties:
+> +      id:
+> +        - description: dai id among one of value defined in header
+> +        - type: u32
+> +      qcom,spkmode-mask:
+> +        - description: mask defining data lines used for speaker
+> +        - type: u32
+> +      qcom,micmode-mask:
+> +        - description: mask defining data lines used for mic
+> +        - type: u32
+> +      qcom,wssrc-mask:
+> +        - description: mask defining word-select source internal/extrnal on dai
+> +        - type: u32
+> +      qcom,loopback-mask:
+> +        - description: mask defining loopback enable/disable on dai
+> +        - type: u32
+> +
+> +      required:
+> +        - id
+> +
+>   required:
+>     - compatible
+>     - reg
+> @@ -101,3 +127,10 @@ examples:
+>   	#sound-dai-cells = <1>;
+>   	qcom,adsp = <&adsp>;
+>   
+> +        prim-mi2s@0 {
+> +		id = <MI2S_PRIMARY>;
+> +		qcom,spkmode-mask = <SD1>;
+> +		qcom,micmode-mask = <SD0>;
+> +                qcom,wssrc-mask = <INTERNAL>;
+> +                qcom,loopback-mask = <DISABLE>;
+> +	};
 > 
