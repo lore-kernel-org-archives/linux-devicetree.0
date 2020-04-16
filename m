@@ -2,101 +2,114 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5E9C3815B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D06C6C2BB55
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A94221D94
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:42:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GG/A2srh"
+	by mail.kernel.org (Postfix) with ESMTP id B92F221D7F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:44:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505821AbgDPLl7 (ORCPT
+        id S2505207AbgDPLoP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:41:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60512 "EHLO
+        Thu, 16 Apr 2020 07:44:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505770AbgDPK6T (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 06:58:19 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78704C0258D4
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 03:57:42 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id u6so5705691ljl.6
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 03:57:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hFUPXxI7jgn/ktPgVbzarMZTHyOx1Nmg/5SBKx4pX4g=;
-        b=GG/A2srh1ACSKZdgHLplfZ/jUi+xHfqSi5dZn0vX/6LIw14wKAv/iShVBee6mNV5+s
-         h/hhCCKNTZ8wtmb9f1Jt173dqX4oF1+DkWJ4ACKhY9XBPC+ndcyHKHhegZ2z25zLjqdM
-         Ehvs/TadXFAZKCdBTBOGRjR6Via/IMCITluuyqfnu9qgdMAWwwr94JMRJ9PXzHSHwoKG
-         slfZgsRKpMg6Si96q2oW1y8x5M9cUVH+dIgZOVHSUa6+BYV9cJG+7SHeLLyODLsXz/eJ
-         SW7YYs6U9T6bf5huPX/Aij1ZcFiQbMPt4YrItZjEd+w3gVbfCsBZyy0qZEzTaFACpgdW
-         5xUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hFUPXxI7jgn/ktPgVbzarMZTHyOx1Nmg/5SBKx4pX4g=;
-        b=Yozmc+bAbM++aTLcZQysFcvkFizHMLSqWJTz0i0C7tTMJDGJzKpQM4Bc6OzGQ4H6je
-         Wu06fhe1Y83hS5Gb03rhgEU1B0+O5z3CElb9tnyIntoXZJg9yZgy8n25ULJxfHDljz7C
-         6rFYhW/BY1cQI0fIeUn+v5Sk9DQ09ELnZXgM5os7rSlBJ+Q17laXZOinKAS6H+95bPfu
-         SE2lBItrO82boK2Raw+EYeWIS55qqjGPAPjfaXJ7SWsiJtOrJbTKt4QAoc7c8ZHkHd8u
-         i9HcdCkRVM7m3im5N0O2fHdiDGpKlmZvVVO+JvAMc0UCsFTjfRLXQtbriMfhexCKQHU5
-         VcNQ==
-X-Gm-Message-State: AGi0PuZmsMB+Xfzs1sCYRAsyAQSC5hSE8pkKcamupKKy9w2xJnXqMgGJ
-        xVoxPvEGbzZwo5F1NTTiZSRz5duI4frI8axcq+ayTg==
-X-Google-Smtp-Source: APiQypIW5KNqgRNJ9hqsEXxDLzCkOX0q/HE89bJBbc8uzjThgdcyvk1104plBxo1ff06jPElEWcriKNEBaC2qQTgiy0=
-X-Received: by 2002:a2e:5048:: with SMTP id v8mr5610475ljd.99.1587034660887;
- Thu, 16 Apr 2020 03:57:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200409043851.31217-1-paweldembicki@gmail.com>
-In-Reply-To: <20200409043851.31217-1-paweldembicki@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Apr 2020 12:57:29 +0200
-Message-ID: <CACRpkdYKB0CHgOQ0DEhYoy16n3tSZ=DZ0WvL-GhAVCq0Jk8s2w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: vendor-prefixes: Add Check Point
-To:     Pawel Dembicki <paweldembicki@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
+        with ESMTP id S2505209AbgDPKgS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 06:36:18 -0400
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6791C03C1AC
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 03:36:14 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:fd83:81bb:c1d7:433d])
+        by baptiste.telenet-ops.be with bizsmtp
+        id TNWz2200b4dKHqf01NWzN4; Thu, 16 Apr 2020 12:31:11 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jP1nP-0001co-N7; Thu, 16 Apr 2020 12:30:59 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jP1nP-0003zF-Lu; Thu, 16 Apr 2020 12:30:59 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Jiri Kosina <trivial@kernel.org>
+Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH trivial 3/6] drm: Fix misspellings of "Analog Devices"
+Date:   Thu, 16 Apr 2020 12:30:55 +0200
+Message-Id: <20200416103058.15269-4-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200416103058.15269-1-geert+renesas@glider.be>
+References: <20200416103058.15269-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Pawel,
+According to https://www.analog.com/, the company name is spelled
+"Analog Devices".
 
-On Thu, Apr 9, 2020 at 6:39 AM Pawel Dembicki <paweldembicki@gmail.com> wrote:
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/gpu/drm/bridge/adv7511/Kconfig | 2 +-
+ drivers/gpu/drm/drm_fb_cma_helper.c    | 2 +-
+ drivers/gpu/drm/tegra/fb.c             | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
->    "^ceva,.*":
->      description: Ceva, Inc.
->    "^chipidea,.*":
-> +    description: Check Point Software Technologies Ltd.
-> +  "^checkpoint,.*":
->      description: Chipidea, Inc
->    "^chipone,.*":
->      description: ChipOne
+diff --git a/drivers/gpu/drm/bridge/adv7511/Kconfig b/drivers/gpu/drm/bridge/adv7511/Kconfig
+index 47d4eb9e845d085c..f46a5e26b5dd6406 100644
+--- a/drivers/gpu/drm/bridge/adv7511/Kconfig
++++ b/drivers/gpu/drm/bridge/adv7511/Kconfig
+@@ -6,7 +6,7 @@ config DRM_I2C_ADV7511
+ 	select REGMAP_I2C
+ 	select DRM_MIPI_DSI
+ 	help
+-	  Support for the Analog Device ADV7511(W)/13/33/35 HDMI encoders.
++	  Support for the Analog Devices ADV7511(W)/13/33/35 HDMI encoders.
+ 
+ config DRM_I2C_ADV7511_AUDIO
+ 	bool "ADV7511 HDMI Audio driver"
+diff --git a/drivers/gpu/drm/drm_fb_cma_helper.c b/drivers/gpu/drm/drm_fb_cma_helper.c
+index 9801c0333eca29e9..cb2349ad338d953b 100644
+--- a/drivers/gpu/drm/drm_fb_cma_helper.c
++++ b/drivers/gpu/drm/drm_fb_cma_helper.c
+@@ -2,7 +2,7 @@
+ /*
+  * drm kms/fb cma (contiguous memory allocator) helper functions
+  *
+- * Copyright (C) 2012 Analog Device Inc.
++ * Copyright (C) 2012 Analog Devices Inc.
+  *   Author: Lars-Peter Clausen <lars@metafoo.de>
+  *
+  * Based on udl_fbdev.c
+diff --git a/drivers/gpu/drm/tegra/fb.c b/drivers/gpu/drm/tegra/fb.c
+index b8a328f538626e7a..2b0666ac681b8721 100644
+--- a/drivers/gpu/drm/tegra/fb.c
++++ b/drivers/gpu/drm/tegra/fb.c
+@@ -4,7 +4,7 @@
+  * Copyright (C) 2012 NVIDIA CORPORATION.  All rights reserved.
+  *
+  * Based on the KMS/FB CMA helpers
+- *   Copyright (C) 2012 Analog Device Inc.
++ *   Copyright (C) 2012 Analog Devices Inc.
+  */
+ 
+ #include <linux/console.h>
+-- 
+2.17.1
 
-This is wrong, you inserted your new vendor between the regexp
-and description for chipidea and flipped the two lines in your
-match.
-
-Yours,
-Linus Walleij
