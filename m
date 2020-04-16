@@ -2,293 +2,186 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDA8C38A29
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F84BC352BE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDB27214D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:28:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587022095;
-	bh=w+nPkuKj2fNBoyAqj0+LVj5YRJnCBFYLxnu4z9r5o3Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TuuGVZ45pu1YfDBLyIsFjatOXxsd1xFAg0CkR8csQU61V9GjYx9+RK/aHARkpmENp
-	 y/5WjVD/lRqlk9pyrwj3C1Nq4Hdc7nJtyuTx5FIJE7U+SY/PbrH9lhTMrxh6xDGIew
-	 2vIfdiLwlRpNyBsFUfkdlfKwh4DwWupydbYyeBKk=
+	by mail.kernel.org (Postfix) with ESMTP id 48D8D206D5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:28:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="zSIcztlU";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="G6Uw3TQH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439269AbgDPH2H (ORCPT
+        id S2439259AbgDPH2Z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:28:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439264AbgDPH2F (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:28:05 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF201206D5;
-        Thu, 16 Apr 2020 07:28:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587022084;
-        bh=w+nPkuKj2fNBoyAqj0+LVj5YRJnCBFYLxnu4z9r5o3Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p/+FaYsXXVpQvawW/bB5pBeFg94y8wvi68MZpusiUD9zf/VTvB/hqDWPT24gpNdlC
-         XDOTiQSFGQKDR4FJnfTeqH9jU6xA5AfbuZM10qjcO4GVgrJFZrTPoxnBiaVw8VyHKK
-         AUbK3qm9zutGjGBq1rIFNYoERjXWo70jPkwEChWo=
-Date:   Thu, 16 Apr 2020 10:28:01 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Robert Marko <robert.marko@sartura.hr>
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Subject: Re: [PATCH v3 1/3] net: phy: mdio: add IPQ40xx MDIO driver
-Message-ID: <20200416072801.GG1309273@unreal>
-References: <20200415150244.2737206-1-robert.marko@sartura.hr>
+        Thu, 16 Apr 2020 03:28:25 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:60961 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2439247AbgDPH2Y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 03:28:24 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id DB7856C8;
+        Thu, 16 Apr 2020 03:28:22 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 16 Apr 2020 03:28:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=oWvboizClBIQCLsIM+QeCQyJEOn
+        4qOWnj1Q+s++lsjs=; b=zSIcztlUz8NKqb7WKKpyAEkcZ1dTraBzvn03Zfzy9A5
+        B+h+d0EccRHd61F+h9HgZ048hy261vUnQJealj3ZWMpO1o7w3u2GAcfD63Nnxb/c
+        iNm6QbEE7TArhYYza3xaEYWi9FOSoi0f/c010l/YRe4+67Am1N59RC8ez1Lqeofo
+        3mzV1ofHkLPYSTAaK+OaUeunBnq0ol6rOLTCnIrqnaEeH0J/WfHjgvoZwJFwfzr/
+        i9KAwgA57QoR9r8uc0QCJ6okJlGk+ae9nJ1SMubPtNaFdiOTks1JoP/WZe0YdG3o
+        cLkh3Qkqy6bCcr4PptQFzgdmhyQu4YOzt/qFz0EbLdA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=oWvboi
+        zClBIQCLsIM+QeCQyJEOn4qOWnj1Q+s++lsjs=; b=G6Uw3TQHyi5VmNPG6Wn5Yb
+        7ey5AyRNaYPpvzgnX/alNu/CrDkMQLCs15YxG4wP9nJ5mVFJfLW5Cx8Zu5/aZGIg
+        7S/G4GDfhgH2/b8+pWmq/OWjAVYwDfggxiA12TY68Lutd6PnqgmCvwEID1NRfJo9
+        IxKlIMZ9YM16RStAhU5KfncdPMjWU6IYSMIftwhdEx3UTOlazk0KbRqD4ElztuLu
+        t9QA7T8rPdmcdr0aoSIT8YDnJP/mr2Co0jyKxLdQu1VdVs/QErPCcsBkXYGIcL7a
+        hZxWEGEGtoeL8yZ6Rolu/ha4SkmC1gl/g7kyquIAm/Faz4PaPGDUr3nGxrm4fkng
+        ==
+X-ME-Sender: <xms:FQmYXujE1KNDZjwwxcLHqAY3RKBJYZ_JObe5_MfOWQxtmrdnf8ZtVQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrfeeggdduvddtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuffhomhgrih
+    hnpeguvghvihgtvghtrhgvvgdrohhrghenucfkphepledtrdekledrieekrdejieenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvg
+    estggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:FQmYXrUzC2IVvL9NVt0jEwUx4KLQUB8fFxLkmCmcEqNFIXqVA80XZg>
+    <xmx:FQmYXo2rFH-LZClwK_K-LJO1UO466yvvJKvejb0g_tE84XrpQFEqWw>
+    <xmx:FQmYXpFYffKWDwhGT52n7INhew0EB4kuo4UDmyCvYWGNIgZjD6LeFA>
+    <xmx:FgmYXl4y38Nz2SXzyM9WNko6ZU3zss0377Fg-TIyiu3ToNx6GbcgPA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 89FC9328005A;
+        Thu, 16 Apr 2020 03:28:21 -0400 (EDT)
+Date:   Thu, 16 Apr 2020 09:28:20 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     devicetree@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        dri-devel@lists.freedesktop.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v1 1/4] dt-bindings: display: convert atmel-hlcdc to DT
+ Schema
+Message-ID: <20200416072820.lizjyhk5dbvnujwv@gilmour.lan>
+References: <20200412182012.27515-1-sam@ravnborg.org>
+ <20200412182012.27515-2-sam@ravnborg.org>
+ <20200414082803.exblunwe7bufbiht@gilmour.lan>
+ <20200415163956.GB7965@ravnborg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lplp3n3i5fwlo3st"
 Content-Disposition: inline
-In-Reply-To: <20200415150244.2737206-1-robert.marko@sartura.hr>
+In-Reply-To: <20200415163956.GB7965@ravnborg.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 05:02:43PM +0200, Robert Marko wrote:
-> This patch adds the driver for the MDIO interface
-> inside of Qualcomm IPQ40xx series SoC-s.
->
-> Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> Cc: Luka Perkov <luka.perkov@sartura.hr>
-> ---
-> Changes from v2 to v3:
-> * Rename registers
-> * Remove unnecessary variable initialisations
-> * Switch to readl_poll_timeout() instead of custom solution
-> * Drop unused header
->
-> Changes from v1 to v2:
-> * Remove magic default value
-> * Remove lockdep_assert_held
-> * Add C45 check
-> * Simplify the driver
-> * Drop device and mii_bus structs from private struct
-> * Use devm_mdiobus_alloc_size()
->
->  drivers/net/phy/Kconfig        |   7 ++
->  drivers/net/phy/Makefile       |   1 +
->  drivers/net/phy/mdio-ipq40xx.c | 160 +++++++++++++++++++++++++++++++++
->  3 files changed, 168 insertions(+)
->  create mode 100644 drivers/net/phy/mdio-ipq40xx.c
->
-> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> index 3fa33d27eeba..23bb5db033e3 100644
-> --- a/drivers/net/phy/Kconfig
-> +++ b/drivers/net/phy/Kconfig
-> @@ -157,6 +157,13 @@ config MDIO_I2C
->
->  	  This is library mode.
->
-> +config MDIO_IPQ40XX
-> +	tristate "Qualcomm IPQ40xx MDIO interface"
-> +	depends on HAS_IOMEM && OF_MDIO
-> +	help
-> +	  This driver supports the MDIO interface found in Qualcomm
-> +	  IPQ40xx series Soc-s.
-> +
->  config MDIO_IPQ8064
->  	tristate "Qualcomm IPQ8064 MDIO interface support"
->  	depends on HAS_IOMEM && OF_MDIO
-> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-> index 2f5c7093a65b..36aafc6128c4 100644
-> --- a/drivers/net/phy/Makefile
-> +++ b/drivers/net/phy/Makefile
-> @@ -37,6 +37,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+= mdio-cavium.o
->  obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
->  obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
->  obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
-> +obj-$(CONFIG_MDIO_IPQ40XX)	+= mdio-ipq40xx.o
->  obj-$(CONFIG_MDIO_IPQ8064)	+= mdio-ipq8064.o
->  obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
->  obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
-> diff --git a/drivers/net/phy/mdio-ipq40xx.c b/drivers/net/phy/mdio-ipq40xx.c
-> new file mode 100644
-> index 000000000000..acf1230341bd
-> --- /dev/null
-> +++ b/drivers/net/phy/mdio-ipq40xx.c
-> @@ -0,0 +1,160 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
-> +/* Copyright (c) 2015, The Linux Foundation. All rights reserved. */
-> +/* Copyright (c) 2020 Sartura Ltd. */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_mdio.h>
-> +#include <linux/phy.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define MDIO_ADDR_REG				0x44
-> +#define MDIO_DATA_WRITE_REG			0x48
-> +#define MDIO_DATA_READ_REG			0x4c
-> +#define MDIO_CMD_REG				0x50
-> +#define MDIO_CMD_ACCESS_BUSY		BIT(16)
-> +#define MDIO_CMD_ACCESS_START		BIT(8)
-> +#define MDIO_CMD_ACCESS_CODE_READ	0
-> +#define MDIO_CMD_ACCESS_CODE_WRITE	1
-> +
-> +#define IPQ40XX_MDIO_TIMEOUT	10000
-> +#define IPQ40XX_MDIO_SLEEP		10
-> +
-> +struct ipq40xx_mdio_data {
-> +	void __iomem	*membase;
-> +};
-> +
-> +static int ipq40xx_mdio_wait_busy(struct mii_bus *bus)
-> +{
-> +	struct ipq40xx_mdio_data *priv = bus->priv;
-> +	unsigned int busy;
-> +
-> +	return readl_poll_timeout(priv->membase + MDIO_CMD_REG, busy,
-> +				  (busy & MDIO_CMD_ACCESS_BUSY) == 0,
-> +				  IPQ40XX_MDIO_SLEEP, IPQ40XX_MDIO_TIMEOUT);
-> +}
-> +
-> +static int ipq40xx_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
-> +{
-> +	struct ipq40xx_mdio_data *priv = bus->priv;
-> +	unsigned int cmd;
-> +
-> +	/* Reject clause 45 */
-> +	if (regnum & MII_ADDR_C45)
-> +		return -EOPNOTSUPP;
-> +
-> +	if (ipq40xx_mdio_wait_busy(bus))
-> +		return -ETIMEDOUT;
-> +
-> +	/* issue the phy address and reg */
-> +	writel((mii_id << 8) | regnum, priv->membase + MDIO_ADDR_REG);
-> +
-> +	cmd = MDIO_CMD_ACCESS_START | MDIO_CMD_ACCESS_CODE_READ;
-> +
-> +	/* issue read command */
-> +	writel(cmd, priv->membase + MDIO_CMD_REG);
-> +
-> +	/* Wait read complete */
-> +	if (ipq40xx_mdio_wait_busy(bus))
-> +		return -ETIMEDOUT;
-> +
-> +	/* Read and return data */
-> +	return readl(priv->membase + MDIO_DATA_READ_REG);
-> +}
-> +
-> +static int ipq40xx_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
-> +							 u16 value)
-> +{
-> +	struct ipq40xx_mdio_data *priv = bus->priv;
-> +	unsigned int cmd;
-> +
-> +	/* Reject clause 45 */
-> +	if (regnum & MII_ADDR_C45)
-> +		return -EOPNOTSUPP;
-> +
-> +	if (ipq40xx_mdio_wait_busy(bus))
-> +		return -ETIMEDOUT;
-> +
-> +	/* issue the phy address and reg */
-> +	writel((mii_id << 8) | regnum, priv->membase + MDIO_ADDR_REG);
-> +
-> +	/* issue write data */
-> +	writel(value, priv->membase + MDIO_DATA_WRITE_REG);
-> +
-> +	cmd = MDIO_CMD_ACCESS_START | MDIO_CMD_ACCESS_CODE_WRITE;
-> +	/* issue write command */
-> +	writel(cmd, priv->membase + MDIO_CMD_REG);
-> +
-> +	/* Wait write complete */
-> +	if (ipq40xx_mdio_wait_busy(bus))
-> +		return -ETIMEDOUT;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ipq40xx_mdio_probe(struct platform_device *pdev)
-> +{
-> +	struct ipq40xx_mdio_data *priv;
-> +	struct mii_bus *bus;
-> +	int ret;
-> +
-> +	bus = devm_mdiobus_alloc_size(&pdev->dev, sizeof(*priv));
-> +	if (!bus)
-> +		return -ENOMEM;
-> +
-> +	priv = bus->priv;
-> +
-> +	priv->membase = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(priv->membase))
-> +		return PTR_ERR(priv->membase);
-> +
-> +	bus->name = "ipq40xx_mdio";
-> +	bus->read = ipq40xx_mdio_read;
-> +	bus->write = ipq40xx_mdio_write;
-> +	bus->parent = &pdev->dev;
-> +	snprintf(bus->id, MII_BUS_ID_SIZE, "%s%d", pdev->name, pdev->id);
-> +
-> +	ret = of_mdiobus_register(bus, pdev->dev.of_node);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Cannot register MDIO bus!\n");
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, bus);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ipq40xx_mdio_remove(struct platform_device *pdev)
-> +{
-> +	struct mii_bus *bus = platform_get_drvdata(pdev);
-> +
-> +	mdiobus_unregister(bus);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id ipq40xx_mdio_dt_ids[] = {
-> +	{ .compatible = "qcom,ipq40xx-mdio" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, ipq40xx_mdio_dt_ids);
-> +
-> +static struct platform_driver ipq40xx_mdio_driver = {
-> +	.probe = ipq40xx_mdio_probe,
-> +	.remove = ipq40xx_mdio_remove,
-> +	.driver = {
-> +		.name = "ipq40xx-mdio",
-> +		.of_match_table = ipq40xx_mdio_dt_ids,
-> +	},
-> +};
-> +
-> +module_platform_driver(ipq40xx_mdio_driver);
-> +
-> +MODULE_DESCRIPTION("IPQ40XX MDIO interface driver");
-> +MODULE_AUTHOR("Qualcomm Atheros");
 
-Strictly saying, but author can't be company.
+--lplp3n3i5fwlo3st
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +MODULE_LICENSE("Dual BSD/GPL");
-> --
-> 2.26.0
+On Wed, Apr 15, 2020 at 06:39:56PM +0200, Sam Ravnborg wrote:
+> Hi Maxime.
 >
+> On Tue, Apr 14, 2020 at 10:28:03AM +0200, Maxime Ripard wrote:
+> > Hi Sam,
+> >
+> > On Sun, Apr 12, 2020 at 08:20:09PM +0200, Sam Ravnborg wrote:
+> > > diff --git a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.yaml b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.yaml
+> > > new file mode 100644
+> > > index 000000000000..7eb6266a25a2
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.yaml
+> > > @@ -0,0 +1,102 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/display/atmel/hlcdc-dc.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Atmel HLCDC (High LCD Controller) display controller
+> > > +
+> > > +maintainers:
+> > > +  - Sam Ravnborg <sam@ravnborg.org>
+> > > +  - Boris Brezillon <bbrezillon@kernel.org>
+> > > +
+> > > +description: |
+> > > +  The Atmel HLCDC Display Controller is subdevice of the HLCDC MFD device.
+> > > +  See ../../mfd/atmel-hlcdc.yaml for more details.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: atmel,hlcdc-display-controller
+> > > +
+> > > +  "#address-cells":
+> > > +    const: 1
+> > > +  "#size-cells":
+> > > +    const: 0
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - "#address-cells"
+> > > +  - "#size-cells"
+> > > +
+> > > +patternProperties:
+> > > +  "^port@[0-9]$":
+> > > +    type: object
+> > > +    description: |
+> > > +      A port node with endpoint definitions as defined in
+> > > +      ../../media/video-interfaces.txt
+> > > +
+> > > +    properties:
+> > > +      "#address-cells":
+> > > +        const: 1
+> > > +
+> > > +      "#size-cells":
+> > > +        const: 0
+> > > +
+> > > +      reg:
+> > > +        maxItems: 1
+> > > +        description: The virtual number of the port
+> > > +
+> > > +    patternProperties:
+> > > +      "^endpoint(@[0-9])$":
+> >
+> > I guess you meant ^endpoint(@[0-9])?$ instead?
+>
+> I think "^endpoint@[0-9]$" will do the trick.
+> No need for endpoints with numbers higher than 9.
+
+If you want to stick to pedantic DT, then if there's a single
+endpoint, you should avoid reg and the unit-address, and this is
+something that dtc will complain about (even though it's silenced in
+Linux), so yeah, ? seems the way to go.
+
+Maxime
+
+--lplp3n3i5fwlo3st
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXpgJFAAKCRDj7w1vZxhR
+xWxgAQCiEz5pDVYTAZAQHIEYCYsDFUgxa56uIAMS+stmFXHAbgD/RnKsMfVPjvNi
+ihHhyUqtRGFrbbr0ZK29Y5ZAVxRAVAI=
+=VL7j
+-----END PGP SIGNATURE-----
+
+--lplp3n3i5fwlo3st--
