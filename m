@@ -2,149 +2,96 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF13AC2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 09:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 467B8C352BE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 09:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B08C20771
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 09:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 221AB20771
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 09:11:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wb/ou2IL"
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="sTtX0xPo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503539AbgDPJKt (ORCPT
+        id S2503370AbgDPJKq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:10:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2503459AbgDPJJ7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:09:59 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FB49C0610D5
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 02:09:56 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id d77so3748910wmd.3
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 02:09:56 -0700 (PDT)
+        Thu, 16 Apr 2020 05:10:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502799AbgDPIol (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 04:44:41 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F38D6C03C1A8
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 01:43:31 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id q204so15947216oia.13
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 01:43:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=AkzX3Dcs3nD4u98CC4pQCRsVTQrys7ElI/8/pjZK+Ts=;
-        b=wb/ou2IL7ZL03YQ8OAV+Os2euU0E17M9a0KwoQ3V3isxo7+xI1+LSfhg5vSw6QDiT5
-         PsrEZIKgjxOmO31HznVmbOHJL0WiBxEdRrUVX8PGl+6aFMMKj+Ok3aE5PJnZLvTAR7uI
-         vGLCAgXDlm9SWpL6LlhpelL2R0kMbpm8ccCFbNZs9pJWVok28OUT2dVDc0jLwk1ecNu2
-         F3LojeUezoSXKQKiaoF94+HsBfCLyTeSTcf13SDqUTYKpELlLnEGHIWeaFAXVEXVx9Ze
-         VdpFDYBagqARwZ2Txck/ZqK5qn1jwast8Gxgr8rEKOIaDNo6PJlLDAZamY6dNhxapVdn
-         0hAQ==
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ykDjvtxv4Q2KeXX83+m1/r5YqBgMSd9dJ4muRIWqoK8=;
+        b=sTtX0xPof16ieMD0Q9OdwI0NgjF/5AfTvpLiSV8y9MbHQuapST//WTvCgs1LhmMB/w
+         ltPjhVc7fz135Ygr7sOa5IK+HaQdpyz/InJXeSWuxtXsWPPZy0uBaatPkI+Lc9lHdAn6
+         20iOMacLvX4sttfW6pW8XAqDOz7Bwn8/ptj70PbeazMMqNLmjF9kd8Q/nUlOzlNFi5Ke
+         7ZBEIsWWaUPDQQXnL5TlrPwok27nzT9jJ7s7YylaHtmNDtyfhiE+xPq+mQL8FtWhCquD
+         cBEglwnIAdIbkGUObP3+Kn8YaUCPMmjpg1dv106flH+bZeFyO88/3UgEUf7DI9L8arWQ
+         3BBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=AkzX3Dcs3nD4u98CC4pQCRsVTQrys7ElI/8/pjZK+Ts=;
-        b=F4QOx4Yn6ZQSMC0iOCNW9/D+Mx0TO4aw0kCpaXH/5nYL9BGJvKfiUMVM0ydNFlvb1R
-         9bkJIgwMVdyadDnSAAcX+uaL1a6PlhTK3KPu49nxhUwKSgypPzcp1uUOj0Jo5ljUCiMi
-         JfTjiuW/3BeIqY4Ljwm584W8VoXCWL6Z5u2Fram0aKvwyqcEwCKuiwVMXWo3pHAkBvrC
-         YHVH5PyTbLIMRKS9yS3vSZLbQlqBEmARF9NAYyN1p+l0H8XRKXo9xg2Iz9JyGwQMGnzG
-         rcYc+4gOIzwowAP65wC9eg0eYO/Q/h8LbQ8Y5MHf4HiTw0SGFJG7cJa1Im/0EIvY9zsg
-         0pdg==
-X-Gm-Message-State: AGi0PubVI1S6QimD6FrcmH/DVk5BdMeWfSdbVA0Ful6apdfxhpLH2zNN
-        8x1WdC6JE9Lcs4QisMub1x+Kpg==
-X-Google-Smtp-Source: APiQypJvFDcKODT9CxRfCRMCE4sQZDVimgniJ+YY4tbASMLPFOZ6+nm+DuXIWSzcnSgUjCRLXlPPcw==
-X-Received: by 2002:a1c:99d3:: with SMTP id b202mr3989576wme.126.1587028194753;
-        Thu, 16 Apr 2020 02:09:54 -0700 (PDT)
-Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id h5sm7933704wrp.97.2020.04.16.02.09.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 02:09:54 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 10:10:54 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ran Bi <ran.bi@mediatek.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        srv_heupstream@mediatek.com
-Subject: Re: [PATCH v12 4/6] mfd: Add support for the MediaTek MT6358 PMIC
-Message-ID: <20200416091054.GZ2167633@dell>
-References: <1586333531-21641-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1586333531-21641-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ykDjvtxv4Q2KeXX83+m1/r5YqBgMSd9dJ4muRIWqoK8=;
+        b=lRuY0+vhfA/ztJWyqOIP3YLIuO4XIrJaFoUdRVTKTTLvMAUGSKuu7w5Pe8RWY1tfgf
+         qczr0WE9FJug8O+2xKFg7BiaTDa2Jd6mJduKHVpILx/L+bWcatMUr4i5RIayUoSYTeDu
+         urEjyEH4tSXkLrXAbmlTv+YUjujHNaSXu7tmaeaS0AZ3/AVwL7ZN+dAP4q6mFALvX9F5
+         Vzae2f9UBjstEw+yoQlWMPavjGSm+AymJbzNzjJc9okZFdw3FpIJZnU9zuCfbidTuojJ
+         fhEgL2DfnAI+R7xBKC7EqpqdrDgrZCe91GYIPj902lT4HnvAjl1YnAVifZiRw9GlE1zv
+         j3gA==
+X-Gm-Message-State: AGi0PuY9SCvTzOtYxJLWMC+STw5d37EmGLOhLf2QeQlMH/yuXBjWRN6A
+        eluskSm0p4jGd4VhEkdF0i247TCWa9BexZENilcmvQ==
+X-Google-Smtp-Source: APiQypKA0tsSgmkVKs1bVQXUH8aVDS5ErxQUQokg0NYz0kQHISsOtgMVqpA9ywjDpHxMmo0pN5cR4SI23dw3PEHfkJc=
+X-Received: by 2002:aca:4d86:: with SMTP id a128mr2238387oib.96.1587026611441;
+ Thu, 16 Apr 2020 01:43:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1586333531-21641-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+References: <20200415150244.2737206-1-robert.marko@sartura.hr>
+ <20200415150244.2737206-2-robert.marko@sartura.hr> <91e6a0bc-2189-69b7-ddca-14721dc6ca1a@gmail.com>
+In-Reply-To: <91e6a0bc-2189-69b7-ddca-14721dc6ca1a@gmail.com>
+From:   Robert Marko <robert.marko@sartura.hr>
+Date:   Thu, 16 Apr 2020 10:43:20 +0200
+Message-ID: <CA+HBbNF22tXVtOQkZJ0JHi_ryeeUnnH3hZuxuHFcyTAxZ_Z2nQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] dt-bindings: add Qualcomm IPQ4019 MDIO bindings
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org, Luka Perkov <luka.perkov@sartura.hr>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 08 Apr 2020, Hsin-Hsiung Wang wrote:
-
-> This adds support for the MediaTek MT6358 PMIC. This is a
-> multifunction device with the following sub modules:
-> 
-> - Regulator
-> - RTC
-> - Codec
-> - Interrupt
-> 
-> It is interfaced to the host controller using SPI interface
-> by a proprietary hardware called PMIC wrapper or pwrap.
-> MT6358 MFD is a child device of the pwrap.
-> 
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> ---
->  drivers/mfd/Makefile                 |   2 +-
->  drivers/mfd/mt6358-irq.c             | 235 +++++++++++++++++++++++++++++
->  drivers/mfd/mt6397-core.c            |  36 +++++
->  include/linux/mfd/mt6358/core.h      | 158 ++++++++++++++++++++
->  include/linux/mfd/mt6358/registers.h | 282 +++++++++++++++++++++++++++++++++++
->  include/linux/mfd/mt6397/core.h      |   3 +
->  6 files changed, 715 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/mfd/mt6358-irq.c
->  create mode 100644 include/linux/mfd/mt6358/core.h
->  create mode 100644 include/linux/mfd/mt6358/registers.h
-
-[...]
-
-> diff --git a/include/linux/mfd/mt6358/core.h b/include/linux/mfd/mt6358/core.h
-> new file mode 100644
-> index 0000000..a304aae
-> --- /dev/null
-> +++ b/include/linux/mfd/mt6358/core.h
-> @@ -0,0 +1,158 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2019 MediaTek Inc.
-
-Nit: This needs updating.
-
-Once updated, please apply my:
-
-For my own reference (apply this as-is to your sign-off block):
-
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+On Thu, Apr 16, 2020 at 1:55 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+>
+>
+> On 4/15/2020 8:02 AM, Robert Marko wrote:
+> > This patch adds the binding document for the IPQ40xx MDIO driver.
+> >
+> > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> > Cc: Luka Perkov <luka.perkov@sartura.hr>
+>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+>
+> Please do not drop tags when they were given to you in an earlier version.
+Sorry, I did not know that.
+Wont do it in future,
+thanks
+> --
+> Florian
