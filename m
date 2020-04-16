@@ -2,127 +2,124 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DC2C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DACA9C2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02F3F206E9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:13:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="sLWJGOSK"
+	by mail.kernel.org (Postfix) with ESMTP id B697F206F9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:19:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587025194;
+	bh=+AtB2qrsVxt1QWCAagtuBV0iMzA+FqM4hoS9ArXVBXI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BoeMVALLR0uMKGLPWVP1YjsxcMjdLYeFHmrCc3C457CiqLQkTUA/7j3rivtqkSlzD
+	 LigCG1typkDCdO/qz2Po/3wCMamDz2iv3XOA5A2YDu+cjUACQq/kmEpehQn/Br8lX9
+	 W6AoShuNXKlUSZ5JM1g1uzL8QKwjG54RVxyeB978=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441205AbgDPINd (ORCPT
+        id S2441308AbgDPITc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 04:13:33 -0400
-Received: from mail-eopbgr1400117.outbound.protection.outlook.com ([40.107.140.117]:14353
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2440433AbgDPINK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:13:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iZWFQt+yumk0kCPy0Gn6K6MfAWceSz23G3Uem+sa64f8M/AGEWOGG+BzIYfkb2Kv7E678V6Wm8ex1ng4hnBmLNJM9og/BHQJfK7+oZtQW+ahsnP1CGw7pJBUKRNRo/TcnrycSTNt7S8yLtyjJyTV0yPKsmhNZktvZY3YLtAKIGq0QsgUUuclrW/hgATw5agql+5t+N1IGbvb+qmrFu3lqI6Q+tZLFGxrN704LjUHy0AjpCTMXhfygZbzCtZVmNzDOJTUXAxKcYIns+ad4ZzwrJlARHKbwyBtQ2EHG7fsQy7qSDbPHuGQ0p8JB+gC6EG6v5WHQ+2WcliuxI0IOunfrg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Kz5uinTdjVCVp0YrzopkP+oDJKTb2K89yvlM6ohUyDw=;
- b=c7OcFAfAOfAmcwzg0QqjvVYShTHeDi+X8Fty/QJK+g+4wRf/AfBCCnhJ+xph9/ZmiTwPSOe1cBy5IBX0v6nKAe9i4GTgCntYn3gsIa/16A3KUrYen/GxlEej4+SfKawL4UPbImhMK1tA0WslGvUtUsrds8znjRPW0yg3eZ91CB/jE1mDIXzscf1u05Oipbela3IlN8LGKQPe9YoGtCg+/ozrGbiwqGoROG8cJzeqDAkc3qKroYgjLip1PmnLf3pE//jKd/ddRUvReaEmW4ule8lQYW7ppTluqAhqEHafM9ff35TjLiIIOCQSWG0YDmeFeZwXMBiTFG8tvL7+GuNoIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Kz5uinTdjVCVp0YrzopkP+oDJKTb2K89yvlM6ohUyDw=;
- b=sLWJGOSK4Qb53B77CJnNbkTN/Jq7IizsucjUsPHCyJbDSU7NWamRnqbxs3olzD+aJKRiYZwIU2+6PlWl8O/nByg5z7WFhr2sYaOusgFoYRCil18nyW15tp/Lpwc4tq4EiOTnrNwfKs3OQKdthIzQUsQMeNcmQy2Opgocr2OkVjo=
-Received: from OSAPR01MB4529.jpnprd01.prod.outlook.com (20.179.176.20) by
- OSAPR01MB1907.jpnprd01.prod.outlook.com (52.134.236.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2900.25; Thu, 16 Apr 2020 08:13:03 +0000
-Received: from OSAPR01MB4529.jpnprd01.prod.outlook.com
- ([fe80::3056:e118:8a8e:b3ad]) by OSAPR01MB4529.jpnprd01.prod.outlook.com
- ([fe80::3056:e118:8a8e:b3ad%7]) with mapi id 15.20.2878.023; Thu, 16 Apr 2020
- 08:13:03 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Vinod <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH 2/2] dt-bindings: dma: renesas,usb-dmac: convert bindings
- to json-schema
-Thread-Topic: [PATCH 2/2] dt-bindings: dma: renesas,usb-dmac: convert bindings
- to json-schema
-Thread-Index: AQHWDx8gtNeFxgyfAE26KaVsY8FTY6h6POmAgADJxGCAAGI2AIAABivg
-Date:   Thu, 16 Apr 2020 08:13:02 +0000
-Message-ID: <OSAPR01MB45292EC62BA96BC551EAB0CFD8D80@OSAPR01MB4529.jpnprd01.prod.outlook.com>
-References: <1586512923-21739-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1586512923-21739-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdWziQYKFeZZt7ZOCYMEWxD8e3mjqf+x0xsAcA7XDzZHWQ@mail.gmail.com>
- <OSAPR01MB452933886B2C83A6E054AE50D8D80@OSAPR01MB4529.jpnprd01.prod.outlook.com>
- <CAMuHMdXauwb2zwxUSPw_d-wZiOAfuo939r+TWYFVDjqmpbg_2A@mail.gmail.com>
-In-Reply-To: <CAMuHMdXauwb2zwxUSPw_d-wZiOAfuo939r+TWYFVDjqmpbg_2A@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f221d2b9-8b69-4c89-a89a-08d7e1ddfc58
-x-ms-traffictypediagnostic: OSAPR01MB1907:
-x-microsoft-antispam-prvs: <OSAPR01MB1907C02C1F6CFB467C1DD630D8D80@OSAPR01MB1907.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0375972289
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB4529.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(396003)(376002)(136003)(39860400002)(346002)(7696005)(55016002)(8676002)(9686003)(76116006)(8936002)(33656002)(81156014)(6916009)(64756008)(66446008)(66946007)(66476007)(86362001)(66556008)(4326008)(186003)(54906003)(478600001)(5660300002)(316002)(71200400001)(6506007)(52536014)(55236004)(26005)(53546011)(2906002)(142933001);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2NrOxlAjW4rBR3KXUsM95l/Uq94jDfeIoakcDD1/YekGAsQHITcrHw/bReYtLIQMeNxLaxjI9hn6B52Pyo8TK2rn+858WixWpsdl9FMsMeEgDNfnytWn5tAwRZSNSZ6vQoKsCdLwdQzBsBp7LFlWSKlv7P21L8KTeCSJf/7/1EFXSGtLWZw0lYgKd8AyZtBggApK86SqTeMOThe+m5EhjfFgyVEf4Y3auI99wC8y3+Oz/pxd67qepGpsoAn4k8MmH64W52Np0LgycYRtTavkQkIXiZ/ZbllS7AVxEDR6TKL0ceZ2NodQYkYTFthvNA4S8a4x5rvKv+xrb//osliAsEkBPlSTtHzduiBGgqQ9Gpvjqfd3l2ge/Qj+xN3mXuDVCeK8pprS6/bvmkJXB7+hkOWOf7RBJ2vNevusVeFUkyiP78+DH8tVnRJh4LNWaRw2OQYpKYbIWTj2RiF5Hp0A0vMy0mrs1hF56dydSxMIrVOIJHE6HJojqt72GwwZVKTf
-x-ms-exchange-antispam-messagedata: KbGy5Dlnf7CUUScPkd+sg7k2MPzhbiJoIZSANQSagI2qQ1Ivo/u2PT2NFhZ5SQhzSwIjDyonFrxIgk6v+TejdYNhQYy/oiEwzddiqgViOGrFw1JlSZIquAl+w8nHOxeOfeWelCCr97cKchHcUDMwTw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 16 Apr 2020 04:19:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2441300AbgDPITU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 04:19:20 -0400
+Received: from localhost (unknown [223.235.195.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D38A206B9;
+        Thu, 16 Apr 2020 08:07:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587024458;
+        bh=+AtB2qrsVxt1QWCAagtuBV0iMzA+FqM4hoS9ArXVBXI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2SDVAHMhpWjl2KgmMtDeMa4mCSN5E7syFhtD6nl+7e+uOtdm92iHSJh7of/HWeSKy
+         HDPx9eDy3/ziMPBERearhYxolH1rzEwouN2J1vLT/RYfJAdCvbbfyQVciDd7LjXhj3
+         Rm7XEVuyXLSwCmFC9enIFNjzAhrkqZPWIGTVc9wk=
+Date:   Thu, 16 Apr 2020 13:37:34 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: Remove cases of 'allOf' containing a
+ '$ref'
+Message-ID: <20200416080734.GJ72691@vkoul-mobl>
+References: <20200416005549.9683-1-robh@kernel.org>
+ <20200416005549.9683-2-robh@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f221d2b9-8b69-4c89-a89a-08d7e1ddfc58
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2020 08:13:03.1996
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zFvMH9RRJ4zST7iTb8WNL04cEKTdqLynRIAOUb24eD9JZcnr6mPukjvsoMU5bbMl2SA4n4p3zsFgR+VRpG2CywEm1VmWrikl7caQ8R3eqHPwLAX17rhKFtnOxaIiUOqb
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB1907
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416005549.9683-2-robh@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogVGh1cnNk
-YXksIEFwcmlsIDE2LCAyMDIwIDQ6NTAgUE0NCj4gDQo+IEhpIFNoaW1vZGEtc2FuLA0KPiANCj4g
-T24gVGh1LCBBcHIgMTYsIDIwMjAgYXQgNDowNCBBTSBZb3NoaWhpcm8gU2hpbW9kYQ0KPiA8eW9z
-aGloaXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+ID4gRnJvbTogR2VlcnQg
-VXl0dGVyaG9ldmVuLCBTZW50OiBXZWRuZXNkYXksIEFwcmlsIDE1LCAyMDIwIDEwOjU2IFBNDQo+
-ID4gPHNuaXA+DQo+ID4gPiA+IC0tLSAvZGV2L251bGwNCj4gPiA+ID4gKysrIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9yZW5lc2FzLHVzYi1kbWFjLnlhbWwNCj4gPiA+
-ID4gKyAgaW50ZXJydXB0czoNCj4gPiA+ID4gKyAgICBtYXhJdGVtczogMg0KPiA+ID4NCj4gPiA+
-IElzIHRoZXJlIGEgdXNlIGNhc2UgZm9yIHNwZWNpZnlpbmcgYSBzaW5nbGUgaW50ZXJydXB0Pw0K
-PiA+DQo+ID4gTm8uIEFsbCBVU0ItRE1BQyBvZiBSLUNhciBHZW4yLzMgYW5kIFJaL0duIGhhcyAy
-IGNoYW5uZWxzLg0KPiA+IEluIGNhc2Ugb2YgUi1DYXIgR2VuMywgcGxlYXNlIHJlZmVyIHRvIHRo
-ZSBGaWd1cmUgNzUuMSBVU0ItRE1BQyBCbG9jayBEaWFncmFtLg0KPiA+IFRoZXNlIFVTQi1ETUFD
-biBoYXZlIENIMCBhbmQgQ0gxDQo+IA0KPiBUaGFua3MgZm9yIGNvbmZpcm1pbmchDQo+IA0KPiA+
-ID4gPiArICBkbWEtY2hhbm5lbHM6DQo+ID4gPiA+ICsgICAgbWF4aW11bTogMg0KPiA+ID4NCj4g
-PiA+IElzIHRoZXJlIGEgdXNlIGNhc2UgZm9yIHNwZWNpZnlpbmcgYSBzaW5nbGUgY2hhbm5lbD8N
-Cj4gPiA+DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgaW9tbXVzOg0KPiA+ID4gPiArICAgIG1heEl0
-ZW1zOiAyDQo+ID4gPg0KPiA+ID4gTGlrZXdpc2U/DQo+ID4NCj4gPiBBcyBJIG1lbnRpb25lZCBh
-Ym92ZSwgdGhlcmUgaXMgbm90IGEgdXNlIGNhc2UgZm9yIHNwZWNpZnlpbmcgYSBzaW5nbGUgY2hh
-bm5lbC4NCj4gDQo+IEhlbmNlIEkgdGhpbmsgYWxsIG9mIHRoZXNlIHNob3VsZCBoYXZlICJjb25z
-dDogMiIgb3IgIm1pbkl0ZW1zOiAyIi4NCg0KVGhhbmsgeW91IGZvciB0aGUgcHJvcG9zYWwuIEkg
-Z290IGl0LiBJJ2xsIGZpeCBpdC4NCg0KQmVzdCByZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1vZGEN
-Cg0K
+On 15-04-20, 19:55, Rob Herring wrote:
+> json-schema versions draft7 and earlier have a weird behavior in that
+> any keywords combined with a '$ref' are ignored (silently). The correct
+> form was to put a '$ref' under an 'allOf'. This behavior is now changed
+> in the 2019-09 json-schema spec and '$ref' can be mixed with other
+> keywords. The json-schema library doesn't yet support this, but the
+> tooling now does a fixup for this and either way works.
+> 
+> This has been a constant source of review comments, so let's change this
+> treewide so everyone copies the simpler syntax.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/arm/cpus.yaml         |  81 +++---
+>  .../devicetree/bindings/arm/l2c2x0.yaml       |  87 +++---
+>  .../devicetree/bindings/arm/psci.yaml         |  15 +-
+>  .../bindings/arm/samsung/exynos-chipid.yaml   |   5 +-
+>  .../bus/allwinner,sun50i-a64-de2.yaml         |   5 +-
+>  .../bindings/clock/fixed-factor-clock.yaml    |   5 +-
+>  .../bindings/connector/usb-connector.yaml     |  28 +-
+>  .../bindings/crypto/st,stm32-hash.yaml        |   9 +-
+>  .../allwinner,sun4i-a10-display-engine.yaml   |   7 +-
+>  .../display/allwinner,sun4i-a10-tcon.yaml     |   5 +-
+>  .../bindings/display/panel/panel-common.yaml  |   5 +-
+>  .../devicetree/bindings/dma/dma-common.yaml   |   3 +-
+>  .../devicetree/bindings/dma/ti/k3-udma.yaml   |  18 +-
+
+Acked-By: Vinod Koul <vkoul@kernel.org>
+
+-- 
+~Vinod
