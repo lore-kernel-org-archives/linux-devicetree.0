@@ -2,114 +2,86 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D28F0C352BE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A24A2C2BB55
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3B07206E9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88AB8206E9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:50:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506378AbgDPLoM (ORCPT
+        id S2505178AbgDPLup (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:44:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57100 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505207AbgDPKgS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 06:36:18 -0400
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFA21C03C1AB
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 03:36:14 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:fd83:81bb:c1d7:433d])
-        by baptiste.telenet-ops.be with bizsmtp
-        id TNWz2200j4dKHqf01NWzN6; Thu, 16 Apr 2020 12:31:11 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jP1nP-0001cz-Q0; Thu, 16 Apr 2020 12:30:59 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jP1nP-0003zO-OP; Thu, 16 Apr 2020 12:30:59 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jiri Kosina <trivial@kernel.org>
-Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH trivial 6/6] ASoC: Fix misspellings of "Analog Devices"
-Date:   Thu, 16 Apr 2020 12:30:58 +0200
-Message-Id: <20200416103058.15269-7-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200416103058.15269-1-geert+renesas@glider.be>
-References: <20200416103058.15269-1-geert+renesas@glider.be>
+        Thu, 16 Apr 2020 07:50:45 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:36032 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2504790AbgDPLul (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 07:50:41 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 68EBC20022;
+        Thu, 16 Apr 2020 13:50:35 +0200 (CEST)
+Date:   Thu, 16 Apr 2020 13:50:33 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v2 02/36] dt-bindings: display: look for dsi* nodes in
+ dsi-controller
+Message-ID: <20200416115033.GA5785@ravnborg.org>
+References: <20200408195109.32692-1-sam@ravnborg.org>
+ <20200408195109.32692-3-sam@ravnborg.org>
+ <CACRpkdYVY7eqrWctUm2GzzZ=1y9Cznya8HUYTDco2bA8Z9Hq1Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYVY7eqrWctUm2GzzZ=1y9Cznya8HUYTDco2bA8Z9Hq1Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=6jNYHG2WMrghLeowZv4A:9
+        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=cvBusfyB2V15izCimMoJ:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-According to https://www.analog.com/, the company name is spelled
-"Analog Devices".
+Hi Linus.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- sound/soc/codecs/ad1980.c  | 2 +-
- sound/soc/codecs/ad73311.c | 2 +-
- sound/soc/codecs/wm8782.c  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+On Thu, Apr 16, 2020 at 01:26:32PM +0200, Linus Walleij wrote:
+> On Wed, Apr 8, 2020 at 9:51 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+> 
+> > Rob wrote:
+> >
+> >     Uhhh, it's looking for dsi-controller(@.*)? which is not the common
+> >     case found in dts files. We should fix that to dsi(@.*)?.
+> >
+> > See: https://lore.kernel.org/dri-devel/20200319032222.GK29911@bogus/
+> >
+> > Fix it.
+> >
+> > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Rob Herring <robh@kernel.org>
+> 
+> I think I was instructed to use dsi-controller@ at some point but I
+> suppose it was a misunderstanding.
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/sound/soc/codecs/ad1980.c b/sound/soc/codecs/ad1980.c
-index c4414c725c1f945a..43b1337bac37f70f 100644
---- a/sound/soc/codecs/ad1980.c
-+++ b/sound/soc/codecs/ad1980.c
-@@ -2,7 +2,7 @@
- /*
-  * ad1980.c  --  ALSA Soc AD1980 codec support
-  *
-- * Copyright:	Analog Device Inc.
-+ * Copyright:	Analog Devices Inc.
-  * Author:	Roy Huang <roy.huang@analog.com>
-  * 		Cliff Cai <cliff.cai@analog.com>
-  */
-diff --git a/sound/soc/codecs/ad73311.c b/sound/soc/codecs/ad73311.c
-index 10daf61f02940b46..b98bf19f594e097f 100644
---- a/sound/soc/codecs/ad73311.c
-+++ b/sound/soc/codecs/ad73311.c
-@@ -2,7 +2,7 @@
- /*
-  * ad73311.c  --  ALSA Soc AD73311 codec support
-  *
-- * Copyright:	Analog Device Inc.
-+ * Copyright:	Analog Devices Inc.
-  * Author:	Cliff Cai <cliff.cai@analog.com>
-  */
- 
-diff --git a/sound/soc/codecs/wm8782.c b/sound/soc/codecs/wm8782.c
-index aa5577e364d01360..f89855c616ebe6e6 100644
---- a/sound/soc/codecs/wm8782.c
-+++ b/sound/soc/codecs/wm8782.c
-@@ -7,7 +7,7 @@
-  * Author: Johannes Stezenbach <js@sig21.net>
-  *
-  * based on ad73311.c
-- * Copyright:	Analog Device Inc.
-+ * Copyright:	Analog Devices Inc.
-  * Author:	Cliff Cai <cliff.cai@analog.com>
-  */
- 
--- 
-2.17.1
+I have already applied this and most other patches.
+I tried to post a follow-up on the first mail to tell so,
+but it was flagged as spam.
 
+So this and your other feddback from today did not hit mainline - sorry.
+But thanks anyway!
+
+	Sam
