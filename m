@@ -7,100 +7,106 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DD8C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 06:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8ADC2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 06:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D95A220857
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 06:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89BD5206D6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 06:34:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eZKdezR3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mFdfZi8V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407996AbgDPG16 (ORCPT
+        id S2407977AbgDPGee (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:27:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46386 "EHLO
+        Thu, 16 Apr 2020 02:34:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2408025AbgDPG1m (ORCPT
+        by vger.kernel.org with ESMTP id S2407709AbgDPGec (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:27:42 -0400
+        Thu, 16 Apr 2020 02:34:32 -0400
 Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61B2CC061A10
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 23:27:41 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id d27so3464433wra.1
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 23:27:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B592EC061A0C
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 23:34:31 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id d27so3480725wra.1
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 23:34:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=NphQLflFsc739n86OFq/OswVHPenGwS7GRnWjxbOy0k=;
-        b=eZKdezR3g6Xn2sdj18nb6poilwEQvi0XhzT3b84gdka8hFqI84MwkeiMqYFtXmwQ2N
-         IjiOjaeozalApJF1io3zj9hOAHdZ4Rvhfq9TYzogQzPOca1M8KYnL3h5TsfBjs5qSzzF
-         Y8kO/oNwyK3ANIMUQ8KyetYw4guYdLLceHgUfaUsddQ5iFk1UkNmJkO8SV+TpdJMCKSJ
-         FDr0Ckin+v6eFoPcEWdhkXBE3AbeMZ4HiGdpF+H75U7M8mPyaTQOvMs9jS6W17Xoy+Bw
-         cDbD7pkdj26e9VODe+TlMR3xTHdtq5Mz/7nY/KEDvg7JZuX/BWY4lcoxBTTVSgQ1I+hT
-         5EoQ==
+        bh=0zaVLvpq9xyTb6tnL5lflzeTc3OD1xVdDRy9b/kylC4=;
+        b=mFdfZi8VBTlwLtP0JTgvvick+7svv6vG9/rG7kqJVdsx7j4WTAwfHqs6HIWFQomHeJ
+         QRxfjpa18BSA4VXbHmcIUmuDtse9X/hdmh/XQiyJ7jEfV081PEJ9tosvNZ+odwiT5hxG
+         fAuY4M7K7YRoqM3JJSExPdZ/FXUazHY4EY9pPLCpFSHR47L1O64WI4C5aFBHEZ1Bbbzk
+         VyRiPRQ9GjOSEu5CKBTWAW/RasKWbr1bdS4jRAqXs0BovImMBsKywoXudzx+lrdfJqOr
+         c4YxSwYJ7+crMFX9rHyCdduz7Zz4FRn76B6VprKnWQ/mwxNDcnFGS+A3ZiWZ4x0P/8LK
+         xXQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=NphQLflFsc739n86OFq/OswVHPenGwS7GRnWjxbOy0k=;
-        b=qdhm5vrkWDX46zNolgcHTX6TuFZch91QUexicxc6ghKqfGvvrQUYH0xp9dmcKyYa18
-         BRtLSuKf/BSyEnZDa5J1ufEVu9izeW+Nftf1IadzElKEC/rqR0xyNSvm5173vyB03S++
-         /HJlAGr1OE0vuCgKEylblAztq4OD3mufTT6tRjV0LNBVGcY4v/cuUPw5bGRYEy9JUzYS
-         sVF9tGtFg6Bi8CfQlWBNqK+3eHZJ9P6BFE/f7dYJwF7UyGecBOd/0kAqoP7ZMoolR92T
-         ZdLg7HrMei41tfbQxiOg64EZz026qNK4ukHymMZbCrJLQfwF3uEB32UEepyKlv0ek+dH
-         NocQ==
-X-Gm-Message-State: AGi0PuYHnUiJYqg6SUcHRtW0G6GFFVaZPH+/FL34SUqLjRIbJtAQvuO/
-        1idXIpFcwuMHFidCT5z1DoQvzA==
-X-Google-Smtp-Source: APiQypJJWXw4mlnhjhyGW7fsUmpmvMSUe+Gva7ARSsUwl+dmWYkhEaXeloTJX9ki2MQdvOcyRHxLUQ==
-X-Received: by 2002:adf:dd4c:: with SMTP id u12mr5139486wrm.395.1587018459796;
-        Wed, 15 Apr 2020 23:27:39 -0700 (PDT)
+        bh=0zaVLvpq9xyTb6tnL5lflzeTc3OD1xVdDRy9b/kylC4=;
+        b=mbCqveSkGxM/qDf0x2EcZJb5fOHXV6Bd0K5CTLD3DaJs3V8lV0vbj3Plj6IhRjUDBn
+         DgP+bQtd0tcF6CeddqkekmJZGYzkUCbiive3GPw5GBgaXiEkbShVGv72faRL9aJLAV/F
+         NbvUz3TS9YX8QOCTEusZ3goicOF1/WhZKS52JblbWEw7YTgL4Dre36Rg/9mn4x26eYs3
+         xByk+GRG2ycHLJtlSLxmsNeyd1wZr6XsndSTiCOvnuYva7RxMmbnPl+ZxX4R49jNi7Xm
+         ZwOFJKakpdjUYI2dFbpdPOSWlt6eYUwNZqZbVrrzyPLVpWcIzHn3MHFIx9usn7DG5KX5
+         9q1A==
+X-Gm-Message-State: AGi0PuZkXmWNaONCGr04yDkuAzkKPdqpQ3j/Nx9cydqyf/rt1ymv76y3
+        5ii+xEJt9Vfc9CSxHvumMYSwGA==
+X-Google-Smtp-Source: APiQypJEpTtqeTr9o0OHWVCd4YNULVp1q0q9U2Soz/KtkpNaaDcqmR9MRis2lZmNki6Q0+MIaix0pA==
+X-Received: by 2002:a5d:5392:: with SMTP id d18mr12081099wrv.278.1587018870349;
+        Wed, 15 Apr 2020 23:34:30 -0700 (PDT)
 Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id h13sm14976188wrs.22.2020.04.15.23.27.33
+        by smtp.gmail.com with ESMTPSA id 5sm2419784wmg.34.2020.04.15.23.34.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 23:27:39 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 07:28:31 +0100
+        Wed, 15 Apr 2020 23:34:29 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 07:35:19 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 02/12] docs: dt: convert usage-model.txt to ReST
-Message-ID: <20200416062831.GL2167633@dell>
-References: <cover.1586961793.git.mchehab+huawei@kernel.org>
- <cfec677ffc34540f5f5b63c393f2d0fae4383787.1586961793.git.mchehab+huawei@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     fabrice.gasnier@st.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        daniel.lezcano@linaro.org, tglx@linutronix.de,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/6] dt-bindings: mfd: Document STM32 low power timer
+ bindings
+Message-ID: <20200416063519.GN2167633@dell>
+References: <20200401083909.18886-1-benjamin.gaignard@st.com>
+ <20200401083909.18886-2-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <cfec677ffc34540f5f5b63c393f2d0fae4383787.1586961793.git.mchehab+huawei@kernel.org>
+In-Reply-To: <20200401083909.18886-2-benjamin.gaignard@st.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 15 Apr 2020, Mauro Carvalho Chehab wrote:
+On Wed, 01 Apr 2020, Benjamin Gaignard wrote:
 
-> - Add a SPDX header;
-> - Adjust document title;
-> - Use footnoote markups;
-> - Some whitespace fixes and new line breaks;
-> - Mark literal blocks as such;
-> - Add it to devicetree/index.rst.
+> Add a subnode to STM low power timer bindings to support timer driver
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
->  Documentation/devicetree/index.rst            |  1 +
->  Documentation/devicetree/of_unittest.txt      |  2 +-
->  .../{usage-model.txt => usage-model.rst}      | 35 +++++++++++--------
+> version 6:
+> - only use one interrupt
+> 
+> version 5:
+> - the previous has been acked-by Rob but since I have docummented
+>   interrupts and interrupt-names properties I haven't applied it here.
+> 
+> version 4:
+> - change compatible and subnode names
+> - document wakeup-source property
+> 
+>  .../devicetree/bindings/mfd/st,stm32-lptimer.yaml   | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 
->  include/linux/mfd/core.h                      |  2 +-
-
-Acked-by: Lee Jones <lee.jones@linaro.org>
-
->  4 files changed, 23 insertions(+), 17 deletions(-)
->  rename Documentation/devicetree/{usage-model.txt => usage-model.rst} (97%)
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
 -- 
 Lee Jones [李琼斯]
