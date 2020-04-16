@@ -2,258 +2,126 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59588C352BE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED9DC2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 332AE20732
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1991B20771
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:47:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="opxz6HfZ"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="mRgeM9vv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439408AbgDPHe6 (ORCPT
+        id S2439546AbgDPHrc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:34:58 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9968 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438944AbgDPHe4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 03:34:56 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e980a320000>; Thu, 16 Apr 2020 00:33:06 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 16 Apr 2020 00:34:56 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 16 Apr 2020 00:34:56 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Apr
- 2020 07:34:56 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 16 Apr 2020 07:34:55 +0000
-Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e980a9d0002>; Thu, 16 Apr 2020 00:34:55 -0700
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>,
-        Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [PATCH V1 4/4] usb: gadget: tegra-xudc: add port_speed_quirk
-Date:   Thu, 16 Apr 2020 13:04:20 +0530
-Message-ID: <1587022460-31988-5-git-send-email-nkristam@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587022460-31988-1-git-send-email-nkristam@nvidia.com>
-References: <1587022460-31988-1-git-send-email-nkristam@nvidia.com>
-X-NVConfidentiality: public
+        Thu, 16 Apr 2020 03:47:32 -0400
+Received: from mail-eopbgr1400093.outbound.protection.outlook.com ([40.107.140.93]:51296
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2439413AbgDPHr3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 03:47:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MciERkZz/9YRAr5XeIRCDux40ur0UeLT8grayums8TkdERqjM179k+Q57x8CqcwG0CT6rGEfQNuLCsPCrq6gg+xtMSoNEEt54lrN+KDL4IN8obt5hndGndAgMnPeIJRXQdIibjVj2JkjG/j2HBZSe3qkkyMppMqOoELpRqcPo7Wmi6F7RB0tJc+tqMwpHfUHwlJnFyKVtcY8Zj3qfT4L60340GYvFGV4aRMzDK4aTw4t5YpE1AAnKr0q7g27CsVU+CW2Q2yvnksFtfMuMa/3BeOUknxzkfykap+5UX3535psHFCIdUSF3V9I2LTskWMx5XE3yabMesG56P1Fjb3Anw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sHpHc4IRH6XjYGb4oICAeqFCRcgVZnm8yi5G4Norpec=;
+ b=lyRmg7kH2Fr4QNNqGDrJ+XQI1cv9UgY6NraFajLqOsTy2oZ6FlXFgByQDWhJmeM9P8zx8E6lQaK5v8LF9FJwUP34Cn7+uteYZ4Qzx5PweDsEPjpsW2v7uL2ObNd2oc/02wSQ1FasV4vdiuEMVNSKEmRyGgDSR+tBWnEL8yzZ8pepDiXJxtvRsrL8BxOlOHjQVibg454JxPRwM6kVHyTp2IIkGH/ODnnCo8wBOCA6HXKbDRUwgTCwUtPSuFrSSnw1vRjjhkzpECYYA6EdKTQR+IO5PFkeIjcJdpumcUqxf+w43Ja3G2pH06i8Q6dTvwNFFyp+99rHNYdZCPx48e4v9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sHpHc4IRH6XjYGb4oICAeqFCRcgVZnm8yi5G4Norpec=;
+ b=mRgeM9vvqsO059VHKOiJ0ol8WAMxtdNL+TkAdOHdDCzagstVwx/tNuRTjQj2DvkMWACfG8l4iTV5xKzqckN93pFDv4cf+lh1SjIFs9AZ9NCWyn3MI0bcfR/hdGEwkpGp0G4MwMhNh9YgPsD7ju3MWxb1LTPFj2i4p8Jg6qPbFPA=
+Received: from OSAPR01MB4529.jpnprd01.prod.outlook.com (20.179.176.20) by
+ OSAPR01MB4242.jpnprd01.prod.outlook.com (20.178.102.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2878.15; Thu, 16 Apr 2020 07:47:22 +0000
+Received: from OSAPR01MB4529.jpnprd01.prod.outlook.com
+ ([fe80::3056:e118:8a8e:b3ad]) by OSAPR01MB4529.jpnprd01.prod.outlook.com
+ ([fe80::3056:e118:8a8e:b3ad%7]) with mapi id 15.20.2878.023; Thu, 16 Apr 2020
+ 07:47:22 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Vinod <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH 1/2] dt-bindings: dma: renesas,rcar-dmac: convert bindings
+ to json-schema
+Thread-Topic: [PATCH 1/2] dt-bindings: dma: renesas,rcar-dmac: convert
+ bindings to json-schema
+Thread-Index: AQHWDx8gfAei1qnt90WjEN4QnCOb0ah6MAqAgAE3OoA=
+Date:   Thu, 16 Apr 2020 07:47:22 +0000
+Message-ID: <OSAPR01MB45298EA0A9AC1EFD86B54FD5D8D80@OSAPR01MB4529.jpnprd01.prod.outlook.com>
+References: <1586512923-21739-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1586512923-21739-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdULExMNnKJWsjAonR1sVeTyQCH0shwO--Wo6dLzrWV_tQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdULExMNnKJWsjAonR1sVeTyQCH0shwO--Wo6dLzrWV_tQ@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 468ccaf7-5adb-4c61-61b8-08d7e1da65df
+x-ms-traffictypediagnostic: OSAPR01MB4242:
+x-microsoft-antispam-prvs: <OSAPR01MB42427C77F14297E082D2E4C3D8D80@OSAPR01MB4242.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0375972289
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB4529.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(39860400002)(366004)(346002)(396003)(376002)(136003)(55236004)(76116006)(55016002)(186003)(64756008)(7696005)(8676002)(66556008)(52536014)(81156014)(8936002)(6916009)(66476007)(6506007)(26005)(478600001)(5660300002)(66946007)(66446008)(966005)(9686003)(54906003)(86362001)(71200400001)(4326008)(33656002)(316002)(2906002)(142933001);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: R3rav4FKayNkXQ/bBg4hXiw4SkOsBo+eVF9Nv5VDFpdcuTdiH1QjR49k6jdrg6qBPJzW65KrYC0BEy0Kl0LgvcLyskVfgboQzJ8/u/GF0P0+OLOFqhSWTSzXh9swCv+XKUTXhFL/MdQKSuCyC2ACzifB3gW8c6G58EU9+w5hr4B45puojdOCRCTaHaYNlwraxv9BNH+6UvLkBFMUVPFTvYRgUvFVppttbH8zfuD3DoZeIwkO2RnR6R+gBEIJBj3y+cKX3KUb22lmvBgQX5hYDFO+JqskZ7TsxEkqGQ9AFgYsk+hyyvexvm4/PLZtjuhVRbPUzu/fhMCVyOpw+x/bK12OD7hSRl5wo8x2b0m8kVEGutJmmZWI+R1HtOqORZCBC+peXUDy83jiA62hHxmv3jU0VwVwQZCCYdpY2p4TyaPbduEa9RF2OflWv4BdVOukRjQKOU8kXHVFro9dwl3pMZmUDprfxxDdrPPzxmNELdeb5a0ZKsdCMVxW9EgeVSc6ArJhBl2MwaPt2HKu/kSjjGe8lC0aTQcnW06+d+LTa42voau1R8+mzYikrPfHlTdb
+x-ms-exchange-antispam-messagedata: erLxxpeC4KPa7SeDjKUEnt9j4PpE/2KW7wsbPFAqFFKA+onLHfHG5K7OjNbjxrA2yG3RpH88Xrm0XK9KNJioJv8LWUZRc/vpaF+YlaUo6GbGluE3Cte1enRI2Y78xcvIseJmvYvpO7+mJ0MgUuMMxA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587022386; bh=naqEuQE4k8cFdiWBVAPEQm5vMjpwh+WbGHA3Ol+AaAk=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=opxz6HfZIJWYEIzeiI+X7Lf9binF1dK6DgrdR6jS/Sz7lBx8q+i/xCtnL1tBqy/Ap
-         GMB/TsL77Nk12pl2qFZ9mWQu1jLSemwa6h/yf3UVgO1yR7z/cubFoJFUAn2h9mze1U
-         r2QQUb6OaNFSH/mqE2Bo6cwyHS+K3yzuRbAU7PmHcbkGRuOS2IRzyeDlAVC6hU3KlE
-         6ARbenruqp8FkcrrmeHV0n2kn8cNGaaTYILhsiINxEWLxiOqVFCl4ZqyOp6RKM1h+T
-         Pe6tkFu5GjEBNZ4wMiUBHBEtOiZgfOdFeSs4yO7+k+iwhsAUASULu3vFgRJSllfo99
-         weKekPQt/qXeQ==
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 468ccaf7-5adb-4c61-61b8-08d7e1da65df
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2020 07:47:22.2414
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: f9QF9PzAgxW6+AB/KVz4tPnx94g4R35U+FQnE6e4b+8zHkCTET0HmoGt1DJp2vq6UjTGk+LRk1I9Z5Kjos2nGdnM5jjUPpHMWg1AGUT83xu12eB+gs2FtuJ34VY9VY04
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB4242
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add port_speed_quirk that modify below registers to limit/restore OTG
-port speed to GEN1/GEN2.
-SSPX_CORE_CNT56
-SSPX_CORE_CNT57
-SSPX_CORE_CNT65
-SSPX_CORE_CNT66
-SSPX_CORE_CNT67
-SSPX_CORE_CNT72
-
-The basic idea is to make SCD intentionally fail, reduce SCD timeout and
-force device transit to TSEQ. Enable this flag to only Tegra194.
-
-Based on work by WayneChang <waynec@nvidia.com>
-
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
----
- drivers/usb/gadget/udc/tegra-xudc.c | 106 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 106 insertions(+)
-
-diff --git a/drivers/usb/gadget/udc/tegra-xudc.c b/drivers/usb/gadget/udc/tegra-xudc.c
-index fb01117..63484f98 100644
---- a/drivers/usb/gadget/udc/tegra-xudc.c
-+++ b/drivers/usb/gadget/udc/tegra-xudc.c
-@@ -158,6 +158,30 @@
- #define  SSPX_CORE_CNT32_POLL_TBURST_MAX_MASK GENMASK(7, 0)
- #define  SSPX_CORE_CNT32_POLL_TBURST_MAX(x) ((x) & \
- 					SSPX_CORE_CNT32_POLL_TBURST_MAX_MASK)
-+#define SSPX_CORE_CNT56 0x6fc
-+#define  SSPX_CORE_CNT56_SCD_BIT0_TRPT_MAX_MASK GENMASK(19, 0)
-+#define  SSPX_CORE_CNT56_SCD_BIT0_TRPT_MAX(x) ((x) & \
-+				SSPX_CORE_CNT56_SCD_BIT0_TRPT_MAX_MASK)
-+#define SSPX_CORE_CNT57 0x700
-+#define  SSPX_CORE_CNT57_SCD_BIT1_TRPT_MAX_MASK GENMASK(19, 0)
-+#define  SSPX_CORE_CNT57_SCD_BIT1_TRPT_MAX(x) ((x) & \
-+				SSPX_CORE_CNT57_SCD_BIT1_TRPT_MAX_MASK)
-+#define SSPX_CORE_CNT65 0x720
-+#define  SSPX_CORE_CNT65_TX_SCD_END_TRPT_MID_MASK GENMASK(19, 0)
-+#define  SSPX_CORE_CNT65_TX_SCD_END_TRPT_MID(x) ((x) & \
-+				SSPX_CORE_CNT65_TX_SCD_END_TRPT_MID_MASK)
-+#define SSPX_CORE_CNT66 0x724
-+#define  SSPX_CORE_CNT66_TX_SCD_BIT0_TRPT_MID_MASK GENMASK(19, 0)
-+#define  SSPX_CORE_CNT66_TX_SCD_BIT0_TRPT_MID(x) ((x) & \
-+				SSPX_CORE_CNT66_TX_SCD_BIT0_TRPT_MID_MASK)
-+#define SSPX_CORE_CNT67 0x728
-+#define  SSPX_CORE_CNT67_TX_SCD_BIT1_TRPT_MID_MASK GENMASK(19, 0)
-+#define  SSPX_CORE_CNT67_TX_SCD_BIT1_TRPT_MID(x) ((x) & \
-+				SSPX_CORE_CNT67_TX_SCD_BIT1_TRPT_MID_MASK)
-+#define SSPX_CORE_CNT72 0x73c
-+#define  SSPX_CORE_CNT72_SCD_LFPS_TIMEOUT_MASK GENMASK(19, 0)
-+#define  SSPX_CORE_CNT72_SCD_LFPS_TIMEOUT(x) ((x) & \
-+				SSPX_CORE_CNT72_SCD_LFPS_TIMEOUT_MASK)
- #define SSPX_CORE_PADCTL4 0x750
- #define  SSPX_CORE_PADCTL4_RXDAT_VLD_TIMEOUT_U3_MASK GENMASK(19, 0)
- #define  SSPX_CORE_PADCTL4_RXDAT_VLD_TIMEOUT_U3(x) ((x) & \
-@@ -530,6 +554,7 @@ struct tegra_xudc_soc {
- 	bool invalid_seq_num;
- 	bool pls_quirk;
- 	bool port_reset_quirk;
-+	bool port_speed_quirk;
- 	bool has_ipfs;
- };
- 
-@@ -599,6 +624,78 @@ static inline void dump_trb(struct tegra_xudc *xudc, const char *type,
- 		trb->control);
- }
- 
-+static void tegra_xudc_limit_port_speed(struct tegra_xudc *xudc)
-+{
-+	u32 val;
-+
-+	/* limit port speed to gen 1 */
-+	val = xudc_readl(xudc, SSPX_CORE_CNT56);
-+	val &= ~(SSPX_CORE_CNT56_SCD_BIT0_TRPT_MAX_MASK);
-+	val |= SSPX_CORE_CNT56_SCD_BIT0_TRPT_MAX(0x260);
-+	xudc_writel(xudc, val, SSPX_CORE_CNT56);
-+
-+	val = xudc_readl(xudc, SSPX_CORE_CNT57);
-+	val &= ~(SSPX_CORE_CNT57_SCD_BIT1_TRPT_MAX_MASK );
-+	val |= SSPX_CORE_CNT57_SCD_BIT1_TRPT_MAX(0x6D6);
-+	xudc_writel(xudc, val, SSPX_CORE_CNT57);
-+
-+	val = xudc_readl(xudc, SSPX_CORE_CNT65);
-+	val &= ~(SSPX_CORE_CNT65_TX_SCD_END_TRPT_MID_MASK);
-+	val |= SSPX_CORE_CNT65_TX_SCD_END_TRPT_MID(0x4B0);
-+	xudc_writel(xudc, val, SSPX_CORE_CNT66);
-+
-+	val = xudc_readl(xudc, SSPX_CORE_CNT66);
-+	val &= ~(SSPX_CORE_CNT66_TX_SCD_BIT0_TRPT_MID_MASK);
-+	val |= SSPX_CORE_CNT66_TX_SCD_BIT0_TRPT_MID(0x4B0);
-+	xudc_writel(xudc, val, SSPX_CORE_CNT66);
-+
-+	val = xudc_readl(xudc, SSPX_CORE_CNT67);
-+	val &= ~(SSPX_CORE_CNT67_TX_SCD_BIT1_TRPT_MID_MASK);
-+	val |= SSPX_CORE_CNT67_TX_SCD_BIT1_TRPT_MID(0x4B0);
-+	xudc_writel(xudc, val, SSPX_CORE_CNT67);
-+
-+	val = xudc_readl(xudc, SSPX_CORE_CNT72);
-+	val &= ~(SSPX_CORE_CNT72_SCD_LFPS_TIMEOUT_MASK);
-+	val |= SSPX_CORE_CNT72_SCD_LFPS_TIMEOUT(0x10);
-+	xudc_writel(xudc, val, SSPX_CORE_CNT72);
-+}
-+
-+static void tegra_xudc_restore_port_speed(struct tegra_xudc *xudc)
-+{
-+	u32 val;
-+
-+	/* restore port speed to gen2 */
-+	val = xudc_readl(xudc, SSPX_CORE_CNT56);
-+	val &= ~(SSPX_CORE_CNT56_SCD_BIT0_TRPT_MAX_MASK);
-+	val |= SSPX_CORE_CNT56_SCD_BIT0_TRPT_MAX(0x438);
-+	xudc_writel(xudc, val, SSPX_CORE_CNT56);
-+
-+	val = xudc_readl(xudc, SSPX_CORE_CNT57);
-+	val &= ~(SSPX_CORE_CNT57_SCD_BIT1_TRPT_MAX_MASK );
-+	val |= SSPX_CORE_CNT57_SCD_BIT1_TRPT_MAX(0x528);
-+	xudc_writel(xudc, val, SSPX_CORE_CNT57);
-+
-+	val = xudc_readl(xudc, SSPX_CORE_CNT65);
-+	val &= ~(SSPX_CORE_CNT65_TX_SCD_END_TRPT_MID_MASK);
-+	val |= SSPX_CORE_CNT65_TX_SCD_END_TRPT_MID(0xE10);
-+	xudc_writel(xudc, val, SSPX_CORE_CNT66);
-+
-+	val = xudc_readl(xudc, SSPX_CORE_CNT66);
-+	val &= ~(SSPX_CORE_CNT66_TX_SCD_BIT0_TRPT_MID_MASK);
-+	val |= SSPX_CORE_CNT66_TX_SCD_BIT0_TRPT_MID(0x348);
-+	xudc_writel(xudc, val, SSPX_CORE_CNT66);
-+
-+	val = xudc_readl(xudc, SSPX_CORE_CNT67);
-+	val &= ~(SSPX_CORE_CNT67_TX_SCD_BIT1_TRPT_MID_MASK);
-+	val |= SSPX_CORE_CNT67_TX_SCD_BIT1_TRPT_MID(0x5a0);
-+	xudc_writel(xudc, val, SSPX_CORE_CNT67);
-+
-+	val = xudc_readl(xudc, SSPX_CORE_CNT72);
-+	val &= ~(SSPX_CORE_CNT72_SCD_LFPS_TIMEOUT_MASK);
-+	val |= SSPX_CORE_CNT72_SCD_LFPS_TIMEOUT(0x1c21);
-+	xudc_writel(xudc, val, SSPX_CORE_CNT72);
-+}
-+
- static void tegra_xudc_device_mode_on(struct tegra_xudc *xudc)
- {
- 	int err;
-@@ -631,6 +728,9 @@ static void tegra_xudc_device_mode_off(struct tegra_xudc *xudc)
- 
- 	reinit_completion(&xudc->disconnect_complete);
- 
-+	if (xudc->soc->port_speed_quirk)
-+		tegra_xudc_restore_port_speed(xudc);
-+
- 	phy_set_mode_ext(xudc->curr_utmi_phy, PHY_MODE_USB_OTG, USB_ROLE_NONE);
- 
- 	pls = (xudc_readl(xudc, PORTSC) & PORTSC_PLS_MASK) >>
-@@ -3274,6 +3374,9 @@ static void tegra_xudc_device_params_init(struct tegra_xudc *xudc)
- 		xudc_writel(xudc, val, BLCG);
- 	}
- 
-+	if (xudc->soc->port_speed_quirk)
-+		tegra_xudc_limit_port_speed(xudc);
-+
- 	/* Set a reasonable U3 exit timer value. */
- 	val = xudc_readl(xudc, SSPX_CORE_PADCTL4);
- 	val &= ~(SSPX_CORE_PADCTL4_RXDAT_VLD_TIMEOUT_U3_MASK);
-@@ -3513,6 +3616,7 @@ static struct tegra_xudc_soc tegra210_xudc_soc_data = {
- 	.invalid_seq_num = true,
- 	.pls_quirk = true,
- 	.port_reset_quirk = true,
-+	.port_speed_quirk = false,
- 	.has_ipfs = true,
- };
- 
-@@ -3526,6 +3630,7 @@ static struct tegra_xudc_soc tegra186_xudc_soc_data = {
- 	.invalid_seq_num = false,
- 	.pls_quirk = false,
- 	.port_reset_quirk = false,
-+	.port_speed_quirk = false,
- 	.has_ipfs = false,
- };
- 
-@@ -3539,6 +3644,7 @@ static struct tegra_xudc_soc tegra194_xudc_soc_data = {
- 	.invalid_seq_num = false,
- 	.pls_quirk = false,
- 	.port_reset_quirk = false,
-+	.port_speed_quirk = true,
- 	.has_ipfs = false,
- };
- 
--- 
-2.7.4
-
+SGkgR2VlcnQtc2FuLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgcmV2aWV3IQ0KDQo+IEZyb206IEdl
+ZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogV2VkbmVzZGF5LCBBcHJpbCAxNSwgMjAyMCAxMDoxMCBQ
+TQ0KPHNuaXA+DQo+ID4gKyAgaW50ZXJydXB0LW5hbWVzOg0KPiA+ICsgICAgbWluSXRlbXM6IDkN
+Cj4gPiArICAgIG1heEl0ZW1zOiAxNw0KPiA+ICsgICAgaXRlbXM6DQo+ID4gKyAgICAgIC0gY29u
+c3Q6IGVycm9yDQo+ID4gKyAgICAgIC0gcGF0dGVybjogIl5jaChbMC05XXwxWzAtNV0pJCINCj4g
+PiArICAgICAgLSBwYXR0ZXJuOiAiXmNoKFswLTldfDFbMC01XSkkIg0KPiA+ICsgICAgICAtIHBh
+dHRlcm46ICJeY2goWzAtOV18MVswLTVdKSQiDQo+ID4gKyAgICAgIC0gcGF0dGVybjogIl5jaChb
+MC05XXwxWzAtNV0pJCINCj4gPiArICAgICAgLSBwYXR0ZXJuOiAiXmNoKFswLTldfDFbMC01XSkk
+Ig0KPiA+ICsgICAgICAtIHBhdHRlcm46ICJeY2goWzAtOV18MVswLTVdKSQiDQo+ID4gKyAgICAg
+IC0gcGF0dGVybjogIl5jaChbMC05XXwxWzAtNV0pJCINCj4gPiArICAgICAgLSBwYXR0ZXJuOiAi
+XmNoKFswLTldfDFbMC01XSkkIg0KPiA+ICsgICAgICAtIHBhdHRlcm46ICJeY2goWzAtOV18MVsw
+LTVdKSQiDQo+ID4gKyAgICAgIC0gcGF0dGVybjogIl5jaChbMC05XXwxWzAtNV0pJCINCj4gPiAr
+ICAgICAgLSBwYXR0ZXJuOiAiXmNoKFswLTldfDFbMC01XSkkIg0KPiA+ICsgICAgICAtIHBhdHRl
+cm46ICJeY2goWzAtOV18MVswLTVdKSQiDQo+ID4gKyAgICAgIC0gcGF0dGVybjogIl5jaChbMC05
+XXwxWzAtNV0pJCINCj4gPiArICAgICAgLSBwYXR0ZXJuOiAiXmNoKFswLTldfDFbMC01XSkkIg0K
+PiA+ICsgICAgICAtIHBhdHRlcm46ICJeY2goWzAtOV18MVswLTVdKSQiDQo+ID4gKyAgICAgIC0g
+cGF0dGVybjogIl5jaChbMC05XXwxWzAtNV0pJCINCj4gDQo+IFdvdWxkIGl0IG1ha2Ugc2Vuc2Ug
+dG8ganVzdCBwdXQgdGhlIGFjdHVhbCBuYW1lcyBoZXJlPw0KPiANCj4gICAgIC0gY29uc3Q6IGVy
+cm9yDQo+ICAgICAtIGNvbnN0OiBjaDANCj4gICAgIC0gY29uc3Q6IGNoMQ0KPiAgICAgICBbLi4u
+XQ0KPiAgICAgLSBjb25zdDogY2ggMTUNCg0KUm9iIHN1Z2dlc3RlZCB1c2luZyBwYXR0ZXJuIG9u
+IG90aGVyIHBhdGNoOg0KaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMjAvMi8xOS83MjANCg0KU28s
+IEknbSB0aGlua2luZyB1c2luZyBwYXR0ZXJuIGlzIGJldHRlci4NCg0KQmVzdCByZWdhcmRzLA0K
+WW9zaGloaXJvIFNoaW1vZGENCg0K
