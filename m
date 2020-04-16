@@ -2,178 +2,93 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF18FC2BB85
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 15:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BDBC2BB55
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF331206D6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 15:24:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKaFl00p"
+	by mail.kernel.org (Postfix) with ESMTP id 8B9E2214AF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 15:34:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587051276;
+	bh=cm5eKnHDf7WtBLQg4e4NaXwt9ZqZ+pLml8cOimogapc=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=CuPWyEonGsnV2QwtiV8OGQIFoFiunV71sTIIEsBrPEekFQ1otF9Ra0u3WkcQq3AUe
+	 GLpQDNXWD2qbPowC/p8Ciq/RYPc6kqYsLXimb/sk6DgZtsUmiF/9jK/BL5wPFz5UkV
+	 RjK+mi1oasccmp06u2fsH0KLrmXdlkyQ0sgyFc38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898019AbgDPNoy (ORCPT
+        id S2393097AbgDPPee (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:44:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58252 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2898433AbgDPNoa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:44:30 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B064C061A0C;
-        Thu, 16 Apr 2020 06:44:30 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id v8so2574131wma.0;
-        Thu, 16 Apr 2020 06:44:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WnOLlJGWjKKU4l6KU86petvNf/KeuBQfP8LASQRqnt8=;
-        b=NKaFl00peRLsJRd1TCpOYzHetW8sbRA+/HJn6nXHcphRgYoHcE2As4Skpd/c5OOtl3
-         aAJP6GhSIoz0w4NCFbSZJ6HKcTBmEX7IXKjNWRGHscVFHFO40s7l2Oij2g2owDoID0a5
-         7/75cQ6pZ1aQ52kQoT65AaH1sagq0kwsSQQsKV6iAsy2BwSQXEQu+AZUDJEATTyjsEvW
-         /dQmoQ710BctBOzQRsQWEq7qIyYJgrGIrl24rfwI89EL6oev6W3DzRYRUHoGWtgMTglM
-         5DlQjWI5n+jybhbO+jO01+JAbMYihB8YdAnzppfOgx7wop42LLUkMnTRf0PV4zxzyq5i
-         zrVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WnOLlJGWjKKU4l6KU86petvNf/KeuBQfP8LASQRqnt8=;
-        b=lEubnyQ/cp6fLEeDfiOQMbHMzZiBd3aDNoa+AcT1Fi9XTQjA+d3zE0t/guRpbmmNTx
-         kSXsmk8Kx7bqIYOjbFROmQ7OPLW2BBRpLkOYLJ8Wqmcfhxv4cG5NKieOqYZ92cj2ikpJ
-         RDzdKktUhiLFywVL4st851X2HA+5/ao6KcioXMDfoXyFYmo7ZM5fHDuy73sjmNPLM6KP
-         VF8EV6p7p8nic8l0X9Qn1S2GrUIZfXadFv0wXjONHLNcmsdIt8sjT0rUv1b1LcalBWrK
-         l6ptRSPUQhERa6rPCoiM3+2MgygRR8Ojjau05E7PN1oHLx+cuHNsrsRTDJlP7dhV/QZ0
-         sIBA==
-X-Gm-Message-State: AGi0PuYh6giViBV7jL1UZxPwjcpeMX3S/xDX6bqsMWEOdI+qWbLzcQQl
-        dTyjG5FaeklVpRtO63ZRcHs=
-X-Google-Smtp-Source: APiQypKHstkks+d7QKXlK1Kx2K4FOqpUNOov9QzJnGobXCUEc76Hs0tyB7U8aK6EB9CSGnwIDUH4vw==
-X-Received: by 2002:a7b:cd10:: with SMTP id f16mr5171636wmj.21.1587044668689;
-        Thu, 16 Apr 2020 06:44:28 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id z18sm21457242wrw.41.2020.04.16.06.44.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Apr 2020 06:44:27 -0700 (PDT)
-Subject: Re: [PATCH 2/4] arm64: dts: rockchip: Add RGA support to the PX30
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jacob Chen <jacob-chen@iotwrt.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hansverk@cisco.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20200416115047.233720-1-paul.kocialkowski@bootlin.com>
- <20200416115047.233720-3-paul.kocialkowski@bootlin.com>
- <478f0a8b-f819-62f4-83b8-27918c4c2431@gmail.com>
- <20200416132442.GI125838@aptenodytes>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <f4ad8ea4-7904-1458-e564-2d20c87ed417@gmail.com>
-Date:   Thu, 16 Apr 2020 15:44:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200416132442.GI125838@aptenodytes>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 16 Apr 2020 11:34:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2634433AbgDPPeW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:34:22 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8132F22244;
+        Thu, 16 Apr 2020 15:34:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587051262;
+        bh=cm5eKnHDf7WtBLQg4e4NaXwt9ZqZ+pLml8cOimogapc=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=b4W9GgOXN/tS7grTIz9CDv4DUjSrIlCNQHob785c8VYERJqv1rOX4qR6zIw/deXRv
+         n2hQyhWBnifk8HYUqbbUoVkxBYpVd4U4qgXO2JMRxoGuqYpuJXh16xzjvZ2iTrlWbS
+         V/OOISaMNNInmoGKm9GsYAjr/rggvJeb0Z2B0B/8=
+Date:   Thu, 16 Apr 2020 16:34:19 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Stephan Gerhold <stephan@gerhold.net>
+Cc:     devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        alsa-devel@alsa-project.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <20200415081159.1098-1-stephan@gerhold.net>
+References: <20200415081159.1098-1-stephan@gerhold.net>
+Subject: Re: [PATCH 1/2] dt-bindings: ASoC: qdsp6: Suggest more generic node names
+Message-Id: <158705078452.48712.10956473806918313608.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 4/16/20 3:24 PM, Paul Kocialkowski wrote:
-> Hi,
+On Wed, 15 Apr 2020 10:11:58 +0200, Stephan Gerhold wrote:
+> Change the listed examples to use more generic node names, representing
+> the class of the device nodes:
 > 
-> On Thu 16 Apr 20, 15:02, Johan Jonker wrote:
->> Hi Paul,
->>
->> The conversion of rockchip-rga.txt to rockchip-rga.yaml by myself just
->> has been approved by robh.
+>   - apr-service@<id>
+>   - dai@<id>
 > 
-> Huh, I looked around for ongoing related work but missed it.
-> I'll definitely rebase on top of your series and use the yaml description
-> instead. Thanks!
+> Both names are already in use in arch/arm64/boot/dts/qcom/sdm845.dtsi.
 > 
->> Maybe place dts patches at the end of a patch serie.
->> Could you include a &rga patch if your device is supported in mainline,
->> so we can test with:
->> make ARCH=arm64 dtbs_check
->> DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-rga.yaml
-> 
-> I tested with the PX30 EVB so I can surely add a node there if that turns
-> out necessary (see below).
-> 
->> Johan
->>
->> On 4/16/20 1:50 PM, Paul Kocialkowski wrote:
->>> The PX30 features a RGA block: add the necessary node to support it.
->>>
->>> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
->>> ---
->>>  arch/arm64/boot/dts/rockchip/px30.dtsi | 11 +++++++++++
->>>  1 file changed, 11 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
->>> index 75908c587511..4bfbee9d4123 100644
->>> --- a/arch/arm64/boot/dts/rockchip/px30.dtsi
->>> +++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
->>> @@ -1104,6 +1104,17 @@ vopl_mmu: iommu@ff470f00 {
->>>  		status = "disabled";
->>>  	};
->>>  
->>> +	rga: rga@ff480000 {
->>> +		compatible = "rockchip,px30-rga";
->>> +		reg = <0x0 0xff480000 0x0 0x10000>;
->>> +		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH 0>;
->>> +		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA_CORE>;
->>> +		clock-names = "aclk", "hclk", "sclk";
->>> +		resets = <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
->>> +		reset-names = "core", "axi", "ahb";
->>> +		power-domains = <&power PX30_PD_VO>;
->>
->> 		status = "disabled";
-> 
-> As of 5.6, the rk3399 has the node enabled by default. Did that change?
+> [...]
 
-'status' disappeared during review for rk3399 between v2 and v3, but
-doesn't mention the reason. If someone can give more info here?
+Applied, thanks!
 
-https://lore.kernel.org/lkml/1500101920-24039-5-git-send-email-jacob-chen@iotwrt.com/
+[1/2] ASoC: qdsp6: Suggest more generic node names
+      commit: 35c638d039bbabbca7affb52960d468951d811c1
+[2/2] dt-bindings: soc: qcom: apr: Use generic node names for APR services
+      (not applied)
 
-https://lore.kernel.org/lkml/1501470460-12014-5-git-send-email-jacob-chen@iotwrt.com/
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-> 
-> Since it's a standalone block that has no I/O dependency, I don't really see
-> the point of disabling it by default.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Vop, hdmi and other video devices are also disabled.
-Follow the rest I think...
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-> 
-> What do you think?
-> 
-> Cheers,
-> 
-> Paul
-> 
->>> +	};
->>> +
->>>  	qos_gmac: qos@ff518000 {
->>>  		compatible = "syscon";
->>>  		reg = <0x0 0xff518000 0x0 0x20>;
->>>
->>
-> 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
+Thanks,
+Mark
