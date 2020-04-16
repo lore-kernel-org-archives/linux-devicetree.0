@@ -2,124 +2,94 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DACA9C2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD2BC2BB85
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B697F206F9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:19:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587025194;
-	bh=+AtB2qrsVxt1QWCAagtuBV0iMzA+FqM4hoS9ArXVBXI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BoeMVALLR0uMKGLPWVP1YjsxcMjdLYeFHmrCc3C457CiqLQkTUA/7j3rivtqkSlzD
-	 LigCG1typkDCdO/qz2Po/3wCMamDz2iv3XOA5A2YDu+cjUACQq/kmEpehQn/Br8lX9
-	 W6AoShuNXKlUSZ5JM1g1uzL8QKwjG54RVxyeB978=
+	by mail.kernel.org (Postfix) with ESMTP id 07741206B9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:25:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rMq9OYF0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441308AbgDPITc (ORCPT
+        id S2501972AbgDPIZG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 04:19:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44470 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2441300AbgDPITU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:19:20 -0400
-Received: from localhost (unknown [223.235.195.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D38A206B9;
-        Thu, 16 Apr 2020 08:07:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587024458;
-        bh=+AtB2qrsVxt1QWCAagtuBV0iMzA+FqM4hoS9ArXVBXI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2SDVAHMhpWjl2KgmMtDeMa4mCSN5E7syFhtD6nl+7e+uOtdm92iHSJh7of/HWeSKy
-         HDPx9eDy3/ziMPBERearhYxolH1rzEwouN2J1vLT/RYfJAdCvbbfyQVciDd7LjXhj3
-         Rm7XEVuyXLSwCmFC9enIFNjzAhrkqZPWIGTVc9wk=
-Date:   Thu, 16 Apr 2020 13:37:34 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: Remove cases of 'allOf' containing a
- '$ref'
-Message-ID: <20200416080734.GJ72691@vkoul-mobl>
-References: <20200416005549.9683-1-robh@kernel.org>
- <20200416005549.9683-2-robh@kernel.org>
+        Thu, 16 Apr 2020 04:25:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2441361AbgDPIV6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 04:21:58 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33B75C061A10
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 01:21:42 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id s195so1659038vkb.11
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 01:21:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T/reHgPggcZhG4lK1Xu2pV+incftSYy8GHcr4ZbUooE=;
+        b=rMq9OYF0LtRi5tqsKnHYSCyeulkSoKDcfn8p0e1GyLCQO7aQDmvujhuiuxSCotUJpO
+         MgcpejIgcrWsQjIAGIT8xIndxMOBXakoo5hUr4I8RJdsvQhbSd02BeZBdOGXXZeOgv0/
+         qbDUT6auHYmr5ilvgisBG0DiOK+tiMTN13fZpSiigctxIEAx4IRzpe/wHNiaiG6Ayv3K
+         PDlwjZllsp/D1bsQudWLnPYb+6erNIRkvwNjdCAstp5CN71wUMAYTd6oLck9geVlwtti
+         uMvymZ+MPmIxyHnnmQMMYo0nmwpt/R2lKoIMmyMBI5/M/m/Tx0fGeWscZNEUNDXY5pBN
+         bjKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T/reHgPggcZhG4lK1Xu2pV+incftSYy8GHcr4ZbUooE=;
+        b=HN6G4T4l/N5Tl6L53ws3P2RcJwoTpTOUB+E1x/Aw9w2kJEL9k4kshzVUfvnQayLm+t
+         Jl8Y0TDuBNdTwxTUgvV6sG5yQd6W/VJ6tPLNS14TqcET1ZG3QHyjGFPXtgJfuwgcuklN
+         Z+WuV2LgqIwH5bx77sJsdHtPUwqlRX0mC5n/aaIvXTWsDtY+Sisw3kWuNrXsSJ9sSvVT
+         QtFO/4mE1yyFbvJQ1+Zvk7QPR2ym7WXGePsuUAtKHKxL/h6CFuVyJJ0Vuc7KjKmu8czB
+         huO8JwoJrVd6BCopcm9LGJKxp/Au96CCiRD8n0+1dxqCSYG9+Y3y4YxM5Ks400qZ01Pf
+         bB6g==
+X-Gm-Message-State: AGi0PubQUUClTolDnm0tOkJdawsgLgPv3Sn7A+7raR7aNzOV3ltyL5HI
+        cDxHuaEPPaXrwq9kqE+ncNnUu8LXGj7v98N9X+AP1GGh
+X-Google-Smtp-Source: APiQypJGh7LR9CvqbpYIu/kxAYhVc8j+KRUnh92CtaIwyLqGZX2FRTHmGeHZiBIo3KhwWW7YiQZDha0chu+g8V/k4fo=
+X-Received: by 2002:a1f:aa48:: with SMTP id t69mr4609579vke.43.1587025301152;
+ Thu, 16 Apr 2020 01:21:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416005549.9683-2-robh@kernel.org>
+References: <1586353607-32222-1-git-send-email-rnayak@codeaurora.org>
+ <1586353607-32222-14-git-send-email-rnayak@codeaurora.org>
+ <CAPDyKFrOFOLCWHu8nE4i5t=d+Ei-kcJ15_42Ft3ROSUDe5jkpw@mail.gmail.com>
+ <3e5f8e78-7cd1-30fb-e005-78c1e7111794@codeaurora.org> <20200416033906.cl2v6wgbz3ch3clg@vireshk-i7>
+In-Reply-To: <20200416033906.cl2v6wgbz3ch3clg@vireshk-i7>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 16 Apr 2020 10:21:05 +0200
+Message-ID: <CAPDyKFptzgZqzFJYM4_mtu4BsmfNmF=OoSfAwy7vv0j6=gmGeA@mail.gmail.com>
+Subject: Re: [PATCH 13/21] mmc: sdhci-msm: Use OPP API to set clk/perf state
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pradeep P V K <ppvk@codeaurora.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 15-04-20, 19:55, Rob Herring wrote:
-> json-schema versions draft7 and earlier have a weird behavior in that
-> any keywords combined with a '$ref' are ignored (silently). The correct
-> form was to put a '$ref' under an 'allOf'. This behavior is now changed
-> in the 2019-09 json-schema spec and '$ref' can be mixed with other
-> keywords. The json-schema library doesn't yet support this, but the
-> tooling now does a fixup for this and either way works.
-> 
-> This has been a constant source of review comments, so let's change this
-> treewide so everyone copies the simpler syntax.
-> 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/arm/cpus.yaml         |  81 +++---
->  .../devicetree/bindings/arm/l2c2x0.yaml       |  87 +++---
->  .../devicetree/bindings/arm/psci.yaml         |  15 +-
->  .../bindings/arm/samsung/exynos-chipid.yaml   |   5 +-
->  .../bus/allwinner,sun50i-a64-de2.yaml         |   5 +-
->  .../bindings/clock/fixed-factor-clock.yaml    |   5 +-
->  .../bindings/connector/usb-connector.yaml     |  28 +-
->  .../bindings/crypto/st,stm32-hash.yaml        |   9 +-
->  .../allwinner,sun4i-a10-display-engine.yaml   |   7 +-
->  .../display/allwinner,sun4i-a10-tcon.yaml     |   5 +-
->  .../bindings/display/panel/panel-common.yaml  |   5 +-
->  .../devicetree/bindings/dma/dma-common.yaml   |   3 +-
->  .../devicetree/bindings/dma/ti/k3-udma.yaml   |  18 +-
+On Thu, 16 Apr 2020 at 05:39, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 15-04-20, 22:13, Rajendra Nayak wrote:
+> > As for the dependencies, its only PATCH 01/21 in this series and that's
+> > already been queued by Viresh [2]
+>
+> It must be part of v5.7-rc2
 
-Acked-By: Vinod Koul <vkoul@kernel.org>
+Great, thanks!
 
--- 
-~Vinod
+KInd regards
+Uffe
