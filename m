@@ -6,61 +6,61 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD66C352BE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 09:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C0FC2BB85
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 09:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE5521BE5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 09:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A57021BE5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 09:42:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ObziAsNZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GBO7Wy48"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503645AbgDPJl3 (ORCPT
+        id S2503833AbgDPJmU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:41:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48522 "EHLO
+        Thu, 16 Apr 2020 05:42:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2503614AbgDPJlG (ORCPT
+        by vger.kernel.org with ESMTP id S2503627AbgDPJmL (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:41:06 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 263AAC061A0C
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 02:41:06 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id y4so7074015ljn.7
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 02:41:06 -0700 (PDT)
+        Thu, 16 Apr 2020 05:42:11 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9636C061A0C
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 02:42:10 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id v9so7032935ljk.12
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 02:42:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8dAk70I1p4hnhRGOefpbJT7ms2GQjkjqrJGg81hx6OQ=;
-        b=ObziAsNZFmML/a7d7NyFT7NUp0TNcEQoe/JcKNJRXlvCU3WayEVxd+oN3RnNbY2YK9
-         fdwRkA2KoGhzenGHSQwzhrnXNIAvYHWxmiS/2E0x/Ti3lsohU1KAS/vGFGhbV/JKJGru
-         IZakD4MQ73Hb+ddeolKSS/3O/BATf1tH82knHsUXb4ZnWDnSnn/Uo1r2Z8bgJaBg/oSQ
-         jvDe9T3HDh61oUWZvHkDZrlF7Fpj4VNr3ji1FKygGOrcPWMqXpluT5PKq6TaE2BdX5WZ
-         A2bUMW2Ip9GH5STT7BwaS4KvoAbcvYu2Eq5P+JT8ilaLA2T+PcZqATJAP1T/UlQMOTMC
-         sRcQ==
+        bh=S+O7/evWJtIotBVQwpT2KqWk5rAQTrvcTqRSVKK6/9k=;
+        b=GBO7Wy481+gwjzwWz6sPoxZqqVNth7p+TZXxXv9ZXZIuibsA7jpbfZ1R3Cltai4VE/
+         T+Q6VWM8Q2rrpO4h9z7LSUUwDtPWLvpo/tgRtXFb00mvUDeFrnFf3yC1N4qAdzPUpqFm
+         TdzpB+TgGyDntlMspEHwiEwmi7RkyzWoWHzpYbd4IXYRJiHIeQBBKmZLQ1gv3hnKR3O3
+         ++3rNzyQ1L2/scInVP4zfxYgBan9tmTDcBBBpC/4+rNQU9yfyEWL/aRb4X2ZbPezw6N2
+         vuVncMTVvXO7PsbL+fsmN08ROgpRe4jFNxIaEcMzDulqNGg4CKbv36dRq7yPUXGY+LDk
+         i9Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8dAk70I1p4hnhRGOefpbJT7ms2GQjkjqrJGg81hx6OQ=;
-        b=EFTob3S5PDXk9jGNmAjcHqs/1D5YC9wtI6eKthOK2PGmzVGOqfsHG7+psV0A1CyftG
-         ebZjWxin9cE6wE23WUqSQ8z3uDprrEVm8P/X45G9qz+TapH3WTDNDk629qIiQgEi4hV0
-         KJvqmXm7y5u9K035RRe2OHRY6+U4/eSB2zCao0IhAk0xZYS4ZUmwRJDP+4yGwbcG5Ec4
-         w6Dahr+TkJGxNOPpvgnutUrfjwfUKPu65acnqzxE9KEVAOzh3AZkD2+5uVM3op6jFLEa
-         LcGvCjw4NhXZhlESgfJ7UxhNjiURSozYblpFsGS0I0lPMZbPu0/9pqbJWnEu+QfNrN3s
-         K6Iw==
-X-Gm-Message-State: AGi0PuZ66eRuxKIkeYV0w8VixDT6Z7aT1iv0SanhY0AyNdspZVMwwg5A
-        cWa55i5BlhH1XFTRx4RYJvT1FPKa3/WxHv7G9+ynpQ==
-X-Google-Smtp-Source: APiQypK8qx4sDjdMlKaIAgsSnv1jrL4D1nl6jj30y6f4zJEOB93Qgx1Jwe4YMT5gUNKLU95XB+kIvZo1wtO6/Q3eFao=
-X-Received: by 2002:a2e:8805:: with SMTP id x5mr2401076ljh.223.1587030064671;
- Thu, 16 Apr 2020 02:41:04 -0700 (PDT)
+        bh=S+O7/evWJtIotBVQwpT2KqWk5rAQTrvcTqRSVKK6/9k=;
+        b=t/kKjKaSvm9QKMm2BAJU4j5dnikeJITjtrb4PVM91F1VJ/teLYsV0sNMHOXpu84Ybw
+         oAve8t5m3NwsJL+bY5HLCYnZrPE8TZGgrC4Ct4ie32baVPQ+KVxYCRWVuGVdekedFtuo
+         pbHjiz3QbvO7AZKLtrN35k39S1Wj0k20mjwtA8nR5QgjksB0+ELVF1rXT2waBengEJPy
+         6L5H78p+Wjrj5N19cbB9kZ3ir3CqIOPfVyfGOFsjKnxooSwdV6Dz3KhtG/Z98+w6hAE5
+         pSNaHHbssVLRDtTiiDHhz4Ffv0cDZxgvg5Uq6cHKU41eMu8qcUxxDyg5PhaS1G1ywXjw
+         VdGg==
+X-Gm-Message-State: AGi0PuZPr5HQg9FJmZoE53Oc/0qPtksiCAfxKsJ4qgiEUOE4ArqUmnc1
+        TEBZBu0tj1q+g9HEHTzRjAPYIzslr6QByhK/vsohHg==
+X-Google-Smtp-Source: APiQypLpGxFP3d0tO0AVQPx+QFHPQbTiqjrHkFQRQ+jm2jkrid0OXVlkJQdGNnguZKq4zibPaNOzMTt/O2P/KsUiIa0=
+X-Received: by 2002:a2e:9605:: with SMTP id v5mr5725065ljh.258.1587030129422;
+ Thu, 16 Apr 2020 02:42:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <1585306559-13973-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1585306559-13973-1-git-send-email-Anson.Huang@nxp.com>
+References: <1585306559-13973-1-git-send-email-Anson.Huang@nxp.com> <1585306559-13973-3-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1585306559-13973-3-git-send-email-Anson.Huang@nxp.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Apr 2020 11:40:53 +0200
-Message-ID: <CACRpkda7U5M0OU+dQ9CKNqqmZ0XU=LsWqZAOy6faDqknaDCaQw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: arm: fsl-scu: Add imx8dxl pinctrl support
+Date:   Thu, 16 Apr 2020 11:41:58 +0200
+Message-ID: <CACRpkda4Bng5HqUdFCL4a+GMzyK-SqcfuDLjOaebS4ghtL4FsQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] arm64: defconfig: Enable CONFIG_PINCTRL_IMX8DXL by default
 To:     Anson Huang <Anson.Huang@nxp.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -94,11 +94,14 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Fri, Mar 27, 2020 at 12:03 PM Anson Huang <Anson.Huang@nxp.com> wrote:
 
-> Update binding doc to support i.MX8DXL pinctrl.
+> Enable CONFIG_PINCTRL_IMX8DXL by default to support i.MX8DXL
+> pinctrl driver.
 >
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Patch applied.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+Please merge this through the SoC tree.
 
 Yours,
 Linus Walleij
