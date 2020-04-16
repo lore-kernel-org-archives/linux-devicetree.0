@@ -2,153 +2,96 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2C5C2BB55
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 13:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 713D5C2BB55
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 13:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C9F8206E9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 13:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D14E2078B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 13:50:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="f5c9A4Fn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895182AbgDPNZP (ORCPT
+        id S2408673AbgDPNu4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 09:25:15 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:41735 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2895219AbgDPNYt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 09:24:49 -0400
-X-Originating-IP: 93.29.109.196
-Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id AF69AE0003;
-        Thu, 16 Apr 2020 13:24:42 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 15:24:42 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jacob Chen <jacob-chen@iotwrt.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Thu, 16 Apr 2020 09:50:56 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:41660 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2408557AbgDPNuv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:50:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=EF/f9myVVbgrLxXwzUMzNnUxGooj5hG2873Zghg3qio=; b=f5c9A4Fn3ySTK1wzQTyIowkDaW
+        o2L99bBr1lFDYtL4BfBJGLRkjJyMo2p4ZrbupRO58aeykvzS/cr/UeCXY+d23IiSHcp6i7CeihRhq
+        jZli5GjTIUplIniSlLGL4h7pv3GwqBpq82wY+p3xcMk7emkYyilPwPjrq7EfOWM4IAck=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jP4ud-0034yA-Ey; Thu, 16 Apr 2020 15:50:39 +0200
+Date:   Thu, 16 Apr 2020 15:50:39 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hansverk@cisco.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 2/4] arm64: dts: rockchip: Add RGA support to the PX30
-Message-ID: <20200416132442.GI125838@aptenodytes>
-References: <20200416115047.233720-1-paul.kocialkowski@bootlin.com>
- <20200416115047.233720-3-paul.kocialkowski@bootlin.com>
- <478f0a8b-f819-62f4-83b8-27918c4c2431@gmail.com>
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH RFC 0/6] PWM fan support on Clearfog gt8k
+Message-ID: <20200416135039.GL657811@lunn.ch>
+References: <20200329104549.GX25745@shell.armlinux.org.uk>
+ <CACRpkdaL4-Z36aKOVW4o2MtCG9fbqm4gxZN3QjejVRPBZrzxxA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="+PbGPm1eXpwOoWkI"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <478f0a8b-f819-62f4-83b8-27918c4c2431@gmail.com>
+In-Reply-To: <CACRpkdaL4-Z36aKOVW4o2MtCG9fbqm4gxZN3QjejVRPBZrzxxA@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Apr 16, 2020 at 09:51:37AM +0200, Linus Walleij wrote:
+> On Sun, Mar 29, 2020 at 12:46 PM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> 
+> > This series adds support for the fan PWM output on the Clearfog GT8K
+> > platform, and can potentially be extended to the Macchiatobin.
+> 
+> The gpio changes all look fine to me +/- fixes for review comments.
+> 
+> Could the MVEBU maintainers provide some feedback?
 
---+PbGPm1eXpwOoWkI
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Linus
 
-Hi,
+I took a quick look at this when it was first posted. I also wrote the
+PWM support in this driver. The hardware is mostly a GPIO driver, but
+it has some basic PWM facilities. It is not possible to cleanly split
+it into two drivers, which is why it has the current structure. And
+the PWM maintainers ask that the PWM parts be listed in MAINTAINERS as
+such, so they got to know about any changes.
 
-On Thu 16 Apr 20, 15:02, Johan Jonker wrote:
-> Hi Paul,
->=20
-> The conversion of rockchip-rga.txt to rockchip-rga.yaml by myself just
-> has been approved by robh.
+Clocking with Marvell devices has always been interesting. Core IP
+like this gets reused between different generations of SoCs. The
+original Orion5x had no clock control at all. Latter SoCs have had
+more and more complex clock trees. So care has to be taken to not
+change old behaviour when adding support for new clocks. So Russell
+2/6 patch looks good to me, and Uwe request could break on some
+SoCs. It would need testing on a lot of SoCs, with and without PWM
+support. 
 
-Huh, I looked around for ongoing related work but missed it.
-I'll definitely rebase on top of your series and use the yaml description
-instead. Thanks!
+I assume Russell will at some point repost without the RFC tag. At
+that point i will take a second look and add Reviewed-by.
 
-> Maybe place dts patches at the end of a patch serie.
-> Could you include a &rga patch if your device is supported in mainline,
-> so we can test with:
-> make ARCH=3Darm64 dtbs_check
-> DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/media/rockchip-rga.ya=
-ml
-
-I tested with the PX30 EVB so I can surely add a node there if that turns
-out necessary (see below).
-
-> Johan
->=20
-> On 4/16/20 1:50 PM, Paul Kocialkowski wrote:
-> > The PX30 features a RGA block: add the necessary node to support it.
-> >=20
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > ---
-> >  arch/arm64/boot/dts/rockchip/px30.dtsi | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> >=20
-> > diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/d=
-ts/rockchip/px30.dtsi
-> > index 75908c587511..4bfbee9d4123 100644
-> > --- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-> > +++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-> > @@ -1104,6 +1104,17 @@ vopl_mmu: iommu@ff470f00 {
-> >  		status =3D "disabled";
-> >  	};
-> > =20
-> > +	rga: rga@ff480000 {
-> > +		compatible =3D "rockchip,px30-rga";
-> > +		reg =3D <0x0 0xff480000 0x0 0x10000>;
-> > +		interrupts =3D <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH 0>;
-> > +		clocks =3D <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA_CORE>;
-> > +		clock-names =3D "aclk", "hclk", "sclk";
-> > +		resets =3D <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
-> > +		reset-names =3D "core", "axi", "ahb";
-> > +		power-domains =3D <&power PX30_PD_VO>;
->=20
-> 		status =3D "disabled";
-
-As of 5.6, the rk3399 has the node enabled by default. Did that change?
-
-Since it's a standalone block that has no I/O dependency, I don't really see
-the point of disabling it by default.
-
-What do you think?
-
-Cheers,
-
-Paul
-
-> > +	};
-> > +
-> >  	qos_gmac: qos@ff518000 {
-> >  		compatible =3D "syscon";
-> >  		reg =3D <0x0 0xff518000 0x0 0x20>;
-> >=20
->=20
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---+PbGPm1eXpwOoWkI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl6YXJoACgkQ3cLmz3+f
-v9Ho3wf/d9zxV64Bwt9TC0ABSimMOz4E7MQphqkXg/XbCpShScAkCWfzSQ71WxB4
-T0+gL2hGnJEua+rGBrWyXst54nDhfUvqmiKw2VDC+ukjpVgGwNNP1UFFWGf5rTqM
-TNY4QMIqmVhU1hvIGLYIT3iFZl66I1jlzBlywy1tM5SqC6B2N7Xy7P1FgtfVt7Wr
-iz3jUXj1tqFrSB4sFdr2HFkOV48LLhtzjfSEPJI5ZtIsgM+jh/fGYu/v38kPlDW5
-2bjcC2ZLiwHQyUpV8/+vEHFo8Ged/qocFyPrKtI1mCZd+Yd/VYRP85f551sbc0uz
-uuYKH6JbkP37Fdz/ONOdyMbAqj+dNg==
-=RgMQ
------END PGP SIGNATURE-----
-
---+PbGPm1eXpwOoWkI--
+     Andrew
