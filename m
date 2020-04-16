@@ -2,122 +2,138 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D32DC2BB85
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B5CC2BB85
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C7BF20656
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:36:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587036977;
-	bh=PbIJJBCyxb0zjE+EsVUIseBGje2iBqdBzd3TawdCtII=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NRU0PmPJZUL+DHtvbfta5LY3uvqYePZrVk7cj2r/HecEX1cY8IGzU+6w9YqUHdM6K
-	 c8b/b0g9yLQ7OD7Z7vt1a1rkX09eS4wym55FHtze4w0PPT86sVw3/KfqheQNFfzp5M
-	 UNeXiCfPKWLqirroXCuVqoqbJHGsmHs3rzXxbQZA=
+	by mail.kernel.org (Postfix) with ESMTP id B9E2120656
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633850AbgDPLgO (ORCPT
+        id S2506033AbgDPLhw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:36:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42100 "EHLO mail.kernel.org"
+        Thu, 16 Apr 2020 07:37:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57660 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2506025AbgDPLEV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:04:21 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BEA4206B9;
-        Thu, 16 Apr 2020 10:40:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587033627;
-        bh=PbIJJBCyxb0zjE+EsVUIseBGje2iBqdBzd3TawdCtII=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qLx+neJh2XiUym52/Y5To6wDkJdF+YfeO3N39IXBEI/aglNs6bS7P/uMNiV4FoJl3
-         TMp7QxwJIyoECwfzV+F5isAyTkbeACxvuyoa8MrjQkJVF1B64098yNWGLrS06i/htu
-         0dOZ+2iYr9R63yIwg4ubkL8oPIU3RmTo6iLh2Iwc=
-Date:   Thu, 16 Apr 2020 11:40:24 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: Clean-up schema indentation formatting
-Message-ID: <20200416104024.GD5354@sirena.org.uk>
-References: <20200416005549.9683-1-robh@kernel.org>
+        id S2506483AbgDPLhv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 07:37:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id CF685AC64;
+        Thu, 16 Apr 2020 11:37:48 +0000 (UTC)
+Message-ID: <55611d3e028b6ea418cba1ef9d94fe7bf1e1b1fd.camel@suse.de>
+Subject: Re: [PATCH 2/4] of: property: Do not link to disabled devices
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Thu, 16 Apr 2020 13:37:48 +0200
+In-Reply-To: <CAGETcx_7cTp0zx2hfGX0X=NpudkAjER8YeLMmRxTEtoqxc0pFw@mail.gmail.com>
+References: <20200415150550.28156-1-nsaenzjulienne@suse.de>
+         <20200415150550.28156-3-nsaenzjulienne@suse.de>
+         <CAGETcx_7cTp0zx2hfGX0X=NpudkAjER8YeLMmRxTEtoqxc0pFw@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-YH2OaEqwZ+TPp+cvOI2i"
+User-Agent: Evolution 3.34.2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wLAMOaPNJ0fu1fTG"
-Content-Disposition: inline
-In-Reply-To: <20200416005549.9683-1-robh@kernel.org>
-X-Cookie: Tempt me with a spoon!
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---wLAMOaPNJ0fu1fTG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--=-YH2OaEqwZ+TPp+cvOI2i
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 15, 2020 at 07:55:48PM -0500, Rob Herring wrote:
-> Fix various inconsistencies in schema indentation. Most of these are
-> list indentation which should be 2 spaces more than the start of the
-> enclosing keyword. This doesn't matter functionally, but affects running
-> scripts which do transforms on the schema files.
+On Wed, 2020-04-15 at 11:30 -0700, Saravana Kannan wrote:
+> On Wed, Apr 15, 2020 at 8:06 AM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > When creating a consumer/supplier relationship between two devices, mak=
+e
+> > sure the supplier node is actually active. Otherwise this will create a
+> > device link that will never be fulfilled. This, in the worst case
+> > scenario, will hang the system during boot.
+> >=20
+> > Note that, in practice, the fact that a device-tree represented
+> > consumer/supplier relationship isn't fulfilled will not prevent devices
+> > from successfully probing.
+> >=20
+> > Fixes: a3e1d1a7f5fc ("of: property: Add functional dependency link from=
+ DT
+> > bindings")
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > ---
+> >  drivers/of/property.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >=20
+> > diff --git a/drivers/of/property.c b/drivers/of/property.c
+> > index a8c2b13521b27..487685ff8bb19 100644
+> > --- a/drivers/of/property.c
+> > +++ b/drivers/of/property.c
+> > @@ -1052,6 +1052,13 @@ static int of_link_to_phandle(struct device *dev=
+,
+> > struct device_node *sup_np,
+> >                 return -ENODEV;
+> >         }
+> >=20
+> > +       /* Don't allow linking a device node as consumer of a disabled =
+node
+> > */
+> > +       if (!of_device_is_available(sup_np)) {
+> > +               dev_dbg(dev, "Not linking to %pOFP - Not available\n",
+> > sup_np);
+> > +               of_node_put(sup_np);
+> > +               return -ENODEV;
+> > +       }
+> > +
+>=20
+> Again, surprised I haven't hit this situation with the number of
+> disabled devices I have.
 
-Acked-by: Mark Brown <broonie@kernel.org>
+I'll point out to the example that triggered this issue on my reply to patc=
+h
+#4.
 
---wLAMOaPNJ0fu1fTG
+> The idea is right, but the implementation can be better. I think this
+> check needs to be the first check after the of_node_get(sup_np) --
+> before we do any of the "walk up to find the device" part.
+>=20
+> Otherwise, you could have a supplier device (the one with compatible
+> prop) that's available with a child node that's disabled. And the
+> phandle could be pointing to that disabled child node. If you don't do
+> this as the first check, you might still try to form a pointless
+> device link. It won't affect probing (because the actual struct device
+> will probe) but it's still a pointless device link and a pointless
+> delay in probing, etc.
+
+Agree, I'll update the patch.
+
+Regards,
+Nicolas
+
+
+--=-YH2OaEqwZ+TPp+cvOI2i
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6YNhcACgkQJNaLcl1U
-h9CTpAf+IW4icH5zPKy5c7TecTxfEyWNDjNTt8Pa69ga67NVmMDHKzueRcPb7D3e
-ihhK7zM0HDSd8aebO5YtW3GiVBBUyJ0m1CNYvbcsJscIhoOoco+NPJUss00w/0Zs
-L0RHGHcgc6lhNve8n+r6QbzSYEeeT9QhqTaPtyPnvMDRUkAYgShAD0ejHjNQWYOt
-3KuH8RD18xfK/PWSRsrrxCY3flOTx0RIpS9+oyO+JWIcKd6Y5lCZiBAXGrXEdEjx
-bgRsC/mO1YSE03iuDgQnodKThzIoJrygjOkGGDJuYsKY5erh8JZ93l5KPoLkyKCT
-SSA9qjNaVs+wMuSlq8WJ3w8m+z5cOA==
-=dNaD
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6YQ4wACgkQlfZmHno8
+x/7CQwgAlEnq8CbPih0tHYb/hiZxVOfc5OBXZ8B1bBe5PoGNyCKfxSehoWqog+fw
+/LDFWdYASXiHvs3jSnKeSoXJTHa+rtBt+EeE/UEXU/c6geGUFq6FKnhRQBmzceBP
+yAJOgDwKtvS86k5bpNuFRbh+nkwN+AFNYglSWBOWlFsuIg2JXaXOCNsF52q7rSS5
+mhNFPkGCqHtvgGlFPYA5hLQMjR+pdwn8/G5rk4Tzr/KSCqJNqNMtsAqpGTvTrI5E
+MtY2COIf/pkkqi7hNbxhD8jaS62zPJ5jBdRq3nkWroZAWwd01CfdYsqfNZhoPdyX
+1PyuuJgabgqfbPrjcIHqWMV5M0DJlg==
+=hiud
 -----END PGP SIGNATURE-----
 
---wLAMOaPNJ0fu1fTG--
+--=-YH2OaEqwZ+TPp+cvOI2i--
+
