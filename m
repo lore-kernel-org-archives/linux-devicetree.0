@@ -2,104 +2,312 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFB6C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF027C352BE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAC26206A2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:02:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zS3y8Lnl"
+	by mail.kernel.org (Postfix) with ESMTP id D525921556
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:03:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437790AbgDPHC6 (ORCPT
+        id S2437675AbgDPHDE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:02:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51820 "EHLO
+        Thu, 16 Apr 2020 03:03:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2437800AbgDPHCh (ORCPT
+        by vger.kernel.org with ESMTP id S2437541AbgDPHCc (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:02:37 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8A00C03C1A9
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 00:02:34 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id t14so3450351wrw.12
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 00:02:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=UcbV/1U7fcT3mqmBtnCZDKM08tchT85s7YFfnWx+Mb8=;
-        b=zS3y8LnlF68g0JllYixN26PbAwCSYY7xSlE8nXjsy7YcsVxDwbGAO2rKjNYL1Vw91a
-         cDrmXmEMPfKStjnT6sMkP5P5xZ8usWxZHQ37ENd8X7uF3wahkUpFfF65sbOObwpTipWH
-         TwoCG+Z5BXWUk1u0ookteA/VWEm7Wd0Jed1o8tTilBP9B0hvhsJE5Z0KHkyyIpWzxfRH
-         doTWrjcELR9xW1KFiQWOEp6uzvD1Nu0DMMHEgI58rgOUMG1xKY+G6wCXfFHBYPbGaMxd
-         5TBnIdhsAJvm7fT4SxC6iM6fvjYQgs5DBb/i/3w3d45KPazkLTm3Ew6LM+RzDHcGFe5f
-         6/Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=UcbV/1U7fcT3mqmBtnCZDKM08tchT85s7YFfnWx+Mb8=;
-        b=MgrkZ2F/vHxbKqpj0yGeWo498Ty6n74x9hJMrKW7lOddmZ6s6V13W8PzaVsbjqCXe4
-         831k7fBa7c63kMXwqJvO64GatsjwQvBj7lJCB09iCDGhK/D5hYxSDnyrF+Q7AC5nlVtH
-         kG5WZCacTEeJy7QOz4j6XGQ1tz9MGi46E68zZV9Rpta9A0/qqegi2g4o6WAMTMOs32hw
-         9S5RPpgd49Nm8NyV2okg31D9jfhRrRRJRma72dWpEQDoVwjyhS1201P3NSG3Kpxi1Qev
-         2G9g9mjRoV87IjMWRr+iHrXjNEtuaf0BZue6vTwzsGHOtBVYDuWsdZNZmdugOEbxzEy9
-         vEcQ==
-X-Gm-Message-State: AGi0PuYiBIPK4g/8bI/Xpjg7mhbe61EZeDOEhbuMSseow/+jp4Zx/5gR
-        s62/6k+wI4zoSclipz6MR3ZfjA==
-X-Google-Smtp-Source: APiQypJ96rWLxKp7VAvSeHK7hZEqilWnmaYg11vV8dBdjgLm8n9pRM8C8e1VgmyHDPezkPAvIIBirQ==
-X-Received: by 2002:adf:ed0e:: with SMTP id a14mr32770394wro.400.1587020553212;
-        Thu, 16 Apr 2020 00:02:33 -0700 (PDT)
-Received: from dell ([95.149.164.124])
-        by smtp.gmail.com with ESMTPSA id j11sm4915082wrr.62.2020.04.16.00.02.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 00:02:32 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 08:03:23 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     fabrice.gasnier@st.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        daniel.lezcano@linaro.org, tglx@linutronix.de,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 4/6] mfd: stm32: enable regmap fast_io for
- stm32-lptimer
-Message-ID: <20200416070323.GO2167633@dell>
-References: <20200401083909.18886-1-benjamin.gaignard@st.com>
- <20200401083909.18886-5-benjamin.gaignard@st.com>
+        Thu, 16 Apr 2020 03:02:32 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 351FAC061A10
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 00:02:32 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jOyXZ-0005qX-7a; Thu, 16 Apr 2020 09:02:25 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jOyXY-0003av-OP; Thu, 16 Apr 2020 09:02:24 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Rob Herring <robh@kernel.org>,
+        David Jander <david@protonic.nl>, devicetree@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: [PATCH v5 4/4] ARM: dts: add Protonic RVT board
+Date:   Thu, 16 Apr 2020 09:02:22 +0200
+Message-Id: <20200416070222.12181-5-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200416070222.12181-1-o.rempel@pengutronix.de>
+References: <20200416070222.12181-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200401083909.18886-5-benjamin.gaignard@st.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 01 Apr 2020, Benjamin Gaignard wrote:
+Protonic RVT is an internal development platform for a wireless ISObus
+Virtual Terminal based on COTS tablets, and the predecessor of the WD2
+platform.
 
-> Because stm32-lptimer need to write in registers in interrupt context
-> enable regmap fast_io to use a spin_lock to protect registers access
-> rather than a mutex.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  drivers/mfd/stm32-lptimer.c | 1 +
->  1 file changed, 1 insertion(+)
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: David Jander <david@protonic.nl>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ .../devicetree/bindings/arm/fsl.yaml          |   1 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/imx6dl-prtrvt.dts           | 203 ++++++++++++++++++
+ 3 files changed, 205 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-prtrvt.dts
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 424be1edf005a..2e8a03ef5c95e 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -168,6 +168,7 @@ properties:
+               - emtrion,emcon-mx6-avari   # emCON-MX6S or emCON-MX6DL SoM on Avari Base
+               - fsl,imx6dl-sabreauto      # i.MX6 DualLite/Solo SABRE Automotive Board
+               - fsl,imx6dl-sabresd        # i.MX6 DualLite SABRE Smart Device Board
++              - prt,prtrvt                # Protonic RVT board
+               - prt,prtvt7                # Protonic VT7 board
+               - technologic,imx6dl-ts4900
+               - technologic,imx6dl-ts7970
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e53abe1de259c..afaccc9bc645b 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -446,6 +446,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6dl-nitrogen6x.dtb \
+ 	imx6dl-phytec-mira-rdk-nand.dtb \
+ 	imx6dl-phytec-pbab01.dtb \
++	imx6dl-prtrvt.dtb \
+ 	imx6dl-prtvt7.dtb \
+ 	imx6dl-rex-basic.dtb \
+ 	imx6dl-riotboard.dtb \
+diff --git a/arch/arm/boot/dts/imx6dl-prtrvt.dts b/arch/arm/boot/dts/imx6dl-prtrvt.dts
+new file mode 100644
+index 0000000000000..cf097437b2762
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6dl-prtrvt.dts
+@@ -0,0 +1,203 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++/*
++ * Copyright (c) 2014 Protonic Holland
++ */
++
++/dts-v1/;
++#include "imx6dl.dtsi"
++#include "imx6qdl-prti6q.dtsi"
++#include <dt-bindings/leds/common.h>
++
++/ {
++	model = "Protonic RVT board";
++	compatible = "prt,prtrvt", "fsl,imx6dl";
++
++	memory@10000000 {
++		device_type = "memory";
++		reg = <0x10000000 0x10000000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_leds>;
++
++		led-debug0 {
++			function = LED_FUNCTION_STATUS;
++			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++		};
++	};
++};
++
++&can1 {
++	pinctrl-0 = <&pinctrl_can1 &pinctrl_can1phy>;
++};
++
++&ecspi1 {
++	cs-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi1>;
++	status = "okay";
++
++	flash@0 {
++		compatible = "winbond,w25q64", "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <20000000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "boot";
++				reg = <0x0 0x80000>;
++			};
++
++			partition@80000 {
++				label = "env";
++				reg = <0x80000 0x10000>;
++			};
++
++			partition@90000 {
++				label = "spare";
++				reg = <0x90000 0x370000>;
++			};
++		};
++	};
++};
++
++&ecspi3 {
++	cs-gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi3>;
++	status = "okay";
++
++	nfc@0 {
++		compatible = "ti,trf7970a";
++		reg = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_nfc>;
++		spi-max-frequency = <2000000>;
++		interrupts-extended = <&gpio5 14 IRQ_TYPE_LEVEL_LOW>;
++		ti,enable-gpios = <&gpio5 12 GPIO_ACTIVE_LOW>,
++				  <&gpio5 11 GPIO_ACTIVE_LOW>;
++		vin-supply = <&reg_3v3>;
++		vin-voltage-override = <3100000>;
++		autosuspend-delay = <30000>;
++		irq-status-read-quirk;
++		en2-rf-quirk;
++		t5t-rmb-extra-byte-quirk;
++		status = "okay";
++	};
++};
++
++&i2c3 {
++	adc@49 {
++		compatible = "ti,ads1015";
++		reg = <0x49>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		/* nc */
++		channel@4 {
++			reg = <4>;
++			ti,gain = <3>;
++			ti,datarate = <3>;
++		};
++
++		/* nc */
++		channel@5 {
++			reg = <5>;
++			ti,gain = <3>;
++			ti,datarate = <3>;
++		};
++
++		/* can1_l */
++		channel@6 {
++			reg = <6>;
++			ti,gain = <3>;
++			ti,datarate = <3>;
++		};
++
++		/* can1_h */
++		channel@7 {
++			reg = <7>;
++			ti,gain = <3>;
++			ti,datarate = <3>;
++		};
++	};
++
++	rtc@51 {
++		compatible = "nxp,pcf8563";
++		reg = <0x51>;
++	};
++};
++
++&pcie {
++	status = "okay";
++};
++
++&usbh1 {
++	status = "disabled";
++};
++
++&vpu {
++	status = "disabled";
++};
++
++&iomuxc {
++	pinctrl_can1phy: can1phy {
++		fsl,pins = <
++			/* CAN1_SR */
++			MX6QDL_PAD_KEY_COL3__GPIO4_IO12	0x13070
++			/* CAN1_TERM */
++			MX6QDL_PAD_GPIO_0__GPIO1_IO00	0x1b0b0
++		>;
++	};
++
++	pinctrl_ecspi1: ecspi1grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D17__ECSPI1_MISO		0x100b1
++			MX6QDL_PAD_EIM_D18__ECSPI1_MOSI		0x100b1
++			MX6QDL_PAD_EIM_D16__ECSPI1_SCLK		0x100b1
++			/* CS */
++			MX6QDL_PAD_EIM_D19__GPIO3_IO19		0x000b1
++		>;
++	};
++
++	pinctrl_ecspi3: ecspi3grp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT0__ECSPI3_SCLK	0x100b1
++			MX6QDL_PAD_DISP0_DAT1__ECSPI3_MOSI	0x100b1
++			MX6QDL_PAD_DISP0_DAT2__ECSPI3_MISO	0x100b1
++			MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24	0x000b1
++		>;
++	};
++
++	pinctrl_leds: ledsgrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_8__GPIO1_IO08		0x1b0b0
++		>;
++	};
++
++	pinctrl_nfc: nfcgrp {
++		fsl,pins = <
++			/* NFC_ASK_OOK */
++			MX6QDL_PAD_DISP0_DAT15__GPIO5_IO09	0x100b1
++			/* NFC_PWR_EN */
++			MX6QDL_PAD_DISP0_DAT16__GPIO5_IO10	0x100b1
++			/* NFC_EN2 */
++			MX6QDL_PAD_DISP0_DAT17__GPIO5_IO11	0x100b1
++			/* NFC_EN */
++			MX6QDL_PAD_DISP0_DAT18__GPIO5_IO12	0x100b1
++			/* NFC_MOD */
++			MX6QDL_PAD_DISP0_DAT19__GPIO5_IO13	0x100b1
++			/* NFC_IRQ */
++			MX6QDL_PAD_DISP0_DAT20__GPIO5_IO14	0x100b1
++		>;
++	};
++};
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.26.0.rc2
+
