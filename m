@@ -2,101 +2,133 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4768EC2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 20:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD84C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 20:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 197A021841
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 20:45:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587069949;
-	bh=yO3atKf6wvfWgm+UsqQ3nafLr0brm1A+2/kreqKzl6w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QU7PNb1Je39wSGwt+D9GGSph/vsl1Pg7jvO91kxE/pHIdDviL6lSNs/UehT6XX/A5
-	 WmxN0i8XPjmxsLiAw+TJbESLDsUJVCEGPmpIrAcWJZ80pPOxA353WyhtOT3Bn2HrSi
-	 XlML0pL0o5wLcDv8mYYfAz7+sdd4o6m1cAa586PA=
+	by mail.kernel.org (Postfix) with ESMTP id 54FD2206D5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 20:57:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hm6Jy+fn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgDPUps (ORCPT
+        id S1728268AbgDPU5H (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 16:45:48 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43152 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727780AbgDPUpr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 16:45:47 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g14so4233531otg.10;
-        Thu, 16 Apr 2020 13:45:47 -0700 (PDT)
+        Thu, 16 Apr 2020 16:57:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728160AbgDPU5H (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 16:57:07 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CC5AC061A0C
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 13:57:07 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id g14so4261296otg.10
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 13:57:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qrdLvNUZuNOVEq/DpctNA3Oq1U2C5yJywp5te7wlqpA=;
+        b=hm6Jy+fnQBEt3O7rSKr1yw27yEpuzy9j5I3q5e96JqP4sTmtV41H+pbUn16pMDC26m
+         Dqrzl1JaVNUhXjZxOI3k27/KW01DXd/piu8CKN4q1RqSOIM6z8+pb6vSPoQ4ZUnkAguF
+         0S35cHU4QtVvC3ZfhU7gow6p82ueKAlcFR1XthxcWf+ogCEnlVPOC3k/608BHI4VnjSP
+         Z2SW4ZUcFyVHslCMQfScIjFbhjiND7nXeY1C7olk4MoPOgoUkA+4km2PfizRTPavTowX
+         uADu9ny+h1mhlnbLWISHS7yrDfX/bNvDRqCHUyk/kwau2RqWm1PB0TF9n2grkzcOF+9Z
+         YhPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uNp2FEE1PLVvPcRli4Kxfk/uC3bIO5nhdJmFaCVvZ8Y=;
-        b=i1YjojYHHnAIATVcPzzcwz+2X/tQwCqulyG8vDqYH3apIB0pI8iXEKuPqH/zmfNrZ5
-         54s7LrkzkVU68EnbNAAw29RZ0JcOfEyQMyNfrLuOB7lP4XNWOxnStBV/Fbr8EXad+JLD
-         PX/BrFnE0iDNT+JHMLKV7J+VnoRBwXdWyrCHd0SAtWYjQUnpnVSM6PU6QTjwBnRUc3RE
-         b90OC9ZcLWup61RkOe61+nj2+mdOO4xEHZlULMoOgar2Cy+F+oEFOoCO/wRU9hxHoyAs
-         RO+M3ob0e1IkmU8rIDg2AxH98gWJz08HydHw1S+4OzFxGi76JA7xBg1SQpbwF5Dz87Uv
-         YTLA==
-X-Gm-Message-State: AGi0Pub0G0jeYFdfOvdmOPQo34pfbXhKEFoO2ajl+nKkdLnp/B05d9wB
-        I4SdGjbGia9YDIiYFqX14Q==
-X-Google-Smtp-Source: APiQypK5AKz1ujNN52aZa37611roc3sbyihjxaYggNSCUvmDTZoTUNxSsPeEJfql3QtvsIAeOCVY9A==
-X-Received: by 2002:a05:6830:1599:: with SMTP id i25mr2759otr.188.1587069947265;
-        Thu, 16 Apr 2020 13:45:47 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f45sm7402999otf.30.2020.04.16.13.45.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 13:45:46 -0700 (PDT)
-Received: (nullmailer pid 19615 invoked by uid 1000);
-        Thu, 16 Apr 2020 20:45:45 -0000
-Date:   Thu, 16 Apr 2020 15:45:45 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Anthony Huang <anthony.huang@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
-        Anthony Huang <anthony.huang@mediatek.com>
-Subject: Re: [PATCH 1/2] dt-bindings: soc: mediatek: Add document for mmdvfs
- driver
-Message-ID: <20200416204545.GA19079@bogus>
-References: <1586949506-22990-1-git-send-email-anthony.huang@mediatek.com>
- <1586949506-22990-2-git-send-email-anthony.huang@mediatek.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qrdLvNUZuNOVEq/DpctNA3Oq1U2C5yJywp5te7wlqpA=;
+        b=AhgUMxVN3A38HwhziYzEuDgml2+xNZI1HPtCdE6X4hihjx1GQdCh7q1J9IWguhNy+V
+         keOwwzHMS+6kMtt00O1noDi8Mq1uB1lCnF9nTaI6HeSMZWdlyP9sWoQkodHIvImy33d9
+         EtttTtwb3XFeRKrmYPXT8eueg+5xL758VyqZ9dSgX8Dlc2GZ8SjkIixs+weppIg8fr3D
+         dItyvaSIbzVRx4lNAc3UHeRtUkhhQjxVl/hmoW9TtiFBMZA/NvIwKuAUcDqJkiD7NmVr
+         3Rq5Tv3fCOiLbKAc3ZIKpwXsEZ7E2cAQRKcHvVhOAuci5I9cqhJ1mO5rckSw/TZN7z8T
+         BBXg==
+X-Gm-Message-State: AGi0PubF1oxqQ1CsFGI4rwawoMwzc/MAi1GwUbJ4QgS5foVMzvqqXb1B
+        /PsG+vMiSRnRdXvkYzJ0MR+idz33UfS+bvNzGz7uXQ==
+X-Google-Smtp-Source: APiQypIlWWZ5GWdzPQxZ8U60trk6vYQpLhZcfD04oMWwGIw7G8vVm1k8npz8diF9AbgVU0yecXzFqW4yfa9vUsF4NGg=
+X-Received: by 2002:a9d:441:: with SMTP id 59mr25004otc.236.1587070626084;
+ Thu, 16 Apr 2020 13:57:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586949506-22990-2-git-send-email-anthony.huang@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200415150550.28156-1-nsaenzjulienne@suse.de>
+ <CAGETcx-=E-6sg=B2Rr+V51eCxiBjNWPnOvvq6K=o9Sr-qLDvOg@mail.gmail.com> <69b79028764dcdfc9f550a5f95752afb491005f0.camel@suse.de>
+In-Reply-To: <69b79028764dcdfc9f550a5f95752afb491005f0.camel@suse.de>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 16 Apr 2020 13:56:29 -0700
+Message-ID: <CAGETcx_AHV8CDzRQ-y3xNRcT_QTi2ise1YwO7mw=u85g6O1uYQ@mail.gmail.com>
+Subject: Re: [PATCH 0/4] of: property: fw_devlink misc fixes
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 15 Apr 2020 19:18:25 +0800, Anthony Huang wrote:
-> This document describes the properties what mtk mmdvfs
-> device node support.
-> 
-> Signed-off-by: Anthony Huang <anthony.huang@mediatek.com>
-> ---
->  .../devicetree/bindings/soc/mediatek/mmdvfs.yaml   |  198 ++++++++++++++++++++
->  1 file changed, 198 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mmdvfs.yaml
-> 
+On Thu, Apr 16, 2020 at 4:03 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> On Wed, 2020-04-15 at 11:17 -0700, Saravana Kannan wrote:
+> > On Wed, Apr 15, 2020 at 8:06 AM Nicolas Saenz Julienne
+> > <nsaenzjulienne@suse.de> wrote:
+> > > As I'm interested in using this feature to fine-tune Raspberry Pi 4's
+> >
+> > You've made my day! Finally another user outside of Android. :) If
+> > this does improve the boot time, I'd be super interested to see the
+> > numbers.
+>
+> Actually making the boot time faster isn't my main objective just a nice
+> possible side-effect. I'll give you some numbers nonetheless :).
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Thanks!
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/mediatek/mmdvfs.example.dt.yaml: example-0: opp-table-mm: {'compatible': ['operating-points-v2'], 'phandle': [[1]], 'opp-0': {'opp-hz': [[315000000]], 'opp-microvolt': [[650000]]}, 'opp-1': {'opp-hz': [[450000000]], 'opp-microvolt': [[725000]]}, 'opp-2': {'opp-hz': [[606000000]], 'opp-microvolt': [[825000]]}} is not valid under any of the given schemas (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/mediatek/mmdvfs.example.dt.yaml: example-0: opp-table-mm: {'compatible': ['operating-points-v2'], 'phandle': [[1]], 'opp-0': {'opp-hz': [[315000000]], 'opp-microvolt': [[650000]]}, 'opp-1': {'opp-hz': [[450000000]], 'opp-microvolt': [[725000]]}, 'opp-2': {'opp-hz': [[606000000]], 'opp-microvolt': [[825000]]}} is not of type 'array'
+> I have two things in mind:
+>  - Exploring if fw_devlink=on can help us solve a rather convoluted device
+>    initialization depency we're seeing in RPi4. It could potentially prevent us
+>    from adding nasty platform specific driver code.
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/mediatek/mmdvfs.example.dt.yaml: mmdvfs: 'clock' is a required property
+I hope it does! I've also noticed that fw_devlink avoids the need for
+ugly hacks in drivers and side steps poorly written error handling in
+drivers.
 
-See https://patchwork.ozlabs.org/patch/1271100
+>  - See if we can use all this information to fine-tune initrd generation on
+>    smaller arm devices with limited i/o speeds.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+That's pretty cool. I have no idea how fw_devlink helps here, but I'm
+glad it does :)
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> Do you have any plans in moving the default behavior to fw_devlink=on? If so
+> what is blocking us?
 
-Please check and re-submit.
+That's my eventual goal. The main reasons it hasn't been done yet are:
+1. Cases like yours where there might be fake cycles.
+2. Cases of DT with bad choice of properties. Say, something like
+"nr-gpios" would cause error spew in the logs (not a functional
+error).
+3. Whatever other unknown reasons this might cause boot up issues.
+
+I'm starting with trying to turn on fw_devlink=permissive so that
+driver developers can stop playing chicken with initcall levels. Then
+work towards setting fw_devlink=on (going to be a long road).
+
+> Also do you think it'd be reasonable to add a DT binding to set the desired
+> fw_devlink level? Something like a 'linux,fw_devlink' property under the
+> /chosen node.
+
+I don't mind that, but not sure if DT maintainers are okay with it.
+But if we do have that, I'd still want the kernel command line to
+override it.
+
+Thanks,
+Saravana
