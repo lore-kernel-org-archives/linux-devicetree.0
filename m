@@ -2,113 +2,130 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56856C2BB55
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 17:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB74C352BE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 17:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 314FD20715
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 17:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C1262078E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 17:10:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="etEaeasS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IkpAFJhJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729869AbgDPRDe (ORCPT
+        id S1731985AbgDPRKF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 13:03:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32994 "EHLO
+        Thu, 16 Apr 2020 13:10:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732667AbgDPRDa (ORCPT
+        by vger.kernel.org with ESMTP id S1731176AbgDPRKD (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 13:03:30 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F763C061A0C;
-        Thu, 16 Apr 2020 10:03:30 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id j2so5686261wrs.9;
-        Thu, 16 Apr 2020 10:03:30 -0700 (PDT)
+        Thu, 16 Apr 2020 13:10:03 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09F67C061A10
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 10:10:03 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id p8so1925085pgi.5
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 10:10:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=998VS9NQrf44xyeybmnR7tkwj8PiFEeNjnEnBJHx1Ko=;
-        b=etEaeasSiSnGiMygaw1TlDGQZ5cuMJRKnWb8gWIaGHwyAXZBfJeejm33AX4ONaR8aI
-         JxtnLBp+/eySPyxInci7beLJ4a52M/l9P5oIPnZIWPnk3E/+YPJkf1D28FRUYTewa3gd
-         jpgUngG5usb629smh5qO5gW8bxf5/gSYukgwdSU9/cG2PyZJCP0WeNbbOt7zmuLALD/B
-         lF/vnL+ODCRBwZGOX8dtzV9+aiKO5gJu70kFoO7oPWBO7ck8UQbkCUqvVL9DbSE8OkBy
-         3Wl2foDhlFoaaT+DXs8xvh3hVFeCXEg9Aa/5CqjGoV1OaCiJPCA46M8FFylgz6pFLtqn
-         yPBQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EcaUjKr60NABrTutbb9VaO0pRJf9+Gj4l3bz6prw+yE=;
+        b=IkpAFJhJdAWshYnm+xeetGdIIaIslGQ5tzURliBkEMMopJKW5GWMhOLteksRf1Z3tm
+         dYOlW+5enQJMQNLJIAfI1YjYJeErgTn3OZivjXXSf7f5bwKv+kKwo6QBG62kv+4764RI
+         2OTJc8tejHbGSLTt4LSOavpzPxlrEqucJWYAQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=998VS9NQrf44xyeybmnR7tkwj8PiFEeNjnEnBJHx1Ko=;
-        b=IQmA240EWAjl8SNnj20c29NjHgbOhbscj4+yw2e9Cc5i9+Y4SOK/r2tR/oA0f3PK84
-         SbwR086Mfvw3Gu43b17kuPdCJtWFFilAUURhPzagM+SyUrIkQNZcxKE2kZ+rntUYo62h
-         X/o2BoceZT913gs7DYGz66ArtPbjVqiQT4zYPtfkDlbg4Je/Nrypw/EgTr5q+p9hzrHx
-         qB+ZTnYO7SFbnuGyLZ+qRteD+qZYAF7XkRhvV6ek1ZOdJcv/+X3xF2KTGo9V2A96G4j5
-         IyFex03/xcLTKcsyJjfVvQlpjJJ3ZbcFDqDZaJNuRN1WRTlLuyRp5O4AlZr5WrFnQyO9
-         N77Q==
-X-Gm-Message-State: AGi0PuY7Y9C9FMDiK7lf+v4viw7/R8k6hSLnsxnS4YvmgIZkvr4I/XEj
-        RRydsyo9FnZwKQnbArZ9Dsk=
-X-Google-Smtp-Source: APiQypJ4BZpuLiC8lmK4Vpk0+VBIqECGuTW9aEjV8pEaWUoRQYlq6LDI6LbwtVgS38F2ll9IB9SpLA==
-X-Received: by 2002:a5d:49c7:: with SMTP id t7mr34097581wrs.22.1587056609264;
-        Thu, 16 Apr 2020 10:03:29 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id g186sm4339600wme.7.2020.04.16.10.03.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Apr 2020 10:03:28 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] ARM: dts: rockchip: fix phy nodename for rk3229-xms6
-Date:   Thu, 16 Apr 2020 19:03:21 +0200
-Message-Id: <20200416170321.4216-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200416170321.4216-1-jbx6244@gmail.com>
-References: <20200416170321.4216-1-jbx6244@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EcaUjKr60NABrTutbb9VaO0pRJf9+Gj4l3bz6prw+yE=;
+        b=Dop1THZc/C+RRoOL6HwqJhDNek2Qih7AtZl8HLhchbKgyy9LhQzDXUClUk9z7wEzo4
+         xksexq3+1lNJNMz207BqcH6LTlvGTZGOXohn/ekbCHxR6LDVL7wZrx3KJZio+Rt9sz+O
+         k0/QNzHr1EX0eeb2qVHQ5KrI+SaFdtKxHxe6kDTVYDHCx0IkXc+DDdVsjLOwP+O2Q91a
+         jMCnN59Z3KwAj4uxDt+zjPGCSTukKqXvzILHtpcN7ZlYA4OUOW34d5Z8fjTD0CXHSz8L
+         10UkktC72g9tVE2rlWzd6V2aLWFNIdKP4+jzQ9XPOu783gIeSmdGUPVmmWten3gfSTJg
+         Hibg==
+X-Gm-Message-State: AGi0PuZi25Q88Ba8IHIkOK8jgK5s4pOMwRTY8b3AxQfnDY2rIm/B1zjM
+        159PA8EnBJH+GCsc0xxTURIFVQ==
+X-Google-Smtp-Source: APiQypIT5kDHYuZg8YXZMEs+ue2sVRmKYbgBy+Kbwvsvc176USpnBUDGYgH/JpVw02EGzNimYbjGEQ==
+X-Received: by 2002:a63:1d4:: with SMTP id 203mr31268336pgb.74.1587057002469;
+        Thu, 16 Apr 2020 10:10:02 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id q2sm10446110pfl.174.2020.04.16.10.10.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2020 10:10:00 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 10:09:59 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, georgi.djakov@linaro.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org
+Subject: Re: [PATCH V4 5/9] i2c: i2c-qcom-geni: Add interconnect support
+Message-ID: <20200416170959.GB199755@google.com>
+References: <1586946198-13912-1-git-send-email-akashast@codeaurora.org>
+ <1586946198-13912-6-git-send-email-akashast@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1586946198-13912-6-git-send-email-akashast@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A test with the command below gives for example this error:
+Hi Akash,
 
-arch/arm/boot/dts/rk3229-xms6.dt.yaml: phy@0:
-'#phy-cells' is a required property
+On Wed, Apr 15, 2020 at 03:53:14PM +0530, Akash Asthana wrote:
+> Get the interconnect paths for I2C based Serial Engine device
+> and vote according to the bus speed of the driver.
+> 
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> ---
+> Changes in V2:
+>  - As per Bjorn's comment, removed se == NULL check from geni_i2c_icc_get
+>  - As per Bjorn's comment, removed code to set se->icc_path* to NULL in failure
+>  - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
+>    path handle
+>  - As per Matthias comment, added error handling for icc_set_bw call
+> 
+> Changes in V3:
+>  - As per Matthias comment, use common library APIs defined in geni-se
+>    driver for ICC functionality.
+> 
+> Changes in V4:
+>  - Move peak_bw guess as twice of avg_bw if nothing mentioned explicitly
+>    to ICC core.
+> 
+>  drivers/i2c/busses/i2c-qcom-geni.c | 26 +++++++++++++++++++++++++-
+>  1 file changed, 25 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+> index 18d1e4f..7bf830a 100644
+> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> @@ -557,6 +557,22 @@ static int geni_i2c_probe(struct platform_device *pdev)
+>  	gi2c->adap.dev.of_node = dev->of_node;
+>  	strlcpy(gi2c->adap.name, "Geni-I2C", sizeof(gi2c->adap.name));
+>  
+> +	ret = geni_icc_get(&gi2c->se, "qup-memory");
+> +	if (ret)
+> +		return ret;
+> +	/*
+> +	 * Set the bus quota for core and cpu to a reasonable value for
+> +	 * register access.
+> +	 * Set quota for DDR based on bus speed.
+> +	 */
+> +	gi2c->se.icc_paths[0].avg_bw = GENI_DEFAULT_BW;
+> +	gi2c->se.icc_paths[1].avg_bw = GENI_DEFAULT_BW;
+> +	gi2c->se.icc_paths[2].avg_bw = Bps_to_icc(gi2c->clk_freq_out);
 
-The phy nodename is normally used by a phy-handle.
-This node is however compatible with
-"ethernet-phy-id1234.d400", "ethernet-phy-ieee802.3-c22"
-which is just been added to 'ethernet-phy.yaml'.
-So change nodename to 'ethernet-phy' for which '#phy-cells'
-is not a required property
-
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/schemas/
-phy/phy-provider.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm/boot/dts/rk3229-xms6.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/rk3229-xms6.dts b/arch/arm/boot/dts/rk3229-xms6.dts
-index 679fc2b00..933ef69da 100644
---- a/arch/arm/boot/dts/rk3229-xms6.dts
-+++ b/arch/arm/boot/dts/rk3229-xms6.dts
-@@ -150,7 +150,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		phy: phy@0 {
-+		phy: ethernet-phy@0 {
- 			compatible = "ethernet-phy-id1234.d400",
- 			             "ethernet-phy-ieee802.3-c22";
- 			reg = <0>;
--- 
-2.11.0
-
+As commented on patch "soc: qcom: geni: Support for ICC voting" the use
+of literals to index the paths isn't very clear, please use enums.
