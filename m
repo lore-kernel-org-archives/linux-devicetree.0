@@ -2,259 +2,249 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C488C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 05:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DF9C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 06:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42DDD2076D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 05:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C6D42078A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 06:16:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JajKd4JF"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DCwOWYHR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407050AbgDPF7D (ORCPT
+        id S2407721AbgDPGQe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 01:59:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41966 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2407021AbgDPF7B (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 01:59:01 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A99FCC061A0C;
-        Wed, 15 Apr 2020 22:59:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=y8YseLI+ypx/GuXd2xC6IFiQ9Bn9G3aicBxjrVrERP8=; b=JajKd4JFYkO+jrP5Rl+SiLHFti
-        S4z+Gt4T7j5kRceZDxvypJYQYiqYDfpPN86Bmp6fiSP4zMsDZ0GBz68yaubrZRA+2h841auyAKIOx
-        0dNRu0n5uGDONEOv9Z3Nk5XJp6EsRKFXvDoqF28mYopKGz1WG4VFZrl7WIuzQcH7wZriu+KpkKwcX
-        j3RrpeoCjL+A17AGGhbLMFB29tzya0xAs+osTVAbnNkJ+L3BfkGLdjAn471lsTzHXUXC2Gly0t9Wr
-        8qzHAGF1ivnZcA7olZ2G9dUVaCHsHXtvOTsj8nnQMCTs2IkwvpHFJLQLoMhLMEdB4WlaiIfs7XNVq
-        wvDUjW9A==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOxYC-0002Yu-9w; Thu, 16 Apr 2020 05:59:00 +0000
-Subject: Re: [PATCH v3 4/4] tty: documentation: document how to use ttyvs
- driver
-To:     Rishi Gupta <gupt21@gmail.com>, gregkh@linuxfoundation.org,
-        jslaby@suse.com, robh+dt@kernel.org, corbet@lwn.net,
-        andriy.shevchenko@linux.intel.com
-Cc:     devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-References: <1587012974-21219-1-git-send-email-gupt21@gmail.com>
- <1587012974-21219-4-git-send-email-gupt21@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <cccf1f76-b16a-600d-0a23-f10d77c524cb@infradead.org>
-Date:   Wed, 15 Apr 2020 22:58:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <1587012974-21219-4-git-send-email-gupt21@gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 16 Apr 2020 02:16:34 -0400
+Received: from mail-eopbgr80041.outbound.protection.outlook.com ([40.107.8.41]:58759
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2407530AbgDPGQ2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 02:16:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LWzGuDAPd7zlSSICVvF0+2sR0v77L4i8p6SwLKiAB1tmK3Sk03T2n/mLiICTH5yvXvHkC9Su1YVVosB4DbY+BDqgIdQH5JBXiuOaoLh4pXKZThdWQYoNmcAY+rm1MihtkI3y4WzhbbOCCbzXXwpEZPzFAIehCUYpCwFQt4JK3JwLh+/l0So41HM7iOGSpXEdjwNPxh7xfT2Lnta9IaD+40kqp2jg30UaaKh4c6d6EyTDVak1fo4Hf0f7DG1ETC0tHpFJEDsuvqkHlJVQNmiMHTvUEoL3r2oq0/Mxpz3hi+qHHh0TWnk/K1kdzdFm/TWLm5PDGvDqarDv4Y7bMo13AA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9fjyfTPX276GIV6J5ZkAEiJKCdZuURyFXqVVKsKed3k=;
+ b=V3hL9XMzISBVzF0CxNlDBdnYm+Dsje63dxBnLeBvO+BAmjcK0+DXytvcdsHmR/Rn73ljaeOjoK4rxM577qWdFqGN3OSVqq7Tt/WRaiJ7ngQM2SxrTssSPwEndz10D1Rq4n8ThvnqRPhY+o034rn0ug/oN2Wv8089k/11lIZlJU8/x5hGXOYMfsY3/L1pwlLSxyQuaMXu/mDYGuLYwVMQeaWEvQx7k6VBYEnE4dyne69r40e/H6Ltd67hTT1KH+yPQ16+v95DurwRVlFTvXRFkx6eNaBgurZLdFK6P1TE0tnSoobf8p64RhK0edtlRS0PIqQeY9O4TgodOEhxeAHqQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9fjyfTPX276GIV6J5ZkAEiJKCdZuURyFXqVVKsKed3k=;
+ b=DCwOWYHROx30qFL0XbPodF+2pGoK2JrLwc9+7EgLpQrY3zQpZ1jzDG9PH1v+1xCs0Zd6b5r7KDmBWwJ2/Vmp/qGl2pZPsp5Xeh8JrvK0mRIadZfNZlB2Pu9+G0jlFTlyJuihSZeGJVTby1J0XAA/KVKKgtacyCMuaWWR6vHrnXk=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB3PR0402MB3755.eurprd04.prod.outlook.com (2603:10a6:8:f::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Thu, 16 Apr
+ 2020 06:16:23 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3143:c46:62e4:8a8b]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3143:c46:62e4:8a8b%7]) with mapi id 15.20.2900.028; Thu, 16 Apr 2020
+ 06:16:23 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+CC:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 1/5] dt-bindings: clock: Convert i.MX6Q clock to
+ json-schema
+Thread-Topic: [PATCH 1/5] dt-bindings: clock: Convert i.MX6Q clock to
+ json-schema
+Thread-Index: AQHWE6hQuNBNfLUpxU+eFy69TbX/iqh7NrqAgAAOwFA=
+Date:   Thu, 16 Apr 2020 06:16:23 +0000
+Message-ID: <DB3PR0402MB391654AB729CC8E27467E6C1F5D80@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1587011171-24532-1-git-send-email-Anson.Huang@nxp.com>
+ <20200416052229.m6ur2coyfg6ef7vz@pengutronix.de>
+In-Reply-To: <20200416052229.m6ur2coyfg6ef7vz@pengutronix.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [183.192.13.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9f9eed6e-d5b4-41f2-f091-08d7e1cdb005
+x-ms-traffictypediagnostic: DB3PR0402MB3755:|DB3PR0402MB3755:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB37554AC1D21A81D0426E1695F5D80@DB3PR0402MB3755.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0375972289
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(366004)(346002)(136003)(376002)(396003)(66556008)(66446008)(66476007)(66946007)(33656002)(71200400001)(9686003)(76116006)(4326008)(86362001)(44832011)(55016002)(186003)(8676002)(81156014)(54906003)(2906002)(45080400002)(5660300002)(6916009)(6506007)(478600001)(8936002)(53546011)(83080400001)(316002)(26005)(52536014)(7416002)(64756008)(7696005);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: L7RfxUid8/cGrNB1Qr1CeWULeviejqUttJTKj1ZWJ1v6q/ic1Qo2f2Utfz/MYoXrSYvOWJwgEEW4WXWDbxYD5su3bghi3P5MMqLjyu7YBHoHNzhUH9IpOsbSTVRgeW8jBsVs/5IPMfgGxgCxp7q0XG9O75i620NzTUbJSAqBUGm//OgJrexNW1Rnzd2Dcj5H8DOuHk0uK0QO73STgQYZUUNis9ekO/VQNqIrEqayXol0520RkeQxQBjbkMx7NikXRWI6BV6IdYC+xBx23SIyN8pkp4yIOJv7gzp+K0hkQZD6q1gp7+XeXxjExoNb6lXOjCO7g6Zzb9sc6ecU1dg/jTeeF4yKpr3UQoEp35DcLkc2zCeFf+1vmde7HfXcsmv3MARz5PbZYFCxe45X9EYarHZVea/n9IafTTLxk797D3JoRK8f0tNDwPe/yVClTMqCmApwaMWBOR0iMLW2aPQCaIOkimc+Wjss3Q8nzrXE0giy1eEqsTptJQdZve1MHSINlQXbPy6/5DNJacfpb0MXOg==
+x-ms-exchange-antispam-messagedata: 7VHUPH0lV8QOX8qXqF0MZ6u9zmmGtyR5MaFT7Cs7DXJ29Kx0GTfG2T+tJznytZwDPle9TBSxQOFJaDpd/r9+kMkGjOhN2oaooF0KXJSIYgosaO0n2OLTEVT/hSaIJwv1VbRJoOxRhieVDeT3bLH/HQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f9eed6e-d5b4-41f2-f091-08d7e1cdb005
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2020 06:16:23.2939
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4G2jotaQQxGzrbdOKRxxYvU8xwVGEJAwPmAulFiPt6mgyIQa5ku8KnIfAhzXQVfOAMmPHOkXlQcJVYrpO6XivA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3755
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-A few changes for you to consider:
+Hi, Marco
 
+> Subject: Re: [PATCH 1/5] dt-bindings: clock: Convert i.MX6Q clock to
+> json-schema
+>=20
+> Hi Anson,
+>=20
+> thanks for the patch. I have two questions please see inline which applie=
+s to all
+> patches.
+>=20
+> On 20-04-16 12:26, Anson Huang wrote:
+>=20
+> ...
+>=20
+> > diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+> > b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+> > new file mode 100644
+> > index 0000000..084d4f0
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+> > @@ -0,0 +1,69 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id:
+> > +https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdev=
+i
+> >
+> +cetree.org%2Fschemas%2Fclock%2Fimx6q-clock.yaml%23&amp;data=3D02%7C
+> 01%7
+> >
+> +Canson.huang%40nxp.com%7Cf07db2c34e834628725208d7e1c63083%7C6
+> 86ea1d3b
+> >
+> +c2b4c6fa92cd99c5c301635%7C0%7C0%7C637226113645218967&amp;sdat
+> a=3DsBVaIF
+> > +hEoFSfaot7P%2Bjcbu6gnAlaB%2BDeEUqn3sv3%2BA8%3D&amp;reserved=3D0
+> > +$schema:
+> > +https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdev=
+i
+> >
+> +cetree.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=3D02%7C01%7Cans
+> on.hua
+> >
+> +ng%40nxp.com%7Cf07db2c34e834628725208d7e1c63083%7C686ea1d3bc2
+> b4c6fa92
+> >
+> +cd99c5c301635%7C0%7C0%7C637226113645218967&amp;sdata=3DKLIuh1sJ
+> 2OQDp%2B
+> > +zSncLn87ziXGb85rwJFu2NnLgvxGI%3D&amp;reserved=3D0
+> > +
+> > +title: Clock bindings for Freescale i.MX6 Quad
+> > +
+> > +maintainers:
+> > +  - Anson Huang <Anson.Huang@nxp.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: fsl,imx6q-ccm
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    minItems: 1
+>=20
+> Why 1 and not 2? The RM describes that the ccm has 2 interrupts.
 
-On 4/15/20 9:56 PM, Rishi Gupta wrote:
-> The commit documents how to use ttyvs driver to create/delete
-> virtual tty devices, how to emulate various serial port events
-> through this driver etc.
-> 
-> Signed-off-by: Rishi Gupta <gupt21@gmail.com>
-> ---
-> Changes in v3:
-> - Rebased on top of v5.7-rc1
-> - Moved virtual-tty-ttyvs.rst from Documentation/virtual to Documentation/admin-guide
-> 
-> Changes in v2:
-> - Added this file from v2 only
-> 
->  Documentation/admin-guide/index.rst             |   1 +
->  Documentation/admin-guide/virtual-tty-ttyvs.rst | 142 ++++++++++++++++++++++++
->  2 files changed, 143 insertions(+)
->  create mode 100644 Documentation/admin-guide/virtual-tty-ttyvs.rst
+This is a typo, since we all use 2 interrupts for ccm, I will change them t=
+o ONLY 2;
 
+>=20
+> > +    maxItems: 2
+> > +
+> > +  '#clock-cells':
+> > +    const: 1
+> > +
+> > +  clocks:
+> > +    items:
+> > +      - description: 24m osc
+> > +      - description: 32k osc
+> > +      - description: ckih1 clock input
+> > +      - description: anaclk1 clock input
+> > +      - description: anaclk2 clock input
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: osc
+> > +      - const: ckil
+> > +      - const: ckih1
+> > +      - const: anaclk1
+> > +      - const: anaclk2
+> > +
+> > +  fsl,pmic-stby-poweroff:
+> > +    $ref: /schemas/types.yaml#/definitions/flag
+> > +    description: |
+> > +      Use this property if the SoC should be powered off by external p=
+ower
+> > +      management IC (PMIC) triggered via PMIC_STBY_REQ signal.
+> > +      Boards that are designed to initiate poweroff on PMIC_ON_REQ
+> signal should
+> > +      be using "syscon-poweroff" driver instead.
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - '#clock-cells'
+> > +
+> > +examples:
+> > +  # Clock Control Module node:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +
+> > +    clks: clock-controller@20c4000 {
+> > +        compatible =3D "fsl,imx6q-ccm";
+> > +        reg =3D <0x020c4000 0x4000>;
+> > +        interrupts =3D <0 87 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <0 88 IRQ_TYPE_LEVEL_HIGH>;
+> > +        #clock-cells =3D <1>;
+> > +    };
+> > +
+> > +...
+>=20
+> Why these '...' here?
 
-> diff --git a/Documentation/admin-guide/virtual-tty-ttyvs.rst b/Documentation/admin-guide/virtual-tty-ttyvs.rst
-> new file mode 100644
-> index 0000000..c30b768
-> --- /dev/null
-> +++ b/Documentation/admin-guide/virtual-tty-ttyvs.rst
-> @@ -0,0 +1,142 @@
-> +================================================
-> +Kernel driver for virtual tty null modem devices
-> +================================================
-> +
-> +Author: Rishi Gupta <gupt21@gmail.com>
-> +
-> +The ttyvs driver (drivers/tty/ttyvs.c) creates virtual tty devices
-> +that can be used with standard POSIX APIs for terminal devices.
-> +
-> +Applications can write to the sysfs file provided by this driver to
-> +emulate various serial port communication events and error conditions.
-> +
-> +This driver creates a virtual card which can have 0 to 65535 virtual
-> +tty devices.
-> +
-> +Use cases
-> +=========
-> +- Automated performance and scalability testing
-> +- Serial port redirector to any other subsystem like TCP/IP
-> +- Feeding data to GPS simulator
-> +- Segregating hardware issues from software bugs quickly
-> +- Serial port communication sniffer or test sniffer application itself
-> +- Application development when hardware is still not available
-> +- Testing user space drivers & corner case by injecting handcrafted data
-> +- Migrate binary only or legacy applications to new communication medium
-> +- Analyze and reverse-engineer serial protocols
-> +- Cases where socat utility does not meet requirements for unix-like OS
-> +- Cases where available physical serial ports don't meet requirements
-> +- Product demo where data from hardware needs to be sent to the GUI app
-> +- Stress and corner case testing of user space application
-> +
-> +How to create devices
-> +=====================
-> +There are two ways to create devices:
-> +
-> +1. Using device tree:
-> +The card is modelled as a node with zero or more child nodes each
-> +representing a virtual tty device. To create a device simply define
-> +a child node with the required device parameters. This is explained
-> +in detail in DT binding file:
-> +Documentation/devicetree/bindings/serial/ttyvs.yaml
-> +
-> +2. Using configfs:
-> +When ttyvs driver is loaded, it will create ttyvs directory inside
-> +configfs mount point. For ex; if configfs is mounted at /config, then
+I will remove it
 
-                 either  For example,
-                 or      E.g.,
+Thanks,
+Anson
 
-> +/config/ttyvs directory will be created. To create a device, simply
-> +create directory inside this, write values to be used as device
-> +parameters and finally write 1 to create attribute. Defining ownidx
-> +and devtype is mandatory.
-> +
-> +Pin mappings are bit maps; set bit 0 to connect a pin to CTS pin,
-> +set bit 1 to connect to DCD pin, set bit 2 to connect to DSR and
-> +set bit 3 to connect to RI. Pin naming conventions are follows
-> +standard RS232 DB9 connector naming conventions.
-
-A table would be better here IMO.
-
-> +
-> +An example to create a loop-back device with device number as 0
-
-                          loopback
-
-> +(/dev/ttyvs0), RTS and DTR pins unconnected, no need to assert DTR
-> +when device is opened would be something like this:
-> +
-> +.. code-block:: sh
-> +
-> + mkdir /config/ttyvs/devlb-0
-> + echo 0 > /config/ttyvs/devlb-0/ownidx
-> + echo lb > /config/ttyvs/devlb-0/devtype
-> + echo 0 > /config/ttyvs/devlb-0/ortsmap
-> + echo 0 > /config/ttyvs/devlb-0/odtrmap
-> + echo 0 > /config/ttyvs/devlb-0/odtratopn
-> + echo 1 > /config/ttyvs/devlb-0/create
-> +
-> +An example to create a standard null modem pair with device numbers
-> +0 and 1 with pin numbers as per RS232 standards will be something
-> +like this:
-> +
-> +.. code-block:: sh
-> +
-> + /dev/ttyvs0        /dev/ttyvs1
-> +   TX  (3)   ---->    (2) RX
-> +   RX  (2)   <----    (3) TX
-> +   RTS (7)   ---->    (8) CTS
-> +   DTR (4)   --+->    (1) DCD
-> +               +->    (6) DSR
-> +   CTS (8)   <----    (7) RTS
-> +   DCD (1)   <-+--    (4) DTR
-> +   DSR (6)   <-+
-> +
-> + mkdir /config/ttyvs/devnm-0-1
-> + echo nm > /config/ttyvs/devnm-0-1/devtype
-> + echo 0 > /config/ttyvs/devnm-0-1/ownidx
-> + echo 1 > /config/ttyvs/devnm-0-1/ortsmap
-> + echo 6 > /config/ttyvs/devnm-0-1/odtrmap
-> + echo 0 > /config/ttyvs/devnm-0-1/odtratopn
-> + echo 1 > /config/ttyvs/devnm-0-1/peeridx
-> + echo 1 > /config/ttyvs/devnm-0-1/prtsmap
-> + echo 6 > /config/ttyvs/devnm-0-1/pdtrmap
-> + echo 0 > /config/ttyvs/devnm-0-1/pdtratopn
-> + echo 1 > /config/ttyvs/devnm-0-1/create
-> +
-> +Directory name devnm-0-1 can be user defined. We used this simple style
-> +as it is intuitive to understand that the device is null modem with
-> +numbers 0 and 1. Further, to use configfs based approach, kernel must
-> +be compiled with CONFIG_CONFIGFS_FS=y option.
-> +
-> +How to delete devices
-> +=====================
-> +To delete a device created by configfs simply delete the directory
-> +created in /config/ttyvs directory. If the device is part of a null
-> +modem pair, peer device will also be deleted automatically.
-> +
-> +How to emulate events
-> +=====================
-> +When a virtual tty device is created, an event sysfs file will also
-> +be created by the driver (/sys/class/tty/ttyvsN/event N is device
-> +number).
-> +
-> +1. Emulating framing error: the driver inserts -7 in data buffer as
-> +the byte that got corrupted due to framing error while receiving data.
-> +To emulate this write 1 to /sys/class/tty/ttyvsN/event file.
-> +
-> +2. Emulating parity error: the driver inserts -8 in data buffer as
-> +the byte that got corrupted due to parity error while receiving data.
-> +To emulate this write 2 to /sys/class/tty/ttyvsN/event file.
-> +
-> +3. Emulating overrun error: the driver reports to tty layer that an
-> +overrun has happened.To emulate this write 3 to /sys/class/tty/ttyvsN/event
-
-               happened. To
-
-> +file.
-> +
-> +4. Emulating ring indication: to emulate as if ring indication has been
-> +observed write 4 to the event file. To emulate as if ring indication has
-> +been removed write 5 to the event file.
-> +
-> +5. Emulate break received: to emulate as if break condition has been received
-> +write 6 to the /sys/class/tty/ttyvsN/event file.
-> +
-> +6. Emulate faulty cable: to emulate as if the cable is faulty write 7
-> +to the event file. In this case data sent from sender will not be received
-> +by the receiver end. To remove this condition write 8 to the event file.
-> +
-> +How to support more devices
-> +===========================
-> +By default ttyvs driver supports upto 64 devices. This can be
-
-                                    up to
-
-> +changed by passing module parameter max_num_vs_devs or by defining
-> +max-num-vs-devs device tree property.
-> 
-
-
-thanks.
--- 
-~Randy
-
+>=20
+> Regards,
+>   Marco
+>=20
+> > --
+> > 2.7.4
