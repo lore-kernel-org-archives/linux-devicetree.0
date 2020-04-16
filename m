@@ -2,130 +2,99 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA39EC2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 06:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23151C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 06:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D46E22087E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 06:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB12C2087E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 06:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408548AbgDPGsX (ORCPT
+        id S2436970AbgDPGwS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 02:48:23 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:54540 "EHLO inva020.nxp.com"
+        Thu, 16 Apr 2020 02:52:18 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:41448 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408319AbgDPGri (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 02:47:38 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A5BDC1A0C19;
-        Thu, 16 Apr 2020 08:47:33 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BA2331A0C21;
-        Thu, 16 Apr 2020 08:47:28 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8A9F3402FC;
-        Thu, 16 Apr 2020 14:47:21 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 3/5] dt-bindings: clock: Convert i.MX6SL clock to json-schema
-Date:   Thu, 16 Apr 2020 14:39:16 +0800
-Message-Id: <1587019158-12143-3-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587019158-12143-1-git-send-email-Anson.Huang@nxp.com>
-References: <1587019158-12143-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S2436898AbgDPGwN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 02:52:13 -0400
+Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1jOyMh-0005IU-H1; Thu, 16 Apr 2020 16:51:12 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 16 Apr 2020 16:51:11 +1000
+Date:   Thu, 16 Apr 2020 16:51:11 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Hadar Gat <hadar.gat@arm.com>
+Cc:     Matt Mackall <mpm@selenic.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <ofir.drang@arm.com>
+Subject: Re: [PATCH v7 0/3] hw_random: introduce Arm CryptoCell TRNG driver
+Message-ID: <20200416065111.GC7901@gondor.apana.org.au>
+References: <1585289423-18440-1-git-send-email-hadar.gat@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585289423-18440-1-git-send-email-hadar.gat@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the i.MX6SL clock binding to DT schema format using json-schema.
+On Fri, Mar 27, 2020 at 09:10:20AM +0300, Hadar Gat wrote:
+> The Arm CryptoCell is a hardware security engine.
+> This patch introduces driver for its TRNG (True Random Number Generator)
+> engine.
+> 
+> v7 change: in arm-cctrng.yaml, removed unneeded 'minitems'
+> 
+> v6 change: add missing initialization of hwrng quality.
+> 
+> v5 changes:
+> 	1. in arm-cctrng.yaml, fixed error in 'make dt_binding_check'
+> 	2. in cctrng.c, clean up cctrng clock handling
+> 
+> v4 changes: update arm-cctrng.yaml to conform with json-schema standard.
+> 
+> v3 change: removed few unneeded "#ifdef CONFIG_PM" from the code.
+> 
+> v2 changes: fixed 'make dt_bnding_check' errors.
+> 
+> Hadar Gat (3):
+>   dt-bindings: add device tree binding for Arm CryptoCell trng engine
+>   hw_random: cctrng: introduce Arm CryptoCell driver
+>   MAINTAINERS: add HG as cctrng maintainer
+> 
+>  .../devicetree/bindings/rng/arm-cctrng.yaml        |  54 ++
+>  MAINTAINERS                                        |   9 +
+>  drivers/char/hw_random/Kconfig                     |  12 +
+>  drivers/char/hw_random/Makefile                    |   1 +
+>  drivers/char/hw_random/cctrng.c                    | 736 +++++++++++++++++++++
+>  drivers/char/hw_random/cctrng.h                    |  72 ++
+>  6 files changed, 884 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+>  create mode 100644 drivers/char/hw_random/cctrng.c
+>  create mode 100644 drivers/char/hw_random/cctrng.h
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V1:
-	- remove minItem of interrupts;
-	- remove '...' at the end of file
----
- .../devicetree/bindings/clock/imx6sl-clock.txt     | 10 ------
- .../devicetree/bindings/clock/imx6sl-clock.yaml    | 42 ++++++++++++++++++++++
- 2 files changed, 42 insertions(+), 10 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/imx6sl-clock.txt
- create mode 100644 Documentation/devicetree/bindings/clock/imx6sl-clock.yaml
-
-diff --git a/Documentation/devicetree/bindings/clock/imx6sl-clock.txt b/Documentation/devicetree/bindings/clock/imx6sl-clock.txt
-deleted file mode 100644
-index 15e40bd..0000000
---- a/Documentation/devicetree/bindings/clock/imx6sl-clock.txt
-+++ /dev/null
-@@ -1,10 +0,0 @@
--* Clock bindings for Freescale i.MX6 SoloLite
--
--Required properties:
--- compatible: Should be "fsl,imx6sl-ccm"
--- reg: Address and length of the register set
--- #clock-cells: Should be <1>
--
--The clock consumer should specify the desired clock by having the clock
--ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6sl-clock.h
--for the full list of i.MX6 SoloLite clock IDs.
-diff --git a/Documentation/devicetree/bindings/clock/imx6sl-clock.yaml b/Documentation/devicetree/bindings/clock/imx6sl-clock.yaml
-new file mode 100644
-index 0000000..7550f13
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/imx6sl-clock.yaml
-@@ -0,0 +1,42 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/imx6sl-clock.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Clock bindings for Freescale i.MX6 SoloLite
-+
-+maintainers:
-+  - Anson Huang <Anson.Huang@nxp.com>
-+
-+properties:
-+  compatible:
-+    const: fsl,imx6sl-ccm
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 2
-+
-+  '#clock-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - '#clock-cells'
-+
-+examples:
-+  # Clock Control Module node:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    clks: clock-controller@20c4000 {
-+        compatible = "fsl,imx6sl-ccm";
-+        reg = <0x020c4000 0x4000>;
-+        interrupts = <0 87 IRQ_TYPE_LEVEL_HIGH>,
-+                     <0 88 IRQ_TYPE_LEVEL_HIGH>;
-+        #clock-cells = <1>;
-+    };
+All applied.  Thanks.
 -- 
-2.7.4
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
