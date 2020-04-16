@@ -2,154 +2,178 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C3DC38A2B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 15:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF18FC2BB85
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 15:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A783422244
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 15:23:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587050623;
-	bh=ZIoIsXIaQkSSo9DwrSDuxVUKUDWHBUIiPNGyWCNpMjY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=b5S/Qd45j1HINQrbYzOaDX3PNPUQG+CdTtVuG69/YJdWzc0FZIwKUcioZ3lC3neeI
-	 mEQ4IG1GiD0X704Repd67w4SZCM5noqqBMloI8pe1OYqAXLIWF+f98GTe80/Bj4gsy
-	 ApP/9NE3FEEG5GmKU8fipuLVFq2Ti1Hk/74sC92w=
+	by mail.kernel.org (Postfix) with ESMTP id BF331206D6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 15:24:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKaFl00p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395155AbgDPPXg (ORCPT
+        id S2898019AbgDPNoy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:23:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37050 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395153AbgDPPXc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:23:32 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A022214D8;
-        Thu, 16 Apr 2020 15:23:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587050611;
-        bh=ZIoIsXIaQkSSo9DwrSDuxVUKUDWHBUIiPNGyWCNpMjY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bBTzd9OrYpXGg6ORHDevc26biU8U6Ir9eDMrYVbq0oazh6OMuVNc+sGyIZ47f/7em
-         9meS9HRqxJekEbvO8q77PIn9Lnv5yio2WbX+XoF1s/KEVYXbiaOmjD7h4soWVtcrHG
-         7bhbBJI+VfwXU79XQ6M8zC9fvfiC7rsu/xGQ/jfU=
-Date:   Thu, 16 Apr 2020 16:23:28 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     alsa-devel@alsa-project.org, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jiri Kosina <trivial@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Thu, 16 Apr 2020 09:44:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58252 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2898433AbgDPNoa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:44:30 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B064C061A0C;
+        Thu, 16 Apr 2020 06:44:30 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id v8so2574131wma.0;
+        Thu, 16 Apr 2020 06:44:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WnOLlJGWjKKU4l6KU86petvNf/KeuBQfP8LASQRqnt8=;
+        b=NKaFl00peRLsJRd1TCpOYzHetW8sbRA+/HJn6nXHcphRgYoHcE2As4Skpd/c5OOtl3
+         aAJP6GhSIoz0w4NCFbSZJ6HKcTBmEX7IXKjNWRGHscVFHFO40s7l2Oij2g2owDoID0a5
+         7/75cQ6pZ1aQ52kQoT65AaH1sagq0kwsSQQsKV6iAsy2BwSQXEQu+AZUDJEATTyjsEvW
+         /dQmoQ710BctBOzQRsQWEq7qIyYJgrGIrl24rfwI89EL6oev6W3DzRYRUHoGWtgMTglM
+         5DlQjWI5n+jybhbO+jO01+JAbMYihB8YdAnzppfOgx7wop42LLUkMnTRf0PV4zxzyq5i
+         zrVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WnOLlJGWjKKU4l6KU86petvNf/KeuBQfP8LASQRqnt8=;
+        b=lEubnyQ/cp6fLEeDfiOQMbHMzZiBd3aDNoa+AcT1Fi9XTQjA+d3zE0t/guRpbmmNTx
+         kSXsmk8Kx7bqIYOjbFROmQ7OPLW2BBRpLkOYLJ8Wqmcfhxv4cG5NKieOqYZ92cj2ikpJ
+         RDzdKktUhiLFywVL4st851X2HA+5/ao6KcioXMDfoXyFYmo7ZM5fHDuy73sjmNPLM6KP
+         VF8EV6p7p8nic8l0X9Qn1S2GrUIZfXadFv0wXjONHLNcmsdIt8sjT0rUv1b1LcalBWrK
+         l6ptRSPUQhERa6rPCoiM3+2MgygRR8Ojjau05E7PN1oHLx+cuHNsrsRTDJlP7dhV/QZ0
+         sIBA==
+X-Gm-Message-State: AGi0PuYh6giViBV7jL1UZxPwjcpeMX3S/xDX6bqsMWEOdI+qWbLzcQQl
+        dTyjG5FaeklVpRtO63ZRcHs=
+X-Google-Smtp-Source: APiQypKHstkks+d7QKXlK1Kx2K4FOqpUNOov9QzJnGobXCUEc76Hs0tyB7U8aK6EB9CSGnwIDUH4vw==
+X-Received: by 2002:a7b:cd10:: with SMTP id f16mr5171636wmj.21.1587044668689;
+        Thu, 16 Apr 2020 06:44:28 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id z18sm21457242wrw.41.2020.04.16.06.44.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2020 06:44:27 -0700 (PDT)
+Subject: Re: [PATCH 2/4] arm64: dts: rockchip: Add RGA support to the PX30
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jacob Chen <jacob-chen@iotwrt.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: Applied "ASoC: Fix misspellings of "Analog Devices"" to the asoc tree
-In-Reply-To:  <20200416103058.15269-7-geert+renesas@glider.be>
-Message-Id:  <applied-20200416103058.15269-7-geert+renesas@glider.be>
-X-Patchwork-Hint: ignore
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hansverk@cisco.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20200416115047.233720-1-paul.kocialkowski@bootlin.com>
+ <20200416115047.233720-3-paul.kocialkowski@bootlin.com>
+ <478f0a8b-f819-62f4-83b8-27918c4c2431@gmail.com>
+ <20200416132442.GI125838@aptenodytes>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <f4ad8ea4-7904-1458-e564-2d20c87ed417@gmail.com>
+Date:   Thu, 16 Apr 2020 15:44:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200416132442.GI125838@aptenodytes>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
+On 4/16/20 3:24 PM, Paul Kocialkowski wrote:
+> Hi,
+> 
+> On Thu 16 Apr 20, 15:02, Johan Jonker wrote:
+>> Hi Paul,
+>>
+>> The conversion of rockchip-rga.txt to rockchip-rga.yaml by myself just
+>> has been approved by robh.
+> 
+> Huh, I looked around for ongoing related work but missed it.
+> I'll definitely rebase on top of your series and use the yaml description
+> instead. Thanks!
+> 
+>> Maybe place dts patches at the end of a patch serie.
+>> Could you include a &rga patch if your device is supported in mainline,
+>> so we can test with:
+>> make ARCH=arm64 dtbs_check
+>> DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-rga.yaml
+> 
+> I tested with the PX30 EVB so I can surely add a node there if that turns
+> out necessary (see below).
+> 
+>> Johan
+>>
+>> On 4/16/20 1:50 PM, Paul Kocialkowski wrote:
+>>> The PX30 features a RGA block: add the necessary node to support it.
+>>>
+>>> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+>>> ---
+>>>  arch/arm64/boot/dts/rockchip/px30.dtsi | 11 +++++++++++
+>>>  1 file changed, 11 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
+>>> index 75908c587511..4bfbee9d4123 100644
+>>> --- a/arch/arm64/boot/dts/rockchip/px30.dtsi
+>>> +++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
+>>> @@ -1104,6 +1104,17 @@ vopl_mmu: iommu@ff470f00 {
+>>>  		status = "disabled";
+>>>  	};
+>>>  
+>>> +	rga: rga@ff480000 {
+>>> +		compatible = "rockchip,px30-rga";
+>>> +		reg = <0x0 0xff480000 0x0 0x10000>;
+>>> +		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH 0>;
+>>> +		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA_CORE>;
+>>> +		clock-names = "aclk", "hclk", "sclk";
+>>> +		resets = <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
+>>> +		reset-names = "core", "axi", "ahb";
+>>> +		power-domains = <&power PX30_PD_VO>;
+>>
+>> 		status = "disabled";
+> 
+> As of 5.6, the rk3399 has the node enabled by default. Did that change?
 
-   ASoC: Fix misspellings of "Analog Devices"
+'status' disappeared during review for rk3399 between v2 and v3, but
+doesn't mention the reason. If someone can give more info here?
 
-has been applied to the asoc tree at
+https://lore.kernel.org/lkml/1500101920-24039-5-git-send-email-jacob-chen@iotwrt.com/
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+https://lore.kernel.org/lkml/1501470460-12014-5-git-send-email-jacob-chen@iotwrt.com/
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> 
+> Since it's a standalone block that has no I/O dependency, I don't really see
+> the point of disabling it by default.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Vop, hdmi and other video devices are also disabled.
+Follow the rest I think...
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From b938b25f49cdb47397b0215b69cdd5251b4b2f8b Mon Sep 17 00:00:00 2001
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Date: Thu, 16 Apr 2020 12:30:58 +0200
-Subject: [PATCH] ASoC: Fix misspellings of "Analog Devices"
-
-According to https://www.analog.com/, the company name is spelled
-"Analog Devices".
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Link: https://lore.kernel.org/r/20200416103058.15269-7-geert+renesas@glider.be
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/codecs/ad1980.c  | 2 +-
- sound/soc/codecs/ad73311.c | 2 +-
- sound/soc/codecs/wm8782.c  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/sound/soc/codecs/ad1980.c b/sound/soc/codecs/ad1980.c
-index c4414c725c1f..43b1337bac37 100644
---- a/sound/soc/codecs/ad1980.c
-+++ b/sound/soc/codecs/ad1980.c
-@@ -2,7 +2,7 @@
- /*
-  * ad1980.c  --  ALSA Soc AD1980 codec support
-  *
-- * Copyright:	Analog Device Inc.
-+ * Copyright:	Analog Devices Inc.
-  * Author:	Roy Huang <roy.huang@analog.com>
-  * 		Cliff Cai <cliff.cai@analog.com>
-  */
-diff --git a/sound/soc/codecs/ad73311.c b/sound/soc/codecs/ad73311.c
-index 10daf61f0294..b98bf19f594e 100644
---- a/sound/soc/codecs/ad73311.c
-+++ b/sound/soc/codecs/ad73311.c
-@@ -2,7 +2,7 @@
- /*
-  * ad73311.c  --  ALSA Soc AD73311 codec support
-  *
-- * Copyright:	Analog Device Inc.
-+ * Copyright:	Analog Devices Inc.
-  * Author:	Cliff Cai <cliff.cai@analog.com>
-  */
- 
-diff --git a/sound/soc/codecs/wm8782.c b/sound/soc/codecs/wm8782.c
-index aa5577e364d0..f89855c616eb 100644
---- a/sound/soc/codecs/wm8782.c
-+++ b/sound/soc/codecs/wm8782.c
-@@ -7,7 +7,7 @@
-  * Author: Johannes Stezenbach <js@sig21.net>
-  *
-  * based on ad73311.c
-- * Copyright:	Analog Device Inc.
-+ * Copyright:	Analog Devices Inc.
-  * Author:	Cliff Cai <cliff.cai@analog.com>
-  */
- 
--- 
-2.20.1
+> 
+> What do you think?
+> 
+> Cheers,
+> 
+> Paul
+> 
+>>> +	};
+>>> +
+>>>  	qos_gmac: qos@ff518000 {
+>>>  		compatible = "syscon";
+>>>  		reg = <0x0 0xff518000 0x0 0x20>;
+>>>
+>>
+> 
 
