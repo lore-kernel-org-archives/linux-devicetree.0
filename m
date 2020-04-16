@@ -2,130 +2,138 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD9FC2BB55
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 15:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC89AC2BB55
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 15:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6102920732
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 15:50:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EIWJ0+dX"
+	by mail.kernel.org (Postfix) with ESMTP id C81C521D91
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 15:51:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587052315;
+	bh=f+v0/f94whq+RFELRQRok+Qo9U6CspwMX5WgTcLbQ9M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qyZ4W4TCFJaa8+hV52N1gsonY49rXnmF5aiAcIrMa5CQ3aQnqXLoiC5YLhnckW8T+
+	 /JTT2uIG4GUMIoOykGstlnFTbO6nrznLYj9XXwUEQLN1hy7VAXfrxpO9YhfnCfrETD
+	 KJadqORlKRExgufHp1YQRUubXHLVKYLEy4+y9yYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442761AbgDPPu2 (ORCPT
+        id S2442776AbgDPPvy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 11:50:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2442756AbgDPPuY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 11:50:24 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96439C061A0C;
-        Thu, 16 Apr 2020 08:50:22 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id h26so5424694wrb.7;
-        Thu, 16 Apr 2020 08:50:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zvYs9XCG2aImnv7YTN/6qNNfm9qAJyY0L/WKA+8FyXo=;
-        b=EIWJ0+dXID3v2/DrPg/3fH19vNCz52vG00gJHBX1/Lp/CedRUzhPJktm+EyqHqicji
-         XzN4VlrRZ/YOSHhpSSWbMlnMHfF3+C9lLC86V51yBL+4xEVxwY560QEkiEH+mtrert5D
-         kLoKzqDqNYhA7HyA0wB4AkcQy5KFs5u7oX68f9e5FHHO1GScYdW4Cg5jqlZR5GGe/+Ki
-         /PlHcuUUbYw3AceLuY90wjN/mMATRvALYTF7f8SCAkBivbPaVM4Ja9R01Mzvo3WM3cqr
-         g9qW+hbuhgzLLhEnylxhvwPWIqaJy/nLDXUX0gzOnCeYGJbHx0TdYSpPSbJveSyR18Bd
-         QAuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zvYs9XCG2aImnv7YTN/6qNNfm9qAJyY0L/WKA+8FyXo=;
-        b=NfWEfAXZVye2XffOp2iLTH8GASk0Q9W6U3Jniycq6Iup/GOgc1ve96XiG3amoXOXCS
-         nDcn+brj4LyAB1e6pdX2sCdHJDMoQtAOeeoZ/YtDVNbnXAwr1VnZ9Z/NDahoGLJXSw2/
-         RZLf62xNUwyXYG18GMAGCP/B6BkGXw6+bbZOUesiolDOTQTISqPQ2WcyHUwYv7+NTZg7
-         c8CvEwY3Fno57OMO6hcHNCpStNjNgYvOMk3P9qMhReGZefOEkhfUsDuQ4MmDEc8XhHdZ
-         3xE8I6MDz3crt+YW5MbQUQ8HrVd0BoQNkfdCcBPWz7j8838btUjEn5a3BRI1DEw9hpcR
-         2VDw==
-X-Gm-Message-State: AGi0PuZwRcnMwkWIzaK1Jo0dOWK3MuQULQdGxK3uyG3nZoONZRkAvIev
-        lZgW1wFc7+DH6dkFHXKLTXlDh8jU+g4=
-X-Google-Smtp-Source: APiQypJvhcf6VMCyMe8iVzg+MLA48ujz8jsHVP3mxFWOxl8TPyYxY8OQhNxhtZM/8kC3ppK3Om+Kvg==
-X-Received: by 2002:a05:6000:162c:: with SMTP id v12mr37458323wrb.313.1587052221186;
-        Thu, 16 Apr 2020 08:50:21 -0700 (PDT)
-Received: from [10.8.0.6] ([5.2.67.190])
-        by smtp.gmail.com with ESMTPSA id a80sm4044167wme.37.2020.04.16.08.50.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Apr 2020 08:50:20 -0700 (PDT)
-Subject: Re: [PATCH 0/8] PCI: aardvark: Fix support for Turris MOX and Compex
- wifi cards
-To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Remi Pommarel <repk@triplefau.lt>,
-        =?UTF-8?Q?Marek_Beh=c3=ban?= <marek.behun@nic.cz>,
-        Xogium <contact@xogium.me>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-References: <20200415160054.951-1-pali@kernel.org>
-From:   Tomasz Maciej Nowak <tmn505@gmail.com>
-Message-ID: <005d1646-867e-8e88-431f-43e0f42ad680@gmail.com>
-Date:   Thu, 16 Apr 2020 17:50:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 16 Apr 2020 11:51:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58760 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437198AbgDPPvr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 11:51:47 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BACC20732;
+        Thu, 16 Apr 2020 15:51:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587052306;
+        bh=f+v0/f94whq+RFELRQRok+Qo9U6CspwMX5WgTcLbQ9M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U5nPloWnP86QJZDjWomAThBMqB3yOl2Uupk0oXRpWZqiHwU84G5P6UDuFfyerwmrz
+         47p/J30AwMTeW5zSJTvdUs7hXGwYBfQGAj2trgrejwc1aA/IzLb+mqNVbVQm7SC6WA
+         CRQ+7UmPmju+ujZ7vz10IPvok54pLnhEoa+V498U=
+Date:   Thu, 16 Apr 2020 16:51:44 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        alsa-devel@alsa-project.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 2/2] ASoC: Add initial ZL38060 driver
+Message-ID: <20200416155144.GM5354@sirena.org.uk>
+References: <20200416001414.25746-1-TheSven73@gmail.com>
+ <20200416001414.25746-2-TheSven73@gmail.com>
+ <20200416124239.GH5354@sirena.org.uk>
+ <CAGngYiVXk+1Qzs3yLwyne3X567_yvbuRfXkjihmGc0EigHo50A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200415160054.951-1-pali@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="VLAOICcq5m4DWEYr"
+Content-Disposition: inline
+In-Reply-To: <CAGngYiVXk+1Qzs3yLwyne3X567_yvbuRfXkjihmGc0EigHo50A@mail.gmail.com>
+X-Cookie: Tempt me with a spoon!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-W dniu 15.04.2020 o 18:00, Pali Rohár pisze:
-> This patch series fixes PCI aardvark controller to work on Turris MOX
-> with Compex WLE900VX (and also other ath10k) wifi cards.
-> 
-> Patches are available also in my git repository in branch pci-aardvark:
-> https://git.kernel.org/pub/scm/linux/kernel/git/pali/linux.git/log/?h=pci-aardvark
-> 
-> Pali Rohár (8):
->   PCI: aardvark: Set controller speed from Device Tree max-link-speed
->   dts: espressobin: Define max-link-speed for pcie0
->   PCI: aardvark: Start link training immediately after enabling link
->     training
->   PCI: aardvark: Do not overwrite Link Status register and ASPM Control
->     bits in Link Control register
->   PCI: aardvark: Set final controller speed based on negotiated link
->     speed
->   PCI: aardvark: Add support for issuing PERST via GPIO
->   dts: aardvark: Route pcie reset pin to gpio function and define
->     reset-gpios for pcie
->   PCI: aardvark: Add FIXME for code which access
->     PCIE_CORE_CMD_STATUS_REG
-> 
->  .../dts/marvell/armada-3720-espressobin.dtsi  |   2 +
->  .../dts/marvell/armada-3720-turris-mox.dts    |   4 -
->  arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |   2 +-
->  drivers/pci/controller/pci-aardvark.c         | 118 +++++++++++++++---
->  4 files changed, 106 insertions(+), 20 deletions(-)
-> 
 
-For the whole series
+--VLAOICcq5m4DWEYr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
+On Thu, Apr 16, 2020 at 11:23:14AM -0400, Sven Van Asbroeck wrote:
+> On Thu, Apr 16, 2020 at 8:42 AM Mark Brown <broonie@kernel.org> wrote:
 
--- 
-TMN
+> > > @@ -0,0 +1,643 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * Codec driver for Microsemi ZL38060 Connected Home Audio Processor.
+> > > + *
+
+> > Please make the entire comment a C++ one so things look more
+> > intentional.
+
+> The 'weird' combination of // SPDX and /* Description/copyright */ seems to
+> be a kernel-wide standard (for C files, at least) ?
+
+> E.g.:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/sound/soc/codecs/wm9090.c?h=v5.7-rc1#n2
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/sound/soc/codecs/wm8904.c?h=v5.7-rc1#n2
+
+> Ok to keep?
+
+Those were all automatically converted, one of these days I might get
+round to updating them :/
+
+> > This external amplifier support shouldn't be here, if there's other
+> > devices in the system then they will have their own drivers and the
+> > machine driver will take care of linking things together.
+
+> In our application, the amp is a "dumb" class-D amp with a single enable line:
+> https://www.onsemi.com/pub/Collateral/FAB3103-D.pdf
+
+> I am not sure how I could make this more general. Could you point me to an
+> example somewhere in the tree?
+
+Look for GPIOs in machine drivers, there's quite a lot of examples (eg,
+rx51 has a speaker amp although it's not the most modern).
+
+> > > +     priv->regmap = devm_regmap_init(dev, &zl38_regmap_bus, spi,
+> > > +                                     &zl38_regmap_conf);
+> > > +     if (IS_ERR(priv->regmap))
+> > > +             return PTR_ERR(priv->regmap);
+
+> > devm_regmap_init_spi()
+
+> I wish !! This chip has complex SPI addressing, using an "address" which:
+> - is variable length, depending on the page of the register being accessed;
+> - contains a field with the length of the data to follow.
+
+OK.
+
+--VLAOICcq5m4DWEYr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6Yfw8ACgkQJNaLcl1U
+h9BSVwf+P2xC6Q4mb+FyMvkNgT3QFu0YqF4YMuC6akEHl+Ne/WqRC6TSls52JJD1
+sLwGV585mfFcdmevXFp/glhZ3sJTIX6kpDGlfBIetsG+bBXZgZ5rwIFdPYPRX94X
+OG/2E75aoQzo/RXv7F+7eXEVZHOrwbW1SDy/AF9EOtrr1CvEj9/kiWTdqVLIj/Rm
+wfWlFaBraepLOKowIpg/eu5JGvmWbHPZwqYu98FloE20jV6RAaCA231IJoMVSK+d
+v4i2SyGZtF7cuG8S6XkBuFPHAwFxTanxxfBs81FazAXLty8VaOfp5GngIYlst1iI
+ivYzjobJUeAsZ1PASHds1ris+woLzw==
+=9et2
+-----END PGP SIGNATURE-----
+
+--VLAOICcq5m4DWEYr--
