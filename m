@@ -2,194 +2,160 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D8BC2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 05:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4529C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 05:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7B3F2076D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 05:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D067720771
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 05:22:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405172AbgDPFMf (ORCPT
+        id S2404971AbgDPFWl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 01:12:35 -0400
-Received: from mx.socionext.com ([202.248.49.38]:55850 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406149AbgDPFMc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 01:12:32 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 16 Apr 2020 14:12:27 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id A338960057;
-        Thu, 16 Apr 2020 14:12:27 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 16 Apr 2020 14:12:27 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id EA77F1A12AD;
-        Thu, 16 Apr 2020 14:12:26 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH] dt-bindings: thermal: Convert UniPhier thermal monitor to json-schema
-Date:   Thu, 16 Apr 2020 14:12:15 +0900
-Message-Id: <1587013935-21760-1-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 16 Apr 2020 01:22:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36396 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2405910AbgDPFWl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 01:22:41 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3FF4C061A0C
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 22:22:40 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jOwyv-0003eK-7t; Thu, 16 Apr 2020 07:22:33 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jOwyr-0007W6-OK; Thu, 16 Apr 2020 07:22:29 +0200
+Date:   Thu, 16 Apr 2020 07:22:29 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH 1/5] dt-bindings: clock: Convert i.MX6Q clock to
+ json-schema
+Message-ID: <20200416052229.m6ur2coyfg6ef7vz@pengutronix.de>
+References: <1587011171-24532-1-git-send-email-Anson.Huang@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587011171-24532-1-git-send-email-Anson.Huang@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:12:42 up 152 days, 20:31, 155 users,  load average: 0.08, 0.14,
+ 0.08
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the UniPhier thermal monitor binding to DT schema format.
+Hi Anson,
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- .../thermal/socionext,uniphier-thermal.yaml        | 57 +++++++++++++++++++
- .../bindings/thermal/uniphier-thermal.txt          | 65 ----------------------
- 2 files changed, 57 insertions(+), 65 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
- delete mode 100644 Documentation/devicetree/bindings/thermal/uniphier-thermal.txt
+thanks for the patch. I have two questions please see inline which
+applies to all patches.
 
-diff --git a/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml b/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
-new file mode 100644
-index 0000000..bdddc5b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/socionext,uniphier-thermal.yaml
-@@ -0,0 +1,57 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/socionext,uniphier-thermal.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Socionext UniPhier thermal monitor
-+
-+description: |
-+  This describes the devicetree bindings for thermal monitor supported by
-+  PVT(Process, Voltage and Temperature) monitoring unit implemented on
-+  Socionext UniPhier SoCs.
-+
-+maintainers:
-+  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - socionext,uniphier-pxs2-thermal
-+      - socionext,uniphier-ld20-thermal
-+      - socionext,uniphier-pxs3-thermal
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  "#thermal-sensor-cells":
-+    const: 0
-+
-+  socionext,tmod-calibration:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    description:
-+      A pair of calibrated values referred from PVT, in case that the values
-+      aren't set on SoC, like a reference board.
-+
-+required:
-+  - compatible
-+  - interrupts
-+  - "#thermal-sensor-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    // The UniPhier thermal should be a subnode of a "syscon" compatible node.
-+
-+    sysctrl@61840000 {
-+        compatible = "socionext,uniphier-ld20-sysctrl",
-+                     "simple-mfd", "syscon";
-+        reg = <0x61840000 0x10000>;
-+
-+        pvtctl: thermal {
-+                compatible = "socionext,uniphier-ld20-thermal";
-+                interrupts = <0 3 1>;
-+                #thermal-sensor-cells = <0>;
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/thermal/uniphier-thermal.txt b/Documentation/devicetree/bindings/thermal/uniphier-thermal.txt
-deleted file mode 100644
-index ceb92a9..0000000
---- a/Documentation/devicetree/bindings/thermal/uniphier-thermal.txt
-+++ /dev/null
-@@ -1,65 +0,0 @@
--* UniPhier Thermal bindings
--
--This describes the devicetree bindings for thermal monitor supported by
--PVT(Process, Voltage and Temperature) monitoring unit implemented on Socionext
--UniPhier SoCs.
--
--Required properties:
--- compatible :
--  - "socionext,uniphier-pxs2-thermal" : For UniPhier PXs2 SoC
--  - "socionext,uniphier-ld20-thermal" : For UniPhier LD20 SoC
--  - "socionext,uniphier-pxs3-thermal" : For UniPhier PXs3 SoC
--- interrupts : IRQ for the temperature alarm
--- #thermal-sensor-cells : Should be 0. See ./thermal.txt for details.
--
--Optional properties:
--- socionext,tmod-calibration: A pair of calibrated values referred from PVT,
--                              in case that the values aren't set on SoC,
--                              like a reference board.
--
--Example:
--
--	sysctrl@61840000 {
--		compatible = "socionext,uniphier-ld20-sysctrl",
--			     "simple-mfd", "syscon";
--		reg = <0x61840000 0x10000>;
--		...
--		pvtctl: pvtctl {
--			compatible = "socionext,uniphier-ld20-thermal";
--			interrupts = <0 3 1>;
--			#thermal-sensor-cells = <0>;
--		};
--		...
--	};
--
--	thermal-zones {
--		cpu_thermal {
--			polling-delay-passive = <250>;	/* 250ms */
--			polling-delay = <1000>;		/* 1000ms */
--			thermal-sensors = <&pvtctl>;
--
--			trips {
--				cpu_crit: cpu_crit {
--					temperature = <110000>;	/* 110C */
--					hysteresis = <2000>;
--					type = "critical";
--				};
--				cpu_alert: cpu_alert {
--					temperature = <100000>;	/* 100C */
--					hysteresis = <2000>;
--					type = "passive";
--				};
--			};
--
--			cooling-maps {
--				map0 {
--					trip = <&cpu_alert>;
--					cooling-device = <&cpu0 (-1) (-1)>;
--				};
--				map1 {
--					trip = <&cpu_alert>;
--					cooling-device = <&cpu2 (-1) (-1)>;
--				};
--			};
--		};
--	};
--- 
-2.7.4
+On 20-04-16 12:26, Anson Huang wrote:
 
+...
+
+> diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.yaml b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+> new file mode 100644
+> index 0000000..084d4f0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+> @@ -0,0 +1,69 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/imx6q-clock.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Clock bindings for Freescale i.MX6 Quad
+> +
+> +maintainers:
+> +  - Anson Huang <Anson.Huang@nxp.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: fsl,imx6q-ccm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 1
+
+Why 1 and not 2? The RM describes that the ccm has 2 interrupts.
+
+> +    maxItems: 2
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: 24m osc
+> +      - description: 32k osc
+> +      - description: ckih1 clock input
+> +      - description: anaclk1 clock input
+> +      - description: anaclk2 clock input
+> +
+> +  clock-names:
+> +    items:
+> +      - const: osc
+> +      - const: ckil
+> +      - const: ckih1
+> +      - const: anaclk1
+> +      - const: anaclk2
+> +
+> +  fsl,pmic-stby-poweroff:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description: |
+> +      Use this property if the SoC should be powered off by external power
+> +      management IC (PMIC) triggered via PMIC_STBY_REQ signal.
+> +      Boards that are designed to initiate poweroff on PMIC_ON_REQ signal should
+> +      be using "syscon-poweroff" driver instead.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - '#clock-cells'
+> +
+> +examples:
+> +  # Clock Control Module node:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    clks: clock-controller@20c4000 {
+> +        compatible = "fsl,imx6q-ccm";
+> +        reg = <0x020c4000 0x4000>;
+> +        interrupts = <0 87 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <0 88 IRQ_TYPE_LEVEL_HIGH>;
+> +        #clock-cells = <1>;
+> +    };
+> +
+> +...
+
+Why these '...' here?
+
+Regards,
+  Marco
+
+> -- 
+> 2.7.4
