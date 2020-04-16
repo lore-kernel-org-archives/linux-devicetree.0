@@ -2,147 +2,115 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C66DC2BB85
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 14:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7073C3815B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 14:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44DA22223E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 14:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8A7F22244
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 14:54:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="I1swcTqP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731134AbgDPOv5 (ORCPT
+        id S2406185AbgDPOyQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 10:51:57 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40968 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728543AbgDPOvn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 10:51:43 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 00BA52A21ED
-Received: by jupiter.universe (Postfix, from userid 1000)
-        id 4C63F4800F7; Thu, 16 Apr 2020 16:51:38 +0200 (CEST)
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Ian Ray <ian.ray@ge.com>,
-        Samu Nuutamo <samu.nuutamo@vincit.fi>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH] ARM: dts: imx53: ppd: alarm LEDs use kernel LED interface
-Date:   Thu, 16 Apr 2020 16:51:23 +0200
-Message-Id: <20200416145123.73039-1-sebastian.reichel@collabora.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 16 Apr 2020 10:54:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729215AbgDPOyF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:54:05 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB8BAC061A0C;
+        Thu, 16 Apr 2020 07:54:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+reo/VTJ0mbrAtwez0qUHllJui2LGmUqeZZaPT2jjgk=; b=I1swcTqPXReZ6oCvu5oUeU1y3
+        d/deFRuczBe4+pedkOkWyodhigLl1Ms/+hrs7CBSbxm0nOq5jrAAPHDlea8ojxzyLHGPBXC07hrLN
+        c2j/N8sEMQ+E6d8dBg87isBtsUrfmjPVaHNJ3M3FdMrjbyR+Wt10umDBlUD+D0nXA9v9UxZLBy7ht
+        jDQewrW/vTJSEcTpUQf0oImbJWtQWVqwko3oJSTcz7Ibh9sEcYts+np/iOJZpAfgOwBfJf8RDHqhY
+        GjSCCOC4gh5436SCT1xl9gP/uGcbrIT348QH19BrYkcEOAZ1haMRyF/y56gXY00kuIZmrwPKQ6Dq9
+        EfYggOTkQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50888)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jP5tq-0004lG-8i; Thu, 16 Apr 2020 15:53:54 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jP5to-0001yN-8z; Thu, 16 Apr 2020 15:53:52 +0100
+Date:   Thu, 16 Apr 2020 15:53:52 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>,
+        Jason Cooper <jason@lakedaemon.net>, linux-pwm@vger.kernel.org,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH RFC 0/6] PWM fan support on Clearfog gt8k
+Message-ID: <20200416145352.GJ25745@shell.armlinux.org.uk>
+References: <20200329104549.GX25745@shell.armlinux.org.uk>
+ <CACRpkdaL4-Z36aKOVW4o2MtCG9fbqm4gxZN3QjejVRPBZrzxxA@mail.gmail.com>
+ <20200416081412.GG25745@shell.armlinux.org.uk>
+ <CACRpkdYFBGvQX3i4P1+cF5ExXOSKieT6cJNPTNuKFxEhtJVEjQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYFBGvQX3i4P1+cF5ExXOSKieT6cJNPTNuKFxEhtJVEjQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ian Ray <ian.ray@ge.com>
+On Thu, Apr 16, 2020 at 02:08:36PM +0200, Linus Walleij wrote:
+> On Thu, Apr 16, 2020 at 10:14 AM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> > On Thu, Apr 16, 2020 at 09:51:37AM +0200, Linus Walleij wrote:
+> 
+> > > The gpio changes all look fine to me +/- fixes for review comments.
+> >
+> > I think Uwe is incorrect for his GPIO comments; the clock is only
+> > optional on A8040.  We know this because A8040 has worked fine
+> > without PWM support without the clock, whereas for Armada 370,
+> > the driver has hard-failed if the clock is not present.
+> 
+> It's fine. You are running the hardware and it should work for you.
+> I usually go by the IETF motto "rough consensus and running code".
+> 
+> > About the only change I would make is to move the check introduced
+> > in patch 2 into patch 3 instead, inside the MVEBU_PWM_SOC_VARIANT_A8K
+> > case, so that deferring for the clock works (which is necessary for
+> > the PWM driver to be useful.)
+> 
+> OK let's go with this.
 
-Use kernel LED interface for the alarm LEDs.
+Well, it turns out to not be particularly nice to do that.  The best
+I can come up with is:
 
-Signed-off-by: Ian Ray <ian.ray@ge.com>
-[Rebased]
-Signed-off-by: Samu Nuutamo <samu.nuutamo@vincit.fi>
-[Rebased]
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
- arch/arm/boot/dts/imx53-ppd.dts | 49 +++++++++++++++++++++++++++------
- 1 file changed, 40 insertions(+), 9 deletions(-)
+        mvchip->clk = devm_clk_get(&pdev->dev, NULL);
+        if (soc_variant->pwm && IS_ENABLED(CONFIG_PWM) &&
+            mvchip->clk == ERR_PTR(-EPROBE_DEFER))
+                return -EPROBE_DEFER;
 
-diff --git a/arch/arm/boot/dts/imx53-ppd.dts b/arch/arm/boot/dts/imx53-ppd.dts
-index 5ff9a179c83c..34ce41600098 100644
---- a/arch/arm/boot/dts/imx53-ppd.dts
-+++ b/arch/arm/boot/dts/imx53-ppd.dts
-@@ -176,7 +176,7 @@ pwm_bl: backlight {
- 		power-supply = <&reg_3v3_lcd>;
- 	};
- 
--	leds {
-+	leds-brightness {
- 		compatible = "pwm-leds";
- 
- 		alarm-brightness {
-@@ -185,6 +185,32 @@ alarm-brightness {
- 		};
- 	};
- 
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_alarmled_pins>;
-+
-+		alarm1 {
-+			label = "alarm:red";
-+			gpios = <&gpio7 3 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		alarm2 {
-+			label = "alarm:yellow";
-+			gpios = <&gpio7 7 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		alarm3 {
-+			label = "alarm:blue";
-+			gpios = <&gpio7 8 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		alarm4 {
-+			label = "alarm:silenced";
-+			gpios = <&gpio7 13 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
- 	gpio-poweroff {
- 		compatible = "gpio-poweroff";
- 		gpios = <&gpio3 9 GPIO_ACTIVE_HIGH>;
-@@ -909,18 +935,10 @@ MX53_PAD_NANDF_CS2__GPIO6_15		0x0
- 			MX53_PAD_NANDF_CS3__GPIO6_16		0x0
- 			/* POWER_AND_BOOT_STATUS_INDICATOR */
- 			MX53_PAD_PATA_INTRQ__GPIO7_2		0x1e4
--			/* ACTIVATE_ALARM_LIGHT_RED */
--			MX53_PAD_PATA_DIOR__GPIO7_3		0x0
--			/* ACTIVATE_ALARM_LIGHT_YELLOW */
--			MX53_PAD_PATA_DA_1__GPIO7_7		0x0
--			/* ACTIVATE_ALARM_LIGHT_CYAN */
--			MX53_PAD_PATA_DA_2__GPIO7_8		0x0
- 			/* RUNNING_ON_BATTERY_INDICATOR_GREEN */
- 			MX53_PAD_GPIO_16__GPIO7_11		0x0
- 			/* BATTERY_STATUS_INDICATOR_AMBER */
- 			MX53_PAD_GPIO_17__GPIO7_12		0x0
--			/* AUDIO_ALARMS_SILENCED_INDICATOR */
--			MX53_PAD_GPIO_18__GPIO7_13		0x0
- 		>;
- 	};
- 
-@@ -1080,4 +1098,17 @@ pinctrl_usb_otg: usbotggrp {
- 			MX53_PAD_KEY_COL4__USBOH3_USBOTG_OC	0x180
- 		>;
- 	};
-+
-+	pinctrl_alarmled_pins: qmx6alarmledgrp {
-+		fsl,pins = <
-+			/* ACTIVATE_ALARM_LIGHT_RED */
-+			MX53_PAD_PATA_DIOR__GPIO7_3		0x0
-+			/* ACTIVATE_ALARM_LIGHT_YELLOW */
-+			MX53_PAD_PATA_DA_1__GPIO7_7		0x0
-+			/* ACTIVATE_ALARM_LIGHT_CYAN */
-+			MX53_PAD_PATA_DA_2__GPIO7_8		0x0
-+			/* AUDIO_ALARMS_SILENCED_INDICATOR */
-+			MX53_PAD_GPIO_18__GPIO7_13		0x0
-+		>;
-+	};
- };
+Doing it in mvebu_pwm_probe() means that we have to deal with unwinding
+the very complex probing (tearing down all the interrupt functionality
+and GPIO stuff) which the driver currently does not do, even on failure.
+
+Is this a shoddy driver that doesn't clean up after itself...
+
 -- 
-2.25.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
