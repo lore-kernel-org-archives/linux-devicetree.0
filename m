@@ -2,99 +2,114 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EBEC2BB85
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2D5C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E374E20732
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:54:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LLp5LveC"
+	by mail.kernel.org (Postfix) with ESMTP id 69C8D2078B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 08:56:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587027383;
+	bh=hrWU6kk9Sm5Qu65G34Lh8AIxzgETA/uQZLe/0g/hvbI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f0hosFIE3Y8mVguw7Vm8rYnuLwiULUmbwtpKIFnh3XUBL77nCIWpf/DfkfLjPzlG2
+	 iSa7qPcqP/3xhw9uld+TcJO6bVn8YqmvUMFoAhHQR7N9hu8mYK/Y4A5PAVKyOTPjuH
+	 rjXq4BL73RHTh/JuqDxsFEtGKbK9bPESQr0YAOQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503010AbgDPIyp (ORCPT
+        id S2503048AbgDPI4S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 04:54:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502988AbgDPIyR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 04:54:17 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCAFBC061A10
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 01:54:12 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id h26so3856559wrb.7
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 01:54:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZEfcdbyCoFlwcBaVZ+sf0k9hPs9ies0vbK3IcfLzskw=;
-        b=LLp5LveCwz1C/4FgavId+LAMO+lPQeQAh5i6g/dwBkd5KRmxdDAOZ9/FDSM6LaE2DO
-         Td6D1PD2vfJMUfU418BKIvqN2n542k0/GOSD1zFfk3KEg6YVnVpiYcQElgtfTWfhW1Hc
-         pyRHcoAoIzLIeqmthE1eiaqNblTBPZh2QK//NuiYOH4m49CJlMjlge+Af8W0dLnPXfDM
-         TI6i6FGWr2uL3dkWfiES2q+uTGrtmI8VH2eWwpnuQoWS1aDfIKdtLlIrcAMs/dkatob5
-         C2RU6qFiWHenxSdOpD61IuhKr0PagtaYgwqeoLijcAccCZ9r8LhwudjqfQNZwoQRmc4d
-         jdrg==
+        Thu, 16 Apr 2020 04:56:18 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:46861 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502720AbgDPIvD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 04:51:03 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w4so7902927edv.13;
+        Thu, 16 Apr 2020 01:51:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZEfcdbyCoFlwcBaVZ+sf0k9hPs9ies0vbK3IcfLzskw=;
-        b=NwuPkWJ7YH617QJEPQxXDJV8eqXqMYdbUYxs0mcweQptT4siK33g2IKVQy2VgRq8bu
-         CKk/KZcCjiSdoZgPNoul9vJSrHNikgotwVh3snyWAFt5DWRWiQ+2I7CQ+F0W5oP0pZ5J
-         Ag+EBn+Zg+oLqLMP5AQ7LTCJgqHc77tFxfljGS/qQjvlhaBsNbDR2oppvpi6CNFXPiUq
-         1Gq5TQhOW+TXQPRxsTwi3LHmDI2CbQSeoAPXaYAUN52zeVvyZ+uV0dW1Ez6ZHzY3t5tq
-         K3WF7r4sbZqJPAL7rr2f4S2gpqggH/AICQRkw80joXlbsuASsSY4szOZN68E1STbTNkt
-         2fCA==
-X-Gm-Message-State: AGi0PuYV/yLJjCDA4rciTiLfFxWpHCcKYQ5OUy7NAoNSLLmK4glTNmo3
-        sMazPSM4s2R9AETVyvt0oePlEA==
-X-Google-Smtp-Source: APiQypL1oyr16FXQx+dkfWQBU6EhMLZhnOgOJbCMSB0gnYSQVADLx4g3CAzdUNtaCRw76OTkBu7LoA==
-X-Received: by 2002:a5d:6305:: with SMTP id i5mr34790010wru.203.1587027251542;
-        Thu, 16 Apr 2020 01:54:11 -0700 (PDT)
-Received: from myrica ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id u7sm3027041wmg.41.2020.04.16.01.54.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 01:54:11 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 10:54:02 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
-        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
-        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com
-Subject: Re: [PATCH v5 02/25] iommu/sva: Manage process address spaces
-Message-ID: <20200416085402.GB1286150@myrica>
-References: <20200414170252.714402-1-jean-philippe@linaro.org>
- <20200414170252.714402-3-jean-philippe@linaro.org>
- <20200416072852.GA32000@infradead.org>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=612iSfEdCExrydRb4c/BtgR5OtI+RlzyNcwVt1HFejQ=;
+        b=BNN1dm8BnF20ZEVRVraemvq1X1zndJl0bV3Sz8GJRusVtvnKGfe1jIrl//7n+DdVxr
+         O5W1vwiHhm9sUxMY9Uka9BiarY9vwI5p2k4I8pLkyLNYjoCBtuAj4TqErl8r4nkM7+kM
+         QnXgj9GKwGZbV2YIPKanYlLxMOA1D6je6ff9AEz4IEctQlSnf60/WoFYD/1AB20GmGT6
+         ugdpNdsHoG6TF6OI9dv/DSoB2gGGr2RF4eFycnzDp3LjXd0o188XNu7vR4efKiKUSABj
+         ciKsQAgDnFOQhTR7AuZjjdZCjxJr5OHOBZ3egy3hTu7n0HBQYE6aDESG9F4gS/sAjm0m
+         nDwA==
+X-Gm-Message-State: AGi0PuYJx7kh5qnDyfwANOKUjdd7WqM5uzgC9EM5towOsx+JcA4YiIJW
+        CHJQWR/Wl+BFtcrel7sAk4E=
+X-Google-Smtp-Source: APiQypLBJohNWBf8al3U6Nm7wdqmu7TVhKtwUuNuYqABpoxhkFpKFPfFew2b9nU4yPhd8D2/wycwag==
+X-Received: by 2002:aa7:d1d6:: with SMTP id g22mr7466242edp.36.1587027059468;
+        Thu, 16 Apr 2020 01:50:59 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id b15sm2495600edn.69.2020.04.16.01.50.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 Apr 2020 01:50:58 -0700 (PDT)
+Date:   Thu, 16 Apr 2020 10:50:49 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap@vger.kernel.org, openpvrsgx-devgroup@letux.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>
+Subject: Re: [PATCH v6 08/12] arm: dts: s5pv210: Add G3D node
+Message-ID: <20200416085049.GA7193@kozik-lap>
+References: <cover.1586939718.git.hns@goldelico.com>
+ <b6733f80546bf3e6b3799f716b9c8e0f407de03d.1586939718.git.hns@goldelico.com>
+ <CAJKOXPcb9KWNAem-CAx_zCS+sZoEHYc0J8x0nk1xjY9hD4-M4w@mail.gmail.com>
+ <AB9B8741-CFF7-414D-9489-D381B539538D@goldelico.com>
+ <BN6PR04MB0660640B15550F75C8CCD4DEA3DB0@BN6PR04MB0660.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200416072852.GA32000@infradead.org>
+In-Reply-To: <BN6PR04MB0660640B15550F75C8CCD4DEA3DB0@BN6PR04MB0660.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 12:28:52AM -0700, Christoph Hellwig wrote:
-> > +	rcu_read_lock();
-> > +	hlist_for_each_entry_rcu(bond, &io_mm->devices, mm_node)
-> > +		io_mm->ops->invalidate(bond->sva.dev, io_mm->pasid, io_mm->ctx,
-> > +				       start, end - start);
-> > +	rcu_read_unlock();
-> > +}
+On Wed, Apr 15, 2020 at 11:17:16AM -0700, Jonathan Bakker wrote:
+ 
+> >>
+> >>> +
+> >>> +                       assigned-clocks = <&clocks MOUT_G3D>, <&clocks DOUT_G3D>;
+> >>> +                       assigned-clock-rates = <0>, <66700000>;
+> >>> +                       assigned-clock-parents = <&clocks MOUT_MPLL>;
+> >>
+> >> Probably this should have status disabled because you do not set
+> >> regulator supply.
 > 
-> What is the reason that the devices don't register their own notifiers?
-> This kinds of multiplexing is always rather messy, and you do it for
-> all the methods.
+> I don't believe there is a regulator on s5pv210, if there is, then it is a
+> fixed regulator with no control on both s5pv210 devices that I have.
+> 
+> The vendor driver did use the regulator framework for its power domain
+> implementation, but that definitely shouldn't be upstreamed.
 
-This sends TLB and ATC invalidations through the IOMMU, it doesn't go
-through device drivers
+Starting with Exynos4210 usually they have separate regulator from PMIC
+but maybe S5Pv210 indeed is different.  Leave it then without it.
 
-Thanks,
-Jean
+Best regards,
+Krzysztof
+
