@@ -2,120 +2,133 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3947C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 10:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB8BC2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 10:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA2AC2078B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 10:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D29E021D82
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 10:50:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505218AbgDPKtZ (ORCPT
+        id S2505232AbgDPKtx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 06:49:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505220AbgDPKgW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 06:36:22 -0400
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFA74C08C5F2
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 03:36:14 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:fd83:81bb:c1d7:433d])
-        by xavier.telenet-ops.be with bizsmtp
-        id TNWz2200j4dKHqf01NWzxF; Thu, 16 Apr 2020 12:31:11 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jP1nP-0001ci-Lk; Thu, 16 Apr 2020 12:30:59 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jP1nP-0003z9-KO; Thu, 16 Apr 2020 12:30:59 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jiri Kosina <trivial@kernel.org>
-Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH trivial 1/6] dt-bindings: Fix misspellings of "Analog Devices"
-Date:   Thu, 16 Apr 2020 12:30:53 +0200
-Message-Id: <20200416103058.15269-2-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200416103058.15269-1-geert+renesas@glider.be>
-References: <20200416103058.15269-1-geert+renesas@glider.be>
+        Thu, 16 Apr 2020 06:49:53 -0400
+Received: from mga14.intel.com ([192.55.52.115]:19172 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2505411AbgDPKtn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 06:49:43 -0400
+IronPort-SDR: lcxxE+nfGBsZftEHNYwjeoggejy1kV4+AiHRPj3qB6/101S9K7a0STQqYA1Hntk2/OGMsxUYkv
+ uGHtRfNp6fjg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 03:40:59 -0700
+IronPort-SDR: 1wg/ODuGBi06D2wIst8A75fcWOrchCyh2F+4Utprzj+/NzuIiYQxmuD3T45hQ2lYlnQkbDVcxb
+ 5dyTobpPsHAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
+   d="scan'208";a="455224018"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 16 Apr 2020 03:40:59 -0700
+Received: from [10.255.154.239] (vramuthx-MOBL1.gar.corp.intel.com [10.255.154.239])
+        by linux.intel.com (Postfix) with ESMTP id 084F558045A;
+        Thu, 16 Apr 2020 03:40:54 -0700 (PDT)
+Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        anders.roxell@linaro.org, andriy.shevchenko@intel.com,
+        arnd@arndb.de, brendanhiggins@google.com, cheol.yong.kim@intel.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, masonccyang@mxic.com.tw,
+        miquel.raynal@bootlin.com, piotrs@cadence.com,
+        qi-ming.wu@intel.com, richard@nod.at, robh+dt@kernel.org,
+        tglx@linutronix.de, vigneshr@ti.com
+References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
+ <c33c8653-16a2-5bcd-97a9-511d958b755a@linux.intel.com>
+ <20200416113822.2ef326cb@collabora.com>
+ <18568cf6-2955-472e-7b68-eb35e654a906@linux.intel.com>
+ <20200416122619.2c481792@collabora.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <d3e137fa-54a0-b4ec-eb24-3984eab2a247@linux.intel.com>
+Date:   Thu, 16 Apr 2020 18:40:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200416122619.2c481792@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-According to https://www.analog.com/, the company name is spelled
-"Analog Devices".
+On 16/4/2020 6:26 pm, Boris Brezillon wrote:
+> On Thu, 16 Apr 2020 17:45:49 +0800
+> "Ramuthevar, Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>
+>>>>>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>>>>>
+>>>>>> This patch adds the new IP of Nand Flash Controller(NFC) support
+>>>>>> on Intel's Lightning Mountain(LGM) SoC.
+>>>>>>
+>>>>>> DMA is used for burst data transfer operation, also DMA HW supports
+>>>>>> aligned 32bit memory address and aligned data access by default.
+>>>>>> DMA burst of 8 supported. Data register used to support the read/write
+>>>>>> operation from/to device.
+>>>>> I am wondering how this new hardware is different from the Lantiq NAND
+>>>>> controller IP - for which there is already a driver in mainline (it's
+>>>>> in drivers/mtd/nand/raw/xway_nand.c).
+>>>>> The CON and WAIT registers look suspiciously similar.
+>>>>>
+>>>>> As far as I understand the "old" SoCs (VRX200 and earlier) don't have
+>>>>> a built-in ECC engine. This seems to have changed with ARX300 though
+>>>>> (again, AFAIK).
+>>>>>
+>>>>> A bit of lineage on these SoCs (initially these were developed by
+>>>>> Infineon. Lantiq then started as an Infineon spin-off in 2009 and
+>>>>> was then acquired by Intel in 2015):
+>>>>> - Danube
+>>>>> - ARX100 from 2008/2009
+>>>>> - VRX200 from 2009/2010
+>>>>> - ARX300 from 2014
+>>>>> - GRX350 from 2015/2016
+>>>>> - GRX550 from 2017
+>>>>> - and now finally: LGM from 2020 (est.)
+>>>>>
+>>>>> The existing xway_nand driver supports the Danube, ARX100 and VRX200
+>>>>> SoCs.
+>>>> Lantiq upstreamed a driver for an older version of this IP core 8 years
+>>>> ago, see here:
+>>>> https://elixir.bootlin.com/linux/v5.5.6/source/drivers/mtd/nand/raw/xway_nand.c
+>>>> It does not support DMA and ECC.
+>>> Then let's just extend this driver to support the new features. Plus,
+>> We do not have the platform to test also it's very old legacy driver .
+> Well, if it's similar enough, we want to have one driver.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- .../devicetree/bindings/display/bridge/adi,adv7123.txt        | 4 ++--
- .../devicetree/bindings/display/bridge/adi,adv7511.txt        | 4 ++--
- Documentation/devicetree/bindings/dma/adi,axi-dmac.txt        | 2 +-
- Documentation/devicetree/bindings/iio/dac/ad5755.txt          | 2 +-
- 4 files changed, 6 insertions(+), 6 deletions(-)
+Thank you very much for the time and suggestions...
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7123.txt b/Documentation/devicetree/bindings/display/bridge/adi,adv7123.txt
-index a6b2b2b8f3d9e3a6..d3c2a4914ea2c247 100644
---- a/Documentation/devicetree/bindings/display/bridge/adi,adv7123.txt
-+++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7123.txt
-@@ -1,5 +1,5 @@
--Analog Device ADV7123 Video DAC
---------------------------------
-+Analog Devices ADV7123 Video DAC
-+--------------------------------
- 
- The ADV7123 is a digital-to-analog converter that outputs VGA signals from a
- parallel video input.
-diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
-index e8ddec5d9d910a5a..659523f538bfc0ee 100644
---- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
-+++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
-@@ -1,5 +1,5 @@
--Analog Device ADV7511(W)/13/33/35 HDMI Encoders
-------------------------------------------
-+Analog Devices ADV7511(W)/13/33/35 HDMI Encoders
-+------------------------------------------------
- 
- The ADV7511, ADV7511W, ADV7513, ADV7533 and ADV7535 are HDMI audio and video
- transmitters compatible with HDMI 1.4 and DVI 1.0. They support color space
-diff --git a/Documentation/devicetree/bindings/dma/adi,axi-dmac.txt b/Documentation/devicetree/bindings/dma/adi,axi-dmac.txt
-index b38ee732efa9fd5f..cd17684aaab5bcd3 100644
---- a/Documentation/devicetree/bindings/dma/adi,axi-dmac.txt
-+++ b/Documentation/devicetree/bindings/dma/adi,axi-dmac.txt
-@@ -1,4 +1,4 @@
--Analog Device AXI-DMAC DMA controller
-+Analog Devices AXI-DMAC DMA controller
- 
- Required properties:
-  - compatible: Must be "adi,axi-dmac-1.00.a".
-diff --git a/Documentation/devicetree/bindings/iio/dac/ad5755.txt b/Documentation/devicetree/bindings/iio/dac/ad5755.txt
-index f0bbd7e1029bd44d..502e1e55adbdebd0 100644
---- a/Documentation/devicetree/bindings/iio/dac/ad5755.txt
-+++ b/Documentation/devicetree/bindings/iio/dac/ad5755.txt
-@@ -1,4 +1,4 @@
--* Analog Device AD5755 IIO Multi-Channel DAC Linux Driver
-+* Analog Devices AD5755 IIO Multi-Channel DAC Linux Driver
- 
- Required properties:
-  - compatible: Has to contain one of the following:
--- 
-2.17.1
+This in-review driver is written for a new nand flash controller IP 
+which is used in LGM.
 
+>>> we'll be happy to have one more of the existing driver converted to
+>>> ->exec_op() ;-).
+>> I have completely adapted to ->exec_op() hook up to replace the legacy
+>> call-back.
+> I suspect porting what you've done to the xway driver shouldn't be too
+> complicated.
+Not ported from xway_nand.c driver , we have developed from the scratch 
+to make it work on
+Intel LGM SoC , it's new x86 ATOM based SoC, IP itself completely 
+different and most of the registers won't match.
+if we port then it would be ugly and also what are the problem may occur 
+we do not know.
+
+Regards
+Vadivel
