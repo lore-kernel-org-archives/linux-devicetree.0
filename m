@@ -2,282 +2,152 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D553C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 21:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8718C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 21:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51D592076D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 21:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B70F5206B9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 21:28:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587070994;
-	bh=AWOEVk56lIsRUxVQRPyTZEvG11RZxuh/vr2RhTlLGD4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=C05c5dtFEeoM1ozw4s26rpJa5xsSuYHUBk3UKUfJlyoyjYZseFMGlxJ/GVRqWtryd
-	 4hRIP7R+7so+4Tw0/gVYuSdkNB5fD7QIHdJF0kwVDQetRmwxxzkmuBQtuCYxUTT9go
-	 DabtlykGN1sSfOyXOWo8URCJNj9jBGCO+6WJcWvs=
+	s=default; t=1587072526;
+	bh=1W5GV7/V9Tn9maKaBF+xq4SFgOYwywBEJY7SBo772cw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wmot5xPv3URLMMXrCkBWFOv/kT0n1gLHs9vSXqiV6c5Un4gcITogN2PQXxGQg1PWd
+	 JMkK3KrDKb75DbLqwzvQS04Rj8f50gruTWQyEVJltzgET22yCEO8ul8KoH1CbVNq3a
+	 E1Dj/hovzlybjDRdgZoYmTzx3N8XA9uFthlSANYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbgDPVDN (ORCPT
+        id S1727901AbgDPV2q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 17:03:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43740 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726320AbgDPVDN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 17:03:13 -0400
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 746E522202;
-        Thu, 16 Apr 2020 21:03:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587070991;
-        bh=AWOEVk56lIsRUxVQRPyTZEvG11RZxuh/vr2RhTlLGD4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ko9mrQcHlyPTKydNkO0FBl2I/cve3riHVAl/dEdYpM5QejULPUa/9M0RtqFUF1BPy
-         ki84B6VAl+UrWQpWN1+AhBfMqRk+2Z6Y+6122CjCZu9visr0b+wT1H56X8JlKLQ8HG
-         wf6w6niqlaKNvgjYVb480dQKZbhxpD/Hga/ZDRk8=
-Received: by mail-qt1-f179.google.com with SMTP id b10so130060qtt.9;
-        Thu, 16 Apr 2020 14:03:11 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ2Kf8InUPqsv/CMQYhHPQSw3NJatpXV+8idj9n8r0trnVLrdrM
-        m479VP6gxgtzHzG6NShiC7U2DZAtJt0JYHtFYw==
-X-Google-Smtp-Source: APiQypJ9CPStA21dmEG4Pw+wkQToBwzb9UsuS9u7k0jxZmYkIMgnueVRGpvhBIMIR23CbNLC4h4N2QH9F4ePINdwkG0=
-X-Received: by 2002:ac8:4907:: with SMTP id e7mr28698015qtq.300.1587070990286;
- Thu, 16 Apr 2020 14:03:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200117230855.25567-1-robh@kernel.org>
-In-Reply-To: <20200117230855.25567-1-robh@kernel.org>
+        Thu, 16 Apr 2020 17:28:46 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35688 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbgDPV2p (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 17:28:45 -0400
+Received: by mail-oi1-f194.google.com with SMTP id b7so293107oic.2;
+        Thu, 16 Apr 2020 14:28:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aZDi6M75xZSmYWePqnnoB2rg9ADM0ASJydJXaT8e6cw=;
+        b=cz9Bza8i+enE7ijRp4/UurlFtuvEdZucR19pyNWXNWbQ7wdUhoKLBj1a5cFsBGhTRQ
+         jGLXxv1MOj69Q7MVbsZ7sPiGj8Uhq8S9DA4Kr6o83blJ/PqEyCaHrfMi5sW5jpBkn6Zq
+         60ERJjY6hockxC8Eutsq9P2XYRCW5fqhhaEHAYi7zhw3FRTzJkDV245qDuwFmzBEiDDg
+         BwKir3sfASDlGt+R05Dh9y8rjJNjVRM9FFKDORolZJCYehO1Cyx4a7XRWHD5s3hyCgIa
+         Y0LUiOHveSCb54UG87bC5FjF089qp5YhY5mnszd8VwxQSmU9gJJe/UgpPj3Zo+wiG0wQ
+         IPkw==
+X-Gm-Message-State: AGi0PuaGSuk7qqbb5J2VRpIb68RvyBbftYv7EXjJkPZqH1DmhR0swvFr
+        gn28zuVcoG49uRVg1P9l8A==
+X-Google-Smtp-Source: APiQypIRlMbrSk467b8ch8GEIs0tdW1iIBJ5clIPnKZJ1NATxlpFo+/Ezfx3Bv68xYsrgs91PDj6mA==
+X-Received: by 2002:a05:6808:992:: with SMTP id a18mr110243oic.142.1587072524616;
+        Thu, 16 Apr 2020 14:28:44 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id z12sm7405057otk.24.2020.04.16.14.28.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 14:28:43 -0700 (PDT)
+Received: (nullmailer pid 29393 invoked by uid 1000);
+        Thu, 16 Apr 2020 21:28:42 -0000
+Date:   Thu, 16 Apr 2020 16:28:42 -0500
 From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 16 Apr 2020 16:02:58 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLDsoJteGC6BRMFvPZ0pekOU71eUNQUqh74we_BB7RZ_g@mail.gmail.com>
-Message-ID: <CAL_JsqLDsoJteGC6BRMFvPZ0pekOU71eUNQUqh74we_BB7RZ_g@mail.gmail.com>
-Subject: Re: [PATCH] arm: tegra: dts: Kill off "simple-panel" compatibles
-To:     devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/4] dt-bindings: power: reset: Add regmap support to the
+ SYSCON reboot-mode bindings
+Message-ID: <20200416212842.GA18756@bogus>
+References: <20200306130341.9585-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306130402.1F4F0803079F@mail.baikalelectronics.ru>
+ <20200312211438.GA21883@bogus>
+ <20200313130231.wrvvcttm7ofaxbfo@ubsrv2.baikal.int>
+ <CAL_Jsq+W84r687zNV=2S-hj9=xbTQxkx9MpVNDTn6TOrBgiGUw@mail.gmail.com>
+ <20200331195053.dcexmhbsbnbfuabe@ubsrv2.baikal.int>
+ <20200416195620.4q6scqk5rqbonz4s@ubsrv2.baikal.int>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416195620.4q6scqk5rqbonz4s@ubsrv2.baikal.int>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 5:08 PM Rob Herring <robh@kernel.org> wrote:
->
-> "simple-panel" is a Linux driver and has never been an accepted upstream
-> compatible string, so remove it.
->
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Jonathan Hunter <jonathanh@nvidia.com>
-> Cc: linux-tegra@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+On Thu, Apr 16, 2020 at 10:56:20PM +0300, Sergey Semin wrote:
+> Rob,
+> Any comment on my suggestion below?
+> 
+> Regards,
+> -Sergey
+> 
+> On Tue, Mar 31, 2020 at 10:50:53PM +0300, Sergey Semin wrote:
+> > On Wed, Mar 18, 2020 at 05:14:25PM -0600, Rob Herring wrote:
+> > > On Fri, Mar 13, 2020 at 7:03 AM Sergey Semin
+> > > <Sergey.Semin@baikalelectronics.ru> wrote:
+> > > >
+> > > > On Thu, Mar 12, 2020 at 04:14:38PM -0500, Rob Herring wrote:
+> > > > > On Fri, Mar 06, 2020 at 04:03:40PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > > > > > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > > > >
+> > > > > > Optional regmap property will be used to refer to a syscon-controller
+> > > > > > having a reboot tolerant register mapped.
+> > > > >
+> > > > > NAK. It should simply be a child node of the 'syscon-controller'.
+> > > >
+> > > > Hm, It's dilemma. The driver maintainer said ack, while you disagree.)
+> > > > So the code change will be merged while the doc-part won't? Lets discuss then
+> > > > to settle the issue.
+> > > >
+> > > > Why 'syscon-reboot' can be out of syscon-controller node, while
+> > > > 'syscon-reboot-mode' can't?
+> > > 
+> > > Look at the history and you will see one was reviewed by DT
+> > > maintainers and one wasn't.
+> > > 
+> > > > They both belong to the same usecase: save
+> > > > cause id and reboot. So having similar properties-set and declaring their
+> > > > nodes someplace nearby is natural.
+> > > 
+> > > Which is what I'm asking for. Where else in the tree does it make
+> > > sense to locate the 'syscon-reboot-mode' node? Locate nodes where they
+> > > logically belong.
+> > > 
+> > > > According to the driver 'syscon-reboot'
+> > > > can't lack the regmap property because it's mandatory, while here you refuse
+> > > > to have even optional support. Additionally in most of the cases the
+> > > > 'syscon-reboot' nodes aren't declared as a child of a system controller
+> > > > node. Why 'syscon-reboot-mode' can't work in a similar way?
+> > > 
+> > > There's plenty of bad or "don't follow current best practice" examples
+> > > in the tree for all sorts of things. That is not a reason for doing
+> > > something in a new binding or adding to an existing one.
+> > > 
+> > > Rob
+> > 
+> > Alright. I see your point. What about I'd provide a sort of opposite
+> > implementation? I could make the "regmap"-phandle reference being optional
+> > in the !"syscon-reboot"! driver instead of adding the regmap-property
+> > support to the "syscon-reboot-mode" driver. So if regmap property isn't
+> > defined in the "syscon-reboot"-compatible node, the driver will try to
+> > get a syscon regmap from the parental node as it's done in the
+> > "syscon-reboot-mode" driver.
 
-Ping. This never got picked up.
+That seems fine.
 
-> ---
->  arch/arm/boot/dts/tegra114-dalmore.dts         | 3 +--
->  arch/arm/boot/dts/tegra124-venice2.dts         | 2 +-
->  arch/arm/boot/dts/tegra20-colibri-eval-v3.dts  | 2 +-
->  arch/arm/boot/dts/tegra20-colibri-iris.dts     | 2 +-
->  arch/arm/boot/dts/tegra20-harmony.dts          | 2 +-
->  arch/arm/boot/dts/tegra20-medcom-wide.dts      | 2 +-
->  arch/arm/boot/dts/tegra20-paz00.dts            | 2 +-
->  arch/arm/boot/dts/tegra20-seaboard.dts         | 2 +-
->  arch/arm/boot/dts/tegra20-ventana.dts          | 2 +-
->  arch/arm/boot/dts/tegra30-apalis-eval.dts      | 2 +-
->  arch/arm/boot/dts/tegra30-apalis-v1.1-eval.dts | 2 +-
->  arch/arm/boot/dts/tegra30-cardhu.dtsi          | 2 +-
->  arch/arm/boot/dts/tegra30-colibri-eval-v3.dts  | 2 +-
->  arch/arm64/boot/dts/nvidia/tegra132-norrin.dts | 2 +-
->  14 files changed, 14 insertions(+), 15 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/tegra114-dalmore.dts b/arch/arm/boot/dts/tegra114-dalmore.dts
-> index 97a5c3504bbe..8e48792ecdc8 100644
-> --- a/arch/arm/boot/dts/tegra114-dalmore.dts
-> +++ b/arch/arm/boot/dts/tegra114-dalmore.dts
-> @@ -46,8 +46,7 @@
->                         avdd-dsi-csi-supply = <&avdd_1v2_reg>;
->
->                         panel@0 {
-> -                               compatible = "panasonic,vvx10f004b00",
-> -                                            "simple-panel";
-> +                               compatible = "panasonic,vvx10f004b00";
->                                 reg = <0>;
->
->                                 power-supply = <&avdd_lcd_reg>;
-> diff --git a/arch/arm/boot/dts/tegra124-venice2.dts b/arch/arm/boot/dts/tegra124-venice2.dts
-> index 7309393bfced..9004fb6dcede 100644
-> --- a/arch/arm/boot/dts/tegra124-venice2.dts
-> +++ b/arch/arm/boot/dts/tegra124-venice2.dts
-> @@ -1087,7 +1087,7 @@
->         };
->
->         panel: panel {
-> -               compatible = "lg,lp129qe", "simple-panel";
-> +               compatible = "lg,lp129qe";
->
->                 backlight = <&backlight>;
->                 ddc-i2c-bus = <&dpaux>;
-> diff --git a/arch/arm/boot/dts/tegra20-colibri-eval-v3.dts b/arch/arm/boot/dts/tegra20-colibri-eval-v3.dts
-> index 3c0f2681fcde..37ad508b61d9 100644
-> --- a/arch/arm/boot/dts/tegra20-colibri-eval-v3.dts
-> +++ b/arch/arm/boot/dts/tegra20-colibri-eval-v3.dts
-> @@ -223,7 +223,7 @@
->                  * edt,et057090dhu: EDT 5.7" LCD TFT
->                  * edt,et070080dh6: EDT 7.0" LCD TFT
->                  */
-> -               compatible = "edt,et057090dhu", "simple-panel";
-> +               compatible = "edt,et057090dhu";
->                 backlight = <&backlight>;
->                 power-supply = <&reg_3v3>;
->         };
-> diff --git a/arch/arm/boot/dts/tegra20-colibri-iris.dts b/arch/arm/boot/dts/tegra20-colibri-iris.dts
-> index d8004d68efa0..af4740847769 100644
-> --- a/arch/arm/boot/dts/tegra20-colibri-iris.dts
-> +++ b/arch/arm/boot/dts/tegra20-colibri-iris.dts
-> @@ -205,7 +205,7 @@
->                  * edt,et057090dhu: EDT 5.7" LCD TFT
->                  * edt,et070080dh6: EDT 7.0" LCD TFT
->                  */
-> -               compatible = "edt,et057090dhu", "simple-panel";
-> +               compatible = "edt,et057090dhu";
->                 backlight = <&backlight>;
->                 power-supply = <&reg_3v3>;
->         };
-> diff --git a/arch/arm/boot/dts/tegra20-harmony.dts b/arch/arm/boot/dts/tegra20-harmony.dts
-> index 1d96d92b72a7..02cd67ea2503 100644
-> --- a/arch/arm/boot/dts/tegra20-harmony.dts
-> +++ b/arch/arm/boot/dts/tegra20-harmony.dts
-> @@ -665,7 +665,7 @@
->         };
->
->         panel: panel {
-> -               compatible = "auo,b101aw03", "simple-panel";
-> +               compatible = "auo,b101aw03";
->
->                 power-supply = <&vdd_pnl_reg>;
->                 enable-gpios = <&gpio TEGRA_GPIO(B, 2) GPIO_ACTIVE_HIGH>;
-> diff --git a/arch/arm/boot/dts/tegra20-medcom-wide.dts b/arch/arm/boot/dts/tegra20-medcom-wide.dts
-> index cda5448c2ace..c73510cd501c 100644
-> --- a/arch/arm/boot/dts/tegra20-medcom-wide.dts
-> +++ b/arch/arm/boot/dts/tegra20-medcom-wide.dts
-> @@ -57,7 +57,7 @@
->         };
->
->         panel: panel {
-> -               compatible = "innolux,n156bge-l21", "simple-panel";
-> +               compatible = "innolux,n156bge-l21";
->
->                 power-supply =  <&vdd_1v8_reg>, <&vdd_3v3_reg>;
->                 enable-gpios = <&gpio TEGRA_GPIO(B, 2) GPIO_ACTIVE_HIGH>;
-> diff --git a/arch/arm/boot/dts/tegra20-paz00.dts b/arch/arm/boot/dts/tegra20-paz00.dts
-> index 85fce5bc72d6..0151cdd09ffb 100644
-> --- a/arch/arm/boot/dts/tegra20-paz00.dts
-> +++ b/arch/arm/boot/dts/tegra20-paz00.dts
-> @@ -558,7 +558,7 @@
->         };
->
->         panel: panel {
-> -               compatible = "samsung,ltn101nt05", "simple-panel";
-> +               compatible = "samsung,ltn101nt05";
->
->                 ddc-i2c-bus = <&lvds_ddc>;
->                 power-supply = <&vdd_pnl_reg>;
-> diff --git a/arch/arm/boot/dts/tegra20-seaboard.dts b/arch/arm/boot/dts/tegra20-seaboard.dts
-> index f91441683aad..376ecb6435f4 100644
-> --- a/arch/arm/boot/dts/tegra20-seaboard.dts
-> +++ b/arch/arm/boot/dts/tegra20-seaboard.dts
-> @@ -826,7 +826,7 @@
->         };
->
->         panel: panel {
-> -               compatible = "chunghwa,claa101wa01a", "simple-panel";
-> +               compatible = "chunghwa,claa101wa01a";
->
->                 power-supply = <&vdd_pnl_reg>;
->                 enable-gpios = <&gpio TEGRA_GPIO(B, 2) GPIO_ACTIVE_HIGH>;
-> diff --git a/arch/arm/boot/dts/tegra20-ventana.dts b/arch/arm/boot/dts/tegra20-ventana.dts
-> index f44551e2d9d0..022649119821 100644
-> --- a/arch/arm/boot/dts/tegra20-ventana.dts
-> +++ b/arch/arm/boot/dts/tegra20-ventana.dts
-> @@ -611,7 +611,7 @@
->         };
->
->         panel: panel {
-> -               compatible = "chunghwa,claa101wa01a", "simple-panel";
-> +               compatible = "chunghwa,claa101wa01a";
->
->                 power-supply = <&vdd_pnl_reg>;
->                 enable-gpios = <&gpio TEGRA_GPIO(B, 2) GPIO_ACTIVE_HIGH>;
-> diff --git a/arch/arm/boot/dts/tegra30-apalis-eval.dts b/arch/arm/boot/dts/tegra30-apalis-eval.dts
-> index 749fc6d1ff70..b39c26806bf2 100644
-> --- a/arch/arm/boot/dts/tegra30-apalis-eval.dts
-> +++ b/arch/arm/boot/dts/tegra30-apalis-eval.dts
-> @@ -195,7 +195,7 @@
->                  * edt,et057090dhu: EDT 5.7" LCD TFT
->                  * edt,et070080dh6: EDT 7.0" LCD TFT
->                  */
-> -               compatible = "edt,et057090dhu", "simple-panel";
-> +               compatible = "edt,et057090dhu";
->                 backlight = <&backlight>;
->                 power-supply = <&reg_3v3>;
->         };
-> diff --git a/arch/arm/boot/dts/tegra30-apalis-v1.1-eval.dts b/arch/arm/boot/dts/tegra30-apalis-v1.1-eval.dts
-> index 0be50e881684..e29dca92ba0a 100644
-> --- a/arch/arm/boot/dts/tegra30-apalis-v1.1-eval.dts
-> +++ b/arch/arm/boot/dts/tegra30-apalis-v1.1-eval.dts
-> @@ -196,7 +196,7 @@
->                  * edt,et057090dhu: EDT 5.7" LCD TFT
->                  * edt,et070080dh6: EDT 7.0" LCD TFT
->                  */
-> -               compatible = "edt,et057090dhu", "simple-panel";
-> +               compatible = "edt,et057090dhu";
->                 backlight = <&backlight>;
->                 power-supply = <&reg_3v3>;
->         };
-> diff --git a/arch/arm/boot/dts/tegra30-cardhu.dtsi b/arch/arm/boot/dts/tegra30-cardhu.dtsi
-> index 7ce61edd52f5..9048fdf4ad54 100644
-> --- a/arch/arm/boot/dts/tegra30-cardhu.dtsi
-> +++ b/arch/arm/boot/dts/tegra30-cardhu.dtsi
-> @@ -432,7 +432,7 @@
->         };
->
->         panel: panel {
-> -               compatible = "chunghwa,claa101wb01", "simple-panel";
-> +               compatible = "chunghwa,claa101wb01";
->                 ddc-i2c-bus = <&panelddc>;
->
->                 power-supply = <&vdd_pnl1_reg>;
-> diff --git a/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts b/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
-> index 5965150ecdd2..8e106e784dce 100644
-> --- a/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
-> +++ b/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
-> @@ -159,7 +159,7 @@
->                  * edt,et057090dhu: EDT 5.7" LCD TFT
->                  * edt,et070080dh6: EDT 7.0" LCD TFT
->                  */
-> -               compatible = "edt,et057090dhu", "simple-panel";
-> +               compatible = "edt,et057090dhu";
->                 backlight = <&backlight>;
->                 power-supply = <&reg_3v3>;
->         };
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts b/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
-> index a0385a386a3f..9f3206c63900 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
-> +++ b/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
-> @@ -990,7 +990,7 @@
->         };
->
->         panel: panel {
-> -               compatible = "innolux,n116bge", "simple-panel";
-> +               compatible = "innolux,n116bge";
->                 backlight = <&backlight>;
->                 ddc-i2c-bus = <&dpaux>;
->         };
-> --
-> 2.20.1
->
+> > Seeing you think that regmap-property-based design is a bad practice in
+> > this case, I also could mark the property as deprecated in the "syscon-reboot"
+> > dt schema and print a warning from the "syscon-reboot" driver if one is defined.
+
+Depends on how many platforms will start getting warnings. I think just 
+marking deprecated is enough.
+
+Rob
