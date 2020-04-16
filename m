@@ -2,170 +2,139 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C60C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 12:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2143DC352BE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 13:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E30D208E4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 12:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0045C206B9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 13:02:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l9OHz4Xu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635962AbgDPMv2 (ORCPT
+        id S2894758AbgDPNCt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 08:51:28 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39826 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2894435AbgDPMvZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 08:51:25 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: aratiu)
-        with ESMTPSA id 5340D2A00AE
-From:   Adrian Ratiu <adrian.ratiu@collabora.com>
-To:     devicetree@vger.kernel.org
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com, Rob Herring <robh@kernel.org>,
+        Thu, 16 Apr 2020 09:02:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51772 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2894629AbgDPNCp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:02:45 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00000C061A0C;
+        Thu, 16 Apr 2020 06:02:44 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id e26so4471148wmk.5;
+        Thu, 16 Apr 2020 06:02:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DsXbXqSR3WQQ/q3QyWRXNvBRy+VnfDMjqm/TEYscBoU=;
+        b=l9OHz4Xu8UUrVETfqDUe78B77QloOSjAuW1zUUPhF6mnjZNyfmYlTZlstQ7DTLMZXx
+         QZp/1o3zt7Pyua6lAgb+Fg8JZ+UNuL0xMB0C5Rg4lNWyh/Y0n58k3khWQmgQMgFW10vA
+         UZEt/WHoic7XKdFncgmdMdD/ERfOIihkhdAZpnaTfjz7gEfcQKaaIbuGilMxFH/Hmcnq
+         2BajeBWSbyY3UWqPnOuAa6ECF+V1+As5iLm580KPCfBt0++Ja+vZt6Yl9Pj6jFpP4SRk
+         6EYcyexDlQ2/QiQcgXyU+yM+IM2Z3TOfzzI21YEHupFpmb5JU3l3/cnQBP7SsJaWacdV
+         /X0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DsXbXqSR3WQQ/q3QyWRXNvBRy+VnfDMjqm/TEYscBoU=;
+        b=YjH+W+hL1At2/TEVQLR4Sj2ju5oav+deJEQYTYda1Lc98yx9XzxXF9bbfeTezsQqlQ
+         g5+vd4WeS4BXMT2UeZBEruwJEv2LMrPOVG9nDEVNnMY3PnSJLfleyAJtq6HIxJKHBlHx
+         VYDUGWm5seF3/b5BO3BV7+yvazpCjzbCVyL+rLE+ySXcLlw17ry8pXBbtC1CsKfnP+Gp
+         lQKg6Rj4I61OpX0U2NIReyqpwadaNdZa+Wh49kfG4zR/qv/LD/QskObgooGU7+1AXcIa
+         2NBrJqA3K/sr3fvi8pXmWsRu595aHXEJsVcZMK7y8rEwe2z50fVk0sH9yv6dwu2D46y9
+         ZPFA==
+X-Gm-Message-State: AGi0PuYEpUweRxu+BeDXJ7FWjC8zXEV0UTz9WV+ZbOF91gXTKBhK0dmz
+        hzkQUwgW7xon6LyIv/PDT3M=
+X-Google-Smtp-Source: APiQypJmGVgOCUB4Bi9u+4yal3fthikSw/VxSVv6cs2uWMvyqqMrS3fjb25iU4fphqExvZQpuidm6Q==
+X-Received: by 2002:a1c:7706:: with SMTP id t6mr4806123wmi.110.1587042163757;
+        Thu, 16 Apr 2020 06:02:43 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id c18sm26903597wrx.5.2020.04.16.06.02.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2020 06:02:42 -0700 (PDT)
+Subject: Re: [PATCH 2/4] arm64: dts: rockchip: Add RGA support to the PX30
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Jacob Chen <jacob-chen@iotwrt.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH] dt-bindings: display: dw_mipi_dsi.txt: convert to yaml
-Date:   Thu, 16 Apr 2020 15:52:07 +0300
-Message-Id: <20200416125207.425271-1-adrian.ratiu@collabora.com>
-X-Mailer: git-send-email 2.26.0
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hansverk@cisco.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20200416115047.233720-1-paul.kocialkowski@bootlin.com>
+ <20200416115047.233720-3-paul.kocialkowski@bootlin.com>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <478f0a8b-f819-62f4-83b8-27918c4c2431@gmail.com>
+Date:   Thu, 16 Apr 2020 15:02:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200416115047.233720-3-paul.kocialkowski@bootlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This converts the Synopsis MIPI DSI binding documentation to yaml and
-should be quite straightforward. I've added a missing ref clk and also
-added Mark and Rob as maintainers based on 'get_maintainer.pl' results.
+Hi Paul,
 
-Cc: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
----
- .../bindings/display/bridge/dw_mipi_dsi.txt   | 32 ---------
- .../display/bridge/snps,dw-mipi-dsi.yaml      | 66 +++++++++++++++++++
- 2 files changed, 66 insertions(+), 32 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
- create mode 100644 Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
+The conversion of rockchip-rga.txt to rockchip-rga.yaml by myself just
+has been approved by robh.
+Maybe place dts patches at the end of a patch serie.
+Could you include a &rga patch if your device is supported in mainline,
+so we can test with:
+make ARCH=arm64 dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-rga.yaml
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
-deleted file mode 100644
-index b13adf30b8d3..000000000000
---- a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
-+++ /dev/null
-@@ -1,32 +0,0 @@
--Synopsys DesignWare MIPI DSI host controller
--============================================
--
--This document defines device tree properties for the Synopsys DesignWare MIPI
--DSI host controller. It doesn't constitue a device tree binding specification
--by itself but is meant to be referenced by platform-specific device tree
--bindings.
--
--When referenced from platform device tree bindings the properties defined in
--this document are defined as follows. The platform device tree bindings are
--responsible for defining whether each optional property is used or not.
--
--- reg: Memory mapped base address and length of the DesignWare MIPI DSI
--  host controller registers. (mandatory)
--
--- clocks: References to all the clocks specified in the clock-names property
--  as specified in [1]. (mandatory)
--
--- clock-names:
--  - "pclk" is the peripheral clock for either AHB and APB. (mandatory)
--  - "px_clk" is the pixel clock for the DPI/RGB input. (optional)
--
--- resets: References to all the resets specified in the reset-names property
--  as specified in [2]. (optional)
--
--- reset-names: string reset name, must be "apb" if used. (optional)
--
--- panel or bridge node: see [3]. (mandatory)
--
--[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
--[2] Documentation/devicetree/bindings/reset/reset.txt
--[3] Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
-diff --git a/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
-new file mode 100644
-index 000000000000..0ab4125eee30
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
-@@ -0,0 +1,66 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/snps,dw-mipi-dsi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Synopsys DesignWare MIPI DSI host controller
-+
-+maintainers:
-+  - Rob Herring <robh+dt@kernel.org>
-+  - Mark Rutland <mark.rutland@arm.com>
-+
-+description: |
-+  This document defines device tree properties for the Synopsys DesignWare MIPI
-+  DSI host controller. It doesn't constitue a device tree binding specification
-+  by itself but is meant to be referenced by platform-specific device tree
-+  bindings.
-+
-+  When referenced from platform device tree bindings the properties defined in
-+  this document are defined as follows. The platform device tree bindings are
-+  responsible for defining whether each property is required or optional.
-+
-+properties:
-+  reg:
-+    description: |
-+      Memory mapped base address and length of the DesignWare MIPI DSI host
-+      controller registers.
-+
-+  clocks:
-+    description: |
-+      References to all the clocks specified in the clock-names property as
-+      specified in Documentation/devicetree/bindings/clock/clock-bindings.txt
-+    items:
-+      - description: Module clock
-+      - description: DSI bus colck for either AHB and APB
-+      - description: Pixel clock for the DPI/RGB input
-+    minItems: 2
-+    maxItems: 3
-+
-+  clock-names:
-+    items:
-+      - const: ref
-+      - const: pclk
-+      - const: px_clk
-+    minItems: 2
-+    maxItems: 3
-+
-+  resets:
-+    description: |
-+      References to all the resets specified in the reset-names property as
-+      specified in Documentation/devicetree/bindings/reset/reset.txt
-+
-+  reset-names:
-+    const: apb
-+
-+patternProperties:
-+  "^panel@[0-3]$":
-+    type: object
-+    description: |
-+      A node containing the panel or bridge description as documented in
-+      Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
-+
-+required:
-+  - reg
-+  - clocks
-+  - clock-names
--- 
-2.26.0
+Johan
+
+On 4/16/20 1:50 PM, Paul Kocialkowski wrote:
+> The PX30 features a RGA block: add the necessary node to support it.
+> 
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> ---
+>  arch/arm64/boot/dts/rockchip/px30.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
+> index 75908c587511..4bfbee9d4123 100644
+> --- a/arch/arm64/boot/dts/rockchip/px30.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
+> @@ -1104,6 +1104,17 @@ vopl_mmu: iommu@ff470f00 {
+>  		status = "disabled";
+>  	};
+>  
+> +	rga: rga@ff480000 {
+> +		compatible = "rockchip,px30-rga";
+> +		reg = <0x0 0xff480000 0x0 0x10000>;
+> +		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH 0>;
+> +		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA_CORE>;
+> +		clock-names = "aclk", "hclk", "sclk";
+> +		resets = <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
+> +		reset-names = "core", "axi", "ahb";
+> +		power-domains = <&power PX30_PD_VO>;
+
+		status = "disabled";
+
+> +	};
+> +
+>  	qos_gmac: qos@ff518000 {
+>  		compatible = "syscon";
+>  		reg = <0x0 0xff518000 0x0 0x20>;
+> 
 
