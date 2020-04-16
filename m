@@ -2,77 +2,74 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C46C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 09:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBE5C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 09:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85700206D6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 09:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6350206E9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 09:28:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hkTtnz2D"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mcjo0LRY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502921AbgDPJVO (ORCPT
+        id S2392063AbgDPJ2I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:21:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45348 "EHLO
+        Thu, 16 Apr 2020 05:28:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2392074AbgDPJUw (ORCPT
+        by vger.kernel.org with ESMTP id S2392194AbgDPJ2G (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:20:52 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE8B9C0610D5
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 02:20:51 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id w145so5046043lff.3
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 02:20:51 -0700 (PDT)
+        Thu, 16 Apr 2020 05:28:06 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDE41C061BD3
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 02:28:02 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id z26so6986894ljz.11
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 02:28:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=iuZQPq25LlhzAjymFw6DX/CB5GWOdpk6lIwmaoZu2BE=;
-        b=hkTtnz2DkVpj5FadPidho1Yi0E3E7wBAIYmB61/Kj4lK/X8UrCLL81x5xmrcWGWc+H
-         azS6fkmcowWvwOnDXcI9l4y6Ucno0mzyziNpLxV9Mthz8Y0YUdXq82D8FzhAITXPdDF8
-         3tFd/DXFS5Ty+STvGvcwXllNt8lFNMCiTuvCiXYSz2PukY3ig/gTtCqCjuJHHyXpd1A3
-         QDfx/KUMUCLzLxrTqLoSlNd+gU4YBuAYH/DvcY6yoeUzHZc1o3NaKorVY+VcrIzkfObd
-         u7uovSiNsexRzNZk8c0flO0ZydCK1WaSDd1IcMQT71DefMnE/zm8iho+FD/0QJcA2MJG
-         wMcA==
+        bh=WsPjodFLa29jgz8fN9Fb4AffGRX4R/S0PAGXHFxg8uc=;
+        b=Mcjo0LRYVYxyzbtjbCWQVN/NoJRsDH8jFlsbuCOBONMT1lR2ImkQ/9Gyi6g9ECLGD9
+         W6+NvffZF/UBCbB65JSgSA15hb1DBUMVmSago9O5LFo/FlxiOs0HJ9MMXrD/bobgK0Wt
+         mMVuq5ylGm8TZD27kCZcpU+ZZGgxXnxAhUmazdaIRigybhADJAXlhqCpHAnwaqebmn77
+         48UsyHV+4cY856JG138S9HEb9o2gew/a6x80Z8PggjjeFafkcMesJftx8HReUBysV/gx
+         GRB7jVLJBDkBbXax2F7N8etArkTLVsDT3ukSGd2g9bhBAQlzlqv6iTs7iWBiPoiBSWfj
+         bFzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=iuZQPq25LlhzAjymFw6DX/CB5GWOdpk6lIwmaoZu2BE=;
-        b=gyhASFhjDDMEuO1Y7Xvw6oTc3dX1gJc1BZK7x/JkmDGni/uCN+0TT/C2vop211co5h
-         mBXLAggiNApdtDbODUaq3hOjyQ0X+AEAUyAj/wnFHPR4jH7Br//w6Yn7MkCTIJ8GE8IF
-         b/J7TYxQ74798j/ur4oKS5dF0yWtlkEINjMiqndcTXLhILYHBa/TziDt6cKSl/9+AsGD
-         nc0qudkbRsiyV6uDmv2eOclX1sA4JGnN0ybHjlQgzRFrRL2H5Dxg9SSiAhrtC22hm/iC
-         WB2vpkOPyFFEXIYHSSaLDv1OvrbtNYD1yig5gojzgYIQ31xKWtv2LPUi3h4fJ759JytG
-         jMYA==
-X-Gm-Message-State: AGi0PuZJpE0VH/R/xuPnjeP62xYUfIjbqmxrPE2tr0PL4rmbBNNSoqB5
-        657HafOrtN/G4OBnjf2HQ7XqWV5KUINhNfhtgtJ7Bw==
-X-Google-Smtp-Source: APiQypJvAs9P0NYlc+VDp3QIFWPUjuxP+cKRiyTPcwcbTngB4Tr+zwZ10UYlTO8u+2AsTbbibFkxTpAAASs25r3y/l8=
-X-Received: by 2002:a05:6512:52c:: with SMTP id o12mr5352302lfc.217.1587028850060;
- Thu, 16 Apr 2020 02:20:50 -0700 (PDT)
+        bh=WsPjodFLa29jgz8fN9Fb4AffGRX4R/S0PAGXHFxg8uc=;
+        b=h0fE74yJ9tlf+Y6LRjGTJlO6AJxI4RtsW7mkjyFS2HDYfO64SGtsPvO29hdxz0S7ec
+         /Uho5Iw58uO/o0W19VQANGJhWK+jTTQWN66OCb4he8E6yw0/eTM/JZ1l93IN/8Ic642H
+         GGYO0KyiatROUcuUS+ZRaQC/DOZxytG80ubzWFPJ2iBrFWtEcmSk5rz99uzfm6UiVM2b
+         zrXPqB/jsRb6Jfii8unqSV34eKPFdn4UchOVhSBfisJqsOLtYmrMuBQWtGHACGLUxXVU
+         yhUbXNX8T8Qfzz94szcXb6jmLgCZVfTPboDrFcGyVm0r3sJpjZRBFU41gUwIbLxBPChS
+         2OJA==
+X-Gm-Message-State: AGi0PuatS+qCK9I6KBEJyWFGmMl2twuhYybFI8WdboJZ1+Lyq5rViOwJ
+        6lDlQWuEaYfmkrJtM91wQBvyvd8fDLnzKNikA6hmrQ==
+X-Google-Smtp-Source: APiQypJMQjT4pZ+GIg1c79TG3Woa9BTCPwC3Eg2zQlaa/+IMFOuGyPsLA6Z0cx46mmNNDk/3KbeDkx0QsaVz8N768ms=
+X-Received: by 2002:a2e:9ad9:: with SMTP id p25mr6015137ljj.39.1587029281103;
+ Thu, 16 Apr 2020 02:28:01 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200402203656.27047-1-michael@walle.cc> <20200402203656.27047-11-michael@walle.cc>
- <CAMpxmJVE3PgVCxkQ-ryc5=KSrKcpdmk1cnJUxJBz9QFCx-e_+A@mail.gmail.com>
- <80bd8661ec8a1f5eda3f09a267846eaa@walle.cc> <CAMpxmJVC7e9JnHzBo-h8M1+KmcA32=Rvxo7+znH=-kAbcCr_LQ@mail.gmail.com>
- <e0388a2137e23d76b2415a7549c01dd1@walle.cc> <CAMpxmJW1x4Orh1BZ4TUoCsYeaAAZ4NBUNvoMG9JgP0iLvXTOtg@mail.gmail.com>
- <62d157198a75a59ada15c496deeab49b@walle.cc> <eab972adf53bbac20b5a9e613fcfb5b0@walle.cc>
-In-Reply-To: <eab972adf53bbac20b5a9e613fcfb5b0@walle.cc>
+In-Reply-To: <20200402203656.27047-11-michael@walle.cc>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Apr 2020 11:20:38 +0200
-Message-ID: <CACRpkdZPZ4nFQ6B3tGG9wvceoTWqAkfY0r1UKs2pf_c=ZNBG=w@mail.gmail.com>
+Date:   Thu, 16 Apr 2020 11:27:49 +0200
+Message-ID: <CACRpkdaqgHhPwdKdUai4zvi21qR-cSQUKyzZ3SyfWBLPN9us3w@mail.gmail.com>
 Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using regmap
 To:     Michael Walle <michael@walle.cc>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
         LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
         Jean Delvare <jdelvare@suse.com>,
         Guenter Roeck <linux@roeck-us.net>,
@@ -92,31 +89,61 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 9:57 PM Michael Walle <michael@walle.cc> wrote:
+On Thu, Apr 2, 2020 at 10:37 PM Michael Walle <michael@walle.cc> wrote:
 
-> So what about the following:
+> There are quite a lot simple GPIO controller which are using regmap to
+> access the hardware. This driver tries to be a base to unify existing
+> code into one place. This won't cover everything but it should be a good
+> starting point.
 >
-> #define GPIO_REGMAP_ADDR_ZERO (unsigned int)(-1)
+> It does not implement its own irq_chip because there is already a
+> generic one for regmap based devices. Instead, the irq_chip will be
+> instanciated in the parent driver and its irq domain will be associate
+> to this driver.
+>
+> For now it consists of the usual registers, like set (and an optional
+> clear) data register, an input register and direction registers.
+> Out-of-the-box, it supports consecutive register mappings and mappings
+> where the registers have gaps between them with a linear mapping between
+> GPIO offset and bit position. For weirder mappings the user can register
+> its own .xlate().
+>
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-Yeah with regmap explicitly using int I guess we can't use
-S32_MAX, so that is fair.
+Overall I really like this driver and I think we should merge is as soon
+as it is in reasonable shape and then improve on top so we can start
+migrating drivers to it.
 
-> So this way the user might assign the base addresses the normal way
-> except when he wants to use zero, in that case he has to use
->
->    ->base_adr = GPIO_REGMAP_ADDR_ZERO;
->
-> gpio-regmap.c could use then:
->
-> if (base_addr)
->    something_useful(gpio_regmap_addr(base_addr));
->
-> unsigned int gpio_regmap_addr(unsigned int addr)
-> {
->    return (addr == GPIO_REGMAP_ADDR_ZERO) ? 0 : addr;
-> }
+> +static int gpio_regmap_to_irq(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       struct gpio_regmap_data *data = gpiochip_get_data(chip);
+> +       struct gpio_regmap *gpio = data->gpio;
+> +
+> +       /* the user might have its own .to_irq callback */
+> +       if (gpio->to_irq)
+> +               return gpio->to_irq(gpio, offset);
+> +
+> +       return irq_create_mapping(gpio->irq_domain, offset);
 
-That's reasonably clean.
+I think that should at least be irq_find_mapping(), the mapping should
+definately not be created by the .to_irq() callback since that is just
+a convenience function.
+
+> +       if (gpio->irq_domain)
+> +               chip->to_irq = gpio_regmap_to_irq;
+
+I don't know about this.
+(...)
+> + * @irq_domain:                (Optional) IRQ domain if the controller is
+> + *                     interrupt-capable
+(...)
+> +       struct irq_domain *irq_domain;
+
+I don't think this is a good storage place for the irqdomain, we already have
+gpio_irq_chip inside gpio_chip and that has an irqdomain, we should
+strive to reuse that infrastructure also for regmap GPIO I think, for now
+I would just leave .to_irq() out of this and let the driver deal with any
+irqs.
 
 Yours,
 Linus Walleij
