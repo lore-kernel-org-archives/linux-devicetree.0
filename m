@@ -2,94 +2,114 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9644C2BB55
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EFEC2BB55
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 12:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AA76221EC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 11:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D219320767
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 12:00:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="qjJyOjHd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634595AbgDPL6T (ORCPT
+        id S2634425AbgDPMAS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 07:58:19 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:58540 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2634304AbgDPL6J (ORCPT
+        Thu, 16 Apr 2020 08:00:18 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:41931 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2634588AbgDPL6T (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:58:09 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03GBtNxS027812;
-        Thu, 16 Apr 2020 07:58:07 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 30dn7ung6y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 07:58:07 -0400
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 03GBw6jZ030802
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Thu, 16 Apr 2020 07:58:06 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 16 Apr
- 2020 07:58:05 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 16 Apr 2020 07:58:05 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03GBw2DX013213;
-        Thu, 16 Apr 2020 07:58:04 -0400
-From:   <alexandru.tachici@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <jic23@kernel.org>, <robh+dt@kernel.org>
-Subject: [PATCH v2 1/2] iio: dac: ad5770r: read channel nr from reg
-Date:   Thu, 16 Apr 2020 14:58:47 +0300
-Message-ID: <20200416115848.56156-2-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200416115848.56156-1-alexandru.tachici@analog.com>
-References: <20200416115848.56156-1-alexandru.tachici@analog.com>
+        Thu, 16 Apr 2020 07:58:19 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id P39mjcdN97xncP39pj7Yw1; Thu, 16 Apr 2020 13:58:16 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1587038296; bh=pgULbLNuPDuvkt/ZE7BTxpxzQCy1rEQZOEHhfHg1VsM=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=qjJyOjHdFOjLwbBE5AMGl7i/o5lLp0YJqVH5ujUzEQNe8Xt3PSeNOeupqZto1YFuW
+         1zfq7YnpoeW8afpHrSYzbQSe8iBC3azo6Uxb6qsBAt0zV+NPGaKtNoRfw4mh+irm/C
+         cK4qk7i7a19AnPLv0EmYn8EuIz6IJDOs+aiYMmuaEUZGKLHngVpwy3Mtn2wp6nhBbC
+         FsE70o5599zP/V2uzhyxjS/ra95EzJUEW4p/rsJ8EEgyWh3qGLyy7D7iijvZ4j7hjc
+         wXCsRTpX/+ViygxDP+AunKH8K/njPSwTGz6YWJ22p2MnWHVUglxSNVQJOZLmbwVUQ5
+         mbSM0G0jboTmg==
+Subject: Re: [PATCH 3/4] media: rockchip: rga: Add support for the PX30
+ compatible
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Jacob Chen <jacob-chen@iotwrt.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hansverk@cisco.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20200416115047.233720-1-paul.kocialkowski@bootlin.com>
+ <20200416115047.233720-4-paul.kocialkowski@bootlin.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <cd224bf8-5b0a-46e5-1657-4b40c6d3915e@xs4all.nl>
+Date:   Thu, 16 Apr 2020 13:58:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-16_03:2020-04-14,2020-04-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- priorityscore=1501 lowpriorityscore=0 spamscore=0 clxscore=1015
- phishscore=0 impostorscore=0 malwarescore=0 adultscore=0 mlxlogscore=999
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004160085
+In-Reply-To: <20200416115047.233720-4-paul.kocialkowski@bootlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfEmG96rhmgcqUobz4xw4DTPU7o17Xmvi5xmN9E10YvKe1uRWAQ34IA/UrD5J42lmTdsyo8ey/yTPTMkxY2TjqV+ryE32yZ58s/zhufVN+JCBqYB8YTqd
+ JTP8ANJFV7SYHFjqgYiARvpouqE3LcP5EponpFIyRknmpRa6MsYPuLssOMDS5mIlBLAvbslArMg3knyFzFb0jgcck7Ive6XVEP5dJaWJtLyZv1enArMbBVjZ
+ h/5ph52twVpt8aTe5KonGJzlYYJba1aMWxyyeNZc7HIVoyx75CzB0Qt4qG0hUXyTiBZ1O3KOafO0dxnLJDPKsJP1HpLQRFPM9LhiRlXlMxKwX/qBh5dFQrck
+ +LH3aa4HIf/N8VHqLzB0Zvm5xGv8MmXazHJ6zsPELgIG38jezZPZBpCDF5f85lDUFRXNVG6LvmyXQzAy5SChrPFC4ZwKZ7lY5K86KXA83D8fe+JGaZDUgpPp
+ ybVpQUhRRnBahgWe/qwFfjWGCbk2dUXTkqi8x5jU4ufWFOtDFTrcYZ9U/+UYUQ49zXeGZrqt//ITrVC9MSUWB8K98nu0w6qvxeQeSvyj5jgJ0tPQkthejEg2
+ E1V739v7VepB0WyJwMLOROH0Ch7pm6H009lDEyYBGjTS5MPX7v0drTfYmVDGQHDVdvjYUIT55hyQeDmFLkS2FGys
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Alexandru Tachici <alexandru.tachici@analog.com>
+On 16/04/2020 13:50, Paul Kocialkowski wrote:
+> The PX30 SoC has a RGA block, so add the associated compatible to
+> support it.
+> 
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> ---
+>  drivers/media/platform/rockchip/rga/rga.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/rockchip/rga/rga.c b/drivers/media/platform/rockchip/rga/rga.c
+> index e9ff12b6b5bb..0ebeb9b4c14a 100644
+> --- a/drivers/media/platform/rockchip/rga/rga.c
+> +++ b/drivers/media/platform/rockchip/rga/rga.c
+> @@ -880,7 +880,6 @@ static int rga_probe(struct platform_device *pdev)
+>  	rga->cmdbuf_virt = dma_alloc_attrs(rga->dev, RGA_CMDBUF_SIZE,
+>  					   &rga->cmdbuf_phy, GFP_KERNEL,
+>  					   DMA_ATTR_WRITE_COMBINE);
+> -
 
-Read channel number from the reg property of each child
-node.
+Spurious change?
 
-Fixes: cbbb819837f6 ("iio: dac: ad5770r: Add AD5770R support")
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
----
- drivers/iio/dac/ad5770r.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Regards,
 
-diff --git a/drivers/iio/dac/ad5770r.c b/drivers/iio/dac/ad5770r.c
-index a98ea76732e7..6302f11551d4 100644
---- a/drivers/iio/dac/ad5770r.c
-+++ b/drivers/iio/dac/ad5770r.c
-@@ -522,7 +522,7 @@ static int ad5770r_channel_config(struct ad5770r_state *st)
- 		return -EINVAL;
- 
- 	device_for_each_child_node(&st->spi->dev, child) {
--		ret = fwnode_property_read_u32(child, "num", &num);
-+		ret = fwnode_property_read_u32(child, "reg", &num);
- 		if (ret)
- 			return ret;
- 		if (num > AD5770R_MAX_CHANNELS)
--- 
-2.20.1
+	Hans
+
+>  	rga->src_mmu_pages =
+>  		(unsigned int *)__get_free_pages(GFP_KERNEL | __GFP_ZERO, 3);
+>  	rga->dst_mmu_pages =
+> @@ -955,6 +954,9 @@ static const struct dev_pm_ops rga_pm = {
+>  };
+>  
+>  static const struct of_device_id rockchip_rga_match[] = {
+> +	{
+> +		.compatible = "rockchip,px30-rga",
+> +	},
+>  	{
+>  		.compatible = "rockchip,rk3288-rga",
+>  	},
+> 
 
