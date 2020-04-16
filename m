@@ -2,79 +2,79 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873BBC2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14821C352BE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 644822076A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E01092076A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 07:59:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YZAXeH8R"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VCUgW+gv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440718AbgDPH4v (ORCPT
+        id S2440583AbgDPH42 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 03:56:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60352 "EHLO
+        Thu, 16 Apr 2020 03:56:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2440705AbgDPH4n (ORCPT
+        by vger.kernel.org with ESMTP id S2439692AbgDPH4Z (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 03:56:43 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30831C061A0C
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 00:56:42 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id y24so3714311wma.4
-        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 00:56:42 -0700 (PDT)
+        Thu, 16 Apr 2020 03:56:25 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B98FC061A10
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 00:56:24 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id e26so3490497wmk.5
+        for <devicetree@vger.kernel.org>; Thu, 16 Apr 2020 00:56:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4wXkP4Jg2SpgPLNlNFxv80H5dUcR070Yf66C9Z6HJMk=;
-        b=YZAXeH8R6EFGR93FoMZPfjyXgVNnyB0Hj/WwXWZygT+Ji3pVWI+parN1ZoWtEhaDl9
-         Q5U1HRaEdkgXXziWJzOXdmEnQi+Ixv+kRHTfAOXqNtvoy5Y+ULWZLjJOMVe48WEcB6Px
-         9IjKWu91KhFbHP2oBSRpE5zJPUhJjO8yUaqypUToh0XIemuI5LSKcMExLW5++px7ylp4
-         Q+G4EnPTSv1BEBVGHaPxUAOG1bAwEQlhBiphm65QiixLfh+8iQHpxgvRp4rmmVbCiXgP
-         +G4eE2PpKXkDAwInyc0+aM47axZ8RYq2j82JaF++aF79ay7+PFxVbO97/5J+1l6VOgsI
-         vETg==
+        bh=ulm6HXP6hdRkHQzW/BLmx++TLB4SCHFqhDCHGDLiv5k=;
+        b=VCUgW+gvGSo/XCfIqo2sYI3PBbjb3wawnETBSCwGVfPCiqHKGOv3DPYvC1eL+jRpLt
+         OeywBaxuHAlyazt97+Ff3g8Sq7DIzxIMjfcC4xCku9dfiNfTXm8Oo84NC5YMuNNdMdx7
+         3fowegU2XrojDa5oIOLxE3D5zHJq2AN/yfPtZqshseVia0n4w6SyyTUGN1zgaWTobRNy
+         ic140FiDKZCKRz79WZ+WkhVse+vyuAXAygWsoclijbqWjQvxrLlURtw+9s7dXcZM8u/m
+         K6mJI3w4e84YnG29lpmarSFNCGD3uKRXaU9mBDutOBZPAyRvR4NMDhecfumiT1c+gQ2L
+         dvow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=4wXkP4Jg2SpgPLNlNFxv80H5dUcR070Yf66C9Z6HJMk=;
-        b=d2XV6xDZJbd/Wc5xRBEv5YPcEEhw6xvNSbTKQ3HCuwzEKnKK+NYIL358rwkIvyxWJl
-         9//FGLYXmoqPnG+sVkwwSZFcSw26eQJU/xR6IoBmIFDMkpbKu3ShpTbA/84oa76uOmKa
-         nvwjYUuxIiTTREwk2E9BaxVtt0bDLNQmbizLeGNpLDcjF0dmnEDPt00Wfhao161zsiom
-         UYgzN+iWCSEicgxGyUagYwW1yQRYkvg0IGbSh9yE15TB53m4W4BR0S5q6tof8WFJrP/x
-         1gfCoQWmCKV+amKGdZ6gTwQtZfTK+OyRcq8NvGxM05IzullUzCsguW84Q6tEWBAHkcgh
-         l7Qw==
-X-Gm-Message-State: AGi0PuZclDe00jQ+BBIgAuFw38/F0TMMOwaTf0pyqQwwdANeP0F/Nb1h
-        AQ8MK3uMiwHyZI2SoM6Cx59tLHLp9yk=
-X-Google-Smtp-Source: APiQypJ2lrl6otM+G6nBiL9EeuYXvwsGAiqWvjGN+NlyKiETI4Foz9VmV53MzLWFGIjTfPzr5oJS6Q==
-X-Received: by 2002:a1c:2007:: with SMTP id g7mr3478215wmg.70.1587023800838;
-        Thu, 16 Apr 2020 00:56:40 -0700 (PDT)
+        bh=ulm6HXP6hdRkHQzW/BLmx++TLB4SCHFqhDCHGDLiv5k=;
+        b=JafDcoiYbcoE4UFJU4fa6iJRXtibizrG3GnX2AryWF8spELz6hS4tdbX7qXbX9v80i
+         dC3kRlpZ+SDBmzsDyjFUsqd5fga/oNd10YquwKVyBj6LtM+jFQ9cZlW2Al8w9KJUsxnT
+         G8Uo0xWkvBP8sfuMd3uDI6ohieTDW5FepQV7pNXp8k3KfCScbI6KSzCNUEHYYG/F8P3n
+         dB/hip6TKcV+dHhlNR0gEVo2JqTyqqpJ5Rjc6f6nSHfpdeN2zbMrYaeUEp6CYR0eniuz
+         VwYaJ6P6n4jzOwtBfci1jQjXaZpW8lNiatn/Hyg1owpLROd7p2MYF7pqBrgLV+LPRd5Q
+         hNDA==
+X-Gm-Message-State: AGi0PuarueIt300u1KgtsVkUVUF+PKLgWAoxiJXXSjVOa6UgbYX3LjCt
+        xNxERpLvdCNXlobjVmyZbW5AEA==
+X-Google-Smtp-Source: APiQypIuyuTdkSr1XavGzGP+CH0F5J2V8jUq1iDBI93URi223iG8SPHxhzLzFDRV4YsUAnVC0qlN2w==
+X-Received: by 2002:a1c:3d83:: with SMTP id k125mr3751097wma.177.1587023782932;
+        Thu, 16 Apr 2020 00:56:22 -0700 (PDT)
 Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id l16sm11451926wrp.91.2020.04.16.00.56.39
+        by smtp.googlemail.com with ESMTPSA id s27sm17430055wra.94.2020.04.16.00.56.21
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Apr 2020 00:56:40 -0700 (PDT)
-Subject: Re: [PATCH 07/11] Documentation: dt-bindings: sound: Add details for
- new dai properties
+        Thu, 16 Apr 2020 00:56:22 -0700 (PDT)
+Subject: Re: [PATCH 02/11] ASoC: qcom: lpass: Add struct lpass_dai to store
+ dai clocks pointer
 To:     Ajit Pandey <ajitp@codeaurora.org>, alsa-devel@alsa-project.org,
         broonie@kernel.org, devicetree@vger.kernel.org,
         plai@codeaurora.org, bgoswami@codeaurora.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.com, stephan@gerhold.net
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.com
 References: <1586592171-31644-1-git-send-email-ajitp@codeaurora.org>
- <1586592171-31644-8-git-send-email-ajitp@codeaurora.org>
+ <1586592171-31644-3-git-send-email-ajitp@codeaurora.org>
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <d7ed94e7-639e-9c94-6092-e769a2fc6ad1@linaro.org>
-Date:   Thu, 16 Apr 2020 08:56:39 +0100
+Message-ID: <3b6fb5bf-c580-a543-ab70-d08113193a34@linaro.org>
+Date:   Thu, 16 Apr 2020 08:56:21 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1586592171-31644-8-git-send-email-ajitp@codeaurora.org>
+In-Reply-To: <1586592171-31644-3-git-send-email-ajitp@codeaurora.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -86,75 +86,214 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 On 11/04/2020 09:02, Ajit Pandey wrote:
-> Add changes related to new sub node defining MI2S dai's properties. Such
-> properties needs to be configured via board specific dts files.
+> lpass_dai will store clocks related to respective dai's and it will
+> be initialized during probe based on variant clock names.
 > 
-+Adding Stephan Gerlhold
+> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
 
-Have a look at https://www.spinics.net/lists/alsa-devel/msg107224.html 
-patches from Stephan Gerlhold which has better version of specifying sd 
-line mask and is inline with DSP based solution too.
+I dont understand why do we need this change? What is the advantage of 
+doing this way vs the existing one?
+
 
 --srini
 
-> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
 > ---
->   .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  | 33 ++++++++++++++++++++++
->   1 file changed, 33 insertions(+)
+>   sound/soc/qcom/lpass-cpu.c | 89 ++++++++++++++++++++++++++--------------------
+>   sound/soc/qcom/lpass.h     | 18 +++++-----
+>   2 files changed, 61 insertions(+), 46 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
-> index a87a406..727ec03 100644
-> --- a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
-> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
-> @@ -16,6 +16,8 @@ description: |
->     configure Low-Power Audio Interface(LPAIF) core registers across different
->     IP versions.
+> diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
+> index dbce7e9..492f27b 100644
+> --- a/sound/soc/qcom/lpass-cpu.c
+> +++ b/sound/soc/qcom/lpass-cpu.c
+> @@ -23,13 +23,15 @@ static int lpass_cpu_daiops_set_sysclk(struct snd_soc_dai *dai, int clk_id,
+>   		unsigned int freq, int dir)
+>   {
+>   	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
+> -	int ret;
+> -
+> -	ret = clk_set_rate(drvdata->mi2s_osr_clk[dai->driver->id], freq);
+> -	if (ret)
+> -		dev_err(dai->dev, "error setting mi2s osrclk to %u: %d\n",
+> -			freq, ret);
+> +	struct lpass_dai *dai_data = drvdata->dai_priv[dai->driver->id];
+> +	int ret = 0;
 >   
-> +  See also dt-bindings/sound/qcom,lpass.h.
-> +
->   properties:
->     compatible:
->       enum:
-> @@ -69,6 +71,30 @@ properties:
->     '#sound-dai-cells':
->       const: 1
+> +	if (dai_data->osr_clk != NULL) {
+> +		ret = clk_set_rate(dai_data->osr_clk, freq);
+> +		if (ret)
+> +			dev_err(dai->dev, "error setting mi2s osrclk to %u:%d\n",
+> +				freq, ret);
+> +	}
+>   	return ret;
+>   }
 >   
-> +  dai-name:
-> +    - description: Each node represents an MI2S dai and conatins dai specific
-> +        properties that may change with board layout & dai connections.
-> +    - type: object
-> +    - properties:
-> +      id:
-> +        - description: dai id among one of value defined in header
-> +        - type: u32
-> +      qcom,spkmode-mask:
-> +        - description: mask defining data lines used for speaker
-> +        - type: u32
-> +      qcom,micmode-mask:
-> +        - description: mask defining data lines used for mic
-> +        - type: u32
-> +      qcom,wssrc-mask:
-> +        - description: mask defining word-select source internal/extrnal on dai
-> +        - type: u32
-> +      qcom,loopback-mask:
-> +        - description: mask defining loopback enable/disable on dai
-> +        - type: u32
-> +
-> +      required:
-> +        - id
-> +
->   required:
->     - compatible
->     - reg
-> @@ -101,3 +127,10 @@ examples:
->   	#sound-dai-cells = <1>;
->   	qcom,adsp = <&adsp>;
+> @@ -37,18 +39,22 @@ static int lpass_cpu_daiops_startup(struct snd_pcm_substream *substream,
+>   		struct snd_soc_dai *dai)
+>   {
+>   	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
+> +	struct lpass_dai *dai_data = drvdata->dai_priv[dai->driver->id];
+>   	int ret;
 >   
-> +        prim-mi2s@0 {
-> +		id = <MI2S_PRIMARY>;
-> +		qcom,spkmode-mask = <SD1>;
-> +		qcom,micmode-mask = <SD0>;
-> +                qcom,wssrc-mask = <INTERNAL>;
-> +                qcom,loopback-mask = <DISABLE>;
-> +	};
+> -	ret = clk_prepare_enable(drvdata->mi2s_osr_clk[dai->driver->id]);
+> -	if (ret) {
+> -		dev_err(dai->dev, "error in enabling mi2s osr clk: %d\n", ret);
+> -		return ret;
+> +	if (dai_data->osr_clk != NULL) {
+> +		ret = clk_prepare_enable(dai_data->osr_clk);
+> +		if (ret) {
+> +			dev_err(dai->dev,
+> +				"error in enabling mi2s osr clk: %d\n", ret);
+> +			return ret;
+> +		}
+>   	}
+>   
+> -	ret = clk_prepare_enable(drvdata->mi2s_bit_clk[dai->driver->id]);
+> +	ret = clk_prepare_enable(dai_data->bit_clk);
+>   	if (ret) {
+>   		dev_err(dai->dev, "error in enabling mi2s bit clk: %d\n", ret);
+> -		clk_disable_unprepare(drvdata->mi2s_osr_clk[dai->driver->id]);
+> +		clk_disable_unprepare(dai_data->osr_clk);
+>   		return ret;
+>   	}
+>   
+> @@ -59,16 +65,18 @@ static void lpass_cpu_daiops_shutdown(struct snd_pcm_substream *substream,
+>   		struct snd_soc_dai *dai)
+>   {
+>   	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
+> +	struct lpass_dai *dai_data = drvdata->dai_priv[dai->driver->id];
+>   
+> -	clk_disable_unprepare(drvdata->mi2s_bit_clk[dai->driver->id]);
+> +	clk_disable_unprepare(dai_data->bit_clk);
+>   
+> -	clk_disable_unprepare(drvdata->mi2s_osr_clk[dai->driver->id]);
+> +	clk_disable_unprepare(dai_data->osr_clk);
+>   }
+>   
+>   static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
+>   		struct snd_pcm_hw_params *params, struct snd_soc_dai *dai)
+>   {
+>   	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
+> +	struct lpass_dai *dai_data = drvdata->dai_priv[dai->driver->id];
+>   	snd_pcm_format_t format = params_format(params);
+>   	unsigned int channels = params_channels(params);
+>   	unsigned int rate = params_rate(params);
+> @@ -163,8 +171,7 @@ static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
+>   		return ret;
+>   	}
+>   
+> -	ret = clk_set_rate(drvdata->mi2s_bit_clk[dai->driver->id],
+> -			   rate * bitwidth * 2);
+> +	ret = clk_set_rate(dai_data->bit_clk, rate * bitwidth * 2);
+>   	if (ret) {
+>   		dev_err(dai->dev, "error setting mi2s bitclk to %u: %d\n",
+>   			rate * bitwidth * 2, ret);
+> @@ -413,6 +420,25 @@ static bool lpass_cpu_regmap_volatile(struct device *dev, unsigned int reg)
+>   	.cache_type = REGCACHE_FLAT,
+>   };
+>   
+> +static int lpass_init_dai_clocks(struct device *dev,
+> +			   struct lpass_data *drvdata)
+> +{
+> +	struct lpass_dai *dai;
+> +	struct lpass_variant *v = drvdata->variant;
+> +	int i;
+> +
+> +	for (i = 0; i < v->num_dai; i++) {
+> +
+> +		dai = drvdata->dai_priv[i];
+> +
+> +		dai->osr_clk = devm_clk_get_optional(dev,
+> +						     v->dai_osr_clk_names[i]);
+> +		dai->bit_clk = devm_clk_get(dev, v->dai_bit_clk_names[i]);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>   int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
+>   {
+>   	struct lpass_data *drvdata;
+> @@ -421,7 +447,7 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
+>   	struct lpass_variant *variant;
+>   	struct device *dev = &pdev->dev;
+>   	const struct of_device_id *match;
+> -	int ret, i, dai_id;
+> +	int ret, i;
+>   
+>   	dsp_of_node = of_parse_phandle(pdev->dev.of_node, "qcom,adsp", 0);
+>   	if (dsp_of_node) {
+> @@ -467,28 +493,15 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
+>   		variant->init(pdev);
+>   
+>   	for (i = 0; i < variant->num_dai; i++) {
+> -		dai_id = variant->dai_driver[i].id;
+> -		drvdata->mi2s_osr_clk[dai_id] = devm_clk_get(&pdev->dev,
+> -					     variant->dai_osr_clk_names[i]);
+> -		if (IS_ERR(drvdata->mi2s_osr_clk[dai_id])) {
+> -			dev_warn(&pdev->dev,
+> -				"%s() error getting optional %s: %ld\n",
+> -				__func__,
+> -				variant->dai_osr_clk_names[i],
+> -				PTR_ERR(drvdata->mi2s_osr_clk[dai_id]));
+> -
+> -			drvdata->mi2s_osr_clk[dai_id] = NULL;
+> -		}
+> +		drvdata->dai_priv[i] = devm_kzalloc(dev,
+> +						sizeof(struct lpass_dai),
+> +						GFP_KERNEL);
+> +	}
+>   
+> -		drvdata->mi2s_bit_clk[dai_id] = devm_clk_get(&pdev->dev,
+> -						variant->dai_bit_clk_names[i]);
+> -		if (IS_ERR(drvdata->mi2s_bit_clk[dai_id])) {
+> -			dev_err(&pdev->dev,
+> -				"error getting %s: %ld\n",
+> -				variant->dai_bit_clk_names[i],
+> -				PTR_ERR(drvdata->mi2s_bit_clk[dai_id]));
+> -			return PTR_ERR(drvdata->mi2s_bit_clk[dai_id]);
+> -		}
+> +	ret = lpass_init_dai_clocks(dev, drvdata);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "error intializing dai clock: %d\n", ret);
+> +		return ret;
+>   	}
+>   
+>   	drvdata->ahbix_clk = devm_clk_get(&pdev->dev, "ahbix-clk");
+> diff --git a/sound/soc/qcom/lpass.h b/sound/soc/qcom/lpass.h
+> index 17113d3..b729686 100644
+> --- a/sound/soc/qcom/lpass.h
+> +++ b/sound/soc/qcom/lpass.h
+> @@ -13,9 +13,14 @@
+>   #include <linux/platform_device.h>
+>   #include <linux/regmap.h>
+>   
+> -#define LPASS_AHBIX_CLOCK_FREQUENCY		131072000
+> -#define LPASS_MAX_MI2S_PORTS			(8)
+> -#define LPASS_MAX_DMA_CHANNELS			(8)
+> +#define LPASS_AHBIX_CLOCK_FREQUENCY            131072000
+> +#define LPASS_MAX_MI2S_PORTS                   (8)
+> +#define LPASS_MAX_DMA_CHANNELS                 (8)
+> +
+> +struct lpass_dai {
+> +	struct clk *osr_clk;
+> +	struct clk *bit_clk;
+> +};
+>   
+>   /* Both the CPU DAI and platform drivers will access this data */
+>   struct lpass_data {
+> @@ -23,11 +28,8 @@ struct lpass_data {
+>   	/* AHB-I/X bus clocks inside the low-power audio subsystem (LPASS) */
+>   	struct clk *ahbix_clk;
+>   
+> -	/* MI2S system clock */
+> -	struct clk *mi2s_osr_clk[LPASS_MAX_MI2S_PORTS];
+> -
+> -	/* MI2S bit clock (derived from system clock by a divider */
+> -	struct clk *mi2s_bit_clk[LPASS_MAX_MI2S_PORTS];
+> +	/* MI2S dai specific configuration */
+> +	struct lpass_dai *dai_priv[LPASS_MAX_MI2S_PORTS];
+>   
+>   	/* low-power audio interface (LPAIF) registers */
+>   	void __iomem *lpaif;
 > 
