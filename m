@@ -2,87 +2,64 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA527C352BE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 19:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765CFC2BB55
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 19:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9151322201
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 19:32:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587065526;
-	bh=faeVG1iBVTsY8w/ZkqXkbv9iMR9B057DVl0dWMgnh0A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JKG57hyWD/xnhKbRBqOqh6SyMasBTiSNd7LGRgFMUw9dKEE0nEF7RKokzVK/AyuZJ
-	 IMg+GuuNHX29S4zfsIvIivWHoCe/FopjnKJ0tdj+tXErrVJAkzhjuVnQ77QTucLbDh
-	 0RElJcz4VsdYWme71neONAY2qMFWT3qo6kyt/JqE=
+	by mail.kernel.org (Postfix) with ESMTP id 5D2E420786
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 19:45:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731075AbgDPTcG (ORCPT
+        id S1727839AbgDPTpS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 15:32:06 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:33367 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728664AbgDPTcF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 15:32:05 -0400
-Received: by mail-oo1-f66.google.com with SMTP id b17so906700ooa.0;
-        Thu, 16 Apr 2020 12:32:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G2KfsHLol0MxR420xNgeMgYQ50fxqR1O3iC2ZHpUZCI=;
-        b=XlQRNX46xNOgIpzbJem5CSH6woGZBYzcSHE3vXyRWHNgBa07OZbPNzgCxWPBz+9pme
-         S5iefyIjt4j8OupGfhtqKOYcbz8/SETcwtiVMVW5cKJgZPjUQAmmGODnSEDt2kNyICmw
-         52PkbeGTqkHHi2UcMSnocjifLHPn/mpTb6VVXOW6xYn1R/UjhNBLn6FL+X2+gsitqM3x
-         KbtQJoJ84oCbA+N2VLolAprct3zK2Mv6t7nkkaEfefDz8Ul/ZLAwFIje0SbUhMpughkV
-         gXs0iyGCWki9m5KAVjOm6mNCe9/rA8JJCyr/lzIlFS4HXEKV8jV9lyUo/dBO++pcD9Dn
-         dPDQ==
-X-Gm-Message-State: AGi0PubK8GJPLiF2UAr5TGLFtY0Kr8Rzh8S4nLjnAXH21hA+Z5UC2OBa
-        dZzyyawkgIUeZe/YRXBgMp4MHmw=
-X-Google-Smtp-Source: APiQypIkMfpzlk1lmK+EBTOhD1SsnV9Gj8mGtLRMMEgrPlQkC3YqpIsnDV4DJjgAdynWvj140tiheA==
-X-Received: by 2002:a4a:95ee:: with SMTP id p43mr27323868ooi.24.1587065523461;
-        Thu, 16 Apr 2020 12:32:03 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t10sm1236678oou.38.2020.04.16.12.32.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 12:32:02 -0700 (PDT)
-Received: (nullmailer pid 21598 invoked by uid 1000);
-        Thu, 16 Apr 2020 19:32:01 -0000
-Date:   Thu, 16 Apr 2020 14:32:01 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     alexandru.tachici@analog.com
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, jic23@kernel.org, robh+dt@kernel.org
-Subject: Re: [PATCH v2 2/2] dt-bindings: iio: dac: AD5570R fix bindings errors
-Message-ID: <20200416193201.GA21490@bogus>
-References: <20200416115848.56156-1-alexandru.tachici@analog.com>
- <20200416115848.56156-3-alexandru.tachici@analog.com>
+        Thu, 16 Apr 2020 15:45:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726164AbgDPTpS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 15:45:18 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20BBAC061A0C;
+        Thu, 16 Apr 2020 12:45:18 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 16AB32A1199;
+        Thu, 16 Apr 2020 20:45:16 +0100 (BST)
+Date:   Thu, 16 Apr 2020 21:45:13 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <lee.jones@linaro.org>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <tony@atomide.com>, marex@denx.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 08/12] mtd: rawnand: stm32_fmc2: use
+ FIELD_PREP/FIELD_GET macros
+Message-ID: <20200416214513.43b7b6e1@collabora.com>
+In-Reply-To: <1586966256-29548-9-git-send-email-christophe.kerello@st.com>
+References: <1586966256-29548-1-git-send-email-christophe.kerello@st.com>
+        <1586966256-29548-9-git-send-email-christophe.kerello@st.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416115848.56156-3-alexandru.tachici@analog.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 16 Apr 2020 14:58:48 +0300, <alexandru.tachici@analog.com> wrote:
-> From: Alexandru Tachici <alexandru.tachici@analog.com>
-> 
-> Replaced num property with reg property, fixed errors
-> reported by dt-binding-check.
-> 
-> Fixes: ea52c21268e6 ("iio: dac: ad5770r: Add AD5770R support")
-> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
-> ---
->  .../bindings/iio/dac/adi,ad5770r.yaml         | 82 +++++++++----------
->  1 file changed, 39 insertions(+), 43 deletions(-)
-> 
+On Wed, 15 Apr 2020 17:57:32 +0200
+Christophe Kerello <christophe.kerello@st.com> wrote:
 
-Applied, thanks.
+> This patch removes custom macros and uses FIELD_PREP and FIELD_GET macros.
 
-Rob
+Oh, nice. I didn't know about these macros. This could have saved me
+from defining a whole bunch of setters/getters in driver code...
+
+
