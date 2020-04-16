@@ -2,106 +2,112 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AEAC2BB55
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 18:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB3EC2BB55
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 18:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA7121924
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 18:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B41052223C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 18:19:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="E7zUJtlD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jOjIXOUN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbgDPSIT (ORCPT
+        id S1729135AbgDPSTy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 14:08:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43230 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728383AbgDPSIT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 14:08:19 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D97F0C061A0C;
-        Thu, 16 Apr 2020 11:08:18 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id x1so1973469ejd.8;
-        Thu, 16 Apr 2020 11:08:18 -0700 (PDT)
+        Thu, 16 Apr 2020 14:19:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbgDPSTx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 14:19:53 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 501C1C061A0C;
+        Thu, 16 Apr 2020 11:19:53 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id i10so5948974wrv.10;
+        Thu, 16 Apr 2020 11:19:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M/GV1V435fNTv1enAJ4SR/cS/jvcRTNBMioIZ9zRVBQ=;
-        b=E7zUJtlDOlHe5lFxFdiJMXe6VHgBlBqRAq/HIzz8vOtD08Io7zQm4KxBjD3DHXBU3p
-         cQF+mIwtvAjMdgpl4IzOyD5RBW8JxARXmrIc6R9/EyX3fSZG/wXwHvp04Myjvu9JvGu6
-         SifC++Xm/0m6KXQTzumns2YrrCmYkNsKiA5x9/0xebPLXBQ2M1mXVDkT7k8eDB15peW2
-         aHHC+RNfCVAkzruf1MKk9i8O1orE2o/dOBWncfQO93vhDI15iQMqGpvOhrBdkF0Abak1
-         UOr88uXK/6ZjnFBVH3qTdr2zd6pHZc9y6M6rYo1lpHOcq85X7IsooURj1b509QF5qMvm
-         Gx/w==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=cEAaXqjbvarVunGK5EIaoB/gFSYviCQxW9/KrEgduNU=;
+        b=jOjIXOUNpqV4vgS2P0e/NN2SML1NfcNU4agJ7hlenV8vJ7aS6bhAXCz9Dn8fBKcD2f
+         pIUPxsoWthEWnS4sy/30qAJcaI/VnP89Z7M4clcCSzK4EWGRkrfyAKAYv3rIE5q+P3IJ
+         aiBiLZQVWgMSSpNy93+Z7GpGHJAQP7b0choQXL0MTXBufxCV39OGP6fUGq71G3bWrUxI
+         EpBvR5rWusmBgI/JJ/S5CFobq7Ublms2NXQc+XRR0K0UnL5QQoSV6o1AzH7IW/68HOuZ
+         682Mt6jHr3UuW+h+3JIIi1bPTcecaos3iPweLmD7GXtMRR7ZUCEbvr5yYlFxqcgBik0f
+         RfMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M/GV1V435fNTv1enAJ4SR/cS/jvcRTNBMioIZ9zRVBQ=;
-        b=SUfkkMn1dZ8/cRe2FvSMWCptShpshj3SxCP+Ri1FeW3UNkzUUgOfXH1CsdqLZ2sXct
-         iMUf3Otl5z+hSoPmL77y/qPn8yL2NL5gu9j30dgpvZh96Qkc2/a5xnoAyytp6hiK/kjy
-         0iC2QeEIYZTyXaxthc32TmIJiE9lQOEjz3xfqyYHD6rG2dIvHw6/iZnDHd6moB4piTdV
-         aRSlHH9YQtIwk3lL/BlSQQPTcF9JEZQCE3D6QNuDJJ32zKh3xAPwJHu5jFDnVJ/P6Bgt
-         4uQvWmv/uRbM+ywDS/f37J8Jkiyk5mZktgh0sGJbsPqLqEWrDFOluW38RgXMURV5BVD6
-         MFZw==
-X-Gm-Message-State: AGi0PuZNRBpT0zY1td0KVqDAL2D1AZddLvX+Z9sEdPivau9kzzM+UpdG
-        bbbMZiCGEhJ85/mu6XD1sBxnx0FdQkp2Wh8IvrU=
-X-Google-Smtp-Source: APiQypKwYkHGxt56C0Q7SaSFBkS/Ts9n2d+vesc4d/k+CGgsFyTfR/Ehj60InmNIJ15VD5fE5OXt4rY0C8t4dTqtkN8=
-X-Received: by 2002:a17:907:2098:: with SMTP id pv24mr10943933ejb.22.1587060497564;
- Thu, 16 Apr 2020 11:08:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
- <c33c8653-16a2-5bcd-97a9-511d958b755a@linux.intel.com> <20200416113822.2ef326cb@collabora.com>
- <18568cf6-2955-472e-7b68-eb35e654a906@linux.intel.com> <20200416122619.2c481792@collabora.com>
- <d3e137fa-54a0-b4ec-eb24-3984eab2a247@linux.intel.com> <20200416131725.51259573@collabora.com>
- <de9f50b8-9215-d294-9914-e49701552185@linux.intel.com> <20200416135711.039ba85c@collabora.com>
-In-Reply-To: <20200416135711.039ba85c@collabora.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 16 Apr 2020 20:08:06 +0200
-Message-ID: <CAFBinCBy2QXFCU9bu6StqNMLLiDBtmvxNNuh+kPc1tgriSGBwQ@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Boris Brezillon <boris.brezillon@collabora.com>,
-        "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     anders.roxell@linaro.org, andriy.shevchenko@intel.com,
-        arnd@arndb.de, brendanhiggins@google.com, cheol.yong.kim@intel.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, masonccyang@mxic.com.tw,
-        miquel.raynal@bootlin.com, piotrs@cadence.com,
-        qi-ming.wu@intel.com, richard@nod.at, robh+dt@kernel.org,
-        tglx@linutronix.de, vigneshr@ti.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=cEAaXqjbvarVunGK5EIaoB/gFSYviCQxW9/KrEgduNU=;
+        b=r0zdtbRDfB3Alv7nSsCnA2jpGBUFcTCrfXPJIlQikDYz97qLnFjqvRg/orhCrB5L6i
+         ctP0YY6xcqr73f4vt3TTQnXM47kT3Dq8TqQsjwE46kHa77nc9ogHNsPKALsJ2WndCwKK
+         eB2f1mwYlIGrtbxDMiVPJ6jbH94mPFiNzbMaDrSeHIezHsBB3WO6YkGcIc+Oj9S6UL4P
+         W+V+Q2kl0uCFyLIFxBSshdpOXUySYU27SbnKeI1Hn6tn2RA56BYM0vR6KsOfVoJd6goS
+         caTHSPjTKPsQXP0mnjkZNhxcO8DP2kg8y9Di7/mNfQ5pFcA3unAOvDvDuUK+S1W9c6+r
+         UnAA==
+X-Gm-Message-State: AGi0PuYU0ys7LZyll0JABP+vMeErJl5My1Q62ytlOoSjM8/0tZeYw3kx
+        BM4ddZ8dM9SXiebLV/bcc92b3nM5
+X-Google-Smtp-Source: APiQypK1DEot7c5BxCRkgoBTWKxlQTrfIXgs2pj3dVp4kUGCzv4aCzV9FQqfjF1BDwwMYWgvn4Cfpw==
+X-Received: by 2002:adf:a18c:: with SMTP id u12mr32028157wru.325.1587061192033;
+        Thu, 16 Apr 2020 11:19:52 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id u17sm31317719wra.63.2020.04.16.11.19.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 Apr 2020 11:19:51 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] arm64: dts: rockchip: add bus-width properties to mmc nodes for rk3328.dtsi
+Date:   Thu, 16 Apr 2020 20:19:42 +0200
+Message-Id: <20200416181944.5879-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Vadivel, Hi Boris,
+'bus-width' and pinctrl containing the bus-pins
+should be in the same file, so add them to
+all mmc nodes in 'rk3328.dtsi'.
 
-On Thu, Apr 16, 2020 at 1:57 PM Boris Brezillon
-<boris.brezillon@collabora.com> wrote:
-[...]
-> As for the testing part, there are 4 scenarios:
->
-> 1/ Your changes work perfectly fine on older platforms. Yay \o/!
-this would be awesome \o/
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> 2/ You break the xway driver and existing users notice it before this
->    series gets merged. Now you found someone to validate your changes.
-The xway_nand driver is still used by 9 (or so) boards in OpenWrt: one
-Danube, one ARX100 and the other 7 with VRX200
-I can be the person to find out whether your changes break one of
-these boards with VRX200 SoC and 128MB SLC NAND (and software ECC
-since AFAIK this SoC doesn't have a hardware ECC engine).
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+index 175060695..db2c3085e 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+@@ -861,6 +861,7 @@
+ 		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
+ 			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
+ 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
++		bus-width = <4>;
+ 		fifo-depth = <0x100>;
+ 		max-frequency = <150000000>;
+ 		status = "disabled";
+@@ -873,6 +874,7 @@
+ 		clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
+ 			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
+ 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
++		bus-width = <4>;
+ 		fifo-depth = <0x100>;
+ 		max-frequency = <150000000>;
+ 		status = "disabled";
+@@ -885,6 +887,7 @@
+ 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
+ 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
+ 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
++		bus-width = <8>;
+ 		fifo-depth = <0x100>;
+ 		max-frequency = <150000000>;
+ 		status = "disabled";
+-- 
+2.11.0
 
-
-Best regards,
-Martin
