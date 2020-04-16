@@ -2,152 +2,133 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8718C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 21:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF91CC352BE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 21:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B70F5206B9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 21:28:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587072526;
-	bh=1W5GV7/V9Tn9maKaBF+xq4SFgOYwywBEJY7SBo772cw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wmot5xPv3URLMMXrCkBWFOv/kT0n1gLHs9vSXqiV6c5Un4gcITogN2PQXxGQg1PWd
-	 JMkK3KrDKb75DbLqwzvQS04Rj8f50gruTWQyEVJltzgET22yCEO8ul8KoH1CbVNq3a
-	 E1Dj/hovzlybjDRdgZoYmTzx3N8XA9uFthlSANYM=
+	by mail.kernel.org (Postfix) with ESMTP id C062E206D5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 21:30:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F+76JoX2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgDPV2q (ORCPT
+        id S1725856AbgDPVao (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 17:28:46 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35688 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbgDPV2p (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 17:28:45 -0400
-Received: by mail-oi1-f194.google.com with SMTP id b7so293107oic.2;
-        Thu, 16 Apr 2020 14:28:45 -0700 (PDT)
+        Thu, 16 Apr 2020 17:30:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725843AbgDPVal (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 17:30:41 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E227C061A0C;
+        Thu, 16 Apr 2020 14:30:41 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id e12so14990pgj.6;
+        Thu, 16 Apr 2020 14:30:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F59MCAy9LQ39t9b94uz/vF55cBc/ty5ftnkMrjUeMVI=;
+        b=F+76JoX2R7sUagBs5MiZtTABq0cgtV+vyQR+Pq0aOKntIcRM+e75S9VZPbYgX+4O35
+         r2iDAKA9feHsDg2oq2V8HbPB7rb1IbMWWnV91YEmvAeuS/wb00lNv8S/b59cVyCbNmoI
+         v0qg2uie9OZvu/aEKifWzzNGkDiYsvXl/ebCuzDMJyooHo9v9plc0T5enusQhD1HRJhQ
+         NCib4b4yxg03NdKVXBqT7s7sudY8OZINEnlICKS38rHSiBGGhrFq0m2JNNfJ7smKua9c
+         uMwPAEVQOM/3xroHC415fZ323fbfwaGmYwSIWFfIdLZdinMSTPCmG5svP9sswxgVc2Wx
+         QHkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aZDi6M75xZSmYWePqnnoB2rg9ADM0ASJydJXaT8e6cw=;
-        b=cz9Bza8i+enE7ijRp4/UurlFtuvEdZucR19pyNWXNWbQ7wdUhoKLBj1a5cFsBGhTRQ
-         jGLXxv1MOj69Q7MVbsZ7sPiGj8Uhq8S9DA4Kr6o83blJ/PqEyCaHrfMi5sW5jpBkn6Zq
-         60ERJjY6hockxC8Eutsq9P2XYRCW5fqhhaEHAYi7zhw3FRTzJkDV245qDuwFmzBEiDDg
-         BwKir3sfASDlGt+R05Dh9y8rjJNjVRM9FFKDORolZJCYehO1Cyx4a7XRWHD5s3hyCgIa
-         Y0LUiOHveSCb54UG87bC5FjF089qp5YhY5mnszd8VwxQSmU9gJJe/UgpPj3Zo+wiG0wQ
-         IPkw==
-X-Gm-Message-State: AGi0PuaGSuk7qqbb5J2VRpIb68RvyBbftYv7EXjJkPZqH1DmhR0swvFr
-        gn28zuVcoG49uRVg1P9l8A==
-X-Google-Smtp-Source: APiQypIRlMbrSk467b8ch8GEIs0tdW1iIBJ5clIPnKZJ1NATxlpFo+/Ezfx3Bv68xYsrgs91PDj6mA==
-X-Received: by 2002:a05:6808:992:: with SMTP id a18mr110243oic.142.1587072524616;
-        Thu, 16 Apr 2020 14:28:44 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z12sm7405057otk.24.2020.04.16.14.28.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 14:28:43 -0700 (PDT)
-Received: (nullmailer pid 29393 invoked by uid 1000);
-        Thu, 16 Apr 2020 21:28:42 -0000
-Date:   Thu, 16 Apr 2020 16:28:42 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/4] dt-bindings: power: reset: Add regmap support to the
- SYSCON reboot-mode bindings
-Message-ID: <20200416212842.GA18756@bogus>
-References: <20200306130341.9585-1-Sergey.Semin@baikalelectronics.ru>
- <20200306130402.1F4F0803079F@mail.baikalelectronics.ru>
- <20200312211438.GA21883@bogus>
- <20200313130231.wrvvcttm7ofaxbfo@ubsrv2.baikal.int>
- <CAL_Jsq+W84r687zNV=2S-hj9=xbTQxkx9MpVNDTn6TOrBgiGUw@mail.gmail.com>
- <20200331195053.dcexmhbsbnbfuabe@ubsrv2.baikal.int>
- <20200416195620.4q6scqk5rqbonz4s@ubsrv2.baikal.int>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F59MCAy9LQ39t9b94uz/vF55cBc/ty5ftnkMrjUeMVI=;
+        b=fzWv5GWkjlU65LKtulrmQiwM3hluoVFKmTRsJ/pb/SkJ681FYflzWwPBWrOzY9kpL3
+         3XUqu+eMgqadwiP9DqhcNTIe62roDF6NhrBdRPhEAgr2WSYp1qux6eyhW99gp19o+Svo
+         5qVdk9ZS1Dg0Bsq4+SR5FpXJQPJ6JQCUo5j7uEGD4uhaHcOSUyuhZqvauMb6Kw82iFxN
+         N2KGjmVX3aZJVlLVirW+H+Pjs6kkPFCXFInhE93+5tpXieCUyZO4XTzJb16KoCFifVlm
+         HsebLmm/4mb344/p68TAVQy/ZACGeqoO1C991PC7iqnIRBxwK59Bln9HnT0kH04inFDE
+         D6lw==
+X-Gm-Message-State: AGi0PuaTBrzEPQoTwBm7Ud6Wdy7qLEUWwkaqKSHDsFkWfJtXqTL9hu8a
+        joHdgEDcv9DEWM0rlRmB8q9mYJ/w6aysLUDCdvqmocPXGYA=
+X-Google-Smtp-Source: APiQypKbsEwv7dyMRMPJoBQNj/KvDFB5w7W5P0FHGG1weQUmw4bO5gMc9e2umvdhLDeoCPYVHjIesY8EPzX4ASZJHQA=
+X-Received: by 2002:a63:5511:: with SMTP id j17mr17300739pgb.4.1587072641114;
+ Thu, 16 Apr 2020 14:30:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416195620.4q6scqk5rqbonz4s@ubsrv2.baikal.int>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200416175729.5550-1-mani@kernel.org>
+In-Reply-To: <20200416175729.5550-1-mani@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 17 Apr 2020 00:30:28 +0300
+Message-ID: <CAHp75Ve6V+gm_KXqMpG8bn7KtHjOctomZwk8n_6xwtx6cFdKfw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Add CTS/RTS gpio support to STM32 UART
+To:     Manivannan Sadhasivam <mani@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 10:56:20PM +0300, Sergey Semin wrote:
-> Rob,
-> Any comment on my suggestion below?
-> 
-> Regards,
-> -Sergey
-> 
-> On Tue, Mar 31, 2020 at 10:50:53PM +0300, Sergey Semin wrote:
-> > On Wed, Mar 18, 2020 at 05:14:25PM -0600, Rob Herring wrote:
-> > > On Fri, Mar 13, 2020 at 7:03 AM Sergey Semin
-> > > <Sergey.Semin@baikalelectronics.ru> wrote:
-> > > >
-> > > > On Thu, Mar 12, 2020 at 04:14:38PM -0500, Rob Herring wrote:
-> > > > > On Fri, Mar 06, 2020 at 04:03:40PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > > > > > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > > > >
-> > > > > > Optional regmap property will be used to refer to a syscon-controller
-> > > > > > having a reboot tolerant register mapped.
-> > > > >
-> > > > > NAK. It should simply be a child node of the 'syscon-controller'.
-> > > >
-> > > > Hm, It's dilemma. The driver maintainer said ack, while you disagree.)
-> > > > So the code change will be merged while the doc-part won't? Lets discuss then
-> > > > to settle the issue.
-> > > >
-> > > > Why 'syscon-reboot' can be out of syscon-controller node, while
-> > > > 'syscon-reboot-mode' can't?
-> > > 
-> > > Look at the history and you will see one was reviewed by DT
-> > > maintainers and one wasn't.
-> > > 
-> > > > They both belong to the same usecase: save
-> > > > cause id and reboot. So having similar properties-set and declaring their
-> > > > nodes someplace nearby is natural.
-> > > 
-> > > Which is what I'm asking for. Where else in the tree does it make
-> > > sense to locate the 'syscon-reboot-mode' node? Locate nodes where they
-> > > logically belong.
-> > > 
-> > > > According to the driver 'syscon-reboot'
-> > > > can't lack the regmap property because it's mandatory, while here you refuse
-> > > > to have even optional support. Additionally in most of the cases the
-> > > > 'syscon-reboot' nodes aren't declared as a child of a system controller
-> > > > node. Why 'syscon-reboot-mode' can't work in a similar way?
-> > > 
-> > > There's plenty of bad or "don't follow current best practice" examples
-> > > in the tree for all sorts of things. That is not a reason for doing
-> > > something in a new binding or adding to an existing one.
-> > > 
-> > > Rob
-> > 
-> > Alright. I see your point. What about I'd provide a sort of opposite
-> > implementation? I could make the "regmap"-phandle reference being optional
-> > in the !"syscon-reboot"! driver instead of adding the regmap-property
-> > support to the "syscon-reboot-mode" driver. So if regmap property isn't
-> > defined in the "syscon-reboot"-compatible node, the driver will try to
-> > get a syscon regmap from the parental node as it's done in the
-> > "syscon-reboot-mode" driver.
+On Thu, Apr 16, 2020 at 8:58 PM <mani@kernel.org> wrote:
+>
+> From: Manivannan Sadhasivam <mani@kernel.org>
+>
+> Hello,
+>
+> This patchset adds CTS/RTS gpio support to STM32 UART controller.
+> Eventhough the UART controller supports using dedicated CTS/RTS gpios,
+> sometimes we need to use different set of gpios for flow control.
+>
+> This is necessary for the upcoming STM32MP1 based board called Stinger96
+> IoT-Box. On that board, a bluetooth chip is connected to one of the UART
+> controller but the CTS/RTS lines got swapped mistakenly. So this patchset
+> serves as a workaround for that hardware bug and also supports the
+> usecase of using any gpio for CTS/RTS functionality. As per the sugggestion
+> provided by Andy for v1, I've now switched to mctrl_gpio driver.
+>
+> This patchset has been validated with Stinger96 IoT-Box connected to Murata
+> WiFi-BT combo chip.
+>
 
-That seems fine.
+Looks good to me,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-> > Seeing you think that regmap-property-based design is a bad practice in
-> > this case, I also could mark the property as deprecated in the "syscon-reboot"
-> > dt schema and print a warning from the "syscon-reboot" driver if one is defined.
+> Thanks,
+> Mani
+>
+> Changes in v2:
+>
+> As per the review by Andy:
+>
+> * Switched to mctrl_gpio driver instead of using custom CTS/RTS
+>   implementation
+> * Removed the use of software flow control terminology.
+>
+> Manivannan Sadhasivam (2):
+>   tty: serial: Add modem control gpio support for STM32 UART
+>   dt-bindings: serial: Document CTS/RTS gpios in STM32 UART
+>
+>  .../bindings/serial/st,stm32-uart.yaml        | 14 ++++++
+>  drivers/tty/serial/Kconfig                    |  1 +
+>  drivers/tty/serial/stm32-usart.c              | 43 ++++++++++++++++++-
+>  drivers/tty/serial/stm32-usart.h              |  1 +
+>  4 files changed, 58 insertions(+), 1 deletion(-)
+>
+> --
+> 2.17.1
+>
 
-Depends on how many platforms will start getting warnings. I think just 
-marking deprecated is enough.
 
-Rob
+-- 
+With Best Regards,
+Andy Shevchenko
