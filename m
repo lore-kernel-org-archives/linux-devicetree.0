@@ -2,200 +2,228 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E604C3815B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 16:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B128FC2BB85
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 16:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD4522244
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 16:23:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587054191;
-	bh=dYe0L8knPjq4V+e3C0CynMr68uvk2h/61C1ujyYiF70=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kPHLk0dZq306ul+yey1H6HF6PvOYPiPWqJcbT1FEWCyOnxoKJEkmWYJ/pECvK9nJ9
-	 lXbLSarqn9eEqPG4C57XbxeraPTFCQG1YxBqW6TVfxtO+TMXKfBhSHoErMtTqMFgpo
-	 bofiuEuOti3HJOUL1oTTrNXYVUn5IYGuYY32wr5o=
+	by mail.kernel.org (Postfix) with ESMTP id 93B1421D7E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 16:29:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733188AbgDPQXJ (ORCPT
+        id S2405880AbgDPQ32 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 12:23:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50818 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729633AbgDPQXG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 12:23:06 -0400
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A03322250;
-        Thu, 16 Apr 2020 16:23:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587054185;
-        bh=dYe0L8knPjq4V+e3C0CynMr68uvk2h/61C1ujyYiF70=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=m92+j7PyJJqSdIZDHDYxGpMk1MSTdEN3OfxmyZ5uDz3gYONFBBkjqZfnO2V19s6L3
-         uWSFke5h6gqhJSuJUX/v4SaHaHZp1FcOjeDRIRraalXi9n50/SXBviV2xU4LGfnrd5
-         Ek5R1e51qljTWjy8yVonj+VDn0jnnD+E/Zrj+BWE=
-Received: by mail-ej1-f41.google.com with SMTP id s9so1713435eju.1;
-        Thu, 16 Apr 2020 09:23:05 -0700 (PDT)
-X-Gm-Message-State: AGi0Pub+htmOBUicEH+5GKsykiMe17NI6O3zbKw5fJhuoYhKKWaSnVMl
-        iiyvH0OSeZ6gsKPZPhfJWdV5hJ+GlP/+Qprujw==
-X-Google-Smtp-Source: APiQypJY17+s5/o0+wlz0famZC0WrI5UI7Klts8JPoOZRnB9zgY8QO2uzy/FBMWzeg9CvxriYGO6Q1j1IF4pKi5aPZw=
-X-Received: by 2002:a17:906:2ad4:: with SMTP id m20mr10975923eje.324.1587054183934;
- Thu, 16 Apr 2020 09:23:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200311165322.1594233-1-enric.balletbo@collabora.com>
- <20200311165322.1594233-5-enric.balletbo@collabora.com> <02290a21-7392-a2cf-576c-215091ec05e8@suse.com>
- <1585177534.26117.4.camel@mtksdaap41> <f3c2926a-ef92-b004-9786-5be1645af497@suse.com>
- <1585234277.12089.3.camel@mtksdaap41> <73ef0b8e-2802-a047-2a56-936b63d264cb@suse.com>
-In-Reply-To: <73ef0b8e-2802-a047-2a56-936b63d264cb@suse.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Fri, 17 Apr 2020 00:22:52 +0800
-X-Gmail-Original-Message-ID: <CAAOTY__EV8PHau9CzSiA8up1QAmZxfK2QnaTid0WrNOsn2Xcag@mail.gmail.com>
-Message-ID: <CAAOTY__EV8PHau9CzSiA8up1QAmZxfK2QnaTid0WrNOsn2Xcag@mail.gmail.com>
-Subject: Re: [PATCH v12 4/5] soc / drm: mediatek: Move routing control to
- mmsys device
-To:     Matthias Brugger <mbrugger@suse.com>
-Cc:     CK Hu <ck.hu@mediatek.com>, Mark Rutland <mark.rutland@arm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        David Airlie <airlied@linux.ie>,
-        Michael Turquette <mturquette@baylibre.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        ulrich.hecht+renesas@gmail.com,
+        Thu, 16 Apr 2020 12:29:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1733145AbgDPQ30 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 12:29:26 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8DB9C061A0C;
+        Thu, 16 Apr 2020 09:29:25 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id BA4EB2A22CA
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Collabora Kernel ML <kernel@collabora.com>,
-        linux-clk@vger.kernel.org, Weiyi Lu <weiyi.lu@mediatek.com>,
-        wens@csie.org, Allison Randal <allison@lohutok.net>,
-        mtk01761 <wendell.lin@mediatek.com>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Seiya Wang <seiya.wang@mediatek.com>, sean.wang@mediatek.com,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rdunlap@infradead.org, linux-kernel <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>, matthias.bgg@kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mark Rutland <mark.rutland@arm.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Philippe CORNU <philippe.cornu@st.com>
+Subject: Re: [PATCH] dt-bindings: display: dw_mipi_dsi.txt: convert to yaml
+In-Reply-To: <CAL_JsqLyEjXjeADvxztT0kg6Sc-VASUeBPr0jJAwS39PckQjpw@mail.gmail.com>
+References: <20200416125207.425271-1-adrian.ratiu@collabora.com>
+ <CAL_JsqLyEjXjeADvxztT0kg6Sc-VASUeBPr0jJAwS39PckQjpw@mail.gmail.com>
+Date:   Thu, 16 Apr 2020 19:30:32 +0300
+Message-ID: <87r1wnjsuv.fsf@adirat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; format=flowed
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Matthias:
+Hi Rob,
 
-Matthias Brugger <mbrugger@suse.com> =E6=96=BC 2020=E5=B9=B43=E6=9C=8826=E6=
-=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8811:45=E5=AF=AB=E9=81=93=EF=BC=
-=9A
->
->
->
-> On 26/03/2020 15:51, CK Hu wrote:
-> > Hi, Matthias:
-> >
-> > On Thu, 2020-03-26 at 12:54 +0100, Matthias Brugger wrote:
-> >> Hi CK,
-> >>
-> >> On 26/03/2020 00:05, CK Hu wrote:
-> >>> Hi, Matthias:
-> >>>
-> >>> On Wed, 2020-03-25 at 17:16 +0100, Matthias Brugger wrote:
-> >>>>
-> >>>> On 11/03/2020 17:53, Enric Balletbo i Serra wrote:
-> >>>>> Provide a mtk_mmsys_ddp_connect() and mtk_mmsys_disconnect() functi=
-ons to
-> >>>>> replace mtk_ddp_add_comp_to_path() and mtk_ddp_remove_comp_from_pat=
-h().
-> >>>>> Those functions will allow DRM driver and others to control the dat=
-a
-> >>>>> path routing.
-> >>>>>
-> >>>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com=
->
-> >>>>> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> >>>>> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> >>>>> Acked-by: CK Hu <ck.hu@mediatek.com>
-> >>>>
-> >>>> This patch does not apply against v5.6-rc1.
-> >>>> Please rebase as this is a quite big patch and it won't be easy to d=
-o that by hand.
-> >>>
-> >>> I think this patch depends on [1] which has been acked by me and I ha=
-ve
-> >>> not picked it. The simple way is that you pick [1] first and then pic=
-k
-> >>> this series.
-> >>>
-> >>> [1]
-> >>> https://patchwork.kernel.org/patch/11406227/
-> >>>
-> >>
-> >> You would need to provide a stable tag for me that I can merge into my=
- tree. You
-> >> can also try to merge my for-next [1] which has the newest version fro=
-m Enric.
-> >> If you see any merge conflict, then we have to do something about it :=
-)
-> >>
-> >> Regards,
-> >> Matthias
-> >>
-> >> [1]
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/matthias.bgg/linux.git=
-/log/?h=3Dfor-next
-> >>
-> >
-> > You have applied this series, so I would not apply other patches which
-> > would conflict with this series. After this series land on main stream
-> > (wish it happen in this merge window), I would rebase other patch on
-> > main stream.
-> >
->
-> I haven't (yet) send the pull request. If you want to bring in your patch=
-es in
-> v5.7 as well we can find a solution to that. Shall I provide you with a s=
-table
-> branch which you can merge? This way you can add all your patches in the =
-pull
-> request as well and we don't have to wait for v5.8 to get things into mai=
-nline.
->
-> Let me know and I'll provide you with a stable branch.
+Thank you for the review, I will address all your points in v2, 
+however I have a one neclarity below.
 
-This series is in linux-next but does not in main stream. So would you
-please provide a stable branch so I could pull this series?
-
-Regards,
-Chun-Kuang.
-
+On Thu, 16 Apr 2020, Rob Herring <robh@kernel.org> wrote:
+> On Thu, Apr 16, 2020 at 7:51 AM Adrian Ratiu 
+> <adrian.ratiu@collabora.com> wrote: 
+>> 
+>> This converts the Synopsis MIPI DSI binding documentation to 
+>> yaml and should be quite straightforward. I've added a missing 
+>> ref clk and also added Mark and Rob as maintainers based on 
+>> 'get_maintainer.pl' results. 
+>> 
+>> Cc: Rob Herring <robh@kernel.org> Cc: Mark Rutland 
+>> <mark.rutland@arm.com> Cc: devicetree@vger.kernel.org 
+>> Suggested-by: Laurent Pinchart 
+>> <laurent.pinchart@ideasonboard.com> Signed-off-by: Adrian Ratiu 
+>> <adrian.ratiu@collabora.com> --- 
+>>  .../bindings/display/bridge/dw_mipi_dsi.txt   | 32 --------- 
+>>  .../display/bridge/snps,dw-mipi-dsi.yaml      | 66 
+>>  +++++++++++++++++++ 2 files changed, 66 insertions(+), 32 
+>>  deletions(-) delete mode 100644 
+>>  Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt 
+>>  create mode 100644 
+>>  Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml 
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt 
+>> b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt 
+>> deleted file mode 100644 index b13adf30b8d3..000000000000 --- 
+>> a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt 
+>> +++ /dev/null @@ -1,32 +0,0 @@ -Synopsys DesignWare MIPI DSI 
+>> host controller -============================================ - 
+>> -This document defines device tree properties for the Synopsys 
+>> DesignWare MIPI -DSI host controller. It doesn't constitue a 
+>> device tree binding specification -by itself but is meant to be 
+>> referenced by platform-specific device tree -bindings.  - -When 
+>> referenced from platform device tree bindings the properties 
+>> defined in -this document are defined as follows. The platform 
+>> device tree bindings are -responsible for defining whether each 
+>> optional property is used or not.  - -- reg: Memory mapped base 
+>> address and length of the DesignWare MIPI DSI -  host 
+>> controller registers. (mandatory) - -- clocks: References to 
+>> all the clocks specified in the clock-names property -  as 
+>> specified in [1]. (mandatory) - -- clock-names: -  - "pclk" is 
+>> the peripheral clock for either AHB and APB. (mandatory) -  - 
+>> "px_clk" is the pixel clock for the DPI/RGB input. (optional) - 
+>> -- resets: References to all the resets specified in the 
+>> reset-names property -  as specified in [2]. (optional) - -- 
+>> reset-names: string reset name, must be "apb" if 
+>> used. (optional) - -- panel or bridge node: see 
+>> [3]. (mandatory) - -[1] 
+>> Documentation/devicetree/bindings/clock/clock-bindings.txt -[2] 
+>> Documentation/devicetree/bindings/reset/reset.txt -[3] 
+>> Documentation/devicetree/bindings/display/mipi-dsi-bus.txt diff 
+>> --git 
+>> a/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml 
+>> b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml 
+>> new file mode 100644 index 000000000000..0ab4125eee30 --- 
+>> /dev/null +++ 
+>> b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml 
+>> @@ -0,0 +1,66 @@ +# SPDX-License-Identifier: (GPL-2.0-only OR 
+>> BSD-2-Clause) +%YAML 1.2 +--- +$id: 
+>> http://devicetree.org/schemas/display/bridge/snps,dw-mipi-dsi.yaml# 
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml# + 
+>> +title: Synopsys DesignWare MIPI DSI host controller + 
+>> +maintainers: +  - Rob Herring <robh+dt@kernel.org> 
+> 
+> No thanks, I don't know anything about this hardware. It should 
+> be the owner for this binding, not who applies patches. 
 >
-> Regards,
-> Matthias
+
+Sorry about that, I just followed what get_maintainer.pl -f 
+returned.
+
+I'm not sure I understand the owner vs maintainers difference for 
+the "maintainers" entry. How do I find out who is the owner?
+
+Looking at the git log, this file was touched only once when added 
+in 88dd1e6f9ad8 ("dt-bindings: display: Add Synopsys DW MIPI DSI 
+host controller") by Philippe CORNU <philippe.cornu@st.com>.
+
+Is the person who added the file automatically owner?
+
+(cc'd Philippe)
+ 
+>> +  - Mark Rutland <mark.rutland@arm.com> 
+> 
+> Check current maintainers. Mark is not one anymore. 
 >
-> > Regards,
-> > CK
-> >
-> >>> Regards,
-> >>> CK
-> >>>
-> >>>>
-> >>>> Regards,
-> >>>> Matthias
-> >>>>
-> >>>>> ---
-> >>>>>
+
+Yes, I just noticed he got removed in my latest next-20200416 
+tree, thanks.
+
+>> +
+>> +description: |
+>> +  This document defines device tree properties for the Synopsys DesignWare MIPI
+>> +  DSI host controller. It doesn't constitue a device tree binding specification
+>> +  by itself but is meant to be referenced by platform-specific device tree
+>> +  bindings.
+>> +
+>> +  When referenced from platform device tree bindings the properties defined in
+>> +  this document are defined as follows. The platform device tree bindings are
+>> +  responsible for defining whether each property is required or optional.
+>> +
+>
+> Need to reference ($ref) dsi-controller.yaml here.
+>
+>> +properties:
+>> +  reg:
+>> +    description: |
+>> +      Memory mapped base address and length of the DesignWare MIPI DSI host
+>> +      controller registers.
+>
+> Drop the description. That's every 'reg'. You need to say how many
+> regions (maxItems: 1?).
+>
+>> +
+>> +  clocks:
+>> +    description: |
+>> +      References to all the clocks specified in the clock-names property as
+>> +      specified in Documentation/devicetree/bindings/clock/clock-bindings.txt
+>
+> Drop
+>
+>> +    items:
+>> +      - description: Module clock
+>> +      - description: DSI bus colck for either AHB and APB
+>
+> typo
+>
+>> +      - description: Pixel clock for the DPI/RGB input
+>> +    minItems: 2
+>> +    maxItems: 3
+>
+> You can drop 'maxItems'. It's implied by the length of 'items'.
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: ref
+>> +      - const: pclk
+>> +      - const: px_clk
+>> +    minItems: 2
+>> +    maxItems: 3
+>> +
+>> +  resets:
+>> +    description: |
+>> +      References to all the resets specified in the reset-names property as
+>> +      specified in Documentation/devicetree/bindings/reset/reset.txt
+>
+> Drop.
+>
+> You need maxItems to define how many reset entries.
+>
+>> +
+>> +  reset-names:
+>> +    const: apb
+>> +
+>> +patternProperties:
+>> +  "^panel@[0-3]$":
+>> +    type: object
+>> +    description: |
+>> +      A node containing the panel or bridge description as documented in
+>
+> bridge? But the node name says panel only.
+>
+>> +      Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+>
+> Drop description.
+>
+>> +
+>> +required:
+>> +  - reg
+>> +  - clocks
+>> +  - clock-names
+>> --
+>> 2.26.0
+>>
