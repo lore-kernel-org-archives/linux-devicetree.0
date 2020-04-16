@@ -2,120 +2,107 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1501FC2BB85
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 09:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD74C352BE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 09:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFE4921BE5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 09:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB20A21BE5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 09:36:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503822AbgDPJff (ORCPT
+        id S2503787AbgDPJgR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 05:35:35 -0400
-Received: from mga12.intel.com ([192.55.52.136]:43263 "EHLO mga12.intel.com"
+        Thu, 16 Apr 2020 05:36:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35074 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2503787AbgDPJfd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:35:33 -0400
-IronPort-SDR: FaOqx3gjHusiIA7aLJig4pR7+mOB0+oesPCHSTLjldh5LEUDLnD37H5S3l1Gs/de7oyTpQA57F
- 9p/Bk4HRrcew==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 02:35:32 -0700
-IronPort-SDR: xTBdCFZ+AyNj7x+sI6oWf2cORZqbOuteXGFH1D7+A8fhQKnjpK5phcfYqEG1bS0ATPkjdpf+ub
- aTAjF3ZJiA6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
-   d="scan'208";a="242595587"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 16 Apr 2020 02:35:32 -0700
-Received: from [10.255.154.239] (vramuthx-MOBL1.gar.corp.intel.com [10.255.154.239])
-        by linux.intel.com (Postfix) with ESMTP id 3F5C05803E3;
-        Thu, 16 Apr 2020 02:35:28 -0700 (PDT)
-Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     anders.roxell@linaro.org, andriy.shevchenko@intel.com,
-        arnd@arndb.de, boris.brezillon@collabora.com,
-        brendanhiggins@google.com, cheol.yong.kim@intel.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, masonccyang@mxic.com.tw,
-        miquel.raynal@bootlin.com, piotrs@cadence.com,
-        qi-ming.wu@intel.com, richard@nod.at, robh+dt@kernel.org,
-        tglx@linutronix.de, vigneshr@ti.com
-References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <c33c8653-16a2-5bcd-97a9-511d958b755a@linux.intel.com>
-Date:   Thu, 16 Apr 2020 17:35:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S2503898AbgDPJgQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 05:36:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 773B5AD0E;
+        Thu, 16 Apr 2020 09:36:13 +0000 (UTC)
+Message-ID: <aa03258a2db37293b4be56dcd2b3f5f32665c6dc.camel@suse.de>
+Subject: Re: [PATCH] ARM: dts: bcm283x: Disable dsi0 node
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Eric Anholt <eric@anholt.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 16 Apr 2020 11:36:11 +0200
+In-Reply-To: <CADaigPXwfjd-HoOtBm_fuPQ9eh7AKTaJx+ocLsppPFdL3Cr4jg@mail.gmail.com>
+References: <20200415144233.23274-1-nsaenzjulienne@suse.de>
+         <CADaigPXwfjd-HoOtBm_fuPQ9eh7AKTaJx+ocLsppPFdL3Cr4jg@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-CzeniVIMWfPwxKpMT9vR"
+User-Agent: Evolution 3.34.2 
 MIME-Version: 1.0
-In-Reply-To: <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Martin,
 
-     Thank you so much for review comments and your time...
+--=-CzeniVIMWfPwxKpMT9vR
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 16/4/2020 6:05 am, Martin Blumenstingl wrote:
-> Hi,
->
-> first of all: thank you for working on upstreaming this.
-> Especially since you are going to use the new exec_op style in v2 as
-> Boris suggested.
->
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> This patch adds the new IP of Nand Flash Controller(NFC) support
->> on Intel's Lightning Mountain(LGM) SoC.
->>
->> DMA is used for burst data transfer operation, also DMA HW supports
->> aligned 32bit memory address and aligned data access by default.
->> DMA burst of 8 supported. Data register used to support the read/write
->> operation from/to device.
-> I am wondering how this new hardware is different from the Lantiq NAND
-> controller IP - for which there is already a driver in mainline (it's
-> in drivers/mtd/nand/raw/xway_nand.c).
-> The CON and WAIT registers look suspiciously similar.
->
-> As far as I understand the "old" SoCs (VRX200 and earlier) don't have
-> a built-in ECC engine. This seems to have changed with ARX300 though
-> (again, AFAIK).
->
-> A bit of lineage on these SoCs (initially these were developed by
-> Infineon. Lantiq then started as an Infineon spin-off in 2009 and
-> was then acquired by Intel in 2015):
-> - Danube
-> - ARX100 from 2008/2009
-> - VRX200 from 2009/2010
-> - ARX300 from 2014
-> - GRX350 from 2015/2016
-> - GRX550 from 2017
-> - and now finally: LGM from 2020 (est.)
->
-> The existing xway_nand driver supports the Danube, ARX100 and VRX200
-> SoCs.
-Lantiq upstreamed a driver for an older version of this IP core 8 years 
-ago, see here:
-https://elixir.bootlin.com/linux/v5.5.6/source/drivers/mtd/nand/raw/xway_nand.c 
-It does not support DMA and ECC.
-This upstream driver works with the xrx200, I do not know how well it 
-works with other SoCs.
+On Wed, 2020-04-15 at 12:17 -0700, Eric Anholt wrote:
+> On Wed, Apr 15, 2020 at 7:42 AM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > Since its inception the module was meant to be disabled by default, but
+> > the original commit failed to add the relevant property.
+> >=20
+> > Fixes: 4aba4cf82054 ("ARM: dts: bcm2835: Add the DSI module nodes and
+> > clocks")
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > ---
+> >  arch/arm/boot/dts/bcm283x.dtsi | 1 +
+> >  1 file changed, 1 insertion(+)
+> >=20
+> > diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x=
+.dtsi
+> > index e1abe8c730cef..b83a864e2e8ba 100644
+> > --- a/arch/arm/boot/dts/bcm283x.dtsi
+> > +++ b/arch/arm/boot/dts/bcm283x.dtsi
+> > @@ -372,6 +372,7 @@ dsi0: dsi@7e209000 {
+> >                                              "dsi0_ddr2",
+> >                                              "dsi0_ddr";
+> >=20
+> > +                       status =3D "disabled";
+> >                 };
+>=20
+> If you've confirmed that vc4 still probes,
 
-Regards
-Vadivel
->
->
-> Best regards,
-> Martin
+Confirmed.
+
+> Reviewed-by: Eric Anholt <eric@anholt.net>
+
+Thanks,
+Nicolas
+
+
+--=-CzeniVIMWfPwxKpMT9vR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6YJwsACgkQlfZmHno8
+x/4N9wgAqYlPDHTVq7kMKPOn6adydtLBBvfMnRHRMQMXIFhdmuET8wrmugAmzy9y
+DD67algfoFxdsMWGSIApFa1P0Yh2fkI9Wqe9jUIVdFn8od6P7s4ntl1ifzi//UDJ
+BA/iSHNI5AZfeeIarCjijfArnXocnV1qtGC6JypqTtPSXjZW2e3TepNg3WIPTx/W
+iw/7W7KOJC7nxFJ3M89ZGJ+GbZmt4Q3dbjX1CS3CeWNzibqTGqBkG+OsUvfOIs12
+W31QzmL50Qut49DVLk47tL2KxaMOdUoywRHcq2LYIJiN1cyShGGvt4uh80ITC7aw
+EjUyVcq3XKr6b81WqlQz982PVe+0IQ==
+=f98w
+-----END PGP SIGNATURE-----
+
+--=-CzeniVIMWfPwxKpMT9vR--
+
