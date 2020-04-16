@@ -2,230 +2,155 @@ Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDB9C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 00:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0B1C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 00:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42210206D6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 00:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6803208E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 00:52:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nW/gyhjR"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a2XbOiwl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404163AbgDPAbT (ORCPT
+        id S2405240AbgDPAwu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Apr 2020 20:31:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47714 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2403969AbgDPAbP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Apr 2020 20:31:15 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B0F7C061A0C
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 17:31:15 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id p8so788671pgi.5
-        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 17:31:14 -0700 (PDT)
+        Wed, 15 Apr 2020 20:52:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51072 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405196AbgDPAwp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Apr 2020 20:52:45 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40440C061A0F
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 17:52:45 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id e20so1730554otl.2
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 17:52:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OnTP4oD4Bcsx3BkotZcrnHZmBw2+eZRhG9uvLnsU78s=;
-        b=nW/gyhjRXg8/9KsX1p83p5SaUYhOsPE36WDt6I4MjKArvFh4GKr9OOEZOsfFzSzCru
-         F9wOIRTPBo0mWDxfr7naClgKm3A6JntVoclABPDwZdwTO+V9itkM1hxdMp2I79skVt0u
-         QDIWFIbXePobRSCuNtHmLoUYUQrmn+Z1Vt8LE=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oymDymDSGwWgVl7PdrWgMeH1mdt9MH+svEJHIh9ofYo=;
+        b=a2XbOiwlAAQzxczt4QF4WPs7900EFsrLVOxWmAfWFDrYlbOxFqFleRRIhOr+uI8M5f
+         M2cwVJ40d4uDtjkefb7KmLLsMXHjL/sGzNwIx0DMzOlXnR5mb/1snHQ+m68Q4OvzwI+F
+         RFsl2ztnRLmbC/I9LzD4UKpcjD3O1jAdNfCXg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OnTP4oD4Bcsx3BkotZcrnHZmBw2+eZRhG9uvLnsU78s=;
-        b=WUX3O8fSyXkU7uz7/n3WKQCLnvGzjAFU8qI0WV5cASkverLJWS4C3JaVDCLxNse7XL
-         oXpzaKDF/ui6Mi/kGNCgNuJDQCtaY/BVJhid3lU8A5jFhpV1ln4srzPFJgFSzaGiSSGa
-         16WtgX5AMlw9z58QX5sNRE+vd248pJX5yfZcdfJqQuQ+xWE5zC0oB70ZsBztwfQYPokj
-         sCxhdZp1xDqSztCI4/7fICpgppRII2qvZdceZB9HGMdb9okOkC16G/bWumTrJYDTdPLY
-         hsLC4gGzbcKOEgH5pyiuXbTATxf8T/0BtaZwZL97WeNl4QISBmRxOs5Z1suqVslrQsSU
-         THIg==
-X-Gm-Message-State: AGi0PuaYRqjRtNn/G1VGET7T0gXb8NyDfGaA2CxSmRweN7dCMrBW9+KI
-        qSL2zR6hlt+oMQ34+aqLvBrwzA==
-X-Google-Smtp-Source: APiQypJuJPbBT1Ne+dMcDqvrakxLTwgs4y4LFX8rDGEPjDP/udbBZw41qlo8PnFyd1zgnqvlYFWcmQ==
-X-Received: by 2002:a63:310:: with SMTP id 16mr28006470pgd.287.1586997074313;
-        Wed, 15 Apr 2020 17:31:14 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id a13sm5198298pfo.85.2020.04.15.17.31.13
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oymDymDSGwWgVl7PdrWgMeH1mdt9MH+svEJHIh9ofYo=;
+        b=MfSWBgYlYrQxFR4jSB43nXJbTT+9Wz/dz0a8dj4ZS7wq6Qels/DbHWH90OOk67zL7I
+         vvJIil4LApzk05gCBEc/Ugug4EGlZrtoIsO4JQ+S79O8EehxO/sWJRkXin9E/g3MXMGK
+         C0vg0AhCVnvnhEg3XSGc9RTHT2haZXsGHaC2chG49NdW4eKEUn50rXKh9FHMkCjm+84j
+         1ggparTvkKnNmYtrVawghOFQtVEYN1sKxWuPm7bU1PC7ypm6I21+o6HJ4Pc//MIHtCf7
+         yCuFON4+SVjXZBSy5H5P7VkvTAuVap8RfTuPon66YfzuEoqdA5pa0T1gly8Bizans/He
+         jygw==
+X-Gm-Message-State: AGi0PuaOB273+294C2cLJFjxp5CGn9afLCJS+sizoa3ca4YaebGSOPKe
+        CsKjowsqWMKdMjfH9iH8kpravTNMong=
+X-Google-Smtp-Source: APiQypIQdC79RBsh9n2E224O1hO7tMImM/2ZGqcILEuBuVmXAViWbmg1US8nTlXogPL/FCdJkdO3aQ==
+X-Received: by 2002:a9d:6214:: with SMTP id g20mr2660843otj.208.1586998364469;
+        Wed, 15 Apr 2020 17:52:44 -0700 (PDT)
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com. [209.85.210.47])
+        by smtp.gmail.com with ESMTPSA id q187sm6781414oih.48.2020.04.15.17.52.44
+        for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Apr 2020 17:31:13 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 17:31:12 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org, georgi.djakov@linaro.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, dianders@chromium.org,
-        evgreen@chromium.org
-Subject: Re: [PATCH V4 4/9] soc: qcom-geni-se: Add interconnect support to
- fix earlycon crash
-Message-ID: <20200416003112.GA199755@google.com>
-References: <1586946198-13912-1-git-send-email-akashast@codeaurora.org>
- <1586946198-13912-5-git-send-email-akashast@codeaurora.org>
+        Wed, 15 Apr 2020 17:52:44 -0700 (PDT)
+Received: by mail-ot1-f47.google.com with SMTP id f52so1696659otf.8
+        for <devicetree@vger.kernel.org>; Wed, 15 Apr 2020 17:52:44 -0700 (PDT)
+X-Received: by 2002:ab0:592c:: with SMTP id n41mr1543975uad.73.1586998027359;
+ Wed, 15 Apr 2020 17:47:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1586946198-13912-5-git-send-email-akashast@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20200403052900.258855-1-evanbenn@chromium.org>
+ <CAKz_xw0gV+w_gMkLfB4qUBdULLfFoiv1TBWp9_PHy33wP_XWyA@mail.gmail.com>
+ <890948ef-7276-fdae-d270-eb30eff3eab2@amlogic.com> <243e107c-35c1-2d14-5285-c9e13744963c@amlogic.com>
+ <CAODwPW9RSB37+4EJ2QXAwz=ShFB23L1GKC2mLYE5L5JuQR2tPw@mail.gmail.com> <20200415231215.GA182398@roeck-us.net>
+In-Reply-To: <20200415231215.GA182398@roeck-us.net>
+From:   Evan Benn <evanbenn@chromium.org>
+Date:   Thu, 16 Apr 2020 10:46:39 +1000
+X-Gmail-Original-Message-ID: <CAKz_xw0+gKBM1jp-Avnd+4j9vSxUix67RZBX-NNbStb0+ri4+Q@mail.gmail.com>
+Message-ID: <CAKz_xw0+gKBM1jp-Avnd+4j9vSxUix67RZBX-NNbStb0+ri4+Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Add a watchdog driver that uses ARM Secure Monitor Calls.
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Julius Werner <jwerner@chromium.org>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Vinod Koul <vkoul@kernel.org>, Will Deacon <will@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Yonghui Yu <yonghui.yu@amlogic.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Akash,
+Thanks Xingyu,
 
-On Wed, Apr 15, 2020 at 03:53:13PM +0530, Akash Asthana wrote:
-> QUP core clock is shared among all the SE drivers present on particular
-> QUP wrapper, the system will reset(unclocked access) if earlycon used after
-> QUP core clock is put to 0 from other SE drivers before real console comes
-> up.
-> 
-> As earlycon can't vote for it's QUP core need, to fix this add ICC
-> support to common/QUP wrapper driver and put vote for QUP core from
-> probe on behalf of earlycon and remove vote during earlycon exit call.
-> 
-> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-> Reported-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> Change in V3:
->  - Add geni_remove_earlycon_icc_vote API that will be used by earlycon
->    exit function to remove ICC vote for earlyconsole.
->  - Remove suspend/resume hook for geni-se driver as we are no longer
->    removing earlyconsole ICC vote from system suspend, we are removing
->    from earlycon exit.
-> 
-> Change in V4:
->  - As per Matthias comment make 'earlycon_wrapper' as static structure.
-> 
->  drivers/soc/qcom/qcom-geni-se.c       | 50 +++++++++++++++++++++++++++++++++++
->  drivers/tty/serial/qcom_geni_serial.c |  7 +++++
->  include/linux/qcom-geni-se.h          |  2 ++
->  3 files changed, 59 insertions(+)
-> 
-> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
-> index 1527bc4..727ad2e 100644
-> --- a/drivers/soc/qcom/qcom-geni-se.c
-> +++ b/drivers/soc/qcom/qcom-geni-se.c
-> @@ -90,8 +90,11 @@ struct geni_wrapper {
->  	struct device *dev;
->  	void __iomem *base;
->  	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
-> +	struct geni_icc_path to_core;
->  };
->  
-> +static struct geni_wrapper *earlycon_wrapper;
-> +
->  #define QUP_HW_VER_REG			0x4
->  
->  /* Common SE registers */
-> @@ -781,6 +784,26 @@ int geni_icc_vote_off(struct geni_se *se)
->  }
->  EXPORT_SYMBOL(geni_icc_vote_off);
->  
-> +void geni_remove_earlycon_icc_vote(void)
-> +{
-> +	struct geni_wrapper *wrapper = earlycon_wrapper;
-> +	struct device_node *parent = of_get_next_parent(wrapper->dev->of_node);
-> +	struct device_node *child;
-> +
-> +	for_each_child_of_node(parent, child) {
-> +		if (of_device_is_compatible(child, "qcom,geni-se-qup")) {
-> +			wrapper = platform_get_drvdata(of_find_device_by_node(
-> +					child));
-> +			icc_put(wrapper->to_core.path);
-> +			wrapper->to_core.path = NULL;
-> +		}
-> +	}
-> +	of_node_put(parent);
-> +
-> +	earlycon_wrapper = NULL;
-> +}
-> +EXPORT_SYMBOL(geni_remove_earlycon_icc_vote);
-> +
->  static int geni_se_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -808,6 +831,33 @@ static int geni_se_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> +#ifdef CONFIG_SERIAL_EARLYCON
-> +	wrapper->to_core.path = devm_of_icc_get(dev, "qup-core");
-> +	if (IS_ERR(wrapper->to_core.path))
-> +		return PTR_ERR(wrapper->to_core.path);
-> +	/*
-> +	 * Put minmal BW request on core clocks on behalf of early console.
-> +	 * The vote will be removed earlycon exit function.
-> +	 *
-> +	 * Note: We are putting vote on each QUP wrapper instead only to which
-> +	 * earlycon is connected because QUP core clock of different wrapper
-> +	 * share same voltage domain. If core1 is put to 0, then core2 will
-> +	 * also run at 0, if not voted. Default ICC vote will be removed ASA
-> +	 * we touch any of the core clock.
-> +	 * core1 = core2 = max(core1, core2)
-> +	 */
-> +	ret = icc_set_bw(wrapper->to_core.path, GENI_DEFAULT_BW, 0);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "%s: ICC BW voting failed for core\n",
-> +			__func__);
-> +		return ret;
-> +	}
-> +
-> +	if (of_get_compatible_child(pdev->dev.of_node, "qcom,geni-debug-uart"))
-> +		earlycon_wrapper = wrapper;
-> +	of_node_put(pdev->dev.of_node);
-> +#endif
-> +
->  	dev_set_drvdata(dev, wrapper);
->  	dev_dbg(dev, "GENI SE Driver probed\n");
->  	return devm_of_platform_populate(dev);
-> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-> index 6119090..8c5d97c 100644
-> --- a/drivers/tty/serial/qcom_geni_serial.c
-> +++ b/drivers/tty/serial/qcom_geni_serial.c
-> @@ -1090,6 +1090,12 @@ static void qcom_geni_serial_earlycon_write(struct console *con,
->  	__qcom_geni_serial_console_write(&dev->port, s, n);
->  }
->  
-> +static int qcom_geni_serial_earlycon_exit(struct console *con)
-> +{
-> +	geni_remove_earlycon_icc_vote();
-> +	return 0;
-> +}
-> +
->  static int __init qcom_geni_serial_earlycon_setup(struct earlycon_device *dev,
->  								const char *opt)
->  {
-> @@ -1135,6 +1141,7 @@ static int __init qcom_geni_serial_earlycon_setup(struct earlycon_device *dev,
->  	writel(stop_bit_len, uport->membase + SE_UART_TX_STOP_BIT_LEN);
->  
->  	dev->con->write = qcom_geni_serial_earlycon_write;
-> +	dev->con->exit = qcom_geni_serial_earlycon_exit;
+Can anyone provide advice about making SMCWD_FUNC_ID a device tree
+param directly, vs using the compatible to select from a table.
 
-The idea of using the exit handler of the early console to remove the
-votes seemed appealing at first, however it has a drawback: the bandwidth
-requests in geni_se_probe() are always made when CONFIG_SERIAL_EARLYCON=y,
-also when the system doesn't actually use an early console. On such a
-system the votes would never be removed.
+Please note get_timeleft erroneously returns res.a0 instead of res.a1
+in this version.
 
-A possible alternative could seem to remove the vote at the end of
-qcom_geni_serial_probe() of the 'normal' console, but it has a similar
-problem: the system could not even have a normal console. One could
-possibly argue that CONFIG_SERIAL_QCOM_GENI_CONSOLE shouldn't be set
-on such a system, however it could be enabled to have a console for
-development, and in production the same kernel config is used, but
-with the console disabled through the device tree.
+Evan
 
-I don't really have a good idea at this point, maybe we just need
-something as ugly as a delayed work to remove the votes. Other
-suggestions are welcome :)
+On Thu, Apr 16, 2020 at 9:12 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On Wed, Apr 15, 2020 at 03:29:29PM -0700, Julius Werner wrote:
+> > > In addition, It looks more reasonable to use the "msec" as the unit of
+> > > timeout parameter for the ATF fw interface with SMCWD_SET_TIMEOUT:
+> > >
+> > > - The fw interface will compatible with the uboot generic watchdog
+> > > interface at [0], and there is no need to convert timeout from msec
+> > > to sec.
+> >
+> > I think we're trying hard to keep this compatible to a Trusted
+> > Firmware counterpart that we have already shipped, so we would prefer
+> > to keep it at seconds if possible. That's what the Linux watchdog core
+> > uses as well after all, so it just seems natural. I don't really see
+> > how what U-Boot does would have anything to do with this.
+> >
+> > > - Some vendor's watchdog may be not support the "wdt_trigger_reset"
+> > > reset operation, but they can use the method below to reset the system
+> > > by the watchdog right now.
+> > >
+> > > watchdog_set_time(1);  //1ms
+> > > watchdog_enable();
+> >
+> > They can still do that but they should do that on the Trusted Firmware
+> > side. Emulating a missing reset functionality should be handled by the
+> > hardware abstraction layer (in this case Trusted Firmware), not at the
+> > Linux API level. So Linux would still send a PSCI_SYSTEM_RESET SMC,
+> > but then Trusted Firmware can choose to implement that by setting the
+> > watchdog to the smallest possible timeout (which it can because it's
+> > accessing it directly, not through this SMC interface) and letting it
+> > expire.
+>
+> I agree. Using a watchdog to implement reset functionality is always a
+> means of last resort and should be avoided if possible.
+>
+> Guenter
