@@ -2,456 +2,156 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E382C38A2C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 17:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A72FFC2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 17:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F4962078E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 17:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C31A221F7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 17:51:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UZ3unsIV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729116AbgDQRVO convert rfc822-to-8bit (ORCPT
+        id S1730068AbgDQRvm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 13:21:14 -0400
-Received: from mailoutvs59.siol.net ([185.57.226.250]:40114 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728863AbgDQRVO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 13:21:14 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 99F9D524C3A;
-        Fri, 17 Apr 2020 19:15:14 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id b6KrGSb_97M0; Fri, 17 Apr 2020 19:15:13 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id AF4AA524C39;
-        Fri, 17 Apr 2020 19:15:13 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id DD577524C3B;
-        Fri, 17 Apr 2020 19:15:12 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     mripard@kernel.org, wens@csie.org, lee.jones@linaro.org,
-        linux@armlinux.org.uk, davem@davemloft.net,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [RFC PATCH 2/4] net: phy: Add support for AC200 EPHY
-Date:   Fri, 17 Apr 2020 19:15:12 +0200
-Message-ID: <4409454.rnE6jSC6OK@jernej-laptop>
-In-Reply-To: <1d03b2a8-fed5-5de8-6326-81b7436637da@gmail.com>
-References: <20200416185758.1388148-1-jernej.skrabec@siol.net> <3035405.oiGErgHkdL@jernej-laptop> <1d03b2a8-fed5-5de8-6326-81b7436637da@gmail.com>
+        Fri, 17 Apr 2020 13:51:42 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:50427 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730035AbgDQRvl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 13:51:41 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200417175138epoutp02237ca0f75db64e3c146a3c5c8039a714~GrMkRUSzl1372413724epoutp02X
+        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 17:51:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200417175138epoutp02237ca0f75db64e3c146a3c5c8039a714~GrMkRUSzl1372413724epoutp02X
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1587145898;
+        bh=5M0OCrAJ3y02bHrC5ozbdimkBCaWSGf/3thZkN8c9Lk=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=UZ3unsIVZCBTJOASRfkUcowPJpuDyqa6uMNwKWzdG4JU8kAAd4a6WcjGHA+07oioZ
+         NN8NEZaRsLk/gN1DBMLZYCj74Az7uLe/3/2udU+O6+o6hb40sraM9dGXgfbCepUzvw
+         oP0NEuK+Pahriautys2cnapFnM2hZfo01Qp31xHg=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20200417175137epcas5p10a40555709962fba229aae6b2fd9db07~GrMj2iz862056520565epcas5p1Z;
+        Fri, 17 Apr 2020 17:51:37 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        BF.3A.04736.9ACE99E5; Sat, 18 Apr 2020 02:51:37 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200417175137epcas5p4820ca1b230480b0d5f780cdbc0972d15~GrMjK1C2X2922329223epcas5p4N;
+        Fri, 17 Apr 2020 17:51:37 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200417175137epsmtrp258288b66028d4eff60b1c16d083ebed7~GrMjKB-hn0836108361epsmtrp2E;
+        Fri, 17 Apr 2020 17:51:37 +0000 (GMT)
+X-AuditID: b6c32a4b-ae3ff70000001280-21-5e99eca912b1
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        21.70.04024.8ACE99E5; Sat, 18 Apr 2020 02:51:36 +0900 (KST)
+Received: from alimakhtar02 (unknown [107.108.234.165]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200417175133epsmtip2df47cad995363cfd7906f70373bd2a42~GrMf0gnPq1190511905epsmtip2O;
+        Fri, 17 Apr 2020 17:51:33 +0000 (GMT)
+From:   "Alim Akhtar" <alim.akhtar@samsung.com>
+To:     "'Christoph Hellwig'" <hch@infradead.org>
+Cc:     <robh@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <linux-samsung-soc@vger.kernel.org>,
+        <martin.petersen@oracle.com>, <linux-kernel@vger.kernel.org>,
+        <krzk@kernel.org>, <kwmad.kim@samsung.com>, <avri.altman@wdc.com>,
+        <cang@codeaurora.org>, "'Seungwon Jeon'" <essuuj@gmail.com>,
+        <stanley.chu@mediatek.com>, <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20200413133926.GA29228@infradead.org>
+Subject: RE: [PATCH v5 4/5] scsi: ufs-exynos: add UFS host support for
+ Exynos SoCs
+Date:   Fri, 17 Apr 2020 23:21:31 +0530
+Message-ID: <018c01d614e0$d6f971f0$84ec55d0$@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQHr+Y8xYXIsvNQeqORDaXjXFCUqCgIAvgGXAbEacNoBTCAGfwGKzB3uAp+278eoAf9z0A==
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRiGeXfO2Y6r2XFJPipYjQwUTEOD0wd9QNip/BEkRZLmaicTdY2d
+        tBlRYrWmm+sDCV3iV2uWBLq55rJsa2VqZQapaVk/StPKRC0EyzK3o+S/636f++Z+HnhJTPqZ
+        CCHTlSdYtVKeKROKccfjiMio2yOlKTGfbTH0l6luIT1RZyHoiicvCbrmlVlAP79cLaA7O+tF
+        dJ+9Badtn3oI+nVTmZAu6XwooPVvnEK6pvWvgJ554BTRN+/2oa3+zGtjkYC5Z3ovYhpuRTK2
+        2gIh02A+y5xvd+HM+OBbnDHaaxHzwxbGXHTrBXvESeJNCjYzPYdVR29OFR/TmtswlUWs6Wmr
+        RHnITRYiPxKoOGi1OvFCJCal1H0Eo7oSxIsJBJZrYwQvJhG0OIvRfKRr2jU3aEaQ33F9LjKC
+        4FLFOO51CakocN7QCr0cOMsdVcM+E0blYzBtKxV5B35ULMzkuXympVQiuPq7fIxT4aB1FPnq
+        JNR6qH9lFfEcAO2lA74CjFoOjd/LMH6lFTA1aCH4sn0w9MeOeE8QtEwZMG8xUA9F8PTct1lB
+        zortUNB2mM8uha+tdhHPIfBjtFnIWzLA0BTLP5+Gm+VPcZ63gLurDPdaMCoC6pqi+SZ/KPo9
+        IOCTEtBppbw7HM6Nds8lQ+GKXk/wzIBr+CN+Ga00LbjLtOAu04L9Tf/LKhFei4JZFZeVxnLr
+        VLFK9uQaTp7FZSvT1hw5nmVDvt8XuduJbC8TPIgikWyxRGcsTZES8hwuN8uDgMRkgZJH8bNP
+        EoU89xSrPn5InZ3Jch4USuKyIMlVovuglEqTn2AzWFbFquenAtIvJA+lbquJ0Jz5pXWP/exb
+        Vt+jUNiP7qSje8s69ir2J1zyrx56Z9++MSFZVz5tmJyyxsXrHGquuNw68DV7R7CxtcV95W9s
+        mCPkU8LeAhsV8KL5xhn9BSzzmaStarzxbe+qxNUHzBJLEnGxf1ehY9EH3QZDTIfGfmeif4fG
+        M3jk25LBZBnOHZOvjcTUnPwfI/0/xnkDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBIsWRmVeSWpSXmKPExsWy7bCSvO7KNzPjDLYoWLz8eZXN4tP6ZawW
+        84+cY7VYfmEJk8XpCYuYLM6f38BucXPLURaLTY+vsVpc3jWHzWLG+X1MFt3Xd7BZLD/+j8ni
+        /54d7BZLt95kdODzuNzXy+Sxc9Zddo/NK7Q8Nq3qZPPYvKTeo+XkfhaPj09vsXj0bVnF6PF5
+        k5xH+4FupgCuKC6blNSczLLUIn27BK6MtiUnmAuWcVVcO7GAsYHxAEcXIyeHhICJxJU/+1m7
+        GLk4hAR2M0p8a2pnhkhIS1zfOIEdwhaWWPnvOTtE0StGiY8nF4Ml2AR0JXYsbmMDsUWA7LML
+        XzCCFDELTGCWOHFvJgtIQkhgF5PE4mdlIDangLHE/4b9YA3CAkES/3segtksAqoSbdt6GUFs
+        XgFLiQ0XNrJD2IISJ2c+AZrDATRUT6JtI1gJs4C8xPa3c6AOVZD4+XQZK8QNYRLP/26BqhGX
+        OPqzh3kCo/AsJJNmIUyahWTSLCQdCxhZVjFKphYU56bnFhsWGOallusVJ+YWl+al6yXn525i
+        BMevluYOxstL4g8xCnAwKvHwGvTMjBNiTSwrrsw9xCjBwawkwnvQDSjEm5JYWZValB9fVJqT
+        WnyIUZqDRUmc92nesUghgfTEktTs1NSC1CKYLBMHp1QD4+pTsW/fRD4OucqypTHFwWRm95uJ
+        Sjl+E2pjSzxv7yn3+8j+tMj9WvCpU3tMCmd82hymUqIuOq9q1yuBAulz85TUtF4fktgspyt2
+        921N0p/Z13LvZHs7TIn+2CsR+mHS3I0Zh3nWJ2+d9ONenGdK0MPdAnUOH1q3+h0TutSyoaA1
+        ROb/1tR2ISWW4oxEQy3mouJEAHqeWkDbAgAA
+X-CMS-MailID: 20200417175137epcas5p4820ca1b230480b0d5f780cdbc0972d15
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200412074218epcas5p3ef7973c8a47533a15a359b069da8003c
+References: <20200412073159.37747-1-alim.akhtar@samsung.com>
+        <CGME20200412074218epcas5p3ef7973c8a47533a15a359b069da8003c@epcas5p3.samsung.com>
+        <20200412073159.37747-5-alim.akhtar@samsung.com>
+        <20200412080947.GA6524@infradead.org>
+        <000001d610e6$e8b11450$ba133cf0$@samsung.com>
+        <20200413133926.GA29228@infradead.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Dne petek, 17. april 2020 ob 18:29:04 CEST je Heiner Kallweit napisal(a):
-> On 17.04.2020 18:03, Jernej Škrabec wrote:
-> > Dne četrtek, 16. april 2020 ob 22:18:52 CEST je Heiner Kallweit 
-napisal(a):
-> >> On 16.04.2020 20:57, Jernej Skrabec wrote:
-> >>> AC200 MFD IC supports Fast Ethernet PHY. Add a driver for it.
-> >>> 
-> >>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> >>> ---
-> >>> 
-> >>>  drivers/net/phy/Kconfig  |   7 ++
-> >>>  drivers/net/phy/Makefile |   1 +
-> >>>  drivers/net/phy/ac200.c  | 206 +++++++++++++++++++++++++++++++++++++++
-> >>>  3 files changed, 214 insertions(+)
-> >>>  create mode 100644 drivers/net/phy/ac200.c
-> >>> 
-> >>> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> >>> index 3fa33d27eeba..16af69f69eaf 100644
-> >>> --- a/drivers/net/phy/Kconfig
-> >>> +++ b/drivers/net/phy/Kconfig
-> >>> @@ -288,6 +288,13 @@ config ADIN_PHY
-> >>> 
-> >>>  	  - ADIN1300 - Robust,Industrial, Low Latency 10/100/1000 Gigabit
-> >>>  	  
-> >>>  	    Ethernet PHY
-> >>> 
-> >>> +config AC200_PHY
-> >>> +	tristate "AC200 EPHY"
-> >>> +	depends on NVMEM
-> >>> +	depends on OF
-> >>> +	help
-> >>> +	  Fast ethernet PHY as found in X-Powers AC200 multi-function
-> > 
-> > device.
-> > 
-> >>> +
-> >>> 
-> >>>  config AMD_PHY
-> >>>  
-> >>>  	tristate "AMD PHYs"
-> >>>  	---help---
-> >>> 
-> >>> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-> >>> index 2f5c7093a65b..b0c5b91900fa 100644
-> >>> --- a/drivers/net/phy/Makefile
-> >>> +++ b/drivers/net/phy/Makefile
-> >>> @@ -53,6 +53,7 @@ obj-$(CONFIG_SFP)		+= sfp.o
-> >>> 
-> >>>  sfp-obj-$(CONFIG_SFP)		+= sfp-bus.o
-> >>>  obj-y				+= $(sfp-obj-y) $(sfp-obj-m)
-> >>> 
-> >>> +obj-$(CONFIG_AC200_PHY)		+= ac200.o
-> >>> 
-> >>>  obj-$(CONFIG_ADIN_PHY)		+= adin.o
-> >>>  obj-$(CONFIG_AMD_PHY)		+= amd.o
-> >>>  aquantia-objs			+= aquantia_main.o
-> >>> 
-> >>> diff --git a/drivers/net/phy/ac200.c b/drivers/net/phy/ac200.c
-> >>> new file mode 100644
-> >>> index 000000000000..3d7856ff8f91
-> >>> --- /dev/null
-> >>> +++ b/drivers/net/phy/ac200.c
-> >>> @@ -0,0 +1,206 @@
-> >>> +// SPDX-License-Identifier: GPL-2.0+
-> >>> +/**
-> >>> + * Driver for AC200 Ethernet PHY
-> >>> + *
-> >>> + * Copyright (c) 2020 Jernej Skrabec <jernej.skrabec@siol.net>
-> >>> + */
-> >>> +
-> >>> +#include <linux/kernel.h>
-> >>> +#include <linux/module.h>
-> >>> +#include <linux/mfd/ac200.h>
-> >>> +#include <linux/nvmem-consumer.h>
-> >>> +#include <linux/of.h>
-> >>> +#include <linux/phy.h>
-> >>> +#include <linux/platform_device.h>
-> >>> +
-> >>> +#define AC200_EPHY_ID			0x00441400
-> >>> +#define AC200_EPHY_ID_MASK		0x0ffffff0
-> >>> +
-> >> 
-> >> You could use PHY_ID_MATCH_MODEL() here.
-> > 
-> > Ok.
-> > 
-> >>> +/* macros for system ephy control 0 register */
-> >>> +#define AC200_EPHY_RESET_INVALID	BIT(0)
-> >>> +#define AC200_EPHY_SYSCLK_GATING	BIT(1)
-> >>> +
-> >>> +/* macros for system ephy control 1 register */
-> >>> +#define AC200_EPHY_E_EPHY_MII_IO_EN	BIT(0)
-> >>> +#define AC200_EPHY_E_LNK_LED_IO_EN	BIT(1)
-> >>> +#define AC200_EPHY_E_SPD_LED_IO_EN	BIT(2)
-> >>> +#define AC200_EPHY_E_DPX_LED_IO_EN	BIT(3)
-> >>> +
-> >>> +/* macros for ephy control register */
-> >>> +#define AC200_EPHY_SHUTDOWN		BIT(0)
-> >>> +#define AC200_EPHY_LED_POL		BIT(1)
-> >>> +#define AC200_EPHY_CLK_SEL		BIT(2)
-> >>> +#define AC200_EPHY_ADDR(x)		(((x) & 0x1F) << 4)
-> >>> +#define AC200_EPHY_XMII_SEL		BIT(11)
-> >>> +#define AC200_EPHY_CALIB(x)		(((x) & 0xF) << 12)
-> >>> +
-> >>> +struct ac200_ephy_dev {
-> >>> +	struct phy_driver	*ephy;
-> >> 
-> >> Why embedding a pointer and not a struct phy_driver directly?
-> >> Then you could omit the separate allocation.
-> > 
-> > Right.
-> > 
-> >> ephy is not the best naming. It may be read as a phy_device.
-> >> Better use phydrv.
-> > 
-> > Ok.
-> > 
-> >>> +	struct regmap		*regmap;
-> >>> +};
-> >>> +
-> >>> +static char *ac200_phy_name = "AC200 EPHY";
-> >>> +
-> >> 
-> >> Why not using the name directly in the assignment?
-> > 
-> > phy_driver->name is pointer. Wouldn't that mean that string is allocated
-> > on
-> > stack and next time pointer is used, it will return garbage?
+Hi Christoph,
+Thanks for your feedback.
+
+> -----Original Message-----
+> From: 'Christoph Hellwig' <hch@infradead.org>
+> Sent: 13 April 2020 19:09
+> To: Alim Akhtar <alim.akhtar@samsung.com>
+> Cc: 'Christoph Hellwig' <hch@infradead.org>; robh@kernel.org;
+> devicetree@vger.kernel.org; linux-scsi@vger.kernel.org; linux-samsung-
+> soc@vger.kernel.org; martin.petersen@oracle.com; linux-
+> kernel@vger.kernel.org; krzk@kernel.org; kwmad.kim@samsung.com;
+> avri.altman@wdc.com; cang@codeaurora.org; 'Seungwon Jeon'
+> <essuuj@gmail.com>; stanley.chu@mediatek.com; linux-arm-
+> kernel@lists.infradead.org
+> Subject: Re: [PATCH v5 4/5] scsi: ufs-exynos: add UFS host support for
+Exynos
+> SoCs
 > 
-> No, it's not on the stack. No problem here.
+> On Sun, Apr 12, 2020 at 09:54:53PM +0530, Alim Akhtar wrote:
+> > > So this doesn't actually require the various removed or not added
+> > > quirks
+> > after
+> > > all?
+> > This driver is actual consumer of those quirks, so those are still
+needed.
+> > On Martin's 5.7/scsi-queue need to revert " 492001990f64 scsi: ufshcd:
+> > remove unused quirks"
 > 
-> >> And better naming: "AC200 Fast Ethernet"
-> > 
-> > Ok.
-> > 
-> >>> +static int ac200_ephy_config_init(struct phy_device *phydev)
-> >>> +{
-> >>> +	const struct ac200_ephy_dev *priv = phydev->drv->driver_data;
-> >>> +	unsigned int value;
-> >>> +	int ret;
-> >>> +
-> >>> +	phy_write(phydev, 0x1f, 0x0100);	/* Switch to Page 1 */
-> >>> +	phy_write(phydev, 0x12, 0x4824);	/* Disable APS */
-> >>> +
-> >>> +	phy_write(phydev, 0x1f, 0x0200);	/* Switch to Page 2 */
-> >>> +	phy_write(phydev, 0x18, 0x0000);	/* PHYAFE TRX optimization */
-> >>> +
-> >>> +	phy_write(phydev, 0x1f, 0x0600);	/* Switch to Page 6 */
-> >>> +	phy_write(phydev, 0x14, 0x708f);	/* PHYAFE TX optimization */
-> >>> +	phy_write(phydev, 0x13, 0xF000);	/* PHYAFE RX optimization */
-> >>> +	phy_write(phydev, 0x15, 0x1530);
-> >>> +
-> >>> +	phy_write(phydev, 0x1f, 0x0800);	/* Switch to Page 6 */
-> >>> +	phy_write(phydev, 0x18, 0x00bc);	/* PHYAFE TRX optimization */
-> >>> +
-> >>> +	phy_write(phydev, 0x1f, 0x0100);	/* switch to page 1 */
-> >>> +	phy_clear_bits(phydev, 0x17, BIT(3));	/* disable intelligent
-> > 
-> > IEEE */
-> > 
-> >>> +
-> >>> +	/* next two blocks disable 802.3az IEEE */
-> >>> +	phy_write(phydev, 0x1f, 0x0200);	/* switch to page 2 */
-> >>> +	phy_write(phydev, 0x18, 0x0000);
-> >>> +
-> >>> +	phy_write(phydev, 0x1f, 0x0000);	/* switch to page 0 */
-> >>> +	phy_clear_bits_mmd(phydev, 0x7, 0x3c, BIT(1));
-> >> 
-> >> Better use the following:
-> >> phy_write_mmd(phydev, MDIO_MMD_AN, MDIO_AN_EEE_ADV, 0x0000);
-> >> It makes clear that you disable advertising EEE completely.
-> > 
-> > Ok.
-> > 
-> >>> +
-> >>> +	if (phydev->interface == PHY_INTERFACE_MODE_RMII)
-> >>> +		value = AC200_EPHY_XMII_SEL;
-> >>> +	else
-> >>> +		value = 0;
-> >>> +
-> >>> +	ret = regmap_update_bits(priv->regmap, AC200_EPHY_CTL,
-> >>> +				 AC200_EPHY_XMII_SEL, value);
-> >>> +	if (ret)
-> >>> +		return ret;
-> >>> +
-> >> 
-> >> I had a brief look at the spec, and it's not fully clear
-> >> to me what this register setting does. Does it affect the
-> >> MAC side and/or the PHY side?
-> > 
-> > It's my understanding that it selects interface mode on PHY. Besides
-> > datasheet mentioned in cover letter, BSP drivers (one for MFD and one for
-> > PHY) are the only other source of information. BSP PHY driver is located
-> > here:
-> > https://github.com/Allwinner-Homlet/H6-BSP4.9-linux/blob/master/drivers/ne
-> > t/ phy/sunxi-ephy.c
-> > 
-> >> If it affects the PHY side, then I'd expect that the chip
-> >> has to talk to the PHY via the MDIO bus. Means there should
-> >> be a PHY register for setting MII vs. RMII.
-> >> In this case the setup could be very much simplified.
-> >> Then the PHY driver wouldn't have to be embedded in the
-> >> platform driver.
-> > 
-> > Actually, PHY has to be configured first through I2C and then through
-> > MDIO. I2C is used to enable it (power it up), configure LED polarity, set
-> > PHY address, write calibration value stored elsewhere.
-> > 
-> > Based on all available documentation I have (code and datasheet), this I2C
-> > register is the only way to select MII or RMII mode.
-> 
-> Then how and where is the PHY interface mode configured on the MAC side?
-> If there is no such setting, then I'd assume that this register bit
-> configures both sides. This leads to the question whether the interface
-> mode really needs to be set in the PHY driver's config_init().
-> If we could avoid this, then you could make the PHY driver static.
+> No. You need to include one patch per quirk in your series to add them
+back.
+Sure, will send the updated version soon.
 
-Check patch 4. There is emac node added with property phy-mode = "rmii"; 
-AC200 and H6 are internally connected through RMII interface.
-
-Note that MAC has multiplexed interface and can either uses this copackaged 
-PHY or external PHY. External PHY usually uses RGMII interface.
-
-In 99% cases, this PHY driver will be used for copackaged AC200 with H6 SoC, 
-which means it will be used in RMII mode. Even if someone uses standalone 
-AC200 IC with mainline Linux, will probably still use RMII. But there is still 
-very small chance that someone will use it in MII mode.
-
-Anyway, if that special setting for H6 proves important, we will still need a 
-way to convey that information from platform driver to PHY. Easiest way to do 
-that is through driver_data.
-
-> 
-> You could set the PHY interface mode as soon as the PHY interface mode
-> is read from DT. So why not set the interface mode at the place where
-> you configure the other values like PHY address?
-
-PHY interface mode is actually set on MAC side in DT. This PHY has acutally 
-programmable PHY address through I2C. Currently I hardcoded it to 1.
-
-As I explained in cover letter, I don't really know how to properly present 
-this device in DT. Based on current DT documentation, PHY node would have to 
-be child node of mdio bus node and MFD node at the same time which is not 
-possible.
-
-> 
-> >>> +	/* FIXME: This is H6 specific */
-> >>> +	phy_set_bits(phydev, 0x13, BIT(12));
-> >>> +
-> >> 
-> >> This seems to indicate that the same PHY is used in a slightly
-> >> different version with other Hx models. Do they use different
-> >> PHY ID's?
-> > 
-> > Situation is a bit complicated. Same PHY, at least with same PHY ID, is
-> > used in different ways.
-> > 1. as part of standalone AC200 MFD IC
-> > 2. as part of AC200 wafer copackaged with H6 SoC wafer in same package.
-> > This in theory shouldn't be any different than standalone IC, but it
-> > apparently is, based on the BSP driver code.
-> > 3. integrated directly in SoCs like H3, H5 and V3s. There is no I2C access
-> > to configuration register. Instead, it's memory mapped and slightly
-> > different.
-> > 
-> > In all cases PHY ID is same, just glue logic is different.
-> > 
-> > I asked Allwinner if above setting is really necessary for H6 and what it
-> > does, but I didn't get any useful answer back.
-> > 
-> > So maybe another compatible is needed for H6.
-> > 
-> > Best regards,
-> > Jernej
-> > 
-> >>> +	return 0;
-> >>> +}
-> >>> +
-> >>> +static int ac200_ephy_probe(struct platform_device *pdev)
-> >>> +{
-> >>> +	struct ac200_dev *ac200 = dev_get_drvdata(pdev->dev.parent);
-> >>> +	struct device *dev = &pdev->dev;
-> >>> +	struct ac200_ephy_dev *priv;
-> >>> +	struct nvmem_cell *calcell;
-> >>> +	struct phy_driver *ephy;
-> >>> +	u16 *caldata, calib;
-> >>> +	size_t callen;
-> >>> +	int ret;
-> >>> +
-> >>> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> >>> +	if (!priv)
-> >>> +		return -ENOMEM;
-> >>> +
-> >>> +	ephy = devm_kzalloc(dev, sizeof(*ephy), GFP_KERNEL);
-> >>> +	if (!ephy)
-> >>> +		return -ENOMEM;
-> >>> +
-> >>> +	calcell = devm_nvmem_cell_get(dev, "calibration");
-> >>> +	if (IS_ERR(calcell)) {
-> >>> +		dev_err(dev, "Unable to find calibration data!\n");
-> >>> +		return PTR_ERR(calcell);
-> >>> +	}
-> >>> +
-> >>> +	caldata = nvmem_cell_read(calcell, &callen);
-> >>> +	if (IS_ERR(caldata)) {
-> >>> +		dev_err(dev, "Unable to read calibration data!\n");
-> >>> +		return PTR_ERR(caldata);
-> >>> +	}
-> >>> +
-> >>> +	if (callen != 2) {
-> >>> +		dev_err(dev, "Calibration data has wrong length: 2 !=
-> > 
-> > %zu\n",
-> > 
-> >>> +			callen);
-> >>> +		kfree(caldata);
-> >>> +		return -EINVAL;
-> >>> +	}
-> >>> +
-> >>> +	calib = *caldata + 3;
-> >>> +	kfree(caldata);
-> >>> +
-> >>> +	ephy->phy_id = AC200_EPHY_ID;
-> >>> +	ephy->phy_id_mask = AC200_EPHY_ID_MASK;
-> >>> +	ephy->name = ac200_phy_name;
-> >>> +	ephy->driver_data = priv;
-> >>> +	ephy->soft_reset = genphy_soft_reset;
-> >>> +	ephy->config_init = ac200_ephy_config_init;
-> >>> +	ephy->suspend = genphy_suspend;
-> >>> +	ephy->resume = genphy_resume;
-> >>> +
-> >>> +	priv->ephy = ephy;
-> >>> +	priv->regmap = ac200->regmap;
-> >>> +	platform_set_drvdata(pdev, priv);
-> >>> +
-> >>> +	ret = regmap_write(ac200->regmap, AC200_SYS_EPHY_CTL0,
-> >>> +			   AC200_EPHY_RESET_INVALID |
-> >>> +			   AC200_EPHY_SYSCLK_GATING);
-> >>> +	if (ret)
-> >>> +		return ret;
-> >>> +
-> >>> +	ret = regmap_write(ac200->regmap, AC200_SYS_EPHY_CTL1,
-> >>> +			   AC200_EPHY_E_EPHY_MII_IO_EN |
-> >>> +			   AC200_EPHY_E_LNK_LED_IO_EN |
-> >>> +			   AC200_EPHY_E_SPD_LED_IO_EN |
-> >>> +			   AC200_EPHY_E_DPX_LED_IO_EN);
-> >>> +	if (ret)
-> >>> +		return ret;
-> >>> +
-> >>> +	ret = regmap_write(ac200->regmap, AC200_EPHY_CTL,
-> >>> +			   AC200_EPHY_LED_POL |
-> >>> +			   AC200_EPHY_CLK_SEL |
-> >>> +			   AC200_EPHY_ADDR(1) |
-> >>> +			   AC200_EPHY_CALIB(calib));
-> >>> +	if (ret)
-> >>> +		return ret;
-> >>> +
-> >>> +	ret = phy_driver_register(priv->ephy, THIS_MODULE);
-> >>> +	if (ret) {
-> >>> +		dev_err(dev, "Unable to register phy\n");
-> >>> +		return ret;
-> >>> +	}
-> >>> +
-> >>> +	return 0;
-> >>> +}
-> >>> +
-> >>> +static int ac200_ephy_remove(struct platform_device *pdev)
-> >>> +{
-> >>> +	struct ac200_ephy_dev *priv = platform_get_drvdata(pdev);
-> >>> +
-> >>> +	phy_driver_unregister(priv->ephy);
-> >>> +
-> >>> +	regmap_write(priv->regmap, AC200_EPHY_CTL, AC200_EPHY_SHUTDOWN);
-> >>> +	regmap_write(priv->regmap, AC200_SYS_EPHY_CTL1, 0);
-> >>> +	regmap_write(priv->regmap, AC200_SYS_EPHY_CTL0, 0);
-> >>> +
-> >>> +	return 0;
-> >>> +}
-> >>> +
-> >>> +static const struct of_device_id ac200_ephy_match[] = {
-> >>> +	{ .compatible = "x-powers,ac200-ephy" },
-> >>> +	{ /* sentinel */ }
-> >>> +};
-> >>> +MODULE_DEVICE_TABLE(of, ac200_ephy_match);
-> >>> +
-> >>> +static struct platform_driver ac200_ephy_driver = {
-> >>> +	.probe		= ac200_ephy_probe,
-> >>> +	.remove		= ac200_ephy_remove,
-> >>> +	.driver		= {
-> >>> +		.name		= "ac200-ephy",
-> >>> +		.of_match_table	= ac200_ephy_match,
-> >>> +	},
-> >>> +};
-> >>> +module_platform_driver(ac200_ephy_driver);
-> >>> +
-> >>> +MODULE_AUTHOR("Jernej Skrabec <jernej.skrabec@siol.net>");
-> >>> +MODULE_DESCRIPTION("AC200 Ethernet PHY driver");
-> >>> +MODULE_LICENSE("GPL");
-
+> Please also follow all proper kernel style guidelines, as the old code
+didn't
+> always follow the proper style.
 
 
 
