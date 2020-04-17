@@ -2,78 +2,99 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4905DC2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 17:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 471BEC2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 17:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 123D620776
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 17:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15C1320776
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 17:01:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="b5I/ZF8t"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="hFTCB2el"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgDQRBS (ORCPT
+        id S1728372AbgDQRBt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 13:01:18 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:52874 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728379AbgDQRBR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 13:01:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1587142848; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=V0ZuQmgIuvZfa1M7BhArB6Fye/2+ZxALtNBtmE1Q7Hs=;
-        b=b5I/ZF8tPBEpwKFDT2WCYsNgC+wTsJKJkwRnsGVpKD6NQoio/nxoR0IjZOrDJOYHHI+7VA
-        BPrJ9LhJknfBSlpJs8/yaO4AfiKqhE+JX1gmtTdZRdveWj/W9ZYxgw/i82pMwFD5PAb2uP
-        RMSKWo5Cl+1RE9m60dYVZbNCxPAdQt8=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     od@zcrc.me, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v6 5/5] MAINTAINERS: Add myself as reviewer for Ingenic rproc driver
-Date:   Fri, 17 Apr 2020 19:00:40 +0200
-Message-Id: <20200417170040.174319-5-paul@crapouillou.net>
-In-Reply-To: <20200417170040.174319-1-paul@crapouillou.net>
-References: <20200417170040.174319-1-paul@crapouillou.net>
+        Fri, 17 Apr 2020 13:01:49 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:44580 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728092AbgDQRBs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Apr 2020 13:01:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=GDt6Kg65vGRHTbVpxtwsO49QfnwXL2hG69odrZ95CMU=; b=hFTCB2elCtEZeaC6o6m91HbKSs
+        e+jNfounAVKh/FRtsRCRy+TsjFMezugcIv1OgyXfebFunp2bndZ8jG4CHHlKqnoaTJBumqO7iwjyn
+        hFoD69plmRq81SR0UsS5SnRTFij5AMkSacKykva5C4O/TS1PCPjGqwDbcRh+lgLGUwhc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jPUN0-003JwF-8T; Fri, 17 Apr 2020 19:01:38 +0200
+Date:   Fri, 17 Apr 2020 19:01:38 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc:     robh+dt@kernel.org, f.fainelli@gmail.com,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux@armlinux.org.uk, mripard@kernel.org,
+        linux-kernel@vger.kernel.org, wens@csie.org, lee.jones@linaro.org,
+        davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH 2/4] net: phy: Add support for AC200 EPHY
+Message-ID: <20200417170138.GD785713@lunn.ch>
+References: <20200416185758.1388148-1-jernej.skrabec@siol.net>
+ <20200416185758.1388148-3-jernej.skrabec@siol.net>
+ <0340f85c-987f-900b-53c8-d29b4672a8fa@gmail.com>
+ <6176364.4vTCxPXJkl@jernej-laptop>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6176364.4vTCxPXJkl@jernej-laptop>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add myself as the reviewer for the Ingenic VPU remoteproc driver.
+> > You could use PHY_ID_MATCH_MODEL() here.
+> 
+> Hm... This doesn't work with dynamically allocated memory, right?
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+I would suggest we get the right structure first, then figure out
+details like this.
 
-Notes:
-    v4: New patch
-    v5-v6: No change
+Depending on when the device will respond to MDIO, we might be able to
+make this a normal PHY driver. It then probes in the normal way, and
+all the horrible dependencies you talked about, module loading order,
+etc all go away.
 
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+There were 3 things you talked about to make the PHY usable:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e64e5db31497..1677071197a0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8418,6 +8418,7 @@ F:	drivers/mtd/nand/raw/ingenic/
- F:	drivers/pinctrl/pinctrl-ingenic.c
- F:	drivers/power/supply/ingenic-battery.c
- F:	drivers/pwm/pwm-jz4740.c
-+F:	drivers/remoteproc/ingenic_rproc.c
- F:	drivers/rtc/rtc-jz4740.c
- F:	drivers/tty/serial/8250/8250_ingenic.c
- F:	drivers/usb/musb/jz4740.c
--- 
-2.25.1
+1) Clock
+2) Reset
+3) Must be enabled and configured through I2C
 
+We already have the concept of a PHY device having a reset controller
+as a property. e.g. Documentation/devicetree/bindings/net/ethernet-phy.yaml
+
+resets = <&rst 8>;
+
+So if the MFD exports a reset controller, we can control that from the
+PHY core. If the MFD has not probed yet, the reset core code will
+return EPROBE_DEFFER, and the PHY probe will get differed until late.
+That solves a lot of probe order issues.
+
+The clock can be handled in two different ways, depending on if the
+clock needs to be ticking to read the PHY ID registers. If it does
+need to be ticking, we add support for a clks property in just the
+same way we have support for the reset property. The PHY core will
+clk_enable_prepare() the clock before probing the PHY. If the clock is
+not needed for probing, the PHY driver can enable the clock as needed.
+
+The last part, Must be enabled and configured through I2C, we need to
+look at the details. It could be the reset controller also enabled the
+PHY. If that is enough that the PHY then probes, the PHY driver can
+then configure the PHY as needed via i2c.
+
+     Andrew
