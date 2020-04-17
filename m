@@ -2,80 +2,170 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9BDC352BE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 11:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A0BC352BE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 11:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2C00208E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 11:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4137207FC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 11:30:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H50wcT4F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729739AbgDQLFe (ORCPT
+        id S1730266AbgDQLap (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 07:05:34 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:38376 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729468AbgDQLFe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Apr 2020 07:05:34 -0400
-Received: from p57b77c7a.dip0.t-ipconnect.de ([87.183.124.122] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jPOoK-0003KN-CI; Fri, 17 Apr 2020 13:05:28 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] arm64: dts: rockchip: add core devicetree for rk3318
-Date:   Fri, 17 Apr 2020 13:05:27 +0200
-Message-ID: <2141402.AJMLQ3pQEO@phil>
-In-Reply-To: <20200417105739.3718-1-jbx6244@gmail.com>
-References: <20200417105739.3718-1-jbx6244@gmail.com>
+        Fri, 17 Apr 2020 07:30:45 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:38010 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730236AbgDQLap (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 07:30:45 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03HBUecs123691;
+        Fri, 17 Apr 2020 06:30:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587123040;
+        bh=wiRay/WueHQYiNnlT8xNUSvOJc16AOt8Hp1NKq0uCY0=;
+        h=From:To:CC:Subject:Date;
+        b=H50wcT4FycYlSx+fVzLSPCU85XQmFBo9Tbb0dtRefiEAaeqqXCxxCShuWMUIiiiNQ
+         zKhXKd4pEIcFQIL+mSAEHJiv6V4Nj+hauGcxetS68C3fSVr3pLoKDSNpypRz6hN1WC
+         cHRGexOov75QQqMSDq+ZXDIp5rh6m1AFl+xlsQzQ=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03HBUeWZ116672
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 17 Apr 2020 06:30:40 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
+ Apr 2020 06:30:39 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 17 Apr 2020 06:30:39 -0500
+Received: from deskari.lan (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03HBUb1k007821;
+        Fri, 17 Apr 2020 06:30:38 -0500
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>, <linux-omap@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [PATCH] ARM: dts: am57xx-idk-common: add tc358778 bridge
+Date:   Fri, 17 Apr 2020 14:30:20 +0300
+Message-ID: <20200417113020.23786-1-tomi.valkeinen@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Johan,
+AM5 IDK boards have TC358778 DPI-to-DSI bridge. Two different DSI panel
+models are used with the AM5 IDKs, and these panels are added with DT
+overlays. The AM5 IDKs can also be used without any panel.
 
-Am Freitag, 17. April 2020, 12:57:39 CEST schrieb Johan Jonker:
-> The rk3318 is basically a rk3328 with improved gpu,
-> so add a dtsi based on that.
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Add TC358778 data to the am57xx-idk-common.dtsi, but set the status to
+disabled.
 
-Please don't add dangling dtsi files.
-I'd expect at least a board dts to actually use that and
-also the updated gpu node.
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+---
+ arch/arm/boot/dts/am57xx-idk-common.dtsi | 58 ++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
-From a cursory glance it looks like it gets upgraded from
-450-MP2 to 450MP3 or so, so that would at least mean
-another set of interrupts.
-
-Heiko
-
-> ---
->  arch/arm64/boot/dts/rockchip/rk3318.dtsi | 3 +++
->  1 file changed, 3 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3318.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3318.dtsi b/arch/arm64/boot/dts/rockchip/rk3318.dtsi
-> new file mode 100644
-> index 000000000..a32f771bc
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3318.dtsi
-> @@ -0,0 +1,3 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +
-> +#include "rk3328.dtsi"
-> 
-
-
-
+diff --git a/arch/arm/boot/dts/am57xx-idk-common.dtsi b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+index aa5e55f98179..8ec71342f289 100644
+--- a/arch/arm/boot/dts/am57xx-idk-common.dtsi
++++ b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+@@ -35,6 +35,16 @@
+ 		regulator-boot-on;
+ 	};
+ 
++	v1_2d: fixedregulator-v1_2d {
++		compatible = "regulator-fixed";
++		regulator-name = "V1_2D";
++		vin-supply = <&vmain>;
++		regulator-min-microvolt = <1200000>;
++		regulator-max-microvolt = <1200000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
+ 	vtt_fixed: fixedregulator-vtt {
+ 		/* TPS51200 */
+ 		compatible = "regulator-fixed";
+@@ -139,6 +149,12 @@
+ 			};
+ 		};
+ 	};
++
++	src_clk_x1: src_clk_x1 {
++		#clock-cells = <0>;
++		compatible = "fixed-clock";
++		clock-frequency = <20000000>;
++	};
+ };
+ 
+ &dra7_pmx_core {
+@@ -378,6 +394,32 @@
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+ 	};
++
++	dsi_bridge: tc358778@e {
++		compatible = "toshiba,tc358778", "toshiba,tc358768";
++		reg = <0xe>;
++		status = "disabled";
++
++		clocks = <&src_clk_x1>;
++		clock-names = "refclk";
++
++		vddc-supply = <&v1_2d>;
++		vddmipi-supply = <&v1_2d>;
++		vddio-supply = <&v3_3d>;
++
++		dsi_bridge_ports: ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				rgb_in: endpoint {
++					remote-endpoint = <&dpi_out>;
++					data-lines = <24>;
++				};
++			};
++		};
++	};
+ };
+ 
+ &mcspi3 {
+@@ -543,4 +585,20 @@
+ 
+ &dss {
+ 	status = "okay";
++
++	vdda_video-supply = <&ldoln_reg>;
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++
++			dpi_out: endpoint {
++				remote-endpoint = <&rgb_in>;
++				data-lines = <24>;
++			};
++		};
++	};
+ };
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
