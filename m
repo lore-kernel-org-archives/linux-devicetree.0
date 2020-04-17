@@ -2,260 +2,99 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A121C2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 04:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA29C2BB55
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 05:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA0AB221F4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 04:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6771521D94
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 05:10:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725964AbgDQEfV (ORCPT
+        id S1726572AbgDQFKu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 00:35:21 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:2103 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725900AbgDQEfV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Apr 2020 00:35:21 -0400
-X-IronPort-AV: E=Sophos;i="5.72,393,1580742000"; 
-   d="scan'208";a="44968899"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 17 Apr 2020 13:35:19 +0900
-Received: from localhost.localdomain (unknown [10.166.252.89])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id E21574007F25;
-        Fri, 17 Apr 2020 13:35:19 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     joro@8bytes.org, robh+dt@kernel.org
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v3] dt-bindings: iommu: renesas,ipmmu-vmsa: convert to json-schema
-Date:   Fri, 17 Apr 2020 13:35:15 +0900
-Message-Id: <1587098115-2969-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 17 Apr 2020 01:10:50 -0400
+Received: from mga06.intel.com ([134.134.136.31]:51848 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726568AbgDQFKu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Apr 2020 01:10:50 -0400
+IronPort-SDR: 23Nnya4jyXwBiGHSOaffZIpPRJVVQzmPg9jFbZy29fhO5kdMDfzOxUcQqBMen/lPYdZIfuVv6j
+ AADUlfXm7vNQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 22:10:49 -0700
+IronPort-SDR: Ru+AzaksJhRHLDZOjcFgQYBfOUAcETbupMhsMVFpsNC8dGKJHTKDJbEIdtNPHMYgY9m8+OdLLs
+ jUukL2Thokdg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,393,1580803200"; 
+   d="scan'208";a="244610530"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 16 Apr 2020 22:10:49 -0700
+Received: from [10.255.156.142] (vramuthx-mobl1.gar.corp.intel.com [10.255.156.142])
+        by linux.intel.com (Postfix) with ESMTP id 592125802C9;
+        Thu, 16 Apr 2020 22:10:44 -0700 (PDT)
+Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        anders.roxell@linaro.org, arnd@arndb.de, brendanhiggins@google.com,
+        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        masonccyang@mxic.com.tw, miquel.raynal@bootlin.com,
+        piotrs@cadence.com, qi-ming.wu@intel.com, richard@nod.at,
+        robh+dt@kernel.org, tglx@linutronix.de, vigneshr@ti.com
+References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
+ <c33c8653-16a2-5bcd-97a9-511d958b755a@linux.intel.com>
+ <20200416113822.2ef326cb@collabora.com>
+ <18568cf6-2955-472e-7b68-eb35e654a906@linux.intel.com>
+ <20200416122619.2c481792@collabora.com>
+ <d3e137fa-54a0-b4ec-eb24-3984eab2a247@linux.intel.com>
+ <20200416131725.51259573@collabora.com>
+ <20200416113250.GA185537@smile.fi.intel.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <c8611110-d2ce-7d16-3acc-974d37ab116a@linux.intel.com>
+Date:   Fri, 17 Apr 2020 13:10:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200416113250.GA185537@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert Renesas VMSA-Compatible IOMMU bindings documentation
-to json-schema.
+Hi Andy,
 
-Note that original documentation doesn't mention renesas,ipmmu-vmsa
-for R-Mobile APE6. But, R-Mobile APE6 is similar to the R-Car
-Gen2. So, renesas,ipmmu-r8a73a4 belongs the renesas,ipmmu-vmsa
-section.
+On 16/4/2020 7:32 pm, Andy Shevchenko wrote:
+> On Thu, Apr 16, 2020 at 01:17:25PM +0200, Boris Brezillon wrote:
+>> On Thu, 16 Apr 2020 18:40:53 +0800
+>> "Ramuthevar, Vadivel MuruganX"
+>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>>
+>>>>>> we'll be happy to have one more of the existing driver converted to
+>>>>>> ->exec_op() ;-).
+>>>>> I have completely adapted to ->exec_op() hook up to replace the legacy
+>>>>> call-back.
+>>>> I suspect porting what you've done to the xway driver shouldn't be too
+>>>> complicated.
+>>> Not ported from xway_nand.c driver , we have developed from the scratch
+>>> to make it work on
+>>> Intel LGM SoC , it's new x86 ATOM based SoC, IP itself completely
+>>> different and most of the registers won't match.
+>>> if we port then it would be ugly and also what are the problem may occur
+>>> we do not know.
+>> Sorry but IMO they look similar enough to try to merge them.
+> I agree. I tried to convince them internally... but here we are.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- Changes from v2:
- - Add a description for R-Mobile APE6 on the commit log.
- - Change renesas,ipmmu-r8a73a4 section on the compatible.
- - Add items on the interrupts.
- - Add power-domains to required.
- - Add oneOf for interrupts and renesas,ipmmu-main
- https://patchwork.kernel.org/patch/11490581/
+Agreed,  will do the changes as Boris and Martin suggested, Thanks!
 
- Changes from v1:
- - Fix typo in the subject.
- - Add a description on #iommu-cells.
- https://patchwork.kernel.org/patch/11485415/
-
- .../bindings/iommu/renesas,ipmmu-vmsa.txt          |  73 ---------------
- .../bindings/iommu/renesas,ipmmu-vmsa.yaml         | 101 +++++++++++++++++++++
- 2 files changed, 101 insertions(+), 73 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
- create mode 100644 Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
-
-diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-deleted file mode 100644
-index 020d6f2..00000000
---- a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-+++ /dev/null
-@@ -1,73 +0,0 @@
--* Renesas VMSA-Compatible IOMMU
--
--The IPMMU is an IOMMU implementation compatible with the ARM VMSA page tables.
--It provides address translation for bus masters outside of the CPU, each
--connected to the IPMMU through a port called micro-TLB.
--
--
--Required Properties:
--
--  - compatible: Must contain SoC-specific and generic entry below in case
--    the device is compatible with the R-Car Gen2 VMSA-compatible IPMMU.
--
--    - "renesas,ipmmu-r8a73a4" for the R8A73A4 (R-Mobile APE6) IPMMU.
--    - "renesas,ipmmu-r8a7743" for the R8A7743 (RZ/G1M) IPMMU.
--    - "renesas,ipmmu-r8a7744" for the R8A7744 (RZ/G1N) IPMMU.
--    - "renesas,ipmmu-r8a7745" for the R8A7745 (RZ/G1E) IPMMU.
--    - "renesas,ipmmu-r8a774a1" for the R8A774A1 (RZ/G2M) IPMMU.
--    - "renesas,ipmmu-r8a774b1" for the R8A774B1 (RZ/G2N) IPMMU.
--    - "renesas,ipmmu-r8a774c0" for the R8A774C0 (RZ/G2E) IPMMU.
--    - "renesas,ipmmu-r8a7790" for the R8A7790 (R-Car H2) IPMMU.
--    - "renesas,ipmmu-r8a7791" for the R8A7791 (R-Car M2-W) IPMMU.
--    - "renesas,ipmmu-r8a7793" for the R8A7793 (R-Car M2-N) IPMMU.
--    - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
--    - "renesas,ipmmu-r8a7795" for the R8A7795 (R-Car H3) IPMMU.
--    - "renesas,ipmmu-r8a7796" for the R8A7796 (R-Car M3-W) IPMMU.
--    - "renesas,ipmmu-r8a77965" for the R8A77965 (R-Car M3-N) IPMMU.
--    - "renesas,ipmmu-r8a77970" for the R8A77970 (R-Car V3M) IPMMU.
--    - "renesas,ipmmu-r8a77980" for the R8A77980 (R-Car V3H) IPMMU.
--    - "renesas,ipmmu-r8a77990" for the R8A77990 (R-Car E3) IPMMU.
--    - "renesas,ipmmu-r8a77995" for the R8A77995 (R-Car D3) IPMMU.
--    - "renesas,ipmmu-vmsa" for generic R-Car Gen2 or RZ/G1 VMSA-compatible
--			   IPMMU.
--
--  - reg: Base address and size of the IPMMU registers.
--  - interrupts: Specifiers for the MMU fault interrupts. For instances that
--    support secure mode two interrupts must be specified, for non-secure and
--    secure mode, in that order. For instances that don't support secure mode a
--    single interrupt must be specified. Not required for cache IPMMUs.
--
--  - #iommu-cells: Must be 1.
--
--Optional properties:
--
--  - renesas,ipmmu-main: reference to the main IPMMU instance in two cells.
--    The first cell is a phandle to the main IPMMU and the second cell is
--    the interrupt bit number associated with the particular cache IPMMU device.
--    The interrupt bit number needs to match the main IPMMU IMSSTR register.
--    Only used by cache IPMMU instances.
--
--
--Each bus master connected to an IPMMU must reference the IPMMU in its device
--node with the following property:
--
--  - iommus: A reference to the IPMMU in two cells. The first cell is a phandle
--    to the IPMMU and the second cell the number of the micro-TLB that the
--    device is connected to.
--
--
--Example: R8A7791 IPMMU-MX and VSP1-D0 bus master
--
--	ipmmu_mx: mmu@fe951000 {
--		compatible = "renasas,ipmmu-r8a7791", "renasas,ipmmu-vmsa";
--		reg = <0 0xfe951000 0 0x1000>;
--		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 221 IRQ_TYPE_LEVEL_HIGH>;
--		#iommu-cells = <1>;
--	};
--
--	vsp@fe928000 {
--		...
--		iommus = <&ipmmu_mx 13>;
--		...
--	};
-diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
-new file mode 100644
-index 00000000..8ade89d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
-@@ -0,0 +1,101 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iommu/renesas,ipmmu-vmsa.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas VMSA-Compatible IOMMU
-+
-+maintainers:
-+  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-+
-+description:
-+  The IPMMU is an IOMMU implementation compatible with the ARM VMSA page tables.
-+  It provides address translation for bus masters outside of the CPU, each
-+  connected to the IPMMU through a port called micro-TLB.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - renesas,ipmmu-r8a73a4  # R-Mobile APE6
-+              - renesas,ipmmu-r8a7743  # RZ/G1M
-+              - renesas,ipmmu-r8a7744  # RZ/G1N
-+              - renesas,ipmmu-r8a7745  # RZ/G1E
-+              - renesas,ipmmu-r8a7790  # R-Car H2
-+              - renesas,ipmmu-r8a7791  # R-Car M2-W
-+              - renesas,ipmmu-r8a7793  # R-Car M2-N
-+              - renesas,ipmmu-r8a7794  # R-Car E2
-+              - renesas,ipmmu-r8a7795  # R-Car H3
-+          - const: renesas,ipmmu-vmsa  # R-Mobile APE6 or R-Car Gen2 or RZ/G1
-+      - items:
-+          - enum:
-+              - renesas,ipmmu-r8a774a1 # RZ/G2M
-+              - renesas,ipmmu-r8a774b1 # RZ/G2N
-+              - renesas,ipmmu-r8a774c0 # RZ/G2E
-+              - renesas,ipmmu-r8a7796  # R-Car M3-W
-+              - renesas,ipmmu-r8a77965 # R-Car M3-N
-+              - renesas,ipmmu-r8a77970 # R-Car V3M
-+              - renesas,ipmmu-r8a77980 # R-Car V3H
-+              - renesas,ipmmu-r8a77990 # R-Car E3
-+              - renesas,ipmmu-r8a77995 # R-Car D3
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 2
-+    description:
-+      Specifiers for the MMU fault interrupts. Not required for cache IPMMUs.
-+    items:
-+      - description: non-secure mode
-+      - description: secure mode if supported
-+
-+  '#iommu-cells':
-+    const: 1
-+    description:
-+      A reference to the IPMMU in two cells. The first cell is a phandle
-+      to the IPMMU and the second cell the number of the micro-TLB that the
-+      device is connected to.
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  renesas,ipmmu-main:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description:
-+      Reference to the main IPMMU instance in two cells. The first cell is
-+      a phandle to the main IPMMU and the second cell is the interrupt bit
-+      number associated with the particular cache IPMMU device. The interrupt
-+      bit number needs to match the main IPMMU IMSSTR register. Only used by
-+      cache IPMMU instances.
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#iommu-cells'
-+  - power-domains
-+
-+oneOf:
-+  - required:
-+      - interrupts
-+  - required:
-+      - renesas,ipmmu-main
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/r8a7791-cpg-mssr.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/power/r8a7791-sysc.h>
-+
-+    ipmmu_mx: mmu@fe951000 {
-+        compatible = "renasas,ipmmu-r8a7791", "renasas,ipmmu-vmsa";
-+        reg = <0xfe951000 0x1000>;
-+        interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
-+        #iommu-cells = <1>;
-+    };
--- 
-2.7.4
-
+Regards
+Vadivel
