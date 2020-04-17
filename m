@@ -2,117 +2,96 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D833BC2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 14:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93141C2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 14:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FDEF2087E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 14:31:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587133893;
-	bh=pT6+doLxhDBboeLR9o8Dpw1tvc89tREvWl1biQA46lM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1Td7j5q1DsA4VwI3joWF5saZh/0YA7ycWgYZlyWFS5LFWKQqXyxA1JXOFsr4+JzT5
-	 pfkcPSaA0sDCLyAUXRpYbbjpS2MUixEbVDyUApjfD/QrkhQLeMjL2o4S56w/iUB5Za
-	 8o460EPCmEGx4yy7lVadnqqSUx/R+VOTc22d44H8=
+	by mail.kernel.org (Postfix) with ESMTP id 61AFD2087E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 14:35:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CT2QjIYY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgDQObd (ORCPT
+        id S1727882AbgDQOfM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:31:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53196 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726065AbgDQObc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:31:32 -0400
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0ABF2223C;
-        Fri, 17 Apr 2020 14:31:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587133892;
-        bh=pT6+doLxhDBboeLR9o8Dpw1tvc89tREvWl1biQA46lM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gkh6DENAZFbDzJIf3gFlleyZJHAgpIxRXuIbcQaYJRwCKVr5jxuSl5wprhsHK8NQv
-         d70cg4H/hlDv7pzVdq0X9RSmWonyibSgmMLQVrRgpQCNjkdh7j9FH4xNyqYZgK+ya1
-         BlDA5SWyRdDvV/b1wK2lwC9TpR2q0Mgy4dAk/xCs=
-Received: by mail-qt1-f177.google.com with SMTP id x8so870257qtp.13;
-        Fri, 17 Apr 2020 07:31:31 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZrs86WVckx3vkSdLOF8oUK8m+P+M8JjcMNG1xcO1yqCXswpky/
-        b6jyV/LRHGHCwqXMMjwts1BjjR/UzYNwFpbxfw==
-X-Google-Smtp-Source: APiQypIyrumUQTKQyuwVJdKoY42ZUrD4HU0jijHUYuJE36Rvv09bfA43tUGFPkwi5wV/2LSEiXno09uVRo0AKF6NNfE=
-X-Received: by 2002:ac8:6695:: with SMTP id d21mr3248533qtp.110.1587133890922;
- Fri, 17 Apr 2020 07:31:30 -0700 (PDT)
+        Fri, 17 Apr 2020 10:35:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726517AbgDQOfM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 10:35:12 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 998AFC061A0C;
+        Fri, 17 Apr 2020 07:35:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=iC7kMxEwSt+feuKPX5Q0+CbVgJZxBEaT8JMxETzRQ4M=; b=CT2QjIYYjvSJCtHlCc7FUuC400
+        Vwwe7u+YORoRTGbwtYaXiBerCQvFgtLtQfqcww0lpdBL70z7y7obAdB8fYT6ZM9bM26K9NAt+Rvpn
+        I6TNtCvH7dTiHg4jpGaKPyfWa5Lfl9434WswISvnRD727cfKpwObS7P5srbwUQPEG6ZiWQk4ekYGU
+        p0qY6BpHyfkW8W5pYBa6m9yksykY913sa60rOyF9XeSzv2oXqDU/qBaiuOywiSxEazHWhweOIcq6/
+        PB+Nf7Yu13bG7Bef99LTz9IRarCb99WONvFLQr5jqHoYl1/TLP2WjF4YC16QebHknBRL+du98CfqL
+        8foDxxsQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jPS5H-0002iy-KP; Fri, 17 Apr 2020 14:35:11 +0000
+Subject: Re: [PATCH v10 3/6] iio: adc: mp2629: Add support for mp2629 ADC
+ driver
+To:     Saravanan Sekar <sravanhome@gmail.com>, lee.jones@linaro.org,
+        andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20200417085003.6124-1-sravanhome@gmail.com>
+ <20200417085003.6124-4-sravanhome@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <a8da9a3d-93a5-b926-b8c0-84138b59ad4f@infradead.org>
+Date:   Fri, 17 Apr 2020 07:35:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <cover.1586359676.git.mchehab+huawei@kernel.org>
- <24b30222392569e7aa5d61d46642a4c38a964512.1586359676.git.mchehab+huawei@kernel.org>
- <87h7xicvht.fsf@kernel.org>
-In-Reply-To: <87h7xicvht.fsf@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 17 Apr 2020 09:31:17 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLrKYTJTiPrzJAR7M-uCVa-S8sLMWUL4Xcy9x=XsY8mcg@mail.gmail.com>
-Message-ID: <CAL_JsqLrKYTJTiPrzJAR7M-uCVa-S8sLMWUL4Xcy9x=XsY8mcg@mail.gmail.com>
-Subject: Re: [PATCH 28/35] docs: dt: qcom,dwc3.txt: fix cross-reference for a
- converted file
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200417085003.6124-4-sravanhome@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 4:27 AM Felipe Balbi <balbi@kernel.org> wrote:
->
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
->
-> > The qcom-qusb2-phy.txt file was converted and renamed to yaml.
-> > Update cross-reference accordingly.
-> >
-> > Fixes: 8ce65d8d38df ("dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bindings to yaml")
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > ---
-> >  Documentation/devicetree/bindings/usb/qcom,dwc3.txt | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-> > index cb695aa3fba4..fbdd01756752 100644
-> > --- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-> > +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-> > @@ -52,8 +52,8 @@ A child node must exist to represent the core DWC3 IP block. The name of
-> >  the node is not important. The content of the node is defined in dwc3.txt.
-> >
-> >  Phy documentation is provided in the following places:
-> > -Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt   - USB3 QMP PHY
-> > -Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt - USB2 QUSB2 PHY
-> > +Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt    - USB3 QMP PHY
-> > +Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml - USB2 QUSB2 PHY
-> >
-> >  Example device nodes:
->
-> Should I take this or will it go via e.g. trivial?
+Hi--
 
-I already queued up v2 of this.
+On 4/17/20 1:50 AM, Saravanan Sekar wrote:
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 82e33082958c..ef0c0cd31855 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -680,6 +680,16 @@ config MESON_SARADC
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called meson_saradc.
+>  
+> +config MP2629_ADC
+> +	tristate "Monolithic MP2629 ADC driver"
+> +	depends on MFD_MP2629
 
->
-> In any case:
->
-> Acked-by: Felipe Balbi <balbi@kernel.org>
->
-> --
-> balbi
+	depends on I2C
+?
+
+> +	help
+> +	  Say yes to have support for battery charger IC MP2629 ADC device
+> +	  accessed over I2C.
+> +
+> +	  This driver provides ADC conversion of system, input power supply
+> +	  and battery voltage & current information.
+> +
+>  config NAU7802
+>  	tristate "Nuvoton NAU7802 ADC driver"
+>  	depends on I2C
+
+thanks.
+-- 
+~Randy
+
