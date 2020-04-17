@@ -2,116 +2,191 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B4FC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 20:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A74C38A2B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 20:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AED20221E9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 20:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C26621841
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 20:59:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R9pFeoH+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k9YWGoBe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgDQU5P (ORCPT
+        id S1726444AbgDQU7Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 16:57:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39044 "EHLO
+        Fri, 17 Apr 2020 16:59:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726507AbgDQU5O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 16:57:14 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D725C061A0C
-        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 13:57:14 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id q204so3221673oia.13
-        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 13:57:14 -0700 (PDT)
+        with ESMTP id S1726093AbgDQU7P (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 16:59:15 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CD74C061A0C;
+        Fri, 17 Apr 2020 13:59:15 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id n10so3876885iom.3;
+        Fri, 17 Apr 2020 13:59:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=39lTiL2QUNm6Li0BGrvaywbwuxh4rjX/zhgI0VviW50=;
-        b=R9pFeoH+DNmb2tnvPG+u2/fSvDd5LqOsY/uTzKa5o5WW6nvaLBQV8lvtpmevzumpe3
-         3r6XDsAKuAnAoHWvH5PqLO0BySgzd300CYL4gwMDhJ1G4gT0sQ0pBE0DL5DJEaPm7zau
-         MJydGJoo5YerDjcgu0Up5ndFoKbXlirzP7JN2ExqXQiLBaxFKG/sGZ07rtZE0HKeIaWk
-         cKArkKF5l5eu5tcheWccuMoA6VUBXlsEaPAdLXGpf2twHEXySjhBKCUmO8OrDrItTOJP
-         ePRL0k0pE7FY/a31SorUiyNUQZNaATX7i5FARFjUGhJXTr/6LWDx4tuSDihhZ+oigIjX
-         OH/A==
+        bh=nSsX3bbUJ1nOO1RD+htfrcSV+1mM35MncUVMYikE8Vc=;
+        b=k9YWGoBeLv05KhqXY0SeQ7omYOQrJj2bvP2qZEQOtnixswHfEfNEXQ7b+DcZ7YxUJ7
+         h6HBT1MgmPfa4nfblCNTuG/PsHDX15vs5OsRlcVxwFvRDtoGtFaLe3vTbWwGLmAy53OC
+         vxzgilJp2U+7RJWV4AArATG971RPKoe9VA1nGNrjYOr3AdqBhEiOw+YPeYzbRDCYYRjW
+         FDWOpmXGyEEHl3KyMeQYUMBykP9AYulp00tqlcnPDCZZQi2QVQn5V6wNw+rISNRBNXkz
+         Hyv42sLSHDU8mEByGqgenikkLGB+GTbB1seyUhXl/XsX9Z0za8wxaxHk+3n7O1N4d8VK
+         xs+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=39lTiL2QUNm6Li0BGrvaywbwuxh4rjX/zhgI0VviW50=;
-        b=SvPaq9jeBXOppU4YHDqv68EvN0Ibv2vIn8j9R9ppoNAnZlxl1vtzo+Ucom5NlDmgFG
-         XeRCf7kLqtxSxb6ct8v79+DAFBDBY15fukcsU63SBF03LaJBm/jllSEdYb1Kmtp8pIDj
-         QpZQBd3vN6pXVwsu9m5oYfNzc7zj6FKun0yY3uQ/HmvGup1QL/cZk3G698zXb5bPrOGG
-         q5ujy59TTe3neM5jAb6SbsmGNHHqLpaOfVjfiCBkhBrYu78KviKbAXsZab8cAnRrKJJs
-         ZNjqeyIPNdrJkYoqz1ErC1NDUAQ/tCvoXERwwPN6txi6WKC35MDZgUm5MiGRErnB7PXF
-         7Kbw==
-X-Gm-Message-State: AGi0PuZZDKZpS9UgbTnQ3naDKVCkPcG2vC9ZEQ89ydrvUPwVk2DMO1cX
-        DjOyGOnPWrgAySSvzh8mJwSQZT9npMurUSgf90HB1g==
-X-Google-Smtp-Source: APiQypKyObG1xCJPIVhAidk/Nuq+dSDAiBa3fvckIr9iSodvJnzuwaxnrnyRyz8kCrqgMjV7dryGPmQ+W3KrJ6PxP3A=
-X-Received: by 2002:aca:682:: with SMTP id 124mr3585199oig.69.1587157033687;
- Fri, 17 Apr 2020 13:57:13 -0700 (PDT)
+        bh=nSsX3bbUJ1nOO1RD+htfrcSV+1mM35MncUVMYikE8Vc=;
+        b=QHBo5YDpszKvsyaZIMFenicBU2NCw060kLZkJagck0a5p1icpQrGKAWPgUMdDBLBN+
+         mfX/ogLtAsgqb8k1b+RM3WcL9dX0boLFpTXPX48CmtrRZhtPxLHQSq2fhszcoSKYxCS5
+         WvFsB5iN/Su/siPw6rEZnEiVxCKzbO/+VspGG5ltYl1KWEKlBlOS22eiFdDv5dP/s3ev
+         xudhTop7S6TdL2lTBoXa53WZzEOSCsh8g5We2/fgUCykQ7+nalaFkGyk0Vx24OAQBh0/
+         dshXFtsONJ7YrPqlvp77XKOQaZ1P8xVFGxpyLayoYVc+H2ODjy55WgeWIiswa0BeY1NX
+         ZJfw==
+X-Gm-Message-State: AGi0PuaH4uBPDeij/m2KsC5ux+sG5L0D/4/2yKzYB+gGfd+Y8D+WLd/V
+        psm/A+mjgqxwWwdGMzkbnLg/tKQm1kpqv4vRz9E=
+X-Google-Smtp-Source: APiQypKVOiN33pHXdR9HAj04IpYkBWToy5mE+4OFR3pMkFY7V3SzV03S4nJSgYdzFUxqSqaIapQOTUJmFBcnXYMLRe4=
+X-Received: by 2002:a02:c77b:: with SMTP id k27mr5133124jao.139.1587157154423;
+ Fri, 17 Apr 2020 13:59:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200417165442.1856-1-nsaenzjulienne@suse.de> <20200417165442.1856-2-nsaenzjulienne@suse.de>
-In-Reply-To: <20200417165442.1856-2-nsaenzjulienne@suse.de>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 17 Apr 2020 13:56:37 -0700
-Message-ID: <CAGETcx88KCPRHEJWkBfkp1CUKzFvfssfJrvymgVbOg_BJfyhrw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] of: property: Fix create device links for all
- child-supplier dependencies
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+References: <20200417202859.35427-1-contact@artur-rojek.eu> <20200417202859.35427-3-contact@artur-rojek.eu>
+In-Reply-To: <20200417202859.35427-3-contact@artur-rojek.eu>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 17 Apr 2020 23:59:03 +0300
+Message-ID: <CAHp75Vcwnu8tw92nMYc_5-x_iX+FY8_OhtaJkSYNehmNUDkHGQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH v5 3/5] IIO: Ingenic JZ47xx: Add touchscreen mode.
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-input <linux-input@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 9:54 AM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
+On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek <contact@artur-rojek.eu> wrote:
 >
-> Upon adding a new device from a DT node, we scan its properties and its
-> children's properties in order to create a consumer/supplier
-> relationship between the device and the property provider.
+> The SADC component in JZ47xx SoCs provides support for touchscreen
+> operations (pen position and pen down pressure) in single-ended and
+> differential modes.
 >
-> That said, it's possible for some of the node's children to be disabled,
-> which will create links that'll never be fulfilled.
+> Of the known hardware to use this controller, GCW Zero and Anbernic RG-350
+> utilize the touchscreen mode by having their joystick(s) attached to the
+> X/Y positive/negative input pins.
+> GCW Zero comes with a single joystick and is sufficiently handled with the
+> currently implemented single-ended mode. Support for boards with two
+> joysticks, where one is hooked up to Xn/Yn and the other to Xp/Yp channels
+> will need to be provided in the future.
 >
-> To get around this, use the for_each_available_child_of_node() function
-> instead of for_each_available_node() when iterating over the node's
-> children.
+> The touchscreen component of SADC takes a significant time to stabilize
+> after first receiving the clock and a delay of 50ms has been empirically
+> proven to be a safe value before data sampling can begin.
 >
-> Fixes: d4387cd11741 ("of: property: Create device links for all child-supplier depencencies")
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->
-> ---
->
-> Changes since v1:
->  - Slightly reword description
->
->  drivers/of/property.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index 252e4f6001553..dc034eb45defd 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -1298,7 +1298,7 @@ static int of_link_to_suppliers(struct device *dev,
->                 if (of_link_property(dev, con_np, p->name))
->                         ret = -ENODEV;
->
-> -       for_each_child_of_node(con_np, child)
-> +       for_each_available_child_of_node(con_np, child)
->                 if (of_link_to_suppliers(dev, child) && !ret)
->                         ret = -EAGAIN;
->
+> All the boards which probe this driver have the interrupt provided from
+> devicetree, with no need to handle a case where the irq was not provided.
 
-Reviewed-by: Saravana Kannan <saravanak@google.com>
+Device Tree
+IRQ
+
+...
+
+> +               .scan_type = {
+> +                       .sign = 'u',
+> +                       .realbits = 12,
+
+> +                       .storagebits = 16
+
+It's slightly better to leave comma in such cases.
+
+> +               },
+
+> +               .scan_type = {
+> +                       .sign = 'u',
+> +                       .realbits = 12,
+
+> +                       .storagebits = 16
+
+Ditto.
+
+> +               },
+
+...
+
+>                 .indexed = 1,
+>                 .channel = INGENIC_ADC_AUX,
+> +               .scan_index = -1
+
+Ditto. You see above? Isn't it nice that you didn't touch that line?
+So, perhaps next developer can leverage this subtle kind of things.
+
+>                 .indexed = 1,
+>                 .channel = INGENIC_ADC_BATTERY,
+> +               .scan_index = -1
+
+Ditto.
+
+>                 .indexed = 1,
+>                 .channel = INGENIC_ADC_AUX2,
+> +               .scan_index = -1
+
+Ditto.
+
+...
+
+> +static int ingenic_adc_buffer_enable(struct iio_dev *iio_dev)
+> +{
+> +       struct ingenic_adc *adc = iio_priv(iio_dev);
+> +
+
+> +       clk_enable(adc->clk);
+
+Error check?
+
+> +       /* It takes significant time for the touchscreen hw to stabilize. */
+> +       msleep(50);
+> +       ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_TOUCH_OPS_MASK,
+> +                              JZ_ADC_REG_CFG_SAMPLE_NUM(4) |
+> +                              JZ_ADC_REG_CFG_PULL_UP(4));
+> +       writew(80, adc->base + JZ_ADC_REG_ADWAIT);
+> +       writew(2, adc->base + JZ_ADC_REG_ADSAME);
+
+> +       writeb((u8)~JZ_ADC_IRQ_TOUCH, adc->base + JZ_ADC_REG_CTRL);
+
+Why casting?
+
+> +       writel(0, adc->base + JZ_ADC_REG_ADTCH);
+> +       ingenic_adc_enable(adc, 2, true);
+> +
+> +       return 0;
+> +}
+
+> +       irq = platform_get_irq(pdev, 0);
+
+Before it worked w/o IRQ, here is a regression you introduced.
+
+> +       if (irq < 0) {
+
+> +               dev_err(dev, "Failed to get irq: %d\n", irq);
+
+Redundant message.
+
+> +               return irq;
+> +       }
+
+-- 
+With Best Regards,
+Andy Shevchenko
