@@ -2,167 +2,111 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 114CCC2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 16:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C48C1C2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 16:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8F1620771
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 16:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9412820771
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 16:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587139813;
-	bh=z9zZIiihBm9SCrbwX4CrR7nO+1x0aofYXpCKPneYiR0=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=2Dkq50aCmMT4t+zV+ua7EqYJbUqWv9X+edZL9xx/kELg80evmOG/MO4hykQMd7HHy
-	 5+Nwoytgh+HIb3MuLq6a9PRoDLzclmx2pTyHwILl3f6uoRLMShujiNxPM6sZU/y/ss
-	 sofu4bW+H5QFUCBVQ4bp/RXwtUEzqbYPj49JxWAY=
+	s=default; t=1587140034;
+	bh=iTUiVhXVQylO6YCPLN3VvXA+gNwx5vPeiOqXWqnRH9I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yvXV61SXOiEIkV50JHT8YeRyRcuKhtuofnedkWaAk+hbyS9nyVxVO64vPmuskVl/d
+	 0Qr15YZJTOcf/ETtIlUzEa7BVSeKPE/AE6z8BG8fE58U6UD2NUem4rNcTQlTst1SA5
+	 87jB8Zmk0OWXRwT1WBHkbZFh7GIiwcI5YQgBPn3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbgDQQKN (ORCPT
+        id S1729429AbgDQQNx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:10:13 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42893 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729282AbgDQQKN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 12:10:13 -0400
-Received: by mail-oi1-f195.google.com with SMTP id d7so2496182oif.9;
-        Fri, 17 Apr 2020 09:10:12 -0700 (PDT)
+        Fri, 17 Apr 2020 12:13:53 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34845 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728105AbgDQQNx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 12:13:53 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e20so1878879otl.2;
+        Fri, 17 Apr 2020 09:13:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Z7Icz3q5Y10NxdDT78V7SC0TdioikLrX59l8qGxJLVI=;
-        b=R0v1A16M0D8vz/xxWlhlUYXo/ULe46F+Nq4K6U2rYnoMZPc+munV3Diiy9UZ5WdSGA
-         5npecKPykCsS+L31QTtv3wdPRjnffsn1/4hfoD25WiHPiBs/eBUoFK68Ohxx/0DCCPiO
-         zRD7gUWcfR73pJ71uNVvW2t88b8tHe6OS3uxiN5h3IHyKAsZ4v+SKgIG94AdUM5i65Q5
-         M/6aNfccD7KMNiHRs8lBKviDZsayR7+E6Q4k/jOq+M5QlK7Zn1eTIR+oJuuD/3mQVdAG
-         +wxhvDET4LlgLigEqckn9Or8IIlxm63bWFYzxAm1Etsc1aOsSbdrsIwZsd45zWhU7J1P
-         CnJg==
-X-Gm-Message-State: AGi0PuYezjygXTJcD/gmF2Qn3jDiUa4QKsKAhtI17jceMor4YZdbTz1Z
-        ZXZFxLMbEQ2JVeZLCpZDYAgVcxE=
-X-Google-Smtp-Source: APiQypLvRrO5P+cGBhbb4JDON5qfotnufzYAKhlxzKY8nGO1wnQN6jQfgltGn4XoBQVXPiNyxr7O8Q==
-X-Received: by 2002:aca:3106:: with SMTP id x6mr2555696oix.94.1587139811949;
-        Fri, 17 Apr 2020 09:10:11 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JwhnhYWE1h4Q1rWRqLd33U9UJZPeq8MCVvmfrJyJ/ew=;
+        b=b57Bw/WwzcmrUnJsoJ4VbZWzH++lvh3Y+Kjsl7qmjEMiJV0kvW9LuDzrZokFXD1aiB
+         Q3QbMNBwBPlQFQuIpR2ofxm1J7IMJQqkC0mNBDm9xs/+ulIC4xXtZWn2FHjnTImziEOA
+         ZDjk/GsOXt7ZlF3Ys/8muBlqeoVapzBU1hd7MOV1V9YVlvS3VPJ41m2TbRsL94RpYhHt
+         cn8RxxxZVohPQUMgzJ5dNshegwe/GElA101bzjbJZMBMyp6LkhQ8PAzNjCrhTwBKXE/i
+         PY0QUcLVGXZ1tlQy/o49bGhfP/c+gtSiWk72tivbvnQz/auRQ0/TdrenX6YS7Ud+a+RD
+         +jAA==
+X-Gm-Message-State: AGi0PubvW/C7LlGRUwcGTBzRtpiNqbsM1wLtssNbVRjPyiBNlEQGI0ZB
+        vX47/zMuHfl3cbbB0JW0KZT2XIc=
+X-Google-Smtp-Source: APiQypJFgP67EwrcBHqKLa1uVT9VQ1p19y6ic9Hn9dhaR+0qtHXD5ALlxhD4Hvp7i+DmGccxd/Tvqw==
+X-Received: by 2002:a9d:3405:: with SMTP id v5mr3313114otb.131.1587140032325;
+        Fri, 17 Apr 2020 09:13:52 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d84sm8071869oig.33.2020.04.17.09.10.11
+        by smtp.gmail.com with ESMTPSA id i20sm2147601ots.29.2020.04.17.09.13.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 09:10:11 -0700 (PDT)
-Received: (nullmailer pid 16011 invoked by uid 1000);
-        Fri, 17 Apr 2020 16:10:10 -0000
-Date:   Fri, 17 Apr 2020 11:10:10 -0500
+        Fri, 17 Apr 2020 09:13:51 -0700 (PDT)
+Received: (nullmailer pid 24956 invoked by uid 1000);
+        Fri, 17 Apr 2020 16:13:50 -0000
+Date:   Fri, 17 Apr 2020 11:13:50 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: [GIT PULL] Devicetree fixes for v5.7, take 1
-Message-ID: <20200417161010.GA14296@bogus>
+To:     Ben Levinsky <ben.levinsky@xilinx.com>
+Cc:     ohad@wizery.com, bjorn.andersson@linaro.org,
+        michal.simek@xilinx.com, jollys@xilinx.com, rajan.vaja@xilinx.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jason Wu <j.wu@xilinx.com>,
+        Wendy Liang <jliang@xilinx.com>
+Subject: Re: [PATCH v2 4/5] dt-bindings: remoteproc: Add documentation for
+ ZynqMP R5 rproc bindings
+Message-ID: <20200417161350.GA24618@bogus>
+References: <1587074082-14836-1-git-send-email-ben.levinsky@xilinx.com>
+ <1587074082-14836-5-git-send-email-ben.levinsky@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <1587074082-14836-5-git-send-email-ben.levinsky@xilinx.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Linus,
+On Thu, 16 Apr 2020 14:54:41 -0700, Ben Levinsky wrote:
+> Add binding for ZynqMP R5 OpenAMP.
+> 
+> Represent the RPU domain resources in one device node. Each RPU
+> processor is a subnode of the top RPU domain node.
+> 
+> Signed-off-by: Ben Levinsky <ben.levinsky@xilinx.com>
+> Signed-off-by: Jason Wu <j.wu@xilinx.com>
+> Signed-off-by: Wendy Liang <jliang@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+>  .../remoteproc/xilinx,zynqmp-r5-remoteproc.yaml    | 119 +++++++++++++++++++++
+>  1 file changed, 119 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml
+> 
 
-Please pull.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Rob
+Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dts:20.14-21: Warning (ranges_format): /example-0/reserved-memory:ranges: empty "ranges" property but its #address-cells (2) differs from /example-0 (1)
+Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dts:20.14-21: Warning (ranges_format): /example-0/reserved-memory:ranges: empty "ranges" property but its #size-cells (2) differs from /example-0 (1)
+Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dts:43.14-21: Warning (ranges_format): /example-0/zynqmp-rpu:ranges: empty "ranges" property but its #address-cells (2) differs from /example-0 (1)
+Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dts:43.14-21: Warning (ranges_format): /example-0/zynqmp-rpu:ranges: empty "ranges" property but its #size-cells (2) differs from /example-0 (1)
+Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dts:39.20-63.11: Warning (unit_address_vs_reg): /example-0/zynqmp-rpu: node has a reg or ranges property, but no unit name
+Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dts:46.25-62.16: Warning (unit_address_vs_reg): /example-0/zynqmp-rpu/r5@0: node has a unit name, but no reg or ranges property
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dt.yaml: zynqmp-rpu: '#address-cells', '#size-cells', 'r5@0', 'ranges', 'reg' do not match any of the regexes: 'pinctrl-[0-9]+'
 
+See https://patchwork.ozlabs.org/patch/1271919
 
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
 
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.7
-
-for you to fetch changes up to 0903060fe590105b7d31901c1ed67614c08cee08:
-
-  kbuild: check libyaml installation for 'make dt_binding_check' (2020-04-17 10:45:23 -0500)
-
-----------------------------------------------------------------
-Devicetree fixes for v5.7:
-
-- Fix warnings from enabling more dtc warnings which landed in the merge
-  window and didn't get fixed in time.
-
-- Fix some document references from DT schema conversions
-
-- Fix kmemleak errors in DT unittests
-
-----------------------------------------------------------------
-Alexandru Tachici (1):
-      dt-bindings: iio: dac: AD5570R fix bindings errors
-
-Fabio Estevam (4):
-      dt-bindings: iio: dac: ad5770r: Add vendor to compatible string
-      dt-bindings: iio: dac: ad5770r: Fix the file path
-      dt-bindings: touchscreen: edt-ft5x06: Remove unneeded I2C unit name
-      dt-bindings: clock: syscon-icst: Remove unneeded unit name
-
-Frank Rowand (5):
-      of: unittest: kmemleak on changeset destroy
-      of: unittest: kmemleak in of_unittest_platform_populate()
-      of: unittest: kmemleak in of_unittest_overlay_high_level()
-      of: overlay: kmemleak in dup_and_fixup_symbol_prop()
-      of: unittest: kmemleak in duplicate property update
-
-Geert Uytterhoeven (1):
-      dt-bindings: Fix misspellings of "Analog Devices"
-
-Masahiro Yamada (1):
-      kbuild: check libyaml installation for 'make dt_binding_check'
-
-Matti Vaittinen (1):
-      dt-bindings: BD718x7 - add missing I2C bus properties
-
-Mauro Carvalho Chehab (6):
-      docs: dt: fix broken reference to phy-cadence-torrent.yaml
-      docs: dt: qcom,dwc3.txt: fix cross-reference for a converted file
-      docs: dt: fix a broken reference for a file converted to json
-      docs: dt: rockchip,dwc3.txt: fix a pointer to a renamed file
-      MAINTAINERS: dt: update display/allwinner file entry
-      MAINTAINERS: dt: fix pointers for ARM Integrator, Versatile and RealView
-
-Rob Herring (4):
-      dt-bindings: Fix dtc warnings on reg and ranges in examples
-      dt-bindings: hwmon: Fix incorrect $id paths
-      dt-bindings: interrupt-controller: Fix loongson,parent_int_map property schema
-      dt-bindings: pwm: Fix cros-ec-pwm example dtc 'reg' warning
-
- .../arm/sunxi/allwinner,sun4i-a10-mbus.yaml        |  6 ++
- .../devicetree/bindings/clock/arm,syscon-icst.yaml |  2 +-
- .../bindings/display/bridge/adi,adv7123.txt        |  4 +-
- .../bindings/display/bridge/adi,adv7511.txt        |  4 +-
- .../devicetree/bindings/dma/adi,axi-dmac.txt       |  2 +-
- .../bindings/hwmon/adi,axi-fan-control.yaml        |  4 +-
- .../devicetree/bindings/hwmon/adt7475.yaml         |  2 +-
- .../devicetree/bindings/iio/dac/ad5755.txt         |  2 +-
- .../devicetree/bindings/iio/dac/adi,ad5770r.yaml   | 97 ++++++++++------------
- .../bindings/input/touchscreen/edt-ft5x06.yaml     |  2 +-
- .../interrupt-controller/loongson,liointc.yaml     |  5 +-
- .../memory-controllers/nvidia,tegra186-mc.yaml     | 41 +++++----
- .../devicetree/bindings/mfd/rohm,bd71837-pmic.yaml |  4 +-
- .../devicetree/bindings/mfd/rohm,bd71847-pmic.yaml |  4 +-
- .../devicetree/bindings/mfd/st,stpmic1.yaml        |  2 +-
- .../devicetree/bindings/net/qcom,ipq8064-mdio.yaml |  1 +
- .../devicetree/bindings/net/qualcomm-bluetooth.txt |  2 +-
- .../devicetree/bindings/phy/ti,phy-j721e-wiz.yaml  |  2 +-
- .../bindings/pwm/google,cros-ec-pwm.yaml           | 17 ++--
- .../devicetree/bindings/rng/brcm,bcm2835.yaml      |  2 +-
- .../bindings/spi/qcom,spi-qcom-qspi.yaml           |  2 +-
- .../devicetree/bindings/usb/ingenic,musb.yaml      |  2 +-
- .../devicetree/bindings/usb/qcom,dwc3.txt          |  4 +-
- .../devicetree/bindings/usb/rockchip,dwc3.txt      |  2 +-
- MAINTAINERS                                        |  7 +-
- drivers/of/overlay.c                               |  2 +
- .../of/unittest-data/overlay_bad_add_dup_prop.dts  | 23 ++++-
- drivers/of/unittest.c                              | 28 +++++--
- scripts/dtc/Makefile                               |  2 +-
- 29 files changed, 162 insertions(+), 115 deletions(-)
+Please check and re-submit.
