@@ -2,175 +2,104 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B677C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 20:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FFAC2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 20:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BCC820656
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 20:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6EA621841
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 20:56:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="egNkywzu"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HfFfOMD8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725862AbgDQUnS (ORCPT
+        id S1726310AbgDQU4M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 16:43:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36880 "EHLO
+        Fri, 17 Apr 2020 16:56:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbgDQUnR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 16:43:17 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C4AEC061A0C
-        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 13:43:17 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id m8so3443862lji.1
-        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 13:43:16 -0700 (PDT)
+        with ESMTP id S1726093AbgDQU4M (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 16:56:12 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8031C061A0C
+        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 13:56:11 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id d21so753336ook.10
+        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 13:56:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bx7G3DGSlFM78EsVg2jPdt/+5qpi6YpaV1U7u7qwwXg=;
-        b=egNkywzutE2lTGuU4HwCFnMahSbqSs3ZzQDJAFiHr0wZ7hfbD1FCHr4+K6fKx74C+u
-         7+p1UwTHiHfcnWVYDhg1Ah0O5DmP/MrmJC3xFhVG+A3M8FDx+dGGa8p2wRN7riBk9nBW
-         XVkA/ErUb+b0vnJAWiKg1Vjw3rC0X5Fce+AIpKTo6Tid+t7zF9W9IoJZMa0dxgtZ0JNn
-         GyIZBqYN7pvrAgc1GBe38W7adOUJiWcqT16856I3NJwdg1HMMB8EnLSZ/l+p8abK4VNU
-         rEAPXOOPZ3iEuT8ZpGZqO5L8ZOvX85T3h2Zztqn3bgTFc8EbeqXIBIhMSxKAWPeXIA2Y
-         yaog==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZRrSWymYNp23VNv1jflVCfYbLbj0nrTpCLnbz+QVbbM=;
+        b=HfFfOMD84P7y8seYdnCWZalBnPjmWIj6Ovtq9JzgmNoE0mia+0qY2a/thtVuXd60+G
+         I78iRU215jQlj8Xjws8El1HX01+nKzUDT0XV1aafrejSSGdRXN+jFqEXAPL2HLOFbcC3
+         zOwChFVm/NqDuTXQJe9z5X+tc6K9QyQ7eRBG/2Dre8LEf75AYeUVgG5qpu+0P0eHaN9O
+         ALndpP14o4dLOsFPBajpEqllZ1212GOOB1QOmfW/hT7d/jzk/ZZr2C3njra9SJ2SoY7W
+         EcdFWbd6n5a9o+3KWhsIp7DUFhvgvZyoYCbZrQISdAJaIzTmrHP0hFGxwBhH+Fxe9yYI
+         4Ekg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bx7G3DGSlFM78EsVg2jPdt/+5qpi6YpaV1U7u7qwwXg=;
-        b=OuvW3StsZlEhd+2WZ7JuzXcFd7gublkfCfl9fZOHflVWL4Ok7dRCagoKRf/QJXCRTQ
-         ItxNnfeYYFKZ6wMa8Tspa+5cRWovxOUC1oYS4m3ZxmrHVojwb9luyyg5UPNcdzvQ9ryD
-         6pG3/jjrejXBtKgT7POwteRC+VRo9VNc6+Hz6PWr2wr2srG33AlKXI6psWS7/oU4y3zM
-         Yq1/fQfZpRGQPbg67oYpPhZKjcIR2FGjPnuyXziygwj3cOru3Dcp2/9RLoMNU3+UxCsB
-         7JBg0MkoQomCuIYrR2LOhqrWwifNsZrRyUG2z2toSNx5ZrcibSpDf4HKejS1kjP8pm+Z
-         Y+gw==
-X-Gm-Message-State: AGi0PuazioR3RydwrM0eu0HbNgBe7xrV+pEBsNiQOtUA45ltF7vOaFve
-        ZxoHvxpJOVtoU7WUiJ5xyP0Jkw==
-X-Google-Smtp-Source: APiQypL6wF6JLZj/qU/1iAWJGDaLwwfBuRTAGBdBQlTC29MSAq6TGftzTrbj9yEnUbH+aBqshKnMZw==
-X-Received: by 2002:a2e:8017:: with SMTP id j23mr2946812ljg.22.1587156195392;
-        Fri, 17 Apr 2020 13:43:15 -0700 (PDT)
-Received: from localhost.bredbandsbolaget (c-f3d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.243])
-        by smtp.gmail.com with ESMTPSA id a8sm1435365ljb.64.2020.04.17.13.43.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 13:43:14 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 1/2 v4] dt-bindings: touchscreen: Add CY8CTMA140 bindings
-Date:   Fri, 17 Apr 2020 22:43:11 +0200
-Message-Id: <20200417204312.13453-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZRrSWymYNp23VNv1jflVCfYbLbj0nrTpCLnbz+QVbbM=;
+        b=tv4HMDGkxHOLo8blM46H+dRad4Y6auKGkvgZS5yi7qJGmwHVbs293/Zfsct7MwL7Rw
+         qPnOM0WfjInltpaNxcK3nqjv/0f1haqII1x3XPjI4klINojtK3STmVNd2oPT5VZFsrSm
+         cIoWJN5TIIc02US9w3ai4LfdbnEd2lRiFLnT2W8tpjPjq7qhy2PIstq/S+XcwH27c9gI
+         GcKbs85s6JUKqarsshDOqEzMWZMNs31hRMrMI0j6n6/eEDhGC80CYIE3FsWsFG5LHJ71
+         HMVchLUatJwt8Yl3DwdjraQesCDkbyrX+nJJYNrm0s2b/PNToide74y8vw/Zj64j5MrY
+         iP5A==
+X-Gm-Message-State: AGi0Pub+stntBRdMUiPfbHtqbmX398v4DT5cPTkrEdEIhAITpfTjZQtX
+        Uq57uw7XulM7h6RjYwLdajGpxdTwBX4nKJyMc7LRQw==
+X-Google-Smtp-Source: APiQypJfj91riCkqx3e93yJnMbbwvx5Qrez6FxxxjKPXXXTo5vbH99INz65O6k0wyRYe+qf5yrs9lpE5Sd16Uwe4tic=
+X-Received: by 2002:a4a:9cd8:: with SMTP id d24mr4109456ook.84.1587156970831;
+ Fri, 17 Apr 2020 13:56:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200417165442.1856-1-nsaenzjulienne@suse.de> <500e8c46a9b411aed03965b6f9130ccde457193d.camel@suse.de>
+In-Reply-To: <500e8c46a9b411aed03965b6f9130ccde457193d.camel@suse.de>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Fri, 17 Apr 2020 13:55:34 -0700
+Message-ID: <CAGETcx8EJiLSV8jzrusim6EvyVvX4H8ANvZaJwO72G1=iS-N2Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] of: property: fw_devlink misc fixes
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds device tree bindings for the Cypress CY8CTMA140
-touchscreen.
+On Fri, Apr 17, 2020 at 11:06 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> Hi Saravana,
+>
+> On Fri, 2020-04-17 at 18:54 +0200, Nicolas Saenz Julienne wrote:
+> > As I'm interested in using this feature to fine-tune Raspberry Pi 4's
+> > device probe dependencies, I tried to get the board to boot with
+> > fw_devlink=on. As of today's linux-next the board won't boot with that
+> > option. I tried to address the underlying issues.
+> >
+>
+> On a semi-related topic, have you looked at vendor specific properties? most of
+> them create a consumer/supplier relationship, it'd be nice to be able to take
+> those ones into account as well.
 
-Cc: devicetree@vger.kernel.org
-Cc: Henrik Rydberg <rydberg@bitmath.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v1->v4:
-- Drop the description of 'reg', it's surplus.
-- Set the I2C frequency to the span 100k to 400k instead
-  of hardcoding 400k.
-- Collect Rob's review tag.
----
- .../input/touchscreen/cypress,cy8ctma140.yaml | 72 +++++++++++++++++++
- 1 file changed, 72 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma140.yaml
+I'm on the wall about that. If we take every vendor specific property,
+this file will explode. Not sure I want to do that.
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma140.yaml b/Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma140.yaml
-new file mode 100644
-index 000000000000..fda64243dc6c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma140.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/touchscreen/cypress,cy8ctma140.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Cypress CY8CTMA140 series touchscreen controller bindings
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+allOf:
-+  - $ref: touchscreen.yaml#
-+
-+properties:
-+  compatible:
-+    const: cypress,cy8ctma140
-+
-+  reg:
-+    const: 0x20
-+
-+  clock-frequency:
-+    description: I2C client clock frequency, defined for host
-+    minimum: 100000
-+    maximum: 400000
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  vcpin-supply:
-+    description: Analog power supply regulator on VCPIN pin
-+
-+  vdd-supply:
-+    description: Digital power supply regulator on VDD pin
-+
-+  touchscreen-inverted-x: true
-+  touchscreen-inverted-y: true
-+  touchscreen-size-x: true
-+  touchscreen-size-y: true
-+  touchscreen-swapped-x-y: true
-+  touchscreen-max-pressure: true
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - touchscreen-size-x
-+  - touchscreen-size-y
-+  - touchscreen-max-pressure
-+
-+examples:
-+- |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c@00000000 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      touchscreen@20 {
-+        compatible = "cypress,cy8ctma140";
-+        reg = <0x20>;
-+        touchscreen-size-x = <480>;
-+        touchscreen-size-y = <800>;
-+        touchscreen-max-pressure = <255>;
-+        interrupt-parent = <&gpio6>;
-+        interrupts = <26 IRQ_TYPE_EDGE_FALLING>;
-+        vdd-supply = <&ab8500_ldo_aux2_reg>;
-+        vcpin-supply = <&ab8500_ldo_aux2_reg>;
-+      };
-+    };
-+
-+...
--- 
-2.21.1
+Also, we haven't even finished all the generic bindings. I'm just
+adding bindings as I get familiar with each of them and I test them on
+hardware I have lying around before sending it out. So, there's where
+my focus is right now wrt fw_devlink and DT.
 
+I wonder how many of the vendor specific properties do very similar
+things and got in over time. Maybe they can be made generic? What one
+did you have in mind?
+
+-Saravana
