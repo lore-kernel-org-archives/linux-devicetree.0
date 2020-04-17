@@ -2,114 +2,175 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C129C38A2B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 20:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B677C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 20:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB6620B1F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 20:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BCC820656
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 20:43:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oZDw8ZH1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="egNkywzu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731053AbgDQUan (ORCPT
+        id S1725862AbgDQUnS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 16:30:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34908 "EHLO
+        Fri, 17 Apr 2020 16:43:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730903AbgDQUan (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 16:30:43 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B851C061A0C
-        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 13:30:43 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id l5so1715340ybf.5
-        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 13:30:43 -0700 (PDT)
+        with ESMTP id S1725800AbgDQUnR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 16:43:17 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C4AEC061A0C
+        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 13:43:17 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id m8so3443862lji.1
+        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 13:43:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fUE5Lx/KFG4wHOc+8/LB7xM75zMUyQV8EF5MnlFdnvw=;
-        b=oZDw8ZH1F0p6LciU2P3FLuNI7GJEKludlMRyjdCTDa6glDAvFQ3ci4SYSsm5up5S1b
-         s/vIyC4uj6Omx5TNRbrUxdMqBfivTHIcE9lg8dDavdDALax+of2UCfa7gxlycAo4WUNw
-         sDB51h9O8y3apXpvFMgrYr3csVBc5URAR1+czyXwKPJ/7jBcPxgbYBttW/tznoQbdNjy
-         GcclvU3hnV4sXRNk2HSAxafuJkIJq585rThGDAqciHZNUcqH0EVA4HjyJz6s0QFBla2Y
-         e8ADm+2lA6oezlWmOFSzkDD07AG1nI2Mb/1qetjZOjOB44sBxaKRsXH+yKhhcImUyzHe
-         p5pA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bx7G3DGSlFM78EsVg2jPdt/+5qpi6YpaV1U7u7qwwXg=;
+        b=egNkywzutE2lTGuU4HwCFnMahSbqSs3ZzQDJAFiHr0wZ7hfbD1FCHr4+K6fKx74C+u
+         7+p1UwTHiHfcnWVYDhg1Ah0O5DmP/MrmJC3xFhVG+A3M8FDx+dGGa8p2wRN7riBk9nBW
+         XVkA/ErUb+b0vnJAWiKg1Vjw3rC0X5Fce+AIpKTo6Tid+t7zF9W9IoJZMa0dxgtZ0JNn
+         GyIZBqYN7pvrAgc1GBe38W7adOUJiWcqT16856I3NJwdg1HMMB8EnLSZ/l+p8abK4VNU
+         rEAPXOOPZ3iEuT8ZpGZqO5L8ZOvX85T3h2Zztqn3bgTFc8EbeqXIBIhMSxKAWPeXIA2Y
+         yaog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fUE5Lx/KFG4wHOc+8/LB7xM75zMUyQV8EF5MnlFdnvw=;
-        b=q2+Qxd2BjiiTuj7RgjlETEKEwgNKN5w9SACOwOkK2DyDEJBuj7LlEwN4qudFZ+4yLC
-         ugrT/eNyTl0u0rETaF180REErXmKp+0iLiF91plqUt5Rvlmcxs7LujHNZrdQ755OxWnl
-         buWI3HUssULhJPiV7GU/Q8y8AO6V2mmi30J561pazocZeS1/zq/Zwx9cO9S3MAEToMVq
-         rtIfVqGEOLUlqMNL/lnCtQ3W5rDbuGHCmOcxEWfqSsuFZ8spoMucaJAaB566CZ3edSMb
-         j8MFLsIvNEg8AYf12qFaep1WiWXUVeKdLM4cKsU3ThmBUcnFKzH03YOlGaTL1uzdQyDY
-         6QUw==
-X-Gm-Message-State: AGi0PuYR5X4FWd5Cc8KFS/YNc2ewWa9SQRpDr+T0WPbMClhmWWj/FbvQ
-        vqZGfxBXs/5xMdJdUjxqxnElQ6emFi3MjPdV1mwS5wFgVqY=
-X-Google-Smtp-Source: APiQypJzBUxepaBfjYkiESH5bXyliP3NCl9uyVY/cXB7ZTciX79812GcTjSOSbIle2pY0teKA4B6PP9ILi5OGTEG+AY=
-X-Received: by 2002:a4a:9cd8:: with SMTP id d24mr4047527ook.84.1587155441279;
- Fri, 17 Apr 2020 13:30:41 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bx7G3DGSlFM78EsVg2jPdt/+5qpi6YpaV1U7u7qwwXg=;
+        b=OuvW3StsZlEhd+2WZ7JuzXcFd7gublkfCfl9fZOHflVWL4Ok7dRCagoKRf/QJXCRTQ
+         ItxNnfeYYFKZ6wMa8Tspa+5cRWovxOUC1oYS4m3ZxmrHVojwb9luyyg5UPNcdzvQ9ryD
+         6pG3/jjrejXBtKgT7POwteRC+VRo9VNc6+Hz6PWr2wr2srG33AlKXI6psWS7/oU4y3zM
+         Yq1/fQfZpRGQPbg67oYpPhZKjcIR2FGjPnuyXziygwj3cOru3Dcp2/9RLoMNU3+UxCsB
+         7JBg0MkoQomCuIYrR2LOhqrWwifNsZrRyUG2z2toSNx5ZrcibSpDf4HKejS1kjP8pm+Z
+         Y+gw==
+X-Gm-Message-State: AGi0PuazioR3RydwrM0eu0HbNgBe7xrV+pEBsNiQOtUA45ltF7vOaFve
+        ZxoHvxpJOVtoU7WUiJ5xyP0Jkw==
+X-Google-Smtp-Source: APiQypL6wF6JLZj/qU/1iAWJGDaLwwfBuRTAGBdBQlTC29MSAq6TGftzTrbj9yEnUbH+aBqshKnMZw==
+X-Received: by 2002:a2e:8017:: with SMTP id j23mr2946812ljg.22.1587156195392;
+        Fri, 17 Apr 2020 13:43:15 -0700 (PDT)
+Received: from localhost.bredbandsbolaget (c-f3d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.243])
+        by smtp.gmail.com with ESMTPSA id a8sm1435365ljb.64.2020.04.17.13.43.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 13:43:14 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 1/2 v4] dt-bindings: touchscreen: Add CY8CTMA140 bindings
+Date:   Fri, 17 Apr 2020 22:43:11 +0200
+Message-Id: <20200417204312.13453-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-References: <c48a3baef99f3d74e7904498c4054221ec384b36.camel@suse.de>
- <20200416205838.161894-1-saravanak@google.com> <CAL_JsqK9VmRomOnkVLQUOR9tHnh6phjjqXB=ERkjqhBw_wTVzg@mail.gmail.com>
-In-Reply-To: <CAL_JsqK9VmRomOnkVLQUOR9tHnh6phjjqXB=ERkjqhBw_wTVzg@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 17 Apr 2020 13:30:05 -0700
-Message-ID: <CAGETcx8g=qz_JR6y4sfet1c8ZEoE-arbTv1JYqxKMzGHcCMNYg@mail.gmail.com>
-Subject: Re: [PATCH v1] of: property: Don't retry device_link_add() upon failure
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 11:16 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Thu, Apr 16, 2020 at 3:58 PM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > When of_link_to_phandle() was implemented initially, there was no way to
-> > tell if device_link_add() was failing because the supplier device hasn't
-> > been parsed yet, hasn't been added yet, the links were creating a cycle,
-> > etc. Some of these were transient errors that'd go away at a later
-> > point.
-> >
-> > However, with the current set of improved checks, if device_link_add()
-> > fails, it'll only be for permanent errors like cycles or out-of-memory
-> > errors.
->
-> What improved checks? The series from Nicolas?
->
+This adds device tree bindings for the Cypress CY8CTMA140
+touchscreen.
 
-Checking for OF_POPULATED and getting the device using get_dev_from_fwnode().
-OF_POPULATED ensures the node has been parsed. get_dev_from_fwnode()
-ensures the device has been added to driver core.
+Cc: devicetree@vger.kernel.org
+Cc: Henrik Rydberg <rydberg@bitmath.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v1->v4:
+- Drop the description of 'reg', it's surplus.
+- Set the I2C frequency to the span 100k to 400k instead
+  of hardcoding 400k.
+- Collect Rob's review tag.
+---
+ .../input/touchscreen/cypress,cy8ctma140.yaml | 72 +++++++++++++++++++
+ 1 file changed, 72 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma140.yaml
 
-> Is there a dependency between this and Nicolas' series?
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma140.yaml b/Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma140.yaml
+new file mode 100644
+index 000000000000..fda64243dc6c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma140.yaml
+@@ -0,0 +1,72 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/input/touchscreen/cypress,cy8ctma140.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Cypress CY8CTMA140 series touchscreen controller bindings
++
++maintainers:
++  - Linus Walleij <linus.walleij@linaro.org>
++
++allOf:
++  - $ref: touchscreen.yaml#
++
++properties:
++  compatible:
++    const: cypress,cy8ctma140
++
++  reg:
++    const: 0x20
++
++  clock-frequency:
++    description: I2C client clock frequency, defined for host
++    minimum: 100000
++    maximum: 400000
++
++  interrupts:
++    maxItems: 1
++
++  vcpin-supply:
++    description: Analog power supply regulator on VCPIN pin
++
++  vdd-supply:
++    description: Digital power supply regulator on VDD pin
++
++  touchscreen-inverted-x: true
++  touchscreen-inverted-y: true
++  touchscreen-size-x: true
++  touchscreen-size-y: true
++  touchscreen-swapped-x-y: true
++  touchscreen-max-pressure: true
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - touchscreen-size-x
++  - touchscreen-size-y
++  - touchscreen-max-pressure
++
++examples:
++- |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    i2c@00000000 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      touchscreen@20 {
++        compatible = "cypress,cy8ctma140";
++        reg = <0x20>;
++        touchscreen-size-x = <480>;
++        touchscreen-size-y = <800>;
++        touchscreen-max-pressure = <255>;
++        interrupt-parent = <&gpio6>;
++        interrupts = <26 IRQ_TYPE_EDGE_FALLING>;
++        vdd-supply = <&ab8500_ldo_aux2_reg>;
++        vcpin-supply = <&ab8500_ldo_aux2_reg>;
++      };
++    };
++
++...
+-- 
+2.21.1
 
-No.
-
-> Should this go to stable?
-
-Kind of a grey area. I mean, if of/fw_devlink is already letting a
-platform boot all the way, this doesn't fix anything. I doubt anyone
-in a stable kernel is turning on this feature if it affects device
-probing. I'd say the same for Nicolas' series too. It allows more
-platforms to work, but if a platform is fully working, it doesn't
-improve anything.
-
-Long story short, your call for stable.
-
--Saravana
