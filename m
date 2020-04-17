@@ -2,146 +2,68 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A7AC2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 02:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EBFC2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 03:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 493AB21D94
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 02:59:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587092382;
-	bh=9f76vsTI4MqslLl1oBh1nibBOhkfOyb39u3yAMi/djM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pvThKw7mLF58diB9/KE5tn7mop7erRXnpAUNuN/4hoxNcO/9uTAGeuvXNYxjS8Wth
-	 KltplS7NxyGL9I1RcYCvXSSpS13kmpSlg5rVzS/kiqBzOemR1KijTve/bhNAYpzOFg
-	 icAnJ+N7cQgROVXQjcm0aNpnT6o83uIYMDjPY51A=
+	by mail.kernel.org (Postfix) with ESMTP id 59C6B2223D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 03:55:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbgDQC7l (ORCPT
+        id S1726055AbgDQDzZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 22:59:41 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:65340 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgDQC7l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 22:59:41 -0400
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 03H2xGCM001052;
-        Fri, 17 Apr 2020 11:59:17 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 03H2xGCM001052
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587092357;
-        bh=KyvqBR7+SebaG4aWnNxI8TwLlMiPkUuznzOpaWP3ElE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iArepsPlYW6fwEQDzK41qhpzZIxtCI9Gomvwee4gdDF01fvlc5uVNJmAKYDRPzFMl
-         eRDuem1jRW3/Pkm16HE0VcVYIOeFvwCdW6cbJsbsRMv27gGnaoOztxx8+HQwZxAeHP
-         d4ud8UJf9DigB9yGa6lE/K+lG9E9N4z5ekPYcO6+fx4i4F4RxVc0Hk3PZCBfxjpjDZ
-         jfiEZ5lDZ67/UAirjsyNN6jmirjLkfSN183Gb9WCODuOXsvSdiKIeqFVYyqbLJQdnG
-         MknLKZ8LennVjEz1lPO8V3zEC32fAn3NOk4HHlZhYmDN0r6ZVsZg7XeM6hCqVbvTkx
-         GZsVX6Xzmy6JA==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id y185so311007vsy.8;
-        Thu, 16 Apr 2020 19:59:17 -0700 (PDT)
-X-Gm-Message-State: AGi0PuY3KsAiJdL8LXAH/UHYSJy4ewNBIPc8fdseN8rgXDGoF1ieNJEQ
-        wLoXXVoCTQqXRchc/L1HPywREa+5ZkI59+6jIJI=
-X-Google-Smtp-Source: APiQypJx7KibXr8fY5Cx+oLiKjzxwOTwbjRJ+oH0Mzy7gunEPVz2/1RMo3P20evTOYZ12luvyM9jUPP0LVIg29GAon0=
-X-Received: by 2002:a05:6102:2007:: with SMTP id p7mr590853vsr.181.1587092355909;
- Thu, 16 Apr 2020 19:59:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200416185420.20192-1-robh@kernel.org>
-In-Reply-To: <20200416185420.20192-1-robh@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 17 Apr 2020 11:58:40 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQUcHCz-hChi5SKj+Ler-FaUscbkF1KSV+wTq0sC1QeHg@mail.gmail.com>
-Message-ID: <CAK7LNAQUcHCz-hChi5SKj+Ler-FaUscbkF1KSV+wTq0sC1QeHg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Add a minimum version check for dtschema
-To:     Rob Herring <robh@kernel.org>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 16 Apr 2020 23:55:25 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:34404 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725857AbgDQDzZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 23:55:25 -0400
+X-IronPort-AV: E=Sophos;i="5.72,393,1580742000"; 
+   d="scan'208";a="44965826"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 17 Apr 2020 12:55:23 +0900
+Received: from localhost.localdomain (unknown [10.166.252.89])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 46BBC400C43C;
+        Fri, 17 Apr 2020 12:55:23 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     vkoul@kernel.org, robh+dt@kernel.org
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2 0/2] dt-bindings: dma: renesas,{rcar,usb}-dmac: convert to json-schema
+Date:   Fri, 17 Apr 2020 12:55:14 +0900
+Message-Id: <1587095716-23468-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 3:54 AM Rob Herring <robh@kernel.org> wrote:
->
-> The dtschema package must be somewhat up to date as the tools and
-> meta-schema checks are still evolving. Implement a version check,
-> so this can be enforced. This will help ensure new schema submissions
-> get checked against the latest meta-schemas.
->
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
+This patch series converts rcar-dmac and usb-dmac documantation to
+json-schema.
 
+Changes from v1:
+ - Add power-domains and resets to required.
+ - Fix some properties about related dma channels on patch 2/2.
+ - Add Reviewed-by on patch 1/2.
+ https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=269169
 
-You cannot check this in the parse stage.
+Yoshihiro Shimoda (2):
+  dt-bindings: dma: renesas,rcar-dmac: convert bindings to json-schema
+  dt-bindings: dma: renesas,usb-dmac: convert bindings to json-schema
 
+ .../devicetree/bindings/dma/renesas,rcar-dmac.txt  | 117 ----------------
+ .../devicetree/bindings/dma/renesas,rcar-dmac.yaml | 150 +++++++++++++++++++++
+ .../devicetree/bindings/dma/renesas,usb-dmac.txt   |  55 --------
+ .../devicetree/bindings/dma/renesas,usb-dmac.yaml  | 101 ++++++++++++++
+ 4 files changed, 251 insertions(+), 172 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/renesas,rcar-dmac.yaml
+ delete mode 100644 Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/renesas,usb-dmac.yaml
 
-Without the latest dt-schema tools,
-you cannot do even 'make clean'. This is odd.
+-- 
+2.7.4
 
-$ make clean
-Documentation/devicetree/bindings/Makefile:13: *** dtschema minimum
-version is v2020.04.  Stop.
-make[1]: *** [scripts/Makefile.clean:66:
-Documentation/devicetree/bindings] Error 2
-make: *** [Makefile:1729: _clean_Documentation] Error 2
-
-
-
-
-How about adding a phony target to check the version?
-
-
-
-
-
-PHONY += check_dtschema_version
-check_dtschema_version:
-        ( Do something to check tool version)
-
-quiet_cmd_chk_binding = CHKDT   $(patsubst $(srctree)/%,%,$<)
-      cmd_chk_binding = $(DT_DOC_CHECKER) -u $(srctree)/$(src) $< ; \
-                        $(DT_EXTRACT_EX) $< > $@
-
-$(obj)/%.example.dts: $(src)/%.yaml check_dtschema_version FORCE
-$(call if_changed,chk_binding)
-
-
-
-
->  Documentation/devicetree/bindings/Makefile | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
-> index 1df680d07461..9f2e64e29d79 100644
-> --- a/Documentation/devicetree/bindings/Makefile
-> +++ b/Documentation/devicetree/bindings/Makefile
-> @@ -3,6 +3,16 @@ DT_DOC_CHECKER ?= dt-doc-validate
->  DT_EXTRACT_EX ?= dt-extract-example
->  DT_MK_SCHEMA ?= dt-mk-schema
->
-> +DT_SCHEMA_MIN_VERSION = 2020.04
-> +ifeq (1,$(shell \
-> +       printf "%s\n" \
-> +               $(DT_SCHEMA_MIN_VERSION) \
-> +               $$($(DT_DOC_CHECKER) --version 2>/dev/null || echo 0) | sort -VC; \
-> +               echo $$? \
-> +       ))
-> +$(error dtschema minimum version is v$(DT_SCHEMA_MIN_VERSION))
-> +endif
-> +
->  quiet_cmd_chk_binding = CHKDT   $(patsubst $(srctree)/%,%,$<)
->        cmd_chk_binding = $(DT_DOC_CHECKER) -u $(srctree)/$(src) $< ; \
->                          $(DT_EXTRACT_EX) $< > $@
-> --
-> 2.20.1
->
-
-
---
-Best Regards
-Masahiro Yamada
