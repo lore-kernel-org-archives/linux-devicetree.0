@@ -2,65 +2,325 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0ECC38A2C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 11:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DC1C38A29
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 11:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFB9B2078E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 11:53:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587124421;
-	bh=c/rbJdi4bYdAFafdhrDilNV10AtbkTU0xeSBWfYgwCk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2qAOoO8VvQPZfWzZIochXFQ9isaOzQ5Q9RzGPJ0OtV2gBYwZfmBaWYZwe01qi0jxH
-	 vk/Py4+tGhvYnvuX2PKq9nFxF3MxAhD+cjYLZJ5g0xuDUFi/Wy3HuhCAOA41X9w0c+
-	 vUQj0jeAB9CkS5McwKjXD4ZKqjZsxvjb9EHEDnj8=
+	by mail.kernel.org (Postfix) with ESMTP id 7E51B20780
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 11:53:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="e5QXaXkw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730477AbgDQLxl (ORCPT
+        id S1730410AbgDQLxw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 07:53:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730410AbgDQLxl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Apr 2020 07:53:41 -0400
-Received: from localhost (unknown [223.235.195.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 17 Apr 2020 07:53:52 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:19740 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730440AbgDQLxv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Apr 2020 07:53:51 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587124430; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=c23aGFTRbhoiRak4PE8kbsHH6SCohQNSkBPKZkx8Zac=;
+ b=e5QXaXkw+B+ibA5eQlDg3821lF/nrvbapMbDcUxxLadS/sVqINTEEftZsUKOM+fzqYF21o9Q
+ YM01Ra5YnW9IizKK8a8FhvqGZYtjOg6j4QUtc+HLXaCdy8lSEGVpuDmlZ6VyhqgSAxa7/5lZ
+ 2QPYiAlv/fw3uOcweetmNuNVuGI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e9998cc.7fed12fc7dc0-smtp-out-n01;
+ Fri, 17 Apr 2020 11:53:48 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 249EDC4478F; Fri, 17 Apr 2020 11:53:48 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 046C920780;
-        Fri, 17 Apr 2020 11:53:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587124420;
-        bh=c/rbJdi4bYdAFafdhrDilNV10AtbkTU0xeSBWfYgwCk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=v5JT95G9uSRzM2zf7VY5lVEZD95zWBnXQH5XfR2a3Y6LqF/0Y7YDGMBreJtaTT8Ic
-         bjiayscEPlzYfF2mqYo7prUsQ1ry/1i8ysf3StEqOMNuEX1T7RQ3wIkuAxPIqMf65E
-         0h6ExThYl2PUDh9keQqkDPpXEP+TTe0/2z34X8kY=
-Date:   Fri, 17 Apr 2020 17:23:36 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     robh+dt@kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] dt-bindings: dma: renesas,{rcar,usb}-dmac:
- convert to json-schema
-Message-ID: <20200417115336.GN72691@vkoul-mobl>
-References: <1587110829-26609-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+        (Authenticated sender: kgunda)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B1AE2C433F2;
+        Fri, 17 Apr 2020 11:53:46 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587110829-26609-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 17 Apr 2020 17:23:46 +0530
+From:   kgunda@codeaurora.org
+To:     Rob Herring <robh@kernel.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        linux-arm-msm@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH V5 1/4] backlight: qcom-wled: convert the wled bindings to
+ .yaml format
+In-Reply-To: <20200415150904.GA11174@bogus>
+References: <1586274430-28402-1-git-send-email-kgunda@codeaurora.org>
+ <1586274430-28402-2-git-send-email-kgunda@codeaurora.org>
+ <20200415150904.GA11174@bogus>
+Message-ID: <557e8bd874256271174402b5faba9c90@codeaurora.org>
+X-Sender: kgunda@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 17-04-20, 17:07, Yoshihiro Shimoda wrote:
-> This patch series converts rcar-dmac and usb-dmac documantation to
-> json-schema.
-
-Applied, thanks
-
--- 
-~Vinod
+On 2020-04-15 20:39, Rob Herring wrote:
+> On Tue, Apr 07, 2020 at 09:17:07PM +0530, Kiran Gunda wrote:
+>> Convert the qcom-wled bindings from .txt to .yaml format.
+>> Also replace PM8941 to WLED3 and PMI8998 to WLED4.
+>> 
+>> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+>> Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+>> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+>> ---
+>>  .../bindings/leds/backlight/qcom-wled.txt          | 154 
+>> ----------------
+>>  .../bindings/leds/backlight/qcom-wled.yaml         | 201 
+>> +++++++++++++++++++++
+>>  2 files changed, 201 insertions(+), 154 deletions(-)
+>>  delete mode 100644 
+>> Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+> 
+> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml 
+>> b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+>> new file mode 100644
+>> index 0000000..770e780
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+>> @@ -0,0 +1,201 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/leds/backlight/qcom-wled.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Binding for Qualcomm Technologies, Inc. WLED driver
+>> +
+>> +maintainers:
+>> +  - Bjorn Andersson <bjorn.andersson@linaro.org>
+>> +  - Kiran Gunda <kgunda@codeaurora.org>
+>> +
+>> +description: |
+>> +  WLED (White Light Emitting Diode) driver is used for controlling 
+>> display
+>> +  backlight that is part of PMIC on Qualcomm Technologies, Inc. 
+>> reference
+>> +  platforms. The PMIC is connected to the host processor via SPMI 
+>> bus.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - qcom,pm8941-wled
+>> +      - qcom,pmi8998-wled
+>> +      - qcom,pm660l-wled
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  default-brightness:
+>> +    description:
+>> +      brightness value on boot.
+>> +    minimum: 0
+>> +    maximum: 4095
+>> +    default: 2048
+>> +
+>> +  label: true
+>> +
+>> +  qcom,cs-out:
+>> +    description:
+>> +      enable current sink output.
+>> +      This property is supported only for WLED3.
+>> +    type: boolean
+>> +
+>> +  qcom,cabc:
+>> +    description:
+>> +      enable content adaptive backlight control.
+>> +    type: boolean
+>> +
+>> +  qcom,ext-gen:
+>> +    description:
+>> +      use externally generated modulator signal to dim.
+>> +      This property is supported only for WLED3.
+>> +    type: boolean
+>> +
+>> +  qcom,current-limit:
+>> +    description:
+>> +      mA; per-string current limit.
+>> +      This property is supported only for WLED3.
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +    default: 20
+>> +    minimum: 0
+>> +    maximum: 25
+>> +    multipleOf: 1
+> 
+> No point in defining a multiple of 1.
+> 
+>> +
+>> +  qcom,current-limit-microamp:
+>> +    description:
+>> +      uA; per-string current limit.
+>> +    default: 25
+>> +    minimum: 0
+>> +    maximum: 30000
+>> +    multipleOf: 25
+>> +
+>> +  qcom,current-boost-limit:
+>> +    description:
+>> +      mA; boost current limit.
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +
+>> +  qcom,switching-freq:
+>> +    description:
+>> +      kHz; switching frequency.
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +      - enum: [ 600, 640, 685, 738, 800, 872, 960, 1066, 1200, 1371, 
+>> 1600, 1920, 2400, 3200, 4800, 9600 ]
+>> +
+>> +  qcom,ovp:
+>> +    description:
+>> +      V; Over-voltage protection limit.
+>> +      This property is supported only for WLED3.
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +      - enum: [ 27, 29, 32, 35 ]
+>> +      - default: 29
+>> +
+>> +  qcom,ovp-millivolt:
+>> +    description:
+>> +      Over-voltage protection limit. This property is for WLED4 only.
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +      - enum: [ 18100, 19600, 29600, 31100 ]
+>> +      - default: 29600
+>> +
+>> +  qcom,num-strings:
+>> +    description:
+>> +      number of led strings attached.
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +
+>> +  qcom,enabled-strings:
+>> +    description:
+>> +      Array of the WLED strings numbered from 0 to 3. Each
+>> +      string of leds are operated individually. Specify the
+>> +      list of strings used by the device. Any combination of
+>> +      led strings can be used.
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+>> +    minItems: 1
+>> +    maxItems: 4
+>> +
+>> +  qcom,external-pfet:
+>> +    description:
+>> +      Specify if external PFET control for short circuit
+>> +      protection is used. This property is supported only
+>> +      for WLED4.
+>> +    type: boolean
+>> +
+>> +  qcom,auto-string-detection:
+>> +    description:
+>> +      Enables auto-detection of the WLED string configuration.
+>> +      This feature is not supported for WLED3.
+>> +    type: boolean
+>> +
+>> +allOf:
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            const: qcom,pm8941-wled
+>> +
+>> +    then:
+>> +      properties:
+>> +        qcom,current-boost-limit:
+>> +           enum: [ 105, 385, 525, 805, 980, 1260, 1400, 1680 ]
+>> +           default: 805
+>> +
+>> +        qcom,switching-freq:
+>> +           default: 1600
+>> +
+>> +        qcom,num-strings:
+>> +           enum: [ 1, 2, 3 ]
+>> +
+>> +        interrupts:
+>> +          items:
+>> +            - description: over voltage protection interrupt.
+>> +
+>> +        interrupt-names:
+>> +          items:
+>> +            - const: ovp
+>> +
+>> +    else:
+>> +      properties:
+>> +        qcom,current-boost-limit:
+>> +           enum: [ 105, 280, 450, 620, 970, 1150, 1300, 1500 ]
+>> +           default: 970
+>> +
+>> +        qcom,switching-freq:
+>> +           default: 800
+>> +
+>> +        qcom,num-strings:
+>> +           enum: [ 1, 2, 3, 4 ]
+>> +
+>> +        interrupts:
+>> +          items:
+>> +            - description: over voltage protection interrupt.
+>> +            - description: short circuit interrupt.
+>> +
+>> +        interrupt-names:
+>> +          items:
+>> +            - const: ovp
+>> +            - const: short
+> 
+> Move these 2 props to the main section adding a 'minItems: 1'. Then 
+> just
+> define 'minItems: 2' here and 'maxItems: 1' in the 'then' clause.
+> 
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - label
+> 
+> Add:
+> 
+> additionalProperties: false
+> 
+>> +
+>> +examples:
+>> +  - |
+>> +    backlight@d800 {
+>> +        compatible = "qcom,pm8941-wled";
+>> +        reg = <0xd800 0x100>;
+>> +        label = "backlight";
+>> +
+>> +        qcom,cs-out;
+>> +        qcom,current-limit = <20>;
+>> +        qcom,current-boost-limit = <805>;
+>> +        qcom,switching-freq = <1600>;
+>> +        qcom,ovp = <29>;
+>> +        qcom,num-strings = <2>;
+>> +        qcom,enabled-strings = <0 1>;
+>> +     };
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>>  a Linux Foundation Collaborative Project
+>> 
+Thanks for reviewing. I will submit the next revision with all the 
+fixes.
