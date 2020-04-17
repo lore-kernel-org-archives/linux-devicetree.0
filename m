@@ -5,47 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB17C38A2C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 12:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E9EC2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 12:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1C02063A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 12:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D572E206B9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 12:59:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HvCRKTGF"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tO4QErGf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730197AbgDQM7R (ORCPT
+        id S1730202AbgDQM6n (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 08:59:17 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:59282 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730241AbgDQM6w (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 08:58:52 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03HCwYrH051599;
-        Fri, 17 Apr 2020 07:58:34 -0500
+        Fri, 17 Apr 2020 08:58:43 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50214 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730163AbgDQM6l (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 08:58:41 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03HCwRDg058810;
+        Fri, 17 Apr 2020 07:58:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587128314;
-        bh=peR9oJnvUwucDzXnKqpf5C5NOv01hYO1Pcv0Nxgp3aw=;
+        s=ti-com-17Q1; t=1587128307;
+        bh=4g2ILaxNCm1SNUD5tcC/SNftOmpCaWGgvx+JRfgFemw=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=HvCRKTGFlB6aHHTeC7BvEZBOR2HeA1FLxTGAY2KIBh194qGe1nk18WGJLLz3C/gu7
-         KUpdOqUgnsIQUcwUZzgU4yg9wZSb/68cjCOa3NxkP6EFepFBdjjXQkNOnDH+q80zb3
-         +UnqcNJNeyYYez3G0kV0SzZEFHtRQbJOlmOZiEjM=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03HCwYkd051916;
-        Fri, 17 Apr 2020 07:58:34 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+        b=tO4QErGfnld0lR5h3+/y22+t6nz7UbFBDsMXFjVJs0lh4fj2sgohJH4GoQ5TE8QKl
+         uqjMKhdhAYDi4GoRM/RvECgADl5UOR42Skf2bL6hF0Vbanh79xlkZlYkGm3mQBsPKT
+         vZ+i+Hr04JxtcUHiaVmShCBGt0BVTyaENcYjcjeM=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03HCwQDI109222
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 17 Apr 2020 07:58:27 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
- Apr 2020 07:58:33 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2020 07:58:26 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 17 Apr 2020 07:58:33 -0500
+ Frontend Transport; Fri, 17 Apr 2020 07:58:26 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03HCvsDF031089;
-        Fri, 17 Apr 2020 07:58:30 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03HCvsDD031089;
+        Fri, 17 Apr 2020 07:58:23 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Tom Joseph <tjoseph@cadence.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -57,9 +58,9 @@ CC:     Arnd Bergmann <arnd@arndb.de>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 10/14] dt-bindings: PCI: Add host mode dt-bindings for TI's J721E SoC
-Date:   Fri, 17 Apr 2020 18:27:49 +0530
-Message-ID: <20200417125753.13021-11-kishon@ti.com>
+Subject: [PATCH v3 08/14] PCI: cadence: Fix updating Vendor ID and Subsystem Vendor ID register
+Date:   Fri, 17 Apr 2020 18:27:47 +0530
+Message-ID: <20200417125753.13021-9-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200417125753.13021-1-kishon@ti.com>
 References: <20200417125753.13021-1-kishon@ti.com>
@@ -71,133 +72,46 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add host mode dt-bindings for TI's J721E SoC.
+Commit 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe
+controller") in order to update Vendor ID, directly wrote to
+PCI_VENDOR_ID register. However PCI_VENDOR_ID in root port configuration
+space is read-only register and writing to it will have no effect.
+Use local management register to configure Vendor ID and Subsystem Vendor
+ID.
 
+Fixes: 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe controller")
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- .../bindings/pci/ti,j721e-pci-host.yaml       | 113 ++++++++++++++++++
- 1 file changed, 113 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+ drivers/pci/controller/cadence/pcie-cadence-host.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-new file mode 100644
-index 000000000000..d8d3011fd578
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-@@ -0,0 +1,113 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/pci/ti,j721e-pci-host.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index 7c220671e66f..c7dc7be0da40 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -70,6 +70,7 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+ {
+ 	struct cdns_pcie *pcie = &rc->pcie;
+ 	u32 value, ctrl;
++	u32 id;
+ 
+ 	/*
+ 	 * Set the root complex BAR configuration register:
+@@ -89,8 +90,12 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+ 	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
+ 
+ 	/* Set root port configuration space */
+-	if (rc->vendor_id != 0xffff)
+-		cdns_pcie_rp_writew(pcie, PCI_VENDOR_ID, rc->vendor_id);
++	if (rc->vendor_id != 0xffff) {
++		id = CDNS_PCIE_LM_ID_VENDOR(rc->vendor_id) |
++			CDNS_PCIE_LM_ID_SUBSYS(rc->vendor_id);
++		cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, id);
++	}
 +
-+title: TI J721E PCI Host (PCIe Wrapper)
-+
-+maintainers:
-+  - Kishon Vijay Abraham I <kishon@ti.com>
-+
-+allOf:
-+  - $ref: "cdns-pcie-host.yaml#"
-+
-+properties:
-+  compatible:
-+      enum:
-+        - ti,j721e-pcie-host
-+
-+  reg:
-+    maxItems: 4
-+
-+  reg-names:
-+    items:
-+      - const: intd_cfg
-+      - const: user_cfg
-+      - const: reg
-+      - const: cfg
-+
-+  ti,syscon-pcie-ctrl:
-+    description: Phandle to the SYSCON entry required for configuring PCIe mode
-+      and link speed.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+    description: clock-specifier to represent input to the PCIe
-+
-+  clock-names:
-+    items:
-+      - const: fck
-+
-+  vendor-id:
-+    const: 0x104c
-+
-+  device-id:
-+    const: 0xb00d
-+
-+  msi-map: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - ti,syscon-pcie-ctrl
-+  - max-link-speed
-+  - num-lanes
-+  - power-domains
-+  - clocks
-+  - clock-names
-+  - vendor-id
-+  - device-id
-+  - msi-map
-+  - dma-coherent
-+  - dma-ranges
-+  - ranges
-+  - reset-gpios
-+  - phys
-+  - phy-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    bus {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        pcie0_rc: pcie@2900000 {
-+            compatible = "ti,j721e-pcie-host";
-+            reg = <0x00 0x02900000 0x00 0x1000>,
-+                  <0x00 0x02907000 0x00 0x400>,
-+                  <0x00 0x0d000000 0x00 0x00800000>,
-+                  <0x00 0x10000000 0x00 0x00001000>;
-+            reg-names = "intd_cfg", "user_cfg", "reg", "cfg";
-+            ti,syscon-pcie-ctrl = <&pcie0_ctrl>;
-+            max-link-speed = <3>;
-+            num-lanes = <2>;
-+            power-domains = <&k3_pds 239 TI_SCI_PD_EXCLUSIVE>;
-+            clocks = <&k3_clks 239 1>;
-+            clock-names = "fck";
-+            device_type = "pci";
-+            #address-cells = <3>;
-+            #size-cells = <2>;
-+            bus-range = <0x0 0xf>;
-+            vendor-id = <0x104c>;
-+            device-id = <0xb00d>;
-+            msi-map = <0x0 &gic_its 0x0 0x10000>;
-+            dma-coherent;
-+            reset-gpios = <&exp1 6 GPIO_ACTIVE_HIGH>;
-+            phys = <&serdes0_pcie_link>;
-+            phy-names = "pcie-phy";
-+            ranges = <0x01000000 0x0 0x10001000  0x00 0x10001000  0x0 0x0010000>,
-+                     <0x02000000 0x0 0x10011000  0x00 0x10011000  0x0 0x7fef000>;
-+            dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
-+        };
-+    };
+ 	if (rc->device_id != 0xffff)
+ 		cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, rc->device_id);
+ 
 -- 
 2.17.1
 
