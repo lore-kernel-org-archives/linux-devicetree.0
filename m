@@ -2,101 +2,151 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E28C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 05:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB19C2BB55
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 05:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD9E22246
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 05:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4673C221F4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 05:54:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgDQFrZ (ORCPT
+        id S1726167AbgDQFyy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 01:47:25 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:47552 "EHLO inva020.nxp.com"
+        Fri, 17 Apr 2020 01:54:54 -0400
+Received: from mga12.intel.com ([192.55.52.136]:64128 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726065AbgDQFrX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Apr 2020 01:47:23 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F311C1A10D9;
-        Fri, 17 Apr 2020 07:47:21 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6AD321A10D7;
-        Fri, 17 Apr 2020 07:47:17 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 89DE6402A8;
-        Fri, 17 Apr 2020 13:47:11 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com,
-        daniel.baluta@nxp.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 2/2] arm64: dts: imx8qxp-mek: Add PMIC thermal zone support
-Date:   Fri, 17 Apr 2020 13:39:06 +0800
-Message-Id: <1587101946-19495-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587101946-19495-1-git-send-email-Anson.Huang@nxp.com>
-References: <1587101946-19495-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726065AbgDQFyx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Apr 2020 01:54:53 -0400
+IronPort-SDR: dpx3WOgxY7JZpK/dmexNDH63BSlxhhTGED6XNlAaOwzaretlY48GEQQ/CRjhO59Gb3s3fIar2E
+ fPnkYROxVpzQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 22:54:53 -0700
+IronPort-SDR: NC5HDhSjxZBTFPHXDwSWhyqwNFkWnMoWKD2QgOoN0ENvTdO8YxwZYP3uLEZyXmKzbxjpPrfRZH
+ x0BeL7GjwOpw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,393,1580803200"; 
+   d="scan'208";a="364233979"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga001.fm.intel.com with ESMTP; 16 Apr 2020 22:54:50 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     sboyd@kernel.org, mturquette@baylibre.com,
+        linux-clk@vger.kernel.org
+Cc:     robh@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v8 0/2] clk: intel: Add a new driver for a new clock controller IP
+Date:   Fri, 17 Apr 2020 13:54:45 +0800
+Message-Id: <cover.1587102634.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-i.MX8QXP MEK board has PMIC thermal sensor, add support for it.
+Hi,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8qxp-mek.dts | 33 +++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+This series adds clock driver for Clock Generation Unit(CGU) of
+Lightning Mountain(LGM) SoC.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-index 2ed7aba..9b105ae 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-@@ -139,6 +139,39 @@
- 	status = "okay";
- };
- 
-+&thermal_zones {
-+	pmic-thermal0 {
-+		polling-delay-passive = <250>;
-+		polling-delay = <2000>;
-+		thermal-sensors = <&tsens IMX_SC_R_PMIC_0>;
-+
-+		trips {
-+			pmic_alert0: trip0 {
-+				temperature = <110000>;
-+				hysteresis = <2000>;
-+				type = "passive";
-+			};
-+
-+			pmic_crit0: trip1 {
-+				temperature = <125000>;
-+				hysteresis = <2000>;
-+				type = "critical";
-+			};
-+		};
-+
-+		cooling-maps {
-+			map0 {
-+				trip = <&pmic_alert0>;
-+				cooling-device =
-+					<&A35_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&A35_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&A35_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&A35_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+			};
-+		};
-+	};
-+};
-+
- &usdhc1 {
- 	assigned-clocks = <&clk IMX_CONN_SDHC0_CLK>;
- 	assigned-clock-rates = <200000000>;
+Patch 1 adds bindings document & include file for CGU.
+Patch 2 adds common clock framework based clock driver for CGU.
+
+These patches are baselined upon Linux 5.7-rc1 at below Git link:
+git git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git
+
+v8:
+- Rebase to linux 5.7-rc1.
+
+v7:
+- Fix a mistake in comments explaining structure fields.
+
+v6:
+- Resolve Kconfig dependencies issues (Randy Dunlap)
+
+v5:
+- Address review concerns - mainly below mentioned. (Stephen Boyd)
+- Improve commit message, add COMPILE_TEST in KConfig dependency.
+- Remove unused header include files, drop unnecessary casts.
+- Switch to using readl_poll_timeout() instead of implementing timeout routine.
+- Avoid using small functions which are called just once. Inline them or
+  remove them.
+- const static --> static const
+- Fix coding style/convention related review concerns.
+- Use __iomem for all IO addresses variables.
+- Consolidate clk_enable & clk_disable ops into a common clk_enable_disable
+  routine to avoid redundant code.
+- Remove unnecessary dev pointers for clk data structures.
+- Redesign code to use new way of specifying clk_parents i.e. use
+  clk_parent_data.fw_name instead of older parent_name strings.
+- Switch from raw_spin_locks() to normal spin_locks() and realign locking.
+- Drop __initconst, __init, __refdata.
+- Reorder patch series - make dt-binding patch as first patch.
+- Add pointer to include file in dt-bindings document.
+- Remove CLK_IS_CRITICAL flag for clks for which IGNORE_UNUSED flag is enough.
+  Add comments for clks which are marked as CRITICAL.
+- Fix $id path in dt-bindings - drop bindings. (Rob Herring).
+- Add Reviewed-by tag from Rob Herring. Thanks Rob.
+
+v4:
+- Add drivers/clk/x86/Kconfig file which got missed in v3 by mistake.
+
+v3:
+- Address review concerns:
+  Add Kconfig entry in x86 folder instead of modifying clk/Kconfig. (Andy Shevchenko)
+  Fix coding style/convention related concerns. (Andy Shevchenko)
+  Improve description, licensing info, rename node name correctly in dt bindings
+  document & remove CLK_NR_CLKS from dt-bindings header file. (Stephen Boyd)
+  Fix a build warning reported by kbuild test robot & Nathan Chancellor
+- Add few new clocks & rename few existing clocks.
+- Add more ops for ddiv & divider clk_ops.
+- Fix few minor bugs.
+- Use CLK_IS_CRITICAL flag for clocks which shall never be disabled.
+
+v2:
+- Move the driver to x86 folder.
+- Remove syscon usage.
+- Remove regmap based access. Use direct readl()/write() instead. Add spinlocks.
+- Change all enum values to capitals.
+- Rename all data structures & functions from intel_* to lgm_*.
+- Remove multiple header files. Keep only one header file.
+- Make probe fail when any of the clk/pll registration fails.
+- Fix few bugs with clk_init_data assignement.
+- Address review concerns for code quality/style/convention.
+
+v1:
+- Initial version.
+
+
+Rahul Tanwar (1):
+  dt-bindings: clk: intel: Add bindings document & header file for CGU
+
+rtanwar (1):
+  clk: intel: Add CGU clock driver for a new SoC
+
+ .../devicetree/bindings/clock/intel,cgu-lgm.yaml   |  44 ++
+ drivers/clk/Kconfig                                |   1 +
+ drivers/clk/x86/Kconfig                            |   8 +
+ drivers/clk/x86/Makefile                           |   1 +
+ drivers/clk/x86/clk-cgu-pll.c                      | 156 +++++
+ drivers/clk/x86/clk-cgu.c                          | 636 +++++++++++++++++++++
+ drivers/clk/x86/clk-cgu.h                          | 335 +++++++++++
+ drivers/clk/x86/clk-lgm.c                          | 492 ++++++++++++++++
+ include/dt-bindings/clock/intel,lgm-clk.h          | 165 ++++++
+ 9 files changed, 1838 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
+ create mode 100644 drivers/clk/x86/Kconfig
+ create mode 100644 drivers/clk/x86/clk-cgu-pll.c
+ create mode 100644 drivers/clk/x86/clk-cgu.c
+ create mode 100644 drivers/clk/x86/clk-cgu.h
+ create mode 100644 drivers/clk/x86/clk-lgm.c
+ create mode 100644 include/dt-bindings/clock/intel,lgm-clk.h
+
 -- 
-2.7.4
+2.11.0
 
