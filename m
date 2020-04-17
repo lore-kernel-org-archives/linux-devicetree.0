@@ -2,151 +2,106 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A537C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 07:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4657AC2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 07:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74B27206D5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 07:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19BE72083E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 07:18:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="D0shEtuy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728472AbgDQHNA (ORCPT
+        id S1728849AbgDQHSQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 03:13:00 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:51073 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728171AbgDQHNA (ORCPT
+        Fri, 17 Apr 2020 03:18:16 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:57975 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728808AbgDQHSP (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Apr 2020 03:13:00 -0400
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 17 Apr 2020 12:42:57 +0530
-Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 17 Apr 2020 12:42:34 +0530
-Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
-        id 48D9C4832; Fri, 17 Apr 2020 12:42:33 +0530 (IST)
-From:   Kalyan Thota <kalyan_t@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        dianders@chromium.org, jsanka@codeaurora.org,
-        mkrishn@codeaurora.org, travitej@codeaurora.org,
-        nganji@codeaurora.org
-Subject: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
-Date:   Fri, 17 Apr 2020 12:42:26 +0530
-Message-Id: <1587107546-7379-1-git-send-email-kalyan_t@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Fri, 17 Apr 2020 03:18:15 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id PLGLjhe6v7xncPLGOj9cXk; Fri, 17 Apr 2020 09:18:13 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1587107893; bh=HSLs2JiZcy4OA1k/VMJ4MaHDQtFq2ylnKTJGakTcPR8=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=D0shEtuyA6wOYrboGofBaD6Hcvyue0LHWkhqvWKl4cAbtlR+789ibtP1go8+npAdS
+         D0GJUT2xnk5cC3X13WO8g/7Fa6+BWe0BnzvxtPX5sgfGvl1PBgDfCCXMTipyw0iy21
+         miXGRXji8uREA4AP3zoHfQGgMK23lJVpbmtJHMud3KbXoTDg7k/iJ1Vzi4FYKaGhOB
+         9RvGs9lDNxWItdMUUytQXVk1iZ8gYrv1+i8XHXUZcyHdh7+wVoayGIwBUZtwzcTgaN
+         M8JHq2lwj72RCeNFDeBABlrTxp8HjSoTKN6BrYVUtB8IXEcr3ZbO/UtFhRxYrhCZZX
+         RvVEV+D9R0kPA==
+Subject: Re: [PATCH v2 7/9] media: MAINTAINERS: rkisp1: add path to
+ dt-bindings
+To:     Helen Koike <helen.koike@collabora.com>,
+        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        robh+dt@kernel.org, heiko@sntech.de, kernel@collabora.com,
+        dafna.hirschfeld@collabora.com, ezequiel@collabora.com,
+        mark.rutland@arm.com, karthik.poduval@gmail.com, jbx6244@gmail.com,
+        kishon@ti.com
+References: <20200403161538.1375908-1-helen.koike@collabora.com>
+ <20200403161538.1375908-8-helen.koike@collabora.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <9a95d227-9592-2c5c-fe6d-dff9b84f4292@xs4all.nl>
+Date:   Fri, 17 Apr 2020 09:18:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200403161538.1375908-8-helen.koike@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfN/6IaxCKZYDRmsDs68Ac7Ohz+Yi31l+n/3qIvjgojpcfRUtSJSc05kGL2CfXDapr3Rq4gYZgR4YeLxd10TX4h+NBJFBcEU+jLCtDcwIuTse6A59qRpJ
+ WiwqnAonGsAFeOerDoqNy1YmLjtUYSNLSY5LUmmSmKy0rm6DvctTMLL3W9KqFzXOfreLQuav06dYKKGgABldV/sXbi1MEA0/2ohTpssCluapKmoWm6umTG9e
+ HExIcM3ACV3iIWTi/FPC5szOfNda35Gg/qXqYmby1qh1kIs/HV8CftXHnN5/2d3NpCApcrT7MMY3/uVm+19nTEM/4gEtPEqIY9tyPN5whm6zo7Xe0SjvlqW3
+ IJCQMlQnO9vto6abRNvXyk95hQWSImEWy6sW2HSs/de9ytBnO5oQzOgIivkyTXpZwi/Fee2YnCZMiYP02i8q6QHktUWTEguBtgWDT5+tp9IJhrbyHhdZeUCv
+ 0f6v/H02P6xJWXY334V3m0VQ6GSTi8p3rJKXE/tJ4EuFT8fucFUXQTyG9nlsMApBPgbXguFq1nGWiDYo8XxIfY/JZOPhaeD78ELP20IXX39a21oQUFlNYEW8
+ Sv4OmjRKJehtX+CPvRbDgzx2v1cMFI1OQs1KvqsqqQdffVXGX/uoVqqqp+n2fnvsBb4D0CIuZgI89l2iB/T3/PoWTioEn1NwCWNUNnBSHspRLA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-"The PM core always increments the runtime usage counter
-before calling the ->suspend() callback and decrements it
-after calling the ->resume() callback"
+On 03/04/2020 18:15, Helen Koike wrote:
+> The Rockchip ISP bindings was moved out of staging.
+> Update MAINTAINERS file with the new path.
 
-DPU and DSI are managed as runtime devices. When
-suspend is triggered, PM core adds a refcount on all the
-devices and calls device suspend, since usage count is
-already incremented, runtime suspend was not getting called
-and it kept the clocks on which resulted in target not
-entering into XO shutdown.
+Shouldn't there be a reference to Documentation/devicetree/bindings/phy/rockchip-mipi-dphy-rx0.yaml
+as well in MAINTAINERS?
 
-Add changes to force suspend on runtime devices during pm sleep.
+Regards,
 
-Changes in v1:
- - Remove unnecessary checks in the function
-    _dpu_kms_disable_dpu (Rob Clark).
+	Hans
 
-Changes in v2:
- - Avoid using suspend_late to reset the usagecount
-   as suspend_late might not be called during suspend
-   call failures (Doug).
-
-Changes in v3:
- - Use force suspend instead of managing device usage_count
-   via runtime put and get API's to trigger callbacks (Doug).
-
-Changes in v4:
- - Check the return values of pm_runtime_force_suspend and
-   pm_runtime_force_resume API's and pass appropriately (Doug).
-
-Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c |  2 ++
- drivers/gpu/drm/msm/dsi/dsi.c           |  2 ++
- drivers/gpu/drm/msm/msm_drv.c           | 14 +++++++++++++-
- 3 files changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index ce19f1d..b886d9d 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -1123,6 +1123,8 @@ static int __maybe_unused dpu_runtime_resume(struct device *dev)
- 
- static const struct dev_pm_ops dpu_pm_ops = {
- 	SET_RUNTIME_PM_OPS(dpu_runtime_suspend, dpu_runtime_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
- };
- 
- static const struct of_device_id dpu_dt_match[] = {
-diff --git a/drivers/gpu/drm/msm/dsi/dsi.c b/drivers/gpu/drm/msm/dsi/dsi.c
-index 55ea4bc2..62704885 100644
---- a/drivers/gpu/drm/msm/dsi/dsi.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi.c
-@@ -161,6 +161,8 @@ static int dsi_dev_remove(struct platform_device *pdev)
- 
- static const struct dev_pm_ops dsi_pm_ops = {
- 	SET_RUNTIME_PM_OPS(msm_dsi_runtime_suspend, msm_dsi_runtime_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
- };
- 
- static struct platform_driver dsi_driver = {
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index 7d985f8..4b93fc1 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -1040,6 +1040,7 @@ static int msm_pm_suspend(struct device *dev)
- {
- 	struct drm_device *ddev = dev_get_drvdata(dev);
- 	struct msm_drm_private *priv = ddev->dev_private;
-+	int ret, rc;
- 
- 	if (WARN_ON(priv->pm_state))
- 		drm_atomic_state_put(priv->pm_state);
-@@ -1051,7 +1052,14 @@ static int msm_pm_suspend(struct device *dev)
- 		return ret;
- 	}
- 
--	return 0;
-+	ret = pm_runtime_force_suspend(dev);
-+	if (ret) {
-+		rc = drm_atomic_helper_resume(ddev, priv->pm_state);
-+		if (!rc)
-+			priv->pm_state = NULL;
-+	}
-+
-+	return ret;
- }
- 
- static int msm_pm_resume(struct device *dev)
-@@ -1063,6 +1071,10 @@ static int msm_pm_resume(struct device *dev)
- 	if (WARN_ON(!priv->pm_state))
- 		return -ENOENT;
- 
-+	ret = pm_runtime_force_resume(dev);
-+	if (ret)
-+		return ret;
-+
- 	ret = drm_atomic_helper_resume(ddev, priv->pm_state);
- 	if (!ret)
- 		priv->pm_state = NULL;
--- 
-1.9.1
+> 
+> Suggested-by: Johan Jonker <jbx6244@gmail.com>
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> ---
+> 
+> V2:
+> - This is a new patch in the series
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d66ac41ef5872..726044b84cf23 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14303,6 +14303,7 @@ M:	Helen Koike <helen.koike@collabora.com>
+>  L:	linux-media@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/staging/media/rkisp1/
+> +F:	Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+>  
+>  ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
+>  M:	Jacob Chen <jacob-chen@iotwrt.com>
+> 
 
