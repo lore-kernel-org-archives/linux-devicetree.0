@@ -2,108 +2,83 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E513BC38A2C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 15:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF08C2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 15:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C366D20936
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 15:14:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XASgXQK5"
+	by mail.kernel.org (Postfix) with ESMTP id 2582B21D79
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 15:21:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728833AbgDQPOv (ORCPT
+        id S1728411AbgDQPVp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 11:14:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728272AbgDQPOu (ORCPT
+        Fri, 17 Apr 2020 11:21:45 -0400
+Received: from smtprelay0187.hostedemail.com ([216.40.44.187]:41826 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728114AbgDQPVp (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Apr 2020 11:14:50 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E655FC061A0C;
-        Fri, 17 Apr 2020 08:14:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=YfcdpQWtKsaw+yPCSMjyubrORmj0oCIV+0oQZL7RWS0=; b=XASgXQK5pLpEHZkviFU71mEj+0
-        yWwsFWDyefLn55gU9UbpLBPsyW8Ga+ODuvzm67RJRnuJeBJWZ6BOJG+XY28jwGaWYaSSRdysqksNm
-        CQisXfnjZsko3uHUDiHf89Cq6+IFII07ctHPYxMGo6/g/4wsHNmPnqMAj0idTtunEMmeUegwel1pf
-        NWZ66er5+AXg1u1yPuWfuTW28JZUAthvPg31VhS95B4j/szxhSNeEn914yeLudR3FISpqCOvWPXfo
-        aB/D7f6MQv2ooen6IA56FniP1G0WLD2NAKAI91alpDt6PK7IbxQ3bllskHnmtpPiz1hcLxBSvot1h
-        IylDvzeQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jPShe-0006IA-Mv; Fri, 17 Apr 2020 15:14:50 +0000
-Subject: Re: [PATCH v10 3/6] iio: adc: mp2629: Add support for mp2629 ADC
- driver
-To:     saravanan sekar <sravanhome@gmail.com>, lee.jones@linaro.org,
-        andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20200417085003.6124-1-sravanhome@gmail.com>
- <20200417085003.6124-4-sravanhome@gmail.com>
- <a8da9a3d-93a5-b926-b8c0-84138b59ad4f@infradead.org>
- <2b4c7de2-aa85-65aa-be5e-3daed689c44d@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <f1e85fcd-e5e5-798c-6093-a195c5cbc08a@infradead.org>
-Date:   Fri, 17 Apr 2020 08:14:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 17 Apr 2020 11:21:45 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 03417100E7B42;
+        Fri, 17 Apr 2020 15:21:44 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: rat66_8345024049b55
+X-Filterd-Recvd-Size: 2028
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf02.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 17 Apr 2020 15:21:41 +0000 (UTC)
+Message-ID: <ee72cdce1c487f7d0fd089f59fb92422ef2d9396.camel@perches.com>
+Subject: Re: [PATCH v3 14/14] MAINTAINERS: Add Kishon Vijay Abraham I for TI
+ J721E SoC PCIe
+From:   Joe Perches <joe@perches.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 17 Apr 2020 08:19:29 -0700
+In-Reply-To: <20200417125753.13021-15-kishon@ti.com>
+References: <20200417125753.13021-1-kishon@ti.com>
+         <20200417125753.13021-15-kishon@ti.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <2b4c7de2-aa85-65aa-be5e-3daed689c44d@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 4/17/20 7:51 AM, saravanan sekar wrote:
-> Hi Randy,
-> 
-> On 17/04/20 4:35 pm, Randy Dunlap wrote:
->> Hi--
->>
->> On 4/17/20 1:50 AM, Saravanan Sekar wrote:
->>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
->>> index 82e33082958c..ef0c0cd31855 100644
->>> --- a/drivers/iio/adc/Kconfig
->>> +++ b/drivers/iio/adc/Kconfig
->>> @@ -680,6 +680,16 @@ config MESON_SARADC
->>>         To compile this driver as a module, choose M here: the
->>>         module will be called meson_saradc.
->>>   +config MP2629_ADC
->>> +    tristate "Monolithic MP2629 ADC driver"
->>> +    depends on MFD_MP2629
->>     depends on I2C
->> ?
-> 
-> Made "depends on I2C" in MFD_MP2629, hope not needed becomes redundant here
-> 
-> Thanks,
-> Saravanan
+On Fri, 2020-04-17 at 18:27 +0530, Kishon Vijay Abraham I wrote:
+> Add Kishon Vijay Abraham I as MAINTAINER for TI J721E SoC PCIe.
+[]
+> diff --git a/MAINTAINERS b/MAINTAINERS
+[]
+> @@ -12968,13 +12968,15 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/pci/designware-pcie.txt
+>  F:	drivers/pci/controller/dwc/*designware*
+>  
+> -PCI DRIVER FOR TI DRA7XX
+> +PCI DRIVER FOR TI DRA7XX/J721E
+>  M:	Kishon Vijay Abraham I <kishon@ti.com>
+>  L:	linux-omap@vger.kernel.org
+>  L:	linux-pci@vger.kernel.org
+> +L:	linux-arm-kernel@lists.infradead.org
+>  S:	Supported
+>  F:	Documentation/devicetree/bindings/pci/ti-pci.txt
+>  F:	drivers/pci/controller/dwc/pci-dra7xx.c
+> +F:	drivers/pci/controller/cadence/pci-j721e.c
 
-I see. Thanks for explaining.
-
->>> +    help
->>> +      Say yes to have support for battery charger IC MP2629 ADC device
->>> +      accessed over I2C.
->>> +
->>> +      This driver provides ADC conversion of system, input power supply
->>> +      and battery voltage & current information.
->>> +
->>>   config NAU7802
->>>       tristate "Nuvoton NAU7802 ADC driver"
->>>       depends on I2C
->> thanks.
+Please keep file patterns in alphabetic order by
+moving this new cadence line up one line above dwc.
 
 
--- 
-~Randy
 
