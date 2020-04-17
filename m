@@ -2,86 +2,121 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03461C2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 14:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32625C38A2B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 14:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D703A20B1F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 14:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F46E2087E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 14:30:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Gs0GmJfF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O655oVXD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgDQO0k (ORCPT
+        id S1725970AbgDQOaT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 10:26:40 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:23537 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726065AbgDQO0j (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Apr 2020 10:26:39 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1587133599; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=CMTAciZ1CDkXatEHtEmVAWxJhkhwS/4RbxCzudGRMx8=; b=Gs0GmJfFcXF6860J8w7e2rHPjRWX7RGKiD0mAVHW6D/rS5tk4NYyIhmg+yHk943dVcO2d1nL
- XW/3de6W56PK0UIeDgZgGL1UeUha3fx0U2SOflYobGJewa8zfOFPtEHAIAdFg/6pLIgZaEUa
- JteMTevDghLFPNhKkrAkPdFQlnE=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e99bc90.7fe8837f05e0-smtp-out-n01;
- Fri, 17 Apr 2020 14:26:24 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7F78AC43636; Fri, 17 Apr 2020 14:26:23 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8981FC433F2;
-        Fri, 17 Apr 2020 14:26:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8981FC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org
-Cc:     agross@kernel.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, evgreen@chromium.org,
-        ohad@wizery.com, mka@chromium.org, dianders@chromium.org,
-        devicetree@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 0/5] Add PAS and MSA based Modem support
-Date:   Fri, 17 Apr 2020 19:56:00 +0530
-Message-Id: <20200417142605.28885-1-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.25.0
+        Fri, 17 Apr 2020 10:30:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35408 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726868AbgDQOaP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 10:30:15 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59795C061A0C
+        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 07:30:14 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id s3so1708817eji.6
+        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 07:30:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t4kmCow4WbTQt7XbF+AHk2oxINCbHnDLYHrlyOhKeBk=;
+        b=O655oVXD26/Duqzplq5CoYORER7kylQOADLYA8rTjyrsRtR+cZoU1U4nPoMhz2fkz8
+         hapAuxqoExCMkSrWtwrMaz1fh4B5HjHb6jhmbHULPqqw+j6tfZjmofNvMNaDq/pdhDdf
+         jQbdidXViJE77LOAHkJ6/vpAL2zd7EOztZHXN4ZS1D3gfE7tNnUtkMK4IFtHz2tQNL9H
+         9YJcx+coYjh+IcshnyOrzzCjR23xQUP76YvhuMi8qg81ltnrMvYhhWBemdUw1mkr/JMd
+         x9WcSSshr6riUwK78zVOB0ReS93JWQIfKnx4W90kVjq5grkY1sAVC6hFgbMwY6FePuIM
+         t+Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t4kmCow4WbTQt7XbF+AHk2oxINCbHnDLYHrlyOhKeBk=;
+        b=q83dBxwTXJzzzTCh5DTfZj5GposD8ubWDUwxAqbKGGU0LimSm1+W0hi8cZSXEUVA7q
+         RVgShpKSWyTAszWUnumT7GujA44a3DleldmGXVlCcfLFs0y//of4CipXLqY08IsZccym
+         ky4mIAFOivui3Oe+gJmhF8Lb6thdQ8BXvqy33C0z7eATw+qvSmRPr7Yg0qNxv00xOjBu
+         bl/+w3HtNN6DLjpo++4sqN+z1nutaUQ5hEnCaDjQKW5Mb8uhO1N6ZGsKQSMGeraEhS9c
+         TmBA02Apmv7NHnCZDCEm2r9FVV1mLOYcGFQWeUi7EdC87LzIFfs5nDZiDxzqE3MgkRGp
+         56+g==
+X-Gm-Message-State: AGi0PuYIZkcqrSONIzWsMjNyeDNt7/y469dZj0hEfpVoV+mspruBkT7R
+        3XrG056JibDqJ+DhcG8XL6N5oQnzxtEED9zqOXTLSQ==
+X-Google-Smtp-Source: APiQypKPdKUYjS3rat3E9WJ8o9VJMKiO8ypcMyMQxjiSuPo/IX7IsxV3bqp0yPJ5iuSP5EY8uP4deMWceCiTHe4iuBY=
+X-Received: by 2002:a17:906:11c9:: with SMTP id o9mr3448550eja.64.1587133812954;
+ Fri, 17 Apr 2020 07:30:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <ilia.lin@kernel.org> <20200313175213.8654-1-ansuelsmth@gmail.com>
+In-Reply-To: <20200313175213.8654-1-ansuelsmth@gmail.com>
+From:   Loic Poulain <loic.poulain@linaro.org>
+Date:   Fri, 17 Apr 2020 16:34:03 +0200
+Message-ID: <CAMZdPi8XnoCiD2OL8dEEG6qtcicz9BM5CrziX4p9_s-UNKk9HQ@mail.gmail.com>
+Subject: Re: [PATCH v2] cpufreq: qcom: Add support for krait based socs
+To:     Ansuel Smith <ansuelsmth@gmail.com>, viresh.kumar@linaro.org
+Cc:     ilia.lin@kernel.org, Sricharan R <sricharan@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        "open list:QUALCOMM CPUFREQ DRIVER MSM8996/APQ8096" 
+        <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add PAS based modem support on SC7180 SoCs and update the device node to
-support MSA based modem boot.
+Hi Viresh, Ansuel,
 
-Patch [1,2] - Add PAS based modem support
-Patch [3] - Update reserved memory map
-Patch [4,5] - Add PAS/MSA modem nodes
 
-Sibi Sankar (5):
-  dt-bindings: remoteproc: qcom: Add SC7180 MPSS support
-  remoteproc: qcom: pas: Add SC7180 Modem support
-  arm64: dts: qcom: sc7180: Update reserved memory map
-  arm64: dts: qcom: sc7180: Add Q6V5 MSS node
-  arm64: dts: qcom: sc7180: Update Q6V5 MSS node
 
- .../bindings/remoteproc/qcom,adsp.txt         |   3 +
- arch/arm64/boot/dts/qcom/sc7180-idp.dts       | 105 +++++++++++++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi          | 124 +++++++++++++++++-
- drivers/remoteproc/qcom_q6v5_pas.c            |   1 +
- 4 files changed, 231 insertions(+), 2 deletions(-)
+On Fri, 13 Mar 2020 at 18:52, Ansuel Smith <ansuelsmth@gmail.com> wrote:
+>
+> In Certain QCOM SoCs like ipq8064, apq8064, msm8960, msm8974
+> that has KRAIT processors the voltage/current value of each OPP
+> varies based on the silicon variant in use.
+>
+> The required OPP related data is determined based on
+> the efuse value. This is similar to the existing code for
+> kryo cores. So adding support for krait cores here.
+>
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> --- a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+> +++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+> @@ -19,7 +19,8 @@ In 'cpu' nodes:
+>  In 'operating-points-v2' table:
+>  - compatible: Should be
+> -       - 'operating-points-v2-kryo-cpu' for apq8096 and msm8996.
+> +       - 'operating-points-v2-kryo-cpu' for apq8096, msm8996, msm8974,
+> +                                            apq8064, ipq8064, msm8960 and ipq8074.
+
+> @@ -153,7 +277,7 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
+>         if (!np)
+>                 return -ENOENT;
+>
+> -       ret = of_device_is_compatible(np, "operating-points-v2-kryo-cpu");
+> +       ret = of_device_is_compatible(np, "operating-points-v2-qcom-cpu");
+
+This breaks backward compatibility and is not aligned with the
+qcom-nvmem-cpufreq compatible binding.
+
+Regards,
+Loic
