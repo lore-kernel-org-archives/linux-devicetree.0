@@ -2,81 +2,106 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4DDC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 07:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2621C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 07:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC788221EB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 07:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2DAD2054F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 07:38:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728801AbgDQHdA (ORCPT
+        id S1729146AbgDQHi3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 03:33:00 -0400
-Received: from smtprelay0233.hostedemail.com ([216.40.44.233]:57740 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728419AbgDQHdA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Apr 2020 03:33:00 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 2884B180284E9;
-        Fri, 17 Apr 2020 07:32:59 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: food81_710b3da05d519
-X-Filterd-Recvd-Size: 2062
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 17 Apr 2020 07:32:56 +0000 (UTC)
-Message-ID: <df23fe6083baad4781a2b79bcbd7d3db055eecd3.camel@perches.com>
-Subject: Re: [PATCH v2 7/9] media: MAINTAINERS: rkisp1: add path to
- dt-bindings
-From:   Joe Perches <joe@perches.com>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Helen Koike <helen.koike@collabora.com>,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        robh+dt@kernel.org, heiko@sntech.de, kernel@collabora.com,
-        dafna.hirschfeld@collabora.com, ezequiel@collabora.com,
-        mark.rutland@arm.com, karthik.poduval@gmail.com, jbx6244@gmail.com,
-        kishon@ti.com
-Date:   Fri, 17 Apr 2020 00:30:44 -0700
-In-Reply-To: <9a95d227-9592-2c5c-fe6d-dff9b84f4292@xs4all.nl>
-References: <20200403161538.1375908-1-helen.koike@collabora.com>
-         <20200403161538.1375908-8-helen.koike@collabora.com>
-         <9a95d227-9592-2c5c-fe6d-dff9b84f4292@xs4all.nl>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Fri, 17 Apr 2020 03:38:29 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44689 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728928AbgDQHi2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 03:38:28 -0400
+Received: by mail-ot1-f65.google.com with SMTP id j4so691959otr.11;
+        Fri, 17 Apr 2020 00:38:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yIWwQv26VIVXOmhR5PyVkihL5BOBmBlh7HlW4wXcRxU=;
+        b=UO8P3fCrOVDIifPhSJYluqb6r4cJKLwc14MBotZf9Z/75ZjMoApavdqYdx/tV+NjWF
+         mk7Yum2xe10xtt7J5ZJF6Il8mkgIFfv+04CAXKSv+bWiahUJLo0JXqn98XjgaMA6i+NC
+         //V0Ev+hiBov3k7OQJuyQammT5n7bZC4UnKlI8sOpFZjilapMdhSPp/x167FTq8QUVEp
+         Of5XuPNzJkj00195ihGjZ9b69dOcfkApAdfWlHtg3B2BQm9HjaK9qHqWiYFky+OcELFo
+         JMgH+gPNZIwCnCDiUfXh3YTEFmiPiSWM0Rz68DZDQnn4Og36W/63LQh3/VrlAOGZGBYF
+         pKHg==
+X-Gm-Message-State: AGi0PuYu13Gi4r0k/1xYLm822d3R2DONSf+5w6mNuq0yzAl/0kXfFc0q
+        IfzFlGo7YikGQrBfMNVy/vrwibKvUiH6rn3e1Y3EOpvv
+X-Google-Smtp-Source: APiQypLwfQvN8h4h7bPR17YD3xh4WDlxXcuPgzXNBUI4pqjzbQeC6XnQKNvmq3QNN6iXpby/aOhuM4uJisvl+oedVeI=
+X-Received: by 2002:a9d:7590:: with SMTP id s16mr1570852otk.250.1587109107894;
+ Fri, 17 Apr 2020 00:38:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <1587095716-23468-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1587095716-23468-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1587095716-23468-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 17 Apr 2020 09:38:16 +0200
+Message-ID: <CAMuHMdWXMcSgjOGwzMD+7R37at1v7db-neM9VgMRh+hMVp-aYA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: dma: renesas,usb-dmac: convert
+ bindings to json-schema
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Vinod <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 2020-04-17 at 09:18 +0200, Hans Verkuil wrote:
-> On 03/04/2020 18:15, Helen Koike wrote:
-> > The Rockchip ISP bindings was moved out of staging.
-> > Update MAINTAINERS file with the new path.
-> 
-> Shouldn't there be a reference to Documentation/devicetree/bindings/phy/rockchip-mipi-dphy-rx0.yaml
-> as well in MAINTAINERS?
+Hi Shimoda-san,
 
-And please keep the file references F: fields in
-alphabetic order.
 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-[]
-> > @@ -14303,6 +14303,7 @@ M:	Helen Koike <helen.koike@collabora.com>
-> >  L:	linux-media@vger.kernel.org
-> >  S:	Maintained
-> >  F:	drivers/staging/media/rkisp1/
-> > +F:	Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> >  
-> >  ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
-> >  M:	Jacob Chen <jacob-chen@iotwrt.com>
-> > 
+On Fri, Apr 17, 2020 at 5:55 AM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> Convert Renesas R-Car USB-DMA Controller bindings documentation
+> to json-schema.
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.yaml
+> @@ -0,0 +1,101 @@
+
+> +  interrupts:
+> +    minItems: 2
+
+Don't you need to keep the "maxItems: 2", too?
+
+> +  interrupt-names:
+> +    minItems: 2
+> +    items:
+> +      - pattern: ch0
+> +      - pattern: ch1
+
+According to Documentation/devicetree/bindings/example-schema.yaml
+
+    The description of each element defines the order and implicitly defines
+    the number of reg entries.
+
+So I think you can drop the minItems.
+
+> +  iommus:
+> +    minItems: 2
+
++ maxItems: 2
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
