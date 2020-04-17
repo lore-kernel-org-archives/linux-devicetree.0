@@ -2,226 +2,96 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D09C38A2E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 03:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC411C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 04:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E86C022247
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 03:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 711CE21D93
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 04:05:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587096335;
+	bh=Hna12HYTPcsdDzrAZYka1iFbZHk72Y721EN7BBRSnlg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=0HCOTYd2oboZPQJmJMkjEM+P6K+HNCmcM2jS7DeymmaG3D4gHqiHfIIBnYs9noOlf
+	 EMtZUD3/Mw3iv2xn/Gq0wiauUVx8CbZDParFzxVFHcK6tupW9K9+c8Y2oTaL3vYQGi
+	 xgfSVonJSElrZkWWTku9nkrAdJM1O5qe5f9sFS1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726022AbgDQDz0 (ORCPT
+        id S1725939AbgDQEFf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 23:55:26 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:34404 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726105AbgDQDzZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 23:55:25 -0400
-X-IronPort-AV: E=Sophos;i="5.72,393,1580742000"; 
-   d="scan'208";a="44965829"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 17 Apr 2020 12:55:23 +0900
-Received: from localhost.localdomain (unknown [10.166.252.89])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 7CEE5400857E;
-        Fri, 17 Apr 2020 12:55:23 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     vkoul@kernel.org, robh+dt@kernel.org
-Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 2/2] dt-bindings: dma: renesas,usb-dmac: convert bindings to json-schema
-Date:   Fri, 17 Apr 2020 12:55:16 +0900
-Message-Id: <1587095716-23468-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587095716-23468-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1587095716-23468-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+        Fri, 17 Apr 2020 00:05:35 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:37842 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbgDQEFe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 00:05:34 -0400
+Received: from oscar.flets-west.jp (softbank060142179096.bbtec.net [60.142.179.96]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id 03H44vZD014012;
+        Fri, 17 Apr 2020 13:04:57 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 03H44vZD014012
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587096298;
+        bh=qN43PMkS5NKTugSiCouk5snU8lM3THH2z0nBNU4+ChA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=D807E+U+/foQCrY9gVuyE9DKueGFRYT5XW/w5j92iEoLZHVaINRTw7LYDo5/x2Q4c
+         Y9oWZ4at0kvzW3Vmc2YCnIK3qAAm4dx5COQTrGVwU9NnRxlPbmJcEDsBvkFPPHbgco
+         SwVOawZR2tJO2VmwJM2++vBQSvTUeDoWyGVHuVI5ZEryWxxJi9Y8XRjFLbsReTGAK3
+         sWRaUIAj2cC+q2e0DLyGXmAbmp//5rk1KBQg82og6MjBy8UjUSykwpOVZ+obnKQKuv
+         60U/3raubsSpwReVelOKxFvYVQY+3QwTFWiyQ/0or8zWpdwjH8j7ku2ZBPdMJsJdrM
+         MUK+0Qj6aSNLQ==
+X-Nifty-SrcIP: [60.142.179.96]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: check libyaml installation for 'make dt_binding_check'
+Date:   Fri, 17 Apr 2020 13:04:55 +0900
+Message-Id: <20200417040455.763892-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert Renesas R-Car USB-DMA Controller bindings documentation
-to json-schema.
+If you run 'make dtbs_check' without installing the libyaml package,
+the error message "dtc needs libyaml ..." is shown.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+This should be checked also for 'make dt_binding_check' because dtc
+needs to validate *.example.dts extracted from *.yaml files.
+
+It is missing since commit 4f0e3a57d6eb ("kbuild: Add support for DT
+binding schema checks"), but this fix-up is applicable only after commit
+e10c4321dc1e ("kbuild: allow to run dt_binding_check and dtbs_check
+in a single command").
+
+I gave the Fixes tag to the latter in case somebody is interested in
+back-porting this.
+
+Fixes: e10c4321dc1e ("kbuild: allow to run dt_binding_check and dtbs_check in a single command")
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- .../devicetree/bindings/dma/renesas,usb-dmac.txt   |  55 -----------
- .../devicetree/bindings/dma/renesas,usb-dmac.yaml  | 101 +++++++++++++++++++++
- 2 files changed, 101 insertions(+), 55 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
- create mode 100644 Documentation/devicetree/bindings/dma/renesas,usb-dmac.yaml
 
-diff --git a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-deleted file mode 100644
-index e8f6c42..00000000
---- a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-+++ /dev/null
-@@ -1,55 +0,0 @@
--* Renesas USB DMA Controller Device Tree bindings
--
--Required Properties:
---compatible: "renesas,<soctype>-usb-dmac", "renesas,usb-dmac" as fallback.
--	Examples with soctypes are:
--	  - "renesas,r8a7743-usb-dmac" (RZ/G1M)
--	  - "renesas,r8a7744-usb-dmac" (RZ/G1N)
--	  - "renesas,r8a7745-usb-dmac" (RZ/G1E)
--	  - "renesas,r8a77470-usb-dmac" (RZ/G1C)
--	  - "renesas,r8a774a1-usb-dmac" (RZ/G2M)
--	  - "renesas,r8a774b1-usb-dmac" (RZ/G2N)
--	  - "renesas,r8a774c0-usb-dmac" (RZ/G2E)
--	  - "renesas,r8a7790-usb-dmac" (R-Car H2)
--	  - "renesas,r8a7791-usb-dmac" (R-Car M2-W)
--	  - "renesas,r8a7793-usb-dmac" (R-Car M2-N)
--	  - "renesas,r8a7794-usb-dmac" (R-Car E2)
--	  - "renesas,r8a7795-usb-dmac" (R-Car H3)
--	  - "renesas,r8a7796-usb-dmac" (R-Car M3-W)
--	  - "renesas,r8a77961-usb-dmac" (R-Car M3-W+)
--	  - "renesas,r8a77965-usb-dmac" (R-Car M3-N)
--	  - "renesas,r8a77990-usb-dmac" (R-Car E3)
--	  - "renesas,r8a77995-usb-dmac" (R-Car D3)
--- reg: base address and length of the registers block for the DMAC
--- interrupts: interrupt specifiers for the DMAC, one for each entry in
--  interrupt-names.
--- interrupt-names: one entry per channel, named "ch%u", where %u is the
--  channel number ranging from zero to the number of channels minus one.
--- clocks: a list of phandle + clock-specifier pairs.
--- #dma-cells: must be <1>, the cell specifies the channel number of the DMAC
--  port connected to the DMA client.
--- dma-channels: number of DMA channels
--
--Example: R8A7790 (R-Car H2) USB-DMACs
--
--	usb_dmac0: dma-controller@e65a0000 {
--		compatible = "renesas,r8a7790-usb-dmac", "renesas,usb-dmac";
--		reg = <0 0xe65a0000 0 0x100>;
--		interrupts = <0 109 IRQ_TYPE_LEVEL_HIGH
--			      0 109 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-names = "ch0", "ch1";
--		clocks = <&mstp3_clks R8A7790_CLK_USBDMAC0>;
--		#dma-cells = <1>;
--		dma-channels = <2>;
--	};
--
--	usb_dmac1: dma-controller@e65b0000 {
--		compatible = "renesas,usb-dmac";
--		reg = <0 0xe65b0000 0 0x100>;
--		interrupts = <0 110 IRQ_TYPE_LEVEL_HIGH
--			      0 110 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-names = "ch0", "ch1";
--		clocks = <&mstp3_clks R8A7790_CLK_USBDMAC1>;
--		#dma-cells = <1>;
--		dma-channels = <2>;
--	};
-diff --git a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.yaml b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.yaml
-new file mode 100644
-index 00000000..084a10d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.yaml
-@@ -0,0 +1,101 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/renesas,usb-dmac.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas USB DMA Controller
-+
-+maintainers:
-+  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-+
-+allOf:
-+  - $ref: "dma-controller.yaml#"
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - renesas,r8a7743-usb-dmac  # RZ/G1M
-+          - renesas,r8a7744-usb-dmac  # RZ/G1N
-+          - renesas,r8a7745-usb-dmac  # RZ/G1E
-+          - renesas,r8a77470-usb-dmac # RZ/G1C
-+          - renesas,r8a774a1-usb-dmac # RZ/G2M
-+          - renesas,r8a774b1-usb-dmac # RZ/G2N
-+          - renesas,r8a774c0-usb-dmac # RZ/G2E
-+          - renesas,r8a7790-usb-dmac  # R-Car H2
-+          - renesas,r8a7791-usb-dmac  # R-Car M2-W
-+          - renesas,r8a7793-usb-dmac  # R-Car M2-N
-+          - renesas,r8a7794-usb-dmac  # R-Car E2
-+          - renesas,r8a7795-usb-dmac  # R-Car H3
-+          - renesas,r8a7796-usb-dmac  # R-Car M3-W
-+          - renesas,r8a77961-usb-dmac # R-Car M3-W+
-+          - renesas,r8a77965-usb-dmac # R-Car M3-N
-+          - renesas,r8a77990-usb-dmac # R-Car E3
-+          - renesas,r8a77995-usb-dmac # R-Car D3
-+      - const: renesas,usb-dmac
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 2
-+
-+  interrupt-names:
-+    minItems: 2
-+    items:
-+      - pattern: ch0
-+      - pattern: ch1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  '#dma-cells':
-+    const: 1
-+    description:
-+      The cell specifies the channel number of the DMAC port connected to
-+      the DMA client.
-+
-+  dma-channels:
-+    const: 2
-+
-+  iommus:
-+    minItems: 2
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-names
-+  - clocks
-+  - '#dma-cells'
-+  - dma-channels
-+  - power-domains
-+  - resets
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/r8a7790-cpg-mssr.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/power/r8a7790-sysc.h>
-+
-+    usb_dmac0: dma-controller@e65a0000 {
-+        compatible = "renesas,r8a7790-usb-dmac", "renesas,usb-dmac";
-+        reg = <0xe65a0000 0x100>;
-+        interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-names = "ch0", "ch1";
-+        clocks = <&cpg CPG_MOD 330>;
-+        power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
-+        resets = <&cpg 330>;
-+        #dma-cells = <1>;
-+        dma-channels = <2>;
-+    };
+ scripts/dtc/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
+index 2f3c3a7e1620..ef85f8b7d4a7 100644
+--- a/scripts/dtc/Makefile
++++ b/scripts/dtc/Makefile
+@@ -13,7 +13,7 @@ dtc-objs	+= dtc-lexer.lex.o dtc-parser.tab.o
+ HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt
+ 
+ ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
+-ifneq ($(CHECK_DTBS),)
++ifneq ($(CHECK_DT_BINDING)$(CHECK_DTBS),)
+ $(error dtc needs libyaml for DT schema validation support. \
+ 	Install the necessary libyaml development package.)
+ endif
 -- 
-2.7.4
+2.25.1
 
