@@ -2,139 +2,155 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A71DAC3815B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 09:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E7EC352BE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 09:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 875A621744
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 09:23:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mHGfQckc"
+	by mail.kernel.org (Postfix) with ESMTP id 5F7C1206B9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 09:27:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587115670;
+	bh=Vo2LY0S2FqXdQuFq7yapdEsm/GR56W2rJZDQ3Snu+5M=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=hrUNEdXDJQ67TuqWvk68wai6JadHQu5YIOGr7yek1VSZq+aI8uljDIa1SYumFPEWD
+	 tGvnghvCHeL9lMBVIR5W32Qu1PehZthfsVwRKkTUW7kwW8Mnc3ZRLdxo0YohPEOP4p
+	 0zO4G1dus4IcfqpsDOWJXqA1NUfsBfgV4T+OHZOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730242AbgDQJXe (ORCPT
+        id S1730106AbgDQJ1u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 05:23:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44134 "EHLO
+        Fri, 17 Apr 2020 05:27:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730240AbgDQJXd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 05:23:33 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8162C061A10
-        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 02:23:32 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id u127so1119530wmg.1
-        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 02:23:32 -0700 (PDT)
+        with ESMTP id S1729987AbgDQJ1t (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 05:27:49 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C341C061A0C;
+        Fri, 17 Apr 2020 02:27:49 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id g10so811008lfj.13;
+        Fri, 17 Apr 2020 02:27:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=B2EV7Dr9G55HYkfQfAu+FWAIDztvRbZhmJstqdWtxkc=;
-        b=mHGfQckcXTY3OTTrOiHgCXY+DEtOXW6whILiTwQMViLFk2xxhL0ohEkLxinS5qIwJv
-         Sp2wM2kODOih4Jvw3l0spWfdAQH9aw4LjmCzHNuDa2iBdu1f5y3sXgF49f9AyTu53Lzi
-         T0XTBiKAQwg3X6Cog6494wwQtTZObT0yKsRgsQ2wwZbEnxEMFPj+O4UT1GmIDtvwB2u0
-         hQFUJtnTcXpnXs/DSt+EvisGhWQPfFKUjaKJ86JWV289ERfIIDtJ1xG0gobInZKBYkwx
-         aWScF4SLYqYyJvDvk742vmlYD4JwPxnYeCGH8LDIT/H/nXTjxnTicWb1LMbiBVaNN2lH
-         ELew==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=z9TmZCPSYHLbADZtDk6utvoUiFo68AqRFtzXP1rnqCE=;
+        b=MvBk/l4Fv4PIGHuS/p6vhpQW5a7nV5pWTle6H/XQgHKCK90C3c+nRLMthbaPZt55Dc
+         XFUldyExOul3jWHUdr4fiIgp3W4dqedm7eZf7zTh99SRSq9yBniFulzQbr5Q9ebRr2oR
+         SYLu8z+JLw5oqXg0nEoPUsmuvU6tiA4JwswOE9TaNhF+Ezt1kmzh2cGmLjvr1iYdK+Jo
+         Dzvw2ry5wZ6lj9yv7iD7f1tO1t+fNlR2DIynnb1x6jryvZd7AHvQCcSARqT1kChLA1ox
+         5iJJoCPblDOz5+EJkn0P/fN+rqxH6sy7xmuFmUhYXBstY1I4mQOAC9QFR5L90adRXeUN
+         ixWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=B2EV7Dr9G55HYkfQfAu+FWAIDztvRbZhmJstqdWtxkc=;
-        b=L606gN/uLgihX1yWZAMFljyVrL/Q6XBiYNr7KMy2uRxsGdCg3iw88NWTKF2C2xE7Gf
-         u63Wiii9gZ3bLTZBn/B/RRFU+isX3YrJRrW3INr+EZC3FuxZG8ZpQ4MZzk8mzCYBGA6a
-         lW5RCumfJrnsJfHlI2MhfGX1JQ76Svzppw/R/7RE2pZ2w5TkEHkQfUbJeac3YmMz+Wxz
-         h5i0r4jYj4awHzSX8vKLGUuWr+KYrD+4Gb9iJiEPhwX0WxCWaP5wvs95DWfyDlhAvY83
-         m/4fm7UNu2sY/BSsVBzqHduosiXPVd+0+rFmYD/7y/eM+H217bzA+CPGX2801CF9XN8R
-         ZHig==
-X-Gm-Message-State: AGi0PuZdTdKTkNfEfslftBdCojxvbS+uynNQB3nJahjY8AOClSyNKHem
-        kLbSqMCuLgMB67sU5eLhCXHwZw==
-X-Google-Smtp-Source: APiQypIppZr/407qIeQiSZ9EWdSv165kLtjK+B5fx1fXkPd+6y30GQXlWG/yqKnV7BMkICzk//tfoA==
-X-Received: by 2002:a7b:c7d2:: with SMTP id z18mr2335863wmk.109.1587115411536;
-        Fri, 17 Apr 2020 02:23:31 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id o18sm4713830wrp.23.2020.04.17.02.23.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 02:23:30 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     bjorn.andersson@linaro.org
-Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: db820c: fix audio configuration
-Date:   Fri, 17 Apr 2020 10:23:27 +0100
-Message-Id: <20200417092327.7341-1-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=z9TmZCPSYHLbADZtDk6utvoUiFo68AqRFtzXP1rnqCE=;
+        b=XFwlsWD8HsC1xBERGX4ksDxhk/399xBAfSUIO9m8jgeivoD67dJEIilLvKQVh1FME/
+         KxusJti2HeOP23+fs8FJyxoMm93HZNpnljSa/YVZBzgYyqvd+pK4r6r6n8SAMp5pobEh
+         Ac5Ydq1COTaPAyg2Yt0lV//DGugENibgwVXMnSikwndPKcNuzavwLPm0E2n/+e/74l1a
+         MnDShbm4H4IjFmfRYX9Htk2hXwYi5IYDTWDFTpNCva2gSUFfwcVHGXgkQ4cCjEmwVwoo
+         zgV/mcs3sy6GW7kywepboDHnxxehCz5bpAvIkITGbtKgTaK5JguUoPXzw0KkZz0ir3hc
+         uGbw==
+X-Gm-Message-State: AGi0Puawm9LHmaVgUv5vzNOnPvt/yZEI2ZbdvGLIHR8rgaN2vcvPjNOC
+        O2COUdIbLpItkz97uf4mRVkUiE4fcSuKzQ==
+X-Google-Smtp-Source: APiQypLrIi1dWDIOyFkDvv+ij+G6A3tYJRL5zY1ih24KqVVQuButGDmZGkxwR0p5LkrNgt3WHSRrug==
+X-Received: by 2002:ac2:46f9:: with SMTP id q25mr1493930lfo.149.1587115667392;
+        Fri, 17 Apr 2020 02:27:47 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id 25sm17492628lft.68.2020.04.17.02.27.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 17 Apr 2020 02:27:46 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 28/35] docs: dt: qcom,dwc3.txt: fix cross-reference for a converted file
+In-Reply-To: <24b30222392569e7aa5d61d46642a4c38a964512.1586359676.git.mchehab+huawei@kernel.org>
+References: <cover.1586359676.git.mchehab+huawei@kernel.org> <24b30222392569e7aa5d61d46642a4c38a964512.1586359676.git.mchehab+huawei@kernel.org>
+Date:   Fri, 17 Apr 2020 12:27:42 +0300
+Message-ID: <87h7xicvht.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-After patch f864edff110d ("ASoC: qdsp6: q6routing: remove default routing")
-and 9b60441692d9 ("ASoC: qdsp6: q6asm-dai: only enable dais from device tree")
-asm dais and routing needs to be properly specified at device tree level.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-This patch fixes this.
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 22 +++++++++++++++++++-
- arch/arm64/boot/dts/qcom/msm8996.dtsi        |  2 ++
- 2 files changed, 23 insertions(+), 1 deletion(-)
+> The qcom-qusb2-phy.txt file was converted and renamed to yaml.
+> Update cross-reference accordingly.
+>
+> Fixes: 8ce65d8d38df ("dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bin=
+dings to yaml")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/usb/qcom,dwc3.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Docume=
+ntation/devicetree/bindings/usb/qcom,dwc3.txt
+> index cb695aa3fba4..fbdd01756752 100644
+> --- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+> @@ -52,8 +52,8 @@ A child node must exist to represent the core DWC3 IP b=
+lock. The name of
+>  the node is not important. The content of the node is defined in dwc3.tx=
+t.
+>=20=20
+>  Phy documentation is provided in the following places:
+> -Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt   - USB3 QMP PHY
+> -Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt - USB2 QUSB2 PHY
+> +Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt    - USB3 QMP PHY
+> +Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml - USB2 QUSB2 P=
+HY
+>=20=20
+>  Example device nodes:
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index 4692b7ad16b7..cf217b6b2b39 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -908,10 +908,30 @@
- 	status = "okay";
- };
- 
-+&q6asmdai {
-+	dai@0 {
-+		reg = <0>;
-+		direction = <2>;
-+	};
-+
-+	dai@1 {
-+		reg = <1>;
-+		direction = <2>;
-+	};
-+
-+	dai@2 {
-+		reg = <2>;
-+		direction = <1>;
-+	};
-+};
-+
- &sound {
- 	compatible = "qcom,apq8096-sndcard";
- 	model = "DB820c";
--	audio-routing =	"RX_BIAS", "MCLK";
-+	audio-routing =	"RX_BIAS", "MCLK",
-+		"MM_DL1",  "MultiMedia1 Playback",
-+		"MM_DL2",  "MultiMedia2 Playback",
-+		"MultiMedia3 Capture", "MM_UL3";
- 
- 	mm1-dai-link {
- 		link-name = "MultiMedia1";
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 14827adebd94..98634d5c4440 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -2066,6 +2066,8 @@
- 						reg = <APR_SVC_ASM>;
- 						q6asmdai: dais {
- 							compatible = "qcom,q6asm-dais";
-+							#address-cells = <1>;
-+							#size-cells = <0>;
- 							#sound-dai-cells = <1>;
- 							iommus = <&lpass_q6_smmu 1>;
- 						};
--- 
-2.21.0
+Should I take this or will it go via e.g. trivial?
 
+In any case:
+
+Acked-by: Felipe Balbi <balbi@kernel.org>
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6Zdo4ACgkQzL64meEa
+mQYUGw/+LzBLQ94ktYWYWxyCitvz+XIYayQ1/iMLn3p3cDv3jEzTF6PO9XWWyxsr
+9X6rmbmlmy0C9cohEthIzKVc1borij4pvn+dERuCAHNXSRkIQdIuiXBWgwSHJjdm
+iiSHotQboyX21IJbd1rbE8DHuGeQ7FX/57srSji8fs3WBxzdwG94uOnP8HmXnppg
+ZHVCj8V5EQPwjV3iyN5VjvTEb/54e5Levmn5RVkMJJxJT7AIkClVoOuqLvfUns+r
+fEEL3OGOVuoqj3DR/0uqaAdxkUJExGp+tmeRbomH6s9ygt9rby4LdC1b8J5ZlDF2
+PqxV+zromTmWBjZ4RjYQLR2iUvMamhwidrsqravshl2A/WYcpcF4hxkQHFs+oiZ+
+3YeGftUNO5yzxZQ+RznmgY9Sw7MLarA+F92Fxa1SaxW9eohUBr6BZo1gb//2izNR
+GO6elpHcMWuaBX/F/R9eliyY96jwjbmQZIe6XkctF8wJGahUlTpWAA1FDYwmSpBQ
+9TOybuw65rpSO14+CzmXUsovXn1bIzsvE8dYXJPQ77lgaAvivV65wZdCaBZJvpLT
+oc9uXg18N090wrdCCcxHodk/iKIW0Aamy6zBs9eXVX2zVf/830J6IcAjmkAyoDwa
+IRBcHPBI/8UXwVKqkuKL/+fSUXCCtv9b1c9h6E5WO6OhKgdVv20=
+=aXc/
+-----END PGP SIGNATURE-----
+--=-=-=--
