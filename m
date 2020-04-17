@@ -2,126 +2,119 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E78C2BB85
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 06:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04714C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 06:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37C6520771
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 06:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D451F2087E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 06:43:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="cdwYNQ/w"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="F7FD5j8w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728050AbgDQGlN (ORCPT
+        id S1728049AbgDQGnv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 02:41:13 -0400
-Received: from mail-eopbgr1400130.outbound.protection.outlook.com ([40.107.140.130]:34323
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728043AbgDQGlN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Apr 2020 02:41:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A/e4oBbI+GTLOiGgyCaS6uvmdj5fZTbmdOazmEVv0bbXznWA6JsIVEngN9jkdNdkQnApuf41xW1dfCvh5oHJeptbDJ+L5HWaJu0NCTti0l5OhYVtiU2gIDOJLGqzUSXLe0SEYUY4qta7k+9e4PUDPn6xmOmFxCxCVTgRpcQjycotUu3XLqlRbIfiyX8XakUBc2Tj4Gbptwo+ukpuE1QbsNlg5ACYZob3u2TUIp7aAe/5sYpOzc7wDXUQ8IjtgDeJMQGK0xhX1sLOCGrFzgWkl33VpiNKPKfU3xkzzn/L6gguzqbAtWeK+du0ZUyGLNV8hlP070g/IL1ijEfYGu+u1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qVB3Ez1IeTdUbiX8U6k/y5CKFED0oIico1bZrQmVvMc=;
- b=ThJBgxbsJcOmzS0/ht/2AavCgCGV1eIlDI5S6crue1cMQ3TB1WunyQ1/8Sc01AQ3UC7C9iMTQY5jkSu9Ke3kwcaLbbp3a7dUWj9uL2Bwqsp0JhdBIfHuKF2mYXIjUEDVxthCg3ZUmOepvoMnPpVtDfXabHrIbnHs4JZ5ITGURil7p7DduDWHuOZ3Fc58w7wTYhGQzoMRPjBkor5ZvIHoK5F+eUDFtGe4L3XEaXr6DAStPhf29Ty9pdtpZ0WyxuTmHRp9NSjaS0KElKhFOGmeAz69zAvRTnEHctsAlzIoRZSH7wXsiE/gnZMKnqsvLykwwOZINcMgPeshGi/UV1fM+w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qVB3Ez1IeTdUbiX8U6k/y5CKFED0oIico1bZrQmVvMc=;
- b=cdwYNQ/w3DBU82kai0tQBj3xp8aHMDcLbtpYh+mZtgy++gWqCLNwEq31zn7v2UWg0lO1YARXBt2+qMSA11ZxUaZ3ZzfyvwPKTndtPgd9iUIbSexNov6ZI0E07ifmzS7McHUA+Cnc2l3f/y7NjAtKHH4DCkPBQ8gNUtcHBLfZzSU=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB2061.jpnprd01.prod.outlook.com (52.133.176.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2921.27; Fri, 17 Apr 2020 06:41:10 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2921.027; Fri, 17 Apr 2020
- 06:41:10 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     "joro@8bytes.org" <joro@8bytes.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v3] dt-bindings: iommu: renesas,ipmmu-vmsa: convert to
- json-schema
-Thread-Topic: [PATCH v3] dt-bindings: iommu: renesas,ipmmu-vmsa: convert to
- json-schema
-Thread-Index: AQHWFHGbkNCiFGzGzkmUwf2v6w0Gfqh83RRQ
-Date:   Fri, 17 Apr 2020 06:41:10 +0000
-Message-ID: <TYAPR01MB4544935A912DB64603A3FCFED8D90@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <1587098115-2969-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1587098115-2969-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: cbfc893a-9d45-4c2a-773b-08d7e29a50e2
-x-ms-traffictypediagnostic: TYAPR01MB2061:
-x-microsoft-antispam-prvs: <TYAPR01MB206150CE3E453C9EACFC8E1ED8D90@TYAPR01MB2061.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 0376ECF4DD
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(346002)(39860400002)(376002)(136003)(396003)(366004)(4744005)(76116006)(186003)(64756008)(478600001)(71200400001)(52536014)(66446008)(86362001)(66556008)(9686003)(66946007)(66476007)(8936002)(54906003)(55236004)(2906002)(4326008)(316002)(110136005)(33656002)(7696005)(55016002)(6506007)(8676002)(81156014)(5660300002)(26005)(142933001);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: hd8x6RcWGl3kUjz9kO3SB4Z/RZnYOOKZYV3c418QvVtFcIBeaHmfM+NgUxYXlFubb3h7GUpNlhgnSL86xaBZc0UkUxKZD7KgLJxp5LxPKmUo06ru7xWk72y1bHOZ9dRbYvn+jixU6Shldze4Cy+FvnYB9JYgsLqLjcR1YhT8TTgMBbIBfFlZU2MRIkSofy4gWx9R+an/fDgYvQxNbTzoY533BJ0TVydUlWn+yXltpzBaGtDZsdRQjwTsSzwfGFeQgcLZn+2QPZlQ1t8FbMPgNhlCoKyfrKVlod4hdDl85JpFXW6Nv9fiP4q7K2KbceQKi8iMv/c+IBQD80dOilF1/dptWM59l323y1eskDWP1Qfj1G0NRwrmIN4RJH3hxVnruJmODcUQu93UEhRsVLpzobWb032PfW0k2WazFmgk9NldAM7ElfUz11wWscrIncV8ai3swhjyzWBQqBF5+yCi9GPxigZLxxWbzEPyx8xs5CEGWbz1pWjd+W5Ul0dXq5hL
-x-ms-exchange-antispam-messagedata: /u1e04U60nWKSyZmXhwfHLubk2HMDtW97uLxuFxvPBwuY4CPzOyCXSiQJCSTh1C8NqarsObXxXz+VbR/fVQrEQThToOYNjFjVpL9pjZGxoWbcyn3fEw3n1B7mVKKBntbqeeTuy23tXGEHdv+lheLcw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 17 Apr 2020 02:43:51 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:37554 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728012AbgDQGnv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 02:43:51 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03H6hkJU044583;
+        Fri, 17 Apr 2020 01:43:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587105826;
+        bh=v75aJKj0g8xdcGf9rfysy67IjF1nkGYA4DJMScXfJBM=;
+        h=From:To:CC:Subject:Date;
+        b=F7FD5j8w8K7Al02lWbBtqhiSZ7Ve6TxPv0Gw6/ox2dsH6Ur5CS6XXNh9D35hppI/g
+         ayKDhdJUch0kAZ+Yjy3aI6b5sthVcwEm88bHfLJ49ZX1QkoLlyd6goQJCtlhtgKnOx
+         HYzwOeQJqfzpFub4in5vmBdM5aRMbyywTa+ZheIM=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03H6hk0U092044
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 17 Apr 2020 01:43:46 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
+ Apr 2020 01:43:46 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 17 Apr 2020 01:43:46 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03H6hhbe088706;
+        Fri, 17 Apr 2020 01:43:43 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>, <stable@kernel.org>
+Subject: [PATCH] ARM: dts: dra7: Fix bus_dma_limit for PCIe
+Date:   Fri, 17 Apr 2020 12:13:40 +0530
+Message-ID: <20200417064340.17527-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cbfc893a-9d45-4c2a-773b-08d7e29a50e2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2020 06:41:10.4725
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: j3C8Vq+53rxKnUE5VX8RAg4QiHGltwZmEKHhMAN+UpDqKKua5Kr7chw6oM+u3BsSZ9WEBhsfY4ycvYul41yTAIsnVsGb0bWRmvNE/2BL+qWWcx8+C+qHFicsjabVErIk
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2061
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi all,
+Even though commit cfb5d65f2595 ("ARM: dts: dra7: Add bus_dma_limit
+for L3 bus") added bus_dma_limit for L3 bus, the PCIe controller
+gets incorrect value of bus_dma_limit.
 
-> From: Yoshihiro Shimoda, Sent: Friday, April 17, 2020 1:35 PM
-<snip>
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - renesas,ipmmu-r8a73a4  # R-Mobile APE6
-> +              - renesas,ipmmu-r8a7743  # RZ/G1M
-> +              - renesas,ipmmu-r8a7744  # RZ/G1N
-> +              - renesas,ipmmu-r8a7745  # RZ/G1E
-> +              - renesas,ipmmu-r8a7790  # R-Car H2
-> +              - renesas,ipmmu-r8a7791  # R-Car M2-W
-> +              - renesas,ipmmu-r8a7793  # R-Car M2-N
-> +              - renesas,ipmmu-r8a7794  # R-Car E2
-> +              - renesas,ipmmu-r8a7795  # R-Car H3
+Fix it by adding empty dma-ranges property to axi@0 and axi@1
+(parent device tree node of PCIe controller).
 
-I'm afraid but this renesas,ipmmu-r8a7795 should be the below section.
-So, I'll fix it.
+Cc: stable@kernel.org
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ arch/arm/boot/dts/dra7.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Best regards,
-Yoshihiro Shimoda
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index 4740989ed9c4..7191ee6a1b82 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -172,6 +172,7 @@
+ 			#address-cells = <1>;
+ 			ranges = <0x51000000 0x51000000 0x3000
+ 				  0x0	     0x20000000 0x10000000>;
++			dma-ranges;
+ 			/**
+ 			 * To enable PCI endpoint mode, disable the pcie1_rc
+ 			 * node and enable pcie1_ep mode.
+@@ -185,7 +186,6 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
+-				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
+@@ -230,6 +230,7 @@
+ 			#address-cells = <1>;
+ 			ranges = <0x51800000 0x51800000 0x3000
+ 				  0x0	     0x30000000 0x10000000>;
++			dma-ranges;
+ 			status = "disabled";
+ 			pcie2_rc: pcie@51800000 {
+ 				reg = <0x51800000 0x2000>, <0x51802000 0x14c>, <0x1000 0x2000>;
+@@ -240,7 +241,6 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
+-				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
+-- 
+2.17.1
 
