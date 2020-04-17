@@ -1,116 +1,175 @@
-Return-Path: <SRS0=e4CZ=6A=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D2DC2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 22:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03770C38A2B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 00:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0C0218AC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Apr 2020 22:11:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587075074;
-	bh=nZ/zJJ4vg3WdeGfR1nLItUHgVbm2bu8HeYWPqXHfkq4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pbXFe8kN0iKbIbxSiy/seWNppX5+de08yDQwz5SJvbRfPDWzrSqrlpA1jisVSKRDl
-	 HVaovvs8ufoQhR+dxufDCjWuAyD0wDSC+6fwiqz0Zff9TghEDUR/5YNShM4Dp1wKv3
-	 uaH9QzzToXyYTB09/rv5x9+twfsDk3acoOy7C/QI=
+	by mail.kernel.org (Postfix) with ESMTP id E0A57221F9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 00:49:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728720AbgDPWLN (ORCPT
+        id S1728577AbgDQAty (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 18:11:13 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43508 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727907AbgDPWLN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Apr 2020 18:11:13 -0400
-Received: by mail-oi1-f195.google.com with SMTP id j16so340350oih.10;
-        Thu, 16 Apr 2020 15:11:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e7l3KZP3LSpY+eDsEpEr417woObUBuV9o5LcUWNMomo=;
-        b=ggNKrPQFrabekMJ3KU71iR8gj4m/Rd8JUMfdzOo6spjtrupBjlS1M5hbuwwcNcJZUL
-         Sq8W8ikbn9kvFWOKrs/HjzYse9+UnH6FqoHLR4ZvZiVdTmA9NxHzGur58IDv4oUNNejL
-         6iiukixkl3LIxiSiCZaH2pHRCStZMXUADxvNCI23CGbeFXihAsUGsKgfe24heH2ZnAUR
-         ggD/PV8lXvAx9cXIJQKyiFM8ogt/sSQ8A2bYPbQkc5SPiCJ4ZiEBaE8M7bMpw6Oifnvk
-         0kZrNzIfEaY3BUtcpoXmSu3lV68kCf5X0GosSRKVu6j3VHQgkiqEHNcsOaJguwMC6KCI
-         M9nQ==
-X-Gm-Message-State: AGi0PubdP22XPLziekBwaiiHmKzLxZ+Y+iIyS0ql/qp/Rt/d58h2pj/H
-        +NzGV/ipqFEfSRLBapqKAaNP4Pk=
-X-Google-Smtp-Source: APiQypJpZGsw1kWGbnlXYKpIH1hOOk/mtu6A9zy2j59ycYZEj2CEWD7Wm3bSYNsH2UKKehkIoLsxRQ==
-X-Received: by 2002:aca:3983:: with SMTP id g125mr205858oia.13.1587075072415;
-        Thu, 16 Apr 2020 15:11:12 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o128sm7465766oih.41.2020.04.16.15.11.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 15:11:11 -0700 (PDT)
-Received: (nullmailer pid 8972 invoked by uid 1000);
-        Thu, 16 Apr 2020 22:11:10 -0000
-Date:   Thu, 16 Apr 2020 17:11:10 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     frowand.list@gmail.com
-Cc:     pantelis.antoniou@konsulko.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Erhard F." <erhard_f@mailbox.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH 5/5] of: unittest: kmemleak in duplicate property update
-Message-ID: <20200416221110.GA8899@bogus>
-References: <1587073370-25963-1-git-send-email-frowand.list@gmail.com>
- <1587073370-25963-6-git-send-email-frowand.list@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587073370-25963-6-git-send-email-frowand.list@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 16 Apr 2020 20:49:54 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:53672 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbgDQAtw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 20:49:52 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E429A1A0F0D;
+        Fri, 17 Apr 2020 02:49:49 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C84EA1A0FCC;
+        Fri, 17 Apr 2020 02:49:44 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 95037402C4;
+        Fri, 17 Apr 2020 08:49:38 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V3 4/5] dt-bindings: clock: Convert i.MX6SLL clock to json-schema
+Date:   Fri, 17 Apr 2020 08:41:30 +0800
+Message-Id: <1587084091-5941-4-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1587084091-5941-1-git-send-email-Anson.Huang@nxp.com>
+References: <1587084091-5941-1-git-send-email-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 16 Apr 2020 16:42:50 -0500, frowand.list@gmail.com wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
-> 
-> kmemleak reports several memory leaks from devicetree unittest.
-> This is the fix for problem 5 of 5.
-> 
-> When overlay 'overlay_bad_add_dup_prop' is applied, the apply code
-> properly detects that a memory leak will occur if the overlay is removed
-> since the duplicate property is located in a base devicetree node and
-> reports via printk():
-> 
->   OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/substation@100/motor-1/rpm_avail
->   OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/substation@100/motor-1/rpm_avail
-> 
-> The overlay is removed when the apply code detects multiple changesets
-> modifying the same property.  This is reported via printk():
-> 
->   OF: overlay: ERROR: multiple fragments add, update, and/or delete property /testcase-data-2/substation@100/motor-1/rpm_avail
-> 
-> As a result of this error, the overlay is removed resulting in the
-> expected memory leak.
-> 
-> Add another device node level to the overlay so that the duplicate
-> property is located in a node added by the overlay, thus no memory
-> leak will occur when the overlay is removed.
-> 
-> Thus users of kmemleak will not have to debug this leak in the future.
-> 
-> Fixes: 2fe0e8769df9 ("of: overlay: check prevents multiple fragments touching same property")
-> Reported-by: Erhard F. <erhard_f@mailbox.org>
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> ---
->  .../of/unittest-data/overlay_bad_add_dup_prop.dts  | 23 ++++++++++++++++++----
->  drivers/of/unittest.c                              | 12 +++++------
->  2 files changed, 25 insertions(+), 10 deletions(-)
-> 
+Convert the i.MX6SLL clock binding to DT schema format using json-schema.
 
-Applied, thanks.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V2:
+	- Force 'interrupts' minItem/maxItem to 2.
+---
+ .../devicetree/bindings/clock/imx6sll-clock.txt    | 36 -------------
+ .../devicetree/bindings/clock/imx6sll-clock.yaml   | 61 ++++++++++++++++++++++
+ 2 files changed, 61 insertions(+), 36 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/imx6sll-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/imx6sll-clock.yaml
 
-Rob
+diff --git a/Documentation/devicetree/bindings/clock/imx6sll-clock.txt b/Documentation/devicetree/bindings/clock/imx6sll-clock.txt
+deleted file mode 100644
+index fee849d..0000000
+--- a/Documentation/devicetree/bindings/clock/imx6sll-clock.txt
++++ /dev/null
+@@ -1,36 +0,0 @@
+-* Clock bindings for Freescale i.MX6 SLL
+-
+-Required properties:
+-- compatible: Should be "fsl,imx6sll-ccm"
+-- reg: Address and length of the register set
+-- #clock-cells: Should be <1>
+-- clocks: list of clock specifiers, must contain an entry for each required
+-  entry in clock-names
+-- clock-names: should include entries "ckil", "osc", "ipp_di0" and "ipp_di1"
+-
+-The clock consumer should specify the desired clock by having the clock
+-ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6sll-clock.h
+-for the full list of i.MX6 SLL clock IDs.
+-
+-Examples:
+-
+-#include <dt-bindings/clock/imx6sll-clock.h>
+-
+-clks: clock-controller@20c4000 {
+-		compatible = "fsl,imx6sll-ccm";
+-		reg = <0x020c4000 0x4000>;
+-		interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
+-		#clock-cells = <1>;
+-		clocks = <&ckil>, <&osc>, <&ipp_di0>, <&ipp_di1>;
+-		clock-names = "ckil", "osc", "ipp_di0", "ipp_di1";
+-};
+-
+-uart1: serial@2020000 {
+-		compatible = "fsl,imx6sl-uart", "fsl,imx6q-uart", "fsl,imx21-uart";
+-		reg = <0x02020000 0x4000>;
+-		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&clks IMX6SLL_CLK_UART1_IPG>,
+-			 <&clks IMX6SLL_CLK_UART1_SERIAL>;
+-		clock-names = "ipg", "per";
+-};
+diff --git a/Documentation/devicetree/bindings/clock/imx6sll-clock.yaml b/Documentation/devicetree/bindings/clock/imx6sll-clock.yaml
+new file mode 100644
+index 0000000..f22b203
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/imx6sll-clock.yaml
+@@ -0,0 +1,61 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/imx6sll-clock.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Clock bindings for Freescale i.MX6 SLL
++
++maintainers:
++  - Anson Huang <Anson.Huang@nxp.com>
++
++properties:
++  compatible:
++    const: fsl,imx6sll-ccm
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 2
++    maxItems: 2
++
++  '#clock-cells':
++    const: 1
++
++  clocks:
++    items:
++      - description: 32k osc
++      - description: 24m osc
++      - description: ipp_di0 clock input
++      - description: ipp_di1 clock input
++
++  clock-names:
++    items:
++      - const: ckil
++      - const: osc
++      - const: ipp_di0
++      - const: ipp_di1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - '#clock-cells'
++  - clocks
++  - clock-names
++
++examples:
++  # Clock Control Module node:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    clks: clock-controller@20c4000 {
++        compatible = "fsl,imx6sll-ccm";
++        reg = <0x020c4000 0x4000>;
++        interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
++        #clock-cells = <1>;
++        clocks = <&ckil>, <&osc>, <&ipp_di0>, <&ipp_di1>;
++        clock-names = "ckil", "osc", "ipp_di0", "ipp_di1";
++    };
+-- 
+2.7.4
+
