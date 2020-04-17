@@ -2,177 +2,126 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88F7C2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 06:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E78C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 06:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A6FD22201
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 06:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37C6520771
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 06:41:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="QJWl4WcT"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="cdwYNQ/w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgDQGeS (ORCPT
+        id S1728050AbgDQGlN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 02:34:18 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:42453 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727912AbgDQGeS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 02:34:18 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 062C222EEB;
-        Fri, 17 Apr 2020 08:34:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1587105252;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yRofvrT7uJxuqc53iK0glkaODL7zqW5wwpHXjFjKcgw=;
-        b=QJWl4WcToI73JqjXrubzRp0qLIcPIjk2ilLyWMLcnLKpiGqrfWON6uL1z8JhJq7r5UUkyF
-        TKqmBRGjCEejYmQaC3M7NJhp8Ji3md43YmGOp9YWBADR/RoIApO6RHynSWNUvMQUz3QA90
-        FlDbwzSR3GqZVaXjssTh33Iz8CDafW4=
+        Fri, 17 Apr 2020 02:41:13 -0400
+Received: from mail-eopbgr1400130.outbound.protection.outlook.com ([40.107.140.130]:34323
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728043AbgDQGlN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Apr 2020 02:41:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=A/e4oBbI+GTLOiGgyCaS6uvmdj5fZTbmdOazmEVv0bbXznWA6JsIVEngN9jkdNdkQnApuf41xW1dfCvh5oHJeptbDJ+L5HWaJu0NCTti0l5OhYVtiU2gIDOJLGqzUSXLe0SEYUY4qta7k+9e4PUDPn6xmOmFxCxCVTgRpcQjycotUu3XLqlRbIfiyX8XakUBc2Tj4Gbptwo+ukpuE1QbsNlg5ACYZob3u2TUIp7aAe/5sYpOzc7wDXUQ8IjtgDeJMQGK0xhX1sLOCGrFzgWkl33VpiNKPKfU3xkzzn/L6gguzqbAtWeK+du0ZUyGLNV8hlP070g/IL1ijEfYGu+u1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qVB3Ez1IeTdUbiX8U6k/y5CKFED0oIico1bZrQmVvMc=;
+ b=ThJBgxbsJcOmzS0/ht/2AavCgCGV1eIlDI5S6crue1cMQ3TB1WunyQ1/8Sc01AQ3UC7C9iMTQY5jkSu9Ke3kwcaLbbp3a7dUWj9uL2Bwqsp0JhdBIfHuKF2mYXIjUEDVxthCg3ZUmOepvoMnPpVtDfXabHrIbnHs4JZ5ITGURil7p7DduDWHuOZ3Fc58w7wTYhGQzoMRPjBkor5ZvIHoK5F+eUDFtGe4L3XEaXr6DAStPhf29Ty9pdtpZ0WyxuTmHRp9NSjaS0KElKhFOGmeAz69zAvRTnEHctsAlzIoRZSH7wXsiE/gnZMKnqsvLykwwOZINcMgPeshGi/UV1fM+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qVB3Ez1IeTdUbiX8U6k/y5CKFED0oIico1bZrQmVvMc=;
+ b=cdwYNQ/w3DBU82kai0tQBj3xp8aHMDcLbtpYh+mZtgy++gWqCLNwEq31zn7v2UWg0lO1YARXBt2+qMSA11ZxUaZ3ZzfyvwPKTndtPgd9iUIbSexNov6ZI0E07ifmzS7McHUA+Cnc2l3f/y7NjAtKHH4DCkPBQ8gNUtcHBLfZzSU=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB2061.jpnprd01.prod.outlook.com (52.133.176.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2921.27; Fri, 17 Apr 2020 06:41:10 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2921.027; Fri, 17 Apr 2020
+ 06:41:10 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     "joro@8bytes.org" <joro@8bytes.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH v3] dt-bindings: iommu: renesas,ipmmu-vmsa: convert to
+ json-schema
+Thread-Topic: [PATCH v3] dt-bindings: iommu: renesas,ipmmu-vmsa: convert to
+ json-schema
+Thread-Index: AQHWFHGbkNCiFGzGzkmUwf2v6w0Gfqh83RRQ
+Date:   Fri, 17 Apr 2020 06:41:10 +0000
+Message-ID: <TYAPR01MB4544935A912DB64603A3FCFED8D90@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <1587098115-2969-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1587098115-2969-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: cbfc893a-9d45-4c2a-773b-08d7e29a50e2
+x-ms-traffictypediagnostic: TYAPR01MB2061:
+x-microsoft-antispam-prvs: <TYAPR01MB206150CE3E453C9EACFC8E1ED8D90@TYAPR01MB2061.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 0376ECF4DD
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(346002)(39860400002)(376002)(136003)(396003)(366004)(4744005)(76116006)(186003)(64756008)(478600001)(71200400001)(52536014)(66446008)(86362001)(66556008)(9686003)(66946007)(66476007)(8936002)(54906003)(55236004)(2906002)(4326008)(316002)(110136005)(33656002)(7696005)(55016002)(6506007)(8676002)(81156014)(5660300002)(26005)(142933001);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: hd8x6RcWGl3kUjz9kO3SB4Z/RZnYOOKZYV3c418QvVtFcIBeaHmfM+NgUxYXlFubb3h7GUpNlhgnSL86xaBZc0UkUxKZD7KgLJxp5LxPKmUo06ru7xWk72y1bHOZ9dRbYvn+jixU6Shldze4Cy+FvnYB9JYgsLqLjcR1YhT8TTgMBbIBfFlZU2MRIkSofy4gWx9R+an/fDgYvQxNbTzoY533BJ0TVydUlWn+yXltpzBaGtDZsdRQjwTsSzwfGFeQgcLZn+2QPZlQ1t8FbMPgNhlCoKyfrKVlod4hdDl85JpFXW6Nv9fiP4q7K2KbceQKi8iMv/c+IBQD80dOilF1/dptWM59l323y1eskDWP1Qfj1G0NRwrmIN4RJH3hxVnruJmODcUQu93UEhRsVLpzobWb032PfW0k2WazFmgk9NldAM7ElfUz11wWscrIncV8ai3swhjyzWBQqBF5+yCi9GPxigZLxxWbzEPyx8xs5CEGWbz1pWjd+W5Ul0dXq5hL
+x-ms-exchange-antispam-messagedata: /u1e04U60nWKSyZmXhwfHLubk2HMDtW97uLxuFxvPBwuY4CPzOyCXSiQJCSTh1C8NqarsObXxXz+VbR/fVQrEQThToOYNjFjVpL9pjZGxoWbcyn3fEw3n1B7mVKKBntbqeeTuy23tXGEHdv+lheLcw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 17 Apr 2020 08:34:09 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using
- regmap
-In-Reply-To: <CACRpkdaqgHhPwdKdUai4zvi21qR-cSQUKyzZ3SyfWBLPN9us3w@mail.gmail.com>
-References: <20200402203656.27047-1-michael@walle.cc>
- <20200402203656.27047-11-michael@walle.cc>
- <CACRpkdaqgHhPwdKdUai4zvi21qR-cSQUKyzZ3SyfWBLPN9us3w@mail.gmail.com>
-Message-ID: <f82706a8596436d13642c49e26233133@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 062C222EEB
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[23];
-         NEURAL_HAM(-0.00)[-0.393];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,baylibre.com,kernel.org,suse.com,roeck-us.net,linaro.org,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cbfc893a-9d45-4c2a-773b-08d7e29a50e2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2020 06:41:10.4725
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: j3C8Vq+53rxKnUE5VX8RAg4QiHGltwZmEKHhMAN+UpDqKKua5Kr7chw6oM+u3BsSZ9WEBhsfY4ycvYul41yTAIsnVsGb0bWRmvNE/2BL+qWWcx8+C+qHFicsjabVErIk
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2061
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Linus,
+Hi all,
 
-Am 2020-04-16 11:27, schrieb Linus Walleij:
-> On Thu, Apr 2, 2020 at 10:37 PM Michael Walle <michael@walle.cc> wrote:
-> 
->> There are quite a lot simple GPIO controller which are using regmap to
->> access the hardware. This driver tries to be a base to unify existing
->> code into one place. This won't cover everything but it should be a 
->> good
->> starting point.
->> 
->> It does not implement its own irq_chip because there is already a
->> generic one for regmap based devices. Instead, the irq_chip will be
->> instanciated in the parent driver and its irq domain will be associate
->> to this driver.
->> 
->> For now it consists of the usual registers, like set (and an optional
->> clear) data register, an input register and direction registers.
->> Out-of-the-box, it supports consecutive register mappings and mappings
->> where the registers have gaps between them with a linear mapping 
->> between
->> GPIO offset and bit position. For weirder mappings the user can 
->> register
->> its own .xlate().
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
-> 
-> Overall I really like this driver and I think we should merge is as 
-> soon
-> as it is in reasonable shape and then improve on top so we can start
-> migrating drivers to it.
-> 
->> +static int gpio_regmap_to_irq(struct gpio_chip *chip, unsigned int 
->> offset)
->> +{
->> +       struct gpio_regmap_data *data = gpiochip_get_data(chip);
->> +       struct gpio_regmap *gpio = data->gpio;
->> +
->> +       /* the user might have its own .to_irq callback */
->> +       if (gpio->to_irq)
->> +               return gpio->to_irq(gpio, offset);
->> +
->> +       return irq_create_mapping(gpio->irq_domain, offset);
-> 
-> I think that should at least be irq_find_mapping(), the mapping should
-> definately not be created by the .to_irq() callback since that is just
-> a convenience function.
+> From: Yoshihiro Shimoda, Sent: Friday, April 17, 2020 1:35 PM
+<snip>
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - renesas,ipmmu-r8a73a4  # R-Mobile APE6
+> +              - renesas,ipmmu-r8a7743  # RZ/G1M
+> +              - renesas,ipmmu-r8a7744  # RZ/G1N
+> +              - renesas,ipmmu-r8a7745  # RZ/G1E
+> +              - renesas,ipmmu-r8a7790  # R-Car H2
+> +              - renesas,ipmmu-r8a7791  # R-Car M2-W
+> +              - renesas,ipmmu-r8a7793  # R-Car M2-N
+> +              - renesas,ipmmu-r8a7794  # R-Car E2
+> +              - renesas,ipmmu-r8a7795  # R-Car H3
 
-what do you mean by conenience function? are there other ways? if you 
-use
-irq_find_mapping() who will create the mappings? most gpio drivers use a
-similar function like gpio_regmap_to_irq().
+I'm afraid but this renesas,ipmmu-r8a7795 should be the below section.
+So, I'll fix it.
 
-> 
->> +       if (gpio->irq_domain)
->> +               chip->to_irq = gpio_regmap_to_irq;
-> 
-> I don't know about this.
-> (...)
->> + * @irq_domain:                (Optional) IRQ domain if the 
->> controller is
->> + *                     interrupt-capable
-> (...)
->> +       struct irq_domain *irq_domain;
-> 
-> I don't think this is a good storage place for the irqdomain, we 
-> already have
-> gpio_irq_chip inside gpio_chip and that has an irqdomain, we should
-> strive to reuse that infrastructure also for regmap GPIO I think, for 
-> now
-> I would just leave .to_irq() out of this and let the driver deal with 
-> any
-> irqs.
+Best regards,
+Yoshihiro Shimoda
 
-How would a driver attach the to_irq callback then? At the moment, the
-gpio_regmap doesn't expose the gpio_chip. So either we have to do that 
-or
-the config still have to have a .to_irq property.
-
--michael
