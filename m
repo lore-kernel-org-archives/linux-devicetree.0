@@ -2,131 +2,108 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 619AAC352BE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 11:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3227C352BE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 11:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA622137B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 11:43:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EXTd0EIW"
+	by mail.kernel.org (Postfix) with ESMTP id 99D7320780
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 11:51:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730507AbgDQLnx (ORCPT
+        id S1730422AbgDQLvU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 07:43:53 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:52148 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730267AbgDQLnx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 07:43:53 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03HBhZZg034317;
-        Fri, 17 Apr 2020 06:43:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587123815;
-        bh=6aSSBM0i5VIvjL6XkO+db3ofrSudsLQ7qzAvGhFRHCU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=EXTd0EIWvC7SWpmIxLbRFkVaZUc/KPij8Qp5DOBtz8sNc6xk9pyIK18WgTBiBJf/9
-         McKh1rsNmh9ja64Krjyhp4MsYvZBKp/OZjwo51hXVTOUqxHoBoIJ0oY4i20iR2nJrH
-         B5dNe1dnvLs2Cb+LrJ8VNLGS7qSqRAi4fdLlng9k=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03HBhZSL086674
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Apr 2020 06:43:35 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
- Apr 2020 06:43:35 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 17 Apr 2020 06:43:35 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03HBhN9q088610;
-        Fri, 17 Apr 2020 06:43:32 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>
-CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 3/4] PCI: cadence: Remove "cdns,max-outbound-regions" DT property
-Date:   Fri, 17 Apr 2020 17:13:21 +0530
-Message-ID: <20200417114322.31111-4-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200417114322.31111-1-kishon@ti.com>
-References: <20200417114322.31111-1-kishon@ti.com>
+        Fri, 17 Apr 2020 07:51:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:50264 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730410AbgDQLvT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Apr 2020 07:51:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D6E1530E;
+        Fri, 17 Apr 2020 04:51:18 -0700 (PDT)
+Received: from [10.57.59.184] (unknown [10.57.59.184])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 984933F6C4;
+        Fri, 17 Apr 2020 04:51:17 -0700 (PDT)
+Subject: Re: [RFC PATCH] arm64: dts: rockchip: add core devicetree for rk3318
+To:     Heiko Stuebner <heiko@sntech.de>, Johan Jonker <jbx6244@gmail.com>
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+References: <20200417105739.3718-1-jbx6244@gmail.com>
+ <2141402.AJMLQ3pQEO@phil>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <6d5a1d27-8d32-eca2-007c-aa0bed81af46@arm.com>
+Date:   Fri, 17 Apr 2020 12:51:15 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <2141402.AJMLQ3pQEO@phil>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-"cdns,max-outbound-regions" device tree property provides the
-maximum number of outbound regions supported by the Host PCIe
-controller. However the outbound regions are configured based
-on what is populated in the "ranges" DT property.
+On 2020-04-17 12:05 pm, Heiko Stuebner wrote:
+> Hi Johan,
+> 
+> Am Freitag, 17. April 2020, 12:57:39 CEST schrieb Johan Jonker:
+>> The rk3318 is basically a rk3328 with improved gpu,
+>> so add a dtsi based on that.
+>>
+>> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> 
+> Please don't add dangling dtsi files.
+> I'd expect at least a board dts to actually use that and
+> also the updated gpu node.
+> 
+>  From a cursory glance it looks like it gets upgraded from
+> 450-MP2 to 450MP3 or so, so that would at least mean
+> another set of interrupts.
 
-Avoid using two properties for configuring outbound regions and
-use only "ranges" property instead.
+I'm not sure anything's "improved" - as far as the internet can tell 
+it's a special low-cost variant of RK3328 for low-end TV box vendors 
+that Rockchip don't want to talk about. The DTB for my H96 Max 3318 
+shows no appreciable difference from the BSP DT for RK3328, although I 
+wouldn't be surprised if some of the unused stuff like the external GMAC 
+was actually missing or broken. The board itself is the exact same one 
+used in a lot of other cheap RK3328 boxes (and I mean literally, it's 
+silkscreened "RK3328_8D4_V1.2").
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/controller/cadence/pcie-cadence-host.c | 6 ------
- drivers/pci/controller/cadence/pcie-cadence.h      | 2 --
- 2 files changed, 8 deletions(-)
+Thanks to one unexpectedly honest Aliexpress listing I stumbled across, 
+the "penta-core GPU" apparently translates from TV-box-marketing-speak 
+to mean Mali-450 MP2 (1GP + 2PP) plus the RGA plus the VOP ;)
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index 60f912a657b9..8f72967f298f 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -140,9 +140,6 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
- 	for_each_of_pci_range(&parser, &range) {
- 		bool is_io;
- 
--		if (r >= rc->max_regions)
--			break;
--
- 		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_MEM)
- 			is_io = false;
- 		else if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
-@@ -221,9 +218,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 	pcie = &rc->pcie;
- 	pcie->is_rc = true;
- 
--	rc->max_regions = 32;
--	of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
--
- 	if (!of_pci_dma_range_parser_init(&parser, np))
- 		if (of_pci_range_parser_one(&parser, &range))
- 			rc->no_bar_nbits = ilog2(range.size);
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index a2b28b912ca4..6bd89a21bb1c 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -251,7 +251,6 @@ struct cdns_pcie {
-  * @bus_range: first/last buses behind the PCIe host controller
-  * @cfg_base: IO mapped window to access the PCI configuration space of a
-  *            single function at a time
-- * @max_regions: maximum number of regions supported by the hardware
-  * @no_bar_nbits: Number of bits to keep for inbound (PCIe -> CPU) address
-  *                translation (nbits sets into the "no BAR match" register)
-  * @vendor_id: PCI vendor ID
-@@ -262,7 +261,6 @@ struct cdns_pcie_rc {
- 	struct resource		*cfg_res;
- 	struct resource		*bus_range;
- 	void __iomem		*cfg_base;
--	u32			max_regions;
- 	u32			no_bar_nbits;
- 	u16			vendor_id;
- 	u16			device_id;
--- 
-2.17.1
+Robin.
 
+> 
+> Heiko
+> 
+>> ---
+>>   arch/arm64/boot/dts/rockchip/rk3318.dtsi | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>   create mode 100644 arch/arm64/boot/dts/rockchip/rk3318.dtsi
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3318.dtsi b/arch/arm64/boot/dts/rockchip/rk3318.dtsi
+>> new file mode 100644
+>> index 000000000..a32f771bc
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3318.dtsi
+>> @@ -0,0 +1,3 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +
+>> +#include "rk3328.dtsi"
+>>
+> 
+> 
+> 
+> 
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> 
