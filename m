@@ -2,131 +2,157 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B49C352BE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 08:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE74BC3815B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 08:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83EF7221EA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 08:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD32922251
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 08:50:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="jqxe+4/b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W5OxyGua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729808AbgDQIfO (ORCPT
+        id S1729910AbgDQIuY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 04:35:14 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:45343 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729747AbgDQIfN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 04:35:13 -0400
-X-UUID: d8d986a5e78941bebdc08bacc8008b68-20200417
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=I69XZhCGCT6PHGSQl+2FE2AZcxuaF8LTOGfpLh230qU=;
-        b=jqxe+4/bHncovWXXVhvU0o0AsCAmL08SKhpRxzft9v+YWGHN/hqpG3sa/ED5QB1DEXD8Fa0Ohs2H8CN1vFBRvAsDyLaVWgjTsP9ICb8I4SgTDZ79Id48q79qrOsA7x7tXpdY4KXhg1Oa+5xAkUI8ugCyReHEstiSE66a9v2a/7k=;
-X-UUID: d8d986a5e78941bebdc08bacc8008b68-20200417
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <ran.bi@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1581973651; Fri, 17 Apr 2020 16:29:59 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs01n1.mediatek.inc
- (172.21.101.68) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 17 Apr
- 2020 16:29:57 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 17 Apr 2020 16:29:54 +0800
-Message-ID: <1587112169.12875.2.camel@mhfsdcap03>
-Subject: Re: [PATCH v12 5/6] rtc: mt6397: Add support for the MediaTek
- MT6358 RTC
-From:   Ran Bi <ran.bi@mediatek.com>
-To:     Lee Jones <lee.jones@linaro.org>
-CC:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        "Kate Stewart" <kstewart@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        "Josef Friedl" <josef.friedl@speed.at>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>, <srv_heupstream@mediatek.com>
-Date:   Fri, 17 Apr 2020 16:29:29 +0800
-In-Reply-To: <20200416091438.GA2167633@dell>
-References: <1586333531-21641-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <1586333531-21641-6-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <20200416091438.GA2167633@dell>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Fri, 17 Apr 2020 04:50:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729748AbgDQIuV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Apr 2020 04:50:21 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF631C061A0F;
+        Fri, 17 Apr 2020 01:50:20 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k13so889797wrw.7;
+        Fri, 17 Apr 2020 01:50:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=NCVZU/bSt76/hiidvSrjEJc/qNxlzUEMq/1bB2ttNxY=;
+        b=W5OxyGuanL+7DSyVsNAI8cIt5HT0/VgXRrpMmjaQI1BDXmK8Yxs0x7vOR1XUp3quYc
+         dzU6XZejFy5lC+HqWU6Ayq0VY2qjpzYddZdj4EKfHK/FScdaXBscgJ6cEzVkeOYkwck4
+         1poskfy9VL94QkQPps57vIYyuPdLRkWCbAuDiOvL46aRJdEuHD5+ILOdfyhcGxQnHsrs
+         qFkmPr1BtneHJaLZWAFF1BpG/FUYmIrNUeSghiZpeNsgw27deK342yxwrvg2ENc9ggvt
+         xWpiwsbQ14O/qadvHmRhdzu+V76V4gfW8UnFj4auj7RpHkeuUGMzPbeWUFq/j6XjXpDT
+         Nu/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=NCVZU/bSt76/hiidvSrjEJc/qNxlzUEMq/1bB2ttNxY=;
+        b=FThjYW7yKVENIH7WG1y7LyCMCsk3e6ZwPY+4auqv9sNjnJQxQXnUrSF/C9GrBJ2lPy
+         MHdos4D+NAMSH+wVX1xyN/8Tdoy1OZ+Q5/d/NEyRP9Qj3r3WhLZyfXXvatR3qEWGN4Lu
+         WjYTqmni+pxwKSQ4m2f6+cyQ5A9dENDr4T9nzWaXqdENrrhs4T/LDPfSowvQEjrC8+ws
+         JkDoDpy6O0tEZnHn/k28Jm+zs7li2z6D2Lo3twn6I+Wg7/8GE761XgOkX55cSND4pUSI
+         bpb94FPAAVvmtbXN7sKEHGSFPA22Qd4UHI6TYCrBn1NwqIp8hfBF7XeJvqB+Hi77MZA1
+         89uA==
+X-Gm-Message-State: AGi0PuacyPwye3IQblDZfYCY2hFgjAR/JLqIlaCAL+7oyzNDJxLV1CoF
+        1EhsPoqWvKyKpRMYYlw4Q9E=
+X-Google-Smtp-Source: APiQypLNnUiUNRL2Gm0jcpPDvKlx5obVgmeRPznD72jGzYOq+Buea79ag2FNssV2gDbPWsWGvIdZVA==
+X-Received: by 2002:a5d:60ca:: with SMTP id x10mr2641819wrt.407.1587113419736;
+        Fri, 17 Apr 2020 01:50:19 -0700 (PDT)
+Received: from localhost.localdomain (p5B3F7443.dip0.t-ipconnect.de. [91.63.116.67])
+        by smtp.gmail.com with ESMTPSA id l5sm6807527wmi.22.2020.04.17.01.50.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 01:50:19 -0700 (PDT)
+From:   Saravanan Sekar <sravanhome@gmail.com>
+To:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
+        robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
+        Saravanan Sekar <sravanhome@gmail.com>
+Subject: [PATCH v10 1/6] dt-bindings: mfd: add document bindings for mp2629
+Date:   Fri, 17 Apr 2020 10:49:58 +0200
+Message-Id: <20200417085003.6124-2-sravanhome@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200417085003.6124-1-sravanhome@gmail.com>
+References: <20200417085003.6124-1-sravanhome@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA0LTE2IGF0IDEwOjE0ICswMTAwLCBMZWUgSm9uZXMgd3JvdGU6DQo+IE9u
-IFdlZCwgMDggQXByIDIwMjAsIEhzaW4tSHNpdW5nIFdhbmcgd3JvdGU6DQo+IA0KPiA+IEZyb206
-IFJhbiBCaSA8cmFuLmJpQG1lZGlhdGVrLmNvbT4NCj4gPiANCj4gPiBUaGlzIGFkZCBzdXBwb3J0
-IGZvciB0aGUgTWVkaWFUZWsgTVQ2MzU4IFJUQy4gRHJpdmVyIHVzaW5nDQo+ID4gY29tcGF0aWJs
-ZSBkYXRhIHRvIHN0b3JlIGRpZmZlcmVudCBSVENfV1JUR1IgYWRkcmVzcyBvZmZzZXQuDQo+ID4g
-VGhpcyByZXBsYWNlIFJUQ19XUlRHUiB0byBSVENfV1JUR1JfTVQ2MzIzIGluIG10NjMyMy1wb3dl
-cm9mZg0KPiA+IGRyaXZlciB3aGljaCBvbmx5IG5lZWRlZCBieSBhcm12NyBDUFUgd2l0aG91dCBB
-VEYuDQo+ID4gDQo+ID4gUmV2aWV3ZWQtYnk6IE5pY29sYXMgQm9pY2hhdCA8ZHJpbmtjYXRAY2hy
-b21pdW0ub3JnPg0KPiA+IFJldmlld2VkLWJ5OiBZaW5nam9lIENoZW4gPHlpbmdqb2UuY2hlbkBt
-ZWRpYXRlay5jb20+DQo+ID4gQWNrZWQtYnk6IEFsZXhhbmRyZSBCZWxsb25pIDxhbGV4YW5kcmUu
-YmVsbG9uaUBib290bGluLmNvbT4NCj4gPiBBY2tlZC1ieTogU2ViYXN0aWFuIFJlaWNoZWwgPHNy
-ZUBrZXJuZWwub3JnPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFJhbiBCaSA8cmFuLmJpQG1lZGlhdGVr
-LmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBIc2luLUhzaXVuZyBXYW5nIDxoc2luLWhzaXVuZy53
-YW5nQG1lZGlhdGVrLmNvbT4NCj4gDQo+IFBsZWFzZSBwbGFjZSB0aGVzZSBpbiBjaHJvbm9sb2dp
-Y2FsIG9yZGVyLiAgVGhleSBzaG91bGQgcHJvdmlkZSBzb21lDQo+IGhpc3RvcnksIHJhdGhlciB0
-aGFuIGEgdW5vcmRlcmVkIHNsYWIgbGlzdCBvZiByYW5kb20gc2lnbi1vZmZzLg0KPiANCg0KSSBz
-dXBwb3NlIHRoYXQgeW91IG1lYW4gdGhlIG9yZGVyIHNob3VsZCBiZSBsaWtlIGJlbG93LCByaWdo
-dD8NClJldmlld2VkLWJ5OiBZaW5nam9lIENoZW4gPHlpbmdqb2UuY2hlbkBtZWRpYXRlay5jb20+
-DQpBY2tlZC1ieTogU2ViYXN0aWFuIFJlaWNoZWwgPHNyZUBrZXJuZWwub3JnPg0KQWNrZWQtYnk6
-IEFsZXhhbmRyZSBCZWxsb25pIDxhbGV4YW5kcmUuYmVsbG9uaUBib290bGluLmNvbT4NClJldmll
-d2VkLWJ5OiBOaWNvbGFzIEJvaWNoYXQgPGRyaW5rY2F0QGNocm9taXVtLm9yZz4NClNpZ25lZC1v
-ZmYtYnk6IEhzaW4tSHNpdW5nIFdhbmcgPGhzaW4taHNpdW5nLndhbmdAbWVkaWF0ZWsuY29tPg0K
-U2lnbmVkLW9mZi1ieTogUmFuIEJpIDxyYW4uYmlAbWVkaWF0ZWsuY29tPg0KDQo+ID4gLS0tDQo+
-ID4gIGRyaXZlcnMvcG93ZXIvcmVzZXQvbXQ2MzIzLXBvd2Vyb2ZmLmMgfCAgMiArLQ0KPiA+ICBk
-cml2ZXJzL3J0Yy9ydGMtbXQ2Mzk3LmMgICAgICAgICAgICAgIHwgMTggKysrKysrKysrKysrKysr
-LS0tDQo+ID4gIGluY2x1ZGUvbGludXgvbWZkL210NjM5Ny9ydGMuaCAgICAgICAgfCAgOSArKysr
-KysrKy0NCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCAyNCBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9u
-cygtKQ0KPiANCj4gWy4uLl0NCj4gDQo+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvbWZk
-L210NjM5Ny9ydGMuaCBiL2luY2x1ZGUvbGludXgvbWZkL210NjM5Ny9ydGMuaA0KPiA+IGluZGV4
-IDdkZmI2M2IuLjYyMDBmM2IgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS9saW51eC9tZmQvbXQ2
-Mzk3L3J0Yy5oDQo+ID4gKysrIGIvaW5jbHVkZS9saW51eC9tZmQvbXQ2Mzk3L3J0Yy5oDQo+ID4g
-QEAgLTE4LDcgKzE4LDkgQEANCj4gPiAgI2RlZmluZSBSVENfQkJQVV9DQlVTWSAgICAgICAgIEJJ
-VCg2KQ0KPiA+ICAjZGVmaW5lIFJUQ19CQlBVX0tFWSAgICAgICAgICAgICgweDQzIDw8IDgpDQo+
-ID4gIA0KPiA+IC0jZGVmaW5lIFJUQ19XUlRHUiAgICAgICAgICAgICAgMHgwMDNjDQo+ID4gKyNk
-ZWZpbmUgUlRDX1dSVEdSX01UNjM1OCAgICAgICAweDNhDQo+ID4gKyNkZWZpbmUgUlRDX1dSVEdS
-X01UNjM5NyAgICAgICAweDNjDQo+IA0KPiBXaHkgcmVtb3ZlIHRoZSBsZWFkaW5nIDAwJ3M/DQo+
-IA0KPiBUaGVzZSBhcmUgbm93IGRpZmZlcmVudCB0byB0aGUgb3RoZXIgcmVncyBkZWZpbmVkIGlu
-IHRoaXMgaGVhZGVyLg0KPiANCg0KSSB3aWxsIGZpeCB0aGlzIGF0IG5leHQgcGF0Y2guDQoNCj4g
-PiArI2RlZmluZSBSVENfV1JUR1JfTVQ2MzIzICAgICAgIFJUQ19XUlRHUl9NVDYzOTcNCj4gPiAg
-DQo+ID4gICNkZWZpbmUgUlRDX0lSUV9TVEEgICAgICAgICAgICAweDAwMDINCj4gDQo+IExpa2Ug
-aGVyZSBmb3IgaW5zdGFuY2UgIC0tXg0KPiANCj4gPiAgI2RlZmluZSBSVENfSVJRX1NUQV9BTCAg
-ICAgICAgIEJJVCgwKQ0KPiA+IEBAIC02NSw2ICs2NywxMCBAQA0KPiA+ICAjZGVmaW5lIE1US19S
-VENfUE9MTF9ERUxBWV9VUyAgMTANCj4gPiAgI2RlZmluZSBNVEtfUlRDX1BPTExfVElNRU9VVCAg
-IChqaWZmaWVzX3RvX3VzZWNzKEhaKSkNCj4gPiAgDQo+ID4gK3N0cnVjdCBtdGtfcnRjX2RhdGEg
-ew0KPiA+ICsJdTMyICAgICAgICAgICAgICAgICAgICAgd3J0Z3I7DQo+ID4gK307DQo+ID4gKw0K
-PiA+ICBzdHJ1Y3QgbXQ2Mzk3X3J0YyB7DQo+ID4gIAlzdHJ1Y3QgZGV2aWNlICAgICAgICAgICAq
-ZGV2Ow0KPiA+ICAJc3RydWN0IHJ0Y19kZXZpY2UgICAgICAgKnJ0Y19kZXY7DQo+ID4gQEAgLTc0
-LDYgKzgwLDcgQEAgc3RydWN0IG10NjM5N19ydGMgew0KPiA+ICAJc3RydWN0IHJlZ21hcCAgICAg
-ICAgICAgKnJlZ21hcDsNCj4gPiAgCWludCAgICAgICAgICAgICAgICAgICAgIGlycTsNCj4gPiAg
-CXUzMiAgICAgICAgICAgICAgICAgICAgIGFkZHJfYmFzZTsNCj4gPiArCWNvbnN0IHN0cnVjdCBt
-dGtfcnRjX2RhdGEgKmRhdGE7DQo+ID4gIH07DQo+ID4gIA0KPiA+ICAjZW5kaWYgLyogX0xJTlVY
-X01GRF9NVDYzOTdfUlRDX0hfICovDQo+IA0KDQo=
+Add device tree binding information for mp2629 mfd driver.
+
+Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+---
+ .../devicetree/bindings/mfd/mps,mp2629.yaml   | 61 +++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+
+diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+new file mode 100644
+index 000000000000..b25b29259d67
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+@@ -0,0 +1,61 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MP2629 Battery Charger PMIC from Monolithic Power System.
++
++maintainers:
++  - Saravanan Sekar <sravanhome@gmail.com>
++
++description: |
++  MP2629 is a PMIC providing battery charging and power supply for smartphones,
++  wireless camera and portable devices. Chip is controlled over I2C.
++
++  The battery charge management device handles battery charger controller and
++  ADC IIO device for battery, system voltage
++
++properties:
++  compatible:
++    const: mps,mp2629
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 2
++    description:
++      The first cell is the IRQ number, the second cell is the trigger type.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-controller
++  - "#interrupt-cells"
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/input/linux-event-codes.h>
++    i2c@7e205000 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        reg = <0x7e205000 0x200>;
++
++        pmic@4b {
++            compatible = "mps,mp2629";
++            reg = <0x4b>;
++
++            interrupt-controller;
++            interrupt-parent = <&gpio2>;
++            #interrupt-cells = <2>;
++            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
++        };
++    };
+-- 
+2.17.1
 
