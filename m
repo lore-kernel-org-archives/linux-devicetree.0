@@ -2,99 +2,93 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA29C2BB55
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 05:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26B9C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 05:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6771521D94
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 05:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D117E20857
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 05:14:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vFUkBxR5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbgDQFKu (ORCPT
+        id S1726620AbgDQFOr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 01:10:50 -0400
-Received: from mga06.intel.com ([134.134.136.31]:51848 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726568AbgDQFKu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Apr 2020 01:10:50 -0400
-IronPort-SDR: 23Nnya4jyXwBiGHSOaffZIpPRJVVQzmPg9jFbZy29fhO5kdMDfzOxUcQqBMen/lPYdZIfuVv6j
- AADUlfXm7vNQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 22:10:49 -0700
-IronPort-SDR: Ru+AzaksJhRHLDZOjcFgQYBfOUAcETbupMhsMVFpsNC8dGKJHTKDJbEIdtNPHMYgY9m8+OdLLs
- jUukL2Thokdg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,393,1580803200"; 
-   d="scan'208";a="244610530"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 16 Apr 2020 22:10:49 -0700
-Received: from [10.255.156.142] (vramuthx-mobl1.gar.corp.intel.com [10.255.156.142])
-        by linux.intel.com (Postfix) with ESMTP id 592125802C9;
-        Thu, 16 Apr 2020 22:10:44 -0700 (PDT)
-Subject: Re: [PATCH v1 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        anders.roxell@linaro.org, arnd@arndb.de, brendanhiggins@google.com,
-        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        masonccyang@mxic.com.tw, miquel.raynal@bootlin.com,
-        piotrs@cadence.com, qi-ming.wu@intel.com, richard@nod.at,
-        robh+dt@kernel.org, tglx@linutronix.de, vigneshr@ti.com
-References: <20200414022433.36622-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200415220533.733834-1-martin.blumenstingl@googlemail.com>
- <c33c8653-16a2-5bcd-97a9-511d958b755a@linux.intel.com>
- <20200416113822.2ef326cb@collabora.com>
- <18568cf6-2955-472e-7b68-eb35e654a906@linux.intel.com>
- <20200416122619.2c481792@collabora.com>
- <d3e137fa-54a0-b4ec-eb24-3984eab2a247@linux.intel.com>
- <20200416131725.51259573@collabora.com>
- <20200416113250.GA185537@smile.fi.intel.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <c8611110-d2ce-7d16-3acc-974d37ab116a@linux.intel.com>
-Date:   Fri, 17 Apr 2020 13:10:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 17 Apr 2020 01:14:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbgDQFOr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 01:14:47 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4B75C061A0C;
+        Thu, 16 Apr 2020 22:14:46 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id w24so1006650qts.11;
+        Thu, 16 Apr 2020 22:14:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5imWM9PoUe4cCDhSNWS0fi5ZUgYX+BEu4b7csjsffI8=;
+        b=vFUkBxR5NlxOV5IXDdLmtqx87H2oMA2w3wcEN59Rqfc06684oOpJtSlsa+NofreCbF
+         OAwE6Q1ZAnO3GVV5wTwI5Y6E93CLK6XkywEVRbEE/++JxMwhyFFmLfo3INTXqPo/xRn/
+         94IGlkS3zGC55fZtxbMop1+hIbCzaxjlXih+ra83OIWP8D5YEFGBN8EyfbHyJiqQh5Ah
+         fcjd/AtZ4GH+hTzb1QUev0X6uaOd+iM3WSaLGm/0CTrvUzaje7HeW2+brY6b78nB46wg
+         JjdltRKPPA3pA0OEOz6De6UnODpPK5S3fQCDIkCn6JRHTDiQOlJGd3NMc9dxOKYPMQ+u
+         ta9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5imWM9PoUe4cCDhSNWS0fi5ZUgYX+BEu4b7csjsffI8=;
+        b=FNLGnfMqXfjHAH81xLzxSQf/yf6vD5bcBLilnjEeXDFu419VVefpL7weF5tbx1jDxg
+         n+kA0VQ/PwbcqxDQzCGd2bj3HVJo4qTXep05B6rN3e6VQND9dmO2A5lXPd8bPXC12QQq
+         8aG3GuS/1T1ZVl+Eq8jskAQapGZLg2e6bdfPQblbnBITqoVf3w991AwM0Qn3elORaZJn
+         KXksoK9MpDbg81G1xVDEOpE7nSEIjh7LljZVSoDp5kFKoLymwSPZYW6mKCxy8ldvU+r8
+         gY9g8a8FlLUV1GVVGmuXaKz6X6H1bnNrlhJC0yQWae3XR5V3d7f5Jka3iAzyqnFD+7bg
+         JWVw==
+X-Gm-Message-State: AGi0PuZXFtBAEZJnYCAyDQvoL0yxBW7MIGZyTVNSD2G14cQR+9cdJm/a
+        47OETp46VhqR6iR/eLSsMIkrWDPjs+iYcyi/BP7cJhEA
+X-Google-Smtp-Source: APiQypKiXsh891oZUSO2SmIKvGzEThVHpuLi5ba2n9Mea29s5pn1nJGPyHRhkcNPWl3+TX7/+WBgUD6P+3RfOUgyryg=
+X-Received: by 2002:aed:20e3:: with SMTP id 90mr1267488qtb.142.1587100485803;
+ Thu, 16 Apr 2020 22:14:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200416113250.GA185537@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <1587012974-21219-1-git-send-email-gupt21@gmail.com> <CAL_JsqLWMTpHG=bOmWgy1kg6d7vxRGbCda+febq=FnqbuRbPyQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqLWMTpHG=bOmWgy1kg6d7vxRGbCda+febq=FnqbuRbPyQ@mail.gmail.com>
+From:   rishi gupta <gupt21@gmail.com>
+Date:   Fri, 17 Apr 2020 10:44:34 +0530
+Message-ID: <CALUj-gsuUFQbRLKX=nTbA+y6oTyEAnX7OaxkAX375rBBgNc44g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: ttyvs: document serial null modem
+ driver bindings
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        devicetree@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andy,
+Initially there was no DT support but later it was added as CONFIGFS
+is optional.
 
-On 16/4/2020 7:32 pm, Andy Shevchenko wrote:
-> On Thu, Apr 16, 2020 at 01:17:25PM +0200, Boris Brezillon wrote:
->> On Thu, 16 Apr 2020 18:40:53 +0800
->> "Ramuthevar, Vadivel MuruganX"
->> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->>
->>>>>> we'll be happy to have one more of the existing driver converted to
->>>>>> ->exec_op() ;-).
->>>>> I have completely adapted to ->exec_op() hook up to replace the legacy
->>>>> call-back.
->>>> I suspect porting what you've done to the xway driver shouldn't be too
->>>> complicated.
->>> Not ported from xway_nand.c driver , we have developed from the scratch
->>> to make it work on
->>> Intel LGM SoC , it's new x86 ATOM based SoC, IP itself completely
->>> different and most of the registers won't match.
->>> if we port then it would be ugly and also what are the problem may occur
->>> we do not know.
->> Sorry but IMO they look similar enough to try to merge them.
-> I agree. I tried to convince them internally... but here we are.
+DT is giving flexibility to use the driver.
 
-Agreed,  will do the changes as Boris and Martin suggested, Thanks!
-
-Regards
-Vadivel
+On Fri, Apr 17, 2020 at 2:08 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Wed, Apr 15, 2020 at 11:56 PM Rishi Gupta <gupt21@gmail.com> wrote:
+> >
+> > The ttyvs driver creates virtual tty devices. These devices can
+> > also be created through device tree. This commit document this.
+>
+> Device tree is for real h/w devices. You have a configfs interface to
+> set these up. I don't think we need both.
+>
+> Rob
