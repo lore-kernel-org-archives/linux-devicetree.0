@@ -2,183 +2,114 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17781C2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 13:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 290CAC352BE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E004321D91
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 13:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0622C21D6C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 14:05:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iotocs2R"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EQdrGWtM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730753AbgDQN6Z (ORCPT
+        id S1730914AbgDQOFS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 09:58:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730563AbgDQN6Y (ORCPT
+        Fri, 17 Apr 2020 10:05:18 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:21766 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730913AbgDQOFM (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Apr 2020 09:58:24 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B887C061A0C;
-        Fri, 17 Apr 2020 06:58:24 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id v7so2463663qkc.0;
-        Fri, 17 Apr 2020 06:58:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=r8S2kr+1qqUEZmx89jm+Cng1XtsvEmNd5bR0TB0uIJE=;
-        b=iotocs2RNeI49d3mnbUlyAa5zwoDWCGA0757Yxah/0qc/j0AXXBLIPdxm09p9H3Ir/
-         ptEt4ci5MW89V7TZlQs31KRvTGMk8ozPnpLACN8LIOOr/WKfYDTBrX1F83DukeJXi9xS
-         6ttqPRpMBj1/RlCpXob8wDDKXyBK+3cIPxDok6r8TrctMVcEQVXnSCpmXegLDLwsetmh
-         5chGVw6tndImMDtEC4XJhTDad+TBkL4bq7fFdL6rHr/LVgscNOV9lGHEx9j+cWZ3tDyp
-         0DVE2cbOpa4b1IpjbWK4vjYT6BqkdS0Nz9jr56kzWrokadZjKXEOw3+it++I1LGTXkzH
-         eGVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=r8S2kr+1qqUEZmx89jm+Cng1XtsvEmNd5bR0TB0uIJE=;
-        b=kUAug7oTP+pzvuV4S2ABQiJ5Y+QR/DLBAmet0nXDNct1nugGXH395W0bvHhWbqJlUO
-         NSW6YyUK6YVhXPkpRe5TQpAvXe/7J0oCX57idAguqAiLuaX4pc63YjyVvNv/4bNQmtab
-         a1pnFqRHoV0piabNbGOaVcVxR2nhoqisCtWUi5bpn/LPCp6+gMaNZ5ZG+wmoYaRKX/xv
-         NM6LcYbhefmN7yNbvU1lNUQui7MwIHUtbABuXniY/eIv/qi10gA3BXeQHgu7VvG/4f6e
-         D05c9fk7z9aFgbtWgai3MH1W9KRCZCmCxAWz71RGGbyVZoZjP1g4ak5X22PpMXdsJEwv
-         kz5g==
-X-Gm-Message-State: AGi0PuZn6xnOIKGK1gFyrc2R7x0khVMHRDcrCFw/AiMNJuK4lIf0Ay0Y
-        qg/A5SP+66dtvQ2T2/u97F4=
-X-Google-Smtp-Source: APiQypLycIbxKLBQBj/VxBvwEctnJBVu08QReewXgY6W5HGc4qa7J3lYp+camisa7kG+4/t0wN902Q==
-X-Received: by 2002:a37:63d1:: with SMTP id x200mr3442405qkb.144.1587131903728;
-        Fri, 17 Apr 2020 06:58:23 -0700 (PDT)
-Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
-        by smtp.gmail.com with ESMTPSA id y6sm8991279qky.133.2020.04.17.06.58.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 06:58:22 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 09:58:20 -0400
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Kamel Bouhara <kamel.bouhara@bootlin.com>, jic23@kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] dt-bindings: counter: microchip-tcb-capture
- counter
-Message-ID: <20200417135820.GB94725@icarus>
-References: <20200415130455.2222019-1-kamel.bouhara@bootlin.com>
- <20200415130455.2222019-3-kamel.bouhara@bootlin.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="l76fUT7nc3MelDdI"
-Content-Disposition: inline
-In-Reply-To: <20200415130455.2222019-3-kamel.bouhara@bootlin.com>
+        Fri, 17 Apr 2020 10:05:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587132312; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=jOasTJk8TBKsg8tFnzipV3s1efilzTH1QAd2yaXELsc=; b=EQdrGWtMC14QoZJ6xoALMErjccaHDNUCfN3blKRRrM3HFToyfcyVsLuHNQRc7qAe9UjYpGtI
+ A/UzjeGshsdTmjChTOzaAAyNEgDcILoCA4prbiVhlD57/8YMWN+J/se5m15MBJDaM0mCckxQ
+ sCnwu19jX/J5GyZI6n/Ot2OAgLc=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e99b795.7f3ea85c0c38-smtp-out-n04;
+ Fri, 17 Apr 2020 14:05:09 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B2AEAC44799; Fri, 17 Apr 2020 14:05:08 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EE401C4478C;
+        Fri, 17 Apr 2020 14:05:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EE401C4478C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v2 00/17] DVFS for IO devices on sdm845 and sc7180
+Date:   Fri, 17 Apr 2020 19:34:22 +0530
+Message-Id: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Changes in v2:
+1. Added error handling for dev_pm_opp_set_clkname()
+and dev_pm_opp_of_add_table()
+2. Used dev_pm_opp_put_clkname() in the cleanup path
+3. Dropped the OPP patch pulled in by Viresh [1]
+4. Dropped the UFS patches since they had some major rework
+needed because of changes that were merged in the merge window
+and I don't have a UFS device currently to validate the changes.
 
---l76fUT7nc3MelDdI
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We have had support added in the OPP core for a while now to support
+DVFS for IO devices, and this series uses that infrastructure to
+add DVFS support for various IO devices in sdm845 and sc7180 SoCs.
 
-On Wed, Apr 15, 2020 at 03:04:54PM +0200, Kamel Bouhara wrote:
-> Describe the devicetree binding for the Microchip TCB module.
-> Each counter blocks exposes three independent counters.
->=20
-> However, when configured in quadrature decoder, both channel <0> and <1>
-> are required for speed/position and rotation capture (yet only the
-> position is captured).
->=20
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+[1] https://lkml.org/lkml/2020/4/14/98 
 
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+Rajendra Nayak (17):
+  tty: serial: qcom_geni_serial: Use OPP API to set clk/perf state
+  spi: spi-geni-qcom: Use OPP API to set clk/perf state
+  arm64: dts: sdm845: Add OPP table for all qup devices
+  arm64: dts: sc7180: Add OPP table for all qup devices
+  drm/msm/dpu: Use OPP API to set clk/perf state
+  drm/msm: dsi: Use OPP API to set clk/perf state
+  arm64: dts: sdm845: Add DSI and MDP OPP tables and power-domains
+  arm64: dts: sc7180: Add DSI and MDP OPP tables and power-domains
+  mmc: sdhci-msm: Use OPP API to set clk/perf state
+  arm64: dts: sdm845: Add sdhc opps and power-domains
+  arm64: dts: sc7180: Add sdhc opps and power-domains
+  media: venus: core: Add support for opp tables/perf voting
+  arm64: dts: sdm845: Add OPP tables and power-domains for venus
+  arm64: dts: sc7180: Add OPP tables and power-domains for venus
+  spi: spi-qcom-qspi: Use OPP API to set clk/perf state
+  arm64: dts: sdm845: Add qspi opps and power-domains
+  arm64: dts: sc7180: Add qspi opps and power-domains
 
-> ---
-> Changes from v3:
->  - Updated the brand name: s/atmel/microchip/.
->=20
-> Changes from v2:
->  - Fixed errors reported by dt_binding_check
->=20
->  .../counter/microchip-tcb-capture.yaml        | 33 +++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/counter/microchip-t=
-cb-capture.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/counter/microchip-tcb-capt=
-ure.yaml b/Documentation/devicetree/bindings/counter/microchip-tcb-capture.=
-yaml
-> new file mode 100644
-> index 000000000000..183e9ee4c049
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/counter/microchip-tcb-capture.yaml
-> @@ -0,0 +1,33 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/counter/microchip-tcb-capture.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip TCB Counter
-> +
-> +maintainers:
-> +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: "microchip,tcb-capture"
-> +
-> +  reg:
-> +    description: TCB capture channel to register as counter device.
-> +      Each channel is independent therefore only one channel is
-> +      registered by default execpt for the QDEC mode where both TCB0's
-> +      channels <0> and  <1> are required.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    tcb0: timer@f800c000 {
-> +        compatible =3D "microchip,tcb-capture";
-> +        reg =3D <0>, <1>;
-> +    };
-> --=20
-> 2.25.0
->=20
+ arch/arm64/boot/dts/qcom/sc7180.dtsi           | 199 +++++++++++++++++-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi           | 266 ++++++++++++++++++++++++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c  |   3 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c        |  20 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h        |   4 +
+ drivers/gpu/drm/msm/dsi/dsi.h                  |   2 +
+ drivers/gpu/drm/msm/dsi/dsi_cfg.c              |   4 +-
+ drivers/gpu/drm/msm/dsi/dsi_host.c             |  53 +++++
+ drivers/media/platform/qcom/venus/core.c       |  21 ++
+ drivers/media/platform/qcom/venus/core.h       |   5 +
+ drivers/media/platform/qcom/venus/pm_helpers.c |  37 +++-
+ drivers/mmc/host/sdhci-msm.c                   |  34 +++-
+ drivers/spi/spi-geni-qcom.c                    |  22 +-
+ drivers/spi/spi-qcom-qspi.c                    |  24 ++-
+ drivers/tty/serial/qcom_geni_serial.c          |  30 ++-
+ include/linux/qcom-geni-se.h                   |   2 +
+ 16 files changed, 700 insertions(+), 26 deletions(-)
 
---l76fUT7nc3MelDdI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl6ZtfwACgkQhvpINdm7
-VJJyFg//WHsXZYH0on+vZZkrMR5ZzW8MOCpE+wrxZiS8hKDnCyQZV6iLxv9ySQi/
-BmWiyF2rMpE7Jt35ALYT82NwfljVPD4JCrqUjESxREF5N6TxtsaHyjjyo9elPG6x
-2vG0aUHWSZecCgt/IhALWE7i3A39oADcsIKf4DDrM/Sg1syaOYmds8F3YtR8uygl
-x+2YZISXhYreGwfipfs3qp2LtbgvXahytEZE01EQAmpZOptcZS3pRL2Ke/zYQmbr
-/yMKknNB82sDFGFty1A28zZ9guz767p+7cilZwTqkWxBOHR40G6ieIQ2wHYYktm6
-yc4AL1/nfdRpXBIlPL2FcxyftrdnV+DG6hyXm58o56JFoESPI3gMoOwEqFFYhNn8
-W1hszb+C6N9pKszPABb9K1eLHwQQfj4sbi+DdeH4mME/ItpIKeF/hJ/K/62yvGyu
-XSg9utS00CYB2YKB832S5v8/wanuO69g+8kMes25QBeiUiIXd/ne2UUsHx64akkc
-Gx3lWSKJmNPNDJuciTCW+r7ax3wLjn9nQjZV887GK6oNiuo4qbrrU1p+71OMBnHc
-N7ezTozJG8dWWoN2DDPU6D2rw4mcFxmls24ryA8OVv0Nrvvg9R/5wh8Hg1BXN7VU
-6E4lGrFc40Q//KgHIsnc0BO6I4eaq/JIEDA73cqLBe7kXxiUDfc=
-=yr/6
------END PGP SIGNATURE-----
-
---l76fUT7nc3MelDdI--
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
