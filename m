@@ -2,111 +2,139 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C48C1C2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 16:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C427C38A2B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 16:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9412820771
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 16:13:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587140034;
-	bh=iTUiVhXVQylO6YCPLN3VvXA+gNwx5vPeiOqXWqnRH9I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yvXV61SXOiEIkV50JHT8YeRyRcuKhtuofnedkWaAk+hbyS9nyVxVO64vPmuskVl/d
-	 0Qr15YZJTOcf/ETtIlUzEa7BVSeKPE/AE6z8BG8fE58U6UD2NUem4rNcTQlTst1SA5
-	 87jB8Zmk0OWXRwT1WBHkbZFh7GIiwcI5YQgBPn3s=
+	by mail.kernel.org (Postfix) with ESMTP id 761122072D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 16:15:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729429AbgDQQNx (ORCPT
+        id S1729926AbgDQQPY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:13:53 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34845 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728105AbgDQQNx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 12:13:53 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e20so1878879otl.2;
-        Fri, 17 Apr 2020 09:13:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JwhnhYWE1h4Q1rWRqLd33U9UJZPeq8MCVvmfrJyJ/ew=;
-        b=b57Bw/WwzcmrUnJsoJ4VbZWzH++lvh3Y+Kjsl7qmjEMiJV0kvW9LuDzrZokFXD1aiB
-         Q3QbMNBwBPlQFQuIpR2ofxm1J7IMJQqkC0mNBDm9xs/+ulIC4xXtZWn2FHjnTImziEOA
-         ZDjk/GsOXt7ZlF3Ys/8muBlqeoVapzBU1hd7MOV1V9YVlvS3VPJ41m2TbRsL94RpYhHt
-         cn8RxxxZVohPQUMgzJ5dNshegwe/GElA101bzjbJZMBMyp6LkhQ8PAzNjCrhTwBKXE/i
-         PY0QUcLVGXZ1tlQy/o49bGhfP/c+gtSiWk72tivbvnQz/auRQ0/TdrenX6YS7Ud+a+RD
-         +jAA==
-X-Gm-Message-State: AGi0PubvW/C7LlGRUwcGTBzRtpiNqbsM1wLtssNbVRjPyiBNlEQGI0ZB
-        vX47/zMuHfl3cbbB0JW0KZT2XIc=
-X-Google-Smtp-Source: APiQypJFgP67EwrcBHqKLa1uVT9VQ1p19y6ic9Hn9dhaR+0qtHXD5ALlxhD4Hvp7i+DmGccxd/Tvqw==
-X-Received: by 2002:a9d:3405:: with SMTP id v5mr3313114otb.131.1587140032325;
-        Fri, 17 Apr 2020 09:13:52 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i20sm2147601ots.29.2020.04.17.09.13.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 09:13:51 -0700 (PDT)
-Received: (nullmailer pid 24956 invoked by uid 1000);
-        Fri, 17 Apr 2020 16:13:50 -0000
-Date:   Fri, 17 Apr 2020 11:13:50 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Ben Levinsky <ben.levinsky@xilinx.com>
-Cc:     ohad@wizery.com, bjorn.andersson@linaro.org,
-        michal.simek@xilinx.com, jollys@xilinx.com, rajan.vaja@xilinx.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jason Wu <j.wu@xilinx.com>,
-        Wendy Liang <jliang@xilinx.com>
-Subject: Re: [PATCH v2 4/5] dt-bindings: remoteproc: Add documentation for
- ZynqMP R5 rproc bindings
-Message-ID: <20200417161350.GA24618@bogus>
-References: <1587074082-14836-1-git-send-email-ben.levinsky@xilinx.com>
- <1587074082-14836-5-git-send-email-ben.levinsky@xilinx.com>
+        Fri, 17 Apr 2020 12:15:24 -0400
+Received: from mailoutvs15.siol.net ([185.57.226.206]:45694 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728105AbgDQQPY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 12:15:24 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 7E3B3524BB0;
+        Fri, 17 Apr 2020 18:15:19 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 8zL-mRWm0sXI; Fri, 17 Apr 2020 18:15:19 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 1358A524C5F;
+        Fri, 17 Apr 2020 18:15:19 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 03505524C64;
+        Fri, 17 Apr 2020 18:15:17 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     mripard@kernel.org, wens@csie.org, lee.jones@linaro.org,
+        linux@armlinux.org.uk, davem@davemloft.net,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [RFC PATCH 2/4] net: phy: Add support for AC200 EPHY
+Date:   Fri, 17 Apr 2020 18:15:17 +0200
+Message-ID: <6176364.4vTCxPXJkl@jernej-laptop>
+In-Reply-To: <0340f85c-987f-900b-53c8-d29b4672a8fa@gmail.com>
+References: <20200416185758.1388148-1-jernej.skrabec@siol.net> <20200416185758.1388148-3-jernej.skrabec@siol.net> <0340f85c-987f-900b-53c8-d29b4672a8fa@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587074082-14836-5-git-send-email-ben.levinsky@xilinx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 16 Apr 2020 14:54:41 -0700, Ben Levinsky wrote:
-> Add binding for ZynqMP R5 OpenAMP.
+Dne četrtek, 16. april 2020 ob 22:18:52 CEST je Heiner Kallweit napisal(a):
+> On 16.04.2020 20:57, Jernej Skrabec wrote:
+> > AC200 MFD IC supports Fast Ethernet PHY. Add a driver for it.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> >  drivers/net/phy/Kconfig  |   7 ++
+> >  drivers/net/phy/Makefile |   1 +
+> >  drivers/net/phy/ac200.c  | 206 +++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 214 insertions(+)
+> >  create mode 100644 drivers/net/phy/ac200.c
+> > 
+> > diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+> > index 3fa33d27eeba..16af69f69eaf 100644
+> > --- a/drivers/net/phy/Kconfig
+> > +++ b/drivers/net/phy/Kconfig
+> > @@ -288,6 +288,13 @@ config ADIN_PHY
+> > 
+> >  	  - ADIN1300 - Robust,Industrial, Low Latency 10/100/1000 Gigabit
+> >  	  
+> >  	    Ethernet PHY
+> > 
+> > +config AC200_PHY
+> > +	tristate "AC200 EPHY"
+> > +	depends on NVMEM
+> > +	depends on OF
+> > +	help
+> > +	  Fast ethernet PHY as found in X-Powers AC200 multi-function 
+device.
+> > +
+> > 
+> >  config AMD_PHY
+> >  
+> >  	tristate "AMD PHYs"
+> >  	---help---
+> > 
+> > diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+> > index 2f5c7093a65b..b0c5b91900fa 100644
+> > --- a/drivers/net/phy/Makefile
+> > +++ b/drivers/net/phy/Makefile
+> > @@ -53,6 +53,7 @@ obj-$(CONFIG_SFP)		+= sfp.o
+> > 
+> >  sfp-obj-$(CONFIG_SFP)		+= sfp-bus.o
+> >  obj-y				+= $(sfp-obj-y) $(sfp-obj-m)
+> > 
+> > +obj-$(CONFIG_AC200_PHY)		+= ac200.o
+> > 
+> >  obj-$(CONFIG_ADIN_PHY)		+= adin.o
+> >  obj-$(CONFIG_AMD_PHY)		+= amd.o
+> >  aquantia-objs			+= aquantia_main.o
+> > 
+> > diff --git a/drivers/net/phy/ac200.c b/drivers/net/phy/ac200.c
+> > new file mode 100644
+> > index 000000000000..3d7856ff8f91
+> > --- /dev/null
+> > +++ b/drivers/net/phy/ac200.c
+> > @@ -0,0 +1,206 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/**
+> > + * Driver for AC200 Ethernet PHY
+> > + *
+> > + * Copyright (c) 2020 Jernej Skrabec <jernej.skrabec@siol.net>
+> > + */
+> > +
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/mfd/ac200.h>
+> > +#include <linux/nvmem-consumer.h>
+> > +#include <linux/of.h>
+> > +#include <linux/phy.h>
+> > +#include <linux/platform_device.h>
+> > +
+> > +#define AC200_EPHY_ID			0x00441400
+> > +#define AC200_EPHY_ID_MASK		0x0ffffff0
+> > +
 > 
-> Represent the RPU domain resources in one device node. Each RPU
-> processor is a subnode of the top RPU domain node.
-> 
-> Signed-off-by: Ben Levinsky <ben.levinsky@xilinx.com>
-> Signed-off-by: Jason Wu <j.wu@xilinx.com>
-> Signed-off-by: Wendy Liang <jliang@xilinx.com>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
->  .../remoteproc/xilinx,zynqmp-r5-remoteproc.yaml    | 119 +++++++++++++++++++++
->  1 file changed, 119 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml
-> 
+> You could use PHY_ID_MATCH_MODEL() here.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Hm... This doesn't work with dynamically allocated memory, right?
 
-Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dts:20.14-21: Warning (ranges_format): /example-0/reserved-memory:ranges: empty "ranges" property but its #address-cells (2) differs from /example-0 (1)
-Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dts:20.14-21: Warning (ranges_format): /example-0/reserved-memory:ranges: empty "ranges" property but its #size-cells (2) differs from /example-0 (1)
-Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dts:43.14-21: Warning (ranges_format): /example-0/zynqmp-rpu:ranges: empty "ranges" property but its #address-cells (2) differs from /example-0 (1)
-Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dts:43.14-21: Warning (ranges_format): /example-0/zynqmp-rpu:ranges: empty "ranges" property but its #size-cells (2) differs from /example-0 (1)
-Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dts:39.20-63.11: Warning (unit_address_vs_reg): /example-0/zynqmp-rpu: node has a reg or ranges property, but no unit name
-Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dts:46.25-62.16: Warning (unit_address_vs_reg): /example-0/zynqmp-rpu/r5@0: node has a unit name, but no reg or ranges property
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dt.yaml: zynqmp-rpu: '#address-cells', '#size-cells', 'r5@0', 'ranges', 'reg' do not match any of the regexes: 'pinctrl-[0-9]+'
+Best regards,
+Jernej
 
-See https://patchwork.ozlabs.org/patch/1271919
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
