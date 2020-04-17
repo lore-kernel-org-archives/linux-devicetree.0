@@ -2,105 +2,99 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE16AC2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 16:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFD7C2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 16:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6ACC20771
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 16:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0A1022202
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 16:54:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbgDQQuS (ORCPT
+        id S1727848AbgDQQy7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:50:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41074 "EHLO mx2.suse.de"
+        Fri, 17 Apr 2020 12:54:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42424 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726644AbgDQQuS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Apr 2020 12:50:18 -0400
+        id S1727840AbgDQQy6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Apr 2020 12:54:58 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C267DAB5C;
-        Fri, 17 Apr 2020 16:50:15 +0000 (UTC)
-Message-ID: <6c9db8d92b6702bc5d7b238788e3cb3cf7ab2486.camel@suse.de>
-Subject: Re: [PATCH v1] of: property: Don't retry device_link_add() upon
- failure
+        by mx2.suse.de (Postfix) with ESMTP id 06275AE21;
+        Fri, 17 Apr 2020 16:54:55 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Saravana Kannan <saravanak@google.com>,
+To:     saravanak@google.com, linux-kernel@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel-team@android.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 17 Apr 2020 18:50:07 +0200
-In-Reply-To: <20200416205838.161894-1-saravanak@google.com>
-References: <20200416205838.161894-1-saravanak@google.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-S4qEB5rg9v9YAAE0ijXu"
-User-Agent: Evolution 3.34.4 
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devicetree@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH v2 2/2] of: property: Do not link to disabled devices
+Date:   Fri, 17 Apr 2020 18:54:42 +0200
+Message-Id: <20200417165442.1856-3-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200417165442.1856-1-nsaenzjulienne@suse.de>
+References: <20200417165442.1856-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+When creating a consumer/supplier relationship between two devices,
+make sure the supplier node is actually active. Otherwise this will
+create a link relationship that will never be fulfilled. This, in the
+worst case scenario, will hang the system during boot.
 
---=-S4qEB5rg9v9YAAE0ijXu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Note that, in practice, the fact that a device-tree represented
+consumer/supplier relationship isn't fulfilled will not prevent devices
+from successfully probing.
 
-On Thu, 2020-04-16 at 13:58 -0700, Saravana Kannan wrote:
-> When of_link_to_phandle() was implemented initially, there was no way to
-> tell if device_link_add() was failing because the supplier device hasn't
-> been parsed yet, hasn't been added yet, the links were creating a cycle,
-> etc. Some of these were transient errors that'd go away at a later
-> point.
->=20
-> However, with the current set of improved checks, if device_link_add()
-> fails, it'll only be for permanent errors like cycles or out-of-memory
-> errors.
->=20
-> Also, with the addition of DL_FLAG_SYNC_STATE_ONLY flag [1] to device
-> links, all the valid dependency cycles due to "proxy" device links
-> (needed for correctness of sync_state() device callback) will never fail
-> device_link_add() due to cycles.
->=20
-> So, continuing to retry failing device links (by returning -EAGAIN) is
-> no longer useful. At worst, it prevents platforms from setting
-> fw_devlink=3Don (or better) because it prevents proper boot up. So, let's
-> not do that anymore.
->=20
-> [1] -=20
-> https://lore.kernel.org/lkml/20191028220027.251605-1-saravanak@google.com=
-/
-> Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
+Fixes: a3e1d1a7f5fc ("of: property: Add functional dependency link from DT bindings")
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
 
-Thanks!
-Nicolas
+Changes since v1:
+ - Move availability check into the compatible search routine and bail
+   if device node disabled
 
+ drivers/of/property.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
---=-S4qEB5rg9v9YAAE0ijXu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6Z3j8ACgkQlfZmHno8
-x/56ywf/TnZ5z9lUBQeAu4oZSHk+zFvjHHD622iRbKSt3mLE28iB56jZKk8T9kFh
-SF24OokLgQyz7i2uQAaSZN+VMPruhb0Bga+9Q1uvefP6r7PuCeL/SzexyPEpwQ7/
-Muf8KHm/wbvmzP86IsNCzqwHXivgGVBDaOItYuxoHML5T8tayXtALitYxOHfdY26
-aDYjubdI6tPjSiXnJbP3JbWKKiZejOsvLgmCCfBJQADEPIY7Y0DqafgcB3+pQMBp
-PUs+v4nAFD0q82W5TiEVG7lJp33CVw01PMdEBa9V/3XLGb7ANNsmqgHI10vrhKa+
-pgOhyX+asj0kBaFGhikG8d8ArM91lg==
-=Q//f
------END PGP SIGNATURE-----
-
---=-S4qEB5rg9v9YAAE0ijXu--
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index dc034eb45defd..14b6266dd054b 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -1045,8 +1045,25 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
+ 	 * Find the device node that contains the supplier phandle.  It may be
+ 	 * @sup_np or it may be an ancestor of @sup_np.
+ 	 */
+-	while (sup_np && !of_find_property(sup_np, "compatible", NULL))
++	while (sup_np) {
++
++		/*
++		 * Don't allow linking a device node as consumer of a disabled
++		 * node.
++		 */
++		if (!of_device_is_available(sup_np)) {
++			dev_dbg(dev, "Not linking to %pOFP - Not available\n",
++				sup_np);
++			of_node_put(sup_np);
++			return -ENODEV;
++		}
++
++		if (of_find_property(sup_np, "compatible", NULL))
++			break;
++
+ 		sup_np = of_get_next_parent(sup_np);
++	}
++
+ 	if (!sup_np) {
+ 		dev_dbg(dev, "Not linking to %pOFP - No device\n", tmp_np);
+ 		return -ENODEV;
+-- 
+2.26.0
 
