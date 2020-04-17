@@ -2,157 +2,97 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF57C2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 18:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A59C3815B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 18:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C892C20771
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 18:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9097D20771
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 18:20:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="LRysrpVB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G3XC6I1a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730555AbgDQSUi (ORCPT
+        id S1730746AbgDQSUl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 14:20:38 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:39796 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730256AbgDQSUh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Apr 2020 14:20:37 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 23E2B458F7;
-        Fri, 17 Apr 2020 18:20:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:x-mailer:message-id:date:date:subject
-        :subject:from:from:received:received:received; s=mta-01; t=
-        1587147631; x=1588962032; bh=unmWuLteJ2yhZ7Tab8Seut6/DvuO5tyqnvo
-        Dln1yBCs=; b=LRysrpVBelTDErm2x8Nnj0x+7/empTrG5frcEYXaAfkG7KLQ2UF
-        QH0nUdsszzQfR7M5RahCuxTT7MAZd/cl4eNdwvIvlgrMiGas0CjZruXCnzj1BixY
-        d/USXB+a4Cs4rJtFujUHjhcK7eWqILzzKSogTd2+aIpqAVHlzltE/Rx4=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id tjGSII9FT_rZ; Fri, 17 Apr 2020 21:20:31 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 76BFE457DE;
-        Fri, 17 Apr 2020 21:20:31 +0300 (MSK)
-Received: from localhost.dev.yadro.com (10.199.3.202) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Fri, 17 Apr 2020 21:20:30 +0300
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v9 1/2] iio: proximity: provide device tree binding document
-Date:   Fri, 17 Apr 2020 21:20:52 +0300
-Message-ID: <20200417182053.22213-2-i.mikhaylov@yadro.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200417182053.22213-1-i.mikhaylov@yadro.com>
-References: <20200417182053.22213-1-i.mikhaylov@yadro.com>
+        Fri, 17 Apr 2020 14:20:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730256AbgDQSUk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Apr 2020 14:20:40 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89116C061A0C;
+        Fri, 17 Apr 2020 11:20:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=JQ5dwC8H6/aiyaSgobgQiiIuDhCA2QJElFHLNREcZsU=; b=G3XC6I1aPH4y/3BSP7CGlyxMNl
+        XnddDYFKR2DIsV862VDMk7ZN2xjYSaJq8YYxVfDwuRBoEQvNRZ7Hx53Xz7bXex4Q4mahdcgZhFSS8
+        mP4UTEf0wT+96OmFBsuaucuVyY/+TiHLf5UKXUdaI8OWsVwBsq2HrW4Ve+elYiGSCEt106E2omVsJ
+        eSvcb1UsDrnMdZIqtu8dPg3Cnqg2uDeqKCEPF7dp7TWoJFvlsRYDel3HOFMmUKg6m6Z8uMgQ5SfzY
+        cLMfydzvRiTWymmAnOQwEJP4IHJ5TtjWagulgj4ahR5Rn7H+hF+HivVAIaAD4rJ6t3nCsz5ZgPu/Y
+        ZFSDwr5w==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jPVbT-0001kx-2U; Fri, 17 Apr 2020 18:20:39 +0000
+Subject: Re: [PATCH v6 09/10] scsi: ufs-exynos: add UFS host support for
+ Exynos SoCs
+To:     Alim Akhtar <alim.akhtar@samsung.com>, robh@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-scsi@vger.kernel.org,
+        krzk@kernel.org, avri.altman@wdc.com, martin.petersen@oracle.com,
+        kwmad.kim@samsung.com, stanley.chu@mediatek.com,
+        cang@codeaurora.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200417175944.47189-1-alim.akhtar@samsung.com>
+ <CGME20200417181024epcas5p4231ae3dd2598155854e9b7ee52438bcb@epcas5p4.samsung.com>
+ <20200417175944.47189-10-alim.akhtar@samsung.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <c0760af4-6867-87f6-4abb-cb4079a7c982@infradead.org>
+Date:   Fri, 17 Apr 2020 11:20:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.199.3.202]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200417175944.47189-10-alim.akhtar@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Mostly standard i2c driver with some additional led-current option
-for vcnl3020.
+On 4/17/20 10:59 AM, Alim Akhtar wrote:
+> diff --git a/drivers/scsi/ufs/Kconfig b/drivers/scsi/ufs/Kconfig
+> index e2005aeddc2d..cc7e29c8c24f 100644
+> --- a/drivers/scsi/ufs/Kconfig
+> +++ b/drivers/scsi/ufs/Kconfig
+> @@ -160,3 +160,15 @@ config SCSI_UFS_BSG
+>  
+>  	  Select this if you need a bsg device node for your UFS controller.
+>  	  If unsure, say N.
+> +
+> +config SCSI_UFS_EXYNOS
+> +	bool "EXYNOS specific hooks to UFS controller platform driver"
+> +	depends on SCSI_UFSHCD_PLATFORM && ARCH_EXYNOS || COMPILE_TEST
 
-Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
----
- .../bindings/iio/proximity/vcnl3020.yaml      | 64 +++++++++++++++++++
- 1 file changed, 64 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+"&&" has higher precedence than "||", so I'm thinking that line should be
 
-diff --git a/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
-new file mode 100644
-index 000000000000..cfaf36b26a62
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
-@@ -0,0 +1,64 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/proximity/vcnl3020.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Integrated Proximity Sensor With Infrared Emitter
-+
-+maintainers:
-+  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
-+
-+description: |
-+  The VCNL3020 is a fully integrated proximity sensor. Fully integrated means
-+  that the infrared emitter is included in the package. It has 16-bit
-+  resolution. It includes a signal processing IC and features standard I2C
-+  communication interface. It features an interrupt function.
-+
-+  Specifications about the devices can be found at:
-+  https://www.vishay.com/docs/84150/vcnl3020.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - vishay,vcnl3020
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  vdd-supply:
-+    description: Regulator that provides power to the sensor
-+
-+  vddio-supply:
-+    description: Regulator that provides power to the bus
-+
-+  vishay,led-current-microamp:
-+    description:
-+      IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0 mA,
-+      1 = 10 mA, 20 = 200 mA. LED Current is limited to 200 mA for values
-+      higher than decimal 20.
-+    enum: [0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000,
-+          100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000,
-+          180000, 190000, 200000]
-+    default: 20000
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c {
-+
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        proximity@13 {
-+              compatible = "vishay,vcnl3020";
-+              reg = <0x13>;
-+              vishay,led-current-microamp = <0x14>;
-+        };
-+    };
++	depends on SCSI_UFSHCD_PLATFORM && (ARCH_EXYNOS || COMPILE_TEST)
+
+> +	select PHY_SAMSUNG_UFS
+> +	help
+> +	  This selects the EXYNOS specific additions to UFSHCD platform driver.
+> +	  UFS host on EXYNOS includes HCI and UNIPRO layer, and associates with
+> +	  UFS-PHY driver.
+> +
+> +	  Select this if you have UFS host controller on EXYNOS chipset.
+> +	  If unsure, say N.
+
+
 -- 
-2.21.1
+~Randy
 
