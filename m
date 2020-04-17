@@ -2,183 +2,106 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6AF5C2BA2B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 00:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EF9C2BA2B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 01:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1C2C21841
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 00:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5CC4221E9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 01:28:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X9abtq98"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbgDQAtu (ORCPT
+        id S1725915AbgDQB2V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Apr 2020 20:49:50 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:54498 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbgDQAtt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Apr 2020 20:49:49 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DB8B6200F18;
-        Fri, 17 Apr 2020 02:49:46 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BA1302002C9;
-        Fri, 17 Apr 2020 02:49:41 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 86727402D8;
-        Fri, 17 Apr 2020 08:49:35 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3 1/5] dt-bindings: clock: Convert i.MX6Q clock to json-schema
-Date:   Fri, 17 Apr 2020 08:41:27 +0800
-Message-Id: <1587084091-5941-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 16 Apr 2020 21:28:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55284 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725858AbgDQB2V (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Apr 2020 21:28:21 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 491E9C061A0C;
+        Thu, 16 Apr 2020 18:28:19 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id 131so470747lfh.11;
+        Thu, 16 Apr 2020 18:28:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6bIv4Ey7KTgpP+jJjbFa11g/XmInVR35K0OUuu60uAY=;
+        b=X9abtq98/SmIYoikPs/RTpICF5o67Gqe/o81Hr+QM44F/2COwakpQT6bOJBQib0BMn
+         MNc8Ztaj9j7wFUj63Y5yr2beYzs4gX+N6UOY86S8vkqzA+0LsC7OiOq0uMvUZsavvU0I
+         B68uZae62Ch97IxN4H8pJdZ34Z2OdF96PRuM7CXyiO7e+qSYqJGWBkvyIXVuWf5K1r5D
+         wWFNEeeV13SjT0VrCHSLeoijcBEoMtYp8wD48NZeiuaplpQDhUg2YwjgyOaXbWkRlIeI
+         8OAAX1dvlzBANqWzdmQmz3U8u38v/pnkauqSc+5ZftdY4WAtFLeXkDJU2RGzBQfj3A74
+         bPyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6bIv4Ey7KTgpP+jJjbFa11g/XmInVR35K0OUuu60uAY=;
+        b=f/hJJE7W5pMFSsksvvI98TJUSdOyg6wxP8NPWbnufP0q0sZWimiKA77TqpU+7l3Vlg
+         5m4cD8iAVPadO0jT2eRxFybNOvPljh7GfaP35Dx1RcjsPwX9IgrldY9YcoaUFrUty/EL
+         iiyIRODHrcP3WaWnKSHhibvUXY34523Qcx3IrmrUXkRiZ+7NIW/UfradjcBkvDrWxdgY
+         OaGfiRVxKWkhivFRZos/XrCvTbNoauoc4O6QyH337aJqLri6DCZVBnE5weGfS/IJIibf
+         gtLBgtJTrb+Sl2T7t206k9f2p8PgGH23VgrVPfIZW+mLmaoTbecUeH2sZofWpbwD486q
+         XB5w==
+X-Gm-Message-State: AGi0PuacfC8sAwXmvRCgfX+heNxUf5a91IjJUwHtoA+kEDss6EPzApNP
+        bBHD2p4NU8JqqnbeK3rO8ls=
+X-Google-Smtp-Source: APiQypJG6kGvdN67TsZu7OB2kpKPIUggZ4g1a64790zidW4ZHcyfGVG4sz6jWEkUeemtkEc+V3pEfQ==
+X-Received: by 2002:a19:88a:: with SMTP id 132mr405691lfi.130.1587086897818;
+        Thu, 16 Apr 2020 18:28:17 -0700 (PDT)
+Received: from localhost.localdomain ([94.229.111.13])
+        by smtp.gmail.com with ESMTPSA id w25sm14644650ljo.78.2020.04.16.18.28.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 18:28:16 -0700 (PDT)
+From:   Alexey Minnekhanov <alexey.min@gmail.com>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht
+Cc:     Alexey Minnekhanov <alexeymin@postmarketos.org>,
+        Alexey Minnekhanov <alexey.min@gmail.com>
+Subject: [PATCH v2 0/3] Add initial support for SDM660/630 SoCs
+Date:   Fri, 17 Apr 2020 04:26:27 +0300
+Message-Id: <20200417012630.222352-1-alexey.min@gmail.com>
+X-Mailer: git-send-email 2.25.3
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the i.MX6Q clock binding to DT schema format using json-schema.
+This patchset adds some minimal device tree
+support for Qualcomm Snapdragon 660/630 SoCs
+and one board that uses SDM660 SoC.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V2:
-	- Force 'interrupts' minItem/maxItem to 2.
----
- .../devicetree/bindings/clock/imx6q-clock.txt      | 41 -------------
- .../devicetree/bindings/clock/imx6q-clock.yaml     | 67 ++++++++++++++++++++++
- 2 files changed, 67 insertions(+), 41 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/imx6q-clock.txt
- create mode 100644 Documentation/devicetree/bindings/clock/imx6q-clock.yaml
+v2:
+ - Sorted compatible sdm660 after sc7180 in bindings
+ - Moved gpio-reserved-ranges to board DTS
 
-diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-deleted file mode 100644
-index 13d36d4..0000000
---- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-+++ /dev/null
-@@ -1,41 +0,0 @@
--* Clock bindings for Freescale i.MX6 Quad
--
--Required properties:
--- compatible: Should be "fsl,imx6q-ccm"
--- reg: Address and length of the register set
--- interrupts: Should contain CCM interrupt
--- #clock-cells: Should be <1>
--
--Optional properties:
--- fsl,pmic-stby-poweroff: Configure CCM to assert PMIC_STBY_REQ signal
--  on power off.
--  Use this property if the SoC should be powered off by external power
--  management IC (PMIC) triggered via PMIC_STBY_REQ signal.
--  Boards that are designed to initiate poweroff on PMIC_ON_REQ signal should
--  be using "syscon-poweroff" driver instead.
--- clocks: list of clock specifiers, must contain an entry for each entry
--          in clock-names
--- clock-names: valid names are "osc", "ckil", "ckih1", "anaclk1" and "anaclk2"
--
--The clock consumer should specify the desired clock by having the clock
--ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6qdl-clock.h
--for the full list of i.MX6 Quad and DualLite clock IDs.
--
--Examples:
--
--#include <dt-bindings/clock/imx6qdl-clock.h>
--
--clks: ccm@20c4000 {
--	compatible = "fsl,imx6q-ccm";
--	reg = <0x020c4000 0x4000>;
--	interrupts = <0 87 0x04 0 88 0x04>;
--	#clock-cells = <1>;
--};
--
--uart1: serial@2020000 {
--	compatible = "fsl,imx6q-uart", "fsl,imx21-uart";
--	reg = <0x02020000 0x4000>;
--	interrupts = <0 26 0x04>;
--	clocks = <&clks IMX6QDL_CLK_UART_IPG>, <&clks IMX6QDL_CLK_UART_SERIAL>;
--	clock-names = "ipg", "per";
--};
-diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.yaml b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
-new file mode 100644
-index 0000000..0daf789
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
-@@ -0,0 +1,67 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/imx6q-clock.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Clock bindings for Freescale i.MX6 Quad
-+
-+maintainers:
-+  - Anson Huang <Anson.Huang@nxp.com>
-+
-+properties:
-+  compatible:
-+    const: fsl,imx6q-ccm
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 2
-+    maxItems: 2
-+
-+  '#clock-cells':
-+    const: 1
-+
-+  clocks:
-+    items:
-+      - description: 24m osc
-+      - description: 32k osc
-+      - description: ckih1 clock input
-+      - description: anaclk1 clock input
-+      - description: anaclk2 clock input
-+
-+  clock-names:
-+    items:
-+      - const: osc
-+      - const: ckil
-+      - const: ckih1
-+      - const: anaclk1
-+      - const: anaclk2
-+
-+  fsl,pmic-stby-poweroff:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: |
-+      Use this property if the SoC should be powered off by external power
-+      management IC (PMIC) triggered via PMIC_STBY_REQ signal.
-+      Boards that are designed to initiate poweroff on PMIC_ON_REQ signal should
-+      be using "syscon-poweroff" driver instead.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - '#clock-cells'
-+
-+examples:
-+  # Clock Control Module node:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    clks: clock-controller@20c4000 {
-+        compatible = "fsl,imx6q-ccm";
-+        reg = <0x020c4000 0x4000>;
-+        interrupts = <0 87 IRQ_TYPE_LEVEL_HIGH>,
-+                     <0 88 IRQ_TYPE_LEVEL_HIGH>;
-+        #clock-cells = <1>;
-+    };
+Alexey Minnekhanov (2):
+  dt-bindings: arm: qcom: Add sdm630 and sdm660 SoCs
+  arm64: dts: qcom: Add Xiaomi Redmi Note 7 (lavender)
+
+Craig Tatlor (1):
+  arm64: dts: qcom: Add SDM660 SoC support
+
+ .../devicetree/bindings/arm/qcom.yaml         |   7 +
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../boot/dts/qcom/sdm660-xiaomi-lavender.dts  |  46 +++
+ arch/arm64/boot/dts/qcom/sdm660.dtsi          | 372 ++++++++++++++++++
+ 4 files changed, 426 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm660-xiaomi-lavender.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm660.dtsi
+
 -- 
-2.7.4
+2.25.3
 
