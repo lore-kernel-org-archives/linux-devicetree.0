@@ -2,139 +2,104 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C427C38A2B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 16:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FF7C38A2B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 16:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 761122072D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 16:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7515D20936
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 16:16:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587140219;
+	bh=XtsgZHijijuzZe7pbCMmqmPNOdju+fj2LvLO6lzXAzI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z5G3cO4PKawzVSzruS95jbkVeW/Nh3G9aFWyZtFjsc97URlkuMplcWVLARoOJvf1d
+	 JEsGXz0cAiEi/e4j0ce0HsmLiY/Lyx4ovewbDPhJMNd+O+0DlFuUNoXKZ1/khS0AH0
+	 RfKzSsb+gY7DiT2ppO9RKjXCyO0oIKy4LjnPl+S8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729926AbgDQQPY convert rfc822-to-8bit (ORCPT
+        id S1729696AbgDQQQ6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:15:24 -0400
-Received: from mailoutvs15.siol.net ([185.57.226.206]:45694 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728105AbgDQQPY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 12:15:24 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 7E3B3524BB0;
-        Fri, 17 Apr 2020 18:15:19 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 8zL-mRWm0sXI; Fri, 17 Apr 2020 18:15:19 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 1358A524C5F;
-        Fri, 17 Apr 2020 18:15:19 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 03505524C64;
-        Fri, 17 Apr 2020 18:15:17 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     mripard@kernel.org, wens@csie.org, lee.jones@linaro.org,
-        linux@armlinux.org.uk, davem@davemloft.net,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [RFC PATCH 2/4] net: phy: Add support for AC200 EPHY
-Date:   Fri, 17 Apr 2020 18:15:17 +0200
-Message-ID: <6176364.4vTCxPXJkl@jernej-laptop>
-In-Reply-To: <0340f85c-987f-900b-53c8-d29b4672a8fa@gmail.com>
-References: <20200416185758.1388148-1-jernej.skrabec@siol.net> <20200416185758.1388148-3-jernej.skrabec@siol.net> <0340f85c-987f-900b-53c8-d29b4672a8fa@gmail.com>
+        Fri, 17 Apr 2020 12:16:58 -0400
+Received: from mail-oo1-f53.google.com ([209.85.161.53]:38867 "EHLO
+        mail-oo1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729581AbgDQQQ6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 12:16:58 -0400
+Received: by mail-oo1-f53.google.com with SMTP id i9so571277ool.5;
+        Fri, 17 Apr 2020 09:16:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=n18HlrFzEzddDGYInumpnanTTIeL8cwMsOF4IHAX20k=;
+        b=ZsBc4Idx2Rn2GiJ2ruLjzQOxjscl9dPRKpIiRuDeYmCM77ZZpJctK1vNJNIUMWfclF
+         bIYeBUXzUJC0K5JLG4q+JJCVhik58ZTRnWkMURCfW3O+/Dsvdmm+QGllyoimZv1cm1ng
+         kNIBlAaYFEQhh9Axd7SW7Er6J5UsM747Wfidb+GAoi1/IOAvEznr30b7NqFWvO0VOkuL
+         YE4D4Ikz471a+jmpP4o5CFoFs+S6Q0e04lDJv9k13wE/YEKykKdL0QvCssmEiwf/C/mb
+         3ot4a6dZpsovWShNfphV9rn5LIB+L9glmrL5F4B5nIUBpZlggoGYrB+eRXouHU1nnqVZ
+         u2dg==
+X-Gm-Message-State: AGi0PuYYxoiPjQKUGJ9Y4tAqKkR32FF/0bYHZJStVjb+9NX++eIWkQGe
+        w2GffWe9+duHdfMJr+utcw==
+X-Google-Smtp-Source: APiQypJbw3Petn9wdktbWmJ2xla/a7PdjaDZGC8jQledwof5uDQTF8vX3jEaNAjBtZO247IkQqC/rA==
+X-Received: by 2002:a4a:5482:: with SMTP id t124mr3083325ooa.92.1587140216553;
+        Fri, 17 Apr 2020 09:16:56 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id i23sm8048489otp.74.2020.04.17.09.16.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 09:16:55 -0700 (PDT)
+Received: (nullmailer pid 32046 invoked by uid 1000);
+        Fri, 17 Apr 2020 16:16:53 -0000
+Date:   Fri, 17 Apr 2020 11:16:53 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Dinh Nguyen <dinguyen@kernel.org>
+Cc:     linux-clk@vger.kernel.org, dinguyen@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCHv7 4/5] dt-bindings: documentation: add clock bindings
+ information for Agilex
+Message-ID: <20200417161653.GA31608@bogus>
+References: <20200415164642.29382-1-dinguyen@kernel.org>
+ <20200415164642.29382-5-dinguyen@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415164642.29382-5-dinguyen@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Dne četrtek, 16. april 2020 ob 22:18:52 CEST je Heiner Kallweit napisal(a):
-> On 16.04.2020 20:57, Jernej Skrabec wrote:
-> > AC200 MFD IC supports Fast Ethernet PHY. Add a driver for it.
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > ---
-> > 
-> >  drivers/net/phy/Kconfig  |   7 ++
-> >  drivers/net/phy/Makefile |   1 +
-> >  drivers/net/phy/ac200.c  | 206 +++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 214 insertions(+)
-> >  create mode 100644 drivers/net/phy/ac200.c
-> > 
-> > diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> > index 3fa33d27eeba..16af69f69eaf 100644
-> > --- a/drivers/net/phy/Kconfig
-> > +++ b/drivers/net/phy/Kconfig
-> > @@ -288,6 +288,13 @@ config ADIN_PHY
-> > 
-> >  	  - ADIN1300 - Robust,Industrial, Low Latency 10/100/1000 Gigabit
-> >  	  
-> >  	    Ethernet PHY
-> > 
-> > +config AC200_PHY
-> > +	tristate "AC200 EPHY"
-> > +	depends on NVMEM
-> > +	depends on OF
-> > +	help
-> > +	  Fast ethernet PHY as found in X-Powers AC200 multi-function 
-device.
-> > +
-> > 
-> >  config AMD_PHY
-> >  
-> >  	tristate "AMD PHYs"
-> >  	---help---
-> > 
-> > diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-> > index 2f5c7093a65b..b0c5b91900fa 100644
-> > --- a/drivers/net/phy/Makefile
-> > +++ b/drivers/net/phy/Makefile
-> > @@ -53,6 +53,7 @@ obj-$(CONFIG_SFP)		+= sfp.o
-> > 
-> >  sfp-obj-$(CONFIG_SFP)		+= sfp-bus.o
-> >  obj-y				+= $(sfp-obj-y) $(sfp-obj-m)
-> > 
-> > +obj-$(CONFIG_AC200_PHY)		+= ac200.o
-> > 
-> >  obj-$(CONFIG_ADIN_PHY)		+= adin.o
-> >  obj-$(CONFIG_AMD_PHY)		+= amd.o
-> >  aquantia-objs			+= aquantia_main.o
-> > 
-> > diff --git a/drivers/net/phy/ac200.c b/drivers/net/phy/ac200.c
-> > new file mode 100644
-> > index 000000000000..3d7856ff8f91
-> > --- /dev/null
-> > +++ b/drivers/net/phy/ac200.c
-> > @@ -0,0 +1,206 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/**
-> > + * Driver for AC200 Ethernet PHY
-> > + *
-> > + * Copyright (c) 2020 Jernej Skrabec <jernej.skrabec@siol.net>
-> > + */
-> > +
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/mfd/ac200.h>
-> > +#include <linux/nvmem-consumer.h>
-> > +#include <linux/of.h>
-> > +#include <linux/phy.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +#define AC200_EPHY_ID			0x00441400
-> > +#define AC200_EPHY_ID_MASK		0x0ffffff0
-> > +
+On Wed, 15 Apr 2020 11:46:41 -0500, Dinh Nguyen wrote:
+> Document the Agilex clock bindings, and add the clock header file. The
+> clock header is an enumeration of all the different clocks on the Agilex
+> platform.
 > 
-> You could use PHY_ID_MATCH_MODEL() here.
+> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+> ---
+> v7: Fix license to be "(GPL-2.0-only OR BSD-2-Clause)"
+> v6: fix build error by adding descriptions for clocks and reg in
+>     properties
+> v5: update license to GPL-2.0-only
+>     Add additionalProperties
+>     Add clock input for clkmgr
+> v4: really fix build error(comment formatting was wrong)
+> v3: address comments from Stephen Boyd
+>     fix build error(tab removed in line 37)
+>     renamed to intel,agilex.yaml
+> v2: convert original document to YAML
+> ---
+>  .../bindings/clock/intel,agilex.yaml          | 46 ++++++++++++
+>  include/dt-bindings/clock/agilex-clock.h      | 70 +++++++++++++++++++
+>  2 files changed, 116 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/intel,agilex.yaml
+>  create mode 100644 include/dt-bindings/clock/agilex-clock.h
+> 
 
-Hm... This doesn't work with dynamically allocated memory, right?
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-Best regards,
-Jernej
-
-
+If a tag was not added on purpose, please state why and what changed.
