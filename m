@@ -2,104 +2,166 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FF7C38A2B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 16:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21733C38A2B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 16:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7515D20936
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 16:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F33402223F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 16:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587140219;
-	bh=XtsgZHijijuzZe7pbCMmqmPNOdju+fj2LvLO6lzXAzI=;
+	s=default; t=1587140535;
+	bh=CsFmhiTV85Efcl3S3vGKBX32p+XyVn5g1c1DCUQfYkA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z5G3cO4PKawzVSzruS95jbkVeW/Nh3G9aFWyZtFjsc97URlkuMplcWVLARoOJvf1d
-	 JEsGXz0cAiEi/e4j0ce0HsmLiY/Lyx4ovewbDPhJMNd+O+0DlFuUNoXKZ1/khS0AH0
-	 RfKzSsb+gY7DiT2ppO9RKjXCyO0oIKy4LjnPl+S8=
+	b=MtRhQO6y674PJjGDm3e/yHdWM2NEnedmS90Zf9QYLFRUZXd89fq6NdHY3ARLS7ABs
+	 P2uaM3VR6UORpE/CVYiWxQcbIblufDqXvUNTEJp9dcQOZ/kfHTcX/eeJanc07yKHaN
+	 1OMQfXjgpa2yzFqJPGrv23dHQ00UAtdRAiG1f934=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729696AbgDQQQ6 (ORCPT
+        id S1730430AbgDQQWO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 12:16:58 -0400
-Received: from mail-oo1-f53.google.com ([209.85.161.53]:38867 "EHLO
-        mail-oo1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729581AbgDQQQ6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 12:16:58 -0400
-Received: by mail-oo1-f53.google.com with SMTP id i9so571277ool.5;
-        Fri, 17 Apr 2020 09:16:57 -0700 (PDT)
+        Fri, 17 Apr 2020 12:22:14 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38553 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730420AbgDQQWN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 12:22:13 -0400
+Received: by mail-oi1-f196.google.com with SMTP id r66so2545559oie.5;
+        Fri, 17 Apr 2020 09:22:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=n18HlrFzEzddDGYInumpnanTTIeL8cwMsOF4IHAX20k=;
-        b=ZsBc4Idx2Rn2GiJ2ruLjzQOxjscl9dPRKpIiRuDeYmCM77ZZpJctK1vNJNIUMWfclF
-         bIYeBUXzUJC0K5JLG4q+JJCVhik58ZTRnWkMURCfW3O+/Dsvdmm+QGllyoimZv1cm1ng
-         kNIBlAaYFEQhh9Axd7SW7Er6J5UsM747Wfidb+GAoi1/IOAvEznr30b7NqFWvO0VOkuL
-         YE4D4Ikz471a+jmpP4o5CFoFs+S6Q0e04lDJv9k13wE/YEKykKdL0QvCssmEiwf/C/mb
-         3ot4a6dZpsovWShNfphV9rn5LIB+L9glmrL5F4B5nIUBpZlggoGYrB+eRXouHU1nnqVZ
-         u2dg==
-X-Gm-Message-State: AGi0PuYYxoiPjQKUGJ9Y4tAqKkR32FF/0bYHZJStVjb+9NX++eIWkQGe
-        w2GffWe9+duHdfMJr+utcw==
-X-Google-Smtp-Source: APiQypJbw3Petn9wdktbWmJ2xla/a7PdjaDZGC8jQledwof5uDQTF8vX3jEaNAjBtZO247IkQqC/rA==
-X-Received: by 2002:a4a:5482:: with SMTP id t124mr3083325ooa.92.1587140216553;
-        Fri, 17 Apr 2020 09:16:56 -0700 (PDT)
+        bh=HeAHiyvWEUaF+aCLu1NaqGKApOTT6/8+xu5a7bTpKz8=;
+        b=PA+0y0WiIDsjD3+EGV0qEkvRcX/46oY4XhQK4p3wdaRszKNM0rSjZmwqu/39x06GCN
+         VWce6+0qf+rC4iGTLasV3bvtwtDM/Lm5jhkhf+ltMrmtJqf0Ho5a1O2u6nv23SwjJw9i
+         /hOuD2iNDlBIixn9n1jgwcWTv+6IB5vgreX2s4r6jA8gLIJ3HXHsxz0qtqd5a+0x5jll
+         PFcPx6/p/MIxYiAM6NxdczTm/1KMZF6eTmEFzazipAO7nCEHU2g0dpuh1VRKGPz71SQx
+         4N2H6/PE/yvi4RgVum3toweEXDiV8/mC5H9gvEyTkG8r7zXBQ5blR6kV4um2BS64GA2U
+         v+dg==
+X-Gm-Message-State: AGi0PualtxPc+IOQj99uYIrvPvF6p3SUGhN7nioTYDQP/T3EPX2QdQWv
+        59DZBV5+wGfBhEl3qfBisS8m2xY=
+X-Google-Smtp-Source: APiQypIr+IqasDXVzw4cm+LyZdJBeCjzNk9h5xojT4id6JrVlp3WKVmJeu6fpY1NvWdWw1q23nYkxA==
+X-Received: by 2002:a54:4085:: with SMTP id i5mr2810167oii.107.1587140532363;
+        Fri, 17 Apr 2020 09:22:12 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i23sm8048489otp.74.2020.04.17.09.16.54
+        by smtp.gmail.com with ESMTPSA id v9sm4651042oto.72.2020.04.17.09.22.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 09:16:55 -0700 (PDT)
-Received: (nullmailer pid 32046 invoked by uid 1000);
-        Fri, 17 Apr 2020 16:16:53 -0000
-Date:   Fri, 17 Apr 2020 11:16:53 -0500
+        Fri, 17 Apr 2020 09:22:11 -0700 (PDT)
+Received: (nullmailer pid 7462 invoked by uid 1000);
+        Fri, 17 Apr 2020 16:22:11 -0000
+Date:   Fri, 17 Apr 2020 11:22:11 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Dinh Nguyen <dinguyen@kernel.org>
-Cc:     linux-clk@vger.kernel.org, dinguyen@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Subject: Re: [PATCHv7 4/5] dt-bindings: documentation: add clock bindings
- information for Agilex
-Message-ID: <20200417161653.GA31608@bogus>
-References: <20200415164642.29382-1-dinguyen@kernel.org>
- <20200415164642.29382-5-dinguyen@kernel.org>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, joel@jms.id.au, andrew@aj.id.au
+Subject: Re: [PATCH v9 1/5] dt-bindings: soc: Add Aspeed XDMA Engine
+Message-ID: <20200417162210.GA402@bogus>
+References: <1587067419-5107-1-git-send-email-eajames@linux.ibm.com>
+ <1587067419-5107-2-git-send-email-eajames@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415164642.29382-5-dinguyen@kernel.org>
+In-Reply-To: <1587067419-5107-2-git-send-email-eajames@linux.ibm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 15 Apr 2020 11:46:41 -0500, Dinh Nguyen wrote:
-> Document the Agilex clock bindings, and add the clock header file. The
-> clock header is an enumeration of all the different clocks on the Agilex
-> platform.
+On Thu, Apr 16, 2020 at 03:03:35PM -0500, Eddie James wrote:
+> Document the bindings for the Aspeed AST25XX and AST26XX XDMA engine.
 > 
-> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 > ---
-> v7: Fix license to be "(GPL-2.0-only OR BSD-2-Clause)"
-> v6: fix build error by adding descriptions for clocks and reg in
->     properties
-> v5: update license to GPL-2.0-only
->     Add additionalProperties
->     Add clock input for clkmgr
-> v4: really fix build error(comment formatting was wrong)
-> v3: address comments from Stephen Boyd
->     fix build error(tab removed in line 37)
->     renamed to intel,agilex.yaml
-> v2: convert original document to YAML
-> ---
->  .../bindings/clock/intel,agilex.yaml          | 46 ++++++++++++
->  include/dt-bindings/clock/agilex-clock.h      | 70 +++++++++++++++++++
->  2 files changed, 116 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/intel,agilex.yaml
->  create mode 100644 include/dt-bindings/clock/agilex-clock.h
+> Changes since v8:
+>  - dropped Rob's tag since this has changed significantly since he last looked
+>    it over.
+
+If this is not merged soon, you're going to need to convert to schema.
+
+>  .../devicetree/bindings/soc/aspeed/xdma.txt        | 45 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  6 +++
+>  2 files changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/soc/aspeed/xdma.txt b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+> new file mode 100644
+> index 0000000..35d0507
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+> @@ -0,0 +1,45 @@
+> +Aspeed AST25XX and AST26XX XDMA Engine
+> +
+> +The XDMA Engine embedded in the AST2500 and AST2600 SOCs can perform automatic
+> +DMA operations over PCI between the SOC (acting as a BMC) and a host processor.
+> +
+> +Required properties:
+> + - compatible		: must be "aspeed,ast2500-xdma" or
+> +			  "aspeed,ast2600-xdma"
+> + - reg			: contains the address and size of the memory region
+> +			  associated with the XDMA engine registers
+> + - clocks		: clock specifier for the clock associated with the
+> +			  XDMA engine
+> + - resets		: reset specifier for the syscon reset associated with
+> +			  the XDMA engine, and, for the AST2600, a second reset
+> +			  associated with the PCI-E root complex
+> + - reset-names		: required only for the AST2600; must be
+> +			  "device", "root-complex"
+> + - interrupts-extended	: two interrupt cells; the first specifies the global
+> +			  interrupt for the XDMA engine and the second
+> +			  specifies the PCI-E reset or PERST interrupt.
+> + - aspeed,scu		: a phandle to the syscon node for the system control
+> +			  unit of the SOC
+> + - memory-region	: a phandle to the reserved memory region to be used by
+> +			  the XDMA engine for DMA operations
+> +
+> +Optional properties:
+> + - pcie-device		: should be either "bmc" or "vga", corresponding to
+> +			  which device should be used by the XDMA engine for
+> +			  DMA operations. If this property is not set, the XDMA
+> +			  engine will use the BMC PCI-E device.
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+aspeed,pcie-device
 
-If a tag was not added on purpose, please state why and what changed.
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +
+> +Example:
+> +
+> +    xdma@1e6e7000 {
+> +        compatible = "aspeed,ast2600-xdma";
+> +        reg = <0x1e6e7000 0x100>;
+> +        clocks = <&syscon ASPEED_CLK_GATE_BCLK>;
+> +        resets = <&syscon ASPEED_RESET_DEV_XDMA>, <&syscon ASPEED_RESET_RC_XDMA>;
+> +        reset-names = "device", "root-complex";
+> +        interrupts-extended = <&gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> +                              <&scu_ic0 ASPEED_AST2600_SCU_IC0_PCIE_PERST_LO_TO_HI>;
+> +        aspeed,scu = <&syscon>;
+> +        pcie-device = "bmc";
+> +        memory-region = <&vga_memory>;
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 5e10560..66f82a2 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2771,6 +2771,12 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/media/aspeed-video.txt
+>  F:	drivers/media/platform/aspeed-video.c
+>  
+> +ASPEED XDMA ENGINE DRIVER
+> +M:	Eddie James <eajames@linux.ibm.com>
+> +L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+> +
+>  ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS
+>  M:	Corentin Chary <corentin.chary@gmail.com>
+>  L:	acpi4asus-user@lists.sourceforge.net
+> -- 
+> 1.8.3.1
+> 
