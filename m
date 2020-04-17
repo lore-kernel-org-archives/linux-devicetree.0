@@ -2,69 +2,96 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5794C2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 19:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9C4C2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 20:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83C2C2076D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 19:15:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587150925;
-	bh=MQM53BbVC2OrZUMe236AuRXoO62cVGl+vSGKNZfke6o=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=DP675pL6+0BIX4yMgwyA5ZqLywFBstZ+D7a+nyEmJKzDyHOXisa9LhPVvcLkXt5K5
-	 ppbyUTXmBE4anoXJH5zpVDszt7PqkijEhwAHEWNxWe9vaIgDw+2YMU70p/x1J4soJb
-	 KbArtkdIDEf7/Nk8OdD2qE8I3fj0EGl/GaVlbOmA=
+	by mail.kernel.org (Postfix) with ESMTP id 91F39221F4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 20:20:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729937AbgDQTPZ (ORCPT
+        id S1730990AbgDQUU0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 15:15:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38730 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728151AbgDQTPW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Apr 2020 15:15:22 -0400
-Subject: Re: [GIT PULL] Devicetree fixes for v5.7, take 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587150922;
-        bh=MQM53BbVC2OrZUMe236AuRXoO62cVGl+vSGKNZfke6o=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=PrVnpEiRYoRbGJSQDzAfbqHAKabQn0JD9WUnZi3+yGw4E2K3ysmHg2kyc24uJuP8A
-         yHJvxupNl80Qz9q9k3bn267tQVThkzlJhzWIq5eS0EUsTuYVBOD+PbJm/DqshMSMz0
-         SYl9shtvH6MnAMQZUMEEr/hXbz231tKSwZB3fw7E=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200417161010.GA14296@bogus>
-References: <20200417161010.GA14296@bogus>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200417161010.GA14296@bogus>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
- tags/devicetree-fixes-for-5.7
-X-PR-Tracked-Commit-Id: 0903060fe590105b7d31901c1ed67614c08cee08
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8fce9058ca8b1c784515e7986385f2b33927a44b
-Message-Id: <158715092222.7925.15410358690654400876.pr-tracker-bot@kernel.org>
-Date:   Fri, 17 Apr 2020 19:15:22 +0000
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
+        Fri, 17 Apr 2020 16:20:26 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:51365 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730573AbgDQUUZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 16:20:25 -0400
+X-Originating-IP: 195.189.32.242
+Received: from pc.localdomain (unknown [195.189.32.242])
+        (Authenticated sender: contact@artur-rojek.eu)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 3B52840006;
+        Fri, 17 Apr 2020 20:20:20 +0000 (UTC)
+From:   Artur Rojek <contact@artur-rojek.eu>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>
+Cc:     Heiko Stuebner <heiko@sntech.de>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
+Subject: [RESEND PATCH v5 1/5] IIO: Ingenic JZ47xx: Add xlate cb to retrieve correct channel idx
+Date:   Fri, 17 Apr 2020 22:28:55 +0200
+Message-Id: <20200417202859.35427-1-contact@artur-rojek.eu>
+X-Mailer: git-send-email 2.26.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The pull request you sent on Fri, 17 Apr 2020 11:10:10 -0500:
+Provide an of_xlate callback in order to retrieve the correct channel
+specifier index from the IIO channels array.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.7
+Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+Tested-by: Paul Cercueil <paul@crapouillou.net>
+---
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8fce9058ca8b1c784515e7986385f2b33927a44b
+ Changes:
 
-Thank you!
+ v2-v5: no change
 
+ drivers/iio/adc/ingenic-adc.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
+index 39c0a609fc94..7a24bc1dabe1 100644
+--- a/drivers/iio/adc/ingenic-adc.c
++++ b/drivers/iio/adc/ingenic-adc.c
+@@ -383,6 +383,21 @@ static int ingenic_adc_read_raw(struct iio_dev *iio_dev,
+ 	}
+ }
+ 
++static int ingenic_adc_of_xlate(struct iio_dev *iio_dev,
++				const struct of_phandle_args *iiospec)
++{
++	int i;
++
++	if (!iiospec->args_count)
++		return -EINVAL;
++
++	for (i = 0; i < iio_dev->num_channels; ++i)
++		if (iio_dev->channels[i].channel == iiospec->args[0])
++			return i;
++
++	return -EINVAL;
++}
++
+ static void ingenic_adc_clk_cleanup(void *data)
+ {
+ 	clk_unprepare(data);
+@@ -392,6 +407,7 @@ static const struct iio_info ingenic_adc_info = {
+ 	.write_raw = ingenic_adc_write_raw,
+ 	.read_raw = ingenic_adc_read_raw,
+ 	.read_avail = ingenic_adc_read_avail,
++	.of_xlate = ingenic_adc_of_xlate,
+ };
+ 
+ static const struct iio_chan_spec ingenic_channels[] = {
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.26.1
+
