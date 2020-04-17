@@ -5,69 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A1EC2BB1D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8809EC352BE
 	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 07:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D64521D91
+	by mail.kernel.org (Postfix) with ESMTP id 699B3221EC
 	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 07:01:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="civ0gk1k"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i+z1H6qc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbgDQHBP (ORCPT
+        id S1728321AbgDQHBQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 03:01:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50172 "EHLO
+        Fri, 17 Apr 2020 03:01:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728219AbgDQHBM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 03:01:12 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E370C061A0C
-        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 00:01:11 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id r20so630938pfh.9
-        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 00:01:11 -0700 (PDT)
+        with ESMTP id S1728245AbgDQHBN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 03:01:13 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D857AC061A10
+        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 00:01:13 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id kb16so702376pjb.1
+        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 00:01:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=yknmXxbqGxVfxrNz0jvbTW2mgVTxtXbV4FI/gCIqcjM=;
-        b=civ0gk1keolqnPGVaUGkyNSJDvVGU8ajyEYU3VaMBeM0lgdwWv5cMHq80pGerPytVm
-         XBJXBtZa38KYD3dTapc4WNr9WFNQbJBFIu7KWxHcnyby2tihC4fsexPQQCQClq40NVyV
-         aVve2BQivQFk9fn4IjdsAfwQLVfheYEWGhHWn9wpcpRkv8qBSsux16mO8yrr41qZJ8ZI
-         vQbG4WQTcBVJ/ais/d6KHidfArAzBMss1PQEPe8ebx3Cg1V+QwasTyRFb2vm4SdaQSSL
-         BO/MjafY2c6wQkij+Bv8W+OCVT+iSYl8CJdx3YADy4+60SCTiGfHILXYq+H175/xlLQj
-         3/Sg==
+        bh=e5yt6ZDVqr+7QSHc88Bnrv499SbQQkOFM9/QQvODlrQ=;
+        b=i+z1H6qc1RQjl8dF/ZQWkrj1LOmONZiANWqZQj2D1MApZKXOwpspT+eAloxxqIWDgb
+         2lxvRDCuJUmPo5f5TTlJ8mQBdorfC+3Sb+nANtWH/ShuFGYtSopy6PHdifjCPMZVjFw0
+         AlpaM40+KsDeja6zYbzc2ZmmTZHvG3PuGI2VjJzpwekWr1/xHwTCLj2eRw2dd++Kcv8e
+         Xzje+GzPKMh1Dk+AEFwcOENQ6LqmvYTKIHbkteGRf9J1pkfjaBWgL+y1r0LghOq1kuNM
+         xnXo6BRHouV9DGEgGcOsahVlGL65Hf3d4c/zFgk9eZUDuLcAnx4GX+ynjLehVLKhyejD
+         ijew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=yknmXxbqGxVfxrNz0jvbTW2mgVTxtXbV4FI/gCIqcjM=;
-        b=SZxzud3y/jkINAR0BMrmSqb4CCNYT4aneTnoBnDksA0xbCUNUaUCGq2DFibelR7Te8
-         7yWS8Mbp8iVVj3Lh7FbG91UNOQqSCPgjIIG92uaynvoKtySCyVaLIXDCvF4XgwL7W30I
-         /ps/8a+EX18wgzxBLO+DiKbg9K2Yz45U/RXkomKvnOl0INMxZiN4fLmT+lWcgNrsXtI/
-         rXTO05J8jEaeoCAQ/BfVVU9VXvhwujo67Uu/dwNxQOKn42GrSWwIvHBLRgMk+ShZsCu5
-         VBW6CFmbAyH6miUJWxsudZ6BZ38XcsVhbJQw5tuSMbQv9K7n0WQY8FUD+pp+nZ0og0mx
-         O68w==
-X-Gm-Message-State: AGi0PuaLtliQrKWzbgdf01bWVK4uMCF6RCQ3SVN86BtjtHWmyB1hYRBq
-        kqwdeKz8eeLBxGKyKZgCYTp9vg==
-X-Google-Smtp-Source: APiQypLVvbrjumlCLlmTCPuXNewSaDSHjE0x0aDETbToJCw1qIkwOjllFHprFIl39+UtGyokRT4g1Q==
-X-Received: by 2002:a05:6a00:2cf:: with SMTP id b15mr1777440pft.174.1587106870611;
-        Fri, 17 Apr 2020 00:01:10 -0700 (PDT)
+        bh=e5yt6ZDVqr+7QSHc88Bnrv499SbQQkOFM9/QQvODlrQ=;
+        b=E7i2OmFTL+JQVbdLWwqaeQc22l/n5yqa1jp+zAGqpo3CMqmg45fK6+E+DiXnoo3SxZ
+         5RnGf55PHP0jBjO9FgwSJiQsh9LtGQrLUKN99yU6/RU1MtxIlx7S016cEC+qseMn3yCj
+         nep8yqjAZ1xku+59MZnIwJ2YfTBCGekTnSYWhR/8dzxSDnkCxxmLkbiLLnV50pwhGTxO
+         1vAANGcMZ0H5ZuGrmB058OhfYN2rgq5Dl+Ys+v93Dp2vmm+QdSO0FtgO3ksqWdmSHqpX
+         z8a0tH8jqoH2k5b3Mw/zlYF19+kRhTvDNR6V63NDcB7WGw1X8oVvVS++zYtfHYh6D3oV
+         jYSg==
+X-Gm-Message-State: AGi0PuZUE3qxKA29v9GejGZR8FlR+FddHmebpSfr2r5j8zC2fsAilKBw
+        vgT7apGDsBfhDVPJ5flgaDk8sQ==
+X-Google-Smtp-Source: APiQypKAPouxJUj8ZEHXCCyGsr9aFHrJPhULvsgTpcyEK+wS31hk0TH+VbwkpYL+s3wPwKVaYlchtA==
+X-Received: by 2002:a17:90a:68cb:: with SMTP id q11mr2759270pjj.15.1587106873385;
+        Fri, 17 Apr 2020 00:01:13 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c125sm18561609pfa.142.2020.04.17.00.01.09
+        by smtp.gmail.com with ESMTPSA id c125sm18561609pfa.142.2020.04.17.00.01.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 00:01:09 -0700 (PDT)
+        Fri, 17 Apr 2020 00:01:12 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/4] clk: qcom: gdsc: Handle GDSC regulator supplies
-Date:   Fri, 17 Apr 2020 00:00:41 -0700
-Message-Id: <20200417070044.1376212-2-bjorn.andersson@linaro.org>
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 3/4] arm64: dts: qcom: db820c: Add vdd_gfx and tie it into mmcc
+Date:   Fri, 17 Apr 2020 00:00:43 -0700
+Message-Id: <20200417070044.1376212-4-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200417070044.1376212-1-bjorn.andersson@linaro.org>
 References: <20200417070044.1376212-1-bjorn.andersson@linaro.org>
@@ -78,109 +79,76 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Certain GDSCs, such as the GPU_GX on MSM8996, requires that the upstream
-regulator supply is powered in order to be turned on.
+From: Rajendra Nayak <rnayak@codeaurora.org>
 
-It's not guaranteed that the bootloader will leave these supplies on and
-the driver core will attempt to enable any GDSCs before allowing the
-individual drivers to probe defer on the PMIC regulator driver not yet
-being present.
+Add the SPMI regulator node in the PMI8994, use it to give us VDD_GX
+at a fixed max nominal voltage for the db820c and specify this as supply
+for the MMSS GPU_GX GDSC.
 
-So the gdsc driver needs to be made aware of supplying regulators and
-probe defer on their absence, and it needs to enable and disable the
-regulator accordingly.
+With the introduction of CPR support the range for VDD_GX should be
+expanded.
 
-Voltage adjustments of the supplying regulator are deferred to the
-client drivers themselves.
-
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+[bjorn: Split between pmi8994 and db820c, changed voltage, rewrote commit message]
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v1:
-- Sorted includes
-- Dropped unnecessary comment
+- Polished commit message
+- vdd_gfx -> vdd-gfx
 
- drivers/clk/qcom/gdsc.c | 23 +++++++++++++++++++++++
- drivers/clk/qcom/gdsc.h |  4 ++++
- 2 files changed, 27 insertions(+)
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 14 ++++++++++++++
+ arch/arm64/boot/dts/qcom/pmi8994.dtsi        |  6 ++++++
+ 2 files changed, 20 insertions(+)
 
-diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
-index a250f59708d8..04944f11659b 100644
---- a/drivers/clk/qcom/gdsc.c
-+++ b/drivers/clk/qcom/gdsc.c
-@@ -11,6 +11,7 @@
- #include <linux/ktime.h>
- #include <linux/pm_domain.h>
- #include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/reset-controller.h>
- #include <linux/slab.h>
- #include "gdsc.h"
-@@ -112,6 +113,12 @@ static int gdsc_toggle_logic(struct gdsc *sc, enum gdsc_status status)
- 	int ret;
- 	u32 val = (status == GDSC_ON) ? 0 : SW_COLLAPSE_MASK;
- 
-+	if (status == GDSC_ON && sc->rsupply) {
-+		ret = regulator_enable(sc->rsupply);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
- 	ret = regmap_update_bits(sc->regmap, sc->gdscr, SW_COLLAPSE_MASK, val);
- 	if (ret)
- 		return ret;
-@@ -143,6 +150,13 @@ static int gdsc_toggle_logic(struct gdsc *sc, enum gdsc_status status)
- 
- 	ret = gdsc_poll_status(sc, status);
- 	WARN(ret, "%s status stuck at 'o%s'", sc->pd.name, status ? "ff" : "n");
-+
-+	if (!ret && status == GDSC_OFF && sc->rsupply) {
-+		ret = regulator_disable(sc->rsupply);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
- 	return ret;
- }
- 
-@@ -371,6 +385,15 @@ int gdsc_register(struct gdsc_desc *desc,
- 	if (!data->domains)
- 		return -ENOMEM;
- 
-+	for (i = 0; i < num; i++) {
-+		if (!scs[i] || !scs[i]->supply)
-+			continue;
-+
-+		scs[i]->rsupply = devm_regulator_get(dev, scs[i]->supply);
-+		if (IS_ERR(scs[i]->rsupply))
-+			return PTR_ERR(scs[i]->rsupply);
-+	}
-+
- 	data->num_domains = num;
- 	for (i = 0; i < num; i++) {
- 		if (!scs[i])
-diff --git a/drivers/clk/qcom/gdsc.h b/drivers/clk/qcom/gdsc.h
-index 64cdc8cf0d4d..c36fc26dcdff 100644
---- a/drivers/clk/qcom/gdsc.h
-+++ b/drivers/clk/qcom/gdsc.h
-@@ -10,6 +10,7 @@
- #include <linux/pm_domain.h>
- 
- struct regmap;
-+struct regulator;
- struct reset_controller_dev;
- 
- /**
-@@ -52,6 +53,9 @@ struct gdsc {
- 	struct reset_controller_dev	*rcdev;
- 	unsigned int			*resets;
- 	unsigned int			reset_count;
-+
-+	const char 			*supply;
-+	struct regulator		*rsupply;
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+index 4692b7ad16b7..fc23b381c5e4 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+@@ -251,6 +251,10 @@ &mdss {
+ 	status = "okay";
  };
  
- struct gdsc_desc {
++&mmcc {
++	vdd-gfx-supply = <&vdd_gfx>;
++};
++
+ &msmgpio {
+ 	gpio-line-names =
+ 		"[SPI0_DOUT]", /* GPIO_0, BLSP1_SPI_MOSI, LSEC pin 14 */
+@@ -688,6 +692,16 @@ pinconf {
+ 	};
+ };
+ 
++
++&pmi8994_spmi_regulators {
++	vdd_gfx: s2@1700 {
++		reg = <0x1700 0x100>;
++		regulator-name = "VDD_GFX";
++		regulator-min-microvolt = <980000>;
++		regulator-max-microvolt = <980000>;
++	};
++};
++
+ &rpm_requests {
+ 	pm8994-regulators {
+ 		compatible = "qcom,rpm-pm8994-regulators";
+diff --git a/arch/arm64/boot/dts/qcom/pmi8994.dtsi b/arch/arm64/boot/dts/qcom/pmi8994.dtsi
+index 21e05215abe4..e5ed28ab9b2d 100644
+--- a/arch/arm64/boot/dts/qcom/pmi8994.dtsi
++++ b/arch/arm64/boot/dts/qcom/pmi8994.dtsi
+@@ -26,5 +26,11 @@ pmic@3 {
+ 		reg = <0x3 SPMI_USID>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++
++		pmi8994_spmi_regulators: regulators {
++			compatible = "qcom,pmi8994-regulators";
++			#address-cells = <1>;
++			#size-cells = <1>;
++		};
+ 	};
+ };
 -- 
 2.24.0
 
