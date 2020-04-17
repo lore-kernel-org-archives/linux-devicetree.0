@@ -2,121 +2,206 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D1DC2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 18:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EEEC2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 18:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45724206F9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 18:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587147403;
-	bh=uFNjI2NTBZuu5HInd9mBICjFFSqgyNOTntNrA4CeJ9k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vfpdWz0weSrS5yIjUgsNZ7NMdfhkmhqVDwheM8GEYrFioVtX8pEJtEXYZB13r7jOO
-	 q+T79nIOCe+idXzDDy7HwQAMr+0qp75iPhCLohG603vI8nFPocZQxI2cm8w5w2tX+N
-	 BAcsWfb4YBLsCE4VOjPKRZgewIpUF/hpFfMSZGqg=
+	by mail.kernel.org (Postfix) with ESMTP id C75BA206F9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 18:17:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a7UCge8K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730374AbgDQSQl (ORCPT
+        id S1730683AbgDQSR3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 14:16:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38500 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730256AbgDQSQl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Apr 2020 14:16:41 -0400
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2EEE22202;
-        Fri, 17 Apr 2020 18:16:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587147400;
-        bh=uFNjI2NTBZuu5HInd9mBICjFFSqgyNOTntNrA4CeJ9k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=KVwP9wt2tX56g8roK8GLXShPr8iTbHwOKAah+lAfxgcOCFnra2g7mBSG3/+JNsGvG
-         WNvvLGbH+RW7ZviRL5HJ8is/1lbPVfVJfGipCfZQRETVo/SasWTYdzRw1Pima5bnBf
-         YtbRgpMmtkYIKYguPVdfdpQgMZCQopRhVYBCxySw=
-Received: by mail-qk1-f177.google.com with SMTP id y3so3403472qky.8;
-        Fri, 17 Apr 2020 11:16:40 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZBOiO2v3YSbiwip1PSOMJ6Wol5JffvUnOmOjinheYGnqT5zqjz
-        w1dop4hDZf/i11glNlBfRbbFHpQRgWx3x3+uKg==
-X-Google-Smtp-Source: APiQypJtW2mvG5+Ex3UqXvZbs5wvXKHc10E3/tyFNH2CKDd4NqO1RLmorKwCUS5+pYi2la9j++2BRIk80oiLTHRuIVU=
-X-Received: by 2002:a37:4a85:: with SMTP id x127mr4598821qka.152.1587147399791;
- Fri, 17 Apr 2020 11:16:39 -0700 (PDT)
+        Fri, 17 Apr 2020 14:17:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730438AbgDQSR1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Apr 2020 14:17:27 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 769ABC061A0C
+        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 11:17:27 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u9so1421504pfm.10
+        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 11:17:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XsZBU4bhjV6O9KVbO6JPEje7KJLsMy5gzQ4J0zuUoG0=;
+        b=a7UCge8KsNi+LrELJHDknwsXaFe2Vfj8hoi97RUEfDhQKmg2JbLscHmOe+FVZS+emQ
+         3KX6TUXU4du4NXQKSWyuf6DVtoloiXA/aJUzax11Ye4Xuj9TUwpK/I1U55VfbVwAIjJd
+         Ybsh+3YSspq2pYRQchoW6mLkb2AU7yekjxUTA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XsZBU4bhjV6O9KVbO6JPEje7KJLsMy5gzQ4J0zuUoG0=;
+        b=qPBGcmPuXg0Ct4Mqy/HDQgS8PZpPwm5grVVNnd6cruOHEEmBbIvb0K/9MCZuXtQGFc
+         2XeAC1OCNbm2GKEkZu63DpikCCTxCzqn8YQoFgjDhYQV+YzgJsN+1PObp0hc3tXp/kZ7
+         UKVCd3MVlK9mYtipdpJrkc3rt9o64kl73GDJDA/dqpisRfRMhaQZZea33184CadFoQwC
+         Nq60cP0hEz1BB/rD4ZvjktkTG7wadrP23NWZ2U7aqNup3G2mY5CNPAoeYBuuy0hUepGB
+         gb3mPDibP4+bJAPMS4G1vEzTNT5bH3Cr28reqXUo7heTvwkjZXuwXxbe19DETHmjh+2X
+         mKlg==
+X-Gm-Message-State: AGi0PuaGF8T6Btu2GTkoqsyWwBOFmiaawHwnIKxADhQezmJliFe4UI3l
+        Fovw6KQgbSPtK2FMmeNP2HmtBXO6Trs=
+X-Google-Smtp-Source: APiQypIkeXBu6ylolmkKJSsiQ23LPbMq+pU1hKJH7sJLHh1ACpzIu3GZNXg9hm13C8XctxztyUIMFA==
+X-Received: by 2002:a65:4908:: with SMTP id p8mr4231124pgs.413.1587147446841;
+        Fri, 17 Apr 2020 11:17:26 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id g11sm19806944pfm.4.2020.04.17.11.17.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Apr 2020 11:17:25 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 11:17:24 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v2 05/17] drm/msm/dpu: Use OPP API to set clk/perf state
+Message-ID: <20200417181724.GE199755@google.com>
+References: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
+ <1587132279-27659-6-git-send-email-rnayak@codeaurora.org>
 MIME-Version: 1.0
-References: <c48a3baef99f3d74e7904498c4054221ec384b36.camel@suse.de> <20200416205838.161894-1-saravanak@google.com>
-In-Reply-To: <20200416205838.161894-1-saravanak@google.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 17 Apr 2020 13:16:25 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqK9VmRomOnkVLQUOR9tHnh6phjjqXB=ERkjqhBw_wTVzg@mail.gmail.com>
-Message-ID: <CAL_JsqK9VmRomOnkVLQUOR9tHnh6phjjqXB=ERkjqhBw_wTVzg@mail.gmail.com>
-Subject: Re: [PATCH v1] of: property: Don't retry device_link_add() upon failure
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1587132279-27659-6-git-send-email-rnayak@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 3:58 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> When of_link_to_phandle() was implemented initially, there was no way to
-> tell if device_link_add() was failing because the supplier device hasn't
-> been parsed yet, hasn't been added yet, the links were creating a cycle,
-> etc. Some of these were transient errors that'd go away at a later
-> point.
->
-> However, with the current set of improved checks, if device_link_add()
-> fails, it'll only be for permanent errors like cycles or out-of-memory
-> errors.
+Hi Rajendra,
 
-What improved checks? The series from Nicolas?
+I have essentially the same comments as for "tty: serial: qcom_geni_serial:
+Use OPP API to set clk/perf state" (https://patchwork.kernel.org/patch/11495209/).
+about error handling of 'dev_pm_opp_of_add_table' and misleading struct
+member names 'opp'/'opp_table'. Please apply the requested changes to the
+entire series unless you disagree (we can keep the discussion in the patch
+referenced above).
 
-Is there a dependency between this and Nicolas' series?
-
-Should this go to stable?
-
-
->
-> Also, with the addition of DL_FLAG_SYNC_STATE_ONLY flag [1] to device
-> links, all the valid dependency cycles due to "proxy" device links
-> (needed for correctness of sync_state() device callback) will never fail
-> device_link_add() due to cycles.
->
-> So, continuing to retry failing device links (by returning -EAGAIN) is
-> no longer useful. At worst, it prevents platforms from setting
-> fw_devlink=on (or better) because it prevents proper boot up. So, let's
-> not do that anymore.
->
-> [1] - https://lore.kernel.org/lkml/20191028220027.251605-1-saravanak@google.com/
-> Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
+On Fri, Apr 17, 2020 at 07:34:27PM +0530, Rajendra Nayak wrote:
+> On some qualcomm platforms DPU needs to express a perforamnce state
+> requirement on a power domain depennding on the clock rates.
+> Use OPP table from DT to register with OPP framework and use
+> dev_pm_opp_set_rate() to set the clk/perf state.
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Cc: Rob Clark <robdclark@gmail.com>
+> Cc: Sean Paul <sean@poorly.run>
+> Cc: dri-devel@lists.freedesktop.org
 > ---
->  drivers/of/property.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index 252e4f600155..ee1bc267f975 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -1074,7 +1074,7 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
->                 return -EAGAIN;
->         }
->         if (!device_link_add(dev, sup_dev, dl_flags))
-> -               ret = -EAGAIN;
-> +               ret = -EINVAL;
->         put_device(sup_dev);
->         return ret;
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c |  3 ++-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       | 20 +++++++++++++++++++-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h       |  4 ++++
+>  3 files changed, 25 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+> index 11f2beb..fe5717df 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/errno.h>
+>  #include <linux/mutex.h>
+> +#include <linux/pm_opp.h>
+>  #include <linux/sort.h>
+>  #include <linux/clk.h>
+>  #include <linux/bitmap.h>
+> @@ -239,7 +240,7 @@ static int _dpu_core_perf_set_core_clk_rate(struct dpu_kms *kms, u64 rate)
+>  		rate = core_clk->max_rate;
+>  
+>  	core_clk->rate = rate;
+> -	return msm_dss_clk_set_rate(core_clk, 1);
+> +	return dev_pm_opp_set_rate(&kms->pdev->dev, core_clk->rate);
 >  }
-> --
-> 2.26.1.301.g55bc3eb7cb9-goog
->
+>  
+>  static u64 _dpu_core_perf_get_core_clk_rate(struct dpu_kms *kms)
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> index ce19f1d..cfce642 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/dma-buf.h>
+>  #include <linux/of_irq.h>
+> +#include <linux/pm_opp.h>
+>  
+>  #include <drm/drm_crtc.h>
+>  #include <drm/drm_file.h>
+> @@ -1033,11 +1034,18 @@ static int dpu_bind(struct device *dev, struct device *master, void *data)
+>  	if (!dpu_kms)
+>  		return -ENOMEM;
+>  
+> +	dpu_kms->opp = dev_pm_opp_set_clkname(dev, "core");
+> +	if (IS_ERR(dpu_kms->opp))
+> +		return PTR_ERR(dpu_kms->opp);
+> +	/* OPP table is optional */
+> +	if (!dev_pm_opp_of_add_table(dev))
+> +		dpu_kms->opp_table = true;
+> +
+>  	mp = &dpu_kms->mp;
+>  	ret = msm_dss_parse_clock(pdev, mp);
+>  	if (ret) {
+>  		DPU_ERROR("failed to parse clocks, ret=%d\n", ret);
+> -		return ret;
+> +		goto err;
+>  	}
+>  
+>  	platform_set_drvdata(pdev, dpu_kms);
+> @@ -1051,6 +1059,11 @@ static int dpu_bind(struct device *dev, struct device *master, void *data)
+>  
+>  	priv->kms = &dpu_kms->base;
+>  	return ret;
+> +err:
+> +	if (dpu_kms->opp_table)
+> +		dev_pm_opp_of_remove_table(dev);
+> +	dev_pm_opp_put_clkname(dpu_kms->opp);
+> +	return ret;
+>  }
+>  
+>  static void dpu_unbind(struct device *dev, struct device *master, void *data)
+> @@ -1059,6 +1072,9 @@ static void dpu_unbind(struct device *dev, struct device *master, void *data)
+>  	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
+>  	struct dss_module_power *mp = &dpu_kms->mp;
+>  
+> +	if (dpu_kms->opp_table)
+> +		dev_pm_opp_of_remove_table(dev);
+> +	dev_pm_opp_put_clkname(dpu_kms->opp);
+>  	msm_dss_put_clk(mp->clk_config, mp->num_clk);
+>  	devm_kfree(&pdev->dev, mp->clk_config);
+>  	mp->num_clk = 0;
+> @@ -1090,6 +1106,8 @@ static int __maybe_unused dpu_runtime_suspend(struct device *dev)
+>  	struct dpu_kms *dpu_kms = platform_get_drvdata(pdev);
+>  	struct dss_module_power *mp = &dpu_kms->mp;
+>  
+> +	/* Drop the performance state vote */
+> +	dev_pm_opp_set_rate(dev, 0);
+>  	rc = msm_dss_enable_clk(mp->clk_config, mp->num_clk, false);
+>  	if (rc)
+>  		DPU_ERROR("clock disable failed rc:%d\n", rc);
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
+> index 211f5de9..0060709 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
+> @@ -128,6 +128,10 @@ struct dpu_kms {
+>  
+>  	struct platform_device *pdev;
+>  	bool rpm_enabled;
+> +
+> +	struct opp_table *opp;
+> +	bool opp_table;
+> +
+>  	struct dss_module_power mp;
+>  
+>  	/* reference count bandwidth requests, so we know when we can
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
