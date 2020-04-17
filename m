@@ -2,324 +2,155 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE649C2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 13:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60854C352BE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 13:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92B3421841
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 13:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 406B521D6C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 13:57:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkL7/2Uw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730784AbgDQNuk (ORCPT
+        id S1730761AbgDQN5G (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 09:50:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57384 "EHLO
+        Fri, 17 Apr 2020 09:57:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730783AbgDQNuj (ORCPT
+        by vger.kernel.org with ESMTP id S1730691AbgDQN5G (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Apr 2020 09:50:39 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97E5DC061A0C
-        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 06:50:39 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jPRO0-0002Xc-1h; Fri, 17 Apr 2020 15:50:28 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jPRNz-0008C2-Il; Fri, 17 Apr 2020 15:50:27 +0200
-Date:   Fri, 17 Apr 2020 15:50:27 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Sandipan Patra <spatra@nvidia.com>
-Cc:     Thierry Reding <treding@nvidia.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Bibek Basu <bbasu@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pwm: tegra: dynamic clk freq configuration by PWM driver
-Message-ID: <20200417135027.wkj6bxiplnehsa5s@pengutronix.de>
-References: <1585917303-10573-1-git-send-email-spatra@nvidia.com>
- <20200403151050.nh2mrffkqdqtkozq@pengutronix.de>
- <BYAPR12MB3014C0178A7360662C6FA8B7ADDB0@BYAPR12MB3014.namprd12.prod.outlook.com>
- <20200415141856.ck3w3gtae4bsxyfl@pengutronix.de>
- <BYAPR12MB30149D2715DC575A030A7F59ADD90@BYAPR12MB3014.namprd12.prod.outlook.com>
+        Fri, 17 Apr 2020 09:57:06 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7E91C061A0C;
+        Fri, 17 Apr 2020 06:57:05 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id bu9so872040qvb.13;
+        Fri, 17 Apr 2020 06:57:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oqcTP4i+a7YGi21w2c2gncPHzEaLd+RyksgvDG1LlGQ=;
+        b=nkL7/2UwuToC9Qt2i6kcBIZYANeglyiEJgWOvtfpq4CAtzTk8zAzGzjSbhyG5yIke6
+         KxE5LoodWN5XEKHKMjhMDp86xkGpMNypr4Bzx3u2ATA4iJ7Jb8YJldfTGpt9Y+Ci07Bo
+         M4SlUWnmNlNBz/3Nk5rRLPh3a3tskzCNw9gefdLV32J4FVJed4gkMGBhfLouR+KAcqwv
+         Hjz77TBwDuzNqzR8TRVMb2zH9Gjj8p0o7KhDbdXJvo0wkW/jnEfv7yRyCFsxNmiTMv8P
+         kpX1+99eQeajo6XQsWCYZPqVXdsDpBF2GssNE1UxgK11+hpfsijVHnij9ARtEpzjQDr4
+         rrTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oqcTP4i+a7YGi21w2c2gncPHzEaLd+RyksgvDG1LlGQ=;
+        b=TdAccyl4dLAO6kbap9CmJfbk/+/DTywY3GSDVo2ZNaqYqaNpKz+ARbIauKLsQgQsEI
+         v4uNLMuMJ1BR4ZIfdIv0oBJ6WNOk6dxbPHPy2gA+JdB4w8cqlAF8fQZWJjq9iNSkJiZP
+         GIJAqJD44XWnifKTVcvC6dWv4HTO3rSA+8vtkuske4AoeezupilJq2vL1Cnlmn3TJV0M
+         CgjaOpDKX5pRJB2ROHHVTvw7XeikqGSD1NTa7L0GSMUwE/C/fPjYQZzbH8zE4bL7diAc
+         dU84BOSI+lbmTwXSk5ovkkL1hyY3JSduAzn+cDjCz2ZVCVINJE2QOfFPYAdQOkujqLac
+         8mzg==
+X-Gm-Message-State: AGi0PuZasHFS4rj3xA50dgpcegxYazs4qZ5Rg8f4zbMsmojbFIgm+bvy
+        jU0448gMO5i+SdrqZRz8CXU=
+X-Google-Smtp-Source: APiQypJ8JrKJ3vHc/mky7+x34T8yXzxIAA4sFNSJhjCHLPgr3v5dwnzrf21iZm9GgH2AV8+9/WiOoQ==
+X-Received: by 2002:ad4:4744:: with SMTP id c4mr2857740qvx.203.1587131825006;
+        Fri, 17 Apr 2020 06:57:05 -0700 (PDT)
+Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id s18sm6143621qkg.53.2020.04.17.06.57.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2020 06:57:03 -0700 (PDT)
+Date:   Fri, 17 Apr 2020 09:56:35 -0400
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Kamel Bouhara <kamel.bouhara@bootlin.com>, jic23@kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] ARM: at91: add atmel tcb capabilities
+Message-ID: <20200417135635.GA94725@icarus>
+References: <20200415130455.2222019-1-kamel.bouhara@bootlin.com>
+ <20200415130455.2222019-2-kamel.bouhara@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BYAPR12MB30149D2715DC575A030A7F59ADD90@BYAPR12MB3014.namprd12.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <20200415130455.2222019-2-kamel.bouhara@bootlin.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
 
-On Fri, Apr 17, 2020 at 10:06:28AM +0000, Sandipan Patra wrote:
-> > On Wed, Apr 15, 2020 at 09:03:35AM +0000, Sandipan Patra wrote:
-> > > > On Fri, Apr 03, 2020 at 06:05:03PM +0530, Sandipan Patra wrote:
-> > > > > Added support for dynamic clock freq configuration in pwm kernel driver.
-> > > > > Earlier the pwm driver used to cache boot time clock rate by pwm
-> > > > > clock parent during probe. Hence dynamically changing pwm
-> > > > > frequency was not possible for all the possible ranges. With this
-> > > > > change, dynamic calculation is enabled and it is able to set the
-> > > > > requested period from sysfs knob provided the value is supported by clock source.
-> > > >
-> > > > Without having looked closely at the patch (yet), just for my
-> > > > understanding: If the PWM is running and the frequency changes, the
-> > > > output changes, too, right? If so, do we need a notifier that
-> > > > prevents a frequency change when the PWM is running?
-> > >
-> > > Yes, frequency can be changed anytime but by the same process who has
-> > > acquired the channel. So if a process is already running/using the
-> > > channel, same process can only modify the frequency.
-> > 
-> > How is this enforced? Does some other peripheral get its input clock from the
-> > clock in question? What is the motivation to modify the frequency other than
-> > modifying the PWM output?
->  
-> PWM instance uses a derived clock and sets the divider for further division of rate.
-> Regarding modifying frequency: it was my wrong interpretation. I mean, to modify
-> the PWM output the driver first sets the clock rate which allows to configure the
-> requested PWM output.
+--Q68bSM7Ycu6FN28Q
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The point here is: It should not happen that some other driver modifies
-a clock that results in a change of the output wave form. Also ideally
-if the PWM is running you should not modify the clock as this results
-in a non-atomic update. this is however not always possible and there is
-no general guideline what to do then. In practise it probably matters
-only little.
+On Wed, Apr 15, 2020 at 03:04:53PM +0200, Kamel Bouhara wrote:
+> Some atmel socs have extra tcb capabilities that allow using a generic
+> clock source or enabling a quadrature decoder.
+>=20
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
 
-> > > > > +     /*
-> > > > > +      *  Period in nano second has to be <= highest allowed period
-> > > > > +      *  based on the max clock rate of the pwm controller.
-> > > > > +      *
-> > > > > +      *  higher limit = max clock limit >> PWM_DUTY_WIDTH
-> > > > > +      */
-> > > > > +     if (rate > (pc->soc->max_frequency >> PWM_DUTY_WIDTH))
-> > > > > +             return -EINVAL;
-> > > >
-> > > > Related to my question above: What happens if the rate increases
-> > > > after this check?
-> > >
-> > > Discussed above with my understanding. Please help me understand if
-> > > you are referring to any other possibilities that rate can be changed.
-> > 
-> > The goal to reach is: The only way to modify the PWM output should be to call
-> > pwm_apply_state() (or its legacy relatives).
-> 
-> I see with current settings, pwm output gets modified by .config() which
-> comes from pwm_apply_state(). I think it suffices the purpose
-> or I am still missing anything?
+Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 
-I assume, you don't miss something.
+> ---
+> Changes from v3:
+>  - Added missing kernel doc for new elements introduced in structure
+>    atmel_tcb_config.
+>=20
+> Changes from v2:
+>  - Fixed first patch not applying on mainline
+>=20
+>  include/soc/at91/atmel_tcb.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/include/soc/at91/atmel_tcb.h b/include/soc/at91/atmel_tcb.h
+> index c3c7200ce151..1d7071dc0bca 100644
+> --- a/include/soc/at91/atmel_tcb.h
+> +++ b/include/soc/at91/atmel_tcb.h
+> @@ -36,9 +36,14 @@ struct clk;
+>  /**
+>   * struct atmel_tcb_config - SoC data for a Timer/Counter Block
+>   * @counter_width: size in bits of a timer counter register
+> + * @has_gclk: boolean indicating if a timer counter has a generic clock
+> + * @has_qdec: boolean indicating if a timer counter has a quadrature
+> + * decoder.
+>   */
+>  struct atmel_tcb_config {
+>  	size_t	counter_width;
+> +	bool    has_gclk;
+> +	bool    has_qdec;
+>  };
+> =20
+>  /**
+> --=20
+> 2.25.0
+>=20
 
-> > > > Also the division above is just done to compare the requested period
-> > > > value with the allowed range.
-> > > >
-> > > > Your check is:
-> > > >
-> > > >         NSEC_PER_SEC / period_ns > (max_frequency >> PWM_DUTY_WIDTH)
-> > > >
-> > > > This is equivalent to
-> > > >
-> > > >         period_ns <= NSEC_PER_SEC / (max_frequency >>
-> > > > PWM_DUTY_WIDTH)
-> > > >
-> > > > where the right side is constant per PWM type. (Rounding might need
-> > > > addressing.)
-> > >
-> > > I will update this calculation in the probe since max_frequency value
-> > > is Different for each chip. Also please note that at this point the
-> > > rate is not the actual pwm output rate. It's just a reference for what
-> > > should be the source clock rate and then requested with
-> > > clk_set_rate(); Actual rounding is required while setting pwm
-> > > controller output rate is done later down in same function.
-> > 
-> > I think I understood. Will check again in your next patch round.
-> > 
-> > > > > +              * clk_set_rate() can not be called again in config because
-> > > > > +              * T210 or any prior chip supports one pwm-controller and
-> > > > > +              * multiple channels. Hence in this case cached clock rate
-> > > > > +              * will be considered which was stored during probe.
-> > > >
-> > > > I don't understand that. If
-> > >
-> > > The if part is for SoCs which have single channel per pwm instance.
-> > > i.e. T186,
-> > > T194 etc. For controllers with single channel, dynamic clock rate
-> > > configuration is possible. The other part is for legacy controller
-> > > which has multiple channels for single pwm instance. The pwm
-> > > controllers having multiple channels share the source clock. So it
-> > > does not allow dynamic clock configuration since it will affect users on the
-> > other channels.
-> > 
-> > The usual approach here is to allow changes iff all other channels are off or
-> > unused.
-> > 
-> 
-> This is handled in the if part, where pwm instances have only one channel
-> and only the dynamic clock configuration can be done. On the other side
-> (under else part), the rate is stored during probe and it does not get modified
-> during run time.
-> 
-> > > > > +              */
-> > > > > +             rate = pc->clk_rate >> PWM_DUTY_WIDTH;
-> > > > > +     }
-> > > > >
-> > > > >       /* Consider precision in PWM_SCALE_WIDTH rate calculation */
-> > > > >       hz = DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC,
-> > > > > period_ns);
-> > > >
-> > > > I took a deeper look into the driver now. Just to ensure, I
-> > > > understood the PWMs behaviour right:
-> > > >
-> > > > There is an ENABLE bit (with obvious semantics), a 13-bit SCALE
-> > > > value and an 8- bit DUTY value. There is an internal counter
-> > > > incrementing by one each (SCALE +
-> > > > 1) clock cycles and resets at 256. The counter going from 0 to 256
-> > > > defines the period length. On counter reset the output gets active
-> > > > and on reaching DUTY the output gets inactive.
-> > > >
-> > > > So we have:
-> > > >
-> > > >         .period = 256 * (SCALE + 1) / clkrate
-> > > >         .duty_cycle = DUTY * (SCALE + 1) / clkrate
-> > > >
-> > > > Right?
-> > >
-> > > Yes. Right.
-> > 
-> > Ideally this would be described in a code comment.
-> 
-> Ok.
-> I will add adequate comments to help providing the register insights.
-> 
-> > 
-> > > >  - When .duty_ns == .period the assignment of DUTY overflows.
-> > > >    (Can the PWM provide 100% duty cycle at all?)
-> > >
-> > > Yes, PWM controller is capable to provide 100% duty cycle.
-> > > Bits 30:16 are dedicated for pulse width out of which only 24:16 (9
-> > > bits) are used. Only 8 bits are usable [23:16] for varying pulse width.
-> > > To achieve 100% duty cycle, Bit [24] needs to be programmed of this
-> > > register to 1'b1.
-> > 
-> > This needs to be documented in a driver comment to be understandable for
-> > people being interested in this driver later.
-> >
-> 
-> Sure. As stated above, I will add the details in code comment. And for further
-> Understanding Tegra documents and specifications can be followed.
+--Q68bSM7Ycu6FN28Q
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If they are publically available, having a link at the top of the driver
-would be great.
+-----BEGIN PGP SIGNATURE-----
 
-> > If Bit[24] is 1, should [23:16] be zero, or is it "don't care" then?
-> >
-> 
-> Once the 24th bit is set, all other bits are considered to be don't care.
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl6ZtX0ACgkQhvpINdm7
+VJJsmg//ZzvO1iZZuwiC/V4qTReyr1hNkDABRiGVHOtaLLWCoDyPqxgZ+03mUfjz
+nOHOaS4wHv52thU/N9zcgqT9gLTpStioyU7TTVdQONnINc1N9ObHfwX3+OYbtsAF
+8ebes1Drz/cx13tJo/UR8IkyExUn9x18447s1cfUrzYVfTYLZUrbD6IweqL0NKgd
+vNpOFWF0hNPy65DKp7qtmbURpAJjUOCTXPjJQcGdwcBtkYIDyFDcc1vO4f5QrM3d
+uk7OWGdaLgyqp0rUkvXEWZT11CRP4OvuK0BLYrNgucE1hkU5vtzcA8pa1JJlCBer
+fkbrLDUvazavSf1buTJZoxZbAfRtmTnBS1U5np/THmggu3kbNl0LDrSYcrjFJEr5
+JmT5GCKyZy3C8vLHBKPOMkQ6MnQXRtpB+NtNCne4/6SFJRBC0LC73cwma04/hSm0
+DTrxc+nVoDfrxXQEvlQ+neAoADJJx4gGh0BLdj09dO8jJHV9g2tm9/NUDur0U9wm
+aJRxAB8WrXHup1lVaXC1pqd5sLNoeChLjL5SKOjUPqEnxfXlbZnFVSlhDo63aziN
+YyJFpOxEh99s0HxfMMlibjGbUV1tL76Cb+wNAO1+DbjCgtFqbEzIwpKnriMEdy6q
+E9bnkPrkRz/OexR1od28QEROZo5Uvl9PuhMyPcL8k83RzMW5/2Y=
+=G8zt
+-----END PGP SIGNATURE-----
 
-ok.
-
-> > > >  - The comment "Since the actual PWM divider is the register's frequency
-> > > >    divider field minus 1, we need to decrement to get the correct value
-> > > >    to write to the register." seems wrong. If I understand correctly, we
-> > > >    need to do s/minus/plus/. If the register holds a 0, the divider
-> > > >    isn't -1 for sure?!
-> > >
-> > > Yes, you are right. The comment needs a correction. It will be plus 1
-> > > instead of minus 1. I will update the comment in the follow up patch.
-> > > Otherwise the calculation is correct.
-> > > rate = DIV_ROUND_CLOSEST_ULL(100ULL * rate, hz); here rate is the
-> > > divider value to be set.
-> > 
-> > If a certain duty+period is requested the driver is supposed to provide an output
-> > such that:
-> > 
-> >         implemented_period = max{ possible periods <= requested period }
-> >         implemented_duty = max{ possible duty <= requested duty }
-> > 
-> 
-> I am not clear if I understood the question correctly.
-
-It was not a question :-)
-
-> implemented_period = max{ possible periods <= requested period }
-> should it be, min { possible periods, requested period } ?
-
-To put my expression in words: pick the maximum of the possible periods
-that are less or equal to the requested value.  Maybe this is better
-understandable:
-
-	max { x ∊ implementablePeriods | x <= requestedPeriod }
-
-?
-
-> If you are asking for requested parameters to fall inside range, this is taken care
-> at below checks.
-> if (period_ns < min_period_ns) //lower bound
-> And if (rate >> PWM_SCALE_WIDTH) //higher bound
-> 
-> If I am not clear with the question, please help me understanding.
-
-Also not sure if your problem is resolved with my words. I hope so,
-please ask if something is still unclear. Maybe also look at the
-PWM_DEBUG checks to understand.
-
-> > so I think DIV_ROUND_CLOSEST_ULL is wrong.
-> > (If the driver provided the modern callback instead of .config/.enable/.disable
-> > CONFIG_PWM_DEBUG would help you here.)
-> 
-> FYI, I will further be working on a separate change sets for tegra pwm driver
-> to use atomic callbacks.
-
-That's good. If you do these first, you can benefit from PWM_DEBUG
-checks.
-
-> > > > How does the PWM behave when it gets disabled? Does it complete the
-> > > > currently running period? Does the output stop at the inactive
-> > > > level, or where it just happens to be? How does a running PWM behave
-> > > > when the register is updated? Does it complete the currently running period?
-> > >
-> > > Yes, it allows to write the bit during any active and inactive time of
-> > > the width. Hence the pwm gets disabled as soon as the enable bit is set to 0.
-> > 
-> > OK, so the output stops oscillating as soon as the PWM_ENABLE bit is cleared in
-> > hardware. How does the output behave then? (Does the output become
-> > inactive? Or does it drive the output level where it just happens to be?) I assume
-> > that the register write in tegra_pwm_config() also results in aborting the
-> > currently running period and start of a new one with the new settings?
->  
-> Yes, the output stops as soon as the PWM_ENABLE bit is cleared in hardware. Then
-> The output is set to 0 (which is inactive).
-> Once .disable() => tegra_pwm_disable() gets invoked, enable bit is cleared and hence
-> PWM will possess no output signal.
-> tegra_pwm_config() will be invoked for any new configuration request.
-
-Some drivers already have a "Limitations" section in their header.
-Please take a look at the existing examples and provide something
-similar. (Note you still didn't answer "How does a running PWM behave
-when the register is updated? Does it complete the currently running
-period?". I assume the answer to the second question is "No" (and the
-first is only there for rhetoric reasons).)
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+--Q68bSM7Ycu6FN28Q--
