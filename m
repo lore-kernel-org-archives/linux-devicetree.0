@@ -3,77 +3,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2681C2BB55
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 08:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA71C2BB85
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 08:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92E6421924
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 08:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66373221E9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 08:23:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727871AbgDQIQG (ORCPT
+        id S1729638AbgDQIXG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 04:16:06 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37674 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729607AbgDQIQF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 04:16:05 -0400
-Received: by mail-oi1-f194.google.com with SMTP id r25so1424909oij.4;
-        Fri, 17 Apr 2020 01:16:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OEUqvO4o4PLcUzctH8y/pHIipYkwHBkxh0sUSwqBhjI=;
-        b=KVj96e/tfUheE6ARFM2bfYhbgfdhQLyr25P7ursPxPh6duAI2Vj1fbe6WWoSlqesRr
-         +VFQKFsTo9YKte6u2iDsBv1fJyRmO1M0nsgPLXNng9kCRS9cfbBvnldfLDzDn6xbFNEu
-         LJOun/DkA/wpUZltpaorii2r48YVFOUO6ddcjrd7aV/5ZeoeHmGRvdF7y/mxrnpkAsgT
-         N8iFiUp+5AgM98Y9kOFEehKV1ZsIl1csRuwqpxR5WA/QBRKYeUcir5YMb4arC98R8vmW
-         H8CJYjv52HzqiAy8j+xT01w4PHPoktT+nMYew8Uyay0XKb0MSoQ8uDnbFcARe2y5GJ0p
-         D4DA==
-X-Gm-Message-State: AGi0PuZNLzDMWluiW1G7FuPyIHg2aIRvYKEgNL8jHWkjUnA3SFEJGDRd
-        e8d6twUqesuEeYouwY3jIqvlcbpHmvZax++9b5bgNQ==
-X-Google-Smtp-Source: APiQypLgb84lCmEkROwoYQwqq0y4HCBdGz8GOcxZq+P0iQq/kE0BDjlAwm2ypBVTzGYMRyxhyaIzk+3QcIX+GqraTH0=
-X-Received: by 2002:aca:cdd1:: with SMTP id d200mr1278264oig.153.1587111363675;
- Fri, 17 Apr 2020 01:16:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <1587110829-26609-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1587110829-26609-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1587110829-26609-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 17 Apr 2020 10:15:52 +0200
-Message-ID: <CAMuHMdX3sPAfKooRQcNBph6OWg=7OQ0g33PCTBpLRkqu5YcP-A@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] dt-bindings: dma: renesas,usb-dmac: convert
- bindings to json-schema
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Vinod <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 17 Apr 2020 04:23:06 -0400
+Received: from mga01.intel.com ([192.55.52.88]:62216 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729176AbgDQIXG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Apr 2020 04:23:06 -0400
+IronPort-SDR: 01Sya9bg7UYTJdBvm3kTd579S1Osp92pfljBNcu5u0adGqAvZckUrweCkLa5xRamTcxNTRFyXn
+ eFKExCsNU3XQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2020 01:23:06 -0700
+IronPort-SDR: oAqIaDm9qhb5Su1LLPerg1oTUd1hRwUw4hTwKgqEiHDu5jiY8UXJQaQgXa/Na8ikJlBlv0rtsc
+ RCIl/egDXZwA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,394,1580803200"; 
+   d="scan'208";a="428156049"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga005.jf.intel.com with ESMTP; 17 Apr 2020 01:23:01 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org
+Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        arnd@arndb.de, brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, piotrs@cadence.com, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v2 0/2] mtd: rawnand: Add NAND controller support on Intel LGM SoC
+Date:   Fri, 17 Apr 2020 16:21:45 +0800
+Message-Id: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 10:08 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> Convert Renesas R-Car USB-DMA Controller bindings documentation
-> to json-schema.
->
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+This patch adds the new IP of Nand Flash Controller(NFC) support
+on Intel's Lightning Mountain(LGM) SoC.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+DMA is used for burst data transfer operation, also DMA HW supports
+aligned 32bit memory address and aligned data access by default.
+DMA burst of 8 supported. Data register used to support the read/write
+operation from/to device.
 
-Gr{oetje,eeting}s,
+NAND controller also supports in-built HW ECC engine. 
 
-                        Geert
+NAND controller driver implements ->exec_op() to replace legacy hooks,
+these specific call-back method to execute NAND operations.
+
+Thank you very much Boris, Martin and Andy for the suggestions and inputs.
+---
+v2:
+  - implement the ->exec_op() to replaces the legacy hook-up.
+  - update the commit message
+  - YAML compatible string update to intel, lgm-nand-controller
+  - add MIPS maintainers and xway_nand driver author in CC
+
+v1:
+ - initial version
+
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: mtd: Add YAML for Nand Flash Controller support
+  mtd: rawnand: Add NAND controller support on Intel LGM SoC
+
+ .../devicetree/bindings/mtd/intel,lgm-nand.yaml    |  61 ++
+ drivers/mtd/nand/raw/Kconfig                       |   7 +
+ drivers/mtd/nand/raw/Makefile                      |   1 +
+ drivers/mtd/nand/raw/intel_lgm_nand.c              | 740 +++++++++++++++++++++
+ 4 files changed, 809 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+ create mode 100644 drivers/mtd/nand/raw/intel_lgm_nand.c
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.11.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
