@@ -2,136 +2,124 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B4CC2BB55
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 07:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FFAC2BB55
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 07:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2347C208E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 07:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8192B214AF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 07:45:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="MboaLkoy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgDQHpU (ORCPT
+        id S1727779AbgDQHp5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 03:45:20 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:55716 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbgDQHpU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 03:45:20 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id D1E94803087C;
-        Fri, 17 Apr 2020 07:45:11 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id c1k99CUap3ve; Fri, 17 Apr 2020 10:45:11 +0300 (MSK)
-Date:   Fri, 17 Apr 2020 10:45:59 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh@kernel.org>
-CC:     Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Fri, 17 Apr 2020 03:45:57 -0400
+Received: from mail-eopbgr1400108.outbound.protection.outlook.com ([40.107.140.108]:55078
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726405AbgDQHp4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Apr 2020 03:45:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bpLIb9h+IgM6VnVaY0hh1fJOlrae4O8zIiqmpJ1abgk3RVFdJuxzA5D/gyvR7CBEofiEJIDEx2o9HRN9RgWeaqiazyeAWxCNvSpmC3mk99WWNBCOaskGWxrfRzCO3N3cgFXspZNKaCGChARTdbnNaln1JvC0d5knwsFU0+Y974hzS2gSrMhY3uuaFfyAHvVYQ8glu/hvgEZxC7xI7B+vcbPCVC7LM3lYC1gnBLH5tj41ENif5ujbnZgIH/1h91WRSSQTVgYyanL+3+1EZcDKFRJcJP5Qpdl51e87Na+UphuMsIJPBfvkWEu4dKpGhcLRnCvvrlEeigIcKjG7IZY1oQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y7nNjdsijVQP7A5SL9CVnoj1WuTIoaF29isWRKSe3Kk=;
+ b=nlOPmD0fg4iH5bqw0qBquik/yHp2GSn6CzZHMN09xUwSO9MePdWmQ41LihZLCLGV9uQPhV58WhJamDuRkc23qRegvubL968Dk/7jGeA9CAPNv0mGCFo5nPDYfRJhXH6Dw1QLf/DayNOJHkdPkNpLznhzgzJgZmUmEz/oIS3RW46CbIUdED46MtkXAPigIg0sPOGL48f0iYwIKwwsp75vV9RNPzn1ena2f8WSGA9xlvKixpzrET9VTUTrsqmfudJBqBDDrSADUYDHWUByHU3mD2n3yOBZ7H4E7qYn8T13mMcN6bX8yI5dzb8dXIpb3CDaGZ3xrAvh7IWBsNLpNmxfvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y7nNjdsijVQP7A5SL9CVnoj1WuTIoaF29isWRKSe3Kk=;
+ b=MboaLkoyEkGN9m9rVT4lEeZbTGC+HQRH6YWECx2v/CZjC/MDAE3DIpQik+U/6vlw471e7JrhBIksUroHTvMc3Yv5P6CeAszvSkarVAtAEBcyf32YngKvwy5JZtrPLJY7tsBAPHuCifL66Pby/Qk0LjXY6o8iI4DqCy69bPfISMo=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB3582.jpnprd01.prod.outlook.com (20.178.138.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2900.20; Fri, 17 Apr 2020 07:45:52 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2921.027; Fri, 17 Apr 2020
+ 07:45:52 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Vinod <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/4] dt-bindings: power: reset: Add regmap support to the
- SYSCON reboot-mode bindings
-Message-ID: <20200417074559.wxh3hv6xwh5ndaz4@ubsrv2.baikal.int>
-References: <20200306130341.9585-1-Sergey.Semin@baikalelectronics.ru>
- <20200306130402.1F4F0803079F@mail.baikalelectronics.ru>
- <20200312211438.GA21883@bogus>
- <20200313130231.wrvvcttm7ofaxbfo@ubsrv2.baikal.int>
- <CAL_Jsq+W84r687zNV=2S-hj9=xbTQxkx9MpVNDTn6TOrBgiGUw@mail.gmail.com>
- <20200331195053.dcexmhbsbnbfuabe@ubsrv2.baikal.int>
- <20200416195620.4q6scqk5rqbonz4s@ubsrv2.baikal.int>
- <20200416212842.GA18756@bogus>
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH v2 2/2] dt-bindings: dma: renesas,usb-dmac: convert
+ bindings to json-schema
+Thread-Topic: [PATCH v2 2/2] dt-bindings: dma: renesas,usb-dmac: convert
+ bindings to json-schema
+Thread-Index: AQHWFGwH58E0smxgi0SC/Y0NfeYxM6h87XgAgAABxDA=
+Date:   Fri, 17 Apr 2020 07:45:52 +0000
+Message-ID: <TYAPR01MB454463E4E71DA4FB67D34A85D8D90@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <1587095716-23468-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1587095716-23468-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdWXMcSgjOGwzMD+7R37at1v7db-neM9VgMRh+hMVp-aYA@mail.gmail.com>
+In-Reply-To: <CAMuHMdWXMcSgjOGwzMD+7R37at1v7db-neM9VgMRh+hMVp-aYA@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 16f3b932-0c9e-4d0e-55c9-08d7e2a35ad7
+x-ms-traffictypediagnostic: TYAPR01MB3582:
+x-microsoft-antispam-prvs: <TYAPR01MB3582AA48403C1546D97BA025D8D90@TYAPR01MB3582.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2657;
+x-forefront-prvs: 0376ECF4DD
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(39860400002)(136003)(346002)(366004)(396003)(376002)(4744005)(54906003)(66556008)(2906002)(81156014)(8676002)(86362001)(71200400001)(478600001)(33656002)(8936002)(316002)(55016002)(4326008)(66476007)(53546011)(55236004)(7696005)(52536014)(76116006)(66446008)(5660300002)(9686003)(66946007)(64756008)(26005)(186003)(6506007)(6916009)(142933001);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gj4BqVrgvJfv4yzN20U+lZSWxlb4Ws+zJ7vnSzEONBGpd6qLjygbrPtTOVlzhqcpgq6VGZ7QHXa/wndnO5ITYZ7UqTrm/PgiuC/FLIjVJFrhR9h0QHKwIMEHudjwiqWd99boII7q+nFMbVocV774b/yx5Lpo3hk0gCVdjdUlVY8jutuq5tpN97pMe5Q69fLtMNRMROmqgVrgOcSL2uJJrqwUpZjac3tVhaPeRx1rstydhjRlGXpMFJEo47tsNyKOKnFprW7JULVY2sL1rBS7CJ6qjAg/Zuv87aRsVpDTUvQCphpcV8/EKhNPsPeudjtse/DwAVVhaV10PG8yM9igv2mnmOlk1Q0Bh+8+wOSEfpX+gENkZHi51bzRhPyLBtEED8I0ocF/x4gC/kPJbUks+bYPst3lI1748cPxLl1pLoAXigECGqo4OyVtR+KN84YouGlJx5GzxKuJBtVPNXm3brLGjDkWgtJFApiGHMmWafZ884fTXspePXe0QV42HXTB
+x-ms-exchange-antispam-messagedata: IC/NSsILzlIJoV9YQ/V1CHcsK5GEEConI0OCos2S9hYLCUCmGMUErcKjpMzWiJzf01rvxQN3ufIxHUl8iyNA+xh0voNA66x4AYSXFu47ZfTq0Ibm2VWdZIi/CJuqsc4Bx983C8oEoNVfB9G7Q71CbQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200416212842.GA18756@bogus>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 16f3b932-0c9e-4d0e-55c9-08d7e2a35ad7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2020 07:45:52.5933
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BpE/g8VnvfsaUbroUnK/kBSmR7gUE8vzRVdspDlMy7vhO22+3MV2ylgKZHUkuz3Syk2+IWl9pdXWfM6DBfSJHOMvpwhd88cyDUHzCLt4g1cSP6OMAolcmD7lqDoRPQTW
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3582
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 04:28:42PM -0500, Rob Herring wrote:
-> On Thu, Apr 16, 2020 at 10:56:20PM +0300, Sergey Semin wrote:
-> > Rob,
-> > Any comment on my suggestion below?
-> > 
-> > Regards,
-> > -Sergey
-> > 
-> > On Tue, Mar 31, 2020 at 10:50:53PM +0300, Sergey Semin wrote:
-> > > On Wed, Mar 18, 2020 at 05:14:25PM -0600, Rob Herring wrote:
-> > > > On Fri, Mar 13, 2020 at 7:03 AM Sergey Semin
-> > > > <Sergey.Semin@baikalelectronics.ru> wrote:
-> > > > >
-> > > > > On Thu, Mar 12, 2020 at 04:14:38PM -0500, Rob Herring wrote:
-> > > > > > On Fri, Mar 06, 2020 at 04:03:40PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > > > > > > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > > > > >
-> > > > > > > Optional regmap property will be used to refer to a syscon-controller
-> > > > > > > having a reboot tolerant register mapped.
-> > > > > >
-> > > > > > NAK. It should simply be a child node of the 'syscon-controller'.
-> > > > >
-> > > > > Hm, It's dilemma. The driver maintainer said ack, while you disagree.)
-> > > > > So the code change will be merged while the doc-part won't? Lets discuss then
-> > > > > to settle the issue.
-> > > > >
-> > > > > Why 'syscon-reboot' can be out of syscon-controller node, while
-> > > > > 'syscon-reboot-mode' can't?
-> > > > 
-> > > > Look at the history and you will see one was reviewed by DT
-> > > > maintainers and one wasn't.
-> > > > 
-> > > > > They both belong to the same usecase: save
-> > > > > cause id and reboot. So having similar properties-set and declaring their
-> > > > > nodes someplace nearby is natural.
-> > > > 
-> > > > Which is what I'm asking for. Where else in the tree does it make
-> > > > sense to locate the 'syscon-reboot-mode' node? Locate nodes where they
-> > > > logically belong.
-> > > > 
-> > > > > According to the driver 'syscon-reboot'
-> > > > > can't lack the regmap property because it's mandatory, while here you refuse
-> > > > > to have even optional support. Additionally in most of the cases the
-> > > > > 'syscon-reboot' nodes aren't declared as a child of a system controller
-> > > > > node. Why 'syscon-reboot-mode' can't work in a similar way?
-> > > > 
-> > > > There's plenty of bad or "don't follow current best practice" examples
-> > > > in the tree for all sorts of things. That is not a reason for doing
-> > > > something in a new binding or adding to an existing one.
-> > > > 
-> > > > Rob
-> > > 
-> > > Alright. I see your point. What about I'd provide a sort of opposite
-> > > implementation? I could make the "regmap"-phandle reference being optional
-> > > in the !"syscon-reboot"! driver instead of adding the regmap-property
-> > > support to the "syscon-reboot-mode" driver. So if regmap property isn't
-> > > defined in the "syscon-reboot"-compatible node, the driver will try to
-> > > get a syscon regmap from the parental node as it's done in the
-> > > "syscon-reboot-mode" driver.
-> 
-> That seems fine.
-> 
-> > > Seeing you think that regmap-property-based design is a bad practice in
-> > > this case, I also could mark the property as deprecated in the "syscon-reboot"
-> > > dt schema and print a warning from the "syscon-reboot" driver if one is defined.
-> 
-> Depends on how many platforms will start getting warnings. I think just 
-> marking deprecated is enough.
-
-Ok. Thanks. I'll do this in v2.
-
-Regards,
--Sergey
-
-> 
-> Rob
+SGkgR2VlcnQtc2FuLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgcmV2aWV3IQ0KDQo+IEZyb206IEdl
+ZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogRnJpZGF5LCBBcHJpbCAxNywgMjAyMCA0OjM4IFBNDQo8
+c25pcD4NCj4gDQo+IEhpIFNoaW1vZGEtc2FuLA0KPiANCj4gDQo+IE9uIEZyaSwgQXByIDE3LCAy
+MDIwIGF0IDU6NTUgQU0gWW9zaGloaXJvIFNoaW1vZGENCj4gPHlvc2hpaGlyby5zaGltb2RhLnVo
+QHJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiBDb252ZXJ0IFJlbmVzYXMgUi1DYXIgVVNCLURNQSBD
+b250cm9sbGVyIGJpbmRpbmdzIGRvY3VtZW50YXRpb24NCj4gPiB0byBqc29uLXNjaGVtYS4NCj4g
+Pg0KPiA+IFNpZ25lZC1vZmYtYnk6IFlvc2hpaGlybyBTaGltb2RhIDx5b3NoaWhpcm8uc2hpbW9k
+YS51aEByZW5lc2FzLmNvbT4NCj4gDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvcmVuZXNhcyx1c2ItZG1hYy55YW1sDQo+
+ID4gQEAgLTAsMCArMSwxMDEgQEANCj4gDQo+ID4gKyAgaW50ZXJydXB0czoNCj4gPiArICAgIG1p
+bkl0ZW1zOiAyDQo+IA0KPiBEb24ndCB5b3UgbmVlZCB0byBrZWVwIHRoZSAibWF4SXRlbXM6IDIi
+LCB0b28/DQoNCk9vcHMhIEknbGwgZml4IGl0Lg0KDQo+ID4gKyAgaW50ZXJydXB0LW5hbWVzOg0K
+PiA+ICsgICAgbWluSXRlbXM6IDINCj4gPiArICAgIGl0ZW1zOg0KPiA+ICsgICAgICAtIHBhdHRl
+cm46IGNoMA0KPiA+ICsgICAgICAtIHBhdHRlcm46IGNoMQ0KPiANCj4gQWNjb3JkaW5nIHRvIERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9leGFtcGxlLXNjaGVtYS55YW1sDQo+IA0K
+PiAgICAgVGhlIGRlc2NyaXB0aW9uIG9mIGVhY2ggZWxlbWVudCBkZWZpbmVzIHRoZSBvcmRlciBh
+bmQgaW1wbGljaXRseSBkZWZpbmVzDQo+ICAgICB0aGUgbnVtYmVyIG9mIHJlZyBlbnRyaWVzLg0K
+PiANCj4gU28gSSB0aGluayB5b3UgY2FuIGRyb3AgdGhlIG1pbkl0ZW1zLg0KDQpUaGFuayB5b3Ug
+Zm9yIHRoZSBpbmZvcm1hdGlvbi4gSSBnb3QgaXQuDQoNCj4gPiArICBpb21tdXM6DQo+ID4gKyAg
+ICBtaW5JdGVtczogMg0KPiANCj4gKyBtYXhJdGVtczogMg0KDQpJJ2xsIGZpeCBpdC4NCg0KQmVz
+dCByZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0K
