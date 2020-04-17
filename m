@@ -2,357 +2,114 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 667EAC38A2F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 20:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C129C38A2B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 20:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D138221F4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 20:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DB6620B1F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 20:30:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oZDw8ZH1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731054AbgDQUUg (ORCPT
+        id S1731053AbgDQUan (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 16:20:36 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:61565 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731027AbgDQUUg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 16:20:36 -0400
-X-Originating-IP: 195.189.32.242
-Received: from pc.localdomain (unknown [195.189.32.242])
-        (Authenticated sender: contact@artur-rojek.eu)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 4020840007;
-        Fri, 17 Apr 2020 20:20:31 +0000 (UTC)
-From:   Artur Rojek <contact@artur-rojek.eu>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>
-Cc:     Heiko Stuebner <heiko@sntech.de>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
-Subject: [RESEND PATCH v5 5/5] input: joystick: Add ADC attached joystick driver.
-Date:   Fri, 17 Apr 2020 22:28:59 +0200
-Message-Id: <20200417202859.35427-5-contact@artur-rojek.eu>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200417202859.35427-1-contact@artur-rojek.eu>
-References: <20200417202859.35427-1-contact@artur-rojek.eu>
+        Fri, 17 Apr 2020 16:30:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730903AbgDQUan (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Apr 2020 16:30:43 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B851C061A0C
+        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 13:30:43 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id l5so1715340ybf.5
+        for <devicetree@vger.kernel.org>; Fri, 17 Apr 2020 13:30:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fUE5Lx/KFG4wHOc+8/LB7xM75zMUyQV8EF5MnlFdnvw=;
+        b=oZDw8ZH1F0p6LciU2P3FLuNI7GJEKludlMRyjdCTDa6glDAvFQ3ci4SYSsm5up5S1b
+         s/vIyC4uj6Omx5TNRbrUxdMqBfivTHIcE9lg8dDavdDALax+of2UCfa7gxlycAo4WUNw
+         sDB51h9O8y3apXpvFMgrYr3csVBc5URAR1+czyXwKPJ/7jBcPxgbYBttW/tznoQbdNjy
+         GcclvU3hnV4sXRNk2HSAxafuJkIJq585rThGDAqciHZNUcqH0EVA4HjyJz6s0QFBla2Y
+         e8ADm+2lA6oezlWmOFSzkDD07AG1nI2Mb/1qetjZOjOB44sBxaKRsXH+yKhhcImUyzHe
+         p5pA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fUE5Lx/KFG4wHOc+8/LB7xM75zMUyQV8EF5MnlFdnvw=;
+        b=q2+Qxd2BjiiTuj7RgjlETEKEwgNKN5w9SACOwOkK2DyDEJBuj7LlEwN4qudFZ+4yLC
+         ugrT/eNyTl0u0rETaF180REErXmKp+0iLiF91plqUt5Rvlmcxs7LujHNZrdQ755OxWnl
+         buWI3HUssULhJPiV7GU/Q8y8AO6V2mmi30J561pazocZeS1/zq/Zwx9cO9S3MAEToMVq
+         rtIfVqGEOLUlqMNL/lnCtQ3W5rDbuGHCmOcxEWfqSsuFZ8spoMucaJAaB566CZ3edSMb
+         j8MFLsIvNEg8AYf12qFaep1WiWXUVeKdLM4cKsU3ThmBUcnFKzH03YOlGaTL1uzdQyDY
+         6QUw==
+X-Gm-Message-State: AGi0PuYR5X4FWd5Cc8KFS/YNc2ewWa9SQRpDr+T0WPbMClhmWWj/FbvQ
+        vqZGfxBXs/5xMdJdUjxqxnElQ6emFi3MjPdV1mwS5wFgVqY=
+X-Google-Smtp-Source: APiQypJzBUxepaBfjYkiESH5bXyliP3NCl9uyVY/cXB7ZTciX79812GcTjSOSbIle2pY0teKA4B6PP9ILi5OGTEG+AY=
+X-Received: by 2002:a4a:9cd8:: with SMTP id d24mr4047527ook.84.1587155441279;
+ Fri, 17 Apr 2020 13:30:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <c48a3baef99f3d74e7904498c4054221ec384b36.camel@suse.de>
+ <20200416205838.161894-1-saravanak@google.com> <CAL_JsqK9VmRomOnkVLQUOR9tHnh6phjjqXB=ERkjqhBw_wTVzg@mail.gmail.com>
+In-Reply-To: <CAL_JsqK9VmRomOnkVLQUOR9tHnh6phjjqXB=ERkjqhBw_wTVzg@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Fri, 17 Apr 2020 13:30:05 -0700
+Message-ID: <CAGETcx8g=qz_JR6y4sfet1c8ZEoE-arbTv1JYqxKMzGHcCMNYg@mail.gmail.com>
+Subject: Re: [PATCH v1] of: property: Don't retry device_link_add() upon failure
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a driver for joystick devices connected to ADC controllers
-supporting the Industrial I/O subsystem.
+On Fri, Apr 17, 2020 at 11:16 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Thu, Apr 16, 2020 at 3:58 PM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > When of_link_to_phandle() was implemented initially, there was no way to
+> > tell if device_link_add() was failing because the supplier device hasn't
+> > been parsed yet, hasn't been added yet, the links were creating a cycle,
+> > etc. Some of these were transient errors that'd go away at a later
+> > point.
+> >
+> > However, with the current set of improved checks, if device_link_add()
+> > fails, it'll only be for permanent errors like cycles or out-of-memory
+> > errors.
+>
+> What improved checks? The series from Nicolas?
+>
 
-Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-Tested-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Heiko Stuebner <heiko@sntech.de>
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
+Checking for OF_POPULATED and getting the device using get_dev_from_fwnode().
+OF_POPULATED ensures the node has been parsed. get_dev_from_fwnode()
+ensures the device has been added to driver core.
 
- v2: - sanity check supported channel format on probe,
-     - rename adc_joystick_disable to a more sensible adc_joystick_cleanup, 
-     - enforce correct axis order by checking the `reg` property of
-       child nodes
+> Is there a dependency between this and Nicolas' series?
 
- v3-v5: no change
+No.
 
- drivers/input/joystick/Kconfig        |  10 ++
- drivers/input/joystick/Makefile       |   1 +
- drivers/input/joystick/adc-joystick.c | 245 ++++++++++++++++++++++++++
- 3 files changed, 256 insertions(+)
- create mode 100644 drivers/input/joystick/adc-joystick.c
+> Should this go to stable?
 
-diff --git a/drivers/input/joystick/Kconfig b/drivers/input/joystick/Kconfig
-index 940b744639c7..efbc20ec5099 100644
---- a/drivers/input/joystick/Kconfig
-+++ b/drivers/input/joystick/Kconfig
-@@ -42,6 +42,16 @@ config JOYSTICK_A3D
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called a3d.
- 
-+config JOYSTICK_ADC
-+	tristate "Simple joystick connected over ADC"
-+	depends on IIO
-+	select IIO_BUFFER_CB
-+	help
-+	  Say Y here if you have a simple joystick connected over ADC.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called adc-joystick.
-+
- config JOYSTICK_ADI
- 	tristate "Logitech ADI digital joysticks and gamepads"
- 	select GAMEPORT
-diff --git a/drivers/input/joystick/Makefile b/drivers/input/joystick/Makefile
-index 8656023f6ef5..58232b3057d3 100644
---- a/drivers/input/joystick/Makefile
-+++ b/drivers/input/joystick/Makefile
-@@ -6,6 +6,7 @@
- # Each configuration option enables a list of files.
- 
- obj-$(CONFIG_JOYSTICK_A3D)		+= a3d.o
-+obj-$(CONFIG_JOYSTICK_ADC)		+= adc-joystick.o
- obj-$(CONFIG_JOYSTICK_ADI)		+= adi.o
- obj-$(CONFIG_JOYSTICK_AMIGA)		+= amijoy.o
- obj-$(CONFIG_JOYSTICK_AS5011)		+= as5011.o
-diff --git a/drivers/input/joystick/adc-joystick.c b/drivers/input/joystick/adc-joystick.c
-new file mode 100644
-index 000000000000..9cb9896da26e
---- /dev/null
-+++ b/drivers/input/joystick/adc-joystick.c
-@@ -0,0 +1,245 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Input driver for joysticks connected over ADC.
-+ * Copyright (c) 2019-2020 Artur Rojek <contact@artur-rojek.eu>
-+ */
-+#include <linux/ctype.h>
-+#include <linux/input.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/consumer.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+
-+struct adc_joystick_axis {
-+	u32 code;
-+	s32 range[2];
-+	s32 fuzz;
-+	s32 flat;
-+};
-+
-+struct adc_joystick {
-+	struct input_dev *input;
-+	struct iio_cb_buffer *buffer;
-+	struct adc_joystick_axis *axes;
-+	struct iio_channel *chans;
-+	int num_chans;
-+};
-+
-+static int adc_joystick_handle(const void *data, void *private)
-+{
-+	struct adc_joystick *joy = private;
-+	enum iio_endian endianness;
-+	int bytes, msb, val, i;
-+	bool sign;
-+
-+	bytes = joy->chans[0].channel->scan_type.storagebits >> 3;
-+
-+	for (i = 0; i < joy->num_chans; ++i) {
-+		endianness = joy->chans[i].channel->scan_type.endianness;
-+		msb = joy->chans[i].channel->scan_type.realbits - 1;
-+		sign = (tolower(joy->chans[i].channel->scan_type.sign) == 's');
-+
-+		switch (bytes) {
-+		case 1:
-+			val = ((const u8 *)data)[i];
-+			break;
-+		case 2:
-+			val = ((const u16 *)data)[i];
-+			if (endianness == IIO_BE)
-+				val = be16_to_cpu(val);
-+			else if (endianness == IIO_LE)
-+				val = le16_to_cpu(val);
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		val >>= joy->chans[i].channel->scan_type.shift;
-+		if (sign)
-+			val = sign_extend32(val, msb);
-+		else
-+			val &= GENMASK(msb, 0);
-+		input_report_abs(joy->input, joy->axes[i].code, val);
-+	}
-+
-+	input_sync(joy->input);
-+
-+	return 0;
-+}
-+
-+static int adc_joystick_open(struct input_dev *dev)
-+{
-+	struct adc_joystick *joy = input_get_drvdata(dev);
-+	int ret;
-+
-+	ret = iio_channel_start_all_cb(joy->buffer);
-+	if (ret)
-+		dev_err(dev->dev.parent, "Unable to start callback buffer");
-+
-+	return ret;
-+}
-+
-+static void adc_joystick_close(struct input_dev *dev)
-+{
-+	struct adc_joystick *joy = input_get_drvdata(dev);
-+
-+	iio_channel_stop_all_cb(joy->buffer);
-+}
-+
-+static void adc_joystick_cleanup(void *data)
-+{
-+	iio_channel_release_all_cb(data);
-+}
-+
-+static int adc_joystick_set_axes(struct device *dev, struct adc_joystick *joy)
-+{
-+	struct adc_joystick_axis *axes;
-+	struct fwnode_handle *child;
-+	int num_axes, ret, i;
-+
-+	num_axes = device_get_child_node_count(dev);
-+	if (!num_axes) {
-+		dev_err(dev, "Unable to find child nodes");
-+		return -EINVAL;
-+	}
-+
-+	if (num_axes != joy->num_chans) {
-+		dev_err(dev, "Got %d child nodes for %d channels",
-+			num_axes, joy->num_chans);
-+		return -EINVAL;
-+	}
-+
-+	axes = devm_kmalloc_array(dev, num_axes, sizeof(*axes), GFP_KERNEL);
-+	if (!axes)
-+		return -ENOMEM;
-+
-+	device_for_each_child_node(dev, child) {
-+		ret = fwnode_property_read_u32(child, "reg", &i);
-+		if (ret || i >= num_axes) {
-+			dev_err(dev, "reg invalid or missing");
-+			goto err;
-+		}
-+
-+		if (fwnode_property_read_u32(child, "linux,code",
-+					     &axes[i].code)) {
-+			dev_err(dev, "linux,code invalid or missing");
-+			goto err;
-+		}
-+
-+		if (fwnode_property_read_u32_array(child, "abs-range",
-+						   axes[i].range, 2)) {
-+			dev_err(dev, "abs-range invalid or missing");
-+			goto err;
-+		}
-+
-+		fwnode_property_read_u32(child, "abs-fuzz",
-+					 &axes[i].fuzz);
-+		fwnode_property_read_u32(child, "abs-flat",
-+					 &axes[i].flat);
-+
-+		input_set_abs_params(joy->input, axes[i].code,
-+				     axes[i].range[0], axes[i].range[1],
-+				     axes[i].fuzz,
-+				     axes[i].flat);
-+		input_set_capability(joy->input, EV_ABS, axes[i].code);
-+	}
-+
-+	joy->axes = axes;
-+
-+	return 0;
-+
-+err:
-+	fwnode_handle_put(child);
-+	return -EINVAL;
-+}
-+
-+static int adc_joystick_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct adc_joystick *joy;
-+	struct input_dev *input;
-+	int bits, ret, i;
-+
-+	joy = devm_kzalloc(dev, sizeof(*joy), GFP_KERNEL);
-+	if (!joy)
-+		return -ENOMEM;
-+
-+	joy->chans = devm_iio_channel_get_all(dev);
-+	if (IS_ERR(joy->chans)) {
-+		ret = PTR_ERR(joy->chans);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Unable to get IIO channels");
-+		return ret;
-+	}
-+
-+	/* Count how many channels we got. NULL terminated. */
-+	while (joy->chans[joy->num_chans].indio_dev)
-+		joy->num_chans++;
-+
-+	bits = joy->chans[0].channel->scan_type.storagebits;
-+	if (!bits || (bits >> 3) > 2) {
-+		dev_err(dev, "Unsupported channel storage size");
-+		return -EINVAL;
-+	}
-+	for (i = 1; i < joy->num_chans; ++i)
-+		if (joy->chans[i].channel->scan_type.storagebits != bits) {
-+			dev_err(dev, "Channels must have equal storage size");
-+			return -EINVAL;
-+		}
-+
-+	input = devm_input_allocate_device(dev);
-+	if (!input) {
-+		dev_err(dev, "Unable to allocate input device");
-+		return -ENOMEM;
-+	}
-+
-+	joy->input = input;
-+	input->name = pdev->name;
-+	input->id.bustype = BUS_HOST;
-+	input->open = adc_joystick_open;
-+	input->close = adc_joystick_close;
-+
-+	ret = adc_joystick_set_axes(dev, joy);
-+	if (ret)
-+		return ret;
-+
-+	input_set_drvdata(input, joy);
-+	ret = input_register_device(input);
-+	if (ret) {
-+		dev_err(dev, "Unable to register input device: %d", ret);
-+		return ret;
-+	}
-+
-+	joy->buffer = iio_channel_get_all_cb(dev, adc_joystick_handle, joy);
-+	if (IS_ERR(joy->buffer)) {
-+		dev_err(dev, "Unable to allocate callback buffer");
-+		return PTR_ERR(joy->buffer);
-+	}
-+
-+	ret = devm_add_action_or_reset(dev, adc_joystick_cleanup, joy->buffer);
-+	if (ret)
-+		dev_err(dev, "Unable to add action");
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id adc_joystick_of_match[] = {
-+	{ .compatible = "adc-joystick", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, adc_joystick_of_match);
-+
-+static struct platform_driver adc_joystick_driver = {
-+	.driver = {
-+		.name = "adc-joystick",
-+		.of_match_table = of_match_ptr(adc_joystick_of_match),
-+	},
-+	.probe = adc_joystick_probe,
-+};
-+module_platform_driver(adc_joystick_driver);
-+
-+MODULE_DESCRIPTION("Input driver for joysticks connected over ADC");
-+MODULE_AUTHOR("Artur Rojek <contact@artur-rojek.eu>");
-+MODULE_LICENSE("GPL");
--- 
-2.26.1
+Kind of a grey area. I mean, if of/fw_devlink is already letting a
+platform boot all the way, this doesn't fix anything. I doubt anyone
+in a stable kernel is turning on this feature if it affects device
+probing. I'd say the same for Nicolas' series too. It allows more
+platforms to work, but if a platform is fully working, it doesn't
+improve anything.
 
+Long story short, your call for stable.
+
+-Saravana
