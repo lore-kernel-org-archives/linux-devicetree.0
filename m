@@ -2,110 +2,80 @@ Return-Path: <SRS0=b/Hz=6B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AF5C352BE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 10:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9BDC352BE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 11:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12C47221F7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 10:58:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i4yCtaOt"
+	by mail.kernel.org (Postfix) with ESMTP id F2C00208E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Apr 2020 11:05:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730128AbgDQK56 (ORCPT
+        id S1729739AbgDQLFe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 06:57:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58924 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730127AbgDQK54 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:57:56 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9B41C061A0C;
-        Fri, 17 Apr 2020 03:57:54 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t16so841150plo.7;
-        Fri, 17 Apr 2020 03:57:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3fSK2DPSrZQ03rN1exfbu/DuncvDZ7rl47wg/eGnnv4=;
-        b=i4yCtaOtzwnfKDnk8KtbzYo/q6+KO6LXk8YMzcPF5b3otBQAEZ7M3Wjk3B6C7MKDd8
-         kNU1KqqIP1bTsBAkeMnRx0WcFWEfaXiP0JgsKDmgfhDi25gwVsFZ45dDQApHh971a2wx
-         94Dy6JWScJAbDyXunDK+KOlRQJN44rJ7Siv3CQnBXmT2qcDAGsMpYG9pNtwlBkbxXNhq
-         lSNv/5GxE4Z4chcgNzUubOTtkZl0zYzuxu8WaBg79a1dBERlwV0h0nwJBD8uxTAuGVSm
-         XYD8YhP8lYe/MfDxJvjKg5jIBXxDxweMT142Cj93sEHrnsD+xtSbh41HrKtmzCRC9X2g
-         vonw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3fSK2DPSrZQ03rN1exfbu/DuncvDZ7rl47wg/eGnnv4=;
-        b=tOmUJZt5/3LW1LPYBVci2DTo144ve0FcuazbqPCMOtAKTbt8ssGSZawj2YCXdIa2gQ
-         w24KIkBGJWzOsoqzBWcmC7ZMLY6ocEBL5JC9vdZXYwm9J4so0ZIpniicow73zYn8vVEi
-         IIAUDJRpwH0eNGHxSr8AmZxzdj+/0irsnfrSJvg8fwaC3M9uhEVesIwLXbb8HsUjN4ZU
-         H+5pZlm/ev4LpHCcgL65os/Ftv3RXHYLgZeIp7jqycvU6OMXd7BSAAyUYSJThVpRX3dO
-         CKHbb18E8MR2ABHGma1EXT0ttxnTRx9AeJFQEDww3n2iUEB2LNWGaMF5TKe+ZTiCkRvr
-         hT/g==
-X-Gm-Message-State: AGi0PubFObAX5iucI+LqPoSIfHjfqi4cH7948ZEKqpnuabm5fawzkQHR
-        LqTZMKJpC2CP1Mz+Tb5sK/u2g0qyE4y/r5e5Bho=
-X-Google-Smtp-Source: APiQypJci118f5LiyBfKV5L18v5aFIDLfnqixHAslNkLLuiUgR2OOW80nFzDzeZNb3S3g8xQguA2iF2RNXDmk8CnaRA=
-X-Received: by 2002:a17:90a:364c:: with SMTP id s70mr3627454pjb.143.1587121074335;
- Fri, 17 Apr 2020 03:57:54 -0700 (PDT)
+        Fri, 17 Apr 2020 07:05:34 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:38376 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729468AbgDQLFe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Apr 2020 07:05:34 -0400
+Received: from p57b77c7a.dip0.t-ipconnect.de ([87.183.124.122] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jPOoK-0003KN-CI; Fri, 17 Apr 2020 13:05:28 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] arm64: dts: rockchip: add core devicetree for rk3318
+Date:   Fri, 17 Apr 2020 13:05:27 +0200
+Message-ID: <2141402.AJMLQ3pQEO@phil>
+In-Reply-To: <20200417105739.3718-1-jbx6244@gmail.com>
+References: <20200417105739.3718-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-References: <20200416012016.21422-1-chris.ruehl@gtsys.com.hk>
- <20200416012016.21422-3-chris.ruehl@gtsys.com.hk> <20200416065655.cxy67hlj267dpjrw@pengutronix.de>
- <e4a6af21-a8ec-e9b5-2c5e-1e109888f0c7@gtsys.com.hk> <CAHp75VfN4Fj0J4n2xKmK8fDKACT0epo_xXQnMzKDW-Y1XH46Pw@mail.gmail.com>
- <cdea4538-ef75-f000-8b9c-db10a9bdd173@metafoo.de>
-In-Reply-To: <cdea4538-ef75-f000-8b9c-db10a9bdd173@metafoo.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 17 Apr 2020 13:57:42 +0300
-Message-ID: <CAHp75VcjUt0QGrs3Bxv4yRpsOxauzJjjN_2VDSZ6si8x-pZQMw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] iio: DAC extension for ltc2634-12/10/8
-To:     Lars-Peter Clausen <lars@metafoo.de>
-Cc:     Chris Ruehl <chris.ruehl@gtsys.com.hk>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexandru Tachici <alexandru.tachici@analog.com>,
-        Steve Winslow <swinslow@gmail.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 1:56 PM Lars-Peter Clausen <lars@metafoo.de> wrote:
->
-> On 4/17/20 12:27 PM, Andy Shevchenko wrote:
-> > On Thu, Apr 16, 2020 at 10:15 AM Chris Ruehl <chris.ruehl@gtsys.com.hk>=
- wrote:
-> >> On 16/4/2020 2:56 pm, Uwe Kleine-K=C3=B6nig wrote:
-> >>> dropped stefan.popa@analog.com from recipents as the address bounces =
-for
-> >>> me.
-> >> the maintainer script added this email automatically , I will remove i=
-t
-> >> in the future mails.
-> > Somebody from Analog Devs should sent a patch as an urgent fix.
-> > I also suffered from very same bounces.
-> https://lkml.org/lkml/2020/3/21/63
+Hi Johan,
 
-Jonathan, can we get this into v5.7-rc2, please?
+Am Freitag, 17. April 2020, 12:57:39 CEST schrieb Johan Jonker:
+> The rk3318 is basically a rk3328 with improved gpu,
+> so add a dtsi based on that.
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
---=20
-With Best Regards,
-Andy Shevchenko
+Please don't add dangling dtsi files.
+I'd expect at least a board dts to actually use that and
+also the updated gpu node.
+
+From a cursory glance it looks like it gets upgraded from
+450-MP2 to 450MP3 or so, so that would at least mean
+another set of interrupts.
+
+Heiko
+
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3318.dtsi | 3 +++
+>  1 file changed, 3 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3318.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3318.dtsi b/arch/arm64/boot/dts/rockchip/rk3318.dtsi
+> new file mode 100644
+> index 000000000..a32f771bc
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3318.dtsi
+> @@ -0,0 +1,3 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +
+> +#include "rk3328.dtsi"
+> 
+
+
+
+
