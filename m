@@ -6,158 +6,102 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E4FC2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 09:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF765C2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 09:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D34621D82
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 09:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AECA5214D8
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 09:49:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725857AbgDRJUh (ORCPT
+        id S1725857AbgDRJtq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Apr 2020 05:20:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44550 "EHLO mx2.suse.de"
+        Sat, 18 Apr 2020 05:49:46 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:48048 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725856AbgDRJUh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 18 Apr 2020 05:20:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id BC2F5AB7F;
-        Sat, 18 Apr 2020 09:20:34 +0000 (UTC)
-Message-ID: <9c20715fdb2955a3974b3d11f6c4eaff588be536.camel@suse.de>
-Subject: Re: [PATCH v2 2/2] of: property: Do not link to disabled devices
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Date:   Sat, 18 Apr 2020 11:20:34 +0200
-In-Reply-To: <CAGETcx81uPQLCurX6N6pMH+2jOZBcs-9u5yhBp83jQWJks0EFw@mail.gmail.com>
-References: <20200417165442.1856-1-nsaenzjulienne@suse.de>
-         <20200417165442.1856-3-nsaenzjulienne@suse.de>
-         <CAGETcx81uPQLCurX6N6pMH+2jOZBcs-9u5yhBp83jQWJks0EFw@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-BqN1HHTsGcrPA2KLRaf6"
-User-Agent: Evolution 3.34.4 
+        id S1725856AbgDRJtq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 18 Apr 2020 05:49:46 -0400
+Received: from p57b77241.dip0.t-ipconnect.de ([87.183.114.65] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jPk6X-0000lO-Su; Sat, 18 Apr 2020 11:49:41 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     justin.swartz@risingedge.co.za, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        robh+dt@kernel.org
+Subject: Re: [PATCH v4 2/3] ARM: dts: rockchip: add rga node for rk322x
+Date:   Sat, 18 Apr 2020 11:49:41 +0200
+Message-ID: <3593382.iQIKm1rSL1@phil>
+In-Reply-To: <bf3a2b97-4a24-e9f0-599b-4731cc94a067@gmail.com>
+References: <be4f2c802a64562cbab629abc82dd7d228a1a747.1580768038.git.justin.swartz@risingedge.co.za> <bf3a2b97-4a24-e9f0-599b-4731cc94a067@gmail.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Am Samstag, 18. April 2020, 11:15:27 CEST schrieb Johan Jonker:
+> Hi Justin, Heiko,
+> 
+> In the discussion about "rockchip,px30-rga" it was mentioned that:
+> "no status for soc internal components without any board-specifics".
+> The binding is in mainline, but the dts node is missing I think.
+> Should this also be changed?
 
---=-BqN1HHTsGcrPA2KLRaf6
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+yep, drop the status disabled from the dtsi and that then results
+in not needing the board-level enablement
 
-On Fri, 2020-04-17 at 14:08 -0700, Saravana Kannan wrote:
-> On Fri, Apr 17, 2020 at 9:54 AM Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de> wrote:
-> > When creating a consumer/supplier relationship between two devices,
-> > make sure the supplier node is actually active. Otherwise this will
-> > create a link relationship that will never be fulfilled. This, in the
-> > worst case scenario, will hang the system during boot.
-> >=20
-> > Note that, in practice, the fact that a device-tree represented
-> > consumer/supplier relationship isn't fulfilled will not prevent devices
-> > from successfully probing.
-> >=20
-> > Fixes: a3e1d1a7f5fc ("of: property: Add functional dependency link from=
- DT
-> > bindings")
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> >=20
+(background: rga is a simple mem2mem device without any
+board-specific hooks)
+
+> 
+> Johan
+> 
+> +&rga {
+> +	status = "okay";
+> +};
+> +
+> 
+> > Add a node to define the presence of RGA, a 2D raster
+> > graphic acceleration unit.
+> > 
+> > Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
 > > ---
-> >=20
-> > Changes since v1:
-> >  - Move availability check into the compatible search routine and bail
-> >    if device node disabled
-> >=20
-> >  drivers/of/property.c | 19 ++++++++++++++++++-
-> >  1 file changed, 18 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/of/property.c b/drivers/of/property.c
-> > index dc034eb45defd..14b6266dd054b 100644
-> > --- a/drivers/of/property.c
-> > +++ b/drivers/of/property.c
-> > @@ -1045,8 +1045,25 @@ static int of_link_to_phandle(struct device *dev=
-,
-> > struct device_node *sup_np,
-> >          * Find the device node that contains the supplier phandle.  It=
- may
-> > be
-> >          * @sup_np or it may be an ancestor of @sup_np.
-> >          */
-> > -       while (sup_np && !of_find_property(sup_np, "compatible", NULL))
-> > +       while (sup_np) {
+> >  arch/arm/boot/dts/rk322x.dtsi | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+> > index 340ed6ccb..29d50bebc 100644
+> > --- a/arch/arm/boot/dts/rk322x.dtsi
+> > +++ b/arch/arm/boot/dts/rk322x.dtsi
+> > @@ -621,6 +621,17 @@
+> >  		status = "disabled";
+> >  	};
+> >  
+> > +	rga: rga@20060000 {
+> > +		compatible = "rockchip,rk3228-rga", "rockchip,rk3288-rga";
+> > +		reg = <0x20060000 0x1000>;
+> > +		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+> > +		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA>;
+> > +		clock-names = "aclk", "hclk", "sclk";
+> > +		resets = <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
+> > +		reset-names = "core", "axi", "ahb";
+> 
+> > +		status = "disabled";
+> 
+> remove?
+> 
+> > +	};
 > > +
-> > +               /*
-> > +                * Don't allow linking a device node as consumer of a
-> > disabled
-> > +                * node.
-> > +                */
->=20
-> Minor nit: I'd just say "Don't allow linking to a disabled supplier".
->=20
-> > +               if (!of_device_is_available(sup_np)) {
-> > +                       dev_dbg(dev, "Not linking to %pOFP - Not
-> > available\n",
-> > +                               sup_np);
-> > +                       of_node_put(sup_np);
-> > +                       return -ENODEV;
-> > +               }
->=20
-> This if block looks very similar to the one right after the loop.
-> Maybe there's a nice way to combine it?
->=20
-> If you replace this if block with this, it'll end up with the same result=
-.
-> if (!of_device_is_available(sup_np)) {
->         of_node_put(sup_np);
->         sup_np =3D NULL;
-> }
->=20
-> of_get_next_parent() handles a NULL input properly. So that won't be a
-> problem. And "No device" is a valid statement for both cases I think.
->=20
-> > +
-> > +               if (of_find_property(sup_np, "compatible", NULL))
-> > +                       break;
-> > +
-> >                 sup_np =3D of_get_next_parent(sup_np);
-> > +       }
-> > +
-> >         if (!sup_np) {
-> >                 dev_dbg(dev, "Not linking to %pOFP - No device\n", tmp_=
-np);
-> >                 return -ENODEV;
->=20
-> However, not against this patch as is if Rob/Frank like it as is.
-
-Agree with your suggestions, I'll send an v3.
-
-Regards,
-Nicolas
+> >  	iep_mmu: iommu@20070800 {
+> >  		compatible = "rockchip,iommu";
+> >  		reg = <0x20070800 0x100>;
+> 
+> 
 
 
---=-BqN1HHTsGcrPA2KLRaf6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6axmIACgkQlfZmHno8
-x/4tQwf/aCxO5DM4IyxA61VgCuBo+QzxtE6q4WBs20J4EKcM0tcoSwVQzCEJHC8f
-HEDszhegck501HhapWxgnZvHbR1pv5aLehwgl0j/3MTo8HTM/fe3/odQpOUfKY+y
-yjMWNULoy4iRQMsHDZHbdFKG4THQ/yz5vebhKVwxIlzlF37yDmMZgLBDlikbiJoa
-6CA4WlKlgc0QU5+6OhVNDcP5fB0JVCSnePVCEqM51Usyngg0JXlBCJ9WQnLVMXDb
-DtJy9sMC1GCYvuTp6BMWqsJ8ZUz0RAuQ0/bQtFKPvwsbpGDfR0EBl4KqTGH8BLjx
-ZuC3RL9z8aSEmrfBkIJ//DMR5K3YXA==
-=NwP/
------END PGP SIGNATURE-----
-
---=-BqN1HHTsGcrPA2KLRaf6--
 
