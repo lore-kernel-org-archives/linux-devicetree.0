@@ -2,125 +2,115 @@ Return-Path: <SRS0=a4mE=6C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CACC352BE
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 21:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB543C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 22:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D9B221927
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 21:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C150221D93
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 22:44:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZVUggX0x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S8KltfH+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbgDRVm3 (ORCPT
+        id S1728213AbgDRWok (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Apr 2020 17:42:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40876 "EHLO
+        Sat, 18 Apr 2020 18:44:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726459AbgDRVm3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Apr 2020 17:42:29 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C402FC061A0C;
-        Sat, 18 Apr 2020 14:42:27 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id z90so5292234qtd.10;
-        Sat, 18 Apr 2020 14:42:27 -0700 (PDT)
+        with ESMTP id S1726887AbgDRWok (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Apr 2020 18:44:40 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADB72C061A0C;
+        Sat, 18 Apr 2020 15:44:39 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id k1so7427780wrx.4;
+        Sat, 18 Apr 2020 15:44:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=w/47EmjUE3OUhd2M0nQ4aXQ8hyh3Kb7PGgRqxtZ7DE0=;
-        b=ZVUggX0x5rhoXJFUBIldk0DtR/0RR5CPGISHzpnQ+TQnYKrfeMt/KhQQ6q8bIhavOj
-         zS5q0fnSx2Qee65hTc8gbTJ22xqcr+E296piNk9oudT07Nb82xX0hBs724JULPmy2x4q
-         GJJwWJcNpbmjPbYl1I3v7RhZl331/lkk1TY7969iA0lNpVOYq6SKDsqasccvZ9MjMB4i
-         0kUKFWtdXOtUj+1L/TOQnaMqL4x10dyz57zTQnjSaLraneT0/j3K6BnGGG1Pq/Avekeu
-         NGM/J24mt5TYyVDDqTHVsWWj/2lHkGdr1t9WzV7e2IJ+pq+90XlqbWTaYHg99pIxSELt
-         5wwg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wutgCaF9Zt/dkeWGofK0wxzxUn+L+6837DjwQz9y1UY=;
+        b=S8KltfH+/O56KBksVXD14TzKEOLFfEQyo4KgSjFu66oO3Uk5cwNWg5nBnLAjoS5ztX
+         4xjow8fTnW0ns/pNDHxBa5a5+HshR5W40o9c/ct5OZrf1o1ZG4g/xKmOfwpk1WBfCTQ0
+         ojGBTITEANi7ER1oclt1vO3TzETC08kH/nIk2fi7a9QfgpGFae5VLrbgydJdH1SHsDAX
+         o1rZrKERoVYwEZEV+PLbbMA7oMVaXf7LID9r6dRhyaPDcSslUQfQlZglgE/ClFrKpR80
+         syrlPCDBugz7YHcQpyH8KXBE/bZOSNAz4isuXF2RD/fSJPp3i54pYPc9E2Bpl5wTZwIC
+         fKuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=w/47EmjUE3OUhd2M0nQ4aXQ8hyh3Kb7PGgRqxtZ7DE0=;
-        b=ceWzO0GxfroZfT1efGV6rgxUhvCcBBGejOpbxayU9sYTHAoiq7E9cYKuf3JvL20zrH
-         tWEzcKkLo/67vQYcoIm0P7P9HiDgq/sfmmdPGJJr2a4LzdPMcVcWTCd3CWQVgpN0aSmM
-         7RkApAHcU6/3faH6LmguWbXBFKy41gW/5wvMAeAieMDl8Es0bJhatGG3FKhVy0JNW12h
-         uha3s8tsL/IJXSJj/wLL45FJ6SQMpUBG9Zdvo1SdvuZvG7yLhBnLAoeZAHmRmGfkEig5
-         E8V7G2pDkQ22x2p7n0k5ZvlAW/uOedS+MsBHvzO4mpOusF+yawsmK9vQgEuaRZRml2mT
-         ZMWg==
-X-Gm-Message-State: AGi0PuYFVTbUUlaJJ5HOhcXpowLXGLfHl1sxJRL78db1VZNRPkUUtP/Y
-        TvcVpVatu6EDm/VlSUfwdRk=
-X-Google-Smtp-Source: APiQypK/ZNb28CwxyoAZvAhkzL57dtO3+k9ZptxS3i9hczv3oFx6wdSujk2rkeT1CVCQDJTCIa6JzA==
-X-Received: by 2002:ac8:1904:: with SMTP id t4mr9678039qtj.367.1587246146742;
-        Sat, 18 Apr 2020 14:42:26 -0700 (PDT)
-Received: from imac (dhcp-108-168-12-59.cable.user.start.ca. [108.168.12.59])
-        by smtp.gmail.com with ESMTPSA id p31sm18381085qtf.11.2020.04.18.14.42.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 18 Apr 2020 14:42:26 -0700 (PDT)
-Date:   Sat, 18 Apr 2020 17:42:23 -0400
-From:   Tim Lewis <elatllat@gmail.com>
-To:     elatllat@gmail.com
-Cc:     narmstrong@baylibre.com, khilman@baylibre.com,
-        christianshewitt@gmail.com, joy.cho@hardkernel.com,
-        tobetter@gmail.com, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org
-Subject: [v2] arm64: dts: meson: odroid-n2: extend cpu opp-points
-Message-ID: <20200418214223.GA4484@imac>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wutgCaF9Zt/dkeWGofK0wxzxUn+L+6837DjwQz9y1UY=;
+        b=b8+IBnH0oHgCjm0Fg8L4LiDkuW29vbI+rUW7tCNtsTqZzpokjlpwWredQ3FGFmqySR
+         pnhNLCxnhVdBkGH0R/a5kfKSz0AAFRccmo0sF78ybry/m8mTm4z4uT7AZrApbOuWAA50
+         DnpniLVr46zz0EogJep/kMLe6b12As5Ta6Kk2rRaMQiwvJJ04RQqkGLCMRXwVsyyEdcf
+         jLZcNxvQrQQIBqCdDW3olfdWsLx9ddnJlLWePt3F3VYb1WY3Igy/A09Zovb04PZx9EP7
+         5IFPGvr6eH9w7lQKnOtWqI7+mTniEfwd4EgsCuJt9JfVnD/Nb76sWcnIHdAAE1C6dB+1
+         xF9A==
+X-Gm-Message-State: AGi0PuYznXECg5wd4trssVqTdIVFBKJ7JWRF7OjRWPK+GNswzkoLdP2+
+        33wwwpy5I+UecfSKQJI/byOFCkSlJAA=
+X-Google-Smtp-Source: APiQypLOwYrHCgIWndZgkcTL4l0O4nIwWLNdaqPiGUU1qxzWWClq+DqLkuqfQGwqt4juRRHwGPellQ==
+X-Received: by 2002:adf:dd07:: with SMTP id a7mr10688193wrm.349.1587249878341;
+        Sat, 18 Apr 2020 15:44:38 -0700 (PDT)
+Received: from localhost.localdomain (91-167-199-67.subs.proxad.net. [91.167.199.67])
+        by smtp.gmail.com with ESMTPSA id t16sm13371559wmi.27.2020.04.18.15.44.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Apr 2020 15:44:37 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v2 0/7] Add H6 I2S support
+Date:   Sun, 19 Apr 2020 00:44:28 +0200
+Message-Id: <20200418224435.23672-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Odroid N2 has a large heatsink and HardKernel supports overclock
-through the addition to extra opp points in their official kernel
-sources [1]. Add these to the N2 dts only, as other S922X devices
-may not have suitable heatsinks.
+Hi,
 
-[1] https://github.com/hardkernel/linux/commit/f86cd9487c7483b2a05f448b9ebacf6bd5a2ad2f
-Signed-off-by: Tim Lewis <elatllat@gmail.com>
+This is a sequel of Marcus Cooper serie[0], where remarks made by Maxime
+have been fixed.
 
----
- .../boot/dts/amlogic/meson-g12b-odroid-n2.dts | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+I have tested it on my Beelink GS1 board.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-index 42f154057..6f32ac83f 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-@@ -260,6 +260,25 @@
- 			};
- 		};
- 	};
-+
-+	cpu_opp_table_0: opp-table-0 {
-+		opp-1992000000 {
-+			opp-hz = /bits/ 64 <1992000000>;
-+			opp-microvolt = <1001000>;
-+		};
-+	};
-+
-+	cpub_opp_table_1: opp-table-1 {
-+		opp-1800000000 {
-+			opp-hz = /bits/ 64 <1800000000>;
-+			opp-microvolt = <981000>;
-+		};
-+
-+		opp-1908000000 {
-+			opp-hz = /bits/ 64 <1908000000>;
-+			opp-microvolt = <1022000>;
-+		};
-+	};
- };
- 
- &arb {
+Thanks,
+Clement
+
+0: https://lore.kernel.org/patchwork/cover/1139949/
+
+Changes since v1:
+ - Fix missing header in set sign extend sample
+
+Jernej Skrabec (3):
+  dt-bindings: ASoC: sun4i-i2s: Add H6 compatible
+  ASoC: sun4i-i2s: Add support for H6 I2S
+  arm64: dts: sun50i-h6: Add HDMI audio to H6 DTSI
+
+Marcus Cooper (4):
+  ASoC: sun4i-i2s: Adjust LRCLK width
+  ASoC: sun4i-i2s: Set sign extend sample
+  ASoc: sun4i-i2s: Add 20 and 24 bit support
+  ASoC: sun4i-i2s: Adjust regmap settings
+
+ .../sound/allwinner,sun4i-a10-i2s.yaml        |   2 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  31 ++
+ sound/soc/sunxi/sun4i-i2s.c                   | 292 ++++++++++++++++--
+ 3 files changed, 301 insertions(+), 24 deletions(-)
+
 -- 
-2.17.1
+2.20.1
 
