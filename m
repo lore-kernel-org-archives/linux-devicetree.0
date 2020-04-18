@@ -1,155 +1,231 @@
 Return-Path: <SRS0=a4mE=6C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.4 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_ABUSE_SURBL,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4D3C38A30
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 13:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFCDC38A2F
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 13:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEAD32054F
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 13:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54F920780
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 13:25:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TKP6Dzo+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="UFqaxoTh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725903AbgDRNIc (ORCPT
+        id S1725887AbgDRNZN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Apr 2020 09:08:32 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:51560 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbgDRNIb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Apr 2020 09:08:31 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200418130828epoutp018ad99d23034b06b75ab35158dc6086d0~G6_naIm5q3059030590epoutp015
-        for <devicetree@vger.kernel.org>; Sat, 18 Apr 2020 13:08:28 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200418130828epoutp018ad99d23034b06b75ab35158dc6086d0~G6_naIm5q3059030590epoutp015
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1587215308;
-        bh=2oam/epN3FCBacMtvE1UAmxv8LZe2ptU3vW+pCn6n3M=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=TKP6Dzo+tvEkRV9Bd094zD4dKs8EyKOMBpx3GLJbqZcH+B+lTyYBuJTE5j5IdXzi9
-         uhX/9kejM1q0RUJxzywv3oPc/UJuuvp4Q5g75Elr9RXkfG6Cg7vb9VGUX4Kn3tTqz5
-         dDUeMxo1hOOW7JgBuV4PTW5jNNtwWFXp8s/GVAUQ=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20200418130826epcas5p2ee3a41f3c7b960b06dcc94cf07670058~G6_mDNO7N2178721787epcas5p2d;
-        Sat, 18 Apr 2020 13:08:26 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        62.B1.04736.ACBFA9E5; Sat, 18 Apr 2020 22:08:26 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200418130826epcas5p411cbf07b9ccbc0b17f829ac20451627d~G6_lmI9EF3188131881epcas5p4A;
-        Sat, 18 Apr 2020 13:08:26 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200418130826epsmtrp2dd31965e35e759bba2b56163385e26a4~G6_llVVPR0489004890epsmtrp2F;
-        Sat, 18 Apr 2020 13:08:26 +0000 (GMT)
-X-AuditID: b6c32a4b-ae3ff70000001280-77-5e9afbca4d54
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5C.E5.04024.ACBFA9E5; Sat, 18 Apr 2020 22:08:26 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200418130823epsmtip1430400b72b2507e6e3fa98bb740e8ffc~G6_i4A5F01834418344epsmtip1F;
-        Sat, 18 Apr 2020 13:08:23 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Avri Altman'" <Avri.Altman@wdc.com>, <robh@kernel.org>
-Cc:     <devicetree@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <krzk@kernel.org>, <martin.petersen@oracle.com>,
-        <kwmad.kim@samsung.com>, <stanley.chu@mediatek.com>,
-        <cang@codeaurora.org>, <linux-samsung-soc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-In-Reply-To: <SN6PR04MB46402211952BC3D427AADA00FCD60@SN6PR04MB4640.namprd04.prod.outlook.com>
-Subject: RE: [PATCH v6 0/10] exynos-ufs: Add support for UFS HCI
-Date:   Sat, 18 Apr 2020 18:38:21 +0530
-Message-ID: <002a01d61582$72250990$566f1cb0$@samsung.com>
+        Sat, 18 Apr 2020 09:25:13 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:59946 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbgDRNZM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Apr 2020 09:25:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1587216310; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qPREZdljeZZMQNmCDVpmtfuQSa2YgdhGa45qFkNG4bA=;
+        b=UFqaxoThyRQoRhg/v5pzojh5cWXRrL35xfuSPGYdRJR5Yymrkid+8O6wQsm3jF6BN3uuBT
+        rm5qxFe8DE0A5uN5fUaicdFb+EZj9z3i0SZZ6MND5l57be0K2YoEzgIzk+q3rcl8wcB9yD
+        UMTWD0w5z12EqIMGZIxOZ3zOT6A2VVg=
+Date:   Sat, 18 Apr 2020 15:24:58 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [RESEND PATCH v5 5/5] input: joystick: Add ADC attached joystick
+ driver.
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Artur Rojek <contact@artur-rojek.eu>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-input <linux-input@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-Id: <NXJZ8Q.5YQ6OBV5Y9V8@crapouillou.net>
+In-Reply-To: <CAHp75VdE=xHi8Kn=nZiH+shHvS6O2pc6W=FCs_VwrJq6Bfwx7w@mail.gmail.com>
+References: <20200417202859.35427-1-contact@artur-rojek.eu>
+        <20200417202859.35427-5-contact@artur-rojek.eu>
+        <CAHp75VfRbnnuUhfyXpu+5dp4TutHSrHus=sX_vG_5F0dX4k0fQ@mail.gmail.com>
+        <UFBY8Q.ES4D59V22INC1@crapouillou.net>
+        <CAHp75VfEAtqucMPdkygfBhojTJoHO5vFk_o0suiyf7i2JCMw9Q@mail.gmail.com>
+        <7CFY8Q.68YMS0V08F992@crapouillou.net>
+        <CAHp75VeVvE8LAO8f=-cwfgL6erFZACGwMnriNRaQnfnHw31wkg@mail.gmail.com>
+        <0HGZ8Q.TO6FK92GVGIN3@crapouillou.net>
+        <CAHp75VdE=xHi8Kn=nZiH+shHvS6O2pc6W=FCs_VwrJq6Bfwx7w@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJ+JYn7iegE7csgtlAtGJi8waFUgQJQDPilAZpCPd2nD2XiwA==
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0gUURTHubOzs+Pmxm21PCmkLRipqZVFo4lJhU0PIaEIorRNJxV11Z2y
-        tCQzMfOVRVAuZi9dwTRl1dh8v239oKH5TjG0l8qKGqEIlbuj5Ld7zv397v8cuLRI/lFsS4er
-        rnJqlTJSQUnJdy1OTq6dy5rA3Y1l7szPpT6KmS/TipnnrV1ipru7XMIMVbaRjG6iX8z0VudR
-        zNPueoLJGNBTTFHHH4L5W6uXMIVVQ8jXku3NziJYXfF9iq0ouM2mGBpIdu7rMMlmVxYjdkG3
-        jb3XmEGcps9LvUO4yPA4Tu3uc0kaNvbkExVTuOFGaatrEiqySEcWNOB9MPvlgygdSWk5rkGw
-        2PKLEIp5BAuldyih+I3AUDJErSmLPaWrSh2C4RE9EooZBEnGBomJorAr6F+nmg1r7A1v2nPM
-        T4lwOQHNDWUrOk1b4IvQUbHXxFhhXxj//s3sktgRJt4uSkyIDHvC92rO1JbhTWDInSRNZxF2
-        Ae3LaZEwkAMsfdWKhajDMDjVTgiMDbQtZZoHBayVQId+mRSEo9BVkrW6jRVMdVRKhLMtLBjr
-        KFMu4AjIrPYQ2regML99VT0EjZ/ySBMiwk5QVu0uRG2ErOVJQjBlkJYqF2hHuGvsWzXt4GFG
-        hlhAWJh+EpyDtmvW7aVZt5dm3fya/1kvEFmMtnIxfFQox++P8VBx1914ZRR/TRXqFhwdpUPm
-        f+Z8Uo90XaeaEaaRwlKWlp0bKBcr4/j4qGYEtEhhLWvyW2nJQpTxCZw6Okh9LZLjm5EdTSps
-        ZI/EfRfkOFR5lYvguBhOvXZL0Ba2ScirNWV5wb4NzQ6cGKH56PEddgWXpTeTB/2lVflbcE2s
-        KujHscc+k+FShfa9JvtBjepZaGxvWMCRUYfEltqE5L0ShzOE/7mIej9tqnHG9WxPYpXhszE+
-        wa6cvuLS3308bm5nZ5PaNsB/6aC3p7E/rpPfbLAfe+V1IDp1zr93dHKXguTDlHucRWpe+Q98
-        UUguYwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGIsWRmVeSWpSXmKPExsWy7bCSnO6p37PiDHbNF7J4+fMqm8Wn9ctY
-        LeYfOcdqcf78BnaLm1uOslhsenyN1eLyrjlsFjPO72Oy6L6+g81i+fF/TBb/9+xgt1i69Saj
-        A4/H5b5eJo9NqzrZPDYvqfdoObmfxePj01ssHn1bVjF6fN4k59F+oJspgCOKyyYlNSezLLVI
-        3y6BK2PRfbWCLu6KzW2NjA2MXZxdjJwcEgImEj8urWXuYuTiEBLYzSjRt3ALK0RCWuL6xgns
-        ELawxMp/z9khil4xSkx4+gYswSagK7FjcRsbiC0iYCfxavJFRpAiZoFdTBJb721jgui4zyhx
-        ePdkoCoODk6BWInjm41AGoQFHCQePH8GNohFQFXi8bof7CAlvAKWEs93pYKEeQUEJU7OfMIC
-        YjMLaEs8vfkUzl628DUzxHEKEj+fLmOFuMFJ4sarY0wQNeISR3/2ME9gFJ6FZNQsJKNmIRk1
-        C0nLAkaWVYySqQXFuem5xYYFhnmp5XrFibnFpXnpesn5uZsYwbGppbmD8fKS+EOMAhyMSjy8
-        Bj0z44RYE8uKK3MPMUpwMCuJ8B50AwrxpiRWVqUW5ccXleakFh9ilOZgURLnfZp3LFJIID2x
-        JDU7NbUgtQgmy8TBKdXAGLKew0jVq+vDFJkLfB9PfF8hnBfiKP6qpLjn9bKzswv3v9aZULbs
-        N2fiY0Hlc45NlWsjrm5c+m9/24Ikd/8iydSJMeXCs1ieH/TTuX9QNmHNn4LFkSJ1tyNKm6e3
-        1r4xecYl5OAt+Lamp6N7ZsvHulnXl516dvhoytpDV4uP15zu1duVfe/QciWW4oxEQy3mouJE
-        APmZZKnJAgAA
-X-CMS-MailID: 20200418130826epcas5p411cbf07b9ccbc0b17f829ac20451627d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200417181006epcas5p269f8c4b94e60962a0b0318ef64a65364
-References: <CGME20200417181006epcas5p269f8c4b94e60962a0b0318ef64a65364@epcas5p2.samsung.com>
-        <20200417175944.47189-1-alim.akhtar@samsung.com>
-        <SN6PR04MB46402211952BC3D427AADA00FCD60@SN6PR04MB4640.namprd04.prod.outlook.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Avri,
 
-> -----Original Message-----
-> From: Avri Altman <Avri.Altman=40wdc.com>
-> Sent: 18 April 2020 18:09
-> To: Alim Akhtar <alim.akhtar=40samsung.com>; robh=40kernel.org
-> Cc: devicetree=40vger.kernel.org; linux-scsi=40vger.kernel.org; krzk=40ke=
-rnel.org;
-> martin.petersen=40oracle.com; kwmad.kim=40samsung.com;
-> stanley.chu=40mediatek.com; cang=40codeaurora.org; linux-samsung-
-> soc=40vger.kernel.org; linux-arm-kernel=40lists.infradead.org; linux-
-> kernel=40vger.kernel.org
-> Subject: RE: =5BPATCH v6 0/10=5D exynos-ufs: Add support for UFS HCI
->=20
->=20
-> >
-> > This patch-set introduces UFS (Universal Flash Storage) host
-> > controller support for Samsung family SoC. Mostly, it consists of UFS
-> > PHY and host specific driver.
-> >
-> > - Changes since v5:
-> > * re-introduce various quicks which was removed because of no driver
-> > * consumer of those quirks, initial 4 patches does the same.
-> You forgot to add those quirks to ufs_fixups.
 
-ufs_fixups are for ufs __device__ related quirks, what I have posted are al=
-l host controller quirks.
-Please have a look on the other quirks related to HCI like UFSHCD_QUIRK_BRO=
-KEN_UFS_HCI_VERSION
-Which is used in other vendor HCI driver.=20
-Let me know if I am missing anything here.
-
-> Each patch that introduces a quirk needs to introduce its users as well -=
- This is
-> the reason it was removed in the first place.
+Le sam. 18 avril 2020 =E0 15:42, Andy Shevchenko=20
+<andy.shevchenko@gmail.com> a =E9crit :
+> On Sat, Apr 18, 2020 at 3:10 PM Paul Cercueil <paul@crapouillou.net>=20
+> wrote:
+>>  Le sam. 18 avril 2020 =E0 14:57, Andy Shevchenko
+>>  <andy.shevchenko@gmail.com> a =E9crit :
+>>  > On Sat, Apr 18, 2020 at 1:48 AM Paul Cercueil=20
+>> <paul@crapouillou.net>
+>>  > wrote:
+>>  >>  Le sam. 18 avril 2020 =E0 0:49, Andy Shevchenko
+>>  >>  <andy.shevchenko@gmail.com> a =E9crit :
+>>  >>  > On Sat, Apr 18, 2020 at 12:24 AM Paul Cercueil
+>>  >> <paul@crapouillou.net>
+>>  >>  > wrote:
+>>  >>  >>  Le sam. 18 avril 2020 =E0 0:10, Andy Shevchenko
+>>  >>  >>  <andy.shevchenko@gmail.com> a =E9crit :
+>>  >>  >>  > On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek
+>>  >>  >> <contact@artur-rojek.eu>
+>>  >>  >>  > wrote:
 >=20
-> Thanks,
-> Avri
+> ...
+>=20
+>>  >>  >>  >>  +#include <linux/of.h>
+>>  >>  >>  >
+>>  >>  >>  > Do you really need this? (See below as well)
+>>  >>  >
+>>  >>  >>  >>  +static const struct of_device_id=20
+>> adc_joystick_of_match[] =3D
+>>  >> {
+>>  >>  >>  >>  +       { .compatible =3D "adc-joystick", },
+>>  >>  >>  >>  +       { },
+>>  >>  >>  >>  +};
+>>  >>  >>  >>  +MODULE_DEVICE_TABLE(of, adc_joystick_of_match);
+>>  >>  >>  >>  +
+>>  >>  >>  >>  +static struct platform_driver adc_joystick_driver =3D {
+>>  >>  >>  >>  +       .driver =3D {
+>>  >>  >>  >>  +               .name =3D "adc-joystick",
+>>  >>  >>  >
+>>  >>  >>  >>  +               .of_match_table =3D
+>>  >>  >>  >> of_match_ptr(adc_joystick_of_match),
+>>  >>  >>  >
+>>  >>  >>  > Drop this a bit harmful of_match_ptr() macro. It should go
+>>  >> with
+>>  >>  >> ugly
+>>  >>  >>  > #ifdeffery. Here you simple introduced a compiler warning.
+>>  >>  >>
+>>  >>  >>  I assume you mean #ifdef around the of_device_id + module=20
+>> table
+>>  >>  >> macro?
+>>  >>  >
+>>  >>  > Yes.
+>>  >>  >
+>>  >>  >>  > On top of that, you are using device property API, OF use=20
+>> in
+>>  >> this
+>>  >>  >> case
+>>  >>  >>  > is contradictory (at lest to some extend).
+>>  >>  >>
+>>  >>  >>  I don't see why. The fact that the driver can work when=20
+>> probed
+>>  >> from
+>>  >>  >>  platform code
+>>  >>  >
+>>  >>  > Ha-ha, tell me how. I would like to be very surprised.
+>>  >>
+>>  >>  iio_map_array_register(),
+>>  >>  pinctrl_register_mappings(),
+>>  >>  platform_add_devices(),
+>>  >>
+>>  >>  you're welcome.
+>>  >
+>>  > I think above has no relation to what I'm talking about.
+>>=20
+>>  Yes it does. It allows you to map the IIO channels, set the pinctrl
+>>  configurations and register a device from platform code instead of
+>>  devicetree.
+>=20
+> I'm not talking about other drivers, I'm talking about this driver and
+> how it will be instantiated. Above, according to the code, can't be
+> comprehensive to fulfill this.
+
+This is how the platform devices were instanciated on JZ4740 before we=20
+switched everything to devicetree.
+
+>>  > How *this* driver can work as a platform instantiated one?
+>>  > We seems have a conceptual misunderstanding here.
+>>  >
+>>  > For example, how can probe of this driver not fail, if it is not
+>>  > backed by a DT/ACPI properties?
+>>=20
+>>  platform_device_add_properties().
+>=20
+> Yes, I waited for this. And seems you don't understand the (scope of)
+> API, you are trying to insist this driver can be used as a platform
+> one.
+> Sorry, I must to disappoint you, it can't. Above interface is created
+> solely for quirks to support (broken) DT/ACPI tables. It's not
+> supposed to be used as a main source for the device properties.
+
+The fact that it was designed for something else doesn't mean it can't=20
+be used.
+
+Anyway, this discussion is pointless. I don't think anybody would want=20
+to do that.
+
+>>  >>  >>  doesn't mean that it shouldn't have a table to probe
+>>  >>  >>  from devicetree.
+>>  >>  >
+>>  >>  > I didn't get what you are talking about here. The idea of
+>>  >> _unified_
+>>  >>  > device property API is to get rid of OF-centric code in=20
+>> favour of
+>>  >> more
+>>  >>  > generic approach. Mixing those two can be done only in=20
+>> specific
+>>  >> cases
+>>  >>  > (here is not the one).
+>>  >>
+>>  >>  And how are we mixing those two here? The only OF-centric thing
+>>  >> here is
+>>  >>  the device table, which is required if we want the driver to=20
+>> probe
+>>  >> from
+>>  >>  devicetree.
+>>  >
+>>  > Table is fine(JFYI the types and sections are defined outside of=20
+>> OF
+>>  > stuff, though being [heavily] used by it) , API (of_match_ptr()=20
+>> macro
+>>  > use) is not.
+>>=20
+>>  Sorry, but that's just stupid. Please have a look at how=20
+>> of_match_ptr()
+>>  macro is defined in <linux/of.h>.
+>=20
+> Call it whatever you want, but above code is broken.
+
+of_match_ptr() is basically defined like this:
+
+#ifdef CONFIG_OF
+#define of_match_ptr(x) (x)
+#else
+#define of_match_ptr(x) NULL
+#endif
+
+So please, enlighten me, tell me what is so wrong about what's being=20
+done here.
+
+> It needs either of:
+> - ugly ifdeffery
+> - dropping of_match_ptr()
+> - explicit dependence to OF
+>=20
+> My choice is second one. Because it makes code better and allows also
+> ACPI to use this driver (usually) without changes.
+
+And how is unconditionally compiling the of_match_table make it=20
+magically probe from ACPI, without a acpi_match_table?
+
+-Paul
+
 
