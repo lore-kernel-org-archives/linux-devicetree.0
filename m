@@ -2,133 +2,190 @@ Return-Path: <SRS0=a4mE=6C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CE7C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 00:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 731BBC38A2C
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 08:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18EB9214D8
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 00:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D51C22246
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 08:06:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHRsxs3d"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="poiD+xo7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbgDRAvb (ORCPT
+        id S1725887AbgDRIGI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Apr 2020 20:51:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725856AbgDRAvb (ORCPT
+        Sat, 18 Apr 2020 04:06:08 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:23048 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725856AbgDRIGG (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Apr 2020 20:51:31 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05298C061A0C;
-        Fri, 17 Apr 2020 17:51:30 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id w65so1848400pfc.12;
-        Fri, 17 Apr 2020 17:51:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RG4zLqgfOd5eFwxQ5MLT79PGcVvleEGHuNZIiiWI3A8=;
-        b=UHRsxs3dACIIwT+uMU1k+HYIiaao56103YAWtZ9T82lMH2/6k+1bzrxddlKocwAjuh
-         uUYH05uZKQ/aA7TG+yPLJz/F9RRFyz34bHILVNLhPocsTu5vQe27bOkgo0lGXU+f5Hld
-         nYZVkck9WAKiSUmfozmvA3+ZDMGtDnBU3FHIsFFiNALSwlpJ9oaf2hs46yzarnOE51Mz
-         MmaNR2ZcuWpUnxCR4+Jqgka9loe6D29S1Kp+ROZ5vCvht+C9hlBqx9Q7+liIxjqnqe6b
-         LQiA2/u+bXiGy5nyrNjaZim8ba1qfsvrXjYz84IhmEPVbiNdhWcOrjqs9hXKvjygObHM
-         fcbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RG4zLqgfOd5eFwxQ5MLT79PGcVvleEGHuNZIiiWI3A8=;
-        b=syxAx19uOK5HQlAmsdra+0svwPVe6iMYhuhEhzHJtX/6FRe4pceEb2jHjH5zrejEWz
-         WWZ/QXJ19FRJuMM4BmosNrXKLa2k3jP8GYtMfJ2gx/l9vijK8iWS/dYHhWnw+IgIDMnG
-         yGGfajfc6aEz+8NHFmPqEog3RqjHHPMwigeNu3qYHtiGRwT5R9L+On79u9GtXDGNPrgB
-         /fWODvQvlh59RN/ueRWa7L9v7eQ/oAiRN+LUuNFZCwwaUQ6vC7WGkfZAzuie9bLfLiLL
-         ig9GlZrzf72lz2K0v15OpGQC2iRPun/pRF6tzlWOos7TJtyc5qlXkz31tmyVTTjoFvt8
-         tWsQ==
-X-Gm-Message-State: AGi0PuaBLXj84MLeI7vE8WvjrmoBMqH8GrU7ERAehCIZJznQNhL7BVKS
-        NWLJwCFWg3pTpPk31tABK5xdWKq7
-X-Google-Smtp-Source: APiQypL2znwCrCCrcxp1psP1Dxfxox0z8Es+9X/HyrMLS38/612Hq3MCaqcTnox76tSZZnkAxv3jqg==
-X-Received: by 2002:a62:404:: with SMTP id 4mr6267992pfe.110.1587171089817;
-        Fri, 17 Apr 2020 17:51:29 -0700 (PDT)
-Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id a18sm6714082pjh.25.2020.04.17.17.51.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 17:51:29 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next] dt-bindings: net: mdio: Document common properties
-Date:   Fri, 17 Apr 2020 17:51:26 -0700
-Message-Id: <20200418005126.15305-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        Sat, 18 Apr 2020 04:06:06 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587197165; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Ai272o6qy5R6nMdbdlalbR48K7Knpt+f0IeAypOdip0=; b=poiD+xo7iTbEET6KyZPdloSY40ARvPFKjZW2++pLf34j7btzNK9GhJkvNrECjqgTAzLxk2lh
+ KDEU0Mh8dFFFKZhNKk2OPqQt6jPjrQAew+522mDTuXuwn5VP34u85oUophsxQuTM44S2ZMLw
+ qYrBjHCABFq8SNngUNKOCIuw+/I=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e9ab4ec.7f887d6d4490-smtp-out-n01;
+ Sat, 18 Apr 2020 08:06:04 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 40007C432C2; Sat, 18 Apr 2020 08:06:04 +0000 (UTC)
+Received: from [10.131.205.89] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BA99CC433F2;
+        Sat, 18 Apr 2020 08:05:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BA99CC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v2 01/17] tty: serial: qcom_geni_serial: Use OPP API to
+ set clk/perf state
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-serial@vger.kernel.org
+References: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
+ <1587132279-27659-2-git-send-email-rnayak@codeaurora.org>
+ <20200417180041.GD199755@google.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <c7f6922a-47c2-9703-c8fa-92fdbe1f69ec@codeaurora.org>
+Date:   Sat, 18 Apr 2020 13:35:56 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200417180041.GD199755@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some of the properties pertaining to the broken turn around or resets
-were only documented in ethernet-phy.yaml while they are applicable
-across all MDIO devices and not Ethernet PHYs specifically which are a
-superset.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- .../devicetree/bindings/net/mdio.yaml         | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
+On 4/17/2020 11:30 PM, Matthias Kaehlcke wrote:
+> Hi Rajendra,
 
-diff --git a/Documentation/devicetree/bindings/net/mdio.yaml b/Documentation/devicetree/bindings/net/mdio.yaml
-index 50c3397a82bc..58d486db5651 100644
---- a/Documentation/devicetree/bindings/net/mdio.yaml
-+++ b/Documentation/devicetree/bindings/net/mdio.yaml
-@@ -50,6 +50,33 @@ patternProperties:
-         description:
-           The ID number for the PHY.
- 
-+      broken-turn-around:
-+        $ref: /schemas/types.yaml#definitions/flag
-+        description:
-+          If set, indicates the PHY device does not correctly release
-+          the turn around line low at the end of a MDIO transaction.
-+
-+      resets:
-+        maxItems: 1
-+
-+      reset-names:
-+        const: phy
-+
-+      reset-gpios:
-+        maxItems: 1
-+        description:
-+          The GPIO phandle and specifier for the PHY reset signal.
-+
-+      reset-assert-us:
-+        description:
-+          Delay after the reset was asserted in microseconds. If this
-+          property is missing the delay will be skipped.
-+
-+      reset-deassert-us:
-+        description:
-+          Delay after the reset was deasserted in microseconds. If
-+          this property is missing the delay will be skipped.
-+
-     required:
-       - reg
- 
+Hey Matthias,
+
+> 
+> On Fri, Apr 17, 2020 at 07:34:23PM +0530, Rajendra Nayak wrote:
+>> geni serial needs to express a perforamnce state requirement on CX
+>> powerdomain depending on the frequency of the clock rates.
+>> Use OPP table from DT to register with OPP framework and use
+>> dev_pm_opp_set_rate() to set the clk/perf state.
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: Akash Asthana <akashast@codeaurora.org>
+>> Cc: linux-serial@vger.kernel.org
+>> ---
+>>   drivers/tty/serial/qcom_geni_serial.c | 30 +++++++++++++++++++++++++-----
+>>   include/linux/qcom-geni-se.h          |  2 ++
+>>   2 files changed, 27 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+>> index 6119090..151012c 100644
+>> --- a/drivers/tty/serial/qcom_geni_serial.c
+>> +++ b/drivers/tty/serial/qcom_geni_serial.c
+>> @@ -9,6 +9,7 @@
+>>   #include <linux/module.h>
+>>   #include <linux/of.h>
+>>   #include <linux/of_device.h>
+>> +#include <linux/pm_opp.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/pm_runtime.h>
+>>   #include <linux/pm_wakeirq.h>
+>> @@ -128,6 +129,7 @@ struct qcom_geni_serial_port {
+>>   	int wakeup_irq;
+>>   	bool rx_tx_swap;
+>>   	bool cts_rts_swap;
+>> +	bool opp_table;
+> 
+> The name of the variable suggests that it holds a OPP table, something
+> like 'has_opp_table' would be clearer.
+
+I agree with your suggestions, I will update the variable names when I respin.
+
+> 
+>>   };
+>>   
+>>   static const struct uart_ops qcom_geni_console_pops;
+>> @@ -961,7 +963,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
+>>   		goto out_restart_rx;
+>>   
+>>   	uport->uartclk = clk_rate;
+>> -	clk_set_rate(port->se.clk, clk_rate);
+>> +	dev_pm_opp_set_rate(uport->dev, clk_rate);
+>>   	ser_clk_cfg = SER_CLK_EN;
+>>   	ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
+>>   
+>> @@ -1198,8 +1200,11 @@ static void qcom_geni_serial_pm(struct uart_port *uport,
+>>   	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF)
+>>   		geni_se_resources_on(&port->se);
+>>   	else if (new_state == UART_PM_STATE_OFF &&
+>> -			old_state == UART_PM_STATE_ON)
+>> +			old_state == UART_PM_STATE_ON) {
+>> +		/* Drop the performance state vote */
+>> +		dev_pm_opp_set_rate(uport->dev, 0);
+>>   		geni_se_resources_off(&port->se);
+>> +	}
+>>   }
+>>   
+>>   static const struct uart_ops qcom_geni_console_pops = {
+>> @@ -1318,13 +1323,20 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
+>>   	if (of_property_read_bool(pdev->dev.of_node, "cts-rts-swap"))
+>>   		port->cts_rts_swap = true;
+>>   
+>> +	port->se.opp = dev_pm_opp_set_clkname(&pdev->dev, "se");
+>> +	if (IS_ERR(port->se.opp))
+>> +		return PTR_ERR(port->se.opp);
+>> +	/* OPP table is optional */
+>> +	if (!dev_pm_opp_of_add_table(&pdev->dev))
+> 
+> Even if the OPP table is optional you probably want to fail if the error
+> is anything other than -ENODEV ("'operating-points' property is not found
+> or is invalid data in device node.").
+
+sounds valid. I will fix it up and respin. Will just wait a few days to see if
+I get any more reviews and feedback.
+
+> 
+>> diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
+>> index dd46494..737e713 100644
+>> --- a/include/linux/qcom-geni-se.h
+>> +++ b/include/linux/qcom-geni-se.h
+>> @@ -24,6 +24,7 @@ enum geni_se_protocol_type {
+>>   
+>>   struct geni_wrapper;
+>>   struct clk;
+>> +struct opp_table;
+>>   
+>>   /**
+>>    * struct geni_se - GENI Serial Engine
+>> @@ -39,6 +40,7 @@ struct geni_se {
+>>   	struct device *dev;
+>>   	struct geni_wrapper *wrapper;
+>>   	struct clk *clk;
+>> +	struct opp_table *opp;
+> 
+> This name suggests that the variable holds a single OPP ('struct
+> dev_pm_opp'). Most other code uses the name 'opp_table', which
+> also seems a good candidate here.
+
+Agree, thanks again for taking time to review.
+
 -- 
-2.19.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
