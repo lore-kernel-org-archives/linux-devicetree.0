@@ -1,174 +1,170 @@
 Return-Path: <SRS0=a4mE=6C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.4 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_ABUSE_SURBL,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52891C3A5A9
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 12:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1D3C38A2F
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 12:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3343A21D7E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 12:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5981D206B9
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 12:14:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="GnQ9Xu4N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="koe5NkvT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725862AbgDRMK1 (ORCPT
+        id S1725873AbgDRMOt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Apr 2020 08:10:27 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:60176 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgDRMK1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Apr 2020 08:10:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1587211824; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W8uyfORoWpoopNQAQRiFt0F12jT9ut5sphQKhCFCQnI=;
-        b=GnQ9Xu4NTvPUquR8iR0VIKLtACsC6IM+aIypTrEzV5CVG1YA9XS7UYVNec1wHO8ZKdcTBK
-        9jiuRA7KEcZet3Im5oH5sODW8CWKMPTHaQfOuCf/FqwNTQNly/9hTNGk47WsflgImO0Ob/
-        xS7TkvnoGiiaz2OKA8kw9JfZek7dLyk=
-Date:   Sat, 18 Apr 2020 14:10:12 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [RESEND PATCH v5 5/5] input: joystick: Add ADC attached joystick
- driver.
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Artur Rojek <contact@artur-rojek.eu>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-Id: <0HGZ8Q.TO6FK92GVGIN3@crapouillou.net>
-In-Reply-To: <CAHp75VeVvE8LAO8f=-cwfgL6erFZACGwMnriNRaQnfnHw31wkg@mail.gmail.com>
-References: <20200417202859.35427-1-contact@artur-rojek.eu>
-        <20200417202859.35427-5-contact@artur-rojek.eu>
-        <CAHp75VfRbnnuUhfyXpu+5dp4TutHSrHus=sX_vG_5F0dX4k0fQ@mail.gmail.com>
-        <UFBY8Q.ES4D59V22INC1@crapouillou.net>
-        <CAHp75VfEAtqucMPdkygfBhojTJoHO5vFk_o0suiyf7i2JCMw9Q@mail.gmail.com>
-        <7CFY8Q.68YMS0V08F992@crapouillou.net>
-        <CAHp75VeVvE8LAO8f=-cwfgL6erFZACGwMnriNRaQnfnHw31wkg@mail.gmail.com>
+        Sat, 18 Apr 2020 08:14:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38772 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725862AbgDRMOt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sat, 18 Apr 2020 08:14:49 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CAFDC061A0C;
+        Sat, 18 Apr 2020 05:14:49 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id a81so5698767wmf.5;
+        Sat, 18 Apr 2020 05:14:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=f+xMR+KYzCgzYlW1x4Og/ZLSKx3U5B8Ky3smGBm8ZHA=;
+        b=koe5NkvTdWegoN30UZTYBcRaxprT1wTS0WqnTAbfD8B4oBWVkTSEqoj+1yIpB/qPiV
+         ondEhRv6v/0G/SyDhcn0t/WmOPmyjDrfge1QkFKA+oRl07dvL613Vq/D8u93n3qt7U42
+         FLe6mDe9LYxN36yCaI/+nOkdw02d0TgkgjwyXWf6FxtJk+7Cy7uiOtaObxKrUH6lAst2
+         mP3wJ4gn5ZjUWKlP0li8NkjDPDSFgJomwczytkyqePEGoq9lfcTTCtthyxd6cZgwbHQ8
+         HDXCuSdNftLEaY8W8+SbZ6FYchlOOLsYXjg8cdsSCSYsiMXf3TuOI66csYo3OddvAUqU
+         KkAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=f+xMR+KYzCgzYlW1x4Og/ZLSKx3U5B8Ky3smGBm8ZHA=;
+        b=tS7Gutnu4fTAth629xb3mnIlcqhiItiZ9C9xXkG0N5TrXsxTGIiZOw26Bu/4PHj8Y9
+         OuQROJA/AuGbvmKuAWa2Ry0AyIchLUnLeLJEld5iZgR08IOHqeYat2wGpBkr8SllVR2l
+         Aevb+PorNkF4qxpbS28/IfTiiHW0FOh3Uh6D/yp7RnvYL8hEvoQwOcfkC/R7Adg1dQXw
+         qUBeIMdgOyid29ctfZ77QfS0NSQ3kaUAtJzPp1QS/awq0prjwllKpPcv6vKhKoW7CBFH
+         ySnPevTL+S+cqg12DniPHoONdGtmhDzBriyS1HyKGryKYXIctU+2AA1DFtZQQc8jTlMu
+         xexw==
+X-Gm-Message-State: AGi0PuYOq4QAl596gGmKnABEQRGYbUwGs+X7AM4KpIsohKdLh42HyayV
+        0h1AUw+qr71G9PcHzu/IwfQ=
+X-Google-Smtp-Source: APiQypLstfRt6XI+FJgsZSB8kYksMAzORNwekKGiJB7VWHJq2V546ps+cjXl1idfaq0d3MMRzVBZ9A==
+X-Received: by 2002:a1c:3105:: with SMTP id x5mr8366565wmx.51.1587212087665;
+        Sat, 18 Apr 2020 05:14:47 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id i97sm37891167wri.1.2020.04.18.05.14.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Apr 2020 05:14:47 -0700 (PDT)
+Subject: Re: [PATCH v4 2/3] ARM: dts: rockchip: add rga node for rk322x
+To:     Heiko Stuebner <heiko@sntech.de>,
+        Justin Swartz <justin.swartz@risingedge.co.za>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        mark.rutland@arm.com, robh+dt@kernel.org
+References: <be4f2c802a64562cbab629abc82dd7d228a1a747.1580768038.git.justin.swartz@risingedge.co.za>
+ <3593382.iQIKm1rSL1@phil> <b77422198df7c285d824086131371284@risingedge.co.za>
+ <2533855.f5ZhyS2AsA@phil>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <558b35c3-7f75-8d0d-048b-c55c06fa8a53@gmail.com>
+Date:   Sat, 18 Apr 2020 14:14:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <2533855.f5ZhyS2AsA@phil>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 4/18/20 12:53 PM, Heiko Stuebner wrote:
+> Am Samstag, 18. April 2020, 11:56:03 CEST schrieb Justin Swartz:
+>> Hi Johan, Heiko,
+>>
+>> On 2020-04-18 11:49, Heiko Stuebner wrote:
+>>
+>>> Am Samstag, 18. April 2020, 11:15:27 CEST schrieb Johan Jonker:
+>>>
+>>>> Hi Justin, Heiko,
+>>>>
+>>>> In the discussion about "rockchip,px30-rga" it was mentioned that:
+>>>> "no status for soc internal components without any board-specifics".
+>>>> The binding is in mainline, but the dts node is missing I think.
+>>>> Should this also be changed?
+>>>
+>>> yep, drop the status disabled from the dtsi and that then results
+>>> in not needing the board-level enablement
+>>>
+>>> (background: rga is a simple mem2mem device without any
+>>> board-specific hooks)
+>>
+>> Shall I submit version 5 of this patch series?
+> 
+> I guess so ... especially as we expect patch1 to go through the
+> media tree and sending a new version might serve as a ping :-)
+> and include the Ack by Rob for easy applying
 
+The conversion to rockchip-rga.yaml including rockchip,rk3228-rga is
+already reviewed by robh.
 
-Le sam. 18 avril 2020 =E0 14:57, Andy Shevchenko=20
-<andy.shevchenko@gmail.com> a =E9crit :
-> On Sat, Apr 18, 2020 at 1:48 AM Paul Cercueil <paul@crapouillou.net>=20
-> wrote:
->>=20
->>=20
->>=20
->>  Le sam. 18 avril 2020 =E0 0:49, Andy Shevchenko
->>  <andy.shevchenko@gmail.com> a =E9crit :
->>  > On Sat, Apr 18, 2020 at 12:24 AM Paul Cercueil=20
->> <paul@crapouillou.net>
->>  > wrote:
->>  >>  Le sam. 18 avril 2020 =E0 0:10, Andy Shevchenko
->>  >>  <andy.shevchenko@gmail.com> a =E9crit :
->>  >>  > On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek
->>  >> <contact@artur-rojek.eu>
->>  >>  > wrote:
->>  >
->>  > ...
->>  >
->>  >>  >>  +#include <linux/of.h>
->>  >>  >
->>  >>  > Do you really need this? (See below as well)
->>  >
->>  >>  >>  +static const struct of_device_id adc_joystick_of_match[] =3D=20
->> {
->>  >>  >>  +       { .compatible =3D "adc-joystick", },
->>  >>  >>  +       { },
->>  >>  >>  +};
->>  >>  >>  +MODULE_DEVICE_TABLE(of, adc_joystick_of_match);
->>  >>  >>  +
->>  >>  >>  +static struct platform_driver adc_joystick_driver =3D {
->>  >>  >>  +       .driver =3D {
->>  >>  >>  +               .name =3D "adc-joystick",
->>  >>  >
->>  >>  >>  +               .of_match_table =3D
->>  >>  >> of_match_ptr(adc_joystick_of_match),
->>  >>  >
->>  >>  > Drop this a bit harmful of_match_ptr() macro. It should go=20
->> with
->>  >> ugly
->>  >>  > #ifdeffery. Here you simple introduced a compiler warning.
->>  >>
->>  >>  I assume you mean #ifdef around the of_device_id + module table
->>  >> macro?
->>  >
->>  > Yes.
->>  >
->>  >>  > On top of that, you are using device property API, OF use in=20
->> this
->>  >> case
->>  >>  > is contradictory (at lest to some extend).
->>  >>
->>  >>  I don't see why. The fact that the driver can work when probed=20
->> from
->>  >>  platform code
->>  >
->>  > Ha-ha, tell me how. I would like to be very surprised.
->>=20
->>  iio_map_array_register(),
->>  pinctrl_register_mappings(),
->>  platform_add_devices(),
->>=20
->>  you're welcome.
->=20
-> I think above has no relation to what I'm talking about.
-
-Yes it does. It allows you to map the IIO channels, set the pinctrl=20
-configurations and register a device from platform code instead of=20
-devicetree.
-
-> How *this* driver can work as a platform instantiated one?
-> We seems have a conceptual misunderstanding here.
->=20
-> For example, how can probe of this driver not fail, if it is not
-> backed by a DT/ACPI properties?
-
-platform_device_add_properties().
-
->=20
->>  >>  doesn't mean that it shouldn't have a table to probe
->>  >>  from devicetree.
->>  >
->>  > I didn't get what you are talking about here. The idea of=20
->> _unified_
->>  > device property API is to get rid of OF-centric code in favour of=20
->> more
->>  > generic approach. Mixing those two can be done only in specific=20
->> cases
->>  > (here is not the one).
->>=20
->>  And how are we mixing those two here? The only OF-centric thing=20
->> here is
->>  the device table, which is required if we want the driver to probe=20
->> from
->>  devicetree.
->=20
-> Table is fine(JFYI the types and sections are defined outside of OF
-> stuff, though being [heavily] used by it) , API (of_match_ptr() macro
-> use) is not.
-
-Sorry, but that's just stupid. Please have a look at how of_match_ptr()=20
-macro is defined in <linux/of.h>.
-
--Paul
-
+> 
+> 
+> Heiko
+> 
+> 
+>>
+>>> Johan
+>>>
+>>> +&rga {
+>>> +    status = "okay";
+>>> +};
+>>> +
+>>>
+>>> Add a node to define the presence of RGA, a 2D raster
+>>> graphic acceleration unit.
+>>>
+>>> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+>>> ---
+>>> arch/arm/boot/dts/rk322x.dtsi | 11 +++++++++++
+>>> 1 file changed, 11 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/rk322x.dtsi 
+>>> b/arch/arm/boot/dts/rk322x.dtsi
+>>> index 340ed6ccb..29d50bebc 100644
+>>> --- a/arch/arm/boot/dts/rk322x.dtsi
+>>> +++ b/arch/arm/boot/dts/rk322x.dtsi
+>>> @@ -621,6 +621,17 @@
+>>> status = "disabled";
+>>> };
+>>>
+>>> +    rga: rga@20060000 {
+>>> +        compatible = "rockchip,rk3228-rga", "rockchip,rk3288-rga";
+>>> +        reg = <0x20060000 0x1000>;
+>>> +        interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+>>> +        clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA>;
+>>> +        clock-names = "aclk", "hclk", "sclk";
+>>> +        resets = <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru 
+>>> SRST_RGA_H>;
+>>> +        reset-names = "core", "axi", "ahb";
+>>> +        status = "disabled";
+>>> remove?
+>>>
+>>> +    };
+>>> +
+>>> iep_mmu: iommu@20070800 {
+>>> compatible = "rockchip,iommu";
+>>> reg = <0x20070800 0x100>;
+>>
+> 
+> 
+> 
+> 
 
