@@ -2,88 +2,113 @@ Return-Path: <SRS0=a4mE=6C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB2CC38A29
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 14:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88813C38A2F
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 14:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C284221D6C
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 14:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69639221F4
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 14:39:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="JoYHbgnQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9cA2LGc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726014AbgDROfQ (ORCPT
+        id S1726408AbgDROjb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Apr 2020 10:35:16 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:46466 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgDROfQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 18 Apr 2020 10:35:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=AZ/RMhwSUwQdo6J0IUbGcZIvgJfSETQ2FQQOLcJdtl4=; b=JoYHbgnQKNg8ELfaeVny9/OIK4
-        /aBwVhAONEQbN7jZtN6XnTXuSLlkLV4qe1CJdpyDqSdhvi+k4xyxPGwzbG8a59i2WjFKDhffnxMkX
-        mv2sAovqYEYe2TkU3ztt2F//DgZc/iqRZQlC4U8kwUpCxe74l7RDqPBreAm+yBfnSMUk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jPoYp-003TBM-5f; Sat, 18 Apr 2020 16:35:11 +0200
-Date:   Sat, 18 Apr 2020 16:35:11 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
+        Sat, 18 Apr 2020 10:39:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60804 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726396AbgDROjb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sat, 18 Apr 2020 10:39:31 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDDD1C061A0C;
+        Sat, 18 Apr 2020 07:39:28 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id v8so7074484wma.0;
+        Sat, 18 Apr 2020 07:39:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=stLQlVuh4P5IJ5M0lj4/6uAQgTyw/bQBI8ltWxyZDXo=;
+        b=E9cA2LGcfpwjWkWL0LUCKY8rmu73mUw4/VIbbjYfLKPQwuWP9GEU6t7ShXY0UXKUmt
+         Z8fXWZurPul5Q9s9FOLmzG8iSW+h9wQGvfq/Vay0WY8Wa7Tz8vb4B2JnsAmuQHQQIOzr
+         jW2PHrACksVjQkQZd1h+cahQd+HTFKynZObqNlHA6BRUDaM/67kufXqd5vmEIFB3F5D+
+         T9p3+9Gkb010F2QJ0jY8Z9vjeEEAtCmOftABQtUOWhaWfAQdnBRi/2pOiSBw4FqLeuFj
+         Pr9VnRQ1cMPsoNr7KfX6BwqUkMOg1kFog4UDIjA0Qum20JgQHo2GbTunOfUK9YQa+HjZ
+         yB+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=stLQlVuh4P5IJ5M0lj4/6uAQgTyw/bQBI8ltWxyZDXo=;
+        b=iAtxmjmEZQ8W3oHtAST3O9aVMvY23WeKhGixAorKbSU9hLsa/BFjqMFTvQj04SDV8Y
+         BIIMT8nvAmNcP0v3V3JcUbf/yinHTDxinsnFqGjVslA8ux/PuynrmxrcvfJ/GD5dzrRR
+         u3t61QHBEjwiq3AC0/OvWjZgU4LoyZmgGry0hAVMvyca5y2yKdyb9fOcIG5q0sLpcek1
+         oeo5YhgGlkfvi8IDXc62+Hhe3oFz83ibfP3bOsH6i09+yb/egC1bYWna/ZKLU3TWn3gg
+         s3tpEsLUincJO1hJST0OZ3wE43JAdegQ682w+CuO3ZHNxVeEFfrwHh0IJOEk3EVebSZc
+         V/Kg==
+X-Gm-Message-State: AGi0PuZvo/SPF58/lZ5uEhqVhSCDPvYMPE8zpkizuLplLJM/PWg09w/d
+        qkeXc8Ly7wvns3ppIZgosrA=
+X-Google-Smtp-Source: APiQypJgp3beoqLe7KxcrcgO1iEb5Zi5/JPSvihpkv2bGufse5QTbKlcUIFXicuNuiKrgQXX+QJ18g==
+X-Received: by 2002:a05:600c:2255:: with SMTP id a21mr8551841wmm.150.1587220767261;
+        Sat, 18 Apr 2020 07:39:27 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0:4e7:1fdd:b7c2:b3ab])
+        by smtp.gmail.com with ESMTPSA id s9sm25375322wrg.27.2020.04.18.07.39.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Apr 2020 07:39:26 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] dt-bindings: net: mdio: Document common
- properties
-Message-ID: <20200418143511.GE804711@lunn.ch>
-References: <20200418005126.15305-1-f.fainelli@gmail.com>
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH 0/7] Add H6 I2S support
+Date:   Sat, 18 Apr 2020 16:39:16 +0200
+Message-Id: <20200418143923.19608-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200418005126.15305-1-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 05:51:26PM -0700, Florian Fainelli wrote:
-> Some of the properties pertaining to the broken turn around or resets
-> were only documented in ethernet-phy.yaml while they are applicable
-> across all MDIO devices and not Ethernet PHYs specifically which are a
-> superset.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  .../devicetree/bindings/net/mdio.yaml         | 27 +++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/mdio.yaml b/Documentation/devicetree/bindings/net/mdio.yaml
-> index 50c3397a82bc..58d486db5651 100644
-> --- a/Documentation/devicetree/bindings/net/mdio.yaml
-> +++ b/Documentation/devicetree/bindings/net/mdio.yaml
-> @@ -50,6 +50,33 @@ patternProperties:
->          description:
->            The ID number for the PHY.
->  
-> +      broken-turn-around:
-> +        $ref: /schemas/types.yaml#definitions/flag
-> +        description:
-> +          If set, indicates the PHY device does not correctly release
-> +          the turn around line low at the end of a MDIO transaction.
+Hi,
 
-Hi Florian
+This is a sequel of Marcus Cooper serie[0], where remarks made by Maxime
+have been fixed.
 
-Since this is a generic property, maybe this should be "the MDIO
-device"? Probably the whole document needs s/PHY/MDIO/g ?
+I have tested it on my Beelink GS1 board.
 
-	 Andrew
+Thanks,
+Clement
+
+0: https://lore.kernel.org/patchwork/cover/1139949/
+
+Jernej Skrabec (3):
+  dt-bindings: ASoC: sun4i-i2s: Add H6 compatible
+  ASoC: sun4i-i2s: Add support for H6 I2S
+  arm64: dts: sun50i-h6: Add HDMI audio to H6 DTSI
+
+Marcus Cooper (4):
+  ASoC: sun4i-i2s: Adjust LRCLK width
+  ASoC: sun4i-i2s: Set sign extend sample
+  ASoc: sun4i-i2s: Add 20 and 24 bit support
+  ASoC: sun4i-i2s: Adjust regmap settings
+
+ .../sound/allwinner,sun4i-a10-i2s.yaml        |   2 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  31 ++
+ sound/soc/sunxi/sun4i-i2s.c                   | 286 ++++++++++++++++--
+ 3 files changed, 295 insertions(+), 24 deletions(-)
+
+-- 
+2.20.1
+
