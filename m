@@ -1,271 +1,107 @@
 Return-Path: <SRS0=a4mE=6C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.4 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_ABUSE_SURBL,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44F2C38A2F
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 17:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5ACC352BE
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 17:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF0020776
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 17:25:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ovFlkDng"
+	by mail.kernel.org (Postfix) with ESMTP id 37CF321D6C
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 17:52:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgDRRZa (ORCPT
+        id S1726025AbgDRRwy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Apr 2020 13:25:30 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:46150 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbgDRRZ3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Apr 2020 13:25:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1587230726; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BJK3SzVpQ1si/reyVxcaxpHREQLlO3j66OLfCZHjFz8=;
-        b=ovFlkDngSG/UH+xUeOabMOqk8s3sWsFD3Ajn8VcLM8qAURKHeCHdwIj7x/gJoK4/NpubJI
-        myHC+zj7i0mU/gSasdHYFqsLUsoeJGpV/q0y8PqLe2XgILJUB29h+7/8tnQY/LFH+UYumP
-        YfxXY+P6PmNPBqiZzfguL8HLsdOb72c=
-Date:   Sat, 18 Apr 2020 19:25:15 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [RESEND PATCH v5 5/5] input: joystick: Add ADC attached joystick
- driver.
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Artur Rojek <contact@artur-rojek.eu>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-Id: <32VZ8Q.HWUYPX9U9OKT@crapouillou.net>
-In-Reply-To: <20200418152257.5f8a45bd@archlinux>
-References: <20200417202859.35427-1-contact@artur-rojek.eu>
-        <20200417202859.35427-5-contact@artur-rojek.eu>
-        <CAHp75VfRbnnuUhfyXpu+5dp4TutHSrHus=sX_vG_5F0dX4k0fQ@mail.gmail.com>
-        <UFBY8Q.ES4D59V22INC1@crapouillou.net>
-        <CAHp75VfEAtqucMPdkygfBhojTJoHO5vFk_o0suiyf7i2JCMw9Q@mail.gmail.com>
-        <7CFY8Q.68YMS0V08F992@crapouillou.net>
-        <CAHp75VeVvE8LAO8f=-cwfgL6erFZACGwMnriNRaQnfnHw31wkg@mail.gmail.com>
-        <0HGZ8Q.TO6FK92GVGIN3@crapouillou.net>
-        <CAHp75VdE=xHi8Kn=nZiH+shHvS6O2pc6W=FCs_VwrJq6Bfwx7w@mail.gmail.com>
-        <NXJZ8Q.5YQ6OBV5Y9V8@crapouillou.net> <20200418152257.5f8a45bd@archlinux>
+        Sat, 18 Apr 2020 13:52:54 -0400
+Received: from muru.com ([72.249.23.125]:50306 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725893AbgDRRwy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 18 Apr 2020 13:52:54 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 2A52B80E1;
+        Sat, 18 Apr 2020 17:53:41 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org
+Subject: [PATCH] ARM: dts: omap4-droid4: Fix flakey wlan by disabling internal pull for gpio
+Date:   Sat, 18 Apr 2020 10:52:48 -0700
+Message-Id: <20200418175248.42963-1-tony@atomide.com>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jonathan,
+The wlan on droid4 is flakey on some devices, and experiments have shown this
+gets fixed if we disable the internal pull for wlan gpio interrupt line.
 
-Le sam. 18 avril 2020 =E0 15:22, Jonathan Cameron <jic23@kernel.org> a=20
-=E9crit :
-> On Sat, 18 Apr 2020 15:24:58 +0200
-> Paul Cercueil <paul@crapouillou.net> wrote:
->=20
->>  Le sam. 18 avril 2020 =E0 15:42, Andy Shevchenko
->>  <andy.shevchenko@gmail.com> a =E9crit :
->>  > On Sat, Apr 18, 2020 at 3:10 PM Paul Cercueil=20
->> <paul@crapouillou.net>
->>  > wrote:
->>  >>  Le sam. 18 avril 2020 =E0 14:57, Andy Shevchenko
->>  >>  <andy.shevchenko@gmail.com> a =E9crit :
->>  >>  > On Sat, Apr 18, 2020 at 1:48 AM Paul Cercueil
->>  >> <paul@crapouillou.net>
->>  >>  > wrote:
->>  >>  >>  Le sam. 18 avril 2020 =E0 0:49, Andy Shevchenko
->>  >>  >>  <andy.shevchenko@gmail.com> a =E9crit :
->>  >>  >>  > On Sat, Apr 18, 2020 at 12:24 AM Paul Cercueil
->>  >>  >> <paul@crapouillou.net>
->>  >>  >>  > wrote:
->>  >>  >>  >>  Le sam. 18 avril 2020 =E0 0:10, Andy Shevchenko
->>  >>  >>  >>  <andy.shevchenko@gmail.com> a =E9crit :
->>  >>  >>  >>  > On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek
->>  >>  >>  >> <contact@artur-rojek.eu>
->>  >>  >>  >>  > wrote:
->>  >
->>  > ...
->>  >
->>  >>  >>  >>  >>  +#include <linux/of.h>
->>  >>  >>  >>  >
->>  >>  >>  >>  > Do you really need this? (See below as well)
->>  >>  >>  >
->>  >>  >>  >>  >>  +static const struct of_device_id
->>  >> adc_joystick_of_match[] =3D
->>  >>  >> {
->>  >>  >>  >>  >>  +       { .compatible =3D "adc-joystick", },
->>  >>  >>  >>  >>  +       { },
->>  >>  >>  >>  >>  +};
->>  >>  >>  >>  >>  +MODULE_DEVICE_TABLE(of, adc_joystick_of_match);
->>  >>  >>  >>  >>  +
->>  >>  >>  >>  >>  +static struct platform_driver adc_joystick_driver=20
->> =3D {
->>  >>  >>  >>  >>  +       .driver =3D {
->>  >>  >>  >>  >>  +               .name =3D "adc-joystick",
->>  >>  >>  >>  >
->>  >>  >>  >>  >>  +               .of_match_table =3D
->>  >>  >>  >>  >> of_match_ptr(adc_joystick_of_match),
->>  >>  >>  >>  >
->>  >>  >>  >>  > Drop this a bit harmful of_match_ptr() macro. It=20
->> should go
->>  >>  >> with
->>  >>  >>  >> ugly
->>  >>  >>  >>  > #ifdeffery. Here you simple introduced a compiler=20
->> warning.
->>  >>  >>  >>
->>  >>  >>  >>  I assume you mean #ifdef around the of_device_id +=20
->> module
->>  >> table
->>  >>  >>  >> macro?
->>  >>  >>  >
->>  >>  >>  > Yes.
->>  >>  >>  >
->>  >>  >>  >>  > On top of that, you are using device property API, OF=20
->> use
->>  >> in
->>  >>  >> this
->>  >>  >>  >> case
->>  >>  >>  >>  > is contradictory (at lest to some extend).
->>  >>  >>  >>
->>  >>  >>  >>  I don't see why. The fact that the driver can work when
->>  >> probed
->>  >>  >> from
->>  >>  >>  >>  platform code
->>  >>  >>  >
->>  >>  >>  > Ha-ha, tell me how. I would like to be very surprised.
->>  >>  >>
->>  >>  >>  iio_map_array_register(),
->>  >>  >>  pinctrl_register_mappings(),
->>  >>  >>  platform_add_devices(),
->>  >>  >>
->>  >>  >>  you're welcome.
->>  >>  >
->>  >>  > I think above has no relation to what I'm talking about.
->>  >>
->>  >>  Yes it does. It allows you to map the IIO channels, set the=20
->> pinctrl
->>  >>  configurations and register a device from platform code instead=20
->> of
->>  >>  devicetree.
->>  >
->>  > I'm not talking about other drivers, I'm talking about this=20
->> driver and
->>  > how it will be instantiated. Above, according to the code, can't=20
->> be
->>  > comprehensive to fulfill this.
->>=20
->>  This is how the platform devices were instanciated on JZ4740 before=20
->> we
->>  switched everything to devicetree.
->>=20
->>  >>  > How *this* driver can work as a platform instantiated one?
->>  >>  > We seems have a conceptual misunderstanding here.
->>  >>  >
->>  >>  > For example, how can probe of this driver not fail, if it is=20
->> not
->>  >>  > backed by a DT/ACPI properties?
->>  >>
->>  >>  platform_device_add_properties().
->>  >
->>  > Yes, I waited for this. And seems you don't understand the (scope=20
->> of)
->>  > API, you are trying to insist this driver can be used as a=20
->> platform
->>  > one.
->>  > Sorry, I must to disappoint you, it can't. Above interface is=20
->> created
->>  > solely for quirks to support (broken) DT/ACPI tables. It's not
->>  > supposed to be used as a main source for the device properties.
->>=20
->>  The fact that it was designed for something else doesn't mean it=20
->> can't
->>  be used.
->>=20
->>  Anyway, this discussion is pointless. I don't think anybody would=20
->> want
->>  to do that.
->>=20
->>  >>  >>  >>  doesn't mean that it shouldn't have a table to probe
->>  >>  >>  >>  from devicetree.
->>  >>  >>  >
->>  >>  >>  > I didn't get what you are talking about here. The idea of
->>  >>  >> _unified_
->>  >>  >>  > device property API is to get rid of OF-centric code in
->>  >> favour of
->>  >>  >> more
->>  >>  >>  > generic approach. Mixing those two can be done only in
->>  >> specific
->>  >>  >> cases
->>  >>  >>  > (here is not the one).
->>  >>  >>
->>  >>  >>  And how are we mixing those two here? The only OF-centric=20
->> thing
->>  >>  >> here is
->>  >>  >>  the device table, which is required if we want the driver to
->>  >> probe
->>  >>  >> from
->>  >>  >>  devicetree.
->>  >>  >
->>  >>  > Table is fine(JFYI the types and sections are defined outside=20
->> of
->>  >> OF
->>  >>  > stuff, though being [heavily] used by it) , API=20
->> (of_match_ptr()
->>  >> macro
->>  >>  > use) is not.
->>  >>
->>  >>  Sorry, but that's just stupid. Please have a look at how
->>  >> of_match_ptr()
->>  >>  macro is defined in <linux/of.h>.
->>  >
->>  > Call it whatever you want, but above code is broken.
->>=20
->>  of_match_ptr() is basically defined like this:
->>=20
->>  #ifdef CONFIG_OF
->>  #define of_match_ptr(x) (x)
->>  #else
->>  #define of_match_ptr(x) NULL
->>  #endif
->>=20
->>  So please, enlighten me, tell me what is so wrong about what's being
->>  done here.
->>=20
->>  > It needs either of:
->>  > - ugly ifdeffery
->>  > - dropping of_match_ptr()
->>  > - explicit dependence to OF
->>  >
->>  > My choice is second one. Because it makes code better and allows=20
->> also
->>  > ACPI to use this driver (usually) without changes.
->>=20
->>  And how is unconditionally compiling the of_match_table make it
->>  magically probe from ACPI, without a acpi_match_table?
->>=20
->>  -Paul
->=20
-> Look up PRP0001 ACPI ID.  Magic trick ;)
->=20
-> https://www.kernel.org/doc/html/latest/firmware-guide/acpi/enumeration.ht=
-ml?highlight=3DPRP0001
->=20
-> It allows you to define an ACPI device in DSDT that is instantiated
-> from what is effectively the DT binding including the id table.
+The symptoms are that the wlan connection is very slow and almost useless
+with lots of wlcore firmware reboot warnings in the dmesg.
 
-So what you're saying, is that the OF table should be present, even=20
-though CONFIG_OF is not set, just in case it is probed from ACPI?
+In addition to configuring the wlan gpio pulls, let's also configure the rest
+of the wlan sd pins. We have not configured those eariler as we're booting
+using kexec.
 
--Paul
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ .../boot/dts/motorola-mapphone-common.dtsi    | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-
+diff --git a/arch/arm/boot/dts/motorola-mapphone-common.dtsi b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
+--- a/arch/arm/boot/dts/motorola-mapphone-common.dtsi
++++ b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
+@@ -371,6 +371,8 @@ &mmc2 {
+ };
+ 
+ &mmc3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc3_pins>;
+ 	vmmc-supply = <&wl12xx_vmmc>;
+ 	/* uart2_tx.sdmmc3_dat1 pad as wakeirq */
+ 	interrupts-extended = <&wakeupgen GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH
+@@ -483,6 +485,37 @@ OMAP4_IOPAD(0x09e, PIN_INPUT | MUX_MODE0)
+ 		>;
+ 	};
+ 
++	/*
++	 * Android uses PIN_OFF_INPUT_PULLDOWN | PIN_INPUT_PULLUP | MUX_MODE3
++	 * for gpio_100, but the internal pull makes wlan flakey on some
++	 * devices. Off mode value should be tested if we have off mode working
++	 * later on.
++	 */
++	mmc3_pins: pinmux_mmc3_pins {
++		pinctrl-single,pins = <
++		/* 0x4a10008e gpmc_wait2.gpio_100 d23 */
++		OMAP4_IOPAD(0x08e, PIN_INPUT | MUX_MODE3)
++
++		/* 0x4a100102 abe_mcbsp1_dx.sdmmc3_dat2 ab25 */
++		OMAP4_IOPAD(0x102, PIN_INPUT_PULLUP | MUX_MODE1)
++
++		/* 0x4a100104 abe_mcbsp1_fsx.sdmmc3_dat3 ac27 */
++		OMAP4_IOPAD(0x104, PIN_INPUT_PULLUP | MUX_MODE1)
++
++		/* 0x4a100118 uart2_cts.sdmmc3_clk ab26 */
++		OMAP4_IOPAD(0x118, PIN_INPUT | MUX_MODE1)
++
++		/* 0x4a10011a uart2_rts.sdmmc3_cmd ab27 */
++		OMAP4_IOPAD(0x11a, PIN_INPUT_PULLUP | MUX_MODE1)
++
++		/* 0x4a10011c uart2_rx.sdmmc3_dat0 aa25 */
++		OMAP4_IOPAD(0x11c, PIN_INPUT_PULLUP | MUX_MODE1)
++
++		/* 0x4a10011e uart2_tx.sdmmc3_dat1 aa26 */
++		OMAP4_IOPAD(0x11e, PIN_INPUT_PULLUP | MUX_MODE1)
++		>;
++	};
++
+ 	/* gpmc_ncs0.gpio_50 */
+ 	poweroff_gpio: pinmux_poweroff_pins {
+ 		pinctrl-single,pins = <
+-- 
+2.26.1
