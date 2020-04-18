@@ -2,63 +2,53 @@ Return-Path: <SRS0=a4mE=6C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B231C352BE
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 18:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C36C3A5A0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 18:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19597221F7
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 18:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F34B0221E9
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 18:53:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587234290;
-	bh=Eiw2FcEguTRJkOBXYe2RiFR5T2mMDxr5J0RGwGhG6fc=;
+	s=default; t=1587235995;
+	bh=6Z96Ro4J8eng7mjTKTrohKq7lCiEJvmaqF+1CM5f0AQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=UNRys+/5RS+xvemQ3EN5wgtcKTizdp9JIR6o5FSaSOp3nUjQ1963rwUrPnDWUWFlF
-	 CFwVEHbYYlh0RYfahN6whZAFm6LqQMRbOAj2guHlpmcgrtEvHmqE2a1t5Mit7gnbqK
-	 OngapC6JYJOLexnKO7N7KBNt7o1b9Ovr57nyAqR0=
+	b=vBSMQuGi4iv8oxmxm51W3gY2JwhOp4/ix1B17TPspUNGcXP8rzoNIBYHAKxmszo5T
+	 gvyJ+NzNbMA1Vc8mxOKMeNV2K4uqc7JpFijGc39mrqhpuGsu9iL7fTvkahVP8aA4Kb
+	 C+JbE+SOj2Of6OSlpFdFeB52emrlbu7YKkIiTGRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726089AbgDRSYt (ORCPT
+        id S1727789AbgDRSxK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Apr 2020 14:24:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50250 "EHLO mail.kernel.org"
+        Sat, 18 Apr 2020 14:53:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725824AbgDRSYt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 18 Apr 2020 14:24:49 -0400
+        id S1725824AbgDRSxJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 18 Apr 2020 14:53:09 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD51221BE5;
-        Sat, 18 Apr 2020 18:24:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E66C21D93;
+        Sat, 18 Apr 2020 18:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587234288;
-        bh=Eiw2FcEguTRJkOBXYe2RiFR5T2mMDxr5J0RGwGhG6fc=;
+        s=default; t=1587235989;
+        bh=6Z96Ro4J8eng7mjTKTrohKq7lCiEJvmaqF+1CM5f0AQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oIG38DGXDITaJxY5mhXfozPYjDp5qVgzxBz2FaEUDhDUIDtJ8/LXkYtm0DCH2A5hi
-         oAqP0Lp7VtDQ92aeu9gmRxu7OyTQ6xhEWpeP1bBkthsCRnau6P7qayITlHJtAYNSF4
-         IVvwF00aGUuThd3pXs7B1gION9uSlHW8WhJ9oBAk=
-Date:   Sat, 18 Apr 2020 19:24:43 +0100
+        b=cKnWoTG0IkKW0ofQ9Nq4hVMgRQX9VSEZ+LazEa+NX1mTkCXFSVX+PKs/cSyVlm5lP
+         QqHc6kNEfW88oWdk97kszhhlMc/IpVEOFZfzNpdLm8+aluT1MPewHxWF1rbBTY8TfM
+         0xhGYP24Nf1NRiE6ndWi85k0dltXMsJDLyuSceBY=
+Date:   Sat, 18 Apr 2020 19:53:03 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     Kamel Bouhara <kamel.bouhara@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] dt-bindings: counter: microchip-tcb-capture
- counter
-Message-ID: <20200418192443.47322236@archlinux>
-In-Reply-To: <20200417135820.GB94725@icarus>
-References: <20200415130455.2222019-1-kamel.bouhara@bootlin.com>
-        <20200415130455.2222019-3-kamel.bouhara@bootlin.com>
-        <20200417135820.GB94725@icarus>
+To:     mani@kernel.org
+Cc:     robh+dt@kernel.org, narcisaanamaria12@gmail.com, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andy.shevchenko@gmail.com
+Subject: Re: [RESEND PATCH v3 0/3] Add Reset and Wakeup support for CCS811
+Message-ID: <20200418195303.5ddf7939@archlinux>
+In-Reply-To: <20200414184930.5576-1-mani@kernel.org>
+References: <20200414184930.5576-1-mani@kernel.org>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -68,79 +58,53 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 17 Apr 2020 09:58:20 -0400
-William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
+On Wed, 15 Apr 2020 00:19:27 +0530
+mani@kernel.org wrote:
 
-> On Wed, Apr 15, 2020 at 03:04:54PM +0200, Kamel Bouhara wrote:
-> > Describe the devicetree binding for the Microchip TCB module.
-> > Each counter blocks exposes three independent counters.
-> > 
-> > However, when configured in quadrature decoder, both channel <0> and <1>
-> > are required for speed/position and rotation capture (yet only the
-> > position is captured).
-> > 
-> > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>  
+> From: Manivannan Sadhasivam <mani@kernel.org>
 > 
-> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
-Will let this sit a bit longer to let the DT maintainers have an opportunity
-to take a look.
+> Hello,
+> 
+> This patchset adds external reset and wakeup support for CCS811 VOC
+> gas sensor. The nRESET and nWAKE pins available on the device are
+> utilised to provide these functionalities.
+> 
+> The patchset has been validated using CCS811 connected to STM32MP1 based
+> board over I2C.
+> 
+> While at it, the devicetree yaml binding and OF match table for this sensor
+> are also added.
+> 
+Looks good to me. I'd just like to give it a bit longer to allow dt
+maintainers to take a look if they wish.
 
 Thanks,
 
 Jonathan
 
+> Thanks,
+> Mani
 > 
-> > ---
-> > Changes from v3:
-> >  - Updated the brand name: s/atmel/microchip/.
-> > 
-> > Changes from v2:
-> >  - Fixed errors reported by dt_binding_check
-> > 
-> >  .../counter/microchip-tcb-capture.yaml        | 33 +++++++++++++++++++
-> >  1 file changed, 33 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/counter/microchip-tcb-capture.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/counter/microchip-tcb-capture.yaml b/Documentation/devicetree/bindings/counter/microchip-tcb-capture.yaml
-> > new file mode 100644
-> > index 000000000000..183e9ee4c049
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/counter/microchip-tcb-capture.yaml
-> > @@ -0,0 +1,33 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/counter/microchip-tcb-capture.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Microchip TCB Counter
-> > +
-> > +maintainers:
-> > +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: "microchip,tcb-capture"
-> > +
-> > +  reg:
-> > +    description: TCB capture channel to register as counter device.
-> > +      Each channel is independent therefore only one channel is
-> > +      registered by default execpt for the QDEC mode where both TCB0's
-> > +      channels <0> and  <1> are required.
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    tcb0: timer@f800c000 {
-> > +        compatible = "microchip,tcb-capture";
-> > +        reg = <0>, <1>;
-> > +    };
-> > -- 
-> > 2.25.0
-> >   
+> Changes in v3:
+> 
+> * Added ccs811_set_wake(false) to all error paths before calling it actually
+> * Added Andy's reviewed-by tag
+> * Added comment for reset procedure and dropped error print for gpio request
+> 
+> Changes in v2:
+> 
+> * Fixed DT binding schema and switched to dual license (GPL/BSD)
+> * Returned actual error code from devm_gpiod_get_optional()
+> * Dropped of.h include and of_match_ptr()
+> 
+> Manivannan Sadhasivam (3):
+>   dt-bindings: iio: chemical: Add binding for CCS811 VOC sensor
+>   iio: chemical: Add support for external Reset and Wakeup in CCS811
+>   iio: chemical: Add OF match table for CCS811 VOC sensor
+> 
+>  .../bindings/iio/chemical/ams,ccs811.yaml     |  51 ++++++++
+>  drivers/iio/chemical/ccs811.c                 | 112 ++++++++++++++++--
+>  2 files changed, 152 insertions(+), 11 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
+> 
 
