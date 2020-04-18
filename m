@@ -2,246 +2,162 @@ Return-Path: <SRS0=a4mE=6C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39EC1C352BE
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 21:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7481FC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 21:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E9212223D
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 21:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 469A521974
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 21:30:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AYjGRpCo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PBweGkuN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgDRVI1 (ORCPT
+        id S1727927AbgDRVa2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Apr 2020 17:08:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35694 "EHLO
+        Sat, 18 Apr 2020 17:30:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbgDRVI1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Apr 2020 17:08:27 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 336ACC061A0C;
-        Sat, 18 Apr 2020 14:08:27 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id ay1so2426025plb.0;
-        Sat, 18 Apr 2020 14:08:27 -0700 (PDT)
+        with ESMTP id S1726807AbgDRVa2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 18 Apr 2020 17:30:28 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BDD2C061A0C;
+        Sat, 18 Apr 2020 14:30:28 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id z12so5830766ilb.10;
+        Sat, 18 Apr 2020 14:30:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PQ+VkFm1IL2gzeFXBK+nXbQRBkL26Rg4FqNHDJ9y8EQ=;
-        b=AYjGRpComkMu9tmzqiNJx9vkjUQvgwfMriME7vyHciHhfmHM3qzNM6vHy1pEkbIXE+
-         HRVRTfHcE2Bhyagjkgroedt6tcXsBCT62Rdd63bis9wzGFHUSKxh5/+oB1pt+RuBRzVF
-         7qdcy86JYX3rfeoAw1b8hXUeq7nYw0F0N0arPPgjinm8jGhE4y7HYM0qHx5DvivczTaa
-         bQPQoetLyYiVKPaHY7dHcBxGyCe/yJoTkTt1HtYFfu2kRFTwSG1nbZruFWF9iws2N7Di
-         LinDuQyAAk7cc95wF9HEWPlXuNvz4/enyC7AN0wYR+s9n6lE6Uw0tnp4yx8YMKo4JCX0
-         ZL4g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=nKuUM6IHW8RYHdTcFjqmk2a4BW3C6dzC42TENSM2aLE=;
+        b=PBweGkuNrIIhqTHUkOqGVSkGqJB1PNvsadvz8LjfFnZ6P4CKIZCf1OAKrTNC4fy/ci
+         4Rp54B1F6f+fHirPVBzu+pGSLCRXannDPndxPXIipkYN04OXsDitRYo8dMu6UkvQ7wka
+         mHlk2SqG72sY3ogGch4dFZJ5dabTsi5z1+3kdAhCfWGUt7A+bnu61TA2CtygquAFmihW
+         ia+COjjURroAkwcgnA79DX9SyvVhL0/SIcGzfzTafYQuR5zcQ3p1u0mLakhEy0SG5eMN
+         ukpZ34SJsxEsGD8VCPxfd/24Qf4ZqKsbkfRiDsxCLI5BV5p0WpoconaIixFeUU6D9fyd
+         Snhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PQ+VkFm1IL2gzeFXBK+nXbQRBkL26Rg4FqNHDJ9y8EQ=;
-        b=ey3vtmhinr1WtzomV2RrdJm08nTmoPjrFSeREhMadOcIcJ5tPcrlINbt4w0opnPgtx
-         /3XdMwGfLos1nFAEDwZgLIRn8U5gV0dwFga71d/ZSiUK8Aul3XqVz05P8sRU7ozHbpqC
-         aSxhCYkgjaw/7vCnjzTfyz4iHgIFizZHEEvx/i+DE0h0vL1z33weLmPZf3AWiz3+DPI4
-         n9M32EjZak2QhKG/d4VXQpPvRDS22VRpr0U8gfDXyCs7gySQCXumOcFiXWeRd68nMs6C
-         D07l7ZMTcqeHne5Hkip8m4Ui8TUc3SAaQPqdWcHfOo5VvSd1uHskZ4grMT44TCiysqBt
-         fM9Q==
-X-Gm-Message-State: AGi0PuawGrMgTXPeZGzZ4TlUtO8emFBKphuJodyfok3f2DbVIqCY1LDr
-        oaoweFvRwIELsulSXl+ZcoM=
-X-Google-Smtp-Source: APiQypIyy0mikmBUcY8Ngq2DMMEAWudajPedCmpZBm3jPRbJNq8QifzfQfTTZyI6773clVmWuXtpyw==
-X-Received: by 2002:a17:902:5997:: with SMTP id p23mr5617071pli.89.1587244106720;
-        Sat, 18 Apr 2020 14:08:26 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c84sm14751055pfb.153.2020.04.18.14.08.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 18 Apr 2020 14:08:26 -0700 (PDT)
-Date:   Sat, 18 Apr 2020 14:08:25 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Tobias Schramm <t.schramm@manjaro.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Yueyao Zhu <yueyao@google.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH] usb: fusb302: Convert to use GPIO descriptors
-Message-ID: <20200418210825.GA20485@roeck-us.net>
-References: <20200415192448.305257-1-linus.walleij@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nKuUM6IHW8RYHdTcFjqmk2a4BW3C6dzC42TENSM2aLE=;
+        b=Dox9hcZjExfJT8C2RM27AkiQCcf8nhC9wtMEUNmElMM3sRiKn0A2blAqnEwyRjimI3
+         p1zFv9N5uYKUFoj3TeuKZQgX5LAdq4BLwGmTIKoQm/HAc3o4mxFhLU9YayipyXmrr/bU
+         K7tNP3488gvG0o8XBccUTFT8l2qwSW3/KyTaDcKre5fzcM43g09ljglTVST9JXezI/fd
+         D9n1VRQfb2hNW5taUeK+Oi+TMQRA94JFG3t/0HsyxCsi0/YXClEYL/MxGJifUnE2UeJa
+         G+kN/JC/MySTgsWH39kQzkgGPcFQocnnKgLD4p4H3A2Iiohhys5j0Koo+BT8DGjjXbwm
+         NqfQ==
+X-Gm-Message-State: AGi0PuY8kddGeIyJutDS3ORywMf3XQ1/duSn2OQmpDVJgSe1QkJhExfg
+        M5a2yGGLA0bverHq5lXhlqKEFvbXKch21SFoFS4=
+X-Google-Smtp-Source: APiQypJzTdzColiYA6jI5kUE3R3feOOH5KcSAgB1jGYlnjTxo7vews7lVZM8Ee7P9ayUu0/SV24dV3u7niNPl+4w1Io=
+X-Received: by 2002:a92:540f:: with SMTP id i15mr8784006ilb.59.1587245427254;
+ Sat, 18 Apr 2020 14:30:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415192448.305257-1-linus.walleij@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200418143923.19608-1-peron.clem@gmail.com> <20200418143923.19608-5-peron.clem@gmail.com>
+In-Reply-To: <20200418143923.19608-5-peron.clem@gmail.com>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Sat, 18 Apr 2020 23:30:16 +0200
+Message-ID: <CAJiuCcdH0=wdKfmAquNfv=0AT_S8qx0Nasbb4m6itWXjUyw8_g@mail.gmail.com>
+Subject: Re: [PATCH 4/7] ASoC: sun4i-i2s: Set sign extend sample
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>
+Cc:     Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Marcus Cooper <codekipper@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 09:24:48PM +0200, Linus Walleij wrote:
-> This converts the FUSB302 driver to use GPIO descriptors.
-> The conversion to descriptors per se is pretty straight-forward.
-> 
-> In the process I discovered that:
-> 
-> 1. The driver uses a completely undocumented device tree binding
->    for the interrupt GPIO line, "fcs,int_n". Ooops.
-> 
-> 2. The undocumented binding, presumably since it has not seen
->    review, is just "fcs,int_n", lacking the compulsory "-gpios"
->    suffix and also something that is not a good name because
->    the "_n" implies the line is inverted which is something we
->    handle with flags in the device tree. Ooops.
-> 
-> 3. Possibly the driver should not be requesting the line as a
->    GPIO and request the corresponding interrupt line by open
->    coding, the GPIO chip is very likely doubleing as an IRQ
->    controller and can probably provide an interrupt directly
->    for this line with interrupts-extended = <&gpio0 ...>;
-> 
-> 4. Possibly the IRQ should just be tagged on the I2C client node
->    in the device tree like apparently ACPI does, as it overrides
->    this IRQ with client->irq if that exists.
-> 
-> But now it is too late to do much about that and as I can see
-> this is used like this in the Pinebook which is a shipping product
-> so let'a just contain the mess and move on.
-> 
-> The property currently appears in:
-> arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
-> 
-> Create a quirk in the GPIO OF library to allow this property
-> specifically to be specified without the "-gpios" suffix, we have
-> other such bindings already.
-> 
-> Cc: Tobias Schramm <t.schramm@manjaro.org>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Cc: Yueyao Zhu <yueyao@google.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Hi,
 
-No idea what to do about the above, but the change itself looks ok to me.
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-Guenter
-
+On Sat, 18 Apr 2020 at 16:39, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
+> wrote:
+>
+> From: Marcus Cooper <codekipper@gmail.com>
+>
+> On the newer SoCs such as the H3 and A64 this is set by default
+> to transfer a 0 after each sample in each slot. However the A10
+> and A20 SoCs that this driver was developed on had a default
+> setting where it padded the audio gain with zeros.
+>
+> This isn't a problem whilst we have only support for 16bit audio
+> but with larger sample resolution rates in the pipeline then SEXT
+> bits should be cleared so that they also pad at the LSB. Without
+> this the audio gets distorted.
+>
+> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
 > ---
-> This is now covered as far as GPIO is concerned but you might
-> want to look into creating proper bindings for this or
-> correcting the devicetree.
-> ---
->  drivers/gpio/gpiolib-of.c        | 21 +++++++++++++++++++++
->  drivers/usb/typec/tcpm/fusb302.c | 32 +++++++++-----------------------
->  2 files changed, 30 insertions(+), 23 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-> index ccc449df3792..20c2c428168e 100644
-> --- a/drivers/gpio/gpiolib-of.c
-> +++ b/drivers/gpio/gpiolib-of.c
-> @@ -460,6 +460,24 @@ static struct gpio_desc *of_find_arizona_gpio(struct device *dev,
->  	return of_get_named_gpiod_flags(dev->of_node, con_id, 0, of_flags);
+>  sound/soc/sunxi/sun4i-i2s.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>
+> diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+> index a23c9f2a3f8c..e5f00be8cdcf 100644
+> --- a/sound/soc/sunxi/sun4i-i2s.c
+> +++ b/sound/soc/sunxi/sun4i-i2s.c
+> @@ -663,6 +663,12 @@ static int sun4i_i2s_set_soc_fmt(const struct sun4i_=
+i2s *i2s,
+>         }
+>         regmap_update_bits(i2s->regmap, SUN4I_I2S_CTRL_REG,
+>                            SUN4I_I2S_CTRL_MODE_MASK, val);
+> +
+> +       /* Set sign extension to pad out LSB with 0 */
+> +       regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT1_REG,
+> +                          SUN4I_I2S_FMT1_REG_SEXT_MASK,
+> +                          SUN4I_I2S_FMT1_REG_SEXT(0));
+
+My apologies, I made a mistake during the rebase between old Marcus
+Cooper patches and new one.
+And sadly I lost the defines required here without noticing it.
+
+Will send a v2.
+
+Sorry for that,
+Clement
+
+> +
+>         return 0;
 >  }
->  
-> +static struct gpio_desc *of_find_usb_gpio(struct device *dev,
-> +					  const char *con_id,
-> +					  enum of_gpio_flags *of_flags)
-> +{
-> +	/*
-> +	 * Currently this USB quirk is only for the Fairchild FUSB302 host which is using
-> +	 * an undocumented DT GPIO line named "fcs,int_n" without the compulsory "-gpios"
-> +	 * suffix.
-> +	 */
-> +	if (!IS_ENABLED(CONFIG_TYPEC_FUSB302))
-> +		return ERR_PTR(-ENOENT);
+>
+> @@ -765,6 +771,11 @@ static int sun8i_i2s_set_soc_fmt(const struct sun4i_=
+i2s *i2s,
+>                            SUN8I_I2S_CTRL_BCLK_OUT | SUN8I_I2S_CTRL_LRCK_=
+OUT,
+>                            val);
+>
+> +       /* Set sign extension to pad out LSB with 0 */
+> +       regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT1_REG,
+> +                          SUN8I_I2S_FMT1_REG_SEXT_MASK,
+> +                          SUN8I_I2S_FMT1_REG_SEXT(0));
 > +
-> +	if (!con_id || strcmp(con_id, "fcs,int_n"))
-> +		return ERR_PTR(-ENOENT);
+>         return 0;
+>  }
+>
+> @@ -867,6 +878,11 @@ static int sun50i_i2s_set_soc_fmt(const struct sun4i=
+_i2s *i2s,
+>                            SUN8I_I2S_CTRL_BCLK_OUT | SUN8I_I2S_CTRL_LRCK_=
+OUT,
+>                            val);
+>
+> +       /* Set sign extension to pad out LSB with 0 */
+> +       regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT1_REG,
+> +                          SUN8I_I2S_FMT1_REG_SEXT_MASK,
+> +                          SUN8I_I2S_FMT1_REG_SEXT(0));
 > +
-> +	return of_get_named_gpiod_flags(dev->of_node, con_id, 0, of_flags);
-> +}
-> +
->  struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
->  			       unsigned int idx, unsigned long *flags)
->  {
-> @@ -504,6 +522,9 @@ struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
->  	if (PTR_ERR(desc) == -ENOENT)
->  		desc = of_find_arizona_gpio(dev, con_id, &of_flags);
->  
-> +	if (PTR_ERR(desc) == -ENOENT)
-> +		desc = of_find_usb_gpio(dev, con_id, &of_flags);
-> +
->  	if (IS_ERR(desc))
->  		return desc;
->  
-> diff --git a/drivers/usb/typec/tcpm/fusb302.c b/drivers/usb/typec/tcpm/fusb302.c
-> index b498960ff72b..b28facece43c 100644
-> --- a/drivers/usb/typec/tcpm/fusb302.c
-> +++ b/drivers/usb/typec/tcpm/fusb302.c
-> @@ -9,14 +9,13 @@
->  #include <linux/delay.h>
->  #include <linux/errno.h>
->  #include <linux/extcon.h>
-> -#include <linux/gpio.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/i2c.h>
->  #include <linux/interrupt.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
->  #include <linux/of_device.h>
-> -#include <linux/of_gpio.h>
->  #include <linux/pinctrl/consumer.h>
->  #include <linux/proc_fs.h>
->  #include <linux/regulator/consumer.h>
-> @@ -83,7 +82,7 @@ struct fusb302_chip {
->  	struct work_struct irq_work;
->  	bool irq_suspended;
->  	bool irq_while_suspended;
-> -	int gpio_int_n;
-> +	struct gpio_desc *gpio_int_n;
->  	int gpio_int_n_irq;
->  	struct extcon_dev *extcon;
->  
-> @@ -1618,30 +1617,17 @@ static void fusb302_irq_work(struct work_struct *work)
->  
->  static int init_gpio(struct fusb302_chip *chip)
->  {
-> -	struct device_node *node;
-> +	struct device *dev = chip->dev;
->  	int ret = 0;
->  
-> -	node = chip->dev->of_node;
-> -	chip->gpio_int_n = of_get_named_gpio(node, "fcs,int_n", 0);
-> -	if (!gpio_is_valid(chip->gpio_int_n)) {
-> -		ret = chip->gpio_int_n;
-> -		dev_err(chip->dev, "cannot get named GPIO Int_N, ret=%d", ret);
-> -		return ret;
-> -	}
-> -	ret = devm_gpio_request(chip->dev, chip->gpio_int_n, "fcs,int_n");
-> -	if (ret < 0) {
-> -		dev_err(chip->dev, "cannot request GPIO Int_N, ret=%d", ret);
-> -		return ret;
-> -	}
-> -	ret = gpio_direction_input(chip->gpio_int_n);
-> -	if (ret < 0) {
-> -		dev_err(chip->dev,
-> -			"cannot set GPIO Int_N to input, ret=%d", ret);
-> -		return ret;
-> +	chip->gpio_int_n = devm_gpiod_get(dev, "fcs,int_n", GPIOD_IN);
-> +	if (IS_ERR(chip->gpio_int_n)) {
-> +		dev_err(dev, "failed to request gpio_int_n\n");
-> +		return PTR_ERR(chip->gpio_int_n);
->  	}
-> -	ret = gpio_to_irq(chip->gpio_int_n);
-> +	ret = gpiod_to_irq(chip->gpio_int_n);
->  	if (ret < 0) {
-> -		dev_err(chip->dev,
-> +		dev_err(dev,
->  			"cannot request IRQ for GPIO Int_N, ret=%d", ret);
->  		return ret;
->  	}
-> -- 
-> 2.25.2
-> 
+>         return 0;
+>  }
+>
+> --
+> 2.20.1
+>
