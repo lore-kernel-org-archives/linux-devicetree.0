@@ -1,161 +1,210 @@
 Return-Path: <SRS0=a4mE=6C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_ABUSE_SURBL,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5D1C38A2E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 12:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F31C38A2E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 12:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DFA6206D9
-	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 12:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55AF7206D9
+	for <linux-devicetree@archiver.kernel.org>; Sat, 18 Apr 2020 12:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cdfq9APS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y3wnFQ8A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725893AbgDRMkC (ORCPT
+        id S1725990AbgDRMm2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 18 Apr 2020 08:40:02 -0400
-Received: from mail-eopbgr60071.outbound.protection.outlook.com ([40.107.6.71]:34528
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725903AbgDRMkC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 18 Apr 2020 08:40:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XWcItMsYOPC9QDwCwe0RTcNBkqVT6W69Af7dv+FJW0wdnqqOt6Y/HSn9q6YPy8nkTGaLS23/PHtAZFILmRF5MLR8ITwSettHBQYcN1TWI6ftE5mkOftGlS/MIOMwQ/eBJKB/7r4jP3iYVLQEKsGI/k1KvlkVO0kcmzSReaSDfHPcurXA+iCYXo44/8YpjCKdVtkiEcnFcbs0Ih3vVQerCmtAnz+O768rvPq5vKTgTe5FZlX15EaaOmXDab9Pc111YfbsMiRIjDrlnMzv7r3w20yVNNy9E3whqawLsLNaOqEf0VuSaP1rgu55gPGeZOaRLMElAkEzJbSSBq6nWLEJ8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tgzj0EPdQ6+1VipzqgvCpBatmaeafTHiCELdzqBsxl4=;
- b=fJqlWUw3Nq2iFRJ+9sa75Eh7tOAOzaat05fFjV803fb/S5CAXlVIuCiR27DtOKeEBacsIJ8U1AUQLmweCDmZuNPjZZTpa8rhHltTDH2Wst9ddY3a03e9iUOHGSZcZUsF79UEB1RO84H52ww2ooMOyOrAq+IRXkb1RXHfqXEXUm4bXDR+oha/XJ5D1OQlEHY/P3MquNHZtwoN7LsSsWbaScAjrJp0DXJRjU2OHagrsGelvZSje3rPkuV3w8goIbHaGvv5rrEHaM3eErOZZOoiA7JLc8gUvlldRlGmi2Orl0XhwBGOHSTgPlZrhOPn68qWuQQbVkN4GBwH1GxtJoy38g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tgzj0EPdQ6+1VipzqgvCpBatmaeafTHiCELdzqBsxl4=;
- b=cdfq9APSrT5B3VhyjplZyV9LZDngqI3R2KHOiSUQobPumBAgVRulCIZV1c9f4B3l7qNqXtdVoycTpncwGDPwr/vQS47+ef83QsOQu4dQCaSaL8nFrsIS0GBWmDwSTBjclConm5HCL+BMrtT+I+QGaQENAo5F5RmdRjFoakvzNaQ=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB3PR0402MB3643.eurprd04.prod.outlook.com (2603:10a6:8:5::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25; Sat, 18 Apr
- 2020 12:39:58 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3143:c46:62e4:8a8b]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3143:c46:62e4:8a8b%7]) with mapi id 15.20.2900.028; Sat, 18 Apr 2020
- 12:39:58 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 1/2] arm64: dts: imx8qxp-mek: Sort labels alphabetically
-Thread-Topic: [PATCH 1/2] arm64: dts: imx8qxp-mek: Sort labels alphabetically
-Thread-Index: AQHWFHuqDS+qjcBTvkSC+6fN5KRxoKh+0MaAgAAB9+A=
-Date:   Sat, 18 Apr 2020 12:39:57 +0000
-Message-ID: <DB3PR0402MB3916E212269C5D5BD6E12D21F5D60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1587101946-19495-1-git-send-email-Anson.Huang@nxp.com>
- <AM6PR04MB496663AED27DFD38E648169C80D60@AM6PR04MB4966.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR04MB496663AED27DFD38E648169C80D60@AM6PR04MB4966.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [183.192.13.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 81e307c4-b874-4691-fb90-08d7e3959aad
-x-ms-traffictypediagnostic: DB3PR0402MB3643:|DB3PR0402MB3643:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB364308271DA3850B448215BAF5D60@DB3PR0402MB3643.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0377802854
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(366004)(136003)(346002)(376002)(39860400002)(8676002)(2906002)(71200400001)(7696005)(81156014)(6506007)(76116006)(33656002)(44832011)(966005)(5660300002)(478600001)(186003)(26005)(52536014)(64756008)(4326008)(66476007)(66946007)(86362001)(9686003)(66556008)(66446008)(55016002)(316002)(110136005)(8936002)(21314003)(921003)(32563001);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6VuWkPveEAGTPGc1xRqXnYySu9mjM8SThMoXzQtjTClAGKKlOJN+XaZBykF7aka6xAh/Ky4soyP0mX6LxlrhEmuGgp5kCnUCJ+vbXDui6DU/LB8MufwLFXxGcNj1sDkmXnHNW9SiX5uhpW47F8d++7KOd9rfuZ4K1Bptf2ykk7zzwLCWX1Tje2lFzauELYe153j5oUtPJ2OS5U3Jzv11Q3sT+EqAROrkKh9XjDTLeopfQ8Xgk9rGeSr1KK17VwedKshUUx0YPv8fM0EVUuV7PeJHMPkS7qMyyiJ9N+8TwXUTv47OTLDvrtKgjzfc73Slrh2Jr3Pvy9YwUe2zrtdHGtHdGgh/In3Xa07uPxnJcYJwNd36U4+5I1ZJyU72Zs4DGaYKnFp9uKD+9kErItrOjoJxQnEgNsfEZQLbAXtJoOKeB4FRTZxpnRnUkucRVgQOzwitYwTXtpBbuZMNcNi4e+sJxtbDAFqKcuSXJBVZ1/LxJjEAY97MLkKHFROX5g3fW31il+7sJUlDC/7ABFEWpyx0o0UIhxRroPkIr6r6E50HOXBSvJn5MTpoJJMQlcCjPVBQ6IQi0OpjsEeR0J/fnF28bU0250BvM2IR9cojARU=
-x-ms-exchange-antispam-messagedata: YdE/4hEjySUHbfVNyeostdOTtpLCkuD22UPsucV2nNV7o7+HEOgjiYNn1RurbZAlUwzOAuCJosk1haeO1EAzQfOo6qvPt7gt+B3uxU5oJStTAyThfcD4ZLMR4IGb+M68I1QvQAZ2owyh9d5X26DsLdAX06hiwlkx9Yd2oEzOgZlsAr3sjCGKtQDsWipU4dem2ZFtBt+D/UsY5yjVFYbMXkpJIVR/iYReXWR03hIZCBgemFifqlTLUvI9+97f3ledQTOHkHTrCUnlmGUgyefrk4YKCGkTLUN2C4BHe4JHKslBRuF+bCJo4iYP9kGuEfP2IM014atnxO6TtLn9Rghs7Hpk5zkRyFJOEkpjNQw30/4OVqb1iJd4Hvx90zQX/zpuLtBEXubKx0zjykppDociMFbry44DUVvZIgCNR/eexe+QB6BMfou/JxdnzvyZQ6vIgvlKqAA9N6jT6DN/J1F2w3FZzAri45FpkgGA2tMr09D/d8VCydRNFR4mdYfBd/lQ7xO9Kffd6ZAwz4sClGqm5ukkBhAkh0VEkeARkg3xO9PHSvqttL9FwZKYCUdU4Lx3s+ttaHaKlpQHMyNLeS8DwS2AN1XTqQVvmZKWz1rjo87ZH/GJUdn1UjDC90v7Be0cWBvLHx4QsOp/DdZitOJF/M4NyC+JjcKpTJ3HEyqtOQjirdaY00NV9nz3CF2vEQbtpHkg8nUGlbxxaIIHYvHDx+tn4JrNWRy7D3PiBXfToUvWzq49cnYeyOCj2BWYtmFfX0KYmjvvY2N7oXiMadO1OVx19etyOhK6yn1hwPb7T98=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sat, 18 Apr 2020 08:42:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725804AbgDRMm2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sat, 18 Apr 2020 08:42:28 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 020CAC061A0C;
+        Sat, 18 Apr 2020 05:42:28 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id o15so1969210pgi.1;
+        Sat, 18 Apr 2020 05:42:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=msTveBEE/I7WigbRod9wGTghAO8DUZ+Kgh3c4iHP0FE=;
+        b=Y3wnFQ8AT/XizL1ztZDKm+4ZYXkLjydtTYVgJfv7Zsajc3/IYcsf7bAa4YwdygSa3s
+         V4XsL5LeC/pU8c68g6blcUZwf4dKneKmC+strYrrjBMJnt9ry8eSrjOfHhYb72H22x39
+         NKHA1dGDv2osm2qH0rFOnmZyRGXLbtw3iC4u5kUtietmfhmLBlc7HAgbEEWVwdu8apKy
+         VuB3UVMf2x2K71w5bVvNaWUi+G6ikDhm6Uh/kHbmAC2KCoL+Pu0guSeZ0O6A8/RX600N
+         q3fHlleTE5hBqEv+bD0icM8K8bFvl1dwTHOVN+SHJ4iwKvDCRMzigNZKMtbszf160Aey
+         EKSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=msTveBEE/I7WigbRod9wGTghAO8DUZ+Kgh3c4iHP0FE=;
+        b=QSuZqyr2qz7gJ5xbf4/NoLBO49xac/c1eXDHagHLCwwcDzv0xkmaw+6uDj8qnDbU2M
+         v61pGBEhO+Tq3/zm6fCtJ5VL/a36LmPRetmHm8RzoprjH6iXcligfRQ4LRkGZ/FeRCDh
+         GTvAzDk8ePk416aTrOKS/mt3XcmQj/IigSHhjSffUx0THsj/bZQhxXBgqYEEvKQYxLZx
+         DP6NevDlOVF2jrQr8b2IwU6f/cw/0SyuzmKSERxF+NUPDuUzg8yz6gkCJwpXRByrUK4Z
+         JfHhbCiQNq0dA/2rzKLg7QY0EiDL1CVxZdktFcJnpZQRszLDCmNbD25W+mZUPi1zkwgK
+         U24w==
+X-Gm-Message-State: AGi0PuZ0fj2FQ6fxrWe0NyJHMr70hHyMFoXwiNHguxh+ND/t6F9DWmzL
+        le+VdnNc2pDVIBmaVAhTrEHHNy6k12TEPDq90wM=
+X-Google-Smtp-Source: APiQypKf2VMHD7rKz0HAHuXSVwB8prRvGVthOHXAroX4Y1+Y5pXFGk/+z0os4Bk0Lz+PLNL39EgkUd9ph8MUZWhKsYA=
+X-Received: by 2002:a63:1d4:: with SMTP id 203mr7467742pgb.74.1587213747470;
+ Sat, 18 Apr 2020 05:42:27 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81e307c4-b874-4691-fb90-08d7e3959aad
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2020 12:39:58.0150
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: otHPEVWQDTKW+AHRzaVsE0utMqZ853oGLCpbBOamlFF6QwSgMRPNxVF5ClzzFhDMObnr7LBS0yYNtMr8FMQzbg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3643
+References: <20200417202859.35427-1-contact@artur-rojek.eu>
+ <20200417202859.35427-5-contact@artur-rojek.eu> <CAHp75VfRbnnuUhfyXpu+5dp4TutHSrHus=sX_vG_5F0dX4k0fQ@mail.gmail.com>
+ <UFBY8Q.ES4D59V22INC1@crapouillou.net> <CAHp75VfEAtqucMPdkygfBhojTJoHO5vFk_o0suiyf7i2JCMw9Q@mail.gmail.com>
+ <7CFY8Q.68YMS0V08F992@crapouillou.net> <CAHp75VeVvE8LAO8f=-cwfgL6erFZACGwMnriNRaQnfnHw31wkg@mail.gmail.com>
+ <0HGZ8Q.TO6FK92GVGIN3@crapouillou.net>
+In-Reply-To: <0HGZ8Q.TO6FK92GVGIN3@crapouillou.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 18 Apr 2020 15:42:16 +0300
+Message-ID: <CAHp75VdE=xHi8Kn=nZiH+shHvS6O2pc6W=FCs_VwrJq6Bfwx7w@mail.gmail.com>
+Subject: Re: [RESEND PATCH v5 5/5] input: joystick: Add ADC attached joystick driver.
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Artur Rojek <contact@artur-rojek.eu>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-input <linux-input@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQoNCj4gU3ViamVjdDogUkU6IFtQQVRDSCAxLzJdIGFybTY0OiBkdHM6IGlteDhxeHAtbWVrOiBT
-b3J0IGxhYmVscyBhbHBoYWJldGljYWxseQ0KPiANCj4gPiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5z
-b24uSHVhbmdAbnhwLmNvbT4NCj4gPiBTZW50OiBGcmlkYXksIEFwcmlsIDE3LCAyMDIwIDE6Mzkg
-UE0NCj4gPg0KPiA+IFNvcnQgdGhlIGxhYmVscyBhbHBoYWJldGljYWxseSBmb3IgY29uc2lzdGVu
-Y3kuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhw
-LmNvbT4NCj4gDQo+IFRoaXMgcGF0Y2ggaXMgbWVhbmluZ2xlc3MgYXMgc3Vic3lzIHByZWZpeCAo
-ZS5nLiBhZG1hX3h4eCkgd2lsbCBiZSByZW1vdmVkDQo+IGxhdGVyIGFuZCBkZXZpY2VzIG5vZGVz
-IGFsbCBtb3ZlZCBpbnRvIHN1YnN5cyBkdHNpLg0KPiBJJ3ZlIHJlcGxpZWQgdGhpcyBiZWZvcmU6
-DQo+IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDIwLzMvMTYvMjQ0DQoNCkkga25ldyB5b3UgcmVw
-bGllZCB0aGlzIGJlZm9yZSwgYnV0IGRvIHlvdSBoYXZlIGFuIGV4YWN0IGRheSBvZiB3aGVuIHN1
-YnN5cyBkdHNpIHdpbGwgYmUgaW1wbGVtZW50ZWQ/DQpNYW55IHByZXZpb3VzIHBhdGNoZXMgb2Yg
-bXkgbWluZSB0byBhZGQgZmVhdHVyZXMgdG8gRFRTIGZpbGUsIEkgaGF2ZSBiZWVuIGFza2VkIGJ5
-IFNoYXduIHRvDQphZGQgYSBuZXcgcGF0Y2ggdG8gaGVscCBzb3J0IHRoZSBsYWJlbHMsIEkgdGhp
-bmsgdGhpcyBpcyBzb21lIG1haW50YWluZXJzJyBob2JieSwgc28gaWYgU2hhd24gdGhpbmtzIG5v
-DQpuZWVkIHRoaXMgZm9yIDhRWFAsIEkgY2FuIGRyb3AgdGhpcyBwYXRjaC4NCg0KQW5zb24NCg0K
-DQo+IA0KPiBSZWdhcmRzDQo+IEFpc2hlbmcNCj4gDQo+ID4gLS0tDQo+ID4gIGFyY2gvYXJtNjQv
-Ym9vdC9kdHMvZnJlZXNjYWxlL2lteDhxeHAtbWVrLmR0cyB8IDYwDQo+ID4gKysrKysrKysrKysr
-Ky0tLS0tLS0tLS0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzMCBpbnNlcnRpb25zKCspLCAz
-MCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRz
-L2ZyZWVzY2FsZS9pbXg4cXhwLW1lay5kdHMNCj4gPiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
-ZXNjYWxlL2lteDhxeHAtbWVrLmR0cw0KPiA+IGluZGV4IDEzNDYwYTMuLjJlZDdhYmEgMTAwNjQ0
-DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC1tZWsuZHRz
-DQo+ID4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OHF4cC1tZWsuZHRz
-DQo+ID4gQEAgLTMwLDI5ICszMCw4IEBADQo+ID4gIAl9Ow0KPiA+ICB9Ow0KPiA+DQo+ID4gLSZh
-ZG1hX2xwdWFydDAgew0KPiA+IC0JcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiAtCXBp
-bmN0cmwtMCA9IDwmcGluY3RybF9scHVhcnQwPjsNCj4gPiAtCXN0YXR1cyA9ICJva2F5IjsNCj4g
-PiAtfTsNCj4gPiAtDQo+ID4gLSZmZWMxIHsNCj4gPiAtCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVs
-dCI7DQo+ID4gLQlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfZmVjMT47DQo+ID4gLQlwaHktbW9kZSA9
-ICJyZ21paS1pZCI7DQo+ID4gLQlwaHktaGFuZGxlID0gPCZldGhwaHkwPjsNCj4gPiAtCWZzbCxt
-YWdpYy1wYWNrZXQ7DQo+ID4gKyZhZG1hX2RzcCB7DQo+ID4gIAlzdGF0dXMgPSAib2theSI7DQo+
-ID4gLQ0KPiA+IC0JbWRpbyB7DQo+ID4gLQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gLQkJ
-I3NpemUtY2VsbHMgPSA8MD47DQo+ID4gLQ0KPiA+IC0JCWV0aHBoeTA6IGV0aGVybmV0LXBoeUAw
-IHsNCj4gPiAtCQkJY29tcGF0aWJsZSA9ICJldGhlcm5ldC1waHktaWVlZTgwMi4zLWMyMiI7DQo+
-ID4gLQkJCXJlZyA9IDwwPjsNCj4gPiAtCQl9Ow0KPiA+IC0JfTsNCj4gPiAgfTsNCj4gPg0KPiA+
-ICAmYWRtYV9pMmMxIHsNCj4gPiBAQCAtMTMxLDYgKzExMCwzNSBAQA0KPiA+ICAJfTsNCj4gPiAg
-fTsNCj4gPg0KPiA+ICsmYWRtYV9scHVhcnQwIHsNCj4gPiArCXBpbmN0cmwtbmFtZXMgPSAiZGVm
-YXVsdCI7DQo+ID4gKwlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfbHB1YXJ0MD47DQo+ID4gKwlzdGF0
-dXMgPSAib2theSI7DQo+ID4gK307DQo+ID4gKw0KPiA+ICsmZmVjMSB7DQo+ID4gKwlwaW5jdHJs
-LW5hbWVzID0gImRlZmF1bHQiOw0KPiA+ICsJcGluY3RybC0wID0gPCZwaW5jdHJsX2ZlYzE+Ow0K
-PiA+ICsJcGh5LW1vZGUgPSAicmdtaWktaWQiOw0KPiA+ICsJcGh5LWhhbmRsZSA9IDwmZXRocGh5
-MD47DQo+ID4gKwlmc2wsbWFnaWMtcGFja2V0Ow0KPiA+ICsJc3RhdHVzID0gIm9rYXkiOw0KPiA+
-ICsNCj4gPiArCW1kaW8gew0KPiA+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsJCSNz
-aXplLWNlbGxzID0gPDA+Ow0KPiA+ICsNCj4gPiArCQlldGhwaHkwOiBldGhlcm5ldC1waHlAMCB7
-DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAiZXRoZXJuZXQtcGh5LWllZWU4MDIuMy1jMjIiOw0KPiA+
-ICsJCQlyZWcgPSA8MD47DQo+ID4gKwkJfTsNCj4gPiArCX07DQo+ID4gK307DQo+ID4gKw0KPiA+
-ICsmc2N1X2tleSB7DQo+ID4gKwlzdGF0dXMgPSAib2theSI7DQo+ID4gK307DQo+ID4gKw0KPiA+
-ICAmdXNkaGMxIHsNCj4gPiAgCWFzc2lnbmVkLWNsb2NrcyA9IDwmY2xrIElNWF9DT05OX1NESEMw
-X0NMSz47DQo+ID4gIAlhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDwyMDAwMDAwMDA+Ow0KPiA+IEBA
-IC0yMjksMTEgKzIzNywzIEBADQo+ID4gIAkJPjsNCj4gPiAgCX07DQo+ID4gIH07DQo+ID4gLQ0K
-PiA+IC0mYWRtYV9kc3Agew0KPiA+IC0Jc3RhdHVzID0gIm9rYXkiOw0KPiA+IC19Ow0KPiA+IC0N
-Cj4gPiAtJnNjdV9rZXkgew0KPiA+IC0Jc3RhdHVzID0gIm9rYXkiOw0KPiA+IC19Ow0KPiA+IC0t
-DQo+ID4gMi43LjQNCg0K
+On Sat, Apr 18, 2020 at 3:10 PM Paul Cercueil <paul@crapouillou.net> wrote:
+> Le sam. 18 avril 2020 =C3=A0 14:57, Andy Shevchenko
+> <andy.shevchenko@gmail.com> a =C3=A9crit :
+> > On Sat, Apr 18, 2020 at 1:48 AM Paul Cercueil <paul@crapouillou.net>
+> > wrote:
+> >>  Le sam. 18 avril 2020 =C3=A0 0:49, Andy Shevchenko
+> >>  <andy.shevchenko@gmail.com> a =C3=A9crit :
+> >>  > On Sat, Apr 18, 2020 at 12:24 AM Paul Cercueil
+> >> <paul@crapouillou.net>
+> >>  > wrote:
+> >>  >>  Le sam. 18 avril 2020 =C3=A0 0:10, Andy Shevchenko
+> >>  >>  <andy.shevchenko@gmail.com> a =C3=A9crit :
+> >>  >>  > On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek
+> >>  >> <contact@artur-rojek.eu>
+> >>  >>  > wrote:
+
+...
+
+> >>  >>  >>  +#include <linux/of.h>
+> >>  >>  >
+> >>  >>  > Do you really need this? (See below as well)
+> >>  >
+> >>  >>  >>  +static const struct of_device_id adc_joystick_of_match[] =3D
+> >> {
+> >>  >>  >>  +       { .compatible =3D "adc-joystick", },
+> >>  >>  >>  +       { },
+> >>  >>  >>  +};
+> >>  >>  >>  +MODULE_DEVICE_TABLE(of, adc_joystick_of_match);
+> >>  >>  >>  +
+> >>  >>  >>  +static struct platform_driver adc_joystick_driver =3D {
+> >>  >>  >>  +       .driver =3D {
+> >>  >>  >>  +               .name =3D "adc-joystick",
+> >>  >>  >
+> >>  >>  >>  +               .of_match_table =3D
+> >>  >>  >> of_match_ptr(adc_joystick_of_match),
+> >>  >>  >
+> >>  >>  > Drop this a bit harmful of_match_ptr() macro. It should go
+> >> with
+> >>  >> ugly
+> >>  >>  > #ifdeffery. Here you simple introduced a compiler warning.
+> >>  >>
+> >>  >>  I assume you mean #ifdef around the of_device_id + module table
+> >>  >> macro?
+> >>  >
+> >>  > Yes.
+> >>  >
+> >>  >>  > On top of that, you are using device property API, OF use in
+> >> this
+> >>  >> case
+> >>  >>  > is contradictory (at lest to some extend).
+> >>  >>
+> >>  >>  I don't see why. The fact that the driver can work when probed
+> >> from
+> >>  >>  platform code
+> >>  >
+> >>  > Ha-ha, tell me how. I would like to be very surprised.
+> >>
+> >>  iio_map_array_register(),
+> >>  pinctrl_register_mappings(),
+> >>  platform_add_devices(),
+> >>
+> >>  you're welcome.
+> >
+> > I think above has no relation to what I'm talking about.
+>
+> Yes it does. It allows you to map the IIO channels, set the pinctrl
+> configurations and register a device from platform code instead of
+> devicetree.
+
+I'm not talking about other drivers, I'm talking about this driver and
+how it will be instantiated. Above, according to the code, can't be
+comprehensive to fulfill this.
+
+> > How *this* driver can work as a platform instantiated one?
+> > We seems have a conceptual misunderstanding here.
+> >
+> > For example, how can probe of this driver not fail, if it is not
+> > backed by a DT/ACPI properties?
+>
+> platform_device_add_properties().
+
+Yes, I waited for this. And seems you don't understand the (scope of)
+API, you are trying to insist this driver can be used as a platform
+one.
+Sorry, I must to disappoint you, it can't. Above interface is created
+solely for quirks to support (broken) DT/ACPI tables. It's not
+supposed to be used as a main source for the device properties.
+
+> >>  >>  doesn't mean that it shouldn't have a table to probe
+> >>  >>  from devicetree.
+> >>  >
+> >>  > I didn't get what you are talking about here. The idea of
+> >> _unified_
+> >>  > device property API is to get rid of OF-centric code in favour of
+> >> more
+> >>  > generic approach. Mixing those two can be done only in specific
+> >> cases
+> >>  > (here is not the one).
+> >>
+> >>  And how are we mixing those two here? The only OF-centric thing
+> >> here is
+> >>  the device table, which is required if we want the driver to probe
+> >> from
+> >>  devicetree.
+> >
+> > Table is fine(JFYI the types and sections are defined outside of OF
+> > stuff, though being [heavily] used by it) , API (of_match_ptr() macro
+> > use) is not.
+>
+> Sorry, but that's just stupid. Please have a look at how of_match_ptr()
+> macro is defined in <linux/of.h>.
+
+Call it whatever you want, but above code is broken.
+It needs either of:
+- ugly ifdeffery
+- dropping of_match_ptr()
+- explicit dependence to OF
+
+My choice is second one. Because it makes code better and allows also
+ACPI to use this driver (usually) without changes.
+
+--=20
+With Best Regards,
+Andy Shevchenko
