@@ -2,106 +2,88 @@ Return-Path: <SRS0=ADtQ=6D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8464BC38A30
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 13:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0081EC38A30
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 15:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64532206F9
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 13:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C420D214D8
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 15:11:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nI95/ZjH"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="nwo2clu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgDSNul (ORCPT
+        id S1725927AbgDSPLn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Apr 2020 09:50:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47810 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbgDSNuR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Apr 2020 09:50:17 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B9D4C061A0C;
-        Sun, 19 Apr 2020 06:50:17 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id r26so8193940wmh.0;
-        Sun, 19 Apr 2020 06:50:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Nc3cDv/S8K5EI2hOuNsI3mldCjUl3ocR/NEfaOULj3M=;
-        b=nI95/ZjH71ySY6uXGjLedJbNIT5kpYGkrINPlyIcPFYvg8Uu9Pyjbw7wLbgdg35tcP
-         uJkJ5tlDF01igqu2vhWLTahY2WkeiOGUhWH8MLTJv/XyZsKnEbrjS8BDVcqRpMbTZcH+
-         /PgR+2tS1pyFOgsnaSQtNa+U65mqYLHp1Yud7AoCSNsc0Z3IhPkvHI+iHlfoMd3SWf8G
-         /UYHSYIkLlpVXg3fAPHyHuFoO1mllH8XhcrXrO3sskPAeWXuMK3IaVyNUfzg+Wx3/jIf
-         sdF+kl+jZFp5ZzCo2YnF10kJ+Fze7jhagwMjTiHR8Ul49tCL176AySvkPo5L83hNF7cZ
-         EFNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Nc3cDv/S8K5EI2hOuNsI3mldCjUl3ocR/NEfaOULj3M=;
-        b=XvSTeTvc2ziS445dbvJWqmgmzEKgGgeGuc9DLPOCX/moBC+n/g/hZMW59sBDemXCuL
-         jYnpQiiJdFeq7gDmdlCH5QvAyFaWqRZNY+R8pK8oXzUrwns1rDcEnKjOUhziSf5rM8V6
-         XyJ6+Ib2JXRSF4zaksvSfd/TjzyjEj2f1U3OgaTzg4Rto1gPikRtrxXRlhNuZ3ZvwRKl
-         0xWa/T7AOvx0XmEU+a5x+U0jonjnW02OwJ/4IsCV8d4VfunG1R4iVyfNvbwbD/TV2URE
-         UGXP6AaBN4qYXSsO0YUhYx2dyysLMrbIjm4cpfJAkTb82RjoyqUYdEDEqqPdIE5NSeD2
-         PNnA==
-X-Gm-Message-State: AGi0PuZUAiRQ/m/oGKlWF7i53/DHzm1mxHSh8qyAAxjSbtHOJG5EHwOw
-        M5mcV8Ef/wTSwKcmAH+l7OM=
-X-Google-Smtp-Source: APiQypJxdgjLYRxBFD6/tAelj5Ds+PrbDiWbR2b/Zct7aMTE9/866RPUxPoM0n27L+lKuJh0zunv7g==
-X-Received: by 2002:a1c:a7c2:: with SMTP id q185mr12958486wme.42.1587304216075;
-        Sun, 19 Apr 2020 06:50:16 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0:4e7:1fdd:b7c2:b3ab])
-        by smtp.gmail.com with ESMTPSA id z8sm20183940wrr.40.2020.04.19.06.50.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 06:50:14 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v3 2/7] arm64: configs: Enable sun50i cpufreq nvmem
-Date:   Sun, 19 Apr 2020 15:50:06 +0200
-Message-Id: <20200419135011.18010-3-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200419135011.18010-1-peron.clem@gmail.com>
-References: <20200419135011.18010-1-peron.clem@gmail.com>
+        Sun, 19 Apr 2020 11:11:43 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:48332 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725910AbgDSPLn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 19 Apr 2020 11:11:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=hccV7HGXuDlGWiOBVr5T3h4obmkusLKjgyGJWPEzlHc=; b=nwo2clu9f98nng0PdkfDffd818
+        kZqs9/x3KcwCTA1rtB4n3EPTzcSJ5SdCPWZn0FqCRC+vL07rfN7iUMtCEP/fd13VVymXUnWozZntd
+        cFxo13fGvRahTXL7PjCwtSQLMjZdab98927rIkeuYxF1f2DhAX+3rdbnfVauPD6eoK08=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jQBba-003eIX-4b; Sun, 19 Apr 2020 17:11:34 +0200
+Date:   Sun, 19 Apr 2020 17:11:34 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v2 1/2] dt-bindings: net: mdio: Document common
+ properties
+Message-ID: <20200419151134.GF836632@lunn.ch>
+References: <20200419030843.18870-1-f.fainelli@gmail.com>
+ <20200419030843.18870-2-f.fainelli@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200419030843.18870-2-f.fainelli@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Allwinner H6 needs this driver to be able to get
-the correct speed_bin required for DVFS.
+On Sat, Apr 18, 2020 at 08:08:42PM -0700, Florian Fainelli wrote:
+> Some of the properties pertaining to the broken turn around or resets
+> were only documented in ethernet-phy.yaml while they are applicable
+> across all MDIO devices and not Ethernet PHYs specifically which are a
+> superset.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  .../devicetree/bindings/net/mdio.yaml         | 27 +++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/mdio.yaml b/Documentation/devicetree/bindings/net/mdio.yaml
+> index 50c3397a82bc..d268ed80bb77 100644
+> --- a/Documentation/devicetree/bindings/net/mdio.yaml
+> +++ b/Documentation/devicetree/bindings/net/mdio.yaml
+> @@ -50,6 +50,33 @@ patternProperties:
+>          description:
+>            The ID number for the PHY.
+>  
+> +      broken-turn-around:
+> +        $ref: /schemas/types.yaml#definitions/flag
+> +        description:
+> +          If set, indicates the MDIO device does not correctly release
+> +          the turn around line low at the end of a MDIO transaction.
 
-Enable this option in arm64 defconfig.
+Sorry, missed this the first time. Turn around is in the middle of the
+transaction, after the register bits for C22, not at the end of the
+transaction.
 
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index f9eefb5940ca..37e512c135ba 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -84,6 +84,7 @@ CONFIG_CPU_FREQ_GOV_CONSERVATIVE=m
- CONFIG_CPU_FREQ_GOV_SCHEDUTIL=y
- CONFIG_CPUFREQ_DT=y
- CONFIG_ACPI_CPPC_CPUFREQ=m
-+CONFIG_ARM_ALLWINNER_SUN50I_CPUFREQ_NVMEM=m
- CONFIG_ARM_ARMADA_37XX_CPUFREQ=y
- CONFIG_ARM_SCPI_CPUFREQ=y
- CONFIG_ARM_IMX_CPUFREQ_DT=m
--- 
-2.20.1
-
+	Andrew
