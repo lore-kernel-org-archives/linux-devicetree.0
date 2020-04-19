@@ -2,164 +2,151 @@ Return-Path: <SRS0=ADtQ=6D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B33FEC3A5A0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 22:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C8AC38A29
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 23:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B15820B1F
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 22:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E5FD21D82
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 23:37:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587339476;
+	bh=aMUkvwJNs+z/YszzNTxWCYyq/+KFAGTZL8L5H5wB620=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=S0yvXUJ2ZEsf51DXwI6ufoBp8ycC7Fv4jdMaD38o315//oSzgPvFnlgKZ5r8BrKYS
+	 s/hAMRAaUwwLK5IHcn3Rcr14SrpVFNJ1yHUL1N4PbEjji8jfsX6WMKpykbpgjQ/MGs
+	 TP/SYEag0926k1aqEiqFO1+OFChBIL4rcN8A1E1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726048AbgDSW2V (ORCPT
+        id S1725947AbgDSXhz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Apr 2020 18:28:21 -0400
-Received: from mga05.intel.com ([192.55.52.43]:59485 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbgDSW2U (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 19 Apr 2020 18:28:20 -0400
-IronPort-SDR: YdqpwMrfgpoC84ppwJ97RGM0CqlkCXFCH76UccdgMLk/WnQv3PDyaJZXetlzZFYyxzYvbWbHKr
- UNtpFWpYt30w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 15:28:20 -0700
-IronPort-SDR: Nh+Dex8K9ftQjDSvavCHtA2y3a9nVX58784fZWSVhNqHos1DyHm21UfAcqen4FhIVAQ9CFSSxP
- PEoGt9ZMnosw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,404,1580803200"; 
-   d="scan'208";a="289824346"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 19 Apr 2020 15:28:15 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1jQIQD-001v9r-Qw; Mon, 20 Apr 2020 01:28:17 +0300
-Date:   Mon, 20 Apr 2020 01:28:17 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
-        brendanhiggins@google.com, tglx@linutronix.de,
-        boris.brezillon@collabora.com, anders.roxell@linaro.org,
-        masonccyang@mxic.com.tw, piotrs@cadence.com, robh+dt@kernel.org,
-        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
-        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
-Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200419222817.GK185537@smile.fi.intel.com>
-References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Sun, 19 Apr 2020 19:37:55 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:53794 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbgDSXhz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Apr 2020 19:37:55 -0400
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 03JNbPqD015952
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 08:37:25 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 03JNbPqD015952
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587339446;
+        bh=dHYGVONabMvO/3fqJjmu1iNx4sX1iSSOhrK7hBoC0d4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1Y/mC5cSjOjqpukIifxbTf4ZOTcc734y27lhe7F2NzM36fZFJNO0D7agMAvuSwpCX
+         BFx9GIno81+7F2FSAqXAf5Up7VqMsgzRhQcGMsvK7137nhos01L27ddnUofyD/W+LW
+         +zhzEsRN/Tx0+quOwiG4IWfShstp0Qg4ZAIefSe5cveGyeq3FmZkTRNi4CV3wOxnGy
+         mW8NfL8/EFEdFZpPw/BxE+GETTz8Xsnmprf5SEhhJe3pGpc2HSR6bFFgkhuk2IKKuw
+         1yUDzADU3hJWO6mIex3waXce/qj5s9DzNnoiSr7qXcMjIFZGqyReZBGZ4EtOijTxUj
+         jIXNV4pO3KzDg==
+X-Nifty-SrcIP: [209.85.222.41]
+Received: by mail-ua1-f41.google.com with SMTP id t8so2960077uap.3
+        for <devicetree@vger.kernel.org>; Sun, 19 Apr 2020 16:37:25 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZ07jthx4aonliOq+IyiJhMZ9N+Wssp+fFlA8jsjmZf/xCikoIO
+        FitdK26u7YlIyMH1VPPJW7Pymr7/f1viiwlu+AY=
+X-Google-Smtp-Source: APiQypL0f0ARsXfF2YkjuYbE9XS4JBo15E5+kATj6zO54fUCVpSM6MMduRAVPmYIV9I9A/D6qXx46hxUksmaysNJl78=
+X-Received: by 2002:ab0:7298:: with SMTP id w24mr6091311uao.95.1587339444497;
+ Sun, 19 Apr 2020 16:37:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <158614147708.29424.2884940487411120526.stgit@localhost> <CAA93ih2ineuFYzA_uhGwmzsznDKacEG=7rK1beWsCkrnR0opuA@mail.gmail.com>
+In-Reply-To: <CAA93ih2ineuFYzA_uhGwmzsznDKacEG=7rK1beWsCkrnR0opuA@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 20 Apr 2020 08:36:48 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR9tdhqkKft5j59_Z=sJj_wVJBwRysFpShO1HXck7-idw@mail.gmail.com>
+Message-ID: <CAK7LNAR9tdhqkKft5j59_Z=sJj_wVJBwRysFpShO1HXck7-idw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] dts: uniphier: Add Akebi96 Board support
+To:     Masami Hiramatsu <masami.hiramatsu@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 04:21:47PM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> This patch adds the new IP of Nand Flash Controller(NFC) support
-> on Intel's Lightning Mountain(LGM) SoC.
-> 
-> DMA is used for burst data transfer operation, also DMA HW supports
-> aligned 32bit memory address and aligned data access by default.
-> DMA burst of 8 supported. Data register used to support the read/write
-> operation from/to device.
-> 
-> NAND controller driver implements ->exec_op() to replace legacy hooks,
-> these specific call-back method to execute NAND operations.
-
-I guess untested version slipped into mailing list...
-See below why.
-
-...
-
-> +#include <linux/clk.h>
-> +#include <linux/completion.h>
-> +#include <linux/dmaengine.h>
-> +#include <linux/dma-direction.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/err.h>
-> +#include <linux/init.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/module.h>
-> +#include <linux/resource.h>
-> +#include <linux/sched.h>
-> +#include <linux/types.h>
-> +#include <linux/mtd/mtd.h>
-> +#include <linux/mtd/rawnand.h>
-> +#include <linux/mtd/nand_ecc.h>
-> +#include <linux/platform_device.h>
-
-> +#include <linux/of.h>
-
-Do you need this?
-
-> +#include <linux/mtd/partitions.h>
-> +#include <linux/io.h>
-> +#include <linux/slab.h>
-> +#include <mtd/mtd-abi.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/mtd/nand.h>
-
-Basically, do you need all of them?
-
-And maybe keep them in order?
-
-...
-
-> +static int lgm_dma_init(struct device *dev, struct lgm_nand_host *lgm_host)
-> +{
-> +	int ret;
-> +
-> +	/* Prepare for TX DMA: */
-> +	lgm_host->dma_tx = dma_request_chan(dev, "tx");
-> +	if (IS_ERR(lgm_host->dma_tx)) {
-> +		ret = PTR_ERR(lgm_host->dma_tx);
-> +		dev_err(dev, "can't get the TX DMA channel, error %d!\n", ret);
-> +		goto err;
-> +	}
-> +
-> +	/* Prepare for RX: */
-> +	lgm_host->dma_rx = dma_request_chan(dev, "rx");
-> +	if (IS_ERR(lgm_host->dma_rx)) {
-> +		ret = PTR_ERR(lgm_host->dma_rx);
-> +		dev_err(dev, "can't get the RX DMA channel, error %d\n", ret);
-
-I suspect this error path hasn't been tested. I don't see where tx channel
-freeing is happening.
-
-> +		goto err;
-> +	}
-> +
-> +	return 0;
-
-> +err:
-> +	return ret;
-
-Redundant label.
-
-> +}
-
-...
-
-> +	res = devm_platform_ioremap_resource_byname(pdev, lgm_host->cs_name);
-> +	lgm_host->nandaddr_va = res;
-> +	nandaddr_pa = res->start;
-> +	if (IS_ERR(lgm_host->nandaddr_va))
-> +		return PTR_ERR(lgm_host->nandaddr_va);
-
-I'm wondering what is this.  How is it even compile?
-
--- 
-With Best Regards,
-Andy Shevchenko
+Hiramatsu-san
 
 
+On Fri, Apr 17, 2020 at 2:31 PM Masami Hiramatsu
+<masami.hiramatsu@linaro.org> wrote:
+>
+> Hello Yamada-san,
+>
+> Could you review this series?
+
+
+Where did you post your series?
+
+I see this ping mail in
+https://lore.kernel.org/linux-arm-kernel/?q=3DAkebi96
+
+But, I do not see the original post.
+
+Could you point me to the patchwork URL, please?
+
+Once I find the patch location, it is easy to handle.
+Since I do not have this board, I will just queue it up with no evaluation.
+
+Thanks.
+
+
+
+>
+> Thank you,
+>
+> 2020=E5=B9=B44=E6=9C=886=E6=97=A5(=E6=9C=88) 11:52 Masami Hiramatsu <masa=
+mi.hiramatsu@linaro.org>:
+> >
+> > Hello,
+> >
+> > Here is a couple of patches to add a devicetree for Akebi96 board.
+> > The Akebi96 is a certified 96boards which is based on Socionext
+> > UniPhier LD20 SoC. Most of the part is similar to LD20 reference
+> > board, but there are some changes.
+> >
+> >   - MAX3421 USB-SPI chip on SPI port3 (for USB gadget port.)
+> >   - Simple frame buffer with 1080p fixed resolution.
+> >   - I2S port which is connected to aout1b instead of aout1.
+> >   - 3 serial ports, only serial3 has CTS/RTS.
+> >   - No NAND, only eMMC on the board.
+> >   - OP-TEE support.
+> >
+> > See https://www.96boards.org/product/akebi96/ for details.
+> >
+> > Thank you,
+> >
+> > ---
+> >
+> > Masami Hiramatsu (2):
+> >       dt-bindings: arm: Add Akebi96 board support
+> >       arm64: dts: uniphier: Add support for Akebi96
+> >
+> >
+> >  .../bindings/arm/socionext/uniphier.yaml           |    1
+> >  arch/arm64/boot/dts/socionext/Makefile             |    1
+> >  .../boot/dts/socionext/uniphier-ld20-akebi96.dts   |  200 ++++++++++++=
+++++++++
+> >  arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi   |    2
+> >  4 files changed, 203 insertions(+), 1 deletion(-)
+> >  create mode 100644 arch/arm64/boot/dts/socionext/uniphier-ld20-akebi96=
+.dts
+> >
+> > --
+> > Masami Hiramatsu <masami.hiramatsu@linaro.org>
+> >
+>
+>
+> --
+> Masami Hiramatsu
+
+
+
+--
+Best Regards
+Masahiro Yamada
