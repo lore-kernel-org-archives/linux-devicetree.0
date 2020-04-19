@@ -6,35 +6,37 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1389C54F70
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 12:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1ED9C3A5A0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 12:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB56921841
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 12:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCA6D20753
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 12:46:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726208AbgDSMgY (ORCPT
+        id S1725910AbgDSMqP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Apr 2020 08:36:24 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:56432 "EHLO gloria.sntech.de"
+        Sun, 19 Apr 2020 08:46:15 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:56568 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726087AbgDSMgL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 19 Apr 2020 08:36:11 -0400
+        id S1725905AbgDSMqP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 19 Apr 2020 08:46:15 -0400
 Received: from p508fcedd.dip0.t-ipconnect.de ([80.143.206.221] helo=phil.fritz.box)
         by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <heiko@sntech.de>)
-        id 1jQ9BB-0006k5-QT; Sun, 19 Apr 2020 14:36:09 +0200
+        id 1jQ9Kp-0006oo-C4; Sun, 19 Apr 2020 14:46:07 +0200
 From:   Heiko Stuebner <heiko@sntech.de>
-To:     Tobias Schramm <t.schramm@manjaro.org>
+To:     Johan Jonker <jbx6244@gmail.com>
 Cc:     Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: add micro SD card regulator to rockpro64
-Date:   Sun, 19 Apr 2020 14:35:58 +0200
-Message-Id: <158729964647.70529.2619682470015783245.b4-ty@sntech.de>
+        linux-arm-kernel@lists.infradead.org, hjc@rock-chips.com,
+        linux-rockchip@lists.infradead.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        airlied@linux.ie
+Subject: Re: [PATCH v2] dt-bindings: display: convert rockchip rk3066 hdmi bindings to yaml
+Date:   Sun, 19 Apr 2020 14:45:59 +0200
+Message-Id: <158729979661.70728.17123531896433795718.b4-ty@sntech.de>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200416145534.1263575-1-t.schramm@manjaro.org>
-References: <20200416145534.1263575-1-t.schramm@manjaro.org>
+In-Reply-To: <20200403133630.7377-1-jbx6244@gmail.com>
+References: <20200403133630.7377-1-jbx6244@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -42,21 +44,20 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 16 Apr 2020 16:55:34 +0200, Tobias Schramm wrote:
-> This patch adds the RockPro64's micro SD card regulator to the
-> RockPro64 dtsi. The regulator is present on all revisions of the
-> device.
-> Previously the regular was missing, resulting in unreliable boot
-> behaviour when booting from SD card.
+On Fri, 3 Apr 2020 15:36:30 +0200, Johan Jonker wrote:
+> Current dts files with 'hdmi' nodes for rk3066 are manually verified.
+> In order to automate this process rockchip,rk3066-hdmi.txt
+> has to be converted to yaml.
 > 
-> Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] arm64: dts: rockchip: add micro SD card regulator to rockpro64
-      commit: 1f5a3e1679353fb53e955afd8801a7f4f60877ff
+[1/1] dt-bindings: display: convert rockchip rk3066 hdmi bindings to yaml
+      commit: 8eea6e26fc2eda6922e5008ccb7f55bc1775d5b3
 
 Best regards,
 -- 
