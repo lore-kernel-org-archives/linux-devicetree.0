@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F10C54F70
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 13:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 733F5C3A5A0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 13:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37063214AF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 13:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5450E21D94
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 13:50:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SCeb+46y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IRpYW7GI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726208AbgDSNuW (ORCPT
+        id S1726307AbgDSNuY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Apr 2020 09:50:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47826 "EHLO
+        Sun, 19 Apr 2020 09:50:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbgDSNuV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Apr 2020 09:50:21 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD6B9C061A0C;
-        Sun, 19 Apr 2020 06:50:20 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f13so8667865wrm.13;
-        Sun, 19 Apr 2020 06:50:20 -0700 (PDT)
+        with ESMTP id S1725905AbgDSNuX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Apr 2020 09:50:23 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0207C061A0C;
+        Sun, 19 Apr 2020 06:50:22 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id k13so7494984wrw.7;
+        Sun, 19 Apr 2020 06:50:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gUA++TEaLcF7xVYj2JPvsFYTdSQV3W9a05Rr324UlUQ=;
-        b=SCeb+46yipxDv9/COJNIXXpa+me9KDQFXu00J1jjuKCGGpCVt1m97bcM7RaiJ8N++8
-         Y+zQNPzqx/yNW5Acurrihk+8H0Sc73dcl/A+GjYpicbG26xu32HtLccq1HlSvsaH27JR
-         jMME7DgK5vip9DRXcp/nEzNrZI60Uylg/5IMKT8vcraiLscku5UiMia8NUqAp0GeTulI
-         /91iigbZF2EfhTZPBw/zD8wk5OUUkCddz4tRhNvZXi9gaWHCRTK5oA6j0jLrBsSGZDo6
-         0f/T6ITi54DGdezprlXKW2us6r5P/Fxr0CGpH/IFJchMxAbZw+IRVK2rSK4tyFn0psz/
-         TDdQ==
+        bh=i+OjEGx56p5nShQkF9i2bVGbxPWUEyMjxVk1NXXnab4=;
+        b=IRpYW7GI7OPPAPHhvhb/srgP8tmGqqnNd0SkG/k3XrSQB5A0dXikTzXCxcUr4+nj5k
+         uonLZsT1rYp80VIudZ3+PFaMZZF1zxtCrF0bkCElVGoxHV44376LXWHaQiaceF9ZLd9O
+         h6HxM2vE6MG4+nIQOYbELFLfgy0J4dzaSslzfR5kuHoYT+jR7FYlsHWKJ4vY0gR39E7A
+         LrKxwHYJyILfq0r7Kjtzv/G4JNJ+F7iv2N64KKMjTIdsrveEwrpa9x30JsZmlrfiW9CS
+         a85dIZTF3yeiPouFbP+bqK1DE2qjjUHNd3vSLG2m57ySJbDuNrtRc2Q8Lkgz5cBmWY6c
+         4Wwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gUA++TEaLcF7xVYj2JPvsFYTdSQV3W9a05Rr324UlUQ=;
-        b=VNBcXhVmCYYMiTpB5smN7Q17B280bLWG4GcmoL6nULfpPj63mnkesQXg75zh16eQSJ
-         Yr+CyI8Y5V59vbH4AUSq63Yaa0u8eb4RZwhpSU0lcZ/fCCusSsp5vZ5zzPrKXhJ3NoSK
-         0ACMU7hXTkBD4x7bgXlVy2EmBRkLmTU22t17Ri7fQFjjIlxOixvNNVtDTdIHhclVnG2k
-         X54I4Jo9qzu7/ioEXj7ATXZNE1Vb1f/RzhjFjyCXmHtVH9DIWK9rma1wlktaK6nRwVe+
-         ig2eFOBrDq9+KU2kBQLHs7fX8vMVmTHvVUAAuBMjgAT1sShk3gYkSGDhCz5KRj9hHCyi
-         N17g==
-X-Gm-Message-State: AGi0PuaR/evZKDLMSNUDJ1iMbfK7+gVWUO6O4ZwZhf22QVkkWosA5zKB
-        SzF24aiuXwnaffiHN81Ml+E=
-X-Google-Smtp-Source: APiQypKADQ9qdgOD90LPt+LaY4fb76W1CUcU3g33XUbM9Z+8ph5ypgbAag07BSBplDly1t8bR8ST9A==
-X-Received: by 2002:a5d:474b:: with SMTP id o11mr13130557wrs.4.1587304219433;
-        Sun, 19 Apr 2020 06:50:19 -0700 (PDT)
+        bh=i+OjEGx56p5nShQkF9i2bVGbxPWUEyMjxVk1NXXnab4=;
+        b=TVKVHkB/o0zh0HTDOC+MWwMj1N7z42Y+0pgKk6uccB3VLvRde2Sow5yNjJ9ttq/kG5
+         KnpanHtrEeOugTAOgRA6b7JSUcy48I7dgkrPeEfWabP6TRxAAYW7olPnncwjb+tZxb0K
+         bR+ttGSH1LZ2MukgBG9iMtwQj/Ox+jINw5Tm6JA/qw/yewsBaLiyUXN0jQ6siMgczADo
+         S8TQZLX7NKR0+vfxIu6sn818x2+MnC1WqPgmlBVgMpAFozsfVpCvyo8fRA6ImJ1eGk+x
+         /SCXuls3/9ex5rQoewN93mqYUl2aGHCoLQOXaBt5F9heF2Dw5hsjEl7CQH/69f9UE0M7
+         A6Xg==
+X-Gm-Message-State: AGi0PuZ54S5+AemQfxVdHZw5WP9k/++aC0gE7MT2U8MFrFc2eselBWuq
+        B7EN7+/GMGyxJA4WRCdbaVE2Mx18MI5Yng==
+X-Google-Smtp-Source: APiQypL5C06Bf6yVWNwxLLJrMfFXFPzgVn6j2eawN9bgs0TIdNfqR+FQtHny+5CKgOHVnG93TVnL1g==
+X-Received: by 2002:a5d:6646:: with SMTP id f6mr13528540wrw.318.1587304221588;
+        Sun, 19 Apr 2020 06:50:21 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0:4e7:1fdd:b7c2:b3ab])
-        by smtp.gmail.com with ESMTPSA id z8sm20183940wrr.40.2020.04.19.06.50.18
+        by smtp.gmail.com with ESMTPSA id z8sm20183940wrr.40.2020.04.19.06.50.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 06:50:18 -0700 (PDT)
+        Sun, 19 Apr 2020 06:50:20 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Rob Herring <robh+dt@kernel.org>
@@ -66,9 +66,9 @@ Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         linux-sunxi <linux-sunxi@googlegroups.com>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v3 5/7] arm64: dts: allwinner: h6: Enable CPU opp tables for Tanix TX6
-Date:   Sun, 19 Apr 2020 15:50:09 +0200
-Message-Id: <20200419135011.18010-6-peron.clem@gmail.com>
+Subject: [PATCH v3 7/7] arm64: dts: allwinner: h6: Enable CPU and GPU opp tables for Pine H64
+Date:   Sun, 19 Apr 2020 15:50:11 +0200
+Message-Id: <20200419135011.18010-8-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200419135011.18010-1-peron.clem@gmail.com>
 References: <20200419135011.18010-1-peron.clem@gmail.com>
@@ -80,22 +80,25 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable CPU opp tables for Tanix TX6.
+Enable CPU and GPU opp tables for Pine H64.
 
-Also add the fixed regulator that provided vdd-cpu-gpu required for
-CPU opp tables.
+Also add the ramp-delay information to avoid any out of spec
+running as the regulator is slower at reaching the voltage
+requested compare to the PLL reaching the frequency.
 
-This voltage has been found using a voltmeter and could be wrong.
+There is no such information for AXP805 but similar PMIC (AXP813)
+has a DVM (Dynamic Voltage scaling Management) ramp rate equal
+to 2500uV/us.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- .../boot/dts/allwinner/sun50i-h6-tanix-tx6.dts      | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-index 83e6cb0e59ce..be81330db14f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+index 63a785b534e1..60fd33f657dc 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
 @@ -4,6 +4,7 @@
  /dts-v1/;
  
@@ -104,31 +107,32 @@ index 83e6cb0e59ce..be81330db14f 100644
  
  #include <dt-bindings/gpio/gpio.h>
  
-@@ -37,6 +38,17 @@
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
+@@ -80,6 +81,10 @@
  	};
-+
-+	reg_vdd_cpu_gpu: vdd-cpu-gpu {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd-cpu-gpu";
-+		regulator-min-microvolt = <1135000>;
-+		regulator-max-microvolt = <1135000>;
-+	};
+ };
+ 
++&cpu0 {
++	cpu-supply = <&reg_dcdca>;
 +};
 +
-+&cpu0 {
-+	cpu-supply = <&reg_vdd_cpu_gpu>;
- };
- 
  &de {
-@@ -56,6 +68,7 @@
- };
- 
- &gpu {
-+	mali-supply = <&reg_vdd_cpu_gpu>;
  	status = "okay";
  };
+@@ -239,6 +244,7 @@
+ 				regulator-always-on;
+ 				regulator-min-microvolt = <810000>;
+ 				regulator-max-microvolt = <1080000>;
++				regulator-ramp-delay = <2500>;
+ 				regulator-name = "vdd-cpu";
+ 			};
+ 
+@@ -246,6 +252,7 @@
+ 				regulator-enable-ramp-delay = <32000>;
+ 				regulator-min-microvolt = <810000>;
+ 				regulator-max-microvolt = <1080000>;
++				regulator-ramp-delay = <2500>;
+ 				regulator-name = "vdd-gpu";
+ 			};
  
 -- 
 2.20.1
