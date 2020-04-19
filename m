@@ -1,108 +1,190 @@
 Return-Path: <SRS0=ADtQ=6D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.4 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_ABUSE_SURBL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0259EC54F70
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 12:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0307C38A30
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 13:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFD2B21841
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 12:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 894262064A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 13:23:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="T4dD6Mu0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbgDSM4G (ORCPT
+        id S1726006AbgDSNXw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Apr 2020 08:56:06 -0400
-Received: from outgoing2.flk.host-h.net ([188.40.0.84]:60145 "EHLO
-        outgoing2.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgDSM4F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Apr 2020 08:56:05 -0400
-Received: from www31.flk1.host-h.net ([188.40.1.173])
-        by antispam3-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1jQ9UO-0001Lu-NN; Sun, 19 Apr 2020 14:56:02 +0200
-Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
-        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1jQ9UK-0008SM-3f; Sun, 19 Apr 2020 14:55:56 +0200
-From:   Justin Swartz <justin.swartz@risingedge.co.za>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 1/1] ARM: dts: rockchip: add rga node for rk322x
-Date:   Sun, 19 Apr 2020 12:51:33 +0000
-Message-Id: <20200419125134.29923-2-justin.swartz@risingedge.co.za>
-In-Reply-To: <558b35c3-7f75-8d0d-048b-c55c06fa8a53@gmail.com>
-References: <558b35c3-7f75-8d0d-048b-c55c06fa8a53@gmail.com>
-X-Authenticated-Sender: justin.swartz@risingedge.co.za
-X-Virus-Scanned: Clear
-X-Originating-IP: 188.40.1.173
-X-SpamExperts-Domain: risingedge.co.za
-X-SpamExperts-Username: 
-Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.03)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0c6d8zDasFm/nDPEg7mmhmypSDasLI4SayDByyq9LIhVh5Ui7mI7WeR2
- i/gtiekj80TNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
- mAX8Bxy/iUu0ThNZg0jxJtcVJProrT987X1VDPOqN+OoDzRTdku7DidYUZdNf38Sp7Of4wP429AA
- f49baR+f3He7jw4SoVhmTJ/3eP9ORQWVx8ds1M4qmk3/bYr2p8zbg4Paoa3pNVQ0zl7t/+UfQLYB
- qEPnp1U88kqVD8AM2G81dFO0E3gi+MOI1foZYzDggRXhpvoPtF3cVkniFXU3qJSqpdJudO6+rkiw
- E5i8Wl78Q18OeOfsy4h7jF1Uv9lnibl3vcBqVmvQB4A18aeGb1pbVH+fmeedmNxjZxYfAVXirbLu
- Jjy3NtnGWLbnBGfrUBEXB2fYGLNieGQuoHtJvp0r29Rf3ZjFwL+MhHEWw/0qBlNDp8uABz3dkWV+
- ttWGem52QLIiDo2hv5/Q58JTycYLFeAN4+MGwnsp7SkU6CLbyF0Zq4b1/7rjUzETJrWks4pbbQJq
- 6gWopI3ep45X19ZysgQ+31LcAX8eoFXAhohfegXGH2GIVQVglJFbK771YV8YbC29CtmpcTqTfSIf
- CWq9oj7OiT8GwpAriB+3/81I3rvR8KJ2fK9jiDYgijyqqY0rATpzHKGfmtNsYTr4SmDZ/bGW8xZC
- RRs6ZD24UhFcZZEpLhnBCwImTQNvxaLyCc35VA7RvW/HGiGqxL09Cymermt8NAa/gGopT3kKfO4C
- gvcKmV0o9jYzsFpuc43pp/LzIs3ornuRuAAdgrkq+6l7ZLNYJcf7Z6PCydDzoYZgInuDxgFOs7AZ
- TwbwMaed1BaNkB2/QnXFItfl/CWoqsuchW3gOtGiIBZ3paVR38NrFoXSENXH6UXfnav35JPA4YfM
- 6tBkXsqvKY6zoLLTPpuFqUUQz+mM8JAD4ECWNo09vb0YLIRnK477e9Xake5PIWKjIXX7qe2zOXoS
- foxI4G0yjIWrwiqa2StnnXPZTM4T14CV/aqGw5avoywT/WbjO41FyBEqIaDudcVplPE6wCr6GXU1
- lCw88ijyus1sGnWknJqS8gGhNQxpB5P3qu7c1xMljx2PG/R+pKBSKy8hXOgvE1zSS7XUhkYEQYeb
- 3jR5NeVaJQBh0uawl0Cg8j+knAzOA9mmoJvkuhKHiekUuskYaI6ERCKp8gXWqnT9kLHhStr5fiGK
- 7KncpWELuTEvuGslKTrRIXcXpFg5ivY=
-X-Report-Abuse-To: spam@antispammaster.host-h.net
+        Sun, 19 Apr 2020 09:23:52 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:39152 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbgDSNXv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Apr 2020 09:23:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1587302628; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=V5aVne3toyOMR2QBY60+iBE8eXu6co6XW9dZTwffKo8=;
+        b=T4dD6Mu0qsqoFzPTaTcL7pzwWw/lgS57C09Bl5JrvBSbPnBP5j2jj6o88OOpnUIVgvXWIY
+        LSgZbBhuliIt625pMfgkVEdycqk70aK1fm5Q0GhjW+txD1T3dwTXdZTAHR3a/wiDAfbJXC
+        mKqFTGItPkROeChe5xiBfhaoqlWY62A=
+Date:   Sun, 19 Apr 2020 15:23:36 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [RESEND PATCH v5 3/5] IIO: Ingenic JZ47xx: Add touchscreen mode.
+To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Artur Rojek <contact@artur-rojek.eu>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-input <linux-input@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-Id: <CJE19Q.00J5TK0U2OLF3@crapouillou.net>
+In-Reply-To: <CAAEAJfDLQnpsMPs8n4S1O6dA9155=mUPE7FqNQo_yNmp--UFgg@mail.gmail.com>
+References: <20200417202859.35427-1-contact@artur-rojek.eu>
+        <20200417202859.35427-3-contact@artur-rojek.eu>
+        <CAHp75Vcwnu8tw92nMYc_5-x_iX+FY8_OhtaJkSYNehmNUDkHGQ@mail.gmail.com>
+        <3KAY8Q.NNI6X4F9QRIX1@crapouillou.net>
+        <CAHp75VfxQFFnVMhGvv0GCb3gv5jTPLDqLyhihRVc2earY=aYcg@mail.gmail.com>
+        <86BY8Q.C5XO8D57M7BI1@crapouillou.net>
+        <CAHp75VfULLBpFx-W04z+jRFv-hGZkTt1k7T9+eMurW55Mdc=+g@mail.gmail.com>
+        <EFCY8Q.V3Q81CTO8TBP2@crapouillou.net>
+        <CAHp75VdBr-o61QESQcbF97F5+JAU=XjVsvZ01M=nN-pe50-H9w@mail.gmail.com>
+        <CAAEAJfDLQnpsMPs8n4S1O6dA9155=mUPE7FqNQo_yNmp--UFgg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a node to define the presence of RGA, a 2D raster graphic
-acceleration unit.
+Hi Ezequiel,
 
-Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
----
- arch/arm/boot/dts/rk322x.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index 4e90efdc9..ce88f5bd6 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -621,6 +621,16 @@
- 		status = "disabled";
- 	};
- 
-+	rga: rga@20060000 {
-+		compatible = "rockchip,rk3228-rga", "rockchip,rk3288-rga";
-+		reg = <0x20060000 0x1000>;
-+		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA>;
-+		clock-names = "aclk", "hclk", "sclk";
-+		resets = <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
-+		reset-names = "core", "axi", "ahb";
-+	};
-+
- 	iep_mmu: iommu@20070800 {
- 		compatible = "rockchip,iommu";
- 		reg = <0x20070800 0x100>;
--- 
-2.11.0
+Le dim. 19 avril 2020 =E0 9:54, Ezequiel Garcia=20
+<ezequiel@vanguardiasur.com.ar> a =E9crit :
+> On Fri, 17 Apr 2020 at 18:54, Andy Shevchenko=20
+> <andy.shevchenko@gmail.com> wrote:
+>>=20
+>>  On Sat, Apr 18, 2020 at 12:45 AM Paul Cercueil=20
+>> <paul@crapouillou.net> wrote:
+>>  > Le sam. 18 avril 2020 =E0 0:42, Andy Shevchenko
+>>  > <andy.shevchenko@gmail.com> a =E9crit :
+>>  > > On Sat, Apr 18, 2020 at 12:18 AM Paul Cercueil=20
+>> <paul@crapouillou.net>
+>>  > > wrote:
+>>  > >>  Le sam. 18 avril 2020 =E0 0:13, Andy Shevchenko
+>>  > >>  <andy.shevchenko@gmail.com> a =E9crit :
+>>  > >>  > On Sat, Apr 18, 2020 at 12:05 AM Paul Cercueil
+>>  > >> <paul@crapouillou.net>
+>>  > >>  > wrote:
+>>  > >>  >>  Le ven. 17 avril 2020 =E0 23:59, Andy Shevchenko
+>>  > >>  >>  <andy.shevchenko@gmail.com> a =E9crit :
+>>  > >>  >>  > On Fri, Apr 17, 2020 at 11:21 PM Artur Rojek
+>>  > >>  >> <contact@artur-rojek.eu>
+>>  > >>  >>  > wrote:
+>>  > >>  >
+>>  > >>  > ...
+>>  > >>  >
+>>  > >>  >>  >>  +       irq =3D platform_get_irq(pdev, 0);
+>>  > >>  >>  >
+>>  > >>  >>  > Before it worked w/o IRQ, here is a regression you=20
+>> introduced.
+>>  > >>  >>
+>>  > >>  >>  Before it simply did not need the IRQ, which is provided=20
+>> by the
+>>  > >>  >>  devicetree anyway. No regression here.
+>>  > >>  >
+>>  > >>  > Does it work without IRQ? Or it was a dead code till now?
+>>  > >>  > For me it's clear regression. Otherwise something is really=20
+>> wrong
+>>  > >> in a
+>>  > >>  > process of development of this driver.
+>>  > >>
+>>  > >>  Nothing wrong here. The IRQ was not used by the driver for the
+>>  > >>  functionality it provided before. It is required now to=20
+>> support the
+>>  > >>  touchscreen channels.
+>>  > >
+>>  > > This is exactly what's wrong.
+>>  > > Previous DTS for my (hypothetical) case has no IRQ defined.=20
+>> Everything
+>>  > > works, right?
+>>  > > Now, due to this change it breaks my setup. Don't you see the=20
+>> problem?
+>>  >
+>>  > The IRQ has been provided by every concerned DTS file since the
+>>  > introduction of this driver and the related bindings, even though=20
+>> it
+>>  > was not used by the driver.
+>>=20
+>>  Can you speak for all possible DTSs/DTBs in the wild?
+>>  Okay, in any case it will be problem of maintainers and yours if
+>>  somebody complains.
+>>  I'm not going to push this anyway -- your choice.
+>>=20
+>>  But I see a (potential) regression.
+>>=20
+>=20
+> So, there are a few things to keep in mind here.
+>=20
+> Let's abstract ourselves from this specific driver
+> for a minute.
+>=20
+> First, and just as Andy pointed out, we can never be fully
+> sure about DTBs out there. These could be out of tree,
+> so out of our control. By introducing a new requirement
+> we break them, which may be seen as a regression.
+>=20
+> Second, the interrupt is not required as per
+> current mainline bindings/iio/adc/ingenic,adc.txt,
+> so it is perfectly legal for users to not have an interrupt
+> specified.
+>=20
+> Now, back to this case, I think we can get away with this
+> change, provided this hardware is not that widespread
+> among developers/users that follow upstream closely.
+>=20
+> I suspect anyone developing a serious platform
+> with this SoC is most likely using some vendor kernel.
+>=20
+> If that is not the case, i.e. if you have users _actually_
+> using this upstream driver, then we should consider
+> making the interrupt optional instead of required.
+>=20
+> Or we can also just break it and hope nobody
+> complaints.
+
+The vast majority of Ingenic devices running Linux use a 3.x kernel=20
+with a lot of patches on top. These kernels don't support devicetree.=20
+So there is no problem with legacy devicetree files: there are no=20
+legacy devicetree files.
+
+Of the few Ingenic devices running mainline kernels, all of them with=20
+an ADC node in the devicetree have the 'interrupts' property specified,=20
+out-of-tree or in-tree.
+
+As the informal Ingenic SoCs maintainer I'm pretty aware of these=20
+things, and I can assure that we're not breaking anything. The only=20
+thing broken is the documentation which doesn't specify that the=20
+'interrupts' property is required.
+
+> BTW, this series looks great and I'm happy
+> to see JZ47xx activity :-)
+>=20
+> Arthur: perhaps you can consider converting the txt dt binding
+> to yaml?
+
+That would be great.
+
+-Paul
+
 
