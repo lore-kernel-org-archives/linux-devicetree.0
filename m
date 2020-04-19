@@ -4,38 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7AAC54F70
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 17:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E434C54F70
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 17:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49CD221927
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 17:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7878821974
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 17:27:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgDSR1T (ORCPT
+        id S1726372AbgDSR1y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Apr 2020 13:27:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725932AbgDSR1T (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 19 Apr 2020 13:27:19 -0400
-X-Greylist: delayed 393 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 19 Apr 2020 10:27:19 PDT
-Received: from mail.blocktrron.ovh (mars.blocktrron.ovh [IPv6:2001:41d0:401:3000::cbd])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 762A0C061A0C;
-        Sun, 19 Apr 2020 10:27:19 -0700 (PDT)
-Received: from dbauer-t470.home.david-bauer.net (p200300E53F42450099DED5C33771392C.dip0.t-ipconnect.de [IPv6:2003:e5:3f42:4500:99de:d5c3:3771:392c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.blocktrron.ovh (Postfix) with ESMTPSA id 1A7CF1E431;
-        Sun, 19 Apr 2020 19:20:44 +0200 (CEST)
-From:   David Bauer <mail@david-bauer.net>
-To:     devicetree@vger.kernel.org
-Cc:     linux-mips@vger.kernel.org
-Subject: [PATCH] dt-bindings: mips: add missing ath79 SoCs
-Date:   Sun, 19 Apr 2020 19:20:32 +0200
-Message-Id: <20200419172032.100463-1-mail@david-bauer.net>
-X-Mailer: git-send-email 2.26.1
+        Sun, 19 Apr 2020 13:27:54 -0400
+Received: from v6.sk ([167.172.42.174]:44470 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbgDSR1x (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 19 Apr 2020 13:27:53 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id F09BD610C1;
+        Sun, 19 Apr 2020 17:27:51 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Michael Turquette <mturquette@baylibre.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH 02/10] clk: mmp: frac: Allow setting bits other than the numerator/denominator
+Date:   Sun, 19 Apr 2020 19:27:34 +0200
+Message-Id: <20200419172742.674717-3-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200419172742.674717-1-lkundrak@v3.sk>
+References: <20200419172742.674717-1-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -43,30 +40,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The binding document was not updates since 2015.
-This adds Qualcomm Atheros SoCs which hit the market since then.
+For the I2S fractional clocks, there are more bits that need to be set
+for the clock to run. Their actual meaning is unknown.
 
-Signed-off-by: David Bauer <mail@david-bauer.net>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- Documentation/devicetree/bindings/mips/ath79-soc.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/clk/mmp/clk-frac.c | 3 +++
+ drivers/clk/mmp/clk.h      | 1 +
+ 2 files changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mips/ath79-soc.txt b/Documentation/devicetree/bindings/mips/ath79-soc.txt
-index 88a12a43e44e..7dc56f26882a 100644
---- a/Documentation/devicetree/bindings/mips/ath79-soc.txt
-+++ b/Documentation/devicetree/bindings/mips/ath79-soc.txt
-@@ -17,5 +17,11 @@ value must be one of the following values:
- - qca,ar9341
- - qca,ar9342
- - qca,ar9344
-+- qca,qca9531
-+- qca,qca9533
- - qca,qca9556
-+- qca,qca9557
- - qca,qca9558
-+- qca,qca9561
-+- qca,qca9563
-+- qca,tp9343
+diff --git a/drivers/clk/mmp/clk-frac.c b/drivers/clk/mmp/clk-frac.c
+index ed9928f5bdc7f..48f592bd633df 100644
+--- a/drivers/clk/mmp/clk-frac.c
++++ b/drivers/clk/mmp/clk-frac.c
+@@ -148,7 +148,10 @@ static int clk_factor_init(struct clk_hw *hw)
+ 		val &= ~(masks->den_mask << masks->den_shift);
+ 		val |= (factor->ftbl[0].den & masks->den_mask) <<
+ 			masks->den_shift;
++	}
+ 
++	if (!(val & masks->enable_mask) || i >= factor->ftbl_cnt) {
++		val |= masks->enable_mask;
+ 		writel(val, factor->base);
+ 	}
+ 
+diff --git a/drivers/clk/mmp/clk.h b/drivers/clk/mmp/clk.h
+index 971b4d6d992fb..0efd5b0b2f01b 100644
+--- a/drivers/clk/mmp/clk.h
++++ b/drivers/clk/mmp/clk.h
+@@ -16,6 +16,7 @@ struct mmp_clk_factor_masks {
+ 	unsigned int den_mask;
+ 	unsigned int num_shift;
+ 	unsigned int den_shift;
++	unsigned int enable_mask;
+ };
+ 
+ struct mmp_clk_factor_tbl {
 -- 
-2.26.1
+2.26.0
 
