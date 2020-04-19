@@ -2,116 +2,285 @@ Return-Path: <SRS0=ADtQ=6D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB9DC38A30
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 19:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 463BCC38A30
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 19:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68B252145D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 19:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C9421744
+	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Apr 2020 19:21:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AMF1DXFR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YzeFIPgR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbgDSTKt (ORCPT
+        id S1726011AbgDSTVp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Apr 2020 15:10:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40366 "EHLO
+        Sun, 19 Apr 2020 15:21:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgDSTKt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Apr 2020 15:10:49 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AB3EC061A0C;
-        Sun, 19 Apr 2020 12:10:49 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id x10so6968854oie.1;
-        Sun, 19 Apr 2020 12:10:49 -0700 (PDT)
+        with ESMTP id S1726557AbgDSTVm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Apr 2020 15:21:42 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96DD1C061A41
+        for <devicetree@vger.kernel.org>; Sun, 19 Apr 2020 12:21:41 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x3so3865837pfp.7
+        for <devicetree@vger.kernel.org>; Sun, 19 Apr 2020 12:21:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gED75tHRUZsoWEBmkmqXmBkA+S7n+TXCiZUX+ASdEyA=;
-        b=AMF1DXFRPm9Bk2MU0CgrIARVheldiQhxEiQbB0EpUkPWCUMpk9ohQMAwbi4ShqBtdd
-         p3uu4cYI/3J8aCDSkzPifeuU4v6OK9jdP63Z8MqSalHHTYcf2Ky9o9DQLxOMmLIIvgU0
-         FoGFyJl3TZY7zrAU841JHbEE2tqAG1a/eAraXi9sKJpT6aDEtU/4m4OFMABqs2irQVhA
-         79AVHbzXGeIeCW5I3C3GJi1F7WBCY1a1YUrVfMAz8iDc6Znpxny4sb0eTxKyZ6AY9A+8
-         XzenocQ/xWKFrjh7QZ4llHhcPYnMmkxedz2lc5Cju6rY9fMqAEd3FBmoAO5FOxykeK3d
-         aYwg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RGMN6tbtT6za2or0wESO5PWSuHGgRvOO5vUg0g7tI/c=;
+        b=YzeFIPgR3xDhN7Clw6ZM8Aqizc6EXlVaPyg6cUMeTK5zjZ9wpu+8TOXbJvs8m17x2e
+         HD/72UoaLoPAw8JSrBJMCMqJWleXN08yQ7TBCyf6QwGJr+rmThs197DRTJhEWaiuxW+0
+         4RvhvXDLDrYR7kpKhWAqdZVjlXG1dSGidNRk1MVdMc+21ttu5wepnN5gj/aF9hA6isBE
+         nJeaeiows3eRK8RhpBI2zG12nTY8xpvPiQi9cm79+/Nme/dr/hmIGUExR4AePnyyd36F
+         5Y/cWYBWBrk0Oi27dBWPR3nvHijhFJO+W/UyF8d3awBO8UPmYG854Z/jxfnO1zKxlnRD
+         S1+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gED75tHRUZsoWEBmkmqXmBkA+S7n+TXCiZUX+ASdEyA=;
-        b=RzIm7/vAwX/xQEWOq1tOCRLnVc+obRdi/cgJEwpwMguF26qzJwrVJziwGER0ccdP9+
-         17mQqmVIsvwRuMYQ/szFSf4HcS007W9h1EDdjguhHNiBMVup+jjM6je7Z6/jVyQ+Ve/X
-         frGll5xqUwlzBIN1YXhM2IvrS7xwXc4WXKbLSBFdG6N/WbsVJBprY6okm7sC8lGeTCpQ
-         0K2u2LbUQgKVFJEKQUPHDNxy4aRsdHPO3Y6b9YF8npyhCF90tpDGXtNGxiwaoyHctnAr
-         crb8a+wu9/3B0TrFv/KbfMMOcYaUmqMhM9LaadzPTHIWnJah7IOFTVvpTbyLrX5fonXG
-         Byow==
-X-Gm-Message-State: AGi0PuZCS23G2uOP/+u4WXzwSkDXxuVa/Ex2vrTqe9sEBOAkidcq0MWm
-        mkGOyK7UAwqGtfeF9SB6CCPqYa74RKHveymF1QQ=
-X-Google-Smtp-Source: APiQypJy/sjdjUWZOujEBGWlWQXsxdIbkeokdvT3BGmONZYx9UDW/EoFLMydMrhyS4nVxPTI0l8LnJ60Q9sNUNhhjPg=
-X-Received: by 2002:aca:5d83:: with SMTP id r125mr8757326oib.8.1587323448883;
- Sun, 19 Apr 2020 12:10:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RGMN6tbtT6za2or0wESO5PWSuHGgRvOO5vUg0g7tI/c=;
+        b=IuEJq+ccWT3syvV6DcvyBuo4zAuUQUYqbN1gMAgtfxqoM/jwRpplvyzA5UdgNvSNnl
+         J5+szjXfL89CuJB8jP//UVPEg+uRcRJdx1R80LC66knZLuN/m43ROQiApZlYoZie6fBb
+         Ylx9cq/LjRgIMkYdrzwTNXzMcZ4ME3G6c/CaRypNR2aZrpqh7Sg/kSMtpZwyDojKm9ha
+         BkmrajEZUNx5cpc8+qFU+d/oVkOvrAS8MHuOk0/3mG7UzPU1zAdOQIi3HhxGFWtiEteZ
+         c18MGjuLxgzdEAFhrS2Au3EETg1hjcE9V06M3ex/YPFyvcTzJ37VXgf+20Rwp+Rw3yJT
+         /zPQ==
+X-Gm-Message-State: AGi0PuaFP0IH8xiwEmfdQ7L4Z86fGgIIvBzswp2A2Fh4OtvL+JWyNhM2
+        sB6DTKhxyDpNBqDBb6bxgZ+r9A==
+X-Google-Smtp-Source: APiQypLIKEQgXhQvct1QrZGarkIuUOJr9obBhQy5yuCohrGWlylbu2HUorcgT0wcj/Y/BW9elhJ9NQ==
+X-Received: by 2002:a63:5d60:: with SMTP id o32mr12883753pgm.172.1587324100903;
+        Sun, 19 Apr 2020 12:21:40 -0700 (PDT)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id o99sm11880162pjo.8.2020.04.19.12.21.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Apr 2020 12:21:40 -0700 (PDT)
+Date:   Sun, 19 Apr 2020 12:21:37 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, evgreen@chromium.org,
+        ohad@wizery.com, mka@chromium.org, dianders@chromium.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 3/5] arm64: dts: qcom: sc7180: Update reserved memory map
+Message-ID: <20200419192137.GF987656@yoga>
+References: <20200417142605.28885-1-sibis@codeaurora.org>
+ <20200417142605.28885-4-sibis@codeaurora.org>
 MIME-Version: 1.0
-References: <1587302823-4435-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1587302823-4435-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <975f3a73bb272b8276687af609cd7e592d6ba9ac.camel@perches.com>
-In-Reply-To: <975f3a73bb272b8276687af609cd7e592d6ba9ac.camel@perches.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Sun, 19 Apr 2020 20:10:22 +0100
-Message-ID: <CA+V-a8uADgccR7sr_Jc0t6gcwGSX5aOANF4NZeNY6ZoSaJJ4Xg@mail.gmail.com>
-Subject: Re: [PATCH v8 8/8] MAINTAINERS: Add file patterns for rcar PCI device
- tree bindings
-To:     Joe Perches <joe@perches.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417142605.28885-4-sibis@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Joe,
+On Fri 17 Apr 07:26 PDT 2020, Sibi Sankar wrote:
 
-On Sun, Apr 19, 2020 at 5:38 PM Joe Perches <joe@perches.com> wrote:
->
-> On Sun, 2020-04-19 at 14:27 +0100, Lad Prabhakar wrote:
-> > Add file pattern entry for rcar PCI devicetree binding, so that when
-> > people run ./scripts/get_maintainer.pl the rcar PCI maintainers could also
-> > be listed.
-> []
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> []
-> > @@ -12933,6 +12933,7 @@ L:    linux-pci@vger.kernel.org
-> >  L:   linux-renesas-soc@vger.kernel.org
-> >  S:   Maintained
-> >  F:   drivers/pci/controller/*rcar*
-> > +F:   Documentation/devicetree/bindings/pci/*rcar*
->
-> MAINTAINERS was recently sorted for consistency.
->
-> Please move this new line above drivers/ to keep alphabetic ordering.
->
-Sure I will rebase this patch on -next and post this patch independently.
+> Add missing regions and remove unused regions from the reserved memory
+> map, as described in version 5.
+> 
 
-Cheers,
---Prabhakar
+Your patch looks good, but I'm quite unhappy with the way these turns
+out and we have been ignoring the fact that different devices on the
+same platform (with TZ) might come with different firmware versions and
+hence different layout of the peripheral memory region.
+
+So how about pushing out at least the peripheral regions to the device's
+dts (the others are pretty much static, except when using coreboot)?
+That should reduce your patch to 4(?) delete-nodes?
+
+Regards,
+Bjorn
+
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 63 +++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 83 ++++++++++++++++++++++++-
+>  2 files changed, 144 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 17eadd80f15de..e613d70cc0198 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -28,6 +28,69 @@ chosen {
+>  	};
+>  };
+>  
+> +/*
+> + * Reserved memory changes
+> + *
+> + * Keep all modifications to the memory map (from sc7180.dtsi) in one place.
+> + * Delete all unused memory nodes and re-create atf_mem/venus_mem/camera_mem
+> + * and wlan_mem memory nodes.
+> + *
+> + */
+> +
+> +/delete-node/ &hyp_mem;
+> +/delete-node/ &xbl_mem;
+> +/delete-node/ &aop_mem;
+> +/delete-node/ &sec_apps_mem;
+> +/delete-node/ &tz_mem;
+> +/delete-node/ &camera_mem;
+> +/delete-node/ &npu_mem;
+> +/delete-node/ &venus_mem;
+> +/delete-node/ &cdsp_mem;
+> +/delete-node/ &adsp_mem;
+> +/delete-node/ &wlan_mem;
+> +/delete-node/ &ipa_fw_mem;
+> +/delete-node/ &ipa_gsi_mem;
+> +/delete-node/ &gpu_mem;
+> +
+> +/* Increase the size from 132 MB to 140 MB */
+> +&mpss_mem {
+> +	reg = <0x0 0x86000000 0x0 0x8c00000>;
+> +};
+> +
+> +/* Increase the size from 2MB to 8MB */
+> +&rmtfs_mem {
+> +	reg = <0x0 0x84400000 0x0 0x800000>;
+> +};
+> +
+> +/ {
+> +	reserved-memory {
+> +		atf_mem: memory@80b00000 {
+> +			reg = <0x0 0x80b00000 0x0 0x100000>;
+> +			no-map;
+> +		};
+> +
+> +		camera_mem: memory@8ec00000 {
+> +			reg = <0x0 0x8ec00000 0x0 0x500000>;
+> +			no-map;
+> +		};
+> +
+> +		venus_mem: memory@8f600000 {
+> +			reg = <0 0x8f600000 0 0x500000>;
+> +			no-map;
+> +		};
+> +
+> +		wlan_mem: memory@94100000 {
+> +			reg = <0x0 0x94100000 0x0 0x200000>;
+> +			no-map;
+> +		};
+> +
+> +		mba_mem: memory@94400000 {
+> +			reg = <0x0 0x94400000 0x0 0x200000>;
+> +			no-map;
+> +		};
+> +	};
+> +};
+> +
+>  &apps_rsc {
+>  	pm6150-rpmh-regulators {
+>  		compatible = "qcom,pm6150-rpmh-regulators";
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 853ba6e8a53ca..f73ffd74d4fcd 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -69,18 +69,97 @@ reserved_memory: reserved-memory {
+>  		#size-cells = <2>;
+>  		ranges;
+>  
+> +		hyp_mem: memory@80000000 {
+> +			reg = <0x0 0x80000000 0x0 0x600000>;
+> +			no-map;
+> +		};
+> +
+> +		xbl_mem: memory@80600000 {
+> +			reg = <0x0 0x80600000 0x0 0x200000>;
+> +			no-map;
+> +		};
+> +
+> +		aop_mem: memory@80800000 {
+> +			reg = <0x0 0x80800000 0x0 0x20000>;
+> +			no-map;
+> +		};
+> +
+>  		aop_cmd_db_mem: memory@80820000 {
+>  			reg = <0x0 0x80820000 0x0 0x20000>;
+>  			compatible = "qcom,cmd-db";
+>  		};
+>  
+> +		sec_apps_mem: memory@808ff000 {
+> +			reg = <0x0 0x808ff000 0x0 0x1000>;
+> +			no-map;
+> +		};
+> +
+>  		smem_mem: memory@80900000 {
+>  			reg = <0x0 0x80900000 0x0 0x200000>;
+>  			no-map;
+>  		};
+>  
+> -		venus_mem: memory@8f600000 {
+> -			reg = <0 0x8f600000 0 0x500000>;
+> +		tz_mem: memory@80b00000 {
+> +			reg = <0x0 0x80b00000 0x0 0x3900000>;
+> +			no-map;
+> +		};
+> +
+> +		rmtfs_mem: memory@84400000 {
+> +			compatible = "qcom,rmtfs-mem";
+> +			reg = <0x0 0x84400000 0x0 0x200000>;
+> +			no-map;
+> +
+> +			qcom,client-id = <1>;
+> +			qcom,vmid = <15>;
+> +		};
+> +
+> +		mpss_mem: memory@86000000 {
+> +			reg = <0x0 0x86000000 0x0 0x8400000>;
+> +			no-map;
+> +		};
+> +
+> +		camera_mem: memory@8e400000 {
+> +			reg = <0x0 0x8e400000 0x0 0x500000>;
+> +			no-map;
+> +		};
+> +
+> +		npu_mem: memory@8e900000 {
+> +			reg = <0x0 0x8e900000 0x0 0x500000>;
+> +			no-map;
+> +		};
+> +
+> +		venus_mem: memory@8ee00000 {
+> +			reg = <0x0 0x8ee00000 0x0 0x500000>;
+> +			no-map;
+> +		};
+> +
+> +		cdsp_mem: memory@8f300000 {
+> +			reg = <0x0 0x8f300000 0x0 0x1e00000>;
+> +			no-map;
+> +		};
+> +
+> +		adsp_mem: memory@91100000 {
+> +			reg = <0x0 0x91100000 0x0 0x2800000>;
+> +			no-map;
+> +		};
+> +
+> +		wlan_mem: memory@93900000 {
+> +			reg = <0x0 0x93900000 0x0 0x200000>;
+> +			no-map;
+> +		};
+> +
+> +		ipa_fw_mem: memory@93b00000 {
+> +			reg = <0x0 0x93b00000 0x0 0x10000>;
+> +			no-map;
+> +		};
+> +
+> +		ipa_gsi_mem: memory@93b10000 {
+> +			reg = <0x0 0x93b10000 0x0 0x5000>;
+> +			no-map;
+> +		};
+> +
+> +		gpu_mem: memory@93b15000 {
+> +			reg = <0x0 0x93b15000 0x0 0x2000>;
+>  			no-map;
+>  		};
+>  	};
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
