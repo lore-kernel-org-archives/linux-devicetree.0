@@ -2,179 +2,142 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21500C3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 19:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A993C3A5A0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 19:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF7FE206F4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 19:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 393F9206A1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 19:57:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fdfckbbL"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="IKhnGhru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgDTTnh (ORCPT
+        id S1726208AbgDTT5b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:43:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43168 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725550AbgDTTnh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:43:37 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBFB9C061A0C
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 12:43:36 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id h11so4324446plr.11
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 12:43:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kSI5jaWP14AnIVoCm5Yym8gL3leYasCeNvQ4GTDuwpc=;
-        b=fdfckbbL3Y3uWvzDUUyOxIri3i9PeJkVn5ApWa+tEt4PQtc2OS9H8fyfU/z7Z4Jqd1
-         wFQF+xUEANETRWIfTPV5zbCQeg3BJ0xB34S0wUT/avm16gdpgQ2v83cPMQWMrugKWTyH
-         A8mVI3Z2Gl2Y2OPG3aXMKBmgMceybHBf1p9KoOfrBvShPT8C23qO2gxcq6kow2eb7/Nb
-         DHCTChK+LUUjMzVoTSAg12KZqFVvjN/auUJYlKVEiZwj/sEChD3RSDKt1XlqNB6/Wn4a
-         POGectpZr2SSXelqOZ1HvmpvaAzG4tOOzwE831Sgz5q0pGIhBSJJzOSQ3nNgKw6m6nz+
-         CSpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kSI5jaWP14AnIVoCm5Yym8gL3leYasCeNvQ4GTDuwpc=;
-        b=Ezdi1GxJW2+uRxxK6OEC5MmRDUtr77lcS5UXLt0n3X0U3KmhgbexL+YJbOiF8j43a7
-         uRg3XhR9ATgIELfPnHDrV1rZ379cSprOxDy4ArH2/6Fe4UtyoqypScbzLbeziS1qyIK5
-         TVNzemTf4YJVLii6wAuy9RHvQTl0FvV0G8CrEugyIXV1k3ZyhnfmLB8ToxtR1T2xU4ZC
-         XERacGznoIoncJF/Wg+X5WWPWk2dy6TQm2i53qhgVRuwJfd/qRUbFk+d6CUzdmOQYW2b
-         NehjlPfWjxCCd0zIWL3BEe3pIM3SWbEtoWv70+hyccMeKZbhnRqyoDP6C/tdBKHtbFql
-         C8yw==
-X-Gm-Message-State: AGi0PuZJNEQGRi8C3VYUyTo0+wtQ+T+BhqA/58+Z25/PHLwXJ5Y++AhC
-        pfP/USam02DgVRGL4D+kvCmiEA==
-X-Google-Smtp-Source: APiQypKrQXVRMSn0gc3hbu3DCD9d+ihrNQzBeB13kvI3v5YoT7hBI1RfU8/Jxkt5h4VR7OZ5cNVEGA==
-X-Received: by 2002:a17:90a:fb89:: with SMTP id cp9mr1169242pjb.40.1587411816359;
-        Mon, 20 Apr 2020 12:43:36 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 185sm300063pfv.9.2020.04.20.12.43.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 12:43:35 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 12:43:59 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: fix pm8150 gpio interrupts
-Message-ID: <20200420194359.GP576963@builder.lan>
-References: <20200420153543.14512-1-jonathan@marek.ca>
+        Mon, 20 Apr 2020 15:57:31 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:48256 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgDTT5a (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 15:57:30 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8327897D;
+        Mon, 20 Apr 2020 21:57:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1587412647;
+        bh=VyAYxn5QYg/qgAZ3QLAxeHFXObmm2KTLy1cekrs4/Co=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IKhnGhruHCVyCfW+bc7TXpXtGwConChaObWLBzXYbiqByrVChPlQLVGl/G4FdUPMl
+         dLXsraIQVsxotRt3uqKwfPrz5ktBfU2tb7IgP5PW9Mdok0h1m4pjy/h0NdzdJNuSqI
+         VkYK0qyxESSpoQaAtbkSWR96MVTLFEOhi89k09oE=
+Date:   Mon, 20 Apr 2020 22:57:14 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     Vishal Sagar <vishal.sagar@xilinx.com>,
+        Hyun Kwon <hyunk@xilinx.com>, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Hyun Kwon <hyun.kwon@xilinx.com>
+Subject: Re: [PATCH v11 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
+ Subsystem driver
+Message-ID: <20200420195714.GB8195@pendragon.ideasonboard.com>
+References: <20200409194424.45555-1-vishal.sagar@xilinx.com>
+ <20200409194424.45555-3-vishal.sagar@xilinx.com>
+ <20200419180222.GB8117@pendragon.ideasonboard.com>
+ <860c27da-eba0-ddcb-719b-52b2725bd9bf@lucaceresoli.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200420153543.14512-1-jonathan@marek.ca>
+In-Reply-To: <860c27da-eba0-ddcb-719b-52b2725bd9bf@lucaceresoli.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon 20 Apr 08:35 PDT 2020, Jonathan Marek wrote:
+Hi Luca,
 
-> This was mistakenly copied from the downstream dts, however the upstream
-> driver works differently.
+On Mon, Apr 20, 2020 at 09:24:25PM +0200, Luca Ceresoli wrote:
+> On 19/04/20 20:02, Laurent Pinchart wrote:
+> [...]
+> >> +static irqreturn_t xcsi2rxss_irq_handler(int irq, void *dev_id)
+> >> +{
+> >> +	struct xcsi2rxss_state *state = (struct xcsi2rxss_state *)dev_id;
+> >> +	struct xcsi2rxss_core *core = &state->core;
+> >> +	u32 status;
+> >> +
+> >> +	status = xcsi2rxss_read(core, XCSI_ISR_OFFSET) & XCSI_ISR_ALLINTR_MASK;
+> >> +	dev_dbg_ratelimited(core->dev, "interrupt status = 0x%08x\n", status);
+> > 
+> > As this is expected to occur for every frame, I would drop the message,
+> > even if rate-limited.
+> > 
+> >> +
+> >> +	if (!status)
+> >> +		return IRQ_NONE;
+> >> +
+> >> +	/* Received a short packet */
+> >> +	if (status & XCSI_ISR_SPFIFONE) {
+> >> +		dev_dbg_ratelimited(core->dev, "Short packet = 0x%08x\n",
+> >> +				    xcsi2rxss_read(core, XCSI_SPKTR_OFFSET));
+> >> +	}
+> > 
+> > Same here, this will occur all the time, I'd remove this message. You
+> > need to read XCSI_SPKTR_OFFSET though, and you should do so in a loop
+> > until the XCSI_CSR_SPFIFONE in XCSI_CSR_OFFSET is cleared in case
+> > multiple short packets are received before the interrupt handler
+> > executes.
+> > 
+> > I also wonder if it would make sense to extract the frame number from
+> > the FS short packet, and make it available through the subdev API. I
+> > think it should be reported through a V4L2_EVENT_FRAME_SYNC event. This
+> > can be implemented later.
+> > 
+> >> +
+> >> +	/* Short packet FIFO overflow */
+> >> +	if (status & XCSI_ISR_SPFIFOF)
+> >> +		dev_dbg_ratelimited(core->dev, "Short packet FIFO overflowed\n");
+> >> +
+> >> +	/*
+> >> +	 * Stream line buffer full
+> >> +	 * This means there is a backpressure from downstream IP
+> >> +	 */
+> >> +	if (status & XCSI_ISR_SLBF) {
+> >> +		dev_alert_ratelimited(core->dev, "Stream Line Buffer Full!\n");
+> >> +		xcsi2rxss_stop_stream(state);
+> >> +		if (core->rst_gpio) {
+> >> +			gpiod_set_value(core->rst_gpio, 1);
+> >> +			/* minimum 40 dphy_clk_200M cycles */
+> >> +			ndelay(250);
+> >> +			gpiod_set_value(core->rst_gpio, 0);
+> >> +		}
+> > 
+> > I don't think you should stop the core here. xcsi2rxss_stop_stream()
+> > calls the source .s_stream(0) operation, which usually involves I2C
+> > writes that will sleep.
+> > 
+> > You should instead report an event to userspace (it looks like we have
+> > no error event defined in V4L2, one should be added), and rely on the
+> > normal stop procedure.
 > 
-> I only tested this with the pm8150_gpios node (used with volume button),
-> but the 2 others should be the same.
+> FWIW, since a long time I've been using a modified version of this
+> routine, where after a Stream Line Buffer Full condition I just stop and
+> restart the csi2rx core and the stream continues after a minimal glitch.
+> Other subdev are unaware that anything has happened and keep on streaming.
 > 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> Not sure this is the correct thing to do, but it's working for me. Also
+> I proposed this topic in one of the previous iterations of this patch,
+> but the situation was different because the stream on/off was not
+> propagated back at that time.
 
-Applied, thanks Jonathan
+Thanks for the feedback. How often does this occur in practice ?
 
+-- 
 Regards,
-Bjorn
 
-> ---
->  arch/arm64/boot/dts/qcom/pm8150.dtsi  | 14 ++------------
->  arch/arm64/boot/dts/qcom/pm8150b.dtsi | 14 ++------------
->  arch/arm64/boot/dts/qcom/pm8150l.dtsi | 14 ++------------
->  3 files changed, 6 insertions(+), 36 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/pm8150.dtsi b/arch/arm64/boot/dts/qcom/pm8150.dtsi
-> index b6e304748a57..c0b197458665 100644
-> --- a/arch/arm64/boot/dts/qcom/pm8150.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/pm8150.dtsi
-> @@ -73,18 +73,8 @@ pm8150_gpios: gpio@c000 {
->  			reg = <0xc000>;
->  			gpio-controller;
->  			#gpio-cells = <2>;
-> -			interrupts = <0x0 0xc0 0x0 IRQ_TYPE_NONE>,
-> -				     <0x0 0xc1 0x0 IRQ_TYPE_NONE>,
-> -				     <0x0 0xc2 0x0 IRQ_TYPE_NONE>,
-> -				     <0x0 0xc3 0x0 IRQ_TYPE_NONE>,
-> -				     <0x0 0xc4 0x0 IRQ_TYPE_NONE>,
-> -				     <0x0 0xc5 0x0 IRQ_TYPE_NONE>,
-> -				     <0x0 0xc6 0x0 IRQ_TYPE_NONE>,
-> -				     <0x0 0xc7 0x0 IRQ_TYPE_NONE>,
-> -				     <0x0 0xc8 0x0 IRQ_TYPE_NONE>,
-> -				     <0x0 0xc9 0x0 IRQ_TYPE_NONE>,
-> -				     <0x0 0xca 0x0 IRQ_TYPE_NONE>,
-> -				     <0x0 0xcb 0x0 IRQ_TYPE_NONE>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
->  		};
->  	};
->  
-> diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> index 322379d5c31f..40b5d75a4a1d 100644
-> --- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> @@ -62,18 +62,8 @@ pm8150b_gpios: gpio@c000 {
->  			reg = <0xc000>;
->  			gpio-controller;
->  			#gpio-cells = <2>;
-> -			interrupts = <0x2 0xc0 0x0 IRQ_TYPE_NONE>,
-> -				     <0x2 0xc1 0x0 IRQ_TYPE_NONE>,
-> -				     <0x2 0xc2 0x0 IRQ_TYPE_NONE>,
-> -				     <0x2 0xc3 0x0 IRQ_TYPE_NONE>,
-> -				     <0x2 0xc4 0x0 IRQ_TYPE_NONE>,
-> -				     <0x2 0xc5 0x0 IRQ_TYPE_NONE>,
-> -				     <0x2 0xc6 0x0 IRQ_TYPE_NONE>,
-> -				     <0x2 0xc7 0x0 IRQ_TYPE_NONE>,
-> -				     <0x2 0xc8 0x0 IRQ_TYPE_NONE>,
-> -				     <0x2 0xc9 0x0 IRQ_TYPE_NONE>,
-> -				     <0x2 0xca 0x0 IRQ_TYPE_NONE>,
-> -				     <0x2 0xcb 0x0 IRQ_TYPE_NONE>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
->  		};
->  	};
->  
-> diff --git a/arch/arm64/boot/dts/qcom/pm8150l.dtsi b/arch/arm64/boot/dts/qcom/pm8150l.dtsi
-> index eb0e9a090e42..cf05e0685d10 100644
-> --- a/arch/arm64/boot/dts/qcom/pm8150l.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/pm8150l.dtsi
-> @@ -56,18 +56,8 @@ pm8150l_gpios: gpio@c000 {
->  			reg = <0xc000>;
->  			gpio-controller;
->  			#gpio-cells = <2>;
-> -			interrupts = <0x4 0xc0 0x0 IRQ_TYPE_NONE>,
-> -				     <0x4 0xc1 0x0 IRQ_TYPE_NONE>,
-> -				     <0x4 0xc2 0x0 IRQ_TYPE_NONE>,
-> -				     <0x4 0xc3 0x0 IRQ_TYPE_NONE>,
-> -				     <0x4 0xc4 0x0 IRQ_TYPE_NONE>,
-> -				     <0x4 0xc5 0x0 IRQ_TYPE_NONE>,
-> -				     <0x4 0xc6 0x0 IRQ_TYPE_NONE>,
-> -				     <0x4 0xc7 0x0 IRQ_TYPE_NONE>,
-> -				     <0x4 0xc8 0x0 IRQ_TYPE_NONE>,
-> -				     <0x4 0xc9 0x0 IRQ_TYPE_NONE>,
-> -				     <0x4 0xca 0x0 IRQ_TYPE_NONE>,
-> -				     <0x4 0xcb 0x0 IRQ_TYPE_NONE>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
->  		};
->  	};
->  
-> -- 
-> 2.26.1
-> 
+Laurent Pinchart
