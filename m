@@ -2,90 +2,102 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AD1C3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 17:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E698C3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 17:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4F8022209
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 17:09:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UfHtJ++f"
+	by mail.kernel.org (Postfix) with ESMTP id 1F8A1207FC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 17:31:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587403903;
+	bh=zYTCgzbp//wOmybEQMjzmB97i0Q6qYo7SyIvO8gPoho=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=2HxJZadoqRY2ImriY1FvJMPukeJ0xZI41zBS4yNJ3QiE6zfchP8x2d8Xl07/blj63
+	 TWs3MCKMWgXV4kMWcyIMXDn2lNw5p1hmL72kXiBdA9NCsL8b1FV9+yrokoYwlMobLl
+	 9St4Vsyx+1xWEmJBOH5B7TKXZTsH0uT2IaBc4niw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbgDTRJf (ORCPT
+        id S1726713AbgDTRbm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 13:09:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726296AbgDTRJf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 13:09:35 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABF7EC061A0C;
-        Mon, 20 Apr 2020 10:09:33 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id g6so5354015pgs.9;
-        Mon, 20 Apr 2020 10:09:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=oGqtpyrEePYxWV1yvaPlc+oStlhcDZxwsYxCHpPKFI0=;
-        b=UfHtJ++fowlpsq/0H7ghGeV8rsUVqv0/BKPIZZyri5E7/EUQF6XEHFd8K+4c17d4dy
-         C8kRmy/2Bwre7U9WXb+/fkxdvXrkDJ0k1UyyO4TvmpnNEGOh6hAUUD1j8YlYmr8rjf31
-         +NhmspOMowcvfYcKMP6Sk87shhQQRGi+xgjMVz5vKNCeNTLuAdl53ueIdu5nB+k8/xIg
-         gRwW4+04QO4SIh26Fl0uZENFY9Gg7j68ncxGjTQQ2k8DRe7j/oLdUeQOrtX69AxSCCKs
-         NUOo5TqscV/yIfiz5hDozG5ftmE9UJd+spJ2CN+mC+PnBOs+27aEK1DZcsTHIgNEOXhE
-         sDjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oGqtpyrEePYxWV1yvaPlc+oStlhcDZxwsYxCHpPKFI0=;
-        b=cQuW5OEOUc0inDirpTk2oicFqZ588QcLUpeqrjv6aTiZaBhsFl+8lmWwKSaj6+/EMB
-         hmljEv+7Im3KVhvTk4BxLR8JK8X/iEUvJOjMNHBnEOVOt7xZ0vWf7pkTDTMYlhLlAuom
-         xLYAxGqVAFx5ZC4TsKMhFpp1bHoUF7UzgXwDebQAm6aqSbFFwe9EfNyUnsy3Z8zqwY06
-         5qo3rXtKcea6TnjYoDlXoeNsq5oIEa8fPxBkBJVLSqwg4dcqjBcpxZxRS7w1YcwBw9Gh
-         VAf5GQg6qb8gOU7rVnMrIqS9CxyoXk1UqiTa/0CvOeElYF9/kCXt017OVPbJ6pT1QaNz
-         /nSA==
-X-Gm-Message-State: AGi0PuYrgoWopbD+8YtonmyAG3QcDPenzUd2+XSBVEv+AqhNWcW7vEKy
-        CKZibRVWLXdkunj5iKv4nYg=
-X-Google-Smtp-Source: APiQypKonnkcRsFc4iqkPXgRs+P8IPPV2hkS+jqMqm39F08ywnDqrN5ZtBi+f5DH78DIeELtHKG8Bw==
-X-Received: by 2002:a62:58c6:: with SMTP id m189mr17359302pfb.161.1587402572992;
-        Mon, 20 Apr 2020 10:09:32 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id t23sm169730pjq.27.2020.04.20.10.09.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 10:09:32 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 10:09:30 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     robh+dt@kernel.org, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] input: misc: Add support for Azoteq IQS269A
-Message-ID: <20200420170930.GO166864@dtor-ws>
-References: <1587340068-2818-1-git-send-email-jeff@labundy.com>
- <1587340068-2818-2-git-send-email-jeff@labundy.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587340068-2818-2-git-send-email-jeff@labundy.com>
+        Mon, 20 Apr 2020 13:31:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50806 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726067AbgDTRbm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Apr 2020 13:31:42 -0400
+Received: from localhost.localdomain (unknown [157.46.94.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 633A920782;
+        Mon, 20 Apr 2020 17:31:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587403901;
+        bh=zYTCgzbp//wOmybEQMjzmB97i0Q6qYo7SyIvO8gPoho=;
+        h=From:To:Cc:Subject:Date:From;
+        b=c/1Ac+5eIzx9CK3uWozc2qQPpNtXOf1KFaNwjXhXFFBAhgIfobshyhwBRnWsGtYsd
+         pK2Xa5F7fKm+lKFCTH8qb1lZGNslUoaHg5bB/Wp5A1ok+bBy0zvhBOCbyw63qBtuv5
+         LGBP6duWY35waItnxkAWOxV1F9PKGnjfTVFkn8Qg=
+From:   mani@kernel.org
+To:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com
+Cc:     devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <mani@kernel.org>
+Subject: [PATCH 0/6] Add Stinger96 and IoT Box board support
+Date:   Mon, 20 Apr 2020 23:01:18 +0530
+Message-Id: <20200420173124.27416-1-mani@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 06:47:48PM -0500, Jeff LaBundy wrote:
-> This patch adds support for the Azoteq IQS269A capacitive touch
-> controller.
-> 
-> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+From: Manivannan Sadhasivam <mani@kernel.org>
 
-This looks good, so just need to get Rob's take on the binding...
+Hello,
 
-Thanks.
+This series adds Stinger96 and IoT Box board support. These boards are
+based on STM32MP157A SoC, designed and manufactured by Shiratech solutions.
+
+The Stinger96 is a base board (96Boards IoT Extended edition) while IoT Box
+adds one mezzanine on top of it and sold as a gateway device.
+
+This series depends on below patchsets already submitted and gone through
+reviews:
+
+[PATCH v3 0/3] Add Reset and Wakeup support for CCS811
+[PATCH v3 0/2] Add CTS/RTS gpio support to STM32 UART
+
+More information about these boards can be found in below links:
+
+https://www.shiratech-solutions.com/products/stinger96/
+https://www.shiratech-solutions.com/products/iot-box/
+
+Thanks,
+Mani
+
+Manivannan Sadhasivam (6):
+  dt-bindings: Add vendor prefix for Shiratech Solutions
+  ARM: dts: Add missing pinctrl entries for STM32MP15
+  dt-bindings: arm: stm32: Document Stinger96 compatible
+  ARM: dts: stm32mp1: Add Stinger96 board support
+  dt-bindings: arm: stm32: Document IoT Box compatible
+  ARM: dts: stm32mp1: Add IoT Box board support
+
+ .../devicetree/bindings/arm/stm32/stm32.yaml  |   2 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ arch/arm/boot/dts/Makefile                    |   2 +
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      |  64 ++++
+ arch/arm/boot/dts/stm32mp157a-iot-box.dts     |  92 +++++
+ arch/arm/boot/dts/stm32mp157a-stinger96.dts   |  12 +
+ arch/arm/boot/dts/stm32mp157a-stinger96.dtsi  | 342 ++++++++++++++++++
+ 7 files changed, 516 insertions(+)
+ create mode 100644 arch/arm/boot/dts/stm32mp157a-iot-box.dts
+ create mode 100644 arch/arm/boot/dts/stm32mp157a-stinger96.dts
+ create mode 100644 arch/arm/boot/dts/stm32mp157a-stinger96.dtsi
 
 -- 
-Dmitry
+2.17.1
+
