@@ -2,133 +2,152 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B986AC3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 14:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53396C3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 14:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96B6220B1F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 14:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 302A720775
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 14:42:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ufZchA3Y";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="4mBxVLpw"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YoHC+xSm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbgDTOkD (ORCPT
+        id S1726387AbgDTOmx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 10:40:03 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:40643 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726050AbgDTOkC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 10:40:02 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 5ACC05C0126;
-        Mon, 20 Apr 2020 10:40:01 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 20 Apr 2020 10:40:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=PXh+J0spjajpstfYlJVLBegen5x
-        1vPub81+/OQ14NPk=; b=ufZchA3YEU0q4bx7XGMFYwzGcFkO8xEWRqczsztkArr
-        2R4KhCDcb1JNYLhMzEWZ63VsagHJCtPfO5uykwcIQRmjF228SxRdG4dzR4zKZIm1
-        5UCRpfehIv6fx1J4nPCWAAFWo2UvUL7QI216ogujlDTOgEtDEwrn6BeehD3qFOHS
-        8QxEIFELywYiOBeEdR5TfZH1H9yctlVeYQ5ho2H0kKZODfcEhpUN2+Sg9z0C8y4D
-        Gnca1ZDdvYM/eiTJZ9DXaE8TPp8sQlbm28ieKM9q6raQt49zrE7UybaxkF0tY5Le
-        H0IOgwMJstAbhzuJ+IFtGaasz8cUt7yoiRqhKUabiOA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=PXh+J0
-        spjajpstfYlJVLBegen5x1vPub81+/OQ14NPk=; b=4mBxVLpwXKEj7dteX1kJU9
-        3Y5UhFhWhaWgIhLhglKQP4/9Dz1p8EzZXT1I2NcA+kBk7qMrcgRIOiy5qLFX5LIu
-        LPxgs1CqMj7+N10okQKfd9lUh9pmWbVWL8Z6fNV0IMOsp2usM8jRmlkmG9hr9oES
-        s0p8sl2CjoUlpH/wNBhwxSSRm+QF+fwMKmAfuecIFjwjSE/a+PV9otFwcbI/MDbA
-        LrAq4f00WMolcCYkFl+l3sbumpLuo9oDc+94SQyUZkcvE/DN6oARDENEtwN4rgRR
-        e5K6F0Z3YxZTXWH1IKtDmcJH30nf961j+dbvkCDaOBHErZo9Of2cZLp6y1C/foCg
-        ==
-X-ME-Sender: <xms:QLSdXjOctWb3R9tY3CVXYn6RD_VPwVFAnu9kynGrVrwuGBfZ-htojg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeefgdejlecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:QLSdXlDqCN_99v6KG6VwbYnyn3C290e6umaoo7BRsBUNWTSdeEwf-g>
-    <xmx:QLSdXp_F2WTv8Nkp_tvAREiqEdrFZNPa-kM6GUwzRMWcq1wY6nJCjw>
-    <xmx:QLSdXuGy6HLiH4EBVng6Ix-cpFfPe6eOT6QV70LrxVctW0VHllszFA>
-    <xmx:QbSdXjDuuIV9lQaFtTUYtQw3soUWX_jrhBMLqSOyTb1TqQi8cGhYQQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 553F03280060;
-        Mon, 20 Apr 2020 10:40:00 -0400 (EDT)
-Date:   Mon, 20 Apr 2020 16:39:58 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
+        Mon, 20 Apr 2020 10:42:53 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1048 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbgDTOmx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 10:42:53 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e9db47a0000>; Mon, 20 Apr 2020 07:40:58 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 20 Apr 2020 07:42:52 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 20 Apr 2020 07:42:52 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Apr
+ 2020 14:42:52 +0000
+Received: from [10.26.73.5] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Apr
+ 2020 14:42:50 +0000
+Subject: Re: [PATCH 2/3] rtc: max77686: Make wakeup support configurable
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH v2 2/4] iommu: Add Allwinner H6 IOMMU driver
-Message-ID: <20200420143958.rdn3j27tu3umtkrh@gilmour.lan>
-References: <cover.a31c229a83f1d92e6928ae2adb70887da0fd44b3.1582222496.git-series.maxime@cerno.tech>
- <6864f0f28825bb7a2ec1c0d811a4aacdecf5f945.1582222496.git-series.maxime@cerno.tech>
- <20200302153606.GB6540@8bytes.org>
- <20200401114710.doioefzmjhte7jwu@gilmour.lan>
- <20200408140649.GI3103@8bytes.org>
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     <devicetree@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200417170825.2551367-1-thierry.reding@gmail.com>
+ <20200417170825.2551367-2-thierry.reding@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <03086f6b-012b-67ab-6a61-fbae1bf0c3c7@nvidia.com>
+Date:   Mon, 20 Apr 2020 15:42:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ru45p6lp7fq34z3p"
-Content-Disposition: inline
-In-Reply-To: <20200408140649.GI3103@8bytes.org>
+In-Reply-To: <20200417170825.2551367-2-thierry.reding@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587393658; bh=yn3vUFGEeKaSbo89hQOh0JOD4JoXvUZWh0Hn+nfcebA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=YoHC+xSm7fcf9pCljcNNHfhhJPIsBavuwb36Om0l229okW8gmTlCCxuWYQwNOtFI/
+         JYd8IebIAUNEAL+QHM5ikslfpPZg/qCcRFIpS1HOIMqC2+S9RAWyh5s7tsADrr3VLS
+         Z0r5o/xEeqZF6sBc6N6ROV+0xunwXc9eyaXoOpnRF56nh9dPOu1IhR/UPMtT3InlUC
+         XYaG4esYbscR0t9W7VBcvHn/Y+P2yJPXHXvoblyNIWYr7XWep8Sq1lArR5SuP6ITll
+         DLUqh7ugaYgfqoGlo+4IA8Gk3IZ1Qg+Kg+Rbp8wycBaxCvYtcRCr3Lc5D7FhDJ5KnD
+         xE35upR4Lcn3w==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---ru45p6lp7fq34z3p
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 17/04/2020 18:08, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> Use the standard "wakeup-source" device tree property to determine if
+> the RTC can act as a wakeup source for the system. Note that the driver
+> by default always assumes that the RTC can act as a wakeup source, but
+> whether it can really do so or not always depends on how it is hooked
+> up.
+> 
+> In order to preserve backwards compatibility with older device trees,
+> only parse the "wakeup-source" property when a device tree node was
+> associated with the RTC device. This doesn't typically happen because
+> the top-level MFD driver doesn't list any compatible strings that can
+> be used to map child nodes to child devices. As a fallback, check if a
+> child node named "rtc" exists and use that instead.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+> Note that we could obviously add support to the MFD driver to match
+> subdevices to their device tree nodes by compatible string, but there
+> are side-effects, such as the driver core complaining about the lack
+> of a DMA mask for these devices. That in turn could also be fixed but
+> it ends up all being rather hacky, so just looking up a child node by
+> name seems like a good compromise, especially since there are already
+> such subnodes for some of the other subdevices of this PMIC.
+> ---
+>  drivers/rtc/rtc-max77686.c | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/rtc/rtc-max77686.c b/drivers/rtc/rtc-max77686.c
+> index d5a0e27dd0a0..35fd74b83626 100644
+> --- a/drivers/rtc/rtc-max77686.c
+> +++ b/drivers/rtc/rtc-max77686.c
+> @@ -722,6 +722,8 @@ static int max77686_rtc_probe(struct platform_device *pdev)
+>  {
+>  	struct max77686_rtc_info *info;
+>  	const struct platform_device_id *id = platform_get_device_id(pdev);
+> +	struct device_node *np = of_node_get(pdev->dev.of_node);
+> +	bool wakeup = true;
+>  	int ret;
+>  
+>  	info = devm_kzalloc(&pdev->dev, sizeof(struct max77686_rtc_info),
+> @@ -746,7 +748,21 @@ static int max77686_rtc_probe(struct platform_device *pdev)
+>  		goto err_rtc;
+>  	}
+>  
+> -	device_init_wakeup(&pdev->dev, 1);
+> +	/*
+> +	 * Only check for the wakeup-source property if there's an actual
+> +	 * device tree node for the RTC. If no device tree node had been
+> +	 * attached during device instantiation, try looking up the "rtc"
+> +	 * child node of the parent's device tree node.
+> +	 */
+> +	if (!np && pdev->dev.parent->of_node)
+> +		np = of_get_child_by_name(pdev->dev.parent->of_node, "rtc");
+> +
+> +	if (np) {
+> +		wakeup = of_property_read_bool(np, "wakeup-source");
+> +		of_node_put(np);
+> +	}
+> +
+> +	device_init_wakeup(&pdev->dev, wakeup);
+>  
+>  	info->rtc_dev = devm_rtc_device_register(&pdev->dev, id->name,
+>  					&max77686_rtc_ops, THIS_MODULE);
+> 
 
-Hi,
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
 
-On Wed, Apr 08, 2020 at 04:06:49PM +0200, Joerg Roedel wrote:
-> On Wed, Apr 01, 2020 at 01:47:10PM +0200, Maxime Ripard wrote:
-> > As far as I understand it, the page table can be accessed concurrently
-> > since the framework doesn't seem to provide any serialization /
-> > locking, shouldn't we have some locks to prevent concurrent access?
->=20
-> The dma-iommu code makes sure that there are no concurrent accesses to
-> the same address-range of the page-table, but there can (and will) be
-> concurrent accesses to the same page-table, just for different parts of
-> the address space.
->=20
-> Making this lock-less usually involves updating non-leaf page-table
-> entries using atomic compare-exchange instructions.
+Cheers
+Jon
 
-That makes sense, thanks!
-
-I'm not sure what I should compare with though, do you want to compare with=
- 0 to
-check if there's already a page table assigned to that DTE? If so, then we
-should also allocate the possible page table before the fact so that we have
-something to swap with, and deallocate it if we already had one?
-
-Maxime
-
---ru45p6lp7fq34z3p
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXp20PgAKCRDj7w1vZxhR
-xdskAQD8uW/heD6sz1jtgnc/STqZgTUkb5RbyrBeNlR9JoXflQD8Dyylg9C7Aacl
-NQgNnyYDy8bej8v1c5S34GeYWpSv6ws=
-=ieXK
------END PGP SIGNATURE-----
-
---ru45p6lp7fq34z3p--
+-- 
+nvpublic
