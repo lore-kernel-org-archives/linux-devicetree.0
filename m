@@ -7,74 +7,73 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE42BC3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 06:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D36FC3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 06:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3EBE2072B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 06:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 662A12080C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 06:49:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ps9f6bBu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WUiMvZ9d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbgDTGqb (ORCPT
+        id S1726039AbgDTGt3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 02:46:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34160 "EHLO
+        Mon, 20 Apr 2020 02:49:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725773AbgDTGqa (ORCPT
+        by vger.kernel.org with ESMTP id S1726024AbgDTGt2 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 02:46:30 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4E59C061A0F
-        for <devicetree@vger.kernel.org>; Sun, 19 Apr 2020 23:46:30 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id a7so3802008pju.2
-        for <devicetree@vger.kernel.org>; Sun, 19 Apr 2020 23:46:30 -0700 (PDT)
+        Mon, 20 Apr 2020 02:49:28 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8765AC061A0F
+        for <devicetree@vger.kernel.org>; Sun, 19 Apr 2020 23:49:28 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id n16so4585160pgb.7
+        for <devicetree@vger.kernel.org>; Sun, 19 Apr 2020 23:49:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=1x1XSaiPurYlCacj5RFP4WLBzIU3d1tqW8IFDpUO5D0=;
-        b=Ps9f6bBu5mTmwfAPImPWi2frG9mYoSeSAIHWhtUCHA3oMOki215jiwryZD4jDwmDe+
-         ebap81b7B46JNvEfUH3xNakxRF3hJf/B8MWmK6wwD2R9kLzEpLKYBV4nXVltBaW2dGIh
-         4c6F1xetdO+lfqIUvk2teuIsgYFberHj6698Z82z01zn7AB6JwAUGBvLaDW1aYAp7R/a
-         CXsGQCSdP54n7eyh27Y3yv0yNXjhIdHQzaexDKOCVDLvKuAL8ZZJFxLkjz2xRM1/5ekl
-         epVsRCtgOspeL3TbUdbVV5aXOif2PKQU2RF0/NERP32+U3q8tZ407Ce8AA5sTSNquzc+
-         2EDg==
+        bh=WqzonlfyvwL3GiTnet9R+LA4ymwNNLykP6f8pKxh1d8=;
+        b=WUiMvZ9dgOyXwv7yKqLM8tH4tCbXkdcAxhJZM+P6e0PfaLVANEhtMjo3834qVFIUwt
+         yDu8fT49146q1shwriBVKXa34WYhkJhpCIrWZsWWNqd7VKBNWkR+Fp1ARLcxHnJ936wy
+         z1pVtFhhe4N3N6t5I595kryBy1QgpwOhi073aZ0dd7S5vGZKrpFYJkp6RJogLVp1mvSB
+         oz8pvwM6wdFkoqp5TqgBlOC4eOx5LRwZtJ3lPZcFkqnk8arjZXjdttQQucKwQOUzRgPh
+         joqDlBuQX5FWZbBWvF++vuTngk8yw7ygzIvGgvfwZasBb2XxB2/8nEIDcQK4umw+4HcS
+         SLfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=1x1XSaiPurYlCacj5RFP4WLBzIU3d1tqW8IFDpUO5D0=;
-        b=Ylp7XGbpOePTsroxFBl38qLgoekuWOB0wAX2u3U+z2cpCBE98frSYh1uHJ3Vtn6Hab
-         Kh+jOdXK5qqI7ehtnNUjvTnxyxmAy0dfC7MorcDtBEaR5bQ11tZqsC3xYfrjE3VSp/y5
-         IHcA2b2l52GSNmSgniOEzhDRQxmGxmbxcYZJ+oVJEJynEGQb4wOhFnc5Kn56RbRXqroS
-         jbcyfcDN+v9r9P90lWbFp8BbDdNx5rgCO7CdTbomulwikAMsr/AR0kFAyu1culSfT05l
-         x8NnuDFoCTWkc+2HUI2ec6KAYPPnQbMdExFbMVkUkymMQCt8g6kgcjQh4THx8UkXdw8a
-         MNrg==
-X-Gm-Message-State: AGi0PuYX98ZOzuwjpfuUM2r/iG32108BbleFdG5obFNawrfnA0sB0yVr
-        BXg7qro0esY7WCmGdHCao0X8Eg==
-X-Google-Smtp-Source: APiQypLMOs/8T1GaAL9VbDgmBkUI1Xt7yDt1bPf1mOGXHe5urocPeF+midMMcSdiNR+DtvRGM2tP5w==
-X-Received: by 2002:a17:90a:ad02:: with SMTP id r2mr19881379pjq.63.1587365189953;
-        Sun, 19 Apr 2020 23:46:29 -0700 (PDT)
+        bh=WqzonlfyvwL3GiTnet9R+LA4ymwNNLykP6f8pKxh1d8=;
+        b=XVctrs6KUDzsDrot03oI5RnAplor9T24pYYjVnlMzpdoVqp9IBXOuWU3l6VS73c75D
+         6nddl9Zluq0KKzB1dOgHUmslIVeegPhfHtxHRj29XAu2ZZFnGuGUBMJCAUOeelEGomto
+         2iyEqHv9i5ewAcjLBBOjGtOfmEWuj6fw8pPVGiyBqkKfV1G8zwkklcznNPtAa73wdVPK
+         dUR5J3uyCYCWCp5ndQi8q1238HnYDRe8NPdDL9T5Msz1ks9wI+JsPHw2UhULQGJcALCA
+         qUiJ8JOhC0wvGyrP31XbeU/k287lDVFNxUVjKuDv8sidzodN6JizZTf1TQUfeaULHLWW
+         4HhQ==
+X-Gm-Message-State: AGi0PuZKO9r320lOuzkdQhPY3FACtlzwSPODcZdBwAkugOkmSOu3da/e
+        4MlE3QGdC/cArrxmBV8Hii7naQ==
+X-Google-Smtp-Source: APiQypLMoYJXtPNOLATIch8erHrs+HZv8MVXnC8Q1YwevfvLvkIMBOTdJw+OLb6sgFIBJeYUhRc/BQ==
+X-Received: by 2002:a62:fc02:: with SMTP id e2mr15362600pfh.195.1587365367935;
+        Sun, 19 Apr 2020 23:49:27 -0700 (PDT)
 Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id q11sm207934pgs.25.2020.04.19.23.46.28
+        by smtp.gmail.com with ESMTPSA id x12sm110012pfq.209.2020.04.19.23.49.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 23:46:29 -0700 (PDT)
-Date:   Sun, 19 Apr 2020 23:46:52 -0700
+        Sun, 19 Apr 2020 23:49:27 -0700 (PDT)
+Date:   Sun, 19 Apr 2020 23:49:50 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Paul Cercueil <paul@crapouillou.net>
 Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
         Arnaud Pouliquen <arnaud.pouliquen@st.com>, od@zcrc.me,
         linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/5] remoteproc: Add device-managed variants of
- rproc_alloc/rproc_add
-Message-ID: <20200420064652.GB1868936@builder.lan>
+Subject: Re: [PATCH v6 3/5] remoteproc: Add support for runtime PM
+Message-ID: <20200420064950.GC1868936@builder.lan>
 References: <20200417170040.174319-1-paul@crapouillou.net>
- <20200417170040.174319-2-paul@crapouillou.net>
+ <20200417170040.174319-3-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200417170040.174319-2-paul@crapouillou.net>
+In-Reply-To: <20200417170040.174319-3-paul@crapouillou.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -82,131 +81,96 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Fri 17 Apr 10:00 PDT 2020, Paul Cercueil wrote:
 
-> Add API functions devm_rproc_alloc() and devm_rproc_add(), which behave
-> like rproc_alloc() and rproc_add() respectively, but register their
-> respective cleanup function to be called on driver detach.
+> Call pm_runtime_get_sync() before the firmware is loaded, and
+> pm_runtime_put() after the remote processor has been stopped.
 > 
+> Even though the remoteproc device has no PM callbacks, this allows the
+> parent device's PM callbacks to be properly called.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> 
+> Notes:
+>     v2-v4: No change
+>     v5: Move calls to prepare/unprepare to rproc_fw_boot/rproc_shutdown
+>     v6: Instead of prepare/unprepare callbacks, use PM runtime callbacks
+> 
+>  drivers/remoteproc/remoteproc_core.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index a7f96bc98406..d391b054efd8 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/devcoredump.h>
+>  #include <linux/rculist.h>
+>  #include <linux/remoteproc.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/iommu.h>
+>  #include <linux/idr.h>
+>  #include <linux/elf.h>
+> @@ -1384,6 +1385,8 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+>  
+>  	dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
+>  
+> +	pm_runtime_get_sync(dev);
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+This can return an error, should we ignore this?
+
+Apart from that this looks good.
 
 Regards,
 Bjorn
 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Notes:
->     v3: New patch
->     v4: No change
->     v5: - Fix return value documentation
->     	- Fix typo in documentation
->     v6: No change
-> 
->  drivers/remoteproc/remoteproc_core.c | 67 ++++++++++++++++++++++++++++
->  include/linux/remoteproc.h           |  5 +++
->  2 files changed, 72 insertions(+)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index e12a54e67588..a7f96bc98406 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1949,6 +1949,33 @@ int rproc_add(struct rproc *rproc)
+> +
+>  	/*
+>  	 * if enabling an IOMMU isn't relevant for this rproc, this is
+>  	 * just a nop
+> @@ -1391,7 +1394,7 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+>  	ret = rproc_enable_iommu(rproc);
+>  	if (ret) {
+>  		dev_err(dev, "can't enable iommu: %d\n", ret);
+> -		return ret;
+> +		goto put_pm_runtime;
+>  	}
+>  
+>  	rproc->bootaddr = rproc_get_boot_addr(rproc, fw);
+> @@ -1435,6 +1438,8 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+>  	rproc->table_ptr = NULL;
+>  disable_iommu:
+>  	rproc_disable_iommu(rproc);
+> +put_pm_runtime:
+> +	pm_runtime_put(dev);
+>  	return ret;
 >  }
->  EXPORT_SYMBOL(rproc_add);
 >  
-> +static void devm_rproc_remove(void *rproc)
-> +{
-> +	rproc_del(rproc);
-> +}
+> @@ -1840,6 +1845,8 @@ void rproc_shutdown(struct rproc *rproc)
+>  
+>  	rproc_disable_iommu(rproc);
+>  
+> +	pm_runtime_put(dev);
 > +
-> +/**
-> + * devm_rproc_add() - resource managed rproc_add()
-> + * @dev: the underlying device
-> + * @rproc: the remote processor handle to register
-> + *
-> + * This function performs like rproc_add() but the registered rproc device will
-> + * automatically be removed on driver detach.
-> + *
-> + * Returns: 0 on success, negative errno on failure
-> + */
-> +int devm_rproc_add(struct device *dev, struct rproc *rproc)
-> +{
-> +	int err;
+>  	/* Free the copy of the resource table */
+>  	kfree(rproc->cached_table);
+>  	rproc->cached_table = NULL;
+> @@ -2118,6 +2125,9 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+>  
+>  	rproc->state = RPROC_OFFLINE;
+>  
+> +	pm_runtime_no_callbacks(&rproc->dev);
+> +	pm_runtime_enable(&rproc->dev);
 > +
-> +	err = rproc_add(rproc);
-> +	if (err)
-> +		return err;
-> +
-> +	return devm_add_action_or_reset(dev, devm_rproc_remove, rproc);
-> +}
-> +EXPORT_SYMBOL(devm_rproc_add);
-> +
->  /**
->   * rproc_type_release() - release a remote processor instance
->   * @dev: the rproc's device
-> @@ -2171,6 +2198,46 @@ int rproc_del(struct rproc *rproc)
+>  	return rproc;
 >  }
->  EXPORT_SYMBOL(rproc_del);
->  
-> +static void devm_rproc_free(struct device *dev, void *res)
-> +{
-> +	rproc_free(*(struct rproc **)res);
-> +}
-> +
-> +/**
-> + * devm_rproc_alloc() - resource managed rproc_alloc()
-> + * @dev: the underlying device
-> + * @name: name of this remote processor
-> + * @ops: platform-specific handlers (mainly start/stop)
-> + * @firmware: name of firmware file to load, can be NULL
-> + * @len: length of private data needed by the rproc driver (in bytes)
-> + *
-> + * This function performs like rproc_alloc() but the acquired rproc device will
-> + * automatically be released on driver detach.
-> + *
-> + * Returns: new rproc instance, or NULL on failure
-> + */
-> +struct rproc *devm_rproc_alloc(struct device *dev, const char *name,
-> +			       const struct rproc_ops *ops,
-> +			       const char *firmware, int len)
-> +{
-> +	struct rproc **ptr, *rproc;
-> +
-> +	ptr = devres_alloc(devm_rproc_free, sizeof(*ptr), GFP_KERNEL);
-> +	if (!ptr)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	rproc = rproc_alloc(dev, name, ops, firmware, len);
-> +	if (rproc) {
-> +		*ptr = rproc;
-> +		devres_add(dev, ptr);
-> +	} else {
-> +		devres_free(ptr);
-> +	}
-> +
-> +	return rproc;
-> +}
-> +EXPORT_SYMBOL(devm_rproc_alloc);
-> +
->  /**
->   * rproc_add_subdev() - add a subdevice to a remoteproc
->   * @rproc: rproc handle to add the subdevice to
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index 9c07d7958c53..8c9c0dda03c3 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -599,6 +599,11 @@ int rproc_add(struct rproc *rproc);
->  int rproc_del(struct rproc *rproc);
->  void rproc_free(struct rproc *rproc);
->  
-> +struct rproc *devm_rproc_alloc(struct device *dev, const char *name,
-> +			       const struct rproc_ops *ops,
-> +			       const char *firmware, int len);
-> +int devm_rproc_add(struct device *dev, struct rproc *rproc);
-> +
->  void rproc_add_carveout(struct rproc *rproc, struct rproc_mem_entry *mem);
->  
->  struct rproc_mem_entry *
+>  EXPORT_SYMBOL(rproc_alloc);
+> @@ -2133,6 +2143,7 @@ EXPORT_SYMBOL(rproc_alloc);
+>   */
+>  void rproc_free(struct rproc *rproc)
+>  {
+> +	pm_runtime_disable(&rproc->dev);
+>  	put_device(&rproc->dev);
+>  }
+>  EXPORT_SYMBOL(rproc_free);
 > -- 
 > 2.25.1
 > 
