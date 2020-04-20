@@ -7,186 +7,98 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA59C54FCC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 05:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4C1C54FCC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 06:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A88720A8B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 05:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5042B2080C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 06:27:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zqmxPhHr"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="bvP774RT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbgDTFto (ORCPT
+        id S1725815AbgDTG1b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 01:49:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725930AbgDTFto (ORCPT
+        Mon, 20 Apr 2020 02:27:31 -0400
+Received: from sender2-op-o12.zoho.com.cn ([163.53.93.243]:17644 "EHLO
+        sender2-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725812AbgDTG1b (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 01:49:44 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C703C061A0F
-        for <devicetree@vger.kernel.org>; Sun, 19 Apr 2020 22:49:44 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x15so156096pfa.1
-        for <devicetree@vger.kernel.org>; Sun, 19 Apr 2020 22:49:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=pYaYny195U45WYKSgGkllyuC27MGqSxRNHzg9ROO/p8=;
-        b=zqmxPhHr7jWaJjjeKvTwz45jn2F93wmZCn83dgMJ4Vi9rD6UD+4wgXsmaqKmBwmEOr
-         3UaoQudmz+SuDKdR8EBN5HlztGq1Q6/AHEnIFVx78hbO/um7Ngw3+ROsyXLDeONU3tT0
-         XyuW/DS369+gRto7xJ6QfTSev0zgTAmG9XgzVvGFScukbO3LEkQH/WcSOOvS8nP3OoZQ
-         1/WH+289vtqQuBhc+6kwqaJtm9fQRQttX98ocFYCHBVeDwKRmZnR+vjreu0Yytp44a7s
-         kSgoc0uZy83OA2Ws6oIy2c90evKRN+EuIZ40NCR6rwmA5aFuXhyV+8+zWyx0btv/wKlt
-         XGAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pYaYny195U45WYKSgGkllyuC27MGqSxRNHzg9ROO/p8=;
-        b=UMWBcg5cxG8OupezRi34U/e+guPOD6DZkEAX6Oy3KmXT+GtmTCrIDvEi3zUg3Lz3p8
-         G2MmDKQYH+PJLdiAUPFygVBahN6m3YGiwCpPaSwm+1nAX5zCbhBhemItq92zS0D186JY
-         WC5xolktc/hGIBgZ3R1yTwMGP2AWtPQnkn6Rt4yd7DgbFpJ11lgjuhjU9BR3heVEsX49
-         KJpe4KBe4MRJY9Hbk9d03vLXOejYuzsiWInzcLPs/3Jf8kLhl9KZqiILtTbEiSw7/QYs
-         HLGCtM8t454axnCAr8/ijaL0DGhLpfgs0zRGOf4Vzma2vsXQoPfiJJO6Xm8Gaa3aQ7/e
-         2HrA==
-X-Gm-Message-State: AGi0PuZny8wSkK0KJ4dWyIAHbH58cbLoQxy6s8UcM/AeI7Yk4hlJBt27
-        2NXZDW9aKd+iuPal3+pcRZa/zg==
-X-Google-Smtp-Source: APiQypJKOFu7hmKkPUSWtQOB+DSqkUO0qvT/vkMuGbUTO1BQxTAyqwqLClsRYtGr77iCkoj8rkrXPg==
-X-Received: by 2002:a62:25c6:: with SMTP id l189mr15595958pfl.28.1587361782982;
-        Sun, 19 Apr 2020 22:49:42 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id m4sm547062pfm.26.2020.04.19.22.49.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 22:49:42 -0700 (PDT)
-Date:   Sun, 19 Apr 2020 22:50:05 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, evgreen@chromium.org,
-        ohad@wizery.com, mka@chromium.org, dianders@chromium.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 5/5] arm64: dts: qcom: sc7180: Update Q6V5 MSS node
-Message-ID: <20200420055005.GI1516868@builder.lan>
-References: <20200417142605.28885-1-sibis@codeaurora.org>
- <20200417142605.28885-6-sibis@codeaurora.org>
+        Mon, 20 Apr 2020 02:27:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1587364046; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=OKswJTuuZSqOD6A9wG562C/dRQQ7lGj6AfKudmr3ntX61zar2i23p2KUjXVquzKATix4zitgPNK+GoCQscCLS6uKBWSxjlv7Wxn4m0a9rPbmtCX0WAIlYo2S4twzed/O61XFau3WHmo3vYy3B+zn6g2ID2+yQ5AjkrEkizXBZj0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1587364046; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
+        bh=rzHxeVv28HFGCH6ZxIG0j5WfG/EiQ0MOksl9cuCiPpI=; 
+        b=ZLLn8/wQUEOzo3RMdkPb1JkPrI+anTl/k615OGp4ooUKBMKnTqVQJiX15yM8TyZT5/j1kHsw+iuBkvtYdFmAHYo44ZF2abPpZtD9uCAwS+faxgCU5eN0CZP5YmgVZFIqtWSlreOqJd8OSHfLVBC8UMgqEcmyo3nVblw1dzBnYAY=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1587364046;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=rzHxeVv28HFGCH6ZxIG0j5WfG/EiQ0MOksl9cuCiPpI=;
+        b=bvP774RTJizBvfupObDeIGVi9YS7iewliIGGu+LBoVixbR2gA+wQzh9Q5myrXozp
+        zsbEISXBnKHrncC6wbsnvwtElFg+HqriXFBhhnkFmQpSzvrDTWlqd2BI+lOB4ecaMnD
+        lWG1ZWd5WOpryAiDmF9h8U3q1lX/IFdDu2fWza4o=
+Received: from [127.0.0.1] (115.205.241.167 [115.205.241.167]) by mx.zoho.com.cn
+        with SMTPS id 1587364043724363.3375087529696; Mon, 20 Apr 2020 14:27:23 +0800 (CST)
+Date:   Mon, 20 Apr 2020 14:27:21 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     David Bauer <mail@david-bauer.net>, devicetree@vger.kernel.org
+CC:     linux-mips@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mips: add missing ath79 SoCs
+User-Agent: K-9 Mail for Android
+Reply-to: jiaxun.yang@flygoat.com
+In-Reply-To: <20200419172032.100463-1-mail@david-bauer.net>
+References: <20200419172032.100463-1-mail@david-bauer.net>
+Message-ID: <91171EE5-9983-4140-AE16-81A98204B89D@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417142605.28885-6-sibis@codeaurora.org>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri 17 Apr 07:26 PDT 2020, Sibi Sankar wrote:
 
-> Add TCSR node and update MSS node to support MSA based Modem boot on
-> SC7180 SoCs.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
-> 
-> Depends on the following bindings:
-> iommus: https://patchwork.kernel.org/patch/11443101/
-> spare-regs: https://patchwork.kernel.org/patch/11491425/
-> 
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 42 +++++++++++++++++++++++++
->  arch/arm64/boot/dts/qcom/sc7180.dtsi    |  5 +++
->  2 files changed, 47 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index e613d70cc0198..6f472872be1a3 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -319,6 +319,48 @@ &qupv3_id_1 {
->  	status = "okay";
->  };
->  
-> +&remoteproc_mpss {
-> +	compatible = "qcom,sc7180-mss-pil";
-> +	reg = <0 0x04080000 0 0x410>, <0 0x04180000 0 0x48>;
 
-I think we should overspecify the properties in the platform dtsi,
-whenever possible - it shouldn't be a problem that the pas driver
-doesn't use all the properties provided by the binding.
+=E4=BA=8E 2020=E5=B9=B44=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
+:20:32, David Bauer <mail@david-bauer=2Enet> =E5=86=99=E5=88=B0:
+>The binding document was not updates since 2015=2E
+>This adds Qualcomm Atheros SoCs which hit the market since then=2E
 
-As such I think you should move the reg, clocks, resets, halt regs and
-power-domains to the platform.
+You'd better convert the whole binding into dt-schema[1] format=2E
 
-> +	reg-names = "qdsp6", "rmb";
-> +
-> +	clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
-> +		 <&gcc GCC_MSS_Q6_MEMNOC_AXI_CLK>,
-> +		 <&gcc GCC_MSS_NAV_AXI_CLK>,
-> +		 <&gcc GCC_MSS_SNOC_AXI_CLK>,
-> +		 <&gcc GCC_MSS_MFAB_AXIS_CLK>,
-> +		 <&rpmhcc RPMH_CXO_CLK>;
-> +	clock-names = "iface", "bus", "nav", "snoc_axi",
-> +		      "mnoc_axi", "xo";
-> +
-> +	iommus = <&apps_smmu 0x460 0x1>, <&apps_smmu 0x444 0x2>;
-> +
-> +	resets = <&aoss_reset AOSS_CC_MSS_RESTART>,
-> +		 <&pdc_reset PDC_MODEM_SYNC_RESET>;
-> +	reset-names = "mss_restart", "pdc_reset";
-> +
-> +	qcom,halt-regs = <&tcsr_mutex_regs 0x23000 0x25000 0x24000>;
-> +	qcom,spare-regs = <&tcsr_regs 0xb3e4>;
-> +
-> +	power-domains = <&aoss_qmp AOSS_QMP_LS_MODEM>,
-> +			<&rpmhpd SC7180_CX>,
-> +			<&rpmhpd SC7180_MX>,
-> +			<&rpmhpd SC7180_MSS>;
-> +	power-domain-names = "load_state", "cx", "mx", "mss";
-> +
-> +	/delete-property/memory-region;
-> +
-> +	status = "okay";
-> +
-> +	mba {
-> +		memory-region = <&mba_mem>;
+Thanks=2E
 
-When I wrote this I was under the impression that memory-region wasn't
-allowed to take an array of regions, perhaps we can make the mss binding
-and driver support a multi-cell memory-region in the of_node directly
-and drop these sub children.
+[1]: https://lwn=2Enet/Articles/771621/
 
-Then it would be a cleaner update of the pas' memory-region.
+>
+>Signed-off-by: David Bauer <mail@david-bauer=2Enet>
+>---
+> Documentation/devicetree/bindings/mips/ath79-soc=2Etxt | 6 ++++++
+> 1 file changed, 6 insertions(+)
+>
+>diff --git a/Documentation/devicetree/bindings/mips/ath79-soc=2Etxt b/Doc=
+umentation/devicetree/bindings/mips/ath79-soc=2Etxt
+>index 88a12a43e44e=2E=2E7dc56f26882a 100644
+>--- a/Documentation/devicetree/bindings/mips/ath79-soc=2Etxt
+>+++ b/Documentation/devicetree/bindings/mips/ath79-soc=2Etxt
+>@@ -17,5 +17,11 @@ value must be one of the following values:
+> - qca,ar9341
+> - qca,ar9342
+> - qca,ar9344
+>+- qca,qca9531
+>+- qca,qca9533
+> - qca,qca9556
+>+- qca,qca9557
+> - qca,qca9558
+>+- qca,qca9561
+>+- qca,qca9563
+>+- qca,tp9343
 
-But I'm fine with us putting this part on the todo list for the time
-being...
-
-Regards,
-Bjorn
-
-> +	};
-> +
-> +	mpss {
-> +		memory-region = <&mpss_mem>;
-> +	};
-> +};
-> +
->  &uart3 {
->  	status = "okay";
->  
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index e319762a0bffc..c49801ddb9d70 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -981,6 +981,11 @@ tcsr_mutex_regs: syscon@1f40000 {
->  			reg = <0 0x01f40000 0 0x40000>;
->  		};
->  
-> +		tcsr_regs: syscon@1fc0000 {
-> +			compatible = "syscon";
-> +			reg = <0 0x01fc0000 0 0x40000>;
-> +		};
-> +
->  		tlmm: pinctrl@3500000 {
->  			compatible = "qcom,sc7180-pinctrl";
->  			reg = <0 0x03500000 0 0x300000>,
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+--=20
+Jiaxun Yang
