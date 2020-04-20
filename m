@@ -2,126 +2,127 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F92BC3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 13:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22027C3A5A0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 13:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C40020722
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 13:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0293B2070B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 13:33:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="vvkimXxX";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kBCxFHsq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jI6iP14b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726048AbgDTN1x (ORCPT
+        id S1726768AbgDTNdn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 09:27:53 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:41617 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725897AbgDTN1x (ORCPT
+        Mon, 20 Apr 2020 09:33:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40620 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726211AbgDTNdn (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 09:27:53 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 4FCB253A;
-        Mon, 20 Apr 2020 09:27:52 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Mon, 20 Apr 2020 09:27:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=C1acu8SOYXvfCrT29OikkU8tqdr
-        tQ88j/dfAu0WvkG0=; b=vvkimXxXCrJAXaUZFh9Qb2mhAU8anR4eWyvNHVUjkKv
-        3ffCHDg1hncrLGuYgwm6/cX6y+RLcBQL8Prwoqgj/UWGvMci1Nb2JrI6vy1Bs6lx
-        jouwojDVTdWMS+CPS6NlcJeJI/TnoxPyXecl76tlAf4B5e6k+WtyqJe2vF0gkruj
-        7207wqQ02t4nPmOt90NkJ6kTI/vn9D1SjprMi7T/rgjTpRMUomj2bOaFbz0lyJdz
-        IJ69d4CPNjF+J/Gkz5R6GSYJvfjqELm1xxxC/Kgsu/bVXFKAFrLnOIorA2PE/d80
-        pxCTb0/KtBY5WGp4nrpej8qp/dtGxr2nWck8F6Guo7w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=C1acu8
-        SOYXvfCrT29OikkU8tqdrtQ88j/dfAu0WvkG0=; b=kBCxFHsqpKac7qMEIGr8Fm
-        y2f+bDdBSXx9PTzgT9s8OZDuCZ853MVb9qP2HKpSb3lkDuWg1KyJJrCpjdfbfKEt
-        xL5GNn0OciaSIEuoXwTAt2D/qWDnSzZ/Lo59AlXZBufnucpK4R0gy1V3aFoHjyE1
-        A7ERK5F9veSaLKtFlmqnm5gsur9p/2SVC6TX/j2+Fntui/d9cFcVIrUF6cr6oIkN
-        CGr1j3nBjhvn7rq8IEUCx2kuOWAwhHKB0S0BbC6KHcn7NfIR3VvIQ63mhKi+iD1a
-        jdolVonx84aakDsW7s43GQPmF2XeY+GuOiw/+z3/wvdFpwd/C10TptLyVrZaglHg
-        ==
-X-ME-Sender: <xms:UqOdXhtx8HTOSqU3DX4z4eehe4Fw8qON_pPgj_3zXkeM2pOVt9BqRA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeefgdeigecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:UqOdXokU1CLUum6CNOsVRCBwnMltaVCJ6DAU3R_-SX26_g3n4AgjgQ>
-    <xmx:UqOdXvUrA9MtKTCZJ0LlfvgJR9BR07kEVKUb6G-5uJ0yctdLLeZDOA>
-    <xmx:UqOdXsvrVzdoOLrptwf2Vd-YLiAqIRQhdzR4IG56CPqux0EVW44PgQ>
-    <xmx:V6OdXsUhYIqsRhlW-qjcISecj48hamvzoL52E7GJTLe7P8eetin5HQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 778AE3065C16;
-        Mon, 20 Apr 2020 09:27:46 -0400 (EDT)
-Date:   Mon, 20 Apr 2020 15:27:45 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: sun50i-a64: Add missing
- address/size-cells
-Message-ID: <20200420132745.7sa4zf2c2xp7ffrc@gilmour.lan>
-References: <20200420103113.577969-1-megous@megous.com>
+        Mon, 20 Apr 2020 09:33:43 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4E80C061A0C;
+        Mon, 20 Apr 2020 06:33:42 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id d17so12145775wrg.11;
+        Mon, 20 Apr 2020 06:33:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:references:subject:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8BFEyEY0pQowkZqKW1UkfT7rrgGTA/DT5VZkesq580U=;
+        b=jI6iP14b7dzEFoZQvAAIUYghaAf74HD2b1ii3wq9eMvvEjaomCD7s16mvfUIQ3rDjA
+         n5zzGtHPJnqu8IG4W2z0EORu4pNg2WrZLng5F5k5QzOFEylOaUGwxN+82zE2B47vgRIQ
+         WLMY9m8uHHcghaTF0wunUg+LFTcKRF4gbhCPF5op07R8yWMAi3J69LC3QtnD3C3lkdMu
+         3ASAmvnv/2rus6HAuPIVE7WBgsN0oPVDV7aV0dqd3pBPdC18aIFKwVlmxa+v4y+UOnKU
+         eqXdkvPDSZ2DyO3uodzwMos8ejLoUotD4Zx7aoJTfF9GesOL5Hx+Mw3nbLUWgNWTRpWy
+         eNbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8BFEyEY0pQowkZqKW1UkfT7rrgGTA/DT5VZkesq580U=;
+        b=AyMQJmjaKhxNuifXQ/CuFtJfVluJmQ2AgqxOByXyckW6Xl/gLshKK0/EVFSa0uAkoK
+         EWb5ciyrVcoUKIVKdZwu4L546Llc0K/aZDJPkkCQAc2dryWznlClrAKPoVPI2jP6U6Nf
+         YXZOuzmwFWojuKi+bU/UBLXLo/o9C+laX7MUAOXYjiWV53PA2dmOtVIPmYBVrtty00MR
+         +nlgjp5vYQ08KHjQ0Bv1U0msZJtjKicecjJ6qin1TtIat+I3787EQ9NTl8N69Rn9I3xm
+         Rx9l6k0EIM67xYlMkX918py5WU0baRpFzk6TTHZrjo3jfNM068FJtoMtpO/Q5PX7UitN
+         GbUQ==
+X-Gm-Message-State: AGi0PuYxXJY0UC3e7w3DMmZq719hTSOOyHUVCheuewwmaVd+UdV1Hz6I
+        KG+3Hc/bMXvh4GoUOLTlX+M=
+X-Google-Smtp-Source: APiQypKZk4QdbUtcxcSUADGSPzH1arT+R3V9CoHvjnRas3SWIG9QuEjLf0kMSsO0onIm5RbW3IJU1g==
+X-Received: by 2002:a05:6000:f:: with SMTP id h15mr18501426wrx.408.1587389621483;
+        Mon, 20 Apr 2020 06:33:41 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id v19sm1310706wra.57.2020.04.20.06.33.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2020 06:33:40 -0700 (PDT)
+To:     heiko@sntech.de
+Cc:     ezequiel@collabora.com, devicetree@vger.kernel.org,
+        hverkuil@xs4all.nl, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        mark.rutland@arm.com, robh@kernel.org
+References: <20200326191343.1989-1-ezequiel@collabora.com>
+Subject: Re: [PATCH v4] dt-bindings: rockchip-vpu: Convert bindings to
+ json-schema
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <12f6d7cf-6af6-4f54-3188-65e73b703a72@gmail.com>
+Date:   Mon, 20 Apr 2020 15:33:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="knpeiqpl5v5uzrh4"
-Content-Disposition: inline
-In-Reply-To: <20200420103113.577969-1-megous@megous.com>
+In-Reply-To: <20200326191343.1989-1-ezequiel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Heiko,
 
---knpeiqpl5v5uzrh4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch was applied by the media people Hans and Ezequil without note
+and test I think.
 
-On Mon, Apr 20, 2020 at 12:31:13PM +0200, Ondrej Jirman wrote:
-> The binding specifies #address-cells and #size-cells should be present.
-> Without them present, dtc issues a warning because default for
-> #address-cells seems to be <2>:
->=20
-> arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1108.4-52:
->   Warning (dma_ranges_format):
->     /soc/dram-controller@1c62000:dma-ranges:
->     "dma-ranges" property has invalid length (12 bytes)
->     (parent #address-cells =3D=3D 1, child #address-cells =3D=3D 2,
->     #size-cells =3D=3D 1)
->=20
-> mbus #address-cells should be 1.
->=20
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
+make ARCH=arm64 dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-vpu.yaml
 
-Applied, thanks
+Errors for example:
 
-Maxime
+  DTC     arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml
+  CHECK   arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml
+arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml: video-codec@ff350000:
+interrupts: [[0, 9, 4]] is too short
+arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml: video-codec@ff350000:
+interrupt-names: ['vdpu'] is too short
+arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml: video-codec@ff350000:
+interrupt-names:0: 'vepu' was expected
 
---knpeiqpl5v5uzrh4
-Content-Type: application/pgp-signature; name="signature.asc"
+See:
+https://lore.kernel.org/lkml/20200403124316.5445-1-jbx6244@gmail.com/
 
------BEGIN PGP SIGNATURE-----
++  interrupts:
++    minItems: 1
++    maxItems: 2
++
++  interrupt-names:
++    oneOf:
++      - const: vdpu
++      - items:
++        - const: vepu
++        - const: vdpu
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXp2jUQAKCRDj7w1vZxhR
-xTOZAQDH2dxXT4rG7cY/ZynLPx95CqmiIV9TpnSMdmyts6jejgD+L7nEB36P07Yi
-F2c44pcXcdYfUaXsokS1a2/3IdEFHgM=
-=PFLR
------END PGP SIGNATURE-----
+Vs.:
 
---knpeiqpl5v5uzrh4--
+
++  interrupts:
++    maxItems: 2
++
++  interrupt-names:
++    items:
++      - const: vepu
++      - const: vdpu
