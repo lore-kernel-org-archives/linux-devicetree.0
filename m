@@ -4,95 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4F5C3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 19:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D4BC3A5A0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 19:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1831D20857
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 19:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 369FE20B1F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 19:15:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587409967;
-	bh=533btvM4regbrCyCqAmnWhPvYUQDFQSGf+Y3Cb2Nbrw=;
+	s=default; t=1587410135;
+	bh=3YD4THGfmacXolwKreYh+0I/NXUHx9GGiPHU0TMrbN0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L33HlDfERc5E4zUQsj0g6cis3qDRkqKAaTNgGt/7S3vT7ztalEeSi6To4IC2X4XR+
-	 3foUuXCzDJL6K4Vajs1p3GnUCr8QnpZh9npXiUytZsB/y1wFnV6F7l4ekrye+kmxRM
-	 cRBq3h7rFvCTOlRXAWIYiwvYc8lAHe2xJ8c13UK8=
+	b=oly3cuDMsLBqlPl/YC7WJBGokmEuV+562qAuPt/6e17O/eP+UD6B9AHDzisRqwvuJ
+	 +VQS1/8WCnb0F3FIB02M9yAsSHdw4UaEmJx0biojLv0/LLWAcr5/7vWU9uHpxJMFTM
+	 nD9h8PL3Ag/1PQ6oJoieVdwO3XB7S5SwuncCI5SY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726039AbgDTTMq (ORCPT
+        id S1728042AbgDTTP0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:12:46 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41437 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725896AbgDTTMq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 15:12:46 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k9so9821515oia.8;
-        Mon, 20 Apr 2020 12:12:45 -0700 (PDT)
+        Mon, 20 Apr 2020 15:15:26 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34944 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728025AbgDTTPZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 15:15:25 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e20so9169742otl.2;
+        Mon, 20 Apr 2020 12:15:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mEdiyEyzF5/3OIaRLc3gV3pkykIsXa9nKV2IZYxgel4=;
-        b=krljELPBzUPq/IuOV0ijUpU0pHszIi6qAr5nxiuXGsCJUHfh3Q4A4Z3qckDfm/mOgv
-         oRw/RgYpXBre75uMZV8eV/6/b3HbnqasAnYIlJ0/wFusxNzFzAXnDsclzl0GmBC1vbOw
-         u1jV/LrhqTdQP+KjI01NWuTYVDEFmfu5iQwHnBG4qKdHqVPQ/2pvYjs3Oci9YPZEFDN9
-         t8JD8qrZBs2WosiaF9GkHNuf41aHiO7jh+g5o3SP8lqhfTzAr8M8CTOVfWiVEq4OIvlO
-         S0jq1R8jILf+vWx5ucBWPlK1rxkrvF1+hh6u4446Lm6yGASQd81tHhfWja8ygB0/IAaH
-         dDVw==
-X-Gm-Message-State: AGi0PuZEmULNMO6NIoQ/X20CD3yMMClQQQww0Qp2/d/Q5qzqlKBJ1vLh
-        X4DIUvSlbmDoZEQMttySDA==
-X-Google-Smtp-Source: APiQypIOTpxeJOVA9/QpCyaMB4NuAAYY4PvbIbTNDLbFynkqVjNurgkpjmad0ZzFxNEnYm/RIpvAMg==
-X-Received: by 2002:aca:6042:: with SMTP id u63mr688459oib.179.1587409965183;
-        Mon, 20 Apr 2020 12:12:45 -0700 (PDT)
+        bh=/E8gPmAs5q5j5c6IF7Y5E5C7JdeQS0MYhxEcRGnaPxs=;
+        b=q72gFrhHlIVrA5mY0Sy2UWVrJoZt9je4tDLA8GnkG6PNoXOoOy0CWgbypp08yB9ETR
+         jTbRjjBjk4VobUNc68ZlJ4t40d8bBSDJB/tCjBvLnWY50JJxjDUlzvAtXUtlDOnUnjuF
+         GxAZW1XgTBgdtlY/y0Qn+AyQqJDjga1d5loMa3ZJkLVs2VbsO62oIHPCXN2Sh/AgP9QL
+         sq7ZHckVMEsOSFkpCKJppaJoYpe324NBCOs1zQqwV+f15r/yTzcLSDa8Sf6k//LL2L+n
+         kT/yaZVx5jBIaB0g7Etf7zYBWsBaZ7YlneflRpVwwxbwvw+K9qL6Gx/1+8/nxYG9jgEm
+         IqxA==
+X-Gm-Message-State: AGi0Puas7HAA1L4zKfb8fXXswkM3GFgMoxeyvzEeUBNJjiQ3ySD0CcOc
+        xi2ah5SvAA8weeZVKTbtjQ==
+X-Google-Smtp-Source: APiQypK4KWrrROkD5Z7eemFuC8Y5bdOwXzixxByT6sDywR+zGy0AuTzZVDCA0mXYc0mjjBP9d9R3jA==
+X-Received: by 2002:a9d:6a98:: with SMTP id l24mr10442730otq.133.1587410124253;
+        Mon, 20 Apr 2020 12:15:24 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p5sm81101ooa.14.2020.04.20.12.12.44
+        by smtp.gmail.com with ESMTPSA id s13sm71633oic.27.2020.04.20.12.15.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 12:12:44 -0700 (PDT)
-Received: (nullmailer pid 31561 invoked by uid 1000);
-        Mon, 20 Apr 2020 19:12:43 -0000
-Date:   Mon, 20 Apr 2020 14:12:43 -0500
+        Mon, 20 Apr 2020 12:15:23 -0700 (PDT)
+Received: (nullmailer pid 3203 invoked by uid 1000);
+        Mon, 20 Apr 2020 19:15:22 -0000
+Date:   Mon, 20 Apr 2020 14:15:22 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     heiko@sntech.de, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] dt-bindings: sram: convert rockchip-pmu-sram bindings
- to yaml
-Message-ID: <20200420191243.GA31486@bogus>
-References: <20200411122507.4040-1-jbx6244@gmail.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     robh+dt@kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Qiang Yu <yuq825@gmail.com>
+Subject: Re: [PATCH v5] dt-bindings: gpu: mali-utgard: Add the #cooling-cells
+ property
+Message-ID: <20200420191522.GA3122@bogus>
+References: <20200411165700.1576314-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200411122507.4040-1-jbx6244@gmail.com>
+In-Reply-To: <20200411165700.1576314-1-martin.blumenstingl@googlemail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 11 Apr 2020 14:25:07 +0200, Johan Jonker wrote:
-> Current dts files with 'rockchip-pmu-sram' compatible nodes
-> are now verified with sram.yaml, although the original
-> text document still exists. Merge rockchip-pmu-sram.txt
-> with sram.yaml by adding it as description with an example.
-> Make #address-cells, #size-cells and ranges optional
-> if there are no child nodes to prevent yaml warnings.
+On Sat, 11 Apr 2020 18:57:00 +0200, Martin Blumenstingl wrote:
+> The GPU can be one of the big heat sources on a SoC. Allow the
+> "#cooling-cells" property to be specified for ARM Mali Utgard GPUs so
+> the GPU clock speeds (and voltages) can be reduced to prevent a SoC from
+> overheating.
 > 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> Reviewed-by: Qiang Yu <yuq825@gmail.com>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
-> Changes v4:
->   Make some properties optional
+> Changes since v4 at [0]:
+> - Added Qiang's Reviewed-by (many thanks)
+> - re-send because I missed the devicetree mailing list in v4
 > 
-> Changes v3:
->   Document the compatible
 > 
-> Changed v2:
->   Merge with sram.yaml
-> ---
->  .../devicetree/bindings/sram/rockchip-pmu-sram.txt | 16 -------------
->  Documentation/devicetree/bindings/sram/sram.yaml   | 26 +++++++++++++++++++---
->  2 files changed, 23 insertions(+), 19 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
+> [0] https://patchwork.kernel.org/patch/11448013/
+> 
+> 
+>  Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
 
 Applied, thanks.
