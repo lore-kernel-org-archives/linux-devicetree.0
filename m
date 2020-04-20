@@ -2,144 +2,127 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 059EEC3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 13:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60224C3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 13:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA72120672
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 13:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3661920735
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 13:57:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="tvkyfl8T"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="mkrf0mj2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728770AbgDTNsV (ORCPT
+        id S1726885AbgDTN53 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 09:48:21 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:31830 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726372AbgDTNsV (ORCPT
+        Mon, 20 Apr 2020 09:57:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726608AbgDTN53 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 09:48:21 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KDllMc024848;
-        Mon, 20 Apr 2020 15:48:06 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=FJh6fC8jON2d+h4HJHf/RBjL/d+0wt6Wf8NAcemUV7o=;
- b=tvkyfl8TSu19rcRoEpFtFxavA/jh5kAEXz1yw9kAvruhldYECXYgE/3fodYagU/vYr2E
- MHBVPnS3YH8YN3ng5JtnyOu68mK9Sm4hli/nrkjh0MbAX7yIu5Xj2dmonh1EHB6loToY
- qWEJNts0I1vlXTDn3VdPDPZL9tGe7kWCjKGKZZEQLf4Qf1v5+mt0zaaB91lGw7fDAHMl
- ciQDw9mZ0YjvbVpD9eHER5iXp22AWKbgMCV+UdP2JgBr2v1O0iNeqXBiu5mmEuuNW9SF
- +agJ9WqWHvxy12dwlRJlraau1xzuk+TmmwEJL/weMp9jKEcsW4XFmL9RPQazdOJfYFMI Uw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30fq11akx7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 15:48:06 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DD55010002A;
-        Mon, 20 Apr 2020 15:48:04 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CBC762B3E2D;
-        Mon, 20 Apr 2020 15:48:04 +0200 (CEST)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 20 Apr 2020 15:48:03
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <gregkh@linuxfoundation.org>,
-        <loic.pallardy@st.com>, <linus.walleij@linaro.org>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH 1/5] dt-bindings: bus: Add firewall bindings
-Date:   Mon, 20 Apr 2020 15:47:56 +0200
-Message-ID: <20200420134800.31604-2-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20200420134800.31604-1-benjamin.gaignard@st.com>
-References: <20200420134800.31604-1-benjamin.gaignard@st.com>
+        Mon, 20 Apr 2020 09:57:29 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A235C061A0C
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 06:57:29 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id o10so8450436qtr.6
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 06:57:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2Y6perFiVeQ3QgWqLdIJUPsNvFY3EZijv/H4bCO6lY4=;
+        b=mkrf0mj2uMHggYNoMXheWws/vfopgkKMdOj2sk/jq91aSFV+FBOaAWfRgYM4xhELk7
+         anpstJTVDOqB4qOo0kIzlwP5u+6LnNpFVukNArZe7hoXCLYhFl026KWaIuXtr4kZkZid
+         IJPXMEIC09IH6YOe2rwd+xfDBeWBnrWSySHhYgTBZSWTKpo9IqVk8fy6bXSM56vwA15i
+         B+iFKjqNtcVfDZUiEh19W3zpSzKpdAhDy9qMwP2cjBEKkXw0Ag44wC60d6gA72lrJVpw
+         SXd4MaW5F4oNRRxVYpJvgy0d14clAWod3shTlEIMW54sI5mktrnVJXVbeAuYZDLtCCXN
+         7OQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2Y6perFiVeQ3QgWqLdIJUPsNvFY3EZijv/H4bCO6lY4=;
+        b=Z1g0FJ//zAUixz6FIvUm+cESxeTH+/17o52kZWfQLhBNuj8tHgumQugrswpmRm2vtX
+         a3QHOBXPjAIROZIDA7ESDKRiipE3tJnE6ueykE/71XBuMm3yHfETkuvOBzogV+WORK/C
+         D8O/4m438Z3RFz89Hx1/jnoFjDlOs8LusYVJw63SMTJ9seBvM1oMlf+5vGqyOKX35PPX
+         ahU1PVmV0S4IhvkbQpeS8tZ6MoRi/NI22BbNvo4ahyV8PUB4HizywcBqISZO7uJ+Sn6z
+         e0PqioItipMzFzd+EleAgmqSpz4UkF33ko16EoTcOLDFLRIAK22hORXgE06KTpkf0JB/
+         fTQQ==
+X-Gm-Message-State: AGi0PuYmCt+BF1hogVPOaGc+n+RAK2E9SVcQ6xdBS08RYBfjjWFQjnSz
+        d+KuoQB8L8/20fzeQHeIj3vxxA==
+X-Google-Smtp-Source: APiQypIj1R9FcMRfRka1KKXW7j9di+d85e9nm7Td/03CCkb8wDdEAIcizkSgGYTTocgktyzsVQW4zw==
+X-Received: by 2002:ac8:82f:: with SMTP id u44mr15905874qth.198.1587391048363;
+        Mon, 20 Apr 2020 06:57:28 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id g14sm550791qtb.24.2020.04.20.06.57.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 Apr 2020 06:57:27 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jQWvP-0002ax-4d; Mon, 20 Apr 2020 10:57:27 -0300
+Date:   Mon, 20 Apr 2020 10:57:27 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
+        zhangfei.gao@linaro.org, xuzaibo@huawei.com
+Subject: Re: [PATCH v5 02/25] iommu/sva: Manage process address spaces
+Message-ID: <20200420135727.GO26002@ziepe.ca>
+References: <20200414170252.714402-1-jean-philippe@linaro.org>
+ <20200414170252.714402-3-jean-philippe@linaro.org>
+ <20200416072852.GA32000@infradead.org>
+ <20200416085402.GB1286150@myrica>
+ <20200416121331.GA18661@infradead.org>
+ <20200420074213.GA3180232@myrica>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-20_04:2020-04-20,2020-04-20 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420074213.GA3180232@myrica>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add schemas for firewall consumer and provider.
+On Mon, Apr 20, 2020 at 09:42:13AM +0200, Jean-Philippe Brucker wrote:
+> On Thu, Apr 16, 2020 at 05:13:31AM -0700, Christoph Hellwig wrote:
+> > On Thu, Apr 16, 2020 at 10:54:02AM +0200, Jean-Philippe Brucker wrote:
+> > > On Thu, Apr 16, 2020 at 12:28:52AM -0700, Christoph Hellwig wrote:
+> > > > > +	rcu_read_lock();
+> > > > > +	hlist_for_each_entry_rcu(bond, &io_mm->devices, mm_node)
+> > > > > +		io_mm->ops->invalidate(bond->sva.dev, io_mm->pasid, io_mm->ctx,
+> > > > > +				       start, end - start);
+> > > > > +	rcu_read_unlock();
+> > > > > +}
+> > > > 
+> > > > What is the reason that the devices don't register their own notifiers?
+> > > > This kinds of multiplexing is always rather messy, and you do it for
+> > > > all the methods.
+> > > 
+> > > This sends TLB and ATC invalidations through the IOMMU, it doesn't go
+> > > through device drivers
+> > 
+> > I don't think we mean the same thing, probably because of my rather
+> > imprecise use of the word device.
+> > 
+> > What I mean is that the mmu_notifier should not be embedded into the
+> > io_mm structure (whch btw, seems to have a way to generic name, just
+> > like all other io_* prefixed names), but instead into the
+> > iommu_bond structure.  That avoid the whole multiplexing layer.
+> 
+> Right, I can see the appeal. I still like having a single mmu notifier per
+> mm because it ensures we allocate a single PASID per mm (as required by
+> x86). I suppose one alternative is to maintain a hashtable of mm->pasid,
+> to avoid iterating over all bonds during allocation.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- .../bindings/bus/stm32/firewall-consumer.yaml      | 25 ++++++++++++++++++++++
- .../bindings/bus/stm32/firewall-provider.yaml      | 18 ++++++++++++++++
- 2 files changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
- create mode 100644 Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml
+I've been getting rid of hash tables like this.. Adding it to the
+mm_struct does seem reasonable, I think PASID is a pretty broad
+concept now.
 
-diff --git a/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml b/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
-new file mode 100644
-index 000000000000..8f123888d058
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/stm32/firewall-consumer.yaml
-@@ -0,0 +1,25 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bus/stm32/firewall-consumer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Common Bus Firewall consumer binding
-+
-+maintainers:
-+  - Benjamin Gaignard <benjamin.gaignard@st.com>
-+
-+# always select the core schema
-+select: true
-+
-+properties:
-+  firewall-0: true
-+
-+  firewall-names: true
-+
-+patternProperties:
-+  "firewall-[0-9]":
-+    $ref: "/schemas/types.yaml#/definitions/phandle-array"
-+
-+dependencies:
-+  firewall-names: [ firewall-0 ]
-diff --git a/Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml b/Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml
-new file mode 100644
-index 000000000000..299824c620ea
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/stm32/firewall-provider.yaml
-@@ -0,0 +1,18 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bus/stm32/firewall-provider.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Common Bus Firewall provider binding
-+
-+maintainers:
-+  - Benjamin Gaignard <benjamin.gaignard@st.com>
-+
-+properties:
-+  '#firewall-cells':
-+     $ref: /schemas/types.yaml#/definitions/uint32
-+     description: Number of cells in a bus firewall specifier
-+
-+required:
-+  - '#firewall-cells'
--- 
-2.15.0
-
+Jason
