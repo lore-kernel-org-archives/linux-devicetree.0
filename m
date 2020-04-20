@@ -2,118 +2,211 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C8FC3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 13:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3227CC54FD0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 13:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C977A20857
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 13:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1273F20857
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 13:46:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="VcwCEC+P"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="hicy5CuB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726081AbgDTNqG (ORCPT
+        id S1728435AbgDTNqY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 09:46:06 -0400
-Received: from vps.xff.cz ([195.181.215.36]:57450 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbgDTNqG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 09:46:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1587390364; bh=lXFLLXv67CfUewvpws4scaGtSsPitz7siYHsuT7MR54=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=VcwCEC+Pfk0c/2AlQG1Fl8KKx5I7xrpdLVyQih6u2kxXdRe0i6NvuWdkX5cmjkT2y
-         6jWeLwUS+6eoVpXnlt2omWpLTfAOLJ+P7WQoOP6D+mAKELXW6IUjImlyGYGo+kJMoy
-         5YPHVmuBQuWv+0p4MoSqIjXB6sUFTf5RjvWI/akc=
-Date:   Mon, 20 Apr 2020 15:46:04 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Mon, 20 Apr 2020 09:46:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725944AbgDTNqY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Apr 2020 09:46:24 -0400
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10F50C061A0C;
+        Mon, 20 Apr 2020 06:46:24 -0700 (PDT)
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 0CFF820CD8;
+        Mon, 20 Apr 2020 13:46:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1587390382; bh=pAU0GQtIe9CHI3zEvVQ1okUdMcuIoJdTgDyCDw9GKa0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hicy5CuBUVkL+GjmHHgahKbGXfIOV7xU5qO9uM1DXePwmgRRE+Qc080dMhME8SrEl
+         ix8+eCtdGMwxqHABdEky2mXP0tgimZmn1VF/tEUlfTx/3c3XePU9wQG0w+NqWioJyE
+         2a43/4letXnP+yNs6W1ZyeT0U5FJQj9N1uUjqJniFGsaYKTsMGeFtQYalQoGI+zlOk
+         eLD49M4zm/+ePKfoIXU7uBs4JCLyXYS9gugchvCOBzWMDIdBVHJnvxUSykZiYH32+M
+         PhnIHd0pC7tOy20W2ru/Cn65pcWSyG931fnjQ5o933wzA70rQtsqU0Pa5r7dCvFk4J
+         OoiGIp/R11hVQ==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [PATCH v5 2/9] arm64: dts: allwinner: h6: Add thermal trip
- points/cooling map
-Message-ID: <20200420134604.bkjp66fjiggses7a@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-References: <20200420130021.3841-1-peron.clem@gmail.com>
- <20200420130021.3841-3-peron.clem@gmail.com>
+        Huacai Chen <chenhc@lemote.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/5] MIPS: Loongson64: Remove dead RTC code
+Date:   Mon, 20 Apr 2020 21:45:25 +0800
+Message-Id: <20200420134536.210475-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200420073347.157230-1-jiaxun.yang@flygoat.com>
+References: <20200420073347.157230-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200420130021.3841-3-peron.clem@gmail.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+RTC is now enabled by devicetree. So platform code is
+no longer needed.
 
-On Mon, Apr 20, 2020 at 03:00:14PM +0200, Clément Péron wrote:
-> From: Ondrej Jirman <megous@megous.com>
-> 
-> This enables passive cooling by down-regulating CPU voltage
-> and frequency.
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+v2: Rebase to mips-next
+---
+ .../include/asm/mach-loongson64/mc146818rtc.h | 36 -----------------
+ arch/mips/loongson64/Kconfig                  |  4 --
+ arch/mips/loongson64/Makefile                 |  1 -
+ arch/mips/loongson64/rtc.c                    | 39 -------------------
+ arch/mips/loongson64/time.c                   |  8 +---
+ 5 files changed, 1 insertion(+), 87 deletions(-)
+ delete mode 100644 arch/mips/include/asm/mach-loongson64/mc146818rtc.h
+ delete mode 100644 arch/mips/loongson64/rtc.c
 
-Does this not produce a lot of warnings for you during compilation?
+diff --git a/arch/mips/include/asm/mach-loongson64/mc146818rtc.h b/arch/mips/include/asm/mach-loongson64/mc146818rtc.h
+deleted file mode 100644
+index ebdccfee50be..000000000000
+--- a/arch/mips/include/asm/mach-loongson64/mc146818rtc.h
++++ /dev/null
+@@ -1,36 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 1998, 2001, 03, 07 by Ralf Baechle (ralf@linux-mips.org)
+- *
+- * RTC routines for PC style attached Dallas chip.
+- */
+-#ifndef __ASM_MACH_LOONGSON64_MC146818RTC_H
+-#define __ASM_MACH_LOONGSON64_MC146818RTC_H
+-
+-#include <linux/io.h>
+-
+-#define RTC_PORT(x)	(0x70 + (x))
+-#define RTC_IRQ		8
+-
+-static inline unsigned char CMOS_READ(unsigned long addr)
+-{
+-	outb_p(addr, RTC_PORT(0));
+-	return inb_p(RTC_PORT(1));
+-}
+-
+-static inline void CMOS_WRITE(unsigned char data, unsigned long addr)
+-{
+-	outb_p(addr, RTC_PORT(0));
+-	outb_p(data, RTC_PORT(1));
+-}
+-
+-#define RTC_ALWAYS_BCD	0
+-
+-#ifndef mc146818_decode_year
+-#define mc146818_decode_year(year) ((year) < 70 ? (year) + 2000 : (year) + 1970)
+-#endif
+-
+-#endif /* __ASM_MACH_LOONGSON64_MC146818RTC_H */
+diff --git a/arch/mips/loongson64/Kconfig b/arch/mips/loongson64/Kconfig
+index 48b29c198acf..c386b8a3c753 100644
+--- a/arch/mips/loongson64/Kconfig
++++ b/arch/mips/loongson64/Kconfig
+@@ -14,8 +14,4 @@ config RS780_HPET
+ 	  If unsure, say Yes.
+ 
+ 
+-config LOONGSON_MC146818
+-	bool
+-	default n
+-
+ endif # MACH_LOONGSON64
+diff --git a/arch/mips/loongson64/Makefile b/arch/mips/loongson64/Makefile
+index b7f40b179c71..32b8c224852f 100644
+--- a/arch/mips/loongson64/Makefile
++++ b/arch/mips/loongson64/Makefile
+@@ -9,5 +9,4 @@ obj-$(CONFIG_SMP)	+= smp.o
+ obj-$(CONFIG_NUMA)	+= numa.o
+ obj-$(CONFIG_RS780_HPET) += hpet.o
+ obj-$(CONFIG_PCI) += pci.o
+-obj-$(CONFIG_LOONGSON_MC146818) += rtc.o
+ obj-$(CONFIG_SUSPEND) += pm.o
+diff --git a/arch/mips/loongson64/rtc.c b/arch/mips/loongson64/rtc.c
+deleted file mode 100644
+index 8d7628c0f513..000000000000
+--- a/arch/mips/loongson64/rtc.c
++++ /dev/null
+@@ -1,39 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-or-later
+-/*
+- *  Lemote Fuloong platform support
+- *
+- *  Copyright(c) 2010 Arnaud Patard <apatard@mandriva.com>
+- */
+-
+-#include <linux/init.h>
+-#include <linux/kernel.h>
+-#include <linux/platform_device.h>
+-#include <linux/mc146818rtc.h>
+-
+-static struct resource loongson_rtc_resources[] = {
+-	{
+-		.start	= RTC_PORT(0),
+-		.end	= RTC_PORT(1),
+-		.flags	= IORESOURCE_IO,
+-	}, {
+-		.start	= RTC_IRQ,
+-		.end	= RTC_IRQ,
+-		.flags	= IORESOURCE_IRQ,
+-	}
+-};
+-
+-static struct platform_device loongson_rtc_device = {
+-	.name		= "rtc_cmos",
+-	.id		= -1,
+-	.resource	= loongson_rtc_resources,
+-	.num_resources	= ARRAY_SIZE(loongson_rtc_resources),
+-};
+-
+-
+-static int __init loongson_rtc_platform_init(void)
+-{
+-	platform_device_register(&loongson_rtc_device);
+-	return 0;
+-}
+-
+-device_initcall(loongson_rtc_platform_init);
+diff --git a/arch/mips/loongson64/time.c b/arch/mips/loongson64/time.c
+index 1245f22cec84..91e842b58365 100644
+--- a/arch/mips/loongson64/time.c
++++ b/arch/mips/loongson64/time.c
+@@ -6,7 +6,7 @@
+  * Copyright (C) 2009 Lemote Inc.
+  * Author: Wu Zhangjin, wuzhangjin@gmail.com
+  */
+-#include <asm/mc146818-time.h>
++
+ #include <asm/time.h>
+ #include <asm/hpet.h>
+ 
+@@ -21,9 +21,3 @@ void __init plat_time_init(void)
+ 	setup_hpet_timer();
+ #endif
+ }
+-
+-void read_persistent_clock64(struct timespec64 *ts)
+-{
+-	ts->tv_sec = mc146818_get_cmos_time();
+-	ts->tv_nsec = 0;
+-}
+-- 
+2.26.0.rc2
 
-regards,
-	o.
-
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 24 ++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> index 370e77b86fe1..60da1627772b 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> @@ -964,6 +964,30 @@
->  			polling-delay-passive = <0>;
->  			polling-delay = <0>;
->  			thermal-sensors = <&ths 0>;
-> +
-> +			trips {
-> +				cpu_alert: cpu-alert {
-> +					temperature = <85000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				cpu-crit {
-> +					temperature = <100000>;
-> +					hysteresis = <0>;
-> +					type = "critical";
-> +				};
-> +			};
-> +
-> +			cooling-maps {
-> +				map0 {
-> +					trip = <&cpu_alert>;
-> +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +				};
-> +			};
->  		};
->  
->  		gpu-thermal {
-> -- 
-> 2.20.1
-> 
