@@ -2,71 +2,74 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16CEFC3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 20:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B7AC54FD0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 20:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E30DD20782
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 20:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09BA72078C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 20:27:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="MNaaf1hF"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="o/PiQFqk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgDTU00 (ORCPT
+        id S1728324AbgDTU1Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:26:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50048 "EHLO
+        Mon, 20 Apr 2020 16:27:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbgDTU0Z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 16:26:25 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE104C061A0C;
-        Mon, 20 Apr 2020 13:26:24 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id u13so13849211wrp.3;
-        Mon, 20 Apr 2020 13:26:24 -0700 (PDT)
+        with ESMTP id S1726759AbgDTU00 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 16:26:26 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2615C061A0C;
+        Mon, 20 Apr 2020 13:26:25 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id h2so1013048wmb.4;
+        Mon, 20 Apr 2020 13:26:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m86kfkguQyuXw4Padwd/5nB4RFgQInyY94SnHr1Z+AI=;
-        b=MNaaf1hFhkSNGsG0/WejBweFAMVqbFBOqTAhKWVbiIqSizUOwh+IXdBtBdMQOCBokB
-         vv+yP9h2nNbyp6aTAwifzxnJbGPVJqTGq4LRcyJUWDGhz9jUEuWFbBWpcaXRNRmd/YMf
-         RCs6t56EELxuk4xEKs+aqdw0M8QA2xnRRU28HKvQf1dqgCP3rcnFbrALfZGdQjgadPMw
-         Uq6PKbW3wtfYIzF3QHPHCuvePPApbnd0V+z2ZGc4HpJ2tCq3EA0oAn/deiaC8+9KEanT
-         iVDYBcvbxNT142KA+Mrwyo2m3kkBUAJ8vdFRnEFZlHAcHmM1Yfs1FE53iFsveq6S5GyB
-         my8g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=rnh+McsJx0RoUC/D7GUKGKHfeXKqPCTz0PtdlxFfOB4=;
+        b=o/PiQFqksFUYRPMkKFrQgndQGSJI9ciJA357NNeXzTWM8lsoquahb/EEL97Vh+UH2x
+         5cTlZIirnZjKLz3ekAkfMfpXBcSccl4hMZbGcyuOlRAkl7ol9DzoVh9o9xxZJH31dxLo
+         va3bSTHUakRiApC/nkd6pEKKDqyMyuiXzWxa8p3d2X0YnUcqDzMktzcQGKC7KwSCqtPm
+         YhoqjUVq5fCPIIi91mYg72KS5bO407J8/xuqaZ95at7DXw1AEKvioh1gAc4PDviiA64y
+         yoqWw+IzQTJFdGQZDMwwYxxYMt21LsfhG+MXDpqeZySPu6Na75Frr7gR/8bRx5gVwYFd
+         vmAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m86kfkguQyuXw4Padwd/5nB4RFgQInyY94SnHr1Z+AI=;
-        b=kbZ2Gy/qLbltHZx4u711Wx1zLoSo8oP96cfE67fsr5EEVBLNbPrOAvAdJ0EefV6iOJ
-         AdjQvghnVXgKH/8XeEJWTve24CPfNPwDedYu7xJsESisSHbAPZeJQDiKPkblXqY7oRrN
-         7oMxeR/r/JUvqnM7Y79uKfHzT8bsp18UiFWLBxxDJCmhYoocUz54hWIq4X260ngeNEWb
-         J2DssGJic95xq+qO4ADUzCeiXpxnGt48NUiZaFS1BPdQ0s/H4Zghc3SmVp4Mg7/ApoQk
-         pJqdgb9u2bb0bgP0Fj29UiqzTU0KTVDO+DeDY7ceSYMF1YAvFHUSczAy+P8/wucF7JdK
-         g+rw==
-X-Gm-Message-State: AGi0PuZSotbhQlPAWr4nEnCO+qTPFmQxxcXpgsvXILK2DvDiytXU/BbS
-        XY2amK7YwW9dzmKVJZp/E0BE5FoZxTA=
-X-Google-Smtp-Source: APiQypKTMMF9oO9FvAFJ4xYhaXCar71+2ejW0w10+TOcqLClxYzLCLiWyqCAI3/BWVAKJrMuDVhxew==
-X-Received: by 2002:adf:ea44:: with SMTP id j4mr22176574wrn.38.1587414383380;
-        Mon, 20 Apr 2020 13:26:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rnh+McsJx0RoUC/D7GUKGKHfeXKqPCTz0PtdlxFfOB4=;
+        b=jjB1jfQTPdlTY89p1RL4B9UTiBzHl2KbsFLBZThEqCalbjYGW0P3aNxJtrqE+8uWtX
+         loy4nkJNnfx4/A2TIezmBxXs3RDAC6YS3kHXx/aseezg9u/qC6yfbushabkjHp+yFvKj
+         dM5x+yr7tqEVbQek/74tocUGkGPtlaYmWni8JfN+Z9KhchJlLONyQH/QfADAveI4ag7+
+         HJ5g4GuO3jtN7ZMr6BSZ+FQPjMslryT1FbWJGzCLL5FSTkBwcbwEsZpbBc51lEFWyRc3
+         CkctFUZ6Mwy6cFNcsFxqDrLKXTGM2GN/KzLgl9LB1JCLQ1eVdRYeYHlVOTz/HdSuXJ5U
+         w3/Q==
+X-Gm-Message-State: AGi0PuamwRZd3xkjkjp+SFPPpQIK8Xs2QEPvsAoWr5jLaJUDORGgQAGS
+        /StobkOTbnDO6c6pZf2iN4hE50ESrC0=
+X-Google-Smtp-Source: APiQypKZQvp7B+IRpQsVNj52BY2L/RrQ0bY8cTNf87BOA6UpV1lzLCYZmUrbDf4YEkV5+FW5fNomog==
+X-Received: by 2002:a05:600c:2316:: with SMTP id 22mr1141143wmo.164.1587414384242;
+        Mon, 20 Apr 2020 13:26:24 -0700 (PDT)
 Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id l19sm657846wmj.14.2020.04.20.13.26.22
+        by smtp.googlemail.com with ESMTPSA id l19sm657846wmj.14.2020.04.20.13.26.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 13:26:22 -0700 (PDT)
+        Mon, 20 Apr 2020 13:26:23 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     robh+dt@kernel.org, khilman@baylibre.com, narmstrong@baylibre.com,
         linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 0/4] meson-ee-pwrc: support for Meson8/8b/8m2 and GX
-Date:   Mon, 20 Apr 2020 22:26:08 +0200
-Message-Id: <20200420202612.369370-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 1/4] dt-bindings: power: meson-ee-pwrc: add support for Meson8/8b/8m2
+Date:   Mon, 20 Apr 2020 22:26:09 +0200
+Message-Id: <20200420202612.369370-2-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200420202612.369370-1-martin.blumenstingl@googlemail.com>
+References: <20200420202612.369370-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -74,48 +77,153 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This series adds support for all "older" SoCs to the meson-ee-pwrc
-driver. I wanted to compare as much as I could between my Meson8b EC-100
-(Endless Mini) and the Le Potato board so I added support for GXBB, GXL
-and GXM as well as for the SoCs that I'm actually working on. I will
-send the ARM64 dts patches once all of this is reviewed and merged.
+The power domains on the 32-bit Meson8/Meson8b/Meson8m2 SoCs are very
+similar to what G12A still uses. The (known) differences are:
+- Meson8 doesn't use any reset lines at all
+- Meson8b and Meson8m2 use the same reset lines, which are different
+  from what the 64-bit SoCs use
+- there is no "vapb" clock on the older SoCs
+- amlogic,ao-sysctrl cannot point to the whole AO sysctrl region but
+  only the power management related registers
 
-I successfully tested the Meson8b part on EC-100 where u-boot does not
-initialize the VPU controller. So this the board where I have been
-struggling most.
+Add a new compatible string and adjust clock and reset line expectations
+for each SoC.
 
-
-Changes since v2 at [1]:
-- don't remove the "reset-names" property from the main description
-  (only make it optional and switch from items to minItems) to fix
-  a dt_binding_check found by Rob (or his bot) - thanks and sorry!
-
-Changes since v1 at [0]:
-- rename PWRC_GXBB_ETH_ID to PWRC_GXBB_ETHERNET_MEM_ID. Spotted by
-  Neil, thanks!
-- update cover-letter since Neil confirmed (thanks!) that the "dvin"
-  reset really belongs to the VPU on GXBB, GXL and GXM
-- removed RFC status
-
-
-[0] https://patchwork.kernel.org/cover/11489163/
-[1] https://patchwork.kernel.org/cover/11496013/
-
-
-Martin Blumenstingl (4):
-  dt-bindings: power: meson-ee-pwrc: add support for Meson8/8b/8m2
-  dt-bindings: power: meson-ee-pwrc: add support for the Meson GX SoCs
-  soc: amlogic: meson-ee-pwrc: add support for Meson8/Meson8b/Meson8m2
-  soc: amlogic: meson-ee-pwrc: add support for the Meson GX SoCs
-
- .../bindings/power/amlogic,meson-ee-pwrc.yaml | 102 +++++++++++++++---
- drivers/soc/amlogic/meson-ee-pwrc.c           |  98 ++++++++++++++++-
- include/dt-bindings/power/meson-gxbb-power.h  |  13 +++
- include/dt-bindings/power/meson8-power.h      |  13 +++
- 4 files changed, 206 insertions(+), 20 deletions(-)
- create mode 100644 include/dt-bindings/power/meson-gxbb-power.h
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ .../bindings/power/amlogic,meson-ee-pwrc.yaml | 74 +++++++++++++++----
+ include/dt-bindings/power/meson8-power.h      | 13 ++++
+ 2 files changed, 72 insertions(+), 15 deletions(-)
  create mode 100644 include/dt-bindings/power/meson8-power.h
 
+diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
+index 6c6079fe1351..2a1c933ae434 100644
+--- a/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
++++ b/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
+@@ -23,13 +23,19 @@ description: |+
+ properties:
+   compatible:
+     enum:
++      - amlogic,meson8-pwrc
++      - amlogic,meson8b-pwrc
++      - amlogic,meson8m2-pwrc
+       - amlogic,meson-g12a-pwrc
+       - amlogic,meson-sm1-pwrc
+ 
+   clocks:
+-    minItems: 2
++    minItems: 1
++    maxItems: 2
+ 
+   clock-names:
++    minItems: 1
++    maxItems: 2
+     items:
+       - const: vpu
+       - const: vapb
+@@ -38,18 +44,7 @@ properties:
+     minItems: 11
+ 
+   reset-names:
+-    items:
+-      - const: viu
+-      - const: venc
+-      - const: vcbus
+-      - const: bt656
+-      - const: rdma
+-      - const: venci
+-      - const: vencp
+-      - const: vdac
+-      - const: vdi6
+-      - const: vencl
+-      - const: vid_lock
++    minItems: 11
+ 
+   "#power-domain-cells":
+     const: 1
+@@ -59,12 +54,61 @@ properties:
+     allOf:
+       - $ref: /schemas/types.yaml#/definitions/phandle
+ 
++allOf:
++  - if:
++      properties:
++        compatible:
++          enum:
++            - amlogic,meson8b-pwrc
++            - amlogic,meson8m2-pwrc
++    then:
++      properties:
++        reset-names:
++          items:
++            - const: dblk
++            - const: pic_dc
++            - const: hdmi_apb
++            - const: hdmi_system
++            - const: venci
++            - const: vencp
++            - const: vdac
++            - const: vencl
++            - const: viu
++            - const: venc
++            - const: rdma
++      required:
++        - resets
++        - reset-names
++
++  - if:
++      properties:
++        compatible:
++          enum:
++            - amlogic,meson-g12a-pwrc
++            - amlogic,meson-sm1-pwrc
++    then:
++      properties:
++        reset-names:
++          items:
++            - const: viu
++            - const: venc
++            - const: vcbus
++            - const: bt656
++            - const: rdma
++            - const: venci
++            - const: vencp
++            - const: vdac
++            - const: vdi6
++            - const: vencl
++            - const: vid_lock
++      required:
++        - resets
++        - reset-names
++
+ required:
+   - compatible
+   - clocks
+   - clock-names
+-  - resets
+-  - reset-names
+   - "#power-domain-cells"
+   - amlogic,ao-sysctrl
+ 
+diff --git a/include/dt-bindings/power/meson8-power.h b/include/dt-bindings/power/meson8-power.h
+new file mode 100644
+index 000000000000..dd8b2ddb82a7
+--- /dev/null
++++ b/include/dt-bindings/power/meson8-power.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
++/*
++ * Copyright (c) 2019 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
++ */
++
++#ifndef _DT_BINDINGS_MESON8_POWER_H
++#define _DT_BINDINGS_MESON8_POWER_H
++
++#define PWRC_MESON8_VPU_ID			0
++#define PWRC_MESON8_ETHERNET_MEM_ID		1
++#define PWRC_MESON8_AUDIO_DSP_MEM_ID		2
++
++#endif /* _DT_BINDINGS_MESON8_POWER_H */
 -- 
 2.26.1
 
