@@ -2,136 +2,137 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B94C3A5A0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 10:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 054C0C3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F757205C9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 10:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB0CA20724
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:03:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="MQEGkVTE"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="lMFob3fx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725988AbgDTKws (ORCPT
+        id S1726081AbgDTLDM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 06:52:48 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:18640 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725773AbgDTKws (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 06:52:48 -0400
-X-UUID: 10f5262b28c749c5bcbed67e4ec0dd43-20200420
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=5ZSYvBnifQattuM6WwNJ4dWYpkcL8v4PWiqKlXsfHC4=;
-        b=MQEGkVTEJjor7u4n/2Ncwn0pFev7mIhXwkIn1iFmGxsdVQ+XfMW8QCKOgE413wlgZlHJD9/E/qlViXeL/UqqZjk17Kkox+fjXjzgAag0IXZAp4E9l8Nfg32vOzXyfOM59XvtcW1rnQ5gLi4ACDc+8HCFnvUdoHQtSvgCG286y1k=;
-X-UUID: 10f5262b28c749c5bcbed67e4ec0dd43-20200420
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <hsin-hsiung.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2007460060; Mon, 20 Apr 2020 18:52:44 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 20 Apr 2020 18:52:38 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 20 Apr 2020 18:52:37 +0800
-Message-ID: <1587379959.6297.2.camel@mtksdaap41>
-Subject: Re: [PATCH v12 1/6] mfd: mt6397: Modify suspend/resume behavior
-From:   Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
-To:     Lee Jones <lee.jones@linaro.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <linux-kernel@vger.kernel.org>,
-        "Richard Fontana" <rfontana@redhat.com>,
-        <linux-rtc@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Ran Bi <ran.bi@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Josef Friedl <josef.friedl@speed.at>,
-        <srv_heupstream@mediatek.com>, Sebastian Reichel <sre@kernel.org>
-Date:   Mon, 20 Apr 2020 18:52:39 +0800
-In-Reply-To: <20200416084910.GX2167633@dell>
-References: <1586333531-21641-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <1586333531-21641-2-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <20200416084910.GX2167633@dell>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 20 Apr 2020 07:03:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725773AbgDTLDK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Apr 2020 07:03:10 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FA13C061A0F
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 04:03:10 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id x4so10501161wmj.1
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 04:03:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:subject:in-reply-to:date:message-id
+         :mime-version;
+        bh=RrxAUu1aJiYwPMpjnlo5gqgVd7ZtEZg5UXQs37AT2OA=;
+        b=lMFob3fxLkovbZefAL5wA3odVFIm8ECwFR8ONBNSMabgh9EC7cc1FPL9ylGueS3l7N
+         Oao6KqAJmY/5QX0pzOeisTWEPOvDMQG9B+35JR/KSFGBdoV4wZ6OzZWAOvk4hKkMtBWf
+         eB8fnGfr2wuWqVXqAmHaYVPGDgRQhRb36FTMASiRw4Neeyms8nCwIKJXjP39wK+Drgus
+         sj+0AHJc3GRtn9s+3aA/BEhBpM2xdpMJHCK8Cujl5ZRsEF29TNerD8+rCEQ7LjcNp9nL
+         Ddaz7/UXcIR/+wloa0P4zUKSPYl/9Aokn5frOpGbBhU8qUCspjSMMjlUYgNHucJAxPGy
+         Uxyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=RrxAUu1aJiYwPMpjnlo5gqgVd7ZtEZg5UXQs37AT2OA=;
+        b=luaHuf9S9FtgteOfG8Lwku6eC7AQeDwPzKpBBEGD7SD0qv2rgMuerQvCnM3BNVsVbN
+         8avo8t+yEIL0cQdC64X1Xdu6rNtiRO1/0cLcjtNBMFU3ZlP4TXgnxMViLpK9RmRRf49F
+         TAjLaqD/LUrOcxXZO/EB41HFsnt8T8BAx1V6lFrUnw7xrjaVAvfgwG+Sb0SoWzYjBuef
+         kjyWElTRvK7UQdc/sEp9bpNl2dR0741214gDEpxZ28B02aIvi4xWUSob7zhLH2rOtyME
+         ME4xRKugVOsOoF5yu3EGpVpcNpSxhgRMOeRmBuCZJmpfVqZQHZgTjiCpgxCOFbk0oMDS
+         w6Rw==
+X-Gm-Message-State: AGi0PuZpNarwEjjt1COVFrf+rnNwyRJ4yPzoGsHeE3xHrQC5G5ZKYu5Z
+        ZeT63PfIZqBSiHeKsjSIIYYxtw==
+X-Google-Smtp-Source: APiQypJtVrmYvXvt0ysu+IAoLgUFCE4HqPBjkqhR5RywtPrJXwK2VKvhMirSaf+WR3eKuCnr5dqesQ==
+X-Received: by 2002:a05:600c:14d4:: with SMTP id i20mr17776614wmh.118.1587380588962;
+        Mon, 20 Apr 2020 04:03:08 -0700 (PDT)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id m188sm859157wme.47.2020.04.20.04.03.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 04:03:08 -0700 (PDT)
+References: <20200419053815.15731-1-christianshewitt@gmail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] arm64: dts: meson: Simplify G12/SM1 Audio Configs
+In-reply-to: <20200419053815.15731-1-christianshewitt@gmail.com>
+Date:   Mon, 20 Apr 2020 13:03:07 +0200
+Message-ID: <1jk12apggk.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 665BB53A9B209DF474DE368E25DAC4D6E7703353C21B189088EF792896EB3DFD2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksDQoNCk9uIFRodSwgMjAyMC0wNC0xNiBhdCAwOTo0OSArMDEwMCwgTGVlIEpvbmVzIHdyb3Rl
-Og0KPiBPbiBXZWQsIDA4IEFwciAyMDIwLCBIc2luLUhzaXVuZyBXYW5nIHdyb3RlOg0KPiANCj4g
-PiBTb21lIHBtaWNzIGRvbid0IG5lZWQgYmFja3VwIGludGVycnVwdCBzZXR0aW5ncywgc28gd2Ug
-Y2hhbmdlIHRvIHVzZQ0KPiA+IHBtIG5vdGlmaWVyIGZvciB0aGUgcG1pY3Mgd2hpY2ggYXJlIG5l
-Y2Vzc2FyeSB0byBzdG9yZSBzZXR0aW5ncy4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBIc2lu
-LUhzaXVuZyBXYW5nIDxoc2luLWhzaXVuZy53YW5nQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4g
-PiAgZHJpdmVycy9tZmQvbXQ2Mzk3LWNvcmUuYyAgICAgICB8IDMwIC0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLQ0KPiA+ICBkcml2ZXJzL21mZC9tdDYzOTctaXJxLmMgICAgICAgIHwgMzUg
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0NCj4gPiAgaW5jbHVkZS9saW51eC9t
-ZmQvbXQ2Mzk3L2NvcmUuaCB8ICAyICsrDQo+ID4gIDMgZmlsZXMgY2hhbmdlZCwgMzYgaW5zZXJ0
-aW9ucygrKSwgMzEgZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-bWZkL210NjM5Ny1jb3JlLmMgYi9kcml2ZXJzL21mZC9tdDYzOTctY29yZS5jDQo+ID4gaW5kZXgg
-MDQzN2M4NS4uZDJlNzBkOCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL21mZC9tdDYzOTctY29y
-ZS5jDQo+ID4gKysrIGIvZHJpdmVycy9tZmQvbXQ2Mzk3LWNvcmUuYw0KPiA+IEBAIC0xMDAsMzUg
-KzEwMCw2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbWZkX2NlbGwgbXQ2Mzk3X2RldnNbXSA9IHsN
-Cj4gPiAgCX0NCj4gPiAgfTsNCj4gPiAgDQo+ID4gLSNpZmRlZiBDT05GSUdfUE1fU0xFRVANCj4g
-PiAtc3RhdGljIGludCBtdDYzOTdfaXJxX3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQ0KPiA+
-IC17DQo+ID4gLQlzdHJ1Y3QgbXQ2Mzk3X2NoaXAgKmNoaXAgPSBkZXZfZ2V0X2RydmRhdGEoZGV2
-KTsNCj4gPiAtDQo+ID4gLQlyZWdtYXBfd3JpdGUoY2hpcC0+cmVnbWFwLCBjaGlwLT5pbnRfY29u
-WzBdLCBjaGlwLT53YWtlX21hc2tbMF0pOw0KPiA+IC0JcmVnbWFwX3dyaXRlKGNoaXAtPnJlZ21h
-cCwgY2hpcC0+aW50X2NvblsxXSwgY2hpcC0+d2FrZV9tYXNrWzFdKTsNCj4gPiAtDQo+ID4gLQll
-bmFibGVfaXJxX3dha2UoY2hpcC0+aXJxKTsNCj4gPiAtDQo+ID4gLQlyZXR1cm4gMDsNCj4gPiAt
-fQ0KPiA+IC0NCj4gPiAtc3RhdGljIGludCBtdDYzOTdfaXJxX3Jlc3VtZShzdHJ1Y3QgZGV2aWNl
-ICpkZXYpDQo+ID4gLXsNCj4gPiAtCXN0cnVjdCBtdDYzOTdfY2hpcCAqY2hpcCA9IGRldl9nZXRf
-ZHJ2ZGF0YShkZXYpOw0KPiA+IC0NCj4gPiAtCXJlZ21hcF93cml0ZShjaGlwLT5yZWdtYXAsIGNo
-aXAtPmludF9jb25bMF0sIGNoaXAtPmlycV9tYXNrc19jdXJbMF0pOw0KPiA+IC0JcmVnbWFwX3dy
-aXRlKGNoaXAtPnJlZ21hcCwgY2hpcC0+aW50X2NvblsxXSwgY2hpcC0+aXJxX21hc2tzX2N1clsx
-XSk7DQo+ID4gLQ0KPiA+IC0JZGlzYWJsZV9pcnFfd2FrZShjaGlwLT5pcnEpOw0KPiA+IC0NCj4g
-PiAtCXJldHVybiAwOw0KPiA+IC19DQo+ID4gLSNlbmRpZg0KPiA+IC0NCj4gPiAtc3RhdGljIFNJ
-TVBMRV9ERVZfUE1fT1BTKG10NjM5N19wbV9vcHMsIG10NjM5N19pcnFfc3VzcGVuZCwNCj4gPiAt
-CQkJbXQ2Mzk3X2lycV9yZXN1bWUpOw0KPiA+IC0NCj4gPiAgc3RydWN0IGNoaXBfZGF0YSB7DQo+
-ID4gIAl1MzIgY2lkX2FkZHI7DQo+ID4gIAl1MzIgY2lkX3NoaWZ0Ow0KPiA+IEBAIC0yMzgsNyAr
-MjA5LDYgQEAgc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgbXQ2Mzk3X2RyaXZlciA9IHsN
-Cj4gPiAgCS5kcml2ZXIgPSB7DQo+ID4gIAkJLm5hbWUgPSAibXQ2Mzk3IiwNCj4gPiAgCQkub2Zf
-bWF0Y2hfdGFibGUgPSBvZl9tYXRjaF9wdHIobXQ2Mzk3X29mX21hdGNoKSwNCj4gPiAtCQkucG0g
-PSAmbXQ2Mzk3X3BtX29wcywNCj4gPiAgCX0sDQo+ID4gIAkuaWRfdGFibGUgPSBtdDYzOTdfaWQs
-DQo+ID4gIH07DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWZkL210NjM5Ny1pcnEuYyBiL2Ry
-aXZlcnMvbWZkL210NjM5Ny1pcnEuYw0KPiA+IGluZGV4IGIyZDNjZTEuLjI5MjQ5MTkgMTAwNjQ0
-DQo+ID4gLS0tIGEvZHJpdmVycy9tZmQvbXQ2Mzk3LWlycS5jDQo+ID4gKysrIGIvZHJpdmVycy9t
-ZmQvbXQ2Mzk3LWlycS5jDQo+ID4gQEAgLTksNiArOSw3IEBADQo+ID4gICNpbmNsdWRlIDxsaW51
-eC9vZl9pcnEuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPiA+
-ICAjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9zdXNwZW5k
-Lmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9tZmQvbXQ2MzIzL2NvcmUuaD4NCj4gPiAgI2luY2x1
-ZGUgPGxpbnV4L21mZC9tdDYzMjMvcmVnaXN0ZXJzLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9t
-ZmQvbXQ2Mzk3L2NvcmUuaD4NCj4gPiBAQCAtODEsNyArODIsNyBAQCBzdGF0aWMgc3RydWN0IGly
-cV9jaGlwIG10NjM5N19pcnFfY2hpcCA9IHsNCj4gPiAgc3RhdGljIHZvaWQgbXQ2Mzk3X2lycV9o
-YW5kbGVfcmVnKHN0cnVjdCBtdDYzOTdfY2hpcCAqbXQ2Mzk3LCBpbnQgcmVnLA0KPiA+ICAJCQkJ
-ICBpbnQgaXJxYmFzZSkNCj4gPiAgew0KPiA+IC0JdW5zaWduZWQgaW50IHN0YXR1czsNCj4gPiAr
-CXVuc2lnbmVkIGludCBzdGF0dXMgPSAwOw0KPiANCj4gVGhpcyBsb29rcyBsaWtlIGFuIHVucmVs
-YXRlZCBjaGFuZ2UsIG5vPw0KPiANCg0KSXQgaXMgdG8gZml4IHRoZSBjb3Zlcml0eSBkZWZlY3Qu
-DQoNCj4gPiAgCWludCBpLCBpcnEsIHJldDsNCj4gPiAgDQo+ID4gIAlyZXQgPSByZWdtYXBfcmVh
-ZChtdDYzOTctPnJlZ21hcCwgcmVnLCAmc3RhdHVzKTsNCj4gPiBAQCAtMTI4LDYgKzEyOSwzNiBA
-QCBzdGF0aWMgY29uc3Qgc3RydWN0IGlycV9kb21haW5fb3BzIG10NjM5N19pcnFfZG9tYWluX29w
-cyA9IHsNCj4gPiAgCS5tYXAgPSBtdDYzOTdfaXJxX2RvbWFpbl9tYXAsDQo+ID4gIH07DQo+IA0K
-PiBPdGhlciB0aGFuIHRoYXQuDQo+IA0KPiBGb3IgbXkgb3duIHJlZmVyZW5jZToNCj4gICBBY2tl
-ZC1mb3ItTUZELWJ5OiBMZWUgSm9uZXMgPGxlZS5qb25lc0BsaW5hcm8ub3JnPg0KPiANClRoYW5r
-cyBmb3IgeW91ciByZXZpZXcuIEkgd2lsbCBhZGQgaXQgaW4gdGhlIG5leHQgdmVyc2lvbi4NCg0K
+
+On Sun 19 Apr 2020 at 07:38, Christian Hewitt <christianshewitt@gmail.com> wrote:
+
+> This series creates two new dtsi with the HDMI and HDMI+S/PDIF audio configs
+> used in most G12/SM1 Android box devices and some SBC's and switches most dts
+> to use them. I have not touched the SEI510/610 which have extra hardware
+> in their dts, and the U200 which does not currently have audio support, but
+> will likely receive an 'all possible routings' master config when Jerome
+> sends his next set of changes (looking at his WIP branch) so I leave U200
+> for him to address later.
+>
+> One advantaage of common configs is that distros that need to embed alsa
+> conf files as part of their userspace support now only need to include two
+> confs that will automatically support more boards and boxes as they are
+> added, instead of needing to track and add confs or card aliases for every
+> new device.
+>
+> Christian Hewitt (5):
+>   arm64: dts: meson: create common hdmi/hdmi-spdif audio dtsi
+
+I'm really not a fan of this. Yes the configuration appear to be similar
+but there always the same. When they are, it is usually by lack of
+knowledge of the platform and its use cases.
+
+Using the same sound card model is particularily bad.
+
+>   arm64: dts: meson: convert ugoos-am6 to common w400 dtsi
+>   arm64: dts: meson: convert odroid-n2 to hdmi dtsi
+>   arm64: dts: meson: convert khadas-vim3/vim3l to hdmi dtsi
+
+For example on the vim3, copying the sei610 was not the best choice
+possible.
+
+- SEI 610 prepares TDM B for 8 ch HDMI because TDM A is used for the
+ internal speaker
+- VIM3 has the TDM B on the 40 pin header and TDM C on the M2 port.
+  It would be better to use TDM A for HDMI is this case (patch will
+ follow)
+
+This is just an example. Bottom, it designs are really copy/paste of the
+ref design, the dtsi should include all the platform, not just the
+sound.
+
+>   arm64: dts: meson: convert x96max to hdmi dtsi
+>
+>  .../amlogic/meson-g12-audio-hdmi-spdif.dtsi   | 139 +++++
+>  .../dts/amlogic/meson-g12-audio-hdmi.dtsi     |  96 ++++
+>  .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 131 +----
+>  .../dts/amlogic/meson-g12b-khadas-vim3.dtsi   |  85 ---
+>  .../boot/dts/amlogic/meson-g12b-odroid-n2.dts |  89 +--
+>  .../boot/dts/amlogic/meson-g12b-ugoos-am6.dts | 541 +-----------------
+>  .../boot/dts/amlogic/meson-g12b-w400.dtsi     | 423 ++++++++++++++
+>  .../boot/dts/amlogic/meson-khadas-vim3.dtsi   |   1 +
+>  8 files changed, 663 insertions(+), 842 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12-audio-hdmi-spdif.dtsi
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12-audio-hdmi.dtsi
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
 
