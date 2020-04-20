@@ -2,85 +2,92 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16ECEC3A5A0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 16:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABEAC3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 16:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9D4A206F6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 16:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 159AE206F6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 16:17:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bc3Vkmcc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgDTQQj (ORCPT
+        id S1726195AbgDTQRZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:16:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:51682 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726195AbgDTQQj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:16:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6440C31B;
-        Mon, 20 Apr 2020 09:16:38 -0700 (PDT)
-Received: from [10.57.33.63] (unknown [10.57.33.63])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C420E3F73D;
-        Mon, 20 Apr 2020 09:16:36 -0700 (PDT)
-Subject: Re: [PATCH v2 2/4] iommu: Add Allwinner H6 IOMMU driver
-To:     Maxime Ripard <maxime@cerno.tech>, Joerg Roedel <joro@8bytes.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <cover.a31c229a83f1d92e6928ae2adb70887da0fd44b3.1582222496.git-series.maxime@cerno.tech>
- <6864f0f28825bb7a2ec1c0d811a4aacdecf5f945.1582222496.git-series.maxime@cerno.tech>
- <20200302153606.GB6540@8bytes.org>
- <20200401114710.doioefzmjhte7jwu@gilmour.lan>
- <20200408140649.GI3103@8bytes.org>
- <20200420143958.rdn3j27tu3umtkrh@gilmour.lan>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <af745738-9e0f-40b6-9a20-19c233a7e52a@arm.com>
-Date:   Mon, 20 Apr 2020 17:16:34 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 20 Apr 2020 12:17:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725958AbgDTQRZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Apr 2020 12:17:25 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3FE0C061A10
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 09:17:24 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id g13so10883617wrb.8
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 09:17:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lPlsXqCGHYagVYmxec3j/xxnK3oND8ckDanm4J5g6+s=;
+        b=Bc3VkmccqsOZmy8SzqwTXHtw4ju1n3q+E8tqpZL08g24yfYOc29x2qPJOm5bPv7VMv
+         IEz+3ozJmMWTBd04ErA+L4wk/0PjyHp2gejrFY5Hp1yD2/uez5UT5BiJtnb2iaKP2/vs
+         SMSQ9qo0pSxEIrRcKZjgoiC7AmF9J9UhdaxfOXmCw9U+Z7w4klykH6tQCy/7+4as4UVZ
+         6dwxlkXGI1NYgtaY7Zu976/NOzffZXZNDeuwtcNtImP4kZT+274B4qypkT0Y1nH8llDD
+         JsBWFcA+GtHbhUA2Dcnw5yiEJEg8239BHg+veY10eVi55Nn6heaw7SXMjo2wxSsUe+mj
+         guyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lPlsXqCGHYagVYmxec3j/xxnK3oND8ckDanm4J5g6+s=;
+        b=JnVpiAB0PDTHJ08y8R370xtWHskrfjpSlmp5srY6jyXV++ONYl0sWJGIn/h0M1BEYg
+         o84ungy/qevW6V+B6xsW2rpkreopHZYvI2H8xpUZf5k0nXq2LOD9OqU/HNaMg7PPclw+
+         S60htGxqbBNL/jYK428Yo1460LztnaL3CZYOQsCkSJCZrZXZ0CX7hrPo4C6JX5IlbIq0
+         K2dsnQ/7s0V54KjbOgkvPQEbBu80i251OuWtKxqH2IdoS5IuM3TPsefwmXL37kebdMn6
+         Faf8IWdph7UqXjFccAk48FCdQnuC3WVbKwayCNTNVU7vzdaQB2EdaS88UR4lJSu8d0pM
+         SakQ==
+X-Gm-Message-State: AGi0PuY0B2xweUUc2RE49mP7PIyBqho/gSC6V3ej1/NgOnsBNZ7a97W5
+        /Zcf1B88Tna7KaWg1Wl2JXCIrw==
+X-Google-Smtp-Source: APiQypKrkeOBy7c9A/9ySH8hmTQpSPXDqk6tEE5oq0yFe5+sxi9L2pzoxp9Luyj6lNrqui3ig6qFsw==
+X-Received: by 2002:adf:800e:: with SMTP id 14mr18882781wrk.369.1587399443572;
+        Mon, 20 Apr 2020 09:17:23 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id s9sm1946164wrg.27.2020.04.20.09.17.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 09:17:22 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 17:17:20 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Kiran Gunda <kgunda@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH V5 2/4] backlight: qcom-wled: Add callback functions
+Message-ID: <20200420161720.cuxponga4vxitrwi@holly.lan>
+References: <1586274430-28402-1-git-send-email-kgunda@codeaurora.org>
+ <1586274430-28402-3-git-send-email-kgunda@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200420143958.rdn3j27tu3umtkrh@gilmour.lan>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586274430-28402-3-git-send-email-kgunda@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-04-20 3:39 pm, Maxime Ripard wrote:
-> Hi,
+On Tue, Apr 07, 2020 at 09:17:08PM +0530, Kiran Gunda wrote:
+> Add wled_cabc_config, wled_sync_toggle, wled_ovp_fault_status
+> and wled_ovp_delay and wled_auto_detection_required callback
+> functions to prepare the driver for adding WLED5 support.
 > 
-> On Wed, Apr 08, 2020 at 04:06:49PM +0200, Joerg Roedel wrote:
->> On Wed, Apr 01, 2020 at 01:47:10PM +0200, Maxime Ripard wrote:
->>> As far as I understand it, the page table can be accessed concurrently
->>> since the framework doesn't seem to provide any serialization /
->>> locking, shouldn't we have some locks to prevent concurrent access?
->>
->> The dma-iommu code makes sure that there are no concurrent accesses to
->> the same address-range of the page-table, but there can (and will) be
->> concurrent accesses to the same page-table, just for different parts of
->> the address space.
->>
->> Making this lock-less usually involves updating non-leaf page-table
->> entries using atomic compare-exchange instructions.
-> 
-> That makes sense, thanks!
-> 
-> I'm not sure what I should compare with though, do you want to compare with 0 to
-> check if there's already a page table assigned to that DTE? If so, then we
-> should also allocate the possible page table before the fact so that we have
-> something to swap with, and deallocate it if we already had one?
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
 
-Indeed, for an example see arm_v7s_install_table() and how 
-__arm_v7s_map() calls it. The LPAE version in io-pgtable-arm.c does the 
-same too, but with some extra software-bit handshaking to track the 
-cache maintenance state as an optimisation, which you can probably do 
-without trying to make sense of ;)
-
-Robin.
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
