@@ -2,127 +2,159 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60224C3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 13:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8289C3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 14:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3661920735
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 13:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87D7320722
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 14:20:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="mkrf0mj2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kJL1QKKg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgDTN53 (ORCPT
+        id S1728202AbgDTOU7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 09:57:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44304 "EHLO
+        Mon, 20 Apr 2020 10:20:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726608AbgDTN53 (ORCPT
+        by vger.kernel.org with ESMTP id S1727890AbgDTOU6 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 09:57:29 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A235C061A0C
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 06:57:29 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id o10so8450436qtr.6
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 06:57:29 -0700 (PDT)
+        Mon, 20 Apr 2020 10:20:58 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92368C061A0C;
+        Mon, 20 Apr 2020 07:20:57 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id n10so11104469iom.3;
+        Mon, 20 Apr 2020 07:20:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2Y6perFiVeQ3QgWqLdIJUPsNvFY3EZijv/H4bCO6lY4=;
-        b=mkrf0mj2uMHggYNoMXheWws/vfopgkKMdOj2sk/jq91aSFV+FBOaAWfRgYM4xhELk7
-         anpstJTVDOqB4qOo0kIzlwP5u+6LnNpFVukNArZe7hoXCLYhFl026KWaIuXtr4kZkZid
-         IJPXMEIC09IH6YOe2rwd+xfDBeWBnrWSySHhYgTBZSWTKpo9IqVk8fy6bXSM56vwA15i
-         B+iFKjqNtcVfDZUiEh19W3zpSzKpdAhDy9qMwP2cjBEKkXw0Ag44wC60d6gA72lrJVpw
-         SXd4MaW5F4oNRRxVYpJvgy0d14clAWod3shTlEIMW54sI5mktrnVJXVbeAuYZDLtCCXN
-         7OQw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=42ZUa8jWdE/lvIlXQ+IaCeRxAVuDOUkmSNgCJWEQBiU=;
+        b=kJL1QKKg8hZD4dmy5HJBPi0VXJYjon4U+mxBDXd4WLeA6JYTuRShbDcgFt/8qAhDJ8
+         rhuz8FTqtmUpcY+jaHRbFWuI060FieGdJ2QUb68Mg+PQpEK98WRTb0kibVi5zgnECM9+
+         +jlRLVRRL8pAKVXeAnpmHP5alVl+nPALYdy1KwTuzoapeLjW5CAstiYlMJnJlG5phOu/
+         0bXhnSWy4JQx6LFMZ3k23WhI8R2m7fd4Lsif6jOKKvgYEyLOEoGfr+1n1erve7RChDo0
+         3TfmZPREQ7ciNlZQTB+Mxuf54kw7PRPgVIO7Hw83iBXumXo6A74n/Bk1XNawEZXHbTv0
+         adZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2Y6perFiVeQ3QgWqLdIJUPsNvFY3EZijv/H4bCO6lY4=;
-        b=Z1g0FJ//zAUixz6FIvUm+cESxeTH+/17o52kZWfQLhBNuj8tHgumQugrswpmRm2vtX
-         a3QHOBXPjAIROZIDA7ESDKRiipE3tJnE6ueykE/71XBuMm3yHfETkuvOBzogV+WORK/C
-         D8O/4m438Z3RFz89Hx1/jnoFjDlOs8LusYVJw63SMTJ9seBvM1oMlf+5vGqyOKX35PPX
-         ahU1PVmV0S4IhvkbQpeS8tZ6MoRi/NI22BbNvo4ahyV8PUB4HizywcBqISZO7uJ+Sn6z
-         e0PqioItipMzFzd+EleAgmqSpz4UkF33ko16EoTcOLDFLRIAK22hORXgE06KTpkf0JB/
-         fTQQ==
-X-Gm-Message-State: AGi0PuYmCt+BF1hogVPOaGc+n+RAK2E9SVcQ6xdBS08RYBfjjWFQjnSz
-        d+KuoQB8L8/20fzeQHeIj3vxxA==
-X-Google-Smtp-Source: APiQypIj1R9FcMRfRka1KKXW7j9di+d85e9nm7Td/03CCkb8wDdEAIcizkSgGYTTocgktyzsVQW4zw==
-X-Received: by 2002:ac8:82f:: with SMTP id u44mr15905874qth.198.1587391048363;
-        Mon, 20 Apr 2020 06:57:28 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id g14sm550791qtb.24.2020.04.20.06.57.27
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 Apr 2020 06:57:27 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jQWvP-0002ax-4d; Mon, 20 Apr 2020 10:57:27 -0300
-Date:   Mon, 20 Apr 2020 10:57:27 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
-        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
-        zhangfei.gao@linaro.org, xuzaibo@huawei.com
-Subject: Re: [PATCH v5 02/25] iommu/sva: Manage process address spaces
-Message-ID: <20200420135727.GO26002@ziepe.ca>
-References: <20200414170252.714402-1-jean-philippe@linaro.org>
- <20200414170252.714402-3-jean-philippe@linaro.org>
- <20200416072852.GA32000@infradead.org>
- <20200416085402.GB1286150@myrica>
- <20200416121331.GA18661@infradead.org>
- <20200420074213.GA3180232@myrica>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=42ZUa8jWdE/lvIlXQ+IaCeRxAVuDOUkmSNgCJWEQBiU=;
+        b=JnZIOPjZyKkad4buQC2vF+WUywfb3yXtCclv1RIi5SjvOeKyRuEMV3I47QekE0lRn6
+         uaLpiiQATxKBHP0gIsJ2PBjxcT9I7QAiUaK0lrNQRD+xv3abCW4gdf2ZWu8RmE/K2inZ
+         N6C/8XoJvOAFguUqKO47sS7tKrY/Uc9OSib/ATS274RZDvnallK5H096wYsXSwHI8+ut
+         UrlIJcpsBW6KC6Twk3btJJPDQKvODOOksat69KZuvFadkiPtNV3487Q2R4NngUzrgwQD
+         2J2DflDcl5aeCJdgxAQUQmGS7cxzr+phnx1RzzVFkmKyRiR8aLgp6PTJ58hqIDcWUUQ4
+         bYOg==
+X-Gm-Message-State: AGi0PubsQxt9QaYpWED4fHnoDN1Gq8W2OV16JPlptKUgr6kxzNfg5txX
+        aIY+24BIxHO1WTSt9sT645wxeuUQDUcQlQzhIXo=
+X-Google-Smtp-Source: APiQypL0OkJvfEysFH1/EQ62r1/N4+ezRkdGJZS2/B6mM481eEQlfXXpdzcY5DOOq2sqZq3sPyJawscazL2Vh5IS3Og=
+X-Received: by 2002:a5d:9494:: with SMTP id v20mr15827724ioj.101.1587392456788;
+ Mon, 20 Apr 2020 07:20:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200420074213.GA3180232@myrica>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200420130021.3841-1-peron.clem@gmail.com> <20200420130021.3841-3-peron.clem@gmail.com>
+ <20200420134604.bkjp66fjiggses7a@core.my.home>
+In-Reply-To: <20200420134604.bkjp66fjiggses7a@core.my.home>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Mon, 20 Apr 2020 16:20:45 +0200
+Message-ID: <CAJiuCcf_-2bSR61goL7vLXGSjNCsUYQ12j2JM3V4MJiSo3srZw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/9] arm64: dts: allwinner: h6: Add thermal trip
+ points/cooling map
+To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 09:42:13AM +0200, Jean-Philippe Brucker wrote:
-> On Thu, Apr 16, 2020 at 05:13:31AM -0700, Christoph Hellwig wrote:
-> > On Thu, Apr 16, 2020 at 10:54:02AM +0200, Jean-Philippe Brucker wrote:
-> > > On Thu, Apr 16, 2020 at 12:28:52AM -0700, Christoph Hellwig wrote:
-> > > > > +	rcu_read_lock();
-> > > > > +	hlist_for_each_entry_rcu(bond, &io_mm->devices, mm_node)
-> > > > > +		io_mm->ops->invalidate(bond->sva.dev, io_mm->pasid, io_mm->ctx,
-> > > > > +				       start, end - start);
-> > > > > +	rcu_read_unlock();
-> > > > > +}
-> > > > 
-> > > > What is the reason that the devices don't register their own notifiers?
-> > > > This kinds of multiplexing is always rather messy, and you do it for
-> > > > all the methods.
-> > > 
-> > > This sends TLB and ATC invalidations through the IOMMU, it doesn't go
-> > > through device drivers
-> > 
-> > I don't think we mean the same thing, probably because of my rather
-> > imprecise use of the word device.
-> > 
-> > What I mean is that the mmu_notifier should not be embedded into the
-> > io_mm structure (whch btw, seems to have a way to generic name, just
-> > like all other io_* prefixed names), but instead into the
-> > iommu_bond structure.  That avoid the whole multiplexing layer.
-> 
-> Right, I can see the appeal. I still like having a single mmu notifier per
-> mm because it ensures we allocate a single PASID per mm (as required by
-> x86). I suppose one alternative is to maintain a hashtable of mm->pasid,
-> to avoid iterating over all bonds during allocation.
+Hi Ondrej,
 
-I've been getting rid of hash tables like this.. Adding it to the
-mm_struct does seem reasonable, I think PASID is a pretty broad
-concept now.
+On Mon, 20 Apr 2020 at 15:46, Ond=C5=99ej Jirman <megous@megous.com> wrote:
+>
+> Hi,
+>
+> On Mon, Apr 20, 2020 at 03:00:14PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Ondrej Jirman <megous@megous.com>
+> >
+> > This enables passive cooling by down-regulating CPU voltage
+> > and frequency.
+>
+> Does this not produce a lot of warnings for you during compilation?
 
-Jason
+I got flooded by lots of warnings, from sun50i-a64, stringray-usb,
+ipq6018 and didn't see but two are from sun50i-h6.
+
+The #cooling-cells property is missing for CPU.
+
+Will send a patch for noticing.
+
+Regard,
+Clement
+
+
+
+>
+> regards,
+>         o.
+>
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 24 ++++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/=
+boot/dts/allwinner/sun50i-h6.dtsi
+> > index 370e77b86fe1..60da1627772b 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > @@ -964,6 +964,30 @@
+> >                       polling-delay-passive =3D <0>;
+> >                       polling-delay =3D <0>;
+> >                       thermal-sensors =3D <&ths 0>;
+> > +
+> > +                     trips {
+> > +                             cpu_alert: cpu-alert {
+> > +                                     temperature =3D <85000>;
+> > +                                     hysteresis =3D <2000>;
+> > +                                     type =3D "passive";
+> > +                             };
+> > +
+> > +                             cpu-crit {
+> > +                                     temperature =3D <100000>;
+> > +                                     hysteresis =3D <0>;
+> > +                                     type =3D "critical";
+> > +                             };
+> > +                     };
+> > +
+> > +                     cooling-maps {
+> > +                             map0 {
+> > +                                     trip =3D <&cpu_alert>;
+> > +                                     cooling-device =3D <&cpu0 THERMAL=
+_NO_LIMIT THERMAL_NO_LIMIT>,
+> > +                                                      <&cpu1 THERMAL_N=
+O_LIMIT THERMAL_NO_LIMIT>,
+> > +                                                      <&cpu2 THERMAL_N=
+O_LIMIT THERMAL_NO_LIMIT>,
+> > +                                                      <&cpu3 THERMAL_N=
+O_LIMIT THERMAL_NO_LIMIT>;
+> > +                             };
+> > +                     };
+> >               };
+> >
+> >               gpu-thermal {
+> > --
+> > 2.20.1
+> >
