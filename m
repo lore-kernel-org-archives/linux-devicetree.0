@@ -7,80 +7,81 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8B2C54FCF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3068C3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC882078C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4687206E9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587408246;
-	bh=tyoefA316Eq6rtCixMBzcsIIWXW7sDcAVvqNYWf5UBQ=;
+	s=default; t=1587408361;
+	bh=S2MHR7K/bEdIcfiXauaS06Km36bGPq6hKoffQCiSPWA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ce/fSWI2D6z7PjrkOJyAMtw3RWCEtCKkY1v8O4CYYosiWTSNQ4VTS+VqOeTWG3T9r
-	 vW1g8WB2P166kCLglb9amoFre668byaLdJOV8q8ua5Sq33LD4iiXVcy3KatjrXJoGp
-	 uD4rgDo4qMeIhZSgf2wfarwzVc4RZiw04WbYN5YQ=
+	b=ZC7r3/2VdLytYIcWgQF31Siw1iFhiV4pZCJKtLgiREf+raqHSHUyTCD6O9Ord5mwp
+	 eW9hwsxqpAaX9J6rK2+kqbZUJ2yB+6yVQlPphCjCCWTMAs5XFZS4TRPCyE4EDHzOKb
+	 ncRflZXK71vXLXny71z9MnvgR3pKZgxBDU8sHZ7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726392AbgDTSoF (ORCPT
+        id S1726748AbgDTSp6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:44:05 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33053 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbgDTSoF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 14:44:05 -0400
-Received: by mail-ot1-f65.google.com with SMTP id j26so9061985ots.0;
-        Mon, 20 Apr 2020 11:44:03 -0700 (PDT)
+        Mon, 20 Apr 2020 14:45:58 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:43330 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbgDTSp6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 14:45:58 -0400
+Received: by mail-oi1-f194.google.com with SMTP id j16so9716146oih.10;
+        Mon, 20 Apr 2020 11:45:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AjTIxQ8I+Qkr8ilLvfcljNmqyjlrey4KznqBzKKGdKQ=;
-        b=pTiYWagye9GlQPM6ZRwiqCv4hce3gmK3U7rTPdjUsn9v01FyRiEJmb6b1fqKayFVYV
-         jMwwibpsRqWWXj1puB1TbFE9I/Bm2ZNzpnjGNC7cciz/NQaviLTI969uf2grZKxL59m0
-         GYN1u8/cGSF4rmdnTNOKmQBzf4G5ZTffr+vTxhue5tTIHu5XzlSp93nKBN5+BxVVhD9W
-         2KnNLnWaGN3ayE5+Tv9+KGzPnRSNSv0x5Srv8lsE0lVeplKkoDNEGDpd/MYDXxAAa66f
-         koZVH8T03FAiUWT0Bm6Yz7dLS4vkKMUgZIvdaVog5JRWht7gXc6QBiln4fAlgOp2loFP
-         oFNw==
-X-Gm-Message-State: AGi0PuZVAGULaCsJTJKowciU3SKZhySEPFeJgwVIsTRRpaJx+aXfRB7m
-        rNNyl1na/sEf6ckCDRidGw==
-X-Google-Smtp-Source: APiQypKArsUevn5DTv5qxS+88LlVRsJwChYKR6jnMpJeLT+Ro5Cq2r0ARUCHlIFEHGVpENGwQITM0A==
-X-Received: by 2002:a9d:4e3:: with SMTP id 90mr10933399otm.261.1587408243271;
-        Mon, 20 Apr 2020 11:44:03 -0700 (PDT)
+        bh=XsG9QK9dAoW9muwGTb9GQutYVR9s3SDoK6UGUt9eOoI=;
+        b=AXzIMLOi3wxCvpWOWO/O/sbWKwFb0g96WvOOC+FiW2sZ7M5NZAY1Qqqz6XVTuXv/5o
+         h6ynghiFZOVkOO/KPHAr5Cbnj3k5kVN/8PkBffE4DcYSnz0i/amNCoZA40oT7qEI5Pkr
+         3ZX33cYDf+MDs2mE9VPjp9T/frvy2dHG1SWi5k/gHVpUmdVY5fn0FOEEn8EQOBRDFLlk
+         8PjlMdb+RQ2qujaxsa5EPi3NtdrMcU0YMguJAIApvGr0eZs5kkEaB8/ACne0rSvPuhNZ
+         So3QmSuotKq7ddMvYIAqxEoT5hT4dFifuAkx2SaHQvyo/DX8092Fh02ORRQcjxuxMhVg
+         7Cqw==
+X-Gm-Message-State: AGi0PubOKzMK1XT2azvLpvZj3ajsiDH4Kk5XJp8iS7FOQKvipwsOP/fd
+        F9ypctc8iNwOIyjwcpcojg==
+X-Google-Smtp-Source: APiQypLRAdtkYVjy4p7D3yVGkjCPhwTk5dbmBpu9n631ISbzrQ14DWeHGLHxuMEMQEPtPqvG8JFtWQ==
+X-Received: by 2002:aca:c3c1:: with SMTP id t184mr545846oif.171.1587408357184;
+        Mon, 20 Apr 2020 11:45:57 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n184sm42631oih.58.2020.04.20.11.44.02
+        by smtp.gmail.com with ESMTPSA id v14sm63557ooe.10.2020.04.20.11.45.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 11:44:02 -0700 (PDT)
-Received: (nullmailer pid 23488 invoked by uid 1000);
-        Mon, 20 Apr 2020 18:44:01 -0000
-Date:   Mon, 20 Apr 2020 13:44:01 -0500
+        Mon, 20 Apr 2020 11:45:56 -0700 (PDT)
+Received: (nullmailer pid 26216 invoked by uid 1000);
+        Mon, 20 Apr 2020 18:45:55 -0000
+Date:   Mon, 20 Apr 2020 13:45:55 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     bhelgaas@google.com, robh+dt@kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH] dt-bindings: pci: rcar: add r8a77961 support
-Message-ID: <20200420184401.GA23436@bogus>
-References: <1586511020-31833-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Subject: Re: [PATCH V2 1/5] dt-bindings: phy: qcom,qmp: Add ipq8074 usb dt
+ bindings
+Message-ID: <20200420184555.GA26160@bogus>
+References: <1586581352-27017-1-git-send-email-sivaprak@codeaurora.org>
+ <1586581352-27017-2-git-send-email-sivaprak@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1586511020-31833-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1586581352-27017-2-git-send-email-sivaprak@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 10 Apr 2020 18:30:20 +0900, Yoshihiro Shimoda wrote:
-> Add support for r8a77961 (R-Car M3-W+).
+On Sat, 11 Apr 2020 10:32:28 +0530, Sivaprakash Murugesan wrote:
+> Add ipq8074 qmp phy device compatible for super speed usb support.
 > 
-> To avoid confusion between R-Car M3-W (R8A77960) and R-Car M3-W+
-> (R8A77961), this patch also updates the comment of
-> "renesas,pcie-r8a7796".
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/pci/rcar-pci.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> [V2]
+>  * corrected typo in compatible
+>  Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
