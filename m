@@ -2,212 +2,166 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C24D8C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8B5C3A5A0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A081D2078E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:15:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z69BlBZc"
+	by mail.kernel.org (Postfix) with ESMTP id AA9A320735
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:16:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587381366;
+	bh=XdUabA5HFN6z4apcvmfZuctTincVnd0fjuIg+6JFK34=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=p0FFDMuybPo4+aOMsOx8zdCLLBQboRofXAx8/PiMR4jKcoLg85cMK8VuJv2H/HW6D
+	 /aHWYDJO7r3Gt5GRCMxJWSXl7q8JoPf0TvdnesBhNwjUz3jcbUn2siKHR1dLQ6/fY0
+	 9Xf6fpB0y+FLEyZvedq0GiCUMQqsGb7m2LFoqkAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725775AbgDTLP1 (ORCPT
+        id S1725994AbgDTLQG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:15:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47580 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726117AbgDTLP0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 07:15:26 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BEDFC061A0F
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 04:15:26 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b11so11613119wrs.6
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 04:15:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=4uCgchzEKUbGCjVb5ErPQQvp7VtDEqWO3rkjRlf6Z0c=;
-        b=Z69BlBZc3+yIjY+OiSNwt8bsyBI0gsYDwMfdiucsDa5C+MKP/wOJquAOhh0jY8LvP8
-         DrypNHoQ8098wugctLVFMem6rV1KysE9rL4PQbw9dgV9IX4vzDo8vaR3IolrnwdZnlue
-         oiYWMkYalyjVcjm2bEgoiKKZoPYWWSYOSW2mlfPKPx+R10IJHuVAXZKI+CMv1NXjZwBe
-         4ApmE0F3A3wQai4D9aDrDuXakAc3roQsOINa7eE95IHRnzDQ2WMpJIYitHW849I7SOu2
-         /WgTnsClHrd3yTWNDwW+tMRpyK1PDxfZIy/Qi+no+uSblRgwH6XmDdXWWcVSG1+c8QGu
-         WI1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=4uCgchzEKUbGCjVb5ErPQQvp7VtDEqWO3rkjRlf6Z0c=;
-        b=oYuQ+G3VWH9mscfcQ5Ry17BBAzidjrfdeZ8DrIQ9I/bHXTmQkvYYAWQTwaPoznZ7xl
-         LtbFIeCmloe5qXE99UGeJ1rVZPyQAivRiYh579VmpMFK5ZFD5h/6q5dGkBjhOj6zqGDu
-         ck0zi5OChpi8Y1Zp6/5MRQmDR3uf2GodZhNTH/vNL2VIXeySlrQu9Lrgad2WqzUppwre
-         9L5wLqKSDoDEAMGKDi96cscV8swQcZgYw5FWajCrdEJTfK7xWQ5eGVeEipJzrLSG9tyY
-         s0Srdnk40CDaQ17vzxrB68CHCE849sskhki/Xqg/qs+5LPwBV/M4IzJhAWDXSvJAkDYx
-         REag==
-X-Gm-Message-State: AGi0PuZXJFAhQBJMIvXDdVr8G7YPSffq9RoF62oNveOHy5jHvbqWSvJF
-        3Jjmc3vg48OIAOh3GBCekkI+iQ==
-X-Google-Smtp-Source: APiQypJhmbeviPbiHBjSOOZlAdECJVyeKqJZLm8MMiKHA1YJPMBCV2InSlX2aY5iSqxkecD8aYWnaQ==
-X-Received: by 2002:a5d:5147:: with SMTP id u7mr17746146wrt.290.1587381324902;
-        Mon, 20 Apr 2020 04:15:24 -0700 (PDT)
-Received: from dell ([95.149.164.107])
-        by smtp.gmail.com with ESMTPSA id q143sm969035wme.31.2020.04.20.04.15.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 04:15:24 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 12:15:22 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org,
-        Richard Fontana <rfontana@redhat.com>,
-        linux-rtc@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Ran Bi <ran.bi@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Josef Friedl <josef.friedl@speed.at>,
-        srv_heupstream@mediatek.com, Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v12 1/6] mfd: mt6397: Modify suspend/resume behavior
-Message-ID: <20200420111522.GB3612@dell>
-References: <1586333531-21641-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1586333531-21641-2-git-send-email-hsin-hsiung.wang@mediatek.com>
- <20200416084910.GX2167633@dell>
- <1587379959.6297.2.camel@mtksdaap41>
+        Mon, 20 Apr 2020 07:16:06 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:36905 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726136AbgDTLQF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 07:16:05 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 03KBFo1e004883
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 20:15:51 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 03KBFo1e004883
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587381351;
+        bh=N6l3+df54Z7OPs8bFrk6kGISVsr2ALvPYKeiEaN5x4A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zRewF2Qwx1qSYCq/7weEGGSFxV4KVmU5LmtMeMJghp0P16k3Eg0xPU/wqFFDc1V5t
+         tKlk4dtnSYfkS/BrtKYtGtz0U/M/dtrtCHLxVkDJs06inEYHOf1JOSVUUsoe2TL2HT
+         ybaZobTWShXpEQ1ISYZXqEuVO1cxKrE5RAqfxrWmvMbYYGaRS9+dxCiN9It7J5/o7o
+         nGzJTxzWyIKzp+4ZcHQJ+MF78q+QjjSXofy8yA0tPY5lCopEfsAIlGoWZsjS96YVW0
+         /xEI7JSfv42NLaQ9HQSeaUrAsG/5M1ZgzCas+EPiXl+NFEBU8mGF1vG2BTszo+qkkc
+         7Gs+0qqsJTOLg==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id r7so5700755vso.2
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 04:15:50 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaODQ3cOCLWlRWFIA+OZ2jdJ19eHqIZac3NtIgYOKNB/fgVhtDq
+        bks2VUbbhSJKBC6cJVRIx4V/MdvwNsHUpwg12qI=
+X-Google-Smtp-Source: APiQypKwhM2QJcFYRL36WyEAeGCTWkeUMtYH2nxWOLM3hMfSzawHXXii5nhIbdVM7VgOf7AVVjKrSNAWx9Kt0hMDXxI=
+X-Received: by 2002:a67:6542:: with SMTP id z63mr11103919vsb.179.1587381349800;
+ Mon, 20 Apr 2020 04:15:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1587379959.6297.2.camel@mtksdaap41>
+References: <158737719165.27947.6617937231903079086.stgit@localhost> <20200420190749.b508c7e6d60a8203360178ec@linaro.org>
+In-Reply-To: <20200420190749.b508c7e6d60a8203360178ec@linaro.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 20 Apr 2020 20:15:13 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQtTPLdKN8cz842gvoS36GVQvk2ztahGp8XWoW3C8BzQg@mail.gmail.com>
+Message-ID: <CAK7LNAQtTPLdKN8cz842gvoS36GVQvk2ztahGp8XWoW3C8BzQg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] arm64: dts: uniphier: Add support for Akebi96
+To:     Masami Hiramatsu <masami.hiramatsu@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>, DTML <devicetree@vger.kernel.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 20 Apr 2020, Hsin-hsiung Wang wrote:
+On Mon, Apr 20, 2020 at 7:08 PM Masami Hiramatsu
+<masami.hiramatsu@linaro.org> wrote:
+>
+> Add the device tree for Akebi96. Akebi96 is a 96boards certified
+> development board based on UniPhir LD20.
+> ( https://www.96boards.org/product/akebi96/ )
+>
+> This board has;
+> - MAX3421 USB-SPI chip on SPI port3 (for USB gadget port)
+> - Simple frame buffer with 1080p fixed resolution.
+> - I2S port which is connected to aout1b instead of aout1.
+> - 3 serial ports, only serial3 has CTS/RTS.
+> - No NAND, only eMMC on the board.
+> - OP-TEE support.
 
-> Hi,
-> 
-> On Thu, 2020-04-16 at 09:49 +0100, Lee Jones wrote:
-> > On Wed, 08 Apr 2020, Hsin-Hsiung Wang wrote:
-> > 
-> > > Some pmics don't need backup interrupt settings, so we change to use
-> > > pm notifier for the pmics which are necessary to store settings.
-> > > 
-> > > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> > > ---
-> > >  drivers/mfd/mt6397-core.c       | 30 ------------------------------
-> > >  drivers/mfd/mt6397-irq.c        | 35 ++++++++++++++++++++++++++++++++++-
-> > >  include/linux/mfd/mt6397/core.h |  2 ++
-> > >  3 files changed, 36 insertions(+), 31 deletions(-)
-> > > 
-> > > diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
-> > > index 0437c85..d2e70d8 100644
-> > > --- a/drivers/mfd/mt6397-core.c
-> > > +++ b/drivers/mfd/mt6397-core.c
-> > > @@ -100,35 +100,6 @@ static const struct mfd_cell mt6397_devs[] = {
-> > >  	}
-> > >  };
-> > >  
-> > > -#ifdef CONFIG_PM_SLEEP
-> > > -static int mt6397_irq_suspend(struct device *dev)
-> > > -{
-> > > -	struct mt6397_chip *chip = dev_get_drvdata(dev);
-> > > -
-> > > -	regmap_write(chip->regmap, chip->int_con[0], chip->wake_mask[0]);
-> > > -	regmap_write(chip->regmap, chip->int_con[1], chip->wake_mask[1]);
-> > > -
-> > > -	enable_irq_wake(chip->irq);
-> > > -
-> > > -	return 0;
-> > > -}
-> > > -
-> > > -static int mt6397_irq_resume(struct device *dev)
-> > > -{
-> > > -	struct mt6397_chip *chip = dev_get_drvdata(dev);
-> > > -
-> > > -	regmap_write(chip->regmap, chip->int_con[0], chip->irq_masks_cur[0]);
-> > > -	regmap_write(chip->regmap, chip->int_con[1], chip->irq_masks_cur[1]);
-> > > -
-> > > -	disable_irq_wake(chip->irq);
-> > > -
-> > > -	return 0;
-> > > -}
-> > > -#endif
-> > > -
-> > > -static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_irq_suspend,
-> > > -			mt6397_irq_resume);
-> > > -
-> > >  struct chip_data {
-> > >  	u32 cid_addr;
-> > >  	u32 cid_shift;
-> > > @@ -238,7 +209,6 @@ static struct platform_driver mt6397_driver = {
-> > >  	.driver = {
-> > >  		.name = "mt6397",
-> > >  		.of_match_table = of_match_ptr(mt6397_of_match),
-> > > -		.pm = &mt6397_pm_ops,
-> > >  	},
-> > >  	.id_table = mt6397_id,
-> > >  };
-> > > diff --git a/drivers/mfd/mt6397-irq.c b/drivers/mfd/mt6397-irq.c
-> > > index b2d3ce1..2924919 100644
-> > > --- a/drivers/mfd/mt6397-irq.c
-> > > +++ b/drivers/mfd/mt6397-irq.c
-> > > @@ -9,6 +9,7 @@
-> > >  #include <linux/of_irq.h>
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/regmap.h>
-> > > +#include <linux/suspend.h>
-> > >  #include <linux/mfd/mt6323/core.h>
-> > >  #include <linux/mfd/mt6323/registers.h>
-> > >  #include <linux/mfd/mt6397/core.h>
-> > > @@ -81,7 +82,7 @@ static struct irq_chip mt6397_irq_chip = {
-> > >  static void mt6397_irq_handle_reg(struct mt6397_chip *mt6397, int reg,
-> > >  				  int irqbase)
-> > >  {
-> > > -	unsigned int status;
-> > > +	unsigned int status = 0;
-> > 
-> > This looks like an unrelated change, no?
-> > 
-> 
-> It is to fix the coverity defect.
 
-Which isn't mentioned in the commit log and doesn't have anything to
-do with this patch.  Thus it should be in a separate patch, but I'm
-not going to lose any sleep over it.
+I did not know "OP-TEE support" was board spec.
 
-> > >  	int i, irq, ret;
-> > >  
-> > >  	ret = regmap_read(mt6397->regmap, reg, &status);
-> > > @@ -128,6 +129,36 @@ static const struct irq_domain_ops mt6397_irq_domain_ops = {
-> > >  	.map = mt6397_irq_domain_map,
-> > >  };
-> > 
-> > Other than that.
-> > 
-> > For my own reference:
-> >   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> > 
-> Thanks for your review. I will add it in the next version.
-> 
+Anyway, I decided to not worry about that.
+
+
+You are adding lots of redundant code.
+
+Delete as follows.
+
+
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20-akebi96.dts
+b/arch/arm64/boot/dts/socionext/uniphier-ld20-akebi96.dts
+index 84ff98d96751..aaf86162da84 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld20-akebi96.dts
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld20-akebi96.dts
+@@ -113,7 +113,6 @@ &serial2 {
+ &serial3 {
+        /* LS connector UART0 */
+        status = "okay";
+-       pinctrl-0 = <&pinctrl_uart3_ctsrts>;
+ };
+
+ &spdif_hiecout1 {
+@@ -155,11 +154,6 @@ &i2c1 {
+        status = "okay";
+ };
+
+-&audio {
+-       pinctrl-0 = <&pinctrl_aout1b>,
+-                   <&pinctrl_aoutiec1>;
+-};
+-
+ &spi3 {
+        status = "okay";
+        #address-cells = <1>;
+@@ -187,14 +181,10 @@ xirq10 {
+        };
+ };
+
+-&pinctrl {
+-       pinctrl_aout1b: aout1b {
+-               groups = "aout1", "aout1b";
+-               function = "aout1";
+-       };
++&pinctrl_aout1 {
++       groups = "aout1", "aout1b";
++};
+
+-       pinctrl_uart3_ctsrts: uart3-ctsrts {
+-               groups = "uart3", "uart3_ctsrts";
+-               function = "uart3";
+-       };
++&pinctrl_uart3 {
++       groups = "uart3", "uart3_ctsrts";
+ };
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+index f93519793bfb..afa90b762ea9 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+@@ -337,7 +337,7 @@ gpio: gpio@55000000 {
+                                                     <21 217 3>;
+                };
+
+-               audio: audio@56000000 {
++               audio@56000000 {
+                        compatible = "socionext,uniphier-ld20-aio";
+                        reg = <0x56000000 0x80000>;
+                        interrupts = <0 144 4>;
+
+
+
+
+
+Lastly, is the pin-setting "aout1", "aout1b" correct ?
+
+
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Best Regards
+Masahiro Yamada
