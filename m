@@ -2,137 +2,140 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 054C0C3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D33E6C3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB0CA20724
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:03:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="lMFob3fx"
+	by mail.kernel.org (Postfix) with ESMTP id B270620735
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:06:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726081AbgDTLDM (ORCPT
+        id S1726061AbgDTLGy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:03:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725773AbgDTLDK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 07:03:10 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FA13C061A0F
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 04:03:10 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x4so10501161wmj.1
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 04:03:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:subject:in-reply-to:date:message-id
-         :mime-version;
-        bh=RrxAUu1aJiYwPMpjnlo5gqgVd7ZtEZg5UXQs37AT2OA=;
-        b=lMFob3fxLkovbZefAL5wA3odVFIm8ECwFR8ONBNSMabgh9EC7cc1FPL9ylGueS3l7N
-         Oao6KqAJmY/5QX0pzOeisTWEPOvDMQG9B+35JR/KSFGBdoV4wZ6OzZWAOvk4hKkMtBWf
-         eB8fnGfr2wuWqVXqAmHaYVPGDgRQhRb36FTMASiRw4Neeyms8nCwIKJXjP39wK+Drgus
-         sj+0AHJc3GRtn9s+3aA/BEhBpM2xdpMJHCK8Cujl5ZRsEF29TNerD8+rCEQ7LjcNp9nL
-         Ddaz7/UXcIR/+wloa0P4zUKSPYl/9Aokn5frOpGbBhU8qUCspjSMMjlUYgNHucJAxPGy
-         Uxyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=RrxAUu1aJiYwPMpjnlo5gqgVd7ZtEZg5UXQs37AT2OA=;
-        b=luaHuf9S9FtgteOfG8Lwku6eC7AQeDwPzKpBBEGD7SD0qv2rgMuerQvCnM3BNVsVbN
-         8avo8t+yEIL0cQdC64X1Xdu6rNtiRO1/0cLcjtNBMFU3ZlP4TXgnxMViLpK9RmRRf49F
-         TAjLaqD/LUrOcxXZO/EB41HFsnt8T8BAx1V6lFrUnw7xrjaVAvfgwG+Sb0SoWzYjBuef
-         kjyWElTRvK7UQdc/sEp9bpNl2dR0741214gDEpxZ28B02aIvi4xWUSob7zhLH2rOtyME
-         ME4xRKugVOsOoF5yu3EGpVpcNpSxhgRMOeRmBuCZJmpfVqZQHZgTjiCpgxCOFbk0oMDS
-         w6Rw==
-X-Gm-Message-State: AGi0PuZpNarwEjjt1COVFrf+rnNwyRJ4yPzoGsHeE3xHrQC5G5ZKYu5Z
-        ZeT63PfIZqBSiHeKsjSIIYYxtw==
-X-Google-Smtp-Source: APiQypJtVrmYvXvt0ysu+IAoLgUFCE4HqPBjkqhR5RywtPrJXwK2VKvhMirSaf+WR3eKuCnr5dqesQ==
-X-Received: by 2002:a05:600c:14d4:: with SMTP id i20mr17776614wmh.118.1587380588962;
-        Mon, 20 Apr 2020 04:03:08 -0700 (PDT)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id m188sm859157wme.47.2020.04.20.04.03.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 04:03:08 -0700 (PDT)
-References: <20200419053815.15731-1-christianshewitt@gmail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Christian Hewitt <christianshewitt@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] arm64: dts: meson: Simplify G12/SM1 Audio Configs
-In-reply-to: <20200419053815.15731-1-christianshewitt@gmail.com>
-Date:   Mon, 20 Apr 2020 13:03:07 +0200
-Message-ID: <1jk12apggk.fsf@starbuckisacylon.baylibre.com>
+        Mon, 20 Apr 2020 07:06:54 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48182 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbgDTLGx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 07:06:53 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E80452A0C6A;
+        Mon, 20 Apr 2020 12:06:50 +0100 (BST)
+Date:   Mon, 20 Apr 2020 13:06:21 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh R <vigneshr@ti.com>, Arnd Bergmann <arnd@arndb.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        masonccyang@mxic.com.tw, piotrs@cadence.com,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        "hauke.mehrtens" <hauke.mehrtens@intel.com>, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com
+Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200420130621.165c8d7f@collabora.com>
+In-Reply-To: <20200420104128.GL185537@smile.fi.intel.com>
+References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200418105533.477ce529@collabora.com>
+        <20200419222040.GJ185537@smile.fi.intel.com>
+        <20200420111754.5863324b@collabora.com>
+        <CAHp75VeOH+DC362tsEo13gr9fJpeCHXok=7O19B3njbxCOzd2A@mail.gmail.com>
+        <20200420115256.3a0ff647@collabora.com>
+        <CAHp75Vfp_WYNR8kHVsSVumGzuVbGEGpAjfXVvJAV7t6zXXY+HA@mail.gmail.com>
+        <20200420122859.2a210268@collabora.com>
+        <20200420104128.GL185537@smile.fi.intel.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, 20 Apr 2020 13:41:28 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-On Sun 19 Apr 2020 at 07:38, Christian Hewitt <christianshewitt@gmail.com> wrote:
+> On Mon, Apr 20, 2020 at 12:28:59PM +0200, Boris Brezillon wrote:
+> > On Mon, 20 Apr 2020 13:14:42 +0300
+> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:  
+> > > On Mon, Apr 20, 2020 at 12:53 PM Boris Brezillon
+> > > <boris.brezillon@collabora.com> wrote:  
+> > > > On Mon, 20 Apr 2020 12:44:51 +0300
+> > > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:  
+> > > > > On Mon, Apr 20, 2020 at 12:21 PM Boris Brezillon
+> > > > > <boris.brezillon@collabora.com> wrote:    
+> > > > > > On Mon, 20 Apr 2020 01:20:40 +0300
+> > > > > > Andy Shevchenko <andriy.shevchenko@intel.com> wrote:    
+> > > > > > > On Sat, Apr 18, 2020 at 10:55:33AM +0200, Boris Brezillon wrote:    
+> > > > > > > > On Fri, 17 Apr 2020 16:21:47 +0800
+> > > > > > > > "Ramuthevar,Vadivel MuruganX"
+> > > > > > > > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:  
+> 
+> ...
+> 
+> > > > > > > > > +static const struct of_device_id lgm_nand_match[] = {
+> > > > > > > > > + { .compatible = "intel,lgm-nand", },
+> > > > > > > > > + {}
+> > > > > > > > > +};
+> > > > > > > > > +MODULE_DEVICE_TABLE(of, lgm_nand_match);    
+> > > > > > > >
+> > > > > > > > You probably have a missing "depends on OF" in your Kconfig.    
+> > > > > > >
+> > > > > > > Since it's using device property API, dependency is not needed.
+> > > > > > >    
+> > > > > >
+> > > > > > There's no compile-time dependency, but this driver will be pretty
+> > > > > > useless if all its users have the NAND controller node defined in their
+> > > > > > DT and CONFIG_OF is not enabled.    
+> > > > >
+> > > > > No, it's not.
+> > > > > See [1] for the details how ACPI may utilize this table.
+> > > > >
+> > > > > [1]: https://www.kernel.org/doc/html/latest/firmware-guide/acpi/enumeration.html#device-tree-namespace-link-device-id    
+> > > >
+> > > > Except the NAND framework does use the OF lib when parsing common DT
+> > > > properties (like nand-ecc-mode, etc), so it does depend on OF if you
+> > > > want those props to be parsed, which, according to the DT binding patch,
+> > > > is the case.    
+> > > 
+> > > I see, so, NAND framework can be transformed at some point. In any
+> > > case, from driver perspective it's OF independent.
+> > >   
+> > 
+> > Well, it uses it only if the driver passes an OF node which this driver
+> > does (see the nand_set_flash_node() call), so no, it's really a driver
+> > dependency.  
+> 
+> Look like still it's framework dependency which driver has to rely on.
+> Means more work would be needed in case NAND to convert to fwnode API.
+> 
 
-> This series creates two new dtsi with the HDMI and HDMI+S/PDIF audio configs
-> used in most G12/SM1 Android box devices and some SBC's and switches most dts
-> to use them. I have not touched the SEI510/610 which have extra hardware
-> in their dts, and the U200 which does not currently have audio support, but
-> will likely receive an 'all possible routings' master config when Jerome
-> sends his next set of changes (looking at his WIP branch) so I leave U200
-> for him to address later.
->
-> One advantaage of common configs is that distros that need to embed alsa
-> conf files as part of their userspace support now only need to include two
-> confs that will automatically support more boards and boxes as they are
-> added, instead of needing to track and add confs or card aliases for every
-> new device.
->
-> Christian Hewitt (5):
->   arm64: dts: meson: create common hdmi/hdmi-spdif audio dtsi
+Sorry, but I'm lost here. The patch series contains a DT bindings doc,
+meaning that it's using a DT representation no matter where it comes
+from (the fact that it might be embedded in an ACPI table doesn't
+matter, right?). The framework just provides convenient DT parsing
+helpers, but they are not mandatory since they are only called if the
+NAND is attached a DT node (some drivers extract those info from
+driver-specific pdata structs).
 
-I'm really not a fan of this. Yes the configuration appear to be similar
-but there always the same. When they are, it is usually by lack of
-knowledge of the platform and its use cases.
-
-Using the same sound card model is particularily bad.
-
->   arm64: dts: meson: convert ugoos-am6 to common w400 dtsi
->   arm64: dts: meson: convert odroid-n2 to hdmi dtsi
->   arm64: dts: meson: convert khadas-vim3/vim3l to hdmi dtsi
-
-For example on the vim3, copying the sei610 was not the best choice
-possible.
-
-- SEI 610 prepares TDM B for 8 ch HDMI because TDM A is used for the
- internal speaker
-- VIM3 has the TDM B on the 40 pin header and TDM C on the M2 port.
-  It would be better to use TDM A for HDMI is this case (patch will
- follow)
-
-This is just an example. Bottom, it designs are really copy/paste of the
-ref design, the dtsi should include all the platform, not just the
-sound.
-
->   arm64: dts: meson: convert x96max to hdmi dtsi
->
->  .../amlogic/meson-g12-audio-hdmi-spdif.dtsi   | 139 +++++
->  .../dts/amlogic/meson-g12-audio-hdmi.dtsi     |  96 ++++
->  .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 131 +----
->  .../dts/amlogic/meson-g12b-khadas-vim3.dtsi   |  85 ---
->  .../boot/dts/amlogic/meson-g12b-odroid-n2.dts |  89 +--
->  .../boot/dts/amlogic/meson-g12b-ugoos-am6.dts | 541 +-----------------
->  .../boot/dts/amlogic/meson-g12b-w400.dtsi     | 423 ++++++++++++++
->  .../boot/dts/amlogic/meson-khadas-vim3.dtsi   |   1 +
->  8 files changed, 663 insertions(+), 842 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12-audio-hdmi-spdif.dtsi
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12-audio-hdmi.dtsi
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
-
+To me, the lack of support of a generic fwnode parsing logic in the
+NAND framework is orthogonal to this "depend on OF" problem, since, no
+matter what abstraction you use to parse the DT node (fwnode would just
+be a wrapper around DT parsing in this specific case), the fact
+remains, for this driver, in its current state, you need OF support to
+make it useful.
