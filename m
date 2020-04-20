@@ -7,93 +7,101 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D4BC3A5A0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 19:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FC1C3A5A0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 19:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 369FE20B1F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 19:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A28321D94
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 19:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587410135;
-	bh=3YD4THGfmacXolwKreYh+0I/NXUHx9GGiPHU0TMrbN0=;
+	s=default; t=1587410236;
+	bh=aBEVhya7Yk0yZMBNii/y+r+QgLkm+47V3MJUQlfS1uU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oly3cuDMsLBqlPl/YC7WJBGokmEuV+562qAuPt/6e17O/eP+UD6B9AHDzisRqwvuJ
-	 +VQS1/8WCnb0F3FIB02M9yAsSHdw4UaEmJx0biojLv0/LLWAcr5/7vWU9uHpxJMFTM
-	 nD9h8PL3Ag/1PQ6oJoieVdwO3XB7S5SwuncCI5SY=
+	b=Wp7LXjlLcC7PaSfJ8UAxhGHPApI6uarAKjX+sVPlpe7PfKRhp2XplPOey1sR6GnOh
+	 +wjQFD52nUDUqLITQuxtW7/WLnhZfWBxEoEZkg5/CwTO+I3OGgqr75Xe7hQHwcXaWy
+	 R2C7ntw2kRWGrMelAUBeZ4phrLlizA46TGNb+dhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgDTTP0 (ORCPT
+        id S1726024AbgDTTRP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:15:26 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34944 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728025AbgDTTPZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 15:15:25 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e20so9169742otl.2;
-        Mon, 20 Apr 2020 12:15:24 -0700 (PDT)
+        Mon, 20 Apr 2020 15:17:15 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39934 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgDTTRP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 15:17:15 -0400
+Received: by mail-ot1-f68.google.com with SMTP id m13so9138212otf.6;
+        Mon, 20 Apr 2020 12:17:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/E8gPmAs5q5j5c6IF7Y5E5C7JdeQS0MYhxEcRGnaPxs=;
-        b=q72gFrhHlIVrA5mY0Sy2UWVrJoZt9je4tDLA8GnkG6PNoXOoOy0CWgbypp08yB9ETR
-         jTbRjjBjk4VobUNc68ZlJ4t40d8bBSDJB/tCjBvLnWY50JJxjDUlzvAtXUtlDOnUnjuF
-         GxAZW1XgTBgdtlY/y0Qn+AyQqJDjga1d5loMa3ZJkLVs2VbsO62oIHPCXN2Sh/AgP9QL
-         sq7ZHckVMEsOSFkpCKJppaJoYpe324NBCOs1zQqwV+f15r/yTzcLSDa8Sf6k//LL2L+n
-         kT/yaZVx5jBIaB0g7Etf7zYBWsBaZ7YlneflRpVwwxbwvw+K9qL6Gx/1+8/nxYG9jgEm
-         IqxA==
-X-Gm-Message-State: AGi0Puas7HAA1L4zKfb8fXXswkM3GFgMoxeyvzEeUBNJjiQ3ySD0CcOc
-        xi2ah5SvAA8weeZVKTbtjQ==
-X-Google-Smtp-Source: APiQypK4KWrrROkD5Z7eemFuC8Y5bdOwXzixxByT6sDywR+zGy0AuTzZVDCA0mXYc0mjjBP9d9R3jA==
-X-Received: by 2002:a9d:6a98:: with SMTP id l24mr10442730otq.133.1587410124253;
-        Mon, 20 Apr 2020 12:15:24 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ub3E7adIUaTOZ0d2h6gOjJTm+Q700wIpBk3EfoZu4d0=;
+        b=s/0UoSbFOhpIbsl54N2ESjkUqEXeakXZh4joN7ngVGnkJ9JUIXFekDMLvc1zXzg97b
+         MLjxhBbuEGRhP+xP4hgaL/pyBpd6N99fOIpj7tNV/Lv221htACQr4m9ZY0k9KxpyIVuR
+         v6xiVXCH1egyhPLv5vbk/qBrTPW1LD+MTjKvKOMHs7/6p2g/LdNsxNoPQOLmH8tRe3Ne
+         E8ZFqV4s91sUsSn7ReuD5rf+m6syEJ8IssaVTR762lXPiJ5dx+pqq44UBKfsg+7ssGyO
+         nNIHscW632ToEkptYAq2peyF7GO+NpeDtViQtyoyrt7Kk6kodvpt6NU2TXWee/4TAv05
+         2uEw==
+X-Gm-Message-State: AGi0Puas8YT9aTbIMSF95xz+oudlhxy82g+pyi85QsQ5CTCwb66aYdIz
+        f5Z3t3tkwvLOhAJ94EHp8Q==
+X-Google-Smtp-Source: APiQypJDYVnfDuJjrQnhyYiYpGJgg8Yjc8BmLRYyQh4810CC6E0IQxG6a8oxfpoglcwaudC1A+cB7w==
+X-Received: by 2002:a05:6830:4c8:: with SMTP id s8mr10643398otd.198.1587410234520;
+        Mon, 20 Apr 2020 12:17:14 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s13sm71633oic.27.2020.04.20.12.15.22
+        by smtp.gmail.com with ESMTPSA id q142sm71471oic.44.2020.04.20.12.17.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 12:15:23 -0700 (PDT)
-Received: (nullmailer pid 3203 invoked by uid 1000);
-        Mon, 20 Apr 2020 19:15:22 -0000
-Date:   Mon, 20 Apr 2020 14:15:22 -0500
+        Mon, 20 Apr 2020 12:17:13 -0700 (PDT)
+Received: (nullmailer pid 5971 invoked by uid 1000);
+        Mon, 20 Apr 2020 19:17:12 -0000
+Date:   Mon, 20 Apr 2020 14:17:12 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     robh+dt@kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Qiang Yu <yuq825@gmail.com>
-Subject: Re: [PATCH v5] dt-bindings: gpu: mali-utgard: Add the #cooling-cells
- property
-Message-ID: <20200420191522.GA3122@bogus>
-References: <20200411165700.1576314-1-martin.blumenstingl@googlemail.com>
+To:     Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>
+Subject: Re: [PATCH v5 6/6] dt-bindings: iio: Add adis16475 documentation
+Message-ID: <20200420191712.GA5911@bogus>
+References: <20200413082445.17324-1-nuno.sa@analog.com>
+ <20200413082445.17324-7-nuno.sa@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200411165700.1576314-1-martin.blumenstingl@googlemail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200413082445.17324-7-nuno.sa@analog.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 11 Apr 2020 18:57:00 +0200, Martin Blumenstingl wrote:
-> The GPU can be one of the big heat sources on a SoC. Allow the
-> "#cooling-cells" property to be specified for ARM Mali Utgard GPUs so
-> the GPU clock speeds (and voltages) can be reduced to prevent a SoC from
-> overheating.
+On Mon, 13 Apr 2020 10:24:45 +0200, =?UTF-8?q?Nuno=20S=C3=A1?= wrote:
+> Document the ADIS16475 device devicetree bindings
 > 
-> Reviewed-by: Qiang Yu <yuq825@gmail.com>
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
 > ---
-> Changes since v4 at [0]:
-> - Added Qiang's Reviewed-by (many thanks)
-> - re-send because I missed the devicetree mailing list in v4
+> Changes in v2:
+>  * Remove burst32 property;
+>  * Rename clk-mode to adi,sync-mode;
+>  * Remove clock-names;
+>  * Add conditionals to state that clocks is only needed depending on adi,sync-mode property.
 > 
+> Changes in v3:
+>  * Make use of 'allOf' in conditionals.
 > 
-> [0] https://patchwork.kernel.org/patch/11448013/
+> Changes in v4:
+>  * Nothing changed.
 > 
+> Changes in v5:
+>  * Nothing changed.
 > 
->  Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
+>  .../bindings/iio/imu/adi,adis16475.yaml       | 137 ++++++++++++++++++
+>  MAINTAINERS                                   |   1 +
+>  2 files changed, 138 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
 > 
 
-Applied, thanks.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
