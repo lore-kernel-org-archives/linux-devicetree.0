@@ -6,79 +6,97 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439FDC55182
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 22:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37021C55181
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 22:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1955B20722
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 22:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12EC620857
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 22:21:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587421086;
-	bh=QnbvNRdQM3m35xa1CRVDOjmBL5Ww79qAqkLDJSX9Ddw=;
+	s=default; t=1587421266;
+	bh=aHfTLENWDjT1y7IZEtgdmOvH5Tyluy1BOJfm+gLvPbc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bOVrFlLqdHVjx9KQfy0hJf2JRInGYnPa+I7GGMeMG74efQjO6gqaoLlE0LQc7X8Aj
-	 n/E6hKjJeipCskYpPhGMK+zWBUs5MYh+Yi0ZCJs0ODer2v4MmiUYgCbMadDQYqzFnM
-	 Mz8ERqSesm5G9g2Wxk2RqbfccCLilBsf24uSuOXg=
+	b=nfdXkRIi4liDO2aR15kkCTtzmYW6dR3svsyhhT6B+fJsC9s5/LeKYR+qVsVVIpUWc
+	 Cw3AbR4hGY2lzdYDQBYRKi5KIXJs4aV4TcBHvGEiIwiSRO77VqBjh57wPUGI5zvknt
+	 rJ2IZAy/ZFM4qdofQxO6yOTu8ak9qukFZNTFjwFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726013AbgDTWSF (ORCPT
+        id S1726121AbgDTWVF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 18:18:05 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38316 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgDTWSF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 18:18:05 -0400
-Received: by mail-oi1-f196.google.com with SMTP id r66so10312677oie.5;
-        Mon, 20 Apr 2020 15:18:04 -0700 (PDT)
+        Mon, 20 Apr 2020 18:21:05 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45629 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgDTWVF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 18:21:05 -0400
+Received: by mail-ot1-f65.google.com with SMTP id i22so9583437otp.12;
+        Mon, 20 Apr 2020 15:21:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rkRZS5DS4nHwvUbyrOz6+6YEYG773x2tAPTyB5Eyop8=;
-        b=g24DtuahPUXqzD2r+Ih5RWs4Hpm+l410Kxh/SMAqOq3k52AhD9vw3EMwMe39RNU5K5
-         i7BpOI/zFCnnoxfr0Q0Z13NH7hVYIUMqPYOyF0zB0KJnZPg9lv+0AmTCYzB9DMfkjZ+t
-         DB/LHcJ/lh4+AvIba0pVrJqyCs73JcvZegzC8el0fSnVefltrEYbB+OCQT/n280qpXM8
-         IcmY/XUHymCs3J9ONs5le4QMRUQ2+3zZuQbpRUrpCuhDmG2KXvN5nedDwQiHtmaiID9N
-         gWn2pvuXl5JZKcvm6eOasBHQR2CPOpJGaajhzLHkdREWe9VOZL5cpTVasfA6mqeexkGS
-         1Dig==
-X-Gm-Message-State: AGi0Pub1BGw7vcthdN4tmJz7GQaQEihsnzSanVF6doKWQjd2NQxZLCsO
-        SOw7KVdHgi8rEIVidiEWka5qx+k=
-X-Google-Smtp-Source: APiQypIo7EUO06qxsuKNykV+xG2tPvmPoJlJrN7Yxnus9RzR9ZKCj+pPPs+lzgkeiLOKBPeOAMchgw==
-X-Received: by 2002:aca:f384:: with SMTP id r126mr1131185oih.41.1587421084583;
-        Mon, 20 Apr 2020 15:18:04 -0700 (PDT)
+        bh=uJ0ZsBgxEkcMHz3xmP0pqIOLKyjGmk0/vhj0hq2pCQU=;
+        b=Jh0ispFOcWOjL9fMpVLuvNJqaPeWZnOEePRhMpacALknWqCNYPz00GdBiVQzcDMt86
+         pzVF8/DhDI/eexg5iDrt+N3kD0h7A1z6RGlYYzkLQxPPiX4REkSc7IzfS0t11SHo3fj3
+         IhiOQOkY3LZNw/AjMk9XGO+IWE3YGpmHVqYw65amwlz3ExTJTc0ZU/K71XdudZPxCYNO
+         LiKA51hlT9dZ0imr1SjP/SXa5EcZ1PfYi/hYCGpMwjIcyXTu0eKgusuKHbK+7T3JcnCR
+         rnm1Sb6cdrRAaC55qNXGMTOULQzzoqjyIXs4Hy2JyF3s4n+0QgSF+EztDI+ycccQaANO
+         zc7g==
+X-Gm-Message-State: AGi0PuZo+mlWaGpRc5TgwDHST5+ZwVOVXvxjfh5DmfFjJbqzQ14A2hQN
+        QyR4YyVDhpnOhfvNvsMRFw==
+X-Google-Smtp-Source: APiQypK6mA7ViCuT9PSsCzl82bf8op0UEzG26RywzG77OoyLaJIecAesBlogXZYyw4vHODRoiQzYoQ==
+X-Received: by 2002:a9d:5a10:: with SMTP id v16mr10849175oth.253.1587421264232;
+        Mon, 20 Apr 2020 15:21:04 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 76sm249798otg.68.2020.04.20.15.18.02
+        by smtp.gmail.com with ESMTPSA id n184sm198794oia.40.2020.04.20.15.21.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 15:18:03 -0700 (PDT)
-Received: (nullmailer pid 30960 invoked by uid 1000);
-        Mon, 20 Apr 2020 22:18:02 -0000
-Date:   Mon, 20 Apr 2020 17:18:02 -0500
+        Mon, 20 Apr 2020 15:21:03 -0700 (PDT)
+Received: (nullmailer pid 3065 invoked by uid 1000);
+        Mon, 20 Apr 2020 22:21:02 -0000
+Date:   Mon, 20 Apr 2020 17:21:02 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: Re: [PATCH v2] i2c: regroup documentation of bindings
-Message-ID: <20200420221802.GA30899@bogus>
-References: <20200415105100.11164-1-wsa+renesas@sang-engineering.com>
+To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
+Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] dt-bindings: counter: microchip-tcb-capture
+ counter
+Message-ID: <20200420222102.GA1214@bogus>
+References: <20200415130455.2222019-1-kamel.bouhara@bootlin.com>
+ <20200415130455.2222019-3-kamel.bouhara@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415105100.11164-1-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20200415130455.2222019-3-kamel.bouhara@bootlin.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 15 Apr 2020 12:51:00 +0200, Wolfram Sang wrote:
-> Some bindings are for the bus master, some are for the slaves.
-> Regroup them and give them seperate headings to make it clear.
-> Also, remove references to "generic names" which is for nodes and not
-> for compatibles.
+On Wed, Apr 15, 2020 at 03:04:54PM +0200, Kamel Bouhara wrote:
+> Describe the devicetree binding for the Microchip TCB module.
+> Each counter blocks exposes three independent counters.
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c.txt | 66 +++++++++++--------
->  1 file changed, 39 insertions(+), 27 deletions(-)
-> 
+> However, when configured in quadrature decoder, both channel <0> and <1>
+> are required for speed/position and rotation capture (yet only the
+> position is captured).
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This is a child of the TCB, right? If so, it needs to be merged with the 
+TCB schema Alexandre is working on.
+
+> 
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> ---
+> Changes from v3:
+>  - Updated the brand name: s/atmel/microchip/.
+> 
+> Changes from v2:
+>  - Fixed errors reported by dt_binding_check
+> 
+>  .../counter/microchip-tcb-capture.yaml        | 33 +++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/counter/microchip-tcb-capture.yaml
