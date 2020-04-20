@@ -2,157 +2,266 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D35AC54FCB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 15:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9258DC3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 15:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E79220775
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 15:45:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="n/OQ8pJd"
+	by mail.kernel.org (Postfix) with ESMTP id 7528B20775
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 15:50:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725989AbgDTPpF (ORCPT
+        id S1728549AbgDTPuC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:45:05 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:50250 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729028AbgDTPow (ORCPT
+        Mon, 20 Apr 2020 11:50:02 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:39520 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725971AbgDTPuB (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 11:44:52 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KFcDWr020255;
-        Mon, 20 Apr 2020 10:44:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=PODMain02222019;
- bh=qNDX1e9cmLY8++RjUuUsNUnq+t/NLjmrrD3VfGW3Akc=;
- b=n/OQ8pJdNl09gVaLnIEJm0bZb29ac7pzHN3BHlI8a+ckuMZvqSgVO28zs7b1gAqx3dqK
- ZMTktB4XLiAhpgE+J0ExxUnUuUkmf0XvMf+nRhWeTDUqPygM72q1HRAL8B337zzgL3s4
- aLkWS1slbg6uW5+uytGqDucbs92oyuD+2xQf5JV5m7Uyd2GcKHEwbc/Yan2R7PassmhG
- z5RGG9ZAi3xG+6mN1ZhQI3i65pOyj1rmpwgVcZYZzDVwbQQosbXc3iEqok0kr7UOK1Rh
- +FRO81xIwrLpoi5rGgU1VwuWmnfrJd1qsV9jrKaeTzBbsaPawrjSW2/Z95MvwIC7dHsx Ow== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0a-001ae601.pphosted.com with ESMTP id 30fxy4b9hq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 20 Apr 2020 10:44:46 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 20 Apr
- 2020 16:44:44 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Mon, 20 Apr 2020 16:44:44 +0100
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 914632C6;
-        Mon, 20 Apr 2020 15:44:44 +0000 (UTC)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <cw00.choi@samsung.com>, <robh+dt@kernel.org>,
-        <lee.jones@linaro.org>, <broonie@kernel.org>
-CC:     <myungjoo.ham@samsung.com>, <lgirdwood@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH 1/4] regulator: arizona-regulator: Move binding over to dtschema
-Date:   Mon, 20 Apr 2020 16:44:41 +0100
-Message-ID: <20200420154444.12332-2-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200420154444.12332-1-ckeepax@opensource.cirrus.com>
-References: <20200420154444.12332-1-ckeepax@opensource.cirrus.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- clxscore=1015 adultscore=0 spamscore=0 priorityscore=1501
- lowpriorityscore=0 suspectscore=0 mlxscore=0 phishscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004200131
+        Mon, 20 Apr 2020 11:50:01 -0400
+X-IronPort-AV: E=Sophos;i="5.72,406,1580742000"; 
+   d="scan'208";a="45217578"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 21 Apr 2020 00:49:59 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id D1FA4400D4A4;
+        Tue, 21 Apr 2020 00:49:57 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v3] arm64: dts: renesas: r8a774c0-cat874: Add support for AISTARVISION MIPI Adapter V2.1
+Date:   Mon, 20 Apr 2020 16:49:54 +0100
+Message-Id: <1587397794-11237-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
- .../bindings/regulator/arizona-regulator.txt       | 18 -----------
- .../devicetree/bindings/regulator/wlf,arizona.yaml | 37 ++++++++++++++++++++++
- 2 files changed, 37 insertions(+), 18 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/regulator/arizona-regulator.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/wlf,arizona.yaml
+This patch adds support for AISTARVISION MIPI Adapter V2.1 board connected
+to G2E board. Common file aistarvision-mipi-adapter-2.1.dtsi is created
+which have the camera endpoint nodes for imx219 and ov5645 so that this can
+be re-used with other G2x platforms.
 
-diff --git a/Documentation/devicetree/bindings/regulator/arizona-regulator.txt b/Documentation/devicetree/bindings/regulator/arizona-regulator.txt
-deleted file mode 100644
-index 69bf41949b01f..0000000000000
---- a/Documentation/devicetree/bindings/regulator/arizona-regulator.txt
-+++ /dev/null
-@@ -1,18 +0,0 @@
--Cirrus Logic Arizona class audio SoCs
--
--These devices are audio SoCs with extensive digital capabilities and a range
--of analogue I/O.
--
--This document lists regulator specific bindings, see the primary binding
--document:
--  For Wolfson Microelectronic Arizona codecs: ../mfd/arizona.txt
--  For Cirrus Logic Madera codecs: ../mfd/madera.txt
--
--Optional properties:
--  - wlf,ldoena : GPIO specifier for the GPIO controlling LDOENA
--
--Optional subnodes:
--  - ldo1 : Initial data for the LDO1 regulator, as covered in
--    Documentation/devicetree/bindings/regulator/regulator.txt
--  - micvdd : Initial data for the MICVDD regulator, as covered in
--    Documentation/devicetree/bindings/regulator/regulator.txt
-diff --git a/Documentation/devicetree/bindings/regulator/wlf,arizona.yaml b/Documentation/devicetree/bindings/regulator/wlf,arizona.yaml
+r8a774c0-ek874-mipi-2.1.dts file enables the required VIN/CSI nodes and by
+default ties ov5645 camera endpoint to CSI2.
+
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+Changes for v3:
+ * Renamed the fixed clock to osc25250_clk and reused the same for both
+   the sensors as pin 3-4 and 5-6 of J14 are short.
+ * Rebased the patch on top of renesas-drivers/master
+
+Changes for v2:
+ * Dropped #{address,size}-cells
+ * Dropped unit address and reg for port
+
+ arch/arm64/boot/dts/renesas/Makefile               |  3 +-
+ .../dts/renesas/aistarvision-mipi-adapter-2.1.dtsi | 94 ++++++++++++++++++++++
+ .../boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts   | 72 +++++++++++++++++
+ 3 files changed, 168 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
+
+diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+index a7ec7a7..d17351c 100644
+--- a/arch/arm64/boot/dts/renesas/Makefile
++++ b/arch/arm64/boot/dts/renesas/Makefile
+@@ -5,7 +5,8 @@ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex-idk-1110wr.dtb
+ dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n.dtb
+ dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n-ex.dtb
+ dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb \
+-			       r8a774c0-ek874-idk-2121wr.dtb
++			       r8a774c0-ek874-idk-2121wr.dtb \
++			       r8a774c0-ek874-mipi-2.1.dtb
+ dtb-$(CONFIG_ARCH_R8A77950) += r8a77950-salvator-x.dtb
+ dtb-$(CONFIG_ARCH_R8A77950) += r8a77950-ulcb.dtb r8a77950-ulcb-kf.dtb
+ dtb-$(CONFIG_ARCH_R8A77951) += r8a77951-salvator-x.dtb r8a77951-salvator-xs.dtb
+diff --git a/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi b/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
 new file mode 100644
-index 0000000000000..a0aea73bf4122
+index 0000000..dac6ff4
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/wlf,arizona.yaml
-@@ -0,0 +1,37 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/wlf,arizona.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
+@@ -0,0 +1,94 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the AISTARVISION MIPI Adapter V2.1
++ *
++ * Copyright (C) 2020 Renesas Electronics Corp.
++ */
 +
-+title: Cirrus Logic/Wolfson Microelectronics Arizona/Madera class audio SoCs
++/ {
++	ov5645_vdddo_1v8: 1p8v {
++		compatible = "regulator-fixed";
++		regulator-name = "camera_vdddo";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++	};
 +
-+maintainers:
-+  - patches@opensource.cirrus.com
++	ov5645_vdda_2v8: 2p8v {
++		compatible = "regulator-fixed";
++		regulator-name = "camera_vdda";
++		regulator-min-microvolt = <2800000>;
++		regulator-max-microvolt = <2800000>;
++		regulator-always-on;
++	};
 +
-+description: |
-+  These devices are audio SoCs with extensive digital capabilities and a
-+  range of analogue I/O.
++	ov5645_vddd_1v5: 1p5v {
++		compatible = "regulator-fixed";
++		regulator-name = "camera_vddd";
++		regulator-min-microvolt = <1500000>;
++		regulator-max-microvolt = <1500000>;
++		regulator-always-on;
++	};
 +
-+  This document lists regulator specific bindings, see the primary binding
-+  document. For Wolfson Microelectronic Arizona codecs ../mfd/wlf,arizona.yaml
-+  and for Cirrus Logic Madera codecs ../mfd/madera.txt
++	imx219_vana_2v8: 2p8v {
++		compatible = "regulator-fixed";
++		regulator-name = "camera_vana";
++		regulator-min-microvolt = <2800000>;
++		regulator-max-microvolt = <2800000>;
++		regulator-always-on;
++	};
 +
-+properties:
-+  wlf,ldoena:
-+    description:
-+      GPIO specifier for the GPIO controlling LDOENA.
-+    $ref: "/schemas/types.yaml#/definitions/phandle-array"
-+    maxItems: 1
++	imx219_vdig_1v8: 1p8v {
++		compatible = "regulator-fixed";
++		regulator-name = "camera_vdig";
++		regulator-min-microvolt = <1500000>;
++		regulator-max-microvolt = <1500000>;
++		regulator-always-on;
++	};
 +
-+  ldo1:
-+    description:
-+      Initial data for the LDO1 regulator.
-+    $ref: "regulator.yaml#"
-+    type: object
++	imx219_vddl_1v2: 1p2v {
++		compatible = "regulator-fixed";
++		regulator-name = "camera_vddl";
++		regulator-min-microvolt = <1200000>;
++		regulator-max-microvolt = <1200000>;
++		regulator-always-on;
++	};
 +
-+  micvdd:
-+    description:
-+      Initial data for the MICVDD regulator.
-+    $ref: "regulator.yaml#"
-+    type: object
++	osc25250_clk: osc25250_clk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <24000000>;
++	};
++};
++
++&MIPI_PARENT_I2C {
++	ov5645: ov5645@3c {
++		compatible = "ovti,ov5645";
++		reg = <0x3c>;
++		clock-names = "xclk";
++		clocks = <&osc25250_clk>;
++		clock-frequency = <24000000>;
++		vdddo-supply = <&ov5645_vdddo_1v8>;
++		vdda-supply = <&ov5645_vdda_2v8>;
++		vddd-supply = <&ov5645_vddd_1v5>;
++
++		port {
++			ov5645_ep: endpoint {
++			};
++		};
++	};
++
++	imx219: imx219@10 {
++		compatible = "sony,imx219";
++		reg = <0x10>;
++		clocks = <&osc25250_clk>;
++		VANA-supply = <&imx219_vana_2v8>;
++		VDIG-supply = <&imx219_vdig_1v8>;
++		VDDL-supply = <&imx219_vddl_1v2>;
++
++		port {
++			imx219_ep: endpoint {
++			};
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
+new file mode 100644
+index 0000000..f0829e9
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
+@@ -0,0 +1,72 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the Silicon Linux RZ/G2E 96board platform (CAT874)
++ * connected with aistarvision-mipi-v2-adapter board
++ *
++ * Copyright (C) 2020 Renesas Electronics Corp.
++ */
++
++/dts-v1/;
++#include "r8a774c0-ek874.dts"
++#define MIPI_PARENT_I2C i2c3
++#include "aistarvision-mipi-adapter-2.1.dtsi"
++
++/ {
++	model = "Silicon Linux RZ/G2E evaluation kit EK874 (CAT874 + CAT875) with aistarvision-mipi-v2-adapter board";
++	compatible = "si-linux,cat875", "si-linux,cat874", "renesas,r8a774c0";
++};
++
++&i2c3 {
++	status = "okay";
++};
++
++&vin4 {
++	status = "okay";
++};
++
++&vin5 {
++	status = "okay";
++};
++
++&csi40 {
++	status = "okay";
++
++	ports {
++		port {
++			csi40_in: endpoint {
++				clock-lanes = <0>;
++				data-lanes = <1 2>;
++				remote-endpoint = <&ov5645_ep>;
++			};
++		};
++	};
++};
++
++&ov5645 {
++	enable-gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
++	reset-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
++
++	port {
++		ov5645_ep: endpoint {
++			clock-lanes = <0>;
++			data-lanes = <1 2>;
++			remote-endpoint = <&csi40_in>;
++		};
++	};
++};
++
++&imx219 {
++	port {
++		imx219_ep: endpoint {
++			clock-lanes = <0>;
++			data-lanes = <1 2>;
++			link-frequencies = /bits/ 64 <456000000>;
++			/* uncomment remote-endpoint property to tie imx219 to
++			 * CSI2 also make sure remote-endpoint for ov5645 camera
++			 * is commented and remote endpoint phandle in csi40_in
++			 * is imx219_ep
++			 */
++			/* remote-endpoint = <&csi40_in>; */
++		};
++	};
++};
 -- 
-2.11.0
+2.7.4
 
