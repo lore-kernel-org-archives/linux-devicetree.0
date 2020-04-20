@@ -2,142 +2,68 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A993C3A5A0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 19:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F1BC3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 19:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 393F9206A1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 19:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3297206E9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 19:59:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="IKhnGhru"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="P1Np4Olo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726208AbgDTT5b (ORCPT
+        id S1726505AbgDTT7C (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:57:31 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:48256 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgDTT5a (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 15:57:30 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8327897D;
-        Mon, 20 Apr 2020 21:57:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1587412647;
-        bh=VyAYxn5QYg/qgAZ3QLAxeHFXObmm2KTLy1cekrs4/Co=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IKhnGhruHCVyCfW+bc7TXpXtGwConChaObWLBzXYbiqByrVChPlQLVGl/G4FdUPMl
-         dLXsraIQVsxotRt3uqKwfPrz5ktBfU2tb7IgP5PW9Mdok0h1m4pjy/h0NdzdJNuSqI
-         VkYK0qyxESSpoQaAtbkSWR96MVTLFEOhi89k09oE=
-Date:   Mon, 20 Apr 2020 22:57:14 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     Vishal Sagar <vishal.sagar@xilinx.com>,
-        Hyun Kwon <hyunk@xilinx.com>, mchehab@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Hyun Kwon <hyun.kwon@xilinx.com>
-Subject: Re: [PATCH v11 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
- Subsystem driver
-Message-ID: <20200420195714.GB8195@pendragon.ideasonboard.com>
-References: <20200409194424.45555-1-vishal.sagar@xilinx.com>
- <20200409194424.45555-3-vishal.sagar@xilinx.com>
- <20200419180222.GB8117@pendragon.ideasonboard.com>
- <860c27da-eba0-ddcb-719b-52b2725bd9bf@lucaceresoli.net>
+        Mon, 20 Apr 2020 15:59:02 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:51904 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726324AbgDTT7C (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Apr 2020 15:59:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=T3mQKlhtFGHs08GyVcsfNUPTltwQz0CSj49TT0aYLW8=; b=P1Np4OloDgFFs80Ll4OLOvuvSC
+        VSqwuxEmQpE2ZXTUWXpxyh8L6nYVRvzuZallxuqbat1Eoc0d/mR3KoWt+Ocn3vJjvPqi+d+2AQli3
+        3rgHr08EN7Y5vTSwLc8qaMoQY6zBDHV6ToLAmz8c05ZW/TQC1kUUTdIeTzB3ER+Xx5vs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jQcZF-003tRE-Pl; Mon, 20 Apr 2020 21:58:57 +0200
+Date:   Mon, 20 Apr 2020 21:58:57 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v3 1/3] dt-bindings: net: Correct description of
+ 'broken-turn-around'
+Message-ID: <20200420195857.GI917792@lunn.ch>
+References: <20200420180723.27936-1-f.fainelli@gmail.com>
+ <20200420180723.27936-2-f.fainelli@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <860c27da-eba0-ddcb-719b-52b2725bd9bf@lucaceresoli.net>
+In-Reply-To: <20200420180723.27936-2-f.fainelli@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Luca,
-
-On Mon, Apr 20, 2020 at 09:24:25PM +0200, Luca Ceresoli wrote:
-> On 19/04/20 20:02, Laurent Pinchart wrote:
-> [...]
-> >> +static irqreturn_t xcsi2rxss_irq_handler(int irq, void *dev_id)
-> >> +{
-> >> +	struct xcsi2rxss_state *state = (struct xcsi2rxss_state *)dev_id;
-> >> +	struct xcsi2rxss_core *core = &state->core;
-> >> +	u32 status;
-> >> +
-> >> +	status = xcsi2rxss_read(core, XCSI_ISR_OFFSET) & XCSI_ISR_ALLINTR_MASK;
-> >> +	dev_dbg_ratelimited(core->dev, "interrupt status = 0x%08x\n", status);
-> > 
-> > As this is expected to occur for every frame, I would drop the message,
-> > even if rate-limited.
-> > 
-> >> +
-> >> +	if (!status)
-> >> +		return IRQ_NONE;
-> >> +
-> >> +	/* Received a short packet */
-> >> +	if (status & XCSI_ISR_SPFIFONE) {
-> >> +		dev_dbg_ratelimited(core->dev, "Short packet = 0x%08x\n",
-> >> +				    xcsi2rxss_read(core, XCSI_SPKTR_OFFSET));
-> >> +	}
-> > 
-> > Same here, this will occur all the time, I'd remove this message. You
-> > need to read XCSI_SPKTR_OFFSET though, and you should do so in a loop
-> > until the XCSI_CSR_SPFIFONE in XCSI_CSR_OFFSET is cleared in case
-> > multiple short packets are received before the interrupt handler
-> > executes.
-> > 
-> > I also wonder if it would make sense to extract the frame number from
-> > the FS short packet, and make it available through the subdev API. I
-> > think it should be reported through a V4L2_EVENT_FRAME_SYNC event. This
-> > can be implemented later.
-> > 
-> >> +
-> >> +	/* Short packet FIFO overflow */
-> >> +	if (status & XCSI_ISR_SPFIFOF)
-> >> +		dev_dbg_ratelimited(core->dev, "Short packet FIFO overflowed\n");
-> >> +
-> >> +	/*
-> >> +	 * Stream line buffer full
-> >> +	 * This means there is a backpressure from downstream IP
-> >> +	 */
-> >> +	if (status & XCSI_ISR_SLBF) {
-> >> +		dev_alert_ratelimited(core->dev, "Stream Line Buffer Full!\n");
-> >> +		xcsi2rxss_stop_stream(state);
-> >> +		if (core->rst_gpio) {
-> >> +			gpiod_set_value(core->rst_gpio, 1);
-> >> +			/* minimum 40 dphy_clk_200M cycles */
-> >> +			ndelay(250);
-> >> +			gpiod_set_value(core->rst_gpio, 0);
-> >> +		}
-> > 
-> > I don't think you should stop the core here. xcsi2rxss_stop_stream()
-> > calls the source .s_stream(0) operation, which usually involves I2C
-> > writes that will sleep.
-> > 
-> > You should instead report an event to userspace (it looks like we have
-> > no error event defined in V4L2, one should be added), and rely on the
-> > normal stop procedure.
+On Mon, Apr 20, 2020 at 11:07:21AM -0700, Florian Fainelli wrote:
+> The turn around bytes (2) are placed between the control phase of the
+> MDIO transaction and the data phase, correct the wording to be more
+> exact.
 > 
-> FWIW, since a long time I've been using a modified version of this
-> routine, where after a Stream Line Buffer Full condition I just stop and
-> restart the csi2rx core and the stream continues after a minimal glitch.
-> Other subdev are unaware that anything has happened and keep on streaming.
-> 
-> Not sure this is the correct thing to do, but it's working for me. Also
-> I proposed this topic in one of the previous iterations of this patch,
-> but the situation was different because the stream on/off was not
-> propagated back at that time.
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Thanks for the feedback. How often does this occur in practice ?
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
--- 
-Regards,
-
-Laurent Pinchart
+    Andrew
