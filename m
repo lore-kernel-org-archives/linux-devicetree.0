@@ -2,187 +2,91 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 812B6C55182
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 21:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DC0C55181
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 21:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58B272078C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 21:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AB0320857
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 21:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587418154;
-	bh=VNiQsywGgzDu+UPWr62f+ikDlVnC2t5q9KRTCBukmn8=;
+	s=default; t=1587418293;
+	bh=dVy3wOmlZH1/zmu2ugX93t8GrmESbinIVXGYIlw/ufE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zFEYM/hNAZJ8nxRhbnVUDb6fwH/VoG/cbjOhZidBl7sXTueUiSxthAcIEvRudMc5i
-	 V+zN5qRWGF+JTumgyh/ggYYKoGcZlvcOWC5lv0A8ODiqXiTTsCu6XjO75iKKgC+4Ct
-	 /0wmptQfIeZBxM6/rqev156Fbj1q8G8aKjNjUvGo=
+	b=h16H2FXor/lyGXt4PhgNTnifBMSn8gPTq5eiSpRjepzqcvqIwTnYnFJ+LGoj8tja/
+	 HrBj0MkEi/nahuqMlea+u4BidNIziyDZyHPjZYgc+cubQaLXRGB64f3GP/GValEcA6
+	 CowA2xTogwjebmyi+BBcpqTCUYXfvM4hLDn7dif0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgDTV3N (ORCPT
+        id S1726764AbgDTVbc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:29:13 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44395 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgDTV3N (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 17:29:13 -0400
-Received: by mail-oi1-f195.google.com with SMTP id a2so5554992oia.11;
-        Mon, 20 Apr 2020 14:29:12 -0700 (PDT)
+        Mon, 20 Apr 2020 17:31:32 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38414 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgDTVbc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 17:31:32 -0400
+Received: by mail-oi1-f193.google.com with SMTP id r66so10205667oie.5;
+        Mon, 20 Apr 2020 14:31:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pVvaPy9TriCxXUNOlVqLauolz3jDKaAdK4fSEUctuf0=;
-        b=EhU9p7YcOFSqelU8j2WjxdXSIdseLQd1/JOhYHqnAWUyEo5ygx4KRs9CmpI/jTvb5o
-         CHwk8U9RA2S9hEcucR18BDuMAqwmrmBmE9kCGuWpltzI/agKINOZzhQOrxXRbVvb8cIZ
-         huCyl5hdKRskHxt4IpHjb+o6IK/+CgmSG/2YJdlDs9+hxvZHktPRXzmB0m0qr9a5fy4l
-         tfb+6BOtaquDC2FS9HIXgXscyjJg5ppSqyMB5hsT0ORc4s2eE59XwtwX4Jong/2Y6j8/
-         itghq3Taqqka2iaE5wk2Zuwza7MYock52burp1/hSIQ16YIjDUOXHrRU4pERZnF7qjDH
-         LFmQ==
-X-Gm-Message-State: AGi0Pua23vH4fLO5beTFngf7Z1fVs4eWDtzt+3YrF1Brq9FoVetzo/sy
-        hWykvBC2I1fH6QYe4GscGQ==
-X-Google-Smtp-Source: APiQypKKosF3ptynJlahs4jhDzXsM68ALGaWcgwNZ/s1v7FiGz78riXbUIaqOwO7V7Tj/97B0k7ZMA==
-X-Received: by 2002:aca:4588:: with SMTP id s130mr1047118oia.133.1587418152449;
-        Mon, 20 Apr 2020 14:29:12 -0700 (PDT)
+        bh=xCbMSBWE/K7CMTFoStyxNkJaPmhk/SFie0hTZQJVUuE=;
+        b=sJMjECmu0mmTTgHhyEETBQesotteG5lfuWufzJGnqs0lHdDFHFv+wbseCsPUftz91Z
+         K7Fu91EVn4YotE4SCEcpdMgKSJ7JhiKbC/qOaWfFn9x1ycWU7ipifDeZ3sYlff5KNsMu
+         DWXJan/NkVA4eBCKIKaL7mjRVR7Iy3bOagUTQSj5j/1Y+zlqS8rSMJXv4ZabGMGb94NJ
+         UEcvjcSVYGQLzwXjlW2v+guSCEMAcmJ2EM0ip1orzToahBQVHBrvxK26slqmwdpI3UAI
+         qZseXhF4nO4GKNHg+Ad6JSqBXExZrxE4vDm+rhAb3j21gUuRQPeHM58ShzyaG4+zJeXK
+         byfA==
+X-Gm-Message-State: AGi0PuYpfAGpmdEwVi1CaI2jzxA50OdeVAvxWBMFsi4hXWiF4xIS3pvW
+        0vr3nW6deOYGGd0PunfaGg==
+X-Google-Smtp-Source: APiQypKp/aMom3WcZIgx4KD9/tZ1PBp+icqSBiPeREh6uL2GtZ7nUmS6xX3EHcojP7gq2hudxYyZ2A==
+X-Received: by 2002:aca:4155:: with SMTP id o82mr1118364oia.16.1587418291457;
+        Mon, 20 Apr 2020 14:31:31 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t13sm225254otr.43.2020.04.20.14.29.11
+        by smtp.gmail.com with ESMTPSA id s73sm171791oih.14.2020.04.20.14.31.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 14:29:11 -0700 (PDT)
-Received: (nullmailer pid 16602 invoked by uid 1000);
-        Mon, 20 Apr 2020 21:29:10 -0000
-Date:   Mon, 20 Apr 2020 16:29:10 -0500
+        Mon, 20 Apr 2020 14:31:30 -0700 (PDT)
+Received: (nullmailer pid 22338 invoked by uid 1000);
+        Mon, 20 Apr 2020 21:31:29 -0000
+Date:   Mon, 20 Apr 2020 16:31:29 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     wim@linux-watchdog.org, linux@roeck-us.net, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V2 1/2] dt-bindings: watchdog: Convert i.MX to json-schema
-Message-ID: <20200420212910.GB7615@bogus>
-References: <1586911211-1141-1-git-send-email-Anson.Huang@nxp.com>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com,
+        Jitao Shi <jitao.shi@mediatek.com>
+Subject: Re: [PATCH v15 2/3] dt-bindings: display: mediatek: convert the
+ document format from txt to yaml
+Message-ID: <20200420213129.GA22262@bogus>
+References: <20200415011319.25559-1-jitao.shi@mediatek.com>
+ <20200415011319.25559-3-jitao.shi@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1586911211-1141-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20200415011319.25559-3-jitao.shi@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 08:40:10AM +0800, Anson Huang wrote:
-> Convert the i.MX watchdog binding to DT schema format using json-schema.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On Wed, 15 Apr 2020 09:13:18 +0800, Jitao Shi wrote:
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 > ---
-> No change.
-> ---
->  .../devicetree/bindings/watchdog/fsl-imx-wdt.txt   | 24 ----------
->  .../devicetree/bindings/watchdog/fsl-imx-wdt.yaml  | 56 ++++++++++++++++++++++
->  2 files changed, 56 insertions(+), 24 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
->  create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
+>  .../bindings/display/mediatek/mediatek,dpi.txt     | 42 ----------
+>  .../bindings/display/mediatek/mediatek,dpi.yaml    | 97 ++++++++++++++++++++++
+>  2 files changed, 97 insertions(+), 42 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
-> deleted file mode 100644
-> index adc6b76..0000000
-> --- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
-> +++ /dev/null
-> @@ -1,24 +0,0 @@
-> -* Freescale i.MX Watchdog Timer (WDT) Controller
-> -
-> -Required properties:
-> -- compatible : Should be "fsl,<soc>-wdt"
-> -- reg : Should contain WDT registers location and length
-> -- interrupts : Should contain WDT interrupt
-> -
-> -Optional properties:
-> -- big-endian: If present the watchdog device's registers are implemented
-> -  in big endian mode, otherwise in native mode(same with CPU), for more
-> -  detail please see: Documentation/devicetree/bindings/regmap/regmap.txt.
-> -- fsl,ext-reset-output: If present the watchdog device is configured to
-> -  assert its external reset (WDOG_B) instead of issuing a software reset.
-> -- timeout-sec : Contains the watchdog timeout in seconds
-> -
-> -Examples:
-> -
-> -wdt@73f98000 {
-> -	compatible = "fsl,imx51-wdt", "fsl,imx21-wdt";
-> -	reg = <0x73f98000 0x4000>;
-> -	interrupts = <58>;
-> -	big-endian;
-> -	timeout-sec = <20>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
-> new file mode 100644
-> index 0000000..674d902
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/watchdog/fsl-imx-wdt.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale i.MX Watchdog Timer (WDT) Controller
-> +
-> +maintainers:
-> +  - Anson Huang <Anson.Huang@nxp.com>
-> +
-> +allOf:
-> +  - $ref: "watchdog.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - fsl,imx21-wdt
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: |
-> +      Watchdog's clock source.
 
-Drop this. No description needed if single entry.
-
-> +    maxItems: 1
-> +
-> +  fsl,ext-reset-output:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description: |
-> +      If present, the watchdog device is configured to assert its
-> +      external reset (WDOG_B) instead of issuing a software reset.
-> +
-> +required:
-> +  - compatible
-> +  - interrupts
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/imx6qdl-clock.h>
-> +
-> +    wdog1: watchdog@20bc000 {
-
-Drop the unused label.
-
-> +        compatible = "fsl,imx21-wdt";
-> +        reg = <0x020bc000 0x4000>;
-> +        interrupts = <0 80 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&clks IMX6QDL_CLK_IPG>;
-> +    };
-> +
-> +...
-> -- 
-> 2.7.4
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
