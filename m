@@ -2,175 +2,140 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D36FC3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 06:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D2EC3A5A0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 06:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 662A12080C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 06:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 317CA22244
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 06:55:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WUiMvZ9d"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="NFQQrUKI";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="s3/Qrro0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726039AbgDTGt3 (ORCPT
+        id S1725959AbgDTGzR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 02:49:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726024AbgDTGt2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 02:49:28 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8765AC061A0F
-        for <devicetree@vger.kernel.org>; Sun, 19 Apr 2020 23:49:28 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id n16so4585160pgb.7
-        for <devicetree@vger.kernel.org>; Sun, 19 Apr 2020 23:49:28 -0700 (PDT)
+        Mon, 20 Apr 2020 02:55:17 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:62356 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgDTGzR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 02:55:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1587365718; x=1618901718;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=8Zt3QVUcyB1nrYZUv4BLWy8FGBq+iMg8ScYQuxJgQyU=;
+  b=NFQQrUKIy7s75Q4K1fJpCz/F7yiF4wcCf5OCi9cp2hTPViAUKDy9H9oR
+   clfTEQUpcQfdYip7DuCQEVJJgxjaCt925PH2261dPZ++fuw2+UayaXzTD
+   6QJSgtjB6X1RhQ+ogr6ZAjnyi5Lq31V1DUPrf56w9DlTlIAhHw0EROgl6
+   OpkjKVMi9h8R/mUZr4K+7wLgpldUzZx7IAZDLK+WZMCsLOmkFX+8jFmcs
+   TxGDiPxHOZEQ9x9Sv/5ZUYlti3fRtVpuk6NwCIBC3JRP/ZhCHBlRsfuZ8
+   mbWR1b3drE35jtZiFBcioANzGEDhWwrPVPuafSqNiBsmivJamiDSY8XsD
+   Q==;
+IronPort-SDR: vwQk5ta2F2/V0LIciNJnejKf6mcvdcewU5RvInDKc7mk8uNwSaRAo5PeCLng5rc93xd6KhYHkc
+ 5fYhLUJ7gQ0vLK4zeNBT3yveclD3/y7aJPaJ6ibjAyeXUY+tVVaGQW8mjivQ4W7hlB9e9rInNU
+ Y72sHGqTIvtbkKtvHv79hw/P+FH6825LM2W2+7PuXVuC5N2k0liP8M3CtJJyoSFlhJMUuhgCJ7
+ fTHrqrJl+sidUbL+jDuH8KfUFz02/ue0UHN3yajt0hJNKW7DD40ohrLpGsjzcwcW3YSdym1qba
+ nuo=
+X-IronPort-AV: E=Sophos;i="5.72,406,1580745600"; 
+   d="scan'208";a="140042628"
+Received: from mail-co1nam11lp2174.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.174])
+  by ob1.hgst.iphmx.com with ESMTP; 20 Apr 2020 14:55:16 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EDgNdKq10Alv7EDXFm9ZRsOdMy2T4DDRSZSvvO7cyI4u07lS/yyrdijPCHAYlHCPYgr4hi5Dcgi3JtRHA6gn47gDmvWa0doQPdEcZXQU9C7gv+zf4eG03rdoSlq7P8WtMj8GFjJwijRERLgFSk04UBi/R04xovDrX+HPOEfZ3xJTnAMjczTRDSkI9neKISnuJiA+j8+Q+4PWRPU3nJGN+n0aH3svtcOYjmneCaBejD4HBikkVPU/lRlWLgljvIfBpccNnYQykVTqlAZ4nmjdEuL7HHHXNTji3mSPqqRHPSrAYhHlIPykm9gQl3Jk8HmwHjU2Mh0Kbq0TL+/nzs6how==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8Zt3QVUcyB1nrYZUv4BLWy8FGBq+iMg8ScYQuxJgQyU=;
+ b=SZ+gpADZB/rfjJv0d0Cn3TKEtb1NGUI7ReeD+8hfwLc+FljhhFsAaqMdvjchgZKwXOcbVdTu/ylpuNzgMnsGcUZpS8jd4XNvCA7geqhD0pXyTeDI4Rkpg5IANI5LAxFDnAdIaLNXsdq+OrCQr45I7JKg2hq6h5fBzfTtws3KjgQLGnv0/3X/GRgQGB7Y7A9NpycFxW7/sbFF46StswjKO1sraA7C6/x/+JmB9MogUxftJS4NI3pNDS4bCiOPNG18KslA7aQCxMK+4KMCf80yTnHiKmOJdG+REkf41yi+JPsrjOPcyDmS9UDqkryAb5H1+NAkLniQQyX1DnkVTZy0xA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=WqzonlfyvwL3GiTnet9R+LA4ymwNNLykP6f8pKxh1d8=;
-        b=WUiMvZ9dgOyXwv7yKqLM8tH4tCbXkdcAxhJZM+P6e0PfaLVANEhtMjo3834qVFIUwt
-         yDu8fT49146q1shwriBVKXa34WYhkJhpCIrWZsWWNqd7VKBNWkR+Fp1ARLcxHnJ936wy
-         z1pVtFhhe4N3N6t5I595kryBy1QgpwOhi073aZ0dd7S5vGZKrpFYJkp6RJogLVp1mvSB
-         oz8pvwM6wdFkoqp5TqgBlOC4eOx5LRwZtJ3lPZcFkqnk8arjZXjdttQQucKwQOUzRgPh
-         joqDlBuQX5FWZbBWvF++vuTngk8yw7ygzIvGgvfwZasBb2XxB2/8nEIDcQK4umw+4HcS
-         SLfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WqzonlfyvwL3GiTnet9R+LA4ymwNNLykP6f8pKxh1d8=;
-        b=XVctrs6KUDzsDrot03oI5RnAplor9T24pYYjVnlMzpdoVqp9IBXOuWU3l6VS73c75D
-         6nddl9Zluq0KKzB1dOgHUmslIVeegPhfHtxHRj29XAu2ZZFnGuGUBMJCAUOeelEGomto
-         2iyEqHv9i5ewAcjLBBOjGtOfmEWuj6fw8pPVGiyBqkKfV1G8zwkklcznNPtAa73wdVPK
-         dUR5J3uyCYCWCp5ndQi8q1238HnYDRe8NPdDL9T5Msz1ks9wI+JsPHw2UhULQGJcALCA
-         qUiJ8JOhC0wvGyrP31XbeU/k287lDVFNxUVjKuDv8sidzodN6JizZTf1TQUfeaULHLWW
-         4HhQ==
-X-Gm-Message-State: AGi0PuZKO9r320lOuzkdQhPY3FACtlzwSPODcZdBwAkugOkmSOu3da/e
-        4MlE3QGdC/cArrxmBV8Hii7naQ==
-X-Google-Smtp-Source: APiQypLMoYJXtPNOLATIch8erHrs+HZv8MVXnC8Q1YwevfvLvkIMBOTdJw+OLb6sgFIBJeYUhRc/BQ==
-X-Received: by 2002:a62:fc02:: with SMTP id e2mr15362600pfh.195.1587365367935;
-        Sun, 19 Apr 2020 23:49:27 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x12sm110012pfq.209.2020.04.19.23.49.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 23:49:27 -0700 (PDT)
-Date:   Sun, 19 Apr 2020 23:49:50 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>, od@zcrc.me,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 3/5] remoteproc: Add support for runtime PM
-Message-ID: <20200420064950.GC1868936@builder.lan>
-References: <20200417170040.174319-1-paul@crapouillou.net>
- <20200417170040.174319-3-paul@crapouillou.net>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8Zt3QVUcyB1nrYZUv4BLWy8FGBq+iMg8ScYQuxJgQyU=;
+ b=s3/Qrro0MHlVyhzP3Rls6kmIAJTkU81zpeUzYji7yt8PVqIDBDpBoILXCBx4Re8BpCPXEyEwKygbG6VOFEVBOYpbgxL4r0xa26KFymtiEXMuT2uAO8/46q02YYyfI9534lN9YCh12l4XFvm5B9IhhZx3gl3f9Es2eMlEF/ok4ZM=
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
+ by SN6PR04MB4926.namprd04.prod.outlook.com (2603:10b6:805:95::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Mon, 20 Apr
+ 2020 06:55:14 +0000
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::3877:5e49:6cdd:c8b]) by SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::3877:5e49:6cdd:c8b%5]) with mapi id 15.20.2921.027; Mon, 20 Apr 2020
+ 06:55:14 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Alim Akhtar <alim.akhtar@samsung.com>,
+        "robh@kernel.org" <robh@kernel.org>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "kwmad.kim@samsung.com" <kwmad.kim@samsung.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v6 01/10] scsi: ufs: add quirk to fix mishandling
+ utrlclr/utmrlclr
+Thread-Topic: [PATCH v6 01/10] scsi: ufs: add quirk to fix mishandling
+ utrlclr/utmrlclr
+Thread-Index: AQHWFONzkBNCSjfmx0i9of86j86lQqiBlzoQ
+Date:   Mon, 20 Apr 2020 06:55:14 +0000
+Message-ID: <SN6PR04MB46405C636408D7676494828BFCD40@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <20200417175944.47189-1-alim.akhtar@samsung.com>
+        <CGME20200417181008epcas5p460840c01c2c09ce1a69e83005b4bddbe@epcas5p4.samsung.com>
+ <20200417175944.47189-2-alim.akhtar@samsung.com>
+In-Reply-To: <20200417175944.47189-2-alim.akhtar@samsung.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b6b97a8d-acd3-4a9a-0005-08d7e4f7c747
+x-ms-traffictypediagnostic: SN6PR04MB4926:
+x-microsoft-antispam-prvs: <SN6PR04MB492612391B1A7BCB43944BBFFCD40@SN6PR04MB4926.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:2331;
+x-forefront-prvs: 03793408BA
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(346002)(376002)(366004)(396003)(39860400002)(136003)(66946007)(8936002)(8676002)(7696005)(26005)(478600001)(81156014)(66446008)(186003)(76116006)(6506007)(64756008)(66556008)(66476007)(5660300002)(7416002)(52536014)(110136005)(55016002)(33656002)(71200400001)(9686003)(54906003)(2906002)(558084003)(316002)(4326008)(86362001);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: OFWSgXNNPA4/22aPd0rwXtGST5Xm2jutJvP9bCNCtlX0QVKCFuehbSu+d6/kDFfeT/zTFCdQMbs98JhPhkEqDuhou2iktkgbK/GEsVA30GJ10E+af5kKW0N+hwaiHhqyUlhVRjuYn4Dv+M9dmnG03veRh8rr2BooxZLsphgtotbdqzyCYgCy5NSjqOGYTkww4dX0cWpnuFT3CgcBIoNOKWqJp2tIKjg8+p+hoNOG+A8ljROPDd6fygmkYtD4G+y9sYm/oUD5YsMin5COmo2gBrdXfYck4kzhhUugO6WUcB5NURg5dUKiwYnb7ySNwiHk6TrQyfftOMaPNEkhN+yLhp4r9Sbzc3ShoqFPrwlwg+YW9LwdvE3xyfiT5sSzS8ukCjaK5k3VkcQAeauXobwm3dxLyxyXblkkkRlMVlDZZ14F8CUrqci/+hXFw9P4cl8Y
+x-ms-exchange-antispam-messagedata: whGFFmHOH0QhsHq4H4lMzcVlioYlpNWXiTH0DqVuVPqhBLeBu9mo+/Yp2vk4Wg9Ctq2f5jTfhEXanWdtgL4KzAACj5O9Ewg5XaAJMV8YmaHTaAsnjxs+hk6/TKCTh4n+o+8N7IqN4QEzbffLKqs4kg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417170040.174319-3-paul@crapouillou.net>
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6b97a8d-acd3-4a9a-0005-08d7e4f7c747
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2020 06:55:14.6109
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: FJfnP3GNrC4JYfYK011Rs1KlgfKuWbb1W2OEJMlNHAPnz1d6S+SH1Lxo/LH5YE11B/wZK/N/ruRtT2KFIVPHSQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4926
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri 17 Apr 10:00 PDT 2020, Paul Cercueil wrote:
-
-> Call pm_runtime_get_sync() before the firmware is loaded, and
-> pm_runtime_put() after the remote processor has been stopped.
-> 
-> Even though the remoteproc device has no PM callbacks, this allows the
-> parent device's PM callbacks to be properly called.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> 
-> Notes:
->     v2-v4: No change
->     v5: Move calls to prepare/unprepare to rproc_fw_boot/rproc_shutdown
->     v6: Instead of prepare/unprepare callbacks, use PM runtime callbacks
-> 
->  drivers/remoteproc/remoteproc_core.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index a7f96bc98406..d391b054efd8 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -29,6 +29,7 @@
->  #include <linux/devcoredump.h>
->  #include <linux/rculist.h>
->  #include <linux/remoteproc.h>
-> +#include <linux/pm_runtime.h>
->  #include <linux/iommu.h>
->  #include <linux/idr.h>
->  #include <linux/elf.h>
-> @@ -1384,6 +1385,8 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
->  
->  	dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
->  
-> +	pm_runtime_get_sync(dev);
-
-This can return an error, should we ignore this?
-
-Apart from that this looks good.
-
-Regards,
-Bjorn
-
-> +
->  	/*
->  	 * if enabling an IOMMU isn't relevant for this rproc, this is
->  	 * just a nop
-> @@ -1391,7 +1394,7 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
->  	ret = rproc_enable_iommu(rproc);
->  	if (ret) {
->  		dev_err(dev, "can't enable iommu: %d\n", ret);
-> -		return ret;
-> +		goto put_pm_runtime;
->  	}
->  
->  	rproc->bootaddr = rproc_get_boot_addr(rproc, fw);
-> @@ -1435,6 +1438,8 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
->  	rproc->table_ptr = NULL;
->  disable_iommu:
->  	rproc_disable_iommu(rproc);
-> +put_pm_runtime:
-> +	pm_runtime_put(dev);
->  	return ret;
->  }
->  
-> @@ -1840,6 +1845,8 @@ void rproc_shutdown(struct rproc *rproc)
->  
->  	rproc_disable_iommu(rproc);
->  
-> +	pm_runtime_put(dev);
-> +
->  	/* Free the copy of the resource table */
->  	kfree(rproc->cached_table);
->  	rproc->cached_table = NULL;
-> @@ -2118,6 +2125,9 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
->  
->  	rproc->state = RPROC_OFFLINE;
->  
-> +	pm_runtime_no_callbacks(&rproc->dev);
-> +	pm_runtime_enable(&rproc->dev);
-> +
->  	return rproc;
->  }
->  EXPORT_SYMBOL(rproc_alloc);
-> @@ -2133,6 +2143,7 @@ EXPORT_SYMBOL(rproc_alloc);
->   */
->  void rproc_free(struct rproc *rproc)
->  {
-> +	pm_runtime_disable(&rproc->dev);
->  	put_device(&rproc->dev);
->  }
->  EXPORT_SYMBOL(rproc_free);
-> -- 
-> 2.25.1
-> 
+PiANCj4gSW4gdGhlIHJpZ2h0IGJlaGF2aW9yLCBzZXR0aW5nIHRoZSBiaXQgdG8gJzAnIGluZGlj
+YXRlcyBjbGVhciBhbmQgJzEnDQo+IGluZGljYXRlcyBubyBjaGFuZ2UuIElmIGhvc3QgY29udHJv
+bGxlciBoYW5kbGVzIHRoaXMgdGhlIG90aGVyIHdheSwNCj4gVUZTSENJX1FVSVJLX0JST0tFTl9S
+RVFfTElTVF9DTFIgY2FuIGJlIHVzZWQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBTZXVuZ3dvbiBK
+ZW9uIDxlc3N1dWpAZ21haWwuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBBbGltIEFraHRhciA8YWxp
+bS5ha2h0YXJAc2Ftc3VuZy5jb20+DQpSZXZpZXdlZC1ieTogQXZyaSBBbHRtYW4gPGF2cmkuYWx0
+bWFuQHdkYy5jb20+DQoNCg==
