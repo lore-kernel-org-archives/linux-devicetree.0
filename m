@@ -2,93 +2,91 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37252C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 21:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B28CC55183
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 21:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03E9C20BED
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 21:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FC052084D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 21:55:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587419757;
+	bh=kkxLaqrl/6cWfSDOWzUOUYNLiePShm6BNfGrHZJ42mM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JkruzfggrpNz/IKsJIoCW66Ca7uBWKWKnQ/OURH/1Tv43GwgWCvlV5KJOAygK2rkG
+	 ORArzxzmIx+66i2OXIxpmzdVfj44djIdkHZibbRpGmP3qr0Uc/snLFEbdoQ+Sc9Tw+
+	 yOX9dTZz9be4MoB0jIgxWgcOD/JdesFVkt9GPuuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbgDTVzw (ORCPT
+        id S1726947AbgDTVz4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:55:52 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:37660 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgDTVzw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 17:55:52 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 3791A1C01E0; Mon, 20 Apr 2020 23:55:50 +0200 (CEST)
-Date:   Mon, 20 Apr 2020 23:55:49 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Johan Hovold <johan@kernel.org>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH 1/4] tty: n_gsm: Add support for serdev drivers
-Message-ID: <20200420215549.GA17489@amd>
-References: <20200319173755.65082-1-tony@atomide.com>
- <20200319173755.65082-2-tony@atomide.com>
+        Mon, 20 Apr 2020 17:55:56 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41243 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgDTVzz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 17:55:55 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c3so9519559otp.8;
+        Mon, 20 Apr 2020 14:55:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iCw71v93X288tPDb+ouK6ph9U/I5qrL2nm2iv5gfjUo=;
+        b=hzkNzBfTKfooMECjldUR19GdOvrj9ws2yeEdoE3JcYUn5GPrGlV3ZCwbnV3zZ/g/sb
+         WrC/+w9EGQMEy3ZL7P3YOLy5yhXVRlHYLPx15aY1jR0Qr3Z10u3pQgHbidzfmiZBsshB
+         1eMZGs9pHesZL5wKPFnFPi2341euYsCblJ6o0u6Y0NKbyc+sbARlXitxJ9DjMaC3b5Sp
+         qMOczzJgbQvx0HZx1Q1lPiZu9G9iurRRFvBBu+G+iF0cD6GVosbklK2jUHePzMZYGJ/f
+         erkYR+2xsIH8KAVqPj3gdkE81WmiYpoU/S8B5aL2zar0tmqe9sNb81UD20MeN1lTFxgi
+         wB4w==
+X-Gm-Message-State: AGi0PubM2YyfpW5ip7BLLJsxQ3F6yp/gnR835/uZx5kiN4kN8uQz1ohU
+        UkSChCRYrVSOmIvIU6pLEn4vo2U=
+X-Google-Smtp-Source: APiQypJ2UbkICoX7+yXMjbxjcdQP7ntZI5u01giYlSzLCtyuo2QmFFLftwRDKn7Lr2RxloPjBms4KA==
+X-Received: by 2002:a05:6830:2439:: with SMTP id k25mr1339863ots.76.1587419754478;
+        Mon, 20 Apr 2020 14:55:54 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h64sm192630oia.11.2020.04.20.14.55.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 14:55:53 -0700 (PDT)
+Received: (nullmailer pid 32546 invoked by uid 1000);
+        Mon, 20 Apr 2020 21:55:52 -0000
+Date:   Mon, 20 Apr 2020 16:55:52 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 2/2] dt-bindings: soc: qcom: apr: Use generic node names
+ for APR services
+Message-ID: <20200420215552.GA32508@bogus>
+References: <20200415081159.1098-1-stephan@gerhold.net>
+ <20200415081159.1098-2-stephan@gerhold.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="0OAP2g/MAC+5xKAE"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200319173755.65082-2-tony@atomide.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200415081159.1098-2-stephan@gerhold.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, 15 Apr 2020 10:11:59 +0200, Stephan Gerhold wrote:
+> Device nodes should be named according to the class of devices
+> they belong to. Change the suggested names of the subnodes to
+> apr-service@<id>, which is already in use in
+> arch/arm64/boot/dts/qcom/sdm845.dtsi.
+> 
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> ---
+>  .../devicetree/bindings/soc/qcom/qcom,apr.txt | 20 +++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+> 
 
---0OAP2g/MAC+5xKAE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu 2020-03-19 10:37:52, Tony Lindgren wrote:
-> We can make use of serdev drivers to do simple device drivers for
-> TS 27.010 chanels, and we can handle vendor specific protocols on top
-> of TS 27.010 with serdev drivers.
->=20
-> So far this has been tested with Motorola droid4 where there is a custom
-> packet numbering protocol on top of TS 27.010 for the MDM6600 modem.
->=20
-> I initially though about adding the serdev support into a separate file,
-> but that will take some refactoring of n_gsm.c. And I'd like to have
-> things working first. Then later on we might want to consider splitting
-> n_gsm.c into three pieces for core, tty and serdev parts. And then maybe
-> the serdev related parts can be just moved to live under something like
-> drivers/tty/serdev/protocol/ngsm.c.
->=20
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-
-Reviewed-by: Pavel Machek <pavel@ucw.cz>
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---0OAP2g/MAC+5xKAE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl6eGmUACgkQMOfwapXb+vI6UwCeOiesuDEAJqWZbPTVhRwfOzwM
-0S8AniLQF8CFJCXqxN/2fqNtVdIRhypC
-=yKMK
------END PGP SIGNATURE-----
-
---0OAP2g/MAC+5xKAE--
+Reviewed-by: Rob Herring <robh@kernel.org>
