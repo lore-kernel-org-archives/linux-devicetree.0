@@ -2,149 +2,121 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B64C38A30
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5153AC3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A9E62071C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:10:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CF9oVWum"
+	by mail.kernel.org (Postfix) with ESMTP id 36B0220BED
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:15:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgDTSKj (ORCPT
+        id S1726067AbgDTSPW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:10:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726532AbgDTSKj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 14:10:39 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34F09C061A0C;
-        Mon, 20 Apr 2020 11:10:39 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id l3so5216018edq.13;
-        Mon, 20 Apr 2020 11:10:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OsEsVqFYdMSb7DvTNoLz36ojWhYP2bDeJgp2Rpv0Krk=;
-        b=CF9oVWum7P6oGqf/+o/Kfq8ccqpl/kqXKpD5Ov3s0d6NsvfIEGAmcv8qfwxjZn0zVg
-         ynvyXJBYZxaE6qa+9ImjKr17D04XIQPPy4Yhi0GtZvMcehBwVgh+am27oicRuZZBy69Y
-         0UE2jBqxbyKVjh3oWwFNvRqjhQiKr57pzRmKNO0fRLYyr1LtdquWn2zwQmk8e/fSC77+
-         DzC+16bcYwTLYolDPEl7ov14N67ELp26piJ8A+kX6zrkQsOK4pZJ4AzYDK0l+vPUoZ9R
-         vBNELc1LN+uOG3lJ4pojJI9EQbhO4dPXVorQBY3l7vszpjDGMIh9CeoZLnM5l5pUSdNU
-         Af9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OsEsVqFYdMSb7DvTNoLz36ojWhYP2bDeJgp2Rpv0Krk=;
-        b=n8q3eGWDsdxfa1oV7caEywVrmSGEoTzXroxa442+neiF8KVBOCOifLwLkDqB80mw0W
-         pkz7ZspJim46/gEoYE9fhz06e8wKLheG7QGVjRBkYABgaMaHGgc+dhms+itJ50ePiupk
-         XDW7cGwISEQHu7UDjzqS2zQlQpawrR5Y7ZSGM3BzksaOF7XZ20hT05W07Pdxm0nF6aKZ
-         Z2vyxodsHb6DwZZv9l017CtKfJhdRwIGJrHeeV2KfPEJBCX4dhcloBebnhB3jyb+8C4X
-         oKOLJ334LdI3SIelBPeTDPPzgcq5N++nTjvlJzg9/1rZ0zC+L7hCzT0eSPXL8ww1MBDC
-         Y1mg==
-X-Gm-Message-State: AGi0PuZnpm7Oi9KAepyRh8Ddsvb6+1XxOZvuFnWxCqJmH6TReymGFKlW
-        gz2UQ0BJ1JjsM+TxXng0ydE2VpuEet/WyWvt1HA=
-X-Google-Smtp-Source: APiQypKh8INZWiu0vYAwkyTSSdFKBGinZbwNyt+jZO5Euhz9Y9RwZQSR5ngPH+538R2KWSEW23JML9DVlLKeSSsbzMs=
-X-Received: by 2002:a50:9ea1:: with SMTP id a30mr16192872edf.318.1587406237905;
- Mon, 20 Apr 2020 11:10:37 -0700 (PDT)
+        Mon, 20 Apr 2020 14:15:22 -0400
+Received: from mga11.intel.com ([192.55.52.93]:24125 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725891AbgDTSPW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Apr 2020 14:15:22 -0400
+IronPort-SDR: veVE+vdBnwufb+p6R7TQvMejQbVC4DT6CRqiNEU/FduGh0PJ5xok/dzYFop3/nu9ARfOcx2z74
+ HDZoR7wXw62w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 11:15:21 -0700
+IronPort-SDR: 8fT09weErfTNfN3mfjnYSebk8Nn+HR58tGa0lnQIUlEHvLqz6923WibZ88j62ipIrGurCIktai
+ 4d4uQqkvArDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,407,1580803200"; 
+   d="scan'208";a="246960869"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga008.fm.intel.com with ESMTP; 20 Apr 2020 11:15:21 -0700
+Date:   Mon, 20 Apr 2020 11:14:37 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        christian.koenig@amd.com, zhangfei.gao@linaro.org,
+        xuzaibo@huawei.com, "Raj, Ashok" <ashok.raj@intel.com>
+Subject: Re: [PATCH v5 02/25] iommu/sva: Manage process address spaces
+Message-ID: <20200420181437.GA229170@romley-ivt3.sc.intel.com>
+References: <20200414170252.714402-1-jean-philippe@linaro.org>
+ <20200414170252.714402-3-jean-philippe@linaro.org>
+ <20200416072852.GA32000@infradead.org>
+ <20200416085402.GB1286150@myrica>
+ <20200416121331.GA18661@infradead.org>
+ <20200420074213.GA3180232@myrica>
+ <20200420135727.GO26002@ziepe.ca>
+ <20200420104850.60531cb6@jacob-builder>
 MIME-Version: 1.0
-References: <20200318001603.9650-1-olteanv@gmail.com> <20200318001603.9650-13-olteanv@gmail.com>
- <CAMuHMdUDYWNOOrAXrq1Lf5_GD84Z1rr4Co5buZS-GnJvGyN5yA@mail.gmail.com>
-In-Reply-To: <CAMuHMdUDYWNOOrAXrq1Lf5_GD84Z1rr4Co5buZS-GnJvGyN5yA@mail.gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 20 Apr 2020 21:10:27 +0300
-Message-ID: <CA+h21hpHeL08Gb36m1RNrE6agebZu7ygz9jFekOH7zGc9uLcSQ@mail.gmail.com>
-Subject: Re: [PATCH v5 12/12] arm64: dts: ls1028a-rdb: Add a spidev node for
- the mikroBUS
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Esben Haabendal <eha@deif.com>,
-        Angelo Dureghello <angelo@sysam.it>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
-        Michael Walle <michael@walle.cc>, peng.ma@nxp.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420104850.60531cb6@jacob-builder>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
+On Mon, Apr 20, 2020 at 10:48:50AM -0700, Jacob Pan wrote:
+> On Mon, 20 Apr 2020 10:57:27 -0300
+> Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> 
+> > On Mon, Apr 20, 2020 at 09:42:13AM +0200, Jean-Philippe Brucker wrote:
+> > > On Thu, Apr 16, 2020 at 05:13:31AM -0700, Christoph Hellwig wrote:  
+> > > > On Thu, Apr 16, 2020 at 10:54:02AM +0200, Jean-Philippe Brucker
+> > > > wrote:  
+> > > > > On Thu, Apr 16, 2020 at 12:28:52AM -0700, Christoph Hellwig
+> > > > > wrote:  
+> > > > > > > +	rcu_read_lock();
+> > > > > > > +	hlist_for_each_entry_rcu(bond, &io_mm->devices,
+> > > > > > > mm_node)
+> > > > > > > +		io_mm->ops->invalidate(bond->sva.dev,
+> > > > > > > io_mm->pasid, io_mm->ctx,
+> > > > > > > +				       start, end - start);
+> > > > > > > +	rcu_read_unlock();
+> > > > > > > +}  
+> > > > > > 
+> > > > > > What is the reason that the devices don't register their own
+> > > > > > notifiers? This kinds of multiplexing is always rather messy,
+> > > > > > and you do it for all the methods.  
+> > > > > 
+> > > > > This sends TLB and ATC invalidations through the IOMMU, it
+> > > > > doesn't go through device drivers  
+> > > > 
+> > > > I don't think we mean the same thing, probably because of my
+> > > > rather imprecise use of the word device.
+> > > > 
+> > > > What I mean is that the mmu_notifier should not be embedded into
+> > > > the io_mm structure (whch btw, seems to have a way to generic
+> > > > name, just like all other io_* prefixed names), but instead into
+> > > > the iommu_bond structure.  That avoid the whole multiplexing
+> > > > layer.  
+> > > 
+> > > Right, I can see the appeal. I still like having a single mmu
+> > > notifier per mm because it ensures we allocate a single PASID per
+> > > mm (as required by x86). I suppose one alternative is to maintain a
+> > > hashtable of mm->pasid, to avoid iterating over all bonds during
+> > > allocation.  
+> > 
+> > I've been getting rid of hash tables like this.. Adding it to the
+> > mm_struct does seem reasonable, I think PASID is a pretty broad
+> > concept now.
+> > 
+> Agreed, perhaps Fenghua can consider that in his patchset. It would
+> help align life cycles as well.
+> https://lkml.org/lkml/2020/3/30/910>
 
-On Mon, 20 Apr 2020 at 21:07, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Vladimir,
->
-> On Wed, Mar 18, 2020 at 1:17 AM Vladimir Oltean <olteanv@gmail.com> wrote:
-> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> >
-> > For debugging, it is useful to have access to the DSPI controller
-> > signals. On the reference design board, these are exported to either the
-> > mikroBUS1 or mikroBUS2 connector (according to the CPLD register
-> > BRDCFG3[SPI3]).
-> >
-> > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
->
-> Thanks for your patch!
->
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> > @@ -83,6 +83,20 @@
-> >         };
-> >  };
-> >
-> > +&dspi2 {
-> > +       bus-num = <2>;
-> > +       status = "okay";
-> > +
-> > +       /* mikroBUS1 */
-> > +       spidev@0 {
->
-> Please use generic node names, e.g. "dac@0".
->
+Seems we depend on each other: my patch defines pasid in mm_struct.
+I can free PASID in your detach() function.
 
-It's not a DAC. It's really an unpopulated pin header. I would have
-really liked to have access to that as a char device with the default
-board DTS, via spidev. That being said, there are warnings to not use
-the "spidev" compatible in device trees. So if what I want is not
-possible, I'd rather drop the patch altogether.
+Thanks.
 
-> > +               compatible = "rohm,dh2228fv";
-> > +               spi-max-frequency = <20000000>;
-> > +               fsl,spi-cs-sck-delay = <100>;
-> > +               fsl,spi-sck-cs-delay = <100>;
-> > +               reg = <0>;
-> > +       };
-> > +};
-> > +
-> >  &esdhc {
-> >         sd-uhs-sdr104;
-> >         sd-uhs-sdr50;
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-
-Thanks,
--Vladimir
+-Fenghua
