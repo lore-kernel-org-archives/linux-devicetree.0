@@ -2,131 +2,97 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1D1C3A5A0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 09:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8E2C54FCC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 09:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAD6320A8B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 09:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F26A20A8B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 09:32:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r9YVCeWj"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="d+DuWXGM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725886AbgDTJbh (ORCPT
+        id S1725994AbgDTJcP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 05:31:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725775AbgDTJbh (ORCPT
+        Mon, 20 Apr 2020 05:32:15 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17866 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725775AbgDTJcO (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 05:31:37 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C8F4C061A0C
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 02:31:36 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id n2so5030625ybg.4
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 02:31:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=QB5gJS0qiE6PU95ShLISgx4JjOeBA/gJe4w+VjEzZ+o=;
-        b=r9YVCeWjT4PHscN7NcgAmiDKTphieHhO7kNM9SFO8rnJ5suS/zV49Vk1q/sxRhCFE2
-         QRGEp8OHwzR0hoZVh7QAoZYJ3kI4DJvITfla+OuT3W+sFGEUFxI8HClojzgtzQLGVX5B
-         VVkbgOWMcN9RW1LgsKPkqtdDobJNhK2WroghvNZgJUiHS3vfx3nQApTH07jQnW2/8KI/
-         hsw7SvJxlIlT+lZNbEG1Akt8Na4WKu/gcIhKX+poqk0bv/GNVuRoeCbcjkYQRC+4w7N3
-         qgigmfZSxEnH7J5rj1qGJC8aey7Oalz5CPms33ykgPWfI2kJkqnRaAEaM+SRbK3Lnwaa
-         tx0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=QB5gJS0qiE6PU95ShLISgx4JjOeBA/gJe4w+VjEzZ+o=;
-        b=PrV0tX5xXxyte+6BZob0zB8uGNiI92BQSh2+RrBZiMJbEGZg1n9s0VdZnFlrp4utwu
-         Wv6krrElwi0pcdYqYVhCB3oVCgDuoXKAxQEoZXxjfebifeaCGHk+kbTAbiMe2VJNMaCN
-         hA+RTft0huV30eS2bPXlizozBqHAXuSjTJyeG5169WaKbClqoi1H69DRt/y+Qt9Vhsu+
-         NUuXcBrXHSpI06sYFNH8AjstXijfdRuoJvjIFCewFmHLZs+s4JsnCX3sZOmZND+dDEDW
-         73PkXw8XfCWzSnWVWYPp4qT83+5DlLlUXU2++9yzaF22WmLJ/0EO2Odu2NClPA5AXyZq
-         yrgQ==
-X-Gm-Message-State: AGi0PuY5Wb3B7ArZOjkzTKivoVyhWJdniQCYCm2MaBfpMe5n9Act/NAg
-        79kifldIvpPLlAoP3Oi1+3hRSLdrYC9yufCsiUnj5w==
-X-Google-Smtp-Source: APiQypJ2/hJHIq11rXAe5vfJdZqTOYJHD/wWZba5U9CMmbXXTsuxYhh0EYNQt1f1r3BHUvwyNK8vaNjgtHItTBbO32I=
-X-Received: by 2002:a25:9cc3:: with SMTP id z3mr18364664ybo.234.1587375095530;
- Mon, 20 Apr 2020 02:31:35 -0700 (PDT)
+        Mon, 20 Apr 2020 05:32:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1587375114; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=WwfkyFbcuXnFIazV/b/xCYn+RCxqzjkdrFPhj3trVx5QZLQfTgIgehU2EAdRQB2gRJtkjvd7XQwfF/8r6ihwtE2/hZvTYetzdENWO9MJzHubTiCdy/DfKvQw3AGJfKAWZPEQtUBs2n/kVFHkhnk77z47NbR6z4+4Z774zv304F4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1587375114; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
+        bh=YWokOhjuoZJKbniCXhiZb2T0HCc4vugSkhCjBeD1p6M=; 
+        b=XlKsNGl86xQB1J1JLN3M564gAhsNgoPRi1BEAoKrYjjiSp8TyEZ8rkT6dL1GgQ2+W58ZQWPGZWkXkLqjkbtwp0b4lYk6jB19vaOcUtaDixkUIxSgQu76J5OgqS5EwsftgSHGbP9cZsFqpEJnBpqbO4J0NW75i5HDoOaEsk3njVo=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1587375114;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=YWokOhjuoZJKbniCXhiZb2T0HCc4vugSkhCjBeD1p6M=;
+        b=d+DuWXGMpg3iToKjczmPbUL5Q9L9a+f4ZfNK/k3pD27VNs1Arucf5MNzFzbVujal
+        k65yj4QlWG0kcIJNqYMeitByF5QOHF/5ZZkRigkxYI1AHik6SiMZ7zExzn0eGqXUb5p
+        9Y0dnk23KN2c8leB2DacSCLO5wFCSwRx3IiSLp1I=
+Received: from [127.0.0.1] (115.205.241.167 [115.205.241.167]) by mx.zoho.com.cn
+        with SMTPS id 1587375111104526.5026860230735; Mon, 20 Apr 2020 17:31:51 +0800 (CST)
+Date:   Mon, 20 Apr 2020 17:31:49 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     linux-mips@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND 0/5] Loongson64: RS780E clean-ups
+User-Agent: K-9 Mail for Android
+Reply-to: jiaxun.yang@flygoat.com
+In-Reply-To: <20200420090726.GA9388@alpha.franken.de>
+References: <20200420073347.157230-1-jiaxun.yang@flygoat.com> <20200420090726.GA9388@alpha.franken.de>
+Message-ID: <3C79E5D5-594D-4139-88CE-050BBD9C6D88@flygoat.com>
 MIME-Version: 1.0
-References: <158735030084.17831.6159788305648251972.stgit@localhost>
- <20200420121403.aff9fb209ee0da7f20ed3ae2@linaro.org> <CAK7LNAT9y2A-dX2Z-2pAsbRvKReoypmoP0hdbWiCGR0G8CuK0w@mail.gmail.com>
-In-Reply-To: <CAK7LNAT9y2A-dX2Z-2pAsbRvKReoypmoP0hdbWiCGR0G8CuK0w@mail.gmail.com>
-From:   Masami Hiramatsu <masami.hiramatsu@linaro.org>
-Date:   Mon, 20 Apr 2020 18:31:24 +0900
-Message-ID: <CAA93ih3X46k7F0Mzv=-H0RRAVMemXmHFDc+trAKn2c1tLOQNHA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: arm: Add Akebi96 board support
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Yamada-san,
 
-2020=E5=B9=B44=E6=9C=8820=E6=97=A5(=E6=9C=88) 18:26 Masahiro Yamada <masahi=
-roy@kernel.org>:
->
-> On Mon, Apr 20, 2020 at 12:14 PM Linaro <masami.hiramatsu@linaro.org> wro=
-te:
-> >
-> > Add uniphier-ld20-akebi96 compatible string for
-> > Akebi96 board support.
-> >
-> > Signed-off-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
-> > ---
-> >  .../bindings/arm/socionext/uniphier.yaml           |    1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/socionext/uniphier.y=
-aml b/Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
-> > index 113f93b9ae55..6caf1f9be390 100644
-> > --- a/Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
-> > @@ -51,6 +51,7 @@ properties:
-> >        - description: LD20 SoC boards
-> >          items:
-> >            - enum:
-> > +              - socionext,uniphier-ld20-akebi96
-> >                - socionext,uniphier-ld20-global
-> >                - socionext,uniphier-ld20-ref
-> >            - const: socionext,uniphier-ld20
-> >
->
-> Your patch submission is still strange.
->
-> https://patchwork.kernel.org/patch/11498025/
->
-> This patch is broken.
->
-> Please make sure it can apply to the mainline code.
 
-Ah, since it is based on the linux-nex.
-OK, I'll update it to the mainline kernel.
+=E4=BA=8E 2020=E5=B9=B44=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=885=
+:07:26, Thomas Bogendoerfer <tsbogend@alpha=2Efranken=2Ede> =E5=86=99=E5=88=
+=B0:
+>On Mon, Apr 20, 2020 at 03:33:35PM +0800, Jiaxun Yang wrote:
+>> Basically ensure all RS780E stuff is enabled by DeviceTree=2E
+>> So I can post LS7A support later on=2E
+>>=20
+>> Hi Thomas, could you please pick them into MIPS tree?
+>
+>well, first patch doesn't apply, because it relies on your PCI patch
+>series=2E I've fixed this while applying and then faced
+>
+>arch/mips/loongson64/pci=2Eo: In function `pcibios_init':
+>pci=2Ec:(=2Einit=2Etext+0x44): undefined reference to `sbx00_acpi_init'
+>
+>IMHO there is something to improve=2E=2E=2E
+
+Oops, sorry=2E
+It should depends on PCI series=2E
+
+I'll send v2 without this requirement soon=2E
+
+Thanks=2E
 
 >
+>Thomas=2E
 >
-> The author files is also odd:
-> From: Linaro <masami.hiramatsu@linaro.org>
-
-Oops, sorry, it was my mis-configure of MUA... OK, fixed it.
-
-Thank you!
 
 --=20
-Masami Hiramatsu
+Jiaxun Yang
