@@ -4,200 +4,339 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA59C3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70568C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 421AD2080C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 508FA2084D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587407853;
-	bh=P5EmJJIN273/S0FNhUmo8XteOF2pmXcFoG774fIUD1I=;
+	s=default; t=1587408194;
+	bh=cznWbjKyzN26vZgPZd5mjitB0qhqNuOK9D3NfN/d3hQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NxbRJDmkzig2nT89Waqw4W3Cvlu6QB7t9/+YWUW5/ozh1RHJlfrSIFag8sGc8m0HB
-	 zT1Cx2PtxWzNksqhJMhhVdYnnJnsJb3rDKmnjBdJH+aWOqdWTLQ8mY0dNh5hOU815F
-	 Zu8AUmavSnbB4nH6KKTkweTdv0b4rPcvVNKQEZDI=
+	b=aWcxjNRKV/MI2U2wAH0084k5Xr6SdGbYs2cAH/QQhRP1ojJrbzCFhLq7sgzN9pdDG
+	 3XtqihUxUI5kWi9smDeJhAk+eOHmr/JIZEzX2JLFcvRRr6Nn5+mwY6e5Igxf/43ie7
+	 7OKwhvziPJcKSGASN0na0unT9uI+kYwBkoM+BfNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgDTSh2 (ORCPT
+        id S1726495AbgDTSnN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:37:28 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41153 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727859AbgDTSh2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 14:37:28 -0400
-Received: by mail-ot1-f67.google.com with SMTP id c3so9010561otp.8;
-        Mon, 20 Apr 2020 11:37:27 -0700 (PDT)
+        Mon, 20 Apr 2020 14:43:13 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43989 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726392AbgDTSnN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 14:43:13 -0400
+Received: by mail-oi1-f195.google.com with SMTP id j16so9707895oih.10;
+        Mon, 20 Apr 2020 11:43:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SwEht26LXsrYWXHN9AUzhB2LIZfMy4nj6PiaQR9cyys=;
-        b=j7OMx1yXolF7jI3IoToWGl1yee1T4SrQZHPsixHd8fuqyFUY6qJmzETIwv4vNWOh8+
-         WLR+gKYrBSI427r34cqNCLKcCa3udcVvDZMid9ZZkSf87qiylmYddJ96MYz77dZtceJI
-         WBNXv1QqCxkVnCMNrIuzTm4vl3pzPHwaYn4gPDGmKAa6URbKS7UNJ7qahYwHZY7clUIE
-         nxkj8tGi2V6pJ1/72VW1Z7rP1sFaCMnWvlDY/hCKZ985TMELBcskHWpRRNXg2ndAT+eD
-         XYJScwJPpLWcwn9N/m9VAED6QmWGFLm7uEt2aGVg7Pk5x+VXvn3Os83UOLs4UXZuW8sn
-         LSvA==
-X-Gm-Message-State: AGi0PuaPT6xzZto0OTPc2ru3hhY59NPmb0uGHS4iZszhaHfTeNFcb5yI
-        GC+RLw8WN7oztazmn46u8Q==
-X-Google-Smtp-Source: APiQypITmTVLmCHUT2eoWbm+5j8UVDm4ArOIAfxEx6QVgHNIjF0wocTSMcaN3A1FjSNLuRxTVjRewg==
-X-Received: by 2002:a9d:2d89:: with SMTP id g9mr10268404otb.367.1587407846953;
-        Mon, 20 Apr 2020 11:37:26 -0700 (PDT)
+        bh=Wr9z4VHkUYV0azpH3NGkoTt6PH+KjpNDUACdFjs/NiA=;
+        b=Gu6Z5Tso+EJRSfSLfc9bwUebHcB5EXrMQQGUWu5wXZvsT8NGBF0EkI8vzjXss+M22D
+         7Yo5HT9oXgjZZpznZgz1pp7TanC3g59pwOcsCnaHxy5oYlgLS5MaffT/34zabwqM8IPk
+         k+0OgWPpox6gTnAIsUOVIimIey0WNeTwBWBm0kI4DvhXCmMLjGI36Ycg0Ca9bW8k/39w
+         Bz+mf1/UawsQfJMHkGMx48OSokP6XXNHu7VdTqeQ3rhHgZsN1ufJmyb4L1d/aWqP1RbM
+         sROYszgRphjcFN58VwkpOdECt9d1PH3wAyB9BK0PCKZarbSSyQX0eyLjYnt3nE2/U9nA
+         v7kw==
+X-Gm-Message-State: AGi0PuYJcbXbGvUkQ8+RFL7WFN6z2VgYmiH1DhJiAjwtv0SYD5xH+PZw
+        XjfJoRn7O8TTTwUjxj1Esw==
+X-Google-Smtp-Source: APiQypJe7MGfPouzuOmJSJnUYSad5CodTv75XXmNZndtyFF4Gy8XOt8HUimd4fV/Vgik2rKP29RQcg==
+X-Received: by 2002:aca:cf4b:: with SMTP id f72mr580396oig.177.1587408191338;
+        Mon, 20 Apr 2020 11:43:11 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r21sm106975otg.67.2020.04.20.11.37.25
+        by smtp.gmail.com with ESMTPSA id c24sm50813oov.48.2020.04.20.11.43.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 11:37:26 -0700 (PDT)
-Received: (nullmailer pid 13827 invoked by uid 1000);
-        Mon, 20 Apr 2020 18:37:25 -0000
-Date:   Mon, 20 Apr 2020 13:37:25 -0500
+        Mon, 20 Apr 2020 11:43:10 -0700 (PDT)
+Received: (nullmailer pid 22017 invoked by uid 1000);
+        Mon, 20 Apr 2020 18:43:09 -0000
+Date:   Mon, 20 Apr 2020 13:43:09 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V2] dt-bindings: thermal: Convert i.MX8MM to json-schema
-Message-ID: <20200420183725.GA11019@bogus>
-References: <1586481044-19283-1-git-send-email-Anson.Huang@nxp.com>
+To:     Louis Kuo <louis.kuo@mediatek.com>
+Cc:     hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com,
+        tfiga@chromium.org, keiichiw@chromium.org, matthias.bgg@gmail.com,
+        mchehab@kernel.org, yuzhao@chromium.org, zwisler@chromium.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, Sean.Cheng@mediatek.com,
+        sj.huang@mediatek.com, christie.yu@mediatek.com,
+        frederic.chen@mediatek.com, Jerry-ch.Chen@mediatek.com,
+        jungo.lin@mediatek.com, linux-media@vger.kernel.org,
+        srv_heupstream@mediatek.com, devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH V6 2/3] dt-bindings: mt8183: Add sensor interface
+ dt-bindings
+Message-ID: <20200420184309.GA14720@bogus>
+References: <20200410071723.19720-1-louis.kuo@mediatek.com>
+ <20200410071723.19720-3-louis.kuo@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1586481044-19283-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20200410071723.19720-3-louis.kuo@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 09:10:44AM +0800, Anson Huang wrote:
-> Convert the i.MX8MM thermal binding to DT schema format using json-schema
+On Fri, Apr 10, 2020 at 03:17:22PM +0800, Louis Kuo wrote:
+> This patch adds the DT binding documentation for the sensor interface
+> module in Mediatek SoCs.
+
+checkpatch.pl reports some trailing WS.
+
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Louis Kuo <louis.kuo@mediatek.com>
 > ---
-> Changes since V1:
-> 	- Add description to mention that i.MX8MM thermal driver supports
-> 	  both i.MX8MM(1 sensor) and i.MX8MP(2 sensors).
-> 	- Remove ./thermal.txt reference.
-> ---
->  .../devicetree/bindings/thermal/imx8mm-thermal.txt | 15 ------
->  .../bindings/thermal/imx8mm-thermal.yaml           | 62 ++++++++++++++++++++++
->  2 files changed, 62 insertions(+), 15 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
->  create mode 100644 Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
+>  .../bindings/media/mediatek-seninf.yaml       | 219 ++++++++++++++++++
+>  1 file changed, 219 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-seninf.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
-> deleted file mode 100644
-> index 3629d3c..0000000
-> --- a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
-> +++ /dev/null
-> @@ -1,15 +0,0 @@
-> -* Thermal Monitoring Unit (TMU) on Freescale i.MX8MM SoC
-> -
-> -Required properties:
-> -- compatible : Must be "fsl,imx8mm-tmu" or "fsl,imx8mp-tmu".
-> -- reg : Address range of TMU registers.
-> -- clocks : TMU's clock source.
-> -- #thermal-sensor-cells : Should be 0 or 1. See ./thermal.txt for a description.
-> -
-> -Example:
-> -tmu: tmu@30260000 {
-> -	compatible = "fsl,imx8mm-tmu";
-> -	reg = <0x30260000 0x10000>;
-> -	clocks = <&clk IMX8MM_CLK_TMU_ROOT>;
-> -	#thermal-sensor-cells = <0>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
+> diff --git a/Documentation/devicetree/bindings/media/mediatek-seninf.yaml b/Documentation/devicetree/bindings/media/mediatek-seninf.yaml
 > new file mode 100644
-> index 0000000..71807e5
+> index 000000000000..c9e5776a2bd0
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
-> @@ -0,0 +1,62 @@
-> +# SPDX-License-Identifier: GPL-2.0
+> +++ b/Documentation/devicetree/bindings/media/mediatek-seninf.yaml
+> @@ -0,0 +1,219 @@
+> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+
+(GPL-2.0-only OR BSD-2-Clause)
+
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/thermal/imx8mm-thermal.yaml#
+> +$id: http://devicetree.org/schemas/media/mediatek-seninf.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: NXP i.MX8M Mini Thermal Binding
+> +title: Mediatek seninf MIPI-CSI2 host driver
+
+Bindings aren't drivers.
+
 > +
 > +maintainers:
-> +  - Anson Huang <Anson.Huang@nxp.com>
+> +  - Louis Kuo <louis.kuo@mediatek.com>
 > +
 > +description: |
-> +  i.MX8MM has TMU IP to allow temperature measurement, there are
-> +  currently two distinct major versions of the IP that is supported
-> +  by a single driver. The IP versions are named v1 and v2, v1 is
-> +  for i.MX8MM which has ONLY 1 sensor, v2 is for i.MX8MP which has
-> +  2 sensors.
+> +  Seninf MIPI-CSI2 host driver is a HW camera interface controller. It support
+> +  a widely adopted, simple, high-speed protocol primarily intended for
+> +  point-to-point image and video transmission between cameras and host devices.
 > +
 > +properties:
 > +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - fsl,imx8mm-tmu
-> +              - fsl,imx8mp-tmu
-
-Just:
-
-compatible:
-  enum:
-    - fsl,imx8mm-tmu
-    - fsl,imx8mp-tmu
-
+> +    const: mediatek,mt8183-seninf
+> +
 > +  reg:
-> +    description: |
-> +      Address range of TMU registers.
+> +    minItems: 2
+> +    items:
+> +      - description: The Seninf main register region
+> +      - description: The RX register region
+> +
+> +  reg-names:
+> +    minItems: 2
 
-Drop this.
+Drop, implied.
 
-> +    maxItems: 1
-
-Blank line here.
-
-> +  clocks:
-> +    description: |
-> +      TMU's clock source.
-
-Drop
-
+> +    items:
+> +      - const: base
+> +      - const: rx
+> +
+> +  interrupts:
 > +    maxItems: 1
 > +
-> +  "#thermal-sensor-cells":
-> +    description: |
-> +      Number of cells required to uniquely identify the thermal
-> +      sensors, 0 for ONLY one sensor and 1 for multiple sensors.
-> +    enum:
-> +      - 0
-> +      - 1
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: Seninf camsys clock
+> +      - description: Seninf top mux clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: clk_cam_seninf
+> +      - const: clk_top_mux_seninf
+
+Drop 'clk_' as it is redundant.
+
+> +
+> +  # See ./video-interfaces.txt for details
+> +  ports:
+> +    type: object
+> +    additionalProperties: false
+> +
+> +    properties: 
+> +      port@0:
+> +        type: object
+> +        description: connection point for sensor at port 0
+> +        additionalProperties: false
+> +
+> +        properties:
+> +          reg:
+> +            const: 0
+> +
+> +        patternProperties:
+> +          endpoint:
+> +            type: object
+> +            additionalProperties: false
+> +
+> +            properties:
+> +              data-lanes:
+> +                minItems: 1
+> +                maxItems: 4
+> +
+> +              remote-endpoint: true
+> +
+> +      port@1:
+> +        type: object
+> +        description: connection point for sensor at port 1
+> +        additionalProperties: false
+> +
+> +        properties:
+> +          reg:
+> +            const: 1
+> +
+> +        patternProperties:
+> +          endpoint:
+> +            type: object
+> +            additionalProperties: false
+> +
+> +            properties:
+> +              data-lanes:
+> +                minItems: 1
+> +                maxItems: 4
+> +
+> +              remote-endpoint: true
+> +
+> +      port@4:
+> +        type: object
+> +        description: connection point for camsys
+> +        additionalProperties: false
+> +
+> +        properties:
+> +          reg:
+> +            const: 4
+> +
+> +        patternProperties:
+> +          endpoint:
+> +            type: object
+> +            additionalProperties: false
+> +
+> +            properties:
+> +              remote-endpoint: true
+> +
+> +    required:
+> +      - port@0
+> +      - port@1
+> +      - port@4
 > +
 > +required:
 > +  - compatible
-> +  - reg
+> +  - interrupts
 > +  - clocks
-> +  - '#thermal-sensor-cells'
+> +  - clock-names
+> +  - power-domains
+> +  - ports
 > +
 > +additionalProperties: false
 > +
 > +examples:
 > +  - |
-> +    #include <dt-bindings/clock/imx8mm-clock.h>
 > +
-> +    tmu: tmu@30260000 {
+> +    #include <dt-bindings/clock/mt8183-clk.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/power/mt8183-power.h>
+> +
+> +    parent0: parent@0 {
 
-thermal-sensor@...
+bus {
 
-> +         compatible = "fsl,imx8mm-tmu";
-> +         reg = <0x30260000 0x10000>;
-> +         clocks = <&clk IMX8MM_CLK_TMU_ROOT>;
-> +         #thermal-sensor-cells = <0>;
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        seninf: seninf@1a040000 {
+> +            compatible = "mediatek,mt8183-seninf";
+> +            reg = <0 0x1a040000 0 0x8000>,
+> +                  <0 0x11c80000 0 0x6000>;
+> +            reg-names = "base", "rx";
+> +            interrupts = <GIC_SPI 251 IRQ_TYPE_LEVEL_LOW>;
+> +            power-domains = <&scpsys MT8183_POWER_DOMAIN_CAM>;
+> +            clocks = <&camsys CLK_CAM_SENINF>,
+> +                <&topckgen CLK_TOP_MUX_SENINF>;
+> +            clock-names = "clk_cam_seninf", "clk_top_mux_seninf";
+> +
+> +            ports {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                port@0 {
+> +                    reg = <0>;
+> +
+> +                    mipi_in_bcam: endpoint {
+> +                        data-lanes = <0 1 3 4>;
+> +                        remote-endpoint = <&bcam_out>;
+> +                    };
+> +                };
+> +
+> +                port@1 {
+> +                    reg = <1>;
+> +
+> +                    mipi_in_fcam: endpoint {
+> +                        data-lanes = <1>;
+> +                        remote-endpoint = <&fcam_out>;
+> +                    };
+> +                };
+> +
+> +                port@4 {
+> +                    reg = <4>;
+> +
+> +                    seninf_camisp_endpoint: endpoint {
+> +                        remote-endpoint = <&camisp_endpoint>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +
+> +        i2c2: i2c@11009000 {
+
+This will give a warning on 5.7-rc. Add a reg property.
+
+> +            clock-frequency = <400000>;
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            wcam: camera@36 {
+> +                compatible = "ovti,ov5695";
+> +                reg = <0x36>;
+> +
+> +                port {
+> +                    bcam_out: endpoint {
+> +                        remote-endpoint = <&mipi_in_bcam>;
+> +                        data-lanes = <0 1 3 4>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +
+> +        i2c4: i2c@11008000 {
+> +            clock-frequency = <400000>;
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            
+> +            ucam: camera@3c {
+> +                compatible = "ovti,ov2685";
+> +                reg = <0x3c>;
+> +
+> +                port {
+> +                    fcam_out: endpoint {
+> +                        remote-endpoint = <&mipi_in_fcam>;
+> +                        data-lanes = <1>;
+> +                    };
+> +                };
+> +            };
+> +        };
 > +    };
-> +
-> +...
+> \ No newline at end of file
+
+Fix.
+
 > -- 
-> 2.7.4
-> 
+> 2.18.0
