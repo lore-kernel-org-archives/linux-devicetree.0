@@ -2,168 +2,111 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF54C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 15:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE858C3A5A0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 15:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EDA1206F6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 15:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB9C92078E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 15:44:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="xH/QmMTG"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="bhHNMY7S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbgDTPf5 (ORCPT
+        id S1729035AbgDTPow (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:35:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59814 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbgDTPfz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 11:35:55 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C02BC061A0F
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 08:35:54 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id b62so11019578qkf.6
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 08:35:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=P5AdbeASeN3LWLwAao7IPBW2Z8hbXGbMOqZhqhTsi0o=;
-        b=xH/QmMTGrRk0vg4u23/IshU43Loy0kmEdOHU6LEJwx6eLcIS3nQx+g31KY/s6njFes
-         eFpdGA7e7bgn8AdpC+HYklwRzIuGD6UXVNiT7wwaO//ei1ErR5rh3im2N2npx0XtCH5I
-         7MjCLC6WKMEnm3WT0zxCUgdOoShSJb5RDyIr6UhlStTvwIFSmgZiz9QK5w6vmP2gTElx
-         1KMCF7wdByLiQjdgU36XzxKeuqW39K5IHYgTUtlYhoJ/D3woMFjPHQJFTT80i3Pya+J6
-         IqUmeLkj/OBSz+q5jbGXEunJfZIPSYFfvxTj/yhzE3WCA2F94rWYjbgLVNtuHOR6f/8C
-         ieuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=P5AdbeASeN3LWLwAao7IPBW2Z8hbXGbMOqZhqhTsi0o=;
-        b=dQbsfi9cnOBVQt4+w3SKSF1TK0qCNiqEku7NbAv/4CRRI4AYr90CnKkLe/3bHSwwHq
-         UgrnKDhpz4mOoTMOL421obwZZumtlFzR1ZZLB0FybjtZRX4dBnYWEcsdSMcca9vqQZOD
-         nYD+82mtb86Mxi2fF03zG5az6/bHo15q6/LSE8RtQlon98x8YryzpfuiZXFWRexYPnHO
-         9DpwNbUUSRUyjP2z9XW7hhPis/OKG3Gal0RLVJq1ILz6ZsNxNqhtO6dulAdIii5x/SaV
-         IbjAh1Uf4modYxdO6frQpTG+TDoe4vRS0ErAASgfrlNwOvfQpR47KqspMvc1ZL/EpcEx
-         z1fw==
-X-Gm-Message-State: AGi0PuZgNglb5UxfzwoakL0musSPqXjmylKOkVOiUEqPP6u3zrAY/btn
-        JwH0CCBKMEJZGElG/UCiEy0CtaPcSKtraw==
-X-Google-Smtp-Source: APiQypKoJbJWLjg+0XysGGc0MJ3P0qgeXjQAIu8l5u0lW95JQmearXo4++Rg9AGrTzIHk3HGJC7uNg==
-X-Received: by 2002:a37:9e94:: with SMTP id h142mr15638183qke.56.1587396953312;
-        Mon, 20 Apr 2020 08:35:53 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id b11sm708373qti.50.2020.04.20.08.35.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 08:35:52 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] arm64: dts: qcom: fix pm8150 gpio interrupts
-Date:   Mon, 20 Apr 2020 11:35:43 -0400
-Message-Id: <20200420153543.14512-1-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
+        Mon, 20 Apr 2020 11:44:52 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:58356 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729024AbgDTPov (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Apr 2020 11:44:51 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KFc4KW020208;
+        Mon, 20 Apr 2020 10:44:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type;
+ s=PODMain02222019; bh=WRLn6CcF91rM0kmmJj1O0brI6NJO4DbTXcBN3wswcwo=;
+ b=bhHNMY7S4MFDkDMkf1pjB1386hgU0x9xNuf8aGakTE1i1lyjMPKVViZsSZQFHryijXaY
+ F/bek3YWiKnG9vLQrZfo4XkwiDvc4wbAU7V2NSqVtS8cXme+OreMVIG1KzqXxtOBK93z
+ EyUWp2ppQsZYg2BTHChTtBWOyYMO6QuAd9PPFH89Rx+ulcI4xLDHp1wGpZN/T3Tc7ZD2
+ zhviE7TlqpPxe1fq8UdMB/wS7GWbVB9UYRFhuPKo7r0azI6QTsqaroK5CKFA1U16tAVr
+ zeRohLRV19d2OCR/lUVHPHS0XGVhPmEPzLyrcMerw06X7r+wNu45rTIGbAGnM0MyeBB0 BA== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex02.ad.cirrus.com ([87.246.76.36])
+        by mx0a-001ae601.pphosted.com with ESMTP id 30fxy4b9hp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 20 Apr 2020 10:44:46 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 20 Apr
+ 2020 16:44:44 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Mon, 20 Apr 2020 16:44:44 +0100
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 7AEE22AB;
+        Mon, 20 Apr 2020 15:44:44 +0000 (UTC)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <cw00.choi@samsung.com>, <robh+dt@kernel.org>,
+        <lee.jones@linaro.org>, <broonie@kernel.org>
+CC:     <myungjoo.ham@samsung.com>, <lgirdwood@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+Subject: [PATCH 0/4] Convert Arizona DT bindings to dtschema
+Date:   Mon, 20 Apr 2020 16:44:40 +0100
+Message-ID: <20200420154444.12332-1-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ ip4:5.172.152.52 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=662 malwarescore=0
+ clxscore=1011 adultscore=0 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 suspectscore=0 mlxscore=0 phishscore=0 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004200131
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This was mistakenly copied from the downstream dts, however the upstream
-driver works differently.
+Convert the bindings over, I have put all the patches in one series
+so they are easy to review, but I put all the MAINTAINER updates
+in the MFD patch (since it is the main binding document) so the
+patches can each go through their own trees with no merge issues.
 
-I only tested this with the pm8150_gpios node (used with volume button),
-but the 2 others should be the same.
+Thanks,
+Charles
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
----
- arch/arm64/boot/dts/qcom/pm8150.dtsi  | 14 ++------------
- arch/arm64/boot/dts/qcom/pm8150b.dtsi | 14 ++------------
- arch/arm64/boot/dts/qcom/pm8150l.dtsi | 14 ++------------
- 3 files changed, 6 insertions(+), 36 deletions(-)
+Charles Keepax (4):
+  regulator: arizona-regulator: Move binding over to dtschema
+  extcon: arizona: Move binding over to dtschema
+  ASoC: arizona: Move binding over to dtschema
+  mfd: arizona: Move binding over to dtschema
 
-diff --git a/arch/arm64/boot/dts/qcom/pm8150.dtsi b/arch/arm64/boot/dts/qcom/pm8150.dtsi
-index b6e304748a57..c0b197458665 100644
---- a/arch/arm64/boot/dts/qcom/pm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8150.dtsi
-@@ -73,18 +73,8 @@ pm8150_gpios: gpio@c000 {
- 			reg = <0xc000>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
--			interrupts = <0x0 0xc0 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc1 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc2 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc3 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc4 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc5 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc6 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc7 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc8 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xc9 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xca 0x0 IRQ_TYPE_NONE>,
--				     <0x0 0xcb 0x0 IRQ_TYPE_NONE>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
- 		};
- 	};
- 
-diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-index 322379d5c31f..40b5d75a4a1d 100644
---- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-@@ -62,18 +62,8 @@ pm8150b_gpios: gpio@c000 {
- 			reg = <0xc000>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
--			interrupts = <0x2 0xc0 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc1 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc2 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc3 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc4 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc5 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc6 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc7 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc8 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xc9 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xca 0x0 IRQ_TYPE_NONE>,
--				     <0x2 0xcb 0x0 IRQ_TYPE_NONE>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
- 		};
- 	};
- 
-diff --git a/arch/arm64/boot/dts/qcom/pm8150l.dtsi b/arch/arm64/boot/dts/qcom/pm8150l.dtsi
-index eb0e9a090e42..cf05e0685d10 100644
---- a/arch/arm64/boot/dts/qcom/pm8150l.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8150l.dtsi
-@@ -56,18 +56,8 @@ pm8150l_gpios: gpio@c000 {
- 			reg = <0xc000>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
--			interrupts = <0x4 0xc0 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc1 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc2 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc3 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc4 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc5 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc6 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc7 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc8 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xc9 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xca 0x0 IRQ_TYPE_NONE>,
--				     <0x4 0xcb 0x0 IRQ_TYPE_NONE>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
- 		};
- 	};
- 
+ .../devicetree/bindings/extcon/extcon-arizona.txt  |  76 ------
+ .../devicetree/bindings/extcon/wlf,arizona.yaml    | 125 +++++++++
+ Documentation/devicetree/bindings/mfd/arizona.txt  | 101 --------
+ .../devicetree/bindings/mfd/wlf,arizona.yaml       | 288 +++++++++++++++++++++
+ .../bindings/regulator/arizona-regulator.txt       |  18 --
+ .../devicetree/bindings/regulator/wlf,arizona.yaml |  37 +++
+ .../devicetree/bindings/sound/wlf,arizona.txt      |  53 ----
+ .../devicetree/bindings/sound/wlf,arizona.yaml     | 114 ++++++++
+ MAINTAINERS                                        |   8 +-
+ 9 files changed, 568 insertions(+), 252 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+ create mode 100644 Documentation/devicetree/bindings/extcon/wlf,arizona.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mfd/arizona.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/wlf,arizona.yaml
+ delete mode 100644 Documentation/devicetree/bindings/regulator/arizona-regulator.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/wlf,arizona.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/wlf,arizona.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/wlf,arizona.yaml
+
 -- 
-2.26.1
+2.11.0
 
