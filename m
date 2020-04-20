@@ -2,129 +2,79 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21232C3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 08:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1B4C3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 08:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8A5920BED
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 08:19:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="jWJHu3Cf"
+	by mail.kernel.org (Postfix) with ESMTP id C210821927
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 08:30:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgDTITQ (ORCPT
+        id S1726100AbgDTIaE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:19:16 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:48932 "EHLO hermes.aosc.io"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbgDTITQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:19:16 -0400
-Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id BCD734F569;
-        Mon, 20 Apr 2020 08:19:07 +0000 (UTC)
-Message-ID: <13564b9a57f734524357a26665c48211e436e305.camel@aosc.io>
-Subject: Re: [RFC PATCH] PCI: dwc: add support for Allwinner SoCs' PCIe
- controller
-From:   Icenowy Zheng <icenowy@aosc.io>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Date:   Mon, 20 Apr 2020 16:18:58 +0800
-In-Reply-To: <20200406082732.nt5d7puwn65j4nvl@gilmour.lan>
-References: <20200402160549.296203-1-icenowy@aosc.io>
-         <20200406082732.nt5d7puwn65j4nvl@gilmour.lan>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 20 Apr 2020 04:30:04 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46522 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbgDTIaE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 04:30:04 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 569992A0A02;
+        Mon, 20 Apr 2020 09:30:02 +0100 (BST)
+Date:   Mon, 20 Apr 2020 10:29:59 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        anders.roxell@linaro.org, masonccyang@mxic.com.tw,
+        piotrs@cadence.com, robh+dt@kernel.org, linux-mips@vger.kernel.org,
+        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200420102959.2659774d@collabora.com>
+In-Reply-To: <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aosc.io; s=dkim;
-        t=1587370752;
-        h=from:subject:date:message-id:to:cc:mime-version:content-type:content-transfer-encoding:in-reply-to:references;
-        bh=pvH6iSsYcrlSeIVQKlxTDceU5G6X0/BLxZ6SjrM8hqs=;
-        b=jWJHu3CfoBStlnD7HAMF8CReqSqLOEfzgiTCkOcL0L3EaFstbOzaX6XfzDESmGnFOaWKMx
-        MFVRRdsirVgRlt+3h6O6GWmgG+K2n16Ow54t3v7gEK3myO/5F/386kvhaIiJdakasAxr8I
-        1ZA+7o372FXcMxh8rqGr0ZSU7sTaK84=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-在 2020-04-06星期一的 10:27 +0200，Maxime Ripard写道：
-> Hi,
-> 
-> On Fri, Apr 03, 2020 at 12:05:49AM +0800, Icenowy Zheng wrote:
-> > The Allwinner H6 SoC uses DesignWare's PCIe controller to provide a
-> > PCIe
-> > host.
-> > 
-> > However, on Allwinner H6, the PCIe host has bad MMIO, which needs
-> > to be
-> > workarounded. A workaround with the EL2 hypervisor functionality of
-> > ARM
-> > Cortex cores is now available, which wraps MMIO operations.
-> > 
-> > This patch is going to add a driver for the DWC PCIe controller
-> > available in Allwinner SoCs, either the H6 one when wrapped by the
-> > hypervisor (so that the driver can consider it as an ordinary PCIe
-> > controller) or further not buggy ones.
-> > 
-> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> > ---
-> > There's no device tree binding patch available, because I still
-> > have
-> > questions on the device tree compatible string. I want to use it to
-> > describe that this driver doesn't support the "native Allwinner H6
-> > PCIe
-> > controller", but a wrapped version with my hypervisor.
-> > 
-> > I think supporting a "para-physical" device is some new thing, so
-> > this
-> > patch is RFC.
-> > 
-> > My hypervisor is at [1], and some basic usage documentation is at
-> > [2].
-> > 
-> > [1] https://github.com/Icenowy/aw-el2-barebone
-> > [2] 
-> > https://forum.armbian.com/topic/13529-a-try-on-utilizing-h6-pcie-with-virtualization/
-> 
-> I'm a bit concerned to throw yet another mandatory, difficult to
-> update, component in the already quite long boot chain.
-> 
-> Getting fixes deployed in ATF or U-Boot is already pretty long,
-> having
-> another component in there will just make it worse, and it's another
-> hard to debug component that we throw into the mix.
-> 
-> And this prevents any use of virtualisation on the platform.
-> 
-> I haven't found an explanation on what that hypervisor is doing
-> exactly, but from a look at it it seems that it will trap all the
-> accesses to the PCIe memory region to emulate a regular space on top
-> of the restricted one we have?
-> 
-> If so, can't we do that from the kernel directly by using a memory
-> region that always fault with a fault handler like Framebuffer's
-> deferred_io is doing (drivers/video/fbdev/core/fb_defio.c) ?
+On Fri, 17 Apr 2020 16:21:47 +0800
+"Ramuthevar,Vadivel MuruganX"
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 
-I don't know well about the memory management of the kernel. However,
-for PCIe memory space, the kernel allows simple ioremap() on it. So
-wrapping it shouldn't be so easy.
+> +
+> +	res = devm_platform_ioremap_resource_byname(pdev, lgm_host->cs_name);
+> +	lgm_host->nandaddr_va = res;
+> +	nandaddr_pa = res->start;
+> +	if (IS_ERR(lgm_host->nandaddr_va))
+> +		return PTR_ERR(lgm_host->nandaddr_va);
 
-And I think the maintainer of pcie-tango suffers from a even more
-simple issue -- PCI config space and MMIO space are muxed. They failed
-to wrap MMIO I/O, and make a warning and taint the kernel. pcie-tango
-is mentioned in my previous discussion on H6 PCIe, see [1].
+Hm, I didn't realize you needed the physical address for DMA transfers.
+Just use platform_get_resource_by_name()+devm_ioremap_resource() in
+that case.
 
-[1] https://www.spinics.net/lists/linux-pci/msg70064.html
 
-> 
-> Maxime
+> +
+> +	writel(LGM_BUSCON_CMULT_V4 | LGM_BUSCON_RECOVC(1) |
+> +	       LGM_BUSCON_HOLDC(1) | LGM_BUSCON_WAITRDC(2) |
+> +	       LGM_BUSCON_WAITWRC(2) | LGM_BUSCON_BCGEN_CS | LGM_BUSCON_ALEC |
+> +	       LGM_BUSCON_SETUP_EN, lgm_host->lgm_va + LGM_BUSCON(cs));
 
+I'm sure some the timings you hardcode here can be extracted from the
+NAND timings. Can you see if you can implement ->setup_data_interface()
+instead.
