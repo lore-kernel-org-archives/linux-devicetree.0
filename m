@@ -2,116 +2,122 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B091EC3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 10:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BF8C3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 10:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64BF32145D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 10:27:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Ql7xHYAz"
+	by mail.kernel.org (Postfix) with ESMTP id 9BA9C206B9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 10:29:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725988AbgDTK1O (ORCPT
+        id S1726319AbgDTK3F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 06:27:14 -0400
-Received: from vps.xff.cz ([195.181.215.36]:53266 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbgDTK1N (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 06:27:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1587378431; bh=o62eKdBWITau5Cn4J0cykM+HQVejW+cPPQs4pz5s9gE=;
-        h=Date:From:To:Subject:References:X-My-GPG-KeyId:From;
-        b=Ql7xHYAz0EL8wAdFvHCBeD7yJ1M+OZ3T1Qj8MgauhSeO4oCK/8hHaY7K8xg3d6IvP
-         /7lrGbdhKlZW0z4cYThrhr/FAg8MusoUx23eP3pCMTHdE/pO3btP1XOBKzTZh2CLlI
-         IBWwdCwX5nru7DaINj9TdP/+gt7pT60xLu1Uvdt8=
-Date:   Mon, 20 Apr 2020 12:27:11 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [linux-sunxi] [PATCH v3 0/7] Add support for Allwinner H6 DVFS
-Message-ID: <20200420102711.4ozfiiakvgisukpk@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-References: <20200419135011.18010-1-peron.clem@gmail.com>
- <20200420094801.ltsittj3gdrbbr3u@core.my.home>
+        Mon, 20 Apr 2020 06:29:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725865AbgDTK3E (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Apr 2020 06:29:04 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B85CC061A0C;
+        Mon, 20 Apr 2020 03:29:04 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9AA0B2A0057;
+        Mon, 20 Apr 2020 11:29:02 +0100 (BST)
+Date:   Mon, 20 Apr 2020 12:28:59 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh R <vigneshr@ti.com>, Arnd Bergmann <arnd@arndb.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        masonccyang@mxic.com.tw, piotrs@cadence.com,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        "hauke.mehrtens" <hauke.mehrtens@intel.com>, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com
+Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200420122859.2a210268@collabora.com>
+In-Reply-To: <CAHp75Vfp_WYNR8kHVsSVumGzuVbGEGpAjfXVvJAV7t6zXXY+HA@mail.gmail.com>
+References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200418105533.477ce529@collabora.com>
+        <20200419222040.GJ185537@smile.fi.intel.com>
+        <20200420111754.5863324b@collabora.com>
+        <CAHp75VeOH+DC362tsEo13gr9fJpeCHXok=7O19B3njbxCOzd2A@mail.gmail.com>
+        <20200420115256.3a0ff647@collabora.com>
+        <CAHp75Vfp_WYNR8kHVsSVumGzuVbGEGpAjfXVvJAV7t6zXXY+HA@mail.gmail.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200420094801.ltsittj3gdrbbr3u@core.my.home>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 11:48:01AM +0200, megous hlavni wrote:
-> Hello Clément,
-> 
-> On Sun, Apr 19, 2020 at 03:50:04PM +0200, Clément Péron wrote:
-> > Hi Sunxi maintainers and members,
-> > 
-> > Now that required drivers are merged we can contibute on DVFS
-> > support for Allwinner H6.
-> > 
-> 
-> [ snip ]
-> 
-> > 
-> > Changes since v2 (thanks to Maxime Ripard):
-> >   - Change Orange Pi boards to Orange Pi 3
-> >   - Change soc speed nvmem node name
-> >   - Fix device tree warnings
-> >   - Drop GPU opp tables
-> 
-> Looks like you may have also inadverently dropped the second patch from v2
-> series that implemented CPU thermal trip points.
+On Mon, 20 Apr 2020 13:14:42 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-Also it looks like the patch 1 from v2 implementing the clock properties
-is missing from v3, and I don't see it being already applied anywhere.
-Without that cpufreq doesn't work.
-
-Also, thermal trip points need to be in the opp.dtsi to avoid dtc warnings
-during build.
-
-https://megous.com/git/linux/commit/?h=ths-5.7&id=cacefd7decf5ae0ce42ab4d48a13a58552929ebd
-
-regards,
-	o.
-
-> > Changes since v1 (thanks to Ondřej Jirman):
-> >   - Remove Polling thermal
-> >   - Add Orange Pi boards
-> >   - Remove minimal voltage change for Beelink GS1
-> >   - Add ramp-deplay for GPU and CPU regulators
-> >   - Push to thermal point to 85°C (Allwinner set them to 100°C and 115°C)
-> >   - Added 1.6GHz and 1.7GHz to OPP table.
-> > 
-> > Clément Péron (6):
-> >   arm64: configs: Enable sun50i cpufreq nvmem
-> >   arm64: dts: allwinner: h6: Enable CPU opp tables for Beelink GS1
-> >   arm64: dts: allwinner: h6: Enable CPU opp tables for Orange Pi 3
-> >   arm64: dts: allwinner: h6: Enable CPU opp tables for Tanix TX6
-> >   arm64: dts: allwinner: Sort Pine H64 device-tree nodes
-> >   arm64: dts: allwinner: h6: Enable CPU and GPU opp tables for Pine H64
+> On Mon, Apr 20, 2020 at 12:53 PM Boris Brezillon
+> <boris.brezillon@collabora.com> wrote:
+> > On Mon, 20 Apr 2020 12:44:51 +0300
+> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> >  
+> > > On Mon, Apr 20, 2020 at 12:21 PM Boris Brezillon
+> > > <boris.brezillon@collabora.com> wrote:  
+> > > > On Mon, 20 Apr 2020 01:20:40 +0300
+> > > > Andy Shevchenko <andriy.shevchenko@intel.com> wrote:  
+> > > > > On Sat, Apr 18, 2020 at 10:55:33AM +0200, Boris Brezillon wrote:  
+> > > > > > On Fri, 17 Apr 2020 16:21:47 +0800
+> > > > > > "Ramuthevar,Vadivel MuruganX"
+> > > > > > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> > > > > >  
+> > > > > > > From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>  
+> > > > >  
+> > > > > > > +static const struct of_device_id lgm_nand_match[] = {
+> > > > > > > + { .compatible = "intel,lgm-nand", },
+> > > > > > > + {}
+> > > > > > > +};
+> > > > > > > +MODULE_DEVICE_TABLE(of, lgm_nand_match);  
+> > > > > >
+> > > > > > You probably have a missing "depends on OF" in your Kconfig.  
+> > > > >
+> > > > > Since it's using device property API, dependency is not needed.
+> > > > >  
+> > > >
+> > > > There's no compile-time dependency, but this driver will be pretty
+> > > > useless if all its users have the NAND controller node defined in their
+> > > > DT and CONFIG_OF is not enabled.  
+> > >
+> > > No, it's not.
+> > > See [1] for the details how ACPI may utilize this table.
+> > >
+> > > [1]: https://www.kernel.org/doc/html/latest/firmware-guide/acpi/enumeration.html#device-tree-namespace-link-device-id  
+> >
+> > Except the NAND framework does use the OF lib when parsing common DT
+> > properties (like nand-ecc-mode, etc), so it does depend on OF if you
+> > want those props to be parsed, which, according to the DT binding patch,
+> > is the case.  
 > 
-> You may also want to fix title of this patch to drop the GPU reference.
+> I see, so, NAND framework can be transformed at some point. In any
+> case, from driver perspective it's OF independent.
 > 
-> thank you and regards,
-> 	o.
-> 
-> > Ondrej Jirman (1):
-> >   arm64: dts: allwinner: h6: Add CPU Operating Performance Points table
+
+Well, it uses it only if the driver passes an OF node which this driver
+does (see the nand_set_flash_node() call), so no, it's really a driver
+dependency.
