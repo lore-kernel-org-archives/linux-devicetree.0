@@ -2,115 +2,126 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2605C3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 13:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F92BC3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 13:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A562F2070B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 13:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C40020722
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 13:27:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="azA8QLNw";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LDabqPL7"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="vvkimXxX";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kBCxFHsq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgDTNZH (ORCPT
+        id S1726048AbgDTN1x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 09:25:07 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:35281 "EHLO
+        Mon, 20 Apr 2020 09:27:53 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:41617 "EHLO
         wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726009AbgDTNZG (ORCPT
+        by vger.kernel.org with ESMTP id S1725897AbgDTN1x (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 09:25:06 -0400
+        Mon, 20 Apr 2020 09:27:53 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id A1E9E52B;
-        Mon, 20 Apr 2020 09:25:05 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 20 Apr 2020 09:25:06 -0400
+        by mailout.west.internal (Postfix) with ESMTP id 4FCB253A;
+        Mon, 20 Apr 2020 09:27:52 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Mon, 20 Apr 2020 09:27:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=yhnengzziE5vWLTBpc6TNXdgy73
-        OT3X2ZS0zw6Wtevw=; b=azA8QLNwW36SCKr3HQis4odPzSWwi4U88WuVeVY14ob
-        NDbQfJICGGzzlUTu3pHWH9zcBwI86JB2UozgMbXKCznSJTP6eVIMhHho0y2usVXg
-        CKbqqo3uUS2YuYTSOU319pS8AOkt63fUqJxTsbLE+MSCYg3BnrAaLL9dhILJZF4d
-        tCxvCv3WNeSXXQOfL//doHnWo2VG3Wqh+X0tPGB5yksUmVB1rXWY9dOMDsu3H6FX
-        a6S3KMSO9+7at32DwO1UBnNqEeVprjoYdwJAwN4kq+zFSjugAsdSpIEfpFMVd5pF
-        1cB1x/C754snD44ZJtAUUS0RAkgmjzxDLAYA+Qe91BA==
+        :content-type:in-reply-to; s=fm2; bh=C1acu8SOYXvfCrT29OikkU8tqdr
+        tQ88j/dfAu0WvkG0=; b=vvkimXxXCrJAXaUZFh9Qb2mhAU8anR4eWyvNHVUjkKv
+        3ffCHDg1hncrLGuYgwm6/cX6y+RLcBQL8Prwoqgj/UWGvMci1Nb2JrI6vy1Bs6lx
+        jouwojDVTdWMS+CPS6NlcJeJI/TnoxPyXecl76tlAf4B5e6k+WtyqJe2vF0gkruj
+        7207wqQ02t4nPmOt90NkJ6kTI/vn9D1SjprMi7T/rgjTpRMUomj2bOaFbz0lyJdz
+        IJ69d4CPNjF+J/Gkz5R6GSYJvfjqELm1xxxC/Kgsu/bVXFKAFrLnOIorA2PE/d80
+        pxCTb0/KtBY5WGp4nrpej8qp/dtGxr2nWck8F6Guo7w==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=yhneng
-        zziE5vWLTBpc6TNXdgy73OT3X2ZS0zw6Wtevw=; b=LDabqPL769MMweHDyQwOF7
-        6inA3sLIdEIjZzH8iojdhdDPIHqjRyJC3wlxrgLzqPNezIRE/jbwAe7NgSTxmt9K
-        KFW5XMwaj2XR2Lz57rw7//yvsNcP6J3cfigVpGwOmHtG+GceO5ewTaZEa5QmuRoV
-        aGVSOiniLgHZFTeFxrKV8pU++UHtUxmL+o95/mKYfmYSbbE+iMMcUdxgyufTLepw
-        tqikKuShseCopd4b4Setjm1D84ZHcPL/oqHD/o0nA1IUA3dTGwKyDHxeuQ243BPY
-        o1LlM9fcSmG57NfAbZtSMszxCmutmDW8Oh/5pMaKX6BbRDwMltPSAn2no0dDGC7A
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=C1acu8
+        SOYXvfCrT29OikkU8tqdrtQ88j/dfAu0WvkG0=; b=kBCxFHsqpKac7qMEIGr8Fm
+        y2f+bDdBSXx9PTzgT9s8OZDuCZ853MVb9qP2HKpSb3lkDuWg1KyJJrCpjdfbfKEt
+        xL5GNn0OciaSIEuoXwTAt2D/qWDnSzZ/Lo59AlXZBufnucpK4R0gy1V3aFoHjyE1
+        A7ERK5F9veSaLKtFlmqnm5gsur9p/2SVC6TX/j2+Fntui/d9cFcVIrUF6cr6oIkN
+        CGr1j3nBjhvn7rq8IEUCx2kuOWAwhHKB0S0BbC6KHcn7NfIR3VvIQ63mhKi+iD1a
+        jdolVonx84aakDsW7s43GQPmF2XeY+GuOiw/+z3/wvdFpwd/C10TptLyVrZaglHg
         ==
-X-ME-Sender: <xms:raKdXihyfHpv81ALfb1YoHtF2BVbmDjGgXLdDuaf3bKPMQzoeaTQKQ>
+X-ME-Sender: <xms:UqOdXhtx8HTOSqU3DX4z4eehe4Fw8qON_pPgj_3zXkeM2pOVt9BqRA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeefgdeigecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
     ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
     ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
     fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:raKdXkFCHcowvAEl21ur6EYF_t-bKFth9B6LxGKsnYmBDOijs8ikkw>
-    <xmx:raKdXtBwbwDvYzdmGzKEmi5rD_uVtqgXI6jadnHpmuIUs7w75fLUdQ>
-    <xmx:raKdXo8uaAE9SdE4qPxmQQKDbfcy0gzYoEyOV8Y6L7dJQYwAW2gbAQ>
-    <xmx:saKdXoqdtuHV2nYQJGk0XRqX3LJ53kyxo1-JizyZ12ODFOlARn3enA>
+X-ME-Proxy: <xmx:UqOdXokU1CLUum6CNOsVRCBwnMltaVCJ6DAU3R_-SX26_g3n4AgjgQ>
+    <xmx:UqOdXvUrA9MtKTCZJ0LlfvgJR9BR07kEVKUb6G-5uJ0yctdLLeZDOA>
+    <xmx:UqOdXsvrVzdoOLrptwf2Vd-YLiAqIRQhdzR4IG56CPqux0EVW44PgQ>
+    <xmx:V6OdXsUhYIqsRhlW-qjcISecj48hamvzoL52E7GJTLe7P8eetin5HQ>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 74791328005E;
-        Mon, 20 Apr 2020 09:25:01 -0400 (EDT)
-Date:   Mon, 20 Apr 2020 15:25:00 +0200
+        by mail.messagingengine.com (Postfix) with ESMTPA id 778AE3065C16;
+        Mon, 20 Apr 2020 09:27:46 -0400 (EDT)
+Date:   Mon, 20 Apr 2020 15:27:45 +0200
 From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [PATCH v5 0/9] Add support for Allwinner H6 DVFS
-Message-ID: <20200420132500.gsnsdv3jaotjup5w@gilmour.lan>
-References: <20200420130021.3841-1-peron.clem@gmail.com>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: allwinner: sun50i-a64: Add missing
+ address/size-cells
+Message-ID: <20200420132745.7sa4zf2c2xp7ffrc@gilmour.lan>
+References: <20200420103113.577969-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fktdxkekevkzu3a3"
+        protocol="application/pgp-signature"; boundary="knpeiqpl5v5uzrh4"
 Content-Disposition: inline
-In-Reply-To: <20200420130021.3841-1-peron.clem@gmail.com>
+In-Reply-To: <20200420103113.577969-1-megous@megous.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---fktdxkekevkzu3a3
-Content-Type: text/plain; charset=iso-8859-1
+--knpeiqpl5v5uzrh4
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 20, 2020 at 03:00:12PM +0200, Cl=E9ment P=E9ron wrote:
-> Hi,
+On Mon, Apr 20, 2020 at 12:31:13PM +0200, Ondrej Jirman wrote:
+> The binding specifies #address-cells and #size-cells should be present.
+> Without them present, dtc issues a warning because default for
+> #address-cells seems to be <2>:
 >=20
-> This is the same as v4 and v3 on top.
-> I have also fix the commit title for Pine H64 as we now only enable CPU D=
-VFS.
+> arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1108.4-52:
+>   Warning (dma_ranges_format):
+>     /soc/dram-controller@1c62000:dma-ranges:
+>     "dma-ranges" property has invalid length (12 bytes)
+>     (parent #address-cells =3D=3D 1, child #address-cells =3D=3D 2,
+>     #size-cells =3D=3D 1)
 >=20
-> Sorry for the noise,
-> Cl=E9ment
+> mbus #address-cells should be 1.
+>=20
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
 
-I dropped the previous ones and applied, thanks!
+Applied, thanks
+
 Maxime
 
---fktdxkekevkzu3a3
+--knpeiqpl5v5uzrh4
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXp2irAAKCRDj7w1vZxhR
-xTOIAQDZ6ddkodAU0H7ADOOqC0WuJOktcAKK+MPuKpf6tzBCEgEAxm0lP1QHVwMp
-YYrf4zOjMAPR251l/CaafMgcfxuSRwk=
-=xMW6
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXp2jUQAKCRDj7w1vZxhR
+xTOZAQDH2dxXT4rG7cY/ZynLPx95CqmiIV9TpnSMdmyts6jejgD+L7nEB36P07Yi
+F2c44pcXcdYfUaXsokS1a2/3IdEFHgM=
+=PFLR
 -----END PGP SIGNATURE-----
 
---fktdxkekevkzu3a3--
+--knpeiqpl5v5uzrh4--
