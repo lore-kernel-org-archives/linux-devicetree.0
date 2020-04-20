@@ -2,93 +2,149 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D888BC3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 07:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B25F7C3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 07:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF03920BED
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 07:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FCB02078C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 07:36:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="HW2pgeCq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="st0iZapP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726089AbgDTHfN (ORCPT
+        id S1726081AbgDTHgo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 03:35:13 -0400
-Received: from vultr.net.flygoat.com ([149.28.68.211]:59030 "EHLO
-        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbgDTHfN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 03:35:13 -0400
-Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 8137120CF0;
-        Mon, 20 Apr 2020 07:35:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1587368112; bh=bDSuF4kuZpYpNlfsiSYtB4XVxy4h2Vp476P6s+KXRFk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HW2pgeCqOei8AF7Iy4NgvHPS8XAZbZ0Ei87BFcwHGFDytzJieqLuoGX575ssMDlk+
-         m5CYxBAOcqxZK1kVW9KG/stLt78tMqb0oE+kHrK0B9Q5KLZprWEEbA3iMWtdDJiS9X
-         Zk0t6KJBtg5WEsCbGUmZEnT5YVnKdNep/w+MhzemZP+sTMmXx6OucaumUblFZWrswz
-         //Q8rHXeHMqULxS68ai0itPfz0qkKTBaeiOwHNuhB2gonjLaFQupSLuL3a6xnat2Kr
-         OHhbheXb1nIWXFLreDFkViiOYUSo/KWk3oBr4VghpffVsXnt8alQGEYUypnoDsYURR
-         JAkDUSsh49vTg==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mon, 20 Apr 2020 03:36:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41974 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726048AbgDTHgn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Apr 2020 03:36:43 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43D0AC061A41
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 00:36:43 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u127so9043777wmg.1
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 00:36:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Mb0X0VbhAnhVtMeOXLuQ8HsuJ6uYYtL6iIOac3n0PJU=;
+        b=st0iZapP+zDcsQ4UrQb7rcM/hsGHFlairhxjzCU+eWwjjuseXuqjJPI+WXPiBeW+Ul
+         493WUgOLbd3mEM16Cz06eaR8/6bMoVqw5mTtKi8z4TMnE1oxQVpLJVVt+gfkQ+awZtBz
+         Llr3jJX2BwEJq6rwnMOXeZHh0HD0SCgTsSVh4nnX6ZlTuAdVem4zbngqA18U1cPELUZ/
+         sp8zegHh6y8ehz3646WCK8B67qgzanSNH1hLnjoluhIns84gS4L6UP74qr+2o2ZskG3I
+         UFiPAJ0w6uzb0ZGGR3YkpjjQ3s73dRbet54XvXOraKAVsFDH372JkVtKLsg+g+bV0NQf
+         x8TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Mb0X0VbhAnhVtMeOXLuQ8HsuJ6uYYtL6iIOac3n0PJU=;
+        b=uDkOOoPQ0lzD713WS49fmCbB9OMm0m6pzXBa4isw5ciG92IWrFu1Gg3S7rJOcaw1Z+
+         Ufb69VcvVG9sucLYRZGqPkDqIOFJ1dyS6J/06U6XvQy3kXc9yhsz6OBRA/vV6EvicRg8
+         G659bX45Ob5xzaSHl9XC1LHeoEj7eKSaE/M2YZ7KGrllhjmQ/89bf2TCqRyoPQAUPccr
+         7rrBTnvZUVAel0jyMgQFxKAzruWcV/Ryrd/yCCNUYxAcyQLD1vlha7y4tikvRfcn0tLR
+         Hpb6odrKvkK/5kwFy7EBsfD1muuUR/A4KJjutav1rbHZjqTziW/T4CfhU7s9PZOUHfJy
+         BNfw==
+X-Gm-Message-State: AGi0PuZXCURUbD1DWSdAWcuDR8cCubtk16rV+vaWeB1eYwxFl0NyZEb2
+        FTLVoPZCyBDIf5EFUPSDZRPuPQ==
+X-Google-Smtp-Source: APiQypJ25Kjm3y9Zgopg3qXJE7CUHbyrlxsvNzWf6js5QWhmpv4/KdDycmxZJtwyZTMEA2yfKfjtHw==
+X-Received: by 2002:a1c:40c4:: with SMTP id n187mr15810229wma.28.1587368201801;
+        Mon, 20 Apr 2020 00:36:41 -0700 (PDT)
+Received: from dell ([95.149.164.107])
+        by smtp.gmail.com with ESMTPSA id w18sm19085wrn.55.2020.04.20.00.36.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 00:36:41 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 08:36:39 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Ran Bi <ran.bi@mediatek.com>
+Cc:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND 5/5] MIPS: Loongson64: Mark RS780 HPET as broken
-Date:   Mon, 20 Apr 2020 15:33:40 +0800
-Message-Id: <20200420073347.157230-6-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200420073347.157230-1-jiaxun.yang@flygoat.com>
-References: <20200420073347.157230-1-jiaxun.yang@flygoat.com>
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        srv_heupstream@mediatek.com
+Subject: Re: [PATCH v12 5/6] rtc: mt6397: Add support for the MediaTek MT6358
+ RTC
+Message-ID: <20200420073639.GL3737@dell>
+References: <1586333531-21641-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1586333531-21641-6-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <20200416091438.GA2167633@dell>
+ <1587112169.12875.2.camel@mhfsdcap03>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1587112169.12875.2.camel@mhfsdcap03>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This driver is using some dangerous hack to set MMIO address for HPET,
-which might break systems with other kinds of PCH.
+On Fri, 17 Apr 2020, Ran Bi wrote:
 
-Also, as Loongson-3 cpufreq driver never appeared in mainline,
-this driver rarely got used.
+> On Thu, 2020-04-16 at 10:14 +0100, Lee Jones wrote:
+> > On Wed, 08 Apr 2020, Hsin-Hsiung Wang wrote:
+> > 
+> > > From: Ran Bi <ran.bi@mediatek.com>
+> > > 
+> > > This add support for the MediaTek MT6358 RTC. Driver using
+> > > compatible data to store different RTC_WRTGR address offset.
+> > > This replace RTC_WRTGR to RTC_WRTGR_MT6323 in mt6323-poweroff
+> > > driver which only needed by armv7 CPU without ATF.
+> > > 
+> > > Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
+> > > Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> > > Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > > Acked-by: Sebastian Reichel <sre@kernel.org>
+> > > Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+> > > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> > 
+> > Please place these in chronological order.  They should provide some
+> > history, rather than a unordered slab list of random sign-offs.
+> > 
+> 
+> I suppose that you mean the order should be like below, right?
+> Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> Acked-by: Sebastian Reichel <sre@kernel.org>
+> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
 
-So we temporarily mark it as broken until we find a better solution.
+This would imply that it was reviewed before it was written, which
+would subsequently imply time-travel, so I suggest not.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- arch/mips/loongson64/Kconfig | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+Author(s)
+Review(s)/Acks(s)/Tested(s) /* ideally in the order they were received */
+Sub-maintainer sign-off     /* if applicable */
+Maintainer sign-off
 
-diff --git a/arch/mips/loongson64/Kconfig b/arch/mips/loongson64/Kconfig
-index c386b8a3c753..16e6acab8cce 100644
---- a/arch/mips/loongson64/Kconfig
-+++ b/arch/mips/loongson64/Kconfig
-@@ -4,14 +4,12 @@ if MACH_LOONGSON64
- config RS780_HPET
- 	bool "RS780/SBX00 HPET Timer"
- 	depends on MACH_LOONGSON64
-+	depends on BROKEN
- 	select MIPS_EXTERNAL_TIMER
- 	help
- 	  This option enables the hpet timer of AMD RS780/SBX00.
- 
--	  If you want to enable the Loongson3 CPUFreq Driver, Please enable
--	  this option at first, otherwise, You will get wrong system time.
--
--	  If unsure, say Yes.
--
-+	  Note: This driver is doing some dangerous hack. Please only enable
-+	  it on RS780E systems.
- 
- endif # MACH_LOONGSON64
+> > > ---
+> > >  drivers/power/reset/mt6323-poweroff.c |  2 +-
+> > >  drivers/rtc/rtc-mt6397.c              | 18 +++++++++++++++---
+> > >  include/linux/mfd/mt6397/rtc.h        |  9 ++++++++-
+> > >  3 files changed, 24 insertions(+), 5 deletions(-)
+
 -- 
-2.26.0.rc2
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
