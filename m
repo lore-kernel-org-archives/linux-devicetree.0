@@ -2,166 +2,88 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AC3C54FC9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 03:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8EEC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 03:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF5F0214AF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 03:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38CA521D82
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 03:36:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WZXgiclI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725896AbgDTD2V (ORCPT
+        id S1726012AbgDTDgL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Apr 2020 23:28:21 -0400
-Received: from mga09.intel.com ([134.134.136.24]:38261 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbgDTD2V (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 19 Apr 2020 23:28:21 -0400
-IronPort-SDR: HxJ2i4q39Vzlq9hk71piAICkRbLiE2pmH84WUcEaBnStIN0ltZ/W2OeJRiK4/xuQOQdBCSwOZj
- b3GqoFoXcZUw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 20:28:20 -0700
-IronPort-SDR: HAo3SnHSgS33uHmI/1WIj+u8MQgHZlw7cOFUr8mBDve0Oo8JvF0iK+RXOd39QJm38wIK6S1q0o
- bGN5MbOYUoYg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,405,1580803200"; 
-   d="scan'208";a="333784767"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 19 Apr 2020 20:28:20 -0700
-Received: from [10.249.68.96] (vramuthx-mobl1.gar.corp.intel.com [10.249.68.96])
-        by linux.intel.com (Postfix) with ESMTP id 90C52580479;
-        Sun, 19 Apr 2020 20:28:15 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
-        brendanhiggins@google.com, tglx@linutronix.de,
-        boris.brezillon@collabora.com, anders.roxell@linaro.org,
-        masonccyang@mxic.com.tw, piotrs@cadence.com, robh+dt@kernel.org,
-        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
-        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
-References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200419222817.GK185537@smile.fi.intel.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <cee6075c-a801-a0a9-f0b7-83c0a8c4fe80@linux.intel.com>
-Date:   Mon, 20 Apr 2020 11:28:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sun, 19 Apr 2020 23:36:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbgDTDgL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Apr 2020 23:36:11 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56730C061A0C
+        for <devicetree@vger.kernel.org>; Sun, 19 Apr 2020 20:36:11 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id z6so3432761plk.10
+        for <devicetree@vger.kernel.org>; Sun, 19 Apr 2020 20:36:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8H1NUjMwWNaYbzJpijo9kPT16a39a5axF1s4naNgu3E=;
+        b=WZXgiclIG1eDxkvnwjc1k3Zzr4gy0TUdaDeugR4EpWuGKYW7hws4VBsItL6z0bnp6a
+         I6PPu8wCTlM2BsSoikRX2Cu3/pSvwrcfQW00KgvxY74Khv0cUefGkIrIiwKzFIQjdOrm
+         wYvqL/kfMEdDLcrjZ2wwbCa0Dl9I7KF+czR0MG72KNllSpMIIcIo2nNA8wayK0O72mYk
+         l1sQLTkeNFC8W7tw+y43pe74eBy4Ocs229venEfem7hgcdpky1EMrWZLEosbrXTGEi9v
+         jHrjnXZxG92Pmu1u5MiN+Uc1eLhZzqaNGiX+lVLoS1WjQU/flGs+TEQXx98+WtzAiT0h
+         Bqig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8H1NUjMwWNaYbzJpijo9kPT16a39a5axF1s4naNgu3E=;
+        b=jmHYlBvr2YCj9+8zIBV8gq8qqvj1qyOHLeLWPZpKUBV8dUzPtbSr7P+WUR1bD4+KsY
+         rBSRMIxW0itQqX8bJaLPrKG0BtnxLs2oUPt1gzwEVqGfHdcRQJbussN11RDX69drk0cd
+         ZTcv4d9F8ngE//Uc9uR/05N15u+X1X7IXhIIIyE3pTOAEC6CtA+wRlBWEm76gJ4rAUTl
+         uDwmPrQs37X0Gh2Ub/vMkaPMi6Lgz+trlibbFkuAM1orgRSk6eW8d2gXairwidCmkJqY
+         LDXJZQkwBNAE3ERggaEN+tyBXYoOgJsJSUvQ9ZGFuxexrc1cl3eMYmACvafKiDeJAT0B
+         kz+w==
+X-Gm-Message-State: AGi0PuazxDjJNNskxAzHmdmjP6CJyPGKK23reFjNf2nnhpkYkuHSyR9z
+        uZ4Tfl8cRge1UA+mzxJFlRqUrhjzFq0=
+X-Google-Smtp-Source: APiQypLPmtlVFRC4fQpc3g0/x5O4imtV2N6XeI7jX2JLMMsPbZFwZ7CxmsczZhYf1ismWHip0KZPZw==
+X-Received: by 2002:a17:902:bc8c:: with SMTP id bb12mr14096905plb.13.1587353770635;
+        Sun, 19 Apr 2020 20:36:10 -0700 (PDT)
+Received: from localhost ([122.171.118.46])
+        by smtp.gmail.com with ESMTPSA id c15sm24108426pgk.66.2020.04.19.20.36.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 19 Apr 2020 20:36:09 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 09:06:07 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     sboyd@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org
+Subject: Re: [PATCH v2 00/17] DVFS for IO devices on sdm845 and sc7180
+Message-ID: <20200420033607.eci57emjzcz7jaq4@vireshk-i7>
+References: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200419222817.GK185537@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andy,
+On 17-04-20, 19:34, Rajendra Nayak wrote:
+> Changes in v2:
+> 1. Added error handling for dev_pm_opp_set_clkname()
+> and dev_pm_opp_of_add_table()
+> 2. Used dev_pm_opp_put_clkname() in the cleanup path
+> 3. Dropped the OPP patch pulled in by Viresh [1]
 
-   Thank you very much for the review comments and your time...
+This is part of 5.7-rc2 now. Thanks.
 
-On 20/4/2020 6:28 am, Andy Shevchenko wrote:
-> On Fri, Apr 17, 2020 at 04:21:47PM +0800, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> This patch adds the new IP of Nand Flash Controller(NFC) support
->> on Intel's Lightning Mountain(LGM) SoC.
->>
->> DMA is used for burst data transfer operation, also DMA HW supports
->> aligned 32bit memory address and aligned data access by default.
->> DMA burst of 8 supported. Data register used to support the read/write
->> operation from/to device.
->>
->> NAND controller driver implements ->exec_op() to replace legacy hooks,
->> these specific call-back method to execute NAND operations.
-> I guess untested version slipped into mailing list...
-> See below why.
-
-Sorry, This is original patch only , header files are mis-aligned so 
-looks like un-tested patch.
-
-> ...
->
->> +#include <linux/clk.h>
->> +#include <linux/completion.h>
->> +#include <linux/dmaengine.h>
->> +#include <linux/dma-direction.h>
->> +#include <linux/dma-mapping.h>
->> +#include <linux/err.h>
->> +#include <linux/init.h>
->> +#include <linux/iopoll.h>
->> +#include <linux/module.h>
->> +#include <linux/resource.h>
->> +#include <linux/sched.h>
->> +#include <linux/types.h>
->> +#include <linux/mtd/mtd.h>
->> +#include <linux/mtd/rawnand.h>
->> +#include <linux/mtd/nand_ecc.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/of.h>
-> Do you need this?
-Noted, will check and drop if it is notnecessary.
->> +#include <linux/mtd/partitions.h>
->> +#include <linux/io.h>
->> +#include <linux/slab.h>
->> +#include <mtd/mtd-abi.h>
->> +#include <linux/mod_devicetable.h>
->> +#include <linux/mtd/nand.h>
-> Basically, do you need all of them?
->
-> And maybe keep them in order?
-Sure, will update.
-> ...
->
->> +static int lgm_dma_init(struct device *dev, struct lgm_nand_host *lgm_host)
->> +{
->> +	int ret;
->> +
->> +	/* Prepare for TX DMA: */
->> +	lgm_host->dma_tx = dma_request_chan(dev, "tx");
->> +	if (IS_ERR(lgm_host->dma_tx)) {
->> +		ret = PTR_ERR(lgm_host->dma_tx);
->> +		dev_err(dev, "can't get the TX DMA channel, error %d!\n", ret);
->> +		goto err;
->> +	}
->> +
->> +	/* Prepare for RX: */
->> +	lgm_host->dma_rx = dma_request_chan(dev, "rx");
->> +	if (IS_ERR(lgm_host->dma_rx)) {
->> +		ret = PTR_ERR(lgm_host->dma_rx);
->> +		dev_err(dev, "can't get the RX DMA channel, error %d\n", ret);
-> I suspect this error path hasn't been tested. I don't see where tx channel
-> freeing is happening.
-Good catch, Thanks!, will update
->> +		goto err;
->> +	}
->> +
->> +	return 0;
->> +err:
->> +	return ret;
-> Redundant label.
-Noted.
->> +}
-> ...
->
->> +	res = devm_platform_ioremap_resource_byname(pdev, lgm_host->cs_name);
->> +	lgm_host->nandaddr_va = res;
->> +	nandaddr_pa = res->start;
->> +	if (IS_ERR(lgm_host->nandaddr_va))
->> +		return PTR_ERR(lgm_host->nandaddr_va);
-> I'm wonderig what is this.  How is it even compile?
-
-Agreed!, need a correction, but it's compiled.
-
-Regards
-Vadivel
->
+-- 
+viresh
