@@ -2,341 +2,83 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70568C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DE2C3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 508FA2084D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D4E12074F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:43:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587408194;
-	bh=cznWbjKyzN26vZgPZd5mjitB0qhqNuOK9D3NfN/d3hQ=;
+	s=default; t=1587408229;
+	bh=olQuPn8361J0Q3JaWU5P2rxD0JudqTjTWp8tJXTS66Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aWcxjNRKV/MI2U2wAH0084k5Xr6SdGbYs2cAH/QQhRP1ojJrbzCFhLq7sgzN9pdDG
-	 3XtqihUxUI5kWi9smDeJhAk+eOHmr/JIZEzX2JLFcvRRr6Nn5+mwY6e5Igxf/43ie7
-	 7OKwhvziPJcKSGASN0na0unT9uI+kYwBkoM+BfNQ=
+	b=ZdrnNkfmGMlKR+NUAx0sdzOMPjbrgR518fqr0hGLXEe80E7tLhMN3MAPSstyQFOAl
+	 RW0Fr5NuRv7i22MGmCzgqbdc/UUSV1iyebihQIBFSnIFWTu9KhttRHQktwCSzqTedu
+	 guTspuOKdeHAb0VPkRRoDn3NUcJwr9vhlbC60k6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgDTSnN (ORCPT
+        id S1726021AbgDTSnt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:43:13 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43989 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726392AbgDTSnN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 14:43:13 -0400
-Received: by mail-oi1-f195.google.com with SMTP id j16so9707895oih.10;
-        Mon, 20 Apr 2020 11:43:12 -0700 (PDT)
+        Mon, 20 Apr 2020 14:43:49 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33850 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbgDTSnt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 14:43:49 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 72so2607396otu.1
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 11:43:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Wr9z4VHkUYV0azpH3NGkoTt6PH+KjpNDUACdFjs/NiA=;
-        b=Gu6Z5Tso+EJRSfSLfc9bwUebHcB5EXrMQQGUWu5wXZvsT8NGBF0EkI8vzjXss+M22D
-         7Yo5HT9oXgjZZpznZgz1pp7TanC3g59pwOcsCnaHxy5oYlgLS5MaffT/34zabwqM8IPk
-         k+0OgWPpox6gTnAIsUOVIimIey0WNeTwBWBm0kI4DvhXCmMLjGI36Ycg0Ca9bW8k/39w
-         Bz+mf1/UawsQfJMHkGMx48OSokP6XXNHu7VdTqeQ3rhHgZsN1ufJmyb4L1d/aWqP1RbM
-         sROYszgRphjcFN58VwkpOdECt9d1PH3wAyB9BK0PCKZarbSSyQX0eyLjYnt3nE2/U9nA
-         v7kw==
-X-Gm-Message-State: AGi0PuYJcbXbGvUkQ8+RFL7WFN6z2VgYmiH1DhJiAjwtv0SYD5xH+PZw
-        XjfJoRn7O8TTTwUjxj1Esw==
-X-Google-Smtp-Source: APiQypJe7MGfPouzuOmJSJnUYSad5CodTv75XXmNZndtyFF4Gy8XOt8HUimd4fV/Vgik2rKP29RQcg==
-X-Received: by 2002:aca:cf4b:: with SMTP id f72mr580396oig.177.1587408191338;
-        Mon, 20 Apr 2020 11:43:11 -0700 (PDT)
+        bh=dz2IRzb2aQKWCSo1yDOq/Bg3xUcblLFiI3vUh+v9Ahg=;
+        b=B/pdwlA64u0vPtKvZDx32pPfDg1SZbYLcyLT5cP7xsU/rVLpPYkhIkbp28hWhVv9xZ
+         YoFsLYOFXF+8yys+kiahU8aKu3pYiLk+FXNLJgbwdz4TLiMAh3G+dQ/DwDMD7mVwKG57
+         R0DncA2vzBhRc3xvV7fxl6HCz4mpRapkpw+diNYE8h6LUZ4KXvmMW3wopMBgPsceJzLj
+         X0T7y68TGU3nZBsFqYzIf8WoN5/lrdOdnOyG0waSCXRZviE/Qcru/uUfUYKgV7f4n+jI
+         yDfDpKkW4NRrZqiILENFw+EimkJSHMeFhK4IHbgemK6yaVU2g0pD2pvs3enbKf/C/vwO
+         CjzA==
+X-Gm-Message-State: AGi0PuZSYZydLxU0PQeMfxHtWQGStDa1AhR9PPdiKxuY+8wWIl44IDgC
+        4FbagDrKtplTBWthVsGQ+A==
+X-Google-Smtp-Source: APiQypJacM9Mp3Jhi8sMpzV92OyGyCiJaYdelbg5r2DMr3hLXSpT0H55qGv4Yut0KPWXFsRFeco8Mg==
+X-Received: by 2002:a05:6830:138c:: with SMTP id d12mr3323171otq.310.1587408228381;
+        Mon, 20 Apr 2020 11:43:48 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c24sm50813oov.48.2020.04.20.11.43.09
+        by smtp.gmail.com with ESMTPSA id 76sm107954otg.68.2020.04.20.11.43.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 11:43:10 -0700 (PDT)
-Received: (nullmailer pid 22017 invoked by uid 1000);
-        Mon, 20 Apr 2020 18:43:09 -0000
-Date:   Mon, 20 Apr 2020 13:43:09 -0500
+        Mon, 20 Apr 2020 11:43:47 -0700 (PDT)
+Received: (nullmailer pid 23028 invoked by uid 1000);
+        Mon, 20 Apr 2020 18:43:46 -0000
+Date:   Mon, 20 Apr 2020 13:43:46 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Louis Kuo <louis.kuo@mediatek.com>
-Cc:     hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com,
-        tfiga@chromium.org, keiichiw@chromium.org, matthias.bgg@gmail.com,
-        mchehab@kernel.org, yuzhao@chromium.org, zwisler@chromium.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, Sean.Cheng@mediatek.com,
-        sj.huang@mediatek.com, christie.yu@mediatek.com,
-        frederic.chen@mediatek.com, Jerry-ch.Chen@mediatek.com,
-        jungo.lin@mediatek.com, linux-media@vger.kernel.org,
-        srv_heupstream@mediatek.com, devicetree@vger.kernel.org
-Subject: Re: [RFC PATCH V6 2/3] dt-bindings: mt8183: Add sensor interface
- dt-bindings
-Message-ID: <20200420184309.GA14720@bogus>
-References: <20200410071723.19720-1-louis.kuo@mediatek.com>
- <20200410071723.19720-3-louis.kuo@mediatek.com>
+To:     tangjianqiang <wyqt1985@gmail.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
+        Tang Jianqiang <wyqt1985@gmail.com>,
+        tangjianqiang <tangjianqiang@xiaomi.com>
+Subject: Re: [PATCH] of: fix the warnings from command line.
+Message-ID: <20200420184346.GA22859@bogus>
+References: <1586507524-3987-1-git-send-email-tangjianqiang@xiaomi.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200410071723.19720-3-louis.kuo@mediatek.com>
+In-Reply-To: <1586507524-3987-1-git-send-email-tangjianqiang@xiaomi.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 10, 2020 at 03:17:22PM +0800, Louis Kuo wrote:
-> This patch adds the DT binding documentation for the sensor interface
-> module in Mediatek SoCs.
-
-checkpatch.pl reports some trailing WS.
-
+On Fri, 10 Apr 2020 16:32:04 +0800, tangjianqiang wrote:
+> Gerrit will complain with this warnings:
+> ERROR: (foo*) should be (foo *)
 > 
-> Signed-off-by: Louis Kuo <louis.kuo@mediatek.com>
+> Signed-off-by: tangjianqiang <tangjianqiang@xiaomi.com>
 > ---
->  .../bindings/media/mediatek-seninf.yaml       | 219 ++++++++++++++++++
->  1 file changed, 219 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek-seninf.yaml
+>  drivers/of/fdt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/media/mediatek-seninf.yaml b/Documentation/devicetree/bindings/media/mediatek-seninf.yaml
-> new file mode 100644
-> index 000000000000..c9e5776a2bd0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/mediatek-seninf.yaml
-> @@ -0,0 +1,219 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 
-(GPL-2.0-only OR BSD-2-Clause)
+Applied, thanks.
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/mediatek-seninf.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Mediatek seninf MIPI-CSI2 host driver
-
-Bindings aren't drivers.
-
-> +
-> +maintainers:
-> +  - Louis Kuo <louis.kuo@mediatek.com>
-> +
-> +description: |
-> +  Seninf MIPI-CSI2 host driver is a HW camera interface controller. It support
-> +  a widely adopted, simple, high-speed protocol primarily intended for
-> +  point-to-point image and video transmission between cameras and host devices.
-> +
-> +properties:
-> +  compatible:
-> +    const: mediatek,mt8183-seninf
-> +
-> +  reg:
-> +    minItems: 2
-> +    items:
-> +      - description: The Seninf main register region
-> +      - description: The RX register region
-> +
-> +  reg-names:
-> +    minItems: 2
-
-Drop, implied.
-
-> +    items:
-> +      - const: base
-> +      - const: rx
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Seninf camsys clock
-> +      - description: Seninf top mux clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: clk_cam_seninf
-> +      - const: clk_top_mux_seninf
-
-Drop 'clk_' as it is redundant.
-
-> +
-> +  # See ./video-interfaces.txt for details
-> +  ports:
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    properties: 
-> +      port@0:
-> +        type: object
-> +        description: connection point for sensor at port 0
-> +        additionalProperties: false
-> +
-> +        properties:
-> +          reg:
-> +            const: 0
-> +
-> +        patternProperties:
-> +          endpoint:
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              data-lanes:
-> +                minItems: 1
-> +                maxItems: 4
-> +
-> +              remote-endpoint: true
-> +
-> +      port@1:
-> +        type: object
-> +        description: connection point for sensor at port 1
-> +        additionalProperties: false
-> +
-> +        properties:
-> +          reg:
-> +            const: 1
-> +
-> +        patternProperties:
-> +          endpoint:
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              data-lanes:
-> +                minItems: 1
-> +                maxItems: 4
-> +
-> +              remote-endpoint: true
-> +
-> +      port@4:
-> +        type: object
-> +        description: connection point for camsys
-> +        additionalProperties: false
-> +
-> +        properties:
-> +          reg:
-> +            const: 4
-> +
-> +        patternProperties:
-> +          endpoint:
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              remote-endpoint: true
-> +
-> +    required:
-> +      - port@0
-> +      - port@1
-> +      - port@4
-> +
-> +required:
-> +  - compatible
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - power-domains
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +
-> +    #include <dt-bindings/clock/mt8183-clk.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/power/mt8183-power.h>
-> +
-> +    parent0: parent@0 {
-
-bus {
-
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        seninf: seninf@1a040000 {
-> +            compatible = "mediatek,mt8183-seninf";
-> +            reg = <0 0x1a040000 0 0x8000>,
-> +                  <0 0x11c80000 0 0x6000>;
-> +            reg-names = "base", "rx";
-> +            interrupts = <GIC_SPI 251 IRQ_TYPE_LEVEL_LOW>;
-> +            power-domains = <&scpsys MT8183_POWER_DOMAIN_CAM>;
-> +            clocks = <&camsys CLK_CAM_SENINF>,
-> +                <&topckgen CLK_TOP_MUX_SENINF>;
-> +            clock-names = "clk_cam_seninf", "clk_top_mux_seninf";
-> +
-> +            ports {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                port@0 {
-> +                    reg = <0>;
-> +
-> +                    mipi_in_bcam: endpoint {
-> +                        data-lanes = <0 1 3 4>;
-> +                        remote-endpoint = <&bcam_out>;
-> +                    };
-> +                };
-> +
-> +                port@1 {
-> +                    reg = <1>;
-> +
-> +                    mipi_in_fcam: endpoint {
-> +                        data-lanes = <1>;
-> +                        remote-endpoint = <&fcam_out>;
-> +                    };
-> +                };
-> +
-> +                port@4 {
-> +                    reg = <4>;
-> +
-> +                    seninf_camisp_endpoint: endpoint {
-> +                        remote-endpoint = <&camisp_endpoint>;
-> +                    };
-> +                };
-> +            };
-> +        };
-> +
-> +        i2c2: i2c@11009000 {
-
-This will give a warning on 5.7-rc. Add a reg property.
-
-> +            clock-frequency = <400000>;
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            wcam: camera@36 {
-> +                compatible = "ovti,ov5695";
-> +                reg = <0x36>;
-> +
-> +                port {
-> +                    bcam_out: endpoint {
-> +                        remote-endpoint = <&mipi_in_bcam>;
-> +                        data-lanes = <0 1 3 4>;
-> +                    };
-> +                };
-> +            };
-> +        };
-> +
-> +        i2c4: i2c@11008000 {
-> +            clock-frequency = <400000>;
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +            
-> +            ucam: camera@3c {
-> +                compatible = "ovti,ov2685";
-> +                reg = <0x3c>;
-> +
-> +                port {
-> +                    fcam_out: endpoint {
-> +                        remote-endpoint = <&mipi_in_fcam>;
-> +                        data-lanes = <1>;
-> +                    };
-> +                };
-> +            };
-> +        };
-> +    };
-> \ No newline at end of file
-
-Fix.
-
-> -- 
-> 2.18.0
+Rob
