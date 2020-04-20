@@ -2,220 +2,222 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA81C54FCC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 06:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E3AC3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 06:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC3C20857
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 06:36:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XEatlmJe"
+	by mail.kernel.org (Postfix) with ESMTP id 9FDF12073A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 06:38:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725896AbgDTGgw (ORCPT
+        id S1725896AbgDTGiL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 02:36:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725812AbgDTGgw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 02:36:52 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A4E9C061A0C
-        for <devicetree@vger.kernel.org>; Sun, 19 Apr 2020 23:36:52 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x3so4473027pfp.7
-        for <devicetree@vger.kernel.org>; Sun, 19 Apr 2020 23:36:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=L27HBU83hEal+N26VFwHycUX9XOfAyoXkB2huIPsA9k=;
-        b=XEatlmJeITPpwD3f0SlRiEBIQL07PhR1eF9mmHF/OhduyMH5V6X1Wn6a71K6iBByQx
-         HK60nJ8BGPYHQWgoZ09buq/ukO0+LJY/fabEE8x2W1HnykDWV61JUWBdy/AJsDfWZz+e
-         KIr2OC0fti5A4PxK6X+n4UwWOSiR6J9LYe5r9lmmUfwY7+rx17ImZsmMnUNgJUEN2fs7
-         gNbRmCztcAR+ox2Q9zFikSPdyd8Ytqo5ZqZojKUU0EnWwFjJ/QCQCaUds8MyM+uqLCjG
-         llSaH06R8wN18FFgBYinwz9/7HqCHuVcH4briVvomSNNW774Skr7R/pazfzRa+N0xLmX
-         xmMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=L27HBU83hEal+N26VFwHycUX9XOfAyoXkB2huIPsA9k=;
-        b=mDaUwy+LqzL7JXyfqpajJ8odhri5bxYm8H2o0X9kAujofOB/m6rBGbG6o6she7IoO0
-         7BSn9tFetwC5FLSMVUiZLlVQDWX+LDVmHty9ayy+cwryzAULTzDyMWAE2Mio70Kiixs6
-         Xau/6XC131TcnKfPaBDG8Zuos2fMV5mpH8d7i49KTKScbuczkvzCg4oLEOveGPOlUXOl
-         OmfO/n+h4G4S8b1Y/gQ7QoS0T4W1xJRsdHGgDVVjLA4g57Cumag2OaLtLqxU723y072u
-         ln9maxfvrhJhWi+45BVexqvR2VNBmE7bdWwahIZnG3uSlov6OVvSiUbp0JCKNlSCWcsh
-         A1uQ==
-X-Gm-Message-State: AGi0PuYyz3wAlphzLRY4z3v/8tQ2DxwUSlstiFmnDoscSrJUWj+KIO4W
-        1HIl4/1ZjmQ63CWxYTP1+7etjw==
-X-Google-Smtp-Source: APiQypIyskZupogxs8R5S2FQG0PhO1AvaANwpsKWLHsPifS9+YKjOFR/4CCknIWpq8eAAm9OOA7gNA==
-X-Received: by 2002:aa7:96cf:: with SMTP id h15mr10987919pfq.319.1587364611618;
-        Sun, 19 Apr 2020 23:36:51 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h9sm96070pfo.129.2020.04.19.23.36.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 23:36:50 -0700 (PDT)
-Date:   Sun, 19 Apr 2020 23:37:14 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>, od@zcrc.me,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v6 4/5] remoteproc: ingenic: Added remoteproc driver
-Message-ID: <20200420063714.GA1868936@builder.lan>
-References: <20200417170040.174319-1-paul@crapouillou.net>
- <20200417170040.174319-4-paul@crapouillou.net>
+        Mon, 20 Apr 2020 02:38:11 -0400
+Received: from mga03.intel.com ([134.134.136.65]:32467 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725815AbgDTGiK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Apr 2020 02:38:10 -0400
+IronPort-SDR: AP6NocAneAfJtVIXO/V3SHiA0xizX7IcheYA2nGuSh1zv5Zh/0D4Dv027BYlmBA55qTnZC511T
+ o4pxFDCogqvA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2020 23:38:10 -0700
+IronPort-SDR: S6x9w74MCfZBElGJ91IF4yeKTW9ZLv0dFAMJYzzr/ATQNLPifhOxPwJ3TMKqy9nvjtYO8DeqH6
+ ywuGZEsAm92w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,406,1580803200"; 
+   d="scan'208";a="364912315"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 19 Apr 2020 23:38:06 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 20 Apr 2020 09:38:06 +0300
+Date:   Mon, 20 Apr 2020 09:38:06 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Tobias Schramm <t.schramm@manjaro.org>,
+        Yueyao Zhu <yueyao@google.com>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org
+Subject: Re: [PATCH] usb: fusb302: Convert to use GPIO descriptors
+Message-ID: <20200420063806.GB3768833@kuha.fi.intel.com>
+References: <20200415192448.305257-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200417170040.174319-4-paul@crapouillou.net>
+In-Reply-To: <20200415192448.305257-1-linus.walleij@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri 17 Apr 10:00 PDT 2020, Paul Cercueil wrote:
-
-> This driver is used to boot, communicate with and load firmwares to the
-> MIPS co-processor found in the VPU hardware of the JZ47xx SoCs from
-> Ingenic.
+On Wed, Apr 15, 2020 at 09:24:48PM +0200, Linus Walleij wrote:
+> This converts the FUSB302 driver to use GPIO descriptors.
+> The conversion to descriptors per se is pretty straight-forward.
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Signed-off-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
+> In the process I discovered that:
+> 
+> 1. The driver uses a completely undocumented device tree binding
+>    for the interrupt GPIO line, "fcs,int_n". Ooops.
+> 
+> 2. The undocumented binding, presumably since it has not seen
+>    review, is just "fcs,int_n", lacking the compulsory "-gpios"
+>    suffix and also something that is not a good name because
+>    the "_n" implies the line is inverted which is something we
+>    handle with flags in the device tree. Ooops.
+> 
+> 3. Possibly the driver should not be requesting the line as a
+>    GPIO and request the corresponding interrupt line by open
+>    coding, the GPIO chip is very likely doubleing as an IRQ
+>    controller and can probably provide an interrupt directly
+>    for this line with interrupts-extended = <&gpio0 ...>;
+> 
+> 4. Possibly the IRQ should just be tagged on the I2C client node
+>    in the device tree like apparently ACPI does, as it overrides
+>    this IRQ with client->irq if that exists.
+> 
+> But now it is too late to do much about that and as I can see
+> this is used like this in the Pinebook which is a shipping product
+> so let'a just contain the mess and move on.
+> 
+> The property currently appears in:
+> arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
+> 
+> Create a quirk in the GPIO OF library to allow this property
+> specifically to be specified without the "-gpios" suffix, we have
+> other such bindings already.
+> 
+> Cc: Tobias Schramm <t.schramm@manjaro.org>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: Yueyao Zhu <yueyao@google.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-Please read Documentation/process/submitting-patches.rst about
-"Developer's Certificate of Origin".
+FWIW:
 
-I suspect that you incorporated review feedback on previous revisions
-from kbuild and Julia, this is generally omitted from the actual commit
-message.
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 > ---
+> This is now covered as far as GPIO is concerned but you might
+> want to look into creating proper bindings for this or
+> correcting the devicetree.
+> ---
+>  drivers/gpio/gpiolib-of.c        | 21 +++++++++++++++++++++
+>  drivers/usb/typec/tcpm/fusb302.c | 32 +++++++++-----------------------
+>  2 files changed, 30 insertions(+), 23 deletions(-)
 > 
-> Notes:
->     v2: Remove exception for always-mapped memories
->     v3: - Use clk_bulk API
->     	- Move device-managed code to its own patch [3/4]
->     	- Move devicetree table right above ingenic_rproc_driver
->     	- Removed #ifdef CONFIG_OF around devicetree table
->     	- Removed .owner = THIS_MODULE in ingenic_rproc_driver
->     	- Removed useless platform_set_drvdata()
->     v4: - Add fix reported by Julia
->     	- Change Kconfig symbol to INGENIC_VPU_RPROC
->     	- Add documentation to struct vpu
->     	- disable_irq_nosync() -> disable_irq()
->     v5: No change
->     v6: Instead of prepare/unprepare callbacks, use PM runtime callbacks
-> 
->  drivers/remoteproc/Kconfig         |   8 +
->  drivers/remoteproc/Makefile        |   1 +
->  drivers/remoteproc/ingenic_rproc.c | 282 +++++++++++++++++++++++++++++
->  3 files changed, 291 insertions(+)
->  create mode 100644 drivers/remoteproc/ingenic_rproc.c
-> 
-> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> index fbaed079b299..31da3e6c6281 100644
-> --- a/drivers/remoteproc/Kconfig
-> +++ b/drivers/remoteproc/Kconfig
-> @@ -240,6 +240,14 @@ config STM32_RPROC
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index ccc449df3792..20c2c428168e 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -460,6 +460,24 @@ static struct gpio_desc *of_find_arizona_gpio(struct device *dev,
+>  	return of_get_named_gpiod_flags(dev->of_node, con_id, 0, of_flags);
+>  }
 >  
->  	  This can be either built-in or a loadable module.
->  
-> +config INGENIC_VPU_RPROC
-
-Please try to keep things alphabetically ordered.
-
-> +	tristate "Ingenic JZ47xx VPU remoteproc support"
-> +	depends on MIPS || COMPILE_TEST
-> +	help
-> +	  Say y or m here to support the VPU in the JZ47xx SoCs from Ingenic.
-> +	  This can be either built-in or a loadable module.
-> +	  If unsure say N.
-> +
->  endif # REMOTEPROC
->  
->  endmenu
-[..]
-> diff --git a/drivers/remoteproc/ingenic_rproc.c b/drivers/remoteproc/ingenic_rproc.c
-[..]
-> +/**
-> + * struct vpu - Ingenic VPU remoteproc private structure
-> + * @irq: interrupt number
-> + * @clks: pointers to the VPU and AUX clocks
-
-aux_base is missing
-
-> + * @mem_info: array of struct vpu_mem_info, which contain the mapping info of
-> + *            each of the external memories
-> + * @dev: private pointer to the device
-> + */
-> +struct vpu {
-> +	int irq;
-> +	struct clk_bulk_data clks[2];
-> +	void __iomem *aux_base;
-> +	struct vpu_mem_info mem_info[ARRAY_SIZE(vpu_mem_map)];
-> +	struct device *dev;
-> +};
-[..]
-> +static void *ingenic_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
+> +static struct gpio_desc *of_find_usb_gpio(struct device *dev,
+> +					  const char *con_id,
+> +					  enum of_gpio_flags *of_flags)
 > +{
-> +	struct vpu *vpu = rproc->priv;
-> +	void __iomem *va = NULL;
-> +	unsigned int i;
+> +	/*
+> +	 * Currently this USB quirk is only for the Fairchild FUSB302 host which is using
+> +	 * an undocumented DT GPIO line named "fcs,int_n" without the compulsory "-gpios"
+> +	 * suffix.
+> +	 */
+> +	if (!IS_ENABLED(CONFIG_TYPEC_FUSB302))
+> +		return ERR_PTR(-ENOENT);
 > +
-> +	if (len <= 0)
-
-len can't be negative (also, does it add value to check for and fail len
-== 0?)
-
-> +		return NULL;
+> +	if (!con_id || strcmp(con_id, "fcs,int_n"))
+> +		return ERR_PTR(-ENOENT);
 > +
-> +	for (i = 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
-> +		const struct vpu_mem_info *info = &vpu->mem_info[i];
-> +		const struct vpu_mem_map *map = info->map;
-> +
-> +		if (da >= map->da && (da + len) < (map->da + info->len)) {
-> +			va = info->base + (da - map->da);
-> +			break;
-> +		}
-> +	}
-> +
-> +	return (__force void *)va;
+> +	return of_get_named_gpiod_flags(dev->of_node, con_id, 0, of_flags);
 > +}
-[..]
-> +static struct platform_driver ingenic_rproc_driver = {
-> +	.probe = ingenic_rproc_probe,
-> +	.driver = {
-> +		.name = "ingenic-vpu",
-> +#ifdef CONFIG_PM
-
-Please omit the #ifdef here.
-
-> +		.pm = &ingenic_rproc_pm,
-> +#endif
-> +		.of_match_table = of_match_ptr(ingenic_rproc_of_matches),
-
-Please omit the of_match_ptr()
-
-Regards,
-Bjorn
-
-> +	},
-> +};
-> +module_platform_driver(ingenic_rproc_driver);
 > +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
-> +MODULE_DESCRIPTION("Ingenic JZ47xx Remote Processor control driver");
+>  struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
+>  			       unsigned int idx, unsigned long *flags)
+>  {
+> @@ -504,6 +522,9 @@ struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
+>  	if (PTR_ERR(desc) == -ENOENT)
+>  		desc = of_find_arizona_gpio(dev, con_id, &of_flags);
+>  
+> +	if (PTR_ERR(desc) == -ENOENT)
+> +		desc = of_find_usb_gpio(dev, con_id, &of_flags);
+> +
+>  	if (IS_ERR(desc))
+>  		return desc;
+>  
+> diff --git a/drivers/usb/typec/tcpm/fusb302.c b/drivers/usb/typec/tcpm/fusb302.c
+> index b498960ff72b..b28facece43c 100644
+> --- a/drivers/usb/typec/tcpm/fusb302.c
+> +++ b/drivers/usb/typec/tcpm/fusb302.c
+> @@ -9,14 +9,13 @@
+>  #include <linux/delay.h>
+>  #include <linux/errno.h>
+>  #include <linux/extcon.h>
+> -#include <linux/gpio.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/i2c.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+>  #include <linux/of_device.h>
+> -#include <linux/of_gpio.h>
+>  #include <linux/pinctrl/consumer.h>
+>  #include <linux/proc_fs.h>
+>  #include <linux/regulator/consumer.h>
+> @@ -83,7 +82,7 @@ struct fusb302_chip {
+>  	struct work_struct irq_work;
+>  	bool irq_suspended;
+>  	bool irq_while_suspended;
+> -	int gpio_int_n;
+> +	struct gpio_desc *gpio_int_n;
+>  	int gpio_int_n_irq;
+>  	struct extcon_dev *extcon;
+>  
+> @@ -1618,30 +1617,17 @@ static void fusb302_irq_work(struct work_struct *work)
+>  
+>  static int init_gpio(struct fusb302_chip *chip)
+>  {
+> -	struct device_node *node;
+> +	struct device *dev = chip->dev;
+>  	int ret = 0;
+>  
+> -	node = chip->dev->of_node;
+> -	chip->gpio_int_n = of_get_named_gpio(node, "fcs,int_n", 0);
+> -	if (!gpio_is_valid(chip->gpio_int_n)) {
+> -		ret = chip->gpio_int_n;
+> -		dev_err(chip->dev, "cannot get named GPIO Int_N, ret=%d", ret);
+> -		return ret;
+> -	}
+> -	ret = devm_gpio_request(chip->dev, chip->gpio_int_n, "fcs,int_n");
+> -	if (ret < 0) {
+> -		dev_err(chip->dev, "cannot request GPIO Int_N, ret=%d", ret);
+> -		return ret;
+> -	}
+> -	ret = gpio_direction_input(chip->gpio_int_n);
+> -	if (ret < 0) {
+> -		dev_err(chip->dev,
+> -			"cannot set GPIO Int_N to input, ret=%d", ret);
+> -		return ret;
+> +	chip->gpio_int_n = devm_gpiod_get(dev, "fcs,int_n", GPIOD_IN);
+> +	if (IS_ERR(chip->gpio_int_n)) {
+> +		dev_err(dev, "failed to request gpio_int_n\n");
+> +		return PTR_ERR(chip->gpio_int_n);
+>  	}
+> -	ret = gpio_to_irq(chip->gpio_int_n);
+> +	ret = gpiod_to_irq(chip->gpio_int_n);
+>  	if (ret < 0) {
+> -		dev_err(chip->dev,
+> +		dev_err(dev,
+>  			"cannot request IRQ for GPIO Int_N, ret=%d", ret);
+>  		return ret;
+>  	}
 > -- 
-> 2.25.1
-> 
+> 2.25.2
+
+thanks,
+
+-- 
+heikki
