@@ -2,164 +2,125 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBB7C54FCC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 22:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8781AC54FCC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 22:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19854205C9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 22:38:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qwz8/nr5"
+	by mail.kernel.org (Postfix) with ESMTP id 598A6206F4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 22:49:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587422997;
+	bh=ER60G7f/wCi9YNreYn1CMCDR1SWv2rYWmzhxdoW2o70=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Ed80UvtnQShSJ0MnY1Kt7Pqjlwalbbs440wcb1FgSEj2/v3VjkF0ITAb73LmpR7KL
+	 3TOL+gH1y7PEhOWusekwszsyhHVcPRxXQWIs9F3AGv75zyAQg+pcRwZ5j0WuRPiRjc
+	 eALmKKF1OeOLz1RwL2kCwQkdfTnjhNwE0ahCPcbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgDTWic (ORCPT
+        id S1726081AbgDTWt5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 18:38:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbgDTWic (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 18:38:32 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1FA3C061A0C
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 15:38:31 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id s202so10365445oih.3
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 15:38:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tqYg6ntkQ0k1GeM/P7oYOBS8jSkjVtqvvJulIoVkKiM=;
-        b=qwz8/nr5QucNjlHATqW9FL6h37kLUiDAM6dAkwSyUVvKHTH+CaeQglYUw9of9Nj/z3
-         xsEFNBcLPrY6BVm0w2eVW+vAd0NuE3MgW/KuVwUelG4Kxq3oBpzYp+ki+lK6cWAWlYoY
-         BgEXbx09x4ia97ZGfEYlmbTuttJjMWJdWGCcK79SYrAVDfMATttQPvhJWng5Fp9d9BNY
-         pC0znJHuBdB5MhWQOsrJ0b9NCX8jxP4/qJKcnRrh30nCYOiq1dwcbX7FBFxCG4kmDwna
-         ih8cSxzfaCfZLU/wDR6ebyxVMDFfFPYTV1c6PlpF2/EYAgAQ3YGA8QX0c6bvOcdpvmil
-         +Kog==
+        Mon, 20 Apr 2020 18:49:57 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44226 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbgDTWt4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 18:49:56 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j4so9641344otr.11;
+        Mon, 20 Apr 2020 15:49:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tqYg6ntkQ0k1GeM/P7oYOBS8jSkjVtqvvJulIoVkKiM=;
-        b=lkJyrj4YEE4PwBSOis0HIiY/+pr6DTbwZIorh0AFdTcrL7G3DTKlqtNRf2hmrEKqy5
-         58DBfT/LOt4wmy4FsCW8WfksIEDg3BrK+fAXzWUM+PwCj/lJ0e76OaN2MN9ypCTb3vC8
-         qj3legml9EvvvvBjnEiX7iYA61CdzxrGZ3ADOXD/q2A83WNypanAmT54pxEkDq/qfjY9
-         BotcQtKySYljfd4I9oHAjJpXNEgS8yzxj9RusIW9sHwMJJfgTXyPfXnGxuY5DaAYtO2L
-         sGbQj2fFrnwqC8NSd0gJvnOcUJQgfmgtt6uQlFroQ25vEj8NyJmv7SuTEUqEKvBatC8o
-         duPQ==
-X-Gm-Message-State: AGi0PuZzI6/4EjHEBSL6+P1ehgvLIgla3gDAMyohkkh5lD+ZUhUy8AFc
-        vqoeDiANzkC3fIOqTC4eLbxMya/mK1Fot3yUzWFR3w==
-X-Google-Smtp-Source: APiQypLhshDKGKzPG2/FUFOcpcMmXm5mKm0h4rRpZd/H1AvaVthcwyaU7iTZW2bPIGE9obKIx5h2rI+JvNTiDoMcMkI=
-X-Received: by 2002:aca:5251:: with SMTP id g78mr1246189oib.172.1587422311105;
- Mon, 20 Apr 2020 15:38:31 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WxapfpzO9hO69SC6FH5ie/6DnovyNGoMMyMXhqKbPBU=;
+        b=Mmdm+26eykaJdqR19q0NrZ2zAbxTEs/oMzm/89/ug7ywuGluks9FxC2dQcSAjnqDue
+         ic3FlvS51A+vcwboApnSWSPKN2NEdGSd2veMLJIKdEgm5x4Bc4yEV2nEpiYNuaCsd0iD
+         Rx62B4FXexRVSltTGwgUerDumKmqo9Qy0AEvrhISCMNqKYltYbgi76HLMvTnBCNVFAZ6
+         HU/C4SpN/vCzpET3RQO8vaB37WzZ/qL9GWhq0r2wAw9TJ0H0G8ORqv7n9drZVOH+nLXO
+         r9hxnEfgKhdsTGeSuNuz8TY3/xU2vZcb0Px4WjthXmEPirgUbCEQpgxmS3Nyqv7GD2aN
+         IlHQ==
+X-Gm-Message-State: AGi0PuZG1oDR6ZGYfP/DU0ic7TAMbJSz8ltMsKBJZViI8mmnXcqDRNjZ
+        uSSbP0OCPVDuKt864Od9WPApPv0=
+X-Google-Smtp-Source: APiQypLKcFOePhjlMDYofUDl5mlCPGBJze9fJqLOZ21TvgSwb9QwiaDLoKcHDilILHnRgmsVo9fqcg==
+X-Received: by 2002:a05:6830:155a:: with SMTP id l26mr10829424otp.246.1587422994251;
+        Mon, 20 Apr 2020 15:49:54 -0700 (PDT)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id n38sm218272ooi.21.2020.04.20.15.49.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 15:49:53 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH v3] dt-bindings: Add a minimum version check for dtschema
+Date:   Mon, 20 Apr 2020 17:49:53 -0500
+Message-Id: <20200420224953.31327-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200417165442.1856-1-nsaenzjulienne@suse.de> <500e8c46a9b411aed03965b6f9130ccde457193d.camel@suse.de>
- <CAGETcx8EJiLSV8jzrusim6EvyVvX4H8ANvZaJwO72G1=iS-N2Q@mail.gmail.com> <1363207183f599732f8bb9c97624886df42ced13.camel@suse.de>
-In-Reply-To: <1363207183f599732f8bb9c97624886df42ced13.camel@suse.de>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Mon, 20 Apr 2020 15:37:54 -0700
-Message-ID: <CAGETcx-9VbdgNUUstbrGzoAA=4s+EPCznG9LrDoj+Gz-C5g__A@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] of: property: fw_devlink misc fixes
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 4:29 AM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
->
-> Hi Saravana,
->
-> On Fri, 2020-04-17 at 13:55 -0700, Saravana Kannan wrote:
-> > On Fri, Apr 17, 2020 at 11:06 AM Nicolas Saenz Julienne
-> > <nsaenzjulienne@suse.de> wrote:
-> > > Hi Saravana,
-> > >
-> > > On Fri, 2020-04-17 at 18:54 +0200, Nicolas Saenz Julienne wrote:
-> > > > As I'm interested in using this feature to fine-tune Raspberry Pi 4's
-> > > > device probe dependencies, I tried to get the board to boot with
-> > > > fw_devlink=on. As of today's linux-next the board won't boot with that
-> > > > option. I tried to address the underlying issues.
-> > > >
-> > >
-> > > On a semi-related topic, have you looked at vendor specific properties? most
-> > > of
-> > > them create a consumer/supplier relationship, it'd be nice to be able to
-> > > take
-> > > those ones into account as well.
-> >
-> > I'm on the wall about that. If we take every vendor specific property,
-> > this file will explode. Not sure I want to do that.
-> >
-> > Also, we haven't even finished all the generic bindings. I'm just
-> > adding bindings as I get familiar with each of them and I test them on
-> > hardware I have lying around before sending it out. So, there's where
-> > my focus is right now wrt fw_devlink and DT.
-> >
-> > I wonder how many of the vendor specific properties do very similar
-> > things and got in over time. Maybe they can be made generic? What one
-> > did you have in mind?
->
-> Well, long story short, we need to create a relationship between RPi4's PCI bus
-> (which hangs from an interconnect in DT) and RPi4's co-processor, which has a
-> highly unconventional firmware driver (raspberrypi.c in drivers/firmware). The
-> PCI bus just needs the co-processor interface to be up before probing,
+The dtschema package must be somewhat up to date as the tools and
+meta-schema checks are still evolving. Implement a version check,
+so this can be enforced. This will help ensure new schema submissions
+get checked against the latest meta-schemas.
 
-I'm guessing it still works fine today by doing a deferred probe and
-you are just trying to avoid having to do a deferred probe? I haven't
-kept track of RPi4's upstream support status.
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+v3:
+ - Drop leading '0' in version month
+ - Rework with Masahiro's shell commands
 
-> that's
-> all (I'll spare you the details of why). Ideally we want to avoid adding
-> platform specific code into an otherwise generic bus driver as it'll be used by
-> a number of unrelated SoCs, and it's generally frowned upon.
+v2:
+ - Use a build rule for the version check instead
+---
+ Documentation/devicetree/bindings/Makefile | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-Which PCI driver is that specifically (I'm sure I can dig around to
-find RPi4's DT and figure it out, but it's easier to just ask :) ) ?
-Also, can you point me to the DT and the nodes that we are talking
-about here (the PCI and the firmware nodes)?
+diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
+index 1df680d07461..67b0969281da 100644
+--- a/Documentation/devicetree/bindings/Makefile
++++ b/Documentation/devicetree/bindings/Makefile
+@@ -3,11 +3,19 @@ DT_DOC_CHECKER ?= dt-doc-validate
+ DT_EXTRACT_EX ?= dt-extract-example
+ DT_MK_SCHEMA ?= dt-mk-schema
+ 
++DT_SCHEMA_MIN_VERSION = 2020.4
++
++PHONY += check_dtschema_version
++check_dtschema_version:
++	@{ echo $(DT_SCHEMA_MIN_VERSION); \
++	$(DT_DOC_CHECKER) --version 2>/dev/null || echo 0; } | sort -VC || \
++	{ echo "ERROR: dtschema minimum version is v$(DT_SCHEMA_MIN_VERSION)" >&2; false; }
++
+ quiet_cmd_chk_binding = CHKDT   $(patsubst $(srctree)/%,%,$<)
+       cmd_chk_binding = $(DT_DOC_CHECKER) -u $(srctree)/$(src) $< ; \
+                         $(DT_EXTRACT_EX) $< > $@
+ 
+-$(obj)/%.example.dts: $(src)/%.yaml FORCE
++$(obj)/%.example.dts: $(src)/%.yaml check_dtschema_version FORCE
+ 	$(call if_changed,chk_binding)
+ 
+ # Use full schemas when checking %.example.dts
+@@ -34,11 +42,11 @@ override DTC_FLAGS := \
+ 	-Wno-avoid_unnecessary_addr_size \
+ 	-Wno-graph_child_address
+ 
+-$(obj)/processed-schema-examples.yaml: $(DT_DOCS) FORCE
++$(obj)/processed-schema-examples.yaml: $(DT_DOCS) check_dtschema_version FORCE
+ 	$(call if_changed,mk_schema)
+ 
+ $(obj)/processed-schema.yaml: DT_MK_SCHEMA_FLAGS := -u
+-$(obj)/processed-schema.yaml: $(DT_SCHEMA_FILES) FORCE
++$(obj)/processed-schema.yaml: $(DT_SCHEMA_FILES) check_dtschema_version FORCE
+ 	$(call if_changed,mk_schema)
+ 
+ extra-y += processed-schema.yaml
+-- 
+2.20.1
 
-> There is no generic property to handle this case, and it's very unlikely there
-> will ever be one, since these firmware drivers have very little in common. I
-> guess this could make an argument for a generic _last resort only_
-> 'supplied-by' property, but I bet this solution won't be very popular.
-
-Ha, this was my initial idea for the whole fw_devlink feature. I
-called it depends-on. Rob/Frank convinced me to instead just parse the
-existing bindings -- which was definitely the right call. Otherwise DT
-would have been a mess. Adding support for "depends-on" for one off
-use cases might still be a touchy topic. I myself am on the wall. It's
-useful for some rare cases, but it's also very easy to abuse.
-
-> Another idea that comes to mind for vendor specific properties would be
-> exporting a macro in the lines of "DEFINE_SIMPLE_PROP()" for supplier drivers
-> to define custom properties. The parse_prop() callbacks could then be added
-> into a special section for of/property.c to pickup and parse. The good thing is
-> that the list length would be limited by the kernel configuration and the
-> maintenance burden moved to the driver authors, at least to some extent.
-
-I did think about this option too sometime back, but not too keen on
-that -- at least at this point. Mostly because there are other issues
-I want to resolve first and want to get their design right before
-getting to hand off property parsing to other drivers/files.
-
-> Anyway, if something comes to mind to solve RPi4's situation feel free to
-> propose anything :).
-
-I'll let you know if I do. I'm not sure I fully understand the issue
-though. I don't think you are trying to avoid deferred probes because
-you aren't trying to improve boot time. I'm guessing the PCI bus
-driver in question has no way to know when to defer the probe, in this
-case you are trying to fix?
-
--Saravana
