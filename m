@@ -2,144 +2,270 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F312C3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 19:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00647C3A5A0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 19:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F4782084D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 19:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D4720B1F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 19:26:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587410810;
+	bh=ydluYkJyVhJ17AtaZA6UDxo3VzkOMZqVN0ZSfWkrUy4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=y4CFTb0x7YmsTWbkxZGqV6YZWCPXRD5AY1yaR54yjZsHhF6jXjjDUNZ3FkNoMJJM1
+	 /z73JU7Yj7g36FSjKKZrlLNIHIYi9jDsrfo7r2k4/T4o7L/wGbYcVtNeUxHWDNIZzC
+	 SCh83JCe7Wnd+pLZuqYdCoVBjq3XWSsCXkJiy46k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbgDTTYd (ORCPT
+        id S1726437AbgDTT0u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 15:24:33 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:45059 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725896AbgDTTYd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 15:24:33 -0400
-Received: from [5.157.121.18] (port=47580 helo=[192.168.77.62])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jQc1o-003t9B-Rv; Mon, 20 Apr 2020 21:24:24 +0200
-Subject: Re: [PATCH v11 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
- Subsystem driver
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vishal Sagar <vishal.sagar@xilinx.com>
-Cc:     Hyun Kwon <hyunk@xilinx.com>, mchehab@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Hyun Kwon <hyun.kwon@xilinx.com>
-References: <20200409194424.45555-1-vishal.sagar@xilinx.com>
- <20200409194424.45555-3-vishal.sagar@xilinx.com>
- <20200419180222.GB8117@pendragon.ideasonboard.com>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <860c27da-eba0-ddcb-719b-52b2725bd9bf@lucaceresoli.net>
-Date:   Mon, 20 Apr 2020 21:24:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 20 Apr 2020 15:26:50 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33456 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbgDTT0u (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 15:26:50 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j26so9182289ots.0;
+        Mon, 20 Apr 2020 12:26:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=j9xfL2w8O2+x1JiWhNil24AxtpnMDKkYvhGBulASv3U=;
+        b=qJQbFFwAT78fZpVaHJdh7tF9L0ls9IuAsXVuhvP4KIm5l9LobD7vWJd4/E6xoKdB39
+         WvTAwdtJccRPGSoXELXNLystrtWpJQNLH2GRpFJHHvF8F+VEeZ7mCypb3w2bTthQszmZ
+         2rvUJcap5dbIsmBfJEarIq3pioQ3KGMOn44A4u++/MhtH21EbzZv1qqikYpEuNVIjxuy
+         58TPY2wc9ZDJ+Jxsg35q1ikUnH2Y0wJneZ6VYhQEv18ldO1OJ+u8QNrtcU5bDEIzOmSc
+         QbjspskR6tqIekCxJZM8RDAIeieoZSIKdXzxa2UQaJJhLB/rbnk+Ue0LM8DmIZISJNBJ
+         xftA==
+X-Gm-Message-State: AGi0PuYDqvgozq9NDBKFLhs2J1UXPD+0fuunVgtqqX6SbsODBCmeAlYa
+        9D0TUVp8w1JLzd79muo1dJMmHVI=
+X-Google-Smtp-Source: APiQypKKF8dAmw9Exvau0ynCJcXVWhHFVCTRqCVX/bjn7pDb+/jZp7ljKJ6BSODSDuqEdJpMZaP8EQ==
+X-Received: by 2002:a05:6830:1444:: with SMTP id w4mr11230612otp.139.1587410808451;
+        Mon, 20 Apr 2020 12:26:48 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p5sm83461oih.20.2020.04.20.12.26.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 12:26:47 -0700 (PDT)
+Received: (nullmailer pid 18938 invoked by uid 1000);
+        Mon, 20 Apr 2020 19:26:46 -0000
+Date:   Mon, 20 Apr 2020 14:26:46 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     joro@8bytes.org, iommu@lists.linux-foundation.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] dt-bndings: iommu: renesas,ipmmu-vmsa: convert to
+ json-schema
+Message-ID: <20200420192646.GA9603@bogus>
+References: <1586773533-8893-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <20200419180222.GB8117@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586773533-8893-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent, Vishal,
+On Mon, Apr 13, 2020 at 07:25:33PM +0900, Yoshihiro Shimoda wrote:
+> Convert Renesas VMSA-Compatible IOMMU bindings documentation
+> to json-schema.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  .../bindings/iommu/renesas,ipmmu-vmsa.txt          | 73 ------------------
+>  .../bindings/iommu/renesas,ipmmu-vmsa.yaml         | 90 ++++++++++++++++++++++
+>  2 files changed, 90 insertions(+), 73 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
+>  create mode 100644 Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
+> deleted file mode 100644
+> index 020d6f2..00000000
+> --- a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
+> +++ /dev/null
+> @@ -1,73 +0,0 @@
+> -* Renesas VMSA-Compatible IOMMU
+> -
+> -The IPMMU is an IOMMU implementation compatible with the ARM VMSA page tables.
+> -It provides address translation for bus masters outside of the CPU, each
+> -connected to the IPMMU through a port called micro-TLB.
+> -
+> -
+> -Required Properties:
+> -
+> -  - compatible: Must contain SoC-specific and generic entry below in case
+> -    the device is compatible with the R-Car Gen2 VMSA-compatible IPMMU.
+> -
+> -    - "renesas,ipmmu-r8a73a4" for the R8A73A4 (R-Mobile APE6) IPMMU.
+> -    - "renesas,ipmmu-r8a7743" for the R8A7743 (RZ/G1M) IPMMU.
+> -    - "renesas,ipmmu-r8a7744" for the R8A7744 (RZ/G1N) IPMMU.
+> -    - "renesas,ipmmu-r8a7745" for the R8A7745 (RZ/G1E) IPMMU.
+> -    - "renesas,ipmmu-r8a774a1" for the R8A774A1 (RZ/G2M) IPMMU.
+> -    - "renesas,ipmmu-r8a774b1" for the R8A774B1 (RZ/G2N) IPMMU.
+> -    - "renesas,ipmmu-r8a774c0" for the R8A774C0 (RZ/G2E) IPMMU.
+> -    - "renesas,ipmmu-r8a7790" for the R8A7790 (R-Car H2) IPMMU.
+> -    - "renesas,ipmmu-r8a7791" for the R8A7791 (R-Car M2-W) IPMMU.
+> -    - "renesas,ipmmu-r8a7793" for the R8A7793 (R-Car M2-N) IPMMU.
+> -    - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
+> -    - "renesas,ipmmu-r8a7795" for the R8A7795 (R-Car H3) IPMMU.
+> -    - "renesas,ipmmu-r8a7796" for the R8A7796 (R-Car M3-W) IPMMU.
+> -    - "renesas,ipmmu-r8a77965" for the R8A77965 (R-Car M3-N) IPMMU.
+> -    - "renesas,ipmmu-r8a77970" for the R8A77970 (R-Car V3M) IPMMU.
+> -    - "renesas,ipmmu-r8a77980" for the R8A77980 (R-Car V3H) IPMMU.
+> -    - "renesas,ipmmu-r8a77990" for the R8A77990 (R-Car E3) IPMMU.
+> -    - "renesas,ipmmu-r8a77995" for the R8A77995 (R-Car D3) IPMMU.
+> -    - "renesas,ipmmu-vmsa" for generic R-Car Gen2 or RZ/G1 VMSA-compatible
+> -			   IPMMU.
+> -
+> -  - reg: Base address and size of the IPMMU registers.
+> -  - interrupts: Specifiers for the MMU fault interrupts. For instances that
+> -    support secure mode two interrupts must be specified, for non-secure and
+> -    secure mode, in that order. For instances that don't support secure mode a
+> -    single interrupt must be specified. Not required for cache IPMMUs.
+> -
+> -  - #iommu-cells: Must be 1.
+> -
+> -Optional properties:
+> -
+> -  - renesas,ipmmu-main: reference to the main IPMMU instance in two cells.
+> -    The first cell is a phandle to the main IPMMU and the second cell is
+> -    the interrupt bit number associated with the particular cache IPMMU device.
+> -    The interrupt bit number needs to match the main IPMMU IMSSTR register.
+> -    Only used by cache IPMMU instances.
+> -
+> -
+> -Each bus master connected to an IPMMU must reference the IPMMU in its device
+> -node with the following property:
+> -
+> -  - iommus: A reference to the IPMMU in two cells. The first cell is a phandle
+> -    to the IPMMU and the second cell the number of the micro-TLB that the
+> -    device is connected to.
+> -
+> -
+> -Example: R8A7791 IPMMU-MX and VSP1-D0 bus master
+> -
+> -	ipmmu_mx: mmu@fe951000 {
+> -		compatible = "renasas,ipmmu-r8a7791", "renasas,ipmmu-vmsa";
+> -		reg = <0 0xfe951000 0 0x1000>;
+> -		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <0 221 IRQ_TYPE_LEVEL_HIGH>;
+> -		#iommu-cells = <1>;
+> -	};
+> -
+> -	vsp@fe928000 {
+> -		...
+> -		iommus = <&ipmmu_mx 13>;
+> -		...
+> -	};
+> diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
+> new file mode 100644
+> index 00000000..3820b10
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
+> @@ -0,0 +1,90 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iommu/renesas,ipmmu-vmsa.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas VMSA-Compatible IOMMU
+> +
+> +maintainers:
+> +  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> +
+> +description:
+> +  The IPMMU is an IOMMU implementation compatible with the ARM VMSA page tables.
+> +  It provides address translation for bus masters outside of the CPU, each
+> +  connected to the IPMMU through a port called micro-TLB.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - renesas,ipmmu-r8a7743  # RZ/G1M
+> +              - renesas,ipmmu-r8a7744  # RZ/G1N
+> +              - renesas,ipmmu-r8a7745  # RZ/G1E
+> +              - renesas,ipmmu-r8a7790  # R-Car H2
+> +              - renesas,ipmmu-r8a7791  # R-Car M2-W
+> +              - renesas,ipmmu-r8a7793  # R-Car M2-N
+> +              - renesas,ipmmu-r8a7794  # R-Car E2
+> +              - renesas,ipmmu-r8a7795  # R-Car H3
+> +          - const: renesas,ipmmu-vmsa  # R-Car Gen2 or RZ/G1
+> +      - items:
+> +          - enum:
+> +              - renesas,ipmmu-r8a73a4  # R-Mobile APE6
+> +              - renesas,ipmmu-r8a774a1 # RZ/G2M
+> +              - renesas,ipmmu-r8a774b1 # RZ/G2N
+> +              - renesas,ipmmu-r8a774c0 # RZ/G2E
+> +              - renesas,ipmmu-r8a7796  # R-Car M3-W
+> +              - renesas,ipmmu-r8a77965 # R-Car M3-N
+> +              - renesas,ipmmu-r8a77970 # R-Car V3M
+> +              - renesas,ipmmu-r8a77980 # R-Car V3H
+> +              - renesas,ipmmu-r8a77990 # R-Car E3
+> +              - renesas,ipmmu-r8a77995 # R-Car D3
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 2
+> +    description:
+> +      Specifiers for the MMU fault interrupts. For instances that support
+> +      secure mode two interrupts must be specified, for non-secure and secure
+> +      mode, in that order. For instances that don't support secure mode a
+> +      single interrupt must be specified. Not required for cache IPMMUs.
+> +
+> +  '#iommu-cells':
+> +    const: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  renesas,ipmmu-main:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description:
+> +      Reference to the main IPMMU instance in two cells. The first cell is
+> +      a phandle to the main IPMMU and the second cell is the interrupt bit
 
-On 19/04/20 20:02, Laurent Pinchart wrote:
-[...]
->> +static irqreturn_t xcsi2rxss_irq_handler(int irq, void *dev_id)
->> +{
->> +	struct xcsi2rxss_state *state = (struct xcsi2rxss_state *)dev_id;
->> +	struct xcsi2rxss_core *core = &state->core;
->> +	u32 status;
->> +
->> +	status = xcsi2rxss_read(core, XCSI_ISR_OFFSET) & XCSI_ISR_ALLINTR_MASK;
->> +	dev_dbg_ratelimited(core->dev, "interrupt status = 0x%08x\n", status);
-> 
-> As this is expected to occur for every frame, I would drop the message,
-> even if rate-limited.
-> 
->> +
->> +	if (!status)
->> +		return IRQ_NONE;
->> +
->> +	/* Received a short packet */
->> +	if (status & XCSI_ISR_SPFIFONE) {
->> +		dev_dbg_ratelimited(core->dev, "Short packet = 0x%08x\n",
->> +				    xcsi2rxss_read(core, XCSI_SPKTR_OFFSET));
->> +	}
-> 
-> Same here, this will occur all the time, I'd remove this message. You
-> need to read XCSI_SPKTR_OFFSET though, and you should do so in a loop
-> until the XCSI_CSR_SPFIFONE in XCSI_CSR_OFFSET is cleared in case
-> multiple short packets are received before the interrupt handler
-> executes.
-> 
-> I also wonder if it would make sense to extract the frame number from
-> the FS short packet, and make it available through the subdev API. I
-> think it should be reported through a V4L2_EVENT_FRAME_SYNC event. This
-> can be implemented later.
-> 
->> +
->> +	/* Short packet FIFO overflow */
->> +	if (status & XCSI_ISR_SPFIFOF)
->> +		dev_dbg_ratelimited(core->dev, "Short packet FIFO overflowed\n");
->> +
->> +	/*
->> +	 * Stream line buffer full
->> +	 * This means there is a backpressure from downstream IP
->> +	 */
->> +	if (status & XCSI_ISR_SLBF) {
->> +		dev_alert_ratelimited(core->dev, "Stream Line Buffer Full!\n");
->> +		xcsi2rxss_stop_stream(state);
->> +		if (core->rst_gpio) {
->> +			gpiod_set_value(core->rst_gpio, 1);
->> +			/* minimum 40 dphy_clk_200M cycles */
->> +			ndelay(250);
->> +			gpiod_set_value(core->rst_gpio, 0);
->> +		}
-> 
-> I don't think you should stop the core here. xcsi2rxss_stop_stream()
-> calls the source .s_stream(0) operation, which usually involves I2C
-> writes that will sleep.
-> 
-> You should instead report an event to userspace (it looks like we have
-> no error event defined in V4L2, one should be added), and rely on the
-> normal stop procedure.
+The cell counting is wrong here. We don't count the phandle as a cell. 
+It's a 'phandle plus 1 cell'.
 
-FWIW, since a long time I've been using a modified version of this
-routine, where after a Stream Line Buffer Full condition I just stop and
-restart the csi2rx core and the stream continues after a minimal glitch.
-Other subdev are unaware that anything has happened and keep on streaming.
+Same goes for 'iommus'.
 
-Not sure this is the correct thing to do, but it's working for me. Also
-I proposed this topic in one of the previous iterations of this patch,
-but the situation was different because the stream on/off was not
-propagated back at that time.
+> +      number associated with the particular cache IPMMU device. The interrupt
+> +      bit number needs to match the main IPMMU IMSSTR register. Only used by
+> +      cache IPMMU instances.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#iommu-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/r8a7791-cpg-mssr.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/power/r8a7791-sysc.h>
+> +
+> +    ipmmu_mx: mmu@fe951000 {
 
+iommu@...
 
--- 
-Luca
+> +        compatible = "renasas,ipmmu-r8a7791", "renasas,ipmmu-vmsa";
+> +        reg = <0xfe951000 0x1000>;
+> +        interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
+> +        #iommu-cells = <1>;
+> +    };
+> -- 
+> 2.7.4
+> 
