@@ -2,180 +2,131 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54058C54FCF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 09:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1D1C3A5A0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 09:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3303020A8B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 09:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAD6320A8B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 09:31:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s4jIYNmD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r9YVCeWj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726025AbgDTJ3n (ORCPT
+        id S1725886AbgDTJbh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 05:29:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59532 "EHLO
+        Mon, 20 Apr 2020 05:31:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725865AbgDTJ3n (ORCPT
+        by vger.kernel.org with ESMTP id S1725775AbgDTJbh (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 05:29:43 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 040EDC061A0F
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 02:29:42 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id s5so3349374uad.4
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 02:29:42 -0700 (PDT)
+        Mon, 20 Apr 2020 05:31:37 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C8F4C061A0C
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 02:31:36 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id n2so5030625ybg.4
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 02:31:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+bXbV2G5yAsWPdoik74HL3zT7EvaYkbi6HLAip4kCPE=;
-        b=s4jIYNmDSCSre8L1fOBe4BKz3cwsdftChktN5JBQLZjCofDyAxUTDTCrR29bQ8dwx0
-         /UULMi3OKQNpg/O5WT4mJDqSI5Hk78M1a6nm2+fLJQyRjBbAfQNz/ioFJ7RxAG8dsQe2
-         HOv+Mde3TMlgY4x2WmVmPYgzvk8jN8pKNA7iRczjLE5el78RwB7Xddsct5dPQcj/nz85
-         zFiR2pBDqDB1AMP8msDaTcEmMj1fANeYRsk7sP3SyWpg9pD9/cptg1Hx8UJuzgV7ye2f
-         j04qjnuf2cPvH1WJr+/Uox3iREXQ9C4W9RHpflU+HXxQUURDtFXPr6Ee3zxVrTGNjEWd
-         Z32A==
+         :cc:content-transfer-encoding;
+        bh=QB5gJS0qiE6PU95ShLISgx4JjOeBA/gJe4w+VjEzZ+o=;
+        b=r9YVCeWjT4PHscN7NcgAmiDKTphieHhO7kNM9SFO8rnJ5suS/zV49Vk1q/sxRhCFE2
+         QRGEp8OHwzR0hoZVh7QAoZYJ3kI4DJvITfla+OuT3W+sFGEUFxI8HClojzgtzQLGVX5B
+         VVkbgOWMcN9RW1LgsKPkqtdDobJNhK2WroghvNZgJUiHS3vfx3nQApTH07jQnW2/8KI/
+         hsw7SvJxlIlT+lZNbEG1Akt8Na4WKu/gcIhKX+poqk0bv/GNVuRoeCbcjkYQRC+4w7N3
+         qgigmfZSxEnH7J5rj1qGJC8aey7Oalz5CPms33ykgPWfI2kJkqnRaAEaM+SRbK3Lnwaa
+         tx0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+bXbV2G5yAsWPdoik74HL3zT7EvaYkbi6HLAip4kCPE=;
-        b=j+HS/jc7oMW7NI6V563UxIcVrHeq7yCgA/epiTbbhh/InWd2a5WujDvTH8NE2C4IYr
-         /yTYjJUBHKGvC7yRLYlikgsyi4q3FtjphERodaRCovjZIvxmGAPL46g94eB4ioZPJOoF
-         vCKrmuNH5Zsjv/FtMEh05iHSG7pJuLctPasU7mgJpHs+/KcHJ4K2jXYLnojBAG9GkZUO
-         DG713yCAXq1ZYjzy9LTABk+g5sxa5fusgq2xTubBX2F1zml2mi3Y4Y+lTW56QWX8P6bv
-         3chRSCI2NV9dmv0eIl9yAVxb8OJdUreyUYzIl673Fpj67nKKQfRxMBV8sCfNMbGl6wBZ
-         LmUA==
-X-Gm-Message-State: AGi0PuaJzJGm0D+iIW+1z32yzr08j/oxFuL2f9rGcIvi4BwBV4tAsxqY
-        Skhn7G5o1uvVW03DKCYR4P4J0uMIw8G8lnOgJ736Rg==
-X-Google-Smtp-Source: APiQypJSb26agvtaW3XUoWIUFAipBIghy203mcWakTXMxgBcN3TEPnxo9vAyT3jVrfHgyafMtr1eTIuTVfa92/Owf/U=
-X-Received: by 2002:ab0:3343:: with SMTP id h3mr517711uap.19.1587374982046;
- Mon, 20 Apr 2020 02:29:42 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=QB5gJS0qiE6PU95ShLISgx4JjOeBA/gJe4w+VjEzZ+o=;
+        b=PrV0tX5xXxyte+6BZob0zB8uGNiI92BQSh2+RrBZiMJbEGZg1n9s0VdZnFlrp4utwu
+         Wv6krrElwi0pcdYqYVhCB3oVCgDuoXKAxQEoZXxjfebifeaCGHk+kbTAbiMe2VJNMaCN
+         hA+RTft0huV30eS2bPXlizozBqHAXuSjTJyeG5169WaKbClqoi1H69DRt/y+Qt9Vhsu+
+         NUuXcBrXHSpI06sYFNH8AjstXijfdRuoJvjIFCewFmHLZs+s4JsnCX3sZOmZND+dDEDW
+         73PkXw8XfCWzSnWVWYPp4qT83+5DlLlUXU2++9yzaF22WmLJ/0EO2Odu2NClPA5AXyZq
+         yrgQ==
+X-Gm-Message-State: AGi0PuY5Wb3B7ArZOjkzTKivoVyhWJdniQCYCm2MaBfpMe5n9Act/NAg
+        79kifldIvpPLlAoP3Oi1+3hRSLdrYC9yufCsiUnj5w==
+X-Google-Smtp-Source: APiQypJ2/hJHIq11rXAe5vfJdZqTOYJHD/wWZba5U9CMmbXXTsuxYhh0EYNQt1f1r3BHUvwyNK8vaNjgtHItTBbO32I=
+X-Received: by 2002:a25:9cc3:: with SMTP id z3mr18364664ybo.234.1587375095530;
+ Mon, 20 Apr 2020 02:31:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <1582181100-29914-1-git-send-email-sbhanu@codeaurora.org>
- <CAPDyKFqSJ4h7UvQfQzWmSq9gg97A0MXvdcuXXaY7b-YUHs=V2g@mail.gmail.com>
- <158334039680.7173.16159724456027777605@swboyd.mtv.corp.google.com>
- <CAPDyKFqecH=AsvtN+JMxdk6pY2dntWUrhUWF6LEq_DLCcPe6pw@mail.gmail.com>
- <158463974696.152100.8345578995373250448@swboyd.mtv.corp.google.com>
- <CAPDyKFrL6uWaKK1zkn6ag2ZqW7ro50VGq6DJnTNyoFS2yGMmRw@mail.gmail.com> <158690616084.105027.4255268086188981149@swboyd.mtv.corp.google.com>
-In-Reply-To: <158690616084.105027.4255268086188981149@swboyd.mtv.corp.google.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 20 Apr 2020 11:29:06 +0200
-Message-ID: <CAPDyKFqw42Vvu1n-MbL+DEr3wsk9bgrRHmOLS=t57A+1P-yLMg@mail.gmail.com>
-Subject: Re: [PATCH V4] mmc: sdhci-msm: Update system suspend/resume callbacks
- of sdhci-msm platform driver
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Shaik Sajida Bhanu <sbhanu@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Sahitya Tummala <stummala@codeaurora.org>,
-        Sayali Lokhande <sayalil@codeaurora.org>, cang@codeaurora.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Ram Prakash Gupta <rampraka@codeaurora.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+References: <158735030084.17831.6159788305648251972.stgit@localhost>
+ <20200420121403.aff9fb209ee0da7f20ed3ae2@linaro.org> <CAK7LNAT9y2A-dX2Z-2pAsbRvKReoypmoP0hdbWiCGR0G8CuK0w@mail.gmail.com>
+In-Reply-To: <CAK7LNAT9y2A-dX2Z-2pAsbRvKReoypmoP0hdbWiCGR0G8CuK0w@mail.gmail.com>
+From:   Masami Hiramatsu <masami.hiramatsu@linaro.org>
+Date:   Mon, 20 Apr 2020 18:31:24 +0900
+Message-ID: <CAA93ih3X46k7F0Mzv=-H0RRAVMemXmHFDc+trAKn2c1tLOQNHA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: Add Akebi96 board support
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         DTML <devicetree@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 15 Apr 2020 at 01:16, Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Ulf Hansson (2020-03-20 03:22:01)
-> > On Thu, 19 Mar 2020 at 18:42, Stephen Boyd <swboyd@chromium.org> wrote:
-> > >
-> > > Quoting Ulf Hansson (2020-03-06 02:07:41)
-> > > > On Wed, 4 Mar 2020 at 17:46, Stephen Boyd <swboyd@chromium.org> wrote:
-> > > > >
-> > > > > Quoting Ulf Hansson (2020-03-04 07:34:29)
-> > > > > > On Thu, 20 Feb 2020 at 07:45, Shaik Sajida Bhanu <sbhanu@codeaurora.org> wrote:
-> > > > > > >
-> > > > > > > The existing suspend/resume callbacks of sdhci-msm driver are just
-> > > > > > > gating/un-gating the clocks. During suspend cycle more can be done
-> > > > > > > like disabling controller, disabling card detection, enabling wake-up events.
-> > > > > > >
-> > > > > > > So updating the system pm callbacks for performing these extra
-> > > > > > > actions besides controlling the clocks.
-> > > > > > >
-> > > > > > > Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-> > > > > > > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> > > > > > > ---
-> > > [...]
-> > > >
-> > > > >
-> > > > > >
-> > > > > > > +
-> > > > > > > +       ret = pm_runtime_force_suspend(dev);
-> > > > > >
-> > > > > > It looks to me that perhaps you could make use of solely
-> > > > > > pm_runtime_force_suspend(), then just skip calling
-> > > > > > sdhci_suspend|resume_host() altogether. Do you think that could work?
-> > > > >
-> > > > > Does that do all the things the commit text mentions is desired for
-> > > > > system suspend?
-> > > >
-> > > > No. :-)
-> > > >
-> > > > But why is system wakeup needed for an eMMC card?
-> > > >
-> > >
-> > > I don't know if system wakeup is needed for an eMMC card. Probably only
-> > > if you plug in a card and some daemon wants to wake up and probe the
-> > > card for auto-play or something like that? Seems possible so might as
-> > > well expose the CD gpio as a wakeup in that case and let userspace
-> > > decide if it wants to do that.
-> >
-> > Right, card detect IRQs could be useful for system wakeups.
-> >
-> > I assume you are using a GPIO IRQ for that, which is easily managed,
-> > as the runtime PM status of the mmc controller is irrelevant when
-> > configuring the GPIO IRQ as wakeup.
-> >
-> > We even have a helper for doing this, mmc_gpio_set_cd_wake().
->
-> Right. Maybe mmc_gpio_set_cd_wake() needs to be called from somewhere in
-> the sdhci core?
+Hi Yamada-san,
 
-Yes, that seems reasonable.
-
+2020=E5=B9=B44=E6=9C=8820=E6=97=A5(=E6=9C=88) 18:26 Masahiro Yamada <masahi=
+roy@kernel.org>:
 >
+> On Mon, Apr 20, 2020 at 12:14 PM Linaro <masami.hiramatsu@linaro.org> wro=
+te:
 > >
-> > >
-> > > Is runtime suspended state the same as system suspended state here
-> > > though? The commit text seems to imply that only clks are disabled when
-> > > it's desirable to disable the entire controller. I'm still fuzzy on how
-> > > runtime PM and system PM interact because it seems to have changed since
-> > > I looked last a few years ago. If the driver can stay in a runtime
-> > > suspended state across system suspend then I'm all for it. That would
-> > > save time for system PM transitions.
+> > Add uniphier-ld20-akebi96 compatible string for
+> > Akebi96 board support.
 > >
-> > In most cases this should be possible. And so far, for this case, I
-> > haven't found a good reason to why it shouldn't work.
+> > Signed-off-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
+> > ---
+> >  .../bindings/arm/socionext/uniphier.yaml           |    1 +
+> >  1 file changed, 1 insertion(+)
 > >
-> > Although, perhaps we need to improve some of the sdhci's library
-> > functions for PM, to better support this.
+> > diff --git a/Documentation/devicetree/bindings/arm/socionext/uniphier.y=
+aml b/Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
+> > index 113f93b9ae55..6caf1f9be390 100644
+> > --- a/Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
+> > @@ -51,6 +51,7 @@ properties:
+> >        - description: LD20 SoC boards
+> >          items:
+> >            - enum:
+> > +              - socionext,uniphier-ld20-akebi96
+> >                - socionext,uniphier-ld20-global
+> >                - socionext,uniphier-ld20-ref
+> >            - const: socionext,uniphier-ld20
 > >
 >
-> So does that mean it's all just working then? Nothing to do here except
-> make wakeup irqs for CD work?
+> Your patch submission is still strange.
+>
+> https://patchwork.kernel.org/patch/11498025/
+>
+> This patch is broken.
+>
+> Please make sure it can apply to the mainline code.
 
-Well, if it "works " or not, I am not really sure.
+Ah, since it is based on the linux-nex.
+OK, I'll update it to the mainline kernel.
 
-My point is, I think most of the things that need to be managed at
-system suspend/resume are the same things that need to be managed
-during runtime suspend/resume (except wakeups). So, rather than
-implementing a whole bunch of system suspend/resume specific things,
-why not make use of the runtime suspend/resume callbacks instead.
+>
+>
+> The author files is also odd:
+> From: Linaro <masami.hiramatsu@linaro.org>
 
-Kind regards
-Uffe
+Oops, sorry, it was my mis-configure of MUA... OK, fixed it.
+
+Thank you!
+
+--=20
+Masami Hiramatsu
