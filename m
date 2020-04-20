@@ -2,183 +2,85 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C01E6C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 21:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9E1C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 21:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ACF520722
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 21:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC16F20724
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 21:50:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587419042;
-	bh=BoAvpCZUao/+tOLx2sDOOs3FQbUO0aLqRApbbgzOnys=;
+	s=default; t=1587419401;
+	bh=FR1Z2uSpQYPsmxEOc/GwebV256/kxJ0+jQqmWFlpIyw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tLbp1jtv0ZgBecE45AmvKoXYwADqZ0fp/KTQTy7zymidZB3rQ3wQvklvnW+fhxE7T
-	 v7n/+Loaygm9MjjIvBmT/z4GTvZp/Suw0qQy2l/W9NsillH74DIRr0qTgzW26NXzX0
-	 hI8km22tJB96SJSBUBo9pMakzvn/69vs0rJ04o20=
+	b=odvVz75+qtGq240ejADcEg3nzO5DcjVOQ2GDD8Py44a3+JTmorr9jgj2Jia/J/IOE
+	 jMvVDljqxsH8aKUEbVxdxcV9Hy8wdf/vgkkPNtXskeqmc/xoC3+tR2jdhS4cZ0sC2O
+	 l6DMvo11bzlt/achQuo6gExbVbYSfmvh9j+Jbnek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbgDTVoC (ORCPT
+        id S1726017AbgDTVuB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:44:02 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35330 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbgDTVoB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 17:44:01 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e20so9554683otl.2;
-        Mon, 20 Apr 2020 14:44:01 -0700 (PDT)
+        Mon, 20 Apr 2020 17:50:01 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35795 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbgDTVuB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 17:50:01 -0400
+Received: by mail-ot1-f67.google.com with SMTP id e20so9567902otl.2;
+        Mon, 20 Apr 2020 14:50:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LZKwSahPOrclJ2VbpUDt4G9WvWMr16xeYo8HAFLzKHs=;
-        b=jHh0jcIHsiGIkeQzCxvvlV+OWimM6d7hIlWq/XUDqz/App23r7FmnXzl+Y5z0H6MPQ
-         BK+mtbxXLQ0iNgcD238/sXDVXSsZVihz5jq6kOw0zIpqPy20EJRZ+I8rv//2INdwLCXH
-         RTFuICQORTx9gQgCw2xQtjcSEmYfb9me23e8dDatnIk0Vj2ZLBV7beIpHPW2d27kxEx2
-         PI8FDymDGYCuzZ2M0k4+9nkeJZ9e9mNILk64YlcR0QjPUNNpDHhGc4vPiwaUp0/cSwRs
-         SEgvSLLAkWOD1Uj2pvn2/dhibopYW4cGg2MOGUeEgtVNH2H9z/fZ7Bo5gXXxKr8ogpBX
-         SLzQ==
-X-Gm-Message-State: AGi0PuaSz5/hJzJwILsHIqaqAznbd5rluUaDDNR/3BmOv5FFqIGV4X68
-        QKi2pIVwDgPxQNxryjMXtw==
-X-Google-Smtp-Source: APiQypK5PQwdf2U+EhRi0OR/D/U3xkutLBi8s1XHwblbK6QRNb3bnhVOo1qkGTQJvhYoYxIjojr/NA==
-X-Received: by 2002:a9d:7343:: with SMTP id l3mr9432115otk.276.1587419040593;
-        Mon, 20 Apr 2020 14:44:00 -0700 (PDT)
+        bh=vYmwwzqG7uqx9g2ELxFVG14owXz8xo4qOPYfFDEaBnk=;
+        b=gedjbVZE0RQ/kZpc1eNrGRNc9pMsnx0nNGWd5xRtMB4JI8RH8gu1zdE+C+AYeWYmcF
+         pNi1rNcYB8tMxVVyo0aUHXjAdJcD4bvOwKT2zmI7ikZ763EAf4OohhHkb1q2uX/ZBO+O
+         0INMGWVyl3s9ffJt1fc8dM6GMnAg/khX1N16x6PURcba8JCmGgWZPK2LBxODQbHpXXPL
+         QX7/ukn+lxKISBu+xnCWHcZ7exHVLu8HwyglTfde/PHfz4D58cGlx5ZkD/BsD5UR39SK
+         yCZU/a5R8DUFkf1Jw0tc1Iy1pdUdMHWbn1TsdEpbjN+6Pi8gtWR3iGmcpImBWz4em0B8
+         2tOg==
+X-Gm-Message-State: AGi0PuZRBmBLXMjSNxwI8dBKai/5fjqPh0yd8IDR/7q+zgSR9L82ij1h
+        jXosoTCGpWLsIYmiisuoLkjqTQk=
+X-Google-Smtp-Source: APiQypLo5amH2CJMms+WGoIdXKyJV3V9lJJ2mR1Um33qIA/Ag0+OPAipS7fQufoA90Fhx/wSicrR3w==
+X-Received: by 2002:a05:6830:1483:: with SMTP id s3mr11058611otq.176.1587419400257;
+        Mon, 20 Apr 2020 14:50:00 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 76sm227400otg.68.2020.04.20.14.43.59
+        by smtp.gmail.com with ESMTPSA id i2sm188842oon.0.2020.04.20.14.49.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 14:44:00 -0700 (PDT)
-Received: (nullmailer pid 15237 invoked by uid 1000);
-        Mon, 20 Apr 2020 21:43:59 -0000
-Date:   Mon, 20 Apr 2020 16:43:59 -0500
+        Mon, 20 Apr 2020 14:49:59 -0700 (PDT)
+Received: (nullmailer pid 23817 invoked by uid 1000);
+        Mon, 20 Apr 2020 21:49:58 -0000
+Date:   Mon, 20 Apr 2020 16:49:58 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     srinivas.kandagatla@linaro.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH 2/3] dt-bindings: nvmem: Convert i.MX IIM to json-schema
-Message-ID: <20200420214358.GA13370@bogus>
-References: <1586921602-1877-1-git-send-email-Anson.Huang@nxp.com>
- <1586921602-1877-2-git-send-email-Anson.Huang@nxp.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] phy: qcom: qmp: Add SM8250 UFS PHY
+Message-ID: <20200420214958.GA23753@bogus>
+References: <20200415060745.740193-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1586921602-1877-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20200415060745.740193-1-bjorn.andersson@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 11:33:21AM +0800, Anson Huang wrote:
-> Convert the i.MX IIM binding to DT schema format using json-schema.
+On Tue, 14 Apr 2020 23:07:45 -0700, Bjorn Andersson wrote:
+> The SM8250 UFS PHY can run off the same initialization sequence as
+> SM8150, but add the compatible to allow future changes.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->  .../devicetree/bindings/nvmem/imx-iim.txt          | 22 --------
->  .../devicetree/bindings/nvmem/imx-iim.yaml         | 59 ++++++++++++++++++++++
->  2 files changed, 59 insertions(+), 22 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/nvmem/imx-iim.txt
->  create mode 100644 Documentation/devicetree/bindings/nvmem/imx-iim.yaml
+>  Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 5 +++++
+>  drivers/phy/qualcomm/phy-qcom-qmp.c                    | 3 +++
+>  2 files changed, 8 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/nvmem/imx-iim.txt b/Documentation/devicetree/bindings/nvmem/imx-iim.txt
-> deleted file mode 100644
-> index 1978c5b..0000000
-> --- a/Documentation/devicetree/bindings/nvmem/imx-iim.txt
-> +++ /dev/null
-> @@ -1,22 +0,0 @@
-> -Freescale i.MX IC Identification Module (IIM) device tree bindings
-> -
-> -This binding represents the IC Identification Module (IIM) found on
-> -i.MX25, i.MX27, i.MX31, i.MX35, i.MX51 and i.MX53 SoCs.
-> -
-> -Required properties:
-> -- compatible: should be one of
-> -	"fsl,imx25-iim", "fsl,imx27-iim",
-> -	"fsl,imx31-iim", "fsl,imx35-iim",
-> -	"fsl,imx51-iim", "fsl,imx53-iim",
-> -- reg: Should contain the register base and length.
-> -- interrupts: Should contain the interrupt for the IIM
-> -- clocks: Should contain a phandle pointing to the gated peripheral clock.
-> -
-> -Example:
-> -
-> -	iim: iim@63f98000 {
-> -		compatible = "fsl,imx53-iim", "fsl,imx27-iim";
-> -		reg = <0x63f98000 0x4000>;
-> -		interrupts = <69>;
-> -                clocks = <&clks IMX5_CLK_IIM_GATE>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/nvmem/imx-iim.yaml b/Documentation/devicetree/bindings/nvmem/imx-iim.yaml
-> new file mode 100644
-> index 0000000..0d85d37
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nvmem/imx-iim.yaml
-> @@ -0,0 +1,59 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/nvmem/imx-iim.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale i.MX IC Identification Module (IIM) device tree bindings
-> +
-> +maintainers:
-> +  - Anson Huang <Anson.Huang@nxp.com>
-> +
-> +description: |
-> +  This binding represents the IC Identification Module (IIM) found on
-> +  i.MX25, i.MX27, i.MX31, i.MX35, i.MX51 and i.MX53 SoCs.
-> +
-> +allOf:
-> +  - $ref: "nvmem.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - fsl,imx25-iim
-> +      - fsl,imx27-iim
-> +      - fsl,imx31-iim
-> +      - fsl,imx35-iim
-> +      - fsl,imx51-iim
-> +      - fsl,imx53-iim
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: |
-> +      IIM's clock source.
 
-Drop this. Same in patch 3.
-
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/imx5-clock.h>
-> +
-> +    iim: efuse@63f98000 {
-> +        compatible = "fsl,imx53-iim";
-> +        reg = <0x63f98000 0x4000>;
-> +        interrupts = <69>;
-> +        clocks = <&clks IMX5_CLK_IIM_GATE>;
-> +    };
-> +
-> +...
-> -- 
-> 2.7.4
-> 
+Acked-by: Rob Herring <robh@kernel.org>
