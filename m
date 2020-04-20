@@ -2,133 +2,93 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3A3C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABDEC3A5A0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 581DD20724
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86A10218AC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:55:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1SIVE6W4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CZBJhyvq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725886AbgDTLp2 (ORCPT
+        id S1726899AbgDTLzM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:45:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52166 "EHLO
+        Mon, 20 Apr 2020 07:55:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726405AbgDTLpS (ORCPT
+        by vger.kernel.org with ESMTP id S1726893AbgDTLzI (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 07:45:18 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87683C061A41
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 04:45:18 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x4so10639880wmj.1
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 04:45:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/Eo7z/bW/75JbK01dAXq1seEbWg98VkTUnan0t5hkQw=;
-        b=1SIVE6W4mcJTTZWKBGYOHiT3uHXcmVOkHZQEgxjGTgee8IoV3FNLpqrFJnZH923Fbc
-         O39HPbopLAKYTRR45NG3vTPnxj5NHjj8qR2uA+BkBQj7XtBehqKHLrfwwLN7f+/st2WD
-         fbmTHYA24mggSSRuPIZwNruyXT4eWW+uMBp2QCLJ05Ap7oFG8pcGGCEZ1duH0RK3cDr7
-         UTuoV9A8YjhkemvD0Ex9zHzyjnoM5DW9pegWP7m3SOic/0r97TfutOjBBdrHU1zi/cyk
-         nyebTDYjUvVUl/iTOyJ0Fcg+K7pnhJpb/4JoVs+q0Cg4QXq/DEhIl6IVNC1z2LV3HU84
-         E4Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/Eo7z/bW/75JbK01dAXq1seEbWg98VkTUnan0t5hkQw=;
-        b=F1NJedIqKuxTD5h/NHpFyyTBkhGi/bfvw3mDxJzxwQ3Hs0S3hvaGdK3rfO2q7AqecI
-         JNZrHkus+x1E3kfJOJycPymiO5KI2E0eHBDoJjedkEsblo6INDnxAhF6cM8WNKhw7zYh
-         FwuCBrc5tXdMNnlMXbiiZbHRUfnbwi6DSQGorTITjIdMh5sF32/RP3CZ4RPeLjSlPx0G
-         w9F32QIreqxMR4G1CCSMQ37LbEZzn+suaKgtMvwEAVZG159uxDtbwT86+Xudb7SGHvwy
-         ruZDv1t0wjBvioi0KYSqe/GZije/l8jw3VXdLqao3snOgMV3lD441mROWjK04hToNXfd
-         6tew==
-X-Gm-Message-State: AGi0PuZcKfwTUniZ3vZzLGO4uAjxUEw7dqR6+rEcpU1v6Vs5QRvpecRv
-        s9neQByX3F/TEvk+0YYM+CDb4Q==
-X-Google-Smtp-Source: APiQypIXImpuNN70wYFRkSp5hlI7aYph/2B0xZyzWhfHsi7Idg5iyDUi1yNEDGrbmDiFOIN9oJI1fQ==
-X-Received: by 2002:a05:600c:29c2:: with SMTP id s2mr17145704wmd.111.1587383117186;
-        Mon, 20 Apr 2020 04:45:17 -0700 (PDT)
-Received: from starbuck.lan (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.googlemail.com with ESMTPSA id k6sm1079182wma.19.2020.04.20.04.45.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 04:45:16 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH 1/2] ASoC: meson: axg-card: fix codec-to-codec link setup
-Date:   Mon, 20 Apr 2020 13:45:10 +0200
-Message-Id: <20200420114511.450560-2-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200420114511.450560-1-jbrunet@baylibre.com>
-References: <20200420114511.450560-1-jbrunet@baylibre.com>
+        Mon, 20 Apr 2020 07:55:08 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1967C061A0C;
+        Mon, 20 Apr 2020 04:55:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=u/v02NGC1oFgel1iBcflEpVS3DgIiIJMM0PTdku3nhQ=; b=CZBJhyvq0qUv3KTenjC17+groE
+        HnljLoftFJKoNw5UOVlCYJYof/UFLtQmL5/bX9LjqyUMTo4QRE86om9NvcRONyDDMnOGVceoX+gxR
+        7skTn5ckWCZHYOoqhWpc3hd4V0HDNyIsFAeYa6bSvpq+bEiu36bK96SxuGk8hfmwqr6BmJyvF1Agl
+        HpKhYqUL4S0RwC/jfr0C4LVaGSMhF+rV//Dtv4Y+Z4h74jcigb+DMo9NGcvEiyfLss4bI4oEpwBN3
+        Xpok6CGILMN9GEeWX+JNL2XSTrGhDYNJ1ex2JKAcJsF3nBgda4YwkG6sQ2olGScYX1ORh8O6xszEf
+        Esp1wo2w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jQV0y-0006P9-DC; Mon, 20 Apr 2020 11:55:04 +0000
+Date:   Mon, 20 Apr 2020 04:55:04 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
+        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
+        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
+        jacob.jun.pan@linux.intel.com, zhangfei.gao@linaro.org,
+        jgg@ziepe.ca, xuzaibo@huawei.com
+Subject: Re: [PATCH v5 02/25] iommu/sva: Manage process address spaces
+Message-ID: <20200420115504.GA20664@infradead.org>
+References: <20200414170252.714402-1-jean-philippe@linaro.org>
+ <20200414170252.714402-3-jean-philippe@linaro.org>
+ <20200416072852.GA32000@infradead.org>
+ <20200416085402.GB1286150@myrica>
+ <20200416121331.GA18661@infradead.org>
+ <20200420074213.GA3180232@myrica>
+ <20200420081034.GA17305@infradead.org>
+ <6b195512-fa73-9a49-03d8-1ed92e86f607@amd.com>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <6b195512-fa73-9a49-03d8-1ed92e86f607@amd.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since the addition of commit 9b5db059366a ("ASoC: soc-pcm: dpcm: Only allow
-playback/capture if supported"), meson-axg cards which have codec-to-codec
-links fail to init and Oops:
+On Mon, Apr 20, 2020 at 01:44:56PM +0200, Christian König wrote:
+> Am 20.04.20 um 10:10 schrieb Christoph Hellwig:
+> > On Mon, Apr 20, 2020 at 09:42:13AM +0200, Jean-Philippe Brucker wrote:
+> > > Right, I can see the appeal. I still like having a single mmu notifier per
+> > > mm because it ensures we allocate a single PASID per mm (as required by
+> > > x86). I suppose one alternative is to maintain a hashtable of mm->pasid,
+> > > to avoid iterating over all bonds during allocation.
+> > Given that the PASID is a pretty generic and important concept can
+> > we just add it directly to the mm_struct and allocate it lazily once
+> > we first need it?
+> 
+> Well the problem is that the PASID might as well be device specific. E.g.
+> some devices use 16bit PASIDs, some 15bit, some other only 12bit.
+> 
+> So what could (at least in theory) happen is that you need to allocate
+> different PASIDs for the same process because different devices need one.
 
-  Unable to handle kernel NULL pointer dereference at virtual address 0000000000000128
-  Internal error: Oops: 96000044 [#1] PREEMPT SMP
-  CPU: 3 PID: 1582 Comm: arecord Not tainted 5.7.0-rc1
-  pc : invalidate_paths_ep+0x30/0xe0
-  lr : snd_soc_dapm_dai_get_connected_widgets+0x170/0x1a8
-  Call trace:
-   invalidate_paths_ep+0x30/0xe0
-   snd_soc_dapm_dai_get_connected_widgets+0x170/0x1a8
-   dpcm_path_get+0x38/0xd0
-   dpcm_fe_dai_open+0x70/0x920
-   snd_pcm_open_substream+0x564/0x840
-   snd_pcm_open+0xfc/0x228
-   snd_pcm_capture_open+0x4c/0x78
-   snd_open+0xac/0x1a8
-   ...
-
-While initiliazing the links, ASoC treats the codec-to-codec links of this
-card type as a DPCM backend. This error eventually leads to the Oops.
-
-Most of the card driver code is shared between DPCM backends and
-codec-to-codec links. The property "no_pcm" marking DCPM BE was left set on
-codec-to-codec links, leading to this problem. This commit fixes that.
-
-Fixes: 0a8f1117a680 ("ASoC: meson: axg-card: add basic codec-to-codec link support")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- sound/soc/meson/axg-card.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/sound/soc/meson/axg-card.c b/sound/soc/meson/axg-card.c
-index af46845f4ef2..89f7f64747cd 100644
---- a/sound/soc/meson/axg-card.c
-+++ b/sound/soc/meson/axg-card.c
-@@ -338,8 +338,10 @@ static int axg_card_add_link(struct snd_soc_card *card, struct device_node *np,
- 
- 	if (axg_card_cpu_is_tdm_iface(dai_link->cpus->of_node))
- 		ret = axg_card_parse_tdm(card, np, index);
--	else if (axg_card_cpu_is_codec(dai_link->cpus->of_node))
-+	else if (axg_card_cpu_is_codec(dai_link->cpus->of_node)) {
- 		dai_link->params = &codec_params;
-+		dai_link->no_pcm = 0; /* link is not a DPCM BE */
-+	}
- 
- 	return ret;
- }
--- 
-2.25.2
-
+This directly contradicts the statement from Jean-Philippe above that
+x86 requires a single PASID per mm_struct.  If we may need different
+PASIDs for different devices and can actually support this just
+allocating one per [device, mm_struct] would make most sense of me, as
+it doesn't couple otherwise disjoint state.
