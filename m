@@ -2,178 +2,197 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55753C54FCC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 08:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78036C54FCC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 08:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E84D20A8B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 08:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58AB5208E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 08:59:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="eZTkOKTq";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="feZwAkDU"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="UmA/0Dcs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725775AbgDTIzq (ORCPT
+        id S1726063AbgDTI7x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:55:46 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:60811 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbgDTIzq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 04:55:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1587372946; x=1618908946;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=7ENCpieTz65E3lirF+44Xaw7VKX5VeIuFJZo3xfPyHM=;
-  b=eZTkOKTqW3eEUY+h4tuWCpP0WgLmFtpD+xKy5Mi5A0PYNUk954epxEZs
-   sh+VvqSVfPXTMrqbE5eUJ/niFGJVregnJCdzsekSSaHjP6ElV7X3U6RRC
-   USQiMzexsqjX+/lOb48I3liwP+PslwgUIChPRtfxDHxjiOW5IgtLEfmVt
-   juAOEu3Qa/9Ib8SMB+IVuE87XDOo6x9sFC4jLTMnKbMaG3oCzOk5fxFA8
-   1Q/fcw2nnKghkhHQz2ygClplLi1a2nTyJydl0B58gCQtgUW/KbD4JyZ+f
-   ZbUNRUhKPBZjQ5w8XGsNXHkiIJ0wwN01aGExHsRwxcMChBFXQsKcj0Mkp
-   Q==;
-IronPort-SDR: CZNVYqYLHZvCCa36i7y0L1IWrXI4znSYJMN73D6DxZTfTI8+2NTDumciNnM+gEcm4EGqnQij8F
- +b0qHzk1wf2H2SDIOpAi1aLqkATdj4TgPNdWg0K4yyi6HXKv+1IIaMUUht16SVZBA6YLANxByS
- Mt5sYaiZ1AOQPqbpNGBqCuLAHeUm4tKcyiEwq0Oweh70jwOH56BhPnyJ3sHJmnyiOpM56My2NM
- vDjtl++Y571jQ5OvCDaN3YZXGkuTNdu7tA+Kk34k+Gy7wDVFN1rQUZkULLMorCo7dKfJO54lW6
- AwE=
-X-IronPort-AV: E=Sophos;i="5.72,406,1580745600"; 
-   d="scan'208";a="136004593"
-Received: from mail-bn8nam11lp2169.outbound.protection.outlook.com (HELO NAM11-BN8-obe.outbound.protection.outlook.com) ([104.47.58.169])
-  by ob1.hgst.iphmx.com with ESMTP; 20 Apr 2020 16:55:44 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KHC5dMkAY5zWKEmdUyJ5cXcwh8PfyFYz2FY00Qw6AyLvvJ0Rvf7iE0j0k1OS3EXeO8qe3AU/G+P0yxwbYz4Zl/1xN3U/KDpd8vLsAXvFxui5S05TxTqJ9cQgw1slsJPJo0oxugygdTOq0y0aOuGDmqXje2SjmO4RNerotkWkMhNcTXb5c3WpPhqp5/5PM/BCXBIOWT3zK+y+7JHNJEouY+bGYmtGeWIPSxNlAFaKw8yA27T0RVNmgfotSsmT8DGKuZs049zGvllRAGKUUCm1IQLxUBuz9iQpRwbqOjEtmLrQDakaAGkI/hUKOimSHXRXlaR/UtO/yKlrzIBpOADfUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7ENCpieTz65E3lirF+44Xaw7VKX5VeIuFJZo3xfPyHM=;
- b=MFaTlTUen8USkQwfKi81AUb+TAx8GeeXkm4yECpo+mC0v1QuNcPdEB9MBMLw3xFFMKgGKsE1tAl22TkP1CyAgIX9UXDWSo3LJzNqIEXFGy6935f68B6xWYmlYXcsTR/+s3NDiWla9cJh3xF21AFUE3oyJOnN8B2+3GP3QEnNYWXieYkmpnWHO/HvR1dLNWWtoS1nG3oiYlnmhwsQw242uPn2jNRzugUs+53GDWvmFEsAS7/Temy7dERxa6KlTYxuEbKfhgpaQUFQBdkgi9W2Him4R9zI99HHTAOjl5a5swKKE3dNshxyHb805L/gp+OQfm27KVbEl0OO1sP+O1gC3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7ENCpieTz65E3lirF+44Xaw7VKX5VeIuFJZo3xfPyHM=;
- b=feZwAkDUSIsUHGyVC/VEJNkfExy0FEyOqoZtvIzzsBXf+61C61rbUD/Wf/6SHc6yvbim321P27/bUVNAGBdxYBfzje1E5WLThUUE/ZxIC0hbdvK+1Si3JyLCselZtZC2VynSeae58ooutL9A8nxPR3+izVVOJlTlv02WX5/JZXQ=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB4733.namprd04.prod.outlook.com (2603:10b6:805:a5::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Mon, 20 Apr
- 2020 08:55:42 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::3877:5e49:6cdd:c8b]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::3877:5e49:6cdd:c8b%5]) with mapi id 15.20.2921.027; Mon, 20 Apr 2020
- 08:55:42 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Alim Akhtar <alim.akhtar@samsung.com>,
-        "robh@kernel.org" <robh@kernel.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "kwmad.kim@samsung.com" <kwmad.kim@samsung.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
+        Mon, 20 Apr 2020 04:59:53 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:54663 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725896AbgDTI7x (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Apr 2020 04:59:53 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03K8wpSC006363;
+        Mon, 20 Apr 2020 10:59:37 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=eBxkQEjV5LwT97ZezRCcYQScn1j4krELuQFmG3AFDoc=;
+ b=UmA/0DcspsogyEGnpBmjMKvbIio5f4taFXIQBV0YNHj4UO5FS9EmK8mK9hVkhYzVnvAA
+ q/gvzcqG0D3cKnDytR9s8lwwymaM9/mAEIaqwf4/J4sBp/cfNdOKliHVhPRH80Ae0OBP
+ S8xrC4QAC53bGR3F4nvwQdG3ghhu01mKVaMJU7DjHCDbhlEKogAuntP7XR8PMKctchLq
+ s353ifKSRZOMfebbWbmhDD5/N7QtqXyXcaPQbxPJgIcaABThyon899Z9Q5I3gdQcZmTT
+ ZPOoI320erdThlNPaGkY/pywRFLVUERQ9QAUz5YIegwH/Idbc1wGOYrLAksROX+yXGpz zQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30fqaw18rs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 10:59:37 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D4E9D100038;
+        Mon, 20 Apr 2020 10:59:36 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BE9902BE226;
+        Mon, 20 Apr 2020 10:59:36 +0200 (CEST)
+Received: from localhost (10.75.127.44) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 20 Apr 2020 10:59:36
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <fabrice.gasnier@st.com>, <lee.jones@linaro.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <daniel.lezcano@linaro.org>, <tglx@linutronix.de>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v6 05/10] scsi: ufs: add quirk to fix abnormal ocs fatal
- error
-Thread-Topic: [PATCH v6 05/10] scsi: ufs: add quirk to fix abnormal ocs fatal
- error
-Thread-Index: AQHWFOOBFbSRs7BAOkOiLBrzlbkq96iBrgCA
-Date:   Mon, 20 Apr 2020 08:55:42 +0000
-Message-ID: <SN6PR04MB46408CF4DD05DB9B48DFE412FCD40@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200417175944.47189-1-alim.akhtar@samsung.com>
-        <CGME20200417181016epcas5p2ee7ac86d743ceee9076690dc5b1e2f08@epcas5p2.samsung.com>
- <20200417175944.47189-6-alim.akhtar@samsung.com>
-In-Reply-To: <20200417175944.47189-6-alim.akhtar@samsung.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0bc995dd-9bda-42b4-ea2f-08d7e5089b7b
-x-ms-traffictypediagnostic: SN6PR04MB4733:
-x-microsoft-antispam-prvs: <SN6PR04MB473356A7580FD048F7C235F0FCD40@SN6PR04MB4733.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 03793408BA
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(39860400002)(136003)(346002)(376002)(396003)(86362001)(7416002)(316002)(54906003)(110136005)(33656002)(81156014)(5660300002)(4326008)(52536014)(478600001)(6506007)(2906002)(76116006)(71200400001)(55016002)(26005)(66446008)(8936002)(64756008)(66556008)(66476007)(66946007)(7696005)(9686003)(8676002)(186003);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: FTsXLKjHAJT9hPSO6Qa4TxXgWcCdtUaYG9j+Wp3gQPJdUlYxXnNXEV+PBSlX27hIXd++hr5TwuVy+yifUKrzYdRkS9xystEqxV+kAJnXgb/AutAeIQel+VSwGFRrWYT9G7B897xEOrsiYTb6g6zRd1PFhJTKQbAM7UIzBZbZRsBoN899zL4IXDU56bWvXzxOCuMHzftx3rp2BIIVf7rPaIY0JrSCbqIWPHxhAvokzy1U7yCEUZA6/zDPJx1ActDdTB6nU0s0IylNM5wtmRNmbNxqfWA4TyfAN8T5E+CHzis4TzJW0xFobNXgbpOZjr00MM9cCU+/kSf9wFzt/K0oxv/X64zxPLhYPKZoL7q8GzXJumQjnjvGV/j/bsp9ljCGhCBQi2pYzF3YmdBy6GrCd/MUC0D6XW5bIaN2/B50etfDUSX1tab5/PrWICtK3FbG
-x-ms-exchange-antispam-messagedata: f2peM62ZgmZuvIQqC2rivO9WXougPxhAShMrfrUSPAnMUmD4SeIgVfZ5k8pBwID0rBLxUNCrWnRmsslO5kG/UOboRNUqqshCUlqDJgny2sYmAWzyHcX+aMBGBD8W2tb5ZpYcy2QkPzLX+bMdUM4JZw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [RESEND v6 2/6] ARM: dts: stm32: Add timer subnodes on stm32mp15 SoCs
+Date:   Mon, 20 Apr 2020 10:59:26 +0200
+Message-ID: <20200420085930.26989-3-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20200420085930.26989-1-benjamin.gaignard@st.com>
+References: <20200420085930.26989-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0bc995dd-9bda-42b4-ea2f-08d7e5089b7b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2020 08:55:42.6243
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8hu7uNwztGfTHpul0IKvuqCVMxSMCazodP5I2H9Ijg1V8xAFoxzzZJ+DdkFScecYrkP0LS5PzUYj4kWnUOsTEA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4733
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-20_03:2020-04-17,2020-04-20 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PiANCj4gRnJvbTogS2l3b29uZyBLaW0gPGt3bWFkLmtpbUBzYW1zdW5nLmNvbT4NCj4gDQo+IFNv
-bWUgYXJjaGl0ZWN0dXJlcyBkZXRlcm1pbmVzIGlmIGZhdGFsIGVycm9yIGZvciBPQ1MNCj4gb2Nj
-dXJycyB0byBjaGVjayBzdGF0dXMgaW4gcmVzcG9uc2UgdXBpdS4gVGhpcyBwYXRjaA0KVHlwbyAt
-IG9jY3Vycw0KDQo+IGlzIHRvIHByZXZlbnQgZnJvbSByZXBvcnRpbmcgY29tbWFuZCByZXN1bHRz
-IHdpdGggdGhhdC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEtpd29vbmcgS2ltIDxrd21hZC5raW1A
-c2Ftc3VuZy5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IEFsaW0gQWtodGFyIDxhbGltLmFraHRhckBz
-YW1zdW5nLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jIHwgNiArKysr
-KysNCj4gIGRyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmggfCA2ICsrKysrKw0KPiAgMiBmaWxlcyBj
-aGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zY3Np
-L3Vmcy91ZnNoY2QuYyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMNCj4gaW5kZXggYjMyZmNl
-ZGNkY2I5Li44YzA3Y2FmZjBhNWMgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc2NzaS91ZnMvdWZz
-aGNkLmMNCj4gKysrIGIvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYw0KPiBAQCAtNDc5NCw2ICs0
-Nzk0LDEyIEBAIHVmc2hjZF90cmFuc2Zlcl9yc3Bfc3RhdHVzKHN0cnVjdCB1ZnNfaGJhICpoYmEs
-DQo+IHN0cnVjdCB1ZnNoY2RfbHJiICpscmJwKQ0KPiAgICAgICAgIC8qIG92ZXJhbGwgY29tbWFu
-ZCBzdGF0dXMgb2YgdXRyZCAqLw0KPiAgICAgICAgIG9jcyA9IHVmc2hjZF9nZXRfdHJfb2NzKGxy
-YnApOw0KPiANCj4gKyAgICAgICBpZiAoaGJhLT5xdWlya3MgJiBVRlNIQ0RfUVVJUktfQlJPS0VO
-X09DU19GQVRBTF9FUlJPUikgew0KPiArICAgICAgICAgICAgICAgaWYgKGJlMzJfdG9fY3B1KGxy
-YnAtPnVjZF9yc3BfcHRyLT5oZWFkZXIuZHdvcmRfMSkgJg0KPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgTUFTS19SU1BfVVBJVV9SRVNVTFQpDQo+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIG9jcyA9IE9DU19TVUNDRVNTOw0KPiArICAgICAgIH0NCj4gKw0KTm90IHN1
-cmUgdGhhdCBJIGZvbGxvdyB3aGF0IHRoaXMgcXVpcmsgaXMgYWxsIGFib3V0Lg0KWW91ciBjb2Rl
-IG92ZXJyaWRlcyBvY3MgYnkgb3BlbiBjb2RpbmcgdWZzaGNkX2dldF9yc3BfdXBpdV9yZXN1bHQu
-DQoNCk5vcm1hbGx5IE9DUyBpcyBpbiB1dHAgdHJhbnNmZXIgcmVxIGRlc2NyaXB0b3IsIGR3b3Jk
-IDIsIGJpdHMgMC4uNy4NCk15IHVuZGVyc3RhbmRpbmcgZnJvbSB5b3VyIGRlc2NyaXB0aW9uLCBp
-cyB0aGF0IHNvbWUgZmF0YWwgZXJyb3IgbWlnaHQgb2NjdXIsDQpCdXQgdGhlIGhvc3QgY29udHJv
-bGxlciBkb2VzIG5vdCByZXBvcnQgaXQsIGFuZCBpdCBzdGlsbCBuZWVkcyB0byBiZSBjaGVja2Vk
-IGluIHRoZSByZXNwb25zZSB1cGl1Lg0KRXZpZGVudGx5IHlvdSBhcmUgbm90IGRvaW5nIHNvLg0K
-UGxlYXNlIGVsYWJvcmF0ZSB5b3VyIGRlc2NyaXB0aW9uLg0KDQpQLlMuDQpUaGUgb2NzIGlzIGJl
-aW5nIGV2YWx1YXRlZCBpbiBkZXZpY2UgbWFuYWdlbWVudCBjb21tYW5kcyBhcyB3ZWxsLA0KSXNu
-J3QgdGhpcyBzb21ldGhpbmcgeW91IG5lZWQgdG8gYXR0ZW5kPw0KDQpUaGFua3MsDQpBdnJpDQoN
-Cj4gICAgICAgICBzd2l0Y2ggKG9jcykgew0KPiAgICAgICAgIGNhc2UgT0NTX1NVQ0NFU1M6DQo+
-ICAgICAgICAgICAgICAgICByZXN1bHQgPSB1ZnNoY2RfZ2V0X3JlcV9yc3AobHJicC0+dWNkX3Jz
-cF9wdHIpOw0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuaCBiL2RyaXZl
-cnMvc2NzaS91ZnMvdWZzaGNkLmgNCj4gaW5kZXggYTliOWFjZTlmYzcyLi5lMWQwOWMyYzQzMDIg
-MTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmgNCj4gKysrIGIvZHJpdmVy
-cy9zY3NpL3Vmcy91ZnNoY2QuaA0KPiBAQCAtNTQxLDYgKzU0MSwxMiBAQCBlbnVtIHVmc2hjZF9x
-dWlya3Mgew0KPiAgICAgICAgICAqIHJlc29sdXRpb24gb2YgdGhlIHZhbHVlcyBvZiBQUkRUTyBh
-bmQgUFJEVEwgaW4gVVRSRCBhcyBieXRlLg0KPiAgICAgICAgICAqLw0KPiAgICAgICAgIFVGU0hD
-RF9RVUlSS19QUkRUX0JZVEVfR1JBTiAgICAgICAgICAgICAgICAgICAgID0gMSA8PCA5LA0KPiAr
-DQo+ICsgICAgICAgLyoNCj4gKyAgICAgICAgKiBUaGlzIHF1aXJrIG5lZWRzIHRvIGJlIGVuYWJs
-ZWQgaWYgdGhlIGhvc3QgY29udHJvbGxlciByZXBvcnRzDQo+ICsgICAgICAgICogT0NTIEZBVEFM
-IEVSUk9SIHdpdGggZGV2aWNlIGVycm9yIHRocm91Z2ggc2Vuc2UgZGF0YQ0KPiArICAgICAgICAq
-Lw0KPiArICAgICAgIFVGU0hDRF9RVUlSS19CUk9LRU5fT0NTX0ZBVEFMX0VSUk9SICAgICAgICAg
-ICAgID0gMSA8PCAxMCwNCj4gIH07DQo+IA0KPiAgZW51bSB1ZnNoY2RfY2FwcyB7DQo+IC0tDQo+
-IDIuMTcuMQ0KDQo=
+Add timer subnode and interrupts to low power timer nodes for
+all stm32mp15x SoCs.
+
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ arch/arm/boot/dts/stm32mp151.dtsi | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+
+diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
+index 3ea05ba48215..5e881e8d0f58 100644
+--- a/arch/arm/boot/dts/stm32mp151.dtsi
++++ b/arch/arm/boot/dts/stm32mp151.dtsi
+@@ -359,6 +359,8 @@
+ 			reg = <0x40009000 0x400>;
+ 			clocks = <&rcc LPTIM1_K>;
+ 			clock-names = "mux";
++			interrupts-extended = <&exti 47 IRQ_TYPE_LEVEL_HIGH>;
++			wakeup-source;
+ 			status = "disabled";
+ 
+ 			pwm {
+@@ -377,6 +379,11 @@
+ 				compatible = "st,stm32-lptimer-counter";
+ 				status = "disabled";
+ 			};
++
++			timer {
++				compatible = "st,stm32-lptimer-timer";
++				status = "disabled";
++			};
+ 		};
+ 
+ 		spi2: spi@4000b000 {
+@@ -1144,6 +1151,8 @@
+ 			reg = <0x50021000 0x400>;
+ 			clocks = <&rcc LPTIM2_K>;
+ 			clock-names = "mux";
++			interrupts-extended = <&exti 48 IRQ_TYPE_LEVEL_HIGH>;
++			wakeup-source;
+ 			status = "disabled";
+ 
+ 			pwm {
+@@ -1162,6 +1171,11 @@
+ 				compatible = "st,stm32-lptimer-counter";
+ 				status = "disabled";
+ 			};
++
++			timer {
++				compatible = "st,stm32-lptimer-timer";
++				status = "disabled";
++			};
+ 		};
+ 
+ 		lptimer3: timer@50022000 {
+@@ -1171,6 +1185,8 @@
+ 			reg = <0x50022000 0x400>;
+ 			clocks = <&rcc LPTIM3_K>;
+ 			clock-names = "mux";
++			interrupts-extended = <&exti 50 IRQ_TYPE_LEVEL_HIGH>;
++			wakeup-source;
+ 			status = "disabled";
+ 
+ 			pwm {
+@@ -1184,6 +1200,11 @@
+ 				reg = <2>;
+ 				status = "disabled";
+ 			};
++
++			timer {
++				compatible = "st,stm32-lptimer-timer";
++				status = "disabled";
++			};
+ 		};
+ 
+ 		lptimer4: timer@50023000 {
+@@ -1191,6 +1212,8 @@
+ 			reg = <0x50023000 0x400>;
+ 			clocks = <&rcc LPTIM4_K>;
+ 			clock-names = "mux";
++			interrupts-extended = <&exti 52 IRQ_TYPE_LEVEL_HIGH>;
++			wakeup-source;
+ 			status = "disabled";
+ 
+ 			pwm {
+@@ -1198,6 +1221,11 @@
+ 				#pwm-cells = <3>;
+ 				status = "disabled";
+ 			};
++
++			timer {
++				compatible = "st,stm32-lptimer-timer";
++				status = "disabled";
++			};
+ 		};
+ 
+ 		lptimer5: timer@50024000 {
+@@ -1205,6 +1233,8 @@
+ 			reg = <0x50024000 0x400>;
+ 			clocks = <&rcc LPTIM5_K>;
+ 			clock-names = "mux";
++			interrupts-extended = <&exti 53 IRQ_TYPE_LEVEL_HIGH>;
++			wakeup-source;
+ 			status = "disabled";
+ 
+ 			pwm {
+@@ -1212,6 +1242,11 @@
+ 				#pwm-cells = <3>;
+ 				status = "disabled";
+ 			};
++
++			timer {
++				compatible = "st,stm32-lptimer-timer";
++				status = "disabled";
++			};
+ 		};
+ 
+ 		vrefbuf: vrefbuf@50025000 {
+-- 
+2.15.0
+
