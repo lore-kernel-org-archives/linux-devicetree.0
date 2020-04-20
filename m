@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 200AEC3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 17:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3FDC3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 17:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F02B120CC7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 17:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C5D420CC7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 17:31:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587403914;
-	bh=cT0OetYZ/YUt8aV+lPE7R4oJyBHx66QFKj3UJB9PhuY=;
+	s=default; t=1587403919;
+	bh=IxBnmwUHGsYcZNKOwd+tpw9k4iNjw6R+P1uEmMntPhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ea7ZciNNSerSEcoxE50vh2vG1uQt9D4e86ZijrZYLS1eBicqGNogHYOPUzBXJQXw0
-	 plvn56pinRLbJ1wkwHxfAMRoROOiC111JIdGDULR8XQLayIErJfN2NrslVjychYoon
-	 mR5PhKaxqLzVyFbAS7VvepDy3MQYGXIHDcfxz6S4=
+	b=WqNmt9gRKBAXZD7h9qC5DaVCnWdpX+vtAnpJ4BHXtbCzBiXqClI6DXDmRvVuZzuLX
+	 Wosj4tTSlsw1NqbeL1OUt7g9gdGyhp9MMzmLu4iguZ/XVQSVgtf6VJVlAO9mjEd+rL
+	 BpvBlNpVvTYT+lT3KgHgaIIUoxFTud0tmTVvpNEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbgDTRbx (ORCPT
+        id S1727031AbgDTRb6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 13:31:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50990 "EHLO mail.kernel.org"
+        Mon, 20 Apr 2020 13:31:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726067AbgDTRbx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 13:31:53 -0400
+        id S1726596AbgDTRb6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Apr 2020 13:31:58 -0400
 Received: from localhost.localdomain (unknown [157.46.94.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A37320782;
-        Mon, 20 Apr 2020 17:31:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A25C20BED;
+        Mon, 20 Apr 2020 17:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587403912;
-        bh=cT0OetYZ/YUt8aV+lPE7R4oJyBHx66QFKj3UJB9PhuY=;
+        s=default; t=1587403918;
+        bh=IxBnmwUHGsYcZNKOwd+tpw9k4iNjw6R+P1uEmMntPhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=glAPmqV6jUTuEUBYfT5dT0mSTxIIx5QSGT6l2LTqTKhNfh/wgnGDhkudKEHMChS78
-         27u7tV5HZjV/YhNtCRy/M2Rwoqv3nlFMdSRJTIo2Gxi09Gt9nbUbopfuKcxNa3v4A6
-         x1J6wY0yb3fjCAryM9c6B/uP70wYV7Y9hbuUINic=
+        b=x9gZNuXFuUPE3n9PEIE1vJsmd3NNUJAPYD9et/4FmW2wutu+mPPNNGLOzV2YaaE05
+         UwFaBV+D37zRNAUgbpn3kYO0GyU7UEXwMIdVinvd0Nl48MJ5ay27zwvxqUahi8cEUF
+         Z/fK5DwAnfhDGWyGWupXgO3cCHt+Sb4euEMByjRg=
 From:   mani@kernel.org
 To:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
         alexandre.torgue@st.com
@@ -46,9 +46,9 @@ Cc:     devicetree@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Manivannan Sadhasivam <mani@kernel.org>
-Subject: [PATCH 2/6] ARM: dts: Add missing pinctrl entries for STM32MP15
-Date:   Mon, 20 Apr 2020 23:01:20 +0530
-Message-Id: <20200420173124.27416-3-mani@kernel.org>
+Subject: [PATCH 3/6] dt-bindings: arm: stm32: Document Stinger96 compatible
+Date:   Mon, 20 Apr 2020 23:01:21 +0530
+Message-Id: <20200420173124.27416-4-mani@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200420173124.27416-1-mani@kernel.org>
 References: <20200420173124.27416-1-mani@kernel.org>
@@ -59,108 +59,25 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Manivannan Sadhasivam <mani@kernel.org>
 
-These pinctrl definitions will be used by Stinger96/IoTBox boards
-from Shiratech.
+Document devicetree compatible of Shiratech Stinger96 board.
 
 Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
 ---
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 64 ++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
+ Documentation/devicetree/bindings/arm/stm32/stm32.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-index aeddcaadb829..858c83038e5a 100644
---- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-@@ -1519,6 +1519,30 @@
- 		};
- 	};
- 
-+	usart2_pins_b: usart2-1 {
-+		pins1 {
-+			pinmux = <STM32_PINMUX('F', 5, AF7)>, /* USART2_TX */
-+				 <STM32_PINMUX('A', 1, AF7)>; /* USART2_RTS */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <0>;
-+		};
-+		pins2 {
-+			pinmux = <STM32_PINMUX('F', 4, AF7)>, /* USART2_RX */
-+				 <STM32_PINMUX('E', 15, AF7)>; /* USART2_CTS_NSS */
-+			bias-disable;
-+		};
-+	};
-+
-+	usart2_sleep_pins_b: usart2-sleep-1 {
-+		pins {
-+			pinmux = <STM32_PINMUX('F', 5, ANALOG)>, /* USART2_TX */
-+				 <STM32_PINMUX('A', 1, ANALOG)>, /* USART2_RTS */
-+				 <STM32_PINMUX('F', 4, ANALOG)>, /* USART2_RX */
-+				 <STM32_PINMUX('E', 15, ANALOG)>; /* USART2_CTS_NSS */
-+		};
-+	};
-+
- 	usart3_pins_a: usart3-0 {
- 		pins1 {
- 			pinmux = <STM32_PINMUX('B', 10, AF7)>; /* USART3_TX */
-@@ -1558,6 +1582,19 @@
- 		};
- 	};
- 
-+	uart4_pins_c: uart4-2 {
-+		pins1 {
-+			pinmux = <STM32_PINMUX('G', 11, AF6)>; /* UART4_TX */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <0>;
-+		};
-+		pins2 {
-+			pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
-+			bias-disable;
-+		};
-+	};
-+
- 	uart7_pins_a: uart7-0 {
- 		pins1 {
- 			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART4_TX */
-@@ -1573,6 +1610,19 @@
- 		};
- 	};
- 
-+	uart7_pins_b: uart7-1 {
-+		pins1 {
-+			pinmux = <STM32_PINMUX('F', 7, AF7)>; /* UART7_TX */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <0>;
-+		};
-+		pins2 {
-+			pinmux = <STM32_PINMUX('F', 6, AF7)>; /* UART7_RX */
-+			bias-disable;
-+		};
-+	};
-+
- 	uart8_pins_a: uart8-0 {
- 		pins1 {
- 			pinmux = <STM32_PINMUX('E', 1, AF8)>; /* UART8_TX */
-@@ -1647,4 +1697,18 @@
- 			bias-disable;
- 		};
- 	};
-+
-+	spi4_pins_a: spi4-0 {
-+		pins {
-+			pinmux = <STM32_PINMUX('E', 12, AF5)>, /* SPI4_SCK */
-+				 <STM32_PINMUX('E', 6, AF5)>;  /* SPI4_MOSI */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <1>;
-+		};
-+		pins2 {
-+			pinmux = <STM32_PINMUX('E', 13, AF5)>; /* SPI4_MISO */
-+			bias-disable;
-+		};
-+	};
- };
+diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+index 71ea3f04ab9c..3849f1d0e03e 100644
+--- a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
++++ b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+@@ -39,6 +39,7 @@ properties:
+           - enum:
+               - arrow,stm32mp157a-avenger96 # Avenger96
+               - lxa,stm32mp157c-mc1
++              - shiratech,stm32mp157a-stinger96 # Stinger96
+               - st,stm32mp157c-ed1
+               - st,stm32mp157a-dk1
+               - st,stm32mp157c-dk2
 -- 
 2.17.1
 
