@@ -2,142 +2,232 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6C6C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 21:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0298EC54FD0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 22:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A978720B1F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 21:57:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vfIBvPws"
+	by mail.kernel.org (Postfix) with ESMTP id D5FFE2078C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 22:02:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587420172;
+	bh=8cbLO4usgF4bzd97d9meReAWDlt6JAv1Ojz3TB/CUYY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZsVI/4v6tErWxsqlBP+CMqMbJIaY3iCnsD5Wx9UaRIL5hHRbwN4gcyD6W8y5nFdB6
+	 uKwWWC+lfe9CrrOXBBjlI+RaTIp0i3LHKESLgJ8uCcyv5zHUWCqiIKWsHItG28FUqf
+	 OfZMuR+LF/wJZVjyM4j1tzpFORaJR5gzlJuBRjj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgDTV5W (ORCPT
+        id S1726109AbgDTWCs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 17:57:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726532AbgDTV5V (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 17:57:21 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AE26C061A0E
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 14:57:20 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id a23so4468380plm.1
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 14:57:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7ERuQZuCLk01x2KDiDzTtYEWNEw864gDAxj/pZ9kbAY=;
-        b=vfIBvPwsW2MNCKWGAxhh5yAxrDMGifvsxaF+4So1WZxSF7vP1lW//oLDySbQAMBPnI
-         LkGncBPyr9PbQbH/Jc5RUiNbIQeFATTGh6AsRoKv5G0WVeN3OhNWAZbet4FVHF09fBZr
-         8K8W2QWAqU6pqDR/inMq0eNMP1W0UR/hu/AMHsycnRuRVetlWfMzc90SOny6tNIEGX/M
-         2+M2LeNSr4X1ZpmQrNAYjorDqYedGwCAgsA+WTr9O0Nrh+gZnRLrG1cAWYToXC7B+2Mf
-         rDcycMc+JyjRT0wSuyd2j6PuEmcwDnica5yMZoTZIY5KGk8Q/nUflv0ZgUxPa/IXoCO/
-         fz0A==
+        Mon, 20 Apr 2020 18:02:48 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34771 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgDTWCs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 18:02:48 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 72so3119270otu.1;
+        Mon, 20 Apr 2020 15:02:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7ERuQZuCLk01x2KDiDzTtYEWNEw864gDAxj/pZ9kbAY=;
-        b=G0ynEPx6zXyGweSkiKDsYeGmRFN0+Xv9BtQjjHSVSPOI+vJ7ZJtHjOPAyHKTBLrpJh
-         8Ju83ZQvrHhF6VzZ2d0l4s2b05tT+OiE6iUyZAqDTT8AsMShlF2vHFRGs68AyupR9Ijz
-         hcmDX631iZv57PJVgpVmqcr97KJvTvWkrNrcYDP6pevHtQWGjH4nczHGCmdBjSEuWU8U
-         u1TWiJTmwiAcrRqopklXvRZPvcF6k+b54UdU1lW8GS4Jh3lM2a+fqRFagkZ8SDvPG6RV
-         qergY0rlir6ULitR6w8hbAsn8+/nW98Sfioizmp00LRLa+syjHH/MrWysk2t7ZcQt/n7
-         axfg==
-X-Gm-Message-State: AGi0PubrXpyH5Iwo77+Vfbm1v5MVMdsD/OkfNO7o7sYLBxGswDqvm351
-        1TyNkB0Zyh4Bdvae9zoKoo5rxA==
-X-Google-Smtp-Source: APiQypJebqWLBt7PWYbUounxjinvwFHZmqwHIZzsMiNPPcvtKjGnPEhbjTMcSAPX1khY32okPttWWA==
-X-Received: by 2002:a17:902:7793:: with SMTP id o19mr11532864pll.107.1587419839603;
-        Mon, 20 Apr 2020 14:57:19 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 62sm455565pfu.181.2020.04.20.14.57.18
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=K5L6UQW35I1N2wLdBvnczZT21mI2+tpfuparcRqaXcg=;
+        b=kbOWWyKG07RmL5TH6HvG2hET8iNpKI8YVSvVvxqa5g5bDZKnitwPqfX17RYOyx6COi
+         NDh5cyixNJ8/QTap3FLPatFsjgc0UbZJ0KEbDUH4/HUU8pGdlrCMYETt3lxb3l5nVhkj
+         vpxwZi10bwan/ZQQyqB/wsuX8N8xEuzRiVczXaj+x58TPItjgrASvY9qPIsYYaaPOgva
+         3XIlWgN9s294pzitQhko9NtECanxYKYFaQgRVOiLkHcfDr3t7tS1a7D773F+SP+/u09f
+         R5m/gk6qeKz/fzLE+J72NrgxnNaq50AvCVNdHNIp7ao9rN2AoglnR8PkP9bgPYOxlxlM
+         d9cQ==
+X-Gm-Message-State: AGi0PuZNxWKWm0x9QWdKGdyRbrJjiHbBJv0C/6hhiYrCyh/vPc4Lz9Z3
+        DTEYltGFOFA83mxoymH0EA==
+X-Google-Smtp-Source: APiQypK8Fy8ojOtSADNqJzMy08M5eOTn6FPLAGyy8imAAB2qDC8Uez6oOOnaxrHsIXx+Ie0sAjhDhg==
+X-Received: by 2002:a9d:3e4b:: with SMTP id h11mr10435724otg.252.1587420166984;
+        Mon, 20 Apr 2020 15:02:46 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 204sm191218oid.18.2020.04.20.15.02.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 14:57:18 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] panel: simple: Add BOE NV133FHM-N61
-Date:   Mon, 20 Apr 2020 14:57:42 -0700
-Message-Id: <20200420215742.1927498-2-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200420215742.1927498-1-bjorn.andersson@linaro.org>
-References: <20200420215742.1927498-1-bjorn.andersson@linaro.org>
+        Mon, 20 Apr 2020 15:02:46 -0700 (PDT)
+Received: (nullmailer pid 9872 invoked by uid 1000);
+        Mon, 20 Apr 2020 22:02:44 -0000
+Date:   Mon, 20 Apr 2020 17:02:44 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jishnu Prakash <jprakash@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, linus.walleij@linaro.org,
+        Jonathan.Cameron@huawei.com, smohanad@codeaurora.org,
+        kgunda@codeaurora.org, aghayal@codeaurora.org,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH V2 2/3] iio: adc: Add PMIC7 ADC bindings
+Message-ID: <20200420220244.GA32739@bogus>
+References: <1586942266-21480-1-git-send-email-jprakash@codeaurora.org>
+ <1586942266-21480-3-git-send-email-jprakash@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586942266-21480-3-git-send-email-jprakash@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The BOE NV133FHM-N61 panel is a 13.3" 1920x1080 eDP panel, add support
-for it in panel-simple.
+On Wed, Apr 15, 2020 at 02:47:45PM +0530, Jishnu Prakash wrote:
+> Add documentation for PMIC7 ADC peripheral.
+> For the PMIC7-type PMICs, ADC peripheral is present in HW for the
+> following PMICs: PMK8350, PM8350, PM8350b, PMR735a and PMR735b.
+> Of these, only the ADC peripheral on PMK8350 is exposed directly to SW.
+> If SW needs to communicate with ADCs on other PMICs, it specifies the
+> PMIC to PMK8350 through the newly added SID register and communication
+> between PMK8350 ADC and other PMIC ADCs is carried out through
+> PBS(Programmable Boot Sequence) at the firmware level.
+> 
+> In addition, add definitions for ADC channels and virtual channel
+> definitions (combination of ADC channel number and PMIC SID number)
+> per PMIC, to be used by ADC clients for PMIC7.
+> 
+> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
+> ---
+>  .../bindings/iio/adc/qcom,spmi-vadc.yaml           | 52 +++++++++++--
+>  include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h    | 67 ++++++++++++++++
+>  include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h   | 88 ++++++++++++++++++++++
+>  include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h   | 46 +++++++++++
+>  include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h   | 28 +++++++
+>  include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h   | 28 +++++++
+>  include/dt-bindings/iio/qcom,spmi-vadc.h           | 78 ++++++++++++++++++-
+>  7 files changed, 380 insertions(+), 7 deletions(-)
+>  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h
+>  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h
+>  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h
+>  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h
+>  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
+> index 8273981..62aa311 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
+> @@ -13,7 +13,7 @@ maintainers:
+>  description: |
+>    SPMI PMIC voltage ADC (VADC) provides interface to clients to read
+>    voltage. The VADC is a 15-bit sigma-delta ADC.
+> -  SPMI PMIC5 voltage ADC (ADC) provides interface to clients to read
+> +  SPMI PMIC5/PMIC7 voltage ADC (ADC) provides interface to clients to read
+>    voltage. The VADC is a 16-bit sigma-delta ADC.
+>  
+>  properties:
+> @@ -28,6 +28,7 @@ properties:
+>            - qcom,spmi-vadc
+>            - qcom,spmi-adc5
+>            - qcom,spmi-adc-rev2
+> +          - qcom,spmi-adc7
+>  
+>    reg:
+>      description: VADC base address in the SPMI PMIC register map
+> @@ -70,6 +71,8 @@ patternProperties:
+>          description: |
+>            ADC channel number.
+>            See include/dt-bindings/iio/qcom,spmi-vadc.h
+> +          For PMIC7 ADC, the channel numbers are specified separately per PMIC
+> +          in the PMIC-specific files in include/dt-bindings/iio/.
+>  
+>        label:
+>          $ref: /schemas/types.yaml#/definitions/string
+> @@ -89,6 +92,8 @@ patternProperties:
+>                of 512 will be used.
+>              - For compatible property "qcom,spmi-adc5", valid values are 250, 420
+>                and 840. If property is not found, default value of 840 is used.
+> +            - For compatible property "qcom,spmi-adc7", valid values are 85, 340
+> +              and 1360. If property is not found, default value of 1360 is used.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/gpu/drm/panel/panel-simple.c | 33 ++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+We express constraints in schema now, don't duplicate with free form 
+text.
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 3ad828eaefe1..5b92583bccdf 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1124,6 +1124,36 @@ static const struct panel_desc boe_nv140fhmn49 = {
- 	.connector_type = DRM_MODE_CONNECTOR_eDP,
- };
- 
-+static const struct drm_display_mode boe_nv133fhm_n61_modes = {
-+	.clock = 147840,
-+	.hdisplay = 1920,
-+	.hsync_start = 1920 + 48,
-+	.hsync_end = 1920 + 48 + 32,
-+	.htotal = 1920 + 48 + 32 + 200,
-+	.vdisplay = 1080,
-+	.vsync_start = 1080 + 3,
-+	.vsync_end = 1080 + 3 + 6,
-+	.vtotal = 1080 + 3 + 6 + 31,
-+	.vrefresh = 60,
-+};
-+
-+static const struct panel_desc boe_nv133fhm_n61 = {
-+	.modes = &boe_nv133fhm_n61_modes,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 300,
-+		.height = 187,
-+	},
-+	.delay = {
-+		.hpd_absent_delay = 200,
-+		.unprepare = 500,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-+	.bus_flags = DRM_BUS_FLAG_DATA_MSB_TO_LSB,
-+	.connector_type = DRM_MODE_CONNECTOR_eDP,
-+};
-+
- static const struct drm_display_mode cdtech_s043wq26h_ct7_mode = {
- 	.clock = 9000,
- 	.hdisplay = 480,
-@@ -3478,6 +3508,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "boe,nv101wxmn51",
- 		.data = &boe_nv101wxmn51,
-+	}, {
-+		.compatible = "boe,nv133fhm-n61",
-+		.data = &boe_nv133fhm_n61,
- 	}, {
- 		.compatible = "boe,nv140fhmn49",
- 		.data = &boe_nv140fhmn49,
--- 
-2.26.0
+>              - For compatible property "qcom,spmi-adc-rev2", valid values are 256,
+>                512 and 1024. If property is not present, default value is 1024.
+>  
+> @@ -122,11 +127,11 @@ patternProperties:
+>                channel calibration. If property is not found, channel will be
+>                calibrated with 0.625V and 1.25V reference channels, also
+>                known as absolute calibration.
+> -            - For compatible property "qcom,spmi-adc5" and "qcom,spmi-adc-rev2",
+> -              if this property is specified VADC will use the VDD reference (1.875V)
+> -              and GND for channel calibration. If property is not found, channel
+> -              will be calibrated with 0V and 1.25V reference channels, also known
+> -              as absolute calibration.
+> +            - For compatible property "qcom,spmi-adc5", "qcom,spmi-adc7" and
+> +              "qcom,spmi-adc-rev2", if this property is specified VADC will use
+> +              the VDD reference (1.875V) and GND for channel calibration. If
+> +              property is not found, channel will be calibrated with 0V and 1.25V
+> +              reference channels, also known as absolute calibration.
+>          type: boolean
+>  
+>        qcom,hw-settle-time:
+> @@ -149,6 +154,12 @@ patternProperties:
+>                Certain controller digital versions have valid values of
+>                15, 100, 200, 300, 400, 500, 600, 700, 1, 2, 4, 8, 16, 32, 64, 128 ms
+>                If property is not found, channel will use 15us.
+> +            - For compatible property "qcom,spmi-adc7", delay = 15us for
+> +              value 0, 100us * (value) for values < 8, 1ms for value 8
+> +              and 2ms * (value - 8) otherwise.
+> +              Valid values are: 15, 100, 200, 300, 400, 500, 600, 700, 1000, 2000,
+> +              4000, 8000, 16000, 32000, 64000, 128000 us.
+> +              If property is not found, channel will use 15us.
+>  
+>        qcom,avg-samples:
+>          $ref: /schemas/types.yaml#/definitions/uint32
+> @@ -160,6 +171,9 @@ patternProperties:
+>              - For compatible property "qcom,spmi-vadc", valid values
+>                are: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
+>                If property is not found, 1 sample will be used.
+> +            - For compatible property "qcom,spmi-adc5", "qcom,spmi-adc7"
+> +              and "qcom,spmi-adc-rev2", valid values are: 1, 2, 4, 8, 16.
+> +              If property is not found, 1 sample will be used.
+>  
+>      required:
+>        - reg
+> @@ -244,6 +258,32 @@ allOf:
+>                  enum: [ 1, 2, 4, 8, 16 ]
+>                  default: 1
+>  
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: qcom,spmi-adc7
+> +
+> +    then:
+> +      patternProperties:
+> +        "^.*@[0-9a-fx]+$":
 
+'x' should not be in unit-addresses.
+
+> +          properties:
+> +            qcom,decimation:
+> +              items:
+
+Not an array, so 'items' doesn't make sense here.
+
+> +                enum: [ 85, 340, 1360 ]
+> +                default: 1360
+> +
+> +            qcom,hw-settle-time:
+> +              items:
+> +                enum: [ 15, 100, 200, 300, 400, 500, 600, 700, 1000, 2000, 4000,
+> +                        8000, 16000, 32000, 64000, 128000 ]
+> +                default: 15
+> +
+> +            qcom,avg-samples:
+> +              items:
+> +                enum: [ 1, 2, 4, 8, 16 ]
+> +                default: 1
+> +
+>  examples:
+>    - |
+>      spmi_bus {
