@@ -2,144 +2,218 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8AEC3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 09:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D413C3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 09:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 171BB214AF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 09:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E46206B8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 09:04:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="P7fx7sEj"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="pwDDKyOF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbgDTJAS (ORCPT
+        id S1726138AbgDTJEL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 05:00:18 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:6986 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726020AbgDTI7x (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 04:59:53 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03K8woNn006295;
-        Mon, 20 Apr 2020 10:59:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=Xdm9Hk9ndXW8z0XFvSbO320SJ8yGV/Y7CcrMhC70rvM=;
- b=P7fx7sEjAqIBzXFnxJTmK1IOCMTNDHrJNX2pWLmfhhlNjaZJIW758hSvc+2xKGTGc93A
- THedOX8sq355QgDpz3Qe9NQ9pZcEF0UyjLbgqXqTrgFGTe7jMHQOLwCmL8PGzY+UBe4a
- fb6HY45hZg3bAYneNpzOYFel8SAPMT7DyQdykX2sonrz8e7nme0zViCAoh8zqOl2rqvQ
- anAIYacfBf4OjvF0ik1k1UBF19lEfnzdw0ZVTJ0n9O0bQuPH6qeRZpOeuh86Ap9tySDb
- F/1ehfX0QyWBtWQvcPVyjj67uvwF2CK6kIMgE8h/ANW8c5g2pzsDPDMWzPX99wiT4NiF 1w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30fqaw18rr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Apr 2020 10:59:37 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B022810003A;
-        Mon, 20 Apr 2020 10:59:35 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9BBA32BE226;
-        Mon, 20 Apr 2020 10:59:35 +0200 (CEST)
-Received: from localhost (10.75.127.47) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 20 Apr 2020 10:59:34
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <fabrice.gasnier@st.com>, <lee.jones@linaro.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <daniel.lezcano@linaro.org>, <tglx@linutronix.de>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
+        Mon, 20 Apr 2020 05:04:11 -0400
+Received: from mail-eopbgr1410131.outbound.protection.outlook.com ([40.107.141.131]:61401
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725773AbgDTJEG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Apr 2020 05:04:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KI33g9xZBgHKaW5voW69jTw0gIidmq43HfdrX6QMYgXFNfwybamzIX+n8FZCI2BXJV6c+Z4E3AU9k//W+xZr4GAFjPuIfiK7MEwSjc7S8pTo9HRT/mOw+YxhXyuOw9J4aJpK/jw95zrY/gw1TjKLgwHIWtLmfe8hipmzJmbGE6NktHcArgIktQ8zhX5n/smQEFA7EmRNuCUsqtvkzONodNX8zkRcLWZWlOpBFKp9BJLew7347v/Q7iU+wSYtmd8q0PeaG6hIMS/mALstP6m3HHrj4dL8FjnitGWYWf3/ihe3EaRCL4B3TUMfn9xt7mfyQwyCS3dZk6XJnXcEK8hwYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7TGHtjA5Z7WbIVqJ1NdRUTSyiYds1CA/1Sub6kW+AsM=;
+ b=dnLClVAWCWhhrPRoYohHDdI84YSchTRAEHy6ZF1laXTQ63irMmy11fNqP5eQ/XH7BKZ9Chz9edBP3yzbLMZUCH5CZvaWiJ6P9a5unQrRHI1dvrAlzxgJfBj6GAYOVaOs2shUsD9iYxZX8Z47zSTca5q/QrRTGNofW9P+4l7Zc67Tgfi3S8EhAE4KpjlPNVRKc1IoPsh1Dsk1hA2+3KW4n/k2evCsA86Kvz/rfh7mGqb/f8SipzkuWmeLsAgvN5XndjcgH94lg1oaLSenOWjaySWG7kap3JiMxhIBHn357FVo6U9gIRAX7zJh8cPVjZ6XIvs1mlZxQjE8WW3xrjF7/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7TGHtjA5Z7WbIVqJ1NdRUTSyiYds1CA/1Sub6kW+AsM=;
+ b=pwDDKyOF1YoAfw1ZG+LryRjLQgwFZFnHHsIIj76nl4cD6qnLApYcMgWdkcxbeK+C//xC+dFdMvPH87YqeZGUceeNuZ2ptHsCFJh98kwFN55FXzLJSeXnMhL7JU66dOFWYqK5Ik3PIrIL9nf3g3dPBaHVbV4SEk6KAoB7nEAS1SY=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB2605.jpnprd01.prod.outlook.com (20.177.103.137) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2921.26; Mon, 20 Apr 2020 09:04:00 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2921.027; Mon, 20 Apr 2020
+ 09:04:00 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [RESEND v6 1/6] dt-bindings: mfd: Document STM32 low power timer bindings
-Date:   Mon, 20 Apr 2020 10:59:25 +0200
-Message-ID: <20200420085930.26989-2-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20200420085930.26989-1-benjamin.gaignard@st.com>
-References: <20200420085930.26989-1-benjamin.gaignard@st.com>
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: RE: [PATCH v8 5/8] PCI: endpoint: Add support to handle multiple base
+ for mapping outbound memory
+Thread-Topic: [PATCH v8 5/8] PCI: endpoint: Add support to handle multiple
+ base for mapping outbound memory
+Thread-Index: AQHWFk5NxeIeMSjSVEWc7YIINcCN9KiBtnxg
+Date:   Mon, 20 Apr 2020 09:04:00 +0000
+Message-ID: <TYAPR01MB4544FDF2FEDBED104F6C6C45D8D40@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <1587302823-4435-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1587302823-4435-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1587302823-4435-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 29289b9f-751e-47cc-7a2c-08d7e509c438
+x-ms-traffictypediagnostic: TYAPR01MB2605:|TYAPR01MB2605:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TYAPR01MB26058622ED10DD7BFE47D86AD8D40@TYAPR01MB2605.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 03793408BA
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(396003)(376002)(346002)(39860400002)(366004)(136003)(55016002)(107886003)(9686003)(33656002)(4326008)(76116006)(52536014)(64756008)(66556008)(66476007)(66946007)(186003)(55236004)(26005)(6506007)(7696005)(66446008)(316002)(54906003)(8676002)(81156014)(8936002)(110136005)(2906002)(5660300002)(478600001)(86362001)(71200400001)(7416002)(921003);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tuuphgj5ozXh/JagCacIiYpiQHopSrB44vp7l4QbKFcfeL/cyfeYcrdVsVhBfvUWgwp8B7uRcq0k9jAGi/NBNdA8OASsTMuIYmr7ljnxK5kkMy63/VKrTapfgM4qphbExzhVKMEwwlX3d3Vr0OVxBTJNVvKeDs/Mg+seaAaYsbcvVMMM3Rsbrgk2jKKZcLFZMcATuCjd7cwyXEI0enm9q3Cx76X76BiYUuMw4+m7NaGEFb2o0uJjWd15C1ie8Hzfql98tG/wCNoPLvHWXbIc0QHX8w6XlOQvDIENA3YK+CvHhJLwEITKhizoWIt4FwrvBvi0i065aw1xm4iA8gNuH44lqLU95eGTdf2O44gSafTZKaZ+HqdOEREZ90atDXFcDwaur4p+qBhBkd2ZDrtsm+AAIhT4Id5f1uuAXB3psvO2b1WcE7Q5GDn2ftDBbgdfEBDMobrGDJTcGsFhvDDiV2zwTYXNn0Wu+ZDxKTjMhFg=
+x-ms-exchange-antispam-messagedata: B5753voFyj56JAbim634rYGLx2IMGOn8IXdCWRgzA3Z+9c8F7FwlwMUzg9V5ysP5+N+GfYD3l2x0S5dkmKn0BIkNU38qvvl9QK35wxzWHz958W0ZHuMKYu6v/3qvoxXDjUha0eKNgoED+8nMK0qUXQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-20_03:2020-04-17,2020-04-20 signatures=0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29289b9f-751e-47cc-7a2c-08d7e509c438
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2020 09:04:00.4087
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: D0AmiTVgX7RGN8P+dRYr045sJi9aVmMWAqWSjsZUPEBseyxbxCgZS+H4qZOTutGa0QupR4Up3qUed9Sf5UcFE0FX3uR444mfGB1aKq5jhqkZCP5Ma4d1K4EuM2zr95rJ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2605
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a subnode to STM low power timer bindings to support timer driver
+Hi Prabhakar-san,
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/mfd/st,stm32-lptimer.yaml     | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Thank you for the patch!
 
-diff --git a/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml b/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
-index ddf190cb800b..64bab1c3bdac 100644
---- a/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
-+++ b/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
-@@ -33,6 +33,9 @@ properties:
-     items:
-       - const: mux
- 
-+  interrupts:
-+    maxItems: 1
-+
-   "#address-cells":
-     const: 1
- 
-@@ -93,6 +96,16 @@ patternProperties:
-     required:
-       - compatible
- 
-+  timer:
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: st,stm32-lptimer-timer
-+
-+    required:
-+      - compatible
-+
- required:
-   - "#address-cells"
-   - "#size-cells"
-@@ -106,11 +119,13 @@ additionalProperties: false
- examples:
-   - |
-     #include <dt-bindings/clock/stm32mp1-clks.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-     timer@40002400 {
-       compatible = "st,stm32-lptimer";
-       reg = <0x40002400 0x400>;
-       clocks = <&timer_clk>;
-       clock-names = "mux";
-+      interrupts-extended = <&exti 47 IRQ_TYPE_LEVEL_HIGH>;
-       #address-cells = <1>;
-       #size-cells = <0>;
- 
-@@ -131,6 +146,10 @@ examples:
-       timer {
-         compatible = "st,stm32-lptimer-timer";
-       };
-+
-+      timer {
-+        compatible = "st,stm32-lptimer-timer";
-+      };
-     };
- 
- ...
--- 
-2.15.0
+> From: Lad Prabhakar, Sent: Sunday, April 19, 2020 10:27 PM
+<snip>
+> @@ -109,11 +137,22 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_init);
+>   */
+>  void pci_epc_mem_exit(struct pci_epc *epc)
+>  {
+> -	struct pci_epc_mem *mem =3D epc->mem;
+> +	struct pci_epc_mem *mem;
+> +	int i;
+>=20
+> +	if (!epc->num_windows)
+> +		return;
+> +
+> +	for (i =3D 0; i <=3D epc->num_windows; i++) {
+
+I'm sorry, I overlooked when I reviewed before.
+This condition should be "i < epc->num_windows".
+
+> +		mem =3D epc->windows[i];
+> +		kfree(mem->bitmap);
+> +		kfree(mem);
+> +	}
+> +	kfree(epc->windows);
+> +
+> +	epc->windows =3D NULL;
+>  	epc->mem =3D NULL;
+> -	kfree(mem->bitmap);
+> -	kfree(mem);
+> +	epc->num_windows =3D 0;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
+>=20
+> @@ -129,31 +168,57 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
+>  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
+>  				     phys_addr_t *phys_addr, size_t size)
+>  {
+> -	int pageno;
+>  	void __iomem *virt_addr =3D NULL;
+> -	struct pci_epc_mem *mem =3D epc->mem;
+> -	unsigned int page_shift =3D ilog2(mem->page_size);
+> +	struct pci_epc_mem *mem;
+> +	unsigned int page_shift;
+> +	size_t align_size;
+> +	int pageno;
+>  	int order;
+> +	int i;
+>=20
+> -	size =3D ALIGN(size, mem->page_size);
+> -	order =3D pci_epc_mem_get_order(mem, size);
+> -
+> -	mutex_lock(&mem->lock);
+> -	pageno =3D bitmap_find_free_region(mem->bitmap, mem->pages, order);
+> -	if (pageno < 0)
+> -		goto ret;
+> +	for (i =3D 0; i < epc->num_windows; i++) {
+> +		mem =3D epc->windows[i];
+> +		mutex_lock(&mem->lock);
+> +		align_size =3D ALIGN(size, mem->window.page_size);
+> +		order =3D pci_epc_mem_get_order(mem, align_size);
+>=20
+> -	*phys_addr =3D mem->phys_base + ((phys_addr_t)pageno << page_shift);
+> -	virt_addr =3D ioremap(*phys_addr, size);
+> -	if (!virt_addr)
+> -		bitmap_release_region(mem->bitmap, pageno, order);
+> +		pageno =3D bitmap_find_free_region(mem->bitmap, mem->pages,
+> +						 order);
+> +		if (pageno >=3D 0) {
+> +			page_shift =3D ilog2(mem->window.page_size);
+> +			*phys_addr =3D mem->window.phys_base +
+> +				((phys_addr_t)pageno << page_shift);
+> +			virt_addr =3D ioremap(*phys_addr, align_size);
+> +			if (!virt_addr)
+> +				bitmap_release_region(mem->bitmap,
+> +						      pageno, order);
+
+I'm sorry here again. But, I think we should call mutex_unlock() and "conti=
+nue;"
+here if ioremap() failed for trying remaining windows. What do you think?
+
+> +			mutex_unlock(&mem->lock);
+> +			return virt_addr;
+> +		}
+> +		mutex_unlock(&mem->lock);
+> +	}
+>=20
+> -ret:
+> -	mutex_unlock(&mem->lock);
+>  	return virt_addr;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
+
+Best regards,
+Yoshihiro Shimoda
 
