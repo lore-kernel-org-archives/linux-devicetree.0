@@ -2,145 +2,111 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AEEC3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 09:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96572C3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 09:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08C7420A8B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 09:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7698C2145D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 09:38:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jPlNud7I"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="OAEQdus/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725896AbgDTJgO (ORCPT
+        id S1726173AbgDTJiz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 05:36:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60530 "EHLO
+        Mon, 20 Apr 2020 05:38:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725773AbgDTJgO (ORCPT
+        by vger.kernel.org with ESMTP id S1725865AbgDTJix (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 05:36:14 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E3D9C061A0C;
-        Mon, 20 Apr 2020 02:36:13 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id t3so9836579qkg.1;
-        Mon, 20 Apr 2020 02:36:13 -0700 (PDT)
+        Mon, 20 Apr 2020 05:38:53 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 102FCC061A0F
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 02:38:52 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id 131so7326654lfh.11
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 02:38:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/3syDFruM55e7HQozZGMW1Rq8pizNFPEYU3zJts7jcc=;
-        b=jPlNud7IcyvvcC4FDfDaaF2GJOXTaOY9mACZEfQBSkhKxw2DZCnYqHSpqTGEPfimor
-         PjSWJpwWjdewLz98XZ/UZIfk/d/51vUoWdhqLHmdQfBUjLAy81WKoFUNUJmySNGtwnlm
-         /szq8VzdM6ihajM4VLZ10Bg/ouBqD2rD8P4Y6y+FZ2146MEIhyGRVtdtNbPi8sOrMuzy
-         Le86yrjIg4cAZVEsIU28yajgXDgKtthrapoK9jK7m7mTolLO94iLRVJ/lgXUtEr2NKb7
-         3USDC1P8FxQUb3Y2Lk5csj4rO7UlziADVkkITlHvfjUtzVnxO6u4ONGsIzgo0HLOy/X+
-         pugA==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fC7yVlTF2dg5BszQAz4tJyESdZOBEbxLy1Uamcwth88=;
+        b=OAEQdus/uuBcOAthS3TtEvK7zG9rY3C+I5VwReBIuCwv2zXqb1cD/5zjsXepByhQ3d
+         UCcSueB286izGvk8BO7rr9Ggr2ajra4ogReJw0OeO7mmEf53K6IN+l29NJctj5COEcqE
+         Yo712wSYLvrq55NXzfSdoszUSYGWltWW6hWzCt7QO9VmVwiOPzXtyaALTMTax3Ux7Kof
+         xsui/qk+6y3PSgsPE1KkTyT8kB24U3cIto2jpiK1aLt4hPxa4HXdf0dL80rMMYTVKesS
+         biXxkI/wUmKgYpuV9t/yrDaBqiYDYnUyCFM+ehbd9gM9QIiTcspvH+6s7YrVkaGr8cTl
+         CvIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/3syDFruM55e7HQozZGMW1Rq8pizNFPEYU3zJts7jcc=;
-        b=Y2Gs9P7DeYpRy7Yi6nV9eWowL5vfE5QR+fBn+tEyPpo3A+FshZJfIjJ+stVpVlqQAa
-         TMl918CfUqSNtdhwr5yhtH2if6SZYPLvwbo6foPa5LE3k2B6VVkVcJ12I0XWObiT4pie
-         h7jh30gOUdJVvHxjYPfPQL9qVkNvKO5n1fTSmuaOP8e1JMHTPj2hPeInouTSVZg9hr4I
-         PO77izWKyoXFkssMzA8sacGMa2QWoYrqKhqtymxmpVa9RLIeb3RS+TNIepBZxQJhnQvw
-         7jwz6RzV40K0dDH2NiaXT95BTTxxsrs1Dj1xOSo8S6Hg0GBrLnVADBsTD/9BOxaARFZg
-         ytHg==
-X-Gm-Message-State: AGi0PuZI47uCtBGUdGDflaFj8AMrtHrJ1HlgOLrtl3AX8F6SxjVdjSqV
-        zJ73zA0XSyZw8Bzhk7TGDQjYLXdA17DVuOw+mF8=
-X-Google-Smtp-Source: APiQypLw+gOLHPIU20qEHGA+Tzz3uLgk+8kc5CB4I2cZCht+4GtvYnE+IUKaHLhktJS/u/ZqgBaQaC1xS3anJ+HAJLw=
-X-Received: by 2002:a37:6f41:: with SMTP id k62mr14432765qkc.239.1587375372653;
- Mon, 20 Apr 2020 02:36:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200413070014.12960-1-zhang.lyra@gmail.com> <20200413070014.12960-2-zhang.lyra@gmail.com>
-In-Reply-To: <20200413070014.12960-2-zhang.lyra@gmail.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Mon, 20 Apr 2020 17:36:01 +0800
-Message-ID: <CABOV4+XaTMd=A5_5eTtGG=S3DvgBCTxrqV4aXnp55pTsdbO4NA@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 1/2] cpuidle: allow idle state to be found as
- deepest state for s2idle only
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fC7yVlTF2dg5BszQAz4tJyESdZOBEbxLy1Uamcwth88=;
+        b=Ziq3KpzDO5TdjkHm4aNafIeOvBo6gcfLHnu/W6odz2twScxSHn9BC8AenSas8sqYj8
+         P8+rhDGgjXd9+RTo5iJdcu8N0YNvxRGEn2bh44wifEe4j58IHw8UsN0alQZeFeP/raHJ
+         WlGbXNz+N0lS+LLB54/IzPPgJ2KwdeWZD99h3gFwMdK4u0EzXQISg8WyA1Z8tlfFAnTa
+         BSqkrqB0ui3IfSFs5Qw8R+Ru/qAq7Mcj3C5e8cOX0tBjDHiRHzj7/tPFhOkGbH0NzzrD
+         XPUTSXGN7WAMd1Ve2cKAfH/dvPnPW8nH/ym4tLEpcuolumwQw9Qfmh9924seV0L1bMbd
+         Gn9w==
+X-Gm-Message-State: AGi0PuadrcetGizi2kzhjcFry8oFG0uM5PvmXd2Guc8H1kGO0MBTYok+
+        GMOKd8l1C9S9LKBLpTpn+HvPgQ==
+X-Google-Smtp-Source: APiQypKznq9XrVI9hd+h/IzXvVE/uV6VvohF+/6F5gk7jvKwnPWCKyu2uLVFoOANvhPhLC1K8XldMg==
+X-Received: by 2002:a19:1c3:: with SMTP id 186mr9964767lfb.191.1587375530442;
+        Mon, 20 Apr 2020 02:38:50 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:25e:8f26:1014:e519:2b4e:4734? ([2a00:1fa0:25e:8f26:1014:e519:2b4e:4734])
+        by smtp.gmail.com with ESMTPSA id w24sm320690lfe.58.2020.04.20.02.38.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2020 02:38:49 -0700 (PDT)
+Subject: Re: [PATCH v4 1/5] PCI: OF: Don't remap iospace on unsupported
+ platform
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200330114239.1112759-1-jiaxun.yang@flygoat.com>
+ <20200420071220.155357-1-jiaxun.yang@flygoat.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <d8f444bf-71a5-add6-2a2c-7807a397e8b7@cogentembedded.com>
+Date:   Mon, 20 Apr 2020 12:38:43 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200420071220.155357-1-jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+Hello!
 
-Any comments or suggests on this? That would be very appreciated.
+On 20.04.2020 10:12, Jiaxun Yang wrote:
 
-Thanks,
-Chunyan
+> There are some platforms don't support iospace remapping
+                           ^ that         ^^^^^^^ I/O space?
 
+> like MIPS. However, our PCI code will try to remap iospace
+> unconditionally and reject io resources on these platforms.
+> 
+> So we should remove iospace remapping check and use a range
 
-On Mon, Apr 13, 2020 at 5:09 PM <zhang.lyra@gmail.com> wrote:
->
-> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
->
-> Add a new flag CPUIDLE_FLAG_S2IDLE to allow c-state to be found as
-> deepest state for s2idle only, so that users can add a new c-state
-> for using s2idle and don't worry disturbing other use cases such as
-> play_idle() which probably don't want to enter into so much deep
-> idle state since devices are not suspended for that kind of cases.
->
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> ---
->  drivers/cpuidle/cpuidle.c        | 3 ++-
->  drivers/cpuidle/dt_idle_states.c | 3 +++
->  include/linux/cpuidle.h          | 1 +
->  3 files changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-> index de81298051b3..bb61f0c271d2 100644
-> --- a/drivers/cpuidle/cpuidle.c
-> +++ b/drivers/cpuidle/cpuidle.c
-> @@ -89,7 +89,8 @@ static int find_deepest_state(struct cpuidle_driver *drv,
->                     s->exit_latency_ns <= latency_req ||
->                     s->exit_latency_ns > max_latency_ns ||
->                     (s->flags & forbidden_flags) ||
-> -                   (s2idle && !s->enter_s2idle))
-> +                   (s2idle && !s->enter_s2idle) ||
-> +                   (!s2idle && (s->flags & CPUIDLE_FLAG_S2ILDE)))
->                         continue;
->
->                 latency_req = s->exit_latency_ns;
-> diff --git a/drivers/cpuidle/dt_idle_states.c b/drivers/cpuidle/dt_idle_states.c
-> index 252f2a9686a6..530db2726c05 100644
-> --- a/drivers/cpuidle/dt_idle_states.c
-> +++ b/drivers/cpuidle/dt_idle_states.c
-> @@ -80,6 +80,9 @@ static int init_state_node(struct cpuidle_state *idle_state,
->         idle_state->flags = 0;
->         if (of_property_read_bool(state_node, "local-timer-stop"))
->                 idle_state->flags |= CPUIDLE_FLAG_TIMER_STOP;
-> +
-> +       if (of_property_read_bool(state_node, "for-s2idle-only"))
-> +               idle_state->flags |= CPUIDLE_FLAG_S2ILDE;
->         /*
->          * TODO:
->          *      replace with kstrdup and pointer assignment when name
-> diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-> index ec2ef63771f0..08da701f74cd 100644
-> --- a/include/linux/cpuidle.h
-> +++ b/include/linux/cpuidle.h
-> @@ -78,6 +78,7 @@ struct cpuidle_state {
->  #define CPUIDLE_FLAG_TIMER_STOP BIT(2) /* timer is stopped on this state */
->  #define CPUIDLE_FLAG_UNUSABLE  BIT(3) /* avoid using this state */
->  #define CPUIDLE_FLAG_OFF       BIT(4) /* disable this state by default */
-> +#define CPUIDLE_FLAG_S2ILDE    BIT(5) /* state is used for s2idle only */
->
->  struct cpuidle_device_kobj;
->  struct cpuidle_state_kobj;
+    I/O space, maybe?
+
+> check instead on these platforms.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > --
-> 2.20.1
->
+> v4: Fix a typo in commit message.
+[...]
+
+MBR, Sergei
