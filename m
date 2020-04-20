@@ -2,257 +2,134 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5A9C54FD2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 16:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A15AC3A5A0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 16:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35E07206F6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 16:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19B6220782
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 16:51:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qOT0X9ri"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lu/WVv9a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgDTQhw (ORCPT
+        id S1726284AbgDTQvn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 12:37:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41426 "EHLO
+        Mon, 20 Apr 2020 12:51:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726605AbgDTQht (ORCPT
+        by vger.kernel.org with ESMTP id S1725773AbgDTQvn (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 12:37:49 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29734C025495
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 09:37:48 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id b11so12993010wrs.6
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 09:37:48 -0700 (PDT)
+        Mon, 20 Apr 2020 12:51:43 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8B27C061A0F
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 09:51:41 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id k9so9374403oia.8
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 09:51:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Rj3jrSbU2b68oTmKDFbN7ThfXz7DCPKlENH6dIentbg=;
-        b=qOT0X9riAMzmEP5Ha7488hZVekV30Pk1csqcVzplu+ZIg38c2b8tJvtqrQxgpOYkB9
-         gX3MxO54dkj2kFQFhE5lK6hQo7mTnazAsr/J9Mos46z019jWW0wXkiX4mXVo7Slw+LmM
-         v5tq74Of3prsSVSua+OY6XUstDoUqWTCf0/NpP7ovNedfz5TSTxz9xs1B4lJkC9hP74b
-         YBH+u7CaAba8aqdOIlMvsOdBz5fvPCDxaisMIDG148fRwFWGWsEtfhVUIWBUGapQLE7h
-         bOZo0wZ/o5qKajlkAxKhsO8NZxFKfxwBbEQ6JKkH71oNt5TtD6msKqc81wIjQ6P9pA/e
-         A2cQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jqQhWBNRVhW6KQWEFBcPM7sptcfxEVerh5+7KiBxKHY=;
+        b=lu/WVv9ah7vi8Hsj9QKCh3seAPQ7I3aowGxEe1aGHyefJm9BuqyIyani6NL+hj+dcI
+         lsB39FGjDPOrd0/XVZOcH/PtFISnz7zVadFSO/HVUsmSxZeckGOs/ysRC60wLneSC0e2
+         l+BqE4Zys5B1IJu6r1RevtW3lgyVRk//eJB5v4B+totP9li4YQ+yCNfpT7PzoyKQ0gBN
+         4JTOGVr37kKQjH01oIRDN4FoLMLK+au8X0cx/4MzxHuHjeZwFA78opZWb8C2xIgkZXca
+         Hv833IfRxKrdTiZdRu3JqiyTe3+fJB9siKjPOnVRao/cTY6+T+HrVd101DcgRLycoCZg
+         VmZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Rj3jrSbU2b68oTmKDFbN7ThfXz7DCPKlENH6dIentbg=;
-        b=WNL90pCRzIQPiRF89GXmPzIwzgrHGnybFw8jkW3ox4IrbYOnwFdMnnPgvtn8p9FQds
-         MOD0NXEC59JbNCqp1LAbXkTQ9L002Go68xNlvGWbj0Q8QIM/LIktDmMoTTGJRTE/WtwW
-         OUjuMgOdS7IhUk4k3Ff8QbdI+ocRbU9Z3fZfzJPfDbKkhjkApFotAuH2/FKCjIYykYUD
-         HGu4/2z8PYsZGxtKvKNK31R2wqENcqia4KlHA5nrSIOraUaOle5Pc6LGQlrw5gQfcE2u
-         5gOZ9/GFo7hf4c6UkJ23piEN74A2NFJswBhUpXg76GKtcSvR2e/B+k2/KpweZxz8Nymt
-         6EAA==
-X-Gm-Message-State: AGi0Puaiu4iQ407gO0hpVTQPKKhjZjxngSlXJTCE3eSdR83JCrO5dFFU
-        VgHeC0Rwo4s5dOdy1tJY29JAllt61of+ig==
-X-Google-Smtp-Source: APiQypKAH6kAxnN7z1zkH/+viWwXnCewnUDNHJ9TNYyq8qYdBhojhij+2K2UR3NYJ6w9XnjttNtugg==
-X-Received: by 2002:adf:e5c8:: with SMTP id a8mr21467911wrn.56.1587400666708;
-        Mon, 20 Apr 2020 09:37:46 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id s8sm42510wru.38.2020.04.20.09.37.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 09:37:46 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 17:37:44 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Kiran Gunda <kgunda@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-Subject: Re: [PATCH V5 4/4] backlight: qcom-wled: Add support for WLED5
- peripheral that is present on PM8150L PMICs
-Message-ID: <20200420163744.3qbeqwv7myzmam3d@holly.lan>
-References: <1586274430-28402-1-git-send-email-kgunda@codeaurora.org>
- <1586274430-28402-5-git-send-email-kgunda@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jqQhWBNRVhW6KQWEFBcPM7sptcfxEVerh5+7KiBxKHY=;
+        b=AxleAhl8jlpXeemLbK8GZ1Mj0CKOJmU3cgvm+uyyEjShjwSLX+KGPvLRhekWhmzwvv
+         dJNoBJzwbHRpI5scKjZVdup0065VDAahg5i1EUfk1LapWeilgh5h2129ORKVckTNG9eI
+         d6AgbnaYKWEMf0NV6oPF7jG7CDXNM1KgQK+uDK0vKgJy3fURzfR3L+3yQ4S58g+S3aJt
+         5i7/ZrPqD+TPoAzKAaK8eWxpvDYGYIFU7woVMfaKMeBhi1ht1aflMvqVykPLiWj3PYqY
+         W7OShLlFHv4QVJVp5kd4/9fl/S4UFNWjz/lT1l006MBJ02lt86jEoNYkNmn9lLVXMyAp
+         GpAA==
+X-Gm-Message-State: AGi0PuZ20BgZ13NLtV9FvCBQlrAywd23EIFBbPu/ELzGWYuO9w9JJZKg
+        +cwjBGNpGG1ZoL7M6l4TZ3KlTCjfAeOv/e8ojckau+YP
+X-Google-Smtp-Source: APiQypJYYaLHQcSVI2bZtlFq6cyMPPAVJWX+kv6+xKscU2Hlf+9c+6T/dxP1qjtyu2Yak43rF6k0r/eK/nJo/AG2egM=
+X-Received: by 2002:aca:abc6:: with SMTP id u189mr259769oie.30.1587401500754;
+ Mon, 20 Apr 2020 09:51:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586274430-28402-5-git-send-email-kgunda@codeaurora.org>
+References: <20200420120101.31405-1-nsaenzjulienne@suse.de> <20200420120101.31405-3-nsaenzjulienne@suse.de>
+In-Reply-To: <20200420120101.31405-3-nsaenzjulienne@suse.de>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 20 Apr 2020 09:51:03 -0700
+Message-ID: <CAGETcx-g=4FQsYZ2=4wXV2EBeTAyt6182KVW2i1qroGajLgfrw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] of: property: Do not link to disabled devices
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 09:17:10PM +0530, Kiran Gunda wrote:
-> From: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-> 
-> PM8150L WLED supports the following:
->     - Two modulators and each sink can use any of the modulator
->     - Multiple CABC selection options from which one can be selected/enabled
->     - Multiple brightness width selection (12 bits to 15 bits)
-> 
-> Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+On Mon, Apr 20, 2020 at 5:02 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> When creating a consumer/supplier relationship between two devices,
+> make sure the supplier node is actually active. Otherwise this will
+> create a link relationship that will never be fulfilled. This, in the
+> worst case scenario, will hang the system during boot.
+>
+> Note that, in practice, the fact that a device-tree represented
+> consumer/supplier relationship isn't fulfilled will not prevent devices
+> from successfully probing.
+>
+> Fixes: a3e1d1a7f5fc ("of: property: Add functional dependency link from DT bindings")
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>
 > ---
->  drivers/video/backlight/qcom-wled.c | 443 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 442 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
-> index a6ddaa9..3a57011 100644
-> --- a/drivers/video/backlight/qcom-wled.c
-> +++ b/drivers/video/backlight/qcom-wled.c
-> ...
-> +static const u8 wled5_brightness_reg[MOD_MAX] = {
-> +	[MOD_A] = WLED5_SINK_REG_MOD_A_BRIGHTNESS_LSB,
-> +	[MOD_B] = WLED5_SINK_REG_MOD_B_BRIGHTNESS_LSB,
-> +};
+>
+> Changes since v2:
+>  - Correct code comment
+>  - Use already available return handling code
+>
+> Changes since v1:
+>  - Move availability check into the compatible search code and stop if
+>    node disabled
+>
+>  drivers/of/property.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index dc034eb45defd..7bcf31ba717d8 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -1045,8 +1045,20 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
+>          * Find the device node that contains the supplier phandle.  It may be
+>          * @sup_np or it may be an ancestor of @sup_np.
+>          */
+> -       while (sup_np && !of_find_property(sup_np, "compatible", NULL))
+> +       while (sup_np) {
 > +
-> +static const u8 wled5_src_sel_reg[MOD_MAX] = {
-> +	[MOD_A] = WLED5_SINK_REG_MOD_A_SRC_SEL,
-> +	[MOD_B] = WLED5_SINK_REG_MOD_B_SRC_SEL,
-> +};
+> +               /* Don't allow linking to a disabled supplier */
+> +               if (!of_device_is_available(sup_np)) {
+> +                       of_node_put(sup_np);
+> +                       sup_np = NULL;
+> +               }
 > +
-> +static const u8 wled5_brt_wid_sel_reg[MOD_MAX] = {
-> +	[MOD_A] = WLED5_SINK_REG_MOD_A_BRIGHTNESS_WIDTH_SEL,
-> +	[MOD_B] = WLED5_SINK_REG_MOD_B_BRIGHTNESS_WIDTH_SEL,
-> +};
+> +               if (of_find_property(sup_np, "compatible", NULL))
+> +                       break;
 > +
+>                 sup_np = of_get_next_parent(sup_np);
+> +       }
+> +
+>         if (!sup_np) {
+>                 dev_dbg(dev, "Not linking to %pOFP - No device\n", tmp_np);
+>                 return -ENODEV;
 
-Each of these lookup tables are used exactly once... and half the time
-when this code chooses between MOD_A and MOD_B a ternary is used and
-half the time these lookup tables.
+Thanks for the fix!
 
-I suggest these be removed.
-
-
->  static int wled3_set_brightness(struct wled *wled, u16 brightness)
->  {
->  	int rc, i;
-> @@ -225,6 +291,25 @@ static int wled4_set_brightness(struct wled *wled, u16 brightness)
->  	return 0;
->  }
->  
-> +static int wled5_set_brightness(struct wled *wled, u16 brightness)
-> +{
-> +	int rc, offset;
-> +	u16 low_limit = wled->max_brightness * 1 / 1000;
-
-Multiplying by 1 is redundant.
-
-
-> +	u8 v[2];
-> +
-> +	/* WLED5's lower limit is 0.1% */
-> +	if (brightness < low_limit)
-> +		brightness = low_limit;
-> +
-> +	v[0] = brightness & 0xff;
-> +	v[1] = (brightness >> 8) & 0x7f;
-> +
-> +	offset = wled5_brightness_reg[wled->cfg.mod_sel];
-> +	rc = regmap_bulk_write(wled->regmap, wled->sink_addr + offset,
-> +			       v, 2);
-> +	return rc;
-> +}
-> +
->  static void wled_ovp_work(struct work_struct *work)
->  {
->  	struct wled *wled = container_of(work,
-> @@ -317,11 +420,67 @@ static int wled4_ovp_fault_status(struct wled *wled, bool *fault_set)
->  	return rc;
->  }
->  
-> +static int wled5_ovp_fault_status(struct wled *wled, bool *fault_set)
-> +{
-> +	int rc;
-> +	u32 int_rt_sts, fault_sts;
-> +
-> +	*fault_set = false;
-> +	rc = regmap_read(wled->regmap,
-> +			wled->ctrl_addr + WLED3_CTRL_REG_INT_RT_STS,
-> +			&int_rt_sts);
-> +	if (rc < 0) {
-> +		dev_err(wled->dev, "Failed to read INT_RT_STS rc=%d\n", rc);
-> +		return rc;
-> +	}
-> +
-> +	rc = regmap_read(wled->regmap,
-> +			wled->ctrl_addr + WLED3_CTRL_REG_FAULT_STATUS,
-> +			&fault_sts);
-> +	if (rc < 0) {
-> +		dev_err(wled->dev, "Failed to read FAULT_STATUS rc=%d\n", rc);
-> +		return rc;
-> +	}
-> +
-> +	if (int_rt_sts & WLED3_CTRL_REG_OVP_FAULT_STATUS)
-> +		*fault_set = true;
-> +
-> +	if (fault_sts & (WLED3_CTRL_REG_OVP_FAULT_BIT |
-> +			       WLED5_CTRL_REG_OVP_PRE_ALARM_BIT))
-
-Correct me if I'm wrong but isn't the only difference between the WLED4
-and WLED5 code that the wled5 code also checks the
-WLED5_CTRL_REG_OVP_PRE_ALARM_BIT ?
-
-If so why do we need to pull out (and duplicate) this code code using
-the function pointers?
-
-> +		*fault_set = true;
-> +
-> +	if (*fault_set)
-> +		dev_dbg(wled->dev, "WLED OVP fault detected, int_rt_sts=0x%x fault_sts=0x%x\n",
-> +			int_rt_sts, fault_sts);
-> +
-> +	return rc;
-> +}
-> +
-> @@ -615,6 +797,7 @@ static void wled_auto_string_detection(struct wled *wled)
->  
->  #define WLED_AUTO_DETECT_OVP_COUNT		5
->  #define WLED_AUTO_DETECT_CNT_DLY_US		USEC_PER_SEC
-> +
-
-Nit picking but this additional line is in the wrong patch ;-)
-
-
->  static bool wled4_auto_detection_required(struct wled *wled)
->  {
->  	s64 elapsed_time_us;
-> @@ -648,6 +831,46 @@ static bool wled4_auto_detection_required(struct wled *wled)
->  	return false;
->  }
->  
-> +static bool wled5_auto_detection_required(struct wled *wled)
-> +{
-> +	s64 elapsed_time_us;
-> +
-> +	if (!wled->cfg.auto_detection_enabled)
-> +		return false;
-> +
-> +	/*
-> +	 * Check if the OVP fault was an occasional one
-> +	 * or if it's firing continuously, the latter qualifies
-> +	 * for an auto-detection check.
-> +	 */
-> +	if (!wled->auto_detection_ovp_count) {
-> +		wled->start_ovp_fault_time = ktime_get();
-> +		wled->auto_detection_ovp_count++;
-> +	} else {
-> +		/*
-> +		 * WLED5 has OVP fault density interrupt configuration i.e. to
-> +		 * count the number of OVP alarms for a certain duration before
-> +		 * triggering OVP fault interrupt. By default, number of OVP
-> +		 * fault events counted before an interrupt is fired is 32 and
-> +		 * the time interval is 12 ms. If we see more than one OVP fault
-> +		 * interrupt, then that should qualify for a real OVP fault
-> +		 * condition to run auto calibration algorithm.
-> +		 */
-
-Given the above why do we have a software mechanism to wait until the
-second time the interrupt fires? I'm a bit rusty on this driver but
-wasn't there already some mechanism to slightly delay turning on the
-fault detection?
-
-
-Daniel.
+Reviewed-by: Saravana Kannan <saravanak@google.com>
