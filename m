@@ -2,75 +2,118 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 806FFC3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 08:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BABE5C3A5A0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 08:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53CD820A8B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 08:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FD1020BED
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 08:13:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kaM0tk5W"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="dE5h4joV";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="G23U+tfw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725865AbgDTIKj (ORCPT
+        id S1725896AbgDTINp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 04:10:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbgDTIKj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 04:10:39 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88D3AC061A0C;
-        Mon, 20 Apr 2020 01:10:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=C1JU5+id39RVYYiwVLrKINx5vf4t7nToazXLCIKWefE=; b=kaM0tk5W81sI2+qX4Q+fhFqknM
-        bURUCNk0t2z/tH3hUWbh5Ya9slhk5rLszSWU71wkyFyy7q2Tqtylx0B1qa4oBZPhzl1Pzd0n9iYI8
-        U7EmgJ8u5DWdLj8f4XGdJLn1gEer0ExVNct3iwrHWd6KEFcS/i5dzVd1+giEP2fKM0YZ5nI94pJGU
-        bLc0GipQGkEljB04yFayRugJ2xmfUknk0m5ohkt5kM/71a59PYsDPRLMCziNvX2mPRoqrCALoAuOB
-        x+Diqoon7jrr1Snwm2VWR5aH9n2Hpqx5jH6fbbjyms2QLla8aBMh0zsJvsuQdVSIVR0dIm7P9QRvO
-        X5rQmNQQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQRVi-0007EB-H6; Mon, 20 Apr 2020 08:10:34 +0000
-Date:   Mon, 20 Apr 2020 01:10:34 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, joro@8bytes.org, catalin.marinas@arm.com,
-        will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
-        baolu.lu@linux.intel.com, Jonathan.Cameron@huawei.com,
-        jacob.jun.pan@linux.intel.com, christian.koenig@amd.com,
-        zhangfei.gao@linaro.org, jgg@ziepe.ca, xuzaibo@huawei.com
-Subject: Re: [PATCH v5 02/25] iommu/sva: Manage process address spaces
-Message-ID: <20200420081034.GA17305@infradead.org>
-References: <20200414170252.714402-1-jean-philippe@linaro.org>
- <20200414170252.714402-3-jean-philippe@linaro.org>
- <20200416072852.GA32000@infradead.org>
- <20200416085402.GB1286150@myrica>
- <20200416121331.GA18661@infradead.org>
- <20200420074213.GA3180232@myrica>
+        Mon, 20 Apr 2020 04:13:45 -0400
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:36807 "EHLO
+        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725773AbgDTINp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Apr 2020 04:13:45 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 2C9A7434;
+        Mon, 20 Apr 2020 04:13:43 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 20 Apr 2020 04:13:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=SXSTFribf+OBJQkU3j6jVIz3bY6
+        eV4OkRjDaFUbGPVw=; b=dE5h4joV1X2zyfsk9mJ41dSV9Gw9Z/YVaMMRGJ820cJ
+        NOM2XNUzGMrQc6ydYn/Zic69B5NNRAo6QYHu7GiXTukZObTUlEBXjml6kZ/h7tAT
+        KMRH6rsLmKGHMxHRm7KJLGWmYRqhGKyvler6AycFGuPEGCumuG7dlYNh0te1Urjx
+        B6h7D1L21WQxrWq9rbIg2awGPkD9xDLlas4gTjOZhaRUMmGgHQg+K1OSe1L7j+F6
+        bmwm6FQYhRHRkEqK671hDPeOeYQIt9YyhceNDEnvh2vN6YHgeij3N4pO5N+DJN7w
+        9V+2zj+aOoX22lyD9EziS9+y0v/eOMqyQ7U5xATaBqw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=SXSTFr
+        ibf+OBJQkU3j6jVIz3bY6eV4OkRjDaFUbGPVw=; b=G23U+tfw+wQH0rkso4eEwx
+        yQrM7P5msXz/OSSuwywZHpLw59W7M9piQzgYDymuZ/YKvqo9EW4FYeWdNyEoH+Ed
+        qmqsr4Sy9SCUAWo+U7Xi8UaefRJgr1xVvCWCNwhs0s9c7HwcgF9NnbIaBi1jxF8Q
+        z/QcFe7e+rHQBP1rEmpE2U43OrZLm5wRDGIiSoDuD1YdwkM+WbU5zoyBvHMF5KMW
+        C7vFCc8JDlwMTEP39M/PyYTBAbvRGE/SyZ1pVAhaeuNueZSROb33Z+uvkYT1/7c3
+        cpFJBI0Uq5E1XdygU8RLJ53HUPy2gALcm2KVAsWjq0oho1PeFfIGNg0GONbW7ZHA
+        ==
+X-ME-Sender: <xms:tFmdXrjoBzIgx--8HKQXgDrtxO5gVSCcQrfVsGCBN7W7YGtfh-qHEA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeefucetufdoteggodetrfdotffvucfrrh
+    hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhmvgcutfhi
+    phgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltddrkeelrd
+    eikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
+    mhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:tFmdXix3P9qkRjDO69NN5eUQUL2gZwUhPrg6E8e4InQODtjq81Pbsw>
+    <xmx:tFmdXp8VSgOzUNGzxjXDXf0hmnasH9Zn98KD4SKEGNOKFRqoWr01-w>
+    <xmx:tFmdXvBn1GLk5m2Pm5avHEkDYkDZzYF2fWl4nUyo3FlyH1VrQfUqxg>
+    <xmx:tlmdXt6FXLOMGmuXYEy2LsOWngKuRKcExd-_FWiOCNilGysnqab04_8LDgI>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A92B33280060;
+        Mon, 20 Apr 2020 04:13:40 -0400 (EDT)
+Date:   Mon, 20 Apr 2020 10:13:39 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Alistair Francis <alistair@alistair23.me>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-bluetooth@vger.kernel.org, wens@csie.org, anarsoul@gmail.com,
+        devicetree@vger.kernel.org, alistair23@gmail.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 3/3] arm64: allwinner: Enable Bluetooth and WiFi on
+ sopine baseboard
+Message-ID: <20200420081339.znoxmshq2z74slvg@gilmour.lan>
+References: <20200412020644.355142-1-alistair@alistair23.me>
+ <20200412020644.355142-3-alistair@alistair23.me>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ejtot7cm3kxebrar"
 Content-Disposition: inline
-In-Reply-To: <20200420074213.GA3180232@myrica>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200412020644.355142-3-alistair@alistair23.me>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 09:42:13AM +0200, Jean-Philippe Brucker wrote:
-> Right, I can see the appeal. I still like having a single mmu notifier per
-> mm because it ensures we allocate a single PASID per mm (as required by
-> x86). I suppose one alternative is to maintain a hashtable of mm->pasid,
-> to avoid iterating over all bonds during allocation.
 
-Given that the PASID is a pretty generic and important concept can
-we just add it directly to the mm_struct and allocate it lazily once
-we first need it?
+--ejtot7cm3kxebrar
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Sat, Apr 11, 2020 at 07:06:44PM -0700, Alistair Francis wrote:
+> The sopine board has an optional RTL8723BS WiFi + BT module that can be
+> connected to UART1. Add this to the device tree so that it will work
+> for users if connected.
+>=20
+> Signed-off-by: Alistair Francis <alistair@alistair23.me>
+
+Like Vasily said in a previous iteration, this should be an overlay.
+
+Maxime
+
+--ejtot7cm3kxebrar
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXp1ZswAKCRDj7w1vZxhR
+xRHnAQDHNvHWo1zmq8o4pNF0FFVzFdG9ZW4B0hE0ap3rEg3u+QEAtFnUoV0c8i8g
+nKNO32LMpG2lK/In+8B74ILYTIcZpAQ=
+=IRUG
+-----END PGP SIGNATURE-----
+
+--ejtot7cm3kxebrar--
