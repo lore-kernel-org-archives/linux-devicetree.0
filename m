@@ -2,147 +2,340 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98705C3A5A0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 15:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DFBC3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 15:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79B5A2074F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 15:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A29720775
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 15:28:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s7ViBweo"
+	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="E/d4gQIi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbgDTPKt (ORCPT
+        id S1726795AbgDTP2d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 11:10:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55832 "EHLO
+        Mon, 20 Apr 2020 11:28:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726888AbgDTPKt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 11:10:49 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EA42C061A0C;
-        Mon, 20 Apr 2020 08:10:48 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id pg17so8209165ejb.9;
-        Mon, 20 Apr 2020 08:10:48 -0700 (PDT)
+        with ESMTP id S1725784AbgDTP2c (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 11:28:32 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2152C061A0C
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 08:28:30 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id j4so8416201otr.11
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 08:28:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9p5YSZ4+mi/e7FFFEHIrB7QFMMbbaz2S5WA2HGT9XH0=;
-        b=s7ViBweoBfolqtUE1Dw+S7+3GkaeERdZbkylc7Ai1AdgnOZfN65hg71OXW2rVO1/hU
-         ROT1CPA181AXr4yd0UPHspj7hazs1F+i3kUgTTZmg6M3RdHYZgnM8vBDyfvpEX1i75yo
-         UwzqsxsY7lQpOBva7nO3k53ypxyz09Hvq6rn4E2QLPHERcYMiqNDY6QqG0q9hiK9XJbD
-         pJ37ogZ12tshixBKhmzU0osoY6T9h+atrk/L0AfZkFeWZ7rcWBRlAQeVTZ92fwy0eDof
-         mMP8lFJLRiU93vpaLiJyXh4wt7SLDINfUqFKY0JfpCuo/anSJvB6VMwTcwWsbMhVetbR
-         1pjw==
+        bh=Pdhitu/GA13B0b+pKwpEIsLq4K1KtaHyPOEGx43ocN4=;
+        b=E/d4gQIiqdJcRaikcAjbAfHFdIwMplawIg6BdNW/RmRpg0TeBBclMy/2L8Pikcyp3h
+         5txC5GRIKZparX3RXZHhl24WjcltJuF7gvhG/VFg27b7mQCZnJBvtJXckl/9gEBCuLXd
+         mLh4fO6XRc7B5tLtTDooYRSikQNMwnraigxd65oHtBcKCWBRLy5t5hweFvRNOQ4OF8Uu
+         hMrJW14RkCGMO0t7KVf5Fox3yDL/8TwxXUXGwUYn6yiRNqNxYiROBW7iGszagGDajSXB
+         TTJE9lOcGrwjHw5EwYG1E3QjzqCwyCAjwwSHxemIrP+wDMHlXaxua/np7rMuaE/Wnir3
+         BVPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9p5YSZ4+mi/e7FFFEHIrB7QFMMbbaz2S5WA2HGT9XH0=;
-        b=fTTNuIivmIbOgAt5hWnQtO9Lxv3KloHsYxg9yzRdkPB5KiDM0CzKTpKAhf9eERqHYj
-         mDTJR2ul4OnUN4KBSe1u47+l2gwN4x0KuHZvE6ZrwKgUydzZvt/NVo2YGjvjwyJ3xu8O
-         wgFnJ9Lo3iZMjNUk8NLK4xaW0KZ4Imt411vnP11FVL4711BRoVnmPLXu3jcqYG5E61bI
-         mLQ5UFOI7SSc3IFnYmCNYKVGtVeWhw41NEdNOq7WtmnFL2Yibr74abT0KWVJ2qsICtCF
-         gMxWkBMffFtaeiL8ChLVNPcm4x80f6+EBLeVJ6/YB2G4zq6138dwEDAzBDLKItwJCMMg
-         tgYw==
-X-Gm-Message-State: AGi0PuaURLQVAcRNppy/ZWHonbBunYmfdObZufUZMRytzuxhjEMUlS2a
-        s+mywqjWZ9ypTW71m4veoQSoOa9og2dOKACrsGs=
-X-Google-Smtp-Source: APiQypKoDW/toyMfK3ngXt0Qzk4fYcwRXK1MtxzKr+4ijH8KGhOQCargMvQmSlg/UhgArVHds5aJa6yamXfVVFNdTzs=
-X-Received: by 2002:a17:906:78c:: with SMTP id l12mr15719453ejc.189.1587395447071;
- Mon, 20 Apr 2020 08:10:47 -0700 (PDT)
+        bh=Pdhitu/GA13B0b+pKwpEIsLq4K1KtaHyPOEGx43ocN4=;
+        b=F9kVmR2osCv2SMSrUZAPok63I5y3BxG/HzRAhoKKbylW+qCo0Rwj8IFNeOhqclxOH5
+         kp4A2TOEZxOlNY3lE1yOxmik0qAJi8lnBwZOYKCOR9NEFmf4e5pJ0/e7DXI3kv3taptY
+         2BXuCDcmt84UBKkLZcU4I0xsU9sQshQl6X+RxC0BUPtcv/ulTASyVELbuwTJhRQZNqyz
+         FeeeA0UFerqprKA/L60usupO4zb+nDjmONvW29saAEII9e+t3UF51kJofKpbL5Uitc5N
+         O3ChGr0oo+cAYSS4nzw693X9vsRDSMa1RF+my+7isa7czUZaR837EibXHbrIbS43EvDC
+         SHXA==
+X-Gm-Message-State: AGi0PuY5cx4GJbsw9FdQ87jvD8YnuGfsisEybdBzvbFDxWVTbo660dS8
+        vxbxXHtqIma+qBFeWyUzJUpurt718mE/waYSVI8oog==
+X-Google-Smtp-Source: APiQypKljkdmPJSFbCodFsRJPlON7rGbbY1ej40phxYNyRoBtjH9cv47s6AEwc6+8FPADLordGEzaxl4nbbBuoFonCI=
+X-Received: by 2002:a9d:7dd8:: with SMTP id k24mr4846402otn.33.1587396510050;
+ Mon, 20 Apr 2020 08:28:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200318001603.9650-1-olteanv@gmail.com> <20200318001603.9650-13-olteanv@gmail.com>
- <20200420143831.GB32419@dragon>
-In-Reply-To: <20200420143831.GB32419@dragon>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 20 Apr 2020 18:10:35 +0300
-Message-ID: <CA+h21hrfwJ7LMjj=sy7LG3D-FFhVSRuM5TwqfX9LvW4XKarUWA@mail.gmail.com>
-Subject: Re: [PATCH v5 12/12] arm64: dts: ls1028a-rdb: Add a spidev node for
- the mikroBUS
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
+References: <1585341214-25285-1-git-send-email-tharvey@gateworks.com>
+ <1585341214-25285-2-git-send-email-tharvey@gateworks.com> <20200417095831.GI2167633@dell>
+In-Reply-To: <20200417095831.GI2167633@dell>
+From:   Tim Harvey <tharvey@gateworks.com>
+Date:   Mon, 20 Apr 2020 08:28:17 -0700
+Message-ID: <CAJ+vNU32JcADb-p4+rpX5fzA8PkfknMr0Qd-UCMs-6AxLRGc5w@mail.gmail.com>
+Subject: Re: [PATCH v8 1/3] dt-bindings: mfd: Add Gateworks System Controller bindings
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linux HWMON List <linux-hwmon@vger.kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
-        angelo@sysam.it, andrew.smirnov@gmail.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
-        Michael Walle <michael@walle.cc>, peng.ma@nxp.com
+        Frank Rowand <frowand.list@gmail.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Robert Jones <rjones@gateworks.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 20 Apr 2020 at 17:38, Shawn Guo <shawnguo@kernel.org> wrote:
+On Fri, Apr 17, 2020 at 2:57 AM Lee Jones <lee.jones@linaro.org> wrote:
 >
-> On Wed, Mar 18, 2020 at 02:16:03AM +0200, Vladimir Oltean wrote:
-> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> On Fri, 27 Mar 2020, Tim Harvey wrote:
+>
+> > This patch adds documentation of device-tree bindings for the
+> > Gateworks System Controller (GSC).
 > >
-> > For debugging, it is useful to have access to the DSPI controller
-> > signals. On the reference design board, these are exported to either the
-> > mikroBUS1 or mikroBUS2 connector (according to the CPLD register
-> > BRDCFG3[SPI3]).
-> >
-> > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> > Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+
+<snip>
+
 > > ---
-> > Changes in v5:
-> > None.
+> >  .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 194 +++++++++++++++++++++
+> >  1 file changed, 194 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
 > >
-> > Changes in v4:
-> > None.
-> >
-> > Changes in v3:
-> > None.
-> >
-> > Changes in v2:
-> > Change compatible string for spidev node.
-> >
-> >  arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> > index 6d05b76c2c7a..0d27b5667b8c 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> > @@ -83,6 +83,20 @@
-> >       };
-> >  };
-> >
-> > +&dspi2 {
-> > +     bus-num = <2>;
-> > +     status = "okay";
+> > diff --git a/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml b/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+> > new file mode 100644
+> > index 00000000..a96751c9
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+> > @@ -0,0 +1,194 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/mfd/gateworks-gsc.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > > +
-> > +     /* mikroBUS1 */
-> > +     spidev@0 {
-> > +             compatible = "rohm,dh2228fv";
+> > +title: Gateworks System Controller multi-function device
 >
-> Is the compatible documented?
+> I'd prefer if you didn't use Linuxisums in DT docs.
 >
-> Shawn
+> A 'multi-function device' isn't a thing - we made it up.
 >
-> > +             spi-max-frequency = <20000000>;
-> > +             fsl,spi-cs-sck-delay = <100>;
-> > +             fsl,spi-sck-cs-delay = <100>;
-> > +             reg = <0>;
-> > +     };
-> > +};
+> Nowhere in the documentation [0] is the Gateworks System Controller
+> described as a multi-function device.
+>
+> [0] http://trac.gateworks.com/wiki/gsc
+>
+> > +description: |
+> > +  The GSC is a Multifunction I2C slave device with the following submodules:
+>
+> No it isn't.  It's a:
+>
+>   "The Gateworks System Controller (GSC) is a device present across
+>    various Gateworks product families that provides a set of system
+>    related feature such as the following (refer to the board hardware
+>    user manuals to see what features are present)"
+>
+> > +   - Watchdog Timer
+> > +   - GPIO
+> > +   - Pushbutton controller
+> > +   - Hardware Monitor with ADC's for temperature and voltage rails and
+> > +     fan controller
+>
+> Why is "Monitor" capitalised, but "controller" is not?
+>
+> I would s/Monitor/monitor/ here.
+>
+> > +maintainers:
+> > +  - Tim Harvey <tharvey@gateworks.com>
+> > +  - Robert Jones <rjones@gateworks.com>
 > > +
-> >  &esdhc {
-> >       sd-uhs-sdr104;
-> >       sd-uhs-sdr50;
-> > --
-> > 2.17.1
-> >
+> > +properties:
+> > +  $nodename:
+> > +    pattern: "gsc@[0-9a-f]{1,2}"
+> > +  compatible:
+> > +    const: gw,gsc
+> > +
+> > +  reg:
+> > +    description: I2C device address
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  interrupt-controller: true
+> > +
+> > +  "#interrupt-cells":
+> > +    const: 1
+> > +
+> > +  "#address-cells":
+> > +    const: 1
+> > +
+> > +  "#size-cells":
+> > +    const: 0
+> > +
+> > +  adc:
+> > +    type: object
+> > +    description: Optional Hardware Monitoring module
+>
+> Again, an odd thing to capitalise.
+>
+> > +    properties:
+> > +      compatible:
+> > +        const: gw,gsc-adc
+> > +
+> > +      "#address-cells":
+> > +        const: 1
+> > +
+> > +      "#size-cells":
+> > +        const: 0
+> > +
+> > +    patternProperties:
+> > +      "^channel@[0-9]+$":
+> > +        type: object
+> > +        description: |
+> > +          Properties for a single ADC which can report cooked values
+> > +          (ie temperature sensor based on thermister), raw values
+> > +          (ie voltage rail with a pre-scaling resistor divider).
+>
+> /ie/i.e./
+>
+> > +        properties:
+> > +          reg:
+> > +            description: Register of the ADC
+> > +            maxItems: 1
+> > +
+> > +          label:
+> > +            description: Name of the ADC input
+> > +
+> > +          gw,mode:
+> > +            description: |
+> > +              conversion mode:
+> > +                0 - temperature, in C*10
+> > +                1 - pre-scaled voltage value
+> > +                2 - scaled voltage based on an optional resistor divider
+> > +                    and optional offset
+> > +            allOf:
+> > +              - $ref: /schemas/types.yaml#/definitions/uint32
+>
+> Rob just submitted a patch-set to remove 'allOf's from '$ref'
+> properties.
+>
+> > +            enum: [0, 1, 2]
+> > +
+> > +          gw,voltage-divider-ohms:
+> > +            description: values of resistors for divider on raw ADC input
+>
+> s/values/Values/
+>
+> > +            maxItems: 2
+> > +            items:
+> > +             minimum: 1000
+> > +             maximum: 1000000
+> > +
+> > +          gw,voltage-offset-microvolt:
+> > +            description: |
+> > +              A positive voltage offset to apply to a raw ADC
+> > +              (ie to compensate for a diode drop).
+>
+> s/ie/i.e/
+>
+> > +            minimum: 0
+> > +            maximum: 1000000
+> > +
+> > +        required:
+> > +          - gw,mode
+> > +          - reg
+> > +          - label
+> > +
+> > +    required:
+> > +      - compatible
+> > +      - "#address-cells"
+> > +      - "#size-cells"
+> > +
+> > +patternProperties:
+> > +  "^fan-controller@[0-9a-f]+$":
+> > +    type: object
+> > +    description: Optional FAN controller
+>
+> "Fan"
+>
+> > +    properties:
+> > +      compatible:
+> > +        const: gw,gsc-fan
+> > +
+> > +      "#address-cells":
+> > +        const: 1
+> > +
+> > +      "#size-cells":
+> > +        const: 0
+> > +
+> > +      reg:
+> > +        description: The fan controller base address
+> > +        maxItems: 1
+> > +
+> > +    required:
+> > +      - compatible
+> > +      - reg
+> > +      - "#address-cells"
+> > +      - "#size-cells"
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - interrupt-controller
+> > +  - "#interrupt-cells"
+> > +  - "#address-cells"
+> > +  - "#size-cells"
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +    i2c {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        gsc@20 {
+> > +            compatible = "gw,gsc";
+> > +            reg = <0x20>;
+> > +            interrupt-parent = <&gpio1>;
+> > +            interrupts = <4 GPIO_ACTIVE_LOW>;
+> > +            interrupt-controller;
+> > +            #interrupt-cells = <1>;
+> > +            #address-cells = <1>;
+> > +            #size-cells = <0>;
+> > +
+> > +            adc {
+> > +                compatible = "gw,gsc-adc";
+> > +                #address-cells = <1>;
+> > +                #size-cells = <0>;
+> > +
+> > +                channel@0 { /* A0: Board Temperature */
+> > +                    reg = <0x00>;
+> > +                    label = "temp";
+> > +                    gw,mode = <0>;
+> > +                };
+> > +
+> > +                channel@2 { /* A1: Input Voltage (raw ADC) */
+> > +                    reg = <0x02>;
+> > +                    label = "vdd_vin";
+> > +                    gw,mode = <1>;
+> > +                    gw,voltage-divider-ohms = <22100 1000>;
+> > +                    gw,voltage-offset-microvolt = <800000>;
+> > +                };
+> > +
+> > +                channel@b { /* A2: Battery voltage */
+> > +                    reg = <0x0b>;
+> > +                    label = "vdd_bat";
+> > +                    gw,mode = <1>;
+> > +                };
+> > +            };
+> > +
+> > +            fan-controller@2c {
+> > +                #address-cells = <1>;
+> > +                #size-cells = <0>;
+> > +                compatible = "gw,gsc-fan";
+> > +                reg = <0x2c>;
+> > +            };
+> > +        };
+> > +    };
+>
 
-I don't really know what's the status with spidev compatibles. I do
-see other device trees are using this one, I thought it should be
-fine.
+Lee,
 
-Thanks,
--Vladimir
+Thanks for the review. I will send a v9 once you have had time to
+review the mfd driver patch in this series.
+
+Best Regards,
+
+Tim
