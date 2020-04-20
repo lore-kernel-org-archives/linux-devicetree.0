@@ -4,96 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D268C3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 17:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC951C3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 17:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31D9F20CC7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 17:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3EFF2145D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 17:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587405295;
-	bh=e7TNlJlG8tlik/sTL4s5OtbMF19QWj5hcKCLZfhL7YQ=;
+	s=default; t=1587405318;
+	bh=86ZXwLRjB23MXeT4yzvCor31U/swaCeYvDBMy7d8VrA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZcLiXoO+iyZikZ3B9uoLu/4sWFctMSYf2ZbkYdKV3i+knGZ74+5OvM0mT2XsrQihQ
-	 1mvPXIPTQq/5e/KsVH1Pg3Adiw4xXlnwiKToEDN3Ibto347p5tbq0uGpMZGwLpjPDr
-	 e1ezDdCZUqjF7XKcjGeGsxWTWicbJep7HEWFEqvs=
+	b=K7T/JrNA5BExOdLlqAfpNVKPV8xpK8WsSVIdtP+xM0A5A0Sr7i7rLAChmf6BFBWjR
+	 5Kr6fJrk+153F2zTzbblXt+q1S10g3h0qr7HQyRI5HjTXTFi+pbOmgOY4Mn7ttIAbu
+	 3pQAF+rcMPmdOGYgkAQMO8VtyVJbCCcVM5D6peDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726644AbgDTRyy (ORCPT
+        id S1726207AbgDTRzS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 13:54:54 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39228 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbgDTRyy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 13:54:54 -0400
-Received: by mail-ot1-f66.google.com with SMTP id m13so8896550otf.6;
-        Mon, 20 Apr 2020 10:54:53 -0700 (PDT)
+        Mon, 20 Apr 2020 13:55:18 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:32850 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726021AbgDTRzS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 13:55:18 -0400
+Received: by mail-oi1-f194.google.com with SMTP id m14so9623109oic.0;
+        Mon, 20 Apr 2020 10:55:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+Gi26TDtWax7qst8ulcbl7U4YQylmsemnZgiw5cB9Us=;
-        b=qHFrach84EMD86oQYsKwdQEZsunZ3rZPFMewmKN6hDR7HyeAB9FPyZzddBF1rs+xxk
-         yGu/ApP5iqEmgFN2W33NDuA98dt96JX17hdK5CcI6c1JSljvGzROVVwS+GEk0IVni8uk
-         AX+YDxoWbeWNhlkBmmbZaHg0RMkndg+JytEqBCy3BfU5nHMm+UdlPE8rDIHZX8azW4hI
-         4qzfjap6lnAD8N1E/V6A9zrcm1V/MlW2SwGrgV5rYvlq+uI1g/OZ84MapsRjzU3qgGPo
-         WInNVPBXq+jjEGu7vPXcCWiiOPE5JlLnK9Xjgmx99IoH6vIGqrAEMS6LPPASDqiAY8hF
-         u+rQ==
-X-Gm-Message-State: AGi0PuZ2e8rBZBXsk/SLf9IuiP3FJ4DHnu+jdPW9Jkc2BLQAbcQgeG4y
-        MkjK6Blcct1SlI6fnao+yA==
-X-Google-Smtp-Source: APiQypLR/LxJLTBWf2MahE0hcKnBt7LJR3oCpN+jJPHAwDJw/tdZyf7TWfdCOMb35+e8qxQsO1P16w==
-X-Received: by 2002:a9d:4e3:: with SMTP id 90mr10762195otm.261.1587405293408;
-        Mon, 20 Apr 2020 10:54:53 -0700 (PDT)
+        bh=Pnrv9lM8OUTY4sC+Y+b2B4Yg/ImImSGXZBXHhlUhbQo=;
+        b=m1V/fVQ22yA3PwSvWQYiaYI1e3eDYRH4QoyVjjdcpupqHGiboCXYNDNB0Mh0CKg97j
+         bQKibL8wfuWwqnGEUJZ7xz/nrqlrgCJ+Dj9GBoMPwZoH9fZzworZ3KEgwWgdnURUCI/K
+         tyYDZm/SWlXCfMgPo5U4RevNKKLj/NvkD8+/7ImzFzLnH0dte2Xe4nYMuOJ2wx4hUAPv
+         UV75pcI2ij/Tx37kpwTukZWqBQCcRLALl3aNVFKcnymGZOUSsdIRIS21tyKBpG4w4dYq
+         KQZq6E7tygzw1RmHKEb4RNboxDoDPpDmaMUVtyf1Qn6CjnWQZPVVZ3wTRVbgMV9c1Sdf
+         9fSw==
+X-Gm-Message-State: AGi0PuYu/DoYuDP0YSMnLd4hGV1CsqM+23h8r8hH6lRjfqT5yP/cIcFY
+        ejKqWx0csDYcQcaPJYeOZw==
+X-Google-Smtp-Source: APiQypKHszk2EWEj6YDqOxTUfHxKYjV5QQAmfU8m5CMhLH5+8GXPeri83oufl4B0ZfG2WOLRfc1+Kw==
+X-Received: by 2002:aca:4b10:: with SMTP id y16mr435420oia.23.1587405317335;
+        Mon, 20 Apr 2020 10:55:17 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f25sm85690oti.2.2020.04.20.10.54.52
+        by smtp.gmail.com with ESMTPSA id k19sm25202oof.33.2020.04.20.10.55.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 10:54:52 -0700 (PDT)
-Received: (nullmailer pid 28270 invoked by uid 1000);
-        Mon, 20 Apr 2020 17:54:51 -0000
-Date:   Mon, 20 Apr 2020 12:54:51 -0500
+        Mon, 20 Apr 2020 10:55:16 -0700 (PDT)
+Received: (nullmailer pid 29244 invoked by uid 1000);
+        Mon, 20 Apr 2020 17:55:15 -0000
+Date:   Mon, 20 Apr 2020 12:55:15 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v9 1/2] iio: proximity: provide device tree binding
- document
-Message-ID: <20200420175451.GA27252@bogus>
-References: <20200417182053.22213-1-i.mikhaylov@yadro.com>
- <20200417182053.22213-2-i.mikhaylov@yadro.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     robh+dt@kernel.org, khilman@baylibre.com, narmstrong@baylibre.com,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: power: meson-ee-pwrc: add support
+ for Meson8/8b/8m2
+Message-ID: <20200420175515.GA28534@bogus>
+References: <20200417190825.1363345-1-martin.blumenstingl@googlemail.com>
+ <20200417190825.1363345-2-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200417182053.22213-2-i.mikhaylov@yadro.com>
+In-Reply-To: <20200417190825.1363345-2-martin.blumenstingl@googlemail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 17 Apr 2020 21:20:52 +0300, Ivan Mikhaylov wrote:
-> Mostly standard i2c driver with some additional led-current option
-> for vcnl3020.
+On Fri, 17 Apr 2020 21:08:22 +0200, Martin Blumenstingl wrote:
+> The power domains on the 32-bit Meson8/Meson8b/Meson8m2 SoCs are very
+> similar to what G12A still uses. The (known) differences are:
+> - Meson8 doesn't use any reset lines at all
+> - Meson8b and Meson8m2 use the same reset lines, which are different
+>   from what the 64-bit SoCs use
+> - there is no "vapb" clock on the older SoCs
+> - amlogic,ao-sysctrl cannot point to the whole AO sysctrl region but
+>   only the power management related registers
 > 
-> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> Add a new compatible string and adjust clock and reset line expectations
+> for each SoC.
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->  .../bindings/iio/proximity/vcnl3020.yaml      | 64 +++++++++++++++++++
->  1 file changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+>  .../bindings/power/amlogic,meson-ee-pwrc.yaml | 75 ++++++++++++++-----
+>  include/dt-bindings/power/meson8-power.h      | 13 ++++
+>  2 files changed, 71 insertions(+), 17 deletions(-)
+>  create mode 100644 include/dt-bindings/power/meson8-power.h
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/proximity/vcnl3020.example.dt.yaml: proximity@13: vishay,led-current-microamp:0:0: 20 is not one of [0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000, 180000, 190000, 200000]
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.example.dt.yaml: power-controller: 'reset-names' does not match any of the regexes: 'pinctrl-[0-9]+'
 
-See https://patchwork.ozlabs.org/patch/1272391
+See https://patchwork.ozlabs.org/patch/1272441
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
