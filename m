@@ -2,93 +2,149 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41295C3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B64C38A30
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 133CC206D6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:08:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587406133;
-	bh=LbiKxNmbI7372BgHRT9t9SxUK+8yYdaShqeF5j2JsL8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mte2iTDj/NS5S4uUNQgDX6tKH+Mv2wpckIuc/EOOZ7FWJ7J3YtvAGAV0HBHsH5Qlb
-	 iBwoe+8KH+JUEgeHrFlMDJJZqvOU1FUFUXfdKe4VHnj6q/RQbWVNqR1gEKB4xmsZmD
-	 YF9VEEl5fbvb9scqUN2aeyYddirWBTcUbbDbJjhk=
+	by mail.kernel.org (Postfix) with ESMTP id 2A9E62071C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:10:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CF9oVWum"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbgDTSIw (ORCPT
+        id S1726937AbgDTSKj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:08:52 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39927 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726123AbgDTSIw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 14:08:52 -0400
-Received: by mail-oi1-f195.google.com with SMTP id 8so9634849oiy.6;
-        Mon, 20 Apr 2020 11:08:51 -0700 (PDT)
+        Mon, 20 Apr 2020 14:10:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726532AbgDTSKj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 14:10:39 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34F09C061A0C;
+        Mon, 20 Apr 2020 11:10:39 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id l3so5216018edq.13;
+        Mon, 20 Apr 2020 11:10:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OsEsVqFYdMSb7DvTNoLz36ojWhYP2bDeJgp2Rpv0Krk=;
+        b=CF9oVWum7P6oGqf/+o/Kfq8ccqpl/kqXKpD5Ov3s0d6NsvfIEGAmcv8qfwxjZn0zVg
+         ynvyXJBYZxaE6qa+9ImjKr17D04XIQPPy4Yhi0GtZvMcehBwVgh+am27oicRuZZBy69Y
+         0UE2jBqxbyKVjh3oWwFNvRqjhQiKr57pzRmKNO0fRLYyr1LtdquWn2zwQmk8e/fSC77+
+         DzC+16bcYwTLYolDPEl7ov14N67ELp26piJ8A+kX6zrkQsOK4pZJ4AzYDK0l+vPUoZ9R
+         vBNELc1LN+uOG3lJ4pojJI9EQbhO4dPXVorQBY3l7vszpjDGMIh9CeoZLnM5l5pUSdNU
+         Af9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bc56Dwj1aMPCCpPjifIrG4vj+vUAtSdEB9HyhT4YU10=;
-        b=JWCxFYH+Qa7JgNcVMf+qCit5ViFepz8ox38ZsPfdqKGQbNDToFi+TOcUjye7jhiovH
-         Aj2WYOmhuy6Ws0t9TCLSK+7Wme+L4AUOhyqxGAYKlDTZMYCaMueS0Jqs3eBbYzTzRryg
-         RMBC/XyzXwzDTqLB/qEVE9tc9c2X8LGVIFCVkD/5w82CvqNukmpl29wEjwRSdLz4mWbg
-         BOnY7tUulliNyDVQXRJjHichAiXeK2BrzTjyeQZZYuS8UuNSDJG+hkkCGA+r/UxZbH0s
-         v8LUniz5TNLefFhTy96uFFoekxH4aL2DbRCw3+W8anC5ZiemEwoRE71AB1SF/NyCPF8W
-         e87A==
-X-Gm-Message-State: AGi0PuZ2wBW5u6KZ/ZYZc/mSN4l5vFg/1dtTgvZI8f7znElfaTSIobuy
-        /Act0PtevNKOCuW8T6rhTGvZhGM=
-X-Google-Smtp-Source: APiQypJ9IiQdq0jjyzPfhPrpdcpv8xxH38/RsgpZdDA5tEwK8oJrZwbmWnVs9XuPzOSsG6g8XvCCqw==
-X-Received: by 2002:aca:3284:: with SMTP id y126mr428503oiy.175.1587406131319;
-        Mon, 20 Apr 2020 11:08:51 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u9sm87462otq.54.2020.04.20.11.08.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 11:08:50 -0700 (PDT)
-Received: (nullmailer pid 32206 invoked by uid 1000);
-        Mon, 20 Apr 2020 18:08:49 -0000
-Date:   Mon, 20 Apr 2020 13:08:49 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] ASoC: dt-bindings: simple-card: switch to yaml base
- Documentation
-Message-ID: <20200420180849.GA32130@bogus>
-References: <87sghovzwb.wl-kuninori.morimoto.gx@renesas.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OsEsVqFYdMSb7DvTNoLz36ojWhYP2bDeJgp2Rpv0Krk=;
+        b=n8q3eGWDsdxfa1oV7caEywVrmSGEoTzXroxa442+neiF8KVBOCOifLwLkDqB80mw0W
+         pkz7ZspJim46/gEoYE9fhz06e8wKLheG7QGVjRBkYABgaMaHGgc+dhms+itJ50ePiupk
+         XDW7cGwISEQHu7UDjzqS2zQlQpawrR5Y7ZSGM3BzksaOF7XZ20hT05W07Pdxm0nF6aKZ
+         Z2vyxodsHb6DwZZv9l017CtKfJhdRwIGJrHeeV2KfPEJBCX4dhcloBebnhB3jyb+8C4X
+         oKOLJ334LdI3SIelBPeTDPPzgcq5N++nTjvlJzg9/1rZ0zC+L7hCzT0eSPXL8ww1MBDC
+         Y1mg==
+X-Gm-Message-State: AGi0PuZnpm7Oi9KAepyRh8Ddsvb6+1XxOZvuFnWxCqJmH6TReymGFKlW
+        gz2UQ0BJ1JjsM+TxXng0ydE2VpuEet/WyWvt1HA=
+X-Google-Smtp-Source: APiQypKh8INZWiu0vYAwkyTSSdFKBGinZbwNyt+jZO5Euhz9Y9RwZQSR5ngPH+538R2KWSEW23JML9DVlLKeSSsbzMs=
+X-Received: by 2002:a50:9ea1:: with SMTP id a30mr16192872edf.318.1587406237905;
+ Mon, 20 Apr 2020 11:10:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87sghovzwb.wl-kuninori.morimoto.gx@renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200318001603.9650-1-olteanv@gmail.com> <20200318001603.9650-13-olteanv@gmail.com>
+ <CAMuHMdUDYWNOOrAXrq1Lf5_GD84Z1rr4Co5buZS-GnJvGyN5yA@mail.gmail.com>
+In-Reply-To: <CAMuHMdUDYWNOOrAXrq1Lf5_GD84Z1rr4Co5buZS-GnJvGyN5yA@mail.gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 20 Apr 2020 21:10:27 +0300
+Message-ID: <CA+h21hpHeL08Gb36m1RNrE6agebZu7ygz9jFekOH7zGc9uLcSQ@mail.gmail.com>
+Subject: Re: [PATCH v5 12/12] arm64: dts: ls1028a-rdb: Add a spidev node for
+ the mikroBUS
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Esben Haabendal <eha@deif.com>,
+        Angelo Dureghello <angelo@sysam.it>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
+        Michael Walle <michael@walle.cc>, peng.ma@nxp.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 01 Apr 2020 09:00:04 +0900, Kuninori Morimoto wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> 
-> This patch switches from .txt base to .yaml base Document.
-> 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> ---
-> v3 -> v4
-> 
-> 	- don't have "clocks" at definitions
-> 	- tidyup comment of "patternProperties"
-> 
->  .../devicetree/bindings/sound/simple-card.txt      | 351 ---------------
->  .../devicetree/bindings/sound/simple-card.yaml     | 484 +++++++++++++++++++++
->  2 files changed, 484 insertions(+), 351 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/simple-card.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/simple-card.yaml
-> 
+Hi Geert,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Mon, 20 Apr 2020 at 21:07, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Vladimir,
+>
+> On Wed, Mar 18, 2020 at 1:17 AM Vladimir Oltean <olteanv@gmail.com> wrote:
+> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> >
+> > For debugging, it is useful to have access to the DSPI controller
+> > signals. On the reference design board, these are exported to either the
+> > mikroBUS1 or mikroBUS2 connector (according to the CPLD register
+> > BRDCFG3[SPI3]).
+> >
+> > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+>
+> Thanks for your patch!
+>
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> > @@ -83,6 +83,20 @@
+> >         };
+> >  };
+> >
+> > +&dspi2 {
+> > +       bus-num = <2>;
+> > +       status = "okay";
+> > +
+> > +       /* mikroBUS1 */
+> > +       spidev@0 {
+>
+> Please use generic node names, e.g. "dac@0".
+>
+
+It's not a DAC. It's really an unpopulated pin header. I would have
+really liked to have access to that as a char device with the default
+board DTS, via spidev. That being said, there are warnings to not use
+the "spidev" compatible in device trees. So if what I want is not
+possible, I'd rather drop the patch altogether.
+
+> > +               compatible = "rohm,dh2228fv";
+> > +               spi-max-frequency = <20000000>;
+> > +               fsl,spi-cs-sck-delay = <100>;
+> > +               fsl,spi-sck-cs-delay = <100>;
+> > +               reg = <0>;
+> > +       };
+> > +};
+> > +
+> >  &esdhc {
+> >         sd-uhs-sdr104;
+> >         sd-uhs-sdr50;
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+
+Thanks,
+-Vladimir
