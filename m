@@ -2,170 +2,341 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFB5C54FCF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C06BC54FD0
 	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 20:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2CE820857
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 20:27:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="p6knrLkB"
+	by mail.kernel.org (Postfix) with ESMTP id 6386020857
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 20:27:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbgDTU0y (ORCPT
+        id S1726839AbgDTU01 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 16:26:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50066 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726878AbgDTU02 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 16:26:28 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98038C061A0C;
-        Mon, 20 Apr 2020 13:26:28 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id v8so886081wma.0;
-        Mon, 20 Apr 2020 13:26:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6W8grtyB7pbKtLO6nZYSpUXrUqbnBG7Y9G7Qj2TNYYc=;
-        b=p6knrLkBXwqGxq6+Y8qDIGzAfcrs/wLEqwashKOOkURN4yTA94z5zf6FYUXgFl5l+A
-         sUZmWPty1XgIIpLJ3hTZO4gKR/faEocL0UrIS0nof9RS8Twbj238UkMEtj94Kz5OlpUd
-         8hQELeyceiME/J/rZZVVMoRms2EpF/5fJzag0sVaY5uAMl/5yXip4SfSyG3lZMWSEjeM
-         k14iXl5I9MZDAQS/v/frX36Orkn+PTNpt0fHnjzmF1buhsAhSk+K0WNkYkNAsy4sfAEL
-         awitjW9GwcEYdzsGz3nqeD8ILj01JO0ixWHC5/iW+BObvDHrDvKpuPvCv4X+F1l5TCIY
-         yh+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6W8grtyB7pbKtLO6nZYSpUXrUqbnBG7Y9G7Qj2TNYYc=;
-        b=CME10pCQEBoI1RMvw5ps/2HHknQywcxYM6VWmPsLyYjH50O2tFRMfWcwcoJVjgDlCn
-         t2qu3pLPYAOnWARhjB855ms6u34kFggkgFPDTenmBC5tQMuuIyFnWRpN95R6Hnbc80Z3
-         5wbeCNXJ6kgj5vvH6P9/Hxzfpf7sjJ1WI+y9aesShfb1+/ykOaGCjybCl+VyRYCC/0oB
-         MnYEVD8ewDBnRdQco5b21nEucMcvk5uk2sENhzOKiaPP/9UUZlzBXc+SY4bKNvTfT1MZ
-         WUb1tI0kh9Ose1t42X62LOA7TJ3OCZ4NI7vCM0ogwn3F5GefkDOdn8aL5HnCAvapBpUs
-         xWOQ==
-X-Gm-Message-State: AGi0PuYC6FooMiZjCjTCyUglHxtupi0j9rLPah4RN2gCghMQq0gy4Ga5
-        kTXR+2aq+7jUvLH4jjHiNh0=
-X-Google-Smtp-Source: APiQypLqmxKs/1t8ZCj39OTBsU0FhGL3s33M63qCSyOMn2SmgJ0ImXAQAFlCOH5BiI32aIJv+k0WsA==
-X-Received: by 2002:a1c:148:: with SMTP id 69mr1161252wmb.181.1587414387225;
-        Mon, 20 Apr 2020 13:26:27 -0700 (PDT)
-Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id l19sm657846wmj.14.2020.04.20.13.26.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 13:26:26 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     robh+dt@kernel.org, khilman@baylibre.com, narmstrong@baylibre.com,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 4/4] soc: amlogic: meson-ee-pwrc: add support for the Meson GX SoCs
-Date:   Mon, 20 Apr 2020 22:26:12 +0200
-Message-Id: <20200420202612.369370-5-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200420202612.369370-1-martin.blumenstingl@googlemail.com>
-References: <20200420202612.369370-1-martin.blumenstingl@googlemail.com>
+        Mon, 20 Apr 2020 16:26:27 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40462 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726743AbgDTU00 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Apr 2020 16:26:26 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03KK2w70130264;
+        Mon, 20 Apr 2020 16:26:18 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30ghu66k55-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 16:26:18 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03KKPiM1010242;
+        Mon, 20 Apr 2020 20:26:17 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma02wdc.us.ibm.com with ESMTP id 30fs66bk28-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Apr 2020 20:26:17 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03KKQH7Z34013512
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Apr 2020 20:26:17 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 02326AE05F;
+        Mon, 20 Apr 2020 20:26:17 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 06EE3AE05C;
+        Mon, 20 Apr 2020 20:26:16 +0000 (GMT)
+Received: from ghost4.ibm.com (unknown [9.163.56.120])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Apr 2020 20:26:15 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-aspeed@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, joel@jms.id.au, andrew@aj.id.au,
+        eajames@linux.ibm.com
+Subject: [PATCH v10 3/7] soc: aspeed: xdma: Add user interface
+Date:   Mon, 20 Apr 2020 15:26:07 -0500
+Message-Id: <20200420202611.17776-4-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200420202611.17776-1-eajames@linux.ibm.com>
+References: <20200420202611.17776-1-eajames@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-20_07:2020-04-20,2020-04-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=4 bulkscore=0 spamscore=0 phishscore=0 adultscore=0
+ clxscore=1015 malwarescore=0 priorityscore=1501 lowpriorityscore=0
+ mlxscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004200155
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for the Meson GX SoCs to the meson-ee-pwrc driver.
+This commits adds a miscdevice to provide a user interface to the XDMA
+engine. The interface provides the write operation to start DMA
+operations. The DMA parameters are passed as the data to the write call.
+The actual data to transfer is NOT passed through write. Note that both
+directions of DMA operation are accomplished through the write command;
+BMC to host and host to BMC.
 
-The power domains on the GX SoCs are very similar to G12A. The only
-known differences so far are:
-- The GX SoCs do not have the HHI_VPU_MEM_PD_REG2 register (for the
-  VPU power-domain)
-- The GX SoCs have an additional reset line called "dvin"
+The XDMA driver reserves an area of physical memory for DMA operations,
+as the XDMA engine is restricted to accessing certain physical memory
+areas on some platforms. This memory forms a pool from which users can
+allocate pages for their usage with calls to mmap. The space allocated
+by a client will be the space used in the DMA operation. For an
+"upstream" (BMC to host) operation, the data in the client's area will
+be transferred to the host. For a "downstream" (host to BMC) operation,
+the host data will be placed in the client's memory area.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Poll is also provided in order to determine when the DMA operation is
+complete for non-blocking IO.
+
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 ---
- drivers/soc/amlogic/meson-ee-pwrc.c | 26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ drivers/soc/aspeed/aspeed-xdma.c | 200 ++++++++++++++++++++++++++++++-
+ 1 file changed, 198 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/soc/amlogic/meson-ee-pwrc.c b/drivers/soc/amlogic/meson-ee-pwrc.c
-index b30868da456a..a90572cb9c82 100644
---- a/drivers/soc/amlogic/meson-ee-pwrc.c
-+++ b/drivers/soc/amlogic/meson-ee-pwrc.c
-@@ -16,6 +16,7 @@
- #include <linux/clk.h>
- #include <dt-bindings/power/meson8-power.h>
- #include <dt-bindings/power/meson-g12a-power.h>
-+#include <dt-bindings/power/meson-gxbb-power.h>
- #include <dt-bindings/power/meson-sm1-power.h>
- 
- /* AO Offsets */
-@@ -73,7 +74,7 @@ struct meson_ee_pwrc_domain_data {
- 
- /* TOP Power Domains */
- 
--static struct meson_ee_pwrc_top_domain g12a_pwrc_vpu = {
-+static struct meson_ee_pwrc_top_domain gxbb_pwrc_vpu = {
- 	.sleep_reg = AO_RTI_GEN_PWR_SLEEP0,
- 	.sleep_mask = BIT(8),
- 	.iso_reg = AO_RTI_GEN_PWR_SLEEP0,
-@@ -138,6 +139,12 @@ static struct meson_ee_pwrc_mem_domain g12a_pwrc_mem_vpu[] = {
- 	VPU_HHI_MEMPD(HHI_MEM_PD_REG0),
+diff --git a/drivers/soc/aspeed/aspeed-xdma.c b/drivers/soc/aspeed/aspeed-xdma.c
+index bf9577da734e..adfb9e13c8b9 100644
+--- a/drivers/soc/aspeed/aspeed-xdma.c
++++ b/drivers/soc/aspeed/aspeed-xdma.c
+@@ -13,6 +13,7 @@
+ #include <linux/io.h>
+ #include <linux/jiffies.h>
+ #include <linux/mfd/syscon.h>
++#include <linux/miscdevice.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/of_device.h>
+@@ -229,6 +230,8 @@ struct aspeed_xdma {
+ 	void *mem_virt;
+ 	dma_addr_t cmdq_phys;
+ 	struct gen_pool *pool;
++
++	struct miscdevice misc;
  };
  
-+static struct meson_ee_pwrc_mem_domain gxbb_pwrc_mem_vpu[] = {
-+	VPU_MEMPD(HHI_VPU_MEM_PD_REG0),
-+	VPU_MEMPD(HHI_VPU_MEM_PD_REG1),
-+	VPU_HHI_MEMPD(HHI_MEM_PD_REG0),
+ struct aspeed_xdma_client {
+@@ -563,6 +566,187 @@ static irqreturn_t aspeed_xdma_pcie_irq(int irq, void *arg)
+ 	return IRQ_HANDLED;
+ }
+ 
++static ssize_t aspeed_xdma_write(struct file *file, const char __user *buf,
++				 size_t len, loff_t *offset)
++{
++	int rc;
++	unsigned int num_cmds;
++	struct aspeed_xdma_op op;
++	struct aspeed_xdma_cmd cmds[2];
++	struct aspeed_xdma_client *client = file->private_data;
++	struct aspeed_xdma *ctx = client->ctx;
++
++	if (len != sizeof(op))
++		return -EINVAL;
++
++	rc = copy_from_user(&op, buf, len);
++	if (rc)
++		return rc;
++
++	if (!op.len || op.len > client->size ||
++	    op.direction > ASPEED_XDMA_DIRECTION_UPSTREAM)
++		return -EINVAL;
++
++	num_cmds = ctx->chip->set_cmd(ctx, cmds, &op, client->phys);
++	do {
++		rc = aspeed_xdma_start(ctx, num_cmds, cmds, !!op.direction,
++				       client);
++		if (!rc)
++			break;
++
++		if ((file->f_flags & O_NONBLOCK) || rc != -EBUSY)
++			return rc;
++
++		rc = wait_event_interruptible(ctx->wait,
++					      !(ctx->current_client ||
++						ctx->in_reset));
++	} while (!rc);
++
++	if (rc)
++		return -EINTR;
++
++	if (!(file->f_flags & O_NONBLOCK)) {
++		rc = wait_event_interruptible(ctx->wait, !client->in_progress);
++		if (rc)
++			return -EINTR;
++
++		if (client->error)
++			return -EIO;
++	}
++
++	return len;
++}
++
++static __poll_t aspeed_xdma_poll(struct file *file,
++				 struct poll_table_struct *wait)
++{
++	__poll_t mask = 0;
++	__poll_t req = poll_requested_events(wait);
++	struct aspeed_xdma_client *client = file->private_data;
++	struct aspeed_xdma *ctx = client->ctx;
++
++	if (req & (EPOLLIN | EPOLLRDNORM)) {
++		if (READ_ONCE(client->in_progress))
++			poll_wait(file, &ctx->wait, wait);
++
++		if (!READ_ONCE(client->in_progress)) {
++			if (READ_ONCE(client->error))
++				mask |= EPOLLERR;
++			else
++				mask |= EPOLLIN | EPOLLRDNORM;
++		}
++	}
++
++	if (req & (EPOLLOUT | EPOLLWRNORM)) {
++		if (READ_ONCE(ctx->current_client))
++			poll_wait(file, &ctx->wait, wait);
++
++		if (!READ_ONCE(ctx->current_client))
++			mask |= EPOLLOUT | EPOLLWRNORM;
++	}
++
++	return mask;
++}
++
++static void aspeed_xdma_vma_close(struct vm_area_struct *vma)
++{
++	int rc;
++	struct aspeed_xdma_client *client = vma->vm_private_data;
++
++	rc = wait_event_interruptible(client->ctx->wait, !client->in_progress);
++	if (rc)
++		return;
++
++	gen_pool_free(client->ctx->pool, (unsigned long)client->virt,
++		      client->size);
++
++	client->virt = NULL;
++	client->phys = 0;
++	client->size = 0;
++}
++
++static const struct vm_operations_struct aspeed_xdma_vm_ops = {
++	.close =	aspeed_xdma_vma_close,
 +};
 +
- static struct meson_ee_pwrc_mem_domain meson8_pwrc_mem_eth[] = {
- 	{ HHI_MEM_PD_REG0, GENMASK(3, 2) },
- };
-@@ -223,11 +230,17 @@ static struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_audio[] = {
- static bool pwrc_ee_get_power(struct meson_ee_pwrc_domain *pwrc_domain);
- 
- static struct meson_ee_pwrc_domain_desc g12a_pwrc_domains[] = {
--	[PWRC_G12A_VPU_ID]  = VPU_PD("VPU", &g12a_pwrc_vpu, g12a_pwrc_mem_vpu,
-+	[PWRC_G12A_VPU_ID]  = VPU_PD("VPU", &gxbb_pwrc_vpu, g12a_pwrc_mem_vpu,
- 				     pwrc_ee_get_power, 11, 2),
- 	[PWRC_G12A_ETH_ID] = MEM_PD("ETH", meson8_pwrc_mem_eth),
- };
- 
-+static struct meson_ee_pwrc_domain_desc gxbb_pwrc_domains[] = {
-+	[PWRC_GXBB_VPU_ID]  = VPU_PD("VPU", &gxbb_pwrc_vpu, gxbb_pwrc_mem_vpu,
-+				     pwrc_ee_get_power, 12, 2),
-+	[PWRC_GXBB_ETHERNET_MEM_ID] = MEM_PD("ETH", meson8_pwrc_mem_eth),
++static int aspeed_xdma_mmap(struct file *file, struct vm_area_struct *vma)
++{
++	int rc;
++	struct aspeed_xdma_client *client = file->private_data;
++	struct aspeed_xdma *ctx = client->ctx;
++
++	/* restrict file to one mapping */
++	if (client->size)
++		return -EBUSY;
++
++	client->size = vma->vm_end - vma->vm_start;
++	client->virt = gen_pool_dma_alloc(ctx->pool, client->size,
++					  &client->phys);
++	if (!client->virt) {
++		client->phys = 0;
++		client->size = 0;
++		return -ENOMEM;
++	}
++
++	vma->vm_pgoff = (client->phys - ctx->mem_phys) >> PAGE_SHIFT;
++	vma->vm_ops = &aspeed_xdma_vm_ops;
++	vma->vm_private_data = client;
++	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
++
++	rc = io_remap_pfn_range(vma, vma->vm_start, client->phys >> PAGE_SHIFT,
++				client->size, vma->vm_page_prot);
++	if (rc) {
++		dev_warn(ctx->dev, "mmap err: v[%08lx] to p[%08x], s[%08x]\n",
++			 vma->vm_start, (u32)client->phys, client->size);
++
++		gen_pool_free(ctx->pool, (unsigned long)client->virt,
++			      client->size);
++
++		client->virt = NULL;
++		client->phys = 0;
++		client->size = 0;
++		return rc;
++	}
++
++	dev_dbg(ctx->dev, "mmap: v[%08lx] to p[%08x], s[%08x]\n",
++		vma->vm_start, (u32)client->phys, client->size);
++
++	return 0;
++}
++
++static int aspeed_xdma_open(struct inode *inode, struct file *file)
++{
++	struct miscdevice *misc = file->private_data;
++	struct aspeed_xdma *ctx = container_of(misc, struct aspeed_xdma, misc);
++	struct aspeed_xdma_client *client = kzalloc(sizeof(*client),
++						    GFP_KERNEL);
++
++	if (!client)
++		return -ENOMEM;
++
++	kref_init(&client->kref);
++	client->ctx = ctx;
++	file->private_data = client;
++	return 0;
++}
++
++static int aspeed_xdma_release(struct inode *inode, struct file *file)
++{
++	struct aspeed_xdma_client *client = file->private_data;
++
++	kref_put(&client->kref, aspeed_xdma_client_release);
++	return 0;
++}
++
++static const struct file_operations aspeed_xdma_fops = {
++	.owner			= THIS_MODULE,
++	.write			= aspeed_xdma_write,
++	.poll			= aspeed_xdma_poll,
++	.mmap			= aspeed_xdma_mmap,
++	.open			= aspeed_xdma_open,
++	.release		= aspeed_xdma_release,
 +};
 +
- static struct meson_ee_pwrc_domain_desc meson8_pwrc_domains[] = {
- 	[PWRC_MESON8_VPU_ID]  = VPU_PD("VPU", &meson8_pwrc_vpu,
- 				       meson8_pwrc_mem_vpu, pwrc_ee_get_power,
-@@ -514,6 +527,11 @@ static struct meson_ee_pwrc_domain_data meson_ee_g12a_pwrc_data = {
- 	.domains = g12a_pwrc_domains,
- };
+ static int aspeed_xdma_init_scu(struct aspeed_xdma *ctx, struct device *dev)
+ {
+ 	struct regmap *scu = syscon_regmap_lookup_by_phandle(dev->of_node,
+@@ -762,6 +946,18 @@ static int aspeed_xdma_probe(struct platform_device *pdev)
  
-+static struct meson_ee_pwrc_domain_data meson_ee_gxbb_pwrc_data = {
-+	.count = ARRAY_SIZE(gxbb_pwrc_domains),
-+	.domains = gxbb_pwrc_domains,
-+};
+ 	aspeed_xdma_init_eng(ctx);
+ 
++	ctx->misc.minor = MISC_DYNAMIC_MINOR;
++	ctx->misc.fops = &aspeed_xdma_fops;
++	ctx->misc.name = "aspeed-xdma";
++	ctx->misc.parent = dev;
++	rc = misc_register(&ctx->misc);
++	if (rc) {
++		dev_err(dev, "Failed to register xdma miscdevice.\n");
++		gen_pool_free(ctx->pool, (unsigned long)ctx->cmdq,
++			      XDMA_CMDQ_SIZE);
++		goto err;
++	}
 +
- static struct meson_ee_pwrc_domain_data meson_ee_m8_pwrc_data = {
- 	.count = ARRAY_SIZE(meson8_pwrc_domains),
- 	.domains = meson8_pwrc_domains,
-@@ -542,6 +560,10 @@ static const struct of_device_id meson_ee_pwrc_match_table[] = {
- 		.compatible = "amlogic,meson8m2-pwrc",
- 		.data = &meson_ee_m8b_pwrc_data,
- 	},
-+	{
-+		.compatible = "amlogic,meson-gxbb-pwrc",
-+		.data = &meson_ee_gxbb_pwrc_data,
-+	},
- 	{
- 		.compatible = "amlogic,meson-g12a-pwrc",
- 		.data = &meson_ee_g12a_pwrc_data,
+ 	/*
+ 	 * This interrupt could fire immediately so only request it once the
+ 	 * engine and driver are initialized.
+@@ -792,8 +988,8 @@ static int aspeed_xdma_remove(struct platform_device *pdev)
+ {
+ 	struct aspeed_xdma *ctx = platform_get_drvdata(pdev);
+ 
+-	gen_pool_free(ctx->pool, (unsigned long)ctx->cmdq_virt,
+-		      XDMA_CMDQ_SIZE);
++	misc_deregister(&ctx->misc);
++	gen_pool_free(ctx->pool, (unsigned long)ctx->cmdq, XDMA_CMDQ_SIZE);
+ 
+ 	reset_control_assert(ctx->reset);
+ 	if (ctx->reset_rc)
 -- 
-2.26.1
+2.24.0
 
