@@ -2,104 +2,93 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A16BFC3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41295C3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84960206D6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:07:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qx09VHFf"
+	by mail.kernel.org (Postfix) with ESMTP id 133CC206D6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 18:08:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587406133;
+	bh=LbiKxNmbI7372BgHRT9t9SxUK+8yYdaShqeF5j2JsL8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mte2iTDj/NS5S4uUNQgDX6tKH+Mv2wpckIuc/EOOZ7FWJ7J3YtvAGAV0HBHsH5Qlb
+	 iBwoe+8KH+JUEgeHrFlMDJJZqvOU1FUFUXfdKe4VHnj6q/RQbWVNqR1gEKB4xmsZmD
+	 YF9VEEl5fbvb9scqUN2aeyYddirWBTcUbbDbJjhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgDTSH3 (ORCPT
+        id S1726387AbgDTSIw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 14:07:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55484 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgDTSH3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 14:07:29 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00DBBC061A0C;
-        Mon, 20 Apr 2020 11:07:29 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id np9so202596pjb.4;
-        Mon, 20 Apr 2020 11:07:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SN+5NQh5GO88eOTvwunTZ0nqR3Nb9UtRYbfk0MSr7bY=;
-        b=Qx09VHFf98yTcYTnvwSEuiXgDBGzA2cEh9hU+9fXyRF1r89n7O02AEfWo5K9PIvT97
-         ipXJkS8m8TogUQn4xmopNWZ3kuVEe5N6YObvYzyF8SM715dpnFc/5i2WuGB+baGzeek8
-         YlGaq7Ue7v399Sg+sF9eQGfdn7ROXy8EfBugSnZfoTL67KORaSMipCbw7zwh4GX8FIfC
-         wHirEn7BdWoBJzL4GIQ5xCfAM0J9mvd1PLzr9+cdVgY5UcDhQG2TQnKLINk13Pcm6CRe
-         XOL4fWem4bD7yVEAe3AJu8KdDaYvJ5GAJMPDMP7uPsxOzeortooI+FTxDVL1Ri5tni+J
-         L7hA==
+        Mon, 20 Apr 2020 14:08:52 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39927 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726123AbgDTSIw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 14:08:52 -0400
+Received: by mail-oi1-f195.google.com with SMTP id 8so9634849oiy.6;
+        Mon, 20 Apr 2020 11:08:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SN+5NQh5GO88eOTvwunTZ0nqR3Nb9UtRYbfk0MSr7bY=;
-        b=NVXwL89j8es/OEmkH1PFPE4gKsfnjclLnAv6L0vluG8CeRZEvPm+iZvfb090LK4WkX
-         1QMt1HB/PHzBqZoeqUoVeidBIAqhjwxb7/dyusuvLS0c/0PhI+TludT1OXYmhhVwu40I
-         1Kmtv+2osupc1B1+G+kWT06wCcHDUclCnd/l3X82GHLYmyKUb0o8uqURTc16mdlrRKse
-         hndSwOSWxY+IT2Ww7KL1DeW2+q8iy978MWD2e0G9URwINZ5Al8rJTg+TjyaV+zWmLmcW
-         ot+JRu1VeYbxsR2v8hQ8cKYaJ32voa2KokCn9zycl8b+K4xDLmdYExs0jibeWspygpH3
-         Xbgg==
-X-Gm-Message-State: AGi0PubYlFvTxKMsMRkUT78BtGi3nTvo3FmXdmqR1ocDFDYpyKs5amPX
-        v2eUsP9KXS7rD8tiMQh0vHGo4z7S
-X-Google-Smtp-Source: APiQypKalceZVtLrFMB4bapQ/qPhpIz0IoQfWZ4qPleh/uBeWC28RetThiV9xgvcWA+j1JMS/KyVcA==
-X-Received: by 2002:a17:90a:1946:: with SMTP id 6mr789203pjh.42.1587406048026;
-        Mon, 20 Apr 2020 11:07:28 -0700 (PDT)
-Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id e7sm131193pfh.161.2020.04.20.11.07.26
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bc56Dwj1aMPCCpPjifIrG4vj+vUAtSdEB9HyhT4YU10=;
+        b=JWCxFYH+Qa7JgNcVMf+qCit5ViFepz8ox38ZsPfdqKGQbNDToFi+TOcUjye7jhiovH
+         Aj2WYOmhuy6Ws0t9TCLSK+7Wme+L4AUOhyqxGAYKlDTZMYCaMueS0Jqs3eBbYzTzRryg
+         RMBC/XyzXwzDTqLB/qEVE9tc9c2X8LGVIFCVkD/5w82CvqNukmpl29wEjwRSdLz4mWbg
+         BOnY7tUulliNyDVQXRJjHichAiXeK2BrzTjyeQZZYuS8UuNSDJG+hkkCGA+r/UxZbH0s
+         v8LUniz5TNLefFhTy96uFFoekxH4aL2DbRCw3+W8anC5ZiemEwoRE71AB1SF/NyCPF8W
+         e87A==
+X-Gm-Message-State: AGi0PuZ2wBW5u6KZ/ZYZc/mSN4l5vFg/1dtTgvZI8f7znElfaTSIobuy
+        /Act0PtevNKOCuW8T6rhTGvZhGM=
+X-Google-Smtp-Source: APiQypJ9IiQdq0jjyzPfhPrpdcpv8xxH38/RsgpZdDA5tEwK8oJrZwbmWnVs9XuPzOSsG6g8XvCCqw==
+X-Received: by 2002:aca:3284:: with SMTP id y126mr428503oiy.175.1587406131319;
+        Mon, 20 Apr 2020 11:08:51 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u9sm87462otq.54.2020.04.20.11.08.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 11:07:26 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next v3 0/3] dt-bindings: net: mdio.yaml fixes
-Date:   Mon, 20 Apr 2020 11:07:20 -0700
-Message-Id: <20200420180723.27936-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        Mon, 20 Apr 2020 11:08:50 -0700 (PDT)
+Received: (nullmailer pid 32206 invoked by uid 1000);
+        Mon, 20 Apr 2020 18:08:49 -0000
+Date:   Mon, 20 Apr 2020 13:08:49 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] ASoC: dt-bindings: simple-card: switch to yaml base
+ Documentation
+Message-ID: <20200420180849.GA32130@bogus>
+References: <87sghovzwb.wl-kuninori.morimoto.gx@renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87sghovzwb.wl-kuninori.morimoto.gx@renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On 01 Apr 2020 09:00:04 +0900, Kuninori Morimoto wrote:
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> 
+> This patch switches from .txt base to .yaml base Document.
+> 
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> ---
+> v3 -> v4
+> 
+> 	- don't have "clocks" at definitions
+> 	- tidyup comment of "patternProperties"
+> 
+>  .../devicetree/bindings/sound/simple-card.txt      | 351 ---------------
+>  .../devicetree/bindings/sound/simple-card.yaml     | 484 +++++++++++++++++++++
+>  2 files changed, 484 insertions(+), 351 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/simple-card.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/simple-card.yaml
+> 
 
-This patch series documents some common MDIO devices properties such as
-resets (and delays) and broken-turn-around. The second patch also
-rephrases some descriptions to be more general towards MDIO devices and
-not specific towards Ethernet PHYs.
-
-Changes in v3:
-
-- corrected wording of 'broken-turn-around' in ethernet-phy.yaml and
-  mdio.yaml, add Andrew's R-b tag to patch #3
-
-Florian Fainelli (3):
-  dt-bindings: net: Correct description of 'broken-turn-around'
-  dt-bindings: net: mdio: Document common properties
-  dt-bindings: net: mdio: Make descriptions more general
-
- .../devicetree/bindings/net/ethernet-phy.yaml |  3 +-
- .../devicetree/bindings/net/mdio.yaml         | 38 ++++++++++++++++---
- 2 files changed, 35 insertions(+), 6 deletions(-)
-
--- 
-2.19.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
