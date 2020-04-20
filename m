@@ -2,218 +2,127 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AC9C3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 04:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE03AC3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 05:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2858020679
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 04:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF24B2078C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 05:38:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QTdCHYpB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726012AbgDTE1X (ORCPT
+        id S1726050AbgDTFiK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 00:27:23 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:55108 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgDTE1X (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 00:27:23 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id A29FE2027885;
-        Mon, 20 Apr 2020 12:27:20 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id gEj8tLI4wYQ1; Mon, 20 Apr 2020 12:27:20 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 863572027883;
-        Mon, 20 Apr 2020 12:27:20 +0800 (HKT)
-Received: from armhf2.gtsys.com.hk (unknown [10.128.4.15])
-        by s01.gtsys.com.hk (Postfix) with ESMTP id 802C6C01F9E;
-        Mon, 20 Apr 2020 12:27:20 +0800 (HKT)
-Received: by armhf2.gtsys.com.hk (Postfix, from userid 1000)
-        id 7A4E0201602; Mon, 20 Apr 2020 12:27:20 +0800 (HKT)
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     devicetree@vger.kernel.org,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Steve Winslow <swinslow@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 3/3] iio/dac: convert ltc2632.txt to lltc,ltc2632.yaml
-Date:   Mon, 20 Apr 2020 12:26:08 +0800
-Message-Id: <20200420042612.27752-4-chris.ruehl@gtsys.com.hk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200420042612.27752-1-chris.ruehl@gtsys.com.hk>
-References: <20200420042612.27752-1-chris.ruehl@gtsys.com.hk>
+        Mon, 20 Apr 2020 01:38:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgDTFiJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 01:38:09 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3042C061A0C
+        for <devicetree@vger.kernel.org>; Sun, 19 Apr 2020 22:38:09 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id b8so4415377pfp.8
+        for <devicetree@vger.kernel.org>; Sun, 19 Apr 2020 22:38:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vXuywTNcLCyXfTRCxE+/gbb1J166gbMzJgknZr7hvR8=;
+        b=QTdCHYpBWRjtP0C4ZMM3bnQLyxnOq96YEAJGGD0d78YRbQeZQT8OnZbNZjwnEzHua8
+         Vknv71fXdd2Qj/rQK+wRt2jNvPa+0uPEzUFlczgphZpuDNvlkG7/dplzSHE2CU69xi0m
+         bkQKbkS5Tzf8EOz35CSAlzVUmEhuOyaRiwsG4m+/8TzyHaxfZYNtaTaTfx95Vhrr9o4K
+         UHqadDGzSpBfM5Ovg60skbf0nxGNBNltrwpLNRqkmDU3jd8mEo7yUpfX7C+JxrX/d8Nl
+         sU1BQCPyQFK5NcKr0MmerpWTLfhcomYPEp1wvxvjU+vXG8+X49UAHFUA6vVH+eMdQHsf
+         YcgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vXuywTNcLCyXfTRCxE+/gbb1J166gbMzJgknZr7hvR8=;
+        b=YvvgacWkcMqpzuQ4E0JtTj4I7IXZ09ZuQOP+xVID0PN41TfhDCbonyih4FT9MHahoj
+         wpOhNhAedKbr5f6CRtz5l2NXwA5yZHZaln2cRsbEqGt6vJGI5AWwIznEsvap0dudVK+C
+         7AEE/Or6UBZfkWkoKLF0KX4geg1geat5TPCNXllZndSyFRKA8T8KRKuLPWqc5WGNpqqG
+         yW9nGh0MW392BpnsZB9+M8MHbWXgUjXaW7iuvZ4AA0pOatef9Ty2CQ8Pr3gRzbHYorrj
+         cHCEspvSKft8yiE69XKfLw+Siic3NbLF0vIsRm1FmpCPvLMEiydjR1sGUGiSyGK/Pl3K
+         bGYA==
+X-Gm-Message-State: AGi0PuZaI/2syMJrs7Bk2yKe42Yw4/LPrVo0qTvoFAt1rUix3tFsbwHD
+        xQOUPxkho/mULCFColVg+qSG8YpvL5A=
+X-Google-Smtp-Source: APiQypKbM9MWn5psD/g3DSNrwZ2q4sHKh/sP1sgRu/OJZVr7IHFEztIdXYyLOc0WGGxhnqioUWIZ2w==
+X-Received: by 2002:aa7:9a84:: with SMTP id w4mr15363759pfi.111.1587361089160;
+        Sun, 19 Apr 2020 22:38:09 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id c80sm12136004pfb.82.2020.04.19.22.38.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Apr 2020 22:38:08 -0700 (PDT)
+Date:   Sun, 19 Apr 2020 22:38:31 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, evgreen@chromium.org,
+        ohad@wizery.com, mka@chromium.org, dianders@chromium.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/5] dt-bindings: remoteproc: qcom: Add SC7180 MPSS
+ support
+Message-ID: <20200420053831.GG1516868@builder.lan>
+References: <20200417142605.28885-1-sibis@codeaurora.org>
+ <20200417142605.28885-2-sibis@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417142605.28885-2-sibis@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Conversion of the ltc2632 to yaml format and name the file 'lltc,ltc2632.yaml'.
+On Fri 17 Apr 07:26 PDT 2020, Sibi Sankar wrote:
 
-Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
----
-v5:
-correct require section
-set maintainer of analog.com
-v4..v2: no change
+> Add MPSS PAS support for SC7180 SoCs.
+> 
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 
- .../bindings/iio/dac/lltc,ltc2632.yaml        | 76 +++++++++++++++++++
- .../devicetree/bindings/iio/dac/ltc2632.txt   | 49 ------------
- 2 files changed, 76 insertions(+), 49 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
- delete mode 100644 Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-diff --git a/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml b/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
-new file mode 100644
-index 000000000000..b0043144fbc4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
-@@ -0,0 +1,76 @@
-+# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/iio/dac/lltc,ltc2632.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Linear Technology LTC263x 12-/10-/8-Bit Rail-to-Rail DAC
-+
-+maintainers:
-+  - Michael Hennerich <michael.hennerich@analog.com>
-+
-+description: |
-+  Bindings for the Linear Technology LTC2632/2634/2636 DAC
-+  Datasheet can be found here: https://www.analog.com/media/en/technical-documentation/data-sheets/LTC263[246].pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - lltc,ltc2632-l12
-+      - lltc,ltc2632-l10
-+      - lltc,ltc2632-l8
-+      - lltc,ltc2632-h12
-+      - lltc,ltc2632-h10
-+      - lltc,ltc2632-h8
-+      - lltc,ltc2634-l12
-+      - lltc,ltc2634-l10
-+      - lltc,ltc2634-l8
-+      - lltc,ltc2634-h12
-+      - lltc,ltc2634-h10
-+      - lltc,ltc2634-h8
-+      - lltc,ltc2636-l12
-+      - lltc,ltc2636-l10
-+      - lltc,ltc2636-l8
-+      - lltc,ltc2636-h12
-+      - lltc,ltc2636-h10
-+      - lltc,ltc2636-h8
-+
-+  reg:
-+    maxItems: 1
-+
-+  spi-max-frequency:
-+    maximum: 2000000
-+
-+  vref-supply:
-+    description:
-+	  Phandle to the external reference voltage supply. This should
-+      only be set if there is an external reference voltage connected to the VREF
-+      pin. If the property is not set the internal reference is used.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    vref: regulator-vref {
-+        compatible = "regulator-fixed";
-+        regulator-name = "vref-ltc2632";
-+        regulator-min-microvolt = <1250000>;
-+        regulator-max-microvolt = <1250000>;
-+        regulator-always-on;
-+    };
-+
-+    spi_master {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      dac: ltc2632@0 {
-+        compatible = "lltc,ltc2632";
-+        reg = <0>;    /* CS0 */
-+        spi-max-frequency = <1000000>;
-+        vref-supply = <&vref>;
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-deleted file mode 100644
-index 1ab9570cf219..000000000000
---- a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-+++ /dev/null
-@@ -1,49 +0,0 @@
--Linear Technology LTC2632/2634/2636 DAC
--
--Required properties:
-- - compatible: Has to contain one of the following:
--	lltc,ltc2632-l12
--	lltc,ltc2632-l10
--	lltc,ltc2632-l8
--	lltc,ltc2632-h12
--	lltc,ltc2632-h10
--	lltc,ltc2632-h8
--	lltc,ltc2634-l12
--	lltc,ltc2634-l10
--	lltc,ltc2634-l8
--	lltc,ltc2634-h12
--	lltc,ltc2634-h10
--	lltc,ltc2634-h8
--	lltc,ltc2636-l12
--	lltc,ltc2636-l10
--	lltc,ltc2636-l8
--	lltc,ltc2636-h12
--	lltc,ltc2636-h10
--	lltc,ltc2636-h8
--
--Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
--apply. In particular, "reg" and "spi-max-frequency" properties must be given.
--
--Optional properties:
--	- vref-supply: Phandle to the external reference voltage supply. This should
--	  only be set if there is an external reference voltage connected to the VREF
--	  pin. If the property is not set the internal reference is used.
--
--Example:
--
--	vref: regulator-vref {
--		compatible = "regulator-fixed";
--		regulator-name = "vref-ltc2632";
--		regulator-min-microvolt = <1250000>;
--		regulator-max-microvolt = <1250000>;
--		regulator-always-on;
--	};
--
--	spi_master {
--		dac: ltc2632@0 {
--			compatible = "lltc,ltc2632-l12";
--			reg = <0>; /* CS0 */
--			spi-max-frequency = <1000000>;
--			vref-supply = <&vref>; /* optional */
--		};
--	};
--- 
-2.20.1
+Regards,
+Bjorn
 
+> ---
+>  Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> index 9938918b2fea3..22604d2cd3f87 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> @@ -15,6 +15,7 @@ on the Qualcomm ADSP Hexagon core.
+>  		    "qcom,qcs404-adsp-pas"
+>  		    "qcom,qcs404-cdsp-pas"
+>  		    "qcom,qcs404-wcss-pas"
+> +		    "qcom,sc7180-mpss-pas"
+>  		    "qcom,sdm845-adsp-pas"
+>  		    "qcom,sdm845-cdsp-pas"
+>  		    "qcom,sm8150-adsp-pas"
+> @@ -46,6 +47,7 @@ on the Qualcomm ADSP Hexagon core.
+>  	qcom,sm8150-slpi-pas:
+>  		    must be "wdog", "fatal", "ready", "handover", "stop-ack"
+>  	qcom,qcs404-wcss-pas:
+> +	qcom,sc7180-mpss-pas:
+>  	qcom,sm8150-mpss-pas:
+>  		    must be "wdog", "fatal", "ready", "handover", "stop-ack",
+>  		    "shutdown-ack"
+> @@ -106,6 +108,7 @@ on the Qualcomm ADSP Hexagon core.
+>  	qcom,sm8150-adsp-pas:
+>  	qcom,sm8150-cdsp-pas:
+>  		    must be "cx", "load_state"
+> +	qcom,sc7180-mpss-pas:
+>  	qcom,sm8150-mpss-pas:
+>  		    must be "cx", "load_state", "mss"
+>  	qcom,sm8150-slpi-pas:
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
