@@ -2,177 +2,138 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B24C3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 12:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 907D4C3A5A0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 13:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA23A206DD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 12:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 685F3206DD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 13:00:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="t/XOmMYQ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OdaLG8aC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J1pZLH7j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbgDTM7Y (ORCPT
+        id S1729754AbgDTNA3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 08:59:24 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:54075 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728078AbgDTM7X (ORCPT
+        Mon, 20 Apr 2020 09:00:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728852AbgDTNA2 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 08:59:23 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 0B0C52F2;
-        Mon, 20 Apr 2020 08:59:21 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Mon, 20 Apr 2020 08:59:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=Z4Tx++3ZiTnOn+3/RNXgeV13mzY
-        czYnd6hnaCAv6DxU=; b=t/XOmMYQJv7YFcnsTVIYHEhbPvHuvMrvIfpfUglv4yC
-        pWRgDVBdxfzJQvjsLV3/ksnCZuLGab+iKs3XRDR5Wf1hrdrZ88Dfqh0SkXBFyZ7b
-        WNVVbJyvnA7CQQSjuif+8TL1QyCy1B0RSEFakcGubek2nG4RhqfNd3BbBURm2ghI
-        3P7jcJZhpc9zMe3fLpD4Up6dqujQuCXg1Kru3v+GonZ+rrj4PIMTVLXJ7DLUqAEh
-        85boYT4Jx2Ohe/zEr6luqckz5gDU9cy2ZrAnExq5bl3Wd4j6tES3mvR17EHPCM6T
-        svYYepcg4yI2CEbyhv92+LhlwtPUke+gJT52TRzEo/Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Z4Tx++
-        3ZiTnOn+3/RNXgeV13mzYczYnd6hnaCAv6DxU=; b=OdaLG8aCJmXh7rG4CSRUqF
-        4FiigsUn6otSH2vWMkFc3CpVemP3dEXEWL0I1QywaZdTOpNnFnYqDeBqN11fJG1o
-        smoQJpBGP0A8GzHLwhRNJ7XNNdycXXHoyTPwNOh3FuHK+u9UlhKcI8fi9T7SM7zV
-        Se39pa61EkaACX5uO1ggA0+WIwOybGH9kH9BWZtpBh9XSrUaWZvNbp7ViE9nCRNo
-        wsneUcvbVXTq2Nzb5QByxvmUbI6tRLKVy5IpluocEtPbVOPPUWdImDhhzPoxPYk5
-        H5rNF/zJ3x6uw3+L4hNBeG35HXYmQWi+RkgY0sknv+G2Khr1KwdpK2hyDrJnxwlw
-        ==
-X-ME-Sender: <xms:qZydXkWOP9VFnj_bMXgrmtEhJk5Yxl6WycU11XNhdDyXkH1vEgdnNA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeefgdehkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:qZydXs2GooQrliKtdJGCuEaQlJe6YIXOVxqh8NP2GgxkxH-C9wPiKw>
-    <xmx:qZydXjaA9koIQRTh0YItL0TdRxY7pbBKFhtm_hxVx_qmi89LcDfw7w>
-    <xmx:qZydXnok7HbV5kG-bom49qpFyTDPsN0jpV5A-t-B-YJGBsNgq_Lvxw>
-    <xmx:qZydXhnAID3tdIYtMuaKHVCA1Y7TScwjZCevTJjvL_5OEtOnmGkwaQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CB79C3065C16;
-        Mon, 20 Apr 2020 08:59:20 -0400 (EDT)
-Date:   Mon, 20 Apr 2020 14:59:19 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Priit Laes <plaes@plaes.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 4/4] ARM: dts: sun7i: Use syscon-based implementation for
- gmac
-Message-ID: <20200420125919.3bqosps7nzwvmasn@gilmour.lan>
-References: <20200417221730.555954-1-plaes@plaes.org>
- <20200417221730.555954-5-plaes@plaes.org>
+        Mon, 20 Apr 2020 09:00:28 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01D78C061A0C;
+        Mon, 20 Apr 2020 06:00:27 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j2so12012403wrs.9;
+        Mon, 20 Apr 2020 06:00:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nA+q8I/QCJJpzTmNvaZndgqzrDAqaSzjE9lI/zFuMMo=;
+        b=J1pZLH7jiM9RNOk7oB7BKZmvRNCbTg6BvjNDXBpp8O9eS47usYikJH7/+sU9jRSkQu
+         HqrKLZzlKB5GQZ9tqg3bZBaRk3u/CRxL6DXN6fL3FZWX9w2kD2W0JUMtPqWzHNoZjk08
+         0DRwUJz5HIi0yi0GZdcKJmNec6PmJFBC6RacArimIPtYgG35HiaWyEWHO82I9QHWObZo
+         uSNXgeAUTfAr4OoqToEZC3Pf2DPl60BnHA3iAI/4dapAVvhWz+3IjHJAIX8Yz8Nx3zeR
+         WsS2rV2e/LQb59Y9P9ZU9MpzxrqirNnpMaSpckFiddg/Ni+0dC5aILDWfIAAXeRnqn3D
+         Cvkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nA+q8I/QCJJpzTmNvaZndgqzrDAqaSzjE9lI/zFuMMo=;
+        b=l9ObYvuzgHoRSXuV5Hj2ZRIw6HFMkTKrPiQM8NDvKrMZ328iyAsI31HLNNSmqDUlDk
+         RflZ5GCoftE18Fd61pOjeXupzHuQjX6xjSxprZ895j5dIyYYxMOidYCtQJ87CTLmEvVa
+         BVEWdsjHKoq3hcLMrZDlVqQ4JFcOtM2XMZOu6TE2ai2o1hoDB4B29LFcfTFPEjOO84Zu
+         zfKgLGdTy9p/RWNUxoZiE8uGaVfyPYjU/6467vfHw+fCSDPMcSnaT80mG+K7CwQdPkg8
+         z/iB3i18hpRPDhPc7bwyKrZyO+u9CIns/wD5WU2UD2c7mu0KBCAChh0l/hKTGRt1ldDm
+         ZvrA==
+X-Gm-Message-State: AGi0PuaO/iranV7c/59E67GHN03UqBAE68K60wgJ/ZUPtqvQyQxLjA7P
+        PUNA+0Gt0VrhsaBhJajqIhQ=
+X-Google-Smtp-Source: APiQypKWtajRaAihejjMnSgeuLK9Lb250Fvr22I0sXmuCCWb67XU6IJ3wY/PMSswrb5+edDhyjx5hw==
+X-Received: by 2002:a5d:6847:: with SMTP id o7mr18776336wrw.83.1587387625601;
+        Mon, 20 Apr 2020 06:00:25 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0:4e7:1fdd:b7c2:b3ab])
+        by smtp.gmail.com with ESMTPSA id e11sm1081680wrn.87.2020.04.20.06.00.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 06:00:24 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v5 1/9] arm64: dts: allwinner: h6: Add clock to CPU cores
+Date:   Mon, 20 Apr 2020 15:00:13 +0200
+Message-Id: <20200420130021.3841-2-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200420130021.3841-1-peron.clem@gmail.com>
+References: <20200420130021.3841-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lxwfdky4v247xqnt"
-Content-Disposition: inline
-In-Reply-To: <20200417221730.555954-5-plaes@plaes.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Yangtao Li <tiny.windzz@gmail.com>
 
---lxwfdky4v247xqnt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The ARM CPU cores are fed by the CPU clock from the CCU. Add a
+reference to the clock for each CPU core, along with the clock
+transition latency.
 
-On Sat, Apr 18, 2020 at 01:17:30AM +0300, Priit Laes wrote:
-> Use syscon-based approach to access gmac clock configuration
-> register, instead of relying on a custom clock driver.
->=20
-> As a bonus, we can now drop the custom clock implementation
-> and dummy clocks making sun7i fully CCU-compatible.
->=20
-> Signed-off-by: Priit Laes <plaes@plaes.org>
-> ---
->  arch/arm/boot/dts/sun7i-a20.dtsi | 36 +++-----------------------------
->  1 file changed, 3 insertions(+), 33 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a=
-20.dtsi
-> index ffe1d10a1a84..750962a94fad 100644
-> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
-> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-> @@ -219,37 +219,6 @@ osc32k: clk-32k {
->  			clock-frequency =3D <32768>;
->  			clock-output-names =3D "osc32k";
->  		};
-> -
-> -		/*
-> -		 * The following two are dummy clocks, placeholders
-> -		 * used in the gmac_tx clock. The gmac driver will
-> -		 * choose one parent depending on the PHY interface
-> -		 * mode, using clk_set_rate auto-reparenting.
-> -		 *
-> -		 * The actual TX clock rate is not controlled by the
-> -		 * gmac_tx clock.
-> -		 */
-> -		mii_phy_tx_clk: clk-mii-phy-tx {
-> -			#clock-cells =3D <0>;
-> -			compatible =3D "fixed-clock";
-> -			clock-frequency =3D <25000000>;
-> -			clock-output-names =3D "mii_phy_tx";
-> -		};
-> -
-> -		gmac_int_tx_clk: clk-gmac-int-tx {
-> -			#clock-cells =3D <0>;
-> -			compatible =3D "fixed-clock";
-> -			clock-frequency =3D <125000000>;
-> -			clock-output-names =3D "gmac_int_tx";
-> -		};
-> -
-> -		gmac_tx_clk: clk@1c20164 {
-> -			#clock-cells =3D <0>;
-> -			compatible =3D "allwinner,sun7i-a20-gmac-clk";
-> -			reg =3D <0x01c20164 0x4>;
-> -			clocks =3D <&mii_phy_tx_clk>, <&gmac_int_tx_clk>;
-> -			clock-output-names =3D "gmac_tx";
-> -		};
->  	};
-> =20
-> =20
-> @@ -1511,11 +1480,12 @@ mali: gpu@1c40000 {
-> =20
->  		gmac: ethernet@1c50000 {
->  			compatible =3D "allwinner,sun7i-a20-gmac";
-> +			syscon =3D <&ccu>;
->  			reg =3D <0x01c50000 0x10000>;
->  			interrupts =3D <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
->  			interrupt-names =3D "macirq";
-> -			clocks =3D <&ccu CLK_AHB_GMAC>, <&gmac_tx_clk>;
-> -			clock-names =3D "stmmaceth", "allwinner_gmac_tx";
-> +			clocks =3D <&ccu CLK_AHB_GMAC>;
-> +			clock-names =3D "stmmaceth";
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-I guess you also need to update the binding so that it considers it valid?
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index a5ee68388bd3..370e77b86fe1 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -25,6 +25,8 @@
+ 			device_type = "cpu";
+ 			reg = <0>;
+ 			enable-method = "psci";
++			clocks = <&ccu CLK_CPUX>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 
+ 		cpu1: cpu@1 {
+@@ -32,6 +34,8 @@
+ 			device_type = "cpu";
+ 			reg = <1>;
+ 			enable-method = "psci";
++			clocks = <&ccu CLK_CPUX>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 
+ 		cpu2: cpu@2 {
+@@ -39,6 +43,8 @@
+ 			device_type = "cpu";
+ 			reg = <2>;
+ 			enable-method = "psci";
++			clocks = <&ccu CLK_CPUX>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 
+ 		cpu3: cpu@3 {
+@@ -46,6 +52,8 @@
+ 			device_type = "cpu";
+ 			reg = <3>;
+ 			enable-method = "psci";
++			clocks = <&ccu CLK_CPUX>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 	};
+ 
+-- 
+2.20.1
 
-Maxime
-
---lxwfdky4v247xqnt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXp2cpwAKCRDj7w1vZxhR
-xV8eAPwMjpw8ngiA7+PMTh3y1+0bYmvhl8gwYCzmS3VzAT3r4QEAhXCLgzR7Iy1z
-EImQYxxDHoP0F/irj6QPAyoSRxOrswc=
-=URSt
------END PGP SIGNATURE-----
-
---lxwfdky4v247xqnt--
