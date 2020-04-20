@@ -2,276 +2,164 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0B6C55182
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 22:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBB7C54FCC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 22:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 831F7206DD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 22:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19854205C9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 22:38:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="NRS0c1VG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qwz8/nr5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbgDTW17 (ORCPT
+        id S1726181AbgDTWic (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 18:27:59 -0400
-Received: from mail-dm6nam10on2054.outbound.protection.outlook.com ([40.107.93.54]:39602
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727066AbgDTW16 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 18:27:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UpiLRtsGTaFzZMAvAd3OqcelqpDNI2JfyyenhKJzKXg7AtATanVxzsMpSfv67q/wnfxIirwcBjXPE53JYuUrRxA2ZlZXW0ItWvCgSotpUre4o2TUYU0j+VK8w4f2IMaQ7Rhlrbp5VlD5xWrUVitT1PiAzK+b6VQ/1fmX2DIOLEg7QAAI7M/iyTjj9r2u0m1AoiR/QGCuxJGF5AfwLnS8/QoYrHOysq3LmixyEfPzTHI7D3YeAQx641DRWKPla9tsOSG8/lOCVDhvEZZJJR4NWKaYKEckH4DSdtz3x7JQeFmTCBsMZb9eXQu1FEc2nopD4kxLJ37J13VZdiq60t+ywA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Uf62ckIJXUHEvdiJURQrlEdK1oQIW9gQCt5kukF+r1g=;
- b=Tg9N3C5qo13Wncoohdy2tYVGhq+Cp6csBGGaKLcVQbz7OH2zOI5WmrYuTmFAcTU4upavCqf0KXDaND449Sdz7vjAw3WyomcR/c1RkveCilWx2QI4iTMr0iRCXdQuKlXYm4VlNaoU1C0fQevcOu5R/jHpBw1vOXCyqOxlpLzJ077KryTuBMCA7iCZ2FOSB3r1DZBzuNFDU1fUV0Yrwm2OWxSuFl6LZ4zZNe69VOciE++YTY5474lFNbY1yaFPht6flq6n8vIH/D+lFuhhWmAsA6S6C91yZMlKnynXHa5Cy6ZlR5BgaLDY479vLTNwNsaAofzF3eCifTgyXuu+ngdGgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Mon, 20 Apr 2020 18:38:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbgDTWic (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 18:38:32 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1FA3C061A0C
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 15:38:31 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id s202so10365445oih.3
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 15:38:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Uf62ckIJXUHEvdiJURQrlEdK1oQIW9gQCt5kukF+r1g=;
- b=NRS0c1VGRkqZ/oH8jfak6BfriATjSxc/dnfDmGj9og2MxILRTLzA8FlnL97c/VGJ2K2rwd46n51SuClGv/F4b8IVak35cFIMjZbTIopLuuUISqGOJJU1/aTFw4AMGxEOas0HlAp0LuSP64bHXubzxYQHVrORGWAXwVExMZZxEY4=
-Received: from CY1PR03CA0018.namprd03.prod.outlook.com (2603:10b6:600::28) by
- CY4PR02MB2200.namprd02.prod.outlook.com (2603:10b6:903:13::17) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2921.27; Mon, 20 Apr 2020 22:27:20 +0000
-Received: from CY1NAM02FT039.eop-nam02.prod.protection.outlook.com
- (2603:10b6:600:0:cafe::e2) by CY1PR03CA0018.outlook.office365.com
- (2603:10b6:600::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend
- Transport; Mon, 20 Apr 2020 22:27:19 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT039.mail.protection.outlook.com (10.152.75.140) with Microsoft SMTP
- Server id 15.20.2921.25 via Frontend Transport; Mon, 20 Apr 2020 22:27:19
- +0000
-Received: from [149.199.38.66] (port=33649 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <ben.levinsky@xilinx.com>)
-        id 1jQers-0000Sd-2d; Mon, 20 Apr 2020 15:26:20 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <ben.levinsky@xilinx.com>)
-        id 1jQesp-0008OD-7k; Mon, 20 Apr 2020 15:27:19 -0700
-Received: from xsj-pvapsmtp01 (smtp3.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 03KMR9gB006358;
-        Mon, 20 Apr 2020 15:27:09 -0700
-Received: from [172.19.2.206] (helo=xsjblevinsk50.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <ben.levinsky@xilinx.com>)
-        id 1jQesf-0008MN-Cr; Mon, 20 Apr 2020 15:27:09 -0700
-From:   Ben Levinsky <ben.levinsky@xilinx.com>
-To:     ohad@wizery.com, bjorn.andersson@linaro.org,
-        michal.simek@xilinx.com, jollys@xilinx.com, rajan.vaja@xilinx.com,
-        robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jason Wu <j.wu@xilinx.com>,
-        Wendy Liang <jliang@xilinx.com>
-Subject: [PATCH v3 4/5] dt-bindings: remoteproc: Add documentation for ZynqMP R5 rproc bindings
-Date:   Mon, 20 Apr 2020 15:27:08 -0700
-Message-Id: <1587421629-914-5-git-send-email-ben.levinsky@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587421629-914-1-git-send-email-ben.levinsky@xilinx.com>
-References: <1587421629-914-1-git-send-email-ben.levinsky@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(136003)(346002)(39860400002)(396003)(46966005)(7696005)(9786002)(82740400003)(54906003)(356005)(4326008)(81166007)(81156014)(8676002)(44832011)(478600001)(336012)(2906002)(426003)(8936002)(107886003)(26005)(36756003)(2616005)(5660300002)(316002)(47076004)(70206006)(186003)(70586007);DIR:OUT;SFP:1101;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tqYg6ntkQ0k1GeM/P7oYOBS8jSkjVtqvvJulIoVkKiM=;
+        b=qwz8/nr5QucNjlHATqW9FL6h37kLUiDAM6dAkwSyUVvKHTH+CaeQglYUw9of9Nj/z3
+         xsEFNBcLPrY6BVm0w2eVW+vAd0NuE3MgW/KuVwUelG4Kxq3oBpzYp+ki+lK6cWAWlYoY
+         BgEXbx09x4ia97ZGfEYlmbTuttJjMWJdWGCcK79SYrAVDfMATttQPvhJWng5Fp9d9BNY
+         pC0znJHuBdB5MhWQOsrJ0b9NCX8jxP4/qJKcnRrh30nCYOiq1dwcbX7FBFxCG4kmDwna
+         ih8cSxzfaCfZLU/wDR6ebyxVMDFfFPYTV1c6PlpF2/EYAgAQ3YGA8QX0c6bvOcdpvmil
+         +Kog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tqYg6ntkQ0k1GeM/P7oYOBS8jSkjVtqvvJulIoVkKiM=;
+        b=lkJyrj4YEE4PwBSOis0HIiY/+pr6DTbwZIorh0AFdTcrL7G3DTKlqtNRf2hmrEKqy5
+         58DBfT/LOt4wmy4FsCW8WfksIEDg3BrK+fAXzWUM+PwCj/lJ0e76OaN2MN9ypCTb3vC8
+         qj3legml9EvvvvBjnEiX7iYA61CdzxrGZ3ADOXD/q2A83WNypanAmT54pxEkDq/qfjY9
+         BotcQtKySYljfd4I9oHAjJpXNEgS8yzxj9RusIW9sHwMJJfgTXyPfXnGxuY5DaAYtO2L
+         sGbQj2fFrnwqC8NSd0gJvnOcUJQgfmgtt6uQlFroQ25vEj8NyJmv7SuTEUqEKvBatC8o
+         duPQ==
+X-Gm-Message-State: AGi0PuZzI6/4EjHEBSL6+P1ehgvLIgla3gDAMyohkkh5lD+ZUhUy8AFc
+        vqoeDiANzkC3fIOqTC4eLbxMya/mK1Fot3yUzWFR3w==
+X-Google-Smtp-Source: APiQypLhshDKGKzPG2/FUFOcpcMmXm5mKm0h4rRpZd/H1AvaVthcwyaU7iTZW2bPIGE9obKIx5h2rI+JvNTiDoMcMkI=
+X-Received: by 2002:aca:5251:: with SMTP id g78mr1246189oib.172.1587422311105;
+ Mon, 20 Apr 2020 15:38:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6d557720-a012-4628-f616-08d7e579fd0d
-X-MS-TrafficTypeDiagnostic: CY4PR02MB2200:
-X-Microsoft-Antispam-PRVS: <CY4PR02MB220032FFE142FC005092FFCEB5D40@CY4PR02MB2200.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 03793408BA
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0+NuoUunW2uRGnL3iyTuz6jbCLoDtLF9Vsh4FpRWP/4cxuuXaklFymDsK7q4AIb99/HUCm2731CmPSXt9V4NBk7wq965OAzpSSvJp4RQyE338oz0Kx2b+rGM/uVdoc7NTqJL4J4IjMp2O7yzvvcB+K3o/pfIVev9PHltBeZbxmvzAExDGwJCGXt0y/e8MgAvUWmny9dFijebN5MChzNqSUAaGUK7isAyXdJGTili02k0/TRXwfy7dhESwjizZ5Rn8uQC/+1GK1uhCTfWb1CfcdYx0Tvs01iLdlvJGz5NkRlvr9MGQ/FtMXqqNBzG1u5hOYA0MP4KtFVILy2Hc4IJNNAnEH2ifwIRpctd6ZQjEAHkg6dBLxrVhAAcyoR2w5RtUa2o7VTqKhxMUEEyAU9d/o34hMLABvzmH6j4sZjJDfTXHPe4FbILyoAOL6MdPhpgObSAStnDH2C+F9+cbYZrFDp5TOJa6NLtBMBUZYxbYYOeH/ozqdh2TRbsUNsab1hnDW6OgQcPCyeUqHEfcY35z+opA6Wtl+rnnEJVNbOW+n1uthnPIyNvgBQ57xZtel+oBvWJzC801lGQhLtOXBhZFg==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2020 22:27:19.5448
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6d557720-a012-4628-f616-08d7e579fd0d
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB2200
+References: <20200417165442.1856-1-nsaenzjulienne@suse.de> <500e8c46a9b411aed03965b6f9130ccde457193d.camel@suse.de>
+ <CAGETcx8EJiLSV8jzrusim6EvyVvX4H8ANvZaJwO72G1=iS-N2Q@mail.gmail.com> <1363207183f599732f8bb9c97624886df42ced13.camel@suse.de>
+In-Reply-To: <1363207183f599732f8bb9c97624886df42ced13.camel@suse.de>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 20 Apr 2020 15:37:54 -0700
+Message-ID: <CAGETcx-9VbdgNUUstbrGzoAA=4s+EPCznG9LrDoj+Gz-C5g__A@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] of: property: fw_devlink misc fixes
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add binding for ZynqMP R5 OpenAMP.
+On Mon, Apr 20, 2020 at 4:29 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> Hi Saravana,
+>
+> On Fri, 2020-04-17 at 13:55 -0700, Saravana Kannan wrote:
+> > On Fri, Apr 17, 2020 at 11:06 AM Nicolas Saenz Julienne
+> > <nsaenzjulienne@suse.de> wrote:
+> > > Hi Saravana,
+> > >
+> > > On Fri, 2020-04-17 at 18:54 +0200, Nicolas Saenz Julienne wrote:
+> > > > As I'm interested in using this feature to fine-tune Raspberry Pi 4's
+> > > > device probe dependencies, I tried to get the board to boot with
+> > > > fw_devlink=on. As of today's linux-next the board won't boot with that
+> > > > option. I tried to address the underlying issues.
+> > > >
+> > >
+> > > On a semi-related topic, have you looked at vendor specific properties? most
+> > > of
+> > > them create a consumer/supplier relationship, it'd be nice to be able to
+> > > take
+> > > those ones into account as well.
+> >
+> > I'm on the wall about that. If we take every vendor specific property,
+> > this file will explode. Not sure I want to do that.
+> >
+> > Also, we haven't even finished all the generic bindings. I'm just
+> > adding bindings as I get familiar with each of them and I test them on
+> > hardware I have lying around before sending it out. So, there's where
+> > my focus is right now wrt fw_devlink and DT.
+> >
+> > I wonder how many of the vendor specific properties do very similar
+> > things and got in over time. Maybe they can be made generic? What one
+> > did you have in mind?
+>
+> Well, long story short, we need to create a relationship between RPi4's PCI bus
+> (which hangs from an interconnect in DT) and RPi4's co-processor, which has a
+> highly unconventional firmware driver (raspberrypi.c in drivers/firmware). The
+> PCI bus just needs the co-processor interface to be up before probing,
 
-Represent the RPU domain resources in one device node. Each RPU
-processor is a subnode of the top RPU domain node.
+I'm guessing it still works fine today by doing a deferred probe and
+you are just trying to avoid having to do a deferred probe? I haven't
+kept track of RPi4's upstream support status.
 
-Signed-off-by: Ben Levinsky <ben.levinsky@xilinx.com>
-Signed-off-by: Jason Wu <j.wu@xilinx.com>
-Signed-off-by: Wendy Liang <jliang@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
-Changes since v2:
-	- update zynqmp_r5 yaml parsing to not raise warnings for extra
-	 information in children of R5 node. The warning "node has a unit
-	 name, but no reg or ranges property" will still be raised though 
-	 as this particular node is needed to describe the
-	 '#address-cells' and '#size-cells' information.
----
- .../remoteproc/xilinx,zynqmp-r5-remoteproc.yaml    | 126 +++++++++++++++++++++
- 1 file changed, 126 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml
+> that's
+> all (I'll spare you the details of why). Ideally we want to avoid adding
+> platform specific code into an otherwise generic bus driver as it'll be used by
+> a number of unrelated SoCs, and it's generally frowned upon.
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml b/Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml
-new file mode 100644
-index 0000000..e7d1496
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml
-@@ -0,0 +1,126 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Xilinx R5 remote processor controller bindings
-+
-+description:
-+  This document defines the binding for the remoteproc component that loads and
-+  boots firmwares on the Xilinx Zynqmp and Versal family chipset.
-+
-+maintainers:
-+  - Ed Mooring <ed.mooring@xilinx.com>
-+  - Ben Levinsky <ben.levinsky@xilinx.com>
-+
-+properties:
-+  compatible:
-+    const: "xlnx,zynqmp-r5-remoteproc-1.0"
-+
-+  core_conf:
-+    description:
-+      R5 core configuration (valid string - split or lock-step)
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      Interrupt mapping for remoteproc IPI. It is required if the
-+      user uses the remoteproc driver with the RPMsg kernel driver.
-+    maxItems: 6
-+
-+  memory-region:
-+    maxItems: 4
-+    minItems: 4
-+  pnode-id:
-+    maxItems: 1
-+  mboxes:
-+    maxItems: 2
-+  mbox-names:
-+    maxItems: 2
-+
-+  r5@0:
-+    type: object
-+    required:
-+        - '#address-cells'
-+        - '#size-cells'
-+        - pnode-id
-+examples:
-+  - |
-+     reserved-memory {
-+          #address-cells = <1>;
-+          #size-cells = <1>;
-+          ranges;
-+          rpu0vdev0vring0: rpu0vdev0vring0@3ed40000 {
-+               no-map;
-+               reg = <0x3ed40000 0x4000>;
-+          };
-+          rpu0vdev0vring1: rpu0vdev0vring1@3ed44000 {
-+               no-map;
-+               reg = <0x3ed44000 0x4000>;
-+          };
-+          rpu0vdev0buffer: rpu0vdev0buffer@3ed48000 {
-+               no-map;
-+               reg = <0x3ed48000 0x100000>;
-+          };
-+          rproc_0_reserved: rproc@3ed000000 {
-+               no-map;
-+               reg = <0x3ed00000 0x40000>;
-+          };
-+     };
-+     rpu: rpu@ff9a0000 {
-+          compatible = "xlnx,zynqmp-r5-remoteproc-1.0";
-+          #address-cells = <1>;
-+          #size-cells = <1>;
-+          ranges;
-+          core_conf = "split";
-+          reg = <0xFF9A0000 0x10000>;
-+          r5_0: r5@0 {
-+               ranges;
-+               #address-cells = <1>;
-+               #size-cells = <1>;
-+               memory-region = <&rproc_0_reserved>, <&rpu0vdev0buffer>, <&rpu0vdev0vring0>, <&rpu0vdev0vring1>;
-+               pnode-id = <0x7>;
-+               mboxes = <&ipi_mailbox_rpu0 0>, <&ipi_mailbox_rpu0 1>;
-+               mbox-names = "tx", "rx";
-+               tcm_0_a: tcm_0@0 {
-+                    #address-cells = <1>;
-+                    #size-cells = <1>;
-+                    reg = <0xFFE00000 0x10000>;
-+                    pnode-id = <0xf>;
-+               };
-+               tcm_0_b: tcm_0@1 {
-+                    #address-cells = <2>;
-+                    #size-cells = <2>;
-+                    reg = <0xFFE20000 0x10000>;
-+                    pnode-id = <0x10>;
-+               };
-+          };
-+     };
-+
-+
-+     zynqmp_ipi1 {
-+          compatible = "xlnx,zynqmp-ipi-mailbox";
-+          interrupt-parent = <&gic>;
-+          interrupts = <0 29 4>;
-+          xlnx,ipi-id = <7>;
-+          #address-cells = <1>;
-+          #size-cells = <1>;
-+          ranges;
-+
-+          /* APU<->RPU0 IPI mailbox controller */
-+          ipi_mailbox_rpu0: mailbox@ff90000 {
-+               reg = <0xff990600 0x20>,
-+                     <0xff990620 0x20>,
-+                     <0xff9900c0 0x20>,
-+                     <0xff9900e0 0x20>;
-+               reg-names = "local_request_region",
-+                        "local_response_region",
-+                        "remote_request_region",
-+                        "remote_response_region";
-+               #mbox-cells = <1>;
-+               xlnx,ipi-id = <1>;
-+          };
-+     };
-+
-+...
--- 
-2.7.4
+Which PCI driver is that specifically (I'm sure I can dig around to
+find RPi4's DT and figure it out, but it's easier to just ask :) ) ?
+Also, can you point me to the DT and the nodes that we are talking
+about here (the PCI and the firmware nodes)?
 
+> There is no generic property to handle this case, and it's very unlikely there
+> will ever be one, since these firmware drivers have very little in common. I
+> guess this could make an argument for a generic _last resort only_
+> 'supplied-by' property, but I bet this solution won't be very popular.
+
+Ha, this was my initial idea for the whole fw_devlink feature. I
+called it depends-on. Rob/Frank convinced me to instead just parse the
+existing bindings -- which was definitely the right call. Otherwise DT
+would have been a mess. Adding support for "depends-on" for one off
+use cases might still be a touchy topic. I myself am on the wall. It's
+useful for some rare cases, but it's also very easy to abuse.
+
+> Another idea that comes to mind for vendor specific properties would be
+> exporting a macro in the lines of "DEFINE_SIMPLE_PROP()" for supplier drivers
+> to define custom properties. The parse_prop() callbacks could then be added
+> into a special section for of/property.c to pickup and parse. The good thing is
+> that the list length would be limited by the kernel configuration and the
+> maintenance burden moved to the driver authors, at least to some extent.
+
+I did think about this option too sometime back, but not too keen on
+that -- at least at this point. Mostly because there are other issues
+I want to resolve first and want to get their design right before
+getting to hand off property parsing to other drivers/files.
+
+> Anyway, if something comes to mind to solve RPi4's situation feel free to
+> propose anything :).
+
+I'll let you know if I do. I'm not sure I fully understand the issue
+though. I don't think you are trying to avoid deferred probes because
+you aren't trying to improve boot time. I'm guessing the PCI bus
+driver in question has no way to know when to defer the probe, in this
+case you are trying to fix?
+
+-Saravana
