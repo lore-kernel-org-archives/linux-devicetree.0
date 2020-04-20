@@ -2,105 +2,143 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BF1C3A5A0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 229B8C3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B92672082E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32342078A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:29:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725865AbgDTLWr (ORCPT
+        id S1725886AbgDTL3L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:22:47 -0400
-Received: from lnfm1.sai.msu.ru ([93.180.26.255]:50684 "EHLO lnfm1.sai.msu.ru"
+        Mon, 20 Apr 2020 07:29:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50212 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbgDTLWq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 07:22:46 -0400
-X-Greylist: delayed 868 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Apr 2020 07:22:44 EDT
-Received: from dragon.sai.msu.ru (dragon.sai.msu.ru [93.180.26.172])
-        by lnfm1.sai.msu.ru (8.14.1/8.12.8) with ESMTP id 03KB7Z7j031036;
-        Mon, 20 Apr 2020 14:07:40 +0300
-Received: from oak.local (unknown [188.123.231.136])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client did not present a certificate)
-        by dragon.sai.msu.ru (Postfix) with ESMTPSA id 8DFB349CC;
-        Mon, 20 Apr 2020 14:07:36 +0300 (MSK)
-From:   "Matwey V. Kornilov" <matwey@sai.msu.ru>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/ZYNQ
-        ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Cc:     matwey.kornilov@gmail.com,
-        "Matwey V. Kornilov" <matwey@sai.msu.ru>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/ZYNQ
-        ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ARM: dts: zynq: Fix ethernet PHY for v5 schematics
-Date:   Mon, 20 Apr 2020 14:07:15 +0300
-Message-Id: <20200420110715.12032-1-matwey@sai.msu.ru>
-X-Mailer: git-send-email 2.25.0
+        id S1725550AbgDTL3L (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Apr 2020 07:29:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 232B4AD10;
+        Mon, 20 Apr 2020 11:29:07 +0000 (UTC)
+Message-ID: <1363207183f599732f8bb9c97624886df42ced13.camel@suse.de>
+Subject: Re: [PATCH v2 0/2] of: property: fw_devlink misc fixes
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Mon, 20 Apr 2020 13:29:07 +0200
+In-Reply-To: <CAGETcx8EJiLSV8jzrusim6EvyVvX4H8ANvZaJwO72G1=iS-N2Q@mail.gmail.com>
+References: <20200417165442.1856-1-nsaenzjulienne@suse.de>
+         <500e8c46a9b411aed03965b6f9130ccde457193d.camel@suse.de>
+         <CAGETcx8EJiLSV8jzrusim6EvyVvX4H8ANvZaJwO72G1=iS-N2Q@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-oWRQfEBEikL1V8VWHXq/"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There are at least two different versions existing for MYIR Zturn:
 
- * v4 schematics has Atheros AR8035 PHY at 0b000
-     http://www.myirtech.com/download/Zynq7000/Z-TURNBOARD_schematic.pdf
- * v5 schematics has Micrel KSZ9031 PHY at 0b011
-     v5 schematics available at DVD disk supplied with the board
+--=-oWRQfEBEikL1V8VWHXq/
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Specify both PHYs to make ethernet interface working for any board
-revision. This commit relies on of_mdiobus_register() behaviour.
+Hi Saravana,
 
-Before the patch:
+On Fri, 2020-04-17 at 13:55 -0700, Saravana Kannan wrote:
+> On Fri, Apr 17, 2020 at 11:06 AM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+> > Hi Saravana,
+> >=20
+> > On Fri, 2020-04-17 at 18:54 +0200, Nicolas Saenz Julienne wrote:
+> > > As I'm interested in using this feature to fine-tune Raspberry Pi 4's
+> > > device probe dependencies, I tried to get the board to boot with
+> > > fw_devlink=3Don. As of today's linux-next the board won't boot with t=
+hat
+> > > option. I tried to address the underlying issues.
+> > >=20
+> >=20
+> > On a semi-related topic, have you looked at vendor specific properties?=
+ most
+> > of
+> > them create a consumer/supplier relationship, it'd be nice to be able t=
+o
+> > take
+> > those ones into account as well.
+>=20
+> I'm on the wall about that. If we take every vendor specific property,
+> this file will explode. Not sure I want to do that.
+>=20
+> Also, we haven't even finished all the generic bindings. I'm just
+> adding bindings as I get familiar with each of them and I test them on
+> hardware I have lying around before sending it out. So, there's where
+> my focus is right now wrt fw_devlink and DT.
+>=20
+> I wonder how many of the vendor specific properties do very similar
+> things and got in over time. Maybe they can be made generic? What one
+> did you have in mind?
 
-[   28.295002] macb e000b000.ethernet eth0: Could not attach PHY (-19)
+Well, long story short, we need to create a relationship between RPi4's PCI=
+ bus
+(which hangs from an interconnect in DT) and RPi4's co-processor, which has=
+ a
+highly unconventional firmware driver (raspberrypi.c in drivers/firmware). =
+The
+PCI bus just needs the co-processor interface to be up before probing, that=
+'s
+all (I'll spare you the details of why). Ideally we want to avoid adding
+platform specific code into an otherwise generic bus driver as it'll be use=
+d by
+a number of unrelated SoCs, and it's generally frowned upon.
 
-After the patch:
+There is no generic property to handle this case, and it's very unlikely th=
+ere
+will ever be one, since these firmware drivers have very little in common. =
+I
+guess this could make an argument for a generic _last resort only_
+'supplied-by' property, but I bet this solution won't be very popular.
 
-[   28.257365] macb e000b000.ethernet eth0: PHY [e000b000.ethernet-ffffffff:00] driver [Micrel KSZ9031 Gigabit PHY] (irq=POLL)
-[   28.257384] macb e000b000.ethernet eth0: configuring for phy/rgmii-id link mode
+Another idea that comes to mind for vendor specific properties would be
+exporting a macro in the lines of "DEFINE_SIMPLE_PROP()" for supplier drive=
+rs
+to define custom properties. The parse_prop() callbacks could then be added
+into a special section for of/property.c to pickup and parse. The good thin=
+g is
+that the list length would be limited by the kernel configuration and the
+maintenance burden moved to the driver authors, at least to some extent.
 
-Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
----
- arch/arm/boot/dts/zynq-zturn.dts | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+Anyway, if something comes to mind to solve RPi4's situation feel free to
+propose anything :).
 
-diff --git a/arch/arm/boot/dts/zynq-zturn.dts b/arch/arm/boot/dts/zynq-zturn.dts
-index 5ec616ebca08..07da9cf60d02 100644
---- a/arch/arm/boot/dts/zynq-zturn.dts
-+++ b/arch/arm/boot/dts/zynq-zturn.dts
-@@ -67,10 +67,17 @@
- &gem0 {
- 	status = "okay";
- 	phy-mode = "rgmii-id";
--	phy-handle = <&ethernet_phy>;
- 
--	ethernet_phy: ethernet-phy@0 {
--		reg = <0x0>;
-+	ethernet-phy@0 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <0>;
-+		max-speed = <1000>;
-+	};
-+
-+	ethernet-phy@3 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <3>;
-+		max-speed = <1000>;
- 	};
- };
- 
--- 
-2.16.4
+Regards,
+Nicolas
+
+
+--=-oWRQfEBEikL1V8VWHXq/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6dh4MACgkQlfZmHno8
+x/6bsQf+O9/wGDiM9jWmJgS5CcfOYfH+LH2Pu1Crp928ANt4oh7OZwBu3hsW3o/1
+cWJ/89Juu3aftIrOPq3bsjJFDxefCwntesJgEhWhrN56uUubPxd0BPKgDqnSDMFo
+Di4NAxqU8xRY2CYcd0vTxh0BUzRxKvNLNfs6RT3sha6GJ5HslboaGpE5Xk+g76HM
++RidyiUiHbjgOnwyM0FwTh83v/vd3V+gTtWN7OASShlAug5GR01WEWYlbWBbo6G6
+Y+cXuBIPm1ksbMHQa3v6LJeO8VDbVv51FfyTb43NmOMDRMdLwtXBiaGEiEIY/joi
+R9iEQAs27JwLsFUFyIHsJnNbbn3e9w==
+=spL2
+-----END PGP SIGNATURE-----
+
+--=-oWRQfEBEikL1V8VWHXq/--
 
