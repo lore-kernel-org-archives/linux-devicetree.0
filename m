@@ -2,123 +2,105 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0424C3A5A0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA54C54FCF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA8EA21744
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 979AC214AF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:42:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587382979;
+	bh=uiGDNn21ZzO0ngRUvSHDTG9522PC8OVG9j/n2nD43Vo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jU4J6VdW0w2itUSyq0Tf8h+BhK0ky66VtEwVFIiptPT4r7mWgRlMfzLDjKxW9Y3gP
+	 MbN5jB11lmrghSGNsA9na+kCHq9roQyCfH7rD/abXtHvfSnKxSx2hVViFYWWYhjb2y
+	 bmMnJk3Diyopslo4FYdNgDWVxsrcsAfsalxvqF8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbgDTLmc (ORCPT
+        id S1726363AbgDTLm7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:42:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:46866 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbgDTLmc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 07:42:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 545301FB;
-        Mon, 20 Apr 2020 04:42:31 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2846D3F237;
-        Mon, 20 Apr 2020 04:42:30 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 12:42:25 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     zhang.lyra@gmail.com
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: Re: [RFC PATCH v1 1/2] cpuidle: allow idle state to be found as
- deepest state for s2idle only
-Message-ID: <20200420114222.GA14343@lakrids.cambridge.arm.com>
-References: <20200413070014.12960-1-zhang.lyra@gmail.com>
- <20200413070014.12960-2-zhang.lyra@gmail.com>
+        Mon, 20 Apr 2020 07:42:59 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:41597 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726683AbgDTLm6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 07:42:58 -0400
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 03KBgUqa024901
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 20:42:31 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 03KBgUqa024901
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587382951;
+        bh=wpHlG59NrpmylHg++7oVcwvUegStYdRpAQFZPV/R1iM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZKqHLe2wK+l0LBzCFG7uF32lXn42CntUbr01uWqBu+/+UFqF2DIPeRfWw1ZVI7uK7
+         D7rTf32mhAAjeib/wZsGwM7a2Zk2YkxdcRDPjm0FTChe8BQxq6pJEfMFqB78OmatkO
+         YtBfWhxhUbtRvOL+WADozp7ulFwSDBEczdHl6khQ1ENZp3ZNdeYh6mN8TvrSfsYaWS
+         y6kKPNtCTLD6OIXHBZ5ROBT8Ddg5DVh5+Ntrg4DtcoMcwhxfnFGXTUwfPrvzd2iYpA
+         GMFm/gfHiozC3aP7I2bFdLm2kaXFPEAwcvJcsWXLyjV9gLASmXovP7SRZNGY75hX62
+         ML22gTZOa8rVQ==
+X-Nifty-SrcIP: [209.85.217.51]
+Received: by mail-vs1-f51.google.com with SMTP id y185so5723125vsy.8
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 04:42:31 -0700 (PDT)
+X-Gm-Message-State: AGi0Pub5vrULz99H0Xwam/dj2FQlhS4eCGXtR9irhRtUBjyH0aEXxoTE
+        aFZRB6SNYdejSgjIKFy2eYibTFB/dKNAbi+mCgE=
+X-Google-Smtp-Source: APiQypLGcXw1QZowAFEn8/HXUY3sqwFcCNVgXq9MCi1nmyDCjNpOdp6pgxeiM2T89p0QI/GbM8UTSZ+u4xsrrcq76iE=
+X-Received: by 2002:a67:e94d:: with SMTP id p13mr8172980vso.215.1587382949616;
+ Mon, 20 Apr 2020 04:42:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413070014.12960-2-zhang.lyra@gmail.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+References: <158737719165.27947.6617937231903079086.stgit@localhost>
+ <20200420190749.b508c7e6d60a8203360178ec@linaro.org> <CAK7LNAQtTPLdKN8cz842gvoS36GVQvk2ztahGp8XWoW3C8BzQg@mail.gmail.com>
+In-Reply-To: <CAK7LNAQtTPLdKN8cz842gvoS36GVQvk2ztahGp8XWoW3C8BzQg@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 20 Apr 2020 20:41:53 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATJy=J-GLJL7O5oaMWk5C46ATmxL6FgorNwn+541=HeFg@mail.gmail.com>
+Message-ID: <CAK7LNATJy=J-GLJL7O5oaMWk5C46ATmxL6FgorNwn+541=HeFg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] arm64: dts: uniphier: Add support for Akebi96
+To:     Masami Hiramatsu <masami.hiramatsu@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>, DTML <devicetree@vger.kernel.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 03:00:13PM +0800, zhang.lyra@gmail.com wrote:
-> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> 
-> Add a new flag CPUIDLE_FLAG_S2IDLE to allow c-state to be found as
-> deepest state for s2idle only, so that users can add a new c-state
-> for using s2idle and don't worry disturbing other use cases such as
-> play_idle() which probably don't want to enter into so much deep
-> idle state since devices are not suspended for that kind of cases.
+Hiramatsu-san,
 
-Can you please elaborate on this?
+On Mon, Apr 20, 2020 at 8:15 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> On Mon, Apr 20, 2020 at 7:08 PM Masami Hiramatsu
+> <masami.hiramatsu@linaro.org> wrote:
+> >
+> > Add the device tree for Akebi96. Akebi96 is a 96boards certified
+> > development board based on UniPhir LD20.
+> > ( https://www.96boards.org/product/akebi96/ )
+> >
+> > This board has;
+> > - MAX3421 USB-SPI chip on SPI port3 (for USB gadget port)
+> > - Simple frame buffer with 1080p fixed resolution.
+> > - I2S port which is connected to aout1b instead of aout1.
+> > - 3 serial ports, only serial3 has CTS/RTS.
+> > - No NAND, only eMMC on the board.
+> > - OP-TEE support.
+>
+>
 
-Why exactly are these states not suited for regular cpu idle? What
-problems do they cause? e.g. long wakeup latency?
 
-The flag and the for-s2-idle-only DT property are encoding a policy
-rarher than a property, and as such I don't think this is the right way
-to describe this in the DT. However, if there might be porperties of the
-idle state that we could describe so that the OS can come to the same
-conclusion.
 
-Thanks,
-Mark.
+> Lastly, is the pin-setting "aout1", "aout1b" correct ?
 
-> 
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> ---
->  drivers/cpuidle/cpuidle.c        | 3 ++-
->  drivers/cpuidle/dt_idle_states.c | 3 +++
->  include/linux/cpuidle.h          | 1 +
->  3 files changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-> index de81298051b3..bb61f0c271d2 100644
-> --- a/drivers/cpuidle/cpuidle.c
-> +++ b/drivers/cpuidle/cpuidle.c
-> @@ -89,7 +89,8 @@ static int find_deepest_state(struct cpuidle_driver *drv,
->  		    s->exit_latency_ns <= latency_req ||
->  		    s->exit_latency_ns > max_latency_ns ||
->  		    (s->flags & forbidden_flags) ||
-> -		    (s2idle && !s->enter_s2idle))
-> +		    (s2idle && !s->enter_s2idle) ||
-> +		    (!s2idle && (s->flags & CPUIDLE_FLAG_S2ILDE)))
->  			continue;
->  
->  		latency_req = s->exit_latency_ns;
-> diff --git a/drivers/cpuidle/dt_idle_states.c b/drivers/cpuidle/dt_idle_states.c
-> index 252f2a9686a6..530db2726c05 100644
-> --- a/drivers/cpuidle/dt_idle_states.c
-> +++ b/drivers/cpuidle/dt_idle_states.c
-> @@ -80,6 +80,9 @@ static int init_state_node(struct cpuidle_state *idle_state,
->  	idle_state->flags = 0;
->  	if (of_property_read_bool(state_node, "local-timer-stop"))
->  		idle_state->flags |= CPUIDLE_FLAG_TIMER_STOP;
-> +
-> +	if (of_property_read_bool(state_node, "for-s2idle-only"))
-> +		idle_state->flags |= CPUIDLE_FLAG_S2ILDE;
->  	/*
->  	 * TODO:
->  	 *	replace with kstrdup and pointer assignment when name
-> diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-> index ec2ef63771f0..08da701f74cd 100644
-> --- a/include/linux/cpuidle.h
-> +++ b/include/linux/cpuidle.h
-> @@ -78,6 +78,7 @@ struct cpuidle_state {
->  #define CPUIDLE_FLAG_TIMER_STOP BIT(2) /* timer is stopped on this state */
->  #define CPUIDLE_FLAG_UNUSABLE	BIT(3) /* avoid using this state */
->  #define CPUIDLE_FLAG_OFF	BIT(4) /* disable this state by default */
-> +#define CPUIDLE_FLAG_S2ILDE	BIT(5) /* state is used for s2idle only */
->  
->  struct cpuidle_device_kobj;
->  struct cpuidle_state_kobj;
-> -- 
-> 2.20.1
-> 
+
+I am not sure if I understood this code correctly, but
+there are two ports "aout1" and "aout1b"
+outputting the same audio, is this correct?
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
