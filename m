@@ -2,140 +2,212 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D33E6C3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C24D8C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B270620735
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A081D2078E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 11:15:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z69BlBZc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbgDTLGy (ORCPT
+        id S1725775AbgDTLP1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 07:06:54 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48182 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbgDTLGx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 07:06:53 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E80452A0C6A;
-        Mon, 20 Apr 2020 12:06:50 +0100 (BST)
-Date:   Mon, 20 Apr 2020 13:06:21 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh R <vigneshr@ti.com>, Arnd Bergmann <arnd@arndb.de>,
-        Brendan Higgins <brendanhiggins@google.com>,
+        Mon, 20 Apr 2020 07:15:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726117AbgDTLP0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Apr 2020 07:15:26 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BEDFC061A0F
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 04:15:26 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id b11so11613119wrs.6
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 04:15:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=4uCgchzEKUbGCjVb5ErPQQvp7VtDEqWO3rkjRlf6Z0c=;
+        b=Z69BlBZc3+yIjY+OiSNwt8bsyBI0gsYDwMfdiucsDa5C+MKP/wOJquAOhh0jY8LvP8
+         DrypNHoQ8098wugctLVFMem6rV1KysE9rL4PQbw9dgV9IX4vzDo8vaR3IolrnwdZnlue
+         oiYWMkYalyjVcjm2bEgoiKKZoPYWWSYOSW2mlfPKPx+R10IJHuVAXZKI+CMv1NXjZwBe
+         4ApmE0F3A3wQai4D9aDrDuXakAc3roQsOINa7eE95IHRnzDQ2WMpJIYitHW849I7SOu2
+         /WgTnsClHrd3yTWNDwW+tMRpyK1PDxfZIy/Qi+no+uSblRgwH6XmDdXWWcVSG1+c8QGu
+         WI1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=4uCgchzEKUbGCjVb5ErPQQvp7VtDEqWO3rkjRlf6Z0c=;
+        b=oYuQ+G3VWH9mscfcQ5Ry17BBAzidjrfdeZ8DrIQ9I/bHXTmQkvYYAWQTwaPoznZ7xl
+         LtbFIeCmloe5qXE99UGeJ1rVZPyQAivRiYh579VmpMFK5ZFD5h/6q5dGkBjhOj6zqGDu
+         ck0zi5OChpi8Y1Zp6/5MRQmDR3uf2GodZhNTH/vNL2VIXeySlrQu9Lrgad2WqzUppwre
+         9L5wLqKSDoDEAMGKDi96cscV8swQcZgYw5FWajCrdEJTfK7xWQ5eGVeEipJzrLSG9tyY
+         s0Srdnk40CDaQ17vzxrB68CHCE849sskhki/Xqg/qs+5LPwBV/M4IzJhAWDXSvJAkDYx
+         REag==
+X-Gm-Message-State: AGi0PuZXJFAhQBJMIvXDdVr8G7YPSffq9RoF62oNveOHy5jHvbqWSvJF
+        3Jjmc3vg48OIAOh3GBCekkI+iQ==
+X-Google-Smtp-Source: APiQypJhmbeviPbiHBjSOOZlAdECJVyeKqJZLm8MMiKHA1YJPMBCV2InSlX2aY5iSqxkecD8aYWnaQ==
+X-Received: by 2002:a5d:5147:: with SMTP id u7mr17746146wrt.290.1587381324902;
+        Mon, 20 Apr 2020 04:15:24 -0700 (PDT)
+Received: from dell ([95.149.164.107])
+        by smtp.gmail.com with ESMTPSA id q143sm969035wme.31.2020.04.20.04.15.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 04:15:24 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 12:15:22 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-kernel@vger.kernel.org,
+        Richard Fontana <rfontana@redhat.com>,
+        linux-rtc@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Ran Bi <ran.bi@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        masonccyang@mxic.com.tw, piotrs@cadence.com,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        "hauke.mehrtens" <hauke.mehrtens@intel.com>, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com
-Subject: Re: [PATCH v2 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200420130621.165c8d7f@collabora.com>
-In-Reply-To: <20200420104128.GL185537@smile.fi.intel.com>
-References: <20200417082147.43384-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200417082147.43384-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200418105533.477ce529@collabora.com>
-        <20200419222040.GJ185537@smile.fi.intel.com>
-        <20200420111754.5863324b@collabora.com>
-        <CAHp75VeOH+DC362tsEo13gr9fJpeCHXok=7O19B3njbxCOzd2A@mail.gmail.com>
-        <20200420115256.3a0ff647@collabora.com>
-        <CAHp75Vfp_WYNR8kHVsSVumGzuVbGEGpAjfXVvJAV7t6zXXY+HA@mail.gmail.com>
-        <20200420122859.2a210268@collabora.com>
-        <20200420104128.GL185537@smile.fi.intel.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Eddie Huang <eddie.huang@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Josef Friedl <josef.friedl@speed.at>,
+        srv_heupstream@mediatek.com, Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v12 1/6] mfd: mt6397: Modify suspend/resume behavior
+Message-ID: <20200420111522.GB3612@dell>
+References: <1586333531-21641-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1586333531-21641-2-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <20200416084910.GX2167633@dell>
+ <1587379959.6297.2.camel@mtksdaap41>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1587379959.6297.2.camel@mtksdaap41>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 20 Apr 2020 13:41:28 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+On Mon, 20 Apr 2020, Hsin-hsiung Wang wrote:
 
-> On Mon, Apr 20, 2020 at 12:28:59PM +0200, Boris Brezillon wrote:
-> > On Mon, 20 Apr 2020 13:14:42 +0300
-> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:  
-> > > On Mon, Apr 20, 2020 at 12:53 PM Boris Brezillon
-> > > <boris.brezillon@collabora.com> wrote:  
-> > > > On Mon, 20 Apr 2020 12:44:51 +0300
-> > > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:  
-> > > > > On Mon, Apr 20, 2020 at 12:21 PM Boris Brezillon
-> > > > > <boris.brezillon@collabora.com> wrote:    
-> > > > > > On Mon, 20 Apr 2020 01:20:40 +0300
-> > > > > > Andy Shevchenko <andriy.shevchenko@intel.com> wrote:    
-> > > > > > > On Sat, Apr 18, 2020 at 10:55:33AM +0200, Boris Brezillon wrote:    
-> > > > > > > > On Fri, 17 Apr 2020 16:21:47 +0800
-> > > > > > > > "Ramuthevar,Vadivel MuruganX"
-> > > > > > > > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:  
+> Hi,
 > 
-> ...
-> 
-> > > > > > > > > +static const struct of_device_id lgm_nand_match[] = {
-> > > > > > > > > + { .compatible = "intel,lgm-nand", },
-> > > > > > > > > + {}
-> > > > > > > > > +};
-> > > > > > > > > +MODULE_DEVICE_TABLE(of, lgm_nand_match);    
-> > > > > > > >
-> > > > > > > > You probably have a missing "depends on OF" in your Kconfig.    
-> > > > > > >
-> > > > > > > Since it's using device property API, dependency is not needed.
-> > > > > > >    
-> > > > > >
-> > > > > > There's no compile-time dependency, but this driver will be pretty
-> > > > > > useless if all its users have the NAND controller node defined in their
-> > > > > > DT and CONFIG_OF is not enabled.    
-> > > > >
-> > > > > No, it's not.
-> > > > > See [1] for the details how ACPI may utilize this table.
-> > > > >
-> > > > > [1]: https://www.kernel.org/doc/html/latest/firmware-guide/acpi/enumeration.html#device-tree-namespace-link-device-id    
-> > > >
-> > > > Except the NAND framework does use the OF lib when parsing common DT
-> > > > properties (like nand-ecc-mode, etc), so it does depend on OF if you
-> > > > want those props to be parsed, which, according to the DT binding patch,
-> > > > is the case.    
-> > > 
-> > > I see, so, NAND framework can be transformed at some point. In any
-> > > case, from driver perspective it's OF independent.
-> > >   
+> On Thu, 2020-04-16 at 09:49 +0100, Lee Jones wrote:
+> > On Wed, 08 Apr 2020, Hsin-Hsiung Wang wrote:
 > > 
-> > Well, it uses it only if the driver passes an OF node which this driver
-> > does (see the nand_set_flash_node() call), so no, it's really a driver
-> > dependency.  
+> > > Some pmics don't need backup interrupt settings, so we change to use
+> > > pm notifier for the pmics which are necessary to store settings.
+> > > 
+> > > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> > > ---
+> > >  drivers/mfd/mt6397-core.c       | 30 ------------------------------
+> > >  drivers/mfd/mt6397-irq.c        | 35 ++++++++++++++++++++++++++++++++++-
+> > >  include/linux/mfd/mt6397/core.h |  2 ++
+> > >  3 files changed, 36 insertions(+), 31 deletions(-)
+> > > 
+> > > diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+> > > index 0437c85..d2e70d8 100644
+> > > --- a/drivers/mfd/mt6397-core.c
+> > > +++ b/drivers/mfd/mt6397-core.c
+> > > @@ -100,35 +100,6 @@ static const struct mfd_cell mt6397_devs[] = {
+> > >  	}
+> > >  };
+> > >  
+> > > -#ifdef CONFIG_PM_SLEEP
+> > > -static int mt6397_irq_suspend(struct device *dev)
+> > > -{
+> > > -	struct mt6397_chip *chip = dev_get_drvdata(dev);
+> > > -
+> > > -	regmap_write(chip->regmap, chip->int_con[0], chip->wake_mask[0]);
+> > > -	regmap_write(chip->regmap, chip->int_con[1], chip->wake_mask[1]);
+> > > -
+> > > -	enable_irq_wake(chip->irq);
+> > > -
+> > > -	return 0;
+> > > -}
+> > > -
+> > > -static int mt6397_irq_resume(struct device *dev)
+> > > -{
+> > > -	struct mt6397_chip *chip = dev_get_drvdata(dev);
+> > > -
+> > > -	regmap_write(chip->regmap, chip->int_con[0], chip->irq_masks_cur[0]);
+> > > -	regmap_write(chip->regmap, chip->int_con[1], chip->irq_masks_cur[1]);
+> > > -
+> > > -	disable_irq_wake(chip->irq);
+> > > -
+> > > -	return 0;
+> > > -}
+> > > -#endif
+> > > -
+> > > -static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_irq_suspend,
+> > > -			mt6397_irq_resume);
+> > > -
+> > >  struct chip_data {
+> > >  	u32 cid_addr;
+> > >  	u32 cid_shift;
+> > > @@ -238,7 +209,6 @@ static struct platform_driver mt6397_driver = {
+> > >  	.driver = {
+> > >  		.name = "mt6397",
+> > >  		.of_match_table = of_match_ptr(mt6397_of_match),
+> > > -		.pm = &mt6397_pm_ops,
+> > >  	},
+> > >  	.id_table = mt6397_id,
+> > >  };
+> > > diff --git a/drivers/mfd/mt6397-irq.c b/drivers/mfd/mt6397-irq.c
+> > > index b2d3ce1..2924919 100644
+> > > --- a/drivers/mfd/mt6397-irq.c
+> > > +++ b/drivers/mfd/mt6397-irq.c
+> > > @@ -9,6 +9,7 @@
+> > >  #include <linux/of_irq.h>
+> > >  #include <linux/platform_device.h>
+> > >  #include <linux/regmap.h>
+> > > +#include <linux/suspend.h>
+> > >  #include <linux/mfd/mt6323/core.h>
+> > >  #include <linux/mfd/mt6323/registers.h>
+> > >  #include <linux/mfd/mt6397/core.h>
+> > > @@ -81,7 +82,7 @@ static struct irq_chip mt6397_irq_chip = {
+> > >  static void mt6397_irq_handle_reg(struct mt6397_chip *mt6397, int reg,
+> > >  				  int irqbase)
+> > >  {
+> > > -	unsigned int status;
+> > > +	unsigned int status = 0;
+> > 
+> > This looks like an unrelated change, no?
+> > 
 > 
-> Look like still it's framework dependency which driver has to rely on.
-> Means more work would be needed in case NAND to convert to fwnode API.
+> It is to fix the coverity defect.
+
+Which isn't mentioned in the commit log and doesn't have anything to
+do with this patch.  Thus it should be in a separate patch, but I'm
+not going to lose any sleep over it.
+
+> > >  	int i, irq, ret;
+> > >  
+> > >  	ret = regmap_read(mt6397->regmap, reg, &status);
+> > > @@ -128,6 +129,36 @@ static const struct irq_domain_ops mt6397_irq_domain_ops = {
+> > >  	.map = mt6397_irq_domain_map,
+> > >  };
+> > 
+> > Other than that.
+> > 
+> > For my own reference:
+> >   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> > 
+> Thanks for your review. I will add it in the next version.
 > 
 
-Sorry, but I'm lost here. The patch series contains a DT bindings doc,
-meaning that it's using a DT representation no matter where it comes
-from (the fact that it might be embedded in an ACPI table doesn't
-matter, right?). The framework just provides convenient DT parsing
-helpers, but they are not mandatory since they are only called if the
-NAND is attached a DT node (some drivers extract those info from
-driver-specific pdata structs).
-
-To me, the lack of support of a generic fwnode parsing logic in the
-NAND framework is orthogonal to this "depend on OF" problem, since, no
-matter what abstraction you use to parse the DT node (fwnode would just
-be a wrapper around DT parsing in this specific case), the fact
-remains, for this driver, in its current state, you need OF support to
-make it useful.
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
