@@ -2,211 +2,90 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D23FC38A30
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 17:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AD1C3815B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 17:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0F842145D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 17:02:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587402157;
-	bh=plMzlobQNccyl97bdN7R33bGIDUnUZmwwqOwhihDlNY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tJtIpvk2su/udrGkf7es9kh5yn2Ynd+DnXEMkfnZYRuI5PcGl9MJrsE6v0jxRfv41
-	 i6zU46deX1UQMin+qnJYXkTUjYzZdVmYN81Eowokba8vPw7QTjmxJEZvRz3hV/4FLq
-	 zEpWj+mNMlIbMHUCKXz+EoPELR42JflsWCZN+5Vc=
+	by mail.kernel.org (Postfix) with ESMTP id C4F8022209
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 17:09:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UfHtJ++f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgDTRCc (ORCPT
+        id S1726562AbgDTRJf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 13:02:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38632 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725784AbgDTRCc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 13:02:32 -0400
-Received: from localhost.localdomain (unknown [157.46.94.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60C5D221F4;
-        Mon, 20 Apr 2020 17:02:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587402151;
-        bh=plMzlobQNccyl97bdN7R33bGIDUnUZmwwqOwhihDlNY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SQoDVIQpN/VZy7sDK1aZIiMW9C0CDN9KdUol7rsq1Ba1n7p0dX8xxuWNbXmLsRxwu
-         huLrKf/jlWP46Vm1R0rOK539k1YpaL60iApYRnV8TgECCfppSF4vkCfNXZE0Fve6n6
-         cXHum4o73j41QL2N0V73y4yGVM+3DqG6AqPsHBX8=
-From:   mani@kernel.org
-To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
-Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com, andy.shevchenko@gmail.com,
-        Manivannan Sadhasivam <mani@kernel.org>
-Subject: [PATCH v3 2/2] tty: serial: Add modem control gpio support for STM32 UART
-Date:   Mon, 20 Apr 2020 22:32:04 +0530
-Message-Id: <20200420170204.24541-3-mani@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200420170204.24541-1-mani@kernel.org>
-References: <20200420170204.24541-1-mani@kernel.org>
+        Mon, 20 Apr 2020 13:09:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726296AbgDTRJf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Apr 2020 13:09:35 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABF7EC061A0C;
+        Mon, 20 Apr 2020 10:09:33 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id g6so5354015pgs.9;
+        Mon, 20 Apr 2020 10:09:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oGqtpyrEePYxWV1yvaPlc+oStlhcDZxwsYxCHpPKFI0=;
+        b=UfHtJ++fowlpsq/0H7ghGeV8rsUVqv0/BKPIZZyri5E7/EUQF6XEHFd8K+4c17d4dy
+         C8kRmy/2Bwre7U9WXb+/fkxdvXrkDJ0k1UyyO4TvmpnNEGOh6hAUUD1j8YlYmr8rjf31
+         +NhmspOMowcvfYcKMP6Sk87shhQQRGi+xgjMVz5vKNCeNTLuAdl53ueIdu5nB+k8/xIg
+         gRwW4+04QO4SIh26Fl0uZENFY9Gg7j68ncxGjTQQ2k8DRe7j/oLdUeQOrtX69AxSCCKs
+         NUOo5TqscV/yIfiz5hDozG5ftmE9UJd+spJ2CN+mC+PnBOs+27aEK1DZcsTHIgNEOXhE
+         sDjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oGqtpyrEePYxWV1yvaPlc+oStlhcDZxwsYxCHpPKFI0=;
+        b=cQuW5OEOUc0inDirpTk2oicFqZ588QcLUpeqrjv6aTiZaBhsFl+8lmWwKSaj6+/EMB
+         hmljEv+7Im3KVhvTk4BxLR8JK8X/iEUvJOjMNHBnEOVOt7xZ0vWf7pkTDTMYlhLlAuom
+         xLYAxGqVAFx5ZC4TsKMhFpp1bHoUF7UzgXwDebQAm6aqSbFFwe9EfNyUnsy3Z8zqwY06
+         5qo3rXtKcea6TnjYoDlXoeNsq5oIEa8fPxBkBJVLSqwg4dcqjBcpxZxRS7w1YcwBw9Gh
+         VAf5GQg6qb8gOU7rVnMrIqS9CxyoXk1UqiTa/0CvOeElYF9/kCXt017OVPbJ6pT1QaNz
+         /nSA==
+X-Gm-Message-State: AGi0PuYrgoWopbD+8YtonmyAG3QcDPenzUd2+XSBVEv+AqhNWcW7vEKy
+        CKZibRVWLXdkunj5iKv4nYg=
+X-Google-Smtp-Source: APiQypKonnkcRsFc4iqkPXgRs+P8IPPV2hkS+jqMqm39F08ywnDqrN5ZtBi+f5DH78DIeELtHKG8Bw==
+X-Received: by 2002:a62:58c6:: with SMTP id m189mr17359302pfb.161.1587402572992;
+        Mon, 20 Apr 2020 10:09:32 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id t23sm169730pjq.27.2020.04.20.10.09.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 10:09:32 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 10:09:30 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Jeff LaBundy <jeff@labundy.com>
+Cc:     robh+dt@kernel.org, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] input: misc: Add support for Azoteq IQS269A
+Message-ID: <20200420170930.GO166864@dtor-ws>
+References: <1587340068-2818-1-git-send-email-jeff@labundy.com>
+ <1587340068-2818-2-git-send-email-jeff@labundy.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587340068-2818-2-git-send-email-jeff@labundy.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Manivannan Sadhasivam <mani@kernel.org>
+On Sun, Apr 19, 2020 at 06:47:48PM -0500, Jeff LaBundy wrote:
+> This patch adds support for the Azoteq IQS269A capacitive touch
+> controller.
+> 
+> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
 
-STM32 UART controllers have the built in modem control support using
-dedicated gpios which can be enabled using 'st,hw-flow-ctrl' flag in DT.
-But there might be cases where the board design need to use different
-gpios for modem control.
+This looks good, so just need to get Rob's take on the binding...
 
-For supporting such cases, this commit adds modem control gpio support
-to STM32 UART controller using mctrl_gpio driver.
+Thanks.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
----
- drivers/tty/serial/Kconfig       |  1 +
- drivers/tty/serial/stm32-usart.c | 53 ++++++++++++++++++++++++++++++--
- drivers/tty/serial/stm32-usart.h |  1 +
- 3 files changed, 53 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 0aea76cd67ff..e7a6f2130684 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1462,6 +1462,7 @@ config SERIAL_STM32
- 	tristate "STMicroelectronics STM32 serial port support"
- 	select SERIAL_CORE
- 	depends on ARCH_STM32 || COMPILE_TEST
-+	select SERIAL_MCTRL_GPIO if GPIOLIB
- 	help
- 	  This driver is for the on-chip Serial Controller on
- 	  STMicroelectronics STM32 MCUs.
-diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index 5e93e8d40f59..17c2f3276888 100644
---- a/drivers/tty/serial/stm32-usart.c
-+++ b/drivers/tty/serial/stm32-usart.c
-@@ -31,6 +31,7 @@
- #include <linux/tty_flip.h>
- #include <linux/tty.h>
- 
-+#include "serial_mctrl_gpio.h"
- #include "stm32-usart.h"
- 
- static void stm32_stop_tx(struct uart_port *port);
-@@ -510,12 +511,29 @@ static void stm32_set_mctrl(struct uart_port *port, unsigned int mctrl)
- 		stm32_set_bits(port, ofs->cr3, USART_CR3_RTSE);
- 	else
- 		stm32_clr_bits(port, ofs->cr3, USART_CR3_RTSE);
-+
-+	mctrl_gpio_set(stm32_port->gpios, mctrl);
- }
- 
- static unsigned int stm32_get_mctrl(struct uart_port *port)
- {
-+	struct stm32_port *stm32_port = to_stm32_port(port);
-+	unsigned int ret;
-+
- 	/* This routine is used to get signals of: DCD, DSR, RI, and CTS */
--	return TIOCM_CAR | TIOCM_DSR | TIOCM_CTS;
-+	ret = TIOCM_CAR | TIOCM_DSR | TIOCM_CTS;
-+
-+	return mctrl_gpio_get(stm32_port->gpios, &ret);
-+}
-+
-+static void stm32_enable_ms(struct uart_port *port)
-+{
-+	mctrl_gpio_enable_ms(to_stm32_port(port)->gpios);
-+}
-+
-+static void stm32_disable_ms(struct uart_port *port)
-+{
-+	mctrl_gpio_disable_ms(to_stm32_port(port)->gpios);
- }
- 
- /* Transmit stop */
-@@ -626,6 +644,9 @@ static void stm32_shutdown(struct uart_port *port)
- 	u32 val, isr;
- 	int ret;
- 
-+	/* Disable modem control interrupts */
-+	stm32_disable_ms(port);
-+
- 	val = USART_CR1_TXEIE | USART_CR1_TE;
- 	val |= stm32_port->cr1_irq | USART_CR1_RE;
- 	val |= BIT(cfg->uart_enable_bit);
-@@ -764,6 +785,12 @@ static void stm32_set_termios(struct uart_port *port, struct ktermios *termios,
- 		cr3 |= USART_CR3_CTSE | USART_CR3_RTSE;
- 	}
- 
-+	/* Handle modem control interrupts */
-+	if (UART_ENABLE_MS(port, termios->c_cflag))
-+		stm32_enable_ms(port);
-+	else
-+		stm32_disable_ms(port);
-+
- 	usartdiv = DIV_ROUND_CLOSEST(port->uartclk, baud);
- 
- 	/*
-@@ -898,6 +925,7 @@ static const struct uart_ops stm32_uart_ops = {
- 	.throttle	= stm32_throttle,
- 	.unthrottle	= stm32_unthrottle,
- 	.stop_rx	= stm32_stop_rx,
-+	.enable_ms	= stm32_enable_ms,
- 	.break_ctl	= stm32_break_ctl,
- 	.startup	= stm32_startup,
- 	.shutdown	= stm32_shutdown,
-@@ -960,10 +988,31 @@ static int stm32_init_port(struct stm32_port *stm32port,
- 
- 	stm32port->port.uartclk = clk_get_rate(stm32port->clk);
- 	if (!stm32port->port.uartclk) {
--		clk_disable_unprepare(stm32port->clk);
- 		ret = -EINVAL;
-+		goto err_clk;
-+	}
-+
-+	stm32port->gpios = mctrl_gpio_init(&stm32port->port, 0);
-+	if (IS_ERR(stm32port->gpios)) {
-+		ret = PTR_ERR(stm32port->gpios);
-+		goto err_clk;
- 	}
- 
-+	/* Both CTS/RTS gpios and "st,hw-flow-ctrl" should not be specified */
-+	if (stm32port->hw_flow_control) {
-+		if (mctrl_gpio_to_gpiod(stm32port->gpios, UART_GPIO_CTS) ||
-+		    mctrl_gpio_to_gpiod(stm32port->gpios, UART_GPIO_RTS)) {
-+			dev_err(&pdev->dev, "Conflicting RTS/CTS config\n");
-+			ret = -EINVAL;
-+			goto err_clk;
-+		}
-+	}
-+
-+	return ret;
-+
-+err_clk:
-+	clk_disable_unprepare(stm32port->clk);
-+
- 	return ret;
- }
- 
-diff --git a/drivers/tty/serial/stm32-usart.h b/drivers/tty/serial/stm32-usart.h
-index db8bf0d4982d..d4c916e78d40 100644
---- a/drivers/tty/serial/stm32-usart.h
-+++ b/drivers/tty/serial/stm32-usart.h
-@@ -274,6 +274,7 @@ struct stm32_port {
- 	bool fifoen;
- 	int wakeirq;
- 	int rdr_mask;		/* receive data register mask */
-+	struct mctrl_gpios *gpios; /* modem control gpios */
- };
- 
- static struct stm32_port stm32_ports[STM32_MAX_PORTS];
 -- 
-2.17.1
-
+Dmitry
