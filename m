@@ -2,159 +2,158 @@ Return-Path: <SRS0=uFL0=6E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8289C3815B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 14:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51ABAC3A5A0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 14:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87D7320722
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 14:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31ADB20857
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Apr 2020 14:30:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kJL1QKKg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s0y6D57U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgDTOU7 (ORCPT
+        id S1729436AbgDTOai (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 10:20:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48010 "EHLO
+        Mon, 20 Apr 2020 10:30:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727890AbgDTOU6 (ORCPT
+        by vger.kernel.org with ESMTP id S1729002AbgDTOai (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 10:20:58 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92368C061A0C;
-        Mon, 20 Apr 2020 07:20:57 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id n10so11104469iom.3;
-        Mon, 20 Apr 2020 07:20:57 -0700 (PDT)
+        Mon, 20 Apr 2020 10:30:38 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1784BC061A0C;
+        Mon, 20 Apr 2020 07:30:38 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id x25so11305677wmc.0;
+        Mon, 20 Apr 2020 07:30:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=42ZUa8jWdE/lvIlXQ+IaCeRxAVuDOUkmSNgCJWEQBiU=;
-        b=kJL1QKKg8hZD4dmy5HJBPi0VXJYjon4U+mxBDXd4WLeA6JYTuRShbDcgFt/8qAhDJ8
-         rhuz8FTqtmUpcY+jaHRbFWuI060FieGdJ2QUb68Mg+PQpEK98WRTb0kibVi5zgnECM9+
-         +jlRLVRRL8pAKVXeAnpmHP5alVl+nPALYdy1KwTuzoapeLjW5CAstiYlMJnJlG5phOu/
-         0bXhnSWy4JQx6LFMZ3k23WhI8R2m7fd4Lsif6jOKKvgYEyLOEoGfr+1n1erve7RChDo0
-         3TfmZPREQ7ciNlZQTB+Mxuf54kw7PRPgVIO7Hw83iBXumXo6A74n/Bk1XNawEZXHbTv0
-         adZA==
+        bh=dI1Gh5Ia/IrSE8braqcvjE9iwr/Xeiid7dJ9xFJyCNc=;
+        b=s0y6D57U6WglS20eFoAv4FmLmev5Pg9B16Yk09l/PNX24/97t7ckTkGfYzvlkZw0on
+         YWCUPILmyo+8FpjJxBZzcc+NUZTnFw1aimtyVysHJ+DYOSk/LPP6rsCCD8+bzuAxqk8Z
+         X13V6yNBTptXhlrFhUxIRYyVzRhogVBjBlcHN2AcaRrWxxGAc0WrJ+CO/ACe7Aa9GlX7
+         Fo24zIIdl4k2938F/y1TY9MhT9hU+6VX/MVUxNsby+dE8LyFzKRWDssqYGqDWoOyj1jV
+         SuYn/vAmMHeCtwC5cxI5E7Hz5Lr6TAj3Aj79HmNZpS4fyJOQzDbTef0sKK3lPDhRKPh+
+         T8SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=42ZUa8jWdE/lvIlXQ+IaCeRxAVuDOUkmSNgCJWEQBiU=;
-        b=JnZIOPjZyKkad4buQC2vF+WUywfb3yXtCclv1RIi5SjvOeKyRuEMV3I47QekE0lRn6
-         uaLpiiQATxKBHP0gIsJ2PBjxcT9I7QAiUaK0lrNQRD+xv3abCW4gdf2ZWu8RmE/K2inZ
-         N6C/8XoJvOAFguUqKO47sS7tKrY/Uc9OSib/ATS274RZDvnallK5H096wYsXSwHI8+ut
-         UrlIJcpsBW6KC6Twk3btJJPDQKvODOOksat69KZuvFadkiPtNV3487Q2R4NngUzrgwQD
-         2J2DflDcl5aeCJdgxAQUQmGS7cxzr+phnx1RzzVFkmKyRiR8aLgp6PTJ58hqIDcWUUQ4
-         bYOg==
-X-Gm-Message-State: AGi0PubsQxt9QaYpWED4fHnoDN1Gq8W2OV16JPlptKUgr6kxzNfg5txX
-        aIY+24BIxHO1WTSt9sT645wxeuUQDUcQlQzhIXo=
-X-Google-Smtp-Source: APiQypL0OkJvfEysFH1/EQ62r1/N4+ezRkdGJZS2/B6mM481eEQlfXXpdzcY5DOOq2sqZq3sPyJawscazL2Vh5IS3Og=
-X-Received: by 2002:a5d:9494:: with SMTP id v20mr15827724ioj.101.1587392456788;
- Mon, 20 Apr 2020 07:20:56 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dI1Gh5Ia/IrSE8braqcvjE9iwr/Xeiid7dJ9xFJyCNc=;
+        b=PmRQPW6uXuYCdVTjtpNTBcQr7+o8rH/7v9lmtHJeI821rIg2yP7Mhna6pU20HquPZH
+         fNKBPD4+CRLoNfQ0q8ML16aIKhRYb+JIVNF2Y8b7/P1T3SoUKQ3Tz2GbhoMGvH7b/QLA
+         ODtXBw+VWma2p77YBImxgcx/YzjCw+2KrrNcvVf8k/BKxuBY2ZXoeqFAeCvmJTep4gUY
+         v7RD7cW+eJXxq57UJKH5CwUPrJAQlaR0UCKAvQeNh0PVVSneA7AhmdlX2goyXiR2XEuh
+         Q5fYwOoSHMscaFDGAXaS5NOjYU6xLkk6+U4Erc/AbcADDAw+cWSxG8RdDYgHyLL1I+NX
+         Dtcw==
+X-Gm-Message-State: AGi0Pub0dCIEG0oC+RwLTeRjqe/rznlx4/RwPjuyX40w/L4HZBH7e1Zs
+        KBj2FBiHVgw5cIRvMAGRq9M=
+X-Google-Smtp-Source: APiQypIJnP/ANrM/0Xq5qXboBFie6OC/sX9QxmPufyHRw6vMmOHVbp/Ybowp2RM8T3Rv0+n8ep75gA==
+X-Received: by 2002:a05:600c:1:: with SMTP id g1mr13041186wmc.142.1587393036662;
+        Mon, 20 Apr 2020 07:30:36 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0:554b:e8c8:c8c2:f119])
+        by smtp.gmail.com with ESMTPSA id v1sm1510452wrv.19.2020.04.20.07.30.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 07:30:35 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH] arm64: dts: allwinner: h6: fix cooling-cell property
+Date:   Mon, 20 Apr 2020 16:30:16 +0200
+Message-Id: <20200420143016.16835-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200420130021.3841-1-peron.clem@gmail.com> <20200420130021.3841-3-peron.clem@gmail.com>
- <20200420134604.bkjp66fjiggses7a@core.my.home>
-In-Reply-To: <20200420134604.bkjp66fjiggses7a@core.my.home>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Mon, 20 Apr 2020 16:20:45 +0200
-Message-ID: <CAJiuCcf_-2bSR61goL7vLXGSjNCsUYQ12j2JM3V4MJiSo3srZw@mail.gmail.com>
-Subject: Re: [PATCH v5 2/9] arm64: dts: allwinner: h6: Add thermal trip
- points/cooling map
-To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
-        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Ondrej,
+We define cooling-cells property for CPUs only for board including
+the sun50i-h6-cpu-opp.dtsi. As not all boards have the CPU OPP
+dtsi file included this create a warning because the cooling-maps
+is defined but not the cooling-cells property in CPU nodes.
 
-On Mon, 20 Apr 2020 at 15:46, Ond=C5=99ej Jirman <megous@megous.com> wrote:
->
-> Hi,
->
-> On Mon, Apr 20, 2020 at 03:00:14PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > From: Ondrej Jirman <megous@megous.com>
-> >
-> > This enables passive cooling by down-regulating CPU voltage
-> > and frequency.
->
-> Does this not produce a lot of warnings for you during compilation?
+Move the cooling-cells to the sun50i-h6.dtsi instead of the
+sun50i-h6-cpu-opp.dtsi
 
-I got flooded by lots of warnings, from sun50i-a64, stringray-usb,
-ipq6018 and didn't see but two are from sun50i-h6.
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi | 4 ----
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi         | 4 ++++
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-The #cooling-cells property is missing for CPU.
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi
+index 9ebd97b04b1a..dcb789519797 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi
+@@ -102,20 +102,16 @@
+ 
+ &cpu0 {
+ 	operating-points-v2 = <&cpu_opp_table>;
+-	#cooling-cells = <2>;
+ };
+ 
+ &cpu1 {
+ 	operating-points-v2 = <&cpu_opp_table>;
+-	#cooling-cells = <2>;
+ };
+ 
+ &cpu2 {
+ 	operating-points-v2 = <&cpu_opp_table>;
+-	#cooling-cells = <2>;
+ };
+ 
+ &cpu3 {
+ 	operating-points-v2 = <&cpu_opp_table>;
+-	#cooling-cells = <2>;
+ };
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 83e32f9c4977..2e31632c6ca8 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -27,6 +27,7 @@
+ 			enable-method = "psci";
+ 			clocks = <&ccu CLK_CPUX>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+@@ -36,6 +37,7 @@
+ 			enable-method = "psci";
+ 			clocks = <&ccu CLK_CPUX>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu2: cpu@2 {
+@@ -45,6 +47,7 @@
+ 			enable-method = "psci";
+ 			clocks = <&ccu CLK_CPUX>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu3: cpu@3 {
+@@ -54,6 +57,7 @@
+ 			enable-method = "psci";
+ 			clocks = <&ccu CLK_CPUX>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
++			#cooling-cells = <2>;
+ 		};
+ 	};
+ 
+-- 
+2.20.1
 
-Will send a patch for noticing.
-
-Regard,
-Clement
-
-
-
->
-> regards,
->         o.
->
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 24 ++++++++++++++++++++
-> >  1 file changed, 24 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/=
-boot/dts/allwinner/sun50i-h6.dtsi
-> > index 370e77b86fe1..60da1627772b 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > @@ -964,6 +964,30 @@
-> >                       polling-delay-passive =3D <0>;
-> >                       polling-delay =3D <0>;
-> >                       thermal-sensors =3D <&ths 0>;
-> > +
-> > +                     trips {
-> > +                             cpu_alert: cpu-alert {
-> > +                                     temperature =3D <85000>;
-> > +                                     hysteresis =3D <2000>;
-> > +                                     type =3D "passive";
-> > +                             };
-> > +
-> > +                             cpu-crit {
-> > +                                     temperature =3D <100000>;
-> > +                                     hysteresis =3D <0>;
-> > +                                     type =3D "critical";
-> > +                             };
-> > +                     };
-> > +
-> > +                     cooling-maps {
-> > +                             map0 {
-> > +                                     trip =3D <&cpu_alert>;
-> > +                                     cooling-device =3D <&cpu0 THERMAL=
-_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                      <&cpu1 THERMAL_N=
-O_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                      <&cpu2 THERMAL_N=
-O_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                      <&cpu3 THERMAL_N=
-O_LIMIT THERMAL_NO_LIMIT>;
-> > +                             };
-> > +                     };
-> >               };
-> >
-> >               gpu-thermal {
-> > --
-> > 2.20.1
-> >
