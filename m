@@ -2,144 +2,110 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BB6C54FC9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 19:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2AAC54FC9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 19:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 837F1206D9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 19:14:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="beL8A6cY"
+	by mail.kernel.org (Postfix) with ESMTP id 8F02C2072D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 19:31:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587497496;
+	bh=FbedF9MkS5eUgPiKSYbu2gEhsu/YFqRKU2igx1LyO0A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bKdbbZdmMWQHErdMKioOKR+TaHyR74nrpdDkOI+76/rM9unjWBQYIsk/A+fvQKZPm
+	 10cQ0tN4mMgcBxpZ46bSNn6G4aOyJpbm/Cg/dnSreDNuXxsQdWqkvvofD8iY0awJij
+	 Lf9X9daJxGxxyPTp/3ubzwARRhDFxI06QS2XKqmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgDUTOd (ORCPT
+        id S1726079AbgDUTbd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 15:14:33 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:60988 "EHLO mail.z3ntu.xyz"
+        Tue, 21 Apr 2020 15:31:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgDUTOc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Apr 2020 15:14:32 -0400
-Received: from localhost.localdomain (80-110-124-168.cgn.dynamic.surfer.at [80.110.124.168])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 12403C4CB7;
-        Tue, 21 Apr 2020 19:14:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1587496470; bh=mOLV8x1mo4P72BrSbNMNW0QKdQku/B/uSphwcxsPkns=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=beL8A6cYYL5HNRXvU7KfvfJkPppTqMlfRmrP2DiuLuwZZJJVzj6KJqdBHTloi+45T
-         PE04g6RTWgrydlgWbwVEV/Mp0sQMiSlCn5D20D1BFnGOXKrloToIEGbxyIcwaINfE0
-         VsaTLUFp8H4tSzTUzBZY8jlVKA5Pm1WGnE5qLXiM=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     linux-leds@vger.kernel.org
-Cc:     Dan Murphy <dmurphy@ti.com>, Heiko Stuebner <heiko@sntech.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, Luca Weiss <luca@z3ntu.xyz>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 1/2] dt-bindings: leds: Add binding for sgm3140
-Date:   Tue, 21 Apr 2020 21:13:53 +0200
-Message-Id: <20200421191354.1443017-2-luca@z3ntu.xyz>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200421191354.1443017-1-luca@z3ntu.xyz>
-References: <20200421191354.1443017-1-luca@z3ntu.xyz>
+        id S1725930AbgDUTbd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Apr 2020 15:31:33 -0400
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 781A72074B;
+        Tue, 21 Apr 2020 19:31:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587497492;
+        bh=FbedF9MkS5eUgPiKSYbu2gEhsu/YFqRKU2igx1LyO0A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=heh7HSg0OO64M2XG26/1/H7Oyc2lGiZMLU3ctWLMjlBATqKdQ+oKtEuw79g7TPuuX
+         ni5S9ABu+Pcl8TRa74jXlwPCWOhIgEhkx/VuVt+4Rer7X20zdyhMZDtndDzN0qPA7G
+         gkzwg90dVHF6QaHFW5p9G5n/JVJSu7bj1uoGr+KA=
+Received: by mail-qk1-f173.google.com with SMTP id x66so15764017qkd.9;
+        Tue, 21 Apr 2020 12:31:32 -0700 (PDT)
+X-Gm-Message-State: AGi0Pua9gKhpMXo5Jo534kblIwhb2uYQAc48cy+ZB9ocLzYR4K0j2q1M
+        ERHtSprdzr4hJC9yqKduqezcghDoqBP63sIonA==
+X-Google-Smtp-Source: APiQypK+SNrDy3Sm4PczTJQzUksQronXA87RGw2UOqjJ46tD8crLtew/o7kmZa8CWFruSj8e2XxBtDl12SpaD3UpgRg=
+X-Received: by 2002:a37:61cd:: with SMTP id v196mr22897372qkb.393.1587497491552;
+ Tue, 21 Apr 2020 12:31:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200229003731.2728-1-robh@kernel.org> <20200421100749.GA5429@pendragon.ideasonboard.com>
+ <CAK7LNARvPytUQoncngLe=s-TzQByQCXd64H99UgrW40=X34JyQ@mail.gmail.com>
+ <20200421110537.GC5983@pendragon.ideasonboard.com> <CAK7LNAQtfyqfbQx2ivg=sVdhxDH9ShVBa+bL-4sC7MU1N=y+cw@mail.gmail.com>
+ <20200421134654.GD5983@pendragon.ideasonboard.com> <CAL_JsqJQpwN4tH0KWOB1s6NWf3sRqqGRsRiKazi=CJGCwb2T+Q@mail.gmail.com>
+ <CAK7LNASe9ahgo04=cAuXcsaoffb9CtnUCYOObJd5=Awaak+YZw@mail.gmail.com>
+In-Reply-To: <CAK7LNASe9ahgo04=cAuXcsaoffb9CtnUCYOObJd5=Awaak+YZw@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 21 Apr 2020 14:31:19 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKV4UQeSX1ArJb4es1_kkMp1kbkd2kd17qVc=Oy988F7Q@mail.gmail.com>
+Message-ID: <CAL_JsqKV4UQeSX1ArJb4es1_kkMp1kbkd2kd17qVc=Oy988F7Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] kbuild: Always validate DT binding examples
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add YAML devicetree binding for SGMICRO SGM3140 charge pump used for
-camera flash LEDs.
+On Tue, Apr 21, 2020 at 11:57 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Hi Rob,
+>
+>
+> On Tue, Apr 21, 2020 at 11:01 PM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > It seems to only fail with out of tree builds (O=...). I expect that
+> > > failures will become more common the more YAML bindings we have, even
+> > > without long directory names.
+> >
+> > dt-mk-schema can take and recurse a single directory already, so does
+> > this fix it for you:
+> >
+> > @@ -22,7 +22,7 @@ $(obj)/%.example.dts: $(src)/%.yaml
+> > check_dtschema_version FORCE
+> >  DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
+> >
+> >  quiet_cmd_mk_schema = SCHEMA  $@
+> > -      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
+> > $(real-prereqs)
+> > +      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
+> > $(srctree)/$(src)
+>
+>
+> I am just curious.
+>
+> How come the tool excludes 'processed-schema*' and '*.example.dt.yaml'
+> from $(srctree)/$(src) ?
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-Reviewed-by: Dan Murphy <dmurphy@ti.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes since v2:
- - add 'type: object' to led property
- - rename dt node in example from sgm3140 to led-controller to match dt spec
+Uggg, it wouldn't. Can't everyone build out of tree. ;) I guess the options are:
 
- .../bindings/leds/leds-sgm3140.yaml           | 62 +++++++++++++++++++
- 1 file changed, 62 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
+- Call dt-mk-schema on each file individually appending the result
+- Make dt-mk-schema take stdin or a file with a list of files as
+Masahiro suggested
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-sgm3140.yaml b/Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
-new file mode 100644
-index 0000000000000..ecf7ac9ab0673
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/leds-sgm3140.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: SGMICRO SGM3140 500mA Buck/Boost Charge Pump LED Driver
-+
-+maintainers:
-+  - Luca Weiss <luca@z3ntu.xyz>
-+
-+description: |
-+  The SGM3140 is a current-regulated charge pump which can regulate two current
-+  levels for Flash and Torch modes.
-+
-+  The data sheet can be found at:
-+    http://www.sg-micro.com/uploads/soft/20190626/1561535688.pdf
-+
-+properties:
-+  compatible:
-+    const: sgmicro,sgm3140
-+
-+  enable-gpios:
-+    maxItems: 1
-+    description: A connection to the 'EN' pin.
-+
-+  flash-gpios:
-+    maxItems: 1
-+    description: A connection to the 'FLASH' pin.
-+
-+  vin-supply:
-+    description: Regulator providing power to the 'VIN' pin.
-+
-+  led:
-+    type: object
-+    allOf:
-+      - $ref: common.yaml#
-+
-+required:
-+  - compatible
-+  - flash-gpios
-+  - enable-gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/leds/common.h>
-+
-+    led-controller {
-+        compatible = "sgmicro,sgm3140";
-+        flash-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
-+        enable-gpios = <&pio 2 3 GPIO_ACTIVE_HIGH>; /* PC3 */
-+        vin-supply = <&reg_dcdc1>;
-+
-+        sgm3140_flash: led {
-+            function = LED_FUNCTION_FLASH;
-+            color = <LED_COLOR_ID_WHITE>;
-+            flash-max-timeout-us = <250000>;
-+        };
-+    };
--- 
-2.26.1
+I'd like to avoid a dt-mk-schema change so I'll try to make the former
+work. It's only been a day since adding a minimum version. :(
 
+Rob
