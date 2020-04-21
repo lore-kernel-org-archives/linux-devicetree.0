@@ -2,125 +2,130 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E07CC54FCC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 20:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB2EC54FCC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 20:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69E4120736
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 20:40:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587501648;
-	bh=WPjD7z+S47NsJvoNNpoPjH0JcfobjHHPouuiRtqoLlc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rTHD9S52RmiPPb7XwPeA3D9GNaS6/NHK6SQIP5zjW8NdIgWUPtHSK9gjDORYumGXM
-	 B5CM8OFLzFvPR7NEpmRyG/GBNW5MQso95r171DNVd0vxh663HFWuJXmeKzbToAjnn2
-	 zJJUAPKOmVtKrcWfkbJA8nSXH5ijZ0bYYGLfDj3s=
+	by mail.kernel.org (Postfix) with ESMTP id 47F95206E9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 20:46:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WGSXQ+29"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726024AbgDUUks (ORCPT
+        id S1726079AbgDUUqw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 16:40:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbgDUUkr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Apr 2020 16:40:47 -0400
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B972020736;
-        Tue, 21 Apr 2020 20:40:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587501646;
-        bh=WPjD7z+S47NsJvoNNpoPjH0JcfobjHHPouuiRtqoLlc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=X/LSmDV89g9lH05MfV5FMdtZH65HJR472W7TAL+iEb6Pf4nMNLm04XdA5cCaoYo1c
-         ugEC8Z3Ks5QtlYmaErTH9zLTdd1jRF4n3C8Kohw+8OUHS2b2ctFYnJJao6VSPVLnWo
-         /FueaH64nNWtyv//yxWjI9jkp6/JoUqNXVd/vzMA=
-Received: by mail-qk1-f178.google.com with SMTP id n143so137978qkn.8;
-        Tue, 21 Apr 2020 13:40:46 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaixUajdiPHqy2qAs8a1fpsQhFzVSTM7l3a0/lIoNzJ94fp3vKm
-        BcZfA5dJespPmUZ4CAZ3T5C7v2++caNr7dMAeg==
-X-Google-Smtp-Source: APiQypL9lEqMBY0g413ztkmJhsz03wf/mRAORfH1azvObhx0AAUgen3X/vzkaMm75SfIg4yUiygGsZgd1mZKVDmeAoM=
-X-Received: by 2002:a37:c43:: with SMTP id 64mr21464433qkm.119.1587501645887;
- Tue, 21 Apr 2020 13:40:45 -0700 (PDT)
+        Tue, 21 Apr 2020 16:46:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50768 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726024AbgDUUqw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Apr 2020 16:46:52 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A914AC0610D5;
+        Tue, 21 Apr 2020 13:46:50 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u16so5049943wmc.5;
+        Tue, 21 Apr 2020 13:46:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=q6uPC1CnCPTFfr9RZtZjgLS8wz+TR/yHxAxpCEB2ABE=;
+        b=WGSXQ+29Ak7SWw6XyBBOxnAH68o34jNmWGCdSwuAEY1YdHxy2Q3GaOntJ+kdFb1tT+
+         Ng0Loh1AGdVwX8vf+w0CPN1iJ9oDCZOiZ17bnvVlgzouMijVA50KnBn8C649htQ6HmZ5
+         18BsCfiUMLQ4c/0vTBDNjJFIKQBW+uSXjgW8reGxf8AlwwVq87VRKZbVMrUXoVv5MW7E
+         ghslZfoXi7gxJZr+q7L73S4SWZEilk/3OKKUjAD9bLfgqSndZ51bQWuVyGAfAn89GhIA
+         yTLjp0wJNhJN0/DusDeUZC5K8w93pqZnSGkw8BG01cYYINHMF4QQ6rsnn08fIHxPc9KH
+         4wAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=q6uPC1CnCPTFfr9RZtZjgLS8wz+TR/yHxAxpCEB2ABE=;
+        b=X/Vz7CTsxnRSXpgrCZuOCgxsy7Y42sF/Fa/4nO41O8tNMKdK1YyAdblQtS1xLFZlws
+         YrpH2DamVYvOiRAFskcfCKs7fQK0DW1m3/4Fsz8byC7QN8xfN5F1SgS0lljh2JnTUo1m
+         bRQmI7eSUENS+fDNxJpJo5UjL0CYQ/1tNJ6VurasCqoKIWr58/z+PcUONik/ROvhedSy
+         NfHAKXDDuuK2OnG+OYZmuQNvi/C1HZOJfAzcIhAQjs19OpXz2Nnb4DHSlnzpzZH9zvo3
+         IjGbqaWetAIxrXhN/JqqVoeYK+FAh9HCYq7A60/AQPfT/y5WsicddPzfRaA2v0pg0JDp
+         XkNA==
+X-Gm-Message-State: AGi0PuYGiZqpLLqQit7LrHsEo6HRFXZVkqoNACty3ijoKsYGfVLo8sLn
+        ldMaOZH7ChZjHUiKF0yrE4w=
+X-Google-Smtp-Source: APiQypJpQe3wpc763YuNJO0Sx0DlrTQK3dxcxLZhIl4oN7YF3FMeSKlRhIhE/z2gMyKgA2LNdg+fhg==
+X-Received: by 2002:a05:600c:2218:: with SMTP id z24mr6646985wml.82.1587502009392;
+        Tue, 21 Apr 2020 13:46:49 -0700 (PDT)
+Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
+        by smtp.gmail.com with ESMTPSA id k184sm4990111wmf.9.2020.04.21.13.46.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 13:46:47 -0700 (PDT)
+Date:   Tue, 21 Apr 2020 22:46:46 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
+        sakari.ailus@iki.fi, helen.koike@collabora.com, digetx@gmail.com,
+        sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v8 5/9] dt-binding: tegra: Add VI and CSI bindings
+Message-ID: <20200421204646.GA3233341@ulmo>
+References: <1587427874-3291-1-git-send-email-skomatineni@nvidia.com>
+ <1587427874-3291-6-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-References: <20200229003731.2728-1-robh@kernel.org> <20200421100749.GA5429@pendragon.ideasonboard.com>
- <CAK7LNARvPytUQoncngLe=s-TzQByQCXd64H99UgrW40=X34JyQ@mail.gmail.com>
- <20200421110537.GC5983@pendragon.ideasonboard.com> <CAK7LNAQtfyqfbQx2ivg=sVdhxDH9ShVBa+bL-4sC7MU1N=y+cw@mail.gmail.com>
- <20200421134654.GD5983@pendragon.ideasonboard.com> <CAL_JsqJQpwN4tH0KWOB1s6NWf3sRqqGRsRiKazi=CJGCwb2T+Q@mail.gmail.com>
- <CAK7LNASe9ahgo04=cAuXcsaoffb9CtnUCYOObJd5=Awaak+YZw@mail.gmail.com> <CAL_JsqKV4UQeSX1ArJb4es1_kkMp1kbkd2kd17qVc=Oy988F7Q@mail.gmail.com>
-In-Reply-To: <CAL_JsqKV4UQeSX1ArJb4es1_kkMp1kbkd2kd17qVc=Oy988F7Q@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 21 Apr 2020 15:40:34 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJRsqCW20o3tAxMWE=dQrxts7jG7P=3yfDDx7HP+w38rQ@mail.gmail.com>
-Message-ID: <CAL_JsqJRsqCW20o3tAxMWE=dQrxts7jG7P=3yfDDx7HP+w38rQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] kbuild: Always validate DT binding examples
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5vNYLRcllDrimb99"
+Content-Disposition: inline
+In-Reply-To: <1587427874-3291-6-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 2:31 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Apr 21, 2020 at 11:57 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > Hi Rob,
-> >
-> >
-> > On Tue, Apr 21, 2020 at 11:01 PM Rob Herring <robh@kernel.org> wrote:
-> > > >
-> > > > It seems to only fail with out of tree builds (O=...). I expect that
-> > > > failures will become more common the more YAML bindings we have, even
-> > > > without long directory names.
-> > >
-> > > dt-mk-schema can take and recurse a single directory already, so does
-> > > this fix it for you:
-> > >
-> > > @@ -22,7 +22,7 @@ $(obj)/%.example.dts: $(src)/%.yaml
-> > > check_dtschema_version FORCE
-> > >  DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
-> > >
-> > >  quiet_cmd_mk_schema = SCHEMA  $@
-> > > -      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
-> > > $(real-prereqs)
-> > > +      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
-> > > $(srctree)/$(src)
-> >
-> >
-> > I am just curious.
-> >
-> > How come the tool excludes 'processed-schema*' and '*.example.dt.yaml'
-> > from $(srctree)/$(src) ?
->
-> Uggg, it wouldn't. Can't everyone build out of tree. ;) I guess the options are:
->
-> - Call dt-mk-schema on each file individually appending the result
-> - Make dt-mk-schema take stdin or a file with a list of files as
-> Masahiro suggested
->
-> I'd like to avoid a dt-mk-schema change so I'll try to make the former
-> work. It's only been a day since adding a minimum version. :(
 
-Laurent, does this work for you? I've reproduced the problem, but just
-double checking.
+--5vNYLRcllDrimb99
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
+On Mon, Apr 20, 2020 at 05:11:10PM -0700, Sowjanya Komatineni wrote:
+> Tegra contains VI controller which can support up to 6 MIPI CSI
+> camera sensors.
+>=20
+> Each Tegra CSI port from CSI unit can be one-to-one mapper to
+> VI channel and can capture from an external camera sensor or
+> from built-in test pattern generator.
+>=20
+> This patch adds dt-bindings for Tegra VI and CSI.
+>=20
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  .../display/tegra/nvidia,tegra20-host1x.txt        | 73 ++++++++++++++++=
+++----
+>  1 file changed, 60 insertions(+), 13 deletions(-)
 
- quiet_cmd_mk_schema = SCHEMA  $@
--      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
-$(real-prereqs)
-+      cmd_mk_schema = $(file >$@.tmp, $(real-prereqs)) \
-+                      cat $@.tmp | xargs $(DT_MK_SCHEMA)
-$(DT_MK_SCHEMA_FLAGS) -o $@
+Acked-by: Thierry Reding <treding@nvidia.com>
 
- DT_DOCS = $(addprefix $(src)/, \
-        $(shell \
+--5vNYLRcllDrimb99
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6fW7MACgkQ3SOs138+
+s6GcPQ/9FNBtMbNYeZe7HR8tmPr1TQ7xTJ21ncNt7vGdlFWn0F7TXycPiWu86+V6
+Zc2pIGZjSk2uhHKbvYUvA9IXkAY0mxtzZrJeXIU+vAADOjAc6+rYYKcf0zuRr28g
+AAgcnaAZPIsxWCdIM/G4l+Bir8kw82HGIpK45J2m4aWmgBF9c1vMVO4yzj5FALzj
+F7nqa2Iiufghax5P7n/9yKWLeQroDPqsrWCWqVh9ILOn52l/qIDfRPAsEjuoCy3s
+FaDQQQRRSoyYTRg8iNLF6t2H8yI89Suyia4ZcN+YzuhwtEc/DlSvIWFW9BVgyXxH
+N6AdkZzFID0me3ij0xAGJWD2bmUlhQVPMPAJZq52t6vdH+0k9WReRUuBp1D0P7nC
+FYuwttry5BJiXXceFOR29KKAe2qO3IMl3/cpLvcDVPSbMi38Zyd3VvhNbvFD+fn+
+hTa3S+5xLhbQxLZsSDnaPA1Phl4EGGNSWo08Nn5mwU+H/oCO11i/Luy4+usaYgor
+lfa9//chWihgxUnpa0fN4nUdgmaRWxymLiJL3bY8twgvEWlzn7cbtf6EacXY5Yzt
+jUE+kPSEAYy0jjuWANsQJUe2BQiLHIRJEEQSt6EsSgLmV2P+5utoIuAjUQWAiF1V
+fE8pGGlhXJza9q7fbW62lHW/c7agPohXsRsq59UytdnjJtnzTz0=
+=FTJX
+-----END PGP SIGNATURE-----
+
+--5vNYLRcllDrimb99--
