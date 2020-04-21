@@ -2,184 +2,152 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D678C54FC9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 07:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B608CC54FC9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 07:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 573A82073A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 07:31:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GlKRZFFy"
+	by mail.kernel.org (Postfix) with ESMTP id 9AE5B2073A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 07:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgDUHbl (ORCPT
+        id S1726123AbgDUHhV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 03:31:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40444 "EHLO
+        Tue, 21 Apr 2020 03:37:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbgDUHbk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Apr 2020 03:31:40 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A902C061A0F;
-        Tue, 21 Apr 2020 00:31:40 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id b11so15222155wrs.6;
-        Tue, 21 Apr 2020 00:31:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D9m3MRy8x+o4H1EEycml0VyqSiaYH7kBtrQzXfBUS8w=;
-        b=GlKRZFFyQs7kZycqIc8kmWXH6Ud4+HQlXs3tT/pPSNZiMX9h8VVS8uJ4YjqPe9VH8K
-         VOsgHdZHB+X8w3fU84GRwWmtLSlcVzqJK7F/LoKjnYTtGYgq3XlXvWec2jF5yMlqXgqT
-         DMgM1TfcX2lja1KJLWe7ISkMNWMptDaq+uRd0auhbWqgVgW1EPpuWXmJWENaC70cqkHl
-         W1OAI+RQF3UbWRsqpDAk3GeJKKu0TXTiXcokuG6Qfw9gi4uhUhhkh/njN+XgNpd68M6p
-         4MIsTwBlPzPF6/fdkxJpNRxasCq6hiJzXqMxnl+6c6ccJiiwVjHBSMjSmK14iNLpPdBh
-         8oig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D9m3MRy8x+o4H1EEycml0VyqSiaYH7kBtrQzXfBUS8w=;
-        b=bY/MPHcON/9Cyl0dJG7ZISbjSsW7j3kyWOXuAeo8mOG2BGNVF26/Eg6TZ0cWQS0V37
-         VrcMTPEoyxsYGMxEJKCcJNfrqQ2sxqW6ZpO+P9XGb/nAnhzmE4IBnRekH+CsFbUJyKYe
-         9J/faFROUifUSEPa8sVsCh1jygNKPqistxBtW/5aCkrdCoVmtSacHypaNroSpH7IKP8C
-         s97ILkCDoguJ1AM495ZMeHYQ+kmoQWTS88c4eLWct3++ERwaCF30gWG2+4mlH3m2wos/
-         sJgC/FhMMaMQnSfHe4CAhT1KkfRLYl6dY88CtLJ1httWDvvyQ+fQKQipLEZozbr70/pa
-         huvA==
-X-Gm-Message-State: AGi0PuZVzIQHCFRDKr3qm5t0izjp7hRL8ZxIaG8qS824WxDHt9Z8Sj6w
-        U8SkI3bI123jpTG4qtfi2KvwxX/w4LaXFXrjKNQOHFjp
-X-Google-Smtp-Source: APiQypIBhAroyKy7dbi8XsEqmZkN6GmZp54F8mQFxWhAQGQ6iOUSPlckooO9rwUr3eRUH0h46LenNWSVw4928Sfzm+M=
-X-Received: by 2002:adf:8b1d:: with SMTP id n29mr22239047wra.196.1587454299040;
- Tue, 21 Apr 2020 00:31:39 -0700 (PDT)
+        with ESMTP id S1725992AbgDUHhU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Apr 2020 03:37:20 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB445C061A0F
+        for <devicetree@vger.kernel.org>; Tue, 21 Apr 2020 00:37:20 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jQnT0-00017T-JC; Tue, 21 Apr 2020 09:37:14 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jQnSz-00045M-IL; Tue, 21 Apr 2020 09:37:13 +0200
+Date:   Tue, 21 Apr 2020 09:37:13 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        David Jander <david@protonic.nl>, devicetree@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH v3 2/5] ARM: dts: add Protonic PRTI6Q board
+Message-ID: <20200421073713.hnv3poogl65ln77w@pengutronix.de>
+References: <20200324110432.25062-1-o.rempel@pengutronix.de>
+ <20200324110432.25062-3-o.rempel@pengutronix.de>
+ <20200421040747.GE8571@dragon>
 MIME-Version: 1.0
-References: <20200413070014.12960-1-zhang.lyra@gmail.com> <20200413070014.12960-2-zhang.lyra@gmail.com>
- <20200420114222.GA14343@lakrids.cambridge.arm.com>
-In-Reply-To: <20200420114222.GA14343@lakrids.cambridge.arm.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Tue, 21 Apr 2020 15:31:02 +0800
-Message-ID: <CAAfSe-u+wraKLWFK2+oKed_ZzkckP0sFRhMkA5LB-b30CGawOw@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 1/2] cpuidle: allow idle state to be found as
- deepest state for s2idle only
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4cydpp6pjv3rbmqg"
+Content-Disposition: inline
+In-Reply-To: <20200421040747.GE8571@dragon>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:23:29 up 157 days, 22:42, 166 users,  load average: 0.07, 0.07,
+ 0.08
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mark,
 
-Many thanks for your comments.
+--4cydpp6pjv3rbmqg
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 20 Apr 2020 at 19:42, Mark Rutland <mark.rutland@arm.com> wrote:
->
-> On Mon, Apr 13, 2020 at 03:00:13PM +0800, zhang.lyra@gmail.com wrote:
-> > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> >
-> > Add a new flag CPUIDLE_FLAG_S2IDLE to allow c-state to be found as
-> > deepest state for s2idle only, so that users can add a new c-state
-> > for using s2idle and don't worry disturbing other use cases such as
-> > play_idle() which probably don't want to enter into so much deep
-> > idle state since devices are not suspended for that kind of cases.
->
-> Can you please elaborate on this?
+Hi Shawn,
 
-Ok.
-
-The thing was, I added a new c-state (named DOMAIN_PD for example) in
-DT for using s2idle, and the target power level indicated in DOMAIN_PD
-would be deeper than the level for regular cpuidle (for example
-level-0 is for regular cpuidle; level-1 is for system suspend and
-power domain would be shutdown as well as all cores , DOMAIN_PD uses
-level-1). I worried that would cause the deeper power domain to be
-shutdown if DOMAIN_PD was selected by play_idle().
-
-But after have another look at PSCI in ATF, I consider that it
-probably is not a problem which would really happen. Since play_idle()
-wouldn't occur on all cpus at the same time, although play_idle()
-could use DOMAIN_PD, the system wouldn't enter into that so deep power
-level.
-
-Hope I've explained the things clearly :)
-
-In a word, this patch seems not needed for now.
+Thank you for the review. You was reviewing v3, the last version is v5.
+Never the less, part of comments still apply. I'll fix them.
 
 
-Thanks again,
-Chunyan
-
-
->
-> Why exactly are these states not suited for regular cpu idle? What
-> problems do they cause? e.g. long wakeup latency?
->
-> The flag and the for-s2-idle-only DT property are encoding a policy
-> rarher than a property, and as such I don't think this is the right way
-> to describe this in the DT. However, if there might be porperties of the
-> idle state that we could describe so that the OS can come to the same
-> conclusion.
->
-> Thanks,
-> Mark.
->
-> >
-> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+On Tue, Apr 21, 2020 at 12:07:49PM +0800, Shawn Guo wrote:
+> On Tue, Mar 24, 2020 at 12:04:29PM +0100, Oleksij Rempel wrote:
+> > Protonic PRTI6Q is a development board and a base class for different
+> > specific customer application boards based on the i.MX6 family of SoCs,
+> > developed by Protonic Holland.
+> >=20
+> > Signed-off-by: David Jander <david@protonic.nl>
+> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 > > ---
-> >  drivers/cpuidle/cpuidle.c        | 3 ++-
-> >  drivers/cpuidle/dt_idle_states.c | 3 +++
-> >  include/linux/cpuidle.h          | 1 +
-> >  3 files changed, 6 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-> > index de81298051b3..bb61f0c271d2 100644
-> > --- a/drivers/cpuidle/cpuidle.c
-> > +++ b/drivers/cpuidle/cpuidle.c
-> > @@ -89,7 +89,8 @@ static int find_deepest_state(struct cpuidle_driver *drv,
-> >                   s->exit_latency_ns <= latency_req ||
-> >                   s->exit_latency_ns > max_latency_ns ||
-> >                   (s->flags & forbidden_flags) ||
-> > -                 (s2idle && !s->enter_s2idle))
-> > +                 (s2idle && !s->enter_s2idle) ||
-> > +                 (!s2idle && (s->flags & CPUIDLE_FLAG_S2ILDE)))
-> >                       continue;
-> >
-> >               latency_req = s->exit_latency_ns;
-> > diff --git a/drivers/cpuidle/dt_idle_states.c b/drivers/cpuidle/dt_idle_states.c
-> > index 252f2a9686a6..530db2726c05 100644
-> > --- a/drivers/cpuidle/dt_idle_states.c
-> > +++ b/drivers/cpuidle/dt_idle_states.c
-> > @@ -80,6 +80,9 @@ static int init_state_node(struct cpuidle_state *idle_state,
-> >       idle_state->flags = 0;
-> >       if (of_property_read_bool(state_node, "local-timer-stop"))
-> >               idle_state->flags |= CPUIDLE_FLAG_TIMER_STOP;
+
+> > +&usdhc2 {
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&pinctrl_usdhc2>;
+> > +	non-removable;
+> > +	vmmc-supply =3D <&reg_wifi>;
+> > +	cap-power-off-card;
+> > +	keep-power-in-suspend;
+> > +	status =3D "okay";
 > > +
-> > +     if (of_property_read_bool(state_node, "for-s2idle-only"))
-> > +             idle_state->flags |= CPUIDLE_FLAG_S2ILDE;
-> >       /*
-> >        * TODO:
-> >        *      replace with kstrdup and pointer assignment when name
-> > diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-> > index ec2ef63771f0..08da701f74cd 100644
-> > --- a/include/linux/cpuidle.h
-> > +++ b/include/linux/cpuidle.h
-> > @@ -78,6 +78,7 @@ struct cpuidle_state {
-> >  #define CPUIDLE_FLAG_TIMER_STOP BIT(2) /* timer is stopped on this state */
-> >  #define CPUIDLE_FLAG_UNUSABLE        BIT(3) /* avoid using this state */
-> >  #define CPUIDLE_FLAG_OFF     BIT(4) /* disable this state by default */
-> > +#define CPUIDLE_FLAG_S2ILDE  BIT(5) /* state is used for s2idle only */
-> >
-> >  struct cpuidle_device_kobj;
-> >  struct cpuidle_state_kobj;
-> > --
-> > 2.20.1
-> >
+> > +	wifi {
+> > +		compatible =3D "ti,wl1271";
+> > +		pinctrl-names =3D "default";
+> > +		pinctrl-0 =3D <&pinctrl_wifi>;
+> > +		irq-gpio =3D <&gpio1 30 GPIO_ACTIVE_HIGH>;
+>=20
+> I failed to find this in "ti,wl1271" bindings.
+
+Indeed. But it is required by the code:
+
+drivers/net/wireless/ti/wlcore/sdio.c:
+static int wlcore_probe_of(struct device *dev, int *irq, int *wakeirq,
+			   struct wlcore_platdev_data *pdev_data)
+{
+=2E...
+	*irq =3D irq_of_parse_and_map(np, 0);
+	if (!*irq) {
+		dev_err(dev, "No irq in platform data\n");
+		return -EINVAL;
+	}
+
+I'll send a patch to fix it.
+
+Regards,
+Oleksij
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--4cydpp6pjv3rbmqg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6eoqMACgkQ4omh9DUa
+UbMcrxAApMsUmQ33pQEOrk9ulSJkkSg8xm+CMZKkas4aamjE0q+LOe97WArayMXB
+db1ttp4L3b12I6qhcnDrgfhw+ZUduM+PU4ZD3MOi+F9Fy6nwkxJW2HQ3z/q1M6JN
+Fy9UJtSTZ5dY74xtlL9mqZ/ifulWCuuxJxXjKkghe8lUcV2Nerf/X0+A72wHVep6
+2bydbKk7Uu8ioBCLuHMOf1jXHNx2GhEmCc66B2VfpLcsitjy3l40+aEBW4JdBY+f
+STmD6DW9VekFJxOnu1Z/IbFuIIIL+mjKUvAwb6sqXjmnr0DVq/XXN/FQ8fgHZRnq
+AHHqhr3jOOqtHc/VHb2jFGgKAmGMYHdUbotlj/0gWy9Uxw0ZGV6tljL8imJ38/CJ
+dbduR7qjQf3W5+XgouJTb2lq3DIzcQ6Fw5U2iIkdtHxNneigP0WVEA1sBL/ksgos
+d2Lx6FRYF5gHbYerSiPGZH8f2tWHtsV6smAjHjXUF8sGxdLsUzmQDefL1iYOQNeJ
+7N6nVssD+AWjJ0TzdEuorvTepcbKYfsjQlOrX9sMr7pwqAKIRgbd6nESrRgLIHbM
+Yumu4MedWmr98zj9eXckVw8Ezedt/fMR3rXNI8OpM1f9G8qFSpU+zDI0cUIMc/He
+5tVW6uxytjLe6//+mBrk1cKqHph4oiaOsPvARZ/NzBjEeqP9MXo=
+=CZn8
+-----END PGP SIGNATURE-----
+
+--4cydpp6pjv3rbmqg--
