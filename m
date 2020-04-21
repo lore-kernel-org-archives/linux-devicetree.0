@@ -2,128 +2,155 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4782DC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 08:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19216C55182
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 08:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D324206B8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 08:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 007982054F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 08:28:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbgDUIXs (ORCPT
+        id S1727787AbgDUI2o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 04:23:48 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:46132 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726018AbgDUIXs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Apr 2020 04:23:48 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jQoC0-0001S4-JW; Tue, 21 Apr 2020 10:23:44 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Johan Jonker <jbx6244@gmail.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Subject: Re: [PATCH 1/3] arm64: dts: rockchip: add bus-width properties to mmc nodes for rk3328.dtsi
-Date:   Tue, 21 Apr 2020 10:23:43 +0200
-Message-ID: <2710874.PL6qFFFsBp@diego>
-In-Reply-To: <CAGb2v67N6t+C8dVKdjuOv1NzD9=3-n0GZQkshy1Pm6PFPJ87dQ@mail.gmail.com>
-References: <20200416181944.5879-1-jbx6244@gmail.com> <CAGb2v67N6t+C8dVKdjuOv1NzD9=3-n0GZQkshy1Pm6PFPJ87dQ@mail.gmail.com>
+        Tue, 21 Apr 2020 04:28:44 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:42176 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbgDUI2n (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Apr 2020 04:28:43 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 8B2911C01E0; Tue, 21 Apr 2020 10:28:41 +0200 (CEST)
+Date:   Tue, 21 Apr 2020 10:28:40 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Johan Hovold <johan@kernel.org>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH 2/4] serdev: ngsm-motmdm: Add Motorola TS 27.010 serdev
+ modem driver for droid4
+Message-ID: <20200421082840.GA4540@amd>
+References: <20200319173755.65082-1-tony@atomide.com>
+ <20200319173755.65082-3-tony@atomide.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="AhhlLboLdkugWU4S"
+Content-Disposition: inline
+In-Reply-To: <20200319173755.65082-3-tony@atomide.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi ChenYu,
 
-Am Dienstag, 21. April 2020, 05:48:52 CEST schrieb Chen-Yu Tsai:
-> On Fri, Apr 17, 2020 at 2:19 AM Johan Jonker <jbx6244@gmail.com> wrote:
-> >
-> > 'bus-width' and pinctrl containing the bus-pins
-> > should be in the same file, so add them to
-> > all mmc nodes in 'rk3328.dtsi'.
-> 
-> Nope. First of all, pinctrl usage is with pinctrl-N properties, not the
-> pinctrl device, and there are no defaults set for any of the mmc nodes.
-> Second, these are board design specific. For example, boards are free to
-> use just 4 bits for the eMMC if they so desire. So this should be in each
-> board dts file. If a board is missing this property, fix the board.
+--AhhlLboLdkugWU4S
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-you are correct that the pinctrl entries are missing from the patches,
-bus-width and pinctrl should be defined in the same file each time,
-but for the whole idea I tend to disagree. 
+Hi!
 
-So far every board with a Rockchip socs follows Rockchip's reference design
-for a lot of parts - for example I only see sdmmc nodes with bus-width=4
-etc.
+> $ printf "ATH\r" > /dev/motmdm1
+> H:OK
+>=20
+> Also SMS can be sent with this patch using /dev/motmdm3 for sending,
+> and /dev/motmdm9 for receiving messages, and /dev/motmdm10 can be
+> used for SIM access.
+>=20
+> Note that the audio mixer needs additional patches though. I will be
+> sending those as a separate series of patches.
+>=20
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
 
-So the basic idea is to have default pinctrl settings for the settings
-everybody uses predefined ... if a board comes along that needs different
-settings it is free to redefine that.
+Reviewed-by: Pavel Machek <pavel@ucw.cz>
 
+Some minor comments are below.
 
-Heiko
+> +++ b/drivers/tty/serdev/protocol/Kconfig
+> @@ -0,0 +1,14 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Serial bus device driver protocol specific configuration
+> +#
+> +
+> +config SERIAL_DEV_NGSM_MOTMDM
+> +	tristate "Motorola Modem TS 27.010 Serdev Protocol Driver"
+> +	depends on N_GSM && PHY_MAPPHONE_MDM6600
+> +	help
+> +	  Select this for Motorola modems using TS 27.010 serial line
+> +	  discipline such as MDM6600 modem found on Motorola Mapphone
+> +	  devices like Droid4
 
+I'd add "." at the end of sentence.
 
-> 
-> This applies to all three patches in the series.
-> 
-> ChenYu
-> 
-> > Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/rockchip/rk3328.dtsi | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-> > index 175060695..db2c3085e 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-> > @@ -861,6 +861,7 @@
-> >                 clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
-> >                          <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
-> >                 clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-> > +               bus-width = <4>;
-> >                 fifo-depth = <0x100>;
-> >                 max-frequency = <150000000>;
-> >                 status = "disabled";
-> > @@ -873,6 +874,7 @@
-> >                 clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
-> >                          <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
-> >                 clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-> > +               bus-width = <4>;
-> >                 fifo-depth = <0x100>;
-> >                 max-frequency = <150000000>;
-> >                 status = "disabled";
-> > @@ -885,6 +887,7 @@
-> >                 clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
-> >                          <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
-> >                 clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-> > +               bus-width = <8>;
-> >                 fifo-depth = <0x100>;
-> >                 max-frequency = <150000000>;
-> >                 status = "disabled";
-> > --
-> > 2.11.0
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+> +/*
+> + * Character devices for DLCI channels with no serdev drivers
+> + */
+> +static int motmdm_cdev_open(struct inode *inode, struct file *file)
+> +{
+> +	struct motmdm_cdev *cdata;
+> +	int ret =3D 0;
+> +
+> +	cdata =3D container_of(inode->i_cdev, struct motmdm_cdev, cdev);
+> +	get_device(cdata->dev);
+> +	nonseekable_open(inode, file);
+> +	file->private_data =3D cdata;
+> +
+> +	down_write(&cdata->rwsem);
+> +	if (cdata->disconnected) {
+> +		ret =3D -ENODEV;
+> +		goto unlock;
+> +	}
+> +
+> +unlock:
+> +	up_write(&cdata->rwsem);
 
+You can delete goto and the label here.
 
+> +static int motmdm_cdev_release(struct inode *inode, struct file *file)
+> +{
+> +	struct motmdm_cdev *cdata =3D file->private_data;
+> +
+> +	down_write(&cdata->rwsem);
+> +	if (cdata->disconnected)
+> +		goto unlock;
+> +
+> +unlock:
+> +	up_write(&cdata->rwsem);
 
+And here... unless it is some kind of preparation for next patch?
 
+> +MODULE_DESCRIPTION("Motorola Modem TS 27.010 serdev driver");
+> +MODULE_AUTHOR("Tony Lindgren <tony@atomide.com");
+
+Missing ">" at the end of email address.
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--AhhlLboLdkugWU4S
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl6errgACgkQMOfwapXb+vLKngCgkkW+3ZbDTRZSC7kzmpY07JCQ
+TVMAnRS8p/yLo9zJbEAFPgQyYe7v11+4
+=5CCg
+-----END PGP SIGNATURE-----
+
+--AhhlLboLdkugWU4S--
