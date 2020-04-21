@@ -2,173 +2,146 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDD3C38A30
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 01:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3BCC38A30
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 02:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA2342078C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 01:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5376B2078C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 02:37:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xfRpFDiM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ePqxLPQp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgDUBxZ (ORCPT
+        id S1725989AbgDUChL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 21:53:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44848 "EHLO
+        Mon, 20 Apr 2020 22:37:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725829AbgDUBxZ (ORCPT
+        by vger.kernel.org with ESMTP id S1725829AbgDUChL (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 21:53:25 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19D98C061A0E
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 18:53:25 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id x26so6020561pgc.10
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 18:53:25 -0700 (PDT)
+        Mon, 20 Apr 2020 22:37:11 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAD60C061A0E;
+        Mon, 20 Apr 2020 19:37:09 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id s10so9100074edy.9;
+        Mon, 20 Apr 2020 19:37:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HjaU46gshLP9GG/96K+kwboQDvDrw0plitPA+YNIbGk=;
-        b=xfRpFDiMGDmWjPTE0YYkUbpZVS47obtstRXpn7KoJtKrL2QbpLZfww1X3ZSIh8l0Nv
-         n+sW9vfTuCEWuxgnENefnuyqJYDmvX0Xl9dbhxiDUU27U/ZaeXsqr7inv+SvEh78uAbg
-         hZf8+Hox1ek/VyaKJyo68zPK/KFaqwxdO/NGoD8pLBlemT0P10eClmNQgU/SiT0rYoAm
-         nvAiyJ857Lcxcgb4dBbMQGn+gfn3MGQej9GLjYxXrPpZ4MHMD5Gx42i7SqCQ51uExIAg
-         XAzv9LqBijXqE+nnbh6rGyQs+EIjq58AiGqemnn/IX9SW/1bnrw70pFKeBSsc5tEX0oQ
-         8rpg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wfjIAKV3CzN2ahQVF5QQ7qnHBO9rsV9xDFuglbIYlvo=;
+        b=ePqxLPQpEgCKHMylYI58HlD8/cm9VNW5FPOSETx1OcR1+SmzgCaSSbuvVi8em6SgPX
+         /vk71YJnaBWoVN2KWdJFcQdLMlp8QaPEtL3XT2g0Ha/t7jMhHlptiTsxMjJ73sv8AULl
+         TGkfouaOnEYkzihEu2Ln6B+0iQvN1VeXhWja7oz8lJ+Iy2N+UI34KCG6N4SufASF1BbH
+         QqjJm+G6nJh+nUAZ/oKJS8B7ncIwR5sim9M+/BeODFxTxk+L7Orff90XH53EmdYlYFuG
+         TsYPZLcWIp6Ycoiw9Nc8z/1Wn/rkDaOD0m6DTWWse67H2GwP3U50UsqXUqlpWW+N2Nbg
+         0k7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HjaU46gshLP9GG/96K+kwboQDvDrw0plitPA+YNIbGk=;
-        b=gwjgUYkb0yPO7qQ1n+UFlz0zrpe7sHLyaRJLapPqDbhVAtS8tZ4jHaQgfOnfMOds6G
-         r+4qoRYA57N7cMGDKkAaM0qpb4C6XrTCvwB/vLy/WJBRP0TFzygbAlsjHaBJjs6yJqOj
-         q+OIKs0q6nVT1rSkP1xqKFLZ2z+9yIgyPCEr3asB7hwzLw3Pcb+Bn9ekbkezanlUQfle
-         IHkdV6ePoVeitaHzbiA1WvHZzvaaeax7t7BEVnmuIgVpdoTWfM2JdYBqDBwmHzni58MB
-         eyiF/0GXXE5xppD06RPTvFKKfI9G0mp1I1hiR/0UR2HMLXhYFOxi5C4aLpUMUfaM8aDA
-         ne4g==
-X-Gm-Message-State: AGi0PuahR5n0Fmk+pXUXIZEZaQhUMP9W1+mCwLQ2vnGBoYLQiXpgpmku
-        lVO39jqwJsnK4wf76aXU46YMyw==
-X-Google-Smtp-Source: APiQypI4Nxn9X9fDUlEU6GiIiPgk4BM6mX4SRxaaBvw8cFMIqbkz4RbBzf6gfeDAsH3XeeLgbtcPOw==
-X-Received: by 2002:a63:310d:: with SMTP id x13mr7596695pgx.266.1587434004255;
-        Mon, 20 Apr 2020 18:53:24 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id s10sm657737pgq.69.2020.04.20.18.53.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 18:53:23 -0700 (PDT)
-Date:   Mon, 20 Apr 2020 18:53:47 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 2/2] dt-bindings: soc: qcom: apr: Use generic node names
- for APR services
-Message-ID: <20200421015347.GT576963@builder.lan>
-References: <20200415081159.1098-1-stephan@gerhold.net>
- <20200415081159.1098-2-stephan@gerhold.net>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wfjIAKV3CzN2ahQVF5QQ7qnHBO9rsV9xDFuglbIYlvo=;
+        b=G548z2qt7PHu5W9634A0UI73udffUCRx/Hg2bIuLiRKpaX+zuH/f8lH+NCumU4uNz7
+         lZQD3eaO9H/7lMdSQnT7bTPMqVbd2noX6CvDWqRCpLLJTsdgsxkAHK8g3XSEbioJPvIh
+         HBdZuycCLsoC+ghdHWB21NawPp+FC+k1m7S81tSH+8Z3FIPfBp5vFMSMCX5n1pMe0SZl
+         be3ZPwBCeumw7+QpWmA1Wh/B0UQAiwu3AxNbIs1ZeNJB2tBwKp6Hqp3KMQPk1IWnMxjk
+         fFb4/Mb4s0TDfpYzfSjxQwPPDpcZzb4M/9yhBod5pxVda5ABmr6U45oYWSBkzdWMBsmq
+         kpxw==
+X-Gm-Message-State: AGi0PuaXAtC3TQWKMjw/IOyNrfLEi/JrVJRZ17rg+2ck/kjC7TdQwHRB
+        3XYKB8MgCKNe61fwjkwb+nc5WW9b
+X-Google-Smtp-Source: APiQypJhXdwWOerhgYAN5dOVFSby+3Mbee+FNPtzk+Uk3eZXjRSCcip4tP0F0bwdHDDzezV9TrpUdA==
+X-Received: by 2002:a50:b263:: with SMTP id o90mr16161876edd.326.1587436628433;
+        Mon, 20 Apr 2020 19:37:08 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id z18sm253309ejl.37.2020.04.20.19.37.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Apr 2020 19:37:07 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] Add a watchdog driver that uses ARM Secure Monitor
+ Calls.
+To:     Evan Benn <evanbenn@chromium.org>
+Cc:     Julius Werner <jwerner@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Yonghui Yu <yonghui.yu@amlogic.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Will Deacon <will@kernel.org>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Rob Herring <robh@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, Olof Johansson <olof@lixom.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+References: <20200403052900.258855-1-evanbenn@chromium.org>
+ <CAKz_xw0gV+w_gMkLfB4qUBdULLfFoiv1TBWp9_PHy33wP_XWyA@mail.gmail.com>
+ <890948ef-7276-fdae-d270-eb30eff3eab2@amlogic.com>
+ <243e107c-35c1-2d14-5285-c9e13744963c@amlogic.com>
+ <CAODwPW9RSB37+4EJ2QXAwz=ShFB23L1GKC2mLYE5L5JuQR2tPw@mail.gmail.com>
+ <20200415231215.GA182398@roeck-us.net>
+ <CAKz_xw0+gKBM1jp-Avnd+4j9vSxUix67RZBX-NNbStb0+ri4+Q@mail.gmail.com>
+ <CAODwPW9Vt7TcWfKYDmRgLndb2-+5HoNvA6XMJJznXCudQDngqw@mail.gmail.com>
+ <9d029a04-2a37-cbbe-1932-be34d34f6b69@gmail.com>
+ <CAKz_xw33YBChSCDHcki2JCR=LXrvfEN2pseEN471xVvqhqrUfA@mail.gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <d1fe9a51-d180-a4f4-7af4-b8edbf3c6f29@gmail.com>
+Date:   Mon, 20 Apr 2020 19:36:58 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415081159.1098-2-stephan@gerhold.net>
+In-Reply-To: <CAKz_xw33YBChSCDHcki2JCR=LXrvfEN2pseEN471xVvqhqrUfA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed 15 Apr 01:11 PDT 2020, Stephan Gerhold wrote:
 
-> Device nodes should be named according to the class of devices
-> they belong to. Change the suggested names of the subnodes to
-> apr-service@<id>, which is already in use in
-> arch/arm64/boot/dts/qcom/sdm845.dtsi.
-> 
-> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 
-Applied, thank you.
+On 4/20/2020 6:08 PM, Evan Benn wrote:
+> Thanks Florian,
+> 
+>> The PSCI binding itself has provision for specifying function IDs for
+>> different functions, and this seems to be followed by other subsystems
+>> as well like SCMI:
+>>
+>> https://www.spinics.net/lists/arm-kernel/msg791270.html
+> 
+> Are you referring to this line in the devicetree linked?
+> 
+> +- arm,smc-id : SMC id required when using smc or hvc transports
+> 
+> I cannot find any prior definition of this in the devicetree yaml
+> format, so I will add that as well.
+> Did you have a link for the psci usage that you referenced?
 
-> ---
->  .../devicetree/bindings/soc/qcom/qcom,apr.txt | 20 +++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> index f8fa71f5d84b..2e2f6dc351c0 100644
-> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> @@ -65,30 +65,30 @@ which uses apr as communication between Apps and QDSP.
->  		compatible = "qcom,apr-v2";
->  		qcom,apr-domain = <APR_DOMAIN_ADSP>;
->  
-> -		q6core@3 {
-> +		apr-service@3 {
->  			compatible = "qcom,q6core";
->  			reg = <APR_SVC_ADSP_CORE>;
->  		};
->  
-> -		q6afe@4 {
-> +		apr-service@4 {
->  			compatible = "qcom,q6afe";
->  			reg = <APR_SVC_AFE>;
->  
->  			dais {
->  				#sound-dai-cells = <1>;
-> -				hdmi@1 {
-> -					reg = <1>;
-> +				dai@1 {
-> +					reg = <HDMI_RX>;
->  				};
->  			};
->  		};
->  
-> -		q6asm@7 {
-> +		apr-service@7 {
->  			compatible = "qcom,q6asm";
->  			reg = <APR_SVC_ASM>;
->  			...
->  		};
->  
-> -		q6adm@8 {
-> +		apr-service@8 {
->  			compatible = "qcom,q6adm";
->  			reg = <APR_SVC_ADM>;
->  			...
-> @@ -106,26 +106,26 @@ have no such dependency.
->  		qcom,glink-channels = "apr_audio_svc";
->  		qcom,apr-domain = <APR_DOMAIN_ADSP>;
->  
-> -		q6core {
-> +		apr-service@3 {
->  			compatible = "qcom,q6core";
->  			reg = <APR_SVC_ADSP_CORE>;
->  		};
->  
-> -		q6afe: q6afe {
-> +		q6afe: apr-service@4 {
->  			compatible = "qcom,q6afe";
->  			reg = <APR_SVC_AFE>;
->  			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
->  			...
->  		};
->  
-> -		q6asm: q6asm {
-> +		q6asm: apr-service@7 {
->  			compatible = "qcom,q6asm";
->  			reg = <APR_SVC_ASM>;
->  			qcom,protection-domain = "tms/servreg", "msm/slpi/sensor_pd";
->  			...
->  		};
->  
-> -		q6adm: q6adm {
-> +		q6adm: apr-service@8 {
->  			compatible = "qcom,q6adm";
->  			reg = <APR_SVC_ADM>;
->  			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-> -- 
-> 2.26.1
-> 
+Sure, line 80 and below from psci.yaml:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/arm/psci.yaml#n80
+-- 
+Florian
