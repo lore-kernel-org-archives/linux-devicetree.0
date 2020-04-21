@@ -2,132 +2,108 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A5FC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 09:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D89C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 09:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FED7206E9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 09:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D15C42087E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 09:47:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wNADBHYf"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="hY2TCnqb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgDUJjY (ORCPT
+        id S1726018AbgDUJrw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 05:39:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725920AbgDUJjY (ORCPT
+        Tue, 21 Apr 2020 05:47:52 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:51468 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725920AbgDUJrw (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Apr 2020 05:39:24 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0112FC061A0F
-        for <devicetree@vger.kernel.org>; Tue, 21 Apr 2020 02:39:24 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id u203so3154906vkb.11
-        for <devicetree@vger.kernel.org>; Tue, 21 Apr 2020 02:39:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J6xX4UX3gD4CgRlcECeL2t8r4Bb9qOAjl08Y9GivdCk=;
-        b=wNADBHYfBqrmYLagYMXhvkFyUT8BxHFDmwzkIw/FRVt1EftHXgipIT5yJYjq9ocehu
-         GrZB6OVK67pjdwBAL3ZpBnNYXCYFWesoXkeoHo0e+Ys2ree61WWYf4q1s6aM2pRu8zzE
-         AejCt13Zo1guyVsMD5GmA9rvmocxaeUAi4sNkPEfOLyZk1Y2qbJjkD6tKDgzsKIF5CWZ
-         bLLAKSp0UWZJvyvTPaV6DLqfwXjGE7lCNhM1KyduORgSrcceVXJfhY1vVq4+4BSaq4zN
-         YVaXK4yTyH5sWOKbHxJKYqWhedO0PsZU5jTNO2D9GxGo88EZ/BqFQXR4VHF3pC6Bn3an
-         zNPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J6xX4UX3gD4CgRlcECeL2t8r4Bb9qOAjl08Y9GivdCk=;
-        b=q4PkuPUPH0QlQPzyPag5kd8nIHbgR0f1O6pVSGUlwEwmslwuMLl4Ln1vrMhA9hkSVn
-         40nDMQPsD3df37H2OZVAc8z/2Gm5abGIu8OcUkQsa3uJxmWHvMQmHIUGcEHa88BavpjQ
-         tRd3eud+hJ8ks4d3PyMIYs6TAY01VYie1OpXvfsj9zJrPgyF9bBAfEj6gXmaPC5MfZdh
-         TRZBVg/l/9c4WECj9ldvs3abopekonaZlV9vDUYlLAwIVKQqg5aeb+cFIK7T8kFIou57
-         VFQTuHAexjqSdZuFg7HTL7nCs4W49qO+A6JsiMBN51JiFjYXvQDof3DcGf/scQA2LZSm
-         VSCg==
-X-Gm-Message-State: AGi0PuadAVUrl9EAMsBc2kzJa0iF+zdtbz+Q0BP6l0Afosr6vl+jiS22
-        bW5yFsBJmSm7bNl0cWdPauyuUVr/Sfzk3fPiw5a6VQ==
-X-Google-Smtp-Source: APiQypLnPZE96uN80G6KHYHQ5XnaUSopJzzVTgfYzGF7mgcTRi/zaOA8wN0KNmuIrTuTzZyPCglj01kkbBVX93uXS2o=
-X-Received: by 2002:a1f:31cf:: with SMTP id x198mr4295427vkx.101.1587461963161;
- Tue, 21 Apr 2020 02:39:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200420161831.5043-1-ludovic.barre@st.com> <CAPDyKFqC3fdnQ9CMYhS-=5MiCET=r5Az2S5oFoA2v1gdDeGO3w@mail.gmail.com>
-In-Reply-To: <CAPDyKFqC3fdnQ9CMYhS-=5MiCET=r5Az2S5oFoA2v1gdDeGO3w@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 21 Apr 2020 11:38:47 +0200
-Message-ID: <CAPDyKFrHcoVd=GKPB70gOFE8STOnTJrJbcZzE_DEgFWh1Vhszg@mail.gmail.com>
-Subject: Re: [PATCH] mmc: mmci_sdmmc: fix power on issue due to pwr_reg initialization
-To:     Ludovic Barre <ludovic.barre@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 21 Apr 2020 05:47:52 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 7F92EC0353;
+        Tue, 21 Apr 2020 09:47:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1587462471; bh=GCOkLmV4EmDz6ISgGT9wRw9lM5hPPhzwmrhK1ozo9qw=;
+        h=Date:From:Subject:To:Cc:From;
+        b=hY2TCnqb40zM7X9JUZZKHAa8wWNEnLTjaOSUnRYOetkufC5jsCir/n0eO2TRWHHBK
+         orKrYFvItKL+aVcfYp7DnLlhVQliNjvh9KxSIVC7srXSA3iDFMU0Km+45RrK3ttniL
+         TVVUIFbq1lmCAarpTyJdZNtivjivtsmyCQKzV15qIhV0lMYxs2HkY2cM8x5LlNhO3+
+         wDu2GXtFMVZkRTGcqu7rH6zNdLxVwTaf6SnSpsjHelYPH+2MH9/Rcj+FHCzDX9QOPo
+         2WOg2yGg+yysFWS3NJWSIKY3pp6P3C3T28BfZl/2Md7lvDrKrFnjNBheOfl/iE+GWM
+         dHaN5dkrui7wg==
+Received: from tejas-VirtualBox (joglekar-e7480.internal.synopsys.com [10.146.16.13])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPSA id 2762BA005C;
+        Tue, 21 Apr 2020 09:47:45 +0000 (UTC)
+Received: by tejas-VirtualBox (sSMTP sendmail emulation); Tue, 21 Apr 2020 15:17:43 +0530
+Date:   Tue, 21 Apr 2020 15:17:43 +0530
+Message-Id: <cover.1587461220.git.joglekar@synopsys.com>
+From:   Tejas Joglekar <Tejas.Joglekar@synopsys.com>
+Subject: [RFC PATCH v2 0/4] Add logic to consolidate TRBs for Synopsys xHC
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>
+Cc:     John Youn <John.Youn@synopsys.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 21 Apr 2020 at 11:25, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Mon, 20 Apr 2020 at 18:18, Ludovic Barre <ludovic.barre@st.com> wrote:
-> >
-> > This patch fix a power-on issue, and avoid to retry the power sequence.
-> >
-> > In power off sequence: sdmmc must set pwr_reg in "power-cycle" state
-> > (value 0x2), to prevent the card from being supplied through the signal
-> > lines (all the lines are driven low).
-> >
-> > In power on sequence: when the power is stable, sdmmc must set pwr_reg
-> > in "power-off" state (value 0x0) to drive all signal to high before to
-> > set "power-on".
->
-> Just a question to gain further understanding.
->
-> Let's assume that the controller is a power-on state, because it's
-> been initialized by the boot loader. When the mmc core then starts the
-> power-on sequence (not doing a power-off first), would $subject patch
-> then cause the
-> MMCIPOWER to remain as is, or is it going to be overwritten?
->
-> I am a little worried that we may start to rely on boot loader
-> conditions, which isn't really what we want either...
->
-> >
-> > To avoid writing the same value to the power register several times, this
-> > register is cached by the pwr_reg variable. At probe pwr_reg is initialized
-> > to 0 by kzalloc of mmc_alloc_host.
-> >
-> > Like pwr_reg value is 0 at probing, the power on sequence fail because
-> > the "power-off" state is not writes (value 0x0) and the lines
-> > remain drive to low.
-> >
-> > This patch initializes "pwr_reg" variable with power register value.
-> > This it done in sdmmc variant init to not disturb default mmci behavior.
-> >
-> > Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
->
-> Besides the comment, the code and the approach seems reasonable to me.
+The Synopsys xHC has an internal TRB cache of size TRB_CACHE_SIZE for
+each endpoint. The default value for TRB_CACHE_SIZE is 16 for SS and 8
+for HS. The controller loads and updates the TRB cache from the
+transfer ring in system memory whenever the driver issues a start
+transfer or update transfer command.
 
-Another related question. I just realized why you probably haven't set
-.pwrreg_nopower for the variant_stm32_sdmmc and variant_stm32_sdmmcv2.
+For chained TRBs, the Synopsys xHC requires that the total amount of
+bytes for all TRBs loaded in the TRB cache be greater than or equal to
+1 MPS. Or the chain ends within the TRB cache (with a last TRB).
 
-I guess it's because you need a slightly different way to restore the
-context of MMCIPOWER register at ->runtime_resume(), rather than just
-re-writing it with the saved register values. Is this something that
-you are looking into as well?
+If this requirement is not met, the controller will not be able to
+send or receive a packet and it will hang causing a driver timeout and
+error.
 
-[...]
+This patch set adds logic to the XHCI driver to detect and prevent this
+from happening along with the quirk to enable this logic for Synopsys
+HAPS platform.
 
-Kind regards
-Uffe
+Based on Mathias's feedback on previous implementation where consolidation
+was done in TRB cache, with this patch series the implementation is done
+during mapping of the URB by consolidating the SG list into a temporary
+buffer if the SG list buffer sizes within TRB_CACHE_SIZE is less than MPS.
+
+Changes since v1:
+ - Comments from Greg are addressed on [PATCH 4/4] and [PATCH 1/4]
+ - Renamed the property and quirk as in other patches based on [PATCH 1/4]
+
+Tejas Joglekar (4):
+  dt-bindings: usb: Add documentation for SG trb cache size quirk
+  usb: xhci: Set quirk for XHCI_SG_TRB_CACHE_SIZE_QUIRK
+  usb: dwc3: Add device property sgl-trb-cache-size-quirk
+  usb: xhci: Use temporary buffer to consolidate SG
+
+ Documentation/devicetree/bindings/usb/dwc3.txt     |   4 +
+ Documentation/devicetree/bindings/usb/usb-xhci.txt |   3 +
+ drivers/usb/dwc3/core.c                            |   2 +
+ drivers/usb/dwc3/core.h                            |   2 +
+ drivers/usb/dwc3/dwc3-haps.c                       |   1 +
+ drivers/usb/dwc3/host.c                            |   6 +-
+ drivers/usb/host/xhci-pci.c                        |   3 +
+ drivers/usb/host/xhci-plat.c                       |   4 +
+ drivers/usb/host/xhci-ring.c                       |   2 +-
+ drivers/usb/host/xhci.c                            | 125 +++++++++++++++++++++
+ drivers/usb/host/xhci.h                            |   5 +
+ 11 files changed, 155 insertions(+), 2 deletions(-)
+
+-- 
+2.11.0
+
