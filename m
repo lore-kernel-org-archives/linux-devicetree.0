@@ -2,110 +2,198 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76442C54FCC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 18:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C0CC54FC9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 18:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5688C20735
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 18:22:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587493353;
-	bh=FwcHGUYdMnDibj/tRCqmioRk8NJPli42GayBPx027Pw=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=jmdEdk2yzjBOZzOciMxaaYPeXpGrdimiUezVd6RMKMhEFAnwvtaF4mox2k+a4fOeI
-	 Q465rO7XUB43+v1fu/4teS2ANTW1e5J60mWpTdgFYIbljxQBlLLfLOOQrxSWNghtxb
-	 ieIF0q9eUshmUQXR3vNToEYRph9CJSeSubfBsnnQ=
+	by mail.kernel.org (Postfix) with ESMTP id CECB1206B9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 18:29:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="O8MylIdt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbgDUSWc (ORCPT
+        id S1725990AbgDUS31 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 14:22:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbgDUSWc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Apr 2020 14:22:32 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56F05206D9;
-        Tue, 21 Apr 2020 18:22:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587493351;
-        bh=FwcHGUYdMnDibj/tRCqmioRk8NJPli42GayBPx027Pw=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=eK2EvRMqCoy5KAlgM/CatYGa7aZv9+O9BbdwG0SYk1b29oAlt7ThQMoKL3REtyXkO
-         rpz4apg98lYR4E9JXQTCCofMqT6leAp9UCThGk2rPKjkEJOa2eZovD9dUgaFdZUniE
-         2orodMJywuJiOar76mwN+At/k9AiGOztnVPpN56Q=
-Date:   Tue, 21 Apr 2020 19:22:29 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Xiubo.Lee@gmail.com, devicetree@vger.kernel.org,
-        nicoleotsuka@gmail.com, perex@perex.cz, lgirdwood@gmail.com,
-        alsa-devel@alsa-project.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        timur@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        festevam@gmail.com, tiwai@suse.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-In-Reply-To: <cover.1587038908.git.shengjiu.wang@nxp.com>
-References: <cover.1587038908.git.shengjiu.wang@nxp.com>
-Subject: Re: [PATCH v9 0/7] ASoC: Add new module driver for new ASRC
-Message-Id: <158749333764.13706.16975370508037163881.b4-ty@kernel.org>
+        Tue, 21 Apr 2020 14:29:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57570 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbgDUS31 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Apr 2020 14:29:27 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 103C3C0610D5;
+        Tue, 21 Apr 2020 11:29:27 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 326A6528;
+        Tue, 21 Apr 2020 20:29:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1587493763;
+        bh=Ub+bvuy54/lHHBzdaKAhPdrkxpA4BOORJHhwhd+Euko=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=O8MylIdtPq0HfXE73cG8CsePtPPdHUr4qKGIHIsXfObuyeGbfy7+3BRs+BnaQatmh
+         mUvSQ+aquZinMBPk3euVqA/ntt1NXXsx1C+03IVkdna/7rhGjkLFIw/CuPtonV5e6j
+         5+yHIoN4Jz9Ta1vT9KdFA61ExbjF4XU36xMZaepE=
+Date:   Tue, 21 Apr 2020 21:29:09 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] kbuild: Always validate DT binding examples
+Message-ID: <20200421182909.GE5983@pendragon.ideasonboard.com>
+References: <20200229003731.2728-1-robh@kernel.org>
+ <20200421100749.GA5429@pendragon.ideasonboard.com>
+ <CAK7LNARvPytUQoncngLe=s-TzQByQCXd64H99UgrW40=X34JyQ@mail.gmail.com>
+ <20200421110537.GC5983@pendragon.ideasonboard.com>
+ <CAK7LNAQtfyqfbQx2ivg=sVdhxDH9ShVBa+bL-4sC7MU1N=y+cw@mail.gmail.com>
+ <20200421134654.GD5983@pendragon.ideasonboard.com>
+ <CAL_JsqJQpwN4tH0KWOB1s6NWf3sRqqGRsRiKazi=CJGCwb2T+Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJQpwN4tH0KWOB1s6NWf3sRqqGRsRiKazi=CJGCwb2T+Q@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 16 Apr 2020 20:25:30 +0800, Shengjiu Wang wrote:
-> Add new module driver for new ASRC in i.MX8MN, several commits
-> are added for new property fsl,asrc-format
+Hi Rob,
+
+On Tue, Apr 21, 2020 at 09:01:32AM -0500, Rob Herring wrote:
+> On Tue, Apr 21, 2020 at 8:47 AM Laurent Pinchart wrote:
+> > On Tue, Apr 21, 2020 at 10:15:02PM +0900, Masahiro Yamada wrote:
+> > > On Tue, Apr 21, 2020 at 8:05 PM Laurent Pinchart wrote:
+> > > > On Tue, Apr 21, 2020 at 07:45:05PM +0900, Masahiro Yamada wrote:
+> > > > > On Tue, Apr 21, 2020 at 7:08 PM Laurent Pinchart wrote:
+> > > > > > On Fri, Feb 28, 2020 at 06:37:30PM -0600, Rob Herring wrote:
+> > > > > > > Most folks only run dt_binding_check on the single schema they care about
+> > > > > > > by setting DT_SCHEMA_FILES. That means example is only checked against
+> > > > > > > that one schema which is not always sufficient.
+> > > > > > >
+> > > > > > > Let's address this by splitting processed-schema.yaml into 2 files: one
+> > > > > > > that's always all schemas for the examples and one that's just the schema
+> > > > > > > in DT_SCHEMA_FILES for dtbs.
+> > > > > >
+> > > > > > This broke
+> > > > > >
+> > > > > > make DT_SCHEMA_FILES=Documentation/devicetree/.. dt_binding_check
+> > > > >
+> > > > > What is intended by
+> > > > > "DT_SCHEMA_FILES=Documentation/devicetree/.."  ?
+> > > >
+> > > > My bad, I forgot to write that ... is the continuation of the string.
+> > > > It's any yaml schema file that has an example.
+> > >
+> > > Ah, OK. I just input verbatim.
+> > >
+> > > Is it broken?
+> > >
+> > > You can specify any individual file(s) under Documentation/devicetree/bindings/.
+> > >
+> > > For example, the following worked for me.
+> > >
+> > > $ make DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml
+> > >  dt_binding_check
+> > >   HOSTCC  scripts/basic/fixdep
+> > >   HOSTCC  scripts/dtc/dtc.o
+> > >   HOSTCC  scripts/dtc/flattree.o
+> > >   HOSTCC  scripts/dtc/fstree.o
+> > >   HOSTCC  scripts/dtc/data.o
+> > >   HOSTCC  scripts/dtc/livetree.o
+> > >   HOSTCC  scripts/dtc/treesource.o
+> > >   HOSTCC  scripts/dtc/srcpos.o
+> > >   HOSTCC  scripts/dtc/checks.o
+> > >   HOSTCC  scripts/dtc/util.o
+> > >   LEX     scripts/dtc/dtc-lexer.lex.c
+> > >   YACC    scripts/dtc/dtc-parser.tab.[ch]
+> > >   HOSTCC  scripts/dtc/dtc-lexer.lex.o
+> > >   HOSTCC  scripts/dtc/dtc-parser.tab.o
+> > >   HOSTCC  scripts/dtc/yamltree.o
+> > >   HOSTLD  scripts/dtc/dtc
+> > >   CHKDT   Documentation/devicetree/bindings/arm/psci.yaml
+> > >   SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
+> > >   DTC     Documentation/devicetree/bindings/arm/psci.example.dt.yaml
+> > >   CHECK   Documentation/devicetree/bindings/arm/psci.example.dt.yaml
+> > >   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+> >
+> > This is getting interesting.
+> >
+> > ~/src/kernel/linux $ make O=output/x86 DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml dt_binding_check
+> > make[1]: Entering directory '/home/laurent/src/kernel/linux/output/x86'
+> >   HOSTCC  scripts/basic/fixdep
+> >   HOSTCC  scripts/dtc/dtc.o
+> >   HOSTCC  scripts/dtc/flattree.o
+> >   HOSTCC  scripts/dtc/fstree.o
+> >   HOSTCC  scripts/dtc/data.o
+> >   HOSTCC  scripts/dtc/livetree.o
+> >   HOSTCC  scripts/dtc/treesource.o
+> >   HOSTCC  scripts/dtc/srcpos.o
+> >   HOSTCC  scripts/dtc/checks.o
+> >   HOSTCC  scripts/dtc/util.o
+> >   LEX     scripts/dtc/dtc-lexer.lex.c
+> >   YACC    scripts/dtc/dtc-parser.tab.[ch]
+> >   HOSTCC  scripts/dtc/dtc-lexer.lex.o
+> >   HOSTCC  scripts/dtc/dtc-parser.tab.o
+> >   HOSTCC  scripts/dtc/yamltree.o
+> >   HOSTLD  scripts/dtc/dtc
+> >   CHKDT   Documentation/devicetree/bindings/arm/psci.yaml
+> >   SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
+> >   DTC     Documentation/devicetree/bindings/arm/psci.example.dt.yaml
+> >   CHECK   Documentation/devicetree/bindings/arm/psci.example.dt.yaml
+> >   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+> > make[1]: Leaving directory '/home/laurent/src/kernel/linux/output/x86'
+> >
+> > ~/src/kernel/this_is_a_long_directory_name/linux $ make O=output/x86 DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml dt_binding_check
+> > make[1]: Entering directory '/home/laurent/src/kernel/this_is_a_long_directory_name/linux/output/x86'
+> >   HOSTCC  scripts/basic/fixdep
+> >   HOSTCC  scripts/dtc/dtc.o
+> >   HOSTCC  scripts/dtc/flattree.o
+> >   HOSTCC  scripts/dtc/fstree.o
+> >   HOSTCC  scripts/dtc/data.o
+> >   HOSTCC  scripts/dtc/livetree.o
+> >   HOSTCC  scripts/dtc/treesource.o
+> >   HOSTCC  scripts/dtc/srcpos.o
+> >   HOSTCC  scripts/dtc/checks.o
+> >   HOSTCC  scripts/dtc/util.o
+> >   LEX     scripts/dtc/dtc-lexer.lex.c
+> >   YACC    scripts/dtc/dtc-parser.tab.[ch]
+> >   HOSTCC  scripts/dtc/dtc-lexer.lex.o
+> >   HOSTCC  scripts/dtc/dtc-parser.tab.o
+> >   HOSTCC  scripts/dtc/yamltree.o
+> >   HOSTLD  scripts/dtc/dtc
+> >   CHKDT   Documentation/devicetree/bindings/arm/psci.yaml
+> > make[2]: execvp: /bin/sh: Argument list too long
+> > make[2]: *** [/home/laurent/src/kernel/this_is_a_long_directory_name/linux/Documentation/devicetree/bindings/Makefile:38: Documentation/devicetree/bindings/processed-schema-examples.yaml] Error 127
+> > make[1]: *** [/home/laurent/src/kernel/this_is_a_long_directory_name/linux/Makefile:1300: dt_binding_check] Error 2
+> > make[1]: Leaving directory '/home/laurent/src/kernel/this_is_a_long_directory_name/linux/output/x86'
+> > make: *** [Makefile:180: sub-make] Error 2
+> >
+> > It seems to only fail with out of tree builds (O=...). I expect that
+> > failures will become more common the more YAML bindings we have, even
+> > without long directory names.
 > 
-> Shengjiu Wang (7):
->   ASoC: fsl_asrc: rename asrc_priv to asrc
->   ASoC: dt-bindings: fsl_asrc: Add new property fsl,asrc-format
->   ASoC: fsl-asoc-card: Support new property fsl,asrc-format
->   ASoC: fsl_asrc: Support new property fsl,asrc-format
->   ASoC: fsl_asrc: Move common definition to fsl_asrc_common
->   ASoC: dt-bindings: fsl_easrc: Add document for EASRC
->   ASoC: fsl_easrc: Add EASRC ASoC CPU DAI drivers
+> dt-mk-schema can take and recurse a single directory already, so does
+> this fix it for you:
+
+Yes, the change below fixes my problem, thank you.
+
+> @@ -22,7 +22,7 @@ $(obj)/%.example.dts: $(src)/%.yaml
+> check_dtschema_version FORCE
+>  DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
 > 
-> [...]
+>  quiet_cmd_mk_schema = SCHEMA  $@
+> -      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
+> $(real-prereqs)
+> +      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
+> $(srctree)/$(src)
+> 
+>  DT_DOCS = $(addprefix $(src)/, \
+>         $(shell \
 
-Applied to
+-- 
+Regards,
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.8
-
-Thanks!
-
-[1/7] ASoC: fsl_asrc: rename asrc_priv to asrc
-      commit: 7470704d8b425c4c7045884690f92cf015563aac
-[2/7] ASoC: dt-bindings: fsl_asrc: Add new property fsl, asrc-format
-      commit: b84b4c9a688d803b0e7cf91fec9a5d8b3ba47768
-[3/7] ASoC: fsl-asoc-card: Support new property fsl, asrc-format
-      commit: 859e364302c510cfdd9abda13a3c4c1d1bc68c57
-[4/7] ASoC: fsl_asrc: Support new property fsl,asrc-format
-      commit: 4520af41fd21863d026d53c7e1eb987509cb3c24
-[5/7] ASoC: fsl_asrc: Move common definition to fsl_asrc_common
-      commit: be7bd03f0201b5a513ced98c08444a140eab92ea
-[6/7] ASoC: dt-bindings: fsl_easrc: Add document for EASRC
-      commit: a960de4da241d409a73e318ab19e6b5fdcd95a83
-[7/7] ASoC: fsl_easrc: Add EASRC ASoC CPU DAI drivers
-      commit: 955ac624058f91172b3b8820280556e699e1e0ff
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+Laurent Pinchart
