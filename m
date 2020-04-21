@@ -2,161 +2,227 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C73F9C54FC9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 15:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B920C54FCC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 15:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EDFF2068F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 15:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A1C9206F4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 15:44:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nXp+eKJF"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="QpuIKuee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725902AbgDUPZI (ORCPT
+        id S1726183AbgDUPn7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 11:25:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725613AbgDUPZH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Apr 2020 11:25:07 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48546C061A41
-        for <devicetree@vger.kernel.org>; Tue, 21 Apr 2020 08:25:07 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id r7so10502427edo.11
-        for <devicetree@vger.kernel.org>; Tue, 21 Apr 2020 08:25:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A0hD3Q0ITYFJ+WJSCgWA5cOFQ2Hb706eW4ZYrVGl9Is=;
-        b=nXp+eKJF/myCFRCaorUOV9CYoN/WHisSwMTKfzpZVvin3o1rzC4CCU4eM1IEsUZWzY
-         K4yhdnlnO+5j7pzJIR2zo3acm84EuPDwIAqvLgv+2hMSZi28C/RwuPpbnMMXfJzQYfbO
-         yVdQUm5C7n/+hWUjCO8EJmj5nopNYBLU/453U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A0hD3Q0ITYFJ+WJSCgWA5cOFQ2Hb706eW4ZYrVGl9Is=;
-        b=ZzXjLxZztFpe8YCbO+R1Rs1j1haLRDRdsBxYU6HzJ0d2yF0xJ9g944ZxnCSWLVr26r
-         q5c1Se9e2bJNFXi1qN6CXsjwqPTT3uwu2pPj0W5SdGw5xvN5NzU93pXx70w7WOH7W3zZ
-         LkPl4zZhGhT5I6NQZehDc8/xz7T5296hX0Yy0Hx4/roWeSGZnIBLswAzOTmgNr7ylTm/
-         H5BzRR/ampL7/cVXK6TZmCw2zLij1F5fcadezZRz8iH8DjY+Fu0hNyqu8k4JRGE1XFaV
-         0w+mgWvZfmqKNLKKLH/xxNtIWdno7hFIeXvIJJgU3zUCzk8kYsyZnu7lDXi9LprivVVv
-         ZoiQ==
-X-Gm-Message-State: AGi0PuZEsTnBxEJn7GvGosgQy2jWaMIBVjHuVi+H9QK0wq1vrqZUkItw
-        RX9QvSuaVfiSr+hiK6U7KsvkGGAM2QJf0w==
-X-Google-Smtp-Source: APiQypKBukGXPZCubiXo2NMhaYc0dVY+LXE9FcZBw/UJQjchAunpVYx+MRQMK5Fp18cZruQnxoz8/g==
-X-Received: by 2002:aa7:d518:: with SMTP id y24mr18625279edq.222.1587482705549;
-        Tue, 21 Apr 2020 08:25:05 -0700 (PDT)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
-        by smtp.gmail.com with ESMTPSA id n17sm507965eja.9.2020.04.21.08.25.04
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 08:25:04 -0700 (PDT)
-Received: by mail-wr1-f51.google.com with SMTP id i10so16893254wrv.10
-        for <devicetree@vger.kernel.org>; Tue, 21 Apr 2020 08:25:04 -0700 (PDT)
-X-Received: by 2002:adf:bb94:: with SMTP id q20mr26683063wrg.105.1587482703399;
- Tue, 21 Apr 2020 08:25:03 -0700 (PDT)
+        Tue, 21 Apr 2020 11:43:59 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:32970 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbgDUPn7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Apr 2020 11:43:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1587483836; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bHceis2+vNOIlN7295BKgbc3RLPfHPJQ+eTv/OC+9IQ=;
+        b=QpuIKueesZI4P4sWW1sIWSdpXUbxiN3H02M0g6ZzKABJLrnx0kWpTKAwNIkdQRdnG//d7A
+        Jzx8FJwDqKws+VKsKJeAhymgOM8RgffnwGXBBVI4tafXQzq7xiPA/ZaOd37L/EBpfK1Xur
+        XEr8WhaY6Wo7Qqsy1thhxE0t4eYRI7E=
+Date:   Tue, 21 Apr 2020 17:43:44 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v6 4/5] remoteproc: ingenic: Added remoteproc driver
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>, od@zcrc.me,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Message-Id: <WCA59Q.IXGX82YOG4GI2@crapouillou.net>
+In-Reply-To: <20200420063714.GA1868936@builder.lan>
+References: <20200417170040.174319-1-paul@crapouillou.net>
+        <20200417170040.174319-4-paul@crapouillou.net>
+        <20200420063714.GA1868936@builder.lan>
 MIME-Version: 1.0
-References: <20200421051858.11176-1-bibby.hsieh@mediatek.com> <20200421051858.11176-3-bibby.hsieh@mediatek.com>
-In-Reply-To: <20200421051858.11176-3-bibby.hsieh@mediatek.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Tue, 21 Apr 2020 17:24:51 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5BhHpVn6aE_Q8zsg6iZu5zf05S2oO4XnE6mAfwx3HHEdw@mail.gmail.com>
-Message-ID: <CAAFQd5BhHpVn6aE_Q8zsg6iZu5zf05S2oO4XnE6mAfwx3HHEdw@mail.gmail.com>
-Subject: Re: [PATCH v13 2/2] i2c: core: support bus regulator controlling in adapter
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 7:19 AM Bibby Hsieh <bibby.hsieh@mediatek.com> wrote:
->
-> Although in the most platforms, the bus power of i2c
-> are alway on, some platforms disable the i2c bus power
-> in order to meet low power request.
->
-> We get and enable bulk regulator in i2c adapter device.
->
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/i2c/i2c-core-base.c | 82 +++++++++++++++++++++++++++++++++++++
->  include/linux/i2c.h         |  2 +
->  2 files changed, 84 insertions(+)
->
-> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> index 5cc0b0ec5570..b3d15d6d449d 100644
-> --- a/drivers/i2c/i2c-core-base.c
-> +++ b/drivers/i2c/i2c-core-base.c
-> @@ -313,6 +313,7 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
->  static int i2c_device_probe(struct device *dev)
->  {
->         struct i2c_client       *client = i2c_verify_client(dev);
-> +       struct i2c_adapter      *adap = client->adapter;
->         struct i2c_driver       *driver;
->         int status;
->
-> @@ -378,6 +379,12 @@ static int i2c_device_probe(struct device *dev)
->
->         dev_dbg(dev, "probe\n");
->
-> +       status = regulator_enable(adap->bus_regulator);
-> +       if (status < 0) {
-> +               dev_err(&adap->dev, "Failed to enable power regulator\n");
-> +               goto err_clear_wakeup_irq;
-> +       }
-> +
->         status = of_clk_set_defaults(dev->of_node, false);
->         if (status < 0)
->                 goto err_clear_wakeup_irq;
-> @@ -414,6 +421,7 @@ static int i2c_device_probe(struct device *dev)
->  static int i2c_device_remove(struct device *dev)
->  {
->         struct i2c_client       *client = i2c_verify_client(dev);
-> +       struct i2c_adapter      *adap = client->adapter;
->         struct i2c_driver       *driver;
->         int status = 0;
->
-> @@ -427,6 +435,8 @@ static int i2c_device_remove(struct device *dev)
->         }
->
->         dev_pm_domain_detach(&client->dev, true);
-> +       if (!pm_runtime_status_suspended(&client->dev))
-> +               regulator_disable(adap->bus_regulator);
->
->         dev_pm_clear_wake_irq(&client->dev);
->         device_init_wakeup(&client->dev, false);
-> @@ -438,6 +448,72 @@ static int i2c_device_remove(struct device *dev)
->         return status;
->  }
->
-> +#ifdef CONFIG_PM_SLEEP
-> +static int i2c_resume_early(struct device *dev)
-> +{
-> +       struct i2c_client *client = i2c_verify_client(dev);
-> +       struct i2c_adapter *adap = client->adapter;
-> +       int err;
-> +
-> +       if (pm_runtime_status_suspended(&client->dev)) {
+Hi Bjorn,
 
-Shouldn't this be !pm_runtime_status_suspended()? If the device was
-suspended at system suspend time, we wouldn't have powered off the
-regulator in our suspend_late callback, so we don't need to re-enable
-it in resume_early.
+Le dim. 19 avril 2020 =E0 23:37, Bjorn Andersson=20
+<bjorn.andersson@linaro.org> a =E9crit :
+> On Fri 17 Apr 10:00 PDT 2020, Paul Cercueil wrote:
+>=20
+>>  This driver is used to boot, communicate with and load firmwares to=20
+>> the
+>>  MIPS co-processor found in the VPU hardware of the JZ47xx SoCs from
+>>  Ingenic.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  Signed-off-by: kbuild test robot <lkp@intel.com>
+>>  Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
+>=20
+> Please read Documentation/process/submitting-patches.rst about
+> "Developer's Certificate of Origin".
+>=20
+> I suspect that you incorporated review feedback on previous revisions
+> from kbuild and Julia, this is generally omitted from the actual=20
+> commit
+> message.
 
-Best regards,
-Tomasz
+Julia / kbuild sent a patch to fix an error in the driver, so my patch=20
+now has code from Julia / kbuild. That document clearly says that I=20
+should add their signed-off-by. Or what do you mean?
+
+>>  Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>  ---
+>>=20
+>>  Notes:
+>>      v2: Remove exception for always-mapped memories
+>>      v3: - Use clk_bulk API
+>>      	- Move device-managed code to its own patch [3/4]
+>>      	- Move devicetree table right above ingenic_rproc_driver
+>>      	- Removed #ifdef CONFIG_OF around devicetree table
+>>      	- Removed .owner =3D THIS_MODULE in ingenic_rproc_driver
+>>      	- Removed useless platform_set_drvdata()
+>>      v4: - Add fix reported by Julia
+>>      	- Change Kconfig symbol to INGENIC_VPU_RPROC
+>>      	- Add documentation to struct vpu
+>>      	- disable_irq_nosync() -> disable_irq()
+>>      v5: No change
+>>      v6: Instead of prepare/unprepare callbacks, use PM runtime=20
+>> callbacks
+>>=20
+>>   drivers/remoteproc/Kconfig         |   8 +
+>>   drivers/remoteproc/Makefile        |   1 +
+>>   drivers/remoteproc/ingenic_rproc.c | 282=20
+>> +++++++++++++++++++++++++++++
+>>   3 files changed, 291 insertions(+)
+>>   create mode 100644 drivers/remoteproc/ingenic_rproc.c
+>>=20
+>>  diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+>>  index fbaed079b299..31da3e6c6281 100644
+>>  --- a/drivers/remoteproc/Kconfig
+>>  +++ b/drivers/remoteproc/Kconfig
+>>  @@ -240,6 +240,14 @@ config STM32_RPROC
+>>=20
+>>   	  This can be either built-in or a loadable module.
+>>=20
+>>  +config INGENIC_VPU_RPROC
+>=20
+> Please try to keep things alphabetically ordered.
+>=20
+>>  +	tristate "Ingenic JZ47xx VPU remoteproc support"
+>>  +	depends on MIPS || COMPILE_TEST
+>>  +	help
+>>  +	  Say y or m here to support the VPU in the JZ47xx SoCs from=20
+>> Ingenic.
+>>  +	  This can be either built-in or a loadable module.
+>>  +	  If unsure say N.
+>>  +
+>>   endif # REMOTEPROC
+>>=20
+>>   endmenu
+> [..]
+>>  diff --git a/drivers/remoteproc/ingenic_rproc.c=20
+>> b/drivers/remoteproc/ingenic_rproc.c
+> [..]
+>>  +/**
+>>  + * struct vpu - Ingenic VPU remoteproc private structure
+>>  + * @irq: interrupt number
+>>  + * @clks: pointers to the VPU and AUX clocks
+>=20
+> aux_base is missing
+>=20
+>>  + * @mem_info: array of struct vpu_mem_info, which contain the=20
+>> mapping info of
+>>  + *            each of the external memories
+>>  + * @dev: private pointer to the device
+>>  + */
+>>  +struct vpu {
+>>  +	int irq;
+>>  +	struct clk_bulk_data clks[2];
+>>  +	void __iomem *aux_base;
+>>  +	struct vpu_mem_info mem_info[ARRAY_SIZE(vpu_mem_map)];
+>>  +	struct device *dev;
+>>  +};
+> [..]
+>>  +static void *ingenic_rproc_da_to_va(struct rproc *rproc, u64 da,=20
+>> size_t len)
+>>  +{
+>>  +	struct vpu *vpu =3D rproc->priv;
+>>  +	void __iomem *va =3D NULL;
+>>  +	unsigned int i;
+>>  +
+>>  +	if (len <=3D 0)
+>=20
+> len can't be negative (also, does it add value to check for and fail=20
+> len
+> =3D=3D 0?)
+>=20
+>>  +		return NULL;
+>>  +
+>>  +	for (i =3D 0; i < ARRAY_SIZE(vpu_mem_map); i++) {
+>>  +		const struct vpu_mem_info *info =3D &vpu->mem_info[i];
+>>  +		const struct vpu_mem_map *map =3D info->map;
+>>  +
+>>  +		if (da >=3D map->da && (da + len) < (map->da + info->len)) {
+>>  +			va =3D info->base + (da - map->da);
+>>  +			break;
+>>  +		}
+>>  +	}
+>>  +
+>>  +	return (__force void *)va;
+>>  +}
+> [..]
+>>  +static struct platform_driver ingenic_rproc_driver =3D {
+>>  +	.probe =3D ingenic_rproc_probe,
+>>  +	.driver =3D {
+>>  +		.name =3D "ingenic-vpu",
+>>  +#ifdef CONFIG_PM
+>=20
+> Please omit the #ifdef here.
+
+If I do, then the PM callbacks will be compiled in even if CONFIG_PM is=20
+disabled. That means dead code and I see no reason why you would want=20
+that.
+
+If you don't mind, I'd like to keep the #ifdef CONFIG_PM for now, until=20
+this patchset is merged: https://lkml.org/lkml/2020/4/13/582
+
+Then it would become a one-liner:
+.pm =3D pm_ptr(&ingenic_rproc_pm),
+
+Cheers,
+-Paul
+
+>>  +		.pm =3D &ingenic_rproc_pm,
+>>  +#endif
+>>  +		.of_match_table =3D of_match_ptr(ingenic_rproc_of_matches),
+>=20
+> Please omit the of_match_ptr()
+>=20
+> Regards,
+> Bjorn
+>=20
+>>  +	},
+>>  +};
+>>  +module_platform_driver(ingenic_rproc_driver);
+>>  +
+>>  +MODULE_LICENSE("GPL");
+>>  +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
+>>  +MODULE_DESCRIPTION("Ingenic JZ47xx Remote Processor control=20
+>> driver");
+>>  --
+>>  2.25.1
+>>=20
+
+
