@@ -5,38 +5,38 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D509C5518F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 00:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3BDC55189
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 00:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CE732082E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 00:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EC1F22209
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 00:11:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ScWjphOb"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="g7kRAz3s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgDUALX (ORCPT
+        id S1726209AbgDUAL4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 20:11:23 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9984 "EHLO
+        Mon, 20 Apr 2020 20:11:56 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9977 "EHLO
         hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbgDUALW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 20:11:22 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e9e3a1d0001>; Mon, 20 Apr 2020 17:11:10 -0700
+        with ESMTP id S1726445AbgDUALV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 20:11:21 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e9e3a1c0001>; Mon, 20 Apr 2020 17:11:08 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 20 Apr 2020 17:11:22 -0700
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 20 Apr 2020 17:11:21 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 20 Apr 2020 17:11:22 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Apr
- 2020 00:11:22 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 21 Apr 2020 00:11:21 +0000
+        by hqpgpgate102.nvidia.com on Mon, 20 Apr 2020 17:11:21 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Apr
+ 2020 00:11:21 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 21 Apr 2020 00:11:20 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.165.49]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e9e3a280001>; Mon, 20 Apr 2020 17:11:21 -0700
+        id <B5e9e3a270001>; Mon, 20 Apr 2020 17:11:20 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -45,9 +45,9 @@ CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
         <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH v8 4/9] clk: tegra: Add Tegra210 CSI TPG clock gate
-Date:   Mon, 20 Apr 2020 17:11:09 -0700
-Message-ID: <1587427874-3291-5-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v8 3/9] dt-bindings: clock: tegra: Add clk id for CSI TPG clock
+Date:   Mon, 20 Apr 2020 17:11:08 -0700
+Message-ID: <1587427874-3291-4-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1587427874-3291-1-git-send-email-skomatineni@nvidia.com>
 References: <1587427874-3291-1-git-send-email-skomatineni@nvidia.com>
@@ -55,55 +55,45 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587427870; bh=/06MYnopqzjyrf2N0nRAUhGBnkcd6r/kBjlHyehzo9I=;
+        t=1587427868; bh=Aw2TIrfzrAVXZOn1lDfsAGIvwrb7U15QVjnSRgzRbvc=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=ScWjphObhyTxS1LYNhpPSkmIciySTfaqOyCXM8UmZMWZNnASDvhJtFZ5lTXpEuAvR
-         a92y23U5ogPWMCRwcvwmBB/lvJ9G7xKtfspcOnTf4jl2onfkUHSl/zDmXHsRH2A6Rf
-         HzHML+HJklr9b0eWRZI9fAljOq8W2BXz/NurwKVZcqqSYywb+PyaKCLwfXmCcrcUwE
-         bU4MttinfF4v0LKp1WWLSNmnCqJYcL1gu3BTD4i5aUVXG+SHb4rEQIiydGfX/E6I5b
-         bLEMqND6NQ+1Vkph76KRi5ENMAFUdDFNmApU5FxlWV3OOMNiEENUqtn1NZhNmXUCyl
-         +c/WOIu63qJiw==
+        b=g7kRAz3s2CF/7se9rpbGBi6O60PjC6KsDDn7avSE63nUcIr58leTZfQutq7oDxkX9
+         sV1QZkBv98twWEOXilD6Ge7jURApiv8ioAZvQwStZci7eXAuD3SHbRwirJraFZd3V9
+         C+Uhy6Qz+Ivc4FFr6hngTltFXdtWpENfT7u5PI5rxgLL7ZYsQp526btKAEIy2GTZ2q
+         EaYxyrgfugLCIMcK7Qaud2CuvzHmpwBC4HbpQWLg6KVw9Uz5voKgznUcZa+sK+Z+1P
+         G7gOXSJOqnHbOK1b9ekRdd4B6CMaJgxlKhIOT0rVttJM9LBgYv9EOqg0EctyNvWMsW
+         OhfeqxotU+ixQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tegra210 CSI hardware internally uses PLLD for internal test pattern
-generator logic.
+Tegra210 uses PLLD out internally for CSI TPG.
 
-PLLD_BASE register in CAR has a bit CSI_CLK_SOURCE to enable PLLD
-out to CSI during TPG mode.
+This patch adds clk id for this CSI TPG clock from PLLD.
 
-This patch adds this CSI TPG clock gate to Tegra210 clock driver
-to allow Tegra video driver to ungate CSI TPG clock during TPG mode
-and gate during non TPG mode.
-
+Acked-by: Rob Herring <robh@kernel.org>
 Acked-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/clk/tegra/clk-tegra210.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ include/dt-bindings/clock/tegra210-car.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
-index defe3b7..81a879b 100644
---- a/drivers/clk/tegra/clk-tegra210.c
-+++ b/drivers/clk/tegra/clk-tegra210.c
-@@ -3035,6 +3035,13 @@ static __init void tegra210_periph_clk_init(void __iomem *clk_base,
- 					     periph_clk_enb_refcnt);
- 	clks[TEGRA210_CLK_DSIB] = clk;
- 
-+	/* csi_tpg */
-+	clk = clk_register_gate(NULL, "csi_tpg", "pll_d",
-+				CLK_SET_RATE_PARENT, clk_base + PLLD_BASE,
-+				23, 0, &pll_d_lock);
-+	clk_register_clkdev(clk, "csi_tpg", NULL);
-+	clks[TEGRA210_CLK_CSI_TPG] = clk;
-+
- 	/* la */
- 	clk = tegra_clk_register_periph("la", la_parents,
- 			ARRAY_SIZE(la_parents), &tegra210_la, clk_base,
+diff --git a/include/dt-bindings/clock/tegra210-car.h b/include/dt-bindings/clock/tegra210-car.h
+index 7a8f10b..d8909e0 100644
+--- a/include/dt-bindings/clock/tegra210-car.h
++++ b/include/dt-bindings/clock/tegra210-car.h
+@@ -351,7 +351,7 @@
+ #define TEGRA210_CLK_PLL_P_OUT_XUSB 317
+ #define TEGRA210_CLK_XUSB_SSP_SRC 318
+ #define TEGRA210_CLK_PLL_RE_OUT1 319
+-/* 320 */
++#define TEGRA210_CLK_CSI_TPG 320
+ /* 321 */
+ #define TEGRA210_CLK_ISP 322
+ #define TEGRA210_CLK_PLL_A_OUT_ADSP 323
 -- 
 2.7.4
 
