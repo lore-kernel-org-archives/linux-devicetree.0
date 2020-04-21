@@ -2,118 +2,93 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C38D1C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 13:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6409C55183
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 13:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A53392070B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 13:47:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587476860;
-	bh=xwGfqpY+jSMQa7+aqhUnV5bg17fNQU268EGV84xlAog=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=emkEZfY+ox6nHmSlROSrZxx+mCmR4rn8LlrWPpVDkmLUAYK+PvlBoHc4iWalJa7fN
-	 lqUrTFRztTZ2wI0l8olB+5AGQ2gLX8/b9XrgNO7Hpiye9lUcEB3dLUKlhwL4govmx/
-	 T7hoU0dVurEYJqVtQNwrM2rxwGqvFDMtFqBiylGo=
+	by mail.kernel.org (Postfix) with ESMTP id 861AD20672
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 13:51:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qttLeasP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbgDUNrh (ORCPT
+        id S1728879AbgDUNv6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:47:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53506 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 09:51:58 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:53940 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728479AbgDUNrh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:47:37 -0400
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91D8A20738;
-        Tue, 21 Apr 2020 13:47:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587476856;
-        bh=xwGfqpY+jSMQa7+aqhUnV5bg17fNQU268EGV84xlAog=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Gcc67ApFHiPldJCLWoZ6XmF0SmsCkqA8XNL/gqdg0koH5B58AOWyp8jGs7OZjEqdl
-         G0moNuTw6tpgTmoEc6KTondsaxlioxB6f2zXKI8rAUN/IC5/7GiB8BTQcduneX2o9P
-         w3ThwpDNOl302kA0XTnjG+xvj/q2FGUzdMOS65h8=
-Received: by mail-qk1-f172.google.com with SMTP id 20so14439166qkl.10;
-        Tue, 21 Apr 2020 06:47:36 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYNW0oute4+N586JyPZFoDQjnfjLRJFrQR8K9wF3DT7gQQqY8mN
-        UDS3RRRf7lrV0x5GLN79qNx8WvENev00dJdQoQ==
-X-Google-Smtp-Source: APiQypISnv8ozS7dPUrDNXNOORNfcjGF9xC4yno1CVV5J1VOJiqF6mt7TVU8G9LyEbpZm+a+Jg2LJ5vuxnjQTc0lk5I=
-X-Received: by 2002:a37:61cd:: with SMTP id v196mr21383674qkb.393.1587476855700;
- Tue, 21 Apr 2020 06:47:35 -0700 (PDT)
+        id S1729022AbgDUNv4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Apr 2020 09:51:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=mC8revuM/eirCe6Cg2dOwMCGMagYu8uBBjjfqIa21+s=; b=qttLeasPRX2EmDfgJDipY5f2KN
+        i2vHtnZWvDqwcvMamK7BlYZWWSn/M9wVRJ/OCBQB0JafY3hmZW1sm4kq1FIKRWLKnLtmtwqCGF+W5
+        gSSQOK0EOIAbPIvfFLT8+ggRrJ+hMjoRAxzlW9P+12zpkxJCvGtJP0i/7NZaCNJwEq5Y=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jQtJU-0041zy-0C; Tue, 21 Apr 2020 15:51:48 +0200
+Date:   Tue, 21 Apr 2020 15:51:47 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next v4 3/4] net: mdio: of: export part of
+ of_mdiobus_register_phy()
+Message-ID: <20200421135147.GE937199@lunn.ch>
+References: <20200421125219.8402-1-o.rempel@pengutronix.de>
+ <20200421125219.8402-4-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-References: <20200229003731.2728-1-robh@kernel.org> <20200421100749.GA5429@pendragon.ideasonboard.com>
- <CAK7LNARvPytUQoncngLe=s-TzQByQCXd64H99UgrW40=X34JyQ@mail.gmail.com>
- <20200421110537.GC5983@pendragon.ideasonboard.com> <CAK7LNAQtfyqfbQx2ivg=sVdhxDH9ShVBa+bL-4sC7MU1N=y+cw@mail.gmail.com>
-In-Reply-To: <CAK7LNAQtfyqfbQx2ivg=sVdhxDH9ShVBa+bL-4sC7MU1N=y+cw@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 21 Apr 2020 08:47:23 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLRWdBm24ZmL+muo4Ef8OoxkYPDNo4ksWSrnvmO_89wkA@mail.gmail.com>
-Message-ID: <CAL_JsqLRWdBm24ZmL+muo4Ef8OoxkYPDNo4ksWSrnvmO_89wkA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] kbuild: Always validate DT binding examples
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421125219.8402-4-o.rempel@pengutronix.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 8:16 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Hi Laurent,
->
-> On Tue, Apr 21, 2020 at 8:05 PM Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
-> >
-> > Hi Yamada-san,
-> >
-> > On Tue, Apr 21, 2020 at 07:45:05PM +0900, Masahiro Yamada wrote:
-> > > On Tue, Apr 21, 2020 at 7:08 PM Laurent Pinchart wrote:
-> > > > On Fri, Feb 28, 2020 at 06:37:30PM -0600, Rob Herring wrote:
-> > > > > Most folks only run dt_binding_check on the single schema they care about
-> > > > > by setting DT_SCHEMA_FILES. That means example is only checked against
-> > > > > that one schema which is not always sufficient.
-> > > > >
-> > > > > Let's address this by splitting processed-schema.yaml into 2 files: one
-> > > > > that's always all schemas for the examples and one that's just the schema
-> > > > > in DT_SCHEMA_FILES for dtbs.
-> > > >
-> > > > This broke
-> > > >
-> > > > make DT_SCHEMA_FILES=Documentation/devicetree/.. dt_binding_check
-> > >
-> > > What is intended by
-> > > "DT_SCHEMA_FILES=Documentation/devicetree/.."  ?
-> >
-> > My bad, I forgot to write that ... is the continuation of the string.
-> > It's any yaml schema file that has an example.
->
-> Ah, OK. I just input verbatim.
->
-> Is it broken?
->
-> You can specify any individual file(s) under Documentation/devicetree/bindings/.
->
-> For example, the following worked for me.
+On Tue, Apr 21, 2020 at 02:52:18PM +0200, Oleksij Rempel wrote:
+> This function will be needed in tja11xx driver for secondary PHY
+> support.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  drivers/of/of_mdio.c    | 73 ++++++++++++++++++++++++-----------------
+>  include/linux/of_mdio.h | 11 ++++++-
+>  2 files changed, 52 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index 8270bbf505fb..d9e637b624ce 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -60,39 +60,15 @@ static struct mii_timestamper *of_find_mii_timestamper(struct device_node *node)
+>  	return register_mii_timestamper(arg.np, arg.args[0]);
+>  }
+>  
+> -static int of_mdiobus_register_phy(struct mii_bus *mdio,
+> -				    struct device_node *child, u32 addr)
+> +int __of_mdiobus_register_phy(struct mii_bus *mdio, struct phy_device *phy,
+> +			      struct device_node *child, u32 addr)
+>  {
 
-Me too.
+Hi Oleksij
 
-There is however a bug I just noticed. We're now always setting '-u'
-for dtbs_check which means the core schema are never used.
+I would prefer a different name. __foo functions often indicate
+locking is needed, or an internal API which should not be used except
+internally. This is going to be an official API. Maybe call it
+of_mdiobus_phy_device_register() ?
 
-Masahiro, Got a better suggestion than adding the ifeq:
-
-ifeq ("$(origin DT_SCHEMA_FILES)", "command line")
-$(obj)/processed-schema.yaml: DT_MK_SCHEMA_FLAGS := -u
-endif
-
-Rob
+	 Andrew
