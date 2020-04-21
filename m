@@ -2,111 +2,125 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72533C54FCC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 17:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB76C54FC9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 17:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50E4F2070B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 17:37:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587490675;
-	bh=WETR+0grQc6TiQu6SPZNPxZHQyPmrCtktdmbQpSgEXY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tIxTaqvD0+co5/SQOtQZ0e4zwunD+m0aIDxZzPODzH0XoEDJiC0CmyAhMM41UfvWN
-	 gUQeHls1kJofbjUvIP4VkRG1uyEtteHuJfyV10Af3WoceF69ErCx9bbDkLjDyd+gaj
-	 Wk4XiNvzerLfgXNuxlUZZTkymBK+X01NehnLo+sA=
+	by mail.kernel.org (Postfix) with ESMTP id 5A374206D9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 17:39:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726043AbgDURhy (ORCPT
+        id S1725870AbgDURjq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 13:37:54 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:49485 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbgDURhy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Apr 2020 13:37:54 -0400
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 03LHbD8u012335;
-        Wed, 22 Apr 2020 02:37:14 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 03LHbD8u012335
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587490634;
-        bh=onymGhbUck19AZVdqs2MMUXq8sVb6RSuA8p4Ua6walc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=miZbySjAoZGsWn6F6etUcfv/Ib8DJrQCkBcrx4vDs/A6q9tm9SmR7wAqCo8Ea26Nu
-         RdFiwVYL6OwNVSEP0DOcq1ruM7rqyp+oH9RhoqmKWfq7Uh+9bgAwkPuUqsOQbnxjoX
-         O+Ac8cIDJjvPKkuGZbYSXYV/SdYPjF6pr1cPgoPGqcoYk5oOYRtkqtxOcH3xzZhShK
-         d2YUPJLyc8dGY8baaN5DclAi2aIqbrSE75MIzcqSC08ZC1B7MnE+W0GLpLAQJoz+Gs
-         y8KCC7F4VcMabHtzhT75V1s6rVdd2B8A69QeXO3RxCUC08AxzBXW0+T7yhTHh2mqpF
-         SZ00t3BFi/gHg==
-X-Nifty-SrcIP: [209.85.217.44]
-Received: by mail-vs1-f44.google.com with SMTP id 1so8941407vsl.9;
-        Tue, 21 Apr 2020 10:37:13 -0700 (PDT)
-X-Gm-Message-State: AGi0PubMadMVI2Tii8Ru0TMH38Vqp1iu4nkTitWPvWamBcapfegTebwC
-        PhPTSGfQvQwiP3IA3GO4k3/4Ii29dhn1D8/thk0=
-X-Google-Smtp-Source: APiQypKVTO7WNsW+ml/GS/8vAZR7f48di3kb94bDCzOQtw069Fm/nYwoVlcsTcMljs4Fs7q86fNhJZH6heQm60CJ8sg=
-X-Received: by 2002:a67:6e07:: with SMTP id j7mr10430712vsc.181.1587490632767;
- Tue, 21 Apr 2020 10:37:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200229003731.2728-1-robh@kernel.org> <20200421100749.GA5429@pendragon.ideasonboard.com>
- <CAK7LNARvPytUQoncngLe=s-TzQByQCXd64H99UgrW40=X34JyQ@mail.gmail.com>
- <20200421110537.GC5983@pendragon.ideasonboard.com> <CAK7LNAQtfyqfbQx2ivg=sVdhxDH9ShVBa+bL-4sC7MU1N=y+cw@mail.gmail.com>
- <20200421134654.GD5983@pendragon.ideasonboard.com>
-In-Reply-To: <20200421134654.GD5983@pendragon.ideasonboard.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 22 Apr 2020 02:36:36 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARcL5tfwFWE=EbW6pnpJKwfQY5n93WmFD0Ggw+EkSJ8mg@mail.gmail.com>
-Message-ID: <CAK7LNARcL5tfwFWE=EbW6pnpJKwfQY5n93WmFD0Ggw+EkSJ8mg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] kbuild: Always validate DT binding examples
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Rob Herring <robh@kernel.org>, DTML <devicetree@vger.kernel.org>,
+        Tue, 21 Apr 2020 13:39:46 -0400
+Received: from muru.com ([72.249.23.125]:50688 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729234AbgDURjq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Apr 2020 13:39:46 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id C057C8081;
+        Tue, 21 Apr 2020 17:40:29 +0000 (UTC)
+Date:   Tue, 21 Apr 2020 10:39:38 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Maxime Ripard <maxime@cerno.tech>,
+        Philipp Rossak <embed3d@gmail.com>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-omap <linux-omap@vger.kernel.org>,
+        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
+        linux-mips@vger.kernel.org,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the
+ PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
+Message-ID: <20200421173938.GZ37466@atomide.com>
+References: <20200415101008.zxzxca2vlfsefpdv@gilmour.lan>
+ <2E3401F1-A106-4396-8FE6-51CAB72926A4@goldelico.com>
+ <20200415130233.rgn7xrtwqicptke2@gilmour.lan>
+ <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com>
+ <10969e64-fe1f-d692-4984-4ba916bd2161@gmail.com>
+ <20200420073842.nx4xb3zqvu23arkc@gilmour.lan>
+ <b5a06c19-7a3e-bcb8-5ae3-76901b9c6c35@gmail.com>
+ <20200421112129.zjmkmzo3aftksgka@gilmour.lan>
+ <20200421141543.GU37466@atomide.com>
+ <D9D4D057-A73D-485F-898D-5C05E89C16B7@goldelico.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D9D4D057-A73D-485F-898D-5C05E89C16B7@goldelico.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent,
+* H. Nikolaus Schaller <hns@goldelico.com> [200421 17:31]:
+> > Am 21.04.2020 um 16:15 schrieb Tony Lindgren <tony@atomide.com>:
+> > Note that on omaps there are actually SoC module specific registers.
+> 
+> Ah, I see. This is of course a difference that the TI glue logic has
+> its own registers in the same address range as the sgx and this can't
+> be easily handled by a common sgx driver.
+> 
+> This indeed seems to be unique with omap.
+> 
+> > And there can be multiple devices within a single target module on
+> > omaps. So the extra dts node and device is justified there.
+> > 
+> > For other SoCs, the SGX clocks are probably best handled directly
+> > in pvr-drv.c PM runtime functions unless a custom hardware wrapper
+> > with SoC specific registers exists.
+> 
+> That is why we need to evaluate what the better strategy is.
+> 
+> So we have
+> a) omap which has a custom wrapper around the sgx
+> b) others without, i.e. an empty (or pass-through) wrapper
+> 
+> Which one do we make the "standard" and which one the "exception"?
+> What are good reasons for either one?
 
-On Tue, Apr 21, 2020 at 10:47 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
+The wrapper is already handled by the ti-sysc binding, the sgx
+binding should be standard with optional clocks.
 
->   HOSTLD  scripts/dtc/dtc
->   CHKDT   Documentation/devicetree/bindings/arm/psci.yaml
-> make[2]: execvp: /bin/sh: Argument list too long
-> make[2]: *** [/home/laurent/src/kernel/this_is_a_long_directory_name/linux/Documentation/devicetree/bindings/Makefile:38: Documentation/devicetree/bindings/processed-schema-examples.yaml] Error 127
-> make[1]: *** [/home/laurent/src/kernel/this_is_a_long_directory_name/linux/Makefile:1300: dt_binding_check] Error 2
-> make[1]: Leaving directory '/home/laurent/src/kernel/this_is_a_long_directory_name/linux/output/x86'
-> make: *** [Makefile:180: sub-make] Error 2
->
-> It seems to only fail with out of tree builds (O=...). I expect that
-> failures will become more common the more YAML bindings we have, even
-> without long directory names.
+See for example the standard 8250 uart for am335x with:
 
-Indeed. This will be a common problem sooner or later.
+$ git grep -B20 -A10 uart0 arch/arm/boot/dts/am33xx-l4.dtsi
 
-Rob already suggested a solution.
+The 8250 device configuration is described in the standard 8250
+dts binding, and the am335x module in the ti-sysc binding.
+The are separate devices :)
 
+So for the sgx binding, you can just leave out TI specific
+module wrapper completely from the example.
 
-Another way is to use a pipe.
+> It also allows to handle different number of clocks (A31 seems to
+> need 4, Samsung, A83 and JZ4780 one) without changing the sgx bindings
+> or making big lists of conditionals. This variance would be handled
+> outside the sgx core bindings and driver.
 
-See the following code in scripts/Makefile.modpost
+Well if other SoCs implement genpd domains etc, that's then
+again part of a separate binding and not part of the sgx binding.
 
+Regards,
 
-# Read out modules.order instead of expanding $(modules) to pass in modpost.
-# Otherwise, allmodconfig would fail with "Argument list too long".
-quiet_cmd_modpost = MODPOST $(words $(modules)) modules
-      cmd_modpost = sed 's/ko$$/o/' $(MODORDER) | $(MODPOST)
-
-
-The same issue happens for modpost
-because allmodconfig floods the command line.
-
-
--- 
-Best Regards
-Masahiro Yamada
+Tony
