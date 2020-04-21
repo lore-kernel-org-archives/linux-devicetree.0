@@ -2,248 +2,267 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1068C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 05:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A71C54FCC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 05:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A37C52071E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 05:10:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cTY27kyZ"
+	by mail.kernel.org (Postfix) with ESMTP id 5B78921D79
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 05:15:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbgDUFKc (ORCPT
+        id S1725904AbgDUFP4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 01:10:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725902AbgDUFKb (ORCPT
+        Tue, 21 Apr 2020 01:15:56 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:31387 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725795AbgDUFPz (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Apr 2020 01:10:31 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5186C061A0F
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 22:10:31 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id j188so3283236vkc.2
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 22:10:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=paY1iS0XEZ77enyUCSAjc82NPQz1vfWi3ogs5RoLTF8=;
-        b=cTY27kyZpzya/ce62x2DSXdivxksVD4ic99dmmaHrZAhFeLPacuvPUA7XTHalvr8xs
-         f++kpfBsi0pzd7nkKr6rmRE0tbOihYyHCpqRejn3tKBVDvBqPyinzwDi5+TFD5KCGAlX
-         LTKqc/x4oYbutmj1ygpL8EF+z+YXVnQTkiuRM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=paY1iS0XEZ77enyUCSAjc82NPQz1vfWi3ogs5RoLTF8=;
-        b=Aiwcb+L8GtKIQJcz1jzi8L1H4BMpxCSE4x9XG2yt/jlLbItYoEj/fZv7KGC6AoRmu0
-         E66XdR7rfCgrDzOwG8xXpq6+2ugOw5weaHPJOmhJ6cWrcPQL+0jpr1lzWS29w4a23hRH
-         iUhIxWjh4y04j8VBN0PdmknEuyYiadJslsDEGNXDbzOHu2QUJzfnq5qxNZcUuXPYHbc+
-         NfEGOcfIQYGXL+9YFJ+tcnuZUAfpC5AOvzvjEBYf32noIMQ9s5hpiAd1bggYTC2NMUbW
-         MbOX+AuK+EEKkmt4NGFmGmYs+pY9GMtvIcXEdW8GGSCmDzwqjayhproTCqW485W9YBpi
-         n60g==
-X-Gm-Message-State: AGi0PuaZWb/hjth1ar45tWUodhZ3VQzAAwVe5FWHarUtjdzMQXC1GbgX
-        mG0RVTskVJ+UuLA3qisxKitHupzleOU=
-X-Google-Smtp-Source: APiQypInzyKFUzrDz13QTcJNk8fAY1PojZWq9eiw+Kerrn6XnBPwyMCRUlsv4i6F94hXnCwwxRrFiw==
-X-Received: by 2002:a1f:31cf:: with SMTP id x198mr3708583vkx.101.1587445830367;
-        Mon, 20 Apr 2020 22:10:30 -0700 (PDT)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id 123sm405485vsz.33.2020.04.20.22.10.29
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Apr 2020 22:10:29 -0700 (PDT)
-Received: by mail-vs1-f42.google.com with SMTP id m24so4605296vsq.10
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 22:10:29 -0700 (PDT)
-X-Received: by 2002:a67:bd07:: with SMTP id y7mr9130800vsq.109.1587445828879;
- Mon, 20 Apr 2020 22:10:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200415084758.1.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
- <20200415084758.2.Ic98f6622c60a1aa547ed85781f2c3b9d3e56b734@changeid>
- <158698038289.105027.2860892334897893887@swboyd.mtv.corp.google.com>
- <20200415203256.GP4758@pendragon.ideasonboard.com> <CAD=FV=U1U7y_U4+zySzA9e_uYE0ECdM1Bd-ew0OxG3ciqjRVSA@mail.gmail.com>
- <20200416005409.GR4758@pendragon.ideasonboard.com> <CAD=FV=WWZ1txHYOQZuCASbspLUP-Ds6OtrzetbJLHySpUyW6YQ@mail.gmail.com>
- <20200417180819.GE5861@pendragon.ideasonboard.com>
-In-Reply-To: <20200417180819.GE5861@pendragon.ideasonboard.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 20 Apr 2020 22:10:17 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UpYALN6xrN5bpZTqqPLVUDB-MJ7BaQE28vrSRR3b+8MA@mail.gmail.com>
-Message-ID: <CAD=FV=UpYALN6xrN5bpZTqqPLVUDB-MJ7BaQE28vrSRR3b+8MA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: drm/bridge: ti-sn65dsi86: Add hpd-gpios
- to the bindings
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Rob Clark <robdclark@chromium.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 21 Apr 2020 01:15:55 -0400
+X-IronPort-AV: E=Sophos;i="5.72,409,1580742000"; 
+   d="scan'208";a="45276363"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 21 Apr 2020 14:15:54 +0900
+Received: from localhost.localdomain (unknown [10.166.252.89])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 59E0E40078AC;
+        Tue, 21 Apr 2020 14:15:54 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     joro@8bytes.org, robh+dt@kernel.org
+Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v5] dt-bindings: iommu: renesas,ipmmu-vmsa: convert to json-schema
+Date:   Tue, 21 Apr 2020 14:15:52 +0900
+Message-Id: <1587446152-23886-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Convert Renesas VMSA-Compatible IOMMU bindings documentation
+to json-schema.
 
-On Fri, Apr 17, 2020 at 11:08 AM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> As for the hpd-gpios, it should be specified in the DT node of the
-> component that provides the HPD signal, and contain a GPIO specifier
-> describing what the signal is connected to. When dealing with a physical
-> DP connector and external monitor, the HPD signal is provided by the DP
-> connector, the hpd-gpios property shall then be specified in the DP
-> connector DT node. The display-connector driver already handles that
-> property. When dealing with an eDP panel, the HPD signal is provided by
-> the panel, the hpd-gpios property shall be specified in the panel DT
-> node.
+Note that original documentation doesn't mention renesas,ipmmu-vmsa
+for R-Mobile APE6. But, R-Mobile APE6 is similar to the R-Car
+Gen2. So, renesas,ipmmu-r8a73a4 belongs the renesas,ipmmu-vmsa
+section.
 
-OK, patch posted to add "hpd-gpios" to "panel-common.yaml" which is I
-think the summary of what you're saying above.
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ Changes from v4:
+ - Fix description about cell counts on #iommu-cells and renesas,ipmmu-main.
+ - Fix node name on the example. 
+ https://patchwork.kernel.org/patch/11494231/
 
-I _think_ this also means that I need to add support to panel-simple.c
-for it so I've posted got a patch for that.  If I followed your whole
-description of the future plans it might eventually move somewhere
-else but we're not there yet.  If I screwed this up hopefully it's OK
-to continue the conversation in v2.  It seemed nice to have code to
-talk about.
+ Changes from v3:
+ - Fix renesas,ipmmu-r8a7795's section
+ https://patchwork.kernel.org/patch/11494079/
 
+ Changes from v2:
+ - Add a description for R-Mobile APE6 on the commit log.
+ - Change renesas,ipmmu-r8a73a4 section on the compatible.
+ - Add items on the interrupts.
+ - Add power-domains to required.
+ - Add oneOf for interrupts and renesas,ipmmu-main
+ https://patchwork.kernel.org/patch/11490581/
 
-> As the SN65DSI86 has native HPD detect capability with a dedicated HPD
-> input (note that this doesn't make the SN65DSI86 a providder of the HPD
-> signal in the sense described above), the bridge driver, in the new
-> model, shall implement the HPD-related operations and the .detect()
-> operation. The drm_bridge_connector_init() helper will then delegate HPD
-> and detection to the ti-sn65dsi86 driver.
+ Changes from v1:
+ - Fix typo in the subject.
+ - Add a description on #iommu-cells.
+ https://patchwork.kernel.org/patch/11485415/
 
-I guess this assumes that anyone ever uses it.  Right now the driver
-hardcodes HPD to be off and it seems hard for me to imagine anyone
-would have a real use for the hardware line given the terrible
-debouncing.  Maybe a panel whose hardcoded delay is super bad?
+ .../bindings/iommu/renesas,ipmmu-vmsa.txt          | 73 ----------------
+ .../bindings/iommu/renesas,ipmmu-vmsa.yaml         | 98 ++++++++++++++++++++++
+ 2 files changed, 98 insertions(+), 73 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
+ create mode 100644 Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
 
+diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
+deleted file mode 100644
+index 020d6f2..00000000
+--- a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
++++ /dev/null
+@@ -1,73 +0,0 @@
+-* Renesas VMSA-Compatible IOMMU
+-
+-The IPMMU is an IOMMU implementation compatible with the ARM VMSA page tables.
+-It provides address translation for bus masters outside of the CPU, each
+-connected to the IPMMU through a port called micro-TLB.
+-
+-
+-Required Properties:
+-
+-  - compatible: Must contain SoC-specific and generic entry below in case
+-    the device is compatible with the R-Car Gen2 VMSA-compatible IPMMU.
+-
+-    - "renesas,ipmmu-r8a73a4" for the R8A73A4 (R-Mobile APE6) IPMMU.
+-    - "renesas,ipmmu-r8a7743" for the R8A7743 (RZ/G1M) IPMMU.
+-    - "renesas,ipmmu-r8a7744" for the R8A7744 (RZ/G1N) IPMMU.
+-    - "renesas,ipmmu-r8a7745" for the R8A7745 (RZ/G1E) IPMMU.
+-    - "renesas,ipmmu-r8a774a1" for the R8A774A1 (RZ/G2M) IPMMU.
+-    - "renesas,ipmmu-r8a774b1" for the R8A774B1 (RZ/G2N) IPMMU.
+-    - "renesas,ipmmu-r8a774c0" for the R8A774C0 (RZ/G2E) IPMMU.
+-    - "renesas,ipmmu-r8a7790" for the R8A7790 (R-Car H2) IPMMU.
+-    - "renesas,ipmmu-r8a7791" for the R8A7791 (R-Car M2-W) IPMMU.
+-    - "renesas,ipmmu-r8a7793" for the R8A7793 (R-Car M2-N) IPMMU.
+-    - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
+-    - "renesas,ipmmu-r8a7795" for the R8A7795 (R-Car H3) IPMMU.
+-    - "renesas,ipmmu-r8a7796" for the R8A7796 (R-Car M3-W) IPMMU.
+-    - "renesas,ipmmu-r8a77965" for the R8A77965 (R-Car M3-N) IPMMU.
+-    - "renesas,ipmmu-r8a77970" for the R8A77970 (R-Car V3M) IPMMU.
+-    - "renesas,ipmmu-r8a77980" for the R8A77980 (R-Car V3H) IPMMU.
+-    - "renesas,ipmmu-r8a77990" for the R8A77990 (R-Car E3) IPMMU.
+-    - "renesas,ipmmu-r8a77995" for the R8A77995 (R-Car D3) IPMMU.
+-    - "renesas,ipmmu-vmsa" for generic R-Car Gen2 or RZ/G1 VMSA-compatible
+-			   IPMMU.
+-
+-  - reg: Base address and size of the IPMMU registers.
+-  - interrupts: Specifiers for the MMU fault interrupts. For instances that
+-    support secure mode two interrupts must be specified, for non-secure and
+-    secure mode, in that order. For instances that don't support secure mode a
+-    single interrupt must be specified. Not required for cache IPMMUs.
+-
+-  - #iommu-cells: Must be 1.
+-
+-Optional properties:
+-
+-  - renesas,ipmmu-main: reference to the main IPMMU instance in two cells.
+-    The first cell is a phandle to the main IPMMU and the second cell is
+-    the interrupt bit number associated with the particular cache IPMMU device.
+-    The interrupt bit number needs to match the main IPMMU IMSSTR register.
+-    Only used by cache IPMMU instances.
+-
+-
+-Each bus master connected to an IPMMU must reference the IPMMU in its device
+-node with the following property:
+-
+-  - iommus: A reference to the IPMMU in two cells. The first cell is a phandle
+-    to the IPMMU and the second cell the number of the micro-TLB that the
+-    device is connected to.
+-
+-
+-Example: R8A7791 IPMMU-MX and VSP1-D0 bus master
+-
+-	ipmmu_mx: mmu@fe951000 {
+-		compatible = "renasas,ipmmu-r8a7791", "renasas,ipmmu-vmsa";
+-		reg = <0 0xfe951000 0 0x1000>;
+-		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
+-			     <0 221 IRQ_TYPE_LEVEL_HIGH>;
+-		#iommu-cells = <1>;
+-	};
+-
+-	vsp@fe928000 {
+-		...
+-		iommus = <&ipmmu_mx 13>;
+-		...
+-	};
+diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
+new file mode 100644
+index 00000000..39675cf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
+@@ -0,0 +1,98 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iommu/renesas,ipmmu-vmsa.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas VMSA-Compatible IOMMU
++
++maintainers:
++  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
++
++description:
++  The IPMMU is an IOMMU implementation compatible with the ARM VMSA page tables.
++  It provides address translation for bus masters outside of the CPU, each
++  connected to the IPMMU through a port called micro-TLB.
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - renesas,ipmmu-r8a73a4  # R-Mobile APE6
++              - renesas,ipmmu-r8a7743  # RZ/G1M
++              - renesas,ipmmu-r8a7744  # RZ/G1N
++              - renesas,ipmmu-r8a7745  # RZ/G1E
++              - renesas,ipmmu-r8a7790  # R-Car H2
++              - renesas,ipmmu-r8a7791  # R-Car M2-W
++              - renesas,ipmmu-r8a7793  # R-Car M2-N
++              - renesas,ipmmu-r8a7794  # R-Car E2
++          - const: renesas,ipmmu-vmsa  # R-Mobile APE6 or R-Car Gen2 or RZ/G1
++      - items:
++          - enum:
++              - renesas,ipmmu-r8a774a1 # RZ/G2M
++              - renesas,ipmmu-r8a774b1 # RZ/G2N
++              - renesas,ipmmu-r8a774c0 # RZ/G2E
++              - renesas,ipmmu-r8a7795  # R-Car H3
++              - renesas,ipmmu-r8a7796  # R-Car M3-W
++              - renesas,ipmmu-r8a77965 # R-Car M3-N
++              - renesas,ipmmu-r8a77970 # R-Car V3M
++              - renesas,ipmmu-r8a77980 # R-Car V3H
++              - renesas,ipmmu-r8a77990 # R-Car E3
++              - renesas,ipmmu-r8a77995 # R-Car D3
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 1
++    maxItems: 2
++    description:
++      Specifiers for the MMU fault interrupts. Not required for cache IPMMUs.
++    items:
++      - description: non-secure mode
++      - description: secure mode if supported
++
++  '#iommu-cells':
++    const: 1
++    description:
++      The number of the micro-TLB that the device is connected to.
++
++  power-domains:
++    maxItems: 1
++
++  renesas,ipmmu-main:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description:
++      Reference to the main IPMMU phandle plus 1 cell. The cell is
++      the interrupt bit number associated with the particular cache IPMMU
++      device. The interrupt bit number needs to match the main IPMMU IMSSTR
++      register. Only used by cache IPMMU instances.
++
++required:
++  - compatible
++  - reg
++  - '#iommu-cells'
++  - power-domains
++
++oneOf:
++  - required:
++      - interrupts
++  - required:
++      - renesas,ipmmu-main
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/r8a7791-cpg-mssr.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/power/r8a7791-sysc.h>
++
++    ipmmu_mx: iommu@fe951000 {
++        compatible = "renasas,ipmmu-r8a7791", "renasas,ipmmu-vmsa";
++        reg = <0xfe951000 0x1000>;
++        interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
++        #iommu-cells = <1>;
++    };
+-- 
+2.7.4
 
-> The new drm_bridge model has support for this use case. It makes a
-> difference between the intrinsic capability of a device to provide a
-> feature (for instance the SN65DSI86 has the intrinsic capability to
-> provide the HPD feature), and the fact that the feature is actually
-> provided by that device on a particular system (in the case you describe
-> here, the SN65DSI86 intrinsic HPD capability isn't used, as the HPD
-> signal isn't connect to the SN65DSI86 HPD input). The former is reported
-> by implementing the corresponding drm_bridge_funcs operations, the
-> latter is reported by setting DRM_BRIGE_OP_* flags in drm_bridge.ops.
-> This mechanism allows bridge drivers to unconditionally set function
-> pointers in their drm_bridge_funcs structure (allowing the structure to
-> make stored in read-only memory), while exposing, for each device
-> instance, whether the feature is actually provided or not.
->
-> The drm_bridge_connector_init() helper, to delegate drm_connector
-> operations to bridges, will look for the first bridge in the chain,
-> starting at the output of the pipeline (connector or panel), that
-> supports the corresponding feature. If your DP connector DT node, or
-> your eDP connector DT node, specifies that the HPD signal is routed to a
-> GPIO (through the hpd-gpios property), then the corresponding bridge
-> driver shall reprot the DRM_BRIDGE_OP_DETECT and DRM_BRIDGE_OP_HPD
-> capabilities. The display-connector driver already supports this, the
-> panel bridge driver doesn't and needs to be extended. The
-> drm_bridge_connector_init() helper will then detect that the drm_bridge
-> for the DP connector or eDP panel supports HPD, and will delegate the
-> related drm_connector operations to that bridge. If the HPD signal is
-> routed to the HPD pin of the SN65DSI86, the DP connector or eDP panel DT
-> node should not contain an hpd-gpios property, the corresponding
-> drm_bridge will not set DRM_BRIDGE_OP_DETECT and DRM_BRIDGE_OP_HPD, and
-> the drm_bridge_connector_init() will look at the next component in the
-> next bridge in the chain, which will be the ti-sn65dsi86. That bridge
-> will report support for the HPD-related operations, and will be used.
->
-> To be fully correct the ti-sn65dsi86 shouldn't set the
-> DRM_BRIDGE_OP_DETECT and DRM_BRIDGE_OP_HPD flags when the HPD signal
-> isn't routed to its HPD input pin. As it should not peek into the DT
-> node of the DP connector or eDP panel for its output, it should have an
-> additional no-hpd DT property in this case. In practice that's may not
-> always be required, as if an hpd-gpios property is specified in the DP
-> connector or eDP panel DT node, the drm_bridge_connector_init() will not
-> look further, but for the case where the HPD signal isn't routed
-> anywhere, we need to make sure that the ti-sn65dsi86 driver will not
-> incorrectly advertise HPD support.
-
-Sounds like you've thought out a lot of the corner cases!
-
-Right now the 'ti-sn65dsi86' driver is hardcoded not to look at HPD
-but its bindings doesn't have the 'no-hpd' property.  Sounds like that
-should be OK-ish as long as the panel either has "hpd-gpios" or
-"no-hpd" because then nobody will actually query the bridge.  ...but
-it would be cleaner to add it.
-
-
-> > 5. The GPIOs on 'ti,sn65dsi86' cannot generate IRQs and can only be
-> > polled.  ...but this is OK.  I'm specifically trying to support the
-> > case of a panel that is always connected and I just want HPD to be the
-> > signal that the panel is ready for me to talk to it.  Polling is fine.
-> > Specifically the bridge driver doesn't try to poll HPD to decide if we
-> > have something connected--it always returns
-> > 'connector_status_connected'.  ...and this is the correct behavior for
-> > eDP because you know the hardware is always there and HPD won't even
-> > be asserted until you start to power up the panel.
->
-> If you look at bridge/display-connector.c, you will see that it reports
-> DRM_BRIDGE_OP_DETECT if there's an hpd-gpios property, and additionally
-> reports DRM_BRIDGE_OP_HPD if that GPIO has interrupt capability. If a
-> bridge in the pipeline reports DRM_BRIDGE_OP_DETECT but no bridge
-> reports DRM_BRIDGE_OP_HPD, drm_bridge_connector_init() creates a
-> connector that uses polling. This is another reason why a no-hpd
-> property is needed for the ti,sn65dsi86, as otherwise the helper would
-> incorrectly consider that the SN65DSI86 will report HPD through an
-> interrupt.
-
-Hrm.  I guess technically it breaks bindings compatibility that
-"no-hpd" wasn't there before but there's something that will break if
-we don't specify it.  ...but it won't break anything until someone
-actually tries to add DRM_BRIDGE_OP_HPD to ti-sn65dsi86.  Maybe we're
-OK as long as we fix it before then?
-
-I've put this in v2 so we can discuss.
-
-
-> > 6. My current implementation in patch #3 actually doesn't fully
-> > implement a Linux GPIO provider in the bridge driver.  See that patch
-> > for justification.  While I could do the work to do this and I'll do
-> > it if folks insist, I think the current simpler code is nice.  If
-> > there was a separate "edp-connector" driver then presumably I'd have
-> > to add the complexity of implementing the GPIO provider API.
->
-> This is the only reason why I don't like asking you to change your
-> implementation, due to the additional complexity required to expose a
-> GPIO provider. However, I think that the new bridge usage model is much
-> cleaner than the current one, and this justifies in my opinion
-> additional complexity in a small number of places, even if it's
-> unfortunate. That being said, if we can put the DT properties where they
-> belong for the new model with isolated bridge drivers to only handle the
-> features of the hardware they correspond to, I wouldn't be opposed to a
-> localized hack (without any derogatory meaning implied) on the driver
-> side to ease the implementation. I'm willing to look at you at how this
-> could be done, once we complete this discussion about the new model,
-> with the hard rule that DT bindings should be designed based on the new
-> model.
-
-OK, I managed to implement the GPIO controller.  Let's see how it
-looks.  I threw GPIO folks on the series too so hopefully they can
-tell me if I'm doing something stupid.
-
-
--Doug
