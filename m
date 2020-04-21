@@ -2,143 +2,112 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB9AC55186
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 20:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7141C54FCC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 21:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0C0C2072D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 20:50:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FkFdVjeA"
+	by mail.kernel.org (Postfix) with ESMTP id 9323A20724
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 21:20:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587504008;
+	bh=pFS2yzzer8QmZtAyTrONwxocmpCDAdckbuwvMAT2QwY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=1j2uSe3Cr+8QOIO2uuurfmpTtzsptIy80LHefLARqdSEL3EITwHVxYDj2HsDFo5yz
+	 Fp1L+E4uNnFhxgDXmJaGJVn6xLmDzUtWDvo6W1CbYRcDd9BebxgEiRXNyepMLDNwjy
+	 LPnNYwbJjwOojY55u9a04N2PvJQ2lG1yI4XVn5MM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726039AbgDUUug (ORCPT
+        id S1726363AbgDUVUI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 16:50:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51346 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726024AbgDUUuf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Apr 2020 16:50:35 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84270C0610D5;
-        Tue, 21 Apr 2020 13:50:35 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id r26so5102865wmh.0;
-        Tue, 21 Apr 2020 13:50:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uC+JJcP7egb4ofyt56mWCPOQaPZzoY/zRGrMx1VckLM=;
-        b=FkFdVjeAsI+sBX/CNG+E14M9Wefz00vmoLhXMLng0Ap6nH8pB6UffYXTYQL5++aSg8
-         1J4eBj+8aLXpkleQA/S9tsKYWIMzYjGJfGkohBOp9wQlSI6ir+6G2CfCGUwK2pFyM9Vg
-         qH+gpFlVm1n46sdu8KwoYXdztEQ57V4GqwxtHOTlXUG4fVpn4LiMDq2gK2TkLSaj6n2z
-         7VQPzfKSn9mI575D8WlJ8FuOEufKPawD5R1AuLS4Q5efX9ikJTH6nMUZUl4Vl03aYeYo
-         RK+QpVSSB6N4XO13Bk474pJx0aLVgmnHJJ/WWiN7a4H4Gm9gL2scxNg1DEmEqaUfOYky
-         crQQ==
+        Tue, 21 Apr 2020 17:20:08 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35414 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbgDUVUH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Apr 2020 17:20:07 -0400
+Received: by mail-oi1-f193.google.com with SMTP id o7so61858oif.2;
+        Tue, 21 Apr 2020 14:20:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uC+JJcP7egb4ofyt56mWCPOQaPZzoY/zRGrMx1VckLM=;
-        b=th+u7MOrxtVJu1G4mW20S4RaG2VlRN0ttTlvsin7/Dunn6hm7sQjhlY+B+pHE0HhyI
-         OY6MlGq4jR9x1co+9LkvQjQjlX+SurAWyGVIcezjROm+J9voDMBuFNWAODw8fnzNx7ji
-         zPrPYfx6Y4uow5tJd2qZbTa3nPZrYcxBUPE5XRtqagf5lj9Z68e9tOFmqDLZZj/1cDln
-         SGgQHDPB/Fb4cpkOHG+dtqaAprAjqTx5Bvwo5idBcopK8OSE/cNzbmgQAw2SbcEda2Zj
-         LDUA3ORr/mP3gm8TNRu94BDn2i4uMl50UZxjavbkWmflfEbRu1nTPqaCB5o3fCCtsgWb
-         oxFw==
-X-Gm-Message-State: AGi0PuYhMzgzWPhYzWXuBGsQKANdG/eosXljB7bLXYaBTYGWb9YaMwwM
-        kKTNDQlk7QwZlwWyMR7iTdw=
-X-Google-Smtp-Source: APiQypK+Gc5H9oDn9XvZP6m0OhwPMUU+tvlw+9xBndDEnwmM0sL73yQu3958nQ99/SmyVzxN2KK85g==
-X-Received: by 2002:a7b:c927:: with SMTP id h7mr6687203wml.122.1587502234234;
-        Tue, 21 Apr 2020 13:50:34 -0700 (PDT)
-Received: from localhost (p2E5BEDBA.dip0.t-ipconnect.de. [46.91.237.186])
-        by smtp.gmail.com with ESMTPSA id y20sm5413891wra.79.2020.04.21.13.50.32
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BekGHQXhf3Jp2g2yBPT6sfHMkawHAJ1e7QouDFB2tgI=;
+        b=uORWPMJTrzsmtUNiX1N/VOoxwKCVrXlP4MTNtaFPGv309mGsPIHlc4Z3c6VrfAjIpJ
+         Q6evG9c967S70aeaDKxMDJGuKFGOTUVUeiDvdaD2VhjP4Rbrs+YURYjMtCleW8J/VG7k
+         opMDpUle4xogIp5wd6HJaPuZqaQZS+38LFrenBHbhX4obJSNj8pMK5Pt5tnP8tpYJW0q
+         8B5Wunw6vagFUuUH+nX3Goq910Ej6PIr5eQRGaYQ+8aMIItQt4KKqhcRSN4D+C7WnxHR
+         hB/bKPWKQTbgT8jkJlM+gztmMqticXkErCKnNRVHqQNLAy95RcGsqagznOBt5VbxfWhY
+         ckCg==
+X-Gm-Message-State: AGi0PuYk8rGjxbYLIKymoM+NOZtRanHxK9s7+MKNHkfg7oPtwM4HY3vE
+        VPRir182R69ACZt2ewDzt+Ph5OU=
+X-Google-Smtp-Source: APiQypJrtH80baDZtKRTOT0kMElY1jA2cRjLb3VeIJ1NvV5x+EnvfLhDMQL6YiHEORNm+arCo/wTiA==
+X-Received: by 2002:aca:4d47:: with SMTP id a68mr4743679oib.60.1587504006390;
+        Tue, 21 Apr 2020 14:20:06 -0700 (PDT)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id e15sm1040430otr.36.2020.04.21.14.20.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 13:50:33 -0700 (PDT)
-Date:   Tue, 21 Apr 2020 22:50:32 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>, jonathanh@nvidia.com,
-        frankc@nvidia.com, sakari.ailus@iki.fi, helen.koike@collabora.com,
-        digetx@gmail.com, sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v8 0/9] Add Tegra driver for video capture
-Message-ID: <20200421205032.GD3233341@ulmo>
-References: <1587427874-3291-1-git-send-email-skomatineni@nvidia.com>
- <5c44beca-4016-6e4f-01bb-e38480bfc34b@xs4all.nl>
+        Tue, 21 Apr 2020 14:20:05 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH 1/2] dt-bindings: Fix command line length limit calling dt-mk-schema
+Date:   Tue, 21 Apr 2020 16:20:03 -0500
+Message-Id: <20200421212004.6146-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mSxgbZZZvrAyzONB"
-Content-Disposition: inline
-In-Reply-To: <5c44beca-4016-6e4f-01bb-e38480bfc34b@xs4all.nl>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+As the number of schemas has increased, we're starting to hit the error
+"execvp: /bin/sh: Argument list too long". This is due to passing all the
+schema files on the command line to dt-mk-schema. It currently is only
+with out of tree builds and is intermittent depending on the file path
+lengths.
 
---mSxgbZZZvrAyzONB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Commit 2ba06cd8565b ("kbuild: Always validate DT binding examples") made
+hitting this proplem more likely since the example validation now always
+gets the full list of schemas.
 
-On Tue, Apr 21, 2020 at 01:09:50PM +0200, Hans Verkuil wrote:
-> Hi Sowjanya,
->=20
-> On 21/04/2020 02:11, Sowjanya Komatineni wrote:
-> > This series adds Tegra210 VI and CSI driver for built-in test pattern
-> > generator (TPG) capture.
-> >=20
-> > Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
-> > CSI port is one-to-one mapped to VI channel for video capture.
-> >=20
-> > This series has TPG support only where it creates hard media links
-> > between CSI subdevice and VI video device without device graphs.
-> >=20
-> > v4l2-compliance results are available below the patch diff.
->=20
-> I'm ready to merge this v8. Looking at the series I should only merge
-> patches 6 and 7, all other patches go through different subsystems, right?
+Fix this by putting the schema file list into a temp file and using xargs.
 
-You could also pick up patch 5 because it adds the bindings that are
-implemented by the driver in patch 6. But I can also pick that up into
-the Tegra tree. In fact, I do have a set of patches to convert some
-Tegra bindings to the new json-schema format and the host1x file is
-among them. If I do get around to finish those up for v5.8 it might be
-better for me to pick up patch 5 so that I can base my conversion patch
-on top of that.
+Reported-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/.gitignore | 2 +-
+ Documentation/devicetree/bindings/Makefile   | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-Either way is fine with me, so I've acked the three patches. Take which
-ones you want and I'll pick up the rest.
+diff --git a/Documentation/devicetree/bindings/.gitignore b/Documentation/devicetree/bindings/.gitignore
+index 5c6d8ea1a09c..0a6aef915fa4 100644
+--- a/Documentation/devicetree/bindings/.gitignore
++++ b/Documentation/devicetree/bindings/.gitignore
+@@ -1,3 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ *.example.dts
+-processed-schema*.yaml
++processed-schema*.yaml*
+diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
+index 1df680d07461..1c1cad860b7c 100644
+--- a/Documentation/devicetree/bindings/Makefile
++++ b/Documentation/devicetree/bindings/Makefile
+@@ -14,7 +14,8 @@ $(obj)/%.example.dts: $(src)/%.yaml FORCE
+ DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
+ 
+ quiet_cmd_mk_schema = SCHEMA  $@
+-      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(real-prereqs)
++      cmd_mk_schema = $(file >$@.tmp, $(real-prereqs)) \
++                      cat $@.tmp | xargs $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
+ 
+ DT_DOCS = $(addprefix $(src)/, \
+ 	$(shell \
+-- 
+2.20.1
 
-Thanks again for your guidance on this patch set!
-
-Thierry
-
---mSxgbZZZvrAyzONB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6fXJcACgkQ3SOs138+
-s6FBjg/9FimcqXOseP9+byIOz8utrw/aQW03bxfp+khGtSfVES8b9+2uyWnlc+IM
-qW2Kc56/5wDuBs2nXSxzJAadqov9o5381zJiiacxwuW84/SHA2csj5UVz8ymb/Uw
-/Sfmk6RDZUb6y+TK4SWzWpwJmsvElhnxAidTh1Q2yDs7nyvqmBC1itkZOLHXibRL
-u5/V7VVeIpEiqIoluxlj5pS9o54KJRNZwDknrXbzkgEzOnYMH9cuGpMsqwdUbFAb
-74dKbjgYMzKcdlf8jz0oo1MBYisCemp760JQnWeI/Grp26xgDPCwU9nmPaapmpMP
-+yAYWCg6Nj51sdwiU1/EsTDVXlP3tUjGB2l5IxkepGKGyc7KydbX9+WUXD7b8m/P
-39Olhf1/jswjtwBPgitwSEX66ZheWbNwIykJo6RiRnu9F1Vnc8aJPbnJMuxqERix
-TqCN2cIKWPJNr9TGOnuHfADbsCNWUpFBIaRxgqM1hTmSYeoMTwgYRCDLkVbK6q58
-LTdMKeYu3iS4QpW0VwQ1JBZwzM8EezsUO63THUXKn+HUj0SiLpTE+5S7OmQvYf1K
-Yo2liZF7SC45LCPFY1UvlbU3/1k6QpDMLIF923iGBRk6NebcHrIqBaJTjaum08uq
-M/tFejv+n6cXergSPcHXgy4/oPyzEUrCJEt/ZfjLuldZuV2ZeKw=
-=qERF
------END PGP SIGNATURE-----
-
---mSxgbZZZvrAyzONB--
