@@ -2,160 +2,185 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECFCC54FCC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 14:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C02D0C54FC9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 14:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BCCF206D6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 14:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95CF7206D6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 14:31:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="iLB7Qk01"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbgDUOaA (ORCPT
+        id S1729255AbgDUOb0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 10:30:00 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:39646 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729174AbgDUO34 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Apr 2020 10:29:56 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D367B200080;
-        Tue, 21 Apr 2020 16:29:54 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B1B72200CEF;
-        Tue, 21 Apr 2020 16:29:49 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D7ADA4029E;
-        Tue, 21 Apr 2020 22:29:43 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3 2/2] dt-bindings: watchdog: Convert i.MX7ULP to json-schema
-Date:   Tue, 21 Apr 2020 22:21:26 +0800
-Message-Id: <1587478886-21512-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1587478886-21512-1-git-send-email-Anson.Huang@nxp.com>
-References: <1587478886-21512-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 21 Apr 2020 10:31:26 -0400
+Received: from mail-am6eur05on2051.outbound.protection.outlook.com ([40.107.22.51]:25440
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729206AbgDUObX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Apr 2020 10:31:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jTz2YPm6VYDbR/HdLyGcoWC7R3fn6whXZMZ+q1bVVbt8IwCCYdtryvGxndncQb+8ElpulF6M7zyDlQ3PUzWOb69gxGQgkxZlYqAjg6/mTIbQcj70OjgD1CHmMrQjL6Nssi1CgstIy5/qCxf1OR4+x9274YrArxaMh01V+l4xuVIcZAf80BOb7cLjYHOrR5J/fFycy3Moi2BIqr3nMxrCQZ/tUF0BELhk5MJoGVeV/dC/17SyWzQffvB3fX+1pYcFX7gsOYqWV1OH+vjomJ4KA7BZAP5flf82ygI2o/dajX5auKgL3PtOhz2PT3OUVrzLqKF/swRWaHdiBWTXpz/uBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EU13+WUaDHSv9p7Nw+Nxw0lh+DgYNdcrNFHJ/qMmWhw=;
+ b=I55nzw2KNrcyUB7iPYJtlmvFWXec0I9Vz+BCc83lydlr9Va/kv1TvZpxd3zIvNiCjW+Y99oEBB5jdj/m/WPcbnUjhyhvhc08YPv0fMhQBYgraxtjmZGMdl+IBvE9wAktSBQr3wCSJnQykcFT2GSagCuHdHbIaCwoYKYo6qzOdUJFUmcsphtnmKJNimmSRyN3WgnZl0P0626boil1vSQa+XwxPIBT8KPnU5Ym4GlMdC9qrlg6Ua1Y8SXL40VdWEG0NeaCiePjXatiu4jWQglcSbA4CRxSC5m4KLFR+cmdrnFPNWNibLfsxVQsqubqMMPTl1MLWSkqXXAFujahv4mZvw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EU13+WUaDHSv9p7Nw+Nxw0lh+DgYNdcrNFHJ/qMmWhw=;
+ b=iLB7Qk01aqjSR8LdgnBCj7kFvQX7LwzBCaSQlLsIDe1tFr09UyPWIaHL6pa3H+UYLaoF7cXVzARje2GTmTABVM59V9m6mbE0mWYAtEd7zl6HgCi3CObot6UR+FN51PEaaOHPX3C7MeU7+XLdVV8TO3pS+szQ98OQjHuZSPMBwJQ=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB3PR0402MB3691.eurprd04.prod.outlook.com (2603:10a6:8:5::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Tue, 21 Apr
+ 2020 14:31:17 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3143:c46:62e4:8a8b]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3143:c46:62e4:8a8b%7]) with mapi id 15.20.2921.030; Tue, 21 Apr 2020
+ 14:31:17 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V2] dt-bindings: thermal: Convert i.MX to json-schema
+Thread-Topic: [PATCH V2] dt-bindings: thermal: Convert i.MX to json-schema
+Thread-Index: AQHWDtWuHhuFKGSv1ECuhQdSmjVzK6iCZy4AgAFNxdA=
+Date:   Tue, 21 Apr 2020 14:31:17 +0000
+Message-ID: <DB3PR0402MB3916B60832507A72F39750EAF5D50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1586480844-19227-1-git-send-email-Anson.Huang@nxp.com>
+ <20200420183512.GA5483@bogus>
+In-Reply-To: <20200420183512.GA5483@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 75e0848e-9930-4c6d-339d-08d7e600a749
+x-ms-traffictypediagnostic: DB3PR0402MB3691:|DB3PR0402MB3691:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB36912FDBFFC18F7789BFC55BF5D50@DB3PR0402MB3691.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1850;
+x-forefront-prvs: 038002787A
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(186003)(9686003)(6506007)(86362001)(54906003)(7416002)(8676002)(4326008)(81156014)(26005)(71200400001)(7696005)(55016002)(64756008)(66476007)(66946007)(66446008)(66556008)(33656002)(52536014)(8936002)(76116006)(44832011)(6916009)(2906002)(498600001)(5660300002);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: eNx4v3QJzjTy8OndEy1RfW1XVrhEnqaRKW9vNETLm80zgl8e2t1Fk/b2eOFJATClWyBKf4Z5V7GuJFTpMoFAdTrluqWNh+h8CagKor9bXgSm5FbLKwNOaspwK+jB4Iggu6IvLonp+x3+mgx7tJpYUom+znzK1B4UA+8yLIxsvzz7dZk747qVmkq/nWONqLC5kAMaYq+g1QKguZbbHdZo50PJDVXuPhQsPV/YAsE4t+fntxR3rZHpHT/8CZfGs4ld84Pp7ZY1NkMMdBM0YACkJjGr4mZusq9N4PLd2aoz1QDdx/hns4kVJKHS/xRkgXA0zMDalikPhclMKl+5bAR77zzmtWpcqsfODCnUbUcRLPP00cyFKjzd8VMJk8eNoCz8gjnuo6ABJROB88dUrCzs2KPW7MH4VNw5hmGxJMG91AvKkzgWuEodVOeJ7I39aFXe
+x-ms-exchange-antispam-messagedata: 69Azka5k0n2Z7/ScLT4sKSg6/89XFnXYjriTCSnKXfeEaQucdOdS1OUq3ai2dGSK728McBV9G+ZO8mCrRAFt8+EYjx13L6JRO6ullyXYwuRjAV1ninpaZ0PImVE4mfK++m8cPwUcJaPdRNC2u2rGwIrsHMjKPxN9h3P1xah2d4LjGxDkwhEnFTD2Hjh3vcMiP8Zr/DyEdJzEdH3inHaZwSbDN5pAYe9bnVzml16pJHq5V7dTTNE1zS7LoXaBtrHEJmICO8jzyvWc/pNiVdRrdbfQu10Qs0s2FrdOBLUVyAsAP1eBZAcfay/mofDvj83PHbpslxAlK70LanR44VyGdStDCkz8KCT/uuVHbvIPSyr8m7XZIxRomDCFwXWFKEAHuepEzkii65FiF8rA+YnA7nyM7VFZNi1djpjXdUNhotj9Z6Qy8WYX5smh6OugdEfD0fYY9dHpB0844wgMNqgYpSAMsP7lhQtHEuqAq52BGBKaZ+9jg/S9Q/BTs/3HsuYM6WOdfgG+HJ3517bQfDVSAqWnJd+adgM19nMM1kgfe3oeqfcmuDmPTcRBF93bGEsjyuxuh7O8xPyEThNpbQnQ0+c67LqAGNOz32yf+IUr5jQTT+LeT9Xda37rvFRcFFbMvybjdjQlUWsS8dWhKP5Puzm/A2h6FoekYK3YkFtxawU0nqZwGLfaxnDkEeE5LaiX+nBIZFW4Mm2ZJwCNxl4ntjrhLVrb9Tnbkm2BJ3p/iYl5pi3VcA1KyJhhrKfXLuAPVDWXChwoS8/WnB4/wFPTlnez8rASQamMUQF8R6dQ6mk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 75e0848e-9930-4c6d-339d-08d7e600a749
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Apr 2020 14:31:17.5716
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lgm0UrLLbkXpnleBqWuTzfo5VXLHwSzEtVhoGPI+YuAviOI8OsZ/bwn3chNaEyLViIIGfHG2mvdJyfr4cxVczQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3691
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the i.MX7ULP watchdog binding to DT schema format using json-schema.
+Hi, Rob
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V2:
-	- drop clocks description;
-	- drop unused label;
-	- improve timeout-sec.
----
- .../bindings/watchdog/fsl-imx7ulp-wdt.txt          | 22 --------
- .../bindings/watchdog/fsl-imx7ulp-wdt.yaml         | 60 ++++++++++++++++++++++
- 2 files changed, 60 insertions(+), 22 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml
 
-diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
-deleted file mode 100644
-index f902508..0000000
---- a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
-+++ /dev/null
-@@ -1,22 +0,0 @@
--* Freescale i.MX7ULP Watchdog Timer (WDT) Controller
--
--Required properties:
--- compatible : Should be "fsl,imx7ulp-wdt"
--- reg : Should contain WDT registers location and length
--- interrupts : Should contain WDT interrupt
--- clocks: Should contain a phandle pointing to the gated peripheral clock.
--
--Optional properties:
--- timeout-sec : Contains the watchdog timeout in seconds
--
--Examples:
--
--wdog1: watchdog@403d0000 {
--	compatible = "fsl,imx7ulp-wdt";
--	reg = <0x403d0000 0x10000>;
--	interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
--	clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
--	assigned-clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
--	assigned-clocks-parents = <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>;
--	timeout-sec = <40>;
--};
-diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml
-new file mode 100644
-index 0000000..51d6d48
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml
-@@ -0,0 +1,60 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/watchdog/fsl-imx7ulp-wdt.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale i.MX7ULP Watchdog Timer (WDT) Controller
-+
-+maintainers:
-+  - Anson Huang <Anson.Huang@nxp.com>
-+
-+allOf:
-+  - $ref: "watchdog.yaml#"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,imx7ulp-wdt
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  assigned-clocks:
-+    maxItems: 1
-+
-+  assigned-clocks-parents:
-+    maxItems: 1
-+
-+  timeout-sec: true
-+
-+required:
-+  - compatible
-+  - interrupts
-+  - reg
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/imx7ulp-clock.h>
-+
-+    watchdog@403d0000 {
-+        compatible = "fsl,imx7ulp-wdt";
-+        reg = <0x403d0000 0x10000>;
-+        interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
-+        assigned-clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
-+        assigned-clocks-parents = <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>;
-+        timeout-sec = <40>;
-+    };
-+
-+...
--- 
-2.7.4
+> Subject: Re: [PATCH V2] dt-bindings: thermal: Convert i.MX to json-schema
+>=20
+> On Fri, Apr 10, 2020 at 09:07:24AM +0800, Anson Huang wrote:
+> > Convert the i.MX thermal binding to DT schema format using json-schema
+> >
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > ---
+> > Changes since V1:
+> > 	- make clock property optional.
+> > ---
+> >  .../devicetree/bindings/thermal/imx-thermal.txt    | 61 --------------
+> >  .../devicetree/bindings/thermal/imx-thermal.yaml   | 96
+> ++++++++++++++++++++++
+> >  2 files changed, 96 insertions(+), 61 deletions(-)  delete mode
+> > 100644 Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> >  create mode 100644
+> > Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> > b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> > deleted file mode 100644
+> > index 823e417..0000000
+> > +
+> > +title: NXP i.MX Thermal Binding
+> > +
+> > +maintainers:
+> > +  - Anson Huang <Anson.Huang@nxp.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+> > +          - enum:
+> > +              - fsl,imx6q-tempmon
+> > +              - fsl,imx6sx-tempmon
+> > +              - fsl,imx7d-tempmon
+> > +
+> > +  interrupts:
+> > +    description: |
+> > +      The interrupt output of the controller, the IRQ will be triggere=
+d
+> > +      when temperature is higher than high threshold.
+> > +    maxItems: 1
+> > +
+> > +  nvmem-cells:
+> > +    description: |
+> > +      Phandle to the calibration cells provided by ocotp for calibrati=
+on
+> > +      data and temperature grade.
+> > +    maxItems: 2
+> > +
+> > +  nvmem-cell-names:
+> > +    maxItems: 2
+> > +    items:
+> > +      - const: calib
+> > +      - const: temp_grade
+> > +
+> > +  fsl,tempmon:
+> > +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> > +    description: |
+> > +      Phandle pointer to system controller that contains TEMPMON
+> control
+> > +      registers, e.g. ANATOP on imx6q.
+>=20
+> Really, this should have been a child of the system controller. Not too l=
+ate to
+> do that, but you'd need to keep this for compatibility.
+
+Sorry, I don't quite get your point, can you provide more details or exampl=
+e, thanks.
+
+Anson
 
