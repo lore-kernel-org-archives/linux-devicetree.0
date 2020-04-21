@@ -2,161 +2,192 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F59AC55183
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 11:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6C4C54FC9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 11:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38E722078C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 11:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550A92073A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 11:17:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="AE1rv34e"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="pzKPTnjr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728675AbgDULRN (ORCPT
+        id S1728391AbgDULRY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 07:17:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47036 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728671AbgDULRH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Apr 2020 07:17:07 -0400
-Received: from mail.nic.cz (lists.nic.cz [IPv6:2001:1488:800:400::400])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EF0AC0610D5;
-        Tue, 21 Apr 2020 04:17:07 -0700 (PDT)
-Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTP id 1942614134D;
-        Tue, 21 Apr 2020 13:17:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1587467824; bh=pMq7DErqh8TZojDH/eCNG834Z0dgCEq5ncP4/JNZcI8=;
-        h=From:To:Date;
-        b=AE1rv34eGV1gri095fNdiXFazUXfD2T8ZGarU0kmLnrU2w/iMU6XF2rhQTWqwoVtm
-         tgNY/Vr9FU+6+YZaSLbRIzAIQ7iDTFzbAvBXYDGGtc4fxbcfipRirW3uH55mPFbb0t
-         XqGmGhzaW+JpqnNoDyHP0B68srUF+4XwNm7J+4U4=
-From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-To:     linux-pci@vger.kernel.org
-Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v2 8/9] arm64: dts: marvell: armada-37xx: set pcie_reset_pin to gpio function
-Date:   Tue, 21 Apr 2020 13:17:00 +0200
-Message-Id: <20200421111701.17088-9-marek.behun@nic.cz>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200421111701.17088-1-marek.behun@nic.cz>
-References: <20200421111701.17088-1-marek.behun@nic.cz>
+        Tue, 21 Apr 2020 07:17:24 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:24956 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728337AbgDULRY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Apr 2020 07:17:24 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03LBC8lR025528;
+        Tue, 21 Apr 2020 13:17:11 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=/c16tCY9ekQ35yC4luKxDhPkTxyEHJ14jZb/3fcZqkE=;
+ b=pzKPTnjr6v2ZLEYjerQsEGRihro9YwPNcBh8DzpgozrlZcahPHcTbC36jXENi6xHwubV
+ AttYW5Cymhc0xgMay9GU+9f/TTIN30xsSZTZnwS5SbjfOiIXiDdBbPPtEnbRRbU2ou3e
+ suUD5EO2R2ozzGKmZP9AgTbPJMPPu59Pq0/+S5eijEsrN64l4c018FtiZwGilTNVQAaL
+ SV6WLQlKVSMjoLOSyJK4prUd+xKeEKEJ+VZAHs5oOqsMARgGSsHENQMnlJv+J4QuRr9i
+ lVxbV9mAexlrsu0LuX9h23Vt2pTuEs2B4ZtwMniZ/tToVkWqBDKlY57SwWI0RcYj3Lok +g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30fpp8qx6h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Apr 2020 13:17:11 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AE7FF10003B;
+        Tue, 21 Apr 2020 13:17:10 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9EFB02ADA0F;
+        Tue, 21 Apr 2020 13:17:10 +0200 (CEST)
+Received: from lmecxl0912.tpe.st.com (10.75.127.44) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 21 Apr
+ 2020 13:17:04 +0200
+Subject: Re: [PATCH 2/6] ARM: dts: Add missing pinctrl entries for STM32MP15
+To:     <mani@kernel.org>, <robh+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200420173124.27416-1-mani@kernel.org>
+ <20200420173124.27416-3-mani@kernel.org>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <2241c327-7cd6-7abd-b94f-00abe43b97e1@st.com>
+Date:   Tue, 21 Apr 2020 13:16:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: /
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-X-Virus-Status: Clean
+In-Reply-To: <20200420173124.27416-3-mani@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-21_04:2020-04-20,2020-04-21 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-We found out that we are unable to control the PERST# signal via the
-default pin dedicated to be PERST# pin (GPIO2[3] pin) on A3700 SOC when
-this pin is in EP_PCIE1_Resetn mode. There is a register in the PCIe
-register space called PERSTN_GPIO_EN (D0088004[3]), but changing the
-value of this register does not change the pin output when measuring
-with voltmeter.
+Hi Mani
 
-We do not know if this is a bug in the SOC, or if it works only when
-PCIe controller is in a certain state.
+Commit title should be ARM: dts: stm32 ...
+otherwise it's good.
 
-Commit f4c7d053d7f7 ("PCI: aardvark: Wait for endpoint to be ready
-before training link") says that when this pin changes pinctrl mode
-from EP_PCIE1_Resetn to GPIO, the PERST# signal is asserted for a brief
-moment.
+regards
+alex
 
-So currently the situation is that on A3700 boards the PERST# signal is
-asserted in U-Boot (because the code in U-Boot issues reset via this pin
-via GPIO mode), and then in Linux by the obscure and undocumented
-mechanism described by the above mentioned commit.
-
-We want to issue PERST# signal in a known way, therefore this patch
-changes the pcie_reset_pin function from "pcie" to "gpio" and adds the
-reset-gpios property to the PCIe node in device tree files of
-EspressoBin and Armada 3720 Dev Board (Turris Mox device tree already
-has this property and uDPU does not have a PCIe port).
-
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Cc: Remi Pommarel <repk@triplefau.lt>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
----
- arch/arm64/boot/dts/marvell/armada-3720-db.dts           | 3 +++
- arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi | 1 +
- arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts   | 4 ----
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi             | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-db.dts b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-index f2cc00594d64..3e5789f37206 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-@@ -128,6 +128,9 @@ phy1: ethernet-phy@1 {
- 
- /* CON15(V2.0)/CON17(V1.4) : PCIe / CON15(V2.0)/CON12(V1.4) :mini-PCIe */
- &pcie0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
-+	reset-gpios = <&gpiosb 3 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-index 42e992f9c8a5..c92ad664cb0e 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-@@ -47,6 +47,7 @@ &pcie0 {
- 	phys = <&comphy1 0>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
-+	reset-gpios = <&gpiosb 3 GPIO_ACTIVE_LOW>;
- };
- 
- /* J6 */
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-index bb42d1e6a4e9..e496bd9d4737 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-@@ -128,10 +128,6 @@ rtc@6f {
- 	};
- };
- 
--&pcie_reset_pins {
--	function = "gpio";
--};
--
- &pcie0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index 000c135e39b7..7909c146eabf 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -317,7 +317,7 @@ sdio_pins: sdio-pins {
- 
- 				pcie_reset_pins: pcie-reset-pins {
- 					groups = "pcie1";
--					function = "pcie";
-+					function = "gpio";
- 				};
- 
- 				pcie_clkreq_pins: pcie-clkreq-pins {
--- 
-2.24.1
-
+On 4/20/20 7:31 PM, mani@kernel.org wrote:
+> From: Manivannan Sadhasivam <mani@kernel.org>
+> 
+> These pinctrl definitions will be used by Stinger96/IoTBox boards
+> from Shiratech.
+> 
+> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+> ---
+>   arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 64 ++++++++++++++++++++++++
+>   1 file changed, 64 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+> index aeddcaadb829..858c83038e5a 100644
+> --- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+> @@ -1519,6 +1519,30 @@
+>   		};
+>   	};
+>   
+> +	usart2_pins_b: usart2-1 {
+> +		pins1 {
+> +			pinmux = <STM32_PINMUX('F', 5, AF7)>, /* USART2_TX */
+> +				 <STM32_PINMUX('A', 1, AF7)>; /* USART2_RTS */
+> +			bias-disable;
+> +			drive-push-pull;
+> +			slew-rate = <0>;
+> +		};
+> +		pins2 {
+> +			pinmux = <STM32_PINMUX('F', 4, AF7)>, /* USART2_RX */
+> +				 <STM32_PINMUX('E', 15, AF7)>; /* USART2_CTS_NSS */
+> +			bias-disable;
+> +		};
+> +	};
+> +
+> +	usart2_sleep_pins_b: usart2-sleep-1 {
+> +		pins {
+> +			pinmux = <STM32_PINMUX('F', 5, ANALOG)>, /* USART2_TX */
+> +				 <STM32_PINMUX('A', 1, ANALOG)>, /* USART2_RTS */
+> +				 <STM32_PINMUX('F', 4, ANALOG)>, /* USART2_RX */
+> +				 <STM32_PINMUX('E', 15, ANALOG)>; /* USART2_CTS_NSS */
+> +		};
+> +	};
+> +
+>   	usart3_pins_a: usart3-0 {
+>   		pins1 {
+>   			pinmux = <STM32_PINMUX('B', 10, AF7)>; /* USART3_TX */
+> @@ -1558,6 +1582,19 @@
+>   		};
+>   	};
+>   
+> +	uart4_pins_c: uart4-2 {
+> +		pins1 {
+> +			pinmux = <STM32_PINMUX('G', 11, AF6)>; /* UART4_TX */
+> +			bias-disable;
+> +			drive-push-pull;
+> +			slew-rate = <0>;
+> +		};
+> +		pins2 {
+> +			pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
+> +			bias-disable;
+> +		};
+> +	};
+> +
+>   	uart7_pins_a: uart7-0 {
+>   		pins1 {
+>   			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART4_TX */
+> @@ -1573,6 +1610,19 @@
+>   		};
+>   	};
+>   
+> +	uart7_pins_b: uart7-1 {
+> +		pins1 {
+> +			pinmux = <STM32_PINMUX('F', 7, AF7)>; /* UART7_TX */
+> +			bias-disable;
+> +			drive-push-pull;
+> +			slew-rate = <0>;
+> +		};
+> +		pins2 {
+> +			pinmux = <STM32_PINMUX('F', 6, AF7)>; /* UART7_RX */
+> +			bias-disable;
+> +		};
+> +	};
+> +
+>   	uart8_pins_a: uart8-0 {
+>   		pins1 {
+>   			pinmux = <STM32_PINMUX('E', 1, AF8)>; /* UART8_TX */
+> @@ -1647,4 +1697,18 @@
+>   			bias-disable;
+>   		};
+>   	};
+> +
+> +	spi4_pins_a: spi4-0 {
+> +		pins {
+> +			pinmux = <STM32_PINMUX('E', 12, AF5)>, /* SPI4_SCK */
+> +				 <STM32_PINMUX('E', 6, AF5)>;  /* SPI4_MOSI */
+> +			bias-disable;
+> +			drive-push-pull;
+> +			slew-rate = <1>;
+> +		};
+> +		pins2 {
+> +			pinmux = <STM32_PINMUX('E', 13, AF5)>; /* SPI4_MISO */
+> +			bias-disable;
+> +		};
+> +	};
+>   };
+> 
