@@ -2,159 +2,144 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD972C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 13:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 733FCC54FCC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 13:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD578206F4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 13:36:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WyFbMps8"
+	by mail.kernel.org (Postfix) with ESMTP id 5736C206A5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 13:40:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbgDUNgj (ORCPT
+        id S1728783AbgDUNkF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:36:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40468 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728479AbgDUNgj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Apr 2020 09:36:39 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8B49C061A10;
-        Tue, 21 Apr 2020 06:36:38 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id j1so11076357wrt.1;
-        Tue, 21 Apr 2020 06:36:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5OQyA1IQKL66fu+SroNc2N6PhU0Vi6Th6juxgV44yhE=;
-        b=WyFbMps8aAO8dbx5cDlOc3GPqsdlkgo3uwVrzOgHfhiIouuR2TPVDcbChKmSYo8PqZ
-         yPB0HQ0Oumt0hawJPO+bvQfRf6YPDDPLkWCrVEAJk9bfUzBmMJgA4cSrEYFnZA6i0Iq5
-         VnoQQrB6eDI+l9ZWsaeL5Ht6bRX0tiSZ+ufwKMUysD2BkRy+VaYHZrE+cOmrVpczNYOH
-         bY6aVGa/DHrqlZMxUi7vUz+AVcwd5lmQhnqyk8RnoozWD5SGtXoRYrIXsXQD09MhSs8g
-         bZw1ASmGPMr/Nvsx9dF5sdq7QTByTw5TLF/pH0fF978qaV3xq9Q2vUNNVV6CPk8XvOZd
-         4PAA==
+        Tue, 21 Apr 2020 09:40:05 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46112 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728391AbgDUNkE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Apr 2020 09:40:04 -0400
+Received: by mail-oi1-f195.google.com with SMTP id q204so11970165oia.13;
+        Tue, 21 Apr 2020 06:40:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5OQyA1IQKL66fu+SroNc2N6PhU0Vi6Th6juxgV44yhE=;
-        b=XsVp1FUTVF/QxZ6LxcBeH74O5eveQeXE7P7FHqTfn7SsNCU7h+hBzMca7jBn9XhuDg
-         eQw1YGncJdEzu0CCQ5tVoLwR8r61pDrwc7Ls/dsT+mvFjhy7d4jVtpkFhYjoifbjux3V
-         p3bi1dy5oMrEAhB6uXgrs2+7Be19QV21yF0LERx5N8PV9811xBE7gzZjIon/QLJSFsCl
-         qm/HOjYYYbwJtRAhcd+NLJR6SjeX+mEP9oA2J2969yCF8F53sy/iZOYJLD3m9wxJQV9/
-         1yxx80x18b6ePBvFUbuwTjM/phAU/00Ape+h6JV/B0loENNOHjGCM6bwhmOEsdWa0uFO
-         KC1g==
-X-Gm-Message-State: AGi0PuZ6bX6FZ1aYSkJekKd9dslPPNMewzgjgdl9Q8prEic+uxWB/wMS
-        mwpDBLJdd0CRkH9+TFbjOC4=
-X-Google-Smtp-Source: APiQypIafTb861wTqKFVKyWjNJsxEWJwE2dYhymN5jKxCk9R4Z9mkEd2PKAJEvjPgI9Xe+SBtGWUsA==
-X-Received: by 2002:a5d:6ccb:: with SMTP id c11mr25202595wrc.416.1587476197392;
-        Tue, 21 Apr 2020 06:36:37 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id k8sm3768837wrm.52.2020.04.21.06.36.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 06:36:36 -0700 (PDT)
-Subject: Re: [PATCH v4] dt-bindings: rockchip-vpu: Convert bindings to
- json-schema
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     ezequiel@collabora.com, devicetree@vger.kernel.org,
-        hverkuil@xs4all.nl, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        mark.rutland@arm.com, robh@kernel.org
-References: <20200326191343.1989-1-ezequiel@collabora.com>
- <12f6d7cf-6af6-4f54-3188-65e73b703a72@gmail.com>
- <9328212d-139f-6a0e-7d0c-3a5529a392f2@gmail.com>
-Message-ID: <0b82a3f1-3b09-15d6-927c-fac1d4a7f631@gmail.com>
-Date:   Tue, 21 Apr 2020 15:36:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3/1l4+L7c32gnSlR+jJxwn2uHEoI18nOZn1jAcK8+9Q=;
+        b=qVWO7oiIChojoNCxQH8rGnO1CVw0zz2QrOO4Z+nt2O0mUtAoNVX7jlgmRi6ZJbdUYz
+         EXPDych6FonQIco66FjGYP6BxiD4JVFLFaf94W2WgFDv2gMgjdASu4h+5MJyjXtZDsoK
+         FUz00XV5Qyafy5bJG2Bt5iKZAfc39fTje+zGPn/aKXr7U+Btq9l9KdQRuFEXSSvsPJM4
+         Q+FesvCsm4C4ud5j3bIRVit2YRPQDbRFren53Ujq10nLU1M4j29NGVa2dpnPLIUBKgXp
+         RtUgeQvRcwFed5NZsTm2Q4xPDskRaJAAc3ct1Vb6rvg1+WXVyQs4F01ORfV0+RRr8Hv/
+         4F4w==
+X-Gm-Message-State: AGi0PuaPvH/9AoSKN/8xJVXF02dUkl2zQWvVO6Sc6HXrETsq2hWEju0D
+        heJTnyzIKhn/qCfJXhoV48thCE8TKovN0GR2FfA=
+X-Google-Smtp-Source: APiQypLnyE8M1S3nafbqgPsJWblXWZUy3OMvbgpZ18EMhwOIcc0Hy40xHYlEJ+5FEBBaTRknY0lppcu8TbDznbLPHQw=
+X-Received: by 2002:aca:f541:: with SMTP id t62mr3020719oih.148.1587476402149;
+ Tue, 21 Apr 2020 06:40:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <9328212d-139f-6a0e-7d0c-3a5529a392f2@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1585289423-18440-1-git-send-email-hadar.gat@arm.com>
+ <CAMuHMdUUJATs+G-hvty=fgyrhyx1EafpFHoWfcm=V_tVLn3q2A@mail.gmail.com>
+ <DB6PR0802MB25330E55914346B46288C712E9D40@DB6PR0802MB2533.eurprd08.prod.outlook.com>
+ <CAMuHMdV1Lp0uEOm_KtUA-nF7-6y1kfyvArcunrLipp6h5A_GMw@mail.gmail.com> <DB6PR0802MB25330B64ABAE083E31B427DDE9D50@DB6PR0802MB2533.eurprd08.prod.outlook.com>
+In-Reply-To: <DB6PR0802MB25330B64ABAE083E31B427DDE9D50@DB6PR0802MB2533.eurprd08.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 21 Apr 2020 15:39:50 +0200
+Message-ID: <CAMuHMdWjBTEM-cU32ZcvvoYDcjdMzcKbQZUyvGggZRMRhkOmFg@mail.gmail.com>
+Subject: Re: [PATCH v7 0/3] hw_random: introduce Arm CryptoCell TRNG driver
+To:     Hadar Gat <Hadar.Gat@arm.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi Hadar (and Gilad),
 
-Also add
+On Tue, Apr 21, 2020 at 3:13 PM Hadar Gat <Hadar.Gat@arm.com> wrote:
+> To better explain the relationship between ccree and cctrng drivers, here an description of the underlying hardware and the relationship to the two drivers:
+>
+> Arm TrustZone CryptoCell is a hardware block that implements two separate and discreet, although related, interfaces: one for the Rich Execution Environment  (read: Linux) and the other for the Trusted Execution Environment (e.g. Trusty, Op-TEE).
+>
+> The ccree driver exposes the REE interface of CryptoCell to Linux. Where a SoC vendor implements both REE and TEE in their design, that is all that is needed.
+>
+> However, we have some customers that make use CryptoCell but never implement a Trusted Execution Environment. This is a design decision taken when the SoC hardware is being designed and not a software controlled configuration, as it involves how the buses are laid out. Some of these customers have requested from us to allow making use in Linux of the TRNG resources which are normally associated with the TEE side when it is not in use. For these customers, the cctrng driver allows making use in Linux the TRNG which is normally part of the TEE side of CryptoCell.
 
-L:	linux-rockchip@lists.infradead.org
+Thank you, that is the part I was missing.
 
-to all Rockchip related MAINTAINERS items.
+BTW, there seems to be no mention of CryptoCell 630 on arm.com; it
+covers only CC-300 and CC-700.
+But from the (very limited) information about the crypto engine on R-Car
+Gen3 SoCs, it looks like the RNG is indeed only present in the secure
+(trusted) part.
 
-On 4/21/20 3:19 PM, Johan Jonker wrote:
-> Hi,
-> 
-> Question for the media maintainers Hans & Co. :
-> 
-> What's nxp,imx8mq-vpu.yaml doing under rga?
-> Why is rockchip-vpu.yaml inserted under rga instead of vpu?
-> 
-> Johan
-> 
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index f0e7b4d17fcc..0cfd86594b0b 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -14471,7 +14471,8 @@ M:	Jacob Chen <jacob-chen@iotwrt.com>
->>  M:	Ezequiel Garcia <ezequiel@collabora.com>
->>  L:	linux-media@vger.kernel.org
->>  S:	Maintained
->> -F:	Documentation/devicetree/bindings/media/rockchip-rga.txt
->> +F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
->> +F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
->>  F:	drivers/media/platform/rockchip/rga/
-> 
-> HANTRO VPU CODEC DRIVER
-> M:	Ezequiel Garcia <ezequiel@collabora.com>
-> M:	Philipp Zabel <p.zabel@pengutronix.de>
-> L:	linux-media@vger.kernel.org
-> L:	linux-rockchip@lists.infradead.org
-> S:	Maintained
-> F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
-> F:	Documentation/devicetree/bindings/media/rockchip-vpu.txt
-> F:	drivers/staging/media/hantro/
-> 
-> ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
-> M:	Jacob Chen <jacob-chen@iotwrt.com>
-> M:	Ezequiel Garcia <ezequiel@collabora.com>
-> L:	linux-media@vger.kernel.org
+> > -----Original Message-----
+> > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > On Mon, Apr 20, 2020 at 2:27 PM Hadar Gat <Hadar.Gat@arm.com> wrote:
+> > > > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > > Sent: Monday, 20 April 2020 12:35
+> > > >
+> > > > On Fri, Mar 27, 2020 at 7:11 AM Hadar Gat <hadar.gat@arm.com> wrote:
+> > > > > The Arm CryptoCell is a hardware security engine.
+> > > > > This patch introduces driver for its TRNG (True Random Number
+> > > > > Generator) engine.
+> > > >
+> > > > Thanks for your series!
+> > > >
+> > > > I am wondering what is the relation between this and
+> > > > Documentation/devicetree/bindings/crypto/arm-cryptocell.txt?
+> > >
+> > > Arm TrustZone CryptoCell hardware contains both cryptographic engine
+> > (ccree) and true random number generator engine (cctrng).
+> >
+> > OK.
+> >
+> > > These are separate engines with some sharing in logic and interface.
+> >
+> > Do they share the same register block?
+> >
+> > > cctrng engine may not always be present.
+> >
+> > I assume that applies to e.g. the older 630p?
+> >
+> > > The devicetree documentation is in:
+> > > For ccree -
+> > > Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
+> > > For cctrng - Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+> >
+> > Thank you, I had already read both documents.
 
-Add list
+Gr{oetje,eeting}s,
 
-> S:	Maintained
-> F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
-> F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
-> F:	drivers/media/platform/rockchip/rga/
-> 
+                        Geert
 
-ROCKCHIP VIDEO DECODER DRIVER
-M:	Ezequiel Garcia <ezequiel@collabora.com>
-L:	linux-media@vger.kernel.org
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Add list
-
-S:	Maintained
-F:	drivers/staging/media/rkvdec/
-F:	Documentation/devicetree/bindings/media/rockchip,vdec.yaml
-
-ROCKCHIP ISP V1 DRIVER
-M:	Helen Koike <helen.koike@collabora.com>
-L:	linux-media@vger.kernel.org
-
-Add list
-
-S:	Maintained
-F:	drivers/staging/media/rkisp1/
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
