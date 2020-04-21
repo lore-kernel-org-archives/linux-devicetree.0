@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C9BC5518A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 05:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2E5C5518B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 05:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 634C3206D6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 05:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07B3E22244
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 05:06:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LyU/7qBi"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mdzRnubw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgDUFGy (ORCPT
+        id S1726573AbgDUFGx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 01:06:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46416 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726516AbgDUFGx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
         Tue, 21 Apr 2020 01:06:53 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C266C03C1A6
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 22:06:51 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id t40so866448pjb.3
-        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 22:06:51 -0700 (PDT)
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46414 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726547AbgDUFGw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Apr 2020 01:06:52 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B67BC061A10
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 22:06:52 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k18so4825254pll.6
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 22:06:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kSeuRl9u6GyicN//nHBoTuV+Y0T22TYVbPnayCqsBO8=;
-        b=LyU/7qBiH/aG71draN5jUS2+mq97YNmFoEqf+sblKY9Kb1Nm1gPztdPY4WZ8PaqNbH
-         oqikhJbyQ2BKNRLsg9jHEVPFG6hON/3WpanZx958wyihOFFNzqRSudzpR55RIgiLzfyq
-         qTiVlBx1/z2Ob78BDAQ9PxqTc1nTl5uIviV70=
+        bh=eGfBKJpSi90UFqlpYNStz7DM33anWi17Ai2zGXaXMWc=;
+        b=mdzRnubwKP7krAS40Ea2KN23CScPHBKO1SR+AS0E+/6i+r66UtFj7LxigBVGbaH03H
+         6mOa4r/1UEkt+v0t8swjMLve4coTvqfK3oY1x5oYuCKpxeBZjJ45n/4QyONrWNhCCJr7
+         mxx+wneohm5w3rXhblsvBowD0WFWXphhzMzEk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kSeuRl9u6GyicN//nHBoTuV+Y0T22TYVbPnayCqsBO8=;
-        b=tBpoc6RfuagZCEyYflrck0xul9TLFaZjsu+mGdolyMQbOz/MicSl5KauFzMI1ktQ7c
-         JK+wn1jWp8MCw3zMyuel9/saXuOzzRomUrAaKyIHOIvEiWeBWeLvhGpaPQDOhhg4h1P3
-         +rs34BOOkYP4vNof39+O5RDTymeUW3D9nMVXq1hWbMAWcLWXY8UNbE5JgOT35qiUOdeW
-         yrbLC1ifbyWXb/AhXXCGMTcuDUO5cr4eN8Tw2WzGPgs2XX4KGysuUokjRDoQVDMExmuB
-         7hlZ2BXk9OIJkJ6EJtPBpt1SHgoT1FWP2kks8P5BEdWHuE5CoQ0bBvsI/0lYwR089oNP
-         WhlA==
-X-Gm-Message-State: AGi0PuYWmpTa3SloVVbvsgCl2AuawUk14rvL13Ot9y62+o1LisZKBwtF
-        Ty0z6754EGvGUUZ2GvtqEojDJQ==
-X-Google-Smtp-Source: APiQypJzFod9tNAuAnsTCpNj/cBg+/8U/+LymAlvnSKQAem9cQnrWeTZHNYSnYef18mwk6N/WqT05w==
-X-Received: by 2002:a17:90a:f995:: with SMTP id cq21mr3440366pjb.56.1587445610633;
-        Mon, 20 Apr 2020 22:06:50 -0700 (PDT)
+        bh=eGfBKJpSi90UFqlpYNStz7DM33anWi17Ai2zGXaXMWc=;
+        b=tYq1xBhS2L57B2qvbuZLaZ4+dqG9mlON/K/7SDImeIeLrlSmvcGbNZxh0HdSv+2wBo
+         bmjkIHRJa3YzSblavt4YHJF9ghw6VTDpf+Yrj8PVNv2nTTnlVVNg9TAg+MSjELnX6+46
+         pEzJUII6+6UF3eLqbbstBjDyJhLR7fJgC7RQjkddm9x9BW8rlTqkNBiZiy3jO+TZ3nDC
+         2Zs9bBnh/fOZwnl65sD0HGHpcmP8aTNm0CYAEYOr50rzv+66Ssmj7Ge0x6E8iZgliBMN
+         jvBMDpr09BMAKnGwfray0HIehZR7+z0XCxZ6cRRMMSE8LrQ3QOOSpX4W90McLFg6hWHd
+         kRaQ==
+X-Gm-Message-State: AGi0PuZjBHJ42sBDGVhXCf2Shle7W3nA+jizbIX/7QM6pYj/63PoG1G0
+        tPnNiUAmh8QddSNZqUmi5M7IPw==
+X-Google-Smtp-Source: APiQypJQNPdkuPcpRjjTTAYI/poAyKTtArgQxmjjnmtRkUI/zZQTGT50tl4mj8Sv4sxDO7Poue+Axw==
+X-Received: by 2002:a17:90a:dc01:: with SMTP id i1mr3278786pjv.94.1587445611989;
+        Mon, 20 Apr 2020 22:06:51 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id p68sm1184780pfb.89.2020.04.20.22.06.49
+        by smtp.gmail.com with ESMTPSA id p68sm1184780pfb.89.2020.04.20.22.06.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2020 22:06:50 -0700 (PDT)
+        Mon, 20 Apr 2020 22:06:51 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
         airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
@@ -67,10 +67,12 @@ Cc:     jonas@kwiboo.se, jeffrey.l.hugo@gmail.com,
         jernej.skrabec@siol.net, swboyd@chromium.org,
         bjorn.andersson@linaro.org, robdclark@chromium.org,
         Douglas Anderson <dianders@chromium.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/6] drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux
-Date:   Mon, 20 Apr 2020 22:06:17 -0700
-Message-Id: <20200420220458.v2.1.Ia50267a5549392af8b37e67092ca653a59c95886@changeid>
+Subject: [PATCH v2 2/6] dt-bindings: display: Add hpd-gpios to panel-common bindings
+Date:   Mon, 20 Apr 2020 22:06:18 -0700
+Message-Id: <20200420220458.v2.2.I1976736b400a3b30e46efa47782248b86b3bc627@changeid>
 X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
 In-Reply-To: <20200421050622.8113-1-dianders@chromium.org>
 References: <20200421050622.8113-1-dianders@chromium.org>
@@ -81,251 +83,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The ti-sn65dsi86 MIPI DSI to eDP bridge chip has 4 pins on it that can
-be used as GPIOs in a system.  Each pin can be configured as input,
-output, or a special function for the bridge chip.  These are:
-- GPIO1: SUSPEND Input
-- GPIO2: DSIA VSYNC
-- GPIO3: DSIA HSYNC or VSYNC
-- GPIO4: PWM
+In the cases where there is no connector in a system there's no great
+place to put "hpd-gpios".  As per discussion [1] the best place to put
+it is in the panel.  Add this to the device tree bindings.
 
-Let's expose these pins as GPIOs.  A few notes:
-- Access to ti-sn65dsi86 is via i2c so we set "can_sleep".
-- These pins can't be configured for IRQ.
-- There are no programmable pulls or other fancy features.
-- Keeping the bridge chip powered might be expensive.  The driver is
-  setup such that if all used GPIOs are only inputs we'll power the
-  bridge chip on just long enough to read the GPIO and then power it
-  off again.  Setting a GPIO as output will keep the bridge powered.
-- If someone releases a GPIO we'll implicitly switch it to an input so
-  we no longer need to keep the bridge powered for it.
-
-Becaue of all of the above limitations we just need to implement a
-bare-bones GPIO driver.  The device tree bindings already account for
-this device being a GPIO controller so we only need the driver changes
-for it.
-
-NOTE: Despite the fact that these pins are nominally muxable I don't
-believe it makes sense to expose them through the pinctrl interface as
-well as the GPIO interface.  The special functions are things that the
-bridge chip driver itself would care about and it can just configure
-the pins as needed.
+[1] https://lore.kernel.org/r/20200417180819.GE5861@pendragon.ideasonboard.com
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
 
 Changes in v2:
-- ("Export...GPIOs") is 1/2 of replacement for ("Allow...bridge GPIOs")
+- ("dt-bindings: display: Add hpd-gpios to panel-common...") new for v2
 
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 165 ++++++++++++++++++++++++++
- 1 file changed, 165 insertions(+)
+ .../devicetree/bindings/display/panel/panel-common.yaml     | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index 6ad688b320ae..d04c2b83d699 100644
---- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-+++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -7,6 +7,8 @@
- #include <linux/clk.h>
- #include <linux/debugfs.h>
- #include <linux/gpio/consumer.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/gpio.h>
- #include <linux/i2c.h>
- #include <linux/iopoll.h>
- #include <linux/module.h>
-@@ -54,6 +56,13 @@
- #define  BPP_18_RGB				BIT(0)
- #define SN_HPD_DISABLE_REG			0x5C
- #define  HPD_DISABLE				BIT(0)
-+#define SN_GPIO_IO_REG				0x5E
-+#define  SN_GPIO_INPUT_SHIFT			4
-+#define  SN_GPIO_OUTPUT_SHIFT			0
-+#define SN_GPIO_CTRL_REG			0x5F
-+#define  SN_GPIO_MUX_INPUT			0
-+#define  SN_GPIO_MUX_OUTPUT			1
-+#define  SN_GPIO_MUX_SPECIAL			2
- #define SN_AUX_WDATA_REG(x)			(0x64 + (x))
- #define SN_AUX_ADDR_19_16_REG			0x74
- #define SN_AUX_ADDR_15_8_REG			0x75
-@@ -102,6 +111,9 @@ struct ti_sn_bridge {
- 	struct gpio_desc		*enable_gpio;
- 	struct regulator_bulk_data	supplies[SN_REGULATOR_SUPPLY_NUM];
- 	int				dp_lanes;
-+
-+	struct gpio_chip		gchip;
-+	atomic_t			gchip_output;
- };
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+index ed051ba12084..e9a04a3a4f5f 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
++++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+@@ -96,6 +96,12 @@ properties:
+       (hot plug detect) signal, but the signal isn't hooked up so we should
+       hardcode the max delay from the panel spec when powering up the panel.
  
- static const struct regmap_range ti_sn_bridge_volatile_ranges[] = {
-@@ -874,6 +886,153 @@ static int ti_sn_bridge_parse_dsi_host(struct ti_sn_bridge *pdata)
- 	return 0;
- }
++  hpd-gpios:
++    maxItems: 1
++    description:
++      If Hot Plug Detect (HPD) is connected to a GPIO in the system rather
++      than a dedicated HPD pin the pin can be specified here.
++
+   # Control I/Os
  
-+static struct ti_sn_bridge *gchip_to_pdata(struct gpio_chip *chip)
-+{
-+	return container_of(chip, struct ti_sn_bridge, gchip);
-+}
-+
-+static int ti_sn_bridge_gpio_get_direction(struct gpio_chip *chip,
-+					   unsigned int offset)
-+{
-+	struct ti_sn_bridge *pdata = gchip_to_pdata(chip);
-+
-+	return (atomic_read(&pdata->gchip_output) & BIT(offset)) ?
-+		GPIOF_DIR_OUT : GPIOF_DIR_IN;
-+}
-+
-+static int ti_sn_bridge_gpio_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct ti_sn_bridge *pdata = gchip_to_pdata(chip);
-+	unsigned int val;
-+	int ret;
-+
-+	/*
-+	 * When the pin is an input we don't forcibly keep the bridge
-+	 * powered--we just power it on to read the pin.  NOTE: part of
-+	 * the reason this works is that the bridge defaults to all 4
-+	 * GPIOs being configured as GPIO input.  Also note that if
-+	 * something else is keeping the chip powered the pm_runtime
-+	 * functions are lightweight increments of a refcount.
-+	 */
-+	pm_runtime_get_sync(pdata->dev);
-+	ret = regmap_read(pdata->regmap, SN_GPIO_IO_REG, &val);
-+	pm_runtime_put(pdata->dev);
-+
-+	if (ret)
-+		return ret;
-+
-+	return (val >> (SN_GPIO_INPUT_SHIFT + offset)) & 1;
-+}
-+
-+static void ti_sn_bridge_gpio_set(struct gpio_chip *chip, unsigned int offset,
-+				  int val)
-+{
-+	struct ti_sn_bridge *pdata = gchip_to_pdata(chip);
-+	int ret;
-+
-+	if (!(atomic_read(&pdata->gchip_output) & BIT(offset))) {
-+		dev_err(pdata->dev, "Ignoring GPIO set while input\n");
-+		return;
-+	}
-+
-+	val &= 1;
-+	ret = regmap_update_bits(pdata->regmap, SN_GPIO_IO_REG,
-+				 BIT(SN_GPIO_OUTPUT_SHIFT + offset),
-+				 val << (SN_GPIO_OUTPUT_SHIFT + offset));
-+}
-+
-+static int ti_sn_bridge_gpio_direction_input(struct gpio_chip *chip,
-+					     unsigned int offset)
-+{
-+	struct ti_sn_bridge *pdata = gchip_to_pdata(chip);
-+	int shift = offset * 2;
-+	int old_gchip_output;
-+	int ret;
-+
-+	old_gchip_output = atomic_fetch_andnot(BIT(offset),
-+					       &pdata->gchip_output);
-+	if (!(old_gchip_output & BIT(offset)))
-+		return 0;
-+
-+	ret = regmap_update_bits(pdata->regmap, SN_GPIO_CTRL_REG,
-+				 0x3 << shift, SN_GPIO_MUX_INPUT << shift);
-+	if (ret) {
-+		atomic_or(BIT(offset), &pdata->gchip_output);
-+		return ret;
-+	}
-+
-+	pm_runtime_put(pdata->dev);
-+
-+	return 0;
-+}
-+
-+static int ti_sn_bridge_gpio_direction_output(struct gpio_chip *chip,
-+					      unsigned int offset, int val)
-+{
-+	struct ti_sn_bridge *pdata = gchip_to_pdata(chip);
-+	int shift = offset * 2;
-+	int old_gchip_output;
-+	int ret;
-+
-+	old_gchip_output = atomic_fetch_or(BIT(offset), &pdata->gchip_output);
-+	if (old_gchip_output & BIT(offset))
-+		return 0;
-+
-+	pm_runtime_get_sync(pdata->dev);
-+
-+	/* Set value first to avoid glitching */
-+	ti_sn_bridge_gpio_set(chip, offset, val);
-+
-+	/* Set direction */
-+	ret = regmap_update_bits(pdata->regmap, SN_GPIO_CTRL_REG,
-+				 0x3 << shift, SN_GPIO_MUX_OUTPUT << shift);
-+	if (ret) {
-+		atomic_andnot(BIT(offset), &pdata->gchip_output);
-+		pm_runtime_put(pdata->dev);
-+	}
-+
-+	return ret;
-+}
-+
-+static void ti_sn_bridge_gpio_free(struct gpio_chip *chip, unsigned int offset)
-+{
-+	/* We won't keep pm_runtime if we're input, so switch there on free */
-+	ti_sn_bridge_gpio_direction_input(chip, offset);
-+}
-+
-+static const char * const ti_sn_bridge_gpio_names[] = {
-+	"GPIO1", "GPIO2", "GPIO3", "GPIO4"
-+};
-+
-+static int ti_sn_setup_gpio_controller(struct ti_sn_bridge *pdata)
-+{
-+	int ret;
-+
-+	/* Only init if someone is going to use us as a GPIO controller */
-+	if (!of_property_read_bool(pdata->dev->of_node, "gpio-controller"))
-+		return 0;
-+
-+	pdata->gchip.label = dev_name(pdata->dev);
-+	pdata->gchip.parent = pdata->dev;
-+	pdata->gchip.owner = THIS_MODULE;
-+	pdata->gchip.free = ti_sn_bridge_gpio_free;
-+	pdata->gchip.get_direction = ti_sn_bridge_gpio_get_direction;
-+	pdata->gchip.direction_input = ti_sn_bridge_gpio_direction_input;
-+	pdata->gchip.direction_output = ti_sn_bridge_gpio_direction_output;
-+	pdata->gchip.get = ti_sn_bridge_gpio_get;
-+	pdata->gchip.set = ti_sn_bridge_gpio_set;
-+	pdata->gchip.can_sleep = true;
-+	pdata->gchip.names = ti_sn_bridge_gpio_names;
-+	pdata->gchip.ngpio = ARRAY_SIZE(ti_sn_bridge_gpio_names);
-+	ret = devm_gpiochip_add_data(pdata->dev, &pdata->gchip, pdata);
-+	if (ret) {
-+		dev_err(pdata->dev, "can't add gpio chip\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int ti_sn_bridge_probe(struct i2c_client *client,
- 			      const struct i2c_device_id *id)
- {
-@@ -937,6 +1096,12 @@ static int ti_sn_bridge_probe(struct i2c_client *client,
- 
- 	pm_runtime_enable(pdata->dev);
- 
-+	ret = ti_sn_setup_gpio_controller(pdata);
-+	if (ret) {
-+		pm_runtime_disable(pdata->dev);
-+		return ret;
-+	}
-+
- 	i2c_set_clientdata(client, pdata);
- 
- 	pdata->aux.name = "ti-sn65dsi86-aux";
+   # Many display panels can be controlled through pins driven by GPIOs. The nature
 -- 
 2.26.1.301.g55bc3eb7cb9-goog
 
