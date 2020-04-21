@@ -2,144 +2,121 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 733FCC54FCC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 13:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D688C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 13:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5736C206A5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 13:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D49B4206B9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 13:44:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="MGvCzKGi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbgDUNkF convert rfc822-to-8bit (ORCPT
+        id S1728956AbgDUNoT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 09:40:05 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46112 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728391AbgDUNkE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Apr 2020 09:40:04 -0400
-Received: by mail-oi1-f195.google.com with SMTP id q204so11970165oia.13;
-        Tue, 21 Apr 2020 06:40:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3/1l4+L7c32gnSlR+jJxwn2uHEoI18nOZn1jAcK8+9Q=;
-        b=qVWO7oiIChojoNCxQH8rGnO1CVw0zz2QrOO4Z+nt2O0mUtAoNVX7jlgmRi6ZJbdUYz
-         EXPDych6FonQIco66FjGYP6BxiD4JVFLFaf94W2WgFDv2gMgjdASu4h+5MJyjXtZDsoK
-         FUz00XV5Qyafy5bJG2Bt5iKZAfc39fTje+zGPn/aKXr7U+Btq9l9KdQRuFEXSSvsPJM4
-         Q+FesvCsm4C4ud5j3bIRVit2YRPQDbRFren53Ujq10nLU1M4j29NGVa2dpnPLIUBKgXp
-         RtUgeQvRcwFed5NZsTm2Q4xPDskRaJAAc3ct1Vb6rvg1+WXVyQs4F01ORfV0+RRr8Hv/
-         4F4w==
-X-Gm-Message-State: AGi0PuaPvH/9AoSKN/8xJVXF02dUkl2zQWvVO6Sc6HXrETsq2hWEju0D
-        heJTnyzIKhn/qCfJXhoV48thCE8TKovN0GR2FfA=
-X-Google-Smtp-Source: APiQypLnyE8M1S3nafbqgPsJWblXWZUy3OMvbgpZ18EMhwOIcc0Hy40xHYlEJ+5FEBBaTRknY0lppcu8TbDznbLPHQw=
-X-Received: by 2002:aca:f541:: with SMTP id t62mr3020719oih.148.1587476402149;
- Tue, 21 Apr 2020 06:40:02 -0700 (PDT)
+        Tue, 21 Apr 2020 09:44:19 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:46805 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728745AbgDUNoS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Apr 2020 09:44:18 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id QtC4jlYNblKa1QtC7j15or; Tue, 21 Apr 2020 15:44:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1587476655; bh=nzCZ64gPxIoM/j+JyeXGQ/ySy+plAMu9pIDfwkwYt6c=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=MGvCzKGiVXtR3xzMsKksuQC2abAPuOsl2d2sj01xJtAkH2mGZl6f9J+LipDrhUCFi
+         fq+M033mKeIBN/bzdy5L+czBCVqGYxJalyfsrZIG1ZbkJAboJnZSKopzP/pp+uq4ZX
+         SVrwC3v9uMwJJP99JV+o7mTCn2s4xiog/QixFL3SkaX3vT4opaUS2t71JNKe/ml652
+         tnwmcg9wzldpnL2jMIV2aFJHPo+HgMjghCvvB27bX4Z9xGJ2CbXUkKMh8IctY9sG57
+         B/2AmLr7CN3tqPwJSZPI++qWO5ahCzVxD23ys1C2rbMflHA7krh4qqPcqLPGjwzckq
+         eTOxTjOQxnMhQ==
+Subject: Re: [PATCH v4] dt-bindings: rockchip-vpu: Convert bindings to
+ json-schema
+To:     Johan Jonker <jbx6244@gmail.com>, heiko@sntech.de
+Cc:     ezequiel@collabora.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        robh@kernel.org
+References: <20200326191343.1989-1-ezequiel@collabora.com>
+ <12f6d7cf-6af6-4f54-3188-65e73b703a72@gmail.com>
+ <9328212d-139f-6a0e-7d0c-3a5529a392f2@gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <30717aac-f589-ffbd-aefb-07c2934f7a2e@xs4all.nl>
+Date:   Tue, 21 Apr 2020 15:44:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <1585289423-18440-1-git-send-email-hadar.gat@arm.com>
- <CAMuHMdUUJATs+G-hvty=fgyrhyx1EafpFHoWfcm=V_tVLn3q2A@mail.gmail.com>
- <DB6PR0802MB25330E55914346B46288C712E9D40@DB6PR0802MB2533.eurprd08.prod.outlook.com>
- <CAMuHMdV1Lp0uEOm_KtUA-nF7-6y1kfyvArcunrLipp6h5A_GMw@mail.gmail.com> <DB6PR0802MB25330B64ABAE083E31B427DDE9D50@DB6PR0802MB2533.eurprd08.prod.outlook.com>
-In-Reply-To: <DB6PR0802MB25330B64ABAE083E31B427DDE9D50@DB6PR0802MB2533.eurprd08.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 21 Apr 2020 15:39:50 +0200
-Message-ID: <CAMuHMdWjBTEM-cU32ZcvvoYDcjdMzcKbQZUyvGggZRMRhkOmFg@mail.gmail.com>
-Subject: Re: [PATCH v7 0/3] hw_random: introduce Arm CryptoCell TRNG driver
-To:     Hadar Gat <Hadar.Gat@arm.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <9328212d-139f-6a0e-7d0c-3a5529a392f2@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfFOD3+wi8uRwj+8VMeKVJAVRmyaCf97nXh7DTYhJ/GTwnfn03wdMnQ2R6vwD2I2C30SNPt/yaF2SYIz2mc8V60m9aOERfxj+viHcuNDmX49kufGAyme4
+ jBztzH57g3sFqQRuyxXEqwOWEsd0WEt3+jmlj0d7nLVV65O5lyqM5wUCkwNEJ0XMLt99HovguvLNV59IHn3rbKjIiEqP1gcS8ufKXbrfChZYzkQIRYCH59kN
+ ddpzFS70DPlLbjMJqNZ8T0HheZVn5xGR8I05J5FbJzkvHxLpt8RI2RGGWYzR8v6f9P4xWdv3ZKq3V54jq0CHyR+lMIszB9qhNpzIfKYGcnuC/IAAMf2DkVkG
+ ie6RUDNMi5+rrv3bqy2YyWDpoW3DSN6yLERrBy/TK9jIK1rILzwPdD/xqhJfdwu+i42mp0b+38cdCbwkYiRNTO9/S040gWLnoIJ7fxPtFKk1sQKcX+0=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Hadar (and Gilad),
+On 21/04/2020 15:19, Johan Jonker wrote:
+> Hi,
+> 
+> Question for the media maintainers Hans & Co. :
+> 
+> What's nxp,imx8mq-vpu.yaml doing under rga?
+> Why is rockchip-vpu.yaml inserted under rga instead of vpu?
 
-On Tue, Apr 21, 2020 at 3:13 PM Hadar Gat <Hadar.Gat@arm.com> wrote:
-> To better explain the relationship between ccree and cctrng drivers, here an description of the underlying hardware and the relationship to the two drivers:
->
-> Arm TrustZone CryptoCell is a hardware block that implements two separate and discreet, although related, interfaces: one for the Rich Execution Environment  (read: Linux) and the other for the Trusted Execution Environment (e.g. Trusty, Op-TEE).
->
-> The ccree driver exposes the REE interface of CryptoCell to Linux. Where a SoC vendor implements both REE and TEE in their design, that is all that is needed.
->
-> However, we have some customers that make use CryptoCell but never implement a Trusted Execution Environment. This is a design decision taken when the SoC hardware is being designed and not a software controlled configuration, as it involves how the buses are laid out. Some of these customers have requested from us to allow making use in Linux of the TRNG resources which are normally associated with the TEE side when it is not in use. For these customers, the cctrng driver allows making use in Linux the TRNG which is normally part of the TEE side of CryptoCell.
+That's clearly wrong. Probably my fault when trying to resolve
+a conflict.
 
-Thank you, that is the part I was missing.
+Ezequiel, can you make a patch fixing this? It's probably a good
+idea if you double-check these entries to make sure I didn't inadvertently
+introduce more mistakes.
 
-BTW, there seems to be no mention of CryptoCell 630 on arm.com; it
-covers only CC-300 and CC-700.
-But from the (very limited) information about the crypto engine on R-Car
-Gen3 SoCs, it looks like the RNG is indeed only present in the secure
-(trusted) part.
+Regards,
 
-> > -----Original Message-----
-> > From: Geert Uytterhoeven <geert@linux-m68k.org>
-> > On Mon, Apr 20, 2020 at 2:27 PM Hadar Gat <Hadar.Gat@arm.com> wrote:
-> > > > From: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > > Sent: Monday, 20 April 2020 12:35
-> > > >
-> > > > On Fri, Mar 27, 2020 at 7:11 AM Hadar Gat <hadar.gat@arm.com> wrote:
-> > > > > The Arm CryptoCell is a hardware security engine.
-> > > > > This patch introduces driver for its TRNG (True Random Number
-> > > > > Generator) engine.
-> > > >
-> > > > Thanks for your series!
-> > > >
-> > > > I am wondering what is the relation between this and
-> > > > Documentation/devicetree/bindings/crypto/arm-cryptocell.txt?
-> > >
-> > > Arm TrustZone CryptoCell hardware contains both cryptographic engine
-> > (ccree) and true random number generator engine (cctrng).
-> >
-> > OK.
-> >
-> > > These are separate engines with some sharing in logic and interface.
-> >
-> > Do they share the same register block?
-> >
-> > > cctrng engine may not always be present.
-> >
-> > I assume that applies to e.g. the older 630p?
-> >
-> > > The devicetree documentation is in:
-> > > For ccree -
-> > > Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
-> > > For cctrng - Documentation/devicetree/bindings/rng/arm-cctrng.yaml
-> >
-> > Thank you, I had already read both documents.
+	Hans
 
-Gr{oetje,eeting}s,
+> 
+> Johan
+> 
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index f0e7b4d17fcc..0cfd86594b0b 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -14471,7 +14471,8 @@ M:	Jacob Chen <jacob-chen@iotwrt.com>
+>>  M:	Ezequiel Garcia <ezequiel@collabora.com>
+>>  L:	linux-media@vger.kernel.org
+>>  S:	Maintained
+>> -F:	Documentation/devicetree/bindings/media/rockchip-rga.txt
+>> +F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
+>> +F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+>>  F:	drivers/media/platform/rockchip/rga/
+> 
+> HANTRO VPU CODEC DRIVER
+> M:	Ezequiel Garcia <ezequiel@collabora.com>
+> M:	Philipp Zabel <p.zabel@pengutronix.de>
+> L:	linux-media@vger.kernel.org
+> L:	linux-rockchip@lists.infradead.org
+> S:	Maintained
+> F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
+> F:	Documentation/devicetree/bindings/media/rockchip-vpu.txt
+> F:	drivers/staging/media/hantro/
+> 
+> ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
+> M:	Jacob Chen <jacob-chen@iotwrt.com>
+> M:	Ezequiel Garcia <ezequiel@collabora.com>
+> L:	linux-media@vger.kernel.org
+> S:	Maintained
+> F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
+> F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+> F:	drivers/media/platform/rockchip/rga/
+> 
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
