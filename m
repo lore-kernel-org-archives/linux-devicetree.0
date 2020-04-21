@@ -2,81 +2,184 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C0F9C55181
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 07:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D678C54FC9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 07:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CAE720B1F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 07:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 573A82073A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 07:31:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GlKRZFFy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726013AbgDUHTm (ORCPT
+        id S1727042AbgDUHbl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 03:19:42 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39518 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgDUHTm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Apr 2020 03:19:42 -0400
-Received: by mail-ot1-f68.google.com with SMTP id m13so10421216otf.6;
-        Tue, 21 Apr 2020 00:19:41 -0700 (PDT)
+        Tue, 21 Apr 2020 03:31:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbgDUHbk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Apr 2020 03:31:40 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A902C061A0F;
+        Tue, 21 Apr 2020 00:31:40 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id b11so15222155wrs.6;
+        Tue, 21 Apr 2020 00:31:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D9m3MRy8x+o4H1EEycml0VyqSiaYH7kBtrQzXfBUS8w=;
+        b=GlKRZFFyQs7kZycqIc8kmWXH6Ud4+HQlXs3tT/pPSNZiMX9h8VVS8uJ4YjqPe9VH8K
+         VOsgHdZHB+X8w3fU84GRwWmtLSlcVzqJK7F/LoKjnYTtGYgq3XlXvWec2jF5yMlqXgqT
+         DMgM1TfcX2lja1KJLWe7ISkMNWMptDaq+uRd0auhbWqgVgW1EPpuWXmJWENaC70cqkHl
+         W1OAI+RQF3UbWRsqpDAk3GeJKKu0TXTiXcokuG6Qfw9gi4uhUhhkh/njN+XgNpd68M6p
+         4MIsTwBlPzPF6/fdkxJpNRxasCq6hiJzXqMxnl+6c6ccJiiwVjHBSMjSmK14iNLpPdBh
+         8oig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=veb+c1epeetzdg6zofKI0cevmUaJQHxspqLhCZkderQ=;
-        b=ndyBYrO+DXHPnKvIrfhxlhWUR8FO5Dj6/UNaX9Nvte4EYPHQI45qTYgo+TpO6KGhzf
-         DCLUnw3WmqG2vdCil2+aNK5MeMOX3lyUNGq8lPSAue3rSmOzvqXbBTDgpnq+Urel+an7
-         yXlwCFGCpNQVINBPqrEuPbYGgKR8zGYc40ehY9y5VHGCgmNkXVLyh6KLXs8MPicND/te
-         SFIALxh8W2AoD6aC8Snm6+vQhO4rFz9O2LRof6/Iw8yGHg75qUUmihHV2OCEN1dZ08Cm
-         aqHVSersNHu9WOSv40Wfc663xGHhK4kd+ERq/ariBA58P5AvSv/Jdqlpkmii/Jz3/M2K
-         qM8w==
-X-Gm-Message-State: AGi0PuavN2cnrrYaISY4r6keuNPe+kB3Q+RaQ3b55JnBuD7M+/YmXxgq
-        h06V8sOplDQCpd1jN/Ya5FdiXcOMvoHg6NO2clI=
-X-Google-Smtp-Source: APiQypLzOp3GKz0WqE0yA707ywSnKhIAt8Y1SJIGp1YtyySWFoWR+keaq+xo+4clNPhU5Y70hNXNgaXr4Cv7dzv7JVU=
-X-Received: by 2002:a9d:76c7:: with SMTP id p7mr12300178otl.145.1587453581546;
- Tue, 21 Apr 2020 00:19:41 -0700 (PDT)
+        bh=D9m3MRy8x+o4H1EEycml0VyqSiaYH7kBtrQzXfBUS8w=;
+        b=bY/MPHcON/9Cyl0dJG7ZISbjSsW7j3kyWOXuAeo8mOG2BGNVF26/Eg6TZ0cWQS0V37
+         VrcMTPEoyxsYGMxEJKCcJNfrqQ2sxqW6ZpO+P9XGb/nAnhzmE4IBnRekH+CsFbUJyKYe
+         9J/faFROUifUSEPa8sVsCh1jygNKPqistxBtW/5aCkrdCoVmtSacHypaNroSpH7IKP8C
+         s97ILkCDoguJ1AM495ZMeHYQ+kmoQWTS88c4eLWct3++ERwaCF30gWG2+4mlH3m2wos/
+         sJgC/FhMMaMQnSfHe4CAhT1KkfRLYl6dY88CtLJ1httWDvvyQ+fQKQipLEZozbr70/pa
+         huvA==
+X-Gm-Message-State: AGi0PuZVzIQHCFRDKr3qm5t0izjp7hRL8ZxIaG8qS824WxDHt9Z8Sj6w
+        U8SkI3bI123jpTG4qtfi2KvwxX/w4LaXFXrjKNQOHFjp
+X-Google-Smtp-Source: APiQypIBhAroyKy7dbi8XsEqmZkN6GmZp54F8mQFxWhAQGQ6iOUSPlckooO9rwUr3eRUH0h46LenNWSVw4928Sfzm+M=
+X-Received: by 2002:adf:8b1d:: with SMTP id n29mr22239047wra.196.1587454299040;
+ Tue, 21 Apr 2020 00:31:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <1587446152-23886-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1587446152-23886-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 21 Apr 2020 09:19:30 +0200
-Message-ID: <CAMuHMdWcMqsP-77qSFoVmKDi6Sfjk-p3UXbdhjSODkkG+kn09Q@mail.gmail.com>
-Subject: Re: [PATCH v5] dt-bindings: iommu: renesas,ipmmu-vmsa: convert to json-schema
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+References: <20200413070014.12960-1-zhang.lyra@gmail.com> <20200413070014.12960-2-zhang.lyra@gmail.com>
+ <20200420114222.GA14343@lakrids.cambridge.arm.com>
+In-Reply-To: <20200420114222.GA14343@lakrids.cambridge.arm.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Tue, 21 Apr 2020 15:31:02 +0800
+Message-ID: <CAAfSe-u+wraKLWFK2+oKed_ZzkckP0sFRhMkA5LB-b30CGawOw@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 1/2] cpuidle: allow idle state to be found as
+ deepest state for s2idle only
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 7:16 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> Convert Renesas VMSA-Compatible IOMMU bindings documentation
-> to json-schema.
+Hi Mark,
+
+Many thanks for your comments.
+
+On Mon, 20 Apr 2020 at 19:42, Mark Rutland <mark.rutland@arm.com> wrote:
 >
-> Note that original documentation doesn't mention renesas,ipmmu-vmsa
-> for R-Mobile APE6. But, R-Mobile APE6 is similar to the R-Car
-> Gen2. So, renesas,ipmmu-r8a73a4 belongs the renesas,ipmmu-vmsa
-> section.
+> On Mon, Apr 13, 2020 at 03:00:13PM +0800, zhang.lyra@gmail.com wrote:
+> > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> >
+> > Add a new flag CPUIDLE_FLAG_S2IDLE to allow c-state to be found as
+> > deepest state for s2idle only, so that users can add a new c-state
+> > for using s2idle and don't worry disturbing other use cases such as
+> > play_idle() which probably don't want to enter into so much deep
+> > idle state since devices are not suspended for that kind of cases.
 >
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Can you please elaborate on this?
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Ok.
 
-Gr{oetje,eeting}s,
+The thing was, I added a new c-state (named DOMAIN_PD for example) in
+DT for using s2idle, and the target power level indicated in DOMAIN_PD
+would be deeper than the level for regular cpuidle (for example
+level-0 is for regular cpuidle; level-1 is for system suspend and
+power domain would be shutdown as well as all cores , DOMAIN_PD uses
+level-1). I worried that would cause the deeper power domain to be
+shutdown if DOMAIN_PD was selected by play_idle().
 
-                        Geert
+But after have another look at PSCI in ATF, I consider that it
+probably is not a problem which would really happen. Since play_idle()
+wouldn't occur on all cpus at the same time, although play_idle()
+could use DOMAIN_PD, the system wouldn't enter into that so deep power
+level.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Hope I've explained the things clearly :)
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+In a word, this patch seems not needed for now.
+
+
+Thanks again,
+Chunyan
+
+
+>
+> Why exactly are these states not suited for regular cpu idle? What
+> problems do they cause? e.g. long wakeup latency?
+>
+> The flag and the for-s2-idle-only DT property are encoding a policy
+> rarher than a property, and as such I don't think this is the right way
+> to describe this in the DT. However, if there might be porperties of the
+> idle state that we could describe so that the OS can come to the same
+> conclusion.
+>
+> Thanks,
+> Mark.
+>
+> >
+> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> > ---
+> >  drivers/cpuidle/cpuidle.c        | 3 ++-
+> >  drivers/cpuidle/dt_idle_states.c | 3 +++
+> >  include/linux/cpuidle.h          | 1 +
+> >  3 files changed, 6 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+> > index de81298051b3..bb61f0c271d2 100644
+> > --- a/drivers/cpuidle/cpuidle.c
+> > +++ b/drivers/cpuidle/cpuidle.c
+> > @@ -89,7 +89,8 @@ static int find_deepest_state(struct cpuidle_driver *drv,
+> >                   s->exit_latency_ns <= latency_req ||
+> >                   s->exit_latency_ns > max_latency_ns ||
+> >                   (s->flags & forbidden_flags) ||
+> > -                 (s2idle && !s->enter_s2idle))
+> > +                 (s2idle && !s->enter_s2idle) ||
+> > +                 (!s2idle && (s->flags & CPUIDLE_FLAG_S2ILDE)))
+> >                       continue;
+> >
+> >               latency_req = s->exit_latency_ns;
+> > diff --git a/drivers/cpuidle/dt_idle_states.c b/drivers/cpuidle/dt_idle_states.c
+> > index 252f2a9686a6..530db2726c05 100644
+> > --- a/drivers/cpuidle/dt_idle_states.c
+> > +++ b/drivers/cpuidle/dt_idle_states.c
+> > @@ -80,6 +80,9 @@ static int init_state_node(struct cpuidle_state *idle_state,
+> >       idle_state->flags = 0;
+> >       if (of_property_read_bool(state_node, "local-timer-stop"))
+> >               idle_state->flags |= CPUIDLE_FLAG_TIMER_STOP;
+> > +
+> > +     if (of_property_read_bool(state_node, "for-s2idle-only"))
+> > +             idle_state->flags |= CPUIDLE_FLAG_S2ILDE;
+> >       /*
+> >        * TODO:
+> >        *      replace with kstrdup and pointer assignment when name
+> > diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
+> > index ec2ef63771f0..08da701f74cd 100644
+> > --- a/include/linux/cpuidle.h
+> > +++ b/include/linux/cpuidle.h
+> > @@ -78,6 +78,7 @@ struct cpuidle_state {
+> >  #define CPUIDLE_FLAG_TIMER_STOP BIT(2) /* timer is stopped on this state */
+> >  #define CPUIDLE_FLAG_UNUSABLE        BIT(3) /* avoid using this state */
+> >  #define CPUIDLE_FLAG_OFF     BIT(4) /* disable this state by default */
+> > +#define CPUIDLE_FLAG_S2ILDE  BIT(5) /* state is used for s2idle only */
+> >
+> >  struct cpuidle_device_kobj;
+> >  struct cpuidle_state_kobj;
+> > --
+> > 2.20.1
+> >
