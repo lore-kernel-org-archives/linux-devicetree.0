@@ -2,217 +2,167 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD21FC55183
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 10:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4544C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 10:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD7E5206A5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 10:51:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="lomhw53N"
+	by mail.kernel.org (Postfix) with ESMTP id 85CAC20679
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 10:57:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbgDUKvG (ORCPT
+        id S1726628AbgDUK5T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 06:51:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbgDUKvF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Apr 2020 06:51:05 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4CF0C061A0F;
-        Tue, 21 Apr 2020 03:51:04 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 3C07E23059;
-        Tue, 21 Apr 2020 12:51:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1587466263;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OSieuTLDTWJZlGZSja3Um3+Gmk1FrxNg3rEeH5FZD9Y=;
-        b=lomhw53NjPGviUGO5c6ReoggM7XHM605itwqG5h1JP3Dpj8r6pXCY28LtwhLVpYpY40Ihd
-        Ku3dGMHKcp68tgLHGsSTqOfceoAzyHJUvzqjunut4xiPDyHEsdpt6Wwkcg8Nu0BdYzkTzj
-        pFap2F6Dl6lKIfJ4b7WMMOlrxShKN0w=
+        Tue, 21 Apr 2020 06:57:19 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60090 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbgDUK5S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Apr 2020 06:57:18 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id E04372A1265
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     devicetree@vger.kernel.org
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        Rob Herring <robh@kernel.org>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v2] dt-bindings: display: dw_mipi_dsi.txt: convert to yaml
+Date:   Tue, 21 Apr 2020 13:58:14 +0300
+Message-Id: <20200421105814.1364900-1-adrian.ratiu@collabora.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 21 Apr 2020 12:50:59 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using
- regmap
-In-Reply-To: <f82706a8596436d13642c49e26233133@walle.cc>
-References: <20200402203656.27047-1-michael@walle.cc>
- <20200402203656.27047-11-michael@walle.cc>
- <CACRpkdaqgHhPwdKdUai4zvi21qR-cSQUKyzZ3SyfWBLPN9us3w@mail.gmail.com>
- <f82706a8596436d13642c49e26233133@walle.cc>
-Message-ID: <3ef94b68893e2fb3075bd5236d0fa6ee@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 3C07E23059
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[23];
-         NEURAL_HAM(-0.00)[-0.743];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,baylibre.com,kernel.org,suse.com,roeck-us.net,linaro.org,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Linus,
+This converts the Synopsis MIPI DSI binding documentation to yaml and
+should be quite straightforward. I've added a missing ref clk and also
+added Philippe as maintainer b/c he's the original txt author following
+the algorithm provided in Message-ID 20200420175909.GA5810@ravnborg.org.
 
-Am 2020-04-17 08:34, schrieb Michael Walle:
-> Hi Linus,
-> 
-> Am 2020-04-16 11:27, schrieb Linus Walleij:
->> On Thu, Apr 2, 2020 at 10:37 PM Michael Walle <michael@walle.cc> 
->> wrote:
->> 
->>> There are quite a lot simple GPIO controller which are using regmap 
->>> to
->>> access the hardware. This driver tries to be a base to unify existing
->>> code into one place. This won't cover everything but it should be a 
->>> good
->>> starting point.
->>> 
->>> It does not implement its own irq_chip because there is already a
->>> generic one for regmap based devices. Instead, the irq_chip will be
->>> instanciated in the parent driver and its irq domain will be 
->>> associate
->>> to this driver.
->>> 
->>> For now it consists of the usual registers, like set (and an optional
->>> clear) data register, an input register and direction registers.
->>> Out-of-the-box, it supports consecutive register mappings and 
->>> mappings
->>> where the registers have gaps between them with a linear mapping 
->>> between
->>> GPIO offset and bit position. For weirder mappings the user can 
->>> register
->>> its own .xlate().
->>> 
->>> Signed-off-by: Michael Walle <michael@walle.cc>
->> 
->> Overall I really like this driver and I think we should merge is as 
->> soon
->> as it is in reasonable shape and then improve on top so we can start
->> migrating drivers to it.
->> 
->>> +static int gpio_regmap_to_irq(struct gpio_chip *chip, unsigned int 
->>> offset)
->>> +{
->>> +       struct gpio_regmap_data *data = gpiochip_get_data(chip);
->>> +       struct gpio_regmap *gpio = data->gpio;
->>> +
->>> +       /* the user might have its own .to_irq callback */
->>> +       if (gpio->to_irq)
->>> +               return gpio->to_irq(gpio, offset);
->>> +
->>> +       return irq_create_mapping(gpio->irq_domain, offset);
->> 
->> I think that should at least be irq_find_mapping(), the mapping should
->> definately not be created by the .to_irq() callback since that is just
->> a convenience function.
-> 
-> what do you mean by conenience function? are there other ways? if you 
-> use
-> irq_find_mapping() who will create the mappings? most gpio drivers use 
-> a
-> similar function like gpio_regmap_to_irq().
-> 
->> 
->>> +       if (gpio->irq_domain)
->>> +               chip->to_irq = gpio_regmap_to_irq;
->> 
->> I don't know about this.
->> (...)
->>> + * @irq_domain:                (Optional) IRQ domain if the 
->>> controller is
->>> + *                     interrupt-capable
->> (...)
->>> +       struct irq_domain *irq_domain;
->> 
->> I don't think this is a good storage place for the irqdomain, we 
->> already have
->> gpio_irq_chip inside gpio_chip and that has an irqdomain, we should
->> strive to reuse that infrastructure also for regmap GPIO I think, for 
->> now
->> I would just leave .to_irq() out of this and let the driver deal with 
->> any
->> irqs.
-> 
-> How would a driver attach the to_irq callback then? At the moment, the
-> gpio_regmap doesn't expose the gpio_chip. So either we have to do that 
-> or
-> the config still have to have a .to_irq property.
+Cc: Rob Herring <robh@kernel.org>
+Cc: Philippe CORNU <philippe.cornu@st.com>
+Cc: devicetree@vger.kernel.org
+Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+---
+Changes in v2:
+  - Removed unnecessary descriptions and maxItems (Rob)
+  - Changed maintainers entry / dropped Mark (Rob)
+  - Added dsi-controller.yaml ref (Rob)
+---
+ .../bindings/display/bridge/dw_mipi_dsi.txt   | 32 -----------
+ .../display/bridge/snps,dw-mipi-dsi.yaml      | 56 +++++++++++++++++++
+ 2 files changed, 56 insertions(+), 32 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
 
-Also, if I move the interrupt hanling completely out of the gpio-regmap, 
-the
-driver would have to deal with "struct gpio_chip" which I would like to 
-avoid
-if possible and keep it private to gpio-regmap.
+diff --git a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+deleted file mode 100644
+index b13adf30b8d3b..0000000000000
+--- a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
++++ /dev/null
+@@ -1,32 +0,0 @@
+-Synopsys DesignWare MIPI DSI host controller
+-============================================
+-
+-This document defines device tree properties for the Synopsys DesignWare MIPI
+-DSI host controller. It doesn't constitue a device tree binding specification
+-by itself but is meant to be referenced by platform-specific device tree
+-bindings.
+-
+-When referenced from platform device tree bindings the properties defined in
+-this document are defined as follows. The platform device tree bindings are
+-responsible for defining whether each optional property is used or not.
+-
+-- reg: Memory mapped base address and length of the DesignWare MIPI DSI
+-  host controller registers. (mandatory)
+-
+-- clocks: References to all the clocks specified in the clock-names property
+-  as specified in [1]. (mandatory)
+-
+-- clock-names:
+-  - "pclk" is the peripheral clock for either AHB and APB. (mandatory)
+-  - "px_clk" is the pixel clock for the DPI/RGB input. (optional)
+-
+-- resets: References to all the resets specified in the reset-names property
+-  as specified in [2]. (optional)
+-
+-- reset-names: string reset name, must be "apb" if used. (optional)
+-
+-- panel or bridge node: see [3]. (mandatory)
+-
+-[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+-[2] Documentation/devicetree/bindings/reset/reset.txt
+-[3] Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+diff --git a/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
+new file mode 100644
+index 0000000000000..d9ab464f79ff4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
+@@ -0,0 +1,56 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/snps,dw-mipi-dsi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Synopsys DesignWare MIPI DSI host controller
++
++maintainers:
++  - Philippe CORNU <philippe.cornu@st.com>
++
++description: |
++  This document defines device tree properties for the Synopsys DesignWare MIPI
++  DSI host controller. It doesn't constitue a device tree binding specification
++  by itself but is meant to be referenced by platform-specific device tree
++  bindings.
++
++  When referenced from platform device tree bindings the properties defined in
++  this document are defined as follows. The platform device tree bindings are
++  responsible for defining whether each property is required or optional.
++
++allOf:
++  - $ref: ../dsi-controller.yaml#
++
++properties:
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Module clock
++      - description: DSI bus clock for either AHB and APB
++      - description: Pixel clock for the DPI/RGB input
++    minItems: 2
++
++  clock-names:
++    items:
++      - const: ref
++      - const: pclk
++      - const: px_clk
++    minItems: 2
++
++  resets:
++    maxItems: 1
++
++  reset-names:
++    const: apb
++
++patternProperties:
++  "^panel@[0-3]$":
++    type: object
++
++required:
++  - reg
++  - clocks
++  - clock-names
+-- 
+2.26.0
 
-Unfortunately, I don't have much experience how a good API for the 
-interrupt
-handling and the gpio-regmap might look like. And there seems to be some
-overlap between regmap-irq and the interrupt stuff in gpiolib. For 
-example,
-both provide and set the irq_domain_ops. Thus handing the domain over to
-gpio-regmap looked like a good idea to me. I get you point, that there 
-is
-already a irqdomain in gpiolib and also a _to_irq() which is the same as
-the current implementation in gpio-regmap. Maybe it makes sense to just
-have a new function
-
-int gpiolib_add_irqdomain(struct gpio_chip *gc, struct irq_domain 
-domain)
-{
-   gc->irq.domain = domain;
-   gc->to_irq = gpiochip_to_irq;
-}
-
-which is called by gpio_regmap_register() if a config->irq_domain is 
-given.
-
--michael
