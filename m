@@ -2,302 +2,294 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DDFC55181
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 09:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 574CFC55181
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 09:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3C3120CC7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 09:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B5B20CC7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 09:32:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587461579;
+	bh=mRZDPb/qOuSMsEULU0GR/w3mXNQJsys8Fbv6ln6rrGw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TOCqneKK7sbIYd4jYFp/SwWRBv9oARLGPyKgg7uji/UUu9pMUZZJhVbEaPkgI2qdo
+	 wger0t+yisij843ylmuloaKbPfF9Tbu6bzlim2wrYotAi4lwum3w4Ylvcar1nTwSVo
+	 K3ZzK1fN0ZqX+B0g/URofRbEjQPNmB5gV1v6T5w4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbgDUJb4 (ORCPT
+        id S1726018AbgDUJc6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 05:31:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39098 "EHLO mx2.suse.de"
+        Tue, 21 Apr 2020 05:32:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726095AbgDUJbz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Apr 2020 05:31:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id DBF64AE53;
-        Tue, 21 Apr 2020 09:31:51 +0000 (UTC)
-Subject: Re: [PATCH v12 4/5] soc / drm: mediatek: Move routing control to
- mmsys device
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc:     CK Hu <ck.hu@mediatek.com>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        linux-clk@vger.kernel.org, Weiyi Lu <weiyi.lu@mediatek.com>,
-        mtk01761 <wendell.lin@mediatek.com>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, Seiya Wang <seiya.wang@mediatek.com>,
-        sean.wang@mediatek.com, Houlong Wei <houlong.wei@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        matthias.bgg@kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-References: <20200311165322.1594233-1-enric.balletbo@collabora.com>
- <20200311165322.1594233-5-enric.balletbo@collabora.com>
- <02290a21-7392-a2cf-576c-215091ec05e8@suse.com>
- <1585177534.26117.4.camel@mtksdaap41>
- <f3c2926a-ef92-b004-9786-5be1645af497@suse.com>
- <1585234277.12089.3.camel@mtksdaap41>
- <73ef0b8e-2802-a047-2a56-936b63d264cb@suse.com>
- <CAAOTY__EV8PHau9CzSiA8up1QAmZxfK2QnaTid0WrNOsn2Xcag@mail.gmail.com>
-From:   Matthias Brugger <mbrugger@suse.com>
-X-Pep-Version: 2.0
-Message-ID: <c809233f-6d96-8871-e6a4-b66ed5cc535f@suse.com>
-Date:   Tue, 21 Apr 2020 11:31:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1725920AbgDUJc6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Apr 2020 05:32:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B173206E9;
+        Tue, 21 Apr 2020 09:32:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587461577;
+        bh=mRZDPb/qOuSMsEULU0GR/w3mXNQJsys8Fbv6ln6rrGw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R1/s2DSNQul5SlNaHgRXdL97W75CURe4tVJUaBMtQcpYo/jL962deTC40xsfT0XDc
+         cNYRBhvb2D1EMua4K3CCIhtl0xbuWMxMthA412pEknm3x1adZRPBrfu4yijP1R/GTq
+         qcDFn066gW/UGWN5tSZv9HxUU7W6QGTlFtkya/6s=
+Date:   Tue, 21 Apr 2020 11:32:55 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mateusz Holenko <mholenko@antmicro.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/5] drivers/soc/litex: add LiteX SoC Controller driver
+Message-ID: <20200421093255.GB725219@kroah.com>
+References: <20200402084513.4173306-0-mholenko@antmicro.com>
+ <20200402084513.4173306-3-mholenko@antmicro.com>
+ <CAPk366QLHbR9cnLs244VbOXOLAg56yhG7O-DEAc1x1ZTvthiig@mail.gmail.com>
+ <20200402074259.GC2755501@kroah.com>
+ <CAPk366Qm62TtwM7xNUSUT4L+7MwWDSPXyGCWXrXHYPjLeVf9OA@mail.gmail.com>
+ <20200416141832.GA1356374@kroah.com>
+ <CAPk366Rg8CVW=rvL_d9PiA0+uuD3bZoQ6Yqw0Rhndqtw0Ecrbg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAAOTY__EV8PHau9CzSiA8up1QAmZxfK2QnaTid0WrNOsn2Xcag@mail.gmail.com>
-Content-Type: multipart/mixed;
- boundary="------------4BB1865ABCAB0DB18962FA15"
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPk366Rg8CVW=rvL_d9PiA0+uuD3bZoQ6Yqw0Rhndqtw0Ecrbg@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------4BB1865ABCAB0DB18962FA15
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On Tue, Apr 21, 2020 at 10:29:33AM +0200, Mateusz Holenko wrote:
+> On Thu, Apr 16, 2020 at 4:18 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Thu, Apr 02, 2020 at 03:50:34PM +0200, Mateusz Holenko wrote:
+> > > On Thu, Apr 2, 2020 at 9:43 AM Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > On Thu, Apr 02, 2020 at 08:50:40AM +0200, Mateusz Holenko wrote:
+> > > > > On Thu, Apr 2, 2020 at 8:46 AM Mateusz Holenko <mholenko@antmicro.com> wrote:
+> > > > > >
+> > > > > > From: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
+> > > > > >
+> > > > > > This commit adds driver for the FPGA-based LiteX SoC
+> > > > > > Controller from LiteX SoC builder.
+> > > > > >
+> > > > > > Co-developed-by: Mateusz Holenko <mholenko@antmicro.com>
+> > > > > > Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+> > > > > > Signed-off-by: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
+> > > > > > ---
+> > > > > >
+> > > > > > Notes:
+> > > > > >     Changes in v4:
+> > > > > >     - fixed indent in Kconfig's help section
+> > > > > >     - fixed copyright header
+> > > > > >     - changed compatible to "litex,soc-controller"
+> > > > > >     - simplified litex_soc_ctrl_probe
+> > > > > >     - removed unnecessary litex_soc_ctrl_remove
+> > > > > >
+> > > > > >     This commit has been introduced in v3 of the patchset.
+> > > > > >
+> > > > > >     It includes a simplified version of common 'litex.h'
+> > > > > >     header introduced in v2 of the patchset.
+> > > > > >
+> > > > > >  MAINTAINERS                        |   2 +
+> > > > > >  drivers/soc/Kconfig                |   1 +
+> > > > > >  drivers/soc/Makefile               |   1 +
+> > > > > >  drivers/soc/litex/Kconfig          |  14 ++
+> > > > > >  drivers/soc/litex/Makefile         |   3 +
+> > > > > >  drivers/soc/litex/litex_soc_ctrl.c | 217 +++++++++++++++++++++++++++++
+> > > > > >  include/linux/litex.h              |  45 ++++++
+> > > > > >  7 files changed, 283 insertions(+)
+> > > > > >  create mode 100644 drivers/soc/litex/Kconfig
+> > > > > >  create mode 100644 drivers/soc/litex/Makefile
+> > > > > >  create mode 100644 drivers/soc/litex/litex_soc_ctrl.c
+> > > > > >  create mode 100644 include/linux/litex.h
+> > > > > >
+> > > > > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > > > > index 2f5ede8a08aa..a35be1be90d5 100644
+> > > > > > --- a/MAINTAINERS
+> > > > > > +++ b/MAINTAINERS
+> > > > > > @@ -9729,6 +9729,8 @@ M:        Karol Gugala <kgugala@antmicro.com>
+> > > > > >  M:     Mateusz Holenko <mholenko@antmicro.com>
+> > > > > >  S:     Maintained
+> > > > > >  F:     Documentation/devicetree/bindings/*/litex,*.yaml
+> > > > > > +F:     drivers/soc/litex/litex_soc_ctrl.c
+> > > > > > +F:     include/linux/litex.h
+> > > > > >
+> > > > > >  LIVE PATCHING
+> > > > > >  M:     Josh Poimboeuf <jpoimboe@redhat.com>
+> > > > > > diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+> > > > > > index 1778f8c62861..78add2a163be 100644
+> > > > > > --- a/drivers/soc/Kconfig
+> > > > > > +++ b/drivers/soc/Kconfig
+> > > > > > @@ -9,6 +9,7 @@ source "drivers/soc/bcm/Kconfig"
+> > > > > >  source "drivers/soc/fsl/Kconfig"
+> > > > > >  source "drivers/soc/imx/Kconfig"
+> > > > > >  source "drivers/soc/ixp4xx/Kconfig"
+> > > > > > +source "drivers/soc/litex/Kconfig"
+> > > > > >  source "drivers/soc/mediatek/Kconfig"
+> > > > > >  source "drivers/soc/qcom/Kconfig"
+> > > > > >  source "drivers/soc/renesas/Kconfig"
+> > > > > > diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+> > > > > > index 8b49d782a1ab..fd016b51cddd 100644
+> > > > > > --- a/drivers/soc/Makefile
+> > > > > > +++ b/drivers/soc/Makefile
+> > > > > > @@ -14,6 +14,7 @@ obj-$(CONFIG_ARCH_GEMINI)     += gemini/
+> > > > > >  obj-$(CONFIG_ARCH_MXC)         += imx/
+> > > > > >  obj-$(CONFIG_ARCH_IXP4XX)      += ixp4xx/
+> > > > > >  obj-$(CONFIG_SOC_XWAY)         += lantiq/
+> > > > > > +obj-$(CONFIG_LITEX_SOC_CONTROLLER) += litex/
+> > > > > >  obj-y                          += mediatek/
+> > > > > >  obj-y                          += amlogic/
+> > > > > >  obj-y                          += qcom/
+> > > > > > diff --git a/drivers/soc/litex/Kconfig b/drivers/soc/litex/Kconfig
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..71264c0e1d6c
+> > > > > > --- /dev/null
+> > > > > > +++ b/drivers/soc/litex/Kconfig
+> > > > > > @@ -0,0 +1,14 @@
+> > > > > > +# SPDX-License_Identifier: GPL-2.0
+> > > > > > +
+> > > > > > +menu "Enable LiteX SoC Builder specific drivers"
+> > > > > > +
+> > > > > > +config LITEX_SOC_CONTROLLER
+> > > > > > +       tristate "Enable LiteX SoC Controller driver"
+> > > > > > +       help
+> > > > > > +         This option enables the SoC Controller Driver which verifies
+> > > > > > +         LiteX CSR access and provides common litex_get_reg/litex_set_reg
+> > > > > > +         accessors.
+> > > > > > +         All drivers that use functions from litex.h must depend on
+> > > > > > +         LITEX_SOC_CONTROLLER.
+> > > > > > +
+> > > > > > +endmenu
+> > > > > > diff --git a/drivers/soc/litex/Makefile b/drivers/soc/litex/Makefile
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..98ff7325b1c0
+> > > > > > --- /dev/null
+> > > > > > +++ b/drivers/soc/litex/Makefile
+> > > > > > @@ -0,0 +1,3 @@
+> > > > > > +# SPDX-License_Identifier: GPL-2.0
+> > > > > > +
+> > > > > > +obj-$(CONFIG_LITEX_SOC_CONTROLLER)     += litex_soc_ctrl.o
+> > > > > > diff --git a/drivers/soc/litex/litex_soc_ctrl.c b/drivers/soc/litex/litex_soc_ctrl.c
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..5defba000fd4
+> > > > > > --- /dev/null
+> > > > > > +++ b/drivers/soc/litex/litex_soc_ctrl.c
+> > > > > > @@ -0,0 +1,217 @@
+> > > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > > +/*
+> > > > > > + * LiteX SoC Controller Driver
+> > > > > > + *
+> > > > > > + * Copyright (C) 2020 Antmicro <www.antmicro.com>
+> > > > > > + *
+> > > > > > + */
+> > > > > > +
+> > > > > > +#include <linux/litex.h>
+> > > > > > +#include <linux/device.h>
+> > > > > > +#include <linux/errno.h>
+> > > > > > +#include <linux/of.h>
+> > > > > > +#include <linux/of_platform.h>
+> > > > > > +#include <linux/platform_device.h>
+> > > > > > +#include <linux/printk.h>
+> > > > > > +#include <linux/module.h>
+> > > > > > +#include <linux/errno.h>
+> > > > > > +#include <linux/io.h>
+> > > > > > +
+> > > > > > +/*
+> > > > > > + * The parameters below are true for LiteX SoC
+> > > > > > + * configured for 8-bit CSR Bus, 32-bit aligned.
+> > > > > > + *
+> > > > > > + * Supporting other configurations will require
+> > > > > > + * extending the logic in this header.
+> > > > > > + */
+> > > > > > +#define LITEX_REG_SIZE             0x4
+> > > > > > +#define LITEX_SUBREG_SIZE          0x1
+> > > > > > +#define LITEX_SUBREG_SIZE_BIT      (LITEX_SUBREG_SIZE * 8)
+> > > > > > +
+> > > > > > +static DEFINE_SPINLOCK(csr_lock);
+> > > > > > +
+> > > > > > +static inline unsigned long read_pointer_with_barrier(
+> > > > > > +       const volatile void __iomem *addr)
+> > > > > > +{
+> > > > > > +       unsigned long val;
+> > > > > > +
+> > > > > > +       __io_br();
+> > > > > > +       val = *(const volatile unsigned long __force *)addr;
+> > > > > > +       __io_ar();
+> > > > > > +       return val;
+> > > > > > +}
+> > > > > > +
+> > > > > > +static inline void write_pointer_with_barrier(
+> > > > > > +       volatile void __iomem *addr, unsigned long val)
+> > > > > > +{
+> > > > > > +       __io_br();
+> > > > > > +       *(volatile unsigned long __force *)addr = val;
+> > > > > > +       __io_ar();
+> > > > > > +}
+> > > > > > +
+> > > > >
+> > > > > I'm defining read_pointer_with_barrier/write_pointer_with_barrier in
+> > > > > order to make sure that a series of reads/writes to a single CSR
+> > > > > register will not be reordered by the compiler.
+> > > >
+> > > > Please do not do this, there are core kernel calls for this, otherwise
+> > > > this would be required by every individual driver, which would be crazy.
+> > > >
+> > > > > Does __raw_readl/__raw_writel guarantee this property? If so, I could
+> > > > > drop my functions and use the system ones instead.
+> > > >
+> > > > Try it and see.
+> > >
+> > > Since I want to avoid read/write reordering caused by the compiler
+> > > optimizations I don't want to rely on a single manual test.
+> > > What I mean is that even if it works now for me, it does not guarantee
+> > > that it will in the future version of the compiler/using different
+> > > compilation flags/etc, right?
+> >
+> > No, if the common functions stop working, then they will be fixed.  If
+> > you try to roll your own and they stop working in the future, no one
+> > will notice.
+> 
+> Sure, no doubts here. What I wanted to say though was that I want to
+> protect the code against compiler optimizations (code reordering) that
+> I might not be able to detect using just a one-time test. It has nothing to
+> do with bugs in common functions, only with the compiler itself (and again
+> it's not a bug).
+> The way optimizations are handled is dependent on the compiler
+> and the configuration and I'm manually testing just one of many possible
+> setups.
+> 
+> I also checked that there are explicit memory barriers used in the
+> code of readl(),
+> so I assume __raw_readl()/__raw_writel() does not guarantee ordering alone
+> (as otherwise __io_br() wouldn't be used in readl()).
 
+Correct, you have "open coded" the existing readX() functions here, just
+use them.
 
+thanks,
 
-On 4/16/20 6:22 PM, Chun-Kuang Hu wrote:
-> Hi, Matthias:
->=20
-> Matthias Brugger <mbrugger@suse.com> =E6=96=BC 2020=E5=B9=B43=E6=9C=882=
-6=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8811:45=E5=AF=AB=E9=81=93=EF=
-=BC=9A
->>
->>
->>
->> On 26/03/2020 15:51, CK Hu wrote:
->>> Hi, Matthias:
->>>
->>> On Thu, 2020-03-26 at 12:54 +0100, Matthias Brugger wrote:
->>>> Hi CK,
->>>>
->>>> On 26/03/2020 00:05, CK Hu wrote:
->>>>> Hi, Matthias:
->>>>>
->>>>> On Wed, 2020-03-25 at 17:16 +0100, Matthias Brugger wrote:
->>>>>>
->>>>>> On 11/03/2020 17:53, Enric Balletbo i Serra wrote:
->>>>>>> Provide a mtk_mmsys_ddp_connect() and mtk_mmsys_disconnect() func=
-tions to
->>>>>>> replace mtk_ddp_add_comp_to_path() and mtk_ddp_remove_comp_from_p=
-ath().
->>>>>>> Those functions will allow DRM driver and others to control the d=
-ata
->>>>>>> path routing.
->>>>>>>
->>>>>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.c=
-om>
->>>>>>> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
->>>>>>> Reviewed-by: CK Hu <ck.hu@mediatek.com>
->>>>>>> Acked-by: CK Hu <ck.hu@mediatek.com>
->>>>>>
->>>>>> This patch does not apply against v5.6-rc1.
->>>>>> Please rebase as this is a quite big patch and it won't be easy to=
- do that by hand.
->>>>>
->>>>> I think this patch depends on [1] which has been acked by me and I =
-have
->>>>> not picked it. The simple way is that you pick [1] first and then p=
-ick
->>>>> this series.
->>>>>
->>>>> [1]
->>>>> https://patchwork.kernel.org/patch/11406227/
->>>>>
->>>>
->>>> You would need to provide a stable tag for me that I can merge into =
-my tree. You
->>>> can also try to merge my for-next [1] which has the newest version f=
-rom Enric.
->>>> If you see any merge conflict, then we have to do something about it=
- :)
->>>>
->>>> Regards,
->>>> Matthias
->>>>
->>>> [1]
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/matthias.bgg/linux.g=
-it/log/?h=3Dfor-next
->>>>
->>>
->>> You have applied this series, so I would not apply other patches whic=
-h
->>> would conflict with this series. After this series land on main strea=
-m
->>> (wish it happen in this merge window), I would rebase other patch on
->>> main stream.
->>>
->>
->> I haven't (yet) send the pull request. If you want to bring in your pa=
-tches in
->> v5.7 as well we can find a solution to that. Shall I provide you with =
-a stable
->> branch which you can merge? This way you can add all your patches in t=
-he pull
->> request as well and we don't have to wait for v5.8 to get things into =
-mainline.
->>
->> Let me know and I'll provide you with a stable branch.
->=20
-> This series is in linux-next but does not in main stream. So would you
-> please provide a stable branch so I could pull this series?
->=20
-
-Please find the pull request below:
-
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f31=
-36:
-
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
-
-are available in the Git repository at:
-
-
-https://git.kernel.org/pub/scm/linux/kernel/git/matthias.bgg/linux.git/
-tags/v5.7-next-drm-stable
-
-for you to fetch changes up to 667c769246b01c53ad0925d603d2a2531abd3ef2:
-
-  soc / drm: mediatek: Fix mediatek-drm device probing (2020-04-13
-13:01:16 +0200)
-
-----------------------------------------------------------------
-Enric Balletbo i Serra (3):
-      dt-bindings: mediatek: Update mmsys binding to reflect it is a
-system controller
-      soc / drm: mediatek: Move routing control to mmsys device
-      soc / drm: mediatek: Fix mediatek-drm device probing
-
-Matthias Brugger (2):
-      drm/mediatek: Omit warning on probe defers
-      clk / soc: mediatek: Move mt8173 MMSYS to platform driver
-
- Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt |   7 =
-+--
- drivers/clk/mediatek/Kconfig                                      |   7 =
-+++
- drivers/clk/mediatek/Makefile                                     |   1 =
-+
- drivers/clk/mediatek/clk-mt8173-mm.c                              | 146
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/clk/mediatek/clk-mt8173.c                                 | 104
-------------------------------------------
- drivers/gpu/drm/mediatek/Kconfig                                  |   1 =
-+
- drivers/gpu/drm/mediatek/mtk_disp_color.c                         |   5 =
-++-
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c                           |   5 =
-++-
- drivers/gpu/drm/mediatek/mtk_disp_rdma.c                          |   5 =
-++-
- drivers/gpu/drm/mediatek/mtk_dpi.c                                |  12
-+++--
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c                           |  19
-++++----
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c                            | 259
-+------------------------------------------------------------------------=
---------------------------------
- drivers/gpu/drm/mediatek/mtk_drm_ddp.h                            |   7 =
----
- drivers/gpu/drm/mediatek/mtk_drm_drv.c                            |  45
-++++++++++---------
- drivers/gpu/drm/mediatek/mtk_drm_drv.h                            |   2 =
-+-
- drivers/gpu/drm/mediatek/mtk_dsi.c                                |   8
-+++-
- drivers/gpu/drm/mediatek/mtk_hdmi.c                               |   4 =
-+-
- drivers/soc/mediatek/Kconfig                                      |   8
-++++
- drivers/soc/mediatek/Makefile                                     |   1 =
-+
- drivers/soc/mediatek/mtk-mmsys.c                                  | 337
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/soc/mediatek/mtk-mmsys.h                            |  20
-+++++++++
- 21 files changed, 592 insertions(+), 411 deletions(-)
- create mode 100644 drivers/clk/mediatek/clk-mt8173-mm.c
- create mode 100644 drivers/soc/mediatek/mtk-mmsys.c
- create mode 100644 include/linux/soc/mediatek/mtk-mmsys.h
-
-
-
-> Regards,
-> Chun-Kuang.
->=20
->>
->> Regards,
->> Matthias
->>
->>> Regards,
->>> CK
->>>
->>>>> Regards,
->>>>> CK
->>>>>
->>>>>>
->>>>>> Regards,
->>>>>> Matthias
->>>>>>
->>>>>>> ---
->>>>>>>
-
---------------4BB1865ABCAB0DB18962FA15
-Content-Type: application/pgp-keys;
- name="pEpkey.asc"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment;
- filename="pEpkey.asc"
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-mQENBFuECLQBCAD66PIehgR5YGIOhLIDfubGmBbktra7Ix4c0uMShRkv05ZfJmPK
-N50OrIm4gaQ25RMDrZd6X3RU35IsoflqTSBGoiMQmC9TklVsAfIObuNkvDMJEDXd
-pvbIuYyj9QcSysHvTW9GrU/hF3uFqoPlaDmQy9TBMDDtJu8CPYVpyVnmXJvyoYa2
-KE77LYXORs+eArKR8dqOK/z3zzHWMq8IieiASRcFfDZBx4fPHRZaOYkFGaLpQPfF
-/bCwWWX6O6bRvx5KOWTQzt2Hp/6ZzHX+A7XY6yLY9bM18/70NICZNF8oaDN6/i/K
-nMoGcugqE2Kk66hLeybFWVmFjppRt7zh6GaVABEBAAG0JE1hdHRoaWFzIEJydWdn
-ZXIgPG1icnVnZ2VyQHN1c2UuY29tPokBVAQTAQgAPgIbAwULCQgHAgYVCgkICwIE
-FgIDAQIeAQIXgBYhBA1mtM782M72qvgLxkP54a369LqrBQJdZ/80BQkDxMzsAAoJ
-EEP54a369LqrBxsH/jOEmKlthbUCWFmvNZyPl8VCqVNRQdVOBlg7JzjYtGPMukdv
-aGMFDTbn9f7RpVdVasnjwta2rAuPxYGT2SajccSqIUnjlyxOXjdWgahfvS1bLfIh
-QW3F3r5P6Sc1hVkSAYB+IKgEHoRl09fcVfxDR4i7xuGP8lvaG5087u7hHiqAXAmL
-gInuY2QA8MkgxLOie6HOavSEG58Car5EBOZOuIzg7lnL0cyYv/nx6kopNuJXAaum
-tsk2xwuNqz8Ny5AYTowyuasaZchEeJpc3su+yoZvOrc/UVgcCmcT7GUnMaTQGc4I
-bVWWK7762RB++hLaDiFVXRJZr6jfIU2X3VrsxOO5AQ0EW4QItQEIAMrwGOUXVhVE
-kl6+IXCnD2TPqdGiuv/aKZ8yIvvD1VPw8j0kRdbsha1sIxE7cKvHcnRqKuLW6w9s
-FCNaXoJBPysVDWhVdT4drpr8WtwZQG4Lqa86t5Ndz14lG3Vr/lFs07BpVbxZj2/k
-RqXNZbAmCmZfZbtR55XyUz20uJxoQ0ckXOUxLA2ye0bF9DOt4SwgNgSdp668YFep
-sTBPR0wRLQQpL/00z+S7fiULzUqzUq4cQPpZt7YALJ2iQoUQ93G3t95DMwdt5/tT
-mnFMt8ruyP45oHO+8X6RDRSR31G34YzLWGinXPMDYZ+kjhFg3yv5m5+V6Lc2+APN
-PbouD/9LEXUAEQEAAYkBPAQYAQgAJgIbDBYhBA1mtM782M72qvgLxkP54a369Lqr
-BQJdZ/80BQkDxMzrAAoJEEP54a369LqrjYAH/iSIrw1ROtd+uPupqwttF9IfG3Na
-O1u/6Sk9nKRa2P0SaxYh7ZF8foUs5m0M9mPrAQwAFMRSuu3KQPKQM6vIJR2dRmET
-G9zkyV6FBfoPaodSo8ovv8qi3XCoJxuaF3/+Fes6DPGjk8zCyCy7h+te06s5H8w1
-HZc7YepyOrgdaVMqG6j4c44epLHQ/xtbHQ6Y4Zbb43RBeyYhcRpBgkB/LWuKCbqm
-3AcVMmhcgns86U8jI1VkYzjuvwt9DNJgFgPpyynqfWKl9N0u7aik7ByYYUeK8tZI
-1rwTZ+CdzOq4YRIVWqoG6eLHd1qf2mCuCqiz9TZnDWXPad5ghdzWiX1Mg44=3D
-=3D3czs
------END PGP PUBLIC KEY BLOCK-----
-
---------------4BB1865ABCAB0DB18962FA15--
+greg k-h
