@@ -2,247 +2,173 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 174F0C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 01:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDD3C38A30
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 01:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC140208E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 01:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA2342078C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 01:53:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="ID+zSKWy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xfRpFDiM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725988AbgDUBqk (ORCPT
+        id S1726121AbgDUBxZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 21:46:40 -0400
-Received: from mail-eopbgr1400091.outbound.protection.outlook.com ([40.107.140.91]:17440
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725958AbgDUBqk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 21:46:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A6q8lyn5PebhT0H2ZrHXfmeWbyB9q1oQS0MwEUoeH+fueBDkMc2xO/5073I+E0ufEnMbSgx1VGNVMfFqW4Qw50oqUUFQRrRow8GNo2GbmutgQfrIa1ZINutsR9uZnJu2xvX98g0+vFcd52tkxhz/MytCkDqZPbBO2JnweVbkm1a6XHr5/lqpVsdTEgySG1Mz8KAMLRYEm7nYUnDdzOnrnKHYM4UehXle1uoJtLXxY1tNgglnJ1j+noESdZ/Trw/iPQc2VZgerUMronb2yVeNGmJhhIxqJcSFUDpDX60zGbTW5XlHsZOu9X6ONWeDPPy7I1ga0kQffhOpm7462LvE9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sg7yc8DRV9nsBRbDz7zhb0OimGIpGWlVcIBERY+mTzw=;
- b=kyFgKmPlXkcPXCiz/Kl2ec2HiVy4J2kI6cXYeo1lskaHyjlrq5S3WywniUsNI7HyzKWp0NIEwCRiaOzEyl9EdU3IDvDj29S58w4TeqRLaKvHyS/gs7m+SHhXnU19ob5SIMrgqTUH8R3z83QtpqxSSPH8ZBJkqPbrPwrQwPsQ704kCZO4JEJcGqgv6qKRgCYJHZgBf4qH4Z8XcNjfmKXZ5IealEcx/eC/qY9kYd7f72sqsKXttNygl4QGexjGizKpoJJxxU4c2+//qi0O9T06LbxVqEENh16k3PxNfECiiurkB8thadCy2cEzh7JtLBXb1Cntqeyq654Mso/+KuGkVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Mon, 20 Apr 2020 21:53:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725829AbgDUBxZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Apr 2020 21:53:25 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19D98C061A0E
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 18:53:25 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id x26so6020561pgc.10
+        for <devicetree@vger.kernel.org>; Mon, 20 Apr 2020 18:53:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sg7yc8DRV9nsBRbDz7zhb0OimGIpGWlVcIBERY+mTzw=;
- b=ID+zSKWyyjdlIFDtiPg948Cxl+fjdvSmpQGfDZHisJXXmTHwj7oCAe7g8XBZT+pMvesY+jU8I3Xggm0DXYxa31HrYASotPJuiFNJJ6+vk8a8vS79o1kFTQwqX03cHBsSc1Aek1+it+fwYPN3F/A8IIRtfdzuaQ5q8pNgd1Ar0ag=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB5054.jpnprd01.prod.outlook.com (20.179.186.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2921.27; Tue, 21 Apr 2020 01:46:36 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2921.030; Tue, 21 Apr 2020
- 01:46:36 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "joro@8bytes.org" <joro@8bytes.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH] dt-bndings: iommu: renesas,ipmmu-vmsa: convert to
- json-schema
-Thread-Topic: [PATCH] dt-bndings: iommu: renesas,ipmmu-vmsa: convert to
- json-schema
-Thread-Index: AQHWEX3joQ1TxPqDiku42usLcXTo3KiCcEYAgABmq1A=
-Date:   Tue, 21 Apr 2020 01:46:36 +0000
-Message-ID: <TYAPR01MB454448A3FAA76FD1E1E9E00CD8D50@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <1586773533-8893-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20200420192646.GA9603@bogus>
-In-Reply-To: <20200420192646.GA9603@bogus>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4c6294d8-058a-42c6-328c-08d7e595d40d
-x-ms-traffictypediagnostic: TYAPR01MB5054:
-x-microsoft-antispam-prvs: <TYAPR01MB50546C1E144DBE22641782DED8D50@TYAPR01MB5054.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 038002787A
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(376002)(396003)(39860400002)(346002)(366004)(136003)(76116006)(8936002)(186003)(8676002)(81156014)(6506007)(55236004)(26005)(9686003)(4326008)(33656002)(66476007)(86362001)(52536014)(66446008)(64756008)(66556008)(55016002)(478600001)(316002)(966005)(2906002)(66946007)(54906003)(7696005)(6916009)(5660300002)(71200400001)(142933001);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Q8wvjaW54PPBwtGKWqhnnA4+CZ9BfKmkDyeTdUqFD+ZC3s02tGubV6GnXHX/we8iLRFZ9nu49TrjApMamanqYHut4pnF7sys7Ga1nLWF4fXyJEEv2fbvINgNEkUpfHu/Hp9bIsnRXfFJ+o4NK+LpS52+duJvydRIFVCgF+K4Yjo0MayJCCgSnKyzmeYIf2LfOPvMgwoTSXysQYunYYx3LOZvcwlYX0/+j6rAEu9yVVia/0p9LV7yQOnI9Jpa4H/wwHXYFRUAJZ3qGglWrhtDY9aF7U/z8ZjjrCusdHjj2kU0e4ftyIakYGFJWC/O2HMXcEW7iPh6hIpzx+VoVyf6ZiEx+Y6cam1UefuGg83gd5pkgFYIg8dTU0CYWY/N7xZY7tMsHoJC0N0UzbCVkIOQ8QMriA+dRnyv1DDSTNmPizh6kV4ZlfmIMZc541p6p7+Z7Ewb/slCFj6VgUIKFqrAcEW4M4Mag0lmKbX7hatWGrwpDh7WdILEq9tYB2Rf5NCXkla/2u82aXUJOMFKmjfYNj8R5nV6ZVa3huirM3a/ArTTWLiFH5jHQR2mc0/mi1nc
-x-ms-exchange-antispam-messagedata: 1yu/N6cVJe+bPCBAffj/hvOJDbyfvQCJo4F/ntbnmwCXMhwDpFUO12Ke8FKV4cHMNRrWNYJ77qhLi/qwPUrXNyrQOR0tQslehScFZp2ceyXqlTxfupFDlCN9x4ISvb//GepL4JRF6CTjwpuyq2u20w==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=HjaU46gshLP9GG/96K+kwboQDvDrw0plitPA+YNIbGk=;
+        b=xfRpFDiMGDmWjPTE0YYkUbpZVS47obtstRXpn7KoJtKrL2QbpLZfww1X3ZSIh8l0Nv
+         n+sW9vfTuCEWuxgnENefnuyqJYDmvX0Xl9dbhxiDUU27U/ZaeXsqr7inv+SvEh78uAbg
+         hZf8+Hox1ek/VyaKJyo68zPK/KFaqwxdO/NGoD8pLBlemT0P10eClmNQgU/SiT0rYoAm
+         nvAiyJ857Lcxcgb4dBbMQGn+gfn3MGQej9GLjYxXrPpZ4MHMD5Gx42i7SqCQ51uExIAg
+         XAzv9LqBijXqE+nnbh6rGyQs+EIjq58AiGqemnn/IX9SW/1bnrw70pFKeBSsc5tEX0oQ
+         8rpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HjaU46gshLP9GG/96K+kwboQDvDrw0plitPA+YNIbGk=;
+        b=gwjgUYkb0yPO7qQ1n+UFlz0zrpe7sHLyaRJLapPqDbhVAtS8tZ4jHaQgfOnfMOds6G
+         r+4qoRYA57N7cMGDKkAaM0qpb4C6XrTCvwB/vLy/WJBRP0TFzygbAlsjHaBJjs6yJqOj
+         q+OIKs0q6nVT1rSkP1xqKFLZ2z+9yIgyPCEr3asB7hwzLw3Pcb+Bn9ekbkezanlUQfle
+         IHkdV6ePoVeitaHzbiA1WvHZzvaaeax7t7BEVnmuIgVpdoTWfM2JdYBqDBwmHzni58MB
+         eyiF/0GXXE5xppD06RPTvFKKfI9G0mp1I1hiR/0UR2HMLXhYFOxi5C4aLpUMUfaM8aDA
+         ne4g==
+X-Gm-Message-State: AGi0PuahR5n0Fmk+pXUXIZEZaQhUMP9W1+mCwLQ2vnGBoYLQiXpgpmku
+        lVO39jqwJsnK4wf76aXU46YMyw==
+X-Google-Smtp-Source: APiQypI4Nxn9X9fDUlEU6GiIiPgk4BM6mX4SRxaaBvw8cFMIqbkz4RbBzf6gfeDAsH3XeeLgbtcPOw==
+X-Received: by 2002:a63:310d:: with SMTP id x13mr7596695pgx.266.1587434004255;
+        Mon, 20 Apr 2020 18:53:24 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id s10sm657737pgq.69.2020.04.20.18.53.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Apr 2020 18:53:23 -0700 (PDT)
+Date:   Mon, 20 Apr 2020 18:53:47 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 2/2] dt-bindings: soc: qcom: apr: Use generic node names
+ for APR services
+Message-ID: <20200421015347.GT576963@builder.lan>
+References: <20200415081159.1098-1-stephan@gerhold.net>
+ <20200415081159.1098-2-stephan@gerhold.net>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c6294d8-058a-42c6-328c-08d7e595d40d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Apr 2020 01:46:36.5457
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XQqDhe61LtTMArRqfK17fsk1XvB01Y5HacDegRruBG/FSaKIqLJAugMguXpADes8ntC3cXjL3YJHsUU7m/n33OLzGuBfO5nrE6sKnspcKy/tlwyuOqfp9WZr1Llzzcjr
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB5054
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415081159.1098-2-stephan@gerhold.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed 15 Apr 01:11 PDT 2020, Stephan Gerhold wrote:
 
-Thank you for the review!
+> Device nodes should be named according to the class of devices
+> they belong to. Change the suggested names of the subnodes to
+> apr-service@<id>, which is already in use in
+> arch/arm64/boot/dts/qcom/sdm845.dtsi.
+> 
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 
-> From: Rob Herring, Sent: Tuesday, April 21, 2020 4:27 AM
->=20
-> On Mon, Apr 13, 2020 at 07:25:33PM +0900, Yoshihiro Shimoda wrote:
-> > Convert Renesas VMSA-Compatible IOMMU bindings documentation
-> > to json-schema.
-> >
-> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-<snip>
-> > diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa=
-.yaml
-> b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
-> > new file mode 100644
-> > index 00000000..3820b10
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
-> > @@ -0,0 +1,90 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iommu/renesas,ipmmu-vmsa.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Renesas VMSA-Compatible IOMMU
-> > +
-> > +maintainers:
-> > +  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > +
-> > +description:
-> > +  The IPMMU is an IOMMU implementation compatible with the ARM VMSA pa=
-ge tables.
-> > +  It provides address translation for bus masters outside of the CPU, =
-each
-> > +  connected to the IPMMU through a port called micro-TLB.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +          - enum:
-> > +              - renesas,ipmmu-r8a7743  # RZ/G1M
-> > +              - renesas,ipmmu-r8a7744  # RZ/G1N
-> > +              - renesas,ipmmu-r8a7745  # RZ/G1E
-> > +              - renesas,ipmmu-r8a7790  # R-Car H2
-> > +              - renesas,ipmmu-r8a7791  # R-Car M2-W
-> > +              - renesas,ipmmu-r8a7793  # R-Car M2-N
-> > +              - renesas,ipmmu-r8a7794  # R-Car E2
-> > +              - renesas,ipmmu-r8a7795  # R-Car H3
-> > +          - const: renesas,ipmmu-vmsa  # R-Car Gen2 or RZ/G1
-> > +      - items:
-> > +          - enum:
-> > +              - renesas,ipmmu-r8a73a4  # R-Mobile APE6
-> > +              - renesas,ipmmu-r8a774a1 # RZ/G2M
-> > +              - renesas,ipmmu-r8a774b1 # RZ/G2N
-> > +              - renesas,ipmmu-r8a774c0 # RZ/G2E
-> > +              - renesas,ipmmu-r8a7796  # R-Car M3-W
-> > +              - renesas,ipmmu-r8a77965 # R-Car M3-N
-> > +              - renesas,ipmmu-r8a77970 # R-Car V3M
-> > +              - renesas,ipmmu-r8a77980 # R-Car V3H
-> > +              - renesas,ipmmu-r8a77990 # R-Car E3
-> > +              - renesas,ipmmu-r8a77995 # R-Car D3
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    minItems: 1
-> > +    maxItems: 2
-> > +    description:
-> > +      Specifiers for the MMU fault interrupts. For instances that supp=
-ort
-> > +      secure mode two interrupts must be specified, for non-secure and=
- secure
-> > +      mode, in that order. For instances that don't support secure mod=
-e a
-> > +      single interrupt must be specified. Not required for cache IPMMU=
-s.
-> > +
-> > +  '#iommu-cells':
-> > +    const: 1
-> > +
-> > +  power-domains:
-> > +    maxItems: 1
-> > +
-> > +  renesas,ipmmu-main:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> > +    description:
-> > +      Reference to the main IPMMU instance in two cells. The first cel=
-l is
-> > +      a phandle to the main IPMMU and the second cell is the interrupt=
- bit
->=20
-> The cell counting is wrong here. We don't count the phandle as a cell.
-> It's a 'phandle plus 1 cell'.
+Applied, thank you.
 
-I got it. I'll fix it.
-
-> Same goes for 'iommus'.
-
-I understood it. I'll also fix '#iommu-cells' description.
-
-> > +      number associated with the particular cache IPMMU device. The in=
-terrupt
-> > +      bit number needs to match the main IPMMU IMSSTR register. Only u=
-sed by
-> > +      cache IPMMU instances.
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - '#iommu-cells'
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/clock/r8a7791-cpg-mssr.h>
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +    #include <dt-bindings/power/r8a7791-sysc.h>
-> > +
-> > +    ipmmu_mx: mmu@fe951000 {
->=20
-> iommu@...
-
-I got it.
-
-BTW, all Renesas related dts files are described as "mmu" now.
-So, I'll also fix dts files later. Thank you for the pointed it out!
-
-Best regards,
-Yoshihiro Shimoda
-
-> > +        compatible =3D "renasas,ipmmu-r8a7791", "renasas,ipmmu-vmsa";
-> > +        reg =3D <0xfe951000 0x1000>;
-> > +        interrupts =3D <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
-> > +        #iommu-cells =3D <1>;
-> > +    };
-> > --
-> > 2.7.4
-> >
+> ---
+>  .../devicetree/bindings/soc/qcom/qcom,apr.txt | 20 +++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> index f8fa71f5d84b..2e2f6dc351c0 100644
+> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> @@ -65,30 +65,30 @@ which uses apr as communication between Apps and QDSP.
+>  		compatible = "qcom,apr-v2";
+>  		qcom,apr-domain = <APR_DOMAIN_ADSP>;
+>  
+> -		q6core@3 {
+> +		apr-service@3 {
+>  			compatible = "qcom,q6core";
+>  			reg = <APR_SVC_ADSP_CORE>;
+>  		};
+>  
+> -		q6afe@4 {
+> +		apr-service@4 {
+>  			compatible = "qcom,q6afe";
+>  			reg = <APR_SVC_AFE>;
+>  
+>  			dais {
+>  				#sound-dai-cells = <1>;
+> -				hdmi@1 {
+> -					reg = <1>;
+> +				dai@1 {
+> +					reg = <HDMI_RX>;
+>  				};
+>  			};
+>  		};
+>  
+> -		q6asm@7 {
+> +		apr-service@7 {
+>  			compatible = "qcom,q6asm";
+>  			reg = <APR_SVC_ASM>;
+>  			...
+>  		};
+>  
+> -		q6adm@8 {
+> +		apr-service@8 {
+>  			compatible = "qcom,q6adm";
+>  			reg = <APR_SVC_ADM>;
+>  			...
+> @@ -106,26 +106,26 @@ have no such dependency.
+>  		qcom,glink-channels = "apr_audio_svc";
+>  		qcom,apr-domain = <APR_DOMAIN_ADSP>;
+>  
+> -		q6core {
+> +		apr-service@3 {
+>  			compatible = "qcom,q6core";
+>  			reg = <APR_SVC_ADSP_CORE>;
+>  		};
+>  
+> -		q6afe: q6afe {
+> +		q6afe: apr-service@4 {
+>  			compatible = "qcom,q6afe";
+>  			reg = <APR_SVC_AFE>;
+>  			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
+>  			...
+>  		};
+>  
+> -		q6asm: q6asm {
+> +		q6asm: apr-service@7 {
+>  			compatible = "qcom,q6asm";
+>  			reg = <APR_SVC_ASM>;
+>  			qcom,protection-domain = "tms/servreg", "msm/slpi/sensor_pd";
+>  			...
+>  		};
+>  
+> -		q6adm: q6adm {
+> +		q6adm: apr-service@8 {
+>  			compatible = "qcom,q6adm";
+>  			reg = <APR_SVC_ADM>;
+>  			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
+> -- 
+> 2.26.1
+> 
