@@ -2,179 +2,117 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A50C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 08:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CF0C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 08:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE86D2084D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 08:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A4B62072D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 08:10:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P5Cau5mc"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="g0Zds66b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgDUIG6 (ORCPT
+        id S1727829AbgDUIKl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 04:06:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45926 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgDUIG4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Apr 2020 04:06:56 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A698C061A0F
-        for <devicetree@vger.kernel.org>; Tue, 21 Apr 2020 01:06:56 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id k28so10356517lfe.10
-        for <devicetree@vger.kernel.org>; Tue, 21 Apr 2020 01:06:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mzFEPeMdiYfPEUHylv58dh/en7nprJe45mS8FlBWrSs=;
-        b=P5Cau5mcQb/dtxGn3vL82In9QZ528aUybqggqzAW5oOE4pVtlM/87cSFIP7ckq64Bt
-         AOOJ03WBRUmGqaCWf3c+Dyt0Amdxgzc5FFqUxWtRxfGjQ/WseU5Of/NkdQdK4681B/cO
-         IFKdr1pOx7JGOuXgJ5QVok/yhhEUwc1291J/PdaznYicvdIO26oUhYuuXQ2SFjUbViwj
-         mTiG2c13HUqNfBN8CtvJGlSK8fVFwaQsdccXeXGSlZ18wBobcsNS+uaqijATh3z4nE5k
-         I3544BK9BADwcyi/F7moT0tm+4xMKGBwCV30dQPq+DO/fhjCik+quQYM2LwAJ+0YYYM3
-         rxJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mzFEPeMdiYfPEUHylv58dh/en7nprJe45mS8FlBWrSs=;
-        b=STWinlhepRIjk0D3r08p0SqxvMCrOATHRLcqMPHQqY3KwObOBPrIAUouv6fTC7DO6h
-         xigZ+t3OH2Oi3P+rmJUeM0goCMKLKq2uBhYkevoG1MjYljaCY/WGMZtRL1+rZ8mDmx/b
-         fV1l6w6XDCA5wbW2RJNKoMVeeKQb1BSVkVpa4kNSfyW1Ozqw9cqetE/M7Htq9h0UnInS
-         OA9d/pc4GKDp+4D4NIkpkLHXPrlsZjrJePEFdsJVw+EbMsJIHx6FIA4iunqjrg6W0DFN
-         xuSayd7wAtQ/zYdIAdGrMqZ6uC8ZZtPYzcj2Ia/tQDXX4OLvWqVeCc27KulFdGtQIwMM
-         bRcQ==
-X-Gm-Message-State: AGi0PubzSyGxxlN1wPnHK04PHbN00bROke/SytuzpLDfgHzXaUWcklTJ
-        jH2O/LjO3FEVJKHZDBjjQdEIxw==
-X-Google-Smtp-Source: APiQypIJ9t3IHnaYjxUeYE5Td3lSXQcm6adIbo1v8gUyy4SPuihBVp3IOoHYhNHdMrhC4zz60ch7gQ==
-X-Received: by 2002:a05:6512:1c5:: with SMTP id f5mr12814889lfp.138.1587456414746;
-        Tue, 21 Apr 2020 01:06:54 -0700 (PDT)
-Received: from localhost.bredbandsbolaget (c-f3d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.243])
-        by smtp.gmail.com with ESMTPSA id v15sm1318091ljd.33.2020.04.21.01.06.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 01:06:53 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 1/2 v5] dt-bindings: touchscreen: Add CY8CTMA140 bindings
-Date:   Tue, 21 Apr 2020 10:06:49 +0200
-Message-Id: <20200421080650.25514-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.1
+        Tue, 21 Apr 2020 04:10:41 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:55982 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726403AbgDUIKk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Apr 2020 04:10:40 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587456640; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=qhaNkfzyboUvEtiuhO92CVabH2/SAoOegZ9nrvZgMWo=; b=g0Zds66bZF9m2bvRs0CSKkH3AltVy9ihS3nKigA63Ug3ZHqvtGRMtqNWFhWzeYDnDRLR0X16
+ dNx78O27m245tyyVa4NJ0Tfomxm3kIEu1FxTeetxNiSe2n7vPAk+K4AFkllgPZ+wKQ2MgncQ
+ U2CsSWP25gdvdPqG7w2X0THcSbc=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e9eaa71.7f8335735fb8-smtp-out-n01;
+ Tue, 21 Apr 2020 08:10:25 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6D5D4C433F2; Tue, 21 Apr 2020 08:10:24 +0000 (UTC)
+Received: from [192.168.43.137] (unknown [106.213.184.221])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC36CC433CB;
+        Tue, 21 Apr 2020 08:10:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DC36CC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH] arm64: dts: qcom: sm8250: Fix PDC compatible and reg
+To:     Vinod Koul <vkoul@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200415054703.739507-1-bjorn.andersson@linaro.org>
+ <20200421070227.GD72691@vkoul-mobl>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <d67adcc2-7f5c-3ed7-5c7c-c3b6b46cbd0b@codeaurora.org>
+Date:   Tue, 21 Apr 2020 13:40:17 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200421070227.GD72691@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds device tree bindings for the Cypress CY8CTMA140
-touchscreen.
+Hi,
 
-Cc: devicetree@vger.kernel.org
-Cc: Henrik Rydberg <rydberg@bitmath.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v4->v5:
-- Fix the unit name in the I2C controller after the building
-  bot complained that it cannot be at @00000000 and that it does
-  not contain a reg. Just call it "i2c".
-ChangeLog v1->v4:
-- Drop the description of 'reg', it's surplus.
-- Set the I2C frequency to the span 100k to 400k instead
-  of hardcoding 400k.
-- Collect Rob's review tag.
----
- .../input/touchscreen/cypress,cy8ctma140.yaml | 72 +++++++++++++++++++
- 1 file changed, 72 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma140.yaml
+We can drop the second reg,
+, <0 0x17c000f0 0 0x60>
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma140.yaml b/Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma140.yaml
-new file mode 100644
-index 000000000000..8c73e5264312
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma140.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/touchscreen/cypress,cy8ctma140.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Cypress CY8CTMA140 series touchscreen controller bindings
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+allOf:
-+  - $ref: touchscreen.yaml#
-+
-+properties:
-+  compatible:
-+    const: cypress,cy8ctma140
-+
-+  reg:
-+    const: 0x20
-+
-+  clock-frequency:
-+    description: I2C client clock frequency, defined for host
-+    minimum: 100000
-+    maximum: 400000
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  vcpin-supply:
-+    description: Analog power supply regulator on VCPIN pin
-+
-+  vdd-supply:
-+    description: Digital power supply regulator on VDD pin
-+
-+  touchscreen-inverted-x: true
-+  touchscreen-inverted-y: true
-+  touchscreen-size-x: true
-+  touchscreen-size-y: true
-+  touchscreen-swapped-x-y: true
-+  touchscreen-max-pressure: true
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - touchscreen-size-x
-+  - touchscreen-size-y
-+  - touchscreen-max-pressure
-+
-+examples:
-+- |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      touchscreen@20 {
-+        compatible = "cypress,cy8ctma140";
-+        reg = <0x20>;
-+        touchscreen-size-x = <480>;
-+        touchscreen-size-y = <800>;
-+        touchscreen-max-pressure = <255>;
-+        interrupt-parent = <&gpio6>;
-+        interrupts = <26 IRQ_TYPE_EDGE_FALLING>;
-+        vdd-supply = <&ab8500_ldo_aux2_reg>;
-+        vcpin-supply = <&ab8500_ldo_aux2_reg>;
-+      };
-+    };
-+
-+...
+The change [1] to read second reg and configure it, is not yet gone in 
+pdc irqchip driver.
+Otherthan this, the patch looks good to me.
+
+Thanks,
+Maulik
+
+On 4/21/2020 12:32 PM, Vinod Koul wrote:
+> On 14-04-20, 22:47, Bjorn Andersson wrote:
+>> The pdc node suffers from both too narrow compatible and insufficient
+>> cells in the reg, fix these.
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+> Tested-by: Vinod Koul <vkoul@kernel.org>
+>
+>> Fixes: 60378f1a171e ("arm64: dts: qcom: sm8250: Add sm8250 dts file")
+>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>> ---
+>>   arch/arm64/boot/dts/qcom/sm8250.dtsi | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+>> index 891d83b2afea..2a7eaefd221d 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+>> @@ -314,8 +314,8 @@ intc: interrupt-controller@17a00000 {
+>>   		};
+>>   
+>>   		pdc: interrupt-controller@b220000 {
+>> -			compatible = "qcom,sm8250-pdc";
+>> -			reg = <0x0b220000 0x30000>, <0x17c000f0 0x60>;
+>> +			compatible = "qcom,sm8250-pdc", "qcom,pdc";
+>> +			reg = <0 0x0b220000 0 0x30000>, <0 0x17c000f0 0 0x60>;
+>>   			qcom,pdc-ranges = <0 480 94>, <94 609 31>,
+>>   					  <125 63 1>, <126 716 12>;
+>>   			#interrupt-cells = <2>;
+>> -- 
+>> 2.24.0
+[1] https://patchwork.kernel.org/patch/11145353/
+
 -- 
-2.21.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
