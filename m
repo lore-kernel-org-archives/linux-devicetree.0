@@ -2,110 +2,129 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE50EC5518F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 23:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6123FC2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 23:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D78252072D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 23:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BDA620679
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 23:31:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587511896;
+	bh=RPY9/TAPtMpNAGRQZw/dlkxmaqPwTqvSl3q13yOk+XI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fXoV3bw33nOwgkbG/tES0rb6VXGUqwl6c7o/orSqck6yz6muwZVslYSCC3glu71cP
+	 231aII+yX08MSFlzRkF4rd4UkTDTvCMVz2oFbHmQCLiytmtVATecVhpe0fzxdSrM54
+	 WsOcFgNFzc6c040YluRFSRabD0eXpvYLnxOsmeH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgDUX2A (ORCPT
+        id S1726012AbgDUXbf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 19:28:00 -0400
-Received: from muru.com ([72.249.23.125]:50810 "EHLO muru.com"
+        Tue, 21 Apr 2020 19:31:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbgDUX2A (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Apr 2020 19:28:00 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id A6D8B8081;
-        Tue, 21 Apr 2020 23:28:45 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>
-Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Johan Hovold <johan@kernel.org>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: [PATCHv6 0/4] n_gsm serdev support and protocol driver for droid4 modem
-Date:   Tue, 21 Apr 2020 16:27:48 -0700
-Message-Id: <20200421232752.3070-1-tony@atomide.com>
-X-Mailer: git-send-email 2.26.2
+        id S1725850AbgDUXbf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Apr 2020 19:31:35 -0400
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83ECC20724;
+        Tue, 21 Apr 2020 23:31:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587511894;
+        bh=RPY9/TAPtMpNAGRQZw/dlkxmaqPwTqvSl3q13yOk+XI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2s72HPDDsl1QTP+FODWwiPUTuk0v4TPC/n61PVeE9RDv3L6UJIXLNfatjGwILnpao
+         g7LNzo9wa6PB/uzg/ll2Epz+WWwNIrR1NrbZxUbfD+1YT6mbuMvcavfEhXqFHSS+Fk
+         66OH7EL2qAF1SeLI0P8nudCKobke3dP858Nw2I+w=
+Received: by mail-ed1-f53.google.com with SMTP id j20so160327edj.0;
+        Tue, 21 Apr 2020 16:31:34 -0700 (PDT)
+X-Gm-Message-State: AGi0PubedbnQYhp5ObyrCVdhky+PR11WhF529nhMbhlJxKoYhKOCjGmJ
+        Y+f5kga0X9JgCQXveUViFvgJ9hjMyRTH2ZeokA==
+X-Google-Smtp-Source: APiQypJo9yp2SonxjWMw73VqqdawuFNXOhrZk2P9FYz3xedbgGtLGvC53P/2on6r1rrbXobjcKm43t2LLpC5Lt5jrNE=
+X-Received: by 2002:a05:6402:1587:: with SMTP id c7mr20059512edv.61.1587511893020;
+ Tue, 21 Apr 2020 16:31:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200411074408.38090-1-jitao.shi@mediatek.com>
+In-Reply-To: <20200411074408.38090-1-jitao.shi@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Wed, 22 Apr 2020 07:31:21 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_-78CsRocevQK-h-CsBZTTDpYCtpuswcL0MkNyhVvAADg@mail.gmail.com>
+Message-ID: <CAAOTY_-78CsRocevQK-h-CsBZTTDpYCtpuswcL0MkNyhVvAADg@mail.gmail.com>
+Subject: Re: [PATCH v6 0/4] Config mipi tx current and impedance
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        huijuan.xie@mediatek.com, stonea168@163.com,
+        cawa.cheng@mediatek.com,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>, yingjoe.chen@mediatek.com,
+        eddie.huang@mediatek.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi all,
+Hi, Jitao:
 
-Here's v4 set of n_gsm serdev support patches, and the related protocol
-driver for the modem found on Motorola Mapphone phones and tablets
-like droid4.
+For this series, applied to mediatek-drm-next [1], thanks.
 
-This series only adds basic character device support for the serdev
-driver. Other serdev consumer drivers for specific devices will be
-posted separately.
-
-The patches are against v5.6-rc series.
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.git/=
+log/?h=3Dmediatek-drm-next
 
 Regards,
+Chun-Kuang.
 
-Tony
-
-
-Changes since v5:
-- Cosmetic fixes for issues noted by Pavel
-
-Changes since v4:
-- Use drivers/tty/serdev/protocol directory for the driver instead of
-  drivers/mfd as discussed on the lists for v3 set of patches
-- Fix remove to call kfree only after removing device from the list
-
-Changes since v3:
-- Update list of folks in Cc, looks like I sent v3 only to Lee and lkml
-- Init privdata before motmdm_register_dlci calls gsm_serdev_register_dlci
-- Update binding based on Rob's comments for license and "allOf"
-
-Changes since v2:
-- Drop useless send_command indirection, use static motmdm_send_command
-
-Changes since v1:
-
-- Simplified usage and got rid of few pointless inline functions
-- Added consumer MFD driver, devicetree binding, and dts changes
-
-
-Tony Lindgren (4):
-  tty: n_gsm: Add support for serdev drivers
-  serdev: ngsm-motmdm: Add Motorola TS 27.010 serdev modem driver for
-    droid4
-  dt-bindings: serdev: motmdm: Add binding for motorola-mdm
-  ARM: dts: omap4-droid4: Enable basic modem support
-
- .../serdev/motorola,mapphone-mdm6600.yaml     |   34 +
- .../boot/dts/motorola-mapphone-common.dtsi    |    6 +
- drivers/tty/n_gsm.c                           |  372 +++++
- drivers/tty/serdev/Kconfig                    |    2 +
- drivers/tty/serdev/Makefile                   |    2 +
- drivers/tty/serdev/protocol/Kconfig           |   14 +
- drivers/tty/serdev/protocol/Makefile          |    3 +
- .../tty/serdev/protocol/serdev-ngsm-motmdm.c  | 1191 +++++++++++++++++
- include/linux/serdev-gsm.h                    |  168 +++
- 9 files changed, 1792 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serdev/motorola,mapphone-mdm6600.yaml
- create mode 100644 drivers/tty/serdev/protocol/Kconfig
- create mode 100644 drivers/tty/serdev/protocol/Makefile
- create mode 100644 drivers/tty/serdev/protocol/serdev-ngsm-motmdm.c
- create mode 100644 include/linux/serdev-gsm.h
-
--- 
-2.26.2
+Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=8811=E6=
+=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8B=E5=8D=883:44=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Changes since v5:
+>  - remove memset()
+>  - add return to remove "else"
+>
+> Changes since v4:
+>  - add Reviewed-by:
+>  - move the get the calibration data code to probe.
+>
+> Changes since v3:
+>  - refine drive-strength-microamp as from 3000 to 6000.
+>
+> Changes since v2:
+>  - fix the title of commit message.
+>  - rename mipitx-current-drive to drive-strength-microamp
+>
+> Changes since v1:
+>  - fix coding style.
+>  - change mtk_mipi_tx_config_calibration_data() to void
+>
+> Jitao Shi (4):
+>   dt-bindings: display: mediatek: add property to control mipi tx drive
+>     current
+>   dt-bindings: display: mediatek: get mipitx calibration data from nvmem
+>   drm/mediatek: add the mipitx driving control
+>   drm/mediatek: config mipitx impedance with calibration data
+>
+>  .../display/mediatek/mediatek,dsi.txt         | 10 ++++
+>  drivers/gpu/drm/mediatek/mtk_mipi_tx.c        | 54 +++++++++++++++++++
+>  drivers/gpu/drm/mediatek/mtk_mipi_tx.h        |  4 ++
+>  drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c | 28 ++++++++++
+>  4 files changed, 96 insertions(+)
+>
+> --
+> 2.21.0
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
