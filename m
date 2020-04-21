@@ -2,129 +2,126 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 212ADC54FC9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 03:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA20C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 03:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F34B22071E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 03:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7157A2076C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 03:49:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587440176;
-	bh=I/pbQmzGjJKqtybLWCiUXpb5mfjHNcIGDc2Iyys5SuM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zAqJbcaDRRqb9IPCzSZaNUZo8xZnEHmLBvNLa5vHzx/RicOMU7nA425HBNk8AfJSU
-	 inTuNU37nu9GFxtsNfuy+BrC9xMUZDp64JiYOQzAHPgAYkY+8WIViaeGEC9TWjB0sY
-	 ZG6AB7qyKLXvfip07djAIACxqcPo73OMihTePdJY=
+	s=default; t=1587440948;
+	bh=0D6hYraBu1DbsgpFZCPm8t6r20cXBzyDrsgU4Z9wbZk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VTSek4AMvDZfvJIgMXhU1Ui1Zw0yq0aoFhHbLYsCK1SlstQ09LPYPT3B0xh7Yexi2
+	 1ccSGi+2weLDmlFDF6NX1rwFSYEdu7vTSCh/XwvR7OWzlr663p8r2ZxsciW8sIQ3mZ
+	 x/F1T7Sk8skTaLNloI5BuehejuCy1AintQlUKjhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgDUDgL (ORCPT
+        id S1727848AbgDUDtH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 23:36:11 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:52663 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbgDUDgK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 23:36:10 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 03L3ZdWh001233;
-        Tue, 21 Apr 2020 12:35:40 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 03L3ZdWh001233
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587440140;
-        bh=z+5DGjEAprgDxyLd7rZ+BckTVvQnx3Zz8y8zRWdf4rw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OwogK5ffXLUH4vGa7xHMEUhggPpcLZTYFpIyxwOCXNREHEGSGyTY0pTRl2yNd3Roh
-         UQheeM+jfFg/f86aWzh0i9KfHWi97rNER07Jhxlc8tV3fm/kU+WUa6qCS1nfPIff1Z
-         yFKlqZYRO+Z2GXul42VPXZJngOj2YEnDgeKP+Pp89+yz9CD/XnXAIpS5LDO+mLKZ8Y
-         dYFExSxPy2Y/TS/M1ck9icbUD7xUYWdHf8/lfGUUcVKGwULjWPsbpBpZZRIYpoVOGs
-         n+ruh3U4bIso6Kxg0PDI/MMzfnjBpaCbhywBRsC0c2vWgI0kxVOel3f3PrpTPTrw0L
-         9fqjPTX5rBUrg==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: [PATCH 2/2] kbuild: use separate commands for generating *.dtb and *.dt.yaml
-Date:   Tue, 21 Apr 2020 12:35:29 +0900
-Message-Id: <20200421033529.487366-2-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200421033529.487366-1-masahiroy@kernel.org>
-References: <20200421033529.487366-1-masahiroy@kernel.org>
+        Mon, 20 Apr 2020 23:49:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726793AbgDUDtH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Apr 2020 23:49:07 -0400
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91E8420882;
+        Tue, 21 Apr 2020 03:49:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587440946;
+        bh=0D6hYraBu1DbsgpFZCPm8t6r20cXBzyDrsgU4Z9wbZk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WWyMs0j3tGy9ANeQcxvdnl4D2WfDvXmeTx+v/xAjU3v1syDAcRLuG+jTM8pAN9C8c
+         +ugCB2prYMNqzzfI9yUZDDQU/E3+XpLnEbFc8dmEc5PWVfX6iEZUISBELut7DAYoEn
+         qZ6RAUv8WCZxTJmFNfy78KPXTD5Iybr6mKPjsOrk=
+Received: by mail-lj1-f181.google.com with SMTP id w20so6164597ljj.0;
+        Mon, 20 Apr 2020 20:49:06 -0700 (PDT)
+X-Gm-Message-State: AGi0PuamOYJ5N702jIpVeGuVmVxHqxl6ilt+TKEKNN5gyFtJVxcigu8E
+        qvJxzyYDWQ1QswIvRCY5kdFgK6jeM+awp9q4yuM=
+X-Google-Smtp-Source: APiQypJ1or0lDKF5QqUv6w69NTZ4v7V/G08isP2Oq7HTw+F7ljB+CKK2Gz7J3f4a+MkTFc+nuAlbnVCvdthGDNd2ybs=
+X-Received: by 2002:a2e:9ada:: with SMTP id p26mr8877859ljj.14.1587440944667;
+ Mon, 20 Apr 2020 20:49:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200416181944.5879-1-jbx6244@gmail.com>
+In-Reply-To: <20200416181944.5879-1-jbx6244@gmail.com>
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Tue, 21 Apr 2020 11:48:52 +0800
+X-Gmail-Original-Message-ID: <CAGb2v67N6t+C8dVKdjuOv1NzD9=3-n0GZQkshy1Pm6PFPJ87dQ@mail.gmail.com>
+Message-ID: <CAGb2v67N6t+C8dVKdjuOv1NzD9=3-n0GZQkshy1Pm6PFPJ87dQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] arm64: dts: rockchip: add bus-width properties to mmc
+ nodes for rk3328.dtsi
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Currently, cmd_dtc takes $(2) to select the target format. The
-additional parameter complicates things when it is used with
-cmd_and_fixdep and if_changed_rule.
+On Fri, Apr 17, 2020 at 2:19 AM Johan Jonker <jbx6244@gmail.com> wrote:
+>
+> 'bus-width' and pinctrl containing the bus-pins
+> should be in the same file, so add them to
+> all mmc nodes in 'rk3328.dtsi'.
 
-To make it easier to understand, use a separate cmd_dtc_yaml.
+Nope. First of all, pinctrl usage is with pinctrl-N properties, not the
+pinctrl device, and there are no defaults set for any of the mmc nodes.
+Second, these are board design specific. For example, boards are free to
+use just 4 bits for the eMMC if they so desire. So this should be in each
+board dts file. If a board is missing this property, fix the board.
 
-One visible change is, 'DTC [Y]' is used for the log when compiling
-*.dts to *.dt.yaml.
+This applies to all three patches in the series.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+ChenYu
 
- scripts/Makefile.lib | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
-
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 4b799737722c..d5ac19e10e1d 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -284,32 +284,37 @@ cmd_dt_S_dtb=						\
- $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
- 	$(call if_changed,dt_S_dtb)
- 
--quiet_cmd_dtc = DTC     $@
--cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
-+__cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
- 	$(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
--	$(DTC) -O $(2) -o $@ -b 0 \
-+	$(DTC) -O $(1) -o $@ -b 0 \
- 		$(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
- 		-d $(depfile).dtc.tmp $(dtc-tmp) ; \
- 	cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
- 
-+quiet_cmd_dtc = DTC     $@
-+      cmd_dtc = $(call __cmd_dtc,dtb)
-+
- $(obj)/%.dtb: $(src)/%.dts $(DTC) FORCE
--	$(call if_changed_dep,dtc,dtb)
-+	$(call if_changed_dep,dtc)
- 
- DT_CHECKER ?= dt-validate
- DT_BINDING_DIR := Documentation/devicetree/bindings
- # DT_TMP_SCHEMA may be overridden from Documentation/devicetree/bindings/Makefile
- DT_TMP_SCHEMA ?= $(objtree)/$(DT_BINDING_DIR)/processed-schema.yaml
- 
-+quiet_cmd_dtc_yaml = DTC [Y] $@
-+      cmd_dtc_yaml = $(call __cmd_dtc,yaml)
-+
- quiet_cmd_dtb_check =	CHECK   $@
-       cmd_dtb_check =	$(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR) -p $(DT_TMP_SCHEMA) $@
- 
--define rule_dtc
--	$(call cmd_and_fixdep,dtc,yaml)
-+define rule_dtc_yaml
-+	$(call cmd_and_fixdep,dtc_yaml)
- 	$(call cmd,dtb_check)
- endef
- 
- $(obj)/%.dt.yaml: $(src)/%.dts $(DTC) $(DT_TMP_SCHEMA) FORCE
--	$(call if_changed_rule,dtc,yaml)
-+	$(call if_changed_rule,dtc_yaml)
- 
- dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
- 
--- 
-2.25.1
-
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3328.dtsi | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+> index 175060695..db2c3085e 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+> @@ -861,6 +861,7 @@
+>                 clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
+>                          <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
+>                 clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+> +               bus-width = <4>;
+>                 fifo-depth = <0x100>;
+>                 max-frequency = <150000000>;
+>                 status = "disabled";
+> @@ -873,6 +874,7 @@
+>                 clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
+>                          <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
+>                 clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+> +               bus-width = <4>;
+>                 fifo-depth = <0x100>;
+>                 max-frequency = <150000000>;
+>                 status = "disabled";
+> @@ -885,6 +887,7 @@
+>                 clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
+>                          <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
+>                 clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+> +               bus-width = <8>;
+>                 fifo-depth = <0x100>;
+>                 max-frequency = <150000000>;
+>                 status = "disabled";
+> --
+> 2.11.0
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
