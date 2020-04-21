@@ -2,108 +2,175 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D0DC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 09:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF123C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 09:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 300EB2070B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 09:48:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="H4n5GW/O"
+	by mail.kernel.org (Postfix) with ESMTP id B262B2087E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 09:54:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgDUJsP (ORCPT
+        id S1728595AbgDUJyL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 05:48:15 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:35400 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726741AbgDUJsP (ORCPT
+        Tue, 21 Apr 2020 05:54:11 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:56002 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726874AbgDUJyK (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Apr 2020 05:48:15 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E37104050B;
-        Tue, 21 Apr 2020 09:48:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1587462495; bh=pEl+BqajQpxKEU6q4ersObSMeKbSkHMMBoPiWf2oh+8=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=H4n5GW/OyNgghmNUf48YLQnLRN56uPNJOoVMdA434Qg5E6LxvLht/lyQ3a98AFuyw
-         k+Qf295QQBkeMAIUnZS1a5QGDrQVR0qd5Ol3wyPZMB5Hqhs9CXm+BsKRYSSr2UjJUm
-         iK/f40gZe30suQQaLIvWDyhsoxLSwj+jlSRmO2DbvILyqsUyacunLLaGflYQgf5BBG
-         NIOO7OJnsm/IyVMSLdpMDNK07apRZGzGX/tznOEHhLGea0OiClLuqlHO4vZtOkiI9o
-         LvXosPiER1Ejgap5+nvwqcywqq51Dn6I5VWArX7RZYzi8zE+nodFviA5JnzFeV6fT1
-         FCDyU2n8rjz3A==
-Received: from tejas-VirtualBox (joglekar-e7480.internal.synopsys.com [10.146.16.13])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPSA id 4B242A005C;
-        Tue, 21 Apr 2020 09:48:11 +0000 (UTC)
-Received: by tejas-VirtualBox (sSMTP sendmail emulation); Tue, 21 Apr 2020 15:18:09 +0530
-Date:   Tue, 21 Apr 2020 15:18:09 +0530
-Message-Id: <5f5fdfbd323159133fced5b1340f5eb5fd11a17a.1587461220.git.joglekar@synopsys.com>
-In-Reply-To: <cover.1587461220.git.joglekar@synopsys.com>
-References: <cover.1587461220.git.joglekar@synopsys.com>
-From:   Tejas Joglekar <Tejas.Joglekar@synopsys.com>
-Subject: [RFC PATCH v2 1/4] dt-bindings: usb: Add documentation for SG trb cache size quirk
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     John Youn <John.Youn@synopsys.com>
+        Tue, 21 Apr 2020 05:54:10 -0400
+Received: from [37.161.214.89] (port=49523 helo=[192.168.42.159])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1jQpbN-009P7k-IS; Tue, 21 Apr 2020 11:54:05 +0200
+Subject: Re: [PATCH v11 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
+ Subsystem driver
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Vishal Sagar <vishal.sagar@xilinx.com>,
+        Hyun Kwon <hyunk@xilinx.com>, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Hyun Kwon <hyun.kwon@xilinx.com>
+References: <20200409194424.45555-1-vishal.sagar@xilinx.com>
+ <20200409194424.45555-3-vishal.sagar@xilinx.com>
+ <20200419180222.GB8117@pendragon.ideasonboard.com>
+ <860c27da-eba0-ddcb-719b-52b2725bd9bf@lucaceresoli.net>
+ <20200420195714.GB8195@pendragon.ideasonboard.com>
+ <0a3ea86b-cb4c-a1db-664e-cfa555d8ccf8@lucaceresoli.net>
+ <20200421083807.GB5983@pendragon.ideasonboard.com>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <66ad4341-8066-6b09-5473-12825fe26828@lucaceresoli.net>
+Date:   Tue, 21 Apr 2020 11:53:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200421083807.GB5983@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This commit adds the documentation for sgl-trb-cache-size-quirk, and
-snps,sgl-trb-cache-size-quirk property. These when set enables the
-quirk for XHCI driver for consolidation of sg list into a temporary
-buffer when small buffer sizes are scattered over the sg list not
-making up to MPS or total transfer size within TRB cache size with
-Synopsys xHC.
+Hi Laurent,
 
-Signed-off-by: Tejas Joglekar <joglekar@synopsys.com>
----
- Changes in v2:
- - Renamed the property
+On 21/04/20 10:38, Laurent Pinchart wrote:
+> Hi Luca,
+> 
+> On Tue, Apr 21, 2020 at 09:45:56AM +0200, Luca Ceresoli wrote:
+>> On 20/04/20 21:57, Laurent Pinchart wrote:
+>>> On Mon, Apr 20, 2020 at 09:24:25PM +0200, Luca Ceresoli wrote:
+>>>> On 19/04/20 20:02, Laurent Pinchart wrote:
+>>>> [...]
+>>>>>> +static irqreturn_t xcsi2rxss_irq_handler(int irq, void *dev_id)
+>>>>>> +{
+>>>>>> +	struct xcsi2rxss_state *state = (struct xcsi2rxss_state *)dev_id;
+>>>>>> +	struct xcsi2rxss_core *core = &state->core;
+>>>>>> +	u32 status;
+>>>>>> +
+>>>>>> +	status = xcsi2rxss_read(core, XCSI_ISR_OFFSET) & XCSI_ISR_ALLINTR_MASK;
+>>>>>> +	dev_dbg_ratelimited(core->dev, "interrupt status = 0x%08x\n", status);
+>>>>>
+>>>>> As this is expected to occur for every frame, I would drop the message,
+>>>>> even if rate-limited.
+>>>>>
+>>>>>> +
+>>>>>> +	if (!status)
+>>>>>> +		return IRQ_NONE;
+>>>>>> +
+>>>>>> +	/* Received a short packet */
+>>>>>> +	if (status & XCSI_ISR_SPFIFONE) {
+>>>>>> +		dev_dbg_ratelimited(core->dev, "Short packet = 0x%08x\n",
+>>>>>> +				    xcsi2rxss_read(core, XCSI_SPKTR_OFFSET));
+>>>>>> +	}
+>>>>>
+>>>>> Same here, this will occur all the time, I'd remove this message. You
+>>>>> need to read XCSI_SPKTR_OFFSET though, and you should do so in a loop
+>>>>> until the XCSI_CSR_SPFIFONE in XCSI_CSR_OFFSET is cleared in case
+>>>>> multiple short packets are received before the interrupt handler
+>>>>> executes.
+>>>>>
+>>>>> I also wonder if it would make sense to extract the frame number from
+>>>>> the FS short packet, and make it available through the subdev API. I
+>>>>> think it should be reported through a V4L2_EVENT_FRAME_SYNC event. This
+>>>>> can be implemented later.
+>>>>>
+>>>>>> +
+>>>>>> +	/* Short packet FIFO overflow */
+>>>>>> +	if (status & XCSI_ISR_SPFIFOF)
+>>>>>> +		dev_dbg_ratelimited(core->dev, "Short packet FIFO overflowed\n");
+>>>>>> +
+>>>>>> +	/*
+>>>>>> +	 * Stream line buffer full
+>>>>>> +	 * This means there is a backpressure from downstream IP
+>>>>>> +	 */
+>>>>>> +	if (status & XCSI_ISR_SLBF) {
+>>>>>> +		dev_alert_ratelimited(core->dev, "Stream Line Buffer Full!\n");
+>>>>>> +		xcsi2rxss_stop_stream(state);
+>>>>>> +		if (core->rst_gpio) {
+>>>>>> +			gpiod_set_value(core->rst_gpio, 1);
+>>>>>> +			/* minimum 40 dphy_clk_200M cycles */
+>>>>>> +			ndelay(250);
+>>>>>> +			gpiod_set_value(core->rst_gpio, 0);
+>>>>>> +		}
+>>>>>
+>>>>> I don't think you should stop the core here. xcsi2rxss_stop_stream()
+>>>>> calls the source .s_stream(0) operation, which usually involves I2C
+>>>>> writes that will sleep.
+>>>>>
+>>>>> You should instead report an event to userspace (it looks like we have
+>>>>> no error event defined in V4L2, one should be added), and rely on the
+>>>>> normal stop procedure.
+>>>>
+>>>> FWIW, since a long time I've been using a modified version of this
+>>>> routine, where after a Stream Line Buffer Full condition I just stop and
+>>>> restart the csi2rx core and the stream continues after a minimal glitch.
+>>>> Other subdev are unaware that anything has happened and keep on streaming.
+>>>>
+>>>> Not sure this is the correct thing to do, but it's working for me. Also
+>>>> I proposed this topic in one of the previous iterations of this patch,
+>>>> but the situation was different because the stream on/off was not
+>>>> propagated back at that time.
+>>>
+>>> Thanks for the feedback. How often does this occur in practice ?
+>>
+>> Quite often indeed in my case, as the MIPI stream comes from a remote
+>> sensor via a video serdes chipset, and both the cable and the remote
+>> sensor module are subject to heavy EMI. Depending on the setup I
+>> observed SLBF happening up to 5~10 times per hour.
+> 
+> Ouch, that is a lot !
 
- Documentation/devicetree/bindings/usb/dwc3.txt     | 4 ++++
- Documentation/devicetree/bindings/usb/usb-xhci.txt | 3 +++
- 2 files changed, 7 insertions(+)
+That is the worst case, but yes, its a lot.
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 9946ff9ba735..6d0418ee4dbd 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -104,6 +104,10 @@ Optional properties:
- 			this and tx-thr-num-pkt-prd to a valid, non-zero value
- 			1-16 (DWC_usb31 programming guide section 1.2.3) to
- 			enable periodic ESS TX threshold.
-+ - snps,sgl-trb-cache-size-quirk: enable sg list consolidation - host mode
-+			only. Set to use SG buffers of at least MPS size
-+			by consolidating smaller SG buffers list into a
-+			single buffer.
- 
-  - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
-  - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index 3f378951d624..14d900474894 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -43,6 +43,9 @@ Optional properties:
-   - quirk-broken-port-ped: set if the controller has broken port disable mechanism
-   - imod-interval-ns: default interrupt moderation interval is 5000ns
-   - phys : see usb-hcd.yaml in the current directory
-+  - sgl-trb-cache-size-quirk: set if you need to consolidate sg list into a
-+    temporary buffer when small SG buffer sizes does not make upto MPS
-+    size or total transfer size across the TRB cache size.
- 
- additionally the properties from usb-hcd.yaml (in the current directory) are
- supported.
+> Is that really caused by EMI though ? I thought
+> SLBF was due to the downstream components applying backpressure.
+
+Hum, good point. I might be wrong, I did the tests several months ago
+and cannot do them again at the moment to confirm. But at some point my
+suspect was that in case of noise at the upstream side, on the MIPI line
+there can be an excess of packets w.r.t. the normal streams (perhaps
+short packets?) that produces frames with more lines than expected. But
+it's just a wild idea I got, never had an opportunity to examine it in
+depth, sorry.
+
 -- 
-2.11.0
-
+Luca
