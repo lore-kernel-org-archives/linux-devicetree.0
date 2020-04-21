@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEBBC2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 04:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBC6C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 04:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 009542084D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 04:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64FA32084D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 04:55:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726039AbgDUEzG (ORCPT
+        id S1726095AbgDUEzN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 00:55:06 -0400
+        Tue, 21 Apr 2020 00:55:13 -0400
 Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:38047 "EHLO
         alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725880AbgDUEzG (ORCPT
+        by vger.kernel.org with ESMTP id S1725880AbgDUEzM (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Apr 2020 00:55:06 -0400
+        Tue, 21 Apr 2020 00:55:12 -0400
 Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 21 Apr 2020 10:25:04 +0530
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 21 Apr 2020 10:25:11 +0530
 Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 21 Apr 2020 10:25:04 +0530
+  by ironmsg01-blr.qualcomm.com with ESMTP; 21 Apr 2020 10:25:10 +0530
 Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
-        id 461C82A55; Tue, 21 Apr 2020 10:25:03 +0530 (IST)
+        id D706A2A55; Tue, 21 Apr 2020 10:25:09 +0530 (IST)
 From:   Harigovindan P <harigovi@codeaurora.org>
 To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
         freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
 Cc:     Harigovindan P <harigovi@codeaurora.org>, robdclark@gmail.com,
         seanpaul@chromium.org, sean@poorly.run
 Subject: [PATCH v11 0/2] Add support for rm69299 Visionox panel driver and add devicetree bindings for visionox panel
-Date:   Tue, 21 Apr 2020 10:24:59 +0530
-Message-Id: <20200421045501.21080-1-harigovi@codeaurora.org>
+Date:   Tue, 21 Apr 2020 10:25:06 +0530
+Message-Id: <20200421045508.21137-1-harigovi@codeaurora.org>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
