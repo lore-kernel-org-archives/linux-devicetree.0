@@ -2,277 +2,657 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE749C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 23:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B56E2C55189
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 23:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5102072D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 23:01:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587510102;
-	bh=OzM3PC6Eo/10PD5ApVmiinYzSR9WtgVpy63OgR+KnOQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pMdvstlSn7SoKm1xvvuID8WJDS7OLisXgwcwrahk75oHPOES0TkFhXAHNigeEx7Wi
-	 yidAZUfF7nwMzEcvK3MmgZFpm7+0jTm+uEuKftd768AP1i0kz5ryx6N/GEB3a9kyLN
-	 OwOc4Ubljh8lMJJT98AVty/b5BTstcNTw6ogsR5A=
+	by mail.kernel.org (Postfix) with ESMTP id 9DBFC20753
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 23:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726055AbgDUXBm (ORCPT
+        id S1726039AbgDUX2E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 19:01:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43062 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 19:28:04 -0400
+Received: from muru.com ([72.249.23.125]:50834 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbgDUXBl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Apr 2020 19:01:41 -0400
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81EDE20736;
-        Tue, 21 Apr 2020 23:01:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587510100;
-        bh=OzM3PC6Eo/10PD5ApVmiinYzSR9WtgVpy63OgR+KnOQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YUBpeY7yvgo9UJe25lyaTkXN9eqvci7g+yXrTMi8wurkq18JUtTIUUDiXkH6HwG26
-         cPqW9C/UCkL8CTwLPnslJgXmmMODTXA6556UNBJ7LFft+SRWVnvsc5OxNlCZCGSuxo
-         ZTUEKxwntWN3rtC+RB2nTet99RqsYapYRBRvS0BI=
-Received: by mail-ej1-f46.google.com with SMTP id n17so345375ejh.7;
-        Tue, 21 Apr 2020 16:01:40 -0700 (PDT)
-X-Gm-Message-State: AGi0PuauS1ANFSxTPzgG+v7uIO4zHhQ4Z1pm3gIUc/WSHa4x2oyFttKj
-        vOHbSbBoeSLfGn6mNOpRoK4SA7QYaiqNL300Lg==
-X-Google-Smtp-Source: APiQypJjtQ9J79KZq2uuN/KxEwfL8dIg+xvPcbzJEGwVqG3VA0FTVqHmr1wJByUQFRVOzIk8+SnGlVKcLKQub2AHOLY=
-X-Received: by 2002:a17:906:eb90:: with SMTP id mh16mr23786643ejb.201.1587510098939;
- Tue, 21 Apr 2020 16:01:38 -0700 (PDT)
+        id S1725850AbgDUX2D (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Apr 2020 19:28:03 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 59117812F;
+        Tue, 21 Apr 2020 23:28:48 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>
+Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Johan Hovold <johan@kernel.org>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: [PATCH 1/4] tty: n_gsm: Add support for serdev drivers
+Date:   Tue, 21 Apr 2020 16:27:49 -0700
+Message-Id: <20200421232752.3070-2-tony@atomide.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200421232752.3070-1-tony@atomide.com>
+References: <20200421232752.3070-1-tony@atomide.com>
 MIME-Version: 1.0
-References: <20200415011319.25559-1-jitao.shi@mediatek.com> <20200415011319.25559-3-jitao.shi@mediatek.com>
-In-Reply-To: <20200415011319.25559-3-jitao.shi@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Wed, 22 Apr 2020 07:01:27 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9-=VxBYbz2VNnPEphpa2gYBJnrVfJvL5Z+G6m_vcg2xQ@mail.gmail.com>
-Message-ID: <CAAOTY_9-=VxBYbz2VNnPEphpa2gYBJnrVfJvL5Z+G6m_vcg2xQ@mail.gmail.com>
-Subject: Re: [PATCH v15 2/3] dt-bindings: display: mediatek: convert the
- document format from txt to yaml
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        huijuan.xie@mediatek.com, stonea168@163.com,
-        cawa.cheng@mediatek.com,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, yingjoe.chen@mediatek.com,
-        eddie.huang@mediatek.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Jitao:
+We can make use of serdev drivers to do simple device drivers for
+TS 27.010 chanels, and we can handle vendor specific protocols on top
+of TS 27.010 with serdev drivers.
 
-Please fixup these checkpatch warnings.
+So far this has been tested with Motorola droid4 where there is a custom
+packet numbering protocol on top of TS 27.010 for the MDM6600 modem.
 
-WARNING: Missing commit description - Add an appropriate one
-WARNING: DT binding docs and includes should be a separate patch. See:
-Documentation/devicetree/bindings/submitting-patches.txt
-WARNING: DT binding docs and includes should be a separate patch. See:
-Documentation/devicetree/bindings/submitting-patches.txt
-WARNING: DT binding documents should be licensed (GPL-2.0-only OR BSD-2-Cla=
-use)
-#71: FILE: Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.=
-yaml:1:
-+# SPDX-License-Identifier: GPL-2.0
+I initially though about adding the serdev support into a separate file,
+but that will take some refactoring of n_gsm.c. And I'd like to have
+things working first. Then later on we might want to consider splitting
+n_gsm.c into three pieces for core, tty and serdev parts. And then maybe
+the serdev related parts can be just moved to live under something like
+drivers/tty/serdev/protocol/ngsm.c.
 
-Regards,
-Chun-Kuang.
+Reviewed-by: Pavel Machek <pavel@ucw.cz>
+Tested-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ drivers/tty/n_gsm.c        | 372 +++++++++++++++++++++++++++++++++++++
+ include/linux/serdev-gsm.h | 168 +++++++++++++++++
+ 2 files changed, 540 insertions(+)
+ create mode 100644 include/linux/serdev-gsm.h
 
-Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B44=E6=9C=8815=E6=
-=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=889:13=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  .../bindings/display/mediatek/mediatek,dpi.txt     | 42 ----------
->  .../bindings/display/mediatek/mediatek,dpi.yaml    | 97 ++++++++++++++++=
-++++++
->  2 files changed, 97 insertions(+), 42 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/mediatek/me=
-diatek,dpi.txt
->  create mode 100644 Documentation/devicetree/bindings/display/mediatek/me=
-diatek,dpi.yaml
->
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
-dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.t=
-xt
-> deleted file mode 100644
-> index 77def4456706..000000000000
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> +++ /dev/null
-> @@ -1,42 +0,0 @@
-> -Mediatek DPI Device
-> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> -
-> -The Mediatek DPI function block is a sink of the display subsystem and
-> -provides 8-bit RGB/YUV444 or 8/10/10-bit YUV422 pixel data on a parallel
-> -output bus.
-> -
-> -Required properties:
-> -- compatible: "mediatek,<chip>-dpi"
-> -  the supported chips are mt2701 , mt8173 and mt8183.
-> -- reg: Physical base address and length of the controller's registers
-> -- interrupts: The interrupt signal from the function block.
-> -- clocks: device clocks
-> -  See Documentation/devicetree/bindings/clock/clock-bindings.txt for det=
-ails.
-> -- clock-names: must contain "pixel", "engine", and "pll"
-> -- port: Output port node with endpoint definitions as described in
-> -  Documentation/devicetree/bindings/graph.txt. This port should be conne=
-cted
-> -  to the input port of an attached HDMI or LVDS encoder chip.
-> -
-> -Optional properties:
-> -- pinctrl-names: Contain "default" and "sleep".
-> -
-> -Example:
-> -
-> -dpi0: dpi@1401d000 {
-> -       compatible =3D "mediatek,mt8173-dpi";
-> -       reg =3D <0 0x1401d000 0 0x1000>;
-> -       interrupts =3D <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
-> -       clocks =3D <&mmsys CLK_MM_DPI_PIXEL>,
-> -                <&mmsys CLK_MM_DPI_ENGINE>,
-> -                <&apmixedsys CLK_APMIXED_TVDPLL>;
-> -       clock-names =3D "pixel", "engine", "pll";
-> -       pinctrl-names =3D "default", "sleep";
-> -       pinctrl-0 =3D <&dpi_pin_func>;
-> -       pinctrl-1 =3D <&dpi_pin_idle>;
-> -
-> -       port {
-> -               dpi0_out: endpoint {
-> -                       remote-endpoint =3D <&hdmi0_in>;
-> -               };
-> -       };
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
-dpi.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.=
-yaml
-> new file mode 100644
-> index 000000000000..2c2d6a71cb8b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yam=
-l
-> @@ -0,0 +1,97 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/mediatek/mediatek,dpi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: mediatek DPI Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - CK Hu <ck.hu@mediatek.com>
-> +  - Jitao shi <jitao.shi@mediatek.com>
-> +
-> +description: |
-> +  The Mediatek DPI function block is a sink of the display subsystem and
-> +  provides 8-bit RGB/YUV444 or 8/10/10-bit YUV422 pixel data on a parall=
-el
-> +  output bus.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - mediatek,mt2701-dpi
-> +      - mediatek,mt8173-dpi
-> +      - mediatek,mt8183-dpi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Pixel Clock
-> +      - description: Engine Clock
-> +      - description: DPI PLL
-> +
-> +  clock-names:
-> +    items:
-> +      - const: pixel
-> +      - const: engine
-> +      - const: pll
-> +
-> +  pinctrl-0: true
-> +  pinctrl-1: true
-> +
-> +  pinctrl-names:
-> +    items:
-> +      - const: default
-> +      - const: sleep
-> +
-> +  port:
-> +    type: object
-> +    description:
-> +      Output port node with endpoint definitions as described in
-> +      Documentation/devicetree/bindings/graph.txt. This port should be c=
-onnected
-> +      to the input port of an attached HDMI or LVDS encoder chip.
-> +
-> +    properties:
-> +      endpoint:
-> +        type: object
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - port
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/mt8173-clk.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    dpi0: dpi@1401d000 {
-> +        compatible =3D "mediatek,mt8173-dpi";
-> +        reg =3D <0 0x1401d000 0 0x1000>;
-> +        interrupts =3D <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
-> +        clocks =3D <&mmsys CLK_MM_DPI_PIXEL>,
-> +             <&mmsys CLK_MM_DPI_ENGINE>,
-> +             <&apmixedsys CLK_APMIXED_TVDPLL>;
-> +        clock-names =3D "pixel", "engine", "pll";
-> +        pinctrl-names =3D "default", "sleep";
-> +        pinctrl-0 =3D <&dpi_pin_func>;
-> +        pinctrl-1 =3D <&dpi_pin_idle>;
-> +
-> +        port {
-> +            dpi0_out: endpoint {
-> +                remote-endpoint =3D <&hdmi0_in>;
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> --
-> 2.12.5
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+--- a/drivers/tty/n_gsm.c
++++ b/drivers/tty/n_gsm.c
+@@ -39,6 +39,7 @@
+ #include <linux/file.h>
+ #include <linux/uaccess.h>
+ #include <linux/module.h>
++#include <linux/serdev.h>
+ #include <linux/timer.h>
+ #include <linux/tty_flip.h>
+ #include <linux/tty_driver.h>
+@@ -50,6 +51,7 @@
+ #include <linux/netdevice.h>
+ #include <linux/etherdevice.h>
+ #include <linux/gsmmux.h>
++#include <linux/serdev-gsm.h>
+ 
+ static int debug;
+ module_param(debug, int, 0600);
+@@ -150,6 +152,7 @@ struct gsm_dlci {
+ 	/* Data handling callback */
+ 	void (*data)(struct gsm_dlci *dlci, const u8 *data, int len);
+ 	void (*prev_data)(struct gsm_dlci *dlci, const u8 *data, int len);
++	struct gsm_serdev_dlci *ops; /* serdev dlci ops, if used */
+ 	struct net_device *net; /* network interface, if created */
+ };
+ 
+@@ -198,6 +201,7 @@ enum gsm_mux_state {
+  */
+ 
+ struct gsm_mux {
++	struct gsm_serdev *gsd;		/* Serial device bus data */
+ 	struct tty_struct *tty;		/* The tty our ldisc is bound to */
+ 	spinlock_t lock;
+ 	struct mutex mutex;
+@@ -2346,6 +2350,374 @@ static int gsm_config(struct gsm_mux *gsm, struct gsm_config *c)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_SERIAL_DEV_BUS
++
++/**
++ * gsm_serdev_get_config - read ts 27.010 config
++ * @gsd:	serdev-gsm instance
++ * @c:		ts 27.010 config data
++ *
++ * See gsm_copy_config_values() for more information.
++ */
++int gsm_serdev_get_config(struct gsm_serdev *gsd, struct gsm_config *c)
++{
++	struct gsm_mux *gsm;
++
++	if (!gsd || !gsd->gsm)
++		return -ENODEV;
++
++	gsm = gsd->gsm;
++
++	if (!c)
++		return -EINVAL;
++
++	gsm_copy_config_values(gsm, c);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(gsm_serdev_get_config);
++
++/**
++ * gsm_serdev_set_config - set ts 27.010 config
++ * @gsd:	serdev-gsm instance
++ * @c:		ts 27.010 config data
++ *
++ * See gsm_config() for more information.
++ */
++int gsm_serdev_set_config(struct gsm_serdev *gsd, struct gsm_config *c)
++{
++	struct gsm_mux *gsm;
++
++	if (!gsd || !gsd->serdev || !gsd->gsm)
++		return -ENODEV;
++
++	gsm = gsd->gsm;
++
++	if (!c)
++		return -EINVAL;
++
++	return gsm_config(gsm, c);
++}
++EXPORT_SYMBOL_GPL(gsm_serdev_set_config);
++
++static struct gsm_dlci *gsd_dlci_get(struct gsm_serdev *gsd, int line,
++				     bool allocate)
++{
++	struct gsm_mux *gsm;
++	struct gsm_dlci *dlci;
++
++	if (!gsd || !gsd->gsm)
++		return ERR_PTR(-ENODEV);
++
++	gsm = gsd->gsm;
++
++	if (line < 1 || line >= 63)
++		return ERR_PTR(-EINVAL);
++
++	mutex_lock(&gsm->mutex);
++
++	if (gsm->dlci[line]) {
++		dlci = gsm->dlci[line];
++		goto unlock;
++	} else if (!allocate) {
++		dlci = ERR_PTR(-ENODEV);
++		goto unlock;
++	}
++
++	dlci = gsm_dlci_alloc(gsm, line);
++	if (!dlci) {
++		gsm = ERR_PTR(-ENOMEM);
++		goto unlock;
++	}
++
++	gsm->dlci[line] = dlci;
++
++unlock:
++	mutex_unlock(&gsm->mutex);
++
++	return dlci;
++}
++
++static void gsd_dlci_data(struct gsm_dlci *dlci, const u8 *buf, int len)
++{
++	struct gsm_mux *gsm = dlci->gsm;
++	struct gsm_serdev *gsd = gsm->gsd;
++
++	if (!gsd || !dlci->ops)
++		return;
++
++	switch (dlci->adaption) {
++	case 0:
++	case 1:
++		if (dlci->ops->receive_buf)
++			dlci->ops->receive_buf(dlci->ops, buf, len);
++		break;
++	default:
++		pr_warn("dlci%i adaption %i not yet implemented\n",
++			dlci->addr, dlci->adaption);
++		break;
++	}
++}
++
++/**
++ * gsm_serdev_write - write data to a ts 27.010 channel
++ * @gsd:	serdev-gsm instance
++ * @ops:	channel ops
++ * @buf:	write buffer
++ * @len:	buffer length
++ */
++int gsm_serdev_write(struct gsm_serdev *gsd, struct gsm_serdev_dlci *ops,
++		     const u8 *buf, int len)
++{
++	struct gsm_mux *gsm;
++	struct gsm_dlci *dlci;
++	struct gsm_msg *msg;
++	int h, size, total_size = 0;
++	u8 *dp;
++
++	if (!gsd || !gsd->gsm)
++		return -ENODEV;
++
++	gsm = gsd->gsm;
++
++	dlci = gsd_dlci_get(gsd, ops->line, false);
++	if (IS_ERR(dlci))
++		return PTR_ERR(dlci);
++
++	h = dlci->adaption - 1;
++
++	if (len > gsm->mtu)
++		len = gsm->mtu;
++
++	size = len + h;
++
++	msg = gsm_data_alloc(gsm, dlci->addr, size, gsm->ftype);
++	if (!msg)
++		return -ENOMEM;
++
++	dp = msg->data;
++	switch (dlci->adaption) {
++	case 1:
++		break;
++	case 2:
++		*dp++ = gsm_encode_modem(dlci);
++		break;
++	}
++	memcpy(dp, buf, len);
++	gsm_data_queue(dlci, msg);
++	total_size += size;
++
++	return total_size;
++}
++EXPORT_SYMBOL_GPL(gsm_serdev_write);
++
++/**
++ * gsm_serdev_data_kick - indicate more data can be transmitted
++ * @gsd:	serdev-gsm instance
++ *
++ * See gsm_data_kick() for more information.
++ */
++void gsm_serdev_data_kick(struct gsm_serdev *gsd)
++{
++	struct gsm_mux *gsm;
++	unsigned long flags;
++
++	if (!gsd || !gsd->gsm)
++		return;
++
++	gsm = gsd->gsm;
++
++	spin_lock_irqsave(&gsm->tx_lock, flags);
++	gsm_data_kick(gsm);
++	spin_unlock_irqrestore(&gsm->tx_lock, flags);
++}
++EXPORT_SYMBOL_GPL(gsm_serdev_data_kick);
++
++/**
++ * gsm_serdev_register_dlci - register a ts 27.010 channel
++ * @gsd:	serdev-gsm instance
++ * @ops:	channel ops
++ */
++int gsm_serdev_register_dlci(struct gsm_serdev *gsd,
++			     struct gsm_serdev_dlci *ops)
++{
++	struct gsm_dlci *dlci;
++	struct gsm_mux *gsm;
++	int retries;
++
++	if (!gsd || !gsd->gsm || !gsd->serdev)
++		return -ENODEV;
++
++	gsm = gsd->gsm;
++
++	if (!ops || !ops->line || !ops->receive_buf)
++		return -EINVAL;
++
++	dlci = gsd_dlci_get(gsd, ops->line, true);
++	if (IS_ERR(dlci))
++		return PTR_ERR(dlci);
++
++	if (dlci->state == DLCI_OPENING || dlci->state == DLCI_OPEN ||
++	    dlci->state == DLCI_CLOSING)
++		return -EBUSY;
++
++	mutex_lock(&dlci->mutex);
++	dlci->ops = ops;
++	dlci->modem_rx = 0;
++	dlci->prev_data = dlci->data;
++	dlci->data = gsd_dlci_data;
++	mutex_unlock(&dlci->mutex);
++
++	gsm_dlci_begin_open(dlci);
++
++	/*
++	 * Allow some time for dlci to move to DLCI_OPEN state. Otherwise
++	 * the serdev consumer driver can start sending data too early during
++	 * the setup, and the response will be missed by gms_queue() if we
++	 * still have DLCI_CLOSED state.
++	 */
++	for (retries = 10; retries > 0; retries--) {
++		if (dlci->state == DLCI_OPEN)
++			break;
++		msleep(100);
++	}
++
++	if (!retries)
++		dev_dbg(&gsd->serdev->dev, "dlci%i not currently active\n",
++			dlci->addr);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(gsm_serdev_register_dlci);
++
++/**
++ * gsm_serdev_unregister_dlci - unregister a ts 27.010 channel
++ * @gsd:	serdev-gsm instance
++ * @ops:	channel ops
++ */
++void gsm_serdev_unregister_dlci(struct gsm_serdev *gsd,
++				struct gsm_serdev_dlci *ops)
++{
++	struct gsm_mux *gsm;
++	struct gsm_dlci *dlci;
++
++	if (!gsd || !gsd->gsm || !gsd->serdev)
++		return;
++
++	gsm = gsd->gsm;
++
++	if (!ops || !ops->line)
++		return;
++
++	dlci = gsd_dlci_get(gsd, ops->line, false);
++	if (IS_ERR(dlci))
++		return;
++
++	mutex_lock(&dlci->mutex);
++	gsm_destroy_network(dlci);
++	dlci->data = dlci->prev_data;
++	dlci->ops = NULL;
++	mutex_unlock(&dlci->mutex);
++
++	gsm_dlci_begin_close(dlci);
++}
++EXPORT_SYMBOL_GPL(gsm_serdev_unregister_dlci);
++
++static int gsm_serdev_output(struct gsm_mux *gsm, u8 *data, int len)
++{
++	struct gsm_serdev *gsd = gsm->gsd;
++	struct serdev_device *serdev = gsm->gsd->serdev;
++	bool asleep;
++
++	asleep = atomic_read(&gsd->asleep);
++	if (asleep)
++		return -ENOSPC;
++
++	if (gsm->gsd->output)
++		return gsm->gsd->output(gsm->gsd, data, len);
++	else
++		return serdev_device_write_buf(serdev, data, len);
++}
++
++static int gsd_receive_buf(struct serdev_device *serdev, const u8 *data,
++			   size_t count)
++{
++	struct gsm_serdev *gsd = serdev_device_get_drvdata(serdev);
++	struct gsm_mux *gsm;
++	const unsigned char *dp;
++	int i;
++
++	if (WARN_ON(!gsd))
++		return 0;
++
++	gsm = gsd->gsm;
++
++	if (debug & 4)
++		print_hex_dump_bytes("gsd_receive_buf: ",
++				     DUMP_PREFIX_OFFSET,
++				     data, count);
++
++	for (i = count, dp = data; i; i--, dp++)
++		gsm->receive(gsm, *dp);
++
++	return count;
++}
++
++static void gsd_write_wakeup(struct serdev_device *serdev)
++{
++	serdev_device_write_wakeup(serdev);
++}
++
++static struct serdev_device_ops gsd_client_ops = {
++	.receive_buf = gsd_receive_buf,
++	.write_wakeup = gsd_write_wakeup,
++};
++
++int gsm_serdev_register_device(struct gsm_serdev *gsd)
++{
++	struct gsm_mux *gsm;
++	int error;
++
++	if (WARN(!gsd || !gsd->serdev || !gsd->output,
++		 "serdev and output must be initialized\n"))
++		return -EINVAL;
++
++	serdev_device_set_client_ops(gsd->serdev, &gsd_client_ops);
++
++	gsm = gsm_alloc_mux();
++	if (!gsm)
++		return -ENOMEM;
++
++	gsm->encoding = 1;
++	gsm->tty = NULL;
++	gsm->gsd = gsd;
++	gsm->output = gsm_serdev_output;
++	atomic_set(&gsd->asleep, 0);
++	gsd->gsm = gsm;
++	mux_get(gsd->gsm);
++
++	error = gsm_activate_mux(gsd->gsm);
++	if (error) {
++		gsm_cleanup_mux(gsd->gsm);
++		mux_put(gsd->gsm);
++
++		return error;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(gsm_serdev_register_device);
++
++void gsm_serdev_unregister_device(struct gsm_serdev *gsd)
++{
++	gsm_cleanup_mux(gsd->gsm);
++	mux_put(gsd->gsm);
++	gsd->gsm = NULL;
++}
++EXPORT_SYMBOL_GPL(gsm_serdev_unregister_device);
++
++#endif	/* CONFIG_SERIAL_DEV_BUS */
++
+ /**
+  *	gsmld_output		-	write to link
+  *	@gsm: our mux
+diff --git a/include/linux/serdev-gsm.h b/include/linux/serdev-gsm.h
+new file mode 100644
+--- /dev/null
++++ b/include/linux/serdev-gsm.h
+@@ -0,0 +1,168 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef _LINUX_SERDEV_GSM_H
++#define _LINUX_SERDEV_GSM_H
++
++#include <linux/device.h>
++#include <linux/serdev.h>
++#include <linux/types.h>
++
++struct gsm_serdev_dlci;
++struct gsm_config;
++
++/**
++ * struct gsm_serdev - serdev-gsm instance
++ * @serdev:		serdev instance
++ * @gsm:		ts 27.010 n_gsm instance
++ * @asleep:		device is in idle state
++ * @drvdata:		serdev-gsm consumer driver data
++ * @output:		read data from ts 27.010 channel
++ *
++ * Currently only serdev and output must be initialized, the rest are
++ * are initialized by gsm_serdev_register_dlci().
++ */
++struct gsm_serdev {
++	struct serdev_device *serdev;
++	struct gsm_mux *gsm;
++	atomic_t asleep;
++	void *drvdata;
++	int (*output)(struct gsm_serdev *gsd, u8 *data, int len);
++};
++
++/**
++ * struct gsm_serdev_dlci - serdev-gsm ts 27.010 channel data
++ * @line:		ts 27.010 channel, control channel 0 is not available
++ * @receive_buf:	function to handle data received for the channel
++ */
++struct gsm_serdev_dlci {
++	int line;
++	int (*receive_buf)(struct gsm_serdev_dlci *ops,
++			   const unsigned char *buf,
++			   size_t len);
++};
++
++#if IS_ENABLED(CONFIG_N_GSM) && IS_ENABLED(CONFIG_SERIAL_DEV_BUS)
++
++int gsm_serdev_register_device(struct gsm_serdev *gsd);
++void gsm_serdev_unregister_device(struct gsm_serdev *gsd);
++
++static inline void *gsm_serdev_get_drvdata(struct device *dev)
++{
++	struct serdev_device *serdev = to_serdev_device(dev);
++	struct gsm_serdev *gsd = serdev_device_get_drvdata(serdev);
++
++	if (gsd)
++		return gsd->drvdata;
++
++	return NULL;
++}
++
++static inline void gsm_serdev_set_drvdata(struct device *dev, void *drvdata)
++{
++	struct serdev_device *serdev = to_serdev_device(dev);
++	struct gsm_serdev *gsd = serdev_device_get_drvdata(serdev);
++
++	if (gsd)
++		gsd->drvdata = drvdata;
++}
++
++static inline void gsm_serdev_suspend(struct gsm_serdev *gsd)
++{
++	if (!gsd)
++		return;
++
++	atomic_set(&gsd->asleep, 1);
++}
++
++static inline int gsm_serdev_resume(struct gsm_serdev *gsd)
++{
++	if (!gsd)
++		return -EINVAL;
++
++	atomic_set(&gsd->asleep, 0);
++
++	return 0;
++}
++
++extern int gsm_serdev_get_config(struct gsm_serdev *gsd, struct gsm_config *c);
++extern int gsm_serdev_set_config(struct gsm_serdev *gsd, struct gsm_config *c);
++extern int gsm_serdev_register_dlci(struct gsm_serdev *gsd,
++				    struct gsm_serdev_dlci *ops);
++extern void gsm_serdev_unregister_dlci(struct gsm_serdev *gsd,
++				       struct gsm_serdev_dlci *ops);
++extern int gsm_serdev_write(struct gsm_serdev *gsd,
++			    struct gsm_serdev_dlci *ops,
++			    const u8 *buf, int len);
++extern void gsm_serdev_data_kick(struct gsm_serdev *gsd);
++
++#else	/* CONFIG_SERIAL_DEV_BUS */
++
++static inline
++int gsm_serdev_register_device(struct gsm_serdev *gsd)
++{
++	return -ENODEV;
++}
++
++static inline
++void gsm_serdev_unregister_device(struct gsm_serdev *gsd)
++{
++}
++
++static inline void *gsm_serdev_get_drvdata(struct device *dev)
++{
++	return NULL;
++}
++
++static inline
++void gsm_serdev_set_drvdata(struct device *dev, void *drvdata)
++{
++}
++
++static inline void gsm_serdev_suspend(struct gsm_serdev *gsd)
++{
++}
++
++static inline int gsm_serdev_resume(struct gsm_serdev *gsd)
++{
++	return -ENODEV;
++}
++
++static inline
++int gsm_serdev_get_config(struct gsm_serdev *gsd, struct gsm_config *c)
++{
++	return -ENODEV;
++}
++
++static inline
++int gsm_serdev_set_config(struct gsm_serdev *gsd, struct gsm_config *c)
++{
++	return -ENODEV;
++}
++
++static inline
++int gsm_serdev_register_dlci(struct gsm_serdev *gsd,
++			     struct gsm_serdev_dlci *ops)
++{
++	return -ENODEV;
++}
++
++static inline
++void gsm_serdev_unregister_dlci(struct gsm_serdev *gsd,
++				struct gsm_serdev_dlci *ops)
++{
++}
++
++static inline
++int gsm_serdev_write(struct gsm_serdev *gsd, struct gsm_serdev_dlci *ops,
++		     const u8 *buf, int len)
++{
++	return -ENODEV;
++}
++
++static inline
++void gsm_serdev_data_kick(struct gsm_serdev *gsd)
++{
++}
++
++#endif	/* CONFIG_N_GSM && CONFIG_SERIAL_DEV_BUS */
++#endif	/* _LINUX_SERDEV_GSM_H */
+-- 
+2.26.2
