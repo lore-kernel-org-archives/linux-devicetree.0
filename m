@@ -2,126 +2,122 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA20C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 03:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C23C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 04:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7157A2076C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 03:49:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587440948;
-	bh=0D6hYraBu1DbsgpFZCPm8t6r20cXBzyDrsgU4Z9wbZk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VTSek4AMvDZfvJIgMXhU1Ui1Zw0yq0aoFhHbLYsCK1SlstQ09LPYPT3B0xh7Yexi2
-	 1ccSGi+2weLDmlFDF6NX1rwFSYEdu7vTSCh/XwvR7OWzlr663p8r2ZxsciW8sIQ3mZ
-	 x/F1T7Sk8skTaLNloI5BuehejuCy1AintQlUKjhY=
+	by mail.kernel.org (Postfix) with ESMTP id 662B520781
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 04:06:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgDUDtH (ORCPT
+        id S1725795AbgDUEGZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 23:49:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47590 "EHLO mail.kernel.org"
+        Tue, 21 Apr 2020 00:06:25 -0400
+Received: from mga17.intel.com ([192.55.52.151]:53853 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbgDUDtH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 23:49:07 -0400
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91E8420882;
-        Tue, 21 Apr 2020 03:49:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587440946;
-        bh=0D6hYraBu1DbsgpFZCPm8t6r20cXBzyDrsgU4Z9wbZk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WWyMs0j3tGy9ANeQcxvdnl4D2WfDvXmeTx+v/xAjU3v1syDAcRLuG+jTM8pAN9C8c
-         +ugCB2prYMNqzzfI9yUZDDQU/E3+XpLnEbFc8dmEc5PWVfX6iEZUISBELut7DAYoEn
-         qZ6RAUv8WCZxTJmFNfy78KPXTD5Iybr6mKPjsOrk=
-Received: by mail-lj1-f181.google.com with SMTP id w20so6164597ljj.0;
-        Mon, 20 Apr 2020 20:49:06 -0700 (PDT)
-X-Gm-Message-State: AGi0PuamOYJ5N702jIpVeGuVmVxHqxl6ilt+TKEKNN5gyFtJVxcigu8E
-        qvJxzyYDWQ1QswIvRCY5kdFgK6jeM+awp9q4yuM=
-X-Google-Smtp-Source: APiQypJ1or0lDKF5QqUv6w69NTZ4v7V/G08isP2Oq7HTw+F7ljB+CKK2Gz7J3f4a+MkTFc+nuAlbnVCvdthGDNd2ybs=
-X-Received: by 2002:a2e:9ada:: with SMTP id p26mr8877859ljj.14.1587440944667;
- Mon, 20 Apr 2020 20:49:04 -0700 (PDT)
+        id S1725283AbgDUEGY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Apr 2020 00:06:24 -0400
+IronPort-SDR: gCNpke3e6SB3YvskM0uZMBXJfNVYz5y2hIhG4RMG99Nz27aWAwn/YjqpFD3P+iWtc3PCDES+oi
+ T+nzmKWR6r0g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 21:06:24 -0700
+IronPort-SDR: jQ5S4iO8mBHoBUGFUFbqLCye4VRHBbTzfry3odGoq4oSZv2cVmTs/VUczYKTJgJF0TMaPfAvOF
+ XnS0sxdN8wrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,408,1580803200"; 
+   d="scan'208";a="456615581"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 20 Apr 2020 21:06:24 -0700
+Received: from [10.214.151.210] (ekotax-mobl.gar.corp.intel.com [10.214.151.210])
+        by linux.intel.com (Postfix) with ESMTP id 9F3295802C9;
+        Mon, 20 Apr 2020 21:06:19 -0700 (PDT)
+Subject: Re: [RESEND PATCH v6 1/4] mfd: syscon: Add fwnode_to_regmap
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, kishon@ti.com,
+        devicetree@vger.kernel.org, arnd@arndb.de, robh@kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@intel.com
+References: <cover.1585889042.git.eswara.kota@linux.intel.com>
+ <9c58aeb1561f28f302921d54aee75942545c4971.1585889042.git.eswara.kota@linux.intel.com>
+ <20200417093551.GH2167633@dell>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <d5b7eb87-7468-a1c4-bf19-d676c8e9c49d@linux.intel.com>
+Date:   Tue, 21 Apr 2020 12:06:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200416181944.5879-1-jbx6244@gmail.com>
-In-Reply-To: <20200416181944.5879-1-jbx6244@gmail.com>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Tue, 21 Apr 2020 11:48:52 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67N6t+C8dVKdjuOv1NzD9=3-n0GZQkshy1Pm6PFPJ87dQ@mail.gmail.com>
-Message-ID: <CAGb2v67N6t+C8dVKdjuOv1NzD9=3-n0GZQkshy1Pm6PFPJ87dQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] arm64: dts: rockchip: add bus-width properties to mmc
- nodes for rk3328.dtsi
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200417093551.GH2167633@dell>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 2:19 AM Johan Jonker <jbx6244@gmail.com> wrote:
->
-> 'bus-width' and pinctrl containing the bus-pins
-> should be in the same file, so add them to
-> all mmc nodes in 'rk3328.dtsi'.
 
-Nope. First of all, pinctrl usage is with pinctrl-N properties, not the
-pinctrl device, and there are no defaults set for any of the mmc nodes.
-Second, these are board design specific. For example, boards are free to
-use just 4 bits for the eMMC if they so desire. So this should be in each
-board dts file. If a board is missing this property, fix the board.
-
-This applies to all three patches in the series.
-
-ChenYu
-
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3328.dtsi | 3 +++
->  1 file changed, 3 insertions(+)
+On 4/17/2020 5:35 PM, Lee Jones wrote:
+> On Mon, 06 Apr 2020, Dilip Kota wrote:
 >
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-> index 175060695..db2c3085e 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-> @@ -861,6 +861,7 @@
->                 clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
->                          <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
->                 clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-> +               bus-width = <4>;
->                 fifo-depth = <0x100>;
->                 max-frequency = <150000000>;
->                 status = "disabled";
-> @@ -873,6 +874,7 @@
->                 clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
->                          <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
->                 clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-> +               bus-width = <4>;
->                 fifo-depth = <0x100>;
->                 max-frequency = <150000000>;
->                 status = "disabled";
-> @@ -885,6 +887,7 @@
->                 clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
->                          <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
->                 clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-> +               bus-width = <8>;
->                 fifo-depth = <0x100>;
->                 max-frequency = <150000000>;
->                 status = "disabled";
-> --
-> 2.11.0
+>> Traverse regmap handle entry from firmware node handle.
+>>
+>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>> ---
+>> Changes on v5:
+>>    No changes
+>>    
+>> Changes on v5:
+>>    No changes
+>>
+>> Changes on v4:
+>>    No changes
+>>
+>>   drivers/mfd/syscon.c       | 8 ++++++++
+>>   include/linux/mfd/syscon.h | 6 ++++++
+>>   2 files changed, 14 insertions(+)
+>>
+>> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+>> index 3a97816d0cba..e085c50816b9 100644
+>> --- a/drivers/mfd/syscon.c
+>> +++ b/drivers/mfd/syscon.c
+>> @@ -178,6 +178,14 @@ struct regmap *device_node_to_regmap(struct device_node *np)
+>>   }
+>>   EXPORT_SYMBOL_GPL(device_node_to_regmap);
+>>   
+>> +struct regmap *fwnode_to_regmap(struct fwnode_handle *fwnode)
+>> +{
+>> +	struct device_node *np = to_of_node(fwnode);
+> You are assuming that the fwnode was Device Tree pointer.
+>
+> The point of a fwnode is that it could be one of multiple types.
+>
+> What if it was a pointer to an ACPI property?
+Yes, i missed to check in other perspective. Thanks for pointing it.
+While going through the System control driver to address the query, i 
+noticed that System Control
+driver is talking with 'of' framework only. (No ACPI)
+
+So, i think to add a defensive check and return error pointer if 
+'to_of_node' returns NULL
+As System control Driver cannot talk with ACPI, so fwnode_to_regmap() 
+cannot talk and return error.
+
+Or, the other option is removing the 'fwnode_to_regmap()' definition 
+itself, to avoid confusion as fwnode can
+point to 'OF', 'ACPI'or 'swnode'.
+
+But, i feel return error for ACPI or oother, looks better because 
+'device_node' has fwnode pointer. And provide description
+in the header file, mentioning function is success for 'OF' and returns 
+error for the rest.
+
+Regards,
+Dilip
+
 >
 >
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
