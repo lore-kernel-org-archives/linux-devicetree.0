@@ -2,41 +2,42 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C97C55185
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 00:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D295DC5518B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 00:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 005622087E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 00:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B37E42082E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 00:11:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="E2KuNSBe"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oEo3cDoP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbgDUAL3 (ORCPT
+        id S1726931AbgDUAL1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 20:11:29 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3540 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726954AbgDUAL1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 20:11:27 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e9e39f10000>; Mon, 20 Apr 2020 17:10:25 -0700
+        Mon, 20 Apr 2020 20:11:27 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11237 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbgDUAL0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 20:11:26 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e9e39bb0000>; Mon, 20 Apr 2020 17:09:31 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 20 Apr 2020 17:11:27 -0700
+  Mon, 20 Apr 2020 17:11:26 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 20 Apr 2020 17:11:27 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
+        by hqpgpgate101.nvidia.com on Mon, 20 Apr 2020 17:11:26 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
  (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 Apr
- 2020 00:11:26 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 21 Apr 2020 00:11:26 +0000
+ 2020 00:11:25 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 21 Apr 2020 00:11:25 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.165.49]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e9e3a2d0000>; Mon, 20 Apr 2020 17:11:26 -0700
+        id <B5e9e3a2c0002>; Mon, 20 Apr 2020 17:11:25 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -45,9 +46,9 @@ CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
         <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH v8 8/9] dt-bindings: reset: Add ID for Tegra210 VI reset
-Date:   Mon, 20 Apr 2020 17:11:13 -0700
-Message-ID: <1587427874-3291-9-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v8 7/9] MAINTAINERS: Add Tegra Video driver section
+Date:   Mon, 20 Apr 2020 17:11:12 -0700
+Message-ID: <1587427874-3291-8-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1587427874-3291-1-git-send-email-skomatineni@nvidia.com>
 References: <1587427874-3291-1-git-send-email-skomatineni@nvidia.com>
@@ -55,41 +56,49 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587427825; bh=KEZ1lHNwQNYea9tamUq6xhOd3Wa4inGS2Z794lURij8=;
+        t=1587427771; bh=b88GH42tRlmFWW/LUhlK8Cl0XZ1rw6pCd4qVM58B0gI=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=E2KuNSBed2rb7qamv3KPQZgmPSMIcg4xeMxmE7ZfYvLa0mLXdw49YzLlBG6XH81yC
-         83T/ZWmIB+quM67kxe1dcSKofK3Io+tYLR/sq2tx9K4eHM/oli/GfW3Zhv8uso+TAF
-         bRVH/uKbRk8ip1mXhpr8CyhYMyILXHxx2q9bdTUrx/5tFiILyucoy1lQvisvidju8E
-         CzouZcvrrX3nZncidSVCUqcwjob9YUNvl9q59zbhLgnKhwuEakI618xiSHMWRHg0Up
-         i5A/JwvaHwhw8dDCCbrvWa6PHxTfDEYLr/9FfmoIdOU3YCjXuWmdxi6tAp/th/cQ2w
-         ehQE5P0dP0v6A==
+        b=oEo3cDoPtirG6UIAza/CPO5p/E4ZhhNdlwxekncGn6sYhXVVidCd9jHL8ZhqKOLSn
+         5Mr5MKEOIvdVtifnn524bMq+rJ2cDlwE863pENFpcuvutoikhERCh1IuHisWMOmWqJ
+         9x/sMTBfr23jhwz0yYnui9D2lY+G+DtIlujG0eYRLgncoo8PfFvVdRMuQBn0vSRKLl
+         gqAH3VB6trpjryBRaDvwvgdlNz6GXLyo8RwqWB93Q0+SFH95zZXh+vyhlEBIFYXJQ1
+         ojPlwoGp5z8e9xIk8Vso2LOEkLrwJL14vQAYVczDMNOpGmzSwhuisYwXRWym5gxJ6P
+         wVRJxKRoDYWDg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds ID for Tegra210 VI controller reset to use with
-device tree.
+Add maintainers and mailing list entries to Tegra Video driver section.
 
-Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- include/dt-bindings/reset/tegra210-car.h | 1 +
- 1 file changed, 1 insertion(+)
+ MAINTAINERS | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/include/dt-bindings/reset/tegra210-car.h b/include/dt-bindings/reset/tegra210-car.h
-index 9dc84ec..8755946 100644
---- a/include/dt-bindings/reset/tegra210-car.h
-+++ b/include/dt-bindings/reset/tegra210-car.h
-@@ -10,5 +10,6 @@
- #define TEGRA210_RESET(x)		(7 * 32 + (x))
- #define TEGRA210_RST_DFLL_DVCO		TEGRA210_RESET(0)
- #define TEGRA210_RST_ADSP		TEGRA210_RESET(1)
-+#define TEGRA210_RST_VI			20
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5872577..47be371 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16608,6 +16608,16 @@ M:	Laxman Dewangan <ldewangan@nvidia.com>
+ S:	Supported
+ F:	drivers/spi/spi-tegra*
  
- #endif	/* _DT_BINDINGS_RESET_TEGRA210_CAR_H */
++TEGRA VIDEO DRIVER
++M:	Thierry Reding <thierry.reding@gmail.com>
++M:	Jonathan Hunter <jonathanh@nvidia.com>
++M:	Sowjanya Komatineni <skomatineni@nvidia.com>
++L:	linux-media@vger.kernel.org
++L:	linux-tegra@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
++F:	drivers/staging/media/tegra/
++
+ TEGRA XUSB PADCTL DRIVER
+ M:	JC Kuo <jckuo@nvidia.com>
+ S:	Supported
 -- 
 2.7.4
 
