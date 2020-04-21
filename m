@@ -2,92 +2,93 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDF9C38A30
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 03:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AE2C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 03:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF712082E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 03:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 733062071E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 03:36:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587438196;
-	bh=vqvUV0TB68GwK6fP6tJbnKqDVXw1gfsNdoWz4+42JN8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=US0qp09DA2UYB3bMYxoci3OI6jpUwXxb/u0wHuUDAtvBDiquqR3dT8cnXIGpW53u2
-	 9Hkt4uUlfzR5MHGZ+t0N9XqQTJ5e8aDpSRQz4ST1L5uEuWBFQFszO0aBhs/Jg0DmcY
-	 KNBZJ7mF1wfEBU7auZjjlxElD6v3jTkVznQctscI=
+	s=default; t=1587440160;
+	bh=tcMJgOdJYTK2DCQx6Q/Q8rhF+NrgCct1feulE1dILv8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=OVr97haa6nmOLA6dNS9qoQuku9iWFuFtTj3HBMHVk9+A+4ggMXPFEa16bqy1O9mYh
+	 R9WVTM1AvpR0SjI5o3yzLh69nHMbN4qK2C2eMtngRkuRd3eTaGLoOxJoG1aHbDVUkm
+	 vBZ+cUL1xSYSFj41Sx9EE2wYORVFcBmj68k/1g/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgDUDDQ (ORCPT
+        id S1727887AbgDUDgA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Apr 2020 23:03:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35038 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbgDUDDQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Apr 2020 23:03:16 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4075420782;
-        Tue, 21 Apr 2020 03:03:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587438195;
-        bh=vqvUV0TB68GwK6fP6tJbnKqDVXw1gfsNdoWz4+42JN8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cI19nYGI+jkJGceTHNo7PwKvxFsl40oFyvOgcatNzPvMMLWs0Rzm4vGGJCE/iqAQ5
-         rGuAvgUSJxbauiSrLNcdOyhYB8mJaA/oiAapybc7ggMRyE+bPFILdtA0hUYguhUTcO
-         cLcK9BhJN1jrqsBeD29kQgVr6Nax9MGH7CJzC/Z8=
-Date:   Tue, 21 Apr 2020 11:03:07 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Martin Kepplinger <martink@posteo.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: imx8mq-librem5-devkit: Use 0.9V for VDD_GPU
-Message-ID: <20200421030307.GB8571@dragon>
-References: <d9bfb11e3d66376792089d54d7d52fe3778efa33.1584636213.git.agx@sigxcpu.org>
- <20200420145459.GE32419@dragon>
- <20200420163224.GA44571@bogon.m.sigxcpu.org>
+        Mon, 20 Apr 2020 23:36:00 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:52350 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727848AbgDUDf7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Apr 2020 23:35:59 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 03L3ZdWg001233;
+        Tue, 21 Apr 2020 12:35:39 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 03L3ZdWg001233
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587440139;
+        bh=XyRdHJjb8MoEiKRt48oj/OQ5B9m4bbw7cOjjdMtRtVE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=0cU3jv+kmbuvcgsDRBo2orNdJvrvp2Ajo1ZOvtehWhvQi8VQAV2y0AwEeadX/hJb+
+         6syaGBXmENROHsee++Uqq0K0qyIzWIM8bT82+IlHjU3yBP4vloV+GxU5lm+Mo+WgHb
+         YI8eMyROpTuxiEev7pDRxguphe4y3cdl2DON/7aYsl+Nx4vQxcUwuACm16cVNGyU7l
+         Bq19pA/dtZ4waL+mYElWnS94UcyEWZ8M/FFm6kt0JCW8YCfM/DcfeGy/bYpwd4Ci9H
+         szEnBo8oKPEdRu65BM3x1p2x9KE50JHfpcCO0tStiLcFaQxA+OVYqsC3P5+ql0lx6v
+         33Iz/QjZsWTYg==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 1/2] kbuild: fix DT binding schema rule again to avoid needless rebuilds
+Date:   Tue, 21 Apr 2020 12:35:28 +0900
+Message-Id: <20200421033529.487366-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200420163224.GA44571@bogon.m.sigxcpu.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 06:32:24PM +0200, Guido Günther wrote:
-> Hi,
-> On Mon, Apr 20, 2020 at 10:54:59PM +0800, Shawn Guo wrote:
-> > On Thu, Mar 19, 2020 at 05:46:02PM +0100, Guido Günther wrote:
-> > > According to the imx8mq data sheet running VDD_GPU at 0.9V is enough
-> > > when not overclocking to 1GHz (which we currently don't do).
-> > > 
-> > > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> > 
-> > It doesn't apply to my branch.
-> 
-> This was against linux next when i sent it, can you link to the branch
-> it should apply to please?
+Since commit 7a0496056064 ("kbuild: fix DT binding schema rule to detect
+command line changes"), this rule is every time re-run even if you change
+nothing.
 
-Here it is:
+cmd_dtc takes one additional parameter to pass to the -O option of dtc.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git for-next
+We need to pass 'yaml' to if_changed_rule. Otherwise, cmd-check invoked
+from if_changed_rule is false positive.
 
-Or even better:
+Fixes: 7a0496056064 ("kbuild: fix DT binding schema rule to detect command line changes")
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
- git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git imx/dt64
+ scripts/Makefile.lib | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Shawn
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 97547108ee7f..4b799737722c 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -309,7 +309,7 @@ define rule_dtc
+ endef
+ 
+ $(obj)/%.dt.yaml: $(src)/%.dts $(DTC) $(DT_TMP_SCHEMA) FORCE
+-	$(call if_changed_rule,dtc)
++	$(call if_changed_rule,dtc,yaml)
+ 
+ dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
+ 
+-- 
+2.25.1
+
