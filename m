@@ -2,79 +2,149 @@ Return-Path: <SRS0=UCWN=6F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAADC54FC9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 20:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49474C54FCC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 20:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA92206B8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 20:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B61E20724
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Apr 2020 20:23:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSVKMtXh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726017AbgDUUUB (ORCPT
+        id S1726067AbgDUUXX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 16:20:01 -0400
-Received: from mga04.intel.com ([192.55.52.120]:27933 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbgDUUUB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Apr 2020 16:20:01 -0400
-IronPort-SDR: rnGD2QRBb4e9b0/TkV31MWiXcjnm/0nSFKsMehLEAW+KwAy7lLP7+S8rb07VI8kUF+A6cPrMcX
- /sbw+8rXhTWQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 13:20:00 -0700
-IronPort-SDR: zF83PQMB5Bu/G1Q5Smya91Ut3aq7rWwKdjy6MzKVxvaWgQaz4eH/A0NjJof8igOwu0tlf6cPqp
- 3avSBwWxz0eQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,411,1580803200"; 
-   d="scan'208";a="290594508"
-Received: from mnchalux-mobl2.gar.corp.intel.com (HELO localhost) ([10.252.44.234])
-  by fmsmga002.fm.intel.com with ESMTP; 21 Apr 2020 13:19:56 -0700
-Date:   Tue, 21 Apr 2020 23:19:55 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Amir Mizinski <amirmizi6@gmail.com>
-Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
-        alexander.steffen@infineon.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Christophe Ricard <christophe-h.ricard@st.com>
-Subject: Re: [PATCH v6 2/7] tpm: tpm_tis: Add check_data handle to
- tpm_tis_phy_ops
-Message-ID: <20200421201955.GB46589@linux.intel.com>
-References: <20200407162044.168890-1-amirmizi6@gmail.com>
- <20200407162044.168890-3-amirmizi6@gmail.com>
- <20200408183324.GB33486@linux.intel.com>
- <0cfa0486-8ccb-d7d1-acf2-ca103f723b3a@gmail.com>
+        Tue, 21 Apr 2020 16:23:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47118 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbgDUUXX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Apr 2020 16:23:23 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 270C8C0610D5;
+        Tue, 21 Apr 2020 13:23:23 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id ay1so5696691plb.0;
+        Tue, 21 Apr 2020 13:23:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zl40T50FPbwBzCKH7/OEcPTWE7rgN74/mA60zW5oOTo=;
+        b=kSVKMtXhsAi8UcAwt4iulSL7+eVDGadF0SrWh1wVO8+gwbi2E3F2/Bu88eqAMDqnNC
+         aZ2mjX0aG8et1NQWeo8ZoqL86PFMAa9v96WA6g5JD4PlRfZEH0jzquzVm9R6IChZKIhb
+         zcY8v9xaimsRqlZD3L00+wNkc2bvpGkgsA4MSxRZvyOGgRs3kAMODPQAfqLSRs2OSJqh
+         BcNdlAijqbWjZzMYeVHCEUzCC2faFEgiPzbSIl3mFI1991GqAT/ycuXtVyi9GAtgp9qw
+         WIkb7B71vc+P6LPbsdJKzeE5C7bacRjKervPeUmo9fHz2TSRbjWv9YZNWlE9xPV6oFpe
+         Di8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zl40T50FPbwBzCKH7/OEcPTWE7rgN74/mA60zW5oOTo=;
+        b=cY3t05GscfJbY08quxK/bL2BiGnsftewrmnK/Lae9xALiiRyVjJs1K2CKzWwos2xn6
+         aPG8LjjNDXYVv0iPQtT4LxpdznRsQkLhuOYY1JphRpgOwlQxGfF4LnZEQj493Dlgrj28
+         /sVxaUeirFOyclbBtKY0eB5sqB9FsLddaCqgvuDTpB59gJH0RsRTt8jGxElhpT7q0788
+         50N7f5qi1iWI9VPkf4dwkOtN+4dbCxIqFX4JBnCphi61INVCNtMgLXYQG7rClmQaDxu6
+         5ft0hbUhlmxKLnrpcHHg/3DdLSzR6ezJu7+FfRom9jKiWcAJNjYcCAdZ0d4ofAMK362v
+         5gGQ==
+X-Gm-Message-State: AGi0PuYAmniL6kAlbKMg2Ss23scbj7nUB+U6ANCEG0B0151mdKuBWirn
+        RVzluqD3kGDPS1wi4G40NSuV5rRb7oM/ijejd4o=
+X-Google-Smtp-Source: APiQypLAu9QTbWNgbPerC9FiXf54TGJy1cCm8ZU48UUMzfczq3a63vgoRJ4CWI4WeYnDtbGa2fmkEOryIT/jGVwyPhs=
+X-Received: by 2002:a17:90a:2401:: with SMTP id h1mr7862503pje.1.1587500602433;
+ Tue, 21 Apr 2020 13:23:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0cfa0486-8ccb-d7d1-acf2-ca103f723b3a@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200421194005.6295-1-i.mikhaylov@yadro.com> <20200421194005.6295-3-i.mikhaylov@yadro.com>
+In-Reply-To: <20200421194005.6295-3-i.mikhaylov@yadro.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 21 Apr 2020 23:23:11 +0300
+Message-ID: <CAHp75VdZ=jmQFt68+iniDbhGY9Q-ueT6QzrL82mLmsoGwftxFg@mail.gmail.com>
+Subject: Re: [PATCH v10 2/2] iio: proximity: Add driver support for vcnl3020
+ proximity sensor
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 01:34:44PM +0000, Amir Mizinski wrote:
-> 
-> Hello jarkko,
-> I reconfigure my email client by the instructions you've sent, and
-> re-responsing as you requested.
-> please tell me if there are still any issues. thank you.
+On Tue, Apr 21, 2020 at 10:39 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+>
+> Proximity sensor driver based on light/vcnl4000.c code.
+> For now supports only the single on-demand measurement.
+>
+> The VCNL3020 is a fully integrated proximity sensor. Fully
+> integrated means that the infrared emitter is included in the
+> package. It has 16-bit resolution. It includes a signal
+> processing IC and features standard I2C communication
+> interface. It features an interrupt function.
 
-This is great, thanks a lot!
+...
 
-Easy enough to check too:
+> +static int vcnl3020_get_and_apply_property(struct vcnl3020_data *data,
+> +                                          const char *prop, u32 reg)
+> +{
+> +       int rc;
+> +       u32 val;
+> +
+> +       rc = device_property_read_u32(data->dev, prop, &val);
+> +       if (rc)
+> +               return 0;
+> +
 
-https://lore.kernel.org/linux-integrity/0cfa0486-8ccb-d7d1-acf2-ca103f723b3a@gmail.com/
+> +       /* An example of conversion from uA to reg val:
+> +        * 200000 uA == 200 mA == 20
+> +        */
+> +       if (!strcmp(prop, "vishay,led-current-microamp"))
+> +               val /= 10000;
 
-It wouldn't end up to the ML if your config wasn't correct.
+I probably missed the point why this function is needed at all, since
+we always call only for a single property.
 
-/Jarkko
+On top of that, why do we have this nasty strcmp()? Can't we simple do
+something like
+
+static int vcnl3020_get_and_apply_property(struct vcnl3020_data *data,
+const char *prop, u32 reg, u32 div)
+{
+...
+  val /= div;
+...
+}
+
+static int vcnl3020_get_and_apply_led_current_property(struct
+vcnl3020_data *data)
+{
+  /*
+   * An example of conversion from uA to reg val:
+   * 200000 uA == 200 mA == 20
+   */
+// Note by the way comments style
+  return vcnl3020_get_and_apply_property(data, "vishay,led-current-microamp",
+                                              VCNL_LED_CURRENT, 10000);
+}
+
+?
+
+> +       rc = regmap_write(data->regmap, reg, val);
+> +       if (rc) {
+> +               dev_err(data->dev, "Error (%d) setting property (%s)\n",
+> +                       rc, prop);
+> +       }
+> +
+> +       return rc;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
