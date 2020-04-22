@@ -5,67 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1653BC55189
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 10:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 147A4C55186
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 10:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA3782073A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 10:40:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6AFF2076E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 10:43:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GvNKDJfe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fQog2JFH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730180AbgDVKj4 (ORCPT
+        id S1730094AbgDVKna (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:39:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35134 "EHLO
+        Wed, 22 Apr 2020 06:43:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730148AbgDVKVN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 06:21:13 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2D29C08E934
-        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 03:20:57 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id s10so1751338wrr.0
-        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 03:20:57 -0700 (PDT)
+        with ESMTP id S1729619AbgDVKTi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 06:19:38 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E775C03C1A9
+        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 03:19:35 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id g13so1703963wrb.8
+        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 03:19:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=123u9I7LwrG7OqauG/EgayFD4qVNvmiu3Wq50pc/uqc=;
-        b=GvNKDJfeh4dQsO8mnI588YI2+9PpMuErH9kG2Ok/GZC9xY5NOMt9q1qJZrqmGVMUZK
-         R4sR2TNQO5gXPNlLTiiVmKvSNzArGmbUIr9yPqT1Y0dUpt+5Hfh30s8eDZ1nhX+FYHLv
-         zNHDnSM9BSKH+LqlQn21ZUSUMVJuesdnj3M6ZsBu5gttTYxuyFN14IGmKUNGGckLRYgy
-         /AJAAMCPn5+p7w36EAidIpMXqzdLrfGwZHODddvNxpFzf7YfLjP4K05bRiPrMJwpEftD
-         vKHFD7PdJNhNsHpfeIHciBjKhzwVDIlIcTnsHMr0936gNrAhM6aCSewT+xKhNeEIKi/s
-         h27g==
+        bh=5PhIRlfxSd6Xawyu0KJOVJaENTrBMylRV4/RWfRrVd8=;
+        b=fQog2JFHadvS9RrhNUQ8NXgdPQM3795g/mlpdl336mApkCejO/gL0OcFOxX3/2PN/P
+         GpPKu2N7mnFNBSVAl9Xp/lWjM5TGxtcVffG1VqZ8BoRtN81WAQ8wtyBKO98NSQ6pJgqC
+         CpiHAOm6KVVOYAWLE68uhj4Pmewf835akUehm840wphbDXoh25/uZiCot+NenUXr3lWO
+         HcAGIWiqCtC0K4H8SBUEAp0zSaNgRiDvB5Qc38OIS9pHCj98Lq8MMZ1RXctVEGbEDbaE
+         fL4ywv2N1AKR4tIzgjjR7qLgIpQfWFPEC1VBkbw36K2d3qp/YfcLQaJRpowtxgMCjMSJ
+         rK0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=123u9I7LwrG7OqauG/EgayFD4qVNvmiu3Wq50pc/uqc=;
-        b=suuZbBd+c3vCmiR5p+3iAlC3Q1XHC790AnYZzfai1tUTSyrmnih65eXQzpRezriOXC
-         pBbIRNERig0Khtpq3NKjd8pbH1u5o+wVMEQKtGCvdFJDMPaEj3xUo5VEen+8UMAUnkxy
-         DcW0FNICtXf49DjLN7ZRIARKjKL+szp1AnC9iG0z08Y0HR5IWxmGi/Mze24p+jX8WpFl
-         1juw4Yw22Hct92h1jdFpZUOzD/64S6Wps2sGY6+fjktvyjcrgfyYXB+ShFAzZ4usnE0C
-         IxMcnMvc+8hBpdPp6fD2JOuN+1J+N5YvNUervBRQLk0VHQ4DOvedWU4sqxzxL2PdWfzZ
-         vnow==
-X-Gm-Message-State: AGi0PubvskYlFH5FYGQLRha0bV+qTa/UPrydwhgKDmjA/VvxnWiXmJ9f
-        LPoEtbcDQvVw8l+1jJvophuy4w==
-X-Google-Smtp-Source: APiQypJt2yJqpBjOpfZHuVtBJqDu3oRBOVm+IrdDn08DJb66CNt9BsvawPp+OzA7IVCouOqPrEL82g==
-X-Received: by 2002:a5d:60ca:: with SMTP id x10mr28404439wrt.407.1587550856176;
-        Wed, 22 Apr 2020 03:20:56 -0700 (PDT)
+        bh=5PhIRlfxSd6Xawyu0KJOVJaENTrBMylRV4/RWfRrVd8=;
+        b=K1ZOqeRzIQ8IEGuKF1iUB8H1EcSyvFoAsWt6o4uF2HYXcnT+OFgmUSDVdE9HeoiRjX
+         odJpfyKmH1rXFa1Jdv0KyalgIGnmQ86ygcbuMVWBPZQvMLZnJtF3xSKHsBv2FbPaCcEy
+         5q8MLiKUy0HsBqIIZjEIa61Ox7/7usem2BcAD1xFmTzN/EMCryR1/hLr5KYlIK9UEXdS
+         dRLoKBAJDgYlTtOHF/8nZNk5doxmd0okAGhfZszTtZLaENTYF+x8DGuRqedIrtxZEY47
+         Q05wz7o+HX6a4h4lYBB4MsMp2gtV8MAtxwpaKIyExD0wTWKnLsB04m1vTXy0KAoAan9t
+         vbkQ==
+X-Gm-Message-State: AGi0PuY8PTWZm+8s2aDrGbKoCngICNKW9rQp14lLSpZns/aR3LA35HbF
+        8rpmvidjzQIXY0BdE0g/3g/PAw==
+X-Google-Smtp-Source: APiQypKtnvoqO690NcodPG5Icoc96fbnAS6AsX06nqnlt6p4KLnlpdrwCBcwDHeB2H2N5nbR++xHTw==
+X-Received: by 2002:a5d:4381:: with SMTP id i1mr28121319wrq.194.1587550774176;
+        Wed, 22 Apr 2020 03:19:34 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id h10sm7792460wrq.33.2020.04.22.03.20.54
+        by smtp.gmail.com with ESMTPSA id k3sm8483299wru.90.2020.04.22.03.19.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 03:20:55 -0700 (PDT)
+        Wed, 22 Apr 2020 03:19:33 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     bjorn.andersson@linaro.org
 Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 1/2] arm64: qcom: c630: fix asm dai setup
-Date:   Wed, 22 Apr 2020 11:20:43 +0100
-Message-Id: <20200422102044.8995-1-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2] arm64: dts: qcom: db820c: fix audio configuration
+Date:   Wed, 22 Apr 2020 11:19:22 +0100
+Message-Id: <20200422101922.8894-1-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -74,32 +74,67 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-"direction" property is only valid for asm compressed dais,
-so remove it for non compressed dais
+After patch f864edff110d ("ASoC: qdsp6: q6routing: remove default routing")
+and 9b60441692d9 ("ASoC: qdsp6: q6asm-dai: only enable dais from device tree")
+asm dais and routing needs to be properly specified at device tree level.
 
-Fixes: 45021d35fcb2 ("arm64: dts: qcom: c630: Enable audio support")
+This patch fixes this.
+
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 2 --
- 1 file changed, 2 deletions(-)
+Changes since v1:
+	- removed invalid direction property
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-index 3b617a75fafa..51a670ad15b2 100644
---- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-@@ -359,12 +359,10 @@
- &q6asmdai {
- 	dai@0 {
- 		reg = <0>;
--		direction = <2>;
- 	};
- 
- 	dai@1 {
- 		reg = <1>;
--		direction = <1>;
- 	};
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 19 ++++++++++++++++++-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi        |  2 ++
+ 2 files changed, 20 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+index af87350b5547..6e81db5671c9 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+@@ -908,10 +908,27 @@
+ 	status = "okay";
  };
  
++&q6asmdai {
++	dai@0 {
++		reg = <0>;
++	};
++
++	dai@1 {
++		reg = <1>;
++	};
++
++	dai@2 {
++		reg = <2>;
++	};
++};
++
+ &sound {
+ 	compatible = "qcom,apq8096-sndcard";
+ 	model = "DB820c";
+-	audio-routing =	"RX_BIAS", "MCLK";
++	audio-routing =	"RX_BIAS", "MCLK",
++		"MM_DL1",  "MultiMedia1 Playback",
++		"MM_DL2",  "MultiMedia2 Playback",
++		"MultiMedia3 Capture", "MM_UL3";
+ 
+ 	mm1-dai-link {
+ 		link-name = "MultiMedia1";
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 14827adebd94..98634d5c4440 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -2066,6 +2066,8 @@
+ 						reg = <APR_SVC_ASM>;
+ 						q6asmdai: dais {
+ 							compatible = "qcom,q6asm-dais";
++							#address-cells = <1>;
++							#size-cells = <0>;
+ 							#sound-dai-cells = <1>;
+ 							iommus = <&lpass_q6_smmu 1>;
+ 						};
 -- 
 2.21.0
 
