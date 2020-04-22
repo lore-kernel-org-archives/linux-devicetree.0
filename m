@@ -2,139 +2,276 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147A4C55186
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 10:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD95C55186
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 10:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6AFF2076E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 10:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 693052076E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 10:44:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fQog2JFH"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OQActlqC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730094AbgDVKna (ORCPT
+        id S1731545AbgDVKo4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:43:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34872 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729619AbgDVKTi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 06:19:38 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E775C03C1A9
-        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 03:19:35 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id g13so1703963wrb.8
-        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 03:19:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5PhIRlfxSd6Xawyu0KJOVJaENTrBMylRV4/RWfRrVd8=;
-        b=fQog2JFHadvS9RrhNUQ8NXgdPQM3795g/mlpdl336mApkCejO/gL0OcFOxX3/2PN/P
-         GpPKu2N7mnFNBSVAl9Xp/lWjM5TGxtcVffG1VqZ8BoRtN81WAQ8wtyBKO98NSQ6pJgqC
-         CpiHAOm6KVVOYAWLE68uhj4Pmewf835akUehm840wphbDXoh25/uZiCot+NenUXr3lWO
-         HcAGIWiqCtC0K4H8SBUEAp0zSaNgRiDvB5Qc38OIS9pHCj98Lq8MMZ1RXctVEGbEDbaE
-         fL4ywv2N1AKR4tIzgjjR7qLgIpQfWFPEC1VBkbw36K2d3qp/YfcLQaJRpowtxgMCjMSJ
-         rK0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5PhIRlfxSd6Xawyu0KJOVJaENTrBMylRV4/RWfRrVd8=;
-        b=K1ZOqeRzIQ8IEGuKF1iUB8H1EcSyvFoAsWt6o4uF2HYXcnT+OFgmUSDVdE9HeoiRjX
-         odJpfyKmH1rXFa1Jdv0KyalgIGnmQ86ygcbuMVWBPZQvMLZnJtF3xSKHsBv2FbPaCcEy
-         5q8MLiKUy0HsBqIIZjEIa61Ox7/7usem2BcAD1xFmTzN/EMCryR1/hLr5KYlIK9UEXdS
-         dRLoKBAJDgYlTtOHF/8nZNk5doxmd0okAGhfZszTtZLaENTYF+x8DGuRqedIrtxZEY47
-         Q05wz7o+HX6a4h4lYBB4MsMp2gtV8MAtxwpaKIyExD0wTWKnLsB04m1vTXy0KAoAan9t
-         vbkQ==
-X-Gm-Message-State: AGi0PuY8PTWZm+8s2aDrGbKoCngICNKW9rQp14lLSpZns/aR3LA35HbF
-        8rpmvidjzQIXY0BdE0g/3g/PAw==
-X-Google-Smtp-Source: APiQypKtnvoqO690NcodPG5Icoc96fbnAS6AsX06nqnlt6p4KLnlpdrwCBcwDHeB2H2N5nbR++xHTw==
-X-Received: by 2002:a5d:4381:: with SMTP id i1mr28121319wrq.194.1587550774176;
-        Wed, 22 Apr 2020 03:19:34 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id k3sm8483299wru.90.2020.04.22.03.19.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 03:19:33 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     bjorn.andersson@linaro.org
-Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2] arm64: dts: qcom: db820c: fix audio configuration
-Date:   Wed, 22 Apr 2020 11:19:22 +0100
-Message-Id: <20200422101922.8894-1-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Wed, 22 Apr 2020 06:44:56 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:12858 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731843AbgDVKoz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:44:55 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587552294; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
+ Subject: Sender; bh=X9RGF6DVDVLfxnPxoe5Yh8TPlAiL8319mi3nRhdPovs=; b=OQActlqC+V8qqn9g1ygbzCvwF41w17OcMbU24Zw54Xy0mo9mJgE1d5ZGnttamOQg4zZGaJo4
+ pHiqDgm0tWRUc7lxYvzg+8RLBXIgQLqkLgYZAdeB8CzDSaWOM/IqJrDl82nQXuZo+x9nwr+F
+ CDv/+NGQr/bMiBvv7NAbHkAIHiA=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea02019.7ff1f3af2500-smtp-out-n05;
+ Wed, 22 Apr 2020 10:44:41 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 05D28C433F2; Wed, 22 Apr 2020 10:44:40 +0000 (UTC)
+Received: from [192.168.0.105] (unknown [49.207.137.37])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sivaprak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2CC38C433D2;
+        Wed, 22 Apr 2020 10:44:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2CC38C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
+Subject: Re: [PATCH V3 3/8] clk: qcom: Add A53 PLL support for ipq6018 devices
+To:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org
+References: <1586832922-29191-1-git-send-email-sivaprak@codeaurora.org>
+ <1586832922-29191-4-git-send-email-sivaprak@codeaurora.org>
+ <158754602745.132238.14379194464345140559@swboyd.mtv.corp.google.com>
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Message-ID: <4025e5c3-b532-d235-f73b-2b86055bdde2@codeaurora.org>
+Date:   Wed, 22 Apr 2020 16:14:33 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <158754602745.132238.14379194464345140559@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-After patch f864edff110d ("ASoC: qdsp6: q6routing: remove default routing")
-and 9b60441692d9 ("ASoC: qdsp6: q6asm-dai: only enable dais from device tree")
-asm dais and routing needs to be properly specified at device tree level.
+Hi Stephen,
 
-This patch fixes this.
+On 4/22/2020 2:30 PM, Stephen Boyd wrote:
+> Quoting Sivaprakash Murugesan (2020-04-13 19:55:17)
+>> The CPUs on Qualcomm IPQ6018 platform is primarily clocked by A53 PLL.
+>> This patch adds support for the A53 PLL on IPQ6018 devices which can
+>> support CPU frequencies above 1Ghz.
+>>
+>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>> ---
+>>   drivers/clk/qcom/a53-pll.c | 136 ++++++++++++++++++++++++++++++++++++---------
+>>   1 file changed, 111 insertions(+), 25 deletions(-)
+>>
+>> diff --git a/drivers/clk/qcom/a53-pll.c b/drivers/clk/qcom/a53-pll.c
+>> index 45cfc57..a95351c 100644
+>> --- a/drivers/clk/qcom/a53-pll.c
+>> +++ b/drivers/clk/qcom/a53-pll.c
+>> @@ -11,11 +11,40 @@
+>>   #include <linux/platform_device.h>
+>>   #include <linux/regmap.h>
+>>   #include <linux/module.h>
+>> +#include <linux/of_device.h>
+> Why does this driver need to change to use of_device APIs?
+we can use devm APIs and avoid this in next patch.
+>
+>>   
+>>   #include "clk-pll.h"
+>>   #include "clk-regmap.h"
+>> +#include "clk-alpha-pll.h"
+>>   
+>> -static const struct pll_freq_tbl a53pll_freq[] = {
+>> +struct a53_alpha_pll {
+>> +       struct alpha_pll_config *pll_config;
+>> +       struct clk_alpha_pll *pll;
+>> +};
+>> +
+>> +union a53pll {
+>> +       struct clk_pll *pll;
+>> +       struct a53_alpha_pll alpha_pll;
+>> +};
+>> +
+>> +struct a53pll_data {
+>> +#define PLL_IS_ALPHA BIT(0)
+>> +       u8 flags;
+>> +       union a53pll a53pll;
+> Why is there a union? Can't we have different clk ops for the two types
+> of PLLs and then use container_of to get it from the clk ops?
+ok.
+>
+>> +};
+>> +
+>> +static const u8 ipq_pll_offsets[] = {
+>> +       [PLL_OFF_L_VAL] = 0x08,
+>> +       [PLL_OFF_ALPHA_VAL] = 0x10,
+>> +       [PLL_OFF_USER_CTL] = 0x18,
+>> +       [PLL_OFF_CONFIG_CTL] = 0x20,
+>> +       [PLL_OFF_CONFIG_CTL_U] = 0x24,
+>> +       [PLL_OFF_STATUS] = 0x28,
+>> +       [PLL_OFF_TEST_CTL] = 0x30,
+>> +       [PLL_OFF_TEST_CTL_U] = 0x34,
+>> +};
+>> +
+>> +static const struct pll_freq_tbl msm8996_a53pll_freq[] = {
+>>          {  998400000, 52, 0x0, 0x1, 0 },
+>>          { 1094400000, 57, 0x0, 0x1, 0 },
+>>          { 1152000000, 62, 0x0, 0x1, 0 },
+>> @@ -26,6 +55,64 @@ static const struct pll_freq_tbl a53pll_freq[] = {
+>>          { }
+>>   };
+>>   
+>> +static struct clk_pll msm8996_pll = {
+>> +       .mode_reg = 0x0,
+>> +       .l_reg = 0x04,
+>> +       .m_reg = 0x08,
+>> +       .n_reg = 0x0c,
+>> +       .config_reg = 0x14,
+>> +       .status_reg = 0x1c,
+>> +       .status_bit = 16,
+>> +       .freq_tbl = msm8996_a53pll_freq,
+>> +       .clkr.hw.init = &(struct clk_init_data){
+>> +               .name = "a53pll",
+>> +               .flags = CLK_IS_CRITICAL,
+>> +               .parent_data = &(const struct clk_parent_data){
+>> +                       .fw_name = "xo",
+>> +                       .name = "xo",
+>> +               },
+>> +               .num_parents = 1,
+>> +               .ops = &clk_pll_sr2_ops,
+>> +       },
+>> +};
+>> +
+>> +static struct clk_alpha_pll ipq6018_pll = {
+>> +       .offset = 0x0,
+>> +       .regs = ipq_pll_offsets,
+>> +       .flags = SUPPORTS_DYNAMIC_UPDATE,
+>> +       .clkr = {
+>> +               .enable_reg = 0x0,
+>> +               .enable_mask = BIT(0),
+>> +               .hw.init = &(struct clk_init_data){
+>> +                       .name = "a53pll",
+>> +                       .flags = CLK_IS_CRITICAL,
+>> +                       .parent_data = &(const struct clk_parent_data){
+>> +                               .fw_name = "xo",
+>> +                       },
+>> +                       .num_parents = 1,
+>> +                       .ops = &clk_alpha_pll_huayra_ops,
+>> +               },
+>> +       },
+>> +};
+>> +
+>> +static struct alpha_pll_config ipq6018_pll_config = {
+> Can this be const?
+yeah it can be. will fix up in next patch.
+>
+>> +       .l = 0x37,
+>> +       .config_ctl_val = 0x04141200,
+>> +       .config_ctl_hi_val = 0x0,
+>> +       .early_output_mask = BIT(3),
+>> +       .main_output_mask = BIT(0),
+>> +};
+>> +
+>> +static struct a53pll_data msm8996pll_data = {
+>> +       .a53pll.pll = &msm8996_pll,
+>> +};
+>> +
+>> +static struct a53pll_data ipq6018pll_data = {
+>> +       .flags = PLL_IS_ALPHA,
+>> +       .a53pll.alpha_pll.pll = &ipq6018_pll,
+>> +       .a53pll.alpha_pll.pll_config = &ipq6018_pll_config,
+>> +};
+>> +
+>>   static const struct regmap_config a53pll_regmap_config = {
+>>          .reg_bits               = 32,
+>>          .reg_stride             = 4,
+>> @@ -39,14 +126,16 @@ static int qcom_a53pll_probe(struct platform_device *pdev)
+>>          struct device *dev = &pdev->dev;
+>>          struct regmap *regmap;
+>>          struct resource *res;
+>> -       struct clk_pll *pll;
+>> +       const struct a53pll_data *pll_data;
+>> +       struct clk_regmap *clkr;
+>>          void __iomem *base;
+>> -       struct clk_init_data init = { };
+>>          int ret;
+>>   
+>> -       pll = devm_kzalloc(dev, sizeof(*pll), GFP_KERNEL);
+>> -       if (!pll)
+>> -               return -ENOMEM;
+>> +       pll_data = of_device_get_match_data(dev);
+> Use device_get_match_data() please.
+ok.
+>
+>> +       if (!pll_data) {
+>> +               dev_err(dev, "failed to get platform data\n");
+> No error message please.
+ok.
+>
+>> +               return -ENODEV;
+>> +       }
+>>   
+>>          res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>          base = devm_ioremap_resource(dev, res);
+>> @@ -57,30 +146,26 @@ static int qcom_a53pll_probe(struct platform_device *pdev)
+>>          if (IS_ERR(regmap))
+>>                  return PTR_ERR(regmap);
+>>   
+>> -       pll->l_reg = 0x04;
+>> -       pll->m_reg = 0x08;
+>> -       pll->n_reg = 0x0c;
+>> -       pll->config_reg = 0x14;
+>> -       pll->mode_reg = 0x00;
+>> -       pll->status_reg = 0x1c;
+>> -       pll->status_bit = 16;
+>> -       pll->freq_tbl = a53pll_freq;
+>> -
+>> -       init.name = "a53pll";
+>> -       init.parent_names = (const char *[]){ "xo" };
+>> -       init.num_parents = 1;
+>> -       init.ops = &clk_pll_sr2_ops;
+>> -       init.flags = CLK_IS_CRITICAL;
+> Please document why a clk is critical.
+ok
+>
+>> -       pll->clkr.hw.init = &init;
+>> -
+>> -       ret = devm_clk_register_regmap(dev, &pll->clkr);
+>> +       if (pll_data->flags & PLL_IS_ALPHA) {
+>> +               struct clk_alpha_pll *alpha_pll =
+>> +                       pll_data->a53pll.alpha_pll.pll;
+>> +               struct alpha_pll_config *alpha_pll_config =
+>> +                       pll_data->a53pll.alpha_pll.pll_config;
+>> +
+>> +               clk_alpha_pll_configure(alpha_pll, regmap, alpha_pll_config);
+>> +               clkr = &pll_data->a53pll.alpha_pll.pll->clkr;
+>> +       } else {
+>> +               clkr = &pll_data->a53pll.pll->clkr;
+>> +       }
+> Sorry, the design is confusing.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
-Changes since v1:
-	- removed invalid direction property
+The basic idea is to add support for various PLLs available to clock the 
+A53 core.
 
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 19 ++++++++++++++++++-
- arch/arm64/boot/dts/qcom/msm8996.dtsi        |  2 ++
- 2 files changed, 20 insertions(+), 1 deletion(-)
+if this messing up the code, can the alpha pll support be moved to a 
+separate file?
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index af87350b5547..6e81db5671c9 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -908,10 +908,27 @@
- 	status = "okay";
- };
- 
-+&q6asmdai {
-+	dai@0 {
-+		reg = <0>;
-+	};
-+
-+	dai@1 {
-+		reg = <1>;
-+	};
-+
-+	dai@2 {
-+		reg = <2>;
-+	};
-+};
-+
- &sound {
- 	compatible = "qcom,apq8096-sndcard";
- 	model = "DB820c";
--	audio-routing =	"RX_BIAS", "MCLK";
-+	audio-routing =	"RX_BIAS", "MCLK",
-+		"MM_DL1",  "MultiMedia1 Playback",
-+		"MM_DL2",  "MultiMedia2 Playback",
-+		"MultiMedia3 Capture", "MM_UL3";
- 
- 	mm1-dai-link {
- 		link-name = "MultiMedia1";
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 14827adebd94..98634d5c4440 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -2066,6 +2066,8 @@
- 						reg = <APR_SVC_ASM>;
- 						q6asmdai: dais {
- 							compatible = "qcom,q6asm-dais";
-+							#address-cells = <1>;
-+							#size-cells = <0>;
- 							#sound-dai-cells = <1>;
- 							iommus = <&lpass_q6_smmu 1>;
- 						};
--- 
-2.21.0
-
+It would be very helpful if you provide your input on this.
