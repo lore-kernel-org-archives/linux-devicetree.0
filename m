@@ -2,231 +2,134 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBED9C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 18:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0948FC55185
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 18:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B12E2076E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 18:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E080120767
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 18:17:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mltae6nP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726154AbgDVSGW (ORCPT
+        id S1726287AbgDVSRe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 14:06:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51286 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726082AbgDVSGW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Apr 2020 14:06:22 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB2FAC03C1A9;
-        Wed, 22 Apr 2020 11:06:21 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: aratiu)
-        with ESMTPSA id A29F02611BF
-From:   Adrian Ratiu <adrian.ratiu@collabora.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Andrzej Hajda <a.hajda@samsung.com>, kernel@collabora.com,
-        linux-stm32@st-md-mailman.stormreply.com, linux-imx@nxp.com,
-        Rob Herring <robh@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Adrian Pop <pop.adrian61@gmail.com>,
-        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
-        Sjoerd Simons <sjoerd.simons@collabora.com>,
-        Martyn Welch <martyn.welch@collabora.com>
-Subject: Re: [PATCH v7 5/8] dt-bindings: display: add i.MX6 MIPI DSI host
- controller doc
-In-Reply-To: <20200422005832.GK5983@pendragon.ideasonboard.com>
-References: <20200421161610.1501827-1-adrian.ratiu@collabora.com>
- <20200421161610.1501827-6-adrian.ratiu@collabora.com>
- <20200422005832.GK5983@pendragon.ideasonboard.com>
-Date:   Wed, 22 Apr 2020 21:07:22 +0300
-Message-ID: <87zhb3iecl.fsf@collabora.com>
+        Wed, 22 Apr 2020 14:17:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726041AbgDVSRd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 14:17:33 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42A89C03C1A9;
+        Wed, 22 Apr 2020 11:17:33 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id p10so3444073ioh.7;
+        Wed, 22 Apr 2020 11:17:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/O8wxkOyz2zqjTvXW5zmlSLKb1rtq1CNhNBPyoq68Ms=;
+        b=Mltae6nP2Mbpr8cAm/sWdOn8rNtI/OcVNw/eOS5AvECfCyKKYKWRzhTgMTN3KuMQ12
+         YDZoIz+eiUNnrsrOWB2JwH2pSNIf90p+8OyeWU0Zl7mGFkke8HotD8oCtnI8IyC7s2OT
+         WljR0uyIlHxHgxXMprKYW+Y+Zhsdv2uCsFJBsAHwIRdNQRPbbICBZCLMf4xL0yRNKKoy
+         QNAg2vy5mimsD9CYhdFH5ROCZSZa1vBEE4Sy7gEXrM1IUiWxScpvUbbtMpx5iUjz2gXa
+         0bCQd9lcEQC6Q6rAyVfn3Ne/HQ4hceLPJOyjh2LqYZR5BDbcoTqmup1GpQXmronZ/dww
+         h0cA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/O8wxkOyz2zqjTvXW5zmlSLKb1rtq1CNhNBPyoq68Ms=;
+        b=Pv7v5E2HlUikZh0GGGY9UpIsoph57zKHbOdPU+mlRpc8fOv3kb+DtuectQNM/Qkn9I
+         auvIHDquGObt54Dwz6bM4O+cxe8xXEFNCrENiO5oZiZFCyIQcya5ZD5vPTdE8K6WZJ62
+         LFssKZUjc7De59DPFeFJr0oxabILKO8IYHwn1g9aK/F6tQjIRVN2G/8eh7+cDrZpun6Y
+         ZIf7MAURIazYrSe9CCw5nNWOVccSfPBWYnPsYx/FRlXgE2X6XesFrPNKK0ihazSaifWv
+         x0R4agoVR3Cupg/s1rkBE4HUYCK4g1vJC2OgqcmYuAu3Sp9Ct4DwVYe3k4v1pdUOMVSu
+         UsYg==
+X-Gm-Message-State: AGi0PubhAxeee1zy7SNsayKZ8qcY6TQTxWzx+rlNIidJUYDUMV5levWd
+        fqhnGpKFZsXhsJRafaQAWsVUtd/PW52yLn7SxZs=
+X-Google-Smtp-Source: APiQypLi5JAfufXmUiHGVYgFDJyCS0FH1GWVjaU1HKRYJC6SB/+hStZS40jpXRvlDRPyXafhRd4YtWORgk95NeW/zck=
+X-Received: by 2002:a6b:e802:: with SMTP id f2mr26865444ioh.128.1587579452616;
+ Wed, 22 Apr 2020 11:17:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+References: <20200328003249.1248978-1-martin.blumenstingl@googlemail.com> <20200328003249.1248978-4-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20200328003249.1248978-4-martin.blumenstingl@googlemail.com>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Wed, 22 Apr 2020 23:47:21 +0530
+Message-ID: <CANAwSgTYgDDodsTbWsuWSgxh7vhci7PLKa14iz-7gF1BuRdgjQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] mmc: host: meson-mx-sdhc: new driver for the
+ Amlogic Meson SDHC host
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     linux-amlogic@lists.infradead.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, jianxin.pan@amlogic.com,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        yinxin_1989@aliyun.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        lnykww@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 22 Apr 2020, Laurent Pinchart 
-<laurent.pinchart@ideasonboard.com> wrote:
-> Hi Adrian, 
-> 
-> Thank you for the patch. 
-> 
-> On Tue, Apr 21, 2020 at 07:16:07PM +0300, Adrian Ratiu wrote: 
->> This provides an example DT binding for the MIPI DSI host 
->> controller present on the i.MX6 SoC based on Synopsis 
->> DesignWare v1.01 IP.   Cc: Rob Herring <robh@kernel.org> Cc: 
->> Neil Armstrong <narmstrong@baylibre.com> Cc: Fabio Estevam 
->> <festevam@gmail.com> Cc: Laurent Pinchart 
->> <laurent.pinchart@ideasonboard.com> Cc: 
->> devicetree@vger.kernel.org Tested-by: Adrian Pop 
->> <pop.adrian61@gmail.com> Tested-by: Arnaud Ferraris 
->> <arnaud.ferraris@collabora.com> Signed-off-by: Sjoerd Simons 
->> <sjoerd.simons@collabora.com> Signed-off-by: Martyn Welch 
->> <martyn.welch@collabora.com> Signed-off-by: Adrian Ratiu 
->> <adrian.ratiu@collabora.com> --- Changes since v6: 
->>   - Added ref to the newly created snps,dw-mipi-dsi.yaml 
->>   (Laurent) - Moved *-cells properties outside 
->>   patternProperties (Laurent) - Removed the panel port 
->>   documentation (Laurent) - Wrapped lines at 80 chars, typo 
->>   fixes, sort includes (Laurent) 
->>  Changes since v5: 
->>   - Fixed missing reg warning (Fabio) - Updated dt-schema and 
->>   fixed warnings (Rob) 
->>  Changes since v4: 
->>   - Fixed yaml binding to pass `make dt_binding_check 
->>   dtbs_check` and addressed received binding feedback (Rob) 
->>  Changes since v3: 
->>   - Added commit message (Neil) - Converted to yaml format 
->>   (Neil) - Minor dt node + driver fixes (Rob) - Added small 
->>   panel example to the host controller binding 
->>  Changes since v2: 
->>   - Fixed commit tags (Emil) 
->> --- 
->>  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 135 
->>  ++++++++++++++++++ 1 file changed, 135 insertions(+) create 
->>  mode 100644 
->>  Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml 
->>  diff --git 
->> a/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml 
->> b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml 
->> new file mode 100644 index 0000000000000..b73e3ae33a852 --- 
->> /dev/null +++ 
->> b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml 
->> @@ -0,0 +1,135 @@ +# SPDX-License-Identifier: (GPL-2.0-only OR 
->> BSD-2-Clause) +%YAML 1.2 +--- +$id: 
->> http://devicetree.org/schemas/display/imx/fsl,mipi-dsi-imx6.yaml# 
->> +$schema: http://devicetree.org/meta-schemas/core.yaml# + 
->> +title: Freescale i.MX6 DW MIPI DSI Host Controller + 
->> +maintainers: +  - Adrian Ratiu <adrian.ratiu@collabora.com> + 
->> +description: | +  The i.MX6 DSI host controller is a Synopsys 
->> DesignWare MIPI DSI v1.01 +  IP block with a companion PHY IP. 
->> + +  These DT bindings follow the Synopsys DW MIPI DSI bindings 
->> defined in + 
->> Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt 
->> with +  the following device-specific properties.  + +allOf: + 
->> - $ref: ../bridge/snps,dw-mipi-dsi.yaml# + +properties: + 
->> '#address-cells': +    const: 1 + +  '#size-cells': +    const: 
->> 0 + +  compatible: +    items: +      - const: 
->> fsl,imx6q-mipi-dsi +      - const: snps,dw-mipi-dsi + +  reg: + 
->> maxItems: 1 + +  interrupts: +    maxItems: 1 + +  clocks: + 
->> items: +      - description: Module Clock +      - description: 
->> DSI bus clock + +  clock-names: +    items: +      - const: ref 
->> +      - const: pclk + +  fsl,gpr: +    description: + 
->> Phandle to the iomuxc-gpr region containing the multiplexer 
->> ctrl register.  +    $ref: 
->> /schemas/types.yaml#/definitions/phandle + +  ports: +    type: 
->> object +    description: | +      A node containing DSI input & 
->> output port nodes with endpoint +      definitions as 
->> documented in + 
->> Documentation/devicetree/bindings/media/video-interfaces.txt + 
->> Documentation/devicetree/bindings/graph.txt +    properties: + 
->> port@0: +        type: object +        description: + 
->> DSI input port node, connected to the ltdc rgb output port.  + 
->> +      port@1: +        type: object +        description: + 
->> RGB output port node, connected to a panel or a bridge input 
->> port. 
-> 
-> Isn't it the other way around, doesn't the bridge take RGB input 
-> and output DSI ? And to be precise, it's not about RGB, but 
-> about the input being parallel interface (DSI will also carry 
-> RGB). 
-> 
-> I would add 
-> 
->     required: 
->       - port@0 - port@1 
-> 
+Hi Martin,
 
-Sorry for the confusions and omissions :) Will fix the names to 
-avoid ambiguities and also add the required property and the 
-missing port@0 in the example below in v8.
+On Sat, 28 Mar 2020 at 06:04, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> The SDHC MMC host controller on Amlogic SoCs provides an eMMC and MMC
+> card interface with 1/4/8-bit bus width.
+> It supports eMMC spec 4.4x/4.5x including HS200 (up to 100MHz clock).
+>
+> The public S805 datasheet [0] contains a short documentation about the
+> registers. Unfortunately it does not describe how to use the registers
+> to make the hardware work. Thus this driver is based on reading (and
+> understanding) the Amlogic 3.10 GPL kernel code.
+>
+> Some hardware details are not easy to see. Jianxin Pan was kind enough
+> to answer my questions:
+> The hardware has built-in busy timeout support. The maximum timeout is
+> 30 seconds. This is only documented in Amlogic's internal
+> documentation.
+>
+> The controller only works with very specific clock configurations. The
+> details are not part of the public datasheet. In my own words the
+> supported configurations are:
+> - 399.812kHz:   clkin =  850MHz div = 2126 sd_rx_phase = 63
+> - 1MHz:         clkin =  850MHz div = 850  sd_rx_phase = 55
+> - 5.986MHz:     clkin =  850MHz div = 142  sd_rx_phase = 24
+> - 25MHz:        clkin =  850MHz div = 34   sd_rx_phase = 15
+> - 47.222MHz:    clkin =  850MHz div = 18   sd_rx_phase = 11/15 (SDR50/HS)
+> - 53.125MHz:    clkin =  850MHz div = 16   sd_rx_phase = (tuning)
+> - 70.833MHz:    clkin =  850MHz div = 12   sd_rx_phase = (tuning)
+> - 85MHz:        clkin =  850MHz div = 10   sd_rx_phase = (tuning)
+> - 94.44MHz:     clkin =  850MHz div = 9    sd_rx_phase = (tuning)
+> - 106.25MHz:    clkin =  850MHz div = 8    sd_rx_phase = (tuning)
+> - 127.5MHz:     clkin = 1275MHz div = 10   sd_rx_phase = (tuning)
+> - 141.667MHz:   clkin =  850MHz div = 6    sd_rx_phase = (tuning)
+> - 159.375MHz:   clkin = 1275MHz div = 8    sd_rx_phase = (tuning)
+> - 212.5MHz:     clkin = 1275MHz div = 6    sd_rx_phase = (tuning)
+> - (sd_tx_phase is always 1, 94.44MHz is not listed in the datasheet
+>    but this is what the 3.10 BSP kernel on Odroid-C1 actually uses)
+>
+> NOTE: CMD23 support is disabled for now because it results in command
+> timeouts and thus decreases read performance.
+>
+> Tested-by: Wei Wang <lnykww@gmail.com>
+> Tested-by: Xin Yin <yinxin_1989@aliyun.com>
+> Reviewed-by: Xin Yin <yinxin_1989@aliyun.com>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
 
-Many thanks,
-Adrian
+Please add my tested on Odroid C1+
 
->
->> +
->> +additionalProperties: false
->> +
->> +patternProperties:
->> +  "^panel@[0-3]$":
->> +    type: object
->> +
->> +required:
->> +  - "#address-cells"
->> +  - "#size-cells"
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - clocks
->> +  - clock-names
->> +  - ports
->> +
->> +examples:
->> +  - |+
->> +    #include <dt-bindings/clock/imx6qdl-clock.h>
->> +    #include <dt-bindings/gpio/gpio.h>
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +
->> +    dsi: dsi@21e0000 {
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +        compatible = "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi";
->> +        reg = <0x021e0000 0x4000>;
->> +        interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
->> +        fsl,gpr = <&gpr>;
->> +        clocks = <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
->> +                 <&clks IMX6QDL_CLK_MIPI_IPG>;
->> +        clock-names = "ref", "pclk";
->> +
->> +        ports {
->> +            #address-cells = <1>;
->> +            #size-cells = <0>;
->
-> port@0 is missing.
->
->> +            port@1 {
->> +                reg = <1>;
->> +                dsi_out: endpoint {
->> +                    remote-endpoint = <&panel_in>;
->> +                };
->> +            };
->> +        };
->> +
->> +        panel@0 {
->> +            compatible = "sharp,ls032b3sx01";
->> +            reg = <0>;
->> +            reset-gpios = <&gpio6 8 GPIO_ACTIVE_LOW>;
->> +            ports {
->> +                #address-cells = <1>;
->> +                #size-cells = <0>;
->> +                port@0 {
->> +                    reg = <0>;
->> +                    panel_in: endpoint {
->> +                        remote-endpoint = <&dsi_out>;
->> +                    };
->> +                };
->> +            };
->> +        };
->> +    };
->> +
->> +...
->
-> -- 
-> Regards,
->
-> Laurent Pinchart
+Tested-by: Anand Moon <linux.amoon@gmail.com>
+
+Best Regards
+-Anand
