@@ -2,128 +2,161 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EA0C55186
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 23:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C93C55186
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 23:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A227A20787
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 23:39:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oDo/4WF/"
+	by mail.kernel.org (Postfix) with ESMTP id 79C072076E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 23:45:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726008AbgDVXjc (ORCPT
+        id S1725854AbgDVXpX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 19:39:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46526 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbgDVXjc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 19:39:32 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 615CCC03C1AA;
-        Wed, 22 Apr 2020 16:39:32 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id c23so2834066qtp.11;
-        Wed, 22 Apr 2020 16:39:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=E1PBrkT1LoNCkirZimCNKHoVPu32mXxSCEKcm1zSQdY=;
-        b=oDo/4WF/ApXIvPS+YZM/b4AuPq4KMtNUrAx4kPRyrKcfDY/7N/wACbuVSV9Bv/+yzf
-         fsnHPe6JvdEzXhWLh9tQ6LLzYjBZVEjddVBn1gtQAALZMkA67fSSmIEs97PND8XNvZYp
-         /CLble/z+CslEMET1pTe/sVN52S4rwol8nho+e70U31cQydk8ItNbaD2Aun5iR9YbF6y
-         S2gA8LYXgnTxOjCa8ODOggGJVmTiCJMrAfqWMBASVIq+rkmiTUfucLWHgc1v7UxPm/SA
-         KXTVxF1f1yGF6eVCicEPf0DvQnww0cq8E9wKeCSoC9OtuV2k7GYnhhDWSC8guN4M4SP1
-         qKPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=E1PBrkT1LoNCkirZimCNKHoVPu32mXxSCEKcm1zSQdY=;
-        b=o3iyGTgInp+JDbK3ZKu1V8KCVnFcy5Swx8zmg3Gi7K+NT3Rvx4qniorndN+yaKVsn2
-         SejvSGlhYTwCkGMipEu+4FbdOEmIPK0D/9RvL5UpzqV9OrJdOvU9ePxgmBjQsNSdgdII
-         jV0ceMr9XLgzQKUSZdiybHjGOdyPZktOlc3ODFwW2j8LtXlI8LrdFAR4TnuE1sJE91py
-         oLZwpagFVTxzBmirBvuOidhJPP6EvJr4GBuLI/LsASESp2NXDped6TxuRaksRbw/9vF/
-         L3olmqhOKUKcvPmipIxEAecihYVOZwu8F6bQqdPKk1tu8DNMIVDfJwxAuHGWSxFA0WGs
-         wdvg==
-X-Gm-Message-State: AGi0PuaLDmC1JDCp7KtFfwHP+xUdA4XumqsOfzi5PtxVlb6GL3d5qF7X
-        rOLFEfIScTJCbF54vSNzdoU=
-X-Google-Smtp-Source: APiQypIx5CG1YBGE7PM0vaWxnGyfc8b17Jq+bNco8g/8Tp6x3Az3BOQ4nLnVYoI1NU6hWc+y49zG8Q==
-X-Received: by 2002:ac8:1090:: with SMTP id a16mr1262025qtj.181.1587598771607;
-        Wed, 22 Apr 2020 16:39:31 -0700 (PDT)
-Received: from imac (dhcp-108-168-12-59.cable.user.start.ca. [108.168.12.59])
-        by smtp.gmail.com with ESMTPSA id i6sm475709qkk.123.2020.04.22.16.39.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 Apr 2020 16:39:31 -0700 (PDT)
-Date:   Wed, 22 Apr 2020 19:39:28 -0400
-From:   Tim Lewis <elatllat@gmail.com>
-To:     elatllat@gmail.com
-Cc:     narmstrong@baylibre.com, khilman@baylibre.com,
-        christianshewitt@gmail.com, joy.cho@hardkernel.com,
-        tobetter@gmail.com, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org
-Subject: [PATCH v3] arm64: dts: meson: S922X: extend cpu opp-points
-Message-ID: <20200422233928.GA2816@imac>
+        Wed, 22 Apr 2020 19:45:23 -0400
+Received: from smtprelay0139.hostedemail.com ([216.40.44.139]:42166 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725846AbgDVXpX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Apr 2020 19:45:23 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 4BDCF182CED2A;
+        Wed, 22 Apr 2020 23:45:22 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: slope31_118e74ec0bf03
+X-Filterd-Recvd-Size: 5035
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 22 Apr 2020 23:45:20 +0000 (UTC)
+Message-ID: <9a32f150f85f851d04afd148b2a9a5cf203f7ce1.camel@perches.com>
+Subject: Re: Rule for bridge yaml dt binding maintainers?
+From:   Joe Perches <joe@perches.com>
+To:     Rob Herring <robh+dt@kernel.org>, Sam Ravnborg <sam@ravnborg.org>
+Cc:     Adrian Ratiu <adrian.ratiu@collabora.com>,
+        devicetree@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Collabora Kernel ML <kernel@collabora.com>
+Date:   Wed, 22 Apr 2020 16:43:03 -0700
+In-Reply-To: <CAL_JsqJXa8QxQmLfkCO8_SSsgYm2nTFW1J6wx4bGbZgAy8Sxog@mail.gmail.com>
+References: <87d082jtfn.fsf@collabora.com>
+         <20200420175909.GA5810@ravnborg.org>
+         <CAL_JsqJXa8QxQmLfkCO8_SSsgYm2nTFW1J6wx4bGbZgAy8Sxog@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-HardKernel supports overclock through the addition to extra opp points
-in their official kernel sources for odroid-n2 [1]. Christian tested
-on other S922X devices with "no obvious issues". Neil thinks dvfs and
-thermal managementis can keep other S922X devices safe.
+On Wed, 2020-04-22 at 15:02 -0500, Rob Herring wrote:
+> On Mon, Apr 20, 2020 at 12:59 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+> > Hi Adrian
+> > 
+> > On Mon, Apr 20, 2020 at 02:19:24PM +0300, Adrian Ratiu wrote:
+> > > Hello,
+> > > 
+> > > I got confused while doing the txt -> yaml conversion at [1] and it's still
+> > > not clear to me who should be added in the "maintainers" field.  Clearly not
+> > > the maintainers as returned by get_maintainer.pl. :)
+> > > 
+> > > Rob mentioned that "owners" should be manintainers but I also have trouble
+> > > picking the persons who should be owners / yaml maintainers.
+> > > 
+> > > Looking at the completed bridge conversions in the latest linux-next, I
+> > > couldn't find a rule and the majority of bindings are still txt:
+> > > 
+> > > $ find ./devicetree/bindings/display/bridge/ -name *txt | wc -l
+> > > 23
+> > > $ find ./devicetree/bindings/display/bridge/ -name *yaml | wc -l
+> > > 5
+> > > 
+> > > So my questions are:
+> > > 1. Is there a general rule for assigning yaml file owners/maintainers?
+> > > 
+> > > 2. Is this vagueness specific to the bridge dt bindings only?
+> > > 
+> > > 3. Who should step up and maintain these bindings? Original/new authors,
+> > > SoC, bridge, DRM maintainers etc.?
+> > > 
+> > > It would be useful to have a rule to make it easier to do these conversions.
+> > > We (Collabora) are considering doing the conversion work.
+> > 
+> > For the panel conversion I did recently it was simple:
+> > 1) If listed in MAINTAINERS - use this info
+> > 2) Otherwise use the person(s) that authored the original .txt file.
+> >    Using git log --follow foo.txt
+> > 3) In a few cases I may have decided otherwise, but the above covers the
+> >    majority.
+> 
+> Yes.
+> 
+> > I would also be great if you or someone else could:
+> > - teach get_maintainers about .yaml file listed maintainers
+> 
+> It already does to some extent. IIRC, there's a mode to extract email
+> addresses from files.
 
-[1] https://github.com/hardkernel/linux/commit/f86cd9487c7483b2a05f448b9ebacf6bd5a2ad2f
-Tested-by: Christian Hewitt <christianshewitt@gmail.com>
-Signed-off-by: Tim Lewis <elatllat@gmail.com>
+--file-emails
+
+> I was hoping that the MAINTAINERS file split happens sometime and we
+> can just generate a MAINTAINERS file for bindings.
+
+I don't see the value really.
+
+> > - teach checkpatch that it is OK to convert .txt to .yaml
+
+I suppose that get_maintainer _could_ enable --file-emails
+for .yaml files.
+
+something like this (more comments below too)
+---
+ scripts/get_maintainer.pl | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
+index 6cbcd1..9d947a0 100755
+--- a/scripts/get_maintainer.pl
++++ b/scripts/get_maintainer.pl
+@@ -527,7 +527,7 @@ foreach my $file (@ARGV) {
+ 	$file =~ s/^\Q${cur_path}\E//;	#strip any absolute path
+ 	$file =~ s/^\Q${lk_path}\E//;	#or the path to the lk tree
+ 	push(@files, $file);
+-	if ($file ne "MAINTAINERS" && -f $file && ($keywords || $file_emails)) {
++	if ($file ne "MAINTAINERS" && -f $file && ($keywords || $file_emails || $file =~ /\.yaml$/)) {
+ 	    open(my $f, '<', $file)
+ 		or die "$P: Can't open $file: $!\n";
+ 	    my $text = do { local($/) ; <$f> };
+@@ -539,7 +539,7 @@ foreach my $file (@ARGV) {
+ 		    }
+ 		}
+ 	    }
+-	    if ($file_emails) {
++	    if ($file_emails || $file =~ /\.yaml$/) {
+ 		my @poss_addr = $text =~ m$[A-Za-zÀ-ÿ\"\' \,\.\+-]*\s*[\,]*\s*[\(\<\{]{0,1}[A-Za-z0-9_\.\+-]+\@[A-Za-z0-9\.-]+\.[A-Za-z0-9]+[\)\>\}]{0,1}$g;
+ 		push(@file_emails, clean_file_emails(@poss_addr));
+ 	    }
 
 ---
- arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi | 15 +++++++++++++++
- 1 files changed, 15 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
-index 046cc332d..1e5d0ee5d 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
-@@ -65,6 +65,11 @@
- 			opp-hz = /bits/ 64 <1896000000>;
- 			opp-microvolt = <981000>;
- 		};
-+
-+		opp-1992000000 {
-+			opp-hz = /bits/ 64 <1992000000>;
-+			opp-microvolt = <1001000>;
-+		};
- 	};
- 
- 	cpub_opp_table_1: opp-table-1 {
-@@ -120,5 +125,15 @@
- 			opp-hz = /bits/ 64 <1704000000>;
- 			opp-microvolt = <891000>;
- 		};
-+
-+		opp-1800000000 {
-+			opp-hz = /bits/ 64 <1800000000>;
-+			opp-microvolt = <981000>;
-+		};
-+
-+		opp-1908000000 {
-+			opp-hz = /bits/ 64 <1908000000>;
-+			opp-microvolt = <1022000>;
-+		};
- 	};
- };
--- 
-2.17.1
+> Yeah, I should fix my bug.
+> 
+> > - teach checkpatch about some simple yaml validation (maybe)
+> 
+> I don't see checkpatch being able to check much of what comes up in
+> review. Maybe indentation.
+
+Likely better done with another external tool.
+
+Could be added to checkpatch as an external
+call like spdxcheck.py
+
+
 
