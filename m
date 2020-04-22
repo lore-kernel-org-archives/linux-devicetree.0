@@ -2,195 +2,261 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1580FC5518C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 08:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA0EC55186
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 09:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6C2E20738
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 08:15:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fEMC7jx1"
+	by mail.kernel.org (Postfix) with ESMTP id 0E9CE206D6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 09:00:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587546030;
+	bh=Szlf9ZzsWRDVLiUoIgGCUpAgcbXQVj4EqngSZMV2pGY=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=CHKNM3ue4kfJ/Bkw4Sz19//ozq/ATVRF/Cu/6Q/EXNyqNmfewiVWwFxeu9d1mydn+
+	 bPLeFP8ePH1VcJ1vzepupxqAQXB1KEgJzQ00so8HyR/i4QdozLC0ssCZiPDzpfQH4R
+	 KUnjHydRMYrpnO0rpT+TDgXNbxHhqR2Lu5lxLlFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725899AbgDVIP7 (ORCPT
+        id S1726399AbgDVJA3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 04:15:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43962 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725810AbgDVIP7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Apr 2020 04:15:59 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2A4EC03C1A6;
-        Wed, 22 Apr 2020 01:15:58 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id k1so1273013wrx.4;
-        Wed, 22 Apr 2020 01:15:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=W1bwVVy/NtLxRgnoJUy2zNxPLp+Z6h7qsHb9WOhUubo=;
-        b=fEMC7jx1CLTOOK/5ySAQ9yyKtT2HbPV/yROeiAslCfHYmhzFoSmSvICfSP3N7z1/0C
-         G5VAOfKlIm0cds8bHhPXuAd4v33j8AtQTNB6NmCrU8a+x1KsGlmRxbwxWB8itzYZm5bG
-         6aO73LwdXbKtwIc4wJAwZHXC0jdGniNHJHJhYXvk84wOdG3RvGNDKQdry/v8CmCkFHgU
-         PZQscstx/0LQJb3YnDiAQkcTTeisPBwvLaLTz6nxTOvRuCG7DP4JCd+Go0N2EZGELaXr
-         H+f9hSZkviBHK/hB8uVVYgOblQNbX3HLgl3YQ36ocrKBf//ISRi5bwdulF8NQ+zJiueo
-         kd4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=W1bwVVy/NtLxRgnoJUy2zNxPLp+Z6h7qsHb9WOhUubo=;
-        b=AwovcF7OD+PP1vPA/BVkhmDB9bjgvXpW6HOGBXCeBjwBUfmvIV26gECyRLM4/62HRb
-         5cgWgx/rerKPmXpmG5ieperfL0V3TyH+tJZn6fDCjloO4TK57R5bCRplgO9iRAOahefV
-         D2S5+pro0xOMavIa9HvaZsQM15dI1k+HrxCzIRrsP9nuPCP3ZIMimLeWVeM1z8M5eWdB
-         PNbSPK0D0BbNfRMLtUxL2PTEof4roFbI+Ns4zbsyaJBnwxkDkvnLQUoNN8T7keLGSGWA
-         bVr4kHpFMOiztVeGk+PRBdXRVRstNYiq4JgHAv+tOtvx7ECtAq9cB8SXsJe92tmVdJkE
-         0xXg==
-X-Gm-Message-State: AGi0PubIkizTG1qAQqQWaBte5OxUo/arllrkctDQGqzVzWw31pxIMpAD
-        wjn91uxVAYeHghZub/bxDFnuoOwpVq4=
-X-Google-Smtp-Source: APiQypLNP3FKxLdejyFGmo/PZCFB4G9yydsMN1CISrxGbgYnQpBB7EGeKZnnv9vuQkhjVUwPsH/F/Q==
-X-Received: by 2002:a5d:49c7:: with SMTP id t7mr26964145wrs.22.1587543357363;
-        Wed, 22 Apr 2020 01:15:57 -0700 (PDT)
-Received: from [192.168.43.138] ([37.142.175.196])
-        by smtp.gmail.com with ESMTPSA id e5sm7154063wru.92.2020.04.22.01.15.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Apr 2020 01:15:56 -0700 (PDT)
-Subject: Re: [PATCH v6 6/7] dt-bindings: tpm: Add YAML schema for TPM TIS I2C
- options
-To:     Rob Herring <robh@kernel.org>
-Cc:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
-References: <20200407162044.168890-1-amirmizi6@gmail.com>
- <20200407162044.168890-7-amirmizi6@gmail.com> <20200415152056.GA30547@bogus>
-From:   Amir Mizinski <amirmizi6@gmail.com>
-Message-ID: <5142cad6-7d22-bc80-a743-e3c75f7a237b@gmail.com>
-Date:   Wed, 22 Apr 2020 08:15:52 +0000
-User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 22 Apr 2020 05:00:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726071AbgDVJA3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Apr 2020 05:00:29 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43919206D6;
+        Wed, 22 Apr 2020 09:00:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587546028;
+        bh=Szlf9ZzsWRDVLiUoIgGCUpAgcbXQVj4EqngSZMV2pGY=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=APQfd9bUJPPAgYgjsa4XM35xNOOByU2WNDdm4k95dTACr3ILzmncCxszFhiy1Ku5u
+         PbqOgLt554/UNk5yAn9xBNFqr3b8J8iP72lUEpcsbvGMY7T4SNFRSz/97qKqIIJy6H
+         YsYBqOkWd6uxz6JZnfqEEUyTg6KjsgcSdsqKhKnI=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200415152056.GA30547@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1586832922-29191-4-git-send-email-sivaprak@codeaurora.org>
+References: <1586832922-29191-1-git-send-email-sivaprak@codeaurora.org> <1586832922-29191-4-git-send-email-sivaprak@codeaurora.org>
+Subject: Re: [PATCH V3 3/8] clk: qcom: Add A53 PLL support for ipq6018 devices
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org
+Date:   Wed, 22 Apr 2020 02:00:27 -0700
+Message-ID: <158754602745.132238.14379194464345140559@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Quoting Sivaprakash Murugesan (2020-04-13 19:55:17)
+> The CPUs on Qualcomm IPQ6018 platform is primarily clocked by A53 PLL.
+> This patch adds support for the A53 PLL on IPQ6018 devices which can
+> support CPU frequencies above 1Ghz.
+>=20
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
+>  drivers/clk/qcom/a53-pll.c | 136 ++++++++++++++++++++++++++++++++++++---=
+------
+>  1 file changed, 111 insertions(+), 25 deletions(-)
+>=20
+> diff --git a/drivers/clk/qcom/a53-pll.c b/drivers/clk/qcom/a53-pll.c
+> index 45cfc57..a95351c 100644
+> --- a/drivers/clk/qcom/a53-pll.c
+> +++ b/drivers/clk/qcom/a53-pll.c
+> @@ -11,11 +11,40 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+>  #include <linux/module.h>
+> +#include <linux/of_device.h>
 
-On 2020-04-15 15:20, Rob Herring wrote:
-> On Tue, Apr 07, 2020 at 07:20:43PM +0300, amirmizi6@gmail.com wrote:
->> From: Amir Mizinski <amirmizi6@gmail.com>
->>
->> Added a YAML schema to support tpm tis i2c realted dt-bindings for the I2c
->> PTP based physical layer.
->>
->> This patch adds the documentation for corresponding device tree bindings of
->> I2C based Physical TPM.
->> Refer to the 'I2C Interface Definition' section in
->> 'TCG PC Client PlatformTPMProfile(PTP) Specification' publication
->> for specification.
->>
->> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
->> ---
->>  .../bindings/security/tpm/tpm-tis-i2c.yaml         | 47 ++++++++++++++++++++++
->>  1 file changed, 47 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml b/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
->> new file mode 100644
->> index 0000000..13d7c2c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
->> @@ -0,0 +1,47 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/security/tpm/tpm-tis-i2c.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: I2C PTP based TPM Device Tree Bindings
->> +
->> +maintainers:
->> +  - Amir Mizinski <amirmizi6@gmail.com>
->> +
->> +description:
->> +  Device Tree Bindings for I2C based Trusted Platform Module(TPM).
->> +
->> +properties:
->> +  compatible:
->> +    contains:
->> +      const: tcg,tpm-tis-i2c
->
-> This is not sufficient. I assume you are testing on some specific TPM
-> chip.
->
+Why does this driver need to change to use of_device APIs?
 
-I am, but this implementation follows the "TCG PC client Device Driver Design Principles for TPM 2.0"
-It's not meant solely for out chip.
+> =20
+>  #include "clk-pll.h"
+>  #include "clk-regmap.h"
+> +#include "clk-alpha-pll.h"
+> =20
+> -static const struct pll_freq_tbl a53pll_freq[] =3D {
+> +struct a53_alpha_pll {
+> +       struct alpha_pll_config *pll_config;
+> +       struct clk_alpha_pll *pll;
+> +};
+> +
+> +union a53pll {
+> +       struct clk_pll *pll;
+> +       struct a53_alpha_pll alpha_pll;
+> +};
+> +
+> +struct a53pll_data {
+> +#define PLL_IS_ALPHA BIT(0)
+> +       u8 flags;
+> +       union a53pll a53pll;
 
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupt:
->> +    maxItems: 1
->> +
->> +  crc-checksum:
->> +    $ref: /schemas/types.yaml#/definitions/flag
->> +    description:
->> +      CRC checksum enable.
->
-> Why would you not want CRC? Some chips support and some don't? If so,
-> the compatible for the chip should imply that.
->
+Why is there a union? Can't we have different clk ops for the two types
+of PLLs and then use container_of to get it from the clk ops?
 
-There's an Enable/Disable CRC option in the TPM chip, not all vendors
-use this by default.
+> +};
+> +
+> +static const u8 ipq_pll_offsets[] =3D {
+> +       [PLL_OFF_L_VAL] =3D 0x08,
+> +       [PLL_OFF_ALPHA_VAL] =3D 0x10,
+> +       [PLL_OFF_USER_CTL] =3D 0x18,
+> +       [PLL_OFF_CONFIG_CTL] =3D 0x20,
+> +       [PLL_OFF_CONFIG_CTL_U] =3D 0x24,
+> +       [PLL_OFF_STATUS] =3D 0x28,
+> +       [PLL_OFF_TEST_CTL] =3D 0x30,
+> +       [PLL_OFF_TEST_CTL_U] =3D 0x34,
+> +};
+> +
+> +static const struct pll_freq_tbl msm8996_a53pll_freq[] =3D {
+>         {  998400000, 52, 0x0, 0x1, 0 },
+>         { 1094400000, 57, 0x0, 0x1, 0 },
+>         { 1152000000, 62, 0x0, 0x1, 0 },
+> @@ -26,6 +55,64 @@ static const struct pll_freq_tbl a53pll_freq[] =3D {
+>         { }
+>  };
+> =20
+> +static struct clk_pll msm8996_pll =3D {
+> +       .mode_reg =3D 0x0,
+> +       .l_reg =3D 0x04,
+> +       .m_reg =3D 0x08,
+> +       .n_reg =3D 0x0c,
+> +       .config_reg =3D 0x14,
+> +       .status_reg =3D 0x1c,
+> +       .status_bit =3D 16,
+> +       .freq_tbl =3D msm8996_a53pll_freq,
+> +       .clkr.hw.init =3D &(struct clk_init_data){
+> +               .name =3D "a53pll",
+> +               .flags =3D CLK_IS_CRITICAL,
+> +               .parent_data =3D &(const struct clk_parent_data){
+> +                       .fw_name =3D "xo",
+> +                       .name =3D "xo",
+> +               },
+> +               .num_parents =3D 1,
+> +               .ops =3D &clk_pll_sr2_ops,
+> +       },
+> +};
+> +
+> +static struct clk_alpha_pll ipq6018_pll =3D {
+> +       .offset =3D 0x0,
+> +       .regs =3D ipq_pll_offsets,
+> +       .flags =3D SUPPORTS_DYNAMIC_UPDATE,
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x0,
+> +               .enable_mask =3D BIT(0),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "a53pll",
+> +                       .flags =3D CLK_IS_CRITICAL,
+> +                       .parent_data =3D &(const struct clk_parent_data){
+> +                               .fw_name =3D "xo",
+> +                       },
+> +                       .num_parents =3D 1,
+> +                       .ops =3D &clk_alpha_pll_huayra_ops,
+> +               },
+> +       },
+> +};
+> +
+> +static struct alpha_pll_config ipq6018_pll_config =3D {
 
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +examples:
->> +  - |
->> +    i2c {
->> +      #address-cells = <1>;
->> +      #size-cells = <0>;
->> +
->> +      tpm-tis-i2c@2e {
->
-> tpm@2e
->
+Can this be const?
 
-I understand why i should remove "i2c", but i think it should be "tpm_tis@2e".
-Respectively with "tpm_tis_spi.txt" and "tpm_tis_mmio.txt".
+> +       .l =3D 0x37,
+> +       .config_ctl_val =3D 0x04141200,
+> +       .config_ctl_hi_val =3D 0x0,
+> +       .early_output_mask =3D BIT(3),
+> +       .main_output_mask =3D BIT(0),
+> +};
+> +
+> +static struct a53pll_data msm8996pll_data =3D {
+> +       .a53pll.pll =3D &msm8996_pll,
+> +};
+> +
+> +static struct a53pll_data ipq6018pll_data =3D {
+> +       .flags =3D PLL_IS_ALPHA,
+> +       .a53pll.alpha_pll.pll =3D &ipq6018_pll,
+> +       .a53pll.alpha_pll.pll_config =3D &ipq6018_pll_config,
+> +};
+> +
+>  static const struct regmap_config a53pll_regmap_config =3D {
+>         .reg_bits               =3D 32,
+>         .reg_stride             =3D 4,
+> @@ -39,14 +126,16 @@ static int qcom_a53pll_probe(struct platform_device =
+*pdev)
+>         struct device *dev =3D &pdev->dev;
+>         struct regmap *regmap;
+>         struct resource *res;
+> -       struct clk_pll *pll;
+> +       const struct a53pll_data *pll_data;
+> +       struct clk_regmap *clkr;
+>         void __iomem *base;
+> -       struct clk_init_data init =3D { };
+>         int ret;
+> =20
+> -       pll =3D devm_kzalloc(dev, sizeof(*pll), GFP_KERNEL);
+> -       if (!pll)
+> -               return -ENOMEM;
+> +       pll_data =3D of_device_get_match_data(dev);
 
->> +        compatible = "tcg,tpm-tis-i2c";
->> +        reg = <0x2e>;
->> +        crc-checksum;
->> +      };
->> +    };
->> +...
->> --
->> 2.7.4
->>
+Use device_get_match_data() please.
 
-Thank you for your feedback.
-Best regards,
-Amir Mizinski
+> +       if (!pll_data) {
+> +               dev_err(dev, "failed to get platform data\n");
 
+No error message please.
+
+> +               return -ENODEV;
+> +       }
+> =20
+>         res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>         base =3D devm_ioremap_resource(dev, res);
+> @@ -57,30 +146,26 @@ static int qcom_a53pll_probe(struct platform_device =
+*pdev)
+>         if (IS_ERR(regmap))
+>                 return PTR_ERR(regmap);
+> =20
+> -       pll->l_reg =3D 0x04;
+> -       pll->m_reg =3D 0x08;
+> -       pll->n_reg =3D 0x0c;
+> -       pll->config_reg =3D 0x14;
+> -       pll->mode_reg =3D 0x00;
+> -       pll->status_reg =3D 0x1c;
+> -       pll->status_bit =3D 16;
+> -       pll->freq_tbl =3D a53pll_freq;
+> -
+> -       init.name =3D "a53pll";
+> -       init.parent_names =3D (const char *[]){ "xo" };
+> -       init.num_parents =3D 1;
+> -       init.ops =3D &clk_pll_sr2_ops;
+> -       init.flags =3D CLK_IS_CRITICAL;
+
+Please document why a clk is critical.
+
+> -       pll->clkr.hw.init =3D &init;
+> -
+> -       ret =3D devm_clk_register_regmap(dev, &pll->clkr);
+> +       if (pll_data->flags & PLL_IS_ALPHA) {
+> +               struct clk_alpha_pll *alpha_pll =3D
+> +                       pll_data->a53pll.alpha_pll.pll;
+> +               struct alpha_pll_config *alpha_pll_config =3D
+> +                       pll_data->a53pll.alpha_pll.pll_config;
+> +
+> +               clk_alpha_pll_configure(alpha_pll, regmap, alpha_pll_conf=
+ig);
+> +               clkr =3D &pll_data->a53pll.alpha_pll.pll->clkr;
+> +       } else {
+> +               clkr =3D &pll_data->a53pll.pll->clkr;
+> +       }
+
+Sorry, the design is confusing.
