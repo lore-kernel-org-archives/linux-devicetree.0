@@ -2,163 +2,842 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEED2C5518B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 07:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1473DC5518B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 07:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99BA5206CD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 07:11:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Yp8bxIcS"
+	by mail.kernel.org (Postfix) with ESMTP id E540B2075A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 07:19:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbgDVHLL (ORCPT
+        id S1726536AbgDVHTt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 03:11:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33968 "EHLO
+        Wed, 22 Apr 2020 03:19:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725907AbgDVHLL (ORCPT
+        by vger.kernel.org with ESMTP id S1725811AbgDVHTr (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:11:11 -0400
-Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ED86C03C1A6;
-        Wed, 22 Apr 2020 00:11:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587539467;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=x9g4xzih9SHZrw00RWoUucyKrGmw7cFSE/C08UHHhbo=;
-        b=Yp8bxIcS44j849A4MQvicvK+yl4C/uCwDApU0g29MmNVcsvsvTuHIxW7Wto7j197z5
-        L/kKtTxuuE6CG2/5RL0QZALxSiwemqThf8bOHNIz2OelEWuYlKXdwItCeKamyLUEhUKu
-        aXNEUs4mRpVdtGsS/GqYALWb7M5mUrqPCCyusa48oz/SoYsR0a3FmBZxcgXBPOqrqxVS
-        hCJMkxsZXJcTtXwyTqkQQHtp3CB9zTUo1AbAJa98QSgeyHi6M3S0SRVYUMqJ1L1+t5T5
-        YykSgrFeiE3kQ8VN5618m3/R4uS5M0DC065X+0zrl1hZJOpevb71xhVx/zyr09+VGDGv
-        dBdw==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCym3NRQH2PRBNS67Wq1XcMUsV9wfG0LbuNrxINn"
-X-RZG-CLASS-ID: mo00
-Received: from [IPv6:2001:16b8:263a:4100:a53d:b96b:debd:cf9d]
-        by smtp.strato.de (RZmta 46.6.1 AUTH)
-        with ESMTPSA id e09987w3M7Ao19A
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Wed, 22 Apr 2020 09:10:50 +0200 (CEST)
-Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200422065859.quy6ane5v7vsy5tf@gilmour.lan>
-Date:   Wed, 22 Apr 2020 09:10:57 +0200
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Philipp Rossak <embed3d@gmail.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Wed, 22 Apr 2020 03:19:47 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AACBCC03C1A6
+        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 00:19:46 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jR9fa-0000lu-7I; Wed, 22 Apr 2020 09:19:42 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jR9fW-0004w7-1H; Wed, 22 Apr 2020 09:19:38 +0200
+Date:   Wed, 22 Apr 2020 09:19:38 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        linux-mips@vger.kernel.org,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1AA57A0C-48E6-49BB-BB9A-2AAFFB371BCD@goldelico.com>
-References: <20200415101008.zxzxca2vlfsefpdv@gilmour.lan> <2E3401F1-A106-4396-8FE6-51CAB72926A4@goldelico.com> <20200415130233.rgn7xrtwqicptke2@gilmour.lan> <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com> <10969e64-fe1f-d692-4984-4ba916bd2161@gmail.com> <20200420073842.nx4xb3zqvu23arkc@gilmour.lan> <b5a06c19-7a3e-bcb8-5ae3-76901b9c6c35@gmail.com> <20200421112129.zjmkmzo3aftksgka@gilmour.lan> <20200421141543.GU37466@atomide.com> <D9D4D057-A73D-485F-898D-5C05E89C16B7@goldelico.com> <20200422065859.quy6ane5v7vsy5tf@gilmour.lan>
-To:     Maxime Ripard <maxime@cerno.tech>
-X-Mailer: Apple Mail (2.3124)
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        David Jander <david@protonic.nl>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 1/5] ARM: dts: add Protonic PRTI6Q board
+Message-ID: <20200422071937.32avvg6cknybnzyp@pengutronix.de>
+References: <20200421124057.19238-1-o.rempel@pengutronix.de>
+ <20200421124057.19238-2-o.rempel@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421124057.19238-2-o.rempel@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:13:22 up 158 days, 22:31, 171 users,  load average: 0.07, 0.11,
+ 0.11
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Maxime,
+On 20-04-21 14:40, Oleksij Rempel wrote:
+> Protonic PRTI6Q is a development board and a base class for different
+> specific customer application boards based on the i.MX6 family of SoCs,
+> developed by Protonic Holland.
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: David Jander <david@protonic.nl>
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  arch/arm/boot/dts/Makefile            |   1 +
+>  arch/arm/boot/dts/imx6q-prti6q.dts    | 529 ++++++++++++++++++++++++++
+>  arch/arm/boot/dts/imx6qdl-prti6q.dtsi | 174 +++++++++
+>  3 files changed, 704 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6q-prti6q.dts
+>  create mode 100644 arch/arm/boot/dts/imx6qdl-prti6q.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index e8dd992013973..206a36a50575e 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -538,6 +538,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+>  	imx6q-pico-nymph.dtb \
+>  	imx6q-pico-pi.dtb \
+>  	imx6q-pistachio.dtb \
+> +	imx6q-prti6q.dtb \
+>  	imx6q-rex-pro.dtb \
+>  	imx6q-sabreauto.dtb \
+>  	imx6q-sabrelite.dtb \
+> diff --git a/arch/arm/boot/dts/imx6q-prti6q.dts b/arch/arm/boot/dts/imx6q-prti6q.dts
+> new file mode 100644
+> index 0000000000000..b0d597a7d59cd
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6q-prti6q.dts
+> @@ -0,0 +1,529 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+> +/*
+> + * Copyright (c) 2014 Protonic Holland
+> + */
+> +
+> +/dts-v1/;
+> +#include "imx6q.dtsi"
+> +#include "imx6qdl-prti6q.dtsi"
+> +#include <dt-bindings/leds/common.h>
+> +#include <dt-bindings/sound/fsl-imx-audmux.h>
+> +
+> +/ {
+> +	model = "Protonic PRTI6Q board";
+> +	compatible = "prt,prti6q", "fsl,imx6q";
+> +
+> +	memory@10000000 {
+> +		device_type = "memory";
+> +		reg = <0x10000000 0xf0000000>;
+> +	};
+> +
+> +	backlight_lcd: backlight-lcd {
+> +		compatible = "pwm-backlight";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_backlight>;
+> +		pwms = <&pwm1 0 5000000>;
+> +		brightness-levels = <0 16 64 255>;
+> +		num-interpolated-steps = <16>;
+> +		default-brightness-level = <16>;
+> +		power-supply = <&reg_3v3>;
+> +		enable-gpios = <&gpio4 28 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	can3_25m_osc: can3-25m-osc {
 
-> Am 22.04.2020 um 08:58 schrieb Maxime Ripard <maxime@cerno.tech>:
->=20
-> On Tue, Apr 21, 2020 at 07:29:32PM +0200, H. Nikolaus Schaller wrote:
->>=20
->>> Am 21.04.2020 um 16:15 schrieb Tony Lindgren <tony@atomide.com>:
->>>=20
->>> * Maxime Ripard <maxime@cerno.tech> [200421 11:22]:
->>>> On Tue, Apr 21, 2020 at 11:57:33AM +0200, Philipp Rossak wrote:
->>>>> I had a look on genpd and I'm not really sure if that fits.
->>>>>=20
->>>>> It is basically some bit that verify that the clocks should be =
-enabled or
->>>>> disabled.
->>>>=20
->>>> No, it can do much more than that. It's a framework to control the =
-SoCs power
->>>> domains, so clocks might be a part of it, but most of the time it's =
-going to be
->>>> about powering up a particular device.
->>>=20
->>> Note that on omaps there are actually SoC module specific registers.
->>=20
->> Ah, I see. This is of course a difference that the TI glue logic has
->> its own registers in the same address range as the sgx and this can't
->> be easily handled by a common sgx driver.
->>=20
->> This indeed seems to be unique with omap.
->>=20
->>> And there can be multiple devices within a single target module on
->>> omaps. So the extra dts node and device is justified there.
->>>=20
->>> For other SoCs, the SGX clocks are probably best handled directly
->>> in pvr-drv.c PM runtime functions unless a custom hardware wrapper
->>> with SoC specific registers exists.
->>=20
->> That is why we need to evaluate what the better strategy is.
->>=20
->> So we have
->> a) omap which has a custom wrapper around the sgx
->> b) others without, i.e. an empty (or pass-through) wrapper
->>=20
->> Which one do we make the "standard" and which one the "exception"?
->> What are good reasons for either one?
->>=20
->>=20
->> I am currently in strong favour of a) being standard because it
->> makes the pvr-drv.c simpler and really generic (independent of
->> wrapping into any SoC).
->>=20
->> This will likely avoid problems if we find more SoC with yet another
->> scheme how the SGX clocks are wrapped.
->>=20
->> It also allows to handle different number of clocks (A31 seems to
->> need 4, Samsung, A83 and JZ4780 one) without changing the sgx =
-bindings
->> or making big lists of conditionals. This variance would be handled
->> outside the sgx core bindings and driver.
->=20
-> I disagree. Every other GPU binding and driver is handling that just =
-fine, and
-> the SGX is not special in any case here.
+Nit, can be named can_osc or can_25m_osc.
 
-Can you please better explain this? With example or a description
-or a proposal?
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <25000000>;
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_leds>;
+> +
+> +		led-debug0 {
+> +			function = LED_FUNCTION_STATUS;
+> +			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "heartbeat";
+> +		};
+> +
+> +		led-debug1 {
+> +			function = LED_FUNCTION_SD;
+> +			gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "disk-activity";
+> +		};
+> +	};
+> +
+> +	panel {
+> +		compatible = "kyo,tcg121xglp";
+> +		backlight = <&backlight_lcd>;
+> +
+> +		port {
+> +			panel_in: endpoint {
+> +				remote-endpoint = <&lvds0_out>;
+> +			};
+> +		};
+> +	};
+> +
+> +	reg_wifi: regulator-wifi {
+> +		compatible = "regulator-fixed";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_wifi_npd>;
+> +		enable-active-high;
+> +		gpio = <&gpio1 26 GPIO_ACTIVE_HIGH>;
+> +		regulator-max-microvolt = <1800000>;
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-name = "regulator-WL12xx";
+> +		startup-delay-us = <70000>;
+> +	};
+> +
+> +	sound {
+> +		compatible = "simple-audio-card";
+> +		simple-audio-card,name = "prti6q-sgtl5000";
+> +		simple-audio-card,format = "i2s";
+> +		simple-audio-card,widgets =
+> +			"Microphone", "Microphone Jack",
+> +			"Line", "Line In Jack",
+> +			"Headphone", "Headphone Jack",
+> +			"Speaker", "External Speaker";
+> +		simple-audio-card,routing =
+> +			"MIC_IN", "Microphone Jack",
+> +			"LINE_IN", "Line In Jack",
+> +			"Headphone Jack", "HP_OUT",
+> +			"External Speaker", "LINE_OUT";
+> +
+> +		simple-audio-card,cpu {
+> +			sound-dai = <&ssi1>;
+> +			system-clock-frequency = <0>;
+> +		};
+> +
+> +		simple-audio-card,codec {
+> +			sound-dai = <&sgtl5000>;
+> +			bitclock-master;
+> +			frame-master;
+> +		};
+> +	};
+> +
+> +	sound-spdif {
+> +		compatible = "fsl,imx-audio-spdif";
+> +		model = "imx-spdif";
+> +		spdif-controller = <&spdif>;
+> +		spdif-in;
+> +		spdif-out;
+> +	};
+> +};
+> +
+> +&audmux {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_audmux>;
+> +	status = "okay";
+> +
+> +	mux_ssi1 {
+> +		fsl,audmux-port = <0>;
+> +		fsl,port-config = <
+> +			IMX_AUDMUX_V2_PTCR_SYN 		0
+> +			IMX_AUDMUX_V2_PTCR_TFSEL(2) 	0
+> +			IMX_AUDMUX_V2_PTCR_TCSEL(2) 	0
+> +			IMX_AUDMUX_V2_PTCR_TFSDIR 	0
+> +			IMX_AUDMUX_V2_PTCR_TCLKDIR IMX_AUDMUX_V2_PDCR_RXDSEL(2)
+> +		>;
+> +	};
+> +
+> +	mux_pins3 {
+> +		fsl,audmux-port = <2>;
+> +		fsl,port-config = <
+> +			IMX_AUDMUX_V2_PTCR_SYN IMX_AUDMUX_V2_PDCR_RXDSEL(0)
+> +			0		       IMX_AUDMUX_V2_PDCR_TXRXEN
+> +		>;
+> +	};
+> +};
+> +
+> +&can2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_can2>;
+> +	status = "okay";
+> +};
+> +
+> +&ecspi1 {
+> +	cs-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_ecspi1>;
+> +	status = "okay";
+> +
+> +	flash@0 {
+> +		compatible = "jedec,spi-nor";
+> +		reg = <0>;
+> +		spi-max-frequency = <20000000>;
+> +	};
+> +};
+> +
+> +&ecspi2 {
+> +	cs-gpios = <&gpio2 26 GPIO_ACTIVE_HIGH>, <&gpio4 25 GPIO_ACTIVE_HIGH>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_ecspi2 &pinctrl_ecspi2_cs>;
+> +	status = "okay";
+> +
+> +	can@0 {
+> +		compatible = "microchip,mcp2515";
+> +		reg = <0>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_can3>;
+> +		clocks = <&can3_25m_osc>;
+> +		interrupts-extended = <&gpio3 20 IRQ_TYPE_LEVEL_LOW>;
+> +		spi-max-frequency = <5000000>;
+> +	};
+> +
+> +	adc@1 {
+> +		compatible = "ti,adc128s052";
+> +		reg = <1>;
+> +		spi-max-frequency = <2000000>;
+> +		vref-supply = <&reg_3v3>;
+> +	};
+> +};
+> +
+> +&ecspi3 {
+> +	cs-gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_ecspi3>;
+> +	status = "okay";
+> +};
+> +
+> +&fec {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_enet>;
+> +	phy-mode = "rgmii-id";
+> +	phy-handle = <&rgmii_phy>;
+> +	status = "okay";
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		/* Microchip KSZ9031RNX PHY */
+> +		rgmii_phy: ethernet-phy@0 {
+> +			reg = <0>;
+> +			interrupts-extended = <&gpio1 28 IRQ_TYPE_LEVEL_LOW>;
+> +			reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
+> +			reset-assert-us = <10000>;
+> +			reset-deassert-us = <300>;
+> +		};
+> +	};
+> +};
+> +
+> +&hdmi {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hdmi>;
+> +	ddc-i2c-bus = <&i2c2>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c1 {
+> +	sgtl5000: audio-codec@a {
+> +		compatible = "fsl,sgtl5000";
+> +		reg = <0xa>;
+> +		#sound-dai-cells = <0>;
+> +		clocks = <&clks 201>;
+> +		VDDA-supply = <&reg_3v3>;
+> +		VDDIO-supply = <&reg_3v3>;
+> +		VDDD-supply = <&reg_1v8>;
+> +	};
+> +};
+> +
+> +/* DDC */
+> +&i2c2 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c2>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c3 {
+> +	adc@49 {
+> +		compatible = "ti,ads1015";
+> +		reg = <0x49>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		/* can2_l */
+> +		channel@4 {
+> +			reg = <4>;
+> +			ti,gain = <3>;
+> +			ti,datarate = <3>;
+> +		};
+> +
+> +		/* can2_h */
+> +		channel@5 {
+> +			reg = <5>;
+> +			ti,gain = <3>;
+> +			ti,datarate = <3>;
+> +		};
+> +
+> +		/* can1_l */
+> +		channel@6 {
+> +			reg = <6>;
+> +			ti,gain = <3>;
+> +			ti,datarate = <3>;
+> +		};
+> +
+> +		/* can1_h */
+> +		channel@7 {
+> +			reg = <7>;
+> +			ti,gain = <3>;
+> +			ti,datarate = <3>;
+> +		};
+> +	};
+> +};
+> +
+> +&pcie {
+> +	status = "okay";
+> +};
+> +
+> +&pwm1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm1>;
+> +	status = "okay";
+> +};
+> +
+> +&ldb {
+> +	status = "okay";
+> +
+> +	lvds-channel@0 {
+> +		status = "okay";
+> +
+> +		port@4 {
+> +			reg = <4>;
+> +
+> +			lvds0_out: endpoint {
+> +				remote-endpoint = <&panel_in>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&sata {
+> +	status = "okay";
+> +};
+> +
+> +&snvs_poweroff {
+> +	status = "okay";
+> +};
+> +
+> +&spdif {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_spdif>;
+> +	status = "okay";
+> +};
+> +
+> +&ssi1 {
+> +	#sound-dai-cells = <0>;
+> +	fsl,mode = "ac97-slave";
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart2>;
+> +	status = "okay";
+> +};
+> +
+> +&uart5 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart5>;
+> +	status = "okay";
+> +};
+> +
+> +&usbotg {
+> +	pinctrl-0 = <&pinctrl_usbotg &pinctrl_usbotg_id>;
+> +};
+> +
+> +&usdhc2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc2>;
+> +	non-removable;
+> +	vmmc-supply = <&reg_wifi>;
+> +	cap-power-off-card;
+> +	keep-power-in-suspend;
+> +	status = "okay";
+> +
+> +	wifi {
+> +		compatible = "ti,wl1271";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_wifi>;
+> +		interrupts-extended = <&gpio1 30 IRQ_TYPE_LEVEL_HIGH>;
+> +		ref-clock-frequency = "38400000";
+> +		tcxo-clock-frequency = "19200000";
+> +	};
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl_audmux: audmuxgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_CSI0_MCLK__CCM_CLKO1		0x030b0
+> +			MX6QDL_PAD_CSI0_DAT7__AUD3_RXD		0x130b0
+> +			MX6QDL_PAD_CSI0_DAT4__AUD3_TXC		0x130b0
+> +			MX6QDL_PAD_CSI0_DAT5__AUD3_TXD		0x110b0
+> +			MX6QDL_PAD_CSI0_DAT6__AUD3_TXFS		0x130b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_backlight: backlightgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_DISP0_DAT7__GPIO4_IO28	0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_can2: can2grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX 0x80000000
+> +			MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX 0x80000000
+> +		>;
+> +	};
+> +
+> +	pinctrl_can3: can3grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_EIM_D20__GPIO3_IO20		0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_ecspi1: ecspi1grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_EIM_D17__ECSPI1_MISO		0x100b1
+> +			MX6QDL_PAD_EIM_D18__ECSPI1_MOSI		0x100b1
+> +			MX6QDL_PAD_EIM_D16__ECSPI1_SCLK		0x100b1
+> +			/* CS */
+> +			MX6QDL_PAD_EIM_D19__GPIO3_IO19		0x000b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_ecspi2: ecspi2grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_EIM_OE__ECSPI2_MISO		0x100b1
+> +			MX6QDL_PAD_EIM_CS0__ECSPI2_SCLK		0x100b1
+> +			MX6QDL_PAD_EIM_CS1__ECSPI2_MOSI		0x100b1
+> +			MX6QDL_PAD_EIM_RW__GPIO2_IO26		0x000b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_ecspi2_cs: ecspi2csgrp {
+> +		fsl,pins = <
+> +			/* ADC128S022 CS */
+> +			MX6QDL_PAD_DISP0_DAT4__GPIO4_IO25	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_ecspi3: ecspi3grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_DISP0_DAT0__ECSPI3_SCLK	0x100b1
+> +			MX6QDL_PAD_DISP0_DAT1__ECSPI3_MOSI	0x100b1
+> +			MX6QDL_PAD_DISP0_DAT2__ECSPI3_MISO	0x100b1
+> +			MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24	0x000b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_enet: enetgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b030
+> +			MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b030
+> +			MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b030
+> +			MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b030
+> +			MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b030
+> +			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b030
+> +			MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x10030
+> +			MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x10030
+> +			MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x10030
+> +			MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x10030
+> +			MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x10030
+> +			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x10030
+> +			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x10030
+> +			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x10030
+> +			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x10030
+> +
+> +			/* Phy reset */
+> +			MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25	0x1b0b0
+> +			MX6QDL_PAD_ENET_TX_EN__GPIO1_IO28	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_hdmi: hdmigrp {
+> +		fsl,pins = <
+> +			/* NOTE: DDC is done via I2C2, so DON'T
+> +			 * configure DDC pins for HDMI!
+> +			 */
+> +			MX6QDL_PAD_EIM_A25__HDMI_TX_CEC_LINE	0x1f8b0
+> +		>;
+> +	};
+> +
+> +	/* DDC */
+> +	pinctrl_i2c2: i2c2grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_KEY_COL3__I2C2_SCL	0x4001b8b1
+> +			MX6QDL_PAD_KEY_ROW3__I2C2_SDA	0x4001b8b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_leds: ledsgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_GPIO_8__GPIO1_IO08		0x1b0b0
+> +			MX6QDL_PAD_GPIO_9__GPIO1_IO09		0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_pwm1: pwm1grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_DISP0_DAT8__PWM1_OUT		0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_spdif: spdifgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_GPIO_16__SPDIF_IN		0x1b0b0
+> +			MX6QDL_PAD_GPIO_19__SPDIF_OUT		0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart2: uart2grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_EIM_D26__UART2_RX_DATA	0x1b0b1
+> +			MX6QDL_PAD_EIM_D27__UART2_TX_DATA	0x1b0b1
+> +			MX6QDL_PAD_EIM_D28__UART2_DTE_CTS_B	0x1b0b1
+> +			MX6QDL_PAD_EIM_D29__UART2_DTE_RTS_B	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart5: uart5grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
+> +			MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usbotg_id: usbotgidgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID	0x1f058
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc2: usdhc2grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD2_CMD__SD2_CMD		0x170b9
+> +			MX6QDL_PAD_SD2_CLK__SD2_CLK		0x100b9
+> +			MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x170b9
+> +			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x170b9
+> +			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x170b9
+> +			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x170b9
+> +		>;
+> +	};
+> +
+> +	pinctrl_wifi: wifigrp {
+> +		fsl,pins = <
+> +			/* WL12xx IRQ */
+> +			MX6QDL_PAD_ENET_TXD0__GPIO1_IO30	0x10880
+> +		>;
+> +	};
+> +
+> +	pinctrl_wifi_npd: wifinpd {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x1b8b0
+> +		>;
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/imx6qdl-prti6q.dtsi b/arch/arm/boot/dts/imx6qdl-prti6q.dtsi
+> new file mode 100644
+> index 0000000000000..7090a7ca83d8d
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6qdl-prti6q.dtsi
+> @@ -0,0 +1,174 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+> +/*
+> + * Copyright (c) 2014 Protonic Holland
+> + */
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +
+> +/ {
+> +	chosen {
+> +		stdout-path = &uart4;
+> +	};
+> +
+> +	reg_1v8: regulator-1v8 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "1v8";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	reg_3v3: regulator-3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "3v3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	reg_usb_h1_vbus: regulator-h1-vbus {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "h1-vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	reg_usb_otg_vbus: regulator-otg-vbus {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "otg-vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +};
+> +
+> +&can1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_can1>;
+> +	status = "okay";
+> +};
 
-I simply do not have your experience with "every other GPU" as you have.
-And I admit that I can't read from your statement what we should do
-to bring this topic forward.
+You change the pinctl for every .dts so we can drop it from the common
+.dtsi completely.
 
-So please make a proposal how it should be in your view.
+> +&i2c1 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c1>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c3 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c3>;
+> +	status = "okay";
+> +
+> +	temperature-sensor@70 {
+> +		compatible = "ti,tmp103";
+> +		reg = <0x70>;
+> +	};
+> +};
+> +
+> +&uart4 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart4>;
+> +	status = "okay";
+> +};
+> +
+> +&usbh1 {
+> +	vbus-supply = <&reg_usb_h1_vbus>;
+> +	phy_type = "utmi";
+> +	dr_mode = "host";
+> +	status = "okay";
+> +};
+> +
+> +&usbotg {
+> +	vbus-supply = <&reg_usb_otg_vbus>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usbotg>;
+> +	phy_type = "utmi";
+> +	dr_mode = "host";
+> +	disable-over-current;
+> +	status = "okay";
+> +};
 
-BR and thanks,
-Nikolaus
+I don't count the .dts which disables the nodes because we enabled it
+here. I would setup the mux and stuff here but would not set it to
+"okay". It is a bit more straight forward to enable a node rather then:
 
+imx6qdl.dtsi -> disable
+common.dtsi -> enable
+specific.dts -> disable
+
+Regards,
+  Marco
+
+> +
+> +&usdhc1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc1>;
+> +	cd-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc3>;
+> +	bus-width = <8>;
+> +	non-removable;
+> +	status = "okay";
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl_can1: can1grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX	0x80000000
+> +			MX6QDL_PAD_KEY_COL2__FLEXCAN1_TX	0x80000000
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c1: i2c1grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_CSI0_DAT8__I2C1_SDA		0x4001f8b1
+> +			MX6QDL_PAD_CSI0_DAT9__I2C1_SCL		0x4001f8b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c3: i2c3grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_GPIO_5__I2C3_SCL	      0x4001b8b1
+> +			MX6QDL_PAD_GPIO_6__I2C3_SDA	      0x4001b8b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart4: uart4grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_KEY_COL0__UART4_TX_DATA	0x1b0b1
+> +			MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1: usdhc1grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD1_CMD__SD1_CMD		0x170f9
+> +			MX6QDL_PAD_SD1_CLK__SD1_CLK		0x100f9
+> +			MX6QDL_PAD_SD1_DAT0__SD1_DATA0		0x170f9
+> +			MX6QDL_PAD_SD1_DAT1__SD1_DATA1		0x170f9
+> +			MX6QDL_PAD_SD1_DAT2__SD1_DATA2		0x170f9
+> +			MX6QDL_PAD_SD1_DAT3__SD1_DATA3		0x170f9
+> +			MX6QDL_PAD_GPIO_1__GPIO1_IO01		0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc3: usdhc3grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17099
+> +			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10099
+> +			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17099
+> +			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17099
+> +			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17099
+> +			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17099
+> +			MX6QDL_PAD_SD3_DAT4__SD3_DATA4		0x17099
+> +			MX6QDL_PAD_SD3_DAT5__SD3_DATA5		0x17099
+> +			MX6QDL_PAD_SD3_DAT6__SD3_DATA6		0x17099
+> +			MX6QDL_PAD_SD3_DAT7__SD3_DATA7		0x17099
+> +			MX6QDL_PAD_SD3_RST__SD3_RESET           0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usbotg: usbotggrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_EIM_D21__USB_OTG_OC	0x1b0b0
+> +			MX6QDL_PAD_EIM_D22__GPIO3_IO22	0x1b0b0
+> +		>;
+> +	};
+> +};
+> -- 
+> 2.26.1
+> 
+> 
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
