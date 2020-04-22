@@ -2,81 +2,139 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C23AAC55186
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 09:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C85C55186
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 09:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A01CB20656
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 09:23:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587547419;
-	bh=KIXbtLYXdqvFRpDylTVVouE4ecbmQXC4DLEhxDnLiqQ=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=mUVnYFNLke8kAJoO2Hywwd9jIDBJ6beefymwrZ4gns0TWDax294WvwECmIbNoGZHZ
-	 R5FfM8FXeLnqIA9wAXD4UDxNQWJ0lgLqRUvHD8LYkUj4Tc0rY0XDS/hh0ENjaWwL8t
-	 FsFfOW3KtUAv45WEBTl30AlClstd+6X5yjMfM6xQ=
+	by mail.kernel.org (Postfix) with ESMTP id 800FB2073A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 09:25:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726077AbgDVJXg (ORCPT
+        id S1726415AbgDVJZK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 05:23:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34792 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgDVJXg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Apr 2020 05:23:36 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38B5020656;
-        Wed, 22 Apr 2020 09:23:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587547416;
-        bh=KIXbtLYXdqvFRpDylTVVouE4ecbmQXC4DLEhxDnLiqQ=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=yRAendzY6ymm0fek+hxJrl3UcbcYiwJc1PuXqmJ2aHooL0fEGEait1WW5A3cWEWDc
-         3ammBbeCxOIOzfGvy+QIl5xHKoKq/8VJtBUvjKhswRhO3cuTnTFqzFRW2pqP6wEkng
-         N4gh2kXS7PF2PCr4tsLpI1VoRpWZ8h7HTBEHXuKU=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 22 Apr 2020 05:25:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726420AbgDVJZJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Apr 2020 05:25:09 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A550C03C1AC
+        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 02:25:09 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jRBcr-0007Rh-33; Wed, 22 Apr 2020 11:25:01 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jRBco-0006Ku-K1; Wed, 22 Apr 2020 11:24:58 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
+        devicetree@vger.kernel.org
+Subject: [PATCH net-next v5 1/4] dt-bindings: net: phy: Add support for NXP TJA11xx
+Date:   Wed, 22 Apr 2020 11:24:53 +0200
+Message-Id: <20200422092456.24281-2-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200422092456.24281-1-o.rempel@pengutronix.de>
+References: <20200422092456.24281-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200411010143.GF20625@builder.lan>
-References: <1586566362-21450-1-git-send-email-wcheng@codeaurora.org> <1586566362-21450-2-git-send-email-wcheng@codeaurora.org> <20200411010143.GF20625@builder.lan>
-Subject: Re: [PATCH v4 1/2] clk: qcom: gcc: Add USB3 PIPE clock and GDSC for SM8150
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     agross@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, vinod.koul@linaro.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Wesley Cheng <wcheng@codeaurora.org>
-Date:   Wed, 22 Apr 2020 02:23:35 -0700
-Message-ID: <158754741540.132238.1839211437225696725@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Bjorn Andersson (2020-04-10 18:01:43)
-> On Fri 10 Apr 17:52 PDT 2020, Wesley Cheng wrote:
->=20
-> > This adds the USB3 PIPE clock and GDSC structures, so
-> > that the USB driver can vote for these resources to be
-> > enabled/disabled when required.  Both are needed for SS
-> > and HS USB paths to operate properly.  The GDSC will
-> > allow the USB system to be brought out of reset, while
-> > the PIPE clock is needed for data transactions between
-> > the PHY and controller.
-> >=20
-> > Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-> > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
->=20
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->=20
->=20
-> Stephen, let me know when you take this patch and I'll take the dts one.
->=20
+Document the NXP TJA11xx PHY bindings.
 
-Looks like I already applied it and it's merged in Linus' tree.
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ .../devicetree/bindings/net/nxp,tja11xx.yaml  | 61 +++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+
+diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+new file mode 100644
+index 0000000000000..42be0255512b3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+@@ -0,0 +1,61 @@
++# SPDX-License-Identifier: GPL-2.0+
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP TJA11xx PHY
++
++maintainers:
++  - Andrew Lunn <andrew@lunn.ch>
++  - Florian Fainelli <f.fainelli@gmail.com>
++  - Heiner Kallweit <hkallweit1@gmail.com>
++
++description:
++  Bindings for NXP TJA11xx automotive PHYs
++
++allOf:
++  - $ref: ethernet-phy.yaml#
++
++patternProperties:
++  "^ethernet-phy@[0-9a-f]+$":
++    type: object
++    description: |
++      Some packages have multiple PHYs. Secondary PHY should be defines as
++      subnode of the first (parent) PHY.
++
++    properties:
++      reg:
++        minimum: 0
++        maximum: 31
++        description:
++          The ID number for the child PHY. Should be +1 of parent PHY.
++
++    required:
++      - reg
++
++examples:
++  - |
++    mdio {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        tja1101_phy0: ethernet-phy@4 {
++            reg = <0x4>;
++        };
++    };
++  - |
++    mdio {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        tja1102_phy0: ethernet-phy@4 {
++            reg = <0x4>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            tja1102_phy1: ethernet-phy@5 {
++                reg = <0x5>;
++            };
++        };
++    };
+-- 
+2.26.1
+
