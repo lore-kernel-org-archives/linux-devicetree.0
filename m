@@ -2,148 +2,95 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 371A4C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 06:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB5DC55181
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 06:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11BE020767
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 06:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 259FD20747
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 06:54:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="klxqohSY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uA+B5OdC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726154AbgDVGXH (ORCPT
+        id S1725811AbgDVGyP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 02:23:07 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15843 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgDVGXH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 02:23:07 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e9fe2560001>; Tue, 21 Apr 2020 23:21:10 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 21 Apr 2020 23:23:06 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 21 Apr 2020 23:23:06 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 22 Apr
- 2020 06:23:06 +0000
-Received: from [10.2.165.49] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 22 Apr
- 2020 06:23:05 +0000
-Subject: Re: [RFC PATCH v8 0/9] Add Tegra driver for video capture
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
-        <helen.koike@collabora.com>, <digetx@gmail.com>,
-        <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1587427874-3291-1-git-send-email-skomatineni@nvidia.com>
- <5c44beca-4016-6e4f-01bb-e38480bfc34b@xs4all.nl>
- <20200421205032.GD3233341@ulmo>
- <cfbd9954-6a89-3973-55f5-920b7a807774@nvidia.com>
-Message-ID: <154b779e-e3f5-1322-2f10-1356402ff956@nvidia.com>
-Date:   Tue, 21 Apr 2020 23:23:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 22 Apr 2020 02:54:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725786AbgDVGyP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 02:54:15 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C985C03C1A6;
+        Tue, 21 Apr 2020 23:54:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=PPZ4h2g1T5oHvKPAYnNLCJiwA+6mBi/YDgQyauKaszE=; b=uA+B5OdCZI47BRrAhfT/13mIKQ
+        tcepQX5mWIn1Y1cEAeGW+MeiXS3dc/+mQmnvDGpF3/MtB7lTDahF03J4+v1e9QCo5UVk+EVRbTw3S
+        xsQkC2wUOAwqKEQn+LF3rYpjdi8CqpQ22CdGp28zJGe3BfiCAisIDCL9+eVulZmyXhH7ffc+xRREo
+        wBdn5UWxKVS3lxdoTU+ggRZWXetaZZVUUBDGgOVan9WZ9hAR3GAk6Q+3PI275OtXqRSZJgbfUy2Q4
+        RhwdqKFLaI7rXULSE49yznfQH6iMjawCrlWwO3LHXhh+V9ln/XQyWZ6FLmViomNojEt+YuDPJUfDq
+        cLPnmVfw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jR9Gw-0004PS-1b; Wed, 22 Apr 2020 06:54:14 +0000
+Date:   Tue, 21 Apr 2020 23:54:14 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Alim Akhtar <alim.akhtar@samsung.com>
+Cc:     robh@kernel.org, devicetree@vger.kernel.org,
+        linux-scsi@vger.kernel.org, krzk@kernel.org, avri.altman@wdc.com,
+        martin.petersen@oracle.com, kwmad.kim@samsung.com,
+        stanley.chu@mediatek.com, cang@codeaurora.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 04/10] scsi: ufs: introduce
+ UFSHCD_QUIRK_PRDT_BYTE_GRAN quirk
+Message-ID: <20200422065414.GK20318@infradead.org>
+References: <20200417175944.47189-1-alim.akhtar@samsung.com>
+ <CGME20200417181014epcas5p1343bc81fb246133cc332d3fc7a394c15@epcas5p1.samsung.com>
+ <20200417175944.47189-5-alim.akhtar@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <cfbd9954-6a89-3973-55f5-920b7a807774@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1587536470; bh=0MjPPOLvF0Koh9IIPl/Xwd7aLx+PTICwfRq0xHoYkQs=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=klxqohSY/6GbdZdLOXvDJjYTVGeNTxVWp+v+1HfSFIbIIlLgy+u99GTzpouOL2+6k
-         LlqsO+MXDxsXOuydKKM8TDzqhnqiZF9GMo/nPjWYsZoF0m7i0U/abRDeVTpC9rFwBZ
-         3LD539xao5yz/yU7fkAulH1vKYMDdUw92gPxptikBYR1ZaYdFPsvDNWvWrE5i4KYaj
-         DtN9sC7pq52aflMt5NaV+3A25YdQW0aCicssTDAHOAclartwbR3Mz2mYRX6bLHiD20
-         1qEbAy+wWi7eEv3XcHy7syu+TMJ5XupwkmCMFT49HFVIsriTsvuCOCkTm81DEUDucT
-         XZe1gqhcQtVmQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417175944.47189-5-alim.akhtar@samsung.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, Apr 17, 2020 at 11:29:38PM +0530, Alim Akhtar wrote:
+> Some UFS host controllers may think granularities of PRDT length and
+> offset as bytes, not double words.
+> 
+> Signed-off-by: Kiwoong Kim <kwmad.kim@samsung.com>
+> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> ---
+>  drivers/scsi/ufs/ufshcd.c | 30 +++++++++++++++++++++++-------
+>  drivers/scsi/ufs/ufshcd.h |  6 ++++++
+>  2 files changed, 29 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index ee30ed6cc805..b32fcedcdcb9 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -2151,8 +2151,14 @@ static int ufshcd_map_sg(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
+>  		return sg_segments;
+>  
+>  	if (sg_segments) {
+> -		lrbp->utr_descriptor_ptr->prd_table_length =
+> -			cpu_to_le16((u16)sg_segments);
+> +
+> +		if (hba->quirks & UFSHCD_QUIRK_PRDT_BYTE_GRAN)
+> +			lrbp->utr_descriptor_ptr->prd_table_length =
+> +				cpu_to_le16((u16)(sg_segments *
+> +					sizeof(struct ufshcd_sg_entry)));
+> +		else
+> +			lrbp->utr_descriptor_ptr->prd_table_length =
+> +				cpu_to_le16((u16) (sg_segments));
 
-On 4/21/20 9:12 PM, Sowjanya Komatineni wrote:
->
-> On 4/21/20 1:50 PM, Thierry Reding wrote:
->> On Tue, Apr 21, 2020 at 01:09:50PM +0200, Hans Verkuil wrote:
->>> Hi Sowjanya,
->>>
->>> On 21/04/2020 02:11, Sowjanya Komatineni wrote:
->>>> This series adds Tegra210 VI and CSI driver for built-in test pattern
->>>> generator (TPG) capture.
->>>>
->>>> Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
->>>> CSI port is one-to-one mapped to VI channel for video capture.
->>>>
->>>> This series has TPG support only where it creates hard media links
->>>> between CSI subdevice and VI video device without device graphs.
->>>>
->>>> v4l2-compliance results are available below the patch diff.
->>> I'm ready to merge this v8. Looking at the series I should only merge
->>> patches 6 and 7, all other patches go through different subsystems, 
->>> right?
->> You could also pick up patch 5 because it adds the bindings that are
->> implemented by the driver in patch 6. But I can also pick that up into
->> the Tegra tree. In fact, I do have a set of patches to convert some
->> Tegra bindings to the new json-schema format and the host1x file is
->> among them. If I do get around to finish those up for v5.8 it might be
->> better for me to pick up patch 5 so that I can base my conversion patch
->> on top of that.
->>
->> Either way is fine with me, so I've acked the three patches. Take which
->> ones you want and I'll pick up the rest.
->>
->> Thanks again for your guidance on this patch set!
->>
->> Thierry
->
-> Hi Hans,
->
-> Would like to add a small fix to the driver for explicit check for vi 
-> and csi availability before TPG setup and cleanup in case if video 
-> driver is enabled without device tree support where vi and csi drivers 
-> does not register.
->
-> Although we are not enabling driver by default now, would be good to 
-> have this in this series itself.
->
-> Will send out the updated version, please pick v9.
->
-> Thanks
->
-> Sowjanya
-
-Sorry Hans. Just sent v9 which has small fix of explicit check on csi 
-and vi both channels availability before TPG setup and cleanup.
-
-As for later Tegras (Tegra186+), CSI is not a child device to VI and in 
-case if either of CSI/VI platform driver register doesn't happen this 
-explicit check helps to skip TPG setup. Mostly as device tree changes go 
-with driver updates, should not be real issue but in case of wrong 
-compatible or missing in device tree to avoid crash added this explicit 
-check.
-
-Please consider this v9 for merge.
-
-Thanks
-
-Sowjanya
-
->
->
+No double words here.  "Normal" UFS uses the actual segment count,
+while Samsumg uses bytes.  Also no need fo the u16 count in
+either the old or new version.
