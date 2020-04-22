@@ -2,52 +2,51 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E305C5518F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 14:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0254BC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 14:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4072C20CC7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 14:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D321F206D4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 14:37:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="p78a3N7V"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Bbe8fkiZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgDVO0l (ORCPT
+        id S1725994AbgDVOhY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 10:26:41 -0400
-Received: from vultr.net.flygoat.com ([149.28.68.211]:59336 "EHLO
-        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727933AbgDVO0l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 10:26:41 -0400
-Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 1287820CD7;
-        Wed, 22 Apr 2020 14:26:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1587565589; bh=p5gnRIZ0/bXq2CwVeK3wJszOYSy/wquMYCbBmYV8dBU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p78a3N7VO3xp7N0BySi1ZbKQiCW0BH819CFCjPTso4wJbaMgdXdGrhXgdl9/A3ixZ
-         0IUAHGI9PLpK6bpRgxl3ZlfWWUNphp9h8dYsfMCGh6D0yd90OBws1+F7JVkEBAUNR6
-         7w2kiRjOhk4sl0VD0qHuzaeS6hYtE9AcfMXeYg8YCOYWVp4lAa7H7ZP5062uB/qVZR
-         7+NJsYEIddLiPz+dmOYT0cSz/6D9EJei7TJD3LREeqVMqDVNIFAD91W/gBguDJDaH8
-         GAZi9VdrV00DxNthO9e7ShlernKT+pAezi3zG60HiJyjSlPaAcimR4/GZcT6qkyxiD
-         PN8Ws/TpyT5ww==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org, maz@kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH 6/6] dt-bindings: interrupt-controller: Add Loongson PCH MSI
-Date:   Wed, 22 Apr 2020 22:24:26 +0800
-Message-Id: <20200422142428.1249684-7-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200422142428.1249684-1-jiaxun.yang@flygoat.com>
-References: <20200422142428.1249684-1-jiaxun.yang@flygoat.com>
+        Wed, 22 Apr 2020 10:37:24 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:54089 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbgDVOhY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 10:37:24 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id 03MEaaEN012204;
+        Wed, 22 Apr 2020 23:36:36 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 03MEaaEN012204
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587566197;
+        bh=qtkMM7xy3zIEAGobkYGRENcGZkyxHsxrtwH6kA03juo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Bbe8fkiZi25X8K0u0JC3pEpd+M3uyHKiWQ3Fh4HnAabPhqW4l2sjIJ8g5wCkeNGnW
+         YNrhw/idkidv98yShZ11vbP2W0VlKyHelFmYmP6L2gheRnHRMmS2RBpYp98hIPpyrA
+         SYusnuIHSSaRIo+JSYIQ0Q5+U0Qz5NYFx901ctAXi5ylhE/Z0Kl/o3HPLiaH1IZ7+p
+         69cyQwSd/CdB4f1FNHz2ZGqz0eAuh7fDdAbUFsFIwAogFgZgumHJGtVN3Xs+zV4vDG
+         TDj1XXFVqYE0v/h0AM+oLFNxl8ZvlQw2wDB2N7gKV6oOQ6IQ8HMX0Mevz2V1mhGaM3
+         HwxyadhtZ83FA==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] ARM: dts: uniphier: add #address-cells and #size-cells to SPI nodes
+Date:   Wed, 22 Apr 2020 23:36:32 +0900
+Message-Id: <20200422143633.1972154-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -55,76 +54,104 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add binding for Loongson PCH MSI controller.
+Documentation/devicetree/bindings/spi/spi-uniphier.txt requires
+#address-cells and #size-cells, but they are missing in actual DT files.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Due to this, 'make ARCH=arm dtbs_check' is super-noisy.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- .../loongson,pch-msi.yaml                     | 56 +++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
-new file mode 100644
-index 000000000000..dfb9cecacba0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/interrupt-controller/loongson,pch-msi.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Loongson PCH MSI Controller
-+
-+maintainers:
-+  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-+
-+description: |
-+  This interrupt controller is found in the Loongson-7A family of PCH for
-+  transforming interrupts from PCIe MSI into HyperTransport vectorized
-+  interrupts.
-+
-+properties:
-+  compatible:
-+    const: loongson,pch-msi-1.0
-+
-+  reg:
-+    maxItems: 1
-+
-+  loongson,msi-base-vec:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: |
-+      u32 value of the base of parent HyperTransport vector allocated
-+      to PCH MSI.
-+
-+  loongson,msi-num-vecs:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: |
-+      u32 value of the number of parent HyperTransport vectors allocated
-+      to PCH MSI.
-+
-+  msi-controller: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - msi-controller
-+  - loongson,msi-base-vec
-+  - loongson,msi-num-vecs
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    msi: msi-controller@2ff00000 {
-+      compatible = "loongson,pch-msi-1.0";
-+      reg = <0x2ff00000 0x4>;
-+      msi-controller;
-+      loongson,msi-base-vec = <64>;
-+      loongson,msi-num-vecs = <64>;
-+      interrupt-parent = <&htvec>;
-+    };
-+...
+ arch/arm/boot/dts/uniphier-ld4.dtsi  | 2 ++
+ arch/arm/boot/dts/uniphier-pro4.dtsi | 2 ++
+ arch/arm/boot/dts/uniphier-pro5.dtsi | 4 ++++
+ arch/arm/boot/dts/uniphier-pxs2.dtsi | 4 ++++
+ arch/arm/boot/dts/uniphier-sld8.dtsi | 2 ++
+ 5 files changed, 14 insertions(+)
+
+diff --git a/arch/arm/boot/dts/uniphier-ld4.dtsi b/arch/arm/boot/dts/uniphier-ld4.dtsi
+index 06e7400d2940..b52957ccda0d 100644
+--- a/arch/arm/boot/dts/uniphier-ld4.dtsi
++++ b/arch/arm/boot/dts/uniphier-ld4.dtsi
+@@ -67,6 +67,8 @@ spi: spi@54006000 {
+ 			compatible = "socionext,uniphier-scssi";
+ 			status = "disabled";
+ 			reg = <0x54006000 0x100>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 			interrupts = <0 39 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_spi0>;
+diff --git a/arch/arm/boot/dts/uniphier-pro4.dtsi b/arch/arm/boot/dts/uniphier-pro4.dtsi
+index 1c866f0306fc..012d9b181311 100644
+--- a/arch/arm/boot/dts/uniphier-pro4.dtsi
++++ b/arch/arm/boot/dts/uniphier-pro4.dtsi
+@@ -75,6 +75,8 @@ spi0: spi@54006000 {
+ 			compatible = "socionext,uniphier-scssi";
+ 			status = "disabled";
+ 			reg = <0x54006000 0x100>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 			interrupts = <0 39 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_spi0>;
+diff --git a/arch/arm/boot/dts/uniphier-pro5.dtsi b/arch/arm/boot/dts/uniphier-pro5.dtsi
+index 8f1ae0957f5f..03a9fd33243a 100644
+--- a/arch/arm/boot/dts/uniphier-pro5.dtsi
++++ b/arch/arm/boot/dts/uniphier-pro5.dtsi
+@@ -160,6 +160,8 @@ spi0: spi@54006000 {
+ 			compatible = "socionext,uniphier-scssi";
+ 			status = "disabled";
+ 			reg = <0x54006000 0x100>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 			interrupts = <0 39 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_spi0>;
+@@ -171,6 +173,8 @@ spi1: spi@54006100 {
+ 			compatible = "socionext,uniphier-scssi";
+ 			status = "disabled";
+ 			reg = <0x54006100 0x100>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 			interrupts = <0 216 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_spi1>;
+diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+index 2f2a24994c69..a04fba6d4064 100644
+--- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
++++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+@@ -173,6 +173,8 @@ spi0: spi@54006000 {
+ 			compatible = "socionext,uniphier-scssi";
+ 			status = "disabled";
+ 			reg = <0x54006000 0x100>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 			interrupts = <0 39 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_spi0>;
+@@ -184,6 +186,8 @@ spi1: spi@54006100 {
+ 			compatible = "socionext,uniphier-scssi";
+ 			status = "disabled";
+ 			reg = <0x54006100 0x100>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 			interrupts = <0 216 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_spi1>;
+diff --git a/arch/arm/boot/dts/uniphier-sld8.dtsi b/arch/arm/boot/dts/uniphier-sld8.dtsi
+index 09992163e1f4..96a766deb8d1 100644
+--- a/arch/arm/boot/dts/uniphier-sld8.dtsi
++++ b/arch/arm/boot/dts/uniphier-sld8.dtsi
+@@ -67,6 +67,8 @@ spi: spi@54006000 {
+ 			compatible = "socionext,uniphier-scssi";
+ 			status = "disabled";
+ 			reg = <0x54006000 0x100>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 			interrupts = <0 39 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_spi0>;
 -- 
-2.26.0.rc2
+2.25.1
 
