@@ -2,168 +2,84 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E543C5518E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 14:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0104C55185
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 14:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 844A42082E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 14:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B96DF20787
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 14:26:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="aBFA8jqB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgDVOWO (ORCPT
+        id S1726951AbgDVO0P (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 10:22:14 -0400
-Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:38519 "EHLO
-        smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726419AbgDVOWN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Apr 2020 10:22:13 -0400
-Received: from pro2.mail.ovh.net (unknown [10.109.146.85])
-        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id D40504F477F1;
-        Wed, 22 Apr 2020 16:13:07 +0200 (CEST)
-Received: from arch.lan (89.70.31.203) by DAG2EX1.emp2.local (172.16.2.11)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Wed, 22 Apr
- 2020 16:13:07 +0200
-From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
-To:     <linux-iio@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <robh+dt@kernel.org>, <jic23@kernel.org>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Subject: [PATCH 4/6] Documentation: ABI: testing: scd30: document iio attributes
-Date:   Wed, 22 Apr 2020 16:11:33 +0200
-Message-ID: <20200422141135.86419-5-tomasz.duszynski@octakon.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
-References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
+        Wed, 22 Apr 2020 10:26:15 -0400
+Received: from vultr.net.flygoat.com ([149.28.68.211]:59258 "EHLO
+        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726414AbgDVO0P (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 10:26:15 -0400
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id A7F4B20CD7;
+        Wed, 22 Apr 2020 14:26:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1587565563; bh=yzj3obMtgh8EsESdciGUOI+o2hcpe8mFlM3owBlPDbc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=aBFA8jqB6F1yCUeQ5WILR6IdVp461Blt/Ilbt/Kw7E5zm1thEzKvXwMHs5Rrdmjpf
+         EKUTj2xxa2kFtfIZ7eVMktvv92vMXv2aXCJzC1FM7GjSMxp0QoDgmKsn3MxEoXD6O1
+         HlABW/gCmm4sqRom52dfvjNoKIa/BOgF9EqNkYo34YZygRFf1YIuZ6z3lpguDNWiDf
+         918pgBEweCrvnboY4Fk3O1t6ddslj+WE7Cvn05kCXK4TNmC0Hga9JIq3aprbRA+tRe
+         EEphAs8trrnx5brWYrikldA6sMVC0NjKBaAlx2w+bo2HHWeS8VkWUoDs0NRkIXQJr6
+         18AdUt4f2T85w==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org, maz@kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH 0/6] Loongson PCH IRQ Support
+Date:   Wed, 22 Apr 2020 22:24:20 +0800
+Message-Id: <20200422142428.1249684-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.26.0.rc2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [89.70.31.203]
-X-ClientProxiedBy: DAG3EX2.emp2.local (172.16.2.22) To DAG2EX1.emp2.local
- (172.16.2.11)
-X-Ovh-Tracer-Id: 5833005944528591895
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrgeejgdeikecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecunecujfgurhephffvufffkffojghfggfgtghisehtkeertdertddtnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecukfhppedtrddtrddtrddtpdekledrjedtrdefuddrvddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehjihgtvdefsehkvghrnhgvlhdrohhrgh
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add documentation for sensor specific iio attributes.
+This series mainly added IRQ support for Loongson-7A1000 PCH.
+DeviceTree will be added later as PCI support is also pending
+for reviewing.
 
-Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
----
- Documentation/ABI/testing/sysfs-bus-iio-scd30 | 97 +++++++++++++++++++
- 1 file changed, 97 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-scd30
+Jiaxun Yang (6):
+  irqchip: Add Loongson HyperTransport Vector support
+  dt-bindings: interrupt-controller: Add Loongson HTVEC
+  irqchip: Add Loongson PCH PIC controller
+  dt-bindings: interrupt-controller: Add Loongson PCH PIC
+  irqchip: Add Loongson PCH MSI controller
+  dt-bindings: interrupt-controller: Add Loongson PCH MSI
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-scd30 b/Documentation/ABI/testing/sysfs-bus-iio-scd30
-new file mode 100644
-index 000000000000..0431a718447d
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-scd30
-@@ -0,0 +1,97 @@
-+What:		/sys/bus/iio/devices/iio:deviceX/pressure_comp
-+Date:		April 2020
-+KernelVersion:	5.8
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Given that sensor's CO2 measurement chamber has fixed volume
-+		pressure changes will affect concentration readings. Writing
-+		current ambient pressure here will allow senor to make necessary
-+		adjustments. Upon reading previously set value is returned.
-+		Units are millibars.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/pressure_comp_available
-+Date:		April 2020
-+KernelVersion:	5.8
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		The range of available values in millibars represented as the
-+		minimum value, the step and the maximum value, all enclosed in
-+		square brackets.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/meas_interval
-+Date:		January 2020
-+KernelVersion:	5.8
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Amount of time between subsequent measurements. Writing this
-+		attribute will change measurement interval. Upon reading
-+		current measurement interval is returned. Units are seconds.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/meas_interval_available
-+Date:		April 2020
-+KernelVersion:	5.8
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		The range of available values in seconds represented as the
-+		minimum value, the step and the maximum value, all enclosed in
-+		square brackets.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/asc
-+Date:		April 2020
-+KernelVersion:	5.8
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Writing 1 or 0 to this attribute will respectively activate or
-+		deactivate automatic self calibration procedure. Upon reading 1
-+		is returned if asc is ongoing, 0 otherwise.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/frc
-+Date:		April 2020
-+KernelVersion:	5.8
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Forced recalibration is used to compensate for sensor drifts
-+		when a reference value of CO2 concentration in close proximity
-+		to the sensor is available. Writing attribute will set frc
-+		value. Upon reading current frc is returned. Units are
-+		millibars.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/frc_available
-+Date:		April 2020
-+KernelVersion:	5.8
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		The range of available values in millibars represented as the
-+		minimum value, the step and the maximum value, all enclosed in
-+		square brackets.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/temp_offset
-+Date:		April 2020
-+KernelVersion:	5.8
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Sensor readings may be affected by ambient temperature.
-+		Writing temperature offset will compensate for unwanted changes.
-+		Note that written offset gets multiplied by a factor of 100
-+		by a sensor internally.
-+
-+		For example, writing 10 here will correspond to 0.1 degree
-+		Celsius.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/temp_offset_available
-+Date:		April 2020
-+KernelVersion:	5.8
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		The range of available values in degrees Celsius represented as
-+		the minimum value, the step and the maximum value, all enclosed
-+		in square brackets.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/reset
-+Date:		April 2020
-+KernelVersion:	5.8
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Software reset mechanism forces sensor into the same state
-+		as after powering up without the need for removing power supply.
-+		Writing any value will reset sensor.
+ .../interrupt-controller/loongson,htvec.yaml  |  59 ++++
+ .../loongson,pch-msi.yaml                     |  56 ++++
+ .../loongson,pch-pic.yaml                     |  55 ++++
+ drivers/irqchip/Kconfig                       |  26 ++
+ drivers/irqchip/Makefile                      |   3 +
+ drivers/irqchip/irq-loongson-htvec.c          | 217 ++++++++++++++
+ drivers/irqchip/irq-loongson-pch-msi.c        | 265 ++++++++++++++++++
+ drivers/irqchip/irq-loongson-pch-pic.c        | 256 +++++++++++++++++
+ 8 files changed, 937 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml
+ create mode 100644 drivers/irqchip/irq-loongson-htvec.c
+ create mode 100644 drivers/irqchip/irq-loongson-pch-msi.c
+ create mode 100644 drivers/irqchip/irq-loongson-pch-pic.c
+
 -- 
-2.26.1
+2.26.0.rc2
 
