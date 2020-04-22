@@ -2,109 +2,81 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F5FC54FCB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 14:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB35C5518B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 14:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2F0820787
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 14:08:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="snwH3gA2"
+	by mail.kernel.org (Postfix) with ESMTP id A9F8320787
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 14:12:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgDVOIl (ORCPT
+        id S1726831AbgDVOMk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 10:08:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42486 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727026AbgDVOIi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 10:08:38 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0759AC03C1AA;
-        Wed, 22 Apr 2020 07:08:38 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id t63so2487135wmt.3;
-        Wed, 22 Apr 2020 07:08:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Wn/XLaNsEUc+JrRQ7mg4yGN/42PXRkrYATqvOjyi41s=;
-        b=snwH3gA2y8hxo2yX0BZogJrmkiRtOPUxjXX+dPm4cR0dVk9LX0VxJ7oPquVLBJbHqz
-         AWnwU3Mhtf0HovRIhUHzwtrkmb9A4hbMEuyPbYmr869gTWKpZ9nPKxwopbxNddiNT0iO
-         k95XZEP72PHNiVNwG/Wmr+htitVZPOUMLegX7fQFxuH6K/643K5oMFXCotPVRHG5OblZ
-         xcAnlzlRxlAYONV4tjcdkDdRPdzcr33n9n0qSv65oa+5hlCLxfiY1UdBC7PSos/Sc3Id
-         DNTZU26mI5J9GuQBD88ysDyCov7KTkmiRHTeQDVWryCdAkWal+U18AwAOPnPOd1vAUGi
-         to9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Wn/XLaNsEUc+JrRQ7mg4yGN/42PXRkrYATqvOjyi41s=;
-        b=c3wFRSH7RIAg41n76ETY1Dss0GA1v/2B0t+TAIquTICvHQlajeqUJD5E9dgc337lea
-         y+78nVBVDEvimV8TYL0p5izb2oK+923TfYzRCMAiC7fnXk6XvcmAhzPNVWhLAEbpDt5a
-         Y6gMdibTu9gyuNw0RTrO2XjWeqLLcLZ6psYHlI4FFoEXNC8aIKWqbXTkFKYPFhrYlVSa
-         P91lao3qUy4ytsStIEeSZit1C62V+aKxQF48edLHBKT6ZtfMnI6GEKpzp4+9EcrRTEGF
-         5jZYntaHVkTY5rVBcbgeOnuxR4GFnEXekMrmrl+K0WDN9ENSLO5yG29hsBlIz6HGGUdX
-         3HrA==
-X-Gm-Message-State: AGi0PuZE/C13bIEiBCorxJYuUoxiLICMpgkMpHbMQgty7xnFLkjnJYXU
-        JRVKsc5tjzJ+MHBG1VhQ2/8=
-X-Google-Smtp-Source: APiQypLcBdgKcojkVDWJDUlHMTtYzEZSNEqVPBloleybYbcysXDKZ/PSC6WiURn0kRHtcRsdukQqQA==
-X-Received: by 2002:a7b:c850:: with SMTP id c16mr10268138wml.108.1587564516651;
-        Wed, 22 Apr 2020 07:08:36 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host36-18-dynamic.45-213-r.retail.telecomitalia.it. [213.45.18.36])
-        by smtp.googlemail.com with ESMTPSA id a9sm7526790wmm.38.2020.04.22.07.08.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 07:08:35 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Ilia Lin <ilia.lin@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sricharan R <sricharan@codeaurora.org>,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] dt-bindings: opp: Fix wrong binding in qcom-nvmem-cpufreq
-Date:   Wed, 22 Apr 2020 16:08:27 +0200
-Message-Id: <20200422140827.1726-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200422140827.1726-1-ansuelsmth@gmail.com>
-References: <20200422140827.1726-1-ansuelsmth@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 22 Apr 2020 10:12:40 -0400
+Received: from mga06.intel.com ([134.134.136.31]:55662 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725810AbgDVOMk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Apr 2020 10:12:40 -0400
+IronPort-SDR: TmK8d7A6G//8FycmGt9yEeYSKowQaejR2YeQxSQg/zGTXhpwwAl23txF3JBs7vk6PY4alus7wY
+ c/HzoxfJvcLw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 07:12:39 -0700
+IronPort-SDR: a87ikjocUkAw37EpT821rljrZjEfnFB+B0YI6diU0qr4wwkzdnEO4xp9qRjakoBvYP8Qn8+Erk
+ nMlD2Rbp6EqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,414,1580803200"; 
+   d="scan'208";a="402560679"
+Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
+  by orsmga004.jf.intel.com with ESMTP; 22 Apr 2020 07:12:37 -0700
+From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+To:     broonie@kernel.org, robh+dt@kernel.org
+Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com,
+        wan.ahmad.zainie.wan.mohamad@intel.com
+Subject: [PATCH v2 0/7] spi: dw: Add support for Intel Keem Bay SPI
+Date:   Wed, 22 Apr 2020 22:11:35 +0800
+Message-Id: <20200422141142.25591-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update binding to new generic name "operating-points-v2-qcom-cpu"
+This patchset adds support for DesignWare DWC_ssi. This soft IP
+is an AMBA version 2.0-compliant AHB slave device. Existing driver
+already supports the older APB version.
 
-Fixes: a8811ec764f9 cpufreq: qcom: Add support for krait based socs
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Intel Keem Bay SPI controller is using this IP. This patchset is
+tested on Keem Bay evaluation module board.
 
-diff --git a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-index 64f07417ecfb..537e1774f589 100644
---- a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-+++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-@@ -19,7 +19,7 @@ In 'cpu' nodes:
- 
- In 'operating-points-v2' table:
- - compatible: Should be
--	- 'operating-points-v2-kryo-cpu' for apq8096, msm8996, msm8974,
-+	- 'operating-points-v2-qcom-cpu' for apq8096, msm8996, msm8974,
- 					     apq8064, ipq8064, msm8960 and ipq8074.
- 
- Optional properties:
+Changes since v1:
+- Rework the third patch based on Rob's feedback.
+
+
+Wan Ahmad Zainie (7):
+  spi: dw: Fix typo in few registers name
+  spi: dw: Add update_cr0() callback to update CTRLR0
+  dt-bindings: spi: dw-apb-ssi: Convert bindings to json-schema
+  dt-bindings: spi: dw-apb-ssi: Add compatible string for DesignWare
+    DWC_ssi
+  spi: dw: Add support for DesignWare DWC_ssi
+  dt-bindings: spi: dw-apb-ssi: Add Intel Keem Bay support
+  spi: dw: Add support for Intel Keem Bay SPI
+
+ .../bindings/spi/snps,dw-apb-ssi.txt          |  41 ------
+ .../bindings/spi/snps,dw-apb-ssi.yaml         |  72 ++++++++++
+ drivers/spi/spi-dw-mid.c                      |   4 +
+ drivers/spi/spi-dw-mmio.c                     |  57 +++++++-
+ drivers/spi/spi-dw.c                          | 125 +++++++++++++-----
+ drivers/spi/spi-dw.h                          |  25 +++-
+ 6 files changed, 243 insertions(+), 81 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+
 -- 
-2.25.1
+2.17.1
 
