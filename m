@@ -4,106 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF9BC54FCB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 19:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC98C5518C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 19:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44DC820767
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 19:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39D7620767
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 19:40:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587584303;
-	bh=9JICITPhJEYDOQWZ4DJJmaE3mVvh24ZEtKsKNXW5DqE=;
+	s=default; t=1587584408;
+	bh=rYDQkQ1Rp6Ix6spFqR+dbfsGD6HIXCpq6Xh8vhT4YzM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wJrYlK3vdmP1omfxJ3qEUoxd8w6UtE7N0XDUCiEwYRoBgQ9VqQbARt2+W2l8RLgsH
-	 3UhqkVshOPN/bcr72RIc7K1zzi+TVaWVe1ojqNjquRrq/rAafyLZRihB4ZzBRgn9cf
-	 37yre1mvdFV08C0D5bHa9orPaLgViqI1niy1/saY=
+	b=b2RzITQwywYZjICtOwyltuw3nhZ3WGUuRX5sIBpoUZ5QiWM5OGcQDZrJuPf8VKi0x
+	 IF8sAhikgCCzd1zTSLvJm2aSeW0iOSNCqQTGYXLEdWWl4mdHEMCrStp8QkcsBBc+iS
+	 inlKKu9f5iGAa7tUUebYsGsIaePndYyUi1QL0x2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725935AbgDVTiW (ORCPT
+        id S1726071AbgDVTkH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 15:38:22 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36386 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbgDVTiW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 15:38:22 -0400
-Received: by mail-oi1-f193.google.com with SMTP id s202so2954472oih.3;
-        Wed, 22 Apr 2020 12:38:22 -0700 (PDT)
+        Wed, 22 Apr 2020 15:40:07 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39176 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbgDVTkG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 15:40:06 -0400
+Received: by mail-oi1-f194.google.com with SMTP id m10so2951522oie.6;
+        Wed, 22 Apr 2020 12:40:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r+bQz+oywLIfBY+qmz5dtgdjHfJr24roK+Q4M23wujE=;
-        b=VdQUNazYj0GYdBcUIACHIbMInWEb1oC4lWSukKdihJy1WY17f1ArTVWyNq0cYnJJOW
-         kzxhBFadrP2uo06xStn+SWa5CqcV9JZpre4C8zA2hU4a4MNocveIhyOBjRhCHvqwtXiQ
-         S1pC0Ba2LcMcuDM+jyLhMMaKnJ2f0Q1+MnDXn6Pmizv4Q0HbsbK5m/iUpbu4WO7ghaG4
-         GEk3i/23TITeO84DQisdHFXkLtCvdS0k9ihn/zSdrF3lbTqDD1mD4HUXdcG7t3WkrflZ
-         LbvXbKG9CKuTNaskKGDBxiGwMtOCucls/LqhL4lWKHG08T6DpzJvLjR8lvmAhqV0qAZG
-         vrsQ==
-X-Gm-Message-State: AGi0PuYk/zBYNCaCZIxWDnEyxROKJk4VinJL36UZXWaRnEkmr0QXPuAB
-        ZbhSJPLHCq2SKOck/3cvNA==
-X-Google-Smtp-Source: APiQypI14oeR06dFErUfwCsPEufwOtD3gkatiqcxhF0Yrwf5FslPbZlGF7qdSUieoA3OewdCEeZm0g==
-X-Received: by 2002:aca:440a:: with SMTP id r10mr415199oia.139.1587584301584;
-        Wed, 22 Apr 2020 12:38:21 -0700 (PDT)
+        bh=Z8YCrPzH7bEfhD/XkAeainySJPOSuJ7nJpltH8wRYvo=;
+        b=dyiOIQA1NcIu0PJ2ySV3ULUlS386hJHiXHYHDA+JeISdUrD2nHZMDZre45KvjBrr+z
+         gPd4VWW26pvauONtr9U1SBosIXeWLMDUK/p0zsBzXZthgE72asW3yGx46sXQAtG0ZGHW
+         UCPgDMbScODRhn0h1ctkT5rWTUdr2+Pjdq9O7qmIiOcRoGgLu4LPWbnhfI4z+pQ4qo6T
+         /9D76Y4a9G1+AZqG9jyaXAiAsigxeWGSLnK8/is0KUemC1KXYIpNn4/BvH4J+0heoWUN
+         zIs4UMbWTo4WNXLS+WNRzZ9fSMPhX3halH8Rf6GkpKKcdWF2VXmlqra/wQALxU8t3qCs
+         Cv+g==
+X-Gm-Message-State: AGi0PuYOpJS1YEvHUnccRGyoH9RVka53TRXqgy/Z7XsT72VnJVH11tVh
+        U220WgpQie5IbgzKFOi8SENpDx0=
+X-Google-Smtp-Source: APiQypL5TS8AlWHNE3HLmqbpzzM0B1ncKTbOmg75+Dduyj7CjMKgq9i2LgrvXa8y3GvDgtAYhrVM5A==
+X-Received: by 2002:aca:c3c1:: with SMTP id t184mr404747oif.171.1587584405664;
+        Wed, 22 Apr 2020 12:40:05 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 80sm17588otd.35.2020.04.22.12.38.20
+        by smtp.gmail.com with ESMTPSA id x17sm45506oif.28.2020.04.22.12.40.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 12:38:20 -0700 (PDT)
-Received: (nullmailer pid 2056 invoked by uid 1000);
-        Wed, 22 Apr 2020 19:38:19 -0000
-Date:   Wed, 22 Apr 2020 14:38:19 -0500
+        Wed, 22 Apr 2020 12:40:05 -0700 (PDT)
+Received: (nullmailer pid 4724 invoked by uid 1000);
+        Wed, 22 Apr 2020 19:40:04 -0000
+Date:   Wed, 22 Apr 2020 14:40:04 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Ben Levinsky <ben.levinsky@xilinx.com>
-Cc:     ohad@wizery.com, bjorn.andersson@linaro.org,
-        michal.simek@xilinx.com, jollys@xilinx.com, rajan.vaja@xilinx.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jason Wu <j.wu@xilinx.com>,
-        Wendy Liang <jliang@xilinx.com>
-Subject: Re: [PATCH v3 4/5] dt-bindings: remoteproc: Add documentation for
- ZynqMP R5 rproc bindings
-Message-ID: <20200422193819.GA1685@bogus>
-References: <1587421629-914-1-git-send-email-ben.levinsky@xilinx.com>
- <1587421629-914-5-git-send-email-ben.levinsky@xilinx.com>
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Harigovindan P <harigovi@codeaurora.org>, robdclark@gmail.com,
+        seanpaul@chromium.org, sean@poorly.run
+Subject: Re: [PATCH v11 2/2] dt-bindings: documenting compatible string
+ vendor "visionox"
+Message-ID: <20200422194004.GA2197@bogus>
+References: <20200421045508.21137-1-harigovi@codeaurora.org>
+ <20200421045508.21137-3-harigovi@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1587421629-914-5-git-send-email-ben.levinsky@xilinx.com>
+In-Reply-To: <20200421045508.21137-3-harigovi@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 20 Apr 2020 15:27:08 -0700, Ben Levinsky wrote:
-> Add binding for ZynqMP R5 OpenAMP.
+On Tue, 21 Apr 2020 10:25:08 +0530, Harigovindan P wrote:
+> Documenting compatible string vendor "visionox" in vendor-prefix yaml file.
 > 
-> Represent the RPU domain resources in one device node. Each RPU
-> processor is a subnode of the top RPU domain node.
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+> ---
+> Changes in v11:
+> 	- Added visionox compatible string in vendor-prefixes.yaml
+> 	- Added as a part of checkpatch script error for panel driver.
 > 
-> Signed-off-by: Ben Levinsky <ben.levinsky@xilinx.com>
-> Signed-off-by: Jason Wu <j.wu@xilinx.com>
-> Signed-off-by: Wendy Liang <jliang@xilinx.com>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
-> Changes since v2:
-> 	- update zynqmp_r5 yaml parsing to not raise warnings for extra
-> 	 information in children of R5 node. The warning "node has a unit
-> 	 name, but no reg or ranges property" will still be raised though 
-> 	 as this particular node is needed to describe the
-> 	 '#address-cells' and '#size-cells' information.
-> ---
->  .../remoteproc/xilinx,zynqmp-r5-remoteproc.yaml    | 126 +++++++++++++++++++++
->  1 file changed, 126 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dts:45.25-65.16: Warning (unit_address_vs_reg): /example-0/rpu@ff9a0000/r5@0: node has a unit name, but no reg or ranges property
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/vendor-prefixes.yaml: patternProperties:visionox,.*: {'description': 'Visionox'} is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/vendor-prefixes.yaml: patternProperties:visionox,.*: 'not' is a required property
 
-See https://patchwork.ozlabs.org/patch/1273784
+Documentation/devicetree/bindings/Makefile:11: recipe for target 'Documentation/devicetree/bindings/vendor-prefixes.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/vendor-prefixes.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+warning: no schema found in file: Documentation/devicetree/bindings/vendor-prefixes.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/vendor-prefixes.yaml: ignoring, error in schema: patternProperties: visionox,.*
+warning: no schema found in file: Documentation/devicetree/bindings/vendor-prefixes.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/vendor-prefixes.yaml: ignoring, error in schema: patternProperties: visionox,.*
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1273941
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
