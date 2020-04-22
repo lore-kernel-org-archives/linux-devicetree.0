@@ -2,277 +2,279 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED01EC55185
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 16:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBEBC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 16:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB7242098B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 16:09:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YUweHA8C"
+	by mail.kernel.org (Postfix) with ESMTP id 7CDBA2076E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 16:18:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgDVQJf (ORCPT
+        id S1726168AbgDVQSt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:09:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727015AbgDVQJc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 12:09:32 -0400
-Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B2B1C03C1A9
-        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 09:09:32 -0700 (PDT)
-Received: by mail-vk1-xa42.google.com with SMTP id v192so564103vkd.3
-        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 09:09:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T7WB2HoF0WdrIBv4ktK6B9A0gQgQTPn58z8FyVNp2Jo=;
-        b=YUweHA8CPztpA/loYxHMeUD6/w6PlfE/ulWxFTAqTelrd/PSlWYfc59LLKgL0oup6K
-         Wzp8tzuL9Y46ob+y6q3r39I+vyASikO8AKSyHcHHm+6yF1JC7x79QyduJb7BeQXAdP36
-         +G9cFYFIEVSpCrwxqE2aTcNw0iAIiuBDIQHVU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T7WB2HoF0WdrIBv4ktK6B9A0gQgQTPn58z8FyVNp2Jo=;
-        b=P7S7KVDc8NkDFCP2jMbmQDeVo1GYceUEPwYfPoWOGZVXzEZLbvagCmsVHb7X7P2xYt
-         HniE1ekYTblibo4cVug8n2DG1tx1EAm+IdCJ4sEzzGZa+xAniGIMFqL0wAhU2PIuZDiE
-         xsVD4N+Kt+rNkmBwR/lus74zN+xVaEb6Wz+yxtKcWK6Rn6Sv4KodxVg4NgJxH4d1vvMk
-         0iJBwWOD+sctmoDRdUVTbFhTTjIay7bY3IocM1wruYBxdPRsH3pNmY7YK8LtFZa15ycx
-         BxaLj0rSwTi7CVv5RZsvGVDKlwHA+W4m6Bnt9VWQMLypKy1zNifOwp4MBkH+kNKBvoe5
-         xNVQ==
-X-Gm-Message-State: AGi0PubdPZf+bB18y/7qWV9VBKUv+GwKJr3xYGCyBA2tCQ0oJQJWz7EW
-        f8vFu5qDZUqAjmtNw6YyTQaT7Um3dyA=
-X-Google-Smtp-Source: APiQypKhaxtaCqKnDO9839gfw4m7L/MhdZLn8tQ8jjz24T6xPcoXEnE33ak1x4UN7UMveMOK+pWDzw==
-X-Received: by 2002:a1f:34c5:: with SMTP id b188mr10371675vka.20.1587571770636;
-        Wed, 22 Apr 2020 09:09:30 -0700 (PDT)
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
-        by smtp.gmail.com with ESMTPSA id t194sm1702132vkt.56.2020.04.22.09.09.29
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Apr 2020 09:09:30 -0700 (PDT)
-Received: by mail-ua1-f41.google.com with SMTP id v24so2224152uak.0
-        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 09:09:29 -0700 (PDT)
-X-Received: by 2002:ab0:375a:: with SMTP id i26mr16701248uat.120.1587571768922;
- Wed, 22 Apr 2020 09:09:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200421050622.8113-1-dianders@chromium.org> <20200420220458.v2.1.Ia50267a5549392af8b37e67092ca653a59c95886@changeid>
- <158755100643.159702.17904334834962681759@swboyd.mtv.corp.google.com>
-In-Reply-To: <158755100643.159702.17904334834962681759@swboyd.mtv.corp.google.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 22 Apr 2020 09:09:17 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WJONhm4ukwZa2vGtozrz_SmLuTCLxVimnGba7wRPPzgQ@mail.gmail.com>
-Message-ID: <CAD=FV=WJONhm4ukwZa2vGtozrz_SmLuTCLxVimnGba7wRPPzgQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>, bgolaszewski@baylibre.com,
-        Daniel Vetter <daniel@ffwll.ch>,
-        LinusW <linus.walleij@linaro.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        Wed, 22 Apr 2020 12:18:49 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47580 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbgDVQSs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 12:18:48 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id 56C542A089E
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
         Jernej Skrabec <jernej.skrabec@siol.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Clark <robdclark@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Andrzej Hajda <a.hajda@samsung.com>, kernel@collabora.com,
+        linux-stm32@st-md-mailman.stormreply.com, linux-imx@nxp.com,
+        Rob Herring <robh@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Adrian Pop <pop.adrian61@gmail.com>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+        Sjoerd Simons <sjoerd.simons@collabora.com>,
+        Martyn Welch <martyn.welch@collabora.com>
+Subject: Re: [PATCH v7 5/8] dt-bindings: display: add i.MX6 MIPI DSI host
+ controller doc
+In-Reply-To: <20200422152956.GE28105@pendragon.ideasonboard.com>
+References: <20200421161610.1501827-1-adrian.ratiu@collabora.com>
+ <20200421161610.1501827-6-adrian.ratiu@collabora.com>
+ <20200422005832.GK5983@pendragon.ideasonboard.com>
+ <20200422010155.GL5983@pendragon.ideasonboard.com>
+ <877dy7ker6.fsf@collabora.com>
+ <20200422152956.GE28105@pendragon.ideasonboard.com>
+Date:   Wed, 22 Apr 2020 19:19:50 +0300
+Message-ID: <87368vjxw9.fsf@collabora.com>
+MIME-Version: 1.0
+Content-Type: text/plain; format=flowed
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, Apr 22, 2020 at 3:23 AM Stephen Boyd <swboyd@chromium.org> wrote:
+On Wed, 22 Apr 2020, Laurent Pinchart 
+<laurent.pinchart@ideasonboard.com> wrote:
+> Hi Adrian, 
+> 
+> On Wed, Apr 22, 2020 at 01:15:41PM +0300, Adrian Ratiu wrote: 
+>> On Wed, 22 Apr 2020, Laurent Pinchart wrote: 
+>> > On Wed, Apr 22, 2020 at 03:58:33AM +0300, Laurent Pinchart 
+>> > wrote:  
+>> >> On Tue, Apr 21, 2020 at 07:16:07PM +0300, Adrian Ratiu 
+>> >> wrote:  
+>> >>> This provides an example DT binding for the MIPI DSI host 
+>> >>> controller present on the i.MX6 SoC based on Synopsis 
+>> >>> DesignWare v1.01 IP.   Cc: Rob Herring <robh@kernel.org> 
+>> >>> Cc:  Neil Armstrong <narmstrong@baylibre.com> Cc: Fabio 
+>> >>> Estevam  <festevam@gmail.com> Cc: Laurent Pinchart 
+>> >>> <laurent.pinchart@ideasonboard.com> Cc: 
+>> >>> devicetree@vger.kernel.org Tested-by: Adrian Pop 
+>> >>> <pop.adrian61@gmail.com> Tested-by: Arnaud Ferraris 
+>> >>> <arnaud.ferraris@collabora.com> Signed-off-by: Sjoerd 
+>> >>> Simons  <sjoerd.simons@collabora.com> Signed-off-by: Martyn 
+>> >>> Welch  <martyn.welch@collabora.com> Signed-off-by: Adrian 
+>> >>> Ratiu  <adrian.ratiu@collabora.com> --- Changes since v6:  
+>> >>>   - Added ref to the newly created snps,dw-mipi-dsi.yaml 
+>> >>>   (Laurent) - Moved *-cells properties outside 
+>> >>>   patternProperties (Laurent) - Removed the panel port 
+>> >>>   documentation (Laurent) - Wrapped lines at 80 chars, typo 
+>> >>>   fixes, sort includes (Laurent)  
+>> >>>  Changes since v5:  
+>> >>>   - Fixed missing reg warning (Fabio) - Updated dt-schema 
+>> >>>   and  fixed warnings (Rob)  
+>> >>>  Changes since v4:  
+>> >>>   - Fixed yaml binding to pass `make dt_binding_check 
+>> >>>   dtbs_check` and addressed received binding feedback (Rob)  
+>> >>>  Changes since v3:  
+>> >>>   - Added commit message (Neil) - Converted to yaml format 
+>> >>>   (Neil) - Minor dt node + driver fixes (Rob) - Added small 
+>> >>>   panel example to the host controller binding  
+>> >>>  Changes since v2:  
+>> >>>   - Fixed commit tags (Emil)  
+>> >>> ---  
+>> >>>  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 135 
+>> >>>  ++++++++++++++++++ 1 file changed, 135 insertions(+) 
+>> >>>  create  mode 100644 
+>> >>>  Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml 
+>> >>>  diff --git  
+>> >>> a/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml 
+>> >>> b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml 
+>> >>> new file mode 100644 index 0000000000000..b73e3ae33a852 --- 
+>> >>> /dev/null +++ 
+>> >>> b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml 
+>> >>> @@ -0,0 +1,135 @@ +# SPDX-License-Identifier: (GPL-2.0-only 
+>> >>> OR BSD-2-Clause) +%YAML 1.2 +--- +$id: 
+>> >>> http://devicetree.org/schemas/display/imx/fsl,mipi-dsi-imx6.yaml# 
+>> >>> +$schema: http://devicetree.org/meta-schemas/core.yaml# + 
+>> >>> +title: Freescale i.MX6 DW MIPI DSI Host Controller + 
+>> >>> +maintainers: +  - Adrian Ratiu 
+>> >>> <adrian.ratiu@collabora.com>  + +description: | +  The 
+>> >>> i.MX6 DSI host controller is a  Synopsys DesignWare MIPI 
+>> >>> DSI v1.01 +  IP block with a  companion PHY IP.  
+>> >  I forgot to mention, if there's a companion PHY, shouldn't 
+>> > it be  referenced from the DT bindings ?  
+>>  I don't think so, that description was copied verbatim from 
+>> the  imx6 ref manual IIRC, the physical layer is the same for 
+>> MIPI DSI  which does TX as for MIPI CSI which does RX, but 
+>> looking at the  ref manual and how drivers are written I don't 
+>> think it's  necessary. 
+> 
+> Does that mean that the PHY is controlled through the registers 
+> specified by the reg property ? If so then this is fine. 
 >
-> Quoting Douglas Anderson (2020-04-20 22:06:17)
-> > The ti-sn65dsi86 MIPI DSI to eDP bridge chip has 4 pins on it that can
-> > be used as GPIOs in a system.  Each pin can be configured as input,
-> > output, or a special function for the bridge chip.  These are:
-> > - GPIO1: SUSPEND Input
-> > - GPIO2: DSIA VSYNC
-> > - GPIO3: DSIA HSYNC or VSYNC
-> > - GPIO4: PWM
-> >
-> > Let's expose these pins as GPIOs.  A few notes:
-> > - Access to ti-sn65dsi86 is via i2c so we set "can_sleep".
-> > - These pins can't be configured for IRQ.
-> > - There are no programmable pulls or other fancy features.
-> > - Keeping the bridge chip powered might be expensive.  The driver is
-> >   setup such that if all used GPIOs are only inputs we'll power the
-> >   bridge chip on just long enough to read the GPIO and then power it
-> >   off again.  Setting a GPIO as output will keep the bridge powered.
-> > - If someone releases a GPIO we'll implicitly switch it to an input so
-> >   we no longer need to keep the bridge powered for it.
-> >
-> > Becaue of all of the above limitations we just need to implement a
+
+Yes that is correct, there is just a single set of conf registers 
+specified via reg.
+
+>> This might change if we wanted to unify the DSI and CSI drivers a 
+>> bit, but considering the scope already associated with this patch 
+>> series I'm a bit afraid to open a subject like that =)
 >
-> Because
+> That's understandable :-)
 >
-> > bare-bones GPIO driver.  The device tree bindings already account for
-> > this device being a GPIO controller so we only need the driver changes
-> > for it.
-> >
-> > NOTE: Despite the fact that these pins are nominally muxable I don't
-> > believe it makes sense to expose them through the pinctrl interface as
-> > well as the GPIO interface.  The special functions are things that the
-> > bridge chip driver itself would care about and it can just configure
-> > the pins as needed.
-> >
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
-> >
+>> >>> +
+>> >>> +  These DT bindings follow the Synopsys DW MIPI DSI bindings defined in
+>> >>> +  Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt with
+>> >>> +  the following device-specific properties.
+>> >>> +
+>> >>> +allOf:
+>> >>> +  - $ref: ../bridge/snps,dw-mipi-dsi.yaml#
+>> >>> +
+>> >>> +properties:
+>> >>> +  '#address-cells':
+>> >>> +    const: 1
+>> >>> +
+>> >>> +  '#size-cells':
+>> >>> +    const: 0
+>> >>> +
+>> >>> +  compatible:
+>> >>> +    items:
+>> >>> +      - const: fsl,imx6q-mipi-dsi
+>> >>> +      - const: snps,dw-mipi-dsi
+>> >>> +
+>> >>> +  reg:
+>> >>> +    maxItems: 1
+>> >>> +
+>> >>> +  interrupts:
+>> >>> +    maxItems: 1
+>> >>> +
+>> >>> +  clocks:
+>> >>> +    items:
+>> >>> +      - description: Module Clock
+>> >>> +      - description: DSI bus clock
+>> >>> +
+>> >>> +  clock-names:
+>> >>> +    items:
+>> >>> +      - const: ref
+>> >>> +      - const: pclk
+>> >>> +
+>> >>> +  fsl,gpr:
+>> >>> +    description:
+>> >>> +      Phandle to the iomuxc-gpr region containing the multiplexer ctrl register.
+>> >>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>> >>> +
+>> >>> +  ports:
+>> >>> +    type: object
+>> >>> +    description: |
+>> >>> +      A node containing DSI input & output port nodes with endpoint
+>> >>> +      definitions as documented in
+>> >>> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+>> >>> +      Documentation/devicetree/bindings/graph.txt
+>> >>> +    properties:
+>> >>> +      port@0:
+>> >>> +        type: object
+>> >>> +        description:
+>> >>> +          DSI input port node, connected to the ltdc rgb output port.
+>> >>> +
+>> >>> +      port@1:
+>> >>> +        type: object
+>> >>> +        description:
+>> >>> +          RGB output port node, connected to a panel or a bridge input port.
+>> >> 
+>> >> Isn't it the other way around, doesn't the bridge take RGB input and
+>> >> output DSI ? And to be precise, it's not about RGB, but about the input
+>> >> being parallel interface (DSI will also carry RGB).
+>> >> 
+>> >> I would add
+>> >> 
+>> >>     required:
+>> >>       - port@0
+>> >>       - port@1
+>> >> 
+>> >>> +
+>> >>> +additionalProperties: false
+>> >>> +
+>> >>> +patternProperties:
+>> >>> +  "^panel@[0-3]$":
+>> >>> +    type: object
+>> >>> +
+>> >>> +required:
+>> >>> +  - "#address-cells"
+>> >>> +  - "#size-cells"
+>> >>> +  - compatible
+>> >>> +  - reg
+>> >>> +  - interrupts
+>> >>> +  - clocks
+>> >>> +  - clock-names
+>> >>> +  - ports
+>> >>> +
+>> >>> +examples:
+>> >>> +  - |+
+>> >>> +    #include <dt-bindings/clock/imx6qdl-clock.h>
+>> >>> +    #include <dt-bindings/gpio/gpio.h>
+>> >>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> >>> +
+>> >>> +    dsi: dsi@21e0000 {
+>> >>> +        #address-cells = <1>;
+>> >>> +        #size-cells = <0>;
+>> >>> +        compatible = "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi";
+>> >>> +        reg = <0x021e0000 0x4000>;
+>> >>> +        interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
+>> >>> +        fsl,gpr = <&gpr>;
+>> >>> +        clocks = <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
+>> >>> +                 <&clks IMX6QDL_CLK_MIPI_IPG>;
+>> >>> +        clock-names = "ref", "pclk";
+>> >>> +
+>> >>> +        ports {
+>> >>> +            #address-cells = <1>;
+>> >>> +            #size-cells = <0>;
+>> >> 
+>> >> port@0 is missing.
+>> >> 
+>> >>> +            port@1 {
+>> >>> +                reg = <1>;
+>> >>> +                dsi_out: endpoint {
+>> >>> +                    remote-endpoint = <&panel_in>;
+>> >>> +                };
+>> >>> +            };
+>> >>> +        };
+>> >>> +
+>> >>> +        panel@0 {
+>> >>> +            compatible = "sharp,ls032b3sx01";
+>> >>> +            reg = <0>;
+>> >>> +            reset-gpios = <&gpio6 8 GPIO_ACTIVE_LOW>;
+>> >>> +            ports {
+>> >>> +                #address-cells = <1>;
+>> >>> +                #size-cells = <0>;
+>> >>> +                port@0 {
+>> >>> +                    reg = <0>;
+>> >>> +                    panel_in: endpoint {
+>> >>> +                        remote-endpoint = <&dsi_out>;
+>> >>> +                    };
+>> >>> +                };
+>> >>> +            };
+>> >>> +        };
+>> >>> +    };
+>> >>> +
+>> >>> +...
 >
-> Cool patch.
+> -- 
+> Regards,
 >
-> > Changes in v2:
-> > - ("Export...GPIOs") is 1/2 of replacement for ("Allow...bridge GPIOs")
-> >
-> >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 165 ++++++++++++++++++++++++++
-> >  1 file changed, 165 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > index 6ad688b320ae..d04c2b83d699 100644
-> > --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > @@ -874,6 +886,153 @@ static int ti_sn_bridge_parse_dsi_host(struct ti_sn_bridge *pdata)
-> >         return 0;
-> >  }
-> >
-> > +static struct ti_sn_bridge *gchip_to_pdata(struct gpio_chip *chip)
-> > +{
-> > +       return container_of(chip, struct ti_sn_bridge, gchip);
-> > +}
-> > +
-> > +static int ti_sn_bridge_gpio_get_direction(struct gpio_chip *chip,
-> > +                                          unsigned int offset)
-> > +{
-> > +       struct ti_sn_bridge *pdata = gchip_to_pdata(chip);
-> > +
-> > +       return (atomic_read(&pdata->gchip_output) & BIT(offset)) ?
->
-> Any reason this isn't a bitmap?
-
-Don't bitmaps need an external lock to protect against concurrent
-access?  When I looked I wasn't convinced that the GPIO subsystem
-prevented two callers from changing two GPIOs at the same time.  See
-below for a bigger discussion.
-
-
-> > +               GPIOF_DIR_OUT : GPIOF_DIR_IN;
->
-> And why can't we read the hardware to figure out if it's in output or
-> input mode?
-
-A few reasons:
-
-1. If nobody else had the bridge powered on this would be a slow
-operation involving powering the bridge on, querying via i2c, and then
-powering the bridge off.  Not only would it be slow but you'd be
-powering the chip up for no really good reason.  You didn't need to
-know anything that only the chip could tell you.
-
-2. If nobody else had the bridge powered on then the bridge loses
-state and resets to defaults (everything resets to "input").  Yes, we
-could still power the bridge up and confirm this, but...
-
-3. This bitmap does double-duty of not only knowing whether a pin is
-input or output but also whether we've incremented the "pm_runtime"
-refcount in order to keep the output driven.  Knowing whether we've
-already incremented the "pm_runtime" refcount can simplify a bit of
-the code because we know whether it's powered without having to power
-it on and query.  If we didn't have a cache, then when we changed a
-pin to input we'd do:
-
-pm_runtime_get() // Make sure we can access
-if dir_was_output:
-  pm_runtime_put() // Not driving anymore
-set_to_input();
-pm_runtime_put()  // Done with access
-
-...basically in some cases we'd do pm_runtime_put() twice in the same
-function.  It'd work, but feels like a worse solution than the one in
-my patch.
-
-4. When I bootup I see that this call gets made once per GPIO in
-gpiochip_add_data_with_key().  There's no reason to go through all the
-slowness when we know these pins are inputs.
-
-
-In the next version of the patch I'll plan to add a kerneldoc comment
-to "struct ti_sn_bridge" and add a summary of the above for
-"gchip_output".
-
-
-> > +}
-> > +
-> [...]
-> > +static int ti_sn_bridge_gpio_direction_output(struct gpio_chip *chip,
-> > +                                             unsigned int offset, int val)
-> > +{
-> > +       struct ti_sn_bridge *pdata = gchip_to_pdata(chip);
-> > +       int shift = offset * 2;
-> > +       int old_gchip_output;
-> > +       int ret;
-> > +
-> > +       old_gchip_output = atomic_fetch_or(BIT(offset), &pdata->gchip_output);
->
-> I presume gpiolib is already preventing a gpio from being modified twice
-> at the same time. So is this atomic stuff really necessary?
-
-Right.  I've assumed that we're not running two of these functions at
-the same time for the same GPIO.  I'm not convinced that the GPIO core
-enforces this but it seems like it'd be undefined behavior for a
-client to be, for instance, setting and changing direction for the
-same GPIO in two threads at the same time.  Where simple I've tried to
-make it so it wouldn't horribly break if someone did some amount of
-concurrent access of the same pin but not every corner case is
-handled.  Mostly I focused on making sure that I could never mess up
-keeping track of whether I incremented the "pm_runtime" refcount for a
-pin.  One thing specifically I didn't handle: if we were midway
-through ti_sn_bridge_gpio_set(), we context switched out and someone
-changed us to an input, then we'd possibly do an unpowered
-regmap_update_bits() and timeout.
-
-What I do think is a sensible case to handle, though, is someone
-working with two different GPIOs exported by this controller at the
-same time.  IIUC atomic_t allows me to only spend 1 bit per pin, have
-no lock, and still make sure these different consumers don't stomp on
-each other.
-
-NOTE: I did a quick trace for the call chain when using the "gpioget"
-command-line tool.  I saw:
-
-- ti_sn_bridge_gpio_get()
-- gpio_chip_get_multiple()
-- gpiod_get_array_value_complex()
-- linehandle_ioctl()
-
-None of these appear to do any locking.  There's sorta an implicit
-lock in that only one client can "request" a given GPIO at the same
-time so the assumption that we're somewhat protected against two
-concurrent accesses of the exact same GPIO is a bit justified.  ...but
-nothing appears to protect us from concurrent accesses of different
-GPIOs.
-
-I also notice that other GPIO drivers seem to grab their own locks.
-If it makes the patch more palatable, I can get rid of all the atomic
-stuff and put in a big mutex?
-
--Doug
+> Laurent Pinchart
