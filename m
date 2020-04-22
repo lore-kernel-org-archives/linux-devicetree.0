@@ -2,79 +2,76 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB34C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 03:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FF4C38A30
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 04:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97E792070B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 03:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C53320747
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 04:11:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="Vv5txikF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nZ+ub6QO"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="MXYvLLEw";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="I6/lLaf6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgDVDxm (ORCPT
+        id S1725810AbgDVELT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 23:53:42 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:46385 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726422AbgDVDxm (ORCPT
+        Wed, 22 Apr 2020 00:11:19 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:58539 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725808AbgDVELT (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Apr 2020 23:53:42 -0400
+        Wed, 22 Apr 2020 00:11:19 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 0053E5801C2;
-        Tue, 21 Apr 2020 23:53:40 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Tue, 21 Apr 2020 23:53:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
-         h=from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm3; bh=+EfqkUSWnK5oB5LHgnO1Rxb0VK
-        C+TbEqPBLo0jnqFfY=; b=Vv5txikFjhlLvXI1tIKdx81CnUOtqX04ItqrZd++y+
-        ylJ31YHwF9JMljYOhGIr0CzgOzvU/p2AtiHnJCBQO2aNv4D0S7Uo11jpZT9bzM3b
-        k9Zvk2D00RhMXhgO0bdcOTcL0p+VteTb9+w+O6Sp/bh5YUTvtDUw94xN+Kbl9sFL
-        kvMjh8pPqD7n9bVAdcJxSzMkKIbg3R4s/L249Gi4aYRjqieTpehR7x8+CvR+sok2
-        hEbvykXcCj1lGXw8kV2i4sfjkJw6GFykcqpRq45d/fwJVKQIDOp582m9frc+CYjD
-        rUBPqYpRaNU9Gl8V8XsQDtYHtXMP/LSu/peBI2yQRCQg==
+        by mailout.nyi.internal (Postfix) with ESMTP id 4CB7D5C011D;
+        Wed, 22 Apr 2020 00:11:18 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Wed, 22 Apr 2020 00:11:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm2; bh=F1dj2Jw3YDEgFV7WpVHDIIKM8X
+        ojVODpM5ZQVusEuJM=; b=MXYvLLEwShFV7Dm5T/etH8ddYFj7Rzkh6OZFhNMgCq
+        LVC7aVazTJhWfaIWGrgE4yyMA+cZEH9GO5xiBQmVYcBGbJNONh37rwp7edlihMnV
+        AGnZaycj22wMsimVKiNBN2GJQp/cVOy0FR/p2XFg9IIzMytq3wPvTW9HMu/6yLVd
+        0yI7b6DDnSjyoe/NyegEOpLaCE4PvFAHfqyD2yGtY4odM6dYmcl2bX2xXwc7v7IC
+        9p03Ypw+dKZ3Wiwg274J+je4nZ16f5Mh69iJE0aDjT3wSJ0YCBlk2KZO/XVT8ND3
+        /NySffPG2VvjNa925/VSnokPHri0gkofc3pdAWb/IhzQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=+EfqkUSWnK5oB5LHg
-        nO1Rxb0VKC+TbEqPBLo0jnqFfY=; b=nZ+ub6QOBaRpvVC0ToDUQ/DS9jU1jSut6
-        8xhF9m2WCT9D1g7LqyhyMWu+DMzvzYkRSfJVjb5hikK/Pg4rLuzPt+Rrp+DMnY/w
-        qqE2v6M3Shup8k2wJxpf5T38BgSprvn72s9eTAeZBgiBi70/05lEkh42UNOQTEUz
-        U3ZzTHD/xNt61V7THd04ZuTvHZgyWoV/kYz441BNOke/5wNGbtVtR0GL33p4ksRX
-        ljtf6iLNfKk1dSpy4V3hqBUg2X5vfYSQ4vq/8PYsJgJocah0GLKl1UEmnNoMWOeY
-        m6pe7yc3Ohrikuf93td82cEEmMDhnr3rL1+yGNIPymRV6neLJJ0xQ==
-X-ME-Sender: <xms:xL-fXtryYa-E56bp_MQzrv-ZweNWTYg05pQAnuoEmzx1HfOe41hu5Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeeigdejhecutefuodetggdotefrodftvf
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=F1dj2Jw3YDEgFV7Wp
+        VHDIIKM8XojVODpM5ZQVusEuJM=; b=I6/lLaf6mN8ViDw9W6zmLNRPTP2Q7dBzW
+        O6vE0TjGDKeXifaidQVvkcn/gNr7l72X7Cp2Q2UDGScoLbfeqAMdaJz0ys+5VIMM
+        NA2jL0SKpSJZM4UDH9IMdsshomiOt3+MzsdNDOZnBxjmvaENaMZrE8+Sl7enDaJi
+        Js+gYZ3N7x0A7jtfRL45077iLACz+ZKOpE4s8oH6SXwcIKntcR8xpNB0KSVbwgBy
+        pdVW228l5Hn7hxjy8hW3yBqBYu84bYws9Rpjm6/+1IY7LJeo3+NcXQIK8lmcLtiQ
+        yiP8sw8qdmprHy8I4mCM5T7vcNR0MTdSdWl5i/s4ZSOgBYtCDxgqw==
+X-ME-Sender: <xms:5cOfXjAJUL0XNAkUOsRMfHSSZYhZmCVEDnDBIMCoZJtvm6MzklxdDA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeeigdejlecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertdertd
-    dtnecuhfhrohhmpeetlhhishhtrghirhcuhfhrrghntghishcuoegrlhhishhtrghirhes
-    rghlihhsthgrihhrvdefrdhmvgeqnecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdroh
-    hrghenucfkphepjeefrdelfedrkeegrddvtdeknecuvehluhhsthgvrhfuihiivgeptden
-    ucfrrghrrghmpehmrghilhhfrhhomheprghlihhsthgrihhrsegrlhhishhtrghirhdvfe
-    drmhgv
-X-ME-Proxy: <xmx:xL-fXr8vh1tErFKMmMRrFOTVByOqqyMkfXEtEH26SDrz7EFWnS9uqA>
-    <xmx:xL-fXs_3hyJxHZuB3nFymkNYyhhsZBAf5w077Be9d4wkzft2tzpbUQ>
-    <xmx:xL-fXqsc8KlVQcN7vc5oQgLnA133RjHzuQpd1eKLFoSrVfeFhSkT9g>
-    <xmx:xL-fXhodnDceTjkOrAp2U-6b0io9GgFzDco_ANuCj-16ht-gxFtHhg>
-Received: from alistair-xps-14z.alistair23.me (c-73-93-84-208.hsd1.ca.comcast.net [73.93.84.208])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 15DD33280063;
-        Tue, 21 Apr 2020 23:53:39 -0400 (EDT)
-From:   Alistair Francis <alistair@alistair23.me>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-bluetooth@vger.kernel.org, mripard@kernel.org, wens@csie.org
-Cc:     anarsoul@gmail.com, devicetree@vger.kernel.org,
-        alistair23@gmail.com, linux-arm-kernel@lists.infradead.org,
-        Alistair Francis <alistair@alistair23.me>
-Subject: [PATCH v4 1/3] dt-bindings: net: bluetooth: Add rtl8723bs-bluetooth
-Date:   Tue, 21 Apr 2020 20:53:31 -0700
-Message-Id: <20200422035333.1118351-1-alistair@alistair23.me>
-X-Mailer: git-send-email 2.26.0
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghlucfj
+    ohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppeejtd
+    drudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
+    mhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
+X-ME-Proxy: <xmx:5cOfXl32P132cVkl3p8G-YSPyd-dNlCGnZEITP4g0bN8QSoRbpxCFg>
+    <xmx:5cOfXhV9Tv7UVJ6_TU_WEwAEdP5It6mnWG5rTjxSu_cAKR6gjVenmg>
+    <xmx:5cOfXnm_uym1zKcNPPvObexA2m2AMC2QiS3txZa94y2myED_qTCbgA>
+    <xmx:5sOfXiYwIMKOhNpq-bw3eff8wf1T5dUZUrDfKhLjgow9PquBK5NoJw>
+Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4FE5A3065CBF;
+        Wed, 22 Apr 2020 00:11:17 -0400 (EDT)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>
+Subject: [PATCH] arm64: dts: allwinner: a64: Disable SPDIF by default
+Date:   Tue, 21 Apr 2020 23:15:02 -0500
+Message-Id: <20200422041502.7497-1-samuel@sholland.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -82,77 +79,31 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Vasily Khoruzhick <anarsoul@gmail.com>
+As of v5.7-rc2, Linux now prints the following message at boot:
 
-Add binding document for bluetooth part of RTL8723BS/RTL8723CS
+  [   33.848525] platform sound_spdif: deferred probe pending
 
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-Signed-off-by: Alistair Francis <alistair@alistair23.me>
+This is because &sound_spdif is waiting on its DAI link component
+&spdif to probe, but &spdif is disabled in the DTS. Disable the
+audio card as well to match.
+
+Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- .../bindings/net/realtek-bluetooth.yaml       | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/realtek-bluetooth.yaml
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/net/realtek-bluetooth.yaml b/Documentation/devicetree/bindings/net/realtek-bluetooth.yaml
-new file mode 100644
-index 000000000000..4eb141b00fcb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/realtek-bluetooth.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/realtek,rtl8723bs-bt.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: RTL8723BS/RTL8723CS/RTL8822CS Bluetooth Device Tree Bindings
-+
-+maintainers:
-+  - Vasily Khoruzhick <anarsoul@gmail.com>
-+  - Alistair Francis <alistair@alistair23.me>
-+
-+description:
-+  RTL8723CS/RTL8723CS/RTL8822CS is WiFi + BT chip. WiFi part is connected over
-+  SDIO, while BT is connected over serial. It speaks H5 protocol with few
-+  extra commands to upload firmware and change module speed.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: "realtek,rtl8723bs-bt"
-+      - const: "realtek,rtl8723cs-bt"
-+      - const: "realtek,rtl8822cs-bt"
-+
-+  device-wake-gpios:
-+    maxItems: 1
-+    description: GPIO specifier, used to wakeup the BT module
-+
-+  enable-gpios:
-+    maxItems: 1
-+    description: GPIO specifier, used to enable the BT module
-+
-+  host-wake-gpios:
-+    maxItems: 1
-+    description: GPIO specifier, used to wakeup the host processor
-+
-+required:
-+  - compatible
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    uart1 {
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-+        uart-has-rtscts = <1>;
-+
-+        bluetooth {
-+            compatible = "realtek,rtl8723bs-bt";
-+            device-wake-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
-+            host-wakeup-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
-+        };
-+    };
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 6f8c30d89b9b..6c233ff031c6 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -169,6 +169,7 @@ link0_codec: codec {
+ 	sound_spdif {
+ 		compatible = "simple-audio-card";
+ 		simple-audio-card,name = "On-board SPDIF";
++		status = "disabled";
+ 
+ 		simple-audio-card,cpu {
+ 			sound-dai = <&spdif>;
 -- 
-2.26.0
+2.24.1
 
