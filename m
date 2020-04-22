@@ -2,568 +2,233 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A770C55185
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 15:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE5BC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 15:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF14206CD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 15:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3932073A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 15:08:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bl02h+kd"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="aKB0vNW7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgDVPAt (ORCPT
+        id S1726284AbgDVPIm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 11:00:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50632 "EHLO
+        Wed, 22 Apr 2020 11:08:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgDVPAs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 11:00:48 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 043AEC03C1A9;
-        Wed, 22 Apr 2020 08:00:48 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id k13so2782729wrw.7;
-        Wed, 22 Apr 2020 08:00:47 -0700 (PDT)
+        with ESMTP id S1725961AbgDVPIl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 11:08:41 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D58A7C03C1AD
+        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 08:08:40 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id j1so2836075wrt.1
+        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 08:08:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=KngDdoFZoZUrkq0v7j6q68yRbieqVr/2n3d5+TIv6qk=;
-        b=bl02h+kdni7FzVKJ+/Kthv0mhLmNr0vZKiP0BAXHHNanjwtxKTvawL+7QcqvkAqnDA
-         1xRXJSabYo598y3k1EHcyRuL6WPwOhRQvh6+1vD2ic9Bh/1/FL5/Ix/P/nZzxPq8vyXY
-         7znbayIhUfBx+WkFhQxHsLGW8bLlDsPp9K8jYNR0Enzmpw91GywNduLWV87Gas+8lf0p
-         6W1RGqGOeoTfDM2pLVmveE6EqsNuQeaXSziY+AegCL39SoU+jToXjOlFlvCjtBS8TDHc
-         MfDJ0yeecgBNJ/eG2YY7Uw8evADo7QSCOaFzeOi3m1GC16+oBRAq5djmPfmtZX6rmuX4
-         OOlg==
+        bh=JaYh26NahsPsqmz5/mIcVsKVgNpCY3mY3g+xU2LFLi8=;
+        b=aKB0vNW7/kq0ElSbDwSF2785i3I+GaTy1V++wNlb7hIZQ5p2vqcHEIWXH6GkZQDp9l
+         Kj7b0Lbf2iqTHK1rwlQb/TQuCm2Djb23qxG7Vxwe1aNMsky1khRafUEQfX7HOL79W7gR
+         6FbHEIzG9WmFvdv/GBhi+GmZ5Cym5EFZfFpGscOIF5i+8tlKrWQoaubCjlnVsg5iCQy7
+         oCmrl5jNK1z9ZJ/2Qpv86/Kxq22DhdqzCBx4TPW6fCldB8JmMbzMsf2rvAcJ3EbwF0m+
+         KS+FGlnRisoD/FZ9k5Yj0boqOdgeQde74aw0VUKk+LPlUoyRR+pzRM2VoQPnMxl3w8n1
+         +jjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KngDdoFZoZUrkq0v7j6q68yRbieqVr/2n3d5+TIv6qk=;
-        b=WgnNf90n1ixMEoys9bXymKQd2vQwirbbKARoxd4uXhSVv2qYnjM/YysCjogIBB5kOY
-         UROt+IaMmtYSPSCM9twJcwdwde4/4S2VuPjuw16YRKl41thKsrq4TXeA1qro1DnaNYyv
-         5+jx8XbqiN59A4sFuzGe13VuHQoMgJKgClemJINwpwjK+ZP2qxb/tbAyIF/gk5UTqBMz
-         LqPYl0pQNpQJryUri2TCU7EwSiBL8mo6VtI+hFZ2Z/QF3gVLt0+icln51YFvZzJUDYUz
-         WYka8+kHOY/qLSnEaKNlTFOghPAdSTKDognKyK38WHRrCyIR1FWDVKNkWETSXUSHTeFO
-         Brhw==
-X-Gm-Message-State: AGi0PuYZLRz92eDmDAdPryMRFOBkSD2Gpw9pMz7s6JL5THxDcsgKTGTU
-        24WnuhL68eh5KFFjYIJRkY6nEpDljug=
-X-Google-Smtp-Source: APiQypK2ZpxxPFvd0fwWed6cS8JCACVRCwYukZKCdOyJq6s5M95RjEaFuuIK+hJrDJmd4RlDjO4Dmw==
-X-Received: by 2002:adf:ea44:: with SMTP id j4mr32515512wrn.38.1587567646568;
-        Wed, 22 Apr 2020 08:00:46 -0700 (PDT)
-Received: from krolik-desktop.lan ([185.188.71.122])
-        by smtp.gmail.com with ESMTPSA id w10sm961006wrg.52.2020.04.22.08.00.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 08:00:45 -0700 (PDT)
-From:   Pawel Dembicki <paweldembicki@gmail.com>
-Cc:     Pawel Dembicki <paweldembicki@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3] ARM: dts: kirkwood: Add Check Point L-50 board
-Date:   Wed, 22 Apr 2020 17:00:06 +0200
-Message-Id: <20200422150007.29119-1-paweldembicki@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=JaYh26NahsPsqmz5/mIcVsKVgNpCY3mY3g+xU2LFLi8=;
+        b=U7wACvrTjEeJ17ygJ66f9pXHrWXqKUohCr53U5sfQqJ03G1g3dsM7SqZAIUltdlW7Z
+         +vurs+CQbxZVEgfbtplqSqY9hY89kl+EQjLzpKTVJNt1idJjIfAhxV0WNw3LQ0UlboDL
+         vw18zF0h8gYBkjIWQ+tOWXra94PfI3Y/uEtJvleUjRCuMtMkQy6IiswfpiIaHqMHCFQj
+         bYcVO5UbBqFIrYHPifNQ8N8vv11bGXHXPhBH4iPZhNBAiv4uHo/SZlESVy2Fb7+SeLrG
+         TOjCWcBIoh7IPvTeQdo2Qrs2AAXZVG+RxK4brNNLjXVlPN3DcgMmzvOhnj0Oufc2rvD4
+         MI0w==
+X-Gm-Message-State: AGi0PuYm0B3Eag4sw6rh6juWnW5H5tULSC/uaBFyZQu44G71I2UY8dAg
+        yXJdeSRodTDv4ln6hewT1jQgAg==
+X-Google-Smtp-Source: APiQypK/twlGcfF73hUVp8JoAFD7eKNkUajdKLVINxkDU+LuowbMB1KsY5yy3OpG1Ew403dm8Imypg==
+X-Received: by 2002:adf:efd1:: with SMTP id i17mr641626wrp.161.1587568119156;
+        Wed, 22 Apr 2020 08:08:39 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56? ([2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56])
+        by smtp.gmail.com with ESMTPSA id i17sm8282802wml.23.2020.04.22.08.08.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2020 08:08:38 -0700 (PDT)
+Subject: Re: [v2] arm64: dts: meson: odroid-n2: extend cpu opp-points
+To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Tim Lewis <elatllat@gmail.com>
+Cc:     khilman@baylibre.com, joy.cho@hardkernel.com, tobetter@gmail.com,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org
+References: <20200418214223.GA4484@imac>
+ <52230ECA-EA47-499D-B71C-FFCD374B75C3@gmail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <949a5388-38ef-a170-a59e-3c54f0bab46a@baylibre.com>
+Date:   Wed, 22 Apr 2020 17:08:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <52230ECA-EA47-499D-B71C-FFCD374B75C3@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds dts for the Check Point L-50 from 600/1100 series
-routers.
+Hi,
 
-Specification:
--CPU: Marvell Kirkwood 88F6821 1200MHz
--RAM: 512MB
--Flash: NAND 512MB
--WiFi: mPCIe card based on Atheros AR9287 b/g/n
--WAN: 1 Gigabit Port (Marvell 88E1116R PHY)
--LAN: 9 Gigabit Ports (2x Marvell 88E6171(5+4))
--USB: 2x USB2.0
--Express card slot
--SD card slot
--Serial console: RJ-45 115200 8n1
--Unsupported DSL
+Could you add "[PATCH vX]" in the subject ?
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
----
-Changes in v3:
-- fix typo and code style issues pointed by OpenWrt guys
-Changes in v2:
-- none
+On 22/04/2020 16:54, Christian Hewitt wrote:
+> 
+>> On 19 Apr 2020, at 1:42 am, Tim Lewis <elatllat@gmail.com> wrote:
+>>
+>> Odroid N2 has a large heatsink and HardKernel supports overclock
+>> through the addition to extra opp points in their official kernel
+>> sources [1]. Add these to the N2 dts only, as other S922X devices
+>> may not have suitable heatsinks.
+>>
+>> [1] https://github.com/hardkernel/linux/commit/f86cd9487c7483b2a05f448b9ebacf6bd5a2ad2f
+>> Signed-off-by: Tim Lewis <elatllat@gmail.com>
+> 
+> Kodi is not a demanding workload, but the extra opp points are being used:
+> 
+> N2:~ # cat /sys/devices/system/cpu/cpufreq/policy0/stats/trans_table 
+>    From  :    To
+>          :    100000    250000    500000    667000   1000000   1200000   1398000   1512000   1608000   1704000   1896000   1992000 
+>    100000:         0     20465       294        81        47         0         1         0         0         0         0       183 
+>    250000:     20388         0       161        52        59         0         0         0         1         0         1       169 
+>    500000:       199       256         0         9        47         1         2         0         0         0         0        57 
+>    667000:       177        50        10         0       284         1         1         0         0         0         0       136 
+>   1000000:       230        12        15       284         0         1         2         0         0         0         0       285 
+>   1200000:         0         0         0         1         0         0         0         0         0         1         0         2 
+>   1398000:         1         1         0         2         0         0         0         0         1         1         0         3 
+>   1512000:         0         0         0         0         0         0         0         0         0         1         0         2 
+>   1608000:         0         0         0         0         0         0         0         1         0         0         0         2 
+>   1704000:         0         1         0         0         0         0         1         0         0         0         0         2 
+>   1896000:         0         0         1         0         0         0         0         0         0         0         0         1 
+>   1992000:        76        47        90       230       392         0         2         2         1         1         1         0 
+> 
+> N2:~ # cat /sys/devices/system/cpu/cpufreq/policy2/stats/trans_table 
+>    From  :    To
+>          :    100000    250000    500000    667000   1000000   1200000   1398000   1512000   1608000   1704000   1800000   1908000 
+>    100000:         0      1698       130        76        87         0         0         0         1         0         1       199 
+>    250000:      1655         0        25        15       357         1         2         0         1         0         0        12 
+>    500000:       258        54         0     50102        30         3         1         0         0         0         1        32 
+>    667000:       267       151     49708         0        77         3         0         0         0         0         0        11 
+>   1000000:         3         5       525        15         0         3         2         0         1         1         0         6 
+>   1200000:         0         2         1         2         2         0         3         0         0         0         1         4 
+>   1398000:         1         0         1         1         4         0         0         1         1         0         2         2 
+>   1512000:         0         0         0         0         0         0         1         0         0         0         0         1 
+>   1608000:         1         0         0         1         0         1         0         0         0         0         0         3 
+>   1704000:         0         0         0         0         0         1         0         1         0         0         0         1 
+>   1800000:         0         0         1         1         0         0         1         0         1         0         0         1 
+>   1908000:         8       158        90         4         3         3         3         0         1         2         0         0 
+> 
+> Board boots in under 4 seconds, Kodi home-screen in about 7 seconds. I haven’t seen the N2 rise over 44ºC.
+> 
+> I’ve also tested some S922X box devices (moving the change to meson-g12b-s922x.dtsi) and no obvious issues.
+> 
+> Tested-by: Christian Hewitt <christianshewitt@gmail.com>
+> 
+>> ---
+>> .../boot/dts/amlogic/meson-g12b-odroid-n2.dts | 19 +++++++++++++++++++
+>> 1 file changed, 19 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+>> index 42f154057..6f32ac83f 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+>> @@ -260,6 +260,25 @@
+>> 			};
+>> 		};
+>> 	};
+>> +
+>> +	cpu_opp_table_0: opp-table-0 {
+>> +		opp-1992000000 {
+>> +			opp-hz = /bits/ 64 <1992000000>;
+>> +			opp-microvolt = <1001000>;
+>> +		};
+>> +	};
+>> +
+>> +	cpub_opp_table_1: opp-table-1 {
+>> +		opp-1800000000 {
+>> +			opp-hz = /bits/ 64 <1800000000>;
+>> +			opp-microvolt = <981000>;
+>> +		};
+>> +
+>> +		opp-1908000000 {
+>> +			opp-hz = /bits/ 64 <1908000000>;
+>> +			opp-microvolt = <1022000>;
+>> +		};
+>> +	};
+>> };
+>>
+>> &arb {
+>> -- 
+>> 2.17.1
+>>
+> 
+I think it could be moved to all s922x devices since we have dvfs and thermal management enabled by default,
+so other devices with inferior cooling will use lower OPPs automatically.
 
- arch/arm/boot/dts/Makefile          |   1 +
- arch/arm/boot/dts/kirkwood-l-50.dts | 438 ++++++++++++++++++++++++++++
- 2 files changed, 439 insertions(+)
- create mode 100644 arch/arm/boot/dts/kirkwood-l-50.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e8dd99201397..eba030b3ba69 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -279,6 +279,7 @@ dtb-$(CONFIG_MACH_KIRKWOOD) += \
- 	kirkwood-iomega_ix2_200.dtb \
- 	kirkwood-is2.dtb \
- 	kirkwood-km_kirkwood.dtb \
-+	kirkwood-l-50.dtb \
- 	kirkwood-laplug.dtb \
- 	kirkwood-linkstation-lsqvl.dtb \
- 	kirkwood-linkstation-lsvl.dtb \
-diff --git a/arch/arm/boot/dts/kirkwood-l-50.dts b/arch/arm/boot/dts/kirkwood-l-50.dts
-new file mode 100644
-index 000000000000..0d81c43a6a73
---- /dev/null
-+++ b/arch/arm/boot/dts/kirkwood-l-50.dts
-@@ -0,0 +1,438 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Check Point L-50 Board Description
-+ * Copyright 2020 Pawel Dembicki <paweldembicki@gmail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "kirkwood.dtsi"
-+#include "kirkwood-6281.dtsi"
-+
-+/ {
-+	model = "Check Point L-50";
-+	compatible = "checkpoint,l-50", "marvell,kirkwood-88f6281", "marvell,kirkwood";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00000000 0x20000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200n8";
-+		stdout-path = &uart0;
-+	};
-+
-+	ocp@f1000000 {
-+		pinctrl: pin-controller@10000 {
-+			pinctrl-0 = <&pmx_led38 &pmx_sysrst &pmx_button29>;
-+			pinctrl-names = "default";
-+
-+			pmx_sysrst: pmx-sysrst {
-+				marvell,pins = "mpp6";
-+				marvell,function = "sysrst";
-+			};
-+
-+			pmx_button29: pmx_button29 {
-+				marvell,pins = "mpp29";
-+				marvell,function = "gpio";
-+			};
-+
-+			pmx_led38: pmx_led38 {
-+				marvell,pins = "mpp38";
-+				marvell,function = "gpio";
-+			};
-+
-+			pmx_sdio_cd: pmx-sdio-cd {
-+				marvell,pins = "mpp46";
-+				marvell,function = "gpio";
-+			};
-+		};
-+
-+		serial@12000 {
-+			status = "okay";
-+		};
-+
-+		mvsdio@90000 {
-+			status = "okay";
-+			cd-gpios = <&gpio1 14 9>;
-+		};
-+
-+		i2c@11000 {
-+			status = "okay";
-+			clock-frequency = <400000>;
-+
-+			gpio2: gpio-expander@20{
-+				#gpio-cells = <2>;
-+				#interrupt-cells = <2>;
-+				compatible = "semtech,sx1505q";
-+				reg = <0x20>;
-+
-+				gpio-controller;
-+			};
-+
-+			/* Three GPIOs from 0x21 exp. are undescribed in dts:
-+			 * 1: DSL module reset (active low)
-+			 * 5: mPCIE reset (active low)
-+			 * 6: Express card reset (active low)
-+			 */
-+			gpio3: gpio-expander@21{
-+				#gpio-cells = <2>;
-+				#interrupt-cells = <2>;
-+				compatible = "semtech,sx1505q";
-+				reg = <0x21>;
-+
-+				gpio-controller;
-+			};
-+
-+			rtc@30 {
-+				compatible = "s35390a";
-+				reg = <0x30>;
-+			};
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		status_green {
-+			label = "l-50:green:status";
-+			gpios = <&gpio1 6 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		status_red {
-+			label = "l-50:red:status";
-+			gpios = <&gpio3 2 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		wifi {
-+			label = "l-50:green:wifi";
-+			gpios = <&gpio2 7 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "phy0tpt";
-+		};
-+
-+		internet_green {
-+			label = "l-50:green:internet";
-+			gpios = <&gpio2 3 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		internet_red {
-+			label = "l-50:red:internet";
-+			gpios = <&gpio2 1 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		usb1_green {
-+			label = "l-50:green:usb1";
-+			gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "usbport";
-+			trigger-sources = <&hub_port3>;
-+		};
-+
-+		usb1_red {
-+			label = "l-50:red:usb1";
-+			gpios = <&gpio2 4 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		usb2_green {
-+			label = "l-50:green:usb2";
-+			gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "usbport";
-+			trigger-sources = <&hub_port1>;
-+		};
-+
-+		usb2_red {
-+			label = "l-50:red:usb2";
-+			gpios = <&gpio2 5 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	usb2_pwr {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb2_pwr";
-+
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio3 3 GPIO_ACTIVE_LOW>;
-+		regulator-always-on;
-+	};
-+
-+	usb1_pwr {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb1_pwr";
-+
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio3 4 GPIO_ACTIVE_LOW>;
-+		regulator-always-on;
-+	};
-+
-+	mpcie_pwr {
-+		compatible = "regulator-fixed";
-+		regulator-name = "mpcie_pwr";
-+
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio3 5 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	express_card_pwr {
-+		compatible = "regulator-fixed";
-+		regulator-name = "express_card_pwr";
-+
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio3 7 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	keys {
-+		compatible = "gpio-keys";
-+
-+		factory_defaults {
-+			label = "factory_defaults";
-+			gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_RESTART>;
-+		};
-+	};
-+};
-+
-+&mdio {
-+	status = "okay";
-+
-+	ethphy8: ethernet-phy@8 {
-+		reg = <0x08>;
-+	};
-+
-+	switch0: switch@10 {
-+		compatible = "marvell,mv88e6085";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x10>;
-+		dsa,member = <0 0>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				label = "lan5";
-+			};
-+
-+			port@1 {
-+			       reg = <1>;
-+			       label = "lan1";
-+			};
-+
-+			port@2 {
-+			       reg = <2>;
-+			       label = "lan6";
-+			};
-+
-+			port@3 {
-+			       reg = <3>;
-+			       label = "lan2";
-+			};
-+
-+			port@4 {
-+				reg = <4>;
-+				label = "lan7";
-+			};
-+
-+			switch0port5: port@5 {
-+				reg = <5>;
-+				phy-mode = "rgmii-txid";
-+				link = <&switch1port5>;
-+				fixed-link {
-+					speed = <1000>;
-+					full-duplex;
-+				};
-+			};
-+
-+			port@6 {
-+				reg = <6>;
-+				label = "cpu";
-+				phy-mode = "rgmii-id";
-+				ethernet = <&eth1port>;
-+				fixed-link {
-+					speed = <1000>;
-+					full-duplex;
-+				};
-+			};
-+		};
-+	};
-+
-+	switch@11 {
-+		compatible = "marvell,mv88e6085";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x11>;
-+		dsa,member = <0 1>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				label = "lan3";
-+			};
-+
-+			port@1 {
-+			       reg = <1>;
-+			       label = "lan8";
-+			};
-+
-+			port@2 {
-+			       reg = <2>;
-+			       label = "lan4";
-+			};
-+
-+			port@3 {
-+			       reg = <3>;
-+			       label = "dmz";
-+			};
-+
-+			switch1port5: port@5 {
-+				reg = <5>;
-+				phy-mode = "rgmii-txid";
-+				link = <&switch0port5>;
-+				fixed-link {
-+					speed = <1000>;
-+					full-duplex;
-+				};
-+			};
-+
-+			port@6 {
-+				reg = <6>;
-+				label = "dsl";
-+				fixed-link {
-+					speed = <100>;
-+					full-duplex;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&eth0 {
-+	status = "okay";
-+	ethernet0-port@0 {
-+		phy-handle = <&ethphy8>;
-+	};
-+};
-+
-+&eth1 {
-+	status = "okay";
-+	ethernet1-port@0 {
-+		speed = <1000>;
-+		duplex = <1>;
-+	};
-+};
-+
-+&nand {
-+	status = "okay";
-+	pinctrl-0 = <&pmx_nand>;
-+	pinctrl-names = "default";
-+
-+	partition@0 {
-+		label = "u-boot";
-+		reg = <0x00000000 0x000c0000>;
-+	};
-+
-+	partition@a0000 {
-+		label = "bootldr-env";
-+		reg = <0x000c0000 0x00040000>;
-+	};
-+
-+	partition@100000 {
-+		label = "kernel-1";
-+		reg = <0x00100000 0x00800000>;
-+	};
-+
-+	partition@900000 {
-+		label = "rootfs-1";
-+		reg = <0x00900000 0x07100000>;
-+	};
-+
-+	partition@7a00000 {
-+		label = "kernel-2";
-+		reg = <0x07a00000 0x00800000>;
-+	};
-+
-+	partition@8200000 {
-+		label = "rootfs-2";
-+		reg = <0x08200000 0x07100000>;
-+	};
-+
-+	partition@f300000 {
-+		label = "default_sw";
-+		reg = <0x0f300000 0x07900000>;
-+	};
-+
-+	partition@16c00000 {
-+		label = "logs";
-+		reg = <0x16c00000 0x01800000>;
-+	};
-+
-+	partition@18400000 {
-+		label = "preset_cfg";
-+		reg = <0x18400000 0x00100000>;
-+	};
-+
-+	partition@18500000 {
-+		label = "adsl";
-+		reg = <0x18500000 0x00100000>;
-+	};
-+
-+	partition@18600000 {
-+		label = "storage";
-+		reg = <0x18600000 0x07a00000>;
-+	};
-+};
-+
-+&rtc {
-+	status = "disabled";
-+};
-+
-+&pciec {
-+	status = "okay";
-+};
-+
-+&pcie0 {
-+	status = "okay";
-+};
-+
-+&sata_phy0 {
-+	status = "disabled";
-+};
-+
-+&sata_phy1 {
-+	status = "disabled";
-+};
-+
-+&usb0 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	port@1 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <1>;
-+		#trigger-source-cells = <0>;
-+
-+		hub_port1: port@1 {
-+			reg = <1>;
-+			#trigger-source-cells = <0>;
-+		};
-+
-+		hub_port3: port@3 {
-+			reg = <3>;
-+			#trigger-source-cells = <0>;
-+		};
-+	};
-+};
---
-2.20.1
-
+Neil
