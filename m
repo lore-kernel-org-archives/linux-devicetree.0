@@ -2,96 +2,99 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46946C5518B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 19:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80286C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 19:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 168222098B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 19:25:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R2IppJag"
+	by mail.kernel.org (Postfix) with ESMTP id 53AF120767
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 19:33:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbgDVTZQ (ORCPT
+        id S1726121AbgDVTdh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 15:25:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35246 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725935AbgDVTZQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Apr 2020 15:25:16 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9273C03C1A9;
-        Wed, 22 Apr 2020 12:25:15 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 145so1600043pfw.13;
-        Wed, 22 Apr 2020 12:25:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Uj9s171jvFoitIg5Oada+VYi2BRzx4238j/iCXrZ1Ac=;
-        b=R2IppJagLrK+ryuyiK45iVoThp1/7fgOnR3z4KrIzUwZu1rDqA44kra36HLdi5SSh6
-         Zakfejh+fL1i2wJM8OleIPMjOB/ciAJbQVFTi2c3KKPun/NIbm+M+jqBJAC62GsSNuE6
-         o+mfma/kTQh+13VUasKDCc1k7W+ZS1pRKR+rDhgZFnJOG/aYKsu57wYAtKaYvDMAdfI9
-         9XKH3yjgAScv8t5Op4J/8EVxDw1oaA1fjkp33M4AgcUfYeWc7Fq0q1hg4uiAaLL5PBmy
-         87w85tYUIf95QWGCSGeeXLXcj9xe0hciJj/XpphMfXNVbNaRgyoJ6SQWPUOQIvefGdBA
-         diOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Uj9s171jvFoitIg5Oada+VYi2BRzx4238j/iCXrZ1Ac=;
-        b=sAef1FouCKeeHAYsDNUlbMyfKFdex4GSAsyzY7D4YauQOSDiuOw0TqvxCryIHxv8gi
-         VeNZHmCQNJWcz7FPVqE7N1dWruS2Pq7tMbP+6CWZN5zenunSSnkEWso7ti8Xy+50eYas
-         7AHLonr9iw3HqIbndzsROdmGDoylKxSA8Yb2fryI0rQqemb9EsLUuwBmgFJcjpr8y26d
-         hqw2jyGRzLUmoHEGPaD0iDwc6vrHm2asbzVoEi7bO+f5nQNLcNwOnch8XfmC+W+TIUaq
-         /WXT6nj5Hte47QsUU9tEuQS4APsOxY07s6Z4ruda07Jyjtef/BnJPtIVPkbYLJ4ps0m4
-         pZfQ==
-X-Gm-Message-State: AGi0PuaEb1a7peQMP1EOU6SZ8/GIlyByTYlsu6EJbEGW6rZhl+F95TD2
-        y1zwLJ3SnertoDJ8jAuzYO78QVl/+WN9gC4gO0FR8Z45ix/+hQ==
-X-Google-Smtp-Source: APiQypLk7oEoO4P2UL6Bp5lqa7linV94/uY192MJZRmUZKWU4eCwmc5qbgsAG9zIXt25afUutnQtpmDQGPlH/3mB8/0=
-X-Received: by 2002:a63:1c1:: with SMTP id 184mr572706pgb.203.1587583515291;
- Wed, 22 Apr 2020 12:25:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200422141135.86419-1-tomasz.duszynski@octakon.com> <20200422141135.86419-7-tomasz.duszynski@octakon.com>
-In-Reply-To: <20200422141135.86419-7-tomasz.duszynski@octakon.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 22 Apr 2020 22:25:03 +0300
-Message-ID: <CAHp75VeQComzEs0JmOBAqtKQ5Ez79sRHmsMNHiU9X2zWfnrpew@mail.gmail.com>
-Subject: Re: [PATCH 6/6] MAINTAINERS: add myself as a SCD30 driver maintainer
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
+        Wed, 22 Apr 2020 15:33:37 -0400
+Received: from muru.com ([72.249.23.125]:51032 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725935AbgDVTdh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Apr 2020 15:33:37 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 6910580EE;
+        Wed, 22 Apr 2020 19:34:20 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 12:33:28 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Philipp Rossak <embed3d@gmail.com>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the
+ PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
+Message-ID: <20200422193328.GD37466@atomide.com>
+References: <20200421112129.zjmkmzo3aftksgka@gilmour.lan>
+ <20200421141543.GU37466@atomide.com>
+ <D9D4D057-A73D-485F-898D-5C05E89C16B7@goldelico.com>
+ <20200422065859.quy6ane5v7vsy5tf@gilmour.lan>
+ <1AA57A0C-48E6-49BB-BB9A-2AAFFB371BCD@goldelico.com>
+ <20200422151328.2oyqz7gqkbunmd6o@gilmour.lan>
+ <07923B6C-4CCD-4B81-A98F-E19C43412A89@goldelico.com>
+ <MC879Q.XY9S0U9R35681@crapouillou.net>
+ <D90A610B-1F26-4AD4-843A-60EB4E410377@goldelico.com>
+ <a1fd55a3-23dd-aa0c-35dd-6956ff4baa1c@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a1fd55a3-23dd-aa0c-35dd-6956ff4baa1c@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 5:23 PM Tomasz Duszynski
-<tomasz.duszynski@octakon.com> wrote:
->
-> Add myself as a SCD30 driver maintainer.
+* Philipp Rossak <embed3d@gmail.com> [200422 19:05]:
+> A few years back, I did a big research on the PowerVR GPUs. Back then I
+> found an interesting TI datasheet. I forgot about this till I have seen the
+> right buzz words. Sorry that I remembered it that late.
+> 
+> Back then I came to the conclusion that all PowerVR GPU's have in general 3
+> Clocks.
+> 
+> A system clock, a memory clock and a core clock. [1].
 
-> +SENSIRION SCD30 CARBON DIOXIDE SENSOR DRIVER
-> +M:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-> +S:     Maintained
-> +F:     drivers/iio/chemical/scd30.h
-> +F:     drivers/iio/chemical/scd30_core.c
-> +F:     drivers/iio/chemical/scd30_i2c.c
-> +F:     drivers/iio/chemical/scd30_serial.c
-> +F:     Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+Hmm I'm not sure if those names are sgx or SoC specific.
 
-Broken order. Run
-  scripts/parse-maintainers.pl --input=MAINTAINERS --output=MAINTAINERS --order
-to fix.
+Anyways, the sgx clocks for omap variants are already handled
+by the ti-sysc module as "fck" and "ick" so nothing to do there.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> The hyd_clk at sunxi devices seems to be the system clock.
+> 
+> With those additional information it should be very easy to get a proper
+> binding.
+
+It would be best to find the clock(s) name used in the sgx docs
+to avoid using SoC specific naming :)
+
+But yeah "sysclk" "memclk" and "coreclk" seem just fine for
+me for the optional clocks if that works for other SoCs.
+
+Regards,
+
+Tony
+
+> [1]: https://github.com/embed-3d/PVRSGX_hwdoc/blob/master/sources/pdfs/Spruh73c_chapter_SGX_Graphics_Accelerator.pdf
