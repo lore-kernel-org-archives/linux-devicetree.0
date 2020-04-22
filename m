@@ -2,183 +2,222 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A740DC55185
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 17:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEEB0C55185
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 17:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDBA520776
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 17:23:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="fAz/SXRp"
+	by mail.kernel.org (Postfix) with ESMTP id 9A1EF20776
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 17:26:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgDVRX7 (ORCPT
+        id S1726486AbgDVR0X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 13:23:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726057AbgDVRX7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Apr 2020 13:23:59 -0400
-Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 707F2C03C1A9;
-        Wed, 22 Apr 2020 10:23:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587576236;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=0rEv5vtIu8s1R6u/s9ENbcEJ/9O1X+purU+T3mOlO00=;
-        b=fAz/SXRpNvzrZQnNuQiahgyYTCE3Hh0/g3eciq8IQbb/HgOe9SnL2LFDjQUv71eNpS
-        jBqT6wKEtvRXoGgALTV9RxbkON6TB8UKjx2cwIMGhCFQwpr8or34KOZA9fOTCfnwt2+E
-        2vGICsVFvQKGjdHmgY6LUTOv99B5puvReTv67b5amKJJfMhuYRSW4Mw8qzAU4t2585vt
-        ftf5m5mJQef7KZiKjGqeM2xAZ1vl7I1D7R8/7MlesjW22QF+mnZOdcWG3DHrzx1g+sY1
-        Ro4RPQLTlNP5b7XCDNz2CKa7iOkNML9eh6aY2+tkb6FykalUOZrEQMSP6y+z1ykjhJQp
-        cSrg==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmMiw43tskc="
-X-RZG-CLASS-ID: mo00
-Received: from mbp-13-nikolaus.fritz.box
-        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
-        with ESMTPSA id R0acebw3MHNj3a9
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Wed, 22 Apr 2020 19:23:45 +0200 (CEST)
-Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=iso-8859-1
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <MC879Q.XY9S0U9R35681@crapouillou.net>
-Date:   Wed, 22 Apr 2020 19:23:52 +0200
-Cc:     Maxime Ripard <maxime@cerno.tech>,
-        Tony Lindgren <tony@atomide.com>,
-        Philipp Rossak <embed3d@gmail.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?iso-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D90A610B-1F26-4AD4-843A-60EB4E410377@goldelico.com>
-References: <20200415130233.rgn7xrtwqicptke2@gilmour.lan> <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com> <10969e64-fe1f-d692-4984-4ba916bd2161@gmail.com> <20200420073842.nx4xb3zqvu23arkc@gilmour.lan> <b5a06c19-7a3e-bcb8-5ae3-76901b9c6c35@gmail.com> <20200421112129.zjmkmzo3aftksgka@gilmour.lan> <20200421141543.GU37466@atomide.com> <D9D4D057-A73D-485F-898D-5C05E89C16B7@goldelico.com> <20200422065859.quy6ane5v7vsy5tf@gilmour.lan> <1AA57A0C-48E6-49BB-BB9A-2AAFFB371BCD@goldelico.com> <20200422151328.2oyqz7gqkbunmd6o@gilmour.lan> <07923B6C-4CCD-4B81-A98F-E19C43412A89@goldelico.com> <MC879Q.XY9S0U9R35681@crapouillou.net>
-To:     Paul Cercueil <paul@crapouillou.net>
-X-Mailer: Apple Mail (2.3124)
+        Wed, 22 Apr 2020 13:26:23 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4472 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbgDVR0X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 13:26:23 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea07e000000>; Wed, 22 Apr 2020 10:25:20 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 22 Apr 2020 10:26:22 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 22 Apr 2020 10:26:22 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 22 Apr
+ 2020 17:26:22 +0000
+Received: from [10.2.165.49] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 22 Apr
+ 2020 17:26:21 +0000
+Subject: Re: [RFC PATCH v9 5/9] dt-binding: tegra: Add VI and CSI bindings
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <frankc@nvidia.com>, <hverkuil@xs4all.nl>, <sakari.ailus@iki.fi>,
+        <helen.koike@collabora.com>, <digetx@gmail.com>,
+        <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1587536339-4030-1-git-send-email-skomatineni@nvidia.com>
+ <1587536339-4030-6-git-send-email-skomatineni@nvidia.com>
+ <20200422172047.GA18765@pendragon.ideasonboard.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <1ae63b2e-17f0-ca0e-23fa-9aa63eafe01b@nvidia.com>
+Date:   Wed, 22 Apr 2020 10:26:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200422172047.GA18765@pendragon.ideasonboard.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Paul,
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+	t=1587576320; bh=HfkzuR+vYVLOjA/839zIGQQg1loQfsQ+IO+/Ii0+hVQ=;
+	h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+	 User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+	 X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+	 Content-Language;
+	b=mXG4pQ46mtw3JTRdiTAfbKIo8ocWIwYbDoR2GlvGZNfM++w8WWv2futApPFpQPDsn
+	 DYKCKfLjQS6QMi9iado5yxDppXLzKNPSAh79WiOtZkDnxnYesOfrbPrR4NvX7uV1Mh
+	 j8yBi3WYowY2ACc/ouLfLAY4GLLXdEDKQeIi7ztdEUZlqCHH9JdQYzt55yeXTSG7Ju
+	 EdBSajJgI0RbyjAhZs9YwJ8/Sk5TpOrby6kmzk2gCzvkCYPp98U69bLnqRccI/uf4e
+	 W6Urof3IfLm6MYH3rDE3nrQmGRMu713Us4o9WX+atKkaCQ+pZUZklqfm9KrCTAdrIL
+	 Ba0krgo3iyjDQ==
 
-> Am 22.04.2020 um 18:55 schrieb Paul Cercueil <paul@crapouillou.net>:
->=20
-> Hi Nikolaus,
->=20
->=20
-> Le mer. 22 avril 2020 =E0 18:09, H. Nikolaus Schaller =
-<hns@goldelico.com> a =E9crit :
->> Hi Maxime,
->>> Am 22.04.2020 um 17:13 schrieb Maxime Ripard <maxime@cerno.tech>:
->>> On Wed, Apr 22, 2020 at 09:10:57AM +0200, H. Nikolaus Schaller =
-wrote:
->>>>> Am 22.04.2020 um 08:58 schrieb Maxime Ripard <maxime@cerno.tech>:
->>>>>> It also allows to handle different number of clocks (A31 seems to
->>>>>> need 4, Samsung, A83 and JZ4780 one) without changing the sgx =
-bindings
->>>>>> or making big lists of conditionals. This variance would be =
-handled
->>>>>> outside the sgx core bindings and driver.
->>>>> I disagree. Every other GPU binding and driver is handling that =
-just fine, and
->>>>> the SGX is not special in any case here.
->>>> Can you please better explain this? With example or a description
->>>> or a proposal?
->>> I can't, I don't have any knowledge about this GPU.
->> Hm. Now I am fully puzzled.
->> You have no knowledge about this GPU but disagree with our proposal?
->> Is it just gut feeling?
->> Anyways, we need to find a solution. Together.
->>>> I simply do not have your experience with "every other GPU" as you =
-have.
->>>> And I admit that I can't read from your statement what we should do
->>>> to bring this topic forward.
->>>> So please make a proposal how it should be in your view.
->>> If you need some inspiration, I guess you could look at the mali and =
-vivante
->>> bindings once you have an idea of what the GPU needs across the SoCs =
-it's
->>> integrated in.
->> Well, I do not need inspiration, we need to come to an agreement =
-about
->> img,pvrsgx.yaml and we need some maintainer to finally pick it up.
->> I wonder how we can come to this stage.
->> If I look at vivante,gc.yaml or arm,mali-utgard.yaml I don't
->> see big differences to what we propose and those I see seem to come
->> from technical differences between sgx, vivante, mali etc. So there
->> is no single scheme that fits all different gpu types.
->> One thing we can learn is that "core" seems to be a de facto standard
->> for the core clock-name. An alternative "gpu" is used by =
-nvidia,gk20a.txt.
->=20
-> The Vivante GPU binding requires "bus", "core" and "shader" clocks. =
-But if your SoC only has one clock for the GPU, there's nothing that =
-prevents you from passing the very same clock as "bus", "core" and =
-"shader". This is what we do on the Ingenic JZ4770 SoC.
+On 4/22/20 10:20 AM, Laurent Pinchart wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> Hi Sowjanya,
+>
+> Thank you for the patch.
+>
+> On Tue, Apr 21, 2020 at 11:18:55PM -0700, Sowjanya Komatineni wrote:
+>> Tegra contains VI controller which can support up to 6 MIPI CSI
+>> camera sensors.
+>>
+>> Each Tegra CSI port from CSI unit can be one-to-one mapper to
+>> VI channel and can capture from an external camera sensor or
+>> from built-in test pattern generator.
+>>
+>> This patch adds dt-bindings for Tegra VI and CSI.
+>>
+>> Acked-by: Thierry Reding <treding@nvidia.com>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   .../display/tegra/nvidia,tegra20-host1x.txt        | 73 ++++++++++++++++++----
+>>   1 file changed, 60 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>> index 9999255..4731921 100644
+>> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>> @@ -40,14 +40,30 @@ of the following host1x client modules:
+>>
+>>     Required properties:
+>>     - compatible: "nvidia,tegra<chip>-vi"
+>> -  - reg: Physical base address and length of the controller's registers.
+>> +  - reg: Physical base address and length of the controller registers.
+>>     - interrupts: The interrupt outputs from the controller.
+>> -  - clocks: Must contain one entry, for the module clock.
+>> +  - clocks: clocks: Must contain one entry, for the module clock.
+>>       See ../clocks/clock-bindings.txt for details.
+>> -  - resets: Must contain an entry for each entry in reset-names.
+>> -    See ../reset/reset.txt for details.
+>> -  - reset-names: Must include the following entries:
+>> -    - vi
+>> +  - Tegra20/Tegra30/Tegra114/Tegra124:
+>> +    - resets: Must contain an entry for each entry in reset-names.
+>> +      See ../reset/reset.txt for details.
+>> +    - reset-names: Must include the following entries:
+>> +      - vi
+>> +  - Tegra210:
+>> +    - power-domains: Must include venc powergate node as vi is in VE partition.
+>> +  - Tegra210 has CSI part of VI sharing same host interface and register space.
+>> +    So, VI device node should have CSI child node.
+>> +
+>> +    - csi: mipi csi interface to vi
+>> +
+>> +      Required properties:
+>> +      - compatible: "nvidia,tegra210-csi"
+>> +      - reg: Physical base address offset to parent and length of the controller
+>> +        registers.
+>> +      - clocks: Must contain entries csi, cilab, cilcd, cile, csi_tpg clocks.
+>> +        See ../clocks/clock-bindings.txt for details.
+>> +      - power-domains: Must include sor powergate node as csicil is in
+>> +        SOR partition.
+> A bit of a stupid question maybe, but why is this needed ? Can't the
+> driver that handles the vi DT node ("nvidia,tegra20-vi") handle all the
+> registers for all the sub-blocks ? Can't we move the clocks and power
+> domains from the CSI node to the VI node ?
 
-Fine and good to know.
+CSI is separate device driver and VI is separate device driver.
 
-Well, for the SGX we so far only know a single "core" clock (with =
-different
-names). Only the A31 seems to be different.
+For T210, CSI shares register space under VI but for later Tegras its 
+separate register space.
 
-Fortunately I finally found a little time to scan through the a31
-user manual: =
-http://dl.linux-sunxi.org/A31/A31%20User%20Manual%20V1.20.pdf
+So CSI and VI drivers are separate with their corresponding clocks and 
+power domains in their nodes.
 
-There are 3 clock dividers. And there is a single clock PLL8 dedicated =
-to
-the gpu. The clock dividers are called "gpu core", "gpu mem", "gpu hyd".
+>
+> Regardless of the answer to this question, I think this is missing port
+> nodes for the physical CSI-2 inputs, to connect them to sensors. I
+> haven't seen anywhere in this series how a CSI-2 sensor is linked to the
+> VI.
 
-Then, there are dedicated clock gating registers. And idle/power status
-registers.
+This patch series is only for Tegra internal TPG and tegra video driver 
+creates hard media links between CSI and VI,
 
-Unfortunately, chapter "5.1. GPU" is almost empty and has no block =
-diagram.
-So I have no idea what "HYD" stands for. And if the memory and HYD =
-clocks
-are needed and how they should be initialized. If they are different =
-ones
-or can all be driven by PLL8 in parallel.
+Sensor support will be in Series-2 where port nodes will be used for 
+real sensor <-> csi <-> vi endpoints
 
-That scarce information makes it difficult to form a "proper" bindings
-document out of it. Any can fit or be false.
-
-At least there is something common with all other SGX implementations I
-am aware of: there is a "core" clock.
-
-So I'd suggest to get things moving forwards:
-* we add a "core" clock-names to the bindings
-* this can't be wrong for the A31 since it is defined in the data sheet
-* we make it optional since the omap chips have a clock wrapper
-* "core" is a name I think all architectures/drivers can live with
-  and can add later "shader", "bus" etc. if needed
-* any additions for the A31 will be additions
-
-If that sounds ok and nobody objects to it, I can submit a new patch
-version for further review.
-
-BR and thanks,
-Nikolaus
-
+>
+>>   - epp: encoder pre-processor
+>>
+>> @@ -309,13 +325,44 @@ Example:
+>>                        reset-names = "mpe";
+>>                };
+>>
+>> -             vi {
+>> -                     compatible = "nvidia,tegra20-vi";
+>> -                     reg = <0x54080000 0x00040000>;
+>> -                     interrupts = <0 69 0x04>;
+>> -                     clocks = <&tegra_car TEGRA20_CLK_VI>;
+>> -                     resets = <&tegra_car 100>;
+>> -                     reset-names = "vi";
+>> +             vi@54080000 {
+>> +                     compatible = "nvidia,tegra210-vi";
+>> +                     reg = <0x0 0x54080000 0x0 0x700>;
+>> +                     interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
+>> +                     assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
+>> +                     assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
+>> +
+>> +                     clocks = <&tegra_car TEGRA210_CLK_VI>;
+>> +                     power-domains = <&pd_venc>;
+>> +
+>> +                     #address-cells = <1>;
+>> +                     #size-cells = <1>;
+>> +
+>> +                     ranges = <0x0 0x0 0x54080000 0x2000>;
+>> +
+>> +                     csi@838 {
+>> +                             compatible = "nvidia,tegra210-csi";
+>> +                             reg = <0x838 0x1300>;
+>> +                             assigned-clocks = <&tegra_car TEGRA210_CLK_CILAB>,
+>> +                                               <&tegra_car TEGRA210_CLK_CILCD>,
+>> +                                               <&tegra_car TEGRA210_CLK_CILE>,
+>> +                                               <&tegra_car TEGRA210_CLK_CSI_TPG>;
+>> +                             assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_P>,
+>> +                                                      <&tegra_car TEGRA210_CLK_PLL_P>,
+>> +                                                      <&tegra_car TEGRA210_CLK_PLL_P>;
+>> +                             assigned-clock-rates = <102000000>,
+>> +                                                    <102000000>,
+>> +                                                    <102000000>,
+>> +                                                    <972000000>;
+>> +
+>> +                             clocks = <&tegra_car TEGRA210_CLK_CSI>,
+>> +                                      <&tegra_car TEGRA210_CLK_CILAB>,
+>> +                                      <&tegra_car TEGRA210_CLK_CILCD>,
+>> +                                      <&tegra_car TEGRA210_CLK_CILE>,
+>> +                                      <&tegra_car TEGRA210_CLK_CSI_TPG>;
+>> +                             clock-names = "csi", "cilab", "cilcd", "cile", "csi_tpg";
+>> +                             power-domains = <&pd_sor>;
+>> +                     };
+>>                };
+>>
+>>                epp {
+> --
+> Regards,
+>
+> Laurent Pinchart
