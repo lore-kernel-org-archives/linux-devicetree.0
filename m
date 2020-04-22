@@ -2,138 +2,223 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3999BC5518C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 20:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A28BBC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 20:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 095BA2077D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 20:03:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 745E22077D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 20:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587585780;
-	bh=vezgGE0FULlzWHW/sVKFB+SlsPkANQPPADxxqiakO3s=;
+	s=default; t=1587586001;
+	bh=0FtickJH33zo7rOmBxZNOUqSRmWNX5fCBm5T7vBhBIg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kBFtcEMUC2ktHIzTL1j1BeNKHt0IjAVIx7tbGRJR3HG6W/nig/RlUBLBQyjo7uJd0
-	 BHkfS7S+hRvDRI8ET6Ltl8r17Hw6PQaRBAV3XPzzm8JlCn8mNoZdOV53nlsDo36s5B
-	 9C9pu+FqIwgphO0exDeXtumXHkAgeeoqy6x95t70=
+	b=J57PhbNzt+lFHoiEROeLwlZkSVsf4Wvq0veeLe+USFpaFru356YwuvDf17pFY9wIw
+	 S4+m07wi4EghLIgf3SGv6XiawBX8sJ71cjDjjpf7c7ZCi0zkbB9NQ659f1WO0cvzQt
+	 TfADW2ZOA2fZmh9jvySLy3e23ncXrfgPPJZRavLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725961AbgDVUC4 (ORCPT
+        id S1726192AbgDVUGl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 16:02:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57336 "EHLO mail.kernel.org"
+        Wed, 22 Apr 2020 16:06:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725779AbgDVUC4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Apr 2020 16:02:56 -0400
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+        id S1726109AbgDVUGk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Apr 2020 16:06:40 -0400
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B4252075A;
-        Wed, 22 Apr 2020 20:02:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCC8D20857
+        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 20:06:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587585775;
-        bh=vezgGE0FULlzWHW/sVKFB+SlsPkANQPPADxxqiakO3s=;
+        s=default; t=1587585999;
+        bh=0FtickJH33zo7rOmBxZNOUqSRmWNX5fCBm5T7vBhBIg=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Unghrin/L/i+H9af2BbSk1N70pX8seQPK9PJ0vkG6gJcuO6HE4qI4R39XQUmJISHL
-         /SRaILbHxISbOfXhwj6Kg2hP+DTvduzPcJxcYHWmrSGc6wMaH+jjxILiINHxrlTSMz
-         0H947HdAi75l3OcMojxM8TDyleDIVpkNaLyfRJc8=
-Received: by mail-qv1-f52.google.com with SMTP id q2so1615208qvd.1;
-        Wed, 22 Apr 2020 13:02:55 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYNO6wNLnDwUCrXSz6FymiVTpquJ+84Fz9Capt09gVTZqsAu+NJ
-        7SWsu0urS4UqmttIdUEIrSkaeUtV12FHUZ7uXA==
-X-Google-Smtp-Source: APiQypIdkXIj8AYOGffsEU3wU7ezGyaQvy4h94PQe9bmu3rIrvrj6rOjlRmAveKIGi/dWjS5sAWPpglXbVJ0fdT7dzQ=
-X-Received: by 2002:a05:6214:a8a:: with SMTP id ev10mr709719qvb.20.1587585774524;
- Wed, 22 Apr 2020 13:02:54 -0700 (PDT)
+        b=bL4uO11Sc6g9qclg+3e8De6vLLWI6B43+7B+PAA+MudixXS2Z3kJN9NQSxvHkoq+0
+         +VU+Wu0AMpese9BG+zr/4MXohS7fxGm+BVWFUlB1h9vpJWaao9SL+cpzTxJnVRKv6m
+         6dRuzkWTMi6GrT/IhE97904tivfNJz2/sEFFI1gk=
+Received: by mail-qt1-f182.google.com with SMTP id o10so2843814qtr.6
+        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 13:06:39 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYdrpckX+uGU8aYt23l1jOW5TUyYfi/WC/6TCTlfdzZA26w5v6h
+        Vt3Kj2Oh81fbjEJZuCGLdweP3W2+WQ+neZi/0g==
+X-Google-Smtp-Source: APiQypKpZC5oYh4Day8VRkXcMufLykh0niakd6Sp2Y1oKVuyJtTvKSG6ZMl+i+p7SSsWpFF/vaqrhy6wuszJO5mDHik=
+X-Received: by 2002:ac8:4907:: with SMTP id e7mr395174qtq.300.1587585998943;
+ Wed, 22 Apr 2020 13:06:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <87d082jtfn.fsf@collabora.com> <20200420175909.GA5810@ravnborg.org>
-In-Reply-To: <20200420175909.GA5810@ravnborg.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 22 Apr 2020 15:02:43 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJXa8QxQmLfkCO8_SSsgYm2nTFW1J6wx4bGbZgAy8Sxog@mail.gmail.com>
-Message-ID: <CAL_JsqJXa8QxQmLfkCO8_SSsgYm2nTFW1J6wx4bGbZgAy8Sxog@mail.gmail.com>
-Subject: Re: Rule for bridge yaml dt binding maintainers?
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Adrian Ratiu <adrian.ratiu@collabora.com>,
-        devicetree@vger.kernel.org,
+References: <20200422180028.1702996-1-adrian.ratiu@collabora.com> <20200422180028.1702996-2-adrian.ratiu@collabora.com>
+In-Reply-To: <20200422180028.1702996-2-adrian.ratiu@collabora.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 22 Apr 2020 15:06:27 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKdDgjNahrcRhxLcMXy+8GR3P6v2OXiEtrA-1Uia-XXRA@mail.gmail.com>
+Message-ID: <CAL_JsqKdDgjNahrcRhxLcMXy+8GR3P6v2OXiEtrA-1Uia-XXRA@mail.gmail.com>
+Subject: Re: [PATCH v3] dt-bindings: display: dw_mipi_dsi.txt: convert to yaml
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     devicetree@vger.kernel.org,
         dri-devel <dri-devel@lists.freedesktop.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Collabora Kernel ML <kernel@collabora.com>
+        Collabora Kernel ML <kernel@collabora.com>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 12:59 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+On Wed, Apr 22, 2020 at 12:59 PM Adrian Ratiu
+<adrian.ratiu@collabora.com> wrote:
 >
-> Hi Adrian
+> This converts the Synopsis MIPI DSI binding documentation to yaml and
+> should be quite straightforward. I've added a missing ref clk and also
+> added Philippe as maintainer b/c he's the original txt author following
+> the algorithm provided in Message-ID 20200420175909.GA5810@ravnborg.org.
 >
-> On Mon, Apr 20, 2020 at 02:19:24PM +0300, Adrian Ratiu wrote:
-> > Hello,
-> >
-> > I got confused while doing the txt -> yaml conversion at [1] and it's still
-> > not clear to me who should be added in the "maintainers" field.  Clearly not
-> > the maintainers as returned by get_maintainer.pl. :)
-> >
-> > Rob mentioned that "owners" should be manintainers but I also have trouble
-> > picking the persons who should be owners / yaml maintainers.
-> >
-> > Looking at the completed bridge conversions in the latest linux-next, I
-> > couldn't find a rule and the majority of bindings are still txt:
-> >
-> > $ find ./devicetree/bindings/display/bridge/ -name *txt | wc -l
-> > 23
-> > $ find ./devicetree/bindings/display/bridge/ -name *yaml | wc -l
-> > 5
-> >
-> > So my questions are:
-> > 1. Is there a general rule for assigning yaml file owners/maintainers?
-> >
-> > 2. Is this vagueness specific to the bridge dt bindings only?
-> >
-> > 3. Who should step up and maintain these bindings? Original/new authors,
-> > SoC, bridge, DRM maintainers etc.?
-> >
-> > It would be useful to have a rule to make it easier to do these conversions.
-> > We (Collabora) are considering doing the conversion work.
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Philippe CORNU <philippe.cornu@st.com>
+> Cc: devicetree@vger.kernel.org
+> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+> ---
+> Changes in v3:
+>   - Added ports property and its children which are required (Laurent)
+>   - Sorted required list alphabetically
 >
-> For the panel conversion I did recently it was simple:
-> 1) If listed in MAINTAINERS - use this info
-> 2) Otherwise use the person(s) that authored the original .txt file.
->    Using git log --follow foo.txt
-> 3) In a few cases I may have decided otherwise, but the above covers the
->    majority.
+> Changes in v2:
+>   - Removed unnecessary descriptions and maxItems (Rob)
+>   - Changed maintainers entry / dropped Mark (Rob)
+>   - Added dsi-controller.yaml ref (Rob)
+> ---
+>  .../bindings/display/bridge/dw_mipi_dsi.txt   | 32 ---------
+>  .../display/bridge/snps,dw-mipi-dsi.yaml      | 72 +++++++++++++++++++
+>  2 files changed, 72 insertions(+), 32 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+> deleted file mode 100644
+> index b13adf30b8d3b..0000000000000
+> --- a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+> +++ /dev/null
+> @@ -1,32 +0,0 @@
+> -Synopsys DesignWare MIPI DSI host controller
+> -============================================
+> -
+> -This document defines device tree properties for the Synopsys DesignWare MIPI
+> -DSI host controller. It doesn't constitue a device tree binding specification
+> -by itself but is meant to be referenced by platform-specific device tree
+> -bindings.
+> -
+> -When referenced from platform device tree bindings the properties defined in
+> -this document are defined as follows. The platform device tree bindings are
+> -responsible for defining whether each optional property is used or not.
+> -
+> -- reg: Memory mapped base address and length of the DesignWare MIPI DSI
+> -  host controller registers. (mandatory)
+> -
+> -- clocks: References to all the clocks specified in the clock-names property
+> -  as specified in [1]. (mandatory)
+> -
+> -- clock-names:
+> -  - "pclk" is the peripheral clock for either AHB and APB. (mandatory)
+> -  - "px_clk" is the pixel clock for the DPI/RGB input. (optional)
+> -
+> -- resets: References to all the resets specified in the reset-names property
+> -  as specified in [2]. (optional)
+> -
+> -- reset-names: string reset name, must be "apb" if used. (optional)
+> -
+> -- panel or bridge node: see [3]. (mandatory)
+> -
+> -[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> -[2] Documentation/devicetree/bindings/reset/reset.txt
+> -[3] Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+> diff --git a/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
+> new file mode 100644
+> index 0000000000000..076567d8d8ec1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml
+> @@ -0,0 +1,72 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/snps,dw-mipi-dsi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Synopsys DesignWare MIPI DSI host controller
+> +
+> +maintainers:
+> +  - Philippe CORNU <philippe.cornu@st.com>
+> +
+> +description: |
+> +  This document defines device tree properties for the Synopsys DesignWare MIPI
+> +  DSI host controller. It doesn't constitue a device tree binding specification
+> +  by itself but is meant to be referenced by platform-specific device tree
+> +  bindings.
+> +
+> +  When referenced from platform device tree bindings the properties defined in
+> +  this document are defined as follows. The platform device tree bindings are
+> +  responsible for defining whether each property is required or optional.
+> +
+> +allOf:
+> +  - $ref: ../dsi-controller.yaml#
+> +
+> +properties:
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: Module clock
+> +      - description: DSI bus clock for either AHB and APB
+> +      - description: Pixel clock for the DPI/RGB input
+> +    minItems: 2
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ref
+> +      - const: pclk
+> +      - const: px_clk
+> +    minItems: 2
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  reset-names:
+> +    const: apb
+> +
+> +  ports:
+> +    type: object
+> +
+> +    properties:
+> +      port@0:
+> +        type: object
+> +        description: Input node to receive pixel data.
+> +      port@1:
+> +        type: object
+> +        description: DSI output node to panel.
+> +
+> +    required:
+> +      - port@0
+> +      - port@1
+> +
+> +patternProperties:
+> +  "^panel@[0-3]$":
 
-Yes.
+It's not always a panel attached. dsi-controller.yaml covers child
+nodes anyways, so you can just drop this.
 
-> I would also be great if you or someone else could:
-> - teach get_maintainers about .yaml file listed maintainers
+With that,
 
-It already does to some extent. IIRC, there's a mode to extract email
-addresses from files.
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-I was hoping that the MAINTAINERS file split happens sometime and we
-can just generate a MAINTAINERS file for bindings.
-
-> - teach checkpatch that it is OK to convert .txt to .yaml
-
-Yeah, I should fix my bug.
-
-> - teach checkpatch about some simple yaml validation (maybe)
-
-I don't see checkpatch being able to check much of what comes up in
-review. Maybe indentation.
-
-> I am looking forward to the day we have more .yaml files
-> than .txt files in Documentation/devicetree/binding/*
-
-700 vs. 3000 currently. It's about 60-70 new bindings and ~100
-conversions per cycle. At this point we're review limited I think and
-at the current rate, we should be done in 7 years. Yay! :( We need a
-faster way.
-
-Rob
+> +    type: object
+> +
+> +required:
+> +  - clock-names
+> +  - clocks
+> +  - ports
+> +  - reg
+> --
+> 2.26.0
+>
