@@ -2,142 +2,188 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15099C55181
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 05:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 008C4C38A30
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 05:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1D5A2075A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 05:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1D94206D9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 05:59:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587535177;
+	bh=8IaSgDSLU8xYm900xksxRZ3rRz+47+uWCuP57TaHiSk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mTB30bmD2kCocHRyuztawfVARWUT/ylzB6Wfpqbo+94oIL/XH8tQuxCUW7IfGN7Mg
+	 XjZM0P7qpOs+ti3zcgg15hKHZxod+H3S6YamfgwvgGNYtDjcbIm97f2WNreiSPl4di
+	 1ybpbJBsoJO3j0fsH7fj3gGLcDcFiz3agB3lDZCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbgDVFy2 (ORCPT
+        id S1725912AbgDVF7h (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 01:54:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbgDVFy2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 01:54:28 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2836CC03C1A6
-        for <devicetree@vger.kernel.org>; Tue, 21 Apr 2020 22:54:28 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jR8Kx-0006oq-Ek; Wed, 22 Apr 2020 07:54:19 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jR8Ku-0006g4-TP; Wed, 22 Apr 2020 07:54:16 +0200
-Date:   Wed, 22 Apr 2020 07:54:16 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next v4 3/4] net: mdio: of: export part of
- of_mdiobus_register_phy()
-Message-ID: <20200422055416.gvbitc6rtbhb4khp@pengutronix.de>
-References: <20200421125219.8402-1-o.rempel@pengutronix.de>
- <20200421125219.8402-4-o.rempel@pengutronix.de>
- <20200421135147.GE937199@lunn.ch>
+        Wed, 22 Apr 2020 01:59:37 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:45784 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbgDVF7g (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 01:59:36 -0400
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 03M5x5WX002217;
+        Wed, 22 Apr 2020 14:59:06 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 03M5x5WX002217
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587535146;
+        bh=seiSfwWiNI4V0jqT1v3MtfXuAE1wvYt6UInOKdV98Wk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PG/TXKE7hKFrVuqz/bSJuLMe3Vge/PVEObk1aIfOzVm/PXK1EVk8jzvXFOk23CecV
+         m9+VpUyPQXSP34q189gqyAMKfzgfz0O/3Pyg+NpCHc+UwVgLE5BYsFTCJDdUh7Fhq8
+         PwDWO7SX8FM8sHgvH4BLcVINGQHcoln6nmHExKegguLvbi4Bq759CV6WwC08uVUot6
+         gSy8wDf/nc6LeuUoyIS1itzC++4D2ZhFDJoB5Z0/hlsHSQXq3Waz7WM9K1JsjLdO6t
+         Ry9sm9qTQibIaRA5/+CUBM30w3Y68Ke9JF67lTGRYKSjNa2CjMV96pfTp1adrJFKc1
+         rn0cD6RgDqwXw==
+X-Nifty-SrcIP: [209.85.221.177]
+Received: by mail-vk1-f177.google.com with SMTP id n128so331631vke.5;
+        Tue, 21 Apr 2020 22:59:06 -0700 (PDT)
+X-Gm-Message-State: AGi0PubXWXXbbf61jaJKNvrLj+4bPZP72DzYiVgK2qkClK0ABEWXDK4Y
+        RAcwFbVqdyVpN6ivqXBx06EhrwOJopDuaE+0C0o=
+X-Google-Smtp-Source: APiQypKsajKPEYSBekdZFNRdiIg8ikbQ6vWDyOltmnrv7IL0jGCos2arjfUh8JCuA92EvHnRCIdAbLzpMnl9xOu1ruU=
+X-Received: by 2002:a1f:5c03:: with SMTP id q3mr18921288vkb.66.1587535145254;
+ Tue, 21 Apr 2020 22:59:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="a2vjqgfecp5ygula"
-Content-Disposition: inline
-In-Reply-To: <20200421135147.GE937199@lunn.ch>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:52:51 up 158 days, 21:11, 165 users,  load average: 0.23, 0.12,
- 0.08
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <20200421212004.6146-1-robh@kernel.org>
+In-Reply-To: <20200421212004.6146-1-robh@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 22 Apr 2020 14:58:29 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASrBW0mL+g=ocQAz1Ggt-c_WX5NyGeRdJGubwSfnhcHaA@mail.gmail.com>
+Message-ID: <CAK7LNASrBW0mL+g=ocQAz1Ggt-c_WX5NyGeRdJGubwSfnhcHaA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: Fix command line length limit calling dt-mk-schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Rob,
 
---a2vjqgfecp5ygula
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 21, 2020 at 03:51:47PM +0200, Andrew Lunn wrote:
-> On Tue, Apr 21, 2020 at 02:52:18PM +0200, Oleksij Rempel wrote:
-> > This function will be needed in tja11xx driver for secondary PHY
-> > support.
-> >=20
-> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > ---
-> >  drivers/of/of_mdio.c    | 73 ++++++++++++++++++++++++-----------------
-> >  include/linux/of_mdio.h | 11 ++++++-
-> >  2 files changed, 52 insertions(+), 32 deletions(-)
-> >=20
-> > diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> > index 8270bbf505fb..d9e637b624ce 100644
-> > --- a/drivers/of/of_mdio.c
-> > +++ b/drivers/of/of_mdio.c
-> > @@ -60,39 +60,15 @@ static struct mii_timestamper *of_find_mii_timestam=
-per(struct device_node *node)
-> >  	return register_mii_timestamper(arg.np, arg.args[0]);
-> >  }
-> > =20
-> > -static int of_mdiobus_register_phy(struct mii_bus *mdio,
-> > -				    struct device_node *child, u32 addr)
-> > +int __of_mdiobus_register_phy(struct mii_bus *mdio, struct phy_device =
-*phy,
-> > +			      struct device_node *child, u32 addr)
-> >  {
->=20
-> Hi Oleksij
->=20
-> I would prefer a different name. __foo functions often indicate
-> locking is needed, or an internal API which should not be used except
-> internally. This is going to be an official API. Maybe call it
-> of_mdiobus_phy_device_register() ?
+On Wed, Apr 22, 2020 at 6:20 AM Rob Herring <robh@kernel.org> wrote:
+>
+> As the number of schemas has increased, we're starting to hit the error
+> "execvp: /bin/sh: Argument list too long". This is due to passing all the
+> schema files on the command line to dt-mk-schema. It currently is only
+> with out of tree builds and is intermittent depending on the file path
+> lengths.
+>
+> Commit 2ba06cd8565b ("kbuild: Always validate DT binding examples") made
+> hitting this proplem more likely since the example validation now always
+> gets the full list of schemas.
+>
+> Fix this by putting the schema file list into a temp file and using xargs.
+>
+> Reported-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/.gitignore | 2 +-
+>  Documentation/devicetree/bindings/Makefile   | 3 ++-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/.gitignore b/Documentation/devicetree/bindings/.gitignore
+> index 5c6d8ea1a09c..0a6aef915fa4 100644
+> --- a/Documentation/devicetree/bindings/.gitignore
+> +++ b/Documentation/devicetree/bindings/.gitignore
+> @@ -1,3 +1,3 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  *.example.dts
+> -processed-schema*.yaml
+> +processed-schema*.yaml*
+> diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
+> index 1df680d07461..1c1cad860b7c 100644
+> --- a/Documentation/devicetree/bindings/Makefile
+> +++ b/Documentation/devicetree/bindings/Makefile
+> @@ -14,7 +14,8 @@ $(obj)/%.example.dts: $(src)/%.yaml FORCE
+>  DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
+>
+>  quiet_cmd_mk_schema = SCHEMA  $@
+> -      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(real-prereqs)
+> +      cmd_mk_schema = $(file >$@.tmp, $(real-prereqs)) \
+> +                      cat $@.tmp | xargs $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@
+>
 
-ok, sounds good. I'll send new version
 
-Regards,
-Oleksij
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+The built-in function $(file ...) is supported on GNU Make 4.0 or later.
+The current minimal version is GNU Make 3.81.
 
---a2vjqgfecp5ygula
-Content-Type: application/pgp-signature; name="signature.asc"
+If you want to use this function, you must update
+Documentation/process/changes.rst first.
 
------BEGIN PGP SIGNATURE-----
+I am pretty sure some conservative distros
+still stick to GNU Make 3.8*
+but I am open to raising the minimal version
+if it is useful.
 
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6f3AUACgkQ4omh9DUa
-UbPIKg/9Hjw846eYnmqn1bhO3YeHO19adcB1QQof1FU7XQ1IdSNZhRqslxIz9LnY
-ORgVoWshdqd+zwLVKUsvUiyc36js8b1EYMrKcYbz5XW2j2xVZY3HUtEnTjWj5KPe
-7venVd/pL/2bIx+bOsZVBSOH6bi4BplQzTCyqmZttIIKWWRf/wlC4YvDSOvc/TFO
-3un6YTNAzk9Bs0QIGuCTL/mCzw5vMENAUP7O25odBfd8f2tdTAMWj1OHFU7q0UIR
-YoWTfp/gTl6VhgBCpn3CuNvIa7wSnU63jruYqrFO3WF618QcnBi83KQy88zqHrvv
-6nu1noa0x6kgv8JU9AW7vlsoO/AF5ZP4YYxQEV8YItlf+ynnkFF0h7c0VIfi8f5c
-/s1iVEsC+bdfk+oaOJRcMxnq+WEslAwy95djCBxpvJxq7JdEwwjgQ44QirlhYYKJ
-caYG9n4iJpjTt4HepU8rfptasOotMGr3OnuuYzvo2Y/SmTAodTWOg44InIVB6gQf
-kqxKR71hK26lK5Tx1jme15G8LVZCZtgGL+xD5e99RuRjxyuxHBGGv114uhdWkR9P
-JtkUBFLWSTMhc0npa6Fc3JsM+Eq+lkd598GenH6UEFQs0ognbQqvB+ezrIP5cSdJ
-I5V8xE1h19ZTfyP0qaUwIkmRHYu7xiqQpz/GCXDpRbvQzR9KhfY=
-=tofP
------END PGP SIGNATURE-----
 
---a2vjqgfecp5ygula--
+
+But, does this code work in the first place?
+
+When a very long command is given, xargs
+splits it into smaller chunks, and invokes
+the command multiple times, right?
+
+
+So, it boils down to this question:
+
+Are the following two commands work equivalently?
+
+
+"dt-mk-schema -o processed-schema-examples.yaml foo.yaml &&
+dt-mk-schema -o processed-schema-examples.yaml bar.yaml &&
+dt-mk-schema -o processed-schema-examples.yaml baz.yaml"
+
+"dt-mk-schema -o processed-schema-examples.yaml foo.yaml bar.yaml baz.yaml"
+
+
+I think the answer is no.
+
+I confirmed the produced processed-schema-examples.yaml is broken.
+
+In a normal case, it is more than 50000 lines,
+but if xargs split the command, it is much smaller.
+
+
+
+masahiro@oscar:~/ref/linux$ make -j24  O=foo/bar dt_binding_check
+masahiro@oscar:~/ref/linux$ wc
+foo/bar/Documentation/devicetree/bindings/processed-schema-examples.yaml
+  51461  115967 1516186
+foo/bar/Documentation/devicetree/bindings/processed-schema-examples.yaml
+
+
+
+
+masahiro@oscar:~/ref/this/is/a/long/long/long/long/long/long/long/long/long/long/long/long/long/long/long/long/long/long/long/long/long/long/long/long/src/path/to/linux$
+make -j24 O=foo/bar dt_binding_check
+masahiro@oscar:~/ref/this/is/a/long/long/long/long/long/long/long/long/long/long/long/long/long/long/long/long/long/long/long/long/long/long/long/long/src/path/to/linux$
+wc  foo/bar/Documentation/devicetree/bindings/processed-schema-examples.yaml
+  9625  21510 291993
+foo/bar/Documentation/devicetree/bindings/processed-schema-examples.yaml
+
+
+
+Can dt-mk-schema read the list of schema files
+by other means?
+
+
+>  DT_DOCS = $(addprefix $(src)/, \
+>         $(shell \
+> --
+> 2.20.1
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
