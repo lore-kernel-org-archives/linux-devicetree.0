@@ -2,110 +2,138 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A60C5518A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 19:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3999BC5518C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 20:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 224B12077D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 19:55:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KlXXhxuk"
+	by mail.kernel.org (Postfix) with ESMTP id 095BA2077D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 20:03:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587585780;
+	bh=vezgGE0FULlzWHW/sVKFB+SlsPkANQPPADxxqiakO3s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kBFtcEMUC2ktHIzTL1j1BeNKHt0IjAVIx7tbGRJR3HG6W/nig/RlUBLBQyjo7uJd0
+	 BHkfS7S+hRvDRI8ET6Ltl8r17Hw6PQaRBAV3XPzzm8JlCn8mNoZdOV53nlsDo36s5B
+	 9C9pu+FqIwgphO0exDeXtumXHkAgeeoqy6x95t70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbgDVTzS (ORCPT
+        id S1725961AbgDVUC4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 15:55:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725961AbgDVTzR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Apr 2020 15:55:17 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEEFEC03C1A9;
-        Wed, 22 Apr 2020 12:55:17 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id r4so1634956pgg.4;
-        Wed, 22 Apr 2020 12:55:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Zs8P//rvg1SHF869DDtGbnL1grMzFoBcMAhWEXUbn6o=;
-        b=KlXXhxukDACNLMUxpYlTVSzYG6IvesGADSdCuxMosdiu9EKeJNaTlEvk1Ajs9junY3
-         UIRo9RskUrRx0zTQ77/IZAhjY+dXigzRdC9Hfvm17e8wuVTeyXTR+1BxFhQeGZax8Don
-         bH+R1wrMoEMuqHZwwta9VKDTfRLdi3InCi8Ak0eXzjkxVTrq3f+WVPPRbAMgf7DUCTgW
-         0TpgX124ei9O8xtv07Vr8+M4fdOdOpmviyfftxoHs73SaVLm3F2msDSVg9spxnupq6o1
-         9Dr5PrtirY4tjGIl9lppDQvDzlDlhAPTt31Aq8BKnfPFooYEeVQjbgHG+jKuGbiKqSBp
-         oU4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Zs8P//rvg1SHF869DDtGbnL1grMzFoBcMAhWEXUbn6o=;
-        b=VxovGCUo+SBCbk/+VGmKoCTs7tewYAkJWZWV3rybKypIXjSInLEO6vlLwnqi6V1ndB
-         M1EvOOaRKYCOBM6xjf+10koKrXVIZ40k28l4lu/axRGeqCqOrkrJQN1Sdtmafti1YqKw
-         ryFRxziJK+TPgJvULH782Z0AA5tZpQFc2yT0ySZemKTlHaDDdttdZYMJd/KpNvX4+m3S
-         i13vAHEnRqZh7QJxuBAy7s27xR0mKrG9KzvGp64LZiwBsCdQK63EiGTuNz+vvTwGKB6M
-         E1Kfn2q+c2Fgb07ks5nVcYAbK1lVL+A7wtShVwzb6QrLAF5Fhkurjg6Vqe2jDeOZBqSI
-         kgTQ==
-X-Gm-Message-State: AGi0PubEsG10a+BSH/dhyB6Py9zNIg1JsRBEDJzKYivOIxp7fcnZfkqB
-        +OnnTYREGntQgJps1N76HRxPnfnH2M8vD+h5jCQ=
-X-Google-Smtp-Source: APiQypJH46V+NkKJyqIIaJ0hU0KoYCno8EKW/Oi/CecMsV4MkYyux/EQvd9iy76qKPRUhBptl4/+K6Zb3chyB9UssPY=
-X-Received: by 2002:aa7:8f26:: with SMTP id y6mr206525pfr.36.1587585317156;
- Wed, 22 Apr 2020 12:55:17 -0700 (PDT)
+        Wed, 22 Apr 2020 16:02:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725779AbgDVUC4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Apr 2020 16:02:56 -0400
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B4252075A;
+        Wed, 22 Apr 2020 20:02:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587585775;
+        bh=vezgGE0FULlzWHW/sVKFB+SlsPkANQPPADxxqiakO3s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Unghrin/L/i+H9af2BbSk1N70pX8seQPK9PJ0vkG6gJcuO6HE4qI4R39XQUmJISHL
+         /SRaILbHxISbOfXhwj6Kg2hP+DTvduzPcJxcYHWmrSGc6wMaH+jjxILiINHxrlTSMz
+         0H947HdAi75l3OcMojxM8TDyleDIVpkNaLyfRJc8=
+Received: by mail-qv1-f52.google.com with SMTP id q2so1615208qvd.1;
+        Wed, 22 Apr 2020 13:02:55 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYNO6wNLnDwUCrXSz6FymiVTpquJ+84Fz9Capt09gVTZqsAu+NJ
+        7SWsu0urS4UqmttIdUEIrSkaeUtV12FHUZ7uXA==
+X-Google-Smtp-Source: APiQypIdkXIj8AYOGffsEU3wU7ezGyaQvy4h94PQe9bmu3rIrvrj6rOjlRmAveKIGi/dWjS5sAWPpglXbVJ0fdT7dzQ=
+X-Received: by 2002:a05:6214:a8a:: with SMTP id ev10mr709719qvb.20.1587585774524;
+ Wed, 22 Apr 2020 13:02:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200422141135.86419-1-tomasz.duszynski@octakon.com> <20200422141135.86419-4-tomasz.duszynski@octakon.com>
-In-Reply-To: <20200422141135.86419-4-tomasz.duszynski@octakon.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 22 Apr 2020 22:55:05 +0300
-Message-ID: <CAHp75VeXd7hgdZ-1FDCpyad7_rHV1ERiigctn-6AYvVhLyX5QA@mail.gmail.com>
-Subject: Re: [PATCH 3/6] iio: chemical: scd30: add serial interface driver
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>
+References: <87d082jtfn.fsf@collabora.com> <20200420175909.GA5810@ravnborg.org>
+In-Reply-To: <20200420175909.GA5810@ravnborg.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 22 Apr 2020 15:02:43 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJXa8QxQmLfkCO8_SSsgYm2nTFW1J6wx4bGbZgAy8Sxog@mail.gmail.com>
+Message-ID: <CAL_JsqJXa8QxQmLfkCO8_SSsgYm2nTFW1J6wx4bGbZgAy8Sxog@mail.gmail.com>
+Subject: Re: Rule for bridge yaml dt binding maintainers?
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Adrian Ratiu <adrian.ratiu@collabora.com>,
+        devicetree@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Collabora Kernel ML <kernel@collabora.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 5:22 PM Tomasz Duszynski
-<tomasz.duszynski@octakon.com> wrote:
+On Mon, Apr 20, 2020 at 12:59 PM Sam Ravnborg <sam@ravnborg.org> wrote:
 >
-> Add serial interface driver for the SCD30 sensor.
+> Hi Adrian
+>
+> On Mon, Apr 20, 2020 at 02:19:24PM +0300, Adrian Ratiu wrote:
+> > Hello,
+> >
+> > I got confused while doing the txt -> yaml conversion at [1] and it's still
+> > not clear to me who should be added in the "maintainers" field.  Clearly not
+> > the maintainers as returned by get_maintainer.pl. :)
+> >
+> > Rob mentioned that "owners" should be manintainers but I also have trouble
+> > picking the persons who should be owners / yaml maintainers.
+> >
+> > Looking at the completed bridge conversions in the latest linux-next, I
+> > couldn't find a rule and the majority of bindings are still txt:
+> >
+> > $ find ./devicetree/bindings/display/bridge/ -name *txt | wc -l
+> > 23
+> > $ find ./devicetree/bindings/display/bridge/ -name *yaml | wc -l
+> > 5
+> >
+> > So my questions are:
+> > 1. Is there a general rule for assigning yaml file owners/maintainers?
+> >
+> > 2. Is this vagueness specific to the bridge dt bindings only?
+> >
+> > 3. Who should step up and maintain these bindings? Original/new authors,
+> > SoC, bridge, DRM maintainers etc.?
+> >
+> > It would be useful to have a rule to make it easier to do these conversions.
+> > We (Collabora) are considering doing the conversion work.
+>
+> For the panel conversion I did recently it was simple:
+> 1) If listed in MAINTAINERS - use this info
+> 2) Otherwise use the person(s) that authored the original .txt file.
+>    Using git log --follow foo.txt
+> 3) In a few cases I may have decided otherwise, but the above covers the
+>    majority.
 
-...
+Yes.
 
-> +#include <linux/of_irq.h>
+> I would also be great if you or someone else could:
+> - teach get_maintainers about .yaml file listed maintainers
 
-Do you need this?
+It already does to some extent. IIRC, there's a mode to extract email
+addresses from files.
 
-> +static int scd30_serdev_probe(struct serdev_device *serdev)
-> +{
-> +       struct device *dev = &serdev->dev;
-> +       struct scd30_serdev_priv *priv;
-> +       int irq, ret;
-> +
-> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +       if (!priv)
-> +               return -ENOMEM;
+I was hoping that the MAINTAINERS file split happens sometime and we
+can just generate a MAINTAINERS file for bindings.
 
-> +       irq = of_irq_get(dev->of_node, 0);
+> - teach checkpatch that it is OK to convert .txt to .yaml
 
-fwnode_irq_get() ?
+Yeah, I should fix my bug.
 
-> +       if (irq <= 0)
-> +               irq = 0;
-> +
-> +       return scd30_probe(dev, irq, KBUILD_MODNAME, priv,
-> +                          scd30_serdev_command);
-> +}
+> - teach checkpatch about some simple yaml validation (maybe)
 
--- 
-With Best Regards,
-Andy Shevchenko
+I don't see checkpatch being able to check much of what comes up in
+review. Maybe indentation.
+
+> I am looking forward to the day we have more .yaml files
+> than .txt files in Documentation/devicetree/binding/*
+
+700 vs. 3000 currently. It's about 60-70 new bindings and ~100
+conversions per cycle. At this point we're review limited I think and
+at the current rate, we should be done in 7 years. Yay! :( We need a
+faster way.
+
+Rob
