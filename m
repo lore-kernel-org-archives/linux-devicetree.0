@@ -2,101 +2,330 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 794D4C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 19:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D0FC55185
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 19:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ECF120857
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 19:42:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587584569;
-	bh=VcBeU1021myRjcRg5O2qICZa7SkpUdjklF/ABgfD7nw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a0/3UaDZJb+jstFNu1V9IXgEI01IKh101bknVUqdCdIFR+OWjf2yHNEjm5yx0T+0V
-	 6t7ByRZpoY0tFECT9f7ugoUDy2rUGCuOohzgdKDCWowj9u1jS9Wmo7+W45N49h8+3D
-	 2t4Q8VtVUGv0BZdtQ3pLA/kVJfisTlYxtTebKbdU=
+	by mail.kernel.org (Postfix) with ESMTP id 4FBDF2071E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 19:49:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hmUe4CbG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgDVTms (ORCPT
+        id S1726141AbgDVTt6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 15:42:48 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44342 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbgDVTms (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 15:42:48 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j4so3250789otr.11;
-        Wed, 22 Apr 2020 12:42:47 -0700 (PDT)
+        Wed, 22 Apr 2020 15:49:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39036 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725779AbgDVTt6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Apr 2020 15:49:58 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79CF2C03C1A9;
+        Wed, 22 Apr 2020 12:49:58 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id p8so1627788pgi.5;
+        Wed, 22 Apr 2020 12:49:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HEjXLWdl4sPw3XwPrs+z0qSSwTKkZOkRFQhqNicUnn8=;
+        b=hmUe4CbGCx7ZGzijtOIN3tmK9FTwPhKDYRSCHLVOzn7pV6XooalEFsDq91hNgXpblR
+         N09kyRKZ/hyOaNU/0Jju84PzZpnqRSgl1aw9FoH3FXGk5O62q0UufIqzaIUULi3lMSGa
+         EPOuSiDFw3FEgzhNl/TaWePHvp0dmHqxmjG1iLlxyZDTDY40XvHECFTBlS2Tyh4so24+
+         Wa07s+y5L5acSUlMs+ho2pbfQwF14TXMW0OqFNG5KcvCg6cCpD9mepg9Bv5QXEUo26av
+         0HTjRD2ddNgSd5QbYuA0O29gezH01ftVFtMeLVQjeEW5AdL3tLW+Pgdx+spld6qRgryM
+         MIyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=H+xYHNUN8NpwWICu1ZzL9vzjHv/h/QGUDSeS/fpG3ug=;
-        b=CqSlvyKm8EsAor7l+Zv5/zsuuuNdp03WjTUTJ1xhVcwJKucJM9NHdtNedCKFmxDozt
-         qmy2xHRY1K8pYPGubDC3ObBudHOMkqhiI7UqHi72kNGwH1VVyRTB+dOR1SCmrjHDlqxg
-         qkLWJjqm4SFRaoKR8Xn8kWP2Pj2DGFPwWCsGMNCLazsYntOFAw4sB08rHLqmzANw/i0d
-         q4NbTeGsq4AN6TKW1fXulgSVphU5Bmm1SjMVk2pJE3/y081Us6SfMVJEtJBdht5YrySG
-         GPPlzFfEqN9cbTGlfQKkb3Z7b87HL0C2l1JMgLE2adwQLZ3X3kTuVQ8qK5UNTUw3v6G3
-         s2Ig==
-X-Gm-Message-State: AGi0PuZQwVe0gY2r/zj9+k6jh3bwTBNyZ4xgR2i/x5YIUrktCPvBPlgf
-        4Ug1sljfa/JD1D73jySmWA==
-X-Google-Smtp-Source: APiQypIAC27fXYzhwwR1murVCsIEyDWyoJ33c1WBjH8aheZV10QcVH827SMvx4BBrBuyijKmXH6PSg==
-X-Received: by 2002:a9d:23a3:: with SMTP id t32mr555321otb.333.1587584567424;
-        Wed, 22 Apr 2020 12:42:47 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q142sm42070oic.44.2020.04.22.12.42.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2020 12:42:46 -0700 (PDT)
-Received: (nullmailer pid 8669 invoked by uid 1000);
-        Wed, 22 Apr 2020 19:42:45 -0000
-Date:   Wed, 22 Apr 2020 14:42:45 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Alistair Francis <alistair@alistair23.me>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-bluetooth@vger.kernel.org, mripard@kernel.org, wens@csie.org,
-        anarsoul@gmail.com, devicetree@vger.kernel.org,
-        alistair23@gmail.com, linux-arm-kernel@lists.infradead.org,
-        Alistair Francis <alistair@alistair23.me>
-Subject: Re: [PATCH v4 1/3] dt-bindings: net: bluetooth: Add
- rtl8723bs-bluetooth
-Message-ID: <20200422194245.GA8411@bogus>
-References: <20200422035333.1118351-1-alistair@alistair23.me>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HEjXLWdl4sPw3XwPrs+z0qSSwTKkZOkRFQhqNicUnn8=;
+        b=R6WAZu1UROnwfDxUsv8EYTMc7tVChGhWeWlFwY8dwJQpZcanxQ3m3Iry9EZr6xdv21
+         MJR5lESXa3LaJ2Pq1QG4zzqwF8gk8Ks6nQspaf/rQ8YrFRJK6glZpZv/cPiC4heScUJr
+         UnMpwxf7DyZmQqOj/Nqj3ZFhW14Iww9pwD4gW2AwbPWa7GEValWuGAzwFSZkV9MrXXDV
+         +6S4tu6UOWEjnQIRSxQd9selniYmBUik/yw8BuuKc6dGS0c4be86KB/z3PkAyCxL4Qc9
+         BtuVbBEYnkhh37fOG0f5e32+ZnmSqUI9GXO1iLhThEfWcpxLK043yI1JjyLWNxYVU7zL
+         lN9Q==
+X-Gm-Message-State: AGi0PubmUj9EnKYvJuhOjUQacsXPZAAukIKKKCsoD/puQkHryF+XHStz
+        NBvnCo5wTuJTipWAfngsj6vr0E43ATEoTmPZT0hLgUYPzihUNg==
+X-Google-Smtp-Source: APiQypIxyLahKCi/vpYF0opnA8l/k+KC9QX6ZJk1GOml3m2DnJfOIKNJrf7hKD/6La/CA40tlXqFvOF6AFIYCRvpy8M=
+X-Received: by 2002:a63:1c1:: with SMTP id 184mr663246pgb.203.1587584997877;
+ Wed, 22 Apr 2020 12:49:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422035333.1118351-1-alistair@alistair23.me>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200422141135.86419-1-tomasz.duszynski@octakon.com> <20200422141135.86419-2-tomasz.duszynski@octakon.com>
+In-Reply-To: <20200422141135.86419-2-tomasz.duszynski@octakon.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 22 Apr 2020 22:49:44 +0300
+Message-ID: <CAHp75VcbaGYj76qkDJnTnuG5SM215qVmFo7FLR6YzHA37PgF_g@mail.gmail.com>
+Subject: Re: [PATCH 1/6] iio: chemical: scd30: add core driver
+To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 21 Apr 2020 20:53:31 -0700, Alistair Francis wrote:
-> From: Vasily Khoruzhick <anarsoul@gmail.com>
-> 
-> Add binding document for bluetooth part of RTL8723BS/RTL8723CS
-> 
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> Signed-off-by: Alistair Francis <alistair@alistair23.me>
-> ---
->  .../bindings/net/realtek-bluetooth.yaml       | 54 +++++++++++++++++++
->  1 file changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/realtek-bluetooth.yaml
-> 
+On Wed, Apr 22, 2020 at 5:22 PM Tomasz Duszynski
+<tomasz.duszynski@octakon.com> wrote:
+>
+> Add Sensirion SCD30 carbon dioxide core driver.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+And DocLink tar of Datasheet: with a link?
 
-Documentation/devicetree/bindings/net/realtek-bluetooth.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/net/realtek-bluetooth.yaml#
+...
 
-See https://patchwork.ozlabs.org/patch/1274671
+> +static SIMPLE_DEV_PM_OPS(scd30_pm_ops, scd30_suspend, scd30_resume);
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+Would it be used in every module? You will get a compiler warning per
+each module that is not using it.
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+...
 
-Please check and re-submit.
+> +int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
+> +               int (*command)(struct scd30_state *state, enum scd30_cmd cmd,
+> +                              u16 arg, char *rsp, int size));
+
+My gosh.
+Please, supply proper structure member in priv or alike.
+
+...
+
+> + * Copyright (c) Tomasz Duszynski <tomasz.duszynski@octakon.com>
+
+Year?
+
+...
+
+> +#include <asm/byteorder.h>
+
+asm goes after linux.
+
+> +#include <linux/bits.h>
+> +#include <linux/compiler.h>
+> +#include <linux/completion.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/errno.h>
+> +#include <linux/export.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +#include <linux/iio/types.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irqreturn.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/string.h>
+> +#include <linux/sysfs.h>
+> +#include <linux/types.h>
+
+Are you sure you need all of them?!
+
+...
+
+> +/* pressure compensation in millibars */
+Put the unit as a suffix to each definition and drop useless comment.
+
+> +/* measurement interval in seconds */
+
+Ditto.
+
+> +/* reference CO2 concentration in ppm */
+
+Ditto.
+
+> +enum {
+> +       CONC,
+> +       TEMP,
+> +       HR,
+> +};
+
+Way too generic names for anonymous enum.
+
+...
+
+> +static int scd30_command(struct scd30_state *state, enum scd30_cmd cmd, u16 arg,
+> +                        char *rsp, int size)
+> +{
+
+> +       /*
+> +        * assumption holds that response buffer pointer has been already
+> +        * properly aligned so casts are safe
+> +        */
+> +       while (size >= sizeof(u32)) {
+
+> +               *(u32 *)rsp = be32_to_cpup((__be32 *)rsp);
+
+Seems like rsp should be void * rather than char *.
+
+> +               rsp += sizeof(u32);
+> +               size -= sizeof(u32);
+> +       }
+
+NIH of https://elixir.bootlin.com/linux/v5.7-rc2/ident/be32_to_cpu_array ?
+
+> +       if (size)
+
+It can be done before even while loop with an immediate bail out.
+
+> +               *(u16 *)rsp = be16_to_cpup((__be16 *)rsp);
+> +
+> +       return 0;
+> +}
+
+...
+
+> +/* simplified float to fixed point conversion with a scaling factor of 0.01 */
+> +static int scd30_float_to_fp(int float32)
+> +{
+> +       int fraction, shift,
+> +           mantissa = float32 & GENMASK(22, 0),
+> +           sign = float32 & BIT(31) ? -1 : 1,
+> +           exp = (float32 & ~BIT(31)) >> 23;
+> +
+> +       /* special case 0 */
+> +       if (!exp && !mantissa)
+> +               return 0;
+> +
+> +       exp -= 127;
+> +       if (exp < 0) {
+> +               exp = -exp;
+
+> +               /* return values ranging from 1 to 99 */
+> +               return sign * ((((BIT(23) + mantissa) * 100) >> 23) >> exp);
+
+  shift = 23 + exp;
+  ... >> shift);
+
+> +       }
+> +
+> +       /* return values starting at 100 */
+> +       shift = 23 - exp;
+> +       float32 = BIT(exp) + (mantissa >> shift);
+> +       fraction = mantissa & GENMASK(shift - 1, 0);
+> +
+> +       return sign * (float32 * 100 + ((fraction * 100) >> shift));
+> +}
+
+Sounds like a candidate to IIO library or even lib/math/*.c.
+
+...
+
+> +static int scd30_wait_meas_irq(struct scd30_state *state)
+> +{
+> +       int ret, timeout = msecs_to_jiffies(state->meas_interval * 1250);
+
+Magic number.
+
+> +       reinit_completion(&state->meas_ready);
+> +       enable_irq(state->irq);
+> +       ret = wait_for_completion_interruptible_timeout(&state->meas_ready,
+> +                                                       timeout);
+> +       if (ret > 0)
+> +               ret = 0;
+> +       else if (!ret)
+> +               ret = -ETIMEDOUT;
+> +
+> +       disable_irq(state->irq);
+> +
+> +       return ret;
+> +}
+
+...
+
+> +static int scd30_wait_meas_poll(struct scd30_state *state)
+> +{
+> +       int tries = 5;
+> +
+> +       while (tries--) {
+> +               int ret;
+> +               u16 val;
+> +
+> +               ret = scd30_command(state, CMD_MEAS_READY, 0, (char *)&val,
+> +                                   sizeof(val));
+> +               if (ret)
+> +                       return -EIO;
+> +
+> +               /* new measurement available */
+> +               if (val)
+> +                       break;
+> +
+> +               msleep_interruptible(state->meas_interval * 250);
+> +       }
+> +
+> +       if (tries == -1)
+> +               return -ETIMEDOUT;
+
+unsigned int tries = ...;
+
+do {
+ ...
+} while (--tries);
+if (!tries)
+  return ...;
+
+looks better and I guess less code in asm.
+
+> +       return 0;
+> +}
+
+...
+
+> +       if (kstrtou16(buf, 0, &val))
+> +               return -EINVAL;
+
+Shadowed error code. Don't do like this.
+
+> +       if (kstrtou16(buf, 0, &val))
+> +               return -EINVAL;
+
+Ditto.
+
+> +       if (kstrtou16(buf, 0, &val))
+> +               return -EINVAL;
+
+Ditto.
+
+> +       val = !!val;
+
+kstrtobool()?
+
+...
+
+> +       if (kstrtou16(buf, 0, &val))
+> +               return -EINVAL;
+
+No shadowed error code, please. Check entire code.
+
+> +static IIO_DEVICE_ATTR_RW(pressure_comp, 0);
+> +static IIO_DEVICE_ATTR_RO(pressure_comp_available, 0);
+> +static IIO_DEVICE_ATTR_RW(meas_interval, 0);
+> +static IIO_DEVICE_ATTR_RO(meas_interval_available, 0);
+> +static IIO_DEVICE_ATTR_RW(asc, 0);
+> +static IIO_DEVICE_ATTR_RW(frc, 0);
+> +static IIO_DEVICE_ATTR_RO(frc_available, 0);
+> +static IIO_DEVICE_ATTR_RW(temp_offset, 0);
+> +static IIO_CONST_ATTR(temp_offset_available, "[0 1 65535]");
+> +static IIO_DEVICE_ATTR_WO(reset, 0);
+
+Do you need all of them? Doesn't  IIO core provides a tons of helpers for these?
+Btw, where is ABI documentation? It's a show stopper.
+
+-- 
+With Best Regards,
+Andy Shevchenko
