@@ -2,113 +2,88 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE86C5518C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 14:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81505C55185
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 14:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5981B21473
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 14:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E8432098B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 14:19:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="DyxCrGC9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgDVOMy (ORCPT
+        id S1725839AbgDVOT2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 10:12:54 -0400
-Received: from mga06.intel.com ([134.134.136.31]:55662 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgDVOMx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Apr 2020 10:12:53 -0400
-IronPort-SDR: 5x75HACFWgCnHoS98YjUDv/PJiGBGgzAxbWJSA8bmWEvKX3PQPlEqRk5e70Pv9smEVdx5K5agA
- Oo3FNJz0XyMQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 07:12:53 -0700
-IronPort-SDR: bYf+WhGGgNKPSymYZDH0Ka02cXG7zt/SC/84i6ZbxoQPME9rkGbhm7pIwPAnZVpuccpTBopTO+
- 8H9PUM9rDKLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,414,1580803200"; 
-   d="scan'208";a="402560816"
-Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
-  by orsmga004.jf.intel.com with ESMTP; 22 Apr 2020 07:12:51 -0700
-From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-To:     broonie@kernel.org, robh+dt@kernel.org
-Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com,
-        wan.ahmad.zainie.wan.mohamad@intel.com
-Subject: [PATCH v2 7/7] spi: dw: Add support for Intel Keem Bay SPI
-Date:   Wed, 22 Apr 2020 22:11:42 +0800
-Message-Id: <20200422141142.25591-8-wan.ahmad.zainie.wan.mohamad@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200422141142.25591-1-wan.ahmad.zainie.wan.mohamad@intel.com>
-References: <20200422141142.25591-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+        Wed, 22 Apr 2020 10:19:28 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:64450 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726720AbgDVOT2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 10:19:28 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id 03MEIq6s003059;
+        Wed, 22 Apr 2020 23:18:53 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 03MEIq6s003059
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1587565133;
+        bh=05L0Y4K5hdMLe5DqDt78XEkJuAdMbS03xklsS80D7Zk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=DyxCrGC9vbJk3WAzDPNWRUm5TW/6TBn/XNszLdLUySG+DlkgrEeyd2p25GpG475X5
+         Ns8AYwSr9Xo5JC94ZC/m/GNu5zne4CZl2onlRtCFyr2RiFN6hr3/hOvDgOztOxDhtt
+         03UobRstNyV6gNpiLIPx9wr7lV+aZh7JPApv/Xc9AQ/tfKV/7v7a1s50P/Gdrb9r6M
+         UrrfceNsdtesIk6C+5GBx2v6z7fJNM7gqa+k/04+yur6u7y9loB0DiGVw/48Zx6n5H
+         WNAxrcJiCrDKXSRC4cJflY3CsJ6DGDRvl4rJHHmUoSUnC05jryRdbh+v2CCHG+i1XW
+         q3voLqhQl5BHw==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-i2c@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: at24: add microchip,24lc[0-9]+ to the compatible pattern
+Date:   Wed, 22 Apr 2020 23:18:36 +0900
+Message-Id: <20200422141836.1964676-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for Intel Keem Bay SPI controller, which uses DesignWare
-DWC_ssi core. Bit 31 of CTRLR0 register is added for Keem Bay, to
-configure the device as a master or as a slave serial peripheral.
+arch/arm/boot/dts/uniphier-ref-daughter.dtsi has
 
-Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+  compatible = "microchip,24lc128", "atmel,24c128";
+
+and 'make ARCH=arm dtbs_check' warns this:
+
+  eeprom@50: compatible: ['microchip,24lc128', 'atmel,24c128'] is not valid under any of the given schemas (Possible causes of the failure)
+
+Microchip 24LC128 is the device used on this board, and I see it in
+https://www.microchip.com/wwwproducts/en/24LC128
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- drivers/spi/spi-dw-mmio.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
 
-diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-index 1df6f3deee2c..abd3bb5e52db 100644
---- a/drivers/spi/spi-dw-mmio.c
-+++ b/drivers/spi/spi-dw-mmio.c
-@@ -44,6 +44,13 @@ struct dw_spi_mmio {
- #define MSCC_SPI_MST_SW_MODE_SW_PIN_CTRL_MODE	BIT(13)
- #define MSCC_SPI_MST_SW_MODE_SW_SPI_CS(x)	(x << 5)
- 
-+/*
-+ * For Keem Bay, CTRLR0[31] is used to select controller mode.
-+ * 0: SSI is slave
-+ * 1: SSI is master
-+ */
-+#define KEEMBAY_CTRLR0_SSIC_IS_MST		BIT(31)
-+
- struct dw_spi_mscc {
- 	struct regmap       *syscon;
- 	void __iomem        *spi_mst;
-@@ -155,6 +162,24 @@ static int dw_spi_dwc_ssi_init(struct platform_device *pdev,
- 	return 0;
- }
- 
-+static u32 dw_spi_update_cr0_keembay(struct spi_controller *master,
-+				     struct spi_device *spi,
-+				     struct spi_transfer *transfer)
-+{
-+	u32 cr0 = dw_spi_update_cr0_v1_01a(master, spi, transfer);
-+
-+	return cr0 | KEEMBAY_CTRLR0_SSIC_IS_MST;
-+}
-+
-+static int dw_spi_keembay_init(struct platform_device *pdev,
-+			       struct dw_spi_mmio *dwsmmio)
-+{
-+	/* Register hook to configure CTRLR0 */
-+	dwsmmio->dws.update_cr0 = dw_spi_update_cr0_keembay;
-+
-+	return 0;
-+}
-+
- static int dw_spi_mmio_probe(struct platform_device *pdev)
- {
- 	int (*init_func)(struct platform_device *pdev,
-@@ -254,6 +279,7 @@ static const struct of_device_id dw_spi_mmio_of_match[] = {
- 	{ .compatible = "amazon,alpine-dw-apb-ssi", .data = dw_spi_alpine_init},
- 	{ .compatible = "renesas,rzn1-spi", .data = dw_spi_dw_apb_init},
- 	{ .compatible = "snps,dwc-ssi-1.01a", .data = dw_spi_dwc_ssi_init},
-+	{ .compatible = "intel,keembay-ssi", .data = dw_spi_keembay_init},
- 	{ /* end of table */}
- };
- MODULE_DEVICE_TABLE(of, dw_spi_mmio_of_match);
+ Documentation/devicetree/bindings/eeprom/at24.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
+index a15787e504f0..2cd7a04cab7c 100644
+--- a/Documentation/devicetree/bindings/eeprom/at24.yaml
++++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
+@@ -34,7 +34,7 @@ properties:
+           - minItems: 1
+             maxItems: 2
+             items:
+-              - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),(24(c|cs|mac)[0-9]+|spd)$"
++              - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),(24(c|cs|lc|mac)[0-9]+|spd)$"
+               - pattern: "^atmel,(24(c|cs|mac)[0-9]+|spd)$"
+           - oneOf:
+               - items:
 -- 
-2.17.1
+2.25.1
 
