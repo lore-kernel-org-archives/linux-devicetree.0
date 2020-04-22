@@ -2,121 +2,106 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B977BC55186
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 09:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0899DC55189
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 09:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1BD120735
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 09:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6ECB206D9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 09:22:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Y76dQb2m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726021AbgDVJS5 (ORCPT
+        id S1725980AbgDVJWq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 05:18:57 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:43116 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725924AbgDVJS5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Apr 2020 05:18:57 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 60C65201036;
-        Wed, 22 Apr 2020 11:18:54 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 53E5620101B;
-        Wed, 22 Apr 2020 11:18:54 +0200 (CEST)
-Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 3E942202AF;
-        Wed, 22 Apr 2020 11:18:54 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 12:18:54 +0300
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Peng Fan <peng.fan@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 01/13] mfd: Add i.MX generic mix support
-Message-ID: <20200422091854.rhtkcfrdptwofngs@fsr-ub1664-175>
-References: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
- <1586937773-5836-2-git-send-email-abel.vesa@nxp.com>
- <20200417080747.GE2167633@dell>
+        Wed, 22 Apr 2020 05:22:46 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:16929 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725810AbgDVJWq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Apr 2020 05:22:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1587547365; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=QtrH0jI6pxLYTskWegU/r5ueqBUsmiWERsTkHhoNS2A=; b=Y76dQb2maG+fZ9QSJ39liTqag79w5wINsWNQavhWWyNxYL3lx0j3+PxALnK8763qZ35AceL9
+ 6R0u+OHlg9UvlEPFReuFxXL4VJ4eSocpN3XSkgCRahCB6uK8/ir4oCk8WyP1kt6RXmi8e6p8
+ fMX7Mm8OYcF/74epfS12m/dQRjM=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ea00cde.7f2b72109960-smtp-out-n03;
+ Wed, 22 Apr 2020 09:22:38 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 38304C43637; Wed, 22 Apr 2020 09:22:38 +0000 (UTC)
+Received: from [10.79.162.214] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9C594C433CB;
+        Wed, 22 Apr 2020 09:22:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9C594C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v2 01/17] tty: serial: qcom_geni_serial: Use OPP API to
+ set clk/perf state
+To:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-serial@vger.kernel.org
+References: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
+ <1587132279-27659-2-git-send-email-rnayak@codeaurora.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <0c9dcb67-5742-ce13-50a5-41c29bbbff51@codeaurora.org>
+Date:   Wed, 22 Apr 2020 14:52:21 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200417080747.GE2167633@dell>
-User-Agent: NeoMutt/20180622
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <1587132279-27659-2-git-send-email-rnayak@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-04-17 09:07:47, Lee Jones wrote:
-> On Wed, 15 Apr 2020, Abel Vesa wrote:
->
-> > Some of the i.MX SoCs have a IP for interfacing the dedicated IPs with
-> > clocks, resets and interrupts, plus some other specific control registers.
-> > To allow the functionality to be split between drivers, this MFD driver is
-> > added that has only two purposes: register the devices and map the entire
-> > register addresses. Everything else is left to the dedicated drivers that
-> > will bind to the registered devices.
-> >
-> > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> > ---
-> >  drivers/mfd/Kconfig   | 11 +++++++++++
-> >  drivers/mfd/Makefile  |  1 +
-> >  drivers/mfd/imx-mix.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 60 insertions(+)
-> >  create mode 100644 drivers/mfd/imx-mix.c
->
-> For completeness - Arnd's reply to this patch:
->
->  https://www.spinics.net/lists/linux-clk/msg47703.html
+Hey Bjorn,
 
-I'm replying here to Arnd's reply.
+> diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
+> index dd46494..737e713 100644
+> --- a/include/linux/qcom-geni-se.h
+> +++ b/include/linux/qcom-geni-se.h
+> @@ -24,6 +24,7 @@ enum geni_se_protocol_type {
+>   
+>   struct geni_wrapper;
+>   struct clk;
+> +struct opp_table;
+>   
+>   /**
+>    * struct geni_se - GENI Serial Engine
+> @@ -39,6 +40,7 @@ struct geni_se {
+>   	struct device *dev;
+>   	struct geni_wrapper *wrapper;
+>   	struct clk *clk;
+> +	struct opp_table *opp;
 
-I'm trying to give here a whole picture of the entire problem while the
-documentation for i.MX8MP is _not yet_ public.
+I just realized this is going to cause merge issues across geni serial and geni spi
+driver (PATCH 02/17 in this series) unless all of this goes via your tree.
+I see this is also an issue with the ongoing ICC patch series [1]
 
-Historically, each IP would have its own enclosure for all the related GPRs.
-Starting with i.MX8MP some GPRs (and some subparts) from the IP were placed
-inside these mixes.
+Do you or Greg have any thoughts on how this common header across various drivers
+issue should be resolved to avoid conflicts while merging?
 
-Audiomix for example, has multiple SAIs, a PLL, and some reset bits for EARC and
-some GPRs for AudioDSP. This means that i.MX8MP has 7 SAIs, 1 EARC and 1 AudioDSP.
-Future platforms might have different numbers of SAIs, EARCs or AudioDSPs. The PLL
-can't be placed in one of those SAIs and it was placed in audiomix.
-The i.MX8MP has at least 4 of these mixes.
+- Rajendra
 
-Now, the commonalities between all mixes are:
- - have their own power domains
- - driven by dedicated clock slice
- - contain clocks and resets
- - some very subsystem specific GPRs
+[1] https://patchwork.kernel.org/patch/11491015/
 
-Knowing that each mix has its own power domain, AFAICT, it needs to be registered
-as a single device. Considering that it can have clocks (audiomix has gates,
-muxes and plls), I believe that needs a clock driver, even more so since the
-muxes need their parents from the platform clock driver. Same principle applies
-to reset bits. The subsystem specific GPRs can be registered as syscon devices
-and taken care of by its counterpart IP (e.g. the AudioDSP specific regs would
-be taken care of by the DSP driver, if there is one).
-
-Now based on all of the above, by using MFD we take care of the power domain
-control for the entire mix, plus, the MFD doesn't have any kind of
-functionality by its own, relying on its children devices that are populated
-based on what is in the mix MFD devicetree node.
-
-> --
-> Lee Jones [李琼斯]
-> Linaro Services Technical Lead
-> Linaro.org │ Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
