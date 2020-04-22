@@ -2,134 +2,131 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0948FC55185
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 18:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAE3C5518B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 18:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E080120767
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 18:17:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mltae6nP"
+	by mail.kernel.org (Postfix) with ESMTP id DB62421473
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 18:27:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587580047;
+	bh=aX7ErMuTRR6KxWw7n67/xp1KzVfow6ube4HmuPuKO0c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=06gXTC196TTtirlLj/YgmSLlleWR79UVd0AcmT0O62KghSIt/WS+Y2CF5+Gla0LCM
+	 AyuvPJjT7xSSJw6Z+x5bztYQ815neq3UaHFZ6pqHWJ1hTd1KhNBEhczFix9Benuq6H
+	 ZTQR76uKR3LxowKqnSezEAAZzG+/lrYUNW7fzt/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgDVSRe (ORCPT
+        id S1725839AbgDVS1Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 14:17:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53030 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726041AbgDVSRd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 14:17:33 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42A89C03C1A9;
-        Wed, 22 Apr 2020 11:17:33 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id p10so3444073ioh.7;
-        Wed, 22 Apr 2020 11:17:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/O8wxkOyz2zqjTvXW5zmlSLKb1rtq1CNhNBPyoq68Ms=;
-        b=Mltae6nP2Mbpr8cAm/sWdOn8rNtI/OcVNw/eOS5AvECfCyKKYKWRzhTgMTN3KuMQ12
-         YDZoIz+eiUNnrsrOWB2JwH2pSNIf90p+8OyeWU0Zl7mGFkke8HotD8oCtnI8IyC7s2OT
-         WljR0uyIlHxHgxXMprKYW+Y+Zhsdv2uCsFJBsAHwIRdNQRPbbICBZCLMf4xL0yRNKKoy
-         QNAg2vy5mimsD9CYhdFH5ROCZSZa1vBEE4Sy7gEXrM1IUiWxScpvUbbtMpx5iUjz2gXa
-         0bCQd9lcEQC6Q6rAyVfn3Ne/HQ4hceLPJOyjh2LqYZR5BDbcoTqmup1GpQXmronZ/dww
-         h0cA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/O8wxkOyz2zqjTvXW5zmlSLKb1rtq1CNhNBPyoq68Ms=;
-        b=Pv7v5E2HlUikZh0GGGY9UpIsoph57zKHbOdPU+mlRpc8fOv3kb+DtuectQNM/Qkn9I
-         auvIHDquGObt54Dwz6bM4O+cxe8xXEFNCrENiO5oZiZFCyIQcya5ZD5vPTdE8K6WZJ62
-         LFssKZUjc7De59DPFeFJr0oxabILKO8IYHwn1g9aK/F6tQjIRVN2G/8eh7+cDrZpun6Y
-         ZIf7MAURIazYrSe9CCw5nNWOVccSfPBWYnPsYx/FRlXgE2X6XesFrPNKK0ihazSaifWv
-         x0R4agoVR3Cupg/s1rkBE4HUYCK4g1vJC2OgqcmYuAu3Sp9Ct4DwVYe3k4v1pdUOMVSu
-         UsYg==
-X-Gm-Message-State: AGi0PubhAxeee1zy7SNsayKZ8qcY6TQTxWzx+rlNIidJUYDUMV5levWd
-        fqhnGpKFZsXhsJRafaQAWsVUtd/PW52yLn7SxZs=
-X-Google-Smtp-Source: APiQypLi5JAfufXmUiHGVYgFDJyCS0FH1GWVjaU1HKRYJC6SB/+hStZS40jpXRvlDRPyXafhRd4YtWORgk95NeW/zck=
-X-Received: by 2002:a6b:e802:: with SMTP id f2mr26865444ioh.128.1587579452616;
- Wed, 22 Apr 2020 11:17:32 -0700 (PDT)
+        Wed, 22 Apr 2020 14:27:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59780 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725648AbgDVS1Y (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Apr 2020 14:27:24 -0400
+Received: from Mani-XPS-13-9360 (unknown [157.46.59.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F28802098B;
+        Wed, 22 Apr 2020 18:27:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587580043;
+        bh=aX7ErMuTRR6KxWw7n67/xp1KzVfow6ube4HmuPuKO0c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KUomHkfmo3+5bmLFETG93ObUl5KqABnNCzS/TOFpYf7ErUDdk5JyhpWWCxI2b3MW2
+         AHaquTr297uPb89AdGe3+onWMQxTO5Xh8mFj2rGGvNh+UNsOT+AL633dVF1qp6Fejd
+         +mP0vHTYslEPPuLVL5uJWr2vCHk6/+VM1W8Kg98c=
+Date:   Wed, 22 Apr 2020 23:57:15 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     jic23@kernel.org
+Cc:     Rob Herring <robh@kernel.org>, narcisaanamaria12@gmail.com,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com
+Subject: Re: [RESEND PATCH v3 1/3] dt-bindings: iio: chemical: Add binding
+ for CCS811 VOC sensor
+Message-ID: <20200422182715.GA27920@Mani-XPS-13-9360>
+References: <20200414184930.5576-1-mani@kernel.org>
+ <20200414184930.5576-2-mani@kernel.org>
+ <20200420211111.GA754@bogus>
 MIME-Version: 1.0
-References: <20200328003249.1248978-1-martin.blumenstingl@googlemail.com> <20200328003249.1248978-4-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20200328003249.1248978-4-martin.blumenstingl@googlemail.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Wed, 22 Apr 2020 23:47:21 +0530
-Message-ID: <CANAwSgTYgDDodsTbWsuWSgxh7vhci7PLKa14iz-7gF1BuRdgjQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] mmc: host: meson-mx-sdhc: new driver for the
- Amlogic Meson SDHC host
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     linux-amlogic@lists.infradead.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, jianxin.pan@amlogic.com,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        yinxin_1989@aliyun.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        lnykww@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200420211111.GA754@bogus>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Martin,
+On Mon, Apr 20, 2020 at 04:11:11PM -0500, Rob Herring wrote:
+> On Wed, Apr 15, 2020 at 12:19:28AM +0530, mani@kernel.org wrote:
+> > From: Manivannan Sadhasivam <mani@kernel.org>
+> > 
+> > This commit adds devicetree binding for AMS CCS811 VOC sensor.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+> > ---
+> >  .../bindings/iio/chemical/ams,ccs811.yaml     | 51 +++++++++++++++++++
+> >  1 file changed, 51 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml b/Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
+> > new file mode 100644
+> > index 000000000000..5cb068666a3e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/chemical/ams,ccs811.yaml
+> > @@ -0,0 +1,51 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/chemical/ams,ccs811.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: AMS CCS811 VOC Sensor
+> > +
+> > +maintainers:
+> > +  - Narcisa Vasile <narcisaanamaria12@gmail.com>
+> > +
+> > +description: |
+> > +  Ultra-Low Power Digital Gas Sensor for Monitoring Indoor Air Quality.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - ams,ccs811
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  reset-gpios:
+> > +    description: GPIO connected to the nRESET line. This is an active low
+> > +                 input to CCS811.
+> > +    maxItems: 1
+> > +
+> > +  wakeup-gpios:
+> > +    description: GPIO connected to the nWAKE line. This is an active low
+> > +                 input to CCS811.
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> 
+> Add:
+> 
+> additionalProperties: false
+> 
 
-On Sat, 28 Mar 2020 at 06:04, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> The SDHC MMC host controller on Amlogic SoCs provides an eMMC and MMC
-> card interface with 1/4/8-bit bus width.
-> It supports eMMC spec 4.4x/4.5x including HS200 (up to 100MHz clock).
->
-> The public S805 datasheet [0] contains a short documentation about the
-> registers. Unfortunately it does not describe how to use the registers
-> to make the hardware work. Thus this driver is based on reading (and
-> understanding) the Amlogic 3.10 GPL kernel code.
->
-> Some hardware details are not easy to see. Jianxin Pan was kind enough
-> to answer my questions:
-> The hardware has built-in busy timeout support. The maximum timeout is
-> 30 seconds. This is only documented in Amlogic's internal
-> documentation.
->
-> The controller only works with very specific clock configurations. The
-> details are not part of the public datasheet. In my own words the
-> supported configurations are:
-> - 399.812kHz:   clkin =  850MHz div = 2126 sd_rx_phase = 63
-> - 1MHz:         clkin =  850MHz div = 850  sd_rx_phase = 55
-> - 5.986MHz:     clkin =  850MHz div = 142  sd_rx_phase = 24
-> - 25MHz:        clkin =  850MHz div = 34   sd_rx_phase = 15
-> - 47.222MHz:    clkin =  850MHz div = 18   sd_rx_phase = 11/15 (SDR50/HS)
-> - 53.125MHz:    clkin =  850MHz div = 16   sd_rx_phase = (tuning)
-> - 70.833MHz:    clkin =  850MHz div = 12   sd_rx_phase = (tuning)
-> - 85MHz:        clkin =  850MHz div = 10   sd_rx_phase = (tuning)
-> - 94.44MHz:     clkin =  850MHz div = 9    sd_rx_phase = (tuning)
-> - 106.25MHz:    clkin =  850MHz div = 8    sd_rx_phase = (tuning)
-> - 127.5MHz:     clkin = 1275MHz div = 10   sd_rx_phase = (tuning)
-> - 141.667MHz:   clkin =  850MHz div = 6    sd_rx_phase = (tuning)
-> - 159.375MHz:   clkin = 1275MHz div = 8    sd_rx_phase = (tuning)
-> - 212.5MHz:     clkin = 1275MHz div = 6    sd_rx_phase = (tuning)
-> - (sd_tx_phase is always 1, 94.44MHz is not listed in the datasheet
->    but this is what the 3.10 BSP kernel on Odroid-C1 actually uses)
->
-> NOTE: CMD23 support is disabled for now because it results in command
-> timeouts and thus decreases read performance.
->
-> Tested-by: Wei Wang <lnykww@gmail.com>
-> Tested-by: Xin Yin <yinxin_1989@aliyun.com>
-> Reviewed-by: Xin Yin <yinxin_1989@aliyun.com>
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
+Hi Jonathan,
 
-Please add my tested on Odroid C1+
+Do you want me to spin another series or you can add it while applying?
 
-Tested-by: Anand Moon <linux.amoon@gmail.com>
+Thanks,
+Mani
 
-Best Regards
--Anand
+> With that,
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
