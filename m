@@ -2,187 +2,151 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB12C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 02:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE258C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 03:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8740E2072D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 02:56:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587524184;
-	bh=uXktadkm7XuXT9daSgTz03SBn8FHZ34ecH0ouje4lq8=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=m/5/qD279Sb0fhHVFt6BtjYDLMYE76zNrBcWuzBDTKVkSF8qzfhKS6JnfoUZs5EJm
-	 xmM4xUrbW3RzQy4vqDvdQZ/WIbLBf9W5TvRBLqZ33wr8YMrerYK7fiZLf5877+msFT
-	 OPqjRLCVf8vle8VsInsZjFD4F7oQtd5l6N3pGkb4=
+	by mail.kernel.org (Postfix) with ESMTP id 893B1206EC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 03:53:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="Wv97607x";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SPdn04y7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgDVC4V (ORCPT
+        id S1726497AbgDVDxp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 22:56:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbgDVC4U (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Apr 2020 22:56:20 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60608206D5;
-        Wed, 22 Apr 2020 02:56:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587524179;
-        bh=uXktadkm7XuXT9daSgTz03SBn8FHZ34ecH0ouje4lq8=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=hAyf5PrQe6/18AAwtdCBy7/vTmkGHFGFWYcT0VucAZGK2avIiPxB3tdbXuKdsc1JX
-         fuuHheVQ6av9Fm1wTvsGGd5MVl+Nfvo/B8pgLXXwAlMz+qTt0aiF5K39+1gyc5D7ll
-         j7wFUiAvPfeCpk0eHH6W0COpcM9jSiPWX81GHpDg=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 21 Apr 2020 23:53:45 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:40837 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726422AbgDVDxo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Apr 2020 23:53:44 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 4C4E25803F4;
+        Tue, 21 Apr 2020 23:53:43 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Tue, 21 Apr 2020 23:53:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
+         h=from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm3; bh=ILg74KFQ4/u/i
+        LEbpVIGKPDUn0lqkuyVDFTjVVQFF4M=; b=Wv97607xPWtRVGaOEQH8OktWOwXs+
+        V7yXLHTFOj6OqTwSz1IzFUzbG65S6h0sTrevJ/K2FFkZTA6Xd/T9XihviBgTmJCL
+        CBmgWTiuzJtUNW9GZFYHfhYxvCo9Z6hYbmmxh5uTpPS02yDV61PkgPSiM9PUXj+l
+        ofsciwklmnohoDNyaDjjNt7MmleGtYA3NWCCV5Qtcpm11sMNIY+kLyRsis97Vp48
+        GBzhdcS6FS16RgyOmqtRyfC0/gTIPwlAf9jZ+dgNM60hduOOYbSDxd60b6IX1VT2
+        BiI1fDzWYOkcdD4ZGNLXd6HoKCBgvESWv9oGjzouKXIjDd7BPa2s+YWgA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=ILg74KFQ4/u/iLEbpVIGKPDUn0lqkuyVDFTjVVQFF4M=; b=SPdn04y7
+        5O+FwlwSZUaBva56KCa1KdMuTWgrJm3rcHYFu/JB2041cQDHwzNLJlvFVGHcNm/W
+        RL9mziBXzOh3u6jmffwMQ609Axegcua8e5a7RhcBfBXoc9mM4Pss+jt2G+vcYPAH
+        MAWDgRESzjQeUDhf+Kr71gknujjBwWoJK5DLIfkKvhSF34/USfi7CO5K/caHrF8k
+        TkHx4BBHCfGs5TigGnfkulpkh3xTirRmvr4BF89qdxeNDQ2SygemahWN8I+sgtZZ
+        4sPKYtqRmpL6KqpfWo+djDR5CIjb2nlSt95GgkkeCSdkM8egNSSnzHsh7O8oFeZD
+        Ddc60Fu86RfIdw==
+X-ME-Sender: <xms:x7-fXkSt4UKXIs5uFgWnvjkfbVK8Tg71eoRgD3E4W9gAHMF9kNnZOQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeeigdejhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
+    ertddtnecuhfhrohhmpeetlhhishhtrghirhcuhfhrrghntghishcuoegrlhhishhtrghi
+    rhesrghlihhsthgrihhrvdefrdhmvgeqnecukfhppeejfedrleefrdekgedrvddtkeenuc
+    evlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhlfhhrohhmpegrlhhishht
+    rghirhesrghlihhsthgrihhrvdefrdhmvg
+X-ME-Proxy: <xmx:x7-fXnDncP3mNbJS1YMLwjAoi4JfRM1SyxLBCkB60khr9oxH98G0bw>
+    <xmx:x7-fXjjK1Kzi1L6oHfe17353xipTLo7ca0YaKqYmmFKLSTHl3xK2uA>
+    <xmx:x7-fXgNgMfQ4r1Gs6Y2ugYwrdHjFif162-1j6GV8F-u7GCyie11Ktg>
+    <xmx:x7-fXrIPz1i6BgJrX98EgeIL5aN7oiFIpfjnaDdW0wJevP7yCXn2Rg>
+Received: from alistair-xps-14z.alistair23.me (c-73-93-84-208.hsd1.ca.comcast.net [73.93.84.208])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D31483280063;
+        Tue, 21 Apr 2020 23:53:41 -0400 (EDT)
+From:   Alistair Francis <alistair@alistair23.me>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-bluetooth@vger.kernel.org, mripard@kernel.org, wens@csie.org
+Cc:     anarsoul@gmail.com, devicetree@vger.kernel.org,
+        alistair23@gmail.com, linux-arm-kernel@lists.infradead.org,
+        Alistair Francis <alistair@alistair23.me>
+Subject: [DO-NOT-MERGE][PATCH v4 3/3] arm64: allwinner: Enable Bluetooth and WiFi on sopine baseboard
+Date:   Tue, 21 Apr 2020 20:53:33 -0700
+Message-Id: <20200422035333.1118351-3-alistair@alistair23.me>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200422035333.1118351-1-alistair@alistair23.me>
+References: <20200422035333.1118351-1-alistair@alistair23.me>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200419121808.440780-4-bryan.odonoghue@linaro.org>
-References: <20200419121808.440780-1-bryan.odonoghue@linaro.org> <20200419121808.440780-4-bryan.odonoghue@linaro.org>
-Subject: Re: [PATCH 3/3] clk: qcom: gcc-msm8939: Make silicon specific updates for msm8939
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        shawn.guo@linaro.org, p.zabel@pengutronix.de,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, mturquette@baylibre.com,
-        robh+dt@kernel.org
-Date:   Tue, 21 Apr 2020 19:56:18 -0700
-Message-ID: <158752417863.132238.13958544237045504884@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Bryan O'Donoghue (2020-04-19 05:18:08)
-> The msm8939 is based on the msm8916. It is compatible in several ways but,
-> has additional functional blocks added which require additional PLL
-> sources. In some cases functional blocks from the msm8916 have different
-> clock sources or different supported frequencies.
->=20
-> This patch encapsulates the conversion from msm8916 to msm8939.
->=20
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> ---
->  drivers/clk/qcom/gcc-msm8939.c | 832 ++++++++++++++++++++++++++++-----
->  1 file changed, 709 insertions(+), 123 deletions(-)
->=20
+The sopine board has an optional RTL8723BS WiFi + BT module that can be
+connected to UART1. Add this to the device tree so that it will work
+for users if connected.
 
-Please use the new way of specifying clk parents with the clk_hw and DT
-based way. Some qcom clk drivers have already migrated. If this is a
-copy of the other driver then perhaps also modify that one in the series
-so that git can find the copy still. Sigh I still haven't written the
-documentation about it!
+Signed-off-by: Alistair Francis <alistair@alistair23.me>
+---
+ .../allwinner/sun50i-a64-sopine-baseboard.dts | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-Look for .parent_data in drivers/clk/qcom/gcc-sc7180.c for the best
-guidance.
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
+index 2f6ea9f3f6a2..34357ba143cb 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
+@@ -42,6 +42,11 @@ reg_vcc1v8: vcc1v8 {
+ 		regulator-min-microvolt = <1800000>;
+ 		regulator-max-microvolt = <1800000>;
+ 	};
++
++	wifi_pwrseq: wifi_pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
++	};
+ };
+ 
+ &ac_power_supply {
+@@ -103,6 +108,17 @@ ext_rgmii_phy: ethernet-phy@1 {
+ 	};
+ };
+ 
++&mmc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_pins>;
++	vmmc-supply = <&reg_dldo4>;
++	vqmmc-supply = <&reg_eldo1>;
++	mmc-pwrseq = <&wifi_pwrseq>;
++	non-removable;
++	bus-width = <4>;
++	status = "okay";
++};
++
+ &mmc2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc2_pins>;
+@@ -174,6 +190,19 @@ &uart0 {
+ 	status = "okay";
+ };
+ 
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
++	uart-has-rtscts = <1>;
++	status = "okay";
++
++	bluetooth {
++		compatible = "realtek,rtl8723bs-bt";
++		device-wake-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
++		host-wake-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
++	};
++};
++
+ /* On Pi-2 connector */
+ &uart2 {
+ 	pinctrl-names = "default";
+-- 
+2.26.0
 
-> @@ -1695,6 +1997,7 @@ static struct clk_branch gcc_blsp1_qup4_spi_apps_cl=
-k =3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
->  static struct clk_branch gcc_blsp1_qup5_i2c_apps_clk =3D {
->         .halt_reg =3D 0x06020,
->         .clkr =3D {
-> @@ -1712,6 +2015,7 @@ static struct clk_branch gcc_blsp1_qup5_i2c_apps_cl=
-k =3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
->  static struct clk_branch gcc_blsp1_qup5_spi_apps_clk =3D {
->         .halt_reg =3D 0x0601c,
->         .clkr =3D {
-> @@ -1729,6 +2033,7 @@ static struct clk_branch gcc_blsp1_qup5_spi_apps_cl=
-k =3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
->  static struct clk_branch gcc_blsp1_qup6_i2c_apps_clk =3D {
->         .halt_reg =3D 0x07020,
->         .clkr =3D {
-> @@ -1746,6 +2051,7 @@ static struct clk_branch gcc_blsp1_qup6_i2c_apps_cl=
-k =3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
->  static struct clk_branch gcc_blsp1_qup6_spi_apps_clk =3D {
->         .halt_reg =3D 0x0701c,
->         .clkr =3D {
-> @@ -1797,6 +2103,7 @@ static struct clk_branch gcc_blsp1_uart2_apps_clk =
-=3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
->  static struct clk_branch gcc_boot_rom_ahb_clk =3D {
->         .halt_reg =3D 0x1300c,
->         .halt_check =3D BRANCH_HALT_VOTED,
-> @@ -2341,6 +2648,7 @@ static struct clk_branch gcc_camss_vfe_axi_clk =3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
->  static struct clk_branch gcc_crypto_ahb_clk =3D {
->         .halt_reg =3D 0x16024,
->         .halt_check =3D BRANCH_HALT_VOTED,
-> @@ -2359,6 +2667,7 @@ static struct clk_branch gcc_crypto_ahb_clk =3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
->  static struct clk_branch gcc_crypto_axi_clk =3D {
->         .halt_reg =3D 0x16020,
->         .halt_check =3D BRANCH_HALT_VOTED,
-> @@ -2377,6 +2686,7 @@ static struct clk_branch gcc_crypto_axi_clk =3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
->  static struct clk_branch gcc_crypto_clk =3D {
->         .halt_reg =3D 0x1601c,
->         .halt_check =3D BRANCH_HALT_VOTED,
-> @@ -2650,6 +3011,7 @@ static struct clk_branch gcc_oxili_gfx3d_clk =3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
->  static struct clk_branch gcc_pdm2_clk =3D {
->         .halt_reg =3D 0x4400c,
->         .clkr =3D {
-> @@ -2667,6 +3029,7 @@ static struct clk_branch gcc_pdm2_clk =3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
->  static struct clk_branch gcc_pdm_ahb_clk =3D {
->         .halt_reg =3D 0x44004,
->         .clkr =3D {
-> @@ -2684,6 +3047,7 @@ static struct clk_branch gcc_pdm_ahb_clk =3D {
->         },
->  };
-> =20
-> +/* CBCR/halt_reg value derived from code only */
-
-Drop these useless comments.
