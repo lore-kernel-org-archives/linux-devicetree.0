@@ -2,131 +2,120 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5940C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 02:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72765C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 02:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F74B20724
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 02:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A53B2075E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 02:44:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c/Nn57tc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eOrNJpdK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725912AbgDVCTS (ORCPT
+        id S1726173AbgDVCoe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 22:19:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726398AbgDVCTR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Apr 2020 22:19:17 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35674C0610D6
-        for <devicetree@vger.kernel.org>; Tue, 21 Apr 2020 19:19:16 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id e17so412246ybq.0
-        for <devicetree@vger.kernel.org>; Tue, 21 Apr 2020 19:19:16 -0700 (PDT)
+        Tue, 21 Apr 2020 22:44:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725912AbgDVCoe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Apr 2020 22:44:34 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07E64C0610D6
+        for <devicetree@vger.kernel.org>; Tue, 21 Apr 2020 19:44:34 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id a32so232383pje.5
+        for <devicetree@vger.kernel.org>; Tue, 21 Apr 2020 19:44:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=eD12MM0qRGC0+kgKXm3ggeVgtjEg4vFSk5PZGwQnw+o=;
-        b=c/Nn57tcIJ4/Fsow2CyCQv4vmDsCDHTrp5fk9kmX3Sx21drX1zOVRkJPzc7l3AWB4d
-         DhWCLB0C7AXuTtrA+++zf76bhHCpcCzjspRFGpBRjLAA9J1FqmjlOT3y3Nd90DoVug8E
-         xl6uJ8Ht+0b09DrEv6i+pwmrmPlexWXO2dYOHfuMlcJ1mp6NMnSk5IxtazRDaELptCXv
-         GSo2P4qtJO8pQvs1KGFuEC23AEakWg4f7TyjsPH+By0NuaOS1zUhyO1WBrW/vr4F3yDc
-         DNcqoWPAufqfJQci8yqdmM4GC0ugOD+/PVTf9wAgYyuNeslJ/a8bqxs5D69LavEQJZjM
-         7F4w==
+        h=date:from:to:cc:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=17DeBbOuJOkYUumUllYYpaTlS+VBGmVOwtkd/Zl7kXg=;
+        b=eOrNJpdKigtIk7ORw4Z+7QkcUAQOT0AvDZ5BbujhISyKxFY2nVSlY020cLD5J4Q6F2
+         /a3tvHTOZta6T8U/eVi39qhOgHpWIJNwpJIgCpNX1UN+HCp3N6aiq7qMaU/TchA6cAOf
+         gyC6QjK6qch8uXLfcbDGXTi/D3eDsD/Qwoc6lO/6GXZtXo0A+MnR1Jy/1w7SqU3XMVVg
+         hIoZ525SQN/QqBB9aiS/d3WhAx8FHqTC1BdCLM55h0bW1FmCD9wUKUju67Vri1Xq0k/3
+         /h7ok5hBFLKeSNCFAK2s8D7GIu1dLIr528NeDkWkdjnv65Ixv0o7AfriKALJv8awGB9g
+         Xi6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=eD12MM0qRGC0+kgKXm3ggeVgtjEg4vFSk5PZGwQnw+o=;
-        b=n1cZLR1+eyAp87rE/Sd6OF5QRvbnMbCFuH5sX+mlUWvrHKSWyAt80tO+5Fr+bupPka
-         DK2hVELqYlDEahDE2BCy8pvQBUvbSalhsv04JnQ+YKK9/iC1Bh5cvXPLSs1/z8qPe7U9
-         3EiaZtsq3AWAGpNqi2RjyKwVKnMHfY4wCA/mbZl6QNvFiHsJP9IOeENDs0AFIYVYYbUW
-         WOQcBeuklIVDT8OekhiExyOqF0Yc29mt+LyjD7+a01JiPOXFAmNZgt7l21sTpqZdNJEJ
-         MCI6W6mkol9NdaHLEWdhDCnIKbbIUaDGc0nlDhv7ATxZhf5y/XzKLOauk2X5wF9oPf2/
-         jxug==
-X-Gm-Message-State: AGi0PubfR74bUcN5uwK7cELOmL9DhtPG4RpPioXm6HV0vTU9OMwLOXGW
-        XDgTdi9gOz/urWa1L6XVKyQnfAcdyUCThcJfBwSCQQ==
-X-Google-Smtp-Source: APiQypJuR76/LW08ImUx/6Stbr8KXo3jLagEMDDWMCJ+qlOKjssz3DtPf0dePxfy9mmoTCGk7EqJwjxIUvjkpKddAJw=
-X-Received: by 2002:a25:4f0a:: with SMTP id d10mr164888ybb.52.1587521954812;
- Tue, 21 Apr 2020 19:19:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <158737719165.27947.6617937231903079086.stgit@localhost>
- <20200420190749.b508c7e6d60a8203360178ec@linaro.org> <CAK7LNAQtTPLdKN8cz842gvoS36GVQvk2ztahGp8XWoW3C8BzQg@mail.gmail.com>
- <CAA93ih0TNEfU_fiS_43+H6+UWrP2b8zh+PxMiiKBg3pZW8Jo8g@mail.gmail.com> <CAK7LNASjoM1vr6=nSfs76yauC+QChKC6VX_pZkq1rhXDnJE5+A@mail.gmail.com>
-In-Reply-To: <CAK7LNASjoM1vr6=nSfs76yauC+QChKC6VX_pZkq1rhXDnJE5+A@mail.gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=17DeBbOuJOkYUumUllYYpaTlS+VBGmVOwtkd/Zl7kXg=;
+        b=XZ+NNAaYSIWKk2t6+0+D/NpIzEyZOOv8CM9eVyB3QSUgIGTVrGYLo4rjKYQ3AlgyzM
+         3qeqUql3AlxGaBGzW3B7UYcxsNIUgqqHRgzNJfkDqZwg+n6nrwD/XXzPEiHDca0yKcsS
+         7Qlh+DGNVnH8gcualbunte7wiQNWC+GcYp/vt2mhB4zPepx5wmMwBRW2wTnzuRDR0Woj
+         YtHy0lSix818Wufr7Iokf2go4QTay0a7TiRUGXJnl4s0z+fmHuCNX0aC71jndXPd6RbU
+         vvZbrTRAqYjsL/VUwVd40Ur0cJFZFQJaSNhZX2L/WVWHO39kd8PeJ9l4vIfy9q9rHM0E
+         +DJg==
+X-Gm-Message-State: AGi0PuaOY8Ze472wsbrk+YfkuInKIPgA8IY/qApiOGWZRy7T9vgYpcn0
+        J8crFMNyPK164b9ND3vMI5u5yA==
+X-Google-Smtp-Source: APiQypL9P1l9F+Oz0txNdc1RqtELqyQOKzxMmkkIK33mjwIy1oqRhCQzU1EuIbbx2Vw7sO91kK4eAg==
+X-Received: by 2002:a17:902:700c:: with SMTP id y12mr15446497plk.162.1587523473517;
+        Tue, 21 Apr 2020 19:44:33 -0700 (PDT)
+Received: from devnote (NE2965lan1.rev.em-net.ne.jp. [210.141.244.193])
+        by smtp.gmail.com with ESMTPSA id b11sm3569232pgj.92.2020.04.21.19.44.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2020 19:44:32 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 11:44:29 +0900
 From:   Masami Hiramatsu <masami.hiramatsu@linaro.org>
-Date:   Wed, 22 Apr 2020 11:19:03 +0900
-Message-ID: <CAA93ih0ksjwNzAW9+Y4ex+Ki8bCViwjcVZxftdQ8rk_YM_HmgA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] arm64: dts: uniphier: Add support for Akebi96
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>, DTML <devicetree@vger.kernel.org>,
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Cc:     devicetree@vger.kernel.org,
         Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
         Jassi Brar <jaswinder.singh@linaro.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v4 0/2] dts: uniphier: Add Akebi96 Board support
+Message-Id: <20200422114429.0b1a6f1a3366bae5964f3e10@linaro.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Yamada-san,
+Hello,
 
-2020=E5=B9=B44=E6=9C=8821=E6=97=A5(=E7=81=AB) 21:57 Masahiro Yamada <masahi=
-roy@kernel.org>:
->
-> On Mon, Apr 20, 2020 at 10:21 PM Masami Hiramatsu
-> <masami.hiramatsu@linaro.org> wrote:
-> > > index f93519793bfb..afa90b762ea9 100644
-> > > --- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-> > > +++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-> > > @@ -337,7 +337,7 @@ gpio: gpio@55000000 {
-> > >                                                      <21 217 3>;
-> > >                 };
-> > >
-> > > -               audio: audio@56000000 {
-> > > +               audio@56000000 {
-> > >                         compatible =3D "socionext,uniphier-ld20-aio";
-> > >                         reg =3D <0x56000000 0x80000>;
-> > >                         interrupts =3D <0 144 4>;
-> > >
-> > >
-> > > Lastly, is the pin-setting "aout1", "aout1b" correct ?
-> >
-> > Yes, according to the schematics of Akebi96(*), it is connected to
-> > aout1b(XIRQ*) instead of aout1(AO1*).
-> >
-> > (*) https://www.96boards.org/documentation/enterprise/akebi96/hardware-=
-docs/akebi96-schematics.pdf
->
-> So, I was asking about "aout1", not "aout1b".
+Here is the 4th version of the patches to add a devicetree for 
+Akebi96 board.
 
-Ah, I got it.
+This version fixes pinctrl_aout1 to remove unnecessary "aout1"
+since which is not connected on the board.
 
->
-> According to the schematic, nothing is connected to AO1*.
-> See sheet 6.
->
-> Why do you need to assign the apparently unused pins?
+The Akebi96 is a certified 96boards which is based on Socionext
+UniPhier LD20 SoC. Most of the part is similar to LD20 reference
+board, but there are some changes.
 
-No, we don't need it. I confirmed we only need groups =3D "aout1b".
-I'll update the series with that fix.
+  - MAX3421 USB-SPI chip on SPI port3 (for USB gadget port.)
+  - Simple frame buffer with 1080p fixed resolution.
+  - I2S port which is connected to aout1b instead of aout1.
+  - 3 serial ports, only serial3 has CTS/RTS.
+  - No NAND, only eMMC on the board.
+  - OP-TEE installed firmware.
 
-Thank you!
+See https://www.96boards.org/product/akebi96/ for details.
 
->
->
->
-> --
-> Best Regards
-> Masahiro Yamada
+Thank you,
+
+---
+
+Masami Hiramatsu (2):
+      dt-bindings: arm: Add Akebi96 board support
+      arm64: dts: uniphier: Add support for Akebi96
 
 
+ .../bindings/arm/socionext/uniphier.yaml           |    1 
+ arch/arm64/boot/dts/socionext/Makefile             |    1 
+ .../boot/dts/socionext/uniphier-ld20-akebi96.dts   |  190 ++++++++++++++++++++
+ 3 files changed, 192 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/socionext/uniphier-ld20-akebi96.dts
 
---=20
-Masami Hiramatsu
+--
+Masami Hiramatsu <masami.hiramatsu@linaro.org>
+
