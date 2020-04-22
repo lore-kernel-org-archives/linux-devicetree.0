@@ -2,245 +2,126 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C6AC5518A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 10:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2391C5518F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 10:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76F6B2073A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 10:31:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="AzOCimmi"
+	by mail.kernel.org (Postfix) with ESMTP id A2C612084D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 10:33:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587551591;
+	bh=009fT8XnlNWgSGFjkqzi9WHS52wJSOjnMq5vvLMSftE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ggyBASdUj/BnHh4FP8FVz9HNvooP0fWGGEVqXzgoMIeweWis5QpP1Kbv2p4SpWseg
+	 xSLRBagBuvhwOxXcz1uWma4DeB4KpXkAS+MnElblhz5ITO0HEUkLnqdXnb5KcXPv4q
+	 913rwt0A3XfYYZsxV+CGUVMKYlI2uq9e+4Ujclms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730840AbgDVKa4 (ORCPT
+        id S1730478AbgDVKY7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:30:56 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:56208 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730716AbgDVK32 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:29:28 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MASQZh005973;
-        Wed, 22 Apr 2020 12:29:16 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=pPakesbqMo9f4f4O8z3p59FXSEQ2p5KiMoyTUXhVLRw=;
- b=AzOCimmihZLvoNlrJ1X13eePRNNu/IQNwX3v1f/NMAPJT+fHwCDPC3LtSxw3O+sbd4pW
- 7nkDmJPIEclKreURFJfD00PFMnWj7FSuOB8uUOK3q2lkYnUSjlwCwvEh7JWjt2fRqTWN
- irYKPiVjPcuwu3jxfX6kIMvqewaIHNmVwkP7DpOguaRkk4OOnupQPDsFOgEHLP2as6Xz
- JD1/GqixWbmkK5d0d1oh8105RBZmxGhIR+CEKsxBZ+lm2XH2LT0yms/KsEGqBkuD/5xS
- jDOtcj1XXz7X7AkodG7lKDSuQltjXaUxgxt20ycZFTJ5DxWiXowSMtnkMh70PGXOal4Y 9w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30fregnraa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Apr 2020 12:29:16 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E1E3910002A;
-        Wed, 22 Apr 2020 12:29:15 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D33842A9560;
-        Wed, 22 Apr 2020 12:29:15 +0200 (CEST)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 22 Apr 2020 12:29:15
- +0200
-From:   Amelie Delaunay <amelie.delaunay@st.com>
-To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-CC:     <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        Pierre-Yves Mordret <pierre-yves.mordret@st.com>
-Subject: [PATCH 2/2] dmaengine: stm32-dma: direct mode support through device tree
-Date:   Wed, 22 Apr 2020 12:29:04 +0200
-Message-ID: <20200422102904.1448-3-amelie.delaunay@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200422102904.1448-1-amelie.delaunay@st.com>
-References: <20200422102904.1448-1-amelie.delaunay@st.com>
+        Wed, 22 Apr 2020 06:24:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730476AbgDVKY5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Apr 2020 06:24:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E904F20776;
+        Wed, 22 Apr 2020 10:24:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587551096;
+        bh=009fT8XnlNWgSGFjkqzi9WHS52wJSOjnMq5vvLMSftE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BW/XRh63tRkDUUveaNk+ktq/cNenSZwyy5DsrHiqtYUnlCtJi65AckmFpfj8RZgWP
+         1rHRtOURAIz7HSjI0k7QVNXRZH81etA2pThcNCPcd5Lu8S/VvPfx8r3sOVBFgd0OKt
+         3hjn49duyA287M3WBAofMvrr1HGLeWXy0EyBSMEI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 098/166] dt-bindings: thermal: tsens: Fix nvmem-cell-names schema
+Date:   Wed, 22 Apr 2020 11:57:05 +0200
+Message-Id: <20200422095059.485243431@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
+References: <20200422095047.669225321@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-22_03:2020-04-22,2020-04-22 signatures=0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Direct mode or FIFO mode is computed by stm32-dma driver. Add a way for
-the user to force direct mode, by setting bit 2 in the bitfield value
-specifying DMA features in the device tree.
+From: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+[ Upstream commit b9589def9f9af93d9d4c5969c9a6c166f070e36e ]
+
+There's a typo 'nvmem-cells-names' in the schema which means the correct
+'nvmem-cell-names' in the examples are not checked. The possible values
+are wrong too both in that the 2nd entry is not specified correctly and the
+values are just wrong based on the dts files in the kernel.
+
+Fixes: a877e768f655 ("dt-bindings: thermal: tsens: Convert over to a yaml schema")
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/stm32-dma.c | 41 +++++++++++++++++++++++++++++++----------
- 1 file changed, 31 insertions(+), 10 deletions(-)
+ .../devicetree/bindings/thermal/qcom-tsens.yaml          | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index 0ddbaa4b4f0b..96ad1b3d24c6 100644
---- a/drivers/dma/stm32-dma.c
-+++ b/drivers/dma/stm32-dma.c
-@@ -117,6 +117,7 @@
- #define STM32_DMA_FIFO_THRESHOLD_HALFFULL		0x01
- #define STM32_DMA_FIFO_THRESHOLD_3QUARTERSFULL		0x02
- #define STM32_DMA_FIFO_THRESHOLD_FULL			0x03
-+#define STM32_DMA_FIFO_THRESHOLD_NONE			0x04
+diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+index eef13b9446a87..a4df53228122a 100644
+--- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
++++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+@@ -53,13 +53,12 @@ properties:
+     description:
+       Reference to an nvmem node for the calibration data
  
- #define STM32_DMA_MAX_DATA_ITEMS	0xffff
- /*
-@@ -136,6 +137,9 @@
- /* DMA Features */
- #define STM32_DMA_THRESHOLD_FTR_MASK	GENMASK(1, 0)
- #define STM32_DMA_THRESHOLD_FTR_GET(n)	((n) & STM32_DMA_THRESHOLD_FTR_MASK)
-+#define STM32_DMA_DIRECT_MODE_MASK	BIT(2)
-+#define STM32_DMA_DIRECT_MODE_GET(n)	(((n) & STM32_DMA_DIRECT_MODE_MASK) \
-+					 >> 2)
+-  nvmem-cells-names:
++  nvmem-cell-names:
+     minItems: 1
+     maxItems: 2
+     items:
+-      - enum:
+-        - caldata
+-        - calsel
++      - const: calib
++      - const: calib_sel
  
- enum stm32_dma_width {
- 	STM32_DMA_BYTE,
-@@ -281,6 +285,9 @@ static bool stm32_dma_fifo_threshold_is_allowed(u32 burst, u32 threshold,
- {
- 	u32 remaining;
+   "#qcom,sensors":
+     allOf:
+@@ -125,7 +124,7 @@ examples:
+                  <0x4a8000 0x1000>; /* SROT */
  
-+	if (threshold == STM32_DMA_FIFO_THRESHOLD_NONE)
-+		return false;
-+
- 	if (width != DMA_SLAVE_BUSWIDTH_UNDEFINED) {
- 		if (burst != 0) {
- 			/*
-@@ -302,6 +309,10 @@ static bool stm32_dma_fifo_threshold_is_allowed(u32 burst, u32 threshold,
+            nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
+-           nvmem-cell-names = "caldata", "calsel";
++           nvmem-cell-names = "calib", "calib_sel";
  
- static bool stm32_dma_is_burst_possible(u32 buf_len, u32 threshold)
- {
-+	/* If FIFO direct mode, burst is not possible */
-+	if (threshold == STM32_DMA_FIFO_THRESHOLD_NONE)
-+		return false;
-+
- 	/*
- 	 * Buffer or period length has to be aligned on FIFO depth.
- 	 * Otherwise bytes may be stuck within FIFO at buffer or period
-@@ -657,6 +668,12 @@ static irqreturn_t stm32_dma_chan_irq(int irq, void *devid)
- 				dev_dbg(chan2dev(chan), "FIFO over/underrun\n");
- 		}
- 	}
-+	if (status & STM32_DMA_DMEI) {
-+		stm32_dma_irq_clear(chan, STM32_DMA_DMEI);
-+		status &= ~STM32_DMA_DMEI;
-+		if (sfcr & STM32_DMA_SCR_DMEIE)
-+			dev_dbg(chan2dev(chan), "Direct mode overrun\n");
-+	}
- 	if (status) {
- 		stm32_dma_irq_clear(chan, status);
- 		dev_err(chan2dev(chan), "DMA error: status=0x%08x\n", status);
-@@ -692,13 +709,13 @@ static int stm32_dma_set_xfer_param(struct stm32_dma_chan *chan,
- 	int src_bus_width, dst_bus_width;
- 	int src_burst_size, dst_burst_size;
- 	u32 src_maxburst, dst_maxburst, src_best_burst, dst_best_burst;
--	u32 dma_scr, threshold;
-+	u32 dma_scr, fifoth;
- 
- 	src_addr_width = chan->dma_sconfig.src_addr_width;
- 	dst_addr_width = chan->dma_sconfig.dst_addr_width;
- 	src_maxburst = chan->dma_sconfig.src_maxburst;
- 	dst_maxburst = chan->dma_sconfig.dst_maxburst;
--	threshold = chan->threshold;
-+	fifoth = chan->threshold;
- 
- 	switch (direction) {
- 	case DMA_MEM_TO_DEV:
-@@ -710,7 +727,7 @@ static int stm32_dma_set_xfer_param(struct stm32_dma_chan *chan,
- 		/* Set device burst size */
- 		dst_best_burst = stm32_dma_get_best_burst(buf_len,
- 							  dst_maxburst,
--							  threshold,
-+							  fifoth,
- 							  dst_addr_width);
- 
- 		dst_burst_size = stm32_dma_get_burst(chan, dst_best_burst);
-@@ -718,7 +735,7 @@ static int stm32_dma_set_xfer_param(struct stm32_dma_chan *chan,
- 			return dst_burst_size;
- 
- 		/* Set memory data size */
--		src_addr_width = stm32_dma_get_max_width(buf_len, threshold);
-+		src_addr_width = stm32_dma_get_max_width(buf_len, fifoth);
- 		chan->mem_width = src_addr_width;
- 		src_bus_width = stm32_dma_get_width(chan, src_addr_width);
- 		if (src_bus_width < 0)
-@@ -728,7 +745,7 @@ static int stm32_dma_set_xfer_param(struct stm32_dma_chan *chan,
- 		src_maxburst = STM32_DMA_MAX_BURST;
- 		src_best_burst = stm32_dma_get_best_burst(buf_len,
- 							  src_maxburst,
--							  threshold,
-+							  fifoth,
- 							  src_addr_width);
- 		src_burst_size = stm32_dma_get_burst(chan, src_best_burst);
- 		if (src_burst_size < 0)
-@@ -742,7 +759,8 @@ static int stm32_dma_set_xfer_param(struct stm32_dma_chan *chan,
- 
- 		/* Set FIFO threshold */
- 		chan->chan_reg.dma_sfcr &= ~STM32_DMA_SFCR_FTH_MASK;
--		chan->chan_reg.dma_sfcr |= STM32_DMA_SFCR_FTH(threshold);
-+		if (fifoth != STM32_DMA_FIFO_THRESHOLD_NONE)
-+			chan->chan_reg.dma_sfcr |= STM32_DMA_SFCR_FTH(fifoth);
- 
- 		/* Set peripheral address */
- 		chan->chan_reg.dma_spar = chan->dma_sconfig.dst_addr;
-@@ -758,7 +776,7 @@ static int stm32_dma_set_xfer_param(struct stm32_dma_chan *chan,
- 		/* Set device burst size */
- 		src_best_burst = stm32_dma_get_best_burst(buf_len,
- 							  src_maxburst,
--							  threshold,
-+							  fifoth,
- 							  src_addr_width);
- 		chan->mem_burst = src_best_burst;
- 		src_burst_size = stm32_dma_get_burst(chan, src_best_burst);
-@@ -766,7 +784,7 @@ static int stm32_dma_set_xfer_param(struct stm32_dma_chan *chan,
- 			return src_burst_size;
- 
- 		/* Set memory data size */
--		dst_addr_width = stm32_dma_get_max_width(buf_len, threshold);
-+		dst_addr_width = stm32_dma_get_max_width(buf_len, fifoth);
- 		chan->mem_width = dst_addr_width;
- 		dst_bus_width = stm32_dma_get_width(chan, dst_addr_width);
- 		if (dst_bus_width < 0)
-@@ -776,7 +794,7 @@ static int stm32_dma_set_xfer_param(struct stm32_dma_chan *chan,
- 		dst_maxburst = STM32_DMA_MAX_BURST;
- 		dst_best_burst = stm32_dma_get_best_burst(buf_len,
- 							  dst_maxburst,
--							  threshold,
-+							  fifoth,
- 							  dst_addr_width);
- 		chan->mem_burst = dst_best_burst;
- 		dst_burst_size = stm32_dma_get_burst(chan, dst_best_burst);
-@@ -791,7 +809,8 @@ static int stm32_dma_set_xfer_param(struct stm32_dma_chan *chan,
- 
- 		/* Set FIFO threshold */
- 		chan->chan_reg.dma_sfcr &= ~STM32_DMA_SFCR_FTH_MASK;
--		chan->chan_reg.dma_sfcr |= STM32_DMA_SFCR_FTH(threshold);
-+		if (fifoth != STM32_DMA_FIFO_THRESHOLD_NONE)
-+			chan->chan_reg.dma_sfcr |= STM32_DMA_SFCR_FTH(fifoth);
- 
- 		/* Set peripheral address */
- 		chan->chan_reg.dma_spar = chan->dma_sconfig.src_addr;
-@@ -1216,6 +1235,8 @@ static void stm32_dma_set_config(struct stm32_dma_chan *chan,
- 	chan->chan_reg.dma_scr |= STM32_DMA_SCR_TEIE | STM32_DMA_SCR_TCIE;
- 
- 	chan->threshold = STM32_DMA_THRESHOLD_FTR_GET(cfg->features);
-+	if (STM32_DMA_DIRECT_MODE_GET(cfg->features))
-+		chan->threshold = STM32_DMA_FIFO_THRESHOLD_NONE;
- }
- 
- static struct dma_chan *stm32_dma_of_xlate(struct of_phandle_args *dma_spec,
+            interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
+            interrupt-names = "uplow";
 -- 
-2.17.1
+2.20.1
+
+
 
