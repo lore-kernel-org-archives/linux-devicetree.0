@@ -2,186 +2,184 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E67DC54FCB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 16:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1984AC55185
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 17:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6769D214AF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 16:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB1F820776
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 17:21:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pmeerw.net header.i=@pmeerw.net header.b="I4EUWzd0"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SEtaKP1O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgDVQkY (ORCPT
+        id S1726147AbgDVRVF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:40:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37896 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbgDVQkY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 12:40:24 -0400
-Received: from ns.pmeerw.net (ns.pmeerw.net [IPv6:2001:1b60:2:23:1033:103:0:1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 772C0C03C1A9
-        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 09:40:24 -0700 (PDT)
-Received: by ns.pmeerw.net (Postfix, from userid 1000)
-        id 3F478E01CB; Wed, 22 Apr 2020 18:40:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pmeerw.net; s=mail;
-        t=1587573617; bh=McsTMxwzAFpLpU1JXIxR7mSymPut3YX7nBAYc8yLJBw=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=I4EUWzd0zUhHuWZGbheNH6bJICyGifB/ISIONWZiCSVzEJCyoEtuHKBeNqUy9htv9
-         +7bJf/ONQTjhUoFi39a5WF9hh+xzYg8aHqhJdT88XzGmKxP6hkCzTtpklFhKOVl8j4
-         JhA5ThSvY0rsJ/i0kbuqbNc0hE+wmOeCAQ4vXs+8=
-Received: from localhost (localhost [127.0.0.1])
-        by ns.pmeerw.net (Postfix) with ESMTP id 2C28CE01A3;
-        Wed, 22 Apr 2020 18:40:17 +0200 (CEST)
-Date:   Wed, 22 Apr 2020 18:40:17 +0200 (CEST)
-From:   Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
-cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org, jic23@kernel.org
-Subject: Re: [PATCH 4/6] Documentation: ABI: testing: scd30: document iio
- attributes
-In-Reply-To: <20200422141135.86419-5-tomasz.duszynski@octakon.com>
-Message-ID: <alpine.DEB.2.21.2004221818490.26800@vps.pmeerw.net>
-References: <20200422141135.86419-1-tomasz.duszynski@octakon.com> <20200422141135.86419-5-tomasz.duszynski@octakon.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 22 Apr 2020 13:21:05 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:47366 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbgDVRVF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 13:21:05 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1420B528;
+        Wed, 22 Apr 2020 19:21:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1587576062;
+        bh=0NQOi0XW/BQoKaII48b5RRVncnaLFN8FKSURigd+vHo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SEtaKP1O7Ne5tsbuTi1ExUc5Q57Il9UJd7f3tyPlRJF+wwKjlYQR2LYQGinrVvjq0
+         47u+UCJ8WpnG8CD1RI2sNvs5QKYjyl2rf+Y5HqnqMpLQ06CppW+RhbGtRi6Up+WpaE
+         IAm9ln0eolH3FMzgS7GKZqPRJwyvUwlG2kGzm0zc=
+Date:   Wed, 22 Apr 2020 20:20:47 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com,
+        digetx@gmail.com, sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v9 5/9] dt-binding: tegra: Add VI and CSI bindings
+Message-ID: <20200422172047.GA18765@pendragon.ideasonboard.com>
+References: <1587536339-4030-1-git-send-email-skomatineni@nvidia.com>
+ <1587536339-4030-6-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1587536339-4030-6-git-send-email-skomatineni@nvidia.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 22 Apr 2020, Tomasz Duszynski wrote:
+Hi Sowjanya,
 
-> Add documentation for sensor specific iio attributes.
+Thank you for the patch.
 
-minor comments below
- 
-> Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+On Tue, Apr 21, 2020 at 11:18:55PM -0700, Sowjanya Komatineni wrote:
+> Tegra contains VI controller which can support up to 6 MIPI CSI
+> camera sensors.
+> 
+> Each Tegra CSI port from CSI unit can be one-to-one mapper to
+> VI channel and can capture from an external camera sensor or
+> from built-in test pattern generator.
+> 
+> This patch adds dt-bindings for Tegra VI and CSI.
+> 
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  Documentation/ABI/testing/sysfs-bus-iio-scd30 | 97 +++++++++++++++++++
->  1 file changed, 97 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-scd30
+>  .../display/tegra/nvidia,tegra20-host1x.txt        | 73 ++++++++++++++++++----
+>  1 file changed, 60 insertions(+), 13 deletions(-)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-scd30 b/Documentation/ABI/testing/sysfs-bus-iio-scd30
-> new file mode 100644
-> index 000000000000..0431a718447d
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-scd30
-> @@ -0,0 +1,97 @@
-> +What:		/sys/bus/iio/devices/iio:deviceX/pressure_comp
-> +Date:		April 2020
-> +KernelVersion:	5.8
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Given that sensor's CO2 measurement chamber has fixed volume
-> +		pressure changes will affect concentration readings. Writing
-> +		current ambient pressure here will allow senor to make necessary
+> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+> index 9999255..4731921 100644
+> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+> @@ -40,14 +40,30 @@ of the following host1x client modules:
+>  
+>    Required properties:
+>    - compatible: "nvidia,tegra<chip>-vi"
+> -  - reg: Physical base address and length of the controller's registers.
+> +  - reg: Physical base address and length of the controller registers.
+>    - interrupts: The interrupt outputs from the controller.
+> -  - clocks: Must contain one entry, for the module clock.
+> +  - clocks: clocks: Must contain one entry, for the module clock.
+>      See ../clocks/clock-bindings.txt for details.
+> -  - resets: Must contain an entry for each entry in reset-names.
+> -    See ../reset/reset.txt for details.
+> -  - reset-names: Must include the following entries:
+> -    - vi
+> +  - Tegra20/Tegra30/Tegra114/Tegra124:
+> +    - resets: Must contain an entry for each entry in reset-names.
+> +      See ../reset/reset.txt for details.
+> +    - reset-names: Must include the following entries:
+> +      - vi
+> +  - Tegra210:
+> +    - power-domains: Must include venc powergate node as vi is in VE partition.
+> +  - Tegra210 has CSI part of VI sharing same host interface and register space.
+> +    So, VI device node should have CSI child node.
+> +
+> +    - csi: mipi csi interface to vi
+> +
+> +      Required properties:
+> +      - compatible: "nvidia,tegra210-csi"
+> +      - reg: Physical base address offset to parent and length of the controller
+> +        registers.
+> +      - clocks: Must contain entries csi, cilab, cilcd, cile, csi_tpg clocks.
+> +        See ../clocks/clock-bindings.txt for details.
+> +      - power-domains: Must include sor powergate node as csicil is in
+> +        SOR partition.
 
-sensor
+A bit of a stupid question maybe, but why is this needed ? Can't the
+driver that handles the vi DT node ("nvidia,tegra20-vi") handle all the
+registers for all the sub-blocks ? Can't we move the clocks and power
+domains from the CSI node to the VI node ?
 
-> +		adjustments. Upon reading previously set value is returned.
-> +		Units are millibars.
+Regardless of the answer to this question, I think this is missing port
+nodes for the physical CSI-2 inputs, to connect them to sensors. I
+haven't seen anywhere in this series how a CSI-2 sensor is linked to the
+VI.
 
-unit for pressure in IIO is kilopascal (e.g. 
-/sys/bus/iio/devices/iio:deviceX/in_pressure_raw)
-
+>  
+>  - epp: encoder pre-processor
+>  
+> @@ -309,13 +325,44 @@ Example:
+>  			reset-names = "mpe";
+>  		};
+>  
+> -		vi {
+> -			compatible = "nvidia,tegra20-vi";
+> -			reg = <0x54080000 0x00040000>;
+> -			interrupts = <0 69 0x04>;
+> -			clocks = <&tegra_car TEGRA20_CLK_VI>;
+> -			resets = <&tegra_car 100>;
+> -			reset-names = "vi";
+> +		vi@54080000 {
+> +			compatible = "nvidia,tegra210-vi";
+> +			reg = <0x0 0x54080000 0x0 0x700>;
+> +			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
+> +			assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
+> +			assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
 > +
-> +What:		/sys/bus/iio/devices/iio:deviceX/pressure_comp_available
-> +Date:		April 2020
-> +KernelVersion:	5.8
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		The range of available values in millibars represented as the
-> +		minimum value, the step and the maximum value, all enclosed in
-> +		square brackets.
+> +			clocks = <&tegra_car TEGRA210_CLK_VI>;
+> +			power-domains = <&pd_venc>;
 > +
-> +What:		/sys/bus/iio/devices/iio:deviceX/meas_interval
-> +Date:		January 2020
-> +KernelVersion:	5.8
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Amount of time between subsequent measurements. Writing this
-> +		attribute will change measurement interval. Upon reading
-> +		current measurement interval is returned. Units are seconds.
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
 > +
-> +What:		/sys/bus/iio/devices/iio:deviceX/meas_interval_available
-> +Date:		April 2020
-> +KernelVersion:	5.8
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		The range of available values in seconds represented as the
-> +		minimum value, the step and the maximum value, all enclosed in
-> +		square brackets.
+> +			ranges = <0x0 0x0 0x54080000 0x2000>;
 > +
-> +What:		/sys/bus/iio/devices/iio:deviceX/asc
-> +Date:		April 2020
-> +KernelVersion:	5.8
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Writing 1 or 0 to this attribute will respectively activate or
-> +		deactivate automatic self calibration procedure. Upon reading 1
-
-deactivate automatic self calibration (asc) procedure
-
-> +		is returned if asc is ongoing, 0 otherwise.
+> +			csi@838 {
+> +				compatible = "nvidia,tegra210-csi";
+> +				reg = <0x838 0x1300>;
+> +				assigned-clocks = <&tegra_car TEGRA210_CLK_CILAB>,
+> +						  <&tegra_car TEGRA210_CLK_CILCD>,
+> +						  <&tegra_car TEGRA210_CLK_CILE>,
+> +						  <&tegra_car TEGRA210_CLK_CSI_TPG>;
+> +				assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_P>,
+> +							 <&tegra_car TEGRA210_CLK_PLL_P>,
+> +							 <&tegra_car TEGRA210_CLK_PLL_P>;
+> +				assigned-clock-rates = <102000000>,
+> +						       <102000000>,
+> +						       <102000000>,
+> +						       <972000000>;
 > +
-> +What:		/sys/bus/iio/devices/iio:deviceX/frc
-> +Date:		April 2020
-> +KernelVersion:	5.8
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Forced recalibration is used to compensate for sensor drifts
-> +		when a reference value of CO2 concentration in close proximity
-> +		to the sensor is available. Writing attribute will set frc
-> +		value. Upon reading current frc is returned. Units are
-> +		millibars.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/frc_available
-> +Date:		April 2020
-> +KernelVersion:	5.8
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		The range of available values in millibars represented as the
-> +		minimum value, the step and the maximum value, all enclosed in
-> +		square brackets.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/temp_offset
-> +Date:		April 2020
-> +KernelVersion:	5.8
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Sensor readings may be affected by ambient temperature.
-> +		Writing temperature offset will compensate for unwanted changes.
-> +		Note that written offset gets multiplied by a factor of 100
-> +		by a sensor internally.
-> +
-> +		For example, writing 10 here will correspond to 0.1 degree
-> +		Celsius.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/temp_offset_available
-> +Date:		April 2020
-> +KernelVersion:	5.8
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		The range of available values in degrees Celsius represented as
-> +		the minimum value, the step and the maximum value, all enclosed
-> +		in square brackets.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/reset
-> +Date:		April 2020
-> +KernelVersion:	5.8
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Software reset mechanism forces sensor into the same state
-> +		as after powering up without the need for removing power supply.
-> +		Writing any value will reset sensor.
-> 
+> +				clocks = <&tegra_car TEGRA210_CLK_CSI>,
+> +					 <&tegra_car TEGRA210_CLK_CILAB>,
+> +					 <&tegra_car TEGRA210_CLK_CILCD>,
+> +					 <&tegra_car TEGRA210_CLK_CILE>,
+> +					 <&tegra_car TEGRA210_CLK_CSI_TPG>;
+> +				clock-names = "csi", "cilab", "cilcd", "cile", "csi_tpg";
+> +				power-domains = <&pd_sor>;
+> +			};
+>  		};
+>  
+>  		epp {
 
 -- 
+Regards,
 
-Peter Meerwald-Stadler
-Mobile: +43 664 24 44 418
+Laurent Pinchart
