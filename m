@@ -2,285 +2,124 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5732BC54FCB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 15:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2EBC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 15:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C9CE20776
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 15:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBFBC2076E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 15:36:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="YZEibynY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AZwYjSI/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbgDVPaN (ORCPT
+        id S1726614AbgDVPgH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 11:30:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55180 "EHLO
+        Wed, 22 Apr 2020 11:36:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbgDVPaN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 11:30:13 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D798C03C1A9;
-        Wed, 22 Apr 2020 08:30:13 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CDF09528;
-        Wed, 22 Apr 2020 17:30:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1587569411;
-        bh=+1pnVNRiTLb7nmelXOXTLaTwyd/zc6UiDxReSqZ2c6A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YZEibynY0pa+TDNM4jvZ8GuCdVrCMyNK9OTmDn3ORYiOGgwHIvDpUiVBibucdqa8v
-         Rv5t/yLaog2tGVFX71DYXDuyfQclTayygVbp86ZPxCR3CzXwj2v3/ighnC4PD2GvQv
-         uLWR61e8wY8NIT+5L0/RsqrUqVeSQP3GDGfWgeow=
-Date:   Wed, 22 Apr 2020 18:29:56 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Adrian Ratiu <adrian.ratiu@collabora.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Andrzej Hajda <a.hajda@samsung.com>, kernel@collabora.com,
-        linux-stm32@st-md-mailman.stormreply.com, linux-imx@nxp.com,
-        Rob Herring <robh@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Adrian Pop <pop.adrian61@gmail.com>,
-        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
-        Sjoerd Simons <sjoerd.simons@collabora.com>,
-        Martyn Welch <martyn.welch@collabora.com>
-Subject: Re: [PATCH v7 5/8] dt-bindings: display: add i.MX6 MIPI DSI host
- controller doc
-Message-ID: <20200422152956.GE28105@pendragon.ideasonboard.com>
-References: <20200421161610.1501827-1-adrian.ratiu@collabora.com>
- <20200421161610.1501827-6-adrian.ratiu@collabora.com>
- <20200422005832.GK5983@pendragon.ideasonboard.com>
- <20200422010155.GL5983@pendragon.ideasonboard.com>
- <877dy7ker6.fsf@collabora.com>
+        with ESMTP id S1725980AbgDVPgG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 11:36:06 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAFE1C03C1A9
+        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 08:36:06 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id e17so1413723ybq.0
+        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 08:36:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+AjFfEvExopko5vrpG5TAim2gTw/nPEygKLzyKFqNHY=;
+        b=AZwYjSI/UXuxNN7NJfejVcVD/JWxuHM2HmXpNcbCNlVy7r0ba+rutav8Pn70cdoLm0
+         ZimhlWIZFJLZoreLu1R0uij5j3if46a95rh73L6nnVX93jPCdyyS6RgQ8Y913UgQqmVA
+         ft7vBx0lpwpTK0DAKv1Wkk60mkzZB/TgGJ7m2AJmeaSEbTTAaWpzr3LNQEitU3/8EsS3
+         /5D6pyqQFfFInaEOc79FLV5OBYUtJcrcN8TIWGPpD0lixpvNavePd4Sa+EVsSgAol1By
+         knki3pld00nBrwMullmQNE8o+Rx5FL5SWT8Vp4QStnwTo/d3Sgath6WRHePUhBavNDyZ
+         DT2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+AjFfEvExopko5vrpG5TAim2gTw/nPEygKLzyKFqNHY=;
+        b=bWV6iWulQMOUowTn3U4fhx5Z4qSJK+MmG6MPzSGABckPKZuv2vlLXL6Iy5GZR+DXzp
+         94td0iidtZal1GHvf4a/r9DrbO10/qYYJKA+SRpk4CuSIm1B7YQ/S3LpyHRidI2lrlDw
+         oFog9KXwTIGuOK390BUk8FTQWu67HzwD+K3RQXuHcAYieqSwJHBojscH86/7oKdz9pph
+         pr9Dcz7bM8BywhlwYgIlpGeMHM+I98d3Uvg4RzvtRDwgBa82PG+xZ3W2Ktp86S1nQuk0
+         hb6/UXHEKVzwktvyiX3Pa396KJvdV8TGr+Sn5a6sW3jWOZ7K5wgIXxPN+hoO10G9JJvM
+         Fupg==
+X-Gm-Message-State: AGi0PuaG68rXy17Fq2/ASKQxa7KdmtF+ktqjAb+xuEZEYlk0NdhOTzwT
+        wbqZJYrbibGnvioMxpZ+YNjjUBtm4z69PJr1PKqGVA==
+X-Google-Smtp-Source: APiQypI//eHnV/pEir7WM2H9X+55MxxgsM/Mje90OxuP3GH+OrpvQW5vERdQQ1tXEJCI8NvO99y+KCXOrOB2lzalJVM=
+X-Received: by 2002:a25:374d:: with SMTP id e74mr35541070yba.343.1587569766048;
+ Wed, 22 Apr 2020 08:36:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <877dy7ker6.fsf@collabora.com>
+References: <20200422114429.0b1a6f1a3366bae5964f3e10@linaro.org>
+ <20200422115035.2f8d48843793d0d6f6724522@linaro.org> <CAK7LNAQL1ZkHKwODW2VYnpRw+y5Eg4abg+xCDa=PfQktHLnW_w@mail.gmail.com>
+In-Reply-To: <CAK7LNAQL1ZkHKwODW2VYnpRw+y5Eg4abg+xCDa=PfQktHLnW_w@mail.gmail.com>
+From:   Masami Hiramatsu <masami.hiramatsu@linaro.org>
+Date:   Thu, 23 Apr 2020 00:35:54 +0900
+Message-ID: <CAA93ih2rqCGEJT91iMQrEK-8BDNd_z_DP52OSF6Ps=HbUjTz4g@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] arm64: dts: uniphier: Add support for Akebi96
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Adrian,
+Hello Yamada-san,
 
-On Wed, Apr 22, 2020 at 01:15:41PM +0300, Adrian Ratiu wrote:
-> On Wed, 22 Apr 2020, Laurent Pinchart wrote:
-> > On Wed, Apr 22, 2020 at 03:58:33AM +0300, Laurent Pinchart wrote: 
-> >> On Tue, Apr 21, 2020 at 07:16:07PM +0300, Adrian Ratiu wrote: 
-> >>> This provides an example DT binding for the MIPI DSI host 
-> >>> controller present on the i.MX6 SoC based on Synopsis 
-> >>> DesignWare v1.01 IP.   Cc: Rob Herring <robh@kernel.org> Cc: 
-> >>> Neil Armstrong <narmstrong@baylibre.com> Cc: Fabio Estevam 
-> >>> <festevam@gmail.com> Cc: Laurent Pinchart 
-> >>> <laurent.pinchart@ideasonboard.com> Cc: 
-> >>> devicetree@vger.kernel.org Tested-by: Adrian Pop 
-> >>> <pop.adrian61@gmail.com> Tested-by: Arnaud Ferraris 
-> >>> <arnaud.ferraris@collabora.com> Signed-off-by: Sjoerd Simons 
-> >>> <sjoerd.simons@collabora.com> Signed-off-by: Martyn Welch 
-> >>> <martyn.welch@collabora.com> Signed-off-by: Adrian Ratiu 
-> >>> <adrian.ratiu@collabora.com> --- Changes since v6: 
-> >>>   - Added ref to the newly created snps,dw-mipi-dsi.yaml 
-> >>>   (Laurent) - Moved *-cells properties outside 
-> >>>   patternProperties (Laurent) - Removed the panel port 
-> >>>   documentation (Laurent) - Wrapped lines at 80 chars, typo 
-> >>>   fixes, sort includes (Laurent) 
-> >>>  Changes since v5: 
-> >>>   - Fixed missing reg warning (Fabio) - Updated dt-schema and 
-> >>>   fixed warnings (Rob) 
-> >>>  Changes since v4: 
-> >>>   - Fixed yaml binding to pass `make dt_binding_check 
-> >>>   dtbs_check` and addressed received binding feedback (Rob) 
-> >>>  Changes since v3: 
-> >>>   - Added commit message (Neil) - Converted to yaml format 
-> >>>   (Neil) - Minor dt node + driver fixes (Rob) - Added small 
-> >>>   panel example to the host controller binding 
-> >>>  Changes since v2: 
-> >>>   - Fixed commit tags (Emil) 
-> >>> --- 
-> >>>  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 135 
-> >>>  ++++++++++++++++++ 1 file changed, 135 insertions(+) create 
-> >>>  mode 100644 
-> >>>  Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml 
-> >>>  diff --git 
-> >>> a/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml 
-> >>> b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml 
-> >>> new file mode 100644 index 0000000000000..b73e3ae33a852 --- 
-> >>> /dev/null +++ 
-> >>> b/Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml 
-> >>> @@ -0,0 +1,135 @@ +# SPDX-License-Identifier: (GPL-2.0-only 
-> >>> OR BSD-2-Clause) +%YAML 1.2 +--- +$id: 
-> >>> http://devicetree.org/schemas/display/imx/fsl,mipi-dsi-imx6.yaml# 
-> >>> +$schema: http://devicetree.org/meta-schemas/core.yaml# + 
-> >>> +title: Freescale i.MX6 DW MIPI DSI Host Controller + 
-> >>> +maintainers: +  - Adrian Ratiu <adrian.ratiu@collabora.com> 
-> >>> + +description: | +  The i.MX6 DSI host controller is a 
-> >>> Synopsys DesignWare MIPI DSI v1.01 +  IP block with a 
-> >>> companion PHY IP. 
-> > 
-> > I forgot to mention, if there's a companion PHY, shouldn't it be 
-> > referenced from the DT bindings ? 
-> 
-> I don't think so, that description was copied verbatim from the 
-> imx6 ref manual IIRC, the physical layer is the same for MIPI DSI 
-> which does TX as for MIPI CSI which does RX, but looking at the 
-> ref manual and how drivers are written I don't think it's 
-> necessary.
+2020=E5=B9=B44=E6=9C=8823=E6=97=A5(=E6=9C=A8) 0:10 Masahiro Yamada <masahir=
+oy@kernel.org>:
+>
+> Hiramatsu-san
+>
+> On Wed, Apr 22, 2020 at 11:50 AM Masami Hiramatsu
+> <masami.hiramatsu@linaro.org> wrote:
+>
+> > +
+> > +&eth {
+> > +       status =3D "okay";
+> > +       phy-mode =3D "rgmii";
+> > +       pinctrl-0 =3D <&pinctrl_ether_rgmii>;
+>
+> These two lines are actually redundant because RGMII
+> is the default in uniphier-ld20.dtsi
+> (and uniphier-ld20-ref.dts skips them.)
+>
+> Did you intentionally make it verbose?
 
-Does that mean that the PHY is controlled through the registers
-specified by the reg property ? If so then this is fine.
+Oops, no, we don't need it. It's a legacy code (IIRC, there's a
+historical reason).
 
-> This might change if we wanted to unify the DSI and CSI drivers a 
-> bit, but considering the scope already associated with this patch 
-> series I'm a bit afraid to open a subject like that =)
 
-That's understandable :-)
+> > +&spi3 {
+> > +       status =3D "okay";
+> > +       #address-cells =3D <1>;
+> > +       #size-cells =3D <0>;
+>
+> Adding #address-cells and #size-sizes to a board DTS
+> is strange.
 
-> >>> +
-> >>> +  These DT bindings follow the Synopsys DW MIPI DSI bindings defined in
-> >>> +  Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt with
-> >>> +  the following device-specific properties.
-> >>> +
-> >>> +allOf:
-> >>> +  - $ref: ../bridge/snps,dw-mipi-dsi.yaml#
-> >>> +
-> >>> +properties:
-> >>> +  '#address-cells':
-> >>> +    const: 1
-> >>> +
-> >>> +  '#size-cells':
-> >>> +    const: 0
-> >>> +
-> >>> +  compatible:
-> >>> +    items:
-> >>> +      - const: fsl,imx6q-mipi-dsi
-> >>> +      - const: snps,dw-mipi-dsi
-> >>> +
-> >>> +  reg:
-> >>> +    maxItems: 1
-> >>> +
-> >>> +  interrupts:
-> >>> +    maxItems: 1
-> >>> +
-> >>> +  clocks:
-> >>> +    items:
-> >>> +      - description: Module Clock
-> >>> +      - description: DSI bus clock
-> >>> +
-> >>> +  clock-names:
-> >>> +    items:
-> >>> +      - const: ref
-> >>> +      - const: pclk
-> >>> +
-> >>> +  fsl,gpr:
-> >>> +    description:
-> >>> +      Phandle to the iomuxc-gpr region containing the multiplexer ctrl register.
-> >>> +    $ref: /schemas/types.yaml#/definitions/phandle
-> >>> +
-> >>> +  ports:
-> >>> +    type: object
-> >>> +    description: |
-> >>> +      A node containing DSI input & output port nodes with endpoint
-> >>> +      definitions as documented in
-> >>> +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> >>> +      Documentation/devicetree/bindings/graph.txt
-> >>> +    properties:
-> >>> +      port@0:
-> >>> +        type: object
-> >>> +        description:
-> >>> +          DSI input port node, connected to the ltdc rgb output port.
-> >>> +
-> >>> +      port@1:
-> >>> +        type: object
-> >>> +        description:
-> >>> +          RGB output port node, connected to a panel or a bridge input port.
-> >> 
-> >> Isn't it the other way around, doesn't the bridge take RGB input and
-> >> output DSI ? And to be precise, it's not about RGB, but about the input
-> >> being parallel interface (DSI will also carry RGB).
-> >> 
-> >> I would add
-> >> 
-> >>     required:
-> >>       - port@0
-> >>       - port@1
-> >> 
-> >>> +
-> >>> +additionalProperties: false
-> >>> +
-> >>> +patternProperties:
-> >>> +  "^panel@[0-3]$":
-> >>> +    type: object
-> >>> +
-> >>> +required:
-> >>> +  - "#address-cells"
-> >>> +  - "#size-cells"
-> >>> +  - compatible
-> >>> +  - reg
-> >>> +  - interrupts
-> >>> +  - clocks
-> >>> +  - clock-names
-> >>> +  - ports
-> >>> +
-> >>> +examples:
-> >>> +  - |+
-> >>> +    #include <dt-bindings/clock/imx6qdl-clock.h>
-> >>> +    #include <dt-bindings/gpio/gpio.h>
-> >>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >>> +
-> >>> +    dsi: dsi@21e0000 {
-> >>> +        #address-cells = <1>;
-> >>> +        #size-cells = <0>;
-> >>> +        compatible = "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi";
-> >>> +        reg = <0x021e0000 0x4000>;
-> >>> +        interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
-> >>> +        fsl,gpr = <&gpr>;
-> >>> +        clocks = <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
-> >>> +                 <&clks IMX6QDL_CLK_MIPI_IPG>;
-> >>> +        clock-names = "ref", "pclk";
-> >>> +
-> >>> +        ports {
-> >>> +            #address-cells = <1>;
-> >>> +            #size-cells = <0>;
-> >> 
-> >> port@0 is missing.
-> >> 
-> >>> +            port@1 {
-> >>> +                reg = <1>;
-> >>> +                dsi_out: endpoint {
-> >>> +                    remote-endpoint = <&panel_in>;
-> >>> +                };
-> >>> +            };
-> >>> +        };
-> >>> +
-> >>> +        panel@0 {
-> >>> +            compatible = "sharp,ls032b3sx01";
-> >>> +            reg = <0>;
-> >>> +            reset-gpios = <&gpio6 8 GPIO_ACTIVE_LOW>;
-> >>> +            ports {
-> >>> +                #address-cells = <1>;
-> >>> +                #size-cells = <0>;
-> >>> +                port@0 {
-> >>> +                    reg = <0>;
-> >>> +                    panel_in: endpoint {
-> >>> +                        remote-endpoint = <&dsi_out>;
-> >>> +                    };
-> >>> +                };
-> >>> +            };
-> >>> +        };
-> >>> +    };
-> >>> +
-> >>> +...
+Indeed.
 
--- 
-Regards,
+> I will apply this:
+> https://lore.kernel.org/patchwork/patch/1229497/
+> then delete the lines above.
 
-Laurent Pinchart
+OK, I'll update.
+
+Thank you,
+
+
+
+--=20
+Masami Hiramatsu
