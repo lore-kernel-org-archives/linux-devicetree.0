@@ -2,126 +2,97 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2391C5518F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 10:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F32C55189
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2C612084D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 10:33:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587551591;
-	bh=009fT8XnlNWgSGFjkqzi9WHS52wJSOjnMq5vvLMSftE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ggyBASdUj/BnHh4FP8FVz9HNvooP0fWGGEVqXzgoMIeweWis5QpP1Kbv2p4SpWseg
-	 xSLRBagBuvhwOxXcz1uWma4DeB4KpXkAS+MnElblhz5ITO0HEUkLnqdXnb5KcXPv4q
-	 913rwt0A3XfYYZsxV+CGUVMKYlI2uq9e+4Ujclms=
+	by mail.kernel.org (Postfix) with ESMTP id C154120656
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 10:34:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SU01xAPQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730478AbgDVKY7 (ORCPT
+        id S1730367AbgDVKed (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:24:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33420 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730476AbgDVKY5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:24:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E904F20776;
-        Wed, 22 Apr 2020 10:24:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587551096;
-        bh=009fT8XnlNWgSGFjkqzi9WHS52wJSOjnMq5vvLMSftE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BW/XRh63tRkDUUveaNk+ktq/cNenSZwyy5DsrHiqtYUnlCtJi65AckmFpfj8RZgWP
-         1rHRtOURAIz7HSjI0k7QVNXRZH81etA2pThcNCPcd5Lu8S/VvPfx8r3sOVBFgd0OKt
-         3hjn49duyA287M3WBAofMvrr1HGLeWXy0EyBSMEI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 098/166] dt-bindings: thermal: tsens: Fix nvmem-cell-names schema
-Date:   Wed, 22 Apr 2020 11:57:05 +0200
-Message-Id: <20200422095059.485243431@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200422095047.669225321@linuxfoundation.org>
-References: <20200422095047.669225321@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 22 Apr 2020 06:34:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35616 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730403AbgDVKYO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 06:24:14 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34506C03C1AA
+        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 03:24:13 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id x77so853752pfc.0
+        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 03:24:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=xkeWLnteJjG54BboMmCRycKnKz+ymn9qqeCn2SIVyPQ=;
+        b=SU01xAPQmFHWruDWFN1SqvstGsdj+QtEI2l+t4wN7c4jgMkL/L/wsL03ySzyuQIxdq
+         T0Ioo5gzkx8Vod0lKiA65OS5kWldrL8Q6G5FI9UlLcTmBDqbVhu478J6FU4I8FNL9FGY
+         /9DU9UBHZRgdxvLgcfDf2MTd1FBckvpItjbac=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=xkeWLnteJjG54BboMmCRycKnKz+ymn9qqeCn2SIVyPQ=;
+        b=WTH/GnXdnlguZQjhIa3cYtahymP9yKCDBsiZWmJPEimv6RQlJKeiI5DgQwVPmsmMxy
+         /vWM6F5J1NJRbH3uKErOii1+I9hhCNi+dRl8UKqQ5A8EpUunfhkkx0GpfcSDC8W7VuZs
+         MjVZ89c4ckoebOXTVv9AXbOn89DPTlDyhySsyDFs1O72TMNdUL6oo4530JyCF5/dSFm0
+         DnMt3K30pGAbH0jBBCyGzVSHJYkoqfSp2HhW6FEh7Wn/94X+/yduLK8iwYmPDYa5aO/t
+         CjAF2v1FxoNjRO1qZX8JbsLxgAB4w5onr1kI25R/zTYu/ob4CInSJpyDihbiqPgoIAPc
+         UGNg==
+X-Gm-Message-State: AGi0PuZLev5n5BF52wdK9OGhhYIgk+YN7NhU+vt6i8zbdEfBz1aYGpx8
+        8NwTRyp02fXIZEFhrs3kDNJSKw==
+X-Google-Smtp-Source: APiQypLBY8yUOpSkusa0a8k0gnufQC44Y4aGlSsuT2v9ocxchD8HZri/OWeKDQvYCLZNlWUEX5ugEA==
+X-Received: by 2002:a62:ed10:: with SMTP id u16mr26724966pfh.16.1587551052739;
+        Wed, 22 Apr 2020 03:24:12 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id a2sm5066746pja.44.2020.04.22.03.24.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 03:24:12 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200420220458.v2.2.I1976736b400a3b30e46efa47782248b86b3bc627@changeid>
+References: <20200421050622.8113-1-dianders@chromium.org> <20200420220458.v2.2.I1976736b400a3b30e46efa47782248b86b3bc627@changeid>
+Subject: Re: [PATCH v2 2/6] dt-bindings: display: Add hpd-gpios to panel-common bindings
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     jonas@kwiboo.se, jeffrey.l.hugo@gmail.com,
+        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        jernej.skrabec@siol.net, bjorn.andersson@linaro.org,
+        robdclark@chromium.org, Douglas Anderson <dianders@chromium.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org
+To:     Douglas Anderson <dianders@chromium.org>,
+        Laurent.pinchart@ideasonboard.com, a.hajda@samsung.com,
+        airlied@linux.ie, bgolaszewski@baylibre.com, daniel@ffwll.ch,
+        linus.walleij@linaro.org, narmstrong@baylibre.com,
+        robh+dt@kernel.org, spanda@codeaurora.org
+Date:   Wed, 22 Apr 2020 03:24:11 -0700
+Message-ID: <158755105124.159702.6095634958147138337@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+Quoting Douglas Anderson (2020-04-20 22:06:18)
+> In the cases where there is no connector in a system there's no great
+> place to put "hpd-gpios".  As per discussion [1] the best place to put
+> it is in the panel.  Add this to the device tree bindings.
+>=20
+> [1] https://lore.kernel.org/r/20200417180819.GE5861@pendragon.ideasonboar=
+d.com
+>=20
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
 
-[ Upstream commit b9589def9f9af93d9d4c5969c9a6c166f070e36e ]
-
-There's a typo 'nvmem-cells-names' in the schema which means the correct
-'nvmem-cell-names' in the examples are not checked. The possible values
-are wrong too both in that the 2nd entry is not specified correctly and the
-values are just wrong based on the dts files in the kernel.
-
-Fixes: a877e768f655 ("dt-bindings: thermal: tsens: Convert over to a yaml schema")
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../devicetree/bindings/thermal/qcom-tsens.yaml          | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-index eef13b9446a87..a4df53228122a 100644
---- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-+++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-@@ -53,13 +53,12 @@ properties:
-     description:
-       Reference to an nvmem node for the calibration data
- 
--  nvmem-cells-names:
-+  nvmem-cell-names:
-     minItems: 1
-     maxItems: 2
-     items:
--      - enum:
--        - caldata
--        - calsel
-+      - const: calib
-+      - const: calib_sel
- 
-   "#qcom,sensors":
-     allOf:
-@@ -125,7 +124,7 @@ examples:
-                  <0x4a8000 0x1000>; /* SROT */
- 
-            nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
--           nvmem-cell-names = "caldata", "calsel";
-+           nvmem-cell-names = "calib", "calib_sel";
- 
-            interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
-            interrupt-names = "uplow";
--- 
-2.20.1
-
-
-
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
