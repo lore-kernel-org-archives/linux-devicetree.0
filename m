@@ -2,114 +2,97 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E905AC55189
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 00:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E805C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 00:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C576720747
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 00:01:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EMDhHEp+"
+	by mail.kernel.org (Postfix) with ESMTP id 1902720575
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 00:22:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587514941;
+	bh=c+XFPyiH5BeEGClHqseQljbOxUU8e9tNUBpvWAMh/7s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XmXk0185xYvG2mTGwwjxvPteOiYnGoGHFdvID42uZZn1RYGOF8stLbzCJCzFaWrLi
+	 CREcJzTY3ohRyfWhHkRWsA+jsZZ+ZV3AzBSH6XYcH8AqtJo+bt5m3Z7HJ6cSVAyc1E
+	 yio5wn3rUO1PVK0WRaaqHH4h8YTsH6wN07nL07HY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgDVABj (ORCPT
+        id S1726453AbgDVAWU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Apr 2020 20:01:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbgDVABa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Apr 2020 20:01:30 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 165A2C0610D6;
-        Tue, 21 Apr 2020 17:01:30 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id l19so344050lje.10;
-        Tue, 21 Apr 2020 17:01:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LSop2fRHEeN0n5T5a31s3xV0wqW+LOYJC5cXPalZm5Q=;
-        b=EMDhHEp+Peft1yloUd3elD/G40QVs3jZd3mgFoRd3Km2h2zIlvmWlg+W0kM1HzRs7o
-         NbX3rqyOTbUkjEse+EDig69a4jrDMzk/+HbPC2rSRI5Hb0W4rYc6VTIwp6cZN7YYOqzI
-         fPGRwU7lz5jz5Yb9Wv45DnvRtQrSO6Es+onZiait9dei1BnVPBoUh45IpRa7fE1SYiOZ
-         wOos1/KTXivIIQTAA6t3KYj63juTa1dd0CnOPMVTh0jzJfQSi3BUNew/GOwhwj2IxSvD
-         DSYtfvhbpuTk6I5L6GxJp0fs8TArErPEhRyHVPO2z0HgQ30yOogSYHUvfoJf7N0DEdUf
-         XZBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LSop2fRHEeN0n5T5a31s3xV0wqW+LOYJC5cXPalZm5Q=;
-        b=eb4PrlRIq+Kxw3iLTlKDtlD+nt1C24ma/GR3aLQ7Pvyao+LlFq//GGlEvKGnWCr6mj
-         FYu67Jw0AKOAJWk1L2UxCjhrFJfGpSVBHVF7SW0nLJ+8mD/tl0RpVAOrNdRSOP8XBGLO
-         mwyyNFXpARZFCkwov/Hx7ivCefRJWvUyoXkHFQC451g3R1DA+BJyJJQOLbeCBzMWnl1v
-         rC4a3EjfrTY77Carag2hgrNFC4PrdbJXgLCgdrqnONkmq/oaIntQOdD044tAj8+e0dn0
-         g9eX51CoYIBbLyK5+oqI0BtYWIE/7T63qhVt1b8XxRe6VNMpjOrSg4fSfbgYJz7RsM8n
-         HaTw==
-X-Gm-Message-State: AGi0Pub3fxrOAjieHK4ZzA0ab8yYZpU83+f8WSWzrpzcpfuR4IP9Oxct
-        vVtpmp4YERGmq1/m6jIQ7jI=
-X-Google-Smtp-Source: APiQypLXDoczTX6/WPl5z1ozxvqYP2lA45zK81XyB/lu7FbyIfB6KBCL8oai+zC+XnvsgD8hHuNEQg==
-X-Received: by 2002:a2e:580e:: with SMTP id m14mr15105060ljb.78.1587513688565;
-        Tue, 21 Apr 2020 17:01:28 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id y9sm2933425ljm.11.2020.04.21.17.01.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2020 17:01:28 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        =?UTF-8?q?Pedro=20=C3=82ngelo?= <pangelo@void.io>,
-        Matt Merhar <mattmerhar@protonmail.com>
-Cc:     linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v6 5/6] dt-bindings: ARM: tegra: Add ASUS Google Nexus 7
-Date:   Wed, 22 Apr 2020 02:59:42 +0300
-Message-Id: <20200421235943.13627-6-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200421235943.13627-1-digetx@gmail.com>
-References: <20200421235943.13627-1-digetx@gmail.com>
+        Tue, 21 Apr 2020 20:22:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35912 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbgDVAWU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Apr 2020 20:22:20 -0400
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 931D720575;
+        Wed, 22 Apr 2020 00:22:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587514939;
+        bh=c+XFPyiH5BeEGClHqseQljbOxUU8e9tNUBpvWAMh/7s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Ht1cZBtsU4ZzklSV5cRr5Qx6XaFQ4W5lxRDq0/8EF2vd2jglMQT6aeg5HlTr+Y+cg
+         GvXxh4r2LskTeGgpwJ5Sx07ICokd+2snluTxFrmyUsyvTzXD+4Xjj4ugclehyDp9OU
+         Ueeuh3pweyX12GUi3BhHMzulqdR1JtYelrt3Dkgg=
+Received: by mail-qk1-f174.google.com with SMTP id j4so697888qkc.11;
+        Tue, 21 Apr 2020 17:22:19 -0700 (PDT)
+X-Gm-Message-State: AGi0Pua5yrPq8jSWRo1KeGkfpSOGnjx4TtwIm4z9ri/o474X0y7HKmFs
+        RaoNBRKDqPSXQNk/1utSSxW1XrAa7To8eXnEUw==
+X-Google-Smtp-Source: APiQypJMvsjKJFcDSNI66nc6nxJLAcqRUC9yc5h1UoxDLBk/UtHLjSXOOVV0+6UfjqW5zRZ3zD4bGr0zEi0q5AN+k1A=
+X-Received: by 2002:a37:c43:: with SMTP id 64mr22162895qkm.119.1587514938757;
+ Tue, 21 Apr 2020 17:22:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200421212004.6146-1-robh@kernel.org> <20200421233737.GH5983@pendragon.ideasonboard.com>
+In-Reply-To: <20200421233737.GH5983@pendragon.ideasonboard.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 21 Apr 2020 19:22:07 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJkp3hQFVJRHCix_oEP=ukPgL1Ykci7E4cScrz7x1m85g@mail.gmail.com>
+Message-ID: <CAL_JsqJkp3hQFVJRHCix_oEP=ukPgL1Ykci7E4cScrz7x1m85g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: Fix command line length limit calling dt-mk-schema
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a binding for the Tegra30-based ASUS Google Nexus 7 tablet device.
+On Tue, Apr 21, 2020 at 6:37 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Rob,
+>
+> Thank you for the patch.
+>
+> On Tue, Apr 21, 2020 at 04:20:03PM -0500, Rob Herring wrote:
+> > As the number of schemas has increased, we're starting to hit the error
+> > "execvp: /bin/sh: Argument list too long". This is due to passing all the
+> > schema files on the command line to dt-mk-schema. It currently is only
+> > with out of tree builds and is intermittent depending on the file path
+> > lengths.
+> >
+> > Commit 2ba06cd8565b ("kbuild: Always validate DT binding examples") made
+> > hitting this proplem more likely since the example validation now always
+> > gets the full list of schemas.
+> >
+> > Fix this by putting the schema file list into a temp file and using xargs.
+> >
+> > Reported-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Cc: Masahiro Yamada <masahiroy@kernel.org>
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+>
+> Quite a bit slower than v5.6 when passing DT_SCHEMA_FILES, but
+> reasonable, and working now :-)
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- Documentation/devicetree/bindings/arm/tegra.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
+That's expected. It's validating with ~700 vs. 1 schema. The problem
+was folks only checking with DT_SCHEMA_FILES set, but a new schema can
+affect another example or existing schemas (including core schema) may
+fail on the new example.
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra.yaml b/Documentation/devicetree/bindings/arm/tegra.yaml
-index 7fd0b66c69b2..fb3bbf7a5fb4 100644
---- a/Documentation/devicetree/bindings/arm/tegra.yaml
-+++ b/Documentation/devicetree/bindings/arm/tegra.yaml
-@@ -62,6 +62,13 @@ properties:
-               - toradex,colibri_t30-eval-v3
-           - const: toradex,colibri_t30
-           - const: nvidia,tegra30
-+      - items:
-+          - const: asus,grouper
-+          - const: nvidia,tegra30
-+      - items:
-+          - const: asus,tilapia
-+          - const: asus,grouper
-+          - const: nvidia,tegra30
-       - items:
-           - enum:
-               - nvidia,dalmore
--- 
-2.26.0
-
+Rob
