@@ -2,68 +2,111 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95159C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 13:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F332EC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 14:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 737B22073A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 13:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E6F20787
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 14:08:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="39uh4IYx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E/0pd5ed"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgDVNtf (ORCPT
+        id S1726602AbgDVOIi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 09:49:35 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:56360 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbgDVNtf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Apr 2020 09:49:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Xsc2UCHP/bV75vanRUlXAA/m2cJnJh00qNoPF97HRqY=; b=39uh4IYxufmxsYJIUKaZlK17cx
-        0LVvqkAEoAMQFsba/IW81vxR5zBu4xaeBG0ZnrbOHz8dh+6hWDyi1UMA26DB2xRTBCXRjf/As4stm
-        ELLsjKkJh6sgdf0Et7ar8tSMORcxIm/YCzaCriGVN0TPKDGKIw8PMwIb6JOCLU70CI4Q=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jRFkl-004D9b-Ll; Wed, 22 Apr 2020 15:49:27 +0200
-Date:   Wed, 22 Apr 2020 15:49:27 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Wed, 22 Apr 2020 10:08:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42480 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbgDVOIh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 10:08:37 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BF8AC03C1A9;
+        Wed, 22 Apr 2020 07:08:36 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id x18so2571158wrq.2;
+        Wed, 22 Apr 2020 07:08:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5seySNK4hDDxpkyp20i2oYy5PSF73LNYovBB3BodsdY=;
+        b=E/0pd5edymyvaj47xBUYZpOZ4bLjv2UW1STlse0uImx7/yQtKEdpnZUgRogcjvia+7
+         HSheHhSZNHyf6KktPA/breNZnh48Jk9SR1SGCUEfRSlAWDLXCIbOR0GNzje3mnFEMQI8
+         3IMFjoa10qcper65UGJIsf1+eD4NBDyMjoNVNvoG6oxXrE69qnH4AC2Ihu7W/qlId/hv
+         h1aRY5t55tqecKYj5wC4wRLHHs+GxJu0R6g1vIhtCvvIm5rjPDwbqd09n7KbaAVmfbp2
+         wOhDHKo2SYs2LIyBne71hUh5xlaMvA/JyVgOAI9xlEamQIysIriPVWGwu9xp9aqxxXH/
+         akGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5seySNK4hDDxpkyp20i2oYy5PSF73LNYovBB3BodsdY=;
+        b=LHO1FEerU9bVJD9ttSluoKazGyFymanO5kB68xoOSbqVmhBpjCCJABsxMXgB0GqdvE
+         YDWQfH2Q0ckxCzflbJeDB661wCey3yE2437Sz8Qjoq2A2lpW2Z5cj2QMEvHre8t30wXa
+         4YbpHespM17rEko9C9Ij2hW2r1Gd8XQAwJau9T3uBp0k6qBF5H23mX/tEWaVmY2LmXpS
+         m1KSn7oTqHaHEgnui+0ivFtI+QpK+ZQsQODK3V95pNGqSQTaMX5ofyl6rMQSN8mYJJ/v
+         GTVQPkTHyiI32LfkOsbgkVet8/KuZC+sNSfgwemxBchOSCce4lPvnOtlKpgXbDKzESq/
+         OVRg==
+X-Gm-Message-State: AGi0PuZVUgcrtyDOKP2AVWsVSEmjeYNR090QBk+sLUGmlmYh9v/G46rX
+        J2YAaaqz3xacwpKGutHtLSc=
+X-Google-Smtp-Source: APiQypJ0a6P5BC4d0K3z0Zq1NGFX9e8zmK21/U1fXuAlAJYYzL+Pc8udhC+MUPVQHOhmt99FJHrxcw==
+X-Received: by 2002:a05:6000:14c:: with SMTP id r12mr29022424wrx.62.1587564514700;
+        Wed, 22 Apr 2020 07:08:34 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host36-18-dynamic.45-213-r.retail.telecomitalia.it. [213.45.18.36])
+        by smtp.googlemail.com with ESMTPSA id a9sm7526790wmm.38.2020.04.22.07.08.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 07:08:33 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Ilia Lin <ilia.lin@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next v5 1/4] dt-bindings: net: phy: Add support for
- NXP TJA11xx
-Message-ID: <20200422134927.GE974925@lunn.ch>
-References: <20200422092456.24281-1-o.rempel@pengutronix.de>
- <20200422092456.24281-2-o.rempel@pengutronix.de>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sricharan R <sricharan@codeaurora.org>,
+        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] cpufreq: qcom: fix  compatibility issue with old binding
+Date:   Wed, 22 Apr 2020 16:08:26 +0200
+Message-Id: <20200422140827.1726-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422092456.24281-2-o.rempel@pengutronix.de>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 11:24:53AM +0200, Oleksij Rempel wrote:
-> Document the NXP TJA11xx PHY bindings.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Binding has changed from operating-points-v2-kryo-cpu to
+operating-points-v2-qcom-cpu. Also check for old binding in driver
+probe.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Fixes: a8811ec764f9 cpufreq: qcom: Add support for krait based socs
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ drivers/cpufreq/qcom-cpufreq-nvmem.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-    Andrew
+diff --git a/drivers/cpufreq/qcom-cpufreq-nvmem.c b/drivers/cpufreq/qcom-cpufreq-nvmem.c
+index a1b8238872a2..8a0411efc79a 100644
+--- a/drivers/cpufreq/qcom-cpufreq-nvmem.c
++++ b/drivers/cpufreq/qcom-cpufreq-nvmem.c
+@@ -278,6 +278,10 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
+ 		return -ENOENT;
+ 
+ 	ret = of_device_is_compatible(np, "operating-points-v2-qcom-cpu");
++	if (!ret)
++		ret = of_device_is_compatible(np,
++					      "operating-points-v2-kyro-cpu");
++
+ 	if (!ret) {
+ 		of_node_put(np);
+ 		return -ENOENT;
+-- 
+2.25.1
+
