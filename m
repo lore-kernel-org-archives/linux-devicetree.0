@@ -2,136 +2,110 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E200EC54FCB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 15:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81829C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 15:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACAD820738
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 15:10:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587568218;
-	bh=QKcSB5LvC4tUOqXN/QdvmSQqdPWnhe8+w87tDDLSGis=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Fe5YHzzllbs31Mw01I3xTbVQGzDaX70u82kVECjAyRESTsdp6KyJ9+8HTOabNpk2E
-	 tfGZNZVXNe8BbRqFl4fBhAnQKf3+CN4JgHV0ALvhRVWy+BawmQHQ+V4P+aoj26S0Jc
-	 uOmEBseeVnLg9XJigqq8m9cw9a68lCgehWV2gEa0=
+	by mail.kernel.org (Postfix) with ESMTP id 5E87420738
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 15:10:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="ioOI8Qk0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbgDVPKS (ORCPT
+        id S1726090AbgDVPKf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 11:10:18 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:63233 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbgDVPKR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 11:10:17 -0400
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 03MF9ZiB011838
-        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 00:09:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 03MF9ZiB011838
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1587568176;
-        bh=RCn7w3WgC5BMCa/+cr1sEac2jwfwrjh2RW9Mm+Q693Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mA6fXO78ilSmK97Vz+SxBCz+LlTi7qyS0iGBittuHhqnZYylhNKhbA5EqUsxs/UJT
-         Vj3nZVX7n+wUT6gwK7NAJjEx0ynYp/aFtWNNF4qqx9CkXatjM/ldzVYVYIGmj72e3v
-         XwvQcFZB7yFZg3WEPOkVesDAS4P4MepzJ13GQbYtjVxeJR+iuhqv6SkrLE0eF/BwJ/
-         r+Ge/00iBCkCVcrbbYQNF/UcHqIUKEkNyIbevgEtPyRpQtVK9mOf5rl0ACgsXpZoe1
-         vKwERWTv8tJrJ/QQvwMPVP7o82JE87RI1DFDDczSL4W8OJKr3iKnUPgPtmAw8260m+
-         EVVT0cOyjZkJw==
-X-Nifty-SrcIP: [209.85.222.172]
-Received: by mail-qk1-f172.google.com with SMTP id l78so2685455qke.7
-        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 08:09:36 -0700 (PDT)
-X-Gm-Message-State: AGi0PuayqcLWJNkPkDPyYuUd9CNcl0UNz6ttOugxnh0T1an9GhfHrtuB
-        NGtC2OakszTUoLQtlhL8dsBCeu+wvgOLmRXzWR4=
-X-Google-Smtp-Source: APiQypKNE3J/ixPyBgoZQOom5KHmUxkSBQ2XEBwHpoVjaxblJiU39sy7AZcuyhpAMZpdTnF1iWiw69Rc48UVtPfQ8qo=
-X-Received: by 2002:a37:9105:: with SMTP id t5mr27150650qkd.202.1587568174946;
- Wed, 22 Apr 2020 08:09:34 -0700 (PDT)
+        Wed, 22 Apr 2020 11:10:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbgDVPKe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 11:10:34 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56082C03C1AA
+        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 08:10:34 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id b11so2825201wrs.6
+        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 08:10:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6MfGdNbZJAtx4H50hH+DJeAeTdpR6Yb4aC2XJdjmZcs=;
+        b=ioOI8Qk02luRJQZNiFXlin0DEScq6GZWagj2tKS5PCDSEhMedbS13Q4GNVvzdo2vy4
+         DZwFDXZ7sgv6C1VQ1pPCh63UL1VIydQ8FZLGh4iO0qj5SUeykL+uxy36VcPptq1QxJFu
+         H8Bqx688cpISC/FaFWDhhLMCGttqs8YXW0oS79uH2Kfn3Qe2JHUqyDOqIaa05yAR3rAh
+         vwdYYk5qN4Da9GCsLoRneIqq9QxqcpnFYInTzYrwEKLpvVRLZOyH9fdYQ6/khF3tnmUl
+         y+cteCPFRB4DlyyrNd+165c8hOI7XfrBAo3g0Q7csVGy9ZuRYYxJltoS4WEXR0bP6qjs
+         gJDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6MfGdNbZJAtx4H50hH+DJeAeTdpR6Yb4aC2XJdjmZcs=;
+        b=WmcrfVfshkq2l2B01o7C6Df5Zo0pIXGmiIPTzty/J1NLysLDdTMvYcvGj/uIEsd9zC
+         YtD3pSsYi/TcpI20zGJUkf2JDCU7HJ4UR9iLcmMq3kaPuP4lYu6W1rJPJIEpnG/SOrh0
+         o1Bof977lHISx7t2afGlT09nz/TqAVNW9HjAjZgSt6HOn6t25wBjJEErNur8lTgx4Oan
+         wC9rs2GSI+7nwt0NDH7pczfKHi1f7xdIlaSP2v5QlhY3p8J6/R7BiH3e0EcNl4nR8dtd
+         KSZuo9LQsjqg3Rt4YAIkKFcfWJl7YVylOpTrDsv2hAlvrSzPkCBBfUs0D3Ozoo/6PSsH
+         c1tg==
+X-Gm-Message-State: AGi0PuZEHfNF/GxcmKYWaOKjZIhFu8qfrYo58vo1ImfhBbX68gocRryT
+        ziat4PT9MHmiakkHM41KwbKlVQ==
+X-Google-Smtp-Source: APiQypJxOab/iAg7Da5ViwCTxFBi4v/oDkYFV5ylPpVXFYWtYN+0CYNdP05BuGEA0h9tODKNKecFxw==
+X-Received: by 2002:a5d:4dd1:: with SMTP id f17mr28911341wru.383.1587568233067;
+        Wed, 22 Apr 2020 08:10:33 -0700 (PDT)
+Received: from localhost ([188.252.226.236])
+        by smtp.gmail.com with ESMTPSA id s14sm7901194wmh.18.2020.04.22.08.10.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 08:10:32 -0700 (PDT)
+From:   Jakov Petrina <jakov.petrina@sartura.hr>
+To:     jason@lakedaemon.net
+Cc:     gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
+        vladimir.vid@sartura.hr, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jakov Petrina <jakov.petrina@sartura.hr>
+Subject: [PATCH] arm: dts: uDPU: switch PHY operation mode to 2500base-x
+Date:   Wed, 22 Apr 2020 17:09:15 +0200
+Message-Id: <20200422150915.3355073-1-jakov.petrina@sartura.hr>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20200422114429.0b1a6f1a3366bae5964f3e10@linaro.org> <20200422115035.2f8d48843793d0d6f6724522@linaro.org>
-In-Reply-To: <20200422115035.2f8d48843793d0d6f6724522@linaro.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 23 Apr 2020 00:08:58 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQL1ZkHKwODW2VYnpRw+y5Eg4abg+xCDa=PfQktHLnW_w@mail.gmail.com>
-Message-ID: <CAK7LNAQL1ZkHKwODW2VYnpRw+y5Eg4abg+xCDa=PfQktHLnW_w@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] arm64: dts: uniphier: Add support for Akebi96
-To:     Masami Hiramatsu <masami.hiramatsu@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>, DTML <devicetree@vger.kernel.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hiramatsu-san
+This resolves issues with certain SPF modules.
 
-On Wed, Apr 22, 2020 at 11:50 AM Masami Hiramatsu
-<masami.hiramatsu@linaro.org> wrote:
+Signed-off-by: Jakov Petrina <jakov.petrina@sartura.hr>
+Signed-off-by: Vladimir Vid <vladimir.vid@sartura.hr>
+---
+ arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> +
-> +&eth {
-> +       status = "okay";
-> +       phy-mode = "rgmii";
-> +       pinctrl-0 = <&pinctrl_ether_rgmii>;
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
+index 7eb6c1796cef..b6e2a9c68b2a 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
++++ b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
+@@ -144,7 +144,7 @@ lm75@49 {
+ };
+ 
+ &eth0 {
+-	phy-mode = "sgmii";
++	phy-mode = "2500base-x";
+ 	status = "okay";
+ 	managed = "in-band-status";
+ 	phys = <&comphy1 0>;
+@@ -152,7 +152,7 @@ &eth0 {
+ };
+ 
+ &eth1 {
+-	phy-mode = "sgmii";
++	phy-mode = "2500base-x";
+ 	status = "okay";
+ 	managed = "in-band-status";
+ 	phys = <&comphy0 1>;
+-- 
+2.24.1
 
-These two lines are actually redundant because RGMII
-is the default in uniphier-ld20.dtsi
-(and uniphier-ld20-ref.dts skips them.)
-
-Did you intentionally make it verbose?
-
-
-
-
-> +       phy-handle = <&ethphy>;
-> +};
-> +
-> +&mdio {
-> +       ethphy: ethphy@0 {
-> +               reg = <0>;
-> +       };
-> +};
-> +
-> +&usb {
-> +       status = "okay";
-> +};
-> +
-> +&pcie {
-> +       status = "okay";
-> +};
-> +
-> +&i2c0 {
-> +       /* LS connector I2C0 */
-> +       status = "okay";
-> +};
-> +
-> +&i2c1 {
-> +       /* LS connector I2C1 */
-> +       status = "okay";
-> +};
-> +
-> +&spi3 {
-> +       status = "okay";
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-
-Adding #address-cells and #size-sizes to a board DTS
-is strange.
-
-I will apply this:
-https://lore.kernel.org/patchwork/patch/1229497/
-then delete the lines above.
-
-
-
-
---
-Best Regards
-
-
-Masahiro Yamada
