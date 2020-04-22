@@ -2,157 +2,145 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4630DC5518C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 16:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E25E4C5518B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 16:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20D5B20774
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 16:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19E72098B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 16:09:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="T49hmSMs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Z92zmf5z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgDVQEy (ORCPT
+        id S1726916AbgDVQJZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 12:04:54 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:41086 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726750AbgDVQEm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Apr 2020 12:04:42 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 38DB84A0B4;
-        Wed, 22 Apr 2020 16:04:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:x-mailer:message-id:date:date:subject
-        :subject:from:from:received:received:received; s=mta-01; t=
-        1587571477; x=1589385878; bh=V1ItQ94tgCt4bYGsnfXpx+j3WI+zxWO6ZLI
-        jBknDkTU=; b=T49hmSMsdF+aH/wG/nm4+cftyGmm7Zodnu9uokXcCjjhjpKdzv5
-        r16zHSjmKyjtY5RFvIYTfutJRXGViUMsWxHgvfQ9DuwuiDTx9/n6DTiXfznXXaHN
-        33JRHvYOG54xx3UpuKGnB+WkZgaf0LJBswO2sgQRU0RRLsRRH5XMccbA=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id pqDJHobbVXim; Wed, 22 Apr 2020 19:04:37 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id E03004A0B0;
-        Wed, 22 Apr 2020 19:04:36 +0300 (MSK)
-Received: from localhost.dev.yadro.com (10.199.3.42) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Wed, 22 Apr 2020 19:04:37 +0300
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Wed, 22 Apr 2020 12:09:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgDVQJY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 12:09:24 -0400
+Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBBE2C03C1A9;
+        Wed, 22 Apr 2020 09:09:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587571762;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=ceaM0Q57EWu8SAKxL8w74OvIguml9sO5tkQvRprE6B8=;
+        b=Z92zmf5zc5DAwK/4sqYPnPboFccD1cImi6PPOfixec3c/E69kLkMo3qtjNS5JkQh9s
+        RHOnVQnUSzwgID+0WyNm9hsbTcUw1JMGhOmyY1sfMqCrEGQ+n4zm396nzyfHmbU1wPTu
+        vHG8La6UEk+wavIXlNHebRDWldJKTxVdcrO/QJpTkw7Be+O2DwrcnpmSIHoFqg0h1Wzm
+        TB/0Eetbzh9TOHDDy2wNkKXVgf0dc/ur1esrCeOIfyta9SSPQc/qWC7PcgyMqVpZcjAP
+        SR0vj8kipr2LX0Dvx0srUmXJaZmqqabdNUDZRDxLNOs8ckxJ4FkoExkQTh0LskpP1Zw+
+        3W/g==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmMiw43tskc="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
+        with ESMTPSA id R0acebw3MG923NL
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Wed, 22 Apr 2020 18:09:02 +0200 (CEST)
+Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200422151328.2oyqz7gqkbunmd6o@gilmour.lan>
+Date:   Wed, 22 Apr 2020 18:09:01 +0200
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Philipp Rossak <embed3d@gmail.com>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v11 1/2] iio: proximity: provide device tree binding document
-Date:   Wed, 22 Apr 2020 19:05:08 +0300
-Message-ID: <20200422160509.7117-2-i.mikhaylov@yadro.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200422160509.7117-1-i.mikhaylov@yadro.com>
-References: <20200422160509.7117-1-i.mikhaylov@yadro.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.199.3.42]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
-To:     unlisted-recipients:; (no To-header on input)
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
+        linux-mips@vger.kernel.org,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <07923B6C-4CCD-4B81-A98F-E19C43412A89@goldelico.com>
+References: <20200415130233.rgn7xrtwqicptke2@gilmour.lan> <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com> <10969e64-fe1f-d692-4984-4ba916bd2161@gmail.com> <20200420073842.nx4xb3zqvu23arkc@gilmour.lan> <b5a06c19-7a3e-bcb8-5ae3-76901b9c6c35@gmail.com> <20200421112129.zjmkmzo3aftksgka@gilmour.lan> <20200421141543.GU37466@atomide.com> <D9D4D057-A73D-485F-898D-5C05E89C16B7@goldelico.com> <20200422065859.quy6ane5v7vsy5tf@gilmour.lan> <1AA57A0C-48E6-49BB-BB9A-2AAFFB371BCD@goldelico.com> <20200422151328.2oyqz7gqkbunmd6o@gilmour.lan>
+To:     Maxime Ripard <maxime@cerno.tech>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Mostly standard i2c driver with some additional led-current option
-for vcnl3020.
+Hi Maxime,
 
-Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
----
- .../bindings/iio/proximity/vcnl3020.yaml      | 64 +++++++++++++++++++
- 1 file changed, 64 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+> Am 22.04.2020 um 17:13 schrieb Maxime Ripard <maxime@cerno.tech>:
+>=20
+> On Wed, Apr 22, 2020 at 09:10:57AM +0200, H. Nikolaus Schaller wrote:
+>>> Am 22.04.2020 um 08:58 schrieb Maxime Ripard <maxime@cerno.tech>:
+>>>>=20
+>>>> It also allows to handle different number of clocks (A31 seems to
+>>>> need 4, Samsung, A83 and JZ4780 one) without changing the sgx =
+bindings
+>>>> or making big lists of conditionals. This variance would be handled
+>>>> outside the sgx core bindings and driver.
+>>>=20
+>>> I disagree. Every other GPU binding and driver is handling that just =
+fine, and
+>>> the SGX is not special in any case here.
+>>=20
+>> Can you please better explain this? With example or a description
+>> or a proposal?
+>=20
+> I can't, I don't have any knowledge about this GPU.
 
-diff --git a/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
-new file mode 100644
-index 000000000000..ac47770609d2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
-@@ -0,0 +1,64 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/proximity/vcnl3020.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Integrated Proximity Sensor With Infrared Emitter
-+
-+maintainers:
-+  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
-+
-+description: |
-+  The VCNL3020 is a fully integrated proximity sensor. Fully integrated means
-+  that the infrared emitter is included in the package. It has 16-bit
-+  resolution. It includes a signal processing IC and features standard I2C
-+  communication interface. It features an interrupt function.
-+
-+  Specifications about the devices can be found at:
-+  https://www.vishay.com/docs/84150/vcnl3020.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - vishay,vcnl3020
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  vdd-supply:
-+    description: Regulator that provides power to the sensor
-+
-+  vddio-supply:
-+    description: Regulator that provides power to the bus
-+
-+  vishay,led-current-microamp:
-+    description:
-+      IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0 mA,
-+      1 = 10 mA, 20 = 200 mA. LED Current is limited to 200 mA for values
-+      higher than decimal 20.
-+    enum: [0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000,
-+          100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000,
-+          180000, 190000, 200000]
-+    default: 20000
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c {
-+
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        proximity@13 {
-+              compatible = "vishay,vcnl3020";
-+              reg = <0x13>;
-+              vishay,led-current-microamp = <200000>;
-+        };
-+    };
--- 
-2.21.1
+Hm. Now I am fully puzzled.
+You have no knowledge about this GPU but disagree with our proposal?
+Is it just gut feeling?
+
+Anyways, we need to find a solution. Together.
+
+>=20
+>> I simply do not have your experience with "every other GPU" as you =
+have.
+>> And I admit that I can't read from your statement what we should do
+>> to bring this topic forward.
+>>=20
+>> So please make a proposal how it should be in your view.
+>=20
+> If you need some inspiration, I guess you could look at the mali and =
+vivante
+> bindings once you have an idea of what the GPU needs across the SoCs =
+it's
+> integrated in.
+
+Well, I do not need inspiration, we need to come to an agreement about
+img,pvrsgx.yaml and we need some maintainer to finally pick it up.
+
+I wonder how we can come to this stage.
+
+If I look at vivante,gc.yaml or arm,mali-utgard.yaml I don't
+see big differences to what we propose and those I see seem to come
+from technical differences between sgx, vivante, mali etc. So there
+is no single scheme that fits all different gpu types.
+
+One thing we can learn is that "core" seems to be a de facto standard=20
+for the core clock-name. An alternative "gpu" is used by =
+nvidia,gk20a.txt.
+
+BR and thanks,
+Nikolaus
 
