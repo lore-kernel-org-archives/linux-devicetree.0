@@ -2,134 +2,154 @@ Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C85C55189
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 11:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAA3C55185
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 11:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A93FE2076E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 11:03:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587553386;
-	bh=fTbTECVBN+Kz09FDYc7YbldgvRd8WnH3neoB4D6wj34=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=mlXvFZc35+6pZ1WvpIxEuf1ysP9t9ZAEjqbqPEMtztumMC4bxit9Z0m2SXbixFqa8
-	 184FuH7K9fuS9ELNyDYjqK0Q8bcCCPOzq7G0IsHv3MELlgMl132keoQfBFCuP/7MvW
-	 vrrfAer0CyVxxyAQVEQe2Rr/9maAXLpKjH/IiLGg=
+	by mail.kernel.org (Postfix) with ESMTP id 967C120774
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 11:10:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oDW7AMfF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbgDVKAN (ORCPT
+        id S1727077AbgDVLKY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 06:00:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726590AbgDVKAD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:00:03 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CF0320776;
-        Wed, 22 Apr 2020 10:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587549602;
-        bh=fTbTECVBN+Kz09FDYc7YbldgvRd8WnH3neoB4D6wj34=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=CyXnhtVQc/tjmkDRIYakYjCI5CAGw3rGlNL21QcC8sdhycajuvegJUEGK6GEUDnEz
-         te+rOS0eVTHZKW4ZCrTH3neUWbLJqt2rMAOOmJGQvCrt1ID0sBcQxwAZPtGxFb6+1t
-         LEZr/4pkNDHM8aSZQ3K75+O1a+/FaU4LRlcqPAy8=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 22 Apr 2020 07:10:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726121AbgDVLKW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Apr 2020 07:10:22 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2310C03C1A9
+        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 04:10:21 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j2so1875231wrs.9
+        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 04:10:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7f32msqOiQc0JpLw4MsEw0QrRZ2lpHCE6FKLkalbvhU=;
+        b=oDW7AMfFyPLs3g/zpMq2viBMk8aiY9eT4ASTGtRNfZ/GNURtr5HFv+DKOuGmhURwNx
+         GR6EDrdL3h4lx7VJpQZEeHiweD8WchR/17GnC0HM9nrLRMwVFA6HY4kuQq53cqoiAL53
+         mDkjEPJkQq9P+x04dN36TjDnEUEy9xVaKEnL/SXcddRNRpjwunVNbITSolUIRvdtSCRI
+         judJfd45dgbj2MidVMBv4ktQjbWqPLZ7screXp/fetAlVT9bISvXZobEegwbEuoPPBc3
+         gX+XheeZyB8YLvL3CragfDHRWXmTMDxQPjw3nxikD76TH1Z+emCQ/wUtg2g6n9lplUXD
+         BcQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7f32msqOiQc0JpLw4MsEw0QrRZ2lpHCE6FKLkalbvhU=;
+        b=c7YjIYEOFoXl0kqY936QcUYEsPGTUg7lRh+T0KWPzCY46UVWzDvtBqQc5Q0QnHlsjL
+         ztvch+ykWXbHPVtEP2poT2IzelqXvNH58cvFDYR/sTwMJ7oyk822n5yywm2cZ0X/zy08
+         +2NPQS7vVPMo0PT7ucSVDWssTeCT8jX3VuFHSdHQss2AUqCmxUbyg5ebPve0NZNYd+Fp
+         2V3wwWpbUWghKYnJ1Y6se6oOVm4aKMPi+g5FWAPh9rQpbS1jSWRkDmq6m0CJo57mkNnZ
+         w/gniJQ/RwBhzFe3tXByz2fiHPzKXs4rQ+Q/f2WVyPaHo36pVS+FNmA3RsU9NkZ4QZk0
+         ERag==
+X-Gm-Message-State: AGi0PubZGXXmpYdZEwkuyHTeqiyCxtCyVTC9VozJcjGJtwDOBUaG/c6Y
+        uYGRQlWxmYOk3hEdzrBvzwwsyA==
+X-Google-Smtp-Source: APiQypINbD+SwSQX239iVL4ARcQzUpE85tcDSAX0g1f/DkT80BUmiUIIWTpHdSuEhZG7PDqB5JWNiA==
+X-Received: by 2002:a5d:470a:: with SMTP id y10mr28586916wrq.63.1587553820230;
+        Wed, 22 Apr 2020 04:10:20 -0700 (PDT)
+Received: from localhost.localdomain ([37.120.50.78])
+        by smtp.gmail.com with ESMTPSA id h188sm7993906wme.8.2020.04.22.04.10.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 04:10:19 -0700 (PDT)
+From:   Robert Foss <robert.foss@linaro.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Robert Foss <robert.foss@linaro.org>
+Subject: [PATCH v1] arm64: dts: qcom: apq8016-sbc-d3: Add Qualcomm APQ8016 SBC + D3 mezzanine
+Date:   Wed, 22 Apr 2020 13:10:14 +0200
+Message-Id: <20200422111014.616233-1-robert.foss@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200414193616.1368209-2-aford173@gmail.com>
-References: <20200414193616.1368209-1-aford173@gmail.com> <20200414193616.1368209-2-aford173@gmail.com>
-Subject: Re: [PATCH 2/3] clk: vc5: Enable addition output configurations of the Versaclock
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     aford@beaconembedded.com, charles.stevens@logicpd.com,
-        Adam Ford <aford173@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Adam Ford <aford173@gmail.com>, linux-clk@vger.kernel.org
-Date:   Wed, 22 Apr 2020 03:00:01 -0700
-Message-ID: <158754960123.132238.9912757167863379129@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Adam Ford (2020-04-14 12:36:15)
-> @@ -865,6 +904,77 @@ static int vc5_probe(struct i2c_client *client,
->                                 init.name);
->                         goto err_clk;
->                 }
-> +
-> +               /* Fetch Clock Output configuration from DT (if specified=
-) */
-> +               child_name =3D kasprintf(GFP_KERNEL, "OUT%d", n);
-> +               np_output =3D of_get_child_by_name(client->dev.of_node, c=
-hild_name);
-> +               kfree(child_name);
-> +               if (!np_output)
-> +                       continue;
-> +               if (!(ret || of_property_read_u32(np_output,
-> +                       "idt,mode", &value))) {
-> +                       vc5->clk_out[n].clk_output_cfg0_mask |=3D VC5_CLK=
-_OUTPUT_CFG0_CFG_MASK;
-> +                       switch (value) {
-> +                       case VC5_CLK_OUTPUT_CFG0_CFG_LVPECL:
-> +                       case VC5_CLK_OUTPUT_CFG0_CFG_CMOS:
-> +                       case VC5_CLK_OUTPUT_CFG0_CFG_HCSL33:
-> +                       case VC5_CLK_OUTPUT_CFG0_CFG_LVDS:
-> +                       case VC5_CLK_OUTPUT_CFG0_CFG_CMOS2:
-> +                       case VC5_CLK_OUTPUT_CFG0_CFG_CMOSD:
-> +                       case VC5_CLK_OUTPUT_CFG0_CFG_HCSL25:
-> +                               vc5->clk_out[n].clk_output_cfg0 |=3D valu=
-e << VC5_CLK_OUTPUT_CFG0_CFG_SHIFT;
-> +                               break;
-> +                       default:
-> +                               ret =3D -EINVAL;
-> +                               break;
-> +                       }
-> +               }
+Add device treee support for the Qualcomm APQ8016 SBC, otherwise known as
+the Dragonboard 410c with the D3 mezzanine expansion board.
 
-Can these three things be functions that are called and passed a
-vc5->clk_out[n] pointer? Then the code would be something like=20
+The D3 mezzanine ships in a kit with a OmniVision 5640 sensor module,
+which is what this DT targets.
 
- ret =3D prop1_parse_and_update(vc5->clk_out[n]);
- if (ret)
- 	goto err_clk;
- ret =3D prop2_parse_and_update(...)
- if (ret)
- 	goto err_clk;
+Signed-off-by: Robert Foss <robert.foss@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/Makefile           |  1 +
+ arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts | 45 +++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts
 
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index cc103f7020fd..025362471929 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc-d3.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+ dtb-$(CONFIG_ARCH_QCOM) += apq8096-ifc6640.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts
+new file mode 100644
+index 000000000000..1b85adeeada1
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts
+@@ -0,0 +1,45 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2015, The Linux Foundation. All rights reserved.
++ */
++
++/dts-v1/;
++
++#include "apq8016-sbc.dtsi"
++
++/ {
++	model = "Qualcomm Technologies, Inc. APQ 8016 SBC w/ D3 Mezzanine";
++	compatible = "qcom,apq8016-sbc", "qcom,apq8016", "qcom,sbc";
++};
++
++&cci_i2c0 {
++	/delete-node/ camera_rear@3b;
++
++	camera_rear@76 {
++		compatible = "ovti,ov5640";
++		reg = <0x76>;
++
++		enable-gpios = <&msmgpio 34 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&camera_rear_default>;
++
++		clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
++		clock-names = "xclk";
++		clock-frequency = <23880000>;
++
++		vdddo-supply = <&camera_vdddo_1v8>;
++		vdda-supply = <&camera_vdda_2v8>;
++		vddd-supply = <&camera_vddd_1v5>;
++
++		status = "ok";
++
++		port {
++			ov5640_ep: endpoint {
++				clock-lanes = <1>;
++				data-lanes = <0 2>;
++				remote-endpoint = <&csiphy0_ep>;
++			};
++		};
++	};
++};
+-- 
+2.25.1
 
-> +               if (!(ret || of_property_read_u32(np_output,
-> +                       "idt,voltage-microvolts", &value))) {
-> +                       vc5->clk_out[n].clk_output_cfg0_mask |=3D VC5_CLK=
-_OUTPUT_CFG0_PWR_MASK;
-> diff --git a/include/dt-bindings/clk/versaclock.h b/include/dt-bindings/c=
-lk/versaclock.h
-> new file mode 100644
-> index 000000000000..30add3488713
-> --- /dev/null
-> +++ b/include/dt-bindings/clk/versaclock.h
-> @@ -0,0 +1,13 @@
-> +/* HEADER */
-
-Any SPDX license for this in place of HEADER?
-
-> +
-> +/* This file defines field values used by the versaclock 6 family
-> + * for defining output type
-> + */
-> +
-> +#define VC5_LVPECL     0
-> +#define VC5_CMOS       1
-> +#define VC5_HCSL33     2
-> +#define VC5_LVDS       3
-> +#define VC5_CMOS2      4
-> +#define VC5_CMOSD      5
-> +#define VC5_HCSL25     6
