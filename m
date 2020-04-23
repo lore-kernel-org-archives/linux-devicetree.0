@@ -2,200 +2,97 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE80C55191
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 20:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93D5C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 21:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB7C22098B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 20:37:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="SAJTsuiP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FjH1HHY1"
+	by mail.kernel.org (Postfix) with ESMTP id 8448520724
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 21:41:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgDWUho (ORCPT
+        id S1726819AbgDWVlK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 16:37:44 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:34665 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725884AbgDWUhn (ORCPT
+        Thu, 23 Apr 2020 17:41:10 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:25427 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725777AbgDWVlJ (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Apr 2020 16:37:43 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 69404580311;
-        Thu, 23 Apr 2020 16:37:42 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 23 Apr 2020 16:37:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=1rgoWEglUTjk3ArPIIoAl+30lpL
-        4idh7C80OCTHpmUw=; b=SAJTsuiPodXPJOLPlP7oomUce1KO9HgLp4LSXSG2q9V
-        k99XrTsnVoZPCz2XKjQKD/wUosuK8MuRP1DWKzbl17A0aD9dPIcfL5Yv29wTyk/s
-        MxPtd1I8auIbqrXO6sX44R4LiutPyRWiA1ti78y/EUTrpxEy1duwnEXz88RMu+Wa
-        29LJ8E+3FKB4mPDCcNdNCTFAYCSjWqg98NxjT/PmRIX9XZYcDg8HGlb8Ek85mB+Y
-        afP7G0NWuBm2SWYwZUxi54SkwGeEkgnt8e2iIWKGi/rdjHY2FkoWTUfZma4E6I7p
-        8zBHjptMWfRwKtt/h5nnvYAnwr/EisDPFqpP7SVY4ew==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=1rgoWE
-        glUTjk3ArPIIoAl+30lpL4idh7C80OCTHpmUw=; b=FjH1HHY1SYTP/zk1w/wFGD
-        SQJkRMnQfaPNqbJSWS0avw2d6sCE0ifpDAK6vqra+AzCyPNpF/s1rZ1bEwox4Tgp
-        5pRbjM7eb2MuhvBXHwujlGQ6qpYXKeyP1LJNg4R8oz82cnPqnDpTB2nCKi/DI/YA
-        Ks5K8dR7ic8gJjYBr7a9npZnjiKmlpoGay9ZCGbr3KF+su+cblWqDQPKYrSD3IR/
-        kCSbFXIEV+Qjgu2OS5YFstcNjXDXy6Fnc7738GUpuHwryUCudVJ5gHwjTV5IveLR
-        qiGMtBCk9VdHZ3Y9yphlb5ppjnApd7jwJ+f9+lE0RQcS4Xdz9gzelpUkfHYLOJ8g
-        ==
-X-ME-Sender: <xms:kfyhXuV9_lOcQCaGhKDLNNqO3cyD3i3DpEf_1MWSOGICGvB7_Q4laA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeelgdduudejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:kfyhXhJGup0irbSm7vO_9T0yPLxTEYhpuZ2E8oHhgz9vj5BJ3Cw0kg>
-    <xmx:kfyhXvKW36ehC4KYnTQbBDBeA-onlsefkaFfDRE0si9E8P2EW3ls3g>
-    <xmx:kfyhXt-bSwETRMJWIWQ8-fwwZs4BZXSea5_ChbcjuZeeIB-CsnZ1CA>
-    <xmx:lvyhXvcpdjm9Gmks9Zw2iUnYhWgzea6einYlDWRsnbwdwAEZC9o6sA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 632923065D59;
-        Thu, 23 Apr 2020 16:37:37 -0400 (EDT)
-Date:   Thu, 23 Apr 2020 22:37:35 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Philipp Rossak <embed3d@gmail.com>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Thu, 23 Apr 2020 17:41:09 -0400
+X-IronPort-AV: E=Sophos;i="5.73,309,1583161200"; 
+   d="scan'208";a="45339771"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 24 Apr 2020 06:41:07 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id ABF4F400C420;
+        Fri, 24 Apr 2020 06:41:03 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        linux-mips@vger.kernel.org,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the
- PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
-Message-ID: <20200423203735.imlafyw6oz6dspev@gilmour.lan>
-References: <cover.1586939718.git.hns@goldelico.com>
- <20200415101008.zxzxca2vlfsefpdv@gilmour.lan>
- <2E3401F1-A106-4396-8FE6-51CAB72926A4@goldelico.com>
- <20200415130233.rgn7xrtwqicptke2@gilmour.lan>
- <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com>
- <10969e64-fe1f-d692-4984-4ba916bd2161@gmail.com>
- <20200420073842.nx4xb3zqvu23arkc@gilmour.lan>
- <b5a06c19-7a3e-bcb8-5ae3-76901b9c6c35@gmail.com>
- <20200421112129.zjmkmzo3aftksgka@gilmour.lan>
- <5749af21-e707-c998-c83b-50c48867c9e8@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="uldmalad7cdsj5zk"
-Content-Disposition: inline
-In-Reply-To: <5749af21-e707-c998-c83b-50c48867c9e8@gmail.com>
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 00/10] Add RZ/G1H support.
+Date:   Thu, 23 Apr 2020 22:40:40 +0100
+Message-Id: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This patch series aims to add support for Renesas RZ/G1H (r8a7742) SoC.
 
---uldmalad7cdsj5zk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+RZ/G1H SoC is similar to R-Car Gen2 H2 SoC.
 
-On Tue, Apr 21, 2020 at 06:42:17PM +0200, Philipp Rossak wrote:
-> Hi,
->=20
-> On 21.04.20 13:21, Maxime Ripard wrote:
-> > Hi,
-> >=20
-> > On Tue, Apr 21, 2020 at 11:57:33AM +0200, Philipp Rossak wrote:
-> > > On 20.04.20 09:38, Maxime Ripard wrote:
-> > > > Hi,
-> > > >=20
-> > > > On Fri, Apr 17, 2020 at 02:09:06PM +0200, Philipp Rossak wrote:
-> > > > > > > I'm a bit skeptical on that one since it doesn't even list the
-> > > > > > > interrupts connected to the GPU that the binding mandates.
-> > > > > >=20
-> > > > > > I think he left it out for a future update.
-> > > > > > But best he comments himself.
-> > > > >=20
-> > > > > I'm currently working on those bindings. They are now 90% done, b=
-ut they are
-> > > > > not finished till now. Currently there is some mainline support m=
-issing to
-> > > > > add the full binding. The A83T and also the A31/A31s have a GPU P=
-ower Off
-> > > > > Gating Register in the R_PRCM module, that is not supported right=
- now in
-> > > > > Mainline. The Register need to be written when the GPU is powered=
- on and
-> > > > > off.
-> > > > >=20
-> > > > > @Maxime: I totally agree on your point that a demo needs to be pr=
-ovided
-> > > > > before the related DTS patches should be provided. That's the rea=
-son why I
-> > > > > added the gpu placeholder patches.
-> > > > > Do you have an idea how a driver for the R_PRCM stuff can look li=
-ke? I'm not
-> > > > > that experienced with the clock driver framework.
-> > > >=20
-> > > > It looks like a power-domain to me, so you'd rather plug that into =
-the genpd
-> > > > framework.
-> > >=20
-> > > I had a look on genpd and I'm not really sure if that fits.
-> > >=20
-> > > It is basically some bit that verify that the clocks should be enable=
-d or
-> > > disabled.
-> >=20
-> > No, it can do much more than that. It's a framework to control the SoCs=
- power
-> > domains, so clocks might be a part of it, but most of the time it's goi=
-ng to be
-> > about powering up a particular device.
-> >=20
-> So I think I've found now the right piece of documentation and a driver t=
-hat
-> implements something similar [1].
->=20
-> So I will write a similar driver like linked above that only sets the rig=
-ht
-> bits for A83T and A31/A31s.
-> Do you think this is the right approach?
+This patch set is based on renesas-drivers/master-v5.7-rc1.
 
-That sounds about right yes
+Lad Prabhakar (10):
+  dt-bindings: power: rcar-sysc: Document r8a7742 SYSC binding
+  dt-bindings: power: rcar-sysc: Add r8a7742 power domain index macros
+  soc: renesas: rcar-sysc: add R8A7742 support
+  dt-bindings: reset: rcar-rst: Document r8a7742 reset module
+  soc: renesas: rcar-rst: Add support for RZ/G1H
+  dt-bindings: clock: renesas: cpg-mssr: Document r8a7742 binding
+  clk: renesas: Add r8a7742 CPG Core Clock Definitions
+  clk: renesas: cpg-mssr: Add R8A7742 support
+  ARM: shmobile: r8a7742: Basic SoC support
+  cpufreq: dt: Add support for r8a7742
 
-Maxime
+ .../bindings/clock/renesas,cpg-mssr.yaml           |   1 +
+ .../bindings/power/renesas,rcar-sysc.yaml          |   1 +
+ .../devicetree/bindings/reset/renesas,rst.yaml     |   1 +
+ arch/arm/mach-shmobile/setup-rcar-gen2.c           |   2 +
+ drivers/clk/renesas/Kconfig                        |   5 +
+ drivers/clk/renesas/Makefile                       |   1 +
+ drivers/clk/renesas/r8a7742-cpg-mssr.c             | 289 +++++++++++++++++++++
+ drivers/clk/renesas/renesas-cpg-mssr.c             |   6 +
+ drivers/clk/renesas/renesas-cpg-mssr.h             |   1 +
+ drivers/cpufreq/cpufreq-dt-platdev.c               |   1 +
+ drivers/soc/renesas/Kconfig                        |   4 +
+ drivers/soc/renesas/Makefile                       |   1 +
+ drivers/soc/renesas/r8a7742-sysc.c                 |  42 +++
+ drivers/soc/renesas/rcar-rst.c                     |   1 +
+ drivers/soc/renesas/rcar-sysc.c                    |   3 +
+ drivers/soc/renesas/rcar-sysc.h                    |   1 +
+ include/dt-bindings/clock/r8a7742-cpg-mssr.h       |  42 +++
+ include/dt-bindings/power/r8a7742-sysc.h           |  29 +++
+ 18 files changed, 431 insertions(+)
+ create mode 100644 drivers/clk/renesas/r8a7742-cpg-mssr.c
+ create mode 100644 drivers/soc/renesas/r8a7742-sysc.c
+ create mode 100644 include/dt-bindings/clock/r8a7742-cpg-mssr.h
+ create mode 100644 include/dt-bindings/power/r8a7742-sysc.h
 
---uldmalad7cdsj5zk
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.7.4
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqH8jwAKCRDj7w1vZxhR
-xa6OAPsG0hWkJM/X3rADW428/4uNb7tDwdYNFydI9sbl6UhzkAEAxIit7pCZ/iLs
-0cgwkg9mtFDlpNF5/GCnOiGoztgoNAU=
-=F7xP
------END PGP SIGNATURE-----
-
---uldmalad7cdsj5zk--
