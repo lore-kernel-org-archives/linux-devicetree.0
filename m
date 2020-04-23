@@ -2,171 +2,76 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 280D3C55191
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 19:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3831BC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 20:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02EB720724
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 19:39:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fqm9ZIjY"
+	by mail.kernel.org (Postfix) with ESMTP id E514420776
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 20:09:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgDWTj1 (ORCPT
+        id S1726090AbgDWUJv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 15:39:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36036 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgDWTj1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 15:39:27 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA6EEC09B043
-        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 12:39:26 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id x26so3381072pgc.10
-        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 12:39:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=7VPU62AS0hE3DKQRkOunlFCKQKhdwD9eupm/jSgSc0o=;
-        b=fqm9ZIjYeSPBDfE/QRu99KVQdVsUeerRL5pAVUVajv+e2SuYpHLE1FyB095+rRNLhg
-         /J3qFsRFP7AfK6wYscG9PXM49C3MZEyA5tvD/Zv8lnY8QYwqZoSxa+Y04fsNkGs3+dpZ
-         9g6GfHdmQjY9gvJea954/kRhpTEdxkybP1Axg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=7VPU62AS0hE3DKQRkOunlFCKQKhdwD9eupm/jSgSc0o=;
-        b=mOu9noGfmWoy+6HW86ZGZ+MWx0gftD2bCvWomI9cv8dOb5jbMIG5je3NKmVKQOdNYA
-         UNfEzKNAGSKOym45sYsTtpdGpW/7QFaFdXuE/j1wAjzKE3xgF0KooLrESD3BOCSeMN9H
-         NMYHNDMfon5oC+F+0DCW7z2utZdnH7UJfrmGUsi50KWklKf8r+zwAWiyVigDCJYmRxxv
-         nev12rNmFop8RZ3MlS3kiuL3ToZnl0vlwiWjkhfIbK8reAhMEmNe5zCjc9rLjTy6ZcGH
-         pqKdoNtqBc1AR32QUDbWV6Eto6+ICuLCfRPBPw6M7qxkvLjGRV42h1QVZHyHG/PLnLEK
-         Vj/Q==
-X-Gm-Message-State: AGi0PuYmvXFSwflxJcM98CrQ8nlYqZmZ3lGZmIIzBkjlgAN8r+9tJY2k
-        fRs5uk1fJItLbfdGitydBLoVSQ==
-X-Google-Smtp-Source: APiQypJd4T0HLRLEhYMctigRHwArQ5Lyj7Ah48K5q+Fq0x5nv4fDYp6iTUKOzhPoARFHEfZwN9MqWQ==
-X-Received: by 2002:a62:8202:: with SMTP id w2mr5342725pfd.117.1587670766035;
-        Thu, 23 Apr 2020 12:39:26 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id l185sm3281987pfl.104.2020.04.23.12.39.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 12:39:24 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 12:39:23 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
-Cc:     Rob Herring <robh@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: usb: qcom,dwc3: Convert USB DWC3
- bindings
-Message-ID: <20200423193923.GK199755@google.com>
-References: <1585206368-685-1-git-send-email-sanm@codeaurora.org>
- <1585206368-685-2-git-send-email-sanm@codeaurora.org>
- <20200404171700.GA10096@bogus>
- <5e2eb0a4-ed70-4212-fc70-6ee850507a7e@codeaurora.org>
- <5793ea62-7a73-789e-33d6-6b2fb37b376c@codeaurora.org>
+        Thu, 23 Apr 2020 16:09:51 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:59103 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbgDWUJv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 16:09:51 -0400
+X-Originating-IP: 93.29.109.196
+Received: from localhost.localdomain (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 0D029E000C;
+        Thu, 23 Apr 2020 20:09:46 +0000 (UTC)
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hansverk@cisco.com>,
+        justin.swartz@risingedge.co.za, Johan Jonker <jbx6244@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: [PATCH v2 0/4] media: rockchip: rga: PX30 support and YUV2YUV fix
+Date:   Thu, 23 Apr 2020 22:09:33 +0200
+Message-Id: <20200423200937.1039257-1-paul.kocialkowski@bootlin.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5793ea62-7a73-789e-33d6-6b2fb37b376c@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 02:23:29PM +0530, Sandeep Maheswaram (Temp) wrote:
-> Hi Rob,
-> 
-> Any suggestions to solve this error in assigned-clock-rates
+Hi,
 
-> On 4/6/2020 10:09 PM, Sandeep Maheswaram (Temp) wrote:
-> > Hi Rob,
-> > 
-> > On 4/4/2020 10:47 PM, Rob Herring wrote:
-> > > On Thu, Mar 26, 2020 at 12:36:07PM +0530, Sandeep Maheswaram wrote:
-> > > > Convert USB DWC3 bindings to DT schema format using json-schema.
-> > > > 
-> > > > Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> > > > ---
-> > > >   .../devicetree/bindings/usb/qcom,dwc3.txt          | 104
-> > > > --------------
-> > > >   .../devicetree/bindings/usb/qcom,dwc3.yaml         | 158
-> > > > +++++++++++++++++++++
-> > > >   2 files changed, 158 insertions(+), 104 deletions(-)
-> > > >   delete mode 100644
-> > > > Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-> > > >   create mode 100644
-> > > > Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-> > > 
-> > > > diff --git
-> > > > a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-> > > > b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-> > > > new file mode 100644
-> > > > index 0000000..0f69475
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+This series adds support for the Rockchip PX30 SoC in the V4L2 M2M RGA driver.
+It also contains a fix for the YUV2YUV case that was not properly handled.
 
-...
+Changes since v1:
+- Rebased on media tree master (changed dt binding to yaml);
+- Removed spurious line removal.
 
-> > > > +    items:
-> > > > +      - description: Must be 19.2MHz (19200000).
-> > > Sounds like a constraint:
-> > > 
-> > > - const: 19200000
-> > > 
-> > > > +      - description: Must be >= 60 MHz in HS mode, >= 125 MHz
-> > > > in SS mode.
-> > > - minimum: 60000000
-> > >    maximum: ?
-> > 
-> > Tried  as below but facing errors
-> > 
-> > assigned-clock-rates:
-> >     items:
-> >       - const: 19200000
-> >       - minimum: 60000000
-> >         maximum: 150000000
-> > 
-> > Errors
-> > 
-> > linux-next/Documentation/devicetree/bindings/usb/qcom,dwc3.example.dt.yaml:
-> > usb@a6f8800: assigned-clock-rates: Additional items are not allowed
-> > ([150000000] was unexpected)
-> > linux-next/Documentation/devicetree/bindings/usb/qcom,dwc3.example.dt.yaml:
-> > usb@a6f8800: assigned-clock-rates:0: [19200000] is too short
-> > linux-next/Documentation/devicetree/bindings/usb/qcom,dwc3.example.dt.yaml:
-> > usb@a6f8800: assigned-clock-rates: [[19200000], [150000000]] is too long
+Cheers,
 
-judging from the error messages my uneducated guess is that the above rules for
-assigned-clock-rates expect a single tuple of two elements, not two tuples with
-a single element, i.e.
+Paul
 
-assigned-clock-rates = <19200000, 150000000>;
+Paul Kocialkowski (4):
+  dt-bindings: rockchip-rga: Add PX30 compatible
+  arm64: dts: rockchip: Add RGA support to the PX30
+  media: rockchip: rga: Add support for the PX30 compatible
+  media: rockchip: rga: Only set output CSC mode for RGB input
 
-  instead of
+ .../bindings/media/rockchip-rga.yaml           |  1 +
+ arch/arm64/boot/dts/rockchip/px30.dtsi         | 11 +++++++++++
+ drivers/media/platform/rockchip/rga/rga-hw.c   | 18 +++++++++++-------
+ drivers/media/platform/rockchip/rga/rga.c      |  3 +++
+ 4 files changed, 26 insertions(+), 7 deletions(-)
 
-assigned-clock-rates = <19200000>, <150000000>;
+-- 
+2.26.0
 
-I experimented a bit but couldn't find the magic incantation to appease the
-schema deities.
-
-Rob, could you please help to distentangle this?
-
-Thanks
-
-Matthias
