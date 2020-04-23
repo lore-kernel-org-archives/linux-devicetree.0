@@ -2,116 +2,92 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D35CC55189
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 00:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DC4C55185
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 01:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E113A2076C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 00:39:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mj30sjvr"
+	by mail.kernel.org (Postfix) with ESMTP id 462162076C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 01:18:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587604735;
+	bh=5J7cR0szFxvJoNJ8P80jMKgqc3d3/p0yIBp4jdKWeYo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dZ/fUM25LbZ9zwH3sZFTDIslrtKTwF1bMOQU2k9ZOL7zmIp/Xt2tJAq1v0tGfCix9
+	 oQS3BlDxveesaS/bGWf7D4NaUTxnPyWNQSVsDgiJL+9Jpf+smMPKWHFfETWvGoUy3X
+	 lDB2uGkTNRZVfdCFF2m2D86xQUFdIs0MeS9Sxxr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgDWAjg (ORCPT
+        id S1726002AbgDWBSy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 20:39:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55816 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726112AbgDWAjg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Apr 2020 20:39:36 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A824AC03C1AA;
-        Wed, 22 Apr 2020 17:39:34 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id t11so3318661lfe.4;
-        Wed, 22 Apr 2020 17:39:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=5fl4A7nRdQONkc+Ns32BwHf/X7YnX+et/nIg9JJL2zU=;
-        b=Mj30sjvrkHvbKMqqfHKFNV5+YQEGBrwRZ0z+4T3vXh7n5MBP9x3dRJ6j2LmHioOge6
-         QYB43T4G4zJsbQVQ7BH3EqooNVpHMppSpitVpDBQztmzTnG24oBhFVzD/pbnt9ghXCDO
-         lIPvj3hYEECgw/yZYPuNE0KHnYN0oFHy/bnaLJb8G8jh4Pwt0ER9hkd3ECRaHkHJU+iO
-         goBbHo0eb/KFYdoDWis9mS1esjCM8LF+3/iN/bWJpmfHjiEIUFmfqjNzVq6UTTEZbD6/
-         cq6F+gZvE/nYHjEyGeNUuF/JF95Q6/HLQv3qf/7y4paceeOPZpHl3Ev/446VWEv+B+4b
-         IBCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=5fl4A7nRdQONkc+Ns32BwHf/X7YnX+et/nIg9JJL2zU=;
-        b=B87NbZIbLKiuUTURFThhvs2SMWre10Crw9wz3hG1Bs8BKWXK3WKVm50fOqqhAiWFUl
-         cB9HP0mQjRg7R+ecQlB6M9ok6+98q6OVHlFrRMXnbljFf6i6ojTWiQoH2DhfhDZ+TZO4
-         q3zy61dkeJq7NBFd+LCl5RSL1e3u64sYQACr3iBnuDSFkj+dudjnW/Ks4f2Bol6kOHGv
-         v8rhIAmvRMpsfm3cr7pD8RoMM7WX63ZWt+X0YzuLqF8ZpCxNA6OLoolgDIBtbZ+CFOuv
-         ZUUaxE7ZJscdT0FszfJh9SlSMHYFKd0xLDO7KQw/1JmVEVtJL5n+6TVQKdWmMfJT+KbA
-         xyMg==
-X-Gm-Message-State: AGi0PuZnda7WPPp9FrmtYyhvgGZAUU5dNUaI33ktEiSxlWZ7rpStzno1
-        SdZuZw2bEko4R3wB129TEUXCz8DdoGY=
-X-Google-Smtp-Source: APiQypKEnU1zF7+eWCBcmj0qvCVqLKmZHMNFwVXoZaQrmlJkac50VlkAbDcbpHZOQ6d2aDNMPqqV1g==
-X-Received: by 2002:a19:c3c5:: with SMTP id t188mr718181lff.199.1587602373144;
-        Wed, 22 Apr 2020 17:39:33 -0700 (PDT)
-Received: from [172.16.20.20] ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id t19sm502360lfl.53.2020.04.22.17.39.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 Apr 2020 17:39:32 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
-Subject: Re: [PATCH 0/3] Bluetooth: hci_qca: add support for QCA9377
-From:   Christian Hewitt <christianshewitt@gmail.com>
-In-Reply-To: <D965D634-A881-43E0-B9F8-DF4679BB9C6D@holtmann.org>
-Date:   Thu, 23 Apr 2020 04:39:24 +0400
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-amlogic@lists.infradead.org,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6103BC70-F2AC-4CA5-BF6F-152466AEEBD1@gmail.com>
-References: <20200421081656.9067-1-christianshewitt@gmail.com>
- <D965D634-A881-43E0-B9F8-DF4679BB9C6D@holtmann.org>
-To:     Marcel Holtmann <marcel@holtmann.org>
-X-Mailer: Apple Mail (2.3445.104.14)
+        Wed, 22 Apr 2020 21:18:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39698 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725961AbgDWBSy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Apr 2020 21:18:54 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5B6A2075A;
+        Thu, 23 Apr 2020 01:18:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587604734;
+        bh=5J7cR0szFxvJoNJ8P80jMKgqc3d3/p0yIBp4jdKWeYo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IIx59UKndzfTh4wq2bvrFTQGolD30iYA5PEGQljltaIBRO7fHpu7TroWBiaoSDHiL
+         zQzTb3TtBKYrMsVRxlHH0z/8IkrBtBN9md++fOaiM7ZrqN+MmQ0q4EHdlAIVhi7UEo
+         DcjwZEgN++cnXQXTx8NmtR6QNwx8wcuUWELejeYo=
+Date:   Thu, 23 Apr 2020 09:18:47 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Martin Kepplinger <martink@posteo.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] arm64: dts: imx8mq-librem5-devkit: Use 0.9V for
+ VDD_GPU
+Message-ID: <20200423011846.GG8571@dragon>
+References: <cover.1587480093.git.agx@sigxcpu.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1587480093.git.agx@sigxcpu.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Apr 21, 2020 at 04:44:12PM +0200, Guido Günther wrote:
+> According to the imx8mq data sheet running VDD_GPU at 0.9V is enough
+> when not overclocking to 1GHz (which we currently don't do).
+> 
+> changes from v2:
+>  - rebase aginst Shawn's tree
+>  - fix a warning for the typec connector
+> 
+> Guido Günther (2):
+>   arm64: dts: imx8mq-librem5-devkit: Use 0.9V for VDD_GPU
+>   arm64: dts: Don't use underscore in node name
 
-> On 22 Apr 2020, at 9:39 pm, Marcel Holtmann <marcel@holtmann.org> =
-wrote:
->=20
-> Hi Christian,
->=20
->> This series adds a new compatible for the QCA9377 BT device that is =
-found
->> in many Android TV box devices, makes minor changes to allow =
-max-speed
->> values for the device to be read from device-tree, and updates =
-bindings
->> to reflect those changes.
->>=20
->> Christian Hewitt (3):
->> dt-bindings: net: bluetooth: Add device tree bindings for QCA9377
->> Bluetooth: hci_qca: add compatible for QCA9377
->> Bluetooth: hci_qca: allow max-speed to be set for QCA9377 devices
->>=20
->> .../bindings/net/qualcomm-bluetooth.txt         |  5 +++++
->> drivers/bluetooth/hci_qca.c                     | 17 =
-++++++++++-------
->> 2 files changed, 15 insertions(+), 7 deletions(-)
->=20
-> the series doesn=E2=80=99t apply cleanly against bluetooth-next tree. =
-Can you please respin it.
+This one should also be prefixed like arm64: dts: imx8mq-librem5-devkit:
 
-Ahh, it was based on 5.7-rc1, will do, thanks.
+I fixed it up and applied both.
 
-Christian=
+Shawn
+
+> 
+>  arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> -- 
+> 2.26.1
+> 
