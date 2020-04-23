@@ -2,134 +2,116 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E965C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 17:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CB7C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 18:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CDE820781
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 17:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 336A120776
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 18:05:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="PJ1n/7Eg"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FGotfNib"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730216AbgDWRrs (ORCPT
+        id S1730026AbgDWSF5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 13:47:48 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:43459 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729936AbgDWRqb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 13:46:31 -0400
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id A663D23059;
-        Thu, 23 Apr 2020 19:46:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1587663988;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=O32DELDjRU5+PMHK61TCvsZ+IJXO1DNHAkIMR41h4Oo=;
-        b=PJ1n/7EgcJLAWKllqdtS8BMBKT55xIpWjQlXcYxh9Eok1bVCDNOKdGnH4MZXJBsM6U+N2s
-        9mG6HXl7ETEWm0Ep2pbfj1Sy7QazALi84QMnt5G33HHrNCeoVhYKaBuyYGB87HsTECRBg0
-        iafM9nI115GkTJ22DlVwvkV6TV+sF80=
-From:   Michael Walle <michael@walle.cc>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thu, 23 Apr 2020 14:05:57 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:58162 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729901AbgDWSF5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 14:05:57 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03NI5l5p005744;
+        Thu, 23 Apr 2020 13:05:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1587665147;
+        bh=mMaO8t1Eqao/J6mtLde2dOBedpV17ybTny2HZzC7JxY=;
+        h=From:To:CC:Subject:Date;
+        b=FGotfNibqGvKapww+9XkCnFPum7qyEFRO+3Lr2RtKQajWJJC1AtH5csD2x4ktFPsk
+         Hvl/AOb2mpj1tsqbeTkKPW24463op5xqnIlj0Vc4OtrZMQIJoqXokdiMYIlHqCe5Ak
+         w32Cwr65Z2BBRwx8nJ8iRFZjuFZJlRSCkbvUQIt0=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03NI5lZt097577
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 23 Apr 2020 13:05:47 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 23
+ Apr 2020 13:05:46 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 23 Apr 2020 13:05:46 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03NI5jw4008985;
+        Thu, 23 Apr 2020 13:05:46 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Dave Gerlach <d-gerlach@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Walle <michael@walle.cc>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH v3 02/16] mfd: mfd-core: Don't overwrite the dma_mask of the child device
-Date:   Thu, 23 Apr 2020 19:45:29 +0200
-Message-Id: <20200423174543.17161-3-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200423174543.17161-1-michael@walle.cc>
-References: <20200423174543.17161-1-michael@walle.cc>
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>
+CC:     Sekhar Nori <nsekhar@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH 0/5] soc: ti: add k3 platforms chipid module driver
+Date:   Thu, 23 Apr 2020 21:05:40 +0300
+Message-ID: <20200423180545.13707-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: A663D23059
-X-Spamd-Result: default: False [6.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         NEURAL_SPAM(0.00)[0.997];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[26];
-         MID_CONTAINS_FROM(1.00)[];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
-         FREEMAIL_CC(0.00)[linaro.org,baylibre.com,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org,walle.cc,arm.com];
-         SUSPICIOUS_RECIPS(1.50)[]
-X-Spam: Yes
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Commit cdfee5623290 ("driver core: initialize a default DMA mask for
-platform device") initialize the DMA of a platform device. But if the
-parent doesn't have a dma_mask set, for example if it's an I2C device,
-the dma_mask of the child platform device will be set to zero again.
-Which leads to many "DMA mask not set" warnings, if the MFD cell has the
-of_compatible property set.
+Hi All,
 
-[    1.877937] sl28cpld-pwm sl28cpld-pwm: DMA mask not set
-[    1.883282] sl28cpld-pwm sl28cpld-pwm.0: DMA mask not set
-[    1.888795] sl28cpld-gpio sl28cpld-gpio: DMA mask not set
+This series introduces TI K3 Multicore SoC platforms chipid module driver
+which provides identification support of the TI K3 SoCs (family, revision)
+and register this information with the SoC bus. It is available under
+/sys/devices/soc0/ for user space, and can be checked, where needed,
+in Kernel using soc_device_match().
+It is also required for introducing support for new revisions of
+K3 AM65x/J721E SoCs.
 
-Thus don't overwrite the dma_mask of the children. Instead set the
-dma_mask of the platform device.
+Example J721E:
+  # cat /sys/devices/soc0/{machine,family,revision}
+  Texas Instruments K3 J721E SoC
+  J721E
+  SR1.0
 
-Signed-off-by: Michael Walle <michael@walle.cc>
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
----
- drivers/mfd/mfd-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Example AM65x:
+  # cat /sys/devices/soc0/{machine,family,revision}
+  Texas Instruments AM654 Base Board
+  AM65X
+  SR1.0
 
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index f5a73af60dd4..e735565969b3 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -138,7 +138,7 @@ static int mfd_add_device(struct device *parent, int id,
- 
- 	pdev->dev.parent = parent;
- 	pdev->dev.type = &mfd_dev_type;
--	pdev->dev.dma_mask = parent->dma_mask;
-+	pdev->platform_dma_mask = parent->dma_mask ? *parent->dma_mask : 0;
- 	pdev->dev.dma_parms = parent->dma_parms;
- 	pdev->dev.coherent_dma_mask = parent->coherent_dma_mask;
- 
+Grygorii Strashko (5):
+  dt-bindings: soc: ti: add binding for k3 platforms chipid module
+  soc: ti: add k3 platforms chipid module driver
+  arm64: arch_k3: enable chipid driver
+  arm64: dts: ti: k3-am65-wakeup: add k3 platforms chipid module node
+  arm64: dts: ti: k3-j721e-mcu-wakeup: add k3 platforms chipid module
+    node
+
+ .../bindings/soc/ti/k3-socinfo.yaml           |  40 ++++++
+ arch/arm64/Kconfig.platforms                  |   1 +
+ arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    |   5 +
+ .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |   5 +
+ drivers/soc/ti/Kconfig                        |  10 ++
+ drivers/soc/ti/Makefile                       |   1 +
+ drivers/soc/ti/k3-socinfo.c                   | 135 ++++++++++++++++++
+ 7 files changed, 197 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-socinfo.yaml
+ create mode 100644 drivers/soc/ti/k3-socinfo.c
+
 -- 
-2.20.1
+2.17.1
 
