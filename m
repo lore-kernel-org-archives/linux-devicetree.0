@@ -2,96 +2,170 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D41CC54FCB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 17:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CEDC55194
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 17:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB3920781
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 17:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D47E721556
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 17:14:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YIzqtZTQ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Fh0fZr67"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729719AbgDWRJB (ORCPT
+        id S1729848AbgDWROl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 13:09:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40588 "EHLO
+        Thu, 23 Apr 2020 13:14:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729766AbgDWRJB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 13:09:01 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F013EC09B045
-        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 10:09:00 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 188so7214123wmc.2
-        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 10:09:00 -0700 (PDT)
+        with ESMTP id S1729674AbgDWROk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 13:14:40 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0EF8C09B042
+        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 10:14:38 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id hi11so2766490pjb.3
+        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 10:14:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HyYauB8Zb4kPY2jhycDpuK1O3YKpPPWs1jRZhg3W+PY=;
-        b=YIzqtZTQ86QFuC3Fm4NBWsdOm0pT4cBdJ7LP5GP2m1Iy0O7jxZ4FN6lCTA4pC3+xEi
-         h8VeJgo2IBWMDWo+UMx5OdJyoS3Dq7CwWyqIzw+mpQOoXpKhW6CaDct1MaBX0WFNswe8
-         S0Fd49PA/VO1sC7i2qPSiJU2syTaaBJbrhV0dWWNbPVG3KxVQZW1Y6bEZIH9/6cxLJmM
-         L/T1dn/jbwKPs4moZuwT8rK7gg6iiHRx4h358kfomBb7V37Y/DqboBHiSGV8uTjXTW1C
-         2uJGiuc9P3sMJZlpspCAZFLGblsS6gZqFdijjC7UOcFH8G58rHKZgdYuqVqPEKasyViT
-         pdeg==
+         :content-disposition:in-reply-to:user-agent;
+        bh=ImuquuX0o7pPZ9bGea3cOCMdcWyQffNkeX4qWUmGnVg=;
+        b=Fh0fZr67sNv4FZXbdb2Lcuj0w/6m5469ARU5b3Jv/J3awFsgvnHW3GBDZFtirwtTBQ
+         VEnYdEMOXA7GOEJ772QwCTyKtnMRkhQGc274PhNw5eueSePwxSpYDaiovIpiQwbjJpk7
+         A+JstF5rX7YaXE7oR/EIxsG2+WhCAhxk2uvkY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HyYauB8Zb4kPY2jhycDpuK1O3YKpPPWs1jRZhg3W+PY=;
-        b=bJFE7/hs/378ZP0DFl8ZuHzlHVGqtKGGiK89aYX/sybHy8VQ36gjeZ83cRwE6+d3MN
-         PPncfoIy6lAEiRD6BzsRfb0Fe4eBZ3Yvw213J0LYcMv+IIEZsK8EkrI8wPPn2pYiVfoR
-         B0JExRD2foE6zUIK5WlIiy8ZnWjj+yFqItCmpP32XPUsb3k0IMivqc9rEjx47Y2/yB5U
-         awmQ0rpjK9EBP9l9N/mZIWAya+AfTHVrMn3+iqpHNCAIZDGlbNEilPOZi8aN7Cqi2YoS
-         xZXQhq5R7fTsKewHOqDrQQZcYTwdCUl1WCPUYy5HpmJUZeFYNEBIeGdzuW0y4QoCXsur
-         wrNw==
-X-Gm-Message-State: AGi0PuZ6cLHPKMQ/l7uVvZK2ZBpJdKIc9FTDe2VKMgctQCOEiPqgsqOy
-        uXXt3PyCoquAumomRJfb00/SQQ==
-X-Google-Smtp-Source: APiQypLTFoqOzEEgVSqQsK2DVwkZLCzK4Qr3KYvzNDTrgnBoJM5h/atmfsvo1wLAjiYN7AmpJR6jMg==
-X-Received: by 2002:a1c:40c4:: with SMTP id n187mr5040344wma.28.1587661739472;
-        Thu, 23 Apr 2020 10:08:59 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id s30sm4475128wrb.67.2020.04.23.10.08.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 10:08:58 -0700 (PDT)
-Date:   Thu, 23 Apr 2020 18:08:56 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Kiran Gunda <kgunda@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
-        robh@kernel.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-fbdev@vger.kernel.org,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-Subject: Re: [PATCH V6 4/4] backlight: qcom-wled: Add support for WLED5
- peripheral that is present on PM8150L PMICs
-Message-ID: <20200423170856.f4r62iwcg7qtppva@holly.lan>
-References: <1587656017-27911-1-git-send-email-kgunda@codeaurora.org>
- <1587656017-27911-5-git-send-email-kgunda@codeaurora.org>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ImuquuX0o7pPZ9bGea3cOCMdcWyQffNkeX4qWUmGnVg=;
+        b=Rtw4FbVfJrEJC5U+j6O/3CQJYZrzjye26Vlxuy0tGCgLQOD4Kx+eJWVbSclU/rfdiH
+         JTpfuUNcx1J8xMwmZi1PyO4H04ZLIHw/eyxHZnfra0NkkWFsSsLVdjxbQBrFqH6e+Fwd
+         FKFcINsAGS++LLsaX3LElkPDteIAk2lhnbdL+UqUv9Xicy+Vqw8lDq7Sqg46lvRc8CY7
+         gF/f6pIJBVtI3TbNlesmaAhgK8Oda7JbETWQu0F7dNOOgFI0fFUnQ8aXREzoXRXK9ilc
+         jJ2QkI5aprDx3zDb1MFqFXx7+jmRq6iZHLuWlxMKJD0Rzhv7DtctuLYJYJWyT/74a52V
+         k1rg==
+X-Gm-Message-State: AGi0PuZrbgstG9k4r6q+8H3RDOzjwk7RbcdpwL5SbgRqoqjjvrB/uZu9
+        xZ827MaSJoPyQcxE8nYDSiMZGQ==
+X-Google-Smtp-Source: APiQypIk9MvasGQWk+XnO6jWjIG+YouGIGQ62gjIE7RPw9r/JY+62QVCBe9Tpk5sU4R2pFA0IkyAPQ==
+X-Received: by 2002:a17:902:70c1:: with SMTP id l1mr4519146plt.298.1587662078207;
+        Thu, 23 Apr 2020 10:14:38 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id d12sm2950227pfq.36.2020.04.23.10.14.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 10:14:37 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 10:14:36 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
+        Tanmay Shah <tanmay@codeaurora.org>, robdclark@gmail.com,
+        abhinavk@codeaurora.org, nganji@codeaurora.org,
+        jsanka@codeaurora.org, aravindh@codeaurora.org,
+        hoegsberg@google.com, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v5 1/3] dt-bindings: phy: qcom,qmp: Convert QMP PHY
+ bindings to yaml
+Message-ID: <20200423171436.GJ199755@google.com>
+References: <1585809534-11244-1-git-send-email-sanm@codeaurora.org>
+ <1585809534-11244-2-git-send-email-sanm@codeaurora.org>
+ <158689927748.105027.5367465616284167712@swboyd.mtv.corp.google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1587656017-27911-5-git-send-email-kgunda@codeaurora.org>
+In-Reply-To: <158689927748.105027.5367465616284167712@swboyd.mtv.corp.google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 09:03:37PM +0530, Kiran Gunda wrote:
-> From: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-> 
-> PM8150L WLED supports the following:
->     - Two modulators and each sink can use any of the modulator
->     - Multiple CABC selection options from which one can be selected/enabled
->     - Multiple brightness width selection (12 bits to 15 bits)
-> 
-> Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+Hi Sandeep,
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+On Tue, Apr 14, 2020 at 02:21:17PM -0700, Stephen Boyd wrote:
+> Quoting Sandeep Maheswaram (2020-04-01 23:38:52)
+> > Convert QMP PHY bindings to DT schema format using json-schema.
+> > 
+> > Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> > ---
+> >  .../devicetree/bindings/phy/qcom,qmp-phy.yaml      | 332 +++++++++++++++++++++
+> >  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 242 ---------------
+> >  2 files changed, 332 insertions(+), 242 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+> > new file mode 100644
+> > index 0000000..18a8985
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+> > @@ -0,0 +1,332 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +
+> > +%YAML 1.2
+> > +---
+> > +$id: "http://devicetree.org/schemas/phy/qcom,qmp-phy.yaml#"
+> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > +
+> > +title: Qualcomm QMP PHY controller
+> > +
+> > +maintainers:
+> > +  - Manu Gautam <mgautam@codeaurora.org>
+> > +
+> > +description:
+> > +  QMP phy controller supports physical layer functionality for a number of
+> > +  controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - qcom,ipq8074-qmp-pcie-phy
+> > +      - qcom,msm8996-qmp-pcie-phy
+> > +      - qcom,msm8996-qmp-ufs-phy
+> > +      - qcom,msm8996-qmp-usb3-phy
+> > +      - qcom,msm8998-qmp-pcie-phy
+> > +      - qcom,msm8998-qmp-ufs-phy
+> > +      - qcom,msm8998-qmp-usb3-phy
+> > +      - qcom,sdm845-qhp-pcie-phy
+> > +      - qcom,sdm845-qmp-pcie-phy
+> > +      - qcom,sdm845-qmp-ufs-phy
+> > +      - qcom,sdm845-qmp-usb3-phy
+> > +      - qcom,sdm845-qmp-usb3-uni-phy
+> > +      - qcom,sm8150-qmp-ufs-phy
+> > +
+> > +  reg:
+> > +    minItems: 1
+> > +    items:
+> > +      - description: Address and length of PHY's common serdes block.
+> > +      - description: Address and length of the DP_COM control block.
+> 
+> This DP_COM block is only for one compatible. Is it possible to split
+> that compatible out of this binding so we can enforce the reg property
+> being either one or two items?
+> 
+> In addition, I don't quite understand how this binding is supposed to
+> work with the DP phy that sits inside qcom,sdm845-qmp-usb3-phy and then
+> gets muxed out on the USB pins on sdm845 and sc7180 SoCs. Can you fill
+> me in on how we plan to share the pins between the two phys so that all
+> the combinations of DP and USB over the type-c pins will work here? My
+> understanding is that the pins that are controlled by this hardware
+> block are basically a full USB type-c connector pinout[1] (except that
+> D+/D- isn't there and the VBUS and CC lines go to the PMIC). Either way,
+> we get the TX1/2 and RX1/2 pins to use, so we can do 4x lanes of DP or
+> 2x lanes DP and 2x lanes of USB. There's also a type-c orientation
+> flipper bit that can flip the DP and USB phy lanes to the correct TX/RX
+> pins on the SoC. And then the DP phy has a lane remapper to change the
+> logical DP lane to the physical DP lane. It's a complex piece of
+> hardware that isn't fully represented by this binding.
+> 
+> [1] https://en.wikipedia.org/wiki/USB-C#/media/File:USB_Type-C_Receptacle_Pinout.svg
+
+Could you please answer Stephen's questions? It would be great to move
+forward and get support for SC7180 landed.
