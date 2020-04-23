@@ -2,516 +2,389 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C894C55192
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 11:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF43C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 11:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6022F20706
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 11:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D32E12077D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 11:13:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m8uwcZY2"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="imEy6icK";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Hu7Bar96"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgDWLM0 (ORCPT
+        id S1726805AbgDWLNl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 07:12:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41286 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726805AbgDWLMZ (ORCPT
+        Thu, 23 Apr 2020 07:13:41 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:51516 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727077AbgDWLNk (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Apr 2020 07:12:25 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40D0AC035494;
-        Thu, 23 Apr 2020 04:12:25 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g12so6097530wmh.3;
-        Thu, 23 Apr 2020 04:12:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bxYSxdYwcXc6p7kPweonk+RqgS5u92HacX+d8Hknp8w=;
-        b=m8uwcZY2w3V/NUn1S7/3puo8tm4KGsYlcltRYEaBJfs5yo/KAhIrQ8a0RbLQ4H2HkC
-         69cRz/4+7tgAUnFTt3WaNdvjiN265ZpkME/0IsvhR0wJ1/mCVQYdvZ8IBph7tOeK68uh
-         0nZI+/d/ww+t/fNY4amVEeRB9kOHXTs8gaoVvw+68Bc5S34QH1xmibH+fX4YPjkpcfy8
-         PJex+Ze9DsIid7poXiLvw6JjS34hKqi0H0SzVeCwhqWPBuj1+3+uja/B+xm3i9l2pyh0
-         lXbqVD6zZgH5dEDM4e4kp1DwWbup01cX/myaS8C3e2JY6JqqPV3PqWy4WLwIiI5zKeVu
-         i8XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bxYSxdYwcXc6p7kPweonk+RqgS5u92HacX+d8Hknp8w=;
-        b=fYIC0+JiP06mJ5Zr0AJRHuwpMcFHGbW8zZ01szl+E/LYHiTg7RahvxisTW7zBbVrqd
-         mn1f02q9v2R0ShWpN4BHr6r6etlsmjhY57XC6Cxl6l9xOjrLUb/0vC4vD1cu9kMlqrXa
-         vB1o2m4NqYk16WGf4EYNugPR1BEzHj6qPjXcbM4WzlKV1LIHhMd6dKqFwm6RPek2MDWl
-         qEXdI8Jg3ddSDv5c/nCilAVlG9HP5j3OENosieHbo16Vd049JTKb6qek7X/KZpPfLQjk
-         lEn48zi9P1oxSIg7hkCuhVKVHs6urscW60DG0ZKr4/klyQRaj6FOvBDZF0G7lXnvkm4+
-         qQhQ==
-X-Gm-Message-State: AGi0PuZilMdtKEWPrXEvMm0SnXSx3AC9nTbiRiY2qBBEt0LVRv2qTWns
-        5HwI4W8o4ckuok6AlkoOqFY2WdTX
-X-Google-Smtp-Source: APiQypIYhN6tMBpUfx0YFUtGTxS8oFi+CP08Gt2smdXlLPjkiye0Xa8KXYom/+lhppWn0l0NiA9l0g==
-X-Received: by 2002:a7b:c927:: with SMTP id h7mr3574245wml.122.1587640343491;
-        Thu, 23 Apr 2020 04:12:23 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id n9sm3240829wrx.61.2020.04.23.04.12.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 04:12:22 -0700 (PDT)
-Subject: Re: [PATCH v2 3/3] ARM: dts: rockchip: add rk3288 ISP and DPHY
-To:     karthik poduval <karthik.poduval@gmail.com>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        heiko@sntech.de, linux-rockchip@lists.infradead.org,
-        Helen Koike <helen.koike@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-References: <karthik.poduval@gmail.com>
- <20200406073017.19462-1-karthik.poduval@gmail.com>
- <20200406073017.19462-4-karthik.poduval@gmail.com>
- <2fc95890-f938-30a5-a163-bf3fa2e223df@gmail.com>
- <CAFP0Ok-NxDDF8TMP4pN=xn6w3H=TYqN3DMfGW-vuiC5qB-Oj5g@mail.gmail.com>
- <CAFP0Ok9XGzVbghbnOOyfXiOOc5-a94uFRu7sD5wXz9sr-+AYEA@mail.gmail.com>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <9407b6c3-b932-5904-18ff-7c6cbf6bcc8b@gmail.com>
-Date:   Thu, 23 Apr 2020 13:12:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <CAFP0Ok9XGzVbghbnOOyfXiOOc5-a94uFRu7sD5wXz9sr-+AYEA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 23 Apr 2020 07:13:40 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E253540192;
+        Thu, 23 Apr 2020 11:13:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1587640420; bh=onUaFDs6wYSISeP1mdP9QC/AaUBejHVUCP9yF5h/ajc=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=imEy6icKcQ1SQGcZxdD93yKfSxv0+ub50lCZFBB0G8D8GHQ9LxipvkI6Kj0dIH+lc
+         bGFBYbP8MSvtaiZp8zoD1SdFuONVyBG5uHXPfPGxJF7G72EMpC9eF2ZH+h2qqN6oua
+         /IQGAZnCPY9fb7OHix95FBxqeZwlRnAMF4VmFI1v1OwiCz1vojBq8QjNb98LTKq8RO
+         jMqPD5ThJvra4vPrgD17CcT0fihDdxTTwtwa/Mv3rJzvcbWlFrlNkKcD2HcD6/eUnx
+         iRFd2YfcEJT7UG/VHNUgNMlhrWPJL8+rMhOD8ibn64iNRaTGK1Ltbi9eVB39D7cEzT
+         9okBG5Mf03New==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 14E62A0083;
+        Thu, 23 Apr 2020 11:13:37 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 23 Apr 2020 04:12:43 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Thu, 23 Apr 2020 04:12:43 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YUTesgvs48zVctQAcwrMWCqlRAlxmjgwec6tZ12BAvetsWTYJZHhDZuA19MCw0797s75BTOKSf86Jx58B2stXmFTaM6TDX4/C9AATZOc9afDow/eniAPQ5bn2EfycCkwyQOuyv9McAbho6rXkVWx5H95ALr4QaT6u5kYK/KgClHsc57j1nPWc2NfJ77wmCj+XTiEy5rAR4DFT0+95PkMOsy+KJ96Ib5Xm2FiaJQ2/eDZJzN5qkk3KkJotqmKRUURoYX1R9L+L8n4UqcqrwVY5psxv1SqpJ+32+mJZekGmtRCooIUDLMdzYuprz5uZS+daIWe7qoW/O1CRq7P2WtXlw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xmgp9cXic+fgTwUQ0cUjGGHcqKTBI407RrOxZ8RLyLg=;
+ b=IPz2Hrl7XB41apDz+xpLhzrhffrxkxFuQfe3pbJrd9z30lBpJDnmEfM5VWadDIan5i1NknkzeybN0XBFti6a6k0uEfOtGQYOQhgTqL383xHtgRFPADoiKq8fShz1BZGyhdGwBfA8nZgVLD3CzMszb76QHv3+gmOFWnPQQcHPSSvRq6zPUKbiD2jqk1qxqymt0KhhmE6aAlilmjhowAGDFRGmG5TZbCSZaJ8tOsbWaT/qK15zD5Y39GoRK5F0fJrErUPyv6r8KaV7Nh7BExu1oQg44soaJ9ARtfCuW89mnXnY9XMEfTxOBwz4oMfhIrNaUlyef46xQcjX0PXSveLJIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xmgp9cXic+fgTwUQ0cUjGGHcqKTBI407RrOxZ8RLyLg=;
+ b=Hu7Bar96oG9sbsq5/OQcNVESC2intVRMq1/T/cXDTYQFFGt3nIlEeGycZw8GwZCEw5E7o0ov+RaO4fmpdEi3cgY4Ku1+54jClbDB+kxvrEtOpZDxaA01KBJ7uIvsTctJrQLpGibDIVkwfzRRNbnUWceGd4B6yv1nYY1hYeS3YVU=
+Received: from MN2PR12MB3789.namprd12.prod.outlook.com (2603:10b6:208:16a::20)
+ by MN2SPR01MB0020.namprd12.prod.outlook.com (2603:10b6:208:184::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Thu, 23 Apr
+ 2020 11:12:40 +0000
+Received: from MN2PR12MB3789.namprd12.prod.outlook.com
+ ([fe80::8d9c:955:1a7b:29c6]) by MN2PR12MB3789.namprd12.prod.outlook.com
+ ([fe80::8d9c:955:1a7b:29c6%4]) with mapi id 15.20.2937.012; Thu, 23 Apr 2020
+ 11:12:40 +0000
+From:   Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+CC:     "kernel@collabora.com" <kernel@collabora.com>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>
+Subject: RE: [PATCH v4] dt-bindings: display: dw_mipi_dsi.txt: convert to yaml
+Thread-Topic: [PATCH v4] dt-bindings: display: dw_mipi_dsi.txt: convert to
+ yaml
+Thread-Index: AQHWGVYkS0wcFeXtGEmdc/0ooO7336iGggXQ
+Date:   Thu, 23 Apr 2020 11:12:40 +0000
+Message-ID: <MN2PR12MB378964868D3C1241FC649100CBD30@MN2PR12MB3789.namprd12.prod.outlook.com>
+References: <20200423100058.1734009-1-adrian.ratiu@collabora.com>
+In-Reply-To: <20200423100058.1734009-1-adrian.ratiu@collabora.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYW5nZWxvclxh?=
+ =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
+ =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLTU2ZjkxOWE4LTg1NTMtMTFlYS05ZDcyLWZjNzc3?=
+ =?us-ascii?Q?NGVlZGMyZVxhbWUtdGVzdFw1NmY5MTlhOS04NTUzLTExZWEtOWQ3Mi1mYzc3?=
+ =?us-ascii?Q?NzRlZWRjMmVib2R5LnR4dCIgc3o9IjYxNzkiIHQ9IjEzMjMyMTEzOTU5MDMy?=
+ =?us-ascii?Q?MTQwMSIgaD0ib1EwOGR3SlVxVlJBWm5kY3BqQWgzZWtxcmxrPSIgaWQ9IiIg?=
+ =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFE?=
+ =?us-ascii?Q?NVZJNFpZQm5XQVQxYTUzVUxvdmVQUFZybmRRdWk5NDhPQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQVFBQkFBQUFIYVd5TkFBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
+ =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
+ =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
+ =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
+ =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
+ =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
+ =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
+ =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
+ =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
+ =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
+ =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
+ =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
+ =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
+ =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
+ =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
+ =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
+ =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
+ =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
+ =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
+ =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
+ =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
+ =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
+ =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
+ =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
+ =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=angelor@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ee9c0481-aafd-4687-4c0b-08d7e7773d14
+x-ms-traffictypediagnostic: MN2SPR01MB0020:
+x-microsoft-antispam-prvs: <MN2SPR01MB0020C3D6582E003955653943CBD30@MN2SPR01MB0020.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 03827AF76E
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3789.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(396003)(39860400002)(366004)(136003)(478600001)(52536014)(76116006)(110136005)(66946007)(8936002)(6506007)(966005)(54906003)(33656002)(86362001)(66446008)(64756008)(7696005)(66556008)(316002)(2906002)(26005)(66476007)(186003)(4326008)(81156014)(8676002)(71200400001)(9686003)(55016002)(5660300002);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7fS3vNr4+1AhGv5oUPqdllRvPrZsZKYV50O3IbSRHFo4DPyh1wcTiO4/aK3jl9hKsRvyznwrSFOCDu816cZTdN79OgnQ7h6SIYAcX+o2l0qYHHoWEtf4BQQ1JoIKwgwS31RODsI+y2747AcGzCus7d4THXYhoE+Fr0P10KMm86rhTySJTmcs+B+owwjknHqX+fENPphOMYEQnwUCWW7FUtU3m2JxyFl5zfOzWopmMws+05iXIuxCXplFY17ZRBs8826ZEZ/OcVRaPGjezvKb0Y5lEvW0cKlmb/qX/Gk62EpHxxH5onp95TX1QGZqeb7qlyYLVYnWLHLobzOADWNq+UJgD1AKnkXhf4LwcLqeXrWZfkWO7TwLpTvWbeJVF0AmXauzwsn2/txbmyIh+9QbtPqpIm0lLvdlFoeBaeqN2GXzyS9nDKUl61kUCWRn4+ogMJtqBl5JhXN6NvoUKkYX0k6YDAPkrlOoav0cI5LCl52JXlKAGuLN2UqqTVzm1yZc8TuXHRo2Fpui13Hv1EVhsQ==
+x-ms-exchange-antispam-messagedata: M6ANK394R6/iukj+pwCu6lfyyWL7qqtDXX1jzTObGroa3rqXLxQmRRM8NwamyZaZTAJ87ppzMPFpDE/oPA2hlBVFY5QxdZjId4Tu52k6Gcgx0fu1+KJqMFbQs7uJlkRlfEhVuuby+k0ProBtb1qfiw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: ee9c0481-aafd-4687-4c0b-08d7e7773d14
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2020 11:12:40.5860
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VpDwGVyBRvEwmf7/kzlB2V5hk6h2Xs9BxyZrcaPJ0BF890QcmZXPnj/32Wc76Px6XVzIrRULxbBSGM893rvjfw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2SPR01MB0020
+X-OriginatorOrg: synopsys.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi robh, Heiko, Karthik, Helen and others,
+Hi Adrian,
 
-See comments below.
-Should we change Helen's patch serie a little bit to accommodate other
-isp1 compatibles as well? Could you give advise here? Thanks!
+From: Adrian Ratiu <adrian.ratiu@collabora.com>
+Date: Thu, Apr 23, 2020 at 11:00:58
 
-Johan
-
-
-On 4/23/20 7:10 AM, karthik poduval wrote:
-> Hi Johan/Helen,
-> 
-> I was attempting to fix the yaml to work for both platforms rk3288 and
-> rk3399. I couldn't find any specific example in the existing yaml files
-> that deal with this exact scenario common driver but different clocks for
-> different chipsets. Could you point me to an appropriate example ?
-> 
-> Meanwhile here is the patch I was trying out.
-> diff --git a/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> b/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> index af246b71eac6..4ca76a1bbb63 100644
-> --- a/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> +++ b/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> @@ -15,7 +15,11 @@ description: |
-> 
->  properties:
->    compatible:
-> -    const: rockchip,rk3399-cif-isp
+> This converts the Synopsis MIPI DSI binding documentation to yaml and
+> should be quite straightforward. I've added a missing ref clk and also
+> added Philippe as maintainer b/c he's the original txt author following
+> the algorithm provided in Message-ID 20200420175909.GA5810@ravnborg.org.
+>=20
+> Cc: Philippe CORNU <philippe.cornu@st.com>
+> Cc: devicetree@vger.kernel.org
+> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+> ---
+> Changes in v4:
+>   - Dropped panel patternProperties (Rob)
+>=20
+> Changes in v3:
+>   - Added ports property and its children which are required (Laurent)
+>   - Sorted required list alphabetically
+>=20
+> Changes in v2:
+>   - Removed unnecessary descriptions and maxItems (Rob)
+>   - Changed maintainers entry / dropped Mark (Rob)
+>   - Added dsi-controller.yaml ref (Rob)
+> ---
+>  .../bindings/display/bridge/dw_mipi_dsi.txt   | 32 ---------
+>  .../display/bridge/snps,dw-mipi-dsi.yaml      | 68 +++++++++++++++++++
+>  2 files changed, 68 insertions(+), 32 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/bridge/dw_m=
+ipi_dsi.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/snps=
+,dw-mipi-dsi.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi=
+.txt b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+> deleted file mode 100644
+> index b13adf30b8d3b..0000000000000
+> --- a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+> +++ /dev/null
+> @@ -1,32 +0,0 @@
+> -Synopsys DesignWare MIPI DSI host controller
+> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> -
+> -This document defines device tree properties for the Synopsys DesignWare=
+ MIPI
+> -DSI host controller. It doesn't constitue a device tree binding specific=
+ation
+> -by itself but is meant to be referenced by platform-specific device tree
+> -bindings.
+> -
+> -When referenced from platform device tree bindings the properties define=
+d in
+> -this document are defined as follows. The platform device tree bindings =
+are
+> -responsible for defining whether each optional property is used or not.
+> -
+> -- reg: Memory mapped base address and length of the DesignWare MIPI DSI
+> -  host controller registers. (mandatory)
+> -
+> -- clocks: References to all the clocks specified in the clock-names prop=
+erty
+> -  as specified in [1]. (mandatory)
+> -
+> -- clock-names:
+> -  - "pclk" is the peripheral clock for either AHB and APB. (mandatory)
+> -  - "px_clk" is the pixel clock for the DPI/RGB input. (optional)
+> -
+> -- resets: References to all the resets specified in the reset-names prop=
+erty
+> -  as specified in [2]. (optional)
+> -
+> -- reset-names: string reset name, must be "apb" if used. (optional)
+> -
+> -- panel or bridge node: see [3]. (mandatory)
+> -
+> -[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> -[2] Documentation/devicetree/bindings/reset/reset.txt
+> -[3] Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+> diff --git a/Documentation/devicetree/bindings/display/bridge/snps,dw-mip=
+i-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-=
+dsi.yaml
+> new file mode 100644
+> index 0000000000000..012aa8e7cb8cd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.y=
+aml
+> @@ -0,0 +1,68 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: https://urldefense.com/v3/__http://devicetree.org/schemas/display/b=
+ridge/snps,dw-mipi-dsi.yaml*__;Iw!!A4F2R9G_pg!Pn0TP0h4QkEcILgH_xBqMjSM4dJxl=
+yU3iCvF4FSbmdQOSIV309ngWu8EKCpP901d$=20
+> +$schema: https://urldefense.com/v3/__http://devicetree.org/meta-schemas/=
+core.yaml*__;Iw!!A4F2R9G_pg!Pn0TP0h4QkEcILgH_xBqMjSM4dJxlyU3iCvF4FSbmdQOSIV=
+309ngWu8EKPfhyNgW$=20
+> +
+> +title: Synopsys DesignWare MIPI DSI host controller
+> +
+> +maintainers:
+> +  - Philippe CORNU <philippe.cornu@st.com>
+> +
+> +description: |
+> +  This document defines device tree properties for the Synopsys DesignWa=
+re MIPI
+> +  DSI host controller. It doesn't constitue a device tree binding specif=
+ication
+> +  by itself but is meant to be referenced by platform-specific device tr=
+ee
+> +  bindings.
+> +
+> +  When referenced from platform device tree bindings the properties defi=
+ned in
+> +  this document are defined as follows. The platform device tree binding=
+s are
+> +  responsible for defining whether each property is required or optional=
+.
+> +
+> +allOf:
+> +  - $ref: ../dsi-controller.yaml#
+> +
+> +properties:
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
 > +    items:
-> +      - enum:
-> +        - rockchip,rk3288-cif-isp
-> +        - rockchip,rk3399-cif-isp
-> +      - const: rockchip,rk3399-cif-isp
-> 
->    reg:
->      maxItems: 1
-> @@ -37,20 +41,38 @@ properties:
->      const: dphy
-> 
+> +      - description: Module clock
+> +      - description: DSI bus clock for either AHB and APB
+> +      - description: Pixel clock for the DPI/RGB input
+> +    minItems: 2
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ref
+> +      - const: pclk
+> +      - const: px_clk
+> +    minItems: 2
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  reset-names:
+> +    const: apb
+> +
+> +  ports:
+> +    type: object
+> +
+> +    properties:
+> +      port@0:
+> +        type: object
+> +        description: Input node to receive pixel data.
+> +      port@1:
+> +        type: object
+> +        description: DSI output node to panel.
+> +
+> +    required:
+> +      - port@0
+> +      - port@1
+> +
+> +required:
+> +  - clock-names
+> +  - clocks
+> +  - ports
+> +  - reg
 
->    clocks:
-> -    items:
-> -      - description: ISP clock
-> -      - description: ISP AXI clock clock
-> -      - description: ISP AXI clock  wrapper clock
-> -      - description: ISP AHB clock clock
-> -      - description: ISP AHB wrapper clock
-> +    oneOf:
-> +      # rk3399 clocks
-> +      - items:
-> +        - description: ISP clock
-> +        - description: ISP AXI clock clock
-> +        - description: ISP AXI clock  wrapper clock
-> +        - description: ISP AHB clock clock
-> +        - description: ISP AHB wrapper clock
-> +      # rk3288 clocks
-> +      - items:
-> +        - description: ISP clock
-> +        - description: ISP AXI clock clock
-> +        - description: ISP AHB clock clock
-> +        - description: ISP Pixel clock
-> +        - description: ISP JPEG source clock
-> 
+Shouldn't the reset and reset-names be stated as required?
+From what I understand the driver will return if the reset is not=20
+available.
 
-We can expect a few more clocks here, so just use:
+> --=20
+> 2.26.0
+>=20
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://urldefense.com/v3/__https://lists.freedesktop.org/mailman/listinf=
+o/dri-devel__;!!A4F2R9G_pg!Pn0TP0h4QkEcILgH_xBqMjSM4dJxlyU3iCvF4FSbmdQOSIV3=
+09ngWu8EKDNeA2R5$=20
 
-  clocks:
-    minItems: 4
-    maxItems: 5
-
-or
-
-See question for Helen about 'pclk_isp_wrap':
-
-  clocks:
-    minItems: 4
-    maxItems: 6
-
-
-From Rockchip tree:
-
-static const char * const rk1808_isp_clks[] = {
-	"clk_isp",
-	"aclk_isp",
-	"hclk_isp",
-	"pclk_isp",
-};
-
-static const char * const rk3288_isp_clks[] = {
-	"clk_isp",
-	"aclk_isp",
-	"hclk_isp",
-	"pclk_isp_in",
-	"sclk_isp_jpe",
-};
-
-static const char * const rk3326_isp_clks[] = {
-	"clk_isp",
-	"aclk_isp",
-	"hclk_isp",
-	"pclk_isp",
-};
-
-static const char * const rk3368_isp_clks[] = {
-	"clk_isp",
-	"aclk_isp",
-	"hclk_isp",
-	"pclk_isp",
-};
-
-static const char * const rk3399_isp_clks[] = {
-	"clk_isp",
-	"aclk_isp",
-	"hclk_isp",
-	"aclk_isp_wrap",
-	"hclk_isp_wrap",
-	"pclk_isp_wrap"
-};
-
-Question for Helen:
-
-Where did 'pclk_isp_wrap' go in your patch serie?
-
->    clock-names:
-> -    items:
-> -      - const: clk_isp
-> -      - const: aclk_isp
-> -      - const: aclk_isp_wrap
-> -      - const: hclk_isp
-> -      - const: hclk_isp_wrap
-> +    oneOf:
-> +      # rk3399 clocks
-
-sort on SoC
-
-> +      - items:
-> +        - const: clk_isp
-> +        - const: aclk_isp
-> +        - const: aclk_isp_wrap
-> +        - const: hclk_isp
-> +        - const: hclk_isp_wrap
-> +      # rk3288 clocks
-
-sort on SoC
-
-> +      - items:
-> +        - const: clk_isp
-> +        - const: aclk_isp
-> +        - const: hclk_isp
-> +        - const: pclk_isp_in
-> +        - const: sclk_isp_jpe
-
-  clock-names:
-    oneOf:
-      # rk3288 clocks
-      - items:
-        - const: clk_isp
-          description: ISP clock
-        - const: aclk_isp
-          description: ISP AXI clock clock
-        - const: hclk_isp
-          description: ISP AHB clock clock
-        - const: pclk_isp_in
-          description: ISP Pixel clock
-        - const: sclk_isp_jpe
-          description: ISP JPEG source clock
-      # rk3399 clocks
-      - items:
-        - const: clk_isp
-          description: ISP clock
-        - const: aclk_isp
-          description: ISP AXI clock clock
-        - const: aclk_isp_wrap
-          description: ISP AXI clock  wrapper clock
-        - const: hclk_isp
-          description: ISP AHB clock clock
-        - const: hclk_isp_wrap
-          description: ISP AHB wrapper clock
-
-Question for robh:
-Is this a proper way to add description or is there a beter way?
-
-> 
-> on running command.
-> make ARCH=arm dtbs_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> 
-> I see following messages for dts nodes.
->  DTC     arch/arm/boot/dts/rk3288-firefly-beta.dt.yaml
->   CHECK   arch/arm/boot/dts/rk3288-firefly-beta.dt.yaml
-> /home/kpoduval/workspace/tinkerboard-yocto/build/tmp/work/tinker_board-poky-linux-gnueabi/linux-stable/5.5.7+gitAUTOINC+ceab3ac1e6-r0/linux-tinker_board-standard-build/arch/arm/boot/dts/rk3288-firefly-beta.dt.yaml:
-> isp@ff910000: clocks: [[7, 107], [7, 205], [7, 469], [7, 371], [7, 108]] is
-> valid under each of {'additionalItems': False, 'items': [{}, {}, {}, {},
-> {}], 'maxItems': 5, 'minItems': 5, 'type': 'array'}, {'additionalItems':
-> False, 'items': [{}, {}, {}, {}, {}], 'maxItems': 5, 'minItems': 5, 'type':
-> 'array'}
-> /home/kpoduval/workspace/tinkerboard-yocto/build/tmp/work/tinker_board-poky-linux-gnueabi/linux-stable/5.5.7+gitAUTOINC+ceab3ac1e6-r0/linux-tinker_board-standard-build/arch/arm/boot/dts/rk3288-firefly-beta.dt.yaml:
-> isp@ff910000: compatible: ['rockchip,rk3288-cif-isp'] is too short
-> 
-> Are these cosidered as error messages ? The "too short" is being alerted
-> for the orgianl yaml for rk3399 without any of my chnages.
-> Kindly advise.
-> 
-> --
-> Regards,
-> Karthik Poduval
-> 
-> On Sat, Apr 11, 2020 at 10:13 PM karthik poduval <karthik.poduval@gmail.com>
-> wrote:
-> 
->> Thanks Johan for your valuable comments.
->>
->> On Wed, Apr 8, 2020 at 6:19 PM Johan Jonker <jbx6244@gmail.com> wrote:
->>>
->>> Hi Karthik and others,
->>>
->>> Include all mail lists found with:
->>> ./scripts/get_maintainer.pl --nogit-fallback --nogit
->>>
->>> Helen is moving isp1 bindings out of staging.
->>> Clocks and other things don't fit with her patch serie.
->>> Maybe fix this while still in staging?
->>>
->>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
->>> 'phys' is a required property
->>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
->>> 'phy-names' is a required property
->>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
->>> 'ports' is a required property
->>>
->>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
->>> 'assigned-clock-rates', 'assigned-clocks'
->>> do not match any of the regexes: 'pinctrl-[0-9]+'
->>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
->>> clock-names:2: 'aclk_isp_wrap' was expected
->>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
->>> clock-names:3: 'hclk_isp' was expected
->>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: isp@ff910000:
->>> clock-names:4: 'hclk_isp_wrap' was expected
->>>
->>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: mipi-phy-rx0: 'power-domains'
->>> is a required property
->>>
->>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: mipi-phy-rx0: clock-names:1:
->>> 'dphy-cfg' was expected
->>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: mipi-phy-rx0: clock-names:
->>> ['dphy-ref', 'pclk'] is too short
->>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: mipi-phy-rx0: clocks: [[7,
->>> 126], [7, 358]] is too short
->>>
->>>
->>> Inside yaml:
->>> Use enum and sort.
->>>>>  properties:
->>>>>    compatible:
->>>
->>>>>      const: rockchip,rk3399-cif-isp
->>>>> +    const: rockchip,rk3288-rkisp1
->>>
->>>     enum:
->>>       - rockchip,rk3288-rkisp1
->>>       - rockchip,rk3399-cif-isp
->>>
->>>>>  properties:
->>>>>    compatible:
->>>>>      const: rockchip,rk3399-mipi-dphy-rx0
->>>>> +    const: rockchip,rk3288-mipi-dphy-rx0
->>>
->>>     enum:
->>>       - rockchip,rk3288-mipi-dphy-rx0
->>>       - rockchip,rk3399-mipi-dphy-rx0
->>>
->>>>
->>>> Please, keep consistency, or rk3288-cif-isp, or we change
->> rk3399-cif-isp to be rk3399-rkisp1.
->>>
->>>
->>> On 4/6/20 9:30 AM, Karthik Poduval wrote:
->>>> ISP and DPHY device entries missing so add them.
->>>>
->>>
->>>> tested on tinkerbaord with ov5647 using command
->>>> cam -c 1 -C -F cap
->>>
->>> Disclose dts node for ov5647 in cover letter, so people can reproduce
->>> this experiment.
->>>
->>> Caution!
->>> Without dts node this command doesn't work correct.
->>>
->>> make ARCH=arm dtbs_check
->>>
->> DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
->>>
->>> make ARCH=arm dtbs_check
->>>
->> DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy-rx0.yaml
->>>
->>> Needed to detect missing: phys, phy-names and ports ,etc.
->>>
->>> &isp {
->>>         status = "okay";
->>> };
->>>
->> Makes sense, that's why my kernel compilation passed and I didn't
->> these errors. Thanks for the command, I will verify dts for
->> correctness in next patch series.
->>
->>> Needed to detect missing: power-domains, etc.
->>>
->>> &mipi_phy_rx0 {
->>>         status = "okay";
->>> };
->>>
->>>>
->>>> Reported-by: Karthik Poduval <karthik.poduval@gmail.com>
->>>> Signed-off-by: Karthik Poduval <karthik.poduval@gmail.com>
->>>> ---
->>>>  arch/arm/boot/dts/rk3288.dtsi | 25 +++++++++++++++++++++++++
->>>>  1 file changed, 25 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/rk3288.dtsi
->> b/arch/arm/boot/dts/rk3288.dtsi
->>>> index 9beb662166aa..adea8189abd9 100644
->>>> --- a/arch/arm/boot/dts/rk3288.dtsi
->>>> +++ b/arch/arm/boot/dts/rk3288.dtsi
->>>> @@ -247,6 +247,23 @@
->>>>               ports = <&vopl_out>, <&vopb_out>;
->>>>       };
->>>>
->>>
->>>> +     isp: isp@ff910000 {
->>>
->>> For nodes:
->>> Sort things without reg alphabetical first,
->>> then sort the rest by reg address.
->>>
->> Sure
->>>> +             compatible = "rockchip,rk3288-rkisp1";
->>>> +             reg = <0x0 0xff910000 0x0 0x4000>;
->>>> +             interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
->>>> +             clocks = <&cru SCLK_ISP>, <&cru ACLK_ISP>,
->>>> +                      <&cru HCLK_ISP>, <&cru PCLK_ISP_IN>,
->>>> +                      <&cru SCLK_ISP_JPE>;
->>>> +             clock-names = "clk_isp", "aclk_isp",
->>>> +                           "hclk_isp", "pclk_isp_in",
->>>> +                           "sclk_isp_jpe";
->>>> +             assigned-clocks = <&cru SCLK_ISP>, <&cru SCLK_ISP_JPE>;
->>>> +             assigned-clock-rates = <400000000>, <400000000>;
->>>
->>>> +             power-domains = <&power RK3288_PD_VIO>;
->>>> +             iommus = <&isp_mmu>;
->>>
->>> sort
->>>
->>> Something missing?
->>> Where are the ports and port nodes?
->>
->> I was assuming that this would be a part of the board specific dtsi or
->> dts entry where the isp node would be overriden and the i2c camera
->> port
->> and the isp port remote-endpoints would be connected. I had this as a
->> part of my first patch series. However I was advised by Helen to not
->> include the ov5647
->> dtsi as it isn't hardwired to the SoC and resides on an camera adapter
->> board.
->>
->> Should this be defined without the remote-endpoint phandle since we
->> don't know exactly which sensor gets connected in this dtsi file ?
->>
->>>
->>>> +             status = "disabled";
-
-Question for Heiko:
-Should we add status to Helen's serie as well?
-
->>>> +     };
->>>> +
->>>>       sdmmc: mmc@ff0c0000 {
->>>>               compatible = "rockchip,rk3288-dw-mshc";
->>>>               max-frequency = <150000000>;
->>>> @@ -891,6 +908,14 @@
->>>>                       status = "disabled";
->>>>               };
->>>>
->>>
->>>> +             mipi_phy_rx0: mipi-phy-rx0 {
->>>
->>> Use separate patch.
->>>
->>> For nodes:
->>> Sort things without reg alphabetical first,
->>> then sort the rest by reg address.
->>>
->> Sure
->>
->>>> +                     compatible = "rockchip,rk3288-mipi-dphy-rx0";
->>>> +                     clocks = <&cru SCLK_MIPIDSI_24M>, <&cru
->> PCLK_MIPI_CSI>;
->>>> +                     clock-names = "dphy-ref", "pclk";
->>> Something missing?
->>> Does this phy have a power domain?
->> The tinkerboard debian kernel (where I referred to for this patch)
->> didn't have it defined for the DPHY. I would guess that it would be
->> the same as the ISP i.e. RK3288_PD_VIO,
->> does anyone know the answer to this or do I have to reach out to
->> Rockchip engineering ?
->>>
->>>> +                     #phy-cells = <0>;
->>>> +                     status = "disabled";
->>>> +             };
->>>> +
->>>>               io_domains: io-domains {
->>>>                       compatible = "rockchip,rk3288-io-voltage-domain";
->>>>                       status = "disabled";
->>>>
->>>
->>
->>
->> --
->> Regards,
->> Karthik Poduval
->>
-> 
-> 
-
+Thanks,
+Angelo
