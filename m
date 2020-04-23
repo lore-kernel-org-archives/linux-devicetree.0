@@ -2,82 +2,198 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC5DC54FCB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 20:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5105C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 20:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89B2B20767
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 20:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD92520780
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 20:36:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Fn2d1x+/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X5O3GV4K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgDWUJz (ORCPT
+        id S1726002AbgDWUgy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 16:09:55 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:33723 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726154AbgDWUJy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 16:09:54 -0400
-X-Originating-IP: 93.29.109.196
-Received: from localhost.localdomain (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id A275CE0007;
-        Thu, 23 Apr 2020 20:09:51 +0000 (UTC)
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Thu, 23 Apr 2020 16:36:54 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:59747 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725877AbgDWUgx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Apr 2020 16:36:53 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 4725158030B;
+        Thu, 23 Apr 2020 16:36:49 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 23 Apr 2020 16:36:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=Iubs+KISuHQ9VGeGg+cCp2xJSoU
+        PuYVrphsLXiw5SFg=; b=Fn2d1x+/36iC3PGOTy5Cp2hHxpxTsbZXqEhCoWSU6fC
+        Bh2uGjm8NzjGSIGOhUdI6jIFnaNlWlK/KNK0SO5YgDVKAzn9T8T4ClUJFkXWcI/L
+        SrSHQwn+ywvkFIfMqeLT0tGOBnOJCf3GhECZDwsJXcOOkFJEZ5PO3Hg2TEHxt0Ji
+        XXCiuCgBhfrNpF+Q4qgbmo0zisCBtKA1VkhzWKnI3UD+PuwtHOjrTI/5OtSrja0W
+        0xNGXCJ8ebZmLgh5iBcj0TUAG6xzsfP58vDHg4dtrP2Je050KddpO2V/+DEw4INi
+        HTrBFJ8cS/EHw4cjf9yqCM3mqKMdTGT34HW7z+GoIEQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Iubs+K
+        ISuHQ9VGeGg+cCp2xJSoUPuYVrphsLXiw5SFg=; b=X5O3GV4KFSkNBZXwi0gXe/
+        Az/rwjNsPXRiOZeR/DIobQrkLfux9vKSBPW2Q7Wch/uG7VG9fPmUEU8Kyi30iPJx
+        6rZFq866Z4AieJ/VQuUcLR0mV0pZLLxlv3ciLBDB/NhY/AvDjNVAvMjJxXjdCS6K
+        u41z1fKpjs0erRbydhTf6J8lDzfZB7FSCFB8idsmUzAcZtLjWHuo6bbN3Dpzw+lv
+        Xc1y1zz0vGYrNGmVPq0/4/8tCV+p/V1vxI12KqIjNELt9KhmHqpZLjuh1WSuMbeZ
+        mWk/VcSn4C4MRsWk0RVAApy8MoL8ZK52EhiDYG9eBvoyLIChI6lqSRyqMDdlQG7g
+        ==
+X-ME-Sender: <xms:XfyhXtOzOOFFqaB2EmGtuUz4AXihlYYhfPH3NPly7o2BbKivw_911Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeelgdduudejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:XfyhXkMYXTgP_dAi3mHrR2OLJMQgltfV-ZrcUbSZbYi-eyL9XqlWvQ>
+    <xmx:XfyhXnRz3tzFqWtdmt2KW_Iy-oRzKWX5FUFdLIFvNbNly0q4eowTmw>
+    <xmx:XfyhXuBpYPyCR1QitUY5OuM1TQtkKBdD8mz-YseHbvORsD3x-nC7Qg>
+    <xmx:YfyhXklTjVJsrJRboZpeYnKPAGn0Xr4Sox5XlaeG8MS2WPQdNjQpdg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id CD893328005E;
+        Thu, 23 Apr 2020 16:36:44 -0400 (EDT)
+Date:   Thu, 23 Apr 2020 22:36:42 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Tony Lindgren <tony@atomide.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-mips@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        linux-samsung-soc@vger.kernel.org,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hansverk@cisco.com>,
-        justin.swartz@risingedge.co.za, Johan Jonker <jbx6244@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v2 2/4] arm64: dts: rockchip: Add RGA support to the PX30
-Date:   Thu, 23 Apr 2020 22:09:35 +0200
-Message-Id: <20200423200937.1039257-3-paul.kocialkowski@bootlin.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200423200937.1039257-1-paul.kocialkowski@bootlin.com>
-References: <20200423200937.1039257-1-paul.kocialkowski@bootlin.com>
+        linux-omap <linux-omap@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philipp Rossak <embed3d@gmail.com>,
+        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        kernel@pyra-handheld.com
+Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the
+ PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
+Message-ID: <20200423203642.35ms4aarnv65tfp5@gilmour.lan>
+References: <b5a06c19-7a3e-bcb8-5ae3-76901b9c6c35@gmail.com>
+ <20200421112129.zjmkmzo3aftksgka@gilmour.lan>
+ <20200421141543.GU37466@atomide.com>
+ <D9D4D057-A73D-485F-898D-5C05E89C16B7@goldelico.com>
+ <20200422065859.quy6ane5v7vsy5tf@gilmour.lan>
+ <1AA57A0C-48E6-49BB-BB9A-2AAFFB371BCD@goldelico.com>
+ <20200422151328.2oyqz7gqkbunmd6o@gilmour.lan>
+ <07923B6C-4CCD-4B81-A98F-E19C43412A89@goldelico.com>
+ <43688597-4b99-8f4d-9ad5-548ddff07f52@baylibre.com>
+ <71F2F964-32C7-41E6-8F1A-A73161EA1BB3@goldelico.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="goo77pyirkr5psgn"
+Content-Disposition: inline
+In-Reply-To: <71F2F964-32C7-41E6-8F1A-A73161EA1BB3@goldelico.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The PX30 features a RGA block: add the necessary node to support it.
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
----
- arch/arm64/boot/dts/rockchip/px30.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+--goo77pyirkr5psgn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
-index f809dd6d5dc3..613703e3d0df 100644
---- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-@@ -1102,6 +1102,17 @@ vopl_mmu: iommu@ff470f00 {
- 		status = "disabled";
- 	};
- 
-+	rga: rga@ff480000 {
-+		compatible = "rockchip,px30-rga";
-+		reg = <0x0 0xff480000 0x0 0x10000>;
-+		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH 0>;
-+		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA_CORE>;
-+		clock-names = "aclk", "hclk", "sclk";
-+		resets = <&cru SRST_RGA>, <&cru SRST_RGA_A>, <&cru SRST_RGA_H>;
-+		reset-names = "core", "axi", "ahb";
-+		power-domains = <&power PX30_PD_VO>;
-+	};
-+
- 	qos_gmac: qos@ff518000 {
- 		compatible = "syscon";
- 		reg = <0x0 0xff518000 0x0 0x20>;
--- 
-2.26.0
+On Thu, Apr 23, 2020 at 05:45:55PM +0200, H. Nikolaus Schaller wrote:
+> > Am 23.04.2020 um 17:00 schrieb Neil Armstrong <narmstrong@baylibre.com>:
+> >> One thing we can learn is that "core" seems to be a de facto standard=
+=20
+> >> for the core clock-name. An alternative "gpu" is used by nvidia,gk20a.=
+txt.
+> >=20
+> > Usually IPs needs a few clocks:
+> > - pclk or apb or reg: the clock clocking the "slave" bus to serve the r=
+egisters
+> > - axi or bus or ahb: the bus clocking the the "master" bus to get data =
+=66rom system memory
+> > - core: the actual clock feeding the GPU logic
+>=20
+> And the sgx544 seems to have two such clocks.
+>=20
+> > Sometimes you have a single clock for slave and master bus.
+> >=20
+> > But you can also have separate clocks for shader cores, .. this depends=
+ on the IP and it's architecture.
+> > The IP can also have memories with separate clocks, etc...
+>=20
+> Indeed.
+>=20
+> > But all these clocks can be source by an unique clock on a SoC, but dif=
+ferent on another
+> > SoC, this is why it's important to list them all, even optional.
+> >=20
+> > You'll certainly have at least a reset signal, and a power domain, thes=
+e should exist and be optional.
+>=20
+> Well, they exist only as hints in block diagrams of some SoC data
+> sheets (so we do not know if they represent the imagination
+> definitions) and the current driver code doesn't make use of it. Still
+> the gpu core works.
+>=20
+> So I do not see any urgent need to add a complete list to the bindings
+> now.
+>=20
+> Unless some special SoC integration makes use of them. Then it is IMHO
+> easier to extend the bindings by a follow-up patch than now thinking
+> about all potential options and bloating the bindings with things we
+> (the open source community) doesn't and can't know.
+>=20
+> My goal is to keep the bindings as minimalistic as possible. And reset
+> lines and power domains are (at least for those we have in the works)
+> not needed to make working systems.
+>=20
+> Therefore, for clocks I also would start with a minimalistic approach
+> for a single optional GPU core clock and leave out reset and power
+> completely.
 
+Like I said above, the DT is considered an ABI and you'll have to
+maintain backward compatibility (ie, newer kernel running with older
+DT). Therefore, you won't be able to require a new clock, reset or
+power-domain later on for example.
+
+I guess the question I'm really asking is: since you don't really know
+how the hardware is integrated at the moment, why should we have that
+discussion *now*. It's really not suprising that you don't know yet, so
+I'm not sure why we need to rush in the bindings.
+
+Maxime
+
+--goo77pyirkr5psgn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXqH8WgAKCRDj7w1vZxhR
+xevnAQDosUT6nmUX0+zNQOj7IKsbVGpyycJhdLX1FoaJiEMTHgD/SWTr0aPp/w2C
+TCfnfiPupaeG8u9JV8QMCk/a58o6Xw8=
+=ygqv
+-----END PGP SIGNATURE-----
+
+--goo77pyirkr5psgn--
