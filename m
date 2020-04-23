@@ -2,149 +2,188 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B454CC54FCB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 15:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A37DDC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 15:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93F042076C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 15:46:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="DrKJ9fNz"
+	by mail.kernel.org (Postfix) with ESMTP id 882B82076C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 15:47:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729300AbgDWPqo (ORCPT
+        id S1729378AbgDWPrm convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:46:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55922 "EHLO
+        Thu, 23 Apr 2020 11:47:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729176AbgDWPqo (ORCPT
+        by vger.kernel.org with ESMTP id S1729320AbgDWPrm (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:46:44 -0400
-Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F720C09B040;
-        Thu, 23 Apr 2020 08:46:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587656801;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=ybxxfVp12h/EJrmfUJdRJSGTmKH3W7lZYEApLFlERWY=;
-        b=DrKJ9fNz8WxLH/lxvzqH+AMSam9tu2FhRn1b+DxbazOFoXyS93+afrGgpwefT4t6QC
-        /4k7b51LsSANcN/xVgHDnGc9MzXErXxCPQeHuiElt1upkXq+nvKp9tSqjV5+k1mBfxS3
-        gAkvjEQjZJNlc0Yw5yj/hGkMx2dR3nhn+e4WqxPIVEcRt6S9melWvYcV+2h+8m47DJTF
-        K+utEk2anK6Ms4Lb8UzV2Zj3a1+UkWzb9yq/ZlLTRil6UF5EXzHTWRMjAccLpfo3BT1D
-        qJ7BmeYa+eOlmSQs2uTl6iNBaTpywNCpLK63P2AacOcUu0H5TmLKFwDnMPpJpV6cP8ls
-        aO1A==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCysOfl5tOw33QtdTbGcCRJGxnkq3ByzlXOnoXby"
-X-RZG-CLASS-ID: mo00
-Received: from [IPv6:2001:16b8:2692:1500:61a3:e550:2224:7950]
-        by smtp.strato.de (RZmta 46.6.2 AUTH)
-        with ESMTPSA id R0acebw3NFjv7lw
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Thu, 23 Apr 2020 17:45:57 +0200 (CEST)
-Subject: Re: [PATCH v6 00/12] ARM/MIPS: DTS: add child nodes describing the PVRSGX GPU present in some OMAP SoC and JZ4780 (and many more)
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <43688597-4b99-8f4d-9ad5-548ddff07f52@baylibre.com>
-Date:   Thu, 23 Apr 2020 17:45:55 +0200
-Cc:     Maxime Ripard <maxime@cerno.tech>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Tony Lindgren <tony@atomide.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        linux-mips@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        linux-samsung-soc@vger.kernel.org,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philipp Rossak <embed3d@gmail.com>,
-        OpenPVRSGX Linux Driver Group <openpvrsgx-devgroup@letux.org>,
+        Thu, 23 Apr 2020 11:47:42 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77D31C09B040
+        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 08:47:42 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jRe4c-0007d9-C5; Thu, 23 Apr 2020 17:47:34 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jRe4b-0006Ow-Ja; Thu, 23 Apr 2020 17:47:33 +0200
+Message-ID: <a32ab342e7e4928ec252815ab0023f81bb182b32.camel@pengutronix.de>
+Subject: Re: [PATCH v3 12/13] reset: imx: Add audiomix reset controller
+ support
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Abel Vesa <abel.vesa@nxp.com>, Lee Jones <lee.jones@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>, Peng Fan <peng.fan@nxp.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>
+Cc:     NXP Linux Team <linux-imx@nxp.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        kernel@pyra-handheld.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <71F2F964-32C7-41E6-8F1A-A73161EA1BB3@goldelico.com>
-References: <20200415130233.rgn7xrtwqicptke2@gilmour.lan> <C589D06E-435E-4316-AD0A-8498325039E3@goldelico.com> <10969e64-fe1f-d692-4984-4ba916bd2161@gmail.com> <20200420073842.nx4xb3zqvu23arkc@gilmour.lan> <b5a06c19-7a3e-bcb8-5ae3-76901b9c6c35@gmail.com> <20200421112129.zjmkmzo3aftksgka@gilmour.lan> <20200421141543.GU37466@atomide.com> <D9D4D057-A73D-485F-898D-5C05E89C16B7@goldelico.com> <20200422065859.quy6ane5v7vsy5tf@gilmour.lan> <1AA57A0C-48E6-49BB-BB9A-2AAFFB371BCD@goldelico.com> <20200422151328.2oyqz7gqkbunmd6o@gilmour.lan> <07923B6C-4CCD-4B81-A98F-E19C43412A89@goldelico.com> <43688597-4b99-8f4d-9ad5-548ddff07f52@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-X-Mailer: Apple Mail (2.3124)
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Date:   Thu, 23 Apr 2020 17:47:33 +0200
+In-Reply-To: <1586937773-5836-13-git-send-email-abel.vesa@nxp.com>
+References: <1586937773-5836-1-git-send-email-abel.vesa@nxp.com>
+         <1586937773-5836-13-git-send-email-abel.vesa@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Neil,
+Hi Abel,
 
-> Am 23.04.2020 um 17:00 schrieb Neil Armstrong =
-<narmstrong@baylibre.com>:
->> One thing we can learn is that "core" seems to be a de facto standard=20=
+On Wed, 2020-04-15 at 11:02 +0300, Abel Vesa wrote:
+> The imx-mix MFD driver registers some devices, one of which, in case of
+> audiomix, maps correctly to a reset controller type. This driver registers
+> a reset controller for that. For now, only the EARC specific resets are added.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> ---
+>  drivers/reset/Kconfig              |   7 +++
+>  drivers/reset/Makefile             |   1 +
+>  drivers/reset/reset-imx-audiomix.c | 117 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 125 insertions(+)
+>  create mode 100644 drivers/reset/reset-imx-audiomix.c
+> 
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index d9efbfd..2f8d9b3 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -81,6 +81,13 @@ config RESET_INTEL_GW
+>  	  Say Y to control the reset signals provided by reset controller.
+>  	  Otherwise, say N.
+>  
+> +config RESET_IMX_AUDIOMIX
+> +	bool "i.MX Audiomix Reset Driver" if COMPILE_TEST
+> +	depends on HAS_IOMEM
+> +	default ARCH_MXC
+> +	help
+> +	  This enables the audiomix reset controller driver for i.MX SoCs.
+> +
+>  config RESET_LANTIQ
+>  	bool "Lantiq XWAY Reset Driver" if COMPILE_TEST
+>  	default SOC_TYPE_XWAY
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index 249ed35..cf23d38 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -12,6 +12,7 @@ obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
+>  obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
+>  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
+>  obj-$(CONFIG_RESET_INTEL_GW) += reset-intel-gw.o
+> +obj-$(CONFIG_RESET_IMX_AUDIOMIX) += reset-imx-audiomix.o
+>  obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
+>  obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
+>  obj-$(CONFIG_RESET_MESON) += reset-meson.o
+> diff --git a/drivers/reset/reset-imx-audiomix.c b/drivers/reset/reset-imx-audiomix.c
+> new file mode 100644
+> index 00000000..9533e41
+> --- /dev/null
+> +++ b/drivers/reset/reset-imx-audiomix.c
+> @@ -0,0 +1,117 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright 2019 NXP.
+> + */
+> +
+> +#include <dt-bindings/reset/imx-audiomix-reset.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset-controller.h>
+> +
+> +#define IMX_AUDIOMIX_EARC_CTRL_REG	0x200
+> +
+> +#define IMX_AUDIOMIX_EARC_RESET_BIT	0x0
+> +#define IMX_AUDIOMIX_EARC_PHY_RESET_BIT	0x1
+> +
+> +struct imx_audiomix_reset_data {
+> +	void __iomem *base;
+> +	struct reset_controller_dev rcdev;
+> +	spinlock_t lock;
+> +};
+> +
+> +static int imx_audiomix_reset_set(struct reset_controller_dev *rcdev,
+> +			  unsigned long id, bool assert)
+> +{
+> +	struct imx_audiomix_reset_data *drvdata = container_of(rcdev,
+> +			struct imx_audiomix_reset_data, rcdev);
+> +	void __iomem *reg_addr = drvdata->base;
+> +	unsigned long flags;
+> +	unsigned int offset;
+> +	u32 reg;
+> +
+> +	switch (id) {
+> +	case IMX_AUDIOMIX_EARC_PHY_RESET:
+> +		reg_addr += IMX_AUDIOMIX_EARC_CTRL_REG;
+> +		offset = IMX_AUDIOMIX_EARC_PHY_RESET_BIT;
+> +		break;
+> +	case IMX_AUDIOMIX_EARC_RESET:
+> +		reg_addr += IMX_AUDIOMIX_EARC_CTRL_REG;
+> +		offset = IMX_AUDIOMIX_EARC_RESET_BIT;
+> +		break;
 
->> for the core clock-name. An alternative "gpu" is used by =
-nvidia,gk20a.txt.
->=20
-> Usually IPs needs a few clocks:
-> - pclk or apb or reg: the clock clocking the "slave" bus to serve the =
-registers
-> - axi or bus or ahb: the bus clocking the the "master" bus to get data =
-from system memory
-> - core: the actual clock feeding the GPU logic
+This switch is not necessary. Since reg_addr is the same for both bits,
+you can just set it directly, once. And since (IMX_AUDIOMIX_EARC_RESET
+== IMX_AUDIOMIX_EARC_RESET_BIT) and (IMX_AUDIOMIX_EARC_PHY_RESET ==
+IMX_AUDIOMIX_EARC_PHY_RESET_BIT), you can just use BIT(id) instead of
+BIT(offset) below.
 
-And the sgx544 seems to have two such clocks.
+> +	default:
+> +		return -EINVAL;
 
-> Sometimes you have a single clock for slave and master bus.
->=20
-> But you can also have separate clocks for shader cores, .. this =
-depends on the IP and it's architecture.
-> The IP can also have memories with separate clocks, etc...
+This is already catched by the core, which doesn't allow
+(id >= rcdev->nr_resets).
 
-Indeed.
+> +	}
+> +
+> +	if (assert) {
+> +		spin_lock_irqsave(&drvdata->lock, flags);
+> +		reg = readl(reg_addr);
+> +		writel(reg & ~BIT(offset), reg_addr);
+> +		spin_unlock_irqrestore(&drvdata->lock, flags);
+> +	} else {
+> +		spin_lock_irqsave(&drvdata->lock, flags);
+> +		reg = readl(reg_addr);
+> +		writel(reg | BIT(offset), reg_addr);
+> +		spin_unlock_irqrestore(&drvdata->lock, flags);
+> +	}
 
-> But all these clocks can be source by an unique clock on a SoC, but =
-different on another
-> SoC, this is why it's important to list them all, even optional.
->=20
-> You'll certainly have at least a reset signal, and a power domain, =
-these should exist and be optional.
-
-Well, they exist only as hints in block diagrams of some SoC data sheets
-(so we do not know if they represent the imagination definitions) and =
-the
-current driver code doesn't make use of it. Still the gpu core works.
-
-So I do not see any urgent need to add a complete list to the bindings =
-now.
-
-Unless some special SoC integration makes use of them. Then it is IMHO =
-easier
-to extend the bindings by a follow-up patch than now thinking about all
-potential options and bloating the bindings with things we (the open =
-source
-community) doesn't and can't know.
-
-My goal is to keep the bindings as minimalistic as possible. And reset =
-lines
-and power domains are (at least for those we have in the works) not =
-needed
-to make working systems.
-
-Therefore, for clocks I also would start with a minimalistic approach =
-for
-a single optional GPU core clock and leave out reset and power =
-completely.
-
-BR and thanks,
-Nikolaus
-
+regards
+Philipp
