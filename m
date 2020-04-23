@@ -2,120 +2,111 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D27BC54FCB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 16:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E42C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 16:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70B8920728
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 16:06:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="DY3WH2bJ"
+	by mail.kernel.org (Postfix) with ESMTP id 6E05C20776
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 16:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbgDWQGk (ORCPT
+        id S1729501AbgDWQWJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:06:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59030 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729386AbgDWQGj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:06:39 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 944C2C09B040;
-        Thu, 23 Apr 2020 09:06:39 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6B5BE4F7;
-        Thu, 23 Apr 2020 18:06:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1587657996;
-        bh=eWZUj9lTkWCXbhwqDd22bo5n7vvld9tAlLBaI/AKyv4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DY3WH2bJ8iJqesFWYQRAgc8apuelXqtZ/iHRDw+zHNOQC7hM6JCLyNNTaM8gxEAK5
-         WjAHJAVRNkG55Otg2RPBzSnARNva14Kd1mLtU9ZyfeAdafVYqx0qUjMxzB2kLcYy32
-         MeQ2uqL7UOq1ADpod+3DO5CMqmXSit3XxqtPbuco=
-Date:   Thu, 23 Apr 2020 19:06:22 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: Fix command line length limit calling
- dt-mk-schema
-Message-ID: <20200423160622.GE6196@pendragon.ideasonboard.com>
-References: <20200422185708.6363-1-robh@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200422185708.6363-1-robh@kernel.org>
+        Thu, 23 Apr 2020 12:22:09 -0400
+Received: from mga18.intel.com ([134.134.136.126]:20646 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729477AbgDWQWI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Apr 2020 12:22:08 -0400
+IronPort-SDR: daDRwMEVdYKP8z3z5u2+kbDy209qVdnZqImId1ARU4I02xw7Sj1rjjNRN0Eht3aHcw8IKEiQAo
+ L4KH5xWue2Qw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 09:22:07 -0700
+IronPort-SDR: pj0Y69wd4xhPZUL8O7agmF9d049aFDa29eVS+FtC4Ct+GxciTXL40ScRSE4MuzZ9LrtneqtnH0
+ E1E4L2J/QIng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
+   d="scan'208";a="274283346"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga002.jf.intel.com with ESMTP; 23 Apr 2020 09:22:03 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org
+Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        arnd@arndb.de, brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com,
+        Ramuthevar Vadivel Murugan 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v3 0/2] mtd: rawnand: Add NAND controller support on Intel LGM SoC
+Date:   Fri, 24 Apr 2020 00:21:11 +0800
+Message-Id: <20200423162113.38055-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 
-Thank you for the patch.
+This patch adds the new IP of Nand Flash Controller(NFC) support
+on Intel's Lightning Mountain(LGM) SoC.
 
-On Wed, Apr 22, 2020 at 01:57:08PM -0500, Rob Herring wrote:
-> As the number of schemas has increased, we're starting to hit the error
-> "execvp: /bin/sh: Argument list too long". This is due to passing all the
-> schema files on the command line to dt-mk-schema. It currently is only
-> with out of tree builds and is intermittent depending on the file path
-> lengths.
-> 
-> Commit 2ba06cd8565b ("kbuild: Always validate DT binding examples") made
-> hitting this proplem more likely since the example validation now always
-> gets the full list of schemas.
-> 
-> Fix this by passing the schema file list in a pipe and using xargs. We end
-> up doing the find twice, but the time is insignificant compared to the
-> dt-mk-schema time.
-> 
-> Reported-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+DMA is used for burst data transfer operation, also DMA HW supports
+aligned 32bit memory address and aligned data access by default.
+DMA burst of 8 supported. Data register used to support the read/write
+operation from/to device.
 
-Tested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+NAND controller also supports in-built HW ECC engine.
 
-> ---
->  Documentation/devicetree/bindings/Makefile | 18 ++++++++++--------
->  1 file changed, 10 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
-> index 87c76bdabfe6..7782d9985082 100644
-> --- a/Documentation/devicetree/bindings/Makefile
-> +++ b/Documentation/devicetree/bindings/Makefile
-> @@ -14,16 +14,18 @@ $(obj)/%.example.dts: $(src)/%.yaml FORCE
->  # Use full schemas when checking %.example.dts
->  DT_TMP_SCHEMA := $(obj)/processed-schema-examples.yaml
->  
-> +find_cmd = find $(srctree)/$(src) \( -name '*.yaml' ! \
-> +		-name 'processed-schema*' ! \
-> +		-name '*.example.dt.yaml' \)
-> +
->  quiet_cmd_mk_schema = SCHEMA  $@
-> -      cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(real-prereqs)
-> +      cmd_mk_schema = rm -f $@ ; \
-> +                      $(if $(DT_MK_SCHEMA_FLAGS), \
-> +                           echo $(real-prereqs), \
-> +                           $(find_cmd)) | \
-> +                      xargs $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) >> $@
->  
-> -DT_DOCS = $(addprefix $(src)/, \
-> -	$(shell \
-> -	cd $(srctree)/$(src) && \
-> -	find * \( -name '*.yaml' ! \
-> -		-name 'processed-schema*' ! \
-> -		-name '*.example.dt.yaml' \) \
-> -	))
-> +DT_DOCS = $(shell $(find_cmd) | sed -e 's|^$(srctree)/||')
->  
->  DT_SCHEMA_FILES ?= $(DT_DOCS)
->  
+NAND controller driver implements ->exec_op() to replace legacy hooks,
+these specific call-back method to execute NAND operations.
+
+Thank you very much Boris and Hauke for the reviews and suggestions.
+---
+v3:
+  - Add depends on MACRO in Kconfig
+  - file name update in Makefile
+  - file name update to intel-nand-controller
+  - modification of MACRO divided like EBU, HSNAND and NAND
+  - add NAND_ALE_OFFS, NAND_CLE_OFFS and NAND_CS_OFFS
+  - rename lgm_ to ebu_ and _va suffix is removed in the whole file
+  - rename structure and varaibles as per review comments.
+  - remove lgm_read_byte(), lgm_dev_ready() and cmd_ctrl() un-used function  
+  - update in exec_op() as per review comments
+  - rename function lgm_dma_exit() by lgm_dma_cleanup()
+  - hardcoded magic value  for base and offset replaced by MACRO defined
+  - mtd_device_unregister() + nand_cleanup() instead of nand_release()
+v2:
+  - implement the ->exec_op() to replaces the legacy hook-up.
+  - update the commit message
+  - YAML compatible string update to intel, lgm-nand-controller
+  - add MIPS maintainers and xway_nand driver author in CC
+
+v1:
+ - initial version
+ 
+
+
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: mtd: Add YAML for Nand Flash Controller support
+  mtd: rawnand: Add NAND controller support on Intel LGM SoC
+
+ .../devicetree/bindings/mtd/intel,lgm-nand.yaml    |  61 ++
+ drivers/mtd/nand/raw/Kconfig                       |   8 +
+ drivers/mtd/nand/raw/Makefile                      |   1 +
+ drivers/mtd/nand/raw/intel-nand-controller.c       | 705 +++++++++++++++++++++
+ 4 files changed, 775 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+ create mode 100644 drivers/mtd/nand/raw/intel-nand-controller.c
 
 -- 
-Regards,
+2.11.0
 
-Laurent Pinchart
