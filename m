@@ -2,74 +2,84 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E7FC55186
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 14:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEE7C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 14:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAEA92098B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 14:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 741632076C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 14:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587651712;
-	bh=57gqQPQd4IJylfioNNAGGdvJ1fl8K/ZNVE8ybhs2MSU=;
+	s=default; t=1587651744;
+	bh=bfbxVsKUF/76rdf0Qqm6uc1xcuiU0K9AP+BipX8lGw4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eYXokUE+pKIzRZ217rU6SxM7tCrLThItVU12yT+nQzlYhkjq4rYaJR71AM+fAeNCI
-	 p+zkN0/fMhqVQjXW4UsjkPdW7jI1+30TjjBsdJMQvW5rHhHpi3+NApaPN3CpTZUH5d
-	 9Rwlx/hio6JYMOSvSpoj854oUt/iWTOq5cwXp/0Q=
+	b=NJH4e5QcXLwRKjxkO4UEj6ZcopChbVRlogLxss9vUmosRn/EArdoWtae9RJGCqIe0
+	 HHNY+jCk6CP8mmeqpM9wSFvUOPqJZoEByv1kIB6Yv0Xo/s92DophMT9cofv+UGybqG
+	 Xh5LE3cLS2SXQQ2PpeWrS3fmHIyLqDhvW6kl0iBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbgDWOVr (ORCPT
+        id S1728681AbgDWOVP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 10:21:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58732 "EHLO mail.kernel.org"
+        Thu, 23 Apr 2020 10:21:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728863AbgDWOVq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Apr 2020 10:21:46 -0400
+        id S1726910AbgDWOVO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Apr 2020 10:21:14 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 994CA21556;
-        Thu, 23 Apr 2020 14:21:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE43B2076C;
+        Thu, 23 Apr 2020 14:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587651705;
-        bh=57gqQPQd4IJylfioNNAGGdvJ1fl8K/ZNVE8ybhs2MSU=;
+        s=default; t=1587651674;
+        bh=bfbxVsKUF/76rdf0Qqm6uc1xcuiU0K9AP+BipX8lGw4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BYsM2BpMxM7Ivd/k9Iiy3wmf1/8mUchXgiGnl+DjJL5TkPenz6E1IUsKzAL2rWDw4
-         /Ov6uolvX7dVHRfYWmClluhdfi2Y0ccXCB8+5pPCTiw/Z7WvhbfQTCFnTgVgnBtPZU
-         iff/89edXcjeS41kWSZKShGt1HpQiNe3YDlVQH18=
-Date:   Thu, 23 Apr 2020 22:21:36 +0800
+        b=tIB63ymyLlCpgjs+FxCNNHjV/qm+B8u3qX0VRpfCGdKn/IN8e8YQGQaLWeOvgK63g
+         ZDfVw/Nb/kjXlhac7hLTNPy7faKl8eSxrp9j29Q5ot3Fer+8e5Q7H2J/skPylp0idr
+         KkHaV8KN+TOUwUtjfn9IGjbHm1YzltMFKX9kV4wY=
+Date:   Thu, 23 Apr 2020 22:21:04 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, aford@beaconembedded.com,
-        Rob Herring <robh+dt@kernel.org>,
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: imx: Add Beacon i.MX8m-Mini development
- kit
-Message-ID: <20200423142135.GB9391@dragon>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: vendor-prefixes: Add Beacon vendor
+ prefix
+Message-ID: <20200423142102.GA9391@dragon>
 References: <20200324144324.21178-1-aford173@gmail.com>
- <20200324144324.21178-2-aford173@gmail.com>
+ <20200423031002.GH8571@dragon>
+ <CAOMZO5B3OL3_Ow_gy_a4PD=E6xaOWvOAHw-aDDB54E51UajQ4w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200324144324.21178-2-aford173@gmail.com>
+In-Reply-To: <CAOMZO5B3OL3_Ow_gy_a4PD=E6xaOWvOAHw-aDDB54E51UajQ4w@mail.gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 09:43:23AM -0500, Adam Ford wrote:
-> Beacon Embeddedworks is launching a development kit based on the
-> i.MX8M Mini SoC.  The kit consists of a System on Module (SOM)
-> + baseboard.  The SOM has the SoC, eMMC, and Ethernet. The baseboard
-> has an wm8962 audio CODEC, a single USB OTG, and three USB host ports.
+On Thu, Apr 23, 2020 at 12:49:52AM -0300, Fabio Estevam wrote:
+> Hi Shawn,
 > 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
+> On Thu, Apr 23, 2020 at 12:10 AM Shawn Guo <shawnguo@kernel.org> wrote:
+> 
+> > Hi Rob,
+> >
+> > Are you okay with this?
+> 
+> Rob has already applied it:
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/Documentation/devicetree/bindings/vendor-prefixes.yaml?h=next-20200422&id=f756619f26edf74ad55d2151a6757a260e660fa8
 
-Applied, thanks.
+Okay.  Thanks Fabio.
+
+Shawn
