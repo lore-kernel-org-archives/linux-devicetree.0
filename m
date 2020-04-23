@@ -2,97 +2,179 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F37CC54FD0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 16:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1F0C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 16:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E8B120704
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 16:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 620C120706
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 16:26:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G8lOVeP0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729453AbgDWQZL (ORCPT
+        id S1729666AbgDWQ0O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 12:25:11 -0400
-Received: from smtpout1.mo528.mail-out.ovh.net ([46.105.34.251]:47439 "EHLO
-        smtpout1.mo528.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729422AbgDWQZL (ORCPT
+        Thu, 23 Apr 2020 12:26:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33878 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729648AbgDWQ0M (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:25:11 -0400
-Received: from pro2.mail.ovh.net (unknown [10.108.16.61])
-        by mo528.mail-out.ovh.net (Postfix) with ESMTPS id 39DD75A9F339;
-        Thu, 23 Apr 2020 18:25:09 +0200 (CEST)
-Received: from localhost (89.70.31.203) by DAG2EX1.emp2.local (172.16.2.11)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Thu, 23 Apr
- 2020 18:25:09 +0200
-Date:   Thu, 23 Apr 2020 18:23:46 +0200
-From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 3/6] iio: chemical: scd30: add serial interface driver
-Message-ID: <20200423162346.GD43448@arch>
-References: <20200422141135.86419-1-tomasz.duszynski@octakon.com>
- <20200422141135.86419-4-tomasz.duszynski@octakon.com>
- <CAHp75VeXd7hgdZ-1FDCpyad7_rHV1ERiigctn-6AYvVhLyX5QA@mail.gmail.com>
+        Thu, 23 Apr 2020 12:26:12 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C06BC09B042
+        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 09:26:11 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id o10so3133575pgb.6
+        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 09:26:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4dPW9lg0yEN6UpDTKstylSuvl3OH/2pBPj9LaxkywyA=;
+        b=G8lOVeP0qxvOsyFHiAAWlAcfYFdO3DFRD0auCPHDOmN+3bjo+IGRmeQgbYIwjCdk+t
+         vMLhHo8Fg8Hh5z1SVY+do5Vkly0bRcLVJoLkW8SlLPrQD4KpbuSnqSfJGTX76Xdz5MFE
+         RTVGUgnoa97/Vnz+e3+757gFQK3WH57ovzkOQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4dPW9lg0yEN6UpDTKstylSuvl3OH/2pBPj9LaxkywyA=;
+        b=j0mO6zjGovtkt0+llXPqmHCuu9JG1Rj0TlLKzpylyQx4Rd1muTg8ag6ibULLYcU3Jo
+         nLb43XjdnyV8Ukb5RBqzWZ6/arDbG0tfSPsdfWP9GKl/nN22kuccDR57XdWk05x5KGqh
+         MzFlRPcpJvCSH4aCeG7scpbZ/VIpMQ+pZ020SIeZn+alXLK40erZGE24aX3dCMbjbUDi
+         ysZrtOxJawdgbCONMQKmTfWIsHO991DQYs5S3LQaLujG3LG6Q65HckyC8hF+fxxdrLfo
+         DZrCkP72ljHArcjTNmldZpplhNai9QAVlSWSN5W4Lwc0FRVoAEKBDTdrTU9mKKYfTFBa
+         4XhA==
+X-Gm-Message-State: AGi0PuYb2GYUEVTsfKmrILja9nfAUULGwiEm6jmL4LnDVYtHp0Jg0+Kq
+        bqCbAyWRN5DDPcMnceN2Sgu2/A==
+X-Google-Smtp-Source: APiQypJdiYDUHi+oU12ax0Gqxa3QS23u1ChWBrvQSZw3vTUsJak7uOfgLrTMHq4j4e1RNVV3QevUBw==
+X-Received: by 2002:aa7:8a9a:: with SMTP id a26mr4225683pfc.77.1587659170761;
+        Thu, 23 Apr 2020 09:26:10 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id d12sm2841927pfq.36.2020.04.23.09.26.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 09:26:10 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
+        narmstrong@baylibre.com, a.hajda@samsung.com,
+        Laurent.pinchart@ideasonboard.com, spanda@codeaurora.org
+Cc:     swboyd@chromium.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, jeffrey.l.hugo@gmail.com,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        robdclark@chromium.org, jernej.skrabec@siol.net, jonas@kwiboo.se,
+        bjorn.andersson@linaro.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/6] drm: Prepare to use a GPIO on ti-sn65dsi86 for Hot Plug Detect
+Date:   Thu, 23 Apr 2020 09:25:42 -0700
+Message-Id: <20200423162548.129661-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VeXd7hgdZ-1FDCpyad7_rHV1ERiigctn-6AYvVhLyX5QA@mail.gmail.com>
-X-Originating-IP: [89.70.31.203]
-X-ClientProxiedBy: DAG2EX2.emp2.local (172.16.2.12) To DAG2EX1.emp2.local
- (172.16.2.11)
-X-Ovh-Tracer-Id: 13935544623297223839
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrgeelgdejkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkfhggtggujghisehttdertddttdejnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecukfhppedtrddtrddtrddtpdekledrjedtrdefuddrvddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehprhhovddrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomhdprhgtphhtthhopehjihgtvdefsehkvghrnhgvlhdrohhrgh
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 10:55:05PM +0300, Andy Shevchenko wrote:
-> On Wed, Apr 22, 2020 at 5:22 PM Tomasz Duszynski
-> <tomasz.duszynski@octakon.com> wrote:
-> >
-> > Add serial interface driver for the SCD30 sensor.
->
-> ...
->
-> > +#include <linux/of_irq.h>
->
-> Do you need this?
->
-> > +static int scd30_serdev_probe(struct serdev_device *serdev)
-> > +{
-> > +       struct device *dev = &serdev->dev;
-> > +       struct scd30_serdev_priv *priv;
-> > +       int irq, ret;
-> > +
-> > +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > +       if (!priv)
-> > +               return -ENOMEM;
->
-> > +       irq = of_irq_get(dev->of_node, 0);
->
-> fwnode_irq_get() ?
 
-Okay, that should work equally good.
+As talked about in commit c2bfc223882d ("drm/bridge: ti-sn65dsi86:
+Remove the mystery delay"), the normal HPD pin on ti-sn65dsi86 is
+kinda useless, at least for embedded DisplayPort (eDP).  However,
+despite the fact that the actual HPD pin on the bridge is mostly
+useless for eDP, the concept of HPD for eDP still makes sense.  It
+allows us to optimize out a hardcoded delay that many panels need if
+HPD isn't hooked up.  Panel timing diagrams show HPD as one of the
+events to measure timing from and we have to assume the worst case if
+we can't actually read HPD.
 
->
-> > +       if (irq <= 0)
-> > +               irq = 0;
-> > +
-> > +       return scd30_probe(dev, irq, KBUILD_MODNAME, priv,
-> > +                          scd30_serdev_command);
-> > +}
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+One way to use HPD for eDP without using the mostly useless HPD pin on
+ti-sn65dsi86 is to route the panel's HPD somewhere else in the system,
+like to a GPIO.  This works great because eDP panels aren't physically
+hotplugged.  That means the debouncing logic that caused us problems
+wasn't really needed and a raw GPIO works great.
+
+As per the above, a smart board designer would realize the value of
+HPD and choose to route it to a GPIO somewhere on the board to avoid
+the silly sn65dsi86 debouncing.  While said "smart designer" could
+theoretically route HPD anywhere on the board, a really smart designer
+would realize that there are several GPIOs on the bridge itself that
+are nearly useless for anything but this purpose and route HPD to one
+of those.
+
+This series of patches is intended to allow the scenario described
+above.
+
+This patch has been tested on a board that is not yet mainline.  On
+the hardware I have:
+- Panel spec says HPD could take up to 200 ms to come up, so without
+  HPD hooked up we need to delay 200 ms.
+- On my board the panel is powered by the same rail as the
+  touchscreen.  By chance of probe order the touchscreen comes up
+  first.  This means by the time we check HPD in ti_sn_bridge_enable()
+  it's already up.  Thus we can use the panel on 200 ms earlier.
+- If I measure HPD on this pane it comes up ~56 ms after the panel is
+  powered.  This means I can save 144 ms of delay.
+
+Side effects (though not main goals) of this series are:
+- ti-sn65dsi86 GPIOs are now exported in Linux.
+- ti-sn65dsi86 bindings are converted to yaml.
+- Common panel bindings now have "hpd-gpios" listed.
+- The simple-panel driver in Linux can delay in prepare based on
+  "hpd-gpios"
+- ti-sn65dsi86 bindings (and current user) now specifies "no-hpd"
+  if HPD isn't hooked up.
+
+Changes in v3:
+- Becaue => Because
+- Add a kernel-doc to our pdata to clarify double-duty of gchip_output.
+- More comments about how powering off affects us (get_dir, dir_input).
+- Cleanup tail of ti_sn_setup_gpio_controller() to avoid one "return".
+- Use a bitmap rather than rolling my own.
+- Remind how gpio_get_optional() works in the commit message.
+- useful implement => useful to implement
+
+Changes in v2:
+- ("Export...GPIOs") is 1/2 of replacement for ("Allow...bridge GPIOs")
+- ("dt-bindings: display: Add hpd-gpios to panel-common...") new for v2
+- ("simple...hpd-gpios") is 1/2 of replacement for ("Allow...bridge GPIOs")
+- specification => specifier.
+- power up => power.
+- Added back missing suspend-gpios.
+- data-lanes and lane-polarities are are the right place now.
+- endpoints don't need to be patternProperties.
+- Specified more details for data-lanes and lane-polarities.
+- Added old example back in, fixing bugs in it.
+- Example i2c bus is just called "i2c", not "i2c1" now.
+- ("dt-bindings: drm/bridge: ti-sn65dsi86: Document no-hpd") new for v2.
+- ("arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza") new for v2.
+
+Douglas Anderson (6):
+  drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux
+  dt-bindings: display: Add hpd-gpios to panel-common bindings
+  drm/panel-simple: Support hpd-gpios for delaying prepare()
+  dt-bindings: drm/bridge: ti-sn65dsi86: Convert to yaml
+  dt-bindings: drm/bridge: ti-sn65dsi86: Document no-hpd
+  arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza
+
+ .../bindings/display/bridge/ti,sn65dsi86.txt  |  87 ------
+ .../bindings/display/bridge/ti,sn65dsi86.yaml | 285 ++++++++++++++++++
+ .../bindings/display/panel/panel-common.yaml  |   6 +
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi    |   2 +
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c         | 194 ++++++++++++
+ drivers/gpu/drm/panel/panel-simple.c          |  53 ++++
+ 6 files changed, 540 insertions(+), 87 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+
+-- 
+2.26.1.301.g55bc3eb7cb9-goog
+
