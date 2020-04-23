@@ -2,92 +2,132 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B88C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 23:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2F8C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 23:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 010FB2064A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 23:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6375B20780
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 23:50:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jUVhZMwk"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SJmtTMwz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgDWXld (ORCPT
+        id S1727065AbgDWXuk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 19:41:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgDWXld (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 19:41:33 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38FF8C09B043
-        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 16:41:33 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id y25so3861043pfn.5
-        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 16:41:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=UvY6yRSr9LoxwMbjAv+ye5C9hpbZ65HCNFVPFwYb5gE=;
-        b=jUVhZMwkNiCZgtMssvAQEOCuMI34GiHeO2OcbYFNA0MO2tPfgE3ecSGPvuR4DPi4rw
-         nrDqAIP+/voLFN3dUnkLv0OMk3nDYNqW8jwkBtqhMo4F2DCygEWZMgmz9XH5/kNZc0bd
-         GWIkMaBex51qJfiKuQsvPBcHbWzw3cikkvWe0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=UvY6yRSr9LoxwMbjAv+ye5C9hpbZ65HCNFVPFwYb5gE=;
-        b=kWl9RJSH6rDTShHKTSSaQIypfYk6JERyLzZKSPfqM/DDa39fv+rG/VjwyB31LhhKo0
-         odrCSlZ1jVyFDLeNBKzRtP06OJI68Y/mLP7vHkZc5pfbEgvDZph+llIkJ/SjljejO8ZS
-         5cjuKAICu1MONwmfd4iWrM/Vp9jry6bTUSMjVXkzOFb/XSkDbIYIEH4Sy2SXKx9vAcCI
-         D4K+UJ1x5IIy5vCr+hSUJ2xbvzH7TtnwsM6pwY9PT1A1HTBp/kmkVI/8Qyfnnd4YFSYy
-         wqIBust3ELO3xVohhI0sfcLb9wT4ppYWmQCRy+hxFV98cOSdu5V8Hq8gX6C2FlGnqKTt
-         +sNg==
-X-Gm-Message-State: AGi0PuYPfAxOwF4oHhNusFltpj9mu7YJcuNpEHKttOYWdxXFvP6wAv2u
-        oBV4QjrOx17lk73NyAqEBUcEfg==
-X-Google-Smtp-Source: APiQypL/1HUpGNgMyu557lD7TWDtpCq8eHWZGde9uRaxlMdNp6k6YJ/zYkJ2Q2VQfzwQSkKLN4Cvvg==
-X-Received: by 2002:a65:4641:: with SMTP id k1mr6634067pgr.406.1587685292738;
-        Thu, 23 Apr 2020 16:41:32 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id h193sm3755976pfe.30.2020.04.23.16.41.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 16:41:32 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 23 Apr 2020 19:50:40 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1067 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbgDWXuj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 19:50:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ea2295a0000>; Thu, 23 Apr 2020 16:48:42 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 23 Apr 2020 16:50:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 23 Apr 2020 16:50:39 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
+ 2020 23:50:39 +0000
+Received: from [10.2.165.49] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
+ 2020 23:50:37 +0000
+Subject: Re: [RFC PATCH v9 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1587536339-4030-1-git-send-email-skomatineni@nvidia.com>
+ <1587536339-4030-7-git-send-email-skomatineni@nvidia.com>
+ <7e473fa9-0409-d868-e818-2e7928a8acca@gmail.com>
+ <a83bfc89-35de-85b5-fe5f-71e62456f5e9@nvidia.com>
+ <3691c4b5-1ecc-2ad3-23ed-72ef6b8d25fa@nvidia.com>
+ <fce6dfbb-0b8d-319b-2d6f-976953a3c36c@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <a2672be9-93c1-8363-6c0e-6d43c2bd59bc@nvidia.com>
+Date:   Thu, 23 Apr 2020 16:50:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <fce6dfbb-0b8d-319b-2d6f-976953a3c36c@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1585701031-28871-3-git-send-email-tanmay@codeaurora.org>
-References: <1585701031-28871-1-git-send-email-tanmay@codeaurora.org> <1585701031-28871-3-git-send-email-tanmay@codeaurora.org>
-Subject: Re: [DPU PATCH v5 2/5] drm: add constant N value in helper file
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Chandan Uddaraju <chandanu@codeaurora.org>, robdclark@gmail.com,
-        abhinavk@codeaurora.org, nganji@codeaurora.org,
-        jsanka@codeaurora.org, aravindh@codeaurora.org,
-        hoegsberg@google.com, dri-devel@lists.freedesktop.org,
-        linux-clk@vger.kernel.org, Vara Reddy <varar@codeaurora.org>
-To:     Tanmay Shah <tanmay@codeaurora.org>, devicetree@vger.kernel.org,
-        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        seanpaul@chromium.org
-Date:   Thu, 23 Apr 2020 16:41:31 -0700
-Message-ID: <158768529129.135303.14920680590198766597@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1587685722; bh=1rPMThke2vlH4gt1psqR9lA1CdQR51YkE8ZDvPRLlnU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=SJmtTMwzED4NoBMwXhvfF9z6v/Yx8Jy0ZfDBdZXvWgm/4B0a0ZcjYh9pacz344iN9
+         fHprafFWYh5sDeZs7newdr2iKjovIQ74PV0LzzmcHHH8VdVLX509gXO5yHxkv5+EII
+         xw6GiUV3ugiZur1zXenvBjJnKNBNqCrsu0qtL5MVVUGJkzPdGHeOvBFMsjjtn/TLrQ
+         GDalrLDyaRkAm7hL1/jZueTefc3W7B0BGzLTTr/RHFCmjx8SBOFaAitpeNvgE0OPP8
+         djnRwh83QalbObyCcUkkK/aLkdN4Vt/rC+0oRQWRKX1l3dU/JUv6iKAvmaBVKectd5
+         osPaOaGNo6lMg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Tanmay Shah (2020-03-31 17:30:28)
-> From: Chandan Uddaraju <chandanu@codeaurora.org>
->=20
-> The constant N value (0x8000) is used by multiple DP
 
-There's one driver using it, not multiple.
-
-> drivers. Define this value in header file and use this
-> in the existing i915 display driver.
->=20
-> Signed-off-by: Chandan Uddaraju <chandanu@codeaurora.org>
-> Signed-off-by: Vara Reddy <varar@codeaurora.org>
+On 4/23/20 4:25 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 24.04.2020 02:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 4/23/20 4:19 PM, Sowjanya Komatineni wrote:
+>>> On 4/23/20 4:16 PM, Dmitry Osipenko wrote:
+>>>> External email: Use caution opening links or attachments
+>>>>
+>>>>
+>>>> 22.04.2020 09:18, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> +static int chan_capture_kthread_start(void *data)
+>>>>> +{
+>>>>> +     struct tegra_vi_channel *chan =3D data;
+>>>>> +     struct tegra_channel_buffer *buf;
+>>>>> +     int err =3D 0;
+>>>>> +
+>>>>> +     set_freezable();
+>>>>> +
+>>>>> +     while (1) {
+>>>>> +             try_to_freeze();
+>>>>> +
+>>>>> +             wait_event_interruptible(chan->start_wait,
+>>>>> + !list_empty(&chan->capture) ||
+>>>>> +                                      kthread_should_stop());
+>>>>> +
+>>>>> +             if (kthread_should_stop())
+>>>>> +                     break;
+>>>>> +
+>>>>> +             /*
+>>>>> +              * Source is not streaming if error is non-zero.
+>>>>> +              * So, do not dequeue buffers on capture error.
+>>>>> +              */
+>>>>> +             if (err)
+>>>>> +                     continue;
+>>>> This will result in an endless loop, I suppose it wasn't the intention=
+.
+>>> no it will not. on error we report vb2_queue_error which will do
+>>> streaming stop request.
+>>>
+>>> So thread will be stopped on streaming stop request thru kthread stop
+>>> signal
+>> To be clear on error it reports vb2 queue error and waits for stop
+>> streaming to happen
+> If thread should exit on error, then it should do it on the actual
+> error. Otherwise it looks very error-prone.
+When v4l2 drivers indicate fatal error through vb2_queue_error, queue=20
+error flag=C2=A0 is set and wakes up all processes waiting on queue along=20
+with polling reporting=C2=A0 EPOLLERR and also reporting error for queuing=
+=20
+and dequeuing buffers. Stream stop will surely happen which stops the=20
+thread.
