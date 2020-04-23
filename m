@@ -2,73 +2,126 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BB3C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 12:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB10AC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 12:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49E7C20781
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 12:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5FB72074F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 12:36:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="OY75G05P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PgsVLVg2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgDWMFL (ORCPT
+        id S1726540AbgDWMgy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 08:05:11 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:56260 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728104AbgDWMFL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Apr 2020 08:05:11 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 638CE4A17C;
-        Thu, 23 Apr 2020 12:05:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        in-reply-to:content-disposition:content-type:content-type
-        :mime-version:references:message-id:subject:subject:from:from
-        :date:date:received:received:received; s=mta-01; t=1587643507;
-         x=1589457908; bh=mLLyssSl6nMcwXw59jsI5OboKUUNH5MjP+qTGX8gHHs=; b=
-        OY75G05PhSzt2UMWkl7XrxyvffrzW9M7VFST76ZgRkVMRyvdWRRiIrU6Km5QujVE
-        /2sJ4v4XTFJIfhs3z/DzvRxYnDtID4Y68+4b3BXPVnjZmJ3qRdgG2r7ywY8/XBds
-        VRdNIfnCpEwfipWFSeELQreZh+FUrLtgQQvuKTxj6zw=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id SGlfKVfQBJWF; Thu, 23 Apr 2020 15:05:07 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 5106B46473;
-        Thu, 23 Apr 2020 15:05:07 +0300 (MSK)
-Received: from localhost (172.17.14.122) by T-EXCH-02.corp.yadro.com
- (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Thu, 23
- Apr 2020 15:05:08 +0300
-Date:   Thu, 23 Apr 2020 15:05:06 +0300
-From:   "Alexander A. Filippov" <a.filippov@yadro.com>
-To:     Alexander Filippov <a.filippov@yadro.com>
-CC:     <linux-aspeed@lists.ozlabs.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] ARM: DTS: Aspeed: Add YADRO Nicole BMC
-Message-ID: <20200423120506.GA21043@bbwork.lan>
-References: <20200423112100.19424-1-a.filippov@yadro.com>
+        Thu, 23 Apr 2020 08:36:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726090AbgDWMgx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Apr 2020 08:36:53 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A928BC08E934;
+        Thu, 23 Apr 2020 05:36:53 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 188so6248774wmc.2;
+        Thu, 23 Apr 2020 05:36:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mi3rnUMPvy/QR3Ps6vsxVuv41qLYHh/uNXwCdOf964o=;
+        b=PgsVLVg2fEE4UgEw5ybsRRcMm8D0szEHNj4jYCN/y3Piw4K0Zvmgpeth5Hjb8gCVI0
+         Y2HAif5w2DxAfImAwIjZYnbyP7fEaBREjKHo0lML6cKH1VCtmlwGLGXxHftgpxo7RyJk
+         5ta54tkpyf8ALl3fGhh7E3u2HGxUH2dYnvxhZ8FMENxzdzOtQmlhJPnxAadF68Z+W+uf
+         V2We74ZXkgSjQP/TIAUvhG6NnMiAjbgwaE6w/Kt2o6aFnsYbbqeZjmXF+ac+tinjBO/U
+         p6YlOnEegbdG2PF+zK/S49wjLppEutcfSgHcBipTrQvS9xAjVt25l7orY3r29/DAPQFs
+         eEMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mi3rnUMPvy/QR3Ps6vsxVuv41qLYHh/uNXwCdOf964o=;
+        b=AJEX3QCfh+BdO/SJSsU6fd+pe8gAHYmfdgPph9hLCcL+0xYgeC9iv2cuMhtr3gw29A
+         69CSsnmLo02w0/m39jVR21ho08JdMdxSVlMDwAXigFn02wVUduu7Xk+cG8xasfg6vF/C
+         v/l53Usc8cNm93UMKmaAGQJW8YgFj3UfYjc9BDZbsuoPGYAZA618fn217CQoI7Dy3xBd
+         2TVevSaMV65aApOn1yuoLYYG4jMaLPo9sW4w0ffeniPxg0zJxpRpjGEmPcr/TWyLqzGY
+         HEHg/EZeJj9cV1iPYXmDwcUS+9LWIzDg9+1aJ2U9M872Z6TDsNXHQ8wsJrKxnTt0TIiP
+         2N9g==
+X-Gm-Message-State: AGi0PuZrXUPYarTT6xRInH1CYEC1O4iEonudktsiIn5n8wB9LA92ukjN
+        Gsfp2zQMBW4R8Mcg4Zee/Os=
+X-Google-Smtp-Source: APiQypLOTc7Zk2kFUmf/qLTme2iOBIANPeVm3oJWV5ReTH48bHyBCwfMNIZwZ1IBZDmEt730DGE/4A==
+X-Received: by 2002:a05:600c:2316:: with SMTP id 22mr3898972wmo.164.1587645412306;
+        Thu, 23 Apr 2020 05:36:52 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id 68sm3672991wrm.65.2020.04.23.05.36.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2020 05:36:51 -0700 (PDT)
+Subject: Re: [PATCH v2 6/9] dt-bindings: media: rkisp1: move rockchip-isp1
+ bindings out of staging
+To:     Helen Koike <helen.koike@collabora.com>,
+        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        robh+dt@kernel.org, heiko@sntech.de, hverkuil-cisco@xs4all.nl,
+        kernel@collabora.com, dafna.hirschfeld@collabora.com,
+        ezequiel@collabora.com, mark.rutland@arm.com,
+        karthik.poduval@gmail.com, kishon@ti.com
+References: <20200403161538.1375908-1-helen.koike@collabora.com>
+ <20200403161538.1375908-7-helen.koike@collabora.com>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <7da8fb4d-018e-894a-884b-760eaf2959e6@gmail.com>
+Date:   Thu, 23 Apr 2020 14:36:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20200423112100.19424-1-a.filippov@yadro.com>
-X-Originating-IP: [172.17.14.122]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+In-Reply-To: <20200403161538.1375908-7-helen.koike@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Looks like I've missed subject prefix.
-Should I resend this with v4 prefix?
+Hi Helen,
 
-Alexander
+make ARCH=arm dt_binding_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+  SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
+  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+  CHKDT   Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+  DTC
+Documentation/devicetree/bindings/media/rockchip-isp1.example.dt.yaml
+Documentation/devicetree/bindings/media/rockchip-isp1.example.dts:22.27-99.11:
+Warning (unit_address_vs_reg): /example-0/parent@0: node has a unit
+name, but no reg or ranges property
+  CHECK
+Documentation/devicetree/bindings/media/rockchip-isp1.example.dt.yaml
+
+On 4/3/20 6:15 PM, Helen Koike wrote:
+> Move rkisp1 bindings to Documentation/devicetree/bindings/media
+> 
+> Verified with:
+> make ARCH=arm64 dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> 
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> ---
+> 
+> V2:
+> - no changes
+> 
+>  .../devicetree/bindings/media/rockchip-isp1.yaml                  | 0
+>  1 file changed, 0 insertions(+), 0 deletions(-)
+>  rename {drivers/staging/media/rkisp1/Documentation => Documentation}/devicetree/bindings/media/rockchip-isp1.yaml (100%)
+> 
+> diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> similarity index 100%
+> rename from drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> rename to Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> 
+
