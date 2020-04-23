@@ -2,95 +2,74 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F733C55186
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 13:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E7FC55186
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 14:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D5542076C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 13:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAEA92098B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 14:21:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587649899;
-	bh=d8fk9lPETH+eLlCSVPRo/VJIzcglnRP9c3doWogaRt8=;
+	s=default; t=1587651712;
+	bh=57gqQPQd4IJylfioNNAGGdvJ1fl8K/ZNVE8ybhs2MSU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Buf5dfBE4DShPZY3Yx534QIZXa/79+gSy3lPndnjM898DQ1BTE6TFB5S9qqydWN7t
-	 2ZNR3NOnuOZdKuXNh6SaCVazBoGHNkp9/Zh4f2qo7YnjNmqQeXAmzwRvt7VBGfiWFq
-	 mzkDpJbRwmiyC2Rq1Sftjha9izmvMIJqTzTAGjYE=
+	b=eYXokUE+pKIzRZ217rU6SxM7tCrLThItVU12yT+nQzlYhkjq4rYaJR71AM+fAeNCI
+	 p+zkN0/fMhqVQjXW4UsjkPdW7jI1+30TjjBsdJMQvW5rHhHpi3+NApaPN3CpTZUH5d
+	 9Rwlx/hio6JYMOSvSpoj854oUt/iWTOq5cwXp/0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbgDWNvg (ORCPT
+        id S1728869AbgDWOVr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 09:51:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40160 "EHLO mail.kernel.org"
+        Thu, 23 Apr 2020 10:21:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726926AbgDWNvg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Apr 2020 09:51:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1728863AbgDWOVq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Apr 2020 10:21:46 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C44D20728;
-        Thu, 23 Apr 2020 13:51:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 994CA21556;
+        Thu, 23 Apr 2020 14:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587649895;
-        bh=d8fk9lPETH+eLlCSVPRo/VJIzcglnRP9c3doWogaRt8=;
+        s=default; t=1587651705;
+        bh=57gqQPQd4IJylfioNNAGGdvJ1fl8K/ZNVE8ybhs2MSU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ssdOxn65MQz0P4dbXZzwrLhiPWNFPavzAxSfodlbeA1TgYRVdu2M0z/P5SRSy6Wjh
-         /zqfgLXBD8Tz36/DQ2JHuNZOo/bEQEkW8xv0yWHe4jsXt1ZEwOWgGpZKFloha5oXr9
-         tq78VaLLNlvGPqTgRg1vfX0fUJf3iMaa5gJKbJk0=
-Date:   Thu, 23 Apr 2020 15:51:33 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v2 01/17] tty: serial: qcom_geni_serial: Use OPP API to
- set clk/perf state
-Message-ID: <20200423135133.GB4091353@kroah.com>
-References: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
- <1587132279-27659-2-git-send-email-rnayak@codeaurora.org>
- <0c9dcb67-5742-ce13-50a5-41c29bbbff51@codeaurora.org>
+        b=BYsM2BpMxM7Ivd/k9Iiy3wmf1/8mUchXgiGnl+DjJL5TkPenz6E1IUsKzAL2rWDw4
+         /Ov6uolvX7dVHRfYWmClluhdfi2Y0ccXCB8+5pPCTiw/Z7WvhbfQTCFnTgVgnBtPZU
+         iff/89edXcjeS41kWSZKShGt1HpQiNe3YDlVQH18=
+Date:   Thu, 23 Apr 2020 22:21:36 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, aford@beaconembedded.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] arm64: dts: imx: Add Beacon i.MX8m-Mini development
+ kit
+Message-ID: <20200423142135.GB9391@dragon>
+References: <20200324144324.21178-1-aford173@gmail.com>
+ <20200324144324.21178-2-aford173@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0c9dcb67-5742-ce13-50a5-41c29bbbff51@codeaurora.org>
+In-Reply-To: <20200324144324.21178-2-aford173@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 22, 2020 at 02:52:21PM +0530, Rajendra Nayak wrote:
-> Hey Bjorn,
+On Tue, Mar 24, 2020 at 09:43:23AM -0500, Adam Ford wrote:
+> Beacon Embeddedworks is launching a development kit based on the
+> i.MX8M Mini SoC.  The kit consists of a System on Module (SOM)
+> + baseboard.  The SOM has the SoC, eMMC, and Ethernet. The baseboard
+> has an wm8962 audio CODEC, a single USB OTG, and three USB host ports.
 > 
-> > diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
-> > index dd46494..737e713 100644
-> > --- a/include/linux/qcom-geni-se.h
-> > +++ b/include/linux/qcom-geni-se.h
-> > @@ -24,6 +24,7 @@ enum geni_se_protocol_type {
-> >   struct geni_wrapper;
-> >   struct clk;
-> > +struct opp_table;
-> >   /**
-> >    * struct geni_se - GENI Serial Engine
-> > @@ -39,6 +40,7 @@ struct geni_se {
-> >   	struct device *dev;
-> >   	struct geni_wrapper *wrapper;
-> >   	struct clk *clk;
-> > +	struct opp_table *opp;
-> 
-> I just realized this is going to cause merge issues across geni serial and geni spi
-> driver (PATCH 02/17 in this series) unless all of this goes via your tree.
-> I see this is also an issue with the ongoing ICC patch series [1]
-> 
-> Do you or Greg have any thoughts on how this common header across various drivers
-> issue should be resolved to avoid conflicts while merging?
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 
-I can ack it and you can take it through a different tree as part of the
-whole series to prevent that.
-
-thanks,
-
-greg k-h
+Applied, thanks.
