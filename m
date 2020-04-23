@@ -1,119 +1,117 @@
-Return-Path: <SRS0=0pfk=6G=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F9DC55185
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 23:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D35CC55189
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 00:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8765220787
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Apr 2020 23:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E113A2076C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 00:39:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="K/lTPU4i";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FFBV6YEE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mj30sjvr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725961AbgDVXu7 (ORCPT
+        id S1726157AbgDWAjg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 19:50:59 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:52027 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725846AbgDVXu6 (ORCPT
+        Wed, 22 Apr 2020 20:39:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726112AbgDWAjg (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Apr 2020 19:50:58 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 672565C024C;
-        Wed, 22 Apr 2020 19:50:57 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 22 Apr 2020 19:50:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=v
-        ZGbnC8RdlpxgKLz2nXfyLccHHit/zhrLhFtuEcHKTc=; b=K/lTPU4iiQf6FH5rw
-        0zf9PwVrEUeYd37vwn0BW7dSg81WiTB9rQG3DlWhbrai7UvMaIE2vv+glKdGHUgH
-        Kgw250BFWps6RmrMnkd/qf9ivkitUxm7Ef2FOmusU2QrRuvxZ660c776xDQgt2Ih
-        c0S2zPl8JM3tmbYTjWS49vf+C60UQ8jaAWd3oO1TG2KBMSsRdLx6v5dm65+18KxK
-        lKcuGrCQfitpYqvyZjhlFdEtMxo/9iOKMagPcPgb/e2CNB4DTFj/fh6HjwR+nkd3
-        /7XSrBXpJ69IzHBMbVE7tedAnXfJ3m9gyoMD6eQRJiD5gbB8qdQcq5wlwMjjjmez
-        E9eBQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=vZGbnC8RdlpxgKLz2nXfyLccHHit/zhrLhFtuEcHK
-        Tc=; b=FFBV6YEE06fvGorfmJ+6zAncPHAXA+6LE+QoMK1qUv8MYOPhoFJHgp6z8
-        ei/NzXteugeW7ZOyzjkw+lykJYRWeBz9NKiUm5BSPZpCO4dTqx4HYnQTdDU+Ie96
-        r7EIjvGc0Uj3bBnnJdw2R/ehtg6Q0p6vuDTcIAzjajW/cYkwOAKCi6NRrltjVxro
-        1BquSDZcjyqJ8bNXCSq2sfXamazkNbIXC5T3hLmVp/b1OILwA9+AoUzN//+CrhWx
-        aXpcE8hHC0FA2cQP19WJZutpRmoCglBmGA3RY7MC+OvNv47NWV1VbRflZ6wSDjZN
-        K//MOl+yvwehsxTu4fkGhOjKvN7lg==
-X-ME-Sender: <xms:YNigXu2IquSGcQPJpUfESJf0wxsif3Xeghy6QJa3A3GEQ9LKJKkgMw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrgeekgddvgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefuvfhfhffkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghmuhgv
-    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
-    epjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
-    rghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
-X-ME-Proxy: <xmx:YNigXrXYWA6_dxSXpXeRQovQ0O2ptgPTobJoFV97fswf3McTyqSC1w>
-    <xmx:YNigXoqxZJj3dTZf3NK6-xPLPTlmXwmMZ0JRmfnxLXuziEjHiFG01w>
-    <xmx:YNigXkbZv5yWWb2Q4fAUt7WxoWYC0Yo3IPqlIG0jjMRTfHNfWRzomA>
-    <xmx:YdigXp0nXKljZYZIzOMW5y_t1v-x59e_T-speuINAiwbz_7FUjdUUQ>
-Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BC5863065CF7;
-        Wed, 22 Apr 2020 19:50:55 -0400 (EDT)
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Disable SPDIF by default
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-References: <20200422041502.7497-1-samuel@sholland.org>
- <20200422151616.httmhmo2tbd4m4eu@gilmour.lan>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <b554ea70-16da-1637-d349-db51dddcf95b@sholland.org>
-Date:   Wed, 22 Apr 2020 18:50:54 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200422151616.httmhmo2tbd4m4eu@gilmour.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 22 Apr 2020 20:39:36 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A824AC03C1AA;
+        Wed, 22 Apr 2020 17:39:34 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id t11so3318661lfe.4;
+        Wed, 22 Apr 2020 17:39:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=5fl4A7nRdQONkc+Ns32BwHf/X7YnX+et/nIg9JJL2zU=;
+        b=Mj30sjvrkHvbKMqqfHKFNV5+YQEGBrwRZ0z+4T3vXh7n5MBP9x3dRJ6j2LmHioOge6
+         QYB43T4G4zJsbQVQ7BH3EqooNVpHMppSpitVpDBQztmzTnG24oBhFVzD/pbnt9ghXCDO
+         lIPvj3hYEECgw/yZYPuNE0KHnYN0oFHy/bnaLJb8G8jh4Pwt0ER9hkd3ECRaHkHJU+iO
+         goBbHo0eb/KFYdoDWis9mS1esjCM8LF+3/iN/bWJpmfHjiEIUFmfqjNzVq6UTTEZbD6/
+         cq6F+gZvE/nYHjEyGeNUuF/JF95Q6/HLQv3qf/7y4paceeOPZpHl3Ev/446VWEv+B+4b
+         IBCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=5fl4A7nRdQONkc+Ns32BwHf/X7YnX+et/nIg9JJL2zU=;
+        b=B87NbZIbLKiuUTURFThhvs2SMWre10Crw9wz3hG1Bs8BKWXK3WKVm50fOqqhAiWFUl
+         cB9HP0mQjRg7R+ecQlB6M9ok6+98q6OVHlFrRMXnbljFf6i6ojTWiQoH2DhfhDZ+TZO4
+         q3zy61dkeJq7NBFd+LCl5RSL1e3u64sYQACr3iBnuDSFkj+dudjnW/Ks4f2Bol6kOHGv
+         v8rhIAmvRMpsfm3cr7pD8RoMM7WX63ZWt+X0YzuLqF8ZpCxNA6OLoolgDIBtbZ+CFOuv
+         ZUUaxE7ZJscdT0FszfJh9SlSMHYFKd0xLDO7KQw/1JmVEVtJL5n+6TVQKdWmMfJT+KbA
+         xyMg==
+X-Gm-Message-State: AGi0PuZnda7WPPp9FrmtYyhvgGZAUU5dNUaI33ktEiSxlWZ7rpStzno1
+        SdZuZw2bEko4R3wB129TEUXCz8DdoGY=
+X-Google-Smtp-Source: APiQypKEnU1zF7+eWCBcmj0qvCVqLKmZHMNFwVXoZaQrmlJkac50VlkAbDcbpHZOQ6d2aDNMPqqV1g==
+X-Received: by 2002:a19:c3c5:: with SMTP id t188mr718181lff.199.1587602373144;
+        Wed, 22 Apr 2020 17:39:33 -0700 (PDT)
+Received: from [172.16.20.20] ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id t19sm502360lfl.53.2020.04.22.17.39.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 Apr 2020 17:39:32 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
+Subject: Re: [PATCH 0/3] Bluetooth: hci_qca: add support for QCA9377
+From:   Christian Hewitt <christianshewitt@gmail.com>
+In-Reply-To: <D965D634-A881-43E0-B9F8-DF4679BB9C6D@holtmann.org>
+Date:   Thu, 23 Apr 2020 04:39:24 +0400
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-amlogic@lists.infradead.org,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <6103BC70-F2AC-4CA5-BF6F-152466AEEBD1@gmail.com>
+References: <20200421081656.9067-1-christianshewitt@gmail.com>
+ <D965D634-A881-43E0-B9F8-DF4679BB9C6D@holtmann.org>
+To:     Marcel Holtmann <marcel@holtmann.org>
+X-Mailer: Apple Mail (2.3445.104.14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Maxime,
 
-On 4/22/20 10:16 AM, Maxime Ripard wrote:
-> On Tue, Apr 21, 2020 at 11:15:02PM -0500, Samuel Holland wrote:
->> As of v5.7-rc2, Linux now prints the following message at boot:
->>
->>   [   33.848525] platform sound_spdif: deferred probe pending
->>
->> This is because &sound_spdif is waiting on its DAI link component
->> &spdif to probe, but &spdif is disabled in the DTS. Disable the
->> audio card as well to match.
->>
->> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> 
-> The patch looks good, but don't we have some boards with SPDIF enabled that
-> should be modified accordingly?
+> On 22 Apr 2020, at 9:39 pm, Marcel Holtmann <marcel@holtmann.org> =
+wrote:
+>=20
+> Hi Christian,
+>=20
+>> This series adds a new compatible for the QCA9377 BT device that is =
+found
+>> in many Android TV box devices, makes minor changes to allow =
+max-speed
+>> values for the device to be read from device-tree, and updates =
+bindings
+>> to reflect those changes.
+>>=20
+>> Christian Hewitt (3):
+>> dt-bindings: net: bluetooth: Add device tree bindings for QCA9377
+>> Bluetooth: hci_qca: add compatible for QCA9377
+>> Bluetooth: hci_qca: allow max-speed to be set for QCA9377 devices
+>>=20
+>> .../bindings/net/qualcomm-bluetooth.txt         |  5 +++++
+>> drivers/bluetooth/hci_qca.c                     | 17 =
+++++++++++-------
+>> 2 files changed, 15 insertions(+), 7 deletions(-)
+>=20
+> the series doesn=E2=80=99t apply cleanly against bluetooth-next tree. =
+Can you please respin it.
 
-I don't see any in-tree. The only A64 DTS that references &spdif at all is
-sun50i-a64-pine64.dts, which explicitly disables it:
+Ahh, it was based on 5.7-rc1, will do, thanks.
 
-	/* On Euler connector */
-	&spdif {
-  		status = "disabled";
-	};
-
-I'm leaning toward agreeing with Clement that the sound_spdif node (and also
-spdif_out) should be removed altogether from the A64 DTSI.
-
-Regards,
-Samuel
+Christian=
