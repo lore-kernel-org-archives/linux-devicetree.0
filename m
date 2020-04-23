@@ -4,129 +4,198 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 978ACC54FD0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 07:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C974EC55186
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 08:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7755E21569
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 07:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7AC621582
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 08:12:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="rPlAzvHY"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="J4rMPyEu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbgDWHsU (ORCPT
+        id S1725854AbgDWIMW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:48:20 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:59635 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726271AbgDWHsT (ORCPT
+        Thu, 23 Apr 2020 04:12:22 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:37406 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726122AbgDWIMV (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Apr 2020 03:48:19 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id RWahjKdw87xncRWaljPcej; Thu, 23 Apr 2020 09:48:16 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1587628096; bh=lJ9loEmVaJryUiVmPLNo9go2q+BR27ddnJpMegvNhPw=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=rPlAzvHYxfTDXr8aJtmoN4++BOKth5dNDNcSepvFoJT7P7WCOYzzwnHy4TOSHZe6S
-         7M2KN8kdpM6BukUl+UG7o8I1zMXlJJ02sCYwkjEai36m/CH89gdApuOz5JLxTq5EAz
-         wFbfX234WeCAnqBYj6TX+ZyYzSFoKYg2vv0zpGDC/rZ1jcxQvZZmiDldoRQeGIj9Cy
-         OqJwPWDWtjrtQoAtrRs7iP5lKi1skasCMeAfZmOefMAydY4Tb39VlV14vmByJUUYY4
-         LXubK5zsBb5sfzdtqje206JABOfOzo+m5hx2Crs8fnQB/GJfvgwJkGCGvWhXXxcO09
-         gSVMCkGxDBr3A==
-Subject: Re: [RFC PATCH v9 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     digetx@gmail.com, sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1587536339-4030-1-git-send-email-skomatineni@nvidia.com>
- <1587536339-4030-7-git-send-email-skomatineni@nvidia.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <ae6dfd6b-4b0b-db73-54cf-a16e59476f38@xs4all.nl>
-Date:   Thu, 23 Apr 2020 09:48:11 +0200
+        Thu, 23 Apr 2020 04:12:21 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03N88G59031061;
+        Thu, 23 Apr 2020 10:12:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=lnLyhFkF5Kttua+5xE5VipgRM0EklZuvKl52ZMG1pu0=;
+ b=J4rMPyEuKrGJ9UDO/aFTHrgID1JgAT0AfVKMA8mllKBEI3ApI300UxBfR85D/Bjvpxmn
+ W979/bMwTyZmE4aVbVLQusLaH8uA9ZXzvqVwkl44zOKlsE4OepzRc7AWnFD6Qbl94eFa
+ ohbS/QwmYpHBGlu1oVidkKc82Iq2ajY+fgOykq18kSTc7j/HK3mLL0NFqZ0nRbe2sWM2
+ AyVgMSqUGARYgHDjyIVxGkHLFkeVsBecKqnmDcCbsXNSrmjBpsNpFsBWSCzJkW9V+bk/
+ Aa9Q+cZTAaBxSU+DlKtvAUQ0FceNtz2btH6gn7pZmaeCMDB1fL5hSgTMZJOG23s/jckk aQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30fq11ud7k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Apr 2020 10:12:07 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6EDDC100038;
+        Thu, 23 Apr 2020 10:12:05 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5C9672AD2B8;
+        Thu, 23 Apr 2020 10:12:05 +0200 (CEST)
+Received: from lmecxl0923.lme.st.com (10.75.127.44) by SFHDAG6NODE1.st.com
+ (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
+ 2020 10:12:04 +0200
+Subject: Re: [PATCH] mmc: mmci_sdmmc: fix power on issue due to pwr_reg
+ initialization
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20200420161831.5043-1-ludovic.barre@st.com>
+ <CAPDyKFqC3fdnQ9CMYhS-=5MiCET=r5Az2S5oFoA2v1gdDeGO3w@mail.gmail.com>
+ <CAPDyKFrHcoVd=GKPB70gOFE8STOnTJrJbcZzE_DEgFWh1Vhszg@mail.gmail.com>
+ <1d9cefd1-aaed-1eb5-92f2-b1f45b4da2ac@st.com>
+ <CAPDyKFpri4VBnH9nbqUa4L=3o_h+fSZ052v7AG_9MhJX2gKgCQ@mail.gmail.com>
+From:   Ludovic BARRE <ludovic.barre@st.com>
+Message-ID: <96725b28-fa19-54f0-7ba7-2043098a24a5@st.com>
+Date:   Thu, 23 Apr 2020 10:12:03 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <1587536339-4030-7-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfBrqqqyGyVRnDMGKreG0gYg22SyVz4yFDJM/l05Yhqmq4BQCdIaJ4DuxIQosu4gWlSjxs/MSCdBjvgXZu3W/LAAUpVk9hbTWPilQrU08m1zbkoKfwi3f
- IeI5VvCQ4yT9S2S93z9cpy80I6a77P8ny8m/ETG6EDu8B+kD1AwsRZfL/2w/Cyq3J4O4/y2vVNxVwkc0qVapTgjSAl8hZSriuL9sgkUrIUBQ6Mrgji4ae0Ow
- 8tiQQiScGT7/SFoLT9fd4PgY6msv9uEWYUwz0R5kmizB1B+Rg5vUx7rj8XUZ+CrBbv2b25xdwN0pEksib83f92vtLpidRoj0oXFjqbSEbanvcUuFdHkWpYYu
- kJx9rWU6ZZdK2Qx8id5pQRK3WAAin3PZxGtn1Q6UWMJGZkDRqGm102J2zTbpuqD6VqR2HwuRd3aoomLeBCm4WEWsItddDwFjMiqAMcIrKW6oPEjFCY3cxtaA
- VXIVmba0haiNpsRiLFhh0SsUy9pci3J1/PowZ8iTZJdXJDLEMYdwrQhHX5oeFf34vJdlM7Ns+aLX+SoHX4SeN9Jj9jc07fwMcUhC+tCjj1go2vwHteqZc6pm
- YmE=
+In-Reply-To: <CAPDyKFpri4VBnH9nbqUa4L=3o_h+fSZ052v7AG_9MhJX2gKgCQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-23_06:2020-04-22,2020-04-23 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 22/04/2020 08:18, Sowjanya Komatineni wrote:
-> Tegra210 contains a powerful Video Input (VI) hardware controller
-> which can support up to 6 MIPI CSI camera sensors.
+
+
+Le 4/22/20 à 6:03 PM, Ulf Hansson a écrit :
+> On Wed, 22 Apr 2020 at 15:40, Ludovic BARRE <ludovic.barre@st.com> wrote:
+>>
+>> hi Ulf
+>>
+>> Le 4/21/20 à 11:38 AM, Ulf Hansson a écrit :
+>>> On Tue, 21 Apr 2020 at 11:25, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>>>>
+>>>> On Mon, 20 Apr 2020 at 18:18, Ludovic Barre <ludovic.barre@st.com> wrote:
+>>>>>
+>>>>> This patch fix a power-on issue, and avoid to retry the power sequence.
+>>>>>
+>>>>> In power off sequence: sdmmc must set pwr_reg in "power-cycle" state
+>>>>> (value 0x2), to prevent the card from being supplied through the signal
+>>>>> lines (all the lines are driven low).
+>>>>>
+>>>>> In power on sequence: when the power is stable, sdmmc must set pwr_reg
+>>>>> in "power-off" state (value 0x0) to drive all signal to high before to
+>>>>> set "power-on".
+>>>>
+>>>> Just a question to gain further understanding.
+>>>>
+>>>> Let's assume that the controller is a power-on state, because it's
+>>>> been initialized by the boot loader. When the mmc core then starts the
+>>>> power-on sequence (not doing a power-off first), would $subject patch
+>>>> then cause the
+>>>> MMCIPOWER to remain as is, or is it going to be overwritten?
+>>
+>> On sdmmc controller, the PWRCTRL[1:0] field of MMCIPOWER register allow
+>> to manage sd lines and has a specific bahavior.
+>>
+>> PWRCTRL value:
+>>    - 0x0: After reset, Reset: the SDMMC is disabled and the clock to the
+>>           Card is stopped, SDMMC_D[7:0], and SDMMC_CMD are HiZ and
+>>           SDMMC_CK is driven low.
+>>           When written 00, power-off: the SDMMC is disabled and the clock
+>>           to the card is stopped, SDMMC_D[7:0], SDMMC_CMD and SDMMC_CK
+>>           are driven high.
+>>
+>>    - 0x2: Power-cycle, the SDMMC is disabled and the clock to the card is
+>>           stopped, SDMMC_D[7:0], SDMMC_CMD and SDMMC_CK are driven low.
+>>
+>>    - 0x3: Power-on: the card is clocked, The first 74 SDMMC_CK cycles the
+>>           SDMMC is still disabled. After the 74 cycles the SDMMC is
+>>           enabled and the SDMMC_D[7:0], SDMMC_CMD and SDMMC_CK are
+>>           controlled according the SDMMC operation.
+>>           **Any further write will be ignored, PWRCTRL value
+>>           will keep 0x3**. when the SDMMC is ON (0x3) only a reset could
+>>           change pwrctrl value and the state of sdmmc lines.
+>>
+>> So if the lines are already "ON", the power-on sequence (decribed in
+>> commit message) not overwrite the pwctrl field and not disturb the sdmmc
+>> lines.
 > 
-> Each Tegra CSI port can be one-to-one mapped to VI channel and can
-> capture from an external camera sensor connected to CSI or from
-> built-in test pattern generator.
+> Thanks for the detailed information, much appreciated!
 > 
-> Tegra210 supports built-in test pattern generator from CSI to VI.
+>>
+>>>>
+>>>> I am a little worried that we may start to rely on boot loader
+>>>> conditions, which isn't really what we want either...
+>>>>
+>>
+>> We not depend of boot loader conditions.
+>>
+>> This patch simply allows to drive high the sd lines before to set
+>> "power-on" value (no effect if already power ON).
 > 
-> This patch adds a v4l2 capture driver with media interface for
-> Tegra210 built-in CSI to VI test pattern generator.
+> Yep, thanks!
 > 
-> This patch includes TPG support only and all the video pipeline
-> configuration happens through the video device node.
+>>
+>>>>>
+>>>>> To avoid writing the same value to the power register several times, this
+>>>>> register is cached by the pwr_reg variable. At probe pwr_reg is initialized
+>>>>> to 0 by kzalloc of mmc_alloc_host.
+>>>>>
+>>>>> Like pwr_reg value is 0 at probing, the power on sequence fail because
+>>>>> the "power-off" state is not writes (value 0x0) and the lines
+>>>>> remain drive to low.
+>>>>>
+>>>>> This patch initializes "pwr_reg" variable with power register value.
+>>>>> This it done in sdmmc variant init to not disturb default mmci behavior.
+>>>>>
+>>>>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>>>>
+>>>> Besides the comment, the code and the approach seems reasonable to me.
+>>>
+>>> Another related question. I just realized why you probably haven't set
+>>> .pwrreg_nopower for the variant_stm32_sdmmc and variant_stm32_sdmmcv2.
+>>>
+>>> I guess it's because you need a slightly different way to restore the
+>>> context of MMCIPOWER register at ->runtime_resume(), rather than just
+>>> re-writing it with the saved register values. Is this something that
+>>> you are looking into as well?
+>>
+>> Yes exactly, the sequence is slightly different. I can't write 0 on
+>> mmci_runtime_suspend, and can't just re-writing the saved register.
 > 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/staging/media/Kconfig          |    2 +
->  drivers/staging/media/Makefile         |    1 +
->  drivers/staging/media/tegra/Kconfig    |   13 +
->  drivers/staging/media/tegra/Makefile   |    8 +
->  drivers/staging/media/tegra/TODO       |   10 +
->  drivers/staging/media/tegra/common.h   |  262 ++++++++
->  drivers/staging/media/tegra/csi.c      |  606 +++++++++++++++++
->  drivers/staging/media/tegra/csi.h      |  149 +++++
->  drivers/staging/media/tegra/tegra210.c |  709 ++++++++++++++++++++
->  drivers/staging/media/tegra/tegra210.h |  190 ++++++
->  drivers/staging/media/tegra/vi.c       | 1132 ++++++++++++++++++++++++++++++++
->  drivers/staging/media/tegra/vi.h       |   83 +++
->  drivers/staging/media/tegra/video.c    |  153 +++++
->  drivers/staging/media/tegra/video.h    |   34 +
->  14 files changed, 3352 insertions(+)
->  create mode 100644 drivers/staging/media/tegra/Kconfig
->  create mode 100644 drivers/staging/media/tegra/Makefile
->  create mode 100644 drivers/staging/media/tegra/TODO
->  create mode 100644 drivers/staging/media/tegra/common.h
->  create mode 100644 drivers/staging/media/tegra/csi.c
->  create mode 100644 drivers/staging/media/tegra/csi.h
->  create mode 100644 drivers/staging/media/tegra/tegra210.c
->  create mode 100644 drivers/staging/media/tegra/tegra210.h
->  create mode 100644 drivers/staging/media/tegra/vi.c
->  create mode 100644 drivers/staging/media/tegra/vi.h
->  create mode 100644 drivers/staging/media/tegra/video.c
->  create mode 100644 drivers/staging/media/tegra/video.h
+> So, it seems like you need to use the ->set_ios() callback, to
+> re-configure the controller correctly.
+> 
+> Just tell if you need more help to make that work, otherwise I am here
+> to review your patches.
+> 
+> In regards to $subject patch, I have applied it for next, thanks!
 
-With 'make menuconfig' I get this:
+Thanks for your review.
+Have a nice day.
 
-scripts/kconfig/mconf  Kconfig
-
-WARNING: unmet direct dependencies detected for TEGRA_HOST1X
-  Depends on [n]: HAS_IOMEM [=y] && (ARCH_TEGRA || ARM && COMPILE_TEST [=y])
-  Selected by [y]:
-  - VIDEO_TEGRA [=y] && STAGING [=y] && STAGING_MEDIA [=y] && MEDIA_SUPPORT [=y] && (ARCH_TEGRA || COMPILE_TEST [=y])
-
-This is an x86_64 build with COMPILE_TEST set. I can provide my full .config if you need it.
-
-CONFIG_TEGRA_HOST1X=y
-CONFIG_VIDEO_TEGRA=y
-
-Regards,
-
-	Hans
+> 
+> Kind regards
+> Uffe
+> 
