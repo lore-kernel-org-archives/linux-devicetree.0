@@ -2,118 +2,142 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CCEC55192
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 12:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2674EC55186
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 13:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4520E2076C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 12:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5F3620781
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 13:19:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y7szCwfP"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GETy1w/R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728439AbgDWM7l (ORCPT
+        id S1727798AbgDWNTg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 08:59:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57988 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726685AbgDWM7l (ORCPT
+        Thu, 23 Apr 2020 09:19:36 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:58490 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726500AbgDWNTg (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Apr 2020 08:59:41 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9869FC08E934;
-        Thu, 23 Apr 2020 05:59:39 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id w20so6125854ljj.0;
-        Thu, 23 Apr 2020 05:59:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=TN99Pfmiq67M57+79MTqUBODg0E96SLf0DqAJRctnww=;
-        b=Y7szCwfP00+3Qlg7PqYuLdN9pvRAG5rPi36oGFARP6hAxfks6vJ0kpRHrizJgIrHF6
-         +UOlyB/xifKw9H7Mjcps0orGTWKYpMe+b2jXNBXalqRLyO+qFvL0kNCGGKNEIlLQfsM1
-         oxn6EQdGdDVBxeI9tubCehhS8YIpVcsdHyMNNsl7VNii6OWYy2gs4q8qujKja7ACMQH3
-         +j9/D7IpTgAJjwqSf/ppkZdnLthHFH1bdNwPS0d+FQJ9yeceJiubSx+RXkt4dD48AIE5
-         e+HAEFNT5/Ij1cmwM3z4eePkajZhzY43MbZNCpqFobUCWnSIoaYlfJtP+82uIDyVhNVY
-         EljQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=TN99Pfmiq67M57+79MTqUBODg0E96SLf0DqAJRctnww=;
-        b=t25YQdXVk2EHIHVj7IOKMUirqmtSBBfBE8bnKVUIyabg8B+Tqb42RahQAxLJHHlUFU
-         nL9f4dra+bKME7YeqKquJy/sIhOKDqWxDw8r4I1udgw/833ZDG0UwzBuizroY+YX6s2c
-         hkrUS7vwlVD9buMcgCeu2xzFlhyz+EOkBeN8rKmhhbdn8Bwwi8YK1vVVjP+Dsprh/dbE
-         4df4nxKvnCiZi7KwSifk01QkfP4QGeSu8ix2X0dWySMlMmYSXBX0EqpPkpAmZZBKjPXB
-         RtFggnj0bTmeo1kJM9peeNmmidgnCxRdCALupkRIfxmc3hBdOeKaK0ZHaBsWyqTviRn4
-         eDwA==
-X-Gm-Message-State: AGi0PubYuxxy7FcthNNqgvVz4A8Wu7A6SIcd0fP60Cg7gmuD+yV2i/3D
-        ufP67GfFByF8UPGUeOFvHok=
-X-Google-Smtp-Source: APiQypJvxNBM10jzGJWdYX4cOhGpXVsnIxYhehXKPyLCRAfn/4qjISIb1q3Uqffmq65KRop51bILWQ==
-X-Received: by 2002:a2e:a58d:: with SMTP id m13mr2348976ljp.164.1587646778073;
-        Thu, 23 Apr 2020 05:59:38 -0700 (PDT)
-Received: from [192.168.86.24] ([213.191.183.145])
-        by smtp.gmail.com with ESMTPSA id q19sm1709346ljj.84.2020.04.23.05.59.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 05:59:36 -0700 (PDT)
-Subject: Re: [PATCH 2/3] dt-bindings: regulator: Add document bindings for
- max77826
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht
-References: <20200413164440.1138178-1-iskren.chernev@gmail.com>
- <20200413164440.1138178-3-iskren.chernev@gmail.com>
- <20200420205501.GA6828@bogus>
-From:   Iskren Chernev <iskren.chernev@gmail.com>
-Message-ID: <f9b5d68d-536b-5806-573b-9dafb848f46f@gmail.com>
-Date:   Thu, 23 Apr 2020 15:59:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 23 Apr 2020 09:19:36 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NDCZm3009225;
+        Thu, 23 Apr 2020 15:19:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=piH1szgwWC3uP7oixK8J3nKJfcS4Tgm4SK/1VavF0sE=;
+ b=GETy1w/Rz7PskUth5vX2vGq3d2Um1E3iRgKZzbhkNbnGns7j7K1VRPuzFn0f4DIaHqNF
+ 5YDS9ojF7j36ix6SJ93RMACVNS5bhw2Z5F8zpyJoOp8xsOIUaCC0O6rFbifp+JAJ3PPN
+ JKccaJZXrsY/heWuF2vcDZMREnQroDr5Mkz/Knvk9RHk/i/WlcD/MYg1ymtE/cwPx3lr
+ sJDSqIThuxorK4+S2JkKe+LUdnle2ns9qwqsJllg4261T8ZFs4GNcb0DJ1H7EwqNgo7r
+ ExHFFaoQcpZhGZ27E3lVq16wdbAsiHy0QY2acRrpYgnnOl5ofJWnkDJ+8KX0SUv8vUO6 cA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30fregw0kc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Apr 2020 15:19:20 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4164210002A;
+        Thu, 23 Apr 2020 15:19:20 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 32D5320758D;
+        Thu, 23 Apr 2020 15:19:20 +0200 (CEST)
+Received: from localhost (10.75.127.44) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 23 Apr 2020 15:19:19
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <gregkh@linuxfoundation.org>,
+        <loic.pallardy@st.com>, <linus.walleij@linaro.org>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v2 3/5] dt-bindings: bus: Add STM32 ETZPC firewall controller
+Date:   Thu, 23 Apr 2020 15:19:11 +0200
+Message-ID: <20200423131913.30786-4-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20200423131913.30786-1-benjamin.gaignard@st.com>
+References: <20200423131913.30786-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-In-Reply-To: <20200420205501.GA6828@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-23_10:2020-04-23,2020-04-23 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Document STM32 ETZPC firewall controller bindings
 
-On 4/20/20 11:55 PM, Rob Herring wrote:
-> On Mon, Apr 13, 2020 at 07:44:39PM +0300, Iskren Chernev wrote:
->> +    patternProperties:
->> +      "^LDO([1-9]|1[0-5])$":
->> +        type: object
->> +        allOf:
->> +          - $ref: regulator.yaml#
->> +
->> +      "^BUCK|BUCKBOOST$":
->> +        type: object
->> +        allOf:
->> +          - $ref: regulator.yaml#
->> +
->> +      additionalProperties: false
->
-> You are defining a property called 'additionalProperties'. This one
-> should be dropped because additionalProperties doesn't work with a $ref.
->
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+version 2:
+- fix unit name into st,stm32-etzpc.yaml example
 
-I got the idea from mps,mpq7920.yaml. It has additionalProperties in the
-exact same places that I do. Also bd718(28|37|47).yaml seem to use
-additionalProperties inside patternProperties. Shall I modify it as well?
+ .../bindings/bus/stm32/st,stm32-etzpc.yaml         | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/stm32/st,stm32-etzpc.yaml
 
-I couldn't find the core schema for this yaml:
-http://devicetree.org/meta-schemas/core.yaml (gives 404).  Is there a way
-to verify the validity of the yaml?
-
-Also, this patch is already merged in linux-next. I guess I shall submit
-a new patch with the fixes standalone?
+diff --git a/Documentation/devicetree/bindings/bus/stm32/st,stm32-etzpc.yaml b/Documentation/devicetree/bindings/bus/stm32/st,stm32-etzpc.yaml
+new file mode 100644
+index 000000000000..d92865fda40c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/bus/stm32/st,stm32-etzpc.yaml
+@@ -0,0 +1,46 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bus/stm32/st,stm32-etzpc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STM32 Extended TrustZone Protection controller
++
++maintainers:
++  - Benjamin Gaignard <benjamin.gaignard@st.com>
++
++description: STMicroelectronics's STM32 firewall bus controller implementation
++
++allOf:
++  - $ref: "firewall-provider.yaml#"
++  - $ref: /schemas/simple-bus.yaml#
++
++properties:
++  compatible:
++    contains:
++      enum:
++        - st,stm32-etzpc-bus
++
++  reg:
++   maxItems: 1
++
++  '#firewall-cells':
++    const: 2
++
++required:
++  - compatible
++  - reg
++  - '#firewall-cells'
++
++examples:
++  - |
++    soc@5c007000 {
++      compatible = "st,stm32-etzpc-bus", "simple-bus";
++      reg = <0x5c007000 0x400>;
++      #firewall-cells = <2>;
++      #address-cells = <1>;
++      #size-cells = <1>;
++      ranges;
++    };
++
++...
+-- 
+2.15.0
 
