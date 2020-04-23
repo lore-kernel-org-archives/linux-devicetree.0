@@ -2,131 +2,118 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD88C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 12:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CCEC55192
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 12:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85B842077D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 12:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4520E2076C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 12:59:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IWSs9nbg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y7szCwfP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbgDWMsN (ORCPT
+        id S1728439AbgDWM7l (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 08:48:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56202 "EHLO
+        Thu, 23 Apr 2020 08:59:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726840AbgDWMsM (ORCPT
+        by vger.kernel.org with ESMTP id S1726685AbgDWM7l (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Apr 2020 08:48:12 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79BD0C08E934;
-        Thu, 23 Apr 2020 05:48:12 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id v4so7382779wme.1;
-        Thu, 23 Apr 2020 05:48:12 -0700 (PDT)
+        Thu, 23 Apr 2020 08:59:41 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9869FC08E934;
+        Thu, 23 Apr 2020 05:59:39 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id w20so6125854ljj.0;
+        Thu, 23 Apr 2020 05:59:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AIWDZqBU/m1xMWhrZfTJgdQpK0v0DeS2ch8sjIFRn1o=;
-        b=IWSs9nbgcZK6vbN6AxMc7DXCMIRSEXT+zXxFa2memXXRINJEoe9BBuUC1XuEul8cU5
-         faG8X/sEDFm2OAPncZD6JmPNo/L1TCNX6CfNM11N3DEfoFStIKSDEELn15N3Z+5P4PUy
-         wUaZgTs5CIAU/qMmi+8RxsyD9Ca+MjwUfOhdK2mWesajkf1G2Z7IYe5KxwnsnPiaMn9D
-         35ZJSQFo6N12ePSS4VxpnFbMFNX8ublLbVA6itFGlvvFB7iRh5VEwbegt6KIanp/CSoF
-         yY3yAFC6idyTWu1j/1GNB3sus005W1MD6LDsqf++mUuPvql+q7Y1flk4g+/GCpd8t7Vb
-         yBiA==
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=TN99Pfmiq67M57+79MTqUBODg0E96SLf0DqAJRctnww=;
+        b=Y7szCwfP00+3Qlg7PqYuLdN9pvRAG5rPi36oGFARP6hAxfks6vJ0kpRHrizJgIrHF6
+         +UOlyB/xifKw9H7Mjcps0orGTWKYpMe+b2jXNBXalqRLyO+qFvL0kNCGGKNEIlLQfsM1
+         oxn6EQdGdDVBxeI9tubCehhS8YIpVcsdHyMNNsl7VNii6OWYy2gs4q8qujKja7ACMQH3
+         +j9/D7IpTgAJjwqSf/ppkZdnLthHFH1bdNwPS0d+FQJ9yeceJiubSx+RXkt4dD48AIE5
+         e+HAEFNT5/Ij1cmwM3z4eePkajZhzY43MbZNCpqFobUCWnSIoaYlfJtP+82uIDyVhNVY
+         EljQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AIWDZqBU/m1xMWhrZfTJgdQpK0v0DeS2ch8sjIFRn1o=;
-        b=Je4D179eryVt9OOrWvuT59OQEgr4MFxIKnD8893r98+GdeWJoR+lPzlnFBe+UmG9vN
-         QHHCdGISb2kRQL5jgNVqdlj1n2t9gskyuvFPnFNEg/9SfOSaUUeuTqDHQZhxz4lLr5ee
-         2u5jJY7lHCZuXdR9DfL60tKCi223MJueqRN6JqZB4Tkdw19Wx0WAiyemEv4VQ4SzmBXf
-         npVVTJikJJW/HJR6oqJf8KdEMOkjJQS8/POfH1+Ui/cEMnbkNcM7l2LT2nGb9Dr8by96
-         gVlNedSTmWDdy3e50ODwSdmHSZGcbISZax6fpKEjR+gRJYbtvuasdZs3ujbIMXzJAG8y
-         4Qtg==
-X-Gm-Message-State: AGi0PuZbh7jNgBIzxy3ayW5WbjyU4nZWUbfZzGIRnS/QOS7O+mVxU3vf
-        3fvVAoNzwihBX+2p2yuNtsk=
-X-Google-Smtp-Source: APiQypLbjw45ucXMMdNEze5vzTmLlFY1dYkm9XBnrtS1Rr4KNXzqteQX0stoMFeih45vI8iuRblXRQ==
-X-Received: by 2002:a1c:5683:: with SMTP id k125mr3897667wmb.17.1587646091198;
-        Thu, 23 Apr 2020 05:48:11 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id f8sm3626512wrm.14.2020.04.23.05.48.10
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=TN99Pfmiq67M57+79MTqUBODg0E96SLf0DqAJRctnww=;
+        b=t25YQdXVk2EHIHVj7IOKMUirqmtSBBfBE8bnKVUIyabg8B+Tqb42RahQAxLJHHlUFU
+         nL9f4dra+bKME7YeqKquJy/sIhOKDqWxDw8r4I1udgw/833ZDG0UwzBuizroY+YX6s2c
+         hkrUS7vwlVD9buMcgCeu2xzFlhyz+EOkBeN8rKmhhbdn8Bwwi8YK1vVVjP+Dsprh/dbE
+         4df4nxKvnCiZi7KwSifk01QkfP4QGeSu8ix2X0dWySMlMmYSXBX0EqpPkpAmZZBKjPXB
+         RtFggnj0bTmeo1kJM9peeNmmidgnCxRdCALupkRIfxmc3hBdOeKaK0ZHaBsWyqTviRn4
+         eDwA==
+X-Gm-Message-State: AGi0PubYuxxy7FcthNNqgvVz4A8Wu7A6SIcd0fP60Cg7gmuD+yV2i/3D
+        ufP67GfFByF8UPGUeOFvHok=
+X-Google-Smtp-Source: APiQypJvxNBM10jzGJWdYX4cOhGpXVsnIxYhehXKPyLCRAfn/4qjISIb1q3Uqffmq65KRop51bILWQ==
+X-Received: by 2002:a2e:a58d:: with SMTP id m13mr2348976ljp.164.1587646778073;
+        Thu, 23 Apr 2020 05:59:38 -0700 (PDT)
+Received: from [192.168.86.24] ([213.191.183.145])
+        by smtp.gmail.com with ESMTPSA id q19sm1709346ljj.84.2020.04.23.05.59.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 05:48:10 -0700 (PDT)
-Subject: Re: [PATCH v2 7/9] media: MAINTAINERS: rkisp1: add path to
- dt-bindings
-To:     Helen Koike <helen.koike@collabora.com>,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        robh+dt@kernel.org, heiko@sntech.de, hverkuil-cisco@xs4all.nl,
-        kernel@collabora.com, dafna.hirschfeld@collabora.com,
-        ezequiel@collabora.com, mark.rutland@arm.com,
-        karthik.poduval@gmail.com, kishon@ti.com
-References: <20200403161538.1375908-1-helen.koike@collabora.com>
- <20200403161538.1375908-8-helen.koike@collabora.com>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <6cc8ac87-761b-de5d-7104-6f55f419a4d1@gmail.com>
-Date:   Thu, 23 Apr 2020 14:48:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+        Thu, 23 Apr 2020 05:59:36 -0700 (PDT)
+Subject: Re: [PATCH 2/3] dt-bindings: regulator: Add document bindings for
+ max77826
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht
+References: <20200413164440.1138178-1-iskren.chernev@gmail.com>
+ <20200413164440.1138178-3-iskren.chernev@gmail.com>
+ <20200420205501.GA6828@bogus>
+From:   Iskren Chernev <iskren.chernev@gmail.com>
+Message-ID: <f9b5d68d-536b-5806-573b-9dafb848f46f@gmail.com>
+Date:   Thu, 23 Apr 2020 15:59:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200403161538.1375908-8-helen.koike@collabora.com>
+In-Reply-To: <20200420205501.GA6828@bogus>
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Helen,
 
-On 4/3/20 6:15 PM, Helen Koike wrote:
-> The Rockchip ISP bindings was moved out of staging.
-> Update MAINTAINERS file with the new path.
-> 
-> Suggested-by: Johan Jonker <jbx6244@gmail.com>
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> ---
-> 
-> V2:
-> - This is a new patch in the series
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d66ac41ef5872..726044b84cf23 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14303,6 +14303,7 @@ M:	Helen Koike <helen.koike@collabora.com>
->  L:	linux-media@vger.kernel.org
+On 4/20/20 11:55 PM, Rob Herring wrote:
+> On Mon, Apr 13, 2020 at 07:44:39PM +0300, Iskren Chernev wrote:
+>> +    patternProperties:
+>> +      "^LDO([1-9]|1[0-5])$":
+>> +        type: object
+>> +        allOf:
+>> +          - $ref: regulator.yaml#
+>> +
+>> +      "^BUCK|BUCKBOOST$":
+>> +        type: object
+>> +        allOf:
+>> +          - $ref: regulator.yaml#
+>> +
+>> +      additionalProperties: false
+>
+> You are defining a property called 'additionalProperties'. This one
+> should be dropped because additionalProperties doesn't work with a $ref.
+>
 
-L:	linux-rockchip@lists.infradead.org
+I got the idea from mps,mpq7920.yaml. It has additionalProperties in the
+exact same places that I do. Also bd718(28|37|47).yaml seem to use
+additionalProperties inside patternProperties. Shall I modify it as well?
 
->  S:	Maintained
+I couldn't find the core schema for this yaml:
+http://devicetree.org/meta-schemas/core.yaml (gives 404).  Is there a way
+to verify the validity of the yaml?
 
->  F:	drivers/staging/media/rkisp1/
-> +F:	Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-
-Rebase.
-The MAINTAINERS document was recently sort.
-Check entries with:
-
-./scripts/parse-maintainers.pl --input=MAINTAINERS --output=MAINTAINERS
---order
-
->  
->  ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
->  M:	Jacob Chen <jacob-chen@iotwrt.com>
-> 
+Also, this patch is already merged in linux-next. I guess I shall submit
+a new patch with the fixes standalone?
 
