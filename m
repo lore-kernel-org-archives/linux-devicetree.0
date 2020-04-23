@@ -2,80 +2,93 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A712C55191
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 06:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 585A4C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 06:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EB6120736
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 06:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 344FE21582
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 06:49:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="ZnFUveIV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i5GjJenz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgDWGks (ORCPT
+        id S1726479AbgDWGtD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 02:40:48 -0400
-Received: from mail.nic.cz ([217.31.204.67]:45872 "EHLO mail.nic.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725562AbgDWGks (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Apr 2020 02:40:48 -0400
-Received: from localhost (unknown [172.20.6.135])
-        by mail.nic.cz (Postfix) with ESMTPSA id A6CED140BD3;
-        Thu, 23 Apr 2020 08:40:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1587624046; bh=LkuL42hXPzC0mMIZfKgl4PYGmSs0s6vQivfcRSS78lo=;
-        h=Date:From:To;
-        b=ZnFUveIVQj8s79JTSSHlALtpN7XAKdI5+MuUx/4RJi/6B/3nrYbTFIgN3ePd3G7P7
-         9LQOR0cbP/3iE+igOHaiNEzmmtDJ1O1/WvOetQsjGSTR+7sqNTR2VFn7Qz0wPlDlzx
-         jB52RXW5L17VXcH8h+3uO9105wryr6qOS2F+9YfI=
-Date:   Thu, 23 Apr 2020 08:40:46 +0200
-From:   Marek Behun <marek.behun@nic.cz>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     linux-leds@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: leds: add cznic,turris-omnia-leds
- binding
-Message-ID: <20200423084046.453262a9@nic.cz>
-In-Reply-To: <20200423063552.GA22554@amd>
-References: <20200421171732.8277-1-marek.behun@nic.cz>
-        <20200421171732.8277-2-marek.behun@nic.cz>
-        <20200423063552.GA22554@amd>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-X-Virus-Status: Clean
+        Thu, 23 Apr 2020 02:49:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56694 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbgDWGtD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 02:49:03 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C358C03C1AB
+        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 23:49:03 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id k1so5460193wrx.4
+        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 23:49:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=EFfxe/epc7L2g82M2YjSCSd5iJjobRL2IJO+04GvmP4=;
+        b=i5GjJenzjF+Mtmr+euiOruLYS80OFAPAUNbhBwVawispTe/Y76HORAzc30r6GUOI9N
+         xZ0NkHoIQ6xbn6AZoag6AllXV3LJYc2DDQ8bBDvbIJuaAds1aKCBk8jCgB4gVSg/fJ1C
+         klCIFCRZPCEqIZWd2keqEMNfOtd7SW0Jrx+/H+CgRYaC3+sCyqbX8yqgmPqTN5DzHyFE
+         5oTe1grM4U2EDBLMVYb+e9RXI5tmGh8Jz9Aut+tpiD7+BDpUI+h3XomGQAIZ8GgymGRz
+         86RDH0jWg925DFj4o5r1rcJ0MY7g0GD7i/XeBYng2zbKPfEyabbvLhlCtcFG2kovF3cF
+         JSdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=EFfxe/epc7L2g82M2YjSCSd5iJjobRL2IJO+04GvmP4=;
+        b=YiLEZo+oasfO2aM5RkgzWlt8eY+lntNxHgQpuu82hkpuFdVEIp2xnSGupOc2B/EZMr
+         68366M/W7QW5ucsYbw7TXvdgcwMcZR/2hEX+fd3/EHJcYHzUEh6nrSaykKXeK0UkISGt
+         0f7eAN/BWuDvUse+H01ImcrhxFpa6u+dy/HIblEUZVmrpBb49z37Atn8HiWnKxXAqFkf
+         U64IxF6kpdGT1yI4TWe+TI5jkHCjF8bEG7CqvVYVlBNwDW8WQlwDDTo5L1gMR9SkVrnC
+         3j+IbNRwdaxXvrG+xH+Ec2OzwyeA6VTBvtan8EN51tNhMTarpiN66mwYNtuPBZ0kVD5e
+         9JuQ==
+X-Gm-Message-State: AGi0PuY30GASKyy5jtLguN7mfsH8sCLKuSTH2FDoUsUmpdvHGX8yGEs5
+        o37wh+LiBYCmOVhbvETqMAd47w==
+X-Google-Smtp-Source: APiQypL9V/xynzD2GzjmsaioxVGXnzw2BCQOJ51nOTMuoE/OVvc54AgkNwrHjY9FrCXuWV7XQC6XWA==
+X-Received: by 2002:adf:afc6:: with SMTP id y6mr3065014wrd.74.1587624541812;
+        Wed, 22 Apr 2020 23:49:01 -0700 (PDT)
+Received: from lmecxl0524.lme.st.com (2a01cb058702ff004d8cf526990082b9.ipv6.abo.wanadoo.fr. [2a01:cb05:8702:ff00:4d8c:f526:9900:82b9])
+        by smtp.gmail.com with ESMTPSA id k17sm2254910wmi.10.2020.04.22.23.49.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 23:49:01 -0700 (PDT)
+From:   Etienne Carriere <etienne.carriere@linaro.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, Etienne Carriere <etienne.carriere@linaro.org>
+Subject: [RFC PATCH 0/2] Add examples of secure- prefixed property in documentation
+Date:   Thu, 23 Apr 2020 08:48:06 +0200
+Message-Id: <20200423064808.10468-1-etienne.carriere@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 23 Apr 2020 08:35:52 +0200
-Pavel Machek <pavel@ucw.cz> wrote:
+Hello,
 
-> Hi!
->=20
-> > Add device-tree bindings documentation for Turris Omnia RGB LEDs.
-> >=20
-> > Signed-off-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
-> > Cc: Rob Herring <robh+dt@kernel.org> =20
->=20
-> Rob already reviewed this one. Is there reason not to have his
-> reviewed-by here?
+This is a proposal for adding a bit of description in the DT bindings
+documentation of how secure- property prefix can be used for. The
+changes in this patch series describe that for clocks and resets properties.
 
-This one is written in yaml, the previous was .txt
+Documentation file arm/secure.txt already states that secure- prefix can be
+used for any property hence the description proposed here are not mandated.
+However it may be useful as explicit examples of such usage.
 
-> https://patchwork.ozlabs.org/project/devicetree-bindings/patch/2019032819=
-3428.19273-3-marek.behun@nic.cz/
->=20
-> >  MAINTAINERS                                   |   5 +- =20
->=20
-> Please put MAINTAINERS change into separate patch. I don't think I can
-> merge it throught the LEDs tree.
+I will be very pleased to get your feedback in this changes.
 
-Ok, I shall send it to someone else then, probably Gregory.
+Regards,
+
+Etienne Carriere (2):
+  dt-bindings: arm: Add secure-clocks binding description
+  dt-bindings: arm: Add secure-resets binding description
+
+ .../devicetree/bindings/arm/secure.txt        | 37 +++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+
+-- 
+2.17.1
+
