@@ -2,417 +2,154 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
-	WEIRD_QUOTING autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C448C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 11:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FB7C55186
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 11:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B96F20728
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 11:21:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="qwXvLarZ"
+	by mail.kernel.org (Postfix) with ESMTP id A10132077D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 11:43:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587642203;
+	bh=ZppbZ6QT7JPo7CxN7xfIaybqyVb8NJUPjpK7mAhbe7k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZEcItwT7iHg1HI1qz7Rp2fHWGJF5zFIU8sY9YugFzQYsgsvnSiOL6Lu1VIGcRzbEA
+	 HmRlwOBtMR1Dmzyf1D6GScu8dUDtZArBc26NJiGzYC0vw1zgG1yycf6uZ19n1ErgWg
+	 IQYzLrb+0pGrz8oIbPRgZaYamqb7knWUoj+caxTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgDWLV3 (ORCPT
+        id S1728108AbgDWLnX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 07:21:29 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:53706 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727877AbgDWLV3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Apr 2020 07:21:29 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 16B9549961;
-        Thu, 23 Apr 2020 11:21:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :x-mailer:message-id:date:date:subject:subject:from:from
-        :received:received:received; s=mta-01; t=1587640884; x=
-        1589455285; bh=r3uhSn2PkUfq4aTcRJp/DI+FCYKerGnHx1LpFfVlNKQ=; b=q
-        wXvLarZvoTiKHCY35wjJfFxX7Dj1tYCu+UQtdD/lcxqxC2zT9jxDlfKMVLtC4q2W
-        ButQTMs6nkKGbO53GnDSs4NcuESQ3QmGYVKkR6fPRY4nqqwoDEYBu6lSev+8yP2l
-        UMnnASrVLjeUR6uQoIOqUFtxK9a8s0g1gBx7yY70zI=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id aOkXb5O-tyLM; Thu, 23 Apr 2020 14:21:24 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 108D947219;
-        Thu, 23 Apr 2020 14:21:24 +0300 (MSK)
-Received: from bbwork.com (172.17.14.122) by T-EXCH-02.corp.yadro.com
- (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Thu, 23
- Apr 2020 14:21:24 +0300
-From:   Alexander Filippov <a.filippov@yadro.com>
-To:     <linux-aspeed@lists.ozlabs.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Joel Stanley <joel@jms.id.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexander Filippov <a.filippov@yadro.com>
-Subject: [PATCH] ARM: DTS: Aspeed: Add YADRO Nicole BMC
-Date:   Thu, 23 Apr 2020 14:21:00 +0300
-Message-ID: <20200423112100.19424-1-a.filippov@yadro.com>
-X-Mailer: git-send-email 2.21.1
+        Thu, 23 Apr 2020 07:43:23 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43943 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbgDWLnV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 07:43:21 -0400
+Received: by mail-lj1-f193.google.com with SMTP id l19so5836902lje.10;
+        Thu, 23 Apr 2020 04:43:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=C7lj58MFnLePtA19l1qlYr6e++DcjSNazO2l/JEQ44w=;
+        b=GQxJrhN1HJmf0PEh02R4CQlQq/Jc/cfcCcgfhomOtMAfSkyCGFjh8dNxzxgVHxyrAN
+         w6rLCT94FH1CHiGvdKT06vXfGS0xd6QI7x2xB7vtNejCN2QQmAFSBQjTklLXQxNQ2vEp
+         ZD4++79mLRT62BX14IeinIId6seG4fdTBDGk+ehNA1N3ksY+0nOmwzZGlNPNjG/1eT45
+         ValhXzSPe6nEa+MfzpGq/uzgXl8tcwv8EkKCHAs+mGWku8/ZdVoyDbWDPdhlH7UycANi
+         NdNjdVU4NX1PEFPkXk/84ezBD6QNmBVdYzk4UA2QJvNFAmN2n0lW9k65df7ssH3VDN3o
+         YKNQ==
+X-Gm-Message-State: AGi0PuZRmhod6jK/rFustsW0ObfCw1IoPo/kThtCz0gAvQ35wmYufGPq
+        3JQpOu012nIROKnNThMbR7g=
+X-Google-Smtp-Source: APiQypLpXxwpZWbjR9D3X5tsAZC+au1GagS5X6SZYtkKVLlZ7Vj6uBrtzkk360XXCFwFPPxnLcWh7g==
+X-Received: by 2002:a2e:a169:: with SMTP id u9mr2231221ljl.144.1587642197450;
+        Thu, 23 Apr 2020 04:43:17 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id 16sm1613269ljr.55.2020.04.23.04.43.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 04:43:16 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1jRaGM-0004uT-CR; Thu, 23 Apr 2020 13:43:26 +0200
+Date:   Thu, 23 Apr 2020 13:43:26 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Johan Hovold <johan@kernel.org>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv6 0/4] n_gsm serdev support and protocol driver for
+ droid4 modem
+Message-ID: <20200423114326.GQ18608@localhost>
+References: <20200421232752.3070-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [172.17.14.122]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200421232752.3070-1-tony@atomide.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Nicole is an OpenPower machine with an Aspeed 2500 BMC SoC manufactured
-by YADRO.
+Hi Tony,
 
-Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
----
- arch/arm/boot/dts/Makefile                  |   1 +
- arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts | 316 ++++++++++++++++++++
- 2 files changed, 317 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts
+On Tue, Apr 21, 2020 at 04:27:48PM -0700, Tony Lindgren wrote:
+> Hi all,
+> 
+> Here's v4 set of n_gsm serdev support patches, and the related protocol
+> driver for the modem found on Motorola Mapphone phones and tablets
+> like droid4.
+> 
+> This series only adds basic character device support for the serdev
+> driver. Other serdev consumer drivers for specific devices will be
+> posted separately.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e8dd99201397..6f9fe0f959f2 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1347,6 +1347,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
- 	aspeed-bmc-microsoft-olympus.dtb \
- 	aspeed-bmc-opp-lanyang.dtb \
- 	aspeed-bmc-opp-mihawk.dtb \
-+	aspeed-bmc-opp-nicole.dtb \
- 	aspeed-bmc-opp-palmetto.dtb \
- 	aspeed-bmc-opp-romulus.dtb \
- 	aspeed-bmc-opp-swift.dtb \
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts b/arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts
-new file mode 100644
-index 000000000000..4f2b91d6a891
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts
-@@ -0,0 +1,316 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+// Copyright 2019 YADRO
-+/dts-v1/;
-+#include "aspeed-g5.dtsi"
-+#include <dt-bindings/gpio/aspeed-gpio.h>
-+
-+/ {
-+	model = "Nicole BMC";
-+	compatible = "yadro,nicole-bmc", "aspeed,ast2500";
-+
-+	chosen {
-+		stdout-path = &uart5;
-+		bootargs = "console=ttyS4,115200 earlyprintk";
-+	};
-+
-+	memory@80000000 {
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		vga_memory: framebuffer@9f000000 {
-+			no-map;
-+			reg = <0x9f000000 0x01000000>; /* 16M */
-+		};
-+
-+		flash_memory: region@98000000 {
-+			no-map;
-+			reg = <0x98000000 0x04000000>; /* 64M */
-+		};
-+
-+		coldfire_memory: codefire_memory@9ef00000 {
-+			reg = <0x9ef00000 0x00100000>;
-+			no-map;
-+		};
-+
-+		gfx_memory: framebuffer {
-+			size = <0x01000000>;
-+			alignment = <0x01000000>;
-+			compatible = "shared-dma-pool";
-+			reusable;
-+		};
-+
-+		video_engine_memory: jpegbuffer {
-+			size = <0x02000000>;	/* 32M */
-+			alignment = <0x01000000>;
-+			compatible = "shared-dma-pool";
-+			reusable;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		power {
-+			gpios = <&gpio ASPEED_GPIO(AA, 4) GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		identify {
-+			gpios = <&gpio ASPEED_GPIO(AA, 7) GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		alarm_red {
-+			gpios = <&gpio ASPEED_GPIO(AA, 3) GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		alarm_yellow {
-+			gpios = <&gpio ASPEED_GPIO(AA, 1) GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	fsi: gpio-fsi {
-+		compatible = "aspeed,ast2500-cf-fsi-master", "fsi-master";
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+		no-gpio-delays;
-+
-+		memory-region = <&coldfire_memory>;
-+		aspeed,sram = <&sram>;
-+		aspeed,cvic = <&cvic>;
-+
-+		clock-gpios = <&gpio ASPEED_GPIO(AA, 0) GPIO_ACTIVE_HIGH>;
-+		data-gpios = <&gpio ASPEED_GPIO(AA, 2) GPIO_ACTIVE_HIGH>;
-+		mux-gpios = <&gpio ASPEED_GPIO(A, 6) GPIO_ACTIVE_HIGH>;
-+		enable-gpios = <&gpio ASPEED_GPIO(D, 0) GPIO_ACTIVE_HIGH>;
-+		trans-gpios = <&gpio ASPEED_GPIO(P, 1) GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		checkstop {
-+			label = "checkstop";
-+			gpios = <&gpio ASPEED_GPIO(J, 2) GPIO_ACTIVE_LOW>;
-+			linux,code = <ASPEED_GPIO(J, 2)>;
-+		};
-+	};
-+
-+	iio-hwmon-battery {
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 12>;
-+	};
-+};
-+
-+&fmc {
-+	status = "okay";
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "bmc";
-+		spi-max-frequency = <50000000>;
-+#include "openbmc-flash-layout.dtsi"
-+	};
-+};
-+
-+&spi1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_spi1_default>;
-+
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "pnor";
-+		spi-max-frequency = <100000000>;
-+	};
-+};
-+
-+&lpc_ctrl {
-+	status = "okay";
-+	memory-region = <&flash_memory>;
-+	flash = <&spi1>;
-+};
-+
-+&uart1 {
-+	/* Rear RS-232 connector */
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd1_default
-+			&pinctrl_rxd1_default
-+			&pinctrl_nrts1_default
-+			&pinctrl_ndtr1_default
-+			&pinctrl_ndsr1_default
-+			&pinctrl_ncts1_default
-+			&pinctrl_ndcd1_default
-+			&pinctrl_nri1_default>;
-+};
-+
-+&uart5 {
-+	status = "okay";
-+};
-+
-+&mac0 {
-+	status = "okay";
-+
-+	use-ncsi;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rmii1_default>;
-+	clocks = <&syscon ASPEED_CLK_GATE_MAC1CLK>,
-+		 <&syscon ASPEED_CLK_MAC1RCLK>;
-+	clock-names = "MACCLK", "RCLK";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	eeprom@50 {
-+		compatible = "atmel,24c256";
-+		reg = <0x50>;
-+		pagesize = <64>;
-+	};
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+    /* CPU0 characterization connector */
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+    /* CLK GEN SI5338 */
-+};
-+
-+&i2c4 {
-+	status = "okay";
-+    /* Voltage regulators for CPU0 */
-+};
-+
-+&i2c5 {
-+	status = "okay";
-+    /* Voltage regulators for CPU1 */
-+};
-+
-+&i2c6 {
-+	status = "okay";
-+
-+	rtc@32 {
-+		compatible = "epson,rx8900";
-+		reg = <0x32>;
-+	};
-+};
-+
-+&i2c7 {
-+	status = "okay";
-+    /* CPLD */
-+};
-+
-+&gpio {
-+	gpio-line-names =
-+	/*A0-A7*/	"","cfam-reset","","","","","fsi-mux","",
-+	/*B0-B7*/	"","","","","","","","",
-+	/*C0-C7*/	"","","","","","","","",
-+	/*D0-D7*/	"fsi-enable","","","nic_func_mode0","nic_func_mode1","","","",
-+	/*E0-E7*/	"","ncsi_cfg","","","","","","",
-+	/*F0-F7*/	"","","","","","","","",
-+	/*G0-G7*/	"","","","","","","","",
-+	/*H0-H7*/	"","","","","","","","",
-+	/*I0-I7*/	"","","","","","","","",
-+	/*J0-J7*/	"","","checkstop","","","","","",
-+	/*K0-K7*/	"","","","","","","","",
-+	/*L0-L7*/	"","","","","","","","",
-+	/*M0-M7*/	"","","","","","","","",
-+	/*N0-N7*/	"","","","","","","","",
-+	/*O0-O7*/	"","","id-button","","","","","",
-+	/*P0-P7*/	"","fsi-trans","","","","","","",
-+	/*Q0-Q7*/	"","","","","","","","",
-+	/*R0-R7*/	"","","","","","","","",
-+	/*S0-S7*/	"","","","","","","","seq_cont",
-+	/*T0-T7*/	"","","","","","","","",
-+	/*U0-U7*/	"","","","","","","","",
-+	/*V0-V7*/	"","","","","","","","",
-+	/*W0-W7*/	"","","","","","","","",
-+	/*X0-X7*/	"","","","","","","","",
-+	/*Y0-Y7*/	"","","","","","","","",
-+	/*Z0-Z7*/	"","","","","","","","",
-+	/*AA0-AA7*/ "fsi-clock","led-alarm-yellow","fsi-data","led-alarm-red",
-+                "led-power","","","led-identify",
-+	/*AB0-AB7*/	"","","","","","","","",
-+	/*AC0-AC7*/	"","","","","","","","";
-+
-+	nic_func_mode0 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(D, 3) GPIO_ACTIVE_HIGH>;
-+		output-low;
-+	};
-+	nic_func_mode1 {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(D, 4) GPIO_ACTIVE_HIGH>;
-+		output-low;
-+	};
-+	seq_cont {
-+		gpio-hog;
-+		gpios = <ASPEED_GPIO(S, 7) GPIO_ACTIVE_HIGH>;
-+		output-low;
-+	};
-+	ncsi_cfg {
-+		gpio-hog;
-+		input;
-+		gpios = <ASPEED_GPIO(E, 1) GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&vuart {
-+	status = "okay";
-+};
-+
-+&gfx {
-+	status = "okay";
-+	memory-region = <&gfx_memory>;
-+};
-+
-+&pinctrl {
-+	aspeed,external-nodes = <&gfx &lhc>;
-+};
-+
-+&ibt {
-+	status = "okay";
-+};
-+
-+&vhub {
-+	status = "okay";
-+};
-+
-+&adc {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc0_default
-+			&pinctrl_adc1_default
-+			&pinctrl_adc2_default
-+			&pinctrl_adc3_default
-+			&pinctrl_adc4_default
-+			&pinctrl_adc5_default
-+			&pinctrl_adc6_default
-+			&pinctrl_adc7_default
-+			&pinctrl_adc8_default
-+			&pinctrl_adc9_default
-+			&pinctrl_adc10_default
-+			&pinctrl_adc11_default
-+			&pinctrl_adc12_default
-+			&pinctrl_adc13_default
-+			&pinctrl_adc14_default
-+			&pinctrl_adc15_default>;
-+};
-+
-+&video {
-+	status = "okay";
-+	memory-region = <&video_engine_memory>;
-+};
-+
-+#include "ibm-power9-dual.dtsi"
--- 
-2.21.1
+I'm still missing an architectural (design) overview here -- reviewer
+time is a scarce resource.
 
+I also suggested earlier that you include, at least as an RFC, one or
+more of your child-device drivers so that we can see how this ends up
+being used in the end (including an example devicetree).
+
+Some high-level comments until then:
+
+I'm not sure that a plain chardev interface for the mux channels is the
+right interface. The n_gsm ldisc exposes tty devices and I think your
+serdev adaptation should continue to do that.
+
+On that note; you're not actually adding general TS 27.010 serdev
+support, but rather some hooks and a custom driver and interface (mfd +
+/dev/motmdmN) for one particular modem.
+
+I'd rather see a generic implementation which can be used with other
+modems and that continues to expose a /dev/gsmttyN interface to which we
+could attach serdev clients instead (and not create a motmdm serdev
+replica of sorts).
+
+I know the location of this driver has been up for discussion already,
+but drivers/tty/serdev/protocol still isn't right (e.g. we don't have an
+drivers/i2c/protocol directory where we stuff random i2c client
+drivers).
+
+It's an mfd + custom chardev driver for a modem and related to n_gsm
+(even more if you add generic serdev support). Currently, drivers/mfd or
+drivers/misc appear to be better choices. Otherwise, n_gsm lives in
+drivers/tty since it's a line discipline, but it could be moved to a new
+drivers/modem if needed (cf. the bluetooth hci ldisc).
+
+Last, it seems you've based the serdev-ngsm-motmdm.c chardev
+implementation on a more or less verbatim copy of drivers/gnss/core.c.
+I'd appreciate if you could mention that in the file header and
+reproduce the copyright notice if you end up keeping that interface.
+
+> Tony Lindgren (4):
+>   tty: n_gsm: Add support for serdev drivers
+>   serdev: ngsm-motmdm: Add Motorola TS 27.010 serdev modem driver for
+>     droid4
+>   dt-bindings: serdev: motmdm: Add binding for motorola-mdm
+>   ARM: dts: omap4-droid4: Enable basic modem support
+> 
+>  .../serdev/motorola,mapphone-mdm6600.yaml     |   34 +
+>  .../boot/dts/motorola-mapphone-common.dtsi    |    6 +
+>  drivers/tty/n_gsm.c                           |  372 +++++
+>  drivers/tty/serdev/Kconfig                    |    2 +
+>  drivers/tty/serdev/Makefile                   |    2 +
+>  drivers/tty/serdev/protocol/Kconfig           |   14 +
+>  drivers/tty/serdev/protocol/Makefile          |    3 +
+>  .../tty/serdev/protocol/serdev-ngsm-motmdm.c  | 1191 +++++++++++++++++
+>  include/linux/serdev-gsm.h                    |  168 +++
+>  9 files changed, 1792 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/serdev/motorola,mapphone-mdm6600.yaml
+>  create mode 100644 drivers/tty/serdev/protocol/Kconfig
+>  create mode 100644 drivers/tty/serdev/protocol/Makefile
+>  create mode 100644 drivers/tty/serdev/protocol/serdev-ngsm-motmdm.c
+>  create mode 100644 include/linux/serdev-gsm.h
+
+Johan
