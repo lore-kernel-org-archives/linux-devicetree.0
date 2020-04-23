@@ -2,184 +2,95 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D1CC55186
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 13:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F733C55186
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 13:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D086B2077D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 13:33:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VuH56kWd"
+	by mail.kernel.org (Postfix) with ESMTP id 3D5542076C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 13:51:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1587649899;
+	bh=d8fk9lPETH+eLlCSVPRo/VJIzcglnRP9c3doWogaRt8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Buf5dfBE4DShPZY3Yx534QIZXa/79+gSy3lPndnjM898DQ1BTE6TFB5S9qqydWN7t
+	 2ZNR3NOnuOZdKuXNh6SaCVazBoGHNkp9/Zh4f2qo7YnjNmqQeXAmzwRvt7VBGfiWFq
+	 mzkDpJbRwmiyC2Rq1Sftjha9izmvMIJqTzTAGjYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbgDWNdp (ORCPT
+        id S1728443AbgDWNvg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 09:33:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726926AbgDWNdp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Apr 2020 09:33:45 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D317FC08E934;
-        Thu, 23 Apr 2020 06:33:44 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id j1so6880690wrt.1;
-        Thu, 23 Apr 2020 06:33:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0Mxnr6QHfY5l0I7jQqZWYhUgYSSrzd0fZHj7N3zbutY=;
-        b=VuH56kWd003boJuQQcUlw8yVQmGe1BHZSvNdF/cY7EpN4JQOs8Miy6zpbzOtbAL5TA
-         tD6pAoBxupOUJE+vpfkf1o1ofVZbwDudQV3/1JM8c6ZooCk2GazIUtTqKgUbISjq4KGQ
-         +AC8O0Aphrq9v23aGS4oVwBJ2mm+nhjCa0WmRNmxlppUbHMLLAIkIB9OpYx+/UoW28s5
-         DtHlCvRf6TUGyU2+w6WYWSjiQYowqvbr/uRLT7lcuG1y6fsRNSc4hJr9PZiRxgE0IW4N
-         eg/Sar2b2uNOVTodH/4Ic8t8kbRSYHuRzc7TaMXuX5V+SFEsZfBeeyLJdhr5SuQ3VnmG
-         ZBMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0Mxnr6QHfY5l0I7jQqZWYhUgYSSrzd0fZHj7N3zbutY=;
-        b=PkmCADQxRValKnz3QtQ6PU2eWcGmdgvKhR3A43yK0KqegKdeVs5znG09QMh1Iq4xVG
-         1PSk3uHMXwSY8VFKzL/miR75Hyd9fyq1AJXDSfAFccpwRYkGRbB9Aee4fxSELbxmxl/C
-         ZH66dogltxDoO3/LvPcwsahTpQUgMP/EHfiGNUNiBSC3XBxmMsYEmQbaO+mRjfCOWqPE
-         HsMJFmfeeGWt9xnvdJG1jiVJ22rfTB+x8EezRYB24zq4ldQVsUHrL/ZfPwDW+q3RSeSx
-         neU6r1yjdU52rViq47srWDkpBYd3GDDytnpBKNtDk6IV4c1Z4CMK0/LA/Gi9UjEB53ul
-         Z+mw==
-X-Gm-Message-State: AGi0PuYo3mYh0XdJN0meB2qGXo1F4r2odyWiu2Y9mfc5Sn1asYZG2P/M
-        KgOsj310RrqyMoOPJY+M+sk=
-X-Google-Smtp-Source: APiQypLpY8N4F27spciix9Sp0I6NywG1ZST5sjbgl6JI+cEYUmY2EnFBHiU/1vkTiDZA9R8SP6bOVA==
-X-Received: by 2002:adf:f4cb:: with SMTP id h11mr589133wrp.191.1587648823644;
-        Thu, 23 Apr 2020 06:33:43 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id v7sm12489779wmg.3.2020.04.23.06.33.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 06:33:43 -0700 (PDT)
-Subject: Re: [PATCH v2 6/9] dt-bindings: media: rkisp1: move rockchip-isp1
- bindings out of staging
-To:     Helen Koike <helen.koike@collabora.com>,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        robh+dt@kernel.org, heiko@sntech.de, hverkuil-cisco@xs4all.nl,
-        kernel@collabora.com, dafna.hirschfeld@collabora.com,
-        ezequiel@collabora.com, mark.rutland@arm.com,
-        karthik.poduval@gmail.com, kishon@ti.com
-References: <20200403161538.1375908-1-helen.koike@collabora.com>
- <20200403161538.1375908-7-helen.koike@collabora.com>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <32115405-8a29-29ee-69e2-7c662689ecfd@gmail.com>
-Date:   Thu, 23 Apr 2020 15:33:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 23 Apr 2020 09:51:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726926AbgDWNvg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Apr 2020 09:51:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C44D20728;
+        Thu, 23 Apr 2020 13:51:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587649895;
+        bh=d8fk9lPETH+eLlCSVPRo/VJIzcglnRP9c3doWogaRt8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ssdOxn65MQz0P4dbXZzwrLhiPWNFPavzAxSfodlbeA1TgYRVdu2M0z/P5SRSy6Wjh
+         /zqfgLXBD8Tz36/DQ2JHuNZOo/bEQEkW8xv0yWHe4jsXt1ZEwOWgGpZKFloha5oXr9
+         tq78VaLLNlvGPqTgRg1vfX0fUJf3iMaa5gJKbJk0=
+Date:   Thu, 23 Apr 2020 15:51:33 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH v2 01/17] tty: serial: qcom_geni_serial: Use OPP API to
+ set clk/perf state
+Message-ID: <20200423135133.GB4091353@kroah.com>
+References: <1587132279-27659-1-git-send-email-rnayak@codeaurora.org>
+ <1587132279-27659-2-git-send-email-rnayak@codeaurora.org>
+ <0c9dcb67-5742-ce13-50a5-41c29bbbff51@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200403161538.1375908-7-helen.koike@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0c9dcb67-5742-ce13-50a5-41c29bbbff51@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Helen,
-
-
->   clocks:
->     items:
->       - description: ISP clock
->       - description: ISP AXI clock clock
->       - description: ISP AXI clock  wrapper clock
->       - description: ISP AHB clock clock
-
-Too many clocks here             ^
-Too many spaces here                 ^
-
->       - description: ISP AHB wrapper clock
-
-We can expect 4 to 5 clocks.
-With 5 clocks and a different description this layout is maybe not so handy.
-
-As first change:
-
-  clocks:
-    maxItems: 5
-    description:
-      rk3399 clocks
-        ISP clock
-        ISP AXI clock
-        ISP AXI wrapper clock
-        ISP AHB clock
-        ISP AHB wrapper clock
-
-And then later:
-
-  clocks:
-    maxItems: 5
-    description:
-      rk3288 clocks
-        ISP clock
-        ISP AXI clock
-        ISP AHB clock
-        ISP Pixel clock
-        ISP JPEG source clock
-      rk3399 clocks
-        ISP clock
-        ISP AXI clock
-        ISP AXI wrapper clock
-        ISP AHB clock
-        ISP AHB wrapper clock
-
-With 4 clocks:
-
-  clocks:
-    minItems: 4
-    maxItems: 5
-    description:
-      rk1808 clocks
-      rk3288 clocks
-      rk3326 clocks
-      rk3368 clocks
-      rk3399 clocks
-[..]
-
-
+On Wed, Apr 22, 2020 at 02:52:21PM +0530, Rajendra Nayak wrote:
+> Hey Bjorn,
 > 
->   clock-names:
->     items:
->       - const: clk_isp
->       - const: aclk_isp
->       - const: aclk_isp_wrap
->       - const: hclk_isp
->       - const: hclk_isp_wrap
+> > diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
+> > index dd46494..737e713 100644
+> > --- a/include/linux/qcom-geni-se.h
+> > +++ b/include/linux/qcom-geni-se.h
+> > @@ -24,6 +24,7 @@ enum geni_se_protocol_type {
+> >   struct geni_wrapper;
+> >   struct clk;
+> > +struct opp_table;
+> >   /**
+> >    * struct geni_se - GENI Serial Engine
+> > @@ -39,6 +40,7 @@ struct geni_se {
+> >   	struct device *dev;
+> >   	struct geni_wrapper *wrapper;
+> >   	struct clk *clk;
+> > +	struct opp_table *opp;
+> 
+> I just realized this is going to cause merge issues across geni serial and geni spi
+> driver (PATCH 02/17 in this series) unless all of this goes via your tree.
+> I see this is also an issue with the ongoing ICC patch series [1]
+> 
+> Do you or Greg have any thoughts on how this common header across various drivers
+> issue should be resolved to avoid conflicts while merging?
 
+I can ack it and you can take it through a different tree as part of the
+whole series to prevent that.
 
+thanks,
 
-On 4/3/20 6:15 PM, Helen Koike wrote:
-> Move rkisp1 bindings to Documentation/devicetree/bindings/media
-> 
-> Verified with:
-> make ARCH=arm64 dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> 
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> ---
-> 
-> V2:
-> - no changes
-> 
->  .../devicetree/bindings/media/rockchip-isp1.yaml                  | 0
->  1 file changed, 0 insertions(+), 0 deletions(-)
->  rename {drivers/staging/media/rkisp1/Documentation => Documentation}/devicetree/bindings/media/rockchip-isp1.yaml (100%)
-> 
-> diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> similarity index 100%
-> rename from drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> rename to Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> 
-
+greg k-h
