@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FBFC55186
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 21:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A2AC55186
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 21:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F6682077D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 21:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF9C52077D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 21:41:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgDWVlZ (ORCPT
+        id S1727896AbgDWVld (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 17:41:25 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:57973 "EHLO
+        Thu, 23 Apr 2020 17:41:33 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:60528 "EHLO
         relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727820AbgDWVlY (ORCPT
+        by vger.kernel.org with ESMTP id S1727820AbgDWVlc (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Apr 2020 17:41:24 -0400
+        Thu, 23 Apr 2020 17:41:32 -0400
 X-IronPort-AV: E=Sophos;i="5.73,309,1583161200"; 
-   d="scan'208";a="45553084"
+   d="scan'208";a="45553095"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 24 Apr 2020 06:41:23 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 24 Apr 2020 06:41:31 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id AEC84400C420;
-        Fri, 24 Apr 2020 06:41:19 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id A74634004BB2;
+        Fri, 24 Apr 2020 06:41:27 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -43,9 +43,9 @@ Cc:     Marian-Cristian Rotariu
         linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
         Lad Prabhakar <prabhakar.csengg@gmail.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 04/10] dt-bindings: reset: rcar-rst: Document r8a7742 reset module
-Date:   Thu, 23 Apr 2020 22:40:44 +0100
-Message-Id: <1587678050-23468-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 06/10] dt-bindings: clock: renesas: cpg-mssr: Document r8a7742 binding
+Date:   Thu, 23 Apr 2020 22:40:46 +0100
+Message-Id: <1587678050-23468-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <1587678050-23468-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -54,26 +54,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document bindings for the RZ/G1H (R8A7742) reset module.
+Add binding documentation for the RZ/G1H (R8A7742) Clock Pulse Generator
+driver.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 ---
- Documentation/devicetree/bindings/reset/renesas,rst.yaml | 1 +
+ Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/reset/renesas,rst.yaml b/Documentation/devicetree/bindings/reset/renesas,rst.yaml
-index b5de1d1..4c2b429 100644
---- a/Documentation/devicetree/bindings/reset/renesas,rst.yaml
-+++ b/Documentation/devicetree/bindings/reset/renesas,rst.yaml
-@@ -23,6 +23,7 @@ description: |
- properties:
+diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
+index 9cd102e..c745bd6 100644
+--- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
++++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
+@@ -25,6 +25,7 @@ properties:
    compatible:
      enum:
-+      - renesas,r8a7742-rst       # RZ/G1H
-       - renesas,r8a7743-rst       # RZ/G1M
-       - renesas,r8a7744-rst       # RZ/G1N
-       - renesas,r8a7745-rst       # RZ/G1E
+       - renesas,r7s9210-cpg-mssr  # RZ/A2
++      - renesas,r8a7742-cpg-mssr  # RZ/G1H
+       - renesas,r8a7743-cpg-mssr  # RZ/G1M
+       - renesas,r8a7744-cpg-mssr  # RZ/G1N
+       - renesas,r8a7745-cpg-mssr  # RZ/G1E
 -- 
 2.7.4
 
