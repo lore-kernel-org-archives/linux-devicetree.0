@@ -2,192 +2,182 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB23C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 07:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD416C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 07:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6840B21582
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 07:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BC9021569
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 07:48:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vQaVOPkc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KDJ/IO44"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgDWHkL (ORCPT
+        id S1726970AbgDWHsU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 03:40:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36354 "EHLO
+        Thu, 23 Apr 2020 03:48:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbgDWHkK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 03:40:10 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAC95C03C1AB
-        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 00:40:08 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x18so5604875wrq.2
-        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 00:40:08 -0700 (PDT)
+        with ESMTP id S1726639AbgDWHsT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 03:48:19 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E422C03C1AB;
+        Thu, 23 Apr 2020 00:48:19 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id e9so5400930iok.9;
+        Thu, 23 Apr 2020 00:48:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rgsjFMqSsFFfA3SHOg4kk9F6xuZxuDBetiHKZE6ZEAU=;
-        b=vQaVOPkcX+k5PLQQ//2UBsEb/qjn5P1N5bQBIHHy5FK16Yb4A+B31m1qe+hhv87lA3
-         AJjarUH2nZsniFrZMRJv0n54hBgioOviCdsnFZ49krVfmZ5j5GN59Q2L33HnhTW1hudd
-         sRha0KwzP0VvOEkaLMuE8t6XTtIlmA/GEYks8ZGnsMPPCOZe5ME5KomchbULNlFv0Nuk
-         LB+zyLIhi0GzGsOaulaFquiBiFzv8b+HCYrkW6TzZvtjoJ6n2D025pGsKTlNXzYg7qnW
-         xj3fuwXasWPnt8QFYMgELGHix5zVPMvOaXVVFiXWsubDOg93tZFzguRfcMm6VRlDK/cy
-         dOVg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=k3ka4IDV0cfMC6JOHC5pyroHAb+x5SRkSxbfLcsX5AI=;
+        b=KDJ/IO44uPtjl2XWhzmum5A4fMJBp7vQqZwQzQ+US4SAkUCIirgn/jct+7xssD9zOp
+         vT2pT9hRxu30Wumt3Hww6OyljA9oitrYq0PpUhha16y8Y6Q694+KAuseOLarKP14AAsT
+         1oUukmeBzmLwXcTaiLVXBTjLIWff9ezBiBv4IFc6Ez8360JCCtbb8wmVQu0LhdO/zGjB
+         e3TleiTgZ9sCrcf1U0JWtCsEfhS3zoCPlgCqmOZwt2wWCNar75PxNIMh2Vg5W2WArbkW
+         3SQRoIu2On3JnM/sRhDnvpNk4DvqeceJB7N20Zh7k6DwEJ1NzldKFDY1RTwJ9qpEWt2+
+         F3zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=rgsjFMqSsFFfA3SHOg4kk9F6xuZxuDBetiHKZE6ZEAU=;
-        b=YhjfgExhV88a4gI/Gh/2PUCcHyH/12A9xTfGbxWRA7md+OI+XrFjfheOqdiRwsAQ6J
-         8Ond+yVHv7g0rVR/9E906TkdADuEgsyNWWLNtIKp6bL+V7g3+GiylTXUlFMg+vp+fMRa
-         tqa9/aOhGrP3Sp/RRdRdHGYrbwVmhIzPkYvcja7gtLoFT8LnW/ljWwxX2GRSvWm1FV/X
-         vP0T0HZxzO+zDUwBYZofvHe27zxW3fghdhi/H3k7ZAjtkduuHDmnNPJrPit1jLjI2mom
-         8/LjeWtx6z2WH4+VeH1x/dj164A8O3/0ieWICS1vnSvV9LF4MtAH0IpoNCDRL+UQLsZf
-         H9Gw==
-X-Gm-Message-State: AGi0PuYdPY7Ua/Jsq8OwFQhcKvbQlnjW5wANhvQqumoeDVajlBX5X1AW
-        S3IP1/Ne2kevBvuFhp/xdu7vqA==
-X-Google-Smtp-Source: APiQypKhS0qi57AjvtSCZG1TL4X8Zf+1Ic2OVYSggCaWZNfJ/WBe8jRi0OU9b9Bmlfgj0/UCCnwNVw==
-X-Received: by 2002:a5d:49cb:: with SMTP id t11mr3329216wrs.91.1587627607168;
-        Thu, 23 Apr 2020 00:40:07 -0700 (PDT)
-Received: from ?IPv6:2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56? ([2a01:e35:2ec0:82b0:39cc:a07:8b48:cc56])
-        by smtp.gmail.com with ESMTPSA id x6sm2595188wrg.58.2020.04.23.00.40.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 00:40:06 -0700 (PDT)
-Subject: Re: [PATCH v3] arm64: dts: meson: S922X: extend cpu opp-points
-To:     Tim Lewis <elatllat@gmail.com>
-Cc:     khilman@baylibre.com, christianshewitt@gmail.com,
-        joy.cho@hardkernel.com, tobetter@gmail.com,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org
-References: <20200422233928.GA2816@imac>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <8255d8b1-f652-9ece-67d2-68c30a5cfbac@baylibre.com>
-Date:   Thu, 23 Apr 2020 09:40:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=k3ka4IDV0cfMC6JOHC5pyroHAb+x5SRkSxbfLcsX5AI=;
+        b=HAsTtJwVWSRXfTULuzXx77JU80THUUVzHu3DnE2JgTjr765KlJtrV9/2UiXMhCUK8X
+         VfU+azSMpUiAHDiBHNrnuRnjXS47mGgP0EkRaIrBTSR/uqg4vjk3+s3wzPMAs39F8ngd
+         fSiq88Fke5gSw21VsKQcm48w6x7Gfv0U0FZGvJuDaY2b3FYS7flPCJdnQcPRE8CJmgqR
+         SUHrrbocTQpKy3szZivySJLJL+zOyQKQmbWWCiU3E8tzMNiTcV5bnyGig49ZKc2MOCot
+         jTQc+KNXFznSTj1viWmjES1FeXmtkTtZInxqyeZtty46a2IBxquox0hZU8afLwEzfUaR
+         kUnA==
+X-Gm-Message-State: AGi0PuYZpcrbYi+g625nlP2nzxc6xYgW0GVJyVid6BfkbedxpOJJi886
+        3jw5p6hGrzTguP+vi/Sykm4NX1ecA8EyqqVpsgZcq39lxmE=
+X-Google-Smtp-Source: APiQypK3bXLrqegiRC0mn5WNVpUFxtcYS22c8Po7fiuvhC6lKHUZty/5o7tA7EcbYgzAbCA0UpccFg8ENAtlzxNrMwQ=
+X-Received: by 2002:a02:3b4b:: with SMTP id i11mr2162238jaf.16.1587628098711;
+ Thu, 23 Apr 2020 00:48:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200422233928.GA2816@imac>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200420143016.16835-1-peron.clem@gmail.com>
+In-Reply-To: <20200420143016.16835-1-peron.clem@gmail.com>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Thu, 23 Apr 2020 09:48:07 +0200
+Message-ID: <CAJiuCccZ6OJXYBZiCnO4VmOQ2WB0CwOsVe6oaU-t5_iiovLzWw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: h6: fix cooling-cell property
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 23/04/2020 01:39, Tim Lewis wrote:
-> HardKernel supports overclock through the addition to extra opp points
-> in their official kernel sources for odroid-n2 [1]. Christian tested
-> on other S922X devices with "no obvious issues". Neil thinks dvfs and
-> thermal managementis can keep other S922X devices safe.
---------------/\
-	  management
+Hi Maxime,
 
-> 
-> [1] https://github.com/hardkernel/linux/commit/f86cd9487c7483b2a05f448b9ebacf6bd5a2ad2f
-> Tested-by: Christian Hewitt <christianshewitt@gmail.com>
-> Signed-off-by: Tim Lewis <elatllat@gmail.com>
-> 
+On Mon, 20 Apr 2020 at 16:30, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
+> wrote:
+>
+> We define cooling-cells property for CPUs only for board including
+> the sun50i-h6-cpu-opp.dtsi. As not all boards have the CPU OPP
+> dtsi file included this create a warning because the cooling-maps
+> is defined but not the cooling-cells property in CPU nodes.
+
+This fix some warnings introduced by the H6 DVFS serie that I sent last wee=
+k...
+
+The cooling-cells has been introduced in
+7e4bbf3fe67c ("arm64: dts: allwinner: h6: Add CPU Operating
+Performance Points table")
+
+instead of
+5fc0928782e9 ("arm64: dts: allwinner: h6: Add thermal trip points/cooling m=
+ap")
+
+Do you plan to squash it? If yes do you want me to sent two patches
+separately (it will be a bit easier to squash them)?
+
+Regards,
+Clement
+
+>
+> Move the cooling-cells to the sun50i-h6.dtsi instead of the
+> sun50i-h6-cpu-opp.dtsi
+>
+> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
 > ---
->  arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi | 15 +++++++++++++++
->  1 files changed, 15 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
-> index 046cc332d..1e5d0ee5d 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
-> @@ -65,6 +65,11 @@
->  			opp-hz = /bits/ 64 <1896000000>;
->  			opp-microvolt = <981000>;
->  		};
-> +
-> +		opp-1992000000 {
-> +			opp-hz = /bits/ 64 <1992000000>;
-> +			opp-microvolt = <1001000>;
-> +		};
->  	};
->  
->  	cpub_opp_table_1: opp-table-1 {
-> @@ -120,5 +125,15 @@
->  			opp-hz = /bits/ 64 <1704000000>;
->  			opp-microvolt = <891000>;
->  		};
-> +
-> +		opp-1800000000 {
-> +			opp-hz = /bits/ 64 <1800000000>;
-> +			opp-microvolt = <981000>;
-> +		};
-> +
-> +		opp-1908000000 {
-> +			opp-hz = /bits/ 64 <1908000000>;
-> +			opp-microvolt = <1022000>;
-> +		};
->  	};
+>  arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi | 4 ----
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi         | 4 ++++
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi b/arch/=
+arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi
+> index 9ebd97b04b1a..dcb789519797 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi
+> @@ -102,20 +102,16 @@
+>
+>  &cpu0 {
+>         operating-points-v2 =3D <&cpu_opp_table>;
+> -       #cooling-cells =3D <2>;
 >  };
-> 
-
-The patch is well formed but I can only test on Odroid-N2.
-
-Anyway, Christian did a test other S922X boxes and it doesn't crash.
-
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-
-Neil
+>
+>  &cpu1 {
+>         operating-points-v2 =3D <&cpu_opp_table>;
+> -       #cooling-cells =3D <2>;
+>  };
+>
+>  &cpu2 {
+>         operating-points-v2 =3D <&cpu_opp_table>;
+> -       #cooling-cells =3D <2>;
+>  };
+>
+>  &cpu3 {
+>         operating-points-v2 =3D <&cpu_opp_table>;
+> -       #cooling-cells =3D <2>;
+>  };
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/bo=
+ot/dts/allwinner/sun50i-h6.dtsi
+> index 83e32f9c4977..2e31632c6ca8 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> @@ -27,6 +27,7 @@
+>                         enable-method =3D "psci";
+>                         clocks =3D <&ccu CLK_CPUX>;
+>                         clock-latency-ns =3D <244144>; /* 8 32k periods *=
+/
+> +                       #cooling-cells =3D <2>;
+>                 };
+>
+>                 cpu1: cpu@1 {
+> @@ -36,6 +37,7 @@
+>                         enable-method =3D "psci";
+>                         clocks =3D <&ccu CLK_CPUX>;
+>                         clock-latency-ns =3D <244144>; /* 8 32k periods *=
+/
+> +                       #cooling-cells =3D <2>;
+>                 };
+>
+>                 cpu2: cpu@2 {
+> @@ -45,6 +47,7 @@
+>                         enable-method =3D "psci";
+>                         clocks =3D <&ccu CLK_CPUX>;
+>                         clock-latency-ns =3D <244144>; /* 8 32k periods *=
+/
+> +                       #cooling-cells =3D <2>;
+>                 };
+>
+>                 cpu3: cpu@3 {
+> @@ -54,6 +57,7 @@
+>                         enable-method =3D "psci";
+>                         clocks =3D <&ccu CLK_CPUX>;
+>                         clock-latency-ns =3D <244144>; /* 8 32k periods *=
+/
+> +                       #cooling-cells =3D <2>;
+>                 };
+>         };
+>
+> --
+> 2.20.1
+>
