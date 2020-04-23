@@ -5,99 +5,135 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC7DC55191
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 18:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D12DC54FD0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 18:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB0372076C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 18:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30CC82076C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 18:11:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EHxJvl3F"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L0AntvfF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730200AbgDWSGW (ORCPT
+        id S1730229AbgDWSLD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 14:06:22 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53604 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730191AbgDWSGW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 14:06:22 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 03NI6Emm001640;
-        Thu, 23 Apr 2020 13:06:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1587665174;
-        bh=VlD9jKFyzM/lNw1mYY2vB0Bu4n56Zf3FBrpLnWHtTMs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=EHxJvl3F4Q6dtOprXYawkBuY3oJF+ft651Ils8hoCHgXuQ8RS5Ok0imX0U2OJBcvd
-         E1eBuTNiuO4We9gOdKuzPNWZY58UpUT4M1EXeamHAEwDeLMBVyvxhnOaMFK+TsxAkD
-         fua50YzY1yF7WpdXR4pEPcG/LXKbfecL3op311rk=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 03NI6Erh108615
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 23 Apr 2020 13:06:14 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 23
- Apr 2020 13:06:14 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 23 Apr 2020 13:06:14 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 03NI6DHu022644;
-        Thu, 23 Apr 2020 13:06:13 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Dave Gerlach <d-gerlach@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Thu, 23 Apr 2020 14:11:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730233AbgDWSLA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 14:11:00 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44655C09B042
+        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 11:11:00 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id f7so3348928pfa.9
+        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 11:11:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hoJh63kKG0D1+kAjjOCcewUCrHwScAwF4fHmVhu3yEY=;
+        b=L0AntvfFKEA4nZ8QFmeepfjDCUe1xnSA9QJTsWXvTnYODCycIN8mNS0gJEzeGP1bSm
+         wAKsdRcfKn9KaXt/gq8ndbLWHH2gdqKsRHAnbuE0qS/y1T1uJTkskpHaDDwLp/nRJBwE
+         Pz48JtbiG88ZSUwUhkb6gOIErAL4odG5iY1q0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hoJh63kKG0D1+kAjjOCcewUCrHwScAwF4fHmVhu3yEY=;
+        b=nIVxG0K1Tc1SNdVmL6l7oc8o+cfJtVF97YtgKXPineB4mvLEOaU0IFAMRUYb7J3q63
+         ZfOmwfuB7KG5Bbrxpu85KcF4gX3rl3P6b2jAfP0puISJYfmofuYLFvZhWFxpK3PHdU3C
+         rYYYgCLLs1CRHf8acUFBEae558Mu53BR9GCIgIuB0U9O7VsBY0mAQvrgMB8ENkQBOB50
+         cR6vIU72IVEJGREyyj8TWwdZ7R9ucursX4Kykai65uh4/5cNWIGzjQTbJsLLl8KuzzXY
+         bOwkswIpcdOIpRxnja5Y6k7Hlt3gXCaMplY4e/tUClRG37OGtKpvybD8M7Fv81gAa3hC
+         Btag==
+X-Gm-Message-State: AGi0PuZljlzIdNlkMpZZnASJKVOJtLuuKdzB0VZniriIJZDzwWfPaIwO
+        MSfKBCRyFwZBhP1yIcRSgI1guA==
+X-Google-Smtp-Source: APiQypI8KmAiqWhTqcfvYHF1yYC3JCBs4eDoNyXAdnzNlAEdjbJVyLX6yor26Tit0MPP0rQlJBaAjQ==
+X-Received: by 2002:a62:e306:: with SMTP id g6mr4896489pfh.182.1587665459750;
+        Thu, 23 Apr 2020 11:10:59 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id u9sm2858156pfn.197.2020.04.23.11.10.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 11:10:59 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Sandeep Maheswaram <sanm@codeaurora.org>, mka@chromium.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>
-CC:     Sekhar Nori <nsekhar@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH 5/5] arm64: dts: ti: k3-j721e-mcu-wakeup: add k3 platforms chipid module node
-Date:   Thu, 23 Apr 2020 21:05:45 +0300
-Message-ID: <20200423180545.13707-6-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200423180545.13707-1-grygorii.strashko@ti.com>
-References: <20200423180545.13707-1-grygorii.strashko@ti.com>
+        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: phy: qcom-qusb2: Fix defaults
+Date:   Thu, 23 Apr 2020 11:10:27 -0700
+Message-Id: <20200423111015.1.Ifa8039b6f3031e9a69c4a526a6efc2f499f07292@changeid>
+X-Mailer: git-send-email 2.26.1.301.g55bc3eb7cb9-goog
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add DT node for the Texas Instruments K3 Multicore J721E SoC platforms
-chipid module.
+The defaults listed in the bindings don't match what the code is
+actually doing.  Presumably existing users care more about keeping
+existing behavior the same, so change the bindings to match the code
+in Linux.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+The "qcom,preemphasis-level" default has been wrong for quite a long
+time (May 2018).  The other two were recently added.
+
+As some evidence that these values are wrong, this is from the Linux
+driver:
+- qcom,preemphasis-level: sets "PORT_TUNE1", lower 2 bits.  Driver
+  programs PORT_TUNE1 to 0x30 by default and (0x30 & 0x3) = 0.
+- qcom,bias-ctrl-value: sets "PLL_BIAS_CONTROL_2", lower 6 bits.
+  Driver programs PLL_BIAS_CONTROL_2 to 0x20 by default and (0x20 &
+  0x3f) = 0x20 = 32.
+- qcom,hsdisc-trim-value: sets "PORT_TUNE2", lower 2 bits.  Driver
+  programs PORT_TUNE2 to 0x29 by default and (0x29 & 0x3) = 1.
+
+Fixes: 1e6f134eb67a ("dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning parameters")
+Fixes: a8b70ccf10e3 ("dt-bindings: phy-qcom-usb2: Add support to override tuning values")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
- arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-index 3d6064125b40..b69688f0f925 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-@@ -48,6 +48,11 @@
- 		};
- 	};
+ Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+index 144ae29e7141..f8bd28ff31c1 100644
+--- a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+@@ -97,7 +97,7 @@ then:
+         - $ref: /schemas/types.yaml#/definitions/uint32
+         - minimum: 0
+           maximum: 63
+-          default: 0
++          default: 32
  
-+	chipid@43000014 {
-+		compatible = "ti,am654-chipid";
-+		reg = <0x0 0x43000014 0x0 0x4>;
-+	};
-+
- 	wkup_pmx0: pinmux@4301c000 {
- 		compatible = "pinctrl-single";
- 		/* Proxy 0 addressing */
+     qcom,charge-ctrl-value:
+      description:
+@@ -130,7 +130,7 @@ then:
+         - $ref: /schemas/types.yaml#/definitions/uint32
+         - minimum: 0
+           maximum: 3
+-          default: 2
++          default: 0
+ 
+     qcom,preemphasis-width:
+       description:
+@@ -152,7 +152,7 @@ then:
+         - $ref: /schemas/types.yaml#/definitions/uint32
+         - minimum: 0
+           maximum: 3
+-          default: 0
++          default: 1
+ 
+ required:
+   - compatible
 -- 
-2.17.1
+2.26.1.301.g55bc3eb7cb9-goog
 
