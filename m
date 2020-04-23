@@ -2,154 +2,168 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FB7C55186
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 11:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D2EC54FCB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 11:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A10132077D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 11:43:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587642203;
-	bh=ZppbZ6QT7JPo7CxN7xfIaybqyVb8NJUPjpK7mAhbe7k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZEcItwT7iHg1HI1qz7Rp2fHWGJF5zFIU8sY9YugFzQYsgsvnSiOL6Lu1VIGcRzbEA
-	 HmRlwOBtMR1Dmzyf1D6GScu8dUDtZArBc26NJiGzYC0vw1zgG1yycf6uZ19n1ErgWg
-	 IQYzLrb+0pGrz8oIbPRgZaYamqb7knWUoj+caxTQ=
+	by mail.kernel.org (Postfix) with ESMTP id E8D1D2077D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 11:51:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbgDWLnX (ORCPT
+        id S1727787AbgDWLvM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 07:43:23 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43943 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbgDWLnV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 07:43:21 -0400
-Received: by mail-lj1-f193.google.com with SMTP id l19so5836902lje.10;
-        Thu, 23 Apr 2020 04:43:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=C7lj58MFnLePtA19l1qlYr6e++DcjSNazO2l/JEQ44w=;
-        b=GQxJrhN1HJmf0PEh02R4CQlQq/Jc/cfcCcgfhomOtMAfSkyCGFjh8dNxzxgVHxyrAN
-         w6rLCT94FH1CHiGvdKT06vXfGS0xd6QI7x2xB7vtNejCN2QQmAFSBQjTklLXQxNQ2vEp
-         ZD4++79mLRT62BX14IeinIId6seG4fdTBDGk+ehNA1N3ksY+0nOmwzZGlNPNjG/1eT45
-         ValhXzSPe6nEa+MfzpGq/uzgXl8tcwv8EkKCHAs+mGWku8/ZdVoyDbWDPdhlH7UycANi
-         NdNjdVU4NX1PEFPkXk/84ezBD6QNmBVdYzk4UA2QJvNFAmN2n0lW9k65df7ssH3VDN3o
-         YKNQ==
-X-Gm-Message-State: AGi0PuZRmhod6jK/rFustsW0ObfCw1IoPo/kThtCz0gAvQ35wmYufGPq
-        3JQpOu012nIROKnNThMbR7g=
-X-Google-Smtp-Source: APiQypLpXxwpZWbjR9D3X5tsAZC+au1GagS5X6SZYtkKVLlZ7Vj6uBrtzkk360XXCFwFPPxnLcWh7g==
-X-Received: by 2002:a2e:a169:: with SMTP id u9mr2231221ljl.144.1587642197450;
-        Thu, 23 Apr 2020 04:43:17 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id 16sm1613269ljr.55.2020.04.23.04.43.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2020 04:43:16 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1jRaGM-0004uT-CR; Thu, 23 Apr 2020 13:43:26 +0200
-Date:   Thu, 23 Apr 2020 13:43:26 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Johan Hovold <johan@kernel.org>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv6 0/4] n_gsm serdev support and protocol driver for
- droid4 modem
-Message-ID: <20200423114326.GQ18608@localhost>
-References: <20200421232752.3070-1-tony@atomide.com>
+        Thu, 23 Apr 2020 07:51:12 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56872 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727081AbgDWLvM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 07:51:12 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id C503C2A23DA
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc:     "kernel@collabora.com" <kernel@collabora.com>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: RE: [PATCH v4] dt-bindings: display: dw_mipi_dsi.txt: convert to yaml
+In-Reply-To: <MN2PR12MB378964868D3C1241FC649100CBD30@MN2PR12MB3789.namprd12.prod.outlook.com>
+References: <20200423100058.1734009-1-adrian.ratiu@collabora.com>
+ <MN2PR12MB378964868D3C1241FC649100CBD30@MN2PR12MB3789.namprd12.prod.outlook.com>
+Date:   Thu, 23 Apr 2020 14:52:14 +0300
+Message-ID: <87wo66ifm9.fsf@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421232752.3070-1-tony@atomide.com>
+Content-Type: text/plain; format=flowed
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Tony,
+Hi Angelo,
 
-On Tue, Apr 21, 2020 at 04:27:48PM -0700, Tony Lindgren wrote:
-> Hi all,
+On Thu, 23 Apr 2020, Angelo Ribeiro <Angelo.Ribeiro@synopsys.com> 
+wrote:
+> Hi Adrian, 
 > 
-> Here's v4 set of n_gsm serdev support patches, and the related protocol
-> driver for the modem found on Motorola Mapphone phones and tablets
-> like droid4.
+> From: Adrian Ratiu <adrian.ratiu@collabora.com> Date: Thu, Apr 
+> 23, 2020 at 11:00:58 
 > 
-> This series only adds basic character device support for the serdev
-> driver. Other serdev consumer drivers for specific devices will be
-> posted separately.
-
-I'm still missing an architectural (design) overview here -- reviewer
-time is a scarce resource.
-
-I also suggested earlier that you include, at least as an RFC, one or
-more of your child-device drivers so that we can see how this ends up
-being used in the end (including an example devicetree).
-
-Some high-level comments until then:
-
-I'm not sure that a plain chardev interface for the mux channels is the
-right interface. The n_gsm ldisc exposes tty devices and I think your
-serdev adaptation should continue to do that.
-
-On that note; you're not actually adding general TS 27.010 serdev
-support, but rather some hooks and a custom driver and interface (mfd +
-/dev/motmdmN) for one particular modem.
-
-I'd rather see a generic implementation which can be used with other
-modems and that continues to expose a /dev/gsmttyN interface to which we
-could attach serdev clients instead (and not create a motmdm serdev
-replica of sorts).
-
-I know the location of this driver has been up for discussion already,
-but drivers/tty/serdev/protocol still isn't right (e.g. we don't have an
-drivers/i2c/protocol directory where we stuff random i2c client
-drivers).
-
-It's an mfd + custom chardev driver for a modem and related to n_gsm
-(even more if you add generic serdev support). Currently, drivers/mfd or
-drivers/misc appear to be better choices. Otherwise, n_gsm lives in
-drivers/tty since it's a line discipline, but it could be moved to a new
-drivers/modem if needed (cf. the bluetooth hci ldisc).
-
-Last, it seems you've based the serdev-ngsm-motmdm.c chardev
-implementation on a more or less verbatim copy of drivers/gnss/core.c.
-I'd appreciate if you could mention that in the file header and
-reproduce the copyright notice if you end up keeping that interface.
-
-> Tony Lindgren (4):
->   tty: n_gsm: Add support for serdev drivers
->   serdev: ngsm-motmdm: Add Motorola TS 27.010 serdev modem driver for
->     droid4
->   dt-bindings: serdev: motmdm: Add binding for motorola-mdm
->   ARM: dts: omap4-droid4: Enable basic modem support
+>> This converts the Synopsis MIPI DSI binding documentation to 
+>> yaml and should be quite straightforward. I've added a missing 
+>> ref clk and also added Philippe as maintainer b/c he's the 
+>> original txt author following the algorithm provided in 
+>> Message-ID 20200420175909.GA5810@ravnborg.org.   Cc: Philippe 
+>> CORNU <philippe.cornu@st.com> Cc: devicetree@vger.kernel.org 
+>> Suggested-by: Laurent Pinchart 
+>> <laurent.pinchart@ideasonboard.com> Reviewed-by: Rob Herring 
+>> <robh@kernel.org> Signed-off-by: Adrian Ratiu 
+>> <adrian.ratiu@collabora.com> --- Changes in v4: 
+>>   - Dropped panel patternProperties (Rob) 
+>>  Changes in v3: 
+>>   - Added ports property and its children which are required 
+>>   (Laurent) - Sorted required list alphabetically 
+>>  Changes in v2: 
+>>   - Removed unnecessary descriptions and maxItems (Rob) - 
+>>   Changed maintainers entry / dropped Mark (Rob) - Added 
+>>   dsi-controller.yaml ref (Rob) 
+>> --- 
+>>  .../bindings/display/bridge/dw_mipi_dsi.txt   | 32 --------- 
+>>  .../display/bridge/snps,dw-mipi-dsi.yaml      | 68 
+>>  +++++++++++++++++++ 2 files changed, 68 insertions(+), 32 
+>>  deletions(-) delete mode 100644 
+>>  Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt 
+>>  create mode 100644 
+>>  Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml 
+>>  diff --git 
+>> a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt 
+>> b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt 
+>> deleted file mode 100644 index b13adf30b8d3b..0000000000000 --- 
+>> a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt 
+>> +++ /dev/null @@ -1,32 +0,0 @@ -Synopsys DesignWare MIPI DSI 
+>> host controller -============================================ - 
+>> -This document defines device tree properties for the Synopsys 
+>> DesignWare MIPI -DSI host controller. It doesn't constitue a 
+>> device tree binding specification -by itself but is meant to be 
+>> referenced by platform-specific device tree -bindings.  - -When 
+>> referenced from platform device tree bindings the properties 
+>> defined in -this document are defined as follows. The platform 
+>> device tree bindings are -responsible for defining whether each 
+>> optional property is used or not.  - -- reg: Memory mapped base 
+>> address and length of the DesignWare MIPI DSI -  host 
+>> controller registers. (mandatory) - -- clocks: References to 
+>> all the clocks specified in the clock-names property -  as 
+>> specified in [1]. (mandatory) - -- clock-names: -  - "pclk" is 
+>> the peripheral clock for either AHB and APB. (mandatory) -  - 
+>> "px_clk" is the pixel clock for the DPI/RGB input. (optional) - 
+>> -- resets: References to all the resets specified in the 
+>> reset-names property -  as specified in [2]. (optional) - -- 
+>> reset-names: string reset name, must be "apb" if 
+>> used. (optional) - -- panel or bridge node: see 
+>> [3]. (mandatory) - -[1] 
+>> Documentation/devicetree/bindings/clock/clock-bindings.txt -[2] 
+>> Documentation/devicetree/bindings/reset/reset.txt -[3] 
+>> Documentation/devicetree/bindings/display/mipi-dsi-bus.txt diff 
+>> --git 
+>> a/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml 
+>> b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml 
+>> new file mode 100644 index 0000000000000..012aa8e7cb8cd --- 
+>> /dev/null +++ 
+>> b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml 
+>> @@ -0,0 +1,68 @@ +# SPDX-License-Identifier: (GPL-2.0-only OR 
+>> BSD-2-Clause) +%YAML 1.2 +--- +$id: 
+>> https://urldefense.com/v3/__http://devicetree.org/schemas/display/bridge/snps,dw-mipi-dsi.yaml*__;Iw!!A4F2R9G_pg!Pn0TP0h4QkEcILgH_xBqMjSM4dJxlyU3iCvF4FSbmdQOSIV309ngWu8EKCpP901d$ 
+>> +$schema: 
+>> https://urldefense.com/v3/__http://devicetree.org/meta-schemas/core.yaml*__;Iw!!A4F2R9G_pg!Pn0TP0h4QkEcILgH_xBqMjSM4dJxlyU3iCvF4FSbmdQOSIV309ngWu8EKPfhyNgW$ 
+>> + +title: Synopsys DesignWare MIPI DSI host controller + 
+>> +maintainers: +  - Philippe CORNU <philippe.cornu@st.com> + 
+>> +description: | +  This document defines device tree properties 
+>> for the Synopsys DesignWare MIPI +  DSI host controller. It 
+>> doesn't constitue a device tree binding specification +  by 
+>> itself but is meant to be referenced by platform-specific 
+>> device tree +  bindings.  + +  When referenced from platform 
+>> device tree bindings the properties defined in +  this document 
+>> are defined as follows. The platform device tree bindings are + 
+>> responsible for defining whether each property is required or 
+>> optional.  + +allOf: +  - $ref: ../dsi-controller.yaml# + 
+>> +properties: +  reg: +    maxItems: 1 + +  clocks: +    items: 
+>> +      - description: Module clock +      - description: DSI 
+>> bus clock for either AHB and APB +      - description: Pixel 
+>> clock for the DPI/RGB input +    minItems: 2 + +  clock-names: 
+>> +    items: +      - const: ref +      - const: pclk +      - 
+>> const: px_clk +    minItems: 2 + +  resets: +    maxItems: 1 + 
+>> +  reset-names: +    const: apb + +  ports: +    type: object + 
+>> +    properties: +      port@0: +        type: object + 
+>> description: Input node to receive pixel data.  +      port@1: 
+>> +        type: object +        description: DSI output node to 
+>> panel.  + +    required: +      - port@0 +      - port@1 + 
+>> +required: +  - clock-names +  - clocks +  - ports +  - reg 
 > 
->  .../serdev/motorola,mapphone-mdm6600.yaml     |   34 +
->  .../boot/dts/motorola-mapphone-common.dtsi    |    6 +
->  drivers/tty/n_gsm.c                           |  372 +++++
->  drivers/tty/serdev/Kconfig                    |    2 +
->  drivers/tty/serdev/Makefile                   |    2 +
->  drivers/tty/serdev/protocol/Kconfig           |   14 +
->  drivers/tty/serdev/protocol/Makefile          |    3 +
->  .../tty/serdev/protocol/serdev-ngsm-motmdm.c  | 1191 +++++++++++++++++
->  include/linux/serdev-gsm.h                    |  168 +++
->  9 files changed, 1792 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serdev/motorola,mapphone-mdm6600.yaml
->  create mode 100644 drivers/tty/serdev/protocol/Kconfig
->  create mode 100644 drivers/tty/serdev/protocol/Makefile
->  create mode 100644 drivers/tty/serdev/protocol/serdev-ngsm-motmdm.c
->  create mode 100644 include/linux/serdev-gsm.h
+> Shouldn't the reset and reset-names be stated as required?  From 
+> what I understand the driver will return if the reset is not 
+> available. 
+>
 
-Johan
+I think the answer is no and is confirmed by other driver bindings 
+(eg. st,stm-32-dsi.yaml) which define the apb reset but don't 
+strictly require it.
+
+I also did some runtime testing on my imx6dl board and even though 
+the code in the dw_mipi_dsi.c bridge probe() is a bit confusing it 
+doesn't strictly require the reset because IS_ERR(apb_rst) is 
+FALSE when apb_rst is NULL, so everything works as expected 
+without errors.
+
+>> -- 
+>> 2.26.0
+>> 
+>> _______________________________________________
+>> dri-devel mailing list
+>> dri-devel@lists.freedesktop.org
+>> https://urldefense.com/v3/__https://lists.freedesktop.org/mailman/listinfo/dri-devel__;!!A4F2R9G_pg!Pn0TP0h4QkEcILgH_xBqMjSM4dJxlyU3iCvF4FSbmdQOSIV309ngWu8EKDNeA2R5$ 
+>
+> Thanks,
+> Angelo
