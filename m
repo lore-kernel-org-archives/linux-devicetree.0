@@ -2,90 +2,147 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B51C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 03:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 178A2C55191
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 04:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCAF920747
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 03:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC091208E4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 04:40:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vM2gdpRX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gYhBQHtg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbgDWDtM (ORCPT
+        id S1725906AbgDWEkw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 23:49:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56984 "EHLO
+        Thu, 23 Apr 2020 00:40:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726002AbgDWDtM (ORCPT
+        by vger.kernel.org with ESMTP id S1725854AbgDWEkv (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Apr 2020 23:49:12 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FD8DC03C1AB;
-        Wed, 22 Apr 2020 20:49:10 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id a21so4689277ljb.9;
-        Wed, 22 Apr 2020 20:49:10 -0700 (PDT)
+        Thu, 23 Apr 2020 00:40:51 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE920C03C1AB
+        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 21:40:51 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 18so1091934pfv.8
+        for <devicetree@vger.kernel.org>; Wed, 22 Apr 2020 21:40:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4JM7We6bunIz+g6XmvFn1IEzfMjm4CKv4LN0v2ntOLM=;
-        b=vM2gdpRXS9VtLSOzF1MYlXw9uRJK2iCEMOidXL7Cd2m1r+l6JqVIcz4yw7Sn6kEpxz
-         YhUiOFl1DrRtCb3wSY3quz2bfebzhZlp/m050rTL3759vJE6jvvS/smNxar46rWz5XP5
-         57HvP9A7GQTrQaG3CVBFsyxZHknrZePnfrdpNTE8+7ZaiXB8tgfsZ8pRZwKoKMupswIa
-         OLolrwraOT4lIwVEBt6Owhd4Uq1hC8PCP1jHjdnS1f6sk+0Ta+8DKgAl6KYyl063vqqP
-         bTg1/DF5z/YUI/tzRbm9r+GGW0pioNenPecD9i6WzEhLyGUsUkfgy90/8Xjxse6aBHzv
-         F4Uw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZS/LLxJx1Ds3cx4GyxEdNHynphtX9//TxQ2D60w281c=;
+        b=gYhBQHtg6aVgFNpAsuZicqx3KgF2/EI40v9gzc+TTBaO0INthZs4oK+6OZXVHVVtPe
+         tPKKq9v1HCjoEgO5iaf0wkIiVty4kBHme2dDPZddnnYYIlh5/960j2SdgVnZtDMaofDG
+         eXV23e91++ocupsga5mbViaM8WsQYNSK8c1HE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4JM7We6bunIz+g6XmvFn1IEzfMjm4CKv4LN0v2ntOLM=;
-        b=bNArH43vF7o2dg62KynGJYeQas8SG3CC8bPIEiaO+pFdDOCqruvpZGWHu+ldglvvde
-         /W+gZFA1q1Tex9fpnUsL6uazG0vpraaX2cP1BdZRKsBxOx81znjHcismQeGBPEjz0lJB
-         pqDQUKxAWcaiAGPI9IQ9hXSWx2DtjnrhEQnyiA87jpzTZd7gMVejVNnPcjdFZ+1gpbRs
-         WVHvqg7MfW/FOhcZr4JEG+JNixj6zXLlnBa4L7dkqRZ3H/Y8hegAYNcoZZP1dyXgb1D0
-         sb25kBXd2XqVcM4CGBw4PVmFyAsyG8nEkBsz2S7GzsOP4VsD38e07Dz4KBr+WzQPqCQF
-         bOag==
-X-Gm-Message-State: AGi0PuZLAKdPoB3bIkOpPjQcSqyiRkTCltVeGj8GhbF/QKHWMdAuKMj3
-        oJeMYEOadrnM+pa9wDozIGIJPkLCtd+YwtbcrFQ=
-X-Google-Smtp-Source: APiQypLcgS5aDreN0N3Msp5Q4hhsUyS9j9GgWbpEW9yptpqpZXWyGyn6hEXXB3uaEmRS6JG5VFOSwC3Mfg8DKu1GKa4=
-X-Received: by 2002:a2e:80cc:: with SMTP id r12mr1071769ljg.269.1587613748658;
- Wed, 22 Apr 2020 20:49:08 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZS/LLxJx1Ds3cx4GyxEdNHynphtX9//TxQ2D60w281c=;
+        b=gWo/QMU4mo7BuiB0xQI9Sg52avZ7FBahl2juBPrwFfcIYicwLb5UH6ey4f21q4QnQn
+         U09K7up0RxQF8I6sKfQyZgSQYlyppoZJXMZEtUdai0DALZupxauU58XyYXh1cx5kNNyE
+         2CwYWYog6YW9lh6OVpS8v8YiZeBS+nxvhy3XXpN2daaUShl1RILtMwkvmtxn+VihGM7k
+         3EvlRlVDzexQpCaS4+MRP+usH6OtB6zSEFlP7AfkMx7tBKK/okrJ/pldXVdbieKE8+fn
+         Y3bTqCeXZJCk2kUEArh2mPUGIu5G6iDhyXPGzQLZwwFlB5Y9yB7QvaaQxWp8xc1pbbcG
+         T+iQ==
+X-Gm-Message-State: AGi0PuaiAYqb5gkGCJWYfZhonG47GqaPkr7z3TXgrbsctT79YhYi1Hpn
+        zjLVO6toQYGDgyYK+p5e2Hss1A==
+X-Google-Smtp-Source: APiQypLI+7/YssjfEAqA7mqNn/1Q292p/7jx+m+Js0S3rpVk2pmi9WqX7DsXMBWP/y1GcYjx6h81JA==
+X-Received: by 2002:a62:d104:: with SMTP id z4mr2035568pfg.26.1587616850973;
+        Wed, 22 Apr 2020 21:40:50 -0700 (PDT)
+Received: from localhost ([2401:fa00:9:14:1105:3e8a:838d:e326])
+        by smtp.gmail.com with ESMTPSA id w13sm1174046pfn.192.2020.04.22.21.40.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2020 21:40:50 -0700 (PDT)
+From:   Evan Benn <evanbenn@chromium.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     jwerner@chromium.org, xingyu.chen@amlogic.com,
+        Evan Benn <evanbenn@chromium.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-watchdog@vger.kernel.org
+Subject: [PATCH v5 0/2] Add a watchdog driver that uses ARM Secure Monitor Calls.
+Date:   Thu, 23 Apr 2020 14:40:34 +1000
+Message-Id: <20200423044036.234578-1-evanbenn@chromium.org>
+X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
 MIME-Version: 1.0
-References: <20200324144324.21178-1-aford173@gmail.com> <20200423031002.GH8571@dragon>
-In-Reply-To: <20200423031002.GH8571@dragon>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 23 Apr 2020 00:49:52 -0300
-Message-ID: <CAOMZO5B3OL3_Ow_gy_a4PD=E6xaOWvOAHw-aDDB54E51UajQ4w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: vendor-prefixes: Add Beacon vendor prefix
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Adam Ford-BE <aford@beaconembedded.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Shawn,
+This is currently supported in firmware deployed on oak, hana and elm mt8173
+chromebook devices. The kernel driver is written to be a generic SMC
+watchdog driver.
 
-On Thu, Apr 23, 2020 at 12:10 AM Shawn Guo <shawnguo@kernel.org> wrote:
+Arm Trusted Firmware upstreaming review:
+    https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/3405
 
-> Hi Rob,
->
-> Are you okay with this?
+Patch to add oak, hana, elm device tree:
+    https://lore.kernel.org/linux-arm-kernel/20200110073730.213789-1-hsinyi@chromium.org/
+I would like to add the device tree support after the above patch is
+accepted.
 
-Rob has already applied it:
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/Documentation/devicetree/bindings/vendor-prefixes.yaml?h=next-20200422&id=f756619f26edf74ad55d2151a6757a260e660fa8
+Changes in v5:
+- Change compatible to arm,smc-wdt
+- Make timeleft return 0 on error
+- Use type punning on smc_func_id to save an alloc
+- Change compatible to arm,smc-wdt
+
+Changes in v4:
+- Add arm,smc-id property
+- Get smc-id from of property
+- Return a1 instead of a0 in timeleft
+
+Changes in v3:
+- Change name back to arm
+- Add optional get_timeleft op
+- change name to arm_smc_wdt
+
+Changes in v2:
+- Change name arm > mt8173
+- use watchdog_stop_on_reboot
+- use watchdog_stop_on_unregister
+- use devm_watchdog_register_device
+- remove smcwd_shutdown, smcwd_remove
+- change error codes
+
+Evan Benn (1):
+  dt-bindings: watchdog: Add ARM smc wdt for mt8173 watchdog
+
+Julius Werner (1):
+  watchdog: Add new arm_smc_wdt watchdog driver
+
+ .../bindings/watchdog/arm-smc-wdt.yaml        |  36 ++++
+ MAINTAINERS                                   |   7 +
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/watchdog/Kconfig                      |  13 ++
+ drivers/watchdog/Makefile                     |   1 +
+ drivers/watchdog/arm_smc_wdt.c                | 189 ++++++++++++++++++
+ 6 files changed, 247 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/arm-smc-wdt.yaml
+ create mode 100644 drivers/watchdog/arm_smc_wdt.c
+
+-- 
+2.26.2.303.gf8c07b1a785-goog
+
