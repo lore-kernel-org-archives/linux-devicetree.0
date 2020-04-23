@@ -2,93 +2,139 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353B8C55185
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 03:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80199C55185
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 03:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E5DB20767
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 03:10:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1587611411;
-	bh=+/exaij1Arkn6tHuufuk2Xp29ui2IZz1yHWl5Hic8yA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GG1non2Fxe8CBeKIWs4lrJdLUI/WiyrOFIm7uKPbXs9hcwpdhfe1g4f/Q4c0AyY6O
-	 kQQp/ZnZ/5e7U037ujaTK5SKsajNmaoVIRmZgbglLfztr8zew14K6rMwV5L9yHoB3h
-	 L8c/+OVI8UFkBgl2zsrZYu3sVUvkI52Cef6OC8wg=
+	by mail.kernel.org (Postfix) with ESMTP id 5C99F20747
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 03:15:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hh6jrlt/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbgDWDKK (ORCPT
+        id S1726736AbgDWDPs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Apr 2020 23:10:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725562AbgDWDKK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Apr 2020 23:10:10 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE1832073A;
-        Thu, 23 Apr 2020 03:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587611410;
-        bh=+/exaij1Arkn6tHuufuk2Xp29ui2IZz1yHWl5Hic8yA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bVL8TzgS4Ij4UHe2Vhg7pNRDHWU6VO8hi5xYIdKT3sy+s1UeJ8Ng8vD7/FDBtPiDy
-         v3TDsmTGvjzZQEl7eC22TJCh2BhsVP5Oj+D4pw4oZ2gq7QIe6MzBdPoDUQFtzpNxuL
-         P6y/LWPHbogNUGKCTtWB6cRd3cSKYfQYMVNvY9xk=
-Date:   Thu, 23 Apr 2020 11:10:03 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, aford@beaconembedded.com,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: vendor-prefixes: Add Beacon vendor
- prefix
-Message-ID: <20200423031002.GH8571@dragon>
-References: <20200324144324.21178-1-aford173@gmail.com>
+        Wed, 22 Apr 2020 23:15:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51898 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbgDWDPs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Apr 2020 23:15:48 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C976C03C1AA;
+        Wed, 22 Apr 2020 20:15:48 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id w2so3230122edx.4;
+        Wed, 22 Apr 2020 20:15:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cxsx7utk7++1Wvv+Y9Ze+APMY5I4SIalD834TlR6uYg=;
+        b=hh6jrlt/msqEqx/ARg0lwpjPhcrympZFisWyBBcykRn/+/HhwXcmfEoY2+YP0u47Yq
+         Ud3Y5H54K6EPPJwtcLKPc24tNAHeqRBtw79NcFeUJXfMmNIitS6HiHImGzZkF8ygibOQ
+         V2GzTew3BWfa7bzFp25BIGaPgse/Xfbkc9Y+5mk4GXui256E2GC0zm5BIPGEbCHyeAZQ
+         eEcervtyqY2rOVsu3sJ8edjDHO18QZQR4XO4yQsPpsdgQKJQD5Vkcg4AO8SSjJ14ic/X
+         K6i9uNeSfc/lxEUKDn50xsur7nXLQD4ty1bushKSMAv67GBHldpaCbEk7n4O6Ttzreux
+         7y2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cxsx7utk7++1Wvv+Y9Ze+APMY5I4SIalD834TlR6uYg=;
+        b=NEnC+f0QP4H04ABCpbOzN0al4ejUyUB+dk2ID1nU9/BD+lcOMcXvZTL8X387NcCrTh
+         inm3lGzhBcu5QsXySbpyAhzdKbK0o7cjsrYpSBbRYX1AELO8F8fvfJiahUp7TFe4Io3y
+         1m4k+oUF8Invv4xh+t9h/DOT4naQeBWoYt5s8b542KBosAQfkJ2NHaB0uRBra2myTu+N
+         uIxYGNl+Sr657voYRY5Fd2dqjNRHPT5VdVhEaDvhvmNpFWdI597YHWRwSAoEdPERQTvd
+         5X2s0iLJiLdqRLowK1wpoeKipwVJ83Cwp9TNKD7Hl35bhsm57tWtEsg7KbJpozNiVmll
+         XWSw==
+X-Gm-Message-State: AGi0PuZYSomBCg5P4Vo2t8/Y5MEyDkEPrJ1SBtYc8QHanLlYXJxPGlBJ
+        YupSvEqCV9t6apIfuOviU5Dqs/A6
+X-Google-Smtp-Source: APiQypJRHUysfsJxvtHghejmUkPFpdgYm2y6xvPxt/EEgHyVePhNxUknpC3IaLtoXtO311aSaLdSOg==
+X-Received: by 2002:a50:85c4:: with SMTP id q4mr1082462edh.147.1587611746367;
+        Wed, 22 Apr 2020 20:15:46 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id dk19sm187042edb.66.2020.04.22.20.15.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2020 20:15:45 -0700 (PDT)
+Subject: Re: [PATCH net-next v5 1/4] dt-bindings: net: phy: Add support for
+ NXP TJA11xx
+To:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
+        devicetree@vger.kernel.org
+References: <20200422092456.24281-1-o.rempel@pengutronix.de>
+ <20200422092456.24281-2-o.rempel@pengutronix.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <b47f742d-e79a-11c8-6d39-db27dced28b8@gmail.com>
+Date:   Wed, 22 Apr 2020 20:15:42 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324144324.21178-1-aford173@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200422092456.24281-2-o.rempel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 09:43:22AM -0500, Adam Ford wrote:
-> Beacon EmebeddedWorks is the brand owned by Compass Electronics Group,
-> LLC based out of the United States.
-> https://beaconembedded.com/
+
+
+On 4/22/2020 2:24 AM, Oleksij Rempel wrote:
+> Document the NXP TJA11xx PHY bindings.
 > 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-
-Hi Rob,
-
-Are you okay with this?
-
-Shawn
-
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>   .../devicetree/bindings/net/nxp,tja11xx.yaml  | 61 +++++++++++++++++++
+>   1 file changed, 61 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index 4c8eaa11daff..7ee772b1840a 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -141,6 +141,8 @@ patternProperties:
->      description: Shenzhen AZW Technology Co., Ltd.
->    "^bananapi,.*":
->      description: BIPAI KEJI LIMITED
-> +  "^beacon,.*":
-> +    description: Compass Electronics Group, LLC
->    "^bhf,.*":
->      description: Beckhoff Automation GmbH & Co. KG
->    "^bitmain,.*":
-> -- 
-> 2.25.1
-> 
+> diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> new file mode 100644
+> index 0000000000000..42be0255512b3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> @@ -0,0 +1,61 @@
+> +# SPDX-License-Identifier: GPL-2.0+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP TJA11xx PHY
+> +
+> +maintainers:
+> +  - Andrew Lunn <andrew@lunn.ch>
+> +  - Florian Fainelli <f.fainelli@gmail.com>
+> +  - Heiner Kallweit <hkallweit1@gmail.com>
+
+I would have expected to have you listed as a maintainer of this 
+binding, but fair enough.
+
+> +
+> +description:
+> +  Bindings for NXP TJA11xx automotive PHYs
+> +
+> +allOf:
+> +  - $ref: ethernet-phy.yaml#
+> +
+> +patternProperties:
+> +  "^ethernet-phy@[0-9a-f]+$":
+> +    type: object
+> +    description: |
+> +      Some packages have multiple PHYs. Secondary PHY should be defines as
+
+should be defined as a subnode.
+-- 
+Florian
