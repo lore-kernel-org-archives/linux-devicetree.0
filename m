@@ -2,158 +2,207 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A8DC54FD0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 15:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9D4C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 15:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD6A92075A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 15:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 270B920781
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 15:44:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="eNDACs8M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbgDWPiC (ORCPT
+        id S1729257AbgDWPo0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 11:38:02 -0400
-Received: from muru.com ([72.249.23.125]:51076 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729201AbgDWPiC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Apr 2020 11:38:02 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id A080A8022;
-        Thu, 23 Apr 2020 15:38:47 +0000 (UTC)
-Date:   Thu, 23 Apr 2020 08:37:56 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv6 0/4] n_gsm serdev support and protocol driver for
- droid4 modem
-Message-ID: <20200423153756.GE37466@atomide.com>
-References: <20200421232752.3070-1-tony@atomide.com>
- <20200423114326.GQ18608@localhost>
+        Thu, 23 Apr 2020 11:44:26 -0400
+Received: from gateway30.websitewelcome.com ([192.185.179.30]:48761 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729204AbgDWPo0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Apr 2020 11:44:26 -0400
+X-Greylist: delayed 1420 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 Apr 2020 11:44:25 EDT
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id 383BC1034
+        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 10:20:44 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id RdeejQ7B0AGTXRdeejjhDv; Thu, 23 Apr 2020 10:20:44 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=lVr7d+CAP5nOq9QPmRmWkdHKDvdbA359gdwduj7bBvE=; b=eNDACs8MYJ6ttfA8OGNvduU9Ou
+        0Cc3NDeYo3BG1LAi5SJ4V0GvVE4Fdw3xAzkGWMumjpwSSf53SjVL4pV+hKQXaStcLe/5LOXlUHgu0
+        I7Mc1wSKfy3GJbmlo98jro3UKy+BD3wca9xLh3I+38LiQHiYmRZ3ZphMP46heRkxt+nmeSHvIuxTj
+        bT4H0zxs9L6FO9rzIesmA5WaWhhs2g+yhdEUPt5IHi0W3mf+9acIa8Ky+XjrUBcVHyhjl1Wyxo+VN
+        NpCCbw7KtqaFvf7P/eaT1wku2PFqzhG9RVfv7Hecz4iVgJDmW4NxHSVSITYi9PhEaugyXwU1vGYRE
+        L3Y6C2EQ==;
+Received: from [191.31.203.120] (port=55674 helo=[192.168.15.3])
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1jRded-000yw3-SL; Thu, 23 Apr 2020 12:20:44 -0300
+Subject: Re: [PATCH v3 3/3] ARM: dts: Add Caninos Loucos Labrador
+To:     afaerber@suse.de
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        edgar.righi@lsitec.org.br, igor.lima@lsitec.org.br,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
+References: <20200229104358.GB19610@mani>
+ <20200320035104.26139-1-matheus@castello.eng.br>
+ <20200320035104.26139-4-matheus@castello.eng.br>
+ <20200405065137.GC8912@Mani-XPS-13-9360>
+From:   Matheus Castello <matheus@castello.eng.br>
+Message-ID: <df32c750-a097-9210-6e13-db7db49836b5@castello.eng.br>
+Date:   Thu, 23 Apr 2020 12:20:39 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423114326.GQ18608@localhost>
+In-Reply-To: <20200405065137.GC8912@Mani-XPS-13-9360>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: pt-BR
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.203.120
+X-Source-L: No
+X-Exim-ID: 1jRded-000yw3-SL
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.3]) [191.31.203.120]:55674
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 8
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Johan Hovold <johan@kernel.org> [200423 11:44]:
-> Hi Tony,
+Hi Andreas,
+
+Em 4/5/20 3:51 AM, Manivannan Sadhasivam escreveu:
+> On Fri, Mar 20, 2020 at 12:51:04AM -0300, Matheus Castello wrote:
+>> Add Device Trees for Caninos Loucos Labrador CoM and base board.
+>> Based on the work of Andreas Färber on Lemaker Guitar device tree.
+>>
+>> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
 > 
-> On Tue, Apr 21, 2020 at 04:27:48PM -0700, Tony Lindgren wrote:
-> > Hi all,
-> > 
-> > Here's v4 set of n_gsm serdev support patches, and the related protocol
-> > driver for the modem found on Motorola Mapphone phones and tablets
-> > like droid4.
-> > 
-> > This series only adds basic character device support for the serdev
-> > driver. Other serdev consumer drivers for specific devices will be
-> > posted separately.
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> I'm still missing an architectural (design) overview here -- reviewer
-> time is a scarce resource.
-
-OK, so for this series it would be roughly:
-
-1. Allow serdev drivers configure and use n_gsm for TS 27.010
-
-2. Add support for a motorola modem with a custom protocol on
-   top of TS 27.010 with only chardev support initially
-
-3. Start adding TS 27.010 channel specific device drivers as
-   regular Linux device drivers later on
-
-> I also suggested earlier that you include, at least as an RFC, one or
-> more of your child-device drivers so that we can see how this ends up
-> being used in the end (including an example devicetree).
-
-Well I left that out intentionally to keep the series smaller. But yeah,
-I guess that part is really what people want. I'll add a basic GNSS
-driver for the next version.
-
-> Some high-level comments until then:
+> Will queue the series for v5.8 once Andreas is happy with it.
 > 
-> I'm not sure that a plain chardev interface for the mux channels is the
-> right interface. The n_gsm ldisc exposes tty devices and I think your
-> serdev adaptation should continue to do that.
 
-That's what I started with, but was not happy at all because of the
-custom motorola protocol layer on top of TS 27.010.
+do you have any more concerns about these patches? Let me know.
 
-A generic n_gsm serdev driver should work easily though. Roughly, the
-n_gsm serdev driver(s) wanting to use just the n_gsm tty devices would
-just call the n_gsm config functions only, and configure no custom
-callbacks. Maybe some flag is needed for n_gsm tty. This needs to
-be checked again though as I have not done that for a while.
+BR,
+Matheus Castello
 
-Then for the custom n_gsm serdev implementations, like this modem,
-we have packet data from n_gsm. I don't think stuffing the packet data
-back into tty devices helps for these cases.
-
-> On that note; you're not actually adding general TS 27.010 serdev
-> support, but rather some hooks and a custom driver and interface (mfd +
-> /dev/motmdmN) for one particular modem.
-
-A generic n_gsm serdev driver would just use a subset of these same
-functions.
-
-> I'd rather see a generic implementation which can be used with other
-> modems and that continues to expose a /dev/gsmttyN interface to which we
-> could attach serdev clients instead (and not create a motmdm serdev
-> replica of sorts).
-
-Yeah this should be doable quite easily actually without really any of
-the motorola driver code. It's a separate driver though, and not
-usable for this case because of the custom layer.
-
-> I know the location of this driver has been up for discussion already,
-> but drivers/tty/serdev/protocol still isn't right (e.g. we don't have an
-> drivers/i2c/protocol directory where we stuff random i2c client
-> drivers).
-
-Argh, the location of driver again.. So we do have the custom motorola
-layer to deal with on top of TS 27.010, but the custom handling is
-contained within the driver. So maybe just drivers/serial for the
-custom driver then.
-
-> It's an mfd + custom chardev driver for a modem and related to n_gsm
-> (even more if you add generic serdev support). Currently, drivers/mfd or
-> drivers/misc appear to be better choices. Otherwise, n_gsm lives in
-> drivers/tty since it's a line discipline, but it could be moved to a new
-> drivers/modem if needed (cf. the bluetooth hci ldisc).
-
-The n_gsm suport is not limited to modems only. Probably best to
-not move it. And I'd avoid drivers/modem until we actually have three
-similar use cases based on the late David "Mr.Bus" Brownell rule of
-thumb :)
-
-> Last, it seems you've based the serdev-ngsm-motmdm.c chardev
-> implementation on a more or less verbatim copy of drivers/gnss/core.c.
-> I'd appreciate if you could mention that in the file header and
-> reproduce the copyright notice if you end up keeping that interface.
-
-Oh yes indeed, thanks for pointing that out. I'll add it to the next
-version. The chardev code is for sure based on drivers/gnss.
-
-To explain my ignorance, I added the chardev support initially as an
-experiment to see if I can handle the motorola packet layer better
-that way compared to the n_gsm ttys and userspace handling. It ended
-up working quite nicely, so I kept it but then I accidentally left
-out references to the source. Sorry about that.
-
-Regards,
-
-Tony
+> Nit: Please keep linux-actions@lists.infradead.org in CC for all future
+> patches/replies.
+> 
+> Thanks,
+> Mani
+> 
+>> ---
+>>   arch/arm/boot/dts/Makefile                  |  1 +
+>>   arch/arm/boot/dts/owl-s500-labrador-bb.dts  | 34 +++++++++++++++++++++
+>>   arch/arm/boot/dts/owl-s500-labrador-v2.dtsi | 21 +++++++++++++
+>>   3 files changed, 56 insertions(+)
+>>   create mode 100644 arch/arm/boot/dts/owl-s500-labrador-bb.dts
+>>   create mode 100644 arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index d6546d2676b9..99f633460833 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -842,6 +842,7 @@ dtb-$(CONFIG_ARCH_ORION5X) += \
+>>   dtb-$(CONFIG_ARCH_ACTIONS) += \
+>>   	owl-s500-cubieboard6.dtb \
+>>   	owl-s500-guitar-bb-rev-b.dtb \
+>> +	owl-s500-labrador-bb.dtb \
+>>   	owl-s500-sparky.dtb
+>>   dtb-$(CONFIG_ARCH_PRIMA2) += \
+>>   	prima2-evb.dtb
+>> diff --git a/arch/arm/boot/dts/owl-s500-labrador-bb.dts b/arch/arm/boot/dts/owl-s500-labrador-bb.dts
+>> new file mode 100644
+>> index 000000000000..91012b4a4c30
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/owl-s500-labrador-bb.dts
+>> @@ -0,0 +1,34 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +/*
+>> + * Caninos Labrador Base Board
+>> + *
+>> + * Copyright (c) 2019-2020 Matheus Castello
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include "owl-s500-labrador-v2.dtsi"
+>> +
+>> +/ {
+>> +	compatible = "caninos,labrador-bb", "caninos,labrador", "actions,s500";
+>> +	model = "Caninos Labrador Base Board M v1.0";
+>> +
+>> +	aliases {
+>> +		serial3 = &uart3;
+>> +	};
+>> +
+>> +	chosen {
+>> +		stdout-path = "serial3:115200n8";
+>> +	};
+>> +
+>> +	uart3_clk: uart3-clk {
+>> +		compatible = "fixed-clock";
+>> +		clock-frequency = <921600>;
+>> +		#clock-cells = <0>;
+>> +	};
+>> +};
+>> +
+>> +&uart3 {
+>> +	status = "okay";
+>> +	clocks = <&uart3_clk>;
+>> +};
+>> diff --git a/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi b/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
+>> new file mode 100644
+>> index 000000000000..0b54f1ef3ec0
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
+>> @@ -0,0 +1,21 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +/*
+>> + * Caninos Labrador CoM V2
+>> + *
+>> + * Copyright (c) 2019-2020 Matheus Castello
+>> + */
+>> +
+>> +#include "owl-s500.dtsi"
+>> +
+>> +/ {
+>> +	compatible = "caninos,labrador", "actions,s500";
+>> +
+>> +	memory@0 {
+>> +		device_type = "memory";
+>> +		reg = <0x0 0x80000000>;
+>> +	};
+>> +};
+>> +
+>> +&timer {
+>> +	clocks = <&hosc>;
+>> +};
+>> --
+>> 2.25.0
+>>
