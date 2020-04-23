@@ -2,389 +2,417 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
+	WEIRD_QUOTING autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF43C2BA19
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 11:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C448C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 11:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D32E12077D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 11:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B96F20728
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 11:21:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="imEy6icK";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Hu7Bar96"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="qwXvLarZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgDWLNl (ORCPT
+        id S1727911AbgDWLV3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 07:13:41 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:51516 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727077AbgDWLNk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Apr 2020 07:13:40 -0400
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E253540192;
-        Thu, 23 Apr 2020 11:13:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1587640420; bh=onUaFDs6wYSISeP1mdP9QC/AaUBejHVUCP9yF5h/ajc=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=imEy6icKcQ1SQGcZxdD93yKfSxv0+ub50lCZFBB0G8D8GHQ9LxipvkI6Kj0dIH+lc
-         bGFBYbP8MSvtaiZp8zoD1SdFuONVyBG5uHXPfPGxJF7G72EMpC9eF2ZH+h2qqN6oua
-         /IQGAZnCPY9fb7OHix95FBxqeZwlRnAMF4VmFI1v1OwiCz1vojBq8QjNb98LTKq8RO
-         jMqPD5ThJvra4vPrgD17CcT0fihDdxTTwtwa/Mv3rJzvcbWlFrlNkKcD2HcD6/eUnx
-         iRFd2YfcEJT7UG/VHNUgNMlhrWPJL8+rMhOD8ibn64iNRaTGK1Ltbi9eVB39D7cEzT
-         9okBG5Mf03New==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        Thu, 23 Apr 2020 07:21:29 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:53706 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727877AbgDWLV3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Apr 2020 07:21:29 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 16B9549961;
+        Thu, 23 Apr 2020 11:21:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:date:subject:subject:from:from
+        :received:received:received; s=mta-01; t=1587640884; x=
+        1589455285; bh=r3uhSn2PkUfq4aTcRJp/DI+FCYKerGnHx1LpFfVlNKQ=; b=q
+        wXvLarZvoTiKHCY35wjJfFxX7Dj1tYCu+UQtdD/lcxqxC2zT9jxDlfKMVLtC4q2W
+        ButQTMs6nkKGbO53GnDSs4NcuESQ3QmGYVKkR6fPRY4nqqwoDEYBu6lSev+8yP2l
+        UMnnASrVLjeUR6uQoIOqUFtxK9a8s0g1gBx7yY70zI=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id aOkXb5O-tyLM; Thu, 23 Apr 2020 14:21:24 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 14E62A0083;
-        Thu, 23 Apr 2020 11:13:37 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 23 Apr 2020 04:12:43 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.487.0; Thu, 23 Apr 2020 04:12:43 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YUTesgvs48zVctQAcwrMWCqlRAlxmjgwec6tZ12BAvetsWTYJZHhDZuA19MCw0797s75BTOKSf86Jx58B2stXmFTaM6TDX4/C9AATZOc9afDow/eniAPQ5bn2EfycCkwyQOuyv9McAbho6rXkVWx5H95ALr4QaT6u5kYK/KgClHsc57j1nPWc2NfJ77wmCj+XTiEy5rAR4DFT0+95PkMOsy+KJ96Ib5Xm2FiaJQ2/eDZJzN5qkk3KkJotqmKRUURoYX1R9L+L8n4UqcqrwVY5psxv1SqpJ+32+mJZekGmtRCooIUDLMdzYuprz5uZS+daIWe7qoW/O1CRq7P2WtXlw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xmgp9cXic+fgTwUQ0cUjGGHcqKTBI407RrOxZ8RLyLg=;
- b=IPz2Hrl7XB41apDz+xpLhzrhffrxkxFuQfe3pbJrd9z30lBpJDnmEfM5VWadDIan5i1NknkzeybN0XBFti6a6k0uEfOtGQYOQhgTqL383xHtgRFPADoiKq8fShz1BZGyhdGwBfA8nZgVLD3CzMszb76QHv3+gmOFWnPQQcHPSSvRq6zPUKbiD2jqk1qxqymt0KhhmE6aAlilmjhowAGDFRGmG5TZbCSZaJ8tOsbWaT/qK15zD5Y39GoRK5F0fJrErUPyv6r8KaV7Nh7BExu1oQg44soaJ9ARtfCuW89mnXnY9XMEfTxOBwz4oMfhIrNaUlyef46xQcjX0PXSveLJIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xmgp9cXic+fgTwUQ0cUjGGHcqKTBI407RrOxZ8RLyLg=;
- b=Hu7Bar96oG9sbsq5/OQcNVESC2intVRMq1/T/cXDTYQFFGt3nIlEeGycZw8GwZCEw5E7o0ov+RaO4fmpdEi3cgY4Ku1+54jClbDB+kxvrEtOpZDxaA01KBJ7uIvsTctJrQLpGibDIVkwfzRRNbnUWceGd4B6yv1nYY1hYeS3YVU=
-Received: from MN2PR12MB3789.namprd12.prod.outlook.com (2603:10b6:208:16a::20)
- by MN2SPR01MB0020.namprd12.prod.outlook.com (2603:10b6:208:184::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Thu, 23 Apr
- 2020 11:12:40 +0000
-Received: from MN2PR12MB3789.namprd12.prod.outlook.com
- ([fe80::8d9c:955:1a7b:29c6]) by MN2PR12MB3789.namprd12.prod.outlook.com
- ([fe80::8d9c:955:1a7b:29c6%4]) with mapi id 15.20.2937.012; Thu, 23 Apr 2020
- 11:12:40 +0000
-From:   Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
-To:     Adrian Ratiu <adrian.ratiu@collabora.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-CC:     "kernel@collabora.com" <kernel@collabora.com>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>
-Subject: RE: [PATCH v4] dt-bindings: display: dw_mipi_dsi.txt: convert to yaml
-Thread-Topic: [PATCH v4] dt-bindings: display: dw_mipi_dsi.txt: convert to
- yaml
-Thread-Index: AQHWGVYkS0wcFeXtGEmdc/0ooO7336iGggXQ
-Date:   Thu, 23 Apr 2020 11:12:40 +0000
-Message-ID: <MN2PR12MB378964868D3C1241FC649100CBD30@MN2PR12MB3789.namprd12.prod.outlook.com>
-References: <20200423100058.1734009-1-adrian.ratiu@collabora.com>
-In-Reply-To: <20200423100058.1734009-1-adrian.ratiu@collabora.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYW5nZWxvclxh?=
- =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
- =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLTU2ZjkxOWE4LTg1NTMtMTFlYS05ZDcyLWZjNzc3?=
- =?us-ascii?Q?NGVlZGMyZVxhbWUtdGVzdFw1NmY5MTlhOS04NTUzLTExZWEtOWQ3Mi1mYzc3?=
- =?us-ascii?Q?NzRlZWRjMmVib2R5LnR4dCIgc3o9IjYxNzkiIHQ9IjEzMjMyMTEzOTU5MDMy?=
- =?us-ascii?Q?MTQwMSIgaD0ib1EwOGR3SlVxVlJBWm5kY3BqQWgzZWtxcmxrPSIgaWQ9IiIg?=
- =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFE?=
- =?us-ascii?Q?NVZJNFpZQm5XQVQxYTUzVUxvdmVQUFZybmRRdWk5NDhPQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUVBQVFBQkFBQUFIYVd5TkFBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
- =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
- =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
- =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
- =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
- =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
- =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
- =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
- =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
- =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
- =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
- =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
- =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
- =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
- =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
- =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
- =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
- =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
- =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
- =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
- =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
- =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
- =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
- =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
- =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=angelor@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ee9c0481-aafd-4687-4c0b-08d7e7773d14
-x-ms-traffictypediagnostic: MN2SPR01MB0020:
-x-microsoft-antispam-prvs: <MN2SPR01MB0020C3D6582E003955653943CBD30@MN2SPR01MB0020.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 03827AF76E
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3789.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(396003)(39860400002)(366004)(136003)(478600001)(52536014)(76116006)(110136005)(66946007)(8936002)(6506007)(966005)(54906003)(33656002)(86362001)(66446008)(64756008)(7696005)(66556008)(316002)(2906002)(26005)(66476007)(186003)(4326008)(81156014)(8676002)(71200400001)(9686003)(55016002)(5660300002);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 7fS3vNr4+1AhGv5oUPqdllRvPrZsZKYV50O3IbSRHFo4DPyh1wcTiO4/aK3jl9hKsRvyznwrSFOCDu816cZTdN79OgnQ7h6SIYAcX+o2l0qYHHoWEtf4BQQ1JoIKwgwS31RODsI+y2747AcGzCus7d4THXYhoE+Fr0P10KMm86rhTySJTmcs+B+owwjknHqX+fENPphOMYEQnwUCWW7FUtU3m2JxyFl5zfOzWopmMws+05iXIuxCXplFY17ZRBs8826ZEZ/OcVRaPGjezvKb0Y5lEvW0cKlmb/qX/Gk62EpHxxH5onp95TX1QGZqeb7qlyYLVYnWLHLobzOADWNq+UJgD1AKnkXhf4LwcLqeXrWZfkWO7TwLpTvWbeJVF0AmXauzwsn2/txbmyIh+9QbtPqpIm0lLvdlFoeBaeqN2GXzyS9nDKUl61kUCWRn4+ogMJtqBl5JhXN6NvoUKkYX0k6YDAPkrlOoav0cI5LCl52JXlKAGuLN2UqqTVzm1yZc8TuXHRo2Fpui13Hv1EVhsQ==
-x-ms-exchange-antispam-messagedata: M6ANK394R6/iukj+pwCu6lfyyWL7qqtDXX1jzTObGroa3rqXLxQmRRM8NwamyZaZTAJ87ppzMPFpDE/oPA2hlBVFY5QxdZjId4Tu52k6Gcgx0fu1+KJqMFbQs7uJlkRlfEhVuuby+k0ProBtb1qfiw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        by mta-01.yadro.com (Postfix) with ESMTPS id 108D947219;
+        Thu, 23 Apr 2020 14:21:24 +0300 (MSK)
+Received: from bbwork.com (172.17.14.122) by T-EXCH-02.corp.yadro.com
+ (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Thu, 23
+ Apr 2020 14:21:24 +0300
+From:   Alexander Filippov <a.filippov@yadro.com>
+To:     <linux-aspeed@lists.ozlabs.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexander Filippov <a.filippov@yadro.com>
+Subject: [PATCH] ARM: DTS: Aspeed: Add YADRO Nicole BMC
+Date:   Thu, 23 Apr 2020 14:21:00 +0300
+Message-ID: <20200423112100.19424-1-a.filippov@yadro.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ee9c0481-aafd-4687-4c0b-08d7e7773d14
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2020 11:12:40.5860
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VpDwGVyBRvEwmf7/kzlB2V5hk6h2Xs9BxyZrcaPJ0BF890QcmZXPnj/32Wc76Px6XVzIrRULxbBSGM893rvjfw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2SPR01MB0020
-X-OriginatorOrg: synopsys.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [172.17.14.122]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Adrian,
+Nicole is an OpenPower machine with an Aspeed 2500 BMC SoC manufactured
+by YADRO.
 
-From: Adrian Ratiu <adrian.ratiu@collabora.com>
-Date: Thu, Apr 23, 2020 at 11:00:58
+Signed-off-by: Alexander Filippov <a.filippov@yadro.com>
+---
+ arch/arm/boot/dts/Makefile                  |   1 +
+ arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts | 316 ++++++++++++++++++++
+ 2 files changed, 317 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts
 
-> This converts the Synopsis MIPI DSI binding documentation to yaml and
-> should be quite straightforward. I've added a missing ref clk and also
-> added Philippe as maintainer b/c he's the original txt author following
-> the algorithm provided in Message-ID 20200420175909.GA5810@ravnborg.org.
->=20
-> Cc: Philippe CORNU <philippe.cornu@st.com>
-> Cc: devicetree@vger.kernel.org
-> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
-> ---
-> Changes in v4:
->   - Dropped panel patternProperties (Rob)
->=20
-> Changes in v3:
->   - Added ports property and its children which are required (Laurent)
->   - Sorted required list alphabetically
->=20
-> Changes in v2:
->   - Removed unnecessary descriptions and maxItems (Rob)
->   - Changed maintainers entry / dropped Mark (Rob)
->   - Added dsi-controller.yaml ref (Rob)
-> ---
->  .../bindings/display/bridge/dw_mipi_dsi.txt   | 32 ---------
->  .../display/bridge/snps,dw-mipi-dsi.yaml      | 68 +++++++++++++++++++
->  2 files changed, 68 insertions(+), 32 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/bridge/dw_m=
-ipi_dsi.txt
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/snps=
-,dw-mipi-dsi.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi=
-.txt b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
-> deleted file mode 100644
-> index b13adf30b8d3b..0000000000000
-> --- a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
-> +++ /dev/null
-> @@ -1,32 +0,0 @@
-> -Synopsys DesignWare MIPI DSI host controller
-> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> -
-> -This document defines device tree properties for the Synopsys DesignWare=
- MIPI
-> -DSI host controller. It doesn't constitue a device tree binding specific=
-ation
-> -by itself but is meant to be referenced by platform-specific device tree
-> -bindings.
-> -
-> -When referenced from platform device tree bindings the properties define=
-d in
-> -this document are defined as follows. The platform device tree bindings =
-are
-> -responsible for defining whether each optional property is used or not.
-> -
-> -- reg: Memory mapped base address and length of the DesignWare MIPI DSI
-> -  host controller registers. (mandatory)
-> -
-> -- clocks: References to all the clocks specified in the clock-names prop=
-erty
-> -  as specified in [1]. (mandatory)
-> -
-> -- clock-names:
-> -  - "pclk" is the peripheral clock for either AHB and APB. (mandatory)
-> -  - "px_clk" is the pixel clock for the DPI/RGB input. (optional)
-> -
-> -- resets: References to all the resets specified in the reset-names prop=
-erty
-> -  as specified in [2]. (optional)
-> -
-> -- reset-names: string reset name, must be "apb" if used. (optional)
-> -
-> -- panel or bridge node: see [3]. (mandatory)
-> -
-> -[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> -[2] Documentation/devicetree/bindings/reset/reset.txt
-> -[3] Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
-> diff --git a/Documentation/devicetree/bindings/display/bridge/snps,dw-mip=
-i-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-=
-dsi.yaml
-> new file mode 100644
-> index 0000000000000..012aa8e7cb8cd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/snps,dw-mipi-dsi.y=
-aml
-> @@ -0,0 +1,68 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: https://urldefense.com/v3/__http://devicetree.org/schemas/display/b=
-ridge/snps,dw-mipi-dsi.yaml*__;Iw!!A4F2R9G_pg!Pn0TP0h4QkEcILgH_xBqMjSM4dJxl=
-yU3iCvF4FSbmdQOSIV309ngWu8EKCpP901d$=20
-> +$schema: https://urldefense.com/v3/__http://devicetree.org/meta-schemas/=
-core.yaml*__;Iw!!A4F2R9G_pg!Pn0TP0h4QkEcILgH_xBqMjSM4dJxlyU3iCvF4FSbmdQOSIV=
-309ngWu8EKPfhyNgW$=20
-> +
-> +title: Synopsys DesignWare MIPI DSI host controller
-> +
-> +maintainers:
-> +  - Philippe CORNU <philippe.cornu@st.com>
-> +
-> +description: |
-> +  This document defines device tree properties for the Synopsys DesignWa=
-re MIPI
-> +  DSI host controller. It doesn't constitue a device tree binding specif=
-ication
-> +  by itself but is meant to be referenced by platform-specific device tr=
-ee
-> +  bindings.
-> +
-> +  When referenced from platform device tree bindings the properties defi=
-ned in
-> +  this document are defined as follows. The platform device tree binding=
-s are
-> +  responsible for defining whether each property is required or optional=
-.
-> +
-> +allOf:
-> +  - $ref: ../dsi-controller.yaml#
-> +
-> +properties:
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Module clock
-> +      - description: DSI bus clock for either AHB and APB
-> +      - description: Pixel clock for the DPI/RGB input
-> +    minItems: 2
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ref
-> +      - const: pclk
-> +      - const: px_clk
-> +    minItems: 2
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  reset-names:
-> +    const: apb
-> +
-> +  ports:
-> +    type: object
-> +
-> +    properties:
-> +      port@0:
-> +        type: object
-> +        description: Input node to receive pixel data.
-> +      port@1:
-> +        type: object
-> +        description: DSI output node to panel.
-> +
-> +    required:
-> +      - port@0
-> +      - port@1
-> +
-> +required:
-> +  - clock-names
-> +  - clocks
-> +  - ports
-> +  - reg
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e8dd99201397..6f9fe0f959f2 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1347,6 +1347,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+ 	aspeed-bmc-microsoft-olympus.dtb \
+ 	aspeed-bmc-opp-lanyang.dtb \
+ 	aspeed-bmc-opp-mihawk.dtb \
++	aspeed-bmc-opp-nicole.dtb \
+ 	aspeed-bmc-opp-palmetto.dtb \
+ 	aspeed-bmc-opp-romulus.dtb \
+ 	aspeed-bmc-opp-swift.dtb \
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts b/arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts
+new file mode 100644
+index 000000000000..4f2b91d6a891
+--- /dev/null
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-nicole.dts
+@@ -0,0 +1,316 @@
++// SPDX-License-Identifier: GPL-2.0+
++// Copyright 2019 YADRO
++/dts-v1/;
++#include "aspeed-g5.dtsi"
++#include <dt-bindings/gpio/aspeed-gpio.h>
++
++/ {
++	model = "Nicole BMC";
++	compatible = "yadro,nicole-bmc", "aspeed,ast2500";
++
++	chosen {
++		stdout-path = &uart5;
++		bootargs = "console=ttyS4,115200 earlyprintk";
++	};
++
++	memory@80000000 {
++		reg = <0x80000000 0x20000000>;
++	};
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		vga_memory: framebuffer@9f000000 {
++			no-map;
++			reg = <0x9f000000 0x01000000>; /* 16M */
++		};
++
++		flash_memory: region@98000000 {
++			no-map;
++			reg = <0x98000000 0x04000000>; /* 64M */
++		};
++
++		coldfire_memory: codefire_memory@9ef00000 {
++			reg = <0x9ef00000 0x00100000>;
++			no-map;
++		};
++
++		gfx_memory: framebuffer {
++			size = <0x01000000>;
++			alignment = <0x01000000>;
++			compatible = "shared-dma-pool";
++			reusable;
++		};
++
++		video_engine_memory: jpegbuffer {
++			size = <0x02000000>;	/* 32M */
++			alignment = <0x01000000>;
++			compatible = "shared-dma-pool";
++			reusable;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		power {
++			gpios = <&gpio ASPEED_GPIO(AA, 4) GPIO_ACTIVE_HIGH>;
++		};
++
++		identify {
++			gpios = <&gpio ASPEED_GPIO(AA, 7) GPIO_ACTIVE_HIGH>;
++		};
++
++		alarm_red {
++			gpios = <&gpio ASPEED_GPIO(AA, 3) GPIO_ACTIVE_HIGH>;
++		};
++
++		alarm_yellow {
++			gpios = <&gpio ASPEED_GPIO(AA, 1) GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	fsi: gpio-fsi {
++		compatible = "aspeed,ast2500-cf-fsi-master", "fsi-master";
++		#address-cells = <2>;
++		#size-cells = <0>;
++		no-gpio-delays;
++
++		memory-region = <&coldfire_memory>;
++		aspeed,sram = <&sram>;
++		aspeed,cvic = <&cvic>;
++
++		clock-gpios = <&gpio ASPEED_GPIO(AA, 0) GPIO_ACTIVE_HIGH>;
++		data-gpios = <&gpio ASPEED_GPIO(AA, 2) GPIO_ACTIVE_HIGH>;
++		mux-gpios = <&gpio ASPEED_GPIO(A, 6) GPIO_ACTIVE_HIGH>;
++		enable-gpios = <&gpio ASPEED_GPIO(D, 0) GPIO_ACTIVE_HIGH>;
++		trans-gpios = <&gpio ASPEED_GPIO(P, 1) GPIO_ACTIVE_HIGH>;
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		checkstop {
++			label = "checkstop";
++			gpios = <&gpio ASPEED_GPIO(J, 2) GPIO_ACTIVE_LOW>;
++			linux,code = <ASPEED_GPIO(J, 2)>;
++		};
++	};
++
++	iio-hwmon-battery {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 12>;
++	};
++};
++
++&fmc {
++	status = "okay";
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++		label = "bmc";
++		spi-max-frequency = <50000000>;
++#include "openbmc-flash-layout.dtsi"
++	};
++};
++
++&spi1 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_spi1_default>;
++
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++		label = "pnor";
++		spi-max-frequency = <100000000>;
++	};
++};
++
++&lpc_ctrl {
++	status = "okay";
++	memory-region = <&flash_memory>;
++	flash = <&spi1>;
++};
++
++&uart1 {
++	/* Rear RS-232 connector */
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_txd1_default
++			&pinctrl_rxd1_default
++			&pinctrl_nrts1_default
++			&pinctrl_ndtr1_default
++			&pinctrl_ndsr1_default
++			&pinctrl_ncts1_default
++			&pinctrl_ndcd1_default
++			&pinctrl_nri1_default>;
++};
++
++&uart5 {
++	status = "okay";
++};
++
++&mac0 {
++	status = "okay";
++
++	use-ncsi;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rmii1_default>;
++	clocks = <&syscon ASPEED_CLK_GATE_MAC1CLK>,
++		 <&syscon ASPEED_CLK_MAC1RCLK>;
++	clock-names = "MACCLK", "RCLK";
++};
++
++&i2c0 {
++	status = "okay";
++
++	eeprom@50 {
++		compatible = "atmel,24c256";
++		reg = <0x50>;
++		pagesize = <64>;
++	};
++};
++
++&i2c2 {
++	status = "okay";
++    /* CPU0 characterization connector */
++};
++
++&i2c3 {
++	status = "okay";
++    /* CLK GEN SI5338 */
++};
++
++&i2c4 {
++	status = "okay";
++    /* Voltage regulators for CPU0 */
++};
++
++&i2c5 {
++	status = "okay";
++    /* Voltage regulators for CPU1 */
++};
++
++&i2c6 {
++	status = "okay";
++
++	rtc@32 {
++		compatible = "epson,rx8900";
++		reg = <0x32>;
++	};
++};
++
++&i2c7 {
++	status = "okay";
++    /* CPLD */
++};
++
++&gpio {
++	gpio-line-names =
++	/*A0-A7*/	"","cfam-reset","","","","","fsi-mux","",
++	/*B0-B7*/	"","","","","","","","",
++	/*C0-C7*/	"","","","","","","","",
++	/*D0-D7*/	"fsi-enable","","","nic_func_mode0","nic_func_mode1","","","",
++	/*E0-E7*/	"","ncsi_cfg","","","","","","",
++	/*F0-F7*/	"","","","","","","","",
++	/*G0-G7*/	"","","","","","","","",
++	/*H0-H7*/	"","","","","","","","",
++	/*I0-I7*/	"","","","","","","","",
++	/*J0-J7*/	"","","checkstop","","","","","",
++	/*K0-K7*/	"","","","","","","","",
++	/*L0-L7*/	"","","","","","","","",
++	/*M0-M7*/	"","","","","","","","",
++	/*N0-N7*/	"","","","","","","","",
++	/*O0-O7*/	"","","id-button","","","","","",
++	/*P0-P7*/	"","fsi-trans","","","","","","",
++	/*Q0-Q7*/	"","","","","","","","",
++	/*R0-R7*/	"","","","","","","","",
++	/*S0-S7*/	"","","","","","","","seq_cont",
++	/*T0-T7*/	"","","","","","","","",
++	/*U0-U7*/	"","","","","","","","",
++	/*V0-V7*/	"","","","","","","","",
++	/*W0-W7*/	"","","","","","","","",
++	/*X0-X7*/	"","","","","","","","",
++	/*Y0-Y7*/	"","","","","","","","",
++	/*Z0-Z7*/	"","","","","","","","",
++	/*AA0-AA7*/ "fsi-clock","led-alarm-yellow","fsi-data","led-alarm-red",
++                "led-power","","","led-identify",
++	/*AB0-AB7*/	"","","","","","","","",
++	/*AC0-AC7*/	"","","","","","","","";
++
++	nic_func_mode0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(D, 3) GPIO_ACTIVE_HIGH>;
++		output-low;
++	};
++	nic_func_mode1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(D, 4) GPIO_ACTIVE_HIGH>;
++		output-low;
++	};
++	seq_cont {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 7) GPIO_ACTIVE_HIGH>;
++		output-low;
++	};
++	ncsi_cfg {
++		gpio-hog;
++		input;
++		gpios = <ASPEED_GPIO(E, 1) GPIO_ACTIVE_HIGH>;
++	};
++};
++
++&vuart {
++	status = "okay";
++};
++
++&gfx {
++	status = "okay";
++	memory-region = <&gfx_memory>;
++};
++
++&pinctrl {
++	aspeed,external-nodes = <&gfx &lhc>;
++};
++
++&ibt {
++	status = "okay";
++};
++
++&vhub {
++	status = "okay";
++};
++
++&adc {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_adc0_default
++			&pinctrl_adc1_default
++			&pinctrl_adc2_default
++			&pinctrl_adc3_default
++			&pinctrl_adc4_default
++			&pinctrl_adc5_default
++			&pinctrl_adc6_default
++			&pinctrl_adc7_default
++			&pinctrl_adc8_default
++			&pinctrl_adc9_default
++			&pinctrl_adc10_default
++			&pinctrl_adc11_default
++			&pinctrl_adc12_default
++			&pinctrl_adc13_default
++			&pinctrl_adc14_default
++			&pinctrl_adc15_default>;
++};
++
++&video {
++	status = "okay";
++	memory-region = <&video_engine_memory>;
++};
++
++#include "ibm-power9-dual.dtsi"
+-- 
+2.21.1
 
-Shouldn't the reset and reset-names be stated as required?
-From what I understand the driver will return if the reset is not=20
-available.
-
-> --=20
-> 2.26.0
->=20
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://urldefense.com/v3/__https://lists.freedesktop.org/mailman/listinf=
-o/dri-devel__;!!A4F2R9G_pg!Pn0TP0h4QkEcILgH_xBqMjSM4dJxlyU3iCvF4FSbmdQOSIV3=
-09ngWu8EKDNeA2R5$=20
-
-Thanks,
-Angelo
