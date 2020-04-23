@@ -2,59 +2,76 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35169C55193
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 10:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258B5C2BA19
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 10:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14AB92074F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 10:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0007520776
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 10:33:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="fNjqh2xt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="geEAW29f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725863AbgDWKZZ (ORCPT
+        id S1725863AbgDWKdm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 06:25:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34004 "EHLO
+        Thu, 23 Apr 2020 06:33:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726420AbgDWKZY (ORCPT
+        by vger.kernel.org with ESMTP id S1727079AbgDWKdk (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Apr 2020 06:25:24 -0400
-Received: from mo6-p00-ob.smtp.rzone.de (mo6-p00-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5300::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB614C035494;
-        Thu, 23 Apr 2020 03:25:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1587637520;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=p51RExXDzM8r8Gjav8uWWUQY9kiVhGtyvXKrvQxO//Q=;
-        b=fNjqh2xtp3AN3tcm7ZpP4uBBf4gq1+Mk0A7Rqblq79jkRsPwK/PlRfhe7tR8RSYaPG
-        E/zzM4HfBLvK9wOlVKn212IO78eHgGVCc/BhvX4+D2X8rFmd8615uxroBKKb8MynwbK0
-        6pzc76w4fbiNBOa4SgEE6ctriEaBPqPfHSW4Ri0AaOdQrIawZspE2Z+NIwfphkqV98Aa
-        ozUjTCW/e7Pvg62jYH/Zixv1We4U4kNXl+evEcfTpbkvuYsLXcMPmBhqIIsxSSr02OTY
-        48wd5pf3HKWPSMAz+fNVCafxtr6ud6I+7SVFUMmU24cxpzz5fUHT+19fOWadB3AeHQnx
-        KXmg==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB4G6Nf3AC"
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
-        with ESMTPSA id 60b02dw3NAPE8nU
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Thu, 23 Apr 2020 12:25:14 +0200 (CEST)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Andi Shyti <andi@etezian.org>, linux-input@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 1/2] Input: mms114 - add extra compatible for mms345l
-Date:   Thu, 23 Apr 2020 12:24:30 +0200
-Message-Id: <20200423102431.2715-1-stephan@gerhold.net>
-X-Mailer: git-send-email 2.26.2
+        Thu, 23 Apr 2020 06:33:40 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 754D0C08E934
+        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 03:33:40 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id t63so5858556wmt.3
+        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 03:33:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=PXsxej4a8qqwz/sfWnqPjxxFcWxvfDf5r8RVd8jOHBY=;
+        b=geEAW29f814kyoPGL10DeGdU59vxQ1iPhioE1md9NB8+Kw3H9NZWCLJHJkmfAfJ28N
+         I8vcc77XVhCO2EK4iG1ImCKJReFzDKWeM5vVeAY0sG19xO8Emjtw6w2xrr6PxRxlMAj6
+         75/BJXRXIsYPovi5842GsFcOGAWc078rV+cGAv77IAqbyzTp/+wMltyxXMpP8nbhXF4k
+         e5vWEJHczAfWrAFJr9MuUHYqUb5sL4Om5ySA3EEtKCONJWvv2wZoLeENoFzbo1nYdeQV
+         P41EJWhntcErC85chgqkSTzRu5Oc6IwqkS/u4cVxZsBR88prHQy91jS4i4d8Sg1ukYJJ
+         IwRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=PXsxej4a8qqwz/sfWnqPjxxFcWxvfDf5r8RVd8jOHBY=;
+        b=Q/vv/EFLuUEf9zfHt051llUiNBS/i0gKZJ5VhgNj7tcLK3/f+GF3ak2tRmabkfRzhD
+         vcxVLw05uONiQlOinqrZfN3i6ZblDhFsMgswmhJcwIzmZgaZf8etA+5N01wZR/A9dfQI
+         S8qr1aYjbox0aSrZiJpQYkKRylx1lomVkguftjATl+pdzsf52T3Fz8f3wd88fm4rHPSI
+         i7p7J90yk6knd99bKAOqN34C6RDP6I/OP71qqHPqbdQip4ekA8LpPEAHRIRjKUctoOxb
+         tdRGSEm/SFXCT4gfGNyW4nsezfi+zl4WJtzgdrgcZudAHySDBaX0gKKBhRlksHV2wuRh
+         QObw==
+X-Gm-Message-State: AGi0PuYGBts21g5WVaGpMWWt1h77Z6Y265W7Rd0ZJtlop03IgGWW07NF
+        eEzb39KqDOsUvIrUqlMLVzHEKg==
+X-Google-Smtp-Source: APiQypLLEs/Xei2i31Dj7XH0Nv/PyCxjKl9szS56wkptag+nkp2ud50gff4JMYKFiSRdC7tSO7Y/Aw==
+X-Received: by 2002:a1c:4603:: with SMTP id t3mr3389832wma.103.1587638019069;
+        Thu, 23 Apr 2020 03:33:39 -0700 (PDT)
+Received: from localhost.localdomain ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id x18sm3086757wrs.11.2020.04.23.03.33.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 03:33:38 -0700 (PDT)
+From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        shawn.guo@linaro.org, p.zabel@pengutronix.de,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: [PATCH v3 1/2] clk: qcom: Add DT bindings for MSM8939 GCC
+Date:   Thu, 23 Apr 2020 11:34:05 +0100
+Message-Id: <20200423103406.481289-2-bryan.odonoghue@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200423103406.481289-1-bryan.odonoghue@linaro.org>
+References: <20200423103406.481289-1-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -62,95 +79,338 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-MMS345L is another first generation touch screen from Melfas,
-which uses mostly the same registers as MMS152.
+Add compatible strings and the include files for the MSM8939 GCC.
 
-However, there is some garbage printed during initialization.
-Apparently MMS345L does not have the MMS152_COMPAT_GROUP register
-that is read+printed during initialization.
-
-  TSP FW Rev: bootloader 0x6 / core 0x26 / config 0x26, Compat group: \x06
-
-On earlier kernel versions the compat group was actually printed as
-an ASCII control character, seems like it gets escaped now.
-
-But we probably shouldn't print something from a random register.
-
-Add a separate "melfas,mms345l" compatible that avoids reading
-from the MMS152_COMPAT_GROUP register. This might also help in case
-there is some other device-specific quirk in the future.
-
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-clk@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
-Adding an extra compatible just for a log message that looks weird
-might be a bit exaggerated, I'm not sure. But so far I got the impression
-that it's better to add separate compatibles if devices behave slightly
-different (in case more differences are discovered later).
+ .../devicetree/bindings/clock/qcom,gcc.yaml   |   3 +
+ include/dt-bindings/clock/qcom,gcc-msm8939.h  | 179 ++++++++++++++++++
+ include/dt-bindings/reset/qcom,gcc-msm8939.h  | 100 ++++++++++
+ 3 files changed, 282 insertions(+)
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8939.h
+ create mode 100644 include/dt-bindings/reset/qcom,gcc-msm8939.h
 
-Alternatively we could also:
-
-  - Remove the "Compat group:" from the log message
-    (I'm not sure how useful it is since it's just printed but nothing
-     is done with it...)
-
-  - Just accept that we might be reading from some invalid register
-    on MMS345L (It doesn't seem to affect functionality at the moment...)
-
-I just thought we should discuss this before I upstream the patch
-that adds the touchscreen to the device tree of my board.
----
- drivers/input/touchscreen/mms114.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/input/touchscreen/mms114.c b/drivers/input/touchscreen/mms114.c
-index 2ef1adaed9af..5bdf4ac1a303 100644
---- a/drivers/input/touchscreen/mms114.c
-+++ b/drivers/input/touchscreen/mms114.c
-@@ -54,6 +54,7 @@
- enum mms_type {
- 	TYPE_MMS114	= 114,
- 	TYPE_MMS152	= 152,
-+	TYPE_MMS345L	= 345,
- };
- 
- struct mms114_data {
-@@ -250,6 +251,15 @@ static int mms114_get_version(struct mms114_data *data)
- 	int error;
- 
- 	switch (data->type) {
-+	case TYPE_MMS345L:
-+		error = __mms114_read_reg(data, MMS152_FW_REV, 3, buf);
-+		if (error)
-+			return error;
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+index e533bb0cfd2b..ee0467fb5e31 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+@@ -22,6 +22,8 @@ description: |
+   - dt-bindings/reset/qcom,gcc-ipq6018.h
+   - dt-bindings/clock/qcom,gcc-ipq806x.h (qcom,gcc-ipq8064)
+   - dt-bindings/reset/qcom,gcc-ipq806x.h (qcom,gcc-ipq8064)
++  - dt-bindings/clock/qcom,gcc-msm8939.h
++  - dt-bindings/reset/qcom,gcc-msm8939.h
+   - dt-bindings/clock/qcom,gcc-msm8660.h
+   - dt-bindings/reset/qcom,gcc-msm8660.h
+   - dt-bindings/clock/qcom,gcc-msm8974.h
+@@ -41,6 +43,7 @@ properties:
+       - qcom,gcc-ipq8064
+       - qcom,gcc-msm8660
+       - qcom,gcc-msm8916
++      - qcom,gcc-msm8939
+       - qcom,gcc-msm8960
+       - qcom,gcc-msm8974
+       - qcom,gcc-msm8974pro
+diff --git a/include/dt-bindings/clock/qcom,gcc-msm8939.h b/include/dt-bindings/clock/qcom,gcc-msm8939.h
+new file mode 100644
+index 000000000000..e792ef049fc8
+--- /dev/null
++++ b/include/dt-bindings/clock/qcom,gcc-msm8939.h
+@@ -0,0 +1,179 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * Copyright 2020 Linaro Limited
++ */
 +
-+		dev_info(dev, "TSP FW Rev: bootloader 0x%x / core 0x%x / config 0x%x\n",
-+			 buf[0], buf[1], buf[2]);
-+		break;
++#ifndef _DT_BINDINGS_CLK_MSM_GCC_8939_H
++#define _DT_BINDINGS_CLK_MSM_GCC_8939_H
 +
- 	case TYPE_MMS152:
- 		error = __mms114_read_reg(data, MMS152_FW_REV, 3, buf);
- 		if (error)
-@@ -287,8 +297,8 @@ static int mms114_setup_regs(struct mms114_data *data)
- 	if (error < 0)
- 		return error;
- 
--	/* MMS152 has no configuration or power on registers */
--	if (data->type == TYPE_MMS152)
-+	/* Only MMS114 has configuration and power on registers */
-+	if (data->type != TYPE_MMS114)
- 		return 0;
- 
- 	error = mms114_set_active(data, true);
-@@ -597,6 +607,9 @@ static const struct of_device_id mms114_dt_match[] = {
- 	}, {
- 		.compatible = "melfas,mms152",
- 		.data = (void *)TYPE_MMS152,
-+	}, {
-+		.compatible = "melfas,mms345l",
-+		.data = (void *)TYPE_MMS345L,
- 	},
- 	{ }
- };
++#define GPLL0					0
++#define GPLL0_VOTE				1
++#define BIMC_PLL				2
++#define BIMC_PLL_VOTE				3
++#define GPLL1					4
++#define GPLL1_VOTE				5
++#define GPLL2					6
++#define GPLL2_VOTE				7
++#define PCNOC_BFDCD_CLK_SRC			8
++#define SYSTEM_NOC_BFDCD_CLK_SRC		9
++#define CAMSS_AHB_CLK_SRC			10
++#define APSS_AHB_CLK_SRC			11
++#define CSI0_CLK_SRC				12
++#define CSI1_CLK_SRC				13
++#define GFX3D_CLK_SRC				14
++#define VFE0_CLK_SRC				15
++#define BLSP1_QUP1_I2C_APPS_CLK_SRC		16
++#define BLSP1_QUP1_SPI_APPS_CLK_SRC		17
++#define BLSP1_QUP2_I2C_APPS_CLK_SRC		18
++#define BLSP1_QUP2_SPI_APPS_CLK_SRC		19
++#define BLSP1_QUP3_I2C_APPS_CLK_SRC		20
++#define BLSP1_QUP3_SPI_APPS_CLK_SRC		21
++#define BLSP1_QUP4_I2C_APPS_CLK_SRC		22
++#define BLSP1_QUP4_SPI_APPS_CLK_SRC		23
++#define BLSP1_QUP5_I2C_APPS_CLK_SRC		24
++#define BLSP1_QUP5_SPI_APPS_CLK_SRC		25
++#define BLSP1_QUP6_I2C_APPS_CLK_SRC		26
++#define BLSP1_QUP6_SPI_APPS_CLK_SRC		27
++#define BLSP1_UART1_APPS_CLK_SRC		28
++#define BLSP1_UART2_APPS_CLK_SRC		29
++#define CCI_CLK_SRC				30
++#define CAMSS_GP0_CLK_SRC			31
++#define CAMSS_GP1_CLK_SRC			32
++#define JPEG0_CLK_SRC				33
++#define MCLK0_CLK_SRC				34
++#define MCLK1_CLK_SRC				35
++#define CSI0PHYTIMER_CLK_SRC			36
++#define CSI1PHYTIMER_CLK_SRC			37
++#define CPP_CLK_SRC				38
++#define CRYPTO_CLK_SRC				39
++#define GP1_CLK_SRC				40
++#define GP2_CLK_SRC				41
++#define GP3_CLK_SRC				42
++#define BYTE0_CLK_SRC				43
++#define ESC0_CLK_SRC				44
++#define MDP_CLK_SRC				45
++#define PCLK0_CLK_SRC				46
++#define VSYNC_CLK_SRC				47
++#define PDM2_CLK_SRC				48
++#define SDCC1_APPS_CLK_SRC			49
++#define SDCC2_APPS_CLK_SRC			50
++#define APSS_TCU_CLK_SRC			51
++#define USB_HS_SYSTEM_CLK_SRC			52
++#define VCODEC0_CLK_SRC				53
++#define GCC_BLSP1_AHB_CLK			54
++#define GCC_BLSP1_SLEEP_CLK			55
++#define GCC_BLSP1_QUP1_I2C_APPS_CLK		56
++#define GCC_BLSP1_QUP1_SPI_APPS_CLK		57
++#define GCC_BLSP1_QUP2_I2C_APPS_CLK		58
++#define GCC_BLSP1_QUP2_SPI_APPS_CLK		59
++#define GCC_BLSP1_QUP3_I2C_APPS_CLK		60
++#define GCC_BLSP1_QUP3_SPI_APPS_CLK		61
++#define GCC_BLSP1_QUP4_I2C_APPS_CLK		62
++#define GCC_BLSP1_QUP4_SPI_APPS_CLK		63
++#define GCC_BLSP1_QUP5_I2C_APPS_CLK		64
++#define GCC_BLSP1_QUP5_SPI_APPS_CLK		65
++#define GCC_BLSP1_QUP6_I2C_APPS_CLK		66
++#define GCC_BLSP1_QUP6_SPI_APPS_CLK		67
++#define GCC_BLSP1_UART1_APPS_CLK		68
++#define GCC_BLSP1_UART2_APPS_CLK		69
++#define GCC_BOOT_ROM_AHB_CLK			70
++#define GCC_CAMSS_CCI_AHB_CLK			71
++#define GCC_CAMSS_CCI_CLK			72
++#define GCC_CAMSS_CSI0_AHB_CLK			73
++#define GCC_CAMSS_CSI0_CLK			74
++#define GCC_CAMSS_CSI0PHY_CLK			75
++#define GCC_CAMSS_CSI0PIX_CLK			76
++#define GCC_CAMSS_CSI0RDI_CLK			77
++#define GCC_CAMSS_CSI1_AHB_CLK			78
++#define GCC_CAMSS_CSI1_CLK			79
++#define GCC_CAMSS_CSI1PHY_CLK			80
++#define GCC_CAMSS_CSI1PIX_CLK			81
++#define GCC_CAMSS_CSI1RDI_CLK			82
++#define GCC_CAMSS_CSI_VFE0_CLK			83
++#define GCC_CAMSS_GP0_CLK			84
++#define GCC_CAMSS_GP1_CLK			85
++#define GCC_CAMSS_ISPIF_AHB_CLK			86
++#define GCC_CAMSS_JPEG0_CLK			87
++#define GCC_CAMSS_JPEG_AHB_CLK			88
++#define GCC_CAMSS_JPEG_AXI_CLK			89
++#define GCC_CAMSS_MCLK0_CLK			90
++#define GCC_CAMSS_MCLK1_CLK			91
++#define GCC_CAMSS_MICRO_AHB_CLK			92
++#define GCC_CAMSS_CSI0PHYTIMER_CLK		93
++#define GCC_CAMSS_CSI1PHYTIMER_CLK		94
++#define GCC_CAMSS_AHB_CLK			95
++#define GCC_CAMSS_TOP_AHB_CLK			96
++#define GCC_CAMSS_CPP_AHB_CLK			97
++#define GCC_CAMSS_CPP_CLK			98
++#define GCC_CAMSS_VFE0_CLK			99
++#define GCC_CAMSS_VFE_AHB_CLK			100
++#define GCC_CAMSS_VFE_AXI_CLK			101
++#define GCC_CRYPTO_AHB_CLK			102
++#define GCC_CRYPTO_AXI_CLK			103
++#define GCC_CRYPTO_CLK				104
++#define GCC_OXILI_GMEM_CLK			105
++#define GCC_GP1_CLK				106
++#define GCC_GP2_CLK				107
++#define GCC_GP3_CLK				108
++#define GCC_MDSS_AHB_CLK			109
++#define GCC_MDSS_AXI_CLK			110
++#define GCC_MDSS_BYTE0_CLK			111
++#define GCC_MDSS_ESC0_CLK			112
++#define GCC_MDSS_MDP_CLK			113
++#define GCC_MDSS_PCLK0_CLK			114
++#define GCC_MDSS_VSYNC_CLK			115
++#define GCC_MSS_CFG_AHB_CLK			116
++#define GCC_OXILI_AHB_CLK			117
++#define GCC_OXILI_GFX3D_CLK			118
++#define GCC_PDM2_CLK				119
++#define GCC_PDM_AHB_CLK				120
++#define GCC_PRNG_AHB_CLK			121
++#define GCC_SDCC1_AHB_CLK			122
++#define GCC_SDCC1_APPS_CLK			123
++#define GCC_SDCC2_AHB_CLK			124
++#define GCC_SDCC2_APPS_CLK			125
++#define GCC_GTCU_AHB_CLK			126
++#define GCC_JPEG_TBU_CLK			127
++#define GCC_MDP_TBU_CLK				128
++#define GCC_SMMU_CFG_CLK			129
++#define GCC_VENUS_TBU_CLK			130
++#define GCC_VFE_TBU_CLK				131
++#define GCC_USB2A_PHY_SLEEP_CLK			132
++#define GCC_USB_HS_AHB_CLK			133
++#define GCC_USB_HS_SYSTEM_CLK			134
++#define GCC_VENUS0_AHB_CLK			135
++#define GCC_VENUS0_AXI_CLK			136
++#define GCC_VENUS0_VCODEC0_CLK			137
++#define BIMC_DDR_CLK_SRC			138
++#define GCC_APSS_TCU_CLK			139
++#define GCC_GFX_TCU_CLK				140
++#define BIMC_GPU_CLK_SRC			141
++#define GCC_BIMC_GFX_CLK			142
++#define GCC_BIMC_GPU_CLK			143
++#define ULTAUDIO_LPAIF_PRI_I2S_CLK_SRC		144
++#define ULTAUDIO_LPAIF_SEC_I2S_CLK_SRC		145
++#define ULTAUDIO_LPAIF_AUX_I2S_CLK_SRC		146
++#define ULTAUDIO_XO_CLK_SRC			147
++#define ULTAUDIO_AHBFABRIC_CLK_SRC		148
++#define CODEC_DIGCODEC_CLK_SRC			149
++#define GCC_ULTAUDIO_PCNOC_MPORT_CLK		150
++#define GCC_ULTAUDIO_PCNOC_SWAY_CLK		151
++#define GCC_ULTAUDIO_AVSYNC_XO_CLK		152
++#define GCC_ULTAUDIO_STC_XO_CLK			153
++#define GCC_ULTAUDIO_AHBFABRIC_IXFABRIC_CLK	154
++#define GCC_ULTAUDIO_AHBFABRIC_IXFABRIC_LPM_CLK	155
++#define GCC_ULTAUDIO_LPAIF_PRI_I2S_CLK		156
++#define GCC_ULTAUDIO_LPAIF_SEC_I2S_CLK		157
++#define GCC_ULTAUDIO_LPAIF_AUX_I2S_CLK		158
++#define GCC_CODEC_DIGCODEC_CLK			159
++#define GCC_MSS_Q6_BIMC_AXI_CLK			160
++
++/* Indexes for GDSCs */
++#define BIMC_GDSC				0
++#define VENUS_GDSC				1
++#define MDSS_GDSC				2
++#define JPEG_GDSC				3
++#define VFE_GDSC				4
++#define OXILI_GDSC				5
++
++#endif
+diff --git a/include/dt-bindings/reset/qcom,gcc-msm8939.h b/include/dt-bindings/reset/qcom,gcc-msm8939.h
+new file mode 100644
+index 000000000000..6e79caff552c
+--- /dev/null
++++ b/include/dt-bindings/reset/qcom,gcc-msm8939.h
+@@ -0,0 +1,100 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * Copyright 2020 Linaro Limited
++ */
++
++#ifndef _DT_BINDINGS_RESET_MSM_GCC_8939_H
++#define _DT_BINDINGS_RESET_MSM_GCC_8939_H
++
++#define GCC_BLSP1_BCR			0
++#define GCC_BLSP1_QUP1_BCR		1
++#define GCC_BLSP1_UART1_BCR		2
++#define GCC_BLSP1_QUP2_BCR		3
++#define GCC_BLSP1_UART2_BCR		4
++#define GCC_BLSP1_QUP3_BCR		5
++#define GCC_BLSP1_QUP4_BCR		6
++#define GCC_BLSP1_QUP5_BCR		7
++#define GCC_BLSP1_QUP6_BCR		8
++#define GCC_IMEM_BCR			9
++#define GCC_SMMU_BCR			10
++#define GCC_APSS_TCU_BCR		11
++#define GCC_SMMU_XPU_BCR		12
++#define GCC_PCNOC_TBU_BCR		13
++#define GCC_PRNG_BCR			14
++#define GCC_BOOT_ROM_BCR		15
++#define GCC_CRYPTO_BCR			16
++#define GCC_SEC_CTRL_BCR		17
++#define GCC_AUDIO_CORE_BCR		18
++#define GCC_ULT_AUDIO_BCR		19
++#define GCC_DEHR_BCR			20
++#define GCC_SYSTEM_NOC_BCR		21
++#define GCC_PCNOC_BCR			22
++#define GCC_TCSR_BCR			23
++#define GCC_QDSS_BCR			24
++#define GCC_DCD_BCR			25
++#define GCC_MSG_RAM_BCR			26
++#define GCC_MPM_BCR			27
++#define GCC_SPMI_BCR			28
++#define GCC_SPDM_BCR			29
++#define GCC_MM_SPDM_BCR			30
++#define GCC_BIMC_BCR			31
++#define GCC_RBCPR_BCR			32
++#define GCC_TLMM_BCR			33
++#define GCC_USB_HS_BCR			34
++#define GCC_USB2A_PHY_BCR		35
++#define GCC_SDCC1_BCR			36
++#define GCC_SDCC2_BCR			37
++#define GCC_PDM_BCR			38
++#define GCC_SNOC_BUS_TIMEOUT0_BCR	39
++#define GCC_PCNOC_BUS_TIMEOUT0_BCR	40
++#define GCC_PCNOC_BUS_TIMEOUT1_BCR	41
++#define GCC_PCNOC_BUS_TIMEOUT2_BCR	42
++#define GCC_PCNOC_BUS_TIMEOUT3_BCR	43
++#define GCC_PCNOC_BUS_TIMEOUT4_BCR	44
++#define GCC_PCNOC_BUS_TIMEOUT5_BCR	45
++#define GCC_PCNOC_BUS_TIMEOUT6_BCR	46
++#define GCC_PCNOC_BUS_TIMEOUT7_BCR	47
++#define GCC_PCNOC_BUS_TIMEOUT8_BCR	48
++#define GCC_PCNOC_BUS_TIMEOUT9_BCR	49
++#define GCC_MMSS_BCR			50
++#define GCC_VENUS0_BCR			51
++#define GCC_MDSS_BCR			52
++#define GCC_CAMSS_PHY0_BCR		53
++#define GCC_CAMSS_CSI0_BCR		54
++#define GCC_CAMSS_CSI0PHY_BCR		55
++#define GCC_CAMSS_CSI0RDI_BCR		56
++#define GCC_CAMSS_CSI0PIX_BCR		57
++#define GCC_CAMSS_PHY1_BCR		58
++#define GCC_CAMSS_CSI1_BCR		59
++#define GCC_CAMSS_CSI1PHY_BCR		60
++#define GCC_CAMSS_CSI1RDI_BCR		61
++#define GCC_CAMSS_CSI1PIX_BCR		62
++#define GCC_CAMSS_ISPIF_BCR		63
++#define GCC_CAMSS_CCI_BCR		64
++#define GCC_CAMSS_MCLK0_BCR		65
++#define GCC_CAMSS_MCLK1_BCR		66
++#define GCC_CAMSS_GP0_BCR		67
++#define GCC_CAMSS_GP1_BCR		68
++#define GCC_CAMSS_TOP_BCR		69
++#define GCC_CAMSS_MICRO_BCR		70
++#define GCC_CAMSS_JPEG_BCR		71
++#define GCC_CAMSS_VFE_BCR		72
++#define GCC_CAMSS_CSI_VFE0_BCR		73
++#define GCC_OXILI_BCR			74
++#define GCC_GMEM_BCR			75
++#define GCC_CAMSS_AHB_BCR		76
++#define GCC_MDP_TBU_BCR			77
++#define GCC_GFX_TBU_BCR			78
++#define GCC_GFX_TCU_BCR			79
++#define GCC_MSS_TBU_AXI_BCR		80
++#define GCC_MSS_TBU_GSS_AXI_BCR		81
++#define GCC_MSS_TBU_Q6_AXI_BCR		82
++#define GCC_GTCU_AHB_BCR		83
++#define GCC_SMMU_CFG_BCR		84
++#define GCC_VFE_TBU_BCR			85
++#define GCC_VENUS_TBU_BCR		86
++#define GCC_JPEG_TBU_BCR		87
++#define GCC_PRONTO_TBU_BCR		88
++#define GCC_SMMU_CATS_BCR		89
++
++#endif
 -- 
-2.26.2
+2.25.1
 
