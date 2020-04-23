@@ -2,200 +2,159 @@ Return-Path: <SRS0=8VFN=6H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C974EC55186
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 08:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9876DC55192
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 09:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7AC621582
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 08:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7713C217BA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Apr 2020 09:31:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="J4rMPyEu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r2VXwUE9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725854AbgDWIMW (ORCPT
+        id S1725884AbgDWJbQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Apr 2020 04:12:22 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:37406 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726122AbgDWIMV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Apr 2020 04:12:21 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03N88G59031061;
-        Thu, 23 Apr 2020 10:12:07 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=lnLyhFkF5Kttua+5xE5VipgRM0EklZuvKl52ZMG1pu0=;
- b=J4rMPyEuKrGJ9UDO/aFTHrgID1JgAT0AfVKMA8mllKBEI3ApI300UxBfR85D/Bjvpxmn
- W979/bMwTyZmE4aVbVLQusLaH8uA9ZXzvqVwkl44zOKlsE4OepzRc7AWnFD6Qbl94eFa
- ohbS/QwmYpHBGlu1oVidkKc82Iq2ajY+fgOykq18kSTc7j/HK3mLL0NFqZ0nRbe2sWM2
- AyVgMSqUGARYgHDjyIVxGkHLFkeVsBecKqnmDcCbsXNSrmjBpsNpFsBWSCzJkW9V+bk/
- Aa9Q+cZTAaBxSU+DlKtvAUQ0FceNtz2btH6gn7pZmaeCMDB1fL5hSgTMZJOG23s/jckk aQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30fq11ud7k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Apr 2020 10:12:07 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6EDDC100038;
-        Thu, 23 Apr 2020 10:12:05 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5C9672AD2B8;
-        Thu, 23 Apr 2020 10:12:05 +0200 (CEST)
-Received: from lmecxl0923.lme.st.com (10.75.127.44) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Apr
- 2020 10:12:04 +0200
-Subject: Re: [PATCH] mmc: mmci_sdmmc: fix power on issue due to pwr_reg
- initialization
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20200420161831.5043-1-ludovic.barre@st.com>
- <CAPDyKFqC3fdnQ9CMYhS-=5MiCET=r5Az2S5oFoA2v1gdDeGO3w@mail.gmail.com>
- <CAPDyKFrHcoVd=GKPB70gOFE8STOnTJrJbcZzE_DEgFWh1Vhszg@mail.gmail.com>
- <1d9cefd1-aaed-1eb5-92f2-b1f45b4da2ac@st.com>
- <CAPDyKFpri4VBnH9nbqUa4L=3o_h+fSZ052v7AG_9MhJX2gKgCQ@mail.gmail.com>
-From:   Ludovic BARRE <ludovic.barre@st.com>
-Message-ID: <96725b28-fa19-54f0-7ba7-2043098a24a5@st.com>
-Date:   Thu, 23 Apr 2020 10:12:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 23 Apr 2020 05:31:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbgDWJbQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Apr 2020 05:31:16 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2695C08E934
+        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 02:31:15 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id z6so5793568wml.2
+        for <devicetree@vger.kernel.org>; Thu, 23 Apr 2020 02:31:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=O26z6wOk23INqulcDtAkwlfLrc079plGrt7LpzYNlIM=;
+        b=r2VXwUE9Svk3QiEBGBKAWJ8Cm5d65tBjhNru6zO9YbS+FD8b1nlIRR1fG26t5GxpFk
+         FJ8QWdlgJVHqPw5m4NSaWw29OStIwP298O3wnZ+Y7YfDnmo7Wu0jwAHlrNsENex6RpKa
+         OG2iKzQnglKldPkctBNoK1foc0IdklQ/7f6Pe3AvoTCUEKQeR8HCJR+D/LVVB4eC//bC
+         HAwjmbpaoEBsuIi8mUfNEWYu/GQrNrb2TiUJWi/kaY+7OP0RL2GqQdnQKIYmjk3R6MzR
+         MMLRo4yNCT38fmrGxw5FQcMNbmBJN3e+y5sdszlEu/59Mpsu0cP0MRBFb2CkVSq1S1o2
+         0Ljg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=O26z6wOk23INqulcDtAkwlfLrc079plGrt7LpzYNlIM=;
+        b=dH3ZlTsnQ6hFTMb3HRqZRNMdZEnzX4RrSCBicGIcw0ZTpydzxbLIXXw2UW6+E9hIBX
+         ghwgNkujU/DmfGS+hBELDjGnhQnyQX4Qkiaa1TT/itYMj9cmsVBDqWXICaSPr2vPhkWD
+         p+t/nSSAqONH6PzX+Q9+nFw/75iw1x1IHgR6ypx7rpfyGlX2FpT06MOhcaU88kw4u9+h
+         WOPLYfXnxOGdxjcjDzCUxB5Fr4h0QtDGn0UtPJR+HxmvFwrMa1ygIkMhmx8/UnqhBQyP
+         5yWZoDnofv7TsI03FULtQpKukQa+Z8f3cZqDteGGuLdppwnaEBdt6jW0QMlbia5foXvO
+         DtQw==
+X-Gm-Message-State: AGi0PuZkPoTaYhtaiNWcSIAN7R/X3HJNNV4dCA5FOynBfs1QnadLuqpv
+        JoJL/QoJhmbWA5qfy6SPRizDuw==
+X-Google-Smtp-Source: APiQypKq50R8cweRl+GxccEmBu6i9qOFRnn+sD3w+viq7DNxgjg+A6RewEEgPj/G9AjZ5NSRpoz1Sg==
+X-Received: by 2002:a1c:ac44:: with SMTP id v65mr3192173wme.33.1587634273995;
+        Thu, 23 Apr 2020 02:31:13 -0700 (PDT)
+Received: from [192.168.0.136] ([87.120.218.65])
+        by smtp.googlemail.com with ESMTPSA id o7sm2703512wmh.46.2020.04.23.02.31.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 Apr 2020 02:31:13 -0700 (PDT)
+Subject: Re: [PATCH V4 2/9] interconnect: Set peak requirement as twice of
+ average
+To:     Akash Asthana <akashast@codeaurora.org>, broonie@kernel.org
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, mka@chromium.org,
+        dianders@chromium.org, evgreen@chromium.org,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Mike Tipton <mdtipton@codeaurora.org>,
+        Sean Sweeney <seansw@qti.qualcomm.com>
+References: <1586946198-13912-1-git-send-email-akashast@codeaurora.org>
+ <1586946198-13912-3-git-send-email-akashast@codeaurora.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <58b91dc1-6ce3-49b8-88c8-259be9af1dbd@linaro.org>
+Date:   Thu, 23 Apr 2020 12:31:11 +0300
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFpri4VBnH9nbqUa4L=3o_h+fSZ052v7AG_9MhJX2gKgCQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-23_06:2020-04-22,2020-04-23 signatures=0
+In-Reply-To: <1586946198-13912-3-git-send-email-akashast@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Akash,
 
+On 4/15/20 13:23, Akash Asthana wrote:
+> Lot of ICC clients are not aware of their actual peak requirement,
+> most commonly they tend to guess their peak requirement as
+> (some factor) * avg_bw.
+> 
+> Centralize random peak guess as twice of average, out into the core
+> to maintain consistency across the clients. Client can always
+> override this setting if they got a better idea.
 
-Le 4/22/20 à 6:03 PM, Ulf Hansson a écrit :
-> On Wed, 22 Apr 2020 at 15:40, Ludovic BARRE <ludovic.barre@st.com> wrote:
->>
->> hi Ulf
->>
->> Le 4/21/20 à 11:38 AM, Ulf Hansson a écrit :
->>> On Tue, 21 Apr 2020 at 11:25, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->>>>
->>>> On Mon, 20 Apr 2020 at 18:18, Ludovic Barre <ludovic.barre@st.com> wrote:
->>>>>
->>>>> This patch fix a power-on issue, and avoid to retry the power sequence.
->>>>>
->>>>> In power off sequence: sdmmc must set pwr_reg in "power-cycle" state
->>>>> (value 0x2), to prevent the card from being supplied through the signal
->>>>> lines (all the lines are driven low).
->>>>>
->>>>> In power on sequence: when the power is stable, sdmmc must set pwr_reg
->>>>> in "power-off" state (value 0x0) to drive all signal to high before to
->>>>> set "power-on".
->>>>
->>>> Just a question to gain further understanding.
->>>>
->>>> Let's assume that the controller is a power-on state, because it's
->>>> been initialized by the boot loader. When the mmc core then starts the
->>>> power-on sequence (not doing a power-off first), would $subject patch
->>>> then cause the
->>>> MMCIPOWER to remain as is, or is it going to be overwritten?
->>
->> On sdmmc controller, the PWRCTRL[1:0] field of MMCIPOWER register allow
->> to manage sd lines and has a specific bahavior.
->>
->> PWRCTRL value:
->>    - 0x0: After reset, Reset: the SDMMC is disabled and the clock to the
->>           Card is stopped, SDMMC_D[7:0], and SDMMC_CMD are HiZ and
->>           SDMMC_CK is driven low.
->>           When written 00, power-off: the SDMMC is disabled and the clock
->>           to the card is stopped, SDMMC_D[7:0], SDMMC_CMD and SDMMC_CK
->>           are driven high.
->>
->>    - 0x2: Power-cycle, the SDMMC is disabled and the clock to the card is
->>           stopped, SDMMC_D[7:0], SDMMC_CMD and SDMMC_CK are driven low.
->>
->>    - 0x3: Power-on: the card is clocked, The first 74 SDMMC_CK cycles the
->>           SDMMC is still disabled. After the 74 cycles the SDMMC is
->>           enabled and the SDMMC_D[7:0], SDMMC_CMD and SDMMC_CK are
->>           controlled according the SDMMC operation.
->>           **Any further write will be ignored, PWRCTRL value
->>           will keep 0x3**. when the SDMMC is ON (0x3) only a reset could
->>           change pwrctrl value and the state of sdmmc lines.
->>
->> So if the lines are already "ON", the power-on sequence (decribed in
->> commit message) not overwrite the pwctrl field and not disturb the sdmmc
->> lines.
-> 
-> Thanks for the detailed information, much appreciated!
-> 
->>
->>>>
->>>> I am a little worried that we may start to rely on boot loader
->>>> conditions, which isn't really what we want either...
->>>>
->>
->> We not depend of boot loader conditions.
->>
->> This patch simply allows to drive high the sd lines before to set
->> "power-on" value (no effect if already power ON).
-> 
-> Yep, thanks!
-> 
->>
->>>>>
->>>>> To avoid writing the same value to the power register several times, this
->>>>> register is cached by the pwr_reg variable. At probe pwr_reg is initialized
->>>>> to 0 by kzalloc of mmc_alloc_host.
->>>>>
->>>>> Like pwr_reg value is 0 at probing, the power on sequence fail because
->>>>> the "power-off" state is not writes (value 0x0) and the lines
->>>>> remain drive to low.
->>>>>
->>>>> This patch initializes "pwr_reg" variable with power register value.
->>>>> This it done in sdmmc variant init to not disturb default mmci behavior.
->>>>>
->>>>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
->>>>
->>>> Besides the comment, the code and the approach seems reasonable to me.
->>>
->>> Another related question. I just realized why you probably haven't set
->>> .pwrreg_nopower for the variant_stm32_sdmmc and variant_stm32_sdmmcv2.
->>>
->>> I guess it's because you need a slightly different way to restore the
->>> context of MMCIPOWER register at ->runtime_resume(), rather than just
->>> re-writing it with the saved register values. Is this something that
->>> you are looking into as well?
->>
->> Yes exactly, the sequence is slightly different. I can't write 0 on
->> mmci_runtime_suspend, and can't just re-writing the saved register.
-> 
-> So, it seems like you need to use the ->set_ios() callback, to
-> re-configure the controller correctly.
-> 
-> Just tell if you need more help to make that work, otherwise I am here
-> to review your patches.
-> 
-> In regards to $subject patch, I have applied it for next, thanks!
+I am still not convinced that this is a good idea. If the factor is a random
+value, then i think that the default factor should be 1.
 
-Thanks for your review.
-Have a nice day.
+According to your previous reply, it seems that from geni we are requesting
+double peak bandwidth to compensate for other clients which are not requesting
+bandwidth for themselves. IMO, this is a bit hacky.
 
-> 
-> Kind regards
-> Uffe
-> 
+Instead of requesting double peak bandwidth, IIUC the correct thing to do here
+is to request peak_bw = avg_bw for geni. And instead of trying to compensate for
+other clients "stealing" bandwidth, can't we make these clients vote for their
+own bandwidth? Or if they really can't, this should be handled elsewhere - maybe
+in the interconnect platform driver we can reserve some amount of minimum
+bandwidth for such cases?
+
+Thanks,
+Georgi
