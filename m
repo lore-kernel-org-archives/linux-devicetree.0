@@ -2,86 +2,137 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C871C2BA1A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 09:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 761D0C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 09:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27B0E2076C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 09:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 503442074F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 09:37:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E+H+PKEW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgDXJc3 (ORCPT
+        id S1726813AbgDXJhZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 05:32:29 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:49362 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbgDXJc3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 05:32:29 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 9E5541C0223; Fri, 24 Apr 2020 11:32:27 +0200 (CEST)
-Date:   Fri, 24 Apr 2020 11:32:26 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Ian Ray <ian.ray@ge.com>, Samu Nuutamo <samu.nuutamo@vincit.fi>
-Subject: Re: [PATCH] ARM: dts: imx53: ppd: alarm LEDs use kernel LED interface
-Message-ID: <20200424093226.GB2647@amd>
-References: <20200416145123.73039-1-sebastian.reichel@collabora.com>
+        Fri, 24 Apr 2020 05:37:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53274 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726298AbgDXJhY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Apr 2020 05:37:24 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FB82C09B046
+        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 02:37:24 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id r26so9950396wmh.0
+        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 02:37:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=lpgfeCztxAhzxjhQqiFZc+a2M7I9kDIUKtebW9THuHo=;
+        b=E+H+PKEWckalgAUrAxfA2tUr4Dr5zRoWeGzskBy6H53BglCw3eP155NoYhsC7jdQiI
+         qluFEhKpQ+DSHSzqLqSZMeD0k14RwoB+SUuhVdhR8jgyw4gXACOPaWr9XutcMcLuLel3
+         8WZxlynNH7qJd0BspwLL1sYeTrHFFu3a76G+RdF7obaS1pLM1DSCbMFbNY9dK4EZ5ymT
+         tlnH/ERsB9TegNHu+KfzIuiJdzFqqCnkwQ8PTxfEGIX3McYJjbN7mZF6m5rNJlKz3aGn
+         ZTeNp7OtPikPXwo7ZqOKDOi+bqkFqVzNR4szarGXzmGI+oivP5a8mWF6fMD7ByBzQbzj
+         15Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=lpgfeCztxAhzxjhQqiFZc+a2M7I9kDIUKtebW9THuHo=;
+        b=aJb2QKLTytc6ftD0fY3/HhIVXnaCerdx779Nkp+Xcc60TxXAKpQVSPTnrkJVkDi+Jq
+         MVQNAjPxXtN5AkbcLRtvLZkWkR5++Lm4Z4ymsmmrv0Sg4tnTiV8JrGi5Sm6ilnKYpVZB
+         iFVaWFVWymD4c47Ymb938s72SveSBogZkmyWg8R6BDkcAsRl43ef77fhjdy5xJELAfPd
+         YSihDHHXi52vzVykRKq9SS/WniTHvwhSHgGsZ8YleA2x04gXwGUNx6pgubPwTXFcMLXM
+         VrDGFw/pn7cLL56KdGeoH0ZNAbxIid6T+ujTy8HZp6owSfwmHK8yWnjAj6mhk7mg6RIX
+         eudQ==
+X-Gm-Message-State: AGi0PuYGkvS+KSVVtIqRV86hofYhd1kUf7i+HzY2UPKpl7+e7BdkzqGs
+        7aHYpsVBFqjyRXXEIkWZGB3l5g==
+X-Google-Smtp-Source: APiQypIP711LckL5LI1ubR6GN3OUzUAydpJDOVRvnJ3Nw6MpHq29JuuPonguAQ22PujRITptpK9QEA==
+X-Received: by 2002:a7b:c213:: with SMTP id x19mr8902459wmi.53.1587721043049;
+        Fri, 24 Apr 2020 02:37:23 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id a7sm2062330wmj.12.2020.04.24.02.37.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2020 02:37:22 -0700 (PDT)
+Date:   Fri, 24 Apr 2020 10:37:20 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     saravanan sekar <sravanhome@gmail.com>
+Cc:     andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        sre@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v9 2/6] mfd: mp2629: Add support for mps battery charger
+Message-ID: <20200424093720.GA3542@dell>
+References: <20200415162030.16414-1-sravanhome@gmail.com>
+ <20200415162030.16414-3-sravanhome@gmail.com>
+ <20200424071822.GM3612@dell>
+ <8ff17d07-8030-fcfe-8d8a-3011e4077778@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="f2QGlHpHGjS2mn6Y"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200416145123.73039-1-sebastian.reichel@collabora.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8ff17d07-8030-fcfe-8d8a-3011e4077778@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, 24 Apr 2020, saravanan sekar wrote:
 
---f2QGlHpHGjS2mn6Y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Hi Lee,
+> 
+> On 24/04/20 9:18 am, Lee Jones wrote:
+> > On Wed, 15 Apr 2020, Saravanan Sekar wrote:
+> > 
+> > > mp2629 is a highly-integrated switching-mode battery charge management
+> > > device for single-cell Li-ion or Li-polymer battery.
+> > > 
+> > > Add MFD core enables chip access for ADC driver for battery readings,
+> > > and a power supply battery-charger driver
+> > > 
+> > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> > > ---
+> > >   drivers/mfd/Kconfig        |  9 ++++
+> > >   drivers/mfd/Makefile       |  2 +
+> > >   drivers/mfd/mp2629.c       | 86 ++++++++++++++++++++++++++++++++++++++
+> > >   include/linux/mfd/mp2629.h | 19 +++++++++
+> > >   4 files changed, 116 insertions(+)
+> > >   create mode 100644 drivers/mfd/mp2629.c
+> > >   create mode 100644 include/linux/mfd/mp2629.h
+> > How is this driver registered?
+> > 
+> > Looks like it has device tree support.  Is there another way?
+> Yes, only using device tree
 
-On Thu 2020-04-16 16:51:23, Sebastian Reichel wrote:
-> From: Ian Ray <ian.ray@ge.com>
->=20
-> Use kernel LED interface for the alarm LEDs.
+Then how about using 'simple-mfd' and 'syscon'?
 
-Could we get these changes cced to LED maintainers?
+Then you can omit this driver completely.
 
-> +		alarm1 {
-> +			label =3D "alarm:red";
-> +			gpios =3D <&gpio7 3 GPIO_ACTIVE_HIGH>;
-> +		};
+> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > > index 3c547ed575e6..85be799795aa 100644
+> > > --- a/drivers/mfd/Kconfig
+> > > +++ b/drivers/mfd/Kconfig
+> > > @@ -434,6 +434,15 @@ config MFD_MC13XXX_I2C
+> > >   	help
+> > >   	  Select this if your MC13xxx is connected via an I2C bus.
+> > > +config MFD_MP2629
+> > > +	tristate "Monolithic power system MP2629 ADC and Battery charger"
+> > > +	depends on I2C
+> > > +	select REGMAP_I2C
+> > > +	help
+> > > +	  Select this option to enable support for monolithic power system
+> > > +	  battery charger. This provides ADC, thermal, battery charger power
+> > > +	  management functions on the systems.
 
-So... What is function of these leds, and can we get naming more
-consistent with rest of the kernel?
-							Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---f2QGlHpHGjS2mn6Y
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl6isioACgkQMOfwapXb+vKH7gCeLfTNWUhERXHz8WjUp/cao3Fb
-WiwAnjuTTY27A4qHvE7yF23fhRewBJeL
-=Nhs2
------END PGP SIGNATURE-----
-
---f2QGlHpHGjS2mn6Y--
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
