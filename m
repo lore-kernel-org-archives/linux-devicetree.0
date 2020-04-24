@@ -2,140 +2,87 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127F1C54FCB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 19:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5340C55186
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 19:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E259D2173E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 19:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2ACA215A4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 19:47:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T0keOgZ7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="ZrErCh9x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbgDXTlt (ORCPT
+        id S1727049AbgDXTrO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 15:41:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729175AbgDXTls (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 15:41:48 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0530DC09B04A
-        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 12:41:48 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id a21so11191639ljb.9
-        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 12:41:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xEmEzSJAW12x5niGKKzPXSqsRmQBFq2lP6H8xvuac/8=;
-        b=T0keOgZ72bgaeEiqotFnnG+NMkzgKYHGXH4TyFbkmZQOJe1Y5iKcFbRjOuVS3LytBL
-         W6AnOWDW2QWZo3w+XoSlX7QKg7WFduDC+turDLabtmC3eHu2R+LW2LppYuJYXdj40rg7
-         CdC1QLOEEL0R1Cimqms8CMRslN8tW7OXjqcp181VPdrvY8W8QYwXkvlGnezntNU/aIQI
-         i6YsVJ+qBo1IpmfuneESoyprPvhhXr26CeMvNdDtUxyovd7PslG1FH6YR8sVB7ohtRad
-         QOWlk/axNwWA9QPd0lqbh3Eau8RDrkadohiHGyCxCHAzXRPCkwjqYlFo45dJvWYiXb2y
-         7ahA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xEmEzSJAW12x5niGKKzPXSqsRmQBFq2lP6H8xvuac/8=;
-        b=CK0X8C0NUjuPiwKK/uGuK9bY9+jCASX1UhjC1rYmGN2dPxDDIlUMXR05dNvkbFWeel
-         HCe1bKd3Q0p3AOpC7/wozAPRI4+oE86liYbtdxhTP9L8e2ukebFEXSUQOuYCViENfKrH
-         CPdIlpUh2K1u+3Jmlh/LkhJQ86yCYpdxl0BzA08w09oymxF6y/OSq22cn910vFKmT8Qs
-         Teb/hTO34VWn7MHYgFCDWAecE/Q57lIma+81X18V31Q4DIulcDQ/bUyQDxZvr0zpzp/X
-         7YeprUE1OS3T8dcTvcH2FyiSYKfoKFJvq9cyUZ9RBYEREjnAQk68gnvcI7yJPO+ugUJL
-         5qlg==
-X-Gm-Message-State: AGi0Pua+Ldvqe2Oh8wZ+uiugCby6HxrwafK2MquhCTruuQC6aFSevMws
-        Jsj2tC+MQvg4MFEJhH2CNI3qnsEiduut+fu5PHtuDQ==
-X-Google-Smtp-Source: APiQypI4Xi6+DbAAYIeOQPzrEcE/mxStfNg2RlTAQ/87ko7Y+RTOVwvrDrzFbofvytmtXUu0lTzmeVzRLH+KYXFDMfY=
-X-Received: by 2002:a2e:9791:: with SMTP id y17mr7027497lji.174.1587757306172;
- Fri, 24 Apr 2020 12:41:46 -0700 (PDT)
+        Fri, 24 Apr 2020 15:47:14 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:56024 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728708AbgDXTrN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Apr 2020 15:47:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:To:From:Date:Sender:
+        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=AZVuLiH3p+8wQZZcoxt6nt2TjZafm2VyUW4d5EZtuyA=; b=ZrErCh9xM1GG9lwK98VsvNvjCn
+        +YR28ar6kY/ehntc3I8eCfPmQQgnYdqrjnGV2Cc76lfcMFr8K2R74t7zWrbESWP32Q68ibmkGXnSX
+        7SFJo4kDXtwV4QOoQaylH0uekmSLHG/GMv4hEpKcRzNrlPaBba9N1AU9AUdEnK1upC0I=;
+Received: from p200300ccff054f001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff05:4f00:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jS4Hy-0006Fb-Ih; Fri, 24 Apr 2020 21:47:06 +0200
+Date:   Fri, 24 Apr 2020 21:47:05 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shawnguo@kernel.org, festevam@gmail.com
+Subject: Re: [PATCH] dts: ARM: e60k02: add interrupt for PMIC
+Message-ID: <20200424214705.0a6bf5cc@aktux>
+In-Reply-To: <20200329104250.15194-1-andreas@kemnade.info>
+References: <20200329104250.15194-1-andreas@kemnade.info>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200328185916.98423-1-rajatja@google.com> <20200328185916.98423-3-rajatja@google.com>
- <20200410164140.GA25924@bogus>
-In-Reply-To: <20200410164140.GA25924@bogus>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Fri, 24 Apr 2020 12:41:09 -0700
-Message-ID: <CACK8Z6G=oy9Gesazk1jJVhk22Dgm8_TGZCcpNndkv+WLqAe8hg@mail.gmail.com>
-Subject: Re: [PATCH v4 3/5] dt-bindings: input/atkbd.txt: Add binding for "function-row-physmap"
-To:     Rob Herring <robh@kernel.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Dmitry Torokhov <dtor@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Furquan Shaikh <furquan@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Benson Leung <bleung@google.com>,
-        Zentaro Kavanagh <zentaro@google.com>,
-        Dominik Behr <dbehr@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+ping...
 
-On Fri, Apr 10, 2020 at 10:38 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Sat, Mar 28, 2020 at 11:59:14AM -0700, Rajat Jain wrote:
-> > Create the documentation for the new introduced property, that
-> > describes the function-row keys physical positions.
-> >
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > ---
-> > v4: Same as v3
-> > v3: same as v2
-> > v2: Remove the Change-Id from the commit log
-> >
-> >  .../devicetree/bindings/input/atkbd.txt       | 34 +++++++++++++++++++
-> >  1 file changed, 34 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/atkbd.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/input/atkbd.txt b/Documentation/devicetree/bindings/input/atkbd.txt
-> > new file mode 100644
-> > index 0000000000000..816653eb8e98d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/atkbd.txt
-> > @@ -0,0 +1,34 @@
-> > +Device tree bindings for AT / PS2 keyboard device
-> > +
-> > +Optional properties:
-> > +
-> > +     function-row-physmap:
-> > +                     An ordered array of the physical codes for the function
-> > +                     row keys. Arranged in order from left to right.
->
-> A single optional property doesn't constitute a DT binding.
->
-> > +
-> > +Example:
-> > +
-> > +     This is a sample ACPI _DSD node describing the property:
->
-> Neither does this ACPI stuff.
+Regards,
+Andreas
 
-I assume this means a nack to the documentation patches.
+On Sun, 29 Mar 2020 12:42:50 +0200
+Andreas Kemnade <andreas@kemnade.info> wrote:
 
-Dmitry, can you apply the other patches in the series?
+> Since the PMIC driver now has IRQ handling, add the GPIO to
+> listen to things like RTC alarm or ADC conversion completion.
+> 
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+> The corresponding property is added to the bindings documentation in
+> https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/log/?h=ib-mfd-iio-rtc-5.7
+>  arch/arm/boot/dts/e60k02.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/e60k02.dtsi b/arch/arm/boot/dts/e60k02.dtsi
+> index ce50c4dc6f2a..3af1ab4458ef 100644
+> --- a/arch/arm/boot/dts/e60k02.dtsi
+> +++ b/arch/arm/boot/dts/e60k02.dtsi
+> @@ -117,6 +117,8 @@
+>  	ricoh619: pmic@32 {
+>  		compatible = "ricoh,rc5t619";
+>  		reg = <0x32>;
+> +		interrupt-parent = <&gpio5>;
+> +		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
+>  		system-power-controller;
+>  
+>  		regulators {
 
-Thanks,
-
-Rajat
-
->
-> Rob
