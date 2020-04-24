@@ -2,100 +2,130 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036E7C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 22:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8B0C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 22:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D39CF20736
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 22:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1893B2168B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 22:19:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dyPDkFe9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726031AbgDXWPW (ORCPT
+        id S1726031AbgDXWT1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 18:15:22 -0400
-Received: from muru.com ([72.249.23.125]:51336 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbgDXWPV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Apr 2020 18:15:21 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id D47FE80E7;
-        Fri, 24 Apr 2020 22:16:06 +0000 (UTC)
-Date:   Fri, 24 Apr 2020 15:15:15 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv6 0/4] n_gsm serdev support and protocol driver for
- droid4 modem
-Message-ID: <20200424221515.GM37466@atomide.com>
-References: <20200421232752.3070-1-tony@atomide.com>
- <20200423114326.GQ18608@localhost>
- <20200424215040.GA14087@amd>
+        Fri, 24 Apr 2020 18:19:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbgDXWT1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 18:19:27 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9072AC09B049;
+        Fri, 24 Apr 2020 15:19:26 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id b11so13051638wrs.6;
+        Fri, 24 Apr 2020 15:19:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=uQciE9sQ/Xrr7n64LqH8na5zfuBXDWo71KYedRmAEk8=;
+        b=dyPDkFe9ZU8B+NLEmufBeGry2o41FWw0H0PHcHXjrjQdtWr66PP3j2ObuEXeWOYS8e
+         q3DeADsJy0wLp4mvx4kZgYIZPIC+mpoZPhnOaJMuiYLA939taTbqQ+sC+yLYvzNTCRF4
+         CwWBbN2w/4sPvRLFBKIxTEDhcq5CWfcp1JkXPwgjIwRW0dJlI6aR7Y0J/bqE5EdHujwD
+         c1KqCe4GSoQAIFZirCLLN9H5q1VHflfUJYJq5r6hL5WdCDS668YpYV+b43yHprd0YoOO
+         7CzjOx+Czkhaag5s6T4rZGTyNaGEFeBSySQub1SVAr1QnbFlJ54nWbcuT3rFDR0jK7l3
+         NhdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=uQciE9sQ/Xrr7n64LqH8na5zfuBXDWo71KYedRmAEk8=;
+        b=F8jCzIIMtQRFHOXu7G33TpRzSI3CQdrslCgxUZVBE7ead39bQzERpZxiZCye/7isS3
+         29C3ECcmxKg6uA/xCg1tL/lLCzJUNY0iBRTxKsx0/LfruPPMsf097N2fboAtVZUxmTBt
+         Mc2kN9CT5gNa87YSB7aBNJMtKUTk9ZgfzE6lmDBTUwy2FfUOygYCtRRmYV1E/QqP3ALu
+         LGExi+jAczFIrb1c8zgVv+Czg/FOZ8C+f5PO/9JSxZZmg/4RijjO7dfMYXx32xR3WDOI
+         G4JbtftBmroc2zWFHvFR0sMXBiJo+nqehLhL+KQ0/elljGNfzgDEIOg6QfVgC/uCgb+7
+         hAQA==
+X-Gm-Message-State: AGi0PuYwoSBawRooZcbin8OAOelY/Ra5Tx7uOjuTsCrhIFPc6Q8WJLNS
+        aBArnGhugaiucFylAysH/bk=
+X-Google-Smtp-Source: APiQypJ7RnkY5hVI/pUo/8qEEJt8iQdG2jA0iTtsu6TvcVs3fn1IG692Es/BXiQsf87tu3tpxI/lmA==
+X-Received: by 2002:adf:9d85:: with SMTP id p5mr14130705wre.101.1587766765002;
+        Fri, 24 Apr 2020 15:19:25 -0700 (PDT)
+Received: from AnsuelXPS (host36-18-dynamic.45-213-r.retail.telecomitalia.it. [213.45.18.36])
+        by smtp.gmail.com with ESMTPSA id 5sm4526484wmg.34.2020.04.24.15.19.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 Apr 2020 15:19:24 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Rob Herring'" <robh+dt@kernel.org>
+Cc:     "'Viresh Kumar'" <vireshk@kernel.org>,
+        "'Andy Gross'" <agross@kernel.org>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+        "'Ilia Lin'" <ilia.lin@kernel.org>, "'Nishanth Menon'" <nm@ti.com>,
+        "'Stephen Boyd'" <sboyd@kernel.org>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
+        "'Sricharan R'" <sricharan@codeaurora.org>,
+        "'linux-arm-msm'" <linux-arm-msm@vger.kernel.org>,
+        "'open list:THERMAL'" <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200422201216.10593-1-ansuelsmth@gmail.com> <20200422201216.10593-2-ansuelsmth@gmail.com> <CAL_JsqLUbM7ed2q7so4Uibiz2URRg1juoGRExy9Ta3J-LWAFow@mail.gmail.com>
+In-Reply-To: <CAL_JsqLUbM7ed2q7so4Uibiz2URRg1juoGRExy9Ta3J-LWAFow@mail.gmail.com>
+Subject: R: [PATCH v2 2/2] dt-bindings: opp: Fix wrong binding in qcom-nvmem-cpufreq
+Date:   Sat, 25 Apr 2020 00:19:21 +0200
+Message-ID: <087301d61a86$68b6f950$3a24ebf0$@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200424215040.GA14087@amd>
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQI2zLF6jE7E+qUxZ1JX975++E9sxAFV8SPrAaqC6P2nr28mgA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Pavel Machek <pavel@denx.de> [200424 21:51]:
-> Hi!
-> 
-> > > Here's v4 set of n_gsm serdev support patches, and the related protocol
-> > > driver for the modem found on Motorola Mapphone phones and tablets
-> > > like droid4.
-> > > 
-> > > This series only adds basic character device support for the serdev
-> > > driver. Other serdev consumer drivers for specific devices will be
-> > > posted separately.
-> > 
-> > I'm still missing an architectural (design) overview here -- reviewer
-> > time is a scarce resource.
-> > 
-> > I also suggested earlier that you include, at least as an RFC, one or
-> > more of your child-device drivers so that we can see how this ends up
-> > being used in the end (including an example devicetree).
-> 
-> Note that this is useful on its own: we have ofonod running on the top
-> of this doing calls and SMSes.
+> On Wed, Apr 22, 2020 at 3:12 PM Ansuel Smith <ansuelsmth@gmail.com>
+> wrote:
+> >
+> > Update binding to new generic name "operating-points-v2-qcom-cpu"
+> >
+> > Fixes: a8811ec764f9 ("cpufreq: qcom: Add support for krait based =
+socs")
+> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > ---
+> >  Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt | 2
+> +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/opp/qcom-nvmem-
+> cpufreq.txt b/Documentation/devicetree/bindings/opp/qcom-nvmem-
+> cpufreq.txt
+> > index 64f07417ecfb..537e1774f589 100644
+> > --- a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+> > +++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-
+> cpufreq.txt
+> > @@ -19,7 +19,7 @@ In 'cpu' nodes:
+> >
+> >  In 'operating-points-v2' table:
+> >  - compatible: Should be
+> > -       - 'operating-points-v2-kryo-cpu' for apq8096, msm8996, =
+msm8974,
+> > +       - 'operating-points-v2-qcom-cpu' for apq8096, msm8996,
+> msm8974,
+> >                                              apq8064, ipq8064, =
+msm8960 and ipq8074.
+>=20
+> This is not how you fix the backwards compatibility issue pointed out
+> on the Fixes reference.
+>=20
+> Rob
 
-Yup.
+Sorry but can you give some directive? Should I use the old binding and =
+change
+the driver to use it instead of the new one (and drop it) ?
 
-> Tony: I know you have drivers depending on this somewhere (audio
-> routing and GPS), but I can't find them. It is not droid4-pending-v5.6
-> AFAICT. Do you have a pointer / could you publish them somewhere?
-
-Hmm they should be there in droid4-pending-v5.6 branch [0]:
-
-$ git log --abbrev=12 --pretty=format:"%h (\"%s\")" \
-	v5.6..droid4-pending-v5.6 | grep -i -e gsm -e mot -e mdm
-e09590a260a4 ("mfd: motmdm: Fix oops on unload of motorola-mdm")
-f9252f9ff6bd ("mfd: motmdm: Revert bad list change")
-d733dcaf4416 ("mfd: motmdm: Fix issue with receiving data before ddata is set")
-452d2b5d4c95 ("n_gsm: Build fixes for make randconfig build")
-6882b27ea92a ("phy: mapphone-mdm6600: Fix write timeouts with shorter GPIO toggle interval")
-58ff58c4b520 ("mfd: motmdm: Add basic DTMF support")
-e92b6f30e5ae ("ASoC: audio-graph-card: Add audio mixer for motorold mdm6600")
-c2caea5767d5 ("gnss: mot-mdm6600: Add support for Motorola Mapphone MDM6600 modem")
-a5f73b7b06f6 ("mfd: motmdm: Add Motorola TS 27.010 serdev driver for devices like droid4")
-6c311d5aeb0a ("dt-bindings: mfd: motmdm: Add binding for motorola-mdm")
-cd02274b920e ("tty: n_gsm: Add support for serdev drivers")
-a73a48321c98 ("phy: mapphone-mdm6600: Fix timeouts by adding wake-up handling")
-
-Regards,
-
-Tony
-
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git/log/?h=droid4-pending-v5.6
