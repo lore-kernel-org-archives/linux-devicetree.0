@@ -2,105 +2,159 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC73C55186
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 09:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C4CC2BA1A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 09:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56E682074F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 09:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19AEB2074F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 09:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgDXJWM (ORCPT
+        id S1726760AbgDXJ3g (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 05:22:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:58060 "EHLO foss.arm.com"
+        Fri, 24 Apr 2020 05:29:36 -0400
+Received: from mx.socionext.com ([202.248.49.38]:38703 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726726AbgDXJWM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Apr 2020 05:22:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CEBB81FB;
-        Fri, 24 Apr 2020 02:22:11 -0700 (PDT)
-Received: from [10.37.12.92] (unknown [10.37.12.92])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A5703F73D;
-        Fri, 24 Apr 2020 02:22:06 -0700 (PDT)
-Subject: Re: [PATCH] thermal: power_allocate: add upper and lower limits
-To:     Michael Kao <michael.kao@mediatek.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>, hsinyi@chromium.org,
-        linux-pm@vger.kernel.org, srv_heupstream@mediatek.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <20200424071601.2636-1-michael.kao@mediatek.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <accb83e0-ffbe-b6e3-6bf9-e7cc8b9fe19c@arm.com>
-Date:   Fri, 24 Apr 2020 10:22:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200424071601.2636-1-michael.kao@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1726582AbgDXJ3g (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Apr 2020 05:29:36 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 24 Apr 2020 18:29:34 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id A5B51180085;
+        Fri, 24 Apr 2020 18:29:34 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 24 Apr 2020 18:29:34 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 15DD91A12D0;
+        Fri, 24 Apr 2020 18:29:34 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v2] dt-bindings: spi: Convert UniPhier SPI controller to json-schema
+Date:   Fri, 24 Apr 2020 18:29:22 +0900
+Message-Id: <1587720562-15293-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Michael,
+Convert UniPhier SPI controller binding to DT schema format.
 
-On 4/24/20 8:16 AM, Michael Kao wrote:
-> The upper and lower limits of thermal throttle state in the
-> device tree do not apply to the power_allocate governor.
-> Add the upper and lower limits to the power_allocate governor.
-> 
-> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
-> ---
->   drivers/thermal/thermal_core.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> index 9a321dc548c8..f6feed2265bd 100644
-> --- a/drivers/thermal/thermal_core.c
-> +++ b/drivers/thermal/thermal_core.c
-> @@ -598,7 +598,7 @@ int power_actor_set_power(struct thermal_cooling_device *cdev,
->   	if (ret)
->   		return ret;
->   
-> -	instance->target = state;
-> +	instance->target = clamp_val(state, instance->lower, instance->upper);
->   	mutex_lock(&cdev->lock);
->   	cdev->updated = false;
->   	mutex_unlock(&cdev->lock);
-> 
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+---
 
-Thank you for the patch and having to look at it. I have some concerns
-with this approach. Let's analyze it further.
+Changes since v1:
+- Put "#address-cells" and "#size-cells" into the required list
 
-In default the cooling devices in the thermal zone which is used by IPA
-do not have this 'lower' and 'upper' limits. They are set to
-THERMAL_NO_LIMIT in DT to give full control to IPA over the states.
+ .../bindings/spi/socionext,uniphier-spi.yaml       | 57 ++++++++++++++++++++++
+ .../devicetree/bindings/spi/spi-uniphier.txt       | 28 -----------
+ 2 files changed, 57 insertions(+), 28 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/socionext,uniphier-spi.yaml
+ delete mode 100644 Documentation/devicetree/bindings/spi/spi-uniphier.txt
 
-This the function 'power_actor_set_power' actually translates granted
-power to the state that device will run for the next period.
-The IPA algorithm has already split the power budget.
-Now what happen when the 'lower' value will change the state to a state
-which consumes more power than was calculated in the IPA alg... It will
-became unstable.
+diff --git a/Documentation/devicetree/bindings/spi/socionext,uniphier-spi.yaml b/Documentation/devicetree/bindings/spi/socionext,uniphier-spi.yaml
+new file mode 100644
+index 0000000..c254092
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/socionext,uniphier-spi.yaml
+@@ -0,0 +1,57 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spi/socionext,uniphier-spi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Socionext UniPhier SPI controller
++
++description: |
++  UniPhier SoCs have SCSSI which supports SPI single channel.
++
++maintainers:
++  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
++  - Keiji Hayashibara <hayashibara.keiji@socionext.com>
++
++allOf:
++  - $ref: spi-controller.yaml#
++
++properties:
++  "#address-cells": true
++  "#size-cells": true
++
++  compatible:
++    const: socionext,uniphier-scssi
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - resets
++  - "#address-cells"
++  - "#size-cells"
++
++examples:
++  - |
++    spi0: spi@54006000 {
++        compatible = "socionext,uniphier-scssi";
++        reg = <0x54006000 0x100>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++        interrupts = <0 39 4>;
++        clocks = <&peri_clk 11>;
++        resets = <&peri_rst 11>;
++    };
+diff --git a/Documentation/devicetree/bindings/spi/spi-uniphier.txt b/Documentation/devicetree/bindings/spi/spi-uniphier.txt
+deleted file mode 100644
+index e120157..0000000
+--- a/Documentation/devicetree/bindings/spi/spi-uniphier.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-Socionext UniPhier SPI controller driver
+-
+-UniPhier SoCs have SCSSI which supports SPI single channel.
+-
+-Required properties:
+- - compatible: should be "socionext,uniphier-scssi"
+- - reg: address and length of the spi master registers
+- - #address-cells: must be <1>, see spi-bus.txt
+- - #size-cells: must be <0>, see spi-bus.txt
+- - interrupts: a single interrupt specifier
+- - pinctrl-names: should be "default"
+- - pinctrl-0: pin control state for the default mode
+- - clocks: a phandle to the clock for the device
+- - resets: a phandle to the reset control for the device
+-
+-Example:
+-
+-spi0: spi@54006000 {
+-	compatible = "socionext,uniphier-scssi";
+-	reg = <0x54006000 0x100>;
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-	interrupts = <0 39 4>;
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_spi0>;
+-	clocks = <&peri_clk 11>;
+-	resets = <&peri_rst 11>;
+-};
+-- 
+2.7.4
 
-I would rather see a change which uses these 'lower' and 'upper' limits
-before the IPA do the calculation of the power budget. But this wasn't
-a requirement and we assumed that IPA has full control over the cooling
-device (which I described above with this DT THERMAL_NO_LIMIT).
-
-Is there a problem with your platform that it has to provide some
-minimal performance, so you tried to introduce this clamping?
-
-Regards,
-Lukasz
