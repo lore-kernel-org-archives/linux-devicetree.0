@@ -2,159 +2,96 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D15FBC7C841
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75025C54FCB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B291C2075A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528142075A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 15:56:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G3O5xC+R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rpnKX0di"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbgDXPyK (ORCPT
+        id S1727972AbgDXP4J (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 11:54:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55668 "EHLO
+        Fri, 24 Apr 2020 11:56:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728199AbgDXPyJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 11:54:09 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1456CC09B048
-        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 08:54:09 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id k1so11494511wrx.4
-        for <devicetree@vger.kernel.org>; Fri, 24 Apr 2020 08:54:09 -0700 (PDT)
+        with ESMTP id S1727063AbgDXP4J (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 11:56:09 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31316C09B046;
+        Fri, 24 Apr 2020 08:56:09 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id k12so2492531wmj.3;
+        Fri, 24 Apr 2020 08:56:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1PV7wNlDdMH3OuiuS+RgGXP0VXIxRvRVyjRNbcZpO3I=;
-        b=G3O5xC+RvIP6f1BcmRIkj0/94vJA4D3RR/OKZ0IK2WHI8deiUNnnii7U/1XEuSENAY
-         pjUhqGHJakehwK3dflf9xjpY7FpaQCetehRVu8pcakwmDQ7Fp9oG/hVDHcdzD+paYXgX
-         lNUM6fM5C5o7k90OSnoHPYH96Hv/zqS6vRPajTKA01JmgSNIrQXbfgwU7Dn3bXJ1DaOQ
-         syswUFhjJVfZ2X6pnPD9+ZGlZEO8PN1np6mb83YgvxneDoErTSj1ETwppcNxAbhyoug6
-         OORcrxEfmkgUrGb4jXTeG3UNc28uzS9ccIWvQAq5igfxgKyS8i807jaSQMatGsrm7uy1
-         gssA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=2dfe96YGRwdkJIStyF40QT5+e8yw/JJFrPUrA9ri3jw=;
+        b=rpnKX0diuZmEefFJBlH4p0uiZ6nT/Uzyd6C8V+ar2sPq3giyBG+MSqmgtQqykf61K3
+         J8s8b6qq9CHsb7VZ+hAgBPpNw0N29/Dx0xZX8yrxDlEymZtAMd0jgz7kR9P09TORmBhC
+         TTLx7LLxBi0/qCjROKIvm7dtrRFClB6x/emlo+op9lkWO+yvfjxN1P3ho2PJ25atistF
+         3OfY3NIrXmYYuxtFfPxwJV6jy/6mJcjHqBZCamamz/gUOG9Jcuu1cEy5zcTMYCgtpQY3
+         eUhzOQdnUt3slZLmWzgh6lJO+UFYWZL2T1F7x+/XI6xSt4/tJvebLm+Z9yAdJn0077jd
+         58EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1PV7wNlDdMH3OuiuS+RgGXP0VXIxRvRVyjRNbcZpO3I=;
-        b=tRopyMV8z5DIfJvGzJZE/Lq2WBIpG3B1tpG43Pb+j8l+4k0kTL5rUir2TwpsRtDoFT
-         ehyXC0EnkHCKfIafpSrHylk8EKX8W4sWaohHFqeEExJydTDjohS8l9xf5vcRar4n34eY
-         xHGTfaXA5aMNoxL8DaS0gRyavPlfrC/1lwqtDNQyf5UJWYyp0f/ufY2VpgPJXXo0ceVk
-         CXuIvxUV89rTaQxrXG6zgwPU5kKRcaGbuBs2TSpjssic9SWAk+xsmGzlbuWcJDznL4t3
-         RdNHnWKyC7+Z6zUnXK8KuzzV+F6wZIlCE6rfOxYs6fstoLC4qtwDcWJVjFH/iIeBiCoa
-         mLmQ==
-X-Gm-Message-State: AGi0PubgFICrrHX/uNCDdVt5wIWi+Wnjgc44CARjOrLBivwM7V+CPeCI
-        lISGE04if/ldMBkHx+yD8azMDg==
-X-Google-Smtp-Source: APiQypKhRF4rK1iG14uisWyxXPjB4ykbVFGRxPgex9UUwbyA2dNx4mc0hwYcw4mhmIWGA5i2uyZLbg==
-X-Received: by 2002:a05:6000:110a:: with SMTP id z10mr11757587wrw.389.1587743647735;
-        Fri, 24 Apr 2020 08:54:07 -0700 (PDT)
-Received: from localhost.localdomain ([87.120.218.65])
-        by smtp.googlemail.com with ESMTPSA id z76sm3923583wmc.9.2020.04.24.08.54.06
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2dfe96YGRwdkJIStyF40QT5+e8yw/JJFrPUrA9ri3jw=;
+        b=LSAsAazEf6X/VbNPknm2QSwQOkHWtARmR1Ykd2lxvocw9zLD4xrBhetdOVNTt9ADqr
+         DfbjVKZhHn/n3FuImTW+jPCG+k4JWnl9SQ8HmHBxzwQaMj50Ma2Aqc7KayWz7Ct08xf2
+         05RiGA5ilKYIurpHrBz+wa+tyOMfX1DtyLRCpGn+jWGtq2T8jtGT3QsCqOE8XDjx5oy+
+         XdB3pkS5JUfOCXJTNT52oULRQLO3xyXmvg4kY67B/VnF0ZF2qm0xmKbrc1f8vJxOFf64
+         OLhwK5TYVdcrwAW9iOkWSDv1ra8HTYeYVm0JvtZTvpLsWAcuk5bajH+62188nl3vRxe8
+         bwLg==
+X-Gm-Message-State: AGi0PuZGoZAHu+91gFb20l1+uaGIcvmjqFoFOWfZ0ClYPXDMUCKtAP/s
+        sUauNRPCpuN/uBLufMkt/jc=
+X-Google-Smtp-Source: APiQypI/huoG9jnHh4iIH+SQGJJR1gdn4nDg2DnrOfJ4docI19S96D0R3OPHztWOl24tnzb8TeUURw==
+X-Received: by 2002:a1c:ac44:: with SMTP id v65mr11008806wme.33.1587743768021;
+        Fri, 24 Apr 2020 08:56:08 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id g69sm3554317wmg.17.2020.04.24.08.56.07
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 Apr 2020 08:54:07 -0700 (PDT)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        robh+dt@kernel.org, rjw@rjwysocki.net, saravanak@google.com,
-        sibis@codeaurora.org
-Cc:     rnayak@codeaurora.org, bjorn.andersson@linaro.org,
-        vincent.guittot@linaro.org, jcrouse@codeaurora.org,
-        evgreen@chromium.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        georgi.djakov@linaro.org
-Subject: [PATCH v7 1/7] dt-bindings: opp: Introduce opp-peak-kBps and opp-avg-kBps bindings
-Date:   Fri, 24 Apr 2020 18:53:58 +0300
-Message-Id: <20200424155404.10746-2-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200424155404.10746-1-georgi.djakov@linaro.org>
-References: <20200424155404.10746-1-georgi.djakov@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 24 Apr 2020 08:56:07 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] arm64: dts: rockchip: remove #sound-dai-cells from &i2s1 node of rk3399-pinebook-pro.dts
+Date:   Fri, 24 Apr 2020 17:55:59 +0200
+Message-Id: <20200424155600.24254-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Saravana Kannan <saravanak@google.com>
+The '#sound-dai-cells' property is already defined in rk3399.dtsi
+at the 'i2s1' node, so remove it from the '&i2s1' node in
+'rk3399-pinebook-pro.dts'.
 
-Interconnects often quantify their performance points in terms of
-bandwidth. So, add opp-peak-kBps (required) and opp-avg-kBps (optional) to
-allow specifying Bandwidth OPP tables in DT.
-
-opp-peak-kBps is a required property that replaces opp-hz for Bandwidth OPP
-tables.
-
-opp-avg-kBps is an optional property that can be used in Bandwidth OPP
-tables.
-
-Signed-off-by: Saravana Kannan <saravanak@google.com>
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
-v7:
-* I have dropped Rob's Reviewed-by, because of the minor change below:
-* In order to store the bandwidth values for multiple paths, the
-opp-peak-kBps and opp-avg-kBps are now defined as arrays of integers,
-instead of just integers.
-* Improved wording (Viresh)
+ arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-v6: https://lore.kernel.org/r/20191207002424.201796-2-saravanak@google.com
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts b/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
+index 5ea281b55..b20062890 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
+@@ -743,7 +743,6 @@
+ };
+ 
+ &i2s1 {
+-	#sound-dai-cells = <0>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2s_8ch_mclk_gpio>, <&i2s1_2ch_bus>;
+ 	rockchip,capture-channels = <8>;
+-- 
+2.11.0
 
- Documentation/devicetree/bindings/opp/opp.txt | 20 ++++++++++++++++---
- .../devicetree/bindings/property-units.txt    |  4 ++++
- 2 files changed, 21 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-index 68592271461f..a8a6a3bfcfcb 100644
---- a/Documentation/devicetree/bindings/opp/opp.txt
-+++ b/Documentation/devicetree/bindings/opp/opp.txt
-@@ -83,9 +83,17 @@ properties.
- 
- Required properties:
- - opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. This is a
--  required property for all device nodes but devices like power domains. The
--  power domain nodes must have another (implementation dependent) property which
--  uniquely identifies the OPP nodes.
-+  required property for all device nodes except for devices like power domains
-+  or bandwidth opp tables. The devices which don't have this property must have
-+  another (implementation dependent) property which uniquely identifies the OPP
-+  nodes.
-+
-+
-+- opp-peak-kBps: Peak bandwidth in kilobytes per second, expressed as an array
-+  of 32-bit big-endian integers. Each element of the array represents the
-+  peak bandwidth value of each interconnect path. The number of elements should
-+  match the number of interconnect paths. This is a required property for
-+  bandwidth OPP tables.
- 
- Optional properties:
- - opp-microvolt: voltage in micro Volts.
-@@ -132,6 +140,12 @@ Optional properties:
- - opp-level: A value representing the performance level of the device,
-   expressed as a 32-bit integer.
- 
-+- opp-avg-kBps: Average bandwidth in kilobytes per second, expressed as an array
-+  of 32-bit big-endian integers. Each element of the array represents the
-+  average bandwidth value of each interconnect path. The number of elements
-+  should match the number of interconnect paths. This property is only
-+  meaningful in OPP tables where opp-peak-kBps is present.
-+
- - clock-latency-ns: Specifies the maximum possible transition latency (in
-   nanoseconds) for switching to this OPP from any other OPP.
- 
-diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
-index e9b8360b3288..c80a110c1e26 100644
---- a/Documentation/devicetree/bindings/property-units.txt
-+++ b/Documentation/devicetree/bindings/property-units.txt
-@@ -41,3 +41,7 @@ Temperature
- Pressure
- ----------------------------------------
- -kpascal	: kilopascal
-+
-+Throughput
-+----------------------------------------
-+-kBps		: kilobytes per second
