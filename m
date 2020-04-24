@@ -2,150 +2,125 @@ Return-Path: <SRS0=9zIi=6I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EF9C2BA1A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 08:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C92AC55186
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 09:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9D4820736
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 08:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B48C20724
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Apr 2020 09:12:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbgDXIg1 convert rfc822-to-8bit (ORCPT
+        id S1726494AbgDXJM2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Apr 2020 04:36:27 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:43261 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbgDXIg1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Apr 2020 04:36:27 -0400
-Received: by mail-oo1-f66.google.com with SMTP id d21so1937057ook.10;
-        Fri, 24 Apr 2020 01:36:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XKUviGQehYQsdPKsJqlt0d2ewH3Dpwogjgl85Dr+3Rw=;
-        b=XY5fHa7oE/1dGjuGiinKTT0AdqNxEX1tt8Zkkd0M68pryp5dJicpudxWnVUO0ydrxQ
-         lCCZCrLKyN3U0A0kH3rkv5IU/bWGe4QoHG97RPHbtBxRnLBtiOlQJyJz/I/gJscqBvFk
-         81EOMxcclPJdmqetgdy/ws+o/BBKAQoDEMei198qzWAiitvbKZXi1KLYhn9m7YCgEDkR
-         Pl9LqsUR1lMvQeowurAARU4OVzI/QnFw8M5KeSEUhlg4g6+6rx3kbxsM9lBR/mc5bA+k
-         EGQ79x+u7s5qs9cVWK1vzVH5Ju5HuL+rpubHBIBDtcEpNUO2LhA0Fn7Uw9UfgHtmh/wN
-         8j6g==
-X-Gm-Message-State: AGi0PubwIcPkRZVqAv9D8XN2OPuVXm3u+s2NRPKcMRAk5Q7WWAeX+81e
-        kdVC2rkGdver4TNGwbiYgGY8Lpn9F+fLoqXsARo=
-X-Google-Smtp-Source: APiQypIVddFc2avRWYGOIH6oeKGojSMgUbJRYGpyiRb64rLZ7Aov6VHeA2Aewh2TWUmXLDJs8MbOEd1c/ZrcZ7neZb4=
-X-Received: by 2002:a4a:eb08:: with SMTP id f8mr6964772ooj.1.1587717385908;
- Fri, 24 Apr 2020 01:36:25 -0700 (PDT)
+        Fri, 24 Apr 2020 05:12:28 -0400
+Received: from mx.socionext.com ([202.248.49.38]:38499 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726298AbgDXJM2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Apr 2020 05:12:28 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 24 Apr 2020 18:12:26 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 5A66E60057;
+        Fri, 24 Apr 2020 18:12:26 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 24 Apr 2020 18:12:26 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 2AD8F1A12D0;
+        Fri, 24 Apr 2020 18:12:26 +0900 (JST)
+Received: from [10.212.22.225] (unknown [10.212.22.225])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 6F879120131;
+        Fri, 24 Apr 2020 18:12:25 +0900 (JST)
+Subject: Re: [PATCH] dt-bindings: spi: Convert UniPhier SPI controller to
+ json-schema
+To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1587087014-14598-1-git-send-email-hayashi.kunihiko@socionext.com>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <1243a377-cb88-3fa5-fcf9-75da200d9a9c@socionext.com>
+Date:   Fri, 24 Apr 2020 18:12:24 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200422101026.9220-1-erosca@de.adit-jv.com> <20200422101026.9220-3-erosca@de.adit-jv.com>
-In-Reply-To: <20200422101026.9220-3-erosca@de.adit-jv.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 24 Apr 2020 10:36:14 +0200
-Message-ID: <CAMuHMdUV-179XEVF9UMdiB6p_2gQeWJKz+25qCfn+b_h8VSdcQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/3] gpio: rcar: Add support for GPIO alternative interrupt
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Chris Paterson <chris.paterson2@renesas.com>,
-        Yusuke Ashiduka <ashiduka@fujitsu.com>,
-        Torii Kenichi <torii.ken1@jp.fujitsu.com>,
-        Fukui Yohhei <yohhei.fukui@denso-ten.com>,
-        Yasushi Asano <yasano@jp.adit-jv.com>,
-        Yuichi Kusakabe <yuichi.kusakabe@denso-ten.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Jiada Wang <jiada_wang@mentor.com>,
-        Eugeniu Rosca <rosca.eugeniu@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Stefano Stabellini <sstabellini@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <1587087014-14598-1-git-send-email-hayashi.kunihiko@socionext.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Eugeniu,
+On 2020/04/17 10:30, Kunihiko Hayashi wrote:
+> Convert UniPhier SPI controller binding to DT schema format.
+> 
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>   .../bindings/spi/socionext,uniphier-spi.yaml       | 55 ++++++++++++++++++++++
+>   .../devicetree/bindings/spi/spi-uniphier.txt       | 28 -----------
+>   2 files changed, 55 insertions(+), 28 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/spi/socionext,uniphier-spi.yaml
+>   delete mode 100644 Documentation/devicetree/bindings/spi/spi-uniphier.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/socionext,uniphier-spi.yaml b/Documentation/devicetree/bindings/spi/socionext,uniphier-spi.yaml
+> new file mode 100644
+> index 0000000..bab8bcc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/socionext,uniphier-spi.yaml
+> @@ -0,0 +1,55 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/spi/socionext,uniphier-spi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Socionext UniPhier SPI controller
+> +
+> +description: |
+> +  UniPhier SoCs have SCSSI which supports SPI single channel.
+> +
+> +maintainers:
+> +  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> +  - Keiji Hayashibara <hayashibara.keiji@socionext.com>
+> +
+> +allOf:
+> +  - $ref: spi-controller.yaml#
+> +
+> +properties:
+> +  "#address-cells": true
+> +  "#size-cells": true
+> +
+> +  compatible:
+> +    const: socionext,uniphier-scssi
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - resets
 
-CC devicetree
-CC Stefano
+According to spi-controller.yaml, the "#address-cells" is required.
+And the "#size-cells" is also required because it specifies "const: 0".
+I'll add them in v2.
 
-Thanks for forwarding this patch!
+Thank you,
 
-On Wed, Apr 22, 2020 at 12:11 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> From: Torii Kenichi <torii.ken1@jp.fujitsu.com>
->
-> INTC-AP accepts both GPIO interrupt and GPIO alternative interrupt,
-> but INTC-RT can only handle GPIO interrupt, as depicted in below excerpt
-> from 'Figure 7.1 GPIO Block Configuration (1)' of
-> 'R-Car3 HW User's Manual Rev.2.00, Jul 2019':
->
->   +------------------------------+
->   | Interrupt  display register  +----> GPIO.ch*  (to INTC-AP, INTC-RT)
->   |           (INTDTn)           +----> GPIO.ch*A (to INTC-AP)
->   +------------------------------+
-
-Note that GPIO.ch[67]A seem to be available on INTC-RT, too. But for
-the other channels, you're right in that the "A" variants are connected
-to INTC-AP only.
-
-> It seems to be also the case for earlier Renesas SoCs like RZ/G,
-> as per 'Figure 6.1 GPIO Block Configuration' in
-> 'RZ/G Series User’s Manual: Hardware Rev.1.00 Sep 2016' [1].
-
-On R-Car Gen2, they're called "EXT_INT" resp. "EXT_ALT_INT" instead of
-"GPIO.ch*" and "GPIO.ch*A".
-
-> To reduce the interference between RT domain (CR7/SH) and the AP domain
-> (Cortex A5x) and to independently control GPIO interrupts in these two
-> domains, add support for processing GPIO alternative interrupts in AP.
->
-> This allows handling normal GPIO interrupts exclusively by INTC-RT.
-> The change is DT-driven and depends on the enablement of the
-> 'use-alternative-interrupt' DTS property.
->
-> One caveat is that the 'interrupts' property update must go hand in hand
-> with the newly added 'use-alternative-interrupt' property.
-
-As I replied to the DT bindings patch, I think the "interrupts" property
-should contain both, so "use-alternative-interrupt" can pick the one it
-needs.
-
-> Signed-off-by: Torii Kenichi <torii.ken1@jp.fujitsu.com>
-> [erosca: enrich commit description]
-> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-
-[actual patch[1] deleted, as it doesn't really matter for the discussion].
-
-You may want to look at "LTD20-205 System Device Tree Project"[2],
-where Stefano talks about using DT to describe the full system
-(I've read the slides, but haven't watched the video yet).
-
-Your patch shows that the assumption "All devices have interrupts routed
-to both interrupt controllers" isn't always true.
-
-[1] https://lore.kernel.org/linux-gpio/20200422101026.9220-3-erosca@de.adit-jv.com/
-[2] https://connect.linaro.org/resources/ltd20/ltd20-205/
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+---
+Best Regards
+Kunihiko Hayashi
